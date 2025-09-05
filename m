@@ -1,158 +1,171 @@
-Return-Path: <linux-pci+bounces-35525-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35526-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 612C6B45552
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 12:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1787B45659
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 13:28:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 215A5585C0E
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 10:53:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 271925A3392
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 11:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3892F619D;
-	Fri,  5 Sep 2025 10:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A31FE342C99;
+	Fri,  5 Sep 2025 11:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jH4lr9KD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QmEL5ag9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sve5TodF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E208D179BD;
-	Fri,  5 Sep 2025 10:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5D3342CA2;
+	Fri,  5 Sep 2025 11:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757069593; cv=none; b=V4LzuaQMeKj05wfs1tGs/KHyu6b6eYC9iYuqHyEbxUKBsWIHWlAny2b0VQMJXGoDgSR1mDJ+EKdyXDyCVeB4QoJpYcZb5ARKhCKCmWAQ4/HF57vEgKT0U9ZzWWxBBTRh/egFawBBcqdQrykOIrt823TE7y8ybYOvO+Qd58T1hYw=
+	t=1757071667; cv=none; b=dAjIkez17ABExdItNcai7ttpTGgzqtAFHJym5SZVa3M3UtAgvVPzb7OOzSyznZNCYktTjvl7WxoXc2KzyUoa1oW8sropf+Vm8XLbbAtxaJ65aYCoJmIdDp//kQaf0c/LLJeEFMzDR4/FqIZ15eBvdiBodg5NVD7FKKqpnWnGLTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757069593; c=relaxed/simple;
-	bh=o7v/HNWnjHt/Uzn1Ge3TzJ7eh0hyU3DB0ZeYdCA8Zk8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Jj4cNL6316CnbAYksra0BurB0fqMpcXcACG4Awjr3wD0z1SOFBGhT5U5aOzERt5kDX/2oVaw4kMHhGltsjXadv4kZVLDqoQddefWpTXR7y8Z1otIPStc/oCGciar2rVHKHGIzX0tuY+yhGluvwpk1lEAYC+o1VUfmzvLvQH8qU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jH4lr9KD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QmEL5ag9; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 24212EC03F9;
-	Fri,  5 Sep 2025 06:53:10 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 05 Sep 2025 06:53:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1757069590;
-	 x=1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=
-	jH4lr9KDGzqJf3o9wPt8s35oNXSKy5YUhWK4AWy+zrd2Lz7QDfZUNbRmjME6kf63
-	u2lOCEwcjey642T8NpEBeEHLbQyufe4Tp0z0klSpY+HyXfd2D8NBBE0OdoRQxmW6
-	Avu0bnOg3dMWvCWoSHPlTZUcK6qaAE03Ee0f1BpFM7CoaDA8atty/6EUP78QoeXA
-	1ExaSub1qp38LG6DIB1PACOmgoha68w/FUK8nM+hqfwQErfExKUtaCevx8EaYND8
-	L+axBmjn5NivHKsVAkeO8OBpTj2/BnyiTodlvMWQTAgbxMDtpl0BAsS/tTTkfm8N
-	6nC8iHOl/V7RqW4pY0glKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757069590; x=
-	1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=Q
-	mEL5ag9goV29QlI2c24+hx/oAx4oWyV8b5vCwUVAExSeA5fjX1NNQp34EY0iDF9z
-	5KRq5vGbIkT/v9rDc+Qo/G2sAFepcOCShNhWOzdBOqier1GPAXzsKcd1i5n1Llqt
-	nnrpCdLuJ3mNDRQAaN3uly/GD8PPOoLjE81W4kYL0SbSipE6IP4nMXZPgxxrL8YE
-	jQwCTwxg7b2Oag9SZ9y3MxlN2DpF9C2//gGoYXqU0VgCTbUWQMmTCkTBQMPL5/s0
-	FLJplIgZxgSRlLyCCyMVy809F6BiRTTETCTRie2vMHn77PBvgb9uGSdKn0p+CEga
-	Hkg7QvG61EGlriR5/JygA==
-X-ME-Sender: <xms:FcG6aG48mVVtE-tVka-hZF0wTFYusVXo9DWMC914E8dZEDjSjHv0IA>
-    <xme:FcG6aP6q538NkYX-o-njEIuQLMk5FQFUnBshrms8GQHILltbLC8unsYuZ4Gvne9ZI
-    zURj8l_zjKNlbtufQ4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekjedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
-    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepph
-    gvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhgvvghssehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigvlhhlsehlihhnrghroh
-    drohhrghdprhgtphhtthhopegsvghnjhgrmhhinhdrtghophgvlhgrnhgusehlihhnrghr
-    ohdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdroh
-    hrghdprhgtphhtthhopehlkhhftheslhhinhgrrhhordhorhhgpdhrtghpthhtohepnhgr
-    rhgvshhhrdhkrghmsghojhhusehlihhnrghrohdrohhrghdprhgtphhtthhopehlkhhfth
-    dqthhrihgrghgvsehlihhsthhsrdhlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:FcG6aABbyTmpwQCB5B1ukcfVsjGJ8ALCSDbQGb915dStrKnMhfBBwA>
-    <xmx:FcG6aHFS-Ugn6hBNjQVt_BhZ8V2QqzKuTOlBT3OjYVhP1CtzB1IJVg>
-    <xmx:FcG6aAsgRlGuUAz_TUFvY3Dht7UDMpqqpM6wBD7rRTDDDILlLs3w8w>
-    <xmx:FcG6aNkXhfJ3-_wPhSXJa4CVMG4EyMK5XJdkj18KPS3kJTz6jgzPCw>
-    <xmx:FsG6aMOQcHjgRB3ah_2HvCAog_UPeWTqXlgVtrAS07LZLHqhj86HCRr6>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6A4E0700065; Fri,  5 Sep 2025 06:53:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1757071667; c=relaxed/simple;
+	bh=J1a4RT+5dXN6HRhSrBG1mu+m8hweH6tEvr3mf/M7CsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqzCu0QoQ+D1mvlTPqm6XZsm2m7La82LrPPLICORUjBVTfcYIk4IaGNgsbELyKe+P6pJ3HWQEt+nyDCfRBsVAY554qNUuZD+utS7m+SzDtTLe7OidCTt2oBjKeRk7Dvsf3qaDDsSUaUNAa89cnrnhmQFWvEYmntgec3KxgBn390=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sve5TodF; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b4fa6cd2377so1255694a12.2;
+        Fri, 05 Sep 2025 04:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757071665; x=1757676465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BvNSdgfroz2AQh+V+YdAGx7lMSQySMqfI1R60lc+cXY=;
+        b=Sve5TodFetSUF04gLCDAeasrh+YMed4/Ta1Ia7Q4bPY9ykVdEuDUVRBmhC11VUEj3S
+         /nVc8YXcjqscy6CLzQsduCoOpeh4RhxKEHnNeQhANiyK8NuXqetNMpmugUGk0LJnJ1Ab
+         eh/67vSQBYgekKJROlNwYVR4EVqRO5GlTsBP/dcE9Tf+uXN4ZJmoBhb86kXzvwpqOF5q
+         5TT1b8WybCZEXlne0ikSDw4SJaaQpWD1PMB7sOleI0OHsAB5ZpIW/TtWTXffI0D/Ejnm
+         kasE17haV/3akxzr+GlqoHIoewjbkG7r8hL2LcMyFHn3hfKX31m2F9X3jF7LKtD2bk0Q
+         PbbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757071665; x=1757676465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BvNSdgfroz2AQh+V+YdAGx7lMSQySMqfI1R60lc+cXY=;
+        b=Vbg6Jg1b3bxhan0vkORDJQXYV632N8rUb6VT0Y6tnsk3jI9bNJbKqEcTSf+nHstkab
+         paLRARSWJNoKlQfDgTh8MG3PV17HAwVhBmWTia2jRFzSQjHCmpOk4Ea6m2O77JR3pHyc
+         0/K7v9adIuNCgZNmH3CMul/r2wnJQMlPNo4AMyoYePn+2O93CxE2k0wEK4ofc22Z2BuR
+         +TyYvEfn8RiidOlF2o9g4k7HZT43dk4PSdOe8mV27MhDmDerG37eJWoPU2XkHWyEOGp2
+         Zjs4xj+9rtDWAuRU39pj3sKpU9p0yziDtFt3euiCTfq0Ck1PoFzebPdBWBDSla9Sqxt3
+         lAtg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRtFmx5JJubfd4nt0xDC17i/UnsiLdS8jMHHRnnkrRjKbixCRWPRVZLLBM5xaDS8YJ8AL0UDaf0GrO@vger.kernel.org, AJvYcCXmqC6P7ru0S08R7zoZmDLazPdY/hnuOz+MXpmms+d2AvuTi/rljU4AXwAhgBySJJB9QD87hY1rTjR5YPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPJRhL3Ya7u/tx+K5PZkvT5mGJVy0H0+8JkA+f27LtNj8KN30e
+	olQdFf0gKzjdx9rvthK+RqwSv7m7SmRnFJE58rbwQ+z+M3IAaTZofDk3
+X-Gm-Gg: ASbGnctiKpQoUZIHox8CDYn3OFV5+YoVd45jXvD/EGUszcHd1vpXvfVoQFBv/VPxADr
+	dCuOsb05q6BNEmuoUCLKohrhiJdGpeBmTR+MJJVc20gBaYZr3IIuubitS+WSiKSJ3k6B4jZfOtQ
+	LfNk1e/Fs+KxMELskqI3TdBoYMn/MonYIgItWfFsbO+rnieip55QlhN8YU7XzsxI1qw2r/pWL5o
+	ctuBPFLGufaB/UMZy6HeS5N9b4VYx4lJeS234GfSNx0DyMxodwf6fX7ouZn7Y/hrczd5WQaK+iW
+	c3HRQBU0uZP/c1ng8wQYUPr5Ntpv2p3yj2nzH6yUWqzQIZZOSnU9EOZvqNv4IZzy4kZWWKS00tC
+	ZPq6C8r38/2j38x/ghjewfWizhRMzY90=
+X-Google-Smtp-Source: AGHT+IGvR4zQ0L9DATfW6OC24buFgtcy9qBxyqE0QsalCQFZz8jZdjfaS+y+TmQZ4bZufc0KdMQo+g==
+X-Received: by 2002:a17:90b:3e44:b0:32b:bc1c:8d65 with SMTP id 98e67ed59e1d1-32bbc1c8e51mr3401055a91.30.1757071665181;
+        Fri, 05 Sep 2025 04:27:45 -0700 (PDT)
+Received: from rockpi-5b ([45.112.0.216])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-329e6d6d4b2sm10390179a91.0.2025.09.05.04.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Sep 2025 04:27:44 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Hans Zhang <18255117159@163.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
+	linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v1] PCI: dw-rockchip: Simplify regulator setup with devm_regulator_get_enable_optional()
+Date: Fri,  5 Sep 2025 16:57:25 +0530
+Message-ID: <20250905112736.6401-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ABrrY9NwCfcB
-Date: Fri, 05 Sep 2025 12:52:44 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Anders Roxell" <anders.roxell@linaro.org>, "Kees Cook" <kees@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- "Linaro Kernel Functional Testing" <lkft@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Peter Zijlstra" <peterz@infradead.org>, linux-hardening@vger.kernel.org
-Message-Id: <f5db760e-c143-4f6c-9389-309a362f0baf@app.fastmail.com>
-In-Reply-To: 
- <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
-References: <20250905052836.work.425-kees@kernel.org>
- <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 5, 2025, at 10:16, Anders Roxell wrote:
-> On Fri, 5 Sept 2025 at 07:28, Kees Cook <kees@kernel.org> wrote:
->> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->>                         rq = mps;
->>         }
->>
->> -       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->> +       firstbit = ffs(rq);
->> +       if (firstbit < 8)
->> +               return -EINVAL;
->> +       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
->
-> Hi Kees,
->
-> Thank you for looking into this.
->
-> These warnings are not a one time thing.  the later versions of gcc
-> can figure it
-> out that firstbit is at least 8 based on the "rq < 128" (i guess), so
-> we're adding
-> bogus code.  maybe we should just disable the check for gcc-8.
+Replace manual get/enable logic with devm_regulator_get_enable_optional()
+to reduce boilerplate and improve error handling. This devm helper ensures
+the regulator is enabled during probe and automatically disabled on driver
+removal. Dropping the vpcie3v3 struct member eliminates redundant state
+tracking, resulting in cleaner and more maintainable code.
 
-Out of the three failures I saw, two also happened with gcc-9, but
-gcc-10 looks clean so far.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 23 +++++--------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
->          \
-> +                                       (0 + (_val)) : 0,
->          \
->                                  _pfx "value too large for the field"); \
->                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
->                                  __bf_cast_unsigned(_reg, ~0ull),       \
->
-> I found similar patterns with ffs and FIELD_PREP here
-> drivers/dma/uniphier-xdmac.c row 156 and 165
-> drivers/gpu/drm/i915/display/intel_cursor_regs.h row 17
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index b5f5eee5a50e..56baca52c3e9 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -76,7 +76,6 @@ struct rockchip_pcie {
+ 	unsigned int clk_cnt;
+ 	struct reset_control *rst;
+ 	struct gpio_desc *rst_gpio;
+-	struct regulator *vpcie3v3;
+ 	struct irq_domain *irq_domain;
+ 	const struct rockchip_pcie_of_data *data;
+ };
+@@ -644,22 +643,15 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	/* DON'T MOVE ME: must be enable before PHY init */
+-	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+-	if (IS_ERR(rockchip->vpcie3v3)) {
+-		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
+-			return dev_err_probe(dev, PTR_ERR(rockchip->vpcie3v3),
+-					"failed to get vpcie3v3 regulator\n");
+-		rockchip->vpcie3v3 = NULL;
+-	} else {
+-		ret = regulator_enable(rockchip->vpcie3v3);
+-		if (ret)
+-			return dev_err_probe(dev, ret,
+-					     "failed to enable vpcie3v3 regulator\n");
+-	}
++	ret = devm_regulator_get_enable_optional(dev, "vpcie3v3");
++	if (ret < 0 && ret != -ENODEV)
++		return dev_err_probe(dev, ret,
++				     "failed to enable vpcie3v3 regulator\n");
+ 
+ 	ret = rockchip_pcie_phy_init(rockchip);
+ 	if (ret)
+-		goto disable_regulator;
++		return dev_err_probe(dev, ret,
++				     "failed to initialize the phy\n");
+ 
+ 	ret = reset_control_deassert(rockchip->rst);
+ 	if (ret)
+@@ -692,9 +684,6 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+ deinit_phy:
+ 	rockchip_pcie_phy_deinit(rockchip);
+-disable_regulator:
+-	if (rockchip->vpcie3v3)
+-		regulator_disable(rockchip->vpcie3v3);
+ 
+ 	return ret;
+ }
 
-I did not come across build failures for these.
+base-commit: d69eb204c255c35abd9e8cb621484e8074c75eaa
+-- 
+2.50.1
 
-    Arnd
 
