@@ -1,286 +1,228 @@
-Return-Path: <linux-pci+bounces-35536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCD43B45F64
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 18:54:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC35B46086
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 19:45:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92AE817AE7D
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 16:54:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D1E11C201CC
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Sep 2025 17:45:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5AD0306B3E;
-	Fri,  5 Sep 2025 16:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF52E36CDF4;
+	Fri,  5 Sep 2025 17:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OICIoC7/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDVR8G1c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8720231D736;
-	Fri,  5 Sep 2025 16:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F91635CED5;
+	Fri,  5 Sep 2025 17:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757091268; cv=none; b=SyF1EMj0w5Zxqx/Z2Ze0r3NjSHrK3nzru4U7sDVPCX1aL3MyPZBfqzP1dOfRGIKvqM7xdXZbXTiPN52OJK6wXOsZ72lUqURVTI+Mk/iJbv3R6vHsC6VjpRpt9kss8RnQSO0KBqn1AmRObxpsEWzI0PfGjxZYx/274LzdUmVWxoY=
+	t=1757094303; cv=none; b=o7uDq2BF7yxTJXmsYuGHOtqW4d1mcFnX0UgH+xPghe4CPPyWxO1EbHdYgC2NTIw/LBYJuoFs8iGPJeI+zY4HCRkIB+MgIkfD4B+qH2MEgnv5lr6TCXQp6WQ22TV+KflmgdIGGndkfaOJxO3aNFoVR/6KyZ58FdTqq2D2IlW54eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757091268; c=relaxed/simple;
-	bh=Iz8mTq/GEt9A4ZHGarw24hhU9Mlb6/EwBsMoab+mPtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=GgW51QQysqJ2ehjZ5ZMNa31Qu8EmsNw28rKWh/tY2ljph/Uf6cgdJe5L49t0ml4AdR7ibI73apwytHZ0iFn9zqoupE2mdDG9sGxXOosJfodW+Z5N/ed5ZCOYp3jDWVK3yKgALzVbpdxKeUWKtSwYbzwVpc+Frn904g+xxLN1sag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OICIoC7/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5E4C4CEF1;
-	Fri,  5 Sep 2025 16:54:27 +0000 (UTC)
+	s=arc-20240116; t=1757094303; c=relaxed/simple;
+	bh=JRoj6Ci9wHU172Ie2bm2KbIB7z/ZxMXoAI7uwTju8l8=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=g4anGc/h2+PpKVw9dNFpWTWPG1rNy76n+TmiVW+wsXOSVSHybpqWtEPhOp2Da9xqsiRhyRt8mBHP3ojJMRAMVpYG/aXxTgQ4vZRSAP5Bx5VqAegcT2G7yh7H5QoZWHqOJUi8GPHUOomCA/dI2ykhod4ItJMcXp9iCSLBkv16GF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDVR8G1c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEA9C4CEF1;
+	Fri,  5 Sep 2025 17:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757091268;
-	bh=Iz8mTq/GEt9A4ZHGarw24hhU9Mlb6/EwBsMoab+mPtk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OICIoC7/LLKx9fTTyxBxRcGy4DbUKkKVichVDNEOiapVC4hlwFdwbzVpx3HaZIScj
-	 LAN12dddrAPyuDATCQpXKBcBwOs6DGvCsPOdl3A1mVq3uVaIA/LQ6Zeo6llPEaVNOP
-	 42E286+2qeHqhaE8QZ2lvMQpwjZHGGa4AuzVHULiUBaDPoJazjPZ8CHXq8WsV1nyPc
-	 iWDsoHrd/R6sVt+aYYdab8MJOzuo8OR5CRayL3P5HpHwAm9c8vEtSnZQX1h/fOE58o
-	 7CNKIqS5XTp/9h9AGrP7+zDOSDJVYj/g8gRFQrqgHwvG744dhAUcMUevtbuNHIWAWZ
-	 W4OcFT6Sd0t7A==
-Date: Fri, 5 Sep 2025 11:54:26 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
-Message-ID: <20250905165426.GA1307227@bhelgaas>
+	s=k20201202; t=1757094303;
+	bh=JRoj6Ci9wHU172Ie2bm2KbIB7z/ZxMXoAI7uwTju8l8=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qDVR8G1cHnoOKaISEn3ILawg4lLl5ZxilJnEWSgjJRinykFT9ihy9ASczjxCypy49
+	 MxncKaEWPiS6iZV76aoax8IAhqp00Wed5VmASI8vg4PkIxFBtNWzk+uYYeunxumOvA
+	 2Mntv+1Tb3txhkWAoWOuTC6xl9R54QvQigtyDpA4uFu5Q4ci71agKxN8JWQ/8Rm605
+	 Xx4eXNZ53V9b5rln4k32L2DV9A0sRnrK/zDR4NqJ0vtyr2sZ+AHmf09R2o956ufAA0
+	 M1QIzWoD2dflMJlCo9AYlOy8XiYzRDD+aM6JHSMbnkeL7xO7jJ7Lu0CvpO+fGIdGIg
+	 CWW4A88Y+q55w==
+Date: Fri, 05 Sep 2025 12:45:02 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905101659.95700-2-devendra.verma@amd.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: kwilczynski@kernel.org, Ziyue Zhang <quic_ziyuzhan@quicinc.com>, 
+ andersson@kernel.org, krzk+dt@kernel.org, devicetree@vger.kernel.org, 
+ vkoul@kernel.org, conor+dt@kernel.org, quic_vbadigan@quicinc.com, 
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ abel.vesa@linaro.org, neil.armstrong@linaro.org, 
+ linux-kernel@vger.kernel.org, mani@kernel.org, jingoohan1@gmail.com, 
+ lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org, bhelgaas@google.com, 
+ qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com, 
+ johan+linaro@kernel.org, konradybcio@kernel.org, linux-pci@vger.kernel.org
+To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com>
+Message-Id: <175709416167.988659.7965157702094931260.robh@kernel.org>
+Subject: Re: [PATCH v12 0/5] pci: qcom: Add QCS8300 PCIe support
 
-On Fri, Sep 05, 2025 at 03:46:58PM +0530, Devendra K Verma wrote:
-> AMD MDB PCIe endpoint support. For AMD specific support
-> added the following
->   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
->   - AMD MDB specific driver data
->   - AMD MDB specific VSEC capability to retrieve the device DDR
->     base address.
+
+On Fri, 05 Sep 2025 15:14:43 +0800, Ziyue Zhang wrote:
+> This series depend on this patch
+> https://lore.kernel.org/all/20250826-pakala-v2-3-74f1f60676c6@oss.qualcomm.com/
 > 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+> This series adds document, phy, configs support for PCIe in QCS8300.
+> It also adds 'link_down' reset for sa8775p.
+> 
+> Have follwing changes:
+> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
+> 	- Add compatible for qcs8300 platform.
+> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 > ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 83 +++++++++++++++++++++++++++++++++++++-
->  include/linux/pci_ids.h            |  1 +
->  2 files changed, 82 insertions(+), 2 deletions(-)
+> Changes in v12:
+> - rebased pcie phy bindings
+> - Link to v11: https://lore.kernel.org/all/20250826091205.3625138-1-ziyue.zhang@oss.qualcomm.com/
 > 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3371e0a7..749067b 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -18,10 +18,12 @@
->  #include "dw-edma-core.h"
->  
->  #define DW_PCIE_VSEC_DMA_ID			0x6
-> +#define DW_PCIE_AMD_MDB_VSEC_ID			0x20
->  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
->  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
->  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
->  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
-> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
->  
->  #define DW_BLOCK(a, b, c) \
->  	{ \
-> @@ -50,6 +52,7 @@ struct dw_edma_pcie_data {
->  	u8				irqs;
->  	u16				wr_ch_cnt;
->  	u16				rd_ch_cnt;
-> +	u64				phys_addr;
->  };
->  
->  static const struct dw_edma_pcie_data snps_edda_data = {
-> @@ -90,6 +93,44 @@ struct dw_edma_pcie_data {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> +static const struct dw_edma_pcie_data amd_mdb_data = {
-> +	/* MDB registers location */
-> +	.rg.bar				= BAR_0,
-> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
-> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
-> +	/* MDB memory linked list location */
-> +	.ll_wr = {
-> +		/* Channel 0 - BAR 2, offset 0 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00000000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 2 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00200000, 0x00000800)
-> +	},
-> +	.ll_rd = {
-> +		/* Channel 0 - BAR 2, offset 4 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00400000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 6 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00600000, 0x00000800)
-> +	},
-> +	/* MDB memory data location */
-> +	.dt_wr = {
-> +		/* Channel 0 - BAR 2, offset 8 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00800000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 9 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00900000, 0x00000800)
-> +	},
-> +	.dt_rd = {
-> +		/* Channel 0 - BAR 2, offset 10 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00a00000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 11 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00b00000, 0x00000800)
-> +	},
-> +	/* Other */
-> +	.mf				= EDMA_MF_HDMA_NATIVE,
-> +	.irqs				= 1,
-> +	.wr_ch_cnt			= 2,
-> +	.rd_ch_cnt			= 2,
-> +};
-> +
->  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  {
->  	return pci_irq_vector(to_pci_dev(dev), nr);
-> @@ -120,9 +161,14 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	u32 val, map;
->  	u16 vsec;
->  	u64 off;
-> +	u16 vendor;
->  
-> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> -					DW_PCIE_VSEC_DMA_ID);
-> +	vendor = pdev->vendor;
-> +	if (vendor != PCI_VENDOR_ID_SYNOPSYS &&
-> +	    vendor != PCI_VENDOR_ID_XILINX)
-> +		return;
-> +
-> +	vsec = pci_find_vsec_capability(pdev, vendor, DW_PCIE_VSEC_DMA_ID);
+> Changes in v11:
+> - move phy/perst/wake to pcie bridge node (Mani)
+> - Link to v10: https://lore.kernel.org/all/20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com/
+> 
+> Changes in v10:
+> - Update PHY max_items (Johan)
+> - Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
+> 
+> Changes in v9:
+> - Fix DTB error (Vinod)
+> - Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
+> 
+> Changes in v8:
+> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
+> - Add Fixes tag to phy change (Johan)
+> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v7:
+> - rebase qcs8300-ride.dtsi change to solve conflicts.
+> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v6:
+> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
+> - Update QCS8300 and sa8775p phy dt, remove aux clock.
+> - Fixed compile error found by kernel test robot
+> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v5:
+> - Add QCOM PCIe controller version in commit msg (Mani)
+> - Modify platform dts change subject (Dmitry)
+> - Fixed compile error found by kernel test robot
+> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v4:
+> - Add received tag
+> - Fixed compile error found by kernel test robot
+> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+> 
+> Changes in v3:
+> - Add received tag(Rob & Dmitry)
+> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+> - remove pcieprot0 node(Konrad & Mani)
+> - Fix format comments(Konrad)
+> - Update base-commit to tag: next-20241213(Bjorn)
+> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
+> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+> 
+> Changes in v2:
+> - Fix some format comments and match the style in x1e80100(Konrad)
+> - Add global interrupt for PCIe0 and PCIe1(Konrad)
+> - split the soc dtsi and the platform dts into two changes(Konrad)
+> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+> 
+> Ziyue Zhang (5):
+>   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+>     for qcs8300
+>   arm64: dts: qcom: qcs8300: enable pcie0
+>   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+>   arm64: dts: qcom: qcs8300: enable pcie1
+>   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+> 
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   5 +-
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  84 +++++
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 310 +++++++++++++++++-
+>  3 files changed, 394 insertions(+), 5 deletions(-)
+> 
+> 
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+> --
+> 2.43.0
+> 
+> 
+> 
 
-The vendor of a device assigns VSEC IDs and determines what each ID
-means, so the semantics of a VSEC Capability are determined by the
-tuple of (device Vendor ID, VSEC ID), where the Vendor ID is the value
-at 0x00 in config space.
 
-This code assumes that Synopsys and Xilinx agreed on the same VSEC ID
-(6) and semantics of that Capability.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-I assume you know this is true in this particular case, but it is not
-safe for in general because even if other vendors incorporate this
-same IP into their devices, they may choose different VSEC IDs because
-they may have already assigned the VSEC ID 6 for something else.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-So you should add a comment to the effect that "Synopsys and Xilinx
-happened to use the same VSEC ID and semantics.  This may vary for
-other vendors."
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-The DVSEC Capability is a more generic solution to this problem.  The
-VSEC ID namespace is determined by the Vendor ID of the *device*.
+  pip3 install dtschema --upgrade
 
-By contrast, the DVSEC ID namespace is determined by a Vendor ID in
-the DVSEC Capability itself, not by the Vendor ID of the device.
 
-So AMD could define a DVSEC ID, e.g., 6, and define the semantics of
-that DVSEC.  Then devices from *any* vendor could include a DVSEC
-Capability with (PCI_VENDOR_ID_AMD, 6), and generic code could look
-for that DVSEC independent of what is at 0x00 in config space.
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 
->  	if (!vsec)
->  		return;
->  
-> @@ -155,6 +201,27 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	off <<= 32;
->  	off |= val;
->  	pdata->rg.off = off;
-> +
-> +	/* AMD specific VSEC capability */
-> +	if (vendor != PCI_VENDOR_ID_XILINX)
-> +		return;
-> +
-> +	vsec = pci_find_vsec_capability(pdev, vendor,
-> +					DW_PCIE_AMD_MDB_VSEC_ID);
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
 
-pci_find_vsec_capability() finds a Vendor-Specific Extended Capability
-defined by the vendor of the device (Xilinx in this case).
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com:
 
-pci_find_vsec_capability() already checks that dev->vendor matches the
-vendor argument so you don't need the "vendor != PCI_VENDOR_ID_XILINX"
-check above.
+arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2'] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs8300-ride.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[50, 70], [50, 68], [50, 80], [50, 72], [50, 74], [50, 77]] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c04000 (qcom,sa8775p-qmp-gen4x2-pcie-phy): clocks: [[57, 66], [57, 68], [57, 94], [57, 72], [57, 74], [57, 77], [57, 70]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clock-names: ['aux', 'cfg_ahb', 'ref', 'rchng', 'pipe', 'pipediv2', 'phy_aux'] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: phy@1c14000 (qcom,sa8775p-qmp-gen4x4-pcie-phy): clocks: [[57, 80], [57, 82], [57, 94], [57, 86], [57, 88], [57, 91], [57, 84]] is too long
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
 
-DW_PCIE_AMD_MDB_VSEC_ID should include "XILINX" because this ID is in
-the namespace created by PCI_VENDOR_ID_XILINX, i.e., it's somewhere in
-the (PCI_VENDOR_ID_XILINX, x) space.
 
-This code should look something like this (you could add "MDB" or
-something if it makes sense):
 
-  #define PCI_VSEC_ID_XILINX_DMA_DATA               0x20
 
-  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-                                  PCI_VSEC_ID_XILINX_DMA_DATA);
 
-> +	if (!vsec)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +	if (PCI_VNDR_HEADER_ID(val) != 0x20 ||
-> +	    PCI_VNDR_HEADER_REV(val) != 0x1)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + 0xc, &val);
-> +	off = val;
-> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
-> +	off <<= 32;
-> +	off |= val;
-> +	pdata->phys_addr = off;
->  }
->  
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> @@ -179,6 +246,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	}
->  
->  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	vsec_data->phys_addr = DW_PCIE_AMD_MDB_INVALID_ADDR;
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-> @@ -186,6 +254,15 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	 */
->  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
-> +		/*
-> +		 * There is no valid address found for the LL memory
-> +		 * space on the device side.
-> +		 */
-> +		if (vsec_data->phys_addr == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> +			return -EINVAL;
-> +	}
-> +
->  	/* Mapping PCI BAR regions */
->  	mask = BIT(vsec_data->rg.bar);
->  	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
-> @@ -367,6 +444,8 @@ static void dw_edma_pcie_remove(struct pci_dev *pdev)
->  
->  static const struct pci_device_id dw_edma_pcie_id_table[] = {
->  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
-> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
-> +	  (kernel_ulong_t)&amd_mdb_data },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table);
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 92ffc43..c15607d 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -636,6 +636,7 @@
->  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS		0x780b
->  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE		0x780c
->  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
-> +#define PCI_DEVICE_ID_AMD_MDB_B054	0xb054
-
-Unless PCI_DEVICE_ID_AMD_MDB_B054 is used in more than one driver,
-move the #define into the file that uses it.  See the note at the top
-of pci_ids.h.
 
