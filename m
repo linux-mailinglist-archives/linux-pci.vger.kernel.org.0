@@ -1,136 +1,135 @@
-Return-Path: <linux-pci+bounces-35598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29408B46F47
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 15:54:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A3C8B47085
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 16:37:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBF5E5A1DE9
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 13:54:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAB417C17DB
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 14:37:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 289AD2F39CC;
-	Sat,  6 Sep 2025 13:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48D9B1FC0ED;
+	Sat,  6 Sep 2025 14:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QnenhXeT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZaI5oaf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931172EE29F;
-	Sat,  6 Sep 2025 13:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12453366;
+	Sat,  6 Sep 2025 14:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757166848; cv=none; b=Lhjr6Egn13X6eeNJiyqVOv0J6Kt0biupdBck8ub6kkqziQl/bfzcQFwNIARmbQjkGB2niYMtXb3mMOhEw7WzV0rK94JJhasWggtNBMnYVnx1HX4gOsyQo0fUwTvdm8aeDGcGCbI0vOqLA4x5n6gH5tvXa47y2z8kfUvvspdzMS0=
+	t=1757169420; cv=none; b=SDyijB8rEumHrtWeX74K59+TEgjsQfeY4ostdozPx8KKGKjhRpEAykDelm7JvfmpdJxifgk7NiKYjEZUbjuWKxfoajspqLbf82wz3ZQ2LWatzfdcrCJmWeUF4UCoZwy60jrglUxWIWQ2jxGKcpF+HIWNZuGrkr8xIGROvHlWm3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757166848; c=relaxed/simple;
-	bh=Dw5uo181Dm3Fr9E03p865uWj8jVKOwAN1D+SIhGoS3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W7X8fenDtiIqzGr+uABABj0V5rj1kn+PhJ5sNY5CeUlsymwwcA5X/FvJy+is/a5Mm3M3myLOS5gd2pcwOsseO1k0Zcih3TIxUdqns0wFT1jvyAgZ0rBT1MAFvhC/2cfxWbyZlb2GQMZhx6mOmbGnuij6GZA+1LyBMaLvJL7URJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QnenhXeT; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 1D6D920285;
-	Sat,  6 Sep 2025 15:54:05 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 15xGSrIbygqB; Sat,  6 Sep 2025 15:54:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1757166844; bh=Dw5uo181Dm3Fr9E03p865uWj8jVKOwAN1D+SIhGoS3E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QnenhXeTVnAZ4hc1cPKPDtuClk2YEMAQ1CvdjE8PRoj4rTwwfuAekElrTBr7hQSgB
-	 N7IvFyxXZ34NEK28AsfeUGPCS0Oqsudvn3qk7kPn8TGAgNI+IJgPITbWXXnKXe3qso
-	 Zc35meOMW+qDjq4diZXyxFRBSk9bgCZyZ9It6mwk5G6qgvILI2F+58bJ70+sKAuUon
-	 dnIfrXCdRUVWoa3Kc7raD2OP716eQrQLe8uSes1OZIP9KDhq9b1QszVP4VmnEY9/nL
-	 yGstc9ZF08io+5dtjwoQr/FUt2mRNqNjW6CLLXu71fEkiltKNK7Umc7qK19o6bEvce
-	 PuVkMK5WfjdwQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 3/3] arm64: dts: rockchip: Enable PCIe controller on Radxa E20C
-Date: Sat,  6 Sep 2025 13:52:46 +0000
-Message-ID: <20250906135246.19398-4-ziyao@disroot.org>
-In-Reply-To: <20250906135246.19398-1-ziyao@disroot.org>
-References: <20250906135246.19398-1-ziyao@disroot.org>
+	s=arc-20240116; t=1757169420; c=relaxed/simple;
+	bh=SPU2rnbsPpnstPtgpQEh1/Gq9XANzp8yZYv6RSNItC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uR9FCE2G2aHvAq+XxwHpkoFC5kFDgdaKXeeH1ASUDU/IGW51ipsL7rtTay6JsxgnQES9Uw+uZxboe3qdlZkLMO68E6hFig+npOzD6rNhXkBDHDSmDUWDwcEoH+htBpi45SIK3f/4qKUWm585twHYbxxWV8sztumC+HiN+vZJ8/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZaI5oaf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABB2C4CEE7;
+	Sat,  6 Sep 2025 14:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757169419;
+	bh=SPU2rnbsPpnstPtgpQEh1/Gq9XANzp8yZYv6RSNItC8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bZaI5oafURYYPGJpisV1NWTga0qD7gCgf/AiF1LmzZ/ePkOFrGtTchlAz7tqchQtD
+	 3qjUuj5dM0rhoXSbeagUMyQXRutyKeCZGCFikUNjMBpvkOsEQJs0IEewcMU9HbvB3k
+	 sjYuk0wFzY2oXq56y+s8uJHHbOWvxvoMDzqQB5jgenVE42/qRsCXLOQ4/bcXU3dLit
+	 luUv0gv/3yarlN4l3yDo6Oq5nxLh9Fy4j2fSR6ne/CO3xNXf/gcYlTYBoaYwTTQdbC
+	 cw2hl+t9IWInTxAfLfg/UiY3nkOghC4lgGYTYwK6wArROyonuwMOKaO6pYkAXN86MV
+	 RiallcJb6wzkg==
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Pavel Machek <pavel@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
+	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
+	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING),
+	AceLan Kao <acelan.kao@canonical.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+	Eric Naim <dnaim@cachyos.org>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>
+Subject: [PATCH v6 RESEND 00/11] Improvements to S5 power consumption
+Date: Sat,  6 Sep 2025 09:36:31 -0500
+Message-ID: <20250906143642.2590808-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Radxa E20C provides one of its GbE ports through RTL8111H connected to
-SoC's PCIe controller. Let's enable the controller and the PHY used by
-it to allow usage of the port.
+A variety of issues both in function and in power consumption have been
+raised as a result of devices not being put into a low power state when
+the system is powered off.
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
+There have been some localized changes[1] to PCI core to help these issues,
+but they have had various downsides.
+
+This series instead tries to use the S4 flow when the system is being
+powered off.  This lines up the behavior with what other operating systems
+do as well.  If for some reason that fails or is not supported, run their
+shutdown() callbacks.
+
+Cc: AceLan Kao <acelan.kao@canonical.com>
+Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+Cc: Eric Naim <dnaim@cachyos.org>
 ---
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+v6 RESEND:
+ * Resent because Greg said he was ignoring it and would like the whole
+   series to be able to review.
+v5->v6:
+ * Fix for LKP robot issue
+ * Some commit message changes
+ * Rebase on 6.17-rc2
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-index 12eec2c1db22..e880c7a7e674 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-@@ -171,6 +171,10 @@ vdd_logic: regulator-vdd-logic {
- 	};
- };
- 
-+&combphy {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vdd_arm>;
- };
-@@ -229,6 +233,13 @@ rgmii_phy: ethernet-phy@1 {
- 	};
- };
- 
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pciem1_pins>, <&pcie_reset_g>;
-+	reset-gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ethernet {
- 		gmac1_rstn_l: gmac1-rstn-l {
-@@ -256,6 +267,12 @@ wan_led_g: wan-led-g {
- 		};
- 	};
- 
-+	pcie {
-+		pcie_reset_g: pcie-reset-g {
-+			rockchip,pins = <1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	sdmmc {
- 		sdmmc_vol_ctrl_h: sdmmc-vol-ctrl-h {
- 			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
+Mario Limonciello (AMD) (11):
+  PM: Introduce new PMSG_POWEROFF event
+  scsi: Add PM_EVENT_POWEROFF into suspend callbacks
+  usb: sl811-hcd: Add PM_EVENT_POWEROFF into suspend callbacks
+  USB: Pass PMSG_POWEROFF event to suspend_common() for poweroff with S4
+    flow
+  PCI: PM: Disable device wakeups when halting system through S4 flow
+  PCI: PM: Split out code from pci_pm_suspend_noirq() into helper
+  PCI: PM: Run bridge power up actions as part of restore phase
+  PCI: PM: Use pci_power_manageable() in pci_pm_poweroff_noirq()
+  PCI: Put PCIe bridges with downstream devices into D3 at hibernate
+  drm/amd: Avoid evicting resources at S5
+  PM: Use hibernate flows for system power off
+
+ drivers/base/power/main.c                  |  7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  4 +
+ drivers/pci/pci-driver.c                   | 99 +++++++++++++++-------
+ drivers/scsi/mesh.c                        |  1 +
+ drivers/scsi/stex.c                        |  1 +
+ drivers/usb/core/hcd-pci.c                 | 11 ++-
+ drivers/usb/host/sl811-hcd.c               |  1 +
+ include/linux/pm.h                         |  5 +-
+ include/trace/events/power.h               |  3 +-
+ kernel/reboot.c                            |  6 ++
+ 10 files changed, 103 insertions(+), 35 deletions(-)
+
 -- 
-2.50.1
+2.43.0
 
 
