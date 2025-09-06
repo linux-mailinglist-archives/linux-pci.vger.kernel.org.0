@@ -1,148 +1,114 @@
-Return-Path: <linux-pci+bounces-35585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35586-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 398B9B467D5
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 03:11:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C0D7B46811
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 03:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6173AC0396
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 01:10:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59F055C6122
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 01:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5361DE4CA;
-	Sat,  6 Sep 2025 01:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E641519A6;
+	Sat,  6 Sep 2025 01:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BX9NEf/X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aMPgdkMy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9286B145B16;
-	Sat,  6 Sep 2025 01:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547051CD2C;
+	Sat,  6 Sep 2025 01:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757121008; cv=none; b=es+VMxo9rCetYxd+Pc2rs7SKCS2p0zwvjPG+KmOf9lT+A3vOmdoJ/u82U8vztLC/+gckNTP2Y35cC7Sedkyu/wIqesAcY9ko/aczLfceQdXSi1ug8aFojWb8twg8z6Sd3/rRTxRKzIZ/jFyKg2S/myoZqZQ/97Fl6V1xkHkBW+U=
+	t=1757123284; cv=none; b=QXQR9YcDKz4GFwtssUuZzBZyTsfwc7+o57YL4rZBXwNeoNp3++q+ZovffVffsIOy6WibAZx4lCASpa1ZkcBnrYuTVMHgBNAuKDShVDGzuOHXn4zrgNZ3dvjR/iWsMFPmAyRDSwqbXACCh0JP4tiKxd5IEP0G4tOMUibgWwv3x/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757121008; c=relaxed/simple;
-	bh=D3d4EEm9KfZVZrOZRrxKFOPjUiMwSN5Ik0Y3pM8gFgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hTu2qd7RthnHw2dMcQaTHwGa9iEbxCp2wtHY1mFbiOCYocZmqJB/X8lzAfIjCFQXILdBkvw2bs9ivj8WyHVj+14Krff5yyZOe4q8b18E2iOu+hyUfRDf4e0uA+EQgG3ncE2IPE4OtUitG4cOgYeFptZ+umL2Wr1PVMxCgTD4otw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BX9NEf/X; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA22720171A1;
-	Fri,  5 Sep 2025 18:10:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA22720171A1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1757121005;
-	bh=+CCS9We1Ij6uOlVmGq9+uq+1zOrHP0OdRaRPzrFp1GA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BX9NEf/X1VneNtjEYWoIbC4svFLWsPr6TE+eGFC7ATnibEAF5CZhHO4BkQA3huB1H
-	 G+vqfIWfbg5hEOs2bwIui5RjjStP2xdsiq/mMkkajOrdNM34AIT7Bqid50NJZSBjcZ
-	 DoYg+VV6O+/ka1HcE7xVbEhJmP4lFjkaKOTv7a2k=
-From: Mukesh Rathor <mrathor@linux.microsoft.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	dmitry.torokhov@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	bhelgaas@google.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	gregkh@linuxfoundation.org,
-	deller@gmx.de,
-	arnd@arndb.de,
-	sgarzare@redhat.com,
-	horms@kernel.org
-Subject: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
-Date: Fri,  5 Sep 2025 18:09:52 -0700
-Message-Id: <20250906010952.2145389-3-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.36.1.vfs.0.0
-In-Reply-To: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
-References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
+	s=arc-20240116; t=1757123284; c=relaxed/simple;
+	bh=A2D2aSftdcMZeG+xPlUYbYdg82HvTTXUJvhglE5jKag=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q07W/N2mnofBl8MlopJ4QnQpWZS7MeMn/tCCagUGNBgBlnqMDuIwNa2WY45zR2Tqm7UQEkOfuVVQAG1DPH/VwG9QHaaJCr6UHwzeoqLp/49MPu99aW4oluiA1URKueuTTHha/Dxs8qLd83vmZRSF37MAjdXMlb6rjFuWzhNWjXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aMPgdkMy; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5861lplt3440581;
+	Fri, 5 Sep 2025 20:47:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1757123271;
+	bh=L7F0n7D432kI/8TDM2zzfMQeAXcSFxDGIcCb60S29Ag=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=aMPgdkMyU0tQsAXg6Z67kzB+8r9scFyKT3o5TgOgy+IJrss8I7NQAhNyKI/MWV8vt
+	 licxwf4EraFKp2U2gpVfNpe7cAhm/8w4RWzyZsTVqHYGHC1AWqA61xaWzIXMtAef78
+	 SPKmKULN0QmAOJ2JKPUMkCzqH6Wj24BMCBoDRzSk=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5861lpko2051501
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 5 Sep 2025 20:47:51 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 5
+ Sep 2025 20:47:51 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Fri, 5 Sep 2025 20:47:51 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5861lnUb1300100;
+	Fri, 5 Sep 2025 20:47:50 -0500
+Date: Sat, 6 Sep 2025 07:17:49 +0530
+From: s-vadapalli <s-vadapalli@ti.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+CC: <vigneshr@ti.com>, <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-omap@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: j721e: Fix incorrect error message in probe
+Message-ID: <22e63c06-ec7f-4afe-8fc2-f90d49004ce9@ti.com>
+References: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
-to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
-hypervisor support, such as hypercalls, clocks/timers, Confidential
-Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
-devices.
+On Fri, Sep 05, 2025 at 02:14:34PM -0700, Alok Tiwari wrote:
+> The probe function printed "pm_runtime_get_sync failed" when
+> j721e_pcie_ctrl_init() returned an error. This is misleading since
+> the failure was not from pm_runtime but from the controller init
+> routine. Update the error message to correctly reflect the source.
+> 
+> No functional changes.
+> 
+> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
+> Not sure if a Fixes tag is required here
+> ---
+>  drivers/pci/controller/cadence/pci-j721e.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 6c93f39d0288..5e445a7bda33 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -549,7 +549,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  
+>  	ret = j721e_pcie_ctrl_init(pcie);
+>  	if (ret < 0) {
+> -		dev_err_probe(dev, ret, "pm_runtime_get_sync failed\n");
+> +		dev_err_probe(dev, ret, "j721e_pcie_ctrl_init failed\n");
+>  		goto err_get_sync;
+>  	}
 
-Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
----
- drivers/Makefile    | 2 +-
- drivers/hv/Kconfig  | 2 +-
- drivers/hv/Makefile | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-diff --git a/drivers/Makefile b/drivers/Makefile
-index b5749cf67044..7ad5744db0b6 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -161,7 +161,7 @@ obj-$(CONFIG_SOUNDWIRE)		+= soundwire/
- 
- # Virtualization drivers
- obj-$(CONFIG_VIRT_DRIVERS)	+= virt/
--obj-$(subst m,y,$(CONFIG_HYPERV))	+= hv/
-+obj-$(CONFIG_HYPERV)		+= hv/
- 
- obj-$(CONFIG_PM_DEVFREQ)	+= devfreq/
- obj-$(CONFIG_EXTCON)		+= extcon/
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index fe29f8dca2b5..7e56c51c5080 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -3,7 +3,7 @@
- menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
--	tristate "Microsoft Hyper-V client drivers"
-+	bool "Microsoft Hyper-V core hypervisor support"
- 	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
- 		|| (ARM64 && !CPU_BIG_ENDIAN)
- 	select PARAVIRT
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 050517756a82..8b04a33e4dd8 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -18,7 +18,7 @@ mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
- mshv_vtl-y := mshv_vtl_main.o
- 
- # Code that must be built-in
--obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
-+obj-$(CONFIG_HYPERV) += hv_common.o
- obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
- ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
-     obj-y += mshv_common.o
--- 
-2.36.1.vfs.0.0
-
+Regards,
+Siddharth.
 
