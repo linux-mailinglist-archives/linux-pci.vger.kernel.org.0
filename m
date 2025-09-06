@@ -1,61 +1,62 @@
-Return-Path: <linux-pci+bounces-35590-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76F8EB46AD6
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 12:43:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F593B46ADC
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 12:44:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6600A1C28BE0
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 10:43:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9EF2A07FED
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Sep 2025 10:44:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7E592C21DB;
-	Sat,  6 Sep 2025 10:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5CFC2E764E;
+	Sat,  6 Sep 2025 10:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYAd+NuY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/45Kyz4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7365C24503B;
-	Sat,  6 Sep 2025 10:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A541172633;
+	Sat,  6 Sep 2025 10:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757155399; cv=none; b=BQQr1SUhc7N8Xl8EukgeZqo3UOMpTtbl8mA9ap8PYiUW/XgU4fR/CN2JptSJz1zMhe6DRzMFCK0KS79USJFHfb8QNHikw+sGzsKDZLBlygyFGv4HamY49elnAQCFkX8wHpdRPNbA5kTbb8rQ3t6c4aTcIkchQSj93DvF//Mn4w4=
+	t=1757155483; cv=none; b=HgdovHGUtLoYU9JrXlKf2+bYbe2zJugXH6c62dFZcCircfiEP8OOmjVkXNT32hr3DsesmLLQu1LI648mlZQAicZ/UjdiWoB7+KWucrCUPISpw7aZcdI9qCi99BumUEtF4Frp3kUSUA8HIi1kI2jdpRyemyctUAUzes4O/fk3jn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757155399; c=relaxed/simple;
-	bh=lcGbBXiQdcHFE0h2xnHGgTf50BsBXXJzX8i4gtf9dOE=;
+	s=arc-20240116; t=1757155483; c=relaxed/simple;
+	bh=+2ExEz/T7vKvEZAp6Ey+uMi0g6aR06klaREC3B5oz84=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yqxrc+FF8aay7HnmSZ0aMASV3TW/3wyacfVLhVys5nEaR5hpZMBkS9Bg8w4mkoxATOaVGOykkPIWUCcepcdXXH9XA7u+lQtTm5sZVhRlaPfRROhcO4uW3pWvwdrm0vnCUUhClLPlsvXLc1AugNlodm8dzfMTshJYL1V4rMmICAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYAd+NuY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E64BC4CEE7;
-	Sat,  6 Sep 2025 10:43:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fnf3AEDs8osajqTOIsVeMaVw8+Gqp+JEQELTOiBKdOY57tMFuRPifflNLacSvxgTAjHBtkTSjspOOQtPmTE+qSwLfuKOwHZEZMqqMO3Tc+OkJDZcTX9MhaEMgUXSnWAxLNkTABLPzMnfvbisATWZ7Mk/vZJI14L/XfaBRcVMzYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/45Kyz4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A285C4CEE7;
+	Sat,  6 Sep 2025 10:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757155399;
-	bh=lcGbBXiQdcHFE0h2xnHGgTf50BsBXXJzX8i4gtf9dOE=;
+	s=k20201202; t=1757155483;
+	bh=+2ExEz/T7vKvEZAp6Ey+uMi0g6aR06klaREC3B5oz84=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pYAd+NuYw4Az1xyQh/mJt2vibKxn/HQKpHrOyx7scWRQlZI/BLFL/puIbjQLkIysq
-	 I+cZw29B0KlstoqQt6/DhI2x/wdAtOtXpJs14yjEFUfb4fC/fpDd8/h73XrWxVnIua
-	 /3+I403DEaP4KJJrHqKKQxpZhFj6RIwzrR5lxucCJqkCju9+VDsyv+CrqK9Eu9lQBa
-	 hMrW15ihMp3Ol34dm1xWrNuy/GRmcofrJLKDh416ermufLAT1z2zXmc1tKeUlLVCL7
-	 s/RlWElbIk2JnTg1yDGp9VnSr6qQ0dxHcAHJXD55iwoGwTyzZT1wUXiHo+pUoXFlTq
-	 noVTdJIXW02Rw==
-Date: Sat, 6 Sep 2025 16:13:08 +0530
+	b=C/45Kyz4g0VvjEWeTHPGKiBMFY9G8cvqnEjjPxXRw42N0Y6UAI9+DkRj4sYhisdA+
+	 rDeNi4J/3sA34pXPTwxQrfhkizgoe9p6U/TgiCvJ+tF8IR5kSgvNYxbp/LiqJWmKpt
+	 9vh8d1SAxex148HnXAOaU0hAn2aQzoxqcBofP0Jkv3zX7rDgnjJICHjvQmwpr2/hbr
+	 1WWqT76bKPWCDTY2AyaPTw0JW2GFvVwBjd4j51vTgFXQJd0tKEYvWSKvlRXQbjOT1o
+	 lPb7RBRM/283iR+Sa+DEho7nOMWpQOeMeDU9Vzbm7r0ai03lPqW6LNjjMcQPjlOsW5
+	 L1ASG3l/YVgVA==
+Date: Sat, 6 Sep 2025 16:14:32 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Brian Norris <briannorris@chromium.org>, stable+noautosel@kernel.org
-Subject: Re: [PATCH v2 1/5] PCI: qcom: Wait for PCIE_RESET_CONFIG_WAIT_MS
- after PERST# deassert
-Message-ID: <7kmf767g4jelftwbbvikk6h3tclkih3t5zrkffeyfjuy2qe3uw@tok2rpim6f7d>
-References: <20250903-pci-pwrctrl-perst-v2-1-2d461ed0e061@oss.qualcomm.com>
- <20250905224430.GA1325412@bhelgaas>
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v8 5/5] PCI: qcom: Add support for ECAM feature
+Message-ID: <ynqmnwjiwiclulrvkym4ldttgllt7az3bkruxnfyo6wlbvlyck@qef6uzmz7qer>
+References: <gwaz7563akxeai4gar7etf4jp3c775fphkipn37alzjcjy6t66@2pa3ykv6kejp>
+ <20250905190840.GA1318549@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,163 +66,166 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250905224430.GA1325412@bhelgaas>
+In-Reply-To: <20250905190840.GA1318549@bhelgaas>
 
-On Fri, Sep 05, 2025 at 05:44:30PM GMT, Bjorn Helgaas wrote:
-> On Wed, Sep 03, 2025 at 12:43:23PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > PCIe spec r6.0, sec 6.6.1 mandates waiting for 100ms before deasserting
-> > PERST# if the downstream port does not support Link speeds greater than
-> > 5.0 GT/s.
-> 
-> I guess you mean we need to wait 100ms *after* deasserting PERST#?
-> 
-
-Right, that's a typo.
-
-> I.e., this wait before sending config requests to a downstream device:
-> 
->   ◦ With a Downstream Port that does not support Link speeds greater
->     than 5.0 GT/s, software must wait a minimum of 100 ms following
->     exit from a Conventional Reset before sending a Configuration
->     Request to the device immediately below that Port.
-> 
-> > But in practice, this delay seem to be required irrespective of
-> > the supported link speed as it gives the endpoints enough time to
-> > initialize.
-> 
-> Saying "but in practice ... seems to be required" suggests that the
-> spec requirement isn't actually enough.  But the spec does say the
-> 100ms delay before config requests is required for all link speeds.
-> The difference is when we start that timer: for 5 GT/s or slower it
-> starts at exit from Conventional Reset; for faster than 5 GT/s it
-> starts when link training completes.
-> 
-> > Hence, add the delay by reusing the PCIE_RESET_CONFIG_WAIT_MS definition if
-> > the linkup_irq is not supported. If the linkup_irq is supported, the driver
-> > already waits for 100ms in the IRQ handler post link up.
-> 
-> I didn't look into this, but I wondered whether it's possible to miss
-> the interrupt, especially the first time during probe.
-> 
-
-No, it is not. Since, the controller reinitializes itself during probe() and it
-starts LTSSM. So once link up happens, this IRQ will be triggered.
-
-> > Also, remove the redundant comment for PCIE_T_PVPERL_MS. Finally, the
-> > PERST_DELAY_US sleep can be moved to PERST# assert where it should be.
-> 
-> Unless this PERST_DELAY_US move is logically part of the
-> PCIE_RESET_CONFIG_WAIT_MS change, putting it in a separate patch would
-> make *this* patch easier to read.
-> 
-> > Cc: stable+noautosel@kernel.org # non-trivial dependency
-> > Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
+On Fri, Sep 05, 2025 at 02:08:40PM GMT, Bjorn Helgaas wrote:
+> On Fri, Sep 05, 2025 at 10:08:54PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Sep 05, 2025 at 10:47:42AM GMT, Krishna Chaitanya Chundru wrote:
+> > > On 9/4/2025 1:42 AM, Bjorn Helgaas wrote:
+> > > > On Thu, Aug 28, 2025 at 01:04:26PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
+> > > > > gives us the offset from which ELBI starts. So override ELBI with the
+> > > > > offset from PARF_SLV_DBI_ELBI and cfg win to map these regions.
+> > > > > 
+> > > > > On root bus, we have only the root port. Any access other than that
+> > > > > should not go out of the link and should return all F's. Since the iATU
+> > > > > is configured for the buses which starts after root bus, block the
+> > > > > transactions starting from function 1 of the root bus to the end of
+> > > > > the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
+> > > > > outside the link through ECAM blocker through PARF registers.
+> > > > > 
+> > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > > > ---
+> > > > >   drivers/pci/controller/dwc/pcie-qcom.c | 70 ++++++++++++++++++++++++++++++++++
+> > > > >   1 file changed, 70 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > index 5092752de23866ef95036bb3f8fae9bb06e8ea1e..8f3c86c77e2604fd7826083f63b66b4cb62a341d 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > @@ -55,6 +55,7 @@
+> > > > >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> > > > >   #define PARF_Q2A_FLUSH				0x1ac
+> > > > >   #define PARF_LTSSM				0x1b0
+> > > > > +#define PARF_SLV_DBI_ELBI			0x1b4
+> > > > >   #define PARF_INT_ALL_STATUS			0x224
+> > > > >   #define PARF_INT_ALL_CLEAR			0x228
+> > > > >   #define PARF_INT_ALL_MASK			0x22c
+> > > > > @@ -64,6 +65,16 @@
+> > > > >   #define PARF_DBI_BASE_ADDR_V2_HI		0x354
+> > > > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
+> > > > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
+> > > > > +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
+> > > > > +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
+> > > > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
+> > > > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
+> > > > > +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
+> > > > > +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
+> > > > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
+> > > > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
+> > > > > +#define PARF_ECAM_BASE				0x380
+> > > > > +#define PARF_ECAM_BASE_HI			0x384
+> > > > >   #define PARF_NO_SNOOP_OVERRIDE			0x3d4
+> > > > >   #define PARF_ATU_BASE_ADDR			0x634
+> > > > >   #define PARF_ATU_BASE_ADDR_HI			0x638
+> > > > > @@ -87,6 +98,7 @@
+> > > > >   /* PARF_SYS_CTRL register fields */
+> > > > >   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
+> > > > > +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
+> > > > >   #define MST_WAKEUP_EN				BIT(13)
+> > > > >   #define SLV_WAKEUP_EN				BIT(12)
+> > > > >   #define MSTR_ACLK_CGC_DIS			BIT(10)
+> > > > > @@ -134,6 +146,9 @@
+> > > > >   /* PARF_LTSSM register fields */
+> > > > >   #define LTSSM_EN				BIT(8)
+> > > > > +/* PARF_SLV_DBI_ELBI */
+> > > > > +#define SLV_DBI_ELBI_ADDR_BASE			GENMASK(11, 0)
+> > > > > +
+> > > > >   /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+> > > > >   #define PARF_INT_ALL_LINK_UP			BIT(13)
+> > > > >   #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
+> > > > > @@ -317,6 +332,48 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+> > > > >   	qcom_perst_assert(pcie, false);
+> > > > >   }
+> > > > > +static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
+> > > > > +{
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > > +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > > > +	u64 addr, addr_end;
+> > > > > +	u32 val;
+> > > > > +
+> > > > > +	/* Set the ECAM base */
+> > > > > +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
+> > > > > +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * The only device on root bus is the Root Port. Any access to the PCIe
+> > > > > +	 * region will go outside the PCIe link. As part of enumeration the PCI
+> > > > > +	 * sw can try to read to vendor ID & device ID with different device
+> > > > > +	 * number and function number under root bus. As any access other than
+> > > > > +	 * root bus, device 0, function 0, should not go out of the link and
+> > > > > +	 * should return all F's. Since the iATU is configured for the buses
+> > > > > +	 * which starts after root bus, block the transactions starting from
+> > > > > +	 * function 1 of the root bus to the end of the root bus (i.e from
+> > > > > +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
+> > > > > +	 */
+> > > > > +	addr = pci->dbi_phys_addr + SZ_4K;
+> > > > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
+> > > > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
+> > > > > +
+> > > > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
+> > > > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
+> > > > > +
+> > > > > +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
+> > > > > +
+> > > > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
+> > > > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
+> > > > > +
+> > > > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
+> > > > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
+> > > > > +
+> > > > > +	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
+> > > > > +	val |= PCIE_ECAM_BLOCKER_EN;
+> > > > > +	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
+> > > > > +}
+> > > > > +
+> > > > >   static int qcom_pcie_start_link(struct dw_pcie *pci)
+> > > > >   {
+> > > > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > > > @@ -326,6 +383,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+> > > > >   		qcom_pcie_common_set_16gt_lane_margining(pci);
+> > > > >   	}
+> > > > > +	if (pci->pp.ecam_enabled)
+> > > > > +		qcom_pci_config_ecam(&pci->pp);
+> > > > > +
+> > > > >   	/* Enable Link Training state machine */
+> > > > >   	if (pcie->cfg->ops->ltssm_enable)
+> > > > >   		pcie->cfg->ops->ltssm_enable(pcie);
+> > > > > @@ -1314,6 +1374,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> > > > >   {
+> > > > >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > > > +	u16 offset;
+> > > > >   	int ret;
+> > > > >   	qcom_ep_reset_assert(pcie);
+> > > > > @@ -1322,6 +1383,15 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> > > > >   	if (ret)
+> > > > >   		return ret;
+> > > > > +	if (pp->ecam_enabled) {
+> > > > > +		/*
+> > > > > +		 * Override ELBI when ECAM is enabled, as when ECAM
+> > > > > +		 * is enabled ELBI moves along with the dbi config space.
+> > > > > +		 */
+> > > > > +		offset = FIELD_GET(SLV_DBI_ELBI_ADDR_BASE, readl(pcie->parf + PARF_SLV_DBI_ELBI));
+> > > > > +		pci->elbi_base = pci->dbi_base + offset;
+> > > > 
+> > > > This looks like there might be a bisection hole between this
+> > > > patch and the previous patch that enables ECAM in the DWC core?
+> > > > Obviously I would want to avoid a bisection hole.
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..bcd080315d70e64eafdefd852740fe07df3dbe75 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -302,20 +302,22 @@ static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
-> >  	else
-> >  		list_for_each_entry(port, &pcie->ports, list)
-> >  			gpiod_set_value_cansleep(port->reset, val);
-> > -
-> > -	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-> >  }
-> >  
-> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >  {
-> >  	qcom_perst_assert(pcie, true);
-> > +	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-> >  }
-> >  
-> >  static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
-> >  {
-> > -	/* Ensure that PERST has been asserted for at least 100 ms */
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > +
-> >  	msleep(PCIE_T_PVPERL_MS);
-> >  	qcom_perst_assert(pcie, false);
-> > +	if (!pp->use_linkup_irq)
-> > +		msleep(PCIE_RESET_CONFIG_WAIT_MS);
+> > Theoretically there is a hole, but practically there isn't. ELBI
+> > register is only used by legacy Qcom SoCs and they do not support
+> > ECAM. So they will continue to use the valid ELBI register region
+> > from DT.
 > 
-> I'm a little confused about why you test pp->use_linkup_irq here
-> instead of testing the max supported link speed.  And I'm not positive
-> that this is the right place, at least at this point in the series.
+> That's a real pain to figure out from code analysis, so I would prefer
+> to squash them to avoid even the appearance of a bisection hole.
 > 
 
-Because, pci->max_link_speed used to only cache the value of the
-'max-link-speed' DT property. But I totally forgot that I changed that behavior
-to cache the max supported link speed of the Root Port with commit:
-19a69cbd9d43 ("PCI: dwc: Always cache the maximum link speed value in
-dw_pcie::max_link_speed")
+I fixed it by splitting the ECAM preparation and enablement into separate
+patches.
 
-So yes, I should've been using 'pci->max_link_speed' here.
-
-> At this point, qcom_ep_reset_deassert() is only used by
-> qcom_pcie_host_init(), so the flow is like this:
-> 
->   qcom_pcie_probe
->     irq = platform_get_irq_byname_optional(pdev, "global")
->     if (irq > 0)
->       pp->use_linkup_irq = true
->     dw_pcie_host_init
->       pp->ops->init
->         qcom_pcie_host_init                         # .init
->           qcom_ep_reset_deassert                    # <--
->  +          if (!pp->use_linkup_irq)
->  +            msleep(PCIE_RESET_CONFIG_WAIT_MS)     # 100ms
->       if (!dw_pcie_link_up(pci))
->         dw_pcie_start_link
->       if (!pp->use_linkup_irq)
->         dw_pcie_wait_for_link
->           for (retries = 0; retries < PCIE_LINK_WAIT_MAX_RETRIES; retries++)
->             if (dw_pcie_link_up(pci))
->               break
->             msleep(PCIE_LINK_WAIT_SLEEP_MS)         # 90ms
->           if (pci->max_link_speed > 2)              # > 5.0 GT/s
->             msleep(PCIE_RESET_CONFIG_WAIT_MS)       # 100ms
-> 
-> For slow links (<= 5 GT/s), it's possible that the link comes up
-> before we even call dw_pcie_link_up() the first time, which would mean
-> we really don't wait at all.
-> 
-> My guess is that most links wouldn't come up that fast but *would*
-> come up within 90ms.  Even in that case, we wouldn't quite meet the
-> spec 100ms requirement.
-> 
-> I wonder if dw_pcie_wait_for_link() should look more like this:
-> 
->   dw_pcie_wait_for_link
->     if (pci->max_link_speed <= 2)                   # <= 5.0 GT/s
->       msleep(PCIE_RESET_CONFIG_WAIT_MS)         dw_pcie_wait_for_link    # 100ms
-> 
->     for (retries = 0; retries < PCIE_LINK_WAIT_MAX_RETRIES; retries++)
->       if (dw_pcie_link_up(pci))
->         break;
->       msleep(...)
-> 
->     if (pci->max_link_speed > 2)                    # > 5.0 GT/s
->       msleep(PCIE_RESET_CONFIG_WAIT_MS)             # 100ms
-> 
-> Then we'd definitely wait the required 100ms even for the slow links.
-> The retry loop could start with a much shorter interval and back off.
-> 
-
-Your concerns are valid. I'll submit a separate series along with *this* patch
-to fix these. I don't think clubbing these with this series is a good idea.
-
-> I wish the max_link_speed checks used some kind of #define to make
-> them readable.
-> 
-
-It is mostly because it used to hold the DT property value which starts from 1.
-We could still convert it to 'enum pci_bus_speed', but that is for a separate
-cleanup.
+Will submit the patches asap.
 
 - Mani
 
