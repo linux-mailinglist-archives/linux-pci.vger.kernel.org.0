@@ -1,135 +1,137 @@
-Return-Path: <linux-pci+bounces-35665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50AEB48DC4
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 14:39:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCCA5B48DCB
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 14:40:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C68571C20A9A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 12:40:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21DA52033E4
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 12:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7BC52FFDFA;
-	Mon,  8 Sep 2025 12:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670362FF155;
+	Mon,  8 Sep 2025 12:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+1Jw5QJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ufv6Hcx6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCCA2FFDE6;
-	Mon,  8 Sep 2025 12:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315F42FE598;
+	Mon,  8 Sep 2025 12:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757335113; cv=none; b=n7G2JuLBkPUYpALC/1AvzbXzJLHsuWOvVlfuKD2+fA1gsZVBql4Wh3Md3tdMtnVCaSusXpruSXuNDOhcBAt7RA0xPpSK9Fi6/d0XHL5Rbf/QHlmsRKMLW7cxe7OaqzQC3/lMafxa/5YOrZgWOrNsrHSxwKG9I7oiWmbOj1bYvxY=
+	t=1757335150; cv=none; b=EeIMP0RHw7FjrwCyR1JjzJNSR2VLM5XSJuaYm1cNT+Nz2ZBGpuWix0p7GYY5iu8nUL7JE1xcEXCoOR3qn0oekG9/FfBBJ0Cy+DW8wOQXQNs4y0DLoA9yqobQp2crb4BEtXci9tCThmYFkyELZ86y0lk393RJpbb8IZYb14XsOnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757335113; c=relaxed/simple;
-	bh=u/aSpq/tYI23caay5KQ+gDiq/maVvqHIQQw80mCFn3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tx/hq3BUAnP+EKSss/oCOhfU7Xwb4FzCuRAHGU9ICgpu9DWYWf1feS/xU+lBvmUnxnCZrdbHs1kG+N8BtY7NKavqC+JBdJ2y7WnOgv2kBwuGuJ3WBGSGY9LGMP5UOVRWyKIbgWhalzOse36d7vjlc1MofOisTKxh9cENeU8GEZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+1Jw5QJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BFFC4CEF1;
-	Mon,  8 Sep 2025 12:38:28 +0000 (UTC)
+	s=arc-20240116; t=1757335150; c=relaxed/simple;
+	bh=Kmgj7JQ2MfTOSMke4wzOHnSg8Sksyl64nAuAQ+DhI4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=txoUPBc6zRjvFy/iM6Eum2PuclmrTR+x0oYJjk4+drzC6p7wmPIdyRwrT/GNSXLpwi22Lcp45nZqGL7cuMLWNZt921a6y6vwT/tUzNmeobHVWAFut0iuKYPKqdBZVQxHxeDKotN+skwaJmzPJrmqBYaH94e6LUHFzx21U6yvbK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ufv6Hcx6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D710C4CEF1;
+	Mon,  8 Sep 2025 12:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757335112;
-	bh=u/aSpq/tYI23caay5KQ+gDiq/maVvqHIQQw80mCFn3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p+1Jw5QJyiyJodrRlHhDg3F8S0oQOxQpM6sq+lJgHPJRsFH/9qXp37SfULYDNstZQ
-	 YEjX6PgRPC/uWE5fOcUMF8gCKGHf9lnvsBHrfHs1VnIGT6pYwy7bOwb0OaqdWU/ZL2
-	 n9yAvPUdlzF8zCl+Rc/LhrzAiOnTVzw09lMhDahFsQVIaD6g0mJS3gYgXf+lRld2Oe
-	 ynGKPo2qqdxvQLuLpjHWMtowk43XtkB1aHtXWn5NzkYTYtL0QEpJmFFLhjO2GKp33m
-	 OToNakbvsd1SVG2IFzxlN+xrC+VJYxsvApsELK2aZW8LDgZnVQ8HQuuo5eYXtPH9TX
-	 ahdbbFP4y4Nxw==
-Date: Mon, 8 Sep 2025 18:08:24 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>
-Cc: Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, yuji2.ishikawa@toshiba.co.jp
-Subject: Re: [PATCH v3 2/2] PCI: dwc: visconti: Remove cpu_addr_fix() after
- DTS fix ranges
-Message-ID: <etltxzybqmhkst3324knpofx46lyp2vju43wvfu47oovfbmo5r@4v4nniat4sx5>
-References: <1757298848-15154-1-git-send-email-nobuhiro.iwamatsu.x90@mail.toshiba>
- <1757298848-15154-3-git-send-email-nobuhiro.iwamatsu.x90@mail.toshiba>
+	s=k20201202; t=1757335150;
+	bh=Kmgj7JQ2MfTOSMke4wzOHnSg8Sksyl64nAuAQ+DhI4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ufv6Hcx6jWD5AxW92cK+ljuNUfSXKHnQZv3kXveaEsZj/qc477qtV8lnGeC+yl2LV
+	 RS+Xs28IVJiEsEENic3DIoEPQdZSHhAU4cy+TktV0KVy4p51YIFXAv1grFur5A4cuH
+	 6bQZcKwbFMBzc6sdl3QoFscqqxGb0GSshxGjTLYgZ5ZSGs+wSs4Anmp+mAqfz/3G43
+	 d2i25P5YPiPUgIUQnhTbmOJCWuiJLaNYNMsOWex5ofVrrPe+JZ78aYrYUP0jSNG4sY
+	 WuOYdOOajtBz008C++gHVHO1nJV3AOOUYzXAxps+DjP5BGGjNMGuX5Ral+AlLsdZhH
+	 w1T2hkMKtFUDQ==
+Message-ID: <af78dfb4-de61-4b8c-a131-cf39a4c3c4b0@kernel.org>
+Date: Mon, 8 Sep 2025 07:39:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 RESEND 00/11] Improvements to S5 power consumption
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+ AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+ Eric Naim <dnaim@cachyos.org>
+References: <20250906143642.2590808-1-superm1@kernel.org>
+ <2025090852-coma-tycoon-9f37@gregkh>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <2025090852-coma-tycoon-9f37@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1757298848-15154-3-git-send-email-nobuhiro.iwamatsu.x90@mail.toshiba>
 
-On Mon, Sep 08, 2025 at 11:34:08AM GMT, Nobuhiro Iwamatsu wrote:
-> From: Frank Li <Frank.Li@nxp.com>
-> 
-> Remove cpu_addr_fix() since it is no longer needed. The PCIe ranges
-> property has been corrected in the DTS, and the DesignWare common code now
-> handles address translation properly without requiring this workaround.
-> 
 
-What about the old DTs? Wouldn't this driver fail to work if you use it with old
-DTs as cpu_addr_fixup() no longer exists?
 
-- Mani
+On 9/8/25 4:19 AM, Greg Kroah-Hartman wrote:
+> On Sat, Sep 06, 2025 at 09:36:31AM -0500, Mario Limonciello (AMD) wrote:
+>> A variety of issues both in function and in power consumption have been
+>> raised as a result of devices not being put into a low power state when
+>> the system is powered off.
+>>
+>> There have been some localized changes[1] to PCI core to help these issues,
+>> but they have had various downsides.
+>>
+>> This series instead tries to use the S4 flow when the system is being
+>> powered off.  This lines up the behavior with what other operating systems
+>> do as well.  If for some reason that fails or is not supported, run their
+>> shutdown() callbacks.
+>>
+>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+>> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+>> Cc: Eric Naim <dnaim@cachyos.org>
+>> ---
+>> v6 RESEND:
+>>   * Resent because Greg said he was ignoring it and would like the whole
+>>     series to be able to review.
+> 
+> Messy, but wow, I'll trust you all that this actually works properly.
 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>
-> 
-> ---
-> v3:
->   Add pci->use_parent_dt_ranges fixes.
->   Update Signed-off-by address, because my company email address haschanged.
-> 
-> v2:
->   No Update.
-> ---
->  drivers/pci/controller/dwc/pcie-visconti.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-> index cdeac6177143c..d8765e57147af 100644
-> --- a/drivers/pci/controller/dwc/pcie-visconti.c
-> +++ b/drivers/pci/controller/dwc/pcie-visconti.c
-> @@ -171,20 +171,7 @@ static void visconti_pcie_stop_link(struct dw_pcie *pci)
->  	visconti_mpu_writel(pcie, val | MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
->  }
->  
-> -/*
-> - * In this SoC specification, the CPU bus outputs the offset value from
-> - * 0x40000000 to the PCIe bus, so 0x40000000 is subtracted from the CPU
-> - * bus address. This 0x40000000 is also based on io_base from DT.
-> - */
-> -static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
-> -{
-> -	struct dw_pcie_rp *pp = &pci->pp;
-> -
-> -	return cpu_addr & ~pp->io_base;
-> -}
-> -
->  static const struct dw_pcie_ops dw_pcie_ops = {
-> -	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
->  	.link_up = visconti_pcie_link_up,
->  	.start_link = visconti_pcie_start_link,
->  	.stop_link = visconti_pcie_stop_link,
-> @@ -310,6 +297,8 @@ static int visconti_pcie_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, pcie);
->  
-> +	pci->use_parent_dt_ranges = true;
-> +
->  	return visconti_add_pcie_port(pcie, pdev);
->  }
->  
-> -- 
-> 2.51.0
-> 
+Yes; I double checked from a UART log all devices (now) went to correct 
+state and from power measurement hardware the respective drop in power.
+
+I will note I have a sampling bias of hardware being x86 AMD hardware.
+Some of the testers of the series also tested Intel hardware which had 
+similar power consumption problem, and I know there were improvements 
+there too.
+
+We probably will have to wait for linux-next for non-x86 hardware coverage.
+> No objections from me, but I don't want my ack on this as I don't know
+> how to maintain it :)
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+I mean - if all goes well even a failed S4 flow should fall back to old 
+path shutdown.  I *did contrive some failures* in an earlier version of 
+the series and confirmed in the UART log it emitted the printk that it 
+was falling back to shutdown.
+
+I had two ideas that maybe could help for regression risk though:
+1) I could add a shutdown= kernel parameter.  I'm not sure what words to 
+use for the two paths but the idea would be if someone had a shutdown 
+failure they could isolate if it's due to this by adding the parameter.
+
+2) I could make a Documentation/ file explaining some examples how to 
+get the shutdown log saved to pstore in case they don't have a UART 
+available.
+
 
