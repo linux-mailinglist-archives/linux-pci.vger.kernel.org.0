@@ -1,252 +1,131 @@
-Return-Path: <linux-pci+bounces-35703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E17CEB49C6F
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:53:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 863C8B49C74
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:55:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A82281BC28D1
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:53:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 408F81652B1
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:55:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBDA627E04C;
-	Mon,  8 Sep 2025 21:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A093A2E2DD8;
+	Mon,  8 Sep 2025 21:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLtH3k9F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiDbdfAu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31AA3A8F7;
-	Mon,  8 Sep 2025 21:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A572367B3;
+	Mon,  8 Sep 2025 21:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757368409; cv=none; b=CmJj4s5eOiFy03bbI3+vltaxWNTjfQzvMe8Rlb8XSMGnlQ0TRgLuMvUS6MN/sZ2/onPb6q1NwRN8P2JqlQjYQpHOegk3cWPa8cobkfugUIUxxVoB6/lly5UqAo6rvpwXYFvkpDJGl89XUGdOfUefwIW6kvKSp28JsbGeG2ohKrc=
+	t=1757368512; cv=none; b=QGcHzDRYu1GF6ftE8iQRV1l253keijRuioJ8nrdV+mq3VrWhet4PglV1oGXsVjm/kjmvoEiiFrEN8AHOqHxo/QFMD8pAsla4woxHSy3GehfRRLfK/bt7ow0LyVdY/Hy++uf04epXYawSWTm+oUBOKXlzHXzeHHjzWDeB1lDEWao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757368409; c=relaxed/simple;
-	bh=o5ygpm090BI0L0bmEOEjsvbPZXjx9ly4jWLa7lG3I/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cSegf+caKJm30EEQyxwO+JqtfE8Ll2iD7yG62zH+QOVYY0MwxWZByPxTDbF9EBMNT5vEaMlnRqShGqrXcuRsL6n55wSiVN3M7lWq+nTQZKW7Dw60Ssyoevpj/arsclc1AsgYQC3diRdrQp8hnnbTr7eGvmc0motf4kTjGiAqqUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLtH3k9F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C0BC4CEF7;
-	Mon,  8 Sep 2025 21:53:28 +0000 (UTC)
+	s=arc-20240116; t=1757368512; c=relaxed/simple;
+	bh=+nYJPbuKlpnqlu3CLLJjdFbOtA1lzkZavy4yOLM+sGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HnhiZa9DThU19QkwL6ioGnx+Tn6a6MWXc21ofa6AOhU61+2G3Bl8L+bhKrvOhbVNWZXX1AODUy0gZOycEeM0HvAWhZphtzNFC45DL/gYUcLkSmy4qvM/faIn2JT0yd9wfictuePGZDXgk4E4L/ipeQEG1SZP0p+WW41scw5zW+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiDbdfAu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B7AC4CEF1;
+	Mon,  8 Sep 2025 21:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757368409;
-	bh=o5ygpm090BI0L0bmEOEjsvbPZXjx9ly4jWLa7lG3I/8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OLtH3k9FpjXTernT8YEQAO2pw88FzretCoAzFbzL+MtL9Yc0YZJzK1xAAAmN1liGp
-	 5nryJnmF2yMWgy1ZWJSNNdaMBWVgNoNFuxGzUfHDcSh3GXLZsx9TeAAPhvsOq7g7wQ
-	 DETuh4AL+7HbfcYRpcnX+ANwOkrh1yPrpqfsbjPPDRw/QdVzL3fCTeO66/35mj9Ebs
-	 /NHsMGbquDTkhhtR9Ij81iFl3jQgiMJg6tNFJ7XXUdipMqXYwCaD5J9YT+xwBdnjWk
-	 Ti1M+OBjLzuFo/lQlXSyVF5B1Q2KLIqWKtWzVicesd6VhCVZjAUK48EePyKG7BJxEl
-	 YDOtOAnqjvHGA==
-Message-ID: <c7e3cbba-5ad2-44bb-906b-8147c0f74df1@kernel.org>
-Date: Mon, 8 Sep 2025 16:53:26 -0500
+	s=k20201202; t=1757368511;
+	bh=+nYJPbuKlpnqlu3CLLJjdFbOtA1lzkZavy4yOLM+sGc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kiDbdfAuo9J++rxAYt2nbuOgNET0a6aGGKZyM1O70K6sKUOOBtjNGuP5/jiU0a2O7
+	 kgDOBgNSMfStFqgdYWCblaRMhdw7xF1V8/WBdswaXIMObwyEyCKJLFMb13dwZc07rt
+	 IjUSn7k/xbQQ3go5vh6EUy5WulEkff8YPQDzVBRI8kU5AuNWVfVPKUSSmrRtP1AYuR
+	 vx04Rru42xQY6+u2WSM0ZRr3xwOBqnxcctWQgasngIzjADGtKq7Iq4oQtMXlawR9kx
+	 yE3u9L6fsekFx4PQ4yK6olQo65pW1Ed4I3YxMTsa2Xwpa2lAJ+vPB3bRE/Tn/bCc2e
+	 nz5PYilemvA6Q==
+Date: Mon, 8 Sep 2025 16:55:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>
+Cc: Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, bhelgaas@google.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	yuji2.ishikawa@toshiba.co.jp
+Subject: Re: [PATCH v3 2/2] PCI: dwc: visconti: Remove cpu_addr_fix() after
+ DTS fix ranges
+Message-ID: <20250908215510.GA1467223@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] PCI/PM: Skip resuming to D0 if disconnected
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
- Lukas Wunner <lukas@wunner.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20250908214822.GA1466431@bhelgaas>
-Content-Language: en-US
-From: "Mario Limonciello (kernel.org)" <superm1@kernel.org>
-In-Reply-To: <20250908214822.GA1466431@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1757298848-15154-3-git-send-email-nobuhiro.iwamatsu.x90@mail.toshiba>
 
+In subject, s/PCI: dwc: visconti:/PCI: visconti:/ to match previous
+history.
 
-
-On 9/8/2025 4:48 PM, Bjorn Helgaas wrote:
-> On Mon, Sep 08, 2025 at 04:29:32PM -0500, Mario Limonciello (kernel.org) wrote:
->> On 9/8/2025 4:03 PM, Bjorn Helgaas wrote:
->>> On Mon, Aug 11, 2025 at 11:35:10AM -0500, Mario Limonciello (AMD) wrote:
->>>> When a USB4 dock is unplugged the PCIe bridge it's connected to will
->>>> issue a "Link Down" and "Card not detected event". The PCI core will
->>>> treat this as a surprise hotplug event and unconfigure all downstream
->>>> devices. This involves setting the device error state to
->>>> `pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
->>>
->>> There's nothing special about USB4 here, right?  I guess the same
->>> happens with any surprise hotplug remove?
->>
->> Correct.
->>
->>> pciehp_unconfigure_device() does the pci_dev_set_io_state(dev,
->>> pci_channel_io_perm_failure) part on everything that got removed, so
->>> that part is pretty straightforward.
->>>
->>>> It doesn't make sense to runtime resume disconnected devices to D0 and
->>>> report the (expected) error, so bail early.
->>>
->>> Can you include a hint about where the runtime resume happens?  It
->>> seems unintuitive to power up removed devices.
->>
->> Here's the whole trace.  Basically as part of the base driver release the
->> device is runtime resumed.
->>
->> Do you want me to respin and try to incorporate a sentence or two into the
->> commit text?
+On Mon, Sep 08, 2025 at 11:34:08AM +0900, Nobuhiro Iwamatsu wrote:
+> From: Frank Li <Frank.Li@nxp.com>
 > 
-> Yes, please.  
+> Remove cpu_addr_fix() since it is no longer needed. The PCIe ranges
+> property has been corrected in the DTS, and the DesignWare common code now
+> handles address translation properly without requiring this workaround.
 
-OK, will do.
-> I guess maybe we are basically here inside the
-> pm_runtime_get_sync() here?
-> 
->    pciehp_unconfigure_device
->      pci_stop_and_remove_bus_device
->        device_release_driver
->          device_remove
->            pci_device_remove
->              pm_runtime_get_sync    <--
->                drv->remove
-> 
-> I guess it's the pm_runtime_get_sync() that eventually lands us in
-> pci_power_up()?
-> 
-> And I guess we can't really check whether the device is already gone
-> in pci_device_remove() because we still want to run the driver
-> .remove() method and other things to clean up.
-> 
-> I suppose everything we call just needs to be aware that its device
-> may be already gone?
+As Mani pointed out, the driver has to continue working correctly with
+any old DTs in the field.
 
-Yes, exactly.
-
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>
 > 
->> [   37.237841] dump_stack_lvl (lib/dump_stack.c:94 lib/dump_stack.c:120)
->> [   37.237858] pci_power_up.cold+0x86/0xc1
->> [   37.237867] ? __pfx_pci_power_up (drivers/pci/pci.c:1360)
->> [   37.237876] ? prb_commit (kernel/printk/printk_ringbuffer.c:1748)
->> [   37.237883] ? __pfx_prb_read_valid
->> (kernel/printk/printk_ringbuffer.c:2184)
->> [   37.237889] pci_pm_power_up_and_verify_state (drivers/pci/pci.c:1146
->> drivers/pci/pci.c:1201 drivers/pci/pci.c:3206)
->> [   37.237897] ? __pfx_pci_pm_power_up_and_verify_state
->> (drivers/pci/pci.c:3204)
->> [   37.237903] ? __pfx_rpm_resume (drivers/base/power/runtime.c:785)
->> [   37.237911] pci_pm_runtime_resume (drivers/pci/pci-driver.c:561
->> drivers/pci/pci-driver.c:1349)
->> [   37.237918] __rpm_callback (drivers/base/power/runtime.c:406)
->> [   37.237923] ? __pfx__raw_spin_lock (kernel/locking/spinlock.c:153)
->> [   37.237932] rpm_callback (drivers/base/power/runtime.c:444)
->> [   37.237936] ? __pfx_pci_pm_runtime_resume (drivers/pci/pci-driver.c:1338)
->> [   37.237941] rpm_resume (drivers/base/power/runtime.c:943)
->> [   37.237946] ? __pfx_rpm_resume (drivers/base/power/runtime.c:785)
->> [   37.237951] ? _raw_spin_lock_irqsave (./include/linux/instrumented.h:96
->> ./include/linux/atomic/atomic-instrumented.h:1301
->> ./include/asm-generic/qspinlock.h:111 ./include/linux/spinlock.h:187
->> ./include/linux/spinlock_api_smp.h:111 kernel/locking/spinlock.c:162)
->> [   37.237954] ? __pfx__raw_spin_lock_irqsave
->> (kernel/locking/spinlock.c:161)
->> [   37.237958] ? mutex_lock (./include/linux/instrumented.h:96
->> ./include/linux/atomic/atomic-instrumented.h:4457 kernel/locking/mutex.c:157
->> kernel/locking/mutex.c:273)
->> [   37.237965] __pm_runtime_resume (drivers/base/power/runtime.c:1192)
->> [   37.237971] device_release_driver_internal (drivers/base/dd.c:1111
->> (discriminator 1) drivers/base/dd.c:1252 (discriminator 1)
->> drivers/base/dd.c:1297 (discriminator 1))
->> [   37.237978] ? pci_pme_active (drivers/pci/pci.c:2521)
->> [   37.237984] pci_stop_bus_device (drivers/pci/remove.c:44
->> drivers/pci/remove.c:107)
->> [   37.237992] pci_stop_bus_device (drivers/pci/remove.c:102 (discriminator
->> 1))
->> [   37.237997] pci_stop_and_remove_bus_device (drivers/pci/remove.c:142)
->> [   37.238003] pciehp_unconfigure_device
->> (drivers/pci/hotplug/pciehp_pci.c:124)
->> [   37.238011] ? __pfx_pciehp_unconfigure_device
->> (drivers/pci/hotplug/pciehp_pci.c:96)
->> [   37.238017] ? _dev_info (drivers/base/core.c:4983)
->> [   37.238025] pciehp_disable_slot (drivers/pci/hotplug/pciehp_ctrl.c:115
->> drivers/pci/hotplug/pciehp_ctrl.c:355 drivers/pci/hotplug/pciehp_ctrl.c:364)
->> [   37.238030] ? __pfx_pciehp_disable_slot
->> (drivers/pci/hotplug/pciehp_ctrl.c:360)
->> [   37.238035] ? __pfx_mutex_unlock (kernel/locking/mutex.c:531)
->> [   37.238039] ? mutex_lock_interruptible (kernel/locking/mutex.c:992)
->> [   37.238047] pciehp_handle_presence_or_link_change
->> (drivers/pci/hotplug/pciehp_ctrl.c:253)
->> [   37.238054] ? down_read (kernel/locking/rwsem.c:174
->> kernel/locking/rwsem.c:182 kernel/locking/rwsem.c:257
->> kernel/locking/rwsem.c:249 kernel/locking/rwsem.c:1260
->> kernel/locking/rwsem.c:1274 kernel/locking/rwsem.c:1539)
->> [   37.238061] ? __pfx_pciehp_handle_presence_or_link_change
->> (drivers/pci/hotplug/pciehp_ctrl.c:232)
->> [   37.238068] ? __pfx_down_read (kernel/locking/rwsem.c:1535)
->> [   37.238074] ? __pfx_pciehp_ist (drivers/pci/hotplug/pciehp_hpc.c:728)
->> [   37.238079] pciehp_ist (drivers/pci/hotplug/pciehp_hpc.c:788)
->> [   37.238085] ? __pfx_pciehp_ist (drivers/pci/hotplug/pciehp_hpc.c:728)
->> [   37.238091] irq_thread_fn (kernel/irq/manage.c:1131)
->> [   37.238098] irq_thread (./arch/x86/include/asm/bitops.h:206
->> ./arch/x86/include/asm/bitops.h:238
->> ./include/asm-generic/bitops/instrumented-non-atomic.h:142
->> kernel/irq/manage.c:1244)
->> [   37.238104] ? __pfx_irq_thread_fn (kernel/irq/manage.c:1130)
->> [   37.238110] ? __pfx_irq_thread (kernel/irq/manage.c:1233)
->> [   37.238115] ? __pfx_irq_thread_dtor (kernel/irq/manage.c:1167)
->> [   37.238123] ? __kthread_parkme (./arch/x86/include/asm/bitops.h:206
->> ./arch/x86/include/asm/bitops.h:238
->> ./include/asm-generic/bitops/instrumented-non-atomic.h:142
->> kernel/kthread.c:290)
->> [   37.238130] ? __pfx_irq_thread (kernel/irq/manage.c:1233)
->> [   37.238136] ? __pfx_irq_thread (kernel/irq/manage.c:1233)
->> [   37.238141] kthread (kernel/kthread.c:463)
->> [   37.238147] ? __pfx_kthread (kernel/kthread.c:412)
->> [   37.238153] ? finish_task_switch.isra.0
->> (./arch/x86/include/asm/irqflags.h:42 ./arch/x86/include/asm/irqflags.h:119
->> kernel/sched/sched.h:1531 kernel/sched/core.c:5105 kernel/sched/core.c:5223)
->> [   37.238161] ? __pfx_kthread (kernel/kthread.c:412)
->> [   37.238166] ret_from_fork (arch/x86/kernel/process.c:154)
->> [   37.238175] ? __pfx_kthread (kernel/kthread.c:412)
->> [   37.238180] ? __pfx_kthread (kernel/kthread.c:412)
->> [   37.238184] ret_from_fork_asm (arch/x86/entry/entry_64.S:258)
->> [   37.238192]  </TASK>
->>
->>>
->>>> Suggested-by: Lukas Wunner <lukas@wunner.de>
->>>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->>>> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->>>> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
->>>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
->>>> ---
->>>> v6:
->>>>    * rebase on v6.17-rc1
->>>> v5:
->>>>    * Pick up tags, rebase on linux-next
->>>>    * https://lore.kernel.org/linux-pci/20250709205948.3888045-1-superm1@kernel.org/T/#mbd784f786c50a3d1b5ab1833520995c01eae2fd2
->>>> ---
->>>>    drivers/pci/pci.c | 5 +++++
->>>>    1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>> index b0f4d98036cdd..036511f5b2625 100644
->>>> --- a/drivers/pci/pci.c
->>>> +++ b/drivers/pci/pci.c
->>>> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
->>>>    		return -EIO;
->>>>    	}
->>>> +	if (pci_dev_is_disconnected(dev)) {
->>>> +		dev->current_state = PCI_D3cold;
->>>> +		return -EIO;
->>>> +	}
->>>> +
->>>>    	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>>    	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>>    		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
->>>>
->>>> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
->>>> -- 
->>>> 2.43.0
->>>>
->>
-
+> ---
+> v3:
+>   Add pci->use_parent_dt_ranges fixes.
+>   Update Signed-off-by address, because my company email address haschanged.
+> 
+> v2:
+>   No Update.
+> ---
+>  drivers/pci/controller/dwc/pcie-visconti.c | 15 ++-------------
+>  1 file changed, 2 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
+> index cdeac6177143c..d8765e57147af 100644
+> --- a/drivers/pci/controller/dwc/pcie-visconti.c
+> +++ b/drivers/pci/controller/dwc/pcie-visconti.c
+> @@ -171,20 +171,7 @@ static void visconti_pcie_stop_link(struct dw_pcie *pci)
+>  	visconti_mpu_writel(pcie, val | MPU_MP_EN_DISABLE, PCIE_MPU_REG_MP_EN);
+>  }
+>  
+> -/*
+> - * In this SoC specification, the CPU bus outputs the offset value from
+> - * 0x40000000 to the PCIe bus, so 0x40000000 is subtracted from the CPU
+> - * bus address. This 0x40000000 is also based on io_base from DT.
+> - */
+> -static u64 visconti_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
+> -{
+> -	struct dw_pcie_rp *pp = &pci->pp;
+> -
+> -	return cpu_addr & ~pp->io_base;
+> -}
+> -
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> -	.cpu_addr_fixup = visconti_pcie_cpu_addr_fixup,
+>  	.link_up = visconti_pcie_link_up,
+>  	.start_link = visconti_pcie_start_link,
+>  	.stop_link = visconti_pcie_stop_link,
+> @@ -310,6 +297,8 @@ static int visconti_pcie_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	pci->use_parent_dt_ranges = true;
+> +
+>  	return visconti_add_pcie_port(pcie, pdev);
+>  }
+>  
+> -- 
+> 2.51.0
+> 
+> 
 
