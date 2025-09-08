@@ -1,119 +1,122 @@
-Return-Path: <linux-pci+bounces-35690-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35691-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8861AB49B61
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6580FB49B69
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:04:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B72F1BC48C3
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:02:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77D581BC46BE
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988F52DCBFC;
-	Mon,  8 Sep 2025 21:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF0C2DCC13;
+	Mon,  8 Sep 2025 21:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sZBDJtvF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUD2eANc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193A723535C;
-	Mon,  8 Sep 2025 21:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D901798F;
+	Mon,  8 Sep 2025 21:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757365298; cv=none; b=pUp3oWz4JlSfISUoC0V1pck09J3s6UA6kCfg55HNXk2NsLo6YDo4Z6qPUdoDM7OTk7nmn7fOR4RwxmJ4puink8Iyjr4lk8DF6mELfZicU1tBwQtL5550gB5oAtsGzjlUJBw0g+2k9mzXlFYv+mFxLbasDpnUB7tSzclLaJ1huuo=
+	t=1757365440; cv=none; b=mV8NVYy9+BNkKAIbWomn9i+D6ynAtelhEsXykXkMs39D/r40jTe3eC6Aws9zHUfQ6851e8+hIxsj+MYjXC7VoE/ZgdGHPCOHY2FmguKHYrIJWF7VwCvsoYC/2uLBdiKRx4oqogKv0EP2g4RBN4613D6no6F4JL4AuMBZp8kbwNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757365298; c=relaxed/simple;
-	bh=Qa3p4r1BGPTbg9JN8Jg7rYA6n7V+dwXJpFgMOWciwh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nTI5MBZ/GbljLix0oXPUdyl9GW/ws2RLl9u8ePKobhDrRZFNUCCXY3J2ZfS6mD8fjVoFUDUNGTOeFr4vQIdTiVkiCjEYxIWtL2xmWE+hoCQM6+8hw+96cfDKdq9eCrqmmtowRkRuXH3qs2L+ME3Qc+xHvLlgQGFGmqAIJBggKts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sZBDJtvF; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3AF8E2119388;
-	Mon,  8 Sep 2025 14:01:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AF8E2119388
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1757365296;
-	bh=8OfRFbMGWhbwHqeXODOj/IPgEc3LWLOaJehvGyq5fVY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sZBDJtvFs9Ofj7nMAu5VU8L0L4nKeDGeNVmFwTGr5mm9ZPuuOp9UCj9Btu+E1vcfa
-	 HB/ifrMcHgdgWOwk/crvaI47rWI+1w94qYyPAZve41oYiMcu+vkaoDgD185Gry75ro
-	 Z7o4crQc3sp24xFFXTYFnxdnQ96IoHTX58i70aM8=
-Message-ID: <d7d7b23f-eaea-2dbc-9c9d-4bee082f6fe7@linux.microsoft.com>
-Date: Mon, 8 Sep 2025 14:01:34 -0700
+	s=arc-20240116; t=1757365440; c=relaxed/simple;
+	bh=lmBcECvI36pXG+iHU1bzh6Ylx9CdhpfB7qPxbZazMD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jTFIZcyrremzvaI+AhQXFlKUvEoj4cijXbMYeKXMkMTerh+jdMxfTKNOaLPiPmac1RRrBoxau7kFqYZamearV6tnc+9IYTZTwtE1Wai1+ER3K5IScjg/4XgjQ3PcARZBvHC0P0jMrdxzKXuc+ndNqgCCe5wahB9zG6zM57MelYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUD2eANc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2FFC4CEF1;
+	Mon,  8 Sep 2025 21:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757365440;
+	bh=lmBcECvI36pXG+iHU1bzh6Ylx9CdhpfB7qPxbZazMD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kUD2eANcUSnmZikgbgETII3iTa24k+oeRhzfI9YCi5f3bwtd4lgG2fwztFAvjYI60
+	 F/zHHjUVFvBISmBziuBrXXoL78lba4vMDWNeJhxbUFqKW6bAdnP/xvF+Jibtaaj7/K
+	 2xt+be6LoPggc/4xlnto2Kz8RTuhDdvU2ZgivWjekGN9S75oliz3Kz88e+yPEN0ABX
+	 +3+xF708OF3uhYQ5T6OQ/0SR1tSQvr/jk9XyMTZckxGQHXe3b9LKDCM+Mc0jE98A6s
+	 jxR12bUB2aUHvCGU0YUmZtRrbdLp9evBqazn565mnJcUOOR4JllnCwuGgcikgzOn3e
+	 pxhldnRmZOYaA==
+Date: Mon, 8 Sep 2025 16:03:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v6] PCI/PM: Skip resuming to D0 if disconnected
+Message-ID: <20250908210358.GA1464207@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org, bentiss@kernel.org,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, bhelgaas@google.com,
- James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
- deller@gmx.de, arnd@arndb.de, sgarzare@redhat.com, horms@kernel.org
-References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
- <20250906010952.2145389-3-mrathor@linux.microsoft.com>
- <2025090621-rumble-cost-2c0d@gregkh>
-From: Mukesh R <mrathor@linux.microsoft.com>
-In-Reply-To: <2025090621-rumble-cost-2c0d@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250811163510.601103-1-superm1@kernel.org>
 
-On 9/6/25 04:36, Greg KH wrote:
-> On Fri, Sep 05, 2025 at 06:09:52PM -0700, Mukesh Rathor wrote:
->> With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
->> to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
->> hypervisor support, such as hypercalls, clocks/timers, Confidential
->> Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
->> devices.
+On Mon, Aug 11, 2025 at 11:35:10AM -0500, Mario Limonciello (AMD) wrote:
+> When a USB4 dock is unplugged the PCIe bridge it's connected to will
+> issue a "Link Down" and "Card not detected event". The PCI core will
+> treat this as a surprise hotplug event and unconfigure all downstream
+> devices. This involves setting the device error state to
+> `pci_channel_io_perm_failure` which pci_dev_is_disconnected() will check.
+
+There's nothing special about USB4 here, right?  I guess the same
+happens with any surprise hotplug remove?
+
+pciehp_unconfigure_device() does the pci_dev_set_io_state(dev,
+pci_channel_io_perm_failure) part on everything that got removed, so
+that part is pretty straightforward.
+
+> It doesn't make sense to runtime resume disconnected devices to D0 and
+> report the (expected) error, so bail early.
+
+Can you include a hint about where the runtime resume happens?  It
+seems unintuitive to power up removed devices.
+
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+> v6:
+>  * rebase on v6.17-rc1
+> v5:
+>  * Pick up tags, rebase on linux-next
+>  * https://lore.kernel.org/linux-pci/20250709205948.3888045-1-superm1@kernel.org/T/#mbd784f786c50a3d1b5ab1833520995c01eae2fd2
+> ---
+>  drivers/pci/pci.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> But why are you making it so that this can not be a module anymore?  You
-> are now forcing ALL Linux distro users to always have this code in their
-> system, despite not ever using the feature.  That feels like a waste to
-> me.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cdd..036511f5b2625 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+>  		return -EIO;
+>  	}
+>  
+> +	if (pci_dev_is_disconnected(dev)) {
+> +		dev->current_state = PCI_D3cold;
+> +		return -EIO;
+> +	}
+> +
+>  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>  		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
 > 
-> What is preventing this from staying as a module?  Why must you always
-> have this code loaded at all times for everyone?
-
-This is currently not a module. I assume it was at the beginning. In
-drivers/Makefile today:
-
-obj-$(subst m,y,$(CONFIG_HYPERV))       += hv/
-
-
-More context: CONFIG_HYPERV doesn't really reflect one module. It is
-both for kernel built in code and building of stuff in drivers/hv.
-
-drivers/hv then builds 4 modules:
-
-obj-$(CONFIG_HYPERV)            += hv_vmbus.o
-obj-$(CONFIG_HYPERV_UTILS)      += hv_utils.o
-obj-$(CONFIG_HYPERV_BALLOON)    += hv_balloon.o
-obj-$(CONFIG_MSHV_ROOT)         += mshv_root.o
-
-Notice vmbus is using CONFIG_HYPERV because there is no 
-CONFIG_HYPERV_VMBUS. We are trying to fix that here.
-
-Thanks,
--Mukesh
-
-> thanks,
+> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+> -- 
+> 2.43.0
 > 
-> greg k-h
-
 
