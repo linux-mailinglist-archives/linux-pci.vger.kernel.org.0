@@ -1,147 +1,119 @@
-Return-Path: <linux-pci+bounces-35689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC39BB49B43
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 22:53:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8861AB49B61
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:01:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CC0E3C1D93
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 20:53:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B72F1BC48C3
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78EB62DC33D;
-	Mon,  8 Sep 2025 20:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988F52DCBFC;
+	Mon,  8 Sep 2025 21:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HwA2dgov"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sZBDJtvF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E1B21FF39;
-	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193A723535C;
+	Mon,  8 Sep 2025 21:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757364831; cv=none; b=k1CHiiWppVZ7beruOrXBa30qV7jL6wjpY3y4JDWJ6h6gs/asXkcfOuSijgLYC0rVgKVFLDbUZPEG9G25+eKaZu0sQeoajy4dkgVu6zXLFD6LCuJZKJfAvAB4VlqPSXcjCBmnrdac7Q7LamHAcx9nplMEJIFKMKZauL92LCvNTwA=
+	t=1757365298; cv=none; b=pUp3oWz4JlSfISUoC0V1pck09J3s6UA6kCfg55HNXk2NsLo6YDo4Z6qPUdoDM7OTk7nmn7fOR4RwxmJ4puink8Iyjr4lk8DF6mELfZicU1tBwQtL5550gB5oAtsGzjlUJBw0g+2k9mzXlFYv+mFxLbasDpnUB7tSzclLaJ1huuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757364831; c=relaxed/simple;
-	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kUTpaUtrh/bH/1Sa3kfgbYDu43k0Om6BspAmteJ8Y0FQUpD5Io0KqZi2Yj2G123QmibPEeAI3QMaaC6oJBfzQ5DktXW411DDXLsUwlbbpvEeqth4hhxF5PhPk8EGxv/5XV/xQO/q037jtiErpOfQIK5aypTRPz9KKeoi2GZIWbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HwA2dgov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB6DC4CEF1;
-	Mon,  8 Sep 2025 20:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757364830;
-	bh=POcz+JpYGpHubzD14Eku3ZQzqXppkJMBMmqMowj0z/E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HwA2dgovXhqbZKDE4CyF6jfjUOnL7dEWbzZKFuoiTgQM0/8RbmKtDJPAN9M5U7NdR
-	 332e8aBZX3AbPbB6EpAt9HNVbvClc42ykkVZoJjNbULcacR8h0B5EXEYiKZkgZ0oop
-	 MOztEVj9EyVglVVIKVAZMxdg6OGkWy3zLxbY/8rXxuKdTmHbBJJ416YTwQcjKpBtKY
-	 fK6GtR6tE/0qkbhp5QxKjzmH6c551WY5tmeIrJaR+WyTrg1e0UOJG7niYxUXTfUBiu
-	 qiXTd7ug2j69De7tF7VnvVqeCJga5fsCbsa8lXBVxnN8uEDltBUZshWZ3PB/PvJJG6
-	 9aMOKYX/9U7dQ==
-Date: Mon, 8 Sep 2025 15:53:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Message-ID: <20250908205349.GA1463686@bhelgaas>
+	s=arc-20240116; t=1757365298; c=relaxed/simple;
+	bh=Qa3p4r1BGPTbg9JN8Jg7rYA6n7V+dwXJpFgMOWciwh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nTI5MBZ/GbljLix0oXPUdyl9GW/ws2RLl9u8ePKobhDrRZFNUCCXY3J2ZfS6mD8fjVoFUDUNGTOeFr4vQIdTiVkiCjEYxIWtL2xmWE+hoCQM6+8hw+96cfDKdq9eCrqmmtowRkRuXH3qs2L+ME3Qc+xHvLlgQGFGmqAIJBggKts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sZBDJtvF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3AF8E2119388;
+	Mon,  8 Sep 2025 14:01:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AF8E2119388
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757365296;
+	bh=8OfRFbMGWhbwHqeXODOj/IPgEc3LWLOaJehvGyq5fVY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sZBDJtvFs9Ofj7nMAu5VU8L0L4nKeDGeNVmFwTGr5mm9ZPuuOp9UCj9Btu+E1vcfa
+	 HB/ifrMcHgdgWOwk/crvaI47rWI+1w94qYyPAZve41oYiMcu+vkaoDgD185Gry75ro
+	 Z7o4crQc3sp24xFFXTYFnxdnQ96IoHTX58i70aM8=
+Message-ID: <d7d7b23f-eaea-2dbc-9c9d-4bee082f6fe7@linux.microsoft.com>
+Date: Mon, 8 Sep 2025 14:01:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905052836.work.425-kees@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org, bentiss@kernel.org,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, bhelgaas@google.com,
+ James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+ deller@gmx.de, arnd@arndb.de, sgarzare@redhat.com, horms@kernel.org
+References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
+ <20250906010952.2145389-3-mrathor@linux.microsoft.com>
+ <2025090621-rumble-cost-2c0d@gregkh>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <2025090621-rumble-cost-2c0d@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
-> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
-> ffs()-family implementations"), which allows GCC's value range tracker
-> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
-> "ffs(rq) - 8" used here:
+On 9/6/25 04:36, Greg KH wrote:
+> On Fri, Sep 05, 2025 at 06:09:52PM -0700, Mukesh Rathor wrote:
+>> With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
+>> to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
+>> hypervisor support, such as hypercalls, clocks/timers, Confidential
+>> Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
+>> devices.
 > 
-> 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> But why are you making it so that this can not be a module anymore?  You
+> are now forcing ALL Linux distro users to always have this code in their
+> system, despite not ever using the feature.  That feels like a waste to
+> me.
 > 
-> could wrap below 0, leading to a very large value, which would be out of
-> range for the FIELD_PREP() usage:
-> 
-> drivers/pci/pci.c: In function 'pcie_set_readrq':
-> include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
-> ...
-> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
->   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->       ^~~~~~~~~~
-> 
-> If the result of the ffs() is bounds checked before being used in
-> FIELD_PREP(), the value tracker seems happy again. :)
-> 
-> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+> What is preventing this from staying as a module?  Why must you always
+> have this code loaded at all times for everyone?
 
-What's your plan for merging cbc654d18d37?  I suppose it's intended
-for v6.18?  If it will appear in v6.17, let me know so I can merge
-this for it as well.
+This is currently not a module. I assume it was at the beginning. In
+drivers/Makefile today:
 
-Maybe this should go in v6.17 regardless, to avoid a warning
-regression between this patch and cbc654d18d37?
+obj-$(subst m,y,$(CONFIG_HYPERV))       += hv/
 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: lkft-triage@lists.linaro.org
-> Cc: Linux Regressions <regressions@lists.linux.dev>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Dan Carpenter <dan.carpenter@linaro.org>
-> Cc: Ben Copeland <benjamin.copeland@linaro.org>
-> Cc: <lkft-triage@lists.linaro.org>
-> Cc: <linux-pci@vger.kernel.org>
-> Cc: <linux-kernel@vger.kernel.org>
-> ---
->  drivers/pci/pci.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+
+More context: CONFIG_HYPERV doesn't really reflect one module. It is
+both for kernel built in code and building of stuff in drivers/hv.
+
+drivers/hv then builds 4 modules:
+
+obj-$(CONFIG_HYPERV)            += hv_vmbus.o
+obj-$(CONFIG_HYPERV_UTILS)      += hv_utils.o
+obj-$(CONFIG_HYPERV_BALLOON)    += hv_balloon.o
+obj-$(CONFIG_MSHV_ROOT)         += mshv_root.o
+
+Notice vmbus is using CONFIG_HYPERV because there is no 
+CONFIG_HYPERV_VMBUS. We are trying to fix that here.
+
+Thanks,
+-Mukesh
+
+> thanks,
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cd..005b92e6585e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5932,6 +5932,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  {
->  	u16 v;
->  	int ret;
-> +	unsigned int firstbit;
->  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->  
->  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  			rq = mps;
->  	}
->  
-> -	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
-> +	firstbit = ffs(rq);
-> +	if (firstbit < 8)
-> +		return -EINVAL;
-> +	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
->  
->  	if (bridge->no_inc_mrrs) {
->  		int max_mrrs = pcie_get_readrq(dev);
-> -- 
-> 2.34.1
-> 
+> greg k-h
+
 
