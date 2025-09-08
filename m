@@ -1,63 +1,66 @@
-Return-Path: <linux-pci+bounces-35639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2AE7B48517
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 09:25:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91C43B48534
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 09:29:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95A8817755D
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 07:25:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C6BF3B8DF1
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 07:29:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88812E7637;
-	Mon,  8 Sep 2025 07:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 868C62E6CC3;
+	Mon,  8 Sep 2025 07:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZ+v4RB3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8/g5uyV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48062E718B;
-	Mon,  8 Sep 2025 07:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFC72DEA6A;
+	Mon,  8 Sep 2025 07:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757316343; cv=none; b=KecgfNErD+Mtnff63YIHrj9cPcilrUIDYihW6cFNGxXIl5IHHp/p2mvSiy8VwKz5Hz4oLhO9gxpTPev96jVBhX2UmEO8zJ5833z5IiKr2YPLr/iDRej9tSxbOtc3XB/96+dzHgKcmho9HsGn5Du13FDvz8NvQzIu4cLYoP4ai1E=
+	t=1757316539; cv=none; b=R/0/D1/f88pqn9VFM/7b7s5FA63Q7SGhOnTjt/3P6IncvfXIdHGcdHlfru9qdnlHzULCadCaTB06itTFTJo8/QfRHjIL+DyNJZtveoXqWOeDiRhRA6o3UHJSbMmT7+4WDAj4jnC0K0e0xWE/cZBn/DD1vjk2M2OUTIM4MoMf6Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757316343; c=relaxed/simple;
-	bh=0OrpL/DbISgvaSntm7MwE6vZ7KTvLFFuzrfYfkuRJhQ=;
+	s=arc-20240116; t=1757316539; c=relaxed/simple;
+	bh=RDvvo3xdx4TsaQjK5xSMvu9RP3KZphhm9dRO9PYFaHE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EzYHxIHzOnLWImv9/Zej1KGJSkZMYexB1hnufSmbBgYsxFjQChpzZ/Uz71GpVGRIHctQ/IKeWGRtMRpG70U0oH1efdyX+GEPVyA+z/EeYoxCXrGlQBygeXtsxMjkKEAOG+fzO8DEmztGzia6RpExUlDhzubjkoT5R1+RsHWK02U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZ+v4RB3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD628C4CEF5;
-	Mon,  8 Sep 2025 07:25:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=CY60jocSqb4vHmxusTFp2p1s/fRSSuo1oWiKwsvW/N6DWQcJND35g8wM5BmC24bN+nAaLLpKrK4gvDXU3NJoaBEhPBMrII0rRoTcrq0fOK3tm7fIWBXpXoBr2hvpLwTzRiodLXvqMfUtu+rKRpd9guwa16EBdDlPgJ0ZoOHmj50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8/g5uyV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0EB2C4CEF1;
+	Mon,  8 Sep 2025 07:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757316343;
-	bh=0OrpL/DbISgvaSntm7MwE6vZ7KTvLFFuzrfYfkuRJhQ=;
+	s=k20201202; t=1757316538;
+	bh=RDvvo3xdx4TsaQjK5xSMvu9RP3KZphhm9dRO9PYFaHE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EZ+v4RB3ujPkq4MZzpZj/xl+anJvRnWAyAmyBgubgwghU/s+EuciURemUbW9ZdM4o
-	 QEWAmzE1mwM/5MsmrB3R0jf33mkyHH8JD3/YJiBp5NUab9gVK6EA278CiwONTgNKRz
-	 pfwebdFq9IaYD1glCJukRv6xkAmKhCtEoHaVZ4j54gpm3XyofkN8pn/HrSc5MGc2gn
-	 R4jigh9qx7NsNkLqyyb737FCFJAUZIZ6iIMp2fIBAG7iEJBg8nU8KN7+iaRtnpo+ex
-	 MjH3kl/UeRBl1bf6tWmnnO05i4ACcNk4cn6vvhLxrp7qfzLXN/fW1sRPwxYIMDD/9M
-	 6IVlAzfmjkvMA==
-Date: Mon, 8 Sep 2025 12:55:34 +0530
+	b=P8/g5uyVIQHXN0e5mPL9I3N+5Fn6il5f2SU5KOSKgX89LWRmezpwmscDnBQlomDrA
+	 aEBCNkVUN1lBdnEclWHE3VhOKuYCntWCldDEu7gJ74ZJ9iay1o8qfCECrOKrtsjbGl
+	 bGirtqLfDtyXx11f2dN0SAZzmnwm/DDg3vBpdgF0GvG6VOktkr+VY9TvNLQVO7esmr
+	 j0srYDy770j88l60UxOBdJi20ZbMBqydj40KYf73dg1BBvfz7YVDkKQ6iQegnXPX/f
+	 9y4eynU6UU84qnbeQYveWvRhShVUzT4Fb/JsxJgLihah1qp66vbvLIcB1kCz9GfyQ9
+	 RYU+pKsc7qzsg==
+Date: Mon, 8 Sep 2025 12:58:51 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	p.zabel@pengutronix.de, johan+linaro@kernel.org, quic_schintav@quicinc.com, 
-	shradha.t@samsung.com, cassel@kernel.org, thippeswamy.havalige@amd.com, 
-	mayank.rana@oss.qualcomm.com, inochiama@gmail.com, ningyu@eswincomputing.com, 
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-Subject: Re: [PATCH v2 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host
- controller driver
-Message-ID: <ktpiiszfmtnvyh3yxchfqnpkfv43uxbke47vptexeg4tli2hmh@keifchvj44yj>
-References: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
- <20250829082405.1203-1-zhangsenchuan@eswincomputing.com>
- <jghozurjqyhmtunivotitgs67h6xo4sb46qcycnbbwyvjcm4ek@vgq75olazmoi>
- <4fa48331.ce3.19913f1cc89.Coremail.zhangsenchuan@eswincomputing.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, helgaas@kernel.org, kishon@kernel.org, vigneshr@ti.com, 
+	stable@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v3] PCI: j721e: Fix programming sequence of "strap"
+ settings
+Message-ID: <wvrouqouhrpoexmggwbc6vjz4xflnylzxrb2ffw3ai7656ehrt@keb53gb2tm2o>
+References: <oztilfun77apxtjxumx4tydkcd2gsalsak4m2rvsry2oooqjna@2yvcx6cnuemm>
+ <b2fb9252-6bfc-45da-973a-31cdfcc86b3d@ti.com>
+ <z3ubracmtlq23yicbrhqjgnzrfoqheffm6cvhfnawlvbu4cmmp@ddu2o7xhw5tz>
+ <48e9d897-2cd3-48ef-b46a-635ae75f5ac6@ti.com>
+ <3wc3t6y5gzzspgfeklsqo3bupfp6gsfy6mls6t66hflcqlqsfk@cu26wv3sow4y>
+ <9d2bba15-52e4-432a-8f7f-a0f5d7c2e4ad@ti.com>
+ <7hxdcjm7evlphkldct7seytno4is7rjkx5vquvtfhpdkzxdhu6@yocrjgzciwu3>
+ <08b87b5f-838b-4f40-ae90-10ded134356e@ti.com>
+ <whinfqhjgqbbvlnuzgbukklqi6gocjji4gakqyycovrse4qq6s@6xq5imqbzvux>
+ <a0e1d273-239b-44e5-8ccc-0ba83b2b5839@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,86 +70,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4fa48331.ce3.19913f1cc89.Coremail.zhangsenchuan@eswincomputing.com>
+In-Reply-To: <a0e1d273-239b-44e5-8ccc-0ba83b2b5839@ti.com>
 
-On Thu, Sep 04, 2025 at 04:57:17PM GMT, zhangsenchuan wrote:
-> Dear Manivannan
+On Thu, Sep 04, 2025 at 11:33:00AM GMT, Siddharth Vadapalli wrote:
+> On Wed, Sep 03, 2025 at 06:51:14PM +0530, Manivannan Sadhasivam wrote:
 > 
-> Thank you for your thorough review.Here are some of my clarifications and questions.
-> Looking forward to your answer, Thank you very much.
+> [...]
 > 
-> > -----Original Messages-----
-> > From: "Manivannan Sadhasivam" <mani@kernel.org>
-> > Send time:Monday, 01/09/2025 14:40:41
-> > To: zhangsenchuan@eswincomputing.com
-> > Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, johan+linaro@kernel.org, quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org, thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com, inochiama@gmail.com, ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-> > Subject: Re: [PATCH v2 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host controller driver
-> 
-> 
-> > > +	/* config eswin vendor id and eic7700 device id */
-> > > +	dw_pcie_writel_dbi(pci, PCIE_TYPE_DEV_VEND_ID, 0x20301fe1);
 > > 
-> > Does it need to be configured all the time?
-> 
-> Clarification：
-> Our hardware initialization did not configure the device Id and vendor Id.
-> Now, we can only rewrite the device Id and vendor Id in the code.
-> 
-
-Ok. Then mention it in the comment itself. Like,
-
-	/*
-	 * Configure ESWIN VID:DID for Root Port as the default values are
-	 * invalid.
-	 */
-
+> > I thought put_noidle() will just reduce the refcount and not invoke the
+> > idle/suspend callbacks, but I seem to be wrong here.
 > > 
-> > > +
-> > > +	/* lane fix config, real driver NOT need, default x4 */
+> > Anyway, I guess we have no option here other than to drop the
+> > pm_runtime_put_noidle() call. This will keep refcount as 1 and will prevent the
+> > parent (genpd) to not enter runtime suspend, but we have to live with it (this
+> > was also the previous beahvior as well).
 > > 
-> > What do you mean by 'readl driver NOT need'?
-> > 
+> > Btw, pm_runtime_set_active/enable change belongs to a separate patch.
 > 
-> Clarification：
-> Sorry, this was added during the compatibility platform test. It is not needed for real devices. 
-> I will remove it later.
+> I will work on and post the v4 patch with the following change:
+> - The commit message and the comment in the code will be updated to
+>   indicate that the runtime PM APIs are used to cause 'genpd' to power off
+>   and power on the controller.
 > 
-> > > +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> > > +	val &= 0xffffff80;
-> > > +	val |= 0x44;
-> > > +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-> > > +
-> > > +	val = dw_pcie_readl_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS);
-> > > +	val &= ~(0x7 << 5);
-> > > +	val |= (0x2 << 5);
-> > > +	dw_pcie_writel_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS, val);
-> > > +
-> > > +	/*  config support 32 msi vectors */
-> > > +	val = dw_pcie_readl_dbi(pci, PCIE_DSP_PF0_MSI_CAP);
-> > > +	val &= ~PCIE_MSI_MULTIPLE_MSG_MASK;
-> > > +	val |= PCIE_MSI_MULTIPLE_MSG_32;
-> > > +	dw_pcie_writel_dbi(pci, PCIE_DSP_PF0_MSI_CAP, val);
-> > > +
-> > > +	/* disable msix cap */
-> > 
-> > Why? Hw doesn't support MSI-X but it advertises MSI-X capability?
-> > 
+> I assume that the driver changes can remain as they are in this patch given
+> that the existing behavior has to be preserved. As j721e_pcie_ctrl_init()
+> programs the strap settings, powering off the controller via
+> pm_runtime_put_sync() and powering it on via pm_runtime_get_sync() shall
+> be implemented within j721e_pcie_ctrl_init() itself leaving the rest of the
+> probe function as-is. To summarize, the driver changes will be:
 > 
-> I'm not quite sure what this comment means? Indeed, our hardware doesn't support MSI-X.
-
-So it advertises MSI-X in capability by mistake then. If so, do you think it is
-going to be applicable for future revisions of the controller also? I believe
-this is a kind of hw bug.
-
-Usually, these kind of issues are fixed in future revisions of the SoC. So I was
-checking if you intend to clear it for all SoCs in the future or not. Otherwise,
-you may set a flag and clear it conditionally.
-
-> We can't disable the MSI-X capability using the PCIE_NEXT_CAP_PTR register? Then which 
-> register is needed to disable the MSI-X capability?
+> 	j721e_pcie_ctrl_init()
+> 		...Existing code...
+> 	+	Add pm_runtime_put_sync() here to power off controller
+> 		...Existing code to program strap settings...
+> 	+	Add pm_runtime_get_sync() here to power on controller
+> 		...Existing code...
 > 
+> Please let me know what you think.
 
-No, my question was not about *how to clear MSI cap*.
+I would've preferred changing the runtime PM calls as I suggested initially, but
+still we would keep it incremented which brings the net effect to the same.
+
+So you can drop my initial comment and post just this patch with improved patch
+description.
 
 - Mani
 
