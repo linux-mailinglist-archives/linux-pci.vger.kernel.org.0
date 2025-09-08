@@ -1,147 +1,123 @@
-Return-Path: <linux-pci+bounces-35678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24704B494C9
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 18:08:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE4DB4951A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 18:23:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3DD3166EDD
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 16:08:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A6F61BC5946
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 16:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB75235BE8;
-	Mon,  8 Sep 2025 16:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B279030FC2B;
+	Mon,  8 Sep 2025 16:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgZktLa+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD401306B34;
-	Mon,  8 Sep 2025 16:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D04930F939
+	for <linux-pci@vger.kernel.org>; Mon,  8 Sep 2025 16:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757347722; cv=none; b=eJkdPjOoxpwOP51AiRZqdjolZZytgDABIHvvBf/1xZINw7RAIN8kK0Ftjqy56vFy3vXrgxuuwSQQCtZ2eEhEeYGvWvpaPlNwnWdQ0W+0c1lA3e5B8wC1rKMTc6smv3/GRHmKx3hzETkCtNExbke0P2Z8+WCkVkoI8020e7wZQWs=
+	t=1757348397; cv=none; b=cCGxGZ4VdR6TkTvCMOPsLr1+awgP32NwG95wALU6/wjGDfv249DVZpXESDWBy67AXWprAiAqg1VSp2azq7G7Bh2+dSzL91R8NUDmE2qJ2kbEQ/ygruK1qRulU9esQRxPP6yDgH9c/Pg53cieeiGGoPSbZ9GxqS429oyM3FZY1So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757347722; c=relaxed/simple;
-	bh=L0oLhH7XTO62+cYljj+HqUg2QW/9wnUQVJlr7OlxZR0=;
-	h=Message-Id:From:Date:Subject:To:Cc; b=cgaN6BkgFO0j1XTiJP9XW1s8qm0tLUDysa13tgi+CB5yb86tUSoQ00K4zq60MyDyop61/uyB+fKxwWxRxfmtvFKch1iRyIQDnkZQDbc6kOQM6Xi7gtnwwXlcHNq7/oGvkF5AeGYNrdpMDWd9nIW+w5LPq+U8qAqVwE/+wxxYbss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4CCB020091A0;
-	Mon,  8 Sep 2025 18:08:30 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 45B715307EE; Mon,  8 Sep 2025 18:08:30 +0200 (CEST)
-Message-Id: <83f58870043e2ae64f19b3a2169b5c3cf3f95130.1757346718.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Mon, 8 Sep 2025 18:08:31 +0200
-Subject: [PATCH] genirq/manage: Reduce priority of forced secondary IRQ
- handler
-To: Thomas Gleixner <tglx@linutronix.de>, "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>, Crystal Wood <crwood@redhat.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, Attila Fazekas <afazekas@redhat.com>, linux-pci@vger.kernel.org, linux-rt-devel@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>
+	s=arc-20240116; t=1757348397; c=relaxed/simple;
+	bh=TQdEl3swo1CiyYVrdBjpFs5kf9S+uEhtXvrX4JbGqwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zv62cMJptX+ZH7naNu7DTtaAxAw/BoD9ChPP3Skn5b8KlMbY8qTHFZgOFLGTJH4IQYIevsD5eVhhFGygU8DUA7fqMg+9eMi8EueC/B5UlfaUfXdFMzgHumzHomNw20N1RNQskMkkeLoW2JNmZf7MC4enR70gM9farA1H0YAnv9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgZktLa+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A25C4CEF1;
+	Mon,  8 Sep 2025 16:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757348397;
+	bh=TQdEl3swo1CiyYVrdBjpFs5kf9S+uEhtXvrX4JbGqwE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JgZktLa+FOOeBKnD2SXY696SJzIKE0rlBBRHFQ38A/kTc3r1yGfLeVoeG8qTAgWJm
+	 7evUDSqZe/HXCLpNcP2/9nJj3TbAdpgsprEgZIisKQBbRgHfu600E3uU1EnnOalmLQ
+	 jcj3EL2DfF7mS1zd6GFVqWeT0iZYMZAkBiQ5HHTyCei8LuRhA1jCW2Ms1pY5+kIyiL
+	 sRYTnxKYseoSnPSBEhW4ou160xLLCtin0y7Za1bWzJQ30GX4WMn0gSbngFmA/HKNQX
+	 xPaANQFP18mTL280y4mM+yU02dyr4M53JAtDKIwC/b4yFv0dzj3cU+NUAMRdAi9GFO
+	 9knc+9rhDuc8A==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Frank Li <Frank.Li@nxp.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: endpoint: pci-epf-test: Fix doorbell test support
+Date: Mon,  8 Sep 2025 18:19:42 +0200
+Message-ID: <20250908161942.534799-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2413; i=cassel@kernel.org; h=from:subject; bh=TQdEl3swo1CiyYVrdBjpFs5kf9S+uEhtXvrX4JbGqwE=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDL2M8ntfCEmdmYXg4ZlqtIKG2EPpnsmmeF/DFZuefx1+ akz3Du7OkpZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjAR11ZGhmltk3Skak06FTdW ereHsc7LevLpc13i6Z3pq57Y15u8YGT4Z1q45NHJV1V650yu61eKrxQ6Knngw8PMLV+3Ovb95D3 bwAIA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-Crystal reports the PCIe Advanced Error Reporting driver getting stuck
-in an infinite loop on PREEMPT_RT:  Both the primary IRQ handler
-aer_irq() as well as the secondary handler aer_isr() are forced into
-threads with identical priority.
+The doorbell feature temporarily overrides the inbound translation to
+point to the address stored in epf_test->db_bar.phys_addr.
+(I.e. it calls set_bar() twice, without ever calling clear_bar(), as
+calling clear_bar() would clear the BAR's PCI address assigned by the
+host).
 
-Crystal writes that on the ARM system in question, the primary IRQ
-handler has to clear an error in the Root Error Status register...
+Thus, when disabling the doorbell, restore the inbound translation to
+point to the memory allocated for the BAR.
 
-   "before the next error happens, or else the hardware will set the
-    Multiple ERR_COR Received bit.  If that bit is set, then aer_isr()
-    can't rely on the Error Source Identification register, so it scans
-    through all devices looking for errors -- and for some reason, on
-    this system, accessing the AER registers (or any Config Space above
-    0x400, even though there are capabilities located there) generates
-    an Unsupported Request Error (but returns valid data).  Since this
-    happens more than once, without aer_irq() preempting, it causes
-    another multi error and we get stuck in a loop."
+Without this, running the pci endpoint kselftest doorbell test case more
+than once would fail.
 
-The issue does not show on non-PREEMPT_RT since the primary IRQ handler
-runs in hardirq context and thus clears the Root Error Status register
-before waking the secondary IRQ handler's thread.
-
-Simulate the same behavior on PREEMPT_RT by assigning a lower default
-priority to forced secondary IRQ handlers.
-
-Reported-by: Crystal Wood <crwood@redhat.com>
-Tested-by: Crystal Wood <crwood@redhat.com>
-Closes: https://lore.kernel.org/r/20250902224441.368483-1-crwood@redhat.com/
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Frank Li <Frank.Li@nxp.com>
+Fixes: eff0c286aa91 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
-Crystal provided a Tested-by off-list.  I've used Crystal's suggestion
-for the code comment, but if anyone prefers Sebastian's or some other
-wording, I don't mind either respinning myself or a maintainer amending
-this or any other aspect of the patch when applying.  Thanks!
+Note: this is actually how the code looked like when it was submitted by
+Frank, see pci_epf_test_disable_doorbell() in:
+https://lore.kernel.org/linux-pci/20250710-ep-msi-v21-6-57683fc7fb25@nxp.com/
+However, the code was modified, without notifying the list of this
+non-trivial logical change, before being applied.
 
- include/linux/sched.h   |  1 +
- kernel/irq/manage.c     |  5 ++++-
- kernel/sched/syscalls.c | 11 +++++++++++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 2b27238..ceed23d 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1894,6 +1894,7 @@ static inline int task_nice(const struct task_struct *p)
- extern int sched_setscheduler(struct task_struct *, int, const struct sched_param *);
- extern int sched_setscheduler_nocheck(struct task_struct *, int, const struct sched_param *);
- extern void sched_set_fifo(struct task_struct *p);
-+extern void sched_set_fifo_minus_one(struct task_struct *p);
- extern void sched_set_fifo_low(struct task_struct *p);
- extern void sched_set_normal(struct task_struct *p, int nice);
- extern int sched_setattr(struct task_struct *, const struct sched_attr *);
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index c948373..b09c18a 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1239,7 +1239,10 @@ static int irq_thread(void *data)
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index e091193bd8a8a..b6ca1766a4ca9 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -772,12 +772,24 @@ static void pci_epf_test_disable_doorbell(struct pci_epf_test *epf_test,
+ 	u32 status = le32_to_cpu(reg->status);
+ 	struct pci_epf *epf = epf_test->epf;
+ 	struct pci_epc *epc = epf->epc;
++	int ret;
  
- 	irq_thread_set_ready(desc, action);
+ 	if (bar < BAR_0)
+ 		goto set_status_err;
  
--	sched_set_fifo(current);
-+	if (action->handler == irq_forced_secondary_handler)
-+		sched_set_fifo_minus_one(current);
-+	else
-+		sched_set_fifo(current);
- 
- 	if (force_irqthreads() && test_bit(IRQTF_FORCED_THREAD,
- 					   &action->thread_flags))
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index 77ae87f..4be85aa 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -847,6 +847,17 @@ void sched_set_fifo(struct task_struct *p)
- EXPORT_SYMBOL_GPL(sched_set_fifo);
- 
- /*
-+ * For tasks that must be preemptible by a sched_set_fifo() task, such as
-+ * to simulate the behavior of a non-PREEMPT_RT system where the
-+ * sched_set_fifo() task is a hard interrupt.
-+ */
-+void sched_set_fifo_minus_one(struct task_struct *p)
-+{
-+	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 - 1 };
-+	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
-+}
+ 	pci_epf_test_doorbell_cleanup(epf_test);
+-	pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no, &epf_test->db_bar);
 +
-+/*
-  * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
-  */
- void sched_set_fifo_low(struct task_struct *p)
++	/*
++	 * The doorbell feature temporarily overrides the inbound translation to
++	 * point to the address stored in epf_test->db_bar.phys_addr.
++	 * (I.e. it calls set_bar() twice, without ever calling clear_bar(), as
++	 * calling clear_bar() would clear the BAR's PCI address assigned by the
++	 * host). Thus, when disabling the doorbell, restore the inbound
++	 * translation to point to the memory allocated for the BAR.
++	 */
++	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &epf->bar[bar]);
++	if (ret)
++		goto set_status_err;
+ 
+ 	status |= STATUS_DOORBELL_DISABLE_SUCCESS;
+ 	reg->status = cpu_to_le32(status);
 -- 
-2.50.1
+2.51.0
 
 
