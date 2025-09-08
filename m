@@ -1,141 +1,172 @@
-Return-Path: <linux-pci+bounces-35648-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC4ADB4865C
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 10:06:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2194CB48763
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 10:42:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D887A3BA0E5
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 08:06:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB173177B18
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 08:42:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF562E8B8F;
-	Mon,  8 Sep 2025 08:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80351531C8;
+	Mon,  8 Sep 2025 08:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qCVR9Clp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6FbpN9H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5AD1D63EF;
-	Mon,  8 Sep 2025 08:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F0338DEC
+	for <linux-pci@vger.kernel.org>; Mon,  8 Sep 2025 08:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757318785; cv=none; b=TdKpZeCNEaPzaC1P6X1EOJ28TnLcKW/tAkF+gkySYbL21O1bATiDxkf9Q4e27keWoby2FMAgCFPE7avYS/l4360fd9kuT0bL4w21zYeNQGEnUnsdgs3xTdp3E2cCE4285hh9+ZLffETvy5QXSLlbT3UU7i9xU0Il9PXzhYEtOOQ=
+	t=1757320942; cv=none; b=UyMC06v/CNERpmbZhTOKu0dsaiPWbJ7T8i2QeZd0wq9TQpa5YoxY5m1F04nmr3J5M+Gpos4oOYVk+K3v6IcK+Kid+nPGeQBQdwmEgZQt8U3KLOXy7SdXAvYtWn4pLxtVGCQ3VB4R24pSU1NTJtbhCpCTlDVLA0TCHohs1CMVHXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757318785; c=relaxed/simple;
-	bh=AADTfuXK3QYcRRdYSB8hq9lZrJCS1ZTo9xHteQZpwig=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ObwekjLn7rzvrJ0fpnkU1gcbGd64AWkOb99Gba9s5x06HJyj/lii1JqEkWbC7ojrFc9nFziBt+ZA9Lqi2yXAsfsB9tEZNEimUzmlovABm3nVW4RM/I7OQ46mmiZxpzQJ/4kSTqn46QbOiOA9a08JXVS6l4vWKFFc4lvbTFa7fZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qCVR9Clp; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58886BF8009467;
-	Mon, 8 Sep 2025 03:06:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1757318771;
-	bh=5100fgc6dG24IM2sWni8imeShu+6586F+2SnyRoG2QM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=qCVR9ClpjJQu9QVcDplCWEXMZM6+VSGyNZRyzZ9Tfx9I3VLcDobIhc117PBYWVPMz
-	 VUZFOqc8U2vqfgHV0fxKRM86qLVnMMEx/jjtXtA+91lUptuRcSTn0b3jTljOQ+/kk2
-	 wtRtEyoU0+B7jjVmOxgWNZQ6qje5RrsQ/lzYHCi8=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58886BHa3621244
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 8 Sep 2025 03:06:11 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 8
- Sep 2025 03:06:11 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 8 Sep 2025 03:06:11 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58886AW6553673;
-	Mon, 8 Sep 2025 03:06:10 -0500
-Date: Mon, 8 Sep 2025 13:36:09 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <helgaas@kernel.org>, <kishon@kernel.org>, <vigneshr@ti.com>,
-        <stable@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH v3] PCI: j721e: Fix programming sequence of "strap"
- settings
-Message-ID: <578e5125-21d8-40c8-aaeb-389599cdd32b@ti.com>
-References: <b2fb9252-6bfc-45da-973a-31cdfcc86b3d@ti.com>
- <z3ubracmtlq23yicbrhqjgnzrfoqheffm6cvhfnawlvbu4cmmp@ddu2o7xhw5tz>
- <48e9d897-2cd3-48ef-b46a-635ae75f5ac6@ti.com>
- <3wc3t6y5gzzspgfeklsqo3bupfp6gsfy6mls6t66hflcqlqsfk@cu26wv3sow4y>
- <9d2bba15-52e4-432a-8f7f-a0f5d7c2e4ad@ti.com>
- <7hxdcjm7evlphkldct7seytno4is7rjkx5vquvtfhpdkzxdhu6@yocrjgzciwu3>
- <08b87b5f-838b-4f40-ae90-10ded134356e@ti.com>
- <whinfqhjgqbbvlnuzgbukklqi6gocjji4gakqyycovrse4qq6s@6xq5imqbzvux>
- <a0e1d273-239b-44e5-8ccc-0ba83b2b5839@ti.com>
- <wvrouqouhrpoexmggwbc6vjz4xflnylzxrb2ffw3ai7656ehrt@keb53gb2tm2o>
+	s=arc-20240116; t=1757320942; c=relaxed/simple;
+	bh=WMJP1XM2qhiEGd26EmUfzXpFIgZEvLiVPEaGbyFoBFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwvQZgjtGOEajL8inu28tzgoYuI0PSX61S9JVjN0y89r/oE3x1xDt0A6T4diJ9mywD9Ll+jmNbLIrDYvU7dMh6G3MRv5bStS5zB57ns6Kn9DW8jZMlHbiw6wNi8LYSJHMcW1pLKTCOxZaMDlYzaWC4CkqDiii6tQ8iE1y5K0fs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6FbpN9H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACBBC4CEF5;
+	Mon,  8 Sep 2025 08:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757320942;
+	bh=WMJP1XM2qhiEGd26EmUfzXpFIgZEvLiVPEaGbyFoBFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h6FbpN9HOSDJwPe549IuV0l6cPiyrIGIq5qFZr5N2CFRiWQcfkmBpDt5up53UB7+k
+	 xYIeTv+ip30pfLpHEteGe2NijEcmJsgGPBtuz07k6+iE2pFrNoUWL7RruRJsN+D9L4
+	 XjnEhUcXIzhAsJwk4fb8FyVqIwcoCIanrquz8cNb44vxNZ2cpyJDWziowP481nfXUc
+	 lBx9lQKhHGFXyIhp0M5JXBasBt90A563y/OSC6nJQMImHM8iChHYi3Ze6uL+lGyBgs
+	 nHyNbtmCqr7qmMlMbQoU7LkG2j1BsKBDcyjEGHcX/1LJDxw4RNFw9vRcJqrSRBdKTD
+	 u0a7b9DhYXQ7w==
+Date: Mon, 8 Sep 2025 14:12:17 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: DWC PCIe eDMA irqs
+Message-ID: <tnowvmxxoj5mfkrvk4k3d7gk624266ua2vin4rybmxeki2yb6u@n46qsc53av4l>
+References: <aLmKsp7VWBdMcM5p@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <wvrouqouhrpoexmggwbc6vjz4xflnylzxrb2ffw3ai7656ehrt@keb53gb2tm2o>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aLmKsp7VWBdMcM5p@ryzen>
 
-On Mon, Sep 08, 2025 at 12:58:51PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Sep 04, 2025 at 11:33:00AM GMT, Siddharth Vadapalli wrote:
-> > On Wed, Sep 03, 2025 at 06:51:14PM +0530, Manivannan Sadhasivam wrote:
-> > 
-> > [...]
-> > 
-> > > 
-> > > I thought put_noidle() will just reduce the refcount and not invoke the
-> > > idle/suspend callbacks, but I seem to be wrong here.
-> > > 
-> > > Anyway, I guess we have no option here other than to drop the
-> > > pm_runtime_put_noidle() call. This will keep refcount as 1 and will prevent the
-> > > parent (genpd) to not enter runtime suspend, but we have to live with it (this
-> > > was also the previous beahvior as well).
-> > > 
-> > > Btw, pm_runtime_set_active/enable change belongs to a separate patch.
-> > 
-> > I will work on and post the v4 patch with the following change:
-> > - The commit message and the comment in the code will be updated to
-> >   indicate that the runtime PM APIs are used to cause 'genpd' to power off
-> >   and power on the controller.
-> > 
-> > I assume that the driver changes can remain as they are in this patch given
-> > that the existing behavior has to be preserved. As j721e_pcie_ctrl_init()
-> > programs the strap settings, powering off the controller via
-> > pm_runtime_put_sync() and powering it on via pm_runtime_get_sync() shall
-> > be implemented within j721e_pcie_ctrl_init() itself leaving the rest of the
-> > probe function as-is. To summarize, the driver changes will be:
-> > 
-> > 	j721e_pcie_ctrl_init()
-> > 		...Existing code...
-> > 	+	Add pm_runtime_put_sync() here to power off controller
-> > 		...Existing code to program strap settings...
-> > 	+	Add pm_runtime_get_sync() here to power on controller
-> > 		...Existing code...
-> > 
-> > Please let me know what you think.
+On Thu, Sep 04, 2025 at 02:48:50PM GMT, Niklas Cassel wrote:
+> Hello Mani,
 > 
-> I would've preferred changing the runtime PM calls as I suggested initially, but
-> still we would keep it incremented which brings the net effect to the same.
 > 
-> So you can drop my initial comment and post just this patch with improved patch
-> description.
+> Looking at dw_pcie_edma_irq_verify()
+> https://github.com/torvalds/linux/blob/v6.17-rc4/drivers/pci/controller/dwc/pcie-designware.c#L1048-L1049
+> 
+> We can see that it does an early return if "pci->edma.nr_irqs == 1".
+> 
+> I.e. if the glue driver has set "pci->edma.nr_irqs == 1", we never even
+> bother to fetch "dma"/"dmaX" from device tree.
+> 
+> This suggests that we support a single IRQ for all eDMA channels,
+> and since we don't even parse anything for DT, it suggests that this
+> IRQ could be the same IRQ as the "sys IRQ" for the PCI controller.
+> (E.g. tegra has a single IRQ for the PCI controller and the eDMA.)
+> 
+> 
+> 
+> However, looking at dw_pcie_edma_irq_vector(), which will be called by
+> dw_edma_probe():
+> https://github.com/torvalds/linux/blob/v6.17-rc4/drivers/pci/controller/dwc/pcie-designware.c#L945-L947
+> 
+> We can see that we need either "dma" or "dmaX" in DT.
+> 
+> Which suggests that the code currently only supports either a
+> separate IRQ for each eDMA per channel, or a combined IRQ for
+> each eDMA channel, but the combined IRQ cannot be the same as
+> the "sys IRQ".
+> 
+> 
+> This seems inconsistent to me.
+> 
 
-Thank you for the clarification. I will implement the above in the v4
-patch.
+Agree.
 
-Regards,
-Siddharth.
+> Since dw_pcie_edma_irq_vector() requires either "dma" or "dmaX" in DT,
+> I don't see why we shouldn't have the same requirement for
+> dw_pcie_edma_irq_verify()
+> 
+
+I think we could also get rid of dw_pcie_edma_irq_verify(), since kernel is not
+a devicetree validator and it should just trust DT (atleast for these kind of
+resources). The binding should make sure that the DTBs are correct.
+
+Moreover, dw_edma_irq_request() will look for only 2 combinations:
+
+1. Single IRQ for all channels
+2. Separate IRQ per channel
+
+So if the platform doesn't supply enough IRQs for each channel,
+dw_edma_irq_request() will fail anyway. Precisely, the irq_vector() callback.
+
+But for removing dw_pcie_edma_irq_verify() and dw_edma_chip::nr_irqs, we also
+need corresponding change in dw_edma_irq_request(). So I'm not asking you to
+implement it. It is more of a note to myself or someone interested :)
+
+> Looking at pcie-ep@1c08000 in arch/arm64/boot/dts/qcom/sm8450.dtsi,
+> it does also specify "dma" IRQ in DT.
+> 
+> 
+> So, should I submit a patch that does:
+> 
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 89aad5a08928..c7a2cf5e886f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -1045,9 +1045,7 @@ static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+>  	char name[15];
+>  	int ret;
+>  
+> -	if (pci->edma.nr_irqs == 1)
+> -		return 0;
+> -	else if (pci->edma.nr_irqs > 1)
+> +	if (pci->edma.nr_irqs > 1)
+>  		return pci->edma.nr_irqs != ch_cnt ? -EINVAL : 0;
+>  
+>  	ret = platform_get_irq_byname_optional(pdev, "dma");
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index bf7c6ac0f3e3..ad98598bb522 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -874,7 +874,6 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+>  	pcie_ep->pci.dev = dev;
+>  	pcie_ep->pci.ops = &pci_ops;
+>  	pcie_ep->pci.ep.ops = &pci_ep_ops;
+> -	pcie_ep->pci.edma.nr_irqs = 1;
+>  
+>  	pcie_ep->cfg = of_device_get_match_data(dev);
+>  	if (pcie_ep->cfg && pcie_ep->cfg->hdma_support) {
+> 
+> 
+> Because, since sm8450 (and all other platforms) currently must have
+> either "dma" or "dmaX" in DT, all currently supported platform should
+> still work.
+> 
+> 
+> If sm8450 case, this code:
+> https://github.com/torvalds/linux/blob/v6.17-rc4/drivers/pci/controller/dwc/pcie-designware.c#L1053-L1057
+> 
+> should set pcie_ep->pci.edma.nr_irqs = 1, because sdm8450 has "dma" in DT.
+> 
+
+Ack, for both changes.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
