@@ -1,73 +1,65 @@
-Return-Path: <linux-pci+bounces-35694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35695-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F33E3B49C45
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0B93B49C4A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:43:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1AD43B50E7
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:40:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE76D4E1098
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:41:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FEB62E03F1;
-	Mon,  8 Sep 2025 21:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A9F2E7F16;
+	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KG0xsGVK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1nq8UmL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378BB2DFA38;
-	Mon,  8 Sep 2025 21:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6372E7BCC;
+	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757367278; cv=none; b=nVNfJWvnHOzYXVDxEBjYU/Rkj8MVXMYhWROCovjGIWzh5eqtMpfOueGR4LMu9Q1fP8ig/skHcszk8xV9uIxuFeWIPJT89IVPXqyMfB1WvDT7c/M/ffUYBtE9kc1uqEttz0hJQ6S4AQq4YbJgxJPzNnJ65r+g4BFFe2Vk0C2shxw=
+	t=1757367591; cv=none; b=K8DWHb1TSa4G62yutknHwt2bphzQMfGPAFvBCoXvVccplFiF3MIUWDLYfpuwTJ4TV90Rvw1VqgcqqVpK6t6X65kO90c6pbLy1IqteeWh+Gp2oJFagsTibiaNItTnKgXW0Fcf1VBavZe+se4JoLWeyatjatdC4cuVBapbTLWcd7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757367278; c=relaxed/simple;
-	bh=NzbMSMpQ4f3Do6KUVa9pmwGpe4Sd68+LnHSAddc02hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=B1s4PIkGbgBYJr+ScN37qa1B35KItZg55lRHCDkHlxlCSOPAJAKuhnJ+CCHoCxip6HB5Gysg0vTmwvsRiWoRQfsbUGxntRcqh8nXPnAvHPsWxIvYnXjq1Bva68l59KnV3oBwipvkfY3bOCKoq0nOLmIUNJ+w7vESvmYadOtLQSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KG0xsGVK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95884C4CEF1;
-	Mon,  8 Sep 2025 21:34:37 +0000 (UTC)
+	s=arc-20240116; t=1757367591; c=relaxed/simple;
+	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSclH9eQL/Uhcm9cZq7QT2d/aHvcO8rhbYDzrGLPV4exSwbDDInB5KGtnOl2TWNZ/hmztAS+T2FYyyeSanaQZ6558GPhED1p2hM7yA3GPGbdpyWsgJTUS2fJc70K2RrjBH6l68y6op1gZ7ZB9Au3p7klI0DwpuYBgt2SwyzyANE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1nq8UmL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183ABC4CEF1;
+	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757367277;
-	bh=NzbMSMpQ4f3Do6KUVa9pmwGpe4Sd68+LnHSAddc02hc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KG0xsGVKP50g/2MEAKc7sN+1zhMxdzclu/RHx9bMUgGoudP8nnKRnjTGCvWakiHcD
-	 7BhxiVTC6Xp/z989LDquWV9Mqeppxh8onBPSxzNPfFi29SBSOmyvb17FABTwAshXqa
-	 pfRK2KiQ1GzMrYFZLhZFEcd+vQ5OQx1EOaHKahYYZWahdltSQDUS70YkkRyA5uqDhg
-	 NQ+tiTpyReOIBucvYBR86yByR8r2tWIzuHishUj92EgsVC8pcxC53NrnFtSOLaViZo
-	 9s7opjqTUVpPIxAgNzXNUP6kVgIcE2AQGGdPA8X9cgOLETH5L5lx6WVFIEHiioBIzq
-	 ZEYlJbuyV5RfA==
-Date: Mon, 8 Sep 2025 16:34:36 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>
-Subject: Re: [PATCH v6 05/11] PCI: PM: Disable device wakeups when halting
- system through S4 flow
-Message-ID: <20250908213436.GA1465429@bhelgaas>
+	s=k20201202; t=1757367591;
+	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S1nq8UmLGx5uRMQs6vh1VmUFVYOAhLM8k3R8gBBpIz5bJ8FbBW4/mPoZh3opih+d9
+	 fD77GaQ1PNtQC9IachDxXUOs0L9pFzXvHPnMwZJJynrt6xEfjEMooCEvEITPHc2aQd
+	 2YzvfcA+lyEs5QjH+jYg4eO3bAGh3oW5cyvpvv8wl8fjyR4Iy89cCYBM8kKwzHVf7t
+	 4TM7W86KNAj7GTJEPLUU9c9xhFdgp1jQ+dNmBInuvFJsNzq+BBjvITJaLyzAk7hwB8
+	 YzE1A/QaN4qDYNpA1+gqTN/Qs97XnUkegNOA/cJmkgxiXE0qs28rB1mLGHaH+AP1Qx
+	 dlEv9ESd1sVSg==
+Date: Mon, 8 Sep 2025 14:39:50 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
+Message-ID: <202509081437.1F92F56@keescook>
+References: <20250905052836.work.425-kees@kernel.org>
+ <20250908205349.GA1463686@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,65 +68,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250818020101.3619237-6-superm1@kernel.org>
+In-Reply-To: <20250908205349.GA1463686@bhelgaas>
 
-In subject, s|PCI: PM:|PCI/PM:| to follow previous practice.
-
-On Sun, Aug 17, 2025 at 09:00:55PM -0500, Mario Limonciello (AMD) wrote:
-> PCI devices can be programmed as a wakeup source from low power states
-> by sysfs.  However when using the S4 flow to go into S5 these wakeup
-> sources should be disabled to avoid what users would perceive as
-> spurious wakeup events.
-
-Is the "can be programmed vis sysfs" part relevant here?
-
-I think S4 and S5 are ACPI sleep states not applicable to all
-platforms.  Is it relevant that we got here via ACPI?
-
-I assume non-ACPI systems can also exercise this path.  Is there a way
-to describe this scenario in a way that would apply to all systems?
-
-I'm not sure what "using the S4 flow to go in to S5" means.
-
-It would be nice to have a spec reference or some sort of rationale
-for the requirement to disable all wakeup sources in SYSTEM_HALT and
-SYSTEM_POWER_OFF.
-
-> Tested-by: Eric Naim <dnaim@cachyos.org>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
-> v5:
->  * Re-order
->  * Add tags
-> v4:
->  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
-> ---
->  drivers/pci/pci-driver.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Mon, Sep 08, 2025 at 03:53:49PM -0500, Bjorn Helgaas wrote:
+> On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
+> > After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
+> > ffs()-family implementations"), which allows GCC's value range tracker
+> > to see past ffs(), GCC 8 on ARM thinks that it might be possible that
+> > "ffs(rq) - 8" used here:
+> > 
+> > 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> > 
+> > could wrap below 0, leading to a very large value, which would be out of
+> > range for the FIELD_PREP() usage:
+> > 
+> > drivers/pci/pci.c: In function 'pcie_set_readrq':
+> > include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
+> > ...
+> > drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
+> >   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> >       ^~~~~~~~~~
+> > 
+> > If the result of the ffs() is bounds checked before being used in
+> > FIELD_PREP(), the value tracker seems happy again. :)
+> > 
+> > Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 63665240ae87f..f201d298d7173 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1139,6 +1139,10 @@ static int pci_pm_poweroff(struct device *dev)
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  
-> +	if (device_may_wakeup(dev) &&
-> +	    (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF))
-> +		device_set_wakeup_enable(dev, false);
+> What's your plan for merging cbc654d18d37?  I suppose it's intended
+> for v6.18?  If it will appear in v6.17, let me know so I can merge
+> this for it as well.
 
-I guess the suggestion is that we can't wake up at all from
-SYSTEM_HALT or SYSTEM_POWER_OFF?  Would both be considered S5?
+I had it planned for v6.18.
 
-Does this mean we need a physical power button push to start up again?
-I guess ACPI r6.5, sec 16.1.5 kind of suggests that: "hardware does
-allow a transition to S0 due to power button press or a Remote Start."
+> Maybe this should go in v6.17 regardless, to avoid a warning
+> regression between this patch and cbc654d18d37?
 
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
->  
-> -- 
-> 2.43.0
-> 
+Sure, or I could take it as part of the ffs series?
+
+-Kees
+
+-- 
+Kees Cook
 
