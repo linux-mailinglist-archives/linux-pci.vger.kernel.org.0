@@ -1,152 +1,82 @@
-Return-Path: <linux-pci+bounces-35627-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35629-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66186B482FD
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 05:48:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95798B4837F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 07:01:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2215A17BAA8
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 03:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E9631893F38
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 05:02:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2311D63F0;
-	Mon,  8 Sep 2025 03:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD20A1E5B64;
+	Mon,  8 Sep 2025 05:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1+HGzm+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEv+XPzy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AF253A7;
-	Mon,  8 Sep 2025 03:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8984236B;
+	Mon,  8 Sep 2025 05:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757303303; cv=none; b=DAwAo+vUh/QmcpL7Tb1f0jzVAlkoWB4XuOXKhHmMfkICqF1zn69tpDjBYr+ahHrwXx3fwwMfijHlFhutid3B1sFu3MXkla0FGOW01tBuWXdqw+jIkTjy4MjlrRNzeU8NHUPKA+l1BW8Xn6wHxgC7DBcB1hn8K/0qLH726lA3/Ts=
+	t=1757307709; cv=none; b=O8SMdfPvkaBDg2pgOFDkb4oTFLVa8musIJbMgXjs0Uj88D45yFgtfX4ROsj1fo92jHuCXpkXne2csDDhop2ci+BNGtRWyudppuPXOCRxMtRtJQpXdR7VeK2IHxp1YSo8x4xhKfsnjnz1BqCX+U6E/TMUMJ09jTaX2BXSbUZugtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757303303; c=relaxed/simple;
-	bh=/bvacUJmYdkFKY7yQmb93B50LcYoGC9OGq8X6zGppu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKRwN+zWdCD3zna2eAqzxZeuYgmwHfXSXtTk4oGF080P+xOI2oIbivxwRr8hr8ln8A3IjvWhpnHfw7MSFJOiACzS2+OOvrUbF1rUqr7MGruBCXpu8nZqGlse1Ok7+7iy8MS9b7Be1c0DmQEK/p6gCtZi5HCnSdNAEWkG8My/DlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1+HGzm+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13397C4CEF5;
-	Mon,  8 Sep 2025 03:48:18 +0000 (UTC)
+	s=arc-20240116; t=1757307709; c=relaxed/simple;
+	bh=dS2wsjUpjJr8agKHSksEWK4Gd3UlvHrI9Y9ZHjDPXds=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=YfTixApLiijvn7FJ6yUVDuUbzSFDVu0kQ2DxJFFp05eNkpZD+hHbUTKlTR7p7GRI7krkyWy+X5mlXQCf6czzVsRZSbG8ffq6H4aRAzAjxElccv1URllMVM4D/w+7keBcTyhYdAEK4pvgPBnZS+1+3ZfytBBq0L5y2+3fqam6Aw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEv+XPzy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B0EC4CEF5;
+	Mon,  8 Sep 2025 05:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757303303;
-	bh=/bvacUJmYdkFKY7yQmb93B50LcYoGC9OGq8X6zGppu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P1+HGzm+6FBuuHKFwXA2r/dAOfshb4T4epFazWasn8UzvrOmv8DTR4eVO8rHRqv/J
-	 40R/S4yyYLU2GG4pXqUTTaZ+/m5ICTzIAa3pZZSdMBrTnJb20lkSUC9j6EY5HUst1m
-	 8xBL0M5Ayk+3Lrkj0roIemcPSwVJzRiFaqIeTV8qIJ/Re6gc6jQoeEjTyTMjoNqsOH
-	 awn/ZjCBkKavNvo0EevmR9z9StqweRN9sZxfqUfzFBbr17+OzafOeVQmrRB/U19PJ9
-	 pIGk3DsienHhrY85UhC3Amf8++fWFZfA/m4Wi41EqHrLCRmkObJr85fHpqnvmyebS5
-	 T8x4bPQ3CAB3Q==
-Date: Mon, 8 Sep 2025 09:18:15 +0530
+	s=k20201202; t=1757307709;
+	bh=dS2wsjUpjJr8agKHSksEWK4Gd3UlvHrI9Y9ZHjDPXds=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=mEv+XPzyGqnS0ywfo+WJZxC/Z5pCqJ3KNB/mIrLeJ15ifEsUJ3VaFDCy6ZnWg3ogQ
+	 9bITBYahnM9M6VJdM20BpS7w28tNESmcSmmOVimABQSl5wjBI3skSNpcnRhc0cCd78
+	 dP+oOG3yHyusgwDVsOpm1M/fqK+AcXz9c+vTUYQ6oIOYmw55bo66pV6su5cz0V7IEV
+	 jVGm3Cfv7ySDCN85qYUFRIV5q6S9kd5wPLdJlF4RJbc0cVAw7raZ4AE35SDbsDvaJS
+	 /29lnMJrMYuxUpkaVPlvPMAyyCd+fQ38VIZ+B6FF6+FOM0Vu0LoJP17jpIT164nM8w
+	 r+BFk23l2JfRQ==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Brian Norris <briannorris@chromium.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 2/5] PCI/pwrctrl: Move pci_pwrctrl_init() before
- turning ON the supplies
-Message-ID: <tv7pahvoblw77jziivp7ulassnfdlpsg2z4xvisumbrueapfgu@iyfzlnjjubkv>
-References: <20250903-pci-pwrctrl-perst-v2-2-2d461ed0e061@oss.qualcomm.com>
- <20250907212242.GA1398560@bhelgaas>
+To: "K . Y . Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>
+In-Reply-To: <20250813055350.1670245-1-namcao@linutronix.de>
+References: <20250813055350.1670245-1-namcao@linutronix.de>
+Subject: Re: [PATCH] PCI: hv: Remove unused parameter of hv_msi_free()
+Message-Id: <175730770554.7580.1535538144092861804.b4-ty@kernel.org>
+Date: Mon, 08 Sep 2025 10:31:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250907212242.GA1398560@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Sun, Sep 07, 2025 at 04:22:42PM GMT, Bjorn Helgaas wrote:
-> On Wed, Sep 03, 2025 at 12:43:24PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > 
-> > To allow pwrctrl core to parse the generic resources such as PERST# GPIO
-> > before turning on the supplies.
+
+On Wed, 13 Aug 2025 07:53:50 +0200, Nam Cao wrote:
+> The 'info' parameter of hv_msi_free() is unused. Delete it.
 > 
-> Can we expand this a little bit?  Which function does that parsing,
-> for example?  pci_pwrctrl_init() itself doesn't do any of that, so the
-> connection isn't obious.
 > 
 
-Sure.
+Applied, thanks!
 
-Pwrctrl core function pci_pwrctrl_device_set_ready() deasserts PERST# if the
-callback is available. Since that requires accessing 'pwrctrl->dev',
-pci_pwrctrl_init() that is setting 'pwrctrl->dev' needs to be called earlier.
+[1/1] PCI: hv: Remove unused parameter of hv_msi_free()
+      commit: ce47f81925ed73f9d27b1a01f07afdb031949c68
 
-I will change the description to be more elaborative. It also requires rewording
-since the pwrctrl core is not parsing PERST# on its own now.
-
-- Mani
-
-> > Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 4 ++--
-> >  drivers/pci/pwrctrl/slot.c               | 4 ++--
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-> > index 4e664e7b8dd23f592c0392efbf6728fc5bf9093f..b65955adc7bd44030593e8c49d60db0f39b03d03 100644
-> > --- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-> > +++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-> > @@ -80,6 +80,8 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
-> >  	if (!data)
-> >  		return -ENOMEM;
-> >  
-> > +	pci_pwrctrl_init(&data->ctx, dev);
-> > +
-> >  	data->pwrseq = devm_pwrseq_get(dev, pdata->target);
-> >  	if (IS_ERR(data->pwrseq))
-> >  		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
-> > @@ -95,8 +97,6 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	pci_pwrctrl_init(&data->ctx, dev);
-> > -
-> >  	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
-> >  	if (ret)
-> >  		return dev_err_probe(dev, ret,
-> > diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
-> > index 6e138310b45b9f7e930b6814e0a24f7111d25fee..b68406a6b027e4d9f853e86d4340e0ab267b6126 100644
-> > --- a/drivers/pci/pwrctrl/slot.c
-> > +++ b/drivers/pci/pwrctrl/slot.c
-> > @@ -38,6 +38,8 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
-> >  	if (!slot)
-> >  		return -ENOMEM;
-> >  
-> > +	pci_pwrctrl_init(&slot->ctx, dev);
-> > +
-> >  	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
-> >  					&slot->supplies);
-> >  	if (ret < 0) {
-> > @@ -63,8 +65,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
-> >  				     "Failed to enable slot clock\n");
-> >  	}
-> >  
-> > -	pci_pwrctrl_init(&slot->ctx, dev);
-> > -
-> >  	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
-> >  	if (ret)
-> >  		return dev_err_probe(dev, ret, "Failed to register pwrctrl driver\n");
-> > 
-> > -- 
-> > 2.45.2
-> > 
-> > 
-
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Manivannan Sadhasivam <mani@kernel.org>
+
 
