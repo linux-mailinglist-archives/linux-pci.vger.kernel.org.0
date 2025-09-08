@@ -1,52 +1,51 @@
-Return-Path: <linux-pci+bounces-35695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0B93B49C4A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:43:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A0F9B49C4B
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 23:43:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE76D4E1098
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:41:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21033165410
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 21:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A9F2E7F16;
-	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B902DECD6;
+	Mon,  8 Sep 2025 21:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1nq8UmL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTWdOjbY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6372E7BCC;
-	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D7520C004;
+	Mon,  8 Sep 2025 21:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757367591; cv=none; b=K8DWHb1TSa4G62yutknHwt2bphzQMfGPAFvBCoXvVccplFiF3MIUWDLYfpuwTJ4TV90Rvw1VqgcqqVpK6t6X65kO90c6pbLy1IqteeWh+Gp2oJFagsTibiaNItTnKgXW0Fcf1VBavZe+se4JoLWeyatjatdC4cuVBapbTLWcd7Y=
+	t=1757367787; cv=none; b=GyTJDOdVaqfT6aeEO0cva0Knoaoq3Uda9PkNiinv/8yP+jv7VtwDQ1tjRgt6hV9LX89njoWjTHr78GfIA1MVlOwXcsk2yKmldeCRw0A9xc3K6qaf5gYCp2YXtHw9THl5uf3WRlHeaAE8wBLFL43CgNPMoHImrYJWdPOL6Nrlh/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757367591; c=relaxed/simple;
-	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	s=arc-20240116; t=1757367787; c=relaxed/simple;
+	bh=84k4JDUXxNpDLTZlejsaeNIruzeP+rMx+BBesQrg90w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSclH9eQL/Uhcm9cZq7QT2d/aHvcO8rhbYDzrGLPV4exSwbDDInB5KGtnOl2TWNZ/hmztAS+T2FYyyeSanaQZ6558GPhED1p2hM7yA3GPGbdpyWsgJTUS2fJc70K2RrjBH6l68y6op1gZ7ZB9Au3p7klI0DwpuYBgt2SwyzyANE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1nq8UmL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183ABC4CEF1;
-	Mon,  8 Sep 2025 21:39:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9AeM9E29uWpGujlAH/AIICtjKAC+9t1ly7xCdvpDtY35Ftv4iXTAa1eNejX5e+fVsmF9eVEkQCG1IahmotFCP8khGnzs7iFUWS77Y9hqGgkVyJi0D5oubueF1sul9EHUhSLSDDQ8ZwgzHQ1WzWodYVzskfU8DGmVodcf9Q9T7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTWdOjbY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83EAEC4CEF1;
+	Mon,  8 Sep 2025 21:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757367591;
-	bh=UU018OS5T8BP6FQvRLgEBBbYmTBbhOLVCvGQwUhRScg=;
+	s=k20201202; t=1757367786;
+	bh=84k4JDUXxNpDLTZlejsaeNIruzeP+rMx+BBesQrg90w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S1nq8UmLGx5uRMQs6vh1VmUFVYOAhLM8k3R8gBBpIz5bJ8FbBW4/mPoZh3opih+d9
-	 fD77GaQ1PNtQC9IachDxXUOs0L9pFzXvHPnMwZJJynrt6xEfjEMooCEvEITPHc2aQd
-	 2YzvfcA+lyEs5QjH+jYg4eO3bAGh3oW5cyvpvv8wl8fjyR4Iy89cCYBM8kKwzHVf7t
-	 4TM7W86KNAj7GTJEPLUU9c9xhFdgp1jQ+dNmBInuvFJsNzq+BBjvITJaLyzAk7hwB8
-	 YzE1A/QaN4qDYNpA1+gqTN/Qs97XnUkegNOA/cJmkgxiXE0qs28rB1mLGHaH+AP1Qx
-	 dlEv9ESd1sVSg==
-Date: Mon, 8 Sep 2025 14:39:50 -0700
+	b=FTWdOjbYqnZovfYFh2G+eVGinRJ3PM9ePxSIgimEzzQOlq6RXZsJ1A9UN2dEYvmdr
+	 Q/kXBNTV5biGP4mC94pFzPHSK8li7JPYu0OAhaKSrnWPf2gGdEws4tUCKPfFJCgG7d
+	 +zG1dKwhsuUio9RSbO7stWIspRobWl3XPP1QmTwqnVZDjIZ1945fT3diqyA+f7abfq
+	 m4XcopGdLv+Ee3P/L+7azk0WtRqWEAw5WARMYIlP1FFcWuGjBL0yhyVROXDvMkcLLm
+	 W8yo22w/UODq+MNPIXYqEOimdcPzJtLvZa4WayRumevBNMmXYctE/Yd/8W4hzyhnAB
+	 oMkc5WleWlRYQ==
+Date: Mon, 8 Sep 2025 14:43:06 -0700
 From: Kees Cook <kees@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: Anders Roxell <anders.roxell@linaro.org>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
 	Naresh Kamboju <naresh.kamboju@linaro.org>,
 	lkft-triage@lists.linaro.org,
 	Linux Regressions <regressions@lists.linux.dev>,
@@ -57,9 +56,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Message-ID: <202509081437.1F92F56@keescook>
+Message-ID: <202509081440.526A41768@keescook>
 References: <20250905052836.work.425-kees@kernel.org>
- <20250908205349.GA1463686@bhelgaas>
+ <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,44 +67,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250908205349.GA1463686@bhelgaas>
+In-Reply-To: <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
 
-On Mon, Sep 08, 2025 at 03:53:49PM -0500, Bjorn Helgaas wrote:
-> On Thu, Sep 04, 2025 at 10:28:41PM -0700, Kees Cook wrote:
-> > After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
-> > ffs()-family implementations"), which allows GCC's value range tracker
-> > to see past ffs(), GCC 8 on ARM thinks that it might be possible that
-> > "ffs(rq) - 8" used here:
-> > 
-> > 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
-> > 
-> > could wrap below 0, leading to a very large value, which would be out of
-> > range for the FIELD_PREP() usage:
-> > 
-> > drivers/pci/pci.c: In function 'pcie_set_readrq':
-> > include/linux/compiler_types.h:572:38: error: call to '__compiletime_assert_471' declared with attribute error: FIELD_PREP: value too large for the field
-> > ...
-> > drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
-> >   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
-> >       ^~~~~~~~~~
-> > 
-> > If the result of the ffs() is bounds checked before being used in
-> > FIELD_PREP(), the value tracker seems happy again. :)
-> > 
-> > Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic ffs()-family implementations")
+On Fri, Sep 05, 2025 at 10:16:33AM +0200, Anders Roxell wrote:
+> > -       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+> > +       firstbit = ffs(rq);
+> > +       if (firstbit < 8)
+> > +               return -EINVAL;
+> > +       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
 > 
-> What's your plan for merging cbc654d18d37?  I suppose it's intended
-> for v6.18?  If it will appear in v6.17, let me know so I can merge
-> this for it as well.
+> Hi Kees,
+> 
+> Thank you for looking into this.
+> 
+> These warnings are not a one time thing.  the later versions of gcc
+> can figure it
+> out that firstbit is at least 8 based on the "rq < 128" (i guess), so
+> we're adding
+> bogus code.  maybe we should just disable the check for gcc-8.
 
-I had it planned for v6.18.
+I think the issue is that GCC thinks it knows the range for ffs is not
+the entire [0..UINT_MAX], but it _doesn't_ know how "rq" affects the
+outcome. (The range checker warnings kick in when it's not the whole
+range of a given type.) But I am just guessing, based on what how I've
+seen in behave in the past.
 
-> Maybe this should go in v6.17 regardless, to avoid a warning
-> regression between this patch and cbc654d18d37?
+> Maybe something like this:
+> 
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 5355f8f806a9..4716025c98c7 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -65,9 +65,20 @@
+>                 BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+>                                  _pfx "mask is not constant");          \
+>                 BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+> -               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+> -                                ~((_mask) >> __bf_shf(_mask)) &        \
+> -                                       (0 + (_val)) : 0,               \
+> +               /* Value validation disabled for gcc < 9 due to
+> __attribute_const__ issues.
+> +                */ \
+> +               BUILD_BUG_ON_MSG(__GNUC__ >= 9 &&
+> __builtin_constant_p(_val) ?  \
+> +                                ~((_mask) >> __bf_shf(_mask)) &
+>          \
+> +                                       (0 + (_val)) : 0,
+>          \
+>                                  _pfx "value too large for the field"); \
+>                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+>                                  __bf_cast_unsigned(_reg, ~0ull),       \
+> 
+> I found similar patterns with ffs and FIELD_PREP here
+> drivers/dma/uniphier-xdmac.c row 156 and 165
+> drivers/gpu/drm/i915/display/intel_cursor_regs.h row 17
 
-Sure, or I could take it as part of the ffs series?
-
--Kees
+You got warnings for these?
 
 -- 
 Kees Cook
