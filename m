@@ -1,162 +1,147 @@
-Return-Path: <linux-pci+bounces-35677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1F3CB49434
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 17:49:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24704B494C9
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 18:08:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58C14188701C
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 15:50:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3DD3166EDD
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Sep 2025 16:08:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1CE21255E;
-	Mon,  8 Sep 2025 15:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8dmRxuo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB75235BE8;
+	Mon,  8 Sep 2025 16:08:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BB61FF61E;
-	Mon,  8 Sep 2025 15:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD401306B34;
+	Mon,  8 Sep 2025 16:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757346588; cv=none; b=uSKRlvFF1wksI7z2xzr2UP6SpbjtEdoNcHNqckWBBccxzInjvXFX6ZpNvwxECq01X62bVFL6KDGjO2CvW+iaAb9ycy0QLHyGt26FFZL8tf0EAlNAVc2erB0IT+lW9YGSE3NmWZ9FxcVIy0Jdn3y8/rfpjCCGoJWmsY2mslV71D4=
+	t=1757347722; cv=none; b=eJkdPjOoxpwOP51AiRZqdjolZZytgDABIHvvBf/1xZINw7RAIN8kK0Ftjqy56vFy3vXrgxuuwSQQCtZ2eEhEeYGvWvpaPlNwnWdQ0W+0c1lA3e5B8wC1rKMTc6smv3/GRHmKx3hzETkCtNExbke0P2Z8+WCkVkoI8020e7wZQWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757346588; c=relaxed/simple;
-	bh=QEkG6MGFd6wCgyTdrMCBAh2H91botqbPD1Iua5pCB8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiQi5LR48z2ZMjUQzlJ8GNfeHKnzysjztXxU9gOklctROGapOhu0eVyDOL5AxRDYOo3t+R9eJC2pF4NmN0bA8KmhQvNLSpgELQHZHRkcBypmhyPgEFKiu7zN2CNthOlb/D9aW0sfstmNKRLanxWtqNbJe1azOFhcrseQUHcwlo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8dmRxuo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1985EC4CEF1;
-	Mon,  8 Sep 2025 15:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757346588;
-	bh=QEkG6MGFd6wCgyTdrMCBAh2H91botqbPD1Iua5pCB8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u8dmRxuoPPXoDzHo2FzdAlM6Wn+oBq6eoOkCPnirxucLaTnwKXBbNAxxxF2xxAgMe
-	 lk24oN0d7WTo3wyANolZi3fQVDMscP7BBCPtaXIQJt5kHx781aJOwtx0bDjXn+/fwr
-	 sVffPrHZIpkjtWVVt7k6TNDApA6bg2a0xpXeihDWmVD4pkmpwe7cuOmdMJHxF1aUZp
-	 2xRdsV8tkeeCXsmOJslX1O7Bq+b9/BglGS+4KzygcmjjyUtl1d00EULx8P+aoaf1ox
-	 33cV4a4jAiwrIkEZ6NF4K9rgXnF4Bnki3/p1D60gSX0IO21WND2hgPnxER838llfgA
-	 rI8G6G82+Xz/A==
-Date: Mon, 8 Sep 2025 21:19:40 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] PCI: imx6: Add a method to handle CLKREQ#
- override active low
-Message-ID: <ruhcvw3oqalrspkbl4ay5vebomatww6wbirwzowxyqxq7sdjou@yba5ri45j24w>
-References: <20250820081048.2279057-1-hongxing.zhu@nxp.com>
- <20250820081048.2279057-3-hongxing.zhu@nxp.com>
- <ryvt2k2blew5wisy7edkjqdcmulrwey7lkeriasrmvaigpe3ku@vdgkod2bf7ma>
- <aL71k+CeZEwTnn86@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1757347722; c=relaxed/simple;
+	bh=L0oLhH7XTO62+cYljj+HqUg2QW/9wnUQVJlr7OlxZR0=;
+	h=Message-Id:From:Date:Subject:To:Cc; b=cgaN6BkgFO0j1XTiJP9XW1s8qm0tLUDysa13tgi+CB5yb86tUSoQ00K4zq60MyDyop61/uyB+fKxwWxRxfmtvFKch1iRyIQDnkZQDbc6kOQM6Xi7gtnwwXlcHNq7/oGvkF5AeGYNrdpMDWd9nIW+w5LPq+U8qAqVwE/+wxxYbss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4CCB020091A0;
+	Mon,  8 Sep 2025 18:08:30 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 45B715307EE; Mon,  8 Sep 2025 18:08:30 +0200 (CEST)
+Message-Id: <83f58870043e2ae64f19b3a2169b5c3cf3f95130.1757346718.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Mon, 8 Sep 2025 18:08:31 +0200
+Subject: [PATCH] genirq/manage: Reduce priority of forced secondary IRQ
+ handler
+To: Thomas Gleixner <tglx@linutronix.de>, "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>, Crystal Wood <crwood@redhat.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, Attila Fazekas <afazekas@redhat.com>, linux-pci@vger.kernel.org, linux-rt-devel@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aL71k+CeZEwTnn86@lizhi-Precision-Tower-5810>
 
-On Mon, Sep 08, 2025 at 11:26:11AM GMT, Frank Li wrote:
-> On Mon, Sep 08, 2025 at 11:36:02AM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Aug 20, 2025 at 04:10:48PM GMT, Richard Zhu wrote:
-> > > The CLKREQ# is an open drain, active low signal that is driven low by
-> > > the card to request reference clock.
-> > >
-> > > Since the reference clock may be required by i.MX PCIe host too.
-> >
-> > Add some info on why the refclk is needed by the host.
-> >
-> > > To make
-> > > sure this clock is available even when the CLKREQ# isn't driven low by
-> > > the card(e.x no card connected), force CLKREQ# override active low for
-> > > i.MX PCIe host during initialization.
-> > >
-> >
-> > CLKREQ# override is not a spec defined feature. So you need to explain what it
-> > does first.
-> >
-> > > The CLKREQ# override can be cleared safely when supports-clkreq is
-> > > present and PCIe link is up later. Because the CLKREQ# would be driven
-> > > low by the card in this case.
-> > >
-> >
-> > Why do you need to depend on 'supports-clkreq' property? Don't you already know
-> > if your platform supports CLKREQ# or not? None of the upstream DTS has the
-> > 'supports-clkreq' property set and the NXP binding also doesn't enable this
-> > property.
-> 
-> It is history reason. Supposed all the boards which supports L1SS need set
-> 'supports-clkreq' in dts. L1SS require board design use open drain connect
-> RC's clk-req and EP's clk-req together, which come from one ECN of PCI
-> spec.
-> 
-> But most M.2 slot now, which support L1SS, so most platform default enable
-> L1SS or default 'supports-clkreq' on.
-> 
-> Ideally, 'supports-clkreq' should use revert logic like 'clk-req-broken'.
-> but 'supports-clkreq' already come into stardard PCIe binding now.
-> 
-> One of i.MX95 boards use standard PCIe slot, PIN 12
-> 12	CLKREQ#	Ground	Clock Request Signal[26]
-> which is reserved at old PCIe standard, so some old PCIe card float this
-> pin.
-> 
+Crystal reports the PCIe Advanced Error Reporting driver getting stuck
+in an infinite loop on PREEMPT_RT:  Both the primary IRQ handler
+aer_irq() as well as the secondary handler aer_isr() are forced into
+threads with identical priority.
 
-Ok. IIUC, i.MX platforms doesn't always support CLKREQ#, as the pin might not be
-wired on some connectors. So if the driver turns off the override, CLKREQ# will
-be driven high, but the endpoint wouldn't get a chance to drive it low and it
-won't receive the refclk.
+Crystal writes that on the ARM system in question, the primary IRQ
+handler has to clear an error in the Root Error Status register...
 
-Is my understanding correct?
+   "before the next error happens, or else the hardware will set the
+    Multiple ERR_COR Received bit.  If that bit is set, then aer_isr()
+    can't rely on the Error Source Identification register, so it scans
+    through all devices looking for errors -- and for some reason, on
+    this system, accessing the AER registers (or any Config Space above
+    0x400, even though there are capabilities located there) generates
+    an Unsupported Request Error (but returns valid data).  Since this
+    happens more than once, without aer_irq() preempting, it causes
+    another multi error and we get stuck in a loop."
 
-I'm wondering in those cases, why can't you keep the CLKREQ# pin to be in
-active low state by defining the initial pinctrl state in DT? Can't you change
-the pinctrl state of CLKREQ#?
+The issue does not show on non-PREEMPT_RT since the primary IRQ handler
+runs in hardirq context and thus clears the Root Error Status register
+before waking the secondary IRQ handler's thread.
 
-> So I think most dts in kernel tree should add 'supports-clkreq' property
-> if they use M.2 and connect CLK_REQ# as below [1]
-> ============================================
->               VCC
->               ---
->                |
->                R (10K)
->                |
-> CLK_REQ# (RC)------ CLK_REQ#(EP)
-> 
-> NOT add supports-clkreq if connect as below [2]
-> ==========================================
-> 
-> CLK_REQ# (RC)  ---> |---------|
->                     | OR GATE | ---> control ref clock
-> CLK_REQ#(EP)   ---> |-------- |
-> 
-> 
-> >
-> > So I'm wondering how you are suddenly using this property. The property implies
-> > that when not set to true, CLKREQ# is not supported by the platform. So when the
-> > driver starts using this property, all the old DTS based platforms are not going
-> > to release CLKREQ# from driving low, so L1SS will not be entered for them. Do
-> > you really want it to happen?
-> 
-> Actually, some old board use [2]. we will add supports-clkreq if board
-> design use [1], so correct reflect board design.
-> 
+Simulate the same behavior on PREEMPT_RT by assigning a lower default
+priority to forced secondary IRQ handlers.
 
-Ok, thanks for clarifying.
+Reported-by: Crystal Wood <crwood@redhat.com>
+Tested-by: Crystal Wood <crwood@redhat.com>
+Closes: https://lore.kernel.org/r/20250902224441.368483-1-crwood@redhat.com/
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+Crystal provided a Tested-by off-list.  I've used Crystal's suggestion
+for the code comment, but if anyone prefers Sebastian's or some other
+wording, I don't mind either respinning myself or a maintainer amending
+this or any other aspect of the patch when applying.  Thanks!
 
-- Mani
+ include/linux/sched.h   |  1 +
+ kernel/irq/manage.c     |  5 ++++-
+ kernel/sched/syscalls.c | 11 +++++++++++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 2b27238..ceed23d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1894,6 +1894,7 @@ static inline int task_nice(const struct task_struct *p)
+ extern int sched_setscheduler(struct task_struct *, int, const struct sched_param *);
+ extern int sched_setscheduler_nocheck(struct task_struct *, int, const struct sched_param *);
+ extern void sched_set_fifo(struct task_struct *p);
++extern void sched_set_fifo_minus_one(struct task_struct *p);
+ extern void sched_set_fifo_low(struct task_struct *p);
+ extern void sched_set_normal(struct task_struct *p, int nice);
+ extern int sched_setattr(struct task_struct *, const struct sched_attr *);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index c948373..b09c18a 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1239,7 +1239,10 @@ static int irq_thread(void *data)
+ 
+ 	irq_thread_set_ready(desc, action);
+ 
+-	sched_set_fifo(current);
++	if (action->handler == irq_forced_secondary_handler)
++		sched_set_fifo_minus_one(current);
++	else
++		sched_set_fifo(current);
+ 
+ 	if (force_irqthreads() && test_bit(IRQTF_FORCED_THREAD,
+ 					   &action->thread_flags))
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 77ae87f..4be85aa 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -847,6 +847,17 @@ void sched_set_fifo(struct task_struct *p)
+ EXPORT_SYMBOL_GPL(sched_set_fifo);
+ 
+ /*
++ * For tasks that must be preemptible by a sched_set_fifo() task, such as
++ * to simulate the behavior of a non-PREEMPT_RT system where the
++ * sched_set_fifo() task is a hard interrupt.
++ */
++void sched_set_fifo_minus_one(struct task_struct *p)
++{
++	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 - 1 };
++	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
++}
++
++/*
+  * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
+  */
+ void sched_set_fifo_low(struct task_struct *p)
 -- 
-மணிவண்ணன் சதாசிவம்
+2.50.1
+
 
