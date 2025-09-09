@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-35761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2564BB5064A
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:19:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD6F3B5063C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:18:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 571DA7B5F57
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:16:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 675571648E8
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:18:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA663570CB;
-	Tue,  9 Sep 2025 19:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D04336998E;
+	Tue,  9 Sep 2025 19:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctzTcQvD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZPx17BJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9814B3570C1;
-	Tue,  9 Sep 2025 19:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4553570C1;
+	Tue,  9 Sep 2025 19:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757445419; cv=none; b=a3zGMvp9bJqLLBDvPaZL+f/5dhoNHAKQ7FP82f4pNQpKlqaLdyb6ed8NNsqXlDSvVYpx0eYDHMpM0YxL8cSAzyRIfXEzJkL8sLmk1BV7NDAkFSHP9+/B342NRdS+j6a9U/OwZsFhbCi/R7LlbgnKmeDIgFqXyDtFW1Y7rQC/3vo=
+	t=1757445421; cv=none; b=Ui26gJBpWWHayWA7h//XSLwdfa8b0z4TxFgDGe5eDFYC8bQZ+XqCkZqeetxPi/r6I8xUdASaDQjU0vK2fCRZ0kalTsfhmoArJ7FDFu0eA4nUuLYYwhhjbcstUuF9HYCC8VpYG5nWKYPrEr+BvzOZwkneUN1bj4bJt34ERz1JjaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757445419; c=relaxed/simple;
-	bh=lZO49mOiU9nMXanXitdCGns/iICvFzwUE7jh8Qy4c6w=;
+	s=arc-20240116; t=1757445421; c=relaxed/simple;
+	bh=3S7JR1J0KLdyO8pzE3T0jrrcCJZbmsNBb/5yq5sNZ4o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lJdQJF5xMJlZoPIecJm4O7dYtLlrR/4h+dcPJIY2wgwd1mEREcyEw1+JkeUmQiof9whNEw4IpnnlfqAIS7eS9SPiQhpGMIUWtKtuChFfR/z7HPLrklUbrmsA1H+ODEoXQltoZRLw4Fm9y9Yf0fZgnZdyjFcUR6Qf+8Bz9wqx1B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctzTcQvD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0016AC4CEFA;
-	Tue,  9 Sep 2025 19:16:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=m6qrpox/vYJllnuHPmb/vZMvuNpK8bCmwepjGCDBZo0QSZoZ/mW6f8YcN/tRyYZCmAbgsw38JZYoiDr0ODd6cBx/BObUWKBjeD7V2DiexQZGen+wjl48UYc3b3y2VUgVVuO/Bpl4RPHgvGT1re0wSFYyadWrUaEUMB0oY/J3QO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZPx17BJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BBBC4CEFB;
+	Tue,  9 Sep 2025 19:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757445419;
-	bh=lZO49mOiU9nMXanXitdCGns/iICvFzwUE7jh8Qy4c6w=;
+	s=k20201202; t=1757445421;
+	bh=3S7JR1J0KLdyO8pzE3T0jrrcCJZbmsNBb/5yq5sNZ4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ctzTcQvDiZTrnvtyL3xYyiN+0iSd2ISMJZm2IAi9RRwPdHcOv9NU4+76XBDyjUdo4
-	 oPCd8IgPur2XViFXEDiGq05Zjy9msbpyoswNx0n7Sgmx44NZMZi129eB9luscDNUq1
-	 vL3ULQxdiTk6ptjCWa5tA+9bY2KqRjtIH2ALEx6ICnAA1nPdIKvrr42spCNigpYeSi
-	 bQcdpCXxnO57cyRU6xwO6YFFABnFLI/GNcIRvOwygnOnHAy9XGYaecgqIOR8McZq/D
-	 Fszlw7I6VTEoltIdgxAhq+RlBkilbPBOHwPBn0SmdCL1Pj4jvDf6zTG/tT7nS5Ud2k
-	 cfYM1Fu5qrOMA==
+	b=BZPx17BJcjBtzqBfOofygLJoWjpryBLy94iyWDVTJSc8fSyZi1iutt9KOs0CbXhrG
+	 7jssnzrLaHsKm97Lf9k5rgwk6N7g1wO9731N4Gs3rPcMqoRUk3KajLbdo2nWl/o0M9
+	 l3HX2gAaU3K/QdryeGaiTuldFFZVidaOofVTTtNib2rtu1AO1QAUugqpzx8bB0RAwW
+	 eMDOOrtfPAK77qaLWHFEFbd4miURqNtXQxBdxjghk12LSq6ch5K5tAgX6LsfjalByW
+	 ykvqikgi65r3/Qh915xzVpkpw8PJCCBvlzp/41fKSIahKgSgIgis6c8cKLvitBSzkh
+	 G9cUzIBziEYSw==
 From: "Mario Limonciello (AMD)" <superm1@kernel.org>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,11 +66,10 @@ Cc: Pavel Machek <pavel@kernel.org>,
 	Eric Naim <dnaim@cachyos.org>,
 	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
 	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v7 10/12] drm/amd: Avoid evicting resources at S5
-Date: Tue,  9 Sep 2025 14:16:17 -0500
-Message-ID: <20250909191619.2580169-11-superm1@kernel.org>
+	Denis Benato <benato.denis96@gmail.com>
+Subject: [PATCH v7 11/12] PM: Use hibernate flows for system power off
+Date: Tue,  9 Sep 2025 14:16:18 -0500
+Message-ID: <20250909191619.2580169-12-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250909191619.2580169-1-superm1@kernel.org>
 References: <20250909191619.2580169-1-superm1@kernel.org>
@@ -83,43 +82,76 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Normally resources are evicted on dGPUs at suspend or hibernate and
-on APUs at hibernate.  These steps are unnecessary when using the S4
-callbacks to put the system into S5.
+When the system is powered off the kernel will call device_shutdown()
+which will issue callbacks into PCI core to wake up a device and call
+it's shutdown() callback.  This will leave devices in ACPI D0 which can
+cause some devices to misbehave with spurious wakeups and also leave some
+devices on which will consume power needlessly.
+
+The issue won't happen if the device is in D3 before system shutdown, so
+putting device to low power state before shutdown solves the issue.
+
+ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+compatible with the current Power Resource states. In other words, all
+devices are in the D3 state when the system state is S4."
+
+The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+state is similar to the S4 state except that OSPM does not save any
+context." so it's safe to assume devices should be at D3 for S5.
+
+To accomplish this, use the PMSG_POWEROFF event to call all the device
+hibernate callbacks when the kernel is compiled with hibernate support.
+If compiled without hibernate support or hibernate fails fall back into
+the previous shutdown flow.
 
 Cc: AceLan Kao <acelan.kao@canonical.com>
 Cc: Kai-Heng Feng <kaihengf@nvidia.com>
 Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Denis Benato <benato.denis96@gmail.com>
 Cc: Merthan Karakaş <m3rthn.k@gmail.com>
 Tested-by: Eric Naim <dnaim@cachyos.org>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Tested-by: Denis Benato <benato.denis96@gmail.com>
+Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/
+Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
 Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
 v5:
- * No changes
+ * split to multiple commits, re-order
 v4:
- * Add A-b tag for Alex
  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
+v3:
+ * Add new PMSG_POWEROFF and PM_EVENT_POWEROFF which alias to poweroff
+   callbacks
+ * Don't try to cleanup on dpm_suspend_start() or dpm_suspend_end() failures
+   Jump right into normal shutdown flow instead.
+ * https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/reboot.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index f9b4c4321f67c..4e4b7a63cc61e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -5017,6 +5017,10 @@ static int amdgpu_device_evict_resources(struct amdgpu_device *adev)
- 	if (!adev->in_s4 && (adev->flags & AMD_IS_APU))
- 		return 0;
- 
-+	/* No need to evict when going to S5 through S4 callbacks */
-+	if (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF)
-+		return 0;
-+
- 	ret = amdgpu_ttm_evict_resources(adev, TTM_PL_VRAM);
- 	if (ret) {
- 		dev_warn(adev->dev, "evicting device resources failed\n");
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index ec087827c85cd..c8835f8e5f271 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -13,6 +13,7 @@
+ #include <linux/kexec.h>
+ #include <linux/kmod.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/pm.h>
+ #include <linux/reboot.h>
+ #include <linux/suspend.h>
+ #include <linux/syscalls.h>
+@@ -305,6 +306,11 @@ static void kernel_shutdown_prepare(enum system_states state)
+ 		(state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
+ 	system_state = state;
+ 	usermodehelper_disable();
++#ifdef CONFIG_HIBERNATE_CALLBACKS
++	if (!dpm_suspend_start(PMSG_POWEROFF) && !dpm_suspend_end(PMSG_POWEROFF))
++		return;
++	pr_emerg("Failed to power off devices, using shutdown instead.\n");
++#endif
+ 	device_shutdown();
+ }
+ /**
 -- 
 2.43.0
 
