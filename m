@@ -1,86 +1,88 @@
-Return-Path: <linux-pci+bounces-35723-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35724-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED171B4A118
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 07:04:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7A25B4A1CD
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 08:10:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F3C1162790
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 05:04:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5EB41BC3406
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 06:11:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28BF026AEC;
-	Tue,  9 Sep 2025 05:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE3E2D8791;
+	Tue,  9 Sep 2025 06:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eSm37yw9"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MQyu08Eg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9AA42AA9
-	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 05:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E0C2DE715
+	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 06:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757394265; cv=none; b=kPQy7u7rr4UG6vPckhchBuDp+1Y7WzeK8I7BcXgBOShGsW2uWTY7nbWwXykJ0AvPghOJ6bVJrYeUxu3FQJrPdT+3fPE6rONm9hldK+QvLQYNgJrhgYIi5Vhw6neLDmeALKfqnsJbTH9wl+s2N346yCdme15dG0H/ip6MyYJI5uo=
+	t=1757398243; cv=none; b=ms5ofmLyRAEdPESAQ7zVDJAQ3bkVh4Vg3VGzprELUaZj+gMr72BGaawyz2ZtwbabP0C9wjJbPOFcoxHXnoV8HIcmDR+t3x5BnigyyfeqvvjbYsDxgJCE2zW7WFAjPeg8HvktfVqDHQdEoj6fz/WPUjS+E12nuuaWk61Ibo3hUdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757394265; c=relaxed/simple;
-	bh=WRKEjVB88UyDSuQnn2M8CsE1PKosjlo1Gos8s6oIScU=;
+	s=arc-20240116; t=1757398243; c=relaxed/simple;
+	bh=rVHuikTiUm+yYiuh5ynrRZAPChfwAhV3DMHGrmyb3vY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rurwWaXjBQHiPEXwdhHCPH3R85whcRGvrTbzU+cnrFwz9dJT/3GeBBQgpOosUwCi+8XzSBBPkQrP4JMZiqJdIm/+kYRRMl+QK1ROcY8+r7CpqpJoQcvK2akR56y3BHeAXc9tq7PQqFphQtSfQHjtGHJQIZRA3sL6QtdY5YQjwKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eSm37yw9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757394262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wr2ePTIKgu+dXGPmYEIQm5pOk8ImaQGQj8O0LKwZ6pU=;
-	b=eSm37yw9NOpsyoundLVopN2CaT50Q0JxrKMxqrSx5VTjO5ldAcrQsD0BAO4S2/sCL2lI6r
-	FUYXXE9kALTPlS6190Ed1ic3fAlXRQZUxsxqgDhRJRtV2ChfHbLJwiPlvJB4454wJ+B4dM
-	lMUEEWNp7a0uuTzQ5EZFsILV6SAIoSk=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-n86Fdx_TMy6waGlKKWlfNw-1; Tue, 09 Sep 2025 01:04:21 -0400
-X-MC-Unique: n86Fdx_TMy6waGlKKWlfNw-1
-X-Mimecast-MFC-AGG-ID: n86Fdx_TMy6waGlKKWlfNw_1757394261
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-816ae20ff2dso535682785a.1
-        for <linux-pci@vger.kernel.org>; Mon, 08 Sep 2025 22:04:21 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=TbUIbNctRfMXHdZKB/Rjecus+Qqe4w4npslwU54AZf81H/xa8iKAqDSUEM6QSNXfuwB4jOcm+5rK6F9tFVf/sWdzyjk89ytr4mVsTNcVvEPT8j1zsMrVDY/I+dK6VdoE3SeP4NPqLrQhEcPcU5LvWDCx4U3J5yrgYKtsEVSJMcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MQyu08Eg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5895aOdS022902
+	for <linux-pci@vger.kernel.org>; Tue, 9 Sep 2025 06:10:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	10/u9q+Ectl5aZ4oToFDw7ffJZNCBBFAUzBbsaG295M=; b=MQyu08Eg7cEJVEmU
+	I1wgOJUpg1xSzLHrhw8119YJdVWxQLVtr4k0wK7LN4XUBw0CJu0YGvh4FcJ5nVNV
+	YvVRls4WyFEOWUaNTPru4iC3vj1Cyif45YvXh8DYL+CPbo0YmrTMQVbdhOKvFzOF
+	h2Ndg8hRMbTD+UBUg1sEBbdBxav6X6eQrcj98gQAwXnTAlimoWt5MJ4G+0ZUSIsP
+	bpbMx3P2VjTKSumFq6wxM0VoDioZpLhfwGIh6mfwf0TpltpK1EF8EMpFkdWVYADF
+	3zqhrqkXlaYpO5092DDopTnh47gLjC2yWrIpKV8Ryh6Iv5+ho/ZxOeAGNtw+QM9C
+	3/gIoA==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 490e4kxyrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 09 Sep 2025 06:10:39 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-32bc286bc1eso7191010a91.0
+        for <linux-pci@vger.kernel.org>; Mon, 08 Sep 2025 23:10:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757394260; x=1757999060;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1757398239; x=1758003039;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wr2ePTIKgu+dXGPmYEIQm5pOk8ImaQGQj8O0LKwZ6pU=;
-        b=RoKCAPzrMOOrb6PaHmFOhwM/M9F5Mhkp2cNB05QE/HUk3JVj/Dx6Wznaz4DKzoqaVe
-         +G2weaT8abZ/1RZYySIozAFHG1nA7XVMbOCmcU65XK1bFNi6jwXQs8w7M0YU8BytlKrp
-         YTGPE3roUTrc7X82immPje8N/S2q5o8K7j3W+VBee6b7/9MyQ9c2Ns/yFfmPNctxF8rj
-         MDoNTjDMsiFdRC15FtLf3ViFTsfdncQCZWltPoJHjh/IYJLzoVIsDnm2noffQtuB00/Z
-         bRjcnDAalCNDrsluKeRIM46D96tmarKRRaqr144YIgR5dPC18NDyeJJytu3wjnnV2Pko
-         2o1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhKOF+0yzmp505hxRWeMv32jiqQAlcsG+iikEPcD1wY/d9A/mFyqVEBBVrHm+9DKquXR7/enPwb4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMwSNT62l69iNop9ORd07n10DzaONhAEmVvrBsNWB1ZU4kGFEs
-	Wwr5jc0aulxVbTjlwJyfI7BP3MKzeIys2QoW4VqUUn1mOLIpILx+yi+qNg3QVV40CeeDZS2i/cZ
-	Nk6/GSVqimrYYNSaVUnhcVAhBJbAU2u2fuIlVSU/LCGgDTd/DU8UQ7UJ8IIAVHuqwbrkykQ==
-X-Gm-Gg: ASbGnct35UXeAg0+qLxyjDOc2bVcxwl+bmq598mBY1hQTXO5mkPlBAnC7P6j7FoYzm3
-	OKUCmKXsta4hlDYtFNOhkjyQdXaSCHDVX0v0H210rcB1qJmN2CVpSEpmd3OpeDWQq0ZXHqsscJ9
-	6TEdN9YxlNc060e6j362G1d1rr38CHLUuVV/Zd5n3bekHpQyCUg07rZKpv053M1JkS6H+KJak1S
-	qVECE19Fp4GVDw0OfSihi6YpHJtcArlvSEbMDJtyhj8Kuu+r/q8xfGkfBwsWBUeUf4Wy9KLYNmI
-	7U3qw52cb2ehGu0IRuUsktrCYtMSF62ZhmGa1xBX
-X-Received: by 2002:a05:620a:4049:b0:7e6:9a11:f0c8 with SMTP id af79cd13be357-813beffa169mr1079398685a.21.1757394260361;
-        Mon, 08 Sep 2025 22:04:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+4M9jnqZ7XEtL8iNZFr7DfeWbk4fN2cPgrooLCIHf05hyNRzqCDxbOlnIixcIpPme44IWnw==
-X-Received: by 2002:a05:620a:4049:b0:7e6:9a11:f0c8 with SMTP id af79cd13be357-813beffa169mr1079397285a.21.1757394259952;
-        Mon, 08 Sep 2025 22:04:19 -0700 (PDT)
-Received: from [192.168.40.164] ([70.105.235.240])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-81b58c51dacsm64417585a.12.2025.09.08.22.04.18
+        bh=10/u9q+Ectl5aZ4oToFDw7ffJZNCBBFAUzBbsaG295M=;
+        b=h8chcJnD5q6i3wINB+XgtqnBSG5dyDBhhIL7eYjkMaGLtl0hwqvASCwKHPUwftEuVC
+         sdChv3n+nO/TUE+q8nUxUZv0Bko7ZdZ6NM/gXoAAAiVO2OCVJ255Tqe4yOF9qu9Dlr+q
+         nKBAPk6FmMTa1WqFG9QDsX1QOyxf28rrLi7V8HkKppR0E40wxPnPtmxIqwX5fBfMuR9C
+         iejKZNGf5UqS1kNKmdPUL1kd8QuT/sg4ZdHzJD4p7n4yFf7bwHCxu4ZMo09/oBMVvhy7
+         jyjkaRP+AljUbbbp7vN3sHQxs0S4+CRlzjSd/pIpoIRsQPEHapbQKNos0z4f9DoJBlxx
+         F7wA==
+X-Forwarded-Encrypted: i=1; AJvYcCUK3lYZpWnUusy8H2Otdqf2oYRYQ95mH1a/4ihHBThd/feMBp+WRVVJob73R9goSgXAI387JB8vNeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCqyh0NDEdJ5vVtw9O2pEtMQTZMxqC9NQLEYpuhsK0r1TP3Wi1
+	iYO5HQAxwlycaKm4O1acVs5+bLG6W4a5AOQ1SNJIf8krE/8eP2siIIuRaq/c3yj7hQs1m54wcQa
+	BnP0nfIW1iMI4VFnuNkoAdMSgwM6rmCBg4Xu9j4mGtUOgn6HdwlgE5XeiQD9q7gY=
+X-Gm-Gg: ASbGncvTM4XVr+4K+/gsMUqbS2v62FAunle1fkxRWwcTIGC1DH/F5T0GXtyz468/U4b
+	T+uTgAmWjE0/B4kNWCKAonA90Q/2i24nWjd3WfAoiqnuPLo2aDYw3DLeaiDB075EvewK+mjF5Mw
+	S6fMW29Z6SXzewf2N/kQjvMOilF9uFhoGM3SE92smQ0epdR3vukHo560id80KVYwbnmju9NBi7a
+	RV6FG1MWRBRh458tCwpRKxc7RRZrJR8CI1sMd/uPe23+cx2tddTBMCg8AG2FXUizVpbSGJuec2O
+	lIUVuKmVXKiXzxjC0s2b1nHoe6wPn55AzTC2eWIJDLYLOGUgVnuOjp4jF1YDdMg27nNOkXBkLOJ
+	iWDSJdNlX176Mf/IdKOmUtPk4zHlk6g==
+X-Received: by 2002:a17:90b:2b48:b0:32b:9506:1780 with SMTP id 98e67ed59e1d1-32d43f4383dmr12807305a91.9.1757398238851;
+        Mon, 08 Sep 2025 23:10:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE/3YW/AGyw1pOiBdMzWKnU27fUqMCjMtdcgsRqWOBX438S0Hzgd28bb+NRvv3OT8HTB4tgzw==
+X-Received: by 2002:a17:90b:2b48:b0:32b:9506:1780 with SMTP id 98e67ed59e1d1-32d43f4383dmr12807249a91.9.1757398238249;
+        Mon, 08 Sep 2025 23:10:38 -0700 (PDT)
+Received: from [10.249.96.170] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-774662f9cfdsm853480b3a.101.2025.09.08.23.10.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 22:04:19 -0700 (PDT)
-Message-ID: <b71c7500-3e1b-491b-8cf0-989401bc6795@redhat.com>
-Date: Tue, 9 Sep 2025 01:04:17 -0400
+        Mon, 08 Sep 2025 23:10:37 -0700 (PDT)
+Message-ID: <e514dac2-a732-45e8-a80d-a7a1b889f593@oss.qualcomm.com>
+Date: Tue, 9 Sep 2025 14:10:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,85 +90,104 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] PCI: Check ACS Extended flags for
- pci_bus_isolated()
+Subject: Re: [PATCH v4 0/4] PCI: qcom: Add support for Glymur PCIe Gen5x4
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Bjorn Helgaas
+ <bhelgaas@google.com>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com,
+        qiang.yu@oss.qualcomm.com,
+        Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250903-glymur_pcie5-v4-0-c187c2d9d3bd@oss.qualcomm.com>
 Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
- linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
- Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
- Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
- kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
- tdave@nvidia.com
-References: <11-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
-From: Donald Dutile <ddutile@redhat.com>
-In-Reply-To: <11-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+From: "Wenbin Yao (Consultant)" <wenbin.yao@oss.qualcomm.com>
+In-Reply-To: <20250903-glymur_pcie5-v4-0-c187c2d9d3bd@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAzOCBTYWx0ZWRfXw1zLxAPuiVXs
+ ec9bWf0pqviTQwGhYhKpt5k6ou0GxcN30hP4QoKUwZfdD9txPskg+zf+X3MFK1JVubDaNcEOp8v
+ l5q580ftZAcTf1DsaC7zq8yU2tkr98SN3nBUDpNxhl2MsXLJLbhOkq8Xy1N0c2I9QoQmElJ6ydi
+ QfxdC2YQhO2WEBpOGVl8CFZBChXMTKs4ZLruL1DCRrH/sMvPWY9435BQs8d4wi+Bo0cD68ffQjF
+ Nmf7JrNsLt70H0UvzqgGbuw+XnozATkORNJBompvlYzCr27SQlCOZpOR2RbwoI8n27I+pOlaGYD
+ m7lzpzgnRWT3OldCavzOwMigX5pCv+XDRAJP86myPTz/OD49JlvCEz+H0TVBy9pwWB/VeeMJZzW
+ 89S8ItNS
+X-Authority-Analysis: v=2.4 cv=J66q7BnS c=1 sm=1 tr=0 ts=68bfc4df cx=c_pps
+ a=RP+M6JBNLl+fLTcSJhASfg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=nBUzdE8Pax3goPOuR84A:9 a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
+X-Proofpoint-GUID: zgkT7-05B8tgJwYuI_YXXgbdMxytTCDO
+X-Proofpoint-ORIG-GUID: zgkT7-05B8tgJwYuI_YXXgbdMxytTCDO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-08_06,2025-09-08_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 clxscore=1015 spamscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060038
 
-
-
-On 9/5/25 2:06 PM, Jason Gunthorpe wrote:
-> When looking at a PCIe switch we want to see that the USP/DSP MMIO have
-> request redirect enabled. Detect the case where the USP is expressly not
-> isolated from the DSP and ensure the USP is included in the group.
-> 
-> The DSP Memory Target also applies to the Root Port, check it there
-> too. If upstream directed transactions can reach the root port MMIO then
-> it is not isolated.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+On 9/4/2025 2:22 PM, Wenbin Yao wrote:
+> Glymur is the next generation compute SoC of Qualcomm. This patch series
+> aims to add support for the fifth PCIe instance on it. The fifth PCIe
+> instance on Glymur has a Gen5 4-lane PHY. Patch [1/4] documents PHY as a
+> separate compatible and Patch [2/4] documents controller as a separate
+> compatible. Patch [3/4] describles the new PCS offsets in a dedicated
+> header file. Patch [4/4] adds configuration and compatible for PHY.
+>
+> The device tree changes and whatever driver patches that are not part of
+> this patch series will be posted separately after official announcement of
+> the SOC.
+>
+> Signed-off-by: Wenbin Yao <wenbin.yao@oss.qualcomm.com>
 > ---
->   drivers/pci/search.c | 16 +++++++++++++---
->   1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> index dac6b042fd5f5d..cba417cbe3476e 100644
-> --- a/drivers/pci/search.c
-> +++ b/drivers/pci/search.c
-> @@ -127,6 +127,8 @@ static enum pci_bus_isolation pcie_switch_isolated(struct pci_bus *bus)
->   	 * traffic flowing upstream back downstream through another DSP.
->   	 *
->   	 * Thus any non-permissive DSP spoils the whole bus.
-> +	 * PCI_ACS_UNCLAIMED_RR is not required since rejecting requests with
-> +	 * error is still isolation.
->   	 */
->   	guard(rwsem_read)(&pci_bus_sem);
->   	list_for_each_entry(pdev, &bus->devices, bus_list) {
-> @@ -136,8 +138,14 @@ static enum pci_bus_isolation pcie_switch_isolated(struct pci_bus *bus)
->   		    pdev->dma_alias_mask)
->   			return PCIE_NON_ISOLATED;
->   
-> -		if (!pci_acs_enabled(pdev, PCI_ACS_ISOLATED))
-> +		if (!pci_acs_enabled(pdev, PCI_ACS_ISOLATED |
-> +						   PCI_ACS_DSP_MT_RR |
-> +						   PCI_ACS_USP_MT_RR)) {
-> +			/* The USP is isolated from the DSP */
-> +			if (!pci_acs_enabled(pdev, PCI_ACS_USP_MT_RR))
-> +				return PCIE_NON_ISOLATED;
->   			return PCIE_SWITCH_DSP_NON_ISOLATED;
-> +		}
->   	}
->   	return PCIE_ISOLATED;
->   }
-> @@ -232,11 +240,13 @@ enum pci_bus_isolation pci_bus_isolated(struct pci_bus *bus)
->   	/*
->   	 * Since PCIe links are point to point root ports are isolated if there
->   	 * is no internal loopback to the root port's MMIO. Like MFDs assume if
-> -	 * there is no ACS cap then there is no loopback.
-> +	 * there is no ACS cap then there is no loopback. The root port uses
-> +	 * DSP_MT_RR for its own MMIO.
->   	 */
->   	case PCI_EXP_TYPE_ROOT_PORT:
->   		if (bridge->acs_cap &&
-> -		    !pci_acs_enabled(bridge, PCI_ACS_ISOLATED))
-> +		    !pci_acs_enabled(bridge,
-> +				     PCI_ACS_ISOLATED | PCI_ACS_DSP_MT_RR))
->   			return PCIE_NON_ISOLATED;
->   		return PCIE_ISOLATED;
->   
-Reviewed-by: Donald Dutile <ddutile@redhat.com>
+> Changes in v4:
+> - Rebase Patch[1/4] onto next branch of linux-phy.
+> - Rebase Patch[4/4] onto next branch of linux-phy.
+> - Link to v3: https://lore.kernel.org/r/20250825-glymur_pcie5-v3-0-5c1d1730c16f@oss.qualcomm.com
+>
+> Changes in v3:
+> - Keep qmp_pcie_of_match_table array sorted.
+> - Drop qref supply for PCIe Gen5x4 PHY.
+> - Link to v2: https://lore.kernel.org/r/20250821-glymur_pcie5-v2-0-cd516784ef20@oss.qualcomm.com
+>
+> Changes in v2:
+> - Add offsets of PLL and TXRXZ register blocks for v8.50 PHY in Patch[4/4].
+> - Link to v1: https://lore.kernel.org/r/20250819-glymur_pcie5-v1-0-2ea09f83cbb0@oss.qualcomm.com
+>
+> ---
+> Prudhvi Yarlagadda (4):
+>        dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the Glymur QMP PCIe PHY
+>        dt-bindings: PCI: qcom: Document the Glymur PCIe Controller
+>        phy: qcom-qmp: pcs: Add v8.50 register offsets
+>        phy: qcom: qmp-pcie: Add support for Glymur PCIe Gen5x4 PHY
+>
+>   .../bindings/pci/qcom,pcie-x1e80100.yaml           |  7 ++++-
+>   .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml   |  3 ++
+>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 32 ++++++++++++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v8_50.h      | 13 +++++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp.h                |  2 ++
+>   5 files changed, 56 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 356590cd61cf89e2420d5628e35b6e73c6b6a770
+> change-id: 20250902-glymur_pcie5-bec675b7bdba
+>
+> Best regards,
+
+Hello, do you have any futher comments?
+
+-- 
+With best wishes
+Wenbin
 
 
