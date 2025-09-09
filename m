@@ -1,237 +1,201 @@
-Return-Path: <linux-pci+bounces-35769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F044BB5079E
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 23:03:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C256FB507C0
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 23:10:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C256D7A9823
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:02:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46A131B21A11
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:10:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 260F231D360;
-	Tue,  9 Sep 2025 21:03:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 428F224C077;
+	Tue,  9 Sep 2025 21:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rker6rYa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EkLrvAYH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE9B80B;
-	Tue,  9 Sep 2025 21:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B21244665
+	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 21:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757451820; cv=none; b=r5lF5n4mMp9BCmBI31ESM9AJeaM7QPOflbOWiZmh8YSq/dliU6/zk/0JLbRNxXlMnPO5RX7+KuwXHXKJi5UdCXRLdTSJh0arlWbYL+fm8TyOZiHcYIb8McofguPeD9/yx/N/mN9ON1L8qASrDIHASj8YiDKAbktNgRChj/7Bor4=
+	t=1757452123; cv=none; b=s4zlAE2RfWY9LnIJm2mIrEraCplBVaeuvoKK/n3PnwdALyYUA6hkz0/CkmJCo3iETCnvRhXscogHDCUS/zer2stDGOpDbjHuk8y2Nh7osw1KoqcGtlQYthotyMctxontiU61M9C41+Iurztdi4cZpG6U8H05cySouE3WZbvCzME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757451820; c=relaxed/simple;
-	bh=fHQCgeIfFerWfyiKnWevc0KBl+geiQXdoCwRBomFimI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DXZjNRQppIbaVhlvHnf998zlaLE4gx6NpClfUys/M2y5UVN+rFVkO8/eWPpACLgFGdKIx4z2T0i03bVwTeEGonFCJ5qhcdWi3kC9OnxeqoMVZbNYH1YSeM1GUfMpjrGVD9LqBGOZd52m/OUgIdsDxZpQW2UjD87SIIvlcdOVhq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rker6rYa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47896C4CEF4;
-	Tue,  9 Sep 2025 21:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757451818;
-	bh=fHQCgeIfFerWfyiKnWevc0KBl+geiQXdoCwRBomFimI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Rker6rYavqlM4A5gbdTJTChCkhUD/zdGVai3dsg0VVvo0D8PfdNfhKKuEkAi9VxCy
-	 QBj4072DohjOxPE16KKBScYpvG/ctY8ttTCI9JKCr5UmS+knmZflPvRlXBoArLzf/o
-	 MTHj0K324OhfiS/4WIEYji9oSs39ja5Gn+ABKUzB7SHeQ86WDkfze0V2HiTfgZfFoU
-	 5h69l3DuhOIuCOwTUA4v12omQDapX4iZxVPCqBCulWT2jNlXrSOwc4lUwgfEvHKbgB
-	 WJlgEgJJgHeQEtlec/g8AcgUSEiKobCQ5qteSzFNMCPbhsAJtgm6d1vgK6knCQxv3F
-	 QQz5j+0tm9ZMQ==
-Date: Tue, 9 Sep 2025 16:03:36 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
-	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Donald Dutile <ddutile@redhat.com>, galshalom@nvidia.com,
-	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
-	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
-	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-Subject: Re: [PATCH v3 05/11] PCI: Add pci_reachable_set()
-Message-ID: <20250909210336.GA1507895@bhelgaas>
+	s=arc-20240116; t=1757452123; c=relaxed/simple;
+	bh=cDZaWb9HOezE8naQ78WzJ8LUy9s/6RYOJK4d1i5mcGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=dWP3alxZA1EDjYJebzKBVzK/WgUKRXr6ogXSVcjrmtBEoXBkV3oiCAkwqYlTrtuwZYPDnea1PwZCpDOiafRfrq+SRbQ/xECXUr2pIBF++PoWQ2qwicvPuXmhH05t8R4elFc8UGzFF1Pw9IKYyxX9P7rg0S4OaVT5fDRETOae+4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EkLrvAYH; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757452121; x=1788988121;
+  h=date:from:to:cc:subject:message-id;
+  bh=cDZaWb9HOezE8naQ78WzJ8LUy9s/6RYOJK4d1i5mcGQ=;
+  b=EkLrvAYHZWh2FQ4kirgp2Ta7k5tTFHXMlr9vVN8U9dxqrxwtw7SJbZ93
+   QOpuAv490AuhX/Viye7r1jcpm0vzF/Vj7lnTCbjr6ZeVcs98ufy4a5LN5
+   JBxi7CsaLqxjyZ1yqh3kmRoQBnRu3KUjwqpGa0mayCaHc+0EEifFEliQL
+   NiCOGhoMVMaE9cZPFF+z6F7sDZpJgtt8ZXKHuEJFShONvxag14Zi23HXg
+   ZFzLBg4rUYzpPPznnee52iEP+aSNhmpcP09WUJMqDnnfEXBRieUeY94Wv
+   /63t6wxSjvehxcZvNEm8V/jv4u+TPenuls4rt7UMmwWaa5fLOCcKnAgdM
+   Q==;
+X-CSE-ConnectionGUID: V5HwG1OyRXmP/GzFArz/hQ==
+X-CSE-MsgGUID: tYCROi6eTd+r2ZhwhNPmLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="77359792"
+X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
+   d="scan'208";a="77359792"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 14:08:40 -0700
+X-CSE-ConnectionGUID: EfMnjb0mS0u/rHl8kVWGrw==
+X-CSE-MsgGUID: 8XPiXLWiTU2oX6M6/u8tMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
+   d="scan'208";a="204187595"
+Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 09 Sep 2025 14:08:39 -0700
+Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uw5Zt-0005Hk-1t;
+	Tue, 09 Sep 2025 21:08:37 +0000
+Date: Wed, 10 Sep 2025 05:08:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:endpoint] BUILD SUCCESS
+ d5f6bd3ee3f5048f272182dc91675c082773999e
+Message-ID: <202509100509.4YTav7NX-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
 
-On Fri, Sep 05, 2025 at 03:06:20PM -0300, Jason Gunthorpe wrote:
-> Implement pci_reachable_set() to efficiently compute a set of devices on
-> the same bus that are "reachable" from a starting device. The meaning of
-> reachability is defined by the caller through a callback function.
-> 
-> This is a faster implementation of the same logic in
-> pci_device_group(). Being inside the PCI core allows use of pci_bus_sem so
-> it can use list_for_each_entry() on a small list of devices instead of the
-> expensive for_each_pci_dev(). Server systems can now have hundreds of PCI
-> devices, but typically only a very small number of devices per bus.
-> 
-> An example of a reachability function would be pci_devs_are_dma_aliases()
-> which would compute a set of devices on the same bus that are
-> aliases. This would also be useful in future support for the ACS P2P
-> Egress Vector which has a similar reachability problem.
-> 
-> This is effectively a graph algorithm where the set of devices on the bus
-> are vertexes and the reachable() function defines the edges. It returns a
-> set of vertexes that form a connected graph.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/pci/search.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h  | 12 ++++++
->  2 files changed, 102 insertions(+)
-> 
-> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> index fe6c07e67cb8ce..dac6b042fd5f5d 100644
-> --- a/drivers/pci/search.c
-> +++ b/drivers/pci/search.c
-> @@ -595,3 +595,93 @@ int pci_dev_present(const struct pci_device_id *ids)
->  	return 0;
->  }
->  EXPORT_SYMBOL(pci_dev_present);
-> +
-> +/**
-> + * pci_reachable_set - Generate a bitmap of devices within a reachability set
-> + * @start: First device in the set
-> + * @devfns: The set of devices on the bus
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
+branch HEAD: d5f6bd3ee3f5048f272182dc91675c082773999e  PCI: endpoint: pci-epf-test: Limit PCIe BAR size for fixed BARs
 
-@devfns is a return parameter, right?  Maybe mention that somewhere?
-And the fact that the set only includes the *reachable* devices on the
-bus.
+elapsed time: 1464m
 
-> + * @reachable: Callback to tell if two devices can reach each other
-> + *
-> + * Compute a bitmap where every set bit is a device on the bus that is reachable
-> + * from the start device, including the start device. Reachability between two
-> + * devices is determined by a callback function.
-> + *
-> + * This is a non-recursive implementation that invokes the callback once per
-> + * pair. The callback must be commutative:
-> + *    reachable(a, b) == reachable(b, a)
-> + * reachable() can form a cyclic graph:
-> + *    reachable(a,b) == reachable(b,c) == reachable(c,a) == true
-> + *
-> + * Since this function is limited to a single bus the largest set can be 256
-> + * devices large.
-> + */
-> +void pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
-> +		       bool (*reachable)(struct pci_dev *deva,
-> +					 struct pci_dev *devb))
-> +{
-> +	struct pci_reachable_set todo_devfns = {};
-> +	struct pci_reachable_set next_devfns = {};
-> +	struct pci_bus *bus = start->bus;
-> +	bool again;
-> +
-> +	/* Assume devfn of all PCI devices is bounded by MAX_NR_DEVFNS */
-> +	static_assert(sizeof(next_devfns.devfns) * BITS_PER_BYTE >=
-> +		      MAX_NR_DEVFNS);
-> +
-> +	memset(devfns, 0, sizeof(devfns->devfns));
-> +	__set_bit(start->devfn, devfns->devfns);
-> +	__set_bit(start->devfn, next_devfns.devfns);
-> +
-> +	down_read(&pci_bus_sem);
-> +	while (true) {
-> +		unsigned int devfna;
-> +		unsigned int i;
-> +
-> +		/*
-> +		 * For each device that hasn't been checked compare every
-> +		 * device on the bus against it.
-> +		 */
-> +		again = false;
-> +		for_each_set_bit(devfna, next_devfns.devfns, MAX_NR_DEVFNS) {
-> +			struct pci_dev *deva = NULL;
-> +			struct pci_dev *devb;
-> +
-> +			list_for_each_entry(devb, &bus->devices, bus_list) {
-> +				if (devb->devfn == devfna)
-> +					deva = devb;
-> +
-> +				if (test_bit(devb->devfn, devfns->devfns))
-> +					continue;
-> +
-> +				if (!deva) {
-> +					deva = devb;
-> +					list_for_each_entry_continue(
-> +						deva, &bus->devices, bus_list)
-> +						if (deva->devfn == devfna)
-> +							break;
-> +				}
-> +
-> +				if (!reachable(deva, devb))
-> +					continue;
-> +
-> +				__set_bit(devb->devfn, todo_devfns.devfns);
-> +				again = true;
-> +			}
-> +		}
-> +
-> +		if (!again)
-> +			break;
-> +
-> +		/*
-> +		 * Every new bit adds a new deva to check, reloop the whole
-> +		 * thing. Expect this to be rare.
-> +		 */
-> +		for (i = 0; i != ARRAY_SIZE(devfns->devfns); i++) {
-> +			devfns->devfns[i] |= todo_devfns.devfns[i];
-> +			next_devfns.devfns[i] = todo_devfns.devfns[i];
-> +			todo_devfns.devfns[i] = 0;
-> +		}
-> +	}
-> +	up_read(&pci_bus_sem);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_reachable_set);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index fb9adf0562f8ef..21f6b20b487f8d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -855,6 +855,10 @@ struct pci_dynids {
->  	struct list_head	list;	/* For IDs added at runtime */
->  };
->  
-> +struct pci_reachable_set {
-> +	DECLARE_BITMAP(devfns, 256);
-> +};
-> +
->  enum pci_bus_isolation {
->  	/*
->  	 * The bus is off a root port and the root port has isolated ACS flags
-> @@ -1269,6 +1273,9 @@ struct pci_dev *pci_get_domain_bus_and_slot(int domain, unsigned int bus,
->  struct pci_dev *pci_get_class(unsigned int class, struct pci_dev *from);
->  struct pci_dev *pci_get_base_class(unsigned int class, struct pci_dev *from);
->  
-> +void pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
-> +		       bool (*reachable)(struct pci_dev *deva,
-> +					 struct pci_dev *devb));
->  enum pci_bus_isolation pci_bus_isolated(struct pci_bus *bus);
->  
->  int pci_dev_present(const struct pci_device_id *ids);
-> @@ -2084,6 +2091,11 @@ static inline struct pci_dev *pci_get_base_class(unsigned int class,
->  						 struct pci_dev *from)
->  { return NULL; }
->  
-> +static inline void
-> +pci_reachable_set(struct pci_dev *start, struct pci_reachable_set *devfns,
-> +		  bool (*reachable)(struct pci_dev *deva, struct pci_dev *devb))
-> +{ }
-> +
->  static inline enum pci_bus_isolation pci_bus_isolated(struct pci_bus *bus)
->  { return PCIE_NON_ISOLATED; }
->  
-> -- 
-> 2.43.0
-> 
+configs tested: 108
+configs skipped: 8
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250909    gcc-8.5.0
+arc                   randconfig-002-20250909    gcc-8.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                          pxa910_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250909    clang-18
+arm                   randconfig-002-20250909    clang-17
+arm                   randconfig-003-20250909    clang-22
+arm                   randconfig-004-20250909    clang-19
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250909    clang-16
+arm64                 randconfig-002-20250909    gcc-11.5.0
+arm64                 randconfig-003-20250909    gcc-11.5.0
+arm64                 randconfig-004-20250909    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250909    gcc-15.1.0
+csky                  randconfig-002-20250909    gcc-15.1.0
+hexagon                           allnoconfig    clang-22
+hexagon               randconfig-001-20250909    clang-22
+hexagon               randconfig-002-20250909    clang-22
+i386        buildonly-randconfig-001-20250909    gcc-13
+i386        buildonly-randconfig-002-20250909    clang-20
+i386        buildonly-randconfig-003-20250909    clang-20
+i386        buildonly-randconfig-004-20250909    clang-20
+i386        buildonly-randconfig-005-20250909    clang-20
+i386        buildonly-randconfig-006-20250909    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250909    gcc-15.1.0
+loongarch             randconfig-002-20250909    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                     loongson1b_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250909    gcc-11.5.0
+nios2                 randconfig-002-20250909    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250909    gcc-8.5.0
+parisc                randconfig-002-20250909    gcc-12.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                 mpc834x_itx_defconfig    clang-16
+powerpc               randconfig-001-20250909    clang-22
+powerpc               randconfig-002-20250909    clang-17
+powerpc               randconfig-003-20250909    gcc-8.5.0
+powerpc                     redwood_defconfig    clang-22
+powerpc64             randconfig-001-20250909    clang-20
+powerpc64             randconfig-002-20250909    gcc-10.5.0
+powerpc64             randconfig-003-20250909    gcc-8.5.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250909    clang-22
+riscv                 randconfig-002-20250909    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250909    gcc-11.5.0
+s390                  randconfig-002-20250909    clang-18
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                               j2_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250909    gcc-15.1.0
+sh                    randconfig-002-20250909    gcc-9.5.0
+sh                           se7619_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250909    gcc-8.5.0
+sparc                 randconfig-002-20250909    gcc-15.1.0
+sparc64               randconfig-001-20250909    clang-22
+sparc64               randconfig-002-20250909    gcc-8.5.0
+um                                allnoconfig    clang-22
+um                    randconfig-001-20250909    gcc-14
+um                    randconfig-002-20250909    gcc-14
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20250909    clang-20
+x86_64      buildonly-randconfig-002-20250909    clang-20
+x86_64      buildonly-randconfig-003-20250909    gcc-14
+x86_64      buildonly-randconfig-004-20250909    clang-20
+x86_64      buildonly-randconfig-005-20250909    gcc-14
+x86_64      buildonly-randconfig-006-20250909    clang-20
+x86_64                              defconfig    gcc-14
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  audio_kc705_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250909    gcc-8.5.0
+xtensa                randconfig-002-20250909    gcc-15.1.0
+xtensa                    xip_kc705_defconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
