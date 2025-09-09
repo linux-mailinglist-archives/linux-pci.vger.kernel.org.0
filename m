@@ -1,172 +1,218 @@
-Return-Path: <linux-pci+bounces-35771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35772-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E8E9B507CD
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 23:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C76FEB50807
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 23:22:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D9361B22257
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:12:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9DCD1B21571
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:22:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB93255F3F;
-	Tue,  9 Sep 2025 21:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62621257ACF;
+	Tue,  9 Sep 2025 21:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mJkBeUA3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A0C2517B9
-	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 21:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757452293; cv=none; b=MCWvxhrm458p49cxUgm87Jx5kkIgy9QtAia6lXUxuEhrya3aeTo6AI/RCKmUbPyvDbAbpgqZ9PInYEdN4XoWrafJ3pKQt56j/f/h4+DXCZmPfb0f/VQQ37r2GWyIvzmG5ngx3TtzStTwttZjCTsyRRIJ4KZCpGoj8wbYyxAI/E0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757452293; c=relaxed/simple;
-	bh=yFBKR6CyaNxRFqy9atHeGzcWUL4lsCYcOtbPoghROlI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=d4tg43xpuX/FdQWIus4q2ST7bxKKwygY1Y370BgrwmsH0WH+CRRTqn897yq1mmpDlbJhw4lxcyEr53gAmpcQYByVmF8jJ8WjpwkPK5Gp2kFXtU1S9IOcKBmOxRfnaO0j1ZXDP3STOTikooZaF33FyiIKRirkwcqoW7+Rj+REda4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-40194dd544eso43359185ab.2
-        for <linux-pci@vger.kernel.org>; Tue, 09 Sep 2025 14:11:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757452291; x=1758057091;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gi+oKRrccGnFwppC+lOMAdaDbYQiIOQIN1lauGMt0Lk=;
-        b=GFSOcbwYaXw1KKaDGBPlfTO7S+tWXAOBZfi0SzFVnzyXAoq+NxjiYfTk8bxyd5hGe2
-         +aPE8CuyvEcZPtUdCC5WKXJoiCAa6OXY5F0dHav79Ut7LJCBQ4REMiiV/F2Tbos5xKD0
-         nHxHcHKJBddlk23fEjP4NJ7DRJxKT2NKAt+2X5o84GH5FSeIRDdBORvKGddqOPKFvZQo
-         +ssrXZHrk8ocWTt6kycjJvyQB4j8w/j9xwm3hMEAQpRt98jLWd91fYGi7tTsjMVkRbbt
-         dM09wFgVqZ6SGXEahN8mLO2fIhO4KWAQbfF65v5RkI4xvSSB7ECaTILAcPMKMMRXZmHo
-         t2Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMrmY7L+VuMpGTuc1QuTkXg8L7QgwzO4DPQw8qZN5FrBY9ZpinbCPy3yWovJXBQ7VSxQkt/QxoJ/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu51vHl/Xx3I7W7UXoo8Yt7q8zK1yo1jzjwe/Vm5mM22PSqn3l
-	fl5Zmt/5WuaRuxiNXQGR0Fk8eq1sq7EwvliGscey6TV4G4WvpvrtQwj+PqbTBT+e1JPHwaoc6Zx
-	6VZkqeqXyJNUKntHawYAVmamJfb3rNjqqSXTjtnGCO7ksRZDaDGfNC9YaE2I=
-X-Google-Smtp-Source: AGHT+IG6JNU8caQsArnbrh9w46NueVmD5f+ZX71LWlKNXeYltndpSBTNSaVjlvWEBkmfBuxJic+95t3TCYp+AirmSIczEdAhJsNo
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3432580CB;
+	Tue,  9 Sep 2025 21:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757452887; cv=fail; b=I2ul1pyh29PXJpv2MQxD+VXCaMa5HTfKUx8PshIyoPvhVzY20YHsGVXnSkc9cEYE4zjxWG/nkKMTGPexwLY8YbRb0hzArWhQsB1qAxigYnIrxb2MzOxC4CKjwL8dq3d7atF85SHhVQVFf+a0xghbvUaGEPWYMNuYQIhAU/NAXfw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757452887; c=relaxed/simple;
+	bh=afmwj+uCd/815yMAs+iUkvPHRr8hwt5ixLVIMZgn8wE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GukrDTXbSCCEaCjaVvm4IVKSoNnyk3cg1Yrgly9yuMgrcSw0rgFXyuUR0d6eyQO1tgO1gipHcVdO4B7IA3TOCZ0Syj/FIJZarbd+VFjQw0C0P7iwgQPrk6on5Cb0ronXwRVvmn1WDDDRYsJYY3gmFQUnPMOS5KmiAIUALMFwX3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mJkBeUA3; arc=fail smtp.client-ip=40.107.243.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LLl4mR32+9ZjqWSHXV2Fw5kCf3LWZqBWWgocDu9Cv9RIWuBzHbRBrCFYvw8sOwx2Vpg3sG520hLLp++QfnxEAUKgIzDqgRWUekFccTVgktDAMyJXTYXFziWPniq4KTVBd9gDp5c71HGanAMZ4V7upFeXBINXmiqsEoVP6RA0EN3zTFdk+ZHqVfUOU/9J97I7t3usNQtaqoo+55/Zsf+Pxicn2ou+bf0/qxyeLrXVEQdQ4F7jvhy+nydo2Fgf+2E+WpOv53yHfsj/eBS15TPMstO1TjXolakuHymXGqnhtXdntC4abVdW1XvsKZlPpB2DIUNslOZYUN8J76BSFcVBwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j0jVJMZbPUfpAf908C9+DglU0uToTMGXvcFQQewN2bM=;
+ b=wUABFkhQ8YZ2Ui872hvxy4WKTFIHppYAvEjZBVfpztUvZhq9zVE/i7YLQ7pE5cC2t8QodHDE3Uj5NxnTAONvq4FTxNt+M7Jn/ogLZnqzMFnsb40TcpDtijz91xg5oZnkwxinMUowP5/C5iQ6+Au88aRcW5veVuRN7bl6nj0ie9kCuK5JC++jnTbc7gmrXxJ7aKeP32g+bOmxk90qMVrgDotuq9SSJ+8b5Fki002Bmsqbc95uSdLatI2GJqZ/RBTa1FMeBbrz99j0/6XUOh/PYCKiTb9W4s8ZIcB+rnua01Gh6xut6sJG+LzpikUxgcgcHLZUjtzJw3uSy4MuC8G+OA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j0jVJMZbPUfpAf908C9+DglU0uToTMGXvcFQQewN2bM=;
+ b=mJkBeUA3alJwDoUaQOtG5mBaJqsuHS3+yzkisoLPwjuztXIIfw1WqbUo/+i9Vk28EhgfgWeinzmQl8wFsT6CXg+ihiY6vvcSmTUzgD8ZaqfM6xc2ji1N7IxwhroAiIuZiXorgXbxQFst97YVtndVHtOKtHXFTIDiVgsNtkqtfi8vgPKtCylm8URE7+zcqpr5O5eRuakpQs+wL+RqQk4X9Qlo2KHrwRQk8X/gpFgbiPPZK3MZmZKl01wh981DVOAN5ZZUVh4Y0t9m96NftahEyqMUkiPac0ZuLXJJ9quyyv+QhtdafJdyWq67EyWC40nje1IDeqL+esapsJWRy+gFAw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by DS7PR12MB9528.namprd12.prod.outlook.com (2603:10b6:8:252::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
+ 2025 21:21:20 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
+ 21:21:20 +0000
+Date: Tue, 9 Sep 2025 18:21:18 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Donald Dutile <ddutile@redhat.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH v3 03/11] iommu: Compute iommu_groups properly for PCIe
+ switches
+Message-ID: <20250909212118.GQ789684@nvidia.com>
+References: <3-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+ <20250909202702.GA1504205@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909202702.GA1504205@bhelgaas>
+X-ClientProxiedBy: YTBP288CA0013.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::26) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fcc:b0:407:24:250f with SMTP id
- e9e14a558f8ab-407002426a1mr129570265ab.27.1757452290925; Tue, 09 Sep 2025
- 14:11:30 -0700 (PDT)
-Date: Tue, 09 Sep 2025 14:11:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68c09802.050a0220.3c6139.000f.GAE@google.com>
-Subject: [syzbot] [pci?] INFO: rcu detected stall in vga_arb_release
-From: syzbot <syzbot+e333f6ae9120efd3294a@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|DS7PR12MB9528:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c6dc726-e0ae-4280-5870-08ddefe6d1f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UmSWjLDrOfJb3LVSY7yoWaF0GMaFLW/gA1E8cVXcyL6HeW38hfYx4aGe7jId?=
+ =?us-ascii?Q?/sNcNF6JIre2f0xNrdMPr3MqQk7kgUPn1B+5Bzta8B/9eDzsurlvGqIXK6j/?=
+ =?us-ascii?Q?0GSnhDB1DRmDQXjNeedScLngteOn5lubVUYEBzvimwahuUK0bGZ7CKYeaHNy?=
+ =?us-ascii?Q?Bf7JKgGNlCZ/4onb+dOAhCmLwzXvHFbLIzLLcikg8dVW5zK8vKhrzjgH3S/W?=
+ =?us-ascii?Q?tQ3uLxz5LkDTrQvVpQ4C5uc1/qkwKfEOcSvueTrPe+X+eMMUsjzZJe9DJQTz?=
+ =?us-ascii?Q?pOXsk0mXNVy1AdLXTE5G3m7+PEnN+uefTTsbvAelWfi7RDfyZHfLZW81C6V3?=
+ =?us-ascii?Q?TqPKWfJV3KKVZmkEuHqE4bE9C2rswbDhsALRcl2yEJJYOhHseNGD1OWdN4EY?=
+ =?us-ascii?Q?XLKMFdzvS0sfR4hNRJBa7WnOLl/XoGK2UWFWlcLNfQuSFLcvNidACOna4Cj/?=
+ =?us-ascii?Q?xF4gLKZZ9RFlKoiKMEGhF2kdadT+n97BGmQZO+wGBBOWMuJDJnN8WsiaWFqW?=
+ =?us-ascii?Q?KYsPJXovxg2p/DExmQ3iI/nJXrZxhvXF1E/e8wed0QknuXr1g1WNkb2KReWr?=
+ =?us-ascii?Q?hL/JwVgwKjgLjby7hOD1TjxKnkr8unHYka/voVVpjHD3vtgP2GuGIDO3yH/u?=
+ =?us-ascii?Q?axSCQf/SXiM+rlMHvMpSv3J/sBbbsmb9yHculWxMkb7byqgY+Nk2QqcuRL9e?=
+ =?us-ascii?Q?NbjlWnHJnGoIuAL+bVQdXKKK1wDPv+xUZstmM0fIMDeTlr8FByHk5A7BZJ1r?=
+ =?us-ascii?Q?B/DkBE3CzK6bp6ufLnf1KBA5bZiU9Y7eRFDWCPbZe70fc8ukiBAiFJhzzlvV?=
+ =?us-ascii?Q?0LEsXASb/EQHB7Eerlv2AIvV+lhfYXI5mR7egF8D8m2HN/u2nPuefORxb6+M?=
+ =?us-ascii?Q?P56dhCvpjW6zMgwuR2pTnbBasFXLfggmVizr8GzAHV/niSl75Na7xhC8csY5?=
+ =?us-ascii?Q?dXaN97G3ow0rIhBKIRkdycQWsWvf6nyjXUBHnsYeQ9fgrdogeBqtvsIgwTY1?=
+ =?us-ascii?Q?WdjWFvCZG8tPgOpHPntiizrHNmvLUXClAOWG6Akh/hQqGlKn94uhHa2Zs9Gm?=
+ =?us-ascii?Q?SC4KLq/wf7SiagIw9sFwb/6lY5z/grIO5DUO6WkLAksN8s6PA/rXJYF3c6pL?=
+ =?us-ascii?Q?+bCyl4BfHvWkczE+yf5G9X+DlkBpY6BYVbVHRNRhPgcg0YGnXw0S4gTyyjCA?=
+ =?us-ascii?Q?LCI8iEZB2n2ehbIqzsZNZMzcQRhWMo68UN/WVDXpcXN8+Ssa/S4OvSSb+hai?=
+ =?us-ascii?Q?b7vQ8aSNr8fAg8iJjN1kOgmBcTzICw776eyaLE8x3DoiwlaCLqyzxEgX6f4l?=
+ =?us-ascii?Q?JL5kIUfCSIDbR15lwxnSWaP+nYUvDXvHjYWlyFoFwSU1E9ZcjkLVHKyQe5rz?=
+ =?us-ascii?Q?xRyzrCMkX7FSYNUNgtLAB5Rtmkr0z18uts09gN1DDiPjPbXUhgPiaP0ArRqX?=
+ =?us-ascii?Q?ESbqv6TmkCU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?93a0zr1itB8I7PmmqucmDsWJ5B+2+1HgWlKEpO2dQsUeG0GFpl+RlOIDeySV?=
+ =?us-ascii?Q?OmLUmEOerhA2K5aUf4zJbO4G3YnG4jjddjcZO7B3X/kGgODUAkpqsJ1Cd2bo?=
+ =?us-ascii?Q?6zq3TcmA3aAKV8IRFpglPE8n23DtEuDvO0w++q3I840suYYDN57uDdEeIORG?=
+ =?us-ascii?Q?g1yox0lx4nBI1kJNUv7QswukhJh9wywsESdtZXajUJ4mvgDj87MUXmh0cSZy?=
+ =?us-ascii?Q?CNNebylKBS/7HHJpgjKVAmYhj4yCpKGczeW/TFgU38icPOASWXeJT3nKt3MV?=
+ =?us-ascii?Q?OutxB776JLACMwkj6IqUgg2TdDYH1GfIiJhfIaGepY0Bbf9CPFGQA5LQz2cx?=
+ =?us-ascii?Q?4jrHlgLEhoMwOrxtFjZrzpszB7oTT6t5VvdKL/TkbNi0ZPqyA30edk9CWyhn?=
+ =?us-ascii?Q?7m4HyZ/oTZP8fYqv3HYEOF+ac/TNwDx2V7oyQL9Sb2J9ayMZTCdItvr4j9zv?=
+ =?us-ascii?Q?PL6uAj+Mnchn+K3gr8vFOVTm5AmVDenW8K/eLf4+g639UHQbVviJ8mhZHQDN?=
+ =?us-ascii?Q?uQLG2hO4w7F8vzeO5cy6EtgxmvdOzckLMKLz671pBu1k4SKNwoeSAUGWtK7Y?=
+ =?us-ascii?Q?Y/9gRl03OD8ddOavNRliCvTSzedw8ON51IxjHwReEDVLUqc7RJODAa3rX9RO?=
+ =?us-ascii?Q?KVZXyFBCQm3HCZZNKSt4DMyD2PoezXSJMT7RPNjAsz7IZTD1cqwUYl6c3wdJ?=
+ =?us-ascii?Q?yO8a6i+fzzTvV6OWZGfiJoZP7oFm0EcdMpc7hTwjzzoadYR3HsmIu47KGBU+?=
+ =?us-ascii?Q?Y51dlk+15Mga+e90yfsaQ7uxdJ85JI9Pxl2xRDht0qn4RPnTP3ajkPujPCGp?=
+ =?us-ascii?Q?HHAnBKnb0Iv38z2XoG3bYKygxExa30xpres82lFz8zAFqbkh9JlOPeeJhDfZ?=
+ =?us-ascii?Q?q8ffIC91lF4JZymF6jMKFRuLTsMAuh/Fj6pINCIbylLipQJetokpGtH3kcUw?=
+ =?us-ascii?Q?stHLn4Se3RGE26c8XOgrz6XC73F1vip4DE153tGXz5EHX5FDd7Ks6wSkwm1m?=
+ =?us-ascii?Q?860qjLU6ubMbr+U8WZ6lfB27s0NFEs0WuVkwbzXfnZynDxcPNjW116r/4zUE?=
+ =?us-ascii?Q?9NDg2lUym/3nOMLQzEnDLxAFGxKtNycDw1jl9PaxWZrnmHE1vz1QFjcNZhrd?=
+ =?us-ascii?Q?LRdT3gKYdpcEIJKzHcPxJiv7yUdoQhfVgl9sX+3MasDWKxBeZa5ZiDLeuQV5?=
+ =?us-ascii?Q?XYVcIecPEqU3liIJp+6+8rpL9cOsgTvV0FeBu0pPxQtFB+Ky9s7h4cpswRR4?=
+ =?us-ascii?Q?YRGY2156YYn7y0S8LOQeaKOcLh5ZBDzhT/wB07KM+moneelKMcjBYmAZaPpH?=
+ =?us-ascii?Q?gu5YcBD34oBrIUnmDTdf4IA3JFVWco5KsB2Uiq3wUakrfjh3Ob87fqjlF2Zf?=
+ =?us-ascii?Q?QBlpQWjcoECZk/gaapkIZCpd+zyLS2pfGCdjSM2aIMQ825NBoYdQcRCIoPwm?=
+ =?us-ascii?Q?JdymoH4wB43KJn1fNOrORBUK9+nDcaQNiMiqjP4vWNbtiflJkeqoQ4esEK33?=
+ =?us-ascii?Q?ifJwCmoJfM0c197Olqo8Ph6mRtmrp3wh81ukoE75bBjnfB52/FtvJ360Y/65?=
+ =?us-ascii?Q?M3nlLNmgGPwHebV/MVo=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c6dc726-e0ae-4280-5870-08ddefe6d1f9
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 21:21:20.6158
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UPEpOOJt1yxcHccpYYF1hXYzOIiuFCGdudpkx8MzVQvcM44A/Fo6UNa34NHDAnu7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9528
 
-Hello,
+On Tue, Sep 09, 2025 at 03:27:02PM -0500, Bjorn Helgaas wrote:
+> > Instead the current algorithm always creates unique single device groups
+> > for this topology. It happens because the pci_device_group(DSP)
+> > immediately moves to the USP and computes pci_acs_path_enabled(USP) ==
+> > true and decides the DSP can get a unique group. The pci_device_group(A)
+> > immediately moves to the DSP, sees pci_acs_path_enabled(DSP) == false and
+> > then takes the DSPs group.
+> 
+> s/takes the DSPs group/takes the DSP's group/ (I guess?)
 
-syzbot found the following issue on:
+yeah
 
-HEAD commit:    f777d1112ee5 Merge tag 'vfs-6.17-rc6.fixes' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11790d62580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=429771c55b615e85
-dashboard link: https://syzkaller.appspot.com/bug?extid=e333f6ae9120efd3294a
-compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1439d562580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14dac642580000
+> > While ACS on root ports is underspecified in the spec, it should still
+> > function as an egress control and limit access to either the MMIO of the
+> > root port itself, or perhaps some other devices upstream of the root
+> > complex - 00:17.0 perhaps in this example.
+> 
+> Does ACS have some kind of MMIO-specific restriction? 
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/860ff2f591a4/disk-f777d111.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/31f4ca3a76d4/vmlinux-f777d111.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c534fac91a74/bzImage-f777d111.xz
+I guess no, the text could be more generic here.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e333f6ae9120efd3294a@syzkaller.appspotmail.com
+> > As grouping is a security property for VFIO creating incorrectly narrowed
+> > groups is a security problem for the system.
+> 
+> I.e., we treated devices as being isolated from P2PDMA when they
+> actually were not isolated, right?  More isolation => smaller
+> (narrower) IOMMU groups?
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P6880
-rcu: 	(detected by 0, t=10502 jiffies, g=16217, q=2735 ncpus=2)
-task:syz.0.301       state:R  running task     stack:26952 pid:6880  tgid:6880  ppid:5958   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <IRQ>
- sched_show_task+0x49d/0x630 kernel/sched/core.c:7933
- rcu_print_detail_task_stall_rnp kernel/rcu/tree_stall.h:292 [inline]
- print_other_cpu_stall+0xf78/0x1340 kernel/rcu/tree_stall.h:681
- check_cpu_stall kernel/rcu/tree_stall.h:857 [inline]
- rcu_pending kernel/rcu/tree.c:3671 [inline]
- rcu_sched_clock_irq+0xa47/0x11b0 kernel/rcu/tree.c:2706
- update_process_times+0x235/0x2d0 kernel/time/timer.c:2473
- tick_sched_handle kernel/time/tick-sched.c:276 [inline]
- tick_nohz_handler+0x39a/0x520 kernel/time/tick-sched.c:297
- __run_hrtimer kernel/time/hrtimer.c:1761 [inline]
- __hrtimer_run_queues+0x503/0xd40 kernel/time/hrtimer.c:1825
- hrtimer_interrupt+0x45d/0xa90 kernel/time/hrtimer.c:1887
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1039 [inline]
- __sysvec_apic_timer_interrupt+0x10b/0x410 arch/x86/kernel/apic/apic.c:1056
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
- sysvec_apic_timer_interrupt+0xa1/0xc0 arch/x86/kernel/apic/apic.c:1050
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0xa8/0x110 kernel/locking/spinlock.c:194
-Code: 74 05 e8 8b d3 cb f6 48 c7 44 24 20 00 00 00 00 9c 8f 44 24 20 f6 44 24 21 02 75 4f f7 c3 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> b3 8b 95 f6 65 8b 05 dc dc fb 06 85 c0 74 40 48 c7 04 24 0e 36
-RSP: 0018:ffffc90003aafb40 EFLAGS: 00000206
-RAX: c013c10a5e9bae00 RBX: 0000000000000a02 RCX: c013c10a5e9bae00
-RDX: 0000000000000006 RSI: ffffffff8d03a0c9 RDI: 0000000000000001
-RBP: ffffc90003aafbd0 R08: ffffffff8f1d5a37 R09: 1ffffffff1e3ab46
-R10: dffffc0000000000 R11: fffffbfff1e3ab47 R12: dffffc0000000000
-R13: ffffffff8e16a380 R14: ffffffff8e16a380 R15: 1ffff92000755f68
- unlock_rt_mutex_safe kernel/locking/rtmutex.c:344 [inline]
- rt_mutex_slowunlock+0x493/0x8a0 kernel/locking/rtmutex.c:1454
- spin_unlock_irqrestore include/linux/spinlock_rt.h:122 [inline]
- vga_put drivers/pci/vgaarb.c:553 [inline]
- vga_arb_release+0x3fb/0xa90 drivers/pci/vgaarb.c:1455
- __fput+0x45b/0xa80 fs/file_table.c:468
- task_work_run+0x1d4/0x260 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:43
- exit_to_user_mode_prepare include/linux/irq-entry-common.h:225 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:175 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:210 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f40e894ebe9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdfc93c728 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 000000000002310c RCX: 00007f40e894ebe9
-RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
-RBP: 00007f40e8b87da0 R08: 0000000000000001 R09: 00000004fc93ca1f
-R10: 0000001b30520000 R11: 0000000000000246 R12: 00007f40e8b8609c
-R13: 00007f40e8b86090 R14: ffffffffffffffff R15: 00007ffdfc93c840
- </TASK>
+Yes
+
+> > Revise the design to solve these problems.
+> > 
+> > Explicitly require ordering, or return EPROBE_DEFER if things are out of
+> > order. This avoids silent errors that created smaller groups and solves
+> > problem #1.
+> 
+> If it's easy to state, would be nice to say what ordering is required.
+> The issue mentioned above was "discovering a downstream device before
+> its upstream", so I guess you want to discover upstream devices before
+> downstream?  
+
+yes
+
+> Obviously PCI enumeration already works that way, so
+> IOMMU group discovery must be a little different.
+ 
+iommu group discovery is driven off of iommu probing which can happen
+in enough different ways that it needs to be checked.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I will fix the other notes
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Jason
 
