@@ -1,175 +1,155 @@
-Return-Path: <linux-pci+bounces-35763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35764-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEE11B50642
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:18:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 331A3B50671
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:33:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B06EB4E0F36
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:18:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A97C1C27062
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F52336C067;
-	Tue,  9 Sep 2025 19:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D242B343D9C;
+	Tue,  9 Sep 2025 19:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSkozw1g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G0clw1fX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D604225415;
-	Tue,  9 Sep 2025 19:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD6A238D3A
+	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 19:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757445424; cv=none; b=DTOmIWovHHygKtFUmVLp8K/Yt59fdZ1jv3/o3MERGv5Try95QmP+xPuq/geVd57dYfNHqwZS+oFaKeuSwJdxugQ7qUhZiGTu/1klKx2rIGfLTd+03BDveMacQOVH6uH0/IQ+yqvztifpEphLCvQuHOfsvRDWrXAyv2bSDaJUYrY=
+	t=1757446420; cv=none; b=GGBHmZ3TJEEcdg0lhtMSMRophYO6WUUWzKMYBszCJLc0COyXVwVC5TyUA2HzgrrAOmHKDcSPCeg/ZpdI/sphyDHJgWHTdAV3XYMTjr/Igi1BbugUc1lmilxRZ+Wubuc9mQaTsvir6SuZiCW7wuevZi7/RdCl9t04te4xRE2bsRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757445424; c=relaxed/simple;
-	bh=gVzxOE/pl/exM5/3ViV8ssmW6tGDSsp+WYKa5FxPoEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h5olin/UFd7YO21u/deCoR1U8qdN/TWamRtaquA8vH7Bn/qGF7XbjKgJgNzCpqoxjjf8vFAUj3TigdAwBDMsEheTKqAD8SRIZxbQ5ONig36BW2/ivXgAscL726St8Qa4I3aWM3m5WWyWCOqpXM6PahitNeruj8ZVviFUiR9KSuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSkozw1g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4B2C4CEF4;
-	Tue,  9 Sep 2025 19:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757445424;
-	bh=gVzxOE/pl/exM5/3ViV8ssmW6tGDSsp+WYKa5FxPoEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RSkozw1g/nG+tUtkLwJcR5YP+2XwvAU++L0WUndrrz/c+jjIsjZLVcIdlHQHNZyg2
-	 il0Xe+pJk7IP0kyenCv5oitFAZB3uHCGXuQHm6eqP21QvXCOIr6y7y99FYK2r0Loa5
-	 /qfrvRMe2yAZDoN+IVzyENwZU+bpO5HxzRu08huVBQr/zmBi27gIPHhHwN82UrNXbg
-	 a/RMIiLygBst9XuqPL0YYkYuE+NzoS9sQD5NHiYvd//Wn87YYFnkGvmrsLgPnnwZpJ
-	 ws4lbjKAoOEzhCJ53lPNJOPQCRSixjZEkaTd6I44jjftM4WyFq77QM6pPyaU7ex/7k
-	 y3uBQcISsATrg==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pavel Machek <pavel@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-pm@vger.kernel.org (open list:HIBERNATION (aka Software Suspend, aka swsusp)),
-	amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING),
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	=?UTF-8?q?Merthan=20Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>
-Subject: [PATCH v7 12/12] Documentation: power: Add document on debugging shutdown hangs
-Date: Tue,  9 Sep 2025 14:16:19 -0500
-Message-ID: <20250909191619.2580169-13-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250909191619.2580169-1-superm1@kernel.org>
-References: <20250909191619.2580169-1-superm1@kernel.org>
+	s=arc-20240116; t=1757446420; c=relaxed/simple;
+	bh=mUgqnSrCeNtyPRzp40kafmu2emrwvDGauUeKsNnrkLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SKtOVVwwgdIDX7ZyoNA7Pgnn2uxrIr2ya0ui3p9QOnRRPVm/p/a+ck2RKYUfgSFHveH0iEQl1Qm7qWvpVCHwSG4c7D1kWEQG0NyZPXM4GcLOMQBPzYjXLhS6pfCw3xvooCPAmHT1ysoOnklpYLgssVs1JWFcTStSJu74sXRHpPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G0clw1fX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757446417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xv0UmvOM6iq9BarO5ln98fc4nB6oP2f7t4wXJ04yBgo=;
+	b=G0clw1fX6AvGkMrAm6568HS4gLuy0l0CLv8+1ItuSYXfoarZAVMB8f3Hj7ojKN4e1i/34R
+	4+vD1lsrye4OmmmvyVBVpPySVeHm6NJISTRtTueKZQOH484WnQio9kfa5A4d4vVDK4xVxc
+	lz3xd8OBPoSyLLL/di+QmY35o3nINdo=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-161-v7mydvpcNt6KIFRh666Y2w-1; Tue, 09 Sep 2025 15:33:35 -0400
+X-MC-Unique: v7mydvpcNt6KIFRh666Y2w-1
+X-Mimecast-MFC-AGG-ID: v7mydvpcNt6KIFRh666Y2w_1757446415
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b6090aeaacso76821591cf.3
+        for <linux-pci@vger.kernel.org>; Tue, 09 Sep 2025 12:33:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757446415; x=1758051215;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xv0UmvOM6iq9BarO5ln98fc4nB6oP2f7t4wXJ04yBgo=;
+        b=sdI/RFrV+4BuomiYmsemZ4Mn+cRS192SCOecJuqpFkSt8Gbn37s/m1vU6O4IaP9AkK
+         5EkP8fGP+pU8PUt76HpnXNKGGTsptMZTPFcCCgNitGTl8siIhva+5WFlSVkj6FWRnr+0
+         XFHFUydCHmPANLu8o2GRQVhIH4whGLCSqYaur90Zi94t3iT99cworrjCNy96/WwOCTSq
+         elGP3na0ddeGX7Zd+bFj/BXHG0tp/IJiFUhYtREGGHudPN3ShAKmNrec7NMMJj5gacK5
+         YDZGur7+Hl6bOnhgT7aLeNfgsVWCcL/TVhIgEBs1tFx8wRNORG3DsH+ilvfNhV5aEsSS
+         EDtA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7FXCG/y7ejR4Cjhh6n+7bG9zKVy5IeSeN6HyqPJg5fM7sA/lBaiyUhJRZn+GAjVz6UNbXVF9JwSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOTU74T1Ug6sv5Fh4q9+4H5DPO9AQ+O6ACCr6qdhyOPIvgRLOE
+	woQr9qO/ob4RUG/lL1AQFg3ZN4f+TapekoTpYbNzE3FwN/J24CQFPuKn0uCi6rN7Yntg0muxQ4Z
+	YwYiYhyzdNWUqvq5uNY8rn+7xgBnu9/7EwTZgpAyC827zxKd7/kF6obzj5vO8lQ==
+X-Gm-Gg: ASbGncsxacztkvL9LKSiDI5xudKjFqWcEYJV+ULk0CmRUlNTyqLyrQJNsYpBcbmHQ3W
+	yQOT9fNXCS9out/cnVhr3px2vpdudHOPO6jXnuhvFLY1B4nCcAYoTs1fM/5wlsZLQeMrNqt+VeE
+	qUb+MaE1kR4s4wjy8tb3CG9NAGe7miLEuerPBJ5yVZSNBeFMwHqiGhuVabVQqqvh5WuV6JIUwqV
+	TD3YCYfabn+8RpiAd9r3HLoKmUVnpc6M94y7lYe5H/29oCwrH9Dseqs/cZ0StSuHP+MdIt4hcR1
+	8mJmu+yrjyQCyoRrN2oeyHc1ySUwetGFRNwJ+5rF
+X-Received: by 2002:a05:622a:1343:b0:4b5:ee26:5373 with SMTP id d75a77b69052e-4b5f83c8b18mr157023811cf.21.1757446415060;
+        Tue, 09 Sep 2025 12:33:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHt6ZFsxR50RVtcwNCWmeGZgkt2Iz2ZbSC15FzqztkMn3bYZzGFWhNgqOHOvkUWFbY7XPZ5nA==
+X-Received: by 2002:a05:622a:1343:b0:4b5:ee26:5373 with SMTP id d75a77b69052e-4b5f83c8b18mr157023411cf.21.1757446414556;
+        Tue, 09 Sep 2025 12:33:34 -0700 (PDT)
+Received: from [192.168.40.164] ([70.105.235.240])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b61bbbc3a3sm12895041cf.24.2025.09.09.12.33.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Sep 2025 12:33:33 -0700 (PDT)
+Message-ID: <3d775106-2610-4766-afdb-0820cf92e6c1@redhat.com>
+Date: Tue, 9 Sep 2025 15:33:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/11] iommu: Compute iommu_groups properly for PCIe
+ switches
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <3-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+ <3634c854-f63f-4dc0-aa53-0b18c5a7ea1c@redhat.com>
+ <20250909121845.GI789684@nvidia.com>
+From: Donald Dutile <ddutile@redhat.com>
+In-Reply-To: <20250909121845.GI789684@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The kernel will attempt hibernation callbacks before shutdown callbacks.
-If there is any problem with this, ideally a UART log should be captured
-to debug the problem.  However if one isn't available users can use the
-pstore functionality to retrieve logs.  Add a document explaining how
-this works.
 
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
-v7:
- * New patch
----
- Documentation/power/index.rst              |  1 +
- Documentation/power/shutdown-debugging.rst | 55 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
- create mode 100644 Documentation/power/shutdown-debugging.rst
 
-diff --git a/Documentation/power/index.rst b/Documentation/power/index.rst
-index a0f5244fb4279..ea70633d9ce6c 100644
---- a/Documentation/power/index.rst
-+++ b/Documentation/power/index.rst
-@@ -19,6 +19,7 @@ Power Management
-     power_supply_class
-     runtime_pm
-     s2ram
-+    shutdown-debugging
-     suspend-and-cpuhotplug
-     suspend-and-interrupts
-     swsusp-and-swap-files
-diff --git a/Documentation/power/shutdown-debugging.rst b/Documentation/power/shutdown-debugging.rst
-new file mode 100644
-index 0000000000000..d4bf12000c1cd
---- /dev/null
-+++ b/Documentation/power/shutdown-debugging.rst
-@@ -0,0 +1,55 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Debugging Kernel Shutdown Hangs with pstore
-++++++++++++++++++++++++++++++++++++++++++++
-+
-+Overview
-+========
-+When the system is shut down to either a halt or power off, the kernel will
-+attempt to run hibernation calls for all devices. If this fails, the kernel will
-+fall back to shutdown callbacks. If this process fails and the system hangs
-+the kernel logs will need to be retrieved to debug the issue.
-+
-+On systems that have a UART available, it is best to configure the kernel to use
-+this UART for kernel console output.
-+
-+If a UART isn't available, the ``pstore`` subsystem provides a mechanism to
-+persist this data across a system reset, allowing it to be retrieved on the next
-+boot.
-+
-+Kernel Configuration
-+====================
-+To enable ``pstore`` and enable saving kernel ring buffer logs, set the
-+following kernel configuration options:
-+
-+* ``CONFIG_PSTORE=y``
-+* ``CONFIG_PSTORE_CONSOLE=y``
-+
-+Additionally, enable a backend to store the data. Depending upon your platform
-+some options include:
-+
-+* ``CONFIG_EFI_VARS_PSTORE=y``
-+* ``CONFIG_PSTORE_RAM=y``
-+* ``CONFIG_PSTORE_FIRMWARE=y``
-+* ``CONFIG_PSTORE_BLK=y``
-+
-+Kernel Command-line Parameters
-+==============================
-+Add these parameters to your kernel command line:
-+
-+* ``printk.always_kmsg_dump=Y``
-+	* Forces the kernel to dump the entire message buffer to pstore during
-+		shutdown
-+* ``efi_pstore.pstore_disable=N``
-+	* For EFI-based systems, ensures the EFI backend is active
-+
-+Userspace Interaction and Log Retrieval
-+=======================================
-+On the next boot after a hang, pstore logs will be available in the pstore
-+filesystem (``/sys/fs/pstore``) and can be retrieved by userspace.
-+
-+On systemd systems, the ``systemd-pstore`` service will help do the following:
-+
-+#. Locate pstore data in ``/sys/fs/pstore``
-+#. Read and save it to ``/var/lib/systemd/pstore``
-+#. Clear pstore data for the next event
--- 
-2.43.0
+On 9/9/25 8:18 AM, Jason Gunthorpe wrote:
+> On Tue, Sep 09, 2025 at 12:14:00AM -0400, Donald Dutile wrote:
+> 
+>>> -/*
+>>> - * Use standard PCI bus topology, isolation features, and DMA alias quirks
+>>> - * to find or create an IOMMU group for a device.
+>>> - */
+>>> -struct iommu_group *pci_device_group(struct device *dev)
+>>> +static struct iommu_group *pci_group_alloc_non_isolated(void)
+> 
+>> Maybe iommu_group_alloc_non_isolated() would be a better name, since that's all it does.
+> 
+> The way I've organized it makes the bus data a per-bus thing, so
+> having pci in the name when setting BUS_DATA_PCI_NON_ISOLATED is
+> correct.
+> 
+> What I did was turn iommu_group_alloc() into
+> 
+> static struct iommu_group *iommu_group_alloc_data(u32 bus_data)
+> 
+> Then
+> 
+> struct iommu_group *iommu_group_alloc(void)
+> {
+> 	return iommu_group_alloc_data(0);
+> }
+> 
+> And instead of pci_group_alloc_non_isolated() it is just:
+> 
+> 	return iommu_group_alloc_data(BUS_DATA_PCI_NON_ISOLATED);
+> 
+> So everything is setup generically if someday another bus would like
+> to have its own data.
+> 
+/my bad, I scanned pci_group_alloc_non_isolated() as calling iommu_group_alloc() & not iommu_group_alloc_data() as you pointed out.
+Looks good.
+
+Reviewed-by: Donald Dutile <ddutile@redhat.com>
+
+> Jason
+> 
 
 
