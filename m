@@ -1,210 +1,236 @@
-Return-Path: <linux-pci+bounces-35776-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35777-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70370B508BF
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 00:12:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04051B50927
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 01:21:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C3133AD151
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 22:12:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EA4416621F
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 23:21:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FC52652BD;
-	Tue,  9 Sep 2025 22:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57678285CBF;
+	Tue,  9 Sep 2025 23:20:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpI5LVd6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pZ5Yu/SM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2077.outbound.protection.outlook.com [40.107.223.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9D6265CDD
-	for <linux-pci@vger.kernel.org>; Tue,  9 Sep 2025 22:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757455968; cv=none; b=EDj3UKIEi9dWmMJxY6dP6nDAy3XgmUXYSsc0uLSoVzDs4j6DlPTSaxLX/4/mEESB7pqtIp9Q2tDG8EdcxgZ7M5UBsDZEto0la0RCYbc4m5OANCFa8wmtCWw3CayBDaTtJMEoHxavslaDJvPJ6TP7JZC6+yE187Ldmc8kTP/mWR0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757455968; c=relaxed/simple;
-	bh=ZszwJ6g6HZlmSE/qWRqdr2gVQ9kr2+YMfGcJ6bcna2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=b+SFyU8c7Fpq0pO+TsPyneA1KWiPjksIVFceF0Ik7FfUSElpIUBfcDcEDSia0HccMg3KloUwqIMq3pPVMSfnmx6hGHMysjwy9/t9b6fq11OcjHk6J/bsQT9s7Wuq3X53xkoWwRn4d7HXg/FYKIGkfdRnjoULrlXLZRH9HG7WsvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpI5LVd6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757455967; x=1788991967;
-  h=date:from:to:cc:subject:message-id;
-  bh=ZszwJ6g6HZlmSE/qWRqdr2gVQ9kr2+YMfGcJ6bcna2Y=;
-  b=gpI5LVd6LX5aBVDHpmgdajeLEgFXwo0oiyMDUc3nM6JSP3R8ZGUM0MAs
-   KNFCRA0qxPK4MI03C8kKpSku0tnDdhmyI6rUNF2Mf3sVwKMPQFZ+k+6dW
-   T4nVsQaQ7l7tEP/X9ukUynPQndjCYWc/FjDeCleNdD2GHHr5CaeZPtfr0
-   Pngx9lOpK/IWv8MtJPJazum3WepjwohxCyy8LKj0bIeE1OgD87W6TTzDS
-   VDaMQREBwVQDwlpT1ywRmHaikvOcTmtMh03mFSoRHchiHlJPuRH0hF/Ma
-   cS2ZtguiM4QFJg/ydnnP5SLtoSmUl4soI5f/n+QDGfMtkcAycO5/rPPyh
-   g==;
-X-CSE-ConnectionGUID: 0VTc5f5rSQ6NDpHwzRnDeA==
-X-CSE-MsgGUID: TN94Bi/VRsKFMOa/qvmGDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="63388570"
-X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
-   d="scan'208";a="63388570"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 15:12:47 -0700
-X-CSE-ConnectionGUID: 3g9T3LTLR2mAFAIrCBOOdA==
-X-CSE-MsgGUID: VHhwdyQCQayaQ7jh1oGc4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,252,1751266800"; 
-   d="scan'208";a="177548978"
-Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 09 Sep 2025 15:12:45 -0700
-Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uw6Zv-0005KB-0h;
-	Tue, 09 Sep 2025 22:12:43 +0000
-Date: Wed, 10 Sep 2025 06:11:48 +0800
-From: kernel test robot <lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F82126D4C3;
+	Tue,  9 Sep 2025 23:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757460059; cv=fail; b=bxmhY30wBh6V7T8lMbEEEmAVBtNeM2OK6zrxbjzOH4y0J7ICAMpBOW1sGHC5HeMnkiGIerewcAtYCOa9JrV4yDeTxysRiMQZgSFGaxyx7Yi3gmAcdL4y+ZpnyqfFnmSlBdgl6IOw4u0pY9ko4Mhfoo5iohEsRRWltNMGkvx+g5w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757460059; c=relaxed/simple;
+	bh=PBXZtrnu0tU8WGb0+yt/rk3jeyO/MyNDimURl21SHUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HcPwxPpgF9QamOUPfn+0wJ+7/ulc1uD5IDC8LXfabJXJ6DRUo54RiiSLvOwVCkthBTdOPEMSHJMbhyy05obN2AcqfDOkpaIcScnu8dJuh8CX8C4h/wXO1pcH0hbA6ffz4HjtyTzHK1IKThsjd/Mf43ciacjIETt8f1tdUu2LyOg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pZ5Yu/SM; arc=fail smtp.client-ip=40.107.223.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YYOWn1K/BtZzvOKl/vPI0qfwxbWBn+s4ora0XWIHj9y9E0WLnQHZQ+FvL8XMYRLQIvzc35MQ2+Fsq01DP+uTBrxzkGAew+O2ar/t6jLN1QtFKx7jlCDsd5CAB3ZjOMpvovYbugzwAiUeTUVqOT148WMQAid8MfIans2Mfs4ph7w4BXnlA/ITjFoZLRQg6U81hd/y6n3H5JwtnY6BDTq7IB/ZOVePb1wvtLfKDJ+ysQhvSPvLc7Rn9pttFSUQ/Bsdy0NgL/pPuwhRB/pew2CrGEDKvJU0IpgKdWmyj1yBbPSGkKq4iMrJ3lcd2EJVk/ebgRAUK3ibFf2UbvZz8jwOwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FmTwkTFHIj5XANh+/Ma3WuM8978XFxS0mn23v03rGcg=;
+ b=RPph51lYU4LgyoU35wn5q5COm2sVq2+3fOFr1W/ESCh6Imp3MQjRy4Z6SDK+x68V8/HmKk5GCBkCoUKjfo69Ci54wmZuHs94vx2S1ZMZmGYSqI0xm7OxYViuuOZ2JxT675dlR2eDF3hy6NrM5viM3F8IzASSLWjLb7p63nGvzfy2PjBtrIQaHecuJ9+qh5VNv1ZzgPnW8OA3w7qS9tgVNGZ6gyz9PpBAkgJh8vCakll8oOgdqwvq5val3EWYUb353kmBVIukEtyCO7DG8g9l+3HRLP1k7fNKYWXpfoZtpj35Y28QSBEfvYJI/Jc3lS5oda6qR/UZy9oLeF7CUGcTDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FmTwkTFHIj5XANh+/Ma3WuM8978XFxS0mn23v03rGcg=;
+ b=pZ5Yu/SMbD+07blNQDxiQTa9kzCRpZjJ06UMvRW4/MCAUJjBjad+nfsaFPZq/ffINd21olKJMCr5rh4VIIQgwFDy2V6e70CzDPm4eImBpIOlOfRthtqghz4VH/LForBGaHeqnYFclNLrl6xUE6lpM5/hLWG5mVp5BWVjdwEAedaM8aApkkSO3GBCDimzW2A4CsSmD8coRY35cezC+QVcqwk9MX26xhEL/nT4iRTbAGLrqUSgrKPDz8dA9njZTgO3ROibwNz9dKji5bQq+kl3kVgXYKHzBwCSKCV8xTSNhso6V6RPgg03usrSSfeKdq6FGu9c2LmfinVHIR8EWVR8pA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by IA4PR12MB9785.namprd12.prod.outlook.com (2603:10b6:208:55b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 9 Sep
+ 2025 23:20:54 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
+ 23:20:54 +0000
+Date: Tue, 9 Sep 2025 20:20:52 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- bfd2c81b061c031cd1cfd7862ce881cb8f6aa9b5
-Message-ID: <202509100637.8SGBIm01-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Donald Dutile <ddutile@redhat.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH v3 06/11] iommu: Compute iommu_groups properly for PCIe
+ MFDs
+Message-ID: <20250909232052.GR789684@nvidia.com>
+References: <6-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+ <20250909212457.GA1508122@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909212457.GA1508122@bhelgaas>
+X-ClientProxiedBy: YT3PR01CA0138.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:83::25) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|IA4PR12MB9785:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4070d2b7-6220-4e4e-fcfe-08ddeff78623
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gqpG05/lGUyL/8Mbh3PyA/1JaI2BLFBa9uYpGzYmqAV5Ky/WPnjyahKUi7Sy?=
+ =?us-ascii?Q?hpyfW8jd5cvGImGFFwatGYR6RLCV5w1D+1WxZ9pL146eF74qC3ZldmaoWwBX?=
+ =?us-ascii?Q?kn1Eb8KQUISEUivqjoAviMgURqRgkwfciuA1psG/hm46rHurnLXh8OKEAuBv?=
+ =?us-ascii?Q?l17JW3j1j+cchjZjflJqDfM/MxexcNU7EPVVG3ZrGJ6WaARO4mMXuMztzcNS?=
+ =?us-ascii?Q?lNADGJFH7SrCtem1EVvhn61u4V9soSAgdVmC0hRK02auM3uLp4eOQOSyaHnd?=
+ =?us-ascii?Q?Od95bjiBuYIpWBcJXuVHXCyIjMd7hGJdEdkm2LTwOHL82CDXw8FFE4sfaQ6M?=
+ =?us-ascii?Q?sgoz5OdnVQJi7Cg4ZLvXUK2jHMrhgODHWouRXOm0Jweanu4y7swcEKnTIg7K?=
+ =?us-ascii?Q?n1r/RLZHfI7UN415POsi39eL54nS9rEPSmfGjakhjQA9eTNXCI+5stMCStew?=
+ =?us-ascii?Q?vs69/iVuvim71KiseteCUjZKqS9dyc10jLg43aFs5fB79IDTuGlwKYk/fC9r?=
+ =?us-ascii?Q?Q2oJE9wlgki29frXPScGQ11h0SpThKHd3EmpHNfYwp9jXE4/1E+9XSOZdPPo?=
+ =?us-ascii?Q?b1AZc76mzii9V648WUkpEKUnf4WgMK5RAv24eLkLEkRqfSS4eGU0JBK61WsN?=
+ =?us-ascii?Q?k9MToe7OIqa466V5o7LWLWRlmk1EHQJGb5sO2S4mixTcooYt6U4MtiG2RiGL?=
+ =?us-ascii?Q?v6o4WDAe7PkADPNGpHapgLYKzzX5s12IpqSFaMYJbOZ+VnaamDhqg38cR/aV?=
+ =?us-ascii?Q?t6iiUNfJ3inRR/oN5bMVmLO3mA5jwwTjaX75takUBklvoTKMqVgwosKckx9p?=
+ =?us-ascii?Q?Z0xyI/Qw9diELq00I9XKQeLbMak9nBYisA77uUoXiEt7ZQrgViJ+KSgduI2R?=
+ =?us-ascii?Q?a0AU/Yj1uKOrwzz8hTtJT70+rR967qrhXMFgJlhukIO7w4X2UF/IP1pUeLIG?=
+ =?us-ascii?Q?O/f9kSZ+9PeYhOtOVXwN7y0FBVjcFvf25eN1YcHCd8OSgViO0t6UFkRICWh/?=
+ =?us-ascii?Q?TZ3IEvxyLMevMnjXpDwQLmYiHyL7Xhqvdqe0Iti0NgOPmKV6hC5hkD/7p5ct?=
+ =?us-ascii?Q?vDtv+tb6Yo3jIZU6t/JmyWxasi2P55VzXkc0D1umXdlXbEvZaAe2MghEtTGO?=
+ =?us-ascii?Q?P8FHOyn+RtnRmLpx73TkzFNsUzlKOMv+G9lMSDbJdvWs3bYqzMT+WlBTd7nZ?=
+ =?us-ascii?Q?ramU9YAZKgpVqvgMgSGqBCo7MKpKawojtmWtMSEHa8u60dVWyts3xZoDWt67?=
+ =?us-ascii?Q?dFxHKahGZYqPUW2TpQ82ZuCFOxBVsJSdaTap+xPXcuccU8DYHeN2bLKTOB+t?=
+ =?us-ascii?Q?QXTrmN9HhHe1f1D4dO13x1U/ho9gp6NSfuVNUnWe9xkIfi9TR+6A5fAazvVP?=
+ =?us-ascii?Q?lAqflb0rox7tgudr/1Iv0Tek9p7lL6M2tW4asKtyUq0rvCRMp/UBlSgyVxcP?=
+ =?us-ascii?Q?82YHQsS2O/k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0YGLTQ8oJWVQLYAHP8wvxhBL9BACsVGQtEeKmhzzaTlKr8us8HWBMWQ0Z8RT?=
+ =?us-ascii?Q?GmZzaOaUtnSqJQYXxewY/X2o81M4p0HCPemn+iIqQAJB/4jX1uP3oylrDP12?=
+ =?us-ascii?Q?qb5zXLEvU/CmeZQIzO0soD3G3x/fkroo0jFzQWgrRe6xEneMEkZ0CtMyLcND?=
+ =?us-ascii?Q?S8LtZC21+nRb2mXxRuNJxFQuTsZr5p2GzwOwm5XbnkeLSc7G5O9/SvzaZ/Ar?=
+ =?us-ascii?Q?Mscx+bM08rfapMGl7tRWnD4/mlY4Z9n7BtekdHduAUaDfeABxyqOsKqImgS5?=
+ =?us-ascii?Q?EpEB7CWTvFHv71qyuxezYqdkBmrXzLRuN1XL4MHzN/aQGsFP/7Q3qtiiHXP/?=
+ =?us-ascii?Q?zFcglNLzKH38gJj+UTcA9t3Ajd38fS+zctLof5Gcwe3L0riH/Sv5Gzah+pY8?=
+ =?us-ascii?Q?UslhH85uCbcXh3pPzih+NnpZdVCf7tIQOS6q39D3KqGuym/znZAS9i+2jAeo?=
+ =?us-ascii?Q?GYK0dc7418kUBlIlthgVkymdwnMiFvVxvVmU8jwT2hP5hWYxCEnv80CGewNL?=
+ =?us-ascii?Q?ylXujMAg3OMoO3CSyNEswQOIoPa2iIOnY9PrXuSJzoEdk8e+ZnMeIZ3Dl2OY?=
+ =?us-ascii?Q?Qj/42Yw0h+y5SCLj06TUy2T2MOOm1xGOxkF1PLhXInb0C0FaYKwdzXl/AURm?=
+ =?us-ascii?Q?SSEoDz/GYhIQrt29Mw1oKMU/Ws8uCxXx1AYmmx+Du5oArWQuQNZJOFtbI/t3?=
+ =?us-ascii?Q?4t+/bruzaSBgJo4HrQ47Ba3HF9SbZ0Q9ytGBVeTfcVnX6KHsNWwY1GoqrePc?=
+ =?us-ascii?Q?Eecks4XuAIS1jLKz6UTf1Me3VVj3CdcCMM7Nb8nsO4WCBmc9yRs6iES3cHx1?=
+ =?us-ascii?Q?KdZ6T+v2H5H4mBxTNkCkdhgrcaErw/JGi2qMy169odbXijjTj69Yf3iksDzY?=
+ =?us-ascii?Q?ZaIx+NhzKSCqwdQQlFud4ffDjAe3DC6o96niaSEuN5y9Na1nbNp4IbVGVS1D?=
+ =?us-ascii?Q?kbkDZ8kmU8UyaHOpycXz8UgjakmEBUVnZtg3kMNBAMKV4tq7l3dODzglFESJ?=
+ =?us-ascii?Q?+FOuAsH8D+1/KCvSadhRLCjDY2D6QftuHB7nrwwKnvTSXEeO2oJjESzH5+qr?=
+ =?us-ascii?Q?lFEoCkmkq/7gfG4609cv4dVMl0MDOe71cxp98g6y8f8Gg3FEbznpKiywLjnS?=
+ =?us-ascii?Q?at9UPCuAHgEggiyRBzKW3Na85389ltnzBfi1sZrywplkOp1hBthI+GaSLqMy?=
+ =?us-ascii?Q?LxA0H3Qa6E+XexEXVBe0zDj6eaPLq/1+316w/9m/vbYR6VzWn74MkIEn9m4M?=
+ =?us-ascii?Q?Kljg2HK9Q7moYgXhfWahN4M5B4GOGBNJ+zChkRqkci4EOovNlX1jsW7I/sFY?=
+ =?us-ascii?Q?5h9lDeAK/eOu7OaTuvb6oprg2CSpaa876/sVvMhRrU2LSJWKN3RJ+cH6oJDA?=
+ =?us-ascii?Q?EHFsw/NY22qDSROx4x2n6FvI0Hd0pgB9tTv+h7s5iN8O7l7FUDJbY7Hviuvr?=
+ =?us-ascii?Q?NcCGZ3124m7nEnQTZnuhXQVSoz/aA/hZyOyji7GnaWMBWYP1FsqoPutRbE9w?=
+ =?us-ascii?Q?LcG8CJfHsBA5rhKoP2R/Ylsr8DoHsfkFsLMaZgcYd9dusQ/F28TYdfWw1WNp?=
+ =?us-ascii?Q?l16v8sx6oKatQBTIoW8=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4070d2b7-6220-4e4e-fcfe-08ddeff78623
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 23:20:54.4907
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ia75wRcQxWUC8CxPc7weSY/55HauhHxFbJSOk07AOqmddUcKp7Soz8M5LGCQjAa8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR12MB9785
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: bfd2c81b061c031cd1cfd7862ce881cb8f6aa9b5  Merge branch 'pci/misc'
+On Tue, Sep 09, 2025 at 04:24:57PM -0500, Bjorn Helgaas wrote:
+> > 
+> >                       -- MFD 00:1f.0 ACS != REQ_ACS_FLAGS
+> >       Root 00:00.00 --|- MFD 00:1f.2 ACS != REQ_ACS_FLAGS
+> >                       |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
+> 
+> REQ_ACS_FLAGS was renamed in an earlier patch.
+> 
+> I don't quite understand the "Root 00:00.00" notation.  I guess it
+> must refer to the root bus 00?  It looks sort of like a bridge, and
+> the ".00" makes it look sort of like a bus/device/function address,
+> but I don't think it is.
 
-elapsed time: 1456m
+Call it the host bridge or whatever is creating the bus segment, it
+doesn't actually matter for the examples.
 
-configs tested: 117
-configs skipped: 4
+> > However, the PCI spec does not really support this:
+> > 
+> >    PCI Section 6.12.1.2 ACS Functions in SR-IOV, SIOV, and Multi-Function
+> >    Devices
+> > 
+> >     ACS P2P Request Redirect: must be implemented by Functions that
+> >     support peer-to-peer traffic with other Functions.
+> 
+> I would include the PCIe r7.0 spec revision, even though the PCI SIG
+> seems to try to preserve section numbers across revisions.
+> 
+> It seems pretty clear that Multi-Function Devices that have an ACS
+> Capability and support peer-to-peer traffic with other Functions are
+> required to implement ACS P2P Request Redirect.
+> 
+> > Meaning from a spec perspective the absence of ACS indicates the absence
+> > of internal loopback. Granted I think we are aware of older real devices
+> > that ignore this, but it seems to be the only way forward.
+> 
+> It's not as clear to me that Multi-Function Devices that support
+> peer-to-peer traffic are required to have an ACS Capability at all.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+How do you read it that way?
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250909    gcc-8.5.0
-arc                   randconfig-002-20250909    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-001-20250909    clang-18
-arm                   randconfig-002-20250909    clang-17
-arm                   randconfig-003-20250909    clang-22
-arm                   randconfig-004-20250909    clang-19
-arm                        spear3xx_defconfig    clang-17
-arm                         wpcm450_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250909    clang-16
-arm64                 randconfig-002-20250909    gcc-11.5.0
-arm64                 randconfig-003-20250909    gcc-11.5.0
-arm64                 randconfig-004-20250909    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250909    gcc-15.1.0
-csky                  randconfig-002-20250909    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250909    clang-22
-hexagon               randconfig-002-20250909    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20250909    gcc-13
-i386        buildonly-randconfig-002-20250909    clang-20
-i386        buildonly-randconfig-003-20250909    clang-20
-i386        buildonly-randconfig-004-20250909    clang-20
-i386        buildonly-randconfig-005-20250909    clang-20
-i386        buildonly-randconfig-006-20250909    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250909    gcc-15.1.0
-loongarch             randconfig-002-20250909    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250909    gcc-11.5.0
-nios2                 randconfig-002-20250909    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           alldefconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250909    gcc-8.5.0
-parisc                randconfig-002-20250909    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                  iss476-smp_defconfig    gcc-15.1.0
-powerpc                     ppa8548_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250909    clang-22
-powerpc               randconfig-002-20250909    clang-17
-powerpc               randconfig-003-20250909    gcc-8.5.0
-powerpc64             randconfig-001-20250909    clang-20
-powerpc64             randconfig-002-20250909    gcc-10.5.0
-powerpc64             randconfig-003-20250909    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250909    clang-22
-riscv                 randconfig-002-20250909    clang-22
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250909    gcc-11.5.0
-s390                  randconfig-002-20250909    clang-18
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                ecovec24-romimage_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250909    gcc-15.1.0
-sh                    randconfig-002-20250909    gcc-9.5.0
-sh                           se7724_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250909    gcc-8.5.0
-sparc                 randconfig-002-20250909    gcc-15.1.0
-sparc64               randconfig-001-20250909    clang-22
-sparc64               randconfig-002-20250909    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                    randconfig-001-20250909    gcc-14
-um                    randconfig-002-20250909    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250909    clang-20
-x86_64      buildonly-randconfig-002-20250909    clang-20
-x86_64      buildonly-randconfig-003-20250909    gcc-14
-x86_64      buildonly-randconfig-004-20250909    clang-20
-x86_64      buildonly-randconfig-005-20250909    gcc-14
-x86_64      buildonly-randconfig-006-20250909    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250909    gcc-8.5.0
-xtensa                randconfig-002-20250909    gcc-15.1.0
+6.12.1.1 is reasonably clear that "This section applies to Root Ports
+and Switch Downstream Ports that implement an ACS Extended Capability
+structure."
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+While 6.12.2.2 is less so "This section applies to Multi-Function
+Device ACS Functions"
+
+I don't know what the author's intent was, but I have a hard time
+reading the "must be implemented" as optional..
+
+Frankly PCI SIG has made a mess here :(
+
+> Alex might remember more, but I kind of suspect the current system of
+> quirks is there because of devices that do internal loopback but have
+> no ACS Capability.
+
+This is correct, there are a few cases where it was confirmed that
+internal loopback exists with no ACS
+
+But mostly we have haphazardly added ACS quirks on demand whenever
+someone was annoyed by what the current algorithm did. Most of the
+investigations seem to have determined there is no actual loopback
+suggesting people are reading the spec as above.
+
+So, I don't see how to make it workable to default that most compliant
+systems require quirks. Effectively this is a proposal to invert that
+and only quirk those we know have internal loopback without ACS..
+
+I will fix the other remarks
+
+Thanks,
+Jason
 
