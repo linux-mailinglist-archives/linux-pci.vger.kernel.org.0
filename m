@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-35755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92ED5B5064B
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:19:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB097B5062B
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 21:17:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D7E07B22D8
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:15:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 797B24E34BC
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Sep 2025 19:17:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E650734F497;
-	Tue,  9 Sep 2025 19:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADE5318129;
+	Tue,  9 Sep 2025 19:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8OCkK/k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oqy2acDF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DFE1531F9;
-	Tue,  9 Sep 2025 19:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC492FFDDB;
+	Tue,  9 Sep 2025 19:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757445405; cv=none; b=dpTDCqbjDdp2NSjYcFLz6T3JyB4/l2s2Nav8O841i2REKxvqW/4FOm5LIoTv0myZDDVPHc0/rxYOlhPRT9/Z1UQCm9d2glHjBhH+r2bqbTypxZn2vVfSRTsaIDx9KEmwEbTgrDKfg8eKGWv80vSJzm3X/9gXbgyJXbCus0O+BjU=
+	t=1757445409; cv=none; b=Aq8z9yVsx+fxNhYFVkuvlZNL62RBHSrkuR4m2QICm0C9tRHAi/yhH1h5xGGfw4+B69fvRqD9bvVIowPHLb8CujBArgmPyh0BIfIyP2TONX++tdsWqek1E+LrPGiNsvWPze/1t6OTk1wLedeCi09xSqsIpIxBV+HsEDKCCgr5QTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757445405; c=relaxed/simple;
-	bh=Gi7TAFmyKWLsGJiQRhzYB7164rEc624qwBmsJLMUCyg=;
+	s=arc-20240116; t=1757445409; c=relaxed/simple;
+	bh=y7k8d5jsVOd5phy+8g1xjAepVVLhhoJ0pLaQErosHyw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YqkACX/5DGbGIU81lLjOlqBKb46ak6Tt7PqW+IM6ju4zU1KjlT043OJC8J48AjwJn7oHNLmn8NSAFr6vopy2kLcD9fIrh/Mwpo62Z7pNE/bfNVaU7pW4sO5PF+/XH122GbwRg7qVTDXdRENB3GG5k8BHwR0tRzsdsqrYpe2qJ8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8OCkK/k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F38C4CEF4;
-	Tue,  9 Sep 2025 19:16:42 +0000 (UTC)
+	 MIME-Version; b=YKRA8LWPBxK5Oi3gjhWbcL5h/w9vW2suZFY4lsaDpwDLSVAjAn5AIMcMVtO7NcIhxEW6lHcFmvoM2WdWxTrj+6fkvD/FTivpMNevIduA8BgwDsK2luDGlEzFEPKkyDGMnlz5JCWyj/T+iqVHuqQ0d/KIPDL47eKTlr07L8v4VlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oqy2acDF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 888B1C4CEF8;
+	Tue,  9 Sep 2025 19:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757445405;
-	bh=Gi7TAFmyKWLsGJiQRhzYB7164rEc624qwBmsJLMUCyg=;
+	s=k20201202; t=1757445407;
+	bh=y7k8d5jsVOd5phy+8g1xjAepVVLhhoJ0pLaQErosHyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s8OCkK/kWB/AyQXcON8slx09Yc2bY3r2Rsg5I4dSHkp2G7U4nm7jlkGPIS++u4zIs
-	 yRjR2uRqTK0mSNQmxywVszC8jITq8gIUDYvwLuEKXs+zP7MtNq2Clv/6+BerF3FWYq
-	 pihsiu4JIXfEjjFzCbMuSfwezW+FB/Nx6OFN+4T0I3gTwmYP/6P/ZI0xGjagRBwOFm
-	 mkPo1sQC/zKks1PQ33CXHY5jztSVlBMbpGuTKJ1Xr+zwEm4vWuLBs3y6IgRo+K1FjY
-	 C+alVJ4fs4iqZAx44zN9PWOA75MVuO3pUJAbaHhNIfk79J4b+IuP4KfLAGN0QehBjC
-	 gqeNZdBUYSZIQ==
+	b=Oqy2acDFLLQ7TKxBJvobhopBzu4swVkadBsaWgR0PPzvouttEATGkAF0lWjPDY54b
+	 9PK2ZqzgNehftAQs2amwVwkYZVPt6MypQZJKi8+eofOzi377x74dCcsI7qCJqY5s3I
+	 V/S56UXvLVxEp+G9sS0rX8+DND2ToS47tH3gN2oe26HlYw1MCdENitEDKwBolIIfRf
+	 G4YgfhWnd+K3plxBBDXfhbtv6iwcyoJlzjG5/WPMXb3knvC3QaHR1Tfk+h/jUk5hlY
+	 eJquGigeKu3fhUmolrPUj0henzU6KYnQjJDO3fjDlO4H/Gg+2j2YjMVI/FTV8THhCL
+	 W3o1QIcU2qZXw==
 From: "Mario Limonciello (AMD)" <superm1@kernel.org>
 To: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,9 +66,9 @@ Cc: Pavel Machek <pavel@kernel.org>,
 	Eric Naim <dnaim@cachyos.org>,
 	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
 	"Mario Limonciello (AMD)" <superm1@kernel.org>
-Subject: [PATCH v7 04/12] USB: Pass PMSG_POWEROFF event to suspend_common()
-Date: Tue,  9 Sep 2025 14:16:11 -0500
-Message-ID: <20250909191619.2580169-5-superm1@kernel.org>
+Subject: [PATCH v7 05/12] PCI/PM: Disable device wakeups when halting or powering off system
+Date: Tue,  9 Sep 2025 14:16:12 -0500
+Message-ID: <20250909191619.2580169-6-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250909191619.2580169-1-superm1@kernel.org>
 References: <20250909191619.2580169-1-superm1@kernel.org>
@@ -80,70 +80,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If powering off the system USB wakeup sources should be ignored.
-Add a new callback hcd_pci_poweroff() which will differentiate whether
-target state is halt or power off and pass PMSG_POWEROFF as the
-message so that suspend_common() will avoid doing wakeups.
+PCI devices can be configured as wakeup sources from low power states.
+However, when the system is halting or powering off such wakeups are
+not expected and may lead to spurious behavior.
 
+ACPI r6.5, section 16.1.5 notes:
+
+    "Hardware does allow a transition to S0 due to power button press
+     or a Remote Start."
+
+This implies that wakeups from PCI devices should not be relied upon
+in these states. To align with this expectation and avoid unintended
+wakeups, disable device wakeup capability during these transitions.
+
+Tested-by: Eric Naim <dnaim@cachyos.org>
 Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
 v7:
- * Reword commit mesasge
-v6:
- * Fix LKP robot issue without CONFIG_PM_SLEEP
+ * Reword title
+ * Reword commit
 v5:
- * New patch
+ * Re-order
+ * Add tags
 v4:
  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
-
-Fix lkp robot issue
 ---
- drivers/usb/core/hcd-pci.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/pci/pci-driver.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-index cd223475917ef..921d1d0940016 100644
---- a/drivers/usb/core/hcd-pci.c
-+++ b/drivers/usb/core/hcd-pci.c
-@@ -6,6 +6,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pm.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 63665240ae87f..f201d298d7173 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1139,6 +1139,10 @@ static int pci_pm_poweroff(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
  
-@@ -531,6 +532,13 @@ static int hcd_pci_freeze(struct device *dev)
- 	return suspend_common(dev, PMSG_FREEZE);
- }
- 
-+static int hcd_pci_poweroff(struct device *dev)
-+{
-+	if (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF)
-+		return suspend_common(dev, PMSG_POWEROFF);
-+	return suspend_common(dev, PMSG_SUSPEND);
-+}
++	if (device_may_wakeup(dev) &&
++	    (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF))
++		device_set_wakeup_enable(dev, false);
 +
- static int hcd_pci_suspend_noirq(struct device *dev)
- {
- 	struct pci_dev		*pci_dev = to_pci_dev(dev);
-@@ -602,6 +610,7 @@ static int hcd_pci_restore(struct device *dev)
- #define hcd_pci_suspend		NULL
- #define hcd_pci_freeze			NULL
- #define hcd_pci_suspend_noirq	NULL
-+#define hcd_pci_poweroff	NULL
- #define hcd_pci_poweroff_late	NULL
- #define hcd_pci_resume_noirq	NULL
- #define hcd_pci_resume		NULL
-@@ -639,7 +648,7 @@ const struct dev_pm_ops usb_hcd_pci_pm_ops = {
- 	.freeze_noirq	= check_root_hub_suspended,
- 	.thaw_noirq	= NULL,
- 	.thaw		= hcd_pci_resume,
--	.poweroff	= hcd_pci_suspend,
-+	.poweroff	= hcd_pci_poweroff,
- 	.poweroff_late	= hcd_pci_poweroff_late,
- 	.poweroff_noirq	= hcd_pci_suspend_noirq,
- 	.restore_noirq	= hcd_pci_resume_noirq,
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
+ 
 -- 
 2.43.0
 
