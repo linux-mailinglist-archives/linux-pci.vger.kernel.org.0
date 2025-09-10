@@ -1,160 +1,217 @@
-Return-Path: <linux-pci+bounces-35843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BF84B51F21
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:39:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BACBB51F30
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:43:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C7877BBF8E
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:38:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37E463A232D
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:43:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7589C33470A;
-	Wed, 10 Sep 2025 17:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54917327A36;
+	Wed, 10 Sep 2025 17:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dePJwE0+"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nuKgz0b8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2070.outbound.protection.outlook.com [40.107.94.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4535432ED52;
-	Wed, 10 Sep 2025 17:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757525965; cv=none; b=L+4L4IngUHQ5fAcJB4fCclJGMkRQDRYYSY75YeZMfoS9zlffYaqJDfkif7Yu6X4W1Cxqx8X2PDsxqLlJi3qsyDCkEf93bK3JuvrDTA2TpsQ5l8FQz6KqqtOZ5ReGaYix0cGI+wnzd3U2nUntWW+ZF7sjucJbDs3ONGlWvJ+bBfc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757525965; c=relaxed/simple;
-	bh=m0DNa4vBUCkxRtQp97NYT7gbXNH16n1jHXxeABD4H7U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U2Gl8mNDYMXvrTdpctSmvY5q/5XLQoQuIXTeMF3Z/DQFyM3vqp7ji1RNRKxaa4lxdksIYuvCFojpg4q8Es1ke1c8BKVau6VLa1i9uktK54MSJELYct/PJwUsjRk4NJa9ySVTGuDoXBWx/7o2tIT+T48fgGWBIYVAJDuBSVU0W4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dePJwE0+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E55C9C4CEF7;
-	Wed, 10 Sep 2025 17:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757525964;
-	bh=m0DNa4vBUCkxRtQp97NYT7gbXNH16n1jHXxeABD4H7U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dePJwE0+Nu+mvg08+eAXMYN8YFekuHEfh6Vi3atzF/Ty545uITzYxhpoPFiKw07OL
-	 6nKfVTT272uce/KB3s9Z0fEMt5BkAmxijHd996Bz2IRX9GhRg2bBy8AE422fTlh/uQ
-	 G8ZWOHy+H/ZTkOq+VXGkvSoQgOhQH5iEVw/P7XPzJJ79o3EOouG7VVICoVW4MNctrJ
-	 jPCD5NAh64Ducq//A2SqKwWxG4HnzFSelKIizm+eMW7S7xNpK/sZRgb2QNXQG932wD
-	 SNRj9HkjXUGhj621Rbbnle6pybEzYa1GrC1D+dYvmzHkFxhR/I4Ux/RK3ZgzQiCFiz
-	 7ovEbGU/Gsolg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72CDCAC58D;
-	Wed, 10 Sep 2025 17:39:24 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 10 Sep 2025 23:09:21 +0530
-Subject: [PATCH 2/2] iommu/of: Call pci_request_acs() before enumerating
- the Root Port device
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AE1270EDF;
+	Wed, 10 Sep 2025 17:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757526189; cv=fail; b=ErEMzafx735zU8/GG2iEQHf5AWFLzQa8IY1AbVcz5DVBgJHyGXOQRO+yeLzSYj2kBBWQyj5i8K7FSKEDX8bZ7toldHDc5S1ItBz/Po3i2rdgPTQTSMRAhpxrq6lLaocZmvCau7qgrd2laPNqfW2opA9XEwQsw/jjUpJs0YjclTg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757526189; c=relaxed/simple;
+	bh=queIhJ0L30V36YGla6wSwSsnJ+qSRZDuCSRtL1VnwHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QLi0QVbqs+/odZ78AaFSfzonH81jpBtYLlvzHWRJyBSaoel5meLBF56OFLbh+Ev5CusymlUTC9pVRXJaw92bVKRnIiCWx/Wt7DGBKgYLLTgu0I5HXBdMd+nJbpYsjvsuuL/vicRtCSjsmUhhtvOtpBNBs9pWElCSrx/3vxYlHeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nuKgz0b8; arc=fail smtp.client-ip=40.107.94.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=miFSLyMnz537QnRyK+RjiMe2MZPdmYPCscx/0G8SsZNTpkpyXr3CzJnBEj+0YKR/x0mNlnoBLSIWYEUwgba9eXqSjm0tezGKjoXgli8KDOYPOcs95cMWCmm/PRmZhNmvOV2alBHP83Mjbc4SbvtpWU2HpdeWv5/6DMGH8PTHlK0lPYOuix0P1RlhT9WPw5HWCAefbEuLiYhxM6wNSzVoOe+Y0uZvJWl9dyImXBRbCdxz0CTjd+2XFPnxEkF35Bgd7KPyBcoCoq44NXPPnUb9IXfBtdqAXYm7NFxw6fblgUIzr5WYPs9a4PK2NS7/fbmFtbQcigSpoLaDhwLpEVgsow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5eoSG2CnVrJe6mEcXVgAutFjdmwJ1dJvrvu5znyb3Pg=;
+ b=ZOSye1Nq6uI01dXsblf5Te/HC+3lVKVTByVXHZK3tp5e7VMeZHdVBnnvnZ6IXvQqnTKsqEYMB9StPZKN3LeNZo2d+3I9d6gfdA6jeOWis79kspR2kvsWlhDn3TrMas5phJml6Kqi74saBS1d6mnzbNLt4gjtwV+RrScWF7s6+ReZsVu1LY7v/An2XvpMxsA7uIz5e148yeJoexdyoi8jOTrq24p19IIj/ST7FwjhgIbOuR7FFMbuJVfob0DqD2zDTRtqGi798gP4dzXMQnCopPVItqk/37a6Jb0FfDkz9Y6vxDncxf5Hy8nziaQsUNbFqcxrfGpLykJp/wMlaLUkLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5eoSG2CnVrJe6mEcXVgAutFjdmwJ1dJvrvu5znyb3Pg=;
+ b=nuKgz0b8xzxmWLcBT6qAeUj4xRvXMkyE+q6z4A0sthrsiUYdG7PhawB+6hb5H5TQbW76oJ7j5P2Ekd7njgURsQY2n9FV9fPwAIwmesCQicMH4OzZ8T1ZG14JV5Oq9376xqGURNFwzpyea4DoIk14L97Ggz1dSkpkF8QgjBxDT4RB8kelAHTRuH12B8rMR6J20CXbsAO99yMFuagp6SfL5wRykiuQjbTSqtFllg3BUdiblBpOdhdqKFuCeCAMMoM0Fu+xmcQ/QfIIex3EoqeDmviZfWpEKiueXt5/XUFZ+Hir/zgAqq4egfsqhyG7RP6llti4l6OtM2VH4VCNWzmW2Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM4PR12MB5769.namprd12.prod.outlook.com (2603:10b6:8:60::6) by
+ PH7PR12MB7454.namprd12.prod.outlook.com (2603:10b6:510:20d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
+ 2025 17:43:04 +0000
+Received: from DM4PR12MB5769.namprd12.prod.outlook.com
+ ([fe80::f5f:6beb:c64a:e1ff]) by DM4PR12MB5769.namprd12.prod.outlook.com
+ ([fe80::f5f:6beb:c64a:e1ff%5]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
+ 17:43:04 +0000
+Date: Wed, 10 Sep 2025 14:43:02 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Donald Dutile <ddutile@redhat.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
+	linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH v3 06/11] iommu: Compute iommu_groups properly for PCIe
+ MFDs
+Message-ID: <20250910174302.GD922134@nvidia.com>
+References: <20250909212457.GA1508122@bhelgaas>
+ <15ee1d12-6900-4cf2-9348-6e6cc8aefbe9@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15ee1d12-6900-4cf2-9348-6e6cc8aefbe9@redhat.com>
+X-ClientProxiedBy: YT4PR01CA0451.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::17) To DM4PR12MB5769.namprd12.prod.outlook.com
+ (2603:10b6:8:60::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250910-pci-acs-v1-2-fe9adb65ad7d@oss.qualcomm.com>
-References: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
-In-Reply-To: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev, 
- Anders Roxell <anders.roxell@linaro.org>, 
- Naresh Kamboju <naresh.kamboju@linaro.org>, 
- Pavankumar Kondeti <quic_pkondeti@quicinc.com>, 
- Xingang Wang <wangxingang5@huawei.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2676;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=s3IWPWrtmYAF1td5P6U9N7afV7EwajwvWtWy1fRfcR0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBowbfLBKMpPRmXeHjCf82JrGyQlLaBTrURN4KsN
- QgzqkNRMXCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaMG3ywAKCRBVnxHm/pHO
- 9cuaB/9aEE0RS60+8mmPH7waGER7/F4s9uVWLBpZtCDkWRZyWUdJ7SMdDR50TXthG97BiOw0ZEl
- 4e6l/R90xwaAnmLqpLJMEtBSGR9tGHIrcG+/CiSN5xNqV2SZBSFPxxdsp4DSywhRmXfHw1KShMd
- RC4g15WALpt1tcpI7nYLmC2Ice8R9lTycjTI23MvuU8H+F5CVsODjWbHUN+5xH1MGM0LoQnpdVd
- jH1+LY4a3TqtbeSVCGJPg8zBe/WRZzLLGB85PgXMKoINILTQu6Zxt/OlppSIEbwIL9KFB9nYhmW
- XWvmR+84jPDpHrO27Hyx7es3T68W6UA577cF56W8GUUtYQrl
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5769:EE_|PH7PR12MB7454:EE_
+X-MS-Office365-Filtering-Correlation-Id: c34a16da-7322-4cf1-fe7a-08ddf0917e92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Xu/b6m4mNL6NnDORoHMjXFaBEYgDWqi2qfcYI29LE0lh4rHnECfkVUgKCd29?=
+ =?us-ascii?Q?kL/LWXGZI7qsI3DS42rDeYwOXHCxUxZqXxX69lODtJhAuo+8hs81Rw8IQbCe?=
+ =?us-ascii?Q?GbOP0/UAn+h1YTIvh3SuLV1XPvM+gXIpv30htiogoFL8rpH7fSQSN/Q9fPdS?=
+ =?us-ascii?Q?0b49OF/XXPLimzsiiUiHZRaLCUg5aE2I+YzXPDEqVnEDQvg2PU3IvLaDdw9m?=
+ =?us-ascii?Q?08zg9WnxQSlADeVi17DJs3VUh+cd2iUzWq2FmdokB3tdjPX0JgPVMf3WuX2O?=
+ =?us-ascii?Q?rvRuV6gScQJx8DTj45+ePucJgPXMLV2JSgJyf3PJoq8NnARvmowZCc0xaON6?=
+ =?us-ascii?Q?nspwqrYovE6l7i+ypKBoil4JkG5qX8ANra0Kk/OQgKcpCggjR5UAb1xpg7lJ?=
+ =?us-ascii?Q?jeymXjVWhV+Xw8oft8m0s5c1iuW+4MDLP1CONFrKq8a1zQPDxmGNOHQ+YK5Q?=
+ =?us-ascii?Q?/BzvWuwUR2MwXGOlxqfEfGL1ql3MPmKW2XpNknBUB4iQ+kZNj23RPgQycEcO?=
+ =?us-ascii?Q?h2IcGxwUENOr32WDy3Pby2F8pNOu4ZNQzvcu/PaMhg4Z4cWCq9RGGIkG8xFQ?=
+ =?us-ascii?Q?KxeSY/ZttfbE1NR6IE2zQpxirzOe7vJAaCffsd8JCJMNSUFqojbRalHcMsll?=
+ =?us-ascii?Q?6vGsob7BHB1NUqFgHB5NX5SLXrpebfZ8jVcjgIY/zGcOvInXgJZJNu6iUFgv?=
+ =?us-ascii?Q?p7gIGULBsvGHAmMU+JqZiciaM6WW0JwwY0Z0l6NkWonzv1vp4f3m+WmfOItA?=
+ =?us-ascii?Q?0SItHeaF4meI9vyL4dxAKjiSCWEnzKWHveh5OhxamP4f6cWHikLEqCMwkWLX?=
+ =?us-ascii?Q?zKp8IRgmI0PGgao0Lj9dDHfGHFaMv3uMkF7TzqJ9O9n7fGi7V6XTdQ+tVjtX?=
+ =?us-ascii?Q?slOay+y1PQHPjYxBDb0Ltkcypo+idafbPoDiut4RigHCO0QD3rCPH10Ta5VO?=
+ =?us-ascii?Q?OwiUM4aIXRk/negmYd70XZFAU2Dg0VkDouZPMu0uAKroHJLoosLyO8gfLChy?=
+ =?us-ascii?Q?omCwx3wp1N+Y6Abmk0GCokqQOAWIdShhpU1jiAyXvNmbIYlq+pJidk/vP343?=
+ =?us-ascii?Q?rbz6mD21tAWacp/jHNKuzqdYViEza69zchX6MHOP5Mv8MZXggu7I8zwqADJ5?=
+ =?us-ascii?Q?IPX2AanE9sqPYJn25jtFK6AkX07meowE97vMKUXasReUV7NVYpC9g09Vn9aL?=
+ =?us-ascii?Q?DDOT/5WnY37IxV8l36yrecrNLdog1KCuWE7zx3kb49YbFKsp6+58+qxfP7sf?=
+ =?us-ascii?Q?wVF2K+j85RIkbN1zX1YDF9clX+P/hiJg2x5OFFiA8ocys7rxSr9bLu4OGp4w?=
+ =?us-ascii?Q?p8MbuX/60QnmvD6EJQNlnqKeRrikayaesWfR03E9YKdsHn3cyyfvOl9iqtSz?=
+ =?us-ascii?Q?Z2jk+JAbhzE6w0Y4JxjAI9SjT/n5wWmLH4gouicy6O68k5QTrYou9uPnSk/t?=
+ =?us-ascii?Q?/QCdV1W/yoQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5769.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?EeZn7Bxa4eYCBd2R5pen5wX3s07f1Yy9PbapB6WgGHut2Zi+OMcTg93gbY7/?=
+ =?us-ascii?Q?WlImeidiEAWvHkAwMiFpp/K/tcFCY2wVQKkW8xiThHJWGKyWM9ki7IlLvX5j?=
+ =?us-ascii?Q?O8lBQvvKl9QTizbb52IRIfXNi9fWd5FxFmraFfVy3Yk0UZQbGlw7qEly++wC?=
+ =?us-ascii?Q?sWTNpzHPpFezoDyJrAfTmpQ8QrgkbrH76p5dbtErHebjZcmTUe0zwpC3YaUP?=
+ =?us-ascii?Q?CpwKrkJE+mPLILH92EisdmipEW07vMFASUU6eSvSVSWGqZoU+7R+BR7wXdcs?=
+ =?us-ascii?Q?V0sjbjoiqWdiiaFXmPINA/XJzMkadlmQwgRwEpeBPodnoCZwcDhcwUJkjZIj?=
+ =?us-ascii?Q?X2brOtvYxHXwf+4EABh4FMc/ULYuKEnbMRaa8/Wl/iIZ5O1MaXB5ByjL+7c2?=
+ =?us-ascii?Q?V2icGxEzoLqkzJIW7y5Y6cJhdcabP6S3ILXbIkz0RV+IaFJi4a0JQu0TUYqb?=
+ =?us-ascii?Q?BVpgR43tky7e0Ur6c4pD62xTKkokMgE2EEKfDa58Y7wnmwaZPiDT6VD2BULd?=
+ =?us-ascii?Q?Y+Jq52t/eDojpChb2RoIu2JYZocYZgTKkt/K5ZAG+mW4bblBwPvwVnYxDYoe?=
+ =?us-ascii?Q?KrzqEJ2hoeITNEPN1a1pc+LvQ9r3GfMh+XwMRsqnQB6Lnwur9VgzyJrEnRdW?=
+ =?us-ascii?Q?oUrgDTczvhoaC7QckrJbHxuDTTWE6zzsQg3mtggaAxriZvbNr6+eHFi4Tea2?=
+ =?us-ascii?Q?XbMOj56fqiK0miGPKLer01A4Hbkw39xQT19BlzbrhIQjxVEYqjVqbgLccwmE?=
+ =?us-ascii?Q?a/d7S7eusUbtJNSxM9KDuxDQVWvMPnvDAkGhox9OwcdMEvEoYFHZ19WAONqn?=
+ =?us-ascii?Q?wL87iqfCg65hpAH08fHaBdVHnQRnTSmFZM/gEfL6MHHgDchAYHzDVFjEv7lz?=
+ =?us-ascii?Q?ns27nygGg46OK4KTnnvJXpxQb22fzBRGHz0RJ3rjjIvzTtKdr0z8YPZ3ZIBQ?=
+ =?us-ascii?Q?gQ02r6NfTOFGmrRkmVcC3JwT9Q9l5IAWX3ebm3ZyQ4LiQXw4QnzkEI9AR8W/?=
+ =?us-ascii?Q?TIxJWaOmvqDn5BgE7vct0ZXeuasK/breuAYG5ypi7aafvvAvkXXCPjbin8Pf?=
+ =?us-ascii?Q?mZwFqA/5hLL8/DUNkbXclqn4rvqQg/7RvqZTOgQPYT57dnKR+bax0V9eOpvL?=
+ =?us-ascii?Q?njetdvpdSWjw/UqcjeBAHKYmIJBKMLi57dPUFwW92YHM3A7pT/w0yqb0uJ25?=
+ =?us-ascii?Q?r8QyRL8n3B+XuYG6f/HugWqLifUg+rbENpJYQ/e5i1oPfQAfhJpCVOtHwXs8?=
+ =?us-ascii?Q?CDdktGb96Bp7qawwP2YI/a8VGREgVh/0v4Uw7wwY3DL8b+1wnaVhrHDKw9Ds?=
+ =?us-ascii?Q?NrJGIrySCvHeo+tFf+24yjImCVhyHACMcBmHrJ7GV15roTlMyTGGJmYQE3D2?=
+ =?us-ascii?Q?8+F82rEatq9RZqCtS87KPY+nUW8nGY0Vp1+ynHHZno4w1ZoLf2H5TzVPoxeA?=
+ =?us-ascii?Q?lW6TQTTbxOqNsA9DaN3oMWXPLkAcHldRmjDgT6GLh2W0/vLzrb4IqN0/q9J7?=
+ =?us-ascii?Q?GBc7F/f5o3aFPu9ChBOVHb0J6EhsRmt1iHTPdNoythlTCbqT/ohUknRqfnJm?=
+ =?us-ascii?Q?WlQ5CSMZKC/8I7Z/kYw=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c34a16da-7322-4cf1-fe7a-08ddf0917e92
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5769.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 17:43:04.2742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6WDbIUmiewYlq3ni9nA8tB2aUdDwHtQzPbcUHMmx2j6hyNInW/lYZ7YeXOWdMjXo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7454
 
-From: Xingang Wang <wangxingang5@huawei.com>
+On Tue, Sep 09, 2025 at 09:59:23PM -0400, Donald Dutile wrote:
+> > Alex might remember more, but I kind of suspect the current system of
+> > quirks is there because of devices that do internal loopback but have
+> > no ACS Capability.
+> > 
+> and they are quirks b/c ... they violated the spec.... they are suppose
+> to have an ACS Cap if they can do internal loopback p2p dma.
 
-When booting with devicetree, ACS is enabled for all ACS capable PCI
-devices except the first Root Port enumerated in the system. This is due to
-calling pci_request_acs() after the enumeration and initialization of the
-Root Port device. But afterwards, ACS is getting enabled for the rest of
-the PCI devices, since pci_request_acs() sets the 'pci_acs_enable' flag and
-the PCI core uses this flag to enable ACS for the rest of the ACS capable
-devices.
+It is the reverse
 
-Ideally, pci_request_acs() should only be called if the 'iommu-map' DT
-property is set for the host bridge device. Hence, call pci_request_acs()
-from devm_of_pci_bridge_init() if the 'iommu-map' property is present in
-the host bridge DT node. This aligns with the implementation of the ARM64
-ACPI driver (drivers/acpi/arm64/iort.c) as well.
+Linux assumed all devices without ACS capability CAN do internal
+loopback.
 
-With this change, ACS will be enabled for all the PCI devices including the
-first Root Port device of the DT platforms.
+This captures a huge number of real devices that it seems don't
+actually do internal loopback.
 
-Cc: stable@vger.kernel.org # 5.6
-Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when configuring IOMMU linkage")
-Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
-Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
-[mani: reworded subject, description and comment]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- drivers/iommu/of_iommu.c | 1 -
- drivers/pci/of.c         | 8 +++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+When people complained, ie for DPDK/etc then quirks saying they don't
+do internal loopback were added. But this was never structured or
+sensible, I have systems here were LOM E1000 is quirked and a few
+generations later it is not quirked. I doubt it suddenly gained
+loopback.
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 6b989a62def20ecafd833f00a3a92ce8dca192e0..c31369924944d36a3afd3d4ff08c86fc6daf55de 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -141,7 +141,6 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
- 			.np = master_np,
- 		};
- 
--		pci_request_acs();
- 		err = pci_for_each_dma_alias(to_pci_dev(dev),
- 					     of_pci_iommu_init, &info);
- 		of_pci_check_device_ats(dev, master_np);
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 3579265f119845637e163d9051437c89662762f8..98c2523f898667b1618c37451d1759959d523da1 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -638,9 +638,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
- 
- int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
- {
--	if (!dev->of_node)
-+	struct device_node *node = dev->of_node;
-+
-+	if (!node)
- 		return 0;
- 
-+	/* Enable ACS if IOMMU mapping is detected for the host bridge */
-+	if (of_property_read_bool(node, "iommu-map"))
-+		pci_request_acs();
-+
- 	bridge->swizzle_irq = pci_common_swizzle;
- 	bridge->map_irq = of_irq_parse_and_map_pci;
- 
+That said in doing so a few cases (AMD sound & GPU MFD comes to mind)
+were found where the MFD actually does internal loopback.
 
--- 
-2.45.2
+So here we have to pick the least bad option:
 
+1) Be pessimistic and assume internal loopback exists without ACS Cap
+   and expand groups. Quirk devices determined to not have internal
+   loopback. (as today, except due to bugs we don't expand the groups
+   enough)
 
+2) Be optimistic and assume no internal looback exists without ACS Cap
+   and shrink groups. Quirk devices that are determiend to have
+   internal loopback. (proposed here)
+
+v2 of this series did my best attempt at #1, and there were too many
+regressions because if you fix ACS to actually group the way it is
+supposed to the internal MFD loopback pessimism breaks alot of real
+systems.
+
+Don pointed to the spec and says there is reasonable language to
+assume that if the MFD has internal loopback it must have an ACS
+capability.
+
+> I'm assuming the quirks that the current system of quirks impacts the
+> groups and/or reachability, such that the quirks are accounted for, and that
+> history isn't lost (and we have another regression issue).
+
+In this version effectively the quirks become ignored for iommu
+grouping as we don't call the acs functions if there is no acs cap.
+
+Jason
 
