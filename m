@@ -1,48 +1,65 @@
-Return-Path: <linux-pci+bounces-35836-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35837-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F095B51ED7
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:24:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DAADB51EDD
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:27:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C249E5815EB
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:24:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB5801B27469
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:27:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7C13191DA;
-	Wed, 10 Sep 2025 17:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19B983277B8;
+	Wed, 10 Sep 2025 17:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaFCKbV8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DSDCH3Pv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856F626D4F9;
-	Wed, 10 Sep 2025 17:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E880327A03;
+	Wed, 10 Sep 2025 17:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757525072; cv=none; b=D3FAtAw6N8Fnrv+GQZM6AKRxzO6NjkzG3fm9ZJU8V0Kkg5etlc80LQhCz2gtRjhgb/zhGmWgNTL0qWSV5qKSZ+sMck2ZFErOW1iKCO3wXsEIa0nxWTh+X/gbBwzYblPMpQe3MaMyVae9/x4FUEpNPI7vAQB4toq2ytRcwFNruZo=
+	t=1757525218; cv=none; b=SiAmnUh5cT8rqJ4MiwBdXg5KSADvLDn8QUG/J8g7UC7csoJFytL4j9K9I4L4ghI8LL6w0xtTYCDkpNvUBDKExdd4qANbkjk6uunKSkljiJDyoP0ZMvdl5y66u1Yp8wRzco/YKGfboB7xwfDpXQcTGuVJXvlg+D+7xoXM8iySJgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757525072; c=relaxed/simple;
-	bh=1IdKMoeb2R+xnIWdnO7rRaMblx2EnlGCpTsdLPuakQM=;
+	s=arc-20240116; t=1757525218; c=relaxed/simple;
+	bh=VLEnz8T/xKPJiUeITjefR9pqPNUwdIGHAeC4WN78Rjg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HjOzRwi4w3fWsqAiejIcYKsM078aCK3NAi1eFwAJmrlymfinyO60PB2nCvBInInvdImzssKM0ezzhkYqoqrTh9yLVexPty4zTkQ0Z4NnPkDc1NbkQ8aL5D5BYmMyIR901yv/dvr6mhKVqbcUQukhfscMO5YOgezC8qkltm2tbEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaFCKbV8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDA5C4CEEB;
-	Wed, 10 Sep 2025 17:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757525072;
-	bh=1IdKMoeb2R+xnIWdnO7rRaMblx2EnlGCpTsdLPuakQM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IaFCKbV81ZeaLR3AD5rUkKSYgXSVzQVcu9fg8JUs10Fq0M7K22m2AbssN0bP1q6Ux
-	 B6rCHuW3lfqsdW4bib8qfmqLO56KZGiYD5A5cVINpNmOAsbHhw5G115+3oHcsLHfnb
-	 i5zEbnRZGnzxhc3OVdJVVTLWIhsMcMtH7l21By5E23FkdULVegygSNCSK+ijas9uiy
-	 bDmf0B+MF82+JdaCthE501HqOmx9AtUJpCvQJ2yNu/bzldJWzYbJM/rO1KT9Ca2kMz
-	 6qfF3QG9IJYbXXJDYoKLjoXS8u8PunK0sQQq6K9X3EvjtNy52w0TRvV7aIZHzO3Bcy
-	 jfwyKi4rfvltg==
-Message-ID: <0bb2cb92-0d31-4e42-b6ef-2cc3fdf0df40@kernel.org>
-Date: Wed, 10 Sep 2025 12:24:29 -0500
+	 In-Reply-To:Content-Type; b=smi9ewMYOSJHIfL4bFqrLZUq9ciiupMFH+Iy8Kk47KnNp7uf9N1UzJYAz/cTvZekgYJ4W7hM5oCCo5sxNwM8+NQaQp9Aqfl4SknS+4q3bOiSy0ygSF+Lm1QoLKeRaToS/qOrftbpfYsm/DBBbcxrAjOuJwqfgZqTOJP6Y/D/eS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DSDCH3Pv; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757525216; x=1789061216;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VLEnz8T/xKPJiUeITjefR9pqPNUwdIGHAeC4WN78Rjg=;
+  b=DSDCH3Pv7TPfEiyLmVFB6cFu0/agJnpzQnjbVIUi9+m14iX8S2VGEIcD
+   mG+z4ZrAEgTg6VkKaIf0fyNjJHhFNX4rjdXOjFuMSRpe/SWYbLFPfqfmf
+   jjLtml38lckI88P4/H0fsdic14o0rC302E0053hgjYDKWVwx5rCfGaJe2
+   9ibEFr9/fLrQec7tSzH7Oc2/zfqZFKCcbz6LJx2+EfTtX9IE1SmUaIdq7
+   AAW+lpjp8iUdMOoh7t7BwVppEbFDqNF8dlcUW1dMrLSK5P5tHqMyEAywc
+   BtAwSb0GcqaxTffaIc57AxlAmDVBfWH7MW3qCJ5oleSl+m418GR/t4y4u
+   A==;
+X-CSE-ConnectionGUID: it7TFVUzRu+fQR4fDIpWpA==
+X-CSE-MsgGUID: zZVGyhFUTSGfu5FNWCK/LQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="58886745"
+X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
+   d="scan'208";a="58886745"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 10:26:56 -0700
+X-CSE-ConnectionGUID: 4IZZ7PCMTRasyYdluzHq2Q==
+X-CSE-MsgGUID: rfMYjKdPTxap3/X6RS6DJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
+   d="scan'208";a="174263345"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.219]) ([10.125.110.219])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 10:26:54 -0700
+Message-ID: <289a86f6-d305-468f-b33f-8301bc546c3a@intel.com>
+Date: Wed, 10 Sep 2025 10:26:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,148 +67,61 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/12] PCI/PM: Disable device wakeups when halting or
- powering off system
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
- <linux-pm@vger.kernel.org>,
- "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
- "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
- "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
- AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
- Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-References: <20250910171132.GA1541776@bhelgaas>
+Subject: Re: [PATCH v11 06/23] CXL/AER: Introduce rch_aer.c into AER driver
+ for handling CXL RCH errors
+To: "Bowman, Terry" <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, shiju.jose@huawei.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ alucerop@amd.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-7-terry.bowman@amd.com>
+ <9e01d94c-7990-4599-9eee-ac0f337d6e2d@intel.com> <aLFnKbWtacLUsjAi@wunner.de>
+ <d7d395e1-b5f2-4897-a6f0-4d503e0fcb66@amd.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250910171132.GA1541776@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <d7d395e1-b5f2-4897-a6f0-4d503e0fcb66@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 9/10/25 12:11 PM, Bjorn Helgaas wrote:
-> On Wed, Sep 10, 2025 at 11:52:00AM -0500, Mario Limonciello wrote:
->> On 9/10/25 10:06 AM, Bjorn Helgaas wrote:
->>> On Tue, Sep 09, 2025 at 02:16:12PM -0500, Mario Limonciello (AMD) wrote:
->>>> PCI devices can be configured as wakeup sources from low power states.
->>>> However, when the system is halting or powering off such wakeups are
->>>> not expected and may lead to spurious behavior.
->>>
->>> I'm a little unclear on the nomenclature for these low power states,
->>> so I think it would be helpful to connect to the user action, e.g.,
->>> suspend/hibernate/etc, and the ACPI state, e.g.,
->>>
->>>     ... when the system is hibernating (e.g., transitioning to ACPI S4
->>>     and halting) or powering off (e.g., transitioning to ACPI S5 soft
->>>     off), such wakeups are not expected ...
->>
->> I will try to firm it up in the commit message.  But yes you're getting the
->> intent, having a wakeup occur at S5 would be unexpected, and would likely
->> change semantics of what people "think" powering off a machine means.
->>
->>> When I suspend or power off my laptop from the GUI user interface, I
->>> want to know if keyboard or mouse activity will resume or if I need to
->>> press the power button.
->>
->> The way the kernel is set up today you get a single wakeup sysfs file for a
->> device and that wakeup file means 3 things:
->> * abort the process of entering a suspend state or hibernate
->> * wake up the machine from a suspend state
->> * wake up the machine from hibernate
->>
->>>> ACPI r6.5, section 16.1.5 notes:
->>>>
->>>>       "Hardware does allow a transition to S0 due to power button press
->>>>        or a Remote Start."
->>>
->>> Important to note here that sec 16.1.5 is specifically for "S5
->>> Soft Off State".
->>>
->>> S4 is a sleeping state and presumably sec 16.1.6 ("Transitioning
->>> from the Working to the Sleeping State") applies.  That section
->>> mentions wakeup devices, so it's not obvious to me that PCI device
->>> wakeup should be disabled for S4.
->>
->> It actually /shouldn't/ be disabled for S4 - it should only be
->> disabled for S5.
->>
->> Are you implying a bug in the flow?  I didn't think there was one:
->>
->> During entering hibernate the poweroff() call will have system_state
->> = SYSTEM_SUSPEND so wakeups would be enabled.
->>
->> For powering off the system using hibernate flows poweroff() call
->> would have system_state = SYSTEM_HALT or SYSTEM_POWER_OFF.
+
+
+On 9/10/25 10:01 AM, Bowman, Terry wrote:
 > 
-> OK.  I assumed that since you check for two states (SYSTEM_HALT or
-> SYSTEM_POWER_OFF), one must be hibernate (ending up in S4?) and the
-> other a soft power off (ending up in S5?).
 > 
-> But it sounds like there are two ways to power off.  I'm just confused
-> about the correspondence between hibernate, soft poweroff, S4, S5,
-> SYSTEM_HALT, and SYSTEM_POWER_OFF.
-> 
-> *Do* both SYSTEM_HALT and SYSTEM_POWER_OFF lead to S5 on an ACPI
-> system?  If so, what's the difference between them?
+> On 8/29/2025 3:39 AM, Lukas Wunner wrote:
+>> On Thu, Aug 28, 2025 at 01:53:35PM -0700, Dave Jiang wrote:
+>>> On 8/26/25 6:35 PM, Terry Bowman wrote:
+>>>>  drivers/cxl/Kconfig        |   9 +++-
+>>>>  drivers/cxl/core/ras.c     |   3 ++
+>>>>  drivers/pci/pci.h          |  20 +++++++
+>>>>  drivers/pci/pcie/Makefile  |   1 +
+>>>>  drivers/pci/pcie/aer.c     | 108 +++----------------------------------
+>>>>  drivers/pci/pcie/rch_aer.c |  99 ++++++++++++++++++++++++++++++++++
+>>> I wonder if this should be cxl_rch_aer.c to be clear that it's cxl
+>>> related code.
+>> I'd prefer an "aer_" prefix at the beginning of filenames,
+>> but maybe that's just me...
+>>
+>> Thanks,
+>>
+>> Lukas
+> You guys let me know what to rename it to. I'm fine with either 
+> change: cxl_rch_aer.c or aer_cxl_rch.c.
 
-The two functions are kernel_halt() and kernel_power_off().
+I'll defer to Lukas since this is in drivers/pci.
 
-And looking again, Ahhhh!  kernel_power_off() is the only thing that 
-actually leads to machine_power_off().  Halt just stops the CPUs.
-
-I think we should only be using the hibernate flows for SYSTEM_POWER_OFF.
-
-This has implications for a lot of the patches.  Thanks a lot for 
-pointing this out. I'll walk the series again and change accordingly.
+DJ
 
 > 
->>>> This implies that wakeups from PCI devices should not be relied upon
->>>> in these states. To align with this expectation and avoid unintended
->>>> wakeups, disable device wakeup capability during these transitions.
->>>>
->>>> Tested-by: Eric Naim <dnaim@cachyos.org>
->>>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
->>>> ---
->>>> v7:
->>>>    * Reword title
->>>>    * Reword commit
->>>> v5:
->>>>    * Re-order
->>>>    * Add tags
->>>> v4:
->>>>    * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
->>>> ---
->>>>    drivers/pci/pci-driver.c | 4 ++++
->>>>    1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>>> index 63665240ae87f..f201d298d7173 100644
->>>> --- a/drivers/pci/pci-driver.c
->>>> +++ b/drivers/pci/pci-driver.c
->>>> @@ -1139,6 +1139,10 @@ static int pci_pm_poweroff(struct device *dev)
->>>>    	struct pci_dev *pci_dev = to_pci_dev(dev);
->>>>    	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->>>> +	if (device_may_wakeup(dev) &&
->>>> +	    (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF))
->>>> +		device_set_wakeup_enable(dev, false);
->>>> +
->>>>    	if (pci_has_legacy_pm_support(pci_dev))
->>>>    		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
->>>> -- 
->>>> 2.43.0
->>>>
->>
+> We also have the VH analog of this file currently named pcie/cxl_aer.c. 
+> This is introduced in patch 17, CXL/AER: 
+> 'Introduce cxl_aer.c into AER driver for forwarding CXL errors'.
+> 
+> We may need to make similar change to the VH file name as well to 
+> be consistent.
+> 
+> Regards,
+> Terry
 
 
