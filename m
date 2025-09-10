@@ -1,227 +1,452 @@
-Return-Path: <linux-pci+bounces-35801-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35802-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01CA2B51498
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 12:56:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10B42B516E2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 14:28:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EFF14E3FDD
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 10:56:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17B8F1C84547
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 12:29:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AA8131691F;
-	Wed, 10 Sep 2025 10:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6BB2D592C;
+	Wed, 10 Sep 2025 12:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I9vIzSfp"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a/pRHGLZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2087.outbound.protection.outlook.com [40.107.92.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AF23148CE
-	for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 10:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DD426AAAB;
+	Wed, 10 Sep 2025 12:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757501750; cv=fail; b=APkuIRpdk7e5F7n+I1ozh1EKVcZjnqHDN5yO+T/p7iUTnkiO7f/NYPTdhpWNOKWij0n0GStyo77Q1r2VXLm07YVCQnh5huVLBpuMXasCaDKmJ4NsEGMzX/O/GrjNKB3Uy0ZjthTgtDeq5+osJ5s4KFKyKT89zqiX58RTV4b03aY=
+	t=1757507326; cv=fail; b=D0BOD8KV/wr5vPSX0jiWoxma+Q9jrO9RM4n9RKfxu+QySrf266FKU0RIRSUoPJ8qtsuh7eEE4sr+ujo/2MrR1ENxR/lVBI+UaMZ/N/PlrsCjYOjawEQaU+dB/qcjQm5CLW1I4lNuKHXotTvqkVIcZOzJ22Kf31zRLS+1ACJ0Hro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757501750; c=relaxed/simple;
-	bh=UhXKBlKThsgFPr61MOOZpxQm4W0p7Z6J/lXPLFMqp2k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=juSX6KSMaQNOuNoeeKLvHAAFbPjIIDwwtf/PSQW27dypQ2g0Pxc9NFykuGO/x5lY3GHDxjJHokMZYtpRoi30HLZ7tLDYAeJZ0MYUWhphrnlyhen8hco9p086EB7fSH6nFpcyFvp3X9/oQtT6KxkzMLf/xknKyDTry2xfCP4koec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I9vIzSfp; arc=fail smtp.client-ip=40.107.243.46
+	s=arc-20240116; t=1757507326; c=relaxed/simple;
+	bh=opedww242jl9UbNKkoB6201KTDKZN7E6U5+rVO+av7U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=CCy383qFsG4PmIAi1WLrf8wMLHwFgIN+hMSAm902luMVQVLxjmJPVaj+fCE9rLBhlUnxRYZQFMYI9aO/J31T9NOxzK4rc3HsMhHw97SL8oimYFRtoAXu7ypBFcbDJYHt6GEznXVsEUGb7uK/U50jAGHhAQPCBh8WNP0JXlaUxVw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a/pRHGLZ; arc=fail smtp.client-ip=40.107.92.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xZSgObGsbPOXpYY4slW71kbFpgSZh0GroSbcWIWPlYpATPEjgu9l3QZcmorIq0sqbYk3uOYsgmJgQnqmeQR1ZqIHctoJTXHg9qzqlCSHB3I1qyh2sFQOfN8fiPh+rvgdkhOuQZzBo7+0C/fWg3LaBondfFouY9YKXc0yMhEjUuLSfzPr0lza63W2zH6CMlnCeTCJVqcQT93T8URTegQ0ebWQPnAA2264hePMXWYO9s/Rn+c4Pkfo5L0WGfuEUJAczSshsqwFdUGb99fbDT3Fh+R/F93DtR23fe83joJGOrPGGHizMmCGrP22mtjSTv89qlRdARMgCetARr7OGfEVSQ==
+ b=XWvMWbP3ucGuD2eNAysA1K9zvYmZXBXOirA1rx0JaU40ighiEdg9gEj/GhpWxjpz6CfJhxZpfbfPlfjU2l+mnTFiP6HqTA5kTtqbmfHr8MycLBTp5ZfgB/TdQQh9mp/shctjuzQbi1TK1blU3V0+uyr3+SPSYetQWSsRaoix4K1RmqiQL4g+NuRUqag7kCzTpmju+LPjLRVHfnzK1jq14J/tdWOiTErqLsb5ax/RyJ2k6k3DNSwbuJ7cyTa99/VTInkNKFqOGQwE0yqXTigZ2rq0lKUixyVApMIOo+zjJzVpQHsJrHBoxZhH3j7lVrSZQyggWAWmuvvtkIQHVdQjsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=biqi5TU4P04kvRUxPETQkIqxMG4J3kXFkZYj5fdxJeQ=;
- b=DaajbngryVjVoYANOnK6BbzSdwoyrWHvMQLqiEu7OF0Nk3AAqmwLHpuApQmWqA7t7lbvCIu0AFe8C8LRTBFpDn8xzvJdatPtil28+0QV7iPRsv/magSLKcPl3OQ1D16N5ZPx1i95s1ORNAcUJpfNneRrhrHWkvbtE18wiytEfXLiWBt1Hj/ARaKH8bw/31Cmn5F4wbDdH2lQs3na74iJwTIuhoQqI0tHFlPJkyArOKmlQzrj7mwNNbAHDIUkvKj2uDPaFevYmTnCsUEPC+/7xVTxb58V1TB2dFH1P7Tx+ZEBrDZUsv31KJWzx+w1T0z51roWG4O44T2wKBpQQkIyTw==
+ bh=IaToFPD3w5GcngIb1bX1xPbnhfzn+HbCJOeVoPyJojw=;
+ b=wWDPVOkE9v+SCAZ5mC8W0GeL04havmc6w/RtmBFj/6afoT8pLi8XyIceJbz42A67yQ4AGFcCJNQRwz1+HfKImnEyz8FCz9AGs3ZI16iVHYUUp94I4ek+fkqRL80RzmrUSXa+i+UqNbFlVSLt/oIgAr0okB2DVGZBBFmZQR0ZRrrP1gp06ogTyJAyJsyzsPXf026mL05p4tXgqWxL8vIYlKLyicMcA5V+QyKGbttB4cjMfsTnJqDitOjDM3luCjdHqid4D7kcQbU5K94X5BWUhQYGtVZ4XqrIAy63AV0TauCSLqd0ld3gPnX/ofB8Cy1sGXHktA+ZC1T9g2IG1BP3Yg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=biqi5TU4P04kvRUxPETQkIqxMG4J3kXFkZYj5fdxJeQ=;
- b=I9vIzSfpctBVRTlygrSx+6Vm5R1zfkeiVXQZrFMwRBJWYY4Zoyt/CNizgqYsiBrv0IcwnYQU0tXuAVHN0lh82GWpct9hJlyIG3pLHI+/Sm2XQl4bnfnnk8Tfw23h1f5+pO9tIo8RK/fe31eUPnp0+GeMUOM28kzcaI003Q3reO4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by PH7PR12MB6907.namprd12.prod.outlook.com (2603:10b6:510:1b9::18) with
+ bh=IaToFPD3w5GcngIb1bX1xPbnhfzn+HbCJOeVoPyJojw=;
+ b=a/pRHGLZqiu4iJaJkwlaQM5NSnVb/tg8k4vKGHFNqphFdgsxJhKiUKh385f6NbCCL/vtKvrUQt38ZjwnugsRRlSFfBP572xKWCYE0XRsiggcFcw64ZgWt4ueHVxQGyg+4MEPKGgI745U/zzDpiy5/Ose+qdrL1C0yZu7LemPXFs=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by SA3PR12MB8045.namprd12.prod.outlook.com (2603:10b6:806:31d::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
- 2025 10:55:45 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 10:55:44 +0000
-Message-ID: <47a21e9e-5749-40bd-8207-efccc747e7e5@amd.com>
-Date: Wed, 10 Sep 2025 20:55:37 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v5 04/10] PCI/TSM: Authenticate devices via platform TSM
-To: dan.j.williams@intel.com, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: yilun.xu@linux.intel.com, aneesh.kumar@kernel.org,
- gregkh@linuxfoundation.org, Lukas Wunner <lukas@wunner.de>,
- Samuel Ortiz <sameo@rivosinc.com>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250827035126.1356683-1-dan.j.williams@intel.com>
- <20250827035126.1356683-5-dan.j.williams@intel.com>
- <c2019b3e-f939-49c8-82e8-400b54a8e71f@amd.com>
- <68b0fd1ac2ade_75db100a3@dwillia2-mobl4.notmuch>
- <a7947c1f-de5a-497d-8aa3-352f6599aaa8@amd.com>
- <68ba33dfac620_75e3100a0@dwillia2-mobl4.notmuch>
- <67382369-d941-48dd-92f6-8bbad7b26b60@amd.com>
- <68bb97518dea6_75db10067@dwillia2-mobl4.notmuch>
- <70c5399e-debc-48ed-a60b-e1921c111690@amd.com>
- <68bf77c923ff4_75e31005a@dwillia2-mobl4.notmuch>
- <c920fde0-0241-4ca2-a75f-384f6f18a255@amd.com>
- <68bf886bc9271_75db10029@dwillia2-mobl4.notmuch>
-From: Alexey Kardashevskiy <aik@amd.com>
+ 2025 12:28:40 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea%7]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
+ 12:28:40 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>
+Subject: RE: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Topic: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Index: AQHcHoXBqFeEWD/5aUGDdjHQzqpmerSKuPpQ
+Date: Wed, 10 Sep 2025 12:28:40 +0000
+Message-ID:
+ <SA1PR12MB8120B9D69376F56AD2540E15950EA@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <20250905101659.95700-2-devendra.verma@amd.com>
+ <20250905165426.GA1307227@bhelgaas>
+In-Reply-To: <20250905165426.GA1307227@bhelgaas>
+Accept-Language: en-US
 Content-Language: en-US
-In-Reply-To: <68bf886bc9271_75db10029@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR03CA0119.apcprd03.prod.outlook.com
- (2603:1096:4:91::23) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-09T11:15:13.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|SA3PR12MB8045:EE_
+x-ms-office365-filtering-correlation-id: 1b7fb0bf-4a42-41d2-f9f1-08ddf065930e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?kTSuepgwUYs9DLMhXNigwHThxnbZbprgw1Uxkt6SneFervk1cqZXtGxR1nFH?=
+ =?us-ascii?Q?+Ls/ECOVBDhffutBH9SIvoH7nfryd/9GNX1FKOdR2648TeBv221djup3GXa2?=
+ =?us-ascii?Q?m0o24WEe6RVvV0ePM/Y7hsAlJgA9dE9a1bomPW0RzQNUXb1rfWDjuW5sndJ/?=
+ =?us-ascii?Q?SkwUdhPy4x7oACWK3w/nR64IUwcm46LkI5RFbt9e1Iblc5K9643onLCSvT74?=
+ =?us-ascii?Q?QJuzFRfiROA38EBc5iTBygXJEJ0JCj/veyb/lk2708hCw4yIoNc42G6kF7bd?=
+ =?us-ascii?Q?SF2UUuKS++znqYOg9l/9HnNlm7V17+qtzvQElVRE9zokikqXlihpOZbqxFWm?=
+ =?us-ascii?Q?U6PUUQAvVlWHW2UpP10HefWu4HcdjfsGncTBtQ2jMVsir5PCxzAOaYUNi/dt?=
+ =?us-ascii?Q?cUa0EL+PypehKa7A1SwO+cA9XvvINj7NtXkmeL8TIJSexL2RbfL0C+lIxrq7?=
+ =?us-ascii?Q?237Txn++U7RvOf+AnWpXt1z7+mcf4Czs035vMBV3HPuBGMsMLT0rYqYQw/xg?=
+ =?us-ascii?Q?svaphqwNHhAtP9Dc0oMeqfGsUAsc239t4JrvPNSVr81DfXHkq/2NNB9Y3Q67?=
+ =?us-ascii?Q?nh5eaBJ1ecBpqbt7bulRhqXJ3eOnAH+0VvaA5CzYmXAvHn+CUh1rWeJ+SHrC?=
+ =?us-ascii?Q?Lhz4AC+RrAjH7pllKMEDPePilOgBkJCiI14ou1T87Nyzh/OLRLMBn5GfM+bQ?=
+ =?us-ascii?Q?7dPxcFS75XZox/HNgK+tJ4jQO4B8Kc0ZUcSSZmpK6uD7EuOgOyTro0nQKy3P?=
+ =?us-ascii?Q?cexb1K49ZqKR2XyHeIopyU9NDOr5wx7jLL+zOkhCTcINhtf8QSs3FLMbtjmk?=
+ =?us-ascii?Q?f6nkPxLypaOgKwE+A++F4eElI9oRlT5tHcaii1+xySyTAYAHmwO84WhPF/Jk?=
+ =?us-ascii?Q?O+ayxly4l83oOwVWscGJ7f4lbVHhrm/p75yMLRAA8+sVNb8ClLr2+DK51gh1?=
+ =?us-ascii?Q?mi+UxXymQCo8DJyROESDaEr/q8t/2yCcnUauFXD9OLcGR+6ZfTiOYpxlrkX5?=
+ =?us-ascii?Q?XiceTabjlFb7U0NT1mnZ1uzXFW5rfFeNTBa8KtQJHbg8wbXnJJ9roHCsbYIf?=
+ =?us-ascii?Q?ZIokLxUxjO4PBbfWYQbXH5RtOpbZ1bABCLSL1KqCgu03qnzU2YGvPHgse8sm?=
+ =?us-ascii?Q?BAkt9thwzoiHr3nFUvrkGIFuqFliFrQDvHB4UNBJ23PrCwyvjDXjHdU2/siL?=
+ =?us-ascii?Q?iTCfIMxcPzs4cCeDa1C05v22ENx6/a9b7cJQjuPmOS9hIIy5umGKtRzc8Uvq?=
+ =?us-ascii?Q?8lJSZKe2vO973npe1QStSFzdpy/nWQK0yPK6mneDacFlTuw2FUJ5cVz62+T8?=
+ =?us-ascii?Q?lqLBkT5oSXSHfD2k/NbrCbXWOkwd8zlSjEybSbfoqeKQkumwww/5XJkTkLcn?=
+ =?us-ascii?Q?JnyEAB2vOYqR+l1FIE85Rle1yHb6fc4Z7kEV0s2jwdiMNCwika4kjsIPKTaf?=
+ =?us-ascii?Q?smGzDgxOfjEwbjfJ/k0JI+hTfBvMalwXxr2JK+wJbt4nMQqEqkNIOBmUt1HC?=
+ =?us-ascii?Q?gMERllwc5i5fFP0=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?WdUSwnyqRF2bI48Ji1pjsnEByAnP3OsF0PpL/mgW46gnUwkQSX0Fg6+ZwQF2?=
+ =?us-ascii?Q?Hp+X0wxOMUsoYkISybEf+1YLVT9demsOqM8+j2iF/g8/Y8IrZm/dq/rn1FTj?=
+ =?us-ascii?Q?CfSitrj3w7mIZaMY3wyuALrkkWHBQenX4hpBStjkgtwwKRbH0HmAcjl2MKTP?=
+ =?us-ascii?Q?pUtWI5Hk6PP1Tuiz1mqK0wnWfYnJWiC5fOjaW0UfPxMgWFlh1jwlIPnfpKn5?=
+ =?us-ascii?Q?ISDAPW/No9zxw2waXMYfVq021DGLkAebfBYKiTfwDKlzStyNBMNWK57IQkcK?=
+ =?us-ascii?Q?W6/4zN9T/AUtlQHSn+XgKxMAKVvr4pZ42GAkyrCjUvJ41U/5aDqYLMmy40Vz?=
+ =?us-ascii?Q?O36ouzwjg1tReXG+6hvvu1o1g0wQExKG2Da2+b255vh0FPIyOTAYe5i/yogA?=
+ =?us-ascii?Q?B/S1gXicf8uMxXU/AuhFmv0UgXJKMvo7pnQNxKn8+FcZEi7B4HfGwcF/Jwht?=
+ =?us-ascii?Q?HvCPBxQqNUi4HQaMp8ZG2Q2LvE/FmiVT0SppOyAEItVzEjcbvrI+C15GA7zY?=
+ =?us-ascii?Q?CI+/gHBmgMgp4t/IdnqPvRqis9q1gkLuSu01qKFmCauqPYWU2DJS7H2667ts?=
+ =?us-ascii?Q?x/LmTpFXLUG2bihV/SZNvFed7Fbs24L6oIFCcFvNyOeHKTpGPXL2hdCjwJmF?=
+ =?us-ascii?Q?EdYtAgFZ2vTODK08SZCVH60JmRBVoPrIoCLSQwktukWAHr741eGe8PxEk2gW?=
+ =?us-ascii?Q?aVGBwofL/IGwoWTunccYldf2IsO6mo3sw2+R0TIwrpkwZ2oP+lF7EJbpfjEc?=
+ =?us-ascii?Q?Q95sgmff1w4+fpqkxaNHQbGaNvR/fYYba+PcR5RtW0Ld1QkrHK7eLQSXsc5Z?=
+ =?us-ascii?Q?qxV0yOrJsha1t9zIO8SY0pJran75VOuW/dVYMajckEWi9y7974N3y+yV+D71?=
+ =?us-ascii?Q?IFfxySlwFKcVZfYAE4okzhAk+rjPjduPKxqow+3o88d/sdbzQu3vx6QnJn7J?=
+ =?us-ascii?Q?nJunpXzKLFpEBKRReyAgYuXFYlPTvswSrQCfS8Acd6zIC3tvbiX7Ten9T82+?=
+ =?us-ascii?Q?zcvoIClcnncCo3EnKt9SqgCjFlpHFEaPhhHfMpIewdLkVyBWfROXP9HbGFJb?=
+ =?us-ascii?Q?Cv7j6ekduRMUj44TBqy2CMklvjHsakaNHmPwaZWqlKlvG/s/tqhJ4GuAHMib?=
+ =?us-ascii?Q?DbaFqxkAScsi0Ufxj9fsXeRKzxREIoEEQDwM5pw52sI72cTiurifZXmJoZh0?=
+ =?us-ascii?Q?dkNw1Hk8OSDH//t0HZZFHyaSWj70ZbWc8r+ivZj78QYQztiGYK1HnRWesoUW?=
+ =?us-ascii?Q?4zhQWc5m2DxVJT1y764saUn//Zf8sCuT+NGRVbUyIJsv0KZYcN2hNwKNGBCd?=
+ =?us-ascii?Q?69ycPefWerQOpSvDLhJ8DpNHJ+K4LOj5ctZiMuF757bCuhuv6ZrYaFW4JlGH?=
+ =?us-ascii?Q?PRvI7AYCc+tKBbPzhAj1n9AguunsEU0CH4fu7L1R1YUuAb9aV7KKAmgHfWUv?=
+ =?us-ascii?Q?rUeBwMtf2KY0b45r0ILta5omgVERzwrXY0Ei3hTb+Tbuon4cLoXWWAJWBLoz?=
+ =?us-ascii?Q?qc04CXLg88UP2AZJHkdBnvULzfS5STBSCgrzFxydTVY+C3lSkqS/qPPuATfu?=
+ =?us-ascii?Q?a61hO986Nt4u5WYXbGE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|PH7PR12MB6907:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46c55cce-4b95-4d22-47c3-08ddf058975f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VFc2dUtkZ0VUUnVhL25SK0pGcEQ3b2NGbzlBaFBmSXdLKzlJNXNoYWR3T2dn?=
- =?utf-8?B?VkF2WUQ3MU83V3dNcTRtd1VReDdHekQrZnhFKzllQUpmUStvdWc0SDZTRTZS?=
- =?utf-8?B?R3JpNWUwZ2wxdjlVM1k3Y1pCSVZjQTdRTkEyVXFBVFRCVjgvWHRFYVh6bmlE?=
- =?utf-8?B?TUs2dHZMWitEenhudTVTWXpkNTBzMUNhNmVpMlRvdmo1amE5TGtWeFo3TURm?=
- =?utf-8?B?ZzdKL3J3S0JXWklHRmhSTGxEeHZUdkRodkozeEw1QWtjWjQvOHZ5ekZDNXU4?=
- =?utf-8?B?eUpQcE4wOFBsT3dMRTFJMjRHVFJnd3orWHFoRUFycXZlZzZJdW1OZ2pUMGda?=
- =?utf-8?B?bVd6YUtVNXQ1TnZYK1NMTzZ3RlJ5QVpSMno3KzZGZzJEY1lJZkppNm5GVE9l?=
- =?utf-8?B?Wjg3Ky9Najd4ekMwUmZYZ0F5NWxXNUxhMHNrdVlLMUt0Q296eWRDcmdLRlpJ?=
- =?utf-8?B?TDNneUxVNElJQkYxNkFXeHNWL3BuOUVHa2JpanBBN3VXYVhhSlFoeVNEUk9k?=
- =?utf-8?B?SHZXUzVEYVRkM0oxTHNURnlPV0FDVzViWDRLSjM4cTR6ejkwUDZVa3oxWmNr?=
- =?utf-8?B?R01HQ0J2dkwrcWhIQ2NmM3VTaTdFVE5STk5vRXVIcFBxcDF2cUtCNGNzWWIz?=
- =?utf-8?B?REw3SlRJUHIydHp5LzRocWhjOG5tcVRHOVVwaC8xK0tEWlFXcENZT1MyNEps?=
- =?utf-8?B?dzVBNkZzdVNndlFSaGgwbzZwUlhJMnNuS1ZNdUlKbFRLaDlsSEJWenpJYVJY?=
- =?utf-8?B?WEhHbEhCTzg5bW1nVTg4ZEpyNUo3Mldoc3IwaWFYVS9RQkdiNFE2UkFCS1BE?=
- =?utf-8?B?bFBhcUJzZHZCbDRkaFoxRmtocG9KUzkrRmhldEJiZ0MxTDdlOVZNeUFFazR2?=
- =?utf-8?B?TW1uMnZBZmFWTXFVQW1ZZXNwWW04VHlvT2daZmNEaFlZcnliN2JkclpwQXdW?=
- =?utf-8?B?a25oLzlvTnJUdzVqVUlrTGhLZFpGTm1jOHNsbkVRbUw1elFsRmhPY1EwZ2Q1?=
- =?utf-8?B?cUp6V20wNjh6Nk9BdjBRR1dFOFBicEhXYWV6c3RsUXVXUEFaY0NIVHFtdXM2?=
- =?utf-8?B?OWFobFJqTHVpUXA5a2ZqNWsvK1FWSDBJcWxuRjNMcGxMeTNZemdWZFhRNU1l?=
- =?utf-8?B?dXZwN1FOWHVCcmRUUGFvaGg2TzVVNklmVlRoNUdISEpBL05tSHRKZXF0eGlX?=
- =?utf-8?B?OHdLRW1HeVJzMGhmYkpLVTRlY1dXWDBPQVZmWDBsN0Z4QzRWLzMrWUkvTmN0?=
- =?utf-8?B?a0RteS9kMVJQaXJ3NXJlT1g2RWQ3eVBydnV0OTdXRDRwOUdSZytKRE55ZlA5?=
- =?utf-8?B?OW81bnRHOVBzYmp0ZTZzY1Q5NGxIbnViZVFLYnJaS0U3MXoxUStsa1cvZ1Nn?=
- =?utf-8?B?ajhvNmpCSlNndGY5OTF1eEZQZWRXNGZmMWd6Rzg3a1FYTFM3UWYzTjVVeTgr?=
- =?utf-8?B?U2YyaExyVUNKeFM5Tmx4MVNnVnZ4Sy9nS3cwcXY5V25OVlZSeStiYTR0TW5y?=
- =?utf-8?B?d0dGd3ZVTDE2aGxMZVRVd054NDJrak41TkVlM2Z2TDJPbi9KZWlhZlI5b3Bv?=
- =?utf-8?B?aksrdE1DSUdtS1cyTGd6Qlp4R2F3L09YYlBxbGpMSmN1UEJjS1FwYjZxaklx?=
- =?utf-8?B?a1N1VUd3RVhCNE1mLzNHcElJSGZyaS9KQVRUZ0JUV3RWNXlrWDFQNFZDdXg4?=
- =?utf-8?B?Y0doWHhVWXJnTzhsVFl0V1ZHS2FZWXowbVZEUUVCUTR4MTRRTnBEeEw0VGcw?=
- =?utf-8?B?Yy9YRTJuamtIYkJtNmtFcDJ2SkVRQW1nRkpEZjlSTURhblFpTlJvbUR2Y21u?=
- =?utf-8?B?Z2FsZVJocm0zSm9TS09OeFUyd2VwamJ1ampWOHNxY2FEL211ekU0Q0cvTDk4?=
- =?utf-8?B?M2dIaUk2Z2QxeXlvTlM5NWJDRkV3d0gwVkRHVWkvRDN4M2pyM0xqMUFaakVw?=
- =?utf-8?Q?uJrgXnrrTtQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WkhBbWdEZlZrRWJJSjRXZnl4Qy9aOHIzQmMwWjU2WVgyUTNTcis2bWNrMndv?=
- =?utf-8?B?MFpYRTM5OWNSb0Y3aEtBRDY2c2crUUlURWFlT3ZvazByN3NhQkl2R2dUZE9i?=
- =?utf-8?B?dU9Qa01lb2p6UjhRbVlnaG05RFZRMHZFbmpmc1VVZlFocW9hVWNQZXRhcmZi?=
- =?utf-8?B?YndpQldUMHVzVnB5TGplbU4wNms1UnJrL2UzTGZDVXBwUUdLUzFrNGdSdi9o?=
- =?utf-8?B?enhrbGdVTHhIbGpLREt5bUI0Um5XY3BCY21WWis4b3lHa3ovSGcxYXM5bmFK?=
- =?utf-8?B?QnFnOXc5NUl6RnZ6endSOXczcVRSVnl5WVRiZTBGWXR0cU1pWlpxandXVllv?=
- =?utf-8?B?K0x0YjJ1a0NtODhkZEJ5ZHpGTDAxNElDcnpWbEpRNEJNUlNlTDJia0tUbUpY?=
- =?utf-8?B?bnVyTmFMWGhneUxQc3lFYWZNNlpJWmJydjhaOUdTdXR6WGxUVTRncUVqOCt5?=
- =?utf-8?B?eEdyYjUzQUlNbUE5L2ZNaEFGOXBHSEZ3bkFwODBJcTNCSkt1eGRHL2ZZZndz?=
- =?utf-8?B?RXp3SFp2VEs5SVNwRE5jT0FTVWZNZGEzY1NJa2tQOWtlZXBPTit6cEltNXZ4?=
- =?utf-8?B?dUdJNmNrYVBtajRUYmY0Z1Q0YWt5R1hOek9JU1FEaHFsUEVNTGR1YWMyb1pv?=
- =?utf-8?B?c1gxREdHY3RTUVc1NTlHTEcyRjh0bVA5V2FoT1ZMazY2MjAzUnErVHFCUUEw?=
- =?utf-8?B?V2ZXVEczZm9BcjhZemhhUWpNQi9SQnhhWGJFa2lBaWtrem5YR1pxUXpDcHM2?=
- =?utf-8?B?VW5QbjlzQWJYRFlkMHIrVmJNTThTTmZpWmZmVHdMWWRjK3lveSswR1VVaUI3?=
- =?utf-8?B?cnRiMXN4UWp1QTZsd0llQXdUOFpLY0ZVTGdMVm5vL2IwT0hxa3Q0UUIwSG5K?=
- =?utf-8?B?Z1NVY3hKTzRMd3IxdkJwUGFldVlpTVp2OERkRm1RclVzWFBHbjFmNE52VkZN?=
- =?utf-8?B?Y282THFwcjZvYlJqUFFsTk9kdEZkSkc4YzM1RFlORWtTN3Y1MmxoQXhmcW5Q?=
- =?utf-8?B?SzBoa1kyVFFlNDE2THUxZ0tMUE1ycHBadlpHd0FxWlc4SkFkcHEya0dNUGtu?=
- =?utf-8?B?WUxmdUZrNHdYOGJuSmlGZ2pmREVMQThUQjloOUVTdnd5U0ovVjlESFcxVU0x?=
- =?utf-8?B?SEVhTjFSN0E1cmVqVlBrS2FwT1NJY3ZiNU1zREt4ZDdHQ0g2d0FoSzJYcC9k?=
- =?utf-8?B?cWEvbElDUUxEYlFlajdQenNuRTluZTErVk9HQm5PNlV4SVNGTWJzVFIwcUt5?=
- =?utf-8?B?M2tNN21mSjJWZ243Mkl0SjBka0hHb2JtV1lETXUxUkxndno1REM0T3ZKd1do?=
- =?utf-8?B?NlBMWXlOeEJqWlRiWXBGQlhGOVRSVFlyWFM4Zmova0x2YmRNdC9YV3p6L0Fr?=
- =?utf-8?B?MjZZOHhsV0lQY25wZ2tiU1pIMm5hZTBuSFE0MENRZUVoUjZIcFhjS3NOV1pw?=
- =?utf-8?B?WnY3cEdvZ3JXRFZnc0F6ajV2QmpFeGU2UC9WRjlzcFNZcTI4UDdCb2l2OFRs?=
- =?utf-8?B?TkVXeGh4VUZ3VzFaNEpBWWJKZjhXdHFsZVF3TGVQaFY4R2JTYjBoWnZGNVBl?=
- =?utf-8?B?ZTRTcFBnTkp0b2ZWNGwrdkYxREZOSi81bUlLN2tMbTRxSlhUUXpoMFFMT2xm?=
- =?utf-8?B?TkkyVjRzYjhML3RRc25mdHJKT05VcEtRRGFjM1FMNDN0bkhiRnUxYkpSdy93?=
- =?utf-8?B?eTk1dW9SK0UxbHptck5oL0t1STA3VG5EN1FnYTFxMkw1bVNPWnIwa0NGcHdo?=
- =?utf-8?B?UHQ0WGZoUTlkTEdJTjFOR1ZJc0lEL0V0dkNubUc0NE5UT0JTeGpHRUJ1d2cw?=
- =?utf-8?B?cVRyYTN0Z29qVnBHdExtbTU5dmJiR2M3aFdSb1pRNVpJYVE4clF5ak1jWWM0?=
- =?utf-8?B?WFM5MnJUWStjSjNuYjBJOVZ3d0NaNGRXcmhEYkIzZWFNaFAvU0Z2ZlIrejVK?=
- =?utf-8?B?TWNCZklZeURzNjk1VUdKeGZsMjhFQytpL1IvZGhHdWxxUm13TWtsM216ZjBY?=
- =?utf-8?B?ck9kaDV2YXA2MC9xbXlHWWRoZWxSdC9lSFVDZDVmV2tKVHJMY2lCNFg3YkVN?=
- =?utf-8?B?NnlTakFMNXNQeTlxQ0FDeTU0QjY1VlBOQ21XL2hwV3pUY3Q2SGJDaVNuUTlR?=
- =?utf-8?Q?VLaF/heqavSaURk4tcPLunjTz?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46c55cce-4b95-4d22-47c3-08ddf058975f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 10:55:44.7527
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b7fb0bf-4a42-41d2-f9f1-08ddf065930e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2025 12:28:40.5522
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XhQt+vNqatZdgC++5/VcSJSSS84kT+kK99YwdlapCjalzhDReS4GgiFa5cPHntctvdU/xs+Y7UtZGcVdW8MH9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6907
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ua4jL2ditZwkRqzd18DV5fCLjNm2TS3SLMyr/pnOLWJP7n9IQFWE1gqxlXYPjepP3Ppnc2DMR5BmoFt6PO9fug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8045
 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
+Thank you, Bjorn for reviewing the code!
+Please check my response inline.
 
-On 9/9/25 11:52, dan.j.williams@intel.com wrote:
-> Alexey Kardashevskiy wrote:
->>
->>
->> On 9/9/25 10:41, dan.j.williams@intel.com wrote:
->>> Alexey Kardashevskiy wrote:
->>>>> So PCI_EXP_DEVCAP_TEE means that there may be a DSM,
->>>>
->>>> This bit I am not sure about. A bit hard to believe that PF0 is always expected to support passing through to a CVM. Thanks,
->>>
->>> I am losing track of your specific feedback, or what changes or being
->>
->> I've reread the thread, I wrongly assumed "tee" is used to decide whether to show "connect" in sysfs or not. I guess I was a bit tired^woverwhelmed when I made that comment, my bad.
->>
->>
->>> suggested here is the summary of what the spec assumptions and what the
->>> core supports:
->>>
->>> Spec assumptions:
->>> - DEVCAP_TEE on a physical function is independent of IDE cap
->>
->> Right, I just want to make sure that PF0 that manages TEE VFs does not have to have the TEE bit itself.
-> 
-> It does. Otherwise, how do you tell the difference between a device that
-> that only supports Component Measurement and Authentication (CMA) in
-> isolation vs a device that support CMA *and* TDISP requests?
+Regards,
+Devendra
 
-I'd check for IDE (not just CMA), and then I'll ask the TSM about TDISP (my PSP asks the PF0 for TDISP version at the very end of DEV_CONNECT). It is the TSM which does all this IDE_KM and TDISP stuff anyway.
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Friday, September 5, 2025 22:24
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+>
+> Caution: This message originated from an External Source. Use proper caut=
+ion
+> when opening attachments, clicking links, or responding.
+>
+>
+> On Fri, Sep 05, 2025 at 03:46:58PM +0530, Devendra K Verma wrote:
+> > AMD MDB PCIe endpoint support. For AMD specific support added the
+> > following
+> >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+> >   - AMD MDB specific driver data
+> >   - AMD MDB specific VSEC capability to retrieve the device DDR
+> >     base address.
+> >
+> > Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-pcie.c | 83
+> +++++++++++++++++++++++++++++++++++++-
+> >  include/linux/pci_ids.h            |  1 +
+> >  2 files changed, 82 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index 3371e0a7..749067b 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -18,10 +18,12 @@
+> >  #include "dw-edma-core.h"
+> >
+> >  #define DW_PCIE_VSEC_DMA_ID                  0x6
+> > +#define DW_PCIE_AMD_MDB_VSEC_ID                      0x20
+> >  #define DW_PCIE_VSEC_DMA_BAR                 GENMASK(10, 8)
+> >  #define DW_PCIE_VSEC_DMA_MAP                 GENMASK(2, 0)
+> >  #define DW_PCIE_VSEC_DMA_WR_CH                       GENMASK(9, 0)
+> >  #define DW_PCIE_VSEC_DMA_RD_CH                       GENMASK(25, 16)
+> > +#define DW_PCIE_AMD_MDB_INVALID_ADDR         (~0ULL)
+> >
+> >  #define DW_BLOCK(a, b, c) \
+> >       { \
+> > @@ -50,6 +52,7 @@ struct dw_edma_pcie_data {
+> >       u8                              irqs;
+> >       u16                             wr_ch_cnt;
+> >       u16                             rd_ch_cnt;
+> > +     u64                             phys_addr;
+> >  };
+> >
+> >  static const struct dw_edma_pcie_data snps_edda_data =3D { @@ -90,6
+> > +93,44 @@ struct dw_edma_pcie_data {
+> >       .rd_ch_cnt                      =3D 2,
+> >  };
+> >
+> > +static const struct dw_edma_pcie_data amd_mdb_data =3D {
+> > +     /* MDB registers location */
+> > +     .rg.bar                         =3D BAR_0,
+> > +     .rg.off                         =3D 0x00001000,   /*  4 Kbytes */
+> > +     .rg.sz                          =3D 0x00002000,   /*  8 Kbytes */
+> > +     /* MDB memory linked list location */
+> > +     .ll_wr =3D {
+> > +             /* Channel 0 - BAR 2, offset 0 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00000000, 0x00000800)
+> > +             /* Channel 1 - BAR 2, offset 2 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00200000, 0x00000800)
+> > +     },
+> > +     .ll_rd =3D {
+> > +             /* Channel 0 - BAR 2, offset 4 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00400000, 0x00000800)
+> > +             /* Channel 1 - BAR 2, offset 6 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00600000, 0x00000800)
+> > +     },
+> > +     /* MDB memory data location */
+> > +     .dt_wr =3D {
+> > +             /* Channel 0 - BAR 2, offset 8 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00800000, 0x00000800)
+> > +             /* Channel 1 - BAR 2, offset 9 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00900000, 0x00000800)
+> > +     },
+> > +     .dt_rd =3D {
+> > +             /* Channel 0 - BAR 2, offset 10 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00a00000, 0x00000800)
+> > +             /* Channel 1 - BAR 2, offset 11 Mbytes, size 2 Kbytes */
+> > +             DW_BLOCK(BAR_2, 0x00b00000, 0x00000800)
+> > +     },
+> > +     /* Other */
+> > +     .mf                             =3D EDMA_MF_HDMA_NATIVE,
+> > +     .irqs                           =3D 1,
+> > +     .wr_ch_cnt                      =3D 2,
+> > +     .rd_ch_cnt                      =3D 2,
+> > +};
+> > +
+> >  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int
+> > nr)  {
+> >       return pci_irq_vector(to_pci_dev(dev), nr); @@ -120,9 +161,14 @@
+> > static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+> >       u32 val, map;
+> >       u16 vsec;
+> >       u64 off;
+> > +     u16 vendor;
+> >
+> > -     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+> > -                                     DW_PCIE_VSEC_DMA_ID);
+> > +     vendor =3D pdev->vendor;
+> > +     if (vendor !=3D PCI_VENDOR_ID_SYNOPSYS &&
+> > +         vendor !=3D PCI_VENDOR_ID_XILINX)
+> > +             return;
+> > +
+> > +     vsec =3D pci_find_vsec_capability(pdev, vendor,
+> > + DW_PCIE_VSEC_DMA_ID);
+>
+> The vendor of a device assigns VSEC IDs and determines what each ID means=
+, so
+> the semantics of a VSEC Capability are determined by the tuple of (device=
+ Vendor
+> ID, VSEC ID), where the Vendor ID is the value at 0x00 in config space.
+>
 
-And how do I tell if PF0 allows TDIs or not? Try binding and see it failing if it does not? Same thing imho.
+As AMD is a vendor for this device, it is determined as VSEC capability to =
+support
+some of the functionality not supported by the other vendor Synopsys.
 
-> Now, the PCI/TSM core will still attach if that PF0 device has IDE,
-> without DEVCAP_TEE, but that support is incidental.
+> This code assumes that Synopsys and Xilinx agreed on the same VSEC ID
+> (6) and semantics of that Capability.
+>
+> I assume you know this is true in this particular case, but it is not saf=
+e for in general
+> because even if other vendors incorporate this same IP into their devices=
+, they may
+> choose different VSEC IDs because they may have already assigned the VSEC=
+ ID 6
+> for something else.
+>
+> So you should add a comment to the effect that "Synopsys and Xilinx happe=
+ned to
+> use the same VSEC ID and semantics.  This may vary for other vendors."
+>
 
-Sure, I am trying to clarify the PCIe language here, none of this is a showstopper really. Thanks,
+Agree with the above suggestion. Will add this in next review.
 
--- 
-Alexey
+> The DVSEC Capability is a more generic solution to this problem.  The VSE=
+C ID
+> namespace is determined by the Vendor ID of the *device*.
+>
+> By contrast, the DVSEC ID namespace is determined by a Vendor ID in the D=
+VSEC
+> Capability itself, not by the Vendor ID of the device.
+>
+> So AMD could define a DVSEC ID, e.g., 6, and define the semantics of that=
+ DVSEC.
+> Then devices from *any* vendor could include a DVSEC Capability with
+> (PCI_VENDOR_ID_AMD, 6), and generic code could look for that DVSEC
+> independent of what is at 0x00 in config space.
+>
 
+As AMD itself becomes the vendor for this device, VSEC capability is chosen=
+ to support
+the functionality missing in the code.
+
+> >       if (!vsec)
+> >               return;
+> >
+> > @@ -155,6 +201,27 @@ static void dw_edma_pcie_get_vsec_dma_data(struct
+> pci_dev *pdev,
+> >       off <<=3D 32;
+> >       off |=3D val;
+> >       pdata->rg.off =3D off;
+> > +
+> > +     /* AMD specific VSEC capability */
+> > +     if (vendor !=3D PCI_VENDOR_ID_XILINX)
+> > +             return;
+> > +
+> > +     vsec =3D pci_find_vsec_capability(pdev, vendor,
+> > +                                     DW_PCIE_AMD_MDB_VSEC_ID);
+>
+> pci_find_vsec_capability() finds a Vendor-Specific Extended Capability de=
+fined by
+> the vendor of the device (Xilinx in this case).
+>
+> pci_find_vsec_capability() already checks that dev->vendor matches the ve=
+ndor
+> argument so you don't need the "vendor !=3D PCI_VENDOR_ID_XILINX"
+> check above.
+>
+> DW_PCIE_AMD_MDB_VSEC_ID should include "XILINX" because this ID is in the
+> namespace created by PCI_VENDOR_ID_XILINX, i.e., it's somewhere in the
+> (PCI_VENDOR_ID_XILINX, x) space.
+>
+> This code should look something like this (you could add "MDB" or somethi=
+ng if it
+> makes sense):
+>
+>   #define PCI_VSEC_ID_XILINX_DMA_DATA               0x20
+>
+
+Thank you for the suggestion, will go with the DW_PCIE_XILINX_MDB_VSEC_ID
+similar to the format already been used in the code.
+
+>   vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+>                                   PCI_VSEC_ID_XILINX_DMA_DATA);
+>
+> > +     if (!vsec)
+> > +             return;
+> > +
+> > +     pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> > +     if (PCI_VNDR_HEADER_ID(val) !=3D 0x20 ||
+> > +         PCI_VNDR_HEADER_REV(val) !=3D 0x1)
+> > +             return;
+> > +
+> > +     pci_read_config_dword(pdev, vsec + 0xc, &val);
+> > +     off =3D val;
+> > +     pci_read_config_dword(pdev, vsec + 0x8, &val);
+> > +     off <<=3D 32;
+> > +     off |=3D val;
+> > +     pdata->phys_addr =3D off;
+> >  }
+> >
+> >  static int dw_edma_pcie_probe(struct pci_dev *pdev, @@ -179,6 +246,7
+> > @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >       }
+> >
+> >       memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> > +     vsec_data->phys_addr =3D DW_PCIE_AMD_MDB_INVALID_ADDR;
+> >
+> >       /*
+> >        * Tries to find if exists a PCIe Vendor-Specific Extended
+> > Capability @@ -186,6 +254,15 @@ static int dw_edma_pcie_probe(struct pc=
+i_dev
+> *pdev,
+> >        */
+> >       dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+> >
+> > +     if (pdev->vendor =3D=3D PCI_VENDOR_ID_XILINX) {
+> > +             /*
+> > +              * There is no valid address found for the LL memory
+> > +              * space on the device side.
+> > +              */
+> > +             if (vsec_data->phys_addr =3D=3D DW_PCIE_AMD_MDB_INVALID_A=
+DDR)
+> > +                     return -EINVAL;
+> > +     }
+> > +
+> >       /* Mapping PCI BAR regions */
+> >       mask =3D BIT(vsec_data->rg.bar);
+> >       for (i =3D 0; i < vsec_data->wr_ch_cnt; i++) { @@ -367,6 +444,8 @=
+@
+> > static void dw_edma_pcie_remove(struct pci_dev *pdev)
+> >
+> >  static const struct pci_device_id dw_edma_pcie_id_table[] =3D {
+> >       { PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+> > +     { PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
+> > +       (kernel_ulong_t)&amd_mdb_data },
+> >       { }
+> >  };
+> >  MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table); diff --git
+> > a/include/linux/pci_ids.h b/include/linux/pci_ids.h index
+> > 92ffc43..c15607d 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -636,6 +636,7 @@
+> >  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS              0x780b
+> >  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE                0x780c
+> >  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
+> > +#define PCI_DEVICE_ID_AMD_MDB_B054   0xb054
+>
+> Unless PCI_DEVICE_ID_AMD_MDB_B054 is used in more than one driver, move
+> the #define into the file that uses it.  See the note at the top of pci_i=
+ds.h.
+
+Agreed. Will move this to the file where it is being used as no other drive=
+r is using it now.
 
