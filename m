@@ -1,183 +1,197 @@
-Return-Path: <linux-pci+bounces-35835-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35836-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59FCAB51EA9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:11:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F095B51ED7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:24:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61F761C86BD1
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:12:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C249E5815EB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:24:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A7D2D3731;
-	Wed, 10 Sep 2025 17:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7C13191DA;
+	Wed, 10 Sep 2025 17:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvZ4XwOu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaFCKbV8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17FB25C80E;
-	Wed, 10 Sep 2025 17:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856F626D4F9;
+	Wed, 10 Sep 2025 17:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757524295; cv=none; b=RMQ0lJVhfHKrsIuBDNGeQjLo4ajx9FPSda38/sWmvkSwq/gn0Hsp8dczoCzhQGg4q7maU0dx4Cu9w75hv7Yq5uCpVEfk1aFY0KeG0h4zuC+EihbGd0cNT5wMVpgYdWIn+87N/gEtkyWuTsz5e/miTzgzqIe3TVgnksNNt2UQ5aQ=
+	t=1757525072; cv=none; b=D3FAtAw6N8Fnrv+GQZM6AKRxzO6NjkzG3fm9ZJU8V0Kkg5etlc80LQhCz2gtRjhgb/zhGmWgNTL0qWSV5qKSZ+sMck2ZFErOW1iKCO3wXsEIa0nxWTh+X/gbBwzYblPMpQe3MaMyVae9/x4FUEpNPI7vAQB4toq2ytRcwFNruZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757524295; c=relaxed/simple;
-	bh=u8asuC2gU2/ZjNwLkyAWyvgcOHOrCFgpO1+omlyn3is=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=K9cx3jZ2FgKKDZjCzCrkYPxFbngEfwySv0zPyRH5gKKIg602Thy9u9yRQiRtJRS3Y6b5+4bzybvx3pXaEgwzKerwgXauM1BhfyVgiHaTqXHQ84XFovNTmh0a8oAqKuaiOy2AcJwgZBJ4da81yLCqwiyc1QMY9kIgACjiPFyuIoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvZ4XwOu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA17C4CEEB;
-	Wed, 10 Sep 2025 17:11:34 +0000 (UTC)
+	s=arc-20240116; t=1757525072; c=relaxed/simple;
+	bh=1IdKMoeb2R+xnIWdnO7rRaMblx2EnlGCpTsdLPuakQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HjOzRwi4w3fWsqAiejIcYKsM078aCK3NAi1eFwAJmrlymfinyO60PB2nCvBInInvdImzssKM0ezzhkYqoqrTh9yLVexPty4zTkQ0Z4NnPkDc1NbkQ8aL5D5BYmMyIR901yv/dvr6mhKVqbcUQukhfscMO5YOgezC8qkltm2tbEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaFCKbV8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDA5C4CEEB;
+	Wed, 10 Sep 2025 17:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757524294;
-	bh=u8asuC2gU2/ZjNwLkyAWyvgcOHOrCFgpO1+omlyn3is=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XvZ4XwOulMW5msvDbsI/wrpR3R0Mmd5sK5AMvGaUghROwrCIbNeiaj/sUnfo4R9JA
-	 zbzfmGxRD7L8sqqOewL/zNsU/FPLrP3NI66PXKHv9fx45IwE1OT/+zhHjV/YCJMfK3
-	 taVgETSVPDgrfbbD2D0bEBDHgH50tW2SfC0pe4uH7jZZZ4u7bmvbLRbT0/8eT38KER
-	 mcFbsqC7CgTLlg889isJCpKaHQuKb4Ys9HWno/45u3JHCfbG56OVWlPH+EpLVeZq0o
-	 zj+cL2yeR1LjENXsceUodY06I+x/8N0kGf7wH9wMHJrc6CXRt7YpXuXuZ7LH+XlsbN
-	 HgtduWtHAzdlg==
-Date: Wed, 10 Sep 2025 12:11:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>,
-	Eric Naim <dnaim@cachyos.org>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Subject: Re: [PATCH v7 05/12] PCI/PM: Disable device wakeups when halting or
- powering off system
-Message-ID: <20250910171132.GA1541776@bhelgaas>
+	s=k20201202; t=1757525072;
+	bh=1IdKMoeb2R+xnIWdnO7rRaMblx2EnlGCpTsdLPuakQM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IaFCKbV81ZeaLR3AD5rUkKSYgXSVzQVcu9fg8JUs10Fq0M7K22m2AbssN0bP1q6Ux
+	 B6rCHuW3lfqsdW4bib8qfmqLO56KZGiYD5A5cVINpNmOAsbHhw5G115+3oHcsLHfnb
+	 i5zEbnRZGnzxhc3OVdJVVTLWIhsMcMtH7l21By5E23FkdULVegygSNCSK+ijas9uiy
+	 bDmf0B+MF82+JdaCthE501HqOmx9AtUJpCvQJ2yNu/bzldJWzYbJM/rO1KT9Ca2kMz
+	 6qfF3QG9IJYbXXJDYoKLjoXS8u8PunK0sQQq6K9X3EvjtNy52w0TRvV7aIZHzO3Bcy
+	 jfwyKi4rfvltg==
+Message-ID: <0bb2cb92-0d31-4e42-b6ef-2cc3fdf0df40@kernel.org>
+Date: Wed, 10 Sep 2025 12:24:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1a46ac1-8e43-4a63-bf59-b9a7c04de40a@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 05/12] PCI/PM: Disable device wakeups when halting or
+ powering off system
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ "open list:HIBERNATION (aka Software Suspend, aka swsusp)"
+ <linux-pm@vger.kernel.org>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+ AceLan Kao <acelan.kao@canonical.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+ Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+References: <20250910171132.GA1541776@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250910171132.GA1541776@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 10, 2025 at 11:52:00AM -0500, Mario Limonciello wrote:
-> On 9/10/25 10:06 AM, Bjorn Helgaas wrote:
-> > On Tue, Sep 09, 2025 at 02:16:12PM -0500, Mario Limonciello (AMD) wrote:
-> > > PCI devices can be configured as wakeup sources from low power states.
-> > > However, when the system is halting or powering off such wakeups are
-> > > not expected and may lead to spurious behavior.
-> > 
-> > I'm a little unclear on the nomenclature for these low power states,
-> > so I think it would be helpful to connect to the user action, e.g.,
-> > suspend/hibernate/etc, and the ACPI state, e.g.,
-> > 
-> >    ... when the system is hibernating (e.g., transitioning to ACPI S4
-> >    and halting) or powering off (e.g., transitioning to ACPI S5 soft
-> >    off), such wakeups are not expected ...
+On 9/10/25 12:11 PM, Bjorn Helgaas wrote:
+> On Wed, Sep 10, 2025 at 11:52:00AM -0500, Mario Limonciello wrote:
+>> On 9/10/25 10:06 AM, Bjorn Helgaas wrote:
+>>> On Tue, Sep 09, 2025 at 02:16:12PM -0500, Mario Limonciello (AMD) wrote:
+>>>> PCI devices can be configured as wakeup sources from low power states.
+>>>> However, when the system is halting or powering off such wakeups are
+>>>> not expected and may lead to spurious behavior.
+>>>
+>>> I'm a little unclear on the nomenclature for these low power states,
+>>> so I think it would be helpful to connect to the user action, e.g.,
+>>> suspend/hibernate/etc, and the ACPI state, e.g.,
+>>>
+>>>     ... when the system is hibernating (e.g., transitioning to ACPI S4
+>>>     and halting) or powering off (e.g., transitioning to ACPI S5 soft
+>>>     off), such wakeups are not expected ...
+>>
+>> I will try to firm it up in the commit message.  But yes you're getting the
+>> intent, having a wakeup occur at S5 would be unexpected, and would likely
+>> change semantics of what people "think" powering off a machine means.
+>>
+>>> When I suspend or power off my laptop from the GUI user interface, I
+>>> want to know if keyboard or mouse activity will resume or if I need to
+>>> press the power button.
+>>
+>> The way the kernel is set up today you get a single wakeup sysfs file for a
+>> device and that wakeup file means 3 things:
+>> * abort the process of entering a suspend state or hibernate
+>> * wake up the machine from a suspend state
+>> * wake up the machine from hibernate
+>>
+>>>> ACPI r6.5, section 16.1.5 notes:
+>>>>
+>>>>       "Hardware does allow a transition to S0 due to power button press
+>>>>        or a Remote Start."
+>>>
+>>> Important to note here that sec 16.1.5 is specifically for "S5
+>>> Soft Off State".
+>>>
+>>> S4 is a sleeping state and presumably sec 16.1.6 ("Transitioning
+>>> from the Working to the Sleeping State") applies.  That section
+>>> mentions wakeup devices, so it's not obvious to me that PCI device
+>>> wakeup should be disabled for S4.
+>>
+>> It actually /shouldn't/ be disabled for S4 - it should only be
+>> disabled for S5.
+>>
+>> Are you implying a bug in the flow?  I didn't think there was one:
+>>
+>> During entering hibernate the poweroff() call will have system_state
+>> = SYSTEM_SUSPEND so wakeups would be enabled.
+>>
+>> For powering off the system using hibernate flows poweroff() call
+>> would have system_state = SYSTEM_HALT or SYSTEM_POWER_OFF.
 > 
-> I will try to firm it up in the commit message.  But yes you're getting the
-> intent, having a wakeup occur at S5 would be unexpected, and would likely
-> change semantics of what people "think" powering off a machine means.
+> OK.  I assumed that since you check for two states (SYSTEM_HALT or
+> SYSTEM_POWER_OFF), one must be hibernate (ending up in S4?) and the
+> other a soft power off (ending up in S5?).
 > 
-> > When I suspend or power off my laptop from the GUI user interface, I
-> > want to know if keyboard or mouse activity will resume or if I need to
-> > press the power button.
+> But it sounds like there are two ways to power off.  I'm just confused
+> about the correspondence between hibernate, soft poweroff, S4, S5,
+> SYSTEM_HALT, and SYSTEM_POWER_OFF.
 > 
-> The way the kernel is set up today you get a single wakeup sysfs file for a
-> device and that wakeup file means 3 things:
-> * abort the process of entering a suspend state or hibernate
-> * wake up the machine from a suspend state
-> * wake up the machine from hibernate
-> 
-> > > ACPI r6.5, section 16.1.5 notes:
-> > > 
-> > >      "Hardware does allow a transition to S0 due to power button press
-> > >       or a Remote Start."
-> > 
-> > Important to note here that sec 16.1.5 is specifically for "S5
-> > Soft Off State".
-> > 
-> > S4 is a sleeping state and presumably sec 16.1.6 ("Transitioning
-> > from the Working to the Sleeping State") applies.  That section
-> > mentions wakeup devices, so it's not obvious to me that PCI device
-> > wakeup should be disabled for S4.
-> 
-> It actually /shouldn't/ be disabled for S4 - it should only be
-> disabled for S5.
-> 
-> Are you implying a bug in the flow?  I didn't think there was one:
-> 
-> During entering hibernate the poweroff() call will have system_state
-> = SYSTEM_SUSPEND so wakeups would be enabled.
-> 
-> For powering off the system using hibernate flows poweroff() call
-> would have system_state = SYSTEM_HALT or SYSTEM_POWER_OFF.
+> *Do* both SYSTEM_HALT and SYSTEM_POWER_OFF lead to S5 on an ACPI
+> system?  If so, what's the difference between them?
 
-OK.  I assumed that since you check for two states (SYSTEM_HALT or
-SYSTEM_POWER_OFF), one must be hibernate (ending up in S4?) and the
-other a soft power off (ending up in S5?).
+The two functions are kernel_halt() and kernel_power_off().
 
-But it sounds like there are two ways to power off.  I'm just confused
-about the correspondence between hibernate, soft poweroff, S4, S5,
-SYSTEM_HALT, and SYSTEM_POWER_OFF.
+And looking again, Ahhhh!  kernel_power_off() is the only thing that 
+actually leads to machine_power_off().  Halt just stops the CPUs.
 
-*Do* both SYSTEM_HALT and SYSTEM_POWER_OFF lead to S5 on an ACPI
-system?  If so, what's the difference between them?
+I think we should only be using the hibernate flows for SYSTEM_POWER_OFF.
 
-> > > This implies that wakeups from PCI devices should not be relied upon
-> > > in these states. To align with this expectation and avoid unintended
-> > > wakeups, disable device wakeup capability during these transitions.
-> > > 
-> > > Tested-by: Eric Naim <dnaim@cachyos.org>
-> > > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> > > ---
-> > > v7:
-> > >   * Reword title
-> > >   * Reword commit
-> > > v5:
-> > >   * Re-order
-> > >   * Add tags
-> > > v4:
-> > >   * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
-> > > ---
-> > >   drivers/pci/pci-driver.c | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > > index 63665240ae87f..f201d298d7173 100644
-> > > --- a/drivers/pci/pci-driver.c
-> > > +++ b/drivers/pci/pci-driver.c
-> > > @@ -1139,6 +1139,10 @@ static int pci_pm_poweroff(struct device *dev)
-> > >   	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > >   	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-> > > +	if (device_may_wakeup(dev) &&
-> > > +	    (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF))
-> > > +		device_set_wakeup_enable(dev, false);
-> > > +
-> > >   	if (pci_has_legacy_pm_support(pci_dev))
-> > >   		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
-> > > -- 
-> > > 2.43.0
-> > > 
+This has implications for a lot of the patches.  Thanks a lot for 
+pointing this out. I'll walk the series again and change accordingly.
+
 > 
+>>>> This implies that wakeups from PCI devices should not be relied upon
+>>>> in these states. To align with this expectation and avoid unintended
+>>>> wakeups, disable device wakeup capability during these transitions.
+>>>>
+>>>> Tested-by: Eric Naim <dnaim@cachyos.org>
+>>>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>>>> ---
+>>>> v7:
+>>>>    * Reword title
+>>>>    * Reword commit
+>>>> v5:
+>>>>    * Re-order
+>>>>    * Add tags
+>>>> v4:
+>>>>    * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
+>>>> ---
+>>>>    drivers/pci/pci-driver.c | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>>> index 63665240ae87f..f201d298d7173 100644
+>>>> --- a/drivers/pci/pci-driver.c
+>>>> +++ b/drivers/pci/pci-driver.c
+>>>> @@ -1139,6 +1139,10 @@ static int pci_pm_poweroff(struct device *dev)
+>>>>    	struct pci_dev *pci_dev = to_pci_dev(dev);
+>>>>    	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>>>> +	if (device_may_wakeup(dev) &&
+>>>> +	    (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF))
+>>>> +		device_set_wakeup_enable(dev, false);
+>>>> +
+>>>>    	if (pci_has_legacy_pm_support(pci_dev))
+>>>>    		return pci_legacy_suspend(dev, PMSG_HIBERNATE);
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>
+
 
