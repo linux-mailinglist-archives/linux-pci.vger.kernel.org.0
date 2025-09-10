@@ -1,142 +1,170 @@
-Return-Path: <linux-pci+bounces-35817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0924EB51B0D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:11:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E79CB51B60
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:21:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59AC6171D3F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 15:07:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5A8416E251
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 15:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12D126C3AE;
-	Wed, 10 Sep 2025 15:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 256A6255F53;
+	Wed, 10 Sep 2025 15:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ipFymVzJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahGOrzwu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0108259CBC
-	for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 15:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E435118871F;
+	Wed, 10 Sep 2025 15:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757516873; cv=none; b=dwQO3peMiFvNonDaGs5tsgmdzOceoqWw92w3Ll1VqMm7rnONmeav+znmQJ5s+GjIw/Z3C1uvO0INHMXDZO2BXL1zBXnPj81WEZsdEmb1f/I4cobgbn53RaFyDh8PSb6FDv0yikBP5PL1KXQRu0XeLSCG690lkdC/3MDipIZpXDU=
+	t=1757517518; cv=none; b=WAmvipqVgh+CTh9yXzRjUACVl9swHBYLRB1koNdsNnwyLU7NC7qBSrNp9iuCpkX0HQD9hrZKb3ZE13UszFQQto+W62ftD59HXGqu1MoW19bDDArDmrrhL7/b8cnxUZf+ZSpJm0kZwIkurBO5FtQNRT3twE4IaknZSnMnFji8+f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757516873; c=relaxed/simple;
-	bh=y8m0jBS7QF7mSBtjPTJejL0GU8BqumBmxws5w8K4d4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uK2kjq0/akZjNUXWYSkFIOt2fweHLx5dscVEKsJmjTR9NhNkTdYNe+oPc8WmtE1fvRQoDAX7D+oicv/cE1HQssxlIlTeYdWA1iZTHo8Btl+92SrPR9EQxbSqiRNcQg6mDOBR9aH0TfXWRo6CCui9YaXNRBFQk80NwGItiVaAhRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ipFymVzJ; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-721504645aaso54629886d6.2
-        for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 08:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1757516871; x=1758121671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNdY3PgAZdaOe7FmnSpRTxifjOSbXP7fn6IEcFySgc0=;
-        b=ipFymVzJsbb4kNskatPk1haPjllc0CtQTO6Q2vE1M0fomeDiY3jPgSYK5JnrgmxOVH
-         bpn+imRs4dO1+yopf2Zt43nXDvarl017ns0DF8hUxQWXp1h1HTQermFcpbgMz1gPO1Vh
-         Hh9q+9hRJyMC3J+uMOsaZk1eHiDnfrFZFf22pvLBLUZKlfJUKKM8VI89MUS3pcNV3I4P
-         Yjx/sY7thJyi/a5H7YwO/jT39O70ik/PG+BKmq4ZxmPc2XqAucAsOAbRO/IdoDYAbvYI
-         0ee6Z19dh8rXGDysh3ALPC2ZeZ4egBQzCvl29CJIUub8tE5TA4qVIytygULUfyr+XtrD
-         0Efg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757516871; x=1758121671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TNdY3PgAZdaOe7FmnSpRTxifjOSbXP7fn6IEcFySgc0=;
-        b=cEL3RH4pEWesmW7iZ+cssRDLNcj00vDaN8X40JjsgvqFIdRJmcV86VUkvNVicA2cz/
-         9eWA1bmSP10u1TiLDqO3Pudwl8itGwTUpo6I/CdvjWOkN0xUqJ9NQw+2jATvH95LP/He
-         N5Vih8/0WmgbSnMrI0ctOmxet6OyR9/HrP4EcNhKqL5kjGuh1hChliIEhTTEfVcoRSNW
-         KNJmvCDb8Sk5tHWzJ6+IxINJbYUaZYfXtReKQlA0kgXk+vt5hefa/C0wB4f10H+J1Ihe
-         mra/4ImetZyxc70Uq4C8v4ka4wLKUlC/S7WkuTFL1F/FsrQTa3slRBL1XVqnMUTtPrWS
-         ZM9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVawU9hmOzx41o0ArkSlQjz5jnB7SFy+HBZCw0/h03PC9WXrqto8J5LmSNKS2ElVaj2uXL5yD0JEiM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdadmnfUhqmpm1Wxyf86fm4WWYP6eLLcIL1+4Rf7aUdhl6u9GO
-	H3eArUGme/EqyLSgxoKdZFxpTFyt+ofocY/GzsUI4hIHhxefZ1V60L3laqCnwp18bT8=
-X-Gm-Gg: ASbGncuSIOUnVumAO3q8ffb7jIiqUdeMzQ72MLpkT7cIB8/DXAvUjzCT6z9cQc5E0dM
-	6OmuXtKUKUr9VkUAV9yH2/Y+aB7waS3ev9eFX71g0JE1iWBMJq5sJE/LC5G0P/Pqjj210yJYavu
-	OmM4QFelyozL6mPa2TzINC7J41zGe2RHH5KdTenr0RA3FkCqMGoEnJZ4xkRVfzy3Uquyh9vQhZs
-	/6rypRqhvPKKgue3fdUPwAVW9P/CNgOe1cHcm7eAFZfJVIB6ynupYL0c9TwCPWKJgGesiEu4QXH
-	BoHXunvOu3vG556oIPGkFvuBmMDECPJIqaMAB4RDbvbJiZD77IMK+SrGjgrD5+e0LAciTwmoPsW
-	Zd06hNnwBfcPm92uqQwk=
-X-Google-Smtp-Source: AGHT+IH+BJW22LupObBGk6NPwobuFYb41PxuJvvB4HPRo4i7+jxyExborwUK24gXOQ4lS4LmrCtzlw==
-X-Received: by 2002:a05:6214:2386:b0:71b:6414:fd06 with SMTP id 6a1803df08f44-739256bd5bdmr177377526d6.27.1757516852901;
-        Wed, 10 Sep 2025 08:07:32 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::3:1704])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-75856b44ac5sm23806886d6.2.2025.09.10.08.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Sep 2025 08:07:31 -0700 (PDT)
-Date: Wed, 10 Sep 2025 11:07:28 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v11 23/23] CXL/PCI: Disable CXL protocol error interrupts
- during CXL Port cleanup
-Message-ID: <aMGUMACDTT5a2-XA@gourry-fedora-PF4VCD3F>
-References: <20250827013539.903682-1-terry.bowman@amd.com>
- <20250827013539.903682-24-terry.bowman@amd.com>
+	s=arc-20240116; t=1757517518; c=relaxed/simple;
+	bh=0uSCp23NvXz2hqHp/yS8FBYbn/cdIneP8YL/ZnCmcUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=DIUGfnfWmOYHo4i9hRiZ27b6UFBjf1AlLRB9tQHTG7YJjR5+EoK2pPk2gZtQn8CKJsOBVnnbxXgJFC6CEv48zYzp7J2wwSQZkzETbdH36cPKeMA/+mVU/IJS2eull/6gqC9jyNcKZUE1nkzf1jlyLPcQpXAT1VR/er9wKlrIpAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahGOrzwu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EBF3C4CEEB;
+	Wed, 10 Sep 2025 15:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757517517;
+	bh=0uSCp23NvXz2hqHp/yS8FBYbn/cdIneP8YL/ZnCmcUk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ahGOrzwuhX9CBWzkao0VsZrDeUgXAGaATsukNto6O3QzeHDmkfiuxJvh+6DPAin2B
+	 1HC5a3v3pW1bS8mc4JaKFZVhsOxsb74sDYfEfwV+Uh3DY36qvJmMA6Rz0nxAz2aoUw
+	 5hoVr0rgmmHjir7QvWrodXujPsN70tleBK9gUAodzR7anFALHxkjrDKOQEirFI7/m/
+	 qp2zMCcToTXnu/HDkCBizXniqC7ZCnNFGt1AMGAUr1t2GOov9qIdDorDNFTouT2V6Q
+	 pLXvsFeyOkxuP20BDSIFiADuqwuH6TyxaEGEOx9Fp+3v/0RjSBUCN0M74v0gA5TfTs
+	 CkUfNTyNFNkWA==
+Date: Wed, 10 Sep 2025 10:18:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+	AceLan Kao <acelan.kao@canonical.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>,
+	Eric Naim <dnaim@cachyos.org>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v7 11/12] PM: Use hibernate flows for system power off
+Message-ID: <20250910151836.GA1536103@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250827013539.903682-24-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250909191619.2580169-12-superm1@kernel.org>
 
-Hi Terry,
+On Tue, Sep 09, 2025 at 02:16:18PM -0500, Mario Limonciello (AMD) wrote:
+> When the system is powered off the kernel will call device_shutdown()
+> which will issue callbacks into PCI core to wake up a device and call
+> it's shutdown() callback.  This will leave devices in ACPI D0 which can
+> cause some devices to misbehave with spurious wakeups and also leave some
+> devices on which will consume power needlessly.
 
-On Tue, Aug 26, 2025 at 08:35:38PM -0500, Terry Bowman wrote:
-> Introduce cxl_mask_proto_interrupts() to call pci_aer_mask_internal_errors().
-> Add calls to cxl_mask_proto_interrupts() within CXL Port teardown for CXL
-> Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
-> Endpoints. Follow the same "bottom-up" approach used during CXL Port
-> teardown.
+The connection between this change and spurious wakeups seems pretty
+tenuous.  If we don't want wakeups, powering off the device seems like
+a sledgehammer approach.
+
+s/it's/its/
+
+> The issue won't happen if the device is in D3 before system shutdown, so
+> putting device to low power state before shutdown solves the issue.
 > 
-...
-> @@ -1471,6 +1475,8 @@ static void cxl_detach_ep(void *data)
->  {
->  	struct cxl_memdev *cxlmd = data;
->  
-> +	cxl_mask_proto_interrupts(cxlmd->cxlds->dev);
-> +
->  	for (int i = cxlmd->depth - 1; i >= 1; i--) {
->  		struct cxl_port *port, *parent_port;
->  		struct detach_ctx ctx = {
+> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+> compatible with the current Power Resource states. In other words, all
+> devices are in the D3 state when the system state is S4."
 
-While testing v10 of this patch set, we found ourselves with a deadlock
-on boot with the following stack in the hung task:
+Re patch 05/12, also interesting that this section mentions "devices
+that are enabled to wake the system and that can do so from their
+device state in S4 can initiate a hardware event that transitions the
+system state to S0."
 
-[  252.784440]  <TASK>
-[  252.789090]  schedule+0x5d6/0x1670
-[  252.796629]  ? schedule_preempt_disabled+0xa/0x10
-[  252.807061]  schedule_preempt_disabled+0xa/0x10
-[  252.817108]  __mutex_lock+0x245/0x7b0
-[  252.825229]  cxl_mask_proto_interrupts+0x23/0x50
-[  252.835470]  cxl_detach_ep+0x25/0x2e0
+So it looks like wakeup from S4 should work in at least some cases.
 
-This occurs on a system which fails to probe ports fully due to the
-duplicate id error resolved by the Delayed HB patch set.  
-
-But it's concerning that there's a deadlock condition without that
-patch set. Can you help try to eyeball this?  I'm trying to get more
-debug info, but testing system availability is limited.
-
-~Gregory
-
+> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+> state is similar to the S4 state except that OSPM does not save any
+> context." so it's safe to assume devices should be at D3 for S5.
+> 
+> To accomplish this, use the PMSG_POWEROFF event to call all the device
+> hibernate callbacks when the kernel is compiled with hibernate support.
+> If compiled without hibernate support or hibernate fails fall back into
+> the previous shutdown flow.
+> 
+> Cc: AceLan Kao <acelan.kao@canonical.com>
+> Cc: Kai-Heng Feng <kaihengf@nvidia.com>
+> Cc: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Cc: Merthan Karakaş <m3rthn.k@gmail.com>
+> Tested-by: Eric Naim <dnaim@cachyos.org>
+> Tested-by: Denis Benato <benato.denis96@gmail.com>
+> Link: https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/
+> Link: https://lore.kernel.org/linux-pci/20250506041934.1409302-1-superm1@kernel.org/
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+> v5:
+>  * split to multiple commits, re-order
+> v4:
+>  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@kernel.org/
+> v3:
+>  * Add new PMSG_POWEROFF and PM_EVENT_POWEROFF which alias to poweroff
+>    callbacks
+>  * Don't try to cleanup on dpm_suspend_start() or dpm_suspend_end() failures
+>    Jump right into normal shutdown flow instead.
+>  * https://lore.kernel.org/linux-pm/20250609024619.407257-1-superm1@kernel.org/T/#me6db0fb946e3d604a8f3d455128844ed802c82bb
+> ---
+>  kernel/reboot.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index ec087827c85cd..c8835f8e5f271 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/kexec.h>
+>  #include <linux/kmod.h>
+>  #include <linux/kmsg_dump.h>
+> +#include <linux/pm.h>
+>  #include <linux/reboot.h>
+>  #include <linux/suspend.h>
+>  #include <linux/syscalls.h>
+> @@ -305,6 +306,11 @@ static void kernel_shutdown_prepare(enum system_states state)
+>  		(state == SYSTEM_HALT) ? SYS_HALT : SYS_POWER_OFF, NULL);
+>  	system_state = state;
+>  	usermodehelper_disable();
+> +#ifdef CONFIG_HIBERNATE_CALLBACKS
+> +	if (!dpm_suspend_start(PMSG_POWEROFF) && !dpm_suspend_end(PMSG_POWEROFF))
+> +		return;
+> +	pr_emerg("Failed to power off devices, using shutdown instead.\n");
+> +#endif
+>  	device_shutdown();
+>  }
+>  /**
+> -- 
+> 2.43.0
+> 
 
