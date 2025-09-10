@@ -1,156 +1,307 @@
-Return-Path: <linux-pci+bounces-35811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B61EB51939
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 16:23:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 389EFB5195B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 16:30:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBDF116B6E4
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 14:23:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28AB51C2730C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 14:30:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A58430F93E;
-	Wed, 10 Sep 2025 14:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C14DF326D69;
+	Wed, 10 Sep 2025 14:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXqV7Y5w"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xV2KzPTR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fVU4KNuQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xV2KzPTR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fVU4KNuQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7671684A4;
-	Wed, 10 Sep 2025 14:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162CD1FBC8C
+	for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 14:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757514203; cv=none; b=ovnr9FzyPd1fCDgbwItWZasdoglbkR2N+0yv8MSHYyobZC8RcSbN2CgVCT6V7JQZCF/Tx2GBB3oc3dsZZ0ogzu3O3qY2SnLWCcDU+EsMYjSxUFPl3PkwBYDYSTP7ci8bLmbTbWwt6Wkxz9UBaPVTaAHm9yfVoV/QIcZdtO3TRRI=
+	t=1757514545; cv=none; b=CLEYQ00fY08QtJ1OnQMT26lcyguYzX0fUZ1K2Lr9sth9l4+CSqSZWpcFczVf0cMIFLit7GIvfxUzXkh4+3XxLj0gfPM4zyB5apBJdMUKPU9C5F1h1agI66bweBnbQ38JejROiINeBE8qKiiwqD33vH1CFyseDiRb0K/qzJcWkhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757514203; c=relaxed/simple;
-	bh=sPrb8D0bSLp1Js3/8C0uU0W0ATkZZf+fqUxj/05AtlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PjtJO5vEWLlMFN0oOtARUpXI6O9DTtddHyYL5kprF+GTJWCUNGL/bzqgegDAP1UJgmIB8hTnLQOkr1XU527xd1A4hj4yZvzoETLk3EYUltOldsLuY36kOzPIdAX3+ZqfheOCCOjNZs/yH9FnZ20mowiAxhOJs1ODZQQwvNXim1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXqV7Y5w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A7FC4CEEB;
-	Wed, 10 Sep 2025 14:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757514202;
-	bh=sPrb8D0bSLp1Js3/8C0uU0W0ATkZZf+fqUxj/05AtlY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZXqV7Y5wyyMy8XPbh7JLpkdcpaKmaztp6Y0DwSjdEv41hAbGELyFer083foOLZxDB
-	 uVTwM9d0VzXe5ApdhOhBcOigUrmCndv5r7VieWdnOyaoM19Y2rzdYnc1aoBHnuFulc
-	 AqIe8dr5b831dN+Kb2n63v4Akag6nRBwY80VbL4FSiuspLylF3TddTA/6EyrER5x/B
-	 DDJiWxz4rrkQ5gD0S9WprL3hWsUolUwdU5r0Q36JY+D4tTcHsNqhb229bRBfxu4z9Y
-	 ZHr8s3wIy6jmv8qTiakGq+vJ6g4lTDSc0pwVl5u9S7lykALNBAxV4MmKgjiH15D5tn
-	 w5RdZe7h8z7oA==
-Date: Wed, 10 Sep 2025 09:23:21 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: kwilczynski@kernel.org, u.kleine-koenig@baylibre.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, arnd@arndb.de,
-	bwawrzyn@cisco.com, bhelgaas@google.com, unicorn_wang@outlook.com,
-	conor+dt@kernel.org, 18255117159@163.com, inochiama@gmail.com,
-	kishon@kernel.org, krzk+dt@kernel.org, lpieralisi@kernel.org,
-	mani@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
-	robh@kernel.org, s-vadapalli@ti.com, tglx@linutronix.de,
-	thomas.richard@bootlin.com, sycamoremoon376@gmail.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev, rabenda.cn@gmail.com, chao.wei@sophgo.com,
-	xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
-Subject: Re: [PATCH v2 2/7] PCI: cadence: Check pcie-ops before using it.
-Message-ID: <20250910142321.GA1533672@bhelgaas>
+	s=arc-20240116; t=1757514545; c=relaxed/simple;
+	bh=+YWJqY5eaIWIl22dRwCmTv5H+sAFsW133h5JZT1oodE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l5LkyJ0DhaQf/E7PxJGDnUIUSrlUHhGcjHDVfDeNzaHp9Vo7yOA0m0GoJLYP3lJDd9E+3mOuATdz1CPsV62C+F3pTRula3RT6NZHOz86kHezXCBR84Y4HFUaXLsbJ90Qo7eMyTD0zQHpT5N9KpGUzzmRNJnm+VhQ0SeZUzfjjEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xV2KzPTR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fVU4KNuQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xV2KzPTR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fVU4KNuQ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B7EA734F76;
+	Wed, 10 Sep 2025 14:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1757514539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=STEYXq0PiTKCTbYq+9bwR8FuphZ7UPvu2jna0DsGEw4=;
+	b=xV2KzPTRVVNzC6JCCySbL+g7FSoQ93jem2phEHSK2Zg06B31CXhuMNw3E4mBXwX1YW+fYw
+	KtXL3FubtbfWxu4+MB5qmKZwxge24zPss0cnWnJ9kSerhGvOPCrD7LgdNEljH9CUe0dTtN
+	g3VtMSGZQQOSIQNxvFJq3sRmc1deSzI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1757514539;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=STEYXq0PiTKCTbYq+9bwR8FuphZ7UPvu2jna0DsGEw4=;
+	b=fVU4KNuQWZyZ8VW7qTgSGxcnVEld56dVZmrrcmM4+C4TVjuM1bCOwkAjO1+FbxWPcC0mbI
+	yLB7d1e5JgInH3Dg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xV2KzPTR;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=fVU4KNuQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1757514539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=STEYXq0PiTKCTbYq+9bwR8FuphZ7UPvu2jna0DsGEw4=;
+	b=xV2KzPTRVVNzC6JCCySbL+g7FSoQ93jem2phEHSK2Zg06B31CXhuMNw3E4mBXwX1YW+fYw
+	KtXL3FubtbfWxu4+MB5qmKZwxge24zPss0cnWnJ9kSerhGvOPCrD7LgdNEljH9CUe0dTtN
+	g3VtMSGZQQOSIQNxvFJq3sRmc1deSzI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1757514539;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=STEYXq0PiTKCTbYq+9bwR8FuphZ7UPvu2jna0DsGEw4=;
+	b=fVU4KNuQWZyZ8VW7qTgSGxcnVEld56dVZmrrcmM4+C4TVjuM1bCOwkAjO1+FbxWPcC0mbI
+	yLB7d1e5JgInH3Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C92013310;
+	Wed, 10 Sep 2025 14:28:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iRCaDCuLwWieIwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 10 Sep 2025 14:28:59 +0000
+Message-ID: <02f7455e-d1b3-414b-a4cb-27b9353a4034@suse.de>
+Date: Wed, 10 Sep 2025 16:28:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18aba25b853d00caf10cc784093c0b91fdc1747d.1757467895.git.unicorn_wang@outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 4/4] DRM: Add a new 'boot_display' attribute
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>,
+ David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>, Manivannan Sadhasivam <mani@kernel.org>
+References: <20250811162606.587759-1-superm1@kernel.org>
+ <20250811162606.587759-5-superm1@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250811162606.587759-5-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,google.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,gitlab.freedesktop.org:url,suse.de:mid,suse.de:dkim,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: B7EA734F76
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 
-Drop period at end of subject.
 
-On Wed, Sep 10, 2025 at 10:08:16AM +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
-> 
-> ops of struct cdns_pcie may be NULL, direct use
-> will result in a null pointer error.
-> 
-> Add checking of pcie->ops before using it for new
-> driver that may not supply pcie->ops.
-> 
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+
+Am 11.08.25 um 18:26 schrieb Mario Limonciello (AMD):
+> On systems with multiple GPUs there can be uncertainty which GPU is the
+> primary one used to drive the display at bootup. In some desktop
+> environments this can lead to increased power consumption because
+> secondary GPUs may be used for rendering and never go to a low power
+> state. In order to disambiguate this add a new sysfs attribute
+> 'boot_display' that uses the output of video_is_primary_device() to
+> populate whether the PCI device was used for driving the display.
+>
+> Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/issues/23
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 2 +-
->  drivers/pci/controller/cadence/pcie-cadence.c      | 4 ++--
->  drivers/pci/controller/cadence/pcie-cadence.h      | 6 +++---
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 59a4631de79f..fffd63d6665e 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -531,7 +531,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
->  
-> -	if (pcie->ops->cpu_addr_fixup)
-> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
->  		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
->  
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> index 70a19573440e..61806bbd8aa3 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> @@ -92,7 +92,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
->  
->  	/* Set the CPU address */
-> -	if (pcie->ops->cpu_addr_fixup)
-> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
->  		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
->  
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
-> @@ -123,7 +123,7 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
->  	}
->  
->  	/* Set the CPU address */
-> -	if (pcie->ops->cpu_addr_fixup)
-> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
->  		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
->  
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 1d81c4bf6c6d..2f07ba661bda 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -468,7 +468,7 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
->  
->  static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
->  {
-> -	if (pcie->ops->start_link)
-> +	if (pcie->ops && pcie->ops->start_link)
->  		return pcie->ops->start_link(pcie);
->  
->  	return 0;
-> @@ -476,13 +476,13 @@ static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
->  
->  static inline void cdns_pcie_stop_link(struct cdns_pcie *pcie)
->  {
-> -	if (pcie->ops->stop_link)
-> +	if (pcie->ops && pcie->ops->stop_link)
->  		pcie->ops->stop_link(pcie);
->  }
->  
->  static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
->  {
-> -	if (pcie->ops->link_up)
-> +	if (pcie->ops && pcie->ops->link_up)
->  		return pcie->ops->link_up(pcie);
->  
->  	return true;
-> -- 
-> 2.34.1
-> 
+> v10:
+>   * Rebase on 6.17-rc1
+>   * Drop Thomas' tag, as this is now in a totally different subsystem
+>     (although same code)
+>   * Squash "Adjust visibility of boot_display attribute instead of creation"
+>   * Squash "PCI: Move boot display attribute to DRM"
+> ---
+>   Documentation/ABI/testing/sysfs-class-drm |  8 +++++
+>   drivers/gpu/drm/drm_sysfs.c               | 41 +++++++++++++++++++++++
+>   2 files changed, 49 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-drm
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-drm b/Documentation/ABI/testing/sysfs-class-drm
+> new file mode 100644
+> index 0000000000000..d23fed5e29a74
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-drm
+> @@ -0,0 +1,8 @@
+> +What:		/sys/class/drm/.../boot_display
+> +Date:		January 2026
+> +Contact:	Linux DRI developers <dri-devel@vger.kernel.org>
+> +Description:
+> +		This file indicates that displays connected to the device were
+> +		used to display the boot sequence.  If a display connected to
+> +		the device was used to display the boot sequence the file will
+> +		be present and contain "1".
+> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+> index a455c56dbbeb7..b01ffa4d65098 100644
+> --- a/drivers/gpu/drm/drm_sysfs.c
+> +++ b/drivers/gpu/drm/drm_sysfs.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/gfp.h>
+>   #include <linux/i2c.h>
+>   #include <linux/kdev_t.h>
+> +#include <linux/pci.h>
+>   #include <linux/property.h>
+>   #include <linux/slab.h>
+>   
+> @@ -30,6 +31,8 @@
+>   #include <drm/drm_property.h>
+>   #include <drm/drm_sysfs.h>
+>   
+> +#include <asm/video.h>
+> +
+>   #include "drm_internal.h"
+>   #include "drm_crtc_internal.h"
+>   
+> @@ -508,6 +511,43 @@ void drm_sysfs_connector_property_event(struct drm_connector *connector,
+>   }
+>   EXPORT_SYMBOL(drm_sysfs_connector_property_event);
+>   
+> +static ssize_t boot_display_show(struct device *dev, struct device_attribute *attr,
+> +				 char *buf)
+> +{
+> +	return sysfs_emit(buf, "1\n");
+> +}
+> +static DEVICE_ATTR_RO(boot_display);
+> +
+> +static struct attribute *display_attrs[] = {
+> +	&dev_attr_boot_display.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t boot_display_visible(struct kobject *kobj,
+> +				    struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj)->parent;
+> +
+> +	if (dev_is_pci(dev)) {
+> +		struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +		if (video_is_primary_device(&pdev->dev))
+> +			return a->mode;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct attribute_group display_attr_group = {
+> +	.attrs = display_attrs,
+> +	.is_visible = boot_display_visible,
+> +};
+> +
+> +static const struct attribute_group *card_dev_groups[] = {
+> +	&display_attr_group,
+> +	NULL
+> +};
+> +
+>   struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+>   {
+>   	const char *minor_str;
+> @@ -531,6 +571,7 @@ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+>   
+>   		kdev->devt = MKDEV(DRM_MAJOR, minor->index);
+>   		kdev->class = drm_class;
+> +		kdev->groups = card_dev_groups;
+>   		kdev->type = &drm_sysfs_device_minor;
+>   	}
+>   
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
+
 
