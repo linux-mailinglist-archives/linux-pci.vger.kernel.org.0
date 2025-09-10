@@ -1,240 +1,263 @@
-Return-Path: <linux-pci+bounces-35838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70219B51F08
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:34:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C75DAB51F0F
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:36:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EF3416CFA9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:34:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F4214817B2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F08913774D;
-	Wed, 10 Sep 2025 17:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E96327A3C;
+	Wed, 10 Sep 2025 17:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aFNvJqHq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu/xfUkb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDB926FD8E;
-	Wed, 10 Sep 2025 17:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757525655; cv=fail; b=PiESavnNOeB0eBVBAPAnKp0dvp+P9GC+CgcayItWdz1VlFo7ZnBzyh6PszG93qY6SSQ6yQV/4u18VJnypWz51X1g1y9YaE54dRSKe/gcrEHoFKVXxnxNF97o17Y5QQJaME3T10e7BHZ2CvQz1HC/rDlPP/5+8Vuq5rIaaQnS2mU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757525655; c=relaxed/simple;
-	bh=OyLwuCaDRVCd5SzN2NcZTr38J0yHWiHQp0KhQ3kc/wo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n7db602Dzdf84erCAhw6OxHrcpsqbIUgem7Jn6pJ+6Eiva67+Yd7aoi5erhBcrg4t3jqtb2aRceb67ubnFrHANcj7zihS6oWJUjtYEoZ8pIzefLnBspQ6x3Gyn5uWJXylbDgeMfobHZ3LIa6JJSLDghvaDK2AaA0C7MsKC0CiKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aFNvJqHq; arc=fail smtp.client-ip=40.107.243.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IMWM/lal5DEH/W2Mute1yOSvCbAfuK/dsy7CFQOJ3I5pObwoCeezux8Wo3lIH9JeiEpvgT6jp00M0OdWlh1bbRXdhAiBmHzto3QKXvd1Q8x81k/FCyvveFlNzBCLvxN2FpMVggXLvp9PjPe1QJWfwWAx3BnBzGyjw9vn94B6E5kuet259JyMiLkz9y9ckUfvC9w21O8GK6TFgClpn24voZf61hEq4eP1vqN5uSCob9l1GVZfwIh0Hp5Vem9Gur5hUWCqgVREcpXd7l1paVQslODHi6BHNBGjGaNKGGFK5jyoCePo98Bz3H+un3W0/n7YPtIMII9RUjDDA7NnHBgtGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zsfklg51Vt4B653Ndr/jQSqkJF7YiVWEDwrJChU5HBQ=;
- b=VBp7eSgiYtlvfdNfHrZyq+bR5SgSov2GRHtGmeBJileXoeTwBrnrlSWvNY3VIW7dl+T/ZokpsFYo6iS+2zarT5puv4Dt6IFp+nvm2i+p4ils4gXzrH7SCGGLU9PRam8nPGZpOJJdB7+O2TqnkukDn5dEPhmODMgpTeCuqMddUFcNl95QTP7rGQSuknKY9OSk1lUrztPIFa3T2atvPlC7JBXoEvoFOphbgFLwlS4hwc8Z7j0rlc9Cx7zQ3B6VMoFlstII8cP1ztplcqgaQzVjnb0VBVOz0Y3Q+LaLH+SOYL658n8x9mYcp+YIxuEYDerlpunGOqe5nyJvVvm031MPVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zsfklg51Vt4B653Ndr/jQSqkJF7YiVWEDwrJChU5HBQ=;
- b=aFNvJqHqY7jXFWliFyzp6fyhrFKdnc8pI11Bsgm839c78F2BWJ7DlbYnx50+t1HLq4Wt9uygIbMZ+BAPt0/7i5WWArI4BOlif2HkGZoMwsOHJha52FWUP0V2p87d45edGiKE88vzkMiFEdwgP7qcSMCYj69BI1f723Id5TRwu1FwO/tQh4BPCStqe77UAWsCxb+4pH/6KqAi5zps3g8hrnUQbOWmlamUdgNL0ycCw6QWkVp0c66MBILge7tgqodbSL1GX7keRlokzwgFNJri+Exx1TmcCG25np6lnVL0W6Hwv11DelpmewemrTNqtfaAfTvj07vkKqKC0qb71wAjIQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB5769.namprd12.prod.outlook.com (2603:10b6:8:60::6) by
- DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9094.22; Wed, 10 Sep 2025 17:34:10 +0000
-Received: from DM4PR12MB5769.namprd12.prod.outlook.com
- ([fe80::f5f:6beb:c64a:e1ff]) by DM4PR12MB5769.namprd12.prod.outlook.com
- ([fe80::f5f:6beb:c64a:e1ff%5]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 17:34:06 +0000
-Date: Wed, 10 Sep 2025 14:34:05 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
-	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Donald Dutile <ddutile@redhat.com>, galshalom@nvidia.com,
-	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
-	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
-	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-Subject: Re: [PATCH v3 10/11] PCI: Check ACS DSP/USP redirect bits in
- pci_enable_pasid()
-Message-ID: <20250910173405.GC922134@nvidia.com>
-References: <10-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
- <20250909214350.GA1509037@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250909214350.GA1509037@bhelgaas>
-X-ClientProxiedBy: YT4PR01CA0154.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ac::20) To DM4PR12MB5769.namprd12.prod.outlook.com
- (2603:10b6:8:60::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A399A20E702;
+	Wed, 10 Sep 2025 17:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757525769; cv=none; b=SoX8SQo4xtGWKA/N6eInGNsKXOdi2/oDKqvzKs+L6lA0490zY6XntY4HTCpYsJt1YLZ5Vp8A0Yg+23KjsFBP+nrzYate744J1XVV9QaycGsPKM4f7PUmbEuQvRQIGYo+nbmPhpj/G/dNyhyy/Oy034nbxtIHxLEArE2kRhhwfKE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757525769; c=relaxed/simple;
+	bh=FA4UCgBFAqpptgI6K6i1JTSsVOvQMM2hst5UCjHh9g4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L0GfmJCvRZyy4sDeRn/eIzwzZW80I1U8BgUNaTEl9aEV3Hfr5mIfW+w9mkIRhISvC3y403spT5+dE/UhdClwEoHfOC8k75NzhwQxSxv7s1KBkLfj4ksZDVPbCDCadEDoPrRp/ssmiZ0igTQqnY/h5Men4NdIT0ttncWMTj42118=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu/xfUkb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45221C113D0;
+	Wed, 10 Sep 2025 17:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757525769;
+	bh=FA4UCgBFAqpptgI6K6i1JTSsVOvQMM2hst5UCjHh9g4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fu/xfUkbgE34Fd2/E910IqX7omjoyicBz6RDbf58O2XQQ1gLhNRNMAwKzhAEdcBBi
+	 Ivryfx9p2FDsTa9GEKCsGo2KdVg4rCSvnk2ZnsC9Q+ubtaDY9i1CePDkM8UNXRKIPi
+	 qhMCez0u61bwaeGd0riAod/zhecM5KPPW8AnEGwEFDEfX7d2KHECa6EnXB6brIQVK8
+	 CVhiC+kOvCOcC5VSim0gg/cKtv4oUYdeVmYYCNpin6SiofjSXjw+9VWsDZf4ZiJxv7
+	 uYUuvPqMpzuOS69Ew1Uju4XJOh+AtHLc5dAnvay+6pu27G1+RCg4+JYe+t1iAxds7H
+	 IL3rY1/CJs83Q==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-62177052206so2190066eaf.1;
+        Wed, 10 Sep 2025 10:36:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWH21nAJqQ1VBAbTnMVNDJgACoIGPTuOir4OKS5jztCQyunwNpoHUtLzxh/i36IPCaHt2X24TlJgMnkLu5pujxXtxPI@vger.kernel.org, AJvYcCWQXhxgPQ7NmRztzdQBLrA9Zn4KbXa6rpAu0mh/W1dwwFHSobLSn/gyDSu8v1U1vmDz8/pr13d6x+0=@vger.kernel.org, AJvYcCX97JYLWGXgJ8ZUo92BLmDF8n/GCY4dF9HcwPgUhYaZqEYFaZYfdofEo0rehqPlaLWIICjYWqSVWES6@vger.kernel.org, AJvYcCXV9EUI8D57FKdSXaNBYjH4gdsCf5vxbvsE5boXNziOvjaOktCkFf6nZ5t7uvvyLmivIhytzY3XBuQ78Q==@vger.kernel.org, AJvYcCXpc/gQOGsO70TLasD1/pQ2MYkbsLUkffy3AvzJ8KdxWU15QE9TOOeWpA8YHomy8eBmvEep2d53ypk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3KwlPQ0vGgdEE0tmZqXBlu19NqvWcPuy5WmpGw4fEQQGdCb32
+	AgowgQhrc+ipRq0EvVIhrQqOaSo2UWBOgGasJohFWIqUu23Gem1xom1hY/m2b+kyfLQyJttTasn
+	6uGVjwqRCSLmTIAUyzA1ox0Y/3pVD5h8=
+X-Google-Smtp-Source: AGHT+IGqRDSNbWbYnkbSbxdVN3DMQjV/YyqRZRbIFNwtq9fMgeLfUQYHbLnAVcBuexhHKoy0HWJ6kgMj3bmeFA8AHIY=
+X-Received: by 2002:a05:6820:2289:b0:61f:f4fa:6d1 with SMTP id
+ 006d021491bc7-62178a9cffcmr6797601eaf.8.1757525768372; Wed, 10 Sep 2025
+ 10:36:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5769:EE_|DM4PR12MB6085:EE_
-X-MS-Office365-Filtering-Correlation-Id: c12cbadc-c4cd-4e95-990f-08ddf0903e37
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iqmG6bF/iK0TEdYe/DA89AQQnNQbkMAkBrT3JdU7vhlOP+OvdpmMb7SDth09?=
- =?us-ascii?Q?puRRdS2ehhYgOiRcSqjWhAAdirVX/prpnJttm/LSB3df+48w0Bam462jL48H?=
- =?us-ascii?Q?Toy/O1D8EmrzQINNvyy4hvHjYZDruNaJcApa36mYslo94Iv//+nAUehNSuAt?=
- =?us-ascii?Q?Zqyu47Aim44DvYXVXNzB8EinbHa1jf4CbEVggOsoapZMO9+MXEB9LLw+wToO?=
- =?us-ascii?Q?o/IuXvF77AAGTo3IISBQI0l7mL3UEDqdg2HOHL+LI173VXNodxN2hI6m/89y?=
- =?us-ascii?Q?/ACqXbhU2W+pc6zc0Zb0mTFyRdTck7NClTIXtdNaUQyNprl7U1Pqaocx00+/?=
- =?us-ascii?Q?WyHMw3fAy2zoiSvCknhJBNV12U5kovNPSCZDRegrH+FY6BC2OPCbBcKbT3J3?=
- =?us-ascii?Q?sVa6K9SntmwPs6DSkPGG7I3mHcneT2ldbzbPEcygjusEAn4hWhf86PIMuFOp?=
- =?us-ascii?Q?TiKl8fxsWMSBMsBPaNLJsiabSfb6kVMB1SulqY33JpCIHHdeAZ97V4A/kFKR?=
- =?us-ascii?Q?k/APaPGl3CcX0EBuWzkADMuotK0uE9e7q/9P8IlB2RvijhF6wT+L4Ewm+7O1?=
- =?us-ascii?Q?KJJ+h8LF0Fy3OOgBB/WbIsOrvbtT9GAN1fsnHe97QjwPzN88sdF0sNVaqXsQ?=
- =?us-ascii?Q?sPwJg40cVK9NKjRWxB99WJl/U7JzmoOeUb481iyVUErH5pF8+OlHjVXrpESl?=
- =?us-ascii?Q?12Zmwq7dbHDFqCLuBZnaaIe1fW+8dyxjmHBvgcIICANKHTyu5U2PdtKoDS6D?=
- =?us-ascii?Q?6JkrcYZj2sOUezrtdZtGqEMBE+Bn2TXhA+Uk/3OZmGDJd4m+u868KdMJGDuv?=
- =?us-ascii?Q?7qLGYAWjjHALAZqQQx9zZGoRhtGujO6YcmH6luJqAbsDT60zKUbAivMFZDgq?=
- =?us-ascii?Q?+cp/SbuDP8a08d9/iLJFCZSdxROln7eNUp2lb4kB0lv5FJaG8Gbt+GzKfdIs?=
- =?us-ascii?Q?WAmO0pjvJPxniIgDXCZQXyCj4ECq0aXx24EiiW7Puas9LYhmxVDHPlVmb54k?=
- =?us-ascii?Q?eHph7J90WvAm58IjqktAJNOMGda7T9yGwZap9/0Nl5plvF+xSCT8wgHI+G2u?=
- =?us-ascii?Q?f9aC0pczhbiVXSq6ctqMa47bbhkN6G0KnRsL1837MrO5Y3qniILE3xyWFoaX?=
- =?us-ascii?Q?cn1L38Qaol2hJItqn6d9sjTJGTBT3r2Cm3Peq/QsolZA2SYUTb9IfeHjePgj?=
- =?us-ascii?Q?LpLr82NXAuPBAnnKrNezwbF0RREhkRKI/NEkS/92P3Ck97NN59WYCT69eR0I?=
- =?us-ascii?Q?KP+tRzNVQCxiT5x0RKbWnQic5jazVL4cWzDBJ1tTTK+9qZ4eg3fpjTCqBnmb?=
- =?us-ascii?Q?n/Ftec495AKAKrJmX6Qlu+0brtW6Rz9Adee/adFL5IQ6gD+lPmUAdsr+BkXU?=
- =?us-ascii?Q?6MPuXS0Y9JBBnM2Ir2WfZqldoMWFW2IkBPtVYG2wxL2GjW4JYrgQ8YnrugV7?=
- =?us-ascii?Q?FwQriegNCHo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5769.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H92cnVSt+nfc0leaworlXTRpWhhVkO98e7xp5wuMTzA2USOBJ+x0nJb3sz+L?=
- =?us-ascii?Q?XbsGmlQTaKT+rUcs9j8I0efLTcfAnLiKijSshOLlglvdEmCPrMju3CZzGxpD?=
- =?us-ascii?Q?0xeuj2MsiEDycNBZ89g13y5xP5BKU4tB5rneR8aWnPgF/XuTaG+zbRoPjHod?=
- =?us-ascii?Q?awqm56bzcmxzIgoM/8NufTJ7UHUWSAMEDR1dE8gZmVSagpTq79mJ85FrfyXE?=
- =?us-ascii?Q?0ELC06D8z5vShaaFojA0/mjyG381GQpxkYjC4HF0dPJH/EPOGAXsVOwLgP9X?=
- =?us-ascii?Q?eKvZg57YGdmKgGQbPwa8aqgC7YfNXvRQYsj9caZNSVgaHZvOvHPcV0fwhbyu?=
- =?us-ascii?Q?2fS+Jo2V6MrH1+DcERVOv+dYLZKC6GBrXaC7aCEM8P/BPlcnXoGgE34ugk0G?=
- =?us-ascii?Q?FJbJp62lYOSMJGuNiI3qDoYomHXRI8Jg7UPKU6XI3/yPXhdImdjtlPgjIGYy?=
- =?us-ascii?Q?NOSM8/CKZB1Qry1kYeYTLzkga//I7YLIzcKb/nPYFmy8me2TtfRN5c1Zu1Wa?=
- =?us-ascii?Q?qlUV6uM4YpkFMKDU4dSTVB+PJAJVzBx3spfhctcp7nI6QmUnsrtZXirih86A?=
- =?us-ascii?Q?u7yDi3/4FE42JecjHC/zIZV3NaDfhvmem513dTcDbM+OK8eCqHN44y7jkN26?=
- =?us-ascii?Q?/tAdMiKfGosq144NFehkILKa3s2mbV5h+Ab7vGE4XpnqXP01Go6o/0dMBfdB?=
- =?us-ascii?Q?tOVOU5cWsIwCLxqxQHuiXVC3KfUzrN/UeC8ojsil+0K/ZrXnyROz8D8qgGEa?=
- =?us-ascii?Q?k4tnrIifPRJSGr99Ob+oy5LCJVDyRfcVkLa+l4IKH7Di1NaK82jP+zridHnm?=
- =?us-ascii?Q?o+RYudIouX7cFpEY7Gn7KkUDZyx9D3JnJRlaJHZbNJZwRFD5EptiJsg77N7R?=
- =?us-ascii?Q?/sz826+JmXORvf3q8s6Pa+TXLuurdBaFeTQ8Ge8IqIb0BbL8gZEirbazWdeS?=
- =?us-ascii?Q?japwm7PlxaWDHebbZ7EBdOFc5bZGrmkfAu6RbGbCpXaJKWyg5V5hI6P8OgtW?=
- =?us-ascii?Q?1DCvDA2aUpapHV1c+FiV9jBmWUIIY6IfBak5qx4/bbh5uNX/ZGv3jQP3oG0c?=
- =?us-ascii?Q?5+BG2VDQpLjfGopZUTUTmmwD5UQzdoJr/htkoJ3i7lO/Pxx8PER8LiDIIMCM?=
- =?us-ascii?Q?m48aUaAl2x21CltAfP28QaKtXQPPwVxDU2biYIMa/cdDg3MIFWSWdFpja9Yq?=
- =?us-ascii?Q?EG3+2kesXBKQsn4crw8p1n+xdiH6TgXiRFoaLQWzepqNJCn7zPF9gaY3JchD?=
- =?us-ascii?Q?iXs1GuUoIq3Oyr3oVoeYFgiUzC6IGDFMjuYL/TkwrdJcl13OouFlJbMT60pC?=
- =?us-ascii?Q?Qr/gAfE2DGdu0kDtcuRKj+wfC5YOrohTaXEU8MwubGoAZ/3Vn6HDzQszHjr9?=
- =?us-ascii?Q?a9wsh4Xrqup8XqjFEV37C61Kv0xCAnGf0DjP87+GdGYWGEehN9jYRtB75hR9?=
- =?us-ascii?Q?Uc1uh1C/Q4r8UZvwg4vT6Yhld7nIl+qCPAmQFHuzYVC05K+ZgPY9bmeJ6s9E?=
- =?us-ascii?Q?yqWaURvp8I+a5y81MTPAWSkAXhssFTUwogObnCioGB5lQrNeFSOn6zvQng6f?=
- =?us-ascii?Q?uCkZlhPGimbvjvG4vRk=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c12cbadc-c4cd-4e95-990f-08ddf0903e37
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5769.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 17:34:06.8587
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BwBjfBnUmtmjQthSG5oKyXdRY649+uzX0cvxwmbgeLXRDkL57eF3ko5bAOFzEqBQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6085
+References: <20250909191619.2580169-1-superm1@kernel.org> <20250909191619.2580169-7-superm1@kernel.org>
+In-Reply-To: <20250909191619.2580169-7-superm1@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 10 Sep 2025 19:35:57 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jZ7hhAY99VmkFwAOdh__qEJF8DJnsz5c1L2vq5yo11bQ@mail.gmail.com>
+X-Gm-Features: Ac12FXyxUagwTReSbqlVJ9A9fdbWKaPIeI6ktCaW0WEPYN3USXhrTzbLXvzoC7g
+Message-ID: <CAJZ5v0jZ7hhAY99VmkFwAOdh__qEJF8DJnsz5c1L2vq5yo11bQ@mail.gmail.com>
+Subject: Re: [PATCH v7 06/12] PCI/PM: Split out code from pci_pm_suspend_noirq()
+ into helper
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pavel Machek <pavel@kernel.org>, 
+	Len Brown <lenb@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, 
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, 
+	Kai-Heng Feng <kaihengf@nvidia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	=?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>, 
+	Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 09, 2025 at 04:43:50PM -0500, Bjorn Helgaas wrote:
-> > +/*
-> > + * The spec is not clear what it means if the capability bit is 0. One view is
-> > + * that the device acts as though the ctrl bit is zero, another view is the
-> > + * device behavior is undefined.
-> > + *
-> > + * Historically Linux has taken the position that the capability bit as 0 means
-> > + * the device supports the most favorable interpretation of the spec - ie that
-> > + * things like P2P RR are always on. As this is security sensitive we expect
-> > + * devices that do not follow this rule to be quirked.
-> 
-> Interpreting a 0 Capability bit, i.e., per spec "the component does
-> not implement the feature", as "the component behaves as though the
-> feature is always enabled" sounds like a stretch to me.
+On Tue, Sep 9, 2025 at 9:16=E2=80=AFPM Mario Limonciello (AMD)
+<superm1@kernel.org> wrote:
+>
+> In order to unify suspend and hibernate codepaths without code duplicatio=
+n
+> the common code should be in common helpers.  Move it from
+> pci_pm_suspend_noirq() into a helper.  No intended functional changes.
 
-I generally agree, but this is how it is implemented today.
+You should say why you need/want to unify the suspend and hibernate
+codepaths because this is kind of relevant for this patch.
 
-I've revised this text, I think it is actually OK and supported by the
-spec, but it is subtle:
+It isn't entirely valid to use suspend-specific code in the
+hibernate/power down code paths.
 
-/*
- * The spec has specific language about what bits must be supported in an ACS
- * capability. In some cases if the capability does not support the bit then it
- * really acts as though the bit is enabled. e.g.:
- *
- *    ACS P2P Request Redirect: must be implemented by Root Ports that support
- *     peer-to-peer traffic with other Root Ports
- *
- * Meaning if RR is not supported then P2P is definately not supported and the
- * device is effectively behaving as if RR is set.
- *
- * Summarizing the spec requirements:
- *      DSP   Root Port   MFD
- * SV    M        M        M
- * RR    M        E        E
- * CR    M        E        E
- * UF    M        E        N/A
- * TB    M        M        N/A
- * DT    M        E        E
- *   - M=Must Be Implemented
- *   - E=If not implemented the behavior is effecitvely as though it is enabled.
- *
- * Therefore take the simple approach and assume the above flags are enabled
- * if the cap is 0.
- *
- * ACS Enhanced eliminated undefined areas of the spec around MMIO in root ports
- * and switch ports. If those ports have no MMIO then it is not relevant.
- * PCI_ACS_UNCLAIMED_RR eliminates the undefined area around an upstream switch
- * window that is not fully decoded by the downstream windows.
- *
- * Though the spec is written on the assumption that existing devices without
- * ACS Enhanced can do whatever they want, Linux has historically assumed what
- * is now codified as PCI_ACS_DSP_MT_RB | PCI_ACS_DSP_MT_RR | PCI_ACS_USP_MT_RB
- * | PCI_ACS_USP_MT_RR | PCI_ACS_UNCLAIMED_RR.
- *
- * Changing how Linux understands existing ACS prior to ACS Enhanced would break
- * alot of systems.
- *
- * Thus continue as historical Linux has always done if ACS Enhanced is not
- * supported, while if ACS Enhanced is supported follow it.
- *
- * Due to ACS Enhanced bits being force set to 0 by older Linux kernels, and
- * those values would break old kernels on the edge cases they cover, the only
- * compatible thing for a new device to implement is ACS Enhanced supported with
- * the control bits (except PCI_ACS_IORB) wired to follow ACS_RR.
- */
+Also, I'd consider reordering the series so that this patch goes
+immediately before patch [9/12] in which the new function is used for
+the first time.
 
-> Sounds like a mess and might be worth an ECR to clarify the spec.
+> Tested-by: Eric Naim <dnaim@cachyos.org>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+> v7:
+>  * Reword title
+> v5:
+>  * Split from earlier patches
+>  * Add tags
+> v4:
+>  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@ker=
+nel.org/
+> ---
+>  drivers/pci/pci-driver.c | 81 +++++++++++++++++++++++++---------------
+>  1 file changed, 51 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index f201d298d7173..571a3809f163a 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -762,6 +762,54 @@ static void pci_pm_complete(struct device *dev)
+>
+>  #endif /* !CONFIG_PM_SLEEP */
+>
+> +#if defined(CONFIG_SUSPEND)
+> +/**
+> + * pci_pm_suspend_noirq_common
+> + * @pci_dev: pci device
+> + * @skip_bus_pm: pointer to a boolean indicating whether to skip bus PM
+> + *
+> + * Prepare the device to go into a low power state by saving state and
+> + * deciding whether to skip bus PM.
+> + *
+> + */
+> +static void pci_pm_suspend_noirq_common(struct pci_dev *pci_dev, bool *s=
+kip_bus_pm)
 
-IMHO alot of this is badly designed for an OS. PCI SIG favours not
-rendering existing HW incompatible with new revs of the spec, which
-generally means the OS has no idea WTF is going on anymore. 
+I guess you want to propagate pci_dev->skip_bus_pm to the parent
+bridge if set for pci_dev in the hibernation code path so that bridges
+can go into D3hot/cold in that case.
 
-For ACS it means the OS cannot accurately predict what the fabric
-routing will be..
+Fair enough, but I'd give the common function a somewhat less neutral
+name, like for example pci_pm_noirq_prepare_to_sleep().
 
-Jason
+> +{
+> +       if (!pci_dev->state_saved) {
+> +               pci_save_state(pci_dev);
+> +
+> +               /*
+> +                * If the device is a bridge with a child in D0 below it,
+> +                * it needs to stay in D0, so check skip_bus_pm to avoid
+> +                * putting it into a low-power state in that case.
+> +                */
+> +               if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev=
+))
+> +                       pci_prepare_to_sleep(pci_dev);
+> +       }
+> +
+> +       pci_dbg(pci_dev, "PCI PM: Sleep power state: %s\n",
+> +               pci_power_name(pci_dev->current_state));
+> +
+> +       if (pci_dev->current_state =3D=3D PCI_D0) {
+> +               pci_dev->skip_bus_pm =3D true;
+> +               /*
+> +                * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if =
+any
+> +                * downstream device is in D0, so avoid changing the powe=
+r state
+> +                * of the parent bridge by setting the skip_bus_pm flag f=
+or it.
+> +                */
+> +               if (pci_dev->bus->self)
+> +                       pci_dev->bus->self->skip_bus_pm =3D true;
+> +       }
+> +
+> +       if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
+
+And pm_suspend_no_platform() is suspend-specific and in the
+hibernation/power down cases it is always false because the platform
+is going to take over.
+
+This means that *skip_bus_pm will not be updated in those cases, so
+why do you need it in this function in the first place?
+
+> +               pci_dbg(pci_dev, "PCI PM: Skipped\n");
+> +               *skip_bus_pm =3D true;
+> +               return;
+> +       }
+> +
+> +       pci_pm_set_unknown_state(pci_dev);
+
+So this should stay outside the common part I think.
+
+> +}
+> +#endif /* CONFIG_SUSPEND */
+> +
+>  #ifdef CONFIG_SUSPEND
+>  static void pcie_pme_root_status_cleanup(struct pci_dev *pci_dev)
+>  {
+> @@ -851,6 +899,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>  {
+>         struct pci_dev *pci_dev =3D to_pci_dev(dev);
+>         const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : N=
+ULL;
+> +       bool skip_bus_pm =3D false;
+
+And it doesn't look like this variable is necessary after all.
+
+>
+>         if (dev_pm_skip_suspend(dev))
+>                 return 0;
+> @@ -881,38 +930,10 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>                 }
+>         }
+>
+> -       if (!pci_dev->state_saved) {
+> -               pci_save_state(pci_dev);
+> -
+> -               /*
+> -                * If the device is a bridge with a child in D0 below it,
+> -                * it needs to stay in D0, so check skip_bus_pm to avoid
+> -                * putting it into a low-power state in that case.
+> -                */
+> -               if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev=
+))
+> -                       pci_prepare_to_sleep(pci_dev);
+> -       }
+> -
+> -       pci_dbg(pci_dev, "PCI PM: Suspend power state: %s\n",
+> -               pci_power_name(pci_dev->current_state));
+> +       pci_pm_suspend_noirq_common(pci_dev, &skip_bus_pm);
+>
+> -       if (pci_dev->current_state =3D=3D PCI_D0) {
+> -               pci_dev->skip_bus_pm =3D true;
+> -               /*
+> -                * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if =
+any
+> -                * downstream device is in D0, so avoid changing the powe=
+r state
+> -                * of the parent bridge by setting the skip_bus_pm flag f=
+or it.
+> -                */
+> -               if (pci_dev->bus->self)
+> -                       pci_dev->bus->self->skip_bus_pm =3D true;
+> -       }
+> -
+> -       if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
+> -               pci_dbg(pci_dev, "PCI PM: Skipped\n");
+> +       if (skip_bus_pm)
+>                 goto Fixup;
+> -       }
+> -
+> -       pci_pm_set_unknown_state(pci_dev);
+>
+>         /*
+>          * Some BIOSes from ASUS have a bug: If a USB EHCI host controlle=
+r's
+> --
 
