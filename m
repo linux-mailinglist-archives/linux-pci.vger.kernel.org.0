@@ -1,240 +1,128 @@
-Return-Path: <linux-pci+bounces-35809-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35810-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65C47B5188E
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 15:59:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DA3CB51926
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 16:21:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFB901C85485
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 13:59:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ED431883C33
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 14:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7DA320CBF;
-	Wed, 10 Sep 2025 13:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F7251684A4;
+	Wed, 10 Sep 2025 14:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9FWv5d5"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="grNxo9uf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B7320A3E;
-	Wed, 10 Sep 2025 13:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650DA202C5D
+	for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 14:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757512735; cv=none; b=JgJ2sajg0sB/KmxC4X6Rn2MrwFdcBBCZR2uCblf5pU1wYOMpw8QhqMXkQgN/C0HwrZyhL/uYvORwSgMGyugi6VOEqO6SrCh8SKznMO7vRTt8k2yUqdEVnKK7qRBf7NGNb68nsKpZBecspe8YzI3TGnN1iECg6BVHZTzJEAtLdtc=
+	t=1757514075; cv=none; b=VRWGh7qOpoC/loAC7h6ZzQ71KuyswISJGQ0//l9mVjgw3U0P0fZGxuEOBW8yOvDvdzXkrta7KZigjfWKqaRUntDl31HLIt0Ygvpadt6LHfu1feTR/s952Q/s1BWtwWXMkZwpMvmmnSjDCLNmAawMM+wNiy9f4hLaU5DAjpYgLqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757512735; c=relaxed/simple;
-	bh=3519NgJS5af1Ajj9Vhlr8KZ7E/Y4HYs8va70a7vghxc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ctT40cuOADklYwQ8DXAuVJp0f4EAahciThD64Sg2ckwyK6JZp5nx2IerTkF3c6JmRI4VMIZf1YRCTpfPjmVkCP8kza17UeVoBv2e2NlqB6aNtXXqYDFL9z7mVJQP8zV3L5DFPzc3EbDZxgYCcLzeYmc2YOoCVpMAkKtGIe4pHL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9FWv5d5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8684C113CF;
-	Wed, 10 Sep 2025 13:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757512733;
-	bh=3519NgJS5af1Ajj9Vhlr8KZ7E/Y4HYs8va70a7vghxc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P9FWv5d5a8NYpbSbgR7Ik8dp74uUr4fNWCQpXBHcctk/mkG0E1DvOINiwc1soE4jg
-	 +BAa7Ud7DObaRmnvBvmQzi0/kpjzlbK2hW9oN9n0vpFM9L5xQ9djr2wuE921sodxEx
-	 WgA0plNJGmVfalbNkjdqpQGLM54PiOIikmBPUA/6lcJa+k/PegVPG6Tstzawxbxcym
-	 +JfOZale0lcvdD1/9K4pK4rksymUyVQ2WLCvpaM2g1bKSmlxq3S2mGA+3oTUDDgPKN
-	 o2H2tmjphxvcy4BVnlh43b3VDrX4EC2Y8ORT05YlhsB98jGNErvFFjT3LDyTRVT1nj
-	 nXGjYQ6RsCMbw==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-74595f3852cso4259627a34.0;
-        Wed, 10 Sep 2025 06:58:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUCbi+h/e82gg0kHa/bCGe4eGvBo/MujUnhhSuU/4u0/SNC+8v31efMzulF/Y5eI8bqZLUfJANntPZ2nA==@vger.kernel.org, AJvYcCV5Hm+/F3mLOyWzbqNz2OS/PPuZRADDTjGhQR0eBMN4cYb9FdjxfexSVKLFn+vd3ZC0JOahHV6STF2W@vger.kernel.org, AJvYcCVAgZOuL/8fqAQLCX9r6F8g5RF1zyi/KeTvuQQGhMsakA5GmO6CcYZtOHcjLfDki/eB0KLVWQ+6P4GFnebs5fZ5vnGg@vger.kernel.org, AJvYcCWvn8wgzwKI62oyN9ROCtI0uxzqJI/s5tQzVNApXeP3NsDmRqpAJjP1UCTYwaB1ut0pXXVinDiGc70=@vger.kernel.org, AJvYcCXn5L3M6CXrKx7Kt2UEbagRJZtSg/ytOaKvQPblXA8LTEGoMxsR2G8oRemUbu9j+hpCrZOlxpNrh3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlU9qZyDojHQWvd3v3oKND/XL5tNf5h4t8ct5HHwDQNvxltw++
-	Up2XWN1wFg9LYn18/jC5XQYhUXatSikp/YG0tYiU3vmDkD2XmkYhGEiuYMAqonFFMZ1HlcQpLQF
-	IuBh6ZliiClE3vwU7gy4hADu0vIub49I=
-X-Google-Smtp-Source: AGHT+IH7BCb6LYGInN6fRifU1PN2pCzvvU+aj27/RQrKYfBGkk+A//ewx0ANkkYnwGiqVgrG/auhpbNo5qaSgs9mrTo=
-X-Received: by 2002:a05:6830:67fb:b0:746:d9af:6664 with SMTP id
- 46e09a7af769-74c74ec0cb2mr7381703a34.20.1757512732743; Wed, 10 Sep 2025
- 06:58:52 -0700 (PDT)
+	s=arc-20240116; t=1757514075; c=relaxed/simple;
+	bh=LNKhKhA6C3nXEhiScX2h3yeOP0cYoVecRbWOHC2eAUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VyYZxlPrpJSFKC2rqDNS0dqxd0dJFO8xUughoHn5iIwZ0fjD+iDCrtCdqSK+41OUrdACywIVrYH2qTIICaLDEJOFuF2buys2+A28c+h0poBo11P37QEP4ECsL/xKOrbg01lUDCxQGg2sONsXdbfoq0raE/1n+DbgaugiebDJiyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=grNxo9uf; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4b5f3e06ba9so8790831cf.1
+        for <linux-pci@vger.kernel.org>; Wed, 10 Sep 2025 07:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1757514072; x=1758118872; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LNKhKhA6C3nXEhiScX2h3yeOP0cYoVecRbWOHC2eAUU=;
+        b=grNxo9ufehAhRM21/3rKfugBp1loIxWsplX3mJwKGeH/6mXW1Pb/F5wW/uQIlZKUsS
+         dm7/pp9eo7XEMslQyRdNb/H0r5Mlade3+0EIh60jIjtvvGOp1rc6Rdtv53MtAhCuPBRL
+         E/5jjvn51wwQc69OyTjGcbDboAHiDpJXowFLiGaVYs1Lqvq8+7faFUy6qxQULUj8jtOI
+         yAJr0UdHfS1qPBzCV3kw+tGue8MP/zQ4btnveecyWACi57qfyx1LrzbC042t5jlhbDjS
+         dZaiiqkZbAy10GDaKv2z23Zqp+ugiqJDuLRmMmwKidQRwPMj3Oi0opM+ivGpONnBToGU
+         XpSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757514072; x=1758118872;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LNKhKhA6C3nXEhiScX2h3yeOP0cYoVecRbWOHC2eAUU=;
+        b=UOJpQgcc80p958ihElqucDj81rgOcwdonbNbP6p3UnFY7teaYoOEiLY/COmnytD0j2
+         kWptFnogltE4cHJv1ALLEom0KRiR7mMr+3NW9I46voFCxkmWM7/uKCT7lBYyJiJOEM+p
+         wcD9KjcALoCk9Ve45tknM9w0sa0vPGdG/3/mCJ5dj3j9XPxHlW6ZR1RAiyoRrJM+BiZf
+         L0uQB/xnD2JFrADuGrUDtCZJsBIROwqfrB+sQ+NXTgsKM5UzPgtmAQpZ0MTbwhafflO6
+         zLx2XcK1ggSDUG3KJAFkY4qqkl4i0hnHW9EuQF3YpIPLs8UfYUqLaTnTzOFPjmMzoNdV
+         jpdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgianWZ39tvQZ+54Hz0jIg85lF5X4gdu7Qbvk3u9TRb8WSE+Q5vQ38ixiPVgaGc/dpjU3OJiiqbu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPlIz59LkT9x0rcgb8ppAofz/dP3cYSRHFd0kaQdw43Pm5sJQi
+	Mfz0BPCob3Y4/VzDjqpFkVj99iNjbYiWpdFDRuSBAbgKgqXby+Q1jl9JuPxGogkVkxvAAhwBnhz
+	l4kwC
+X-Gm-Gg: ASbGncs7OUo4hG1+Wvyl4v1SGqI5TfY59JH/oB6gdiUf7G4FCQvcJF9SmmTnnwuUJA3
+	BG2jl+27tpAuLVLpAXHDGQL8ASOOMIcmgqHApmdbeRDwCeQPOc5T8nnjYRXN7gH70kquyZEKV0M
+	dcHY2GoIUsySgrCH8lBl+OSPrYwC9LPo6+bMxFqkiTPMurXQmrcKZZqesjrYWJl1gKP5WyJbec1
+	OSbU2XwgFsNqiuu1eB14Bi8utXz2SGuPhYi4Z+vt2tUT3w+r+/UE+QCZIW/9uW/amluzCI5Rs72
+	jqoaMuxwSA+uw6tQxFZ9vqWM4Lsq+OwEuw5mZGDrcpXZJpRMH8AqiLeyDdT4mEFn3C3EZNCXv0p
+	0p+zUR9Hs90TTkocBsj/6E569BJpnvjXw7Gc13w6ZjIibFGa/gsoaM/HUhGWvqxFosCA1
+X-Google-Smtp-Source: AGHT+IFQUqXdlLFuZHw73Bg4VN3PcnM2gIuoqeeTT9gq8x5We6/aliAOx3fJNb9QKgrD/fgUoao2tw==
+X-Received: by 2002:a05:620a:4054:b0:7f2:8bef:93c8 with SMTP id af79cd13be357-813c443dcbdmr1375146585a.40.1757514072083;
+        Wed, 10 Sep 2025 07:21:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-81b5ed732f1sm299020385a.49.2025.09.10.07.21.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Sep 2025 07:21:11 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uwLh8-00000003roy-2q61;
+	Wed, 10 Sep 2025 11:21:10 -0300
+Date: Wed, 10 Sep 2025 11:21:10 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Arto Merilainen <amerilainen@nvidia.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	aik@amd.com, lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>, kvmarm@lists.linux.dev,
+	linux-coco@lists.linux.dev
+Subject: Re: [RFC PATCH v1 34/38] coco: guest: arm64: Validate mmio range
+ found in the interface report
+Message-ID: <20250910142110.GE882933@ziepe.ca>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-35-aneesh.kumar@kernel.org>
+ <d57d12ce-78c6-4381-80eb-03e9e94f9903@nvidia.com>
+ <c3291a06-1154-4c89-a77b-73e2a3ef61ee@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909191619.2580169-1-superm1@kernel.org> <20250909191619.2580169-2-superm1@kernel.org>
-In-Reply-To: <20250909191619.2580169-2-superm1@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 10 Sep 2025 15:58:41 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i6+UaTHDnJE6z-VFuJrXbmfiAr7Gs=z9-xaX9mS7NqGA@mail.gmail.com>
-X-Gm-Features: Ac12FXxslvL9eXXrmgBCzhpzNxr-VzxsKkb6k4uN3mry0ap06Tvs7qCSO374gMM
-Message-ID: <CAJZ5v0i6+UaTHDnJE6z-VFuJrXbmfiAr7Gs=z9-xaX9mS7NqGA@mail.gmail.com>
-Subject: Re: [PATCH v7 01/12] PM: Introduce new PMSG_POWEROFF event
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pavel Machek <pavel@kernel.org>, 
-	Len Brown <lenb@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, 
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, 
-	Kai-Heng Feng <kaihengf@nvidia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	=?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>, 
-	Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3291a06-1154-4c89-a77b-73e2a3ef61ee@nvidia.com>
 
-On Tue, Sep 9, 2025 at 9:16=E2=80=AFPM Mario Limonciello (AMD)
-<superm1@kernel.org> wrote:
->
-> PMSG_POWEROFF will be used for the PM core to allow differentiating betwe=
-en
-> a hibernation or shutdown sequence when re-using callbacks.
->
-> This event should not have wakeups enabled
+On Wed, Sep 10, 2025 at 08:47:43AM +0300, Arto Merilainen wrote:
+> This creates a tricky problem given that RSI_VDEV_VALIDATE_MAPPING requires
+> both the ipa_base and pa_base which should correspond to the same location.
+> In above scenario, the PA of the first range would correspond to the BAR
+> base whereas the second range would correspond to a location residing after
+> the MSI-X table.
 
-Why?
+This seems like a defect in the RSI_VDEV_VALIDATE_MAPPING - it should
+be able to consume the same format of data that the tdisp report emits
+to validate it.
 
-It surely is valid to wake up the system while it is being powered
-off, especially in the hibernation case.
+From a kernel side we also should be careful that the driver isn't
+tricked into mapping MMIO that is not secure when it should
+be. Presumably all the default io access functions should demand
+secure memory in T=1 mode, and special ones like the MSI-X code would
+have some special version to accept either?
 
-The "poweroff" transition is generally not recoverable, however, so it
-may be better to complete it and trigger a reboot if wakeup has been
-signaled.
-
-> so update PMSG_NO_WAKEUP() to match it as well.
-
-No, please.
-
-> Tested-by: Eric Naim <dnaim@cachyos.org>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
-> v7:
->  * Reword commit
-> v5:
->  * Re-order and split
->  * Add tags
-> v4:
->  * https://lore.kernel.org/linux-pci/20250616175019.3471583-1-superm1@ker=
-nel.org/
-> ---
->  drivers/base/power/main.c    | 7 +++++++
->  include/linux/pm.h           | 5 ++++-
->  include/trace/events/power.h | 3 ++-
->  3 files changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 2ea6e05e6ec90..86661c94e8cef 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -99,6 +99,8 @@ static const char *pm_verb(int event)
->                 return "restore";
->         case PM_EVENT_RECOVER:
->                 return "recover";
-> +       case PM_EVENT_POWEROFF:
-> +               return "poweroff";
->         default:
->                 return "(unknown PM event)";
->         }
-> @@ -369,6 +371,7 @@ static pm_callback_t pm_op(const struct dev_pm_ops *o=
-ps, pm_message_t state)
->         case PM_EVENT_FREEZE:
->         case PM_EVENT_QUIESCE:
->                 return ops->freeze;
-> +       case PM_EVENT_POWEROFF:
->         case PM_EVENT_HIBERNATE:
->                 return ops->poweroff;
->         case PM_EVENT_THAW:
-> @@ -403,6 +406,7 @@ static pm_callback_t pm_late_early_op(const struct de=
-v_pm_ops *ops,
->         case PM_EVENT_FREEZE:
->         case PM_EVENT_QUIESCE:
->                 return ops->freeze_late;
-> +       case PM_EVENT_POWEROFF:
->         case PM_EVENT_HIBERNATE:
->                 return ops->poweroff_late;
->         case PM_EVENT_THAW:
-> @@ -437,6 +441,7 @@ static pm_callback_t pm_noirq_op(const struct dev_pm_=
-ops *ops, pm_message_t stat
->         case PM_EVENT_FREEZE:
->         case PM_EVENT_QUIESCE:
->                 return ops->freeze_noirq;
-> +       case PM_EVENT_POWEROFF:
->         case PM_EVENT_HIBERNATE:
->                 return ops->poweroff_noirq;
->         case PM_EVENT_THAW:
-> @@ -1370,6 +1375,8 @@ static pm_message_t resume_event(pm_message_t sleep=
-_state)
->                 return PMSG_RECOVER;
->         case PM_EVENT_HIBERNATE:
->                 return PMSG_RESTORE;
-> +       case PM_EVENT_POWEROFF:
-> +               return PMSG_ON;
->         }
->         return PMSG_ON;
->  }
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index cc7b2dc28574c..892bd93f13dad 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -507,6 +507,7 @@ const struct dev_pm_ops name =3D { \
->   * RECOVER     Creation of a hibernation image or restoration of the mai=
-n
->   *             memory contents from a hibernation image has failed, call
->   *             ->thaw() and ->complete() for all devices.
-> + * POWEROFF    System will poweroff, call ->poweroff() for all devices.
->   *
->   * The following PM_EVENT_ messages are defined for internal use by
->   * kernel subsystems.  They are never issued by the PM core.
-> @@ -537,6 +538,7 @@ const struct dev_pm_ops name =3D { \
->  #define PM_EVENT_USER          0x0100
->  #define PM_EVENT_REMOTE                0x0200
->  #define PM_EVENT_AUTO          0x0400
-> +#define PM_EVENT_POWEROFF      0x0800
->
->  #define PM_EVENT_SLEEP         (PM_EVENT_SUSPEND | PM_EVENT_HIBERNATE)
->  #define PM_EVENT_USER_SUSPEND  (PM_EVENT_USER | PM_EVENT_SUSPEND)
-> @@ -551,6 +553,7 @@ const struct dev_pm_ops name =3D { \
->  #define PMSG_QUIESCE   ((struct pm_message){ .event =3D PM_EVENT_QUIESCE=
-, })
->  #define PMSG_SUSPEND   ((struct pm_message){ .event =3D PM_EVENT_SUSPEND=
-, })
->  #define PMSG_HIBERNATE ((struct pm_message){ .event =3D PM_EVENT_HIBERNA=
-TE, })
-> +#define PMSG_POWEROFF  ((struct pm_message){ .event =3D PM_EVENT_POWEROF=
-F, })
->  #define PMSG_RESUME    ((struct pm_message){ .event =3D PM_EVENT_RESUME,=
- })
->  #define PMSG_THAW      ((struct pm_message){ .event =3D PM_EVENT_THAW, }=
-)
->  #define PMSG_RESTORE   ((struct pm_message){ .event =3D PM_EVENT_RESTORE=
-, })
-> @@ -568,7 +571,7 @@ const struct dev_pm_ops name =3D { \
->
->  #define PMSG_IS_AUTO(msg)      (((msg).event & PM_EVENT_AUTO) !=3D 0)
->  #define PMSG_NO_WAKEUP(msg)    (((msg).event & \
-> -                               (PM_EVENT_FREEZE | PM_EVENT_QUIESCE)) !=
-=3D 0)
-> +                               (PM_EVENT_FREEZE | PM_EVENT_QUIESCE | PM_=
-EVENT_POWEROFF)) !=3D 0)
->  /*
->   * Device run-time power management status.
->   *
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index 82904291c2b81..370f8df2fdb4b 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -179,7 +179,8 @@ TRACE_EVENT(pstate_sample,
->                 { PM_EVENT_HIBERNATE, "hibernate" }, \
->                 { PM_EVENT_THAW, "thaw" }, \
->                 { PM_EVENT_RESTORE, "restore" }, \
-> -               { PM_EVENT_RECOVER, "recover" })
-> +               { PM_EVENT_RECOVER, "recover" }, \
-> +               { PM_EVENT_POWEROFF, "poweroff" })
->
->  DEFINE_EVENT(cpu, cpu_frequency,
->
-> --
-> 2.43.0
->
+Jason
 
