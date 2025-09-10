@@ -1,197 +1,353 @@
-Return-Path: <linux-pci+bounces-35789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C85B50C48
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 05:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5DA8B50C74
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 05:54:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65CAA1897746
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 03:21:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B55401C25086
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 03:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85A0D258EEB;
-	Wed, 10 Sep 2025 03:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5D225CC40;
+	Wed, 10 Sep 2025 03:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ohAdzmit"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="S/cA+wZ6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010015.outbound.protection.outlook.com [52.103.67.15])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2046.outbound.protection.outlook.com [40.107.244.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A462E35961;
-	Wed, 10 Sep 2025 03:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8900222422A;
+	Wed, 10 Sep 2025 03:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757474475; cv=fail; b=m4b6bFmd/XUhmgDjKmQWWinqT5YshHPfO+gLp7EdztowSYAlFaFf97kHyWZl9KxrRvmQdw1TFl0Q/8DqnH7HgWRM+kmkwc2RTDcbcHM7BpvVsKGsORfGmJFNO9qDKtho7e2wG/ChnbPBg0bvZGw0FEdtHfljWzkAQgkAI19/YBI=
+	t=1757476474; cv=fail; b=uhvIWIee0MY+uzwzq4qQDehZUf5L6cV6/6C7gVIl0VT6G8E9gFoeJriwMTIhDU9u+7w/65I6FOeBLDU27B/YuZ2rBjtx/87w2Y0XI2xG89RI3CMr5AYZG8ezx9eL3v4DlW/YxcQNGHZELnTGCHyMcnm2avkoYdx7ryz1Zgqrvug=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757474475; c=relaxed/simple;
-	bh=Jd+21r2hQAq77t6SNUtzD1lx6jT6dbNed2GBkVnzSW0=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=j4Q5d7Kcnl29ckcScyS0dVIJ3GnZkGI43tGES6dyPoG3RrZqomLS2SpPxt9yXP+twXD2Zna52R95eyJpvlkqZGG1NRfZ6EhXnCFjZQd/u5yPGnLHeBvFtID/59iPiRLCUL0/HLjxssqAB2kHGQgliyJGjZBfBhtGoKobA0Y1n/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ohAdzmit; arc=fail smtp.client-ip=52.103.67.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1757476474; c=relaxed/simple;
+	bh=B8rnnqt2cgRBCOHq+Y9aRCuzt3Ey1eHKVGw2hrrV9Sw=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lnWp42sgF+HTs7pJhsKNSg9a5/2qoaxsdOvSlnNpjn6+aOP1GmwIkA5eJqv7Zi/r3+gc8dlz2SlBq0+9xzPrBLjC1RoJQoXj9jmrFNbveDICRZaDy268O2Wq9RnsCNO7vt5bcCnpKR4jsO0vvusz+zUVEKEkx/QCQcSTdHb+4UI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=S/cA+wZ6; arc=fail smtp.client-ip=40.107.244.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KJfZBThKIUxz6c1kXLPg3idJZZOS2MV/tBc3z8OREDOKpVqLWaQQbtA/6XSRSFDWQlFzqXn03ojhphXGInzRvEUAtwUbC1q3T52NYfJ/zOCfI7EaY2qYGq9XstOSCy400a+w7FZbzaKgeCfDzg9aGBbi4SrLgf9hX1VyUcpDG2tMQh5SdKd1/nWIdN0E09FAQ97d/pLOa5+nL1TAIqfVxqcFIfu5k/toQAG7+HAKvaJXqWs+4wR6nmFsCo2MNdIYwZ1xZaSy2Utn2KFIIrPLnoQDxM7B5vBQoFm4wplHmU1UPCCC76Cy/Si4aHo1DiKUqz/oaN6KD9QQWRqu5QQPEw==
+ b=PWPzMBdZakd61woOFonWrRVRJnVC7DA4+DqbfrvCge15WR4sNz/EMAIBQMeVe2SbrSKdF97a7N7H9PzsXLmdeIxHhHscGz0bJQnQxXEOYwFoXegFPrks75xdmEJNYtNXauBKDb1jsqALsUoc3a7/xgZewopCvjC1As2c1GPYeUyMQ3Dv8pZpSsjLHB1D9iYkw6dTdeCQlKZhZECEsBtguCalIk2Sx7vinRL6ywS6KHPDZCPoZ/RgEg/foIJtUBJs5Tn+BfaUHrgIOc+SyDQVJVR5BOw5aIMb93vS0wv01+7Gq0ozbRxJBDM7xP0jwigWanA6TLCN6hfjppaeteMMYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qJGNrAkc4KIwLMfvnCdw2IejK4ZRwy4tABSe+MoJyxc=;
- b=A4TE9nUc/AolhJT+zyVxaQ5DL6WOtMVF1IaPUEm1E/zhkAjeDqqy0J1XCXr6L3GtPojUzGG5wQAcaBKF5mL7+6QHgu82JOLAiT/EHfoYYxImEHEPhNYYR79hxxBCCVcY2KgL2Wq2mq3akuwkZPa92qIr/wujWO948x9eChAjQyXqjjw5Ik9it4TeFTCZb+xHSvqtxBM+CN62ngP22pij3wgJWiIeQmYB6xpVpuabA6HSsf5Z3hdsd2y+HuGN4QluUj6oUKSP7ufb1nVmebPCqBeT+0r0jgOfYMy0khlfzHTpO9Gzj1E5NFsgaK8mRSsR+94c5wDec1NCBC+gt4jcLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=zWhva8i+lHiKOecWjfktKttB3Sy3C6bskyCAXLR+JA4=;
+ b=Lfz8AU57wD3Ny/gNfP9sfwNAx2T0wU71JqQBbeEhxd7xaTD4C4GB1DTkD3c1LHP3/R0fmMqC3QNVBZnQ6gQMto5EcH8GoIcmPtXs5YUG8BEa9qSOVrN6FJQRgy41mKPmc1xV1+mpuLDoRDTBn8hPlixFVSr8V3YWW1miOjcL8cmAn7pbuKG89rMf4k1v2o9SHBLHPSZDFuVEDn7ymavfYRGGwI9bNBmem9t3ByRrx4R7GEjgiBvNkl/ivRLA3wFm2tq3BRFGvbi53vpHuGszxXzy6Q14PnRJn84qk63DgIj15mLOoCrJiQ81r2o9YeXCGf4fLR+eM1wy8LayBa+bMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qJGNrAkc4KIwLMfvnCdw2IejK4ZRwy4tABSe+MoJyxc=;
- b=ohAdzmitLBDLFcI2k5rLVPNlcjYjG7ZFYG13FqOnoMKEg9OhQ4/IGo2dRZ7lVA5Q0GOfcLNQz2mf5aMeaSxM2anF30fzmo2hxGxdW7XQ40TW47KaKENr/BR1x5N1LYDGa8ZesmDpcj/J+vbqm0hLO/V8XWymyNb0nHv9HqUzPOdf15BsduwRHYM9M0Jjio+z4y3ra0B/lxUayBYDg1RB6CfU0MqrWWaA8hY8KAplqdN7+FfLCSA8mLsqN/rd0Ps2lRrTMngqyFCOHfQ95TvUM532miBtjh0Lg6F72lHP8NHHDPwrl4Y+f7G2hDgstNLixkM4VqyG0urLal2TwDpJTg==
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16) by PN2PR01MB10334.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:1f7::13) with Microsoft SMTP Server (version=TLS1_2,
+ bh=zWhva8i+lHiKOecWjfktKttB3Sy3C6bskyCAXLR+JA4=;
+ b=S/cA+wZ6QnZZb1oXW49F97/hNCTvMrsl/7CnXklOuUWnxyGgsOVVEGbX9mSKEBb5hpk4CoWSkVwA7JuT4kR7ZcXARgUp1quRc0FayI6jlmnFadf2rqAgy/5H9taPRCAmN6HqJki6vh/mnNZ750qg77TdSG21j60nW9hSVZbd5t202AkWYBCC/0mr75BtnFfQz+s98JHaYwh2mm/oSsDy7WUuH03NA+vQPk/eHihf92+C5erkFXXzcAk3ZTZ1ToDUwxfGx5K0Szv68eEQzpxbSiOYiRAVItHI4IAHuSDT6afjp97kabccgjwaZgs7CUhaLmTZVLkKKjb5T5h86IJ+TQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by PH0PR12MB7096.namprd12.prod.outlook.com (2603:10b6:510:21d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
- 2025 03:20:59 +0000
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b]) by MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b%4]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
- 03:20:58 +0000
-Message-ID:
- <MAUPR01MB11072EF3457DA48317FBFBB09FE0EA@MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM>
-Date: Wed, 10 Sep 2025 11:20:50 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-To: Inochi Amaoto <inochiama@gmail.com>, Chen Wang <unicornxw@gmail.com>,
- kwilczynski@kernel.org, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, arnd@arndb.de, bwawrzyn@cisco.com, bhelgaas@google.com,
- conor+dt@kernel.org, 18255117159@163.com, kishon@kernel.org,
- krzk+dt@kernel.org, lpieralisi@kernel.org, mani@kernel.org,
- palmer@dabbelt.com, paul.walmsley@sifive.com, robh@kernel.org,
- s-vadapalli@ti.com, tglx@linutronix.de, thomas.richard@bootlin.com,
- sycamoremoon376@gmail.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-riscv@lists.infradead.org, sophgo@lists.linux.dev,
- rabenda.cn@gmail.com, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
- fengchun.li@sophgo.com
-References: <cover.1757467895.git.unicorn_wang@outlook.com>
- <162d064228261ccd0bf9313a20288e510912effd.1757467895.git.unicorn_wang@outlook.com>
- <xmk5uvnw7mcizxpaoarvx2c2sejaz2skaiyyac7oo5y6loyjgp@5v3sldwbqpw5>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <xmk5uvnw7mcizxpaoarvx2c2sejaz2skaiyyac7oo5y6loyjgp@5v3sldwbqpw5>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ 2025 03:54:29 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.9094.021; Wed, 10 Sep 2025
+ 03:54:29 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	dakr@kernel.org
+Cc: acourbot@nvidia.com,
+	Alistair Popple <apopple@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>,
+	joel@joelfernandes.org,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [PATCH] rust: pci: add PCI interrupt allocation and management support
+Date: Tue,  9 Sep 2025 23:54:15 -0400
+Message-Id: <20250910035415.381753-1-joelagnelf@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0031.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::11) To MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16)
-X-Microsoft-Original-Message-ID:
- <5292aef0-e2b2-46ce-8d3c-2ac9c80cb5a5@outlook.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MN2PR19CA0072.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::49) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MAUPR01MB11072:EE_|PN2PR01MB10334:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5b3abb4-1bf6-4ba2-3a1e-08ddf0190f94
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|23021999003|8060799015|19110799012|461199028|5072599009|6090799003|15080799012|52005399003|40105399003|3412199025|440099028|41105399003;
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|PH0PR12MB7096:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32c3771f-1edc-4999-8492-08ddf01dbe17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?anVmZjlkYUJGQlpFellURUFNdGhCNHQ5Z0VndmtCU0lxb2hXQjNjZjdGeG5H?=
- =?utf-8?B?cEppVU9BTExrQWxDOWZxdXdJcjl5dklFOE8xeWJ4ajZGRFlUc0JKRVp1YVRl?=
- =?utf-8?B?UlZFaU1uQ01sbnBvcnk4cEhmbFF0bU1RVm1PcnVQa1lodjgyaTJOZ2tYcDNa?=
- =?utf-8?B?YWhGbzhRdmRULyt2S3dDdTZGSFpDTXFWdW5XUzQxREF1Sjc2aUh6UlBTTU1i?=
- =?utf-8?B?amV1RzRYSUdYUndVVjN5eW5vMUZmNTZRNDJJR09UY2xTOWt2V2l3U0RDTlJs?=
- =?utf-8?B?T2NzSXVMN3NMQUJ2WG8rQjVXa2NBRHZFRlE0UEtQRXFSSzN1VmtWQzVoa2hP?=
- =?utf-8?B?TjZKUnA5Rm4rNnBIc3BLRlVESDVXT25LVlJJWngyMXlaZUd6SDh2OEo3ZWxB?=
- =?utf-8?B?TTNFMG9wd2tEWkZjUWY0MWZOY1R2NTIxOGdzejYraVUvNEltVFdhaXlwdlF2?=
- =?utf-8?B?VHd2QzNYUGlDenNWSFNlS0MyejZjZVR2Y2Q0c1RzTmgvL0FTTXRVT0FWSXFH?=
- =?utf-8?B?QVNUUmgwME5VbytzbVoyTDZuRlo0ZEUzeS84VFdvMUFCVmUxa3pQd0FuZVhy?=
- =?utf-8?B?VFlJcnZYQVdwRUtLSW9rcklLb2QyZ0ZXVUFtUE9MclRuYlJzYmxPcms4bjNs?=
- =?utf-8?B?OE5DREZJWWozTjR4dHhkeGFGaG5OcE9GMVBsZUc1d3FGU04vU3pudy9OTmtW?=
- =?utf-8?B?bHlVWHZ4K3lId3lhRkhPd3IwOFdsbjh2YTA3SnhDYlV4VWk1VWlGc0tkUG9Y?=
- =?utf-8?B?SC9MSlY3OFFrQUpBd3FFRHh1S0NLMFpYdjg1aVBSUkJ4a3FaNENCaEZJcW1z?=
- =?utf-8?B?TFZPYjlUQWVReERVZjNad3c2YnVNZlNZVUxLZE8zUElFNS9pMGlxTUZacnZV?=
- =?utf-8?B?NUF4WlFENzhBT3VIbENWN0xFbGNrcUVINGY4U1RqVGx0WjhZcnN4eVBjcDNQ?=
- =?utf-8?B?aWZQb2VWK29hRFJmek1pSVNhNWk3SGY3TlRQZjlFeFVKWGRidFpoRkhZcDBi?=
- =?utf-8?B?RmxtUHVuZmlwSEw5U3dqRVlObmFnWkh4aDltWjQrbk0vb1RFR1FxaDhVUnR4?=
- =?utf-8?B?eEd6Z3JMTGp6MnFmS1p1b1JGZGtvVEI2WG5yc002Q0NNL29yekdROHBHbk5X?=
- =?utf-8?B?WTRoNGszSzA3NW9EeEZXZ05TOCtuSWdRaERWUWQ2aGdtZWxJM0VrV0x5RzA2?=
- =?utf-8?B?aWYveXI3WDcrNHh0QktLZkJDR0hKK2NTSlBydWNWM0VQaVplN3pZZS9maUpZ?=
- =?utf-8?B?ZExCbDA0a0RzY2pteVhKTnhOSGxRMTk5d28xVXlPbWNCN1JBUUpLSk1kNVZS?=
- =?utf-8?B?SVRsRFVvejZFTW9UMFpWY3Rsbnp0bzA4anFCUFNselhld0hVREdlWEFNSGZS?=
- =?utf-8?B?aVJhT3c2V2VnU2U3VlRZMGpFNkkwMFg5SnBGYUhvSG56V3oxNUtJSXBXNGZL?=
- =?utf-8?B?RHBsRWpSVmxsc1VhL2xiWnRLYVdjY0RaOVljaUgxYUhxOTltaFVWUTVrUmtC?=
- =?utf-8?B?czRHdVdHTlVDdkphczErVTRwMnk1akF3OTdydU56dWtIaDhGRytoMklJd0lD?=
- =?utf-8?B?VFFPWSsrVjI3QitldjNnTGRxbWRjVjVzL1dmR05aQ0JMakxIMktjTjhqTDhC?=
- =?utf-8?Q?h1CPqrlqOZ5e8+sX+R++5toX3iAgZ303T3E/Nz8rq8aM=3D?=
+	=?us-ascii?Q?TLyVIJSKQJhbdTQfOHfD4YzsJsosOCse+S06eEaG3dgc38ZsY7i+6ZNYbAbO?=
+ =?us-ascii?Q?dJrdjNKbISrOUxoy9yALIUc8glzJ+q39R9TXL7Q82JETOHsCgYXTCstLroXp?=
+ =?us-ascii?Q?f4vwRRh2zIQx3G6Zan7XJ1hFbL/PbydGXbXk3Kr4kIGWup9/bCME1s3pU1mo?=
+ =?us-ascii?Q?DhwCNCFlSMivq8X68B0D+RAE73XoyJkP1e4hczhZE7lL+dbL1pfOgfhFmoqc?=
+ =?us-ascii?Q?2iX/peQAKatEsxJvenyH0Fc2IuAKsvf9aAXn/X/B4saJ6h2KFrhscCSZGvto?=
+ =?us-ascii?Q?opdrNSICJAkDfqBY4XRMzvIPoobJciUnqoEHz9j6asCz3dlz6NKjAzBxQO6u?=
+ =?us-ascii?Q?nkrQwjg1B+mcmpQ08GkrQI0hMJ30uQUzS7gsqJfnCe56U8Zmc5QSyxOSnf0D?=
+ =?us-ascii?Q?phTMe8+EHqelmRlO67LQtR+qNITdqdU0EZOafAsfuahDVUUCZ4Vxt5qYN+SU?=
+ =?us-ascii?Q?9LUNJyL9JNdmmFgJ10PMCqbQFqP1IXuSDXzR2U20egALDX1DRopdcv78OKhz?=
+ =?us-ascii?Q?Pe1vKBqjNLHLjaiTqfWISTxr9Gv5WVzs/hXCLBFG9h7RBcuSrkP6yfXRJTGO?=
+ =?us-ascii?Q?W5aDKttObX3+MkxQ1R3Q9pMvRgdCes/L3LjOWAQgnYabtL94tooZa8raeDGO?=
+ =?us-ascii?Q?RUfJo+xZ8rJeuVDrPr6ZtsnYHwBzaWH00gOKQ3KrOzellnT2W18rCFVPCa6C?=
+ =?us-ascii?Q?jAaGtfHU7Ir62x3AHIjrMDxumDgpCEk4aH9g27JiYc7oHYJYoVruhhNn7u2V?=
+ =?us-ascii?Q?Ifla9k/QDpx2QgpCW0HBA7RInkrFd4UhIeKA4EVe3kM61kZ51mKo0Ox6G3kB?=
+ =?us-ascii?Q?9loq6cgEyc5Qm46xx4WFZvBPTpJ94OiNvF08utUl1NXKyxy95U3toC7lfh9E?=
+ =?us-ascii?Q?1g3PgVqx5xEy++rwO1nT6IehjSLpu48CtrBz4JfOwGv5nxRnuyBQ2xeMh0Gl?=
+ =?us-ascii?Q?zxODVxU7FesA+cswJrpEUek07+riy+lg3NMiiUgslvBIkS6AcnoYy2pSGsJS?=
+ =?us-ascii?Q?rFe0wiziaUc6XoGKfCN3Bn9kkDWND03ndicE8OTNHkLGUv1qxc2m7QIcoVWj?=
+ =?us-ascii?Q?WY+XhFs5UeQtir6VAMnsOcQ18v+YHBxKPO9m0LGMXJDGD6F31i15bKg39Ag1?=
+ =?us-ascii?Q?4h47P0K7QlDTKm6MUziSdlxFDQfi0hOWetpF/lDhQtobY3W0fRFVkjrCOWRg?=
+ =?us-ascii?Q?p0isOH9iZwRs/apjMyntdxXHONRZf0bg42m6BePcZOaUbIt790GBPYSMGVgs?=
+ =?us-ascii?Q?/ZoQPJJ9vD1LzgcgCFbDsZZFySKJk/S1uG29APoe64cY04S0aIN3AALTLrd6?=
+ =?us-ascii?Q?kkHt1lXEFeEsF2ihUrBSJe1t5dUlMKBbiUXAvdzOwIbtzcUy04FHlPEmcGtB?=
+ =?us-ascii?Q?2EvsYsh5Jg3y4lj/HTpLRQ5r5BKlmcG4CePKxLBlrUhPX50un0W/3QypK/B5?=
+ =?us-ascii?Q?OhUNcLpv2aE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cmFxdS9QV2prN0lIc2dFUzd3NERjNkNKQ0xGNzR1SEgxT1JOd2tJWmZhQ1pM?=
- =?utf-8?B?Sy9jL1NZWE05VEgza0pmSmt6NmZoZFVjWm90ZlZpTzFuYnNqUk1sY1VWZlR6?=
- =?utf-8?B?QTN1N29uTHFwb2I5UFlsT0RMN2RKM1Nob1QxVWVWMUt2L0dnbXVuUFBML3pl?=
- =?utf-8?B?VllkdTdIWENsRFVpMTVUVklQb3l3enRGZkEyK0Y0bnVMRWFoTnVHUWlIbTFG?=
- =?utf-8?B?UUxERnp0aEM4dWFVSm16V3Y5Y3QzM2U0b29zNHNTSDZZcjc4MTdRVnJkUGxQ?=
- =?utf-8?B?QUZVaklCNmlwWkZKWUwyOWxkdE4wL0RaTlVNbEdwa1Bla1YwNFF1UGdPWld5?=
- =?utf-8?B?Vm0zWXNDOC8zMWM0SlRISlNINTE3WHFIUG9zQUgvQi91UUk3VGVadVVXOVVy?=
- =?utf-8?B?OEg1eVhOSTl5UFo2Tjh2aU1iQXJuWHl1UjU2ZllLUTZEMTl5ZGl0ZnZIWGhS?=
- =?utf-8?B?QjNNeHNpamNFeWhVV2JZa2pSeTN2L2tlbXlBZDB0dktMK3VjWHV6a3lhcXBZ?=
- =?utf-8?B?cHZUcVBvcVp0TGdOcWVScTdQdjdXcTliZ2ROZitXVVZsU0NmcDJaMlgvRHQx?=
- =?utf-8?B?N2xCdHM3d2FGNi85L0ZUem1jOGUrdnoxVmNoWWkySU1qeGpJVTNoQVoyVFkz?=
- =?utf-8?B?dWpsdTU5YzZiY2x4UG1BRjhHYytFU0g3emZhdTFleTRPdlNUVlJQbVdrQnNR?=
- =?utf-8?B?NysyQm0vbHB2bEwrNTlidWgrTzRMd0dtU1dmMnAwWk44YWxTV2ZTVFpoc2ox?=
- =?utf-8?B?dm9pN3QxcW1SVWl1Q2JjVk5wSk94SDI4ZU94dXBsYlgyWHA4VTdTUHZiRG5p?=
- =?utf-8?B?YTZXTmI3dStVeGFvSWFsT0d0M0RxRjc4Y3Zld3NlMWtBYnlCR25COHFtdDNr?=
- =?utf-8?B?RmQyYXJtVEhVZFhoTHByU01uTzdDVGlIcTZqWXlralRSQ2tBWnBDbHNJMVZn?=
- =?utf-8?B?T3paaW9UY1dleG8rZXNid0ptalZmMTMrMFpJR1JiV1RQNFdEN2RzZmtCaGZZ?=
- =?utf-8?B?dS8xOVpiNzQ4aUZvbDJ3MDRxdFEwMGJJU3BrOFBJajJkT1NOR0swM2VCUzdp?=
- =?utf-8?B?K3M0a3RGclhtN1Y4YjRudXFxNXdBS1A2YWxISVV4aGkzNm9aZ0lNbjYvTW1W?=
- =?utf-8?B?YUR3QW5uKy9rYUtEZDVvRXpoWFh4OWtuUk41djdNTU9zMjE0YXhxZUg2c0VT?=
- =?utf-8?B?MzNXNlUvdlhzTXRIRHVzQXE4aGRSQVl6Tk9kT05yTmlKOHc1VWZYaHV3N3Bt?=
- =?utf-8?B?ZlIzdG1XOHYvRjRvOHB3K282VVZIYW5mQ1M3Rk9sZk1nb2hXQkRkTUs2VkpR?=
- =?utf-8?B?V0s5aDFsSUdwRERwVHNMWjF0TmcvRGRJZ0ozQnFIb21LVWRaS2JrV05KbmpL?=
- =?utf-8?B?MlkwQzI4dlUwcjVPT0l0MEw5YlVocEJaRDdDbzNnbmpuWWNJdGhSQUVSWnJZ?=
- =?utf-8?B?VTRVeFQvc3B1OENHeWQ2ejdTMDVlVG1ERlQvT290N2ZaQVdVWkV2UUtqN1ZX?=
- =?utf-8?B?SjJiMkRoSXNOUnF3K3cyRDdmeVV0elhZVDUweUVCeUdXd2pEWXVCTlA0SU81?=
- =?utf-8?B?VjlQSUZhTStlUjAvOEtXamw3ZUcwaTJaOThqUlJjakNkTGxueTZiekplMW1n?=
- =?utf-8?B?d2x2aG1odHVoZnQvbFg1Z2wvQ3psc2hINVlVU09aZlFCVlMzK1lYenN1N2RC?=
- =?utf-8?B?ZWh3N2hmZXdsQllLRDBnQkVmQnhzaVFJVFlwUmVROElLT1h6TmdkL0N1NElG?=
- =?utf-8?Q?gEKNB99vV5rE4b1JzBDndYfKeCgpiIxDKkHKvUf?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5b3abb4-1bf6-4ba2-3a1e-08ddf0190f94
-X-MS-Exchange-CrossTenant-AuthSource: MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
+	=?us-ascii?Q?AtLPaavU+5OnDobSQRllhqp804nhtryr8UdXaMvIQwTMl8Rijwdl7Ssi1ZIR?=
+ =?us-ascii?Q?5kybQvYDMItqxIMnA0nGzVGkrbdNegGGG+1uI0qMIi4DwwHd7APhcevIlZBZ?=
+ =?us-ascii?Q?tiJ8j+ENH65zQGRpV1J5zTNwLD5xlfalcDz8afThIhdhxLG1s8YcBni++4UY?=
+ =?us-ascii?Q?Q3YnqIffOGkVTW8G1otR4jM158KJkQUkVG9RukVwJhqaSX6bJheSda6nIUnm?=
+ =?us-ascii?Q?7HfgOxgIfjQ2SmTOrE8Mv5e4d7HYERlecKc5YVG9Ul88OKZHw/scwV7WVXCA?=
+ =?us-ascii?Q?L0U8uG7UXBQ60Trq3EXgzX5Kw2aqEG23QvEY+b5FVIT1H8wx2zlZegkNvusy?=
+ =?us-ascii?Q?lDPBL33FI96FwEAAZzG9S5CVODzfCOX3ER9Yb0hbKeuYL+v3IaVCBY2QwbTC?=
+ =?us-ascii?Q?RTpJAfeKvEeIyiHB5wZe46Frms2xXuFHNeDgnMA5381FCSPHUuTxAp/NCCpk?=
+ =?us-ascii?Q?OdPA3CBfZ5CLBQIK94QZ0asxV9kWVGgo/t5fjXibzCNy/BDDYixve9Oz+yn4?=
+ =?us-ascii?Q?ICUjTnofajcypZ0L3nerPV9bbFdPgb+4M+oh4KT8/lPTaZm4BlAmtHshYnIu?=
+ =?us-ascii?Q?ISAgK8yrlWJMyeBaKGCnNGz+dn4Fx9qDp08aEIadf7Ves1fgf+9X5U2Ni4mT?=
+ =?us-ascii?Q?elA7C3W1iZ504rWuqGqDXa9qHtkO25Fw7q/JUL8OK3l7NDra0iVDsDjcwKBU?=
+ =?us-ascii?Q?rrKr2swOtuphNhlcYMkPwvVshb+hPyPzrroHqUVsMbvfjHzfHC4CPfF0yw/x?=
+ =?us-ascii?Q?UR8u9eJvzFuepJf+oUetNnfuAOtK+yhq5eb4Id9PaeLm+v+sHnYo+RxYChbc?=
+ =?us-ascii?Q?padH5+qCFJX6z7Y5gQkNXK1zbejBc3TNU7yjvbA0MHQOq3260AjNA6kwLdDe?=
+ =?us-ascii?Q?mYS3baX7iFgE4N2pqjdcYkL35O2korqBQR4h0JM6LIO7hm1VO1No9eKrEnnq?=
+ =?us-ascii?Q?Eja0TB8QAFw5L4v9GuKt4jaEHej26FWw24CmWCQleD9WnE1H1Kmy4rdsIDF2?=
+ =?us-ascii?Q?MFCH7jA79+vzGOlnJvk9Vks4Vzky8Wlqt8SisYtt5EhUNh/HkRPi23DUOcg0?=
+ =?us-ascii?Q?drIPCahEK8xOXObFcJVFzAU9ytXZsbez97MLqI+X9WwfN8q1cALzwtQUAZ93?=
+ =?us-ascii?Q?7UkYqXjPDs59+08LYk6bDGCukUIi9Zb1KnR7hizKpWCsGFU18Du9Iw8eN9rD?=
+ =?us-ascii?Q?UwRPH3Shk6RVYyx3ciWpe5ktIURrxNA4pU8TeWY0auhW93X6WRm1G0S3QT+h?=
+ =?us-ascii?Q?vpeVnPmOIu0Dqa7+DtT+lEPynvnzwCOu4JNAIQvlpBl9A/7ffZ052VpK8FyN?=
+ =?us-ascii?Q?GWC3gXK2OqUCbdNkxBTaykSZQE5mPGzB2KVwNokBDJmPrZBMEDjfb2t2o6as?=
+ =?us-ascii?Q?q16nqALGvpH1J0WMKlOoJ8BSqSX36idwq7GhafYys0O55xiY2vmGc764GdxE?=
+ =?us-ascii?Q?8GZjO2ezvhVXVu0cupCM5CEN4F46rlyWtfbC8u1z9rzQG/p2e0LJ95cNkYcm?=
+ =?us-ascii?Q?ziPfEfuFd2V2ZuwT7LVfc+WIdp2fMtfnY0xmhO6cEjTuG6DQ2cyXX20uK6aN?=
+ =?us-ascii?Q?Wykg9glfDLgXIAyGGHwbA89DgCafhH2b4pTFBtMT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32c3771f-1edc-4999-8492-08ddf01dbe17
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 03:20:58.6624
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 03:54:29.1853
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB10334
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 58WAGbjUvZVz0O2BYurA0w+8Q9v74tZhK1vrQeC5HeJUL6E8f468WtX2A86FkTaqvW9xkDrTi3vfoIgndYcNGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7096
 
+Add support for allocating and managing PCI interrupts (MSI-X, MSI, and
+legacy) in the Rust PCI abstractions. This provides an interface for
+drivers to allocate interrupt vectors and obtain their Linux IRQ
+numbers.
 
-On 9/10/2025 10:56 AM, Inochi Amaoto wrote:
-> On Wed, Sep 10, 2025 at 10:08:39AM +0800, Chen Wang wrote:
+Add the following methods to PCI device:
+- alloc_irq_vectors() for allocating interrupts during probe
+- irq_vector() for obtaining Linux IRQ numbers for each vector
+- free_irq_vectors() for releasing interrupt resources during unbind
 
-[......]
+This is required for Nova's IRQ handling to allocate and manage
+interrupts using PCI interrupt APIs.
 
->> +static void sg2042_pcie_remove(struct platform_device *pdev)
->> +{
->> +	struct cdns_pcie *pcie = platform_get_drvdata(pdev);
->> +
->> +	cdns_pcie_disable_phy(pcie);
->> +}
->> +
-> I think this remove is useless, as it is almost impossible to
-> remove a pcie at runtime.
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+---
+ rust/kernel/pci.rs | 131 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
-I think since we implemented the driver as a module, supporting remove 
-is also a requirement for completeness. So I add this as per request 
-from Manivannan in the last review.
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 887ee611b553..98c3a7a04e88 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -23,6 +23,59 @@
+ };
+ use kernel::prelude::*;
+ 
++/// IRQ type flags for PCI interrupt allocation.
++#[derive(Debug, Clone, Copy)]
++pub enum IrqType {
++    /// Legacy INTx interrupts
++    Legacy,
++    /// Message Signaled Interrupts (MSI)
++    Msi,
++    /// Extended Message Signaled Interrupts (MSI-X)
++    MsiX,
++}
++
++impl IrqType {
++    /// Convert to the corresponding kernel flags
++    const fn to_flags(self) -> u32 {
++        match self {
++            IrqType::Legacy => bindings::PCI_IRQ_INTX,
++            IrqType::Msi => bindings::PCI_IRQ_MSI,
++            IrqType::MsiX => bindings::PCI_IRQ_MSIX,
++        }
++    }
++}
++
++/// Set of IRQ types that can be used for PCI interrupt allocation.
++#[derive(Debug, Clone, Copy, Default)]
++pub struct IrqTypes(u32);
++
++impl IrqTypes {
++    /// Create a set containing all IRQ types (MSI-X, MSI, and Legacy)
++    pub const fn all() -> Self {
++        Self(bindings::PCI_IRQ_ALL_TYPES)
++    }
++
++    /// Add a single IRQ type to the set
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// // Create a set with only MSI and MSI-X (no legacy interrupts)
++    /// let msi_only = IrqTypes::default()
++    ///     .with(IrqType::Msi)
++    ///     .with(IrqType::MsiX);
++    /// ```
++    pub const fn with(mut self, irq_type: IrqType) -> Self {
++        self.0 |= irq_type.to_flags();
++        self
++    }
++
++    /// Get the raw flags value
++    const fn raw(self) -> u32 {
++        self.0
++    }
++}
++
+ /// An adapter for the registration of PCI drivers.
+ pub struct Adapter<T: Driver>(T);
+ 
+@@ -413,6 +466,16 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+ }
+ 
+ impl Device<device::Bound> {
++    /// Free all allocated IRQ vectors for this device.
++    ///
++    /// This should be called to release interrupt resources when they are no longer needed,
++    /// during driver unbind or removal.
++    pub fn free_irq_vectors(&self) {
++        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
++        // `pci_free_irq_vectors` is safe to call even if no vectors are currently allocated.
++        unsafe { bindings::pci_free_irq_vectors(self.as_raw()) };
++    }
++
+     /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
+     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
+     pub fn iomap_region_sized<'a, const SIZE: usize>(
+@@ -445,6 +508,74 @@ pub fn set_master(&self) {
+         // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
+         unsafe { bindings::pci_set_master(self.as_raw()) };
+     }
++
++    /// Allocate IRQ vectors for this PCI device.
++    ///
++    /// Allocates between `min_vecs` and `max_vecs` interrupt vectors for the device.
++    /// The allocation will use MSI-X, MSI, or legacy interrupts based on the `irq_types`
++    /// parameter and hardware capabilities. When multiple types are specified, the kernel
++    /// will try them in order of preference: MSI-X first, then MSI, then legacy interrupts.
++    /// This is called during driver probe.
++    ///
++    /// # Arguments
++    ///
++    /// * `min_vecs` - Minimum number of vectors required
++    /// * `max_vecs` - Maximum number of vectors to allocate
++    /// * `irq_types` - Types of interrupts that can be used
++    ///
++    /// # Returns
++    ///
++    /// Returns the number of vectors successfully allocated, or an error if the allocation
++    /// fails or cannot meet the minimum requirement.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// // Allocate using any available interrupt type in the order mentioned above.
++    /// let nvecs = dev.alloc_irq_vectors(1, 32, IrqTypes::all())?;
++    ///
++    /// // Allocate MSI or MSI-X only (no legacy interrupts)
++    /// let msi_only = IrqTypes::default()
++    ///     .with(IrqType::Msi)
++    ///     .with(IrqType::MsiX);
++    /// let nvecs = dev.alloc_irq_vectors(4, 16, msi_only)?;
++    /// ```
++    pub fn alloc_irq_vectors(
++        &self,
++        min_vecs: u32,
++        max_vecs: u32,
++        irq_types: IrqTypes,
++    ) -> Result<u32> {
++        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
++        // `pci_alloc_irq_vectors` internally validates all parameters and returns error codes.
++        let ret = unsafe {
++            bindings::pci_alloc_irq_vectors(self.as_raw(), min_vecs, max_vecs, irq_types.raw())
++        };
++
++        to_result(ret)?;
++        Ok(ret as u32)
++    }
++
++    /// Get the Linux IRQ number for a specific vector.
++    ///
++    /// This is called during driver probe after successful IRQ allocation
++    /// to obtain the IRQ numbers for registering interrupt handlers.
++    ///
++    /// # Arguments
++    ///
++    /// * `vector` - The vector index (0-based)
++    ///
++    /// # Returns
++    ///
++    /// Returns the Linux IRQ number for the specified vector, or an error if the vector
++    /// index is invalid or no vectors are allocated.
++    pub fn irq_vector(&self, vector: u32) -> Result<u32> {
++        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
++        let irq = unsafe { bindings::pci_irq_vector(self.as_raw(), vector) };
++
++        to_result(irq)?;
++        Ok(irq as u32)
++    }
+ }
+ 
+ // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+-- 
+2.34.1
 
-Thanks，
-
-Chen
-
-> Regards,
-> Inochi
 
