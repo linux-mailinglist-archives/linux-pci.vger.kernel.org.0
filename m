@@ -1,149 +1,127 @@
-Return-Path: <linux-pci+bounces-35846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8F2DB51F7A
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:51:57 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DA8AB51F89
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 19:56:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 224BE7BE33F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:47:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 05E824E2121
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Sep 2025 17:56:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2169431D377;
-	Wed, 10 Sep 2025 17:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89BAE32A3C3;
+	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6NDtd5A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRe4zWcM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E346A24A058;
-	Wed, 10 Sep 2025 17:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C456258EC9;
+	Wed, 10 Sep 2025 17:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757526533; cv=none; b=Omi43LN6BX5sNXr5PvC0sWHIAQfrKuKzPwZ/Ye596LckL5wR2a/kTFpU5ueeArJvRbMIS3alkcWqvffMfaL+IyIq4BPkdlkQeZ+cZmJyOuxhvzTEDC8ap4bBeRH+FMn85KOrSpq793VUFS6NWXIRpYg4hw3+qInEjuDgiJykW88=
+	t=1757526999; cv=none; b=t/bkzjOCGHSCVD81og+QKGiEDXJ5wbeW5Oqr3goZvyVhRl9Jf2HB7khOzX/8fzYJUW58OA9VRnmLx09hfGO9cgyf9kPz8Wo+KWXzOqmPp3VvjAeP0cf1WcYZf2nMmc/lV0JOHoJBr38BfLVvU564BxUOKfyFs++3UiT0eUSJLWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757526533; c=relaxed/simple;
-	bh=JWkrCD/pUkyX9wjEhNii7+JjAOcFy0ueHFktHUQ0t80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L9CZy39Ya0I9YHv2n8oB37u4DFd8enq/3lAhc5ExD16no1xbpe8OhAITHQrjVmcZdrNyE5JCQ9Ix0Q3S1g+i6wavRI4ISPlkwjoifU1ZGjtM3/O/TU44k0EEjajZ1BlhWHKYJKLX3P1tzft60FzrmDvpIF6tcQJqFZU5srcIZTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6NDtd5A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8F4C4CEF0;
-	Wed, 10 Sep 2025 17:48:51 +0000 (UTC)
+	s=arc-20240116; t=1757526999; c=relaxed/simple;
+	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fMSWoF37duoKf2ztpto+hkhqB9EpuBY8zdShtawCqlAZsX3x48oZucDzPUloe8HEwl9qrVfDl/oYNWvmQbQ+3DzzuwQ+OQO9t9rJX2Hm58nD4Cy60VE6nIwiEFqm+gHDsGoAK8to4DM0RcsVqpUE0ak6XGbxPkNr/e36ivsWArI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRe4zWcM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AD3C4CEEB;
+	Wed, 10 Sep 2025 17:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757526531;
-	bh=JWkrCD/pUkyX9wjEhNii7+JjAOcFy0ueHFktHUQ0t80=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d6NDtd5AvkZ3cAyHiBAlhsfdUR3l9P2CxyKtdFH5/bGkhOLVPbOeOSka+H44aAKBn
-	 K/b1NClF/FVpo7KBFx/V6Lm5W5MqD3jLJcAVwJCwgIma8vkBVngnmL3Rjg5giNXbss
-	 GcsrEwC0wzJF6OlEkbBWdmv+S0xN55czfk1SKsmU5/bbzGwquE1FQ5KxZoNXHh5bV3
-	 DhGcyt2/rm+pcCmSKnhUsCXHRHPuR077rJpQCJTHoPfmo/sQQB/OcdvpLSzJcPI+M4
-	 51KrcuUa7vVoDJFlhhzMvuXO6Gnwfuyuu9tRoBj4EhQG7+YAxu+jIXI6IOdaSG5+ac
-	 HAEB2JxbRjDDg==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-62177052206so2196064eaf.1;
-        Wed, 10 Sep 2025 10:48:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVVCiY7YEmXf//AT1snrQyk+A/aJW8w2XGIckcuFszwUAJDsTtyEMkwD8IIYXomJKtwdHCnzzWPJZ+K2OWD3ZoveaQQ@vger.kernel.org, AJvYcCVrGWYqk/k7ifUeAO2pyWzAdslqNLbDBmuncjgG6nx4ZkOj3mD5v8/treVwvO3N38V7AmYoPBHw/cc=@vger.kernel.org, AJvYcCXG6A7fBmrreliZ9tos2HRvpDmHXkZ8ZGysm3FHnnIHMaNhwMsBz1x7wGWGZBe5kDBxFFSk80BGNrk=@vger.kernel.org, AJvYcCXbdhzvfztzdZSsxvyp6U+6+yuFU178kxwiISf4arEFHoiRX92rn8LIX2ivHs0H08+jtG+20583R8CXdA==@vger.kernel.org, AJvYcCXdfG23CaRvalcussxjsbJp3CUQ4OYMRY0y7jxtmhl1MLNqnCOPdBFWf7j2lhsddxSmIW9vDU7bsN76@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVoa/xa7IStNgGaGWsn6v+mpLhncvW1UNMyeKQZUPOdYWRl7RC
-	EtzQ0i2dNlaiVh/N/ctTeugJEpa/ikku4V33HVP6+80Yr9RkyD3Xo8CfSVx9cwE4FXfAer3nWUm
-	kf6RUah09wy4e7f/dBnozb+b9I7cqWyc=
-X-Google-Smtp-Source: AGHT+IHIQIF5cP+OhlL3KucdzEwULKP8UbyHlNW3Z/2yYgUbnpkKJtfuorEsV1W09cBVlr7j0fot96/NnMtI6HNTGd4=
-X-Received: by 2002:a05:6820:221c:b0:621:75a2:6791 with SMTP id
- 006d021491bc7-6217897ccc2mr7019038eaf.0.1757526530846; Wed, 10 Sep 2025
- 10:48:50 -0700 (PDT)
+	s=k20201202; t=1757526998;
+	bh=dfx1QaAI0kMvhYWbrVkmXlfwZKY2ldtz8H0dhNG7WB0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jRe4zWcMZHGYVN74V/1AJ/RR2YxEknyGXojZPMJPAXKzCcUsWiYO7XK3pRkSWg/9H
+	 +2fDQbPHhT/8ZjKfE5OWvhwZ1xfBaj68k5xQiSjAOvdX84b1dgC1EC7/20wvrPNHcA
+	 jCKo676PQIRA938vU+osLyFjB3p6WfF6mWtMHbnLMPe+61M0sFF0OsSOkZP3AIQO0k
+	 DRc6vwwAL8fUMqiz4Cw20Y4AxKihAd848QAKNyOhzt03TUZEKHkC8k1EIk6B+h2dhp
+	 wi7XUzEXqldcZ+0qEddD6SbaF91V9KHJ1ymZAKeTZfUlS+9B8KKyQENONIHBsVt925
+	 xPMz0GqWHu7Nw==
+Date: Wed, 10 Sep 2025 12:56:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Verma, Devendra" <Devendra.Verma@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>
+Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <20250910175637.GA1541229@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909191619.2580169-1-superm1@kernel.org> <20250909191619.2580169-8-superm1@kernel.org>
-In-Reply-To: <20250909191619.2580169-8-superm1@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 10 Sep 2025 19:48:39 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g8Hq4nfrkEPKByesAZ7SmKz4N8Cm9H_AmK_fez=0QtWw@mail.gmail.com>
-X-Gm-Features: Ac12FXyd_vL1lzVAXI-I3rJHVcPaSI6vkfuoiTOhlX1EtvOyF4XzkNpq89iEtOs
-Message-ID: <CAJZ5v0g8Hq4nfrkEPKByesAZ7SmKz4N8Cm9H_AmK_fez=0QtWw@mail.gmail.com>
-Subject: Re: [PATCH v7 07/12] PCI/PM: Run bridge power up actions as part of
- restore phase
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Pavel Machek <pavel@kernel.org>, 
-	Len Brown <lenb@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	"open list:HIBERNATION (aka Software Suspend, aka swsusp)" <linux-pm@vger.kernel.org>, 
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>, 
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, 
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, 
-	Kai-Heng Feng <kaihengf@nvidia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	=?UTF-8?Q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>, 
-	Eric Naim <dnaim@cachyos.org>, "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR12MB81200F594C9B842C563F3DFE950EA@SA1PR12MB8120.namprd12.prod.outlook.com>
 
-On Tue, Sep 9, 2025 at 9:16=E2=80=AFPM Mario Limonciello (AMD)
-<superm1@kernel.org> wrote:
->
-> Suspend resume actions will check the state of the device and whether
-> bus PM should be skipped.  These same actions make sense during hibernati=
-on
-> image restore.
+On Wed, Sep 10, 2025 at 12:30:39PM +0000, Verma, Devendra wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
 
-Not really (see below).
+[redundant headers removed]
 
-They kind of would have made sense in the error code path attempting
-to roll back the power-off transition, but I'm not sure if this is
-worth the hassle because it would require ->restore() to be able to
-handle two different cases without knowing which case it is handling.
+> > On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
+> > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > > The current code does not have the mechanisms to enable the DMA
+> > > transactions using the non-LL mode. The following two cases are added
+> > > with this patch:
 
->  Apply them there as well.
->
-> Tested-by: Eric Naim <dnaim@cachyos.org>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
-> v7:
->  * Reword title
-> v5:
->  * Split out patch
-> ---
->  drivers/pci/pci-driver.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 571a3809f163a..fb6f1f60b2f1f 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1246,10 +1246,15 @@ static int pci_pm_restore_noirq(struct device *de=
-v)
->  {
->         struct pci_dev *pci_dev =3D to_pci_dev(dev);
->         const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : N=
-ULL;
-> +       pci_power_t prev_state =3D pci_dev->current_state;
+> > > +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
+> > > +                              struct dw_edma_pcie_data *pdata,
+> > > +                              enum pci_barno bar) {
+> > > +     if (pdev->vendor == PCI_VENDOR_ID_XILINX)
+> > > +             return pdata->phys_addr;
+> > > +     return pci_bus_address(pdev, bar);
+> >
+> > This doesn't seem right.  pci_bus_address() returns
+> > pci_bus_addr_t, so pdata->phys_addr should also be a
+> > pci_bus_addr_t, and the function should return pci_bus_addr_t.
+> >
+> > A pci_bus_addr_t is not a "phys_addr"; it is an address that is
+> > valid on the PCI side of a PCI host bridge, which may be different
+> > than the CPU physical address on the CPU side of the bridge
+> > because of things like IOMMUs.
+> >
+> > Seems like the struct dw_edma_region.paddr should be renamed to
+> > something like "bus_addr" and made into a pci_bus_addr_t.
+> 
+> In case of AMD, it is not an address that is accessible from host
+> via PCI, it is the device side DDR offset of physical address which
+> is not known to host,that is why the VSEC capability is used to let
+> know host of the DDR offset to correctly programming the LLP of DMA
+> controller.  Without programming the LLP controller will not know
+> from where to start reading the LL for DMA processing. DMA
+> controller requires the physical address of LL present on its side
+> of DDR.
 
-In the hibernation restore case, pci_dev->current_state is irrelevant
-because the system has gone through the entire init in the BIOS and
-boot loader, and the boot (restore) kernel before the control goes
-back to the image kernel which runs the ->restore() callbacks.  It may
-have changed three times since it was set during power-off.
+I guess "device side DDR offset" means this Xilinx device has some DDR
+internal to the PCI device, and the CPU cannot access it via a BAR?
 
-> +       bool skip_bus_pm =3D pci_dev->skip_bus_pm;
+But you need addresses inside that device DDR even though the CPU
+can't access it, and the VSEC gives you the base address of the DDR?
 
-This one is irrelevant either in that case.
+This makes me wonder about how dw_edma_region is used elsewhere
+because some of those places seem like they assume the CPU *can*
+access this area.
 
->
->         pci_pm_default_resume_early(pci_dev);
->         pci_fixup_device(pci_fixup_resume_early, pci_dev);
->
-> +       if (!skip_bus_pm && prev_state =3D=3D PCI_D3cold)
-> +               pci_pm_bridge_power_up_actions(pci_dev);
-> +
->         if (pci_has_legacy_pm_support(pci_dev))
->                 return 0;
->
-> --
+dw_pcie_edma_ll_alloc() uses dmam_alloc_coherent(), which allocates
+RAM and gives you a CPU virtual address (ll->vaddr.mem) and a DMA
+address (ll->paddr).  dw_edma_pcie_probe() will later overwrite the
+ll->paddr with the DDR offset based on VSEC.
+
+But it sounds like ll->vaddr.mem is useless for Xilinx devices since
+the CPU can't access the DDR?
+
+If the CPU can't use ll->vaddr.mem, what happens in places like
+dw_hdma_v0_write_ll_data() where we access it?
+
+Bjorn
 
