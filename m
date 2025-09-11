@@ -1,170 +1,167 @@
-Return-Path: <linux-pci+bounces-35865-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35866-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65890B52828
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 07:34:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A7A6B52AB3
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 09:56:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05F274872B1
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 05:34:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 312F81BC394A
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 07:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4321123A994;
-	Thu, 11 Sep 2025 05:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0A4C2C029A;
+	Thu, 11 Sep 2025 07:56:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFT6pShU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pgc9bvnw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3FB329F29;
-	Thu, 11 Sep 2025 05:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ABE2C08AC;
+	Thu, 11 Sep 2025 07:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757568840; cv=none; b=TDUrFH6HTFo9UIFRNV6a5S4znpTNv7K6b7B6yL5yirWf34r5i4/AFbMn9lMD7xB4vMHLadJRmyc5cEF1Ti2OYjFcQjsUDHQUwPTejFHef0XTOAqcH2JZ9hAHl5NjJM+9su0gxlJSfSFe3ryCq69RhwdJDGpEcxhAIfQgUhsxP80=
+	t=1757577382; cv=none; b=XwttPDhdQtf8ImqUeuFRprJobsi7qYjmb9PPDnlxj7ust1H7LoxWtRZjcq4oCPvqzSlqmO/nn+iJDO8AQz7nzHHhDRplNjYY+Mk666co0x9xfFSugu/UgfAOrtCG8jqc1swWfnRo7212jc0PHmFnR69jX/WErGH28Rc/dlXVsFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757568840; c=relaxed/simple;
-	bh=5vWUqhvI4pD7PEFK16VOGInaekHB8D/PZdNkUx+vkzo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=m0IVGX4z25AZcOI7+so2E6uaFFAbEkQHwlJI4p8fhiG4rsM1umOH7EhFHmM3+HhXp7YF1Izxro0rqB5jeAGO0koAOwBQ3JvYnb06IxwYYP1T7JzB1P8EzvM2G8FIxSoVi09VIkqPUwx21hUiZZEm/oB+sp/Zz25vTuPp3ut3XAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFT6pShU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA597C4CEF1;
-	Thu, 11 Sep 2025 05:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757568839;
-	bh=5vWUqhvI4pD7PEFK16VOGInaekHB8D/PZdNkUx+vkzo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=BFT6pShUwC2LHdJj1bD7Cyqj0kBjdg10vsYiOhwd6YIqPHY3x0Rc2grk5Z0mCaj+f
-	 YlhZPsqmbVhb0043ePmfWFOwoN0s0k87pK/mSg5cTOHHNNT28CP80SL2mvi6JY0a8D
-	 PfVl0GorQ+dqp1v/FWOX1UYd4I0ZEMl5StDZov0SMkhhbdD+0P0/Q+DrOUA8QWi62a
-	 4fLqaBHMgfAZ1FF6eRyFmLr9DIEOpe7mnO5crtxbdZfabRTuLmEvJyWngMtuPmnRpU
-	 wONyDWq5cbRtqpCSVp9cYV4ZtkAgTLDZIPevlQxwTqVHdbYJhZxdLFEQA/3YMExDfO
-	 +T+cHRoziMnPA==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Arto Merilainen <amerilainen@nvidia.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, aik@amd.com,
-	lukas@wunner.de, Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, kvmarm@lists.linux.dev,
-	linux-coco@lists.linux.dev
-Subject: Re: [RFC PATCH v1 34/38] coco: guest: arm64: Validate mmio range
- found in the interface report
-In-Reply-To: <c3291a06-1154-4c89-a77b-73e2a3ef61ee@nvidia.com>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-35-aneesh.kumar@kernel.org>
- <d57d12ce-78c6-4381-80eb-03e9e94f9903@nvidia.com>
- <c3291a06-1154-4c89-a77b-73e2a3ef61ee@nvidia.com>
-Date: Thu, 11 Sep 2025 11:03:50 +0530
-Message-ID: <yq5ay0ql364h.fsf@kernel.org>
+	s=arc-20240116; t=1757577382; c=relaxed/simple;
+	bh=NdLKAQlWUr0SnI1fWCp+SY3s4Yp8zDJc9KTErx0pre0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=J+PIdW+pWqEamePuK2udi79z2kH4TDfB7ufgmKiEZs7U5H/hO6TlaPulIEPnXgQn58oSAn21EpO9fKWk1uPD5N6xf6Gp+Ln5ZTrO+8teTIFq+smLY0APL3S/XWB6y/oHvodzInDtzo1QVkrWol2IBKzbdIDlh5tx7aIddUEzsZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pgc9bvnw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757577381; x=1789113381;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NdLKAQlWUr0SnI1fWCp+SY3s4Yp8zDJc9KTErx0pre0=;
+  b=Pgc9bvnwgYzyS/oxiqWP3c9lw0aP9dn6rxdlL3PzA8mxIhVDLI7VWEIc
+   PXuh849AQsKYhULkJnZnk7DSxbw9JozFxpOraUc/j7xLlm5D6kCDTjD7Y
+   qz3Zh2FW3XvqrvYZ/V4Qcc2VyOW57vGxXyFD7tUNySMsZBPfRvBabDVW5
+   Edv4vebcGuwLbMEUn3zKVInFdT7tBMpXOkttM6wP6bImWYGr/7sZa0IJe
+   WHFpyn+L6Qlwkc3v+P5xRvCIVIy3Y22KYq6QWDcZ3NF05oOk8KvXoYzyy
+   OFLKYQtZLQWtlNrvxbZR1QUpDksD97mlyB6mXBb9oV/9ganG0ASleeG5L
+   Q==;
+X-CSE-ConnectionGUID: S31QwmsYTrWq/jWcxfR/fg==
+X-CSE-MsgGUID: vFxmZBZaSb6V1uc1Zvmy7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="58942205"
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="58942205"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:56:20 -0700
+X-CSE-ConnectionGUID: vPGNxPT3TFm13imjCknavQ==
+X-CSE-MsgGUID: PTSScRSiSEyaM2fCiqO+cQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="210757574"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:56:13 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	David Airlie <airlied@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 00/11] PCI: Resizable BAR improvements
+Date: Thu, 11 Sep 2025 10:55:54 +0300
+Message-Id: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Arto Merilainen <amerilainen@nvidia.com> writes:
+pci.c has been used as catch everything that doesn't fits elsewhere
+within PCI core and thus resizable BAR code has been placed there as
+well. Move Resizable BAR related code to a newly introduced rebar.c to
+reduce size of pci.c. After move, there are no pci_rebar_*() calls from
+pci.c indicating this is indeed well-defined subset of PCI core.
 
-> On 31.7.2025 14.39, Arto Merilainen wrote:
->> On 28.7.2025 16.52, Aneesh Kumar K.V (Arm) wrote:
->>=20
->>> +=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < interface_report->mmio_range_=
-count; i++,=20
->>> mmio_range++) {
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*FIXME!! units in 4K size*/
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 range_id =3D FIELD_GET(TSM_=
-INTF_REPORT_MMIO_RANGE_ID,=20
->>> mmio_range->range_attributes);
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* no secure interrupts */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (msix_tbl_bar !=3D -1 &&=
- range_id =3D=3D msix_tbl_bar) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_=
-info("Skipping misx table\n");
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 con=
-tinue;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (msix_pba_bar !=3D -1 &&=
- range_id =3D=3D msix_pba_bar) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_=
-info("Skipping misx pba\n");
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 con=
-tinue;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +
->>=20
->>=20
->> MSI-X and PBA can be placed to a BAR that has other registers as well.=20
->> While the PCIe specification recommends BAR-level isolation for MSI-X=20
->> structures, it is not mandated. It is enough to have sufficient=20
->> isolation within the BAR. Therefore, skipping the MSI-X and PBA BARs=20
->> altogether may leave registers unintentionally mapped via unprotected=20
->> IPA when they should have been mapped via protected IPA.
->>=20
->> Instead of skipping the whole BAR, would it make sense to determine
->> where the MSI-X related regions reside, and skip validation only from=20
->> these regions?
->
-> I re-reviewed my suggestion, and what I proposed here seems wrong.=20
-> However, I think there is a different more generic problem related to=20
-> the MSI-X table, PBA and non-TEE ranges.
->
-> If a BAR is sparse (e.g., it has TEE pages and the MSI-X table, PBA or=20
-> non-TEE areas), the TDISP interface report may contain multiple ranges=20
-> with the same range_id (/BAR id). In case a BAR contains some registers=20
-> in low addresses, the MSI-X table and other registers after the MSI-X=20
-> table, the interface report is expected to have two ranges for the same=20
-> BAR with different "first 4k page" and "size" fields.
->
-> This creates a tricky problem given that RSI_VDEV_VALIDATE_MAPPING=20
-> requires both the ipa_base and pa_base which should correspond to the=20
-> same location. In above scenario, the PA of the first range would=20
-> correspond to the BAR base whereas the second range would correspond to=20
-> a location residing after the MSI-X table.
->
-> Assuming that the report contains obfuscated (but linear) physical=20
-> addresses, it would be possible to create heuristics for this case.=20
-> However, the fundamental problem is that none of the "first 4k page"=20
-> fields in the ranges is guaranteed to correspond to the base of any BAR:=
-=20
-> Consider a case where the MSI-X table is in the beginning of a BAR and=20
-> it is followed by a single TEE range. If the MSI-X is not locked, the=20
-> "first 4k page" field will not correspond to the beginning of the BAR.=20
-> If the realm naiviely reads the ipa_base using pci_resouce_n() and=20
-> corresponding pa_base from the interface report, the addresses won't=20
-> match and the validation will fail.
->
-> It seems that interpreting the interface report cannot be done without=20
-> knowledge of the device's register layout. Therefore, I don't think the=20
-> ranges can be validated/remapped automatically without involving the=20
-> device driver, but there should be APIs for reading the interface=20
-> report, and for requesting making specific ranges protected.
->
+Endpoint drivers perform Resizable BAR related operations which could
+well be performed by PCI core to simplify driver-side code. This
+series adds a few new API functions to that effect and converts the
+drivers to use the new APIs (in separate patches).
 
-But we need to validate the interface report before accepting the device,
-and the device driver is only loaded after the device has been accepted.
+While at it, also convert BAR sizes bitmask to u64 as PCIe spec already
+specifies more sizes than what will fit u32 to make the API typing more
+future-proof. The extra sizes beyond 128TB are not added at this point.
 
-Can we assume that only the MSI-X table and PBA ranges may be missing
-from the interface report, while all other non-secure regions are
-reported as NON-TEE ranges?
+These are based on pci/main, there are two minor conflicts with the
+work in pci/resource but I'm hesitant to base this on top of it as this
+is otherwise entirely independent. If we end up having to pull the
+bridge window select changes, there should be no reason why this does
+have to become collateral damage (so my suggestion, if this is good to
+go in this cycle, to take this into a separate branch than pci/resource
+and deal with those small conflicts while merging into pci/next).
 
-If so, we could retrieve the MSI-X guest real address details from
-config space and map the beginning of the BAR correctly.
+I've tested sysfs resize, i915, and xe BAR resizing functionality. In
+the case of xe, I did small hack patch as its resize is anyway broken
+as is because BAR0 pins the bridge window so resizing BAR2 fails. My
+hack caused other problems further down the road (likely because BAR0
+is in use by the driver so releasing it messed assumptions xe driver
+has) but the BAR resize itself was working which was all I was
+interested to know. I'm not planning to pursue fixing the pinning
+problem within xe driver because the core changes to consider maximum
+size of the resizable BARs should take care of the main problem by
+different means.
 
-Dan / Yilun =E2=80=94 how is this handled in Intel TDX?
+Some parts of this are to be used by the resizable BAR changes into the
+resource fitting/assingment logic but these seem to stand on their own
+so sending these out now to reduce the size of the other patch series.
 
-From what I can see, the AMD patches appear to encounter the same issue.
 
--aneesh
+Ilpo Järvinen (11):
+  PCI: Move Resizable BAR code into rebar.c
+  PCI: Cleanup pci_rebar_bytes_to_size() and move into rebar.c
+  PCI: Move pci_rebar_size_to_bytes() and export it
+  PCI: Improve Resizable BAR functions kernel doc
+  PCI: Add pci_rebar_size_supported() helper
+  drm/i915/gt: Use pci_rebar_size_supported()
+  drm/xe/vram: Use PCI rebar helpers in resize_vram_bar()
+  PCI: Add pci_rebar_get_max_size()
+  drm/xe/vram: Use pci_rebar_get_max_size()
+  drm/amdgpu: Use pci_rebar_get_max_size()
+  PCI: Convert BAR sizes bitmasks to u64
+
+ Documentation/driver-api/pci/pci.rst        |   3 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c  |   8 +-
+ drivers/gpu/drm/i915/gt/intel_region_lmem.c |  10 +-
+ drivers/gpu/drm/xe/xe_vram.c                |  32 +-
+ drivers/pci/Makefile                        |   2 +-
+ drivers/pci/iov.c                           |   9 +-
+ drivers/pci/pci-sysfs.c                     |   2 +-
+ drivers/pci/pci.c                           | 145 ---------
+ drivers/pci/pci.h                           |   5 +-
+ drivers/pci/rebar.c                         | 318 ++++++++++++++++++++
+ drivers/pci/setup-res.c                     |  78 -----
+ include/linux/pci.h                         |  15 +-
+ 12 files changed, 354 insertions(+), 273 deletions(-)
+ create mode 100644 drivers/pci/rebar.c
+
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+-- 
+2.39.5
+
 
