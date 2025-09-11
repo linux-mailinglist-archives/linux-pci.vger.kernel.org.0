@@ -1,162 +1,206 @@
-Return-Path: <linux-pci+bounces-35932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F75DB53B4E
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 20:21:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1333B53B76
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 20:33:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E36851743CE
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 18:21:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7741A1CC64FF
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 18:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3087135A2BE;
-	Thu, 11 Sep 2025 18:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63855369983;
+	Thu, 11 Sep 2025 18:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeHAljJD"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ScsAs25f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DA847F4A;
-	Thu, 11 Sep 2025 18:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E6E27FD5B;
+	Thu, 11 Sep 2025 18:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757614861; cv=none; b=hi5SiViCo+uocWIe8skyc4I0SLMe0U/Kzgapni4iPGT5I1VxpynyIjd9+wurNYmcRC22XDqmCQQAn8qBHeKfFksU7UvT/Mb6BsJVmDtapNooGnfamcPhr2+JJrFj7CYA1cgzZDvJe5BQfITZAabDxf1lAoYOTgnFPXwaIKWfIYI=
+	t=1757615596; cv=none; b=Rf3ZLS60m3b4aOmAjsnHmyaD104X8kUVuG6LTCO9/ZUNrZdCz1grzkYaFYoLmpj+wvfYaYs+KZgLUXcqK040/mkyzG6wmfB64clSBeKkkitPnM0+LFZFVRZrYKNIsYdcXQjMmtlzM/qLnCKeSFN/lEPoq9NzlMQ/1b75W2V33fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757614861; c=relaxed/simple;
-	bh=o+sxduyxa8P2is/JjSQ9wBtUm8hKM5vkrOVW/URvt50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDIMopsdH+7tGt6hnZqEFtM0Wmkq0k5+v3AMcG5LPwxrp4MJrwnJHK7xRWg7CGrUtObZq6P1/+ao2Iko7v75d218j6VtztvYSH6vtacHBRQAC4wNT3xeNRsQoPCeOVgO8gZNAu10IsTTVieIMyeoYke7Rssw4BRv8iBXjucYwjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeHAljJD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAA6C4CEF0;
-	Thu, 11 Sep 2025 18:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757614860;
-	bh=o+sxduyxa8P2is/JjSQ9wBtUm8hKM5vkrOVW/URvt50=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CeHAljJDzJdup7w9zQX9/GNFkTzX6d6ORTJhqykt+uG10pc8rhwqpixStBAK6ISou
-	 9ofRSL0uKG0Ey1N33hqbnSyi8KtF5bgXi0bnndxi51NfUzKhN1OpofUEcehsnq+WHD
-	 Yhj9f8iZuSV1iicRNV3S11bcVEwdL7G4DLm4x1mTipYlWLDPeDdeHx5SYwsVjT8LVA
-	 RzDQYilJZ8eyw9XgCePXgw7pqpjsDNcjVSFdoRCRU8PNMq0HNWQZVhN/LCwthHbzXs
-	 9CMMnKcRX4V6y4qZ7fJO1vLw1w+UbkQ8/k4wOC8XVgOw0PlFam+ljNDWcFTlsKQlwC
-	 Egpsg2MIOFmew==
-Message-ID: <2833916c-f4e7-4fd3-9d16-f9b544922921@kernel.org>
-Date: Thu, 11 Sep 2025 13:20:55 -0500
+	s=arc-20240116; t=1757615596; c=relaxed/simple;
+	bh=ck5UhhM7ahmNVtuybHiqx1PE1IHgAdJHgJZx+XtttAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D8Zk/KekYn/mosF5h3bns00AIYQjLigKqI2iBKRUeApS4AZgwufg+3Dy+V/ZooQKowNnT7uSCSiCc4HEQOqyw25XnjG7+wm/GuFJE46X5TASn6M5LrEmxPk2UUBf2YU0rnyf7sy2e4ZzBRFKwx1uFRNuC5xLIxvPpngTvDG3s4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ScsAs25f; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58B9u5Ka026934;
+	Thu, 11 Sep 2025 18:33:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=QWix6YwOudrids1O38gaCCzCkdi4dxsLUSL/w46KJ
+	Zk=; b=ScsAs25fLQPd3+Mddi6UBaeuDanD8nEmS3DbqvGaWA7Ikkkt8MW+M3FLB
+	GL7OITRvYNu21DO5ouMAW19PgUerfPca0nGbnGxSmVkGVs+wZzibpxJKgV8hkU+a
+	JSYqc4D9MIJ8981ZoCWwo0x+h/qgdkYx8v1LkVS0ZBREOLw0JtBFy6oHf0dGQYHD
+	jzbdrASPXUnSQBRbW6W2io6dqdC+IUT1JZuUCJjxqFcEF5RFW8wPrLitDBt8g762
+	lkD8TuAcJ5+WwCl80dCNkUWTDwU3dGue+6airUUwQ9mf6nttbBW0jeecMdPoBnA7
+	TORRcO6crVNN0p9TyvvMc+NeBUJKw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490cmx6n8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Sep 2025 18:33:10 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58BI0u8s017172;
+	Thu, 11 Sep 2025 18:33:09 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4911gmq2c3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Sep 2025 18:33:09 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58BIX82e32310010
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Sep 2025 18:33:08 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6466858059;
+	Thu, 11 Sep 2025 18:33:08 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B03A058058;
+	Thu, 11 Sep 2025 18:33:07 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.249.32])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 11 Sep 2025 18:33:07 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: alex.williamson@redhat.com, helgaas@kernel.org, alifm@linux.ibm.com,
+        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+Subject: [PATCH v3 00/10] Error recovery for vfio-pci devices on s390x
+Date: Thu, 11 Sep 2025 11:32:57 -0700
+Message-ID: <20250911183307.1910-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/PM: Move ASUS EHCI workaround out of generic code
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Alan Stern <stern@rowland.harvard.edu>,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
- Timo Jyrinki <timo.jyrinki@iki.fi>, Ernst Persson <ernstp@gmail.com>,
- Steven Harms <sjharms@gmail.com>, James Ettle <james@ettle.org.uk>,
- Nick Coghlan <ncoghlan@gmail.com>, Weng Xuetian <wengxt@gmail.com>,
- Andrey Rahmatullin <wrar@wrar.name>, Boris Barbour <boris.barbour@ens.fr>,
- Vlastimil Zima <vlastimil.zima@gmail.com>, David Banks <amoebae@gmail.com>,
- Michal Jaegermann <michal@harddata.com>, Chris Moeller <kode54@gmail.com>,
- Daniel Fraga <fragabr@gmail.com>, Javier Marcet <jmarcet@gmail.com>,
- Pavel Pisa <pisa@cmp.felk.cvut.cz>
-References: <75e4ae507fa4faddd063a3a9e17d319ed84529b6.1757562971.git.lukas@wunner.de>
- <80980751-64db-4dc2-9516-03046e8b4b31@kernel.org>
- <CAJZ5v0idqEPUpA0uBb_PAaKe0KNqCt0xLskPThPwtsfh3eCdxg@mail.gmail.com>
- <fd9629df-0718-4968-b22b-cad36d870f63@kernel.org>
- <CAJZ5v0hJHxVvyNdvDSZg=Pn9=xEqO79T4Ou9toc0Qofi777NcA@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAJZ5v0hJHxVvyNdvDSZg=Pn9=xEqO79T4Ou9toc0Qofi777NcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ncZO6VLDxwHY4cwuEFFdKqBAD1ApAOpq
+X-Proofpoint-ORIG-GUID: ncZO6VLDxwHY4cwuEFFdKqBAD1ApAOpq
+X-Authority-Analysis: v=2.4 cv=J52q7BnS c=1 sm=1 tr=0 ts=68c315e6 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=pxXGJ1xoj55wCGANvjsA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAyNSBTYWx0ZWRfX1zHPwCY/WLna
+ 6T4ZOT5K7jlD0WX3MYWiZY07QVnmL4ZgDgQrK73NKHJloUIcghLZ9+7KgpYY3HMmwDEgumVIVz1
+ v/UMGYKqr/RFiHOROPwcRdN1malMxkKFXA4ialCzjWzj8W4UL8T9joI2pOPXp9CqwGppB/TbUHG
+ zo1lw4qEgdwz9/eqcYFxvBalmQF1mhFGJ5a3+Wl2K35WNM54LLAPUuqj984w5Izkuwpt9vefCZb
+ UqgIafsyFChRV7hOogJHQsTO8A5Ky+/hBXcDbm79P/0H3BBveJGjh6Gx8jbQlCjZTOp+SOCQscv
+ wLLkm71TmBk/HiyMvmEYYaK1352dJ56rg7oh3duHzGNzjqYkZf67v+aACyzZxKchdAcHWW1KSV5
+ PjLBC0w1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-11_03,2025-09-11_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1011 suspectscore=0 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060025
 
-On 9/11/25 8:56 AM, Rafael J. Wysocki wrote:
-> On Thu, Sep 11, 2025 at 3:46 PM Mario Limonciello <superm1@kernel.org> wrote:
->>
->> On 9/11/25 8:43 AM, Rafael J. Wysocki wrote:
->>> On Thu, Sep 11, 2025 at 3:34 PM Mario Limonciello <superm1@kernel.org> wrote:
->>>>
->>>> On 9/11/25 8:11 AM, Lukas Wunner wrote:
->>>>> In 2012, commit dbf0e4c7257f ("PCI: EHCI: fix crash during suspend on ASUS
->>>>> computers") amended pci_pm_suspend_noirq() to work around a BIOS issue by
->>>>> clearing the Command register if the suspended device is a USB EHCI host
->>>>> controller.
->>>>>
->>>>> Commit 0b68c8e2c3af ("PCI: EHCI: Fix crash during hibernation on ASUS
->>>>> computers") subsequently amended pci_pm_poweroff_noirq() to do the same.
->>>>>
->>>>> Two years later, commit 7d2a01b87f16 ("PCI: Add pci_fixup_suspend_late
->>>>> quirk pass") introduced the ability to execute arbitrary quirks
->>>>> specifically in pci_pm_suspend_noirq() and pci_pm_poweroff_noirq().
->>>>>
->>>>> This allows moving the ASUS workaround out of generic code and into a
->>>>> proper quirk to improve maintainability and readability.  Constrain to x86
->>>>> since the ASUS BIOS doesn't seem to have been used on other arches.
->>>>>
->>>>> lspci output of affected EHCI host controllers reveals that the only bits
->>>>> set in the Command register are Memory Space Enable and Bus Master Enable:
->>>>>      https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=658778
->>>>>
->>>>> The latter is cleared by:
->>>>>      hcd_pci_suspend()
->>>>>        suspend_common()
->>>>>          pci_disable_device()
->>>>>
->>>>> pci_disable_device() does not clear I/O and Memory Space Enable, although
->>>>> its name suggests otherwise.
->>>>
->>>> That was my gut reaction as well.
->>>>
->>>>> The kernel has never disabled these bits
->>>>> once they're enabled.  Doing so would avoid the need for the quirk, but it
->>>>> is unclear what will break if this fundamental behavior is changed.
->>>>>
->>>>
->>>> It's too late for this cycle to do so, but how would you feel about
->>>> making this change at the start of the next cycle so it had a whole
->>>> cycle to bake in linux-next and see if there is a problem in doing so?
->>>
->>> One cycle in linux-next may not be sufficient I'm afraid because
->>> linux-next is not tested on the majority of systems running Linux.
->>>
->>> We'd probably learn about the breakage from distro vendors.
->>>
->>>> If there is it could certainly be moved back to a quirk.
->>>
->>> Most likely, it would work on the majority of systems, but there would
->>> be a tail of systems where it would break.  That tail would then need
->>> to be quirked somehow and it may be worse than just one quirk we have
->>> today.
->>
->> But is that a reason not to *try* and rid the tech debt?
->>
->> We could just all agree that *if* there is breakage we revert back to
->> the quirk just for EHCI.
-> 
-> Well, it's not that simple because how much time do you want to wait?
-> 
-> The distro installed on the system I'm using right now ships with a
-> 6.4-based kernel, so it potentially sees and may report breakage
-> introduced into the mainline 2 years ago.
-> 
-> Will you decide to go back to the EHCI quirk if breakage is reported 2
-> years after dropping it?
-> 
-> IMV, if a decision is made to change the pci_disable_device() behavior
-> in this respect, we'll need to stick to it unless the breakage is
-> common and overwhelming (which I don't really expect to be the case).
+Hi,
 
-Thanks, I see your point.  We would only know soon if there was major 
-breakage from it and thus it is not an easy call that it was successful 
-or not.
+This Linux kernel patch series introduces support for error recovery for
+passthrough PCI devices on System Z (s390x). 
 
-Bjorn, what are your thoughts here?
+Background
+----------
+For PCI devices on s390x an operating system receives platform specific
+error events from firmware rather than through AER.Today for
+passthrough/userspace devices, we don't attempt any error recovery and
+ignore any error events for the devices. The passthrough/userspace devices
+are managed by the vfio-pci driver. The driver does register error handling
+callbacks (error_detected), and on an error trigger an eventfd to
+userspace.  But we need a mechanism to notify userspace
+(QEMU/guest/userspace drivers) about the error event. 
+
+Proposal
+--------
+We can expose this error information (currently only the PCI Error Code)
+via a device feature. Userspace can then obtain the error information 
+via VFIO_DEVICE_FEATURE ioctl and take appropriate actions such as driving 
+a device reset.
+
+I would appreciate some feedback on this series.
+
+Thanks
+Farhan
+
+ChangeLog
+---------
+v2 series https://lore.kernel.org/all/20250825171226.1602-1-alifm@linux.ibm.com/
+v2 -> v3
+   - Patch 1 avoids saving any config space state if the device is in error
+   (suggested by Alex)
+
+   - Patch 2 adds additional check only for FLR reset to try other function 
+     reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions. Creates a new flag pci_slot to allow per function slot.
+
+   - Patch 4 fixes a bug in s390 for resource to bus address translation.
+
+   - Rebase on 6.17-rc5
+
+
+v1 series https://lore.kernel.org/all/20250813170821.1115-1-alifm@linux.ibm.com/
+v1 - > v2
+   - Patches 1 and 2 adds some additional checks for FLR/PM reset to 
+     try other function reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions.
+
+   - Patch 7 adds a new device feature for zPCI devices for the VFIO_DEVICE_FEATURE 
+     ioctl. The ioctl is used by userspace to retriece any PCI error
+     information for the device (suggested by Alex).
+
+   - Patch 8 adds a reset_done() callback for the vfio-pci driver, to
+     restore the state of the device after a reset.
+
+   - Patch 9 removes the pcie check for triggering VFIO_PCI_ERR_IRQ_INDEX.
+
+Farhan Ali (10):
+  PCI: Avoid saving error values for config space
+  PCI: Add additional checks for flr reset
+  PCI: Allow per function PCI slots
+  s390/pci: Add architecture specific resource/bus address translation
+  s390/pci: Restore IRQ unconditionally for the zPCI device
+  s390/pci: Update the logic for detecting passthrough device
+  s390/pci: Store PCI error information for passthrough devices
+  vfio-pci/zdev: Add a device feature for error information
+  vfio: Add a reset_done callback for vfio-pci driver
+  vfio: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
+
+ arch/s390/include/asm/pci.h        |  30 +++++++-
+ arch/s390/pci/pci.c                |  74 ++++++++++++++++++++
+ arch/s390/pci/pci_event.c          | 107 ++++++++++++++++-------------
+ arch/s390/pci/pci_irq.c            |   9 +--
+ drivers/pci/host-bridge.c          |   4 +-
+ drivers/pci/hotplug/s390_pci_hpc.c |  10 ++-
+ drivers/pci/pci.c                  |  40 +++++++++--
+ drivers/pci/pcie/aer.c             |   5 ++
+ drivers/pci/pcie/dpc.c             |   5 ++
+ drivers/pci/pcie/ptm.c             |   5 ++
+ drivers/pci/slot.c                 |  14 +++-
+ drivers/pci/tph.c                  |   5 ++
+ drivers/pci/vc.c                   |   5 ++
+ drivers/vfio/pci/vfio_pci_core.c   |  20 ++++--
+ drivers/vfio/pci/vfio_pci_intrs.c  |   3 +-
+ drivers/vfio/pci/vfio_pci_priv.h   |   8 +++
+ drivers/vfio/pci/vfio_pci_zdev.c   |  45 +++++++++++-
+ include/linux/pci.h                |   1 +
+ include/uapi/linux/vfio.h          |  14 ++++
+ 19 files changed, 330 insertions(+), 74 deletions(-)
+
+-- 
+2.43.0
+
 
