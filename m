@@ -1,191 +1,200 @@
-Return-Path: <linux-pci+bounces-35886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F4B2B52C08
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 10:44:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B0DB52C6D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 11:00:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 556BE7A9DD0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 08:43:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CD283AD456
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 09:00:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C89D2E424F;
-	Thu, 11 Sep 2025 08:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EC6F2E7185;
+	Thu, 11 Sep 2025 09:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="UMVoGXhH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CN731Js3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702FA23372C
-	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 08:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4721D8DFB;
+	Thu, 11 Sep 2025 09:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757580273; cv=none; b=oQKGD9afmdhibXopVLw29Tr3NLLBG8f6njqpjaM3LfEy+kGqgmlxPi30k8I3PJ6xOF8A0PKnjx1+NMEkmhoh8YbeNt8yi1iBDHN3SI7Jq3oCw+62/zwofF5APZXgx1xQbsd1UdYHT82xqRrZjyF57O6awrg0OMjoWHzOuRg3bYs=
+	t=1757581210; cv=none; b=LoTF8iWZ7fy5Pj2cdeZhsyQ9PY0QUvQ5B0M0gy8rUsWUbHqAce8caTbWVkoXrNqWo0TI+zTxeMVTjjzXqgo1xZEbuNfzY34VEWSG5chmiQuRHMG/ZVAffHq7s8pPGbglV0VYMmutxpVMmOar8MSgvJUKbrPNOfAT0vaM0Wf+Z90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757580273; c=relaxed/simple;
-	bh=iD0m5qHzlc7V64bQ971FKQ/OWd0ILTt+45PnPJ40xhY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZVpyLSxL6RH1iUqla0CHON89oQJSNPSTO7noJ7orTxQ+TLdaTZ5VaPskqbyqEi90o7nuwCyIKhiiRSkeS/fnlBrLYnN04NnHysveeg/xhtUl1b81RhfK5e4fLE8rlzMWS0Y4PJZ5gB28dUk+klij0l7n5kgYqANGKZVIl3yBKU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=UMVoGXhH; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1757580271;
- bh=71L95gSKTmlkjoVh2fs/9dex/A1y0fWYRyHyjXcBq4g=;
- b=UMVoGXhHSXrrjAeHJOS1OP8kk+Tucxxh5xNvANoP1G9VKRPMoUuLRz6ai4sHA7DC7BAcjjE/S
- vgenOi6Nfk3bGZZHPCI7M/dzDjo7SobtNT783saaWogWelrbOdIMdLK1sBN5qdrrV5Iczpscccd
- XL8BGJWV1IVY/4mMEe+gpdGVRzKeRUDdusjREEAQc1omaCLQ/6dcibOlwLyuU6u8Ku86+1/m3qC
- XVaFPhQuYxgxeF2nC1d+NEqknMQzy6x4dKZy0IXOZs/vRA+DN1iVNPjPLa+w3uQVSGS1aDG+1yr
- TExJaCqSo9mraACfA3BpsJ/uhUnOxVH4lPUsYaP8kklw==
-X-Forward-Email-ID: 68c28be303561882c9813720
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.2.14
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <59cff81f-4be2-45e7-bc41-60fb52bfc6ca@kwiboo.se>
-Date: Thu, 11 Sep 2025 10:44:11 +0200
+	s=arc-20240116; t=1757581210; c=relaxed/simple;
+	bh=apxpL+JA5234BjF+vbBSUV5l8bBfl2JCXGsBGUN2Sww=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Zyc6wszwCSkuSPqmdKy++GKILcQu/YHv9UZDX3kEsckG3eeCCikgPsUXBei4DLMVrhRz9jxYq2Wnb8f6C5gvZAKDelxx1aJDLS/kcWs5XCmXL357Lhg622aCMk1IOUZ8wViCwflN++kl2ZfkXp3RJDsfegmP7vd6wTtA21wKJ/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CN731Js3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757581209; x=1789117209;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=apxpL+JA5234BjF+vbBSUV5l8bBfl2JCXGsBGUN2Sww=;
+  b=CN731Js3kiHGhOxf+CyNtov06/vfZ5YPLbKQGqE/m3J1C15vEJu33W3a
+   CNLhez96zaQokVhxVvYWu33EPqdIjLTbCfhxL1zKFBeD86I5295TWbmuJ
+   FEN8EHckskKlCcm5ecXwBE3MOaueS8NiCTn8We/vF7AwWeM35K1RphhOS
+   PdVnJQDBQKxFq79X0g3Pa+6TwWjKnSBb0u2Na75OEhCB03KrpInp+GUfg
+   wH2Ddx/YclPrQ6olhBNf33aDEoOal60qAuM1gqoq5I6VeEgw3TcSwa1l8
+   cNdPH0TmW2pii/I9yTFmFIseb+7KLkgOgVWoqi7uCZfUJZuq5rQ4UfAEO
+   g==;
+X-CSE-ConnectionGUID: y6YRnXHfREGMOA60rEi+VQ==
+X-CSE-MsgGUID: M7ff5+1HST66WCvZHBNMRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="59980857"
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="59980857"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 02:00:08 -0700
+X-CSE-ConnectionGUID: DK3xpkOuRkutGbdOlc8uZg==
+X-CSE-MsgGUID: S0y7rLfnSaGwSUn6CKkovA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="173539949"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 02:00:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Sep 2025 11:59:58 +0300 (EEST)
+To: =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
+    David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, 
+    intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+    Jani Nikula <jani.nikula@linux.intel.com>, 
+    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+    Tvrtko Ursulin <tursulin@ursulin.net>, 
+    ?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 04/11] PCI: Improve Resizable BAR functions kernel doc
+In-Reply-To: <97f8d4a7-6897-4fe5-878c-c04a887cce62@amd.com>
+Message-ID: <20c3a5f5-fa15-3889-3f56-20726aa3925b@linux.intel.com>
+References: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com> <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com> <97f8d4a7-6897-4fe5-878c-c04a887cce62@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: rockchip: Add PCIe Gen2x1 controller for
- RK3528
-To: Yao Zi <ziyao@disroot.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Shawn Lin <shawn.lin@rock-chips.com>, Simon Xue <xxm@rock-chips.com>,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Chukun Pan <amadeus@jmu.edu.cn>
-References: <20250906135246.19398-1-ziyao@disroot.org>
- <20250906135246.19398-3-ziyao@disroot.org>
- <38e80b6d-1dc9-47a8-8b23-e875c2848e6e@kwiboo.se> <aMKAvCglcaC6-00k@pie>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <aMKAvCglcaC6-00k@pie>
+Content-Type: multipart/mixed; boundary="8323328-183604244-1757581198=:944"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-183604244-1757581198=:944
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 9/11/2025 9:56 AM, Yao Zi wrote:
-> On Wed, Sep 10, 2025 at 11:29:00PM +0200, Jonas Karlman wrote:
->> Hi Yao Zi,
->>
->> On 9/6/2025 3:52 PM, Yao Zi wrote:
->>> Describes the PCIe Gen2x1 controller integrated in RK3528 SoC. The SoC
->>> doesn't provide a separate MSI controller, thus the one integrated in
->>> designware PCIe IP must be used.
->>>
->>> Signed-off-by: Yao Zi <ziyao@disroot.org>
->>> ---
->>>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 56 +++++++++++++++++++++++-
->>>  1 file changed, 55 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->>> index db5dbcac7756..2d2af467e5ab 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
->>> @@ -7,6 +7,7 @@
->>>  #include <dt-bindings/gpio/gpio.h>
->>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>  #include <dt-bindings/interrupt-controller/irq.h>
->>> +#include <dt-bindings/phy/phy.h>
->>>  #include <dt-bindings/pinctrl/rockchip.h>
->>>  #include <dt-bindings/clock/rockchip,rk3528-cru.h>
->>>  #include <dt-bindings/power/rockchip,rk3528-power.h>
->>> @@ -239,7 +240,7 @@ gmac0_clk: clock-gmac50m {
->>>  
->>>  	soc {
->>>  		compatible = "simple-bus";
->>> -		ranges = <0x0 0xfe000000 0x0 0xfe000000 0x0 0x2000000>;
->>> +		ranges = <0x0 0xfc000000 0x0 0xfc000000 0x0 0x44400000>;
->>
->> We should use the dbi reg area in the 32-bit address space, please use:
->>
->>   ranges = <0x0 0xfc000000 0x0 0xfc000000 0x0 0x4000000>;
-> 
-> This seems strange to me. I read through TRMs for RK3562 and RK3576, and
-> found it's common for Rockchip SoCs to map DBI regions of PCIe
-> controllers to two separate MMIO regions, but am still not sure why it's
-> necessary to use the mapping in the 32-bit address space.
+On Thu, 11 Sep 2025, Christian K=C3=B6nig wrote:
 
-I prefer the use of the 32-bit address range to ensure better
-compatibility with bootloaders and possible other OS that may have
-issues with regs in 64-bit address range.
+> On 11.09.25 09:55, Ilpo J=C3=A4rvinen wrote:
+> > Fix the copy-pasted errors in the Resizable BAR handling functions
+> > kernel doc and generally improve wording choices.
+> >=20
+> > Fix the formatting errors of the Return: line.
+> >=20
+> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >  drivers/pci/rebar.c | 29 ++++++++++++++++++-----------
+> >  1 file changed, 18 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
+> > index 020ed7a1b3aa..64315dd8b6bb 100644
+> > --- a/drivers/pci/rebar.c
+> > +++ b/drivers/pci/rebar.c
+> > @@ -58,8 +58,9 @@ void pci_rebar_init(struct pci_dev *pdev)
+> >   * @bar: BAR to find
+> >   *
+> >   * Helper to find the position of the ctrl register for a BAR.
+> > - * Returns -ENOTSUPP if resizable BARs are not supported at all.
+> > - * Returns -ENOENT if no ctrl register for the BAR could be found.
+> > + *
+> > + * Return: %-ENOTSUPP if resizable BARs are not supported at all,
+> > + *=09   %-ENOENT if no ctrl register for the BAR could be found.
+> >   */
+> >  static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
+> >  {
+> > @@ -92,12 +93,15 @@ static int pci_rebar_find_pos(struct pci_dev *pdev,=
+ int bar)
+> >  }
+> > =20
+> >  /**
+> > - * pci_rebar_get_possible_sizes - get possible sizes for BAR
+> > + * pci_rebar_get_possible_sizes - get possible sizes for Resizable BAR
+> >   * @pdev: PCI device
+> >   * @bar: BAR to query
+> >   *
+> >   * Get the possible sizes of a resizable BAR as bitmask defined in the=
+ spec
+> > - * (bit 0=3D1MB, bit 31=3D128TB). Returns 0 if BAR isn't resizable.
+> > + * (bit 0=3D1MB, bit 31=3D128TB).
+> > + *
+> > + * Return: A bitmask of possible sizes (0=3D1MB, 31=3D128TB), or %0 if=
+ BAR isn't
+> > + *=09   resizable.
+> >   */
+> >  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+> >  {
+> > @@ -121,12 +125,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *=
+pdev, int bar)
+> >  EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
+> > =20
+> >  /**
+> > - * pci_rebar_get_current_size - get the current size of a BAR
+> > + * pci_rebar_get_current_size - get the current size of a Resizable BA=
+R
+> >   * @pdev: PCI device
+> > - * @bar: BAR to set size to
+> > + * @bar: BAR to get the size from
+> >   *
+> > - * Read the size of a BAR from the resizable BAR config.
+> > - * Returns size if found or negative error code.
+> > + * Reads the current size of a BAR from the Resizable BAR config.
+> > + *
+> > + * Return: BAR Size if @bar is resizable (bit 0=3D1MB, bit 31=3D128TB)=
+, or
+>=20
+> This is a bit misleading since there is no mask returned but rather the=
+=20
+> order or in other words which bit of the mask was used.=20
 
-E.g. U-Boot have had issues with accessing >32-bit addressable range in
-the past, use of the 32-bit dbi range ensure we can use pcie in
-U-Boot without having to possible patch DT in a <soc>-u-boot.dtsi file.
+Thanks for noticing this. I'll removed "bit" x2 from it, does that fully=20
+address your concern?
 
-Regards,
-Jonas
+--=20
+ i.
 
-> 
-> However, I'm willing to follow the vendor's decision here in order to
-> avoid unexpected problems. Will adapt this in v2.
-> 
->>>  		#address-cells = <2>;
->>>  		#size-cells = <2>;
->>>  
->>> @@ -1133,6 +1134,59 @@ combphy: phy@ffdc0000 {
->>>  			rockchip,pipe-phy-grf = <&pipe_phy_grf>;
->>>  			status = "disabled";
->>>  		};
->>> +
->>> +		pcie: pcie@fe4f0000 {
->>
->> With the dbi reg area changed below, please update the node name and
->> move this node to top of the soc node.
->>
->>   pcie@fe000000
->>
->>> +			compatible = "rockchip,rk3528-pcie",
->>> +				     "rockchip,rk3568-pcie";
->>> +			reg = <0x1 0x40000000 0x0 0x400000>,
->>
->> We should use the dbi reg area in the 32-bit address space, please use:
->>
->>   reg = <0x0 0xfe000000 0x0 0x400000>,
->>
->>> +			      <0x0 0xfe4f0000 0x0 0x10000>,
->>> +			      <0x0 0xfc000000 0x0 0x100000>;
->>> +			reg-names = "dbi", "apb", "config";
->>> +			bus-range = <0x0 0xff>;
->>> +			clocks = <&cru ACLK_PCIE>, <&cru HCLK_PCIE_SLV>,
->>> +				 <&cru HCLK_PCIE_DBI>, <&cru PCLK_PCIE>,
->>> +				 <&cru CLK_PCIE_AUX>, <&cru PCLK_PCIE_PHY>;
->>> +			clock-names = "aclk_mst", "aclk_slv",
->>> +				      "aclk_dbi", "pclk",
->>> +				      "aux", "pipe";
->>
->> In my U-Boot test I did not have the pipe/phy clock here, do we need it?
-> 
-> Just as mentioned by Chukun, the clock should indeed be managed by phy
-> instead of the PCIe controller. Will fix it as well.
-> 
->> With above fixed this more or less matches my U-Boot testing, and is:
->>
->> Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-> 
-> Much thanks.
-> 
->> Regards,
->> Jonas
-> 
-> Best regards,
-> Yao Zi
-
+> > + *=09   negative on error.
+> >   */
+> >  int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
+> >  {
+> > @@ -142,13 +148,14 @@ int pci_rebar_get_current_size(struct pci_dev *pd=
+ev, int bar)
+> >  }
+> > =20
+> >  /**
+> > - * pci_rebar_set_size - set a new size for a BAR
+> > + * pci_rebar_set_size - set a new size for a Resizable BAR
+> >   * @pdev: PCI device
+> >   * @bar: BAR to set size to
+> > - * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
+> > + * @size: new size as defined in the PCIe spec (0=3D1MB, 31=3D128TB)
+> >   *
+> >   * Set the new size of a BAR as defined in the spec.
+> > - * Returns zero if resizing was successful, error code otherwise.
+> > + *
+> > + * Return: %0 if resizing was successful, or negative on error.
+> >   */
+> >  int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size)
+> >  {
+>=20
+--8323328-183604244-1757581198=:944--
 
