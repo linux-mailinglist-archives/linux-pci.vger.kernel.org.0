@@ -1,54 +1,89 @@
-Return-Path: <linux-pci+bounces-35954-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35955-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5ED9B53E15
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 23:50:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2F1FB53E1C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 23:52:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C723F1B226C6
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 21:51:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8376F567FFF
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 21:52:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61493248F5C;
-	Thu, 11 Sep 2025 21:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51271258EC9;
+	Thu, 11 Sep 2025 21:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpCuGA0s"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lwFQjeHP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AD1221FC7;
-	Thu, 11 Sep 2025 21:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E20221FC7
+	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 21:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757627450; cv=none; b=XyGgN4GEASnuIvT1gUeOAv5AEgMZb6mB20SsTSxr5GlPnDsO8iA5EKAkz1EEnUsGZ61WKgsG9oHGK5go8dBaIqxZUBYeAGnvaG1CLqkaSNba4wNGPSH64e9+d4zy3QqFRw3KGgxHgsm5ncPm01s4tCrBsJc6jMvgAiQJ+FIxSSI=
+	t=1757627531; cv=none; b=UZQOysgpUtJVKuQooVqS2gI8tXDgKSzcq5HMYkR0MSZNMV4syFxXymYs7lU8CgkJvfFT/u+TUT3YknI32LRWN/FjNJqF4/xGlEiox7t/lDI1EKYVKpDZCFtk1xhu9w9whTjq1ndFBL+g1tLx6h2Xb/9LZ7MASZsQBV9JJm2icG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757627450; c=relaxed/simple;
-	bh=0xFWuWckeYn7i+UQkHAiDtVNRwOXcCZQjBQISDrUu28=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=inDqght26+hEWzAaTxqRyr0dMZAVswx0Zfmp/C9MYucQ5d4IRaW2XBK4uNKUqw3j5sNOhSc50W4XFR5GnZ2w5u3f1lk12Qc3QWC3Wb9kM0ALsevWHWM1sztsJdhCEb86yrVKIBBopUopdOiOXkupeQAdXCB/BmLDwhM2GyE2jQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpCuGA0s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97945C4CEF1;
-	Thu, 11 Sep 2025 21:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757627449;
-	bh=0xFWuWckeYn7i+UQkHAiDtVNRwOXcCZQjBQISDrUu28=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bpCuGA0soSywcvGUOnM0DKH1nS9egRpSVYcRnBnj2p1mWJSuxIAgYbjRU0nkAiguR
-	 FCDtR9aiwhMZzliJ1PEvIRoEML+Atn4eppdgr+EOPsc9WaNTGQVFkGah67sGdvXxPX
-	 +DCDqiHRq0wJs0l1Kee0nIeGjKOVI5UxX7+0p593tomuUl4i03ckCQOvsHxt/2dxNJ
-	 QLnYbfLwxHBYr9cQlYQsokoiG/eiYx1z2WVO5JfsVhOI2kVVuDRs6Niu/++YiGNL7M
-	 OjAdUodsqIEoPuUPyzpkAZ3WLdj6OSFG1sVkrO+GevbBGcj56i/0eOLfXM2s+G+wIU
-	 EYpSuxIcfR9Lg==
-Date: Thu, 11 Sep 2025 16:50:48 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH v1 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
-Message-ID: <20250911215048.GA1591374@bhelgaas>
+	s=arc-20240116; t=1757627531; c=relaxed/simple;
+	bh=11jfNs7XD9+70o8E2n4SbCGdw78596CKJwoetTJ9SVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aS8hA3TmlYaNcdr8nqRqng5m+rY6OThS4lLEdgVGfbNF/aH8CFZow/5cQV67RaBjZi2WpAQ0kQtq/ajrMFWc6XCYi/Wukn7Lz3UmYZAWwppZ8T4G/qy/ObvdNc91UHbLZ4Zs/Qgf3TV90AdhpKJEUpXOUPEnPdekBCfVx7xwrqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lwFQjeHP; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-77269d19280so1215605b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 14:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1757627529; x=1758232329; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HCC2l5e6FSf+CmwH+t7zaiFzHJluzLyI3JzzK5xSQZI=;
+        b=lwFQjeHPpdlq0JSJLj9WNR9HDWjn0Uyb7dfJvcDlhrm8NjuTyn1QzfnH5F+tKvcQm8
+         a7O7ZnhVq7vb8Q4I8WBbm8tMfc9f+EmchgO1yf+FhVDd+M4wbiXI5FqRNbl+DZYXVufS
+         52MZ09ooL1cevhObSf5GSSh2mbSgAmZB3G6Xw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757627529; x=1758232329;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HCC2l5e6FSf+CmwH+t7zaiFzHJluzLyI3JzzK5xSQZI=;
+        b=ld9Tf4zAE+Y93GTCHC5F+vM0wcFdbizp7tPePBg0cByIUNW5De6jNJ/KfPKLcubwgp
+         BkYYYBPMADI917+AXw+xwDLnGIWT6tRPbnWAnhWUVC6F8dWDYfb3/U/PvGRVM+zBW+jz
+         jdBlFiLA6IAdPeJhoV5q4X8KAhpnNY77ABDIIgjtHxPi+YNNHsx5Y2zJ5qNB0aou4DLF
+         uYjMkIZU1umzZUv/qMSzIc7xtyrg5vnPMV1yl9If7Y9KS4gpuGTyT3STbvtkHttDmQ5H
+         z8+NqBr72xxeJ0dKpyncDJTorrhUR7lUuHxh0bPu9gwgBpqxqskhTnVteaRw/3Nn/E42
+         EPoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHWL9CwHUWvfSW2BJF2JAUw2IGtHZewLjmeNN0CS6kvCQxxMe6DxLa2koo+mWfJNxTeBe6pm04de4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOYlZANE9a9WWdcR16+yeV5+9KV8KbsMdFGQOOUgbt2LqKXJyC
+	I9wSqSceccWKbwTXxC7ZonuBG8m8BPZwZyQRiGcSFXIPQtnigdy7PwXrKEA3QsenDA==
+X-Gm-Gg: ASbGncsawFDqiQvqdNqVFasXDjMynBDM+NAlcknHMh3GtvY/y6pd9UNausZO62/hpvV
+	g17TWi5KbmB3vRyhQyRPfJtG1nSwfnf3Mp/eKvkrnAMYWy9bmLKkzXAjttogOZMbCqESi1/ZPam
+	qMmxeXSXSuH0ye6Topio4MvQiwmSDgJMLooesBncpIP/qi/qC0Z+g06vy3Hy4sS6P7vmag5LknE
+	DPhngm77Gi3mSjjBTCIU7RqKSejMG8tAGzP7m3BtyV3dsDfBUx4eAQH+qoIcxP6pZNfiWq00xAc
+	ryZEgs3nqdRi56Ta8C7z2UAHFgUx3Pu3E4xh2zcm5ynUGz3rYfOt41KzDjEo1NWCIO65VtzUnPj
+	kgycYU23zoDTGR5cN6eXY9jfXWzYvv2uxWLSvTtV2rDC0ysApL6xfzdj+PVo=
+X-Google-Smtp-Source: AGHT+IHb7w+bL2sibzRwFec3AsLqESlpAB7GfKe+XRbiM8MpDO4ZOEXOkV+dkAH3wE9LCWOv78D60g==
+X-Received: by 2002:a05:6a00:2345:b0:772:63ba:127 with SMTP id d2e1a72fcca58-776121884a1mr929198b3a.24.1757627529148;
+        Thu, 11 Sep 2025 14:52:09 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:6690:568:13de:b368])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-77607b18400sm3138359b3a.59.2025.09.11.14.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Sep 2025 14:52:08 -0700 (PDT)
+Date: Thu, 11 Sep 2025 14:52:06 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Linas Vepstas <linasvepstas@gmail.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/4] PCI: Update error recovery documentation
+Message-ID: <aMNEhqiJKK9NOreA@google.com>
+References: <cover.1756451884.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,269 +92,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250911114451.15947-2-devendra.verma@amd.com>
+In-Reply-To: <cover.1756451884.git.lukas@wunner.de>
 
-On Thu, Sep 11, 2025 at 05:14:50PM +0530, Devendra K Verma wrote:
-> AMD MDB PCIe endpoint support. For AMD specific support
-> added the following
->   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
->   - AMD MDB specific driver data
->   - AMD MDB specific VSEC capability to retrieve the device DDR
->     base address.
+On Fri, Aug 29, 2025 at 09:25:00AM +0200, Lukas Wunner wrote:
+> The documentation on PCIe Advanced Error Reporting hasn't kept up with
+> code changes over the years.  This series seeks to remedy as many issues
+> as I could find.
 > 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
-> ---
-> Changes in v1:
-> Removed the pci device id from pci_ids.h file.
-> Added the vendor id macro as per the suggested method.
-> Changed the type of the newly added devmem_phys_off variable.
-> Added to logic to assign offsets for LL and data region blocks
-> in case more number of channels are enabled than given in
-> amd_mdb_data struct.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 132 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 131 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3371e0a7..48ecfce 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -23,6 +23,11 @@
->  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
->  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
->  
-> +/* AMD MDB specific defines */
-> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
-> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
-> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
-> +
->  #define DW_BLOCK(a, b, c) \
->  	{ \
->  		.bar = a, \
-> @@ -50,6 +55,7 @@ struct dw_edma_pcie_data {
->  	u8				irqs;
->  	u16				wr_ch_cnt;
->  	u16				rd_ch_cnt;
-> +	pci_bus_addr_t			devmem_phys_off;
+> Previous commits touching the documentation either prefixed the subject
+> with "Documentation: PCI:" or (when combined with code changes) "PCI/AER:"
+> or "PCI/ERR:".  I chose the latter for brevity and to avoid mentioning
+> "documentation" or "PCI" twice in the subject.  If anyone objects or
+> finds other mistakes in these patches, please let me know.  Thanks!
 
-Based on your previous response, I don't think pci_bus_addr_t is the
-right type.  IIUC devmem_phys_off is not an address that a PCIe
-analyzer would ever see in a TLP.  It sounds like it's the result of
-applying an iATU translation to a PCI bus address.
+Series looks good to my limited knowledge:
 
-I'm not sure there's a special type for that, so u64 might be as good
-as anything.
-
->  };
->  
->  static const struct dw_edma_pcie_data snps_edda_data = {
-> @@ -90,6 +96,89 @@ struct dw_edma_pcie_data {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> +static const struct dw_edma_pcie_data amd_mdb_data = {
-> +	/* MDB registers location */
-> +	.rg.bar				= BAR_0,
-> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
-> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
-> +	/* MDB memory linked list location */
-> +	.ll_wr = {
-> +		/* Channel 0 - BAR 2, offset 0 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00000000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 2 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00200000, 0x00000800)
-> +	},
-> +	.ll_rd = {
-> +		/* Channel 0 - BAR 2, offset 4 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00400000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 6 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00600000, 0x00000800)
-> +	},
-> +	/* MDB memory data location */
-> +	.dt_wr = {
-> +		/* Channel 0 - BAR 2, offset 8 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00800000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 9 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00900000, 0x00000800)
-> +	},
-> +	.dt_rd = {
-> +		/* Channel 0 - BAR 2, offset 10 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00a00000, 0x00000800)
-> +		/* Channel 1 - BAR 2, offset 11 Mbytes, size 2 Kbytes */
-> +		DW_BLOCK(BAR_2, 0x00b00000, 0x00000800)
-> +	},
-> +	/* Other */
-> +	.mf				= EDMA_MF_HDMA_NATIVE,
-> +	.irqs				= 1,
-> +	.wr_ch_cnt			= 2,
-> +	.rd_ch_cnt			= 2,
-> +};
-> +
-> +static void dw_edma_assign_chan_data(struct dw_edma_pcie_data *pdata,
-> +				     enum pci_barno bar)
-> +{
-> +	u16 i;
-> +	off_t off = 0, offsz = 0x200000;
-> +	size_t size = 0x800;
-> +	u16 wr_ch = pdata->wr_ch_cnt;
-> +	u16 rd_ch = pdata->rd_ch_cnt;
-> +
-> +	if (wr_ch <= 2 || rd_ch <= 2)
-> +		return;
-> +
-> +	/* Write channel LL region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->ll_wr[i].bar = bar;
-> +		pdata->ll_wr[i].off = off;
-> +		pdata->ll_wr[i].sz = size;
-> +		off += offsz + size;
-> +	}
-> +
-> +	/* Read channel LL region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->ll_rd[i].bar = bar;
-> +		pdata->ll_rd[i].off = off;
-> +		pdata->ll_rd[i].sz = size;
-> +		off += offsz + size;
-> +	}
-> +
-> +	/* Write channel data region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->dt_wr[i].bar = bar;
-> +		pdata->dt_wr[i].off = off;
-> +		pdata->dt_wr[i].sz = size;
-> +		off += offsz + size;
-> +	}
-> +
-> +	/* Read channel data region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->dt_rd[i].bar = bar;
-> +		pdata->dt_rd[i].off = off;
-> +		pdata->dt_rd[i].sz = size;
-> +		off += offsz + size;
-> +	}
-> +}
-> +
->  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  {
->  	return pci_irq_vector(to_pci_dev(dev), nr);
-> @@ -121,7 +210,11 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	u16 vsec;
->  	u64 off;
->  
-> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> +	/*
-> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
-> +	 * of map, channel counts, etc.
-> +	 */
-> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor,
->  					DW_PCIE_VSEC_DMA_ID);
-
-You must validate pdev->vendor first.  Passing pdev->vendor means this
-will find any VSEC with ID 0x6 on any device at all.  For example, you
-could find a VSEC with ID 0x6 on an Intel device where VSEC ID 0x6
-means something completely different.
-
-You have to know what the Vendor ID is before calling
-pci_find_vsec_capability() because otherwise you don't know what the
-VSEC ID means.
-
-The best way to do this would be to use a separate #define for each
-vendor to remove the assumption that each vendor uses the same ID:
-
-  #define DW_PCIE_SYNOPSYS_VSEC_DMA_ID 0x6
-  #define DW_PCIE_XILINX_VSEC_DMA_ID   0x6
-
-  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-                                  DW_PCIE_SYNOPSYS_VSEC_DMA_ID);
-  if (!vsec) {
-    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-                                    DW_PCIE_XILINX_VSEC_DMA_ID);
-    if (!vsec)
-      return;
-  }
-
-That way it's clear that this only applies to Synopsys devices and
-Xilinx devices, Synopsys and Xilinx implemented a VSEC with the same
-semantics, and it's just a coincidence that they assigned the same
-VSEC ID.
-
->  	if (!vsec)
->  		return;
-> @@ -155,6 +248,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	off <<= 32;
->  	off |= val;
->  	pdata->rg.off = off;
-> +
-> +	/* AMD specific VSEC capability */
-> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor,
-> +					DW_PCIE_XILINX_MDB_VSEC_ID);
-
-Same here.  This will find a VSEC with ID 0x20 on any device from any
-vendor at all.  But you only know what 0x20 means on Xilinx devices,
-so this should be:
-
-  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-                                  DW_PCIE_XILINX_MDB_VSEC_ID);
-
-> +	if (!vsec)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +	if (PCI_VNDR_HEADER_ID(val) != 0x20 ||
-> +	    PCI_VNDR_HEADER_REV(val) != 0x1)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + 0xc, &val);
-> +	off = val;
-> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
-> +	off <<= 32;
-> +	off |= val;
-> +	pdata->devmem_phys_off = off;
->  }
->  
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> @@ -179,6 +290,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	}
->  
->  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-> @@ -186,6 +298,22 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	 */
->  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
-> +		/*
-> +		 * There is no valid address found for the LL memory
-> +		 * space on the device side.
-> +		 */
-> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * Configure the channel LL and data blocks if number of
-> +		 * channels enabled in VSEC capability are more than the
-> +		 * channels configured in amd_mdb_data.
-> +		 */
-> +		dw_edma_assign_chan_data(vsec_data, BAR_2);
-> +	}
-> +
->  	/* Mapping PCI BAR regions */
->  	mask = BIT(vsec_data->rg.bar);
->  	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
-> @@ -367,6 +495,8 @@ static void dw_edma_pcie_remove(struct pci_dev *pdev)
->  
->  static const struct pci_device_id dw_edma_pcie_id_table[] = {
->  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
-> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
-> +	  (kernel_ulong_t)&amd_mdb_data },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table);
-> -- 
-> 1.8.3.1
-> 
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 
