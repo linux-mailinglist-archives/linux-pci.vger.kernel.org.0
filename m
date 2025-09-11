@@ -1,91 +1,101 @@
-Return-Path: <linux-pci+bounces-35929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F522B53ABA
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 19:51:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 551D9B53ACC
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 19:56:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B278B1C84696
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 17:52:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 975911C242DA
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 17:56:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3432E31E0EC;
-	Thu, 11 Sep 2025 17:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DA11362092;
+	Thu, 11 Sep 2025 17:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTLyzh+a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ9KJYfA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1007541A8F
-	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 17:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5437C35FC3C;
+	Thu, 11 Sep 2025 17:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757613113; cv=none; b=roELSqJGcC7vrNU8apbxsh3VP7jDkZ0d1sgE2LBxXqMg9HRnHOd6BQgJ/fdg/3TFpRB8HM7Mb4YXIIAaaDHi+Gv2+EkUfwbJPUNObnC49BPFvg0J9igZMtAT1yIpI3uorATUPQe5KYHc5dyF9wFJzE33Vhq9FiU4xviJBijZJmU=
+	t=1757613380; cv=none; b=AM8YpnkOW6zB7WT4zkh8FCWI4SFo+Pak5qZt08uHxA4ZhwgLz4liIlw7H73rL5KrMnaoOCFO9w6Ob8/CNYoyiUI9FbrJ/QgpmbN1fWhBWraZicHWFPZExjZh7vHW+s+J6nVIeyuK5mUZt+x1YHVM3WSyx2ud6FS5E+x8MIVJbKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757613113; c=relaxed/simple;
-	bh=7WTALW7EhOWGhJPs59fIOBySNhqUqr19+3fqDaDwPZc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AMnMy7NejRzcoWM0LbPjpLft9ROEFqnBXgN5dE5GWrsC+0/AKUUSxJiv3+vXAVAvUX24Ejv7nSGTYecNi59huWOYCDlqjacxeYgYws5urxvOSz44OJyCNOtFhyBwJVVIlOecz29YmyUI6kfZmQlmAp0CMwAG3/B24p7VFetB8SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTLyzh+a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239FBC4CEF0;
-	Thu, 11 Sep 2025 17:51:48 +0000 (UTC)
+	s=arc-20240116; t=1757613380; c=relaxed/simple;
+	bh=OCHmyyyREP4+Sk7q9SH4hwADD3BC7U5F+hODRDkJinA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vFUqZyw0E42IfyurjfDXRYSX0noUNlyzFDhcgGCFLzCAflstY7zHT5K9viKnbGmobbh3aiStJoskqNVPMzkJHK3S5C7yfdqOu2ZQ52TJATWFOWVHD1FtE1Kw0THIrOoVSXpvpYxxXM1kMMFkcnAS2inLLmaHna2kUHXRm90egC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJ9KJYfA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A15A9C4CEF0;
+	Thu, 11 Sep 2025 17:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757613111;
-	bh=7WTALW7EhOWGhJPs59fIOBySNhqUqr19+3fqDaDwPZc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pTLyzh+a18lmv6TPScqDXPAF1uQKzHGp5IttyONW3nPdENvbp884frd8pLQDzGKBG
-	 T0ocy6tr6IYEyUkQY3j4XXzlT0h6mL2+Bpw/ydTFzyQ/idZgQCWbCWwu43dUSU4ZP9
-	 azMY6PmnePEFqLZxwUsoCj57sF6oshsyMSrGTkneTmISCIG6xP1GmROgBNfGRddTFz
-	 aT9SNiCBvyXhE2IysbnC1iDtnnJEQ+/QpG2jRdTSpvH354+kk5zfaBhWqJ1b20qZWe
-	 YN0ak5JvLMefWC7CR7+L7t6IqwvJbiv5FY/mzJELTqKI+hmfG7eJgUFbxR37NmPgb/
-	 718Har2wbGFCg==
+	s=k20201202; t=1757613379;
+	bh=OCHmyyyREP4+Sk7q9SH4hwADD3BC7U5F+hODRDkJinA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iJ9KJYfAa+ZHiVzHuni8+5wVh1groCL0QGr8j3o6M1YeaKgZ/1CEvx5mJ9rxghYcP
+	 U9MnU8ubpuf/eQ1Efabg0aZvOqKQzkzNp/ssxhkYZpC4FTcG+8Bd9KhP3OfxSE40gK
+	 +u5g8JMipzDx0UyWtOEOMk9KX76a9PHoRTM+2icbAcQqrNjldgtfUUQkGLsKPXqXho
+	 LSL3in6LySimo1PemYXe77fKK59k4Y/zllA7P4lIlgntSNPzTFvbpN/rFNtCMBVOYA
+	 Pf0+wI9N4jhc/Z5qlMvQF8CiDWxDQyAjT8Q85Z9LP38x2rg6rhQlR/jUvtdvs5RhQ6
+	 Q3+LsdkDAP12A==
+Date: Thu, 11 Sep 2025 23:26:11 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Niklas Cassel <cassel@kernel.org>
-Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, 
- linux-pci@vger.kernel.org
-In-Reply-To: <20250908165914.547002-3-cassel@kernel.org>
-References: <20250908165914.547002-3-cassel@kernel.org>
-Subject: Re: [PATCH 1/2] PCI: dwc: Cleanup dw_pcie_edma_irq_verify()
-Message-Id: <175761310875.2542822.4150252355334050578.b4-ty@kernel.org>
-Date: Thu, 11 Sep 2025 23:21:48 +0530
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, yuji2.ishikawa@toshiba.co.jp
+Subject: Re: [PATCH v3 2/2] PCI: dwc: visconti: Remove cpu_addr_fix() after
+ DTS fix ranges
+Message-ID: <chsfhg3u5akllpggnjnld5uv2jauwfaccuaoodcmzlpv2nou4s@czb4swbr3she>
+References: <1757298848-15154-3-git-send-email-nobuhiro.iwamatsu.x90@mail.toshiba>
+ <20250908215510.GA1467223@bhelgaas>
+ <aMGi4smALwIJS8Tc@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aMGi4smALwIJS8Tc@lizhi-Precision-Tower-5810>
 
-
-On Mon, 08 Sep 2025 18:59:15 +0200, Niklas Cassel wrote:
-> dw_pcie_edma_irq_vector() requires either "dma" (if there is a single IRQ
-> for all DMA channels) or "dmaX" (if there is one IRQ per DMA channel) to
-> be specified in device tree.
+On Wed, Sep 10, 2025 at 12:10:10PM GMT, Frank Li wrote:
+> On Mon, Sep 08, 2025 at 04:55:10PM -0500, Bjorn Helgaas wrote:
+> > In subject, s/PCI: dwc: visconti:/PCI: visconti:/ to match previous
+> > history.
+> >
+> > On Mon, Sep 08, 2025 at 11:34:08AM +0900, Nobuhiro Iwamatsu wrote:
+> > > From: Frank Li <Frank.Li@nxp.com>
+> > >
+> > > Remove cpu_addr_fix() since it is no longer needed. The PCIe ranges
+> > > property has been corrected in the DTS, and the DesignWare common code now
+> > > handles address translation properly without requiring this workaround.
+> >
+> > As Mani pointed out, the driver has to continue working correctly with
+> > any old DTs in the field.
 > 
-> Thus, it does not make any sense for dw_pcie_edma_irq_verify() to have a
-> looser requirement than dw_pcie_edma_irq_vector(). (Since both functions
-> will get called during the probe of the eDMA driver. First
-> dw_pcie_edma_irq_verify(), then dw_pcie_edma_irq_vector().)
+> DTS should be merged first, then after some linux release cycle, then PCI
+> can merge this change.
 > 
-> [...]
+> The similar case happen at other area, which broken back compatible. But
+> we still need move forward.
+> 
 
-Applied, thanks!
+Absolutely not! DT is a firmware. Even though the firmware turns out to be
+buggy, we should not regress platforms that were using the old firmware.
 
-[1/2] PCI: dwc: Cleanup dw_pcie_edma_irq_verify()
-      commit: 35ddcfd49f1520a95db3aafdb5bd115e2fd075a4
-[2/2] PCI: qcom-ep: Remove redundant edma.nr_irqs initialization
-      commit: 9e495c2d7f38a6e256749a8466856dc711666f05
+We can surely remove the check after some time. Maybe when all the stable
+kernels stop supporting older DTs. But not until then.
 
-Best regards,
+- Mani
+
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
