@@ -1,61 +1,63 @@
-Return-Path: <linux-pci+bounces-35870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A93DAB52ADB
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 09:58:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0572CB52AF8
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 10:00:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBC5B178E7B
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 07:58:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86FD27BE4E6
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 07:57:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7359E2C21D1;
-	Thu, 11 Sep 2025 07:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE56B2C11E7;
+	Thu, 11 Sep 2025 07:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBmRQFhr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9xynmmo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFEA2C11FC;
-	Thu, 11 Sep 2025 07:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460062C327D;
+	Thu, 11 Sep 2025 07:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757577435; cv=none; b=sOpxOSsCAribI+0PjAwncc5Zx1Uc7SvIfAUGcY/l+c4CF8oOb8laBKyYTx8X70zvuRrV+6w7jMNViS4SW7n8lB5HKkdJtLZG7CALA7/fVskqn7c+t6HCz0bqST0YuKEubhuWqGu4Kf9vUyu/eFuazc/fyyfcmVa3z4kT3A57dSs=
+	t=1757577470; cv=none; b=tEMSN45Jip+kJsjYlipRJ+e3Kx+VLhpQLDYPfbmx7nECkoejihoAn4qrr3R02UpSGgSDXzwuD7qUg+8Ey9vwe/M1CBpNECUs0wSJzy6VsBBSAz7BbHx6oAsqIEmT/yPLmYrCTElMafvdHcKIWcqvlvuuCzinZGHYWmjR/gpNFgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757577435; c=relaxed/simple;
-	bh=lE1YC+dX33i+aMnsuUWLhFtM6ENVPF0fEcJ9ldn7GHw=;
+	s=arc-20240116; t=1757577470; c=relaxed/simple;
+	bh=IAxgNbJGd3/oP9q1FLQX9YXGLqA1E1HjfwvAaKjpyHI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qNdekZqP7+pOeZQB1pdvV5Xng5Rn3favTQ3M7EayaWwgshQOD2+O6nJaVc46ExfgIS/gCGwxh/aQSp1395LlfiSjd5BJKu7VbiIPLFz/lq7fpxqQ12pjF1BqHmMvkMC9OueGuvIXUz11XewCOhFWbXmO5T8fiSlQLD3e2OKFYS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBmRQFhr; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=HyCXmD/yU5q2rmACYsc4BNNWWd4ezEcfUIFO+Dw+NvIt5FvGnj0kTFxAEW2xU77B4bT3prZPMqJJJvihS+yHHsMjmsQ0kJYfc6CDkaB0x4aap1uPCo8dA6QBlrrolkgKDBBanEXi4BcCbbcnW0y54gu9l1iFrHYqxxvOHSyv64E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9xynmmo; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757577433; x=1789113433;
+  t=1757577469; x=1789113469;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lE1YC+dX33i+aMnsuUWLhFtM6ENVPF0fEcJ9ldn7GHw=;
-  b=bBmRQFhrqcpErPbCXtRiTd+oqRJciv9VfPl+ZAhZ7CQABk2qEPNv93/o
-   UaORi9kVMCt6a7pljD4KyklHfuRXYA5x5YVWfEGIBcasg9SDJWE3aP111
-   EHijKzAcKaB0txHydbmpkQJTayqyj5Doxzh22aKiKERphto3BjxdtN16S
-   Evflxamw5w+SxxPx0k5XzQpq1JBrg90DlsopgLKTbTqIfGI62+//2R6h2
-   vQe3md2EeTfCeJJTm2mzgFP1PinbDVU+7ai9iBr7nRoMUip67+oN5YTb/
-   i9MnSXtvfpOR0ky9CEx+TqjXrHtuYVHO2Z/l+DbQsRzOf/czDAeDKMjcx
-   A==;
-X-CSE-ConnectionGUID: 4kfvueONTU+MTaRDZ8tQmg==
-X-CSE-MsgGUID: oqBHvdgnQ8iNYcZDDJ691Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="60012567"
+  bh=IAxgNbJGd3/oP9q1FLQX9YXGLqA1E1HjfwvAaKjpyHI=;
+  b=m9xynmmo2eVQwaZ0VCOr89ZE4IWh6BwNwWvc6zXk3EfRp6ACnFqCf0WZ
+   I2tOYYvfcjk3XrIsFqfvA3M2i1GU84RjJxu/61IPmxGENT+cp7/seNupG
+   T7KslAdoryN5L/+O5NEjCgeQ6uOXjjqSGFYj87V1YJuR2XJzzMKfVqN+L
+   hu1Bu0XotZj4epG3yP4H+OsmDGBvh7Fdt99wnh7Ev+ka1bT7pDMvRcf2G
+   OiMsgKXOoWQ4xZjb8HE7gNmt3pvWL1FdsbQlgQpVrQ+cu3YUQIyM1X0S7
+   SaBSxvu1wKHOeT0eNUmWyk7WW+NOSFQZTAZkY7N72DmMxT+pniNokRPRh
+   Q==;
+X-CSE-ConnectionGUID: Xmk+WQxbS5yK/puVGEgc6Q==
+X-CSE-MsgGUID: 3mO7qcr8TC+4yjyXatrrog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="70999287"
 X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
-   d="scan'208";a="60012567"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:57:13 -0700
-X-CSE-ConnectionGUID: YwZXk2OKQJuTD9OiEb/TCg==
-X-CSE-MsgGUID: UemHOX5dRE2HANBySPjYbQ==
+   d="scan'208";a="70999287"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:57:28 -0700
+X-CSE-ConnectionGUID: gmapQe/zSUKriqtkGuXbwg==
+X-CSE-MsgGUID: W5vBlPAvSlSbgBpu2YqvCQ==
 X-ExtLoop1: 1
-Received: from opintica-mobl1 (HELO localhost) ([10.245.245.187])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:57:05 -0700
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="173186230"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:57:19 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -78,9 +80,9 @@ To: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 04/11] PCI: Improve Resizable BAR functions kernel doc
-Date: Thu, 11 Sep 2025 10:55:58 +0300
-Message-Id: <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 05/11] PCI: Add pci_rebar_size_supported() helper
+Date: Thu, 11 Sep 2025 10:55:59 +0300
+Message-Id: <20250911075605.5277-6-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com>
 References: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com>
@@ -93,87 +95,121 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Fix the copy-pasted errors in the Resizable BAR handling functions
-kernel doc and generally improve wording choices.
+Many callers of pci_rebar_get_possible_sizes() are interested in
+finding out if a particular BAR Size (PCIe r6.2 sec. 7.8.6.3) is
+supported by the particular BAR.
 
-Fix the formatting errors of the Return: line.
+Add pci_rebar_size_supported() into PCI core to make it easy for the
+drivers to determine if the BAR Size is supported or not.
+
+Use the new function in pci_resize_resource() and in
+pci_iov_vf_bar_set_size().
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/rebar.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/pci/iov.c   |  7 +------
+ drivers/pci/rebar.c | 29 +++++++++++++++++++++++------
+ include/linux/pci.h |  1 +
+ 3 files changed, 25 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index ac4375954c94..51844a9176a0 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -1334,7 +1334,6 @@ EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+  */
+ int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+ {
+-	u32 sizes;
+ 	int ret;
+ 
+ 	if (!pci_resource_is_iov(resno))
+@@ -1343,11 +1342,7 @@ int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+ 	if (pci_iov_is_memory_decoding_enabled(dev))
+ 		return -EBUSY;
+ 
+-	sizes = pci_rebar_get_possible_sizes(dev, resno);
+-	if (!sizes)
+-		return -ENOTSUPP;
+-
+-	if (!(sizes & BIT(size)))
++	if (!pci_rebar_size_supported(dev, resno, size))
+ 		return -EINVAL;
+ 
+ 	ret = pci_rebar_set_size(dev, resno, size);
 diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
-index 020ed7a1b3aa..64315dd8b6bb 100644
+index 64315dd8b6bb..735d9afd6ab1 100644
 --- a/drivers/pci/rebar.c
 +++ b/drivers/pci/rebar.c
-@@ -58,8 +58,9 @@ void pci_rebar_init(struct pci_dev *pdev)
-  * @bar: BAR to find
-  *
-  * Helper to find the position of the ctrl register for a BAR.
-- * Returns -ENOTSUPP if resizable BARs are not supported at all.
-- * Returns -ENOENT if no ctrl register for the BAR could be found.
-+ *
-+ * Return: %-ENOTSUPP if resizable BARs are not supported at all,
-+ *	   %-ENOENT if no ctrl register for the BAR could be found.
+@@ -3,6 +3,7 @@
+  * PCI Resizable BAR Extended Capability handling.
   */
- static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- {
-@@ -92,12 +93,15 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- }
  
- /**
-- * pci_rebar_get_possible_sizes - get possible sizes for BAR
-+ * pci_rebar_get_possible_sizes - get possible sizes for Resizable BAR
-  * @pdev: PCI device
-  * @bar: BAR to query
-  *
-  * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-- * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
-+ * (bit 0=1MB, bit 31=128TB).
-+ *
-+ * Return: A bitmask of possible sizes (0=1MB, 31=128TB), or %0 if BAR isn't
-+ *	   resizable.
-  */
- u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- {
-@@ -121,12 +125,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
++#include <linux/bits.h>
+ #include <linux/bitfield.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+@@ -124,6 +125,27 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+ }
  EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
  
- /**
-- * pci_rebar_get_current_size - get the current size of a BAR
-+ * pci_rebar_get_current_size - get the current size of a Resizable BAR
-  * @pdev: PCI device
-- * @bar: BAR to set size to
-+ * @bar: BAR to get the size from
-  *
-- * Read the size of a BAR from the resizable BAR config.
-- * Returns size if found or negative error code.
-+ * Reads the current size of a BAR from the Resizable BAR config.
++/**
++ * pci_rebar_size_supported - check if size is supported for BAR
++ * @pdev: PCI device
++ * @bar: BAR to check
++ * @size: size as defined in the PCIe spec (0=1MB, 31=128TB)
 + *
-+ * Return: BAR Size if @bar is resizable (bit 0=1MB, bit 31=128TB), or
-+ *	   negative on error.
-  */
- int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
- {
-@@ -142,13 +148,14 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
- }
++ * Return: %true if @bar is resizable and @size is a supported, otherwise
++ *	   %false.
++ */
++bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
++{
++	u64 sizes;
++
++	sizes = pci_rebar_get_possible_sizes(pdev, bar);
++	if (!sizes)
++		return false;
++
++	return BIT(size) & sizes;
++}
++EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
++
+ /**
+  * pci_rebar_get_current_size - get the current size of a Resizable BAR
+  * @pdev: PCI device
+@@ -231,7 +253,6 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+ 	struct resource *res = pci_resource_n(dev, resno);
+ 	struct pci_host_bridge *host;
+ 	int old, ret;
+-	u32 sizes;
  
- /**
-- * pci_rebar_set_size - set a new size for a BAR
-+ * pci_rebar_set_size - set a new size for a Resizable BAR
-  * @pdev: PCI device
-  * @bar: BAR to set size to
-- * @size: new size as defined in the spec (0=1MB, 31=128TB)
-+ * @size: new size as defined in the PCIe spec (0=1MB, 31=128TB)
-  *
-  * Set the new size of a BAR as defined in the spec.
-- * Returns zero if resizing was successful, error code otherwise.
-+ *
-+ * Return: %0 if resizing was successful, or negative on error.
-  */
- int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size)
- {
+ 	/* Check if we must preserve the firmware's resource assignment */
+ 	host = pci_find_host_bridge(dev->bus);
+@@ -245,11 +266,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+ 	if (pci_resize_is_memory_decoding_enabled(dev, resno))
+ 		return -EBUSY;
+ 
+-	sizes = pci_rebar_get_possible_sizes(dev, resno);
+-	if (!sizes)
+-		return -ENOTSUPP;
+-
+-	if (!(sizes & BIT(size)))
++	if (!pci_rebar_size_supported(dev, resno, size))
+ 		return -EINVAL;
+ 
+ 	old = pci_rebar_get_current_size(dev, resno);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 6f0c31290675..917c3b897739 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1423,6 +1423,7 @@ void pci_release_resource(struct pci_dev *dev, int resno);
+ int pci_rebar_bytes_to_size(u64 bytes);
+ resource_size_t pci_rebar_size_to_bytes(int size);
+ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar);
++bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size);
+ int __must_check pci_resize_resource(struct pci_dev *dev, int i, int size);
+ 
+ int pci_select_bars(struct pci_dev *dev, unsigned long flags);
 -- 
 2.39.5
 
