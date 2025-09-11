@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-35881-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35882-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31F43B52B8C
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 10:24:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C59A5B52B9C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 10:27:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 220471B26D63
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 08:25:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75B3E3BBCC4
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 08:27:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 575DC2DCF72;
-	Thu, 11 Sep 2025 08:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06722D8DCA;
+	Thu, 11 Sep 2025 08:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="biY37AuB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hWDDKdp4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2062.outbound.protection.outlook.com [40.107.92.62])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2061.outbound.protection.outlook.com [40.107.243.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789E62D6409;
-	Thu, 11 Sep 2025 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E483A2E03EA;
+	Thu, 11 Sep 2025 08:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757579084; cv=fail; b=XU+ByFKZRhZ1kIJwyngWQfkJ/IEdUiiuF4PbQ9uGuhL5LTM9yvN/Woeq3RgiPU/UG0gttldsJ0ok9w7nO6BQ3+4ZUdUHFCBRBUqxHteZSSxMBj1Xo7mAGTIn71y+hTGueTKiLC3Kzrb6S5uuXTEHYQrG/hr73lAIgwGh+IRgqto=
+	t=1757579245; cv=fail; b=HYWccUs7N54qeLYeOBrDRpLZzKo7qn5pjbgXFVjwm8YTOsy4tmhRp7nC9aHkPVj1KHjQj6wMGgrVsp8l9hEPKqpf2/ZLuBjJN4bE+1SFbbyssj761psCbJq0HC+7QEZf/SUcEfOU72TA8z5Zhk4DFVH84RpBCl/XNda3ksvngAc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757579084; c=relaxed/simple;
-	bh=/cfEtH/Z6of1D3AG3q7K1SJByYk9XGnyq5BsLu72psw=;
+	s=arc-20240116; t=1757579245; c=relaxed/simple;
+	bh=nhilC/Y+nm9c0XvM0dIDCdy4aKSzy9/5+MnxeluYMvA=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OtCtod8vQXMExkARoRGuyRJen80kGSagbV3KF53c10o94cVwXWkxL4VCo90t3WlMTmG2J2leH7D9NWbgDiG5wXSNBHtRRYZejT/v2OfjVl4J3S/JZQnp0CdBSS+1qwkySTA1c8oLOsd+PE2pRCJhKlfvWuaB+FqvI3IsCg/3W5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=biY37AuB; arc=fail smtp.client-ip=40.107.92.62
+	 Content-Type:MIME-Version; b=KGwdi5rPVrXDbtmCchf5VvGuG/pVJz2gWjmVSCiR+Xhp4TMLOP8MXU/ZnVAW0zg/GOdZDrGng6KmN9nE04rx7kC/NGyWzPJthgQeDirU1gY7JrIp/mzr8CY9T2cbcWtakWB1C4QNNfQGKKU6lhPb4QySiXDyMNghkSq0wSmDNSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hWDDKdp4; arc=fail smtp.client-ip=40.107.243.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IuUlFP+FZxS3IpLbUfgczvi8oOEzAbLyyl9MBRng78w79hdvazw8yo4t3r5HDzozMUyDqpH/aD77BS1X7k4c4JH0K6qMecZXFJNEnOwH/MrgUKYRGiYwcBygBk4IgfshWBahm6O+CnTmFHv+uScfrVxoBeK85U8PXPedlamg1IwXRcRK2PxzZVudu7WHNgX3isUtnfExM/9wwWPrUBAEsMXgGhCO8xwgOoI6dp/UbK96HkWgRsXAy7FDuZhAYF0XzrutDk14yOeBQOGDOcy2Bp8bMG97zYF+sOK0uXFzOIedtSctwYEh3BK+sBjZPkRZsL+ADZCmaApweuNrcpp+dA==
+ b=jnixgPJsyDib+hPwP9SVBNG6OYoP9ZQOsLQk8Fonc+J0lJsnyj27xY+H3ji6nb9TI0NF2FEQK/TRqfPF71gVz6QnK7sfIMTbgyYxzu470mpz1jV2W8UwO4+PbA2Erliz1fw3HDhI6frJ+z0kR9plNGXILRvI3At+sVz5zZS/m8TTfmzRUNEStUuKO+bgBK8T6ZK4/AE9xyWlzygG3LvSs/aMylkgvtIEdoNb9nXkZIvDerdrn/5hnxBKZ5tXHUJuvlsAoyUtxYKfvMrWnHerBc/yQg33WWR9hXWorNdtSV5gYX4foNyXqh4LO+jlALvJ4QYBX2pjNlKo0yKi30Z6Jg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5zieBl4lTqu1FkHdos+xVBDpXzoHE8cHE24msHhxr7Y=;
- b=U8fTcxD+ggLTwbzvCOwB6j5ZK0VcnfBAv0sCfs2PHMbYhkRRqxhmDf3XFa++DLOmUoS8TsldHmeyew47Wchae9muZhb4LXnwK5uuSA9nvIyjorJPeNjFlckTcRo9Y4zA9q4wiiiMhIuw98TLQqHkptcbuYSIoPKNajLAGD8NTwJf1SfZv6n6oc8ySLuZxOD0VbnRBgotsf7pO/RuKYeQnnG7fdShgI/p1l7DGvZ/XIy70YhRlEvUuZobvB06r5KMCXe3d/6SyfkZQqNoZ4m/xQ0K3kvUwZEsl8/ZtkvD7RAET3ff7fT7JVnIRZWmj/uTUD1VRckLL5JmjVWDnJJrcA==
+ bh=/bZrUgMo/1WrZCEszaEUON5AJ4xe5KwGsH4FLVRng7s=;
+ b=Bnl0aVOgjvomWcpoPiAiFLdrWOZZR9fsLhAsXtGNm4LQc1N4onFuqyxNt3TNq4GYwMDyKzQXe2MqVbP3IRZ8EDnS5V7Mq/oBhJcwhaYuDt9r8+ovpTFNxDFdZV08ES/Gg75iCy+T8NQBQND+KHEPZ6Q/ZGDKrBHwUQOiEDLTkD/8lUmFfh+0nm6Ei08HhN2AXYV4reGB+1sBBHqqII6xsCrQXsxreuoKlJltfbVEYL05Ye+XW/uNNakAEjmO5OWQw70LEcNtvvp2rbi2pSxjXEx61hQtM9PW0b9ZJ/aKexP649VVn8W3wpgDFgLFvKQOeeQG0JafU3BzkDKmXP+V9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5zieBl4lTqu1FkHdos+xVBDpXzoHE8cHE24msHhxr7Y=;
- b=biY37AuBQHw0oftcH25IAA+mRTDA4NZUZGc4zeuTtC1W0Yg/p89ICZW7DIZc3XsOGSaJzHItJ7/vSXDOMSWiIrTfHIn2UpA9YopFLX+vbp4VMSVz3KMNaLHUMWajkTRahKNgWqwzbrkrhSc4wWc34rEwIGUAS+CTLCPgEFckXeY=
+ bh=/bZrUgMo/1WrZCEszaEUON5AJ4xe5KwGsH4FLVRng7s=;
+ b=hWDDKdp43T+9Jnz3wmuUT8yss0poaUfaTmCLNpoeOobwS3SerwezSKKX66JNu+Emp/6lP3bsX37hRnPp18Fs9OFp0ednCe8uPzMlYNbNXwDETdk/gR/eSxbD3Rzh/0iLPWMTwVbl7qYohtqGIFM+qkbgAwtHprrzIOB20RL1HQ4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH0PR12MB8507.namprd12.prod.outlook.com (2603:10b6:610:189::5) with
+ by MN2PR12MB4424.namprd12.prod.outlook.com (2603:10b6:208:26a::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Thu, 11 Sep
- 2025 08:24:38 +0000
+ 2025 08:27:21 +0000
 Received: from PH7PR12MB5685.namprd12.prod.outlook.com
  ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
  ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.9094.021; Thu, 11 Sep 2025
- 08:24:38 +0000
-Message-ID: <97f8d4a7-6897-4fe5-878c-c04a887cce62@amd.com>
-Date: Thu, 11 Sep 2025 10:24:31 +0200
+ 08:27:20 +0000
+Message-ID: <75167aa2-d974-44ec-9aa5-1a18acdfc091@amd.com>
+Date: Thu, 11 Sep 2025 10:27:14 +0200
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/11] PCI: Improve Resizable BAR functions kernel doc
+Subject: Re: [PATCH 05/11] PCI: Add pci_rebar_size_supported() helper
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -76,14 +76,14 @@ To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org
 References: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com>
- <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com>
+ <20250911075605.5277-6-ilpo.jarvinen@linux.intel.com>
 Content-Language: en-US
 From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250911075605.5277-6-ilpo.jarvinen@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0291.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:e7::17) To PH7PR12MB5685.namprd12.prod.outlook.com
+X-ClientProxiedBy: FR2P281CA0042.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:92::15) To PH7PR12MB5685.namprd12.prod.outlook.com
  (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -92,186 +92,223 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH0PR12MB8507:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49d10d47-4202-4d1a-2bdd-08ddf10ca5ca
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4424:EE_
+X-MS-Office365-Filtering-Correlation-Id: afa7eeca-cf48-4092-cdcc-08ddf10d0660
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|921020|7053199007;
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZXBuT0NTN0RHZUc0OTZFZXJITnNXcXZsWDlXYTYzNENZYlVqN3dUeWQ3Rzl2?=
- =?utf-8?B?eTl6ck1iQkxiSlFudld5bkw4VnA0ekhRbzlNcCtWd3Vra1NLMGZkd0JxRit1?=
- =?utf-8?B?eVlhajFoNENkOEdJVGVXcVlsRDBobjNINVpvbWg1WWV0TGVOZGNSNTV4MHlZ?=
- =?utf-8?B?MnhDM3NOSlRJaEppUWEyZVIybmMwRnRiaHFoNzVlSkM5eWd1R3JuR01qME5t?=
- =?utf-8?B?K3QwVm00U3lnYXJEMXgzZFRuUkNhdTFGbStGSlIvUVVLZStaSEJERVlFamhB?=
- =?utf-8?B?UE93Q29BVG95L2NrcHg4TnVVVit5RWlIZ0Rpak9ueGVNQzJpMldGYi94ZGFq?=
- =?utf-8?B?RFVRMTRDRDVJZlBreHVTNnZkdVMrYUxLTzhNZllQY1B2endKelZXUzQxNTMz?=
- =?utf-8?B?cS9XcWtBZWpHTHNTWThoWGp4eVVEUXNRa1JiSnZUd3hkZGR5Rkh0TU1ySERN?=
- =?utf-8?B?VDBuL085MytvczdWU0hqazJHOEVTVzBGdUxzRkVqcFlHQk5Ta000TDRicnJx?=
- =?utf-8?B?ZGtleWpVSi9FamdTbG1DKzJibkdLZ0pSQzVvWU5yMkpSNVdXWVNOVTExaWl6?=
- =?utf-8?B?ZnpwN0JPNGlGOG9vWmd0K3BJSHM2OExUbVc2QjFRcDdqd0RzNjlJQXh2ckpK?=
- =?utf-8?B?UUhXeXFONWFZT1JMbHE1RDhMU3RFSngxQmpob1lTRkErYVJ3S0R6KzVtVyt0?=
- =?utf-8?B?c28xdFhEVTJTZDJLL0RFU0lnWEtHM2tIeDRkV1hPY3FEelVpaFNvby9paGEr?=
- =?utf-8?B?dEVjY0ptNFJHVjJiOWdUNEZ2MENDN0ZjWXVLb3FDMEx6RHVNakZqbzU5WmVj?=
- =?utf-8?B?NFhGbmNORWFlOFdDZjNOQVBRdFZIaWlQL2kzTmlNS01MbUdleFQ3cVpMd1dv?=
- =?utf-8?B?d0lNTU9uWFN1TVp1VCs2cmxFVW02aHRUYTRkbEpBdXprUGdNZE1Md3lrMzBv?=
- =?utf-8?B?Sm43Z0tLcTh5dnZFWlBmS3ovZURHcURvNEJjd0NvRmpERmtacUU1NGNkZmt5?=
- =?utf-8?B?TmFGeW96SWxlMlVJMlQ1VE0wYWpHaFFlSExIRUowWERvTTM1U2pINCtrck4y?=
- =?utf-8?B?Z0JLN2o5Z2JrMzdLbE1JRzdFakhUVDJrOWp4KzUrTnpMSXlaM1dRTUIweUdJ?=
- =?utf-8?B?MGN1amtZVTJERHhIRHptQWhYUFhOMTVJVG5wNS9tOStjK2tNZ0pkSGpMVm5s?=
- =?utf-8?B?UmdQM1MwQ1Q4VUFuZVgrVHVXK2p2K0ZwZS9uMEdVMi9DNFRjN2QzRVBRdElZ?=
- =?utf-8?B?U3U1Y1pKdkdkY01YaUlOeDIrdTN2U0FyZW10OFBtVVViSlRocDcvam5VOXJK?=
- =?utf-8?B?UkNGeGI5WmpJTlUxbEhNOG9CTWRoNWFWT1o5OGYwREJuSHk3TEtsZmlLK1pz?=
- =?utf-8?B?bUpuTCsyN0Z5eWYxL1Z5UURFUXRYVDBUNEJEZHJnUkVpWDllNFpmSExpUFpt?=
- =?utf-8?B?ZmVsc04zb3pSK2VwNjhBYlh5YnFGb3VTVXRpUUxZRjdiTGw3dlZ2SHFYN0xV?=
- =?utf-8?B?VlpTM1lXNjRVeXJlM1ZZTGwzQWJZM1A4dERlMFJHL2k3MUU1KzRnaEVkQ2tF?=
- =?utf-8?B?WGU0eGZQazA3T3JvaGJUT1QwUm1tUnJrNG9ST1I4emNEeVQvUXV1NTlWd2Jk?=
- =?utf-8?B?UCtkQkhhb3dwcHNZUDhBOElNQWhRTExmaUlKdFU4eXowS2ZucWxNczF0NUsr?=
- =?utf-8?B?ZXZUbHVrT1p2MVhjUGtVc216K3NqSHpDVHF1c0NKcG9qTTFubjNHcXFBWnFD?=
- =?utf-8?B?SmhCM2tVVGVkMjg0b2NCVlp3S2gvT2gzTDhUZ3pJRHVrZ0JUZ1E2RlFCQmxh?=
- =?utf-8?B?WXZndlNDWUFVUk9rWU5GMXYxQkxVVWF1Q3MrUUVjYXowWFY1QnlEMmdrUHVT?=
- =?utf-8?B?UnVKV1VGNFpPTGhCbkxtWFBwTDlWUmdNR3JvL3RtOUdPNytpY2FPemp2ZTV4?=
- =?utf-8?B?Tmhkc1ZCY3dBenRHSWk4eENCWkk2U0RBdjJBelBSQktWeGw3TDRTYzRPUS81?=
- =?utf-8?B?NDRjanFQZFFRPT0=?=
+	=?utf-8?B?VDhVV2xBSkgzRzE4L0hrcFIrTk5Oek5KVTMrTGpISE5ZelBTSGVsVTV3M1Rl?=
+ =?utf-8?B?WkI0a3VBSjRndnoxTDBWcFltb0JPS3EvSWlBKzJQcDB6Ym1FWnVpVzNNdVdj?=
+ =?utf-8?B?b01Pa0xocmVGTTBRUmhHTXhveGw1U012RHRhK2huelFNVTNJL0FRYjhrVEtp?=
+ =?utf-8?B?aCtWcUFaVmVzWDg3RmgwY2xWTWUyV1U3dFluQkRXaEo0bkJjekswdGtpb2F6?=
+ =?utf-8?B?aGlPeFd2Y1VnLzVUZHYwdXJJaytneE5LY3dVcEJRY1ZFblhjdVIzcnZKOTBG?=
+ =?utf-8?B?TkpKaXhHVUZSc3I1dHdyeGxIbmNrQnFPSlp4WDBCaFk1OXJKRDUwYWplYmlr?=
+ =?utf-8?B?TnJ5MWlqRDZ5Z2hKeW04Mmdkc1djVXZxZGhoeFBkdDZrMElWTlQwSnlFc3dl?=
+ =?utf-8?B?ZnM0MDVMc2oweVlIY0F1NERjNGd2cHFvMjMzcW9QMHAvZjRKSTdEclhnZEFk?=
+ =?utf-8?B?TVdMTVlUUWIzTzNBV0dWWXk2MzVyOTR1ajYxUkVtSmFrd3pXdzlmeDFjYkJk?=
+ =?utf-8?B?dHNiMXg2Z3BZVTFONDhjN0M5QUR1M2RJa09uZ3hiN2RMdGxMK2x3c0puNGkw?=
+ =?utf-8?B?UnJSMHo4T0doam1rbnp3NTA5aWVPYXJrU3g0NzM2RTdGWFRUQlhCY1VXSFkr?=
+ =?utf-8?B?K1lLc3JEV0l6bDJEUG5YL2tYMURHWTVPcWczYWxSa05FZU1KeitGSjBsNnlP?=
+ =?utf-8?B?MEdValdjME1XOWtIc0VwU0VpQ2traWZJempZNVF1VFJmYWo0UmdLSzN0VTNj?=
+ =?utf-8?B?bThoK1lobVRoYUxhNzRQRVNQUyttTFZwbEwvaFluTFg2WFJZYStyZnBnOXh4?=
+ =?utf-8?B?UU1UNnpTdVpoOG1MMEwrRHJ2OUwzNTk2bDdlZE93amlWTnRSWitFbnRwenhG?=
+ =?utf-8?B?b1BTK3hzdmE5Y09vVnU3MjN1VXYxSjlQUWY3UDZEaGtRSGR2czFwUTR1NHJM?=
+ =?utf-8?B?OStSQUliNnFkRjJUeXZDNW1wZUZTeWt3cmROTERXbmR1YkZTMCtlTDFIWjkr?=
+ =?utf-8?B?bk02MkprbFFlUnJqTjhudlM1bjRKTmRHc092R2NOZ1ZpUlNRcmpSN2N0VzE2?=
+ =?utf-8?B?UXdXbis0Y0wyWTNpMllMRGdkWWRQMFJFWGExd1hjUXN1L1U0OW5LMTlFSjlY?=
+ =?utf-8?B?TC9iVXBleXI3SUlIdjhYOXBsNEFhQU1KazUvZHk0eTVlMThjTU5wSnl2VCsx?=
+ =?utf-8?B?bXJmaDRtZFc2SnViRnhhWTJVbTFTOTg3d3RHei9MSlVUNm9hcDFyVXNvSkNq?=
+ =?utf-8?B?clR0T3FjZHBaZWZjWlJaSXQxNng3UUg2UFE3UWdab09BMTZTbk1PQjR3Nkh6?=
+ =?utf-8?B?eENua0QydjQwaXBuQmxKTDJid084d0JJVjRrR1RGd0dudEtZR2FmUDRmMitx?=
+ =?utf-8?B?a0hvWHl1dThUZUdQbUtuQUNUSkFPM1k2SDBOZUtnaXViTEIwTUZYaVI5WEUw?=
+ =?utf-8?B?aUxncjlTTXZBbmd2dnd4dmJsWWQ4eE4wZDB5d3d0enl2ak1ZSHY3ZmJRUEJs?=
+ =?utf-8?B?dUltUVhIZklHa2Z0c0RxNFU2L3RZTU0ybEhYcXhtWnlNODRVbG80UHJuaGxm?=
+ =?utf-8?B?NSs4cHRjRlpDazFERDJrKzBKNFJHcnQzcThGUE05Q3IrYWhtSk5RSHpoMEpY?=
+ =?utf-8?B?RVF6U0lPWUFqcFFrTTkxL2xGakpESDQ5RU1Wcjk1eDBVSUVDLzREUzZIWllE?=
+ =?utf-8?B?Wjd1aDVLWGlKc0wzSTFMNkEwc3BlcE5GaEd4Ukd3dEhpZEp6angwMDZKTWh1?=
+ =?utf-8?B?VE5xc0RYZzVvYVBKVWxaVlVtbjYwZGU0V1h2MWJtREUxdy9Db2VBZDZvQkVY?=
+ =?utf-8?B?c1Y3dnF2MWE3ekhjR1VVQU9YaGhLclhhZjVMaUwrTldyckszQUhwZnpsRFRG?=
+ =?utf-8?B?NlhPZzNYa21tU3FGemdaODIwTzlvTURiczg2Q1k2ajdoUG14aG9HVE5DTzRY?=
+ =?utf-8?B?ai9YRHpxTmpYK0lyNWc4L25ramtrblduWUFqNXh3RGZaZE1MSVNjWTFaNGYx?=
+ =?utf-8?B?Uyt3UDhCQWp3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SThCZENKWXJHNVIyL2ZXWjY3eTRoMHNZL0VtQ3NCMXJjWVVXMlVVN0tKbFFm?=
- =?utf-8?B?OEZEbm53QWFaSm1xWUcxRU85VmdmYTFnWGQzcWhpTWpEcUtYS255dUZ2c2h6?=
- =?utf-8?B?TTEvSDFrTXJSWVpYczB5SmFmYklGUFhPSDNtK256UEJBMkEvMWNBK25mU2da?=
- =?utf-8?B?MEd2b3BBNEJvYy9BdHBKZnRmanRjUXZQcXZtQ2piT3NxZjNaOWRXbU55Ti82?=
- =?utf-8?B?TEc0ZjZ5ZmUyb2hXUWYyaXowZUwwekdRRzQyYXkwcnpUb1YvZUV2Qi9ua2o2?=
- =?utf-8?B?UTRxUzcvSGpVYmxzbjFPbTlJN3A2SFQzUVVGZkZzc29YK2FGY1M2MGZnczhy?=
- =?utf-8?B?TVc0U3FuSnBtelRoTGhQOVRVVkdjeVpVb3JZZmY0Znpod0FYT3VBV0ZDb0J4?=
- =?utf-8?B?OXhEa3kxb2dMUzI2Q1JtSlpuSVFPa2JkNWY2aDA2YTIzY1NiaFBBVHZYRzhC?=
- =?utf-8?B?L1dkY29tUUhFTEFhOXU4Rmkxb3pUM1FIaVE0Y2xlYjhrN3k5cUQ0OGFYSFdC?=
- =?utf-8?B?ZzJPcFI4Yk4xUE5Nb0hmdGZoMDBWR01hM2h4SXRQVHcyWjZIQ240Qkx0dU5J?=
- =?utf-8?B?Y2x2VjRpUmpmSFNUUkhNWEd3UVUyR1NuV1JibEx3VlpiVExEM3Z1aHQ2Y09x?=
- =?utf-8?B?elozZU9zNkNmRnB1T3JzNndyRXRneVMrM1QyMVhtd3ZEMXplRGlpb2QyWDBW?=
- =?utf-8?B?cUpOMDVaYUlZUmI5WTRJc1p3YjgwNUREOTRncEt6bjFlV3haVCtiQWR3S2Ir?=
- =?utf-8?B?cGZXUmxaTXhUUEQ2Sy9pRmJlYTFPNlZOV1l6ZGl2ZStkV29wR2I5dlNlUkRa?=
- =?utf-8?B?aEVVNTlSbHdmdFVDY2NOeUVWcUFQUEY5NU9kY3BtMk13aXZHUG13ZVBNTlJP?=
- =?utf-8?B?clBhTEZ6TldaN1VnNkZqMDBGS0Q1TnZIaGF3ZldZWXFrQ0lBQVhUeUpCWG1m?=
- =?utf-8?B?MjNXdXB3WThZM25EYXM4YktrZnF5ME0wSFFtVXJzOERhcnAvbHNyRzQrS2Ur?=
- =?utf-8?B?VHJwK3pwK1RYSEh3amFpcTNZQUZ5dlE4dnJlQTVkdzYzSHVxVE40bXNtRUMr?=
- =?utf-8?B?dmMwOFBHSFVkdVVsZnc3amNPNC9rL2FVOUxiNllVZ2xkUHAwM0cyNUpDczlm?=
- =?utf-8?B?d2JOZ2t3VEc5UERYU2hvZkdWTlRGZmJOOGhpVWtzUDlkdjlJM2sxQk9nN1Av?=
- =?utf-8?B?YzJTckpUOVZMTk10TjJxQUZLU3B6KzJEWGlXK1FyeWdaU0hwZkhFck4rU3Mr?=
- =?utf-8?B?c1M3V0FqemtiTXJ1VFFqLytqMjVxZWlRZGJkaEVqajRzSkZ1QUJoYXVURktE?=
- =?utf-8?B?WTZIWFo3QytRN3E0ZklycWxmYllFU2tSVzI1ajM2R3dTd09vb1NmQU1YWkU0?=
- =?utf-8?B?b1hOeGZ3WFBQMHBQdUNQWnZNS0lPVzhSeGtBREVOZjYrZSt0b2tLYzlWTWdO?=
- =?utf-8?B?Vlh4SncrZFhGNWtIcEM5MkpOdWRWZ1FJMW9zY2ZDVEFhM2htd2p1QXkrQ0wy?=
- =?utf-8?B?NHNuemIzSERSMk5zalFqd2ZiSTFkWmY5aDFGbFRzTkR0dXUybXBPVDhyeVBW?=
- =?utf-8?B?TkRyMUpLdWFOK1h0SmpYYXVWODlRZmFGeWJpRVp4QWdrYkI4RGljVWpIL1VH?=
- =?utf-8?B?ZTkxbk5UczQ5OXhzZHIxSlNPSUNiNWhPa1luaEFzZmprcFRNUGMwSXBlK2R1?=
- =?utf-8?B?N0JkMEVXK3loR0ZmRm1FN1dJbG9heCtXTWFOblAvSzJ3aENhaktscFYvZklS?=
- =?utf-8?B?dUtrZGtwZzlUeW1Ib0xwZXd2eTZRUDljTkFmVDkxZVZhSndoK2JyTzhOdy9w?=
- =?utf-8?B?MlY2MzV1TTNXYmdjdGlaRnNXaFZCS1NWdmxyNitTTnBUV2FyRCtqcHJodzdh?=
- =?utf-8?B?VXladVk3RlorOFRNeW1ZN0ZaZkowcWJ3WW9tZWJGUkxxMjZwMW41MHFucVJV?=
- =?utf-8?B?N2MzYkFvZGdaVFFCVXRGKytiM0E3MUM4bk1TR3FINjc0bWlKUmg3UDlFOUJi?=
- =?utf-8?B?eWMrWHFJZ0FoaFFnaCtPenZ5ZEcrVkgwOTl4M2ZBWVlicWgzNW1rNFgvd3do?=
- =?utf-8?B?dDMzaHZrbzFJNzcyYTJVcW0vZzNCU3c5NlZpc0pBdU5kOHlRV3NTaXpjOVFZ?=
- =?utf-8?Q?twE4PAdJoq4a8tt5/K1pYj+QS?=
+	=?utf-8?B?eDVEV0s5UmVxa0IrN094UERyS2hFeGQ1MVFjWG1BUmhFVS9nWTBhb0NSUnBO?=
+ =?utf-8?B?RlJkWFFoOXlVSWI5bk5lbEswTGQvVjlEbVZzaStsdUZjVjFESmxRR1lyUTRW?=
+ =?utf-8?B?MkRQVit6R28xRXc2bDYwbjVxNElOU0R2a1ZkR1NRSDhLL0s5SnYxazZ4MFJx?=
+ =?utf-8?B?OE5NVXlpcTVkU2NVZTNlT2J5UkNlcVg5Tkpsc2VHbnhIc1QxMDJ6VUFRQjh2?=
+ =?utf-8?B?K3hzSlB3bE0vVzlFb3U1TFh1UmVZQVZYUlI0c2FqblZrajM1bU53Q0NVdjBC?=
+ =?utf-8?B?OXY2M2h5L294YmEvZGthZklSd3ZLZXhRbCtaZEM2YldacDY0MkdURGlDcGVB?=
+ =?utf-8?B?NlduK0k1dldOaE0rK0VJRDJVNnQwdlgxN0FuSlhCb2g5dnNPaEdid2pIQkhD?=
+ =?utf-8?B?TUd4UGk0djFpZkxTUVA3ZmZyTFJRcW04Q2E1bkF4U2h0WE5jSFh1QlJMUVk3?=
+ =?utf-8?B?TXd5eWJMU0FqM1VDUC9EWWkxNUZNUUJvaUVtK3RVWmFSZjk5M1RKWmNkQWZk?=
+ =?utf-8?B?ZlNReHdVZG1JT0xIMXUwMlQzeFZwQkczUjV5L01XR0xzNCsyZnlYc21wclA0?=
+ =?utf-8?B?RWlRank0NU1JM2hNcWtmZ3ZQNzFrNm5qSkNUSnFCbUM2OUlkbGdiV3cxN3Uw?=
+ =?utf-8?B?ZzJRNmNUc2pWbXgrV2FEeXFOeWNrUUNqaUNqa2c2RjVzWEgzK3lxVzN0eXZC?=
+ =?utf-8?B?U2pYbUxlTTlPME11TGc2RG5OZFdkNkdsR0dFV3hqejVlYWVzZ1dOZ3JHaFFN?=
+ =?utf-8?B?RDJrTnk2STB5T04yYUVSeUU5ZUFhMWJwenhaYUlTZlB0NlhTU2dPZlBjN1l5?=
+ =?utf-8?B?WDk1QjBZUEgxS1FXd01idllDdDZZTjh4eWRYUzFmRmtyK2dxM3AwMmt0NmZw?=
+ =?utf-8?B?VWR2SHhwamxjNFRVRlhLNXY5eEtIVncxOWsvWUlBRWlKM01yTHlzeWlBWTZN?=
+ =?utf-8?B?a1NDVXJ0UThUTXNwNk1YSzNJYkdDaUNwYVlZSHRUZUQwTWFwSGtudmFvY3Zl?=
+ =?utf-8?B?dlF6dUZhRDV0RHJBczdSRFhkMklnRmJyYjRlUmFLWldINXZSQmRXSGxUUldI?=
+ =?utf-8?B?N3Rwa2wvNWoydVY1Q1ptUk1EU2JlaDlDUzZydFNBQlEwd2VuKzNBNWpEZlUx?=
+ =?utf-8?B?bDk4Z0FrVXF0dWpPRVI0K0pUTnYyUTR4azUrRG92RjhVZkdDK3VqU00wbkx0?=
+ =?utf-8?B?NTFZQ0pLaXB6SzE1VkNFNUpRb2lweGN3UERZSFphQVFuZnBud2kwbDMvQ3I1?=
+ =?utf-8?B?WDNxRUJBMWJjZEgwSlZiSk1hTHdFeENzSjlkQTVVemVvTnRtTkVTL2N2VXht?=
+ =?utf-8?B?OXQxMGN2WklCSWxab1oxQkN6bTNUU0ljQ2hjVUdjNUdDYVNhWmkrL2tJdjBl?=
+ =?utf-8?B?eHdPQmI4UENpNlBCVHF4eSt2TzNWN0tNZ2M4Y0JCQ0g2dlRibGlRbzQ5VFVX?=
+ =?utf-8?B?VVRoSWdDdW8wUkhDSkZZc3MwKys5dHoxcEh4UmhJa0llS2pPSFMvOE1VYXJM?=
+ =?utf-8?B?S3VGMUQ4eU5GZlFNakF6eU51UVFhZHRUREk2V2hEYnVxQjFzWnlzNHBERU5a?=
+ =?utf-8?B?UEd5WDBIditqclZhazFOb0hZWjBoTGNNakxKNUV6Rk95V2FNMlVjS0U3Tnhj?=
+ =?utf-8?B?V09mNUNmSGR3eWpXUXFsM2QxY3hYMTdCMnQ5ZzE2V25RZ0lPdm9iTjgrQ0l5?=
+ =?utf-8?B?RmxpeVZad1ZvbjhvSjhXUHVyTkg4SHNQWlF3UU80Zk13ME9lV1gzOU83UmNM?=
+ =?utf-8?B?K0ZVUUUwUXgzNDVnVm1FR1ArVGJNSW9KZEJJY1JKNk1Wd3lHb0FLeS9uc1h3?=
+ =?utf-8?B?V1pXT1dpUExadmRJekVHdUVYUTErMERCVXJaVzR1ZStwL3lpOEYrbWh1Niti?=
+ =?utf-8?B?QkJlaHZvUHcyVEZ6OU04WHdiYTduQmpqSHV6bGJobEdtL3M2TzNETGZzbktw?=
+ =?utf-8?B?UUc3VUs5T3k4VzJyL0kvZHNGQzVyVWlyKzNhUmV3NDNZSFlXUTR1Qm5COUNs?=
+ =?utf-8?B?WmtLYXpad04wVm9zWHZyNDlsVm56bTA4M1JVNU9ldGc0aGtlRGFnVzBtMTBS?=
+ =?utf-8?B?Mm5IUnpDVWIzTXJ6clpiNGVORHgxbnhKTkM0MEMyeENPd3h5N1M1STg0bDRE?=
+ =?utf-8?Q?3OC6KX+cSZ/txQbWGNETxqI3k?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49d10d47-4202-4d1a-2bdd-08ddf10ca5ca
+X-MS-Exchange-CrossTenant-Network-Message-Id: afa7eeca-cf48-4092-cdcc-08ddf10d0660
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2025 08:24:38.2355
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2025 08:27:20.3186
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wN6iWDFt85+ehgiVXmDSJLH+Hq5Pz8fmrs/V/vmXCTDyvyDXx2aD/157DyIoknws
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8507
+X-MS-Exchange-CrossTenant-UserPrincipalName: zavgvwyEtNkbFPUFbBX/pgMnIui22wqT/XAHzjcl6D7V5hwmSiX+mZYMiixWxVPE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4424
+
+
 
 On 11.09.25 09:55, Ilpo Järvinen wrote:
-> Fix the copy-pasted errors in the Resizable BAR handling functions
-> kernel doc and generally improve wording choices.
+> Many callers of pci_rebar_get_possible_sizes() are interested in
+> finding out if a particular BAR Size (PCIe r6.2 sec. 7.8.6.3) is
+> supported by the particular BAR.
 > 
-> Fix the formatting errors of the Return: line.
+> Add pci_rebar_size_supported() into PCI core to make it easy for the
+> drivers to determine if the BAR Size is supported or not.
+> 
+> Use the new function in pci_resize_resource() and in
+> pci_iov_vf_bar_set_size().
 > 
 > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 > ---
->  drivers/pci/rebar.c | 29 ++++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 11 deletions(-)
+>  drivers/pci/iov.c   |  7 +------
+>  drivers/pci/rebar.c | 29 +++++++++++++++++++++++------
+>  include/linux/pci.h |  1 +
+>  3 files changed, 25 insertions(+), 12 deletions(-)
 > 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index ac4375954c94..51844a9176a0 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -1334,7 +1334,6 @@ EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+>   */
+>  int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+>  {
+> -	u32 sizes;
+>  	int ret;
+>  
+>  	if (!pci_resource_is_iov(resno))
+> @@ -1343,11 +1342,7 @@ int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+>  	if (pci_iov_is_memory_decoding_enabled(dev))
+>  		return -EBUSY;
+>  
+> -	sizes = pci_rebar_get_possible_sizes(dev, resno);
+> -	if (!sizes)
+> -		return -ENOTSUPP;
+> -
+> -	if (!(sizes & BIT(size)))
+> +	if (!pci_rebar_size_supported(dev, resno, size))
+>  		return -EINVAL;
+>  
+>  	ret = pci_rebar_set_size(dev, resno, size);
 > diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
-> index 020ed7a1b3aa..64315dd8b6bb 100644
+> index 64315dd8b6bb..735d9afd6ab1 100644
 > --- a/drivers/pci/rebar.c
 > +++ b/drivers/pci/rebar.c
-> @@ -58,8 +58,9 @@ void pci_rebar_init(struct pci_dev *pdev)
->   * @bar: BAR to find
->   *
->   * Helper to find the position of the ctrl register for a BAR.
-> - * Returns -ENOTSUPP if resizable BARs are not supported at all.
-> - * Returns -ENOENT if no ctrl register for the BAR could be found.
-> + *
-> + * Return: %-ENOTSUPP if resizable BARs are not supported at all,
-> + *	   %-ENOENT if no ctrl register for the BAR could be found.
+> @@ -3,6 +3,7 @@
+>   * PCI Resizable BAR Extended Capability handling.
 >   */
->  static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
->  {
-> @@ -92,12 +93,15 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
->  }
 >  
->  /**
-> - * pci_rebar_get_possible_sizes - get possible sizes for BAR
-> + * pci_rebar_get_possible_sizes - get possible sizes for Resizable BAR
->   * @pdev: PCI device
->   * @bar: BAR to query
->   *
->   * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-> - * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
-> + * (bit 0=1MB, bit 31=128TB).
-> + *
-> + * Return: A bitmask of possible sizes (0=1MB, 31=128TB), or %0 if BAR isn't
-> + *	   resizable.
->   */
->  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  {
-> @@ -121,12 +125,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+> +#include <linux/bits.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/errno.h>
+>  #include <linux/export.h>
+> @@ -124,6 +125,27 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+>  }
 >  EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
 >  
->  /**
-> - * pci_rebar_get_current_size - get the current size of a BAR
-> + * pci_rebar_get_current_size - get the current size of a Resizable BAR
->   * @pdev: PCI device
-> - * @bar: BAR to set size to
-> + * @bar: BAR to get the size from
->   *
-> - * Read the size of a BAR from the resizable BAR config.
-> - * Returns size if found or negative error code.
-> + * Reads the current size of a BAR from the Resizable BAR config.
+> +/**
+> + * pci_rebar_size_supported - check if size is supported for BAR
+> + * @pdev: PCI device
+> + * @bar: BAR to check
+> + * @size: size as defined in the PCIe spec (0=1MB, 31=128TB)
 > + *
-> + * Return: BAR Size if @bar is resizable (bit 0=1MB, bit 31=128TB), or
+> + * Return: %true if @bar is resizable and @size is a supported, otherwise
+> + *	   %false.
+> + */
+> +bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
+> +{
+> +	u64 sizes;
+> +
+> +	sizes = pci_rebar_get_possible_sizes(pdev, bar);
 
-This is a bit misleading since there is no mask returned but rather the order or in other words which bit of the mask was used.
+> +	if (!sizes)
+> +		return false;
+> +
+> +	return BIT(size) & sizes;
+
+Checking size for zero first looks superfluous.
 
 Regards,
 Christian.
 
-> + *	   negative on error.
->   */
->  int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
->  {
-> @@ -142,13 +148,14 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
->  }
->  
+> +}
+> +EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
+> +
 >  /**
-> - * pci_rebar_set_size - set a new size for a BAR
-> + * pci_rebar_set_size - set a new size for a Resizable BAR
+>   * pci_rebar_get_current_size - get the current size of a Resizable BAR
 >   * @pdev: PCI device
->   * @bar: BAR to set size to
-> - * @size: new size as defined in the spec (0=1MB, 31=128TB)
-> + * @size: new size as defined in the PCIe spec (0=1MB, 31=128TB)
->   *
->   * Set the new size of a BAR as defined in the spec.
-> - * Returns zero if resizing was successful, error code otherwise.
-> + *
-> + * Return: %0 if resizing was successful, or negative on error.
->   */
->  int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size)
->  {
+> @@ -231,7 +253,6 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+>  	struct resource *res = pci_resource_n(dev, resno);
+>  	struct pci_host_bridge *host;
+>  	int old, ret;
+> -	u32 sizes;
+>  
+>  	/* Check if we must preserve the firmware's resource assignment */
+>  	host = pci_find_host_bridge(dev->bus);
+> @@ -245,11 +266,7 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+>  	if (pci_resize_is_memory_decoding_enabled(dev, resno))
+>  		return -EBUSY;
+>  
+> -	sizes = pci_rebar_get_possible_sizes(dev, resno);
+> -	if (!sizes)
+> -		return -ENOTSUPP;
+> -
+> -	if (!(sizes & BIT(size)))
+> +	if (!pci_rebar_size_supported(dev, resno, size))
+>  		return -EINVAL;
+>  
+>  	old = pci_rebar_get_current_size(dev, resno);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 6f0c31290675..917c3b897739 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1423,6 +1423,7 @@ void pci_release_resource(struct pci_dev *dev, int resno);
+>  int pci_rebar_bytes_to_size(u64 bytes);
+>  resource_size_t pci_rebar_size_to_bytes(int size);
+>  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar);
+> +bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size);
+>  int __must_check pci_resize_resource(struct pci_dev *dev, int i, int size);
+>  
+>  int pci_select_bars(struct pci_dev *dev, unsigned long flags);
 
 
