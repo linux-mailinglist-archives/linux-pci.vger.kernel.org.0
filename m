@@ -1,125 +1,124 @@
-Return-Path: <linux-pci+bounces-35952-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35953-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49C6AB53D38
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 22:43:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D33B4B53D63
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 22:58:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F049B3A76B3
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 20:43:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BF4648837A
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 20:58:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00A99299A94;
-	Thu, 11 Sep 2025 20:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2039A2D8379;
+	Thu, 11 Sep 2025 20:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcrG6NH0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z8Nvya0A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76AB2DC77C;
-	Thu, 11 Sep 2025 20:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E96B2D7DD1;
+	Thu, 11 Sep 2025 20:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757623422; cv=none; b=CDz5AoSFDSAMkq8TpehqwwYAeNOWGmxVblE/Nyg32wrMCbGa9ToFaKABAtbLi4JKYyqISxlaD7K6Hlz+dgnn346o5eNyVo3qVy0GUUDl+YHmLkoCGU9UyghLMZwgWU6vTK1mT75NfwvuN17Lf0WrtIGoD/FVDZQPjjKf9byYqJQ=
+	t=1757624306; cv=none; b=aSPhxaSFuSEWLeTXIgJaqU4+1BlzCBYAxrBhc8jKSrFto9XSOWTwoulMTZUde6Z/7K49SR7BnCGtsck4QDuLuEMYtp43/u1+LPZwAKjUizlZzal4Wlgj+Fj32lwl31obLv+sfTiRyg5wR5stAsavqka3tY/FnzqkShFx4jl7+40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757623422; c=relaxed/simple;
-	bh=5jfTK8qp37ri/0OUIgzUb+MsW/3Rl3jCY4BUaO8ZRk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Gr9xXmG35+3tpulBw78F5Zix/qYaGDwADT8ymiD71TcGmk2iLTsvfa0VG+BLp11K4DBdLIq0V/nVc9MIFCkBxKNoew6qM10GSmZUmAR+G5iT9Vhq9HiaPxgBCOg4/4BIg09iyl4YsfBNx5/BQGn/bapBU4FQ3RR7aSiN8zEI4sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcrG6NH0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 454FEC4CEF0;
-	Thu, 11 Sep 2025 20:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757623422;
-	bh=5jfTK8qp37ri/0OUIgzUb+MsW/3Rl3jCY4BUaO8ZRk4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XcrG6NH0QU8sxJwMSCVQ8O1tF/RhSxEzF48HPagONuJ0RGiZ73/oKqRhbJr1t/RmI
-	 ZxlerT6npf6usu9olJV4ZOOnNOXBQBuxMZ9zx57ZjBwU2nxDC1bycQagKEHrYacU1o
-	 YMC2/Femf2nYL3dOm8WBzuaYDhZicOOrw+bFO6L7n6FfL0umfy1QYEWhrnD8V1sMtb
-	 Id27n2rZCUwzDUdhg0b7o6sNGwK4BWl7FrZBGpuBSs4iK9bjQ8md3/9MkjVY/5EyLa
-	 R7gCTBPXxfdGxkdzQw+gTpW9UK1/ljvfHUf3FB+EqpxNiejr9uu+GcZaOx8/qItWFi
-	 nJh5fRysOE7/w==
-Date: Thu, 11 Sep 2025 15:43:40 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Verma, Devendra" <Devendra.Verma@amd.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH 2/2] dmaengine: dw-edma: Add non-LL mode
-Message-ID: <20250911204340.GA1584422@bhelgaas>
+	s=arc-20240116; t=1757624306; c=relaxed/simple;
+	bh=9xTFYBpfVXgAIAe+xeFobNHCnzAp2klE/GvShxlxQmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OGkktsSe4URgDACTNUC80XpHiqjZvIHUBZ7LWp1YT8/iHnrhz8BooVtFpN2AaO0YbS18MjVYPi3o5+sJ/Bnl+P0p2c1AJP8r/1x+huyjvkF8lUFSd6upkoxV1u6b8LNZdO3f861BBpg2eiQYL8d02Ol7EoNoMMVXLO22y2dR+ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Z8Nvya0A; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=0qy55m6NltHy97e3BgE53LDGV8tmJEWe7HuI0Fh9fMU=; b=Z8Nvya0A5h9hSajXA7XhLa9YNA
+	QznMZ9P5uW4O+XyH9XMxoco14sEFcjkDwyxUJygW9N3DquMGnIX6CPuHYhFFxp+hjeAXvsm/eZWzJ
+	oh9q5JXsCQSQnuFocm241p2ZLwpgI+LENLStiQlj9eMaCe29iy8gW2XTTAsw4VEPJg76mIVhcSktQ
+	MhzchP7Hbft3zhwnkDSGjCoF25c1SpfIjSDAXI1U60vAMzwAV8EJzka/VlUSFaymc3I/4eadTfkCq
+	E2AbrSPZxbho7Gtdtrh8tnL7G77PQTHysIq5t/lf+PGHytQ5vGmyicqgXKIWNv3ala9/xIhf+Xtd7
+	/G5j8JXQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uwoN4-00000005LTR-0IIn;
+	Thu, 11 Sep 2025 20:58:22 +0000
+Message-ID: <8be02c33-b659-4999-8408-2bd939009e82@infradead.org>
+Date: Thu, 11 Sep 2025 13:58:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SA1PR12MB812027AB20BEE7C28F30A5FE9509A@SA1PR12MB8120.namprd12.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/11] PCI: Improve Resizable BAR functions kernel doc
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
+ David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ ?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+References: <20250911075605.5277-1-ilpo.jarvinen@linux.intel.com>
+ <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250911075605.5277-5-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 11, 2025 at 11:42:31AM +0000, Verma, Devendra wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
+Hi,
 
-> > On Wed, Sep 10, 2025 at 12:30:39PM +0000, Verma, Devendra wrote:
-> > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> >
-> > [redundant headers removed]
-> >
-> > > > On Fri, Sep 05, 2025 at 03:46:59PM +0530, Devendra K Verma wrote:
-> > > > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
-> > > > > The current code does not have the mechanisms to enable the DMA
-> > > > > transactions using the non-LL mode. The following two cases are
-> > > > > added with this patch:
-> >
-> > > > > +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
-> > > > > +                              struct dw_edma_pcie_data *pdata,
-> > > > > +                              enum pci_barno bar) {
-> > > > > +     if (pdev->vendor == PCI_VENDOR_ID_XILINX)
-> > > > > +             return pdata->phys_addr;
-> > > > > +     return pci_bus_address(pdev, bar);
-> > > >
-> > > > This doesn't seem right.  pci_bus_address() returns pci_bus_addr_t,
-> > > > so pdata->phys_addr should also be a pci_bus_addr_t, and the
-> > > > function should return pci_bus_addr_t.
-> > > >
-> > > > A pci_bus_addr_t is not a "phys_addr"; it is an address that is
-> > > > valid on the PCI side of a PCI host bridge, which may be different
-> > > > than the CPU physical address on the CPU side of the bridge because
-> > > > of things like IOMMUs.
-> > > >
-> > > > Seems like the struct dw_edma_region.paddr should be renamed to
-> > > > something like "bus_addr" and made into a pci_bus_addr_t.
-> > >
-> > > In case of AMD, it is not an address that is accessible from host via
-> > > PCI, it is the device side DDR offset of physical address which is not
-> > > known to host,that is why the VSEC capability is used to let know host
-> > > of the DDR offset to correctly programming the LLP of DMA controller.
-> > > Without programming the LLP controller will not know from where to
-> > > start reading the LL for DMA processing. DMA controller requires the
-> > > physical address of LL present on its side of DDR.
-> >
-> > I guess "device side DDR offset" means this Xilinx device has some
-> > DDR internal to the PCI device, and the CPU cannot access it via a
-> > BAR?
+On 9/11/25 12:55 AM, Ilpo Järvinen wrote:
+> Fix the copy-pasted errors in the Resizable BAR handling functions
+> kernel doc and generally improve wording choices.
 > 
-> The host can access the DDR internal to the PCI device via BAR, but
-> it involves an iATU translation. The host can use the virtual /
-> physical address to access that DDR.  The issue is not with the host
-> rather DMA controller which does not understand the physical address
-> provided by the host, eg, the address returned by pci_bus_addr(pdev,
-> barno).
+> Fix the formatting errors of the Return: line.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>  drivers/pci/rebar.c | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
+> index 020ed7a1b3aa..64315dd8b6bb 100644
+> --- a/drivers/pci/rebar.c
+> +++ b/drivers/pci/rebar.c
+> @@ -58,8 +58,9 @@ void pci_rebar_init(struct pci_dev *pdev)
+>   * @bar: BAR to find
+>   *
+>   * Helper to find the position of the ctrl register for a BAR.
+> - * Returns -ENOTSUPP if resizable BARs are not supported at all.
+> - * Returns -ENOENT if no ctrl register for the BAR could be found.
+> + *
+> + * Return: %-ENOTSUPP if resizable BARs are not supported at all,
+> + *	   %-ENOENT if no ctrl register for the BAR could be found.
 
-Does this mean dw_edma_get_phys_addr() depends on iATU programming
-done by the PCI controller driver?  Is it possible for that driver to
-change the iATU programming after dw_edma_get_phys_addr() in a way
-that breaks this?
+These 2 lines will run together in the (html) output. They could be
+made "prettier" (IMO) into a 2-item list if you choose:
 
-Bjorn
+ * Return:
+ * * %-ENOTSUPP if resizable BARs are not supported at all
+ * * %-ENOENT if no ctrl register for the BAR could be found
+
+
+>   */
+>  static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
+>  {
+
+-- 
+~Randy
+
 
