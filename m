@@ -1,150 +1,111 @@
-Return-Path: <linux-pci+bounces-35890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35889-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14DBDB52D5D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 11:33:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BDD0B52D4C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 11:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50B441C85722
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 09:34:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFA9956149D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 09:30:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5698D2E9735;
-	Thu, 11 Sep 2025 09:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7152D3218;
+	Thu, 11 Sep 2025 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtWet2gn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E95222E8B61
-	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 09:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55732253B71;
+	Thu, 11 Sep 2025 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757583215; cv=none; b=k5JxeU2jGCeREF0vKMFIDSRTg+htAsRpRXqJUAdC2Yz7z5BmQefGIAP5+CgsUwHDh4DlBC3LCo7lCOARiJbOTeTBX6mxtQqh4YyCVpYOZJ9kCp5lzFLZd+OzzGBu+1O3lxsP5W7HzlMGB/N5AEyZEJoZlWYQ5cwoW55lg387/zc=
+	t=1757583030; cv=none; b=Tc3NfmgrEP/8obdVq2b2OKkLL+9ufUjh2bwk1ULfd811K8AduVm0vZEp6YCv7m5RGOSuGD/woMEyFXZtqdYtVOO3X30F4gINESuwAXmyUX4/avQLVXhp2vLqCKT1OvXRExfAKaxNbvSp0yTIGcoZQDJb4VSWBNT9I9RVcLUN/2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757583215; c=relaxed/simple;
-	bh=oL7C1B2/D20JAtRB6vupdKOlaQDH4AP8vfILkMJO1Jg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vAnxs1N3p0YryaXqwIPw0xoyLC6PfwvbFbR/FfXPChCwQdUNH1rDtS0W2GIvoJXV1BJ8I+z1ARI7fNbmACRocXenLlt44yKW7Zy7NmdCDGTSthBUuDWF+LCq/xd5Pa4P5fbP5WKjXf6oW539AHAiGygOU895G2l5Fhzo+n14HgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 9BEDC72C8CC;
-	Thu, 11 Sep 2025 12:24:45 +0300 (MSK)
-Received: from pony.office.basealt.ru (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 9179236D0196;
-	Thu, 11 Sep 2025 12:24:45 +0300 (MSK)
-Received: by pony.office.basealt.ru (Postfix, from userid 500)
-	id 68A2E360D68F; Thu, 11 Sep 2025 12:24:45 +0300 (MSK)
-Date: Thu, 11 Sep 2025 12:24:45 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hui Wang <hui.wang@canonical.com>, linux-pci@vger.kernel.org, 
-	bhelgaas@google.com, raphael.norwitz@nutanix.com, alay.shah@nutanix.com, 
-	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com, 
-	Nirmal Patel <nirmal.patel@linux.intel.com>, Jonathan Derrick <jonathan.derrick@linux.dev>, 
-	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Message-ID: <ryrirg2yqwnkqaw3rk56p75tdn@altlinux.org>
-References: <16f95861-6e71-49e4-b8f5-6d874e7db700@canonical.com>
- <20250811230445.GA168752@bhelgaas>
+	s=arc-20240116; t=1757583030; c=relaxed/simple;
+	bh=XlD4WoOFeyYCMS23BhK7vxcJp2Nn2UT84D4twDMVang=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i0u5chzloFDqqH4nweNXcZ+nTfFJ4h7t2stEsEd8xbdH76fl0LxjxocXnTEa8YlK2rFiKLkh+zz/fw7buMcwe1V4Mja+yqmKkgrhFpYZFZd9a2BHwStdLorwl4RKuv1gBZQ9GqNntZDWFveMFWbqdxFAJbYNv0l0NzalJt7k31M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtWet2gn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C68C4CEF7;
+	Thu, 11 Sep 2025 09:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757583030;
+	bh=XlD4WoOFeyYCMS23BhK7vxcJp2Nn2UT84D4twDMVang=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FtWet2gnnN5HpKYLZEDrkwvr1gA7DtHdix0DvbJsNaDiChQprN9AUHb6MK7Jrcgt0
+	 CNBxI7aSfmEn5XN/Gk9y3TB9T9E5XUhhLySh5JufXB5mELaodbIFia2LX4IiffM2UD
+	 0x7glvuIKcblHccUsh4lAaBE1Vtcf7CGvf6CyFLGLcaFL0Rc3zpRF4XbJhx5itrSRM
+	 EtV3lNJvtfQ9WwTDWvGvITCxjI3G1zpmwGmn3ro8/mBcsCCO5F2A4nvm7jbOImzmkj
+	 bd6cpnO3yNmc0R4xUKbDKHgP+d/ukNnoPuAspsMCBbqBKsOVSur2TFBT0wUUrTfz5R
+	 AsvHgRvuMj/Gw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Vidya Sagar <vidyas@nvidia.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Nagarjuna Kristam <nkristam@nvidia.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] PCI: tegra194: Fix duplicate pll disable
+Date: Thu, 11 Sep 2025 11:30:22 +0200
+Message-ID: <20250911093021.1454385-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1463; i=cassel@kernel.org; h=from:subject; bh=M648GLrR928m0wVvWYgbmCdhyWQ+VTim/YBmiK/5wC4=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIOTVubvrunRvNWRYs+L5/NJ5n2L7nyxnru0wPknBk2r /RpDTPtKGVhEONikBVTZPH94bK/uNt9ynHFOzYwc1iZQIYwcHEKwET2ZjH8lW96raOozld69puK Widb3tXGxax3fix7xdiWrFq8n+P3f0aGjjVftjgzGvPOjvh/yMv9m07qP5kG/ydLUvN+TUu6az2 ZAQA=
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250811230445.GA168752@bhelgaas>
 
-Bjorn,
+From: Nagarjuna Kristam <nkristam@nvidia.com>
 
-On Mon, Aug 11, 2025 at 06:04:45PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 08, 2025 at 10:23:45AM +0800, Hui Wang wrote:
-> > Hi Bjorn,
-> > 
-> > Any progress on this issue, do we have a fix for this now? The
-> > ubuntu users are waiting for a fix :-).
-> 
-> Not yet, but thanks for the reminder.  Keep bugging me!
+During PERST# assertion tegra_pcie_bpmp_set_pll_state() is currently
+called twice.
 
-Other distributions' users waiting for the fix too!
+pex_ep_event_pex_rst_assert() should do the opposite of
+pex_ep_event_pex_rst_deassert(), so it is obvious that the duplicate
+tegra_pcie_bpmp_set_pll_state() is a mistake, and that the duplicate
+tegra_pcie_bpmp_set_pll_state() call should instead be a call to
+tegra_pcie_bpmp_set_ctrl_state().
 
-Thanks,
+With this, the uninitialization sequence also matches that of
+tegra_pcie_unconfig_controller().
 
-> 
-> PCIe r7.0, sec 2.3.1, makes it clear that devices are permitted to
-> return RRS after FLR:
-> 
->   ◦ For Configuration Requests only, if Device Readiness Status is not
->     supported, following reset it is permitted for a Function to
->     terminate the request and indicate that it is temporarily unable
->     to process the Request, but will be able to process the Request in
->     the future - in this case, the Request Retry Status (RRS)
->     Completion Status must be used (see § Section 6.6). Valid reset
->     conditions after which a device/Function is permitted to return
->     RRS in response to a Configuration Request are:
-> 
->     ▪ FLRs
-> 
->     ...
-> 
-> But I am a little bit concerned because sec 2.3.2, which talks about
-> how a Root Complex handles that RRS and the RRS Software Visiblity
-> feature, says (note the "system reset" period):
-> 
->   Root Complex handling of a Completion with Request Retry Status for
->   a Configuration Request is implementation specific, except for the
->   period following SYSTEM RESET (see § Section 6.6). For Root
->   Complexes that support Configuration RRS Software Visibility, the
->   following rules apply:
-> 
->     ◦ If Configuration RRS Software Visibility is enabled:
-> 
->       ▪ For a Configuration Read Request that includes both bytes of
-> 	the Vendor ID field of a device Function's Configuration Space
-> 	Header, the Root Complex must complete the Request to the host
-> 	by returning a read-data value of 0001h for the Vendor ID
-> 	field and all 1's for any additional bytes included in the
-> 	request.
-> 
-> So I'm worried that the Software Visibility feature might work after
-> *system reset*, but not necessarily after an FLR.  That might make
-> sense because I don't think the RC can tell when we are doing an FLR
-> to a device.
-> 
-> It seems that after FLR, most RCs *do* make RRS visible via SV.  But
-> if we can't rely on that, I don't know how we're supposed to learn
-> when a device becomes ready.
-> 
-> Bjorn
-> 
-> > On 7/3/25 08:05, Hui Wang wrote:
-> > > On 7/2/25 17:43, Hui Wang wrote:
-> > > > On 7/2/25 07:23, Bjorn Helgaas wrote:
-> > > > > On Tue, Jun 24, 2025 at 08:58:57AM +0800, Hui Wang wrote:
-> > > > > > Sorry for late response, I was OOO the past week.
-> > > > > > 
-> > > > > > This is the log after applied your patch:
-> > > > > > https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/61
-> > > > > > 
-> > > > > > Looks like the "retry" makes the nvme work.
-> > > > >
-> > > > > Thank you!  It seems like we get 0xffffffff (probably PCIe
-> > > > > error) for a long time after we think the device should be
-> > > > > able to respond with RRS.
-> > > > > 
-> > > > > I always thought the spec required that after the delays, a
-> > > > > device should respond with RRS if it's not ready, but now I
-> > > > > guess I'm not 100% sure.  Maybe it's allowed to just do
-> > > > > nothing, which would lead to the Root Port timing out and
-> > > > > logging an Unsupported Request error.
-> > > > > 
-> > > > > Can I trouble you to try the patch below?  I think we might
-> > > > > have to start explicitly checking for that error.  That
-> > > > > probably would require some setup to enable the error, check
-> > > > > for it, and clear it.  I hacked in some of that here, but
-> > > > > ultimately some of it should go elsewhere.
-> > ...
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+[cassel: improve commit log]
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 4f26086f25daf..0c0734aa14b68 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1722,9 +1722,9 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
+ 				ret);
+ 	}
+ 
+-	ret = tegra_pcie_bpmp_set_pll_state(pcie, false);
++	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to turn off UPHY: %d\n", ret);
++		dev_err(pcie->dev, "Failed to disable controller: %d\n", ret);
+ 
+ 	pcie->ep_state = EP_STATE_DISABLED;
+ 	dev_dbg(pcie->dev, "Uninitialization of endpoint is completed\n");
+-- 
+2.51.0
+
 
