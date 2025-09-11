@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-35966-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35967-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92E94B53F58
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 01:57:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 621FAB53F59
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 01:57:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DF12A05AE0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 23:57:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EB4BA05B51
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 23:57:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25DE3272E7B;
-	Thu, 11 Sep 2025 23:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D9E26D4F8;
+	Thu, 11 Sep 2025 23:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ERGxMCMw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQK502yL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B07C2E6CAC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0042E6CA4
 	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 23:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757635018; cv=none; b=Z4OrJwNkVpkX00hHVzOSCNgD5NRNM+IazUGEC38YPMbLvfgYYdEvqdYm5Ss7HvK1oISqiGo1k8HFXVE82gl/Eg2z/qx9V8xcM/o3znc/QFTV+5HfmkIjny99PX3RAYxLtvICeIs2WxmOpO/X47yKDH7Bz/HrulCHxPOL+8o7CSA=
+	t=1757635019; cv=none; b=cO1kKsCoMQN79Y6toJlQFuel1Cp301mbgAtEqRQFDMM49l5Deegur5SOg9oApAPtLEH7Qoiv6t2w+K8vKCd4/v1cGAdZU9momjXy9xzm1bMK0UHh2eFb6lai65dfzRU4JvOmj2/o0nRGeg9VQoDL8ZTnHQurqFDQEtQS8tKsF+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757635018; c=relaxed/simple;
-	bh=bjteZad0h7nv1n7j0NcNq+YwGCKnPjrVfJjR1E/mVjg=;
+	s=arc-20240116; t=1757635019; c=relaxed/simple;
+	bh=HKqs1z3XyJ6hB9LZSzoym856kfboNUzxev19eYNllrk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n4P2MHGRNUq1NcgHjeFho712IV5jRDI/WjlhJZRv7nmCq69DFPlIVXsNs5lKk7EwfQM7DyjBHx4u2UP6mIXEftZ1IpDSlmKhZ4L9YamkXv2kdhuQ7Cgose1BG7i+O2VTKvOC/++gsxcmGL8F/vxqIO3bpt+JnSXikN4RPxeFnc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ERGxMCMw; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=K+s0l9MvyVOZ2OnWafjyYBL06RCCSNG8NypkLWVa/ZilHaYk12E0KqfQNeuABgGTAebWX9Do84/Pm/A2nSzkKShrRmK/D4ZXvbNgHvTs7ESpnMzUBVl6SHz1hp/wSmOB7wApUxVwjUEXUrEmDX4dPLPsuACshKL+WtPaiYe/eIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQK502yL; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,41 +36,38 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1757635016; x=1789171016;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bjteZad0h7nv1n7j0NcNq+YwGCKnPjrVfJjR1E/mVjg=;
-  b=ERGxMCMwFAdw6gkpEK3CTjeuF1IBOEyN3iSRf2XAciEfNQKlQXcq/UPc
-   vdjDCQRhWVUqt4qzu6V0I6KYAgZAkar8tlqkFvcdv0b1ogTox+zNcZV3h
-   ih0df2vdk/FvRHoz+81AeKfsBmlfmBLkVUPfOYZpIWz8UDQEU9N9d/XPY
-   9VCk3r7hBgxzjkCqNuPmr63wHlr88Afmlvy+DeaA8xyZSoOcubN6W0yH5
-   DMb8QXyqB0PMEkHRcWF5ZzlLEunaiSLawnUXgKaDC7UAsmQx5OVzSUVwI
-   xtWaYbCpORp3+BWY7di0Bfx33ZAtf+/asWBmgdgbiQHu6vI2o1yl9RQJV
-   A==;
-X-CSE-ConnectionGUID: K/CPZ6cdQQ+E0dncqXrJAQ==
-X-CSE-MsgGUID: Is4BGEYsSdyyHiVfouN++Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11550"; a="70598755"
+  bh=HKqs1z3XyJ6hB9LZSzoym856kfboNUzxev19eYNllrk=;
+  b=jQK502yLxAmmyNEEMmMZPeGuCtCO9gXZ37Kk67Rkt8Xy9h77vwd75C9A
+   F4BXU0esLtAi0tS/0ZAslR5y8I01qB9x3BWqtqy0KI3YDKrTU7/d5+QWr
+   1IH0ur+cMMo1VWLIh3oREJo88fmDONLa984ba/lUwTR8pQkoPoeolFLot
+   9ucLnePCxeCbpgQ4WCnUv0XGpLMs8usmY9U+GizbvJppM2AyqJSLSO49S
+   79VllA98S3Xs27bPwizMX8qaHPEM3I+dedKnjk9n72VcUhzDoFkp8IUrN
+   yd9JeAFVib4RbNKXds79ujVwmVEXEjqKuBJW9PYXf+FXF2rlEaNz/3iGu
+   g==;
+X-CSE-ConnectionGUID: NuIuy55gQs6A0RjRpBTRnA==
+X-CSE-MsgGUID: NHMqVAnoRv2tBBmrDCdOkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11550"; a="70598764"
 X-IronPort-AV: E=Sophos;i="6.18,258,1751266800"; 
-   d="scan'208";a="70598755"
+   d="scan'208";a="70598764"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 16:56:51 -0700
-X-CSE-ConnectionGUID: 6kiQRhRGTvqQd/lmHLXQ/Q==
-X-CSE-MsgGUID: azbLreqrQ1amtpDHf3Djjw==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 16:56:52 -0700
+X-CSE-ConnectionGUID: wFrSydUnSFOYN8VkVbumMg==
+X-CSE-MsgGUID: XZroizV8SEe6uS45+QMQXA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,258,1751266800"; 
-   d="scan'208";a="173393538"
+   d="scan'208";a="173393546"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Sep 2025 16:56:50 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 11 Sep 2025 16:56:51 -0700
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-pci@vger.kernel.org,
 	linux-coco@lists.linux.dev
 Cc: gregkh@linuxfoundation.org,
 	bhelgaas@google.com,
 	lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH resend v6 08/10] PCI/IDE: Report available IDE streams
-Date: Thu, 11 Sep 2025 16:56:45 -0700
-Message-ID: <20250911235647.3248419-9-dan.j.williams@intel.com>
+Subject: [PATCH resend v6 09/10] PCI/TSM: Report active IDE streams
+Date: Thu, 11 Sep 2025 16:56:46 -0700
+Message-ID: <20250911235647.3248419-10-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250911235647.3248419-1-dan.j.williams@intel.com>
 References: <20250911235647.3248419-1-dan.j.williams@intel.com>
@@ -82,192 +79,172 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The limited number of link-encryption (IDE) streams that a given set of
-host bridges supports is a platform specific detail. Provide
-pci_ide_init_nr_streams() as a generic facility for either platform TSM
-drivers, or PCI core native IDE, to report the number available streams.
-After invoking pci_ide_init_nr_streams() an "available_secure_streams"
-attribute appears in PCI host bridge sysfs to convey that count.
+Given that the platform TSM owns IDE Stream ID allocation, report the
+active streams via the TSM class device. Establish a symlink from the
+class device to the PCI endpoint device consuming the stream, named by
+the Stream ID.
 
-Introduce a device-type, @pci_host_bridge_type, now that both a release
-method and sysfs attribute groups are being specified for all 'struct
-pci_host_bridge' instances.
-
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Samuel Ortiz <sameo@rivosinc.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- .../ABI/testing/sysfs-devices-pci-host-bridge | 12 ++++
- drivers/pci/ide.c                             | 59 +++++++++++++++++++
- drivers/pci/pci.h                             |  3 +
- drivers/pci/probe.c                           | 12 +++-
- include/linux/pci.h                           |  8 +++
- 5 files changed, 93 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-class-tsm | 10 ++++++++
+ drivers/pci/ide.c                         |  6 ++++-
+ drivers/pci/pci.h                         |  2 +-
+ drivers/virt/coco/tsm-core.c              | 29 +++++++++++++++++++++++
+ include/linux/pci-ide.h                   |  2 ++
+ include/linux/tsm.h                       |  3 +++
+ 6 files changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge b/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-index 2c66e5bb2bf8..b91ec3450811 100644
---- a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-+++ b/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-@@ -31,3 +31,15 @@ Description:
- 		platform specific pool of stream resources shared by the Root
- 		Ports in a host bridge. See /sys/devices/pciDDDD:BB entry for
- 		details about the DDDD:BB format.
+diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
+index 2949468deaf7..6fc1a5ac6da1 100644
+--- a/Documentation/ABI/testing/sysfs-class-tsm
++++ b/Documentation/ABI/testing/sysfs-class-tsm
+@@ -7,3 +7,13 @@ Description:
+ 		signals when the PCI layer is able to support establishment of
+ 		link encryption and other device-security features coordinated
+ 		through a platform tsm.
 +
-+What:		pciDDDD:BB/available_secure_streams
++What:		/sys/class/tsm/tsmN/streamH.R.E
 +Contact:	linux-pci@vger.kernel.org
 +Description:
-+		(RO) When a host bridge has Root Ports that support PCIe IDE
-+		(link encryption and integrity protection) there may be a
-+		limited number of Selective IDE Streams that can be used for
-+		establishing new end-to-end secure links. This attribute
-+		decrements upon secure link setup, and increments upon secure
-+		link teardown. The in-use stream count is determined by counting
-+		stream symlinks. See /sys/devices/pciDDDD:BB entry for details
-+		about the DDDD:BB format.
++		(RO) When a host bridge has established a secure connection via
++		the platform TSM, symlink appears. The primary function of this
++		is have a system global review of TSM resource consumption
++		across host bridges. The link points to the endpoint PCI device
++		and matches the same link published by the host bridge. See
++		Documentation/ABI/testing/sysfs-devices-pci-host-bridge.
 diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-index 608ce79d830f..eb6e146e6fb5 100644
+index eb6e146e6fb5..851633b240e3 100644
 --- a/drivers/pci/ide.c
 +++ b/drivers/pci/ide.c
-@@ -519,3 +519,62 @@ void pci_ide_stream_disable(struct pci_dev *pdev, struct pci_ide *ide)
- 	settings->enable = 0;
+@@ -11,6 +11,7 @@
+ #include <linux/pci_regs.h>
+ #include <linux/slab.h>
+ #include <linux/sysfs.h>
++#include <linux/tsm.h>
+ 
+ #include "pci.h"
+ 
+@@ -272,6 +273,9 @@ void pci_ide_stream_release(struct pci_ide *ide)
+ 	if (ide->partner[PCI_IDE_EP].enable)
+ 		pci_ide_stream_disable(pdev, ide);
+ 
++	if (ide->tsm_dev)
++		tsm_ide_stream_unregister(ide);
++
+ 	if (ide->partner[PCI_IDE_RP].setup)
+ 		pci_ide_stream_teardown(rp, ide);
+ 
+@@ -553,7 +557,7 @@ static umode_t pci_ide_attr_visible(struct kobject *kobj, struct attribute *a, i
+ 	return a->mode;
  }
- EXPORT_SYMBOL_GPL(pci_ide_stream_disable);
-+
-+static ssize_t available_secure_streams_show(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *buf)
-+{
-+	struct pci_host_bridge *hb = to_pci_host_bridge(dev);
-+	int avail;
-+
-+	if (!hb->nr_ide_streams)
-+		return -ENXIO;
-+
-+	avail = hb->nr_ide_streams -
-+		bitmap_weight(hb->ide_stream_map, hb->nr_ide_streams);
-+	return sysfs_emit(buf, "%d\n", avail);
-+}
-+static DEVICE_ATTR_RO(available_secure_streams);
-+
-+static struct attribute *pci_ide_attrs[] = {
-+	&dev_attr_available_secure_streams.attr,
-+	NULL
-+};
-+
-+static umode_t pci_ide_attr_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_host_bridge *hb = to_pci_host_bridge(dev);
-+
-+	if (a == &dev_attr_available_secure_streams.attr)
-+		if (!hb->nr_ide_streams)
-+			return 0;
-+
-+	return a->mode;
-+}
-+
-+struct attribute_group pci_ide_attr_group = {
-+	.attrs = pci_ide_attrs,
-+	.is_visible = pci_ide_attr_visible,
-+};
-+
-+/**
-+ * pci_ide_init_nr_streams() - sets size of the pool of IDE Stream resources
-+ * @hb: host bridge boundary for the stream pool
-+ * @nr: number of streams
-+ *
-+ * Platform PCI init and/or expert test module use only. Enable IDE
-+ * Stream establishment by setting the number of stream resources
-+ * available at the host bridge. Platform init code must set this before
-+ * the first pci_ide_stream_alloc() call.
-+ *
-+ * The "PCI_IDE" symbol namespace is required because this is typically
-+ * a detail that is settled in early PCI init. I.e. this export is not
-+ * for endpoint drivers.
-+ */
-+void pci_ide_init_nr_streams(struct pci_host_bridge *hb, u8 nr)
-+{
-+	hb->nr_ide_streams = nr;
-+	sysfs_update_group(&hb->dev.kobj, &pci_ide_attr_group);
-+}
-+EXPORT_SYMBOL_NS_GPL(pci_ide_init_nr_streams, "PCI_IDE");
+ 
+-struct attribute_group pci_ide_attr_group = {
++const struct attribute_group pci_ide_attr_group = {
+ 	.attrs = pci_ide_attrs,
+ 	.is_visible = pci_ide_attr_visible,
+ };
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 0e24262aa4ba..22e0256a10ba 100644
+index 22e0256a10ba..716eb7fecb16 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -521,8 +521,11 @@ static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
+@@ -521,7 +521,7 @@ static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
  
  #ifdef CONFIG_PCI_IDE
  void pci_ide_init(struct pci_dev *dev);
-+extern struct attribute_group pci_ide_attr_group;
-+#define PCI_IDE_ATTR_GROUP (&pci_ide_attr_group)
+-extern struct attribute_group pci_ide_attr_group;
++extern const struct attribute_group pci_ide_attr_group;
+ #define PCI_IDE_ATTR_GROUP (&pci_ide_attr_group)
  #else
  static inline void pci_ide_init(struct pci_dev *dev) { }
-+#define PCI_IDE_ATTR_GROUP NULL
- #endif
+diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
+index f0bb580563c9..d223cb6fa972 100644
+--- a/drivers/virt/coco/tsm-core.c
++++ b/drivers/virt/coco/tsm-core.c
+@@ -2,14 +2,17 @@
+ /* Copyright(c) 2024 Intel Corporation. All rights reserved. */
  
- #ifdef CONFIG_PCI_TSM
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 6e308199001c..cc77020aa021 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -640,6 +640,16 @@ static void pci_release_host_bridge_dev(struct device *dev)
- 	kfree(bridge);
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++#define dev_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/tsm.h>
+ #include <linux/idr.h>
++#include <linux/pci.h>
+ #include <linux/rwsem.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/cleanup.h>
+ #include <linux/pci-tsm.h>
++#include <linux/pci-ide.h>
+ 
+ static struct class *tsm_class;
+ static DECLARE_RWSEM(tsm_rwsem);
+@@ -107,6 +110,32 @@ void tsm_unregister(struct tsm_dev *tsm_dev)
  }
+ EXPORT_SYMBOL_GPL(tsm_unregister);
  
-+static const struct attribute_group *pci_host_bridge_groups[] = {
-+	PCI_IDE_ATTR_GROUP,
-+	NULL
-+};
-+
-+static const struct device_type pci_host_bridge_type = {
-+	.groups = pci_host_bridge_groups,
-+	.release = pci_release_host_bridge_dev,
-+};
-+
- static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- {
- 	INIT_LIST_HEAD(&bridge->windows);
-@@ -659,6 +669,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	bridge->native_dpc = 1;
- 	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
- 	bridge->native_cxl_error = 1;
-+	bridge->dev.type = &pci_host_bridge_type;
- 
- 	device_initialize(&bridge->dev);
- }
-@@ -672,7 +683,6 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
- 		return NULL;
- 
- 	pci_init_host_bridge(bridge);
--	bridge->dev.release = pci_release_host_bridge_dev;
- 
- 	return bridge;
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 45360ba87538..3a71f30211a5 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -670,6 +670,14 @@ void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
- 				 void (*release_fn)(struct pci_host_bridge *),
- 				 void *release_data);
- 
-+#ifdef CONFIG_PCI_IDE
-+void pci_ide_init_nr_streams(struct pci_host_bridge *hb, u8 nr);
-+#else
-+static inline void pci_ide_init_nr_streams(struct pci_host_bridge *hb, u8 nr)
++/* must be invoked between tsm_register / tsm_unregister */
++int tsm_ide_stream_register(struct pci_ide *ide)
 +{
-+}
-+#endif
++	struct pci_dev *pdev = ide->pdev;
++	struct pci_tsm *tsm = pdev->tsm;
++	struct tsm_dev *tsm_dev = tsm->ops->owner;
++	int rc;
 +
- int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge);
++	rc = sysfs_create_link(&tsm_dev->dev.kobj, &pdev->dev.kobj, ide->name);
++	if (rc)
++		return rc;
++
++	ide->tsm_dev = tsm_dev;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(tsm_ide_stream_register);
++
++void tsm_ide_stream_unregister(struct pci_ide *ide)
++{
++	struct tsm_dev *tsm_dev = ide->tsm_dev;
++
++	sysfs_remove_link(&tsm_dev->dev.kobj, ide->name);
++	ide->tsm_dev = NULL;
++}
++EXPORT_SYMBOL_GPL(tsm_ide_stream_unregister);
++
+ static void tsm_release(struct device *dev)
+ {
+ 	struct tsm_dev *tsm_dev = container_of(dev, typeof(*tsm_dev), dev);
+diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
+index 5a7ffb1d826f..a30f9460b04a 100644
+--- a/include/linux/pci-ide.h
++++ b/include/linux/pci-ide.h
+@@ -46,6 +46,7 @@ struct pci_ide_partner {
+  * @host_bridge_stream: track platform Stream ID
+  * @stream_id: unique Stream ID (within Partner Port pairing)
+  * @name: name of the established Selective IDE Stream in sysfs
++ * @tsm_dev: For TSM established IDE, the TSM device context
+  *
+  * Negative @stream_id values indicate "uninitialized" on the
+  * expectation that with TSM established IDE the TSM owns the stream_id
+@@ -57,6 +58,7 @@ struct pci_ide {
+ 	u8 host_bridge_stream;
+ 	int stream_id;
+ 	const char *name;
++	struct tsm_dev *tsm_dev;
+ };
  
- #define PCI_REGION_FLAG_MASK	0x0fU	/* These bits of resource flags tell us the PCI region flags */
+ struct pci_ide_partner *pci_ide_to_settings(struct pci_dev *pdev, struct pci_ide *ide);
+diff --git a/include/linux/tsm.h b/include/linux/tsm.h
+index ee9a54ae3d3c..376139585797 100644
+--- a/include/linux/tsm.h
++++ b/include/linux/tsm.h
+@@ -120,4 +120,7 @@ int tsm_report_unregister(const struct tsm_report_ops *ops);
+ struct tsm_dev *tsm_register(struct device *parent, struct pci_tsm_ops *ops);
+ void tsm_unregister(struct tsm_dev *tsm_dev);
+ struct tsm_dev *find_tsm_dev(int id);
++struct pci_ide;
++int tsm_ide_stream_register(struct pci_ide *ide);
++void tsm_ide_stream_unregister(struct pci_ide *ide);
+ #endif /* __TSM_H */
 -- 
 2.51.0
 
