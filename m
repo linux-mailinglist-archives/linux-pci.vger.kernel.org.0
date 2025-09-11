@@ -1,54 +1,58 @@
-Return-Path: <linux-pci+bounces-35956-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35957-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C59BEB53E27
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 23:53:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89EB8B53EDA
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 00:55:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D6073AD1EC
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 21:53:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94EE1B22A15
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 22:55:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6C2221FC7;
-	Thu, 11 Sep 2025 21:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2608A2ED855;
+	Thu, 11 Sep 2025 22:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1cIU9mF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IE3kYxL3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044BB1957FC;
-	Thu, 11 Sep 2025 21:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1552279334;
+	Thu, 11 Sep 2025 22:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757627629; cv=none; b=PZr/EUuiiXspzm7Mj16N4vU6LghpRxxOsJRDuRcQKQqVlNz1bWPDkOisEGWHhpXUZOjSAdK03iPMOzkgRaRKId20LFj7whvyhLexYl960Sm9sxdwHEsT5O5bJZzNiGFaCSayd2eEASWDrN/gpvduyDFxdO33g60THEUxmXPqpw0=
+	t=1757631299; cv=none; b=u/R4nAHAarxQRvxMSF444VcWEfspeB0Vr/u89AaaheTyRCh04LPY/f/ns+yrO/AqTed0UFLtgMq6GTr0n11Bi3vC/uDyS/4nyr62yxrWIgtgzdMqrhI5XFfNAfoCGZFtGy0QY4LF4vC0ed7CYME5VUCkTvB+ipWie6T3IKzzWtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757627629; c=relaxed/simple;
-	bh=1TNKDOxG2GqpKo5rO+DaIjNngyRXhVq03oruUJ+w3S8=;
+	s=arc-20240116; t=1757631299; c=relaxed/simple;
+	bh=9wA1L6p2PKuguKMkeIHlsJ7+VV03bsUAvg+8nv3mAs8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=a00f6AIwKe5XxxvXCea1lDIQGeccFsAugFLcnUFcPC1c6ZzQnAsAGd8/ilP8fa2+fh5ArhiDYJQ5fN2/GZRO/zHUCHkCXdmOmLDSmRZaWRcdZ86YdPoQEzcG2U/Stgiguyh/mIOcmDQFS85QzNnhCaG2oA3XMPdc2ybHv5Ib3RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1cIU9mF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F39C4CEF0;
-	Thu, 11 Sep 2025 21:53:48 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Jsi65TPYgfzi3KoC4D1z5JLZDuwu+Wt9GszyCd69lZJlFjiRZtkLRgmoQ1lLc51+MzTOuVOtU5FQF4f2ln0gh8/itheLnIdtmyAE4NFGOmJhN34VeSBgb66jggF0tmWqwvV2veoI73pRwbQL42wwOKmEXqiaLJpvb8N8dZqeduY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IE3kYxL3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6991AC4CEF0;
+	Thu, 11 Sep 2025 22:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757627628;
-	bh=1TNKDOxG2GqpKo5rO+DaIjNngyRXhVq03oruUJ+w3S8=;
+	s=k20201202; t=1757631298;
+	bh=9wA1L6p2PKuguKMkeIHlsJ7+VV03bsUAvg+8nv3mAs8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=X1cIU9mFeBbZKTDPsVZlraneuD33Wjjd9PJIvOGFA7N2kWpyKDc8sMoXMFC0DEIQ2
-	 uFMn9MOUjm9mrkSPkSMqaq40+nECes8VDHHkSYFzMfehbyO0WKOGpViTW0kbVyjyuI
-	 bDCNFb/x23dFfbBNPkDDW+I4SDTc5BlcXqETvk+BxD69anKKZfnBBLOQxh8gKBbKpo
-	 LymkF5l7TZttahNm5VkcFF4amr6Wkf7UkAqdw6ZyrdMLtjqX5fjWomF84grO550gxk
-	 yZ2rGXumI4/Qy6/Xzz/w3mDp1/0VImbVIU8Zw6v/O/SUfluKnLWScUHpORK5ol1pzj
-	 Eyj49Xneioz9Q==
-Date: Thu, 11 Sep 2025 16:53:47 -0500
+	b=IE3kYxL3j5ylxA9XwchT2l/UJCmXRe7xcP+pSsmNkKbs9B0khvd6aAXnJYdRV4jv5
+	 MIYAIa4DXhp1LhxJYplXrppof8YZEgFKXTfGUJOWbYhvQMwSRo+oGplW5L/9uPO+Ob
+	 J1zmkFspz+G3t4gvkjatMQYdASc4LHFKt5boqHny3xeR/XKpEn+JapLaZkVe+1IKcC
+	 h9X4Ui5auC75CbrBY2fGH6MfFlTOwCXdZ6/kYduefY11XhKV+x+gS+b9saQHIgmhUj
+	 ImvnkQXASqmZppEdl0fCXggHM7BPhNIM4dTILDAzaVoLGy4Mh9LfiX7eNyQu9HtGI9
+	 nKr6b3EPhtZWw==
+Date: Thu, 11 Sep 2025 17:54:57 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add non-LL mode
-Message-ID: <20250911215347.GA1594166@bhelgaas>
+To: Vernon Yang <vernon2gm@gmail.com>
+Cc: mahesh@linux.ibm.com, bhelgaas@google.com, oohall@gmail.com,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Vernon Yang <yanglincheng@kylinos.cn>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Dongdong Liu <liudongdong3@huawei.com>
+Subject: Re: [PATCH] PCI/AER: Fix NULL pointer access by aer_info
+Message-ID: <20250911225457.GA1596803@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,35 +61,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250911114451.15947-3-devendra.verma@amd.com>
+In-Reply-To: <20250904182527.67371-1-vernon2gm@gmail.com>
 
-On Thu, Sep 11, 2025 at 05:14:51PM +0530, Devendra K Verma wrote:
-> AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
-> The current code does not have the mechanisms to enable the
-> DMA transactions using the non-LL mode. The following two cases
-> are added with this patch:
-> - When a valid physical base address is not configured via the
->   Xilinx VSEC capability then the IP can still be used in non-LL
->   mode. The default mode for all the DMA transactions and for all
->   the DMA channels then is non-LL mode.
-> - When a valid physical base address is configured but the client
->   wants to use the non-LL mode for DMA transactions then also the
->   flexibility is provided via the peripheral_config struct member of
->   dma_slave_config. In this case the channels can be individually
->   configured in non-LL mode. This use case is desirable for single
->   DMA transfer of a chunk, this saves the effort of preparing the
->   Link List.
+[+cc Terry, Robert, CXL list, Smita, Dongdong]
 
-> +static pci_bus_addr_t dw_edma_get_phys_addr(struct pci_dev *pdev,
-> +					    struct dw_edma_pcie_data *pdata,
-> +					    enum pci_barno bar)
-> +{
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX)
-> +		return pdata->devmem_phys_off;
-> +	return pci_bus_address(pdev, bar);
+On Fri, Sep 05, 2025 at 02:25:27AM +0800, Vernon Yang wrote:
+> From: Vernon Yang <yanglincheng@kylinos.cn>
+> 
+> The kzalloc(GFP_KERNEL) may return NULL, so all accesses to
+> aer_info->xxx will result in kernel panic. Fix it.
+> 
+> Signed-off-by: Vernon Yang <yanglincheng@kylinos.cn>
 
-Does this imply that non-Xilinx devices don't have the iATU that
-translates a PCI bus address to an internal device address?
+Applied to pci/aer for v6.18, thanks, Vernon!
 
-> +}
+Not directly related to this patch, but I'm concerned about some users
+of dev->aer_cap.
+
+Most users of dev->aer_cap either (a) check that it's set before using
+it or (b) are called in paths obviously only reachable via an AER
+interrupt.
+
+But there are a few users of dev->aer_cap that use it without checking
+it for zero, and it's not obvious to me that it must be valid:
+
+  - pci_aer_unmask_internal_errors(), added by b7e9392d5d46 ("PCI/AER:
+    Unmask RCEC internal errors to enable RCH downstream port error
+    handling")
+
+  - dpc_get_aer_uncorrect_severity(), added by 9f08a5d896ce ("PCI/DPC:
+    Fix print AER status in DPC event handling")
+
+  - dpc_is_surprise_removal(), added by 2ae8fbbe1cd4 ("PCI/DPC: Ignore
+    Surprise Down error on hot removal")
+
+> ---
+>  drivers/pci/pcie/aer.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index e286c197d716..aeb2534f50dd 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -383,6 +383,10 @@ void pci_aer_init(struct pci_dev *dev)
+>  		return;
+>  
+>  	dev->aer_info = kzalloc(sizeof(*dev->aer_info), GFP_KERNEL);
+> +	if (!dev->aer_info) {
+> +		dev->aer_cap = 0;
+> +		return;
+> +	}
+>  
+>  	ratelimit_state_init(&dev->aer_info->correctable_ratelimit,
+>  			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
+> -- 
+> 2.51.0
+> 
 
