@@ -1,153 +1,149 @@
-Return-Path: <linux-pci+bounces-35912-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35913-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBCFEB53424
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 15:44:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A5F3B5342B
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 15:45:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1A205A5289
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 13:43:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15000188F2F6
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Sep 2025 13:45:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B77341AA3;
-	Thu, 11 Sep 2025 13:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8625986340;
+	Thu, 11 Sep 2025 13:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="knPWJyWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRDIokHV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936B0341661
-	for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 13:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584A332ED2D;
+	Thu, 11 Sep 2025 13:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757598073; cv=none; b=YNqOz+VbFr5AoUDALm3kNGtzahGq864n1U1bEIUfuHsHZE1bfzPfCjd8+FmZZSGj/l86c4iUHbbHWefI7oq7ptgOD0BDvPHHYcp+AxOAzKdXDpecBhzYk8f5hI1767c4ctwCZaBorPxsGHBy6+pVz9CA0GVPuBsohALot5gOi9A=
+	t=1757598217; cv=none; b=f4ewu9uEYOs8SU3iwNpW0Hs+LjrIFGLbm53/vH3EjatNvqXTWbh0vDE6M5SeZx4VWcC/Y6utB5Qlsi116l0oAPdtbg34Nxz8neqONbl/Yu7I1H5vlOLDBiIg21NAYV4b7onzEXGDXKDiZ0gluEfOo21Waj0WRPkhFQ1fZDcrkhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757598073; c=relaxed/simple;
-	bh=eLNCihb73AkP7eUzkZCYHE7Hj0pppLXFYhZ9Vl1IUQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHb8Nn1dlh3zYxkSjex+Q7OsLM1G2GbmcaiXZCnDb3nM0a4SIyoaGFSiYIYxkeGPwtp1mR3VXNn75ZXFNyk61b+gpqvIu8M4FcIH1+0EJLtfT8LtyO6OJ7GpESlqGbmec6y8qz8RXimuCZQ59vPdUdEn8f1RVUTSd+JRCm0YTOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=knPWJyWP; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4b5fb2f7295so7370521cf.1
-        for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 06:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1757598070; x=1758202870; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b9qmtOM7dk27TAU4OyKZ0knJ4KFcYKzonTZZzmEGOvc=;
-        b=knPWJyWPr0WFntWs6KShTFUbzrHAFhZbbSVbKcX8R6/tHIj8xdWJmAiN0Ow2pK4omx
-         aZVX0Crvad5169nekNpnqzU9q0ccOWjzLPRpXSA6vdUdtZ/FC/DguEvKdD2l7WaJ72Nx
-         x1mS1ay5rFmU7kBnllh4JRVRowGnBo+SELguVgZxHx+O1mUbzk5rStsMLcADVEcKMAkl
-         97h3ryGzVSvwvHdde/OAdmg73dHI0fVN0aQ85/AahAI4ioBnii+oTckyphjDVjiv3eWF
-         2+P+Hj0YyS54wYWpcrpXMwW68vobI6Jc5eZM0Pa7USJEn/WEG+/j99PUG+oka9JAOz1y
-         zIrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757598070; x=1758202870;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b9qmtOM7dk27TAU4OyKZ0knJ4KFcYKzonTZZzmEGOvc=;
-        b=W7swSUcRRtOA5vhbdv8XQYRY4GWGBZoxVQceT2Y4JFc01MrTM2NSmRjj1hbMI+YOgz
-         Er1+flKbCCJ9TkEuZ4k0J0roEhhTCuNrzlIM++Kg7A1FnpgKDyp5+xbQk5T3HfHB968f
-         MvLSB2NKQnXiMN4+okGmZcobpi+R8dAVFMgywWsbV1+GCIZjkr84iTF9/kRpAoBsWJ7G
-         7tMKhiBFQrBHJllI7GNn/3+J+p3CpuoTtQi8xX0Uh0s+M/k5FIuv+7l9H5Yie2SSrN1G
-         blOGnYihdYJ25KNc8EfxFiKdYgfZD3UTzP6XLkoWY759uRM/AHSs1vFtBmwSQUVXTmbR
-         KehQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8mH0xXEm+Y+oBtfFWggNq+GoPEyXkXhuabg6q3s+fAFGnU0L9Xis+Sl4tnxAMEguBO6MrKVNxJjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2FZh7pIw849vIuRdPPwPr35Km9EC1qNbdzAYrDfro1tDSGz1Q
-	1gUZPlFv9+LNebA6idvP/+wMT9/6GL1UVS8XtEjBaDdiSdcTtZyiMZmYG0xwqDClZDc=
-X-Gm-Gg: ASbGncttfqDDod9aUhxfP68JHJHTow5zHZiDXJhwMJTP9WFMiSWa9geIVogHPHmpqCS
-	yTWku70sSYsSE8s71GC696dUSVIbGNGz3+iK023zkw6nhMryHD2FrhmrR3D874bleTqlGVunnO6
-	exhiQHWct3qZkJAxzGl22/dBwjc0CEqPgz9zqot/dOOy71Phm8esFjDSgBHXdI+A6D0cjZVCoUu
-	dRAox5Q4iw+fFNg3wFXVSpKiLwbaE9BJOy2qO43JDTsxlAurG85r3f71962VGKsQl/VUd8aMCFD
-	GTIlVnmfmzTTeiLW4f4AIkiag33BuCldGG4XGsH0sLAY9WL1NGxeWHSyInHRBuVtKeksGrX7h4k
-	QiK/WDxRUnfH3EkxAxfhh+RDfx8JP+fG0bprPim2DSxirTWnlwiTsDd4GrNxMe0jfgjzIBw7SYG
-	aGLYw=
-X-Google-Smtp-Source: AGHT+IG5BULuh1Ix3dTKx0dMR7o7+0XiARxVmRkjj0WGgmMyJMRjiHF7nh7Zr7cWchr7UEHaWH/u8g==
-X-Received: by 2002:a05:622a:1214:b0:4b5:d932:15c6 with SMTP id d75a77b69052e-4b5f847fd1emr220313931cf.34.1757598070182;
-        Thu, 11 Sep 2025 06:41:10 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-820cd703f54sm102730285a.37.2025.09.11.06.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Sep 2025 06:41:08 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uwhXv-00000003zwM-3lhP;
-	Thu, 11 Sep 2025 10:41:07 -0300
-Date: Thu, 11 Sep 2025 10:41:07 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Arto Merilainen <amerilainen@nvidia.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, kvmarm@lists.linux.dev,
-	linux-coco@lists.linux.dev
-Subject: Re: [RFC PATCH v1 34/38] coco: guest: arm64: Validate mmio range
- found in the interface report
-Message-ID: <20250911134107.GG882933@ziepe.ca>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-35-aneesh.kumar@kernel.org>
- <d57d12ce-78c6-4381-80eb-03e9e94f9903@nvidia.com>
- <c3291a06-1154-4c89-a77b-73e2a3ef61ee@nvidia.com>
- <yq5ay0ql364h.fsf@kernel.org>
+	s=arc-20240116; t=1757598217; c=relaxed/simple;
+	bh=0GXo4WsPXbb94gtbo4YsNCOo6bkT29Ut19/AJPbQdME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LKlhlkAfWqxQMN7yASXMMS+dOBuyjCaCw6dyHZo879m9ELssAYj+wCXeLEgWiJt8e/0sST2Zdt5Xu0tp5Oo86a4TrF8yb161Mt5675k6EnnC2zcOGRXN2bC2+kVezXOzx6H0yWSiG4qIzez/b8IhH4xvYUfLnOYJkh5nHvaj9JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRDIokHV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA47EC4CEFC;
+	Thu, 11 Sep 2025 13:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757598217;
+	bh=0GXo4WsPXbb94gtbo4YsNCOo6bkT29Ut19/AJPbQdME=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sRDIokHV+3NXgwH90Z3qR3vXPcPx8SCzRFPduK9JxA5R64wArH2pxjAsKkr6+syON
+	 BDXtAWWHZu7fVDQ9HCwFYquvzy4TOA6T/6dnZu+91j4Oko+FOLcNJmFqHIW+Y0wDQU
+	 Ip7GmOsTzEIzC3lDJRkP97e7ZQqgjK77qTjCay38ZpPp3K6aZPFe4kuGPyo0QOkKJ8
+	 cTW5QwzLNVs6bmInAxr1oJtgIXPMcWQvgOso2ugG3MyjSAYq7pZNMI/Dx8cYemxbPG
+	 V0D09r4LtpT9haGes1lSfBeqzylbVB8AE7NsKy+RAj3cAwL8d6jR0tPudKzgwIQYP8
+	 0DQzFxQRcEU0Q==
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-74381e2079fso769418a34.0;
+        Thu, 11 Sep 2025 06:43:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUa0bN1yco8b7+kApVVF3LRNr22/0l/6FNK0Ynj9j6bt049AuN874U9yHdV9IwPqYeHgDMv8sFYW0FG22k=@vger.kernel.org, AJvYcCUuT/MK8RKJ6JYspFqQGD0J+Nxrt0resH21FnuFEWSSppuBmJYmnQMC+BHMeV+f5/MsoxHSv5PTfmA=@vger.kernel.org, AJvYcCXFK378e3nPkJ989gT3ZZ0Em/2ZN3pXaNdJcmGdHf+dwOCfEz5n9Le8VUL0K6uPgSLmq2jpUUy7qk8Z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/HIHHHeLkbBHvNQcykHqDi1fY1gKGvOK4DL/0NZDW8JzQp5u2
+	aQ4w/a2WJ2x1J6QcjxODSCtLYZoxj7l1XaFwPr4TMibPvkm8rE8aQVduVuNjRyub4fJxKBo81HC
+	rUECWaQ4iWlY+hkBZZ4K2BJwAOcxe3bM=
+X-Google-Smtp-Source: AGHT+IE6Ady68fU71PxUHEDevFaxfnLgB7dpVmhBz5UaanlQR3tYIFV8QpjfWjN8l418mkJ0TLtqkyf/qpZL17czUqo=
+X-Received: by 2002:a05:6830:6f85:b0:745:a336:7260 with SMTP id
+ 46e09a7af769-74c66210137mr12873344a34.0.1757598216239; Thu, 11 Sep 2025
+ 06:43:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5ay0ql364h.fsf@kernel.org>
+References: <75e4ae507fa4faddd063a3a9e17d319ed84529b6.1757562971.git.lukas@wunner.de>
+ <80980751-64db-4dc2-9516-03046e8b4b31@kernel.org>
+In-Reply-To: <80980751-64db-4dc2-9516-03046e8b4b31@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 11 Sep 2025 15:43:25 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0idqEPUpA0uBb_PAaKe0KNqCt0xLskPThPwtsfh3eCdxg@mail.gmail.com>
+X-Gm-Features: Ac12FXw8YYdZ59nK2i-Qn8MLk67KRnR9Lix3xAU-CKM32UvuPaTrcYVd_fsr0jI
+Message-ID: <CAJZ5v0idqEPUpA0uBb_PAaKe0KNqCt0xLskPThPwtsfh3eCdxg@mail.gmail.com>
+Subject: Re: [PATCH] PCI/PM: Move ASUS EHCI workaround out of generic code
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
+	Oleksij Rempel <o.rempel@pengutronix.de>, Timo Jyrinki <timo.jyrinki@iki.fi>, 
+	Ernst Persson <ernstp@gmail.com>, Steven Harms <sjharms@gmail.com>, James Ettle <james@ettle.org.uk>, 
+	Nick Coghlan <ncoghlan@gmail.com>, Weng Xuetian <wengxt@gmail.com>, 
+	Andrey Rahmatullin <wrar@wrar.name>, Boris Barbour <boris.barbour@ens.fr>, 
+	Vlastimil Zima <vlastimil.zima@gmail.com>, David Banks <amoebae@gmail.com>, 
+	Michal Jaegermann <michal@harddata.com>, Chris Moeller <kode54@gmail.com>, Daniel Fraga <fragabr@gmail.com>, 
+	Javier Marcet <jmarcet@gmail.com>, Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 11, 2025 at 11:03:50AM +0530, Aneesh Kumar K.V wrote:
+On Thu, Sep 11, 2025 at 3:34=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
+rg> wrote:
+>
+> On 9/11/25 8:11 AM, Lukas Wunner wrote:
+> > In 2012, commit dbf0e4c7257f ("PCI: EHCI: fix crash during suspend on A=
+SUS
+> > computers") amended pci_pm_suspend_noirq() to work around a BIOS issue =
+by
+> > clearing the Command register if the suspended device is a USB EHCI hos=
+t
+> > controller.
+> >
+> > Commit 0b68c8e2c3af ("PCI: EHCI: Fix crash during hibernation on ASUS
+> > computers") subsequently amended pci_pm_poweroff_noirq() to do the same=
+.
+> >
+> > Two years later, commit 7d2a01b87f16 ("PCI: Add pci_fixup_suspend_late
+> > quirk pass") introduced the ability to execute arbitrary quirks
+> > specifically in pci_pm_suspend_noirq() and pci_pm_poweroff_noirq().
+> >
+> > This allows moving the ASUS workaround out of generic code and into a
+> > proper quirk to improve maintainability and readability.  Constrain to =
+x86
+> > since the ASUS BIOS doesn't seem to have been used on other arches.
+> >
+> > lspci output of affected EHCI host controllers reveals that the only bi=
+ts
+> > set in the Command register are Memory Space Enable and Bus Master Enab=
+le:
+> >    https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D658778
+> >
+> > The latter is cleared by:
+> >    hcd_pci_suspend()
+> >      suspend_common()
+> >        pci_disable_device()
+> >
+> > pci_disable_device() does not clear I/O and Memory Space Enable, althou=
+gh
+> > its name suggests otherwise.
+>
+> That was my gut reaction as well.
+>
+> > The kernel has never disabled these bits
+> > once they're enabled.  Doing so would avoid the need for the quirk, but=
+ it
+> > is unclear what will break if this fundamental behavior is changed.
+> >
+>
+> It's too late for this cycle to do so, but how would you feel about
+> making this change at the start of the next cycle so it had a whole
+> cycle to bake in linux-next and see if there is a problem in doing so?
 
-> But we need to validate the interface report before accepting the device,
-> and the device driver is only loaded after the device has been accepted.
+One cycle in linux-next may not be sufficient I'm afraid because
+linux-next is not tested on the majority of systems running Linux.
 
-+1
+We'd probably learn about the breakage from distro vendors.
 
-This must work from the generic OS code.
+> If there is it could certainly be moved back to a quirk.
 
-So I'd say add a new TSM op:
- int validate_pci_bar_range(struct pci_dev *pdev,
-                            unsigned int bar_index, u64 tdisp_pa,
-			    u64 size,phys_addr_t *bar_offset_out);
-
-TSM has broadly two options to compute bar_offset_out:
-
-1) Require the TDISP MMIO Offset is aligned to the BAR size and use
-   something like:
-
-    *bar_offset_out = (tdisp_pa) % pci_resource_len(pdev, bar_index);
-    ipa = pci_resource_start(pdev, bar_index) + *bar_offset_out;
-    if (size + *bar_offset_out > pci_resource_len(pdev, bar_index))
-        return -EINVAL;
-    tsm_call_to_validate(pdev, ipa, pa, size)
-
-2) Require the TSM to convert the offest'd PA to the IPA:
-
-    tsm_call_to_convert(pdev, pa, size, &ipa);
-
-    if (ipa < pci_resource_start(pdev, bar_index) ||
-        ipa >= pci_resource_end(pdev, bar_index) ||
-        (ipa + size) > pci_resource_end(pdev, bar_index))
-	return -EINVAL;
-
-    *bar_offset_out = ipa -  pci_resource_start(pdev, bar_index);
-
-Then the generic code builds a map of what parts of the BAR are secure
-and what are not.
-
-If it can't do either the TSM is unusable by Linux.
-
-Jason
+Most likely, it would work on the majority of systems, but there would
+be a tail of systems where it would break.  That tail would then need
+to be quirked somehow and it may be worse than just one quirk we have
+today.
 
