@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-36072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0632FB559DB
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 01:10:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A571B559DE
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 01:11:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D9AB3B4CD7
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 23:10:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1AD55C4315
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 23:11:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE21E2877C1;
-	Fri, 12 Sep 2025 23:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD7EF28C869;
+	Fri, 12 Sep 2025 23:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oSfxH+7I"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KQRUMNRz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D54128643F
-	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 23:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7D32877E8
+	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 23:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757718599; cv=none; b=Ei06YDYWEvH6Cm7zWxd0o8qqQ2C47NpnYlEwCm7pHpnk8j1fOCo11tVpS+BQF27Y65PsR/0DC0fuNI9JkO3ACx2nEU+RhgB7uWTiAxnW4buK2sFxwoRL1clT5Xg/45n1VW+JXC2aw3/81f3im+5UBwE0HmDmZch6KiwXafpxZZk=
+	t=1757718601; cv=none; b=W48PSZeyHeyzvdaQ93dhFt0WvKIaxqtaPUJUBtMcGPidI90BgnzmWpUp7HxH6AWNIwojOIHgLY7dmlE5+kuGvjLteWjgoI6mdlcuRuq+JNADQoLVZzqWvGL6M9X8mFA3MnHsBDONPaFi1Rn6AioOw8/YhUcRWImiXidFq9pwwD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757718599; c=relaxed/simple;
-	bh=wk+cDFX3JYEG9AqRvbMYfzyBlK7TsevKhe8uR7IxhbI=;
+	s=arc-20240116; t=1757718601; c=relaxed/simple;
+	bh=YEh//s+EtsJjGeLO13TxNSxxYq8mSsN2ket2o0T8fSo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oPObGMJU4KC6xEz+ueReBcN75NDPDhFv+frE5IS3YZa7nSONXYB5+DSKHGmAwtP8ypQb3w+sGV1MPGtAc15WdxzL2W0YUsMOZnzXkNurOGR26AT0Dq9e9B2s8BryRYv5FYrD4QCP3wgTUO8G2C6aKmViNyESc3FpPpp6yL/j20o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oSfxH+7I; arc=none smtp.client-ip=209.85.216.48
+	 MIME-Version; b=ZFNHfEcMAdzEb8SR0i9XzqTEwG/ZZRxwDMyfSZsQaPxBJusF4FeagvtxzjRse4PUgyMRhVZZkGjtXv5huGiGrOlfGOXYokXjlu21UuKihFVY3Prw71+nVIFQB0VQSFu58Iymjn4Dkblus1tGfJwpQReX7tOhivm8JXWy6lvNm5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KQRUMNRz; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-32de2f8562aso1681753a91.1
-        for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 16:09:57 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-32df682cba2so545152a91.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 16:09:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1757718597; x=1758323397; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1757718599; x=1758323399; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8EcyIGZa+6ToxzyxPuYk0yjX8tMoF6H8xGiBH9NLpZE=;
-        b=oSfxH+7IGNGd4n6yensMZUHuSbXJ85ZRxqQ6AIN4hRhTUgIhz3PWx6rIbKq8FlOwB0
-         3VWJmMPXWDRI1BumxDz7UkuPKrdNol6M3Psrloco6IzdRdHGtbh6SSD+cRFp9SaK2ejq
-         q/Yl9ueMaqDzQbOVM/wBXwa88RixXeI0ZAGJY=
+        bh=1aqQsfYpqczFMN6xd995B9cIuPxzc6IeMNO1DIuGzJc=;
+        b=KQRUMNRzLQIwOB9SGgCZ1b7r6/r4gdYltSkJpKKYpVE0gy/yOkd/lgR2sxXv0RsNZs
+         bb1tIWazv+Bj/yXnD8NLciEBJU/5oUttJVhftH88p4beIUfOkrE+fCxcM1ez6l63Qa0y
+         NgQA7SH+iE4cEOkAMfz/iB2jsQ9aTcB8BQbYI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757718597; x=1758323397;
+        d=1e100.net; s=20230601; t=1757718599; x=1758323399;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8EcyIGZa+6ToxzyxPuYk0yjX8tMoF6H8xGiBH9NLpZE=;
-        b=kpxkGn68yw82zj+/l65bUCVM0FJRTUsWL0X6MxqFd8dgpn+yZsbLUXg24KRwhDHV6Y
-         FffiWJy0qlgR2SFVQcbowgwoQm291k0pEF0zjt6cULV1ok3ddzMhuBnpw3nSZJgD9U7Z
-         BRXTRVuEhbydn7VoCMGyG5U81S6S5Ve4dE+51ouBn8zKQb4JgWVLzVQ88B2eFSTQiQ70
-         1FrLp+Js3jo3P1kPT+7Kb0t27d5ilnj90srOqTKCII78tDiiidzPjE98XVRSCg7HFokz
-         jgc8BgHs5WU9s+4yKwjFEmkQqKsJQ6Jt/FIiozSXDumFQhIhARzGqEF9qTUQ13tnWhcr
-         e22Q==
-X-Gm-Message-State: AOJu0YwTx0vrh4WfdnJgE7gvgnLDYSb11j0eDiVZwpG54ludI5RLvg2R
-	aEr6Eb9P/wEP5eMGMzGzPw7vwzySEny5ARkqt3ImpOMD0FRzMwkDToDIN7whrt0IZA==
-X-Gm-Gg: ASbGncsFaBk0S8LjbnbHFt9qkbKGpHeIeMHHNjciQzHNn5/Vp5NBsEy5zHMB5yAOGTP
-	5s2a5D3ue/A1z5KcqOQRqGjR90CzWZZahcwuYw75Ub5QzcfcHsx4D5uFYvmZlughqkbiwlstw4b
-	6fNfGH69D1TjR3E3Sr+DstDo7ELDCNlZfupiJFG4G45Hf8tH5Peaw8TdY7QFR/83l16s9uE8ewc
-	MdU+VXp6+bkSihs98qPNTQEZ39kGE9KU+neV9rdE199iFW5CBfruMac+D0d76AW9oG9Mzu1Nfyk
-	3FhOIwtCuIMetPR/lWqUkc+NRssEKRy9Y2sLmsAtdQ0JcQg4O6bVyfftc/8Z23Gv5jNUUqb8ro9
-	rtqyWVcJVAhUBU2AG/xKDHwgy8bTHxVHLdv5OdBSiwbcv1gWMm1A/eQJdXzQ=
-X-Google-Smtp-Source: AGHT+IF2cmiYrFQ1xKWdEqefxU7NdVKHQQ304cYE/Le3s9iB7z7uuIXrlH2bNcZ2AM03GLoo+rEoOg==
-X-Received: by 2002:a17:90a:fc4d:b0:329:e729:b2a1 with SMTP id 98e67ed59e1d1-32de4fa1c8bmr5042000a91.35.1757718597437;
-        Fri, 12 Sep 2025 16:09:57 -0700 (PDT)
+        bh=1aqQsfYpqczFMN6xd995B9cIuPxzc6IeMNO1DIuGzJc=;
+        b=lGK5PzSpzWCX8N99vwRSdNACGq6Z+2d/j71RoDxpREP5+MhgQmDUXl0WkNJcS9DwY0
+         71Pr8z6c3bC8wFHr8R/6sgbs1T6YrsB+TgT/GTqe7nqRkXo/IJXD6NyPdsCqYGKg/Iw9
+         d7d8TnfpIah00d8MrvnxFlwFOvmwvxz1H8zAMT5tq5Vp+3CJKUjUtLJBwBc8sxaCimm1
+         YycTP9rGePDyft4ioq6dFdb09Rb0/c8YsRSCZ33lpTZLSg70kjxDRw2pQr2FjOHi3T1e
+         aBx2vAo9fZWqORu88H0oD/FISafXYaK4ZKMYktUQyviCmPdhvLmEqzzTbUURGIYOwxMk
+         c35Q==
+X-Gm-Message-State: AOJu0YzbdsTTc0VcRkDMrtfaO3WlTW/O0EGRpyuGyzOICfaRUQ8vScVy
+	6OFAzLrGFk5oMuWkXTXpeFseWb6nwVfhwltePZukiUU/cwIiQsCnoe1JxJHXYjjrMQ==
+X-Gm-Gg: ASbGncv8z6NOhPznXn4S/6WQ3sEExACkN9OfvE0WI7UImpELBRI+mFPlHERB+uM/9pG
+	wnyM9rCMp6BNayaURLvsVSBiIsifsezuRIGqKrUy+9uVopm3aHae7vnRW/Cpa2elADbk9ROQtTV
+	6+oCiXy3vXq1l3Z8C7rntXUoIb/uMRAtPF1RagIzxGXp6O5qboT9AahUHSzJipkZOjFgJNPvGIV
+	EXp8EmA6q4Nfoq49opwX4nyTvVY9yl+vZ9nN0AY6g19rBnRu7POQE9ATRxKOH0MdLS1OiimmOEv
+	4hNJ4xxLT8OPf8MheMXXdU1fHy6k29ylJ3BWzH9/40vbi+1B64VRBi5Jrxof3oH3RenCSlq1MnS
+	muaQ4xo7dW+KSkQMiUtmEJynogvzQPju+chYgiEqI1PBEPLjxchzMGXgV3TM=
+X-Google-Smtp-Source: AGHT+IHahHShoB5Ii1WzvFIbd2LUrSYt+MXYAQPhHq31+WasztFuE5rlFSFzEb7dWV7UvuA2EIiQ1Q==
+X-Received: by 2002:a17:90b:4d0e:b0:327:53f0:6368 with SMTP id 98e67ed59e1d1-32de4b88595mr5567635a91.2.1757718599221;
+        Fri, 12 Sep 2025 16:09:59 -0700 (PDT)
 Received: from localhost ([2a00:79e0:2e14:7:e464:c3f:39d8:1bab])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-32dea223ddasm1310790a91.2.2025.09.12.16.09.56
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b54a35b7e31sm5643608a12.11.2025.09.12.16.09.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 16:09:56 -0700 (PDT)
+        Fri, 12 Sep 2025 16:09:58 -0700 (PDT)
 From: Brian Norris <briannorris@chromium.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
@@ -89,9 +89,9 @@ Cc: linux-pci@vger.kernel.org,
 	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
 	linux-um@lists.infradead.org,
 	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 3/4] um: Select PCI_DOMAINS_GENERIC
-Date: Fri, 12 Sep 2025 15:59:34 -0700
-Message-ID: <20250912230208.967129-4-briannorris@chromium.org>
+Subject: [PATCH 4/4] kunit: qemu_configs: Add PCI to arm, arm64
+Date: Fri, 12 Sep 2025 15:59:35 -0700
+Message-ID: <20250912230208.967129-5-briannorris@chromium.org>
 X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
 In-Reply-To: <20250912230208.967129-1-briannorris@chromium.org>
 References: <20250912230208.967129-1-briannorris@chromium.org>
@@ -103,27 +103,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is useful especially for KUnit tests, where we may want to
-dynamically add/remove PCI domains.
+To get some more test coverage on PCI tests.
 
 Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
 
- arch/um/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/kunit/qemu_configs/arm.py   | 1 +
+ tools/testing/kunit/qemu_configs/arm64.py | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 9083bfdb7735..7fccd63c3229 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -38,6 +38,7 @@ config UML
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select THREAD_INFO_IN_TASK
-+	select PCI_DOMAINS_GENERIC if PCI
+diff --git a/tools/testing/kunit/qemu_configs/arm.py b/tools/testing/kunit/qemu_configs/arm.py
+index db2160200566..101d67e5157c 100644
+--- a/tools/testing/kunit/qemu_configs/arm.py
++++ b/tools/testing/kunit/qemu_configs/arm.py
+@@ -3,6 +3,7 @@ from ..qemu_config import QemuArchParams
+ QEMU_ARCH = QemuArchParams(linux_arch='arm',
+ 			   kconfig='''
+ CONFIG_ARCH_VIRT=y
++CONFIG_PCI=y
+ CONFIG_SERIAL_AMBA_PL010=y
+ CONFIG_SERIAL_AMBA_PL010_CONSOLE=y
+ CONFIG_SERIAL_AMBA_PL011=y
+diff --git a/tools/testing/kunit/qemu_configs/arm64.py b/tools/testing/kunit/qemu_configs/arm64.py
+index 5c44d3a87e6d..ba2b4e660ba7 100644
+--- a/tools/testing/kunit/qemu_configs/arm64.py
++++ b/tools/testing/kunit/qemu_configs/arm64.py
+@@ -2,6 +2,7 @@ from ..qemu_config import QemuArchParams
  
- config MMU
- 	bool
+ QEMU_ARCH = QemuArchParams(linux_arch='arm64',
+ 			   kconfig='''
++CONFIG_PCI=y
+ CONFIG_SERIAL_AMBA_PL010=y
+ CONFIG_SERIAL_AMBA_PL010_CONSOLE=y
+ CONFIG_SERIAL_AMBA_PL011=y
 -- 
 2.51.0.384.g4c02a37b29-goog
 
