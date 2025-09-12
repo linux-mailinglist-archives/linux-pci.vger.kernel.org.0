@@ -1,48 +1,79 @@
-Return-Path: <linux-pci+bounces-36026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67BFCB54FD6
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:41:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6590B54FEB
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:46:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B58B11885AAF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 13:42:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F8D07C0258
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 13:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F7530DEBC;
-	Fri, 12 Sep 2025 13:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C82AC155CB3;
+	Fri, 12 Sep 2025 13:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3N9S4fP"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LL2IB630"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0CD304BB5;
-	Fri, 12 Sep 2025 13:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F0B33991
+	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 13:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757684513; cv=none; b=Zrq69+tddHGn4yCz4pdcV1r4lcgXTzvnwOyjBgIGo7/WG+28BtMQkPRgvHfdAQT0cQheIdtwGGQaprmELF2roRO1dbBuwnEUPnaNkIzzT4GFZ8FVOddlVXUy9NR9OfaJarY11TUAHlMWAsgzNe7v1doAfpwK6umW3ElXSM5afug=
+	t=1757684757; cv=none; b=drvH2MlmbnNUWdXldYjlv0E/luiKJmT7JkMNvfrI23i5l0WcsLvY4aZHsv7RUmnUN2dP4xryV2s9Zw6391DiKH91K2mtLiKctsU8aIfjNbg6qiJssPuos8ihpp4bn0mR5p4YMuqEJMuG43ODxPB+mcwCbX+Larwvms4nUd9BL/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757684513; c=relaxed/simple;
-	bh=HYntge/rTh/z78LL+yXjZ79tEiJiarbFlDubbPxo0ig=;
+	s=arc-20240116; t=1757684757; c=relaxed/simple;
+	bh=eZ/3k8S1FsU7ViCaeVzf+yLWQczlSilj3ntqWZdSbS4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=syrpoi0Wrznu9TIqcfUuVCeFhNmZl4koQc+xZdMqGh06pyEZWx6eoJZeKMwU/ZNXBa2TILqhNWvcP0xxk1IHnoyVoDCA9vE+NdlTFqHttUUybin077T4wCd19xvwSuirbE9PM5P4Gsc8aF+j5x6EWR1NAqxiMMuNbsXxWSqggYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3N9S4fP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F876C4CEF1;
-	Fri, 12 Sep 2025 13:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757684512;
-	bh=HYntge/rTh/z78LL+yXjZ79tEiJiarbFlDubbPxo0ig=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p3N9S4fPYn2lGOifR9z6N7+/rMZOHk78KhOHkj4DWt//NXN6z4h9mCxdSSBis43Vs
-	 bffI3+C4jfvDv4UGdRcgbWzXWjk59EJCSZzDwJqgl9jIPa/SqbSIy+8Z/YBM8hz8Jf
-	 x2S1AGi+cbwVhWLUHXXZRAAUoRRYs/DzR2fF3mac+hvy1bUif/rc1kLMD3lih0Ohkj
-	 0qBwcb8b+He490zC30B+himio7YYjZcBUuWptadU+u6okbVleLKb+PtAnkmlD5JUrf
-	 l3S90EHL0xEqOriMXPbPpOwZtR7AnRLJKGR/JYw9m26CcLFnlrlqALUkfuLPlFIipC
-	 6G44/vdmP2Fiw==
-Message-ID: <025bc9f5-bc65-45d6-adfb-740473d6b097@kernel.org>
-Date: Fri, 12 Sep 2025 15:41:46 +0200
+	 In-Reply-To:Content-Type; b=uPT9+/HIH9tYRZZsMB3LhjQVZSyl9FgPG2sgi44XimnsO9nKkOtvK8+OPR409FWjSH5q+EJj2nhhbKKxxbPU6oDgCnz245QQTGtKXdNZsHjo2pKikNIRAGTzw0ip+X7BFXgusLrlZo4WokBmNvGrfWZYm+RcL6q1o2UMFA1YvCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LL2IB630; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b07d5e67a95so37781766b.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 06:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1757684754; x=1758289554; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bEDg70Jj7YKjT08by451j1eysJp3oufT9qTjoaWDXNc=;
+        b=LL2IB630We+CcGmz/4ip+YdvQYC7ZEhje5LLh7aIkWTJLl1ZRTDlJ1J5cK7nUlSQ+p
+         JFMcRJiKW/WVnu148MKr+8QLdgNRWeX0jd4b1IsUw2hl8QGvOn+jTNZ6lbKDJyW0zrwK
+         dMadsOqI/ZJ7t+gA8GVQh9Y46ROrIumpwUskPOAhWn80eOb1i1GJL53Zl1dzLkM1OJ/S
+         hVazPivgCmRlNOtBplI9OITuh6OQvkGhWxI4qtxWOQ4hac4g5zFbns5bdMEAhy1y6LsQ
+         1NkgEcPCmva2aD2LiZKFy/rU5nYNEdMjSrkRT1VyqVb8iyc0ZdEZGFuUuFSr4Fc08pJ2
+         cw3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757684754; x=1758289554;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bEDg70Jj7YKjT08by451j1eysJp3oufT9qTjoaWDXNc=;
+        b=QEgNJ6jiXKEAUgb/m4QesFqRzbycga0eQk4BOSaUmnOsqOM6MxqI4GKHMuzXjiCG8r
+         Ug+alIVqs1DtDCWOXVQZWA4UFBfix/ptvIJ/3YIW/0nFwCmNK58hHYqfPeZHra3yiTQk
+         nXl3XG0n6YADsLyrLsby/OaQM2wxhmfgz+2T0fW5vXKD60886qccn+Z+lRQEDqsDQega
+         AcT5RF8RiSq16v5MpLjWDdi3CwWbMT0n1nVLzqTr8vnzsuX5M/MWAmgTL61M3bPRxwB9
+         pRN2G5WsbiybhSKF4PT8KE3y5sDh1zvixQLk09qHj717Q0rpffpqhTNOk70k7swYD1ef
+         YPHg==
+X-Gm-Message-State: AOJu0YxZJPfAGj+hX2TwdkjOXLeAriXkfFtfxl3GHVy+A0uVMQzHHp8v
+	tiKKQozh0PLJm/m56vszM0hTNAoPMQczT1MSw2FjsQfA8IeQopVDCzOQT87t6BUYdgI=
+X-Gm-Gg: ASbGncsHxQpUvfnb5XlpNKoisvtbicSI/A2+5f6uy2AlzIuF/MNZwemEZvsKb9TwrJ4
+	2ddJ9jnHMFaKwGLjTMS7Ve16wYoUXe6iC8SDLTyxSS7JZJV+UolavlpABh2lqvucSC7sjcq1x7e
+	vL/Lc5wrIN1kUb+85QcBLjwkM6webL4qkmJE9GQn+QthZ5114SZh+u+KZDkoKlY/F3VSi4W0rYx
+	muKul17JFYqtT0oJZ+s44pETNWD6GcgxVwvmtJi8k8exIOLXe7cmVPTAG/kZ663PZGBpMXiC16Y
+	HPdRKrGP8gIuQZ9pCeK+TalzAq8/REBY2XM4DlCVidnSSrb02DdwaKlc2zeHc5M8Mc8knTayd2w
+	8AOD/Bk7EnLUYBUX7ENoJrcjf4EDn2HLElkijQUisyQ==
+X-Google-Smtp-Source: AGHT+IEsCimxO1uS8fXVfh+sRS/G5aXdz/QiPj+EdzJelEbwTklRPu2BA2r4RlFn2GW1OHK5h/DRUA==
+X-Received: by 2002:a17:907:d64a:b0:b04:6f77:9cff with SMTP id a640c23a62f3a-b07c2597b06mr320087566b.27.1757684753981;
+        Fri, 12 Sep 2025 06:45:53 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.153])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07b3129199sm370798366b.36.2025.09.12.06.45.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Sep 2025 06:45:53 -0700 (PDT)
+Message-ID: <9af52f53-1060-4311-85bd-e0539baf0a4b@tuxon.dev>
+Date: Fri, 12 Sep 2025 16:45:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,9 +81,9 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/6] arm64: defconfig: Enable PCIe for the Renesas
- RZ/G3S SoC
-To: Claudiu <claudiu.beznea@tuxon.dev>, bhelgaas@google.com,
+Subject: Re: [PATCH v4 1/6] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
+ documentation for the PCIe IP on Renesas RZ/G3S
+To: Krzysztof Kozlowski <krzk@kernel.org>, bhelgaas@google.com,
  lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  geert+renesas@glider.be, magnus.damm@gmail.com, p.zabel@pengutronix.de
@@ -61,74 +92,83 @@ Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
  Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
  Wolfram Sang <wsa+renesas@sang-engineering.com>
 References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
- <20250912122444.3870284-7-claudiu.beznea.uj@bp.renesas.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <20250912122444.3870284-2-claudiu.beznea.uj@bp.renesas.com>
+ <d40011bb-8e03-402e-b343-7331d51e2427@kernel.org>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250912122444.3870284-7-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <d40011bb-8e03-402e-b343-7331d51e2427@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/09/2025 14:24, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+
+On 9/12/25 16:41, Krzysztof Kozlowski wrote:
+> On 12/09/2025 14:24, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
+>> Base Specification 4.0. It is designed for root complex applications and
+>> features a single-lane (x1) implementation. Add documentation for it.
+>>
+>> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > 
-> Enable PCIe for the Renesas RZ/G3S SoC.
+> You cannot really test bindings in that meaning and build tools don't
+> count as testing, just like building C code is not testing, running
+> sparse is not testing, checking with coccinelle is not testing.
 > 
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> And it cannot be tested even in the meaning of building, because:
 
-...
+That tag was picked by b4. I'll drop it next time. Same for the defconfig
+patch.
 
+> 
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+> 
+> 
+> ...
+> 
+>> +            interrupt-controller;
+>> +            interrupt-map-mask = <0 0 0 7>;
+>> +            interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INTA */
+>> +                            <0 0 0 2 &pcie 0 0 0 1>, /* INTB */
+>> +                            <0 0 0 3 &pcie 0 0 0 2>, /* INTC */
+>> +                            <0 0 0 4 &pcie 0 0 0 3>; /* INTD */
+>> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
+>> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
+>> +            clock-names = "aclk", "pm";
+>> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
+>> +                     <&cpg R9A08G045_PCI_RST_B>,
+>> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
+>> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
+>> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
+>> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
+>> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
+>> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
+>> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
+>> +            power-domains = <&cpg>;
+>> +            device_type = "pci";
+>> +            #address-cells = <3>;
+>> +            #size-cells = <2>;
+>> +            max-link-speed = <2>;
+>> +            renesas,sysc = <&sysc>;
+>> +            status = "disabled";
+> 
+> ...you disabled the example.
+> 
+> I don't understand what happened here - why this got now disabled.
+> 
+> Code was correct before, but you made so many changes including this one.
 
-> @@ -230,6 +230,7 @@ CONFIG_PCIE_MEDIATEK_GEN3=m
->  CONFIG_PCI_TEGRA=y
->  CONFIG_PCIE_RCAR_HOST=y
->  CONFIG_PCIE_RCAR_EP=y
-> +CONFIG_PCIE_RENESAS_RZG3S_HOST=y
+I reordered the properties in the device tree to follow almost the same
+pattern as other already existing nodes in the SoC dtsi and copied that one
+here as example. I missed to enable the example.
 
-You really cannot test defconfig, either...
+Thank you for your review,
+Claudiu
 
-Best regards,
-Krzysztof
+> 
+> Best regards,
+> Krzysztof
+
 
