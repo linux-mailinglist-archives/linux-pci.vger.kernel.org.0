@@ -1,79 +1,148 @@
-Return-Path: <linux-pci+bounces-36051-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36052-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B8AEB5559E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 19:49:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35CCCB555DC
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 20:10:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C18F176CAE
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 17:49:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E05333B06AB
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 18:10:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BAAF32A3F2;
-	Fri, 12 Sep 2025 17:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC69032A81C;
+	Fri, 12 Sep 2025 18:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ3Uy4KF"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LQ3BgZpe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53096329F3F;
-	Fri, 12 Sep 2025 17:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51810302CB2;
+	Fri, 12 Sep 2025 18:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757699344; cv=none; b=R6QxYQD+UG/becBG4o5fh2jfqJH92BjehuM+T2rLMcZnCHGRJ8SGrHhrSLNo1EGLrXvox3au/ISLtS6ve7w4BJoPqKRHpJke5qWglaJ9EPZrn304/5c38Zg54uz+pqozrgno2DOZKrCPw/r6gGLObTI2NvkUfZtmUySHF6gZi1g=
+	t=1757700609; cv=none; b=JxqUS9OQDGgaAyDAAMKec8QM684ZH6xZQwlJnymGck3XTl4lCq6qylYrbvG0jxl+EF6LL/BYS9BQi8VCPovP3V2DomvnuD/n4q1yYJRl9l/41AiPZ1nQuLCa8LlQ6DZkVTRTFUuBhm51kS4MPcR0m97ZZBW9DLY1ah/972CM0pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757699344; c=relaxed/simple;
-	bh=QW9jAxsE0BHuYb8pADHkxYBs4aPFw2GiNbEAj9orAMA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qZqne9nZWDjDvND6ZASEc4fHvYe1rdHQX0+XOj2m5RJYUPvznx2PhGPuz5IdLMxF/feGS1oKubk+D0pwAoroffKk6KznIwMSKF3KH9tbFEaq9QYMxRSsx6lXADmBptvpZRi6lD403aMkcsLijT9sobczdqvrrdESnG/SCRDD41Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ3Uy4KF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D609AC4CEF1;
-	Fri, 12 Sep 2025 17:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757699343;
-	bh=QW9jAxsE0BHuYb8pADHkxYBs4aPFw2GiNbEAj9orAMA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MZ3Uy4KFtUP99h/jsj293C9ZB23Ca1cQZxusNBo3rja2NjqmzRKihgc4Qj2DZPYHd
-	 pDaAeFL2HbbVbZ7d0K2z4s7CtXYbZpkLc/q+fJn0bS/ptpeJ0RkHmpsN6L3vLLYDA0
-	 Jy9ahpLKC0a3w+O6E3sa9to9R5QIX1WY/Re1PpF6AUrZctKsCXu9kxBBO8e+DkC7Y6
-	 S2JMAA6R+w93ZgwY2IF/8kXbAOS5uAFVMp37GavZCLJV0zMwn78h8+XGT2houJMBpo
-	 VrDgB7G/v5Nfdyro/JcPLBSSaCVMvKJlaGCEfIa00WJsA/9WrKUm/tu2Umpn0MXbPK
-	 dF9MRwEu/7QCA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71410383BF4E;
-	Fri, 12 Sep 2025 17:49:07 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.17
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250912152842.GA1625331@bhelgaas>
-References: <20250912152842.GA1625331@bhelgaas>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250912152842.GA1625331@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-3
-X-PR-Tracked-Commit-Id: b816265396daf1beb915e0ffbfd7f3906c2bf4a4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 22f20375f5b71f30c0d6896583b93b6e4bba7279
-Message-Id: <175769934592.3023336.8078993412767026909.pr-tracker-bot@kernel.org>
-Date: Fri, 12 Sep 2025 17:49:05 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Klaus Kudielka <klaus.kudielka@gmail.com>, Jan Palus <jpalus@fastmail.com>, Tony Dinh <mibodhi@gmail.com>, Rob Herring <robh@kernel.org>
+	s=arc-20240116; t=1757700609; c=relaxed/simple;
+	bh=yPJqLt8S5WWM4BObvCnuZSDbc1t/tgpd5gl4wkceEGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3c+crgGM9/fJ1XVtzaq2C74CVkrhehomByFYYJ3536xoME/bMOoI+eCfaFN+QpLEeXimyjuMh1mHTFgsWFMP0cunydtYHzj6hzrZoeg6QfcYcDom9jPyqzvP0axGR48m3M6LnNbhmhdWwc3I8hVBhZEFcjUksr1tpZ8m7qj9EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LQ3BgZpe; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id ED2B42119CBF;
+	Fri, 12 Sep 2025 11:10:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED2B42119CBF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757700602;
+	bh=HXYJgEfXFwo/OPKrYhrveFvpXwC44rrX+LkCZApziY4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LQ3BgZpeMJGwjTLRudlWpMa8SX8RO+j/34vsQaL4PkTvTkI/qkWK/wElTFG4ma7bq
+	 8NM3LoJh5HhkcNK+KwwYAoh01/HqKWzw8IdRL8lUGd7y0lqldMU83UUu/URfbdFHiD
+	 X8LZ8UBwGVc2sHYIuNq4iAAYSpEmzqL/34I8VDGk=
+Message-ID: <a8c8305c-b518-c840-fc64-50bcba302725@linux.microsoft.com>
+Date: Fri, 12 Sep 2025 11:10:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v1 2/2] Drivers: hv: Make CONFIG_HYPERV bool
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-arch@vger.kernel.org, virtualization@lists.linux.dev,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, jikos@kernel.org, bentiss@kernel.org,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, bhelgaas@google.com,
+ James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+ deller@gmx.de, arnd@arndb.de, sgarzare@redhat.com, horms@kernel.org
+References: <20250906010952.2145389-1-mrathor@linux.microsoft.com>
+ <20250906010952.2145389-3-mrathor@linux.microsoft.com>
+ <2025090621-rumble-cost-2c0d@gregkh>
+ <d7d7b23f-eaea-2dbc-9c9d-4bee082f6fe7@linux.microsoft.com>
+ <2025091253-overwrite-carol-b197@gregkh>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <2025091253-overwrite-carol-b197@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Fri, 12 Sep 2025 10:28:42 -0500:
+On 9/12/25 04:43, Greg KH wrote:
+> On Mon, Sep 08, 2025 at 02:01:34PM -0700, Mukesh R wrote:
+>> On 9/6/25 04:36, Greg KH wrote:
+>>> On Fri, Sep 05, 2025 at 06:09:52PM -0700, Mukesh Rathor wrote:
+>>>> With CONFIG_HYPERV and CONFIG_HYPERV_VMBUS separated, change CONFIG_HYPERV
+>>>> to bool from tristate. CONFIG_HYPERV now becomes the core Hyper-V
+>>>> hypervisor support, such as hypercalls, clocks/timers, Confidential
+>>>> Computing setup, PCI passthru, etc. that doesn't involve VMBus or VMBus
+>>>> devices.
+>>>
+>>> But why are you making it so that this can not be a module anymore?  You
+>>> are now forcing ALL Linux distro users to always have this code in their
+>>> system, despite not ever using the feature.  That feels like a waste to
+>>> me.
+>>>
+>>> What is preventing this from staying as a module?  Why must you always
+>>> have this code loaded at all times for everyone?
+>>
+>> This is currently not a module. I assume it was at the beginning. In
+>> drivers/Makefile today:
+>>
+>> obj-$(subst m,y,$(CONFIG_HYPERV))       += hv/
+>>
+>>
+>> More context: CONFIG_HYPERV doesn't really reflect one module. It is
+>> both for kernel built in code and building of stuff in drivers/hv.
+>>
+>> drivers/hv then builds 4 modules:
+>>
+>> obj-$(CONFIG_HYPERV)            += hv_vmbus.o
+>> obj-$(CONFIG_HYPERV_UTILS)      += hv_utils.o
+>> obj-$(CONFIG_HYPERV_BALLOON)    += hv_balloon.o
+>> obj-$(CONFIG_MSHV_ROOT)         += mshv_root.o
+>>
+>> Notice vmbus is using CONFIG_HYPERV because there is no 
+>> CONFIG_HYPERV_VMBUS. We are trying to fix that here.
+> 
+> This series does not apply to my tree:
+> 
+> checking file drivers/gpu/drm/Kconfig
+> checking file drivers/hid/Kconfig
+> checking file drivers/hv/Kconfig
+> Hunk #2 FAILED at 82.
+> 1 out of 2 hunks FAILED
+> checking file drivers/hv/Makefile
+> checking file drivers/input/serio/Kconfig
+> checking file drivers/net/hyperv/Kconfig
+> checking file drivers/pci/Kconfig
+> checking file drivers/scsi/Kconfig
+> checking file drivers/uio/Kconfig
+> checking file drivers/video/fbdev/Kconfig
+> checking file include/asm-generic/mshyperv.h
+> Hunk #1 succeeded at 162 with fuzz 2 (offset -3 lines).
+> Hunk #2 succeeded at 198 (offset -3 lines).
+> Hunk #3 succeeded at 215 (offset -3 lines).
+> checking file net/vmw_vsock/Kconfig
+> 
+> What was it made against?
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-3
+Sorry to hear that. It was built against hyper-next, but perhaps I 
+accidentally used our internal mirror. Let me rebase and send V2
+right away.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/22f20375f5b71f30c0d6896583b93b6e4bba7279
+Thanks,
+-Mukesh
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
 
