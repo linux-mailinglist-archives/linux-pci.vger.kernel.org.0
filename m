@@ -1,130 +1,242 @@
-Return-Path: <linux-pci+bounces-35983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C3BDB543E9
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 09:31:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BEBB54552
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 10:28:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8145686602
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 07:31:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E8B11CC2C42
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 08:28:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACC0281530;
-	Fri, 12 Sep 2025 07:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FB22D5945;
+	Fri, 12 Sep 2025 08:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/4hv4q4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4QQCTls"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FC61917F1
-	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 07:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E252C2DC780;
+	Fri, 12 Sep 2025 08:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757662299; cv=none; b=T5JPEIFp4T5HM7dGhuH7yjlgLtTSsT4ez7EVPLGElRzJdUCqsCBpgHB6Y/yflbCsxexmsgOl6LhCVOHl2ViMpo+97vrGoDH/Sk0hlop1dOKdoEE2yVB5xJnSOIm+2zNFofQOLERJ5ONkOT//y6P2KlKfIFS83DqaDvBOrrFyYrE=
+	t=1757665662; cv=none; b=SpzHSuWqXaPDEjnAemhQEfQGuBtZ2RlyCAdmteta6I2K8zGgNXpgIkRrFhSJ59OoOpF19QhPaMm2vHyI7UGx9gYgqVwFMQGlpcQ+WNDJpEur8rfsRCYXLAflrLNcYNlb1HDoW9EHoM1v0UTzjVuLq1NrdHbLPgJULwLn6ispjJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757662299; c=relaxed/simple;
-	bh=TZpTxFDmSe7EMR/ZVrRQ+bWbSTyYS+WuOsZbKAYbS1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cdv0EJghA8A4yPtqFeya3ixQlzWP206cqdXEngbab703g5C1y0KDl4aND3weLAgWh3ltBKTaWSK/Rl5PsbBEnF80y5qrHmAJUG/CD0HBKxs4G6wg99oE2l6fRCbrS9XTVqB5K7ox+qIhvN4I/8k/AZb1xMo5ZakscxDdj+z+TOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/4hv4q4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAB9C4CEF4;
-	Fri, 12 Sep 2025 07:31:37 +0000 (UTC)
+	s=arc-20240116; t=1757665662; c=relaxed/simple;
+	bh=6xxzzd/ernId8OPpo0sEQcfNMw1jhcfLCa6q7kv32EU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JiJT0yhbJ61UWMK32e/d0rogI8uLsI0Jpwc4yUrQ5IU40D0wRcQ9VanggiqkZYmEb8NfwDEwYuPnY0ztkUU6paqRI1qOW4pdOGdRz5boZp3uPTsMRAntEydSNXGIfpLTYbMH23TSrObIzzJ/KuVvqutDbvmQjelD5ax/lBtXsyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4QQCTls; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB056C4CEF4;
+	Fri, 12 Sep 2025 08:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757662299;
-	bh=TZpTxFDmSe7EMR/ZVrRQ+bWbSTyYS+WuOsZbKAYbS1g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O/4hv4q4YtNsfAmESnzDSlGmRJWfn15IeGq34vlmH7+3LyiEpbLP8v0s2dG7hJMG/
-	 me1/CPrAki/HmPqHx8jO+lrvdGRMYd96E/svCA2LDYPbsa2z/LhPXuZFTarbJvczzJ
-	 ZKxpY2Mg87VZRkTmnQ6vTTuvv5aLheDERigxS23HY+nyN850COS74AGwf5HO+LkioD
-	 7tA2jzZDCTyWsGDhjXc8sdcnOpMFKmZrm3ZVUHQmWgYay683A9MmlCwf6/unRz5Cpf
-	 xMCpKdXvHg2nIPSPOC6oO4ldjRTAfsHT3ljVFtjzhbyCzUAPj6Nlt4crstSnlu/JYZ
-	 JKe6JkvNsFGtA==
-Message-ID: <94e8dbce-9e9a-4fe7-b33c-1d451c07eba6@kernel.org>
-Date: Fri, 12 Sep 2025 16:31:36 +0900
+	s=k20201202; t=1757665661;
+	bh=6xxzzd/ernId8OPpo0sEQcfNMw1jhcfLCa6q7kv32EU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A4QQCTls3hEVEbvxLogVWLsmPwqUlMAuTpTowWWWXM/+qphMfQKBOABU+yM5dMtWj
+	 ae84y6BbOT/fovVXR+wZlIPtLKXys/5Jhqb5DHlw13M69uyAZroR0mrIZ6n0iarwIl
+	 +t2ixIcdZy6kDp5rBgjXoCJDdTRgh6ifdEhruEA7uh2536m5HYeIhGb5dW4Mqg/eTP
+	 qO7sqZCBXwBv/0KIzwufRxRpyDncba3zabmcbwlc8yca8UmcDNOFSYyEQ55u58wbTt
+	 Pavc5brh/OnI0vsO/0+quZs+20Ydj1FxAs/5gFTcSofITixZF+zHsrW+r3WimXMm1a
+	 HENDyOFg6iDzg==
+Date: Fri, 12 Sep 2025 13:57:34 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 5/5] PCI: qcom: Allow pwrctrl core to toggle PERST#
+ for new DT binding
+Message-ID: <r7cpjk2jun3h4xnfncqldeyfov4ad3bpq5kcfcxcx3eyg6g2hj@rcajqn7snemy>
+References: <20250903-pci-pwrctrl-perst-v2-5-2d461ed0e061@oss.qualcomm.com>
+ <20250908193428.GA1437972@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: NULL check dma channels
- before release
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
- Niklas Cassel <cassel@kernel.org>
-References: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250908193428.GA1437972@bhelgaas>
 
-On 9/12/25 16:11, Shin'ichiro Kawasaki wrote:
-> When endpoint controller driver is immature, the fields dma_chan_tx and
-> dma_chan_rx of the struct pci_epf_test could be NULL even after epf
-> initialization. However, pci_epf_test_clean_dma_chan() assumes that they
-> are always non-NULL valid values, and causes kernel panic when the
-> fields are NULL. To avoid the kernel panic, NULL check the fields before
-> release.
+On Mon, Sep 08, 2025 at 02:34:28PM GMT, Bjorn Helgaas wrote:
+> On Wed, Sep 03, 2025 at 12:43:27PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > If the platform is using the new DT binding, let the pwrctrl core toggle
+> > PERST# for the device. This is achieved by populating the
+> > 'pci_host_bridge::toggle_perst' callback with qcom_pcie_toggle_perst().
 > 
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+> Can we say something here about how to identify a "new DT binding"?
+> I assume there is a DT property or something that makes it "new"?
+
+This is taken care now.
+
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e091193bd8a8..1c29d5dd4382 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -301,15 +301,20 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
->  
-> -	dma_release_channel(epf_test->dma_chan_tx);
-> -	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +	if (epf_test->dma_chan_tx) {
-> +		dma_release_channel(epf_test->dma_chan_tx);
-> +		if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +			epf_test->dma_chan_tx = NULL;
-> +			epf_test->dma_chan_rx = NULL;
-> +			return;
-> +		}
->  		epf_test->dma_chan_tx = NULL;
-> -		epf_test->dma_chan_rx = NULL;
-> -		return;
->  	}
+> > qcom_pcie_toggle_perst() will find the PERST# GPIO descriptor associated
+> > with the supplied 'device_node' and toggles PERST#. If PERST# is not found
+> > in the supplied node, the function will look for PERST# in the parent node
+> > as a fallback. This is needed since PERST# won't be available in the
+> > endpoint node as per the DT binding.
+> > 
+> > Note that the driver still asserts PERST# during the controller
+> > initialization as it is needed as per the hardware documentation. Apart
+> > from that, the driver wouldn't touch PERST# for the new binding.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 89 +++++++++++++++++++++++++++++-----
+> >  1 file changed, 78 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 78355d12f10d263a0bb052e24c1e2d5e8f68603d..3c5c65d7d97cac186e1b671f80ba7296ad226d68 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -276,6 +276,7 @@ struct qcom_pcie_port {
+> >  struct qcom_pcie_perst {
+> >  	struct list_head list;
+> >  	struct gpio_desc *desc;
+> > +	struct device_node *np;
+> >  };
+> >  
+> >  struct qcom_pcie {
+> > @@ -298,11 +299,50 @@ struct qcom_pcie {
+> >  
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> >  
+> > -static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
+> > +static struct gpio_desc *qcom_find_perst(struct qcom_pcie *pcie, struct device_node *np)
+> > +{
+> > +	struct qcom_pcie_perst *perst;
+> > +
+> > +	list_for_each_entry(perst, &pcie->perst, list) {
+> > +		if (np == perst->np)
+> > +			return perst->desc;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +static void qcom_toggle_perst_per_device(struct qcom_pcie *pcie,
+> > +					 struct device_node *np, bool assert)
+> > +{
+> > +	int val = assert ? 1 : 0;
+> > +	struct gpio_desc *perst;
+> > +
+> > +	perst = qcom_find_perst(pcie, np);
+> > +	if (perst)
+> > +		goto toggle_perst;
+> > +
+> > +	/*
+> > +	 * If PERST# is not available in the current node, try the parent. This
+> > +	 * fallback is needed if the current node belongs to an endpoint or
+> > +	 * switch upstream port.
+> > +	 */
+> > +	if (np->parent)
+> > +		perst = qcom_find_perst(pcie, np->parent);
+> 
+> Ugh.  I think we need to fix the data structures here before we go
+> much farther.  We should be able to search for PERST# once at probe of
+> the Qcom controller.  Hopefully we don't need lists of things.
+> 
+> See https://lore.kernel.org/r/20250908183325.GA1450728@bhelgaas.
+> 
 
-Can we simplify here ?
+I've added a patch to fix in the next version of this series.
 
-	if (epf_test->dma_chan_tx) {
-		dma_release_channel(epf_test->dma_chan_tx);
-		epf_test->dma_chan_tx = NULL;
-		if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-			epf_test->dma_chan_rx = NULL;
-			return;
-		}
-	}
+> > +toggle_perst:
+> > +	/* gpiod* APIs handle NULL gpio_desc gracefully. So no need to check. */
+> > +	gpiod_set_value_cansleep(perst, val);
+> > +}
+> > +
+> > +static void qcom_perst_reset(struct qcom_pcie *pcie, struct device_node *np,
+> > +			      bool assert)
+> >  {
+> >  	struct qcom_pcie_perst *perst;
+> >  	int val = assert ? 1 : 0;
+> >  
+> > +	if (np)
+> > +		return qcom_toggle_perst_per_device(pcie, np, assert);
+> > +
+> >  	if (list_empty(&pcie->perst))
+> >  		gpiod_set_value_cansleep(pcie->reset, val);
+> >  
+> > @@ -310,22 +350,34 @@ static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
+> >  		gpiod_set_value_cansleep(perst->desc, val);
+> >  }
+> >  
+> > -static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> > +static void qcom_ep_reset_assert(struct qcom_pcie *pcie, struct device_node *np)
+> >  {
+> > -	qcom_perst_assert(pcie, true);
+> > +	qcom_perst_reset(pcie, np, true);
+> >  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+> >  }
+> >  
+> > -static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+> > +static void qcom_ep_reset_deassert(struct qcom_pcie *pcie,
+> > +				   struct device_node *np)
+> >  {
+> >  	struct dw_pcie_rp *pp = &pcie->pci->pp;
+> >  
+> >  	msleep(PCIE_T_PVPERL_MS);
+> > -	qcom_perst_assert(pcie, false);
+> > +	qcom_perst_reset(pcie, np, false);
+> >  	if (!pp->use_linkup_irq)
+> >  		msleep(PCIE_RESET_CONFIG_WAIT_MS);
+> >  }
+> >  
+> > +static void qcom_pcie_toggle_perst(struct pci_host_bridge *bridge,
+> > +				    struct device_node *np, bool assert)
+> > +{
+> > +	struct qcom_pcie *pcie = dev_get_drvdata(bridge->dev.parent);
+> > +
+> > +	if (assert)
+> > +		qcom_ep_reset_assert(pcie, np);
+> > +	else
+> > +		qcom_ep_reset_deassert(pcie, np);
+> > +}
+> > +
+> >  static int qcom_pcie_start_link(struct dw_pcie *pci)
+> >  {
+> >  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > @@ -1320,7 +1372,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> >  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> >  	int ret;
+> >  
+> > -	qcom_ep_reset_assert(pcie);
+> > +	qcom_ep_reset_assert(pcie, NULL);
+> >  
+> >  	ret = pcie->cfg->ops->init(pcie);
+> >  	if (ret)
+> > @@ -1336,7 +1388,13 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> >  			goto err_disable_phy;
+> >  	}
+> >  
+> > -	qcom_ep_reset_deassert(pcie);
+> > +	/*
+> > +	 * Only deassert PERST# for all devices here if legacy binding is used.
+> > +	 * For the new binding, pwrctrl driver is expected to toggle PERST# for
+> > +	 * individual devices.
+> 
+> Can we replace "new binding" with something explicit?  In a few
+> months, "new binding" won't mean anything.
+> 
 
->  
-> -	dma_release_channel(epf_test->dma_chan_rx);
-> -	epf_test->dma_chan_rx = NULL;
-> +	if (epf_test->dma_chan_rx) {
-> +		dma_release_channel(epf_test->dma_chan_rx);
-> +		epf_test->dma_chan_rx = NULL;
-> +	}
->  }
->  
->  static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
+So I've introduced a new flag, qcom_pcie::legacy_binding, which gets set if the
+driver uses qcom_pcie_parse_legacy_binding(). Based on this flag, PERST# will be
+deasserted in this driver.
 
+And I've removed references to 'new binding' term.
+
+- Mani
 
 -- 
-Damien Le Moal
-Western Digital Research
+மணிவண்ணன் சதாசிவம்
 
