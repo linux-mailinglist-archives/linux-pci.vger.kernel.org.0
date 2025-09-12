@@ -1,123 +1,153 @@
-Return-Path: <linux-pci+bounces-36048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFA9CB5552C
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 18:58:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A5F3B5556F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 19:19:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9275A16F258
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 16:58:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD597565117
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 17:19:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 570C43218BF;
-	Fri, 12 Sep 2025 16:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3535B324B01;
+	Fri, 12 Sep 2025 17:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmbXP34F"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dFO7o4Jr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304AE32145E
-	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 16:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD69322DCB;
+	Fri, 12 Sep 2025 17:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757696289; cv=none; b=mIf23DUM8Y5p/m/iINcL2/BY8IZ7/zMHjt/W1EUxisn6wFNMySTEM1or6/77rt+CzqA7EV6ay3eMzI0aeUKL48e3WTStQeT1zsCI0Vu6uQEtO8rLZ6yWH/0hmSSTpnMTCQEfHSeBpXC1NrU4PU0ee4279NSJ7JZpwZW2BqYhnNA=
+	t=1757697592; cv=none; b=L8XW86OYpN8ySek9Z0Odo+iyaDLiJxWnY226BhxwGpXukZbTJsJMn2WNIb+nMjEQlskCSkeufXyN/P25qFkZeinG4e9kQ5SoJtR7tcXBwZuJy8uQkwmCij2RF5+5IzT7w6L7V9enHoQENxhWgQO5OBda9vI+KptnofZhfhcnyPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757696289; c=relaxed/simple;
-	bh=OoRdHtTOUMfFS2/6YMJj+FtDjsuwWqJPziOP2yWlZZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aCarpw+I9WRXPxkQJnXHyJag1RhO9h1hxeGnQea0f5BnfOABvYvDp0Y38fgkcdFZ2rg+RpAso4u7LhhYygN9Q0WdzUK8SvsdE0VB6t9Q8RT9wbasfu1IzsSAX/YTbcPJDdGXToPztfVyC88IE6lHx/vSh4bhkwNZTTZXYGrk+N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmbXP34F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA84C4CEF1;
-	Fri, 12 Sep 2025 16:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757696288;
-	bh=OoRdHtTOUMfFS2/6YMJj+FtDjsuwWqJPziOP2yWlZZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UmbXP34FMIkJoDoPI3fUdp5p86uMkyh5V8ZlAl6h1SlcuZ1ojBYH1cgTr+BpHt2ya
-	 9xiKaYHvlxu4txPFYWMzkQJderqgO4nk8OgZ52NYj3fqGS8B9fMWFAOuTGFKZ9tRy4
-	 SoO4s/aCcd+zgmmdFK9Vn0n0BKGVSYLSqV81ls1xabsbY9fXt6vPq17/5AJV5RkWFI
-	 fi4Bfp4QfzvSrB/buYaz8JdpyI1wIqfqXx30t61KYQ08nPTmer9TxBKvBeeMraKwLW
-	 4G1RFKEHwAPuS+RRLmFBbqj2OvBNX1so0Yr7CduIG32TqRGTtlQex9kKNyrEf/rdH2
-	 Wb/zzHARtDWGg==
-Date: Fri, 12 Sep 2025 22:28:02 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: linux-pci@vger.kernel.org, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>, Niklas Cassel <cassel@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: NULL check dma channels
- before release
-Message-ID: <hjqei3oc33o7uqnpv5lcxph5jk3fmjbdiuljdkvxtuv7mowwy4@tvljtegx3rop>
-References: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
+	s=arc-20240116; t=1757697592; c=relaxed/simple;
+	bh=00HX9sqjgT4jmdcgIww/3ZL9wYzYI6eaFGABQQpNLAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YqeeEU5Ms6rxDpCAEn4lvlzT+s/1iQoMWOLOf1LLNNBb3ZJ9rCZSLSZI3pJRcqI+V39eMGQ+fNkqNKI4ENc6GwjCgdtCsZFux/HAyOUK9KF0zYYGPds7XhsyT13LdTbX22P7jY1CEKjnfu5W+D4YUuHWYswTgAIpKdyV6Ea/Ao4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dFO7o4Jr; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58CCE2qw021580;
+	Fri, 12 Sep 2025 17:19:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=fiIx/Z
+	JNeAb9F68r3duUyfRYcjT0+OWFNHbeLAbi7oM=; b=dFO7o4JruHIHlPSUIXaFq6
+	PDLOFnRzTANp7kD/SqrpS61okxJwEHsei7nxYoo88HpouH6shbieX/iCyq0BCMps
+	K7ZaJQCOF1bGOCy4yGcqCOETHMYcKvx+769NHP47DiFHWsizdIlfvatWSX8qXH6N
+	7V691pL7QbLzNHncmTGmrE+DVYF/w6Eedr6weJjIgf+PGPSeQaQxyVKOcbgZTGfO
+	W0STz+cNLo356vXl++ycb7gC/2kw5idaenhZNd4MCFRt6nnt10uzUjRNLlOM8WmN
+	WBnK8nXGxKm45C1H0fiJnGDx+nn4+kyet9y8iKAYBkR98RoimDhYLGyjj4I7HGQA
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490bctbh1u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Sep 2025 17:19:46 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58CE39QB010618;
+	Fri, 12 Sep 2025 17:19:45 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4910snc064-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Sep 2025 17:19:45 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58CHJiwR34013516
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Sep 2025 17:19:44 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2DEA858045;
+	Fri, 12 Sep 2025 17:19:44 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2841158050;
+	Fri, 12 Sep 2025 17:19:43 +0000 (GMT)
+Received: from [9.61.247.49] (unknown [9.61.247.49])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Sep 2025 17:19:43 +0000 (GMT)
+Message-ID: <422d6b1d-d2be-4f78-a973-05a4316e62f3@linux.ibm.com>
+Date: Fri, 12 Sep 2025 10:19:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] PCI: Allow per function PCI slots
+To: Benjamin Block <bblock@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+References: <20250911183307.1910-1-alifm@linux.ibm.com>
+ <20250911183307.1910-4-alifm@linux.ibm.com>
+ <20250912122300.GA15517@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <20250912122300.GA15517@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAxMCBTYWx0ZWRfXyAVuyl4UwphV
+ /rHE/UiZes6adQoZiInzo+nKaXL/cb/l9CcxXLMhxhkMAIrNkNwW0DaQ1gUnOVpDDpUDNx86Z2a
+ Ujm12zsl80VSmOTEJhCVeRIZgzLDy85V/BHtxK16PkTOwRGvZlxaUTyes783wMVtQT01PW1si0e
+ woIO8M3jkIBkBOs7Gda1tgZ2Ip54/E75DeNcfbpkXfentA3oDp+1Nzo6ovhje+a/9/40PUwmegy
+ 4ySY+hhAeHcKfMTAY6gRp0OI2ENkV8/15lQfirvqyX+ZdWqnrT0VSaChlybiyBEB1fuj/4hUcd2
+ MCWLgIz6hiYLW/BJg1vwLOBNn/f9jO2Yt+S9GNlXelud8WkaG8GFURm3ebrS27hMovEXTWUALJf
+ F4HHaw2w
+X-Authority-Analysis: v=2.4 cv=SKNCVPvH c=1 sm=1 tr=0 ts=68c45632 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=xhFoRCAMrjWxjyH1ee0A:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: mJC4DuTeUBBLdGGLQoJxiGrhFaD83tmC
+X-Proofpoint-ORIG-GUID: mJC4DuTeUBBLdGGLQoJxiGrhFaD83tmC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-12_06,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060010
 
-On Fri, Sep 12, 2025 at 04:11:40PM GMT, Shin'ichiro Kawasaki wrote:
-> When endpoint controller driver is immature, the fields dma_chan_tx and
-> dma_chan_rx of the struct pci_epf_test could be NULL even after epf
-> initialization. However, pci_epf_test_clean_dma_chan() assumes that they
-> are always non-NULL valid values, and causes kernel panic when the
-> fields are NULL. To avoid the kernel panic, NULL check the fields before
-> release.
-> 
 
-Have you seen the kernel panic or just predicting it by the code? If you have
-seen it, it is better to add the logs, Fixes tag and CC stable list. Even if
-not, Fixes tag would be needed since it is a bug fix.
+On 9/12/2025 5:23 AM, Benjamin Block wrote:
+> On Thu, Sep 11, 2025 at 11:33:00AM -0700, Farhan Ali wrote:
+>> On s390 systems, which use a machine level hypervisor, PCI devices are
+>> always accessed through a form of PCI pass-through which fundamentally
+>> operates on a per PCI function granularity. This is also reflected in the
+>> s390 PCI hotplug driver which creates hotplug slots for individual PCI
+>> functions. Its reset_slot() function, which is a wrapper for
+>> zpci_hot_reset_device(), thus also resets individual functions.
+>>
+>> Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot object
+>> to multifunction devices. This approach worked fine on s390 systems that
+>> only exposed virtual functions as individual PCI domains to the operating
+>> system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunctions")
+>> s390 supports exposing the topology of multifunction PCI devices by
+>> grouping them in a shared PCI domain. When attempting to reset a function
+>> through the hotplug driver, the shared slot assignment causes the wrong
+>> function to be reset instead of the intended one. It also leaks memory as
+>> we do create a pci_slot object for the function, but don't correctly free
+>> it in pci_slot_release().
+>>
+>> Add a flag for struct pci_slot to allow per function PCI slots for
+>> functions managed through a hypervisor, which exposes individual PCI
+>> functions while retaining the topology.
+>>
+>> Fixes: 44510d6fa0c0 ("s390/pci: Handling multifunctions")
+> Stable tag?
+> Reseting the wrong PCI function sounds bad enough.
 
-- Mani
+That's a fair point. This is definitely broken for NETD devices 
+(https://www.ibm.com/docs/en/linux-on-systems?topic=express-direct-mode). 
+Will cc stable.
 
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e091193bd8a8..1c29d5dd4382 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -301,15 +301,20 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
->  
-> -	dma_release_channel(epf_test->dma_chan_tx);
-> -	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +	if (epf_test->dma_chan_tx) {
-> +		dma_release_channel(epf_test->dma_chan_tx);
-> +		if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +			epf_test->dma_chan_tx = NULL;
-> +			epf_test->dma_chan_rx = NULL;
-> +			return;
-> +		}
->  		epf_test->dma_chan_tx = NULL;
-> -		epf_test->dma_chan_rx = NULL;
-> -		return;
->  	}
->  
-> -	dma_release_channel(epf_test->dma_chan_rx);
-> -	epf_test->dma_chan_rx = NULL;
-> +	if (epf_test->dma_chan_rx) {
-> +		dma_release_channel(epf_test->dma_chan_rx);
-> +		epf_test->dma_chan_rx = NULL;
-> +	}
->  }
->  
->  static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
-> -- 
-> 2.51.0
-> 
+Thanks
+Farhan
 
--- 
-மணிவண்ணன் சதாசிவம்
 
