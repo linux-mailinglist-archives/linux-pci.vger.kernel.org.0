@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-36025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CC91B54FCF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:41:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67BFCB54FD6
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:41:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0224B462155
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 13:41:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B58B11885AAF
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 13:42:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBFDE3090CA;
-	Fri, 12 Sep 2025 13:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F7530DEBC;
+	Fri, 12 Sep 2025 13:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bh6kI93o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3N9S4fP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B934B304BB5;
-	Fri, 12 Sep 2025 13:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0CD304BB5;
+	Fri, 12 Sep 2025 13:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757684470; cv=none; b=ZIsP/NKyd0li2XEkF8ybnCoLtXADYUoAgEqTFZyL+1Gj1i68vcQN+Q829VR+hnCM7Zjpw2WQ13MGNIeJohUysJKeslbs8VR5y2PjLQi7IkGK9fqiEvne8FPOVnDmuamfeonetV6VgJeDxwdKcUvutNJn9wHJ9d6yb6B313myf0s=
+	t=1757684513; cv=none; b=Zrq69+tddHGn4yCz4pdcV1r4lcgXTzvnwOyjBgIGo7/WG+28BtMQkPRgvHfdAQT0cQheIdtwGGQaprmELF2roRO1dbBuwnEUPnaNkIzzT4GFZ8FVOddlVXUy9NR9OfaJarY11TUAHlMWAsgzNe7v1doAfpwK6umW3ElXSM5afug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757684470; c=relaxed/simple;
-	bh=E4eP4rC4TDnQOL6fwlL/6K6S0ylH6QAGXdXkuNjGzVU=;
+	s=arc-20240116; t=1757684513; c=relaxed/simple;
+	bh=HYntge/rTh/z78LL+yXjZ79tEiJiarbFlDubbPxo0ig=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kNmrcZ6WdEylWSZr5LZ7n/F04JerFOXEzUoxYD00LjpN4MkZI3+VPmecdTjzctKYMOy8t9pbbIwdA/aXjzZcl80ehp7SESomYfwWQ7HGQIsOHORCS2D7rjjrXSN2Lg5UGw6p86dtG58PuuMXsR81FgkZM8vmpathxDiMyTn6PL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bh6kI93o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7256FC4CEF1;
-	Fri, 12 Sep 2025 13:41:06 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=syrpoi0Wrznu9TIqcfUuVCeFhNmZl4koQc+xZdMqGh06pyEZWx6eoJZeKMwU/ZNXBa2TILqhNWvcP0xxk1IHnoyVoDCA9vE+NdlTFqHttUUybin077T4wCd19xvwSuirbE9PM5P4Gsc8aF+j5x6EWR1NAqxiMMuNbsXxWSqggYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3N9S4fP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F876C4CEF1;
+	Fri, 12 Sep 2025 13:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757684470;
-	bh=E4eP4rC4TDnQOL6fwlL/6K6S0ylH6QAGXdXkuNjGzVU=;
+	s=k20201202; t=1757684512;
+	bh=HYntge/rTh/z78LL+yXjZ79tEiJiarbFlDubbPxo0ig=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bh6kI93oPfsrTQ1CXlbsfS4cqtLBYuTircmQ69NF0dDvcOHku2jxpyscw7pn7RHRB
-	 t3GeYwVbAdxXJIWGItuZHiiVG6AgVuuzRM9s08NQ9UJKRYwe/SUJrI3ygdANEpMbYP
-	 cflb7I7229EkZDpckDVkJs/eVVbvIU/ujSnDXcyqsPD+Y5ytoLap7vjD80+oiP0Vo3
-	 g0y/KlGmSyQnIl1mkAsZ8vlYAGBTBMwDUZAxJnYkLK4KbcJtbpzDVCurdXjJuQmedW
-	 euWtOnet9eu2Hdl/trzPhB3/56tC9O4NR1RoPXwGHbymNKNuPssiSlUmB0bMgqfL+n
-	 QOZxRit3i8i1w==
-Message-ID: <d40011bb-8e03-402e-b343-7331d51e2427@kernel.org>
-Date: Fri, 12 Sep 2025 15:41:04 +0200
+	b=p3N9S4fPYn2lGOifR9z6N7+/rMZOHk78KhOHkj4DWt//NXN6z4h9mCxdSSBis43Vs
+	 bffI3+C4jfvDv4UGdRcgbWzXWjk59EJCSZzDwJqgl9jIPa/SqbSIy+8Z/YBM8hz8Jf
+	 x2S1AGi+cbwVhWLUHXXZRAAUoRRYs/DzR2fF3mac+hvy1bUif/rc1kLMD3lih0Ohkj
+	 0qBwcb8b+He490zC30B+himio7YYjZcBUuWptadU+u6okbVleLKb+PtAnkmlD5JUrf
+	 l3S90EHL0xEqOriMXPbPpOwZtR7AnRLJKGR/JYw9m26CcLFnlrlqALUkfuLPlFIipC
+	 6G44/vdmP2Fiw==
+Message-ID: <025bc9f5-bc65-45d6-adfb-740473d6b097@kernel.org>
+Date: Fri, 12 Sep 2025 15:41:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/6] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
- documentation for the PCIe IP on Renesas RZ/G3S
+Subject: Re: [PATCH v4 6/6] arm64: defconfig: Enable PCIe for the Renesas
+ RZ/G3S SoC
 To: Claudiu <claudiu.beznea@tuxon.dev>, bhelgaas@google.com,
  lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
@@ -61,7 +61,7 @@ Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
  Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
  Wolfram Sang <wsa+renesas@sang-engineering.com>
 References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
- <20250912122444.3870284-2-claudiu.beznea.uj@bp.renesas.com>
+ <20250912122444.3870284-7-claudiu.beznea.uj@bp.renesas.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,62 +107,27 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250912122444.3870284-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250912122444.3870284-7-claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 12/09/2025 14:24, Claudiu wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
-> Base Specification 4.0. It is designed for root complex applications and
-> features a single-lane (x1) implementation. Add documentation for it.
+> Enable PCIe for the Renesas RZ/G3S SoC.
 > 
 > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-You cannot really test bindings in that meaning and build tools don't
-count as testing, just like building C code is not testing, running
-sparse is not testing, checking with coccinelle is not testing.
-
-And it cannot be tested even in the meaning of building, because:
-
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-
-
 ...
 
-> +            interrupt-controller;
-> +            interrupt-map-mask = <0 0 0 7>;
-> +            interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INTA */
-> +                            <0 0 0 2 &pcie 0 0 0 1>, /* INTB */
-> +                            <0 0 0 3 &pcie 0 0 0 2>, /* INTC */
-> +                            <0 0 0 4 &pcie 0 0 0 3>; /* INTD */
-> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
-> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
-> +            clock-names = "aclk", "pm";
-> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
-> +                     <&cpg R9A08G045_PCI_RST_B>,
-> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
-> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
-> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
-> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
-> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
-> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
-> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
-> +            power-domains = <&cpg>;
-> +            device_type = "pci";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            max-link-speed = <2>;
-> +            renesas,sysc = <&sysc>;
-> +            status = "disabled";
 
-...you disabled the example.
+> @@ -230,6 +230,7 @@ CONFIG_PCIE_MEDIATEK_GEN3=m
+>  CONFIG_PCI_TEGRA=y
+>  CONFIG_PCIE_RCAR_HOST=y
+>  CONFIG_PCIE_RCAR_EP=y
+> +CONFIG_PCIE_RENESAS_RZG3S_HOST=y
 
-I don't understand what happened here - why this got now disabled.
-
-Code was correct before, but you made so many changes including this one.
+You really cannot test defconfig, either...
 
 Best regards,
 Krzysztof
