@@ -1,202 +1,219 @@
-Return-Path: <linux-pci+bounces-36036-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36037-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77F21B5522B
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 16:48:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7145DB55305
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 17:18:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 189EE16D926
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:48:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 816EEAC3FF3
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:17:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2804D30EF65;
-	Fri, 12 Sep 2025 14:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s/E6eicp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DC231DD88;
+	Fri, 12 Sep 2025 15:15:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC6E30E0E7;
-	Fri, 12 Sep 2025 14:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904773148CD;
+	Fri, 12 Sep 2025 15:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757688519; cv=none; b=Na+IR7Nh+cL2C8YwQNazLJcziGEArdwYKWFyB8ZAo8z4A36mwf2mxcluLbe5qHoQN23x6h8JWMGV9GFpVrpFmSzAiXPbn8wQv0chLuFnMCxJWC+5et+cZspxC0TO7HMXBkcSnHuvQr1OaHq7Cmsr5/VvLpDjssWP+Xikxov/rVs=
+	t=1757690106; cv=none; b=I6dF08lz44lyreBUYsJSCZIK1Z8B1ORj90W2qRb1p9IbOuAInGdNT1MNX/9aWot/nwNhvJ7KLY7XnyYsUK31dH4+hsFe71xyMczfhq+0FuBw1Dvk3v9pJVfwSdgVmZBO3/rcuJyf7y3CVOPScHJDR8rr4hV83+ccuyPq0vy6l2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757688519; c=relaxed/simple;
-	bh=+ABVEeOXJ7mEOPyuEbFrriT4hhdZOvJZoXdR2qD/FPU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b45ROUkCdBwjdtE0ds5iqqPqmqo5YgLN8DYdM7PqLu5pFHqVX+usMkRxddn7p4InWVT5NQJnaz1950s7wlr9IM3hB1DUTV0WFRNVGdRlIzOsCSpx2lNiEt5lvcv4WT4Cnxj8H0rIog/kaxl1PyerUOHcYcF3zz42qvbLNRswku0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s/E6eicp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58CBfSEs029066;
-	Fri, 12 Sep 2025 14:48:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=poyrRa
-	t3JE9zqE25yJdtT9U2kFZs0+N92cgc5yAxDs0=; b=s/E6eicpBTxWo1BsyKu0Bs
-	a+EnLanGVv/Mi9i1MeVZJmuwGki+72crOd6rPLqcWochQ0d4CJqQeb622EE394va
-	1CIdbh4AE/pwSu/CX+2zY+3/rH00wq3ZfOTwMnDWPm2NPasJmwBswMiReialewyd
-	ufyNIPOxZN4IUciuHvblKC3kIDlw1H9QEw6CntomWtCg0i1rCrgUiFLERb3hZ24A
-	VhLnrBAfcSf2hUkIbV2WTJ/Sk7tt+IEWmtuMm1Zltrqv80V7bOKYKV197oKoWXl4
-	gwy6OKsPpXxSwHkpL6B/WUbyxw0HTiQFn8NmjB/rcc2uNPFJnkNsLWLZHLtyKCcw
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490cmxc5r5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 14:48:34 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58CCohRK011434;
-	Fri, 12 Sep 2025 14:48:33 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 490y9uupry-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 14:48:33 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58CEmTQl59638174
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Sep 2025 14:48:30 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E149A20043;
-	Fri, 12 Sep 2025 14:48:29 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0EBC820040;
-	Fri, 12 Sep 2025 14:48:29 +0000 (GMT)
-Received: from [9.111.56.142] (unknown [9.111.56.142])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Sep 2025 14:48:28 +0000 (GMT)
-Message-ID: <5d94639d3db0827602e530639d699026ec092743.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] PCI: Add lockdep assertion in
- pci_stop_and_remove_bus_device()
-From: Gerd Bayer <gbayer@linux.ibm.com>
-To: Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas
- <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@kernel.org>, Matthew Rosato
- <mjrosato@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Halil
- Pasic <pasic@linux.ibm.com>, Farhan Ali <alifm@linux.ibm.com>,
-        Julian
- Ruess <julianr@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date: Fri, 12 Sep 2025 16:48:28 +0200
-In-Reply-To: <20250826-pci_fix_sriov_disable-v1-2-2d0bc938f2a3@linux.ibm.com>
-References: <20250826-pci_fix_sriov_disable-v1-0-2d0bc938f2a3@linux.ibm.com>
-	 <20250826-pci_fix_sriov_disable-v1-2-2d0bc938f2a3@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1757690106; c=relaxed/simple;
+	bh=h76DRWc/sfj+QFjeh+wSOipvyV+oy8XSGs8WY1Jd4n4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PDIbUVlap/xCxRope3cWH3VLSe0IEqdG37kvqUE2zjtzC225ukkQZ9siTQD3OemgfCkdOfUXDbDVIyUG7KLZ0E2PVKrmaDIUbxJLQKd4Zw5S40nm3j+k3RaofJc5YKvVwKckriaFbF4y9pDIB2IKGgUVUhnMdyuRmouZdr8OYYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cNdH94p7Zz6D8cl;
+	Fri, 12 Sep 2025 23:13:41 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1ACDB1402EA;
+	Fri, 12 Sep 2025 23:15:00 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 12 Sep
+ 2025 17:14:59 +0200
+Date: Fri, 12 Sep 2025 16:14:58 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 03/16] PCI: PCIe portdrv: Add CXL Isolation service
+ driver
+Message-ID: <20250912161458.00002d16@huawei.com>
+In-Reply-To: <20250730214718.10679-4-Benjamin.Cheatham@amd.com>
+References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+	<20250730214718.10679-4-Benjamin.Cheatham@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yl01E8MMDRSN5r8Mq0Xhx2pKKloWE5Hr
-X-Proofpoint-ORIG-GUID: Yl01E8MMDRSN5r8Mq0Xhx2pKKloWE5Hr
-X-Authority-Analysis: v=2.4 cv=J52q7BnS c=1 sm=1 tr=0 ts=68c432c2 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=F53kh5m_LVtqdGsIIDMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAyNSBTYWx0ZWRfX7Lsj9q8l41LL
- 6jzB0d79hf7nRfdQBB8jxhVKE8mB8kMFH743SFIvNxQNtCxUm3vUmdVEGTwKobKlo4o2GiKl+HZ
- QtZnpkgnTF2AU3sw44RBR8hfkvRcz6XmmzRfbRl5zR2bQra1X6oBnB4SXvs8p6Nuz92ZmagH0kb
- RuZVeKZpqzt7N+djN6cEsOXFDWWTL12JltTEoqdquvyS8doYJ9HhNH+iOek1gamniFDwsU0Ll+g
- sdnvJQvRNGKvXXW6X+ThaGS6AhlPJcpivw1jRjuaZEkQ3TrVQnnxdi1qB/zs6MgxdYHCWndXfic
- UIGBWdOVU4mcbKg8B+Kex1oaMnQsmgsqvmfD1lbkYaOElp0ypCuqabhBe7bz6QLHe5lZVOsFo8I
- Ly3p56u8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-12_05,2025-09-11_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1011 suspectscore=0 spamscore=0 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060025
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 2025-08-26 at 10:52 +0200, Niklas Schnelle wrote:
-> Removing a PCI devices requires holding pci_rescan_remove_lock. Prompted
-> by this being missed in sriov_disable() and going unnoticed since its
-> inception add a lockdep assert so this doesn't get missed again in the
-> future.
->=20
-> Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+On Wed, 30 Jul 2025 16:47:05 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+
+> Add the CXL isolation service, which will provide the necessary
+> information to the PCIe portdrv and CXL drivers to map, setup, and
+> handle CXL isolation interrupts.
+> 
+> Add functions to get the CXL isolation MSI/-X interrupt vector
+> from the PCIe portdrv.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+
+Hmm. I feel a bit guilty I haven't gotten back to a rework of the
+portdrv.  To potentially make that easier (when I or someone else
+get the time), would it work for you if this only did MSI-X?
+That would let us handle this in a somewhat 'pluggable' way without
+having to deal with the limitations of MSI wrt to dynamic interrupt
+allocation.
+
 > ---
->  drivers/pci/pci.h    | 2 ++
->  drivers/pci/probe.c  | 2 +-
->  drivers/pci/remove.c | 1 +
->  3 files changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 34f65d69662e9f61f0c489ec58de2ce17d21c0c6..1ad2e3ab147f3b2c42b3257e4=
-f366fc5e424ede3 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -84,6 +84,8 @@ struct pcie_tlp_log;
->  extern const unsigned char pcie_link_speed[];
->  extern bool pci_early_dump;
-> =20
-> +extern struct mutex pci_rescan_remove_lock;
+>  drivers/cxl/Kconfig              | 14 +++++
+>  drivers/cxl/cxl.h                |  4 ++
+>  drivers/pci/pcie/Makefile        |  1 +
+>  drivers/pci/pcie/cxl_isolation.c | 87 ++++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/portdrv.c       |  1 +
+>  drivers/pci/pcie/portdrv.h       | 18 ++++++-
+>  6 files changed, 124 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pci/pcie/cxl_isolation.c
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 57274de54a45..537e1e8e13da 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -247,4 +247,18 @@ config CXL_NATIVE_RAS
+>  	  If unsure, or if this kernel is meant for production environments,
+>  	  say Y.
+>  
+> +config CXL_ISOLATION
+> +	bool "CXL.mem Isolation Support"
+> +	depends on PCIEPORTBUS
+> +	depends on CXL_BUS=PCIEPORTBUS
+> +	help
+> +	  Enables the CXL.mem isolation PCIe port bus service driver. This
+> +	  driver, in combination with the CXL driver core, is responsible
+> +	  for managing CXL-capable PCIe root ports that undergo CXL.mem
+> +	  error isolation due to either a CXL.mem transaction timeout or
+> +	  link down condition. Without error isolation, either of these
+> +	  conditions will trigger a system reset.
 > +
->  bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
->  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
->  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index f41128f91ca76ab014ad669ae84a53032c7c6b6b..2b35bb39ab0366bbf86b43e72=
-1811575b9fbcefb 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3469,7 +3469,7 @@ EXPORT_SYMBOL_GPL(pci_rescan_bus);
->   * pci_rescan_bus(), pci_rescan_bus_bridge_resize() and PCI device remov=
-al
->   * routines should always be executed under this mutex.
->   */
-> -static DEFINE_MUTEX(pci_rescan_remove_lock);
-> +DEFINE_MUTEX(pci_rescan_remove_lock);
-> =20
->  void pci_lock_rescan_remove(void)
->  {
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index 445afdfa6498edc88f1ef89df279af1419025495..0b9a609392cecba36a818bc49=
-6a0af64061c259a 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -138,6 +138,7 @@ static void pci_remove_bus_device(struct pci_dev *dev=
-)
->   */
->  void pci_stop_and_remove_bus_device(struct pci_dev *dev)
->  {
-> +	lockdep_assert_held(&pci_rescan_remove_lock);
->  	pci_stop_bus_device(dev);
->  	pci_remove_bus_device(dev);
->  }
+> +	  If unsure say 'y'
+I'd drop this last line or say something more about when it makes sense to enable.
 
-I'm totally in favor of adding this lockdep assertion, even if this
-means that the mutex pci_rescan_remove_lock needs to be externalized
-from drivers/pci/probe.c.
 
-However, I was surprised that you didn't add the assertion to the
-_locked() variant until I realized that here the naming of _locked vs.
-not _locked variants of pci_stop_and_remove_bus_device() is just the
-opposite to the naming in driver/pci/pci.c:
-There _locked implies that the necessary lock is already held on
-routine entry. But this change in semantics was already introduced with
-commit 9d16947b7583 ("PCI: Add global pci_lock_rescan_remove()").
+> diff --git a/drivers/pci/pcie/cxl_isolation.c b/drivers/pci/pcie/cxl_isolation.c
+> new file mode 100644
+> index 000000000000..550f16271d1c
+> --- /dev/null
+> +++ b/drivers/pci/pcie/cxl_isolation.c
+> @@ -0,0 +1,87 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * The CXL Isolation PCIe port service driver provides functions to allocate
+> + * and set up CXL Timeout & Isolation interrupts (CXL 3.2 12.3). This driver
+> + * does no actual interrupt handling, it only provides the information for
+> + * the CXL driver to set up its own handling because the CXL driver is better
+> + * equipped to handle isolation interrupts.
+> + *
+> + * Copyright (C) 2025, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> + */
+> +
+> +#include <linux/pci.h>
+> +
+> +#include "../../cxl/cxlpci.h"
+> +#include "portdrv.h"
+> +
+> +static int get_isolation_intr_vec(u32 cap)
+> +{
+> +	if (!FIELD_GET(CXL_ISOLATION_CAP_INTR_SUPP, cap) ||
+> +	    !FIELD_GET(CXL_ISOLATION_CAP_MEM_ISO_SUPP, cap))
+> +		return -ENXIO;
+> +
+> +	return FIELD_GET(CXL_ISOLATION_CAP_INTR_MASK, cap);
+> +}
+> +
+> +int pcie_cxliso_get_intr_vec(struct pci_dev *dev, int *vec)
+> +{
+> +	struct cxl_component_regs regs;
+> +	struct cxl_register_map map;
+> +	u32 cap;
+> +	int rc;
+> +
+> +	rc = cxl_find_regblock(dev, CXL_REGLOC_RBI_COMPONENT, &map);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_setup_regs(&map);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (!map.component_map.isolation.valid)
+> +		return -ENXIO;
+> +
 
-Looks like aligning the naming to the convention in driver/pci/pci.c
-would touch quite a bit of code - but so does the introduction of this
-lockdep assertion...
+Add some comments here on why we go through this dance of temporary mapping.
+(I have similar for the CPMU code I never finished upstreaming).
 
-Sigh, Gerd
+> +	rc = cxl_map_component_regs(&map, &regs,
+> +				    BIT(CXL_CM_CAP_CAP_ID_ISOLATION));
+> +	if (rc)
+> +		return rc;
+> +
+> +	cap = readl(regs.isolation + CXL_ISOLATION_CAPABILITY_OFFSET);
+> +	rc = get_isolation_intr_vec(cap);
+> +	if (rc < 0) {
 
+Probably use a goto given common shared stuff to do on exit.
+
+> +		cxl_unmap_component_regs(&map, &regs,
+> +					 BIT(CXL_CM_CAP_CAP_ID_ISOLATION));
+> +		return rc;
+> +	}
+> +
+> +	if (vec)
+> +		*vec = rc;
+> +
+> +	cxl_unmap_component_regs(&map, &regs, BIT(CXL_CM_CAP_CAP_ID_ISOLATION));
+> +	return 0;
+> +
+> +}
+> +
+> +static int cxl_isolation_probe(struct pcie_device *dev)
+> +{
+> +	if (!pcie_is_cxl(dev->port) || pcie_cxliso_get_intr_vec(dev->port, NULL))
+The second call has rich error codes so better not to eat them.
+
+	if (!pcie_is_cxl(dev->port))
+		return -ENXIO;
+
+	rc = pcie_cxl_iso_get_intr_vec();
+	if (rc)
+		return rc;
+
+> +		return -ENXIO;
+> +
+> +	pci_info(dev->port, "CXLISO: Signaling with IRQ %d\n", dev->irq);
+I guess there is history of this for other portdrv services, but to me too noisy
+for a normal boot and should be trivial to get from /proc/interrupts
+
+> +	return 0;
+> +}
 
 
