@@ -1,204 +1,153 @@
-Return-Path: <linux-pci+bounces-36024-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0BC0B54DCD
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:32:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C3D4B54D94
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D51813BE5DF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:28:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92B321CC64F8
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:23:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042DE3064AE;
-	Fri, 12 Sep 2025 12:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8111819D8A3;
+	Fri, 12 Sep 2025 12:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sga40TPb"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aFsXhQzJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F0D303A13;
-	Fri, 12 Sep 2025 12:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D452427B4F5;
+	Fri, 12 Sep 2025 12:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757679940; cv=none; b=X2JfBKZ8mL5xHh6/rKbIxAf31bEnQdT7p/rCMx274wyY2+N/pziwZh1OzzNhozd/daVdF1aApWeTqr7x96Fw5JYt7Uq4R3l5W65lhFHa6GoRHKZAz089E4AOV4rmKeULkU5RZTgweiOJwULFxRZbjl6j69HfdZ2eRRVhk0tkJD8=
+	t=1757679794; cv=none; b=jsHc5PL7aVw6pEMAMZ9dLFnzCDakUYDwQMN+t+7O63HVghf46gpon+4nsgGBMpbacuzMHhYKNLn7Iiht3guKVa0287x8OdUTA3MfNlHqToFqAd2e/ILYn/OirXmdE5HsnGBGAK7J/hEBxfHx1litQm8kXjz4tZwLVL+4io613jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757679940; c=relaxed/simple;
-	bh=3P3PAZ/ZvvSohXI8QCKB1SR20xpdsKjkvrAi8p8Li3g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kSSelVlqTQuuQAZbgKm25qiFZAItj1MW/SDL5rw/DEAOxSSrKruPn/bJTv9Ds7mfxokX8j5Bz6FW294AC2w869VkBJwwDsE2akS6dF0hQihd59OmGldeRFcFDhUjDXuF2HG73nk2TUKcOY2oYR5CITwdLFE39wdeRBRGbFcodPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sga40TPb; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CCPE65968259;
-	Fri, 12 Sep 2025 07:25:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1757679914;
-	bh=W3wNqasuPPpJNRZvnxmgSVHOkxs2jXZ6/IsjcnNJii8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=sga40TPbvjpvMJSKV3OTySsYpLMeyuYrTyLC7WNggLMultoS43/tpiKtMCAzfBXQS
-	 fniBw15seitUR9P2KOIQXTYBwZ06SqUOl1gNhQeGz24W2MYo46s7sr4TpAOSGkCCIA
-	 KHUgLc/KoT4EKWnuRU4cWXztv04tche0ZphoEkus=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CCPEX91291704
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 12 Sep 2025 07:25:14 -0500
-Received: from DLEE201.ent.ti.com (157.170.170.76) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 12
- Sep 2025 07:25:14 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE201.ent.ti.com
- (157.170.170.76) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 12 Sep 2025 07:25:14 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CCNuLc3589278;
-	Fri, 12 Sep 2025 07:25:07 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-        <christian.bruel@foss.st.com>, <qiang.yu@oss.qualcomm.com>,
-        <mayank.rana@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <inochiama@gmail.com>, <cassel@kernel.org>, <kishon@kernel.org>,
-        <sergio.paracuellos@gmail.com>, <18255117159@163.com>,
-        <rongqianfeng@vivo.com>
-CC: <jirislaby@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 10/10] PCI: keystone: Add support to build as a loadable module
-Date: Fri, 12 Sep 2025 17:46:21 +0530
-Message-ID: <20250912122356.3326888-11-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250912122356.3326888-1-s-vadapalli@ti.com>
-References: <20250912122356.3326888-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1757679794; c=relaxed/simple;
+	bh=bH4NRMgWnPXPHJ94kL2TjjMeV3PNPXB41VeHrC20Y5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bV6ytQlmH9ygZFj6WdGwt+u6z8CcWQjmpMMpPxpmdph0MmXXkR1+IQHdC/nDUCLpYi49O3Pmj/02JTWpeumYsUqRpZRUo0/usBnFhbX6m+CqBsBTqPmij7HrRC8TvuibicxuxLGp1ihii0+kqahQcgkwEtnZItvzgxKERRegaPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aFsXhQzJ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58C6F43A027074;
+	Fri, 12 Sep 2025 12:23:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:sender:subject:to; s=pp1;
+	 bh=9ux8ILTUeDcvga5jYs95DD4PIL2aOHphcYBxHMQbne0=; b=aFsXhQzJduxW
+	OVtpT7SZwurzdlwzOIRkUaz9Mf744udZxtuT6WajNpQVfJyZjIDfDqKdCb3UGyMR
+	Sp8fNnsCP+Uo/LG+yF4TUw7ggFYrndS4TYv6sFaq0WJkJYhKH2rzdmqh4PzNbqeE
+	G7Kp48I4uxsJPbbaPFbfCKoGCLP7EEyOewYFLsW4mwxkjz6Rov4ErmFrx74u31Uq
+	0oMHaN8P8aCFiPGjzmMN1vY67bKmhyuHUoWvuo5W5Q7s0VmjGkcbPbbk1MQtcDVt
+	6rjIdlLmXROnBeJO9jRh03F4mGv0rkhF76iEVpTJkZlR7fNgYH3o06dzEhJnKZwW
+	I1VGalTh1A==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490bcta2gr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Sep 2025 12:23:08 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58CB0oSV017163;
+	Fri, 12 Sep 2025 12:23:07 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4911gmtq2w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Sep 2025 12:23:07 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58CCN0fb52363584
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Sep 2025 12:23:01 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DE6E42004D;
+	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CDAF32004B;
+	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
+Received: from p1gen4-pw042f0m (unknown [9.152.212.78])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
+Received: from bblock by p1gen4-pw042f0m with local (Exim 4.98.2)
+	(envelope-from <bblock@linux.ibm.com>)
+	id 1ux2ns-00000002uha-2OLi;
+	Fri, 12 Sep 2025 14:23:00 +0200
+Date: Fri, 12 Sep 2025 14:23:00 +0200
+From: Benjamin Block <bblock@linux.ibm.com>
+To: Farhan Ali <alifm@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+Subject: Re: [PATCH v3 03/10] PCI: Allow per function PCI slots
+Message-ID: <20250912122300.GA15517@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+References: <20250911183307.1910-1-alifm@linux.ibm.com>
+ <20250911183307.1910-4-alifm@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250911183307.1910-4-alifm@linux.ibm.com>
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAxMCBTYWx0ZWRfX3TNJOphnH2il
+ jrBpLiBmr1DdZdMx+mcIweDwmZ+wZdH6httyq+5D/gQ0h+M4iYAllWqZ0VskJIBZ1dRB4vPei5u
+ 8wFkfpqRKy6YbwxQ+mt4mMGfAaTTT2fmFmN1MtJy+Af2GwwVdJSqb5C2mZ0LDJSaffXSlYyJTHV
+ md6zyVH0ByfJBeeHJ/idmWgRjeoz7EWm7ym+2znVp4zKbXqNIZFapj4Ot9eAWeppAoqwjMjyFFy
+ bQ+oXp5sbVtXB29EKHV/X7pZqnQcTkFkuZb+BWSa9qgy/F2dHzvbrOsJvRt6tSTXQMaMLylRBC5
+ fLOW5J8MBSum64BqZa6k4TcDd+p8cdPi4Y9ImSNZZ8KM8srvKNjrTJ8vDnDt6PiHvg3vV3XFCkx
+ l4mn4fhW
+X-Authority-Analysis: v=2.4 cv=SKNCVPvH c=1 sm=1 tr=0 ts=68c410ac cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=8nJEP1OIZ-IA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=TjuGVM56yl0YPUG8lfgA:9
+ a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
+X-Proofpoint-GUID: AUWlo5yUzZA2zKTw0JinpgK5xuJm9dp7
+X-Proofpoint-ORIG-GUID: AUWlo5yUzZA2zKTw0JinpgK5xuJm9dp7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-12_04,2025-09-11_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060010
 
-The 'pci-keystone.c' driver is the application/glue/wrapper driver for the
-Designware PCIe Controllers on TI SoCs. Now that all of the helper APIs
-that the 'pci-keystone.c' driver depends upon have been exported for use,
-enable support to build the driver as a loadable module.
+On Thu, Sep 11, 2025 at 11:33:00AM -0700, Farhan Ali wrote:
+> On s390 systems, which use a machine level hypervisor, PCI devices are
+> always accessed through a form of PCI pass-through which fundamentally
+> operates on a per PCI function granularity. This is also reflected in the
+> s390 PCI hotplug driver which creates hotplug slots for individual PCI
+> functions. Its reset_slot() function, which is a wrapper for
+> zpci_hot_reset_device(), thus also resets individual functions.
+> 
+> Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot object
+> to multifunction devices. This approach worked fine on s390 systems that
+> only exposed virtual functions as individual PCI domains to the operating
+> system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunctions")
+> s390 supports exposing the topology of multifunction PCI devices by
+> grouping them in a shared PCI domain. When attempting to reset a function
+> through the hotplug driver, the shared slot assignment causes the wrong
+> function to be reset instead of the intended one. It also leaks memory as
+> we do create a pci_slot object for the function, but don't correctly free
+> it in pci_slot_release().
+> 
+> Add a flag for struct pci_slot to allow per function PCI slots for
+> functions managed through a hypervisor, which exposes individual PCI
+> functions while retaining the topology.
+> 
+> Fixes: 44510d6fa0c0 ("s390/pci: Handling multifunctions")
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+Stable tag?
+Reseting the wrong PCI function sounds bad enough.
 
-v1: https://lore.kernel.org/r/20250903124505.365913-12-s-vadapalli@ti.com/
-Changes since v1:
-- Based on the feedback from Manivannan Sadhasivam <mani@kernel.org> at:
-  https://lore.kernel.org/r/2gzqupa7i7qhiscwm4uin2jmdb6qowp55mzk7w4o3f73ob64e7@taf5vjd7lhc5/
-  builtin_platform_driver() is being retained in the driver due to which
-  the change made in the v1 patch of replacing builtin_platform_driver()
-  with module_platform_driver() has been discarded in this patch.
-
- drivers/pci/controller/dwc/Kconfig        |  6 +++---
- drivers/pci/controller/dwc/pci-keystone.c | 22 ++++++++++++++++++++++
- 2 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 34abc859c107..46012d6a607e 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -482,10 +482,10 @@ config PCI_DRA7XX_EP
- 	  This uses the DesignWare core.
- 
- config PCI_KEYSTONE
--	bool
-+	tristate
- 
- config PCI_KEYSTONE_HOST
--	bool "TI Keystone PCIe controller (host mode)"
-+	tristate "TI Keystone PCIe controller (host mode)"
- 	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
- 	depends on PCI_MSI
- 	select PCIE_DW_HOST
-@@ -497,7 +497,7 @@ config PCI_KEYSTONE_HOST
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_KEYSTONE_EP
--	bool "TI Keystone PCIe controller (endpoint mode)"
-+	tristate "TI Keystone PCIe controller (endpoint mode)"
- 	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
- 	depends on PCI_ENDPOINT
- 	select PCIE_DW_EP
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index e85942b4f6be..661e31b60a48 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -17,6 +17,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-@@ -132,6 +133,7 @@ struct keystone_pcie {
- 	struct			device_node *msi_intc_np;
- 	struct irq_domain	*intx_irq_domain;
- 	struct device_node	*np;
-+	struct gpio_desc	*reset_gpio;
- 
- 	/* Application register space */
- 	void __iomem		*va_app_base;	/* DT 1st resource */
-@@ -1211,6 +1213,7 @@ static const struct of_device_id ks_pcie_of_match[] = {
- 	},
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, ks_pcie_of_match);
- 
- static int ks_pcie_probe(struct platform_device *pdev)
- {
-@@ -1329,6 +1332,7 @@ static int ks_pcie_probe(struct platform_device *pdev)
- 			dev_err(dev, "Failed to get reset GPIO\n");
- 		goto err_link;
- 	}
-+	ks_pcie->reset_gpio = gpiod;
- 
- 	/* Obtain references to the PHYs */
- 	for (i = 0; i < num_lanes; i++)
-@@ -1440,9 +1444,23 @@ static void ks_pcie_remove(struct platform_device *pdev)
- {
- 	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
- 	struct device_link **link = ks_pcie->link;
-+	struct dw_pcie *pci = ks_pcie->pci;
- 	int num_lanes = ks_pcie->num_lanes;
-+	const struct ks_pcie_of_data *data;
- 	struct device *dev = &pdev->dev;
-+	enum dw_pcie_device_mode mode;
-+
-+	ks_pcie_disable_error_irq(ks_pcie);
-+	data = of_device_get_match_data(dev);
-+	mode = data->mode;
-+	if (mode == DW_PCIE_RC_TYPE) {
-+		dw_pcie_host_deinit(&pci->pp);
-+	} else {
-+		pci_epc_deinit_notify(pci->ep.epc);
-+		dw_pcie_ep_deinit(&pci->ep);
-+	}
- 
-+	gpiod_set_value_cansleep(ks_pcie->reset_gpio, 0);
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
- 	ks_pcie_disable_phy(ks_pcie);
-@@ -1459,3 +1477,7 @@ static struct platform_driver ks_pcie_driver = {
- 	},
- };
- builtin_platform_driver(ks_pcie_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("PCIe host controller driver for Texas Instruments Keystone SoCs");
-+MODULE_AUTHOR("Murali Karicheri <m-karicheri2@ti.com>");
 -- 
-2.43.0
-
+Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
+IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
+Vors. Aufs.-R.: Wolfgang Wendt         /        Geschäftsführung: David Faller
+Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
 
