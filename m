@@ -1,120 +1,130 @@
-Return-Path: <linux-pci+bounces-35982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2253CB543CD
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 09:26:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C3BDB543E9
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 09:31:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7EBA1C8743D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 07:26:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8145686602
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 07:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 638D62C0262;
-	Fri, 12 Sep 2025 07:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACC0281530;
+	Fri, 12 Sep 2025 07:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/4hv4q4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE45728726D;
-	Fri, 12 Sep 2025 07:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FC61917F1
+	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 07:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757661986; cv=none; b=jNvib9zfEp+bRRqAkukdWIsviaRLUm8YHRkvwDSD6357MLfjDB4qLdz7RH26Aztjmk+Dm+pa3BAbxylOGtCJhT/D6+rrkXywr8+rVrWSgnbfKS0gedFEPqwXl+xnbZC7W+lLW5i6psDhRtK9+gsS3b+CxJzL3EJT58DqsBiLk+E=
+	t=1757662299; cv=none; b=T5JPEIFp4T5HM7dGhuH7yjlgLtTSsT4ez7EVPLGElRzJdUCqsCBpgHB6Y/yflbCsxexmsgOl6LhCVOHl2ViMpo+97vrGoDH/Sk0hlop1dOKdoEE2yVB5xJnSOIm+2zNFofQOLERJ5ONkOT//y6P2KlKfIFS83DqaDvBOrrFyYrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757661986; c=relaxed/simple;
-	bh=8nuinajrhFNvduXuneZuWtF6AEKEMnItNe5WjWRWBOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OCyW9oHkV1/sphGRWg7eMM2cxblhQjSfnPlSnCuS5gk9K8//bvhzlWqiPa6PvdfhUc9uBoGq2Xq/jvd58Dun1WgOD/IEnHzuI2YxxSFMFEyAF1pzDrZEIpj4gUKjE79ABG3S8hw3PCGqNya48W7dKj32FikGfv/LSg+Pk+r8kVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1D864201D1B8;
-	Fri, 12 Sep 2025 09:26:04 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 08C831F4A8; Fri, 12 Sep 2025 09:26:04 +0200 (CEST)
-Date: Fri, 12 Sep 2025 09:26:04 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Timo Jyrinki <timo.jyrinki@gmail.com>,
-	Ernst Persson <ernstp@gmail.com>, Steven Harms <sjharms@gmail.com>,
-	James Ettle <james@ettle.org.uk>, Nick Coghlan <ncoghlan@gmail.com>,
-	Weng Xuetian <wengxt@gmail.com>,
-	Andrey Rahmatullin <wrar@wrar.name>,
-	Boris Barbour <boris.barbour@ens.fr>,
-	Vlastimil Zima <vlastimil.zima@gmail.com>,
-	David Banks <amoebae@gmail.com>, Chris Moeller <kode54@gmail.com>,
-	Daniel Fraga <fragabr@gmail.com>, Javier Marcet <jmarcet@gmail.com>,
-	Pavel Pisa <pisa@cmp.felk.cvut.cz>
-Subject: Re: [PATCH] PCI/PM: Move ASUS EHCI workaround out of generic code
-Message-ID: <aMPLDLYpeVXO1y6R@wunner.de>
-References: <75e4ae507fa4faddd063a3a9e17d319ed84529b6.1757562971.git.lukas@wunner.de>
- <80980751-64db-4dc2-9516-03046e8b4b31@kernel.org>
+	s=arc-20240116; t=1757662299; c=relaxed/simple;
+	bh=TZpTxFDmSe7EMR/ZVrRQ+bWbSTyYS+WuOsZbKAYbS1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cdv0EJghA8A4yPtqFeya3ixQlzWP206cqdXEngbab703g5C1y0KDl4aND3weLAgWh3ltBKTaWSK/Rl5PsbBEnF80y5qrHmAJUG/CD0HBKxs4G6wg99oE2l6fRCbrS9XTVqB5K7ox+qIhvN4I/8k/AZb1xMo5ZakscxDdj+z+TOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/4hv4q4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAB9C4CEF4;
+	Fri, 12 Sep 2025 07:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757662299;
+	bh=TZpTxFDmSe7EMR/ZVrRQ+bWbSTyYS+WuOsZbKAYbS1g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O/4hv4q4YtNsfAmESnzDSlGmRJWfn15IeGq34vlmH7+3LyiEpbLP8v0s2dG7hJMG/
+	 me1/CPrAki/HmPqHx8jO+lrvdGRMYd96E/svCA2LDYPbsa2z/LhPXuZFTarbJvczzJ
+	 ZKxpY2Mg87VZRkTmnQ6vTTuvv5aLheDERigxS23HY+nyN850COS74AGwf5HO+LkioD
+	 7tA2jzZDCTyWsGDhjXc8sdcnOpMFKmZrm3ZVUHQmWgYay683A9MmlCwf6/unRz5Cpf
+	 xMCpKdXvHg2nIPSPOC6oO4ldjRTAfsHT3ljVFtjzhbyCzUAPj6Nlt4crstSnlu/JYZ
+	 JKe6JkvNsFGtA==
+Message-ID: <94e8dbce-9e9a-4fe7-b33c-1d451c07eba6@kernel.org>
+Date: Fri, 12 Sep 2025 16:31:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80980751-64db-4dc2-9516-03046e8b4b31@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: NULL check dma channels
+ before release
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250912071140.649968-1-shinichiro.kawasaki@wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 11, 2025 at 08:34:56AM -0500, Mario Limonciello wrote:
-> On 9/11/25 8:11 AM, Lukas Wunner wrote:
-> > pci_disable_device() does not clear I/O and Memory Space Enable, although
-> > its name suggests otherwise.  The kernel has never disabled these bits
-> > once they're enabled.  Doing so would avoid the need for the quirk, but it
-> > is unclear what will break if this fundamental behavior is changed.
+On 9/12/25 16:11, Shin'ichiro Kawasaki wrote:
+> When endpoint controller driver is immature, the fields dma_chan_tx and
+> dma_chan_rx of the struct pci_epf_test could be NULL even after epf
+> initialization. However, pci_epf_test_clean_dma_chan() assumes that they
+> are always non-NULL valid values, and causes kernel panic when the
+> fields are NULL. To avoid the kernel panic, NULL check the fields before
+> release.
 > 
-> It's too late for this cycle to do so, but how would you feel about making
-> this change at the start of the next cycle so it had a whole cycle to bake
-> in linux-next and see if there is a problem in doing so?
+> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index e091193bd8a8..1c29d5dd4382 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -301,15 +301,20 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
+>  	if (!epf_test->dma_supported)
+>  		return;
+>  
+> -	dma_release_channel(epf_test->dma_chan_tx);
+> -	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
+> +	if (epf_test->dma_chan_tx) {
+> +		dma_release_channel(epf_test->dma_chan_tx);
+> +		if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
+> +			epf_test->dma_chan_tx = NULL;
+> +			epf_test->dma_chan_rx = NULL;
+> +			return;
+> +		}
+>  		epf_test->dma_chan_tx = NULL;
+> -		epf_test->dma_chan_rx = NULL;
+> -		return;
+>  	}
 
-I can look into it.
+Can we simplify here ?
 
-The change could be justified as a security enhancement to prevent
-unauthorized traffic between devices through peer-to-peer transactions.
+	if (epf_test->dma_chan_tx) {
+		dma_release_channel(epf_test->dma_chan_tx);
+		epf_test->dma_chan_tx = NULL;
+		if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
+			epf_test->dma_chan_rx = NULL;
+			return;
+		}
+	}
 
-pci_disable_device() was introduced with v2.4.3.5 in 2002:
-https://git.kernel.org/tglx/history/c/9102e0eb3e9e
+>  
+> -	dma_release_channel(epf_test->dma_chan_rx);
+> -	epf_test->dma_chan_rx = NULL;
+> +	if (epf_test->dma_chan_rx) {
+> +		dma_release_channel(epf_test->dma_chan_rx);
+> +		epf_test->dma_chan_rx = NULL;
+> +	}
+>  }
+>  
+>  static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
 
-I suspect back in the day, clearing Bus Master Enable seemed sufficient
-because the only concern was to prevent DMA (and by extension MSIs)
-from broken devices.  Attacks *between* devices were probably not
-considered realistic.
 
-ACS is meant to prevent such attacks, but is an optional capability
-and might be configured incorrectly.  A zero trust, defense in depth
-approach as is common today requires not leaving doors open without need.
-
-If the kernel would clear Memory Space Enable, a malicious device could
-not re-enable it on its own because "propagation of Configuration Requests
-from Downstream to Upstream as well as peer-to-peer are not supported"
-(PCIe r7.0 sec 7.3.3).
-
-It seemed too risky to make such a sweeping change only to get rid of
-the EHCI quirk.  The present patch is meant as a low-risk refactoring,
-but we can consider clearing IO + Memory Space Enable as a long-term
-solution.  I've cc'ed all the people who reported issues with ASUS
-machines back in 2012 in the hope that some of them still have the
-(now 13 years old) hardware to test the patch.  They might also be
-able to test whether the long-term change doesn't regress anything.
-
-Thanks,
-
-Lukas
+-- 
+Damien Le Moal
+Western Digital Research
 
