@@ -1,206 +1,217 @@
-Return-Path: <linux-pci+bounces-35970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-35971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07486B53F89
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 02:53:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8B33B54066
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 04:35:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A91D1CC21E1
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 00:53:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30C757AB932
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 02:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239CA2030A;
-	Fri, 12 Sep 2025 00:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B54051DDC2A;
+	Fri, 12 Sep 2025 02:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="rPJV8mCE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKp+ypH0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010015.outbound.protection.outlook.com [52.103.68.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167482DC784;
-	Fri, 12 Sep 2025 00:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757638376; cv=fail; b=KodGJaDzATKfAouequCbYf/7G5kvGXR8Hl1N3H8uzBM8BtFsusJgT2o7gk2vUFvnLm6YhHOyD+x2YFDLl66/19Q+Fb50iPYHzsiVxB0rIL99oZLYCqAUfbCEQ0eHp1HWHTx5XgqH3YoypvcNvjhwdqrlxGt34LnAsOiAQOnJ44U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757638376; c=relaxed/simple;
-	bh=nzsP0OSZDHDGmxiDK6uIiriqY9nm/mFSXeCC6LQNeiM=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RtiGTEYafFhmygxWidxMceVLlUC6WXHx5x0HP2iLHAQCMqAQXCPF5QROMNBXI1KdKDcoaIRbacH06GsTgzfI/SEwuyAnMGdcaV1TPpJ9h3Y9Zv988Nja1oxAhNIO4LkjESDWrKbpZnKkgxfAHcZoid7hcq/cDwbNRpzvEy9I7Bo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=rPJV8mCE; arc=fail smtp.client-ip=52.103.68.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VwnSYYF1GV+yDEhaDOU5fh+gUmFFWD0ppMHgwou7wLSs9CxNxvrUgS4gzU7B5Zxw01K38d/550eHvQ82jjE5pt+6Whkkun6I/gZhFHWJIqkBy+v7dfiC/8U4G2fcmowbIlJC8i1s7lnVKHghciage405zAz3lG1Pf3yzVuuPpi+hVsWv1PlXAuI26qff8vM0wU7U2ddJThhbZakoTOdXSL9/MqM+EKQwJMhqGjORE1MWmKVXs/IH16IpaD4Z4EMvo4bt2ec4GtfYqOYJcLpMsOl7F+eF4x/DyR+f4kX9m0jI1jdA4pPrWFQ8Gp/iRWkth6ng03GYk0lLr+rUptGDWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4PZiunQQhYoddhB7VtpKOQHxcmiwCRo05CXFAsw3IuA=;
- b=PJPE03jvoLbhlDEIq3pb2gGIZjy/hS+pi56o9JLkwO8b53E0TJfLguyZk8axLQ0mHhUmTmSCX7XfYubYvgxvYRl1VSQ2AqmI7bjuqLFDzwiEm9q0PvpWoMwDd7otKgxDRBLJG0bvFEduphfXyCRYyyJL4R0JGCOp5FG0bmDy5wF/absLNrBkZM49xHRvHAVKq9ouEKr9e7cGOz7/T/QE33PBEwGFWMbYl7BM3pSGe7LsFvwOba1l0OZLIAFM3ca/uYYv5v+ZJs7UHW5/Czckzw7kTvBNMXgBt4/mcSw1rMyFaqm8UTRtv6jNtgC4sg4Ujl1FbyPHABeGHbkyDMQZDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4PZiunQQhYoddhB7VtpKOQHxcmiwCRo05CXFAsw3IuA=;
- b=rPJV8mCEyq+NGh3TbvPTjkrfTjSkHxIHMpC3I+Gi5vF0usYgB9X292RyK8PtJif1eQ2448bUHDjl/nKSwenc0P9WTjCWUReg6pAyQ54FQf/X9TYgzdZxcYX69+cFX5xCTGPcoQcEt9P7Rmj9K66g+dFc+etC6cdIMqz8b4mM8NkwFC5tEkvJipj4vFPVcN28UXndXKcjWwluSOLgQVrlLKPXSCYDD+F+TLC0T3PRI0fugEW0CK1tT2A2f8nHjk4aL6hK+juFgtT5jqQVltCjpfoYiGSmk/5gQdogsBCj8JycSLBY0d8VJMsIVjspGRqH+VD23D9AM6mTffF2p60QxA==
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16) by PN4PR01MB11915.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:2da::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Fri, 12 Sep
- 2025 00:52:40 +0000
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b]) by MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b%4]) with mapi id 15.20.9094.021; Fri, 12 Sep 2025
- 00:52:39 +0000
-Message-ID:
- <MAUPR01MB1107222DD9BBA9349C3907E21FE08A@MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM>
-Date: Fri, 12 Sep 2025 08:52:30 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-To: Mingcong Bai <jeffbai@aosc.io>, Chen Wang <unicornxw@gmail.com>,
- kwilczynski@kernel.org, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, arnd@arndb.de, bwawrzyn@cisco.com, bhelgaas@google.com,
- conor+dt@kernel.org, 18255117159@163.com, inochiama@gmail.com,
- kishon@kernel.org, krzk+dt@kernel.org, lpieralisi@kernel.org,
- mani@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- robh@kernel.org, s-vadapalli@ti.com, tglx@linutronix.de,
- thomas.richard@bootlin.com, sycamoremoon376@gmail.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
- sophgo@lists.linux.dev, rabenda.cn@gmail.com, chao.wei@sophgo.com,
- xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
-References: <cover.1757467895.git.unicorn_wang@outlook.com>
- <162d064228261ccd0bf9313a20288e510912effd.1757467895.git.unicorn_wang@outlook.com>
- <35447ba0-21c2-4a12-9d27-033a7be0af3e@aosc.io>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <35447ba0-21c2-4a12-9d27-033a7be0af3e@aosc.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYWPR01CA0019.jpnprd01.prod.outlook.com
- (2603:1096:400:aa::6) To MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16)
-X-Microsoft-Original-Message-ID:
- <d6f1156d-a438-49ff-a287-6bc029f588f5@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C1945948
+	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 02:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757644523; cv=none; b=KvsNdfRYG1gxF1V7z9UK3Yvvu529x3yKtz5UMZQlCVMGeZyJN2CqKhL9WDV99naEYVOfK7B5C/YIHm1/82w8vDRXYGbpKCopzNuDcjkaVtrXMtgUqzajqrfsBmo5CgpoetbJy83fXDkTqArrAYG45+xS2gJH0X9lKPRUqO3uuMw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757644523; c=relaxed/simple;
+	bh=gH9mXsZ1NreP7BRLCz/KnwpMOnnbb5r27TVVPsD+/H8=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=XrRbnPVuWz0RLgw8/RIjGCj7YGYB0pvtrKlaoUsBNDRI1jP8WWMinIEIKPeDIh/UMdXwMPGc3h0WHVWX4j8mbLDMhs8775BQHIlu9c9htagvNDmkvrC1pVC/RCUKvomn9oZJ+2JmAWRqLhCVfy69Xkluslr0yyu2BUW2uq/1frw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKp+ypH0; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-43832e0c40fso64151b6e.1
+        for <linux-pci@vger.kernel.org>; Thu, 11 Sep 2025 19:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757644521; x=1758249321; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=adSqTL8NuaakTvHTADgBkkDWAaGQjbxG9j1BynMCSQU=;
+        b=VKp+ypH093oI8Ktp341QcMLUOJjacimTQNFUh4Tr9Odze586piRXkqVfvGhC7Uq2ti
+         SrEp6pMPczWAR/bAqUdXwtQ6XZDFeb11Pnfcv2LjgxRK9BBk0c9dqGpg+s3VIJjG0O3C
+         Yr55K7d6rgxt+SxWyxkp1bc00/1LG443YtF/AWrFzsJgXjapwguxff+1cTLYzobAMrbQ
+         hFKbLZ2R3i9IaYJ1xHXnCAhmFHoDSC5OpjDUFHx8dXs0NVCcZSCUUmv4W0xBjs6PbDy+
+         k9rnHGj9yu7FLNwYaxshje3VDVzM6A4+DGwLdoZgvfdCBkHsAO8uwPy4HhDUC072+bt4
+         Hf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757644521; x=1758249321;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=adSqTL8NuaakTvHTADgBkkDWAaGQjbxG9j1BynMCSQU=;
+        b=ZM+5gWoRAsL1Uyvfj1P8pCk6e1CAL3LIgcvWJc3tpnvKEH7xfMePRxwcDZwBqnmZZ2
+         5bbOafmk1fvZF618XopZns7v/vLlD+FY4z9Ka4vXT3r1HlQmitNfeiTtNwXmO/jUR8PQ
+         SSVaa5MlLGB34Xd6Cd1XvtKNNSkI4JRDdp6+vbfzAwBeEpCSlDOL6pZiOVKRvVhmtMKM
+         FhTSbnP9fsEMpIQe9HPEvEwWNjY/ygXOcOzFPYy5zhSH+1cKtO1VJGc564Omy4yTp/nb
+         V9vPM8vhS18UJG3wAELtk3+t30GsFyVJFYjMjmDKah5BAsQDZrqnKuDW+eFECxBv7WVU
+         3CLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCxN9XdSitQSBq38AEodX2u+aF0X4l+MYg1iTxu8EtO+qgCYWpFjeptF6vGhkpghmy5Pmy3btOoLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza/G4fjpwtBu55O9qAF2XcsOGLrrMWNdkLvHZtk9W2qH3ZLr6g
+	CCGCwRTZN7Q+Ok0LMoY5rPNPFpWBZI4yXkRCGCUlIDK/woU3JxTdrLvr
+X-Gm-Gg: ASbGncsY9rS0u2jo4uwjPTF2OjsVi8ff+v0PwmB2flqIcaCYwMKtq35o7Pp+7BgPJQr
+	YxTGSkAgvEVQY21/iU1NywvFPaUpHEm6Hf5CQ591nnlWyMLIEvKs6okHv747SbCmj7gJzbnWRhp
+	cRtE4BYpdCQS9yV5gjJhRT83DpDf9SytrL4oCO0Ii5P00SqD0qdlQ/Klz6TCITGdFJIBGqSHKI+
+	1ONVlOEnU6qdcrNN/G7N0tyB2iDKENSR3/4TrbhuoI4Os2v1CqYkYu2HRAZDE5F7ss/JA+dZC5u
+	esXnH82kOgvdJhzoowwrNL0UWPqYwLlvwWstSkScqI2Hb8ezRBRVFmQQVt63hKTXWg+Wf32f/m+
+	rEFqscenDn/ioNbPF4VxkeFnnuYBPyTic
+X-Google-Smtp-Source: AGHT+IGWQK39i39FWL4qHMCK2JcI2v7l2UTe5cu2Hfp1wmFQwUNAPDH21RFBHh1BoHV6V+GM7HwRsg==
+X-Received: by 2002:a05:6808:1244:b0:437:eb1d:cdde with SMTP id 5614622812f47-43b8da33f47mr464232b6e.33.1757644520618;
+        Thu, 11 Sep 2025 19:35:20 -0700 (PDT)
+Received: from localhost.localdomain ([122.8.183.87])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-43b82aa7b97sm559913b6e.24.2025.09.11.19.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Sep 2025 19:35:19 -0700 (PDT)
+From: Chen Wang <unicornxw@gmail.com>
+To: kwilczynski@kernel.org,
+	u.kleine-koenig@baylibre.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	arnd@arndb.de,
+	bwawrzyn@cisco.com,
+	bhelgaas@google.com,
+	unicorn_wang@outlook.com,
+	conor+dt@kernel.org,
+	18255117159@163.com,
+	inochiama@gmail.com,
+	kishon@kernel.org,
+	krzk+dt@kernel.org,
+	lpieralisi@kernel.org,
+	mani@kernel.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	tglx@linutronix.de,
+	thomas.richard@bootlin.com,
+	sycamoremoon376@gmail.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	rabenda.cn@gmail.com,
+	chao.wei@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com,
+	jeffbai@aosc.io
+Subject: [PATCH v3 0/7] Add PCIe support to Sophgo SG2042 SoC
+Date: Fri, 12 Sep 2025 10:35:10 +0800
+Message-Id: <cover.1757643388.git.unicorn_wang@outlook.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MAUPR01MB11072:EE_|PN4PR01MB11915:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2cd1babf-94f7-4190-848f-08ddf196abff
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799012|23021999003|8060799015|19110799012|461199028|5072599009|6090799003|52005399003|41105399003|40105399003|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q2F0bk04M3dremZ2M1czdEpMLy9Kakg4WXBNVURDbWlhbVh3N0ViWE8vWmdx?=
- =?utf-8?B?aGMxYXB0RU5lTTFYMUUrZkx3QjQzUVJLS1VPN2ZaSFVrS2F6VDB5cGJibmhQ?=
- =?utf-8?B?aThnWlhIREZBWWZSck5iSE9QdmNnTEVFUm1BenE5OXdHR2JVbDR3eTdwQm0r?=
- =?utf-8?B?eXluMkExK0tSSzFvNWlqSHZVNW9nVzhpU0JOU3dEVFVFc01zdUJzLzRwYW5z?=
- =?utf-8?B?MFQvMHF1MDdaU0dvbWZKamF5K1c4Mk9MNFNMNWdzbUZoTDd2b1RuNjJvWi84?=
- =?utf-8?B?b1VVQ3BtMmlSVC80Z1J4V2ZyQ3JQbStwQ1dYUXhsTTZ4dGNLSkU1RVJNWVcy?=
- =?utf-8?B?L1VBamNEZERvL1F5M0tpclVub2NVbWJURVlEUGxXV2pqWFY0VUxhSlpab21r?=
- =?utf-8?B?NjB2VEd1UGVwVjdwbEpDMU5Fd2M5eFd4d0wra0t5Ykc3SXYwNHAvVHIrdG13?=
- =?utf-8?B?ZVpSNWpsczFuMDFUcWRFalEvaHFiYkovdlVlNjBGQUtUMHFRM0xHVENaMzBN?=
- =?utf-8?B?QWhFanhYOUVGa3hnRmVLZ0d1ci9SajJaR25iSW9zei9zTDhDT21SK29VUWda?=
- =?utf-8?B?UWI2UVg4eTgxQ1JPbTJQdHdwQWplOW5pOWpLRkZwN1JvbkZJclBZN1EvcUZn?=
- =?utf-8?B?VmR2d1BuT1ZDV2pKR0ZCT3dveHJtUzVrWmlNM3k3UWQ0TldBblZOZXdzZy83?=
- =?utf-8?B?K0MzUEpTSzhZWFFVS1FNVGhQOWhoU05GSTRtR1orWUtsTm04WGpYMGFFamlp?=
- =?utf-8?B?YWVPWVQrSE1ndzNCQ1NmeTZHMGJqN3pBVCs5c2xGUkdxRVJWVDZvazZxeExX?=
- =?utf-8?B?OWU1cWhXYTVDWHJTSkFIUXF2ZnZ6ODBERS9mZGlvV0J2Q0ZZK0dnajA0Umh2?=
- =?utf-8?B?Q2k0ZUtrSVEzK0VZMkgvTFdyZzhwS0IzdFBrN1dNckdSMWdNRG5LZjdrd1du?=
- =?utf-8?B?VUkwV2dKL0tMY1JyYXNZZGJ3UUxWLzhBK2MvT0JVcHNESDczWjJ1Ym9aUU9S?=
- =?utf-8?B?YmF5NXBGRHBLbjBKTW1GN2htbmpFUHJtM0s3YUlQQ05zbkF6VEVyQ0dSOWxM?=
- =?utf-8?B?NENmOUxqeTFqQW9CVHB3YlFLM1pMdW02T2hSYnN4YmZIUEVydTVUNy9nd3Bq?=
- =?utf-8?B?R1BKWVR4WUt2enJYRDF1Q1lTQTBnWW5Na3cwZnYyRGtWMi9mNG5CTFRaU0p6?=
- =?utf-8?B?REZMSEN4ZEVDYnFxeFEyOGRTRDdMeENGNmZOVnR3VG9jOS9LODB2d0REVmtU?=
- =?utf-8?B?M05MYkxOa1hVeFNKOU1STVlJTkRxOS9qRE9ZenlYQXBHbHhOTWpUUGY3ZHFF?=
- =?utf-8?B?OG96b05semRQbjZTb3JvdDNjTmhSQWRLemRkOEh0a040eUs2NUtqK2N2SjNV?=
- =?utf-8?B?QS9YMkJTNkNOdXhYdk9NdVFzVDIzT0JjSlFlbG5mYWl3elBmZnYrVWxHbFpM?=
- =?utf-8?B?U2lRUlV3OFRDM0hTVVRuVTg3TFhESU8vRE9rdG9YRzNwR240S2wwazg4dDZy?=
- =?utf-8?B?djhaanE0TDhUUEtUclpRM0RHTFgxdWpwMXIwMXRzcDk1V1lkS1JKZTJMRG1h?=
- =?utf-8?B?T25nS1R5RzZxNG5YclBSSlN0a2V0TDdkSGE3c3Fmc3F5RnNBZEovcTNWZHdH?=
- =?utf-8?Q?OljsJPB4n2IUWfWLXV2xV3eW6aL21q3aEzM08PXmg43w=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bkdaTFlqbEFyQlNKUWg0VlE5Szg2ZUsyNklxRmtWcnpVbGtCTkNYSGg1c2d4?=
- =?utf-8?B?TWkvVXYzQ2VaWTJhV3psYlJqYlBPZnViMHY3SG9PM1J5MlJxMmIzK05zMlBH?=
- =?utf-8?B?SGJTYVpxL09TOGFqalV5cmgvS0V6cEFzTVNyV2paYzIzQmFkSlFVdGd1aXhR?=
- =?utf-8?B?ZjduRW9EQkRZSTd1YzRFSFZHdHJmZ1ZRZVZnY0ozdHFhTEp6dENOV2VnUE5P?=
- =?utf-8?B?UjVXQjE0RmV4QXh5dXMzbTZnZ3J3eHlrWFRQYWxReVJiWnpNOWtXTS9lNEo1?=
- =?utf-8?B?N1ZqUDRkTlZlZTFqVUI2eU9pQWs5QXZlQmVRYUMwbkFtb2xCbXg1RGlnVkds?=
- =?utf-8?B?RWVTWHM4UFZFaTluT1Q4b3FybUdkSFMzS3FLWGFWYThFT2d6T2M5emtIWFcw?=
- =?utf-8?B?K0M2MXdOZ0t0eklJLy95RzNIZkZsQnZHdXJJS1cyS1ZSSXM0dURnTDRCdTFv?=
- =?utf-8?B?MHFnV0N0ZXh0NmdkbStCSW45eGV1a2IwSlFGRkl0emlpNjVXbzdaaTBLbERB?=
- =?utf-8?B?WG83cGRXWlpaNTJsYWd6RTJTcG4xeGZYai9tVjBWcnBKWVZUYzNDRWdPWHlK?=
- =?utf-8?B?aEhkaHRiZndlYjArM2xMTDFQQ1FGZEY3WTM0Z0s3OVJxQ3FSOTlqZ0xqYW5m?=
- =?utf-8?B?V0lIQUJtK2pYNHlsa1ZXY2lCQ1kyTjBMa244YmROSmNqNTBNdHpkWEhidmdm?=
- =?utf-8?B?SnBnT3dSSDY2aUtDR3RSRmRyNXJqQm5ZWWdUSEpWeldKWFZFcUwydFl4cE5M?=
- =?utf-8?B?ZDBvRXh5M3EzYzEyYXBwZHRCWTYyM0tyV1V3Y2pGL0lEeGdTaUdyZ0VPU0VP?=
- =?utf-8?B?OGY3MlFaeDV0U0d6VTV5TjhBZWJPcS84d0F2NHhGK2l6RmJQMzRiTitCRXRJ?=
- =?utf-8?B?dGFrcjRrWDBVTGc1NlRvOSthNURoUTVxOCtRMkVQRzl4YjB6bEZCbG9mcGtK?=
- =?utf-8?B?eTYyVjRRZVFBQXBFZTh6dkhjZUdOUUtId1psU0JoTWs2OWRKNExDQ3I5TnpP?=
- =?utf-8?B?UUNyUUVOTzFJN0Q4R2lHWkVyRFRaZjNhUy9kL1BsYW41T3F2QTh4N2p3YmRP?=
- =?utf-8?B?T3pLdVJCRXF6YW9OUWhxUDJqRDRjQll5NFZPMDMzNzFKNHlRbUpxeGg4dWQy?=
- =?utf-8?B?MWFmR21KN3BndlhEMXdKR0dFQXB6TWUxRHV2R0NFQkpuR2VYWVJpVVgxemNS?=
- =?utf-8?B?RmVRd2ZYUEgybEluL0VteGRDQ1dhUUJwZXJUdjRmSDdCd3ZhT1RSUDhkS1c5?=
- =?utf-8?B?VDV1eWNrdVg3eURpQlNyUldKdVNDUDdhYkRFTkEydDRvMHVESW9ya2dKNlBq?=
- =?utf-8?B?YUdEbytScENJbGk1eW9JRXN2TjRMeWdWUXhCNnh0Qi92N1hNSjk0WkVSb2tL?=
- =?utf-8?B?Z213dFptQTY3OEF6MXdJWkJMdnNERDdvdXFPYUxOcTlGb1NNbGRJc1NSKzlX?=
- =?utf-8?B?MWpQWVc0dzE5RkpFR1hGakNYV1BXNy8zNmhSbU1lckp0MkkwNFUwVjV3aGtW?=
- =?utf-8?B?emEzazBFMWpUT051TkVlcVM2MWFBcjhndG44SEZVTlEvZUdFczM3Q2lkbEQ1?=
- =?utf-8?B?R1NNNGRReVYzV2k1dUhJcHYrTnExcDFLc3A3Wk9jdDFnaFhJMDEwUXdWUWF3?=
- =?utf-8?B?dy9kelZKNDFHcVo3TGlDTmRRVCtDWEc3UmkwQmdLSUtsT1NrSGRwMW44QnZZ?=
- =?utf-8?B?Sk9ZM1ZpYlBteE5BbTRVTWpuREZ3LzR3ZUNoWDlnWFQ4K2JwekVHeCtiTXVH?=
- =?utf-8?Q?FyMM4SNaoTSakLacudaZeF6xF9rzrvDuDlUAtWM?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cd1babf-94f7-4190-848f-08ddf196abff
-X-MS-Exchange-CrossTenant-AuthSource: MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2025 00:52:39.6040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN4PR01MB11915
+Content-Transfer-Encoding: 8bit
 
+From: Chen Wang <unicorn_wang@outlook.com>
 
-On 9/12/2025 12:17 AM, Mingcong Bai wrote:
-> Hi Chen,
->
-> 在 2025/9/10 10:08, Chen Wang 写道:
->> +config PCIE_SG2042_HOST
->> +    tristate "Sophgo SG2042 PCIe controller (host mode)"
->> +    depends on OF && (ARCH_SOPHGO || COMPILE_TEST)
->> +    select PCIE_CADENCE_HOST
->> +    help
->> +      Say Y here if you want to support the Sophgo SG2042 PCIe platform
->> +      controller in host mode. Sophgo SG2042 PCIe controller uses 
->> Cadence
->> +      PCIe core.
->> +
->
-> While build testing this patch against v6.16.6, PCIE_SG2042_HOST is 
-> set to "M", the kernel would fail to build during MODPOST:
->
-> ERROR: modpost: "cdns_pcie_pm_ops" 
-> [drivers/pci/controller/cadence/pcie-sg2042.ko] undefined!
-> make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-> make[1]: *** [[...]/linux-6.16.6/Makefile:1953: modpost] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
->
-My fault, seems there were some problems when I submitted the driver 
-code. I will correct them immediately and submit a new version.
+Sophgo's SG2042 SoC uses Cadence PCIe core to implement RC mode.
+
+This is a completely rewritten PCIe driver for SG2042. It inherits
+some previously submitted patch codes (not merged into the upstream
+mainline), but the biggest difference is that the support for
+compatibility with old 32-bit PCIe devices has been removed in this
+new version. This is because after discussing with community users,
+we felt that there was not much demand for support for old devices,
+so we made a new design based on the simplified design and practical
+needs. If someone really needs to play with old devices, we can provide
+them with some necessary hack patches in the downstream repository.
+
+Since the new design is quite different from the old code, I will
+release it as a new patch series. The old patch series can be found in
+here [old-series].
+
+Note, regarding [2/7] of this patchset, this fix is introduced because
+the pcie->ops pointer is not filled in SG2042 PCIe driver. This is not
+a must-have parameter, if we use it w/o checking will cause a null
+pointer access error during runtime.
+
+Link: https://lore.kernel.org/linux-riscv/cover.1736923025.git.unicorn_wang@outlook.com/ [old-series]
 
 Thanks,
-
 Chen
 
+---
 
-> Best Regards,
-> Mingcong Bai
+Changes in v3:
+
+  This patchset is based on v6.17-rc1.
+
+  Fixed following issues for driver code based on feedbacks from Bjorn Helgaas,
+  Mingcong Bai, thanks.
+
+  - Fixed the issue when building the driver as a module. Define own pm_ops
+    inside driver, don't use the ops defined in other built-in drivers.
+  - Improve .remove() function to properly disable the host.
+
+Changes in v2:
+
+  This patchset is based on v6.17-rc1. You can simply review or test the
+  patches at the link [2].
+
+  Fixed following issues based on feedbacks from Rob Herring, Manivannan Sadhasivam,
+  Bjorn Helgaas, ALOK TIWARI, thanks.
+
+  - Driver binding:
+    - Removed vendor-id/device-id from "required" property.
+  - Improve drivers code:
+    - Have separated pci_ops for the root bus and child buses.
+    - Make the driver tristate and as a module.
+    - Change the configuration name from PCIE_SG2042 to PCIE_SG2042_HOST.
+    - Removed "Fixes" tag from commit [2/7], since this is not for an existing bug fix.
+    - Other code cleanups and optimizations
+  - DT:
+    - Add PCIe support for SG2042 EVB boards.    
+
+Changes in v1:
+
+  The patch series is based on v6.17-rc1. You can simply review or test the
+  patches at the link [1].
+
+Link: https://lore.kernel.org/linux-riscv/cover.1756344464.git.unicorn_wang@outlook.com/ [1]
+Link: https://lore.kernel.org/linux-riscv/cover.1757467895.git.unicorn_wang@outlook.com/ [2]
+
+---
+
+Chen Wang (7):
+  dt-bindings: pci: Add Sophgo SG2042 PCIe host
+  PCI: cadence: Check pcie-ops before using it
+  PCI: sg2042: Add Sophgo SG2042 PCIe driver
+  riscv: sophgo: dts: add PCIe controllers for SG2042
+  riscv: sophgo: dts: enable PCIe for PioneerBox
+  riscv: sophgo: dts: enable PCIe for SG2042_EVB_V1.X
+  riscv: sophgo: dts: enable PCIe for SG2042_EVB_V2.0
+
+ .../bindings/pci/sophgo,sg2042-pcie-host.yaml |  64 ++++++++
+ arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts  |  12 ++
+ arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts  |  12 ++
+ .../boot/dts/sophgo/sg2042-milkv-pioneer.dts  |  12 ++
+ arch/riscv/boot/dts/sophgo/sg2042.dtsi        |  88 +++++++++++
+ drivers/pci/controller/cadence/Kconfig        |  10 ++
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ .../controller/cadence/pcie-cadence-host.c    |   2 +-
+ drivers/pci/controller/cadence/pcie-cadence.c |   4 +-
+ drivers/pci/controller/cadence/pcie-cadence.h |   6 +-
+ drivers/pci/controller/cadence/pcie-sg2042.c  | 138 ++++++++++++++++++
+ 11 files changed, 343 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pcie-sg2042.c
+
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+-- 
+2.34.1
+
 
