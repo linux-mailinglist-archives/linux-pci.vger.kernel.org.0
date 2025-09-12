@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-36020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36021-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47D67B54DBF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:31:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2C1B54DC3
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:31:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 888933BDB6D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:27:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03F2E3AD269
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:27:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433983043A5;
-	Fri, 12 Sep 2025 12:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E457A3019AC;
+	Fri, 12 Sep 2025 12:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SFDYyMZu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bFgUuti5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0A23019AC;
-	Fri, 12 Sep 2025 12:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EDC30FC2B;
+	Fri, 12 Sep 2025 12:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757679918; cv=none; b=LHP5vXgIwopyS+WUkWuHiG2Zt3zj7E6ig17QIMnArbqBA2/TI7I5M8k/eS27b7pdmU1+8KAdOSZ0iRUa4KBdTocDVLRBU452vHxCn34ozGfeVf4Q6tuvF1+D4cJjWMKvY8r8qXWJVm8Fcd6BUdJlE6XtBc9eIAAM00wiPe9bjRc=
+	t=1757679921; cv=none; b=FWbd5tmHY9T+MIEB2gkKVZ1wnlqUGLz22KGQl0V/ObMAEddALT8xo+kAdw0CHpvf/WmLRd1If5MkftCOSYqM0A+qGnfPeTTnv9bt/9WGfEGNY2xu2UJkRo/idPfkCqzfs6/OMECeQAObv/+LYbukIXiDv+MsCB4+dVtzGBB5Ijk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757679918; c=relaxed/simple;
-	bh=lOl1bORjgtUVblIfSnhHhHV6S3RXTIIydyYBHH+vI90=;
+	s=arc-20240116; t=1757679921; c=relaxed/simple;
+	bh=0Mu2TfwYTvGNT0/SOuznU8Xo9nEgevesqabtorRMzNY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DzvkG6wGXm2jN1ozOUPQ5g16wctB3+PD6ULMoQshzhmA/+Tw63aFIkbPbomQCIdoOuEFKN+upb2b4VkLz5Z5M3aE3VJRYWJLLmVdlXPRByUzOZ5aFFYZv0dgM2nIcbq0ePoVD1ii9nsMxd7dbzjqApG6vU+FPzAzC3p6BC5I2FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SFDYyMZu; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=r0Se2xe795M2LKzMqv3HC+hRPbIRIYveA1Tms9hpHl9RpouNZSqONVZpBVP39pH6USttsR0zXav3pK0hbyc8SqCPT84OGgrWsValLqI7Gm2+OzWSD7N+NV10tRhTg3vo0v6tmY50dQZKEiW5myZsy7gr/DsAAxn4xsZFVHY1ojY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bFgUuti5; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CCOkQ11030270;
-	Fri, 12 Sep 2025 07:24:46 -0500
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CCOrbn517286;
+	Fri, 12 Sep 2025 07:24:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1757679886;
-	bh=akHgpV0QofSJh7+9oJVQtZLcV4mul4y96HgMakofh04=;
+	s=ti-com-17Q1; t=1757679893;
+	bh=vj2uaDJCxGQbaAM5o1tES0SUnARreMitm6wm4PP1R30=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=SFDYyMZuL/p17Zovwj5vhVROb6DWXPCjna7kNgtW0JhBYEpUY8imhcRAi4wjd3NQO
-	 BcOW0sKgZkiKeddP6JVN25nNmyR5UTtdR1QBOILm8zCpSi38Sh/iw8BnlUt8k0m1Q3
-	 J8LwDK1c/ZiK7MmPEMEihl/1SrhItHkqlrnBnzxM=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CCOk9a1291380
+	b=bFgUuti5l61jeacjYH7OkeHcu6S6d9/GAcx/aiKxVI93iaBFlotTTLz3E3IbscnsP
+	 CpkCje3swMwqyiNLrPoUoQ7YpGltPGsSLFzD3eCF01J4soG1vkfs9tYK8whgX5Y3O6
+	 AfSy9QCMy8vqnrzSOwsj+kLjc/zjtxDSJHojY8lY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CCOrtr1969762
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 12 Sep 2025 07:24:46 -0500
-Received: from DLEE210.ent.ti.com (157.170.170.112) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 12 Sep 2025 07:24:53 -0500
+Received: from DLEE200.ent.ti.com (157.170.170.75) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 12
- Sep 2025 07:24:46 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2025 07:24:53 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE200.ent.ti.com
+ (157.170.170.75) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 12 Sep 2025 07:24:46 -0500
+ Transport; Fri, 12 Sep 2025 07:24:53 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CCNuLY3589278;
-	Fri, 12 Sep 2025 07:24:39 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CCNuLZ3589278;
+	Fri, 12 Sep 2025 07:24:46 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
         <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
@@ -68,9 +68,9 @@ To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
 CC: <jirislaby@kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 06/10] PCI: keystone: Add ks_pcie_free_intx_irq() helper for cleanup
-Date: Fri, 12 Sep 2025 17:46:17 +0530
-Message-ID: <20250912122356.3326888-7-s-vadapalli@ti.com>
+Subject: [PATCH v2 07/10] PCI: keystone: Add ks_pcie_host_deinit() helper for cleanup
+Date: Fri, 12 Sep 2025 17:46:18 +0530
+Message-ID: <20250912122356.3326888-8-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250912122356.3326888-1-s-vadapalli@ti.com>
 References: <20250912122356.3326888-1-s-vadapalli@ti.com>
@@ -84,60 +84,57 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Introduce the helper function ks_pcie_free_intx_irq() which will undo the
-configuration performed by the ks_pcie_config_intx_irq() function. This
-will be required for implementing a future helper function to undo the
-configuration performed by the ks_pcie_host_init() function.
+Introduce the helper function ks_pcie_host_deinit() to undo the
+configuration performed by the ks_pcie_host_init() function and also to
+free the MSI Domains if the '.msi_init' callback was implemented which
+would have made a call to dw_pcie_allocate_domains().
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
 
-v1: https://lore.kernel.org/r/20250903124505.365913-7-s-vadapalli@ti.com/
+v1: https://lore.kernel.org/r/20250903124505.365913-8-s-vadapalli@ti.com/
 No changes since v1.
 
- drivers/pci/controller/dwc/pci-keystone.c | 29 +++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/pci/controller/dwc/pci-keystone.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 81c3686688c0..074566fb1d74 100644
+index 074566fb1d74..3a3188e89a2a 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -745,6 +745,35 @@ static int ks_pcie_config_msi_irq(struct keystone_pcie *ks_pcie)
- 	return ret;
+@@ -885,6 +885,18 @@ static int ks_pcie_init_id(struct keystone_pcie *ks_pcie)
+ 	return 0;
  }
  
-+static void ks_pcie_free_intx_irq(struct keystone_pcie *ks_pcie)
++static void ks_pcie_host_deinit(struct dw_pcie_rp *pp)
 +{
-+	struct device_node *np = ks_pcie->np;
-+	struct device_node *intc_np;
-+	int irq_count, i;
-+	u32 val;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
 +
-+	/* Nothing to do if INTx Interrupt Controller does not exist */
-+	intc_np = of_get_child_by_name(np, "legacy-interrupt-controller");
-+	if (!intc_np)
-+		return;
-+
-+	/* irq_count should be non-zero. Else, ks_pcie_host_init would have failed. */
-+	irq_count = of_irq_count(intc_np);
-+
-+	/* Disable all legacy interrupts */
-+	for (i = 0; i < PCI_NUM_INTX; i++) {
-+		val = ks_pcie_app_readl(ks_pcie, IRQ_ENABLE_SET(i));
-+		val &= ~INTx_EN;
-+		ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_SET(i), val);
-+	}
-+
-+	irq_domain_remove(ks_pcie->intx_irq_domain);
-+	for (i = 0; i < irq_count; i++)
-+		irq_set_chained_handler(ks_pcie->intx_host_irqs[i], NULL);
-+
-+	of_node_put(intc_np);
++	ks_pcie_stop_link(pci);
++	ks_pcie_free_msi_irq(ks_pcie);
++	ks_pcie_free_intx_irq(ks_pcie);
++	if (pci->pp.ops->msi_init)
++		dw_pcie_free_domains(pp);
 +}
 +
- static int ks_pcie_config_intx_irq(struct keystone_pcie *ks_pcie)
+ static int ks_pcie_host_init(struct dw_pcie_rp *pp)
  {
- 	struct device *dev = ks_pcie->pci->dev;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+@@ -929,11 +941,13 @@ static int ks_pcie_host_init(struct dw_pcie_rp *pp)
+ 
+ static const struct dw_pcie_host_ops ks_pcie_host_ops = {
+ 	.init = ks_pcie_host_init,
++	.deinit = ks_pcie_host_deinit,
+ 	.msi_init = ks_pcie_msi_host_init,
+ };
+ 
+ static const struct dw_pcie_host_ops ks_pcie_am654_host_ops = {
+ 	.init = ks_pcie_host_init,
++	.deinit = ks_pcie_host_deinit,
+ };
+ 
+ static irqreturn_t ks_pcie_err_irq_handler(int irq, void *priv)
 -- 
 2.43.0
 
