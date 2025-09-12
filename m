@@ -1,77 +1,85 @@
-Return-Path: <linux-pci+bounces-36055-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8673BB55695
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 20:55:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32046B556D7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 21:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 708051D624BC
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 18:56:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E38E45C0DE5
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 19:17:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B4033471C;
-	Fri, 12 Sep 2025 18:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NtAGk5nL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82463281526;
+	Fri, 12 Sep 2025 19:17:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1133009F0;
-	Fri, 12 Sep 2025 18:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEC4CA6F;
+	Fri, 12 Sep 2025 19:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757703337; cv=none; b=JFqiRF6zLSDvtvTYK5QrXQMhqw67j89/d1cIIaiYHfYcOlLM92XMp42Ymj0bubA44G9l9zCZJUxc+I9UmL0yO6SZg9FDzXAF+pnnZg1L/6bjDDW2osQ44JCzIMWAqC7fyN+UntvCGGIEBdo6lbUGsm4HBoYUlsK4mc4UDdDTPys=
+	t=1757704663; cv=none; b=UkjRv5RRjBOE+hvfktzUF0DWtfBA8cieTgFqu/LjCkGePZ4LZz6q208QDlKsmt2yXISSSlI1C7oPUDwHhNmEZv+MobMehGxLNlNgZ2FXMiARebVO2q/QfUnQtkvMd0gve81WjlRNRpGlFT4Phq93iuBw8/MdInFZU4KYCzmdXn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757703337; c=relaxed/simple;
-	bh=aKOcvQkDHyx/TzlTNSXydXtQ/XFWj3CNb7g5yIDhkA0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=gutUibXXgqD85fseX533ApPOE/vF0F//MbM9k3IHYXA8B75xFz8KVKXuNc2ilFg9cJL7REaEJPdz3LOK5RUpkYvddvt7VeouR7mssLAnK6YW4Ktp66ev/Uq/IJ6zKCs/nZ2sXNh1desljS/+iumkDnZrt9/7U+TvlFtuS3c8dCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NtAGk5nL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37515C4CEF4;
-	Fri, 12 Sep 2025 18:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757703337;
-	bh=aKOcvQkDHyx/TzlTNSXydXtQ/XFWj3CNb7g5yIDhkA0=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=NtAGk5nLdg1mlsNxa5FbcEjJ0BNLHJG1HLdMvM1p3ax8OujVOJjwEoR8LP28vlnVv
-	 3ElAFqzBp7wHHrqrX5VRw+T1Cn5GGjp1SD5g2sDB8rdX3ec+Abxa6KOckSfxtTvUnl
-	 WSy5NsicuxDR8fLSWcSELyQvlp5INIzPhsQstC1GtDOm1qZXriFnVttzMmDFpZjM2k
-	 h+x2+bs0wZoIDO3+0W5DiVlwWdZK3n/ZCEigWlF1JWPEfPVWPM3GL0lMwvfzdSNRLN
-	 GlSYtyG0H4dfEEa/uEEsrkzzkciZoW88nDFDwvYEQE5QywsTWzQaB4jexvG5EGrFH5
-	 kkRovwXl2KqMQ==
+	s=arc-20240116; t=1757704663; c=relaxed/simple;
+	bh=EM2F7JCOBK983i5qh1AozmAebcYg09wkr2nQauyIpZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cKY+er2+IFiCRcwfjBpiczdJciHpDSjqvH2V154OYMLw3C5xxImO+gUDpOtmMVvneIaH9JAIRrEm4iphC51BnaTUNqQ5tt9YMJSCyq0WE1uXOmUX0oDF7zKXkSZOs9pmJ+otefQcKbOPkatVfN1FqRbT/PEaKWra7UAUVBA6aAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7964F2C0E223;
+	Fri, 12 Sep 2025 21:09:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6EF231213AA; Fri, 12 Sep 2025 21:09:23 +0200 (CEST)
+Date: Fri, 12 Sep 2025 21:09:23 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com,
+	shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v11 06/23] CXL/AER: Introduce rch_aer.c into AER driver
+ for handling CXL RCH errors
+Message-ID: <aMRv47i-qpSHbw-9@wunner.de>
+References: <20250827013539.903682-1-terry.bowman@amd.com>
+ <20250827013539.903682-7-terry.bowman@amd.com>
+ <9e01d94c-7990-4599-9eee-ac0f337d6e2d@intel.com>
+ <aLFnKbWtacLUsjAi@wunner.de>
+ <52a64372-098b-4656-a1c0-1a6cfee126e3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Sep 2025 20:55:31 +0200
-Message-Id: <DCR1TV2BQVSH.8QHNTN9F2XG6@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [GIT PULL] Rust pin-init for v6.18
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Bjorn Helgaas" <bhelgaas@google.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Tejun Heo"
- <tj@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Dirk Behme"
- <dirk.behme@gmail.com>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Christian Schrefl" <chrisi.schrefl@gmail.com>,
- "Alban Kurti" <kurti@invicto.ai>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20250912174148.373530-1-lossin@kernel.org>
-In-Reply-To: <20250912174148.373530-1-lossin@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52a64372-098b-4656-a1c0-1a6cfee126e3@amd.com>
 
-On Fri Sep 12, 2025 at 7:41 PM CEST, Benno Lossin wrote:
-> Please pull for v6.18 -- thanks!
+On Fri, Sep 12, 2025 at 08:59:37AM -0500, Bowman, Terry wrote:
+> Hi Lukas,
+> 
+> After discussing off-thread I understand you prefer changing the
+> name here to be drivers/pci/pcie/aer_cxl_rch.c.
+> 
+> Also, the non-RCH changes should be added to a file named
+> drivers/pci/pcie/aer_cxl_vh.c in the later patch
+> (CXL/AER: Introduce cxl_aer.c into AER driver for forwarding CXL errors).
+> 
+> Can you confirm the name changes are as you prefer?
 
-Merged into drm-rust-next, thanks!
+LGTM -- Lukas
 
