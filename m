@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-36000-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36001-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9697EB548C2
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:08:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08D82B548C7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:09:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5630A56736E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 10:08:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 256A7A078A0
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 10:08:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4AF42DF71D;
-	Fri, 12 Sep 2025 10:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C323D2E03FF;
+	Fri, 12 Sep 2025 10:08:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OqAPmlMA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m82ZGnTA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BF927CCC4;
-	Fri, 12 Sep 2025 10:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77EA2DF150;
+	Fri, 12 Sep 2025 10:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757671705; cv=none; b=h/dI4U47hbfKn6IhBD59hkdPEPuzfbL4wNzaARFapVAR2mrvgaY5Pxr8CjmxLnN+WXVuZBnBzbJdfe3p8mzKpk34INTcPQt9M2jGrdc5MT3debHSHYonrkc/9aNQyZeYECCH6r9rMth0lR/iy9a0VrthuVawwR2lvTvkGEvHnPQ=
+	t=1757671715; cv=none; b=neR6kJim+ete+ZIrhJ63iJeEilwqUE959QgjD0mFCC5h3V0KcqpemFbeXcUwwoG63KR3hU+MBiW+LcgQXTipKz06BnexP9Tuqct6Kvttx2u3jCcPkap1Q3k8fqKr4I2acOY+0jS71STpdIOvVu9RdASHE/NvizScmlXUMhVklxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757671705; c=relaxed/simple;
-	bh=CFr0GsRX1ePBBaWO+P0uLssrp1EXY24CAwGtNTif/Mg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FEpqn0N4gvAeIhAmZi8K6vnTGZA5Ovw8dBfsSByM7LQvqoJLojI3Bz1Q2PBRCaQSqhCF1CgQPFTK8/Uqt8GsTWN03ZdJaxZQaKlXK9AcjB+AB1ynATWzXTJ+NDklzKaTapAAK6ByHafQZneD6Wl8z2MmQAvdazagr3V4WkFDMT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OqAPmlMA; arc=none smtp.client-ip=198.47.23.235
+	s=arc-20240116; t=1757671715; c=relaxed/simple;
+	bh=zq5xJZnF93omx3N6DnNKxmVlxwrZm3wubVridx+hST4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ItC3shBAYRA6/XQKucRQ961/XuovFTUsJ1atD4BPxsnSpSKccrZhFiftWrg/N4mszkp5Eb+sxhLjpGFwI8EdLrr388yC8rxI/yg2Idc80KdPSWjLRr3xKejEEyFc7RmjF47V4W5lDr+P6nw2BfYTLsuyTGH1aEDLt94vaf4YOJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m82ZGnTA; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CA89L71011360;
-	Fri, 12 Sep 2025 05:08:09 -0500
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CA8F8b498897;
+	Fri, 12 Sep 2025 05:08:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1757671689;
-	bh=QAI1/iuQnmfWqwTdKggQ6qlQpdt/mhf+D90s4RMqkNI=;
-	h=From:To:CC:Subject:Date;
-	b=OqAPmlMAOuoKOdqjkDQVk7CR8Zfr19sScOkUTLrQ9o40U29VXVT5qcbB+0zUFJgyC
-	 ATU1kr8XH8wO2J8FsofrFlavpJEZZw3D9em9ZpQCFnsdi1/fYEEw2kEOIF3M6LR0MC
-	 fFIHP6GLgpgy0CCjwk3di+0WUK90kIcw19WXiq64=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CA89vI1904747
+	s=ti-com-17Q1; t=1757671695;
+	bh=nkuV7aobCdIbkeyG47qx7I1Surx6uFb1AcdgHCLEWSg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=m82ZGnTA9oGzaNeaTQWEh1g2zm0aD42xFzy+ovmzBFZImQeh9dbvKnZzk3WL33YSt
+	 EAsGc0QEZDSxdUpDCLgHfRNm7k9YxL9/qSUSM+w//1AnYVFdBIqAmX9/nKro5Si6HL
+	 7Ye5Qk5Pj9bDXKszSF+YPFwWAJL4xdTbHu36O7kU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CA8F632696732
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 12 Sep 2025 05:08:09 -0500
-Received: from DFLE213.ent.ti.com (10.64.6.71) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 12 Sep 2025 05:08:15 -0500
+Received: from DLEE211.ent.ti.com (157.170.170.113) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 12
- Sep 2025 05:08:08 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE213.ent.ti.com
- (10.64.6.71) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2025 05:08:14 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE211.ent.ti.com
+ (157.170.170.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 12 Sep 2025 05:08:08 -0500
+ Transport; Fri, 12 Sep 2025 05:08:14 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CA83MG3740807;
-	Fri, 12 Sep 2025 05:08:03 -0500
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CA83MH3740807;
+	Fri, 12 Sep 2025 05:08:09 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
         <robh@kernel.org>, <bhelgaas@google.com>, <cassel@kernel.org>,
@@ -64,10 +65,12 @@ To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
 CC: <stable@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH 0/2] PCI: Keystone: __init and IRQ Fixes
-Date: Fri, 12 Sep 2025 15:37:57 +0530
-Message-ID: <20250912100802.3136121-1-s-vadapalli@ti.com>
+Subject: [PATCH 1/2] PCI: keystone: Use devm_request_irq() to free "ks-pcie-error-irq" on exit
+Date: Fri, 12 Sep 2025 15:37:58 +0530
+Message-ID: <20250912100802.3136121-2-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250912100802.3136121-1-s-vadapalli@ti.com>
+References: <20250912100802.3136121-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,60 +81,42 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello,
+Commit under Fixes introduced the IRQ handler for "ks-pcie-error-irq".
+The interrupt is acquired using "request_irq()" but is never freed if
+the driver exits due to an error. Although the section in the driver that
+invokes "request_irq()" has moved around over time, the issue hasn't been
+addressed until now.
 
-This series is based on commit
-320475fbd590 Merge tag 'mtd/fixes-for-6.17-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
-of Mainline Linux.
+Fix this by using "devm_request_irq()" which shall automatically release
+the interrupt if the driver exits. Also, since the interrupt handler for
+the "ks-pcie-error-irq" namely "ks_pcie_handle_error_irq() is only printing
+the error and clearing the interrupt, there is no necessity to prefer
+devm_request_threaded_irq() over devm_request_irq().
 
-The first patch in the series has been posted as a Fix in contrast to
-its predecessor at:
-https://lore.kernel.org/r/20250903124505.365913-10-s-vadapalli@ti.com/
-based on the feedback provided by Jiri Slaby <jirislaby@kernel.org> at:
-https://lore.kernel.org/r/3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org/
-Since the Fix is independent of enabling loadable module support for the
-pci-keystone.c driver, it is being posted as a new patch.
+Fixes: 025dd3daeda7 ("PCI: keystone: Add error IRQ handler")
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: https://lore.kernel.org/r/3d3a4b52-e343-42f3-9d69-94c259812143@kernel.org
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Checking out at the commit of Mainline Linux which this series is based
-on, I noticed an exception triggered by the pci-keystone.c driver during
-its probe. Although this is not a fatal exception and Linux continues to
-boot, the driver is non-functional. I root-caused the exception to
-free_initmem() freeing the memory associated with the ks_pcie_host_init()
-function in the driver before the driver's probe was invoked. This
-appears to be a race condition but it is easily reproducible with the
-Linux .config that I have used. The fix therefore is to remove the
-__init macro which is implemented by the second patch in the series.
-
-For reference, the logs for the case where Linux is built by checking
-out at the base commit of Mainline Linux are:
-https://gist.github.com/Siddharth-Vadapalli-at-TI/f4891b707921c53dfb464ad2f3a968bf
-and the logs clearly prove that the print associated with free_initmem()
-which is:
-[    2.446834] Freeing unused kernel memory: 4864K
-is displayed prior to the prints associated with the pci-keystone.c
-driver being probed which is:
-[    7.707103] keystone-pcie 5500000.pcie: host bridge /bus@100000/pcie@5500000 ranges:
-
-Building Linux by applying both patches in the series on the base commit of
-Mainline Linux, the driver probes successfully without any exceptions or
-errors. This was tested on AM654-EVM with an NVMe SSD connected to the
-PCIe Connector on the board. The NVMe SSD enumerates successfully.
-Additionally, the 'hdparm' utility was used to read from the SSD
-confirming that the SSD is functional. The logs corresponding to this are:
-https://gist.github.com/Siddharth-Vadapalli-at-TI/1b09a12a53db4233e82c5bcfc0e89214
-
-Regards,
-Siddharth.
-
-Siddharth Vadapalli (2):
-  PCI: keystone: Use devm_request_irq() to free "ks-pcie-error-irq" on
-    exit
-  PCI: keystone: Remove the __init macro for the ks_pcie_host_init()
-    callback
-
- drivers/pci/controller/dwc/pci-keystone.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 2b2632e513b5..21808a9e5158 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1201,8 +1201,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
+ 
+-	ret = request_irq(irq, ks_pcie_err_irq_handler, IRQF_SHARED,
+-			  "ks-pcie-error-irq", ks_pcie);
++	ret = devm_request_irq(dev, irq, ks_pcie_err_irq_handler, IRQF_SHARED,
++			       "ks-pcie-error-irq", ks_pcie);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to request error IRQ %d\n",
+ 			irq);
 -- 
 2.43.0
 
