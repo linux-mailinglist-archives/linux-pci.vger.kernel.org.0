@@ -1,153 +1,174 @@
-Return-Path: <linux-pci+bounces-36006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C3D4B54D94
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:28:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22BAEB54D9E
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 14:29:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92B321CC64F8
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:23:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33D804846C0
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 12:25:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8111819D8A3;
-	Fri, 12 Sep 2025 12:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BF8305E2D;
+	Fri, 12 Sep 2025 12:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aFsXhQzJ"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LYXxq3oC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D452427B4F5;
-	Fri, 12 Sep 2025 12:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7C305046
+	for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 12:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757679794; cv=none; b=jsHc5PL7aVw6pEMAMZ9dLFnzCDakUYDwQMN+t+7O63HVghf46gpon+4nsgGBMpbacuzMHhYKNLn7Iiht3guKVa0287x8OdUTA3MfNlHqToFqAd2e/ILYn/OirXmdE5HsnGBGAK7J/hEBxfHx1litQm8kXjz4tZwLVL+4io613jo=
+	t=1757679893; cv=none; b=X7ICqe3yECWklfjwo2n7OmxbNcMhA/PZKE895LEN2kqCa3Sqy6/KGVrnZprU1wpuB38XTH7msm/V1eH7rndsPNeHg9e2gwc9u2JqrA32585uz/RcSatHDJCUD3+G32wIyq9DFEsMxWQVpn8qQaBBbrCSGPXngntMKjfPbQAFns4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757679794; c=relaxed/simple;
-	bh=bH4NRMgWnPXPHJ94kL2TjjMeV3PNPXB41VeHrC20Y5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bV6ytQlmH9ygZFj6WdGwt+u6z8CcWQjmpMMpPxpmdph0MmXXkR1+IQHdC/nDUCLpYi49O3Pmj/02JTWpeumYsUqRpZRUo0/usBnFhbX6m+CqBsBTqPmij7HrRC8TvuibicxuxLGp1ihii0+kqahQcgkwEtnZItvzgxKERRegaPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aFsXhQzJ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58C6F43A027074;
-	Fri, 12 Sep 2025 12:23:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:sender:subject:to; s=pp1;
-	 bh=9ux8ILTUeDcvga5jYs95DD4PIL2aOHphcYBxHMQbne0=; b=aFsXhQzJduxW
-	OVtpT7SZwurzdlwzOIRkUaz9Mf744udZxtuT6WajNpQVfJyZjIDfDqKdCb3UGyMR
-	Sp8fNnsCP+Uo/LG+yF4TUw7ggFYrndS4TYv6sFaq0WJkJYhKH2rzdmqh4PzNbqeE
-	G7Kp48I4uxsJPbbaPFbfCKoGCLP7EEyOewYFLsW4mwxkjz6Rov4ErmFrx74u31Uq
-	0oMHaN8P8aCFiPGjzmMN1vY67bKmhyuHUoWvuo5W5Q7s0VmjGkcbPbbk1MQtcDVt
-	6rjIdlLmXROnBeJO9jRh03F4mGv0rkhF76iEVpTJkZlR7fNgYH3o06dzEhJnKZwW
-	I1VGalTh1A==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490bcta2gr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 12:23:08 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58CB0oSV017163;
-	Fri, 12 Sep 2025 12:23:07 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4911gmtq2w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 12:23:07 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58CCN0fb52363584
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Sep 2025 12:23:01 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE6E42004D;
-	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CDAF32004B;
-	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
-Received: from p1gen4-pw042f0m (unknown [9.152.212.78])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 12 Sep 2025 12:23:00 +0000 (GMT)
-Received: from bblock by p1gen4-pw042f0m with local (Exim 4.98.2)
-	(envelope-from <bblock@linux.ibm.com>)
-	id 1ux2ns-00000002uha-2OLi;
-	Fri, 12 Sep 2025 14:23:00 +0200
-Date: Fri, 12 Sep 2025 14:23:00 +0200
-From: Benjamin Block <bblock@linux.ibm.com>
-To: Farhan Ali <alifm@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-Subject: Re: [PATCH v3 03/10] PCI: Allow per function PCI slots
-Message-ID: <20250912122300.GA15517@p1gen4-pw042f0m.boeblingen.de.ibm.com>
-References: <20250911183307.1910-1-alifm@linux.ibm.com>
- <20250911183307.1910-4-alifm@linux.ibm.com>
+	s=arc-20240116; t=1757679893; c=relaxed/simple;
+	bh=1X+it+zTAdvHtkVDC9ptPSL7qX6EXCsJqZ3em9dxcto=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ovkYlhs5pRdkRqpWhCzmxfNCLjnEPc9inxyNiqiUPcnwxcMivPOMcalgRvyBwqdyTXu6Awlmji/u63T+rOUQ7UuxNZDmAg1g3ecWngQxA2SBDrroa9x4Rpur5//TQUHAxbCLtfsO5RTchK2NiWW09LwMkhoNMfzlCShhknNiD5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LYXxq3oC; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3d3ff4a4d6fso1457954f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 Sep 2025 05:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1757679889; x=1758284689; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljjbIvIvj2Q1tUtMUPNsqGBDwVAciETje0nuBmAVX84=;
+        b=LYXxq3oC0dEWpu9X74BmLte1MieUYonva1ud5qIXeCaQhUbbMMdy0y5Do5AxXSQfLR
+         i9fvviVaY225e5Q5DzhdIrdq57neIT45rAcATb/DxvPa3KETSmsbQ4ZSrgvmQYAoEDVV
+         fNeLLQ5c7C4MVcf4uxU6KvAuyTZOZvXJ3fwZDy8kaMXZNCEgjskZ+hAeRC47b43W7y3C
+         XBcwZ3NiKCO3VeMmIFAk8er1UiMKxXSVQs36rt4ls7tT7RvWq8eG1Lt5SLIp7/hIbcm+
+         rHDDvoO5SDezZS7OLAloLt3eaMwh/xOCTgqcyJMtvyyCx+UbL2gsELIo065We11pQQJL
+         uZ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757679889; x=1758284689;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ljjbIvIvj2Q1tUtMUPNsqGBDwVAciETje0nuBmAVX84=;
+        b=mCOwgps/z6U1/5qCpCUPVcw33W/f0n+/h48AcIbFjKd30Koxz1XQI7kdytuGX9VQd0
+         tA0wnHIDt+fzkZOL2Q1XonH+fb9uDJbElBaRfA5s0Tml9P+kzfMNV8CK5K995d0UBWgv
+         0t3NMp13Cuf9iqh7wfGBd2Gchln2xQhib0rQiLSkVegI0TjBU+SSMmkijMAMumNydp/C
+         d83Tx4MStwvdUdBWYuWgyMY1DnX6Upn2iyTJdpsE6vbXJ313KzckzCi/05qYpRiL1XiC
+         MMSC0El8aM/7palNrE/JYvCDT9d40h/pRMs+ElRkPzZxsu0yTG4rvJGcTflOoThiVL1B
+         N0LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+32MiDYtuwPumTafXpTsLE6CzfBhi4yHF0mfoYUETSmF18zs34gzA6lhJKHmFfqpx4DYFj2bkZ+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT5hcl+SGmNeHFIdtp91VHSdCWZeu47nAuO9mRQTwQSyHTYhN8
+	nWJ1ce7rFyoYgruoxA01nmQOYhdyC8MO/crJ6FPL4bED/NXi+HecttwZ2qY0YklKNrk=
+X-Gm-Gg: ASbGncvm+wVh3jo1VGF68wp9QqHqOkHWE94zpPgdcM3Ffre3dD3zbBo0vJEhkEz6Uhd
+	p4Bcd6AskkqZ0BJHiSnpnUk52Ddz2MWIBU1PBUrvsxlVA22c+3iv3NI3A8WuRHGvdOb3wfU/LnX
+	EE2uTT+d53okKFkXLnrRPGk3BkiMkFRdR8c+HmMcd9Vc7p5wH0wF/rLvvOWKkSkHKHyhCg4rkqA
+	e7K6nyOS5rm3hobuivsCYgT8Yb6AEFEfmXkQpjfOnqHezyUmqEs80Mn+W0krTbcItbbIXL0HKWa
+	v1aqH6oJMihadBmK5ca6EE1JM4FfwL9F74uxZVqj7zBeTLS0c9zUoBlYmANy2gXuQpxLocG4luz
+	OoBwB9naMcaOaBQKiMHO4a0F8nYdBEHdph0Opzo4SkIlpqla8Avg4
+X-Google-Smtp-Source: AGHT+IEYppUYO/8aAZsKn0b0DcJjcfxTnMO/idgXekJXbeD6ctIiByRvNUh0evCMuK6Sg67U0omW4A==
+X-Received: by 2002:a05:6000:2086:b0:3e0:152a:87a9 with SMTP id ffacd0b85a97d-3e7659e20bemr2983464f8f.28.1757679889474;
+        Fri, 12 Sep 2025 05:24:49 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.153])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607770c2sm6320091f8f.8.2025.09.12.05.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Sep 2025 05:24:49 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	p.zabel@pengutronix.de
+Cc: claudiu.beznea@tuxon.dev,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v4 0/6] PCI: rzg3s-host: Add PCIe driver for Renesas RZ/G3S SoC
+Date: Fri, 12 Sep 2025 15:24:38 +0300
+Message-ID: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250911183307.1910-4-alifm@linux.ibm.com>
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAxMCBTYWx0ZWRfX3TNJOphnH2il
- jrBpLiBmr1DdZdMx+mcIweDwmZ+wZdH6httyq+5D/gQ0h+M4iYAllWqZ0VskJIBZ1dRB4vPei5u
- 8wFkfpqRKy6YbwxQ+mt4mMGfAaTTT2fmFmN1MtJy+Af2GwwVdJSqb5C2mZ0LDJSaffXSlYyJTHV
- md6zyVH0ByfJBeeHJ/idmWgRjeoz7EWm7ym+2znVp4zKbXqNIZFapj4Ot9eAWeppAoqwjMjyFFy
- bQ+oXp5sbVtXB29EKHV/X7pZqnQcTkFkuZb+BWSa9qgy/F2dHzvbrOsJvRt6tSTXQMaMLylRBC5
- fLOW5J8MBSum64BqZa6k4TcDd+p8cdPi4Y9ImSNZZ8KM8srvKNjrTJ8vDnDt6PiHvg3vV3XFCkx
- l4mn4fhW
-X-Authority-Analysis: v=2.4 cv=SKNCVPvH c=1 sm=1 tr=0 ts=68c410ac cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=8nJEP1OIZ-IA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=TjuGVM56yl0YPUG8lfgA:9
- a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
-X-Proofpoint-GUID: AUWlo5yUzZA2zKTw0JinpgK5xuJm9dp7
-X-Proofpoint-ORIG-GUID: AUWlo5yUzZA2zKTw0JinpgK5xuJm9dp7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-12_04,2025-09-11_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060010
 
-On Thu, Sep 11, 2025 at 11:33:00AM -0700, Farhan Ali wrote:
-> On s390 systems, which use a machine level hypervisor, PCI devices are
-> always accessed through a form of PCI pass-through which fundamentally
-> operates on a per PCI function granularity. This is also reflected in the
-> s390 PCI hotplug driver which creates hotplug slots for individual PCI
-> functions. Its reset_slot() function, which is a wrapper for
-> zpci_hot_reset_device(), thus also resets individual functions.
-> 
-> Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot object
-> to multifunction devices. This approach worked fine on s390 systems that
-> only exposed virtual functions as individual PCI domains to the operating
-> system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunctions")
-> s390 supports exposing the topology of multifunction PCI devices by
-> grouping them in a shared PCI domain. When attempting to reset a function
-> through the hotplug driver, the shared slot assignment causes the wrong
-> function to be reset instead of the intended one. It also leaks memory as
-> we do create a pci_slot object for the function, but don't correctly free
-> it in pci_slot_release().
-> 
-> Add a flag for struct pci_slot to allow per function PCI slots for
-> functions managed through a hypervisor, which exposes individual PCI
-> functions while retaining the topology.
-> 
-> Fixes: 44510d6fa0c0 ("s390/pci: Handling multifunctions")
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Stable tag?
-Reseting the wrong PCI function sounds bad enough.
+Hi,
+
+Series adds a PCIe driver for the Renesas RZ/G3S SoC.
+It is split as follows:
+- patches 1-2/6:	add PCIe support for the RZ/G3S SoC
+- patches 3-6/6:	add device tree support and defconfig flag
+
+Please provide your feedback.
+
+Merge strategy, if any:
+- patches 1-2/6 can go through the PCI tree
+- patches 3-6/6 can go through the Renesas tree
+
+Thank you,
+Claudiu Beznea
+
+Changes in v4:
+- dropped v3 patches:
+  - "clk: renesas: r9a08g045: Add clocks and resets support for PCIe"
+  - "soc: renesas: rz-sysc: Add syscon/regmap support"
+  as they are already integrated
+- dropped v3 patch "PCI: of_property: Restore the arguments of the
+  next level parent" as it is not needed anymore in this version due
+  port being added in device tree
+- addressed review comments
+- per-patch changes are described in each individual patch
+
+Changes in v3:
+- added patch "PCI: of_property: Restore the arguments of the next level parent"
+  to fix the legacy interrupt request
+- addressed review comments
+- per-patch changes are described in each individual patch
+
+Changes in v2:
+- dropped "of/irq: Export of_irq_count()" as it is not needed anymore
+  in this version
+- added "arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe"
+  to reflect the board specific memory constraints
+- addressed review comments
+- updated patch "soc: renesas: rz-sysc: Add syscon/regmap support"
+- per-patch changes are described in each individual patch
+
+
+Claudiu Beznea (6):
+  dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add documentation for the
+    PCIe IP on Renesas RZ/G3S
+  PCI: rzg3s-host: Add Renesas RZ/G3S SoC host driver
+  arm64: dts: renesas: r9a08g045: Add PCIe node
+  arm64: dts: renesas: rzg3s-smarc-som: Update dma-ranges for PCIe
+  arm64: dts: renesas: rzg3s-smarc: Enable PCIe
+  arm64: defconfig: Enable PCIe for the Renesas RZ/G3S SoC
+
+ .../bindings/pci/renesas,r9a08g045-pcie.yaml  |  240 +++
+ MAINTAINERS                                   |    8 +
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi    |   66 +
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |   10 +
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi  |   11 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/Kconfig                |    8 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-rzg3s-host.c      | 1792 +++++++++++++++++
+ 9 files changed, 2137 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
+ create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
 
 -- 
-Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
-IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
-Vors. Aufs.-R.: Wolfgang Wendt         /        Geschäftsführung: David Faller
-Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
+2.43.0
+
 
