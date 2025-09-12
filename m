@@ -1,88 +1,138 @@
-Return-Path: <linux-pci+bounces-36041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AC01B5538D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 17:29:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC79B553B9
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 17:34:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B8F11D680E3
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:29:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DACB7B64EAC
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Sep 2025 15:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1880221F09;
-	Fri, 12 Sep 2025 15:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cshk9sz/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABB4D30F54D;
+	Fri, 12 Sep 2025 15:33:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D781ACA;
-	Fri, 12 Sep 2025 15:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEB03115BE;
+	Fri, 12 Sep 2025 15:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757690924; cv=none; b=i+qCY5uMIYeTfiUYoBBCS7bxTPdUJpIWrdIbyGorQjNPfPvbVVNl/sXjBXoBnHG19t77h1L8LiwcqnjVen2Q6mrUKAhSsZjqdMH6VSkFdHhpWLAP4wyGsXYaAfiO4Alj9YgjJtjgFpHaQmxh/jmxDmcCUAfJaGVZuqwjh69uSCE=
+	t=1757691235; cv=none; b=bX+l/Qw324G2UGR2ND2BRkLqpcpm2Z1yMo6QMuvx/S2T3uAz/QY9ShANhGFMv/TrI7yzT7TEU5BUei+/vFR7q7jji2AKpezdtUF4qm/hbn3/2WIHF+F2kb/8VZaNbroy1VPIfJVA79fKsIVs89g9toOe3XGJ2r99XmJFkWSr2d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757690924; c=relaxed/simple;
-	bh=zkrlxh87Pfqa6odbArry9+vOqn1frQ7KIL3iHO0zQro=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RDtTLBZPwaxivmzFFCeOcdNhLli6G9Civh9wQnMH8O7IMLj95ooebCM8bLm7e/pJswLKSycgkNzfw2PxoJkY3XcBEyIkaBce9e2hVr8dahGtcF9vEc5EsL08PA4nC9NyEQH0kCS/bRwMKSpWalqpxJc1sHXhgmj3CRqlQkln3ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cshk9sz/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBCAC4CEF1;
-	Fri, 12 Sep 2025 15:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757690924;
-	bh=zkrlxh87Pfqa6odbArry9+vOqn1frQ7KIL3iHO0zQro=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cshk9sz/SWdyq3FMcX/MWeO7YUhptJ/dlgMkYzth4svS5p+BizTs+5OLHlecbNRI4
-	 awoRkyHhS/YvZ9q8ZITod4PolnLKJSczKEjb+ekWSsZ8WBTraJKUwXYrd6YXh2IPdz
-	 Zvg80ghAfrn5MqhkqwPwFzPqBat9wRGJJdB4GKYYsdTxaumlK0eGYsMkG/vZBeNpUq
-	 vJ3wyPkK+X/dWexkodPl8eOxMrDx9wETLXbOgzzdEHf5x3xUZV3nhTgyzrk6VQ95qJ
-	 GelGJnGUcQx4tx2q/iV2riSBu48d7JWU9SmangsUC4Otm3J8vxnVwWQ1fIoBTjekS7
-	 uLwkN869zb3RA==
-Date: Fri, 12 Sep 2025 10:28:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Jan Palus <jpalus@fastmail.com>, Tony Dinh <mibodhi@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Subject: [GIT PULL] PCI fixes for v6.17
-Message-ID: <20250912152842.GA1625331@bhelgaas>
+	s=arc-20240116; t=1757691235; c=relaxed/simple;
+	bh=Yf6gphKjYSoORScCnkQ+lf2y5m/zepnTYR1+L9G6++M=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CMO1l/KlkAV0M0KHRAJkFd/uhpg+TwD10YTFiLsQ7801OrmvQ3KCKxJh9SCEotyOmHw61LY0eQSNsLtXuPhQaRwqm/EIQRZ9RInjJYlvZTQSRUkUGZI3NE3BkFKbzCxh/C6vT5mLw/mGd+YY4E9TIkSyv+hgQntGTUR1HwxtacE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cNdhv418Cz6D8cf;
+	Fri, 12 Sep 2025 23:32:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A3861402EA;
+	Fri, 12 Sep 2025 23:33:50 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 12 Sep
+ 2025 17:33:49 +0200
+Date: Fri, 12 Sep 2025 16:33:48 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Ben Cheatham <Benjamin.Cheatham@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 12/16] PCI: PCIe portdrv: Add cxl_isolation sysfs
+ attributes
+Message-ID: <20250912163348.00004d1b@huawei.com>
+In-Reply-To: <20250730214718.10679-13-Benjamin.Cheatham@amd.com>
+References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+	<20250730214718.10679-13-Benjamin.Cheatham@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
+On Wed, 30 Jul 2025 16:47:14 -0500
+Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
 
-  Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
+> Add sysfs attributes to enable/disable CXL isolation and transaction
+> timeout. The intended use for these attributes is to disable isolation
+> and/or timeout as part of device maintenance or hotplug.
+> 
+> The attributes are added under a new "cxl_isolation" group on the PCIe
+> Root Port device.
+> 
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+Comments below apply in quite a few of these functions, I just
+picked one example to talk about.
 
-are available in the Git repository at:
+Thanks,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.17-fixes-3
+Jonathan
 
-for you to fetch changes up to b816265396daf1beb915e0ffbfd7f3906c2bf4a4:
+> diff --git a/drivers/pci/pcie/cxl_isolation.c b/drivers/pci/pcie/cxl_isolation.c
+> index 5a56a327b599..9d2ad14810e8 100644
+> --- a/drivers/pci/pcie/cxl_isolation.c
+> +++ b/drivers/pci/pcie/cxl_isolation.c
 
-  PCI: mvebu: Fix use of for_each_of_range() iterator (2025-09-08 14:40:27 -0500)
 
-----------------------------------------------------------------
 
-- Fix mvebu PCI enumeration regression caused by converting to
-  for_each_of_range() iterator (Klaus Kudielka)
+> +static ssize_t timeout_ctrl_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct cxl_port *port;
+> +	u32 ctrl;
+> +
+> +	struct cxl_dport **dport __free(kfree) =
+> +		kzalloc(sizeof(*dport), GFP_KERNEL);
+> +	if (!dport)
+> +		return -ENOMEM;
+> +
+> +	port = cxl_find_pcie_rp(pdev, dport);
+	struct cxl_port *port __free(put_cxl_port) = cxl_find_pcie_rp();
 
-----------------------------------------------------------------
-Klaus Kudielka (1):
-      PCI: mvebu: Fix use of for_each_of_range() iterator
+Same for other cases above.
 
- drivers/pci/controller/pci-mvebu.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+
+> +	if (!port || !(*dport))
+
+leaks device reference if port is set and dport isn't.
+
+> +		return -ENODEV;
+> +
+> +	if (!(*dport)->regs.isolation)
+leaks device reference.
+> +		return -ENXIO;
+> +
+> +	ctrl = readl((*dport)->regs.isolation + CXL_ISOLATION_CTRL_OFFSET);
+> +	put_device(&port->dev);
+
+and no need to do this by hand.
+
+> +
+> +	return sysfs_emit(buf, "%lu\n",
+> +			  FIELD_GET(CXL_ISOLATION_CTRL_MEM_TIME_ENABLE, ctrl));
+> +}
+> +DEVICE_ATTR_RW(timeout_ctrl);
+> +
+> +static struct attribute *isolation_attrs[] = {
+> +	&dev_attr_timeout_ctrl.attr,
+> +	&dev_attr_isolation_ctrl.attr,
+> +	NULL,
+My favorite trivial comment :) No need for that trailing comma.
+> +};
+
+
+
 
