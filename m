@@ -1,96 +1,96 @@
-Return-Path: <linux-pci+bounces-36085-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36086-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97A3FB55F7B
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 10:27:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 828A8B55FBC
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 11:06:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE89A1C87147
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 08:27:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 208FF586A78
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 09:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A03202E9756;
-	Sat, 13 Sep 2025 08:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A942EA74D;
+	Sat, 13 Sep 2025 09:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRe11eRu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OiAHel96"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9269B2E9731
-	for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 08:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75412EA177
+	for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 09:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757752044; cv=none; b=rzat/oMaZ7E6Azp1NWduNMze4zvsMds9LfTs0kwjnZoMDe5D7xgVDf0WbMXkaGXnRdJyXVslMe+MnItzklzJmMAF230izrgjslmi3OW0mnPuTLwNjZuZGLzy/Yhvz1vcvuOyQ7jYbJ0yG+pc+S0tUIuIHDYrllje1KSCFLAklKg=
+	t=1757754389; cv=none; b=GJJ8RyQ9hH9VcdzJwy0Tw2eZE6OX4OUqNIqR7w66Ezu4msTQjd415rX4yXSex9RmIjgd9DIugZRm5o/BBuPsMQzZKALkfAuW3MMlKmMyfVGUmgwYCtBUNoed3pRbn6SP1oONQZYjVIMYAoxh6JgjvDw6MKVODdY2iRPGYK6v1IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757752044; c=relaxed/simple;
-	bh=KBdb34yjuqC8JNMb7MU0xophtAjSJbuqI+5/g2ts2wc=;
+	s=arc-20240116; t=1757754389; c=relaxed/simple;
+	bh=8dEp1AU6wmo+g+BbWCezxqlLsb7zc0IB8g7OnuHFGSE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ejPcWwliVNQ1Mbe+kP2FTqJPiVXa0N0xf2IFv/dCNUOZKtBQZKlmTa/41D0NL1svlz2e2Va7yrOXwryWV4zlDq8wY5LcJoHsRARA4QZgYJYHgB+KHkFXtA87W4IV+bJA6ePsniUMrBpub31X+JP1FBN7Pn5KDV9S00w+FScc/+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRe11eRu; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=kUjsn9xaZxSG8U4IPOyp1dsFyUm1nuyu13CtBYZqti3OekklW5He+Pvw640t60xa8ypJ/IqRd7kWdDlClMBYVdyA/n8yr/efwvODn3ZQk4nURCog8+IR27dCMhhbFgxtYM2oG9tsUSzmCGv1GpjM9d0cUGgmJRTFOsq1aR73Oa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OiAHel96; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757752041;
+	s=mimecast20190719; t=1757754385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jHz5EoPd+ylCkG4BgrRtBzTwz79VaTitLewrCZQ2PXY=;
-	b=IRe11eRu4nLwyrUUcEmiuDKwaOWORP7jmRmMEKhvaH8uCvAPDgRCn3RXGykHkpKmzFHpnQ
-	jcB8iqR0Gjlh5xIBcEq0WHotrJX2efTbW8yhT0jmzFqJMOhwFH/xruzoM+tV+HDnnNVHKB
-	Sj6DzJZgnKxQa9aUVmHo4jA5PKHAAzw=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=uOsyKEsT4d7f0MxqTpsXQLTyDPQ6JiWR10VEY3czRBY=;
+	b=OiAHel96hdSqvygMwcXVsT10EtcUCX9BpTXezygfuP/jBvNclpxulxObdAR4cRtSCnhfK0
+	eOS8zfg4mS4hHcUwKXOXeMIDgoPV3qMpsU3qLttR/OXuilFYddzyAYRgzbuDMDkkFN7uaG
+	eALZPTwooHpmZAyA1bBp835V1xmHMj4=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-50-52W2ueSrOlm6ibEvQbd28w-1; Sat, 13 Sep 2025 04:27:20 -0400
-X-MC-Unique: 52W2ueSrOlm6ibEvQbd28w-1
-X-Mimecast-MFC-AGG-ID: 52W2ueSrOlm6ibEvQbd28w_1757752039
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-4217003f85fso1361295ab.1
-        for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 01:27:19 -0700 (PDT)
+ us-mta-588-lO0tcqk4OseiJW1GIUxqQQ-1; Sat, 13 Sep 2025 05:06:24 -0400
+X-MC-Unique: lO0tcqk4OseiJW1GIUxqQQ-1
+X-Mimecast-MFC-AGG-ID: lO0tcqk4OseiJW1GIUxqQQ_1757754383
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-4223e391be2so3474085ab.0
+        for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 02:06:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757752039; x=1758356839;
+        d=1e100.net; s=20230601; t=1757754383; x=1758359183;
         h=content-transfer-encoding:mime-version:organization:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jHz5EoPd+ylCkG4BgrRtBzTwz79VaTitLewrCZQ2PXY=;
-        b=adcrLsRrrAJxFAhlsAifmCOgl5vAkn+BZdY0EVM00yNN6qmGnBgmdh4j6YEXkgfMpQ
-         d6Ob6nqfrMaZfdr2UZdV3408mikk1yW5QmLFY4ilLSuTNsY7FQfLK6pwLw4xvVUBFiC9
-         t6w/P4/eKuGVUxE3R5LEcdWv4sikmaPSz6aK9qkdzH1a14O8KCUObTuhBOMKMlWsePN5
-         9Q3SJqoBXq14NM1xIP7g2ZRw0E8ImHPiq9WNIDGnu9N3xlS0UQ01aL2AruBZbp8GVFHv
-         ihaMUbL8Dl6SGt6dKHQibyzv8RERabpkq8Iqe+kgUMjoZUze0Uf+SCnJIJWnQVCyplTG
-         cU2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVViKEGxmjoDhAruqTRoz7w9atf3i9t4DRI7ct6jYUiYRk3BI5NROoauev+C1gZQL8MHgBFaFqei3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRr8/8xMo/sKswcXT7sAgGe68WDpQ0C/I85vdiJ5rCCYCb1jTL
-	tNQ1I/xcmoHsOyzdvcqptBOz0qdfVOLMHai7xuPMOgGVJKPZMLn0tla+CuUKHsZBL1EXwtcKB24
-	bJ//0lYujeUCGSkAJWuOdLUj2yDkjb4zXaJs9lp15/F3LaUF6s6Q2GFaZlXNu1Q==
-X-Gm-Gg: ASbGncuNXXn02vZQvMmmFxxBI1nb31m2yaL4pGXDi+8OzcRHNyJXKqrlvXia8UY7LfF
-	V7m/seF1ii1hcyTSK4EUR2C6pihvHFB8RD94nM1uAZiAMk7ILdeik/fMQS53kyJnqjmQuGtEDdW
-	fgcnXgLi2qEmI0ijOFEWB/ZDLonqFEWWlwE7xEGarhcL2U+GtGnx4P7wJTkpbOvErjiacGkZC3k
-	sbglebttMac6r5zqfjhNch5jmeITIMfNhPRBq0D4GZhDWWwrx2iryWDUMN/wPaauwcs/u8tQvKN
-	N8eyRtEgokM85JvyslsQv7FRcj4cdzoG7CsQjMWjJlE=
-X-Received: by 2002:a05:6e02:1489:b0:412:5782:c7c1 with SMTP id e9e14a558f8ab-4209fc549bamr26611025ab.5.1757752039132;
-        Sat, 13 Sep 2025 01:27:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIW4jBz+RhyO9sjz/kQQ01borjLc8HZiyi2LaANGIQ/TGf19Rkd/3OlbjO/Xq+R2DLvjT7/A==
-X-Received: by 2002:a05:6e02:1489:b0:412:5782:c7c1 with SMTP id e9e14a558f8ab-4209fc549bamr26610945ab.5.1757752038702;
-        Sat, 13 Sep 2025 01:27:18 -0700 (PDT)
+        bh=uOsyKEsT4d7f0MxqTpsXQLTyDPQ6JiWR10VEY3czRBY=;
+        b=kChhXzTJD1pb8LFOHwyqDX41sysZ4QPTkbvaSl7xaTmveM7FZ1/Im+JDHhv27eufuI
+         nqiTygsKBHyLQwRyEpBIrWjENutWZ++GGGv1t8KsALkqzgUeFyv3SLVwsfO4lmXJwdmS
+         w2YsX0Wtz340ubXJep3SLgSZdVcZo7pLWsrBVWPrYdY1I0eojygPYdBri8BDOiq19gxh
+         MX1G23D5ZVJsm6Gfr2KLCQgWrULXx47/BCBbnSwbqAyZGDI3vB8GduL1UEqQCEvTkoZ5
+         2GR5jKdgVXL8jSdq5f63IYYzARi2BoCPwq94yxN3kwiwx+GX9J0cf2SiFsaXDpKb9LLk
+         i/AA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAfOfGzSbTQIx7dVGqdoSa3t8oNIgJLifYf+fTFOKVxqOzBm38opjMVwet2FBFIQ1wqfZPZ911x3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNsf3eoDE/B+nBf1kSyN93LeySgCqtenPm52VzTxu+vJI3B4uz
+	PRpWq27CJ+aCWaloQRGpsELNebeEAuDEHHd/hEV9BjjiWC7BIyoZuiYrgHNa7NNQ4MzEZ34IaEp
+	R9y05osGBAwtiLmC5wzbbBdi2oCNYUHBgXtzOVa5q/CHnvOgipk3o37ypf+rhbg==
+X-Gm-Gg: ASbGnct42WT1+wpb3E4pSys0vfC3TQmodLL+Go0vg5Rz/XX/IU0RQAMaU5oMW17ipYe
+	qgXu7YEBXzQniHx3iwk1vMRSy2q/FQCxxDV8ZxGyrJF5ZzHVv88ru4m46XXZ/JHsensru6sDN3c
+	30e0Z5rP4RrbnPkdadQXAAfK1RQ0Q+I28tawfME6K8RECsAZoDVoChoM0SazVOwxD/7qoaUisIo
+	xVMJqGOMp5ZiTSbTzJI3QU55R1E4ZZTC1Z+22o0+MivyPtNvtxP0V8/4HyEjUduZMQ2sGfNQjCA
+	hm7+hqemXI4VwgMQ+MLMy0BgxI/T/uUkxrDWNJi6MJY=
+X-Received: by 2002:a92:ca4d:0:b0:419:de32:2d01 with SMTP id e9e14a558f8ab-420a1bf0e2amr28604235ab.4.1757754383431;
+        Sat, 13 Sep 2025 02:06:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IENFwGsYCj5we8cqrgqcps0vU//BTqxnSv90KfRfiVLx0DBHmLiooNtsdQvyKhq4QCqGgNKww==
+X-Received: by 2002:a92:ca4d:0:b0:419:de32:2d01 with SMTP id e9e14a558f8ab-420a1bf0e2amr28604185ab.4.1757754383024;
+        Sat, 13 Sep 2025 02:06:23 -0700 (PDT)
 Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-41deede6de7sm30080015ab.10.2025.09.13.01.27.15
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-41deede6d15sm31335025ab.7.2025.09.13.02.06.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 01:27:18 -0700 (PDT)
-Date: Sat, 13 Sep 2025 09:27:09 +0100
+        Sat, 13 Sep 2025 02:06:21 -0700 (PDT)
+Date: Sat, 13 Sep 2025 10:04:57 +0100
 From: Alex Williamson <alex.williamson@redhat.com>
 To: Farhan Ali <alifm@linux.ibm.com>
 Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  helgaas@kernel.org, schnelle@linux.ibm.com, mjrosato@linux.ibm.com
-Subject: Re: [PATCH v3 01/10] PCI: Avoid saving error values for config
- space
-Message-ID: <20250913092709.2e58782d.alex.williamson@redhat.com>
-In-Reply-To: <20250911183307.1910-2-alifm@linux.ibm.com>
+Subject: Re: [PATCH v3 08/10] vfio-pci/zdev: Add a device feature for error
+ information
+Message-ID: <20250913100457.1af13cd7.alex.williamson@redhat.com>
+In-Reply-To: <20250911183307.1910-9-alifm@linux.ibm.com>
 References: <20250911183307.1910-1-alifm@linux.ibm.com>
-	<20250911183307.1910-2-alifm@linux.ibm.com>
+	<20250911183307.1910-9-alifm@linux.ibm.com>
 Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -101,190 +101,136 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Sep 2025 11:32:58 -0700
+On Thu, 11 Sep 2025 11:33:05 -0700
 Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> The current reset process saves the device's config space state before
-> reset and restores it afterward. However, when a device is in an error
-> state before reset, config space reads may return error values instead of
-> valid data. This results in saving corrupted values that get written back
-> to the device during state restoration.
-> 
-> Avoid saving the state of the config space when the device is in error.
-> While restoring we only restorei the state that can be restored through
-
-s/restorei/restore/
-
-> kernel data such as BARs or doesn't depend on the saved state.
+> For zPCI devices, we have platform specific error information. The platform
+> firmware provides this error information to the operating system in an
+> architecture specific mechanism. To enable recovery from userspace for
+> these devices, we want to expose this error information to userspace. Add a
+> new device feature to expose this information.
 > 
 > Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 > ---
->  drivers/pci/pci.c      | 29 ++++++++++++++++++++++++++---
->  drivers/pci/pcie/aer.c |  5 +++++
->  drivers/pci/pcie/dpc.c |  5 +++++
->  drivers/pci/pcie/ptm.c |  5 +++++
->  drivers/pci/tph.c      |  5 +++++
->  drivers/pci/vc.c       |  5 +++++
->  6 files changed, 51 insertions(+), 3 deletions(-)
+>  drivers/vfio/pci/vfio_pci_core.c |  2 ++
+>  drivers/vfio/pci/vfio_pci_priv.h |  8 ++++++++
+>  drivers/vfio/pci/vfio_pci_zdev.c | 34 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h        | 14 +++++++++++++
+>  4 files changed, 58 insertions(+)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cd..4b67d22faf0a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1720,6 +1720,11 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
->  	struct pci_cap_saved_state *save_state;
->  	u16 *cap;
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 7dcf5439dedc..378adb3226db 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1514,6 +1514,8 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+>  		return vfio_pci_core_pm_exit(device, flags, arg, argsz);
+>  	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
+>  		return vfio_pci_core_feature_token(device, flags, arg, argsz);
+> +	case VFIO_DEVICE_FEATURE_ZPCI_ERROR:
+> +		return vfio_pci_zdev_feature_err(device, flags, arg, argsz);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+> index a9972eacb293..a4a7f97fdc2e 100644
+> --- a/drivers/vfio/pci/vfio_pci_priv.h
+> +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> @@ -86,6 +86,8 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  				struct vfio_info_cap *caps);
+>  int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev);
+>  void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev);
+> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
+> +			      void __user *arg, size_t argsz);
+>  #else
+>  static inline int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  					      struct vfio_info_cap *caps)
+> @@ -100,6 +102,12 @@ static inline int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
 >  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring pcie state, no saved state");
-> +		return;
-> +	}
+>  static inline void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
+>  {}
 > +
->  	/*
->  	 * Restore max latencies (in the LTR capability) before enabling
->  	 * LTR itself in PCI_EXP_DEVCTL2.
-> @@ -1775,6 +1780,11 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
->  	struct pci_cap_saved_state *save_state;
->  	u16 *cap;
+> +static int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
+> +				     void __user *arg, size_t argsz);
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif
 >  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring pcix state, no saved state");
-> +		return;
-> +	}
+>  static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+> index 2be37eab9279..261954039aa9 100644
+> --- a/drivers/vfio/pci/vfio_pci_zdev.c
+> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
+> @@ -141,6 +141,40 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  	return ret;
+>  }
+>  
+> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
+> +			      void __user *arg, size_t argsz)
+> +{
+> +	struct vfio_device_feature_zpci_err err;
+> +	struct vfio_pci_core_device *vdev =
+> +		container_of(device, struct vfio_pci_core_device, vdev);
+> +	struct zpci_dev *zdev = to_zpci(vdev->pdev);
+> +	int ret;
+> +	int head = 0;
 > +
->  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
->  	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
->  	if (!save_state || !pos)
-> @@ -1792,6 +1802,14 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
->  int pci_save_state(struct pci_dev *dev)
+> +	if (!zdev)
+> +		return -ENODEV;
+> +
+> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
+> +				 sizeof(err));
+> +	if (ret != 1)
+> +		return ret;
+> +
+> +	mutex_lock(&zdev->pending_errs_lock);
+> +	if (zdev->pending_errs.count) {
+> +		head = zdev->pending_errs.head % ZPCI_ERR_PENDING_MAX;
+> +		err.pec = zdev->pending_errs.err[head].pec;
+> +		zdev->pending_errs.head++;
+> +		zdev->pending_errs.count--;
+> +		err.pending_errors = zdev->pending_errs.count;
+> +	}
+> +	mutex_unlock(&zdev->pending_errs_lock);
+> +
+> +	if (copy_to_user(arg, &err, sizeof(err)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+>  int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
 >  {
->  	int i;
-> +	u16 val;
-> +
-> +	pci_read_config_word(dev, PCI_DEVICE_ID, &val);
-> +	if (PCI_POSSIBLE_ERROR(val)) {
-> +		pci_warn(dev, "Device in error, not saving config space state\n");
-> +		return -EIO;
-> +	}
-> +
+>  	struct zpci_dev *zdev = to_zpci(vdev->pdev);
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 75100bf009ba..a950c341602d 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1478,6 +1478,20 @@ struct vfio_device_feature_bus_master {
+>  };
+>  #define VFIO_DEVICE_FEATURE_BUS_MASTER 10
+>  
+> +/**
+> + * VFIO_DEVICE_FEATURE_ZPCI_ERROR feature provides PCI error information to
+> + * userspace for vfio-pci devices on s390x. On s390x PCI error recovery involves
+> + * platform firmware and notification to operating system is done by
+> + * architecture specific mechanism.  Exposing this information to userspace
+> + * allows userspace to take appropriate actions to handle an error on the
+> + * device.
+> + */
+> +struct vfio_device_feature_zpci_err {
+> +	__u16 pec;
+> +	int pending_errors;
+> +};
 
-I don't think this works with standard VFs, per the spec the device ID
-register returns 0xFFFF.  Likely need to look for a CRS or error status
-across both vendor and device ID registers.
-
-We could be a little more formal and specific describing the skipped
-states too, ex. "PCIe capability", "PCI-X capability", "PCI AER
-capability", etc.  Thanks,
+This should have some explicit alignment.  Thanks,
 
 Alex
 
->  	/* XXX: 100% dword access ok here? */
->  	for (i = 0; i < 16; i++) {
->  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
-> @@ -1854,6 +1872,14 @@ static void pci_restore_config_space_range(struct pci_dev *pdev,
->  
->  static void pci_restore_config_space(struct pci_dev *pdev)
->  {
-> +	if (!pdev->state_saved) {
-> +		pci_warn(pdev, "No saved config space, restoring BARs\n");
-> +		pci_restore_bars(pdev);
-> +		pci_write_config_word(pdev, PCI_COMMAND,
-> +				PCI_COMMAND_MEMORY | PCI_COMMAND_IO);
-> +		return;
-> +	}
+> +#define VFIO_DEVICE_FEATURE_ZPCI_ERROR 11
 > +
->  	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL) {
->  		pci_restore_config_space_range(pdev, 10, 15, 0, false);
->  		/* Restore BARs before the command register. */
-> @@ -1906,9 +1932,6 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
->   */
->  void pci_restore_state(struct pci_dev *dev)
->  {
-> -	if (!dev->state_saved)
-> -		return;
-> -
->  	pci_restore_pcie_state(dev);
->  	pci_restore_pasid_state(dev);
->  	pci_restore_pri_state(dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e286c197d716..dca3502ef669 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -361,6 +361,11 @@ void pci_restore_aer_state(struct pci_dev *dev)
->  	if (!aer)
->  		return;
+>  /* -------- API for Type1 VFIO IOMMU -------- */
 >  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring aer state, no saved state");
-> +		return;
-> +	}
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
->  	if (!save_state)
->  		return;
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index fc18349614d7..62c520af71a7 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -67,6 +67,11 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->  	if (!pci_is_pcie(dev))
->  		return;
->  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring dpc state, no saved state");
-> +		return;
-> +	}
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> index 65e4b008be00..7b5bcc23000d 100644
-> --- a/drivers/pci/pcie/ptm.c
-> +++ b/drivers/pci/pcie/ptm.c
-> @@ -112,6 +112,11 @@ void pci_restore_ptm_state(struct pci_dev *dev)
->  	if (!ptm)
->  		return;
->  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring ptm state, no saved state");
-> +		return;
-> +	}
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
->  	if (!save_state)
->  		return;
-> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-> index cc64f93709a4..f0f1bae46736 100644
-> --- a/drivers/pci/tph.c
-> +++ b/drivers/pci/tph.c
-> @@ -435,6 +435,11 @@ void pci_restore_tph_state(struct pci_dev *pdev)
->  	if (!pdev->tph_enabled)
->  		return;
->  
-> +	if (!pdev->state_saved) {
-> +		pci_warn(pdev, "Not restoring tph state, no saved state");
-> +		return;
-> +	}
-> +
->  	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
->  	if (!save_state)
->  		return;
-> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-> index a4ff7f5f66dd..fda435cd49c1 100644
-> --- a/drivers/pci/vc.c
-> +++ b/drivers/pci/vc.c
-> @@ -391,6 +391,11 @@ void pci_restore_vc_state(struct pci_dev *dev)
->  {
->  	int i;
->  
-> +	if (!dev->state_saved) {
-> +		pci_warn(dev, "Not restoring vc state, no saved state");
-> +		return;
-> +	}
-> +
->  	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
->  		int pos;
->  		struct pci_cap_saved_state *save_state;
+>  /**
 
 
