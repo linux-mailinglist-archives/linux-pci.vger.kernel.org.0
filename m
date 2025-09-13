@@ -1,200 +1,202 @@
-Return-Path: <linux-pci+bounces-36076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBD15B55A93
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 02:18:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FD2B55DD5
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 04:18:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BC98AC0314
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 00:18:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C793A08337
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 02:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 672C82DC782;
-	Sat, 13 Sep 2025 00:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985254204E;
+	Sat, 13 Sep 2025 02:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ab7RMTjE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m21hctkB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E75DC2E0
-	for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 00:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCC43594F;
+	Sat, 13 Sep 2025 02:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757722680; cv=none; b=I6H+I/P8vENZMeCqVSEEQfqUkDF8b6wse3PKofZn6kqWktYHUOdvHUFGcj7ufPp5UxUaaoxAVfuULahFaO72FbtnX5+/9qcApl8MpWPUBen36msdC4thkZdpLZHpoYbaljY18I3U29yTBoklcCdtEbD0obZazqFCjjet087YqdI=
+	t=1757729896; cv=none; b=jp7jeHktROoJArB88XY0n8vDSICXDbBKxlsgbzYE3+gt8AHybtAnNJVmEJvPFNzJjYv4JXUrrwcDSW427ke+LsLCFsyjTF2uUX6vCi+sYAUejh+VEvLrR6CXIZVkj/hsNCsuSWfCDmFRL8L/rVZEQBWanGb1S0fl55zZ27k8HAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757722680; c=relaxed/simple;
-	bh=/f4p2dJ6b5Nu3BEzvVjsd4dJ5rNrKFOzLVYvijjD0rE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=esiB6ajzBG3i1/y+MdxQpgA7C6tQ9qTljy+iFpqC997Jp/Nfz2bqdG8Bn4cKhCp6eGw+411pOfOOBuxX+5fAwfFuz6698S4nQhDGAc5mrCIO1BDv9I6ySjmsvhkkIOcUJFAOYi9CVgswb16qrUvx5PP2QEI1AZbdEfprtSkD65g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ab7RMTjE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757722679; x=1789258679;
-  h=date:from:to:cc:subject:message-id;
-  bh=/f4p2dJ6b5Nu3BEzvVjsd4dJ5rNrKFOzLVYvijjD0rE=;
-  b=Ab7RMTjEOaWtFAydTF3JrNxhfEQEqopUYHUw8//VROWU04mZV8p/s3r1
-   SKOk+w0gZ0fMvrsT7qdcqk1d5iQ5ka3ycFibhV/uusrAyXTKAwmKgsM+4
-   Uqci093LziGAvm4Fl+DLXLvkehxVe5RDyJvErzOyZ6qsR72dApmRvm90i
-   yrpJfI5MeG0znLtlO8PQMffndwpIqAJDr8WpTfue4zb01Oqp+0lEinOdg
-   PzbXACjyGzLMZjVy9OH9pYPJGlONMMaf2409drt5CrZRmXvbLe9hrHcuQ
-   XTyecNSnIg69QR1c5AXdLgB1FrgDQbFyehfY8nJoK72aVZSdjMdjWXMit
-   w==;
-X-CSE-ConnectionGUID: lSwHufiQT92MYiwfQ1S+lA==
-X-CSE-MsgGUID: aBxartViSwilNHpIP2uhAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11551"; a="47642310"
-X-IronPort-AV: E=Sophos;i="6.18,260,1751266800"; 
-   d="scan'208";a="47642310"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2025 17:17:58 -0700
-X-CSE-ConnectionGUID: MjwNjaXrSI6oL39fXF4iKw==
-X-CSE-MsgGUID: 1nmKBHtyT8iIJqMw1hF9dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,260,1751266800"; 
-   d="scan'208";a="173292107"
-Received: from lkp-server02.sh.intel.com (HELO eb5fdfb2a9b7) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 12 Sep 2025 17:17:56 -0700
-Received: from kbuild by eb5fdfb2a9b7 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uxDxi-0001Gu-0u;
-	Sat, 13 Sep 2025 00:17:54 +0000
-Date: Sat, 13 Sep 2025 08:17:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:aer] BUILD SUCCESS
- 0a27bdb14b028fed30a10cec2f945c38cb5ca4fa
-Message-ID: <202509130823.JVX50mPZ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1757729896; c=relaxed/simple;
+	bh=8qXiJSMEz70CJJyZBmfhphnYdJah4N8ITAV+vxiw8B0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=toevmmp2HUMIO+icuToOW0b1q+beGncq9L5tUMu1YjNYEaXWan4U3ieekIzvYLGZ7vTyY0IAKteeUoIWGWl8A25TkrOYkuqLNZCIKm9YxY/GWu4MjHzF5v0iSbTzQwJW+wcTbIOqUTRFh8rpPAsOsXjKC8sHgbntge/8O5h5QwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=m21hctkB; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3EC6D211AD04;
+	Fri, 12 Sep 2025 19:18:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3EC6D211AD04
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1757729893;
+	bh=qOt0TBqCe0QCWONCv2pqyI3pCBn1b1ZIwH52f/TrEDE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m21hctkBJpAAvPT14i0FYZtzlISv5mc1KdMdUKKQhmnzfoCElHUGBS+seT0oarMWz
+	 Iot9rItOfVaGuBBzEf1dpzmTbMUw768EMx54jcKZGqo9hdfr970CkylZBj8ESJFeCq
+	 A5s6IMzPUDi2A+V2R/nF+SwCQVXtZBcN3o1+C4dE=
+Message-ID: <1033ff35-850c-e2f0-e2f3-1d5bf4b96a76@linux.microsoft.com>
+Date: Fri, 12 Sep 2025 19:18:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+Content-Language: en-US
+To: Michael Kelley <mhklinux@outlook.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>
+Cc: "x86@kernel.org" <x86@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f711d4ad-87a8-9cb3-aabc-a493ff18986a@linux.microsoft.com>
+ <33b59cc4-2834-b6c7-5ffd-7b9d620a4ce5@linux.microsoft.com>
+ <SN6PR02MB4157376DD06C1DC2E28A76B7D432A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <833a0c96-470f-acff-72e7-cc82995fbc2f@linux.microsoft.com>
+ <SN6PR02MB4157875C0979EFF29626A18CD43DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <d6e63ef3-bdd2-f185-f065-76b333dd1fc3@linux.microsoft.com>
+ <SN6PR02MB41575CDB3874DB0867FF9E8FD43EA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157BF605BE8EE1777AE1860D408A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157BF605BE8EE1777AE1860D408A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
-branch HEAD: 0a27bdb14b028fed30a10cec2f945c38cb5ca4fa  PCI/AER: Fix NULL pointer access by aer_info
+On 9/12/25 08:25, Michael Kelley wrote:
+> From: Michael Kelley <mhklinux@outlook.com> Sent: Monday, August 25, 2025 2:01 PM
+>>
+>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Friday, August 22, 2025 7:25 PM
+>>>
+>>> On 8/21/25 19:10, Michael Kelley wrote:
+>>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Thursday, August 21, 2025 1:50 PM
+>>>>>
+>>>>> On 8/21/25 12:24, Michael Kelley wrote:
+>>>>>> From: Mukesh R <mrathor@linux.microsoft.com> Sent: Wednesday, August 20, 2025 7:58 PM
+>>>>>>>
+>>>>>>> On 8/20/25 17:31, Mukesh R wrote:
+>>>>>>>> With time these functions only get more complicated and error prone. The
+>>>>>>>> saving of ram is very minimal, this makes analyzing crash dumps harder,
+>>>>>>>> and in some cases like in your patch 3/7 disables unnecessarily in error case:
+>>>>>>>>
+>>>>>>>> - if (count > HV_MAX_MODIFY_GPA_REP_COUNT) {
+>>>>>>>> -  pr_err("Hyper-V: GPA count:%d exceeds supported:%lu\n", count,
+>>>>>>>> -   HV_MAX_MODIFY_GPA_REP_COUNT);
+>>>>>>>> + local_irq_save(flags);      <<<<<<<
+>>>>>>>> ...
+>>>>>>
+>>>>>> FWIW, this error case is not disabled. It is checked a few lines further down as:
+>>>>>
+>>>>> I meant disabled interrupts. The check moves after disabling interrupts, so
+>>>>> it runs "disabled" in traditional OS terminology :).
+>>>>
+>>>> Got it. But why is it problem to make this check with interrupts disabled?
+>>>
+>>> You are creating disabling overhead where that overhead previously
+>>> did not exist.
+>>
+>> I'm not clear on what you mean by "disabling overhead". The existing code
+>> does the following:
+>>
+>> 1) Validate that "count" is not too big, and return an error if it is.
+>> 2) Disable interrupts
+>> 3) Populate the per-cpu hypercall input arg
+>> 4) Make the hypercall
+>> 5) Re-enable interrupts
+>>
+>> With the patch, steps 1 and 2 are done in a different order:
+>>
+>> 2) Disable interrupts
+>> 1) Validate that "count" is not too big. Re-enable interrupts and return an error if it is.
+>> 3) Populate the per-cpu hypercall input arg
+>> 4) Make the hypercall
+>> 5) Re-enable interrupts
+>>
+>> Validating "count" with interrupts disabled is probably an additional
+>> 2 or 3 instructions executed with interrupts disabled, which is negligible
+>> compared to the thousands (or more) of instructions the hypercall will
+>> execute with interrupts disabled.
+>>
+>> Or are you referring to something else as "disabling overhead"?
+> 
+> Mukesh -- anything further on what you see as the problem here?
+> I'm just not getting what your concern is.
 
-elapsed time: 1452m
+It increases the interrupts disabled window, does a print from
+interrupts disabled (not a great idea unless it is pr_emerg and system
+is crashing), and in case of actual error of (count > batch_size) 
+interrupts are getting enabled and disabled that were not before.
 
-configs tested: 107
-configs skipped: 3
+> [snip]
+> 
+>>>>>>> Furthermore, this makes us lose the ability to permanently map
+>>>>>>> input/output pages in the hypervisor. So, Wei kindly undo.
+>>>>>>>
+>>>>>>
+>>>>>> Could you elaborate on "lose the ability to permanently map
+>>>>>> input/output pages in the hypervisor"? What specifically can't be
+>>>>>> done and why?
+>>>>>
+>>>>> Input and output are mapped at fixed GPA/SPA always to avoid hyp
+>>>>> having to map/unmap every time.
+>>>>
+>>>> OK. But how does this patch set impede doing a fixed mapping?
+>>>
+>>> The output address can be varied depending on the hypercall, instead
+>>> of it being fixed always at fixed address:
+>>>
+>>>           *(void **)output = space + offset; <<<<<<
+>>
+>> Agreed. But since mappings from GPA to SPA are page granular, having
+>> such a fixed mapping means that there's a mapping for every byte in
+>> the page containing the GPA to the corresponding byte in the SPA,
+>> right? So even though the offset above may vary across hypercalls,
+>> the output GPA still refers to the same page (since the offset is always
+>> less than 4096), and that page has a fixed mapping. I would expect the
+>> hypercall code in the hypervisor to look for an existing mapping based
+>> on the output page, not the output address that includes the offset.
+>> But I'm haven't looked at the hypervisor code. If the Hyper-V folks say
+>> that a non-zero offset thwarts finding the existing mapping, what does
+>> the hypervisor end up doing? Creating a 2nd mapping wouldn't seem
+>> to make sense. So I'm really curious about what's going on ....
+>>
+> 
+> Again, any further information about why we "lose the ability to
+> permanently map input/output pages"? It seems doubtful to me
+> that an offset within the same page would make any difference,
+> but maybe Hyper-V is doing something unexpected. If so, I'd like
+> to know more about what that is.
+> 
+> Michael
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250912    gcc-10.5.0
-arc                   randconfig-002-20250912    gcc-12.5.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-001-20250912    clang-22
-arm                   randconfig-002-20250912    gcc-14.3.0
-arm                   randconfig-003-20250912    clang-22
-arm                   randconfig-004-20250912    gcc-10.5.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250912    clang-20
-arm64                 randconfig-002-20250912    clang-16
-arm64                 randconfig-003-20250912    clang-22
-arm64                 randconfig-004-20250912    clang-19
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250912    gcc-15.1.0
-csky                  randconfig-002-20250912    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250912    clang-22
-hexagon               randconfig-002-20250912    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20250912    gcc-14
-i386        buildonly-randconfig-002-20250912    clang-20
-i386        buildonly-randconfig-003-20250912    gcc-13
-i386        buildonly-randconfig-004-20250912    clang-20
-i386        buildonly-randconfig-005-20250912    gcc-14
-i386        buildonly-randconfig-006-20250912    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250912    gcc-15.1.0
-loongarch             randconfig-002-20250912    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250912    gcc-11.5.0
-nios2                 randconfig-002-20250912    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250912    gcc-14.3.0
-parisc                randconfig-002-20250912    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250912    gcc-8.5.0
-powerpc               randconfig-002-20250912    clang-22
-powerpc               randconfig-003-20250912    clang-17
-powerpc64             randconfig-001-20250912    gcc-12.5.0
-powerpc64             randconfig-002-20250912    clang-22
-powerpc64             randconfig-003-20250912    clang-19
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250912    clang-16
-riscv                 randconfig-002-20250912    gcc-9.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250912    gcc-10.5.0
-s390                  randconfig-002-20250912    gcc-10.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250912    gcc-15.1.0
-sh                    randconfig-002-20250912    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250912    gcc-8.5.0
-sparc                 randconfig-002-20250912    gcc-13.4.0
-sparc64               randconfig-001-20250912    gcc-8.5.0
-sparc64               randconfig-002-20250912    clang-20
-um                                allnoconfig    clang-22
-um                    randconfig-001-20250912    clang-22
-um                    randconfig-002-20250912    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250912    gcc-14
-x86_64      buildonly-randconfig-002-20250912    gcc-14
-x86_64      buildonly-randconfig-003-20250912    clang-20
-x86_64      buildonly-randconfig-004-20250912    clang-20
-x86_64      buildonly-randconfig-005-20250912    clang-20
-x86_64      buildonly-randconfig-006-20250912    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250912    gcc-9.5.0
-xtensa                randconfig-002-20250912    gcc-12.5.0
+you've to pass the offset/pointer ever time, and hyp has to map
+that instead of just per cpu permanent mapping.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Mukesh
+
 
