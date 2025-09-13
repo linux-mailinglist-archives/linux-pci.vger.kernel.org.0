@@ -1,58 +1,57 @@
-Return-Path: <linux-pci+bounces-36082-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36083-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87CDEB55EF6
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 08:29:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3EC6B55F0D
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 09:00:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4765F583C31
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 06:29:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 614451C84CC0
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Sep 2025 07:01:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1873B2E6CB4;
-	Sat, 13 Sep 2025 06:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60558248B;
+	Sat, 13 Sep 2025 07:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsrAUWQ5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4JfT/Ye"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E708315D1
-	for <linux-pci@vger.kernel.org>; Sat, 13 Sep 2025 06:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972CF2DC787;
+	Sat, 13 Sep 2025 07:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757744944; cv=none; b=lfunVg1sJHJBma4tvVFknjbj5qxsjamql8cVgm0C7QUK/qJIDaacsygGNhrnFwI+na6OtFpJftVR7jSJYMXQlZqAzTmijO/mTCH8WUm0SpqPiUUL3bz0QYHx4OhjZ+TwJ9ClEleaPgdXQ3IdY9UJqQHTbmt7Yk/hlPUSDbSrULE=
+	t=1757746849; cv=none; b=miRSeE0tvCGTUKdbb4IUOKFrxsv87Zakg529Yj3g6IqWOLSUV8nwXpicI4fi9IR53sl3vsH0j5mcihr/CWn+JXE6y+ue2nSovJcx8QvpVWt1q5RCx9xjuuwiD3RWfbrpWUTKK8E999hO5pcICCDd9uBnnDhXbjrfbF1xRvFF4+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757744944; c=relaxed/simple;
-	bh=+tGRqPU3CNM5AXx6swpVf+YLcfPRrzMt5yM2nz195Jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRZsJkCGsu4WyvYFakiytd2immDSdpkCMr5xVwVb/nnSKPN8Vl9Z/029h4+faF98zqgTF0fmHZp/kY/ZKUCYwDe6JW9nMy8OTlrDN832HG5ItsgpQ49i4ESLdYmipqlBTPN8QD4sHiH5hSI1ANWM2jafFak5Gol68s+xkcPb/yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsrAUWQ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D18EC4CEEB;
-	Sat, 13 Sep 2025 06:29:02 +0000 (UTC)
+	s=arc-20240116; t=1757746849; c=relaxed/simple;
+	bh=6YzFyOOv4WRQ72+9SDNxAcsBvNgeOLTg4Z+Rr2GC6N4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bkMVXISH/rJo3uNpCmE/sRJD0zBI1sYNiSqeMc2rGYlBdH5dMeTd8nTNngAB+qr2OVt69PQTVfGHGHF5/IBXTwH7ehsc85SVTCIvXkNZ7Y41ej2midaw98SQ8RYErRxYJivy/F78KciE4kdQqP4wpPSND7TweXYQJHR47M48cu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4JfT/Ye; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE1B3C4CEEB;
+	Sat, 13 Sep 2025 07:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757744943;
-	bh=+tGRqPU3CNM5AXx6swpVf+YLcfPRrzMt5yM2nz195Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsrAUWQ5x27t0yJLkZ7m1D3JqoHfyeaDLsjFBnDVW3bzqSjOb1DZ6ihKNKIkgkg6y
-	 6B2UxUTbw/LWHoVBVBNul/C6r2kBK2q0f231seGRir3qll789POswl6n3I+anxvgzJ
-	 0OekBfz7qxjLKKdYhfP8kGpPOvl0/MyiymgaC20lNpypYhfb+qHEH8ioTaNDBT3Z5c
-	 FbDxg+NA2iXQWgqwqUuIjI6aBELC4VoV6p/T9M0MoaQh7E7dg/ZlQHGYz+l7AGeTAl
-	 o4gbpGvxh0nlLt3eYOza4a3MMb3ciRpftwogO95UDyv+R0ppTCfVyY1P0TG8vRpqw0
-	 FWXqKCOKAnv3A==
-Date: Sat, 13 Sep 2025 15:29:01 +0900
+	s=k20201202; t=1757746849;
+	bh=6YzFyOOv4WRQ72+9SDNxAcsBvNgeOLTg4Z+Rr2GC6N4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=m4JfT/Yery3tyOZZsqO7+bgJA+5alwoaZi6nv77ZdYA5/I0CLhEBI5smGyEwcOJ/E
+	 Yr/665Qr4JHiwyMAGU/hrDgPdk8jl8xl3B+4pXo5F2FUSACQo3wcf9K11l8kRC+4gB
+	 3WzUsHUG81Fu2AknhVY1UjWXkt1ELLi6oP676qHUi422yLo431IqfEH64yjJfsvPE3
+	 b2XR/UOlm6J3q+HTWiYlTW1fx51n3yPhv9lQ7G/GBQrFRMN5uP+DmgI7Fd2v4scKv9
+	 Jw/p8UAa7ioelnZuXjAhjFkNzkWC2ahSWdL4+MnvriTBU2nk0fG7ZUg5ANymEn9juw
+	 gtvfHC5HIWn/w==
+Date: Sat, 13 Sep 2025 16:00:47 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Frank Li <Frank.Li@nxp.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: NULL check dma channels
- before release
-Message-ID: <20250913062901.GC1992308@rocinante>
-References: <20250913054815.141503-1-shinichiro.kawasaki@wdc.com>
+To: Linux PCI <linux-pci@vger.kernel.org>,
+	Linux IOMMU <iommu@lists.linux.dev>,
+	Linux KVM <kvm@vger.kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO2cmc=?= Roedel <joro@8bytes.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: The VFIO/IOMMU/PCI MC at LPC 2025 - Call for Papers reminder
+Message-ID: <20250913070047.GA3309104@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,27 +61,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250913054815.141503-1-shinichiro.kawasaki@wdc.com>
 
-Hello,
+Hello everyone!
 
-> When endpoint controller driver is immature, the fields dma_chan_tx and
-> dma_chan_rx of the struct pci_epf_test could be NULL even after epf
-> initialization. However, pci_epf_test_clean_dma_chan() assumes that they
-> are always non-NULL valid values, and causes kernel panic when the
+The registration for the Linux Plumbers Conference 2025 will be open soon.
 
-Simply saying that the fields can be NULL, which can lead to a panic on
-access in some cases, and hence it's prudent to check for the non-NULL
-values, would be sufficient.
+That said, there are still two weeks, or so, before the Call for Papers
+submission deadline (which is the 30th of September; 2025-09-30) for the
+MC.  The deadline is more of an advisory one, rather than a hard deadline,
+as we will accept some late submissions, too.  However, the sooner the
+better, as it makes it easier for us to review submissions, and plan the
+future scheduled ahead of time.
 
-Wording-wise, whether the driver is immature, mature, or middle-aged, it's
-completely irrelevant here.
+As such, while there is still time, and if you had planned to speak at the
+MC this year, please do not hesitate to send us your proposal.  Even a draft
+would be fine, as we can refine it later.
 
-Otherwise, changes look good, as such:
+As always, please get in touch with me directly, or with any other
+questions organisers, if you need any assistance or have any questions.
 
-Reviewed-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Looking forward to seeing you all there, either in Tokyo in-person or
+virtually!
 
-Thank you,
+For mode information and updates, please keep an eye on the conference web
+page at https://lpc.events.
 
-	Krzysztof
+Previous posts about the MC:
+
+- https://lore.kernel.org/linux-pci/20250812174506.GA3633156@rocinante
+
+Thank you!
+
+	Alex, Bjorn, Jörg, Lorenzo and Krzysztof
 
