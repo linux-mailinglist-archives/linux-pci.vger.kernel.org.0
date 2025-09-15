@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-36120-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36121-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2426B5728F
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 10:10:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D1B8B572A0
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 10:15:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 353DE189279F
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:10:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B12921785FC
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:15:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AC92EA461;
-	Mon, 15 Sep 2025 08:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D212EBB96;
+	Mon, 15 Sep 2025 08:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tubH/oHB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peH66S1M"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3591C23313E;
-	Mon, 15 Sep 2025 08:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1593F2EB5C4;
+	Mon, 15 Sep 2025 08:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757923802; cv=none; b=EsiXkiaWtlOvpMuHMnVpcNUwqAO48mzYe5WzdbIW0wyaXfN260Rv2COIaiz0X+bw39+k6A2hPkcEYqSESh+TmqXpcW/3RqITwV8vvYHtWFxM5JFQ8kdPTVar5OUUB9U45Q1LLjoGlDIC/wYxkWAN55CLvX3NXDLKj+yHAahSDm8=
+	t=1757924116; cv=none; b=n9Nj5lC7wZ3SSdGzGTWxGNC02FDIi9KF/isfI+8YRGSVQB2fmTc9mD1xsxo6qxaTJqZ35elAceS5Z6PZlGI+QKsZxBCzdR+sNTFRGiBVakIeDvMTayLFYmYBaYmbrRmP5V5oc6JK+AJlAv53yFa6jxK2TIXmtL84EPB04h+z1kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757923802; c=relaxed/simple;
-	bh=R2OBGwkdnG69vVohU5KU260WyiuRmC80tvS8RzcF/u0=;
+	s=arc-20240116; t=1757924116; c=relaxed/simple;
+	bh=mpw1Kp/ruV8064l6dcTGb8KpE+L8YZqt3SSB47iPlo0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2YqgGQcG6UJjD6rHOjlZ88MXOsLpxVKafk/t8W8CqVy0nzWRTf9y3Xf4O/ig0SJ6MbwKSwUKr1rZDAwWdYtO1Sz7aH4SmPJ44PLUrj4YrcCb5uRSEvHNaWntRom/usrQXnLtarS+fmUay3N3aC8pxwfwYXY8I8mKcnhjrrOEmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tubH/oHB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5133EC4CEF1;
-	Mon, 15 Sep 2025 08:09:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVLGil6Ho832jpSMWk4+Xcx6rpqKW5oLxMt89izFlP5D6n6JqRPt8tvR6YV2qIHJ2k4IPgl6P3JsV1RQual5AIZyLfiyDc7WLo+AaFEbECHeEK3WygCDKBSdo37oHKVuZ/hhc17xFTgXIABreh+Wnr/Lt34kVNtzJzb7iHB531g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peH66S1M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A93D4C4CEF1;
+	Mon, 15 Sep 2025 08:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757923801;
-	bh=R2OBGwkdnG69vVohU5KU260WyiuRmC80tvS8RzcF/u0=;
+	s=k20201202; t=1757924114;
+	bh=mpw1Kp/ruV8064l6dcTGb8KpE+L8YZqt3SSB47iPlo0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tubH/oHBqbechwfAOzvenH87hKY5v/Zf4fYwOo7IGSyFuW0d/aUhGI0vZg7Dy4kSm
-	 E9jQW0Bh9PipZ5lbFL3KBJW3mT6j9pBQ0MXoen7EzCIfSzDSZ1ytQzJH7Dcg4L1XXA
-	 CU31bIHKeW+aAh4OXNwUUVDUHOChlpKhFAPRPspTyJYiAowVc5CUyr6wT/FM6h6ZHn
-	 kZnJ10JNROeo/WbmQ4ptVNH58roRk953kbagDMczxdSyFRU6GSsIeQWCRGx8j+IsFq
-	 GiS/bAlLyk5eKOz41fnGCkuWL6uv1rWed0yrv31CcZ1GxAv+l+1+vwwJPGEun85r40
-	 XUr46gGNdFGFg==
-Date: Mon, 15 Sep 2025 13:39:49 +0530
+	b=peH66S1MaL/o5ItLrB+kDxmnPsq9tk53l1nKj5PFQAY7UlTolv/oeUbJ8dP4CuEwz
+	 yVJ2U3mDcclKIL+pJ7MvcHbLaQXVoadr590BASq+j3+XbNQUhTqfRtZ1BEqRiA23i0
+	 E6tcSm3VKTTS42rKBMAYqxTQtX1e1UXcsLTfvnwcoy8FtFWnG1TgKD0IfVIhxPHBo3
+	 sA7gPahnYjouLq07rtGr/fspDIqe9abSsQ0v6BWtN4J3podytFClcXZQmEyeckPvf8
+	 DxslL10q5RDuxRlv8ZcKXSkNbVjDN0ohQXPN6FGEk3JQdjyUJi/fYc/f927/skzN6M
+	 9s8wrlhV8nB7A==
+Date: Mon, 15 Sep 2025 13:44:58 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Alex Elder <elder@riscstar.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, 
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, vkoul@kernel.org, 
 	kishon@kernel.org, dlan@gentoo.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
 	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de, tglx@linutronix.de, 
 	johan+linaro@kernel.org, thippeswamy.havalige@amd.com, namcao@linutronix.de, 
@@ -53,10 +53,11 @@ Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
 	quic_schintav@quicinc.com, fan.ni@samsung.com, devicetree@vger.kernel.org, 
 	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, spacemit@lists.linux.dev, 
 	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] PCI: spacemit: introduce SpacemiT PCIe host driver
-Message-ID: <sptrmspkmqrwsh2iv4rmha45vsoz5ks7vhcdp3dytsxyabn6qn@mmk7z6tf5wcv>
+Subject: Re: [PATCH 3/6] dt-bindings: phy: spacemit: introduce PCIe root
+ complex
+Message-ID: <tmdq6iut5z2bzemduovvyarya6ho2lwlxvvqqhazw6dnnyjpq3@72xrd2pij42h>
 References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-6-elder@riscstar.com>
+ <20250813184701.2444372-4-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,490 +67,150 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250813184701.2444372-6-elder@riscstar.com>
+In-Reply-To: <20250813184701.2444372-4-elder@riscstar.com>
 
-On Wed, Aug 13, 2025 at 01:46:59PM GMT, Alex Elder wrote:
-> Introduce a driver for the PCIe root complex found in the SpacemiT
-> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
-> The driver supports three PCIe ports that operate at PCIe v2 transfer
-> rates (5 GT/sec).  The first port uses a combo PHY, which may be
-> configured for use for USB 3 instead.
+On Wed, Aug 13, 2025 at 01:46:57PM GMT, Alex Elder wrote:
+
+Subject should have 'pci' prefix, not 'phy'.
+
+> Add the Device Tree binding for the PCIe root complex found on the
+> SpacemiT K1 SoC.  This device is derived from the Synopsys Designware
+> PCIe IP.  It supports up to three PCIe ports operating at PCIe gen 2
+> link speeds (5 GT/sec).  One of the ports uses a combo PHY, which is
+> typically used to support a USB 3 port.
 > 
 > Signed-off-by: Alex Elder <elder@riscstar.com>
 > ---
->  drivers/pci/controller/dwc/Kconfig   |  10 +
->  drivers/pci/controller/dwc/Makefile  |   1 +
->  drivers/pci/controller/dwc/pcie-k1.c | 355 +++++++++++++++++++++++++++
->  3 files changed, 366 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-k1.c
+>  .../bindings/pci/spacemit,k1-pcie-rc.yaml     | 141 ++++++++++++++++++
+>  1 file changed, 141 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.yaml
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index ff6b6d9e18ecf..ca5782c041ce8 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -492,4 +492,14 @@ config PCIE_VISCONTI_HOST
->  	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
->  	  This driver supports TMPV7708 SoC.
->  
-> +config PCIE_K1
-> +	bool "SpacemiT K1 host mode PCIe controller"
-
-No need to make it bool, build it as a module. Only the PCI controller drivers
-implementing irqchip need to be kept bool for irq disposal concerns.
-
-> +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> +	depends on PCI && OF && HAS_IOMEM
-> +	select PCIE_DW_HOST
-> +	default ARCH_SPACEMIT
-> +	help
-> +	  Enables support for the PCIe controller in the K1 SoC operating
-> +	  in host mode.
-
-Is the driver only applicable for K1 SoCs or other SoCs from spacemit? Even if
-it is the former, I would suggest renaming to 'pcie-spacemit-k1.c'
-
-> +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 6919d27798d13..62d9d4e7dd4d3 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
->  obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
-> +obj-$(CONFIG_PCIE_K1) += pcie-k1.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-k1.c b/drivers/pci/controller/dwc/pcie-k1.c
+> diff --git a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.yaml b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.yaml
 > new file mode 100644
-> index 0000000000000..e9b1df3428d16
+> index 0000000000000..6bcca2f91a6fd
 > --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-k1.c
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SpacemiT K1 PCIe host driver
-> + *
-> + * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
-> + * Copyright (c) 2023, spacemit Corporation.
-> + */
+> +++ b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-rc.yaml
+> @@ -0,0 +1,141 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/spacemit,k1-pcie-rc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gfp.h>
-> +#include <linux/irq.h>
+> +title: SpacemiT K1 PCI Express Root Complex
+> +
+> +maintainers:
+> +  - Alex Elder <elder@riscstar.com>
+> +
+> +description:
+> +  The SpacemiT K1 SoC PCIe root complex controller is based on the
+> +  Synopsys DesignWare PCIe IP.
+> +
+> +properties:
+> +  compatible:
+> +    const: spacemit,k1-pcie-rc.yaml
+> +
+> +  reg:
+> +    items:
+> +      - description: DesignWare PCIe registers
+> +      - description: ATU address space
+> +      - description: PCIe configuration space
+> +      - description: Link control registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: atu
+> +      - const: config
+> +      - const: link
+> +
+> +  clocks:
+> +    items:
+> +      - description: DWC PCIe Data Bus Interface (DBI) clock
+> +      - description: DWC PCIe application AXI-bus Master interface clock
+> +      - description: DWC PCIe application AXI-bus Slave interface clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: dbi
+> +      - const: mstr
+> +      - const: slv
+> +
+> +  resets:
+> +    items:
+> +      - description: DWC PCIe Data Bus Interface (DBI) reset
+> +      - description: DWC PCIe application AXI-bus Master interface reset
+> +      - description: DWC PCIe application AXI-bus Slave interface reset.
+> +      - description: Global reset; must be deasserted for PHY to function
+> +
+> +  reset-names:
+> +    items:
+> +      - const: dbi
+> +      - const: mstr
+> +      - const: slv
+> +      - const: global
+> +
+> +  interrupts-extended:
+> +    maxItems: 1
 
-unused?
-
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/of.h>
-> +#include <linux/pci.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/types.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +#define K1_PCIE_VENDOR_ID	0x201f
-> +#define K1_PCIE_DEVICE_ID	0x0001
-> +
-> +/* Offsets and field definitions of link management registers */
-> +
-> +#define K1_PHY_AHB_IRQ_EN			0x0000
-> +#define PCIE_INTERRUPT_EN		BIT(0)
-> +
-> +#define K1_PHY_AHB_LINK_STS			0x0004
-> +#define SMLH_LINK_UP			BIT(1)
-> +#define RDLH_LINK_UP			BIT(12)
-> +
-> +#define INTR_ENABLE				0x0014
-> +#define MSI_CTRL_INT			BIT(11)
-> +
-> +/* Offsets and field definitions for PMU registers */
-> +
-> +#define PCIE_CLK_RESET_CONTROL			0x0000
-> +#define LTSSM_EN			BIT(6)
-> +#define PCIE_AUX_PWR_DET		BIT(9)
-> +#define PCIE_RC_PERST			BIT(12)	/* 0: PERST# high; 1: low */
-> +#define APP_HOLD_PHY_RST		BIT(30)
-> +#define DEVICE_TYPE_RC			BIT(31)	/* 0: endpoint; 1: RC */
-> +
-> +#define PCIE_CONTROL_LOGIC			0x0004
-> +#define PCIE_SOFT_RESET			BIT(0)
-> +
-> +struct k1_pcie {
-> +	struct dw_pcie pci;
-> +	void __iomem *link;
-> +	struct regmap *pmu;
-> +	u32 pmu_off;
-> +	struct phy *phy;
-> +	struct reset_control *global_reset;
-> +};
-> +
-> +#define to_k1_pcie(dw_pcie)	dev_get_drvdata((dw_pcie)->dev)
-> +
-> +static int k1_pcie_toggle_soft_reset(struct k1_pcie *k1)
-> +{
-> +	u32 offset = k1->pmu_off + PCIE_CONTROL_LOGIC;
-> +	const u32 mask = PCIE_SOFT_RESET;
-> +	int ret;
-> +
-> +	ret = regmap_set_bits(k1->pmu, offset, mask);
-
-For MMIO, it is OK to skip the error handling.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	mdelay(2);
-
-If the previous write to the PMU got stuck in the CPU cache, there is no
-guarantee that this delay of 2ms between write and clear will be enforced. So
-you should do a dummy read after write to ensure that the previous write has
-reached the PMU (or any device) and then clear the bits.
+What is the purpose of this property? Is it for MSI or INTx?
 
 > +
-> +	return regmap_clear_bits(k1->pmu, offset, mask);
-> +}
+> +  spacemit,syscon-pmu:
+> +    description:
+> +      PHandle that refers to the APMU system controller, whose
+> +      regmap is used in managing resets and link state.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
 > +
-> +/* Enable app clocks, deassert app resets */
-> +static int k1_pcie_app_enable(struct k1_pcie *k1)
-> +{
-> +	struct dw_pcie *pci = &k1->pci;
-> +	u32 clock_count;
-> +	u32 reset_count;
-> +	int ret;
+> +  device_type:
+> +    const: pci
 > +
-> +	clock_count = ARRAY_SIZE(pci->app_clks);
+> +  max-link-speed:
+> +    const: 2
 
-Just use ARRAY_SIZE() directly below.
-
-> +	ret = clk_bulk_prepare_enable(clock_count, pci->app_clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reset_count = ARRAY_SIZE(pci->app_rsts);
-
-Same here.
-
-> +	ret = reset_control_bulk_deassert(reset_count, pci->app_rsts);
-> +	if (ret)
-> +		goto err_disable_clks;
-> +
-> +	ret = reset_control_deassert(k1->global_reset);
-> +	if (ret)
-> +		goto err_assert_resets;
-> +
-> +	return 0;
-> +
-> +err_assert_resets:
-> +	(void)reset_control_bulk_assert(reset_count, pci->app_rsts);
-
-Why void cast? Here and in other places.
-
-> +err_disable_clks:
-> +	clk_bulk_disable_unprepare(clock_count, pci->app_clks);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Disable app clocks, assert app resets */
-> +static void k1_pcie_app_disable(struct k1_pcie *k1)
-> +{
-> +	struct dw_pcie *pci = &k1->pci;
-> +	u32 count;
-> +	int ret;
-> +
-> +	(void)reset_control_assert(k1->global_reset);
-> +
-> +	count = ARRAY_SIZE(pci->app_rsts);
-> +	ret = reset_control_bulk_assert(count, pci->app_rsts);
-> +	if (ret)
-> +		dev_err(pci->dev, "app reset assert failed (%d)\n", ret);
-> +
-> +	count = ARRAY_SIZE(pci->app_clks);
-> +	clk_bulk_disable_unprepare(count, pci->app_clks);
-> +}
-
-Same comments as k1_pcie_app_enable().
+Why do you need to limit it to 5 GT/s always?
 
 > +
-> +static int k1_pcie_init(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct k1_pcie *k1 = to_k1_pcie(pci);
-> +	u32 offset;
-> +	u32 mask;
-> +	int ret;
+> +  num-viewport:
+> +    const: 8
 > +
-> +	ret = k1_pcie_toggle_soft_reset(k1);
-> +	if (ret)
-> +		goto err_app_disable;
-> +
-> +	ret = k1_pcie_app_enable(k1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_init(k1->phy);
-> +	if (ret)
-> +		goto err_app_disable;
-> +
-> +	/* Set the PCI vendor and device ID */
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, K1_PCIE_VENDOR_ID);
-> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, K1_PCIE_DEVICE_ID);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +
-> +	/*
-> +	 * Put the port in root complex mode, record that Vaux is present.
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - spacemit,syscon-pmu
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - device_type
+> +  - max-link-speed
 
-There is no 3.3Vaux supply present in the binding. So the supply is guaranteed
-to be present and enabled always by the platform?
+Same comment as above.
 
-> +	 * Assert fundamental reset (drive PERST# low).
-> +	 */
-> +	offset = k1->pmu_off + PCIE_CLK_RESET_CONTROL;
-> +	mask = DEVICE_TYPE_RC | PCIE_AUX_PWR_DET;
-> +	mask |= PCIE_RC_PERST;
-> +	ret = regmap_set_bits(k1->pmu, offset, mask);
-> +	if (ret)
-> +		goto err_phy_exit;
+> +  - bus-range
+> +  - num-viewport
 > +
-> +	/* Wait the PCIe-mandated 100 msec before deasserting PERST# */
-> +	mdelay(100);
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/spacemit,k1-syscon.h>
+> +    pcie0: pcie@ca000000 {
+> +        compatible = "spacemit,k1-pcie-rc";
+> +        reg = <0x0 0xca000000 0x0 0x00001000>,
+> +              <0x0 0xca300000 0x0 0x0001ff24>,
+> +              <0x0 0x8f000000 0x0 0x00002000>,
+> +              <0x0 0xc0b20000 0x0 0x00001000>;
+> +        reg-names = "dbi",
+> +                    "atu",
+> +                    "config",
+> +                    "link";
+> +
+> +        ranges = <0x01000000 0x8f002000 0x0 0x8f002000 0x0 0x100000>,
 
-Same comment as k1_pcie_toggle_soft_reset() applies here.
-
-> +
-> +	ret = regmap_clear_bits(k1->pmu, offset, PCIE_RC_PERST);
-> +	if (!ret)
-> +		return 0;	/* Success! */
-
-Please use common pattern to return success:
-
-	regmap_clear_bits()
-
-	return 0;
-
-> +
-> +err_phy_exit:
-> +	(void)phy_exit(k1->phy);
-> +err_app_disable:
-> +	k1_pcie_app_disable(k1);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Silently ignore any errors */
-> +static void k1_pcie_deinit(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct k1_pcie *k1 = to_k1_pcie(pci);
-> +
-> +	/* Re-assert fundamental reset (drive PERST# low) */
-
-s/Re-assert/Assert
-
-> +	(void)regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-> +			      PCIE_RC_PERST);
-> +
-> +	(void)phy_exit(k1->phy);
-> +
-> +	k1_pcie_app_disable(k1);
-> +}
-> +
-> +static const struct dw_pcie_host_ops k1_pcie_host_ops = {
-> +	.init		= k1_pcie_init,
-> +	.deinit		= k1_pcie_deinit,
-> +};
-> +
-> +static void k1_pcie_enable_interrupts(struct k1_pcie *k1)
-> +{
-> +	void __iomem *virt;
-> +	u32 val;
-> +
-> +	/* Enable the MSI interrupt */
-> +	writel(MSI_CTRL_INT, k1->link + INTR_ENABLE);
-
-If there are no ordering issues (I guess so), you can very well use the _relaxed
-variants throughout the driver.
-
-> +
-> +	/* Top-level interrupt enable */
-> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
-> +	val = readl(virt);
-> +	val |= PCIE_INTERRUPT_EN;
-> +	writel(val, virt);
-> +}
-> +
-> +static void k1_pcie_disable_interrupts(struct k1_pcie *k1)
-> +{
-> +	void __iomem *virt;
-> +	u32 val;
-> +
-> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
-> +	val = readl(virt);
-> +	val &= ~PCIE_INTERRUPT_EN;
-> +	writel(val, virt);
-> +
-> +	writel(0, k1->link + INTR_ENABLE);
-> +}
-> +
-> +static bool k1_pcie_link_up(struct dw_pcie *pci)
-> +{
-> +	struct k1_pcie *k1 = to_k1_pcie(pci);
-> +	u32 val;
-> +
-> +	val = readl(k1->link + K1_PHY_AHB_LINK_STS);
-> +
-> +	return (val & RDLH_LINK_UP) && (val & SMLH_LINK_UP);
-> +}
-> +
-> +static int k1_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct k1_pcie *k1 = to_k1_pcie(pci);
-> +	int ret;
-> +
-> +	/* Stop holding the PHY in reset, and enable link training */
-> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-> +				 APP_HOLD_PHY_RST | LTSSM_EN, LTSSM_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	k1_pcie_enable_interrupts(k1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void k1_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct k1_pcie *k1 = to_k1_pcie(pci);
-> +	int ret;
-> +
-> +	k1_pcie_disable_interrupts(k1);
-> +
-> +	/* Disable the link and hold the PHY in reset */
-> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-> +				 APP_HOLD_PHY_RST | LTSSM_EN, APP_HOLD_PHY_RST);
-> +	if (ret)
-> +		dev_err(pci->dev, "disable LTSSM failed (%d)\n", ret);
-> +}
-> +
-> +static const struct dw_pcie_ops k1_pcie_ops = {
-> +	.link_up	= k1_pcie_link_up,
-> +	.start_link	= k1_pcie_start_link,
-> +	.stop_link	= k1_pcie_stop_link,
-> +};
-> +
-> +static int k1_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct dw_pcie_rp *pp;
-> +	struct dw_pcie *pci;
-> +	struct k1_pcie *k1;
-> +	int ret;
-> +
-> +	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
-> +	if (!k1)
-> +		return -ENOMEM;
-> +	dev_set_drvdata(dev, k1);
-> +
-> +	k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
-> +						       "spacemit,syscon-pmu",
-> +						       1, &k1->pmu_off);
-> +	if (IS_ERR(k1->pmu))
-> +		return dev_err_probe(dev, PTR_ERR(k1->pmu),
-> +				     "lookup PMU regmap failed\n");
-
-'Failed to lookup \"PMU\" registers'
-
-> +
-> +	k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
-> +	if (!k1->link)
-> +		return dev_err_probe(dev, -ENOMEM, "map link regs failed\n");
-
-'Failed to map \"link\" registers
-
-Same for below error prints as well.
-
-> +
-> +	k1->global_reset = devm_reset_control_get_shared(dev, "global");
-> +	if (IS_ERR(k1->global_reset))
-> +		return dev_err_probe(dev, PTR_ERR(k1->global_reset),
-> +				     "get global reset failed\n");
-> +
-> +	/* Hold the PHY in reset until we start the link */
-> +	ret = regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-> +			      APP_HOLD_PHY_RST);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "hold PHY in reset failed\n");
-> +
-> +	k1->phy = devm_phy_get(dev, NULL);
-> +	if (IS_ERR(k1->phy))
-> +		return dev_err_probe(dev, PTR_ERR(k1->phy), "get PHY failed\n");
-> +
-> +	pci = &k1->pci;
-> +	dw_pcie_cap_set(pci, REQ_RES);
-> +	pci->dev = dev;
-> +	pci->ops = &k1_pcie_ops;
-> +
-> +	pp = &pci->pp;
-> +	pp->num_vectors = MAX_MSI_IRQS;
-
-I don't understand how MSI is implemented in this platform. If the controller
-relies on an external interrupt controller for handling MSIs (I think it does),
-then there should be either 'msi-parent' or 'msi-map' existed in the binding.
-
-But I see none, other than 'interrupts-extended'. So I don't know how MSI works
-at all.
-
-> +	pp->ops = &k1_pcie_host_ops;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "host init failed\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void k1_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct k1_pcie *k1 = dev_get_drvdata(&pdev->dev);
-> +	struct dw_pcie_rp *pp = &k1->pci.pp;
-> +
-> +	dw_pcie_host_deinit(pp);
-> +}
-> +
-> +static const struct of_device_id k1_pcie_of_match_table[] = {
-> +	{ .compatible = "spacemit,k1-pcie-rc", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver k1_pcie_driver = {
-> +	.probe	= k1_pcie_probe,
-> +	.remove	= k1_pcie_remove,
-> +	.driver = {
-> +		.name			= "k1-dwc-pcie",
-> +		.of_match_table		= k1_pcie_of_match_table,
-> +		.suppress_bind_attrs	= true,
-
-No need of this flag for the reason I mentioned in the Kcofig change.
-
-You should also set,
-
-	.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-
-to make use of the async probing of the devices during boot. This does save some
-boot time.
+I/O port CPU address starts from 0.
 
 - Mani
 
