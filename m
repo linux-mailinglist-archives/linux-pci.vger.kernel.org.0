@@ -1,236 +1,133 @@
-Return-Path: <linux-pci+bounces-36112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEBD8B5702C
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C934B5703C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 953763B1FAA
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 06:26:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DF953BD48B
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 06:28:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760AA17C21E;
-	Mon, 15 Sep 2025 06:26:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E80327FD49;
+	Mon, 15 Sep 2025 06:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LflDPC5E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CDA27FD49;
-	Mon, 15 Sep 2025 06:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0CB1DED64
+	for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 06:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757917581; cv=none; b=WNJl14LEowt11wgaBFFVxsVEXb0vEC/LuKwx7nGdx2NVnUystrFMLwnkpt1NSEIo43U3DLL4QLtuHjgv0u+oSY7vxHnvu6oi+ALkbkgmUyz132Y2fTWfu91m10XrxU3+co7ApWC+7h4CvEl94N1f+ecAYMn0KwoAsvlL6Oe3+SU=
+	t=1757917724; cv=none; b=YClWL9SjBUdnt6o8xCW9vX87LBBCgOPEQWVqSPMjyFNAyhz2/q6C//CUc0VwqclMNZHhVnvbN3qGpDwq/WvL8p4exMWZzHyv8bektdRyXiJi4fQM88h2XpQ/paOQ+SQp00TUm8wxgTZsChxBt89g/Fjm/VmNoti0F7w1iVLz25o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757917581; c=relaxed/simple;
-	bh=7O5/BSZl32Qvd/QPLu2wLdEtlOR5US6qvRISzhVCLtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LOtK/HQfjNHA5LAX9q9CRCDd13Yv63gIRYx99lxAVrZlw0RL5nj0kwNbLKoLylxrv47kMqQHBI6loIGC3QW4FtPIl3FK9B3sy+OJEHbi26kgATblctAR605c7GgobwYGhMLjgnRKQM8Mz9N+obolYxSugOZ4fZ13/0cSt+/FrZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaod.org; spf=pass smtp.mailfrom=ozlabs.org; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaod.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ozlabs.org
-Received: from mail.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-	by gandalf.ozlabs.org (Postfix) with ESMTP id 4cQFRB5m3Mz4wB7;
-	Mon, 15 Sep 2025 16:26:14 +1000 (AEST)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4cQFR7555tz4w9s;
-	Mon, 15 Sep 2025 16:26:11 +1000 (AEST)
-Message-ID: <d55b6b2e-3217-41e1-a95a-744dbbdbe618@kaod.org>
-Date: Mon, 15 Sep 2025 08:26:07 +0200
+	s=arc-20240116; t=1757917724; c=relaxed/simple;
+	bh=r/9Kn45ZUStYRhTjTOzLMQUK+ADSzSjvKa97iBsSXfk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W1atF5+Fm/O/MYio52rU+ZuVUaUjp+ZJ0SRwh5LTEscZB/HdihuNm7fznB2QNTP5Mwhy672Jv+OcezaNjIMBEvdzZlsijT4twjWv/gzCu2mwSfwKYbXMwHaPteFGZIwd78C25ehJa0EmDB1HzpBDpOw0DWe3oQgMNiwwpyLaduI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LflDPC5E; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-32e801552ccso8913a91.0
+        for <linux-pci@vger.kernel.org>; Sun, 14 Sep 2025 23:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757917722; x=1758522522; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vmqCBgglSH1XFTVmKbDycfFQaWCzr9UXmOQ9aT0xQLg=;
+        b=LflDPC5ElrIkFtQIpKiy+aQibJzVNLC+DgkpBILfdx5zRORuFyGIV9g9Jt3NpRyoRv
+         K/PAw8B/1A0N6tAjIORmDo7WbbmidEN8L26lBPTRCgo/BEFu+m4zOptkCybotDP7dm3M
+         TGsFzfRCILs0Oo/CaF24kGAcMwH63G2aa6fhYRHki/O9pMvYTQtrnZsOOcw+6Ek2nOJZ
+         BVbm/TjpmmR/7y6c+jHRVI9j11P5ixvuy8BA+9ZN+VftUb9TNI8RlJFR9AMmMb0T5h6j
+         PsSDw7C9f3rSQwlOPPuzjMeUjeoDv0B9LScjfnkj8skAUWGSAP2pOy6kmPBm/em3CIrD
+         dqqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757917722; x=1758522522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vmqCBgglSH1XFTVmKbDycfFQaWCzr9UXmOQ9aT0xQLg=;
+        b=pDzcoSPE72orlST94HF6orLoj1ChvdckcvwpLACmgSB6tpVqeCPvspwYLyf9myYIcw
+         5oRuPOX6WUNBOh+o/OZ+om6YCV3kL2ZHvG/Uj2Xh2b4hX9T6Ol54FCGgwsAEyAMOGwAL
+         WKNBbQTtTj60QNpq6/8mvg2prbRmA9kuqwkOjlv9qfZEgl+uTcOB3VtR0c3EaeD5JKi1
+         D7ipyCoIqfntvIglBz4e5SVImrzU7bMb4aEG96BXMUGdfXLZN3KyfHoHfed+eyiXcDIi
+         PvUj26kq8qAcXR/FyEnuWnmffZpsRXOoXPp0AXjDsdz9pPJt4DkxH9lQz8vP8fiN3Vcb
+         BJxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNrLwWA/SeLCuRtyaYQo/lQHVSCVzqvPhighPQpzsAGSrnq2J7Kgs9Ms5jnyhytL/EjuoKLARoH/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxga9zbAML53Z6BuamhRq0JJkcKPU6ajh4FVB4PQP8r6TI/Q2uN
+	eoCU7SXBIRpZ7JhYrZXdxfzC8KOvUKjK/ihI63YupmkHZ2m/inoQbY4jswjIo1iPrpQUz6vp/2e
+	MGjWfRNE04nRHwhb8/nA53m2+T2quvig=
+X-Gm-Gg: ASbGnctiX0tAiWSuZPPF4rm1NPzgDb6DtFQ75q0keouN55295XMknLYyukWh6Ad24Af
+	4zdjdabN66R413f2ctMRqfpOOKy0uaIqlCwUs9hM1hTgJ2NH3eJAkeXUxmlNEsyJyzD5gwp6d/G
+	f+XIOVFA1smBSrmT067v1WSjUnCXr7/2kM0DhoORID50jIsg4NvoX3eVzG0EoHarwm7Na+rR8Ic
+	ssxfkkxyB2Pq6GFaozPbv7IGgFXdvSEo6buZGpPGBUk2So/aDImOcEFg9ls80MmXyzcyuinPzlY
+	PvKzb3lsLczvVdbl2gj/0NmcJKmQngPB/u6w
+X-Google-Smtp-Source: AGHT+IEchiEsGjMEl1Hm6ui7MHlyoHtVT9JbiNr8xFHt1Dh/GCG2aVZ9Mc9Wk0rDlBUnhgEKt0EkP1bILsFTHX+KRrs=
+X-Received: by 2002:a17:90b:3804:b0:32d:e980:7a70 with SMTP id
+ 98e67ed59e1d1-32de9807ddfmr6262491a91.0.1757917722224; Sun, 14 Sep 2025
+ 23:28:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/10] vfio-pci/zdev: Add a device feature for error
- information
-To: Farhan Ali <alifm@linux.ibm.com>, linux-s390@vger.kernel.org,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
- mjrosato@linux.ibm.com
-References: <20250911183307.1910-1-alifm@linux.ibm.com>
- <20250911183307.1910-9-alifm@linux.ibm.com>
-From: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>
-Content-Language: en-US, fr
-Autocrypt: addr=clg@kaod.org; keydata=
- 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
-In-Reply-To: <20250911183307.1910-9-alifm@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250913172557.19074-1-sergeantsagara@protonmail.com>
+ <CANiq72msM5PT2mYKrX_RPXYtA4vapMRO=iSex1gQZqiXdpvvDA@mail.gmail.com> <26oqasrlptl5v4ymfkrlznltbwqx5rfi4dworhri3msme4wlmm@cclnphvwur6r>
+In-Reply-To: <26oqasrlptl5v4ymfkrlznltbwqx5rfi4dworhri3msme4wlmm@cclnphvwur6r>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 15 Sep 2025 08:28:30 +0200
+X-Gm-Features: AS18NWCkmdX2sBHMEVZOaZAumYceYyW3PCH1MqnX3I-KTdnLVgDBS3-v3ItVfN8
+Message-ID: <CANiq72mpQO0v-acGOWUcYaBmETSTAjkJUDN4MT498imVGboYQQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: pci: fix incorrect platform references in doc comments
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/11/25 20:33, Farhan Ali wrote:
-> For zPCI devices, we have platform specific error information. The platform
-> firmware provides this error information to the operating system in an
-> architecture specific mechanism. To enable recovery from userspace for
-> these devices, we want to expose this error information to userspace. Add a
-> new device feature to expose this information.
-> 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->   drivers/vfio/pci/vfio_pci_core.c |  2 ++
->   drivers/vfio/pci/vfio_pci_priv.h |  8 ++++++++
->   drivers/vfio/pci/vfio_pci_zdev.c | 34 ++++++++++++++++++++++++++++++++
->   include/uapi/linux/vfio.h        | 14 +++++++++++++
->   4 files changed, 58 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 7dcf5439dedc..378adb3226db 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -1514,6 +1514,8 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
->   		return vfio_pci_core_pm_exit(device, flags, arg, argsz);
->   	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
->   		return vfio_pci_core_feature_token(device, flags, arg, argsz);
-> +	case VFIO_DEVICE_FEATURE_ZPCI_ERROR:
-> +		return vfio_pci_zdev_feature_err(device, flags, arg, argsz);
->   	default:
->   		return -ENOTTY;
->   	}
-> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-> index a9972eacb293..a4a7f97fdc2e 100644
-> --- a/drivers/vfio/pci/vfio_pci_priv.h
-> +++ b/drivers/vfio/pci/vfio_pci_priv.h
-> @@ -86,6 +86,8 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
->   				struct vfio_info_cap *caps);
->   int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev);
->   void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev);
-> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
-> +			      void __user *arg, size_t argsz);
->   #else
->   static inline int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
->   					      struct vfio_info_cap *caps)
-> @@ -100,6 +102,12 @@ static inline int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
->   
->   static inline void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
->   {}
-> +
-> +static int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
-> +				     void __user *arg, size_t argsz);
+On Mon, Sep 15, 2025 at 7:29=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
+>
+> Why should a spelling fix be backported to stable? The stable kernel rule=
+s
+> explicitly states that these kind of fixes should *not* be backported:
+>
+>   - No "trivial" fixes without benefit for users (spelling changes, white=
+space
+>     cleanups, etc).
 
-The extra ';' breaks builds on non-Z platforms.
+I am aware, but the stable team has autoselected a similar fix in the
+past (and I asked them about it, precisely because of the rules
+above).
 
-C.
+For typos outside doc comments, I wouldn't tag it (but they may still
+autoselect it).
 
-> +{
-> +	return -ENODEV;
-> +}
->   #endif
->   
->   static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
-> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
-> index 2be37eab9279..261954039aa9 100644
-> --- a/drivers/vfio/pci/vfio_pci_zdev.c
-> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
-> @@ -141,6 +141,40 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
->   	return ret;
->   }
->   
-> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
-> +			      void __user *arg, size_t argsz)
-> +{
-> +	struct vfio_device_feature_zpci_err err;
-> +	struct vfio_pci_core_device *vdev =
-> +		container_of(device, struct vfio_pci_core_device, vdev);
-> +	struct zpci_dev *zdev = to_zpci(vdev->pdev);
-> +	int ret;
-> +	int head = 0;
-> +
-> +	if (!zdev)
-> +		return -ENODEV;
-> +
-> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
-> +				 sizeof(err));
-> +	if (ret != 1)
-> +		return ret;
-> +
-> +	mutex_lock(&zdev->pending_errs_lock);
-> +	if (zdev->pending_errs.count) {
-> +		head = zdev->pending_errs.head % ZPCI_ERR_PENDING_MAX;
-> +		err.pec = zdev->pending_errs.err[head].pec;
-> +		zdev->pending_errs.head++;
-> +		zdev->pending_errs.count--;
-> +		err.pending_errors = zdev->pending_errs.count;
-> +	}
-> +	mutex_unlock(&zdev->pending_errs_lock);
-> +
-> +	if (copy_to_user(arg, &err, sizeof(err)))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +}
-> +
->   int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
->   {
->   	struct zpci_dev *zdev = to_zpci(vdev->pdev);
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 75100bf009ba..a950c341602d 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1478,6 +1478,20 @@ struct vfio_device_feature_bus_master {
->   };
->   #define VFIO_DEVICE_FEATURE_BUS_MASTER 10
->   
-> +/**
-> + * VFIO_DEVICE_FEATURE_ZPCI_ERROR feature provides PCI error information to
-> + * userspace for vfio-pci devices on s390x. On s390x PCI error recovery involves
-> + * platform firmware and notification to operating system is done by
-> + * architecture specific mechanism.  Exposing this information to userspace
-> + * allows userspace to take appropriate actions to handle an error on the
-> + * device.
-> + */
-> +struct vfio_device_feature_zpci_err {
-> +	__u16 pec;
-> +	int pending_errors;
-> +};
-> +#define VFIO_DEVICE_FEATURE_ZPCI_ERROR 11
-> +
->   /* -------- API for Type1 VFIO IOMMU -------- */
->   
->   /**
+For typos in rendered docs like this one, especially one that is not
+just a spelling one (like this one), I think it is OK either way, and
+a bit more worth it since these are meant to be rendered unlike
+implementation comments.
 
+Thus, since this one was in the fuzzy line, I suggested it so that the
+contributor avoided Greg's bot when detecting the missing tag.
+
+As for noautosel, I wouldn't do that -- they want them sometimes,
+after all. Instead, I would reserve it for things that really
+shouldn't be picked for a given reason.
+
+I hope that clarifies a bit.
+
+Cheers,
+Miguel
 
