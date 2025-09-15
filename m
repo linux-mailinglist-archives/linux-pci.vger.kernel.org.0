@@ -1,192 +1,112 @@
-Return-Path: <linux-pci+bounces-36138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91011B57533
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 11:48:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EE6EB5757A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 12:03:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D0FF166C1E
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 09:48:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 668B817DBFC
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 10:03:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E151C2E6127;
-	Mon, 15 Sep 2025 09:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDH2Pda8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 793CB2ED163;
+	Mon, 15 Sep 2025 10:03:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184B186A;
-	Mon, 15 Sep 2025 09:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF442F39B5;
+	Mon, 15 Sep 2025 10:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757929707; cv=none; b=mXAEy4alMGQsneVX85oBMdto2lhac7wVz4/szgVOl7/86osv57CwPU4hPKf/1BuZ3mOYKl1mVs8yA6bBKeWAIX7g2tuSg8SjJ8+iPNWZrpnQGx0Nz7bLFzP+zwtLImkYHhBu60e20zPadskKO56reaGNmlVQeRqlp7rjTkTJ+HA=
+	t=1757930607; cv=none; b=IvaMjuYHlv2qI076v0O18DOlfnaxqlB444Wzl07FwuHvUXTt6W3SiALPU+pW+7RhlDiX8tl17Tnx/EjMmPYyTHwTFlAZvfXIaxs18ChxaTY9h9aD0B88wlb98QYj8hCDgDPDD8ljkBfeA+I3P+1IoDl4eCFR+ZpbMsjSnVQxP5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757929707; c=relaxed/simple;
-	bh=aQeFPB6y0jxLv3hHgWg7/iEYKO+lhBgQVa0rrS32CaY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=eXjjoQhjrrPuoPDZmJBGcMzVBAG2+RzW9VWoj5bD540oEPAo7oSGkPp92upvXo0v/O0gPlNs0l7rmsMH30oj7YT2ak8SpbcFVCLdCP5ZdiKwSZGaXVfCSb/m0WNGOnv6IXaeBBky7xwSl0uXSN/UAKy08Sr0jkYjHewHGYvzy64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDH2Pda8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB60C4CEF1;
-	Mon, 15 Sep 2025 09:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757929707;
-	bh=aQeFPB6y0jxLv3hHgWg7/iEYKO+lhBgQVa0rrS32CaY=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=RDH2Pda8qSieRtXmX5Fs8NrBrvBEqpzxrH/66DX7dacK03qCw22kGwtLM9VPTv6Ih
-	 ge9ps8VYDzSwYn1tJEvM9r6AaU7MhwrpOc6LUeMk4onwyo0Nttk1cZFFCdXhN6XNg7
-	 aSui4SEMKc72HBG/mpPd2XYkmLbmnsVr2YdR/PvnmqTskrtHM4/zPhuKifec5rQ/p9
-	 60vtWmBksgxaibNvL0DGHDTUnUVN0zTwBHiguRy3v7rjoNFA0kqZ/kuhjLPqeZ2Nxo
-	 9y7zZkjYOBS+8RSKpHewzCB3My98T+AWhcimCM7Dii5Ez+JquIwoKCg+cvFqTU5hMg
-	 KR1wVRytkmQEg==
+	s=arc-20240116; t=1757930607; c=relaxed/simple;
+	bh=QPAozO9IPCmM9NuB4KSm+9RLT4V7i/cbQWE5o+mkTiw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n8mTBe6jweUzMDpdS/nZIgPzo71mzi6zMZJx6xBCK0PSmcqrq1ZLHn2CEH4o1HfVveJxmqrxt1CdikSx6hl5uiIUDTEnrdfcV+PZKVZKvFQV1wyM78Z7dRfQfAGhDsqbieDwUbVRpFaorwFSOPO3qF35YCn6ybcOEvRmXCM4UIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQLD25tk5z6K9GM;
+	Mon, 15 Sep 2025 18:01:54 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B2ABF1402FB;
+	Mon, 15 Sep 2025 18:03:21 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 15 Sep
+ 2025 12:03:21 +0200
+Date: Mon, 15 Sep 2025 11:03:20 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+CC: Keith Busch <kbusch@kernel.org>, Matthew Wood <thepacketgeek@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Mario Limonciello <superm1@kernel.org>,
+	Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [RESEND PATCH v7 1/1] PCI/sysfs: Expose PCIe device serial
+ number
+Message-ID: <20250915110320.0000602f@huawei.com>
+In-Reply-To: <20250913061720.GA1992308@rocinante>
+References: <20250821232239.599523-1-thepacketgeek@gmail.com>
+	<20250821232239.599523-2-thepacketgeek@gmail.com>
+	<aK9e_Un3fWMWDIzD@kbusch-mbp>
+	<20250913061720.GA1992308@rocinante>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 15 Sep 2025 11:48:19 +0200
-Message-Id: <DCTA2J6Y2PSC.1B48J5ZHUQCOI@kernel.org>
-Subject: Re: [PATCH] rust: pci: add PCI interrupt allocation and management
- support
-Cc: <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
- <nouveau@lists.freedesktop.org>, <rust-for-linux@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <acourbot@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "John Hubbard" <jhubbard@nvidia.com>,
- "Timur Tabi" <ttabi@nvidia.com>, <joel@joelfernandes.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: "Joel Fernandes" <joelagnelf@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20250910035415.381753-1-joelagnelf@nvidia.com>
- <DCOZMX59W82I.1AH7XVW3RUX2D@kernel.org> <20250910180955.GA598866@joelbox2>
- <20250910190239.GA727765@joelbox2>
-In-Reply-To: <20250910190239.GA727765@joelbox2>
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed Sep 10, 2025 at 9:02 PM CEST, Joel Fernandes wrote:
-> On Wed, Sep 10, 2025 at 02:09:55PM -0400, Joel Fernandes wrote:
-> [...]=20
->> > > +    /// Allocate IRQ vectors for this PCI device.
->> > > +    ///
->> > > +    /// Allocates between `min_vecs` and `max_vecs` interrupt vecto=
-rs for the device.
->> > > +    /// The allocation will use MSI-X, MSI, or legacy interrupts ba=
-sed on the `irq_types`
->> > > +    /// parameter and hardware capabilities. When multiple types ar=
-e specified, the kernel
->> > > +    /// will try them in order of preference: MSI-X first, then MSI=
-, then legacy interrupts.
->> > > +    /// This is called during driver probe.
->> > > +    ///
->> > > +    /// # Arguments
->> > > +    ///
->> > > +    /// * `min_vecs` - Minimum number of vectors required
->> > > +    /// * `max_vecs` - Maximum number of vectors to allocate
->> > > +    /// * `irq_types` - Types of interrupts that can be used
->> > > +    ///
->> > > +    /// # Returns
->> > > +    ///
->> > > +    /// Returns the number of vectors successfully allocated, or an=
- error if the allocation
->> > > +    /// fails or cannot meet the minimum requirement.
->> > > +    ///
->> > > +    /// # Examples
->> > > +    ///
->> > > +    /// ```
->> > > +    /// // Allocate using any available interrupt type in the order=
- mentioned above.
->> > > +    /// let nvecs =3D dev.alloc_irq_vectors(1, 32, IrqTypes::all())=
-?;
->> > > +    ///
->> > > +    /// // Allocate MSI or MSI-X only (no legacy interrupts)
->> > > +    /// let msi_only =3D IrqTypes::default()
->> > > +    ///     .with(IrqType::Msi)
->> > > +    ///     .with(IrqType::MsiX);
->> > > +    /// let nvecs =3D dev.alloc_irq_vectors(4, 16, msi_only)?;
->> > > +    /// ```
->> > > +    pub fn alloc_irq_vectors(
->> > > +        &self,
->> > > +        min_vecs: u32,
->> > > +        max_vecs: u32,
->> > > +        irq_types: IrqTypes,
->> > > +    ) -> Result<u32> {
->> > > +        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a=
- valid `struct pci_dev`.
->> > > +        // `pci_alloc_irq_vectors` internally validates all paramet=
-ers and returns error codes.
->> > > +        let ret =3D unsafe {
->> > > +            bindings::pci_alloc_irq_vectors(self.as_raw(), min_vecs=
-, max_vecs, irq_types.raw())
->> > > +        };
->> > > +
->> > > +        to_result(ret)?;
->> > > +        Ok(ret as u32)
->> > > +    }
->> >=20
->> > This is only valid to be called from the Core context, as it modifies =
-internal
->> > fields of the inner struct device.
->>=20
->> It is called from core context, the diff format confuses.
->> >=20
->> > Also, it would be nice if it would return a new type that can serve as=
- argument
->> > for irq_vector(), such that we don't have to rely on random integers.
->>=20
->> Makes sense, I will do that.
->>=20
-> By the way, the "ret" value returned by pci_alloc_irq_vectors() is the nu=
-mber
-> of vectors, not the vector index.
+On Sat, 13 Sep 2025 15:17:20 +0900
+Krzysztof Wilczy=C5=84ski <kw@linux.com> wrote:
 
-Sure, but the vector index passed to pci_irq_vector() must be in the range
-defined by the return value of pci_alloc_irq_vectors().
+> Hello,
+>=20
+> > Can we get a ruling on this one? It's pretty straight forward
+> > implementation exposing a useful attribute. =20
+>=20
+> Who needs this?  Why is this useful?  Why hasn't there been a need for
+> exposing serial number in past decades, and suddenly we need it so
+> desperately?
+>=20
+> We probably wouldn't want to add this if there is only a single user that
+> needs this, especially give that userspace tools like lspci already expose
+> this when someone needs it.
+>=20
+> Also, we were reluctant to expose some types of information, like serial
+> numbers and such, via the VPD recently, so why exposing any serial numbers
+> via sysfs would be any different?
 
-I thought of e.g. Range<pci::IrqVector> as return value. This way you can e=
-asily
-iterate it and prove that it's an allocated vector index.
+I'll note that we already expose these serial numbers for CXL type3 devices
+because they are really useful when you have a bunch of identical devices
+as they turn in RAS error records and other places.
 
-> So basically there are 3 numbers that mean
-> different things:
-> 1. Number of vectors (as returned by alloc_irq_vectors).
-> 2. Index of a vector (passed to pci_irq_vector).
-> 3. The Linux IRQ number (passed to request_irq).
->
-> And your point is well taken, in fact even in current code there is
-> ambiguity: irq_vector() accepts a vector index, where as request_irq()
-> accepts a Linux IRQ number, which are different numbers. I can try to cle=
-an
-> that up as well but let me know if you had any other thoughts. In fact, I
-> think Device<device::Bound>::request_irq() pci should just accept IrqRequ=
-est?
+I pushed back on adding this same sysfs attribute to other CXL types
+on basis we could just get it from the associated PCI device (assuming this
+series lands).
 
-Currently, pci::Device::request_irq() takes an IRQ vector index and calls
-irq_vector() internally to convert the vector index into an IRQ number.
+https://elixir.bootlin.com/linux/v6.17-rc5/source/drivers/cxl/core/memdev.c=
+#L113
 
-I'd keep this semantics, but introduce a new type IrqVector rather than usi=
-ng
-the raw integer. So, drivers would call
+Note that we don't do is_visible magic for this particular attribute in CXL
+because it is mandated as present by the CXL spec.  We do that for a lot
+of other stuff though as it keeps the interface clean.
 
-	// `irq_vecs` is of type `Range<pci::IrqVector>`.
-	let irq_vecs =3D dev.alloc_irq_vectors(1, 1, pci::IrqTypes::ANY)?;
-	let irq =3D KBox::pin_init(
-	   dev.request_irq(irq_vecs.start, ...)?,
-	)?;
+Jonathan
 
-Alternatively, to request all of them, if we have multiple, we can leverage
-KBox::pin_slice(), which will land in v6.18 (see alloc-next or rust-next br=
-anch
-in the Rust tree), so all irq::Registration objects can be stored in a sing=
-le
-allocation.
+
+>=20
+> Thank you,
+>=20
+> 	Krzysztof
+
 
