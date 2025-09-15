@@ -1,182 +1,219 @@
-Return-Path: <linux-pci+bounces-36204-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36205-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1ACAB585E5
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 22:17:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 477BCB58606
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 22:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AFF5D4E24AE
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 20:17:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F16C3AA126
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 20:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB934286412;
-	Mon, 15 Sep 2025 20:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BE7C296BB0;
+	Mon, 15 Sep 2025 20:25:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FvCYF3L3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hZ2+sUIi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011018.outbound.protection.outlook.com [40.93.194.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7EE2749D9;
-	Mon, 15 Sep 2025 20:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757967455; cv=fail; b=LuzvdHBmwMO2+nDXF+esRT8bNMwUmD2AtMucmZVo1dBuX9x5F5p2ZhcupJDP3PyMNpehAYrHl3xgBmpgN/mzoh2WT9FlaY1BAij34jqUWu7Fo4r0KkN6uk+264h4Zr53H7EzXTgRPcmUpjaKeaINUm6fIDJBZt24DlFlj/v3tp0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757967455; c=relaxed/simple;
-	bh=50OYNTAS+I9JtY+Ptjrrvg4G6CYQAoDGkI/V5TRAp2Q=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pQcorEbDxsXoZJC7UlyYva2AN8XjDVi3Pp/eiJzapErOLx9guKCdYdoaUBK049qy6/R/x53PUDORDksUJIncgCLlCQ7sgnYFoZagsWhEpfG8WoghZ0ZCSkhDUqeRwzn//Tfuefu2AcfT7p/QxawO7BwmDOXvaqhVk/G7onaDXmY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FvCYF3L3; arc=fail smtp.client-ip=40.93.194.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gSyF2a2LXTrpG+VLuqtLerpM14Jaf4zEEOQo2jrhUUN1kU3gnKJPRlJ3s8qx0t8jiUOd4IDeEKQ1n7bfc/F/vdfDqBF8rG5RDTeVMdK6zJkvAytK58+WBKsXu4F/qlqPYkBWo2bQZxF6rCQ9ycGmb04Z2VJ0giYFerX1xE/IHwGGHqC1L/gXbUnA2rvuvN+9BS950NVYvmls48L1dl/iMpwwXqQFHzsIejuENiNMIjA0CUTt2lF/NKFPRdpm6lPBDuBUpJpRSpjSC9ORCDyhNqHAX4ffeVS5AJc+9YyZNzsUGDYq/Ae9DkN9Ew8cWVKi2FHbYFI6mMlR/KXj5kU88g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qKA3zMkye8A/4vBriXBNewBtM3Dew/c+H1N5CLDrTn4=;
- b=qXMbIXFI1Aie8wPZPp5O/qrFFgHQ3y9t9QWFlewKXaYca8xuzP7OCaycMJDeIFQqi1/nofW/05CixpxlnU9K7fjgCFXy7EgaTLcvxHrEbdO/aWVkccyDDISRLv7XKSSqJBHdoKJ/C0/27ScQdpJNs8nlSW4vIuOxpKcPUJGromGuXpDD5btB+KrHwnYpWsaPuvKAZoT1+IWEN1NvuJ8CoZTLLmrO3O2Bd4BYn186uw0ibz3+eGsZXpSxpi4tq3ec+QBitYRtSoOotyMACFhaRfQotL0zHI5sKrM0zsHykHvb+6A1Y/mwAXVrpeLLONfpoJfzwCnOp6e6AVL3pPPU1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qKA3zMkye8A/4vBriXBNewBtM3Dew/c+H1N5CLDrTn4=;
- b=FvCYF3L3ZbNfgPwWj2gEq8FWwvTi/PuATtxpqRcDKon8JMGLaaOd/Q2RFry4PkFTC/VN+3O7Z4GQnNs8fVIANR8ifIQDsdO5e7HX6nBMkplp8FlPDDc3yC4RLCG6SXnOCMkUGJstv/wHIl/Y+qeBEQUN7NDPq7EiNwouFdtdxdo=
-Received: from CH2PR08CA0030.namprd08.prod.outlook.com (2603:10b6:610:5a::40)
- by IA0PR12MB8975.namprd12.prod.outlook.com (2603:10b6:208:48f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Mon, 15 Sep
- 2025 20:17:27 +0000
-Received: from DS3PEPF0000C380.namprd04.prod.outlook.com
- (2603:10b6:610:5a:cafe::10) by CH2PR08CA0030.outlook.office365.com
- (2603:10b6:610:5a::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9094.22 via Frontend Transport; Mon,
- 15 Sep 2025 20:17:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS3PEPF0000C380.mail.protection.outlook.com (10.167.23.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.12 via Frontend Transport; Mon, 15 Sep 2025 20:17:27 +0000
-Received: from localhost (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 15 Sep
- 2025 13:17:26 -0700
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH RFC 01/13] PCI: Add SNIA SDXI accelerator sub-class
-In-Reply-To: <20250915172509.GA1751399@bhelgaas>
-References: <20250915172509.GA1751399@bhelgaas>
-Date: Mon, 15 Sep 2025 15:17:25 -0500
-Message-ID: <87ikhja2sq.fsf@AUSNATLYNCH.amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBCD291C13
+	for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 20:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757967916; cv=none; b=HdsGpROGllsKhxq8cens4cCM03mfPfGydySKNOmf11Ba8O7iXBBfb4MFPit8T/RIIQYgS3SBSjw5ul4d3BDJtTULIiIW7GppDsnj214ZMNg/x4g2FpOnVCRFqx64ddXPkWjAQV74UExLuSWeFDJP+oVo49pa7LcbtEH7yWEtLAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757967916; c=relaxed/simple;
+	bh=Oo9wGMZhnst9JKD4ApAAC3zg3Wq/VvmKzOk8qOj+8WA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNPYB+bT23CRVFHzY7rsIkYckkzK6r8TRQ2ffok5BHwdOd75isOTomVR/uNxVGMuul55/2VCisq1LGHATCM5m24EZYsV4Tc5ExU7DPHUdXZ5XbGiL5d0rwIgsXEAyrS5ucUHpp33YR5EGjE+W6Kbf2C0jc0uiAyZLY+uUzFKS1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hZ2+sUIi; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2570bf605b1so45521485ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 13:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1757967914; x=1758572714; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O72yw8vJtQy+8bHFkvEUobUMXSH/AYeLaHaVDBYLJyk=;
+        b=hZ2+sUIi9pf3OXUUBWGgpMI5lz3YNtMyjManCGjlhT68Jf3aWAX5gEb5flACSwLeL8
+         m2NKLGcinlGwgkrukw+lUQlIYAIY64+ywTzk6KEe4qXidGdBLOw4LqXS+4INsGIDyduM
+         P3TVtGcqXTsoY5Pk6PsMJsRqcGMDib280YHfw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757967914; x=1758572714;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O72yw8vJtQy+8bHFkvEUobUMXSH/AYeLaHaVDBYLJyk=;
+        b=k+fc5o7RlriMIcABk5GsFEAKaBtSsFr1WI5wZ1pB7SFGl8jG6uRo1TzruZfSxgH6G6
+         +BUZz0644xBQ6yUeeQymxY/egWxJzsy60M1OaJwgNX2evQl1wQaA158ivBGEcAkGSQaG
+         KT+mdL9uR+U3PgDr640w76E0QJBsAN3AafOYfHZNKZ+pBdBi7G690wT7z0xO0Q+73j0G
+         u+rQ1CH731R53NTUeizrCoUVoJnXe2/I5riVHGSLNd3O9bj/PnigJ7AcyYpDRG3u8orJ
+         nwmH4bkMBSVq93zX+DSjupGSX68M0j2v7IXMC16+nutmxiCjLu+xu5T3HakQb+CKrZnA
+         N3FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlGulorztL4LF5Sci11rtellUjNWc+vXwjSVNyjIp/jDlcO9aMNDR93Ja18rDEiaR0J2/x0OTfjeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKUg/gnukQn5sz96Nepwv9vDXUZHiFg9PMAHvi5w8AGKqK9VyN
+	lBn3/h75s3/4qijb155wSPu8FtgIOBzX6CucMKZ1ipjh2C9POXptm7PPZVTuF93/Jw==
+X-Gm-Gg: ASbGnct3DQzvQVH5eFfYZTcaUMtiSxJS8MVEheK89iQQvK6J79a6VYu6aFGsgg90DQZ
+	5z81jOzaSFqtzx3TpmzypzSB28aRThtQTyXP/QTfVFTkQF1xX1LqcNASDKAc00uiGmF+wtCFLsi
+	1WWZM9VBa1IFxVn/Beeyox95q1eiZkTzLOTAUIpPa8NlbcNDJKIaFVhgT61zZbPd6WB49rK2kiX
+	7QGkBLctrYrM51kZqLCnkUE7Rp4lbMuwFgJH03lrYoviyYTYlDsFM9mZ5TTwgVU3jpuL9QCJyCP
+	VnSVAhHgocGogyTVs98b6iGDwkg9Pwv/4BIAuzvYLzC42eAYZaDvRTDLPPQwGNcfawT//052pMq
+	Lslb0WnSH7H8rFXf+pAJHoLwJHd+CUGqFXAXIenV+kxVWw1w7KZPBd/JFNF2B3ESKOxm1iTo=
+X-Google-Smtp-Source: AGHT+IH0BB3qybe2HQfIXVITegc2cfF0wfUP7hE62PhWgnHrlmUKZL5W+LGvMXTHhPZvp8uroV0xQA==
+X-Received: by 2002:a17:902:ebc2:b0:24b:25f:5f7f with SMTP id d9443c01a7336-25d2801094emr140529445ad.60.1757967913824;
+        Mon, 15 Sep 2025 13:25:13 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:fd49:49b1:16e7:2c97])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-25fc8285639sm86930085ad.134.2025.09.15.13.25.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Sep 2025 13:25:13 -0700 (PDT)
+Date: Mon, 15 Sep 2025 13:25:11 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	kunit-dev@googlegroups.com,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH 2/4] PCI: Add KUnit tests for FIXUP quirks
+Message-ID: <aMh2J1K_YiWYaNxf@google.com>
+References: <20250912230208.967129-1-briannorris@chromium.org>
+ <20250912230208.967129-3-briannorris@chromium.org>
+ <aMfJCbld_TMHPTbD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF0000C380:EE_|IA0PR12MB8975:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb65c31d-18a2-4740-7399-08ddf494e3f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|7053199007|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9kWxbQTFrEBUwcBCiP8uPzGM8RIHTFTu/Mb+BW3zhd8b5CEEavwIiGC8NcM0?=
- =?us-ascii?Q?pwQeuPTOqLJ3SgQCrHQsv+o/dTsWRdmGPtoQSoIqLk7cSq/fTmwDed9yWDa7?=
- =?us-ascii?Q?VkZIIRiRo2t/5Ka7DVLLP6gDpwzFXOuBk7qUz7LRgNJO0tr+WPyNvxy+gMqt?=
- =?us-ascii?Q?WDboaLfaDzfasBowYMWgscv4vckNFeEX1I/PgYMskgBlIBBW5LMTM9Jz75ZM?=
- =?us-ascii?Q?cm1G1KuudGMEg40dF3ZSzOI8TH0jCnbjR6W0lvxmbKK8P3dqaGTLefBDsefp?=
- =?us-ascii?Q?zoTqCg4djmwyF58/Cc8O5PP2QPmuoTh3Hwa8zYbtChoSutPP1ZgW4gqcd0f+?=
- =?us-ascii?Q?lkI0xYPkq5iXLTw3js+V1LPNELTU4t/2cbpwzbmi1+f5sk1XIBcQdX+UR4kL?=
- =?us-ascii?Q?V9ZXPFYJSBEyRXzkPGuvtVxnZ1/PJM7kf47lEBfx9uSivJxbL/iUPtRMmPtB?=
- =?us-ascii?Q?5cQQmvjWNTK2HX9BjndJRK6k0eNpewiwXaQrg3cdLegWePdOGStE637ZoHeW?=
- =?us-ascii?Q?YNmkR+U49QExc1eRFcntPZLqH/Qt6UTY3zSY2/czoX1tvBiPNlP2Q7UPdlDH?=
- =?us-ascii?Q?jRY33qtiAXavdW583Bt13Jjobmgf4pZ7QGAYkhQDbnSQgVkIrse5zkZtZd92?=
- =?us-ascii?Q?SjSUDsfv489UNcUNq5u7PmrSDhnFlscZfX6RRMXBpuOYQirD8CQQW0XZNaTe?=
- =?us-ascii?Q?Fibzi7gsAhVYUTaxXMb587eYTSh2IsYYpznwgdPPJlTlmmV+mjJrsGAcNcIs?=
- =?us-ascii?Q?+WfhizIfKd1uk0R/yrZ+4HmQBZip+z5EYt0ey2CR+Ar2sLPcQvVe6p7D/UAo?=
- =?us-ascii?Q?QePTWZowk7C7gIKO1ixNx6tSgJMJ8tzVd+szcRtXf3e3vihQAfEhFhA6r+St?=
- =?us-ascii?Q?NSA1dIJjpugmIp9eddBg6IvJrjEChSdmyubuVTtiprzBGKztiN89mb8BRRsu?=
- =?us-ascii?Q?LYhtFwIEfR0Z7b0neJOtdDwvyxpIKGw9oRP6FnNq6k8KhVeAOfEsHKFPzMIC?=
- =?us-ascii?Q?IvCOLUDts5E8WrVoWjaz8QQg9SbRo/TNsatBaUE4a1IJL/IyUYezIkUuf+j8?=
- =?us-ascii?Q?D+jr1sv1th40lPE4BGUuPtjUIk11RUYa/r3V9Cck/ebqO3/yd0kAsp7VWXDl?=
- =?us-ascii?Q?J+zZ+dDTuEQpS+0wCzF3/0BTi5zw0GSivwJIqjZNmL4ZBDsvxKt0AjZzAsPd?=
- =?us-ascii?Q?4ReROJBHeZbF2yXxttBf/ga4uAB5qhhPbcTHvNF4GrrPFsKuErlbMEM3GHTp?=
- =?us-ascii?Q?SVwNOcl7UuMg79J85kevHIrDBVn3zRLjHa6nwfkCRhhrpcDecWIFHnPvGgTK?=
- =?us-ascii?Q?Z6BwDTurL45YetZGyEO8zZ/AsLGhFFyH5tsJKhjY5tv/bTw/xUy7TC8+0wRV?=
- =?us-ascii?Q?93QENAH8qSuaVXrhg7ctPetkwlhF8k6I0r8l06RSfsECU8ktEunMHrTFZbZZ?=
- =?us-ascii?Q?jmbvPvhZ7UQJvZZCXFUd8Dtf1CCn45epjgczlTDS1Ttc0JtCkFCbxg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2025 20:17:27.2653
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb65c31d-18a2-4740-7399-08ddf494e3f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF0000C380.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8975
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aMfJCbld_TMHPTbD@google.com>
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
-> On Fri, Sep 05, 2025 at 01:48:24PM -0500, Nathan Lynch via B4 Relay wrote:
->> From: Nathan Lynch <nathan.lynch@amd.com>
->> 
->> This was added to the PCI Code and ID Assignment Specification in
->> revision 1.14 (2021). Refer to 1.19. "Base Class 12h" of that document
->> as well as the "SDXI PCI-Express Device Architecture" chapter of the
->> SDXI specification:
->
-> Would prefer if this said:
->
->   Add sub-class code for SNIA Smart Data Accelerator Interface (SDXI).
->   See PCI Code and ID Assignment spec r1.14, sec 1.19.
->
-> so the antecedent of "this" is here instead of in the subject and
-> "1.19" doesn't get confused with a spec revision.
->
->> """
->>   SDXI functions are expected to be identified through the SDXI class
->>   code.
->>   * SNIA Smart Data Accelerator Interface (SDXI) controller:
->>     * Base Class = 0x12
->>     * Sub Class = 0x01
->>     * Programming Interface = 0x0
->> """
->> 
->> Information about SDXI may be found at the SNIA website:
->> 
->>   https://www.snia.org/sdxi
->
-> I don't think the SDXI spec material is really necessary.  The PCI
-> Code and ID spec is definitive for class codes.
->
->> Co-developed-by: Wei Huang <wei.huang2@amd.com>
->> Signed-off-by: Wei Huang <wei.huang2@amd.com>
->> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Hi,
 
-Thanks Bjorn, I have made the commit message changes you've suggested
-and incorporated your ack for this patch.
+On Mon, Sep 15, 2025 at 08:06:33AM +0000, Tzung-Bi Shih wrote:
+> On Fri, Sep 12, 2025 at 03:59:33PM -0700, Brian Norris wrote:
+> > +static int test_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+> > +			    int size, u32 *val)
+> > +{
+> > +	if (PCI_SLOT(devfn) > 0)
+> > +		return PCIBIOS_DEVICE_NOT_FOUND;
+> > +
+> > +	if (where + size > TEST_CONF_SIZE)
+> > +		return PCIBIOS_BUFFER_TOO_SMALL;
+> > +
+> > +	if (size == 1)
+> > +		*val = test_readb(test_conf_space + where);
+> > +	else if (size == 2)
+> > +		*val = test_readw(test_conf_space + where);
+> > +	else if (size == 4)
+> > +		*val = test_readl(test_conf_space + where);
+> > +
+> > +	return PCIBIOS_SUCCESSFUL;
+> 
+> To handle cases where size might be a value other than {1, 2, 4}, would a
+> switch statement with a default case be more robust here?
+
+I was patterning based on pci_generic_config_read() and friends, but I
+see that those use an 'else' for the last block, where I used an 'else
+if'.
+
+I suppose I could switch to 'else'. I'm not sure 'switch/case' is much
+better.
+
+> > +static int test_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+> > +			     int size, u32 val)
+> > +{
+> > +	if (PCI_SLOT(devfn) > 0)
+> > +		return PCIBIOS_DEVICE_NOT_FOUND;
+> > +
+> > +	if (where + size > TEST_CONF_SIZE)
+> > +		return PCIBIOS_BUFFER_TOO_SMALL;
+> > +
+> > +	if (size == 1)
+> > +		test_writeb(test_conf_space + where, val);
+> > +	else if (size == 2)
+> > +		test_writew(test_conf_space + where, val);
+> > +	else if (size == 4)
+> > +		test_writel(test_conf_space + where, val);
+> > +
+> > +	return PCIBIOS_SUCCESSFUL;
+> 
+> Same here.
+> 
+> > +static struct pci_dev *hook_device_early;
+> > +static struct pci_dev *hook_device_header;
+> > +static struct pci_dev *hook_device_final;
+> > +static struct pci_dev *hook_device_enable;
+> > +
+> > +static void pci_fixup_early_hook(struct pci_dev *pdev)
+> > +{
+> > +	hook_device_early = pdev;
+> > +}
+> > +DECLARE_PCI_FIXUP_EARLY(TEST_VENDOR_ID, TEST_DEVICE_ID, pci_fixup_early_hook);
+> > [...]
+> > +static int pci_fixup_test_init(struct kunit *test)
+> > +{
+> > +	hook_device_early = NULL;
+> > +	hook_device_header = NULL;
+> > +	hook_device_final = NULL;
+> > +	hook_device_enable = NULL;
+> > +
+> > +	return 0;
+> > +}
+> 
+> FWIW: if the probe is synchronous and the thread is the same task_struct,
+> the module level variables can be eliminated by using:
+> 
+>     test->priv = kunit_kzalloc(...);
+>     KUNIT_ASSERT_PTR_NE(...);
+> 
+> And in the hooks, kunit_get_current_test() returns the struct kunit *.
+
+Ah, good suggestion, will give that a shot.
+
+> > +static void pci_fixup_match_test(struct kunit *test)
+> > +{
+> > +	struct device *dev = kunit_device_register(test, DEVICE_NAME);
+> > +
+> > +	KUNIT_ASSERT_PTR_NE(test, NULL, dev);
+> > +
+> > +	test_conf_space = kunit_kzalloc(test, TEST_CONF_SIZE, GFP_KERNEL);
+> > +	KUNIT_ASSERT_PTR_NE(test, NULL, test_conf_space);
+> 
+> The common initialization code can be moved to pci_fixup_test_init().
+> 
+> > +	struct pci_host_bridge *bridge = devm_pci_alloc_host_bridge(dev, 0);
+> > +
+> > +	KUNIT_ASSERT_PTR_NE(test, NULL, bridge);
+> > +	bridge->ops = &test_ops;
+> 
+> The `bridge` allocation can be moved to .init() too.
+> 
+> > +	KUNIT_EXPECT_PTR_EQ(test, NULL, hook_device_early);
+> > +	KUNIT_EXPECT_PTR_EQ(test, NULL, hook_device_header);
+> > +	KUNIT_EXPECT_PTR_EQ(test, NULL, hook_device_final);
+> > +	KUNIT_EXPECT_PTR_EQ(test, NULL, hook_device_enable);
+> 
+> Does it really need to check them?  They are just initialized by .init().
+
+Probably not. I wrote these before there were multiple test cases and an
+.init() function, and I didn't reconsider them afterward. And they'll be
+especially pointless once these move into a kzalloc'd private structure.
+
+Thanks for the suggestions.
+
+Brian
 
