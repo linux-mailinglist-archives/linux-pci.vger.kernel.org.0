@@ -1,309 +1,328 @@
-Return-Path: <linux-pci+bounces-36184-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36185-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 098ECB582BB
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 19:05:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD526B58338
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 19:17:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 946904E13A1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 17:05:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5E371A26034
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 17:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C55426E71B;
-	Mon, 15 Sep 2025 17:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFC5D2882BD;
+	Mon, 15 Sep 2025 17:16:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OEuipUee"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k6Vq5qJG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD472080C8;
-	Mon, 15 Sep 2025 17:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757955908; cv=fail; b=MCswoOZCwlEGRjZ0W2sOe2sMnMuk/dIXUuhEKgxg+9PNP5wXxLpfOcl3t9uIT4lbx4368jBcceJdb6u/t/bBOnRGMU6pvLQuyPFTUAz38cgDzKOvOkbcfIbs8YwNtixvQXQ+fjdAKV9nL6vi1x2CX6JB9WTeuDG9zSj4QYBb/6w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757955908; c=relaxed/simple;
-	bh=YYPaZypjXf3qByJ+LKoiVVb9R2e6NekpAthPZCIJLyQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PO5n9XkvRbRKVomKeIQ8IUBmZGEZtk7rk2Hb1M7y3L/v1g6MEL4gzLRS7xrXD0sbwZCgE28x+86X0MC5S2IqH+Pt4U8Vl7ASdj1bZ7vbz952jhADfglORRo41epy938psoAnQusuEs1Ev187bF6RqGZGcQMuLC3GKZ5qctlHAkI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OEuipUee; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757955907; x=1789491907;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=YYPaZypjXf3qByJ+LKoiVVb9R2e6NekpAthPZCIJLyQ=;
-  b=OEuipUeeYHrpoleuiSxCXVYzq0L4O7q8WccB+iA9sNF0ZKCUV6RIZ6eH
-   UmeM+Uleg4TmrbP6EKXZvseNEyOCTv7sj5Dc6wAEoWTzAM5BS3LArYzuZ
-   47SdC775JNxNKEz+E1Mug59AjMtIa4SXPIxzkS7oC5WnhuZlyP/hdy+nN
-   HLALZ0VGagWp2MTM6xxuv8P8P4QVoQ3Mbxn7dLFx3X0K2s3Elk7tJnjAH
-   hrKFxQeQ/kCB4H9AXbWIpcW4P9FeRmmI03jzA9qO8iUMEQPhZfka6T5ty
-   GTJl/OMUmCcNU3dwptWIRN2F3G4MCGbk1fYpZ+5hCk1ELudQDrnNxLH4D
-   Q==;
-X-CSE-ConnectionGUID: OXG4RM6HTjCIxRTD2NN/7g==
-X-CSE-MsgGUID: Z2bT08yCQHWTBQclfjyG7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="62853977"
-X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="62853977"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 10:05:05 -0700
-X-CSE-ConnectionGUID: TNv6z3SbRQG4wdqwKlnnmw==
-X-CSE-MsgGUID: 7I1xWa1UTSev0rldURMGHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="175094701"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 10:05:04 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 15 Sep 2025 10:05:03 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Mon, 15 Sep 2025 10:05:03 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.71) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 15 Sep 2025 10:05:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LHQ+M+dzs1uQDFXOX7AAGLXM0w0aaYyvadL+sx9HDhKvDLROkwItnm9mogqRwpBv4BC4nG2dxAxBrL7Fq1Yi9AgTh0/eXoi5GIxvWD7tYEp33gVg2TEccIKy12/VeGyBDwhRTkDhPKt9wPQQlX2zvpfGrvM6dmr99dIJNUshqkdxKLf60VL3ek2hD9sCyLFdADU1TUH4J3R657cPaR9PdNpMjO1A+TYHNsndLoLhlRYck3iEo5D23f8yhTqaQW8hrxh+NJazl30Syuxr9GV8uvv3IqI71hmGEpcmZtpLY8hV2D65Nu7Ju6k8ORM+Y44Xl0alSooT+gWsx6TkmTk1VQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WLmkSb/5Ky/zgmIEirYXEVVW36LIrdBtsC2Pso4hxR4=;
- b=ChUDs9XMGHneHYcK15g/sEfEn/Atn8FP5TAroQUKUBzhHVErY68OMMts0jSDpGw12ZmzEbRDB+lfGWEnwU2KKpTU/0YZTHMSHRTc/cFF5IXWJqtdWh3Os6GCzN4cmjR+9Ti86sYJr9BiLqbTrsxtTMLdarNzL4GszbFMgsS7ecEZLS3my2yHzXjTDG8lCPkYFGoFWH359lT6PPQTJCnSeU4VNbyWlp+89J+skDpyy69QjyxB+0JPWWzLqU+nZ4OR9igXeG1Fr+5+6M+jYzxGjovisSAObMn1YCkZKoTMDAl+x7zjio20YS3tbUYVGaktRchUMI7qj1ycAutsbeTcsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by DS7PR11MB8805.namprd11.prod.outlook.com (2603:10b6:8:254::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Mon, 15 Sep
- 2025 17:04:58 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9115.020; Mon, 15 Sep 2025
- 17:04:58 +0000
-Date: Mon, 15 Sep 2025 12:04:53 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Christian
- =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, "=?utf-8?Q?Micha=C5=82?=
- Winiarski" <michal.winiarski@intel.com>, Alex Deucher
-	<alexander.deucher@amd.com>, <amd-gfx@lists.freedesktop.org>, David Airlie
-	<airlied@gmail.com>, <dri-devel@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>, "Jani
- Nikula" <jani.nikula@linux.intel.com>, Joonas Lahtinen
-	<joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>,
-	?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Michael J . Ruhl" <mjruhl@habana.ai>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v2 00/11] PCI: Resizable BAR improvements
-Message-ID: <wqukxnxni2dbpdhri3cbvlrzsefgdanesgskzmxi5sauvsirsl@xor663jw2cdw>
-References: <20250915091358.9203-1-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="iso-8859-1"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250915091358.9203-1-ilpo.jarvinen@linux.intel.com>
-X-ClientProxiedBy: SJ0PR13CA0071.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::16) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BE92836A3;
+	Mon, 15 Sep 2025 17:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757956571; cv=none; b=hi8lqn2Oo74SGUlx5S2UjLwWvnYlBVbINj3iDTvvSLABdgm2TBBnbdjTGg9LGUDPzSzkK2My9y2EYpjJRgkGuMptzFtpZuryuphYitwgHbzBzV8+eODq/XoydsFK48jXwY+4sMbZKlTK6uq7B54tgaUKfbqVfBHjUs3HXUmjYpI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757956571; c=relaxed/simple;
+	bh=7Cs2abMlYfg0Hlz8i95zu7AVNuUpQjULT/Uojb8KiBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WzIe/b5M9P+rzJNu3ufOtTzJcgBslOTNbYhuXfpcRaF05GguDR3EAw2V7rBEDlmAX24Xsy7VM0G/5bcAxJMLrFMGcDMNRgSuTZkSxGSVEaRo3Y/zXukHqdsnsSEvWGysdMTPt52iVBcZuD/UXnZKXrRkX1chH9MwJZ2ChwaEvZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k6Vq5qJG; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58F9aurC018695;
+	Mon, 15 Sep 2025 17:16:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=O5vLmc
+	YVSWD9a8z/T+INdDdPEgZT9xY4BDXnkFZLLVs=; b=k6Vq5qJGlIo9gYYwFZduZB
+	qcTfo7VHbDSCPHV5akD+b9BtJchToYTZVXJTgo1+UGGjjIgsG2k53iGSeOyuvsgE
+	KvdFzxwlBdjUvDH21+fRiQ7bRWAxW4+0i4RU8IIXojZbFnLu43UO5yPAa8XWC+hm
+	WBxQzKFJqwTszujeFQoUNBcBmvFWGA39umNGfMUQYjNRZ7qcAi+5sT61A5TtMr2p
+	4FaarheteOWJvFYq7UdbpUm07BPjNDq9xneAYPsdZyy5FCXxVzqLRr4Susxl9/af
+	9XjA9sxHEbvKHValz5vo+iHgNivnOja1b1hfhZ1eY0n+/dtxMJQCry+UbwoOfFmg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496gat2feh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 17:16:05 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58FFAAEM022316;
+	Mon, 15 Sep 2025 17:16:04 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495kxpfk5x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 17:16:04 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58FHG3JY28312314
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Sep 2025 17:16:03 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F377058058;
+	Mon, 15 Sep 2025 17:16:02 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2F9355805B;
+	Mon, 15 Sep 2025 17:16:02 +0000 (GMT)
+Received: from [9.61.244.242] (unknown [9.61.244.242])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 15 Sep 2025 17:16:02 +0000 (GMT)
+Message-ID: <cd1fa387-df80-4756-a2dc-5acdd0f09697@linux.ibm.com>
+Date: Mon, 15 Sep 2025 10:15:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DS7PR11MB8805:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75239d60-9000-4494-64b2-08ddf479ffd3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?vGNjZM28kr6V8JI11y4MvKGGBOdfTgmV6gl3EW7UOJAKYTwTiQkKsV5ykz?=
- =?iso-8859-1?Q?5lG/RIaMDTbXM/7iveYuNd9H9c5LgdHr8g6H9eGKv9MUo2ZCsCk5CVoOee?=
- =?iso-8859-1?Q?+KLlt7I9kh+aufMnUHbR0rDlBa7u0gx2apeErSCw4wyQHaCtxbJpVx4Wvq?=
- =?iso-8859-1?Q?GDw3WZqXHiU6R2EjAMd0goO2G0yG/7Zs3SrsJc+8XJ9vK9XC+PJQ0ieVo6?=
- =?iso-8859-1?Q?GDC6KDcv5SzM7Au71IkSxVWARoysEc75VyBKIiAEyHNUwPyWqOClEHGD1f?=
- =?iso-8859-1?Q?QnV/glostv/xAxP4MQHww0rQJTdhEIADvit53gjLfzE4v2GK7hZy41Eop1?=
- =?iso-8859-1?Q?BwidtMAq0VxdqaEBv0uBdV0GeeUtHHLSV5AZl5Ce1plA1kL3m72D65xj6p?=
- =?iso-8859-1?Q?QsOxaKs/BZOX91e7vilpAd+KqarrzhtG+EO389bEw2Ei0ds9xQjE4V6Pdp?=
- =?iso-8859-1?Q?8vxPcQMzfv/qdbD5nKtLBf0IO05AUWHem0HDge+K//H/cyT4dI4E9iOQQ9?=
- =?iso-8859-1?Q?aFWzSxZXdFwHOrx542mWmRQfE7tQay3/r/Y3/HbMGH+fbtwbMiSAG4BT4C?=
- =?iso-8859-1?Q?K4w0di0NmxDp4ATYvHu8D8Y1VGmAsxRug015EVniA7L9BGRX3v5I2FYL9/?=
- =?iso-8859-1?Q?1p4ei8jfEvT0UhrjV1unL/laMwGL8XC3LILmcPFyOwdl+8wuyZbLM3wMr6?=
- =?iso-8859-1?Q?2L+vF7hEEWz6vvQyQIsFKmTTgCj3L+E23hTiWEPKY9HtLsutSl1D42/HH6?=
- =?iso-8859-1?Q?j3D21OMKahBTdcgiC6gxX3h5TLn2CTHR4pnupdQjBPgpIyM72FRNpiL/0b?=
- =?iso-8859-1?Q?gPHKs24ZtkdJfYbU4Cyv0vri2vmkyXzldu4l8F2GlXeq1R8EXLEVHqHTee?=
- =?iso-8859-1?Q?6MloO+dEEE5M8MiI4kp02d+wHRFPEymeQ4wWybJSZJcRtaozkgKvjK9N9N?=
- =?iso-8859-1?Q?Z5cwdvZNPe7OmGg+Eb9WZnbFjw0qLt7RSVvMdguLThQ2Lwe/ZgojYSDwmk?=
- =?iso-8859-1?Q?JGS4zu/2VoXESniESVuICyaONL3bKstnaz4+EANH1OeSL7wTbuSO+FfMY+?=
- =?iso-8859-1?Q?nF7f3Tdx0r245bXwntW5s3zmPnDHqAszRIYFWIXRyokS+AP6nPN58KFy4+?=
- =?iso-8859-1?Q?WF+8WvfkFPsQIXi9Dba8jUIe02NysroYszw6SnMYVCfIkKnhh3foLi+Gel?=
- =?iso-8859-1?Q?8mZahW581sFC7hgaQLZtGv729KE0oHHFGP1/MUcYLDj+/WvvZwVE2qDrkD?=
- =?iso-8859-1?Q?6ebD3P/G532pyFgXzsV9OQP42DRBRCpRER38Tt906elJklgxoV8ZIScVDJ?=
- =?iso-8859-1?Q?V/KapgUBnapHllrmVjcmtrv1LBe7gTYoXPB2590WeQXcvXbNXZeYDlntmx?=
- =?iso-8859-1?Q?6VABHcyq1dF+CSf5fKp5vy4Nfzn6qSgxIDYQ0dCpeatxmE/OPBlxB7tkQI?=
- =?iso-8859-1?Q?r84mPdw0mmnvvUfmeiXID/6ZWZj0QwhvFwRDd4kgwvCN3GbBvNOxfi9lVu?=
- =?iso-8859-1?Q?s=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?FXCviziYuhehGS/3hFYtW3r+HiP8Z66uio2ofNm4S0hcZ0oRzfrFAjzv4u?=
- =?iso-8859-1?Q?+OBtgx8SFDXGsbbPWQcEgkFve4N2ISRT4SZtSeS/JeBBxvLzYNbRf/7gOl?=
- =?iso-8859-1?Q?mNuNdR0RJn3y+hY+oZCXpgyuqH6N85aSKKHUqKfSM8KOGu24vN57vZr/zc?=
- =?iso-8859-1?Q?GzEbJ2vzFkTAIJl56lLu9Y/zCxoaEqQBZr3cVFyUk7RDCnngvzrIlSsGZb?=
- =?iso-8859-1?Q?jgbVOMT2vmsi3h8iNV0CR4wuzvU4xoCNqYrn8oy8K9ifW+UInMBaD3S7eq?=
- =?iso-8859-1?Q?oqc9bPb1GwO9/TDgsfDny5upJpmnaeBjwR5AGC/MaFGU38Rxu1Rhi9WKl3?=
- =?iso-8859-1?Q?ekAAZocb+WXDWt3uDdXqU0VwH+kqlKxsmEgbSNum1BBOIrgZqiICsNvsrw?=
- =?iso-8859-1?Q?6TNdJzsmVM7jI+hFQpN9Z288eiAa/7gYM9BGSloK8y4iMD5TWV7mhRpD8h?=
- =?iso-8859-1?Q?iNjTNVjRU8Ow4Yr7aDGpYNV32RiWn16Aa4DWofgduIaNufR+QkUkGpCu2A?=
- =?iso-8859-1?Q?pqVcGArcHy0j3yA6HLxUBHZ6UKqSQTG15UxGh2853ekSV3Jf4cRKU78OKN?=
- =?iso-8859-1?Q?BbmJ1qg7rc5CWEH54es2lEORzvf06arq8wgpY8rox7nsr31GoxAetk1FB2?=
- =?iso-8859-1?Q?P8DJ8KWokX1xMM7NC/jtNXtYa9TUOKuPRcrSJ+QMvt/23PHwrDB83lKmR4?=
- =?iso-8859-1?Q?HQQLWCoPiSQf4SiEpMCOTbA+bCFPhvquggB476yDsbWbt5fj/vw591rfw7?=
- =?iso-8859-1?Q?SGPx324TqzAmXZJ3tgf7dartcpvyX+9DeG47J44Bc/iS4EOU7eFlgLHxZa?=
- =?iso-8859-1?Q?aMWwg4nOAeMFC3rriXffRDByfI4Zz50zjFrcCwqe6icUKndE9uXVTsNL9y?=
- =?iso-8859-1?Q?ZAHZu1+Y5frjTuo+glIA5C6gl0Cy3oWC6P73yf3h3VFwPItyXHE07umRIb?=
- =?iso-8859-1?Q?OkVHmUXtU2W9T+1yANYXDRicSgekrv9qz5UGwOZZ+f4wLGdLOTI5liRdBZ?=
- =?iso-8859-1?Q?+MwgzBZlCHnFD6s8jjNmSt4LkopHcKPmJe0DQS5nQ3nyN0jjeJgk9Aa7x+?=
- =?iso-8859-1?Q?aQyOjotOrzpEFYxfSrbKo9gMIBUepVYyllziwppCSzgbDI1nfykB/Fk+Ou?=
- =?iso-8859-1?Q?i41oOoTvZRkW7zcfkuBZes7+b+2VHmtKbGL/sCcdELjRefU12FEkOqmIa1?=
- =?iso-8859-1?Q?jDj+uTVxf++VRoM8hz9ewhjRpyhgVcw4VlL0pX+U5ajD3q2PgkKNlNvvg1?=
- =?iso-8859-1?Q?3AxugZBZt2fDUDcmNflZ2XcOjmJ09msy7o5OZGsnQ8q9hggUSVIn9vsDIB?=
- =?iso-8859-1?Q?Vgo7xW9QdTnZ62RMWOMCy86UqKgxBD0J1FVPIItG3/mkc70hhmiy0XGEAW?=
- =?iso-8859-1?Q?Hdwyf0U1L46G61BRAvDQIyK9X4QbOz4bstOf+ij1r9RmJt42fdTfVf5rnb?=
- =?iso-8859-1?Q?KV+cZ07MewRCJO8YD3FjYT46ZYZ+gtgNmnYT94NzO47vn8r3AS2mwVylOP?=
- =?iso-8859-1?Q?cE5x8S6V8HzC9pBlmu00pvlAwlW8h1LyHbGn5uRNJjUP9BTadVXojJipK3?=
- =?iso-8859-1?Q?5WZX6XSErKdM8ZaDlANBvFBPjoFvUgaR8agBJexGzc9yFOf7/Un3hcdTUf?=
- =?iso-8859-1?Q?zHJGeAuNiC57CGx4aGYtXq1idmTJhz8UEINyzjvFiA828inlqeIYOQug?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75239d60-9000-4494-64b2-08ddf479ffd3
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2025 17:04:58.4007
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YpbCg1oYSXht8JUcr/fWXHvf0xEIdpCKAyRl814ifbydikPJI0K7nN6SHfuC5II9NRJ/hGIkPvcTvshJFFQKRMbM+Jd6ZNWwHyF51q8faZo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB8805
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] PCI: Avoid saving error values for config space
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        helgaas@kernel.org, schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+References: <20250911183307.1910-1-alifm@linux.ibm.com>
+ <20250911183307.1910-2-alifm@linux.ibm.com>
+ <20250913092709.2e58782d.alex.williamson@redhat.com>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <20250913092709.2e58782d.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=BKWzrEQG c=1 sm=1 tr=0 ts=68c849d5 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=7ShtpSrotxfIQnzH-x0A:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: nguE7s-SaO93ZD5vfbu3cCLJ4fUP4Zr5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA4NiBTYWx0ZWRfXx27Yvp/YKJlf
+ DBUqCiEb2BckzbXw6GOuWarGUqcRYhSq5Az+pM7qHjf6Ci5ebATFUHuXBsQHOzaJMJhX3/aP8pM
+ RyfcGayKZDics4vS5iq/I2uXNVoywKYUw6oaLrnw9EwpqOcDxdhleTGWWkyNupF9p9fSPalqd0d
+ lmDaE0z01BDlS+pS476p3mB2YjRXJdU9vVy49m8rVj6tu7NasTxojbrNpSUpB3I9UKwytQBOwob
+ 9vonT7ymuymrGYi78kUObCUE0lxL3QvfkV5eR72+FODRxAJkhVQkInitCcZiJ8VGDTiqFutHZsN
+ zCqTymTBkTK+zI/sXTu0p51fYXe/8ApZGKmu3C/wuNUz+ewLRpVS2R+adA1RGpLT438qlwS1O9v
+ xg2Z04jY
+X-Proofpoint-ORIG-GUID: nguE7s-SaO93ZD5vfbu3cCLJ4fUP4Zr5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-15_06,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150086
 
-On Mon, Sep 15, 2025 at 12:13:47PM +0300, Ilpo Järvinen wrote:
->pci.c has been used as catch everything that doesn't fits elsewhere
->within PCI core and thus resizable BAR code has been placed there as
->well. Move Resizable BAR related code to a newly introduced rebar.c to
->reduce size of pci.c. After move, there are no pci_rebar_*() calls from
->pci.c indicating this is indeed well-defined subset of PCI core.
->
->Endpoint drivers perform Resizable BAR related operations which could
->well be performed by PCI core to simplify driver-side code. This
->series adds a few new API functions to that effect and converts the
->drivers to use the new APIs (in separate patches).
->
->While at it, also convert BAR sizes bitmask to u64 as PCIe spec already
->specifies more sizes than what will fit u32 to make the API typing more
->future-proof. The extra sizes beyond 128TB are not added at this point.
->
->These are based on pci/main plus a simple "adapter" patch to add the
->include for xe_vram_types.h that was added by a commit in drm-tip.
->Hopefully that is enough to avoid the within context conflict with
->BAR_SIZE_SHIFT removal to let the xe CI tests to be run for this
->series.
->
->There are two minor conflicts with the work in pci/resource but I'm
->hesitant to base this on top of it as this is otherwise entirely
->independent (and would likely prevent GPU CI tests as well). If we end
->up having to pull the bridge window select changes, there should be no
->reason why this does have to become collateral damage (so my
->suggestion, if this is good to go in this cycle, to take this into a
->separate branch than pci/resource and deal with those small conflicts
->while merging into pci/next).
->
->I've tested sysfs resize, i915, and xe BAR resizing functionality. In
->the case of xe, I did small hack patch as its resize is anyway broken
->as is because BAR0 pins the bridge window so resizing BAR2 fails. My
->hack caused other problems further down the road (likely because BAR0
->is in use by the driver so releasing it messed assumptions xe driver
->has) but the BAR resize itself was working which was all I was
 
-is the hack you mention here to release all BARs before attempting the
-resize?
+On 9/13/2025 1:27 AM, Alex Williamson wrote:
+> On Thu, 11 Sep 2025 11:32:58 -0700
+> Farhan Ali <alifm@linux.ibm.com> wrote:
+>
+>> The current reset process saves the device's config space state before
+>> reset and restores it afterward. However, when a device is in an error
+>> state before reset, config space reads may return error values instead of
+>> valid data. This results in saving corrupted values that get written back
+>> to the device during state restoration.
+>>
+>> Avoid saving the state of the config space when the device is in error.
+>> While restoring we only restorei the state that can be restored through
+> s/restorei/restore/
 
->interested to know. I'm not planning to pursue fixing the pinning
->problem within xe driver because the core changes to consider maximum
->size of the resizable BARs should take care of the main problem by
->different means.
+Thanks for catching that, will fix.
 
-I'd actually like to pursue that myself as that could be propagated to
-stable since we do have some resize errors in xe with BMG that I wasn't
-understanding. It's likely due to xe_mmio_probe_early() taking a hold of
-BAR0 and not expecting it to be moved. We could either remap if we have
-have to resize or just move the resize logic early on.
+>> kernel data such as BARs or doesn't depend on the saved state.
+>>
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> ---
+>>   drivers/pci/pci.c      | 29 ++++++++++++++++++++++++++---
+>>   drivers/pci/pcie/aer.c |  5 +++++
+>>   drivers/pci/pcie/dpc.c |  5 +++++
+>>   drivers/pci/pcie/ptm.c |  5 +++++
+>>   drivers/pci/tph.c      |  5 +++++
+>>   drivers/pci/vc.c       |  5 +++++
+>>   6 files changed, 51 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index b0f4d98036cd..4b67d22faf0a 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -1720,6 +1720,11 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>>   	struct pci_cap_saved_state *save_state;
+>>   	u16 *cap;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring pcie state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	/*
+>>   	 * Restore max latencies (in the LTR capability) before enabling
+>>   	 * LTR itself in PCI_EXP_DEVCTL2.
+>> @@ -1775,6 +1780,11 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
+>>   	struct pci_cap_saved_state *save_state;
+>>   	u16 *cap;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring pcix state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+>>   	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+>>   	if (!save_state || !pos)
+>> @@ -1792,6 +1802,14 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
+>>   int pci_save_state(struct pci_dev *dev)
+>>   {
+>>   	int i;
+>> +	u16 val;
+>> +
+>> +	pci_read_config_word(dev, PCI_DEVICE_ID, &val);
+>> +	if (PCI_POSSIBLE_ERROR(val)) {
+>> +		pci_warn(dev, "Device in error, not saving config space state\n");
+>> +		return -EIO;
+>> +	}
+>> +
+> I don't think this works with standard VFs, per the spec the device ID
+> register returns 0xFFFF.  Likely need to look for a CRS or error status
+> across both vendor and device ID registers.
 
-thanks
-Lucas De Marchi
+Yes, I missed that. Though the spec also mentions both vendor and device 
+id registers can be 0xFFFF for standard VFs. The implementation note in 
+the spec mentions legacy software can ignore VFs if both device id and 
+vendor id is 0xFFFF. So not sure if checking both would work here?
+
+Also by CRS are you referring to Configuration Request Retry? (In PCIe 
+spec v6 I couldn't find reference to CRS, but found RRS so its probably 
+been renamed to Request Retry Status). Based on my understanding of the 
+spec a function will return CRS after a reset, but in this case we are 
+trying to read and save the state before a reset? Based on 
+pci_bus_rrs_vendor_id(), on a CRS vendor ID returned would be 0x1, but 
+that wouldn't work for s390 as currently reads on error will return 
+0xFFFF. Apologies if I misunderstood anything.
+
+I see pci_dev_wait() check for command and status register in case RRS 
+is not available, would that be appropriate check here?
+
 
 >
->Some parts of this are to be used by the resizable BAR changes into the
->resource fitting/assingment logic but these seem to stand on their own
->so sending these out now to reduce the size of the other patch series.
+> We could be a little more formal and specific describing the skipped
+> states too, ex. "PCIe capability", "PCI-X capability", "PCI AER
+> capability", etc.  Thanks,
 >
->v2:
->- Kerneldoc:
->  - Improve formatting of errno returns
->  - Open "ctrl" -> "control"
->  - Removed mislead "bit" words (when referring to BAR size)
->  - Rewrote pci_rebar_get_possible_sizes() kernel doc to not claim the
->    returned bitmask is defined in PCIe spec as the capability bits now
->    span across two registers in the spec and are not continuous (we
->    don't support the second block of bits yet, but this API is expected
->    to return the bits without the hole so it will not be matching with
->    the spec layout).
->- Dropped superfluous zero check from pci_rebar_size_supported()
->- Small improvement to changelog of patch 7
+> Alex
+
+Makes sense, will update the warn messages.
+
+Thanks
+Farhan
+
 >
->Ilpo Järvinen (11):
->  PCI: Move Resizable BAR code into rebar.c
->  PCI: Cleanup pci_rebar_bytes_to_size() and move into rebar.c
->  PCI: Move pci_rebar_size_to_bytes() and export it
->  PCI: Improve Resizable BAR functions kernel doc
->  PCI: Add pci_rebar_size_supported() helper
->  drm/i915/gt: Use pci_rebar_size_supported()
->  drm/xe/vram: Use PCI rebar helpers in resize_vram_bar()
->  PCI: Add pci_rebar_get_max_size()
->  drm/xe/vram: Use pci_rebar_get_max_size()
->  drm/amdgpu: Use pci_rebar_get_max_size()
->  PCI: Convert BAR sizes bitmasks to u64
->
-> Documentation/driver-api/pci/pci.rst        |   3 +
-> drivers/gpu/drm/amd/amdgpu/amdgpu_device.c  |   8 +-
-> drivers/gpu/drm/i915/gt/intel_region_lmem.c |  10 +-
-> drivers/gpu/drm/xe/xe_vram.c                |  32 +-
-> drivers/pci/Makefile                        |   2 +-
-> drivers/pci/iov.c                           |   9 +-
-> drivers/pci/pci-sysfs.c                     |   2 +-
-> drivers/pci/pci.c                           | 145 ---------
-> drivers/pci/pci.h                           |   5 +-
-> drivers/pci/rebar.c                         | 314 ++++++++++++++++++++
-> drivers/pci/setup-res.c                     |  78 -----
-> include/linux/pci.h                         |  15 +-
-> 12 files changed, 350 insertions(+), 273 deletions(-)
-> create mode 100644 drivers/pci/rebar.c
->
->
->base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
->prerequisite-patch-id: 35bd3cd7a60ff7d887450a7fdde73b055a76ae24
->-- 
->2.39.5
->
+>>   	/* XXX: 100% dword access ok here? */
+>>   	for (i = 0; i < 16; i++) {
+>>   		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+>> @@ -1854,6 +1872,14 @@ static void pci_restore_config_space_range(struct pci_dev *pdev,
+>>   
+>>   static void pci_restore_config_space(struct pci_dev *pdev)
+>>   {
+>> +	if (!pdev->state_saved) {
+>> +		pci_warn(pdev, "No saved config space, restoring BARs\n");
+>> +		pci_restore_bars(pdev);
+>> +		pci_write_config_word(pdev, PCI_COMMAND,
+>> +				PCI_COMMAND_MEMORY | PCI_COMMAND_IO);
+>> +		return;
+>> +	}
+>> +
+>>   	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL) {
+>>   		pci_restore_config_space_range(pdev, 10, 15, 0, false);
+>>   		/* Restore BARs before the command register. */
+>> @@ -1906,9 +1932,6 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
+>>    */
+>>   void pci_restore_state(struct pci_dev *dev)
+>>   {
+>> -	if (!dev->state_saved)
+>> -		return;
+>> -
+>>   	pci_restore_pcie_state(dev);
+>>   	pci_restore_pasid_state(dev);
+>>   	pci_restore_pri_state(dev);
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index e286c197d716..dca3502ef669 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -361,6 +361,11 @@ void pci_restore_aer_state(struct pci_dev *dev)
+>>   	if (!aer)
+>>   		return;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring aer state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
+>>   	if (!save_state)
+>>   		return;
+>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>> index fc18349614d7..62c520af71a7 100644
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -67,6 +67,11 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+>>   	if (!pci_is_pcie(dev))
+>>   		return;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring dpc state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+>>   	if (!save_state)
+>>   		return;
+>> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+>> index 65e4b008be00..7b5bcc23000d 100644
+>> --- a/drivers/pci/pcie/ptm.c
+>> +++ b/drivers/pci/pcie/ptm.c
+>> @@ -112,6 +112,11 @@ void pci_restore_ptm_state(struct pci_dev *dev)
+>>   	if (!ptm)
+>>   		return;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring ptm state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
+>>   	if (!save_state)
+>>   		return;
+>> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+>> index cc64f93709a4..f0f1bae46736 100644
+>> --- a/drivers/pci/tph.c
+>> +++ b/drivers/pci/tph.c
+>> @@ -435,6 +435,11 @@ void pci_restore_tph_state(struct pci_dev *pdev)
+>>   	if (!pdev->tph_enabled)
+>>   		return;
+>>   
+>> +	if (!pdev->state_saved) {
+>> +		pci_warn(pdev, "Not restoring tph state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_TPH);
+>>   	if (!save_state)
+>>   		return;
+>> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+>> index a4ff7f5f66dd..fda435cd49c1 100644
+>> --- a/drivers/pci/vc.c
+>> +++ b/drivers/pci/vc.c
+>> @@ -391,6 +391,11 @@ void pci_restore_vc_state(struct pci_dev *dev)
+>>   {
+>>   	int i;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring vc state, no saved state");
+>> +		return;
+>> +	}
+>> +
+>>   	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
+>>   		int pos;
+>>   		struct pci_cap_saved_state *save_state;
 
