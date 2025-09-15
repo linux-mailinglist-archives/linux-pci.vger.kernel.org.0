@@ -1,108 +1,261 @@
-Return-Path: <linux-pci+bounces-36180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25634B5819C
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 18:08:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CD0BB58129
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 17:47:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1B873BA2CA
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 16:05:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7283D16E46A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 15:44:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC77E2566E2;
-	Mon, 15 Sep 2025 16:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19B317C91;
+	Mon, 15 Sep 2025 15:44:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="WwuuRcgj"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gFLcvl/q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158B824E01D
-	for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 16:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE571F1527;
+	Mon, 15 Sep 2025 15:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757952291; cv=none; b=JkKjDtDFbqh1tsu5xIaIjgqxZRIo6jiG1Z/Kqsj5Tj4Nx+F1ZYhQ8ukm0QgG6b62MFxKHxnFuqSTLRT4Yr5EIYBRX2hvoqZxFvruyAukx58w7t8KTjhhZG2fO99uWTTK5bYA7Nv0BZtJFGpoYaQONMx+kKav9UzVqR76Wmn9ZN8=
+	t=1757951052; cv=none; b=ISOdhK5I8UJx7+aa/0CQZQaRFYr1JS+F7JX1v/LzDlbd6tJM4vOTgHoVBQhZbysjdhLbXWT0VPobOmcowRTs4xGdGImvGyinutKZ3eQKnTXbU0MHemUp9ZhcLtZZWiPFpCZaOoLr1Qw3T4eqGjtmkBRJjVNLIVqzVHEE/Ph9NkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757952291; c=relaxed/simple;
-	bh=qZak0IWjTFvTEZDlBi5GLG7k8WDKzZb2UcXYudM6lak=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=UjSD4IYuVgnyywsY8GbfOluVK2tRu1S5AjBK4kZLNe71irAqQ5q4ceDzPe9BrJpl/SCes4nBkTYLY52e0tXlXu64FjQ1RfNlqfqUc90km23lCWKHxSqVo723AklDbEYyjRnxOtMtfGccz9WrKwvKHQ7Ccm945/kcIRKtnjOpnUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=WwuuRcgj; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=ct6Q6jd9bg2f3Yaega2w/3bt4lVQ8RUfwQj2iLKeA0k=; b=WwuuRcgjKBfqMAdgftjSrkdCkd
-	E98/p++osXW2XuK5DOyzTWeE+Id+csr7dnCOVTrW+zFjN0Zu0iPuuMWA8/wXxnNULDNJMe0oFmllW
-	cHxMDutsK1cIl9fCp8UU4DvJhE9X93FfzSZn8bqda2lzpUH2EEfzCjiL5YLIpCbpR0yxtXJN+B1kO
-	npoljLq5CyW84ZgE25L6yyivVlJ6qyPj7JiE0B8pl/gkXm5W7DMETtZp7AduSvCFm5rXQ2YmZwQaS
-	LqGLFU4FB55rvQgSQWnc/umArpQUfxB4PI5PQGtACojtsQiUffX7029YRu6kf9RiXlmmDZPlGqjen
-	L2YESB+A==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1uyBCk-005CIr-1L;
-	Mon, 15 Sep 2025 09:33:22 -0600
-Message-ID: <7cb11157-4b77-407d-ac48-7e75dc01a7a3@deltatee.com>
-Date: Mon, 15 Sep 2025 09:33:19 -0600
+	s=arc-20240116; t=1757951052; c=relaxed/simple;
+	bh=tMu36zYznbV3+H214zmLqs6uemkId24zseXnMjvmlKg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Dwff8ebfJRraWHmO99ovengr8AV4DO3zdiaTIoCWQ5sf8hARjIGOTCsdYHIt0sHu8VtRDO0D1+lTXCyeLKmY67MNXMKYnu9fTsxhmWvubk0cgm+6FT3O04lntXliiyYZ63NvVxAM6hsv7O1u2VABgyHUpmM+fmQmf2+5KcNRY00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gFLcvl/q; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58F9bo2j020054;
+	Mon, 15 Sep 2025 15:44:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TMUYpd
+	2nzblfn8rITAb0oYwzeXWSSmD1Tlbr3rjq2Ng=; b=gFLcvl/qGXlHsHh04l9FWm
+	kvgS3Kqb7b2mV6hE6lFgTv/2ehO7ss+7WTWhefmMabffkoxhaFXn/BCG2CyHVZCR
+	6QA/mpzAVTZ2v/VtjtTQxcVP8cFjQZmTLdx4G6zITwlnfGBlOSmMK7zEyC6p6ixp
+	EWLYMBUn6cgewtS8LntAHdOceG88PQwOkmroOfJYAo0YCc1ItbOSzZXUFI/V9hQ7
+	yOSd+tkv9W27yMQz20SjTkerxEhKKa5BrHxw6117BOJvRSaBjZc0P+JqagARU+ta
+	fJCAJWNsZfm/ZkoMZiHm1jRNIMRYVLRXrPy52l8D3ibe0OOWPGoW4izOchCy/gYQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496gat1xr6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 15:43:59 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58FFcK5S017622;
+	Mon, 15 Sep 2025 15:43:58 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496gat1xr1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 15:43:58 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58FE6UTx005935;
+	Mon, 15 Sep 2025 15:43:57 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 495jxtycxk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 15:43:57 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58FFhuNQ24445446
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Sep 2025 15:43:57 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 93EF658057;
+	Mon, 15 Sep 2025 15:43:56 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 830A358059;
+	Mon, 15 Sep 2025 15:43:54 +0000 (GMT)
+Received: from [9.111.35.47] (unknown [9.111.35.47])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 15 Sep 2025 15:43:54 +0000 (GMT)
+Message-ID: <3f57e4d2d317fecf50e1b87e5cce8a848e4098b3.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 3/4] Documentation: PCI: Amend error recovery doc
+ with DPC/AER specifics
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Corbet
+	 <corbet@lwn.net>
+Cc: Terry Bowman <terry.bowman@amd.com>,
+        Ilpo Jarvinen	
+ <ilpo.jarvinen@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy	
+ <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Linas Vepstas	
+ <linasvepstas@gmail.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        Brian Norris
+ <briannorris@chromium.org>
+Date: Mon, 15 Sep 2025 17:43:53 +0200
+In-Reply-To: <61d8eeadb20ee71c3a852f44c863bfe0209c454d.1757942121.git.lukas@wunner.de>
+References: <cover.1757942121.git.lukas@wunner.de>
+	 <61d8eeadb20ee71c3a852f44c863bfe0209c454d.1757942121.git.lukas@wunner.de>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Vivek Kasireddy <vivek.kasireddy@intel.com>,
- dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20250915072428.1712837-1-vivek.kasireddy@intel.com>
- <20250915072428.1712837-2-vivek.kasireddy@intel.com>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20250915072428.1712837-2-vivek.kasireddy@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: vivek.kasireddy@intel.com, dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, bhelgaas@google.com, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=BKWzrEQG c=1 sm=1 tr=0 ts=68c8343f cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=cm27Pg_UAAAA:8 a=VnNF1IyMAAAA:8
+ a=KkUFHGsvljIy0fMCjwwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: rp1qdtcWLgxhpcmnYCfvK4Aa6T-YEw2H
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA4NiBTYWx0ZWRfX1cqd++TuCWYQ
+ m5+t1oC9I5qw6bQkKIAsXLRxFjzKapNV8Z9YDoBOqopHpwqAmdnSQVuBaRc1CigaofI6jd0fsdK
+ WGbz/njz2gzUCVxj2nabXQ4Wm6BdTOPOMovrYq6MGNAaVqHcQifpbnCqwUEl/a200inie/eSlLH
+ zajmQCYNuct1L2VmkixfnvpWRCdck5hG7PLSZ+adAahZsv3+bxcOkNZ1OLUTsLanoWqZ+o7KING
+ DFQ1he7uYIWzlRFTWKBRiObwPM+Igvu1zibI+nq5xZq9V/1hh3gh5YgKYBMtYQ8xn7WcS8IlXOR
+ bMz8wbyfqOw8Q293Cd0Dby04xedV0xqnoymqbv58ihTmwXTUcqPrwfqYOkh2umsuIUCgiSdADO0
+ mFml4txG
+X-Proofpoint-ORIG-GUID: l2W4QL8GpnSeA78T2gYWmupK6pSVcEXD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-15_06,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150086
 
+On Mon, 2025-09-15 at 15:50 +0200, Lukas Wunner wrote:
+> Amend the documentation on PCI error recovery with specifics about
+> Downstream Port Containment and Advanced Error Reporting:
+>=20
+> * Explain that with DPC, devices are inaccessible upon an error (similar
+>   to EEH on powerpc) and do not become accessible until the link is
+>   re-enabled.
+>=20
+> * Explain that with AER, although devices may already be accessible in th=
+e
+>   ->error_detected() callback, accesses should be deferred to the
+>   ->mmio_enabled() callback for compatibility with EEH on powerpc and wit=
+h
+>   s390.
+>=20
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> ---
+>  Documentation/PCI/pci-error-recovery.rst | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI=
+/pci-error-recovery.rst
+> index d5c661baa87f..9e1e2f2a13fa 100644
+> --- a/Documentation/PCI/pci-error-recovery.rst
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -122,6 +122,10 @@ A PCI bus error is detected by the PCI hardware.  On=
+ powerpc, the slot
+>  is isolated, in that all I/O is blocked: all reads return 0xffffffff,
+>  all writes are ignored.
+> =20
+> +Similarly, on platforms supporting Downstream Port Containment
+> +(PCIe r7.0 sec 6.2.11), the link to the sub-hierarchy with the
+> +faulting device is disabled. Any device in the sub-hierarchy
+> +becomes inaccessible.
+> =20
+>  STEP 1: Notification
+>  --------------------
+> @@ -204,6 +208,24 @@ link reset was performed by the HW. If the platform =
+can't just re-enable IOs
+>  without a slot reset or a link reset, it will not call this callback, an=
+d
+>  instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot R=
+eset)
+> =20
+> +.. note::
+> +
+> +   On platforms supporting Advanced Error Reporting (PCIe r7.0 sec 6.2),
+> +   the faulting device may already be accessible in STEP 1 (Notification=
+).
+> +   Drivers should nevertheless defer accesses to STEP 2 (MMIO Enabled)
+> +   to be compatible with EEH on powerpc and with s390 (where devices are
+> +   inaccessible until STEP 2).
+> +
+> +   On platforms supporting Downstream Port Containment, the link to the
+> +   sub-hierarchy with the faulting device is re-enabled in STEP 3 (Link
+> +   Reset). Hence devices in the sub-hierarchy are inaccessible until
+> +   STEP 4 (Slot Reset).
+> +
+> +   For errors such as Surprise Down (PCIe r7.0 sec 6.2.7), the device
+> +   may not even be accessible in STEP 4 (Slot Reset). Drivers can detect
+> +   accessibility by checking whether reads from the device return all 1'=
+s
+> +   (PCI_POSSIBLE_ERROR()).
+> +
+>  .. note::
+> =20
+>     The following is proposed; no platform implements this yet:
 
+Thanks for improving this. Makes sense to mention and spell this out
+explicitly.
 
-On 2025-09-15 01:21, Vivek Kasireddy wrote:
-> Typically, functions of the same PCI device (such as a PF and a VF)
-> share the same bus and have a common root port and the PF provisions
-> resources for the VF. Given this model, they can be considered
-> compatible as far as P2PDMA access is considered.
-> 
-> Currently, although the distance (2) is correctly calculated for
-> functions of the same device, an ACS check failure prevents P2P DMA
-> access between them. Therefore, introduce a small function named
-> pci_devfns_support_p2pdma() to determine if the provider and client
-> belong to the same device and facilitate P2PDMA between them by
-> not enforcing the ACS check.
-> 
-> However, since it is hard to determine if the device functions of
-> any given PCI device are P2PDMA compatible, we only relax the ACS
-> check enforcement for device functions of Intel GPUs. This is
-> because the P2PDMA communication between the PF and VF of Intel
-> GPUs is handled internally and does not typically involve the PCIe
-> fabric.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: <linux-pci@vger.kernel.org>
-> Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
-
-This looks good to me, thanks.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
+Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
