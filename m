@@ -1,323 +1,192 @@
-Return-Path: <linux-pci+bounces-36137-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36138-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59F1BB5750C
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 11:42:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91011B57533
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 11:48:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC5F31889019
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 09:42:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D0FF166C1E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 09:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36ADD223DF0;
-	Mon, 15 Sep 2025 09:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E151C2E6127;
+	Mon, 15 Sep 2025 09:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MHRdwX7i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDH2Pda8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8D2DC790
-	for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184B186A;
+	Mon, 15 Sep 2025 09:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757929314; cv=none; b=o71aUbylzGpnezWSoU74ZuqrfnmFWeKq8MLAwZCMI5c8pbjK0vJMvjIiD7QpEBKzpYFNeod6rRx3C178Dm5Jq9Ew9yhMPe8yld+Hd0O36LzZP692BT6/gZiR6NMltWVUKghwbB6ajv9cEgtGDC7j0kWMyr5biO0ENn/RjPYYYJw=
+	t=1757929707; cv=none; b=mXAEy4alMGQsneVX85oBMdto2lhac7wVz4/szgVOl7/86osv57CwPU4hPKf/1BuZ3mOYKl1mVs8yA6bBKeWAIX7g2tuSg8SjJ8+iPNWZrpnQGx0Nz7bLFzP+zwtLImkYHhBu60e20zPadskKO56reaGNmlVQeRqlp7rjTkTJ+HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757929314; c=relaxed/simple;
-	bh=bpFMZabaBpAY2pP5TxRVkzX6A/el9BHedG8sx0ri/pA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gL4UgBayEQX782zwjy7+PlOZS/g+9QYjhHiIMExsQb2mHWakGiwfmUh0HBKt5H6b5iqx77rqK7v32ES8JX5bTJJ6axvrbhDUM6W/skSTwOxkrjPFcKEwGTTfW15hiZ4d153CVIUe80fe+1kE+NCuEccqMnj+DsgBmoYXAOaYfKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MHRdwX7i; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757929309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uyyAmT26WPY63DOQqTvlGR3GzEVA1MQHKPqxpl3/fSQ=;
-	b=MHRdwX7iH1mNGB0WToY8QFgNel7eOPQhBKVmSI30KScbIs+jHSU5GPajKjmiXUzJ/beuv9
-	fG2peb5R1SKHgkN1xPwVCXnN+LVu7tkf4jN/Em+twg2fdvccnnbXhI5w158UlHXCArhZND
-	GvBvZCv/dF/DFI7+XczkiaYWs7ozra4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-65-A24ekUH0NyigP7lpdQJrtA-1; Mon, 15 Sep 2025 05:41:48 -0400
-X-MC-Unique: A24ekUH0NyigP7lpdQJrtA-1
-X-Mimecast-MFC-AGG-ID: A24ekUH0NyigP7lpdQJrtA_1757929307
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45dd9a66cfbso35032635e9.1
-        for <linux-pci@vger.kernel.org>; Mon, 15 Sep 2025 02:41:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757929307; x=1758534107;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uyyAmT26WPY63DOQqTvlGR3GzEVA1MQHKPqxpl3/fSQ=;
-        b=f+wJexeB2q8SY2GolXv+/eB064gVF4pVk0yrR75L1yQe3YeaPrtqs/Hsh/9w3HeopB
-         ymoN6eo3X10Pt56PU8T3zpNy9GSXPvYex5iyNlPgMb/ozHWrTVr3XUHyJQ94T9b+RykX
-         4RiS9x5pm6p3sXFJkTBLNfIsHA6hCtD0KxphJfoA0dvF+RDJv4zQmqfwJOUrzrTegPXA
-         mF1ZkfEHFwD3K3XK4ME6BGVe6vznjNaxyVPRL0YOXXRuIC9h36NziRkOUJQkniuEIEwp
-         3fo+5FX2pUNovr2rTrV4V+797GjSPDjhe35mK3P4EPyUEzMuKRvQTxPBwp6vjvmdEuZF
-         TaZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE31Ch3OjtywWIWctydN+hH3ucWS0NV8PUskUtd3PrWdNtVgXHXfNsIj/qF1rodoKphgXMDgGH3Kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNA1WyPHUD8ZwPPgQiwhkLglG0XzTOrjuC/VfQznaCOxQPp6H3
-	Rqd+8YV0DhzuVwquI34oLbaXuMgFUUzKyQnQFx+zcScEbwvfFOBJyBPux2FSplm7DgWmERcGh/u
-	Gn0JeumAU/fabzHBJZpSNDvcBQbCHnGkmIO5xqv44RNDf+bt32eB7CBgWaNopuQ==
-X-Gm-Gg: ASbGncut/mEcmoFSFb6ot1ZrriVbQPkjkuSZbELiEAOSQIFJ9EDKHesJqV+SdQYIm0W
-	mTMtJ9dsn7KiXBCkbRclaB2Jd7R96Lg0iNZ68gzzJXlPB31amKs7xQJLzVPGD5zPFf0XebWxmOD
-	DkX+KvVrXLFgjCQE1ch3o2u3ybt8oHYenXZpmbb8sWmXg1D1GyWF0F2+KpLCalBFk3tbNW3e3pE
-	eO2WiOn9c6TtpkXcFDiWGgMWQLnduaQbUtjRuCjdYvcsp+4oM824Uf+LVYR/X97xnz+8QKBVr8Y
-	I7quRWnP4wQ4UF5+QZ5lh4C+/X9aZuqop0XG2BP4F9gfMYYzZF7hCD62pFdecAqBaBqJixNQHYF
-	B8oY=
-X-Received: by 2002:a05:6000:22c1:b0:3da:d8a1:9b86 with SMTP id ffacd0b85a97d-3e765a09221mr8615318f8f.50.1757929307081;
-        Mon, 15 Sep 2025 02:41:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg3xxaOKspn1hA6O93v4fHlqqQJyEimS5ZxAfU8EHz2MjAiPIfjWh2uApK5fHPxe09sU8QnA==
-X-Received: by 2002:a05:6000:22c1:b0:3da:d8a1:9b86 with SMTP id ffacd0b85a97d-3e765a09221mr8615288f8f.50.1757929306566;
-        Mon, 15 Sep 2025 02:41:46 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:280:24f0:576b:abc6:6396:ed4a? ([2a01:e0a:280:24f0:576b:abc6:6396:ed4a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ebc49f7ebbsm660792f8f.51.2025.09.15.02.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Sep 2025 02:41:46 -0700 (PDT)
-Message-ID: <835a9022-aca1-49ec-a704-578a4b3c5bbd@redhat.com>
-Date: Mon, 15 Sep 2025 11:41:44 +0200
+	s=arc-20240116; t=1757929707; c=relaxed/simple;
+	bh=aQeFPB6y0jxLv3hHgWg7/iEYKO+lhBgQVa0rrS32CaY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=eXjjoQhjrrPuoPDZmJBGcMzVBAG2+RzW9VWoj5bD540oEPAo7oSGkPp92upvXo0v/O0gPlNs0l7rmsMH30oj7YT2ak8SpbcFVCLdCP5ZdiKwSZGaXVfCSb/m0WNGOnv6IXaeBBky7xwSl0uXSN/UAKy08Sr0jkYjHewHGYvzy64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDH2Pda8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB60C4CEF1;
+	Mon, 15 Sep 2025 09:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757929707;
+	bh=aQeFPB6y0jxLv3hHgWg7/iEYKO+lhBgQVa0rrS32CaY=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=RDH2Pda8qSieRtXmX5Fs8NrBrvBEqpzxrH/66DX7dacK03qCw22kGwtLM9VPTv6Ih
+	 ge9ps8VYDzSwYn1tJEvM9r6AaU7MhwrpOc6LUeMk4onwyo0Nttk1cZFFCdXhN6XNg7
+	 aSui4SEMKc72HBG/mpPd2XYkmLbmnsVr2YdR/PvnmqTskrtHM4/zPhuKifec5rQ/p9
+	 60vtWmBksgxaibNvL0DGHDTUnUVN0zTwBHiguRy3v7rjoNFA0kqZ/kuhjLPqeZ2Nxo
+	 9y7zZkjYOBS+8RSKpHewzCB3My98T+AWhcimCM7Dii5Ez+JquIwoKCg+cvFqTU5hMg
+	 KR1wVRytkmQEg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] Fix incorrect iommu_groups with PCIe ACS
-To: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
- linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
- Lu Baolu <baolu.lu@linux.intel.com>, Donald Dutile <ddutile@redhat.com>,
- galshalom@nvidia.com, Joerg Roedel <jroedel@suse.de>,
- Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, maorg@nvidia.com,
- patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-References: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
-From: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>
-Content-Language: en-US, fr
-Autocrypt: addr=clg@redhat.com; keydata=
- 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
- uVKe8BVz4atMOoktmt0GWTOC8P4=
-In-Reply-To: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 15 Sep 2025 11:48:19 +0200
+Message-Id: <DCTA2J6Y2PSC.1B48J5ZHUQCOI@kernel.org>
+Subject: Re: [PATCH] rust: pci: add PCI interrupt allocation and management
+ support
+Cc: <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+ <nouveau@lists.freedesktop.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <acourbot@nvidia.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "John Hubbard" <jhubbard@nvidia.com>,
+ "Timur Tabi" <ttabi@nvidia.com>, <joel@joelfernandes.org>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: "Joel Fernandes" <joelagnelf@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250910035415.381753-1-joelagnelf@nvidia.com>
+ <DCOZMX59W82I.1AH7XVW3RUX2D@kernel.org> <20250910180955.GA598866@joelbox2>
+ <20250910190239.GA727765@joelbox2>
+In-Reply-To: <20250910190239.GA727765@joelbox2>
 
-On 9/5/25 20:06, Jason Gunthorpe wrote:
-> The series patches have extensive descriptions as to the problem and
-> solution, but in short the ACS flags are not analyzed according to the
-> spec to form the iommu_groups that VFIO is expecting for security.
-> 
-> ACS is an egress control only. For a path the ACS flags on each hop only
-> effect what other devices the TLP is allowed to reach. It does not prevent
-> other devices from reaching into this path.
-> 
-> For VFIO if device A is permitted to access device B's MMIO then A and B
-> must be grouped together. This says that even if a path has isolating ACS
-> flags on each hop, off-path devices with non-isolating ACS can still reach
-> into that path and must be grouped gother.
-> 
-> For switches, a PCIe topology like:
-> 
->                                 -- DSP 02:00.0 -> End Point A
->   Root 00:00.0 -> USP 01:00.0 --|
->                                 -- DSP 02:03.0 -> End Point B
-> 
-> Will generate unique single device groups for every device even if ACS is
-> not enabled on the two DSP ports. It should at least group A/B together
-> because no ACS means A can reach the MMIO of B. This is a serious failure
-> for the VFIO security model.
-> 
-> For multi-function-devices, a PCIe topology like:
-> 
->                    -- MFD 00:1f.0 ACS not supported
->    Root 00:00.00 --|- MFD 00:1f.2 ACS not supported
->                    |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
-> 
-> Will group [1f.0, 1f.2] and 1f.6 gets a single device group. However from
-> a spec perspective each device should get its own group, because ACS not
-> supported can assume no loopback is possible by spec.
-> 
-> For root-ports a PCIe topology like:
->                                           -- Dev 01:00.0
->    Root  00:00.00 --- Root Port 00:01.0 --|
->                    |                      -- Dev 01:00.1
-> 		  |- Dev 00:17.0
-> 
-> Previously would group [00:01.0, 01:00.0, 01:00.1] together if there is no
-> ACS capability in the root port.
-> 
-> While ACS on root ports is underspecified in the spec, it should still
-> function as an egress control and limit access to either the MMIO of the
-> root port itself, or perhaps some other devices upstream of the root
-> complex - 00:17.0 perhaps in this example.
-> 
-> Historically the grouping in Linux has assumed the root port routes all
-> traffic into the TA/IOMMU and never bypasses the TA to go to other
-> functions in the root complex. Following the new understanding that ACS is
-> required for internal loopback also treat root ports with no ACS
-> capability as lacking internal loopback as well.
-> 
-> There is also some confusing spec language about how ACS and SRIOV works
-> which this series does not address.
-> 
-> 
-> This entire series goes further and makes some additional improvements to
-> the ACS validation found while studying this problem. The groups around a
-> PCIe to PCI bridge are shrunk to not include the PCIe bridge.
-> 
-> The last patches implement "ACS Enhanced" on top of it. Due to how ACS
-> Enhanced was defined as a non-backward compatible feature it is important
-> to get SW support out there.
-> 
-> Due to the potential of iommu_groups becoming wider and thus non-usable
-> for VFIO this should go to a linux-next tree to give it some more
-> exposure.
-> 
-> I have now tested this a few systems I could get:
-> 
->   - Various Intel client systems:
->     * Raptor Lake, with VMD enabled and using the real_dev mechanism
->     * 6/7th generation 100 Series/C320
->     * 5/6th generation 100 Series/C320 with a NIC MFD quirk
->     * Tiger Lake
->     * 5/6th generation Sunrise Point
+On Wed Sep 10, 2025 at 9:02 PM CEST, Joel Fernandes wrote:
+> On Wed, Sep 10, 2025 at 02:09:55PM -0400, Joel Fernandes wrote:
+> [...]=20
+>> > > +    /// Allocate IRQ vectors for this PCI device.
+>> > > +    ///
+>> > > +    /// Allocates between `min_vecs` and `max_vecs` interrupt vecto=
+rs for the device.
+>> > > +    /// The allocation will use MSI-X, MSI, or legacy interrupts ba=
+sed on the `irq_types`
+>> > > +    /// parameter and hardware capabilities. When multiple types ar=
+e specified, the kernel
+>> > > +    /// will try them in order of preference: MSI-X first, then MSI=
+, then legacy interrupts.
+>> > > +    /// This is called during driver probe.
+>> > > +    ///
+>> > > +    /// # Arguments
+>> > > +    ///
+>> > > +    /// * `min_vecs` - Minimum number of vectors required
+>> > > +    /// * `max_vecs` - Maximum number of vectors to allocate
+>> > > +    /// * `irq_types` - Types of interrupts that can be used
+>> > > +    ///
+>> > > +    /// # Returns
+>> > > +    ///
+>> > > +    /// Returns the number of vectors successfully allocated, or an=
+ error if the allocation
+>> > > +    /// fails or cannot meet the minimum requirement.
+>> > > +    ///
+>> > > +    /// # Examples
+>> > > +    ///
+>> > > +    /// ```
+>> > > +    /// // Allocate using any available interrupt type in the order=
+ mentioned above.
+>> > > +    /// let nvecs =3D dev.alloc_irq_vectors(1, 32, IrqTypes::all())=
+?;
+>> > > +    ///
+>> > > +    /// // Allocate MSI or MSI-X only (no legacy interrupts)
+>> > > +    /// let msi_only =3D IrqTypes::default()
+>> > > +    ///     .with(IrqType::Msi)
+>> > > +    ///     .with(IrqType::MsiX);
+>> > > +    /// let nvecs =3D dev.alloc_irq_vectors(4, 16, msi_only)?;
+>> > > +    /// ```
+>> > > +    pub fn alloc_irq_vectors(
+>> > > +        &self,
+>> > > +        min_vecs: u32,
+>> > > +        max_vecs: u32,
+>> > > +        irq_types: IrqTypes,
+>> > > +    ) -> Result<u32> {
+>> > > +        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a=
+ valid `struct pci_dev`.
+>> > > +        // `pci_alloc_irq_vectors` internally validates all paramet=
+ers and returns error codes.
+>> > > +        let ret =3D unsafe {
+>> > > +            bindings::pci_alloc_irq_vectors(self.as_raw(), min_vecs=
+, max_vecs, irq_types.raw())
+>> > > +        };
+>> > > +
+>> > > +        to_result(ret)?;
+>> > > +        Ok(ret as u32)
+>> > > +    }
+>> >=20
+>> > This is only valid to be called from the Core context, as it modifies =
+internal
+>> > fields of the inner struct device.
+>>=20
+>> It is called from core context, the diff format confuses.
+>> >=20
+>> > Also, it would be nice if it would return a new type that can serve as=
+ argument
+>> > for irq_vector(), such that we don't have to rely on random integers.
+>>=20
+>> Makes sense, I will do that.
+>>=20
+> By the way, the "ret" value returned by pci_alloc_irq_vectors() is the nu=
+mber
+> of vectors, not the vector index.
 
+Sure, but the vector index passed to pci_irq_vector() must be in the range
+defined by the return value of pci_alloc_irq_vectors().
 
-FWIW, I have tested this series on some of the systems I use
-for upstream VFIO  :
+I thought of e.g. Range<pci::IrqVector> as return value. This way you can e=
+asily
+iterate it and prove that it's an allocated vector index.
 
-   Intel(R) Xeon(R) Silver 4310 CPU @ 2.10GHz
-   Intel(R) Xeon(R) Silver 4514Y
-   Intel(R) 12th Gen Core(TM) i7-12700K
-   Neoverse-N1
+> So basically there are 3 numbers that mean
+> different things:
+> 1. Number of vectors (as returned by alloc_irq_vectors).
+> 2. Index of a vector (passed to pci_irq_vector).
+> 3. The Linux IRQ number (passed to request_irq).
+>
+> And your point is well taken, in fact even in current code there is
+> ambiguity: irq_vector() accepts a vector index, where as request_irq()
+> accepts a Linux IRQ number, which are different numbers. I can try to cle=
+an
+> that up as well but let me know if you had any other thoughts. In fact, I
+> think Device<device::Bound>::request_irq() pci should just accept IrqRequ=
+est?
 
-I didn't see any regressions on IOMMU grouping like on v2.
-Please ping me if you need more info on the PCI topology.
+Currently, pci::Device::request_irq() takes an IRQ vector index and calls
+irq_vector() internally to convert the vector index into an IRQ number.
 
-I also booted an IBM/S390 z16 LPAR with VFs to complete the
-experiment. All good.
+I'd keep this semantics, but introduce a new type IrqVector rather than usi=
+ng
+the raw integer. So, drivers would call
 
+	// `irq_vecs` is of type `Range<pci::IrqVector>`.
+	let irq_vecs =3D dev.alloc_irq_vectors(1, 1, pci::IrqTypes::ANY)?;
+	let irq =3D KBox::pin_init(
+	   dev.request_irq(irq_vecs.start, ...)?,
+	)?;
 
-
->    The 6/7th gen system has a root port without an ACS capability and it
->    becomes ungrouped as described above.
-> 
->    All systems have changes, the MFDs in the root complex all become ungrouped.
-> 
->   - NVIDIA Grace system with 5 different PCI switches from two vendors
->     Bug fix widening the iommu_groups works as expected here
-> 
-> This is on github: https://github.com/jgunthorpe/linux/commits/pcie_switch_groups
-> 
-> v3:
->   - Rebase to v6.17-rc4
->   - Drop the quirks related patches
->   - Change the MFD logic to process no ACS cap as meaning no internal
->     loopback. This avoids creating non-isolated groups for MFD root ports in
->     common AMD and Intel systems
->   - Fix matching MFDs to ignore SRIOV VFs
->   - Fix some kbuild splats
-> v2: https://patch.msgid.link/r/0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com
->   - Revise comments and commit messages
->   - Rename struct pci_alias_set to pci_reachable_set
->   - Make more sense of the special bus->self = NULL case for SRIOV
->   - Add pci_group_alloc_non_isolated() for readability
->   - Rename BUS_DATA_PCI_UNISOLATED to BUS_DATA_PCI_NON_ISOLATED
->   - Propogate BUS_DATA_PCI_NON_ISOLATED downstream from a MFD in case a MFD
->     function is a bridge
->   - New patches to add pci_mfd_isolation() to retain more cases of narrow
->     groups on MFDs with missing ACS.
->   - Redescribe the MFD related change as a bug fix. For a MFD to be
->     isolated all functions must have egress control on their P2P.
-> v1: https://patch.msgid.link/r/0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com
-> 
-> Cc: galshalom@nvidia.com
-> Cc: tdave@nvidia.com
-> Cc: maorg@nvidia.com
-> Cc: kvm@vger.kernel.org
-> Cc: Ceric Le Goater" <clg@redhat.com>
-
-Curiously, I didn't get the email. weird.
-
-Cheers,
-
-C.
-
-
-
-> Cc: Donald Dutile <ddutile@redhat.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> Jason Gunthorpe (11):
->    PCI: Move REQ_ACS_FLAGS into pci_regs.h as PCI_ACS_ISOLATED
->    PCI: Add pci_bus_isolated()
->    iommu: Compute iommu_groups properly for PCIe switches
->    iommu: Organize iommu_group by member size
->    PCI: Add pci_reachable_set()
->    iommu: Compute iommu_groups properly for PCIe MFDs
->    iommu: Validate that pci_for_each_dma_alias() matches the groups
->    PCI: Add the ACS Enhanced Capability definitions
->    PCI: Enable ACS Enhanced bits for enable_acs and config_acs
->    PCI: Check ACS DSP/USP redirect bits in pci_enable_pasid()
->    PCI: Check ACS Extended flags for pci_bus_isolated()
-> 
->   drivers/iommu/iommu.c         | 510 +++++++++++++++++++++++-----------
->   drivers/pci/ats.c             |   4 +-
->   drivers/pci/pci.c             |  73 ++++-
->   drivers/pci/search.c          | 274 ++++++++++++++++++
->   include/linux/pci.h           |  46 +++
->   include/uapi/linux/pci_regs.h |  18 ++
->   6 files changed, 759 insertions(+), 166 deletions(-)
-> 
-> 
-> base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
-
+Alternatively, to request all of them, if we have multiple, we can leverage
+KBox::pin_slice(), which will land in v6.18 (see alloc-next or rust-next br=
+anch
+in the Rust tree), so all irq::Registration objects can be stored in a sing=
+le
+allocation.
 
