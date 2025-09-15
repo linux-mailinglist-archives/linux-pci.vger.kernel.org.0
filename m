@@ -1,91 +1,84 @@
-Return-Path: <linux-pci+bounces-36157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB10BB57DED
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 15:51:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1BBBB57E3F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 16:02:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C30034C1CDB
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 13:50:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 876FB1700A2
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 13:58:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D54131B821;
-	Mon, 15 Sep 2025 13:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KtFhqylv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89BD2BDC09;
+	Mon, 15 Sep 2025 13:58:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAE41FCF7C;
-	Mon, 15 Sep 2025 13:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058E4288C27;
+	Mon, 15 Sep 2025 13:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757944105; cv=none; b=E8zvfJjVEUV9yegZo+/TYT5mHKI87s5DFAaHfoFHk9KK7njLuUseXgxsI1fZn3ptZhxmwY+jOTPnGZ4J7rKPXEoP1xdApRjtkiif4Dx6iLzDGgaqQ1nU/jHOKVuPYRMVKRDn7jLeqRO8XFbJOFoPftvF7GOwJhHUDE3qniLayDw=
+	t=1757944703; cv=none; b=nU9WWd5FJiWXI1ng/V4MUOwYcMaBYdcv+Q/cJMTLD1KPCnbDGeT9eP//n/xuyLng0+WpoLGatKiLq9yOuPWSPBgFy067r9iZY3vf/cG3SjLTlqG6fVsD7GYXc5mDe3q0QPfQe5q6+Tdl3f633lMYe2agCSUTq3ar4XC08QPvyR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757944105; c=relaxed/simple;
-	bh=NTOWiy5dTMZluijZRXvogpMObctV0ej6Q8JzUqFg6Xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nuQeH7iUFIMbgPRSNH7EO7zIeKF6492tyzazJWoEXAHkn7G3rEGeAsw0fvEELTWlbhfKnsS4TJ/booTo45Sb+jaiGbvs/m4La82lq/DMntqmGWYSeFy1Pg3TfRptego4aCOKh82LUdaCf+zdDaMG9QvN/Pdv0btYbJKDz/mWxg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KtFhqylv; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NTOWiy5dTMZluijZRXvogpMObctV0ej6Q8JzUqFg6Xc=; b=KtFhqylv9VPDG70FiAWcrua/fz
-	zqjVDB2ayLTJPG/dXU6ratFizRBc65qFRqGzQq/eBnedgyAJzgEKZ7o+u0TRm1uKoGklenGh+8A6T
-	+MnErMNozi1PHNmM7LwHA+tBapYgOFXuXrPuPnjcVx+h7qss7erdXyYffXyI2CDUDui+UT+8lQBa8
-	rtGKeO4jL7M3YOTwtaghH1yEfXoA2NFE2K0uLJtp6CAb1meZfEpQ0x2dxKykeVKPv2WGI7RbxY/wP
-	kwohJGFMv/QhuUHRSgmdojp8gcPCsBMK3MZ9e05dkZAcuPrNX+C803mI3C4zoc79/vEAf3d/0ZMU8
-	WHHvwGlg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uy9Z8-00000004RlJ-2vGz;
-	Mon, 15 Sep 2025 13:48:22 +0000
-Date: Mon, 15 Sep 2025 06:48:22 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	kunit-dev@googlegroups.com,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH 0/4] PCI: Add support and tests for FIXUP quirks in
- modules
-Message-ID: <aMgZJgU7p57KC0DL@infradead.org>
-References: <20250912230208.967129-1-briannorris@chromium.org>
+	s=arc-20240116; t=1757944703; c=relaxed/simple;
+	bh=x/aEPn629sGbWXEZVt6Qurw2viseDOvEAhqqv1jBxHM=;
+	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=F6R8t2/XQoxKCaG6QW4ntfKxTaI60vE0ARZDkc4JE1iq5VInoQ2abgR5Jdq8OeLVb/N8xbyQq9kEXwq0YFr1iU5nYuK+3YNUoN7pwfP80v2I2foFsaXE5T0MQbeYNUhMVWNO20cm6dHk1myoNMAaFlTl7xm8NFimKpPjJtcXLLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by mailout2.hostsharing.net (Postfix) with UTF8SMTPS id EBA2C2C1E640;
+	Mon, 15 Sep 2025 15:51:02 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by h08.hostsharing.net (Postfix) with UTF8SMTPSA id CB93461248BC;
+	Mon, 15 Sep 2025 15:51:02 +0200 (CEST)
+X-Mailbox-Line: From db56b7ef12043f709a04ce67c1d1e102ab5f4e19 Mon Sep 17 00:00:00 2001
+Message-ID: <cover.1757942121.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Mon, 15 Sep 2025 15:50:00 +0200
+Subject: [PATCH v2 0/4] Documentation: PCI: Update error recovery docs
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250912230208.967129-1-briannorris@chromium.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Terry Bowman <terry.bowman@amd.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Linas Vepstas <linasvepstas@gmail.com>, "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>, "Oliver OHalloran" <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, Brian Norris <briannorris@chromium.org>
 
-On Fri, Sep 12, 2025 at 03:59:31PM -0700, Brian Norris wrote:
-> This series primarily adds support for DECLARE_PCI_FIXUP_*() in modules.
-> There are a few drivers that already use this, and so they are
-> presumably broken when built as modules.
+Fix deviations between the code and the documentation on
+PCIe Advanced Error Reporting.  Add minor clarifications
+and make a few small cleanups.
 
-That's a reall bad idea, because it allows random code to insert quirks
-not even bound to the hardware they support.
+Changes v1 -> v2:
+* In all patches, change subject prefix to "Documentation: PCI: ".
+* In patch [3/4], mention s390 alongside powerpc (Niklas).
 
-So no, modules should not allow quirks, but the kernel should probably
-be nice enough to fail compilation when someone is attemping that
-instead of silently ignoring the quirks.
+Link to v1:
+https://lore.kernel.org/all/cover.1756451884.git.lukas@wunner.de/
+
+Lukas Wunner (4):
+  Documentation: PCI: Sync AER doc with code
+  Documentation: PCI: Sync error recovery doc with code
+  Documentation: PCI: Amend error recovery doc with DPC/AER specifics
+  Documentation: PCI: Tidy error recovery doc's PCIe nomenclature
+
+ Documentation/PCI/pci-error-recovery.rst | 43 ++++++++++---
+ Documentation/PCI/pcieaer-howto.rst      | 81 +++++++++++-------------
+ 2 files changed, 72 insertions(+), 52 deletions(-)
+
+-- 
+2.51.0
 
 
