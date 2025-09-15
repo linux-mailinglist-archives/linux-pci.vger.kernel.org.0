@@ -1,126 +1,110 @@
-Return-Path: <linux-pci+bounces-36114-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16A0DB5705B
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:33:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83089B570C8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 08:58:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EBC51894BE3
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 06:33:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB57D7A113D
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Sep 2025 06:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1043E275106;
-	Mon, 15 Sep 2025 06:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB02246BBA;
+	Mon, 15 Sep 2025 06:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="iB0ibLlr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b27XNKfx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421021F2361;
-	Mon, 15 Sep 2025 06:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F393B136E3F;
+	Mon, 15 Sep 2025 06:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757918000; cv=none; b=g/S+CPWQeVnx7mLIvTQIHVdAL4jz7KCDCHdDoDwbHElEvqLgl4NOrnuK8BC/saSE9xATVvxE7YAb4LVgfk9EVw79NU5LPm3zox5mMkRPx+3btILMMv2xl2SZBeb+BfBtDYqWZaNjI6md++MOwEE973Z39Wljih6x8vDsZ1Z49Hc=
+	t=1757919533; cv=none; b=CaHQhmT95PQdnl8KAosLDg3NN4EjS2B+2jWdAizMOLpo2XL1ek9M7f1Cw9XdrTh+HQ0iKqifMgwJ+hxH/IsPovfTOOQ0BvSRNEn1lgJxinlYlnnjeC4Eqd0OJ7eF1Q4ZqB9fpp8bhXDpeCo5aQR/hXFtJ57JK7JdsP+Vd8rsPt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757918000; c=relaxed/simple;
-	bh=QlPxaZpQgAbJ15RgCwCxR2W4D+X5bJYrlbORaI22aqg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZReHTIuU1Q6CKMSDNpRDpwg1z8TXEqhlu+rzOxw6fF83rF2IiuiBFasJrkLrw1z3sF/xg+OAdj721l78cQ8Zn1xXHDpS9fpARtUO1gh1uY+gdo6Bh0YbTvCOf6SlrBMwvQvMYztsL+sUccTW5SB74N6Vp9TjYDBfUofUQ7QWI8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=iB0ibLlr; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=QlPxaZpQgAbJ15RgCwCxR2W4D+X5bJYrlbORaI22aqg=;
-	t=1757917999; x=1759127599; b=iB0ibLlrQzr7wy7mTR3wVlZtM1tW+Dvb9bTAcNPpdqEcP97
-	ZXgFeZx/7Tsv4GCH78ZhlKnAPYfcTqjposb3icB17MVqJBB5r4QmAN3/PZxlllz0XU8A7BCAbyo9S
-	T3MSYimLd6nSgK6SRwk9CiPcDGiSGjXgDdoVkWoz3NKozSnRrSEUeV6WoR2jaBY7PrdYCM4W4EpB5
-	7BLxS41xGD1a05iOgDy1NsyWyhJxgxjUCr8287iquvg/AU4gpFqEQcQkRdf1xpeb3XdwYQwhezXJg
-	nYRoyrHRQYmU5a4W2/fGkUvbrQCXnj51Z9MCt99P+SfUa6pIeUi5MicJcLyueNUw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uy2lx-00000005sPh-0Vis;
-	Mon, 15 Sep 2025 08:33:09 +0200
-Message-ID: <8e75d6cc3847899ba8d6a0cbd0ef3ac57eabf009.camel@sipsolutions.net>
-Subject: Re: [PATCH 1/4] PCI: Support FIXUP quirks in modules
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Brian Norris <briannorris@chromium.org>, Bjorn Helgaas
- <bhelgaas@google.com>,  Luis Chamberlain	 <mcgrof@kernel.org>, Petr Pavlu
- <petr.pavlu@suse.com>, Daniel Gomez	 <da.gomez@kernel.org>
-Cc: linux-pci@vger.kernel.org, David Gow <davidgow@google.com>, Rae Moar	
- <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, Sami Tolvanen	
- <samitolvanen@google.com>, Richard Weinberger <richard@nod.at>, Wei Liu	
- <wei.liu@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	kunit-dev@googlegroups.com, Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- 	linux-um@lists.infradead.org
-Date: Mon, 15 Sep 2025 08:33:08 +0200
-In-Reply-To: <20250912230208.967129-2-briannorris@chromium.org> (sfid-20250913_010956_669404_FC913C9D)
-References: <20250912230208.967129-1-briannorris@chromium.org>
-	 <20250912230208.967129-2-briannorris@chromium.org>
-	 (sfid-20250913_010956_669404_FC913C9D)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1757919533; c=relaxed/simple;
+	bh=nRRbPf3NF5C5ekIv2cigVd3N3aQVOq638dblv75A6XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMqj/I3JWwxftGjm153xBfccik6NLjaPQsvu6i6qDfg9W4xZcI0cknGkqHyMjKPSKvWk/HyOeANkfVnHsPZmOFbvzHrtqBLXaucJAEPyb0BCDovJMlDt+uADt8E6QK1bVbp5U5qG8p8t97S5oU90+rGeTOstF+pNlYKukPTrnx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b27XNKfx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB3AC4CEF1;
+	Mon, 15 Sep 2025 06:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757919532;
+	bh=nRRbPf3NF5C5ekIv2cigVd3N3aQVOq638dblv75A6XU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b27XNKfxXO32bo4XZTUsv8BOFRM9ukXfA74S+9pSymWTZKe9OL37vQVMWFQuTGoX7
+	 xnhV5dLTMuwQo5MUeMBNitcdttBBB+21eka6zPwDeMOqoV7kF8u/gRmoLR2/9gUr3k
+	 gMcwmLZfFbLkcdvy7lwK36543l6fTGpF+1ccADQcT7uNzbZ0RBj/dEkt0wwO1PxUf/
+	 wP3hr9r5Me6npLG/X4AqRuVVbYJO43zNuETmp1VrCMfW629KjykSfUVsy3jtpGJy8t
+	 MfdZ4a69ktTRIuemttgPORLBHGk9GwBcUVLifcryeyT8mIbwUF1dBF/JoI7DpFtCZR
+	 yCmDYvs9p9y9Q==
+Date: Mon, 15 Sep 2025 12:28:43 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Rahul Rameshbabu <sergeantsagara@protonmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>
+Subject: Re: [PATCH] rust: pci: fix incorrect platform references in doc
+ comments
+Message-ID: <3tvlfhghyl3xu7drx2vawkw54ghrbbf32qfgsiutrltm3sszck@bdgqp64pbdy7>
+References: <20250913172557.19074-1-sergeantsagara@protonmail.com>
+ <CANiq72msM5PT2mYKrX_RPXYtA4vapMRO=iSex1gQZqiXdpvvDA@mail.gmail.com>
+ <26oqasrlptl5v4ymfkrlznltbwqx5rfi4dworhri3msme4wlmm@cclnphvwur6r>
+ <CANiq72mpQO0v-acGOWUcYaBmETSTAjkJUDN4MT498imVGboYQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mpQO0v-acGOWUcYaBmETSTAjkJUDN4MT498imVGboYQQ@mail.gmail.com>
 
-On Fri, 2025-09-12 at 15:59 -0700, Brian Norris wrote:
-> The PCI framework supports "quirks" for PCI devices via several
-> DECLARE_PCI_FIXUP_*() macros. These macros allow arch or driver code to
-> match device IDs to provide customizations or workarounds for broken
-> devices.
->=20
-> This mechanism is generally used in code that can only be built into the
-> kernel, but there are a few occasions where this mechanism is used in
-> drivers that can be modules. For example, see commit 574f29036fce ("PCI:
-> iproc: Apply quirk_paxc_bridge() for module as well as built-in").
->=20
-> The PCI fixup mechanism only works for built-in code, however, because
-> pci_fixup_device() only scans the ".pci_fixup_*" linker sections found
-> in the main kernel; it never touches modules.
->=20
-> Extend the fixup approach to modules.
+On Mon, Sep 15, 2025 at 08:28:30AM GMT, Miguel Ojeda wrote:
+> On Mon, Sep 15, 2025 at 7:29 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > Why should a spelling fix be backported to stable? The stable kernel rules
+> > explicitly states that these kind of fixes should *not* be backported:
+> >
+> >   - No "trivial" fixes without benefit for users (spelling changes, whitespace
+> >     cleanups, etc).
+> 
+> I am aware, but the stable team has autoselected a similar fix in the
+> past (and I asked them about it, precisely because of the rules
+> above).
+> 
+> For typos outside doc comments, I wouldn't tag it (but they may still
+> autoselect it).
+> 
+> For typos in rendered docs like this one, especially one that is not
+> just a spelling one (like this one), I think it is OK either way, and
+> a bit more worth it since these are meant to be rendered unlike
+> implementation comments.
+> 
+> Thus, since this one was in the fuzzy line, I suggested it so that the
+> contributor avoided Greg's bot when detecting the missing tag.
+> 
+> As for noautosel, I wouldn't do that -- they want them sometimes,
+> after all. Instead, I would reserve it for things that really
+> shouldn't be picked for a given reason.
+> 
+> I hope that clarifies a bit.
+> 
 
-This _feels_ a bit odd to me - what if you reload a module, should the
-fixup be done twice?=C2=A0Right now this was not possible in a module, whic=
-h
-is a bit of a gotcha, but at least that's only one for developers, not
-for users (unless someone messes up and puts it into modular code, as in
-the example you gave.)
+Fair enough!
 
-Although, come to think of it, you don't even apply the fixup when the
-module is loaded, so what I just wrote isn't really true. That almost
-seems like an oversight though, now the module has to be loaded before
-the PCI device is enumerated, which is unlikely to happen in practice?
-But then we get the next gotcha - the device is already enumerated, so
-the fixups cannot be applied at the various enumeration stages, and
-you're back to having to load the module before PCI enumeration, which
-could be tricky, or somehow forcing re-enumeration of a given device
-from userspace, but then you're firmly in "gotcha for the user"
-territory again ...
+- Mani
 
-I don't really have any skin in this game, but overall I'd probably
-argue it's better to occasionally have to fix things such as in the
-commit you point out but have a predictable system, than apply things
-from modules.
-
-Perhaps it'd be better to extend the section checking infrastructure to
-catch and error out on these sections in modules instead, so we catch it
-at build time, rather than finding things missing at runtime?
-
-And yeah, now I've totally ignored the kunit angle, but ... not sure how
-to combine the two requirements if they are, as I think, conflicting.
-
-johannes
+-- 
+மணிவண்ணன் சதாசிவம்
 
