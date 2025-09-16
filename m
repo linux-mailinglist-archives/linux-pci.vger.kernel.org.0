@@ -1,280 +1,178 @@
-Return-Path: <linux-pci+bounces-36254-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36255-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85F7EB594C8
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 13:06:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E46B59591
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 13:54:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F1DB7A7420
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 11:05:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E1A11B26317
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 11:54:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83AB428C862;
-	Tue, 16 Sep 2025 11:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E590D304BBE;
+	Tue, 16 Sep 2025 11:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="BrW9Nbhf"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zBm6dYtV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010000.outbound.protection.outlook.com [52.103.68.0])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010060.outbound.protection.outlook.com [52.101.201.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88D27E043;
-	Tue, 16 Sep 2025 11:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B713D638;
+	Tue, 16 Sep 2025 11:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758020810; cv=fail; b=j7arESzO8H3G6AjHbKiqgUVpJRUapa9LGAMT9fcE0ehAnjNsT3RFaTrQsmJLTvLABy6+EZZyVeySH5duHGrmkj+A/V6Oxri6fjOa5X0WMbMWsugAuwDApewszB1Q2rB/FFSUEbwZCOQiXoO/Rh4vM/8uoVtLLr8iiNvo+FKE1Dg=
+	t=1758023664; cv=fail; b=pg+glg2EZXWZq0+DtSsBG4wnct8iuOduTcljrVYW/jPS4JGLq84qxlO296TI/BprZkn5whsOO/ZroZw+e4kUeomAc4NQvjZov8YrE2rUhTE1XdJH8y7/ZixZJ2XqCKgR270GY6jdKqC9BBhk6UFtbj/VPYipD1iH0ey4wfcOyk4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758020810; c=relaxed/simple;
-	bh=H/VNUBnrwXbXDKLcaKNIsowRVgAOnaFEkop2WEPkKTI=;
-	h=Message-ID:Date:Subject:To:References:From:Cc:In-Reply-To:
-	 Content-Type:MIME-Version; b=gNp/+DVx/e5m8m82Yl2Pnrxw2rHQwSuUM6LOhpVAwFYMyIdhoCToxYM8vLodhhY04TFY2yJ5h9t0kDRD8ON4ZXaRV2bT2auJq0Xe2ZvHe7E1x/suRLRGijQTOlgAu+G1Gzjam6EYaNVK84zcZtBdnZvwh8XdF25zT21ZCLVdW1k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=BrW9Nbhf; arc=fail smtp.client-ip=52.103.68.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1758023664; c=relaxed/simple;
+	bh=33QvYkajPjxLy++iyhn+B/YR2ytxAKSQX3Ba+0QVdmU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NadSOcviwdRFSdsATvQbCzzoZKOo4UnV29ifEtZI5UMq5vWaVqDY+H6m3p/9PEyLKOcQKaxfiauajBXwjZPV4thH20LDIyxaNP1mO4jb/msbjjgbrCcvl0QQE3pcZtdu8hU+aIcvxmo7W36RNtBKNSssQGI76lTh8jDHmnTQwVg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zBm6dYtV; arc=fail smtp.client-ip=52.101.201.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rCEajQEFaMK0Mby5pxLITQw0SxPxh/iELYQgqPr8hG/8vLmQvgC1ioOB6aXsW4dmGar66XSZglFr2i8FMHihxxSzUFQAWRJETwTAPxqCo/dQdIKg33AXztErZpnZ5/kdjCNSYm/eFQh8Z2z6r1TI5BhvzYBjpI1qHqdU7cvzAqys856NTYASdtkkuY1ekDh7zvhFttdB8hfgc6CMP2va5CRsX/7bwJZC4x7J2wkuRRAQG1iHcSk7+YSx33nDrseY4ziZF+ptEf2IgIJgSTxZwNwJgSNtCosRxKrXmAp+sSfJFdqpD7v8GD7K0twkPWWaBznlR0FZuF+sei+u0YXL3A==
+ b=TU0FKyiwPplhUX86a6zjEjKq37F9KFO/0DP5Ujij6wx12CyjVcAsPl+4Xs+//VSZJQXbN6C7Aefb1uVX0IgEnRLkUPvlwqeqZ/WmmcDEd18Szkkcr6TIK0pXGW1Vho3r4ZF5OXnaVwuIrKG3BfKbo0lrVgKO5wNeNCRWRbP3LxHdrLf6ew5l6vTMwBtH4xeP1xrxfNgx6CwE25B15oUPeuO9aKv/ga8GLOxbpEdsVZ6iviOvFjmckWFPL7qTYVtnG59CKOlhMHQMNTYU4rfaEDlpGk5kMQpadaE0SoWgFTGT7PLlugdETGr6RkuJnw75fLdtz/c1CfT+XRJEU9mhPQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Op3D7/goUTQ5LpwwKdFPv/F+JK5K0I/OMeTRnPwrwv4=;
- b=Ft7tJcwlf/Roz8tb2yGEi6yg0Us/zHpmDo2klMC8cwh+cQG8uWHnkkYEvHWadhaw0hrxwX7G9fDDLVu8/UqS821J3YzKGdgdfGr46UyJANn6bh9fITuJCCjGBCcN8dEUhKAyJ2e4UuDv4smmp80uihHZB9uG/eW6qUR6ICgRn82iB5pxNqkEefYEmwdXc77XcMFbQbLa184tm111Ty0yvmkuZSzDJJTWIa0gA70Q9eMNs/wVV+6YHNXLZPmYwPgubBisylAMqCjoK8WVXrnjij5WnHJQ7bgW6MsKPuHMr4rzv/ga/qcFFflVEEjxxzX/Z7wKHq3yE+TZs+Ix3h+8EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=POOaGtDq3AApC5W3w3TfrdVWi+gV/uqhSG+xPfXv1W8=;
+ b=pq0l79EVpv0T3ICKuv3MpeMjSxv0jXg1ZCUh01F5Y4UrC5RjJNPcLfSB8IzYIm/uEU9IXg99L2e15n9kFQT61VMuYIEG2kVe1joEpDpuWDFEbYYMiJbci3ZZn+a8mhzPFPZfj8qrjebKJx2ZBT4CsHxT+T958zelgsushvHc3qJQ53PCj6+JhkpV9NfHjrP7kf+h6J5Qi04ceYJacrveLazAwCYDfHdPZ1KnN/CbP3PfBljeS8Y8291hhnXmmojQR5a7rr9/kZRwRXj5HNzKzBmhc1z5lKQLz7WzovtQhmq4vY9CU5dubZurKcLLqOiaBm2uBZk5w7FDADUFZQBY5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Op3D7/goUTQ5LpwwKdFPv/F+JK5K0I/OMeTRnPwrwv4=;
- b=BrW9NbhfSh2XZ+ZqoGI/SR8M+YttC5E6jy5fYLWZXKzur4iP3IZ0aHV9qrdGxxToH4poiOVTbhy67ZK9K2rDyYpX3udQp6RWcIouekMRXfqQlGVQGDFgaWyt6ELS7xzVfo4uGhnM0zG4pLTOIlcvsY5CD5FY0D21Uf5tUziicdLZZmHqMpS2bXzb+VVASPcTTUyf+AcdNATqAYpBmypDAfLnH5Ubvv1m2hOAw5s0psuddGvUvc8VHrRENGJlavo+sGKWlgovVhH3Dbce3WdFncfrbDNF7KJ0RedhoaW9lmLRxSMxA1U4WHTnWt9Rze2TPALfevod8j5oRE3nRsGhIQ==
-Received: from PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:2f4::10) by MA0PR01MB9078.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:11a::11) with Microsoft SMTP Server (version=TLS1_2,
+ bh=POOaGtDq3AApC5W3w3TfrdVWi+gV/uqhSG+xPfXv1W8=;
+ b=zBm6dYtV3N+KxjUZbuaDUEa8ELXKLcv99eA3+iVLpnrobeeFTLPOzmxxrha/Sz5EVzrQRmRBzVFy5IgBo93hOLmSKHJEpIZEvuGebysDZF2DcFLXhKgEwG794EijqE00vwIljTo60bCLB9trSppZmzYJkbXCJRDwXpPu1ve/72Y=
+Received: from BLAPR03CA0114.namprd03.prod.outlook.com (2603:10b6:208:32a::29)
+ by DS0PR12MB6656.namprd12.prod.outlook.com (2603:10b6:8:d2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Tue, 16 Sep
- 2025 11:06:34 +0000
-Received: from PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::aedf:9d47:d2fd:7de0]) by PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::aedf:9d47:d2fd:7de0%7]) with mapi id 15.20.9115.017; Tue, 16 Sep 2025
- 11:06:34 +0000
-Message-ID:
- <PN4PR01MB11064C24A188A68558B5CD94DFE14A@PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM>
-Date: Tue, 16 Sep 2025 19:06:21 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] Add PCIe support to Sophgo SG2042 SoC
-To: Bjorn Helgaas <bhelgaas@google.com>
-References: <cover.1757643388.git.unicorn_wang@outlook.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-Cc: Chen Wang <unicornxw@gmail.com>, kwilczynski@kernel.org,
- u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- arnd@arndb.de, bwawrzyn@cisco.com, bhelgaas@google.com, conor+dt@kernel.org,
- 18255117159@163.com, inochiama@gmail.com, kishon@kernel.org,
- krzk+dt@kernel.org, lpieralisi@kernel.org, mani@kernel.org,
- palmer@dabbelt.com, paul.walmsley@sifive.com, robh@kernel.org,
- s-vadapalli@ti.com, tglx@linutronix.de, thomas.richard@bootlin.com,
- sycamoremoon376@gmail.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-riscv@lists.infradead.org, sophgo@lists.linux.dev,
- rabenda.cn@gmail.com, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
- fengchun.li@sophgo.com, jeffbai@aosc.io
-In-Reply-To: <cover.1757643388.git.unicorn_wang@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SGXP274CA0003.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::15)
- To PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:2f4::10)
-X-Microsoft-Original-Message-ID:
- <291160b7-5431-46ba-b53a-5ecebb896bde@outlook.com>
+ 2025 11:54:16 +0000
+Received: from BL02EPF00029928.namprd02.prod.outlook.com
+ (2603:10b6:208:32a:cafe::3d) by BLAPR03CA0114.outlook.office365.com
+ (2603:10b6:208:32a::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.21 via Frontend Transport; Tue,
+ 16 Sep 2025 11:54:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL02EPF00029928.mail.protection.outlook.com (10.167.249.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 11:54:15 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Tue, 16 Sep
+ 2025 04:54:15 -0700
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Sep
+ 2025 06:54:15 -0500
+Received: from xhdapps-pcie2.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 16 Sep 2025 04:54:12 -0700
+From: Devendra K Verma <devendra.verma@amd.com>
+To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>
+Subject: [PATCH v3 0/2] Add AMD MDB Endpoint and non-LL mode Support
+Date: Tue, 16 Sep 2025 17:24:09 +0530
+Message-ID: <20250916115411.23655-1-devendra.verma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: devendra.verma@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN4PR01MB11064:EE_|MA0PR01MB9078:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3cbf5ee-30e5-4eb0-b3c1-08ddf51118e4
+X-MS-TrafficTypeDiagnostic: BL02EPF00029928:EE_|DS0PR12MB6656:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74873d33-41c3-41aa-2a49-08ddf517c2db
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|23021999003|15080799012|461199028|8060799015|19110799012|5072599009|6090799003|1602099012|40105399003|52005399003|41105399003|440099028|3412199025|4302099013|10035399007;
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eHZnVUk0SmkvcUkvMVJTMERraUYzVlgwamVHamptdWlqZnlzU29OREdmR0E3?=
- =?utf-8?B?aUU4ZlpZVEZCcXc5QkhnNjBoQ29lcHFqTEppY2ZLT1BWQ1dJY0NvT2RLVk9n?=
- =?utf-8?B?clU0ZEJaZE1tOUtVMVByUmtmZ2xRNHFEeXpPSlBhV3FyaE5XbVU0QmV4ektN?=
- =?utf-8?B?VThhNC9pOEorRm10YThyaExlNU9oejRibXlvTUZxYzQ3ODZUQVd4VXgwdWFN?=
- =?utf-8?B?U2dKTUE3QUtvbFlQZFRkWGU2YnFHS2x4d0JWMURuTkZ3a0FUS0I3Q1FnZS9i?=
- =?utf-8?B?ZUJpazlXYzN1bUhQWEVJUTlQZmpvUGtXcER1U3VuRVd2UFN3TnVseC9jMFdC?=
- =?utf-8?B?ZjBZTjRLUjBoMXBuYmp3Y3FtR2R2eUlxRUU0dHRaWkJDM3VnM1dxallzTGRV?=
- =?utf-8?B?QldwMzJMZmFkdE5ZWGFvWkU4TzF3SU4vMmR6QXM0WHRWdHNTb0FJaHJnOC9m?=
- =?utf-8?B?N1ZDbHZPTEJURUl1TXlVWHJwZW56Z29SQzk1dFhSdDdrSGNsaEJ6c2JoK3Rw?=
- =?utf-8?B?WnRjUklYNmVGQ0hCekplZzFFdDE4VUthSXc2OGVXUU80YUlNK0ROaGVnVVp2?=
- =?utf-8?B?cnlRaTR0SjJ2bjYzZEZEdlJONVBIL2tnNSt3ODVWbEMzZFdsa04wRFlVSjNk?=
- =?utf-8?B?dVIzd01ibnIyc2JoYWlzVGVxYkcxZGROYUhNNDVTdHVwVGt4bVZuWGg1VWdk?=
- =?utf-8?B?bmZoTG1rSnJqWkRMMXRMRGMyMDM3ZHJqK0d0a2duOHp1RnI1dFFCQmc2UUhj?=
- =?utf-8?B?RHEyRTBjSW42U2NGcXA3MlkzdUFxWVZFbFgwclNtZXAvZWdaTUxFb1JVbDR5?=
- =?utf-8?B?NkdpcjdCRm5BU0NNbWtYTmlNcGVQM01GaTVjWFc1eFJRb3A2NFZHRmF2NUlV?=
- =?utf-8?B?N0VkSDlwMkpFc1hFN3lHSXFTeWQ0dTdtQ21RRVVYTkN3TWtMQkRrT01EU3dE?=
- =?utf-8?B?aFdOa0ZMN21OR0tmUlZOMTA4dkxEdFBmUk1TM2xrR3ZMbWhkcFBKdVJKcmZS?=
- =?utf-8?B?WE5ya0trU0QvSGZ5dVFJVHJmRXFUT3JmcWNPbzkzWTUzKzI2UzMvaHJyMEpK?=
- =?utf-8?B?NldGUkt2U3lDTDdEaHRuZk84dm5FYyswMGduQ1IyRjRVRTNOSHZXQnVUTkdP?=
- =?utf-8?B?K3d2YXZ2NTluaktEekZKTnN0cXdGSUZibXBiTDRET0pVa1BWVUNoU0p2RHNW?=
- =?utf-8?B?M2YxdmcxY1F5ajFrS0ZqQnpJTmhSb01sQWRrOHhwNlN1OFNQWlRSb1R2RFcr?=
- =?utf-8?B?RlJGMjBFUXZKbUZmaW1YVnVaU0xSQXhqV1d4M0V2Z21ZYndsWFgwVHJSSTNX?=
- =?utf-8?B?dVp6bjlxUGJzV2lWK2VVcGVSeFBoRksxalNZZWFWYnkzQ2twdWh5UEpnN1Rt?=
- =?utf-8?B?SFBsa0ZDSWo3M1dXRHMvMnlNbzdPMCtUM2U4dXBFcVVVZXFDZk9MRFlXd3hO?=
- =?utf-8?B?SjBPNnhNT1hMT1RDeXVkYU5VdWlYeExUMXpES1JabTd1S29UMUxSOHNNMXdJ?=
- =?utf-8?B?N0VtZXBwNnd4TWRHcEl5cmVmWE5DYnJSYkFtbklwUFpOZmlSVkIxVm5HMktl?=
- =?utf-8?B?bmI1L0N5OFhLQnVGYmsyOE55eFZrV0FVZzBFbFZYK1M0ZGJMSzM4UUZOb2Iv?=
- =?utf-8?B?dnYxQzlIRXpIY2VPUmlqSTJaT05uZXB4K0Q0NFJOU0dkUXJlQTBPZU1iZWJh?=
- =?utf-8?B?Q09QRmR0MW50V0kxZEhIUjJjNkRUa2s0YVZwbnk3ck8xc3NPV0xDU0VCQVdC?=
- =?utf-8?B?QzIwN3FIQkZQemVnTVRIbnhtZzU2V3ZGRFlKRkN0V3JTcVIwbFYwekZWQlNH?=
- =?utf-8?B?Sk43R1pTUUVhaWhxUFhmemRJVG5SQVdKSEF4RGJ1SXlrYmphOCtyWnRQMS96?=
- =?utf-8?Q?+qbSCq3OoSgWZ?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SzZMb3l0TGtRbS9KNkpKajdQVUlSUGlPVWNwbFhsUUFTcjlpYWhmNHRJamh2?=
- =?utf-8?B?NUtzVERocjFTN1ZhT2lReDF2VVg2T01mUDJiLyt4eUttMFJJR0tQaGJzRW1v?=
- =?utf-8?B?WVg4djZRZklwNGQ1WnVrbWxiRHRUdExmNGMydEdVS29yUU93TjdxMk5ubEM3?=
- =?utf-8?B?ZTNPUnB6akMvWUlnRFpENDhJOXdYVk1kRjRlc3VjY3dmRFRQOHgzd1ozYzE1?=
- =?utf-8?B?clBadmRtK2tzVzRnV1VqejdmblltNDFWV2I5aGl3SEtscnZYZ3BkNVcyMHVz?=
- =?utf-8?B?Q3BJMHgrSHhiejduc1g2NnFvY0xZdGh3WFA2TTk3R2ZEeEE0RVVldnNYVjYw?=
- =?utf-8?B?bzFWdU9kUUlkTGNkVm82cS81RE9yUUM5MTlwbVlwbW43RTN5ajNpVDlxbFdu?=
- =?utf-8?B?NlFUVldEMkl3dEgyTGhrcVp6VHlzcmNnVnE3RVZsajRqaTVRUVo3SVJFZmlF?=
- =?utf-8?B?RVNndVV2T2l2Z1BYOTlURGozVS8xOXZlY3M2Qy9ia1VmQlNkTHJsV004RjZE?=
- =?utf-8?B?R2c3aFJVOGdsd0ZzSVZoK2hsYVlmcis1VEEyUEswQVNIckJSRTM3MzJ4d0Qv?=
- =?utf-8?B?UC9ucXplU1RyVGduSFVpUEdNdnNXMVJKRnV0Q01BRk5Wblc4WnRidHl5MEVH?=
- =?utf-8?B?TFMwSFlqK0x4NWxoazIwb24wOUkxTVJxUlBzUHZadWpVaG5HVEJXcnljRFJl?=
- =?utf-8?B?NllNL2pJYVhTTmFoa1RMUVc2S1Q0dXZJcWQwL1NXUE1wdGwvNHB2aHhKUzJy?=
- =?utf-8?B?S1RlR00vVFlEMTJXckZTOEpubDA2L041UnJNMXo5dmQ1eVNXWXNSekdWbldr?=
- =?utf-8?B?bFgzRlB5N3NFRGFrY3VoSTdyYzJ5WWkwWDhxWVBKdlI4VTl0Z21aN0ZITThq?=
- =?utf-8?B?Q0g4Z2paWWNmbGF3YnQvQ2JvQ3JUenByS1B5aG1ramYrRXpiMGtvbEhMM3ht?=
- =?utf-8?B?OEpVUHUvck5peXBYbVVOamdqdCtycXIwKzVhbjlGeUlwYis3TE5wdVNQSUYz?=
- =?utf-8?B?bHpINTF3VWE0S3NBb0R2c0J5Y1p4dHhnZVJRTjk3cTR4Z3BNS1ZSekhNVWx2?=
- =?utf-8?B?bEUvcFkxWWcybUYwVXhIdHdBZGt0Q3JncGdTWXEyUENDWHFOM3h3L2htanM1?=
- =?utf-8?B?NDI1dGtwMU9OWml1L1NXeVRlcVdaNTVoTFpBRjFoM0JXNDdUMDhVZVFaY21E?=
- =?utf-8?B?RzdwVFNWL0x3RlNPV0hVbGd2UXBvQkV1aDZwcStYRFhiYTdENDdQUnFobFB2?=
- =?utf-8?B?NFdvM0NJbFpaemY1ZFdwUnVjVGVsQUsxRGRRaGRKWnNvdktMNDZxaEViQW1i?=
- =?utf-8?B?eFRXc3hXb28yRGs0bm9na3I0VXd0bjZTMnVSV1NrTkp3S2ZWU29uSUpHUTQr?=
- =?utf-8?B?b2hXdHpVM3cvM1BMU0xkN0tMN3lyaWJRczUrY2UrWHBaTzlIL2ZsMWUwNWR0?=
- =?utf-8?B?QWloMmpqS1NBZnphbGxJNVlvYTAzYXRpcjdwd1E1ejJLS3FxVmorZGxoMTBI?=
- =?utf-8?B?V0cvT0hUeXpXSmx2YW5PVXpYRGs1Z0c3dkQvdU5STm5ya29JUHZtVEgvVnRx?=
- =?utf-8?B?MWp1VjllaFdIbU01ekRmeStPanRCQlFYSWthc21FekNiRFVjRjNNK3U5TTBk?=
- =?utf-8?B?dWlhYlZDajl1cWtEbGJqVVRCdFZuMFFXdzRWUFB1Ukx0c1lpUC9pcmhyQ1VG?=
- =?utf-8?B?VTROWlM2aStIcXlNMzl4Y0hXQjY1QlBsRndGaE9jRUJ5U1FVZmJMM2MrYnFE?=
- =?utf-8?Q?h0vLhGYey+gF0BaJCUQ7oP1aYk1Xl3KB9fqpUop?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3cbf5ee-30e5-4eb0-b3c1-08ddf51118e4
-X-MS-Exchange-CrossTenant-AuthSource: PN4PR01MB11064.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 11:06:34.0720
+	=?us-ascii?Q?YbuUracHRFCoLI8xQqUkH0dL2PCWXAz7syNxK7OWM1hqAbHnln2Tm1NVvshm?=
+ =?us-ascii?Q?8BPFwwJlo6UZn4OYN60j9FSICq3bf1fTJzrQ8X3WnipstBz0pwifYtmS6UJx?=
+ =?us-ascii?Q?H+SlVUNspiyqgHDbNiRHOAXvON6KcQ4+9ijZydRlYaV5b64sCsQlvXWxdYl/?=
+ =?us-ascii?Q?gFk8aP6KA0N69gfIxU8ovbZP6Oeo89h4Og8TWHcpnMUy+6A1PwP3ABso2Iky?=
+ =?us-ascii?Q?rTQHYnViDKv7tLNhFGK+RakBi2SQ8EEdZQNeHXAQS4/TQUt2XbUGRKb4SqZQ?=
+ =?us-ascii?Q?AZGwZ54vRe/jsw+5wG4cz3rjMCrEL2MZpobwL7kqkdcJw9mx3ML4AkrQVUrj?=
+ =?us-ascii?Q?0q21Mk5t9FpjWI+SivzDiVyfr/2vfAGmYr+jYQigSu7l8Y0K9YZSPZ1hG1E8?=
+ =?us-ascii?Q?PkElry+YeDI19qDQq3Vj66TbH+doknzK8Gm1XudBJ5hXe6OPanttKESo7RWi?=
+ =?us-ascii?Q?Q9MD2miJ+VNbObQo7LcAud0Qp2BBmVoBcb4XD4DqOWLrjb/y5HHB1YmJzUsm?=
+ =?us-ascii?Q?p1LuW7S3EpiLmjwrcssngAUONN8O6dNJOu+g20nqMGWtbQNbEq/MvCri+jVo?=
+ =?us-ascii?Q?DYQzblfHkgPaUpeWf1nSk2/y9VBFSTzpEMYJqV9nEo2tzu7Mw2p+1lQY5wqL?=
+ =?us-ascii?Q?R5JxGGBfflkMPeVXPMJtm76HCnAGeLaI1hOnkpr+UGb5bAuIUKFUjlpyyf6/?=
+ =?us-ascii?Q?NYevZQAecYTjnpnViH81+7/JVcuMSczxRxLTwZuYUFN1KtO1QYvRkVBN3Qj1?=
+ =?us-ascii?Q?iTga5HiRrUI45Cb5aE3N/IOK8AuxB3Jbfutj31wQ2FvJiaQbirVbnseM0Uuk?=
+ =?us-ascii?Q?U5pTQkVl+3UHlhy4MdcRu60HtUeTHFT9L7A7XVcXgyV6KucpM2eqbZ8N+F47?=
+ =?us-ascii?Q?6yTvOvGkC4P0f9uahzbIZ0e+QGH3foD2JidFHkDG1kCg7/CJ3A72dEgfIyR9?=
+ =?us-ascii?Q?WTkyfsToti9FDwpRgwylUYAew8nLdGvcYbcLnGL1DHS9Q3/MNPIpYaojxcn0?=
+ =?us-ascii?Q?Ini3nONGLgovnHLfzVckXHzgG42AKzPwubyzDQPBpqJ2wFnylmHHyLUg+ENn?=
+ =?us-ascii?Q?4uxthUTH70JJLiGjZbkEoUk0Ucu5u/wtusVUKvEtc3QmTO2tfe8j4eGbG0Ke?=
+ =?us-ascii?Q?U0WqdKj872jZfO+ai2u6uVigJxJLfkzbR4KRG+q+nfoZM/WFiMP0is/Xqj00?=
+ =?us-ascii?Q?m8U0iCgxjLsBrPBmfJUy/p2YhE9KSiC0++vu3M06BFRq6F1eo3TZhtZ+1VT4?=
+ =?us-ascii?Q?+k0gNLXQpUxLiI9GMQMKv6rNHph4SI4A6V202Bmy9krON3f/Y8c1FUk76kQs?=
+ =?us-ascii?Q?K3ViABE+kckAv277XS81A5OPBHsL43DTPmN7ifDPyh/6ApBDvGprj3COtqq2?=
+ =?us-ascii?Q?soZYFdb717wzVV2L9S7zluDheEs+IKbwpaMhh7x7uc3rqPhZQCstrGQGNOUP?=
+ =?us-ascii?Q?d1TTTKZbIXNQMvyOJRakL8OFSJ1vHisiihFGAr73RAW5hKOBXz99rws2/eD4?=
+ =?us-ascii?Q?35LG4iABGlQj7/S1PI0koTFySui87YGEcAzj?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 11:54:15.8256
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB9078
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74873d33-41c3-41aa-2a49-08ddf517c2db
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00029928.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6656
 
-Hello, Bjorn,
+This series of patch support the following:
 
-Is it ok for you to pick this patchset, so we can see this in next 6.18.
+ - AMD MDB Endpoint Support, as part of this patch following are
+   added:
+   o AMD supported device ID and vendor ID (Xilinx)
+   o AMD MDB specific driver data
+   o AMD specific VSEC capabilities to retrieve the base of
+     phys address of MDB side DDR
+   o Logic to assign the offsets to LL and data blocks if
+     more number of channels are enabled than configured
+     in the given pci_data struct.
 
-You can pick [1/7]~[3/7], I can handle the left dts part.
+ - Addition of non-LL mode
+   o The IP supported non-LL mode functions
+   o Flexibility to choose non-LL mode via dma_slave_config
+     param peripheral_config, by the client
+   o Allow IP utilization if LL mode is not available
 
-Thanks,
+Devendra K Verma (2):
+  dmaengine: dw-edma: Add AMD MDB Endpoint Support
+  dmaengine: dw-edma: Add non-LL mode
 
-Chen
+ drivers/dma/dw-edma/dw-edma-core.c    |  38 +++++++-
+ drivers/dma/dw-edma/dw-edma-core.h    |   1 +
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 178 ++++++++++++++++++++++++++++++++--
+ drivers/dma/dw-edma/dw-hdma-v0-core.c |  62 +++++++++++-
+ include/linux/dma/edma.h              |   1 +
+ 5 files changed, 266 insertions(+), 14 deletions(-)
 
-On 9/12/2025 10:35 AM, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
->
-> Sophgo's SG2042 SoC uses Cadence PCIe core to implement RC mode.
->
-> This is a completely rewritten PCIe driver for SG2042. It inherits
-> some previously submitted patch codes (not merged into the upstream
-> mainline), but the biggest difference is that the support for
-> compatibility with old 32-bit PCIe devices has been removed in this
-> new version. This is because after discussing with community users,
-> we felt that there was not much demand for support for old devices,
-> so we made a new design based on the simplified design and practical
-> needs. If someone really needs to play with old devices, we can provide
-> them with some necessary hack patches in the downstream repository.
->
-> Since the new design is quite different from the old code, I will
-> release it as a new patch series. The old patch series can be found in
-> here [old-series].
->
-> Note, regarding [2/7] of this patchset, this fix is introduced because
-> the pcie->ops pointer is not filled in SG2042 PCIe driver. This is not
-> a must-have parameter, if we use it w/o checking will cause a null
-> pointer access error during runtime.
->
-> Link: https://lore.kernel.org/linux-riscv/cover.1736923025.git.unicorn_wang@outlook.com/ [old-series]
->
-> Thanks,
-> Chen
->
-> ---
->
-> Changes in v3:
->
->    This patchset is based on v6.17-rc1.
->
->    Fixed following issues for driver code based on feedbacks from Bjorn Helgaas,
->    Mingcong Bai, thanks.
->
->    - Fixed the issue when building the driver as a module. Define own pm_ops
->      inside driver, don't use the ops defined in other built-in drivers.
->    - Improve .remove() function to properly disable the host.
->
-> Changes in v2:
->
->    This patchset is based on v6.17-rc1. You can simply review or test the
->    patches at the link [2].
->
->    Fixed following issues based on feedbacks from Rob Herring, Manivannan Sadhasivam,
->    Bjorn Helgaas, ALOK TIWARI, thanks.
->
->    - Driver binding:
->      - Removed vendor-id/device-id from "required" property.
->    - Improve drivers code:
->      - Have separated pci_ops for the root bus and child buses.
->      - Make the driver tristate and as a module.
->      - Change the configuration name from PCIE_SG2042 to PCIE_SG2042_HOST.
->      - Removed "Fixes" tag from commit [2/7], since this is not for an existing bug fix.
->      - Other code cleanups and optimizations
->    - DT:
->      - Add PCIe support for SG2042 EVB boards.
->
-> Changes in v1:
->
->    The patch series is based on v6.17-rc1. You can simply review or test the
->    patches at the link [1].
->
-> Link: https://lore.kernel.org/linux-riscv/cover.1756344464.git.unicorn_wang@outlook.com/ [1]
-> Link: https://lore.kernel.org/linux-riscv/cover.1757467895.git.unicorn_wang@outlook.com/ [2]
->
-> ---
->
-> Chen Wang (7):
->    dt-bindings: pci: Add Sophgo SG2042 PCIe host
->    PCI: cadence: Check pcie-ops before using it
->    PCI: sg2042: Add Sophgo SG2042 PCIe driver
->    riscv: sophgo: dts: add PCIe controllers for SG2042
->    riscv: sophgo: dts: enable PCIe for PioneerBox
->    riscv: sophgo: dts: enable PCIe for SG2042_EVB_V1.X
->    riscv: sophgo: dts: enable PCIe for SG2042_EVB_V2.0
->
->   .../bindings/pci/sophgo,sg2042-pcie-host.yaml |  64 ++++++++
->   arch/riscv/boot/dts/sophgo/sg2042-evb-v1.dts  |  12 ++
->   arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts  |  12 ++
->   .../boot/dts/sophgo/sg2042-milkv-pioneer.dts  |  12 ++
->   arch/riscv/boot/dts/sophgo/sg2042.dtsi        |  88 +++++++++++
->   drivers/pci/controller/cadence/Kconfig        |  10 ++
->   drivers/pci/controller/cadence/Makefile       |   1 +
->   .../controller/cadence/pcie-cadence-host.c    |   2 +-
->   drivers/pci/controller/cadence/pcie-cadence.c |   4 +-
->   drivers/pci/controller/cadence/pcie-cadence.h |   6 +-
->   drivers/pci/controller/cadence/pcie-sg2042.c  | 138 ++++++++++++++++++
->   11 files changed, 343 insertions(+), 6 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
->   create mode 100644 drivers/pci/controller/cadence/pcie-sg2042.c
->
->
-> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+-- 
+1.8.3.1
+
 
