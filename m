@@ -1,55 +1,59 @@
-Return-Path: <linux-pci+bounces-36308-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36309-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D531B7D88D
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:30:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EE44B7E1B0
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:42:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F81658365D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:22:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D4DF325A19
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99BB12E5430;
-	Tue, 16 Sep 2025 22:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0187529BD88;
+	Tue, 16 Sep 2025 22:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdLmnpc+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJiJZ+uF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9752248B0;
-	Tue, 16 Sep 2025 22:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB514292B2E;
+	Tue, 16 Sep 2025 22:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758061373; cv=none; b=ggWPSI1I2ZfGQgtVhpkJ7+rnbfJeswpviRhE3OlUYJ/K1q5EBRU5osUnXynnCGSKsT05wZt77qxi2oHfVUIWzJzQ3O3+vqnzkNg8vBb+WYUdx0+axUaqs5acPYGQsJ7LOqMWnunSqInzgmPmG95f2+N2MLIQ+EIOpQpwEVMokGw=
+	t=1758062158; cv=none; b=QHIbw8vEGZyV1z9e7WrKLkj3M5sVQQSzfXXazp2TitP8YpEf97cB3n2Tl/zRzCWLhyBnzhGxCcVpq2RcfhzBMutoSd05bBQDvRJ+/9pho1Oxr8YiNkQnE4IBmuIf6mwTFXez9kGn4Bt1FN4Olu+IOBcLBNlxgzdQk7OLNCR976k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758061373; c=relaxed/simple;
-	bh=r9Or6o3OMAYk+p4F3zH87XvoquFuNXXbiVA8xc/4Zng=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cZAbe+2hrP7bn1rgBP5X6Pxp9ql4EWCbahxWOj7DDMzrKk+vMCwQhPFoOGK49LaAo+2pVOkBS6bn+k7NpX86XT9T0OS5nd0Gj+ewO1gW1ag8mMauol0mvkM5eSdxVMl+0nIbrW3eFZTgWlKnttU5bBwYHbNWHRAOxrSg5vN3ucM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdLmnpc+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09EEC4CEEB;
-	Tue, 16 Sep 2025 22:22:52 +0000 (UTC)
+	s=arc-20240116; t=1758062158; c=relaxed/simple;
+	bh=l0E8v9W0wXbu+8pAbt59haAcRrr7gOctSVelRsyJceY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szVDpWgPqpFMdI1546cwYyH3t6/LzQRIw3huuFlwzHOek+Ok0cbH95c5LBlqBdtcUqSoVMEsiY47HyLNMT/ORcis6KOjqnxTlNhJpw2qfpLYXRu9AO67otrKpCv/pA6j403kYROICnB5AJSMlE+rDyc87A6+9uQyDRiNMcDf9NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJiJZ+uF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46678C4CEEB;
+	Tue, 16 Sep 2025 22:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758061372;
-	bh=r9Or6o3OMAYk+p4F3zH87XvoquFuNXXbiVA8xc/4Zng=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TdLmnpc+UKAo7nGuEZrAZsRPqvQ44VO4DAIPvj4NTrvkEIUtoTL64I0g8yVZ8do31
-	 jxyJE0l8Q56u2oWOFTjasi7o4jbVZ8nzZy01JOttBqzavdbQeuZuztp3fczINsB9aV
-	 FVZmmyQdTA/3WynRgYSrepmflT/fEMzI1JKgI2yaEn0ZoNGd6G1u7vY75P5Mk0xa6Y
-	 iXOB0t7LVDpwjwVPHErsGSJMuKUJyTCQFk5mkIoQwPah4t+LYuOgKH05HgbgSCenH7
-	 zTcq6DyxvO+O88pnLpdpgdUuQ8BoYrWgix9OfLNPb8v54NpoXbtRihyHtKhuAibSSI
-	 1HsRv+0UBpsBg==
-Date: Tue, 16 Sep 2025 17:22:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, Chia-Lin Kao <acelan.kao@canonical.com>
-Subject: Re: Question on generic PCI ACPI/DT device property wrt ASPM
-Message-ID: <20250916222251.GA1826923@bhelgaas>
+	s=k20201202; t=1758062158;
+	bh=l0E8v9W0wXbu+8pAbt59haAcRrr7gOctSVelRsyJceY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gJiJZ+uFOszg2pFjCy0mQEorYpZdmPG2saAVXEvOBXZZJa3Cpiwh8pzexVYLKDa/G
+	 fZr4+Lv0rZjaizcCO9grSzvYbx6NfCpqbJ6Y4OBZ/FdYuGI4K4be7saQcX23mzm3D7
+	 T/wFkMCcBa+UPJYgOlJ6HuIkjMilg9oN+xUNtPEPgb2XNIoO6U1/t8dTbbE2LTMVBf
+	 sHa8tBZbm6Y3zuyYu60RqpaV06HeOTCxVM/RoZATYrZfHAmu5QpPDXAz9DrR2dPMg3
+	 3OxC9BsTVfyFj3sUiI+5+SvIb/75Q1meBHzE4I1rnSxrd346cpRDcRLIOraQVTDp/O
+	 JuBTRcvk+XkDQ==
+Date: Tue, 16 Sep 2025 16:35:56 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Matthew Wood <thepacketgeek@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mario Limonciello <superm1@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND PATCH v7 1/1] PCI/sysfs: Expose PCIe device serial number
+Message-ID: <aMnmTMsUWwTwnlWV@kbusch-mbp>
+References: <20250821232239.599523-2-thepacketgeek@gmail.com>
+ <20250915193904.GA1756590@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,66 +62,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b54c5083-fd3a-40ad-98ee-f102fd28e230@gmail.com>
+In-Reply-To: <20250915193904.GA1756590@bhelgaas>
 
-On Tue, Sep 16, 2025 at 10:56:26PM +0200, Heiner Kallweit wrote:
-> On 9/16/2025 10:25 PM, Bjorn Helgaas wrote:
-> > On Tue, Sep 16, 2025 at 09:48:06PM +0200, Heiner Kallweit wrote:
-> >> There are drivers (in my case r8169) disabling ASPM for a device per default
-> >> because there are known issues on a number of systems. However on other
-> >> systems ASPM works flawlessly, and vendors (especially of notebooks) would
-> >> like to (re-)enable ASPM for this device on such systems.
-> > 
-> > I would definitely love to be able to fully enable ASPM on these
-> > devices everywhere and rip the ASPM code out of r8169.
-> > 
-> >> Reference:
-> >> https://lore.kernel.org/netdev/20250912072939.2553835-1-acelan.kao@canonical.com/
-> >>
-> >> Realtek NICs are used on more or less every consumer device, and maintaining
-> >> long DMI-based whitelists wouldn't be too nice.
-> >>
-> >> Therefore idea is to use a device property (working title: aspm-is-safe), that
-> >> can be set via ACPI or DT. In my case it's a PCIe NIC, but in general the
-> >> property could be applicable on every PCIe device.
-> >> So question is to which schema such a property would belong. Here?
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/pci/pci-ep.yaml?h=next-20250916
-> > 
-> > I'm not super enthused about yet more knobs to control ASPM based on
-> > issues we don't completely understand.
-> > 
-> > Quirks that say "X is broken on this device" are to be expected, but I
-> > have a hard time understanding a quirk that says "this feature works
-> > as it's supposed to."
-> > 
-> > If ASPM works on some systems but not others, it's either because some
-> > Downstream Ports leading to the NIC have defects or Linux (or BIOS) is
-> > configuring ASPM incorrectly sometimes.
-> > 
-> > I think we just need to figure this out.
+On Mon, Sep 15, 2025 at 02:39:04PM -0500, Bjorn Helgaas wrote:
+> > @@ -660,6 +677,7 @@ static struct attribute *pcie_dev_attrs[] = {
+> >  	&dev_attr_current_link_width.attr,
+> >  	&dev_attr_max_link_width.attr,
+> >  	&dev_attr_max_link_speed.attr,
+> > +	&dev_attr_serial_number.attr,
 > 
-> I'm tempted to say we've been having the ASPM issues with Realtek NICs
-> for decades now, and so far there was no good way to "just figure this out".
+> I can see that the PCI r3.0 (conventional PCI) spec doesn't include
+> the Device Serial Number Capability and the PCIe spec does include it,
+> but this seems like it would fit better in the pci_dev_dev_attrs[],
+> and the visibility check would be parallel to the
+> dev_attr_boot_vga.attr check there.
 
-Yeah, that was a little flip, sorry.
+I'm not sure I agree. The pci_dev_dev_attrs apply to all pci devices,
+but DSN only exists in PCIe Extended Capability space. Conventional pci
+config requests couldn't even describe it, so seems okay to fence it off
+using the PCI-Express attribute group that already has that visibility
+barrier.
 
-My impression (perhaps unfounded) is that we don't have much solid
-data about any situation where ASPM doesn't work reliably.  I don't
-remember seeing actual ASPM configurations or details from a PCIe
-analyzer.  Maybe Realtek has looked at this internally; I just don't
-think I've seen it.
-
-My suspicion is that it's mostly likely a misconfiguration because the
-Root Ports are almost certainly used in many other machines.  And if
-the NIC works well in other machines, the NIC is most likely not
-broken.
-
-> Some issues:
-> - We only see the tip of the iceberg (the users reporting ASPM issues to
->   linux kernel bugzilla)
-> - These Realtek NICs are on hundreds of consumer mainboard/system types,
->   with endless chances of problematic NIC chip version / PCIe chipset / BIOS
->   issues combinations.
-> 
-> Therefore a whitelist property might be the least bad option.
+I also don't like Krzysztof's suggestion to make it visible even if we
+know you can't read it. The exisiting attributes that behave that way
+shouldn't do that, IMO. It's a waste of resources to provide a handle
+just to say the capability doesn't exist when the handle could just not
+exist instead.
 
