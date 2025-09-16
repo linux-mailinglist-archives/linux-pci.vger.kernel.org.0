@@ -1,162 +1,140 @@
-Return-Path: <linux-pci+bounces-36286-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36287-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77079B59F57
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:34:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 100C8B59F8C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:39:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E06741C02BAD
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 17:35:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54B8D1C04D05
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 17:39:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C181269D18;
-	Tue, 16 Sep 2025 17:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46081261B65;
+	Tue, 16 Sep 2025 17:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ep7qwY+H"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="EQXTBjlM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC848246795
-	for <linux-pci@vger.kernel.org>; Tue, 16 Sep 2025 17:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DE132D5AA;
+	Tue, 16 Sep 2025 17:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758044086; cv=none; b=EYy00NcmTVOj+b+x3GULAZGIT8tLLzg/2JXv0J2RatRlJBn7qiiMqUZYrwu5zVtgMOkrPr0UpnTQmi+Pv60J+OlCMEeoXbpnNhHZm+4t1cRb6e7D38NiuWTNv9gRlTjnT3+9NSqxtVMI0lbBSooiuCCaQiAOmS9t1ML8HZfQbPU=
+	t=1758044356; cv=none; b=ZIQFPI7X5URfXZATDLAjEonL1CK67TL7JLVEVfFGzjgyG1njAoC4UDrD9g13jT2QqmMF9n5HO0Nwi4HAa4ZjxDe7dNwl6lEsY1zLlpowIxSRWeN0rSU409pSTdZWHec+kYXZdacU/khfHJDdnyOH9KhEBzv8pXslLaRxSR0JaxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758044086; c=relaxed/simple;
-	bh=g4fOI7lP326A/npVX2fO/Vi1aw7o2KcT7AikMVIOx/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KE5W+ePAilxCobP6ysY2PLc/jYXort5nfoDlXxpmnEMcit1dl0MNZsmV3QCj7Ngt13Bl4gnyWixJQYPP92yccJnpqd5KZ79C6EaoaI8mPlGUMXUlVKUXo13DDbnqONy5mPZYp4z8nD2otfZVzkLCFAs8L9nP+42uBboprM362dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ep7qwY+H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B202C4CEEB;
-	Tue, 16 Sep 2025 17:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758044085;
-	bh=g4fOI7lP326A/npVX2fO/Vi1aw7o2KcT7AikMVIOx/U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Ep7qwY+HAMiYSQ0JsRo/bXS+8m6BuJqlhIc7zzuGY54bIXXpYVk6a2JQrPbC2DuBY
-	 jAy2SsOiUrt+IXCTdcyZJrpgi39Wr8DU/PoTp0SlzwEUe6fdjNpQGsYvmrQ9x0yevD
-	 mES5NjYdhNG2BKouEJR8D87RuzZMr+dK1mxUsiPzDRc9z38AccLlZWeZSlZ9Vb8dHU
-	 5LdapKr5LKRkInL3WVJPWHBEHWS7Dd6Afh4FRoNgVKY7gxqrbWOzLF+UZ4lir+t/gq
-	 gcuQIT2CIuPYIvg2B2zWoKpKffSVki1kivfr+FEK++MimodDQY9EYfOjDO66Hu5MFr
-	 l7rKe+KmFF24Q==
-Date: Tue, 16 Sep 2025 12:34:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vivek Kasireddy <vivek.kasireddy@intel.com>
-Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Message-ID: <20250916173442.GA1765656@bhelgaas>
+	s=arc-20240116; t=1758044356; c=relaxed/simple;
+	bh=2I1gVgaz9JZmo0V1wFV9xBcLNHnMqUrsYTBwIhXPNh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GTCeIGLN+2eu/6lJ8V+xbFxaWL/XFJ2RlJyDRAS5FawvT+q6thLBLpsF5+r68TXR//T/gjXezkOcpIAQXm9UM24SFGHyGFUX1syZT+fbp3/J4vCYnj2TWULZ+uXUDeu4Apcw0+VGg+lGSMz0mscQdI8uN9v6GQd1W3PJP3XRfzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=EQXTBjlM; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4cR8KB5zzQz9t8x;
+	Tue, 16 Sep 2025 19:39:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758044350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iy+diz1IFg9aObDq0ylETHFNNDzHn78HPNeZm0rB0Sk=;
+	b=EQXTBjlMO19X1pbJvpbj8gQRklZ2zQMJi0oQP8rutPB9ntziMJ5hSRJEgqAKB2GO/Fn+NZ
+	zqbtv1dnlt+7A3I2ERpaUuTCptwdvab1hR1Z71cww6x5preEQtSqXkOnMZznNwx6bBITVD
+	gwGOt2JLF+9u6iuCn/67FZgXFRfTuA7gKTLF8DhcyYG8BRvZr6/AuIlQdZuU5RN0eMc7vm
+	yq4u1WqYEaKw0qnbA7hsibKqF2djcre8rZVZk+iXGQ8whL/1NjfuFigfagq/PIfY+UwQOC
+	9f5nrg3H1Vo+3py15+49e6X/weR7lZmwHIQ+tv/sow5NTOsFo18g+M8Ff0E9aQ==
+Message-ID: <ab002c9a-0c9c-4d8f-be5d-b2694175cc86@mailbox.org>
+Date: Tue, 16 Sep 2025 19:39:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250915072428.1712837-2-vivek.kasireddy@intel.com>
+Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
+ initialization
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+References: <20250916171312.GA1808058@bhelgaas>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <20250916171312.GA1808058@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: daeedef892919c07b86
+X-MBO-RS-META: m4rkq7aibx3jdynfwf5saoajtbdypwj5
 
-[+cc Jason, also doing a lot of ACS work]
-
-On Mon, Sep 15, 2025 at 12:21:05AM -0700, Vivek Kasireddy wrote:
-> Typically, functions of the same PCI device (such as a PF and a VF)
-> share the same bus and have a common root port and the PF provisions
-> resources for the VF. Given this model, they can be considered
-> compatible as far as P2PDMA access is considered.
-
-These seem like more than just "typical".  Such devices *always* have
-a common Root Port and a PF *always* provisions VF resources.  I guess
-it's "typical" or at least common that a PF and VF share the same bus.
-
-> Currently, although the distance (2) is correctly calculated for
-> functions of the same device, an ACS check failure prevents P2P DMA
-> access between them. Therefore, introduce a small function named
-> pci_devfns_support_p2pdma() to determine if the provider and client
-> belong to the same device and facilitate P2PDMA between them by
-> not enforcing the ACS check.
+On 9/16/25 7:13 PM, Bjorn Helgaas wrote:
+> On Tue, Sep 16, 2025 at 06:31:31PM +0200, Marek Vasut wrote:
+>> On 9/16/25 3:57 PM, Geert Uytterhoeven wrote:
+>>> On Tue, 16 Sept 2025 at 15:39, Marek Vasut <marek.vasut@mailbox.org> wrote:
+>>>> On 9/16/25 11:59 AM, Geert Uytterhoeven wrote:
 > 
-> However, since it is hard to determine if the device functions of
-> any given PCI device are P2PDMA compatible, we only relax the ACS
-> check enforcement for device functions of Intel GPUs. This is
-> because the P2PDMA communication between the PF and VF of Intel
-> GPUs is handled internally and does not typically involve the PCIe
-> fabric.
+>>>>> This change looks correct, and fixes the timeout seen on White Hawk
+>>>>> with CONFIG_DEBUG_LOCK_ALLOC=y.
+>>>>> However, it causes a crash when CONFIG_DEBUG_LOCK_ALLOC=n:
+>>>>>
+>>>>>        SError Interrupt on CPU0, code 0x00000000be000011 -- SError
+>>>>
+>>>> ...
+>>>>
+>>>>>         el1h_64_error_handler+0x2c/0x40
+>>>>>         el1h_64_error+0x70/0x74
+>>>>>         dw_pcie_read+0x20/0x74 (P)
+>>>>>         rcar_gen4_pcie_additional_common_init+0x1c/0x6c
+>>>>
+>>>> SError in rcar_gen4_pcie_additional_common_init , this is unrelated to
+>>>> this fix.
+>>>>
+>>>> Does the following patch make this SError go away ?
+>>>
+>>>> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>> @@ -204,6 +204,8 @@ static int rcar_gen4_pcie_common_init(struct
+>>>> rcar_gen4_pcie *rcar)
+>>>>            if (ret)
+>>>>                    goto err_unprepare;
+>>>>
+>>>> +mdelay(1);
+>>>> +
+>>>>            if (rcar->drvdata->additional_common_init)
+>>>>                    rcar->drvdata->additional_common_init(rcar);
+>>>>
+>>>
+>>> Yes it does, thanks!
+>>
+>> So with this one extra mdelay(1), the PCIe is fully good on your side, or is
+>> there still anything weird/flaky/malfunctioning ?
 > 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: <linux-pci@vger.kernel.org>
-> Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
-> ---
-> v1 -> v2:
-> - Relax the enforcment of ACS check only for Intel GPU functions
->   as they are P2PDMA compatible given the way the PF provisions
->   the resources among multiple VFs.
+> Do we have a theory about why this delay is needed?  I assume it's
+> something specific to the rcar hardware (not something required by the
+> PCIe base spec)?
 > 
-> v2 -> v3:
-> - s/pci_devs_are_p2pdma_compatible/pci_devfns_support_p2pdma
-> - Improve the commit message to explain the reasoning behind
->   relaxing the ACS check enforcement only for Intel GPU functions.
-> 
-> v3 -> v4: (Logan)
-> - Drop the dev_is_pf() hunk as no special handling is needed for PFs
-> - Besides the provider, also check to see the client is an Intel GPU
-> ---
->  drivers/pci/p2pdma.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index da5657a02007..0a1d884cd0ff 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -544,6 +544,19 @@ static unsigned long map_types_idx(struct pci_dev *client)
->  	return (pci_domain_nr(client->bus) << 16) | pci_dev_id(client);
->  }
->  
-> +static bool pci_devfns_support_p2pdma(struct pci_dev *provider,
-> +				      struct pci_dev *client)
-> +{
-> +	if (provider->vendor == PCI_VENDOR_ID_INTEL &&
-> +	    client->vendor == PCI_VENDOR_ID_INTEL) {
-> +		if ((pci_is_vga(provider) && pci_is_vga(client)) ||
-> +		    (pci_is_display(provider) && pci_is_display(client)))
-> +			return pci_physfn(provider) == pci_physfn(client);
-> +	}
+> I'm seeing SError interrupts and external aborts on several arm64
+> systems and I'd like to understand better why they happen and when/if
+> we can recover from them.
+The SError here happens when the PWR RST is released and DBI is accessed 
+rapidly right after that. The current hypothesis is, that the controller 
+core needs a bit of time to initialize itself after the reset is 
+released, before DBI access can be performed ; if the DBI access happens 
+too soon after the reset was released, the core reject the access and 
+CPU interprets that as SError.
 
-I know I've asked this before, but I'm still confused about how this
-is related to PCIe r7.0, sec 7.7.12, which says that if an SR-IOV
-device implements internal peer-to-peer transactions, ACS is required,
-and ACS P2P Egress Control must be supported.
-
-Are you saying that these Intel GPUs don't conform to this?
-
-Or they do, but it's not enough to solve this issue?
-
-Or something else?
-
-Maybe if we add the right comment here, it will keep me from asking
-again :)
-
-> +	return false;
-> +}
-> +
->  /*
->   * Calculate the P2PDMA mapping type and distance between two PCI devices.
->   *
-> @@ -643,7 +656,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
->  
->  	*dist = dist_a + dist_b;
->  
-> -	if (!acs_cnt) {
-> +	if (!acs_cnt || pci_devfns_support_p2pdma(provider, client)) {
->  		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
->  		goto done;
->  	}
-> -- 
-> 2.50.1
-> 
+The reference manual however does not list any such delay, which makes 
+me concerned. I can send such a patch which adds the mdelay(1) as a 
+temporary stopgap fix, until some better explanation maybe sometimes 
+gets uncovered, if that would be OK ?
 
