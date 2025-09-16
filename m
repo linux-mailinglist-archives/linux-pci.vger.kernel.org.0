@@ -1,105 +1,193 @@
-Return-Path: <linux-pci+bounces-36297-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36298-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5685BB5A19D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 21:49:10 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D80B5A1BC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:01:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1453C527AE2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:49:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 06CC04E1ADD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:01:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD14527E7DA;
-	Tue, 16 Sep 2025 19:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA052E090B;
+	Tue, 16 Sep 2025 20:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilqQQHkz"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qalxXyue"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE1027E07A;
-	Tue, 16 Sep 2025 19:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3912356B9;
+	Tue, 16 Sep 2025 20:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758052148; cv=none; b=jKgKXcFOoNabrB6RlqcGAPQQ71FV3hE0tDKijUyGgQlU23G9s7f2El3rTHXB7U6gVyD+q+WpqIgBKYFBXis5sJrUPpVRpZUKwzZXsfZUzXo9cEPUlMTLuoW2+FTxSuidpnMCy7EMaK7chuoqxgh2h3ehaFs+z/qXmDwezUN5AIA=
+	t=1758052856; cv=none; b=nGVqfiMYy6eMXw4qhheqAdC2uKrMjql1RYMLK1CqVcaX2YhRjTRi0sHahwPHD7V+YL7LEnbpJyQSyr1fXiKxS0ikY/Vnb/NRwxjlJgLZ0allFEB5YlTWS24wG/9PaM7g3wnhrmNgtCLzt48VDPUnh/nvGRVXpOmzn4otxpjsuUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758052148; c=relaxed/simple;
-	bh=dYvAKxDefyFeKKvefy9yPkFzuUPPoG8H5WMFizwxFII=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=q6Ea4GpG5jA3L466TrEPLdlGUnvIzjXnmVJUIP8Jfy4j0iZF9oZhEN0otjC1Wca8bdfxLry9iUqRk3OUIx3vo34tXbQo1eb04309d/Lf8Xkw1ZOle6Vd+nzkpCKIfaoU7nude0qMxSSODh7sD9QNBubKjjYVX9s9uFCnQvluG00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilqQQHkz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C40C4CEEB;
-	Tue, 16 Sep 2025 19:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758052148;
-	bh=dYvAKxDefyFeKKvefy9yPkFzuUPPoG8H5WMFizwxFII=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ilqQQHkzcWtFDAcyeIwcyThPhLEzawKBlIYuNrFMxWEfXBjUr8NJMD38tNVTstw6+
-	 t+91/2qZkSTnUPKMlh5x7lfpoczOmb2Z6TRoqUFqIHUYa4yBYEaLgKsLaH45RrtG1l
-	 j7kDDhOHZJJUoKB5Y+VwVigeMveDNdrq4Xh4Pw8/+kTfNxvhkSas1Tqw8KX/IJtVyo
-	 GeVnCItdxJnNwU/+d+81qmdhl1y8kJT+iueqf2X8uEc2sxwNVYmgUJva0t0+NAyqMV
-	 UIxpOySIXCIEP3ps0A4POR14O7ei33zDG2TO48qetpeiPnebd2DX8kL7BdmDLWHllX
-	 1Z1My30Xd18mg==
-Date: Tue, 16 Sep 2025 14:49:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Saravana Kannan <saravanak@google.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 3/4] PCI: qcom: Parse PERST# from all PCIe bridge nodes
-Message-ID: <20250916194906.GA1738942@bhelgaas>
+	s=arc-20240116; t=1758052856; c=relaxed/simple;
+	bh=zXiOIHy9ejwvJSdfc0MFDmV+apcwnc62XAPntiwORCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XXrYk2U4eO4A3VGg3XzLs9LBkqFNb21Ng9a3R2DFKWF6oVxkDVteBzR0gTRbmTZK8I/szlZPC+i86niRZttBfvHxQetSL3uLx1ISTUedvbuziMF4S0vTPr3ikwMtpLTnC8FquTrsNOZ5MV9N+mzyvgKbadzR5thL69gCONzqpyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qalxXyue; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GCdVDu003190;
+	Tue, 16 Sep 2025 20:00:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=pxX+MR
+	PFQ/scwamhTyYekj06Xy9jwdu0NhB/orGkvK0=; b=qalxXyue805dp8sROeXMEv
+	feA9/IMHLIo0dnUctyHVgKkmbXlL921E/qMtMm8iITBJioeXkRFaP+7cMF4t9Lii
+	hldMPJ22mSIpJE0Nb5GBr2Z/X3y0V3KNV6dt7L90xKy1PEVcUsywVZ6sWPXRqzOV
+	dhetIeWkbtyMEaDpHY4CD3B+XZWjgcCQ6RlkHEe8NF6uA5SkSm/SViyMUCBxDht1
+	64EMmIqFteOVsLzsfFQeiLjBEana64IhysAGt/uJ4Toar9XKygA9cqTMR9YLMhCX
+	ExHGw+qXwcnVL8AQJszfAV621BJ7KSdilLayxDy8mhoRTRnsIrJEpFRlvvuHD7Fw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 494x1tjmc9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Sep 2025 20:00:37 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58GHkGYh027308;
+	Tue, 16 Sep 2025 20:00:37 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495men5nxm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Sep 2025 20:00:37 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58GK0Z8i30867826
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Sep 2025 20:00:35 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B90805804B;
+	Tue, 16 Sep 2025 20:00:35 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DF9AD58065;
+	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
+Received: from [9.61.248.85] (unknown [9.61.248.85])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
+Message-ID: <d6655c44-ca97-4527-8788-94be2644c049@linux.ibm.com>
+Date: Tue, 16 Sep 2025 13:00:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <blgpkdfx333h6vu25peatl3bbxffe5vuovgmae4osuoahuiryp@owrxkcv63kxb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] PCI: Avoid saving error values for config space
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+References: <20250916180958.GA1797871@bhelgaas>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <20250916180958.GA1797871@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=OMsn3TaB c=1 sm=1 tr=0 ts=68c9c1e5 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+ a=VnNF1IyMAAAA:8 a=mDscfjHxmXLP5G7XJkoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAwMSBTYWx0ZWRfX7uy6lqZco1w+
+ t1kZYAYu0+hYrVc26mwhBiCdLOhuiK5LfTEc/F9t0xXll+UUqB2yCEiqdOqVBddVHMheJiusVpn
+ TmIQkJ2hYe2H6xJeghrRYTppvt2eDDNKJu/hqlvN6ih7oYvnap5ZqGgBwkMAj6KgOU3tUToDBJk
+ j16XLwtC1aAtP+N9MSoALqvEO7UZJd0MRro+703/AUDws13NyUmkN2nnNMJ1wWbhc9EYPc2+RsO
+ ySt7E3jAtzj80gYOwsQX+I7am3ColXMkmr7dqbxpYPaHjpFw+la8afr6Drgn2vlpiYxXlpT89G3
+ cSV37zi+uCgtMyEfJohd/V9NNMQZ+KJKeoiaCWpJQMYEGwyUbDGMp5C4e+wApznKiiMazPJ9R0P
+ yUhslYd1
+X-Proofpoint-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-16_02,2025-09-16_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509130001
 
-On Mon, Sep 15, 2025 at 06:23:45PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Sep 12, 2025 at 06:28:11PM GMT, Bjorn Helgaas wrote:
-> > On Fri, Sep 12, 2025 at 02:05:03PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > 
-> > > Devicetree schema allows the PERST# GPIO to be present in all
-> > > PCIe bridge nodes, not just in Root Port node. But the current
-> > > logic parses PERST# only from the Root Port nodes. Though it is
-> > > not causing any issue on the current platforms, the upcoming
-> > > platforms will have PERST# in PCIe switch downstream ports also.
-> > > So this requires parsing all the PCIe bridge nodes for the
-> > > PERST# GPIO.
-> > > 
-> > > Hence, rework the parsing logic to extend to all PCIe bridge
-> > > nodes starting from the Root Port node. If the 'reset-gpios'
-> > > property is found for a PCI bridge node, the GPIO descriptor
-> > > will be stored in qcom_pcie_perst::desc and added to the
-> > > qcom_pcie_port::perst list.
-> > 
-> > The switch part doesn't seem qcom specific.  Aren't we going to
-> > end up with lots of drivers reimplementing something like the
-> > qcom_pcie_port.perst list?
-> 
-> If this kind of switch is attached to other platforms, then yes.
-> Right now, Qcom host is the only known DT based host platform that
-> has seen this requirement.
 
-So I guess the issue here is that pwrctrl controls power to a slot
-below a Switch Downstream Port, and we want pwrctrl to also control
-PERST# to that same slot so that pwrctrl can power up the slot and
-then deassert PERST# to the slot later, e.g., after a T_PVPERL delay?
+On 9/16/2025 11:09 AM, Bjorn Helgaas wrote:
+> On Thu, Sep 11, 2025 at 11:32:58AM -0700, Farhan Ali wrote:
+>> The current reset process saves the device's config space state before
+>> reset and restores it afterward. However, when a device is in an error
+>> state before reset, config space reads may return error values instead of
+>> valid data. This results in saving corrupted values that get written back
+>> to the device during state restoration.
+>>
+>> Avoid saving the state of the config space when the device is in error.
+>> While restoring we only restorei the state that can be restored through
+>> kernel data such as BARs or doesn't depend on the saved state.
+>>
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> ---
+>>   drivers/pci/pci.c      | 29 ++++++++++++++++++++++++++---
+>>   drivers/pci/pcie/aer.c |  5 +++++
+>>   drivers/pci/pcie/dpc.c |  5 +++++
+>>   drivers/pci/pcie/ptm.c |  5 +++++
+>>   drivers/pci/tph.c      |  5 +++++
+>>   drivers/pci/vc.c       |  5 +++++
+>>   6 files changed, 51 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index b0f4d98036cd..4b67d22faf0a 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -1720,6 +1720,11 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>>   	struct pci_cap_saved_state *save_state;
+>>   	u16 *cap;
+>>   
+>> +	if (!dev->state_saved) {
+>> +		pci_warn(dev, "Not restoring pcie state, no saved state");
+>> +		return;
+Hi Bjorn
 
-Seems like whatever parses the devicetree power regulator information
-for the slot should also parse the PERST# GPIO for the slot.
+Thanks for taking a look.
 
-Bjorn
+> Seems like a lot of messages.  If we want to warn about this, why
+> don't we do it once in pci_restore_state()?
+
+I thought providing messages about which state is not restored would be 
+better and meaningful as we try to restore some of the state. But if the 
+preference is to just have a single warn message in pci_restore_state 
+then I can update it. (would also like to hear if Alex has any 
+objections to that)
+
+>
+> I guess you're making some judgment about what things can be restored
+> even when !dev->state_saved.  That seems kind of hard to maintain in
+> the future as other capabilities are added.
+>
+> Also seems sort of questionable if we restore partial state and keep
+> using the device as if all is well.  Won't the device be in some kind
+> of inconsistent, unpredictable state then?
+>
+> Bjorn
+
+I tried to avoid restoring state that explicitly needed to save the 
+state. For some of the other capabilities, that didn't explicitly store 
+the state, I tried to keep the same behavior. This is based on the 
+discussion with Alex 
+(https://lore.kernel.org/all/20250826094845.517e0fa7.alex.williamson@redhat.com/). 
+Also AFAIU currently the dev->state_saved is set to true as long as we 
+save the first 64 bytes of config space (pci_save_state), so we could 
+for example fail to save the PCIe state, but while restoring can 
+continue to restore other capabilities like pasid.
+
+At the very least I would like to avoid corrupting the BAR registers and 
+restore msix (arch_restore_msi_irqs) to get devices into a functional 
+state after a reset. I am open to suggestions on how we can do this.
+
+Would also like to get your feedback on patch 3 and the approach there 
+of having a new flag in struct pci_slot.
+
+Thanks
+Farhan
+
 
