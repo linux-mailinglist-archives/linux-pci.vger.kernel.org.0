@@ -1,203 +1,100 @@
-Return-Path: <linux-pci+bounces-36262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B367B599FC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 16:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF02B59A14
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 16:31:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C832188AFC2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 14:24:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48A581C00880
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 14:25:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2EBB316904;
-	Tue, 16 Sep 2025 14:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63B5D311C3D;
+	Tue, 16 Sep 2025 14:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlzvzNC0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063C230C606;
-	Tue, 16 Sep 2025 14:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3919D2F83DE;
+	Tue, 16 Sep 2025 14:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758032464; cv=none; b=Nqmg5HV2gRH+BoSviTEsFmnzjJ0/YzbMVaeMPqVmuS9dR1M+Cn+mP8kxqIVz0gZlW6RBtnZqJDkChNjBUEKrEX269v+cxzEhI322oe77y39LO8lnJ4+VhrvHTaxD/EkwLOc6NeMAjCfDQstAC8jK8hTwHtp6V8z5KRjEMvJcuS8=
+	t=1758032597; cv=none; b=IfZgSmqRbIuxDH2DTi5t3oDWM5X/1bhfymgvv9sV4R6QomfyYgI4j4BM9HLdYfrxBHZTFMKB1HUuEEgBeG660iKlNxbZUBS8n0LoLrdeUV1/z5vmlFhry54XUMZ/yjjETFA6ATjjWItdZ+7VrsDDdaL2P7abbVnLyWTEvbJaPhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758032464; c=relaxed/simple;
-	bh=p1am+g3ifY86Lf8CB4d9hKoIsb4z7QdDsy8ownC58v4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oQcRlhV/68ktiayFVXyPO56q4WhF605lxsChq7qm3HYApT8WdVSD74diUHImNkotdla+GCGHiY/XA29+v8khDB5S3s1XnYSn6ke/nvMw+fP6kwRw3U6aBawKoDYOppnvSTtXHfFgMLjsVcfi5kxkKxx48/vM3OesFr2aQjImLxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cR3qL0yVnz6L5Dg;
-	Tue, 16 Sep 2025 22:16:30 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 758F11402F5;
-	Tue, 16 Sep 2025 22:20:59 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 16 Sep
- 2025 16:20:58 +0200
-Date: Tue, 16 Sep 2025 15:20:57 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Nathan Lynch <nathan.lynch@amd.com>
-CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>, Kees Cook
-	<kees@kernel.org>
-Subject: Re: [PATCH RFC 03/13] dmaengine: sdxi: Add descriptor encoding and
- unit tests
-Message-ID: <20250916152057.00005f7a@huawei.com>
-In-Reply-To: <87ms6va4z4.fsf@AUSNATLYNCH.amd.com>
-References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-	<20250905-sdxi-base-v1-3-d0341a1292ba@amd.com>
-	<20250915125226.000043c1@huawei.com>
-	<87ms6va4z4.fsf@AUSNATLYNCH.amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1758032597; c=relaxed/simple;
+	bh=XEetWU2DNn7YAZx5ChfEf0v6aUr32SLIPyIUZ8Zz3MQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QlWpoMDth7Av5a4XxGwnJTaq756zWjrd4UdSBX01WFQM6eEXrr667noM13Htt4oLXKVzFzqpaGGoZ249fE9hCOFVXAeRzWniVnQi434nPmWrIw6NtrGbe/65g7RlC3lxy630zqOHA/JLlQzis56pc90QWe/sXTJB39eCJr9iEdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlzvzNC0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BA7C4CEEB;
+	Tue, 16 Sep 2025 14:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758032594;
+	bh=XEetWU2DNn7YAZx5ChfEf0v6aUr32SLIPyIUZ8Zz3MQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dlzvzNC0id/9Fjio4OifV+Ag3lBlJaaRDquAue0R8OmXvrAukjZKbuTSxuuRYhmAk
+	 RXGZp3DOO5NlOBBNvRKEHHwZULqo0LrQLOLieLA0/t83qvaM5ca3N4M/qo6nHNXHGs
+	 UB7UjP9x4blU7OQJEmGnFDgST/9C7r/EZPeD+A9x5q/Wssi6m4HuMJf/0jbrRO6DHe
+	 kht7STqv+PVoDKW7UdkuVnkqboi9RUt4NnJHKsnfXUAVqLUd04WpFjdnOzPzgvo64I
+	 1BPryxHuYLxMF95WXT+0uERSEdBWB0kmL3P6bNiqJmOPdqQ49COdZVdfFkQC0wGNHG
+	 3Sc6o3r190EJA==
+Date: Tue, 16 Sep 2025 09:23:13 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>
+Cc: chester62515@gmail.com, mbrugger@suse.com,
+	ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com,
+	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com,
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: pcie: Add the NXP PCIe controller
+Message-ID: <20250916142313.GA1795171@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDog36hBZ0XvhC-NyfL0SwB5ve53nLFpofToKt1ebhuGQ@mail.gmail.com>
 
-On Mon, 15 Sep 2025 14:30:23 -0500
-Nathan Lynch <nathan.lynch@amd.com> wrote:
+On Tue, Sep 16, 2025 at 10:10:31AM +0200, Vincent Guittot wrote:
+> On Sun, 14 Sept 2025 at 14:35, Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+> > On Sat, 13 Sept 2025 at 00:50, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Sep 12, 2025 at 04:14:33PM +0200, Vincent Guittot wrote:
+> > > > Describe the PCIe controller available on the S32G platforms.
 
-+CC Kees given I refer to a prior discussion Kees helped out with
-and this is a different related case.
-
-> Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-> > On Fri, 05 Sep 2025 13:48:26 -0500
-> > Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:  
-> >> +++ b/drivers/dma/sdxi/descriptor.c  
-> >  
-> >> +enum {
-> >> +	SDXI_PACKING_QUIRKS = QUIRK_LITTLE_ENDIAN | QUIRK_LSW32_IS_FIRST,
-> >> +};
-> >> +
-> >> +#define sdxi_desc_field(_high, _low, _member) \
-> >> +	PACKED_FIELD(_high, _low, struct sdxi_desc_unpacked, _member)
-> >> +#define sdxi_desc_flag(_bit, _member) \
-> >> +	sdxi_desc_field(_bit, _bit, _member)
-> >> +
-> >> +static const struct packed_field_u16 common_descriptor_fields[] = {
-> >> +	sdxi_desc_flag(0, vl),
-> >> +	sdxi_desc_flag(1, se),
-> >> +	sdxi_desc_flag(2, fe),
-> >> +	sdxi_desc_flag(3, ch),
-> >> +	sdxi_desc_flag(4, csr),
-> >> +	sdxi_desc_flag(5, rb),
-> >> +	sdxi_desc_field(15, 8, subtype),
-> >> +	sdxi_desc_field(26, 16, type),
-> >> +	sdxi_desc_flag(448, np),
-> >> +	sdxi_desc_field(511, 453, csb_ptr),  
+> > > > +                  num-lanes = <2>;
+> > > > +                  phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
+> > >
+> > > num-lanes and phys are properties of a Root Port, not the host bridge.
+> > > Please put them in a separate stanza.  See this for details and
+> > > examples:
+> > >
+> > >   https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
 > >
-> > I'm not immediately seeing the advantage of dealing with unpacking in here
-> > when patch 2 introduced a bunch of field defines that can be used directly
-> > in the tests.  
+> > Ok, I'm going to have a look
 > 
-> My idea is to use the bitfield macros (GENMASK etc) for the real code
-> that encodes descriptors while using the packing API in the tests for
-> those functions.
+> This driver relies on dw_pcie_host_init() to get common resources like
+> num-lane which doesn't look at childs to get num-lane.
 > 
-> By limiting what's shared between the real code and the tests I get more
-> confidence in both. If both the driver code and the tests rely on the
-> bitfield macros, and then upon adding a new descriptor field I
-> mistranslate the bit numbering from the spec, that error is more likely
-> to propagate to the tests undetected than if the test code relies on a
-> separate mechanism for decoding descriptors.
+> I have to keep num-lane in the pcie node. Having this in mind should I
+> keep phys as well as they are both linked ?
 
-That's a fair reason.  Perhaps add a comment just above the first
-instance of this or top of file to express that?
-> 
-> I find the packing API quite convenient to use for the SDXI descriptor
-> tests since the spec defines the fields in terms of bit offsets that can
-> be directly copied to a packed_field_ array.
-> 
-> 
-> >> +};
+Huh, that sounds like an issue in the DWC core.  Jingoo, Mani?
 
-> >> +	u64 csb_ptr;
-> >> +	u32 opcode;
-> >> +
-> >> +	opcode = (FIELD_PREP(SDXI_DSC_VL, 1) |
-> >> +		  FIELD_PREP(SDXI_DSC_FE, 1) |
-> >> +		  FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_CXT_STOP) |
-> >> +		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
-> >> +
-> >> +	cxt_start = params->range.cxt_start;
-> >> +	cxt_end = params->range.cxt_end;
-> >> +
-> >> +	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
-> >> +
-> >> +	desc_clear(desc);  
-> >
-> > Not particularly important, but I'd be tempted to combine these with
-> >
-> > 	*desc = (struct sdxi_desc) {
-> > 		.ctx_stop = {
-> > 			.opcode = cpu_to_le32(opcode),
-> > 			.cxt_start = cpu_to_le16(cxt_start),
-> > 			.cxt_end = cpu_to_le16(cxt_end),
-> > 			.csb_ptr = cpu_to_le64(csb_ptr),
-> > 		},
-> > 	};
-> >
-> > To me that more clearly shows what is set and that the
-> > rest is zeroed.  
-> 
-> Maybe I prefer your version too. Just mentioning in case it's not clear:
-> cxt_stop is a union member with the same size as the enclosing struct
-> sdxi_desc. Each member of struct sdxi_desc's interior anonymous union is
-> intended to completely overlay the entire object.
-> 
-> The reason for the preceding desc_clear() is that the designated
-> initializer construct does not necessarily zero padding bytes in the
-> object. Now, there *shouldn't* be any padding bytes in SDXI descriptors
-> as I've defined them, so I'm hoping the redundant stores are discarded
-> in the generated code. But I haven't checked this.
+dw_pcie_host_init() includes several things that assume a single Root
+Port: num_lanes, of_pci_get_equalization_presets(),
+dw_pcie_start_link() are all per-Root Port things.
 
-So, this one is 'fun' (and I can hopefully find the references)
-The C spec has had some updates that might cover this though
-I'm not sure and too lazy to figure it out today.  Anyhow,
-that doesn't help anyway as we care about older compilers.
-
-So we cheat and just check the compiler does fill them ;)
-
-Via a reply Kees sent on a discussion of the somewhat related {}
-https://lore.kernel.org/linux-iio/202505090942.48EBF01B@keescook/
-
-https://elixir.bootlin.com/linux/v6.17-rc6/source/lib/tests/stackinit_kunit.c
-
-I think the relevant one is __dynamic_all which is used with various hole sizes
-and with both bare structures and unions.
-
-+CC Kees who might have time to shout if I have this particular case wrong ;)
-
-
-
-> 
-> And it looks like I neglected to mark all the descriptor structs __packed,
-> oops.
-> 
-> I think I can add the __packed to struct sdxi_desc et al, use your
-> suggested initializer, and discard desc_clear().
-
-That would indeed work.
-
-> 
-> 
-> >> +	desc->cxt_stop = (struct sdxi_dsc_cxt_stop) {
-> >> +		.opcode = cpu_to_le32(opcode),
-> >> +		.cxt_start = cpu_to_le16(cxt_start),
-> >> +		.cxt_end = cpu_to_le16(cxt_end),
-> >> +		.csb_ptr = cpu_to_le64(csb_ptr),
-> >> +	};
+Bjorn
 
