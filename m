@@ -1,155 +1,124 @@
-Return-Path: <linux-pci+bounces-36259-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36260-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1D11B597DE
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 15:39:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27C90B5984C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 15:55:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D9DE7A4B3A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 13:38:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 289B23A6C31
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 13:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045853019BE;
-	Tue, 16 Sep 2025 13:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="sH1xuCuM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72E63203B4;
+	Tue, 16 Sep 2025 13:54:12 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9751F28315A;
-	Tue, 16 Sep 2025 13:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AD831A05B;
+	Tue, 16 Sep 2025 13:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758029979; cv=none; b=jc0O5uwr1R7r9m5LEWZ/ldx2DhvzfFFVBxSkBhzbzvGiPgrHyfuMpxZLwIR0uGvGc2G+ue0c7CQ0POM/wqXQiMucgOYUbKNY8Atzsjs06x/1KblAG2qBn+YGzqlXndUkv6Fq2+bKqfvBwuMZOKYEj3Q9DoWnDJg7LeHJCcQAoMI=
+	t=1758030852; cv=none; b=ILZUBfiIIeu4rsqoPiZ0CQrZp0JrN5VA+gDpzdlb9juMsay4hiDr56d200sCqe6+JQWX6MPVzYd7euFgK84eRlT/0fVxxjz0LorySiXJi+PiHQLqhs6HLPraSj26NsP8gthifJ/ExcfFO6pDWT+kzqfIwAoTEu5NVWLZBQhi1wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758029979; c=relaxed/simple;
-	bh=oXfCogu51Y1JMNG2+OaF7xr6XeoOW7V7I6ypr3fSbQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VVUg1oU4tqI0cFVk9MoFkFVKAQ4Dnfn/NkTxRdmtqJiLMlLrAfw7sSQl/7XQHvX4j0O1wPuRCbOvXDhVm3mIzeerPd/1n9O9t0sJ+TgUcPzaIY5D4ot6ZaZeT7Cxn7JN3Bqsy7GRrcL+Wt8c48BhAdlyuYbjF10qSarCfVaTETQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=sH1xuCuM; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cR30h3BTpz9skk;
-	Tue, 16 Sep 2025 15:39:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758029972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k8GhPVxxHZ+Y3EpvPo7HYyNQhRtudJBKn7C5LHbgH50=;
-	b=sH1xuCuM3gwfGZQIONkrBz7X5tBdHkdCoIv2OPaL/wefxJq38KRnLdtQ8hsK7wbaEu7sm6
-	LfGcbfYaMWQJzXpeXqMZO1018t7jgae3JpBWOVu2Ti60NXlO87oUYW3ZrWMTMnsqAf4Ycg
-	+fg2ZsPKSNcq7DsZoZ1hyndCRsX90BRMnX0MUrdP5HS0KeoHhg0icNUWLfEEpcc0pOkpme
-	7KFnXkBHSTYGjbfA7Zwoss57Cr8K685HNtRjk20G/oK4eJ+HhREgrR+FxjUYEMaBmzZ39T
-	eC1C9uSxRTmqc5Ci7id7YnGQ1mdp5ASLE8mNSP1hr5qmrdnd/fwNgdEJkn8rXg==
-Message-ID: <6fdc7d1e-8eaa-4244-a6b4-4a07e719dd73@mailbox.org>
-Date: Tue, 16 Sep 2025 15:39:29 +0200
+	s=arc-20240116; t=1758030852; c=relaxed/simple;
+	bh=vQX07VrDvNZ54F535FxdtJdQJ6Lebbt7jbH1jt8/C9A=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ev0/EPrlzO/xOAQ20g5Mll64hMZgVmXYwB/4LV2FSbDM10/tFXqX/Y9HSYW/LzEP93TycOtRI1FB7Pf5eeb3Hx6L1Xk1usQHEK+9fWcZotUiqFrAL49yW6+DmsJ2t4+TG2Gkd1lkJZ+GXkaORCOnSytrqQ+vui+++32okX1yZdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cR3DB1L80z6L51n;
+	Tue, 16 Sep 2025 21:49:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 768191402FC;
+	Tue, 16 Sep 2025 21:53:59 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 16 Sep
+ 2025 15:53:58 +0200
+Date: Tue, 16 Sep 2025 14:53:57 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Keith Busch <kbusch@kernel.org>
+CC: Krzysztof =?ISO-8859-1?Q?Wilczy=B4nski?= <kw@linux.com>, Matthew Wood
+	<thepacketgeek@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "Mario
+ Limonciello" <superm1@kernel.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	<thomas.weissschuh@linutronix.de>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [RESEND PATCH v7 1/1] PCI/sysfs: Expose PCIe device serial
+ number
+Message-ID: <20250916145357.00007ebb@huawei.com>
+In-Reply-To: <aMiRy_gJ4MQjgaS7@kbusch-mbp>
+References: <20250821232239.599523-1-thepacketgeek@gmail.com>
+	<20250821232239.599523-2-thepacketgeek@gmail.com>
+	<20250913062041.GB1992308@rocinante>
+	<aMiRy_gJ4MQjgaS7@kbusch-mbp>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
- initialization
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
- <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-renesas-soc@vger.kernel.org
-References: <20250915235910.47768-1-marek.vasut+renesas@mailbox.org>
- <CAMuHMdXAK6EhxPoNoqwqWSjGtwM24gL4qjSf6_n+NMCcpDf1HA@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <CAMuHMdXAK6EhxPoNoqwqWSjGtwM24gL4qjSf6_n+NMCcpDf1HA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: ddt3k6hk83bg1jd35oym9p6444sir7a3
-X-MBO-RS-ID: 0586fb1d42d24f34612
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 9/16/25 11:59 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
+On Mon, 15 Sep 2025 16:23:07 -0600
+Keith Busch <kbusch@kernel.org> wrote:
 
-Hello Geert,
+> On Sat, Sep 13, 2025 at 03:20:41PM +0900, Krzysztof Wilczy=B4nski wrote:
+> > Hello,
+> >  =20
+> > > @@ -1749,10 +1767,13 @@ static umode_t pcie_dev_attrs_are_visible(str=
+uct kobject *kobj,
+> > >  	struct device *dev =3D kobj_to_dev(kobj);
+> > >  	struct pci_dev *pdev =3D to_pci_dev(dev);
+> > > =20
+> > > -	if (pci_is_pcie(pdev))
+> > > -		return a->mode;
+> > > +	if (!pci_is_pcie(pdev))
+> > > +		return 0;
+> > > =20
+> > > -	return 0;
+> > > +	if (a =3D=3D &dev_attr_serial_number.attr && !pci_get_dsn(pdev))
+> > > +		return 0;
+> > > +
+> > > +	return a->mode; =20
+> >=20
+> > It would be fine to have this sysfs attribute present all the time, and
+> > simply return error when the serial number is not available.  Not sure =
+if
+> > hiding it adds a lot of value.  This is how some of the existing attrib=
+utes
+> > currently behave.
+> >=20
+> > But it does add extra code to pcie_dev_attrs_are_visible() where it is =
+now
+> > a special case, somewhat. =20
+>=20
+> You bring up a good point, but I think it seems odd that the existing
+> pcie attributes are visible even if we know reading it will fail.
 
-> On Tue, 16 Sept 2025 at 01:59, Marek Vasut
-> <marek.vasut+renesas@mailbox.org> wrote:
->> R-Car V4H Reference Manual R19UH0186EJ0130 Rev.1.30 Apr. 21, 2025 page 4581
->> Figure 104.3b Initial Setting of PCIEC(example), third quarter of the figure
->> indicates that register 0xf8 should be polled until bit 18 becomes set to 1.
->>
->> Register 0xf8 bit 18 is 0 immediately after write to PCIERSTCTRL1 and is set
->> to 1 in less than 1 ms afterward. The current readl_poll_timeout() break
->> condition is inverted and returns when register 0xf8 bit 18 is set to 0,
->> which in most cases means immediately. In case CONFIG_DEBUG_LOCK_ALLOC=y ,
->> the timing changes just enough for the first readl_poll_timeout() poll to
->> already read register 0xf8 bit 18 as 1 and afterward never read register
->> 0xf8 bit 18 as 0, which leads to timeout and failure to start the PCIe
->> controller.
->>
->> Fix this by inverting the poll condition to match the reference manual
->> initialization sequence.
->>
->> Fixes: faf5a975ee3b ("PCI: rcar-gen4: Add support for R-Car V4H")
->> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> 
-> Thanks for your patch!
-> 
->> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
->> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
->> @@ -711,7 +711,7 @@ static int rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable
->>          val &= ~APP_HOLD_PHY_RST;
->>          writel(val, rcar->base + PCIERSTCTRL1);
->>
->> -       ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, !(val & BIT(18)), 100, 10000);
->> +       ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, val & BIT(18), 100, 10000);
->>          if (ret < 0)
->>                  return ret;
->>
-> 
-> This change looks correct, and fixes the timeout seen on White Hawk
-> with CONFIG_DEBUG_LOCK_ALLOC=y.
-> However, it causes a crash when CONFIG_DEBUG_LOCK_ALLOC=n:
-> 
->      SError Interrupt on CPU0, code 0x00000000be000011 -- SError
+Perhaps historical. The is_visible infrastructure is I think somewhat
+newer than a lot of that ABI.
 
-...
+> Perhaps the pcie link status visibility should be changed to follow this
+> patch's example to hide when they don't exist. Applications might notice
+> a different error, ENOENT vs EINVAL, if the device doesn't support the
+> capability, but that is a more accurate errno.
 
->       el1h_64_error_handler+0x2c/0x40
->       el1h_64_error+0x70/0x74
->       dw_pcie_read+0x20/0x74 (P)
->       rcar_gen4_pcie_additional_common_init+0x1c/0x6c
+As it is sysfs we can never be sure someone hasn't assumed existing files
+are present even when they aren't useful.
 
-SError in rcar_gen4_pcie_additional_common_init , this is unrelated to 
-this fix.
+So I doubt we can improve the existing cases without something breaking.
+If we want to give it a go and see who screams I'm fine with that :)
 
-Does the following patch make this SError go away ?
+Jonathan
 
-"
-diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c 
-b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-index d787f2a364d5..5932f83996f0 100644
---- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-+++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-@@ -204,6 +204,8 @@ static int rcar_gen4_pcie_common_init(struct 
-rcar_gen4_pcie *rcar)
-         if (ret)
-                 goto err_unprepare;
 
-+mdelay(1);
-+
-         if (rcar->drvdata->additional_common_init)
-                 rcar->drvdata->additional_common_init(rcar);
 
-"
 
