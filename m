@@ -1,364 +1,294 @@
-Return-Path: <linux-pci+bounces-36293-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36294-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4E68B5A0B1
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:38:24 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE5E0B5A0EE
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 21:06:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E933A585C0D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 18:38:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 710784E143E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:06:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F333A283FD0;
-	Tue, 16 Sep 2025 18:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DFD32D5D4;
+	Tue, 16 Sep 2025 19:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ce9uqpsK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ha2EurB7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011028.outbound.protection.outlook.com [52.101.52.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA191284889;
-	Tue, 16 Sep 2025 18:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758047889; cv=none; b=K31DdICiuRlYD+Q6Ca3nXeWT1BSwBaq1ItdPUMlWS1nHle/wxrVBHfC8cp3lx9j4rVP7P6HoK3Ai9AYw09S4kFBMIZjbpSHf32dPs4qh7INwFzPcRHIvLiPQvB6L8ZzXAW0cfW8i7wjGeVTiRkEBxul061ThTYH4gTPGuDCMcEI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758047889; c=relaxed/simple;
-	bh=IpDq4Tciz2ORqiJy1wI4JKzfKJ+XkxMcUu/ZTaLKoxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p11V4WCMeevYgEfpa8dyM0XeoGPuupVOWOclheYOzoR004LaLbcY57qYHcMDbnxwBWjpA6TL3j1Sa6Mt/bCUmhrKzBdlkYn+97O7iOfDKKEXSLe+zNeyncoclinr5WvsjkbE1CWfGLf82cY7ZmQaX3+joFacBqK5KLf9oYTmij8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ce9uqpsK; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GB3vCJ024250;
-	Tue, 16 Sep 2025 18:38:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=dRmI84
-	CR+1H+W4KqtHLaB9gtGpEBCAQvehJ+XP4RHZc=; b=ce9uqpsKCQd8tl6YWap/Ee
-	AEnk/8iDEFC4WO6oKQ99bgbV6I6Ak0bUjNci5lKFmWkLAmP3zYF5w0/jB3Y4n+Ey
-	MEY9YazOOdJunPSENkRckU4x2976NRMXm1k/ujZmDShNCgWwYIPUtgSHBrnvLfCf
-	HA2GECAbXsc+S6Whm2yo6RdToTpue/WLkRgbD/dvY+M/3szj/AgKB/CPR1yXSMfw
-	3tSg9dRphOLbARYtnQGfp2WF1KzYtcCaDkrXowvZ9mLnoSHq0x25wGoUx3/BZwBJ
-	uzG1DaPufbzcD71yxfSnTW5TUQ+9YGPe2OQqJuLnH1S9L+/UCT51/4oFM1SsCj8g
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496avnu5tn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 18:38:02 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58GHBOne005940;
-	Tue, 16 Sep 2025 18:38:01 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 495jxu5pps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 18:38:01 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58GIbx2E23528108
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Sep 2025 18:38:00 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6CA45803F;
-	Tue, 16 Sep 2025 18:37:59 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6B9958054;
-	Tue, 16 Sep 2025 18:37:58 +0000 (GMT)
-Received: from [9.61.252.174] (unknown [9.61.252.174])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Sep 2025 18:37:58 +0000 (GMT)
-Message-ID: <e86caff6-8af0-48c9-9058-c1991e23160f@linux.ibm.com>
-Date: Tue, 16 Sep 2025 11:37:54 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D5B2D6E67;
+	Tue, 16 Sep 2025 19:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758049579; cv=fail; b=aoVmDuAQIOKA3EQhw7BAXB73kuT4MXHB7ch6anm7uZBJGrH+tH7m2CFweRmiGop04cdxue5ARzwZMYFVTMeU2QhOE4OqAFCaPcU+4Vgz4Tc46oqc9OvJUQwb9gceEcIie/cYnXxxHan9y6TvzO79z0KBYUt5uO5qtBwW548IEDc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758049579; c=relaxed/simple;
+	bh=yB2ObhiqQP0tDoANRN6oZBCJFCyhJhOIkNluxKkVxtE=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k2MtHfty87/B6EPf1vPd/zW4bPzvvUMhLc416hFebzLig0L9t9OMEMXBa/dxrkBjhDo/t7fwUZ3knFVkrHuvpj9QIUgkoc7sNwpPKDEcE03vlRWdvt3Rlp5hX+Mapk1VXSz2TLP5c4A6YuBNo6N8AMafDqIMCdQRmOdpY9utrUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ha2EurB7; arc=fail smtp.client-ip=52.101.52.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RplW6b6Uej3N1oaO4wWCPU011JViNzBOBxxwVAVUKEIwyN72LEuK3/d+qtryuN4HA+EMAVSWIYZNPfcDiwK585L7emSqy7JCQMj315GuB2YVWJJl2UPJvkYp7MJ2irCTO7AVnajltaTurdYXhsNgMux53fzCLJKpd9zYYfY1/9JUwdL5oj4irFHd5Cd/C3C35Gq8zqPmwWLWe4qpwnwwosQIhbZBJMATeW0X32e9fL1/werClRefHMkKfihiCS1aUMox6ZDFZDtzVwTOP7khgWnK/5zEejksCE7Fqr3gZbYIq8qxmj4MqEEqYaB1f4aKgyKhCHGhKVF9m7vpdHn4IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lYkKNBMfPpeHtwnpCXc9jthy75wODUY2MubXFFqfskU=;
+ b=TSqCpVR5gSw/FWaR9cjlcHVIaU+VOxZ3VgR3zRFgdTt6yDf0YJoHqEQaXcivfg6sAMOaAJNhMgSB4oiUlK41RkIYRcNeYHQUrYFJymtIqI4Z0XDn74/0m5MNRrUOurDmRtugaGR7Iatt5bmAEmMHNt0kf4VgraG8S1FWWPRF6VeT4ZiS680nNCZCCb/dptDP+3uj/GtnLF/Jo30RRckJz+YiabK8teZgfAjEezJQNsl1dHO/f4kgYS8Ha1rSxVRT3nkmoDSTEuSOsP5iJQx+K2mfSJcwkBVuVtbhWItCkwxESg9bnV1jeTwfuVXXuFuoWFaQ09Quc3KAYatjKominw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lYkKNBMfPpeHtwnpCXc9jthy75wODUY2MubXFFqfskU=;
+ b=Ha2EurB7iy8qo85jzi4MZijo/QvMe8yterp1sfVdR1YdHOdkTHHYqSP6DOt6nW0avcsw501IABhz3igMD1WW5u6ZlM/unE3s8jPXEDj/3B5LICkpahUQkQ7oKdKmV6IG2wPf1EYftcJcOrb3DFWI/S3WNHbC7kHyPi6fH/EbKYI=
+Received: from SJ0PR05CA0164.namprd05.prod.outlook.com (2603:10b6:a03:339::19)
+ by MN2PR12MB4144.namprd12.prod.outlook.com (2603:10b6:208:15f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Tue, 16 Sep
+ 2025 19:06:12 +0000
+Received: from SJ5PEPF000001CF.namprd05.prod.outlook.com
+ (2603:10b6:a03:339:cafe::d9) by SJ0PR05CA0164.outlook.office365.com
+ (2603:10b6:a03:339::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.11 via Frontend Transport; Tue,
+ 16 Sep 2025 19:06:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001CF.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 19:06:12 +0000
+Received: from localhost (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 16 Sep
+ 2025 12:06:07 -0700
+From: Nathan Lynch <nathan.lynch@amd.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>, Kees Cook
+	<kees@kernel.org>
+Subject: Re: [PATCH RFC 03/13] dmaengine: sdxi: Add descriptor encoding and
+ unit tests
+In-Reply-To: <20250916152057.00005f7a@huawei.com>
+References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
+ <20250905-sdxi-base-v1-3-d0341a1292ba@amd.com>
+ <20250915125226.000043c1@huawei.com> <87ms6va4z4.fsf@AUSNATLYNCH.amd.com>
+ <20250916152057.00005f7a@huawei.com>
+Date: Tue, 16 Sep 2025 14:06:06 -0500
+Message-ID: <87frcmxlnl.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/10] PCI: Allow per function PCI slots
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-References: <20250911183307.1910-1-alifm@linux.ibm.com>
- <20250911183307.1910-4-alifm@linux.ibm.com>
- <07205677-09f0-464b-b31c-0fb5493a1d81@redhat.com>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <07205677-09f0-464b-b31c-0fb5493a1d81@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: a48L7LcWdbbzzgrG3cDw7JfR26Hlxgfb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDAyOCBTYWx0ZWRfXzR4WN/fQO4Ny
- kqHVfeVVWI/I7fTytUUEjtEBJX0o4U1IpJNk9GzfZvSK1BQwn0HmzI1Wvs19I+cJmLBKM4T9sTU
- q4o/b0v9LPfXCc2QiBM5/lTGfY+fipbHIucmjhTzf/94JacS0l22eGdbSAbRohY5B++7jhE29B6
- AOdDEVda6qsDOEh/gMVLegKS+eJwSMf3DdBj4nH/9veOX7dcpGF2HJ1ZdAEVvcqwVw3Q8Qc5Woe
- 3VLDmFCQm4TG0rK/vo5i0NLnv8Ws7z3aijiNNQf8aAjfKyfttEwbF/hAW6Mw2lY9YcsY8lSqQiJ
- tnK4QGcr3+uNy5CKMZt/H+eA8RKNMt0YWiEZLOmeo/FkluTV9YuScgZQPVT+NgwRZzz8e/yD26n
- lE2wkJ2F
-X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=68c9ae8a cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=ECVjj4BpMI1lRmso1gAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: a48L7LcWdbbzzgrG3cDw7JfR26Hlxgfb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-16_02,2025-09-16_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 spamscore=0 priorityscore=1501 suspectscore=0
- malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150028
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CF:EE_|MN2PR12MB4144:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f26c7ac-5970-458d-da1c-08ddf5541a55
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Q9ahvECdflB/tDeS9JLp+PdWFgvLzunIRNj4dtacoOiAijhnLh1TEli/r1mg?=
+ =?us-ascii?Q?iAhaIkOo2u9G12d+TIyqSUqY3IIEJLMmsDKwfzruozREE+WR/L2ZOJJ9Kvq/?=
+ =?us-ascii?Q?sLOOlVmob3GstnjLrFa8onu4rZ5CbF9+s+thiLq7bZjgiyzv6m6KEYIgN7Zh?=
+ =?us-ascii?Q?dV2gQEKookQm9HaBFkfVSCRwzW04PLDmFXbf+Zj3E37j3zHyhm8GL8oalz5N?=
+ =?us-ascii?Q?MXu1EpmnsE55dRwvPrDg5pwvbp8mKJVb6zHFHaTSZ8g39ryWQ84SPPGeB+uR?=
+ =?us-ascii?Q?cGQAIxHJw4+uTYtFG7rpJoXponddgJqUVs4RETz62HINX3vWPWRqSmjHDYYP?=
+ =?us-ascii?Q?2h/khqCBpWxoQ4QHo7bqbVrcNFmMKeBWnJh2rS2NqGqObKvzYUbox+o3Hv7p?=
+ =?us-ascii?Q?z6Vk75Z4tpOjldplMZ8WQ0DYoVqWA8R4tKt9/Y4/A8CqFNRV9r4ceV1Lk7O1?=
+ =?us-ascii?Q?Lwb8xZUF7Q4yzz0OrGuiK+TuyNr/DNPta5BIE8PRZUqr+ZJjO2/q7AM7ddRU?=
+ =?us-ascii?Q?eQfxTECPPnbaZOVEzJk+c1pU1Tm098HsxfynLLxCoPoJ6ZZrgmNHb3wYfGA2?=
+ =?us-ascii?Q?vbKw+thGsF/XX0oBM65N0RDo+eg/lHfzujB+lu2wvtS7U3+q1JHQCUE9+y8z?=
+ =?us-ascii?Q?r8hV7JQXRFHN1jVdPmyn1rXw6iF1KMfoJn09jao5HJva6E6Fv4ClRw0rrpfS?=
+ =?us-ascii?Q?FUZvRJcyMjMiAJ581abEVf34ZowYPpwsDJQMT2sdldTuKKDyeJKA8Z9hAd9b?=
+ =?us-ascii?Q?Fi6UAGrdB14lO6oO/ZuJasMks2Fb3csbZa60OD32bqAY6xqpM6X3xDTOrWqT?=
+ =?us-ascii?Q?LgASxMiApR1hivAsQNKRS63FR3AADafYyhzD9bTnvpyeFZGub5zj1IKDSuEE?=
+ =?us-ascii?Q?RBfdVDhVJwavNCkY5+4Apm96Y0iQwqy6TZ5/34NMrzvv8YOfJ3aQRoY//dLP?=
+ =?us-ascii?Q?3cPFaHFKZHs9Sy4TV/gfaPzpteTIQt0f+FF4+3/Z5q9m9o4SpRZ1T68M5AFq?=
+ =?us-ascii?Q?hqsKok5XtWk+h3XwFV3oy6QR7kJyPyAM5VqcsIGNE1l3BpZmtI9ksEchOKig?=
+ =?us-ascii?Q?dFCqm+F17LJw6B+GrIQi7lDV1jTVlLXDBXkPIII78nZ+2JZ0wTlE5WL3uENs?=
+ =?us-ascii?Q?DTJkBdAZZIWHvn0Fr5UJP496bkORK968dRBo1mnXASQY9iGXyjjNY1dbx4Yh?=
+ =?us-ascii?Q?fq0FtsWKtkZ8fLgjZHZR2U7WyD0V4izhlLuxTO2egPDel6dShREmwxee5zgD?=
+ =?us-ascii?Q?JUDpKoXaoAEVj4VPaovO/le1Xo+6VGhaMhT+W1BnOtaKvn2I/u9b6IXtslJl?=
+ =?us-ascii?Q?A38gEpdqeWJaotqGjyR+KvMTryqIJ2qQFntjEALmQVKYe6KyFlG4T3H3PFIg?=
+ =?us-ascii?Q?BhHT5KRcc5MY6vppIhvgegN12Ooemv8WcrT+9bInvEQ7WwSVMvwagLpGlwPw?=
+ =?us-ascii?Q?d/rbcuaCcRXBtM0BrDPpUryfWovjkPjEdkfDb67bz45DuBeluXKj6g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 19:06:12.3027
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f26c7ac-5970-458d-da1c-08ddf5541a55
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001CF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4144
 
-
-On 9/15/2025 11:52 PM, Cédric Le Goater wrote:
-> Hello Ali,
+Jonathan Cameron <jonathan.cameron@huawei.com> writes:
+> On Mon, 15 Sep 2025 14:30:23 -0500
+> Nathan Lynch <nathan.lynch@amd.com> wrote:
 >
-> On 9/11/25 20:33, Farhan Ali wrote:
->> On s390 systems, which use a machine level hypervisor, PCI devices are
->> always accessed through a form of PCI pass-through which fundamentally
->> operates on a per PCI function granularity. This is also reflected in 
->> the
->> s390 PCI hotplug driver which creates hotplug slots for individual PCI
->> functions. Its reset_slot() function, which is a wrapper for
->> zpci_hot_reset_device(), thus also resets individual functions.
->>
->> Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot 
->> object
->> to multifunction devices. This approach worked fine on s390 systems that
->> only exposed virtual functions as individual PCI domains to the 
->> operating
->> system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunctions")
->> s390 supports exposing the topology of multifunction PCI devices by
->> grouping them in a shared PCI domain. When attempting to reset a 
->> function
->> through the hotplug driver, the shared slot assignment causes the wrong
->> function to be reset instead of the intended one. It also leaks 
->> memory as
->> we do create a pci_slot object for the function, but don't correctly 
->> free
->> it in pci_slot_release().
->>
->> Add a flag for struct pci_slot to allow per function PCI slots for
->> functions managed through a hypervisor, which exposes individual PCI
->> functions while retaining the topology.
->>
->> Fixes: 44510d6fa0c0 ("s390/pci: Handling multifunctions")
->> Suggested-by: Niklas Schnelle <schnelle@linux.ibm.com>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> ---
->>   drivers/pci/hotplug/s390_pci_hpc.c | 10 ++++++++--
->>   drivers/pci/pci.c                  |  4 +++-
->>   drivers/pci/slot.c                 | 14 +++++++++++---
->>   include/linux/pci.h                |  1 +
->>   4 files changed, 23 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/hotplug/s390_pci_hpc.c 
->> b/drivers/pci/hotplug/s390_pci_hpc.c
->> index d9996516f49e..8b547de464bf 100644
->> --- a/drivers/pci/hotplug/s390_pci_hpc.c
->> +++ b/drivers/pci/hotplug/s390_pci_hpc.c
->> @@ -126,14 +126,20 @@ static const struct hotplug_slot_ops 
->> s390_hotplug_slot_ops = {
->>     int zpci_init_slot(struct zpci_dev *zdev)
->>   {
->> +    int ret;
->>       char name[SLOT_NAME_SIZE];
->>       struct zpci_bus *zbus = zdev->zbus;
->>         zdev->hotplug_slot.ops = &s390_hotplug_slot_ops;
->>         snprintf(name, SLOT_NAME_SIZE, "%08x", zdev->fid);
->> -    return pci_hp_register(&zdev->hotplug_slot, zbus->bus,
->> -                   zdev->devfn, name);
->> +    ret = pci_hp_register(&zdev->hotplug_slot, zbus->bus,
->> +                zdev->devfn, name);
->> +    if (ret)
->> +        return ret;
->> +
->> +    zdev->hotplug_slot.pci_slot->per_func_slot = 1;
->> +    return 0;
->>   }
->>     void zpci_exit_slot(struct zpci_dev *zdev)
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 3994fa82df68..70296d3b1cfc 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -5061,7 +5061,9 @@ static int pci_reset_hotplug_slot(struct 
->> hotplug_slot *hotplug, bool probe)
->>     static int pci_dev_reset_slot_function(struct pci_dev *dev, bool 
->> probe)
->>   {
->> -    if (dev->multifunction || dev->subordinate || !dev->slot ||
->> +    if (dev->multifunction && !dev->slot->per_func_slot)
->> +        return -ENOTTY;
->> +    if (dev->subordinate || !dev->slot ||
->>           dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
->>           return -ENOTTY;
->>   diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
->> index 50fb3eb595fe..51ee59e14393 100644
->> --- a/drivers/pci/slot.c
->> +++ b/drivers/pci/slot.c
->> @@ -63,6 +63,14 @@ static ssize_t cur_speed_read_file(struct pci_slot 
->> *slot, char *buf)
->>       return bus_speed_read(slot->bus->cur_bus_speed, buf);
->>   }
->>   +static bool pci_dev_matches_slot(struct pci_dev *dev, struct 
->> pci_slot *slot)
->> +{
->> +    if (slot->per_func_slot)
->> +        return dev->devfn == slot->number;
->> +
->> +    return PCI_SLOT(dev->devfn) == slot->number;
->> +}
->> +
->>   static void pci_slot_release(struct kobject *kobj)
->>   {
->>       struct pci_dev *dev;
->> @@ -73,7 +81,7 @@ static void pci_slot_release(struct kobject *kobj)
->>         down_read(&pci_bus_sem);
->>       list_for_each_entry(dev, &slot->bus->devices, bus_list)
->> -        if (PCI_SLOT(dev->devfn) == slot->number)
->> +        if (pci_dev_matches_slot(dev, slot))
->>               dev->slot = NULL;
->>       up_read(&pci_bus_sem);
->>   @@ -166,7 +174,7 @@ void pci_dev_assign_slot(struct pci_dev *dev)
->>         mutex_lock(&pci_slot_mutex);
->>       list_for_each_entry(slot, &dev->bus->slots, list)
->> -        if (PCI_SLOT(dev->devfn) == slot->number)
->> +        if (pci_dev_matches_slot(dev, slot))
->>               dev->slot = slot;
->>       mutex_unlock(&pci_slot_mutex);
->>   }
->> @@ -285,7 +293,7 @@ struct pci_slot *pci_create_slot(struct pci_bus 
->> *parent, int slot_nr,
->>         down_read(&pci_bus_sem);
->>       list_for_each_entry(dev, &parent->devices, bus_list)
->> -        if (PCI_SLOT(dev->devfn) == slot_nr)
->> +        if (pci_dev_matches_slot(dev, slot))
->>               dev->slot = slot;
->>       up_read(&pci_bus_sem);
->>   diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 59876de13860..9265f32d9786 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -78,6 +78,7 @@ struct pci_slot {
->>       struct list_head    list;        /* Node in list of slots */
->>       struct hotplug_slot    *hotplug;    /* Hotplug info (move here) */
->>       unsigned char        number;        /* PCI_SLOT(pci_dev->devfn) */
->> +    unsigned int        per_func_slot:1; /* Allow per function slot */
->>       struct kobject        kobj;
->>   };
+> +CC Kees given I refer to a prior discussion Kees helped out with
+> and this is a different related case.
 >
-> This change generates a kernel oops on x86_64. It can be reproduced in 
-> a VM.
+>> Jonathan Cameron <jonathan.cameron@huawei.com> writes:
+>> > On Fri, 05 Sep 2025 13:48:26 -0500
+>> > Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:  
+>> >> +++ b/drivers/dma/sdxi/descriptor.c  
+>> >  
+>> >> +enum {
+>> >> +	SDXI_PACKING_QUIRKS = QUIRK_LITTLE_ENDIAN | QUIRK_LSW32_IS_FIRST,
+>> >> +};
+>> >> +
+>> >> +#define sdxi_desc_field(_high, _low, _member) \
+>> >> +	PACKED_FIELD(_high, _low, struct sdxi_desc_unpacked, _member)
+>> >> +#define sdxi_desc_flag(_bit, _member) \
+>> >> +	sdxi_desc_field(_bit, _bit, _member)
+>> >> +
+>> >> +static const struct packed_field_u16 common_descriptor_fields[] = {
+>> >> +	sdxi_desc_flag(0, vl),
+>> >> +	sdxi_desc_flag(1, se),
+>> >> +	sdxi_desc_flag(2, fe),
+>> >> +	sdxi_desc_flag(3, ch),
+>> >> +	sdxi_desc_flag(4, csr),
+>> >> +	sdxi_desc_flag(5, rb),
+>> >> +	sdxi_desc_field(15, 8, subtype),
+>> >> +	sdxi_desc_field(26, 16, type),
+>> >> +	sdxi_desc_flag(448, np),
+>> >> +	sdxi_desc_field(511, 453, csb_ptr),  
+>> >
+>> > I'm not immediately seeing the advantage of dealing with unpacking in here
+>> > when patch 2 introduced a bunch of field defines that can be used directly
+>> > in the tests.  
+>> 
+>> My idea is to use the bitfield macros (GENMASK etc) for the real code
+>> that encodes descriptors while using the packing API in the tests for
+>> those functions.
+>> 
+>> By limiting what's shared between the real code and the tests I get more
+>> confidence in both. If both the driver code and the tests rely on the
+>> bitfield macros, and then upon adding a new descriptor field I
+>> mistranslate the bit numbering from the spec, that error is more likely
+>> to propagate to the tests undetected than if the test code relies on a
+>> separate mechanism for decoding descriptors.
 >
+> That's a fair reason.  Perhaps add a comment just above the first
+> instance of this or top of file to express that?
+
+OK. Looks like sdxi_desc_unpack() and the related field description
+structure could be moved to the test code too.
+
+
+>> I find the packing API quite convenient to use for the SDXI descriptor
+>> tests since the spec defines the fields in terms of bit offsets that can
+>> be directly copied to a packed_field_ array.
+>> 
+>> 
+>> >> +};
 >
-> C.
+>> >> +	u64 csb_ptr;
+>> >> +	u32 opcode;
+>> >> +
+>> >> +	opcode = (FIELD_PREP(SDXI_DSC_VL, 1) |
+>> >> +		  FIELD_PREP(SDXI_DSC_FE, 1) |
+>> >> +		  FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_CXT_STOP) |
+>> >> +		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
+>> >> +
+>> >> +	cxt_start = params->range.cxt_start;
+>> >> +	cxt_end = params->range.cxt_end;
+>> >> +
+>> >> +	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
+>> >> +
+>> >> +	desc_clear(desc);  
+>> >
+>> > Not particularly important, but I'd be tempted to combine these with
+>> >
+>> > 	*desc = (struct sdxi_desc) {
+>> > 		.ctx_stop = {
+>> > 			.opcode = cpu_to_le32(opcode),
+>> > 			.cxt_start = cpu_to_le16(cxt_start),
+>> > 			.cxt_end = cpu_to_le16(cxt_end),
+>> > 			.csb_ptr = cpu_to_le64(csb_ptr),
+>> > 		},
+>> > 	};
+>> >
+>> > To me that more clearly shows what is set and that the
+>> > rest is zeroed.  
+>> 
+>> Maybe I prefer your version too. Just mentioning in case it's not clear:
+>> cxt_stop is a union member with the same size as the enclosing struct
+>> sdxi_desc. Each member of struct sdxi_desc's interior anonymous union is
+>> intended to completely overlay the entire object.
+>> 
+>> The reason for the preceding desc_clear() is that the designated
+>> initializer construct does not necessarily zero padding bytes in the
+>> object. Now, there *shouldn't* be any padding bytes in SDXI descriptors
+>> as I've defined them, so I'm hoping the redundant stores are discarded
+>> in the generated code. But I haven't checked this.
 >
-> [    3.073990] BUG: kernel NULL pointer dereference, address: 
-> 0000000000000021
-> [    3.074976] #PF: supervisor read access in kernel mode
-> [    3.074976] #PF: error_code(0x0000) - not-present page
-> [    3.074976] PGD 0 P4D 0
-> [    3.074976] Oops: Oops: 0000 [#1] SMP NOPTI
-> [    3.074976] CPU: 18 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-> 6.17.0-rc6-clg-dirty #8 PREEMPT(voluntary)
-> [    3.074976] Hardware name: Supermicro Super Server/X13SAE-F, BIOS 
-> 4.2 12/17/2024
-> [    3.074976] RIP: 0010:pci_reset_bus_function+0xdf/0x160
-> [    3.074976] Code: 4e 08 00 00 40 0f 85 83 00 00 00 48 8b 78 18 e8 
-> 27 9d ff ff 83 f8 e7 74 17 48 83 c4 08 5b 5d 41 5c c3 cc cc cc cc 48 
-> 8b 43 30 <f6> 40 21 01 75 b6 48 8b 53 10 48 83 7a 10 00 74 5e 48 83 7b 
-> 18 00
-> [    3.074976] RSP: 0000:ffffcd808007b9a8 EFLAGS: 00010202
-> [    3.074976] RAX: 0000000000000000 RBX: ffff88c4019b8000 RCX: 
-> 0000000000000000
-> [    3.074976] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 
-> ffff88c4019b8000
-> [    3.074976] RBP: 0000000000000001 R08: 0000000000000002 R09: 
-> ffffcd808007b99c
-> [    3.074976] R10: ffffcd808007b950 R11: 0000000000000000 R12: 
-> 0000000000000001
-> [    3.074976] R13: ffff88c4019b80c8 R14: ffff88c401a7e028 R15: 
-> ffff88c401a73400
-> [    3.074976] FS:  0000000000000000(0000) GS:ffff88d38aad5000(0000) 
-> knlGS:0000000000000000
-> [    3.074976] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    3.074976] CR2: 0000000000000021 CR3: 0000000f66222001 CR4: 
-> 0000000000770ef0
-> [    3.074976] PKRU: 55555554
-> [    3.074976] Call Trace:
-> [    3.074976]  <TASK>
-> [    3.074976]  ? pci_pm_reset+0x39/0x180
-> [    3.074976]  pci_init_reset_methods+0x52/0x80
-> [    3.074976]  pci_device_add+0x215/0x5d0
-> [    3.074976]  pci_scan_single_device+0xa2/0xe0
-> [    3.074976]  pci_scan_slot+0x66/0x1c0
-> [    3.074976]  ? klist_next+0x145/0x150
-> [    3.074976]  pci_scan_child_bus_extend+0x3a/0x290
-> [    3.074976]  acpi_pci_root_create+0x236/0x2a0
-> [    3.074976]  pci_acpi_scan_root+0x19b/0x1f0
-> [    3.074976]  acpi_pci_root_add+0x1a5/0x370
-> [    3.074976]  acpi_bus_attach+0x1a8/0x290
-> [    3.074976]  ? __pfx_acpi_dev_for_one_check+0x10/0x10
-> [    3.074976]  device_for_each_child+0x4b/0x80
-> [    3.074976]  acpi_dev_for_each_child+0x28/0x40
-> [    3.074976]  ? __pfx_acpi_bus_attach+0x10/0x10
-> [    3.074976]  acpi_bus_attach+0x7a/0x290
-> [    3.074976]  ? _raw_spin_unlock_irqrestore+0x23/0x40
-> [    3.074976]  ? __pfx_acpi_dev_for_one_check+0x10/0x10
-> [    3.074976]  device_for_each_child+0x4b/0x80
-> [    3.074976]  acpi_dev_for_each_child+0x28/0x40
-> [    3.074976]  ? __pfx_acpi_bus_attach+0x10/0x10
-> [    3.074976]  acpi_bus_attach+0x7a/0x290
-> [    3.074976]  acpi_bus_scan+0x6a/0x1c0
-> [    3.074976]  ? __pfx_acpi_init+0x10/0x10
-> [    3.074976]  acpi_scan_init+0xdc/0x280
-> [    3.074976]  ? __pfx_acpi_init+0x10/0x10
-> [    3.074976]  acpi_init+0x218/0x530
-> [    3.074976]  do_one_initcall+0x40/0x310
-> [    3.074976]  kernel_init_freeable+0x2fe/0x450
-> [    3.074976]  ? __pfx_kernel_init+0x10/0x10
-> [    3.074976]  kernel_init+0x16/0x1d0
-> [    3.074976]  ret_from_fork+0x1ab/0x1e0
-> [    3.074976]  ? __pfx_kernel_init+0x10/0x10
-> [    3.074976]  ret_from_fork_asm+0x1a/0x30
-> [    3.074976]  </TASK>
-> [    3.074976] Modules linked in:
-> [    3.074976] CR2: 0000000000000021
-> [    3.074976] ---[ end trace 0000000000000000 ]---
-> [    3.074976] RIP: 0010:pci_reset_bus_function+0xdf/0x160
+> So, this one is 'fun' (and I can hopefully find the references)
+> The C spec has had some updates that might cover this though
+> I'm not sure and too lazy to figure it out today.  Anyhow,
+> that doesn't help anyway as we care about older compilers.
 >
-Hi Cedric,
+> So we cheat and just check the compiler does fill them ;)
+>
+> Via a reply Kees sent on a discussion of the somewhat related {}
+> https://lore.kernel.org/linux-iio/202505090942.48EBF01B@keescook/
+>
+> https://elixir.bootlin.com/linux/v6.17-rc6/source/lib/tests/stackinit_kunit.c
+>
+> I think the relevant one is __dynamic_all which is used with various hole sizes
+> and with both bare structures and unions.
+>
+> +CC Kees who might have time to shout if I have this particular case
+> wrong ;)
 
-Thanks for pointing this out. I missed that dev->slot could be NULL and 
-so the per_func_slot check should be done after the check for 
-!dev->slot. I tried this change on top of the patch in an x86_64 VM and 
-was able to boot the VM without the oops.
+Thanks for the references, when making this decision I consulted:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 70296d3b1cfc..3631f7faa0cf 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5061,10 +5061,9 @@ static int pci_reset_hotplug_slot(struct 
-hotplug_slot *hotplug, bool probe)
+https://gustedt.wordpress.com/2012/10/24/c11-defects-initialization-of-padding/
 
-  static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
-  {
--       if (dev->multifunction && !dev->slot->per_func_slot)
--               return -ENOTTY;
-         if (dev->subordinate || !dev->slot ||
--           dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
-+           dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
-+           (dev->multifunction && !dev->slot->per_func_slot))
-                 return -ENOTTY;
+and
+
+https://interrupt.memfault.com/blog/c-struct-padding-initialization
+
+But we seem to agree that it's a moot point for this code if I make the
+changes discussed below.
 
 
-
-Thanks
-Farhan
-
+>> And it looks like I neglected to mark all the descriptor structs __packed,
+>> oops.
+>> 
+>> I think I can add the __packed to struct sdxi_desc et al, use your
+>> suggested initializer, and discard desc_clear().
+>
+> That would indeed work.
+>
+>> 
+>> 
+>> >> +	desc->cxt_stop = (struct sdxi_dsc_cxt_stop) {
+>> >> +		.opcode = cpu_to_le32(opcode),
+>> >> +		.cxt_start = cpu_to_le16(cxt_start),
+>> >> +		.cxt_end = cpu_to_le16(cxt_end),
+>> >> +		.csb_ptr = cpu_to_le64(csb_ptr),
+>> >> +	};
 
