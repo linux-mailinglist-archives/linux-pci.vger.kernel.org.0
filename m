@@ -1,49 +1,50 @@
-Return-Path: <linux-pci+bounces-36225-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36226-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF84B58F71
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 09:45:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAB74B58F78
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 09:45:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 559FF321906
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 07:45:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D34318963D4
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 07:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A2D2EB873;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD252EBDDE;
 	Tue, 16 Sep 2025 07:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e38VY6JO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="seoqjGSf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F315C2EB853;
-	Tue, 16 Sep 2025 07:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2742E9EA0;
+	Tue, 16 Sep 2025 07:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758008717; cv=none; b=li33mjKmESICu9Yk5r9C9+26J7GbFYS6BWARybuHpBMa9KvATM4SQ35EjkBWRtUIdaTwaQCbipmvemo+0U6ufhDAhz8S5h7A2gc7ln7ETHyD9MsqbfffHJhLBJ6jYUsAOurAGgA/1Qu3D3nPDERDriZAheMxl1u9TZXGT2GZHWw=
+	t=1758008717; cv=none; b=GhOvfnoRHhcCSOEgj+gTCB6xP5O+zXt0hgndVt/IzJY7wWHcbUkEts/XgfGY0SStttX9YE8iNOI9M6odrZxU6qP9MtDxFycYLLohLeiiaZg/qqrdr5FbYJRiv4UDrwBgy5Jn5G1pvG+qci5Z2aGOmjAOcv3ML7UShRYME3Ef5/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758008717; c=relaxed/simple;
-	bh=L+rmVaZTkoNGFXRnqwO/2ib3IwA5h8QBXMSTU4xtLN8=;
+	bh=TDPjKbP6JuxBf+E8pj9xVBmtW5mDyqaBa2s3+wF1yxs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Xy5jUjtyYuL0ibjYSktAlw1GbxzI0VVM6OlKAzxps7JUHH7SXdD1EWvS5l94nMYjg0/3sQ4aw30pL3OWFYsLdIbT3wOQ692Y6fFcF26lpx/YlH/6JeM2PNHcXGzaxavzt2JYQB6I38/Hr42ZGZA4NY7iroXApDlfBM4mM6ZUuTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e38VY6JO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4005C113CF;
-	Tue, 16 Sep 2025 07:45:15 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=TRi0X55V+9+YLJuMAXovlhvHsvLfJdN3+vN8/uQBq5hswdW7KRCM3HHhVgDJQGfsAx611FRMKm4HdchhMQ46dqDJJq+T3f29yelvh+ffX5Qzb2Zsqwb/TYkKeUaK9g9ANaYihiTvm3zgGrxpOmw1L2jykqKXCTCXkH3N34BwZ5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=seoqjGSf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BAA3C113D0;
+	Tue, 16 Sep 2025 07:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758008716;
-	bh=L+rmVaZTkoNGFXRnqwO/2ib3IwA5h8QBXMSTU4xtLN8=;
+	s=k20201202; t=1758008717;
+	bh=TDPjKbP6JuxBf+E8pj9xVBmtW5mDyqaBa2s3+wF1yxs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=e38VY6JOPJo8UuZYtPEECUL7Sw/4CSkLvPNdCJL/OUPpO3qWgUHYKn9tdv3dfCnVi
-	 Q3g7pSb5YGuMXOK8eC0uMzqFPcXxoBIbX7Zx12JyDR/0jg3TeuEbCXP7VLUezaeaFF
-	 vKpdJBjm09itIrRHudKVTTfYd8QyRse7K5mqk8Luzy8iGyrqFYfTPr0AyN7VXcHnce
-	 gt9JAK/pKiD5EDm6FVjF9JbmbY6G0bEhZXt8dGBUQ4YQy2QdTE5PvJs7rQtXaPEIc8
-	 Jv8JI7koO3EHE44JI2lTz20QOBi7l1Hwrv5R7FuRpkbV7xMusY4UF1no04DeNH5eGf
-	 PsRp24a2b8mdg==
+	b=seoqjGSfcad+F4LQlY4eypPy7RmGTApX8ESLhazqzEN1HqQT31hDXGjAN+ZV0YC82
+	 l8J7wJ6sNdBc1Dqg/ONUUBlJ5WGVZNdLKxmjQpay4BFTwlU52E1GUGaAsmZwUCTxmM
+	 HgWiKrQtvKegIxpfvR6+899VfqhZSoZVHYBYTl3owjcsBibjXIeyBn1U3vfToX2erT
+	 nlNetMwECfwqULyQTTmrliyQ7t8HlFc8fvyNC2xlfFt2SS5PIkKQO45CH45JXSQnww
+	 LHVWVcKzhxcqXP/JFfcRujFiDGFlcqW8QuNtOCyjtfLTXWG1W3rBub25RAId2LQEEj
+	 TNAlua9tSPk5Q==
 From: Chris Li <chrisl@kernel.org>
-Date: Tue, 16 Sep 2025 00:45:10 -0700
-Subject: [PATCH v2 02/10] PCI/LUO: Create requested liveupdate device list
+Date: Tue, 16 Sep 2025 00:45:11 -0700
+Subject: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
+ callbacks to driver
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250916-luo-pci-v2-2-c494053c3c08@kernel.org>
+Message-Id: <20250916-luo-pci-v2-3-c494053c3c08@kernel.org>
 References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
 In-Reply-To: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -69,293 +70,363 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
 X-Mailer: b4 0.14.2
 
-Introduce struct dev_liveupdate and add it to struct device.
+After the list of preserved devices is constructed, the PCI subsystem can
+now forward the liveupdate request to the driver.
 
-Use the new struct to track a device's liveupdate states.
-- flags: If not zero, the device participate the live update.
+The PCI subsystem saves and restores a u64 data from LUO callback. For
+each device, the PCI subsystem preserve a "dev_state" struct, which
+contains the path (domain + bus + devfn) and a per device u64 data.
 
-Currently the "flags" has two possible bit:
-LU_BUSMASTER: The device is requested for perserving the bus master.
-LU_BUSMASTER_BRIDGE: A child device is requested for preserving the
-	bus master. The bridge will need to preserve bus master as well.
+The device driver will use such a u64 data area to store the device driver
+state. The device live update callback looks very similar to the LUO
+subsystem callback, with the "void *arg" change to "struct device *dev".
 
-In the PCI subsystem prepare callback, create the requested device list
- as per the following rules:
-- If the device is requested for liveupdate LU_BUSMASTER, then the parent
-  bridge will be set LU_BUSMASTER_BRIDGE
+In the prepare callback, the PCI subsystem allocates then preserves a
+folio big enough to hold all requested device state (struct pci_dev_ser)
+in an array and the count.
 
-The list of PCI root bus and its children bus lists form a tree of all
-PCI buses. The tree is walked in postorder traversal, so that the device
-on the child bus can mark the parent bridge for LU_BUSMASTER_BRIDGE.
+The PCI sub system will just forward the liveupdate call back with u64
+data point to the u64 field of the device state array.
 
-After the postorder traversal of the bus tree then reverse order
-enumerates the devices in the bus, all device marks either requested or
-depended will be added to the requested device list.
+If some device fails the prepare callback, all previous devices that
+already successfully finished the prepare call back will get the cancel
+call back to clean up the saved state. That clean up is the special case
+that not the full list will be walked.
 
-This list of devices will be used in the next change to forward the
-liveupdate call back into individual devices.
-
-Note that collect_liveupdate_devices() returns the number of devices it
-added to request_devices. This will be used in a subsequent commit so that
-the PCI subsystem can calculate what size folio to allocate for its save
+In other live update callbacks, all the devices in the preserved device
+list will get the callback with their own u64 data field.
 
 Signed-off-by: Chris Li <chrisl@kernel.org>
 ---
- MAINTAINERS                    |  1 +
- drivers/pci/liveupdate.c       | 80 ++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pcie/portdrv.c     |  1 +
- drivers/pci/probe.c            |  4 ++-
- include/linux/dev_liveupdate.h | 44 +++++++++++++++++++++++
- include/linux/device.h         | 15 ++++++++
- 6 files changed, 144 insertions(+), 1 deletion(-)
+ drivers/pci/liveupdate.c       | 203 +++++++++++++++++++++++++++++++++++++++--
+ include/linux/dev_liveupdate.h |  23 +++++
+ include/linux/device/driver.h  |   6 ++
+ 3 files changed, 223 insertions(+), 9 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85749a5da69f88544ccc749e9d723b1b54c0e3b7..1ae3d166cd35ec5c7818f202079ed5d10c09144b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14021,6 +14021,7 @@ F:	Documentation/ABI/testing/sysfs-kernel-liveupdate
- F:	Documentation/admin-guide/liveupdate.rst
- F:	drivers/misc/liveupdate/
- F:	drivers/pci/liveupdate/
-+F:	include/linux/dev_liveupdate.h
- F:	include/linux/liveupdate.h
- F:	include/uapi/linux/liveupdate.h
- F:	tools/testing/selftests/liveupdate/
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 86b4f3a2fb44781c6e323ba029db510450556fa9..e8891844b8194dabf8d1e8e2d74d9c701bd741ca 100644
+index e8891844b8194dabf8d1e8e2d74d9c701bd741ca..2b215c224fb78c908579b0d22be713e1dc7ca21f 100644
 --- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -6,14 +6,94 @@
-  */
+@@ -9,11 +9,25 @@
+ #define dev_fmt(fmt) "PCI liveupdate: " fmt
  
- #define pr_fmt(fmt) "PCI liveupdate: " fmt
-+#define dev_fmt(fmt) "PCI liveupdate: " fmt
- 
-+#include <linux/types.h>
+ #include <linux/types.h>
++#include <linux/kexec_handover.h>
  #include <linux/liveupdate.h>
-+#include "pci.h"
+ #include "pci.h"
  
  #define PCI_SUBSYSTEM_NAME "pci"
  
-+static void stack_push_buses(struct list_head *stack, struct list_head *buses)
-+{
-+	struct pci_bus *bus;
++static LIST_HEAD(preserved_devices);
 +
-+	list_for_each_entry(bus, buses, node)
-+		list_move_tail(&bus->dev.lu.lu_next, stack);
-+}
++struct pci_dev_ser {
++	u32	path;		/* domain + bus + slot + fn */
++	u32	flags;
++	u64	driver_data;	/* driver data */
++};
 +
-+static void liveupdate_add_dev(struct device *dev, struct list_head *head)
-+{
-+	dev_info(dev, "collect liveupdate device: flags %x\n", dev->lu.flags);
-+	list_move_tail(&dev->lu.lu_next, head);
-+}
++struct pci_ser {
++	u32 count;
++	struct pci_dev_ser devs[];
++};
 +
-+static int collect_bus_devices_reverse(struct pci_bus *bus, struct list_head *head)
-+{
-+	struct pci_dev *pdev;
-+	int count = 0;
-+
-+	list_for_each_entry_reverse(pdev, &bus->devices, bus_list) {
-+		if (pdev->dev.lu.flags & LU_BUSMASTER &&  pdev->dev.parent)
-+			pdev->dev.parent->lu.flags |= LU_BUSMASTER_BRIDGE;
-+		if (pdev->dev.lu.flags) {
-+			liveupdate_add_dev(&pdev->dev, head);
-+			count++;
-+		}
-+	}
-+	return count;
-+}
-+
-+static int build_liveupdate_devices(struct list_head *head)
-+{
-+	LIST_HEAD(bus_stack);
-+	int count = 0;
-+
-+	stack_push_buses(&bus_stack, &pci_root_buses);
-+
-+	while (!list_empty(&bus_stack)) {
-+		struct device *busdev;
-+		struct pci_bus *bus;
-+
-+		busdev = list_last_entry(&bus_stack, struct device, lu.lu_next);
-+		bus = to_pci_bus(busdev);
-+		if (!busdev->lu.visited && !list_empty(&bus->children)) {
-+			stack_push_buses(&bus_stack, &bus->children);
-+			busdev->lu.visited = 1;
-+			continue;
-+		}
-+
-+		count += collect_bus_devices_reverse(bus, head);
-+		busdev->lu.visited = 0;
-+		list_del_init(&busdev->lu.lu_next);
-+	}
-+	return count;
-+}
-+
-+static void cleanup_liveupdate_devices(struct list_head *head)
-+{
-+	struct device *d, *n;
-+
-+	list_for_each_entry_safe(d, n, head, lu.lu_next) {
-+		d->lu.flags &= ~LU_DEPENDED;
-+		list_del_init(&d->lu.lu_next);
-+	}
-+}
-+
- static int pci_liveupdate_prepare(void *arg, u64 *data)
+ static void stack_push_buses(struct list_head *stack, struct list_head *buses)
  {
-+	LIST_HEAD(requested_devices);
+ 	struct pci_bus *bus;
+@@ -70,42 +84,213 @@ static int build_liveupdate_devices(struct list_head *head)
+ 	return count;
+ }
+ 
++static void dev_cleanup_liveupdate(struct device *dev)
++{
++	dev->lu.flags &= ~LU_DEPENDED;
++	list_del_init(&dev->lu.lu_next);
++}
 +
- 	pr_info("prepare data[%llx]\n", *data);
+ static void cleanup_liveupdate_devices(struct list_head *head)
+ {
+ 	struct device *d, *n;
+ 
+-	list_for_each_entry_safe(d, n, head, lu.lu_next) {
+-		d->lu.flags &= ~LU_DEPENDED;
+-		list_del_init(&d->lu.lu_next);
++	list_for_each_entry_safe(d, n, head, lu.lu_next)
++		dev_cleanup_liveupdate(d);
++}
++
++static void cleanup_liveupdate_state(struct pci_ser *pci_state)
++{
++	struct folio *folio = virt_to_folio(pci_state);
++
++	kho_unpreserve_folio(folio);
++	folio_put(folio);
++}
++
++static void pci_call_cancel(struct pci_ser *pci_state)
++{
++	struct pci_dev_ser *si = pci_state->devs;
++	struct device *dev, *next;
++
++	list_for_each_entry_safe(dev, next, &preserved_devices, lu.lu_next) {
++		struct pci_dev_ser *s = si++;
++
++		if (!dev->driver)
++			panic("PCI liveupdate cancel: %s has no driver", dev_name(dev));
++		if (!dev->driver->lu)
++			panic("PCI liveupdate cancel: %s driver %s does not support liveupdate",
++			      dev_name(dev), dev->driver->name ? : "(null name)");
++		if (dev->driver->lu->cancel)
++			dev->driver->lu->cancel(dev, s->driver_data);
++		dev_cleanup_liveupdate(dev);
+ 	}
+ }
+ 
+-static int pci_liveupdate_prepare(void *arg, u64 *data)
++static int pci_get_device_path(struct pci_dev *pdev)
++{
++	return (pci_domain_nr(pdev->bus) << 16) | pci_dev_id(pdev);
++}
++
++static int pci_save_device_state(struct device *dev, struct pci_dev_ser *s)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	s->path = pci_get_device_path(pdev);
++	s->flags = dev->lu.flags;
++	return 0;
++}
++
++static int pci_call_prepare(struct pci_ser *pci_state,
++			    struct list_head *devices)
++{
++	struct pci_dev_ser *pdev_state_current = pci_state->devs;
++	struct device *dev, *next;
++	int ret;
++	char *reason;
++
++	list_for_each_entry_safe(dev, next, devices, lu.lu_next) {
++		struct pci_dev_ser *s = pdev_state_current++;
++
++		if (!dev->driver) {
++			reason = "no driver";
++			ret = -ENOENT;
++			goto cancel;
++		}
++		if (!dev->driver->lu) {
++			reason = "driver does not support liveupdate";
++			ret = -EPERM;
++			goto cancel;
++		}
++		ret = pci_save_device_state(dev, s);
++		if (ret) {
++			reason = "save device state failed";
++			goto cancel;
++		}
++		if (dev->driver->lu->prepare) {
++			ret = dev->driver->lu->prepare(dev, &s->driver_data);
++			if (ret) {
++				reason = "prepare() failed";
++				goto cancel;
++			}
++		}
++		list_move_tail(&dev->lu.lu_next, &preserved_devices);
++	}
++	return 0;
++
++cancel:
++	dev_err(dev, "luo prepare failed %d (%s)\n", ret, reason);
++	pci_call_cancel(pci_state);
++	return ret;
++}
++
++static int __pci_liveupdate_prepare(void *arg, u64 *data)
+ {
+ 	LIST_HEAD(requested_devices);
++	struct pci_ser *pci_state;
++	int ret;
++	int count = build_liveupdate_devices(&requested_devices);
++	int size = sizeof(*pci_state) + sizeof(pci_state->devs[0]) * count;
++	int order = get_order(size);
++	struct folio *folio;
+ 
+-	pr_info("prepare data[%llx]\n", *data);
++	folio = folio_alloc(GFP_KERNEL | __GFP_ZERO, order);
++	if (!folio) {
++		ret = -ENOMEM;
++		goto cleanup_device;
++	}
+ 
+-	pci_lock_rescan_remove();
+-	down_write(&pci_bus_sem);
++	pci_state = folio_address(folio);
++	pci_state->count = count;
++
++	ret = kho_preserve_folio(folio);
++	if (ret) {
++		pr_err("liveupdate_preserve_folio failed\n");
++		goto release_folio;
++	}
++
++	ret = pci_call_prepare(pci_state, &requested_devices);
++	if (ret)
++		goto unpreserve;
+ 
+-	build_liveupdate_devices(&requested_devices);
++	*data = __pa(pci_state);
++	pr_info("prepare data[%llx]\n", *data);
++	return 0;
++
++unpreserve:
++	kho_unpreserve_folio(folio);
++release_folio:
++	folio_put(folio);
++cleanup_device:
+ 	cleanup_liveupdate_devices(&requested_devices);
++	return ret;
++}
+ 
++static int pci_liveupdate_prepare(void *arg, u64 *data)
++{
++	int ret;
 +
 +	pci_lock_rescan_remove();
 +	down_write(&pci_bus_sem);
++	ret = __pci_liveupdate_prepare(arg, data);
+ 	up_write(&pci_bus_sem);
+ 	pci_unlock_rescan_remove();
++	return ret;
++}
 +
-+	build_liveupdate_devices(&requested_devices);
-+	cleanup_liveupdate_devices(&requested_devices);
++static int pci_call_freeze(struct pci_ser *pci_state, struct list_head *devlist)
++{
++	struct pci_dev_ser *n = pci_state->devs;
++	struct device *dev;
++	int ret = 0;
 +
-+	up_write(&pci_bus_sem);
-+	pci_unlock_rescan_remove();
++	list_for_each_entry(dev, devlist, lu.lu_next) {
++		struct pci_dev_ser *s = n++;
++
++		if (!dev->driver) {
++			if (!dev->parent)
++				continue;
++			panic("PCI liveupdate freeze: %s has no driver", dev_name(dev));
++		}
++		if (!dev->driver->lu->freeze)
++			continue;
++		ret = dev->driver->lu->freeze(dev, &s->driver_data);
++		if (ret) {
++			dev_err(dev, "luo freeze failed %d\n", ret);
++			pci_call_cancel(pci_state);
++			return ret;
++		}
++	}
  	return 0;
  }
  
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index e8318fd5f6ed537a1b236a3a0f054161d5710abd..0e9ef387182856771d857181d88f376632b46f0d 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -304,6 +304,7 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
- 	device = &pcie->device;
- 	device->bus = &pcie_port_bus_type;
- 	device->release = release_pcie_device;	/* callback to free pcie dev */
-+	dev_liveupdate_init(device);
- 	dev_set_name(device, "%s:pcie%03x",
- 		     pci_name(pdev),
- 		     get_descriptor_id(pci_pcie_type(pdev), service));
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 4b8693ec9e4c67fc1655e0057b3b96b4098e6630..dddd7ebc03d1a6e6ee456e0bf02ab9833a819509 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -614,6 +614,7 @@ static struct pci_bus *pci_alloc_bus(struct pci_bus *parent)
- 	INIT_LIST_HEAD(&b->devices);
- 	INIT_LIST_HEAD(&b->slots);
- 	INIT_LIST_HEAD(&b->resources);
-+	dev_liveupdate_init(&b->dev);
- 	b->max_bus_speed = PCI_SPEED_UNKNOWN;
- 	b->cur_bus_speed = PCI_SPEED_UNKNOWN;
- #ifdef CONFIG_PCI_DOMAINS_GENERIC
-@@ -1985,6 +1986,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	dev->sysdata = dev->bus->sysdata;
- 	dev->dev.parent = dev->bus->bridge;
- 	dev->dev.bus = &pci_bus_type;
-+	dev_liveupdate_init(&dev->dev);
- 	dev->hdr_type = hdr_type & 0x7f;
- 	dev->multifunction = !!(hdr_type & 0x80);
- 	dev->error_state = pci_channel_io_normal;
-@@ -3184,7 +3186,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 		return NULL;
+ static int pci_liveupdate_freeze(void *arg, u64 *data)
+ {
++	struct pci_ser *pci_state = phys_to_virt(*data);
++	int ret;
++
+ 	pr_info("freeze data[%llx]\n", *data);
+-	return 0;
++	pci_lock_rescan_remove();
++	down_write(&pci_bus_sem);
++
++	ret = pci_call_freeze(pci_state, &preserved_devices);
++
++	up_write(&pci_bus_sem);
++	pci_unlock_rescan_remove();
++	return ret;
+ }
  
- 	bridge->dev.parent = parent;
--
-+	dev_liveupdate_init(&bridge->dev);
- 	list_splice_init(resources, &bridge->windows);
- 	bridge->sysdata = sysdata;
- 	bridge->busnr = bus;
+ static void pci_liveupdate_cancel(void *arg, u64 data)
+ {
++	struct pci_ser *pci_state = phys_to_virt(data);
++
+ 	pr_info("cancel data[%llx]\n", data);
++	pci_lock_rescan_remove();
++	down_write(&pci_bus_sem);
++
++	pci_call_cancel(pci_state);
++	cleanup_liveupdate_state(pci_state);
++
++	up_write(&pci_bus_sem);
++	pci_unlock_rescan_remove();
+ }
+ 
+ static void pci_liveupdate_finish(void *arg, u64 data)
 diff --git a/include/linux/dev_liveupdate.h b/include/linux/dev_liveupdate.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..72297cba08a999e89f7bc0997dabdbe14e0aa12c
---- /dev/null
+index 72297cba08a999e89f7bc0997dabdbe14e0aa12c..80a723c7701ac4ddc2ddd03d0ffc9cc5a62a6083 100644
+--- a/include/linux/dev_liveupdate.h
 +++ b/include/linux/dev_liveupdate.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+@@ -20,6 +20,8 @@ enum liveupdate_flag {
+ #define	LU_REQUESTED	(LU_BUSMASTER)
+ #define	LU_DEPENDED	(LU_BUSMASTER_BRIDGE)
+ 
++struct device;
 +
-+/*
-+ * Copyright (c) 2025, Google LLC.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ * Chris Li <chrisl@kernel.org>
-+ */
-+#ifndef _LINUX_DEV_LIVEUPDATE_H
-+#define _LINUX_DEV_LIVEUPDATE_H
-+
-+#include <linux/liveupdate.h>
-+
-+#ifdef CONFIG_LIVEUPDATE
-+
-+enum liveupdate_flag {
-+	LU_BUSMASTER = 1 << 0,
-+	LU_BUSMASTER_BRIDGE = 2 << 0,
-+};
-+
-+#define	LU_REQUESTED	(LU_BUSMASTER)
-+#define	LU_DEPENDED	(LU_BUSMASTER_BRIDGE)
-+
+ /**
+  * struct dev_liveupdate - Device state for live update operations
+  * @lu_next:	List head for linking the device into live update
+@@ -40,5 +42,26 @@ struct dev_liveupdate {
+ 	bool visited:1;
+ };
+ 
 +/**
-+ * struct dev_liveupdate - Device state for live update operations
-+ * @lu_next:	List head for linking the device into live update
-+ *		related lists (e.g., a list of devices participating
-+ *		in a live update sequence).
-+ * @flags:	Indicate what liveupdate feature does the device
-+ *		participtate.
-+ * @visited:	Only used by the bus devices when travese the PCI buses
-+ *		to build the liveupdate devices list. Set if the child
-+ *		buses have been pushed into the pending stack.
++ * struct dev_liveupdate_ops - Live Update callback functions
++ * @prepare:     Prepare device for the upcoming state transition. Driver and
++ *               buses should save the necessary device state.
++ * @freeze:      A final notification before the system jumps to the new kernel.
++ *               Called from reboot() syscall.
++ * @cancel:      Cancel the live update process. Driver should clean
++ *               up any saved state if necessary.
++ * @finish:      The system has completed a transition. Drivers and buses should
++ *               have already restored the previously saved device state.
++ *               Clean-up any saved state or reset unreclaimed device.
 + *
-+ * This structure holds the state information required for performing
-+ * live update operations on a device. It is embedded within a struct device.
++ * This structure is used by drivers and buses to hold the callback from LUO.
 + */
-+struct dev_liveupdate {
-+	struct list_head lu_next;
-+	enum liveupdate_flag flags;
-+	bool visited:1;
++struct dev_liveupdate_ops {
++	int (*prepare)(struct device *dev, u64 *data);
++	int (*freeze)(struct device *dev, u64 *data);
++	void (*cancel)(struct device *dev, u64 data);
++	void (*finish)(struct device *dev, u64 data);
 +};
 +
-+#endif /* CONFIG_LIVEUPDATE */
-+#endif /* _LINUX_DEV_LIVEUPDATE_H */
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4940db137fffff4ceacf819b32433a0f4898b125..e0b35c723239f1254a3b6152f433e0412cd3fb34 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -21,6 +21,7 @@
- #include <linux/lockdep.h>
- #include <linux/compiler.h>
- #include <linux/types.h>
-+#include <linux/dev_liveupdate.h>
- #include <linux/mutex.h>
+ #endif /* CONFIG_LIVEUPDATE */
+ #endif /* _LINUX_DEV_LIVEUPDATE_H */
+diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+index cd8e0f0a634be9ea63ff22e89d66ada3b1a9eaf2..b2ba469cc3065a412f02230c62e811af19c4d2c6 100644
+--- a/include/linux/device/driver.h
++++ b/include/linux/device/driver.h
+@@ -19,6 +19,7 @@
  #include <linux/pm.h>
- #include <linux/atomic.h>
-@@ -508,6 +509,7 @@ struct device_physical_location {
-  * @pm_domain:	Provide callbacks that are executed during system suspend,
-  * 		hibernation, system resume and during runtime PM transitions
-  * 		along with subsystem-level and driver-level callbacks.
-+ * @lu:		Live update state.
-  * @em_pd:	device's energy model performance domain
-  * @pins:	For device pin management.
-  *		See Documentation/driver-api/pin-control.rst for details.
-@@ -603,6 +605,10 @@ struct device {
- 	struct dev_pm_info	power;
- 	struct dev_pm_domain	*pm_domain;
+ #include <linux/device/bus.h>
+ #include <linux/module.h>
++#include <linux/dev_liveupdate.h>
  
-+#ifdef CONFIG_LIVEUPDATE
-+	struct dev_liveupdate	lu;
-+#endif
-+
- #ifdef CONFIG_ENERGY_MODEL
- 	struct em_perf_domain	*em_pd;
- #endif
-@@ -1168,4 +1174,13 @@ void device_link_wait_removal(void);
- #define MODULE_ALIAS_CHARDEV_MAJOR(major) \
- 	MODULE_ALIAS("char-major-" __stringify(major) "-*")
+ /**
+  * enum probe_type - device driver probe type to try
+@@ -80,6 +81,8 @@ enum probe_type {
+  *		it is bound to the driver.
+  * @pm:		Power management operations of the device which matched
+  *		this driver.
++ * @lu:		Live update callbacks, notify device of the live
++ *		update state, and allow preserve device across reboot.
+  * @coredump:	Called when sysfs entry is written to. The device driver
+  *		is expected to call the dev_coredump API resulting in a
+  *		uevent.
+@@ -116,6 +119,9 @@ struct device_driver {
+ 	const struct attribute_group **dev_groups;
  
+ 	const struct dev_pm_ops *pm;
 +#ifdef CONFIG_LIVEUPDATE
-+static inline void dev_liveupdate_init(struct device *dev)
-+{
-+	INIT_LIST_HEAD(&dev->lu.lu_next);
-+}
-+#else
-+static inline void dev_liveupdate_init(struct device *dev) {}
++	const struct dev_liveupdate_ops *lu;
 +#endif
-+
- #endif /* _DEVICE_H_ */
+ 	void (*coredump) (struct device *dev);
+ 
+ 	struct driver_private *p;
 
 -- 
 2.51.0.384.g4c02a37b29-goog
