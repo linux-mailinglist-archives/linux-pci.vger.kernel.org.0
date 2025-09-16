@@ -1,140 +1,134 @@
-Return-Path: <linux-pci+bounces-36301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1F12B5A328
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:34:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8F69B5A357
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:39:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47A3C4615A9
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:33:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 152034839B9
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:37:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D78631BCA5;
-	Tue, 16 Sep 2025 20:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DF2C31BC93;
+	Tue, 16 Sep 2025 20:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mak2OBqs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpp5cQ8M"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3314031BCA1;
-	Tue, 16 Sep 2025 20:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B9931BC8F;
+	Tue, 16 Sep 2025 20:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054352; cv=none; b=snjImW+qmlT9HNpifl7PYE774WnzYA7H7vQsfRqVa2JEpt3jfLgBQRmnggq8qXgeO3NnHVogiKTlUCYhhzfI8Mmdj6DsxRhiFkcO88uU4asFlcD2MU5zDJc2tdcDlqN6NaKMGxJu4wdQeP8Rs4C/VEWzL6HAGIcMu21XyksbyBY=
+	t=1758054941; cv=none; b=G1DP1fLCMq3tTm2JmBootjmQpFKoYDBFaG699eLfYLB6Zib64krNN472NfJlDMFKSCAa7wJRs3La9MAmUJhZO2gLth0/Rtb7Cs0KXXTjHGrZza02+zvs7TCDhNY/Y7fibxDUpVsh9wUZbPs+IMzqqNSTlRY3rkjb8SrzXxdDSLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758054352; c=relaxed/simple;
-	bh=m37YmQRRErQE/O0cGfIUVqjH/BwggCX8wBYw+TGhzww=;
+	s=arc-20240116; t=1758054941; c=relaxed/simple;
+	bh=KqfC65wNBi+Y/C3HaiesaaDgdsXgozVufkjtOAiu4hM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UvKp4le0udEU4tT/WLyaWNjjLeCrgMtOwF9SXZOHsqY4gICsQ/RILFojkZvh79gx0Ui0AOJUifemHW2wdPiedLju/NrEIIXFQ286YTHeuGhxfme9WI5K60mTDXODBh8Vc+lNvO1RjQzvzQVoi2bXuGtwGTUB6BN1zRnbtQxJQhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mak2OBqs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7672C4CEEB;
-	Tue, 16 Sep 2025 20:25:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=BfzbexwznLCPkNGwbicJxk5WRPXtCeTw5eoU3oa2KIF443Ga0H6O7aD3GJgA8TOVRpXWSpptkO9pf18dMG928QP1Nkp8/LRHy3Hgcz3o7POcpBPVTRHTTkHtNrfWv7LseML17GI3irwlgsfdZaCcDecqqrq9j85oYtBWmyrBb4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpp5cQ8M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8304C4CEEB;
+	Tue, 16 Sep 2025 20:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758054351;
-	bh=m37YmQRRErQE/O0cGfIUVqjH/BwggCX8wBYw+TGhzww=;
+	s=k20201202; t=1758054940;
+	bh=KqfC65wNBi+Y/C3HaiesaaDgdsXgozVufkjtOAiu4hM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Mak2OBqsfdKvjlsa6J1UGVAwP2mvnFb8f2YKKNHSvSmtXLft8aK+e6MYl4Ra8sJVx
-	 +pjuL1GjriXMQ4JoVU2dV+jvN+9dlvsDvEVVWKzHaJ7VnDrNkKEBDNM6z2HVgeuX52
-	 bEoZebZs6II7O9qVWvOHc8af6Tw+miIRInx0HecUlWebCrjbw3I6DftewvGWOKh0iY
-	 T3jFujR9NkQ3auALHbI281uH6alVZULkxde9h9Xj0S+UASZU+HJqXpJH98Z+nlXVGl
-	 8ZokuMhEXa8eVD3WfY/NL7184Yq3WfJlIy3FVdQf1kiqEuo6IyEZ4jgCSlQ3yy9COX
-	 9JBMDOVfzEuOQ==
-Date: Tue, 16 Sep 2025 15:25:50 -0500
+	b=gpp5cQ8MDuThAKuE8YpdMV+sVmG1CQsK86y/CmAihJJHE7cjHFOtU+vBlylCrbI/B
+	 lkY285P/FU7qaXK1zTJsd0Uy9haUzrsSnqAKTj9pxM3bxqo491TsNsOl9LfISl5v+3
+	 dCUmflIjzOaN8eacQOndiOs4z+ePCcVHzgG8AQdQD2SB9IgOACAVpGSI/q18Z++lMp
+	 i5FYXY9WRiRyOlU7eo3XUR7kQuJT1uYmRXwaj9L/VhQ50qoSiW9SeCH+MAImQa9z2F
+	 ONE1Tn7ylJq2aVqatsdhE9zACAPUYCJw5cNPtF6AVXbcNBe+SKpSyJ/qE4CHEQMRHA
+	 NHRiyZI6sn0yg==
+Date: Tue, 16 Sep 2025 15:35:39 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Chia-Lin Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH 0/2] PCI/ASPM: Enable ASPM and Clock PM by default on
- devicetree platforms
-Message-ID: <20250916202550.GA1814752@bhelgaas>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
+	nic_swsd@realtek.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Wang, Crag" <Crag.Wang@dell.com>,
+	"Chen, Alan" <Alan.Chen6@dell.com>,
+	"Alex Shen@Dell" <Yijun.Shen@dell.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] r8169: enable ASPM on Dell platforms
+Message-ID: <20250916203539.GA1815401@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250916172116.GA1808269@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec602131-ed22-44a8-a356-03729764a690@gmail.com>
 
-[+cc Heiner, AceLan in case it's of interest to you]
+[+cc linux-pci]
 
-On Tue, Sep 16, 2025 at 12:21:18PM -0500, Bjorn Helgaas wrote:
-> [+cc Kai-Heng, Rafael; thread at
-> https://lore.kernel.org/r/20250916-pci-dt-aspm-v1-0-778fe907c9ad@oss.qualcomm.com]
+On Mon, Sep 15, 2025 at 09:25:39PM +0200, Heiner Kallweit wrote:
+> On 9/15/2025 3:37 AM, Chia-Lin Kao (AceLan) wrote:
+> > On Fri, Sep 12, 2025 at 05:30:52PM +0200, Heiner Kallweit wrote:
+> >> On 9/12/2025 9:29 AM, Chia-Lin Kao (AceLan) wrote:
+> >>> Enable PCIe ASPM for RTL8169 NICs on Dell platforms that have been
+> >>> verified to work reliably with this power management feature. The
+> >>> r8169 driver traditionally disables ASPM to prevent random link
+> >>> failures and system hangs on problematic hardware.
+> >>>
+> >>> Dell has validated these product families to work correctly with
+> >>> RTL NIC ASPM and commits to addressing any ASPM-related issues
+> >>> with RTL hardware in collaboration with Realtek.
+> >>>
+> >>> This change enables ASPM for the following Dell product families:
+> >>> - Alienware
+> >>> - Dell Laptops/Pro Laptops/Pro Max Laptops
+> >>> - Dell Desktops/Pro Desktops/Pro Max Desktops
+> >>> - Dell Pro Rugged Laptops
+> >>>
+> >> I'd like to avoid DMI-based whitelists in kernel code. If more system
+> >> vendors do it the same way, then this becomes hard to maintain.
+> >
+> > I totally understand your point; I also don’t like constantly adding DMI
+> > info to the list. But this list isn’t for a single product name, it’s a
+> > product family that covers a series of products, and it probably won’t
+> > change anytime soon.
+> > 
+> >> There is already a mechanism for vendors to flag that they successfully
+> >> tested ASPM. See c217ab7a3961 ("r8169: enable ASPM L1.2 if system vendor
+> >> flags it as safe").
+> >
+> > Right, but writing the flag is not applicable for Dell manufacturing
+> > processes.
+> > 
+> Can you elaborate on why this doesn't work for Dell?
 > 
-> On Tue, Sep 16, 2025 at 09:42:51PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > Hi,
+> >> Last but not least ASPM can be (re-)enabled from userspace, using sysfs.
+> >
+> > That doesn't sound like a good solution to push the list to userspace.
 > > 
-> > This series is one of the 'let's bite the bullet' kind, where we have decided to
-> > enable all ASPM and Clock PM states by default on devicetree platforms [1]. The
-> > reason why devicetree platforms were chosen because, it will be of minimal
-> > impact compared to the ACPI platforms. So seemed ideal to test the waters.
-> > 
-> > Problem Statement
-> > =================
-> > 
-> > Historically, PCI subsystem relied on the BIOS to enable ASPM and Clock PM
-> > states for PCI devices before the kernel boot. This was done to avoid enabling
-> > ASPM for the buggy devices that are known to create issues with ASPM (even
-> > though they advertise the ASPM capability). But BIOS is not at all a thing on
-> > most of the non-x86 platforms. For instance, the majority of the Embedded and
-> > Compute ARM based platforms using devicetree have something called bootloader,
-> > which is not anyway near the standard BIOS used in x86 based platforms. And
-> > these bootloaders wouldn't touch PCIe at all, unless they boot using PCIe
-> > storage, even then there would be no guarantee that the ASPM states will get
-> > enabled. Another example is the Intel's VMD domain that is not at all configured
-> > by the BIOS. But, this series is not enabling ASPM/Clock PM for VMD domain. I
-> > hope it will be done similarly in the future patches.
-> > 
-> > Solution
-> > ========
-> > 
-> > So to avoid relying on BIOS, it was agreed [2] that the PCI subsystem has to
-> > enable ASPM and Clock PM states based on the device capability. If any devices
-> > misbehave, then they should be quirked accordingly.
-> > 
-> > First patch of this series introduces two helper functions to enable all ASPM
-> > and Clock PM states if CONFIG_OF is enabled. Second patch drops the custom ASPM
-> > enablement code from the pcie-qcom driver as it is no longer needed.
-> > 
-> > Testing
-> > =======
-> > 
-> > This series is tested on Lenovo Thinkpad T14s based on Snapdragon X1 SoC. All
-> > supported ASPM states are getting enabled for both the NVMe and WLAN devices by
-> > default.
-> > 
-> > [1] https://lore.kernel.org/linux-pci/a47sg5ahflhvzyzqnfxvpk3dw4clkhqlhznjxzwqpf4nyjx5dk@bcghz5o6zolk
-> > [2] https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> > Manivannan Sadhasivam (2):
-> >       PCI/ASPM: Override the ASPM and Clock PM states set by BIOS for devicetree platforms
-> >       PCI: qcom: Remove the custom ASPM enablement code
-> > 
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 32 -----------------------
-> >  drivers/pci/pcie/aspm.c                | 48 ++++++++++++++++++++++++++++++----
-> >  2 files changed, 43 insertions(+), 37 deletions(-)
-> > ---
-> > base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-> > change-id: 20250916-pci-dt-aspm-8b3a7e8d2cf1
-> > 
-> > Best regards,
-> > -- 
-> > Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > 
-> > 
+> > Dell has already been working with Canonical for more than a decade to
+> > ship their products with r8169 ASPM enabled. Dell has also had lengthy
+> > discussions with Realtek to have this feature enabled by default in the
+> > r8169 driver. I think this is a good opportunity for Dell to work with
+> > Realtek to spot bugs and refine the r8169 driver.
+>
+> One more option to avoid having to change kernel code with each new
+> and successfully ASPM-tested system family from any system vendor:
+> 
+> We could define a device property which states that ASPM has been
+> successfully tested on a system. This device property could be set
+> via device tree or via ACPI. Then a simple device_property_present()
+> in the driver would be sufficient.
+> A device property would also have the advantage that vendors can
+> control behavior per device, not only per device family.
+> An ACPI device property could be rolled out via normal BIOS update
+> for existing systems.
+> 
+> See also:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/firmware-guide/acpi/DSD-properties-rules.rst?h=v6.16.7
+
+Related conversation:
+https://lore.kernel.org/r/5b00870c-be1a-42d6-8857-48b89716d5e2@gmail.com
 
