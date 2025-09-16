@@ -1,208 +1,264 @@
-Return-Path: <linux-pci+bounces-36306-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36307-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C82EFB5A3D2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 23:24:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07167B5F832
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 00:10:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41E87486BF4
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 21:23:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A03F6328307
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:10:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8591128A72F;
-	Tue, 16 Sep 2025 21:23:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE30D298CB7;
+	Tue, 16 Sep 2025 22:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ndmyF+qn"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="rYLNrsB8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012019.outbound.protection.outlook.com [40.107.200.19])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBE42582;
-	Tue, 16 Sep 2025 21:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758057821; cv=fail; b=NE8LcPmGvUsGcp4sBn2giUH20J/idgXJPMDeT26vgnKUOSXKr5keWqa9YWyL393Sm/VPDI2Vo+t5GcHozMxuThCHDZMW04fa0kUXNiveXFK8DHPuw4I17kgo9Vjhy2PHpboKrcBN4b6xgsGzfp1Q8+KuqzIXXrAiYa/pl7FHTz8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758057821; c=relaxed/simple;
-	bh=bme/BIQ+ERSLWMRr9m2wRIQik7VMJC596tVTKSkGcxw=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ha1Fp9ZiZCEPepO4QU31EbwmWKhB3bcQITFsQa6+kVc8Ru1oMY1xwrq71XeW3U5M1HTZIQCU4Bf8cNY5ExXLDuPmOJh/XVWIm1yGYcAOe4qotGW11aQgZtgIWl8tzsRxTNQ/y3TOwKlOz2dIaesAnLiPJIF19BgXTbjnIqz9gms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ndmyF+qn; arc=fail smtp.client-ip=40.107.200.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gCI3uylqQkEkngSVL+falLlhRYoR0t7eiotfqIyDbP/y6j0TOhI0AKM88kdteTRdEhd/fhR591TG2BLUPS909tKibyttvgEDdbv12H3BZKaGZRG36nsAwuAnv5fV6OyzvXfI5zkrn0ffNgNiquDdS+hQiGsEZv2p5uDsBrfg0oFqq1vRUtgkWKH6r6d4cp93R+zT0OwsWSWmam3bnXPSZaydbGdhz78yRWeyUmBiocGrljLHw2ahb4dSqUkxtuWcESPPqEvgMG6NYVVTQ9viUIhrEs5JvxeVbZaWDxmCou3dBIe0mOvn54L+OCTRLPiA1mH8JaW9HMH8AMTnwH3X+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wxkUMB+cxkAwR/lVny6R0/u+5bSXhcB48HCofQ3EJAk=;
- b=fq9imV+fMRD2khj4onAu4MePA8QlKYNEPs9rLZ/kb6aP15qLsdyxBGsymVPo0+eKszhb55eHY7alMnhQDzK/gDNH31PgEa+SLKpi6EwmusxliqfGQkkz3TCd9xo1vcHWp0FWTwCjJ5BFHCvyzUXR6CiRZlGQkORWzwBWnqCtoz0B7iGpOKjpWJqqpHmdavZDaSx77VAM6KZyPiWaTGW42dNrHHpkncEouqfL3of4b0zF3+3nOfh/GW3B03HA4NeosTKHk2mToApXoi8uMfsskihoirgzoEMeNmMwBBMGVjXR+nL+R1DJdbLCO5uYf5pu7Uv5u8euJpEOX0jtGpSahw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxkUMB+cxkAwR/lVny6R0/u+5bSXhcB48HCofQ3EJAk=;
- b=ndmyF+qnvwf3cp7MLcd7f0As/JSeDtDrUnpzGd6JelMQp9fWhBAM1Al4A7NNJfEZJQ4GjfLvYDzWcVW43TQHSY7tnhyQMi8b9VXvCCwbh3n8gTq+7xLP8FUjrmqB+2t+yuLQq/HdRXC31fikVRgg1qR9M2Ie89SQ3eOlvo5vbMw=
-Received: from CH2PR14CA0031.namprd14.prod.outlook.com (2603:10b6:610:56::11)
- by CH3PR12MB9429.namprd12.prod.outlook.com (2603:10b6:610:1c9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Tue, 16 Sep
- 2025 21:23:36 +0000
-Received: from CH3PEPF0000000B.namprd04.prod.outlook.com
- (2603:10b6:610:56:cafe::2c) by CH2PR14CA0031.outlook.office365.com
- (2603:10b6:610:56::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.22 via Frontend Transport; Tue,
- 16 Sep 2025 21:23:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CH3PEPF0000000B.mail.protection.outlook.com (10.167.244.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 21:23:35 +0000
-Received: from localhost (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 16 Sep
- 2025 14:23:34 -0700
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH RFC 09/13] dmaengine: sdxi: Add core device management code
-In-Reply-To: <20250915152331.0000246a@huawei.com>
-References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
- <20250905-sdxi-base-v1-9-d0341a1292ba@amd.com>
- <20250915152331.0000246a@huawei.com>
-Date: Tue, 16 Sep 2025 16:23:33 -0500
-Message-ID: <877bxyxfai.fsf@AUSNATLYNCH.amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7553E285C95;
+	Tue, 16 Sep 2025 22:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758060602; cv=none; b=KUvLlCUk7XIern9B7Ac9Ya4gxmQLdjAaz6KShVy+1aM+Gsi3FXD0FVQKail6eTUoLs/hRiyP3+B8LVQhX5Dgo+8Ew+RMcHqN1zinKj95xp3FVuv8y+3SzQxg0BF0fWm/CSIQKhCAG1GNw47D42fygKUevmilArGy7rQmL5RwRvI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758060602; c=relaxed/simple;
+	bh=5ZW7xgclfEVdJBLramF18uiwLPXnLoB2bpXnl8cFvv4=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=t53rNPQEfJ2CjjGZYjgqoJkkN9+Ic4iHVN5CuX6VoZhKT1mcjMnXKOlKWBOyRcn00bVoycD8o58MeHk1OeBEQ+7cN8dhNjjPfeUoInvdv5ZtiSaz+JSmyQP2P3u5YL6R0PNkxmfRRveiyDKSWinLYRSDwVbXy5e/S2maxeFqydQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=rYLNrsB8; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cRGKc3zDtz9t8X;
+	Wed, 17 Sep 2025 00:09:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758060596;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xEJEnmpRagi+nUiHPzvm+G7T+hKq5MS0PYsR2dwTg7I=;
+	b=rYLNrsB8T6LD6foVbt5jYdzvU6HqFAiAdF4SR+XLlLU4ykOfs1mxR/FHnEfIKCzvk57kD6
+	cdSXM0K/UCT2Gq2aXeKnyEf6aRMaVBjrOzjRAA214jpbwE41EXIiTNHbzggb6OvG2ZDrH6
+	ocZNUdrrTrXXF2z11TARChevmOkpGs6HWtJL83HINT8izR7e+a3HHNhpHDMCpT+WPsTAZi
+	gginmDSM4g+FgIFq1F3sS3knoKgQsb85nkxgccRBnoYesvMhu76uBmt+7HctmmxkZOmYdG
+	CBOepyLljNSNuRLnaxRnnjZth+LO2ukv+StwWIqsf1oiXQthFZCN+mC+8Ofplw==
+Content-Type: multipart/mixed; boundary="------------5F1ZMUY5Lvr44xoJynSN20Fq"
+Message-ID: <643c9b19-dda4-43c5-bb6d-aa0705053d43@mailbox.org>
+Date: Wed, 17 Sep 2025 00:09:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000B:EE_|CH3PR12MB9429:EE_
-X-MS-Office365-Filtering-Correlation-Id: add49c3b-f86f-4b03-44f2-08ddf5674ba2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wO+lV/iSz0jkX0ekW827hR01BcmVRr9ZphB/3ckoP6TSxnEnAGIujIsh6ZRi?=
- =?us-ascii?Q?g0U35UAAw6DGA7QDIWwyluiPEA7ChC4BzAi+x+fiV9cNnNh+IW+rlsfXW70m?=
- =?us-ascii?Q?L7HqPydzBfawBt7rIc8Fi4ocAJBkLDC529nNwVcLfqCFkoOVkhltReAwLABC?=
- =?us-ascii?Q?GnGYC7errMgpYvn9TP2IbBCfe826p7fxcT9TkuCQz4/8mFmksPx14Ygt1ye5?=
- =?us-ascii?Q?Nymt/bJCk6xiU0UA2Lw7YiToqlm2zZnYixFAFp6yh/yIlgcDHxopexWKYZzW?=
- =?us-ascii?Q?+jjSi/fXvbguA4fikekDirGXf8KIDdL4hYy79AQWs2AKHkEmCyk2mrnD1fui?=
- =?us-ascii?Q?SrPTUnXEnqUq/BpMCR2kyXX9hIxTrvRT4R5jVSVTQA2LClg6PG3r9/5uyvkz?=
- =?us-ascii?Q?r9Pwz1wO+aeskcmuzxMQ8E8Z2BnGzrIHq+Mx6qriAh+c6F8UBfmpRhD68Gxs?=
- =?us-ascii?Q?CNctZhB7+sCXAFNic2D4RfFSXOf42G/tEwHh1dc0sYe1nH/tJH4DvMzwSh/6?=
- =?us-ascii?Q?Jn9dlTxSXi649zBZBd4+0E9v10ssGyQ4g83xvRuqNFAPBLNxixx4GXAbFWCO?=
- =?us-ascii?Q?7329vSpgV5xbfssxtZLmV5sDkGIpeN5jY6qFE3Rrg8NX/Wy0cMBywcVobabt?=
- =?us-ascii?Q?7iF44V2A8wtRPbhvVzq5CTiZCHS7b8NUpjrGcNejAKZ1rcx2v7eMuSX8bMvT?=
- =?us-ascii?Q?I8wEw2DKQ0A5Kr5ylf2Mch8Hu2rVR6i8lqSAjZU4Tv2kRJp9nm0fi/vIl4pF?=
- =?us-ascii?Q?CSjI9QmQ33Q6m/fg3nLIepq+xh55DtgXiDJOTm+3jC6grpdMZt18ChrrwGm0?=
- =?us-ascii?Q?VEi0uRP3LKMD4C782BhIiTY00xSVaKRDMw3jGb52lx0bdWgdmp7frjaG27VL?=
- =?us-ascii?Q?vgMyC+bpCM49eMBQzAQcCSHE+eGlsvLVAA+KEXrtRPWPFkrcssbISUnHFJoc?=
- =?us-ascii?Q?NERJfBylhCOoPs/KGogeZuVgAgkCgfRROS3YyDs+y6YZxw8d4BHjdx5UkE+C?=
- =?us-ascii?Q?v29hiGPeMgyDtAyGEgaXu0ZqxISpoZYf4nHO9npqE8gd8S83q9dn6veq6LZw?=
- =?us-ascii?Q?0akSi958pCzGtiolmABooibowfcbZFb4uC71afefQmpV0RwAddSER5JA3/MJ?=
- =?us-ascii?Q?xY2lm7Q67Hy0bZaxKOzTc6wDc8I/T/Q1/KIxqIdf2J48lCNvushxeZgYWFzs?=
- =?us-ascii?Q?DttJDBZNJWBZGvu3g0I2gD+pZ0jxzfeWkfYWGDpOl2fL0ruPyRfHQjlsB+lU?=
- =?us-ascii?Q?UQsY8pD4289FvkHD1VqHFHEqqJuJ2D1ff/M+AnCqQg85cVzJyJO0x6IEMfTw?=
- =?us-ascii?Q?OZn8GqPHRM3iw+QmCM5JQ/0wlItg+8OikS2uEKerT8E2fTKp8ZxCZRCFYXmI?=
- =?us-ascii?Q?8t+4qgbaVczFJoLe+Oed9id8dUJ2yIdLfrtvu52eLxi2fQ4DdBWntkVMOjOy?=
- =?us-ascii?Q?svlnOWiAiYA2Z/c7/Bd2yBeyc4cmC/nQZVXMNRuhp5hrOHhano7oPaKIvvKz?=
- =?us-ascii?Q?SNErGlwoMNWUm5EkNqNm/ayhnjzTXB3il8KA?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 21:23:35.5304
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: add49c3b-f86f-4b03-44f2-08ddf5674ba2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF0000000B.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9429
+Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
+ initialization
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+References: <20250916181558.GA1810654@bhelgaas>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <20250916181558.GA1810654@bhelgaas>
+X-MBO-RS-ID: 1ad0c2000c055ae463a
+X-MBO-RS-META: igaf1iyfcjnetcawoa5n5wo3wnrjeyc8
 
-Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-> On Fri, 05 Sep 2025 13:48:32 -0500
-> Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org> wrote:
->
->> From: Nathan Lynch <nathan.lynch@amd.com>
->> 
->> Add code that manages device initialization and exit and provides
->> entry points for the PCI driver code to come.
->
-> I'd prefer a patch series that started with the PCI device and built up
-> functionality for the stuff found earlier + in this patch on top of it.
-> Doing that allows each patch to be fully tested and reviewed on it's
-> own.
+This is a multi-part message in MIME format.
+--------------5F1ZMUY5Lvr44xoJynSN20Fq
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Right, I think you made this point elsewhere too -- I'll try organizing
-the series as you suggest.
+On 9/16/25 8:15 PM, Bjorn Helgaas wrote:
+> On Tue, Sep 16, 2025 at 07:39:07PM +0200, Marek Vasut wrote:
+>> On 9/16/25 7:13 PM, Bjorn Helgaas wrote:
+>>> On Tue, Sep 16, 2025 at 06:31:31PM +0200, Marek Vasut wrote:
+>>>> On 9/16/25 3:57 PM, Geert Uytterhoeven wrote:
+>>>>> On Tue, 16 Sept 2025 at 15:39, Marek Vasut <marek.vasut@mailbox.org> wrote:
+>>>>>> On 9/16/25 11:59 AM, Geert Uytterhoeven wrote:
+>>>
+>>>>>>> This change looks correct, and fixes the timeout seen on White Hawk
+>>>>>>> with CONFIG_DEBUG_LOCK_ALLOC=y.
+>>>>>>> However, it causes a crash when CONFIG_DEBUG_LOCK_ALLOC=n:
+>>>>>>>
+>>>>>>>         SError Interrupt on CPU0, code 0x00000000be000011 -- SError
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>>>          el1h_64_error_handler+0x2c/0x40
+>>>>>>>          el1h_64_error+0x70/0x74
+>>>>>>>          dw_pcie_read+0x20/0x74 (P)
+>>>>>>>          rcar_gen4_pcie_additional_common_init+0x1c/0x6c
+>>>>>>
+>>>>>> SError in rcar_gen4_pcie_additional_common_init , this is unrelated to
+>>>>>> this fix.
+>>>>>>
+>>>>>> Does the following patch make this SError go away ?
+>>>>>
+>>>>>> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>>>> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>>>> @@ -204,6 +204,8 @@ static int rcar_gen4_pcie_common_init(struct
+>>>>>> rcar_gen4_pcie *rcar)
+>>>>>>             if (ret)
+>>>>>>                     goto err_unprepare;
+>>>>>>
+>>>>>> +mdelay(1);
+>>>>>> +
+>>>>>>             if (rcar->drvdata->additional_common_init)
+>>>>>>                     rcar->drvdata->additional_common_init(rcar);
+>>>>>>
+>>>>>
+>>>>> Yes it does, thanks!
+>>>>
+>>>> So with this one extra mdelay(1), the PCIe is fully good on your side, or is
+>>>> there still anything weird/flaky/malfunctioning ?
+>>>
+>>> Do we have a theory about why this delay is needed?  I assume it's
+>>> something specific to the rcar hardware (not something required by the
+>>> PCIe base spec)?
+>>>
+>>> I'm seeing SError interrupts and external aborts on several arm64
+>>> systems and I'd like to understand better why they happen and when/if
+>>> we can recover from them.
+>>
+>> The SError here happens when the PWR RST is released and DBI is
+>> accessed rapidly right after that. The current hypothesis is, that
+>> the controller core needs a bit of time to initialize itself after
+>> the reset is released, before DBI access can be performed ; if the
+>> DBI access happens too soon after the reset was released, the core
+>> reject the access and CPU interprets that as SError.
+> 
+> Sounds like this SError is for something on the CPU side of the host
+> bridge.
 
+Since this only happens when accessing DBI registers shortly after the 
+reset was deasserted, it seems that way.
 
->> +/* Refer to "Activation of the SDXI Function by Software". */
->> +static int sdxi_fn_activate(struct sdxi_dev *sdxi)
->> +{
->> +	const struct sdxi_dev_ops *ops = sdxi->dev_ops;
->> +	u64 cxt_l2;
->> +	u64 cap0;
->> +	u64 cap1;
->> +	u64 ctl2;
->
-> Combine these u64 declarations on one line.
+> I've also seen errors that seem to be related to errors on the PCIe
+> side, e.g., a PCIe Completion Timeout or Unsupported Request.  On most
+> platforms, those result in writes being silently dropped or ~0 data
+> being synthesized for reads.
+> 
+> E.g., this SError that seems related to a BAR programming issue:
+> https://lore.kernel.org/linux-pci/86plf0lgit.fsf@scott-ph-mail.amperecomputing.com/
 
-Sure.
+The SError is reported for basically almost any AXI bus error, some IO 
+operation happened and it didn't complete or some such, so it is 
+expected to see a lot of disparate SErrors like that.
 
+In this case, it isn't anything on the bridge side yet, the bridge isn't 
+even fully configured and the link is down when the SError happens here.
 
->> +void sdxi_device_exit(struct sdxi_dev *sdxi)
->> +{
->> +	sdxi_working_cxt_exit(sdxi->dma_cxt);
->> +
->> +	/* Walk sdxi->cxt_array freeing any allocated rows. */
->> +	for (size_t i = 0; i < L2_TABLE_ENTRIES; ++i) {
->> +		if (!sdxi->cxt_array[i])
->> +			continue;
->> +		/* When a context is released its entry in the table should be NULL. */
->> +		for (size_t j = 0; j < L1_TABLE_ENTRIES; ++j) {
->> +			struct sdxi_cxt *cxt = sdxi->cxt_array[i][j];
->> +
->> +			if (!cxt)
->> +				continue;
->> +			if (cxt->id != 0)  /* admin context shutdown is last */
->> +				sdxi_working_cxt_exit(cxt);
->> +			sdxi->cxt_array[i][j] = NULL;
->> +		}
->> +		if (i != 0)  /* another special case for admin cxt */
->> +			kfree(sdxi->cxt_array[i]);
->> +	}
->> +
->> +	sdxi_working_cxt_exit(sdxi->admin_cxt);
->> +	kfree(sdxi->cxt_array[0]);  /* ugh */
->
-> The constraints here need to be described a little more clearly.
+>> The reference manual however does not list any such delay, which
+>> makes me concerned. I can send such a patch which adds the mdelay(1)
+>> as a temporary stopgap fix, until some better explanation maybe
+>> sometimes gets uncovered, if that would be OK ?
+> 
+> Yeah, if it's some rcar-specific thing, I don't see a better
+> alternative.
+I have one more hypothesis.
 
-Heh, I think I was tired of finding and fixing memory leaks when I wrote
-these comments. If this part of the code survives to the next version
-I'll improve them, but I plan to rework how we track contexts using a
-per-device xarray, so this code should become a single xa_for_each()
-loop followed by the admin context cleanup.
+I noticed in V4H RM rev.1.30 page 798 that CPG (reset) and PCIe are on 
+different busses. From CA76, the CPG reset is reachable via "CCI->Slave 
+Access BUS->CPG" and PCIe is reachable via "CCI->Slave Access BUS->HSC".
+
+I wonder if a sequence like this:
+- writel(CPG un-reset register)
+- readl(PCI DBI register)
+can, due to bus behavior, lead to readl(PCI DBI register) taking effect 
+on the PCIe IP _before_ the writel(CPG un-reset register) takes effect 
+on the CPG IP, which trigger the SError (coming from PCIe IP).
+
+Or is it guaranteed that writel(some IP) followed by readl(another IP) 
+are strictly ordered in this manner even on the IP end at which they 
+arrive, even if the two IPs are on different busses ? Please pardon my 
+ignorance.
+
+Does the attached diff also help Geert with the SError ?
+
+Same diff is also inline below:
+
+"
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c 
+b/drivers/clk/renesas/renesas-cpg-mssr.c
+index be9f59e6975d..cb380ba20141 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.c
++++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+@@ -688,12 +688,14 @@ static int cpg_mssr_reset(struct 
+reset_controller_dev *rcdev,
+
+  	/* Reset module */
+  	writel(bitmask, priv->pub.base0 + priv->reset_regs[reg]);
++	readl(priv->pub.base0 + priv->reset_regs[reg]);
+
+  	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+  	udelay(35);
+
+  	/* Release module from reset state */
+  	writel(bitmask, priv->pub.base0 + priv->reset_clear_regs[reg]);
++	readl(priv->pub.base0 + priv->reset_clear_regs[reg]);
+
+  	return 0;
+  }
+@@ -708,6 +710,7 @@ static int cpg_mssr_assert(struct 
+reset_controller_dev *rcdev, unsigned long id)
+  	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+
+  	writel(bitmask, priv->pub.base0 + priv->reset_regs[reg]);
++	readl(priv->pub.base0 + priv->reset_regs[reg]);
+  	return 0;
+  }
+
+@@ -722,6 +725,7 @@ static int cpg_mssr_deassert(struct 
+reset_controller_dev *rcdev,
+  	dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
+
+  	writel(bitmask, priv->pub.base0 + priv->reset_clear_regs[reg]);
++	readl(priv->pub.base0 + priv->reset_clear_regs[reg]);
+  	return 0;
+  }
+
+"
+--------------5F1ZMUY5Lvr44xoJynSN20Fq
+Content-Type: text/x-patch; charset=UTF-8; name="reset.diff"
+Content-Disposition: attachment; filename="reset.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3JlbmVzYXMvcmVuZXNhcy1jcGctbXNzci5jIGIv
+ZHJpdmVycy9jbGsvcmVuZXNhcy9yZW5lc2FzLWNwZy1tc3NyLmMKaW5kZXggYmU5ZjU5ZTY5
+NzVkLi5jYjM4MGJhMjAxNDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3JlbmVzYXMvcmVu
+ZXNhcy1jcGctbXNzci5jCisrKyBiL2RyaXZlcnMvY2xrL3JlbmVzYXMvcmVuZXNhcy1jcGct
+bXNzci5jCkBAIC02ODgsMTIgKzY4OCwxNCBAQCBzdGF0aWMgaW50IGNwZ19tc3NyX3Jlc2V0
+KHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsCiAKIAkvKiBSZXNldCBtb2R1
+bGUgKi8KIAl3cml0ZWwoYml0bWFzaywgcHJpdi0+cHViLmJhc2UwICsgcHJpdi0+cmVzZXRf
+cmVnc1tyZWddKTsKKwlyZWFkbChwcml2LT5wdWIuYmFzZTAgKyBwcml2LT5yZXNldF9yZWdz
+W3JlZ10pOwogCiAJLyogV2FpdCBmb3IgYXQgbGVhc3Qgb25lIGN5Y2xlIG9mIHRoZSBSQ0xL
+IGNsb2NrIChAIGNhLiAzMiBrSHopICovCiAJdWRlbGF5KDM1KTsKIAogCS8qIFJlbGVhc2Ug
+bW9kdWxlIGZyb20gcmVzZXQgc3RhdGUgKi8KIAl3cml0ZWwoYml0bWFzaywgcHJpdi0+cHVi
+LmJhc2UwICsgcHJpdi0+cmVzZXRfY2xlYXJfcmVnc1tyZWddKTsKKwlyZWFkbChwcml2LT5w
+dWIuYmFzZTAgKyBwcml2LT5yZXNldF9jbGVhcl9yZWdzW3JlZ10pOwogCiAJcmV0dXJuIDA7
+CiB9CkBAIC03MDgsNiArNzEwLDcgQEAgc3RhdGljIGludCBjcGdfbXNzcl9hc3NlcnQoc3Ry
+dWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwgdW5zaWduZWQgbG9uZyBpZCkKIAlk
+ZXZfZGJnKHByaXYtPmRldiwgImFzc2VydCAldSUwMnVcbiIsIHJlZywgYml0KTsKIAogCXdy
+aXRlbChiaXRtYXNrLCBwcml2LT5wdWIuYmFzZTAgKyBwcml2LT5yZXNldF9yZWdzW3JlZ10p
+OworCXJlYWRsKHByaXYtPnB1Yi5iYXNlMCArIHByaXYtPnJlc2V0X3JlZ3NbcmVnXSk7CiAJ
+cmV0dXJuIDA7CiB9CiAKQEAgLTcyMiw2ICs3MjUsNyBAQCBzdGF0aWMgaW50IGNwZ19tc3Ny
+X2RlYXNzZXJ0KHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsCiAJZGV2X2Ri
+Zyhwcml2LT5kZXYsICJkZWFzc2VydCAldSUwMnVcbiIsIHJlZywgYml0KTsKIAogCXdyaXRl
+bChiaXRtYXNrLCBwcml2LT5wdWIuYmFzZTAgKyBwcml2LT5yZXNldF9jbGVhcl9yZWdzW3Jl
+Z10pOworCXJlYWRsKHByaXYtPnB1Yi5iYXNlMCArIHByaXYtPnJlc2V0X2NsZWFyX3JlZ3Nb
+cmVnXSk7CiAJcmV0dXJuIDA7CiB9CiAK
+
+--------------5F1ZMUY5Lvr44xoJynSN20Fq--
 
