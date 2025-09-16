@@ -1,62 +1,54 @@
-Return-Path: <linux-pci+bounces-36265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3897B59AB9
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 16:47:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5E54B59BA3
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 17:12:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CD687ACD08
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 14:45:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FC351BC5B6F
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 15:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB069338F54;
-	Tue, 16 Sep 2025 14:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF787221DA5;
+	Tue, 16 Sep 2025 15:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azkm4t/C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFzKO8jA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01CC23312D;
-	Tue, 16 Sep 2025 14:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F622AD16;
+	Tue, 16 Sep 2025 15:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758034016; cv=none; b=sChYWHwe/wZe9OjClmJjr2+b8h2k31R+LS1hN172wrZp/TowXgqrNEFguuDIGMFM4hjrdbSuPQc0VKNrG1Wtenq3mTGI8qaHSsiRaB8F1ljTxSOBgzXF3+FCthKEKeYXTY4JwMLg7ScTtdJcjcmr5XcwW+nX1wmC27I9fw4jJDE=
+	t=1758035047; cv=none; b=pQLjVrLGEhPuW36/MA0cP75XeJj1b8/6Wabg12qFkhjtiRrv0n5gxNe6DPR1RyTG3o/1zRR6XHc8ubQa9NzgTCtYNTUEWMKnuXz9t8tF8wwQW7hQz53GCA67Dp/TTCIYwHu7OuTy1WwAKaz9kxBL3XsM/f1cBGQPNbdRAH7wSoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758034016; c=relaxed/simple;
-	bh=rmokWgu3bgtJV2jhI9peM2VUuHBg9IVE5FtZDhrD/Ec=;
+	s=arc-20240116; t=1758035047; c=relaxed/simple;
+	bh=A8E8x5fuXpCM+FBWZSmn2EAMAcnZvznNPoDqYpcEXng=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UK0PwA1ZuUCDV4NPaZJ+TWeGwQzMcH7OEJn5tazMtg3rYcCsNAWX76zDTEn+Fcl1s3CAC84T6MRPixCw8m7EzS5YGae7nN1j7AIjJVE2aUjcORlEqrugSg1godOsIHa0FKLovvj10f/SchLyj/a6PPLzV4SIEQJDi1Y0zq4gLzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azkm4t/C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35ACCC4CEEB;
-	Tue, 16 Sep 2025 14:46:54 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=rw0o9Kolx5+Cx1v3xjO6PHBuqXU6u7KncJ2TFzinTttpoX87Om3vYeNf3WMgNAEkUI1wOywnTmpo+Av93jTixofzpcJUOac7R1cXy3ujUE/60VzOrDdHCvnaK9T70Rr6MKFGsILgsvxTYZz8HuQ4+Smr7FimYSGv0FkhWAozZH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFzKO8jA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19055C4CEEB;
+	Tue, 16 Sep 2025 15:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758034014;
-	bh=rmokWgu3bgtJV2jhI9peM2VUuHBg9IVE5FtZDhrD/Ec=;
+	s=k20201202; t=1758035047;
+	bh=A8E8x5fuXpCM+FBWZSmn2EAMAcnZvznNPoDqYpcEXng=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=azkm4t/CsnnuRennBkQm0BJYQ+7BWRA9gXx1iKf1V1BM2A0r5nTj6o09x+D14oNem
-	 zcrucLRqwjcRlf52eF2MlnmdJo+8ZhX0AQUzKGl8yg1djOC9iIGArAPTWwrwVirkk0
-	 64mJjJBVRvX+sUUnX/mbIVKcDFO3Mv/2iJ7OeM+5Dcba29PG/eCSjC5HK5i0qBdQQO
-	 9PJCn51wrREU3sd5bMSgfujKq9rrl/rgMHNjk7MGxlPvsA2BkTRT6gh5D7Ye/xKV50
-	 NeSP7Tmer3BhPWG6gXUQ3PWm+eWGsjFCri/1aBBi5JuC8Bei47VgmjM1Y+IFNZDr84
-	 lDwIq4uG73GPQ==
-Date: Tue, 16 Sep 2025 09:46:52 -0500
+	b=fFzKO8jAs8H5xWrhfkZOrVRr462W8nP6fV2ip/6A0skP/Q5+zuC28nyTToNBiD9Pz
+	 I1R6QYUqLCHES8szK7QsqgG+5FNwiP14cv3am+J7iPyroHEuYAAGoPKAdsTjz91vkS
+	 /Cfo8xS8Dmby6E9ij+ekHr8n+io2PIj/qd6SX0zSCXpc+TEgXMIw9sInuOs8azx72C
+	 2dWtXT4nIVMndH8Fg9EembSo2fVN/vYmsOVujbdbjTN9kMulpUgnXv213oW9StKMKR
+	 rTP8U161NQrdqMzU67GJ4ec3NrQd/32CVzJGdTuJwYPqUDkhIk4ApdLAMWEDsTQ9m2
+	 uwyNPCY+Itrng==
+Date: Tue, 16 Sep 2025 10:04:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Randolph Lin <randolph@andestech.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alex@ghiti.fr,
-	aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com,
-	ben717@andestech.com, inochiama@gmail.com,
-	thippeswamy.havalige@amd.com, namcao@linutronix.de,
-	shradha.t@samsung.com, randolph.sklin@gmail.com,
-	tim609@andestech.com
-Subject: Re: [PATCH v2 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver
- support
-Message-ID: <20250916144652.GA1795814@bhelgaas>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Message-ID: <20250916150405.GA1796861@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,92 +57,87 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250916100417.3036847-5-randolph@andestech.com>
+In-Reply-To: <20250916104320.9473-2-devendra.verma@amd.com>
 
-On Tue, Sep 16, 2025 at 06:04:16PM +0800, Randolph Lin wrote:
-> Add driver support for DesignWare based PCIe controller in Andes
-> QiLai SoC. The driver only supports the Root Complex mode.
+On Tue, Sep 16, 2025 at 04:13:18PM +0530, Devendra K Verma wrote:
+> AMD MDB PCIe endpoint support. For AMD specific support
+> added the following
+>   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+>   - AMD MDB specific driver data
+>   - AMD MDB specific VSEC capability to retrieve the device DDR
+>     base address.
 
-> +config PCIE_ANDES_QILAI
-> +	bool "ANDES QiLai PCIe controller"
-> +	depends on OF && (RISCV || COMPILE_TEST)
-> +	depends on PCI_MSI
-> +	depends on ARCH_ANDES
+> +/* Synopsys */
+>  #define DW_PCIE_VSEC_DMA_ID			0x6
+>  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
+>  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
+>  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
+>  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
+>  
+> +/* AMD MDB specific defines */
+> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
+> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
+> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
+> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
 
-This prevents a lot of compile testing.  AFAICT, no other controller
-depends directly on the arch.  Most do something like these:
-
-  depends on MACH_ARTPEC6 || COMPILE_TEST
-  depends on ARCH_MXC || COMPILE_TEST
-  depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-
-> +	select PCIE_DW_HOST
-> +	help
-> +          Say Y here to enable PCIe controller support on Andes QiLai SoCs,
-> +	  which operate in Root Complex mode. The Andes QiLai SoCs PCIe
-> +	  controller is based on DesignWare IP (5.97a version) and therefore
-> +	  the driver re-uses the DesignWare core functions to implement the
-> +	  driver. The Andes QiLai SoC has three Root Complexes (RCs): one
-> +	  operates on PCIe 4.0 with 4 lanes at 0x80000000, while the other
-> +	  two operate on PCIe 4.0 with 2 lanes at 0xA0000000 and 0xC0000000,
-> +	  respectively.
-
-I assume these addresses come from devicetree, so I don't think
-there's any need to include them here.
-
-Fix space/tab indentation issue on first line of help text.  Do the
-indentation the same way as the rest of the file.
-
-> + * Refer to Table A4-5 (Memory type encoding) in the
-> + * AMBA AXI and ACE Protocol Specification.
-> + * The selected value corresponds to the Memory type field:
-> + * "Write-back, Read and Write-allocate".
-
-Add blank line between paragraphs or rewrap into a single paragraph.
-
-> +static
-> +bool qilai_pcie_outbound_atu_addr_valid(struct dw_pcie *pci,
-> +					const struct dw_pcie_ob_atu_cfg *atu,
-> +					u64 *limit_addr)
-> +{
-> +	u64 parent_bus_addr = atu->parent_bus_addr;
-> +
-> +	*limit_addr = parent_bus_addr + atu->size - 1;
-> +
+> @@ -120,9 +213,22 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	u32 val, map;
+>  	u16 vsec;
+>  	u64 off;
+> +	u16 vendor = pdev->vendor;
+> +	int cap;
+>  
+> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+> -					DW_PCIE_VSEC_DMA_ID);
 > +	/*
-> +	 * Addresses below 4 GB are not 1:1 mapped; therefore, range checks
-> +	 * only need to ensure addresses below 4 GB match pci->region_limit.
+> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
+> +	 * of map, channel counts, etc.
 > +	 */
-> +	if (lower_32_bits(*limit_addr & ~pci->region_limit) !=
-> +	    lower_32_bits(parent_bus_addr & ~pci->region_limit) ||
-> +	    !IS_ALIGNED(parent_bus_addr, pci->region_align) ||
-> +	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size)
-> +		return false;
+> +	if (vendor != PCI_VENDOR_ID_SYNOPSYS ||
+> +	    vendor != PCI_VENDOR_ID_XILINX)
+> +		return;
+> +
+> +	cap = DW_PCIE_VSEC_DMA_ID;
+> +	if (vendor == PCI_VENDOR_ID_XILINX)
+> +		cap = DW_PCIE_XILINX_MDB_VSEC_ID;
+> +
+> +	vsec = pci_find_vsec_capability(pdev, vendor, cap);
 
-Seems a little bit strange.  Is this something that could be expressed
-via devicetree?  Or something peculiar about QiLai that's different
-from all the other DWC-based controllers?
+This looks correct, so it's OK as-is.  But it does require more
+analysis to verify than it would if you did it like this:
 
-> + * Setup the Qilai PCIe IOCP (IO Coherence Port) Read/Write Behaviors to the
-> + * Write-Back, Read and Write Allocate mode.
-> + * The IOCP HW target is SoC last-level cache (L2 Cache), which serves as the
-> + * system cache.
-> + * The IOCP HW helps maintain cache monitoring, ensuring that the device can
-> + * snoop data from/to the cache.
+  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+                                  DW_PCIE_SYNOPSYS_VSEC_DMA_ID);
+  if (!vsec) {
+    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+                                    DW_PCIE_XILINX_VSEC_DMA_ID);
+    if (!vsec)
+      return;
+  }
 
-Add blank lines between paragraphs (or rewrap into a single paragraph
-if that's what you intend).
+This way it's obvious from the pci_find_vsec_capability() calls
+themselves (and could potentially be checked by coccinelle, etc) that
+we're using the Vendor ID and VSEC ID correctly.
 
-> +static struct platform_driver qilai_pcie_driver = {
-> +	.probe = qilai_pcie_probe,
-> +	.driver = {
-> +		.name	= "qilai-pcie",
-> +		.of_match_table = qilai_pcie_of_match,
-> +		/* only test passed at PROBE_DEFAULT_STRATEGY */
-> +		.probe_type = PROBE_DEFAULT_STRATEGY,
+> +	/* AMD specific VSEC capability */
 
-This is the only use of PROBE_DEFAULT_STRATEGY in the entire tree, so
-I doubt you need it.  If you do, please explain why in more detail.
+This should say "Xilinx specific VSEC capability" because the Vendor
+ID in the device is PCI_VENDOR_ID_XILINX.  We shouldn't have to look
+up the corporate ownership history and figure out that AMD acquired
+Xilinx.  That's not relevant in this context.
+
+> +	vsec = pci_find_vsec_capability(pdev, vendor,
+> +					DW_PCIE_XILINX_MDB_VSEC_ID);
+
+But this one is wrong.  We do know that the device Vendor ID is either
+PCI_VENDOR_ID_SYNOPSYS or PCI_VENDOR_ID_XILINX from above, but we
+*don't* know what VSEC ID 0x20 means for Synopsys devices.
+
+We only know what VSEC ID 0x20 means for Xilinx devices.  So this has
+to be:
+
+  vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+                                  DW_PCIE_XILINX_MDB_VSEC_ID);
 
 Bjorn
 
