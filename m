@@ -1,283 +1,126 @@
-Return-Path: <linux-pci+bounces-36233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BFE7B58F8A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 09:47:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 766D8B59003
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 10:07:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 732D016AC9A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 07:47:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E2301BC282A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 08:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5632857CB;
-	Tue, 16 Sep 2025 07:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A38127C872;
+	Tue, 16 Sep 2025 08:07:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyUBKcwr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cX0tUzYc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60048285404;
-	Tue, 16 Sep 2025 07:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660FB21771B;
+	Tue, 16 Sep 2025 08:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758008723; cv=none; b=ZZHpe0cQWmAK7AkdDYkZBwvw3bliRAtpqpu0x89C7aB2kxifZYGh+7AUHeRTXz00GGPCz+aBtaRKi0xvs2mE0J15UmNAcT2qISfSQP9QPlxKo3W3RzpOD7LCdnB5bHLVzWC0mXYvO6Asw6B6+N+Ccj53lj/fUTlnK7R7VgJSqyQ=
+	t=1758010040; cv=none; b=SF4hR0lvx5CMGppj90Oa7IHkjTEfJ+PTizLJ83gn8A9ysU+DUlRa0ntgGbO+beMsgzS00SUU69Mn2DNUi94/Vn5pRpTxhJ8rWdcEwZazURGdy3s1bCX2p7OPrRouUy7WgkJI6GuB0vONy2mY6BgHf44sBWr8igxl2jhfre9Seqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758008723; c=relaxed/simple;
-	bh=16j+gt48AZcP2m8b1g7nP5m8FD/QP8fJ6B1kWd7m3OM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cLupNLF/+rXk++4evMx2TdzySPsrEHT9tEGnWSpGbiQRaBwx1DveOrHTUu/CcLyqu7JeSzQxCl8g/NH/29MZEW9bS3lfTCFy877km2x8YphqS5PihEEvrUZTEx/YhXjHR2GMi43dWc1Vl2AiwHFCmhQSXb91BmKx+wvcCGryuX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyUBKcwr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E0CC4CEFA;
-	Tue, 16 Sep 2025 07:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758008723;
-	bh=16j+gt48AZcP2m8b1g7nP5m8FD/QP8fJ6B1kWd7m3OM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jyUBKcwrTYXXxzot4Z4yMuvQP1+VUMFjbHmoZNwR4GbEWAwHtp7sRJjhj/aJ7UUTk
-	 nj2WkIbSIAvaA4z9qS2/GY6RNS703FAizetwzIwIqQSNNrxEjr6NpWwFWJi3tEMMwz
-	 0eA72vGnK6Dp2dTPodtHqxkVcAumoB5gdIE0V1U53ilDVT7icKVnBdBy11e40Lg6ir
-	 hNV5X6Eb8xjUWywF9t1lwZVv5K1XHaGHa6ZFgnKXStdS5k3qKtGCOD7jfqU56NwdkG
-	 k5j8b8YGyVjX/Aoihqu/xvh9dd+8xoza8DImJJsX70iOBhKhJta7IGwnweHI4BlNi4
-	 GdfyfH98k4bqQ==
-From: Chris Li <chrisl@kernel.org>
-Date: Tue, 16 Sep 2025 00:45:18 -0700
-Subject: [PATCH v2 10/10] PCI: pci-lu-stub: Add a stub driver for Live
- Update testing
+	s=arc-20240116; t=1758010040; c=relaxed/simple;
+	bh=Y8J/F7oKrl3zjCh+oB+s8eg1WIz+389ZWBoMt2NLWbc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dY9Ci2S4KlVaRChI2E80hIH8EhTrpgG1FrlYZUY6IAEzDooNo3rRmbiRHXBvK8xawNthFIu/Rv/S9xY73eXpzei3jD/iIp98VDnDSDecVjdnI8PPtY/8mQ6jVYxItHH47b9PdkIRL2uOxeD3HAJ92DZxKP9e16UpydNd1ub8q+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cX0tUzYc; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758010038; x=1789546038;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Y8J/F7oKrl3zjCh+oB+s8eg1WIz+389ZWBoMt2NLWbc=;
+  b=cX0tUzYc03KQe89oXhg/IHQj3nVapsc3yB7A0FetPr1QMYKmFyPjNBIg
+   yG1m51yDsJQ8JrxcQKiALq24aaPMUeWxt+LacR/D2YH6yEDcxyBxzWEmM
+   izVoNdDdweU9R0kByGY/S+fMmLDB6N0cFbwgrn9RHhCSuPcZz+U6aa86p
+   84kByyQ5+q5melLREKdRKpowD2QUV3qsBRNwpOVCih5FFKR9Mrqeyw1c0
+   nQChshten2oKEuWL/SFD6vG1IEWmxt71zAOie+Z+q4h8i0UBZX0d75e6r
+   i0vxKQ3NWcA4JyLJnfgejUKOkdiVBgf/8o9q09kFaB3nEEhAG4JuHCvkk
+   w==;
+X-CSE-ConnectionGUID: P4zZmfsGTB+Xt1uR5+zWVQ==
+X-CSE-MsgGUID: 4R4oHyf8RTmhA+6yhN3iRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="59326753"
+X-IronPort-AV: E=Sophos;i="6.18,268,1751266800"; 
+   d="scan'208";a="59326753"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 01:07:17 -0700
+X-CSE-ConnectionGUID: JyflTA6ySzGmtCMp5c36wg==
+X-CSE-MsgGUID: bcQf46JZTxGbHCsvp5kmDQ==
+X-ExtLoop1: 1
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.81])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 01:07:10 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Andi Shyti <andi.shyti@kernel.org>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Christian
+ =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>, =?utf-8?Q?Micha=C5=82?= Winiarski
+ <michal.winiarski@intel.com>,
+ Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
+ David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, Lucas De Marchi
+ <lucas.demarchi@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona
+ Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>,
+ ?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Michael J . Ruhl" <mjruhl@habana.ai>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 05/11] PCI: Add pci_rebar_size_supported() helper
+In-Reply-To: <cduh4ave3lbdgd2kutfhgf3obf3wuskgxf6rrhggsiksw7wrwa@lqly5npj5g3r>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250915091358.9203-1-ilpo.jarvinen@linux.intel.com>
+ <20250915091358.9203-6-ilpo.jarvinen@linux.intel.com>
+ <cduh4ave3lbdgd2kutfhgf3obf3wuskgxf6rrhggsiksw7wrwa@lqly5npj5g3r>
+Date: Tue, 16 Sep 2025 11:07:07 +0300
+Message-ID: <eb0bbfbcb963174bbb625268b0e5385deb8a2c62@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250916-luo-pci-v2-10-c494053c3c08@kernel.org>
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
-In-Reply-To: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Len Brown <lenb@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>, 
- Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
- Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
- Adithya Jayachandran <ajayachandra@nvidia.com>, 
- Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
- Mike Rapoport <rppt@kernel.org>, Chris Li <chrisl@kernel.org>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-Introduce a new driver, pci-lu-stub, that can be bound to any PCI device
-and used to test the PCI subsystem support for Live Update. This driver
-gives developers a way to opt-in a device for Live Update and driver
-interaction with the PCI subsystem. This driver is only intended for
-testing purposes.
+On Mon, 15 Sep 2025, Andi Shyti <andi.shyti@kernel.org> wrote:
+> Hi Ilpo,
+>
+>> +/**
+>> + * pci_rebar_size_supported - check if size is supported for BAR
+>> + * @pdev: PCI device
+>> + * @bar: BAR to check
+>> + * @size: size as defined in the PCIe spec (0=1MB, 31=128TB)
+>> + *
+>> + * Return: %true if @bar is resizable and @size is a supported, otherwise
+>> + *	   %false.
+>> + */
+>> +bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
+>> +{
+>> +	u64 sizes = pci_rebar_get_possible_sizes(pdev, bar);
+>> +
+>> +	return BIT(size) & sizes;
+>
+> I would return here "!!(BIT(size) & sizes)", but it doesn't
+> really matter.
 
-In the future this driver can be extended to test other scenarios (such
-as failing prepare() on purpose).
+If the patch had that, I'd ask to drop the superfluous negations and
+parens...
 
-Signed-off-by: David Matlack <dmatlack@google.com>
-Signed-off-by: Chris Li <chrisl@kernel.org>
----
- MAINTAINERS               |   1 +
- drivers/pci/Kconfig       |  10 ++++
- drivers/pci/Makefile      |   1 +
- drivers/pci/pci-lu-stub.c | 140 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 152 insertions(+)
+BR,
+Jani.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1ae3d166cd35ec5c7818f202079ed5d10c09144b..43e5813e6f030a80c2c109b38e332eef536707d6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14021,6 +14021,7 @@ F:	Documentation/ABI/testing/sysfs-kernel-liveupdate
- F:	Documentation/admin-guide/liveupdate.rst
- F:	drivers/misc/liveupdate/
- F:	drivers/pci/liveupdate/
-+F:	drivers/pci/pci-lu-stub.c
- F:	include/linux/dev_liveupdate.h
- F:	include/linux/liveupdate.h
- F:	include/uapi/linux/liveupdate.h
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 9c0e4aaf4e8cb7fecd9f80ac6289b8d854ce03aa..37e44782fa35c64c2eba6a0f6942d44d8003a499 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -327,3 +327,13 @@ source "drivers/pci/switch/Kconfig"
- source "drivers/pci/pwrctrl/Kconfig"
- 
- endif
-+
-+config PCI_LU_STUB
-+	tristate "PCI Live Update Stub Driver"
-+	depends on LIVEUPDATE
-+	help
-+	  Say Y or M here if you want to enable support for the Live Update stub
-+	  driver. This driver can be used to test the PCI subsystem support for
-+	  Live Updates.
-+
-+	  When in doubt, say N.
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index aa1bac7aed7d12c641a6b55e56176fb3cdde4c91..061e98d0411a951573e1996c61ce5a98f2775e53 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
- obj-$(CONFIG_PCI_NPEM)		+= npem.o
- obj-$(CONFIG_PCIE_TPH)		+= tph.o
- obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
-+obj-$(CONFIG_PCI_LU_STUB) 	+= pci-lu-stub.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/pci-lu-stub.c b/drivers/pci/pci-lu-stub.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..aa0404d16336278d76b062d8126dc5f45732403e
---- /dev/null
-+++ b/drivers/pci/pci-lu-stub.c
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/kexec_handover.h>
-+#include <linux/liveupdate.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+
-+struct pci_lu_stub_ser {
-+	u16 dev_id;
-+} __packed;
-+
-+static const struct pci_device_id pci_lu_stub_id_table[] = {
-+	/* Allow binding to any device but only via driver_override. */
-+	{ PCI_DEVICE_DRIVER_OVERRIDE(PCI_ANY_ID, PCI_ANY_ID, 1) },
-+	{},
-+};
-+
-+static int validate_folio(struct pci_dev *dev, struct folio *folio)
-+{
-+	const struct pci_lu_stub_ser *ser = folio_address(folio);
-+
-+	if (folio_order(folio) != get_order(sizeof(*ser))) {
-+		pci_err(dev, "Restored folio has unexpected order %u\n", folio_order(folio));
-+		return -ERANGE;
-+	}
-+
-+	if (ser->dev_id != pci_dev_id(dev)) {
-+		pci_err(dev, "Restored folio contains unexpected dev_id: 0x%x\n", ser->dev_id);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pci_lu_stub_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+{
-+	struct folio *folio;
-+	u64 data;
-+	int ret;
-+
-+	if (liveupdate_state_normal()) {
-+		pci_set_master(dev);
-+		pci_info(dev, "Marking device liveupdate busmaster\n");
-+		dev->dev.lu.flags = LU_BUSMASTER;
-+		return 0;
-+	}
-+
-+	if (!liveupdate_state_updated()) {
-+		pci_err(dev, "Unable to handle probe() outside of normal and updated states.\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = pci_liveupdate_get_driver_data(dev, &data);
-+	if (ret) {
-+		pci_err(dev, "Failed to get driver data for device (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	pci_info(dev, "%s(): data: 0x%llx\n", __func__, data);
-+
-+	folio = kho_restore_folio(data);
-+	if (!folio) {
-+		pci_err(dev, "Failed to restore folio at 0x%llx.\n", data);
-+		return -ENOENT;
-+	}
-+
-+	return validate_folio(dev, folio);
-+}
-+
-+static void pci_lu_stub_remove(struct pci_dev *dev)
-+{
-+	WARN_ON(!liveupdate_state_normal());
-+	dev->dev.lu.flags = 0;
-+}
-+
-+static int pci_lu_stub_prepare(struct device *dev, u64 *data)
-+{
-+	struct pci_lu_stub_ser *ser;
-+	struct folio *folio;
-+	int ret;
-+
-+	folio = folio_alloc(GFP_KERNEL | __GFP_ZERO, get_order(sizeof(*ser)));
-+	if (!folio)
-+		return -ENOMEM;
-+
-+	ret = kho_preserve_folio(folio);
-+	if (ret) {
-+		dev_err(dev, "Failed to preserve folio (%d)\n", ret);
-+		folio_put(folio);
-+		return ret;
-+	}
-+
-+	ser = folio_address(folio);
-+	ser->dev_id = pci_dev_id(to_pci_dev(dev));
-+
-+	*data = virt_to_phys(ser);
-+	dev_info(dev, "%s(): data: 0x%llx\n", __func__, *data);
-+	return 0;
-+}
-+
-+static int pci_lu_stub_freeze(struct device *dev, u64 *data)
-+{
-+	struct folio *folio = pfn_folio(PHYS_PFN(*data));
-+
-+	dev_info(dev, "%s(): data: 0x%llx\n", __func__, *data);
-+	return validate_folio(to_pci_dev(dev), folio);
-+}
-+
-+static void pci_lu_stub_finish(struct device *dev, u64 data)
-+{
-+	struct folio *folio = pfn_folio(PHYS_PFN(data));
-+
-+	dev_info(dev, "%s(): data: 0x%llx\n", __func__, data);
-+	WARN_ON(validate_folio(to_pci_dev(dev), folio));
-+	folio_put(folio);
-+}
-+
-+static void pci_lu_stub_cancel(struct device *dev, u64 data)
-+{
-+	dev_info(dev, "%s(): data: 0x%llx\n", __func__, data);
-+	pci_lu_stub_finish(dev, data);
-+}
-+
-+static struct dev_liveupdate_ops liveupdate_ops = {
-+	.prepare	= pci_lu_stub_prepare,
-+	.freeze		= pci_lu_stub_freeze,
-+	.finish		= pci_lu_stub_finish,
-+	.cancel		= pci_lu_stub_cancel,
-+};
-+
-+static struct pci_driver pci_lu_stub_driver = {
-+	.name		= "pci-lu-stub",
-+	.id_table	= pci_lu_stub_id_table,
-+	.probe		= pci_lu_stub_probe,
-+	.remove		= pci_lu_stub_remove,
-+	.driver.lu	= &liveupdate_ops,
-+};
-+
-+module_pci_driver(pci_lu_stub_driver);
-+MODULE_LICENSE("GPL");
+>
+> Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+>
+> Andi
 
 -- 
-2.51.0.384.g4c02a37b29-goog
-
+Jani Nikula, Intel
 
