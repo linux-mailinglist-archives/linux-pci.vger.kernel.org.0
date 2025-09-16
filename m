@@ -1,61 +1,56 @@
-Return-Path: <linux-pci+bounces-36285-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36286-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77C1CB59F27
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:21:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77079B59F57
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 19:34:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3612B46365B
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 17:21:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E06741C02BAD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 17:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989FE253B67;
-	Tue, 16 Sep 2025 17:21:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C181269D18;
+	Tue, 16 Sep 2025 17:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbtS+8sJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ep7qwY+H"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963B247281;
-	Tue, 16 Sep 2025 17:21:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC848246795
+	for <linux-pci@vger.kernel.org>; Tue, 16 Sep 2025 17:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758043278; cv=none; b=DaAt40B0Q/qrc7vRJHjdIAMO1uG2nZNirpQzI7BZH3VJ8p6TmXxuPvN+vX86zvvlrJY62XgmKThnOD9NYvyRrSWd57z8AgZINKvjRAW3pAw/FVWYmfjj5hoqGtMrEy2CKVF7iJLdWcKHXu8cBZBe50CUQvJN/eLIRfC3PkVlBh4=
+	t=1758044086; cv=none; b=EYy00NcmTVOj+b+x3GULAZGIT8tLLzg/2JXv0J2RatRlJBn7qiiMqUZYrwu5zVtgMOkrPr0UpnTQmi+Pv60J+OlCMEeoXbpnNhHZm+4t1cRb6e7D38NiuWTNv9gRlTjnT3+9NSqxtVMI0lbBSooiuCCaQiAOmS9t1ML8HZfQbPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758043278; c=relaxed/simple;
-	bh=v9PZrVZhFy0HSlGw35h9CD/JQawJe2ljdG3SUb0+F4o=;
+	s=arc-20240116; t=1758044086; c=relaxed/simple;
+	bh=g4fOI7lP326A/npVX2fO/Vi1aw7o2KcT7AikMVIOx/U=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZucIP/jVSP8SkvOVOJ00BY0Y9L0APo7w06rYMkRPZgo/m9CwYnUDob04wENG1cHOROjkGubn2kjPnGX/A31kO9a38kaL08Yz1W4SQc70HubRyPpHJN5i3NCcENMGDg5WMPizR5jgeVF8B9QRTx2w9+o0pi48TpUa57Gi1orOi6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbtS+8sJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A5BC4CEEB;
-	Tue, 16 Sep 2025 17:21:18 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=KE5W+ePAilxCobP6ysY2PLc/jYXort5nfoDlXxpmnEMcit1dl0MNZsmV3QCj7Ngt13Bl4gnyWixJQYPP92yccJnpqd5KZ79C6EaoaI8mPlGUMXUlVKUXo13DDbnqONy5mPZYp4z8nD2otfZVzkLCFAs8L9nP+42uBboprM362dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ep7qwY+H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B202C4CEEB;
+	Tue, 16 Sep 2025 17:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758043278;
-	bh=v9PZrVZhFy0HSlGw35h9CD/JQawJe2ljdG3SUb0+F4o=;
+	s=k20201202; t=1758044085;
+	bh=g4fOI7lP326A/npVX2fO/Vi1aw7o2KcT7AikMVIOx/U=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MbtS+8sJp3hz64X9CM9moepnjqS4AC4oqLhYkLH0OtClenOBgBUeHpLKZqeS4nAy2
-	 GANHYdVSGZPliYt3KKE8VyFLMEdmQGrhSHf0xBBdgnk4mK6MF0H52pMK1ZclSlRIrd
-	 5glKDSYi0xRaLTaaZOuACs5Q+2EK8xleQC6eTbzHWNwWRcnapmuMtcYsqmOp6X223r
-	 KAXwFb7zrMQgfzAr+qPvpasRzJSY20aQS5Qy4UKIC2qMkMhUHsjpSeiTtp/23Yr5Sn
-	 xURFMs8sq7a3TAZ0sJplqy2yMk9x4Eqnwey8SXxJ3rtwMKXCRtyDdAAigKHlULG0E5
-	 G9mTPlJ2586YA==
-Date: Tue, 16 Sep 2025 12:21:16 -0500
+	b=Ep7qwY+HAMiYSQ0JsRo/bXS+8m6BuJqlhIc7zzuGY54bIXXpYVk6a2JQrPbC2DuBY
+	 jAy2SsOiUrt+IXCTdcyZJrpgi39Wr8DU/PoTp0SlzwEUe6fdjNpQGsYvmrQ9x0yevD
+	 mES5NjYdhNG2BKouEJR8D87RuzZMr+dK1mxUsiPzDRc9z38AccLlZWeZSlZ9Vb8dHU
+	 5LdapKr5LKRkInL3WVJPWHBEHWS7Dd6Afh4FRoNgVKY7gxqrbWOzLF+UZ4lir+t/gq
+	 gcuQIT2CIuPYIvg2B2zWoKpKffSVki1kivfr+FEK++MimodDQY9EYfOjDO66Hu5MFr
+	 l7rKe+KmFF24Q==
+Date: Tue, 16 Sep 2025 12:34:42 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 0/2] PCI/ASPM: Enable ASPM and Clock PM by default on
- devicetree platforms
-Message-ID: <20250916172116.GA1808269@bhelgaas>
+To: Vivek Kasireddy <vivek.kasireddy@intel.com>
+Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+ functions of Intel GPUs
+Message-ID: <20250916173442.GA1765656@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,72 +59,104 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250916-pci-dt-aspm-v1-0-778fe907c9ad@oss.qualcomm.com>
+In-Reply-To: <20250915072428.1712837-2-vivek.kasireddy@intel.com>
 
-[+cc Kai-Heng, Rafael; thread at
-https://lore.kernel.org/r/20250916-pci-dt-aspm-v1-0-778fe907c9ad@oss.qualcomm.com]
+[+cc Jason, also doing a lot of ACS work]
 
-On Tue, Sep 16, 2025 at 09:42:51PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> Hi,
+On Mon, Sep 15, 2025 at 12:21:05AM -0700, Vivek Kasireddy wrote:
+> Typically, functions of the same PCI device (such as a PF and a VF)
+> share the same bus and have a common root port and the PF provisions
+> resources for the VF. Given this model, they can be considered
+> compatible as far as P2PDMA access is considered.
+
+These seem like more than just "typical".  Such devices *always* have
+a common Root Port and a PF *always* provisions VF resources.  I guess
+it's "typical" or at least common that a PF and VF share the same bus.
+
+> Currently, although the distance (2) is correctly calculated for
+> functions of the same device, an ACS check failure prevents P2P DMA
+> access between them. Therefore, introduce a small function named
+> pci_devfns_support_p2pdma() to determine if the provider and client
+> belong to the same device and facilitate P2PDMA between them by
+> not enforcing the ACS check.
 > 
-> This series is one of the 'let's bite the bullet' kind, where we have decided to
-> enable all ASPM and Clock PM states by default on devicetree platforms [1]. The
-> reason why devicetree platforms were chosen because, it will be of minimal
-> impact compared to the ACPI platforms. So seemed ideal to test the waters.
+> However, since it is hard to determine if the device functions of
+> any given PCI device are P2PDMA compatible, we only relax the ACS
+> check enforcement for device functions of Intel GPUs. This is
+> because the P2PDMA communication between the PF and VF of Intel
+> GPUs is handled internally and does not typically involve the PCIe
+> fabric.
 > 
-> Problem Statement
-> =================
-> 
-> Historically, PCI subsystem relied on the BIOS to enable ASPM and Clock PM
-> states for PCI devices before the kernel boot. This was done to avoid enabling
-> ASPM for the buggy devices that are known to create issues with ASPM (even
-> though they advertise the ASPM capability). But BIOS is not at all a thing on
-> most of the non-x86 platforms. For instance, the majority of the Embedded and
-> Compute ARM based platforms using devicetree have something called bootloader,
-> which is not anyway near the standard BIOS used in x86 based platforms. And
-> these bootloaders wouldn't touch PCIe at all, unless they boot using PCIe
-> storage, even then there would be no guarantee that the ASPM states will get
-> enabled. Another example is the Intel's VMD domain that is not at all configured
-> by the BIOS. But, this series is not enabling ASPM/Clock PM for VMD domain. I
-> hope it will be done similarly in the future patches.
-> 
-> Solution
-> ========
-> 
-> So to avoid relying on BIOS, it was agreed [2] that the PCI subsystem has to
-> enable ASPM and Clock PM states based on the device capability. If any devices
-> misbehave, then they should be quirked accordingly.
-> 
-> First patch of this series introduces two helper functions to enable all ASPM
-> and Clock PM states if CONFIG_OF is enabled. Second patch drops the custom ASPM
-> enablement code from the pcie-qcom driver as it is no longer needed.
-> 
-> Testing
-> =======
-> 
-> This series is tested on Lenovo Thinkpad T14s based on Snapdragon X1 SoC. All
-> supported ASPM states are getting enabled for both the NVMe and WLAN devices by
-> default.
-> 
-> [1] https://lore.kernel.org/linux-pci/a47sg5ahflhvzyzqnfxvpk3dw4clkhqlhznjxzwqpf4nyjx5dk@bcghz5o6zolk
-> [2] https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: <linux-pci@vger.kernel.org>
+> Signed-off-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
 > ---
-> Manivannan Sadhasivam (2):
->       PCI/ASPM: Override the ASPM and Clock PM states set by BIOS for devicetree platforms
->       PCI: qcom: Remove the custom ASPM enablement code
+> v1 -> v2:
+> - Relax the enforcment of ACS check only for Intel GPU functions
+>   as they are P2PDMA compatible given the way the PF provisions
+>   the resources among multiple VFs.
 > 
->  drivers/pci/controller/dwc/pcie-qcom.c | 32 -----------------------
->  drivers/pci/pcie/aspm.c                | 48 ++++++++++++++++++++++++++++++----
->  2 files changed, 43 insertions(+), 37 deletions(-)
+> v2 -> v3:
+> - s/pci_devs_are_p2pdma_compatible/pci_devfns_support_p2pdma
+> - Improve the commit message to explain the reasoning behind
+>   relaxing the ACS check enforcement only for Intel GPU functions.
+> 
+> v3 -> v4: (Logan)
+> - Drop the dev_is_pf() hunk as no special handling is needed for PFs
+> - Besides the provider, also check to see the client is an Intel GPU
 > ---
-> base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-> change-id: 20250916-pci-dt-aspm-8b3a7e8d2cf1
+>  drivers/pci/p2pdma.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
-> Best regards,
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index da5657a02007..0a1d884cd0ff 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -544,6 +544,19 @@ static unsigned long map_types_idx(struct pci_dev *client)
+>  	return (pci_domain_nr(client->bus) << 16) | pci_dev_id(client);
+>  }
+>  
+> +static bool pci_devfns_support_p2pdma(struct pci_dev *provider,
+> +				      struct pci_dev *client)
+> +{
+> +	if (provider->vendor == PCI_VENDOR_ID_INTEL &&
+> +	    client->vendor == PCI_VENDOR_ID_INTEL) {
+> +		if ((pci_is_vga(provider) && pci_is_vga(client)) ||
+> +		    (pci_is_display(provider) && pci_is_display(client)))
+> +			return pci_physfn(provider) == pci_physfn(client);
+> +	}
+
+I know I've asked this before, but I'm still confused about how this
+is related to PCIe r7.0, sec 7.7.12, which says that if an SR-IOV
+device implements internal peer-to-peer transactions, ACS is required,
+and ACS P2P Egress Control must be supported.
+
+Are you saying that these Intel GPUs don't conform to this?
+
+Or they do, but it's not enough to solve this issue?
+
+Or something else?
+
+Maybe if we add the right comment here, it will keep me from asking
+again :)
+
+> +	return false;
+> +}
+> +
+>  /*
+>   * Calculate the P2PDMA mapping type and distance between two PCI devices.
+>   *
+> @@ -643,7 +656,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+>  
+>  	*dist = dist_a + dist_b;
+>  
+> -	if (!acs_cnt) {
+> +	if (!acs_cnt || pci_devfns_support_p2pdma(provider, client)) {
+>  		map_type = PCI_P2PDMA_MAP_BUS_ADDR;
+>  		goto done;
+>  	}
 > -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
+> 2.50.1
 > 
 
