@@ -1,193 +1,264 @@
-Return-Path: <linux-pci+bounces-36298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86D80B5A1BC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:01:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F7E5B5A1DA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:08:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 06CC04E1ADD
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:01:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92CCD3BE844
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 20:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA052E090B;
-	Tue, 16 Sep 2025 20:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1471D2D9EE5;
+	Tue, 16 Sep 2025 20:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qalxXyue"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmBLBF6K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3912356B9;
-	Tue, 16 Sep 2025 20:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BED2C0268;
+	Tue, 16 Sep 2025 20:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758052856; cv=none; b=nGVqfiMYy6eMXw4qhheqAdC2uKrMjql1RYMLK1CqVcaX2YhRjTRi0sHahwPHD7V+YL7LEnbpJyQSyr1fXiKxS0ikY/Vnb/NRwxjlJgLZ0allFEB5YlTWS24wG/9PaM7g3wnhrmNgtCLzt48VDPUnh/nvGRVXpOmzn4otxpjsuUk=
+	t=1758053303; cv=none; b=XWJGXE52SKPyNiMH8WMgVKSebkyju8m28WCw3ErfjOxvFV3lmIWY+NCj29pJQL098cpQjfFu/dslDhHMdYGlscXbwCSBJNBT3kbCdyQyWN9ZFxLFwGSnVqqpb9LNkUMflhbm/gQfHB0a5lHhXeepGvhehnWXueDeb8DLpBdg5Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758052856; c=relaxed/simple;
-	bh=zXiOIHy9ejwvJSdfc0MFDmV+apcwnc62XAPntiwORCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XXrYk2U4eO4A3VGg3XzLs9LBkqFNb21Ng9a3R2DFKWF6oVxkDVteBzR0gTRbmTZK8I/szlZPC+i86niRZttBfvHxQetSL3uLx1ISTUedvbuziMF4S0vTPr3ikwMtpLTnC8FquTrsNOZ5MV9N+mzyvgKbadzR5thL69gCONzqpyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qalxXyue; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GCdVDu003190;
-	Tue, 16 Sep 2025 20:00:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pxX+MR
-	PFQ/scwamhTyYekj06Xy9jwdu0NhB/orGkvK0=; b=qalxXyue805dp8sROeXMEv
-	feA9/IMHLIo0dnUctyHVgKkmbXlL921E/qMtMm8iITBJioeXkRFaP+7cMF4t9Lii
-	hldMPJ22mSIpJE0Nb5GBr2Z/X3y0V3KNV6dt7L90xKy1PEVcUsywVZ6sWPXRqzOV
-	dhetIeWkbtyMEaDpHY4CD3B+XZWjgcCQ6RlkHEe8NF6uA5SkSm/SViyMUCBxDht1
-	64EMmIqFteOVsLzsfFQeiLjBEana64IhysAGt/uJ4Toar9XKygA9cqTMR9YLMhCX
-	ExHGw+qXwcnVL8AQJszfAV621BJ7KSdilLayxDy8mhoRTRnsIrJEpFRlvvuHD7Fw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 494x1tjmc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 20:00:37 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58GHkGYh027308;
-	Tue, 16 Sep 2025 20:00:37 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495men5nxm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 20:00:37 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58GK0Z8i30867826
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Sep 2025 20:00:35 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B90805804B;
-	Tue, 16 Sep 2025 20:00:35 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DF9AD58065;
-	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
-Received: from [9.61.248.85] (unknown [9.61.248.85])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
-Message-ID: <d6655c44-ca97-4527-8788-94be2644c049@linux.ibm.com>
-Date: Tue, 16 Sep 2025 13:00:30 -0700
+	s=arc-20240116; t=1758053303; c=relaxed/simple;
+	bh=c07+nrBCBVI2N9HmL41m7c9WRz3jG1BDnxKK1KtQgvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PtaLnrF97W5NfpCPRdNtEMTLwReIOQLyh7TIMewNdFV66AJIsKv+D13WibTlDqngp2pcbKyFb5VT3z19f3upRF+VpniBtasogU2h33e+wFF3Seni7zz0Bqofi1MxPoK3Ec8BFj31BKJ04KMcO+7YOspBoFCK9rSWHq/ku2REI5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmBLBF6K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57474C4CEEB;
+	Tue, 16 Sep 2025 20:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758053299;
+	bh=c07+nrBCBVI2N9HmL41m7c9WRz3jG1BDnxKK1KtQgvM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=AmBLBF6K7tgJv4FVjr4LpxbcDNRkTbEBo3oEptCsjCUKFoYDjPH9vQIGjKpR8ViTR
+	 oTnjDhybQhFR8jn08e7GesLk5GzC9WtJ8f5D/f+2D9/FHkbD1yczEMbZL+4OuUBGIh
+	 +9GcE26FkX6ptHyCTQpgNzjQjqpSd8Y78KCuCWDRiJuVSmU6DQlmC4bCVTNNVsm6v7
+	 6U993AgnvxQjfx+k9Pkyix+cEazqUyVOrDiqs5qW0eFGa+YifPAI6oq1RxgvuJyr51
+	 Ovr13gUIPixChWR0lvXqFf5IFQGR4DG7Fg7lddrEZqiG1IjdCmESTzm8c/5GcS06sh
+	 eX4g9LAjJT4Kw==
+Date: Tue, 16 Sep 2025 15:08:17 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Saravana Kannan <saravanak@google.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 2/4] PCI: qcom: Move host bridge 'phy' and 'reset'
+ pointers to struct qcom_pcie_port
+Message-ID: <20250916200817.GA1814336@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] PCI: Avoid saving error values for config space
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-References: <20250916180958.GA1797871@bhelgaas>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <20250916180958.GA1797871@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=OMsn3TaB c=1 sm=1 tr=0 ts=68c9c1e5 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
- a=VnNF1IyMAAAA:8 a=mDscfjHxmXLP5G7XJkoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAwMSBTYWx0ZWRfX7uy6lqZco1w+
- t1kZYAYu0+hYrVc26mwhBiCdLOhuiK5LfTEc/F9t0xXll+UUqB2yCEiqdOqVBddVHMheJiusVpn
- TmIQkJ2hYe2H6xJeghrRYTppvt2eDDNKJu/hqlvN6ih7oYvnap5ZqGgBwkMAj6KgOU3tUToDBJk
- j16XLwtC1aAtP+N9MSoALqvEO7UZJd0MRro+703/AUDws13NyUmkN2nnNMJ1wWbhc9EYPc2+RsO
- ySt7E3jAtzj80gYOwsQX+I7am3ColXMkmr7dqbxpYPaHjpFw+la8afr6Drgn2vlpiYxXlpT89G3
- cSV37zi+uCgtMyEfJohd/V9NNMQZ+KJKeoiaCWpJQMYEGwyUbDGMp5C4e+wApznKiiMazPJ9R0P
- yUhslYd1
-X-Proofpoint-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-16_02,2025-09-16_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509130001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250912-pci-pwrctrl-perst-v3-2-3c0ac62b032c@oss.qualcomm.com>
 
+On Fri, Sep 12, 2025 at 02:05:02PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> 
+> DT binding allows specifying 'phy' and 'reset' properties in both host
+> bridge and Root Port nodes, though specifying in the host bridge node is
+> marked as deprecated. Still, the pcie-qcom driver should support both
+> combinations for maintaining the DT backwards compatibility. For this
+> purpose, the driver is holding the relevant pointers of these properties in
+> two structs: struct qcom_pcie_port and struct qcom_pcie.
+> 
+> However, this causes confusion and increases the driver complexity. Hence,
+> move the pointers from struct qcom_pcie to struct qcom_pcie_port. As a
+> result, even if these properties are specified in the host bridge node,
+> the pointers will be stored in struct qcom_pcie_port as if the properties
+> are specified in a single Root Port node. This logic simplifies the driver
+> a lot.
+> 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-On 9/16/2025 11:09 AM, Bjorn Helgaas wrote:
-> On Thu, Sep 11, 2025 at 11:32:58AM -0700, Farhan Ali wrote:
->> The current reset process saves the device's config space state before
->> reset and restores it afterward. However, when a device is in an error
->> state before reset, config space reads may return error values instead of
->> valid data. This results in saving corrupted values that get written back
->> to the device during state restoration.
->>
->> Avoid saving the state of the config space when the device is in error.
->> While restoring we only restorei the state that can be restored through
->> kernel data such as BARs or doesn't depend on the saved state.
->>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> ---
->>   drivers/pci/pci.c      | 29 ++++++++++++++++++++++++++---
->>   drivers/pci/pcie/aer.c |  5 +++++
->>   drivers/pci/pcie/dpc.c |  5 +++++
->>   drivers/pci/pcie/ptm.c |  5 +++++
->>   drivers/pci/tph.c      |  5 +++++
->>   drivers/pci/vc.c       |  5 +++++
->>   6 files changed, 51 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index b0f4d98036cd..4b67d22faf0a 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1720,6 +1720,11 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
->>   	struct pci_cap_saved_state *save_state;
->>   	u16 *cap;
->>   
->> +	if (!dev->state_saved) {
->> +		pci_warn(dev, "Not restoring pcie state, no saved state");
->> +		return;
-Hi Bjorn
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com> 
 
-Thanks for taking a look.
+I would put this patch by itself on pci/controller/qcom immediately
+because it's not related to the rest of the series, and we should make
+sure it's in v6.18 regardless of the rest.
 
-> Seems like a lot of messages.  If we want to warn about this, why
-> don't we do it once in pci_restore_state()?
-
-I thought providing messages about which state is not restored would be 
-better and meaningful as we try to restore some of the state. But if the 
-preference is to just have a single warn message in pci_restore_state 
-then I can update it. (would also like to hear if Alex has any 
-objections to that)
-
->
-> I guess you're making some judgment about what things can be restored
-> even when !dev->state_saved.  That seems kind of hard to maintain in
-> the future as other capabilities are added.
->
-> Also seems sort of questionable if we restore partial state and keep
-> using the device as if all is well.  Won't the device be in some kind
-> of inconsistent, unpredictable state then?
->
-> Bjorn
-
-I tried to avoid restoring state that explicitly needed to save the 
-state. For some of the other capabilities, that didn't explicitly store 
-the state, I tried to keep the same behavior. This is based on the 
-discussion with Alex 
-(https://lore.kernel.org/all/20250826094845.517e0fa7.alex.williamson@redhat.com/). 
-Also AFAIU currently the dev->state_saved is set to true as long as we 
-save the first 64 bytes of config space (pci_save_state), so we could 
-for example fail to save the PCIe state, but while restoring can 
-continue to restore other capabilities like pasid.
-
-At the very least I would like to avoid corrupting the BAR registers and 
-restore msix (arch_restore_msi_irqs) to get devices into a functional 
-state after a reset. I am open to suggestions on how we can do this.
-
-Would also like to get your feedback on patch 3 and the approach there 
-of having a new flag in struct pci_slot.
-
-Thanks
-Farhan
-
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 87 ++++++++++++++--------------------
+>  1 file changed, 36 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..6170c86f465f43f980f5b2f88bd8799c3c152e68 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -279,8 +279,6 @@ struct qcom_pcie {
+>  	void __iomem *elbi;			/* DT elbi */
+>  	void __iomem *mhi;
+>  	union qcom_pcie_resources res;
+> -	struct phy *phy;
+> -	struct gpio_desc *reset;
+>  	struct icc_path *icc_mem;
+>  	struct icc_path *icc_cpu;
+>  	const struct qcom_pcie_cfg *cfg;
+> @@ -297,11 +295,8 @@ static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
+>  	struct qcom_pcie_port *port;
+>  	int val = assert ? 1 : 0;
+>  
+> -	if (list_empty(&pcie->ports))
+> -		gpiod_set_value_cansleep(pcie->reset, val);
+> -	else
+> -		list_for_each_entry(port, &pcie->ports, list)
+> -			gpiod_set_value_cansleep(port->reset, val);
+> +	list_for_each_entry(port, &pcie->ports, list)
+> +		gpiod_set_value_cansleep(port->reset, val);
+>  
+>  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+>  }
+> @@ -1253,57 +1248,32 @@ static bool qcom_pcie_link_up(struct dw_pcie *pci)
+>  	return val & PCI_EXP_LNKSTA_DLLLA;
+>  }
+>  
+> -static void qcom_pcie_phy_exit(struct qcom_pcie *pcie)
+> -{
+> -	struct qcom_pcie_port *port;
+> -
+> -	if (list_empty(&pcie->ports))
+> -		phy_exit(pcie->phy);
+> -	else
+> -		list_for_each_entry(port, &pcie->ports, list)
+> -			phy_exit(port->phy);
+> -}
+> -
+>  static void qcom_pcie_phy_power_off(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_port *port;
+>  
+> -	if (list_empty(&pcie->ports)) {
+> -		phy_power_off(pcie->phy);
+> -	} else {
+> -		list_for_each_entry(port, &pcie->ports, list)
+> -			phy_power_off(port->phy);
+> -	}
+> +	list_for_each_entry(port, &pcie->ports, list)
+> +		phy_power_off(port->phy);
+>  }
+>  
+>  static int qcom_pcie_phy_power_on(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_port *port;
+> -	int ret = 0;
+> +	int ret;
+>  
+> -	if (list_empty(&pcie->ports)) {
+> -		ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
+> +	list_for_each_entry(port, &pcie->ports, list) {
+> +		ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
+>  		if (ret)
+>  			return ret;
+>  
+> -		ret = phy_power_on(pcie->phy);
+> -		if (ret)
+> +		ret = phy_power_on(port->phy);
+> +		if (ret) {
+> +			qcom_pcie_phy_power_off(pcie);
+>  			return ret;
+> -	} else {
+> -		list_for_each_entry(port, &pcie->ports, list) {
+> -			ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
+> -			if (ret)
+> -				return ret;
+> -
+> -			ret = phy_power_on(port->phy);
+> -			if (ret) {
+> -				qcom_pcie_phy_power_off(pcie);
+> -				return ret;
+> -			}
+>  		}
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> @@ -1748,8 +1718,10 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
+>  	return ret;
+>  
+>  err_port_del:
+> -	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
+> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> +		phy_exit(port->phy);
+>  		list_del(&port->list);
+> +	}
+>  
+>  	return ret;
+>  }
+> @@ -1757,20 +1729,32 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
+>  static int qcom_pcie_parse_legacy_binding(struct qcom_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->pci->dev;
+> +	struct qcom_pcie_port *port;
+> +	struct gpio_desc *reset;
+> +	struct phy *phy;
+>  	int ret;
+>  
+> -	pcie->phy = devm_phy_optional_get(dev, "pciephy");
+> -	if (IS_ERR(pcie->phy))
+> -		return PTR_ERR(pcie->phy);
+> +	phy = devm_phy_optional_get(dev, "pciephy");
+> +	if (IS_ERR(phy))
+> +		return PTR_ERR(phy);
+>  
+> -	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
+> -	if (IS_ERR(pcie->reset))
+> -		return PTR_ERR(pcie->reset);
+> +	reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset))
+> +		return PTR_ERR(reset);
+>  
+> -	ret = phy_init(pcie->phy);
+> +	ret = phy_init(phy);
+>  	if (ret)
+>  		return ret;
+>  
+> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return -ENOMEM;
+> +
+> +	port->reset = reset;
+> +	port->phy = phy;
+> +	INIT_LIST_HEAD(&port->list);
+> +	list_add_tail(&port->list, &pcie->ports);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1984,9 +1968,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  err_host_deinit:
+>  	dw_pcie_host_deinit(pp);
+>  err_phy_exit:
+> -	qcom_pcie_phy_exit(pcie);
+> -	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
+> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> +		phy_exit(port->phy);
+>  		list_del(&port->list);
+> +	}
+>  err_pm_runtime_put:
+>  	pm_runtime_put(dev);
+>  	pm_runtime_disable(dev);
+> 
+> -- 
+> 2.45.2
+> 
+> 
 
