@@ -1,105 +1,135 @@
-Return-Path: <linux-pci+bounces-36328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36E88B7F460
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 15:29:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2077AB7D440
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:23:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F37EF7AEC5F
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 08:34:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EE11169DDD
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 08:43:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C1F19F40A;
-	Wed, 17 Sep 2025 08:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DCA30CDB8;
+	Wed, 17 Sep 2025 08:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoBk9H9/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585333016F6
-	for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 08:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF630C34F;
+	Wed, 17 Sep 2025 08:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758098175; cv=none; b=BSKcoTWpFE5vYJ1dSRPiIrXE8DIV0fYT/rhNv9s7/GKLFtUutQ27WmuAvlBOL6SEd67PQho2I2vGHIucsl5NAcweRBH67MyNQbmbayHQ836FxJXQ1ECt4H1L3pTGnNZmCIFoyaeQei4yZ6pA9iT0B0fuXm4sTzmmm7e6pw/4j8A=
+	t=1758098571; cv=none; b=A8++vMTTRBYYVU1b264/iT9Rszddfe95dK+lMu/NKemHhI9h1Kwtp7wh/RaHSm/RWg9XrytL5jaL+8KQrGeI1i3nzE6rA3XwewxsITmRVWk8yersVOHwXxPc0Ghf1JXe/dyJOnUtusXWIzOFq460ZgTufJNrzEbCQNLsZP5zFro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758098175; c=relaxed/simple;
-	bh=sXFkn3fuD3qapzhmeLtcjyz5+yB2lVkMKUy/xANyteE=;
+	s=arc-20240116; t=1758098571; c=relaxed/simple;
+	bh=CMm0HgNBKMoHaAJh86JjHiEwTFlQgqebNAVg0nJ9CEA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rBdc+Ro6MduLmr0us0l3V6B95b/0eAYGF4YUn89n3e7PHQ+bV43mnKiXGiSTW3/vtaWtS3EVA7o1z3PA2cpF9/BRYXW2sPQ7x6Jof1RNMY7kNkVUSsMV9WPz6qR+Zk6+ZGhr0mVWj3mTpLb4WgpZ39tUON911dZV9Mkfc/+mdSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-32dc4faa0d7so5325949a91.1
-        for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 01:36:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758098173; x=1758702973;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5C6ubQVztzzRmQnjXOEGDILcUWZK/yh+JDrJ9NOH2l8=;
-        b=WPZ1Xm/iedkjeazi6uMEzr0lNFT7+kN91ooCgcOINFX4Ehdq+up7lJGt2FFxImqtKG
-         8M+gonHakuKfHg/dRDyRp/tSqxSKFx3u1tLoyGLXNtuLjSo8ISD+PIF6uZrJIF2tucY4
-         lEzQXv+f/oY4FZv3hp/A2siUBzfjLXbCTHOwVWeioW57LHUPXDcUknYjxnSX2BNZR9bv
-         ei1yKT352+sv0vkWjBfMgH3l5e0+RprvgxwAEYKy6CriIS2wwwlgUl+SazwIyo9QDD4u
-         ATvPcnscdFaT2xHWM5fTYyF+OIwEnnpexLfYT4DBdbdN+1fiThhTyWemakEU0hbHVx7S
-         NF6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUGMAE9T5jm+Cz6qmCjLdZU8ru17d0WFoi1g5PSEAgjGmCHAAL0zK+Y1ktK7F1ti1t/KI/vIjKIFLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkoPTWn8GnWsmLnFvhfxQkNl0CWDuRfhtW3mY90iO7EZkED8t7
-	6yqcPb4w2VBOAJuSUK0gVehyc/vdiWknhPw2EMIsMt46Qz9z0RGLuFDL
-X-Gm-Gg: ASbGnctwoGoiinyM8+wwHiV50W4D8y47uouPWSr+0Kqq0G8AWE4sO/KH/3PYpStSUNA
-	0H1ao3BHeKbKtDNL/FuNtZcoPratCagyanpPC63ZDP5ZTX1g/jgDkI5TFYVrLg7D93CEMcgVCCy
-	6vmY/1BxfD/42Yiijw3av/89pGPaDFQssMYFIcUt0+ScDShv6nVaUg9hiqJUNwVPS7pzSoYpfNc
-	NDtniYmvAHyt+aPjSinUdf0lbgEntqywIjhAMxx1fo7RRcopDh+iR4Ud+udMTgRv/zzRbjuw5NE
-	1hROqb2bfckAT3eNdaKnt6kBRBO+0/VeSPWF61ay9rZJh5tpCLxhpiB9LDAbyKaICGyx5coZOcV
-	cyT5j0VnsApGtG2A/zv/W8KB8EHfTSIzkNgMq9kJz/Lv9VJH31k/9/YJzhg==
-X-Google-Smtp-Source: AGHT+IHADwAA9JCqd2quqoOP3FocyxM/8owwIIVqvZ9oow3gcrEgcb/6VhdirEK4z8X/BFS9knXdhA==
-X-Received: by 2002:a17:90a:d88b:b0:32e:1b1c:f8b8 with SMTP id 98e67ed59e1d1-32ee3f7b4c2mr1574450a91.26.1758098173401;
-        Wed, 17 Sep 2025 01:36:13 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-32ed27612b3sm1764647a91.22.2025.09.17.01.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Sep 2025 01:36:12 -0700 (PDT)
-Date: Wed, 17 Sep 2025 17:36:11 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Matthew Wood <thepacketgeek@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mario Limonciello <superm1@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND PATCH v7 1/1] PCI/sysfs: Expose PCIe device serial number
-Message-ID: <20250917083611.GB1467593@rocinante>
-References: <20250821232239.599523-2-thepacketgeek@gmail.com>
- <20250915193904.GA1756590@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jNA9asDb0uxEAwAadMckUGTnki6hk/9rbuJVQgSMfXGm6+ON4qUA4qnIEv3hj0wRpOz5Bp11sqowiv8xaQZ46w6t2ADAbVitsGoWfGNYtYiuAdx2Kcm0Gefv/LZv8D0+0QYBHlj9fNGufkrsqJDTKRVWQ961Hh7k82bSEW/bbj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoBk9H9/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9EB6C4CEF5;
+	Wed, 17 Sep 2025 08:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758098570;
+	bh=CMm0HgNBKMoHaAJh86JjHiEwTFlQgqebNAVg0nJ9CEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XoBk9H9/fk3hEvvn+gAJu80NKRXPfW8GtIar0Vpe65NqcQI0fOFTf6+Ni4y4mQA6v
+	 uvy1/nwUiDDy754G6J1W3BifeTN6slbPxx++cVkO2M1G2ZAhmhRmaEy5aBMlnviDj0
+	 H5vOuebJLQVHpm6NBS9qLds5Lb+/OsKf0TcaOIGRvmxkeb55LAnq/PfCuz4tRCrNrw
+	 02Wc1kIXqFgn7Domq1qtNXu/90UOdKtL8VeTojPXYQ15DopqoMceKwQqh8d9J2lRQN
+	 b+Wy2Wj3gbqEiogu6BbIWJ0IRNug8dyHcCBfxchaxyrjagH9A0hCWX3A1SaP+9maaE
+	 KjAQcfOIBWRBg==
+Date: Wed, 17 Sep 2025 10:42:44 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: chester62515@gmail.com, mbrugger@suse.com,
+	ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com,
+	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com,
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: pcie: Add the NXP PCIe controller
+Message-ID: <aMp0hNnBUwTV5cbp@ryzen>
+References: <20250912141436.2347852-1-vincent.guittot@linaro.org>
+ <20250912141436.2347852-2-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250915193904.GA1756590@bhelgaas>
+In-Reply-To: <20250912141436.2347852-2-vincent.guittot@linaro.org>
 
-> > Add a single sysfs read-only interface for reading PCIe device serial
-> > numbers from userspace in a programmatic way. This device attribute
-> > uses the same hexadecimal 1-byte dashed formatting as lspci serial number
-> > capability output. If a device doesn't support the serial number
-> > capability, the serial_number sysfs attribute will not be visible.
-> > 
-> > Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
-> > Reviewed-by: Mario Limonciello <superm1@kernel.org>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > Reviewed-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
-> Sorry for the delay, I have no excuse.
+Hello Vincent,
 
-I also didn't noticed it has been a while... This series has fallen through
-the cracks completely, indeed.  Sorry about this.
+Nice to see you sending some PCIe patches :)
 
-Thank you,
+Quite different from the scheduler and power management patches that you
+usually work on :)
 
-	Krzysztof
+(snip)
+
+> +  nxp,phy-mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: Select PHY mode for PCIe controller
+> +    enum:
+> +      - crns  # Common Reference Clock, No Spread Spectrum
+> +      - crss  # Common Reference Clock, Spread Spectrum
+> +      - srns  # Separate reference Clock, No Spread Spectrum
+> +      - sris  # Separate Reference Clock, Independent Spread Spectrum
+
+This does not seem to be anything NXP specific, so I really think that this
+should be some kind of generic property.
+
+
+Note that I tried to add a similar property, but for the PCIe endpoint side
+rather that the PCIe root complex side:
+https://lore.kernel.org/linux-pci/20250425092012.95418-2-cassel@kernel.org/
+
+However, due to shifting priorities, I haven't been able to follow up with
+a new version/proposal.
+
+My problem is not exactly the same, but even for a root complex, the PCI
+specification allows the endpoint side to provide the common clock, which
+means that the root complex would source the refclk from the PCIe slot,
+so I would say that our problems are quite similar.
+
+Rob Herring suggested to use the clock binding rather than an enum.
+I can see his point of view, but personally I'm not convinced that his
+suggestion of not having a clock specified means "source the refclock from
+the slot" is better than a simple enum.
+
+To me, it seems way clearer to explicitly specify the mode in device tree,
+rather than the mode implictly being set if a "clk" phandle is there or not.
+That approach seems way easier to misunderstand, as the user would need to
+know that the clocking mode is inferred from a "clk" phandle being there or
+not.
+
+
+I also note that Rob Herring was not really a fan of having separate spread
+spectrum options. Instead, it seems like he wanted a separate way to define
+if SSC was used or not.
+
+I have seen the following patch merged:
+https://github.com/devicetree-org/dt-schema/pull/154
+https://github.com/devicetree-org/dt-schema/commit/d7c9156d46bd287f21a5ed3303bea8a4d66d452a
+
+So I'm not sure if that is the intended way they want SSC to be defined or
+not.
+
+
+I apologize for bringing up my own problem in this discussion, but at least
+it is clear to me that we cannot continue with each PCIe driver adding their
+own vendor specific properties (with completely different names) for this.
+Some kind of generic solution is needed, at least for new drivers.
+
+
+Kind regards,
+Niklas
 
