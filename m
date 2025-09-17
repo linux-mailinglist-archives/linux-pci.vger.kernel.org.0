@@ -1,275 +1,100 @@
-Return-Path: <linux-pci+bounces-36343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0643B7DA26
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:32:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 609FCB7C5D7
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 13:59:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 241401BC11CA
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 11:10:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36E521BC3B86
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 11:22:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F375A30217E;
-	Wed, 17 Sep 2025 11:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFD72F3617;
+	Wed, 17 Sep 2025 11:22:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Yl9L/cE9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkOcHhF8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012066.outbound.protection.outlook.com [40.107.209.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BD03568FB;
-	Wed, 17 Sep 2025 11:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758107361; cv=fail; b=l0n4Z7WF6buhEMBv60nD67A37rphkgXRtmzWhn8HOd6bLkvIR5XEKNCCwDpCupZMdKLZ064d6ox48zDWIL7bcN0Zg9B4TCv7RMXiHfRj7UVUaNKNgoV6puR3nmAEHo9uHUCL5AZi+15/t6vyxLu1M7jRS1fMoxaN8H6RXGg3Tro=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758107361; c=relaxed/simple;
-	bh=mRBJxheckLs7x24GGF89I1bRhnWAcN3nk8j46xB6GRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=D90hsNg79znUZd4WXm/vF3GfKPG0OcTr0zF6SiKncnkAYyPKKkuyfUh2lw+5W+TY2ggWCWkQrBxJ2sxz4vqCJ1NRHm8TxLhaIKN9dx/EWawMe/9hluqd8yI5JAX2Amp8NbqYS4/o/eeSH6uWViKv5KUNZD2bxXuC3WzuDsAkCVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Yl9L/cE9; arc=fail smtp.client-ip=40.107.209.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZaDMimkmxOgU1u3GPpF8Tta6Kjbta6FJD+zHvDDyAsYkzguRheeHWvs6HdAGSS46mfonE95pyJqZz2XzHWiM9xzGqjunfO2EJq3Tx2PlrOKwWb0yR0MbtyA/k+hz9FyHjD07V7Cfjh04KXhA2+yYRecuE2N/ozIJDSLLzYPHOc/SkGQpmLut1gdR67ASdT8HW7YO9IG3NkOPvuL2KTLqlFPvzXbtXkx2Dzk/j2El1GQojmMNGrrF9NKPIRfHQKi3nDiOlc7fhklMNphD1pFqFOfjTxyTCkd2UdZH96Zlaf2yX54M/WBq1W+rwcCZnACd/mbMh0jGHApTO3/2q9Bp3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FFQjmbwZuvgBLQlktU8gQrEZbnInbsD3jUSH3a6v7xs=;
- b=HNBgJzgTFGGLoESf050Mg4WYOHQwhFM0y+XcK2CsJ3Q3MLxrm2tn4IvXfGdXwFuX0hPCmV+pCTrzxwnMMx7bB5/Bm5Fq0JdCkRtDZbLZBIHlwK5INV9Crk1mZCZGe0NVnAKHs+yKdY71LRGhdIjyhzyo5X+HZfsJImwGgK2r7rZ4i/QWUvEul2fYTV94WhvzeH1jDllQDuyTqQWMmVTcveBWw1YdmdtroDNyiudEyW3vFTTKll33in/DgNavCXN6sTNS9pY4cWoOAjf7LFX75Ypr7sfdAdGeIYKgNKqouQVWnD1ZHDyAQpsbBWPvePZHeevIME/HXaljtGJwm6mMLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FFQjmbwZuvgBLQlktU8gQrEZbnInbsD3jUSH3a6v7xs=;
- b=Yl9L/cE9vPIY9um2zmCBiZh88wJqfZ1UosH7f6ratSPufGZAmEYEZ/Lx60ilAuKo3Jm+7gLQlVbilp/zUK29GGiS4yNuWJWKg876MXVBhRYGfxYbYm1StBfow9sua0Y8XSYZ6RItJ1AcxdamoD99SBqKFjkDrvMFRP/bvFab5TUywD91CHgJ9ZfETuS3/4ZpaHDlCYTwuwgDdkddijQLbI4NZJiE0qK2oLEiA2PVs6Ftsc/Ud9pcTCn0GFiPJSf56YphPLA4sGRUgtepPmBFHo7vmJdfkVUgqklREZysh2ArrcMfqUZQGrL/+haAPh7QxtgpG/F2qJdM/FHUXEpU1w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by DS0PR12MB7826.namprd12.prod.outlook.com (2603:10b6:8:148::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Wed, 17 Sep
- 2025 11:09:16 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.9115.022; Wed, 17 Sep 2025
- 11:09:16 +0000
-Date: Wed, 17 Sep 2025 07:09:14 -0400
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org, acourbot@nvidia.com,
-	Alistair Popple <apopple@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	John Hubbard <jhubbard@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
-	joel@joelfernandes.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5292D9EE5;
+	Wed, 17 Sep 2025 11:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758108140; cv=none; b=aFv/5AafTuqEBntg2xiQdAWCz5YQden83dN0OraKtyQl4F6nm6qhxpscayk5SXoTDhdPxt9LAryQyBqyagUe74WzaQGqzv8pjoeyl4Ce5F8NRzib2cYQqrKxLtlXlTdmm1zyo1UfKSOnVJqNPgbUbc8UD/dFzWQ3UJe/ndWz0a4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758108140; c=relaxed/simple;
+	bh=P8qzGWIhByRFZr7nwyU8aErrXN4ExIt9jBI3wNw3DOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ng6IFEdbGunDvXsXITWN4qwnM6mXB+t6Eh2IzX4ljyci7a6eBgMwZk2B/+Szcm15plGx2V39LMTdNAySQAsuJYsPnlgAydjnKkxxzKjbcVtwqrtDKdBtyJBAJQ2Cy8PjvxQHwRFLfTtJtldA8g0oMNjZeFD/G9PHvkRm6UBWF5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkOcHhF8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F68C4CEF0;
+	Wed, 17 Sep 2025 11:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758108140;
+	bh=P8qzGWIhByRFZr7nwyU8aErrXN4ExIt9jBI3wNw3DOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dkOcHhF8Tzhf0qmstpd8TJR+CwpzHhukAz4m9vupb6UvHShWYkw1MkqHh9q/AAvqr
+	 6vkTRBEt9Qondm1AWJlecwk46MZPAvuYqGMNuVjIZMKMnqt2rUY/0EAaKfJKPvujkY
+	 MonE5s/ljRaU0Mss9XIi2DMw09nzmss4SrCthOviw0aSM26EIbJkUVP+d7Fru5gSfj
+	 bsAksP3XDV0GQZO38LaGzxofCGsUIFMtUNN+LO0wG2g/FAomCX2C0pKNy79fblr3S/
+	 2xHQ4LVqOndRB8Ivlclljhcuzkf5oQJ0kaDUAisrKfdpccFOEbvxV2DLjRiwZEtKY4
+	 15xUV3ByVE3xA==
+Date: Wed, 17 Sep 2025 06:22:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH] rust: pci: add PCI interrupt allocation and management
- support
-Message-ID: <20250917110914.GA1797159@joelbox2>
-References: <20250910035415.381753-1-joelagnelf@nvidia.com>
- <DCOZMX59W82I.1AH7XVW3RUX2D@kernel.org>
- <20250910180955.GA598866@joelbox2>
- <20250910190239.GA727765@joelbox2>
- <DCTA2J6Y2PSC.1B48J5ZHUQCOI@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DCTA2J6Y2PSC.1B48J5ZHUQCOI@kernel.org>
-X-ClientProxiedBy: BL6PEPF00016410.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:17) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH 1/2] PCI/ASPM: Override the ASPM and Clock PM states set
+ by BIOS for devicetree platforms
+Message-ID: <20250917112218.GA1844955@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DS0PR12MB7826:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb4703f4-89e5-4ecb-ea6f-08ddf5daa417
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SprWADx/u8ZpAEWoithsBQKLvhWbmOvg+mv6oC6ZCl92+KHf8SOqj0v7DSTz?=
- =?us-ascii?Q?+EJKbQP+aYdiSJuZYoY9cqUYcEP6ljehc8rSV48ciLhuxJVoskvy6fCa4kMT?=
- =?us-ascii?Q?j1glkcJv2NxkSo09xi9vMMnU8jRk1UsaKm9OyxZZG+gcnpgREXa7vtV1O0vT?=
- =?us-ascii?Q?mH+zpydngCQ/kxGNhCO/DTV3iXvnzMXwWNaU2Wi68QvBBm69FBjfRkTz2C81?=
- =?us-ascii?Q?LUKxPW2KFiKXd60s9I3Sc35s68KXFlq9iYnMRZroo1/rDAw2GhkhgWmiq2fd?=
- =?us-ascii?Q?4ERwlPY1YJlJ01dAmWpZNrLamnO3/nvLNpEDAY9dndLqzC1foRkokDe/ZjJO?=
- =?us-ascii?Q?UF3RKhMoLWMHzkuOFwU0Ujni3ULS2pN4NUqbZ+q5r1j1qOjOeWccrPeLNoq+?=
- =?us-ascii?Q?SNW2huXguzouvzMEOtC0Mk/NwDoBl0DQr3qec2gzN009Hf7USUejO0uEAzki?=
- =?us-ascii?Q?P/bRz5ku8goZndFvi2gUhk2YlBmj4niAf8YEUeF83FBMDJOwGNWJMd6OdlwV?=
- =?us-ascii?Q?TxpGVbTUMmI/FRckl79EjWkNHkv8NIe5oh2Ywt2TRH9gbwTWa9Hwlt0YD4OB?=
- =?us-ascii?Q?7N991UHM6PiPd5Xm2O0+RMfOpX192vJFxJFLZjnLb+jBZgGEtHF1uHQLNrkx?=
- =?us-ascii?Q?iYrlnnDD/iJXqdS010uk2q7zXBbdC8OWXerGHWxNIoqsQ+erRGgot90ZsGXX?=
- =?us-ascii?Q?uRnAF33mxEMH7kmHrMmgvi4nXKAheMnqknpiUcxaBda82X09YcyaQ1qw4fbP?=
- =?us-ascii?Q?IsYGxJoSmzXXIrK+PeLat/mw2hrtdSa9QRc8gkEPntOCYVgA9UXxyMiZS3Kr?=
- =?us-ascii?Q?cuZb9Y6E2sT/VuftM8ZndCT1RcYEGqMo4FTZ12eop4p68TR1mB38oRulP42T?=
- =?us-ascii?Q?VObVV9gRua4dfTwNDibFOLwWlHlvsFV3nEQVJvckWZh5+irFu1pQmMbimj9b?=
- =?us-ascii?Q?iFMgi4RfOd8S81sAel4sCZQuMBA5OpmZlJ0NJvV85pR0JyvW1JdALFYjE7sV?=
- =?us-ascii?Q?7WVB63Wtf010Q/z6a4sCxl0gYxLni9LvbGXS+Z8k1hCmrdeC5ExJ2IA+MnRJ?=
- =?us-ascii?Q?SASaAD4PxMFaqgIlKhiuKig26IKKn/vwORTafYDP9SZut7ZSaKCT7QvXYCui?=
- =?us-ascii?Q?VAIx4kFSEIqjOslVIDk4rzlNtBD8dhCgBLaWHBPszKrzv6laRhYmVl0urCUz?=
- =?us-ascii?Q?/He6VaY86pD4koufgdIDkhc1zodxaasW0WIRxtjQEd/ic+Rn/xl+A12a3Tcf?=
- =?us-ascii?Q?YfyIbwq8kAsKLwMoBd+hdgluudJr/5FiEsz9DtbYZruREsw3trDZcahqLhaH?=
- =?us-ascii?Q?ISTpnSJnj5XpadfCzbU0PAR6A5BivsFq+OVUXI/JYijuAOBf9tUzQDhqAQ5N?=
- =?us-ascii?Q?8LxT3XjGPqx1VLoq0t90wKVo6HMAqV6skAo6an51NyJFRaSf2v2PT6As18zA?=
- =?us-ascii?Q?k8il94QcnSA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VHp4zImKoBuzt0oKLLJbG+/INZlo+JsMTpdBohfySkDauuWALZJJoy1Q5sYz?=
- =?us-ascii?Q?BZycsJeXyZRfYJ/x0TmrTH0qwTPnQjN/NbpGlcgJaFNBfmruqNFak3TtxaSd?=
- =?us-ascii?Q?VbiCDwc+MQep6EXpvByr7hqiW37Ci5vO/acEGmRxNCIdlYdUGP7DAiqYPyhs?=
- =?us-ascii?Q?nQndRn7jA0wNs4lJh+AoySrhcJ4I3MShtvL80aiiJQ8kwaGom9hbz4qJ55Nn?=
- =?us-ascii?Q?wbqUgkTRuGgILL2tfWsc2NfIY5uxX8DwNMHCibCG307gGAqExo7Iv82vMumg?=
- =?us-ascii?Q?Bk4rVnwxktelOzpqrWR+cmXa8R5tF1GwjODb+wJPH3zuc3mkabhnPYloExFA?=
- =?us-ascii?Q?reqxcvr/4qHbSDLhWhyMFboIPSVEmADwos3VoM7UfaVm5RvcXXz1tKcmINDW?=
- =?us-ascii?Q?duJhhYCMNQ8ENuKLwB0n4biUmCwAQjz1GZcWbjWw89YruB3PqQuszCbGcsRe?=
- =?us-ascii?Q?guUJTsoLLiaxJz7MgRP1pKfCM2Q9tyntB4VaW1xgcNmTa5H1gfKeK2b8II21?=
- =?us-ascii?Q?1WFFLT/0TV0cDEKylj3OK7wVz7KvdMUqLd/R4qSVJscZ8ztA1OZDmZOH/2db?=
- =?us-ascii?Q?ewfNxan8uQ825VUfcVygJnEpZHN2CrM6ser+w4if8SNOqr5HGeQbgebgeJjy?=
- =?us-ascii?Q?LVGlrA48C7YnGJQPajjiYNsKNifiNGMy7+RA9PICLfkkmh3Gju5aQA00oLrG?=
- =?us-ascii?Q?OIWSPEocV82b3AG1Wsd7VhHj6KFlL9iY36ahv0lfrmjTYZJ/0WwHEXaQhoNm?=
- =?us-ascii?Q?ULzYy3JTGHkzA/lIv+2jocr1dDQ9dWhRfeciN6SPJOjV0feLj5Ajz7WkNs3G?=
- =?us-ascii?Q?AoLc+BaRdBLnAHnSoAm+VfPtFYfFg1bsSzl3GpWPPslB1sDvmxGgqh7nQMy4?=
- =?us-ascii?Q?s4H8wFlxfYXRX8TFgKgDoEFf4DI2R0LcJre7lfTKWLca/GZvIGtolg5esP2t?=
- =?us-ascii?Q?g0Xg3EolarN/1UsewGAzFfurUrw7wtyXM/n8RNO2rnFqUNtVRrF8Ngj39evf?=
- =?us-ascii?Q?s2K46kYw0Fuc5B8ARbtZD1m12QAuBVSAxQOZbWV+8aXODm44ft/nNbIML4ur?=
- =?us-ascii?Q?0RLWNm5REPGrtbFO9ZXwu3+hNrBQqzqmXl6EiSpsv0t8poozgnTk1tQmUE8J?=
- =?us-ascii?Q?oa0IeDh+Zq5urUmtBV0y9RhDTVKgSKaUP55lfLMo+7nACgXKq1vuRrAnxQ6+?=
- =?us-ascii?Q?I3ECK23/8BU3JKXAgACB4cuHTH9iy92xiz+fpHVNQ7mgMoTsOgO3g/E4hXGt?=
- =?us-ascii?Q?5Rst6SlHVjsZkdZebPJ7WbjKheQywXiA2o6QK7HBW79j1o6f9KfHq4gm3msX?=
- =?us-ascii?Q?h4GTbz1jzS1ZR/WCKmwA2eGG3q65AzyCdBc3kHijIpTorhW55HYjTXrscPWG?=
- =?us-ascii?Q?FvhOyddslC3b3enQjX0oULDDwwcgVRdduFtGe2C38o9OZKXMjP2KY0EA0C1e?=
- =?us-ascii?Q?cdAxw1EoRUY7SzOjBTBjx/KF5VtNA9WqC3W3lCbhx/NQ1krjfV/1cU/PhFxE?=
- =?us-ascii?Q?nYOZdqkff0Z/4kq5kRKuV2lTzUh084ovX9DI+SP12mNWG8lSL2lziwYmUQtt?=
- =?us-ascii?Q?wdkYnRg7cOKZeMo4MwTAr9NVI6avKOu80j8sfVMZ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb4703f4-89e5-4ecb-ea6f-08ddf5daa417
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2025 11:09:16.3103
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h/97MtssD/QLljfwpsmKp9R5sRZbYvROqP5Mck3/nS8Bwy219ny0tFRZYoLVKW3dkTdIBznyktfym+DDxDMO8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7826
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <frmzvhnhljy23xds7lnmo23zg35wxpzu4pvabnc6v6vz7qn2lj@gk25cglbpn3q>
 
-On Mon, Sep 15, 2025 at 11:48:19AM +0200, Danilo Krummrich wrote:
-> On Wed Sep 10, 2025 at 9:02 PM CEST, Joel Fernandes wrote:
-> > On Wed, Sep 10, 2025 at 02:09:55PM -0400, Joel Fernandes wrote:
-> > [...] 
-> >> > > +    /// Allocate IRQ vectors for this PCI device.
-> >> > > +    ///
-> >> > > +    /// Allocates between `min_vecs` and `max_vecs` interrupt vectors for the device.
-> >> > > +    /// The allocation will use MSI-X, MSI, or legacy interrupts based on the `irq_types`
-> >> > > +    /// parameter and hardware capabilities. When multiple types are specified, the kernel
-> >> > > +    /// will try them in order of preference: MSI-X first, then MSI, then legacy interrupts.
-> >> > > +    /// This is called during driver probe.
-> >> > > +    ///
-> >> > > +    /// # Arguments
-> >> > > +    ///
-> >> > > +    /// * `min_vecs` - Minimum number of vectors required
-> >> > > +    /// * `max_vecs` - Maximum number of vectors to allocate
-> >> > > +    /// * `irq_types` - Types of interrupts that can be used
-> >> > > +    ///
-> >> > > +    /// # Returns
-> >> > > +    ///
-> >> > > +    /// Returns the number of vectors successfully allocated, or an error if the allocation
-> >> > > +    /// fails or cannot meet the minimum requirement.
-> >> > > +    ///
-> >> > > +    /// # Examples
-> >> > > +    ///
-> >> > > +    /// ```
-> >> > > +    /// // Allocate using any available interrupt type in the order mentioned above.
-> >> > > +    /// let nvecs = dev.alloc_irq_vectors(1, 32, IrqTypes::all())?;
-> >> > > +    ///
-> >> > > +    /// // Allocate MSI or MSI-X only (no legacy interrupts)
-> >> > > +    /// let msi_only = IrqTypes::default()
-> >> > > +    ///     .with(IrqType::Msi)
-> >> > > +    ///     .with(IrqType::MsiX);
-> >> > > +    /// let nvecs = dev.alloc_irq_vectors(4, 16, msi_only)?;
-> >> > > +    /// ```
-> >> > > +    pub fn alloc_irq_vectors(
-> >> > > +        &self,
-> >> > > +        min_vecs: u32,
-> >> > > +        max_vecs: u32,
-> >> > > +        irq_types: IrqTypes,
-> >> > > +    ) -> Result<u32> {
-> >> > > +        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
-> >> > > +        // `pci_alloc_irq_vectors` internally validates all parameters and returns error codes.
-> >> > > +        let ret = unsafe {
-> >> > > +            bindings::pci_alloc_irq_vectors(self.as_raw(), min_vecs, max_vecs, irq_types.raw())
-> >> > > +        };
-> >> > > +
-> >> > > +        to_result(ret)?;
-> >> > > +        Ok(ret as u32)
-> >> > > +    }
-> >> > 
-> >> > This is only valid to be called from the Core context, as it modifies internal
-> >> > fields of the inner struct device.
-> >> 
-> >> It is called from core context, the diff format confuses.
-> >> > 
-> >> > Also, it would be nice if it would return a new type that can serve as argument
-> >> > for irq_vector(), such that we don't have to rely on random integers.
-> >> 
-> >> Makes sense, I will do that.
-> >> 
-> > By the way, the "ret" value returned by pci_alloc_irq_vectors() is the number
-> > of vectors, not the vector index.
+[+cc Kai-Heng, Rafael, Heiner, AceLan; response to
+https://lore.kernel.org/r/20250916-pci-dt-aspm-v1-1-778fe907c9ad@oss.qualcomm.com]
+
+On Wed, Sep 17, 2025 at 04:14:42PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Sep 16, 2025 at 12:15:46PM GMT, Bjorn Helgaas wrote:
+> > On Tue, Sep 16, 2025 at 09:42:52PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > So far, the PCI subsystem has honored the ASPM and Clock PM states set by
+> > > the BIOS (through LNKCTL) during device initialization. This was done
+> > > conservatively to avoid issues with the buggy devices that advertise
+> > > ASPM capabilities, but behave erratically if the ASPM states are enabled.
+> > > So the PCI subsystem ended up trusting the BIOS to enable only the ASPM
+> > > states that were known to work for the devices.
+> ...
+
+> > For debuggability, I wonder if we should have a pci_dbg() at the point
+> > where we actually update PCI_EXP_LNKCTL, PCI_L1SS_CTL1, etc?  I could
+> > even argue for pci_info() since this should be a low-frequency and
+> > relatively high-risk event.
 > 
-> Sure, but the vector index passed to pci_irq_vector() must be in the range
-> defined by the return value of pci_alloc_irq_vectors().
-> 
-> I thought of e.g. Range<pci::IrqVector> as return value. This way you can easily
-> iterate it and prove that it's an allocated vector index.
+> I don't know why we should print register settings since we are explicitly
+> printing out what states are getting enabled.
 
-Agreed, I will do it like this.
+My thinking here is that we care about is what is actually written to
+the device, not what we *intend* to write to the device.
 
-> > So basically there are 3 numbers that mean
-> > different things:
-> > 1. Number of vectors (as returned by alloc_irq_vectors).
-> > 2. Index of a vector (passed to pci_irq_vector).
-> > 3. The Linux IRQ number (passed to request_irq).
-> >
-> > And your point is well taken, in fact even in current code there is
-> > ambiguity: irq_vector() accepts a vector index, where as request_irq()
-> > accepts a Linux IRQ number, which are different numbers. I can try to clean
-> > that up as well but let me know if you had any other thoughts. In fact, I
-> > think Device<device::Bound>::request_irq() pci should just accept IrqRequest?
-> 
-> Currently, pci::Device::request_irq() takes an IRQ vector index and calls
-> irq_vector() internally to convert the vector index into an IRQ number.
-> 
-> I'd keep this semantics, but introduce a new type IrqVector rather than using
-> the raw integer. So, drivers would call
-> 
-> 	// `irq_vecs` is of type `Range<pci::IrqVector>`.
-> 	let irq_vecs = dev.alloc_irq_vectors(1, 1, pci::IrqTypes::ANY)?;
-> 	let irq = KBox::pin_init(
-> 	   dev.request_irq(irq_vecs.start, ...)?,
-> 	)?;
-
-This sounds good to me. Thanks,
-
- - Joel
-
+There's a lot of complicated aspm.c code between setting
+link->clkpm_default/aspm_default and actually programming the device,
+and when debugging a problem, I don't want to have to parse all that
+code to derive the register values.
 
