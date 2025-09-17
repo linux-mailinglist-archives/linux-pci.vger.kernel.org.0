@@ -1,119 +1,151 @@
-Return-Path: <linux-pci+bounces-36356-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36357-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AD46B7F75D
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 15:42:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F98AB7F9C7
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 15:56:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AEA84A498E
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 13:36:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83BBA18936FD
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 13:51:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B48302CDC;
-	Wed, 17 Sep 2025 13:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E8E1B424F;
+	Wed, 17 Sep 2025 13:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="UcKiHouV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDC431A7EE;
-	Wed, 17 Sep 2025 13:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E75E233140;
+	Wed, 17 Sep 2025 13:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758116056; cv=none; b=fLf4hpVKr5x4KiTKd1cbzSbKf4IfooUn8ob/emenaYW8y2Gs5Asgr5rgLO8Dn6EIrtk4D7InMPbPOvGYZBuZmQD3afuPpavD9YTagtH9/Zl+jHHfve6COgfmVaUHza7kEDCwHil1/8N4Zum4HuTUDBEBgRZphHjrik5R9dDd9Lo=
+	t=1758116670; cv=none; b=klhjhyFc6KWcQXu6DNMvCZSXdhG9ByCxbzxa3GdJTO1zqDUnEsznJUUgi4RAY58fEabpfExpXDV/p9MxLv4J02BY1I13JEcL67emtmjWyq59ypRPPkxbkfErZ44WyhzZ4srQHHtIeQ6ecUBvKoiMO6NATQiBvq/CLb9/j76nxo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758116056; c=relaxed/simple;
-	bh=ioO5mDRtnsQXD0qffG7STW6S+g2YpCQbLNbqPpwEPVo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cOKmr4AcCy3V0xODsXLd9nKm4bIRt2V4syJZCL54lLaZqxp9ghrVU6vDBL/pOmKwqxPBIQZfEUb8F0AWWD2GNHSTt1nzOUIQX+9oHPX3ljVCgPLvWv+RcFuG8PxyrJneZZEU2wY5BA+hoOa5SlBKRxh4MiWH/N66eUxKkzvvf+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cRfkq2Z4yz6DDmL;
-	Wed, 17 Sep 2025 21:29:39 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2020140371;
-	Wed, 17 Sep 2025 21:34:11 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Sep
- 2025 15:34:11 +0200
-Date: Wed, 17 Sep 2025 14:34:10 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Nathan Lynch <nathan.lynch@amd.com>
-CC: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>, "Mario
- Limonciello" <mario.limonciello@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH RFC 08/13] dmaengine: sdxi: Context creation/removal,
- descriptor submission
-Message-ID: <20250917143410.00005bb4@huawei.com>
-In-Reply-To: <87a52uxhat.fsf@AUSNATLYNCH.amd.com>
-References: <20250905-sdxi-base-v1-0-d0341a1292ba@amd.com>
-	<20250905-sdxi-base-v1-8-d0341a1292ba@amd.com>
-	<20250915151257.0000253b@huawei.com>
-	<87a52uxhat.fsf@AUSNATLYNCH.amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1758116670; c=relaxed/simple;
+	bh=u90Fk5cPBbawK5fK7gzSnozL1IIQ7AgT4sUYW+7MSC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EPCqvUYi0Yp7Z7CQh7YhsjuqjNnaTjADOsBZemmOUwwk5ynvnnvpJ5GIgWYFwour1f4CuMk5T2R3zqmwPFaz/bNmpDDbgNWVd6ioiS1Welc0U0s+5NjvBej4FhOMkG3sv2BVvm41hX6NPnXP0L2J4xqCoFpugjfgZiENIXz6ZL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=UcKiHouV; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cRg3l0V4Lz9tK1;
+	Wed, 17 Sep 2025 15:44:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758116659;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=urDXGyEsj1r/aJXZk5lMxgMwOCYoe0BVA9dDdk/rdpU=;
+	b=UcKiHouV+A8jmB7/LKNJtMjIN0Jx/qBupdrfggZnpDsME3ImnILP5VJkpj3m27ODrqk0Ih
+	tBN33C6MGi+R62WpEjjO4SkXZHG0KSjuZ3Y/Ftl1dDBpdJCZmM2+uYAR48FnxuY450dh15
+	xeKHjFIBZXFlcOesTKSgh+H6EamLKAJuLKWGsKP43D9tDfIzTsXQSaRjA31rBKZ4Xxm3wf
+	jBwBpldOLukXdxsZyY+hRmLvGSv9NmuVAMjOL2M2rpnaw6NKz3UiYKOHYamGhrILXH140N
+	dcLOV1S8R01Xh7nVUBSll9AaL81mo0DtAdxO+dGmwyx86tCa3lxhx1kxcmiPGg==
+Message-ID: <bf385367-bec7-432c-af2b-1c1bd269547e@mailbox.org>
+Date: Wed, 17 Sep 2025 15:44:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
+ initialization
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+References: <20250916181558.GA1810654@bhelgaas>
+ <643c9b19-dda4-43c5-bb6d-aa0705053d43@mailbox.org>
+ <CAMuHMdXh0rxpLXW+3yCP7hZNwacVcuc3Wp5t8CiDJ2HE=P+OiQ@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <CAMuHMdXh0rxpLXW+3yCP7hZNwacVcuc3Wp5t8CiDJ2HE=P+OiQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MBO-RS-ID: 75b0886a497c68c846f
+X-MBO-RS-META: dczkuht97h9yh5n3egsxea9qkhkii97i
 
+On 9/17/25 10:00 AM, Geert Uytterhoeven wrote:
 
-> >> +static const char *cxt_sts_state_str(enum cxt_sts_state state)
-> >> +{
-> >> +	static const char *const context_states[] = {
-> >> +		[CXTV_STOP_SW]  = "stopped (software)",
-> >> +		[CXTV_RUN]      = "running",
-> >> +		[CXTV_STOPG_SW] = "stopping (software)",
-> >> +		[CXTV_STOP_FN]  = "stopped (function)",
-> >> +		[CXTV_STOPG_FN] = "stopping (function)",
-> >> +		[CXTV_ERR_FN]   = "error",
-> >> +	};
-> >> +	const char *str = "unknown";
-> >> +
-> >> +	switch (state) {
-> >> +	case CXTV_STOP_SW:
-> >> +	case CXTV_RUN:
-> >> +	case CXTV_STOPG_SW:
-> >> +	case CXTV_STOP_FN:
-> >> +	case CXTV_STOPG_FN:
-> >> +	case CXTV_ERR_FN:
-> >> +		str = context_states[state];  
-> >
-> > I'd do a default to make it explicit that there are other states. If
-> > there aren't then just return here and skip the return below. A
-> > compiler should be able to see if you handled them all and complain
-> > loudly if a new one is added that you haven't handled.  
+Hello Geert,
+
+>> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+>> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+>> @@ -688,12 +688,14 @@ static int cpg_mssr_reset(struct
+>> reset_controller_dev *rcdev,
+>>
+>>          /* Reset module */
+>>          writel(bitmask, priv->pub.base0 + priv->reset_regs[reg]);
+>> +       readl(priv->pub.base0 + priv->reset_regs[reg]);
+>>
+>>          /* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+>>          udelay(35);
+>>
+>>          /* Release module from reset state */
+>>          writel(bitmask, priv->pub.base0 + priv->reset_clear_regs[reg]);
+>> +       readl(priv->pub.base0 + priv->reset_clear_regs[reg]);
+>>
+>>          return 0;
+>>    }
+>> @@ -708,6 +710,7 @@ static int cpg_mssr_assert(struct
+>> reset_controller_dev *rcdev, unsigned long id)
+>>          dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+>>
+>>          writel(bitmask, priv->pub.base0 + priv->reset_regs[reg]);
+>> +       readl(priv->pub.base0 + priv->reset_regs[reg]);
+>>          return 0;
+>>    }
+>>
+>> @@ -722,6 +725,7 @@ static int cpg_mssr_deassert(struct
+>> reset_controller_dev *rcdev,
+>>          dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
+>>
+>>          writel(bitmask, priv->pub.base0 + priv->reset_clear_regs[reg]);
+>> +       readl(priv->pub.base0 + priv->reset_clear_regs[reg]);
+>>          return 0;
+>>    }
+>>
 > 
-> The CXTV_... values are the only valid states that an SDXI device is
-> allowed to report for a context, but this function is intended to be
-> resilient against unspecified values in case of implementation bugs (in
-> the caller, or firmware, whatever). That's why it falls back to
-> returning "unknown".
+> Yes, reading the reset registers after writing works, too.
 > 
-> But it's coded without a default label so that -Wswitch (which is
-> enabled by -Wall and so is generally active for kernel code) will warn
-> on an unhandled case. The presence of a default label will actually
-> defeat this unless the compiler is invoked with -Wswitch-enum, which
-> even W=1 doesn't enable.
+> I just noticed the module reset operation in the R-Car V4H Hardware
+> User's Manual has changed from R-Car Gen2/Gen3, and is now more complex,
+> with three different reset types, depending on the module to be reset
+> (see Section 9.3 "Operation" subsection (2) "Software Reset").
+> The most striking difference is that there is no more mention of
+> a single delay of 1 RCLK cycle (cfr. the udelay(35) above), but of
+> much longer delays of 1 ms.
 > 
-> I really do want warnings on unhandled cases of this sort, so I suppose
-> at the very least this code deserves a comment to deter well-meaning
-> people from trying to add a default label. Or I could add the default
-> label and see how painful it is to use -Wswitch-enum throughout the
-> driver. There are several similar functions in the error reporting code
-> so this isn't the only instance of this pattern in the driver.
+> As drivers/pci/controller/dwc/pcie-rcar-gen4.c does not call the
+> combined reset_control_reset() , but uses separate
+> reset_control_assert() and reset_control_deassert() calls, the PCIe
+> driver itself is responsible for enforcing this 1 ms delay.
 
-Thanks for the response. Makes sense.
+Shouldn't we patch the reset driver and insert unconditional 1ms delay 
+into reset_assert() callback ?
 
-J
+> Which is exactly what your introduction of mdelay(1) (just after the
+> out-of-context call to reset_control_deassert()) does, so I believe
+> we're all set?
 
+No, I do not think so. Figure 9.3.2 Software Reset flow (B) on page 585 
+does NOT describe 1ms delay after write into SRSTCLR register. It does 
+describe 1ms delay after write into SRCR register. That means, we need 
+1ms delay after reset_control_assert(), but it does NOT mean we need 1ms 
+delay after reset_control_deassert() . That means the issue remains 
+unexplained ?
 
