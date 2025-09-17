@@ -1,91 +1,104 @@
-Return-Path: <linux-pci+bounces-36309-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36310-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EE44B7E1B0
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:42:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB6FEB7DCF1
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:34:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D4DF325A19
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Sep 2025 22:36:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 719521BC4788
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 00:46:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0187529BD88;
-	Tue, 16 Sep 2025 22:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA199221F12;
+	Wed, 17 Sep 2025 00:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJiJZ+uF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqxxfqUx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB514292B2E;
-	Tue, 16 Sep 2025 22:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE84221D9E;
+	Wed, 17 Sep 2025 00:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758062158; cv=none; b=QHIbw8vEGZyV1z9e7WrKLkj3M5sVQQSzfXXazp2TitP8YpEf97cB3n2Tl/zRzCWLhyBnzhGxCcVpq2RcfhzBMutoSd05bBQDvRJ+/9pho1Oxr8YiNkQnE4IBmuIf6mwTFXez9kGn4Bt1FN4Olu+IOBcLBNlxgzdQk7OLNCR976k=
+	t=1758069911; cv=none; b=WWT+Phgp5Dkiw3d5/+fWG0CvU48S4ber0RFPm6lgrTCw/U5risNyMvcCBO1xuQQ48b55rK9OseL5rncIUL6JfzXbvEZ4yh3121VQKeqDSbTChq0snOcI0jG5xI1mW01gLeBMAlKWwMRuZinbX2ojcOWea12tgqYXcXcX5jGWIHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758062158; c=relaxed/simple;
-	bh=l0E8v9W0wXbu+8pAbt59haAcRrr7gOctSVelRsyJceY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=szVDpWgPqpFMdI1546cwYyH3t6/LzQRIw3huuFlwzHOek+Ok0cbH95c5LBlqBdtcUqSoVMEsiY47HyLNMT/ORcis6KOjqnxTlNhJpw2qfpLYXRu9AO67otrKpCv/pA6j403kYROICnB5AJSMlE+rDyc87A6+9uQyDRiNMcDf9NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJiJZ+uF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46678C4CEEB;
-	Tue, 16 Sep 2025 22:35:58 +0000 (UTC)
+	s=arc-20240116; t=1758069911; c=relaxed/simple;
+	bh=hM1WsqT6+2Sj1W5hK44iajXZdntKcCchQ0B8FZgONAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HVmoUIqNmlAp2ZW+oHI9OL4vITV7+mxIR1rzvqywqtmMYbQzU4iVh3HR+3inrieJ9NF25/PWItHX3594p8lmhxNe0u2z3fS2CcDd4HYOwD0mxn+A8B29sn8gRj1ssT9QXl0bi4SXxQiEcNJgCX8hhxDWozpfat/Wq9S2d8YyOUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqxxfqUx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC024C4CEEB;
+	Wed, 17 Sep 2025 00:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758062158;
-	bh=l0E8v9W0wXbu+8pAbt59haAcRrr7gOctSVelRsyJceY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gJiJZ+uFOszg2pFjCy0mQEorYpZdmPG2saAVXEvOBXZZJa3Cpiwh8pzexVYLKDa/G
-	 fZr4+Lv0rZjaizcCO9grSzvYbx6NfCpqbJ6Y4OBZ/FdYuGI4K4be7saQcX23mzm3D7
-	 T/wFkMCcBa+UPJYgOlJ6HuIkjMilg9oN+xUNtPEPgb2XNIoO6U1/t8dTbbE2LTMVBf
-	 sHa8tBZbm6Y3zuyYu60RqpaV06HeOTCxVM/RoZATYrZfHAmu5QpPDXAz9DrR2dPMg3
-	 3OxC9BsTVfyFj3sUiI+5+SvIb/75Q1meBHzE4I1rnSxrd346cpRDcRLIOraQVTDp/O
-	 JuBTRcvk+XkDQ==
-Date: Tue, 16 Sep 2025 16:35:56 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Matthew Wood <thepacketgeek@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mario Limonciello <superm1@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND PATCH v7 1/1] PCI/sysfs: Expose PCIe device serial number
-Message-ID: <aMnmTMsUWwTwnlWV@kbusch-mbp>
-References: <20250821232239.599523-2-thepacketgeek@gmail.com>
- <20250915193904.GA1756590@bhelgaas>
+	s=k20201202; t=1758069911;
+	bh=hM1WsqT6+2Sj1W5hK44iajXZdntKcCchQ0B8FZgONAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DqxxfqUxYmrCGdbdHUXGz6b01BEvtztSTI6eC4riOXRCFdi2HtHVYwjArb4Th02JV
+	 02vuniBHAA21u3KTEAhVFaOyiBJb00RpbX2B8viOpWzcyLuO9Ekz0adZgd9roctyzH
+	 b5yqJjBkseb6PXBbG2dHD08WrjAA3DUxh8OipnCpF7D8qoEVgBJj+3W6g33qnNk8Gq
+	 +gsYrSEXXMesEndg/hi3gDa9CZ8pemGs66PubwTh7pCwM8UJu9KHdKYUBCRxMlbrsU
+	 +JmJPVZ9E9IMRGfJHizpHK3ZroaMu2bErhiKTg9w0W7AP1ZlhYIWAFmjPK59ZWvIK7
+	 ZhkmhWS0VSuyw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	jingoohan1@gmail.com,
+	mani@kernel.org,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	johan+linaro@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	neil.armstrong@linaro.org,
+	abel.vesa@linaro.org,
+	Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	qiang.yu@oss.qualcomm.com,
+	quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com
+Subject: Re: (subset) [PATCH v6 0/3] Add Equalization Settings for 8.0 GT/s and 32.0 GT/s and Add PCIe Lane Equalization Preset Properties for 8.0 GT/s and 16.0 GT/s
+Date: Tue, 16 Sep 2025 19:45:05 -0500
+Message-ID: <175806990240.4070293.6265162511011715762.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250904065225.1762793-1-ziyue.zhang@oss.qualcomm.com>
+References: <20250904065225.1762793-1-ziyue.zhang@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250915193904.GA1756590@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 15, 2025 at 02:39:04PM -0500, Bjorn Helgaas wrote:
-> > @@ -660,6 +677,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> >  	&dev_attr_current_link_width.attr,
-> >  	&dev_attr_max_link_width.attr,
-> >  	&dev_attr_max_link_speed.attr,
-> > +	&dev_attr_serial_number.attr,
+
+On Thu, 04 Sep 2025 14:52:22 +0800, Ziyue Zhang wrote:
+> This series adds add equalization settings for 8.0 GT/s and 32.0 GT/s,
+> and add PCIe lane equalization preset properties for 8.0 GT/s and
+> 16.0 GT/s for sa8775p ride platform, which fix AER errors.
 > 
-> I can see that the PCI r3.0 (conventional PCI) spec doesn't include
-> the Device Serial Number Capability and the PCIe spec does include it,
-> but this seems like it would fit better in the pci_dev_dev_attrs[],
-> and the visibility check would be parallel to the
-> dev_attr_boot_vga.attr check there.
+> While equalization settings for 16 GT/s have already been set, this
+> update adds the required equalization settings for PCIe operating at
+> 8.0 GT/s and 32.0 GT/s, including the configuration of shadow registers,
+> ensuring optimal performance and stability.
+> 
+> [...]
 
-I'm not sure I agree. The pci_dev_dev_attrs apply to all pci devices,
-but DSN only exists in PCIe Extended Capability space. Conventional pci
-config requests couldn't even describe it, so seems okay to fence it off
-using the PCI-Express attribute group that already has that visibility
-barrier.
+Applied, thanks!
 
-I also don't like Krzysztof's suggestion to make it visible even if we
-know you can't read it. The exisiting attributes that behave that way
-shouldn't do that, IMO. It's a waste of resources to provide a handle
-just to say the capability doesn't exist when the handle could just not
-exist instead.
+[3/3] arm64: dts: qcom: lemans: Add PCIe lane equalization preset properties
+      commit: b4f745f1d8adad62ba8c2065873c8a857ed4c3da
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
