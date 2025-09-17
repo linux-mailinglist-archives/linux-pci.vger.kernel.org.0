@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-36339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2838AB7DF35
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:37:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BA0FB7EA28
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 14:55:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9E5E84E2CD6
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 10:11:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49B7716405F
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 10:23:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652C935CEC2;
-	Wed, 17 Sep 2025 10:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF512E5405;
+	Wed, 17 Sep 2025 10:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnWPOktB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCPYpQC/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D26356908;
-	Wed, 17 Sep 2025 10:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C870224FA;
+	Wed, 17 Sep 2025 10:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758103858; cv=none; b=JAxuYfd8DnxL6mSZ8vO17JIzJ5gIOkNBDEAz+IQydjQZXZ77LiCwQkivI09peR8LqN+4OYY25DIMcpiwF4kE21qrtPKgl7Ti1vx0iDtQAXmuYvKgQMHUuz57N1OKI8qGe+vKAomueE3PCIR7mcbnhq4VzLHKEXr5nBsmH8IP7JU=
+	t=1758104616; cv=none; b=BedAMLS62zRdgfcGW7S6Ov+yymXI/QVceJo0VG4Ka59jJRGOKk+2NNUgg3wx8had82/AKxgesuMvlSn1esxGGBzPv2WGsw3GeAhUO4XauQ7DTlp/JrxaeA5PhhcxYsoux9iLy18LqCD0eS84RxlguYx0aFqBn7go4EeEWFnDm+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758103858; c=relaxed/simple;
-	bh=a3TxFGgi88EPRbXikutgfbto+hW60mBv6IPriBJtunA=;
+	s=arc-20240116; t=1758104616; c=relaxed/simple;
+	bh=1sHt+GhISQCh7Dw+H0WwBAFkHIiCQ9IvxG+dQYuSAXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNkKtb6ffThOSn8SbYM6QYsogVwQKVJR/9QtS2gknj4weT5idpgqQ5N80ixgn+U2aUJ1rTxRmqnNNkt0CsYwUfMVVuEr3aY6KNW0Hei3H65g7vztDoJbU7WceKkPwjh0twj1BbRphrOfDAGMlYzoRhok5NPJBVFXLigu6nRP0HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnWPOktB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA37C4CEF0;
-	Wed, 17 Sep 2025 10:10:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EM3IbcsWod3w7BoVJKY9dcEmjOL/7jjf+NLC98Mcnk7se4Kgr6Krsn4vKjlapcdKyffr0cuDevpb2YP/2DXnX8n3QJdYYhjDkMvnFJSG+P9vJQK/flVEy+YFEoUVPp9FFEgbTx2kGOKPJmW3nPVvcMxT4PrA+JUgfiU8qLfPT/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCPYpQC/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475B4C4CEF0;
+	Wed, 17 Sep 2025 10:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758103857;
-	bh=a3TxFGgi88EPRbXikutgfbto+hW60mBv6IPriBJtunA=;
+	s=k20201202; t=1758104616;
+	bh=1sHt+GhISQCh7Dw+H0WwBAFkHIiCQ9IvxG+dQYuSAXQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hnWPOktBeofCuukIdaGjN17LL80o0d3i9OTMPKM5GSsleR4SAFdgsUvzYRKpUET9v
-	 k0U6wJRh9pdPn1BxoGPtzMqLyKfxkgLXRFOV8jfjYutZbwF6ZIiJ0icJqvndlEwiUT
-	 FNQAiCm/UbWww6PPwcWvWC0jOf9uHe3t6nKrG1EZts5LxeZnLWK7GAZ9h+csgnQZUn
-	 TEW8tIR1wIh5cQ0gt2yEqsRcKeJKbNzxAOr3PPH774kFMyQYGrAWxFJE9IoixGkZim
-	 k/anbDE62wBXjDZ+5Jbl6EJF3A1MBfngqND4VwMgMDpwKEyYf4SJwkdCL059fLP5iJ
-	 o5vmzVZ5exIQw==
-Date: Wed, 17 Sep 2025 15:40:48 +0530
+	b=mCPYpQC/WAgfXA/i9a5VD06wTLnH+S/7nmo3AIo7KLuYWqTpEe3FJwk+FgyJhwobp
+	 nTait17HSpCRwEAneDE1HstHfQ7K2FIwst+O7hgs8pleiGnNNvkYjnbJjLE8js3rwf
+	 8TQh7K2+lsUal8wZP/6TtXJMN3svpxBCyVLKxFfOfjPS4wpneyVglZs27qxpf5brJW
+	 7e5j1olsZm8Hay6Lk6r22zgD6Wx4atAvKRfKPhLpCiC0xZ3cynDbhlpZQ1jsLOXN8b
+	 /6jeN4qO2yEOrZ+qYf/v4GfQcg7Q0LLZn7Y2srsjcdWQGT45e82mhIgSlZtWztKYZm
+	 +GqqYMaClakNg==
+Date: Wed, 17 Sep 2025 15:53:25 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: manivannan.sadhasivam@oss.qualcomm.com, 
@@ -51,11 +51,11 @@ Cc: manivannan.sadhasivam@oss.qualcomm.com,
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
 	Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 2/4] PCI: qcom: Move host bridge 'phy' and 'reset'
- pointers to struct qcom_pcie_port
-Message-ID: <2tloujy4jx6xfjpq47ostfxen3rcghy7acmwh4njwzanirhxia@va47lzxqvud3>
-References: <20250912-pci-pwrctrl-perst-v3-2-3c0ac62b032c@oss.qualcomm.com>
- <20250916200817.GA1814336@bhelgaas>
+Subject: Re: [PATCH v3 4/4] PCI: qcom: Allow pwrctrl core to control PERST#
+ if 'reset-gpios' property is available
+Message-ID: <gnaubphg6iyh23vtf2flsjxoot7psgla7cr2c5jpecaozh4vf3@mzcmg74g3ogk>
+References: <20250912-pci-pwrctrl-perst-v3-4-3c0ac62b032c@oss.qualcomm.com>
+ <20250916204810.GA1814032@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,208 +65,84 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250916200817.GA1814336@bhelgaas>
+In-Reply-To: <20250916204810.GA1814032@bhelgaas>
 
-On Tue, Sep 16, 2025 at 03:08:17PM GMT, Bjorn Helgaas wrote:
-> On Fri, Sep 12, 2025 at 02:05:02PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+On Tue, Sep 16, 2025 at 03:48:10PM GMT, Bjorn Helgaas wrote:
+> On Fri, Sep 12, 2025 at 02:05:04PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
 > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > > 
-> > DT binding allows specifying 'phy' and 'reset' properties in both host
-> > bridge and Root Port nodes, though specifying in the host bridge node is
-> > marked as deprecated. Still, the pcie-qcom driver should support both
-> > combinations for maintaining the DT backwards compatibility. For this
-> > purpose, the driver is holding the relevant pointers of these properties in
-> > two structs: struct qcom_pcie_port and struct qcom_pcie.
-> > 
-> > However, this causes confusion and increases the driver complexity. Hence,
-> > move the pointers from struct qcom_pcie to struct qcom_pcie_port. As a
-> > result, even if these properties are specified in the host bridge node,
-> > the pointers will be stored in struct qcom_pcie_port as if the properties
-> > are specified in a single Root Port node. This logic simplifies the driver
-> > a lot.
-> > 
-> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > For historic reasons, the pcie-qcom driver was controlling the power supply
+> > and PERST# GPIO of the PCIe slot.
 > 
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com> 
+> > This turned out to be an issue as the power supply requirements
+> > differ between components. For instance, some of the WLAN chipsets
+> > used in Qualcomm systems were connected to the Root Port in a
+> > non-standard way using their own connectors.
 > 
-> I would put this patch by itself on pci/controller/qcom immediately
-> because it's not related to the rest of the series, and we should make
-> sure it's in v6.18 regardless of the rest.
+> This is kind of hand-wavy.  I don't know what a non-standard connector
+> has to do with this.  I assume there's still a PCIe link from Root
+> Port to WLAN, and there's still a PERST# signal to the WLAN device and
+> a Root Port GPIO that asserts/deasserts it.
 > 
 
-Done!
+If we have a non-standard connector, then the power supply requirements change.
+There is no longer the standard 3.3v, 3.3Vaux, 1.8v supplies, but plenty more.
+For instance, take a look at the WCN6855 WiFi/BT combo chip in the Lenovo X13s
+laptop:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts#n414
+
+These supplies directly go from the host PMIC to the WCN6855 chip integrated
+in the PCB itself. And these supplies need to be turned on/off in a sequence
+also, together with the EN/SWCTRL GPIOs, while sharing with the Bluetooth
+driver.
+
+To handle this complexity, pwrctrl framework was introduced.
 
 - Mani
 
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 87 ++++++++++++++--------------------
-> >  1 file changed, 36 insertions(+), 51 deletions(-)
+> > This requires specific power sequencing mechanisms for controlling
+> > the WLAN chipsets. So the pwrctrl framework (CONFIG_PWRCTRL) was
+> > introduced to handle these custom and complex power supply
+> > requirements for components.
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..6170c86f465f43f980f5b2f88bd8799c3c152e68 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -279,8 +279,6 @@ struct qcom_pcie {
-> >  	void __iomem *elbi;			/* DT elbi */
-> >  	void __iomem *mhi;
-> >  	union qcom_pcie_resources res;
-> > -	struct phy *phy;
-> > -	struct gpio_desc *reset;
-> >  	struct icc_path *icc_mem;
-> >  	struct icc_path *icc_cpu;
-> >  	const struct qcom_pcie_cfg *cfg;
-> > @@ -297,11 +295,8 @@ static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
-> >  	struct qcom_pcie_port *port;
-> >  	int val = assert ? 1 : 0;
-> >  
-> > -	if (list_empty(&pcie->ports))
-> > -		gpiod_set_value_cansleep(pcie->reset, val);
-> > -	else
-> > -		list_for_each_entry(port, &pcie->ports, list)
-> > -			gpiod_set_value_cansleep(port->reset, val);
-> > +	list_for_each_entry(port, &pcie->ports, list)
-> > +		gpiod_set_value_cansleep(port->reset, val);
-> >  
-> >  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-> >  }
-> > @@ -1253,57 +1248,32 @@ static bool qcom_pcie_link_up(struct dw_pcie *pci)
-> >  	return val & PCI_EXP_LNKSTA_DLLLA;
-> >  }
-> >  
-> > -static void qcom_pcie_phy_exit(struct qcom_pcie *pcie)
-> > -{
-> > -	struct qcom_pcie_port *port;
-> > -
-> > -	if (list_empty(&pcie->ports))
-> > -		phy_exit(pcie->phy);
-> > -	else
-> > -		list_for_each_entry(port, &pcie->ports, list)
-> > -			phy_exit(port->phy);
-> > -}
-> > -
-> >  static void qcom_pcie_phy_power_off(struct qcom_pcie *pcie)
-> >  {
-> >  	struct qcom_pcie_port *port;
-> >  
-> > -	if (list_empty(&pcie->ports)) {
-> > -		phy_power_off(pcie->phy);
-> > -	} else {
-> > -		list_for_each_entry(port, &pcie->ports, list)
-> > -			phy_power_off(port->phy);
-> > -	}
-> > +	list_for_each_entry(port, &pcie->ports, list)
-> > +		phy_power_off(port->phy);
-> >  }
-> >  
-> >  static int qcom_pcie_phy_power_on(struct qcom_pcie *pcie)
-> >  {
-> >  	struct qcom_pcie_port *port;
-> > -	int ret = 0;
-> > +	int ret;
-> >  
-> > -	if (list_empty(&pcie->ports)) {
-> > -		ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
-> > +	list_for_each_entry(port, &pcie->ports, list) {
-> > +		ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
-> >  		if (ret)
-> >  			return ret;
-> >  
-> > -		ret = phy_power_on(pcie->phy);
-> > -		if (ret)
-> > +		ret = phy_power_on(port->phy);
-> > +		if (ret) {
-> > +			qcom_pcie_phy_power_off(pcie);
-> >  			return ret;
-> > -	} else {
-> > -		list_for_each_entry(port, &pcie->ports, list) {
-> > -			ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
-> > -			if (ret)
-> > -				return ret;
-> > -
-> > -			ret = phy_power_on(port->phy);
-> > -			if (ret) {
-> > -				qcom_pcie_phy_power_off(pcie);
-> > -				return ret;
-> > -			}
-> >  		}
-> >  	}
-> >  
-> > -	return ret;
-> > +	return 0;
-> >  }
-> >  
-> >  static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> > @@ -1748,8 +1718,10 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
-> >  	return ret;
-> >  
-> >  err_port_del:
-> > -	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-> > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > +		phy_exit(port->phy);
-> >  		list_del(&port->list);
-> > +	}
-> >  
-> >  	return ret;
-> >  }
-> > @@ -1757,20 +1729,32 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
-> >  static int qcom_pcie_parse_legacy_binding(struct qcom_pcie *pcie)
-> >  {
-> >  	struct device *dev = pcie->pci->dev;
-> > +	struct qcom_pcie_port *port;
-> > +	struct gpio_desc *reset;
-> > +	struct phy *phy;
-> >  	int ret;
-> >  
-> > -	pcie->phy = devm_phy_optional_get(dev, "pciephy");
-> > -	if (IS_ERR(pcie->phy))
-> > -		return PTR_ERR(pcie->phy);
-> > +	phy = devm_phy_optional_get(dev, "pciephy");
-> > +	if (IS_ERR(phy))
-> > +		return PTR_ERR(phy);
-> >  
-> > -	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
-> > -	if (IS_ERR(pcie->reset))
-> > -		return PTR_ERR(pcie->reset);
-> > +	reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset))
-> > +		return PTR_ERR(reset);
-> >  
-> > -	ret = phy_init(pcie->phy);
-> > +	ret = phy_init(phy);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> > +	if (!port)
-> > +		return -ENOMEM;
-> > +
-> > +	port->reset = reset;
-> > +	port->phy = phy;
-> > +	INIT_LIST_HEAD(&port->list);
-> > +	list_add_tail(&port->list, &pcie->ports);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1984,9 +1968,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >  err_host_deinit:
-> >  	dw_pcie_host_deinit(pp);
-> >  err_phy_exit:
-> > -	qcom_pcie_phy_exit(pcie);
-> > -	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-> > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > +		phy_exit(port->phy);
-> >  		list_del(&port->list);
-> > +	}
-> >  err_pm_runtime_put:
-> >  	pm_runtime_put(dev);
-> >  	pm_runtime_disable(dev);
+> > Sooner, we realized that it would be best to let the pwrctrl driver control
+> > the supplies to the PCIe slots also. As it will allow us to consolidate all
+> > the power supply handling in one place instead of doing it in two. So the
+> > CONFIG_PWRCTRL_SLOT driver was introduced, that just parses the Root Port
+> > nodes representing slots and controls the standard power supplies like
+> > 3.3v, 3.3VAux etc...
 > > 
-> > -- 
-> > 2.45.2
+> > However, the control of the PERST# GPIOs was still within the controller
+> > drivers like pcie-qcom. So the controller drivers continued to assert/
+> > deassert PERST# GPIOs independent of the power supplies to the components.
+> > This mostly went unnoticed as the components tolerated this non-standard
+> > PERST# assertion/deassertion. But this behavior completely goes against the
+> > PCIe Electromechanical specs like CEM, M.2, as these specs enforce strict
+> > control of PERST# signal together with the power supplies.
 > > 
+> > So conform to these specs, allow the pwrctrl core to control PERST# for the
+> > slots if the 'reset-gpios' property is specified in the DT bridge nodes.
+> > This is achieved by populating the 'pci_host_bridge::perst_assert' callback
+> > with qcom_pcie_perst_assert() function, so that the pwrctrl core can
+> > control PERST# through this callback.
 > > 
+> > qcom_pcie_perst_assert() will find the PERST# GPIO descriptor associated
+> > with the supplied 'device_node' of the component and asserts/deasserts
+> > PERST# as requested by the 'assert' parameter. If PERST# is not found in
+> > the supplied node of the component, the function will look for PERST# in
+> > the parent node as a fallback. This is needed since PERST# won't be
+> > available in the endpoint node as per the DT binding.
+> > 
+> > Note that the driver still asserts PERST# during the controller
+> > initialization as it is needed as per the hardware documentation.
+> > 
+> > For preserving the backward compatibility with older DTs that still
+> > specifies the Root Port resources in the host bridge DT node, the
+> > controller driver still controls power supplies and PERST# for them. For
+> > those cases, the 'qcom_pcie::legacy_binding' flag will be set and the
+> > driver will continue to control PERST# exclusively. If this flag is not
+> > set, then the pwrctrl driver will control PERST# through the callback.
 
 -- 
 மணிவண்ணன் சதாசிவம்
