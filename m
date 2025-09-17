@@ -1,171 +1,122 @@
-Return-Path: <linux-pci+bounces-36375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55B24B813AC
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 19:51:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AC1EB81562
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 20:27:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D9114674CD
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 17:51:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BB56462678
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 18:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6D92FD7A4;
-	Wed, 17 Sep 2025 17:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46852FF664;
+	Wed, 17 Sep 2025 18:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iZgOCoNi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+4sa/i/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9E02FE56B;
-	Wed, 17 Sep 2025 17:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414E92FD1BF
+	for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 18:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758131469; cv=none; b=M95HAL1e5+1xjbVIsRiTZwCaOWvryW3notThhbIKfqFwiuo/D3hpcG3yEBgT5T/yf6VeoxW9i5dVLpX+FWs5NWNv1dXvs1UpBNzJt3lBhmlIRKXdWYSABEH4TlWmUU71zKAvJbftyuKyA8p5hZrhRI7naFej8nM0uAQMZRs0jWw=
+	t=1758133615; cv=none; b=BbuzI+U/knIOTpqqPKGfW9mObxAFrRO7rqSMwaMi4Mtt90DB0y8kFFcovUeWg+L44/itfDyocpZvy7fpvc/ibzKg+/seAOGrfP2i61EtnSb/DgcKWV4uvqXV03nNnpovm0Ip4uCBRXjn8L04oWVUslV6TuIwNv6ONbqiFbrvPvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758131469; c=relaxed/simple;
-	bh=brl3rUJ7PHhbScsa8OjzCWBMtqQju8gphFm/i7O0YIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GAKuhOHC3pZCaNHGwiydf+M0lqtbDGKjPtT7HLUoogSjiPmVEiNvVO3tCSqHUzu4ye6KLqRd8+IRC9oUXY9CLH7KFPNY282ftjzGH8Lm+Qq7fpy7XHj26okJyjRIrZGvK/4cRjOIVuMMGD6rL/GoymGtrUD3i7KFrto6e6yh6yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iZgOCoNi; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58HB47Op031401;
-	Wed, 17 Sep 2025 17:51:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=VSb8bE
-	4XA/Ua9GKH9sL1VLxuwv8W4LaMgmb1OJHJR6w=; b=iZgOCoNiSdWEsGhANdLOOg
-	/5Az7NYqZoSEkMvNVukXsxy8MiHEftUehCzoIoo0yovfQx/vcnlW54+WZU90IDmY
-	lDwZnzhFMQeFcqDvvCofSZql2zPleME3E2qU7urZ9eCOTRCF/gh/IMeXQTIIQqdf
-	qhOJpQjqQu4rtyUwLiTuYkn8YjzjgqAgfr5GVdQBiO3cPxBC6+GKVWf77NPKVAq/
-	0ar9pyQ6RJWsok9SPwS04SVJPGEeVCXF79IJbN1RhrebKZFjlTao0OuYl9mOGDcq
-	ouFKWhDtobft57qcYO6QgUlbNydGBWRDuoS7/aoUprawKBh5B6Pw4oAPLveu0pcQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4hndde-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 17:51:00 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58HHR1db022297;
-	Wed, 17 Sep 2025 17:50:59 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495kxptj9q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 17:50:59 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58HHowjB63176996
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Sep 2025 17:50:58 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C5B75805C;
-	Wed, 17 Sep 2025 17:50:58 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CC28058051;
-	Wed, 17 Sep 2025 17:50:56 +0000 (GMT)
-Received: from [9.61.250.96] (unknown [9.61.250.96])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Sep 2025 17:50:56 +0000 (GMT)
-Message-ID: <28a56c75-9e45-4855-b555-49237cacba3a@linux.ibm.com>
-Date: Wed, 17 Sep 2025 10:50:51 -0700
+	s=arc-20240116; t=1758133615; c=relaxed/simple;
+	bh=VOindL3lSQlV+EU8bzBVqCefJiskGRsvr4EyQUGkHpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pij5vlOR4V8aCR+LH/pwQY4ZULSm/Sqtlq/OazaIDXhFRrBntOJ3WgV7xPQx+P0mHPI6xdPQ9ppbz5JjrxWYRvI88+hZbDGDCHyjxqW1z9C1DwxxaOe69Oj5cGIu9vFp8/NoTx4MINEQyb+RZZYVhSEBhXEDd7A28/DC2j6tPb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+4sa/i/; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-62f28da25b9so82591a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 11:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758133613; x=1758738413; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KE5vzhXPDe/Jivh+qVVI2ieYJwT4ugymYXPAOJdscp4=;
+        b=k+4sa/i/7kn93DZNGN4Qvx3feW/CX14EfRmaW1leB8pHlXkIofY3oxG18NfrdelQ6E
+         jKxMmjgj/7XZJBfpqm2oBgMM9N2p7H4HOXdk4ursgjqZsiWSzKQpvIBPDnVMtcpFPwhL
+         YYZw6CIW4Pwq5M2m7mSy8MTUfdGLc2MRUO56z0p0rTgIjeHgIik8c2qj7X1r3QXfrCdA
+         v76RQwNv6ejZPNvUMrWuBu1nKGn33GjEKz+yS9Ai1sWhQ5v3n6lsYcbjsRsb+P2aYlLq
+         B9P1omqeani/0S3TQH5ydUJDrnecwoDZU3D8Ngc1JMoJEcoPAYN8iblIKWBPmIlE7q0l
+         wjXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758133613; x=1758738413;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KE5vzhXPDe/Jivh+qVVI2ieYJwT4ugymYXPAOJdscp4=;
+        b=Bl7dER4JKF4mUgRmweZMx+SBKTBMHgueXRHdoWo7jZGrH2Df9v3ZG7j7RyJia4O1dX
+         h0aM9VJgD77pj44OB4ZdOWj+3FGHkcNMMyL4+l2bxnQoP7Fux2zTi9AqdCV9IVfnqA8q
+         Uz/ngAgisUix3/43NE0PnDjT8eFSDlDyoRhgdc7+x0N0lFPUpyb1cplEETX+9614teNu
+         AXZcxchYxV7qTFWsTrwpKWurBsWkMF/DcBjxfUF0D/+wB7qAW7GMNI05aK7ms9jMCFFB
+         bbBQ3bI1hhRkRzxWkR6BxrjpzRdRxkZLBojS12ogpjiJ1t4rDcznGnYuHEJHmpjv45rQ
+         3glw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+KJOe9B8JklmG8iyFUKtKAe0SoUjTiO5SC1avEUvg4LrSzEEpuiuA7C8KOh2+csw1Q/yFJLcOXmA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsfH4VuoeitFTWTs53VeBkqlrMMTC5leBd0mQyS0XujLtdIOt1
+	v/hEWB4aadWvzczyCuw0Al3Ds79U3EtfVRwMKmgYvQlwiLkPCxAh3W10zqQYEs5LwJQsD0DIhpe
+	ErmNOmNSdb2mLxX01ddF+Ebh1hdc8WSo=
+X-Gm-Gg: ASbGncvs7lV6OZBS5fDohH/sZWb49MSkGEjvKb1g9b+8P2Cfc/JNO4TQoe/4gYA6rgW
+	tl8bfyPi2XYMuGUlSaXs/suEKHQjpiWe2ML+gwETWjKivvJQ6lY9ij2VtYmxf8hGfS2eFdtbev9
+	L2m6s8+HNnNUmawbjU1Wo9eFWUyGyOrL73+/eKEoVTxLNhDISWCutDiBVDcP/5FCawx9EQNq4hb
+	GFys1wod0sd8WFa
+X-Google-Smtp-Source: AGHT+IGEkC4e+jpdiaw/hjRvLoVCqkr7yflYqLNKY/nMRIxPb09k+z4AWhjNOjTproo2SENLd11XurMp8ldAQeOkPHM=
+X-Received: by 2002:a05:6402:1ecb:b0:62f:897e:f10c with SMTP id
+ 4fb4d7f45d1cf-62f897ef2f1mr3046469a12.35.1758133612406; Wed, 17 Sep 2025
+ 11:26:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/10] PCI: Allow per function PCI slots
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: alex.williamson@redhat.com, helgaas@kernel.org, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-References: <20250911183307.1910-1-alifm@linux.ibm.com>
- <20250911183307.1910-4-alifm@linux.ibm.com>
- <07205677-09f0-464b-b31c-0fb5493a1d81@redhat.com>
- <e86caff6-8af0-48c9-9058-c1991e23160f@linux.ibm.com>
- <f6f59318-c462-404b-bf4f-ae121950be8c@redhat.com>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <f6f59318-c462-404b-bf4f-ae121950be8c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nkD6okS8y5FMS1TA12UjqrsOPnxcqlL6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfXyrUpHLqs3GpL
- xCHsiRpSr6M/vGiYHrUDiU/3T8aVW3wZJXoxPP39XRhF16wr21ZVeNCcTU8ZDE3NQtoNz1wAIec
- gWscSNOojQzJ1Q8pBvn5k6um6MyEJf95ktFQVBs/+qjUfMq6I29xW3yFz6iOipFywHbaeZx/6tZ
- aAzf5miXquFt8x8YSB8MWmdT1Y1vKpVI6g1QO9YGPM6/9FnLzUbCF7NHzpzoV6nTDV+PHwe8BIo
- QOJeZdqPB5Xbu861mqiJbMb6UIXqmg9/+dxw0sy7ZVwav1D0PBe9+2TGjDjZtNCmGuk1tT3PgxV
- sgWt3ozaq3FFXycfW5SE0Z3TsIpdC+ID46Sr5+TM9tKSr9IoyfhYeKZ9jKXV7PtMCBuJfA8iNYW
- EaMqw7FT
-X-Proofpoint-GUID: nkD6okS8y5FMS1TA12UjqrsOPnxcqlL6
-X-Authority-Analysis: v=2.4 cv=co2bk04i c=1 sm=1 tr=0 ts=68caf505 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=NEAV23lmAAAA:8 a=3iO8Xu5d0OMkKlL8vZAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-17_01,2025-09-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 spamscore=0 bulkscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509160204
+References: <20250831190055.7952-1-linux.amoon@gmail.com> <20250831190055.7952-2-linux.amoon@gmail.com>
+ <a743fd19-d54b-450f-a4db-8efc21acf22a@nvidia.com>
+In-Reply-To: <a743fd19-d54b-450f-a4db-8efc21acf22a@nvidia.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 17 Sep 2025 23:56:35 +0530
+X-Gm-Features: AS18NWCdYdMNTArMBqsuADdCuXSmojDCTvOV6KkCt_TLO4kj7BWmpqiyqyTAfVE
+Message-ID: <CANAwSgS-Oq7iXDtiWM0W8NZ2q=BcCGviJAUdscWJRvyxLsw0CQ@mail.gmail.com>
+Subject: Re: [RFC v1 1/2] PCI: tegra: Simplify clock handling by using
+ clk_bulk*() functions
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"open list:PCI DRIVER FOR NVIDIA TEGRA" <linux-tegra@vger.kernel.org>, 
+	"open list:PCI DRIVER FOR NVIDIA TEGRA" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Jon,
 
-On 9/16/2025 11:21 PM, Cédric Le Goater wrote:
-> Hi Farhan,
->
->> Hi Cedric,
->>
->> Thanks for pointing this out. I missed that dev->slot could be NULL 
->> and so the per_func_slot check should be done after the check for 
->> !dev->slot. I tried this change on top of the patch in an x86_64 VM 
->> and was able to boot the VM without the oops.
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 70296d3b1cfc..3631f7faa0cf 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -5061,10 +5061,9 @@ static int pci_reset_hotplug_slot(struct 
->> hotplug_slot *hotplug, bool probe)
->>
->>   static int pci_dev_reset_slot_function(struct pci_dev *dev, bool 
->> probe)
->>   {
->> -       if (dev->multifunction && !dev->slot->per_func_slot)
->> -               return -ENOTTY;
->>          if (dev->subordinate || !dev->slot ||
->> -           dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
->> +           dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
->> +           (dev->multifunction && !dev->slot->per_func_slot))
->>                  return -ENOTTY;
-> All good.
->
-> I have pushed the Linux branch I use for vfio :
->
->    https://github.com/legoater/linux/commits/vfio/
->
-> These commits have small changes :
->
->     PCI: Allow per function PCI slots
->     vfio-pci/zdev: Add a device feature for error information
->
-> Thanks,
->
-> C.
+On Wed, 17 Sept 2025 at 19:14, Jon Hunter <jonathanh@nvidia.com> wrote:
 >
 >
-Hi Cedric,
-
-Thanks again for your help in reviewing the patches.
-
+> On 31/08/2025 20:00, Anand Moon wrote:
+> > Currently, the driver acquires clocks and prepare/enable/disable/unprepare
+> > the clocks individually thereby making the driver complex to read.
+> >
+> > The driver can be simplified by using the clk_bulk*() APIs.
+> >
+> > Use:
+> >    - devm_clk_bulk_get_all() API to acquire all the clocks
+> >    - clk_bulk_prepare_enable() to prepare/enable clocks
+> >    - clk_bulk_disable_unprepare() APIs to disable/unprepare them in bulk
+> >
+> > As part of this cleanup, the legacy has_cml_clk flag and explicit handling
+> > of individual clocks (pex, afi, pll_e, cml) are removed. Clock sequencing
+> > is now implicitly determined by the order defined in the device tree,
+> > eliminating hardcoded logic and improving maintainability.
+>
+> What platforms have you tested this change on?
+>
+I'm using a Jetson Nano 4GB model as my test platform.
+> Thanks
+> Jon
 Thanks
-Farhan
-
-
+-Anand
 
