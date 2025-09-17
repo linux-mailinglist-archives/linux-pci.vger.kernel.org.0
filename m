@@ -1,236 +1,114 @@
-Return-Path: <linux-pci+bounces-36386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E112B82174
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 00:02:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E912AB8217A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 00:04:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C2323BCB73
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 22:02:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB065172005
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Sep 2025 22:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 881E130BF78;
-	Wed, 17 Sep 2025 22:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E18289340;
+	Wed, 17 Sep 2025 22:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iHJOiA1Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQTT3NL9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1F72DCBF7;
-	Wed, 17 Sep 2025 22:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1372123ABA0
+	for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 22:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758146550; cv=none; b=F6DA07EV6OEGIIrGn4DBNenV7zRJRY0ZC/iA87zgH6saz3s4QPFNCoeFfB7A1hqVqGZ0R5UbG7nAX/dv1MGYzsxyVJWszBgRpA2qZ9bx8FTIVRc6uO34WxNvKlCIdakE7fakRor1ayTaKNEmUJKUr39k/C90z1zXewA9lLgBWdY=
+	t=1758146641; cv=none; b=tX1eHA5D53JYW4Y0Fr/2hcJl/yXy5bubBmlgtNcDb0kKo5Dw/A0Ae8bPEQroyYobw6/j2/kS4WGDWf+WH1aMFH5Ds2YLtaIp8QkdTauu3QK6VUpmyvstqcFIXp0ujAeGGrDBdQTIvGP/T7qcSPEOToBqIwPWcJfOls8AdrRwwWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758146550; c=relaxed/simple;
-	bh=CVXw9uvZ4D6n5HmWG5IpYQjWsYYCqrfqLRvpe9sauYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qruwjzudyVNKhjSBIEJE3FvZKZFQJmn6jqypkqboxzdN9wG8hjZYVGUPISrqeD+NttnfltRmrXx92XR6HM5O5UogMxnqrdqZa4NQb9UVeaVtzRSZmxoa8+ilEHCD83ZTJ8+AJZN91b+uyq/lYy7Kam79Qn3EMj3SDLzjCtwIWTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iHJOiA1Q; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758146548; x=1789682548;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CVXw9uvZ4D6n5HmWG5IpYQjWsYYCqrfqLRvpe9sauYg=;
-  b=iHJOiA1QZ42WrgQuwHkZbUfDHc4PYVkz/SuISR6saWIPk/mepbcHtAo4
-   axFBSdXeTF/WOhw22Q1AWZsk+PtR+cPiCt7etISQsFAB6nO1wU2OIcisM
-   KCtu8dQHKs2bSrfAQb/rkMPuLxvS4fDbruT2LcGS50EvfniUqOaeYsw3V
-   E7XbJjTnvfrsKg/H1SDPNXrLw0NNsR9N/c3tamDEukLQqrSu5gJAtXllB
-   tuFEfIFERCqn/xxUKVIOrkHYe7WpjPds4pn0kDEOZ2+cfDJGRrQpEjWmF
-   HhJnkZOx/TekY+QYZZzoc1vPREUR87K6nF0CgpheG5b9pf45OPsmKy96c
-   g==;
-X-CSE-ConnectionGUID: w7lW9iZ/T3qCNcQuq8kY3g==
-X-CSE-MsgGUID: YC0mldr8S4ekStCuQvQKlA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11556"; a="60160885"
-X-IronPort-AV: E=Sophos;i="6.18,273,1751266800"; 
-   d="scan'208";a="60160885"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 15:02:27 -0700
-X-CSE-ConnectionGUID: XCLV9Ns4SDyPh9+V1u4rVQ==
-X-CSE-MsgGUID: Xs5J8C6XSLqSRK49Z5F+eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,273,1751266800"; 
-   d="scan'208";a="175279710"
-Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 17 Sep 2025 15:02:24 -0700
-Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uz0EI-0002VL-1R;
-	Wed, 17 Sep 2025 22:02:22 +0000
-Date: Thu, 18 Sep 2025 06:01:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, bhelgaas@google.com,
-	mahesh@linux.ibm.com, mani@kernel.org, Jonathan.Cameron@huawei.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com
-Cc: oe-kbuild-all@lists.linux.dev, oohall@gmail.com,
-	xueshuai@linux.alibaba.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v5 2/3] PCI/DPC: Run recovery on device that detected the
- error
-Message-ID: <202509180501.eB8FJ5Vt-lkp@intel.com>
-References: <20250917063352.19429-3-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1758146641; c=relaxed/simple;
+	bh=k0nQcch1exthX5y375fnAM/rKw5+r4sZQRE5ja526JE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OXI5Jcmlgr+Gje6yC4OyKPWYpnsEoqyfay7u+xyolbPJdQq4pZT6kmyzfuUF7DoFN3T47XnDNwLeY+2rd+XuPR0FppaEwvYIzRKu8K6UMgtgjgT1NaT3lV09cXDJ9+5kDrdiQq/ChuTufbrdGdXGsg8cxNDShsDnnAhohA67sps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQTT3NL9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70738C4CEE7;
+	Wed, 17 Sep 2025 22:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758146640;
+	bh=k0nQcch1exthX5y375fnAM/rKw5+r4sZQRE5ja526JE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dQTT3NL9+lHO9jfiIkV5KN4lAfP28eFGLHU1xDD3QmqtblWsLeUUGQHfHdQbqXoyU
+	 8nWVxURgce2i1Wda9Sckwt1CxibMXlj2CtXtADi2voLnAEC+KzGbJlBfYEo2aPMuJV
+	 SG0RPFjGYEsD1H5BL0kWsJ7BVfXjvKhdm5k+867xwLdCSOGr6O5M8EhkVAZZLmg8of
+	 SR7NBic4c1hl4I9T8BRmff9A0MNTH5HmIdJIn5kdGzDtjnWeaIcKiLftsbmFtd3zRk
+	 FhUY2r7aqATRtw1lBJFcNyXUlo4zSldkAwkPuO2v6p5SIOYdMWxCWmuW6yn/XWe1IY
+	 1P6FN5M7/pfCw==
+Date: Wed, 17 Sep 2025 17:03:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7] PCI/PM: Skip resuming to D0 if device is disconnected
+Message-ID: <20250917220359.GA1877999@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250917063352.19429-3-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250909031916.4143121-1-superm1@kernel.org>
 
-Hi Shuai,
+On Mon, Sep 08, 2025 at 10:19:15PM -0500, Mario Limonciello (AMD) wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> When a PCIe device is surprise-removed (e.g., due to a dock unplug),
+> the PCI core unconfigures all downstream devices and sets their error
+> state to `pci_channel_io_perm_failure`. This marks them as disconnected
+> via `pci_dev_is_disconnected()`.
+> 
+> During device removal, the runtime PM framework may attempt to resume
+> the device to D0 via `pm_runtime_get_sync()`, which calls into
+> `pci_power_up()`. Since the device is already disconnected, this
+> resume attempt is unnecessary and results in a predictable error.
+> Avoid powering up disconnected devices by checking their status early
+> in `pci_power_up()` and returning -EIO.
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-kernel test robot noticed the following build warnings:
+Applied to pci/pm for v6.18, thanks, Mario!
 
-[auto build test WARNING on pci/for-linus]
-[also build test WARNING on linus/master v6.17-rc6 next-20250917]
-[cannot apply to pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-DPC-Clarify-naming-for-error-port-in-DPC-Handling/20250917-143459
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-patch link:    https://lore.kernel.org/r/20250917063352.19429-3-xueshuai%40linux.alibaba.com
-patch subject: [PATCH v5 2/3] PCI/DPC: Run recovery on device that detected the error
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250918/202509180501.eB8FJ5Vt-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 7c861bcedf61607b6c087380ac711eb7ff918ca6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250918/202509180501.eB8FJ5Vt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509180501.eB8FJ5Vt-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from <built-in>:3:
-   In file included from include/linux/compiler_types.h:171:
-   include/linux/compiler-clang.h:28:9: warning: '__SANITIZE_ADDRESS__' macro redefined [-Wmacro-redefined]
-      28 | #define __SANITIZE_ADDRESS__
-         |         ^
-   <built-in>:371:9: note: previous definition is here
-     371 | #define __SANITIZE_ADDRESS__ 1
-         |         ^
->> drivers/pci/pcie/edr.c:188:6: warning: variable 'err_dev' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     188 |         if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/pcie/edr.c:218:14: note: uninitialized use occurs here
-     218 |         pci_dev_put(err_dev);
-         |                     ^~~~~~~
-   drivers/pci/pcie/edr.c:188:2: note: remove the 'if' if its condition is always false
-     188 |         if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     189 |                 pci_err(err_port, "Invalid DPC trigger %#010x\n", status);
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     190 |                 goto send_ost;
-         |                 ~~~~~~~~~~~~~~
-     191 |         }
-         |         ~
-   drivers/pci/pcie/edr.c:181:6: warning: variable 'err_dev' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     181 |         if (!err_port->dpc_cap) {
-         |             ^~~~~~~~~~~~~~~~~~
-   drivers/pci/pcie/edr.c:218:14: note: uninitialized use occurs here
-     218 |         pci_dev_put(err_dev);
-         |                     ^~~~~~~
-   drivers/pci/pcie/edr.c:181:2: note: remove the 'if' if its condition is always false
-     181 |         if (!err_port->dpc_cap) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-     182 |                 pci_err(err_port, FW_BUG "This device doesn't support DPC\n");
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     183 |                 goto send_ost;
-         |                 ~~~~~~~~~~~~~~
-     184 |         }
-         |         ~
-   drivers/pci/pcie/edr.c:153:50: note: initialize the variable 'err_dev' to silence this warning
-     153 |         struct pci_dev *pdev = data, *err_port, *err_dev;
-         |                                                         ^
-         |                                                          = NULL
-   3 warnings generated.
-
-
-vim +188 drivers/pci/pcie/edr.c
-
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  150  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  151  static void edr_handle_event(acpi_handle handle, u32 event, void *data)
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  152  {
-267102466d7b592 Shuai Xue                  2025-09-17  153  	struct pci_dev *pdev = data, *err_port, *err_dev;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  154  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  155  	u16 status;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  156  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  157  	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  158  		return;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  159  
-774820b362b07b9 Bjorn Helgaas              2023-04-07  160  	/*
-774820b362b07b9 Bjorn Helgaas              2023-04-07  161  	 * pdev is a Root Port or Downstream Port that is still present and
-774820b362b07b9 Bjorn Helgaas              2023-04-07  162  	 * has triggered a containment event, e.g., DPC, so its child
-774820b362b07b9 Bjorn Helgaas              2023-04-07  163  	 * devices have been disconnected (ACPI r6.5, sec 5.6.6).
-774820b362b07b9 Bjorn Helgaas              2023-04-07  164  	 */
-af03958da0678c3 Kuppuswamy Sathyanarayanan 2020-04-15  165  	pci_info(pdev, "EDR event received\n");
-af03958da0678c3 Kuppuswamy Sathyanarayanan 2020-04-15  166  
-774820b362b07b9 Bjorn Helgaas              2023-04-07  167  	/*
-774820b362b07b9 Bjorn Helgaas              2023-04-07  168  	 * Locate the port that experienced the containment event.  pdev
-774820b362b07b9 Bjorn Helgaas              2023-04-07  169  	 * may be that port or a parent of it (PCI Firmware r3.3, sec
-774820b362b07b9 Bjorn Helgaas              2023-04-07  170  	 * 4.6.13).
-774820b362b07b9 Bjorn Helgaas              2023-04-07  171  	 */
-a56b1e47845b946 Shuai Xue                  2025-09-17  172  	err_port = acpi_dpc_port_get(pdev);
-a56b1e47845b946 Shuai Xue                  2025-09-17  173  	if (!err_port) {
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  174  		pci_err(pdev, "Firmware failed to locate DPC port\n");
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  175  		return;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  176  	}
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  177  
-a56b1e47845b946 Shuai Xue                  2025-09-17  178  	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(err_port));
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  179  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  180  	/* If port does not support DPC, just send the OST */
-a56b1e47845b946 Shuai Xue                  2025-09-17  181  	if (!err_port->dpc_cap) {
-a56b1e47845b946 Shuai Xue                  2025-09-17  182  		pci_err(err_port, FW_BUG "This device doesn't support DPC\n");
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  183  		goto send_ost;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  184  	}
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  185  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  186  	/* Check if there is a valid DPC trigger */
-a56b1e47845b946 Shuai Xue                  2025-09-17  187  	pci_read_config_word(err_port, err_port->dpc_cap + PCI_EXP_DPC_STATUS, &status);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23 @188  	if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-a56b1e47845b946 Shuai Xue                  2025-09-17  189  		pci_err(err_port, "Invalid DPC trigger %#010x\n", status);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  190  		goto send_ost;
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  191  	}
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  192  
-267102466d7b592 Shuai Xue                  2025-09-17  193  	err_dev = dpc_process_error(err_port);
-a56b1e47845b946 Shuai Xue                  2025-09-17  194  	pci_aer_raw_clear_status(err_port);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  195  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  196  	/*
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  197  	 * Irrespective of whether the DPC event is triggered by ERR_FATAL
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  198  	 * or ERR_NONFATAL, since the link is already down, use the FATAL
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  199  	 * error recovery path for both cases.
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  200  	 */
-267102466d7b592 Shuai Xue                  2025-09-17  201  	estate = pcie_do_recovery(err_dev, pci_channel_io_frozen, dpc_reset_link);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  202  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  203  send_ost:
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  204  
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  205  	/*
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  206  	 * If recovery is successful, send _OST(0xF, BDF << 16 | 0x80)
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  207  	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  208  	 */
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  209  	if (estate == PCI_ERS_RESULT_RECOVERED) {
-a56b1e47845b946 Shuai Xue                  2025-09-17  210  		pci_dbg(err_port, "DPC port successfully recovered\n");
-a56b1e47845b946 Shuai Xue                  2025-09-17  211  		pcie_clear_device_status(err_port);
-a56b1e47845b946 Shuai Xue                  2025-09-17  212  		acpi_send_edr_status(pdev, err_port, EDR_OST_SUCCESS);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  213  	} else {
-a56b1e47845b946 Shuai Xue                  2025-09-17  214  		pci_dbg(err_port, "DPC port recovery failed\n");
-a56b1e47845b946 Shuai Xue                  2025-09-17  215  		acpi_send_edr_status(pdev, err_port, EDR_OST_FAILED);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  216  	}
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  217  
-267102466d7b592 Shuai Xue                  2025-09-17  218  	pci_dev_put(err_dev);
-a56b1e47845b946 Shuai Xue                  2025-09-17  219  	pci_dev_put(err_port);
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  220  }
-ac1c8e35a3262d0 Kuppuswamy Sathyanarayanan 2020-03-23  221  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+> v7:
+>  * Reword commit message
+>  * Rebase on v6.17-rc5
+> ---
+>  drivers/pci/pci.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cdd..036511f5b2625 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+>  		return -EIO;
+>  	}
+>  
+> +	if (pci_dev_is_disconnected(dev)) {
+> +		dev->current_state = PCI_D3cold;
+> +		return -EIO;
+> +	}
+> +
+>  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>  		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+> -- 
+> 2.43.0
+> 
 
