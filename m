@@ -1,284 +1,191 @@
-Return-Path: <linux-pci+bounces-36422-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36423-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E53ADB8571F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:07:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C289B8579A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:12:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19C851C84DC8
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:05:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9AEC626D6C
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:08:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5048C2264CB;
-	Thu, 18 Sep 2025 15:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F6AE231A21;
+	Thu, 18 Sep 2025 15:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x9O0XxUF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKwQaTqZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9035E1CAA7D
-	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 15:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A950C22E004
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 15:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758207747; cv=none; b=WpJfPffEFr4cEoA0AoMiRMLEACwdo8PlUx4jACWErw+6N8ki6Wop203QmedycmD5L/M/eKZagPYz4NucItiQiBYUcDPQoJFhmjwvifi9xJniQ2/ZkgLOwv91Xt7r0gi5SKY1uUXebLOw0wrHXKublTiOWkydd9h2Vmoy7Tpd9rQ=
+	t=1758208018; cv=none; b=HG+hGvDM8vpJzMIcAQ48/QX+PmphSfaKELK8smVhFVbXLXjEjVlgA1+kCGmVnFA9duoQJnqj+LdfAU0qR91SZ8F22JLiYiI0l/NWl7+BS+GTKAPnHECOjrH12Zzs3IEUPinV8yHp+sAGYftn+awFTqyBPEH4arOYFvVxmgACpzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758207747; c=relaxed/simple;
-	bh=vJ54JE6+riZlcAldU+0faKQxu82OqxHqyvNXkYI5oGI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pzohqya5BduIetvhTSGuPsjOaG1tyTYpJAY/EDeeBCeLrwlC+lCM0XS6SunHreFBtZGTORJqVgBsEIjYXWj4s0wAIZ3vB/tB0z6VV982m1XHUE0IQLVEPayvXosjVGMeBiKYTNTvnXhcuknf7J35/W6H569CoHsLy2bTw4MDUhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x9O0XxUF; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-45b98de0e34so10986325e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 08:02:23 -0700 (PDT)
+	s=arc-20240116; t=1758208018; c=relaxed/simple;
+	bh=KsI7IFE8nmE3nobB8kd8ZjHOdWvgSD+Q3iDrO0FofoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qqyMsu/bJ8kbAY3rPTK5HdbgJEggE7H13+kVS71w59uW6XodnVYzC7X5q/pZZ6LLNXcVo4uk6qflB+JXItzTTortZBTdC5KgxEAKyiXxwX4d13Ii6biwKcDirXdFhNnckxgF5SzV5RE/l9oWwPMox39RQweX30NXle4FWT8URiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AKwQaTqZ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b0418f6fc27so180682566b.3
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 08:06:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758207742; x=1758812542; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l7zJnB3yDJu54j7XDPcUHBWHQ2xjhdYOpr3OUldWhZI=;
-        b=x9O0XxUFO7N4ZtNhcCOB7pynd1FZ5QJDaTtXr/WiVlQTD45f0sWeZjhqtrWVjMrc40
-         ZYp0MdtR54boZEwb6ECU0f9OKqFAzQZ1xBIWXUO6V8EtEd9ac1YWkBCZh13FF2ImyvIt
-         XhDoJo4yxBUwJZOD71VDNcwa8T9MB/O8wXvqPIWrw76tuR+6G/hFnf0KHv8hyAXR/gaF
-         /HiYUR+gF9Rbmf5zgbw4Si8R3bzpwQ9w7kZOm4xj9hy1hsOclSL2kYAivyQSa/HfQh6n
-         ICgE2N9yIcP7q9WjqnYkaZF9Jbulsc3eun/yZQyJmYS6mNO1rY4+VkIQAtkKh0ZjWbxZ
-         T7dg==
+        d=gmail.com; s=20230601; t=1758208015; x=1758812815; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jGRAU1dIkQ6kSxN8cpDQ6o04Ckso8P+w3s3co1ZgV0U=;
+        b=AKwQaTqZUcD9POEszN5jugttKg/1g4pgKnFgl+gEC2ZBr3Pb0o4lFJSBBT1kLNgTQT
+         8nGiVaaRwsUJIc72e7v9005D2b8/cejL1Q7iA6KcE0KNRtzyf6ZSdOH/xVGNoO3H4QxS
+         xDgofPPrw3W6ci+JNkEDO4yFwAwprhuzHRrrgWh2shLVOks+FwuxWi6kqv44i/pIBLJZ
+         11R0Ybzjm0fcu1Yp5edUIXcrBW7SKGtcSDfTjg9NKm7lQCiRt5bKAHqiylfZOlXtlODI
+         7sN4+tTTU1aEOOOlt2z3tkw1oSB0a8K3S+xP6lZrzJOkGIhfttDm0QpCiiJYkd4RBRBx
+         QvgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758207742; x=1758812542;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l7zJnB3yDJu54j7XDPcUHBWHQ2xjhdYOpr3OUldWhZI=;
-        b=Og0pEm+7r/6MbQHdEcY/LB0qry7Tfx46eSib/y90W2M95vx8tVNHcoVTLUA8LiSf55
-         b15P+MBTOyG7VpKIZxeYRO3ArTdjRhJol5jSmEWqi1XszklG1o2NSN3Jea7SHI0JDETb
-         0t2Qy8qNpE8Ho3XkvgO8+75lxlzmeRPEDsdiT8P8bmtyNa4CRDk8EfJyLM7HEo8sVShH
-         4rgxvVyCau78jwooFHxJuEJnun96oSAckv6OgemjNIjMFKH2/QvUkGlPpVokeI24qK1s
-         mguplMp/aFkIt5tvSTcDKb+nnQwGRAbX0g0ojtw7zgfL1E6GcDthQDEq+EJMLjSsjbqW
-         9hbg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5nJk8Z38xy/yXeIt47wL1CStXy6KkkOPyhp+cF9AVv9/fwFjDTrAwEJf9P/XbaQZxAqliokZ0loQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6yjEc6eAji+Mc3YjJs/nZ2rbXUGv32s8dPw4e5/j7zykQjGBT
-	fSedL+1fj/54DfVhrT1x9xbwJG3cpZNRBN9C757lsSakJUJqGZVvDlxWZHCrIt5QPMGOgZhSRHh
-	4pNTw7qvaPWemo7iv6g==
-X-Google-Smtp-Source: AGHT+IGPi4MZRXFcoOWPdUNlDZJMVbEdW8oLBAH+1jAR+Diom6ppak8B/S5RDukjmv+fduoTwCEAHE4877UjRK8=
-X-Received: from wmbay25.prod.google.com ([2002:a05:600c:1e19:b0:464:f7d9:6b0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4e93:b0:45f:2d21:cb36 with SMTP id 5b1f17b1804b1-462074c576amr51491305e9.35.1758207742039;
- Thu, 18 Sep 2025 08:02:22 -0700 (PDT)
-Date: Thu, 18 Sep 2025 15:02:11 +0000
+        d=1e100.net; s=20230601; t=1758208015; x=1758812815;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jGRAU1dIkQ6kSxN8cpDQ6o04Ckso8P+w3s3co1ZgV0U=;
+        b=wS3GlSQZH18xD+m320dTfaQJ34ZM2OmexFODLi84s3bEbSJ4WBFkwafcFqqRYTfYLS
+         +IRRoiI0aTZLrqzxGR/ewD17qEz4+bVkt4qvKV6hveSQuxCVEomWbqYzC4sVpWqaTnwp
+         pby3CbJ5JpLnpxU9+D1hqqjx74X2nE07GTzhRH+d14nInbcb1FsX2GOGUHYYa+V9SYy9
+         CsdrT0evQLwmykDqcQJxhUAEsSPBtdpIPRL/N4ZdOhKg2lAV7Wi1sKJ7rTP7j7vKc8fT
+         H8xdlux2g1GyN1lifAARNmHengWbni+qGM4AIZ6rsgogfguxJ6MWFqVJNvL4YMVnKdxU
+         HenA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUWTH1E9vzovNvmnndgZRfer3bZhlFGwCD+mY3o+5OA+/mJoO/YilvUCneLk2f8gGjXtRMJmgWIV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN0jZG8bF3jMqt0csyeS0M9nhtBIqwKyCrGw5UsSxybojYp6w9
+	xxVTeOciY/24C57Au95WE8eIshAUbmRsNvI6waUloxDJ9OF1HC9GIp9YfQ7DpnSmjCzAAIZjhIA
+	ev3DDUgvBzS1fLUWn+wIojJOu01SJlyU=
+X-Gm-Gg: ASbGnctvriTDCyKoPaAOvpjTVKBkTZJe+zuKJfaHakTjt8Y5/EAhX4cd+ts3hkE4bbE
+	ChbWVwe51FMGWnMAy0JxvrtMHU9sz9GCViGsE7yNcOu8W+PPKjgzcRNR3CdnZtu4JwnrG5QBEdT
+	kUK//oFaNk3OLqIB+bn3CARnMG1ojHr9m8+rEWKQRZS7KcGLOnrPfh3pcNdbr9X8dybSkDRmxi/
+	oQlrMe0mbE7S0lbCp6Ybjeq
+X-Google-Smtp-Source: AGHT+IHnbC4doB+vg+OxOA1QuVMDQP5DcvXk+VafWalM/bZQwRbyhzLm7RyxJchWydSc6QVXLy4X1CWUyQpsG9I8wPc=
+X-Received: by 2002:a17:907:da8:b0:b04:7ef0:9dd6 with SMTP id
+ a640c23a62f3a-b1bbe7d7e07mr615048366b.55.1758208014587; Thu, 18 Sep 2025
+ 08:06:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAPIezGgC/x3MQQqEMAxA0atI1gbaqKBeRVw4NdVsWmmKDoh3t
- 7h8i/9vUE7CCmN1Q+JTVGIosHUFbl/CxihrMZChzgy2xytJZozeK2d0MWhG86PGupZ64gVKeCT 28v+m0/w8L+9hGf9kAAAA
-X-Change-Id: 20250918-write-offset-const-0b231c4282ea
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7310; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=vJ54JE6+riZlcAldU+0faKQxu82OqxHqyvNXkYI5oGI=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBozB748rOfzrnjjSiHKGsX0n/x0Z3PtJbpWHfqq
- gTHB11OZYyJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaMwe+AAKCRAEWL7uWMY5
- Rl4RD/4t8Nbnz6TBtCmQoNUw/ZfJv6wR1kk4pmCvIL62u/kkC7XWhfJGvi1fvuVUZNAsyCukNOb
- S0+2aa463z8u2qomYAZNc8ronaonyjtPh8NNcdI3G0b73niWeexkLA7J619ZUlfMxHddicnVACb
- 387tj0pEiWOqKBTAm4dxcr/+IyglGnhIgMkSsJdgzjpOODll2GE5zwJJnuQTzw+HxtNM5sxIPPa
- DIUAG71t3yxrqpQBxUBIkD4f8Z+QgNAy+eBzjWMRQXz+nrLve/UcrY9Tbmg8v1qMutTTsrLLVCM
- ghZhVL/Gy0QXTPzEOQBZ2FFHh4Y6LkoRWOn6X90gwyEfoFLn7P00LIxKU9RXwW4tRN9HwSWLqAE
- /r4ftVa79WR5/TiYyB4eMmiYcsCmxbqv3GEwdnIihYn/ioNDllGczIlZ5MzbsRaOB6c4z1E8X1Y
- V+V/fZ9VITnZggfsta5SeDYXrsN5/krxJ/EkD2717cEvfHgLxI45/7ruAiL/+WJ7WvXjGBwytIf
- QtvHPOljIsnugLwZHCGwpAbQQCZXLHKOxsV/dutoOFxODJ8NITd4vurbhyMu21T43/h0HyamWQE
- qCdE4RhoFXxy4z06spZHRF2O6KU8EnLuiQLMetP37LiyVQ+P3wd45B1WGHm6iOREbrDSN0pCWvO OENwPwQjM3fbOLA==
-X-Mailer: b4 0.14.2
-Message-ID: <20250918-write-offset-const-v1-1-eb51120d4117@google.com>
-Subject: [PATCH] rust: io: use const generics for read/write offsets
-From: Alice Ryhl <aliceryhl@google.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"=?utf-8?q?Krzysztof_Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-pci@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250831190055.7952-1-linux.amoon@gmail.com> <20250831190055.7952-2-linux.amoon@gmail.com>
+ <a743fd19-d54b-450f-a4db-8efc21acf22a@nvidia.com> <CANAwSgS-Oq7iXDtiWM0W8NZ2q=BcCGviJAUdscWJRvyxLsw0CQ@mail.gmail.com>
+ <8fac00fe-2ad4-4202-a6f2-c5043f7343f9@nvidia.com>
+In-Reply-To: <8fac00fe-2ad4-4202-a6f2-c5043f7343f9@nvidia.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 18 Sep 2025 20:36:35 +0530
+X-Gm-Features: AS18NWDEDkuCM0HycoUXLj4fCVD45cYRPAenXAVYcU6nd-dwQWLEpxd6NQpSBIU
+Message-ID: <CANAwSgSZ7ANQVXyWM6wtaOG0tgAbNxoVh7Kz_AaDuxvQsA1b9g@mail.gmail.com>
+Subject: Re: [RFC v1 1/2] PCI: tegra: Simplify clock handling by using
+ clk_bulk*() functions
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"open list:PCI DRIVER FOR NVIDIA TEGRA" <linux-tegra@vger.kernel.org>, 
+	"open list:PCI DRIVER FOR NVIDIA TEGRA" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Using build_assert! to assert that offsets are in bounds is really
-fragile and likely to result in spurious and hard-to-debug build
-failures. Therefore, build_assert! should be avoided for this case.
-Thus, update the code to perform the check in const evaluation instead.
+Hi Jon,
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- drivers/gpu/drm/tyr/regs.rs     |  4 ++--
- rust/kernel/devres.rs           |  4 ++--
- rust/kernel/io.rs               | 18 ++++++++++--------
- rust/kernel/io/mem.rs           |  6 +++---
- samples/rust/rust_driver_pci.rs | 10 +++++-----
- 5 files changed, 22 insertions(+), 20 deletions(-)
+On Thu, 18 Sept 2025 at 14:47, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 17/09/2025 19:26, Anand Moon wrote:
+> > Hi Jon,
+> >
+> > On Wed, 17 Sept 2025 at 19:14, Jon Hunter <jonathanh@nvidia.com> wrote:
+> >>
+> >>
+> >> On 31/08/2025 20:00, Anand Moon wrote:
+> >>> Currently, the driver acquires clocks and prepare/enable/disable/unprepare
+> >>> the clocks individually thereby making the driver complex to read.
+> >>>
+> >>> The driver can be simplified by using the clk_bulk*() APIs.
+> >>>
+> >>> Use:
+> >>>     - devm_clk_bulk_get_all() API to acquire all the clocks
+> >>>     - clk_bulk_prepare_enable() to prepare/enable clocks
+> >>>     - clk_bulk_disable_unprepare() APIs to disable/unprepare them in bulk
+> >>>
+> >>> As part of this cleanup, the legacy has_cml_clk flag and explicit handling
+> >>> of individual clocks (pex, afi, pll_e, cml) are removed. Clock sequencing
+> >>> is now implicitly determined by the order defined in the device tree,
+> >>> eliminating hardcoded logic and improving maintainability.
+> >>
+> >> What platforms have you tested this change on?
+> >>
+> > I'm using a Jetson Nano 4GB model as my test platform.
+>
+> Thanks. One concern I have about this is that right now the DT binding
+> doc for this device is still in the legacy text format and not converted
+> to yaml. Therefore, there is no way to validate the device-tree bindings
+> for this driver. So by making this change we are susceptible to people
+> getting the device-tree incorrect and there is no way to check. Right
+> now the driver will fail is a given clock is missing but after this
+> change we are completely reliant that the device-tree is correct but no
+> way to validate.
+>
+> It would be great to convert the text binding doc to yaml as part of
+> this series.
+>
+I will convert the legacy text binding to a YAML file as part of this series.
 
-diff --git a/drivers/gpu/drm/tyr/regs.rs b/drivers/gpu/drm/tyr/regs.rs
-index f46933aaa2214ee0ac58b1ea2a6aa99506a35b70..e3c306e48e86d1d6047cab7944e0fe000901d48b 100644
---- a/drivers/gpu/drm/tyr/regs.rs
-+++ b/drivers/gpu/drm/tyr/regs.rs
-@@ -25,13 +25,13 @@
- impl<const OFFSET: usize> Register<OFFSET> {
-     #[inline]
-     pub(crate) fn read(&self, dev: &Device<Bound>, iomem: &Devres<IoMem>) -> Result<u32> {
--        let value = (*iomem).access(dev)?.read32(OFFSET);
-+        let value = (*iomem).access(dev)?.read32::<OFFSET>();
-         Ok(value)
-     }
- 
-     #[inline]
-     pub(crate) fn write(&self, dev: &Device<Bound>, iomem: &Devres<IoMem>, value: u32) -> Result {
--        (*iomem).access(dev)?.write32(value, OFFSET);
-+        (*iomem).access(dev)?.write32::<OFFSET>(value);
-         Ok(())
-     }
- }
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index da18091143a67fcfbb247e7cb4f59f5a4932cac5..3e66e10c05fa078e42162c7a367161fbf735a07f 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -96,7 +96,7 @@ struct Inner<T: Send> {
- /// let devres = KBox::pin_init(Devres::new(dev, iomem), GFP_KERNEL)?;
- ///
- /// let res = devres.try_access().ok_or(ENXIO)?;
--/// res.write8(0x42, 0x0);
-+/// res.write8::<0x0>(0x42);
- /// # Ok(())
- /// # }
- /// ```
-@@ -232,7 +232,7 @@ pub fn device(&self) -> &Device {
-     ///
-     ///     // might_sleep()
-     ///
--    ///     bar.write32(0x42, 0x0);
-+    ///     bar.write32::<0x0>(0x42);
-     ///
-     ///     Ok(())
-     /// }
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 03b467722b8651ebecd660ac0e2d849cf88dc915..563ff8488100d9e07a7f4bffeb085db7bd7e9d6a 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -103,7 +103,7 @@ pub fn maxsize(&self) -> usize {
- ///# fn no_run() -> Result<(), Error> {
- /// // SAFETY: Invalid usage for example purposes.
- /// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
--/// iomem.write32(0x42, 0x0);
-+/// iomem.write32::<0x0>(0x42);
- /// assert!(iomem.try_write32(0x42, 0x0).is_ok());
- /// assert!(iomem.try_write32(0x42, 0x4).is_err());
- /// # Ok(())
-@@ -120,8 +120,8 @@ macro_rules! define_read {
-         /// time, the build will fail.
-         $(#[$attr])*
-         #[inline]
--        pub fn $name(&self, offset: usize) -> $type_name {
--            let addr = self.io_addr_assert::<$type_name>(offset);
-+        pub fn $name<const OFF: usize>(&self) -> $type_name {
-+            let addr = self.io_addr_assert::<$type_name, OFF>();
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-             unsafe { bindings::$c_fn(addr as *const c_void) }
-@@ -149,8 +149,8 @@ macro_rules! define_write {
-         /// time, the build will fail.
-         $(#[$attr])*
-         #[inline]
--        pub fn $name(&self, value: $type_name, offset: usize) {
--            let addr = self.io_addr_assert::<$type_name>(offset);
-+        pub fn $name<const OFF: usize>(&self, value: $type_name) {
-+            let addr = self.io_addr_assert::<$type_name, OFF>();
- 
-             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-             unsafe { bindings::$c_fn(value, addr as *mut c_void) }
-@@ -217,10 +217,12 @@ fn io_addr<U>(&self, offset: usize) -> Result<usize> {
-     }
- 
-     #[inline]
--    fn io_addr_assert<U>(&self, offset: usize) -> usize {
--        build_assert!(Self::offset_valid::<U>(offset, SIZE));
-+    fn io_addr_assert<U, const OFF: usize>(&self) -> usize {
-+        const {
-+            build_assert!(Self::offset_valid::<U>(OFF, SIZE));
-+        }
- 
--        self.addr() + offset
-+        self.addr() + OFF
-     }
- 
-     define_read!(read8, try_read8, readb -> u8);
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-index 6f99510bfc3a63dd72c1d47dc661dcd48fa7f54e..b73557f5f57c955ac251a46c9bdd6df0687411e2 100644
---- a/rust/kernel/io/mem.rs
-+++ b/rust/kernel/io/mem.rs
-@@ -54,7 +54,7 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     ///       pdev: &platform::Device<Core>,
-     ///       info: Option<&Self::IdInfo>,
-     ///    ) -> Result<Pin<KBox<Self>>> {
--    ///       let offset = 0; // Some offset.
-+    ///       const OFFSET: usize = 0; // Some offset.
-     ///
-     ///       // If the size is known at compile time, use [`Self::iomap_sized`].
-     ///       //
-@@ -66,9 +66,9 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     ///       let io = iomem.access(pdev.as_ref())?;
-     ///
-     ///       // Read and write a 32-bit value at `offset`.
--    ///       let data = io.read32_relaxed(offset);
-+    ///       let data = io.read32_relaxed::<OFFSET>();
-     ///
--    ///       io.write32_relaxed(data, offset);
-+    ///       io.write32_relaxed::<OFFSET>(data);
-     ///
-     ///       # Ok(KBox::new(SampleDriver, GFP_KERNEL)?.into())
-     ///     }
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 606946ff4d7fd98e206ee6420a620d1c44eb0377..6f0388853e2b36e0800df5125a5dd8b20a6d5912 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -46,17 +46,17 @@ struct SampleDriver {
- impl SampleDriver {
-     fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
-         // Select the test.
--        bar.write8(index.0, Regs::TEST);
-+        bar.write8::<{ Regs::TEST }>(index.0);
- 
--        let offset = u32::from_le(bar.read32(Regs::OFFSET)) as usize;
--        let data = bar.read8(Regs::DATA);
-+        let offset = u32::from_le(bar.read32::<{ Regs::OFFSET }>()) as usize;
-+        let data = bar.read8::<{ Regs::DATA }>();
- 
-         // Write `data` to `offset` to increase `count` by one.
-         //
-         // Note that we need `try_write8`, since `offset` can't be checked at compile-time.
-         bar.try_write8(data, offset)?;
- 
--        Ok(bar.read32(Regs::COUNT))
-+        Ok(bar.read32::<{ Regs::COUNT }>())
-     }
- }
- 
-@@ -98,7 +98,7 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
-     fn unbind(pdev: &pci::Device<Core>, this: Pin<&Self>) {
-         if let Ok(bar) = this.bar.access(pdev.as_ref()) {
-             // Reset pci-testdev by writing a new test index.
--            bar.write8(this.index.0, Regs::TEST);
-+            bar.write8::<{ Regs::TEST }>(this.index.0);
-         }
-     }
- }
+[0] Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
 
----
-base-commit: cf4fd52e323604ccfa8390917593e1fb965653ee
-change-id: 20250918-write-offset-const-0b231c4282ea
+> Also if you look at the dwmac-tegra.c driver this one still populates
+> the clock names when using the bulk APIs so that we know that the clocks
+> that we require are present.
+>
+Only the Tegra20 SoC has three clocks.
+    compatible = "nvidia,tegra20-pcie";
+    clocks = <&tegra_car TEGRA20_CLK_PEX>,
+                         <&tegra_car TEGRA20_CLK_AFI>,
+                         <&tegra_car TEGRA20_CLK_PLL_E>;
+                clock-names = "pex", "afi", "pll_e";
 
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+Whereas all the rest of the SoCs have 4 clocks.
 
+  compatible = "nvidia,tegra30-pcie";
+  compatible = "nvidia,tegra124-pcie";
+  compatible = "nvidia,tegra210-pcie";
+  compatible = "nvidia,tegra186-pcie";
+
+  clocks = <&tegra_car TEGRA30_CLK_PCIE>,
+                         <&tegra_car TEGRA30_CLK_AFI>,
+                         <&tegra_car TEGRA30_CLK_PLL_E>,
+                         <&tegra_car TEGRA30_CLK_CML0>;
+                clock-names = "pex", "afi", "pll_e", "cml";
+
+As suggested, I need to create two clock arrays for the clocks of the SoC.
+
+But the code will introduce more overhead:
+
+bulk clks -> devm_kcalloc (for clocks) -> assign id to clocks ->
+devm_clk_bulk_get -> clk_bulk_prepare_enable.
+
+I believe the use of devm_clk_bulk_get_all() is a cleaner and more modern
+approach for the following reasons:
+It simplifies the code by removing the need for manual memory allocation
+(devm_kcalloc) and populating an array of clock specifications.
+It is more efficient, as all clocks are fetched in a single API call,
+reducing overhead.
+
+Please let me know if this plan addresses your concerns.
+
+> Jon
+>
+> [0] drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c
+>
+> --
+> nvpublic
+>
+Thanks
+-Anand
 
