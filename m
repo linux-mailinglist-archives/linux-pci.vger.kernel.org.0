@@ -1,151 +1,122 @@
-Return-Path: <linux-pci+bounces-36446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F56EB872B8
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 23:42:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E02EB87340
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 00:08:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC9C27A4556
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 21:40:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C36E87C2E96
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 22:08:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 019522FA0C6;
-	Thu, 18 Sep 2025 21:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2B3E2FCBF1;
+	Thu, 18 Sep 2025 22:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ssVJN7RM";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="DnNvpYIV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8ytYRSs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584CD2DAFA5;
-	Thu, 18 Sep 2025 21:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8E42FB627
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 22:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758231718; cv=none; b=sNPoOL4RtF/0DGbsbjkO1kUuG/d6fwv4/HIC3YBb7x3o703eCr6WA/cF2EFQBLve0tY8dPrh0y4k8Cb7qPPx9lIIJiz4xIz8xLij4592cBnGfVL6P9TEh7g1xU+NihR95DL6A1Lef7/77DYUizAYb66+JUJpI9caKS+EGP1qtP4=
+	t=1758233299; cv=none; b=DGn73YvZxFd2iO3j/NONrF/CsRGaXB4fREDLos0IklQDB5ZOT0vZxNvl0dK/SuFDRhBX1nrHEGVX+MCdZt9jDY8E+t/kmqHhgtRrs0z4Vi1z9C5I+UfA5m3lK+OtWy0ZuyHDurq/kGIWkGPO99CBf9bkJi+jtIRRg0i2rZk2eNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758231718; c=relaxed/simple;
-	bh=fQWqwO+IY90WkL9HuMehtFEhCqsAL8G/tYqXfD3H99M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qr/MCXur+rU22rsMA36ZzsBojDOBWEya0lRRapET0vdilj6DAnmIedhlP75sNuWupSz0umMy+l+1JEx61P5UhTWXTo7qvZo63NdIfzo4ONkiy0LNNnz5eYVa4ZxBqu54QaE7Eddav6JjqRGr42B4SVhh3X8Z1i1FRimuuyXDqnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ssVJN7RM; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=DnNvpYIV; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4cSTcL15NSz9tcg;
-	Thu, 18 Sep 2025 23:41:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758231714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqGuZKA6c1No0HtARiiZ7b/FNkRUJ8+YJVLSsjHRpys=;
-	b=ssVJN7RMnEz7VXAVFk++4c3g+Sw0k7Lb0OuJl4JGZBiPHqgQpP7TopaknKXnbapOoSyzUb
-	O33Si/t4bn99cUD/M8gpsnTTA9vo69MjO0r3pxxDxibvn8oF5DJBNasF3Ri5p1G896DSs8
-	1qVlm2GSVTGAEXwLMS+koh9tGQI0qrbRwfTYQfUG41opUjM8UYRkaV+3qyswZZjFYRp5XX
-	+7eS/LvpRQk3lhWPuF5wKuj9139U2O+Hleo/XvK90aY5+jMSuz52FNQaHimtGeO+z8/11J
-	ymLXiKh+gCCfHpQwZogcV35lsSO+I779Wc85HhoWA2M3UMhaAWqQzTHummIUGQ==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=DnNvpYIV;
-	spf=pass (outgoing_mbo_mout: domain of marek.vasut@mailbox.org designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=marek.vasut@mailbox.org
-Message-ID: <e7dadf6d-b89f-4054-91d6-5452012b6dd7@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758231712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dqGuZKA6c1No0HtARiiZ7b/FNkRUJ8+YJVLSsjHRpys=;
-	b=DnNvpYIVbmrbXkWDf8owhRDoO1PTHK4bQJRoqbSfm2x9qMEwPW23c9Q4jdUipnMwMWPQ59
-	eQH1R6PQco9e2SmSWg8iXpY68Pk7lr+3lLKd7ol2SBCU1Kcm4kfj+qETQd63BriK0AhmYh
-	rr1TMOr9rd1Z793N8iyZqS+ehK8cs2u9mo5gGaPEgvOze8MAw3F+YMmLTQq6PUVVn8qx3h
-	93GPkK/ieveHomPLj18UmnPbNsInfwRTYS1mAKTAmumPDX9dlqIolEOmb9IjzXYAbJ+f9N
-	XY5Q3egYplyWVerUJfKTVcOWsVTF2jxFPE6CJH3butyTZF0LRIprN50hjrDpag==
-Date: Thu, 18 Sep 2025 23:41:49 +0200
+	s=arc-20240116; t=1758233299; c=relaxed/simple;
+	bh=5aweSLkzh7ejNDcgoNf1VnnuIro2pfodjmCHJRSPpTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qWrLG3tQvY95xbvu8CtsRGs4JAyfyD4XJdvb34qWrSZLjtuf+1L/yMrLAmut4Hpx0ZXITB6TUCEPFUt6avBuhw8EMdwG0Cb5UPn9YAeRpgrDr9tJG/uTyJ7SUXTZEa5JFiS7M6BmgpvwxXfzd0q76dVpsUUmmzgSIDae2IYfnm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8ytYRSs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34769C4CEE7;
+	Thu, 18 Sep 2025 22:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758233298;
+	bh=5aweSLkzh7ejNDcgoNf1VnnuIro2pfodjmCHJRSPpTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=o8ytYRSszEyC59bAp8RdK+emycoT4ysYYvq6viNpZ/cR8L8ET9La7Tul83PVwkoza
+	 xDc2SxIvxDTzCkaLDFu3SAwlQIfTrtAotxi9MCPoBsFRl9erdlYXRuGfKpete2h4sD
+	 eKyOo3r7FDXz2K/FAQ49C9ibMtxAqaLpUrlCGKeRYAOpsiYto5ZvkV3U8MJ3ZZ6tQS
+	 U+jtUoHhE+PWmcHZZ6Q17UuHHEWshnFIOtn9o8aX+eR6kqyNottumygY//rPVbvxD6
+	 XdhNshp7JfnVDDzWAMh3cpx3rOf8QpB2i5NVc+hQ8WCxcZh3EudlfyAUPr4lT8Rnsn
+	 lq4l7voAiOqpQ==
+Date: Thu, 18 Sep 2025 17:08:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7] PCI/PM: Skip resuming to D0 if device is disconnected
+Message-ID: <20250918220816.GA1925068@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: rcar-gen4: Add missing 1ms delay after PWR reset
- assertion
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
- <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-renesas-soc@vger.kernel.org
-References: <20250918204416.GA1921028@bhelgaas>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <20250918204416.GA1921028@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: b151e38783d1c17a838
-X-MBO-RS-META: kiczounzyu9uh8gm9d3jms5b8wdagr73
-X-Rspamd-Queue-Id: 4cSTcL15NSz9tcg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250909031916.4143121-1-superm1@kernel.org>
 
-On 9/18/25 10:44 PM, Bjorn Helgaas wrote:
-> On Thu, Sep 18, 2025 at 10:35:08PM +0200, Marek Vasut wrote:
->> On 9/18/25 10:04 PM, Bjorn Helgaas wrote:
->>> On Thu, Sep 18, 2025 at 05:00:26AM +0200, Marek Vasut wrote:
->>>> R-Car V4H Reference Manual R19UH0186EJ0130 Rev.1.30 Apr. 21, 2025 page 585
->>>> Figure 9.3.2 Software Reset flow (B) indicates that for peripherals in HSC
->>>> domain, after reset has been asserted by writing a matching reset bit into
->>>> register SRCR, it is mandatory to wait 1ms.
->>>
->>>> @@ -182,8 +182,10 @@ static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
->>>>    		return ret;
->>>>    	}
->>>> -	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc))
->>>> +	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc)) {
->>>>    		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
->>>> +		usleep_range(1000, 2000);
->>>
->>> What would you think of "fsleep(1000)"?
->>>
->>> I know there's controvery about fsleep(), but while the 1000 usec
->>> lower bound is important, I think the selection of the 2000 usec upper
->>> bound is pretty arbitrary and doesn't really justify spelling it out.
->>
->> The upper bound is arbitrary.
->>
->> My reasoning for picking up usleep_range() is to give the kernel
->> sufficient space to pick the best fitting delay in that 1..2 ms
->> range, without constraining the timers too much. In other words, let
->> the kernel pick the next easy to use timer tick which guarantees at
->> least 1ms delay.
+On Mon, Sep 08, 2025 at 10:19:15PM -0500, Mario Limonciello (AMD) wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Right, basically the same motivation as fsleep().
+> When a PCIe device is surprise-removed (e.g., due to a dock unplug),
+> the PCI core unconfigures all downstream devices and sets their error
+> state to `pci_channel_io_perm_failure`. This marks them as disconnected
+> via `pci_dev_is_disconnected()`.
 > 
->> As far as I can tell, fsleep() in this case would add a bit of
->> auto-detection overhead, and then select equivalent of
->> usleep_range(1000, 1250) , wouldn't it ?
->>
->> So I think using fsleep() here would add overhead, but not yield any
->> actual benefit. Is my understanding and conclusions correct ?
+> During device removal, the runtime PM framework may attempt to resume
+> the device to D0 via `pm_runtime_get_sync()`, which calls into
+> `pci_power_up()`. Since the device is already disconnected, this
+> resume attempt is unnecessary and results in a predictable error.
+> Avoid powering up disconnected devices by checking their status early
+> in `pci_power_up()` and returning -EIO.
+
+Hi Mario,
+
+I forgot to ask if there are any characteristic dmesg logs and user
+activities that we could include here to help users recognize this
+problem.  I suppose it results in messages like this?
+
+  pci 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+
+Maybe especially when undocking?  Although oddly a google search for
+that message and "undock" finds nothing.
+
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v7:
+>  * Reword commit message
+>  * Rebase on v6.17-rc5
+> ---
+>  drivers/pci/pci.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> I think you're right that fsleep() will pick usleep_range(1000, 1250),
-> so it's less optimal in that sense, but I think optimization like that
-> would be better done inside fsleep() instead of everybody doing it ad
-> hoc at the call site.
-
-Lemme do V2 with fsleep() then.
-
-> I don't think fsleep() should add any overhead since it's inlined and
-> all the delays are constants.  But I haven't actually looked at the
-> generated code.
-
-You're right about this part.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b0f4d98036cdd..036511f5b2625 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+>  		return -EIO;
+>  	}
+>  
+> +	if (pci_dev_is_disconnected(dev)) {
+> +		dev->current_state = PCI_D3cold;
+> +		return -EIO;
+> +	}
+> +
+>  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>  		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
+> -- 
+> 2.43.0
+> 
 
