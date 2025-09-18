@@ -1,199 +1,124 @@
-Return-Path: <linux-pci+bounces-36420-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36421-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22B7EB84F18
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 16:01:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 105FEB85306
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 16:23:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2781E7B7EA4
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 13:58:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17C733A9484
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 14:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71521F63D9;
-	Thu, 18 Sep 2025 14:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1A0830CB21;
+	Thu, 18 Sep 2025 14:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snU8wzfN"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Jv5JSEvt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6B12AD02;
-	Thu, 18 Sep 2025 14:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5548330CB22
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 14:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758204020; cv=none; b=I8FewDoEW+nE5YP7KdiO+r22uvn/Ls2BbFG1dbxMtFeKRvaKVGpkK2+Krsc0+e1t87Uj/vQA2l5wCGqhrEGJlcSHVp7T6npzPPGNMFaXSesadUIKK8iLiuOnytCfEl01nmjZJBhVbItuNFMgTtu24SOcTIc2aq1N8HOth9RCpVw=
+	t=1758204667; cv=none; b=ZqEWpOLn6fhnDkGTPQr7Ie34UPfpYLvC+qYSRk0ev1qWPC3kGL6VvXcbkpl1rExeo3/DWDbApWc9EYhR/cMu/DnbsphcIj96sjeQVbTSuUS1pzVT5inqQeP+URxabUuO5uVKg7utS7hSiUl6WNIXB2cx09PBx62+8zjHVeug8lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758204020; c=relaxed/simple;
-	bh=XMVU+sHDWjhNf7yz3skhy780y+rTanxteszC2S1bpOg=;
+	s=arc-20240116; t=1758204667; c=relaxed/simple;
+	bh=x7jb8JfGQsSR4XtTJ8eBWd6uBi74hSXtB25C9NcBMXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+IEHR6yGAVRVaJr+BXh1uvIP8tjn2QDazhFpa+gyt2ZS2MaooT4YENY+y5Mx/BQ0BmuJAU+N4OSrQ7nAbPqtXAOPOnC2sC9m1gFTs1EQBkd0AHgbc3x7QImncedcCRA7rTbu59MBcfYW1wMYWuCkRG8bbn8lumoc/BO8SnR3gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snU8wzfN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10739C4CEE7;
-	Thu, 18 Sep 2025 14:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758204020;
-	bh=XMVU+sHDWjhNf7yz3skhy780y+rTanxteszC2S1bpOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=snU8wzfNao7CQ6+eadp7FCIQKqkHyCCmXDpHUc1Ht4gK7Zf57kxA+8KsOnxdWMnQb
-	 Uw52TMd4Vp7MbPXTalxJS3vBB6sXBHhOWU822uaLR7CRXZdLrKmwsi7xjOuiy7UYJK
-	 fRuyQfYI9k7p1MlfUvBeBTcTZcir9/kn3FYR7HmOz+3/tYsQto8EV29e31g/f+Ai8i
-	 zRvAZOrPVS+8+j+s6jV19TEn7RD6/iNS6gGycEgX235M23DelgYNl+iMMiObrI+BfV
-	 ivBcTYwzuENOhFLOa1EfqcrzrATM1Y/jRb+Tgt8k2swIaqbfiiucRE5uZrSNT//bTb
-	 dCRq7Th0DyDmg==
-Date: Thu, 18 Sep 2025 16:00:17 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Waiman Long <llong@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 02/33] PCI: Protect against concurrent change of
- housekeeping cpumask
-Message-ID: <aMwQcVZeTwuk2Q8A@localhost.localdomain>
-References: <20250829154814.47015-1-frederic@kernel.org>
- <20250829154814.47015-3-frederic@kernel.org>
- <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PlVMdqPJ4XyOf53bXCdwY3zQuzatMw01x8NlGFatrdhmkRAF2QBhAB+wYY1klFayQDm66FZvv46O+RaK83aEOq/vB21Zq//lv6YmTyioCuJBuwDHO+hJHooHg8BfUKDoBxY5Vr3jZgdD/Qic3Cde6VnTHkR+VhHnJcX8HMtgsDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Jv5JSEvt; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-812bc4ff723so113116985a.0
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 07:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1758204664; x=1758809464; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x7jb8JfGQsSR4XtTJ8eBWd6uBi74hSXtB25C9NcBMXU=;
+        b=Jv5JSEvt90Fa9tbW7z3hoHOvmlNlKEagQOh6WrcP01HKdI0sZIqM7xCK5+8ZnqbRMD
+         fAzcx9rQ+TbZ8zunCIkVM8BqI9D97/uKbeWaMzMpM3+ziHP69ifZzRPsj4iuUBg7FkFh
+         ze1I+tVXnLL4I55H5+Yjz8nzSGGS3LFrYI2RtKxnJ0glqLk8cLGwYN80fdqtNI6ZDk1o
+         8cwZnd1IjEV+ffSwf7mzQ1S+/ozk4yIz3/zo8TXZKrymfxHAcsr5xrah24eO4mcVNeNc
+         Jf6YKv3WS4K0UdFj+UnbL6WOsqayPzmLbQHSpdqdprdFyxEHnjpc6bKaFSocruMTkSTa
+         7rcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758204664; x=1758809464;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x7jb8JfGQsSR4XtTJ8eBWd6uBi74hSXtB25C9NcBMXU=;
+        b=AJ6RHI08K8u48n4dWBpKJsnO84wSeKRNeF9iu8YNR9kAg+5eS8CLp9jkYOX7tVz90G
+         rUTl4Rl00zyybRt+JUx5sMq/UyS/XBFhnXavUtK8Z8OCDTVmJEApUsfrsO0pbzjtqugr
+         JpYT+ExoA8mXKb0RAu/IWc4rL6SrCdsiDIQDCuLKbCZoT6uYQNF2PDBHZNfqG89bNF/c
+         6TMtv1GnSwwQSOroabu30lsO70qFaRCJi3bwID2eHj0vLak6S31CetQSHWLQh63FlsM2
+         jYZje9NHpcv7UPbOfwljK0Xj1Gc6ibOe4/t/1zMCvSXu5LRV20JkRdT86l8SEzVAYZu/
+         6g4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVydtxPMj1g7u5swWThE834QWbPLUbKpQEiFzEa7qvVMqstfZyddIKZpzr/e1772m/6T2brqCIbo9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwICrTh2i2KfCW6NAVbgr9ScWB3JOalecGxBhNJnNo+nChUU6Gx
+	96Yetze+hz3+GUJeoiRCZzJ8NYFbfQltMkFDL2zHfuRLzBHsFy/WQeT4QKsQiWiMH/I=
+X-Gm-Gg: ASbGncvkEYfHm62QuwqNKmVikYRaFsQhHVn3SfmPH6ouShFsAuUMnPLCYj7oq8cjgSY
+	zSr4YVU0/tQSurdXAymDeTNqyH6HIWLJtor+EOoJTDG4QK9AXaODcbUxdEAxv4wxvVuRss5AVxM
+	FEsR1jaOW+GoaLe7NuLmIIcUA19eHfNyL3mU0AI9FThu6dvMvbzGTI+NtFxsVM6e9L3slII9C15
+	yxJDPFSUiy9czSwdO7TiNwoYxz/OIC7CI5OCWtrBnpUcH0Or7p/K8lxah7W5ERqFS258QdQH/0X
+	x0yzCNHAV0wdNVM5bgDCz6zmXipWfKfEkfaGGVMPo0CVIDXeJGXBGpuXvg2NdcUG+5p7TIFQwRJ
+	q0xDSbveBe/3vZw0dRlzFNQZ5vhusLTzVHG/rXtB6AeOZ2trajEgSXvhjePKrgGUFrrzEZq0P6E
+	b1Vhq1Pl8OgTY=
+X-Google-Smtp-Source: AGHT+IFcG0Z3ZK5/PQ6vJav0eqkeBfwJrYJnuhkwdniJkW36no16Dw8WiAtdmBAplhwPvdJpSRD8qA==
+X-Received: by 2002:a05:620a:462c:b0:812:be4:670e with SMTP id af79cd13be357-831109114e7mr656127185a.43.1758204663628;
+        Thu, 18 Sep 2025 07:11:03 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-83627d7dd01sm169419185a.27.2025.09.18.07.11.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Sep 2025 07:11:02 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uzFLi-00000008vyr-1Vsu;
+	Thu, 18 Sep 2025 11:11:02 -0300
+Date: Thu, 18 Sep 2025 11:11:02 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
+	Xingang Wang <wangxingang5@huawei.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: Fix ACS enablement for Root Ports in DT
+ platforms
+Message-ID: <20250918141102.GO1326709@ziepe.ca>
+References: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
+In-Reply-To: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
 
-Le Fri, Aug 29, 2025 at 06:01:17PM -0400, Waiman Long a écrit :
-> On 8/29/25 11:47 AM, Frederic Weisbecker wrote:
-> > HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
-> > therefore be made modifyable at runtime. Synchronize against the cpumask
-> > update using RCU.
-> > 
-> > The RCU locked section includes both the housekeeping CPU target
-> > election for the PCI probe work and the work enqueue.
-> > 
-> > This way the housekeeping update side will simply need to flush the
-> > pending related works after updating the housekeeping mask in order to
-> > make sure that no PCI work ever executes on an isolated CPU.
-> > 
-> > Signed-off-by: Frederic Weisbecker<frederic@kernel.org>
-> > ---
-> >   drivers/pci/pci-driver.c | 40 +++++++++++++++++++++++++++++++---------
-> >   1 file changed, 31 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 63665240ae87..cf2b83004886 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -302,9 +302,8 @@ struct drv_dev_and_id {
-> >   	const struct pci_device_id *id;
-> >   };
-> > -static long local_pci_probe(void *_ddi)
-> > +static int local_pci_probe(struct drv_dev_and_id *ddi)
-> >   {
-> > -	struct drv_dev_and_id *ddi = _ddi;
-> >   	struct pci_dev *pci_dev = ddi->dev;
-> >   	struct pci_driver *pci_drv = ddi->drv;
-> >   	struct device *dev = &pci_dev->dev;
-> > @@ -338,6 +337,19 @@ static long local_pci_probe(void *_ddi)
-> >   	return 0;
-> >   }
-> > +struct pci_probe_arg {
-> > +	struct drv_dev_and_id *ddi;
-> > +	struct work_struct work;
-> > +	int ret;
-> > +};
-> > +
-> > +static void local_pci_probe_callback(struct work_struct *work)
-> > +{
-> > +	struct pci_probe_arg *arg = container_of(work, struct pci_probe_arg, work);
-> > +
-> > +	arg->ret = local_pci_probe(arg->ddi);
-> > +}
-> > +
-> >   static bool pci_physfn_is_probed(struct pci_dev *dev)
-> >   {
-> >   #ifdef CONFIG_PCI_IOV
-> > @@ -362,34 +374,44 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
-> >   	dev->is_probed = 1;
-> >   	cpu_hotplug_disable();
-> > -
-> >   	/*
-> >   	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
-> >   	 * device is probed from work_on_cpu() of the Physical device.
-> >   	 */
-> >   	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
-> >   	    pci_physfn_is_probed(dev)) {
-> > -		cpu = nr_cpu_ids;
-> > +		error = local_pci_probe(&ddi);
-> >   	} else {
-> >   		cpumask_var_t wq_domain_mask;
-> > +		struct pci_probe_arg arg = { .ddi = &ddi };
-> > +
-> > +		INIT_WORK_ONSTACK(&arg.work, local_pci_probe_callback);
-> >   		if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
-> >   			error = -ENOMEM;
-> >   			goto out;
-> >   		}
-> > +
-> > +		rcu_read_lock();
-> >   		cpumask_and(wq_domain_mask,
-> >   			    housekeeping_cpumask(HK_TYPE_WQ),
-> >   			    housekeeping_cpumask(HK_TYPE_DOMAIN));
-> >   		cpu = cpumask_any_and(cpumask_of_node(node),
-> >   				      wq_domain_mask);
-> > +		if (cpu < nr_cpu_ids) {
-> > +			schedule_work_on(cpu, &arg.work);
-> > +			rcu_read_unlock();
-> > +			flush_work(&arg.work);
-> > +			error = arg.ret;
-> > +		} else {
-> > +			rcu_read_unlock();
-> > +			error = local_pci_probe(&ddi);
-> > +		}
-> > +
-> >   		free_cpumask_var(wq_domain_mask);
-> > +		destroy_work_on_stack(&arg.work);
-> >   	}
-> > -
-> > -	if (cpu < nr_cpu_ids)
-> > -		error = work_on_cpu(cpu, local_pci_probe, &ddi);
-> > -	else
-> > -		error = local_pci_probe(&ddi);
-> >   out:
-> >   	dev->is_probed = 0;
-> >   	cpu_hotplug_enable();
-> 
-> A question. Is the purpose of open-coding work_on_cpu() to avoid calling
-> INIT_WORK_ONSTACK() and destroy_work_on_stack() in RCU read-side critical
-> section? These two macro/function may call debugobjects code which I don't
-> know if they are allowed inside rcu_read_lock() critical section.
-> 
-> Cheers, Longman
+On Wed, Sep 10, 2025 at 11:09:19PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> This issue was already found and addressed with a quirk for a different device
+> from Microsemi with 'commit, aa667c6408d2 ("PCI: Workaround IDT switch ACS
+> Source Validation erratum")'. Apparently, this issue seems to be documented in
+> the erratum #36 of IDT 89H32H8G3-YC, which is not publicly available.
 
-No the point is that I need to keep the target selection
-(housekeeping_cpumask() read) and the work queue within the same
-RCU critical section so that things are synchronized that way:
+This is a pretty broken device! I'm not sure this fix is good enough
+though.
 
-    CPU 0                                          CPU 1
-    -----                                          -----
-    rcu_read_lock()                                housekeeping_update()
-    cpu = cpumask_any(housekeeping_cpumask(...))       housekeeping_cpumask &= ~val
-    queue_work_on(cpu, pci_probe_wq, work)             synchronize_rcu()
-    rcu_read_unlock()                                  flush_workqueue(pci_probe_wq)
-    flush_work(work)
-        
-And I can't include the whole work_on_cpu() within rcu_read_lock() because
-flush_work() may sleep.
+For instance if you reset a downstream device it should loose its RID
+and then the config cycles waiting for reset to complete will trigger SV
+and reset will fail?
 
-Also now that you mention it, I need to create that pci_probe_wq and flush it :-)
+Maybe a better answer is to say these switches don't support SV and
+prevent the kernel from enabling it in the first place?
 
--- 
-Frederic Weisbecker
-SUSE Labs
+Jason
 
