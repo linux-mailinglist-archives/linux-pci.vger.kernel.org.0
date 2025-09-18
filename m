@@ -1,168 +1,186 @@
-Return-Path: <linux-pci+bounces-36396-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36397-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FFFCB82B93
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 05:16:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97B16B82BBB
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 05:17:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B365720ACC
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 03:16:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8C0E4A4926
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 03:17:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9898F1E3DF2;
-	Thu, 18 Sep 2025 03:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E45C1FBEB9;
+	Thu, 18 Sep 2025 03:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="gSRyPFPK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [4.193.249.245])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEC615D5B6;
-	Thu, 18 Sep 2025 03:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.193.249.245
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBBE23C4F4;
+	Thu, 18 Sep 2025 03:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758165361; cv=none; b=ZxFKQoEXtM/PqRIkEWryXuZ6SuugOGUdIlVT6H2OGJcSDn625DWG1DYGjNcKztQ5hTJ3Koy7eQKpAgqs2nW+bZFZzdfr8H7wDOnWLF0IkLMB7ErtN3p/yVZbNqm5GAWF6F8FeJe0EmHGL83mkEmIf7dcjdsmwYJK+N13dehjOfs=
+	t=1758165412; cv=none; b=TlSB62Np8AVNraWLOp/fdAYnCnlwp0h+DI/oKu15u2Zyk7TAN04sXB9/gDc8d5+QxERqtfIVK9qZcxcM0ihmlhx+Hd5rUswmssORoJ36xH2j6VKdGqxT53gXW6qHccUpKesMkifWL/JprS5FdMuiSuLqecNDGeOKiYG0QvibJMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758165361; c=relaxed/simple;
-	bh=MpbYwch/1RbEjBSTiQ77cUx2hvewGlvAavH9VQI5j3w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=oIXr5l91XeWQhAMBBra3yQzPFUwGwvEKEaEwqZGd3dMVCM1QjdzdzNZNQt8V5y/NIr8yMz8fhyzA8nDfeLJg2puDrcic4nZY8wxcdNQL74S/+Jq5feqh3dp/p4aoJMio2l2DLSkRZOrTQyIK3nW9+FxTLsfg2f7HHNm2/SzCdO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=4.193.249.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 18 Sep 2025 11:15:27 +0800 (GMT+08:00)
-Date: Thu, 18 Sep 2025 11:15:27 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org,
-	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v2 1/2] dt-bindings: PCI: eic7700: Add Eswin eic7700
- PCIe host controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20250901-congenial-weightless-parakeet-42d2de@kuoka>
-References: <20250829082021.49-1-zhangsenchuan@eswincomputing.com>
- <20250829082237.1064-1-zhangsenchuan@eswincomputing.com>
- <20250901-congenial-weightless-parakeet-42d2de@kuoka>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1758165412; c=relaxed/simple;
+	bh=ryTT3N25mG7wS1phsm1BBg04KF1Hd0yABxMx56lwJXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HiM8Y1u70SqZHqDuP0YuOK+S2Ooa86zBhoTKSZPwuQWIl5DiQuRAWnTbzE9tDZPDVmCYubPOmCFCmWX1yTcHj48N3Bwx8pjPOSnit1HDZqFvFsgRjoWRAioWdqOCUuJKEyx2+3o5rTN/fLOP0Mk5Fr0qlA7RCi5O3BlB1bH5H+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=gSRyPFPK; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4cS1596G9fz9tgv;
+	Thu, 18 Sep 2025 05:16:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758165405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WJiellIJxOMKYBDkQCC2kMZIE2wxTzAMm26GhkPt9Jg=;
+	b=gSRyPFPKICc2fMJT/Zf4K+kDOPoIQ/gtz0OtsPajy8ngZL3zlP89Tc67NjN2OVUvdfoRIx
+	U8CdJX6VPWp5xmioK78MM7A/EWOhKViOyiIgrWdxTZE3tQoAotLSft8GpSW0/LFNLyoOh0
+	IqGcUqhVorQwcHr10ZI704bJ8sIW5dj/A98mBuP7y0++a/MP7HoLZtkUXrPB2ZrOw2/f0G
+	U32FC0pEg0jYoiztsPQfI78sUMmGjmYIQIiw6q40Tt/SKcTeBkUPYay+CZvyTsOwow4Oor
+	kjb+xC3kUgf3l56sSgDEhvq2CID9PIiOs6w9Sq+UjVBy7AE8TjrynvmoNNzhlA==
+Message-ID: <12b54030-5505-416b-9e4e-2338263c5c7a@mailbox.org>
+Date: Thu, 18 Sep 2025 05:16:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <43535323.1499.1995ad1dce3.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgAXt5VPectoCkrUAA--.25719W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQEJBmjK4
-	nkLZAABsY
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
+ initialization
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+References: <20250915235910.47768-1-marek.vasut+renesas@mailbox.org>
+ <CAMuHMdXAK6EhxPoNoqwqWSjGtwM24gL4qjSf6_n+NMCcpDf1HA@mail.gmail.com>
+ <6fdc7d1e-8eaa-4244-a6b4-4a07e719dd73@mailbox.org>
+ <CAMuHMdVrw1Mr_hKvgve03DQwvpqSPNaN5XUnYRJPXMeX1wvv0A@mail.gmail.com>
+ <de4e4003-214f-4260-854c-d15efc81bb74@mailbox.org>
+ <CAMuHMdVgFNb-3TgL7a+AJMYE6tqOiMpGYFDhXnQoz9R5gLz=-A@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <CAMuHMdVgFNb-3TgL7a+AJMYE6tqOiMpGYFDhXnQoz9R5gLz=-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: 31s7ai5uoss1fgcmjc99mwgm3nccu1ok
+X-MBO-RS-ID: c4ff34d47b981fde408
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiS3J6eXN6dG9mIEtvemxv
-d3NraSIgPGtyemtAa2VybmVsLm9yZz4KPiBTZW5kIHRpbWU6TW9uZGF5LCAwMS8wOS8yMDI1IDEz
-OjE5OjA0Cj4gVG86IHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tCj4gQ2M6IGJoZWxn
-YWFzQGdvb2dsZS5jb20sIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVs
-Lm9yZywgbWFuaUBrZXJuZWwub3JnLCByb2JoQGtlcm5lbC5vcmcsIGtyemsrZHRAa2VybmVsLm9y
-ZywgY29ub3IrZHRAa2VybmVsLm9yZywgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZywgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIHAuemFi
-ZWxAcGVuZ3V0cm9uaXguZGUsIGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnLCBxdWljX3NjaGludGF2
-QHF1aWNpbmMuY29tLCBzaHJhZGhhLnRAc2Ftc3VuZy5jb20sIGNhc3NlbEBrZXJuZWwub3JnLCB0
-aGlwcGVzd2FteS5oYXZhbGlnZUBhbWQuY29tLCBtYXlhbmsucmFuYUBvc3MucXVhbGNvbW0uY29t
-LCBpbm9jaGlhbWFAZ21haWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tLCBsaW5taW5A
-ZXN3aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlwcy5jb20KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHYyIDEvMl0gZHQtYmluZGluZ3M6IFBDSTogZWljNzcwMDogQWRkIEVz
-d2luIGVpYzc3MDAgUENJZSBob3N0IGNvbnRyb2xsZXIKPiAKPiBPbiBGcmksIEF1ZyAyOSwgMjAy
-NSBhdCAwNDoyMjozN1BNICswODAwLCB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSB3
-cm90ZToKPiA+ICthbGxPZjoKPiA+ICsgIC0gJHJlZjogL3NjaGVtYXMvcGNpL3BjaS1ob3N0LWJy
-aWRnZS55YW1sIwo+ID4gKwo+ID4gK3Byb3BlcnRpZXM6Cj4gPiArICBjb21wYXRpYmxlOgo+ID4g
-KyAgICBjb25zdDogZXN3aW4sZWljNzcwMC1wY2llCj4gPiArCj4gPiArICByZWc6Cj4gPiArICAg
-IG1heEl0ZW1zOiAzCj4gPiArCj4gPiArICByZWctbmFtZXM6Cj4gPiArICAgIGl0ZW1zOgo+ID4g
-KyAgICAgIC0gY29uc3Q6IGRiaQo+ID4gKyAgICAgIC0gY29uc3Q6IGNvbmZpZwo+ID4gKyAgICAg
-IC0gY29uc3Q6IG1nbXQKPiA+ICsKPiA+ICsgIHJhbmdlczoKPiA+ICsgICAgbWF4SXRlbXM6IDMK
-PiA+ICsKPiA+ICsgIG51bS1sYW5lczoKPiA+ICsgICAgY29uc3Q6IDQKPiAKPiBJZiB0aGF0J3Mg
-Y29uc3QsIHlvdSBkbyBub3QgbmVlZCBpdC4gSXQncyBpbXBsaWVkIGJ5IHRoZSBjb21wYXRpYmxl
-Lgo+IEkgc2VlIHNvbWUgb3RoZXIgYmluZGluZ3MgZG8gc2ltaWxhcmx5IGFuZCBJIHRoaW5rIHRo
-YXQncyBub3QgdGhlCj4gY29ycmVjdCBjaG9pY2UuCj4gCj4gV2VsbCwgbWF5YmUgQFJvYiBrbm93
-cyBpZiBQQ0kgaXMgZGlmZmVyZW50IGhlcmUgYW55aG93PwoKRGVhciBLcnp5c3p0b2YKClRoYW5r
-IHlvdSB2ZXJ5IG11Y2ggZm9yIHlvdXIgcmV2aWV3LgpZb3UncmUgcmlnaHTvvIxJZiB0aGF0J3Mg
-Y29uc3QsICBJIGRvbid0IHRoaW5rIGl0J3MgbmVjZXNzYXJ5IGVpdGhlci4KQWZ0ZXIgaW52ZXN0
-aWdhdGlvbiwgdGhlIGRlc2NyaXB0aW9uIG9mIHRoZSAibnVtLWxhbmVzIiBhdHRyaWJ1dGUgaGVy
-ZSAKaXMgaW5jb3JyZWN0LiBUaGUgY29ycmVjdCBvbmUgc2hvdWxkIGJlIHRoZSBmb2xsb3dpbmcg
-ZGVzY3JpcHRpb246CiAgICBudW0tbGFuZXM6CiAgICAgIG1heGltdW06IDQKSWYgc28sIHRoZSBu
-dW0tbGFuZXMgYXR0cmlidXRlIHNob3VsZCBuZWVkIHRvIGJlIGRlc2NyaWJlZCBoZXJlLgpXaGF0
-IGRvIHlvdSB0aGluaz8KCj4gCj4gPiArCj4gPiArICAnI2ludGVycnVwdC1jZWxscyc6Cj4gPiAr
-ICAgIGNvbnN0OiAxCj4gPiArCj4gPiArICBpbnRlcnJ1cHRzOgo+ID4gKyAgICBtYXhJdGVtczog
-OQo+ID4gKwo+ID4gKyAgaW50ZXJydXB0LW5hbWVzOgo+ID4gKyAgICBpdGVtczoKPiA+ICsgICAg
-ICAtIGNvbnN0OiBtc2kKPiA+ICsgICAgICAtIGNvbnN0OiBpbnRhCj4gPiArICAgICAgLSBjb25z
-dDogaW50Ygo+ID4gKyAgICAgIC0gY29uc3Q6IGludGMKPiA+ICsgICAgICAtIGNvbnN0OiBpbnRk
-Cj4gPiArICAgICAgLSBjb25zdDogaW50ZQo+ID4gKyAgICAgIC0gY29uc3Q6IGludGYKPiA+ICsg
-ICAgICAtIGNvbnN0OiBpbnRnCj4gPiArICAgICAgLSBjb25zdDogaW50aAo+ID4gKwo+ID4gKyAg
-aW50ZXJydXB0LW1hcDoKPiA+ICsgICAgbWF4SXRlbXM6IDQKPiA+ICsKPiA+ICsgIGludGVycnVw
-dC1tYXAtbWFzazoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDogMAo+ID4gKyAg
-ICAgIC0gY29uc3Q6IDAKPiA+ICsgICAgICAtIGNvbnN0OiAwCj4gPiArICAgICAgLSBjb25zdDog
-Nwo+ID4gKwo+ID4gKyAgY2xvY2tzOgo+ID4gKyAgICBtYXhJdGVtczogNAo+ID4gKwo+ID4gKyAg
-Y2xvY2stbmFtZXM6Cj4gPiArICAgIGl0ZW1zOgo+ID4gKyAgICAgIC0gY29uc3Q6IG1zdHIKPiA+
-ICsgICAgICAtIGNvbnN0OiBkYmkKPiA+ICsgICAgICAtIGNvbnN0OiBwY2xrCj4gPiArICAgICAg
-LSBjb25zdDogYXV4Cj4gPiArCj4gPiArICByZXNldHM6Cj4gPiArICAgIG1heEl0ZW1zOiAzCj4g
-PiArCj4gPiArICByZXNldC1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25z
-dDogY2ZnCj4gPiArICAgICAgLSBjb25zdDogcG93ZXJ1cAo+ID4gKyAgICAgIC0gY29uc3Q6IHB3
-cmVuCj4gPiArCj4gPiArcmVxdWlyZWQ6Cj4gPiArICAtIGNvbXBhdGlibGUKPiA+ICsgIC0gcmVn
-Cj4gPiArICAtIHJhbmdlcwo+ID4gKyAgLSBudW0tbGFuZXMKPiA+ICsgIC0gaW50ZXJydXB0cwo+
-ID4gKyAgLSBpbnRlcnJ1cHQtbmFtZXMKPiA+ICsgIC0gaW50ZXJydXB0LW1hcC1tYXNrCj4gPiAr
-ICAtIGludGVycnVwdC1tYXAKPiA+ICsgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnCj4gPiArICAtIGNs
-b2Nrcwo+ID4gKyAgLSBjbG9jay1uYW1lcwo+ID4gKyAgLSByZXNldHMKPiA+ICsgIC0gcmVzZXQt
-bmFtZXMKPiA+ICsKPiA+ICt1bmV2YWx1YXRlZFByb3BlcnRpZXM6IGZhbHNlCj4gPiArCj4gPiAr
-ZXhhbXBsZXM6Cj4gPiArICAtIHwKPiA+ICsgICAgc29jIHsKPiA+ICsgICAgICAgICNhZGRyZXNz
-LWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47Cj4gPiArCj4gPiAr
-ICAgICAgICBwY2llQDU0MDAwMDAwIHsKPiA+ICsgICAgICAgICAgICBjb21wYXRpYmxlID0gImVz
-d2luLGVpYzc3MDAtcGNpZSI7Cj4gPiArICAgICAgICAgICAgcmVnID0gPDB4MCAweDU0MDAwMDAw
-IDB4MCAweDQwMDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgIDwweDAgMHg0MDAwMDAwMCAw
-eDAgMHg4MDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgIDwweDAgMHg1MDAwMDAwMCAweDAg
-MHgxMDAwMDA+Owo+ID4gKyAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJkYmkiLCAiY29uZmlnIiwg
-Im1nbXQiOwo+ID4gKyAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDM+Owo+ID4gKyAgICAg
-ICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgICAgICNpbnRlcnJ1cHQtY2Vs
-bHMgPSA8MT47Cj4gPiArICAgICAgICAgICAgcmFuZ2VzID0gPDB4ODEwMDAwMDAgMHgwIDB4NDA4
-MDAwMDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4ODAwMDAwPiwKPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICA8MHg4MjAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHhmMDAw
-MDAwPiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8MHhjMzAwMDAwMCAweDgwIDB4MDAwMDAw
-MDAgMHg4MCAweDAwMDAwMDAwIDB4MiAweDAwMDAwMDAwPjsKPiA+ICsgICAgICAgICAgICBidXMt
-cmFuZ2UgPSA8MHgwIDB4ZmY+Owo+ID4gKyAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sgNTYy
-PiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIDU2Mz4sCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgPCZjbG9jayA1NjQ+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmY2xv
-Y2sgNTY1PjsKPiA+ICsgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtc3RyIiwgImRiaSIsICJw
-Y2xrIiwgImF1eCI7Cj4gPiArICAgICAgICAgICAgcmVzZXRzID0gPCZyZXNldCA4ICgxIDw8IDAp
-PiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8JnJlc2V0IDggKDEgPDwgMSk+LAo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgIDwmcmVzZXQgOCAoMSA8PCAyKT47Cj4gPiArICAgICAgICAgICAg
-cmVzZXQtbmFtZXMgPSAiY2ZnIiwgInBvd2VydXAiLCAicHdyZW4iOwo+ID4gKyAgICAgICAgICAg
-IGludGVycnVwdHMgPSA8MjIwPiwgPDE3OT4sIDwxODA+LCA8MTgxPiwgPDE4Mj4sIDwxODM+LCA8
-MTg0PiwgPDE4NT4sIDwxODY+Owo+ID4gKyAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJt
-c2kiLCAiaW50YSIsICJpbnRiIiwgImludGMiLCAiaW50ZCIsCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgImludGUiLCAiaW50ZiIsICJpbnRnIiwgImludGgiOwo+ID4gKyAgICAg
-ICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JnBsaWM+Owo+ID4gKyAgICAgICAgICAgIGludGVy
-cnVwdC1tYXAtbWFzayA9IDwweDAgMHgwIDB4MCAweDc+Owo+ID4gKyAgICAgICAgICAgIGludGVy
-cnVwdC1tYXAgPSA8MHgwIDB4MCAweDAgMHgxICZwbGljIDE3OT4sCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwweDAgMHgwIDB4MCAweDIgJnBsaWMgMTgwPiwKPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgPDB4MCAweDAgMHgwIDB4MyAmcGxpYyAxODE+LAo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwIDB4MCAweDAgMHg0ICZwbGljIDE4Mj47Cj4g
-PiArICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsKPiA+ICsgICAgICAgICAgICBudW0t
-bGFuZXMgPSA8MHg0PjsKPiAKPiBUaGF0J3Mgbm90IGEgaGV4IG51bWJlciwgYnV0IGRlY2ltYWwu
-Cj4gCj4gUmV2aWV3ZWQtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyenlzenRvZi5rb3psb3dz
-a2lAbGluYXJvLm9yZz4KCk1hbml2YW5uYW4gYW5kIEJqb3JuIGhhdmUgcHJvdmlkZWQgbWUgd2l0
-aCBzb21lIGV4Y2VsbGVudCBzdWdnZXN0aW9ucyBmb3IgbXkgeWFtbC4gCk15IHlhbWwgd2lsbCBi
-ZSByZWZhY3RvcmVkIGluIHRoZSBuZXh0IHBhdGNoLCBhbmQgSSBtaWdodCBuZWVkIHlvdSB0byBy
-ZXZpZXcgaXQgCmFnYWluIGZvciBtZSBpbiB0aGUgbmV4dCBwYXRjaC4gSSdtIGEgbGl0dGxlIHdv
-bmRlcmluZyBpZiBJIG5lZWQgdG8gYWRkCiJSZXZpZXdlZC1ieTogS3J6eXN6dG9mIEtvemxvd3Nr
-aSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPiIgaW4gbmV4dCBwYXRjaC4KTWF5IEkg
-YXNrIGZvciB5b3VyIG9waW5pb24/CgoKQmVzdCByZWdhcmRzLApTZW5jaHVhbiB6aGFuZwoK
+On 9/17/25 9:23 AM, Geert Uytterhoeven wrote:
+
+Hello Geert,
+
+> On Tue, 16 Sept 2025 at 18:31, Marek Vasut <marek.vasut@mailbox.org> wrote:
+>> On 9/16/25 3:57 PM, Geert Uytterhoeven wrote:
+>>> On Tue, 16 Sept 2025 at 15:39, Marek Vasut <marek.vasut@mailbox.org> wrote:
+>>>> On 9/16/25 11:59 AM, Geert Uytterhoeven wrote:
+>>>>> On Tue, 16 Sept 2025 at 01:59, Marek Vasut
+>>>>> <marek.vasut+renesas@mailbox.org> wrote:
+>>>>>> R-Car V4H Reference Manual R19UH0186EJ0130 Rev.1.30 Apr. 21, 2025 page 4581
+>>>>>> Figure 104.3b Initial Setting of PCIEC(example), third quarter of the figure
+>>>>>> indicates that register 0xf8 should be polled until bit 18 becomes set to 1.
+>>>>>>
+>>>>>> Register 0xf8 bit 18 is 0 immediately after write to PCIERSTCTRL1 and is set
+>>>>>> to 1 in less than 1 ms afterward. The current readl_poll_timeout() break
+>>>>>> condition is inverted and returns when register 0xf8 bit 18 is set to 0,
+>>>>>> which in most cases means immediately. In case CONFIG_DEBUG_LOCK_ALLOC=y ,
+>>>>>> the timing changes just enough for the first readl_poll_timeout() poll to
+>>>>>> already read register 0xf8 bit 18 as 1 and afterward never read register
+>>>>>> 0xf8 bit 18 as 0, which leads to timeout and failure to start the PCIe
+>>>>>> controller.
+>>>>>>
+>>>>>> Fix this by inverting the poll condition to match the reference manual
+>>>>>> initialization sequence.
+>>>>>>
+>>>>>> Fixes: faf5a975ee3b ("PCI: rcar-gen4: Add support for R-Car V4H")
+>>>>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+>>>>>
+>>>>> Thanks for your patch!
+>>>>>
+>>>>>> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>>>> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>>>> @@ -711,7 +711,7 @@ static int rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable
+>>>>>>            val &= ~APP_HOLD_PHY_RST;
+>>>>>>            writel(val, rcar->base + PCIERSTCTRL1);
+>>>>>>
+>>>>>> -       ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, !(val & BIT(18)), 100, 10000);
+>>>>>> +       ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, val & BIT(18), 100, 10000);
+>>>>>>            if (ret < 0)
+>>>>>>                    return ret;
+>>>>>>
+>>>>>
+>>>>> This change looks correct, and fixes the timeout seen on White Hawk
+>>>>> with CONFIG_DEBUG_LOCK_ALLOC=y.
+>>>>> However, it causes a crash when CONFIG_DEBUG_LOCK_ALLOC=n:
+>>>>>
+>>>>>        SError Interrupt on CPU0, code 0x00000000be000011 -- SError
+>>>>
+>>>> ...
+>>>>
+>>>>>         el1h_64_error_handler+0x2c/0x40
+>>>>>         el1h_64_error+0x70/0x74
+>>>>>         dw_pcie_read+0x20/0x74 (P)
+>>>>>         rcar_gen4_pcie_additional_common_init+0x1c/0x6c
+>>>>
+>>>> SError in rcar_gen4_pcie_additional_common_init , this is unrelated to
+>>>> this fix.
+>>>>
+>>>> Does the following patch make this SError go away ?
+>>>
+>>>> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>>>> @@ -204,6 +204,8 @@ static int rcar_gen4_pcie_common_init(struct
+>>>> rcar_gen4_pcie *rcar)
+>>>>            if (ret)
+>>>>                    goto err_unprepare;
+>>>>
+>>>> +mdelay(1);
+>>>> +
+>>>>            if (rcar->drvdata->additional_common_init)
+>>>>                    rcar->drvdata->additional_common_init(rcar);
+>>>>
+>>>
+>>> Yes it does, thanks!
+>> So with this one extra mdelay(1), the PCIe is fully good on your side,
+>> or is there still anything weird/flaky/malfunctioning ?
+>>
+>> If you could give me a RB/TB on this fix, it would be nice.
+> 
+> You can have my
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> but only for the combination of both (A) "[PATCH] PCI: rcar-gen4: Fix
+> inverted break condition in PHY initialization" and (B) the addition
+> of the mdelay.
+> 
+>    - (A) without (B) causes an SError if CONFIG_DEBUG_LOCK_ALLOC=n,
+> 
+>    - (B) without (A) causes a timeout if CONFIG_DEBUG_LOCK_ALLOC=n
+>      (i.e. same behavior as with CONFIG_DEBUG_LOCK_ALLOC=y).
+I have instead posted what I think are proper fixes for that SError:
+
+PCI: rcar-gen4: Add missing 1ms delay after PWR reset assertion
+https://patchwork.kernel.org/project/linux-pci/patch/20250918030058.330960-1-marek.vasut+renesas@mailbox.org/
+
+clk: renesas: cpg-mssr: Add missing 1ms delay into reset toggle callback
+https://patchwork.kernel.org/project/linux-clk/patch/20250918030552.331389-1-marek.vasut+renesas@mailbox.org/
+
+clk: renesas: cpg-mssr: Read back reset registers to assure values latched
+https://patchwork.kernel.org/project/linux-clk/patch/20250918030723.331634-1-marek.vasut+renesas@mailbox.org/
+
+I hope those help. Can you please let me know if they do help ?
 
