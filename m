@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-36443-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D19BBB86FA0
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 22:59:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 694F7B86FA3
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 22:59:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AE6A525AC5
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 20:59:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 241D3581068
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 20:59:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BF3530EF97;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13BD030FC09;
 	Thu, 18 Sep 2025 20:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJOF4jcR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dTtcwYhi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A115D2F39CD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC8D2F6165;
 	Thu, 18 Sep 2025 20:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758229166; cv=none; b=g6xkwJNIX160wUG8V5Uzx+IcAOIZaJ3WFBKbDysGErUm5/EZn69R/rzdh5FgnNAXfYelkVmDzPzTsjmi0fHd34sPLProW9YjYBnNkFcYrBsFsDsPqZj3ZpmkRp+sS/Wv+lJoLUFxOzP+yXvrP10WCrgrtti290t8JJgF2xJI7k0=
+	t=1758229167; cv=none; b=Rt5j2HYb6AcBvMBwW6O2lmu126L0JcWER3EEtr+zC4DSJyEz4GRGNeO2jU+XifgQeMkmmyo7swwkEI6LNoThLLscZAnMs+Y1rHKfA8we7hUgNtpu2l2D9+ZZZ0tocC/uC3PE36lK2biCtmUCNBSMNPfq27CA2SW1+O2Y3/rJfOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758229166; c=relaxed/simple;
-	bh=a618McCJxNt8+s5TduoVSTIH5FpmlqM0mzZ0wyJHReA=;
+	s=arc-20240116; t=1758229167; c=relaxed/simple;
+	bh=1N5u2uZNEdRh0AXqZeut8mXdoEDnRWB0FRWb3AvMEI4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q2Eia2gFzT2UMPv2/tRpjQ2wIWAhWsfBBYXQYz1cM0r9xXAV7j8KJTj/OZUaEssLjMCcNS2cZ3jIYgeLgw/qCaZ1KXIbGbWWl+0/L1lQSQZMrI8P8qL0kw6ASuAHrA7uyAxdXzx10+FPdgs1xx/C6M+deJpiY3Mkg2uSk7L59ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJOF4jcR; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=GcfJU7TXj51ivUhuzUgPbZWkaVctbjxlU+BSz9lALmC8gZnSLrXmb26VorlpOJwMQ5CqNMTdqstYt/+VsqkC0KQTTHFylwkWA7tLjuQ5TZG/gof00IySUu4UmGXkBb7cEjCOAEEmhr0577cmZP9rg2dPQVpQNg/XPrkjfovNCp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dTtcwYhi; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758229164; x=1789765164;
+  t=1758229165; x=1789765165;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=a618McCJxNt8+s5TduoVSTIH5FpmlqM0mzZ0wyJHReA=;
-  b=jJOF4jcRsE+3OKErPk1S8kMe1/hzgd7eQJJNVLSVjtBpvKNi69ghK8Za
-   M/tf/d8exIw0DjB8Z6ZBy5pEjvfK12GeADZD2CqS2WRYIOEEeL5zf5PDs
-   h7dPYhPbci4uJgHcy/a9V34hkJJ0affq29UHi/zjc9dutWmZJx53OOilP
-   OguxU7qOnld5mWW7oceNKNLrg9zcpnZw7UzS0nC+DtNjb+R43DQR8TGTI
-   k2yZQOXFBzl8zV/rcP6MUdzSwZQqDMzG0SuOncoPZ/wvsY981MnJFxAC0
-   UYHgtwqspXXUpGiTdqnnVNkKWgqJSHYhyCghXHpoTA4ZZ6TlKvG50BU2y
+  bh=1N5u2uZNEdRh0AXqZeut8mXdoEDnRWB0FRWb3AvMEI4=;
+  b=dTtcwYhi0ucAQMCXb9PHH63RwiM2sLAO729RrKogdwHzEdCehJP2/lQL
+   leY2uobXcPAyMzzccEUjoczhknS4kzOMN1W6VxKSmpyMeHhJnPOJhwg30
+   IIQqt1WeOJvaG8bRyHyCCclmeGQGqknulsh+k577Fadh11WnwIHo3eXr0
+   ZAEHdTnekTXrxmDE2XO+nwzJvqYTg0bft/jPI4P6lIc+Ah+ShLCciiG1K
+   MZS81iPaSQ43eVlMd6EdOZvUZYcfjiSKLY20j6N1lQEj0h+oG4XGjmWu4
+   UvVMXh3Ce2li6Q5tU6ONtXdKMZP9Z6aFVrhEIjS5pBaOLB4WJAEv+jhFb
    w==;
-X-CSE-ConnectionGUID: nDuRlADvTGGyexMwP3LZCQ==
-X-CSE-MsgGUID: BgzGqBOZS4OLXwvh3hQ+nA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="63205053"
+X-CSE-ConnectionGUID: Zs6biipYRaCbnpQVMsOlBg==
+X-CSE-MsgGUID: rkhjc5fRSnCfUKbRN0qSmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="63205060"
 X-IronPort-AV: E=Sophos;i="6.18,275,1751266800"; 
-   d="scan'208";a="63205053"
+   d="scan'208";a="63205060"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 13:59:21 -0700
-X-CSE-ConnectionGUID: gOHW8YI/RKS+WJ3wK+dBOA==
-X-CSE-MsgGUID: 574gvXfnT2C+JcvxIMRIIA==
+X-CSE-ConnectionGUID: Esn+u7iERu+JPTUxHhRfjA==
+X-CSE-MsgGUID: qB58IITmT4OlWH96t96TrQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,275,1751266800"; 
-   d="scan'208";a="174915017"
+   d="scan'208";a="174915020"
 Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
   by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 13:59:21 -0700
 From: Lucas De Marchi <lucas.demarchi@intel.com>
@@ -72,9 +72,9 @@ Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
 	Simon Richter <Simon.Richter@hogyros.de>,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow GPU BAR resize
-Date: Thu, 18 Sep 2025 13:58:56 -0700
-Message-ID: <20250918-xe-pci-rebar-2-v1-1-6c094702a074@intel.com>
+Subject: [PATCH 2/2] drm/xe: Move rebar to be done earlier
+Date: Thu, 18 Sep 2025 13:58:57 -0700
+Message-ID: <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com>
 References: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com>
@@ -88,85 +88,156 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.15-dev-b03c7
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+There may be cases in which the BAR0 also needs to move to accommodate
+the bigger BAR2. However if it's not released, the BAR2 resize fails.
+During the vram probe it can't be released as it's already in use by
+xe_mmio for early register access.
 
-Resizing BAR to a larger size has to release upstream bridge windows in
-order make the bridge windows larger as well (and to potential relocate
-them into a larger free block within iomem space). Some GPUs have an
-integrated PCI switch that has BAR0. The resource allocation assigns
-space for that BAR0 as it does for any resource.
+Add a new function in xe_vram and let xe_pci call it directly before
+even early device probe. This allows the BAR2 to resize in cases BAR0
+also needs to move:
 
-An extra resource on a bridge will pin its upstream bridge window in
-place which prevents BAR resize for anything beneath that bridge.
+	[] xe 0000:03:00.0: vgaarb: deactivate vga console
+	[] xe 0000:03:00.0: [drm] Attempting to resize bar from 8192MiB -> 16384MiB
+	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: releasing
+	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
+	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
+	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
+	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
+	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
+	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
+	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: assigned
+	[] pcieport 0000:00:01.0: PCI bridge to [bus 01-04]
+	[] pcieport 0000:00:01.0:   bridge window [mem 0x83000000-0x840fffff]
+	[] pcieport 0000:00:01.0:   bridge window [mem 0x4000000000-0x44007fffff 64bit pref]
+	[] pcieport 0000:01:00.0: PCI bridge to [bus 02-04]
+	[] pcieport 0000:01:00.0:   bridge window [mem 0x83000000-0x840fffff]
+	[] pcieport 0000:01:00.0:   bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]
+	[] pcieport 0000:02:01.0: PCI bridge to [bus 03]
+	[] pcieport 0000:02:01.0:   bridge window [mem 0x83000000-0x83ffffff]
+	[] pcieport 0000:02:01.0:   bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]
+	[] xe 0000:03:00.0: [drm] BAR2 resized to 16384M
+	[] xe 0000:03:00.0: [drm:xe_pci_probe [xe]] BATTLEMAGE  e221:0000 dgfx:1 gfx:Xe2_HPG (20.02) ...
 
-Nothing in the pcieport driver provided by PCI core, which typically is
-the driver bound to these bridges, requires that BAR0. Because of that,
-releasing the extra BAR does not seem to have notable downsides but
-comes with a clear upside.
+As shown above, it happens even before we try to read any register for
+platform identification.
 
-Therefore, release BAR0 of such switches using a quirk and clear its
-flags to prevent any new invocation of the resource assignment
-algorithm from assigning the resource again.
+All the rebar logic is more pci-specific than xe-specific and can be
+done very early in the probe sequence. In future it would be good to
+move it out of xe_vram.c, but this refactor is left for later.
 
-Due to other siblings within the PCI hierarchy of all the devices
-integrated into the GPU, some other devices may still have to be
-manually removed before the resize is free of any bridge window pins.
-Such siblings can be released through sysfs to unpin windows while
-leaving access to GPU's sysfs entries required for initiating the
-resize operation, whereas removing the topmost bridge this quirk
-targets would result in removing the GPU device as well so no manual
-workaround for this problem exists.
-
-Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
-Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3lwcp3h7esmvnyg26n44y@owo2ojiu2mov/
-Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icenowy.me/
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v6.12+
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: <stable@vger.kernel.org> # 6.12+
+Link: https://lore.kernel.org/intel-xe/fafda2a3-fc63-ce97-d22b-803f771a4d19@linux.intel.com
 Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
-
-Remarks from Ilpo: this feels quite hacky to me and I'm working towards a
-better solution which is to consider Resizable BAR maximum size the
-resource fitting algorithm. But then, I don't expect the better solution
-to be something we want to push into stable due to extremely invasive
-dependencies. So maybe consider this an interim/legacy solution to the
-resizing problem and remove it once the algorithmic approach works (or
-more precisely retain it only in the old kernel versions).
+v2:
+- Use res->parent to test resource assignment and avoid resetting
+  resources unnecessarily (Ilpo)
+- Use pci_dev_for_each_resource() to loop through the resources and
+  release resource with same type as lmembar (Ilpo)
 ---
- drivers/pci/quirks.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/gpu/drm/xe/xe_pci.c  |  2 ++
+ drivers/gpu/drm/xe/xe_vram.c | 34 ++++++++++++++++++++++++++--------
+ drivers/gpu/drm/xe/xe_vram.h |  1 +
+ 3 files changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d97335a401930..9b1c08de3aa89 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
- #endif
+diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
+index 77bee811a1501..95c8aafc0810e 100644
+--- a/drivers/gpu/drm/xe/xe_pci.c
++++ b/drivers/gpu/drm/xe/xe_pci.c
+@@ -868,6 +868,8 @@ static int xe_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (err)
+ 		return err;
+ 
++	xe_vram_resize_bar(xe);
 +
+ 	err = xe_device_probe_early(xe);
+ 	/*
+ 	 * In Boot Survivability mode, no drm card is exposed and driver
+diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
+index b44ebf50fedbb..652df7a5f4f65 100644
+--- a/drivers/gpu/drm/xe/xe_vram.c
++++ b/drivers/gpu/drm/xe/xe_vram.c
+@@ -26,15 +26,35 @@
+ 
+ #define BAR_SIZE_SHIFT 20
+ 
+-static void
+-_resize_bar(struct xe_device *xe, int resno, resource_size_t size)
 +/*
-+ * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
-+ * resizing the BARs of the GPU device due to that bridge BAR0 pinning the
-+ * bridge window it's under in place. Nothing in pcieport requires that
-+ * BAR0.
-+ *
-+ * Release and disable BAR0 permanently by clearing its flags to prevent
-+ * anything from assigning it again.
++ * Release all the BARs that could influence/block LMEMBAR resizing, i.e.
++ * assigned IORESOURCE_MEM_64 BARs
 + */
-+static void pci_release_bar0(struct pci_dev *pdev)
++static void release_bars(struct pci_dev *pdev)
 +{
-+	struct resource *res = pci_resource_n(pdev, 0);
++	struct resource *res;
++	int i;
 +
-+	if (!res->parent)
-+		return;
++	pci_dev_for_each_resource(pdev, res, i) {
++		/* Resource already un-assigned, do not reset it */
++		if (!res->parent)
++			continue;
 +
-+	pci_release_resource(pdev, 0);
-+	res->flags = 0;
++		/* No need to release unrelated BARs */
++		if (!(res->flags & IORESOURCE_MEM_64))
++			continue;
++
++		pci_release_resource(pdev, i);
++	}
 +}
-+DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0);
-+DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0);
-+DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0);
++
++static void resize_bar(struct xe_device *xe, int resno, resource_size_t size)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+ 	int bar_size = pci_rebar_bytes_to_size(size);
+ 	int ret;
+ 
+-	if (pci_resource_len(pdev, resno))
+-		pci_release_resource(pdev, resno);
++	release_bars(pdev);
+ 
+ 	ret = pci_resize_resource(pdev, resno, bar_size);
+ 	if (ret) {
+@@ -50,7 +70,7 @@ _resize_bar(struct xe_device *xe, int resno, resource_size_t size)
+  * if force_vram_bar_size is set, attempt to set to the requested size
+  * else set to maximum possible size
+  */
+-static void resize_vram_bar(struct xe_device *xe)
++void xe_vram_resize_bar(struct xe_device *xe)
+ {
+ 	int force_vram_bar_size = xe_modparam.force_vram_bar_size;
+ 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+@@ -119,7 +139,7 @@ static void resize_vram_bar(struct xe_device *xe)
+ 	pci_read_config_dword(pdev, PCI_COMMAND, &pci_cmd);
+ 	pci_write_config_dword(pdev, PCI_COMMAND, pci_cmd & ~PCI_COMMAND_MEMORY);
+ 
+-	_resize_bar(xe, LMEM_BAR, rebar_size);
++	resize_bar(xe, LMEM_BAR, rebar_size);
+ 
+ 	pci_assign_unassigned_bus_resources(pdev->bus);
+ 	pci_write_config_dword(pdev, PCI_COMMAND, pci_cmd);
+@@ -148,8 +168,6 @@ static int determine_lmem_bar_size(struct xe_device *xe, struct xe_vram_region *
+ 		return -ENXIO;
+ 	}
+ 
+-	resize_vram_bar(xe);
+-
+ 	lmem_bar->io_start = pci_resource_start(pdev, LMEM_BAR);
+ 	lmem_bar->io_size = pci_resource_len(pdev, LMEM_BAR);
+ 	if (!lmem_bar->io_size)
+diff --git a/drivers/gpu/drm/xe/xe_vram.h b/drivers/gpu/drm/xe/xe_vram.h
+index 72860f714fc66..13505cfb184dc 100644
+--- a/drivers/gpu/drm/xe/xe_vram.h
++++ b/drivers/gpu/drm/xe/xe_vram.h
+@@ -11,6 +11,7 @@
+ struct xe_device;
+ struct xe_vram_region;
+ 
++void xe_vram_resize_bar(struct xe_device *xe);
+ int xe_vram_probe(struct xe_device *xe);
+ 
+ struct xe_vram_region *xe_vram_region_alloc(struct xe_device *xe, u8 id, u32 placement);
 
 -- 
 2.50.1
