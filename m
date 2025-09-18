@@ -1,189 +1,199 @@
-Return-Path: <linux-pci+bounces-36419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36420-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4E5FB84B22
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 14:55:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22B7EB84F18
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 16:01:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59AC21B20F68
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 12:55:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2781E7B7EA4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 13:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737232D3207;
-	Thu, 18 Sep 2025 12:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71521F63D9;
+	Thu, 18 Sep 2025 14:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snU8wzfN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ABD283FD0
-	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 12:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6B12AD02;
+	Thu, 18 Sep 2025 14:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758200127; cv=none; b=HVBhI2kWxN4IgvcuHApJZ4cTja1ZNekio0w0nCse5CYRCC2ZN8AweAh4GMuwNGZnR9V1ItOyoSPQYqghD6axWdz3Afq06OYGtQagfgJYxB8F+q9nTF40o9J+3G08L5liCiLWkv3DPeUcvnXzpRHvgT9drA5YppNOPo8/MYJqqgo=
+	t=1758204020; cv=none; b=I8FewDoEW+nE5YP7KdiO+r22uvn/Ls2BbFG1dbxMtFeKRvaKVGpkK2+Krsc0+e1t87Uj/vQA2l5wCGqhrEGJlcSHVp7T6npzPPGNMFaXSesadUIKK8iLiuOnytCfEl01nmjZJBhVbItuNFMgTtu24SOcTIc2aq1N8HOth9RCpVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758200127; c=relaxed/simple;
-	bh=m3EqRKAwY9UDXyEPAWoe177Ipr31uPyNxTxWRE0I8Lg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjYtaqsWF1s7x1dB6D4/En1TxFFqZM+okx/++0vKROn8McZ7tgcLaMNMI/2J/gCqS6J/OPnaxsEhxQsyRdZRRM7R6i3GGWN7IKYP196RekZg0RIRTcT6RIIdQ2bX+/kaTtO5b37l6IXGJdNGb7ltU+ebsDAaukjJWe0qX+sKq3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 58ICsllo009181
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Sep 2025 20:54:47 +0800 (+08)
-	(envelope-from randolph@andestech.com)
-Received: from swlinux02 (10.0.15.183) by ATCPCS31.andestech.com (10.0.1.89)
- with Microsoft SMTP Server id 14.3.498.0; Thu, 18 Sep 2025 20:54:47 +0800
-Date: Thu, 18 Sep 2025 20:54:40 +0800
-From: Randolph Lin <randolph@andestech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <jingoohan1@gmail.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alex@ghiti.fr>,
-        <aou@eecs.berkeley.edu>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <ben717@andestech.com>,
-        <inochiama@gmail.com>, <thippeswamy.havalige@amd.com>,
-        <namcao@linutronix.de>, <shradha.t@samsung.com>,
-        <randolph.sklin@gmail.com>, <tim609@andestech.com>
-Subject: Re: [PATCH v2 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver
- support
-Message-ID: <aMwBEBNo0AAxlfHx@swlinux02>
-References: <aMqmmd381sySCGnY@swlinux02>
- <20250917215722.GA1876729@bhelgaas>
+	s=arc-20240116; t=1758204020; c=relaxed/simple;
+	bh=XMVU+sHDWjhNf7yz3skhy780y+rTanxteszC2S1bpOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+IEHR6yGAVRVaJr+BXh1uvIP8tjn2QDazhFpa+gyt2ZS2MaooT4YENY+y5Mx/BQ0BmuJAU+N4OSrQ7nAbPqtXAOPOnC2sC9m1gFTs1EQBkd0AHgbc3x7QImncedcCRA7rTbu59MBcfYW1wMYWuCkRG8bbn8lumoc/BO8SnR3gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snU8wzfN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10739C4CEE7;
+	Thu, 18 Sep 2025 14:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758204020;
+	bh=XMVU+sHDWjhNf7yz3skhy780y+rTanxteszC2S1bpOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=snU8wzfNao7CQ6+eadp7FCIQKqkHyCCmXDpHUc1Ht4gK7Zf57kxA+8KsOnxdWMnQb
+	 Uw52TMd4Vp7MbPXTalxJS3vBB6sXBHhOWU822uaLR7CRXZdLrKmwsi7xjOuiy7UYJK
+	 fRuyQfYI9k7p1MlfUvBeBTcTZcir9/kn3FYR7HmOz+3/tYsQto8EV29e31g/f+Ai8i
+	 zRvAZOrPVS+8+j+s6jV19TEn7RD6/iNS6gGycEgX235M23DelgYNl+iMMiObrI+BfV
+	 ivBcTYwzuENOhFLOa1EfqcrzrATM1Y/jRb+Tgt8k2swIaqbfiiucRE5uZrSNT//bTb
+	 dCRq7Th0DyDmg==
+Date: Thu, 18 Sep 2025 16:00:17 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 02/33] PCI: Protect against concurrent change of
+ housekeeping cpumask
+Message-ID: <aMwQcVZeTwuk2Q8A@localhost.localdomain>
+References: <20250829154814.47015-1-frederic@kernel.org>
+ <20250829154814.47015-3-frederic@kernel.org>
+ <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250917215722.GA1876729@bhelgaas>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 58ICsllo009181
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
 
-Hi Bjorn,
+Le Fri, Aug 29, 2025 at 06:01:17PM -0400, Waiman Long a écrit :
+> On 8/29/25 11:47 AM, Frederic Weisbecker wrote:
+> > HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
+> > therefore be made modifyable at runtime. Synchronize against the cpumask
+> > update using RCU.
+> > 
+> > The RCU locked section includes both the housekeeping CPU target
+> > election for the PCI probe work and the work enqueue.
+> > 
+> > This way the housekeeping update side will simply need to flush the
+> > pending related works after updating the housekeeping mask in order to
+> > make sure that no PCI work ever executes on an isolated CPU.
+> > 
+> > Signed-off-by: Frederic Weisbecker<frederic@kernel.org>
+> > ---
+> >   drivers/pci/pci-driver.c | 40 +++++++++++++++++++++++++++++++---------
+> >   1 file changed, 31 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 63665240ae87..cf2b83004886 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -302,9 +302,8 @@ struct drv_dev_and_id {
+> >   	const struct pci_device_id *id;
+> >   };
+> > -static long local_pci_probe(void *_ddi)
+> > +static int local_pci_probe(struct drv_dev_and_id *ddi)
+> >   {
+> > -	struct drv_dev_and_id *ddi = _ddi;
+> >   	struct pci_dev *pci_dev = ddi->dev;
+> >   	struct pci_driver *pci_drv = ddi->drv;
+> >   	struct device *dev = &pci_dev->dev;
+> > @@ -338,6 +337,19 @@ static long local_pci_probe(void *_ddi)
+> >   	return 0;
+> >   }
+> > +struct pci_probe_arg {
+> > +	struct drv_dev_and_id *ddi;
+> > +	struct work_struct work;
+> > +	int ret;
+> > +};
+> > +
+> > +static void local_pci_probe_callback(struct work_struct *work)
+> > +{
+> > +	struct pci_probe_arg *arg = container_of(work, struct pci_probe_arg, work);
+> > +
+> > +	arg->ret = local_pci_probe(arg->ddi);
+> > +}
+> > +
+> >   static bool pci_physfn_is_probed(struct pci_dev *dev)
+> >   {
+> >   #ifdef CONFIG_PCI_IOV
+> > @@ -362,34 +374,44 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+> >   	dev->is_probed = 1;
+> >   	cpu_hotplug_disable();
+> > -
+> >   	/*
+> >   	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
+> >   	 * device is probed from work_on_cpu() of the Physical device.
+> >   	 */
+> >   	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
+> >   	    pci_physfn_is_probed(dev)) {
+> > -		cpu = nr_cpu_ids;
+> > +		error = local_pci_probe(&ddi);
+> >   	} else {
+> >   		cpumask_var_t wq_domain_mask;
+> > +		struct pci_probe_arg arg = { .ddi = &ddi };
+> > +
+> > +		INIT_WORK_ONSTACK(&arg.work, local_pci_probe_callback);
+> >   		if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
+> >   			error = -ENOMEM;
+> >   			goto out;
+> >   		}
+> > +
+> > +		rcu_read_lock();
+> >   		cpumask_and(wq_domain_mask,
+> >   			    housekeeping_cpumask(HK_TYPE_WQ),
+> >   			    housekeeping_cpumask(HK_TYPE_DOMAIN));
+> >   		cpu = cpumask_any_and(cpumask_of_node(node),
+> >   				      wq_domain_mask);
+> > +		if (cpu < nr_cpu_ids) {
+> > +			schedule_work_on(cpu, &arg.work);
+> > +			rcu_read_unlock();
+> > +			flush_work(&arg.work);
+> > +			error = arg.ret;
+> > +		} else {
+> > +			rcu_read_unlock();
+> > +			error = local_pci_probe(&ddi);
+> > +		}
+> > +
+> >   		free_cpumask_var(wq_domain_mask);
+> > +		destroy_work_on_stack(&arg.work);
+> >   	}
+> > -
+> > -	if (cpu < nr_cpu_ids)
+> > -		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+> > -	else
+> > -		error = local_pci_probe(&ddi);
+> >   out:
+> >   	dev->is_probed = 0;
+> >   	cpu_hotplug_enable();
+> 
+> A question. Is the purpose of open-coding work_on_cpu() to avoid calling
+> INIT_WORK_ONSTACK() and destroy_work_on_stack() in RCU read-side critical
+> section? These two macro/function may call debugobjects code which I don't
+> know if they are allowed inside rcu_read_lock() critical section.
+> 
+> Cheers, Longman
 
-On Wed, Sep 17, 2025 at 04:57:22PM -0500, Bjorn Helgaas wrote:
-> [EXTERNAL MAIL]
-> 
-> On Wed, Sep 17, 2025 at 08:16:25PM +0800, Randolph Lin wrote:
-> > On Tue, Sep 16, 2025 at 09:46:52AM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Sep 16, 2025 at 06:04:16PM +0800, Randolph Lin wrote:
-> > > > Add driver support for DesignWare based PCIe controller in Andes
-> > > > QiLai SoC. The driver only supports the Root Complex mode.
-> 
-> > > > +          Say Y here to enable PCIe controller support on Andes QiLai SoCs,
-> > > > +       which operate in Root Complex mode. The Andes QiLai SoCs PCIe
-> > > > +       controller is based on DesignWare IP (5.97a version) and therefore
-> > > > +       the driver re-uses the DesignWare core functions to implement the
-> > > > +       driver. The Andes QiLai SoC has three Root Complexes (RCs): one
-> > > > +       operates on PCIe 4.0 with 4 lanes at 0x80000000, while the other
-> > > > +       two operate on PCIe 4.0 with 2 lanes at 0xA0000000 and 0xC0000000,
-> > > > +       respectively.
-> > >
-> > > I assume these addresses come from devicetree, so I don't think
-> > > there's any need to include them here.
-> >
-> > I will add num-lanes property in the devicetree.
-> 
-> Don't add num-lanes to devicetree unless your driver requires it.
-> dw_pcie_host_init() uses dw_pcie_link_get_max_link_width() try to get
-> the lane width from PCI_EXP_LNKCAP.
->
+No the point is that I need to keep the target selection
+(housekeeping_cpumask() read) and the work queue within the same
+RCU critical section so that things are synchronized that way:
 
-ok.
+    CPU 0                                          CPU 1
+    -----                                          -----
+    rcu_read_lock()                                housekeeping_update()
+    cpu = cpumask_any(housekeeping_cpumask(...))       housekeeping_cpumask &= ~val
+    queue_work_on(cpu, pci_probe_wq, work)             synchronize_rcu()
+    rcu_read_unlock()                                  flush_workqueue(pci_probe_wq)
+    flush_work(work)
+        
+And I can't include the whole work_on_cpu() within rcu_read_lock() because
+flush_work() may sleep.
 
-> > > > +static
-> > > > +bool qilai_pcie_outbound_atu_addr_valid(struct dw_pcie *pci,
-> > > > +                                     const struct dw_pcie_ob_atu_cfg *atu,
-> > > > +                                     u64 *limit_addr)
-> > > > +{
-> > > > +     u64 parent_bus_addr = atu->parent_bus_addr;
-> > > > +
-> > > > +     *limit_addr = parent_bus_addr + atu->size - 1;
-> > > > +
-> > > > +     /*
-> > > > +      * Addresses below 4 GB are not 1:1 mapped; therefore, range checks
-> > > > +      * only need to ensure addresses below 4 GB match pci->region_limit.
-> > > > +      */
-> > > > +     if (lower_32_bits(*limit_addr & ~pci->region_limit) !=
-> > > > +         lower_32_bits(parent_bus_addr & ~pci->region_limit) ||
-> > > > +         !IS_ALIGNED(parent_bus_addr, pci->region_align) ||
-> > > > +         !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size)
-> > > > +             return false;
-> > >
-> > > Seems a little bit strange.  Is this something that could be expressed
-> > > via devicetree?  Or something peculiar about QiLai that's different
-> > > from all the other DWC-based controllers?
-> >
-> > After reviewing both the code history and the bug tracking system,
-> > it turns out that this code doesn't even qualify as a valid
-> > workaround.  Apologies for having submitted it as a patch.
-> >
-> > The root cause is that the iATU limits were not configured
-> > correctly.  The original design assumed at least 32GB or 128GB of
-> > BAR resource assignment, but the actual chip sets the iATU limit to
-> > only 4GB.  As a result, region_limit is always constrained by this
-> > 4GB boundary.
-> >
-> > The correct workaround should be to program the iATU only for the
-> > 32-bit address space and skip iATU programming for the 64-bit space.
-> > A simple way to implement this workaround is to parse the
-> > num-viewport property from the devicetree and use this value
-> > directly, instead of relying on the result of reading
-> > PCIE_ATU_VIEWPORT.
-> >
-> > I will attempt to implement it this way, but the correct method is
-> > not yet well-defined. Do you have any suggestions on how to modify
-> > the num-viewport property from the devicetree for use in the driver?
-> > It seems it will be modified in pcie-designware.c.
-> 
-> Nope, I don't know enough about DWC to give any advice, sorry!
-> 
-> > > > +static struct platform_driver qilai_pcie_driver = {
-> > > > +     .probe = qilai_pcie_probe,
-> > > > +     .driver = {
-> > > > +             .name   = "qilai-pcie",
-> > > > +             .of_match_table = qilai_pcie_of_match,
-> > > > +             /* only test passed at PROBE_DEFAULT_STRATEGY */
-> > > > +             .probe_type = PROBE_DEFAULT_STRATEGY,
-> > >
-> > > This is the only use of PROBE_DEFAULT_STRATEGY in the entire tree, so
-> > > I doubt you need it.  If you do, please explain why in more detail.
-> >
-> > In the V1 patch, the reviewer, Manivannan, suggested:
-> > "You should start using PROBE_PREFER_ASYNCHRONOUS."
-> > However, after setting up PROBE_PREFER_ASYNCHRONOUS, numerous errors
-> > were encountered during the EP device probe flow.
-> > Therefore, we would prefer to continue using PROBE_DEFAULT_STRATEGY.
-> 
-> I don't really know the details of probe_type.  But it sounds like the
-> errors with PROBE_PREFER_ASYNCHRONOUS should probably be debugged and
-> fixed.
-> 
-> If PROBE_PREFER_ASYNCHRONOUS can't be made to work, it sounds like you
-> should specify PROBE_FORCE_SYNCHRONOUS, because the comments suggest
-> that using PROBE_DEFAULT_STRATEGY means the driver should work with
-> either PROBE_FORCE_SYNCHRONOUS or PROBE_PREFER_ASYNCHRONOUS:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/device/driver.h?id=v6.16#n24
+Also now that you mention it, I need to create that pci_probe_wq and flush it :-)
 
-refer to the following patches:
-    91703041697c ("PCI: Allow built-in drivers to use async initial probing")
-    8e77d3d59d7b ("Revert "usb: xhci-pci: Set PROBE_PREFER_ASYNCHRONOUS"")
-
-We can continue using PROBE_PREFER_ASYNCHRONOUS.
-When used with drivers that support it, such as NVMe, the system behaves as
-expected. In the past, we primarily used Renesas xHCI controller.
-
-Sincerely,
-Randolph
+-- 
+Frederic Weisbecker
+SUSE Labs
 
