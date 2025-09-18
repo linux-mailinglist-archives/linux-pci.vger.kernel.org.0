@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-36425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CC34B85AAA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 013AEB85ABC
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:37:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7DF1C257FE
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:32:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 545131B229A9
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:32:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6784C30FF1D;
-	Thu, 18 Sep 2025 15:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FF1230F944;
+	Thu, 18 Sep 2025 15:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lnkAaIfZ"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="mk+VgQiI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEB23C512;
-	Thu, 18 Sep 2025 15:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53EE28643D;
+	Thu, 18 Sep 2025 15:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758209495; cv=none; b=Vjl8sGoIM/sn5lDdCIUfjz425pjYT+Gndv4nbemmesj4P6BXVMGhljinyFAaWfoWlBvFOPDRlw8jEDCeAUpEyDWrs7gDy+WoDF2/2c8UDWPWXcvOXztSzQkLVRc3GjecyuTauaX6doDbh1QYQNAumUYFJ4l1K+9W1Jc7gIFqL34=
+	t=1758209507; cv=none; b=k44oFDZiHDqqHJm0Js4v/6yImvJGZrRPz+ZzbDk8DggdBnAfINCIn7XOaWM1nqrfNVH1zI5ucBnc8K50ym1xFnzMjKCneP6y6OQyhiiy5uPrlH3id9f/YbxEsNxHh5E140xDBp5J485xDtQdQdrYToAA0bKYy/dCeAEigG7Bdx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758209495; c=relaxed/simple;
-	bh=M1y4kyl7/u9ISiwORUl0PBLLRmK62BT8dpUJThLsa44=;
+	s=arc-20240116; t=1758209507; c=relaxed/simple;
+	bh=7Oock8b8hlmLqfE0k+5g/Ha+kXjaqiFUV09Vepcpo4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uud83C36GHySMY6qrsVQg0KTAqakNKqXL/r8e8AFEPNINlfD7AoIvSiHpfV/gs8MrD1aoqvspFU+QOHKTyyNtcRqJ1EV3UL2fNWEsD+CNefKHCVSLaCpE+1Ec4oy2RHX5nB4wdd5HqbeNXZDqA+4aNSm4AgonzpZysIOlmrUZcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lnkAaIfZ; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=AaHQ0s9z5G3qyx5sUnWveZqirM0pI+PIs65x6Vb8GyfKMOp/nUdMtaP0QJLmRHMrpdxxMCW2ZFj5TK5YdH6c7+ZyemzHNFnQX5/C+QaQKuvMX4WPtIS/yNb5RCLV7OWgQz9btrXqiHlWyZhC+lnbAbKxQHuPsKxOEEsiC9P6Tpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=mk+VgQiI; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D572F25FC1;
-	Thu, 18 Sep 2025 17:31:31 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id F372120E31;
+	Thu, 18 Sep 2025 17:31:43 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ZaX2TIHOkGrM; Thu, 18 Sep 2025 17:31:31 +0200 (CEST)
+ id EP9vSBDod2Au; Thu, 18 Sep 2025 17:31:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1758209491; bh=M1y4kyl7/u9ISiwORUl0PBLLRmK62BT8dpUJThLsa44=;
+	t=1758209503; bh=7Oock8b8hlmLqfE0k+5g/Ha+kXjaqiFUV09Vepcpo4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lnkAaIfZT7DKYWkRJEIOlW3ppvRJGOyH5FGe3UXQ3josx0Ye2dY+cWRyyP5/N4Rnf
-	 KWcTAeiIZW3AZdUEeZWlpJuTVqxdUohKHGH4Q+0r5FD+Rib36KegUeegZCxNK/Spm3
-	 NLGbiWFUNtWQ31yMktiLXIGezjP/vTp/scQnUG0bNAygUsmh14zyKnkckXWykdC0a+
-	 y2BFD6pyJ4FQdZDQxP9/DdufUl5EdtUvJyCbgsfndVEyuZIVWlz1LL9sXoHQhdt3E2
-	 sgJkJAaatZ/8arOwvviVaomS6vjGbOseGy/GBGJPUST1JO8eN/tLnSsSbVWOY1nX1a
-	 /mPmddGUO1wDg==
+	b=mk+VgQiIXCA9bcEjRzqyyb/CX5Gu0IUqO8JKphsCbXb3DRV5M0pg9tB1LNG6NKsAd
+	 Xy4OUm7xHjqDgEEOjy32kZUcG67qhduvLkzj+Dg2f1cllP+B6e4U/5iBiBWhyBjEkR
+	 4O4ZRzEewF7yD+zovPUPecdvbG//qGWx6keXyFSlxwbtf5f+8j9Sg7sR+dttkLfq9h
+	 3QgEuQAZQ04aUX1tdjOfr83ephV70PcXyYiNtp+LzLcuaPcMgdxtb1G0TyL7Y4ZD+T
+	 +wxIg8OB52XK6qT2YaiWhg4pgE67N9YOb+fgPbW3jW2Wz31fO5k/xCRpTLktRIop/i
+	 UcYE/GzIKe5Ig==
 From: Yao Zi <ziyao@disroot.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -66,9 +66,9 @@ Cc: linux-pci@vger.kernel.org,
 	Jonas Karlman <jonas@kwiboo.se>,
 	Chukun Pan <amadeus@jmu.edu.cn>,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 1/3] dt-bindings: PCI: dwc: rockchip: Add RK3528 variant
-Date: Thu, 18 Sep 2025 15:30:55 +0000
-Message-ID: <20250918153057.56023-2-ziyao@disroot.org>
+Subject: [PATCH v2 2/3] arm64: dts: rockchip: Add PCIe Gen2x1 controller for RK3528
+Date: Thu, 18 Sep 2025 15:30:56 +0000
+Message-ID: <20250918153057.56023-3-ziyao@disroot.org>
 In-Reply-To: <20250918153057.56023-1-ziyao@disroot.org>
 References: <20250918153057.56023-1-ziyao@disroot.org>
 Precedence: bulk
@@ -79,53 +79,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RK3528 ships a PCIe Gen2x1 controller that operates in RC mode only.
-Since the SoC has no separate MSI controller, the one integrated in the
-DWC PCIe IP must be used, and thus its interrupt scheme is similar to
-variants found in RK3562 and RK3576.
+Describes the PCIe Gen2x1 controller integrated in RK3528 SoC. The SoC
+doesn't provide a separate MSI controller, thus the one integrated in
+designware PCIe IP must be used.
 
-Older BSP code claimed its integrated MSI controller supports only 8
-MSIs[1], but this has been changed in newer BSP[2] and testing proves
-the controller works correctly with more than 8 MSIs allocated,
-suggesting the controller should be compatible with the RK3568 variant.
-Let's document its compatible string.
-
-Link: https://github.com/rockchip-linux/kernel/blob/792a7d4273a5/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L1610-L1613 # [1]
-Link: https://github.com/rockchip-linux/kernel/blob/1ba51b059f25/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L904-L906 # [2]
 Signed-off-by: Yao Zi <ziyao@disroot.org>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 56 +++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 6c6d828ce964..67f1a5502048 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -22,6 +22,7 @@ properties:
-       - const: rockchip,rk3568-pcie
-       - items:
-           - enum:
-+              - rockchip,rk3528-pcie
-               - rockchip,rk3562-pcie
-               - rockchip,rk3576-pcie
-               - rockchip,rk3588-pcie
-@@ -78,6 +79,7 @@ allOf:
-           compatible:
-             contains:
-               enum:
-+                - rockchip,rk3528-pcie
-                 - rockchip,rk3562-pcie
-                 - rockchip,rk3576-pcie
-     then:
-@@ -89,6 +91,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - rockchip,rk3528-pcie
-               - rockchip,rk3562-pcie
-               - rockchip,rk3576-pcie
-     then:
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+index d5f8f7b9bf01..d402f2828814 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rockchip,rk3528-cru.h>
+ #include <dt-bindings/power/rockchip,rk3528-power.h>
+@@ -278,10 +279,63 @@ gmac0_clk: clock-gmac50m {
+ 
+ 	soc {
+ 		compatible = "simple-bus";
+-		ranges = <0x0 0xfe000000 0x0 0xfe000000 0x0 0x2000000>;
++		ranges = <0x0 0xfc000000 0x0 0xfc000000 0x0 0x44000000>;
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 
++		pcie: pcie@fe000000 {
++			compatible = "rockchip,rk3528-pcie",
++				     "rockchip,rk3568-pcie";
++			reg = <0x0 0xfe000000 0x0 0x400000>,
++			      <0x0 0xfe4f0000 0x0 0x010000>,
++			      <0x0 0xfc000000 0x0 0x100000>;
++			reg-names = "dbi", "apb", "config";
++			bus-range = <0x0 0xff>;
++			clocks = <&cru ACLK_PCIE>, <&cru HCLK_PCIE_SLV>,
++				 <&cru HCLK_PCIE_DBI>, <&cru PCLK_PCIE>,
++				 <&cru CLK_PCIE_AUX>;
++			clock-names = "aclk_mst", "aclk_slv",
++				      "aclk_dbi", "pclk",
++				      "aux";
++			device_type = "pci";
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "sys", "pmc", "msg", "legacy", "err",
++					  "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc 0>,
++					<0 0 0 2 &pcie_intc 1>,
++					<0 0 0 3 &pcie_intc 2>,
++					<0 0 0 4 &pcie_intc 3>;
++			linux,pci-domain = <0>;
++			max-link-speed = <2>;
++			num-lanes = <1>;
++			phys = <&combphy PHY_TYPE_PCIE>;
++			phy-names = "pcie-phy";
++			power-domains = <&power RK3528_PD_VPU>;
++			ranges = <0x01000000 0x0 0xfc100000 0x0 0xfc100000 0x0 0x00100000>,
++				 <0x02000000 0x0 0xfc200000 0x0 0xfc200000 0x0 0x01e00000>,
++				 <0x03000000 0x1 0x00000000 0x1 0x00000000 0x0 0x40000000>;
++			resets = <&cru SRST_PCIE_POWER_UP>, <&cru SRST_P_PCIE>;
++			reset-names = "pwr", "pipe";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			status = "disabled";
++
++			pcie_intc: legacy-interrupt-controller {
++				interrupt-controller;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 155 IRQ_TYPE_EDGE_RISING>;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
+ 		gic: interrupt-controller@fed01000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x0 0xfed01000 0 0x1000>,
 -- 
 2.50.1
 
