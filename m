@@ -1,123 +1,157 @@
-Return-Path: <linux-pci+bounces-36406-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36407-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F8C9B8395C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 10:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F1EFB83B18
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 11:09:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99901622E46
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 08:49:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F08C721B5D
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 09:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23D32FF141;
-	Thu, 18 Sep 2025 08:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X9M8txaz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F0182F6167;
+	Thu, 18 Sep 2025 09:09:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89CB2F5315;
-	Thu, 18 Sep 2025 08:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC92FE592
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 09:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758185333; cv=none; b=AU39NZtRFIapcGxKIbseoRh4zKgjjzbhGc4LLSYrSccmNe8SAoy0C+0M1eu6eUSeQzczQpaZVQi+nGWipCvuJ4kSt/DhJfUQ7vREejKVWRGQGolWAwmh4Y7vDz5Dj1rFzUYAX1kZYDNgmcat4R5NfIgOKUVn9d1fYH7ivaVCl1o=
+	t=1758186569; cv=none; b=SFabdixYDMGJDlV+O05MdEzcwJCXZvLAeFLf02EmqjL0dTN+mOepizT5DPvxFy4e8pyWZ2e9SjyQAuSI8NUgeWKZY/giMDZFBRWNlrgpLagXfDDYZnQyZC5vh8+3cY8Tpef8lptO2iCpO71pV3uJe+MFmciTeLj8OykFHR3+C04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758185333; c=relaxed/simple;
-	bh=HXWQdDsbefm3PuZ+d8+OcEN8g08SGDzBtWifzKKgjfo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KShBCuzSSnHkqeXi5gEuGKkyFwxFIySbZ/q1VM0SV4vfKP8Kfj1ycAAoGT2etaTjSl4pJOgEC8/pu6G/ZZk0HpHr3hHlmykneWNHQ71Oy3xD4s7WqLxAySLHu2UQwBInBccOply/bWIbt/Ro0A5ji3Ki3N4B6jusiyQoH0iiI3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X9M8txaz; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758185332; x=1789721332;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HXWQdDsbefm3PuZ+d8+OcEN8g08SGDzBtWifzKKgjfo=;
-  b=X9M8txazkEZLRdtgk8odGIyYI4UoGnwY/3q/38Myfg9pssvI0JuS1OxK
-   NUNZfk86dTY/K3HDHwEBpxa0gO9XRPuvNP4GjMmhwuHg6xS1vo5pnMaPm
-   MPqaoKiS6KkKP52K8tqpl7CCfZAikYk/m8dH++2t1kMXWLu680zBcLSkL
-   SjNqN73OHdtdnzP/rvSIwwkcmjaCSgiKGfN3JhobKe4FeUuF9oeHV/uBA
-   x3je00QFd4tagpoGy2/jycvj3X5B/YmJSnmtgMZQxGDGRzKkakckwUudi
-   hdH76uC+y/LNn24+7UvkocKq1bZCjekzeHHcW6W9VfD0fMknAXmkKCSqR
-   w==;
-X-CSE-ConnectionGUID: JBhropZsSLe2OkTLpPKr/w==
-X-CSE-MsgGUID: m5n53isDT3izRBQgs6hSjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11556"; a="64325708"
-X-IronPort-AV: E=Sophos;i="6.18,274,1751266800"; 
-   d="scan'208";a="64325708"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 01:48:51 -0700
-X-CSE-ConnectionGUID: tbd38+u4TguQK4ophI7O3w==
-X-CSE-MsgGUID: 8PsEr+wrTFS4EOzBGuQ9wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,274,1751266800"; 
-   d="scan'208";a="175404818"
-Received: from indlpbc065983.iind.intel.com ([10.49.120.87])
-  by fmviesa006.fm.intel.com with ESMTP; 18 Sep 2025 01:48:49 -0700
-From: George Abraham P <george.abraham.p@intel.com>
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	giovanni.cabiddu@intel.com,
-	George Abraham P <george.abraham.p@intel.com>
-Subject: [PATCH] PCI/TPH: Skip Root Port completer check for RC_END devices
-Date: Thu, 18 Sep 2025 14:19:40 +0530
-Message-Id: <20250918084940.1334124-1-george.abraham.p@intel.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1758186569; c=relaxed/simple;
+	bh=oA78+Hc2QsigW6eOAwWharYmhHBJia9T9YFq3+h/+4Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kfHJBqpoDpbd6dYyD6nPHdueJhD5og5YcOHgvXdsOnIZ7qWwL5+8R3KJFu4buMIZzeBypABrumxeUHQtfDWY7P8WhLSZC9FwKksWh5bez9pbtXnr2LEwc8zwEiPxdAegmntzZg7lVvcwxaZ4HcN0+PH3r05+LdPyKbHK1b2cNVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-54a786ed57cso386726e0c.3
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 02:09:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758186566; x=1758791366;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BUI3LMEUjKeaMro6VS1cwSeOA9TFMizFtGUUlwJmP8Y=;
+        b=rkq2KBmJbKiOOx8Uin0+4BQQiWpyvUWw8ezWD8QnD2Guyt3q+AvzMmLZDrhEDrp8qY
+         NpmaMTwro6VZkc2PGw4qayK01MigBtsaOjIM8Ktkxm+95NOuGIu1Kr0sZx9U/Jy3dhvc
+         AhOChEGAxMe19waCpgeFnCkncN2iYWgdmwT60OpuCEb8KO83rZWTrX36S3MYGnTGdfnv
+         is9NJmXlPNESzGke5us3XZP+mQhNe8/1LmrtRihdojknGjC/tWOd0+kgguQKJZcgxcUy
+         ZtiA9yzQPxOabWuQyj6Hmrsh8EZppClrCYx7b61iMIVfIJFVCDYLb7WeAsC9IYxD0vEC
+         PBqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpJVnopk9mxdcAU33XMn6DTjVfZ++MBtLz/gpSt5uROD0c2jFZMowdSSGV7OJGZjbeJSnIvKihpos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNCpO1i/iw7oVnucNHS5JfMETVkQR2xDuq0Bh9Bx7XqWCVs9WM
+	IxnRgE4Ubvj744M1ZuYUnkira7at+WB9qIJRdBMXrix/mNGFxXObI0y4KGVDmC4p
+X-Gm-Gg: ASbGncuoxlT/ny3WZp5PCwkv9DnsNSUNxpSFf+BbxsGTWclzsjTKQ5C0KltkVf/hybE
+	puEorRwMhui55EZ7vm7pD3lVYhT9GViT4+gufbrh1TNQIOph7nK4BT1eXGqU6E1J7aSUZBUwxHS
+	cw3lUXyqrOV1TiSn9O0J6ylPAJvCjsH2axli/qhzP8n8oAu96zeYsXl8fYPF9ygN89fCh1GpTYR
+	vgMGEyiTkyivXNCMAMvbIqENFsh69sTlYJ7jMVzqm+r5/R/nM1D2fVajigyVki4w/ncaHJ326TW
+	zWwK2OUJhpk/ySKg0x8OCmBr8Np4wUK7NMV1YFNnA9TUCcMzrBfYisd2k1c4LOHAyoh1jISA7Xq
+	Pni40A30RNqCgQEmYDk6BaKrkAh2RcrraJXrVKcq1IpNGC+B5ODaaEneiAXev2cxbn4S/yuOnGW
+	JGcZc=
+X-Google-Smtp-Source: AGHT+IEwP7/FM4NjrYkL95e97j+uRUYhLAu4UOEAOwxG5FcJh8+sqM/3tNmqervRmXZFLIbLfqOfOA==
+X-Received: by 2002:a05:6122:4698:b0:544:b2fb:d9f4 with SMTP id 71dfb90a1353d-54a608eb7fbmr2152931e0c.4.1758186566050;
+        Thu, 18 Sep 2025 02:09:26 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54a729744fbsm424305e0c.18.2025.09.18.02.09.25
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Sep 2025 02:09:25 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-552d3a17a26so219112137.2
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 02:09:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPRaxNIIK5VJx4SSCZjDBoYji9cX5GGt0zsOzFAt1ggfPgQQ8dP1ZW7n4i2JPPnUy0sYEW69TBXCA=@vger.kernel.org
+X-Received: by 2002:a05:6102:6c7:b0:4fb:fc47:e8c2 with SMTP id
+ ada2fe7eead31-56d5088a6e8mr1645890137.9.1758186565181; Thu, 18 Sep 2025
+ 02:09:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com> <20250912122444.3870284-5-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250912122444.3870284-5-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Sep 2025 11:09:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com>
+X-Gm-Features: AS18NWCGAnZ0XCOYl-nrDkcvcpM1hNQPPeX1PmUWoRk02X3Ow_sZmQjL_oQhdiM
+Message-ID: <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: renesas: rzg3s-smarc-som: Update
+ dma-ranges for PCIe
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Root Complex Integrated Endpoint devices (PCI_EXP_TYPE_RC_END) are
-directly integrated into the root complex and do not have an
-associated Root Port in the traditional PCIe hierarchy. The current
-TPH implementation incorrectly attempts to find and check a Root Port's
-TPH completer capability for these devices.
+Hi Claudiu,
 
-Add a check to skip Root Port completer type verification for RC_END
-devices, allowing them to use their full TPH requester capability
-without being limited by a non-existent Root Port's completer support.
+On Fri, 12 Sept 2025 at 14:24, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The first 128MB of memory is reserved on this board for secure area.
+> Secure area is a RAM region used by firmware. The rzg3s-smarc-som.dtsi
+> memory node (memory@48000000) excludes the secure area.
+> Update the PCIe dma-ranges property to reflect this.
+>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-For RC_END devices, the root complex itself acts as the TPH completer,
-and this relationship is handled differently than the standard
-endpoint-to-Root-Port model.
+Thanks for your patch!
 
-Signed-off-by: George Abraham P <george.abraham.p@intel.com>
----
- drivers/pci/tph.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> @@ -214,6 +214,16 @@ &sdhi2 {
+>  };
+>  #endif
+>
+> +&pcie {
+> +       /* First 128MB is reserved for secure area. */
 
-diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-index cc64f93709a4..c61456d24f61 100644
---- a/drivers/pci/tph.c
-+++ b/drivers/pci/tph.c
-@@ -397,10 +397,13 @@ int pcie_enable_tph(struct pci_dev *pdev, int mode)
- 	else
- 		pdev->tph_req_type = PCI_TPH_REQ_TPH_ONLY;
- 
--	rp_req_type = get_rp_completer_type(pdev);
-+	/* Check if the device is behind a Root Port */
-+	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END) {
-+		rp_req_type = get_rp_completer_type(pdev);
- 
--	/* Final req_type is the smallest value of two */
--	pdev->tph_req_type = min(pdev->tph_req_type, rp_req_type);
-+		/* Final req_type is the smallest value of two */
-+		pdev->tph_req_type = min(pdev->tph_req_type, rp_req_type);
-+	}
- 
- 	if (pdev->tph_req_type == PCI_TPH_REQ_DISABLE)
- 		return -EINVAL;
+Do you really have to take that into account here?  I believe that
+128 MiB region will never be used anyway, as it is excluded from the
+memory map (see memory@48000000).
 
-base-commit: c29008e61d8e75ac7da3efd5310e253c035e0458
--- 
-2.40.1
+> +       dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
 
+Hence shouldn't you add
+
+    dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
+
+to the pcie node in arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+instead, like is done for all other Renesas SoCs that have PCIe?
+
+> +};
+> +
+> +&pcie_port0 {
+> +       clocks = <&versa3 5>;
+> +       clock-names = "ref";
+> +};
+
+This is not related.
+
+> +
+>  &pinctrl {
+>  #if SW_CONFIG3 == SW_ON
+>         eth0-phy-irq-hog {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
