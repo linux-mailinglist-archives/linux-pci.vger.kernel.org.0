@@ -1,149 +1,188 @@
-Return-Path: <linux-pci+bounces-36410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03C55B83EC4
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 11:54:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03B5FB83F24
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 12:00:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7DF134E1B9C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 09:54:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3380B2A8665
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 10:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223982C026D;
-	Thu, 18 Sep 2025 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSIodTy7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC79A24167F;
+	Thu, 18 Sep 2025 10:00:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D70274B37
-	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 09:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF482773F0
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 10:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758189282; cv=none; b=rMa2nNKscKaVhZ4IQgqeypU9+m9Ss14JcYB4c54U9wWqgAge3+hWMTwNh2rToH4F5RhybSldFt3rO7CWVvwJu13VouyP6h2LMnUljEq0d0guI9zxJPVwc7oA75isK1Uh+5q5Bq0JUvW3spFlID8aS3NwCpnml/P4MoOfNdB33po=
+	t=1758189621; cv=none; b=Tu0OG7PTXYz7tkpLzpPP5EAbjyn/YFAw64Hj3MXX6bqzUevPEHOr6pmNLhvyaAdJRD2381bcAajbgvJMQW2dtB9KUsuHpvej9A/qDpve6J08oMXiV55LdzSWK2195eTqSUW1Ysa3wjTLbueOGmwYB/fSBaBtYWvWom0IVO0Mgco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758189282; c=relaxed/simple;
-	bh=HvpH/we1i8j6YDiaciJy38Drhc0hF4JJPv6YA9NqLZQ=;
+	s=arc-20240116; t=1758189621; c=relaxed/simple;
+	bh=/OBhn+PWMDqXGRrapAeq9Q3SvZxxEYXxE4Nz5bqD3Xo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=enGmXhjInbry05gTSTwU8eNt+Vz2IHMfoO/PegYdTcHJIMrPlNaA6ts0/1jyLbLPvFdFZcrXcPufQPzCjP19sgmQzpdz40DId4Oa9dgSmZEip43vxMs4GhPkgIsf8bBkqW8SbMwnKva5h3QOQn0wbOJsPnjWyzVC4t5J+bC5S+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSIodTy7; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-62fa99bcfcdso664892a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 02:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758189279; x=1758794079; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uhf87DrC/GqYd1AzAwWRkEB5wkIeXkNvqHSQcwwy4Q=;
-        b=WSIodTy7iljYjesgsd6VPAkcROQzsgZ21/VGGHsoiRHyTWb5zCr1Iyfj+hfhTF8jZU
-         8YIyVi8SXNvVO9xjIzBkfaOCiOAe600uuckRekGwOAiOtM/RqjWimK5929zZmDek7lfc
-         iRn3vg5RsqZj3XPT2D9oQ8oZ0saHPhxL+LKdJ1EmdDOvRztrynueKcLBkec/9kAUVflY
-         5Ns1DtCvxmK2PiVD/7oyDuo3gd+4bmJqQCcnouqYoekAvQ6/1nWJAXSru6KXgrLbLIEC
-         FrFu9FyHwpqGrM2XEOvfNCTEQqLL6TOd6aep1pKJVOw1L0UG2UyRjg2I8ZP4MI0fjQWT
-         ly6A==
+	 To:Cc:Content-Type; b=QM8HvjAuyk2Vtk/kPwrBIWqLsBoZnOWZKfpf24d+TE7A9ld6fmxHfrxBNqLxzulWFRFXe1sjuQjuUKw3nbByqHFlCA5XyiYP1L4kZCyDmslaZAyaZxVxpEdlLcsEVMkUivDI/ZN0inN2AeLXUlSr5cq+c7uU9aPjDRhQDT4N3rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-890190d9f89so461239241.2
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 03:00:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758189279; x=1758794079;
+        d=1e100.net; s=20230601; t=1758189617; x=1758794417;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3uhf87DrC/GqYd1AzAwWRkEB5wkIeXkNvqHSQcwwy4Q=;
-        b=mq8fYfgz2e1HA6yBKtp2jhNNelD21kQ1xG08XyWP/MIs936xbjKqx2JZuN3Xa/L2b2
-         pNH6RypuZ3T2XYIZwfrHpJ38KFg56T/a/V0D8HJYQajvP1fWRZJVySy3+hH8mM+PizmA
-         bNTidAr2FU04N7GuXaoZPdDwTpikLkVPJWEmGYzwKGvqXjJMF/z7OOAC7LhH0YuRAdjr
-         V3nQhxllndQnNnpOf03DgQV1qLoHI/AICV14D+SQwK8yr2x72WlLw39rC5uwE3X53jF8
-         q/ljchXpqiySv7EeUjBI6Q3WSW3o5TA46QpN/QgVs6wsVEE47I/XnSfCL3SH117522zy
-         WpRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5gRtdLNDscBUA3WqgWwHJFUhXtU9Qiq2rUd8F5E8C8jCBiDp8xVLEnEnAzT0oPkzMbH+r1rBK2PQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9zRfgU/vKtM+dpav1HgKKRbu7HN8vPVobNEizwb8ZYyYvJAV5
-	TmWWEWqC67+XvSvejdvSYBd8F5IugmTknpJOMEbg4PpXKdqsgJBRnywxTW+d/6S+tW1l7qwIs1q
-	nwA/EsjSmEqbxDUOaV5CgULRsLDkyhHb/oNsriNSgPA==
-X-Gm-Gg: ASbGncsK147P0qtLkPdt1aaF0CuFZ+09oCN+qS36xs05PnBlVWjmsSfF8gQaAtaROqL
-	wN5dxCvHpBmaSmUNYpj4nR1BdVwiB1Z6yP10LEjt8ja1BdHNACqFptDsl+/cmFY6uBrs9EcoU+h
-	Fgfd/6yG5G95ttDgXftZzKZ+VprhFniFBbtpQfBa4lPlAIKZwzZjhHWI6/0LjmMDLDph764o12Q
-	1GE1CMNjtE2fs/PN7SDqyvB4XsFw6YmWaxcvouGAQHjP4CuqEC0
-X-Google-Smtp-Source: AGHT+IE1zmv9oHlYf6BUBNOW+SUyz6ajjYN0b3+2pAlc66/NC3KjbbHlv5KbLza2QpbO9MoNOwx3daqo5CZgA0JV3IY=
-X-Received: by 2002:a05:6402:2115:b0:62f:7968:e1ca with SMTP id
- 4fb4d7f45d1cf-62f84798527mr4551388a12.38.1758189278612; Thu, 18 Sep 2025
- 02:54:38 -0700 (PDT)
+        bh=heq3/GupfVYfNfyXxVtKecyYAD/tIXHJ4nXkThDhTOc=;
+        b=HDLEbdhIl5L3GyHJ2H3a7hQbFkHuPg/yLLWGoSuoFFg/W7l1WTu60TcUJdJRRIQvqs
+         r62Rri09ASgJbfnfgGEGl0ZTu212U9MAoSRCH14Prqu4JJaQxbQBYwPzR12DNHpYkzR5
+         0act1cxMMKM0oskasDMnljvJvqrOtBGOVKxK+/pYM/ZNUMNZlAlQOzSg/c2+z3sX2mi+
+         8bqLmwpoihiKlms9Nz3/Q9UtaSeWKLXTKsedvHaAUq3acsC78lvnNI1dURTBKpVZd5Qh
+         2XYFQcaboVJ23NcgrmrjWWqPll4uvyg06phvVr3RH9UB9IshstrCU1IVSHBCa/hDdyzi
+         GPmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdTbul5HS51E/9tiUysuNpMFlJ8hFHmiqE2wSVQ4Xfi69PaoFgYQgxSP91H2DywFBnPVOzPIbrcys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRtyVLTxMJkusSwhYU4L+OvDNR7oePP4JJV07Nd4gxYDm6ycK4
+	NJdM4nx8kusqrZUVGFQEkSiY+Fhf52vRnEmmCcAn8SbFfU1lbtbyNzl4R6CY5bQU
+X-Gm-Gg: ASbGnctpO4jEBqCt+D9DUzgHtjuyQ85UNxErptLfmq9XeHxUl0N93/MQmnt3ae6uzUx
+	hoGZyyiu0n8RAwcTfbj2c3IPzIzOcr3YRHKg9AEtElqKrItPeht7U1sQ/FSqiVMVg7Is+wjHOE4
+	OVCz7NU56IoZ4xGEhLUhV+vzMcmTVJWmPEZfSHW9SV2ST+DYn6/SkxY0qtNQE2H48Tu/C3Kvrno
+	KN5weoFLULQHtmvZHTjMigiA0VTTPQKcRQ0S7ZgdpOvfY8BpM7itAKlp2Vs/x9EksaMtAnuBUmp
+	tpo5/8MHGGfhlST8cfspwlaI8qd0esYOhTjp9l0JqyaxBMs9QHl7tLQuvv3jheDnymaiN1X4Lj6
+	jSihcB2u4ZO54KH2gCGJKweGKNNmCPoIl3aRL3EwmF6sTitlNvt8Bsg1d6HKdxdIpXvhuEiv9+2
+	eKsxU=
+X-Google-Smtp-Source: AGHT+IHIJNIE5vAX5DyMmNyWlNb7cC3XFdk5zeq42O1xJIYlrh/rIjxWjJ+1xLtFYFd6eYA3K8r8Jg==
+X-Received: by 2002:a05:6102:2d06:b0:521:f2f5:e444 with SMTP id ada2fe7eead31-56d62acfc75mr2511319137.17.1758189617451;
+        Thu, 18 Sep 2025 03:00:17 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-579dd9085d6sm512625137.4.2025.09.18.03.00.16
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Sep 2025 03:00:17 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-552d3a17a26so231591137.2
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 03:00:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXk50+YoJhfW0z+VXKkD7yFFgBejkz/oaBfJdHRTsLPup2x1XjvNXrI/su1w+viM2mcax+lSoTZvo4=@vger.kernel.org
+X-Received: by 2002:a05:6102:5e89:b0:520:ec03:32e9 with SMTP id
+ ada2fe7eead31-56d4ca46b90mr1938216137.3.1758189615787; Thu, 18 Sep 2025
+ 03:00:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e236uncj7qradf34elkmd2c4wjogc6pfkobuu7muyoyb2hrrai@tta36jq5fzsr> <20250917212833.GA1873293@bhelgaas>
-In-Reply-To: <20250917212833.GA1873293@bhelgaas>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 18 Sep 2025 11:54:26 +0200
-X-Gm-Features: AS18NWDHkrQ8kASDtWOuxujVdqn0GrRUTOJ77F2So0WyDmX2EIKvc-v29xTUv-g
-Message-ID: <CAKfTPtCizQ7nk3P4Dzi6uFewH5GcAnMakMt5=bK-Ykayp3t7XQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: pcie: Add the NXP PCIe controller
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, chester62515@gmail.com, 
-	mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com, 
-	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com, 
-	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250912122444.3870284-5-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com> <c2fc5f6b-0e7c-464e-89a6-35dc76177d18@tuxon.dev>
+In-Reply-To: <c2fc5f6b-0e7c-464e-89a6-35dc76177d18@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Sep 2025 12:00:04 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWeHoUe-=7TDetnDQbLQsKGf4pDGpSdz3xEVLs_Rst9qQ@mail.gmail.com>
+X-Gm-Features: AS18NWA7yJuM6P3qfqTjc7fj_WIPx-OpKuRx0s7hlxrQZNP3abmLA3cANYn1ePk
+Message-ID: <CAMuHMdWeHoUe-=7TDetnDQbLQsKGf4pDGpSdz3xEVLs_Rst9qQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: renesas: rzg3s-smarc-som: Update
+ dma-ranges for PCIe
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 17 Sept 2025 at 23:28, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Sep 17, 2025 at 10:41:08PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Sep 16, 2025 at 09:23:13AM GMT, Bjorn Helgaas wrote:
-> > > On Tue, Sep 16, 2025 at 10:10:31AM +0200, Vincent Guittot wrote:
-> > > > On Sun, 14 Sept 2025 at 14:35, Vincent Guittot
-> > > > <vincent.guittot@linaro.org> wrote:
-> > > > > On Sat, 13 Sept 2025 at 00:50, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Fri, Sep 12, 2025 at 04:14:33PM +0200, Vincent Guittot wrote:
-> > > > > > > Describe the PCIe controller available on the S32G platforms.
-> > >
-> > > > > > > +                  num-lanes = <2>;
-> > > > > > > +                  phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
-> > > > > >
-> > > > > > num-lanes and phys are properties of a Root Port, not the host bridge.
-> > > > > > Please put them in a separate stanza.  See this for details and
-> > > > > > examples:
-> > > > > >
-> > > > > >   https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
-> > > > >
-> > > > > Ok, I'm going to have a look
-> > > >
-> > > > This driver relies on dw_pcie_host_init() to get common resources like
-> > > > num-lane which doesn't look at childs to get num-lane.
-> > > >
-> > > > I have to keep num-lane in the pcie node. Having this in mind should I
-> > > > keep phys as well as they are both linked ?
->
-> > > Huh, that sounds like an issue in the DWC core.  Jingoo, Mani?
-> > >
-> > > dw_pcie_host_init() includes several things that assume a single Root
-> > > Port: num_lanes, of_pci_get_equalization_presets(),
-> > > dw_pcie_start_link() are all per-Root Port things.
+Hi Claudiu,
+
+On Thu, 18 Sept 2025 at 11:47, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 9/18/25 12:09, Geert Uytterhoeven wrote:
+> > On Fri, 12 Sept 2025 at 14:24, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> The first 128MB of memory is reserved on this board for secure area.
+> >> Secure area is a RAM region used by firmware. The rzg3s-smarc-som.dtsi
+> >> memory node (memory@48000000) excludes the secure area.
+> >> Update the PCIe dma-ranges property to reflect this.
+> >>
+> >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > >
-> > Yeah, it is a gap right now. We only recently started moving the DWC
-> > platforms to per Root Port binding (like Qcom).
->
-> Do you need num-lanes in the devicetree?
-> dw_pcie_link_get_max_link_width() will read it from PCI_EXP_LNKCAP, so
-> if that works maybe you can omit it from the binding?
+> > Thanks for your patch!
+> >
+> >> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> >> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> >> @@ -214,6 +214,16 @@ &sdhi2 {
+> >>  };
+> >>  #endif
+> >>
+> >> +&pcie {
+> >> +       /* First 128MB is reserved for secure area. */
+> >
+> > Do you really have to take that into account here?  I believe that
+> > 128 MiB region will never be used anyway, as it is excluded from the
+> > memory map (see memory@48000000).
+> >
+> >> +       dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
+> >
+> > Hence shouldn't you add
+> >
+> >     dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
 
-num-lane is not mandatory but we can have 1 or 2 lanes so should be
-able to restrict to only 1 lane for some platform
-the "num-lanes = <2>;" in the example is wrong as we don't need it in
-case of 2 lanes but only if we want to restrict to 1 lane
+Oops, I really meant (forgot to edit after copying it):
+
+    dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0x0 0x40000000>;
+
+> >
+> > to the pcie node in arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> > instead, like is done for all other Renesas SoCs that have PCIe?
+>
+> I chose to add it here as the rzg3s-smarc-som.dtsi is the one that defines
+> the available memory for board, as the available memory is something board
+> dependent.
+
+But IMHO it is independent from the amount of memory on the board.
+On other SoCs, it has a comment:
+
+     /* Map all possible DDR as inbound ranges */
 
 >
-> If you do need num-lanes in the binding, maybe you could make a Root
-> Port parser similar to mvebu_pcie_parse_port() or
-> qcom_pcie_parse_port() that would get num-lanes, the PHY, and
-> nxp,phy-mode from a Root Port node?
+> If you consider it is better to have it in the SoC file, please let me know.
+
+Hence yes please.
+
+However, I missed you already have:
+
+    /* Map all possible DRAM ranges (4 GB). */
+    dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0x1 0x0>;
+
+in r9a08g045.dtsi, so life's good.
+
++
+> >> +};
+> >> +
+> >> +&pcie_port0 {
+> >> +       clocks = <&versa3 5>;
+> >> +       clock-names = "ref";
+> >> +};
+> >
+> > This is not related.
 >
-> Then all this would be in one place, and if you set ->num_lanes there
-> it looks like the DWC core wouldn't do anything with it.
+> Ah, right! Could you please let me know if you prefer to have another patch
+> or to update the patch description?
+
+Given the dma-ranges changes is IMHO not needed, this can just be
+a separate patch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
