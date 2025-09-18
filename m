@@ -1,147 +1,126 @@
-Return-Path: <linux-pci+bounces-36430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36431-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21AACB862CD
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 19:13:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD282B86542
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 19:54:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A73BA1765BA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:13:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E9063B2176
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AB231327C;
-	Thu, 18 Sep 2025 17:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C2D28135D;
+	Thu, 18 Sep 2025 17:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmjBQyS3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlXv59gI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9782641C3;
-	Thu, 18 Sep 2025 17:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760AC2820CB
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 17:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758215614; cv=none; b=kF6mc1kSwQrAwHyngNKTg/bTyTiDgTrO9r3mqVmAocNlD4pKawX30DSYiE368TJeDNtveHKijTXo86r7iLKsY3hEkVO2ElIXFWLBv4uFS9QzhJgbABvusCzwKI6FgVtxzkVWyKAShZGQoabNh40/MuWWroc12PP6srSookWD+G0=
+	t=1758218076; cv=none; b=PbbWeq/myFHpNsXM5vEw0kz+A7gu+rDQJCq6/4KpASVgY+wbM9BC02eHUhX5MY5iOceXesfy6vb8Z+az/Hl2abfVUQXvs2iyiXfOyvB7vwaN3oiPjynFHD9sxHUqOe9ROU85nFcUwC8KcIbaE6EQbB8/MgZhxHmNN3gdMq1F31I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758215614; c=relaxed/simple;
-	bh=k5kPnZBeAnA3V1Ui5siLTtPQXO0de+C8LUAH7bGc7Sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mdZnm93gH2zPzEYYj+jLxs2pYlgiM48Sm2DiZAauZHQrhd4qr0/BSJQ18Fi3RPWicpa6tkBTT1ICv4kSdC1ph4Yw0FDAIZI/9Rwzw9UFxpzH4fHgQfGvl0rgT9eOYbzRB8Z0OJCGbZke5l7bKefpkGwx5Q4flv1BvvNAmpTWYjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmjBQyS3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798F1C4CEE7;
-	Thu, 18 Sep 2025 17:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758215613;
-	bh=k5kPnZBeAnA3V1Ui5siLTtPQXO0de+C8LUAH7bGc7Sg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DmjBQyS34U8zBIkv1MVRiTPrhnpH3Bx5xOadfZIEruV+n59yEJPKqHakZbw2DmFkk
-	 mTTv0VYIUXaSoTj7hNDwnG5XbZlaV03D+T21+nmzjbyCib8ULtwpLpvBB/wGWWMlgN
-	 i+hIHC52YWCW7BwbKW0j7kRWfE6q0WJ+hVnPbeYPcy4IrExDled+6BlkvEIG1+hilT
-	 i8gnvIgvq/DJKvllurrgS9eD95Sar5LVsPUhyh4klElnn91Wj4/d1Pch5Z0dXcptIs
-	 twPNzSc1irAE2nDcq9Y3S+LZxSaXxrX9ohbD4jgCTESOP4nnC8EJnkbVjqXP/ssi/E
-	 pmK6+s12BgQyA==
-Date: Thu, 18 Sep 2025 12:13:31 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org,
-	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v2 1/2] dt-bindings: PCI: eic7700: Add Eswin eic7700
- PCIe host controller
-Message-ID: <20250918171331.GA1911330@bhelgaas>
+	s=arc-20240116; t=1758218076; c=relaxed/simple;
+	bh=pyu+PEknQKVBR7WM+1Odw7v7Lj38JV9BuP14vt2oyn0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=c+jAowp98G3A8fHmkbzOYDYHNJAWM2fJ4maruoZfEtOFGGarhz4azyg2F1dlADxHw/TrJ3lIwci3H3ejPF35+zK2ft/agypQ8Zgtqv6B07GLXtILs+ujIMQHV9zJGZfXagJBOkf8MIU7OcbOaNeQcOB1ktkUmFKtsfHpWoGJ02I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DlXv59gI; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-336dd55aae1so11981331fa.1
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 10:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758218073; x=1758822873; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pyu+PEknQKVBR7WM+1Odw7v7Lj38JV9BuP14vt2oyn0=;
+        b=DlXv59gImnQFLcoeqPcuwSBAwgPT6KtnnkHeJeN0SoIly8nTOK/EmYmHhs0FW/FH/0
+         Q/e7qMPH9neA5U58EarKZMBeGU2HJ2guug16OhAL3NlCexqUSjzzdAzKUKccNVHONXDa
+         ngDGKj3EmiN/9AtmQ65b+XtIcM/aplGayAJslOrG7p59D/gCdwgqZ+YIovg/rJ8Ej+QX
+         w0h3nO1KKmfXhiERmW+5qQ6h4VAWFaxa+x4mJWRv2YP8wbwcG1PLZ4K/jHzgCDGghBsJ
+         NpkgQg7txZidFnMjb00zWiPK4+UkkzOMWQ77MSmYnKkehLlPEDfsYXn/Cc/nK+Mrt/RK
+         2zVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758218073; x=1758822873;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pyu+PEknQKVBR7WM+1Odw7v7Lj38JV9BuP14vt2oyn0=;
+        b=UwEeGbrobOt42ntQjzKIuJqcj38GK9xD9cwJSS31fV7khn7jlquqgr/D8uWAtTqacr
+         7061LJXB7CJzQFVX6wqoh2v9+4liW8lCFih3rDBv8Sl96ETxWqq8qbeX++JV6VPsyUye
+         Mqb7yZBqcC62rTbjLZsAnn6/u/XNmGOrMYUk2FOCjBk03ugochqzWqbbwf4orpV8ZMqT
+         FDEeDOjn4x2JTxUPPdj+pSBsEl7U89mJRImXHCa4+kD/g9iff+vSVwj3desI+81DldtO
+         tnfhBRz9XEolshEr5YdZ/zWyLHN2flsLSp7JX/dySWINjYAhXdrm/xkohU3qEN36/B1k
+         z/Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVMNwLwJyDeOwq+ZX3krwENn+8gZfC+GLdnlHU0uwLIoqqC+Od6OP27lWe2wRe40IYe2QvAInTp6V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuJkAYVmU35VoS9DfRvW+7E5xR36iPcqAXViAEqNLBVyf0C3pK
+	E1suFay6KLgyY7+cEb9qkCixM+stxahD/mB9UyF6wD7/77iXjR4KZ9CFDGVjufA4YDNZTUyc+LM
+	bgvgAIJWKc8sBAxLYP/GWhI4FUPWjBei1Zg==
+X-Gm-Gg: ASbGncsvgOM4x15ZoPJ+Mm6jgmKJRfT9MEVBtrse+jj6lMUJAyy8ekfEZiroyhD4Mkh
+	fuQjIKESoUK5b8tEfV/H6YfBNNb9DCaC74K4xoilHnVov5/3Bn+ej2XbGEcOf8UiS/3PPSxOHp6
+	rqYD0O8a5enwF63ksOdxKiiwLQXjZnxgYU/KaEBNMbNDQrFliEM0sydX1wUoQVdCZMvheTDnDiw
+	jsxhXuNYRefpC1r08ESFiPG1KJgPstJCkq9JF8=
+X-Google-Smtp-Source: AGHT+IGWM1Kap4e+m/WrejLEWP2o8PYUi3RQ+on6TGo8+y8abvoNNR7whNgmd0+FLFUh2eGKY8FYnQXigMolH21LKSA=
+X-Received: by 2002:a05:651c:3254:10b0:337:ed76:7067 with SMTP id
+ 38308e7fff4ca-36418ecc3d6mr989751fa.39.1758218072373; Thu, 18 Sep 2025
+ 10:54:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3e54d23b.14bf.1995b523ddf.Coremail.zhangsenchuan@eswincomputing.com>
+From: Ajay Garg <ajaygargnsit@gmail.com>
+Date: Thu, 18 Sep 2025 23:24:19 +0530
+X-Gm-Features: AS18NWBuRfQ-UKCPiS_YSKD2LwE5CmC0UkCJ_avXXnH_mgXZ3W03kcmFYrI4-GY
+Message-ID: <CAHP4M8W+uMHkzcx-fHJ0NxYf4hrkdFBQTGWwax5wHLa0Qf37Nw@mail.gmail.com>
+Subject: How are iommu-mappings set up in guest-OS for dma_alloc_coherent
+To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Sep 18, 2025 at 01:35:40PM +0800, zhangsenchuan wrote:
-> > -----Original Messages-----
-> > From: "Bjorn Helgaas" <helgaas@kernel.org>
-> > On Fri, Aug 29, 2025 at 04:22:37PM +0800, zhangsenchuan@eswincomputing.com wrote:
-> > > From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-> > > 
-> > > Add Device Tree binding documentation for the ESWIN EIC7700
-> > > PCIe controller module,the PCIe controller enables the core
-> > > to correctly initialize and manage the PCIe bus and connected
-> > > devices.
+Hi everyone.
 
-> > > +            resets = <&reset 8 (1 << 0)>,
-> > > +                     <&reset 8 (1 << 1)>,
-> > > +                     <&reset 8 (1 << 2)>;
-> > > +            reset-names = "cfg", "powerup", "pwren";
-> > > +            interrupts = <220>, <179>, <180>, <181>, <182>, <183>, <184>, <185>, <186>;
-> > > +            interrupt-names = "msi", "inta", "intb", "intc", "intd",
-> > > +                              "inte", "intf", "intg", "inth";
-> > > +            interrupt-parent = <&plic>;
-> > > +            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> > > +            interrupt-map = <0x0 0x0 0x0 0x1 &plic 179>,
-> > > +                            <0x0 0x0 0x0 0x2 &plic 180>,
-> > > +                            <0x0 0x0 0x0 0x3 &plic 181>,
-> > > +                            <0x0 0x0 0x0 0x4 &plic 182>;
-> > > +            device_type = "pci";
-> > > +            num-lanes = <0x4>;
-> > 
-> > num-lanes and perst are per-Root Port items.  Please put anything
-> > related specifically to the Root Port in its own stanza to make it
-> > easier to support multiple Root Ports in future versions of the
-> > hardware.
-> > 
-> > See
-> > https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
-> > for examples of how to do this.
-> 
-> Thank you very much for your review.
-> I think the suggestions you put forward are very good，I placed
-> perst in the root port as per your suggestion.
-> 
-> I'm a bit confused about the "num-lanes" attribute.  The "num-lanes"
-> attribute will be parsed in the "pcie-designware.c" file. In the
-> "pcie-designware-host.c" file, When our driver calls the
-> dw_pcie_host_init function for initialization, the attribute
-> "num_lanes" will be judged. If the attribute is available, use the
-> value parsed from the device tree. If the attribute cannot be
-> obtained from the node, the lanes supported by the hardware default
-> will be obtained by reading the register.Can I avoid reparsing the
-> num-lanes attribute?
-> 
-> I saw vendors based on Synopsys implementation. They separated the
-> root port node and did not place "num-lanes" in the root port node.
-> For examples:
-> hisilicon,kirin-pcie.yaml
-> qcom,pcie-sc7280.yaml
-> qcom,pcie-sa8255p.yaml
+Let's say we have a following setup :
 
-This is currently a problem because the DWC core doesn't know to look
-for "num-lanes" in a Root Port node.  Similar situation in the NXP
-driver: https://lore.kernel.org/r/20250917212833.GA1873293@bhelgaas
+i)
+x86_64 host-os, booted up with iommu enabled and pass-through mode.
 
-Would it work for you to add a Root Port parser in eic7700, similar to
-mvebu_pcie_parse_port() or qcom_pcie_parse_port() that would get
-"num-lanes"?
+ii)
+x86_64 guest-os, booted up using vfio+qemu+kvm and a pci-device attached to it.
 
-It looks like that would keep the DWC core from setting num-lanes.
+iii)
+A guest-os-device-driver calls "dma_alloc_coherent", after which the
+returned dma-address / iova is programmed to the pci-device's
+mmio-register.
 
-Eventually the DWC core should look first for a Root Port node before
-falling back to the current behavior of looking in the host bridge
-node.  If/when that happens, we should be able to remove the num-lanes
-parsing in eic7700 and similar drivers.
 
-I'd like to separate the per-Root Port things in the devicetree from
-the beginning because once devicetrees are out in the world, we
-basically have to support their structure forever.
+In the above case, how are the IOMMU mappings set up during the
+guest-os-device-driver's "dma_alloc_coherent" call?
+Does :
 
-Bjorn
+a)
+The VMM / KVM intercept the "dma_alloc_coherent" call, and use the
+host-iommu to set up things?
+
+OR
+
+b)
+There is no interception from VMM / KVM, but rather the guest-OS
+itself has a view of the IOMMU (through the regular ACPI tables
+populated during guest boot up)?
+
+OR
+
+c)
+Anything else under the hood?
+
+
+Will be grateful for clearing the haze.
+
+
+Thanks and Regards,
+Ajay
 
