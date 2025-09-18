@@ -1,198 +1,370 @@
-Return-Path: <linux-pci+bounces-36432-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36433-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB691B8661B
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 20:07:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B9A0B8664F
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 20:14:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 684E017E713
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 18:07:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D5BB546E96
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 18:14:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6D82BEC59;
-	Thu, 18 Sep 2025 18:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7463C2D2381;
+	Thu, 18 Sep 2025 18:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UDGiFH/g"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tDs7SXbC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013018.outbound.protection.outlook.com [40.107.201.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EFC72614
-	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 18:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758218865; cv=none; b=a5RC84hrOvTnLmkvXre5knUftujtAuSWZ4WHMd48A9UGq0INsoW04JgEGG4u8dKD3jQyr/uffSv9VSnDXVNUWAO7kXW5RM67lZD01Ts1IQe+7JrldSPrRc/rDXTZuHkTTE9E9Gi1Toxuk6B6aw86fNPswrprTPXLUQIG5PHPUZU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758218865; c=relaxed/simple;
-	bh=unJ4dBQ/sCo+RxfLpdc5ZA6qAyzo7osUBVvdvChh5xE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=dXqmE15SIGinYyNENj2hsbB8/MuVDoEYBM1IBsRI0rxZ9+mQIxUVA0Iaftggg36Fl6XJYDe7C5a0HZPCD30K9XoSqVYKd5ykkzR+zWjCgm6e3BQX5xX16Vt9wlMj6LUdlv4lJZJtEa5e31ETc3QIAwYQ6NvutgV5EAOZE9LV/ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UDGiFH/g; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758218863; x=1789754863;
-  h=date:from:to:cc:subject:message-id;
-  bh=unJ4dBQ/sCo+RxfLpdc5ZA6qAyzo7osUBVvdvChh5xE=;
-  b=UDGiFH/glhIuqXHvl4ubGtTEGSUbffYvXr4UFu7jh1FzF9e43NZRntvU
-   AVKApBDZS2mCZQgnWVgM2zlnQiw8YIC3Xif3K+oMj3NqGM33CwZ1ZR0A4
-   1DeN9lduUKUJB6wfinLlEyuQCO/3k13G53nC+go9AzV24jCeXl1Yj8ylj
-   vaWEwT3M5OG0641WEA92qGODpuAOIWnmbJRDejnmRr5qOeqLwv4stMKIK
-   UQXlhRySqWllCt/hBT29qrJM1L09WKQE4kkSbTNx3jdvQl+I/zUuBIk+S
-   2eg2wi3zaVLAmDg8FjAyn+ZQ4UgCsKig2L/7HYcZaz55wOJL3cRoi8JpF
-   Q==;
-X-CSE-ConnectionGUID: YmUQSK8RSi6a91IRQBTnpA==
-X-CSE-MsgGUID: QDnK/GShSZqWutr573i81A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60617176"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60617176"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 11:07:42 -0700
-X-CSE-ConnectionGUID: KUhBiTgNS5uUFBkD+zV6CQ==
-X-CSE-MsgGUID: L7baaVFbR6Gi74iSM+yG5A==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 18 Sep 2025 11:07:41 -0700
-Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uzJ2h-0003at-0w;
-	Thu, 18 Sep 2025 18:07:39 +0000
-Date: Fri, 19 Sep 2025 02:07:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- cf6ee09b0913308729f9c38cfbcb8320c10fe5d5
-Message-ID: <202509190200.YdByTL3G-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2362D193C;
+	Thu, 18 Sep 2025 18:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758219245; cv=fail; b=UBZpykhGjeCPh3n0c5FkfM3KL1e6wNFfZ85IAEh7a+g7WCVEM1VfL+3QB5Ki1lHuRNYapCZVTzb1SDmUBEeU44qxHkC4ygK8LFiPpmsgNPOkOZZs6oyPQpE69MX2U2LI2FsypxUHsLESIysviO3nF1iEEeARK87QmAtuMNcdn9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758219245; c=relaxed/simple;
+	bh=O/ByCTvIGs7XqquQHXvzdrf7rVGCCD5RPmw4rR4UwVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bckEPLByNDBvcJ4IigjxpFXFqt+7LpzZliix30iqA7L/g5UBhxe7rqFrDlXbltWXZLxIjSb/xsnVk6NzKm3rlaXfQS5Ig1sJ8ebPmohjN6Jjx7IcGoiAqB772CYkCZIPmY4M5HuO7/t5a/NeCga0ugX9qEc1nvjZ/x2pTYiQ7Hw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tDs7SXbC; arc=fail smtp.client-ip=40.107.201.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aH2W+QJ5+Bkcix9PKq35kB5JMg7l9jGwYQV58KxWgfbeszdN3Ukx8zBotbpVdSJgAlQZmh9FSh1+YpZmL+nZz5BbQZuf5PYGI2rjYjw4TK1bxjz6Mx2R6p+qMrrO8Gvs6kIeJ3lFgbmFPL/QoJmzNoVQtOa5eStwdX0odm9Qly1uzzW9cJmyj0WC7zT0tVpNTf2vFnlnxkGVZ7X+b9iPEF8IAAKuh78zXssjrVFHJjJFwyFnpTXq0R/BgPwkaliLYWMN7vgzIw8AREU0FZSyh2REz41AihMClPD/0TwPbc0VoefaN411xp0P62ciu1cAOYs358b4HN4G0OcAze+CVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=26Nbc2e6BuIl6jFDPhuTDAHQLmmyK5pbcyDZ4mT+qR4=;
+ b=XDp7fUi3IzQbUH+jddKggneICu/J7ij4iMZsNmRVPMlV1Z9WWWQML+v42qk0AwPxtEfgU9eeU2ODuoFZv5N3PyF36gVSb0BXqgfJ2QKzf6yEqzu3Ms30TW4Fvch3iuk+X/xhPfyU+rkz49dXfZBp96CES03R9lTpELs6PZrIfFhYBvUzfE09uHwxdru5kWjZ6zLMPoaKzqs9vnVBnJWRutEG5ZdkOM+NghnZbHdGv7qhIOW0ZZ1EbLT1/DiXBaS/9mHPBhn8fBxVPxn9x/DcY2pHPjgmaqT3gBwHbe/notWUq3P5BVe+k0ARbRSGreikN2mskPR+DYrgJSGl4vBiEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=26Nbc2e6BuIl6jFDPhuTDAHQLmmyK5pbcyDZ4mT+qR4=;
+ b=tDs7SXbCKOKEUT27YA9K5fxIsTEQtxvll2KYScmF0IUBzOYkscEzZc4pb1wsJMRZyNG8OiLEDBSR4njFIpVKkrjpKFHqbuf76Hkt+FI1gDakhb3sw/UmAYIDYHcmVjy4FuolImV8q1hHg8bgydV2DHdronr4YGGiVD90aPOPoihu7h5oXwSJsBPplzHn3rEMokDTm2YMr+i4bty+eiP+d2BwrMPLRc7X1ABjGuah8StlLsj1907MiCmv8omxFd80OoJDS+PdawJaLIjXjQ1vwYSFQsgTrS8x8+oeegqsTG2yTOVdKeIwpRiwx9qWzh0xQu8JbbI9uiuX7ajQu5wIdw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SJ5PPFE4FC9FAB3.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Thu, 18 Sep
+ 2025 18:13:59 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.9115.022; Thu, 18 Sep 2025
+ 18:13:59 +0000
+Date: Thu, 18 Sep 2025 14:13:57 -0400
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] rust: io: use const generics for read/write offsets
+Message-ID: <20250918181357.GA1825487@joelbox2>
+References: <20250918-write-offset-const-v1-1-eb51120d4117@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918-write-offset-const-v1-1-eb51120d4117@google.com>
+X-ClientProxiedBy: BN9PR03CA0303.namprd03.prod.outlook.com
+ (2603:10b6:408:112::8) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ5PPFE4FC9FAB3:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2510ef32-590d-4cf0-ce53-08ddf6df23bb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rK/5Ecj4+RFoo5J26XdubiyKfkyw94yGoXKaEbdPbjCNNCp6EMv5e/ZhhdnE?=
+ =?us-ascii?Q?Ou9Ef6BNEj+xzK0ropjbLDn+Gg7O8nR+kG+yf21BVx9umWpZCD/Z6+rJUhbP?=
+ =?us-ascii?Q?x/jjUmc/8wZcBT8W+L1wYcFG3AeljESC7/T5Xo5j69l3bvNHi8ITnfKoifxG?=
+ =?us-ascii?Q?mz7hlKODP4062q6cmoTwGm4M/dFu7n8dZjV2i8AG+unNvLi8ZQvqmjUX5upS?=
+ =?us-ascii?Q?r8FQq6w3xjf6N71Z3qOBt4oC1mwDtNDuksvtx+Ny/SlCw4AhvchOHbUeqPlV?=
+ =?us-ascii?Q?EiXxi2mAqqZw3FcGGLitFnuWIWIFVfWk5TPgC/dXeQ/P39E5gppw6Ctaxu17?=
+ =?us-ascii?Q?ZRq3S8PrmaNY/TKfqlflJ96usr+QgIBrwV/UMAwCTD6+b+6sOxvEA/IqKSGm?=
+ =?us-ascii?Q?K1phTVMDrHkGM+h6lXeUOHXA85Nhn/O+pmQMfkIJnEqI7YaJkA996NMA3gx5?=
+ =?us-ascii?Q?Bz/UeORSTeXYgG9r1D3BSr+HLdlCwVczJM0Y0BG4dyo8nwrt3ZXda0kwEdfF?=
+ =?us-ascii?Q?gcVzw3Dk2VxZNHgR0yl8CEYfWNJVYZcBWNkfCUrhZhk3G3wZj2RRZYKmsq1B?=
+ =?us-ascii?Q?oD1kYPi+QmzpQDsir7kfm0j0Bb7TM0mAG6zy1WqTNexSJxyF7EPUnWot502A?=
+ =?us-ascii?Q?YO8bzjYgtxxC9LGrtLlKIpCr7taPmQlBisJ22HJ2CmCiqLbC8/R0T5/w9iH7?=
+ =?us-ascii?Q?wIn7CUResxS02fP5gqDX5TjpddUNvPgzoe3Jb/0GWj40zSshE1REBelYqDTA?=
+ =?us-ascii?Q?iR97mFuugGXnMYZWyMqwCRvlXXOLuCwDT6jIgv/v+MqVV0xdlbi66bXKtUuH?=
+ =?us-ascii?Q?6+F4L29Xjs0zwUm0RTSj9qKZ847geJI0vV2k/jMCitm2LMzhGRk8QWfBbEnL?=
+ =?us-ascii?Q?cpAUd38VF06+dAA3wFQA7VJRNuyuZUn/k/3alBcJkGgAE0oyVI9qzwk7SeZZ?=
+ =?us-ascii?Q?6upD40BnWg8JUlZGtMTUo7lbxivk1HzniHDJ6m1gUfNTFnjrTnavlGabgSd7?=
+ =?us-ascii?Q?PhuKnv8KwqHCwrKUdGIbMEYOrVI2CifFWN3pBwiwApklwJlcXYGGWVfYbdaM?=
+ =?us-ascii?Q?VZ+pPjN1LoXQ/UAvd3UfdCI3G/V3qniUTBxn01Bmgvd3BSfCx9kqXGdW11ef?=
+ =?us-ascii?Q?eBjyCoAxDEIJ7Paydk1JULJbcEOALoV15oaB3c+zXkWqHGqMfrLZKGNpTkDG?=
+ =?us-ascii?Q?zlo4RuQqzvNHhvIIlyb24OJt9enyXcOpGktw5vqWslQu2aoBOx8mdguUmu5b?=
+ =?us-ascii?Q?7hJHi8cBL7VVrDNxPpirskTcCTXuHPXwJxpCfz5hVJrMmXxUavA6coweSoG1?=
+ =?us-ascii?Q?ic/RiJVyFBXESzjU7cZ+1Twk1gvH+03FSbBxXP+kkrBzCrl4GwYLZdu9joXv?=
+ =?us-ascii?Q?Yyf81HxXD4ELMA3aleSrouUk8Q6REtGKQ97KmF1w7GcUXcgBRxXXE+fJSdGJ?=
+ =?us-ascii?Q?uOxcbVsJTl8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AEDnejv1io9NyaYROfQHXAiDZXb+wlZoh9Mwh4nj9mzxEisRYGjsH3BmRkzH?=
+ =?us-ascii?Q?bfEzuISor33d3XcnshTGBUKefomW71fq1S/PbwtQ+AeS/T518adhkHv9djQh?=
+ =?us-ascii?Q?nrNAN67TIbJU7QVDKiFxeX9ohYgNKmw98W9XlYabHuR0jU5mY8lld9/BElaG?=
+ =?us-ascii?Q?kR1/GuaSarkLh7NlvycNUBJEgc5ObuXxyrlfDKQEuMKj26jqPOOXSetGx1ZQ?=
+ =?us-ascii?Q?/G3yQxVOcizzeliGqj3xXkO6JyOZ9nhyBAFyuO0gE8kdqvY2VnD7oQDFuOEU?=
+ =?us-ascii?Q?XysszAB+w/hdb6bM2HnMRJZEav9YmCHfTls4e/ez8gy8BTT+8H9DEVHEyZ9w?=
+ =?us-ascii?Q?x81q3X8eHvUPzPu0IUOyWzl8Z24ju+hGZy+5ajFYjlqEPr4uEupHG38JbBPu?=
+ =?us-ascii?Q?R9fDo0ceWt9coVmvIG42FkEc99+Eyoz2gPFMQn7oY60lvr5EOVmn1AnlXGLm?=
+ =?us-ascii?Q?iwG62EvR/rzYRVPutu7paVvahtJ/7dih7v6I1Tyz+/E1XEu3SLxmTF6UnuDg?=
+ =?us-ascii?Q?tl2ajjArVlhF5rpn9Y8FXLrOmc/ewB/AO4xoHR9o2Mf4fqZHwVMQKIlHQBqa?=
+ =?us-ascii?Q?4tJuO6rnISr9BT52pKdBQgQD0jPTSyqbp+vteu2+n+EaU2S7JdwkJJVJNl0a?=
+ =?us-ascii?Q?xSH4qAM4QJCGH1XotFvjjN3XSKmoVF56FIZ8mxJ6VK/Wy5xI1qdWTF5ZACHL?=
+ =?us-ascii?Q?koBroAUqMtg6wk1P9XsODcUIYszsUYZmwrXLUZqgttAnKUprFv9S59eqrPP7?=
+ =?us-ascii?Q?bjVsafnGfdRQFBcbM5nHmZVREAw84zlAcLJIdzHpZHwSazrGTKNI0H4BKv5G?=
+ =?us-ascii?Q?97wHZdcWawaNJk0qoY/FWsBpb27mtuwVT8cofaQlyzXCFn3sPJSOeZUU+kKC?=
+ =?us-ascii?Q?eV35SmlEdDTREtQgjx/0tWjpCXuDN8NKB7yJ6TDFP+cJ0oEp5DZeP6caF8Dk?=
+ =?us-ascii?Q?sdfv681RsbdTvkifvWlx0ofZt3cMBSA6TiQ9BhxlaUOsK/zIi/g3IvviS9Hg?=
+ =?us-ascii?Q?VW6Xo3Gy0C395SyuJW+ckfHAAr8vqxj6FOL9n8WNJaR1mdYLsb+PPihuwW1f?=
+ =?us-ascii?Q?uJyYg5hSB87FYnza0z39PHgun0J0S1hF8RcrQ47sc1LPFZaFSrwctAEcoOS9?=
+ =?us-ascii?Q?JS2oXqayAQJGe3JnjzDY9rGZxKycTF24HXm6MWtVe/Jg2p+4s9GtoW9DemJl?=
+ =?us-ascii?Q?+01CzfNBY3uJDYkUncBf9yTYhsE3IWKzt1e9uoRU60e44dE+Ldlq0YR5PqQ9?=
+ =?us-ascii?Q?9oWd662KQNt2ODLmdjSLgP+R7x6IDHHKZBoOFZYcak4Ug+K0uu4eTaIV0GcQ?=
+ =?us-ascii?Q?etroET+7lVeyFBLJvIzEZAjl9n6IIVtTuXfc8u5MbG8gUTme1NarlsrpzStv?=
+ =?us-ascii?Q?PclWETcBMwv/zGlaB8qlO083YItOde+chZSXdVzfKU/8D31D/4EHo6Qn/HBs?=
+ =?us-ascii?Q?I6suZweyGPZnXW/wvKpKl46m0h3H56v7w4GyDlSfGTtBVbfvOsD1LL5CZVRj?=
+ =?us-ascii?Q?vWVolPFeQdpy9j5W95moXyrmDS2Jw9tVg2Xdhml9gW/a/kqfDxU3APitUOCx?=
+ =?us-ascii?Q?vV+FG8OXQrkBKY2VZbc1v6CxiBnrAm5Oh/IgXLBt?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2510ef32-590d-4cf0-ce53-08ddf6df23bb
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2025 18:13:59.5474
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RDfxWyz3TQDpqlRP86uON5YuJtTgLbKqB6sL60j69J71fjlxA7mBXiTljLbY4TDHzl4XX8odChpYmal1kM+FVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFE4FC9FAB3
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: cf6ee09b0913308729f9c38cfbcb8320c10fe5d5  PCI/sysfs: Expose PCI device serial number
+On Thu, Sep 18, 2025 at 03:02:11PM +0000, Alice Ryhl wrote:
+> Using build_assert! to assert that offsets are in bounds is really
+> fragile and likely to result in spurious and hard-to-debug build
+> failures. Therefore, build_assert! should be avoided for this case.
+> Thus, update the code to perform the check in const evaluation instead.
 
-elapsed time: 1550m
+I really don't think this patch is a good idea (and nobody I spoke to thinks
+so). Not only does it mess up the user's caller syntax completely, it is also
+super confusing to pass both a generic and a function argument separately.
 
-configs tested: 107
-configs skipped: 7
+Sorry if I knew this would be the syntax, I would have objected even when we
+spoke :)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I think the best fix (from any I've seen so far), is to move the bindings
+calls of offending code into a closure and call the closure directly, as I
+posted in the other thread. I also passed the closure idea by Gary and he
+confirmed the compiler should behave correctly (I will check the code gen
+with/without later). Gary also provided a brilliant suggestion that we can
+call the closure directly instead of assigning it to a variable first. That
+fix is also smaller, and does not screw up the users. APIs should fix issues
+within them instead of relying on user to work around them.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250918    gcc-8.5.0
-arc                   randconfig-002-20250918    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20250918    clang-22
-arm                   randconfig-002-20250918    gcc-8.5.0
-arm                   randconfig-003-20250918    clang-22
-arm                   randconfig-004-20250918    gcc-11.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250918    clang-22
-arm64                 randconfig-002-20250918    gcc-11.5.0
-arm64                 randconfig-003-20250918    clang-22
-arm64                 randconfig-004-20250918    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250918    gcc-15.1.0
-csky                  randconfig-002-20250918    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250918    clang-22
-hexagon               randconfig-002-20250918    clang-22
-i386        buildonly-randconfig-001-20250918    clang-20
-i386        buildonly-randconfig-002-20250918    gcc-14
-i386        buildonly-randconfig-003-20250918    gcc-14
-i386        buildonly-randconfig-004-20250918    clang-20
-i386        buildonly-randconfig-005-20250918    gcc-14
-i386        buildonly-randconfig-006-20250918    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250918    clang-18
-loongarch             randconfig-002-20250918    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250918    gcc-10.5.0
-nios2                 randconfig-002-20250918    gcc-8.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-14
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250918    gcc-12.5.0
-parisc                randconfig-002-20250918    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20250918    gcc-9.5.0
-powerpc               randconfig-002-20250918    clang-17
-powerpc               randconfig-003-20250918    clang-19
-powerpc64             randconfig-001-20250918    gcc-8.5.0
-powerpc64             randconfig-002-20250918    gcc-14.3.0
-powerpc64             randconfig-003-20250918    clang-22
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    gcc-14
-riscv                 randconfig-001-20250918    clang-22
-riscv                 randconfig-002-20250918    gcc-9.5.0
-s390                              allnoconfig    clang-22
-s390                                defconfig    gcc-14
-s390                  randconfig-001-20250918    gcc-11.5.0
-s390                  randconfig-002-20250918    gcc-8.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                    randconfig-001-20250918    gcc-15.1.0
-sh                    randconfig-002-20250918    gcc-10.5.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250918    gcc-11.5.0
-sparc                 randconfig-002-20250918    gcc-15.1.0
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20250918    clang-20
-sparc64               randconfig-002-20250918    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20250918    clang-22
-um                    randconfig-002-20250918    clang-18
-um                           x86_64_defconfig    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250918    clang-20
-x86_64      buildonly-randconfig-002-20250918    clang-20
-x86_64      buildonly-randconfig-003-20250918    clang-20
-x86_64      buildonly-randconfig-004-20250918    clang-20
-x86_64      buildonly-randconfig-005-20250918    clang-20
-x86_64      buildonly-randconfig-006-20250918    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250918    gcc-8.5.0
-xtensa                randconfig-002-20250918    gcc-8.5.0
+So from my side, NAK. But I do appreciate you taking a look!
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+thanks,
+
+ - Joel
+
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  drivers/gpu/drm/tyr/regs.rs     |  4 ++--
+>  rust/kernel/devres.rs           |  4 ++--
+>  rust/kernel/io.rs               | 18 ++++++++++--------
+>  rust/kernel/io/mem.rs           |  6 +++---
+>  samples/rust/rust_driver_pci.rs | 10 +++++-----
+>  5 files changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tyr/regs.rs b/drivers/gpu/drm/tyr/regs.rs
+> index f46933aaa2214ee0ac58b1ea2a6aa99506a35b70..e3c306e48e86d1d6047cab7944e0fe000901d48b 100644
+> --- a/drivers/gpu/drm/tyr/regs.rs
+> +++ b/drivers/gpu/drm/tyr/regs.rs
+> @@ -25,13 +25,13 @@
+>  impl<const OFFSET: usize> Register<OFFSET> {
+>      #[inline]
+>      pub(crate) fn read(&self, dev: &Device<Bound>, iomem: &Devres<IoMem>) -> Result<u32> {
+> -        let value = (*iomem).access(dev)?.read32(OFFSET);
+> +        let value = (*iomem).access(dev)?.read32::<OFFSET>();
+>          Ok(value)
+>      }
+>  
+>      #[inline]
+>      pub(crate) fn write(&self, dev: &Device<Bound>, iomem: &Devres<IoMem>, value: u32) -> Result {
+> -        (*iomem).access(dev)?.write32(value, OFFSET);
+> +        (*iomem).access(dev)?.write32::<OFFSET>(value);
+>          Ok(())
+>      }
+>  }
+> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> index da18091143a67fcfbb247e7cb4f59f5a4932cac5..3e66e10c05fa078e42162c7a367161fbf735a07f 100644
+> --- a/rust/kernel/devres.rs
+> +++ b/rust/kernel/devres.rs
+> @@ -96,7 +96,7 @@ struct Inner<T: Send> {
+>  /// let devres = KBox::pin_init(Devres::new(dev, iomem), GFP_KERNEL)?;
+>  ///
+>  /// let res = devres.try_access().ok_or(ENXIO)?;
+> -/// res.write8(0x42, 0x0);
+> +/// res.write8::<0x0>(0x42);
+>  /// # Ok(())
+>  /// # }
+>  /// ```
+> @@ -232,7 +232,7 @@ pub fn device(&self) -> &Device {
+>      ///
+>      ///     // might_sleep()
+>      ///
+> -    ///     bar.write32(0x42, 0x0);
+> +    ///     bar.write32::<0x0>(0x42);
+>      ///
+>      ///     Ok(())
+>      /// }
+> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+> index 03b467722b8651ebecd660ac0e2d849cf88dc915..563ff8488100d9e07a7f4bffeb085db7bd7e9d6a 100644
+> --- a/rust/kernel/io.rs
+> +++ b/rust/kernel/io.rs
+> @@ -103,7 +103,7 @@ pub fn maxsize(&self) -> usize {
+>  ///# fn no_run() -> Result<(), Error> {
+>  /// // SAFETY: Invalid usage for example purposes.
+>  /// let iomem = unsafe { IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD)? };
+> -/// iomem.write32(0x42, 0x0);
+> +/// iomem.write32::<0x0>(0x42);
+>  /// assert!(iomem.try_write32(0x42, 0x0).is_ok());
+>  /// assert!(iomem.try_write32(0x42, 0x4).is_err());
+>  /// # Ok(())
+> @@ -120,8 +120,8 @@ macro_rules! define_read {
+>          /// time, the build will fail.
+>          $(#[$attr])*
+>          #[inline]
+> -        pub fn $name(&self, offset: usize) -> $type_name {
+> -            let addr = self.io_addr_assert::<$type_name>(offset);
+> +        pub fn $name<const OFF: usize>(&self) -> $type_name {
+> +            let addr = self.io_addr_assert::<$type_name, OFF>();
+>  
+>              // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+>              unsafe { bindings::$c_fn(addr as *const c_void) }
+> @@ -149,8 +149,8 @@ macro_rules! define_write {
+>          /// time, the build will fail.
+>          $(#[$attr])*
+>          #[inline]
+> -        pub fn $name(&self, value: $type_name, offset: usize) {
+> -            let addr = self.io_addr_assert::<$type_name>(offset);
+> +        pub fn $name<const OFF: usize>(&self, value: $type_name) {
+> +            let addr = self.io_addr_assert::<$type_name, OFF>();
+>  
+>              // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+>              unsafe { bindings::$c_fn(value, addr as *mut c_void) }
+> @@ -217,10 +217,12 @@ fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+>      }
+>  
+>      #[inline]
+> -    fn io_addr_assert<U>(&self, offset: usize) -> usize {
+> -        build_assert!(Self::offset_valid::<U>(offset, SIZE));
+> +    fn io_addr_assert<U, const OFF: usize>(&self) -> usize {
+> +        const {
+> +            build_assert!(Self::offset_valid::<U>(OFF, SIZE));
+> +        }
+>  
+> -        self.addr() + offset
+> +        self.addr() + OFF
+>      }
+>  
+>      define_read!(read8, try_read8, readb -> u8);
+> diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
+> index 6f99510bfc3a63dd72c1d47dc661dcd48fa7f54e..b73557f5f57c955ac251a46c9bdd6df0687411e2 100644
+> --- a/rust/kernel/io/mem.rs
+> +++ b/rust/kernel/io/mem.rs
+> @@ -54,7 +54,7 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
+>      ///       pdev: &platform::Device<Core>,
+>      ///       info: Option<&Self::IdInfo>,
+>      ///    ) -> Result<Pin<KBox<Self>>> {
+> -    ///       let offset = 0; // Some offset.
+> +    ///       const OFFSET: usize = 0; // Some offset.
+>      ///
+>      ///       // If the size is known at compile time, use [`Self::iomap_sized`].
+>      ///       //
+> @@ -66,9 +66,9 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
+>      ///       let io = iomem.access(pdev.as_ref())?;
+>      ///
+>      ///       // Read and write a 32-bit value at `offset`.
+> -    ///       let data = io.read32_relaxed(offset);
+> +    ///       let data = io.read32_relaxed::<OFFSET>();
+>      ///
+> -    ///       io.write32_relaxed(data, offset);
+> +    ///       io.write32_relaxed::<OFFSET>(data);
+>      ///
+>      ///       # Ok(KBox::new(SampleDriver, GFP_KERNEL)?.into())
+>      ///     }
+> diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+> index 606946ff4d7fd98e206ee6420a620d1c44eb0377..6f0388853e2b36e0800df5125a5dd8b20a6d5912 100644
+> --- a/samples/rust/rust_driver_pci.rs
+> +++ b/samples/rust/rust_driver_pci.rs
+> @@ -46,17 +46,17 @@ struct SampleDriver {
+>  impl SampleDriver {
+>      fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
+>          // Select the test.
+> -        bar.write8(index.0, Regs::TEST);
+> +        bar.write8::<{ Regs::TEST }>(index.0);
+>  
+> -        let offset = u32::from_le(bar.read32(Regs::OFFSET)) as usize;
+> -        let data = bar.read8(Regs::DATA);
+> +        let offset = u32::from_le(bar.read32::<{ Regs::OFFSET }>()) as usize;
+> +        let data = bar.read8::<{ Regs::DATA }>();
+>  
+>          // Write `data` to `offset` to increase `count` by one.
+>          //
+>          // Note that we need `try_write8`, since `offset` can't be checked at compile-time.
+>          bar.try_write8(data, offset)?;
+>  
+> -        Ok(bar.read32(Regs::COUNT))
+> +        Ok(bar.read32::<{ Regs::COUNT }>())
+>      }
+>  }
+>  
+> @@ -98,7 +98,7 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>
+>      fn unbind(pdev: &pci::Device<Core>, this: Pin<&Self>) {
+>          if let Ok(bar) = this.bar.access(pdev.as_ref()) {
+>              // Reset pci-testdev by writing a new test index.
+> -            bar.write8(this.index.0, Regs::TEST);
+> +            bar.write8::<{ Regs::TEST }>(this.index.0);
+>          }
+>      }
+>  }
+> 
+> ---
+> base-commit: cf4fd52e323604ccfa8390917593e1fb965653ee
+> change-id: 20250918-write-offset-const-0b231c4282ea
+> 
+> Best regards,
+> -- 
+> Alice Ryhl <aliceryhl@google.com>
+> 
 
