@@ -1,196 +1,174 @@
-Return-Path: <linux-pci+bounces-36403-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36404-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4196BB8304F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 07:36:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48966B830D9
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 07:56:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB7555875FC
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 05:36:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F21C6467302
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 05:56:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A18127EC73;
-	Thu, 18 Sep 2025 05:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AAFA2D73A7;
+	Thu, 18 Sep 2025 05:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vM+QcwdY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8738534BA5E;
-	Thu, 18 Sep 2025 05:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C2D2D6E7D
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 05:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758173764; cv=none; b=TmmJEh9M/ELdsDpWviQkxiSwOI+/ygA46GAAdhuw/XB3igVf/uklMhzky/OFkKWu9bymcN3sOSHpGnVzdG4bax3mZhSGIUo2PA//Vaq9ijt+rJrRs3a9QrAmGHUL4Sb0kf2nddoC87eL82VV6WAZLWJSJGeiFpttrbuMH8gr42I=
+	t=1758174967; cv=none; b=iXGP6Kqbec9Zcue2u9laWqIqDyPHxL6Ps0DHh0s23U1HZc0zs1fHOsD75ULqEN/8asxzDzT5oHEh7gtGEHZhSrxBEjuxl1R+lK+e9zJSFUBLobwdAr8ok+syiTRS7UvRqGrhs1dj34VKisvRnK+jh2CoKllC2I4zFhkfIo3RSN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758173764; c=relaxed/simple;
-	bh=JwVkjxyPZ5ffcPA7o+3su7EcR47ly1pOd5uIZaUU54I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=tV0CQavvxWXMGenNfdBvadtmiR83WNsG1zWtyWmO/gn4Pnru9WVbZrobpYRo9zZQiUW/ifbkNX+mJyOwtdoZzz0mwsL+CsIQ3+shfQnNT69BzQvDnvtPvZZxfkqreLXG+lVrAu4j0FPitCx1G9HdZzltDRYz1WvID0T3yE4PFO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.182.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 18 Sep 2025 13:35:40 +0800 (GMT+08:00)
-Date: Thu, 18 Sep 2025 13:35:40 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org,
-	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v2 1/2] dt-bindings: PCI: eic7700: Add Eswin eic7700
- PCIe host controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20250904160600.GA1264982@bhelgaas>
-References: <20250904160600.GA1264982@bhelgaas>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1758174967; c=relaxed/simple;
+	bh=MtvCNWiMVnsL+fP/NF0hiCxoJi0DUaViJhCKPmRyngw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ABWr2xQWOA+pm5KHVkPpxexXr+qylcQCZ+JofCkLZZtzHDmjtcDnC/HRiXEVZHvA4xBJj1ocV4UHf4g5SfPTE1kw61EgyGQTfgu90cUBoA9dLzhYUitfINSi3yWmk1VGOllQCwRy8ZCNzOzbrWBCYLUJm2IQp5s9Xka1ytfbfKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vM+QcwdY; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-62f0411577aso1062753a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 17 Sep 2025 22:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1758174964; x=1758779764; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=crkj1xqggaMTh9oPYxb0RXj1qaPHLThFfXIKjj2cn5I=;
+        b=vM+QcwdY2P+3Maa1johRsRZg1Txz8wupuAtxuUSLM9/5RmqY6LdGIXaPpDo70JB7LL
+         m7LI4TKxYVFrV7/v+vFAQsTAxX3BtBENUFtnkGIMIr/GyLmb1yb2foeK1EW5jN+qemRZ
+         xb3LXEpb/aRzmEQZHPL/jZe6rEe263ShoL+Cn1bMgS6aJt3MLRhWYxVYfk+VwqthzZpF
+         RUuL2V7yWHTj1a1FMi5mbKPp+mHsIK40cRLsKJmEDxclSMvkCvPauFZtLhY5fzgN51Sa
+         jd3zlLDDDHO6/ezMwcJzcK9L/g9IZtNhiLTv0pXFfNvPG27J3whJ4W2MoiNe0Xalhnl2
+         /lKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758174964; x=1758779764;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=crkj1xqggaMTh9oPYxb0RXj1qaPHLThFfXIKjj2cn5I=;
+        b=AKOT9XWVEhIfPFUjKCFWJ5YB0orWBsfqHuYLXTIuX3NBT+SxXL5cnvWZy6Xy4JPFHT
+         esqloysgzxFHNW5d8PcaRT7lV4iT0FO87+YtzuPB7awRPMAoaVtw98+TjcFe2GkP7fft
+         qMg7AHLsVVRv3GeCFENyYvYwWDsMI8XtXilsxq4UF5hAIW/qZ0/OLn9oGH6gA18MFK1G
+         6S5+u76KCqxpTSHxfVWPez+DAGocZvw4zVvaECbHoul7oeexvKuPDt6OP6I3EuXE8VCf
+         BcCj4zAFG9rrtyYZHBJCmjexBoeppjC/6pnOs+/y9peLTxPwvgQ7Er0agjFX4eovkCWj
+         Yj0g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0nwPfMBFSrS7zFdmYR1LyQGWBEId+j17P8YMFHFo4orS3bSD6f0DZdaHKE+nzJibbdB1oD9TrFzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNHC5dET2g1ROU2bJywh39/FYI3GdrJD7Pbd/H4Y0BgSPxvp8y
+	6dv+uRuBT9dxnRL2UPyg4IVR1IVFtSlz8SukEpxFoB5/lKUPq31nuh4uSQDV62YYjcDvdn6J9Z9
+	/562hrQeegCXlFebfDeU03NtcLsEKTpl6US/oyKMHQw==
+X-Gm-Gg: ASbGncuHqkq/Dr+FxJ7enZNFQNtISPymyp/33I2JM9grHhB1d4jNpIsEAoBaUIlMX8a
+	8eQ8vj+LNk+KkiMANxbTRarTjg+6uHkcTt+KfMaa3jouy2DruWwVM3+UZILpIhEbaUK022nb9wX
+	JA5wX+9lp+oRthN5KfC7ZDAkyocaPI5qalMnhd5fhX3T5xzoftnBk0yDx3GU+QNQP3oW1mrx4mW
+	yjfBc+JMm6W76gXdJ68HKBKcSmvfkqTAbmdlmcPi8GQVoesyjnX+EI=
+X-Google-Smtp-Source: AGHT+IGR7nTIOBAlrh93nycdh2C4wP1m8EWpmRWv6aiZAFrIZWDDf8XTFM9Ow/5GHA8Zx6KHRGOD1LFlVtecDyn67Xg=
+X-Received: by 2002:a05:6402:1d52:b0:62f:4be5:2268 with SMTP id
+ 4fb4d7f45d1cf-62f84231d4dmr4414232a12.19.1758174963640; Wed, 17 Sep 2025
+ 22:56:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3e54d23b.14bf.1995b523ddf.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgA31pQsmstoZ2DUAA--.25272W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQEJBmjK4
-	nkORwAAs-
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <20250912141436.2347852-2-vincent.guittot@linaro.org> <20250917211825.GA1874549@bhelgaas>
+In-Reply-To: <20250917211825.GA1874549@bhelgaas>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 18 Sep 2025 07:55:50 +0200
+X-Gm-Features: AS18NWDMnG99kNALQoafVcWPwrQuqGOxmbLVsuUCgARppc3AjZboY6ARustWRK0
+Message-ID: <CAKfTPtC6bGYCoUuMZSX=kx0uR1XS1rHKzY99tkTQa-hUigmpPQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: pcie: Add the NXP PCIe controller
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: chester62515@gmail.com, mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, 
+	s32@nxp.com, lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com, 
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiQmpvcm4gSGVsZ2FhcyIg
-PGhlbGdhYXNAa2VybmVsLm9yZz4KPiBTZW5kIHRpbWU6RnJpZGF5LCAwNS8wOS8yMDI1IDAwOjA2
-OjAwCj4gVG86IHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tCj4gQ2M6IGJoZWxnYWFz
-QGdvb2dsZS5jb20sIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9y
-ZywgbWFuaUBrZXJuZWwub3JnLCByb2JoQGtlcm5lbC5vcmcsIGtyemsrZHRAa2VybmVsLm9yZywg
-Y29ub3IrZHRAa2VybmVsLm9yZywgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZywgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIHAuemFiZWxA
-cGVuZ3V0cm9uaXguZGUsIGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnLCBxdWljX3NjaGludGF2QHF1
-aWNpbmMuY29tLCBzaHJhZGhhLnRAc2Ftc3VuZy5jb20sIGNhc3NlbEBrZXJuZWwub3JnLCB0aGlw
-cGVzd2FteS5oYXZhbGlnZUBhbWQuY29tLCBtYXlhbmsucmFuYUBvc3MucXVhbGNvbW0uY29tLCBp
-bm9jaGlhbWFAZ21haWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tLCBsaW5taW5AZXN3
-aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlwcy5jb20KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYyIDEvMl0gZHQtYmluZGluZ3M6IFBDSTogZWljNzcwMDogQWRkIEVzd2lu
-IGVpYzc3MDAgUENJZSBob3N0IGNvbnRyb2xsZXIKPiAKPiBPbiBGcmksIEF1ZyAyOSwgMjAyNSBh
-dCAwNDoyMjozN1BNICswODAwLCB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSB3cm90
-ZToKPiA+IEZyb206IFNlbmNodWFuIFpoYW5nIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5n
-LmNvbT4KPiA+IAo+ID4gQWRkIERldmljZSBUcmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3Ig
-dGhlIEVTV0lOIEVJQzc3MDAKPiA+IFBDSWUgY29udHJvbGxlciBtb2R1bGUsdGhlIFBDSWUgY29u
-dHJvbGxlciBlbmFibGVzIHRoZSBjb3JlCj4gPiB0byBjb3JyZWN0bHkgaW5pdGlhbGl6ZSBhbmQg
-bWFuYWdlIHRoZSBQQ0llIGJ1cyBhbmQgY29ubmVjdGVkCj4gPiBkZXZpY2VzLgo+ID4gCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBZdSBOaW5nIDxuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gU2ln
-bmVkLW9mZi1ieTogU2VuY2h1YW4gWmhhbmcgPHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcu
-Y29tPgo+ID4gLS0tCj4gPiAgLi4uL2JpbmRpbmdzL3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFt
-bCAgICAgIHwgMTQyICsrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNDIg
-aW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGNpL2Vzd2luLGVpYzc3MDAtcGNpZS55YW1sCj4gPiAKPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Vzd2luLGVpYzc3
-MDAtcGNpZS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9lc3dp
-bixlaWM3NzAwLXBjaWUueWFtbAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uNjVmNjQwOTAyYjExCj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Vzd2luLGVpYzc3MDAtcGNpZS55YW1s
-Cj4gPiBAQCAtMCwwICsxLDE0MiBAQAo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChH
-UEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQo+ID4gKyVZQU1MIDEuMgo+ID4gKy0tLQo+ID4g
-KyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGNpL2Vzd2luLGVpYzc3MDAtcGNp
-ZS55YW1sIwo+ID4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMv
-Y29yZS55YW1sIwo+ID4gKwo+ID4gK3RpdGxlOiBFc3dpbiBFSUM3NzAwIFBDSWUgaG9zdCBjb250
-cm9sbGVyCj4gPiArCj4gPiArbWFpbnRhaW5lcnM6Cj4gPiArICAtIFl1IE5pbmcgPG5pbmd5dUBl
-c3dpbmNvbXB1dGluZy5jb20+Cj4gPiArICAtIFNlbmNodWFuIFpoYW5nIDx6aGFuZ3NlbmNodWFu
-QGVzd2luY29tcHV0aW5nLmNvbT4KPiA+ICsKPiA+ICtkZXNjcmlwdGlvbjoKPiA+ICsgIFRoZSBQ
-Q0llIGNvbnRyb2xsZXIgb24gRUlDNzcwMCBTb0MuCj4gPiArCj4gPiArYWxsT2Y6Cj4gPiArICAt
-ICRyZWY6IC9zY2hlbWFzL3BjaS9wY2ktaG9zdC1icmlkZ2UueWFtbCMKPiA+ICsKPiA+ICtwcm9w
-ZXJ0aWVzOgo+ID4gKyAgY29tcGF0aWJsZToKPiA+ICsgICAgY29uc3Q6IGVzd2luLGVpYzc3MDAt
-cGNpZQo+ID4gKwo+ID4gKyAgcmVnOgo+ID4gKyAgICBtYXhJdGVtczogMwo+ID4gKwo+ID4gKyAg
-cmVnLW5hbWVzOgo+ID4gKyAgICBpdGVtczoKPiA+ICsgICAgICAtIGNvbnN0OiBkYmkKPiA+ICsg
-ICAgICAtIGNvbnN0OiBjb25maWcKPiA+ICsgICAgICAtIGNvbnN0OiBtZ210Cj4gPiArCj4gPiAr
-ICByYW5nZXM6Cj4gPiArICAgIG1heEl0ZW1zOiAzCj4gPiArCj4gPiArICBudW0tbGFuZXM6Cj4g
-PiArICAgIGNvbnN0OiA0Cj4gPiArCj4gPiArICAnI2ludGVycnVwdC1jZWxscyc6Cj4gPiArICAg
-IGNvbnN0OiAxCj4gPiArCj4gPiArICBpbnRlcnJ1cHRzOgo+ID4gKyAgICBtYXhJdGVtczogOQo+
-ID4gKwo+ID4gKyAgaW50ZXJydXB0LW5hbWVzOgo+ID4gKyAgICBpdGVtczoKPiA+ICsgICAgICAt
-IGNvbnN0OiBtc2kKPiA+ICsgICAgICAtIGNvbnN0OiBpbnRhCj4gPiArICAgICAgLSBjb25zdDog
-aW50Ygo+ID4gKyAgICAgIC0gY29uc3Q6IGludGMKPiA+ICsgICAgICAtIGNvbnN0OiBpbnRkCj4g
-PiArICAgICAgLSBjb25zdDogaW50ZQo+ID4gKyAgICAgIC0gY29uc3Q6IGludGYKPiA+ICsgICAg
-ICAtIGNvbnN0OiBpbnRnCj4gPiArICAgICAgLSBjb25zdDogaW50aAo+ID4gKwo+ID4gKyAgaW50
-ZXJydXB0LW1hcDoKPiA+ICsgICAgbWF4SXRlbXM6IDQKPiA+ICsKPiA+ICsgIGludGVycnVwdC1t
-YXAtbWFzazoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDogMAo+ID4gKyAgICAg
-IC0gY29uc3Q6IDAKPiA+ICsgICAgICAtIGNvbnN0OiAwCj4gPiArICAgICAgLSBjb25zdDogNwo+
-ID4gKwo+ID4gKyAgY2xvY2tzOgo+ID4gKyAgICBtYXhJdGVtczogNAo+ID4gKwo+ID4gKyAgY2xv
-Y2stbmFtZXM6Cj4gPiArICAgIGl0ZW1zOgo+ID4gKyAgICAgIC0gY29uc3Q6IG1zdHIKPiA+ICsg
-ICAgICAtIGNvbnN0OiBkYmkKPiA+ICsgICAgICAtIGNvbnN0OiBwY2xrCj4gPiArICAgICAgLSBj
-b25zdDogYXV4Cj4gPiArCj4gPiArICByZXNldHM6Cj4gPiArICAgIG1heEl0ZW1zOiAzCj4gPiAr
-Cj4gPiArICByZXNldC1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDog
-Y2ZnCj4gPiArICAgICAgLSBjb25zdDogcG93ZXJ1cAo+ID4gKyAgICAgIC0gY29uc3Q6IHB3cmVu
-Cj4gPiArCj4gPiArcmVxdWlyZWQ6Cj4gPiArICAtIGNvbXBhdGlibGUKPiA+ICsgIC0gcmVnCj4g
-PiArICAtIHJhbmdlcwo+ID4gKyAgLSBudW0tbGFuZXMKPiA+ICsgIC0gaW50ZXJydXB0cwo+ID4g
-KyAgLSBpbnRlcnJ1cHQtbmFtZXMKPiA+ICsgIC0gaW50ZXJydXB0LW1hcC1tYXNrCj4gPiArICAt
-IGludGVycnVwdC1tYXAKPiA+ICsgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnCj4gPiArICAtIGNsb2Nr
-cwo+ID4gKyAgLSBjbG9jay1uYW1lcwo+ID4gKyAgLSByZXNldHMKPiA+ICsgIC0gcmVzZXQtbmFt
-ZXMKPiA+ICsKPiA+ICt1bmV2YWx1YXRlZFByb3BlcnRpZXM6IGZhbHNlCj4gPiArCj4gPiArZXhh
-bXBsZXM6Cj4gPiArICAtIHwKPiA+ICsgICAgc29jIHsKPiA+ICsgICAgICAgICNhZGRyZXNzLWNl
-bGxzID0gPDI+Owo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47Cj4gPiArCj4gPiArICAg
-ICAgICBwY2llQDU0MDAwMDAwIHsKPiA+ICsgICAgICAgICAgICBjb21wYXRpYmxlID0gImVzd2lu
-LGVpYzc3MDAtcGNpZSI7Cj4gPiArICAgICAgICAgICAgcmVnID0gPDB4MCAweDU0MDAwMDAwIDB4
-MCAweDQwMDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgIDwweDAgMHg0MDAwMDAwMCAweDAg
-MHg4MDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgIDwweDAgMHg1MDAwMDAwMCAweDAgMHgx
-MDAwMDA+Owo+ID4gKyAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJkYmkiLCAiY29uZmlnIiwgIm1n
-bXQiOwo+ID4gKyAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDM+Owo+ID4gKyAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMg
-PSA8MT47Cj4gPiArICAgICAgICAgICAgcmFuZ2VzID0gPDB4ODEwMDAwMDAgMHgwIDB4NDA4MDAw
-MDAgMHgwIDB4NDA4MDAwMDAgMHgwIDB4ODAwMDAwPiwKPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICA8MHg4MjAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHg0MTAwMDAwMCAweDAgMHhmMDAwMDAw
-PiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICA8MHhjMzAwMDAwMCAweDgwIDB4MDAwMDAwMDAg
-MHg4MCAweDAwMDAwMDAwIDB4MiAweDAwMDAwMDAwPjsKPiA+ICsgICAgICAgICAgICBidXMtcmFu
-Z2UgPSA8MHgwIDB4ZmY+Owo+ID4gKyAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sgNTYyPiwK
-PiA+ICsgICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIDU2Mz4sCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgPCZjbG9jayA1NjQ+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmY2xvY2sg
-NTY1PjsKPiA+ICsgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtc3RyIiwgImRiaSIsICJwY2xr
-IiwgImF1eCI7Cj4gPiArICAgICAgICAgICAgcmVzZXRzID0gPCZyZXNldCA4ICgxIDw8IDApPiwK
-PiA+ICsgICAgICAgICAgICAgICAgICAgICA8JnJlc2V0IDggKDEgPDwgMSk+LAo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgIDwmcmVzZXQgOCAoMSA8PCAyKT47Cj4gPiArICAgICAgICAgICAgcmVz
-ZXQtbmFtZXMgPSAiY2ZnIiwgInBvd2VydXAiLCAicHdyZW4iOwo+ID4gKyAgICAgICAgICAgIGlu
-dGVycnVwdHMgPSA8MjIwPiwgPDE3OT4sIDwxODA+LCA8MTgxPiwgPDE4Mj4sIDwxODM+LCA8MTg0
-PiwgPDE4NT4sIDwxODY+Owo+ID4gKyAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJtc2ki
-LCAiaW50YSIsICJpbnRiIiwgImludGMiLCAiaW50ZCIsCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgImludGUiLCAiaW50ZiIsICJpbnRnIiwgImludGgiOwo+ID4gKyAgICAgICAg
-ICAgIGludGVycnVwdC1wYXJlbnQgPSA8JnBsaWM+Owo+ID4gKyAgICAgICAgICAgIGludGVycnVw
-dC1tYXAtbWFzayA9IDwweDAgMHgwIDB4MCAweDc+Owo+ID4gKyAgICAgICAgICAgIGludGVycnVw
-dC1tYXAgPSA8MHgwIDB4MCAweDAgMHgxICZwbGljIDE3OT4sCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDwweDAgMHgwIDB4MCAweDIgJnBsaWMgMTgwPiwKPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPDB4MCAweDAgMHgwIDB4MyAmcGxpYyAxODE+LAo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICA8MHgwIDB4MCAweDAgMHg0ICZwbGljIDE4Mj47Cj4gPiAr
-ICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsKPiA+ICsgICAgICAgICAgICBudW0tbGFu
-ZXMgPSA8MHg0PjsKPiAKPiBudW0tbGFuZXMgYW5kIHBlcnN0IGFyZSBwZXItUm9vdCBQb3J0IGl0
-ZW1zLiAgUGxlYXNlIHB1dCBhbnl0aGluZwo+IHJlbGF0ZWQgc3BlY2lmaWNhbGx5IHRvIHRoZSBS
-b290IFBvcnQgaW4gaXRzIG93biBzdGFuemEgdG8gbWFrZSBpdAo+IGVhc2llciB0byBzdXBwb3J0
-IG11bHRpcGxlIFJvb3QgUG9ydHMgaW4gZnV0dXJlIHZlcnNpb25zIG9mIHRoZQo+IGhhcmR3YXJl
-Lgo+IAo+IFNlZQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8yMDI1MDYyNTIy
-MTY1My5HQTE1OTAxNDZAYmhlbGdhYXMvCj4gZm9yIGV4YW1wbGVzIG9mIGhvdyB0byBkbyB0aGlz
-LgoKRGVhciBCam9ybgoKVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgeW91ciByZXZpZXcuCkkgdGhp
-bmsgdGhlIHN1Z2dlc3Rpb25zIHlvdSBwdXQgZm9yd2FyZCBhcmUgdmVyeSBnb29k77yMSSBwbGFj
-ZWQgcGVyc3QgaW4gdGhlIApyb290IHBvcnQgYXMgcGVyIHlvdXIgc3VnZ2VzdGlvbi4KCkknbSBh
-IGJpdCBjb25mdXNlZCBhYm91dCB0aGUgIm51bS1sYW5lcyIgYXR0cmlidXRlLgpUaGUgIm51bS1s
-YW5lcyIgYXR0cmlidXRlIHdpbGwgYmUgcGFyc2VkIGluIHRoZSAicGNpZS1kZXNpZ253YXJlLmMi
-IGZpbGUuIEluIHRoZSAKInBjaWUtZGVzaWdud2FyZS1ob3N0LmMiIGZpbGUsIFdoZW4gb3VyIGRy
-aXZlciBjYWxscyB0aGUgZHdfcGNpZV9ob3N0X2luaXQgZnVuY3Rpb24gCmZvciBpbml0aWFsaXph
-dGlvbiwgdGhlIGF0dHJpYnV0ZSAibnVtX2xhbmVzIiB3aWxsIGJlIGp1ZGdlZC4gSWYgdGhlIGF0
-dHJpYnV0ZSBpcyAKYXZhaWxhYmxlLCB1c2UgdGhlIHZhbHVlIHBhcnNlZCBmcm9tIHRoZSBkZXZp
-Y2UgdHJlZS4gSWYgdGhlIGF0dHJpYnV0ZSBjYW5ub3QgYmUgCm9idGFpbmVkIGZyb20gdGhlIG5v
-ZGUsIHRoZSBsYW5lcyBzdXBwb3J0ZWQgYnkgdGhlIGhhcmR3YXJlIGRlZmF1bHQgd2lsbCBiZSBv
-YnRhaW5lZApieSByZWFkaW5nIHRoZSByZWdpc3Rlci5DYW4gSSBhdm9pZCByZXBhcnNpbmcgdGhl
-IG51bS1sYW5lcyBhdHRyaWJ1dGU/CgpJIHNhdyB2ZW5kb3JzIGJhc2VkIG9uIFN5bm9wc3lzIGlt
-cGxlbWVudGF0aW9uLiBUaGV5IHNlcGFyYXRlZCB0aGUgcm9vdCBwb3J0IG5vZGUgCmFuZCBkaWQg
-bm90IHBsYWNlICJudW0tbGFuZXMiIGluIHRoZSByb290IHBvcnQgbm9kZS4KRm9yIGV4YW1wbGVz
-OgpoaXNpbGljb24sa2lyaW4tcGNpZS55YW1sCnFjb20scGNpZS1zYzcyODAueWFtbApxY29tLHBj
-aWUtc2E4MjU1cC55YW1sCgpJcyBpdCBhbGxvd2VkIGZvciBtZSBub3QgdG8gcGxhY2UgIm51bS1s
-YW5lcyIgaW4gdGhlIHJvb3QgcG9ydCBub2RlPwpMb29raW5nIGZvcndhcmQgdG8geW91ciByZXBs
-eSwgdGhhbmtzIQoKQmVzdCByZWdhcmRzLApTZW5jaHVhbiB6aGFuZw==
+On Wed, 17 Sept 2025 at 23:18, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Suggest following convention for subject lines (run "git log --oneline
+> Documentation/devicetree/bindings/pci/"), e.g.,
+>
+>   dt-bindings: PCI: s32g: Add NXP PCIe controller
+
+okay
+
+>
+> On Fri, Sep 12, 2025 at 04:14:33PM +0200, Vincent Guittot wrote:
+> > Describe the PCIe controller available on the S32G platforms.
+>
+> > +        pcie0: pcie@40400000 {
+> > +            compatible = "nxp,s32g3-pcie",
+> > +                         "nxp,s32g2-pcie";
+> > +            dma-coherent;
+> > +            reg = <0x00 0x40400000 0x0 0x00001000>,   /* dbi registers */
+> > +                  <0x00 0x40420000 0x0 0x00001000>,   /* dbi2 registers */
+> > +                  <0x00 0x40460000 0x0 0x00001000>,   /* atu registers */
+> > +                  <0x00 0x40470000 0x0 0x00001000>,   /* dma registers */
+> > +                  <0x00 0x40481000 0x0 0x000000f8>,   /* ctrl registers */
+> > +                  /* RC configuration space, 4KB each for cfg0 and cfg1
+> > +                   * at the end of the outbound memory map
+> > +                   */
+> > +                  <0x5f 0xffffe000 0x0 0x00002000>,
+> > +                  <0x58 0x00000000 0x0 0x40000000>; /* 1GB EP addr space */
+> > +                  reg-names = "dbi", "dbi2", "atu", "dma", "ctrl",
+> > +                              "config", "addr_space";
+>
+> Looks like an indentation error.  Shouldn't "reg-names" and subsequent
+> properties be aligned under "reg"?
+
+yeah, that's a mistake.
+
+>
+> > +                  #address-cells = <3>;
+> > +                  #size-cells = <2>;
+> > +                  device_type = "pci";
+> > +                  ranges =
+> > +                  /* downstream I/O, 64KB and aligned naturally just
+> > +                   * before the config space to minimize fragmentation
+> > +                   */
+> > +                  <0x81000000 0x0 0x00000000 0x5f 0xfffe0000 0x0 0x00010000>,
+> > +                  /* non-prefetchable memory, with best case size and
+> > +                  * alignment
+> > +                   */
+> > +                  <0x82000000 0x0 0x00000000 0x58 0x00000000 0x7 0xfffe0000>;
+> > +
+> > +                  nxp,phy-mode = "crns";
+>
+> If "nxp,phy-mode" goes with "phys", should it be adjacent to it?
+
+yes, this , phys and num-lane should be together
+
+>
+> > +                  bus-range = <0x0 0xff>;
+> > +                  interrupts =  <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
+> > +                  interrupt-names = "link_req_stat", "dma", "msi",
+> > +                                    "phy_link_down", "phy_link_up", "misc",
+> > +                                    "pcs", "tlp_req_no_comp";
+> > +                  #interrupt-cells = <1>;
+> > +                  interrupt-map-mask = <0 0 0 0x7>;
+> > +                  interrupt-map = <0 0 0 1 &gic 0 0 0 128 4>,
+> > +                                  <0 0 0 2 &gic 0 0 0 129 4>,
+> > +                                  <0 0 0 3 &gic 0 0 0 130 4>,
+> > +                                  <0 0 0 4 &gic 0 0 0 131 4>;
+> > +                  msi-parent = <&gic>;
+> > +
+> > +                  num-lanes = <2>;
+> > +                  phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
+> > +        };
+> > +    };
 
