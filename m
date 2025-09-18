@@ -1,185 +1,149 @@
-Return-Path: <linux-pci+bounces-36409-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B385B83E46
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 11:47:51 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03C55B83EC4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 11:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F0791C005F4
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 09:48:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7DF134E1B9C
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 09:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03EBC279DA1;
-	Thu, 18 Sep 2025 09:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223982C026D;
+	Thu, 18 Sep 2025 09:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Ybv3BI+6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSIodTy7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0394027726
-	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 09:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D70274B37
+	for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 09:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758188865; cv=none; b=k5dZhI1G0pqUxIiI3p0NPo8iU23cFeidMaoH+V1dUxmso+y5tziSewEOeBpyAIBO060sqXBTTJfRE2q37jl9C51Z+1P3CYzvzUzWaG8U7OdrpW+03G1MoGH63ETdp51JXQijc98z+rUsZuCO4GH3tyKN/qo4oWxPCyXZFliLB3M=
+	t=1758189282; cv=none; b=rMa2nNKscKaVhZ4IQgqeypU9+m9Ss14JcYB4c54U9wWqgAge3+hWMTwNh2rToH4F5RhybSldFt3rO7CWVvwJu13VouyP6h2LMnUljEq0d0guI9zxJPVwc7oA75isK1Uh+5q5Bq0JUvW3spFlID8aS3NwCpnml/P4MoOfNdB33po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758188865; c=relaxed/simple;
-	bh=ebIejkG9lO3H+4v19Kd3NsOO4t6uOqMYtPLh1XK6HPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h08HeKbB5X4ZJ8kg9JSn/zvKgeJY0qewQ8gktpoB5NazaKYr3tk/Q70brsysYn2lSE3dOfFk39zm4RPDiI1Wf9caQI8Ttz2na58rMyswZvpj4GJRJpRfkds+diHv1J+UMvtAXqKvbIV7OR21gkyqMqZB1eZ9SxMwm1c5EI/4GNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Ybv3BI+6; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-afcb78ead12so107131866b.1
-        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 02:47:43 -0700 (PDT)
+	s=arc-20240116; t=1758189282; c=relaxed/simple;
+	bh=HvpH/we1i8j6YDiaciJy38Drhc0hF4JJPv6YA9NqLZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=enGmXhjInbry05gTSTwU8eNt+Vz2IHMfoO/PegYdTcHJIMrPlNaA6ts0/1jyLbLPvFdFZcrXcPufQPzCjP19sgmQzpdz40DId4Oa9dgSmZEip43vxMs4GhPkgIsf8bBkqW8SbMwnKva5h3QOQn0wbOJsPnjWyzVC4t5J+bC5S+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSIodTy7; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-62fa99bcfcdso664892a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 18 Sep 2025 02:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1758188862; x=1758793662; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xY2fN2zgk9K5ePhnAH7PE+WNn7DSzrHO8ylDHhqkcZ4=;
-        b=Ybv3BI+6pNabav/XvdmX6XIsppQ0M/5IxuGMMtXGZgPUwY0Lnd/MprI2Pk+tOS7kbu
-         w2fp5utdwqax5a1S9sBlkkn7oAbBk1ju3xCZ0EHQv/lYLwEjgbeUIgxZIxTOhXj9nefr
-         qPiv2mCwuGuJI9ezJUK6Xo9K1uZ9Ae08ij4XxyXDeSwiFt/BW9DxV3KC2zA3DKvDrGI6
-         N6nUXPpEtXLqIsyy3Q7F6qLx0OuqWg8OE6X6flkiKAoV4oFhP5E9C0Tvw9SvRzp8cluG
-         yxv9j7zqAIQmCBkecM0MwzPVezr/UPQoij/GCYGfDzWnDgeb+mBWcoO4AzzC1oMpIkT4
-         cJMQ==
+        d=linaro.org; s=google; t=1758189279; x=1758794079; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3uhf87DrC/GqYd1AzAwWRkEB5wkIeXkNvqHSQcwwy4Q=;
+        b=WSIodTy7iljYjesgsd6VPAkcROQzsgZ21/VGGHsoiRHyTWb5zCr1Iyfj+hfhTF8jZU
+         8YIyVi8SXNvVO9xjIzBkfaOCiOAe600uuckRekGwOAiOtM/RqjWimK5929zZmDek7lfc
+         iRn3vg5RsqZj3XPT2D9oQ8oZ0saHPhxL+LKdJ1EmdDOvRztrynueKcLBkec/9kAUVflY
+         5Ns1DtCvxmK2PiVD/7oyDuo3gd+4bmJqQCcnouqYoekAvQ6/1nWJAXSru6KXgrLbLIEC
+         FrFu9FyHwpqGrM2XEOvfNCTEQqLL6TOd6aep1pKJVOw1L0UG2UyRjg2I8ZP4MI0fjQWT
+         ly6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758188862; x=1758793662;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xY2fN2zgk9K5ePhnAH7PE+WNn7DSzrHO8ylDHhqkcZ4=;
-        b=uZBndBzIU/tZtNNKYWKgtM5bwykKp0t3Mx+f/sxxKYbOasJaR26vSn4VL++hN5TwjB
-         inBjsNyhhlZD+rFtnn9w0MKi/UhydZ6t8P/t9SQtgze1JhuEpcSFNehC3zT7ruDEcifM
-         BTN8jO2dvzZfhmitpXYlPFEfmgejAlwvBYYy3bOSwtVMnCcyD/yjMifMt3HLUjabnJID
-         kQ31cMgx9QGubqGDBGWCy5ZA2Uqu/3J4wRiFiAvE94i3cXz4NO2964hdZdMmJYIJeX7N
-         ArZFZzG+JSQJPnpydgdRYsBSMkcdaCrd0JKStWSF7I9DyX9RupcED4Hk7UUbgbLGpFop
-         dcWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgpMPlDCmBZix0ZID2gTCHMz6Qm5HTR//1q3CQx8UGn2QarQINu3MF8rmdw75mZjO5foaJkbo6Woo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsq+NM5a/QtCXubnIswI2EwIxpuvuFHO6XQGrzE7Ds9bBCnVvQ
-	Q+KfiCeZZOcZEShxidh/aLSKGooI8EMVOIy7JwFMnDs9FWb3b+6q+/Ft8oFTtVpL+2E=
-X-Gm-Gg: ASbGncvuAAMRHl7H3hfHx51yYet9jPLJMbYAJQktSq5IDlWyzYc8UJtVdw5KFWqi/Vh
-	pUS7XsdNDU6AnQ/nhAfa/8J00QeolePlGe9BisCunyaB8eVVCYUoN6ot7DbcDe0IsJEL4qVVNP/
-	xoXx+XKza7nc1hyYgwPECdbv12E6YxejrTt05GKVtK3dF4AqQ2izJsUid8wupBX9ZdLWlTT8vyb
-	QJvQWT5M0ezLl8b/CNeSWmxnnCozZYcK2LYrpNXmIrmHJEgyi49dk+SXfY9OgQKrN+qKHf69QiJ
-	WREbeY/OrtVE+1zyPNbbOcKleNXQbSB0KfckTvatI3aQBAS1g8mAKNAblyZl1sLVpMU4i3OFsiw
-	eX8tBWpBG6S3fOy3hIAXNgrKfSmIkgH9HWGAKf6xDpe9gW8WyhYm/cRUM9VdH
-X-Google-Smtp-Source: AGHT+IGm1gMecKNS7ulsOyutPp7cC/3sMrnG/x/HjeoFQdZsaPx3dh9Tz2I2uksJ4hOSdxJlyIcHBg==
-X-Received: by 2002:a17:906:730d:b0:b07:88ae:4b80 with SMTP id a640c23a62f3a-b1bbb7615cdmr515429166b.65.1758188862248;
-        Thu, 18 Sep 2025 02:47:42 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.153])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b1fd15cb2fesm161684766b.89.2025.09.18.02.47.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 02:47:41 -0700 (PDT)
-Message-ID: <c2fc5f6b-0e7c-464e-89a6-35dc76177d18@tuxon.dev>
-Date: Thu, 18 Sep 2025 12:47:40 +0300
+        d=1e100.net; s=20230601; t=1758189279; x=1758794079;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3uhf87DrC/GqYd1AzAwWRkEB5wkIeXkNvqHSQcwwy4Q=;
+        b=mq8fYfgz2e1HA6yBKtp2jhNNelD21kQ1xG08XyWP/MIs936xbjKqx2JZuN3Xa/L2b2
+         pNH6RypuZ3T2XYIZwfrHpJ38KFg56T/a/V0D8HJYQajvP1fWRZJVySy3+hH8mM+PizmA
+         bNTidAr2FU04N7GuXaoZPdDwTpikLkVPJWEmGYzwKGvqXjJMF/z7OOAC7LhH0YuRAdjr
+         V3nQhxllndQnNnpOf03DgQV1qLoHI/AICV14D+SQwK8yr2x72WlLw39rC5uwE3X53jF8
+         q/ljchXpqiySv7EeUjBI6Q3WSW3o5TA46QpN/QgVs6wsVEE47I/XnSfCL3SH117522zy
+         WpRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5gRtdLNDscBUA3WqgWwHJFUhXtU9Qiq2rUd8F5E8C8jCBiDp8xVLEnEnAzT0oPkzMbH+r1rBK2PQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9zRfgU/vKtM+dpav1HgKKRbu7HN8vPVobNEizwb8ZYyYvJAV5
+	TmWWEWqC67+XvSvejdvSYBd8F5IugmTknpJOMEbg4PpXKdqsgJBRnywxTW+d/6S+tW1l7qwIs1q
+	nwA/EsjSmEqbxDUOaV5CgULRsLDkyhHb/oNsriNSgPA==
+X-Gm-Gg: ASbGncsK147P0qtLkPdt1aaF0CuFZ+09oCN+qS36xs05PnBlVWjmsSfF8gQaAtaROqL
+	wN5dxCvHpBmaSmUNYpj4nR1BdVwiB1Z6yP10LEjt8ja1BdHNACqFptDsl+/cmFY6uBrs9EcoU+h
+	Fgfd/6yG5G95ttDgXftZzKZ+VprhFniFBbtpQfBa4lPlAIKZwzZjhHWI6/0LjmMDLDph764o12Q
+	1GE1CMNjtE2fs/PN7SDqyvB4XsFw6YmWaxcvouGAQHjP4CuqEC0
+X-Google-Smtp-Source: AGHT+IE1zmv9oHlYf6BUBNOW+SUyz6ajjYN0b3+2pAlc66/NC3KjbbHlv5KbLza2QpbO9MoNOwx3daqo5CZgA0JV3IY=
+X-Received: by 2002:a05:6402:2115:b0:62f:7968:e1ca with SMTP id
+ 4fb4d7f45d1cf-62f84798527mr4551388a12.38.1758189278612; Thu, 18 Sep 2025
+ 02:54:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] arm64: dts: renesas: rzg3s-smarc-som: Update
- dma-ranges for PCIe
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
- mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
- <20250912122444.3870284-5-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <e236uncj7qradf34elkmd2c4wjogc6pfkobuu7muyoyb2hrrai@tta36jq5fzsr> <20250917212833.GA1873293@bhelgaas>
+In-Reply-To: <20250917212833.GA1873293@bhelgaas>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 18 Sep 2025 11:54:26 +0200
+X-Gm-Features: AS18NWDHkrQ8kASDtWOuxujVdqn0GrRUTOJ77F2So0WyDmX2EIKvc-v29xTUv-g
+Message-ID: <CAKfTPtCizQ7nk3P4Dzi6uFewH5GcAnMakMt5=bK-Ykayp3t7XQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: pcie: Add the NXP PCIe controller
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, chester62515@gmail.com, 
+	mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com, 
+	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com, 
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Geert,
+On Wed, 17 Sept 2025 at 23:28, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Sep 17, 2025 at 10:41:08PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Sep 16, 2025 at 09:23:13AM GMT, Bjorn Helgaas wrote:
+> > > On Tue, Sep 16, 2025 at 10:10:31AM +0200, Vincent Guittot wrote:
+> > > > On Sun, 14 Sept 2025 at 14:35, Vincent Guittot
+> > > > <vincent.guittot@linaro.org> wrote:
+> > > > > On Sat, 13 Sept 2025 at 00:50, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Fri, Sep 12, 2025 at 04:14:33PM +0200, Vincent Guittot wrote:
+> > > > > > > Describe the PCIe controller available on the S32G platforms.
+> > >
+> > > > > > > +                  num-lanes = <2>;
+> > > > > > > +                  phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
+> > > > > >
+> > > > > > num-lanes and phys are properties of a Root Port, not the host bridge.
+> > > > > > Please put them in a separate stanza.  See this for details and
+> > > > > > examples:
+> > > > > >
+> > > > > >   https://lore.kernel.org/linux-pci/20250625221653.GA1590146@bhelgaas/
+> > > > >
+> > > > > Ok, I'm going to have a look
+> > > >
+> > > > This driver relies on dw_pcie_host_init() to get common resources like
+> > > > num-lane which doesn't look at childs to get num-lane.
+> > > >
+> > > > I have to keep num-lane in the pcie node. Having this in mind should I
+> > > > keep phys as well as they are both linked ?
+>
+> > > Huh, that sounds like an issue in the DWC core.  Jingoo, Mani?
+> > >
+> > > dw_pcie_host_init() includes several things that assume a single Root
+> > > Port: num_lanes, of_pci_get_equalization_presets(),
+> > > dw_pcie_start_link() are all per-Root Port things.
+> >
+> > Yeah, it is a gap right now. We only recently started moving the DWC
+> > platforms to per Root Port binding (like Qcom).
+>
+> Do you need num-lanes in the devicetree?
+> dw_pcie_link_get_max_link_width() will read it from PCI_EXP_LNKCAP, so
+> if that works maybe you can omit it from the binding?
 
-On 9/18/25 12:09, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Fri, 12 Sept 2025 at 14:24, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The first 128MB of memory is reserved on this board for secure area.
->> Secure area is a RAM region used by firmware. The rzg3s-smarc-som.dtsi
->> memory node (memory@48000000) excludes the secure area.
->> Update the PCIe dma-ranges property to reflect this.
->>
->> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Thanks for your patch!
-> 
->> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
->> @@ -214,6 +214,16 @@ &sdhi2 {
->>  };
->>  #endif
->>
->> +&pcie {
->> +       /* First 128MB is reserved for secure area. */
-> 
-> Do you really have to take that into account here?  I believe that
-> 128 MiB region will never be used anyway, as it is excluded from the
-> memory map (see memory@48000000).
-> 
->> +       dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
-> 
-> Hence shouldn't you add
-> 
->     dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
-> 
-> to the pcie node in arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-> instead, like is done for all other Renesas SoCs that have PCIe?
+num-lane is not mandatory but we can have 1 or 2 lanes so should be
+able to restrict to only 1 lane for some platform
+the "num-lanes = <2>;" in the example is wrong as we don't need it in
+case of 2 lanes but only if we want to restrict to 1 lane
 
-I chose to add it here as the rzg3s-smarc-som.dtsi is the one that defines
-the available memory for board, as the available memory is something board
-dependent.
-
-If you consider it is better to have it in the SoC file, please let me know.
-
-> 
->> +};
->> +
->> +&pcie_port0 {
->> +       clocks = <&versa3 5>;
->> +       clock-names = "ref";
->> +};
-> 
-> This is not related.
-
-Ah, right! Could you please let me know if you prefer to have another patch
-or to update the patch description?
-
-Thank you,
-Claudiu
-
-> 
->> +
->>  &pinctrl {
->>  #if SW_CONFIG3 == SW_ON
->>         eth0-phy-irq-hog {
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
-
+>
+> If you do need num-lanes in the binding, maybe you could make a Root
+> Port parser similar to mvebu_pcie_parse_port() or
+> qcom_pcie_parse_port() that would get num-lanes, the PHY, and
+> nxp,phy-mode from a Root Port node?
+>
+> Then all this would be in one place, and if you set ->num_lanes there
+> it looks like the DWC core wouldn't do anything with it.
 
