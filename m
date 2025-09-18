@@ -1,51 +1,52 @@
-Return-Path: <linux-pci+bounces-36424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 925BEB85A7A
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:35:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CC34B85AAA
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 17:36:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5C436221D6
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:31:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7DF1C257FE
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Sep 2025 15:32:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BC9C30F93A;
-	Thu, 18 Sep 2025 15:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6784C30FF1D;
+	Thu, 18 Sep 2025 15:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Er0/+4DA"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lnkAaIfZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6CC30F939;
-	Thu, 18 Sep 2025 15:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEB23C512;
+	Thu, 18 Sep 2025 15:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758209485; cv=none; b=O/3wJszZeysZPIbHPsY9l9s+QziMDm3xw1ffnbpbPjYo8BWhV3qihMEJSk72IwHq1C4BH15lg3i88jmjXnRZSXai3sBJuKy0oR0KDJFPb6HFejul28m67xiBsxFoQRthOxDRBzhyS4I5f3HPpcfg/jPAP56MctoNyXYfBV6WkIA=
+	t=1758209495; cv=none; b=Vjl8sGoIM/sn5lDdCIUfjz425pjYT+Gndv4nbemmesj4P6BXVMGhljinyFAaWfoWlBvFOPDRlw8jEDCeAUpEyDWrs7gDy+WoDF2/2c8UDWPWXcvOXztSzQkLVRc3GjecyuTauaX6doDbh1QYQNAumUYFJ4l1K+9W1Jc7gIFqL34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758209485; c=relaxed/simple;
-	bh=kNhbnaZz9O0F4p7ucRW4mmMBjCu2zNDrBJriaH3FC64=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Srudb57yVi1lPCWSR2TJccLm/IbENWnPNfVxtI6sg2dtl/iQV007QLgsZEr7P3bpNWyYEjM1tojAHfEmNwIJ/maAPaeMyac3LoUthetLW5NsJUgB/e2vzDQpv8PM3t+/L/Z62aZ0o4BAa+jenOHyij9qdpQf2wvGAQ/GK9hw0Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Er0/+4DA; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1758209495; c=relaxed/simple;
+	bh=M1y4kyl7/u9ISiwORUl0PBLLRmK62BT8dpUJThLsa44=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uud83C36GHySMY6qrsVQg0KTAqakNKqXL/r8e8AFEPNINlfD7AoIvSiHpfV/gs8MrD1aoqvspFU+QOHKTyyNtcRqJ1EV3UL2fNWEsD+CNefKHCVSLaCpE+1Ec4oy2RHX5nB4wdd5HqbeNXZDqA+4aNSm4AgonzpZysIOlmrUZcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lnkAaIfZ; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id E4EEE2649D;
-	Thu, 18 Sep 2025 17:31:21 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id D572F25FC1;
+	Thu, 18 Sep 2025 17:31:31 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id admD6bqCwlFv; Thu, 18 Sep 2025 17:31:20 +0200 (CEST)
+ id ZaX2TIHOkGrM; Thu, 18 Sep 2025 17:31:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1758209480; bh=kNhbnaZz9O0F4p7ucRW4mmMBjCu2zNDrBJriaH3FC64=;
-	h=From:To:Cc:Subject:Date;
-	b=Er0/+4DATvWq8LChdwoWUu4mCOryZT0oVFxIIV9N4ORORc2hW2iXF8uGNqcFSK2BD
-	 4f5fLcc/z2HhRuYUbFvmUR8ppmQ+CkQJKwcUQyidSml1Cf8JIlg3DhFvBvWkARDR9g
-	 2j1glEPrNCp5c01KvUQFG45oMHMgu89NFBGV185kUGUrUrFFrZoCsbYcEZTBTYxGp2
-	 sJhRH6jt1bfYjMt8H7ZBuQBuPRNwMVwpSSOm3zMmAo+mLL/Msqy16k86jO3t2hPkpv
-	 G5HaGRQLY/mWxXcj2vr0eJ2go4fpyTtNmsf0A8jUqEZftedcneQYkayFHuKl802qZD
-	 aNdpRxAfMA25w==
+	t=1758209491; bh=M1y4kyl7/u9ISiwORUl0PBLLRmK62BT8dpUJThLsa44=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lnkAaIfZT7DKYWkRJEIOlW3ppvRJGOyH5FGe3UXQ3josx0Ye2dY+cWRyyP5/N4Rnf
+	 KWcTAeiIZW3AZdUEeZWlpJuTVqxdUohKHGH4Q+0r5FD+Rib36KegUeegZCxNK/Spm3
+	 NLGbiWFUNtWQ31yMktiLXIGezjP/vTp/scQnUG0bNAygUsmh14zyKnkckXWykdC0a+
+	 y2BFD6pyJ4FQdZDQxP9/DdufUl5EdtUvJyCbgsfndVEyuZIVWlz1LL9sXoHQhdt3E2
+	 sgJkJAaatZ/8arOwvviVaomS6vjGbOseGy/GBGJPUST1JO8eN/tLnSsSbVWOY1nX1a
+	 /mPmddGUO1wDg==
 From: Yao Zi <ziyao@disroot.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -65,9 +66,11 @@ Cc: linux-pci@vger.kernel.org,
 	Jonas Karlman <jonas@kwiboo.se>,
 	Chukun Pan <amadeus@jmu.edu.cn>,
 	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 0/3] Add PCIe Gen2x1 controller support for RK3528
-Date: Thu, 18 Sep 2025 15:30:54 +0000
-Message-ID: <20250918153057.56023-1-ziyao@disroot.org>
+Subject: [PATCH v2 1/3] dt-bindings: PCI: dwc: rockchip: Add RK3528 variant
+Date: Thu, 18 Sep 2025 15:30:55 +0000
+Message-ID: <20250918153057.56023-2-ziyao@disroot.org>
+In-Reply-To: <20250918153057.56023-1-ziyao@disroot.org>
+References: <20250918153057.56023-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,43 +79,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rockchip RK3528 ships one PCIe Gen2x1 controller that operates in RC
-mode only. The SoC doesn't provide a separate MSI controller, thus the
-one integrated in designware PCIe IP must be used. This series documents
-the PCIe controller in dt-binding and describes it in the SoC devicetree.
+RK3528 ships a PCIe Gen2x1 controller that operates in RC mode only.
+Since the SoC has no separate MSI controller, the one integrated in the
+DWC PCIe IP must be used, and thus its interrupt scheme is similar to
+variants found in RK3562 and RK3576.
 
-Radxa E20C board is used for testing, whose LAN GbE port is provided
-through an RTL8111H chip connected to PCIe controller. Its devicetree
-is adjusted to enable the controller, and IPERF3 shows the interface
-runs at full-speed. A typical result looks like
+Older BSP code claimed its integrated MSI controller supports only 8
+MSIs[1], but this has been changed in newer BSP[2] and testing proves
+the controller works correctly with more than 8 MSIs allocated,
+suggesting the controller should be compatible with the RK3568 variant.
+Let's document its compatible string.
 
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec    0             sender
-[  5]   0.00-10.01  sec  1.10 GBytes   941 Mbits/sec                  receiver
+Link: https://github.com/rockchip-linux/kernel/blob/792a7d4273a5/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L1610-L1613 # [1]
+Link: https://github.com/rockchip-linux/kernel/blob/1ba51b059f25/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L904-L906 # [2]
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This series is based on next-20250917, thanks for your time and review.
-
-Changed from v1
-- Collect review tags
-- SoC devicetree
-  - Drop redundant PCLK_PCIE_PHY clock for PCIe node
-  - Use 32-bit DBI address, adjust SoC ranges property and reorder nodes
-  - Align cells of reg and ranges properties
-- board devicetree
-  - drop redundant pinconf pcie_reset_g
-  - Add missing vpcie3v3-supply
-- Link to v1: https://lore.kernel.org/all/20250906135246.19398-1-ziyao@disroot.org/
-
-Yao Zi (3):
-  dt-bindings: PCI: dwc: rockchip: Add RK3528 variant
-  arm64: dts: rockchip: Add PCIe Gen2x1 controller for RK3528
-  arm64: dts: rockchip: Enable PCIe controller on Radxa E20C
-
- .../bindings/pci/rockchip-dw-pcie.yaml        |  3 +
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 12 ++++
- arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 56 ++++++++++++++++++-
- 3 files changed, 70 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 6c6d828ce964..67f1a5502048 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -22,6 +22,7 @@ properties:
+       - const: rockchip,rk3568-pcie
+       - items:
+           - enum:
++              - rockchip,rk3528-pcie
+               - rockchip,rk3562-pcie
+               - rockchip,rk3576-pcie
+               - rockchip,rk3588-pcie
+@@ -78,6 +79,7 @@ allOf:
+           compatible:
+             contains:
+               enum:
++                - rockchip,rk3528-pcie
+                 - rockchip,rk3562-pcie
+                 - rockchip,rk3576-pcie
+     then:
+@@ -89,6 +91,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - rockchip,rk3528-pcie
+               - rockchip,rk3562-pcie
+               - rockchip,rk3576-pcie
+     then:
 -- 
 2.50.1
 
