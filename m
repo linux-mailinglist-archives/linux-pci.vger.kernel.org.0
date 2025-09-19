@@ -1,110 +1,130 @@
-Return-Path: <linux-pci+bounces-36475-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36476-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5233EB89766
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 14:33:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B360B89A25
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 15:17:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB67A7BA9C6
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 12:31:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F10318909B5
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 13:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B2D1B4236;
-	Fri, 19 Sep 2025 12:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8A521FF3F;
+	Fri, 19 Sep 2025 13:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7ocws22"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kh2VgatM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813E419CC27;
-	Fri, 19 Sep 2025 12:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F5F1B21BD;
+	Fri, 19 Sep 2025 13:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758285200; cv=none; b=rkXw5qnfeuUc4CuslshXMQIK8bt4DvgRr/B1sLgLaf1zCUTWmRN6Wz4oFaXWdSgBE8xIccy4IuTVS3V+Dhozt5h0pfOgJnvBdBheMIMJZYYt9LhGpzb+j3DYEGypiO9ecRqxL0lkjfVC3lzlYguVZGZ2Yj/u1CrxdjEVQXniVa0=
+	t=1758287817; cv=none; b=UHQxv+IikDyOEaqQrjLHfW+7gsaoT0Fro/J1nm5V4blp/XWTy6jp6ZGZFkcSzfjnvY2eVyKraerqmkbr8CglPbxuxVE5Wu/TThvM0LLQchfhnR4skKjNyIOFvQyfAbr6BXIH2wyxr5Y5ExcuVU0qqTnqRv4SB8lAAeyIzV2iM24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758285200; c=relaxed/simple;
-	bh=vobpzHuxbagJk0+nMmeihBJWUkhXY4FqYQ5Kve1dS28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8n5mpcMZk9c/3fE+tmvxfidm1eqv9dq5nKl0dSuxRLIwZxnmYzHcxZgJffLXS4k1BDZG21RV5ofyxB+bokydJhXxIvRKx+W5tU7awGFGoF85KVLLVJQCGvvPv15Nb5fdCyhn8CheT8StY7OoxrEmDqkzD+F/6uiY7RRNQR8pms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7ocws22; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA9EC4CEF0;
-	Fri, 19 Sep 2025 12:33:16 +0000 (UTC)
+	s=arc-20240116; t=1758287817; c=relaxed/simple;
+	bh=/eFfU0hGF05pJwVzBmAFJn19mo9Ahj7F3snFSc4GoGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K9fQHSlzOfWoAFTkmkL0Wlud455lGEEpIa4/IESvNyZ0zZJtzQWyVRkaGo66MDaGYA/a9hcxWUO2DR/9hfHdZXxrEW2fdSCg9jQCVR+y6mLcc3qi6mBlrcrDWmhv8JAEe+yD71pxNh9A9qmog+LVzPaTku+O2kdzUBWRe43Ivwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kh2VgatM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5261DC4CEF1;
+	Fri, 19 Sep 2025 13:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758285200;
-	bh=vobpzHuxbagJk0+nMmeihBJWUkhXY4FqYQ5Kve1dS28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b7ocws22QNoMpcYJxLykD6ISRoWbqEhp+J6wvNPJ1LUSWeMmBvJpKmPC22zMs76qi
-	 Yg/cKI1S0ccqcmHbbxqwJu8QdWbTbyY9aGdS7W0GMdWACbXeWEXMibFT2UW0bK4N8A
-	 ndJPF9AzU/IaMd/KghcT93eJmQL8rRX+YTR5w5Iys8d/OvluCdJJMkoR/UKlCrjxa1
-	 wjHjYRkP0Ufat6GTRpCGhF+jvjQVso4E62E2UQHdyXjdwETVpJMIP4NXLBD5PHdEvF
-	 5eV9bvb0DQMo/4Eso5BNpjffDvhDV7Ryx+lWxbkEIe2g+aa2FaG35UsMr/mgIeYShU
-	 JzXRNgLlAEmfg==
-Date: Fri, 19 Sep 2025 18:03:13 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rcar-gen4: Add missing 1ms delay after PWR reset
- assertion
-Message-ID: <3h3tkv6jmkwqqsb6bdotdx4bcnnzqqqzgl5digryxo5bc4qpm6@np76zatxj6ff>
-References: <20250918231253.189906-1-marek.vasut+renesas@mailbox.org>
- <20250919100038.GA3918632@rocinante>
+	s=k20201202; t=1758287817;
+	bh=/eFfU0hGF05pJwVzBmAFJn19mo9Ahj7F3snFSc4GoGY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kh2VgatMzWfOelfU2ZMCvt98U4+EHk3aSAViqAknGtfmeRT0URRNu9lgklvKlSqcO
+	 3ZwISDxedTOEKYdkJ5t5RtkMsMeI28fbHfvfEjcy7pTvkRecEUO4jeBdS26juaHlFH
+	 /I/3/sYVUCdyUpsEO6EWGaZL+o2I1oey7SY6TRZbRUiYz2v6lf/2swytaefi0Tm4d7
+	 NE4JAOKEhRdhV1/T1sLri16MNy17f5emoIQzud/Gb8a06vSFRnSoL8Zd0vS4kNQlis
+	 2ZZxmpo9zTQ+l6eDZVHYGz1WYkMQEgQjYCIU81wN8kw85FMltu3M5QWWLP6pKxxvuN
+	 E3jcdp1Gdzvtw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Vidya Sagar <vidyas@nvidia.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] PCI: tegra194: Reset BARs when running in PCIe endpoint mode
+Date: Fri, 19 Sep 2025 15:16:47 +0200
+Message-ID: <20250919131646.167330-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2228; i=cassel@kernel.org; h=from:subject; bh=/eFfU0hGF05pJwVzBmAFJn19mo9Ahj7F3snFSc4GoGY=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDLOhu9rb4nV3L7cqqTjpFz+CjN1Lg6bR+Vb3pjnzHGae VflSn9ERykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACYyfT/DH/7LCoHX1x1xcVpw IvW8TPTtOMvfcccyZGY+S+Apnbt4dzHDP63HtVPPdR11bTnHf0tC5/zD+FWma9a9siqcwCS3zJf FgQ8A
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250919100038.GA3918632@rocinante>
 
-On Fri, Sep 19, 2025 at 07:00:38PM +0900, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> [...]
-> > Because it is the controller driver which can determine whether or not the
-> > controller is in HSC domain based on its compatible string, add the missing
-> > delay into the controller driver.
-> > 
-> > This 1ms delay is documented on R-Car V4H and V4M, it is currently unclear
-> > whether S4 is affected as well. This patch does apply the extra delay on
-> > R-Car S4 as well.
-> 
+Tegra already defines all BARs expect for BAR0 as BAR_RESERVED.
+This is sufficient for pci-epf-test to not allocate backing memory and to
+not call set_bar() for those BARs.
 
-What are the implications of not having the delay? Just asking to determine if
-this patch is a stable candidate or not.
+However, the host side driver, pci_endpoint_test, simply does an ioremap
+for all enabled BARs, and will run tests against all enabled BARs.
 
-> [...]
-> > -	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc))
-> > +	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc)) {
-> >  		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
-> > +		fsleep(1000);
-> > +	}
-> 
-> Would it be a prudent thing to do here to add a comment over the fsleep()
-> or over the if-statement to document briefly (and for posterity) why we
-> sleep here?
-> 
+After running the BARs tests (which will write to all enabled BARs), the
+inbound address translation is broken.
+This is because the tegra controller exposes the ATU Port Logic Structure
+in BAR4. So when BAR4 is written, the inbound address translation settings
+get overwritten.
 
-I can add the quote to the reference manual while applying.
+To avoid this, implement the dw_pcie_ep_ops .init() callback and start off
+by disabling all BARs (pci-epf-test will later enable/configure BARs that
+are not defined as BAR_RESERVED).
 
-> Otherwise, looks good! Thank you for fixing this potential issue.
-> 
-> Reviewed-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-> 
+This matches the behavior of other PCIe endpoint drivers:
+dra7xx, imx6, layerscape-ep, artpec6, dw-rockchip, qcom-ep, rcar-gen4, and
+uniphier-ep.
 
-Thanks!
+With this, the PCI endpoint kselftest test case CONSECUTIVE_BAR_TEST
+(which was specifically made to detect address translation issues) passes.
 
-- Mani
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 4f26086f25daf..9488805ecf608 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1941,6 +1941,15 @@ static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void tegra_pcie_ep_init(struct dw_pcie_ep *ep)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	enum pci_barno bar;
++
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
++		dw_pcie_ep_reset_bar(pci, bar);
++};
++
+ static int tegra_pcie_ep_raise_intx_irq(struct tegra_pcie_dw *pcie, u16 irq)
+ {
+ 	/* Tegra194 supports only INTA */
+@@ -2017,6 +2026,7 @@ tegra_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ }
+ 
+ static const struct dw_pcie_ep_ops pcie_ep_ops = {
++	.init = tegra_pcie_ep_init,
+ 	.raise_irq = tegra_pcie_ep_raise_irq,
+ 	.get_features = tegra_pcie_ep_get_features,
+ };
 -- 
-மணிவண்ணன் சதாசிவம்
+2.51.0
+
 
