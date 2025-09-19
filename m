@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-36534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36535-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2245B8AEF6
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 20:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD1ABB8AF0E
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 20:37:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 680FF5A6A57
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 18:36:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97C61587BCD
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 18:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55E1261B64;
-	Fri, 19 Sep 2025 18:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B2025CC64;
+	Fri, 19 Sep 2025 18:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdrwFbGN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O31sX8wv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B120211A28;
-	Fri, 19 Sep 2025 18:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF6525A33F;
+	Fri, 19 Sep 2025 18:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758306949; cv=none; b=AjldrDDLfOFmAjVktW0l34GogjKhP7NhlB94TMGe/Lvy+Drs4Z4l0KvRLw8mUU9kLDqsUbR+RxMC77368vjQqN3LCz1hF+s/naFgXCgfQbwe3SbJ9FwjA1CFuKCFdtcK3qX3PSmlxyNLSdpQnublKAHPdUub1GEfTp6ga05umw4=
+	t=1758307018; cv=none; b=qyz9BnwNSXPnTExhBVJPS3obOceGefkEfBX6dodxJ7V2rANTZqJNpFkk3KqhZO3Kimmyh+i+U2pEENEALO8WCJVDOcgZlrMQyvJe6mofNIUl+YT48rMMj8z3VjBng7G/5Ag+tga8zKYiEuB3guK3Imo4lIyCRQu43eYa1wvHgZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758306949; c=relaxed/simple;
-	bh=oo7MnNncuxbbEuJjYzS+KOutOdZkuh1LO0HXaCxkr0c=;
+	s=arc-20240116; t=1758307018; c=relaxed/simple;
+	bh=iywf2XUVkfJv534hhdlLGZ+yOgrjcyl7VuGSUy57e6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJqB9USV83xWjHCm8aXPDoRfDLzXAzRdTGKQ4tBDjwkCiVFevMCpB1z70ee/8mkTDwC69jZ1juJ2lAStI2Qhh8sAUmbKL1fKL4UfcOHl9cC8ce+rx3sIzIdLop+Fyr4n7VdxsY4nSqoNmqiil5xbDUBm4FJ1udAhOi+oTHASO4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdrwFbGN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8416C4CEF7;
-	Fri, 19 Sep 2025 18:35:41 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=g5DXVz6GR5nJircQUZgiY2SF9Rh5/AvHfuZOWzuZ83shCwCdxsZNDHztyAet4GwjFJmm8UJeYHcOD4GplUr5ah1qc95cTcM0aXm5yk7YxU0m3TejVO/h4Tsq4rm4nQxdmnoXX+DyiGBPw412onbWLY8HgBqQgV/3SqsTZN0zmu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O31sX8wv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C754C4CEF0;
+	Fri, 19 Sep 2025 18:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758306949;
-	bh=oo7MnNncuxbbEuJjYzS+KOutOdZkuh1LO0HXaCxkr0c=;
+	s=k20201202; t=1758307017;
+	bh=iywf2XUVkfJv534hhdlLGZ+yOgrjcyl7VuGSUy57e6U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IdrwFbGNBg+mcvrizzNAt938gwJnXeswj9demaxuYxuALGgDanebsnojheH/LeTzJ
-	 9zpYxwBE4U4OObrIalWu5Azd0xgXyIe7ef5TUkP9SXKVp+Dm6iabs9fPwjGAL54A6l
-	 zvPlmsCPiHxpeVc75UBZzAaSRhSe480HrH60JEfrG5qPZc0uCIvKKTx+47NF/0++0D
-	 akeE47J1lxg4PC9L9ZJTxuUfImYiQl4JK4sh5BC2NQR8p08XW1frHb+DOOxi0arqtQ
-	 GP6UCIKLk4gfk5efeBDwblvyTTWLJ/CqFpZCoKhJo4rMMkmI4xO5H5tafJQwa55POk
-	 t79asfELyLhKg==
-Date: Sat, 20 Sep 2025 00:05:38 +0530
+	b=O31sX8wvF3L2SvcQVdppWH4aPVQzPgdarm4vEk41OAEIzdHn6RmmcE3wbWUk9Hyf1
+	 fXeLwvZOpTQnkfqzyqEFWzTpB5U8X4e4LvpqgGaPPQd6+C3Hk0fJjFV6PCd+eL/lx1
+	 Ot9GM/Tss29As8mZV9yBUb8QYQq+L1GiY8x9SAp/QZ+zhY0vDu5X3DYhVAx1bWMryN
+	 0sikJaHrGsTd19B0xAoXKjZbtXWBI1Vk7o7YATfJbrLOqkriaIqTa29JWc5cxc/Ptg
+	 89+TTti8LA/7vpEsStmmrO8VLyu0D9brkgF+wQd5DH2T2Yg04pQV4TDSrvp4t+xYJG
+	 hPw9FU7GiVdmw==
+Date: Sat, 20 Sep 2025 00:06:46 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Siddharth Vadapalli <s-vadapalli@ti.com>
 Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
@@ -52,11 +52,11 @@ Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
 	18255117159@163.com, rongqianfeng@vivo.com, jirislaby@kernel.org, 
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, srk@ti.com
-Subject: Re: [PATCH v2 06/10] PCI: keystone: Add ks_pcie_free_intx_irq()
- helper for cleanup
-Message-ID: <7sbyvk6vyrbyox5ghvhokrv67r2el4s4f6k42aygmfo3rltj27@6v5pjxbhdl5w>
+Subject: Re: [PATCH v2 09/10] PCI: keystone: Exit ks_pcie_probe() for the
+ default switch-case of "mode"
+Message-ID: <lo2zv3nxek57s3h4hwv2ujzophdx2ubfuam4gqmo5h77t2g4jo@447qpc7a4ub3>
 References: <20250912122356.3326888-1-s-vadapalli@ti.com>
- <20250912122356.3326888-7-s-vadapalli@ti.com>
+ <20250912122356.3326888-10-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,68 +66,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250912122356.3326888-7-s-vadapalli@ti.com>
+In-Reply-To: <20250912122356.3326888-10-s-vadapalli@ti.com>
 
-On Fri, Sep 12, 2025 at 05:46:17PM +0530, Siddharth Vadapalli wrote:
-> Introduce the helper function ks_pcie_free_intx_irq() which will undo the
-> configuration performed by the ks_pcie_config_intx_irq() function. This
-> will be required for implementing a future helper function to undo the
-> configuration performed by the ks_pcie_host_init() function.
+On Fri, Sep 12, 2025 at 05:46:20PM +0530, Siddharth Vadapalli wrote:
+> In ks_pcie_probe(), the switch-case for the "mode" is used to configure
+> the PCIe Controller for either Root-Complex or Endpoint mode of operation.
+> Prior to the switch-case statement for "mode" an invalid mode will result
+> in probe failure only if "dw_pcie_ver_is_ge(pci, 480A)" is true, which
+> is the case for the AM654 platform. On the other hand, when that is not
+> the case, "ks_pcie_set_mode()" will be invoked, which does not validate
+> the mode. As a result, it is possible for the switch-case statement for
+> "mode" to receive an invalid mode. Currently, an error message is displayed
+> in the "default" case where "mode" is neither "DW_PCIE_RC_TYPE" nor
+> "DW_PCIE_EP_TYPE", but the probe succeeds. However, since the configuration
+> required for Root-Complex and Endpoint mode have not been performed, the
+> Controller is not operational.
+> 
+> Fix this by exiting "ks_pcie_probe()" with the return value of "-EINVAL"
+> in addition to displaying the existing error message.
 > 
 > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Please squash all patches introducing new helpers.
+Fixes tag? And probably CC stable since the controller seems to be not
+operations without this fix.
 
 - Mani
 
 > ---
 > 
-> v1: https://lore.kernel.org/r/20250903124505.365913-7-s-vadapalli@ti.com/
+> v1: https://lore.kernel.org/r/20250903124505.365913-11-s-vadapalli@ti.com/
 > No changes since v1.
 > 
->  drivers/pci/controller/dwc/pci-keystone.c | 29 +++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+>  drivers/pci/controller/dwc/pci-keystone.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 81c3686688c0..074566fb1d74 100644
+> index 2da9feaaf9ee..e85942b4f6be 100644
 > --- a/drivers/pci/controller/dwc/pci-keystone.c
 > +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -745,6 +745,35 @@ static int ks_pcie_config_msi_irq(struct keystone_pcie *ks_pcie)
->  	return ret;
->  }
+> @@ -1414,6 +1414,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
+>  		break;
+>  	default:
+>  		dev_err(dev, "INVALID device type %d\n", mode);
+> +		ret = -EINVAL;
+> +		goto err_get_sync;
+>  	}
 >  
-> +static void ks_pcie_free_intx_irq(struct keystone_pcie *ks_pcie)
-> +{
-> +	struct device_node *np = ks_pcie->np;
-> +	struct device_node *intc_np;
-> +	int irq_count, i;
-> +	u32 val;
-> +
-> +	/* Nothing to do if INTx Interrupt Controller does not exist */
-> +	intc_np = of_get_child_by_name(np, "legacy-interrupt-controller");
-> +	if (!intc_np)
-> +		return;
-> +
-> +	/* irq_count should be non-zero. Else, ks_pcie_host_init would have failed. */
-> +	irq_count = of_irq_count(intc_np);
-> +
-> +	/* Disable all legacy interrupts */
-> +	for (i = 0; i < PCI_NUM_INTX; i++) {
-> +		val = ks_pcie_app_readl(ks_pcie, IRQ_ENABLE_SET(i));
-> +		val &= ~INTx_EN;
-> +		ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_SET(i), val);
-> +	}
-> +
-> +	irq_domain_remove(ks_pcie->intx_irq_domain);
-> +	for (i = 0; i < irq_count; i++)
-> +		irq_set_chained_handler(ks_pcie->intx_host_irqs[i], NULL);
-> +
-> +	of_node_put(intc_np);
-> +}
-> +
->  static int ks_pcie_config_intx_irq(struct keystone_pcie *ks_pcie)
->  {
->  	struct device *dev = ks_pcie->pci->dev;
+>  	ks_pcie_enable_error_irq(ks_pcie);
 > -- 
 > 2.43.0
 > 
