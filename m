@@ -1,61 +1,64 @@
-Return-Path: <linux-pci+bounces-36465-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36466-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2281FB885DC
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 10:16:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89381B88686
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 10:26:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E48AB567458
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 08:16:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DC7A567AEC
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 08:26:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB3C2D9796;
-	Fri, 19 Sep 2025 08:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 759C02F28EB;
+	Fri, 19 Sep 2025 08:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aduFlHHp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc1G9Gh9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180A727FD71;
-	Fri, 19 Sep 2025 08:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438342C0266;
+	Fri, 19 Sep 2025 08:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758269760; cv=none; b=i0b8nmpwvhu3rqyDrehUOaR1X+X/OAK/ipkLbIhx+ja6iQ+V7KBGWBwVmY6u+i1zOc4lJfIWiRiPLXFKSYEpEcLhONgpX8gxKCT9oyOaHZbGZkFvdDGOVhxXPFGGTYnmCa5Uu6lzPU1lze6303+RViuzX08ZKuzEA8tLbBC9ygI=
+	t=1758270363; cv=none; b=n9EiiVDb6U33JqyL9j8ZOH+rxnWN7GXhAzNO+f4WbASpXSeIefxJOUJB4ZpknOmM/O13Cs4D1ObSOTB/cDLW1bT8/do/pCBorKmfr3XYqNTzPU8sqkmWR/09EmRkCM013cDLzzgmHBfMqO0w9P7PdIbcdHqdAaAYQ5u1PPJK8MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758269760; c=relaxed/simple;
-	bh=VxTAjSklRSGqESyW8iAN9ut3qajeB4/ZGEoQ1sC9AGc=;
+	s=arc-20240116; t=1758270363; c=relaxed/simple;
+	bh=94XJgyA9heUKGaNQHHvoXRU6/+9lv/JiUASGkCrs2sA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CjqePxo111cBziWdO+xo77qP5OP56ljKQur5giit85mSVjHAxwaqiuDbvHKOfgEBmmtWX8haRC1YxSLK+PSLuDgCtnDGAkI4tWjxC2/uhFhAmyxRqjj/MM0AN4/gJEpis27pQae2Ocp87QMxNEOBUe/lZndv2kwUHlGZsdHzPsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aduFlHHp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8FAC4CEF0;
-	Fri, 19 Sep 2025 08:15:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ha55g/yffvKboLLFc/9TsHsjulT4dWKGqvlUb3k/aQxk8BmaqJ4G+3fjkl2HHbRTvW3TQ4runzLVcD8ruarJaXm9x3rrO526AbmxiUYrLaR2fwGs37vmXAF2oRVk9c0jut9ftdsTrE4PLOsR+B0CflWkyEulNsBb8XM1DRq4cMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc1G9Gh9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8886BC4CEF0;
+	Fri, 19 Sep 2025 08:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758269759;
-	bh=VxTAjSklRSGqESyW8iAN9ut3qajeB4/ZGEoQ1sC9AGc=;
+	s=k20201202; t=1758270362;
+	bh=94XJgyA9heUKGaNQHHvoXRU6/+9lv/JiUASGkCrs2sA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aduFlHHpk5thnaiNT9P64Li/+3xf6NFuLJ0K2/6m57BH17S00nClFhpJJkvSGMcx/
-	 FG2FWJmu0sXcdVr3znKtPHiuysD4gSew11FaMSpfpEnSL/XKzV9NaSdAAzo2CQo3oK
-	 +Npzxtvvafi7SKiQRZDZxvYp/qhXl39HRJa36AOIZsNd2B6JRcO68BIGraQkX1Kz54
-	 ayZTWtsZfE8DjK4AyTvrgxoO0WyOgMVi4ET7aPTph55fEdRmrNpsYZnWZUrHEkoxh9
-	 z3cNG71qmYRzZRM+nu3UauFTAQ/zBMmZP3WNIXwfB0yU8mBVySI1cCsQPrcGSOQJpX
-	 BHabaLVJrQp+w==
-Date: Fri, 19 Sep 2025 13:45:51 +0530
+	b=jc1G9Gh9G9MUDfv02eB8f66vHm/pTD3oBEghnT8jfZnaSBfuYevs9E1aFWZSQIgz4
+	 Oei6unoME5dYatMYUzkhwTYB91ailhf/tFZw+YwTUbGsd/TkO8y0YdHvS1n/oMxHi7
+	 15fiMqI4Ix0oxHgqjkywhSBLV0BOqvGNvpMPIN+whapbnJBtmFX8lbdm4tfSj6L11a
+	 KlKrpc0yl4Nh2/YJDxb+H5RyCAV3aTZWK7IURNwW7XOXHw3j+EWNgVnPHUMdKrlzdo
+	 G0DDBXLcPKPUZxZmSWqafP0T3SoTaDnR2SH62qsLrpalJMvAwOkc5p1oKeB4WNcKfO
+	 c7Q5E43MopcMw==
+Date: Fri, 19 Sep 2025 13:55:53 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 4/4] PCI: qcom: Allow pwrctrl core to control PERST#
- if 'reset-gpios' property is available
-Message-ID: <nxcr6ymgspcdofoy7cv4lok34qqucwrm4cxn7a7spqrszgmvin@x3mhucqy2tb3>
-References: <gnaubphg6iyh23vtf2flsjxoot7psgla7cr2c5jpecaozh4vf3@mzcmg74g3ogk>
- <20250918185356.GA1879416@bhelgaas>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, bhelgaas@google.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, magnus.damm@gmail.com, p.zabel@pengutronix.de, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: renesas: rzg3s-smarc-som: Update
+ dma-ranges for PCIe
+Message-ID: <lunqwki2orbf5gjyo4a5kz6ko3rs5w6fspbantqcv7b2vxe5ku@734remr6z4lp>
+References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250912122444.3870284-5-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWP638eB_p9xMAqZmOnuc6n7=n31h6AqV+287uvqQEdww@mail.gmail.com>
+ <c2fc5f6b-0e7c-464e-89a6-35dc76177d18@tuxon.dev>
+ <CAMuHMdWeHoUe-=7TDetnDQbLQsKGf4pDGpSdz3xEVLs_Rst9qQ@mail.gmail.com>
+ <0a20c765-ff72-4c03-af84-dff3f4850fa4@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,84 +68,103 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250918185356.GA1879416@bhelgaas>
+In-Reply-To: <0a20c765-ff72-4c03-af84-dff3f4850fa4@tuxon.dev>
 
-On Thu, Sep 18, 2025 at 01:53:56PM -0500, Bjorn Helgaas wrote:
-> On Wed, Sep 17, 2025 at 03:53:25PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Sep 16, 2025 at 03:48:10PM GMT, Bjorn Helgaas wrote:
-> > > On Fri, Sep 12, 2025 at 02:05:04PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > > 
-> > > > For historic reasons, the pcie-qcom driver was controlling the
-> > > > power supply and PERST# GPIO of the PCIe slot.
-> > > 
-> > > > This turned out to be an issue as the power supply requirements
-> > > > differ between components. For instance, some of the WLAN
-> > > > chipsets used in Qualcomm systems were connected to the Root
-> > > > Port in a non-standard way using their own connectors.
-> > > 
-> > > This is kind of hand-wavy.  I don't know what a non-standard
-> > > connector has to do with this.  I assume there's still a PCIe link
-> > > from Root Port to WLAN, and there's still a PERST# signal to the
-> > > WLAN device and a Root Port GPIO that asserts/deasserts it.
+On Fri, Sep 19, 2025 at 10:38:52AM +0300, Claudiu Beznea wrote:
+> Hi, Geert,
+> 
+> On 9/18/25 13:00, Geert Uytterhoeven wrote:
+> > Hi Claudiu,
 > > 
-> > If we have a non-standard connector, then the power supply
-> > requirements change.  There is no longer the standard 3.3v, 3.3Vaux,
-> > 1.8v supplies, but plenty more.  For instance, take a look at the
-> > WCN6855 WiFi/BT combo chip in the Lenovo X13s laptop:
+> > On Thu, 18 Sept 2025 at 11:47, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> >> On 9/18/25 12:09, Geert Uytterhoeven wrote:
+> >>> On Fri, 12 Sept 2025 at 14:24, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>>>
+> >>>> The first 128MB of memory is reserved on this board for secure area.
+> >>>> Secure area is a RAM region used by firmware. The rzg3s-smarc-som.dtsi
+> >>>> memory node (memory@48000000) excludes the secure area.
+> >>>> Update the PCIe dma-ranges property to reflect this.
+> >>>>
+> >>>> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>>
+> >>> Thanks for your patch!
+> >>>
+> >>>> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> >>>> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+> >>>> @@ -214,6 +214,16 @@ &sdhi2 {
+> >>>>  };
+> >>>>  #endif
+> >>>>
+> >>>> +&pcie {
+> >>>> +       /* First 128MB is reserved for secure area. */
+> >>>
+> >>> Do you really have to take that into account here?  I believe that
+> >>> 128 MiB region will never be used anyway, as it is excluded from the
+> >>> memory map (see memory@48000000).
+> >>>
+> >>>> +       dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
+> >>>
+> >>> Hence shouldn't you add
+> >>>
+> >>>     dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0x0 0x38000000>;
 > > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts#n414
+> > Oops, I really meant (forgot to edit after copying it):
 > > 
-> > These supplies directly go from the host PMIC to the WCN6855 chip
-> > integrated in the PCB itself. And these supplies need to be turned
-> > on/off in a sequence also, together with the EN/SWCTRL GPIOs, while
-> > sharing with the Bluetooth driver.
+> >     dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0x0 0x40000000>;
+> > 
+> >>>
+> >>> to the pcie node in arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+> >>> instead, like is done for all other Renesas SoCs that have PCIe?
+> >>
+> >> I chose to add it here as the rzg3s-smarc-som.dtsi is the one that defines
+> >> the available memory for board, as the available memory is something board
+> >> dependent.
+> > 
+> > But IMHO it is independent from the amount of memory on the board.
+> > On other SoCs, it has a comment:
+> > 
+> >      /* Map all possible DDR as inbound ranges */
+> > 
+> >>
+> >> If you consider it is better to have it in the SoC file, please let me know.
+> > 
+> > Hence yes please.
+> > 
+> > However, I missed you already have:
+> > 
+> >     /* Map all possible DRAM ranges (4 GB). */
+> >     dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0x1 0x0>;
+> > 
+> > in r9a08g045.dtsi, so life's good.
+> > 
+> > +
+> >>>> +};
+> >>>> +
+> >>>> +&pcie_port0 {
+> >>>> +       clocks = <&versa3 5>;
+> >>>> +       clock-names = "ref";
+> >>>> +};
+> >>>
+> >>> This is not related.
+> >>
+> >> Ah, right! Could you please let me know if you prefer to have another patch
+> >> or to update the patch description?
+> > 
+> > Given the dma-ranges changes is IMHO not needed,
 > 
-> It sounds like the WCN6855 power supplies have nothing to do with the
-> qcom PCIe controller, the Root Port, or any switches leading to the
-> WCN6855.  And I guess the same for the wlan-enable, bt-enable, and
-> swctrl GPIOs?
+> I kept it here as the driver configures the PCIe registers for the inbound
+> windows with the values passed though the dma-ranges. This is done through
+> rzg3s_pcie_set_inbound_windows() -> rzg3s_pcie_set_inbound_window(). The
+> controller will be aware that the secure area zone is something valid to
+> work with. In that case, if my understanding of PCIe windows is right, I
+> added this in the idea that an endpoint (a malicious one?) could DMA
+> into/from secure area if we don't exclude it here?
 > 
->   wcn6855-pmu {
->           compatible = "qcom,wcn6855-pmu";
->           wlan-enable-gpios = <&tlmm 134 GPIO_ACTIVE_HIGH>;
->           bt-enable-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
->           swctrl-gpios = <&tlmm 132 GPIO_ACTIVE_HIGH>;
->           regulators {
->                   vreg_pmu_rfa_cmn_0p8: ldo0 {
->                           regulator-name = "vreg_pmu_rfa_cmn_0p8";
->                   ...
-> 
->   &pcie4_port0 {
->           wifi@0 {
->                   compatible = "pci17cb,1103";
->                   vddrfacmn-supply = <&vreg_pmu_rfa_cmn_0p8>;
->                   ...
-> 
-> But I guess PERST# isn't described in the same place (not in
-> wcn6855-pmu)?  Looks like maybe it's this, which IIUC is part of the
-> pcie4 host bridge?
-> 
->   &pcie4 {
->           max-link-speed = <2>;
->           perst-gpios = <&tlmm 141 GPIO_ACTIVE_LOW>;
->           wake-gpios = <&tlmm 139 GPIO_ACTIVE_LOW>;
-> 
-> Does that mean this PERST# signal is driven by a GPIO and routed
-> directly to the WCN6855?  Seems like there's some affinity between the
-> WCN6855 power supplies and the WCN6855 PERST# signal, and maybe they
-> would be better described together?
 
-Yes, 'perst-gpios' is the PERST# signal that goes from the host system to the
-WCN6855 chip. But we cannot define this signal in the WCN6855 node as the DT
-binding only allows to define it in the PCI bridge nodes. This is why it is
-currently defined in the host bridge node. But when this platform switches to
-the per-Root Port binding, this property will be moved to the Root Port node as
-'reset-gpios'.
-
-Because of this reason, the host controller driver has to parse PERST# from all
-PCI bridge nodes (like if there is a switch connected, there might be PERST# per
-downstream port) and share them with the pwrctrl framework.
+That's true. But do you really have an usecase to setup inbound window for the
+endpoints? What does the endpoint do with this memory?
 
 - Mani
 
