@@ -1,75 +1,94 @@
-Return-Path: <linux-pci+bounces-36508-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36509-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97957B89E36
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 16:23:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C56BBB89E63
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 16:24:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A51B623126
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 14:23:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04F9D1CC2717
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 14:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2492E313D65;
-	Fri, 19 Sep 2025 14:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBEF30E0C2;
+	Fri, 19 Sep 2025 14:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BLO/AhKM"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CUjREkX7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFC7310635
-	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 14:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A856E220F34
+	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 14:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758291776; cv=none; b=cQxPZr91523vCgJDOavqSgLZ9z0CL+UfjryIEI39pNun0ltaJKXhj6OWcm9Y5ogF0l6mYZ5n7+cBr3WMqYTDrOr+70Pqu6XkX+SJLSIdiOOmZJHqKeD5IwKCk9SF5c1GYyUn/t9cBM6GlrlBrt4uSNmq6ck5fwwyTLo/UFasY7o=
+	t=1758291828; cv=none; b=t/li/TIyjtl5NBa1Ww7Uf4wGEcRpbNqcD6yuUBJnsewqlySSs5v7kbxOzVlt6NB1VmOU9Z1NikslC4r2l0bDCwFGU7kwVswrtH8d/ZTHRxlObKGOlP8jAEpuC4eB64vY+4ktxD1Q/T3LthLIyBAc3UohjvknpYkcnl/9F/wJG8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758291776; c=relaxed/simple;
-	bh=DCXAAAawAfgafMCswTubFriMc9sUfXJi6LE8G5oPqMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CDM6frAQ4LPMnzX26xerLJJxuCptKDLj/LJQxsYrFRH8gboa8Qx26R+Nbt82YPsGzYfM7T8RtBk8P3ZxlxvbK6fQPdVpBPY0U+STbJFLlHU2NTb/SS2fXSPorTpjxVulmMdagl1JGjudH/vThYUaYxXfAqhxQH8Uu+Kr+TKWGaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BLO/AhKM; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758291774; x=1789827774;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DCXAAAawAfgafMCswTubFriMc9sUfXJi6LE8G5oPqMI=;
-  b=BLO/AhKMk551LOg6gymxnWZeULkz2tZqgO+EeLg8hXf1E3VtvghsCIFo
-   mdst+RcEzFw8hA0Jr+/BuWJOi56z5XARsSX23yWXzE9+nncqF7OktJq2j
-   z/IYA0k2vKxugN9RmLubeQNAGCI8hD9qC/jpecAWO/gL5JgUD7bmyIb0I
-   NYbSoaor+mC3P59ubgjoS5H9fKJwbya72Y71g/sCtdXs3fy67F87jP0Sa
-   tYpNzAHZM2QbXARvyGkXBDHwMbCOm/xNCunjD8j+mEgaW2yrrNaKYMeCv
-   qNBWYrhdROYoZF7QSSKnAqSo9TXWfGoHnokk2l4bE6Nn9fbfnCvxB+c8x
-   w==;
-X-CSE-ConnectionGUID: IrU3M3C5RF2zBY2yUc/tmw==
-X-CSE-MsgGUID: 6+a38KhaSe+Why8l2+UTOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60750587"
-X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="60750587"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 07:22:42 -0700
-X-CSE-ConnectionGUID: D9Em7AQdQaqDWSC4mT+RGQ==
-X-CSE-MsgGUID: bG60RQ1/Rr2ZgK44d66YEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="176655074"
-Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Sep 2025 07:22:41 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Cc: xin@zytor.com,
-	chao.gao@intel.com,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: [RFC PATCH 27/27] coco/tdx-host: Implement IDE stream setup/teardown
-Date: Fri, 19 Sep 2025 07:22:36 -0700
-Message-ID: <20250919142237.418648-28-dan.j.williams@intel.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250919142237.418648-1-dan.j.williams@intel.com>
-References: <20250919142237.418648-1-dan.j.williams@intel.com>
+	s=arc-20240116; t=1758291828; c=relaxed/simple;
+	bh=WrctqBG5yal8gLgqGrzL6aanaaRl0HBq6tsGt6dAVGE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fPKM7LQ2xEKxhYzc3TNnpUnerAidYbB5vf03PiM8w9gwyAiapgjoBHYZSgA/odhpJ5UVw4iUAPPkcqbgDNTs2mRJewt2w/hEoQfTIkerGdr45twbymkzZgJbxF7mndEKMJ/5GXYmVXF8SqKqX9t9uEq4ovBmTAnzy5rVvMDTr1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CUjREkX7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58J6x2qn018235
+	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 14:23:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=H0MOngd9nnOaMlhiVp3d7MqH4YoWgLyveqG
+	b+3qi4Vc=; b=CUjREkX7e+91P4hZSHghPs8G3g49mWfx+bJA8NQAcxe5eKd0wmP
+	G8dFbKIhCur0NciKhFAQMaPN5ry1OeyuvUZFqt6DqQxqACQjK5Oly2zW9LuHH2OD
+	kJOIbySvNFsxAMol1MGiHnGoeA4PPk/vtGKQ1wqlOnQ4ySE2IFNtAejJzyYHdmtM
+	+bu8HMH10Wv+JG2jux7sDsW53Sk/kKlXbTJUeNxUB3VxQTY1tmdbuxZmj5KTxwXV
+	yrlrYvKmEXHwxak3PN8c4vtLa5LLisL7+W11gQowbqqIBsz66YT3i/U37/nXMUxW
+	f5thC3XPz8Ugv+PE9VLq7p7BIWWLN3SAblQ==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497fxwjpbk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 14:23:45 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-77ec1f25fedso846066b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 07:23:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758291825; x=1758896625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H0MOngd9nnOaMlhiVp3d7MqH4YoWgLyveqGb+3qi4Vc=;
+        b=ZwpFn3woIKtRdqXUXVeUQUkjsaFZSO+hqpSguO8MzODf0rhbJ4VEIPNPBo1HJkK3Ii
+         xLDfAC+FeS/0Cd9IFZVkoIWGP57fMa9Fl56AVFPCvG1PXuZE0ClWL6EAB1JOR+fSoFvh
+         jCFaHwgvQgoeR5m5X/oKZpkLfPR0cqRPKKFRD9DFBdPPV1laNS6wOd/YVu20OVek2dVU
+         0Heyaa9wJIlXJUElhMH0dl9mwVwIO9zH6yN5WryEFkma/ZuGR4P/kP4iTWD147wNb027
+         KtMdeGP/wXv64lRysxspaRvXhxIrthK7IBjC6eWdrTMvBvAsjOUCxCKKrcjlqUXGGgZg
+         Xftg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZSt7zFl6wTOoQmLaORGiCBqRpn0p3B5uQNfW1zKS8Aoq0Kl5ly0OI9faVpjNdZhzz6rreUSjRyxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5aUy1OKv/cfaPIInxpuqsRg6xfftkQPGd74nBuHo66ecHQ/nF
+	ncvqCvb6kwpBbQyLLsQlvI5Ca2aTVjNquDWF9QQIDeKQ38k/Vk6rZ78Wbg9v8bLFO3+AP5G5AvE
+	SzGHYpaCtg7MxNeRPOOPyOIEGr4ZwV7RNtK9iGuIVke6NYhVA0xmjpEP7Vf08GC8=
+X-Gm-Gg: ASbGnctyX+PH7ErhidJKlBDmAROuGLEBrVKxQKHqLil5zyWJzBVg+LVuHeNVgz0lVYn
+	rMcHiHN0s3vyxc7/ct6PYV0QDvaPyQVyZ8XcuoVCpXNaxWnEb6+ENilJxsagncUrOII8iJEuigg
+	WX1phcizVsEvz1pq/4StxG0cDyAXFAvCF4s406oF1nPfVOe5w22RMd1NO4KVe2hlLR1Aq+XnQCG
+	Wx+RdlYaR5sYIKahpcU71+yHBgniXLeX2ly80dbqt3BuxlUibp/EJbdokpXUFZBI/D8Y6zBcMQB
+	2h+nwFEYd6KSlPicLfnbQ71EdhvKKtT5wXFkfAqxVpdxp7qltupPxaXiHdJCLaBm09CHth9tizI
+	ZGf7pJPJmfSdZRLYMGCjz7hbbtqqaihUpdvLiE03gl4pUUncFcStfsiPi22J/
+X-Received: by 2002:a05:6a20:7485:b0:262:23dd:2e93 with SMTP id adf61e73a8af0-2923a323a25mr5577755637.0.1758291824899;
+        Fri, 19 Sep 2025 07:23:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsFVhcjm0X3oNhORINQVqZ5ZFstDem6nqXS91CKPxgvJ43nQqgJn2edyW48rEB6IkCNBZ2ng==
+X-Received: by 2002:a05:6a20:7485:b0:262:23dd:2e93 with SMTP id adf61e73a8af0-2923a323a25mr5577720637.0.1758291824430;
+        Fri, 19 Sep 2025 07:23:44 -0700 (PDT)
+Received: from hu-pankpati-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77f097b60e7sm1335147b3a.1.2025.09.19.07.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Sep 2025 07:23:44 -0700 (PDT)
+From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+To: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, andersson@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: PCI: qcom,pcie-x1e80100: Set clocks minItems for the fifth Glymur PCIe Controller
+Date: Fri, 19 Sep 2025 19:53:25 +0530
+Message-Id: <20250919142325.1090059-1-pankaj.patil@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,322 +96,58 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=HbIUTjE8 c=1 sm=1 tr=0 ts=68cd6771 cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=UB6fr0ZYtwJW8fNbdQgA:9
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwMiBTYWx0ZWRfX92hAvvor+V/E
+ pCBa/ajamJyRN7TvbzfAzP8+F5EyWnJw7OIs7xaCMyCVp1spEwfMMw20+sKn6sVsLj0aoK7Okoh
+ g7i4E8/KKkXwloo96uuyk/7Nk/Dp6mi7nS+5KUjZWu5ZbVCGxg+5v09PTxNFJZVZWVeWU1o6Y1z
+ //iK+doRoITMTRW9xvLCp3eGA95zi8kPQvEw/OlPEnnYQ5xxGEyiEi+oiz95VLycYPGJeMLuTt/
+ 6VJPUxiCGu2uvSG0CBMzSyWgjL0oj2vsWK9dULR2umS6LmT01a2E6Q6NvujCQxhOSaQ/INH2bp8
+ 0fEQS1R7YIS8L5IVGlD2R13cUgQrcpWOfSZZUop3GCbZO3BO8vk4WjOWlim1LaE3aILidGKIeCp
+ wAwJ+TOO
+X-Proofpoint-GUID: fdVcy3vjJpsFhpJraYJ7yv1NONb9D_mL
+X-Proofpoint-ORIG-GUID: fdVcy3vjJpsFhpJraYJ7yv1NONb9D_mL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-19_01,2025-09-19_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1011
+ adultscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160202
 
-From: Xu Yilun <yilun.xu@linux.intel.com>
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
 
-Implementation for a most straightforward Selective IDE stream setup.
-Hard code all parameters for Stream Control Register. And no IDE Key
-Refresh support.
+On the Qualcomm Glymur platform, the fifth PCIe host is compatible with
+the DWC controller present on the X1E80100 platform, but does not have
+cnoc_sf_axi clock. Hence, set minItems of clocks and clock-names to six.
 
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
 ---
- drivers/virt/coco/tdx-host/tdx-host.c | 271 +++++++++++++++++++++++++-
- 1 file changed, 270 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virt/coco/tdx-host/tdx-host.c b/drivers/virt/coco/tdx-host/tdx-host.c
-index 258539cf0cdf..7f156d219cee 100644
---- a/drivers/virt/coco/tdx-host/tdx-host.c
-+++ b/drivers/virt/coco/tdx-host/tdx-host.c
-@@ -12,6 +12,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/pci.h>
- #include <linux/pci-doe.h>
-+#include <linux/pci-ide.h>
- #include <linux/pci-tsm.h>
- #include <linux/sysfs.h>
- #include <linux/tsm.h>
-@@ -65,6 +66,10 @@ struct tdx_link {
- 	struct tdx_page_array *spdm_mt;
- 	unsigned int dev_info_size;
- 	void *dev_info_data;
-+
-+	struct pci_ide *ide;
-+	struct tdx_page_array *stream_mt;
-+	unsigned int stream_id;
- };
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
+index 257068a18264..61581ffbfb24 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
+@@ -32,10 +32,11 @@ properties:
+       - const: mhi # MHI registers
  
- static struct tdx_link *to_tdx_link(struct pci_tsm *tsm)
-@@ -345,13 +350,277 @@ static int tdx_spdm_session_setup(struct tdx_link *tlink)
- 	return 0;
- }
+   clocks:
+-    minItems: 7
++    minItems: 6
+     maxItems: 7
  
-+enum tdx_ide_stream_km_op {
-+	TDX_IDE_STREAM_KM_SETUP = 0,
-+	TDX_IDE_STREAM_KM_REFRESH = 1,
-+	TDX_IDE_STREAM_KM_STOP = 2,
-+};
-+
-+static int tdx_ide_stream_km(struct tdx_link *tlink,
-+			     enum tdx_ide_stream_km_op op)
-+{
-+	u64 r, out_msg_sz;
-+	int ret;
-+
-+	do {
-+		r = tdh_ide_stream_km(tlink->spdm_id, tlink->stream_id, op,
-+				      tlink->in_msg, tlink->out_msg,
-+				      &out_msg_sz);
-+		ret = tdx_link_event_handler(tlink, r, out_msg_sz);
-+	} while (ret == -EAGAIN);
-+
-+	return ret;
-+}
-+
-+static int tdx_ide_stream_key_program(struct tdx_link *tlink)
-+{
-+	return tdx_ide_stream_km(tlink, TDX_IDE_STREAM_KM_SETUP);
-+}
-+
-+static void tdx_ide_stream_key_stop(struct tdx_link *tlink)
-+{
-+	tdx_ide_stream_km(tlink, TDX_IDE_STREAM_KM_STOP);
-+}
-+
-+static void add_pdev_to_addr_range(struct pci_dev *pdev,
-+				   resource_size_t *start, resource_size_t *end)
-+{
-+	resource_size_t s = ULLONG_MAX, e = 0;
-+	int i;
-+
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		if (!(pci_resource_flags(pdev, i) & IORESOURCE_MEM))
-+			continue;
-+
-+		/* Skip low MMIO BAR */
-+		if (pci_resource_start(pdev, i) <= U32_MAX)
-+			continue;
-+
-+		if (!pci_resource_len(pdev, i))
-+			continue;
-+
-+		s = min_t(resource_size_t, s, pci_resource_start(pdev, i));
-+		e = max_t(resource_size_t, e, pci_resource_end(pdev, i));
-+	}
-+
-+	*start = min_t(resource_size_t, s, *start);
-+	*end = max_t(resource_size_t, e, *end);
-+}
-+
-+static int match_pci_dev_by_devid(struct device *dev, const void *data)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (*(const unsigned int *)data == pci_dev_id(pdev))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+/* OPEN: Should we add general address range support in pci/ide.c ? */
-+static void setup_addr_range(struct pci_dev *pdev,
-+			     resource_size_t *start, resource_size_t *end)
-+{
-+	struct device *dev;
-+	u32 devid;
-+	int i;
-+
-+	add_pdev_to_addr_range(pdev, start, end);
-+
-+	for (i = 0; i < pci_num_vf(pdev); i++) {
-+		devid = PCI_DEVID(pci_iov_virtfn_bus(pdev, i),
-+				  pci_iov_virtfn_devfn(pdev, i));
-+
-+		dev = bus_find_device(&pci_bus_type, NULL, &devid,
-+				      match_pci_dev_by_devid);
-+		if (dev) {
-+			add_pdev_to_addr_range(to_pci_dev(dev), start, end);
-+			put_device(dev);
-+		}
-+	}
-+}
-+
-+static void sel_stream_block_setup(struct pci_dev *pdev, struct pci_ide *ide,
-+				   u64 *rid_assoc1, u64 *rid_assoc2,
-+				   u64 *addr_assoc1, u64 *addr_assoc2,
-+				   u64 *addr_assoc3)
-+{
-+	struct pci_dev *rp = pcie_find_root_port(pdev);
-+	struct pci_ide_partner *setting = pci_ide_to_settings(rp, ide);
-+	resource_size_t start = ULLONG_MAX, end = 0;
-+
-+	*rid_assoc1 = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT, setting->rid_end);
-+	*rid_assoc2 = PREP_PCI_IDE_SEL_RID_2(setting->rid_start, pci_ide_domain(pdev));
-+
-+	/* Only one address association register block */
-+	setup_addr_range(pdev, &start, &end);
-+
-+	*addr_assoc1 = PREP_PCI_IDE_SEL_ADDR1(start, end);
-+	*addr_assoc2 = FIELD_GET(SEL_ADDR_UPPER, end);
-+	*addr_assoc3 = FIELD_GET(SEL_ADDR_UPPER, start);
-+}
-+
-+#define STREAM_INFO_RP_DEVFN		GENMASK_ULL(7, 0)
-+#define STREAM_INFO_TYPE		BIT_ULL(8)
-+#define  STREAM_INFO_TYPE_LINK		0
-+#define  STREAM_INFO_TYPE_SEL		1
-+
-+static int tdx_ide_stream_create(struct tdx_link *tlink, struct pci_ide *ide)
-+{
-+	u64 stream_info, stream_ctrl, rid_assoc1, rid_assoc2;
-+	u64 addr_assoc1, addr_assoc2, addr_assoc3;
-+	u64 stream_id, rp_ide_id;
-+	unsigned int nr_pages = tdx_sysinfo->connect.ide_mt_page_count;
-+	struct pci_dev *pdev = tlink->pci.base_tsm.pdev;
-+	struct pci_dev *rp = pcie_find_root_port(pdev);
-+	u64 r;
-+
-+	struct tdx_page_array *stream_mt __free(tdx_page_array_free) =
-+		tdx_page_array_create(nr_pages, true);
-+	if (!stream_mt)
-+		return -ENOMEM;
-+
-+	stream_info = FIELD_PREP(STREAM_INFO_RP_DEVFN, rp->devfn);
-+	stream_info |= FIELD_PREP(STREAM_INFO_TYPE, STREAM_INFO_TYPE_SEL);
-+
-+	/*
-+	 * For Selective IDE stream, below values must be 0:
-+	 *   NPR_AGG/PR_AGG/CPL_AGG/CONF_REQ/ALGO/DEFAULT/STREAM_ID
-+	 *
-+	 * below values are configurable but now hardcode to 0:
-+	 *   PCRC/TC
-+	 */
-+	stream_ctrl = FIELD_PREP(PCI_IDE_SEL_CTL_EN, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_TX_AGGR_NPR, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_TX_AGGR_PR, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_TX_AGGR_CPL, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_PCRC_EN, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_CFG_EN, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_ALG, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_TC, 0) |
-+		      FIELD_PREP(PCI_IDE_SEL_CTL_ID, 0);
-+
-+	sel_stream_block_setup(pdev, ide, &rid_assoc1, &rid_assoc2,
-+			       &addr_assoc1, &addr_assoc2, &addr_assoc3);
-+
-+	r = tdh_ide_stream_create(stream_info, tlink->spdm_id,
-+				  stream_mt, stream_ctrl,
-+				  rid_assoc1, rid_assoc2, addr_assoc1,
-+				  addr_assoc2, addr_assoc3,
-+				  &stream_id, &rp_ide_id);
-+	if (r)
-+		return -EFAULT;
-+
-+	tlink->stream_id = stream_id;
-+	tlink->stream_mt = no_free_ptr(stream_mt);
-+
-+	pci_dbg(pdev, "%s stream id 0x%x rp ide_id 0x%llx\n", __func__,
-+		tlink->stream_id, rp_ide_id);
-+	return 0;
-+}
-+
-+static void tdx_ide_stream_delete(struct tdx_link *tlink)
-+{
-+	struct pci_dev *pdev = tlink->pci.base_tsm.pdev;
-+	unsigned int nr_released;
-+	u64 released_hpa, r;
-+
-+	r = tdh_ide_stream_block(tlink->spdm_id, tlink->stream_id);
-+	if (r) {
-+		pci_err(pdev, "ide stream block fail %llx\n", r);
-+		goto leak;
-+	}
-+
-+	r = tdh_ide_stream_delete(tlink->spdm_id, tlink->stream_id,
-+				  tlink->stream_mt, &nr_released,
-+				  &released_hpa);
-+	if (r) {
-+		pci_err(pdev, "ide stream delete fail %llx\n", r);
-+		goto leak;
-+	}
-+
-+	if (tdx_page_array_ctrl_release(tlink->stream_mt, nr_released,
-+					released_hpa)) {
-+		pci_err(pdev, "fail to release IDE stream metadata pages\n");
-+		goto leak;
-+	}
-+
-+	goto out;
-+
-+leak:
-+	tdx_page_array_ctrl_leak(tlink->stream_mt);
-+out:
-+	tlink->stream_mt = NULL;
-+}
-+
- static void tdx_ide_stream_teardown(struct tdx_link *tlink)
- {
-+	struct pci_dev *pdev = tlink->pci.base_tsm.pdev;
-+	struct pci_ide *ide = tlink->ide;
-+
-+	if (!ide)
-+		return;
-+
-+	pci_ide_stream_disable(pdev, ide);
-+	tsm_ide_stream_unregister(ide);
-+	tdx_ide_stream_key_stop(tlink);
-+	pci_ide_stream_teardown(pdev, ide);
-+	pci_ide_stream_unregister(ide);
-+	tdx_ide_stream_delete(tlink);
-+	pci_ide_stream_free(tlink->ide);
-+	tlink->ide = NULL;
- }
- 
- static int tdx_ide_stream_setup(struct tdx_link *tlink)
- {
--	return -EOPNOTSUPP;
-+	struct pci_dev *pdev = tlink->pci.base_tsm.pdev;
-+	struct pci_ide *ide;
-+	int ret;
-+
-+	ide = pci_ide_stream_alloc(pdev);
-+	if (!ide)
-+		return -ENOMEM;
-+
-+	/* Configure IDE capability for RP & get stream_id */
-+	ret = tdx_ide_stream_create(tlink, ide);
-+	if (ret)
-+		goto stream_free;
-+
-+	ide->stream_id = tlink->stream_id;
-+	ret = pci_ide_stream_register(ide);
-+	if (ret)
-+		goto tdx_stream_delete;
-+
-+	/* Configure IDE capability for target device */
-+	pci_ide_stream_setup(pdev, ide);
-+
-+	/* Key Programming for RP & target device, enable IDE stream for RP */
-+	ret = tdx_ide_stream_key_program(tlink);
-+	if (ret)
-+		goto stream_teardown;
-+
-+	ret = tsm_ide_stream_register(ide);
-+	if (ret)
-+		goto tdx_key_stop;
-+
-+	/* Enable IDE stream for target device */
-+	pci_ide_stream_enable(pdev, ide);
-+
-+	tlink->ide = ide;
-+
-+	return 0;
-+
-+tdx_key_stop:
-+	tdx_ide_stream_key_stop(tlink);
-+stream_teardown:
-+	pci_ide_stream_teardown(pdev, ide);
-+	pci_ide_stream_unregister(ide);
-+tdx_stream_delete:
-+	tdx_ide_stream_delete(tlink);
-+stream_free:
-+	pci_ide_stream_free(tlink->ide);
-+	tlink->ide = NULL;
-+	return ret;
- }
- 
- static void __tdx_link_disconnect(struct tdx_link *tlink)
+   clock-names:
++    minItems: 6
+     items:
+       - const: aux # Auxiliary clock
+       - const: cfg # Configuration clock
 -- 
-2.51.0
+2.34.1
 
 
