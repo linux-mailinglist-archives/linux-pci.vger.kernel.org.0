@@ -1,650 +1,347 @@
-Return-Path: <linux-pci+bounces-36544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5073FB8B71C
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 00:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39C59B8B92C
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 00:51:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06A227E2ABA
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 22:10:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47CCDA824B7
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 22:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3C22C0F83;
-	Fri, 19 Sep 2025 22:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 483742D46A4;
+	Fri, 19 Sep 2025 22:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ZOKlpcQN"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Nk8tBQ+u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011005.outbound.protection.outlook.com [40.107.208.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A722C3278
-	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 22:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758319839; cv=none; b=AB9AzhE7ZkbCWdTM/U81n8NLpIMzI0JaMfQRrEUwEWcp/m2MRC7fzlzym0DY9X4EHErCHUsq/IiIuh1qYcBQEH3zUJGYgdH1eOgVGqmia8Fw50lu1WnZb7ixzEchIKE6eVSZyv8Fvy1BD5QdMsQ02rNkjLQJzuiUgGoJH6JX3JQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758319839; c=relaxed/simple;
-	bh=4q1AnSE6bsLLkAJ7K9Pc3wIAgoqhjjlrMBV8BMtECGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EklC1ZgnTGQoP8yPuFLcZ01lpGYLPQ5HKSLXovvnq0owMJoFkBTf8JZaRoewb1N7D+SjUV6FmcLUAbTMFLmM0Gu1gIiZPyZyIrIozV8Msfoy/uIivQEf8rwmHIwOqqC6YkM/ZhyA7bc/gFAoXHpZWoJg1DliJaDzmRVJv0WtQ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ZOKlpcQN; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-423fe622487so29029965ab.0
-        for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 15:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1758319836; x=1758924636; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xgcPdNC8TLKzaK2dbK4ItnfKIaHmVEGBsiI70uCF/kk=;
-        b=ZOKlpcQNv9mtCJncgT0M17yvi/LItfAg3M5m6iC9d1xJWZyaMWu9LWDZupd8gpU9hS
-         AkMKTvC606zKsy3Ajy3n57j0AJAYpHgcwI8iYrVBvS5RQWvPoEtXPWocVT7jK2dHit+R
-         RuhEdhr4fib+VHKSSEVgTK0sbTNWVqKHwUaNEdUsxd2AaaXftW8XFnfBhqlafUrl71Oy
-         /o7Y4gAkzCcqPGH90tPxWEC5iXR1Rg2wU0+yUu9KCOrztCwJWDross7EBXxY34YKw/H4
-         NRWwp3oW+y8Bf/diZCDK66y7sWNT5AnmCu2M0Q5JuJmYb/d1OwaRRSS0RoPqE3AdlAcq
-         uSCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758319836; x=1758924636;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xgcPdNC8TLKzaK2dbK4ItnfKIaHmVEGBsiI70uCF/kk=;
-        b=oKmkr2lJClRBRCu/IXe4CsYR6kpWF2mD8RmGD+ScrZ8IA5qo9SlUALZqVyarps0YAx
-         Yir+iBBYWocMmJSIgkLS4qLK2qx8s60LGlJIls2Buls3C9yCgVtn/4se5jVgmMWybQAR
-         Ir6s/G254616xcaeGoR8TmIHTSpawrzAGIzPDSwrTMqMxdZxZNUJ8PK+FW2w6+45efPg
-         NFdhe1KAIawiJbFBDsSgBv/AfD8deDpRyak66nTQ7aejaASw1El1LkGXdHi9Xgr6y466
-         v0lMeSTljBKnKkSyyYq4v2X7JJkQKEp/RlW0ePoqo7c7X3nk3jA1gPKbyRwAQM1tI+wQ
-         e/Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5zsy/kOyXvaG/28K24Q5D+t65EbokYoCNAqzhFSHKvz93PYp646h+TLjuJHYQVqgC3CugykoXlts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8hI77Bv3V8b2E/9RkoLKbdNUi+zmFj/q2VZc5t6HgYPgJA717
-	3QKxPNec5MbB/pB/xd+thr32qHwDbZ3wbPvLFyTXs4idfbbdapIenShlclvuRuxWvnI=
-X-Gm-Gg: ASbGncv3LfnlzLDo4y57UWaMn8cdZ9jn501mVs5L5+zFSSK0GsdW5l+eyJu0UnLjNYz
-	zM/Bc0tLEb72KwGf/ptNR/2movAz3qN4CSQNI9kQkT8Ao3H0y71r3QG6+8kHK34aV1pUKAgZyld
-	E2SINT1qgxikquludShM0rPPMpE8JprCn0dSkfLsPdn1rC57imjZ8Ha4jptoV7BdMQJdR/VXcaj
-	txiBIJ0QB/WeZ0D/RefagSn3uL1XczmYjTmxKKnVPNVkBnWN17t/3SVqKrnCW9uN2cL7Rl4P5Oi
-	uNqND6BVPWm0T4t+v7IZHTgJHNpcBJ2EhUUAz9ZOdbKsy3RUTp5rMFEQLfPk03wmJhHaYXznebP
-	7gSYXxXjIGbWq6ggmipcE18mSPwLtrNcYQRNy+9n5S7Q21XIC1Xcv/IM2LBFIINDes+aL4Wao
-X-Google-Smtp-Source: AGHT+IGUMi5Y+ZNyrqZVZaqAnb8mulirnkLZLTN1tiOo9Dktfk1VavRS0LndvmbeW3SqfgHBdfpwmQ==
-X-Received: by 2002:a05:6e02:2195:b0:424:672:e0fa with SMTP id e9e14a558f8ab-42481927108mr82251805ab.11.1758319835807;
-        Fri, 19 Sep 2025 15:10:35 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d56b5a45csm2587794173.70.2025.09.19.15.10.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Sep 2025 15:10:35 -0700 (PDT)
-Message-ID: <21ad322f-5abe-4a97-9373-d027b846ee8c@riscstar.com>
-Date: Fri, 19 Sep 2025 17:10:33 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB292D374D;
+	Fri, 19 Sep 2025 22:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758322092; cv=fail; b=avN/8MYWh73S8qw5EKkznV9/aoBMWnTjAW+d1lzkPHk8+e0Olq3y5N7y/mQOu3r39xACrpUUhxdx2FdCFaEKd1/L3vQGwFIYfIS2B0hVOnLcnATGL2MjMF/xHeIxDXsqQz9VijYXA5cU/4RZTFAwrLdym/qltW2GKpaZiY4mGo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758322092; c=relaxed/simple;
+	bh=z0rg/nNHqd1A2hJOGUuYi0fSmeZ9TUTYKbS6FNtzzLs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itEK4wF0U3Wb2i5d9uL3IQneGpuAc8hLa0iupzraHgveE+YRwgAIk1fF29cPPgqhv//m9JWr3IotYX7jWrNbgW6kIuTQnwpWPQDCFIY1jbvkF2IK4Ul5qd/3Z7uZBF6PRrPd4iuJ/klKnCIRijYv5XLtYWD6C4mlraFlbsqoavc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Nk8tBQ+u; arc=fail smtp.client-ip=40.107.208.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YQCnhAd4ogXwluZATUxNvL5CuJR9NfAIGtCxJmkOS9qd7VXJ0KePD7HMQhpY6Pjjc5IlRPamYbT83DeTnguHDu4agsEEj4cKY5Sq27dWtGMsyim9QgVzIU07XkHAyuO9gN04LWbmgz1/IzbC9b8ziDpAVR6Bh/djMaeK1sf4N9aZw9k7az4/6d4QTc2MMlyEtcOoQrzcnESGvXn0TiV0jtG9q18Agz6QEEUxENmlIDxeT/QtTgurwy4bpKL50xD0xRPAQDeGdfVBid4QSVv+qjilRAfnd9DtSZd6wizlRhg0k+Ui+Dwl/STv1pADyT/kY4dUUcaL9z1nX51gq/iDXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dsweyLScKXuoF/HTxi11r8BjDMX9bNlmMBgK3Adk0Zo=;
+ b=vzBcwDnrnzv52hSMpqcY20PDITYl+RxPOIAJJwvcQCgv2cEx5VbuyBcbiYjc4BBH1VpRa1Z3Q6UEkl4pCl6uym56AEgKT/u5//Wgo3PPsL5iBE5/U+4qqlwTy+h/ENvnht7Zb6FYCqIbgo7j3JInczPnOumSDOZd+WZ0zYXyvyYbgWHIPMA0etCs8INjkUC2xss/4VQiVMBRVUl3iF6CE054BAGi6InsP02+tDka8zRHJiTXTmn2txk+RBY5XD3Wfp2T+ZA+Cd1ajGlNXiiqLspRYbWel28NKsZImfSpYv8MEKs8F7mzDw7CK1MSDdOgapo4xXKYiitY0FALAuhXmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=csie.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dsweyLScKXuoF/HTxi11r8BjDMX9bNlmMBgK3Adk0Zo=;
+ b=Nk8tBQ+uFXO5QDs1h4oP4TcPb98iU4vhhVjeHNFZcmj5qKnOuCsDmRgpFKA1r/e1k+X2Fsk14Fg4B17Lka0mpRtg+8Z9e0mSw0ettXHDt2p+GmTjJlqhAIyQF1dGG5pWu1aG4Eav1PdgUo/4uNerAgkC9RmI9d1PkYh2eVc0deu6mvv+OEy9hLkK8VlpTzdUz+18nHSElGhYL/wDWelYnpfzWUOkB5xIbtGVb8G8pFa2VAdDn2OhCFLvcpNx9ZdEZYJZvz0Mkv5CC62/HLOL212VNhdePDdOjeCFo7QzIYoRGRqzK+uKfuRlPXlwuYlZPNSsqIW+TfBmQef0m/UHBA==
+Received: from MN2PR08CA0005.namprd08.prod.outlook.com (2603:10b6:208:239::10)
+ by DS7PR12MB6190.namprd12.prod.outlook.com (2603:10b6:8:99::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.14; Fri, 19 Sep
+ 2025 22:48:05 +0000
+Received: from BL6PEPF0001AB71.namprd02.prod.outlook.com
+ (2603:10b6:208:239:cafe::94) by MN2PR08CA0005.outlook.office365.com
+ (2603:10b6:208:239::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.16 via Frontend Transport; Fri,
+ 19 Sep 2025 22:48:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL6PEPF0001AB71.mail.protection.outlook.com (10.167.242.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Fri, 19 Sep 2025 22:48:03 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 19 Sep
+ 2025 15:47:54 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Fri, 19 Sep 2025 15:47:53 -0700
+Received: from Asurada-Nvidia (10.127.8.9) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 19 Sep 2025 15:47:51 -0700
+Date: Fri, 19 Sep 2025 15:47:49 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: "Tian, Kevin" <kevin.tian@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "suravee.suthikulpanit@amd.com"
+	<suravee.suthikulpanit@amd.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "sven@kernel.org"
+	<sven@kernel.org>, "j@jannau.net" <j@jannau.net>, "alyssa@rosenzweig.io"
+	<alyssa@rosenzweig.io>, "neal@gompa.dev" <neal@gompa.dev>,
+	"robin.clark@oss.qualcomm.com" <robin.clark@oss.qualcomm.com>,
+	"m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "krzk@kernel.org"
+	<krzk@kernel.org>, "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+	"dwmw2@infradead.org" <dwmw2@infradead.org>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "yong.wu@mediatek.com" <yong.wu@mediatek.com>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "tjeznach@rivosinc.com"
+	<tjeznach@rivosinc.com>, "paul.walmsley@sifive.com"
+	<paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "alex@ghiti.fr"
+	<alex@ghiti.fr>, "heiko@sntech.de" <heiko@sntech.de>,
+	"schnelle@linux.ibm.com" <schnelle@linux.ibm.com>, "mjrosato@linux.ibm.com"
+	<mjrosato@linux.ibm.com>, "gerald.schaefer@linux.ibm.com"
+	<gerald.schaefer@linux.ibm.com>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+	"zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "wens@csie.org"
+	<wens@csie.org>, "jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
+	"samuel@sholland.org" <samuel@sholland.org>, "jean-philippe@linaro.org"
+	<jean-philippe@linaro.org>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"cwabbott0@gmail.com" <cwabbott0@gmail.com>, "quic_pbrahma@quicinc.com"
+	<quic_pbrahma@quicinc.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"asahi@lists.linux.dev" <asahi@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
+	<linux-samsung-soc@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-rockchip@lists.infradead.org"
+	<linux-rockchip@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "linux-sunxi@lists.linux.dev"
+	<linux-sunxi@lists.linux.dev>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "virtualization@lists.linux.dev"
+	<virtualization@lists.linux.dev>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "Sethi, Vikram" <vsethi@nvidia.com>,
+	"helgaas@kernel.org" <helgaas@kernel.org>, "etzhao1900@gmail.com"
+	<etzhao1900@gmail.com>
+Subject: Re: [PATCH v4 1/7] iommu/arm-smmu-v3: Add release_domain to attach
+ prior to release_dev()
+Message-ID: <aM3dlQH0rk74w2CH@Asurada-Nvidia>
+References: <cover.1756682135.git.nicolinc@nvidia.com>
+ <c6bc114e438779129a891408af7d997bf6c28b5b.1756682135.git.nicolinc@nvidia.com>
+ <BL1PR11MB5271767F92289C1D1207D8188C08A@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <20250915123515.GE1024672@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] PCI: spacemit: introduce SpacemiT PCIe host driver
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
- bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
- vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, p.zabel@pengutronix.de, tglx@linutronix.de,
- johan+linaro@kernel.org, thippeswamy.havalige@amd.com, namcao@linutronix.de,
- mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, inochiama@gmail.com,
- quic_schintav@quicinc.com, fan.ni@samsung.com, devicetree@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
- spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250813184701.2444372-1-elder@riscstar.com>
- <20250813184701.2444372-6-elder@riscstar.com>
- <sptrmspkmqrwsh2iv4rmha45vsoz5ks7vhcdp3dytsxyabn6qn@mmk7z6tf5wcv>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <sptrmspkmqrwsh2iv4rmha45vsoz5ks7vhcdp3dytsxyabn6qn@mmk7z6tf5wcv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250915123515.GE1024672@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB71:EE_|DS7PR12MB6190:EE_
+X-MS-Office365-Filtering-Correlation-Id: d68a65b7-1329-45b8-f457-08ddf7ce97f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZCl7tuhenDwOjfT4C6k5OaH6jJnCVYRVJJ/KHeIjeC9EsGiFHyc5afTmTlIW?=
+ =?us-ascii?Q?ENDm7euUQvCiGuYNxyV3jhsxfOuyk2mm68G6RKusBpc6cNY2SvWmD/PceP5s?=
+ =?us-ascii?Q?ILsCTo/fw9M61EMgWT3Xq70TPkK9eZ+XMQhGlpRKZvC+UMKXsJVYGgcLKLrP?=
+ =?us-ascii?Q?MqYHnFVZNN8soiM8wld4Pq+fvZRpPJsw2FfpNd+Na2xw1yLj3MN6b46yr9Rf?=
+ =?us-ascii?Q?OPUUoNzsIV/DECDDlemLTudPe54sQ0pcqjNDctjwsNEfyxM9vRgd4p9uUiLz?=
+ =?us-ascii?Q?MNp49MijbMTXc9H/83Jt5oily6K4iiNoDMADunVft87jt1Lwzvh95NEPdrWq?=
+ =?us-ascii?Q?VN05/eQ1/NTkAFjCCJIDfYGJpAvDtMo01kwhqfaiPLzOAS5tqOFzU/vo56lz?=
+ =?us-ascii?Q?QWwj0H0hIo61O0Qr5rgcOHvz5MOwiOspnI3ZUb8UQ3AJnHWIwpn1qyYh/wSL?=
+ =?us-ascii?Q?IEmW6HhqhTOC925Q6LLbaGmmNKOT4mdMJtSOwmkJSET+CeX++fF2ZvYClJBA?=
+ =?us-ascii?Q?0UrafQwa87lat7/eyWxGmOHNc/Tkn/Ld4zyIYnj0+qfQmr5YtIZdIKOkZry8?=
+ =?us-ascii?Q?nEi17l3OBwmyO3FoNB39M26l5UKhrayVTKhbQ+ClkHyz7EIUX54Vp6bVa+g+?=
+ =?us-ascii?Q?f6uPWGB+RuYa1O/iLNiiuu6Kh6bevIbK19XyQF/HdsJVggQp5CiQJN99pbHm?=
+ =?us-ascii?Q?eRyY/AdYKHyQG/m6pfRfKKp7boXDGZRWgfeAmADNvxO5T6B5O/NZPpFFdGTG?=
+ =?us-ascii?Q?0VMgkuOhlR6UZs6LNyHg55bMq3zmnUeXBOsgQQwRYBQuTI88Ma8SbmPlkb4F?=
+ =?us-ascii?Q?N9uVAXz5P2TjIwzlw+da2i0LepoRfyOc75Aeh2a0yYQxEL5iTDbseAP1zNYR?=
+ =?us-ascii?Q?Nay9l5K3xk97tFnis6/A87bc0oTbw9IHqcWVW9A+jsU+hmezkP4JFUUqlAze?=
+ =?us-ascii?Q?YsjS/Tpf0Xhd8VZsDEsQWFBZdboxYSt4n/YY96Kg5rpLg0gGk2ljk+i7pjGC?=
+ =?us-ascii?Q?98MuzqrdFlNeM1X8xB/cjL7FjgDiHKx2+s9EbRvxwuzS+vNtAtDfpLJ8lK/0?=
+ =?us-ascii?Q?5TjCQyxCUtrrmPr8hTop4qYhHxI4Gj4//wpZUAqIJVHjW6G6bXPKBr3jJHhl?=
+ =?us-ascii?Q?B9d4EPF8Y2RZOzmR4T+pmNdfC0qzr4RtzYDhNeUm4/JhoBEycwteOWZRup8c?=
+ =?us-ascii?Q?vbEUBCUWfmE7Vd8l8VxbShUWTUg0hx0JCXJ63DYOKh+9eq7Hd9hb7llKD6j/?=
+ =?us-ascii?Q?vfVHg1i5I1Cg6Lo2zjhcI2czR/ZE41Q1HZlRZhEALcAJQ7crqxGhZspAQmrq?=
+ =?us-ascii?Q?atn4ObUj/DPicbUZZ52OekvPKff4V47N62uymEwiGY3UU8Nw+zB+dtFGcLAJ?=
+ =?us-ascii?Q?c/bpQZ7vRlx1JJhbOmeImBLnEBCaSnjQB5QrbObXnM3Yat5980+v4fgT+Zt+?=
+ =?us-ascii?Q?Qz65tXHdCUteEQC/Q1zSTJJ1IDnes2T4gFFdGQiD39fC1eTmrYpgyOIUNLf9?=
+ =?us-ascii?Q?m9YsTgu+SZEnAtyd2p1vazP9VhADdN4oDwG7?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 22:48:03.9741
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d68a65b7-1329-45b8-f457-08ddf7ce97f4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB71.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6190
 
-On 9/15/25 3:09 AM, Manivannan Sadhasivam wrote:
-> On Wed, Aug 13, 2025 at 01:46:59PM GMT, Alex Elder wrote:
->> Introduce a driver for the PCIe root complex found in the SpacemiT
->> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
->> The driver supports three PCIe ports that operate at PCIe v2 transfer
->> rates (5 GT/sec).  The first port uses a combo PHY, which may be
->> configured for use for USB 3 instead.
->>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
->> ---
->>   drivers/pci/controller/dwc/Kconfig   |  10 +
->>   drivers/pci/controller/dwc/Makefile  |   1 +
->>   drivers/pci/controller/dwc/pcie-k1.c | 355 +++++++++++++++++++++++++++
->>   3 files changed, 366 insertions(+)
->>   create mode 100644 drivers/pci/controller/dwc/pcie-k1.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index ff6b6d9e18ecf..ca5782c041ce8 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -492,4 +492,14 @@ config PCIE_VISCONTI_HOST
->>   	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
->>   	  This driver supports TMPV7708 SoC.
->>   
->> +config PCIE_K1
->> +	bool "SpacemiT K1 host mode PCIe controller"
+On Mon, Sep 15, 2025 at 09:35:15AM -0300, Jason Gunthorpe wrote:
+> On Fri, Sep 12, 2025 at 09:33:06AM +0000, Tian, Kevin wrote:
+> > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > Sent: Monday, September 1, 2025 7:32 AM
+> > > 
+> > > +static int arm_smmu_attach_dev_release(struct iommu_domain *domain,
+> > > +				       struct device *dev)
+> > > +{
+> > > +	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+> > > +
+> > > +	WARN_ON(master->iopf_refcount);
 > 
-> No need to make it bool, build it as a module. Only the PCI controller drivers
-> implementing irqchip need to be kept bool for irq disposal concerns.
-
-OK.
-
->> +	depends on ARCH_SPACEMIT || COMPILE_TEST
->> +	depends on PCI && OF && HAS_IOMEM
->> +	select PCIE_DW_HOST
->> +	default ARCH_SPACEMIT
->> +	help
->> +	  Enables support for the PCIe controller in the K1 SoC operating
->> +	  in host mode.
+> This doesn't look right anymore..
 > 
-> Is the driver only applicable for K1 SoCs or other SoCs from spacemit? Even if
-> it is the former, I would suggest renaming to 'pcie-spacemit-k1.c'
+> Now that iopf is managed automatically it technically doesn't go to
+> zero until the attaches below:
 
-Yes, I will do that.
+I will leave this WARN_ON in the arm_smmu_release_device(), while
+having a release_domain to call arm_smmu_attach_dev_blocked():
 
->>   endmenu
->> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
->> index 6919d27798d13..62d9d4e7dd4d3 100644
->> --- a/drivers/pci/controller/dwc/Makefile
->> +++ b/drivers/pci/controller/dwc/Makefile
->> @@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->>   obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->>   obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
->>   obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
->> +obj-$(CONFIG_PCIE_K1) += pcie-k1.o
->>   
->>   # The following drivers are for devices that use the generic ACPI
->>   # pci_root.c driver but don't support standard ECAM config access.
->> diff --git a/drivers/pci/controller/dwc/pcie-k1.c b/drivers/pci/controller/dwc/pcie-k1.c
->> new file mode 100644
->> index 0000000000000..e9b1df3428d16
->> --- /dev/null
->> +++ b/drivers/pci/controller/dwc/pcie-k1.c
->> @@ -0,0 +1,355 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * SpacemiT K1 PCIe host driver
->> + *
->> + * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
->> + * Copyright (c) 2023, spacemit Corporation.
->> + */
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/bits.h>
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/gfp.h>
->> +#include <linux/irq.h>
+-----------------------------------------------------------------
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 2a8b46b948f05..3b21790938d24 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -3291,6 +3291,16 @@ static struct iommu_domain arm_smmu_blocked_domain = {
+ 	.ops = &arm_smmu_blocked_ops,
+ };
+ 
++/* Same as arm_smmu_blocked_ops but less set_dev_pasid */
++static const struct iommu_domain_ops arm_smmu_release_ops = {
++	.attach_dev = arm_smmu_attach_dev_blocked,
++};
++
++static struct iommu_domain arm_smmu_release_domain = {
++	.type = IOMMU_DOMAIN_BLOCKED,
++	.ops = &arm_smmu_release_ops,
++};
++
+ static struct iommu_domain *
+ arm_smmu_domain_alloc_paging_flags(struct device *dev, u32 flags,
+ 				   const struct iommu_user_data *user_data)
+@@ -3582,12 +3592,6 @@ static void arm_smmu_release_device(struct device *dev)
+ 
+ 	WARN_ON(master->iopf_refcount);
+ 
+-	/* Put the STE back to what arm_smmu_init_strtab() sets */
+-	if (dev->iommu->require_direct)
+-		arm_smmu_attach_dev_identity(&arm_smmu_identity_domain, dev);
+-	else
+-		arm_smmu_attach_dev_blocked(&arm_smmu_blocked_domain, dev);
+-
+ 	arm_smmu_disable_pasid(master);
+ 	arm_smmu_remove_master(master);
+ 	if (arm_smmu_cdtab_allocated(&master->cd_table))
+@@ -3678,6 +3682,7 @@ static int arm_smmu_def_domain_type(struct device *dev)
+ static const struct iommu_ops arm_smmu_ops = {
+ 	.identity_domain	= &arm_smmu_identity_domain,
+ 	.blocked_domain		= &arm_smmu_blocked_domain,
++	.release_domain		= &arm_smmu_release_domain,
+ 	.capable		= arm_smmu_capable,
+ 	.hw_info		= arm_smmu_hw_info,
+ 	.domain_alloc_sva       = arm_smmu_sva_domain_alloc,
+-----------------------------------------------------------------
+
+> > > +
+> > > +	/* Put the STE back to what arm_smmu_init_strtab() sets */
+> > > +	if (dev->iommu->require_direct)
+> > > +
+> > > 	arm_smmu_attach_dev_identity(&arm_smmu_identity_domain,
+> > > dev);
+> > > +	else
+> > > +
+> > > 	arm_smmu_attach_dev_blocked(&arm_smmu_blocked_domain,
+> > > dev);
 > 
-> unused?
+> And I'd argue the attaches internally should have the assertion. If no
+> pasids and blocked/identity the iopf == 0.
 
-Yes, and there are a few others I can get rid of too.
+Ack. I will try a separate SMMU patch from this series.
 
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/of.h>
->> +#include <linux/pci.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset.h>
->> +#include <linux/types.h>
->> +
->> +#include "pcie-designware.h"
->> +
->> +#define K1_PCIE_VENDOR_ID	0x201f
->> +#define K1_PCIE_DEVICE_ID	0x0001
->> +
->> +/* Offsets and field definitions of link management registers */
->> +
->> +#define K1_PHY_AHB_IRQ_EN			0x0000
->> +#define PCIE_INTERRUPT_EN		BIT(0)
->> +
->> +#define K1_PHY_AHB_LINK_STS			0x0004
->> +#define SMLH_LINK_UP			BIT(1)
->> +#define RDLH_LINK_UP			BIT(12)
->> +
->> +#define INTR_ENABLE				0x0014
->> +#define MSI_CTRL_INT			BIT(11)
->> +
->> +/* Offsets and field definitions for PMU registers */
->> +
->> +#define PCIE_CLK_RESET_CONTROL			0x0000
->> +#define LTSSM_EN			BIT(6)
->> +#define PCIE_AUX_PWR_DET		BIT(9)
->> +#define PCIE_RC_PERST			BIT(12)	/* 0: PERST# high; 1: low */
->> +#define APP_HOLD_PHY_RST		BIT(30)
->> +#define DEVICE_TYPE_RC			BIT(31)	/* 0: endpoint; 1: RC */
->> +
->> +#define PCIE_CONTROL_LOGIC			0x0004
->> +#define PCIE_SOFT_RESET			BIT(0)
->> +
->> +struct k1_pcie {
->> +	struct dw_pcie pci;
->> +	void __iomem *link;
->> +	struct regmap *pmu;
->> +	u32 pmu_off;
->> +	struct phy *phy;
->> +	struct reset_control *global_reset;
->> +};
->> +
->> +#define to_k1_pcie(dw_pcie)	dev_get_drvdata((dw_pcie)->dev)
->> +
->> +static int k1_pcie_toggle_soft_reset(struct k1_pcie *k1)
->> +{
->> +	u32 offset = k1->pmu_off + PCIE_CONTROL_LOGIC;
->> +	const u32 mask = PCIE_SOFT_RESET;
->> +	int ret;
->> +
->> +	ret = regmap_set_bits(k1->pmu, offset, mask);
-> 
-> For MMIO, it is OK to skip the error handling.
+> Also, I don't think this should be in the smmu driver, every driver
+> should have this same logic, it is part of the definition of RMR
+> Let's put it in the core code:
 
-You mean even though the regmap API returns an error,
-it never will with MMIO?
-- regmap_mmio_read() and regmap_mmio_write() always
-   return 0 unless there's an error enabling its clock.
+Ack. Adding this patch prior to the SMMU release_domain:
 
-Sounds good, I'll simplify places that use this.
+-----------------------------------------------------------------
+From: Jason Gunthorpe <jgg@nvidia.com>
+Date: Fri, 19 Sep 2025 22:26:45 +0000
+Subject: [PATCH] iommu: Use identity_domain as release_domain for
+ require_direct
 
->> +	if (ret)
->> +		return ret;
->> +
->> +	mdelay(2);
-> 
-> If the previous write to the PMU got stuck in the CPU cache, there is no
-> guarantee that this delay of 2ms between write and clear will be enforced. So
-> you should do a dummy read after write to ensure that the previous write has
-> reached the PMU (or any device) and then clear the bits.
+If dev->iommu->require_direct is set, the core prevent attaching a BLOCKED
+domains entirely in __iommu_device_set_domain():
 
-Wow, really?  I was aware of this being possible for I/O
-writes but it seems like something regmap might handle.
+	if (dev->iommu->require_direct &&
+	    (new_domain->type == IOMMU_DOMAIN_BLOCKED ||
+	     new_domain == group->blocking_domain)) {
+		dev_warn(dev, "....");
+		return -EINVAL;
+	}
 
-I'll add a regmap_read() for the same offset and discard
-the result *before* the delay.  I'll do the same for this:
+Thus, in most sane cases, the above will never convert BLOCKED to IDENTITY
+in order to preserve the RMRs (direct mappings).
 
-         mdelay(PCIE_T_PVPERL_MS);
+A similar situation would happen to the release_domain: while driver might
+have set it to a BLOCKED domain, replace it with an IDENTITY for RMRs.
 
->> +	return regmap_clear_bits(k1->pmu, offset, mask);
->> +}
->> +
->> +/* Enable app clocks, deassert app resets */
->> +static int k1_pcie_app_enable(struct k1_pcie *k1)
->> +{
->> +	struct dw_pcie *pci = &k1->pci;
->> +	u32 clock_count;
->> +	u32 reset_count;
->> +	int ret;
->> +
->> +	clock_count = ARRAY_SIZE(pci->app_clks);
-> 
-> Just use ARRAY_SIZE() directly below.
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+---
+ drivers/iommu/iommu.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-OK.
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 08ba7b929580f..438458b465cac 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -516,8 +516,20 @@ static void iommu_deinit_device(struct device *dev)
+ 	 * Regardless, if a delayed attach never occurred, then the release
+ 	 * should still avoid touching any hardware configuration either.
+ 	 */
+-	if (!dev->iommu->attach_deferred && ops->release_domain)
+-		ops->release_domain->ops->attach_dev(ops->release_domain, dev);
++	if (!dev->iommu->attach_deferred && ops->release_domain) {
++		struct iommu_domain *release_domain = ops->release_domain;
++
++		/*
++		 * If the device requires direct mappings then it should not
++		 * be parked on a BLOCKED domain during release as that would
++		 * break the direct mappings.
++		 */
++		if (dev->iommu->require_direct && ops->identity_domain &&
++		    release_domain == ops->blocked_domain)
++			release_domain = ops->identity_domain;
++
++		release_domain->ops->attach_dev(release_domain, dev);
++	}
+ 
+ 	if (ops->release_device)
+ 		ops->release_device(dev);
+-- 
+2.43.0
 
->> +	ret = clk_bulk_prepare_enable(clock_count, pci->app_clks);
->> +	if (ret)
->> +		return ret;
->> +
->> +	reset_count = ARRAY_SIZE(pci->app_rsts);
-> 
-> Same here.
+-----------------------------------------------------------------
 
-OK.
-
->> +	ret = reset_control_bulk_deassert(reset_count, pci->app_rsts);
->> +	if (ret)
->> +		goto err_disable_clks;
->> +
->> +	ret = reset_control_deassert(k1->global_reset);
->> +	if (ret)
->> +		goto err_assert_resets;
->> +
->> +	return 0;
->> +
->> +err_assert_resets:
->> +	(void)reset_control_bulk_assert(reset_count, pci->app_rsts);
-> 
-> Why void cast? Here and in other places.
-
-I put void casts when I'm ignoring a returned value.
-It's not necessary, but it reminds me that the function
-returns a value, and at some point I decided to ignore it.
-I can drop those if you find them offensive.
-
-If you're suggesting I should issue a warning here if
-an error is returned here, tell me that.
-
->> +err_disable_clks:
->> +	clk_bulk_disable_unprepare(clock_count, pci->app_clks);
->> +
->> +	return ret;
->> +}
->> +
->> +/* Disable app clocks, assert app resets */
->> +static void k1_pcie_app_disable(struct k1_pcie *k1)
->> +{
->> +	struct dw_pcie *pci = &k1->pci;
->> +	u32 count;
->> +	int ret;
->> +
->> +	(void)reset_control_assert(k1->global_reset);
->> +
->> +	count = ARRAY_SIZE(pci->app_rsts);
->> +	ret = reset_control_bulk_assert(count, pci->app_rsts);
->> +	if (ret)
->> +		dev_err(pci->dev, "app reset assert failed (%d)\n", ret);
->> +
->> +	count = ARRAY_SIZE(pci->app_clks);
->> +	clk_bulk_disable_unprepare(count, pci->app_clks);
->> +}
-> 
-> Same comments as k1_pcie_app_enable().
-
-OK.
-
->> +static int k1_pcie_init(struct dw_pcie_rp *pp)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct k1_pcie *k1 = to_k1_pcie(pci);
->> +	u32 offset;
->> +	u32 mask;
->> +	int ret;
->> +
->> +	ret = k1_pcie_toggle_soft_reset(k1);
->> +	if (ret)
->> +		goto err_app_disable;
->> +
->> +	ret = k1_pcie_app_enable(k1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = phy_init(k1->phy);
->> +	if (ret)
->> +		goto err_app_disable;
->> +
->> +	/* Set the PCI vendor and device ID */
->> +	dw_pcie_dbi_ro_wr_en(pci);
->> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, K1_PCIE_VENDOR_ID);
->> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, K1_PCIE_DEVICE_ID);
->> +	dw_pcie_dbi_ro_wr_dis(pci);
->> +
->> +	/*
->> +	 * Put the port in root complex mode, record that Vaux is present.
-> 
-> There is no 3.3Vaux supply present in the binding. So the supply is guaranteed
-> to be present and enabled always by the platform?
-
-Actually, I don't know, I'll ask.  Thank you for pointing this out.
-
->> +	 * Assert fundamental reset (drive PERST# low).
->> +	 */
->> +	offset = k1->pmu_off + PCIE_CLK_RESET_CONTROL;
->> +	mask = DEVICE_TYPE_RC | PCIE_AUX_PWR_DET;
->> +	mask |= PCIE_RC_PERST;
->> +	ret = regmap_set_bits(k1->pmu, offset, mask);
->> +	if (ret)
->> +		goto err_phy_exit;
->> +
->> +	/* Wait the PCIe-mandated 100 msec before deasserting PERST# */
->> +	mdelay(100);
-> 
-> Same comment as k1_pcie_toggle_soft_reset() applies here.
-
-Yes, understood.
-
->> +
->> +	ret = regmap_clear_bits(k1->pmu, offset, PCIE_RC_PERST);
->> +	if (!ret)
->> +		return 0;	/* Success! */
-> 
-> Please use common pattern to return success:
-> 
-> 	regmap_clear_bits()
-> 
-> 	return 0;
-
-Now that I won't be checking return values this will come
-naturally.  So yes, it will look like this, and there are
-no other instances of this return pattern in this file.
-
-> 
->> +
->> +err_phy_exit:
->> +	(void)phy_exit(k1->phy);
->> +err_app_disable:
->> +	k1_pcie_app_disable(k1);
->> +
->> +	return ret;
->> +}
->> +
->> +/* Silently ignore any errors */
->> +static void k1_pcie_deinit(struct dw_pcie_rp *pp)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct k1_pcie *k1 = to_k1_pcie(pci);
->> +
->> +	/* Re-assert fundamental reset (drive PERST# low) */
-> 
-> s/Re-assert/Assert
-> 
->> +	(void)regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
->> +			      PCIE_RC_PERST);
->> +
->> +	(void)phy_exit(k1->phy);
->> +
->> +	k1_pcie_app_disable(k1);
->> +}
->> +
->> +static const struct dw_pcie_host_ops k1_pcie_host_ops = {
->> +	.init		= k1_pcie_init,
->> +	.deinit		= k1_pcie_deinit,
->> +};
->> +
->> +static void k1_pcie_enable_interrupts(struct k1_pcie *k1)
->> +{
->> +	void __iomem *virt;
->> +	u32 val;
->> +
->> +	/* Enable the MSI interrupt */
->> +	writel(MSI_CTRL_INT, k1->link + INTR_ENABLE);
-> 
-> If there are no ordering issues (I guess so), you can very well use the _relaxed
-> variants throughout the driver.
-
-The only writel() calls are related to updating
-these interrupt bits.  I think you're right.
-
->> +	/* Top-level interrupt enable */
->> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
->> +	val = readl(virt);
->> +	val |= PCIE_INTERRUPT_EN;
->> +	writel(val, virt);
->> +}
->> +
->> +static void k1_pcie_disable_interrupts(struct k1_pcie *k1)
->> +{
->> +	void __iomem *virt;
->> +	u32 val;
->> +
->> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
->> +	val = readl(virt);
->> +	val &= ~PCIE_INTERRUPT_EN;
->> +	writel(val, virt);
->> +
->> +	writel(0, k1->link + INTR_ENABLE);
->> +}
->> +
->> +static bool k1_pcie_link_up(struct dw_pcie *pci)
->> +{
->> +	struct k1_pcie *k1 = to_k1_pcie(pci);
->> +	u32 val;
->> +
->> +	val = readl(k1->link + K1_PHY_AHB_LINK_STS);
->> +
->> +	return (val & RDLH_LINK_UP) && (val & SMLH_LINK_UP);
->> +}
->> +
->> +static int k1_pcie_start_link(struct dw_pcie *pci)
->> +{
->> +	struct k1_pcie *k1 = to_k1_pcie(pci);
->> +	int ret;
->> +
->> +	/* Stop holding the PHY in reset, and enable link training */
->> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
->> +				 APP_HOLD_PHY_RST | LTSSM_EN, LTSSM_EN);
->> +	if (ret)
->> +		return ret;
->> +
->> +	k1_pcie_enable_interrupts(k1);
->> +
->> +	return 0;
->> +}
->> +
->> +static void k1_pcie_stop_link(struct dw_pcie *pci)
->> +{
->> +	struct k1_pcie *k1 = to_k1_pcie(pci);
->> +	int ret;
->> +
->> +	k1_pcie_disable_interrupts(k1);
->> +
->> +	/* Disable the link and hold the PHY in reset */
->> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
->> +				 APP_HOLD_PHY_RST | LTSSM_EN, APP_HOLD_PHY_RST);
->> +	if (ret)
->> +		dev_err(pci->dev, "disable LTSSM failed (%d)\n", ret);
->> +}
->> +
->> +static const struct dw_pcie_ops k1_pcie_ops = {
->> +	.link_up	= k1_pcie_link_up,
->> +	.start_link	= k1_pcie_start_link,
->> +	.stop_link	= k1_pcie_stop_link,
->> +};
->> +
->> +static int k1_pcie_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct dw_pcie_rp *pp;
->> +	struct dw_pcie *pci;
->> +	struct k1_pcie *k1;
->> +	int ret;
->> +
->> +	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
->> +	if (!k1)
->> +		return -ENOMEM;
->> +	dev_set_drvdata(dev, k1);
->> +
->> +	k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
->> +						       "spacemit,syscon-pmu",
->> +						       1, &k1->pmu_off);
->> +	if (IS_ERR(k1->pmu))
->> +		return dev_err_probe(dev, PTR_ERR(k1->pmu),
->> +				     "lookup PMU regmap failed\n");
-> 
-> 'Failed to lookup \"PMU\" registers'
-OK.
-
->> +
->> +	k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
->> +	if (!k1->link)
->> +		return dev_err_probe(dev, -ENOMEM, "map link regs failed\n");
-> 
-> 'Failed to map \"link\" registers
-> 
-> Same for below error prints as well.
-
-OK.
-
->> +
->> +	k1->global_reset = devm_reset_control_get_shared(dev, "global");
->> +	if (IS_ERR(k1->global_reset))
->> +		return dev_err_probe(dev, PTR_ERR(k1->global_reset),
->> +				     "get global reset failed\n");
->> +
->> +	/* Hold the PHY in reset until we start the link */
->> +	ret = regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
->> +			      APP_HOLD_PHY_RST);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "hold PHY in reset failed\n");
->> +
->> +	k1->phy = devm_phy_get(dev, NULL);
->> +	if (IS_ERR(k1->phy))
->> +		return dev_err_probe(dev, PTR_ERR(k1->phy), "get PHY failed\n");
->> +
->> +	pci = &k1->pci;
->> +	dw_pcie_cap_set(pci, REQ_RES);
->> +	pci->dev = dev;
->> +	pci->ops = &k1_pcie_ops;
->> +
->> +	pp = &pci->pp;
->> +	pp->num_vectors = MAX_MSI_IRQS;
-> 
-> I don't understand how MSI is implemented in this platform. If the controller
-> relies on an external interrupt controller for handling MSIs (I think it does),
-> then there should be either 'msi-parent' or 'msi-map' existed in the binding.
-
-OK your comment earlier made me realize I had more to do here.
-I'll work to improve that.
-
-> But I see none, other than 'interrupts-extended'. So I don't know how MSI works
-> at all.
-> 
->> +	pp->ops = &k1_pcie_host_ops;
->> +
->> +	ret = dw_pcie_host_init(pp);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "host init failed\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static void k1_pcie_remove(struct platform_device *pdev)
->> +{
->> +	struct k1_pcie *k1 = dev_get_drvdata(&pdev->dev);
->> +	struct dw_pcie_rp *pp = &k1->pci.pp;
->> +
->> +	dw_pcie_host_deinit(pp);
->> +}
->> +
->> +static const struct of_device_id k1_pcie_of_match_table[] = {
->> +	{ .compatible = "spacemit,k1-pcie-rc", },
->> +	{ },
->> +};
->> +
->> +static struct platform_driver k1_pcie_driver = {
->> +	.probe	= k1_pcie_probe,
->> +	.remove	= k1_pcie_remove,
->> +	.driver = {
->> +		.name			= "k1-dwc-pcie",
->> +		.of_match_table		= k1_pcie_of_match_table,
->> +		.suppress_bind_attrs	= true,
-> 
-> No need of this flag for the reason I mentioned in the Kcofig change.
-
-Because this doesn't implement an irqchip?
-
-> You should also set,
-> 
-> 	.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> 
-> to make use of the async probing of the devices during boot. This does save some
-> boot time.
-
-That's great to know, there is a noticeable delay during probe.
-
-Thank you very much for your careful review, Mani.
-
-					-Alex
-
-> - Mani
-> 
+Thanks
+Nicolin
 
