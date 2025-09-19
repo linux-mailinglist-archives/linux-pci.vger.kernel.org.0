@@ -1,103 +1,108 @@
-Return-Path: <linux-pci+bounces-36531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3B49B8AE86
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 20:24:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B60B5B8AEB4
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 20:31:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F65E16ED5D
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 18:24:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 86EE81B23687
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 18:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771FC25B31D;
-	Fri, 19 Sep 2025 18:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56836211A28;
+	Fri, 19 Sep 2025 18:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pk7eWoom"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiTCts8I"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F7760B8A;
-	Fri, 19 Sep 2025 18:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBA560B8A;
+	Fri, 19 Sep 2025 18:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758306293; cv=none; b=d/gbNQnrTI55cFEBFXjmVPSTP34abIxguQAaMW5GbhiOSF0lDpdR0EEa3t2IlAsCFSmjACoPeljyi2sii6nLeIkOM4p1yR0Lx8zbw4mt7ESKmg/PRwfiSDaG9yqg8axBQbAl+AM3hcU3GYbEoWNoBFeGuhgKrjAVB48OrnyyYQE=
+	t=1758306660; cv=none; b=EYy8zRiqVk8eUK4NLXsvaRdxnZeaQuuIpwR05JkVzaxo9Yd6DxChCeYjAIiiniPAexvMs+By8ZqaaTQXmPjNjH6VVGSoGk11uPVg97V9a5+i14UZEA4TRNAzEyeO4ITbbbIcclKp+haBakhLAK+f5M/uwwSz70072pDXq2gIq18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758306293; c=relaxed/simple;
-	bh=1IVG3kWb+ICcP1ix8L0I8381OKaoshV+1ehyxxb90qI=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=i//BbN8IVHS6aZ69IY8ByXOQ5K2ord3gE65Np+ubCslwYJm62cRZ7UVZeU/QmgkedhQ7AgmTyLz+WK09oCaYoUAqJuaZmi1nHapeZeaY7DJhTussaepPyqOSnOhgLyfPL6CGxby2KeSqGQ3BwWdv/nP9fMliPTDqmGla2CECGmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pk7eWoom; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A5EC4CEF7;
-	Fri, 19 Sep 2025 18:24:42 +0000 (UTC)
+	s=arc-20240116; t=1758306660; c=relaxed/simple;
+	bh=VqGaXrsnHDB0BUTkmiNdMkMLAZVWdKAH/20+GH3zJ4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZcPf3e15cP0n1IFDBQVQa4jiFLc9rl5gWSmCsuFECxusOAsH3SwEEVfUyzo+ebGymTE1rgVMlba8jaA91GFv/9GzqI0NYWDQ9yOHu6wIojvk0tfcdsowdu69b1TDtxHIhGoxnv+2r3gwLdaLqw3aezYdI0t73J4SXcGUYVc1lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiTCts8I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F83C4CEF0;
+	Fri, 19 Sep 2025 18:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758306292;
-	bh=1IVG3kWb+ICcP1ix8L0I8381OKaoshV+1ehyxxb90qI=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=Pk7eWoomJsWIx9HJ6D+Y6bg4qhA4bCOdOkCqIjVW9FyxhSyS2alujMBAzhHKQVgcD
-	 bbgJl43wjtGflgVAwQbn6dJ/HhYuug/632sNIh1jOrApA56Xff3HZVCtesk57OqnV+
-	 gR4ADg8CbPI231jRgHPSxaoDkaT8wK+s6oLXLM77Or06aNdj5AiVRQ6//tge4ML3Lg
-	 P3eM1UvAVPyTMmgZaZolBKKmMINhHvhcIoxOKuUk/mutNKsqO54QIK7IFWHw1mhDs2
-	 QozwvHCyIGiJmBHsQIf5OXgdAowSs/7hIfJCA+8UE0mYR2i27LYaOlgYbPdX7aHDQm
-	 mFkpvoagxU6lA==
+	s=k20201202; t=1758306658;
+	bh=VqGaXrsnHDB0BUTkmiNdMkMLAZVWdKAH/20+GH3zJ4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qiTCts8ITuKje9k20xuiq9n+85M+xbls4wD13KoIdMwCL9Af3TTOit6LevDtelBCQ
+	 y8KdVdq5c+gWclkluTbPyEpvsfM2EYFiOjal41dTJUahi1kwuEuudZDJNY0aBqotrI
+	 Zo4YXug1FwXnGQYx8MRgXLUoxrwMmk4AnmvobngvYR05B/yFwWtXzL6Qj1v3iZR+bK
+	 XhenwT9qvFeYVMkz504Pnxj/C4IFhwWT+tgrWYeZLJyipVJzrTLY6GvGBqhO8jS+8Q
+	 qb7zUON53XmUNdIjypNaIdYWpKiSlUs9C/lxU5BXUW7gvpbT3rOexT3jQr4V7CTMUl
+	 UGUs33Pih9wsA==
+Date: Sat, 20 Sep 2025 00:00:47 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: kwilczynski@kernel.org, u.kleine-koenig@baylibre.com, 
- aou@eecs.berkeley.edu, alex@ghiti.fr, arnd@arndb.de, bwawrzyn@cisco.com, 
- bhelgaas@google.com, unicorn_wang@outlook.com, conor+dt@kernel.org, 
- 18255117159@163.com, inochiama@gmail.com, kishon@kernel.org, 
- krzk+dt@kernel.org, lpieralisi@kernel.org, palmer@dabbelt.com, 
- paul.walmsley@sifive.com, robh@kernel.org, s-vadapalli@ti.com, 
- tglx@linutronix.de, thomas.richard@bootlin.com, sycamoremoon376@gmail.com, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, 
- sophgo@lists.linux.dev, rabenda.cn@gmail.com, chao.wei@sophgo.com, 
- xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com, jeffbai@aosc.io, 
- Chen Wang <unicornxw@gmail.com>
-In-Reply-To: <cover.1757643388.git.unicorn_wang@outlook.com>
-References: <cover.1757643388.git.unicorn_wang@outlook.com>
-Subject: Re: (subset) [PATCH v3 0/7] Add PCIe support to Sophgo SG2042 SoC
-Message-Id: <175830628258.24420.13208135130254060127.b4-ty@kernel.org>
-Date: Fri, 19 Sep 2025 23:54:42 +0530
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, christian.bruel@foss.st.com, 
+	qiang.yu@oss.qualcomm.com, mayank.rana@oss.qualcomm.com, thippeswamy.havalige@amd.com, 
+	shradha.t@samsung.com, quic_schintav@quicinc.com, inochiama@gmail.com, 
+	cassel@kernel.org, kishon@kernel.org, sergio.paracuellos@gmail.com, 
+	18255117159@163.com, rongqianfeng@vivo.com, jirislaby@kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v2 04/10] PCI: dwc: ep: Export
+ dw_pcie_ep_raise_msix_irq() for pci-keystone
+Message-ID: <kb6jxzyihyuhd4qfvdtgxgopzgyymhsflqmheb3fribovdck23@ahswbufb23sv>
+References: <20250912122356.3326888-1-s-vadapalli@ti.com>
+ <20250912122356.3326888-5-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250912122356.3326888-5-s-vadapalli@ti.com>
 
-
-On Fri, 12 Sep 2025 10:35:10 +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
+On Fri, Sep 12, 2025 at 05:46:15PM +0530, Siddharth Vadapalli wrote:
+> The pci-keystone.c driver uses the 'dw_pcie_ep_raise_msix_irq()' helper.
+> In preparation for enabling the pci-keystone.c driver to be built as a
+> loadable module, export 'dw_pcie_ep_raise_msix_irq()'.
 > 
-> Sophgo's SG2042 SoC uses Cadence PCIe core to implement RC mode.
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+This patch could be merged with patch 2.
+
+- Mani
+
+> ---
 > 
-> This is a completely rewritten PCIe driver for SG2042. It inherits
-> some previously submitted patch codes (not merged into the upstream
-> mainline), but the biggest difference is that the support for
-> compatibility with old 32-bit PCIe devices has been removed in this
-> new version. This is because after discussing with community users,
-> we felt that there was not much demand for support for old devices,
-> so we made a new design based on the simplified design and practical
-> needs. If someone really needs to play with old devices, we can provide
-> them with some necessary hack patches in the downstream repository.
+> v1: https://lore.kernel.org/r/20250903124505.365913-5-s-vadapalli@ti.com/
+> No changes since v1.
 > 
-> [...]
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 7f2112c2fb21..19571ac2b961 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -797,6 +797,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_msix_irq);
+>  
+>  /**
+>   * dw_pcie_ep_cleanup - Cleanup DWC EP resources after fundamental reset
+> -- 
+> 2.43.0
+> 
 
-Applied, thanks!
-
-[1/7] dt-bindings: pci: Add Sophgo SG2042 PCIe host
-      commit: 4e4a4f58bed19e1a3a5a7c3a18ce3b927b76fcd3
-[2/7] PCI: cadence: Check pcie-ops before using it
-      commit: 49a6c160ad4812476f8ae1a8f4ed6d15adfa6c09
-[3/7] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-      commit: 1c72774df028429836eec3394212f2921bb830fc
-
-Best regards,
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
