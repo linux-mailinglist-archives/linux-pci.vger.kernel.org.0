@@ -1,249 +1,650 @@
-Return-Path: <linux-pci+bounces-36543-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36544-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FF37B8B40E
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 22:57:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5073FB8B71C
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 00:10:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEB94587BA5
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 20:57:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06A227E2ABA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 22:10:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748452C237D;
-	Fri, 19 Sep 2025 20:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3C22C0F83;
+	Fri, 19 Sep 2025 22:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="otsPn8O9"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ZOKlpcQN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022107.outbound.protection.outlook.com [52.101.96.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E559274FEF;
-	Fri, 19 Sep 2025 20:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758315428; cv=fail; b=rwtGMWy6PA4MducX9rt9Byj99KhMohrkQGbYRcQtLkbPt0H4EGEiEF6p81lQdJ/r6tXahqE+nq6WRLxmqN8NFZA2PR77kmpnbTtYSRlawKma/LPO+82DbDNrMcfZzL3sMDMZqntwu17+PcxfNBuT2WtHp2mDQBYYas8ElPkY6PA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758315428; c=relaxed/simple;
-	bh=NUTzqvVUrJByJwj6R40p8enOyg8vE+pU3lZjIImqyxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n2uQw+55ED88hJB7mBqdnTBRIIKibMJKsUc6JIZ6yLN0PFdLek5sRfmOg8yMb3YfFQiwAZsv0z7s5zwYQUmOH0Kumg7CwGcrrh2PRmDmNvqt08sHfK+zu7PGeGp6OTLxLoEWb1McpaAatTyG+XvPklT6PsIpjD/gP33s7btlKH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=otsPn8O9; arc=fail smtp.client-ip=52.101.96.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g5C4v8cjpWYr79bAmmYUh1IKssWZnpW3HnFHNoKwtXNTzgca23ItIGm36SX0hpW/CY9994/VAlNMAX4a2Gc6mukAitldPepd9iYbEgotXcDBSTVYEjaXc7DWpz/oa31peuDUF2WfJl4y5Edcm07FmFOMDi3umKydIYRSdJbPUGsUVtYOrZFGQz13YFQKv+wEQlvpVCa/RbdhPAZClF8GAvfxXtWIhVibU6sMcwT24xi6iuUdAH8KxDdNaDTzyCx+O7TVN65YzsZfTX3XcS8OoeEWF+VkC81xgs2919lRzdSLS/HTbi9tmWANdZWilXFzNQuRPh/Zv2xVWIjmtTN58Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mziERtBd1QmSRcEw95xnSViq2nvvtp+DTHgI8aBcuEo=;
- b=TcYVwCcHUcA3t/ql9FOf8UAJHlkKKYKz1AbMP+vMvxnikp4bCBHMoDdCdfYaPH/R3GnnjmKlA9rPurmzevt/hoBZMukP0sOKZed8BKhLifMBUQl1RTcSmPlIDGN/2+xlclmtZ2jqp9nih97OVWFaIDLLKtvNvWq+NaDICkJUMPiC7pfKz5Ee7uTYTVw6y/i8TXjQVoXDk7P3eMTpLv3VWtUV7WRE46jxcJ8Kc0HDFx6Rl4u9/BbkZFOsNJgJkIvq80ZKm3NWrfJ6z4IdGTIx1A2HKgRiYdus3ggktK59HOOccn6SbeedYdltEm9xF1w+WClgGNPgqZuN+fN5/o6N+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mziERtBd1QmSRcEw95xnSViq2nvvtp+DTHgI8aBcuEo=;
- b=otsPn8O9COQQgJOlZXIxTJmFyHl4tjAq0ZzhpWu6Dd8NuJJ/J9dvnGSHZcqdA//0AEx+k1urG+kTrVLvjllaQkkT+j5V2d0mGWPkV1Fooocb6f+pgoUwDQGEhYs0PiyK0Sg4dYhGsWeaF8lPxngQu9gD87I5wYz+Hx9++ssSC9s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
- by LO4P265MB6822.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:34a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.17; Fri, 19 Sep
- 2025 20:56:58 +0000
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
- 20:56:58 +0000
-Date: Fri, 19 Sep 2025 21:56:34 +0100
-From: Gary Guo <gary@garyguo.net>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Joel Fernandes" <joelagnelf@nvidia.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, =?UTF-8?B?QmrDtnJu?= Roy Baron
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- "Bjorn Helgaas" <bhelgaas@google.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRz?=
- =?UTF-8?B?a2k=?= <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] rust: io: use const generics for read/write offsets
-Message-ID: <20250919215634.7a1c184e.gary@garyguo.net>
-In-Reply-To: <DCWBCL9U0IY4.NFNUMLRULAWM@kernel.org>
-References: <20250918-write-offset-const-v1-1-eb51120d4117@google.com>
-	<20250918181357.GA1825487@joelbox2>
-	<DCWBCL9U0IY4.NFNUMLRULAWM@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0307.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:391::15) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:253::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A722C3278
+	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 22:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758319839; cv=none; b=AB9AzhE7ZkbCWdTM/U81n8NLpIMzI0JaMfQRrEUwEWcp/m2MRC7fzlzym0DY9X4EHErCHUsq/IiIuh1qYcBQEH3zUJGYgdH1eOgVGqmia8Fw50lu1WnZb7ixzEchIKE6eVSZyv8Fvy1BD5QdMsQ02rNkjLQJzuiUgGoJH6JX3JQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758319839; c=relaxed/simple;
+	bh=4q1AnSE6bsLLkAJ7K9Pc3wIAgoqhjjlrMBV8BMtECGk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EklC1ZgnTGQoP8yPuFLcZ01lpGYLPQ5HKSLXovvnq0owMJoFkBTf8JZaRoewb1N7D+SjUV6FmcLUAbTMFLmM0Gu1gIiZPyZyIrIozV8Msfoy/uIivQEf8rwmHIwOqqC6YkM/ZhyA7bc/gFAoXHpZWoJg1DliJaDzmRVJv0WtQ3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ZOKlpcQN; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-423fe622487so29029965ab.0
+        for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 15:10:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1758319836; x=1758924636; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xgcPdNC8TLKzaK2dbK4ItnfKIaHmVEGBsiI70uCF/kk=;
+        b=ZOKlpcQNv9mtCJncgT0M17yvi/LItfAg3M5m6iC9d1xJWZyaMWu9LWDZupd8gpU9hS
+         AkMKTvC606zKsy3Ajy3n57j0AJAYpHgcwI8iYrVBvS5RQWvPoEtXPWocVT7jK2dHit+R
+         RuhEdhr4fib+VHKSSEVgTK0sbTNWVqKHwUaNEdUsxd2AaaXftW8XFnfBhqlafUrl71Oy
+         /o7Y4gAkzCcqPGH90tPxWEC5iXR1Rg2wU0+yUu9KCOrztCwJWDross7EBXxY34YKw/H4
+         NRWwp3oW+y8Bf/diZCDK66y7sWNT5AnmCu2M0Q5JuJmYb/d1OwaRRSS0RoPqE3AdlAcq
+         uSCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758319836; x=1758924636;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xgcPdNC8TLKzaK2dbK4ItnfKIaHmVEGBsiI70uCF/kk=;
+        b=oKmkr2lJClRBRCu/IXe4CsYR6kpWF2mD8RmGD+ScrZ8IA5qo9SlUALZqVyarps0YAx
+         Yir+iBBYWocMmJSIgkLS4qLK2qx8s60LGlJIls2Buls3C9yCgVtn/4se5jVgmMWybQAR
+         Ir6s/G254616xcaeGoR8TmIHTSpawrzAGIzPDSwrTMqMxdZxZNUJ8PK+FW2w6+45efPg
+         NFdhe1KAIawiJbFBDsSgBv/AfD8deDpRyak66nTQ7aejaASw1El1LkGXdHi9Xgr6y466
+         v0lMeSTljBKnKkSyyYq4v2X7JJkQKEp/RlW0ePoqo7c7X3nk3jA1gPKbyRwAQM1tI+wQ
+         e/Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5zsy/kOyXvaG/28K24Q5D+t65EbokYoCNAqzhFSHKvz93PYp646h+TLjuJHYQVqgC3CugykoXlts=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8hI77Bv3V8b2E/9RkoLKbdNUi+zmFj/q2VZc5t6HgYPgJA717
+	3QKxPNec5MbB/pB/xd+thr32qHwDbZ3wbPvLFyTXs4idfbbdapIenShlclvuRuxWvnI=
+X-Gm-Gg: ASbGncv3LfnlzLDo4y57UWaMn8cdZ9jn501mVs5L5+zFSSK0GsdW5l+eyJu0UnLjNYz
+	zM/Bc0tLEb72KwGf/ptNR/2movAz3qN4CSQNI9kQkT8Ao3H0y71r3QG6+8kHK34aV1pUKAgZyld
+	E2SINT1qgxikquludShM0rPPMpE8JprCn0dSkfLsPdn1rC57imjZ8Ha4jptoV7BdMQJdR/VXcaj
+	txiBIJ0QB/WeZ0D/RefagSn3uL1XczmYjTmxKKnVPNVkBnWN17t/3SVqKrnCW9uN2cL7Rl4P5Oi
+	uNqND6BVPWm0T4t+v7IZHTgJHNpcBJ2EhUUAz9ZOdbKsy3RUTp5rMFEQLfPk03wmJhHaYXznebP
+	7gSYXxXjIGbWq6ggmipcE18mSPwLtrNcYQRNy+9n5S7Q21XIC1Xcv/IM2LBFIINDes+aL4Wao
+X-Google-Smtp-Source: AGHT+IGUMi5Y+ZNyrqZVZaqAnb8mulirnkLZLTN1tiOo9Dktfk1VavRS0LndvmbeW3SqfgHBdfpwmQ==
+X-Received: by 2002:a05:6e02:2195:b0:424:672:e0fa with SMTP id e9e14a558f8ab-42481927108mr82251805ab.11.1758319835807;
+        Fri, 19 Sep 2025 15:10:35 -0700 (PDT)
+Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d56b5a45csm2587794173.70.2025.09.19.15.10.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Sep 2025 15:10:35 -0700 (PDT)
+Message-ID: <21ad322f-5abe-4a97-9373-d027b846ee8c@riscstar.com>
+Date: Fri, 19 Sep 2025 17:10:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO4P265MB6822:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b533b3b-6efe-4dc4-fcdb-08ddf7bf12e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YmlSGMoUZNNOtny1Ey29MlBJr30X45tzL55H8gAsuzMrSEET6+FiXNKzwjCz?=
- =?us-ascii?Q?Yj8qGxVp2dUN4FsE7gCJQ4nq2/MVeiYZGGiW/Qx/IFCg6UR0/fxyuWfydFEd?=
- =?us-ascii?Q?aYh4y6RF5UWXQ9vIrACDnncnNpo4sFJnJJtgVTIRbAQj7mG8FuootCmxmAkq?=
- =?us-ascii?Q?y8VQ3Oldbq9dAr9d7+V++2sP9wUomg1ISQHdx7VGT59SQHRKErbEAEJ/CQ3X?=
- =?us-ascii?Q?EMxQakSZ3jv+qTDV69gWCW0nsS1Ai+QyiAMXSf4UnFcKcpwA8kpNEC45+Bgk?=
- =?us-ascii?Q?JC0xSl5UJaRgVNP0Z0HWpkyQLcuU0/nGCICjvF8mu9py0J93tShpnpITlIMn?=
- =?us-ascii?Q?qHO7JzhJQ9xdgLZX1gKtdM79RNsJ6VbRmWpEIvFz+fXGFUwakNKXmlaXEirr?=
- =?us-ascii?Q?Mo77pv8bLQV0qTt1x3prXHB5+P1+2VKC52Qd9MW61B6LIz7C0HzTwSDtMPa0?=
- =?us-ascii?Q?OsLx6gKhlKbOm5oGGsX/EczZ43d4tUE9cIUoNJ9uTvd9guRGby2GNseCJoj/?=
- =?us-ascii?Q?a97bU/aiACm0SaOh908OX/Ddd/rEBvT425cWU7ff1zd+vf10GmyGYWEjyLOP?=
- =?us-ascii?Q?7DJcwDLaExfYliQMZTblJ1i/8QkrI4iJr6/ErxH7nalOaIAbwlS+IJIim8dQ?=
- =?us-ascii?Q?gERY9ujpG9OYB94c2zN59bLmzo0KlX0Xg/R5zqeJOmrxXKW8jl2+TFhJLW/+?=
- =?us-ascii?Q?Db1o4N2pauttkRpIXWy+BhG/1l31A9VVGeJmZkDhcczYLKbrLA7zYuBCHBPG?=
- =?us-ascii?Q?w9u1I4MP4xjrqmEpJz+AGfDdtRm6XRfcU9Mv/+HXViG4d26D7p0d2HUV0BSL?=
- =?us-ascii?Q?R6nqE5djncxU/UpsiRN5pvOTxTyD2zebx946/sB032w8RQuUFvW3OXH7juwr?=
- =?us-ascii?Q?lWgfVBrmMMOi27sJGrDe429eqE/locl57pI5Ys196OjHbO5BHhf5cyTrDMY/?=
- =?us-ascii?Q?XqD5yZPuBEG99UVz15f8WxseFTgAxdTxSCmJBuOX80J1HaKhelWVgHajo1Yq?=
- =?us-ascii?Q?jBlY9TOvgvVDmKX0fhNf8JTy5eQ/2OCHAwN7w1S2sfADX1IPCMIZW4ilw5w6?=
- =?us-ascii?Q?yR/6QJIUdmmv8el9jTb+dbQ7L3mo7N0SXg6quIFsE+MbrwQldoSxYM10qVYg?=
- =?us-ascii?Q?LmFSbkWHHO7nfe4A33z+5TPwp4iONvxJ/J+SgF63ZuuHI4PgFuTt+nTMOi8x?=
- =?us-ascii?Q?yLP+eKsMDgGEW4rDkxwtGsUfDnDjEkl0n6UMWogK+lRqrPNY/hpxIV0iR+iZ?=
- =?us-ascii?Q?P3pRzjYXaWyrNl73E2QHDohgHU403247Fq6+hFZPSOaukjZKr8m0m5EKg4Y5?=
- =?us-ascii?Q?NRhbCs3EbB8rsSvnwaKSLwA/gUHvvsVNlfOMnKrTlCrBiFIuBJ7Bsc12ofq2?=
- =?us-ascii?Q?NMqB78U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?AAUEhx9G3DzSoWIW4S/AIJ7kVZ/RHkj2jpVr5DvdlTwzNvIo8ozsOlfuRrfe?=
- =?us-ascii?Q?D5xC9gbZaaQhR6EZLvFw2JOq+KDL0RgCkF2+3IKMIWmyNcXP0TKZ7e2ffzPX?=
- =?us-ascii?Q?yRQbkGTL9bkZXMqWr6D/CP9J4XT4/JLbnjVDgsSO0zkBarjLfx29ZQLy2xgu?=
- =?us-ascii?Q?EcV1rtpOe96t0lJUapf1gOCCDL8fceZG4JdpiJjYP+8YmBIr1GLKutuq/Os3?=
- =?us-ascii?Q?lygPQPrGswx/SouflEvz+9v5OhX9EOake+MkeEwfivqBYaUpujeHfPHtsOBL?=
- =?us-ascii?Q?KephUOHVUDL/m93wTVrnt3orh/Zmkl4iX3arGRaIPgpyaV/9p0X88Xt3nEju?=
- =?us-ascii?Q?EvGd50PvuWJZk+H50AXJVWBC8wYeWEWDZmtRSkHUAlYGoCS5KyUI20dL0wTB?=
- =?us-ascii?Q?EnB9c/72gZ/cwXttOwK5J4f5zhC+QR3K9yXs15AFILgTUIWnVneGN1yHGBrr?=
- =?us-ascii?Q?vcrTV/zh2OusQg9gAgq5KBIVGPX4F29hc5zCQsxhFYP1fwCEuFsNCR77PzrS?=
- =?us-ascii?Q?IrQ17g27FiUyOsWAX1TeRuwYczYVdllaZgaRfPxNa8KKjkISlZv2hkcGzu8L?=
- =?us-ascii?Q?PjTO5FLjwgOV7ZZ/+KZf5u/LyCEYDId7VNLUTsIJvAKIxfjSQvVHqjVl1NLV?=
- =?us-ascii?Q?nelNRT7AQo6qxyVFqHysbxp+6pOu8oXwqm0kwrPaqw150XLFgJtfHnAqLH/F?=
- =?us-ascii?Q?SPH9ePZBmTUNqx3alNcTFj9MsLS59UN21pCI3J0ovZYN7QCcRZ+xwMa0Xi0U?=
- =?us-ascii?Q?pWm3NbxJUIUQ7Z/NSryO/qKkyIxmQG4qM09gvWyopRl4cP+v+SPu98GMKLQU?=
- =?us-ascii?Q?iIFcEuoANS70k3QBigHFvaYidduUEarxrc7dlT/LILCEPNl+PdAto/t6DcDC?=
- =?us-ascii?Q?y7llCpAntmCNNtYEr+6L1YbW7ApHAzs3D4pVe0IuORg3mMQmxUt7/idmXJlv?=
- =?us-ascii?Q?LDC8mEhsHNNIK8dlMLJBERY6pzMdzAXyDPDRYzbP2Rx3DKFZzCe68m5fX6hS?=
- =?us-ascii?Q?kaCICnAV3CSbMGdeW4D5qFxjOCAQ4vHttshEcTWmQodHpQQyLjGwoANPN8OQ?=
- =?us-ascii?Q?tZne5AmNB1QlFJ2TT3V8b8YviieJ6Y7mT5koBcPIRgpqW5NpPxixg4gou+WW?=
- =?us-ascii?Q?9vH3fZuutLIL6cf6JVyymrMT+q5tZC8CrY7nOcSd54sYrLHKWdkJizA3qh3L?=
- =?us-ascii?Q?xEy2CRTnAwRJRLsruQSz7TgxL/twoxQYHE14JZRgc1ju+e95Zj7+3HSoyVXY?=
- =?us-ascii?Q?4iWIHjFIo1pLUxZ6Gz83Xb8B0qHwv5n8e58Po/GMsNiVNEE8Gr/uj0HYw0wQ?=
- =?us-ascii?Q?iRL4PObnwPtQ1UfY3ZQOAEyGiA5oSG+dMQ+C+5AWsla9bt17yVjt7UrWmELW?=
- =?us-ascii?Q?r7z3J7STPCHiqS3NIEtuRj9dmuF71ZUhYYwJb6MwvKfS6eLZbZfy9u0uFIl4?=
- =?us-ascii?Q?hFNkpcLyab4LisAp6lEVXu0z2l32ppCnEDjZvqzeKIO2c+6qF2j4T2TUb/9j?=
- =?us-ascii?Q?gLg+8HnYUcAmDjE6ctWKTa/FhhDBLh32L2ff9hRg/qfpIqksgFArg4CQ9I2h?=
- =?us-ascii?Q?nl2XlCXKVDewr00t8ipmFRGaoxhsskbaSc+40YSTXDbHdr60cI0wva2KCMf7?=
- =?us-ascii?Q?Ng=3D=3D?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b533b3b-6efe-4dc4-fcdb-08ddf7bf12e2
-X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 20:56:58.5716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w0mdSOfpOSTLbq9sGAZOrxDupF86OYwvj7nICrNed4HvlvaDMt/TcTy0uMK1KpiMVkESf95tfjjswu/+t0VOOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P265MB6822
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] PCI: spacemit: introduce SpacemiT PCIe host driver
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, p.zabel@pengutronix.de, tglx@linutronix.de,
+ johan+linaro@kernel.org, thippeswamy.havalige@amd.com, namcao@linutronix.de,
+ mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, inochiama@gmail.com,
+ quic_schintav@quicinc.com, fan.ni@samsung.com, devicetree@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+ spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250813184701.2444372-1-elder@riscstar.com>
+ <20250813184701.2444372-6-elder@riscstar.com>
+ <sptrmspkmqrwsh2iv4rmha45vsoz5ks7vhcdp3dytsxyabn6qn@mmk7z6tf5wcv>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <sptrmspkmqrwsh2iv4rmha45vsoz5ks7vhcdp3dytsxyabn6qn@mmk7z6tf5wcv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 19 Sep 2025 01:26:28 +0200
-"Danilo Krummrich" <dakr@kernel.org> wrote:
-
-> On Thu Sep 18, 2025 at 8:13 PM CEST, Joel Fernandes wrote:
-> > On Thu, Sep 18, 2025 at 03:02:11PM +0000, Alice Ryhl wrote:  
-> >> Using build_assert! to assert that offsets are in bounds is really
-> >> fragile and likely to result in spurious and hard-to-debug build
-> >> failures. Therefore, build_assert! should be avoided for this case.
-> >> Thus, update the code to perform the check in const evaluation instead.  
-> >
-> > I really don't think this patch is a good idea (and nobody I spoke to thinks
-> > so). Not only does it mess up the user's caller syntax completely, it is also  
+On 9/15/25 3:09 AM, Manivannan Sadhasivam wrote:
+> On Wed, Aug 13, 2025 at 01:46:59PM GMT, Alex Elder wrote:
+>> Introduce a driver for the PCIe root complex found in the SpacemiT
+>> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
+>> The driver supports three PCIe ports that operate at PCIe v2 transfer
+>> rates (5 GT/sec).  The first port uses a combo PHY, which may be
+>> configured for use for USB 3 instead.
+>>
+>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig   |  10 +
+>>   drivers/pci/controller/dwc/Makefile  |   1 +
+>>   drivers/pci/controller/dwc/pcie-k1.c | 355 +++++++++++++++++++++++++++
+>>   3 files changed, 366 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-k1.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index ff6b6d9e18ecf..ca5782c041ce8 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -492,4 +492,14 @@ config PCIE_VISCONTI_HOST
+>>   	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
+>>   	  This driver supports TMPV7708 SoC.
+>>   
+>> +config PCIE_K1
+>> +	bool "SpacemiT K1 host mode PCIe controller"
 > 
-> I appreacite you raising the concern, but I rather have other people speak up
-> themselves.
+> No need to make it bool, build it as a module. Only the PCI controller drivers
+> implementing irqchip need to be kept bool for irq disposal concerns.
 
-Joel asked me for opinion on this syntax during Kangrejos and I said
-that I hated it.
+OK.
+
+>> +	depends on ARCH_SPACEMIT || COMPILE_TEST
+>> +	depends on PCI && OF && HAS_IOMEM
+>> +	select PCIE_DW_HOST
+>> +	default ARCH_SPACEMIT
+>> +	help
+>> +	  Enables support for the PCIe controller in the K1 SoC operating
+>> +	  in host mode.
+> 
+> Is the driver only applicable for K1 SoCs or other SoCs from spacemit? Even if
+> it is the former, I would suggest renaming to 'pcie-spacemit-k1.c'
+
+Yes, I will do that.
+
+>>   endmenu
+>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>> index 6919d27798d13..62d9d4e7dd4d3 100644
+>> --- a/drivers/pci/controller/dwc/Makefile
+>> +++ b/drivers/pci/controller/dwc/Makefile
+>> @@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>>   obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>>   obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+>>   obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
+>> +obj-$(CONFIG_PCIE_K1) += pcie-k1.o
+>>   
+>>   # The following drivers are for devices that use the generic ACPI
+>>   # pci_root.c driver but don't support standard ECAM config access.
+>> diff --git a/drivers/pci/controller/dwc/pcie-k1.c b/drivers/pci/controller/dwc/pcie-k1.c
+>> new file mode 100644
+>> index 0000000000000..e9b1df3428d16
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/dwc/pcie-k1.c
+>> @@ -0,0 +1,355 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * SpacemiT K1 PCIe host driver
+>> + *
+>> + * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
+>> + * Copyright (c) 2023, spacemit Corporation.
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bits.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/gfp.h>
+>> +#include <linux/irq.h>
+> 
+> unused?
+
+Yes, and there are a few others I can get rid of too.
+
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/of.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/types.h>
+>> +
+>> +#include "pcie-designware.h"
+>> +
+>> +#define K1_PCIE_VENDOR_ID	0x201f
+>> +#define K1_PCIE_DEVICE_ID	0x0001
+>> +
+>> +/* Offsets and field definitions of link management registers */
+>> +
+>> +#define K1_PHY_AHB_IRQ_EN			0x0000
+>> +#define PCIE_INTERRUPT_EN		BIT(0)
+>> +
+>> +#define K1_PHY_AHB_LINK_STS			0x0004
+>> +#define SMLH_LINK_UP			BIT(1)
+>> +#define RDLH_LINK_UP			BIT(12)
+>> +
+>> +#define INTR_ENABLE				0x0014
+>> +#define MSI_CTRL_INT			BIT(11)
+>> +
+>> +/* Offsets and field definitions for PMU registers */
+>> +
+>> +#define PCIE_CLK_RESET_CONTROL			0x0000
+>> +#define LTSSM_EN			BIT(6)
+>> +#define PCIE_AUX_PWR_DET		BIT(9)
+>> +#define PCIE_RC_PERST			BIT(12)	/* 0: PERST# high; 1: low */
+>> +#define APP_HOLD_PHY_RST		BIT(30)
+>> +#define DEVICE_TYPE_RC			BIT(31)	/* 0: endpoint; 1: RC */
+>> +
+>> +#define PCIE_CONTROL_LOGIC			0x0004
+>> +#define PCIE_SOFT_RESET			BIT(0)
+>> +
+>> +struct k1_pcie {
+>> +	struct dw_pcie pci;
+>> +	void __iomem *link;
+>> +	struct regmap *pmu;
+>> +	u32 pmu_off;
+>> +	struct phy *phy;
+>> +	struct reset_control *global_reset;
+>> +};
+>> +
+>> +#define to_k1_pcie(dw_pcie)	dev_get_drvdata((dw_pcie)->dev)
+>> +
+>> +static int k1_pcie_toggle_soft_reset(struct k1_pcie *k1)
+>> +{
+>> +	u32 offset = k1->pmu_off + PCIE_CONTROL_LOGIC;
+>> +	const u32 mask = PCIE_SOFT_RESET;
+>> +	int ret;
+>> +
+>> +	ret = regmap_set_bits(k1->pmu, offset, mask);
+> 
+> For MMIO, it is OK to skip the error handling.
+
+You mean even though the regmap API returns an error,
+it never will with MMIO?
+- regmap_mmio_read() and regmap_mmio_write() always
+   return 0 unless there's an error enabling its clock.
+
+Sounds good, I'll simplify places that use this.
+
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	mdelay(2);
+> 
+> If the previous write to the PMU got stuck in the CPU cache, there is no
+> guarantee that this delay of 2ms between write and clear will be enforced. So
+> you should do a dummy read after write to ensure that the previous write has
+> reached the PMU (or any device) and then clear the bits.
+
+Wow, really?  I was aware of this being possible for I/O
+writes but it seems like something regmap might handle.
+
+I'll add a regmap_read() for the same offset and discard
+the result *before* the delay.  I'll do the same for this:
+
+         mdelay(PCIE_T_PVPERL_MS);
+
+>> +	return regmap_clear_bits(k1->pmu, offset, mask);
+>> +}
+>> +
+>> +/* Enable app clocks, deassert app resets */
+>> +static int k1_pcie_app_enable(struct k1_pcie *k1)
+>> +{
+>> +	struct dw_pcie *pci = &k1->pci;
+>> +	u32 clock_count;
+>> +	u32 reset_count;
+>> +	int ret;
+>> +
+>> +	clock_count = ARRAY_SIZE(pci->app_clks);
+> 
+> Just use ARRAY_SIZE() directly below.
+
+OK.
+
+>> +	ret = clk_bulk_prepare_enable(clock_count, pci->app_clks);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	reset_count = ARRAY_SIZE(pci->app_rsts);
+> 
+> Same here.
+
+OK.
+
+>> +	ret = reset_control_bulk_deassert(reset_count, pci->app_rsts);
+>> +	if (ret)
+>> +		goto err_disable_clks;
+>> +
+>> +	ret = reset_control_deassert(k1->global_reset);
+>> +	if (ret)
+>> +		goto err_assert_resets;
+>> +
+>> +	return 0;
+>> +
+>> +err_assert_resets:
+>> +	(void)reset_control_bulk_assert(reset_count, pci->app_rsts);
+> 
+> Why void cast? Here and in other places.
+
+I put void casts when I'm ignoring a returned value.
+It's not necessary, but it reminds me that the function
+returns a value, and at some point I decided to ignore it.
+I can drop those if you find them offensive.
+
+If you're suggesting I should issue a warning here if
+an error is returned here, tell me that.
+
+>> +err_disable_clks:
+>> +	clk_bulk_disable_unprepare(clock_count, pci->app_clks);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/* Disable app clocks, assert app resets */
+>> +static void k1_pcie_app_disable(struct k1_pcie *k1)
+>> +{
+>> +	struct dw_pcie *pci = &k1->pci;
+>> +	u32 count;
+>> +	int ret;
+>> +
+>> +	(void)reset_control_assert(k1->global_reset);
+>> +
+>> +	count = ARRAY_SIZE(pci->app_rsts);
+>> +	ret = reset_control_bulk_assert(count, pci->app_rsts);
+>> +	if (ret)
+>> +		dev_err(pci->dev, "app reset assert failed (%d)\n", ret);
+>> +
+>> +	count = ARRAY_SIZE(pci->app_clks);
+>> +	clk_bulk_disable_unprepare(count, pci->app_clks);
+>> +}
+> 
+> Same comments as k1_pcie_app_enable().
+
+OK.
+
+>> +static int k1_pcie_init(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +	u32 offset;
+>> +	u32 mask;
+>> +	int ret;
+>> +
+>> +	ret = k1_pcie_toggle_soft_reset(k1);
+>> +	if (ret)
+>> +		goto err_app_disable;
+>> +
+>> +	ret = k1_pcie_app_enable(k1);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = phy_init(k1->phy);
+>> +	if (ret)
+>> +		goto err_app_disable;
+>> +
+>> +	/* Set the PCI vendor and device ID */
+>> +	dw_pcie_dbi_ro_wr_en(pci);
+>> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, K1_PCIE_VENDOR_ID);
+>> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, K1_PCIE_DEVICE_ID);
+>> +	dw_pcie_dbi_ro_wr_dis(pci);
+>> +
+>> +	/*
+>> +	 * Put the port in root complex mode, record that Vaux is present.
+> 
+> There is no 3.3Vaux supply present in the binding. So the supply is guaranteed
+> to be present and enabled always by the platform?
+
+Actually, I don't know, I'll ask.  Thank you for pointing this out.
+
+>> +	 * Assert fundamental reset (drive PERST# low).
+>> +	 */
+>> +	offset = k1->pmu_off + PCIE_CLK_RESET_CONTROL;
+>> +	mask = DEVICE_TYPE_RC | PCIE_AUX_PWR_DET;
+>> +	mask |= PCIE_RC_PERST;
+>> +	ret = regmap_set_bits(k1->pmu, offset, mask);
+>> +	if (ret)
+>> +		goto err_phy_exit;
+>> +
+>> +	/* Wait the PCIe-mandated 100 msec before deasserting PERST# */
+>> +	mdelay(100);
+> 
+> Same comment as k1_pcie_toggle_soft_reset() applies here.
+
+Yes, understood.
+
+>> +
+>> +	ret = regmap_clear_bits(k1->pmu, offset, PCIE_RC_PERST);
+>> +	if (!ret)
+>> +		return 0;	/* Success! */
+> 
+> Please use common pattern to return success:
+> 
+> 	regmap_clear_bits()
+> 
+> 	return 0;
+
+Now that I won't be checking return values this will come
+naturally.  So yes, it will look like this, and there are
+no other instances of this return pattern in this file.
 
 > 
-> > super confusing to pass both a generic and a function argument separately.  
+>> +
+>> +err_phy_exit:
+>> +	(void)phy_exit(k1->phy);
+>> +err_app_disable:
+>> +	k1_pcie_app_disable(k1);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/* Silently ignore any errors */
+>> +static void k1_pcie_deinit(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +
+>> +	/* Re-assert fundamental reset (drive PERST# low) */
 > 
-> Why? We assert that the offset has to be const, whereas the value does not
-> have this requirement, so this makes perfect sense to me.
-
-In some peripherals there are also cases where there are a window of
-registers and you want to use a computed value to access them.
-If I have a window of registers where the first address is `FOO` and
-the last is `FOO_END`, then I might reasonable want to do access
-registers in a loop.
-
+> s/Re-assert/Assert
 > 
-> (I agree that it can look unfamiliar at the first glance though.)
+>> +	(void)regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+>> +			      PCIE_RC_PERST);
+>> +
+>> +	(void)phy_exit(k1->phy);
+>> +
+>> +	k1_pcie_app_disable(k1);
+>> +}
+>> +
+>> +static const struct dw_pcie_host_ops k1_pcie_host_ops = {
+>> +	.init		= k1_pcie_init,
+>> +	.deinit		= k1_pcie_deinit,
+>> +};
+>> +
+>> +static void k1_pcie_enable_interrupts(struct k1_pcie *k1)
+>> +{
+>> +	void __iomem *virt;
+>> +	u32 val;
+>> +
+>> +	/* Enable the MSI interrupt */
+>> +	writel(MSI_CTRL_INT, k1->link + INTR_ENABLE);
 > 
-> > Sorry if I knew this would be the syntax, I would have objected even when we
-> > spoke :)
-> >
-> > I think the best fix (from any I've seen so far), is to move the bindings
-> > calls of offending code into a closure and call the closure directly, as I
-> > posted in the other thread. I also passed the closure idea by Gary and he
-> > confirmed the compiler should behave correctly (I will check the code gen
-> > with/without later). Gary also provided a brilliant suggestion that we can
-> > call the closure directly instead of assigning it to a variable first. That
-> > fix is also smaller, and does not screw up the users. APIs should fix issues
-> > within them instead of relying on user to work around them.  
+> If there are no ordering issues (I guess so), you can very well use the _relaxed
+> variants throughout the driver.
+
+The only writel() calls are related to updating
+these interrupt bits.  I think you're right.
+
+>> +	/* Top-level interrupt enable */
+>> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
+>> +	val = readl(virt);
+>> +	val |= PCIE_INTERRUPT_EN;
+>> +	writel(val, virt);
+>> +}
+>> +
+>> +static void k1_pcie_disable_interrupts(struct k1_pcie *k1)
+>> +{
+>> +	void __iomem *virt;
+>> +	u32 val;
+>> +
+>> +	virt = k1->link + K1_PHY_AHB_IRQ_EN;
+>> +	val = readl(virt);
+>> +	val &= ~PCIE_INTERRUPT_EN;
+>> +	writel(val, virt);
+>> +
+>> +	writel(0, k1->link + INTR_ENABLE);
+>> +}
+>> +
+>> +static bool k1_pcie_link_up(struct dw_pcie *pci)
+>> +{
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +	u32 val;
+>> +
+>> +	val = readl(k1->link + K1_PHY_AHB_LINK_STS);
+>> +
+>> +	return (val & RDLH_LINK_UP) && (val & SMLH_LINK_UP);
+>> +}
+>> +
+>> +static int k1_pcie_start_link(struct dw_pcie *pci)
+>> +{
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +	int ret;
+>> +
+>> +	/* Stop holding the PHY in reset, and enable link training */
+>> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+>> +				 APP_HOLD_PHY_RST | LTSSM_EN, LTSSM_EN);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	k1_pcie_enable_interrupts(k1);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void k1_pcie_stop_link(struct dw_pcie *pci)
+>> +{
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +	int ret;
+>> +
+>> +	k1_pcie_disable_interrupts(k1);
+>> +
+>> +	/* Disable the link and hold the PHY in reset */
+>> +	ret = regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+>> +				 APP_HOLD_PHY_RST | LTSSM_EN, APP_HOLD_PHY_RST);
+>> +	if (ret)
+>> +		dev_err(pci->dev, "disable LTSSM failed (%d)\n", ret);
+>> +}
+>> +
+>> +static const struct dw_pcie_ops k1_pcie_ops = {
+>> +	.link_up	= k1_pcie_link_up,
+>> +	.start_link	= k1_pcie_start_link,
+>> +	.stop_link	= k1_pcie_stop_link,
+>> +};
+>> +
+>> +static int k1_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct dw_pcie_rp *pp;
+>> +	struct dw_pcie *pci;
+>> +	struct k1_pcie *k1;
+>> +	int ret;
+>> +
+>> +	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
+>> +	if (!k1)
+>> +		return -ENOMEM;
+>> +	dev_set_drvdata(dev, k1);
+>> +
+>> +	k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
+>> +						       "spacemit,syscon-pmu",
+>> +						       1, &k1->pmu_off);
+>> +	if (IS_ERR(k1->pmu))
+>> +		return dev_err_probe(dev, PTR_ERR(k1->pmu),
+>> +				     "lookup PMU regmap failed\n");
 > 
-> This is not a workaround, this is an idiomatic solution (which I probably should
-> have been doing already when I introduced the I/O code).
+> 'Failed to lookup \"PMU\" registers'
+OK.
 
-I don't think this can be said to be idiomatic. Syntax churn is a real
-issue, and quite a big one.
-
-Turbofish is cumbersome to write with just magic numbers, and the
-fact `{}` is needed to pass in constant expressions made this much
-worse. If the drivers try hard to avoid magic numbers, you would
-effective require  all code to be `::<{ ... }>()` and this is ugly.
-
-In the design of generic atomics this is taken into consideration and
-is why the `load`/`store` functions don't take `Ordering` type
-parameter itself, but additionally takes a value of it and just throw it
-away. This is so that you can still write `.load(Relaxed)` rather
-than needing to write `.load::<Relaxed>()`.
-
-If we have argument position const generics today, I'd say let's make
-the switch. However with the tools that we have I don't think it's a
-clear cut. I would even personally prefer a BUG than to having to do
-turbofish every single time.
-
-Best,
-Gary
-
+>> +
+>> +	k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
+>> +	if (!k1->link)
+>> +		return dev_err_probe(dev, -ENOMEM, "map link regs failed\n");
 > 
-> We do exactly the same thing for DmaMask::new() [1] and we agreed on doing the
-> same thing for Alignment as well [2].
+> 'Failed to map \"link\" registers
 > 
-> [1] https://rust.docs.kernel.org/kernel/dma/struct.DmaMask.html#method.new
-> [2] https://lore.kernel.org/rust-for-linux/20250908-num-v5-1-c0f2f681ea96@nvidia.com/
+> Same for below error prints as well.
 
+OK.
+
+>> +
+>> +	k1->global_reset = devm_reset_control_get_shared(dev, "global");
+>> +	if (IS_ERR(k1->global_reset))
+>> +		return dev_err_probe(dev, PTR_ERR(k1->global_reset),
+>> +				     "get global reset failed\n");
+>> +
+>> +	/* Hold the PHY in reset until we start the link */
+>> +	ret = regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+>> +			      APP_HOLD_PHY_RST);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "hold PHY in reset failed\n");
+>> +
+>> +	k1->phy = devm_phy_get(dev, NULL);
+>> +	if (IS_ERR(k1->phy))
+>> +		return dev_err_probe(dev, PTR_ERR(k1->phy), "get PHY failed\n");
+>> +
+>> +	pci = &k1->pci;
+>> +	dw_pcie_cap_set(pci, REQ_RES);
+>> +	pci->dev = dev;
+>> +	pci->ops = &k1_pcie_ops;
+>> +
+>> +	pp = &pci->pp;
+>> +	pp->num_vectors = MAX_MSI_IRQS;
+> 
+> I don't understand how MSI is implemented in this platform. If the controller
+> relies on an external interrupt controller for handling MSIs (I think it does),
+> then there should be either 'msi-parent' or 'msi-map' existed in the binding.
+
+OK your comment earlier made me realize I had more to do here.
+I'll work to improve that.
+
+> But I see none, other than 'interrupts-extended'. So I don't know how MSI works
+> at all.
+> 
+>> +	pp->ops = &k1_pcie_host_ops;
+>> +
+>> +	ret = dw_pcie_host_init(pp);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "host init failed\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void k1_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +	struct k1_pcie *k1 = dev_get_drvdata(&pdev->dev);
+>> +	struct dw_pcie_rp *pp = &k1->pci.pp;
+>> +
+>> +	dw_pcie_host_deinit(pp);
+>> +}
+>> +
+>> +static const struct of_device_id k1_pcie_of_match_table[] = {
+>> +	{ .compatible = "spacemit,k1-pcie-rc", },
+>> +	{ },
+>> +};
+>> +
+>> +static struct platform_driver k1_pcie_driver = {
+>> +	.probe	= k1_pcie_probe,
+>> +	.remove	= k1_pcie_remove,
+>> +	.driver = {
+>> +		.name			= "k1-dwc-pcie",
+>> +		.of_match_table		= k1_pcie_of_match_table,
+>> +		.suppress_bind_attrs	= true,
+> 
+> No need of this flag for the reason I mentioned in the Kcofig change.
+
+Because this doesn't implement an irqchip?
+
+> You should also set,
+> 
+> 	.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> 
+> to make use of the async probing of the devices during boot. This does save some
+> boot time.
+
+That's great to know, there is a noticeable delay during probe.
+
+Thank you very much for your careful review, Mani.
+
+					-Alex
+
+> - Mani
+> 
 
