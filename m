@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-36492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36491-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C263B89E06
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 16:23:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC51BB89E09
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 16:23:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18F353B421A
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 14:23:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36CEB1B203E6
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Sep 2025 14:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F3B313D68;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D373313263;
 	Fri, 19 Sep 2025 14:22:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Up272hRm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CwlHt289"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5413148C3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750AF3148A6
 	for <linux-pci@vger.kernel.org>; Fri, 19 Sep 2025 14:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758291765; cv=none; b=LSXjQuWPoJeDqAW+wp6+b+WtVfgqnKxGXmj9wpZBQeq3rEBsVOQHywAMLr5KzBszQroAeaMkwjAcrxa7ZJclLAU7eSPzneO95j1EvkCyjCgJtEfdPR1f9Ctz/633q1KthT8uVnNWl3mCoPT+wIP/waNNRRrKrJxqq4hqtunvXF8=
+	t=1758291765; cv=none; b=tkaWMHgb25m2kFF4r5v23Fpzd/59wZgYiok4YU+8NcamX9mYkLQbDyg5YQryAUKuoO2vbeq7OzvNTewS+6MXD4hM9OilArm4BaXVD7HDyN7cbH8nnQrdIqRe+AJ/cvJ1ebfUZVcXR5H8zdAb4g8mYGsMAylbL5ftrsYxnTaOGUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758291765; c=relaxed/simple;
-	bh=E3dL3oxWta3xgRIz6vny2WQW9mMupe7mYbnmMlKiju8=;
+	bh=20+rjfk+uEbJYZn2Pwz3s+qLBFd5m5rPOVOdRQ/i5Nk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QGhUB+K7vpcMjCkjD/KW9GcEh7/r2msDBlyjLcPriIUkwLiCfpYEld54rAuPFfsCkxUbmKnYn8GYgSw4eiGi4yekCNPiRMfStwi33Dj8CCQH/MMGKQ7PtXOP3xecSx3ag2Pdo4B2sgiF+6kUZ/P3sYkPKIOiObygKIQ+oTZ+ODM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Up272hRm; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version; b=ksKpyBYQhx1xm/R+EsRsISUa3XCTlWoPsfOCikPfQo8vJ9h0sDXc705MsQINKxFMrYnvWkwzHtXDCuUC2ZAOt1lRtegCctUz2E6iyYcF96IIw44wQSNd8B76OxsVYGDsSDjvhjMMyc8A6oGQknfU07FSVHGlpVaZa20dVLpDaJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CwlHt289; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758291764; x=1789827764;
+  t=1758291763; x=1789827763;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=E3dL3oxWta3xgRIz6vny2WQW9mMupe7mYbnmMlKiju8=;
-  b=Up272hRmrZS8ncDSwSXWt0rD3iSrproGpCr4gI3MZ9uWkbYw9/71ouOa
-   Je68J1br3o+kP1dBdSwv8q/dzKyW4cKsYiD6HGE4ezklp544I4JiEH0I5
-   DI/dKCGqA6bfJcNLzeay+hgAX7Mvmy5z7nzCXvhm0jy9UWzG8sTIcByXJ
-   TTie3BWTq0uYWngcJnXn5uzj++xsmUBupc1RKoCWKIx1e/OhuBR/q6WHL
-   JPUHWzFsLgSCbJ+2rg5fXyOAbW5sBlFCsEWxd2Jo7+md9AyrguyYrVJGJ
-   4Y9fkVCmgRE+deuwpoh+enWq5kSt5VmNO7CysS4Ym6bF6YH1PfD87EFiT
-   A==;
-X-CSE-ConnectionGUID: g+OIINz6Q62QwT2HxQrXHg==
-X-CSE-MsgGUID: oDmY8WROQJ+x9An1wrbVYw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60750531"
+  bh=20+rjfk+uEbJYZn2Pwz3s+qLBFd5m5rPOVOdRQ/i5Nk=;
+  b=CwlHt289ozGfNX/5IiRlJ6o52J7z6uKquXI+TOUrFqAPTzJ1xYoojoyR
+   T0CXmBBxwASrWUliGqHRFb31KMbKws3CjQvoAKlkcfEDVvyv3ffch5wV5
+   4atfGF9ApJYMybAWiSBBK41zi+EYuriVqVU82uFZX+AzlQTwUJdpzLofQ
+   IkW5XFTtQYrbAkcFyX6Jhhl2lUvhTEVvvbWbXag7J+WvPM5tBsYMTT0y7
+   UszXf1jR/aOXWoKdhE0OvlJPoJk8tnhywAIMCxdZutTpnkP19vB7tkWxj
+   ep7cTdIzAYj5xOrOlly6wc9BCjYBl17o3FTQR4KM10tH0MMMlJGYUYlR4
+   g==;
+X-CSE-ConnectionGUID: pPF9Qm8NTiCXcdgGXrlL+g==
+X-CSE-MsgGUID: GWQultucT0avZ+T7yVmUOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="60750534"
 X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="60750531"
+   d="scan'208";a="60750534"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 07:22:38 -0700
-X-CSE-ConnectionGUID: LcTRxD12Rnmx9JdqreaWtw==
-X-CSE-MsgGUID: Gjq/GFE+TKKnbqRk4KqkLw==
+X-CSE-ConnectionGUID: bJI+d+zqTD2sP9AUaeWqmg==
+X-CSE-MsgGUID: sqLRI1aYT4KuQKc1eOhMPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,278,1751266800"; 
-   d="scan'208";a="176655020"
+   d="scan'208";a="176655023"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by fmviesa010.fm.intel.com with ESMTP; 19 Sep 2025 07:22:38 -0700
 From: Dan Williams <dan.j.williams@intel.com>
@@ -65,9 +65,9 @@ Cc: xin@zytor.com,
 	chao.gao@intel.com,
 	Dave Jiang <dave.jiang@intel.com>,
 	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: [RFC PATCH 10/27] acpi: Add KEYP support to fw_table parsing
-Date: Fri, 19 Sep 2025 07:22:19 -0700
-Message-ID: <20250919142237.418648-11-dan.j.williams@intel.com>
+Subject: [RFC PATCH 11/27] acpi: Add KEYP Key Configuration Unit parsing
+Date: Fri, 19 Sep 2025 07:22:20 -0700
+Message-ID: <20250919142237.418648-12-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250919142237.418648-1-dan.j.williams@intel.com>
 References: <20250919142237.418648-1-dan.j.williams@intel.com>
@@ -81,161 +81,206 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Jiang <dave.jiang@intel.com>
 
-KEYP ACPI table can be parsed using the common fw_table handlers. Add
-additional support to detect and parse the table.
+Parse the KEYP Key Configuration Units (KCU), to decide the max IDE
+streams supported for each host bridge.
+
+The KEYP table points to a number of KCU structures that each associates
+with a list of root ports (RP) via segment, bus, and devfn. Sanity check
+the KEYP table, ensure all RPs listed for each KCU are included in one
+host bridge. Then extact the max IDE streams supported to
+pci_host_bridge via pci_ide_init_nr_streams().
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-[djbw: todo: drop config symbol for this]
+[djbw: todo: find a better place for this than common host-bridge init]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/acpi/Kconfig     | 12 ++++++++++++
- drivers/acpi/tables.c    | 14 +++++++++++++-
- include/linux/acpi.h     | 13 +++++++++++++
- include/linux/fw_table.h |  1 +
- lib/fw_table.c           |  9 +++++++++
- 5 files changed, 48 insertions(+), 1 deletion(-)
+ drivers/acpi/Makefile              |   2 +
+ drivers/acpi/pci_root.c            |   2 +
+ drivers/acpi/x86/keyp.c            | 118 +++++++++++++++++++++++++++++
+ drivers/virt/coco/tdx-host/Kconfig |   1 +
+ include/linux/acpi.h               |   3 +
+ 5 files changed, 126 insertions(+)
+ create mode 100644 drivers/acpi/x86/keyp.c
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index b594780a57d7..e9af80d69e02 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -600,6 +600,18 @@ config ACPI_PRMT
- 	  substantially increase computational overhead related to the
- 	  initialization of some server systems.
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index d1b0affb844f..fdd68d402aa2 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -134,3 +134,5 @@ obj-$(CONFIG_ACPI_VIOT)		+= viot.o
  
-+config ACPI_KEYP
-+	bool "ACPI KEYP Table Support for Integrity and Data Encryption (IDE)"
-+	depends on X86_64
-+	default y
-+	help
-+	  Platform KEYP table holds the KEY Configuration Unit (KCU) structures
-+	  and the base address of the KCU register block associated with each
-+	  IDE capable host bridge. Host parses this table to gets the max IDE
-+	  streams supported by each host bridge.
+ obj-$(CONFIG_RISCV)		+= riscv/
+ obj-$(CONFIG_X86)		+= x86/
 +
-+	  Say Y to enable KEYP table parsing for IDE stream creation.
++obj-$(CONFIG_ACPI_KEYP)		+= x86/keyp.o
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 74ade4160314..633e6a00c62d 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -757,6 +757,8 @@ static int acpi_pci_root_add(struct acpi_device *device,
+ 		acpi_ioapic_add(root->device->handle);
+ 	}
+ 
++	keyp_setup_nr_ide_stream(root->bus);
 +
- endif	# ACPI
- 
- config X86_PM_TIMER
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index fa9bb8c8ce95..37c72d31eac8 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -299,6 +299,18 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
- }
- EXPORT_SYMBOL_ACPI_LIB(acpi_table_parse_cedt);
- 
-+#ifdef CONFIG_ACPI_KEYP
-+int __init_or_acpilib
-+acpi_table_parse_keyp(enum acpi_keyp_type id,
-+		      acpi_tbl_entry_handler_arg handler_arg, void *arg)
+ 	pci_lock_rescan_remove();
+ 	pci_bus_add_devices(root->bus);
+ 	pci_unlock_rescan_remove();
+diff --git a/drivers/acpi/x86/keyp.c b/drivers/acpi/x86/keyp.c
+new file mode 100644
+index 000000000000..99680f1edff7
+--- /dev/null
++++ b/drivers/acpi/x86/keyp.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * KEYP ACPI table parsing
++ *
++ * Copyright (C) 2023 Intel Corporation
++ */
++
++#include <linux/acpi.h>
++#include <linux/bitfield.h>
++#include <linux/pci.h>
++
++#define KCU_STR_CAP_NUM_STREAMS		GENMASK(8, 0)
++
++/* The bus_end is inclusive */
++struct keyp_hb_info {
++	/* input */
++	u16 segment;
++	u8 bus_start;
++	u8 bus_end;
++	/* output */
++	u8 nr_ide_streams;
++};
++
++static bool keyp_info_match(struct acpi_keyp_rp_info *rp,
++			    struct keyp_hb_info *hb)
 +{
-+	return __acpi_table_parse_entries(ACPI_SIG_KEYP,
-+					  sizeof(struct acpi_table_keyp), id,
-+					  NULL, handler_arg, arg, 0);
-+}
-+EXPORT_SYMBOL_ACPI_LIB(acpi_table_parse_keyp);
-+#endif
++	if (rp->segment != hb->segment)
++		return false;
 +
- int __init acpi_table_parse_entries(char *id, unsigned long table_size,
- 				    int entry_id,
- 				    acpi_tbl_entry_handler handler,
-@@ -408,7 +420,7 @@ static const char table_sigs[][ACPI_NAMESEG_SIZE] __nonstring_array __initconst
- 	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
- 	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
- 	ACPI_SIG_NHLT, ACPI_SIG_AEST, ACPI_SIG_CEDT, ACPI_SIG_AGDI,
--	ACPI_SIG_NBFT };
-+	ACPI_SIG_NBFT, ACPI_SIG_KEYP };
- 
- #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
- 
++	if (rp->bus >= hb->bus_start && rp->bus <= hb->bus_end)
++		return true;
++
++	return false;
++}
++
++static int keyp_config_unit_handler(union acpi_subtable_headers *header,
++				    void *arg, const unsigned long end)
++{
++	struct acpi_keyp_config_unit *acpi_cu =
++		(struct acpi_keyp_config_unit *)&header->keyp;
++	struct keyp_hb_info *hb_info = arg;
++	int rp_size, rp_count, i;
++	void __iomem *addr;
++	bool match = false;
++	u32 cap;
++
++	rp_size = acpi_cu->header.length - sizeof(*acpi_cu);
++	if (rp_size % sizeof(struct acpi_keyp_rp_info))
++		return -EINVAL;
++
++	rp_count = rp_size / sizeof(struct acpi_keyp_rp_info);
++	if (!rp_count || rp_count != acpi_cu->root_port_count)
++		return -EINVAL;
++
++	for (i = 0; i < rp_count; i++) {
++		struct acpi_keyp_rp_info *rp_info = &acpi_cu->rp_info[i];
++
++		if (i == 0) {
++			match = keyp_info_match(rp_info, hb_info);
++			/* The host bridge already matches another KCU */
++			if (match && hb_info->nr_ide_streams)
++				return -EINVAL;
++
++			continue;
++		}
++
++		if (match ^ keyp_info_match(rp_info, hb_info))
++			return -EINVAL;
++	}
++
++	if (!match)
++		return 0;
++
++	addr = ioremap(acpi_cu->register_base_address, sizeof(cap));
++	if (!addr)
++		return -ENOMEM;
++	cap = ioread32(addr);
++	iounmap(addr);
++
++	hb_info->nr_ide_streams = FIELD_GET(KCU_STR_CAP_NUM_STREAMS, cap) + 1;
++
++	return 0;
++}
++
++static u8 keyp_find_nr_ide_stream(u16 segment, u8 bus_start, u8 bus_end)
++{
++	struct keyp_hb_info hb_info = {
++		.segment = segment,
++		.bus_start = bus_start,
++		.bus_end = bus_end,
++	};
++	int rc;
++
++	rc = acpi_table_parse_keyp(ACPI_KEYP_TYPE_CONFIG_UNIT,
++				   keyp_config_unit_handler, &hb_info);
++	if (rc < 0)
++		return 0;
++
++	return hb_info.nr_ide_streams;
++}
++
++void keyp_setup_nr_ide_stream(struct pci_bus *bus)
++{
++	struct pci_host_bridge *hb = to_pci_host_bridge(bus->bridge);
++	u8 nr_ide_streams;
++
++	if (hb->nr_ide_streams > 0)
++		return;
++
++	nr_ide_streams = keyp_find_nr_ide_stream(pci_domain_nr(bus),
++						 bus->busn_res.start,
++						 bus->busn_res.end);
++	if (!nr_ide_streams)
++		return;
++
++	pci_ide_init_nr_streams(hb, nr_ide_streams);
++}
++EXPORT_SYMBOL_GPL(keyp_setup_nr_ide_stream);
+diff --git a/drivers/virt/coco/tdx-host/Kconfig b/drivers/virt/coco/tdx-host/Kconfig
+index 026b7d5ea4fa..c3f779c511e3 100644
+--- a/drivers/virt/coco/tdx-host/Kconfig
++++ b/drivers/virt/coco/tdx-host/Kconfig
+@@ -14,3 +14,4 @@ config TDX_CONNECT
+ 	depends on TDX_HOST_SERVICES
+ 	depends on PCI_TSM
+ 	default TDX_HOST_SERVICES
++	select ACPI_KEYP
 diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 1c5bb1e887cd..36662c1c7de4 100644
+index 36662c1c7de4..0165f2209d91 100644
 --- a/include/linux/acpi.h
 +++ b/include/linux/acpi.h
-@@ -235,6 +235,19 @@ int __init_or_acpilib
- acpi_table_parse_cedt(enum acpi_cedt_type id,
+@@ -239,6 +239,7 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
+ int __init_or_acpilib
+ acpi_table_parse_keyp(enum acpi_keyp_type id,
  		      acpi_tbl_entry_handler_arg handler_arg, void *arg);
- 
-+#ifdef CONFIG_ACPI_KEYP
-+int __init_or_acpilib
-+acpi_table_parse_keyp(enum acpi_keyp_type id,
-+		      acpi_tbl_entry_handler_arg handler_arg, void *arg);
-+#else
-+static inline int acpi_table_parse_keyp(enum acpi_keyp_type id,
-+					acpi_tbl_entry_handler_arg handler_arg,
-+					void *arg)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
++void __init_or_acpilib keyp_setup_nr_ide_stream(struct pci_bus *bus);
+ #else
+ static inline int acpi_table_parse_keyp(enum acpi_keyp_type id,
+ 					acpi_tbl_entry_handler_arg handler_arg,
+@@ -246,6 +247,8 @@ static inline int acpi_table_parse_keyp(enum acpi_keyp_type id,
+ {
+ 	return -EOPNOTSUPP;
+ }
 +
++static inline void keyp_setup_nr_ide_stream(struct pci_bus *bus) {}
+ #endif
+ 
  int acpi_parse_mcfg (struct acpi_table_header *header);
- void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
- 
-diff --git a/include/linux/fw_table.h b/include/linux/fw_table.h
-index 9bd605b87c4c..293252cb0b7e 100644
---- a/include/linux/fw_table.h
-+++ b/include/linux/fw_table.h
-@@ -36,6 +36,7 @@ union acpi_subtable_headers {
- 	struct acpi_prmt_module_header prmt;
- 	struct acpi_cedt_header cedt;
- 	struct acpi_cdat_header cdat;
-+	struct acpi_keyp_common_header keyp;
- };
- 
- int acpi_parse_entries_array(char *id, unsigned long table_size,
-diff --git a/lib/fw_table.c b/lib/fw_table.c
-index 16291814450e..147e3895e94c 100644
---- a/lib/fw_table.c
-+++ b/lib/fw_table.c
-@@ -20,6 +20,7 @@ enum acpi_subtable_type {
- 	ACPI_SUBTABLE_PRMT,
- 	ACPI_SUBTABLE_CEDT,
- 	CDAT_SUBTABLE,
-+	ACPI_SUBTABLE_KEYP,
- };
- 
- struct acpi_subtable_entry {
-@@ -41,6 +42,8 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
- 		return entry->hdr->cedt.type;
- 	case CDAT_SUBTABLE:
- 		return entry->hdr->cdat.type;
-+	case ACPI_SUBTABLE_KEYP:
-+		return entry->hdr->keyp.type;
- 	}
- 	return 0;
- }
-@@ -61,6 +64,8 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
- 		__le16 length = (__force __le16)entry->hdr->cdat.length;
- 
- 		return le16_to_cpu(length);
-+	case ACPI_SUBTABLE_KEYP:
-+		return entry->hdr->keyp.length;
- 	}
- 	}
- 	return 0;
-@@ -80,6 +85,8 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
- 		return sizeof(entry->hdr->cedt);
- 	case CDAT_SUBTABLE:
- 		return sizeof(entry->hdr->cdat);
-+	case ACPI_SUBTABLE_KEYP:
-+		return sizeof(entry->hdr->keyp);
- 	}
- 	return 0;
- }
-@@ -95,6 +102,8 @@ acpi_get_subtable_type(char *id)
- 		return ACPI_SUBTABLE_CEDT;
- 	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
- 		return CDAT_SUBTABLE;
-+	if (strncmp(id, ACPI_SIG_KEYP, 4) == 0)
-+		return ACPI_SUBTABLE_KEYP;
- 	return ACPI_SUBTABLE_COMMON;
- }
- 
 -- 
 2.51.0
 
