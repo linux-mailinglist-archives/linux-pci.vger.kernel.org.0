@@ -1,123 +1,135 @@
-Return-Path: <linux-pci+bounces-36600-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E40EB8D203
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 00:42:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4E87B8D218
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 00:53:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C175C7ADE67
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 22:40:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0FD87B11C5
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 22:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B66621FF24;
-	Sat, 20 Sep 2025 22:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2401121579F;
+	Sat, 20 Sep 2025 22:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2VD451v"
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="lKBvlV+A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.83.148.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6661E491B;
-	Sat, 20 Sep 2025 22:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C721CBEAA;
+	Sat, 20 Sep 2025 22:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.83.148.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758408121; cv=none; b=mu++fLPFkC5+bzEzKxRLHJW0IyKYkBHlnKNkUvoZWTJY5UCvckF8i03POTUpQs/mZUPIO3b1GACK1wpbWdpAPBlM6+Wuf1N9Yoh4l4BpJVoRG6gMxrozp8T0QpYTvSM2cGs28WSKJ2C5oRPU2sNl0HRhcjLWhqdXCmW8y4Hb2v0=
+	t=1758408792; cv=none; b=puznnBMAy/4AVkdGBvbbXRF9RIcQEMOMWmAg6h+GnrzFiU1GEf87ikYiZUWkoCW6kwTcei3DVQXetPxDaN4faioXGKz4DsoMGmxdsf/FO1yaE0eWIdOKxu7N39TwgdpUEKn9+a3GU5B+bMLdKgdg1Hbxr5zWL+zPZR/ch1HakFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758408121; c=relaxed/simple;
-	bh=Dt8VKsI0bzzPWavc0PQi4CMaYsaPhVChPxt1pBUrkF4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=ln87ulYu587Cma4jdPH6OrspFJnLaPyGcPOhiYl0vXm9zJOb5lKnEnfjyVKwXxVC8iwOnMVZkJySOf4W+9JXIT+FrheWa88KSVgNnCnkhTZNLqEc6sUN8Lx+7YEzhiuFrmQmUkiFZzRos5WWzKjQLEWo+816hjWdWUblEJ+niXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2VD451v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDD5C4CEEB;
-	Sat, 20 Sep 2025 22:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758408121;
-	bh=Dt8VKsI0bzzPWavc0PQi4CMaYsaPhVChPxt1pBUrkF4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=O2VD451vT9HNTTN9Ot+gYm+T7u5XS4TeGU3KNlq3MyYzbPc/WfKyJ5YsAal0YSqZa
-	 xVtREVHKDSzLplyY10SBSdmsSkd8v5ip1Co82UnaMPTaNqgxCQbGA18E8DeWVBE2Zo
-	 SPYF0+SvJAmBHV64T2e37DNfLhT5tv8ICq0uLqr/KChDAFAk3cxcyoFYaBYj8TEvYu
-	 tFnngljlcAoDTqs1yknnMrQY7rGzRV3q8ZPQ4pR3BcK5CAvsPT0GYyQPXbCNhMKRpw
-	 GIQRLcZwMYeIxTY63zUOhMNQchRVFai5QcRRjKXe54mpAmHWTldY9qzCM9oUtlMk28
-	 Pmn+JiZra4uYA==
-Date: Sat, 20 Sep 2025 17:41:57 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1758408792; c=relaxed/simple;
+	bh=NLG83zG4Iqi1Xyv2M3uzidymYz/T7neW8GLLEwTPTyw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ST5Hd9PwxjbfYhK5CB+u32ybM50JjSlG7xm3gf1f2wXfaxFN73jGt+IGr8i0Wq0Azm8Q0of2SwS9aGl07+tJ9zTRTC1JHc+iju31w39WTCOvg6HAfzFwj9FHXzuWeICjKPnxEE1Tz1bqNv2YKF7mUnrZUJkTQjMu/oCk+wxqgks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=lKBvlV+A; arc=none smtp.client-ip=35.83.148.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1758408790; x=1789944790;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=DbXAa8qTsxyq1mEKjnb+++zhRcJBDvgJFncuYVQDFFE=;
+  b=lKBvlV+A0exj4eJ3TXKi6Ast3J3l9xMm6UfX+kC1p3bN0tzZtY8iDUTu
+   bmIhXs6jcXdDEqj9BjsMbGyuUyjOSEy7jpZMHjr1vieKXeGdWHOim761m
+   XVoJJDgk9QSkZ6uVR/2TmgmQnPPbNyo7GKc3xoYd1WDdNfCcNW4uGWXHm
+   UaJmERE2J2IJLewgq8+4RNtE1LOh0RcQ2MrIy5SF+qmjSZtGmBSIJrvJv
+   ICcIUqZ0KysWDdGcEyPL/OtrkX7XhZpRrsh+owURnOD49vUfHwE4rVHdy
+   pBU9i8/0Eg1DJkUnfwuz/2oCZZXLK9jvH5eCN9FZQys9gVAGXkc7wtyYh
+   g==;
+X-CSE-ConnectionGUID: zMA0ONwqTy6JSTQNaePjXQ==
+X-CSE-MsgGUID: 3Ci37821TSaw+QF3eJWciQ==
+X-IronPort-AV: E=Sophos;i="6.18,282,1751241600"; 
+   d="scan'208";a="3249959"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2025 22:53:10 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:4911]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.168:2525] with esmtp (Farcaster)
+ id 920169d4-e150-49a4-9281-68b82a9564ae; Sat, 20 Sep 2025 22:53:09 +0000 (UTC)
+X-Farcaster-Flow-ID: 920169d4-e150-49a4-9281-68b82a9564ae
+Received: from EX19D032UWA003.ant.amazon.com (10.13.139.37) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Sat, 20 Sep 2025 22:53:09 +0000
+Received: from dev-dsk-ravib-2a-f2262d1b.us-west-2.amazon.com (10.169.187.85)
+ by EX19D032UWA003.ant.amazon.com (10.13.139.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Sat, 20 Sep 2025 22:53:09 +0000
+From: Ravi Kumar Bandi <ravib@amazon.com>
+To: <mani@kernel.org>, <thippeswamy.havalige@amd.com>
+CC: <lpieralisi@kernel.org>, <bhelgaas@google.com>,
+	<linux-pci@vger.kernel.org>, <kwilczynski@kernel.org>, <robh@kernel.org>,
+	<ravib@amazon.com>, <michal.simek@amd.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+Subject: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+Date: Sat, 20 Sep 2025 22:52:32 +0000
+Message-ID: <20250920225232.18757-1-ravib@amazon.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
+References: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Jianjun Wang <jianjun.wang@mediatek.com>, 
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Ryder Lee <ryder.lee@mediatek.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org
-To: Christian Marangi <ansuelsmth@gmail.com>
-In-Reply-To: <20250920114103.16964-1-ansuelsmth@gmail.com>
-References: <20250920114103.16964-1-ansuelsmth@gmail.com>
-Message-Id: <175838993594.10832.1517003373145392481.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: mediatek: Convert to YAML schema
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
+ EX19D032UWA003.ant.amazon.com (10.13.139.37)
 
+The pcie-xilinx-dma-pl driver does not enable INTx interrupts
+after initializing the port, preventing INTx interrupts from
+PCIe endpoints from flowing through the Xilinx XDMA root port
+bridge. This issue affects kernel 6.6.0 and later versions.
 
-On Sat, 20 Sep 2025 13:41:01 +0200, Christian Marangi wrote:
-> Convert the PCI mediatek Documentation to YAML schema to enable
-> validation of the supported GEN1/2 Mediatek PCIe controller.
-> 
-> While converting, lots of cleanup were done from the .txt with better
-> specifying what is supported by the various PCIe controller variant and
-> drop of redundant info that are part of the standard PCIe Host Bridge
-> schema.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../devicetree/bindings/pci/mediatek-pcie.txt | 289 ---------
->  .../bindings/pci/mediatek-pcie.yaml           | 564 ++++++++++++++++++
->  2 files changed, 564 insertions(+), 289 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
-> 
+This patch allows INTx interrupts generated by PCIe endpoints
+to flow through the root port. Tested the fix on a board with
+two endpoints generating INTx interrupts. Interrupts are
+properly detected and serviced. The /proc/interrupts output
+shows:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+[...]
+32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
+52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
+[...]
 
-yamllint warnings/errors:
+Changes since v1::
+- Fixed commit message per reviewer's comments
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek-pcie.example.dtb: syscon@1a000000 (mediatek,mt7623-hifsys): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7623-hifsys', 'mediatek,mt2701-hifsys', 'syscon'] is too long
-	'mediatek,mt7623-hifsys' is not one of ['mediatek,mt2701-hifsys', 'mediatek,mt7622-hifsys']
-	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt2701-hifsys.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek-pcie.example.dtb: pcie@0,0: 'device_type' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek-pcie.example.dtb: pcie@1,0: 'device_type' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek-pcie.example.dtb: pcie@2,0: 'device_type' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
+---
+ drivers/pci/controller/pcie-xilinx-dma-pl.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250920114103.16964-1-ansuelsmth@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+index b037c8f315e4..cc539292d10a 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -659,6 +659,12 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
+ 		return err;
+ 	}
+ 
++	/* Enable interrupts */
++	pcie_write(port, XILINX_PCIE_DMA_IMR_ALL_MASK,
++		   XILINX_PCIE_DMA_REG_IMR);
++	pcie_write(port, XILINX_PCIE_DMA_IDRN_MASK,
++		   XILINX_PCIE_DMA_REG_IDRN_MASK);
++
+ 	return 0;
+ }
+ 
+-- 
+2.47.3
 
 
