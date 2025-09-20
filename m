@@ -1,204 +1,104 @@
-Return-Path: <linux-pci+bounces-36571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DFC6B8C18B
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 09:42:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2826B8C39E
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 09:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADC926223EC
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 07:42:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74EA9177627
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 07:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 755FA26773C;
-	Sat, 20 Sep 2025 07:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F275F25F780;
+	Sat, 20 Sep 2025 07:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvVfkc9p"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jCLFa8cq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC66A55;
-	Sat, 20 Sep 2025 07:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1A01EF38E;
+	Sat, 20 Sep 2025 07:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758354140; cv=none; b=tg3vp0qIGXxtk6d+VD/kA3rwL2qoZ4tUOa4Sdy5mWvlN3CGcQtAzQzDFkg3xCp4k0/YoCPCU5CqLG9s8AEqOANOpgJdrJGl7+l+YBkHUunwpJETJ02kQTmT5bAo5dpbUh0bTW3gOli5NPiNk1whAH0S/3DQvZ++q5tnEuH630G0=
+	t=1758355065; cv=none; b=uzu72ql6oTan0KqwLUPDUJYbOQ0sZ47RCLDJr7ZM3ZNBosHGQJP/SYX5xVEFnMawObuZPvkPFRUnbH6FGCqU5s8jjuYtjYvvOUIh1gw9+9M8FbBT7fNxjeYQuzx96mjx/6DGPdHE8fGF5UJl6+YUoMjPyTbxcRR6HNd5j5EjGiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758354140; c=relaxed/simple;
-	bh=00/ZcdeScyYNhHtGZfw/xJV1F83XgBgalo+slKN3fjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZnpNnZEFNkYggMObW/wi7SjBbkNOolFNAQLj63hxdOVqRQUXKh0XPar7KLyazyH2LjzMQYNzdUQyGO0ydURP86BH+Yo/e3tcJSf7ommhJGGbDEvg9x9vnJRn+nBGv9t9dSyRLEXyYCyGJQF+UsavEsxozH5FfWUy0TNDW7bE59o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvVfkc9p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AEC7C4CEEB;
-	Sat, 20 Sep 2025 07:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758354139;
-	bh=00/ZcdeScyYNhHtGZfw/xJV1F83XgBgalo+slKN3fjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dvVfkc9p1DQkPQGO6GvJxUSVuzwQyG0dxhdApalfEBZOdOBtSMcgKk0xJmK0jQuSI
-	 XJCEEZuu3VbGnRULFowmzwbchAXvDXUvZpGCmgsUuRslFce1oMhKt7E6EcErgv28Wg
-	 RyDp2qZDwjG2Y7kOPZXACiBEAOHtVl6rlsUUxQlC6lUi8rMdwh/6e79eUW49+2FUBX
-	 zok+//sVZGZwSXAqgmZu4pmzJgNCWIVHVs9xQdvaFa/JRRaTL3wxR+jFonqq5Il91m
-	 VOjFZP0Pokvf691m8TEg6SZgdo3SFE65v43VtPDUquAzoW0lGYueiwehQWKtAPNC5C
-	 znSjsF7BW7Udg==
-Date: Sat, 20 Sep 2025 13:12:06 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: kwilczynski@kernel.org, u.kleine-koenig@baylibre.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, arnd@arndb.de, bwawrzyn@cisco.com, 
-	bhelgaas@google.com, unicorn_wang@outlook.com, conor+dt@kernel.org, 
-	18255117159@163.com, inochiama@gmail.com, kishon@kernel.org, krzk+dt@kernel.org, 
-	lpieralisi@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, robh@kernel.org, 
-	s-vadapalli@ti.com, tglx@linutronix.de, thomas.richard@bootlin.com, 
-	sycamoremoon376@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, sophgo@lists.linux.dev, 
-	rabenda.cn@gmail.com, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, 
-	fengchun.li@sophgo.com, jeffbai@aosc.io
-Subject: Re: [PATCH v3 4/7] riscv: sophgo: dts: add PCIe controllers for
- SG2042
-Message-ID: <cwc3hnre3s3rvzcgzjdbdrhlrizz4obifwragusrixa5owj5qg@yotfd3l3qxf4>
-References: <cover.1757643388.git.unicorn_wang@outlook.com>
- <828860951ec4973285fe92fceb4b6f0ecb365a2f.1757643388.git.unicorn_wang@outlook.com>
+	s=arc-20240116; t=1758355065; c=relaxed/simple;
+	bh=cUBuuElSRX3MDS4sybOgqLga1EjZLdw5MDd6QvzWdjc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AW6xIRkENDcNzSa0hNaQ3DerYLZK2Xj17WigDyR4OBEhZk1RPJ4qM090F9AMeBDOvjFGDm1riMZoI3Suy47m3TbjwcSCdV4ACFhYe9oOTiWzOTKrvCTiotZO9DMDUzywSSjCB2hHg6C+wfxF9jn/7TTegB7RogGKPboG2OETgKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jCLFa8cq; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58K7v7J5388223;
+	Sat, 20 Sep 2025 02:57:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1758355027;
+	bh=T3gkevHKttZ+zKYQgGG9Fj0bcgXN5Z9yfJL6umgFsuI=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=jCLFa8cq930P8+yRMuQyL4OSdG9GsvXm0KxiF5xQfmuvqU5VK5PDVeREyNCZh5qk9
+	 nIiuHgOd1ngtgDKGjwRA1iDWzYY9DgV8I4Cv//ODZybRcmvKjrCwLIYtUxKJS/73Vi
+	 ySJ6+AEelM4Wari0SDzYjyzbni0oq1rEbVEzBBRo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58K7v74L2919129
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Sat, 20 Sep 2025 02:57:07 -0500
+Received: from DFLE203.ent.ti.com (10.64.6.61) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Sat, 20
+ Sep 2025 02:57:06 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE203.ent.ti.com
+ (10.64.6.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Sat, 20 Sep 2025 02:57:06 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58K7v5pr3828574;
+	Sat, 20 Sep 2025 02:57:06 -0500
+Date: Sat, 20 Sep 2025 13:27:05 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <christian.bruel@foss.st.com>,
+        <qiang.yu@oss.qualcomm.com>, <mayank.rana@oss.qualcomm.com>,
+        <thippeswamy.havalige@amd.com>, <shradha.t@samsung.com>,
+        <quic_schintav@quicinc.com>, <inochiama@gmail.com>,
+        <cassel@kernel.org>, <kishon@kernel.org>,
+        <sergio.paracuellos@gmail.com>, <18255117159@163.com>,
+        <rongqianfeng@vivo.com>, <jirislaby@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH v2 04/10] PCI: dwc: ep: Export
+ dw_pcie_ep_raise_msix_irq() for pci-keystone
+Message-ID: <6550c06c-b8e8-437e-a399-d1c8c2e29774@ti.com>
+References: <20250912122356.3326888-1-s-vadapalli@ti.com>
+ <20250912122356.3326888-5-s-vadapalli@ti.com>
+ <kb6jxzyihyuhd4qfvdtgxgopzgyymhsflqmheb3fribovdck23@ahswbufb23sv>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <828860951ec4973285fe92fceb4b6f0ecb365a2f.1757643388.git.unicorn_wang@outlook.com>
+In-Reply-To: <kb6jxzyihyuhd4qfvdtgxgopzgyymhsflqmheb3fribovdck23@ahswbufb23sv>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Sep 12, 2025 at 10:36:50AM +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
+On Sat, Sep 20, 2025 at 12:00:47AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Sep 12, 2025 at 05:46:15PM +0530, Siddharth Vadapalli wrote:
+> > The pci-keystone.c driver uses the 'dw_pcie_ep_raise_msix_irq()' helper.
+> > In preparation for enabling the pci-keystone.c driver to be built as a
+> > loadable module, export 'dw_pcie_ep_raise_msix_irq()'.
+> > 
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > 
-> Add PCIe controller nodes in DTS for Sophgo SG2042.
-> Default they are disabled.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  arch/riscv/boot/dts/sophgo/sg2042.dtsi | 88 ++++++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> index b3e4d3c18fdc..b521f674283e 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> @@ -220,6 +220,94 @@ clkgen: clock-controller@7030012000 {
->  			#clock-cells = <1>;
->  		};
->  
-> +		pcie_rc0: pcie@7060000000 {
-> +			compatible = "sophgo,sg2042-pcie-host";
-> +			device_type = "pci";
-> +			reg = <0x70 0x60000000  0x0 0x00800000>,
-> +			      <0x40 0x00000000  0x0 0x00001000>;
-> +			reg-names = "reg", "cfg";
-> +			linux,pci-domain = <0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0  0xc0000000  0x40 0xc0000000  0x0 0x00400000>,
+> This patch could be merged with patch 2.
 
-PCI address of the I/O port starts from 0. So this should be:
+I will squash this in patch 2 in the v3 series.
 
-				<0x01000000 0x0  0x00000000  0x40 0xc0000000  0x0 0x00400000>,
-
-Same comment for other nodes.
-
-With this fixed,
-
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-- Mani
-
-> +				 <0x42000000 0x0  0xd0000000  0x40 0xd0000000  0x0 0x10000000>,
-> +				 <0x02000000 0x0  0xe0000000  0x40 0xe0000000  0x0 0x20000000>,
-> +				 <0x43000000 0x42 0x00000000  0x42 0x00000000  0x2 0x00000000>,
-> +				 <0x03000000 0x41 0x00000000  0x41 0x00000000  0x1 0x00000000>;
-> +			bus-range = <0x0 0xff>;
-> +			vendor-id = <0x1f1c>;
-> +			device-id = <0x2042>;
-> +			cdns,no-bar-match-nbits = <48>;
-> +			msi-parent = <&msi>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie_rc1: pcie@7060800000 {
-> +			compatible = "sophgo,sg2042-pcie-host";
-> +			device_type = "pci";
-> +			reg = <0x70 0x60800000  0x0 0x00800000>,
-> +			      <0x44 0x00000000  0x0 0x00001000>;
-> +			reg-names = "reg", "cfg";
-> +			linux,pci-domain = <1>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0  0xc0400000  0x44 0xc0400000  0x0 0x00400000>,
-> +				 <0x42000000 0x0  0xd0000000  0x44 0xd0000000  0x0 0x10000000>,
-> +				 <0x02000000 0x0  0xe0000000  0x44 0xe0000000  0x0 0x20000000>,
-> +				 <0x43000000 0x46 0x00000000  0x46 0x00000000  0x2 0x00000000>,
-> +				 <0x03000000 0x45 0x00000000  0x45 0x00000000  0x1 0x00000000>;
-> +			bus-range = <0x0 0xff>;
-> +			vendor-id = <0x1f1c>;
-> +			device-id = <0x2042>;
-> +			cdns,no-bar-match-nbits = <48>;
-> +			msi-parent = <&msi>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie_rc2: pcie@7062000000 {
-> +			compatible = "sophgo,sg2042-pcie-host";
-> +			device_type = "pci";
-> +			reg = <0x70 0x62000000  0x0 0x00800000>,
-> +			      <0x48 0x00000000  0x0 0x00001000>;
-> +			reg-names = "reg", "cfg";
-> +			linux,pci-domain = <2>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0  0xc0800000  0x48 0xc0800000  0x0 0x00400000>,
-> +				 <0x42000000 0x0  0xd0000000  0x48 0xd0000000  0x0 0x10000000>,
-> +				 <0x02000000 0x0  0xe0000000  0x48 0xe0000000  0x0 0x20000000>,
-> +				 <0x03000000 0x49 0x00000000  0x49 0x00000000  0x1 0x00000000>,
-> +				 <0x43000000 0x4a 0x00000000  0x4a 0x00000000  0x2 0x00000000>;
-> +			bus-range = <0x0 0xff>;
-> +			vendor-id = <0x1f1c>;
-> +			device-id = <0x2042>;
-> +			cdns,no-bar-match-nbits = <48>;
-> +			msi-parent = <&msi>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie_rc3: pcie@7062800000 {
-> +			compatible = "sophgo,sg2042-pcie-host";
-> +			device_type = "pci";
-> +			reg = <0x70 0x62800000  0x0 0x00800000>,
-> +			      <0x4c 0x00000000  0x0 0x00001000>;
-> +			reg-names = "reg", "cfg";
-> +			linux,pci-domain = <3>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0  0xc0c00000  0x4c 0xc0c00000  0x0 0x00400000>,
-> +				 <0x42000000 0x0  0xf8000000  0x4c 0xf8000000  0x0 0x04000000>,
-> +				 <0x02000000 0x0  0xfc000000  0x4c 0xfc000000  0x0 0x04000000>,
-> +				 <0x43000000 0x4e 0x00000000  0x4e 0x00000000  0x2 0x00000000>,
-> +				 <0x03000000 0x4d 0x00000000  0x4d 0x00000000  0x1 0x00000000>;
-> +			bus-range = <0x0 0xff>;
-> +			vendor-id = <0x1f1c>;
-> +			device-id = <0x2042>;
-> +			cdns,no-bar-match-nbits = <48>;
-> +			msi-parent = <&msi>;
-> +			status = "disabled";
-> +		};
-> +
->  		clint_mswi: interrupt-controller@7094000000 {
->  			compatible = "sophgo,sg2042-aclint-mswi", "thead,c900-aclint-mswi";
->  			reg = <0x00000070 0x94000000 0x00000000 0x00004000>;
-> -- 
-> 2.34.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards,
+Siddharth.
 
