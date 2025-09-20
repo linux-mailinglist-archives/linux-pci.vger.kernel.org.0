@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-36575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACB0DB8C3B4
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 10:09:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB59CB8C3C0
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 10:12:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3C011BC240D
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 08:10:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FE3D7C1126
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 08:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DCD27603C;
-	Sat, 20 Sep 2025 08:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBF42773DC;
+	Sat, 20 Sep 2025 08:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Oq/cyC6x"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BM70R1d6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537A61E9B1C;
-	Sat, 20 Sep 2025 08:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A73278761;
+	Sat, 20 Sep 2025 08:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758355786; cv=none; b=QM2OW1KOqdU19b+6I6IsFJ+HvbDZTFzA0RJPnLF+4AcRGIbGMNprRFyZK/mprLUvxT817konCyOmnmQvV6hlDIWadPeg3i7RakEMHHO4/XK6yCP8Vvlal7gAcWs0qVvqwStgcPMfNS5u9AC0LwKWapHLeovyqvs9Fc1g4Xnuw3s=
+	t=1758355921; cv=none; b=IdOaBSp4jKmfWnrpMK54hp0fNWfWo9Qv1HY5G+W3J0PIrPc508/4EF2a9je3QGX0sfmCXhdkXhDkpfSeUyjPngaPbF+4LIvMc5q5/k/GJcTDsDI4CbuJrQDqWHo5SZuYEAV2iln7tpbdlr3HKSyqy7olXqPsUhXGcRdF8Vt4Dh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758355786; c=relaxed/simple;
-	bh=6YIlnQGfJtK4b/34oDcJxMdzbkn4VAuRMiy6KSr0M8I=;
+	s=arc-20240116; t=1758355921; c=relaxed/simple;
+	bh=FdOKyewrZfem6Nqglsv21HzTh61ls7TSW8CJqxOtAN4=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBQsgtxEcehHcGS3isNGT8+kOorEcLDUlkfyfAKfafnAWLn4LHHmAdVrUqcU7k4Iq9RU2vp2xeWy5Ze80nNgmCrq2FmfuMaufdCzLISYl1i6GZi6c/XwE3HGbNSLmp2+kEF3uX3QHYSmh1HAsS8VBlKK7dgKjj/Fi29dDv65raE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Oq/cyC6x; arc=none smtp.client-ip=198.47.19.245
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMATX+4dYb5pV5uyEfPY6yRhq3yLd9029MfLB00LYLNh75514kuHv592HMD8c1I9+P21xmzbCNCpCrRV9mqKwLYGBXmt2cYkYWaYM5+U4C3qc6X9OFd1LYV2g+AQZHHwucwGAijVawcIfn0dWWb9Igm9Yv/gH0SxOl+BvTcQVls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BM70R1d6; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58K89O51389660;
-	Sat, 20 Sep 2025 03:09:24 -0500
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58K8BbA1871386;
+	Sat, 20 Sep 2025 03:11:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1758355764;
-	bh=tK7KqxjdZLBASzeM34EVBqx8HWtcYbb8JxjopxX43w0=;
+	s=ti-com-17Q1; t=1758355897;
+	bh=KtHTw6KafLBqEqV2OxoEjlbV2rU4oUv00hFO/KwtPmI=;
 	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=Oq/cyC6x3/uAqlrNORZUalQdytMXrSoiZ+MJZeKSuwy+EFCoNxiu+1WR8bPvmjVLd
-	 5Il7K5dPlB0p8okENOu+NzN5FRO5M4wqK69k+cxGzu422Hxgf6hTU1LlEZAYGrvHp+
-	 U9vNUKZIF0Je4nUKTm4VOflejILv6fVy/5rmr9no=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58K89O0N3499538
+	b=BM70R1d6Zrdmx64cmYFIFLcuCi1/29MyA3d3hfMWRqslt6rBeaVkP8xKYTgdf2drJ
+	 c4FFXfnM6wMuz6hTjtkDdpKs0+UWCL2hJCZSSbZQb7CmFnkPR0e9aK1ps4tt4AyPhg
+	 PhSBQ8UU1Tq0Zd3V9se2RgNQrHRQMaTAahTzlMeE=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58K8Bb452930499
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Sat, 20 Sep 2025 03:09:24 -0500
-Received: from DLEE204.ent.ti.com (157.170.170.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 20 Sep 2025 03:11:37 -0500
+Received: from DFLE201.ent.ti.com (10.64.6.59) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Sat, 20
- Sep 2025 03:09:24 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE204.ent.ti.com
- (157.170.170.84) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2025 03:11:36 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE201.ent.ti.com
+ (10.64.6.59) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Sat, 20 Sep 2025 03:09:23 -0500
+ Transport; Sat, 20 Sep 2025 03:11:36 -0500
 Received: from localhost (uda0492258.dhcp.ti.com [172.24.231.84])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58K89MDc3568350;
-	Sat, 20 Sep 2025 03:09:23 -0500
-Date: Sat, 20 Sep 2025 13:39:22 +0530
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58K8BZ5G3571649;
+	Sat, 20 Sep 2025 03:11:36 -0500
+Date: Sat, 20 Sep 2025 13:41:35 +0530
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: Manivannan Sadhasivam <mani@kernel.org>
 CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
@@ -70,12 +70,12 @@ CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
         <rongqianfeng@vivo.com>, <jirislaby@kernel.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH v2 09/10] PCI: keystone: Exit ks_pcie_probe() for the
- default switch-case of "mode"
-Message-ID: <3f3b2f06-64a3-4e6d-9fa9-c3412b1ca710@ti.com>
+Subject: Re: [PATCH v2 10/10] PCI: keystone: Add support to build as a
+ loadable module
+Message-ID: <8582c87e-5f0d-4712-b93f-c7524f051fd7@ti.com>
 References: <20250912122356.3326888-1-s-vadapalli@ti.com>
- <20250912122356.3326888-10-s-vadapalli@ti.com>
- <lo2zv3nxek57s3h4hwv2ujzophdx2ubfuam4gqmo5h77t2g4jo@447qpc7a4ub3>
+ <20250912122356.3326888-11-s-vadapalli@ti.com>
+ <6nj2fkhxixpkneh7pdvyveu6ogpm5phbpvaw6cog3bshm5spfh@kb64rycphtft>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,71 +84,121 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <lo2zv3nxek57s3h4hwv2ujzophdx2ubfuam4gqmo5h77t2g4jo@447qpc7a4ub3>
+In-Reply-To: <6nj2fkhxixpkneh7pdvyveu6ogpm5phbpvaw6cog3bshm5spfh@kb64rycphtft>
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sat, Sep 20, 2025 at 12:06:46AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Sep 12, 2025 at 05:46:20PM +0530, Siddharth Vadapalli wrote:
-> > In ks_pcie_probe(), the switch-case for the "mode" is used to configure
-> > the PCIe Controller for either Root-Complex or Endpoint mode of operation.
-> > Prior to the switch-case statement for "mode" an invalid mode will result
-> > in probe failure only if "dw_pcie_ver_is_ge(pci, 480A)" is true, which
-> > is the case for the AM654 platform. On the other hand, when that is not
-> > the case, "ks_pcie_set_mode()" will be invoked, which does not validate
-> > the mode. As a result, it is possible for the switch-case statement for
-> > "mode" to receive an invalid mode. Currently, an error message is displayed
-> > in the "default" case where "mode" is neither "DW_PCIE_RC_TYPE" nor
-> > "DW_PCIE_EP_TYPE", but the probe succeeds. However, since the configuration
-> > required for Root-Complex and Endpoint mode have not been performed, the
-> > Controller is not operational.
-> > 
-> > Fix this by exiting "ks_pcie_probe()" with the return value of "-EINVAL"
-> > in addition to displaying the existing error message.
+On Sat, Sep 20, 2025 at 12:10:59AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Sep 12, 2025 at 05:46:21PM +0530, Siddharth Vadapalli wrote:
+> > The 'pci-keystone.c' driver is the application/glue/wrapper driver for the
+> > Designware PCIe Controllers on TI SoCs. Now that all of the helper APIs
+> > that the 'pci-keystone.c' driver depends upon have been exported for use,
+> > enable support to build the driver as a loadable module.
 > > 
 > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> 
-> Fixes tag? And probably CC stable since the controller seems to be not
-> operations without this fix.
-
-While I had mentioned the rationale for not including the 'Fixes tag' in
-the v1 patch below the tearline, I forgot to add it in this patch. I will
-quote the same below:
-
-    NOTE: A "Fixes" tag is ommitted on purpose since the fix is not crucial:
-    1. It doesn't fix a crash or any fatal error
-    2. It doesn't enable controller functionality by fixing the issue
-
-    Therefore, the patch may not be worth backporting.
-
-Prior to this patch, the probe succeeded and the controller was
-unusable. Post this patch, the probe will fail and the controller is
-still unusable. Behavior is identical from a usability perspective but
-the user is aware of the issue since the probe fails.
-
-> 
-> - Mani
-> 
 > > ---
 > > 
-> > v1: https://lore.kernel.org/r/20250903124505.365913-11-s-vadapalli@ti.com/
-> > No changes since v1.
+> > v1: https://lore.kernel.org/r/20250903124505.365913-12-s-vadapalli@ti.com/
+> > Changes since v1:
+> > - Based on the feedback from Manivannan Sadhasivam <mani@kernel.org> at:
+> >   https://lore.kernel.org/r/2gzqupa7i7qhiscwm4uin2jmdb6qowp55mzk7w4o3f73ob64e7@taf5vjd7lhc5/
+> >   builtin_platform_driver() is being retained in the driver due to which
+> >   the change made in the v1 patch of replacing builtin_platform_driver()
+> >   with module_platform_driver() has been discarded in this patch.
 > > 
-> >  drivers/pci/controller/dwc/pci-keystone.c | 2 ++
-> >  1 file changed, 2 insertions(+)
+> >  drivers/pci/controller/dwc/Kconfig        |  6 +++---
+> >  drivers/pci/controller/dwc/pci-keystone.c | 22 ++++++++++++++++++++++
+> >  2 files changed, 25 insertions(+), 3 deletions(-)
 > > 
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 34abc859c107..46012d6a607e 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -482,10 +482,10 @@ config PCI_DRA7XX_EP
+> >  	  This uses the DesignWare core.
+> >  
+> >  config PCI_KEYSTONE
+> > -	bool
+> > +	tristate
+> >  
+> >  config PCI_KEYSTONE_HOST
+> > -	bool "TI Keystone PCIe controller (host mode)"
+> > +	tristate "TI Keystone PCIe controller (host mode)"
+> >  	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+> >  	depends on PCI_MSI
+> >  	select PCIE_DW_HOST
+> > @@ -497,7 +497,7 @@ config PCI_KEYSTONE_HOST
+> >  	  DesignWare core functions to implement the driver.
+> >  
+> >  config PCI_KEYSTONE_EP
+> > -	bool "TI Keystone PCIe controller (endpoint mode)"
+> > +	tristate "TI Keystone PCIe controller (endpoint mode)"
+> >  	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+> >  	depends on PCI_ENDPOINT
+> >  	select PCIE_DW_EP
 > > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> > index 2da9feaaf9ee..e85942b4f6be 100644
+> > index e85942b4f6be..661e31b60a48 100644
 > > --- a/drivers/pci/controller/dwc/pci-keystone.c
 > > +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> > @@ -1414,6 +1414,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
-> >  		break;
-> >  	default:
-> >  		dev_err(dev, "INVALID device type %d\n", mode);
-> > +		ret = -EINVAL;
-> > +		goto err_get_sync;
-> >  	}
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> >  #include <linux/msi.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_irq.h>
+> > @@ -132,6 +133,7 @@ struct keystone_pcie {
+> >  	struct			device_node *msi_intc_np;
+> >  	struct irq_domain	*intx_irq_domain;
+> >  	struct device_node	*np;
+> > +	struct gpio_desc	*reset_gpio;
 > >  
-> >  	ks_pcie_enable_error_irq(ks_pcie);
+> >  	/* Application register space */
+> >  	void __iomem		*va_app_base;	/* DT 1st resource */
+> > @@ -1211,6 +1213,7 @@ static const struct of_device_id ks_pcie_of_match[] = {
+> >  	},
+> >  	{ },
+> >  };
+> > +MODULE_DEVICE_TABLE(of, ks_pcie_of_match);
+> >  
+> >  static int ks_pcie_probe(struct platform_device *pdev)
+> >  {
+> > @@ -1329,6 +1332,7 @@ static int ks_pcie_probe(struct platform_device *pdev)
+> >  			dev_err(dev, "Failed to get reset GPIO\n");
+> >  		goto err_link;
+> >  	}
+> > +	ks_pcie->reset_gpio = gpiod;
+> >  
+> >  	/* Obtain references to the PHYs */
+> >  	for (i = 0; i < num_lanes; i++)
+> > @@ -1440,9 +1444,23 @@ static void ks_pcie_remove(struct platform_device *pdev)
+> >  {
+> >  	struct keystone_pcie *ks_pcie = platform_get_drvdata(pdev);
+> >  	struct device_link **link = ks_pcie->link;
+> > +	struct dw_pcie *pci = ks_pcie->pci;
+> >  	int num_lanes = ks_pcie->num_lanes;
+> > +	const struct ks_pcie_of_data *data;
+> >  	struct device *dev = &pdev->dev;
+> > +	enum dw_pcie_device_mode mode;
+> > +
+> > +	ks_pcie_disable_error_irq(ks_pcie);
+> > +	data = of_device_get_match_data(dev);
+> > +	mode = data->mode;
+> > +	if (mode == DW_PCIE_RC_TYPE) {
+> > +		dw_pcie_host_deinit(&pci->pp);
+> > +	} else {
+> > +		pci_epc_deinit_notify(pci->ep.epc);
+> > +		dw_pcie_ep_deinit(&pci->ep);
+> > +	}
+> >  
+> > +	gpiod_set_value_cansleep(ks_pcie->reset_gpio, 0);
+> 
+> Can ks_pcie_remove() be called for a builtin_platform_driver?
+
+It cannot be executed but I have added it for the sake of completeness - in
+the same manner that the initial implementation didn't simply make the
+'ks_pcie_remove()' function a no-op and the code exists as if it could
+be executed or if it were to be executed at some point in the future.
 
 Regards,
 Siddharth.
