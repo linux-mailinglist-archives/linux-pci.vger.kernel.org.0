@@ -1,161 +1,161 @@
-Return-Path: <linux-pci+bounces-36592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B7E3B8CA59
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 16:34:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73851B8CB7F
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 17:31:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F00421B24AAA
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 14:35:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 062DC1BC222A
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 15:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D57091DDC3F;
-	Sat, 20 Sep 2025 14:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C7F219301;
+	Sat, 20 Sep 2025 15:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZRzEdIGQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIX0LMHj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29D41D61B7
-	for <linux-pci@vger.kernel.org>; Sat, 20 Sep 2025 14:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF66420FAA4;
+	Sat, 20 Sep 2025 15:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758378890; cv=none; b=D8fvBb7pWldBOYmP1DbR1AU0ap3zsNVZtAMP4uTgcbMpZFk+Q4N0JGw1eMoI6+t9pUpehW5wgbTubhzzc8xGnTXeyvh1op1iKiG6IagUoFVzdda5Vf9pRWOEfQMe7mD1x1g96rDwaiQcqy9jUuTY4g+9ot0+yfHPGmSJeuL3hjw=
+	t=1758382293; cv=none; b=toIMISjUeuPPRqXbaPhQgfWqzmcPiWf2HQahpD2LC9zSLTCrC4DgprETC0CK8oOxSFKdKNyKm/YJtCnle0+5jhKS4LDDmo9i3WvDn9Qj9+da0/78ZPhrJVGsCBr6qF/0PvKn6HM4JyHrmR1Kpb6CMVS9SnTsc0U9rO768ikke1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758378890; c=relaxed/simple;
-	bh=m7o1JmdCtCm0ban/9JFAPVOEURfRDh7SX9QH+JTTZCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qu1BG8ml2LPEEmd1YAFBsV3W/Al44qr/KuEgydh/Eo/G5m8zLjGnsOVAizGKzub7dBp1n5a67yfMo3mjgFuJKZgq42Vu9x0vFNSYKyqNGUGP4AbhRk7BbZGxAZ9EEqLck2E2HZ96F/g0GOGe98gn6tjE9NhM5oDwDuWAO/24W7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZRzEdIGQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758378887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lmW0GhFqpuOz4IYUZyTxB91HzEDm1lTR2DbWJheeJf8=;
-	b=ZRzEdIGQUqOarQgpRXQAcpsRrxp7cB7FfvpuIqSy9bNgHsM0nB5wJNXuG5HdBHRWQBu3BX
-	ACtgU9fSb0qtmZ+bpXeXjhjarC+OcsdXI7SyAUkq7x+n9gKBpRG64z/1e/yQHqBBj6WKnh
-	LeklW9Me1GMywx7zOdYnBCruQi5l2H0=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-ppid0FfTO9q3PbQohqwY2w-1; Sat, 20 Sep 2025 10:34:46 -0400
-X-MC-Unique: ppid0FfTO9q3PbQohqwY2w-1
-X-Mimecast-MFC-AGG-ID: ppid0FfTO9q3PbQohqwY2w_1758378885
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-890975f55bfso59099239f.3
-        for <linux-pci@vger.kernel.org>; Sat, 20 Sep 2025 07:34:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758378885; x=1758983685;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lmW0GhFqpuOz4IYUZyTxB91HzEDm1lTR2DbWJheeJf8=;
-        b=k2aSUeR9bjy/yrNRg9uFhAVJ3sgpJFhU5lTDuTu+qFp6KasAInWlx+RYIrIyRlYJ7b
-         UwbLsz5O9uffMfyrJ1QkhHq4QPNuyJxnc3Zw7QQlwedyY64GmwTF34z6Eklzjzg0kfIA
-         LUqJm1Eqk2XpvTjxcV9Om7W+Cn6E0UgGpiu74+3HsQTBPjfcDwnX5KDua8hjKHhBDzSq
-         oLDJPbkuxmjm8Vcg6KkufuVUB3nVEOTjcfZScWv+ALfEkzOclmFFG1iXlO8CI+L+G+Ro
-         LftoPcbTPvqLp8oCMn1YxATBSsHFv4L6mrpS4uQty6/dZjoB6i+UN9QV510ggfM0tS0x
-         wMQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSIoOjQiBJDfWs9yvx1s+E67cl6NukRtltMCrOs9PzrPnlUUryV4k3CflQbViW5w7/A01Z9mseUCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEWvxX1m7wbJ1NGBm0uP+pdskWtknDfHz3th2DFSX3CAgi1vXO
-	NsniefIFBAjnut8LIqdcbsomhU1N7gp66wAgZ1WVzynPTbo7iFjVeTDUnf3cdGXpxgMH46iLTG+
-	WUm64dEvs4fStpunqA3JtgdVZ631kAB52WL1ZtUg2xpnHnipw+1/X2B9c/MJ+Wg==
-X-Gm-Gg: ASbGncs21sn98k4fDQ8hrPNw1LjaYd3XyCrguqTMM+qZtgqQLjBsQ80+eh9va31c2FE
-	4MxervcNGriSVJRt1v6FkCH/lu165pS708D0u1rpay/bD7iI+AH6YBqu4PjcbLyK0nHZIEAXDmB
-	f+Snn1ofXb5/8CjUK4u0FbD7UBeWw0M1S5AZ01097dQgXdz26R4OQFXoDvFo1ry5sjoRnb8+b7Y
-	HjWPzOpQkAFmkHPmmb+/tG/9cqGPLO0/l+vl79NZ8B2oJ7+j6qLYJMJjHQcBDE0XX3ZQJPpmIaR
-	BdW734ZOXzwZY1UjBOePo6iKu/vOvgvu8ttvnKOirc4=
-X-Received: by 2002:a05:6e02:2301:b0:40f:407b:f276 with SMTP id e9e14a558f8ab-4248197e364mr38881845ab.4.1758378885057;
-        Sat, 20 Sep 2025 07:34:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGn/sU+69zKpMjjxvM7+FqZPhR1nEz46uEcfbGd5xDRY/strRZMysIf+Q/QIhqN6+Ha09OCGw==
-X-Received: by 2002:a05:6e02:2301:b0:40f:407b:f276 with SMTP id e9e14a558f8ab-4248197e364mr38881785ab.4.1758378884673;
-        Sat, 20 Sep 2025 07:34:44 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d3f7570c6sm3458457173.31.2025.09.20.07.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Sep 2025 07:34:44 -0700 (PDT)
-Date: Sat, 20 Sep 2025 08:34:41 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Ajay Garg <ajaygargnsit@gmail.com>
-Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: How are iommu-mappings set up in guest-OS for
- dma_alloc_coherent
-Message-ID: <20250920083441.306d58d0.alex.williamson@redhat.com>
-In-Reply-To: <CAHP4M8XQw5_2LX4OpYeO+8bbAEEaRmjQ39+nPzk0qXzwG7uaUQ@mail.gmail.com>
-References: <CAHP4M8W+uMHkzcx-fHJ0NxYf4hrkdFBQTGWwax5wHLa0Qf37Nw@mail.gmail.com>
-	<20250919104123.7c6ba069.alex.williamson@redhat.com>
-	<CAHP4M8XQw5_2LX4OpYeO+8bbAEEaRmjQ39+nPzk0qXzwG7uaUQ@mail.gmail.com>
-Organization: Red Hat
+	s=arc-20240116; t=1758382293; c=relaxed/simple;
+	bh=gZqX2H7n0UEtTkfIc/RuIFUydJoKJ53JhCKjq8fs61I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dszTiz+BPn9SwKKgdwW5wbZvaLbpN0yMX6w8yl95UCWrZwNv7gUpX8cxLopK9koSNyM6y4UuOoVu5CJw8qyBz4IgDUaXAyhCopDFb0t8xOSkrC4QC4a/LL0krRwNKQNb4ZvtxWm4lSv4jZfkrcCsSDeBO131R4nUOl0iL+OXNJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIX0LMHj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4053C4CEEB;
+	Sat, 20 Sep 2025 15:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758382293;
+	bh=gZqX2H7n0UEtTkfIc/RuIFUydJoKJ53JhCKjq8fs61I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XIX0LMHjsoHEyzTGaCYxixYg/Gw83ThsAZygSvEaBKxB3QAttPZRy5Z5T6IClHXRC
+	 olHdCvvT6rKD4clpBS4qlS04R4l3x8CVtMi4eXr5xOdsPwsbtVQwkuhI0iCCStPnIK
+	 N7mJHmHsspXygmYRaj80SyI6wixBkhQRIM/1nvln5Pm9ES1nS2DVELgScy9p8GgNVl
+	 ptIIqHMZJy6wF6b4BsKaFNAicBYBm4KQf6aflaSJ3m56dcsEd6oyDeWmNRpWQLb+XZ
+	 K8k0Cz9iDa/i4/SgNKr30Gu6rliPyEZ1F1bNQcQ7Bs1X0e4oHtQX3RCs/ddWw7eqiL
+	 riIc565RExgYA==
+Date: Sat, 20 Sep 2025 21:01:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra194: Handle errors in BPMP response
+Message-ID: <lvchydppqdxm4hy4kogkzinz4w2hllvsihg2ehvueth25sxi53@feqxeedvrs2o>
+References: <20250911122728.1465254-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250911122728.1465254-2-cassel@kernel.org>
 
-On Sat, 20 Sep 2025 08:34:41 +0530
-Ajay Garg <ajaygargnsit@gmail.com> wrote:
+On Thu, Sep 11, 2025 at 02:27:29PM +0200, Niklas Cassel wrote:
+> From: Vidya Sagar <vidyas@nvidia.com>
+> 
+> The return value from tegra_bpmp_transfer() indicates the success or
+> failure of the IPC transaction with BPMP. If the transaction
+> succeeded, we also need to check the actual command's result code.
+> 
+> If a host deasserts PERST without providing a refclock, enabling the PHY
+> (via a tegra_bpmp_transfer() call) will silently fail, however, because
+> we are lacking error handling, pex_ep_event_pex_rst_deassert() will still
+> set pcie->ep_state = EP_STATE_ENABLED.
+> 
 
-> > If the VM is configured without a vIOMMU or the vIOMMU is inactive in
-> > the guest, all of the guest physical memory is pinned and mapped
-> > through the physical IOMMU when the guest is started.  Nothing happens
-> > regarding the IOMMU when a coherent mapping is created in the guest,
-> > it's already setup.
-> >  
-> 
-> Thanks Alex.
-> 
-> Another doubt pops up for this scenario.
-> 
-> Let's take a host-OS, with two guess-OSes spawned up (we can take
-> everything to be x86_64 for simplicity).
-> Guest G1 has PCI-device-1 attached to it; Guest G2 has PCI-device-2
-> attached to it.
-> 
-> a)
-> We do "dma_alloc_coherent" in G1, which returns GVA1 (CPU
-> virtual-address) and GIOVA1 (Device-bus virtual-address).
-> Since vIOMMU is not exposed in guest, so GIOVA1 will/can be equal to
-> GPA1 (physical-address).
-> 
-> This GIOVA1 (== GPA1) will be programmed to the PCI-device-1's
-> BAR-register to set up DMA.
-> 
-> b)
-> Similarly, we do "dma_alloc_coherent" in G2, and program GIOVA2 (==
-> GPA2) to PCI-device-2's BAR-register to set up DMA.
-> 
-> c)
-> At this point, the physical/host IOMMU will contain mappings for :
-> 
->     GIOVA1 => HPA1
->     GIOVA2 => HPA2
-> 
-> We take "sufficiently" multi-core systems, so that both guests could
-> be running concurrently, and HPA1 != HPA2 generally.
-> However, since both guests are running independently, we could very
-> well land in the situation where
-> 
->     GIOVA1 == GIOVA2 (== GPA1 == GPA2).
-> 
-> How do we handle such conflicts?
-> Does x86-IOMMU-PASID come to the rescue here (implicitly meaning that
-> PCI-device-1 and PCI-device-2 """"must"""" be PASID capable)?
+How can a host deassert PERST# without providing refclk? As per the CEM spec
+r4.0, sec 2.2, refclk should be active at least TPERST-CLK before PERST# is
+deasserted.
 
-No, each device has a unique Requester ID (RID).  The IOMMU page tables
-are first indexed by the RID, therefore two devices making use of the
-same IOVA will use separate page tables resulting in unique HPAs.
-PASID provides another level of page table lookup that is not necessary
-in the scenario described.  Thanks,
+So does this controller violate the spec? Even so, I don't know how an endpoint
+could function if it relies on the host for refclk.
 
-Alex
+- Mani
 
+> Because of this, any succeeding PERST deassertion will incorrectly be a
+> no-op (because of the pcie->ep_state == EP_STATE_ENABLED check in
+> pex_ep_event_pex_rst_deassert()), even if the host does provide a refclock
+> during the succeeding PERST deassertion.
+> 
+> Add error handling to tegra_bpmp_transfer(), such that the pcie->ep_state
+> can not get out of sync with reality, which will incorrectly cause the
+> driver to think that it has been successfully initialized, which
+> incorrectly makes future calls to pex_ep_event_pex_rst_deassert() a no-op.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> [cassel: improve commit log]
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 0c0734aa14b68..8c5c370dbba5e 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1214,6 +1214,7 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+>  	struct mrq_uphy_response resp;
+>  	struct tegra_bpmp_message msg;
+>  	struct mrq_uphy_request req;
+> +	int err;
+>  
+>  	/*
+>  	 * Controller-5 doesn't need to have its state set by BPMP-FW in
+> @@ -1236,7 +1237,13 @@ static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+>  	msg.rx.data = &resp;
+>  	msg.rx.size = sizeof(resp);
+>  
+> -	return tegra_bpmp_transfer(pcie->bpmp, &msg);
+> +	err = tegra_bpmp_transfer(pcie->bpmp, &msg);
+> +	if (err)
+> +		return err;
+> +	if (msg.rx.ret)
+> +		return -EINVAL;
+> +
+> +	return 0;
+>  }
+>  
+>  static int tegra_pcie_bpmp_set_pll_state(struct tegra_pcie_dw *pcie,
+> @@ -1245,6 +1252,7 @@ static int tegra_pcie_bpmp_set_pll_state(struct tegra_pcie_dw *pcie,
+>  	struct mrq_uphy_response resp;
+>  	struct tegra_bpmp_message msg;
+>  	struct mrq_uphy_request req;
+> +	int err;
+>  
+>  	memset(&req, 0, sizeof(req));
+>  	memset(&resp, 0, sizeof(resp));
+> @@ -1264,7 +1272,13 @@ static int tegra_pcie_bpmp_set_pll_state(struct tegra_pcie_dw *pcie,
+>  	msg.rx.data = &resp;
+>  	msg.rx.size = sizeof(resp);
+>  
+> -	return tegra_bpmp_transfer(pcie->bpmp, &msg);
+> +	err = tegra_bpmp_transfer(pcie->bpmp, &msg);
+> +	if (err)
+> +		return err;
+> +	if (msg.rx.ret)
+> +		return -EINVAL;
+> +
+> +	return 0;
+>  }
+>  
+>  static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+> -- 
+> 2.51.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
