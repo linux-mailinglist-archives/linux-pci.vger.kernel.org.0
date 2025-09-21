@@ -1,135 +1,123 @@
-Return-Path: <linux-pci+bounces-36601-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36602-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E87B8D218
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 00:53:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2366CB8D575
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 08:06:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0FD87B11C5
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Sep 2025 22:51:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D951F2A0F9C
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 06:06:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2401121579F;
-	Sat, 20 Sep 2025 22:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C9492857C2;
+	Sun, 21 Sep 2025 06:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="lKBvlV+A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GWIUgSmJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.83.148.184])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C721CBEAA;
-	Sat, 20 Sep 2025 22:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.83.148.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D27FEEA8;
+	Sun, 21 Sep 2025 06:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758408792; cv=none; b=puznnBMAy/4AVkdGBvbbXRF9RIcQEMOMWmAg6h+GnrzFiU1GEf87ikYiZUWkoCW6kwTcei3DVQXetPxDaN4faioXGKz4DsoMGmxdsf/FO1yaE0eWIdOKxu7N39TwgdpUEKn9+a3GU5B+bMLdKgdg1Hbxr5zWL+zPZR/ch1HakFQ=
+	t=1758434757; cv=none; b=AVSFUZkRQDd59txxZlwdbOanU6AhE0u0rTqv1MlWgizXU/AJ0Ib6O39VSOk6QjJ/mwtLm9Yh8AY/2Fd1No4vGJeNZlRqznvQVMKHMsgNxJMvBt40qdtzANDWI7r+lzp3Z7Rbx0Rz3oM0EUOa2M9q5Oaif84ge7pErdw95VEXAq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758408792; c=relaxed/simple;
-	bh=NLG83zG4Iqi1Xyv2M3uzidymYz/T7neW8GLLEwTPTyw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ST5Hd9PwxjbfYhK5CB+u32ybM50JjSlG7xm3gf1f2wXfaxFN73jGt+IGr8i0Wq0Azm8Q0of2SwS9aGl07+tJ9zTRTC1JHc+iju31w39WTCOvg6HAfzFwj9FHXzuWeICjKPnxEE1Tz1bqNv2YKF7mUnrZUJkTQjMu/oCk+wxqgks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=lKBvlV+A; arc=none smtp.client-ip=35.83.148.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1758408790; x=1789944790;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DbXAa8qTsxyq1mEKjnb+++zhRcJBDvgJFncuYVQDFFE=;
-  b=lKBvlV+A0exj4eJ3TXKi6Ast3J3l9xMm6UfX+kC1p3bN0tzZtY8iDUTu
-   bmIhXs6jcXdDEqj9BjsMbGyuUyjOSEy7jpZMHjr1vieKXeGdWHOim761m
-   XVoJJDgk9QSkZ6uVR/2TmgmQnPPbNyo7GKc3xoYd1WDdNfCcNW4uGWXHm
-   UaJmERE2J2IJLewgq8+4RNtE1LOh0RcQ2MrIy5SF+qmjSZtGmBSIJrvJv
-   ICcIUqZ0KysWDdGcEyPL/OtrkX7XhZpRrsh+owURnOD49vUfHwE4rVHdy
-   pBU9i8/0Eg1DJkUnfwuz/2oCZZXLK9jvH5eCN9FZQys9gVAGXkc7wtyYh
+	s=arc-20240116; t=1758434757; c=relaxed/simple;
+	bh=8ctr9bJIScthH2cD/1XQ1vcsW7U4Lt1MN5qWna68e2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHEeGmdnbmr3C/s1Fm5fITYQj/zEbuJi1INZsooJa6zNKp6Ke5jngbV7UX8vBrprLjHSc/lg8gjsJGAQS19ynjrt+RmnhUTGGITO1gLy8iEN6bsb19e6Muz29h9ldWD75Z+WNqTPkIBQPc/8OQ00ozeOrnqZLUOyWtXib4hT3QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GWIUgSmJ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758434755; x=1789970755;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8ctr9bJIScthH2cD/1XQ1vcsW7U4Lt1MN5qWna68e2c=;
+  b=GWIUgSmJkDdV7Jj9BY+7xYY1nrdNPgBPcGNG3kj+CapcpjW6jLaDMf3A
+   cQdE11V2AJMb+CisiYMIyBmhv/ceic7v1CgzVbqxS/ql4NyQGB8BbulSF
+   XKiHg3LANyPQ9XlZ1DQKKvmh6rF3NNl60QIoBmVc55uWvGofWS37yy2Uq
+   gPNJQ1OY4Wm0+cLirfoZztJDvZ3i3Xnq5eYbwyn9uxD/IZi5F2xb6ZRg5
+   ISQ/kQltGLA7lNuRJUicZwjK59FH0gJ6SwIj7lpVgEniZDEd1RArDLHv0
+   vV0r5j1ZC6Y/aWOyYCntl61PlsEe0OzOUmxId6GVWnRzx9Mdgf2vkxj4s
    g==;
-X-CSE-ConnectionGUID: zMA0ONwqTy6JSTQNaePjXQ==
-X-CSE-MsgGUID: 3Ci37821TSaw+QF3eJWciQ==
-X-IronPort-AV: E=Sophos;i="6.18,282,1751241600"; 
-   d="scan'208";a="3249959"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2025 22:53:10 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:4911]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.168:2525] with esmtp (Farcaster)
- id 920169d4-e150-49a4-9281-68b82a9564ae; Sat, 20 Sep 2025 22:53:09 +0000 (UTC)
-X-Farcaster-Flow-ID: 920169d4-e150-49a4-9281-68b82a9564ae
-Received: from EX19D032UWA003.ant.amazon.com (10.13.139.37) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Sat, 20 Sep 2025 22:53:09 +0000
-Received: from dev-dsk-ravib-2a-f2262d1b.us-west-2.amazon.com (10.169.187.85)
- by EX19D032UWA003.ant.amazon.com (10.13.139.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Sat, 20 Sep 2025 22:53:09 +0000
-From: Ravi Kumar Bandi <ravib@amazon.com>
-To: <mani@kernel.org>, <thippeswamy.havalige@amd.com>
-CC: <lpieralisi@kernel.org>, <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, <kwilczynski@kernel.org>, <robh@kernel.org>,
-	<ravib@amazon.com>, <michal.simek@amd.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
-Date: Sat, 20 Sep 2025 22:52:32 +0000
-Message-ID: <20250920225232.18757-1-ravib@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
-References: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
+X-CSE-ConnectionGUID: 6vzy5fbQQyG2aJDCRcfxUQ==
+X-CSE-MsgGUID: ERH2kYZ3SHOKpxujiZTJNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11559"; a="59769787"
+X-IronPort-AV: E=Sophos;i="6.18,282,1751266800"; 
+   d="scan'208";a="59769787"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2025 23:05:54 -0700
+X-CSE-ConnectionGUID: Bx5ZTH74RSeyEBDMZHWvWw==
+X-CSE-MsgGUID: rnp+F5cfT3GT6/klwfGJDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,282,1751266800"; 
+   d="scan'208";a="199916867"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 20 Sep 2025 23:05:51 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v0DCn-0000Ur-0u;
+	Sun, 21 Sep 2025 06:05:49 +0000
+Date: Sun, 21 Sep 2025 14:05:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Cc: oe-kbuild-all@lists.linux.dev, Christian Marangi <ansuelsmth@gmail.com>
+Subject: Re: [PATCH] PCI: mediatek: add support for Airoha AN7583 SoC
+Message-ID: <202509211315.51HZNnRI-lkp@intel.com>
+References: <20250920114341.17818-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
- EX19D032UWA003.ant.amazon.com (10.13.139.37)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250920114341.17818-1-ansuelsmth@gmail.com>
 
-The pcie-xilinx-dma-pl driver does not enable INTx interrupts
-after initializing the port, preventing INTx interrupts from
-PCIe endpoints from flowing through the Xilinx XDMA root port
-bridge. This issue affects kernel 6.6.0 and later versions.
+Hi Christian,
 
-This patch allows INTx interrupts generated by PCIe endpoints
-to flow through the root port. Tested the fix on a board with
-two endpoints generating INTx interrupts. Interrupts are
-properly detected and serviced. The /proc/interrupts output
-shows:
+kernel test robot noticed the following build warnings:
 
-[...]
-32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
-52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
-[...]
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.17-rc6 next-20250919]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Changes since v1::
-- Fixed commit message per reviewer's comments
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/PCI-mediatek-add-support-for-Airoha-AN7583-SoC/20250920-194637
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250920114341.17818-1-ansuelsmth%40gmail.com
+patch subject: [PATCH] PCI: mediatek: add support for Airoha AN7583 SoC
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250921/202509211315.51HZNnRI-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250921/202509211315.51HZNnRI-lkp@intel.com/reproduce)
 
-Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
----
- drivers/pci/controller/pcie-xilinx-dma-pl.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509211315.51HZNnRI-lkp@intel.com/
 
-diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-index b037c8f315e4..cc539292d10a 100644
---- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-+++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-@@ -659,6 +659,12 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
- 		return err;
- 	}
- 
-+	/* Enable interrupts */
-+	pcie_write(port, XILINX_PCIE_DMA_IMR_ALL_MASK,
-+		   XILINX_PCIE_DMA_REG_IMR);
-+	pcie_write(port, XILINX_PCIE_DMA_IDRN_MASK,
-+		   XILINX_PCIE_DMA_REG_IDRN_MASK);
-+
- 	return 0;
- }
- 
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/pci/controller/pcie-mediatek.c:163 struct member 'skip_pcie_rstb' not described in 'mtk_pcie_soc'
+
 -- 
-2.47.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
