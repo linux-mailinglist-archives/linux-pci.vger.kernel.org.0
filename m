@@ -1,85 +1,66 @@
-Return-Path: <linux-pci+bounces-36602-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36603-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2366CB8D575
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 08:06:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E852B8DB9A
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 15:12:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D951F2A0F9C
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 06:06:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 656D6189A579
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Sep 2025 13:13:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C9492857C2;
-	Sun, 21 Sep 2025 06:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GWIUgSmJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FA912D5408;
+	Sun, 21 Sep 2025 13:12:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D27FEEA8;
-	Sun, 21 Sep 2025 06:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52C9257858;
+	Sun, 21 Sep 2025 13:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758434757; cv=none; b=AVSFUZkRQDd59txxZlwdbOanU6AhE0u0rTqv1MlWgizXU/AJ0Ib6O39VSOk6QjJ/mwtLm9Yh8AY/2Fd1No4vGJeNZlRqznvQVMKHMsgNxJMvBt40qdtzANDWI7r+lzp3Z7Rbx0Rz3oM0EUOa2M9q5Oaif84ge7pErdw95VEXAq8=
+	t=1758460357; cv=none; b=Hlna1k4kXU5O4a3oZQp8/TGgtQoe+5dcD2Fyn2SR1YQveCwLejNKtdQkv/M73xTlQvL7fdROBb7GWP2q9RiphGhD8lABGKT3A6vHhyh6kn/aE6wOZWIGs7ZTfEiLOILdgmsYIIpkeZhe+zBJgHuipLF02tbUwZ27vzx+n7BXhUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758434757; c=relaxed/simple;
-	bh=8ctr9bJIScthH2cD/1XQ1vcsW7U4Lt1MN5qWna68e2c=;
+	s=arc-20240116; t=1758460357; c=relaxed/simple;
+	bh=A+t8Qo2X7e6ZL5vrxNtcYmymUXK2tAHjCMdMDGCZs+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHEeGmdnbmr3C/s1Fm5fITYQj/zEbuJi1INZsooJa6zNKp6Ke5jngbV7UX8vBrprLjHSc/lg8gjsJGAQS19ynjrt+RmnhUTGGITO1gLy8iEN6bsb19e6Muz29h9ldWD75Z+WNqTPkIBQPc/8OQ00ozeOrnqZLUOyWtXib4hT3QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GWIUgSmJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758434755; x=1789970755;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8ctr9bJIScthH2cD/1XQ1vcsW7U4Lt1MN5qWna68e2c=;
-  b=GWIUgSmJkDdV7Jj9BY+7xYY1nrdNPgBPcGNG3kj+CapcpjW6jLaDMf3A
-   cQdE11V2AJMb+CisiYMIyBmhv/ceic7v1CgzVbqxS/ql4NyQGB8BbulSF
-   XKiHg3LANyPQ9XlZ1DQKKvmh6rF3NNl60QIoBmVc55uWvGofWS37yy2Uq
-   gPNJQ1OY4Wm0+cLirfoZztJDvZ3i3Xnq5eYbwyn9uxD/IZi5F2xb6ZRg5
-   ISQ/kQltGLA7lNuRJUicZwjK59FH0gJ6SwIj7lpVgEniZDEd1RArDLHv0
-   vV0r5j1ZC6Y/aWOyYCntl61PlsEe0OzOUmxId6GVWnRzx9Mdgf2vkxj4s
-   g==;
-X-CSE-ConnectionGUID: 6vzy5fbQQyG2aJDCRcfxUQ==
-X-CSE-MsgGUID: ERH2kYZ3SHOKpxujiZTJNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11559"; a="59769787"
-X-IronPort-AV: E=Sophos;i="6.18,282,1751266800"; 
-   d="scan'208";a="59769787"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2025 23:05:54 -0700
-X-CSE-ConnectionGUID: Bx5ZTH74RSeyEBDMZHWvWw==
-X-CSE-MsgGUID: rnp+F5cfT3GT6/klwfGJDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,282,1751266800"; 
-   d="scan'208";a="199916867"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 20 Sep 2025 23:05:51 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v0DCn-0000Ur-0u;
-	Sun, 21 Sep 2025 06:05:49 +0000
-Date: Sun, 21 Sep 2025 14:05:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com
-Cc: oe-kbuild-all@lists.linux.dev, Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH] PCI: mediatek: add support for Airoha AN7583 SoC
-Message-ID: <202509211315.51HZNnRI-lkp@intel.com>
-References: <20250920114341.17818-1-ansuelsmth@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9l4vxh/DoyeMwZMMDkY6rFTXOEeqLb+RgoIieUykBuyOsbzBYq37UWIfYOJElLjmuSTXYIvyGyy0jOUhlZAt+aAfKLi49Qh+JuGWrm+g8mXIUiwR2fEx2vdA6GjUm24L9AKvbIS89bUjbNyjv4YUOloV9xPugw9jRs3pC503NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E02292C000B7;
+	Sun, 21 Sep 2025 15:12:25 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id B59C450BDD8; Sun, 21 Sep 2025 15:12:25 +0200 (CEST)
+Date: Sun, 21 Sep 2025 15:12:25 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Crystal Wood <crwood@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, Attila Fazekas <afazekas@redhat.com>,
+	linux-pci@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>
+Subject: Re: [PATCH] genirq/manage: Reduce priority of forced secondary IRQ
+ handler
+Message-ID: <aM_5uXlknW286cfg@wunner.de>
+References: <83f58870043e2ae64f19b3a2169b5c3cf3f95130.1757346718.git.lukas@wunner.de>
+ <87348g95yd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,36 +69,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250920114341.17818-1-ansuelsmth@gmail.com>
+In-Reply-To: <87348g95yd.ffs@tglx>
 
-Hi Christian,
+On Sat, Sep 20, 2025 at 11:20:26PM +0200, Thomas Gleixner wrote:
+> I obviously understand that the proposed change squashs the whole class
+> of similar (not yet detected) issues, but that made me look at that
+> particular instance nevertheless.
+> 
+> All aer_irq() does is reading two PCI config words, writing one and then
+> sticking 64bytes into a KFIFO. All of that is hard interrupt safe. So
+> arguably this AER problem can be nicely solved by the below one-liner,
+> no?
 
-kernel test robot noticed the following build warnings:
+The one-liner (which sets IRQF_NO_THREAD) was what Crystal originally
+proposed:
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.17-rc6 next-20250919]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+https://lore.kernel.org/r/20250902224441.368483-1-crwood@redhat.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/PCI-mediatek-add-support-for-Airoha-AN7583-SoC/20250920-194637
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250920114341.17818-1-ansuelsmth%40gmail.com
-patch subject: [PATCH] PCI: mediatek: add support for Airoha AN7583 SoC
-config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250921/202509211315.51HZNnRI-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250921/202509211315.51HZNnRI-lkp@intel.com/reproduce)
+I guess your point is that handling the few operations in aer_irq()
+in hard interrupt context is cheaper than waking a thread and
+deferring them to that thread?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509211315.51HZNnRI-lkp@intel.com/
+Intuitively I would assume that most threaded interrupt handlers
+are architected in this way:  They only do minimal work in hard
+interrupt context and defer the actual work to the (secondary)
+thread.  E.g. pciehp_isr() + pciehp_ist() is likewise designed
+to follow this principle.
 
-All warnings (new ones prefixed by >>):
+Your research that at first glance, at least 21 of 40 instances of
+request_threaded_irq() could just use IRQF_NO_THREAD, seems to
+support the notion that the majority of interrupt handlers only
+do minimal work in hard interrupt context.
 
->> Warning: drivers/pci/controller/pcie-mediatek.c:163 struct member 'skip_pcie_rstb' not described in 'mtk_pcie_soc'
+But if that is the case, and if you believe that deferring that
+small amount of work to a thread is nonsensical, then why is the
+primary handler forced into a thread by default in the first place,
+requiring drivers to explicitly opt out by setting IRQF_NO_THREAD?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Shouldn't it rather be the other way round, i.e. by default the
+primary handler is *not* forced into a thread, but only if the
+driver explicitly opts in?  (In cases where the primary handler
+does a sufficient amount of work that is justified to be deferred
+to a thread.)
+
+Thanks,
+
+Lukas
 
