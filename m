@@ -1,245 +1,179 @@
-Return-Path: <linux-pci+bounces-36715-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36716-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3A2FB93676
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 23:52:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FAA3B937CA
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 00:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE1F5162700
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 21:52:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62936175C67
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 22:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090ED25A34F;
-	Mon, 22 Sep 2025 21:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24DB427F018;
+	Mon, 22 Sep 2025 22:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hnP47hnX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YHkJJIg9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B9D2F49F2
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 21:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5306B26F46F
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 22:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758577910; cv=none; b=Z3WC6B6xO4b9GLQ/mQ9g8TI0B8bjyDd3afhK60D/gvnTydO3zoD86mcf+08vYbGRTtJONyMexlux4CRnUarjY8ap/2PhoNMAjexgc5LxfrF5rLS2upNnGoItjyCLT0pKCcSQXrqMAD1qg8gknO5X9RlQ51hG+PHlEG2K5ySv0Rw=
+	t=1758580330; cv=none; b=Ez6S66gMwEgpsIrHjycCdFEsyYYdX70oUq4L6lXgrKT7ZnGJGKBiZjuLqsUz8LDObVtUoQL/0LSYjlXNmQULdh0aZtX99buRijCbgmd4p3V8YeavFaqBrTAFtzCH92hpxQBVsNsQYpDRHhiIvIu74eoMaYk50zDeiX2jhfPdK48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758577910; c=relaxed/simple;
-	bh=IO+2VJI4ZMWwrOEJVHLzPh+dWD6p3JDoCjrwZpVkmHA=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZL1hu97FppYz2KAfHH6z3sEdI4Elc8ftxAc3lhuhgRo4P7RHpAseNXvXtOHfob9WHsPGrjk30uz+dopDwuawTsgNM2ilmzlUFXvVudlR2scLc9TjKRbBrolcHC2YgGi71T6PdW8Sao030jxINFsnHQ6JCbm3m+IOnvM5cogo3gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hnP47hnX; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1758580330; c=relaxed/simple;
+	bh=tGsUKlZfH22Kkdt+rXlTfFHGLqAHCVSokUZMQlqwc6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qjevvH4FSLRU3SiDUVelhM0DMl8P1HOxRUhnhLJL5FPankTMRjfbkz/NZ8UyDTv/PVUuaJotSTqmIlaMnV1MG36xCn0LlnIz797mkUcuv5w++PQldlMnm1fTtk2UTo++U59LwrSFpXkz1uufAZEK4Fv0AAueymU7NWtQuiozRN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YHkJJIg9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758577904;
+	s=mimecast20190719; t=1758580327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FEinhsYu5ZAzzk9ZjrHV61k9LGkgCm2NxTV8yeK83cc=;
-	b=hnP47hnXJOhxb3/VmTwR7sAj+ymhfMGtm/GL4R5JlMvdjiUQe9aV0I6j5GZ5o35mR2OhXs
-	8noZK0NTTzTSjk3uj2UWYh9naSvhbXcc4VTry5hn3dafERUk4zpipdsz42NvlBeXLsLscC
-	5LKG16WlD2z4HIokLDUhXY+jP5QdrNA=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WrM/zxhwv4klqtoRkgBDgOYK9tDXhnKZzT4SJVNV1Qg=;
+	b=YHkJJIg9piSWBZ6j2clBLYX91lXPcvTl6/cqX7K/5zNg5XA1wugi1pJjRoZXHc6TZbs7Ye
+	fnE5tPjzCKJlfK/rlwichoZymdOCD8xx2jMPyl+blzwKbzlWNWvmvCUTJzTue2zT+JTS7g
+	j81LVpXj9kTuO8aqkQsfL31Po/MLCXY=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-321-9RxdZM_QPbKAOjOTG4r0GQ-1; Mon, 22 Sep 2025 17:51:42 -0400
-X-MC-Unique: 9RxdZM_QPbKAOjOTG4r0GQ-1
-X-Mimecast-MFC-AGG-ID: 9RxdZM_QPbKAOjOTG4r0GQ_1758577902
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-804512c4373so976043585a.3
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:51:42 -0700 (PDT)
+ us-mta-70-hV3FbROTM52sI_-1GhkLXA-1; Mon, 22 Sep 2025 18:32:05 -0400
+X-MC-Unique: hV3FbROTM52sI_-1GhkLXA-1
+X-Mimecast-MFC-AGG-ID: hV3FbROTM52sI_-1GhkLXA_1758580325
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8873042483fso76670639f.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 15:32:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758577902; x=1759182702;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FEinhsYu5ZAzzk9ZjrHV61k9LGkgCm2NxTV8yeK83cc=;
-        b=S4XPHkQNlmKHTNEQHQIJZqskfRi2BnN8gHnUw+cjcxMHLdK+bY9iTxB6oy7iGVllqY
-         mPDbQ9liP7qp00guXyN2ADZvI3eTpNVm2xYXGgkgQCJAjOB097+6CHGAK4AfsvlyE5bn
-         lYS9w/RTJdbwZuQEx0xf2HOkh7x7ANfNITGWIHUgKoGZuRK/UALwZxXTLqFW7aOMBm9E
-         Wfs3HY1tuiANg+9fdNeUNTNoFe3zbb7bxZTEifkFiLzMn2/0tiVooGa0uT6niAs7+yN4
-         UhbiRd6PVAvIoELOd2D0huSXiensXnvfENWqxkmya2WnioekYWSs4x/HmwZ5CE9BDJaF
-         x3Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXH02JjwZTzop01m+Dl9N1AV8CfETWpTpgNIHYeQh4HAqvMtRfrv01UQxe+MNgJkFdv79pRtFT597c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkLUMOjo6xLq/kvkFp1/9nGR2F3j789Ti4nSUN6aNBS5ZuOjJ+
-	tHYcq/MDE25a6BpEJDYfNcqoJJQ5AHbDS6Ymp2lgI7mtC7XYHS34RXZ4UUqU1JWI0bSWJok0qAa
-	wNC6Qi/zunVqYCkjmXyu6HFqB0awE8Bv6eqTyLwgGOQkq8Nwxm8RFcWGlOP0WyA==
-X-Gm-Gg: ASbGnctxWQVFgIYuF64el/xCqXAPApsLwsZnXlcx+ordwPIJCwW701DLx11ZqnlQsQS
-	jU5SZQh5CELGZuTURGErGNv6DXEsJ8MfPvtfDPFV7MFLUqgiefoVGFykV0LmG8WNgYOuwpdjx9x
-	LtXGw96DvarPApKBoCiNluG5PNPr3QEHTYWNM01wsn7a9v/uuLK1SCyWccFBgFhnQQZEROJk9Qi
-	lCzWN8dsHjcX69ND3v4DE9gLubT36UjPlIalfyegBl2N8Snlgnhc/Zkhnx2JRQhmYlg7mwnShYI
-	KngGU+quZXDut2542wb5lenJhdhLEcQV+PsJGvTzdq0rJl4BlW3Kpu9qH1nqR9DuQK5fgV33dIN
-	UUq8e7THjJaM=
-X-Received: by 2002:a05:620a:2687:b0:833:b213:c062 with SMTP id af79cd13be357-85173701bf6mr62640585a.40.1758577901725;
-        Mon, 22 Sep 2025 14:51:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJb1ojM9Iwcf/vhwYlmDHzcaqEu1qarCseJ6sSvAXpTXynFpjhKro6kJnwCmmx+9EwGXyDTw==
-X-Received: by 2002:a05:620a:2687:b0:833:b213:c062 with SMTP id af79cd13be357-85173701bf6mr62637285a.40.1758577901241;
-        Mon, 22 Sep 2025 14:51:41 -0700 (PDT)
-Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8363198b0fbsm869143885a.50.2025.09.22.14.51.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Sep 2025 14:51:40 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <f1545ac2-9a4e-49e9-b918-205f617ec900@redhat.com>
-Date: Mon, 22 Sep 2025 17:51:39 -0400
+        d=1e100.net; s=20230601; t=1758580325; x=1759185125;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WrM/zxhwv4klqtoRkgBDgOYK9tDXhnKZzT4SJVNV1Qg=;
+        b=do1Td3sFB+nGBVHg9hnjwrKwBBzsIktcP78TceIS7VJrRhsi9XeYTS+U8fU806VWsH
+         R6qvqhIhQ4P3J9brQ95gTfa2rE+Ki3z6fkvJxXGbfD1ZIM+LxKNDdYsBnpynak4s+mPa
+         J2j3fGwARYjNmYo/q7YQJ2CMk56ZkF0GQLXC0BK6SmF0bXrzeq7NDgoGhrSEtBkg9iEA
+         qYTgzMiOehgbSKKfdHhvoYNpeZlWmsvCayL61tUywf4ueHg/59AoDjNg4hicE/PNtyEa
+         IvbYerh3suLif2Ctu7u2djc3b4REMlmoDpyD8AzdQVL99DQu/+zD+DoWUyLWuifxpIzp
+         brCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpLv7dPtJ1Yjbi4ULukJf1In9e1tqacHsx0b+lnq7jxGFw8bJuLnPlD6w9aQGCX0dRpuISCugJgMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUllKO2gju45FfDSQX4SymN5+5/8IDqNFTI+oGXJvhfxB8myHY
+	kKIcarBOIl1GD5yofLlzlqSQyhmwsyPwxMPI6mLLvMqRSeyBjvhCAzVXEHmgJTZ0f+ZPBXdJjy8
+	ZLybGJyccGdoJJ19yiYRwBPHYSVx6UjZLztEKHsGYb0WbtNGooJnYqrvN857Xng==
+X-Gm-Gg: ASbGncvqN7ekZAZSUEHQnEJwFUdUc1QKhpF+S7KHN/DlR0eW57NTEw3DPdD+emhQw93
+	td9sethO/IQxg6l0IAnn1BusAImBJ/fHC5YWpUkNrvYMb4e9ydQQjrfWamYFQHJRPk5Zx18sbCu
+	TAU48rCfqA20tR4vICQkBEI8ADN2k7z2x8srH0mwuGsQyHufm4mPF5lXV/BT00VMnqhjlCrSxAg
+	lNCxBhj/s6gAlL47LYfX/cNEK6JrNq9QgOFpo5G42hV14buD4zQMBphvpRVtdoj8rNvAuYtmwTH
+	vr1dJ6ZAgQ5wkGB6bN7g9ad1Hewp9adMeAHmWiwsKWo=
+X-Received: by 2002:a05:6e02:164d:b0:400:7d06:dd6d with SMTP id e9e14a558f8ab-42581e09c50mr3117535ab.1.1758580325082;
+        Mon, 22 Sep 2025 15:32:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJEglC1l9HK0trhwS8TUhgMjco7KnQFggHDZoCeb4hUnb+WHFtfyngwGswerl1XqO2iXxTzA==
+X-Received: by 2002:a05:6e02:164d:b0:400:7d06:dd6d with SMTP id e9e14a558f8ab-42581e09c50mr3117245ab.1.1758580324618;
+        Mon, 22 Sep 2025 15:32:04 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d50aa460bsm6196930173.52.2025.09.22.15.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Sep 2025 15:32:03 -0700 (PDT)
+Date: Mon, 22 Sep 2025 16:32:00 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Donald Dutile <ddutile@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
+ linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Will Deacon
+ <will@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ galshalom@nvidia.com, Joerg Roedel <jroedel@suse.de>, Kevin Tian
+ <kevin.tian@intel.com>, kvm@vger.kernel.org, maorg@nvidia.com,
+ patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH 03/11] iommu: Compute iommu_groups properly for PCIe
+ switches
+Message-ID: <20250922163200.14025a41.alex.williamson@redhat.com>
+In-Reply-To: <20250718133259.GD2250220@nvidia.com>
+References: <0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
+	<3-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
+	<20250701132905.67d29191.alex.williamson@redhat.com>
+	<20250702010407.GB1051729@nvidia.com>
+	<c05104a1-7c8e-4ce9-bfa3-bcbc8c9e0ef5@redhat.com>
+	<20250717202744.GA2250220@nvidia.com>
+	<2cb00715-bfa8-427a-a785-fa36667f91f9@redhat.com>
+	<20250718133259.GD2250220@nvidia.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/33] PCI: Protect against concurrent change of
- housekeeping cpumask
-To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
- <mhocko@suse.com>, Peter Zijlstra <peterz@infradead.org>,
- Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, linux-pci@vger.kernel.org
-References: <20250829154814.47015-1-frederic@kernel.org>
- <20250829154814.47015-3-frederic@kernel.org>
- <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
- <aMwQcVZeTwuk2Q8A@localhost.localdomain>
-Content-Language: en-US
-In-Reply-To: <aMwQcVZeTwuk2Q8A@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 9/18/25 10:00 AM, Frederic Weisbecker wrote:
-> Le Fri, Aug 29, 2025 at 06:01:17PM -0400, Waiman Long a écrit :
->> On 8/29/25 11:47 AM, Frederic Weisbecker wrote:
->>> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
->>> therefore be made modifyable at runtime. Synchronize against the cpumask
->>> update using RCU.
->>>
->>> The RCU locked section includes both the housekeeping CPU target
->>> election for the PCI probe work and the work enqueue.
->>>
->>> This way the housekeeping update side will simply need to flush the
->>> pending related works after updating the housekeeping mask in order to
->>> make sure that no PCI work ever executes on an isolated CPU.
->>>
->>> Signed-off-by: Frederic Weisbecker<frederic@kernel.org>
->>> ---
->>>    drivers/pci/pci-driver.c | 40 +++++++++++++++++++++++++++++++---------
->>>    1 file changed, 31 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>> index 63665240ae87..cf2b83004886 100644
->>> --- a/drivers/pci/pci-driver.c
->>> +++ b/drivers/pci/pci-driver.c
->>> @@ -302,9 +302,8 @@ struct drv_dev_and_id {
->>>    	const struct pci_device_id *id;
->>>    };
->>> -static long local_pci_probe(void *_ddi)
->>> +static int local_pci_probe(struct drv_dev_and_id *ddi)
->>>    {
->>> -	struct drv_dev_and_id *ddi = _ddi;
->>>    	struct pci_dev *pci_dev = ddi->dev;
->>>    	struct pci_driver *pci_drv = ddi->drv;
->>>    	struct device *dev = &pci_dev->dev;
->>> @@ -338,6 +337,19 @@ static long local_pci_probe(void *_ddi)
->>>    	return 0;
->>>    }
->>> +struct pci_probe_arg {
->>> +	struct drv_dev_and_id *ddi;
->>> +	struct work_struct work;
->>> +	int ret;
->>> +};
->>> +
->>> +static void local_pci_probe_callback(struct work_struct *work)
->>> +{
->>> +	struct pci_probe_arg *arg = container_of(work, struct pci_probe_arg, work);
->>> +
->>> +	arg->ret = local_pci_probe(arg->ddi);
->>> +}
->>> +
->>>    static bool pci_physfn_is_probed(struct pci_dev *dev)
->>>    {
->>>    #ifdef CONFIG_PCI_IOV
->>> @@ -362,34 +374,44 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->>>    	dev->is_probed = 1;
->>>    	cpu_hotplug_disable();
->>> -
->>>    	/*
->>>    	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
->>>    	 * device is probed from work_on_cpu() of the Physical device.
->>>    	 */
->>>    	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
->>>    	    pci_physfn_is_probed(dev)) {
->>> -		cpu = nr_cpu_ids;
->>> +		error = local_pci_probe(&ddi);
->>>    	} else {
->>>    		cpumask_var_t wq_domain_mask;
->>> +		struct pci_probe_arg arg = { .ddi = &ddi };
->>> +
->>> +		INIT_WORK_ONSTACK(&arg.work, local_pci_probe_callback);
->>>    		if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
->>>    			error = -ENOMEM;
->>>    			goto out;
->>>    		}
->>> +
->>> +		rcu_read_lock();
->>>    		cpumask_and(wq_domain_mask,
->>>    			    housekeeping_cpumask(HK_TYPE_WQ),
->>>    			    housekeeping_cpumask(HK_TYPE_DOMAIN));
->>>    		cpu = cpumask_any_and(cpumask_of_node(node),
->>>    				      wq_domain_mask);
->>> +		if (cpu < nr_cpu_ids) {
->>> +			schedule_work_on(cpu, &arg.work);
->>> +			rcu_read_unlock();
->>> +			flush_work(&arg.work);
->>> +			error = arg.ret;
->>> +		} else {
->>> +			rcu_read_unlock();
->>> +			error = local_pci_probe(&ddi);
->>> +		}
->>> +
->>>    		free_cpumask_var(wq_domain_mask);
->>> +		destroy_work_on_stack(&arg.work);
->>>    	}
->>> -
->>> -	if (cpu < nr_cpu_ids)
->>> -		error = work_on_cpu(cpu, local_pci_probe, &ddi);
->>> -	else
->>> -		error = local_pci_probe(&ddi);
->>>    out:
->>>    	dev->is_probed = 0;
->>>    	cpu_hotplug_enable();
->> A question. Is the purpose of open-coding work_on_cpu() to avoid calling
->> INIT_WORK_ONSTACK() and destroy_work_on_stack() in RCU read-side critical
->> section? These two macro/function may call debugobjects code which I don't
->> know if they are allowed inside rcu_read_lock() critical section.
->>
->> Cheers, Longman
-> No the point is that I need to keep the target selection
-> (housekeeping_cpumask() read) and the work queue within the same
-> RCU critical section so that things are synchronized that way:
->
->      CPU 0                                          CPU 1
->      -----                                          -----
->      rcu_read_lock()                                housekeeping_update()
->      cpu = cpumask_any(housekeeping_cpumask(...))       housekeeping_cpumask &= ~val
->      queue_work_on(cpu, pci_probe_wq, work)             synchronize_rcu()
->      rcu_read_unlock()                                  flush_workqueue(pci_probe_wq)
->      flush_work(work)
->          
-> And I can't include the whole work_on_cpu() within rcu_read_lock() because
-> flush_work() may sleep.
+On Fri, 18 Jul 2025 10:32:59 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Right, you are trying to avoid flush_work() within rcu_read_lock() 
-critical section. It makes it easier to review if you mention that in 
-the commit log.
+> On Thu, Jul 17, 2025 at 10:31:42PM -0400, Donald Dutile wrote:
+>  
+> > > > If no (optional) ACS P2P Egress control, and no other ACS control, then I read/decode
+> > > > the spec to mean no p2p btwn functions is possible, b/c if it is possible, by spec,
+> > > > it must have an ACS cap to control it; ergo, no ACS cap, no p2p capability/routing.  
+> > > 
+> > > Where did you see this? Linux has never worked this way, we have
+> > > extensive ACS quirks specifically because we've assumed no ACS cap
+> > > means P2P is possible and not controllable.
+> > >   
+> > e.g., Section 6.12.1.2 ACS Functions in SR-IOV, SIOV, and Multi-Function Devices
+> >  ...
+> >  ACS P2P Request Redirect: must be implemented by Functions that support peer-to-peer traffic with other Functions.
+> >                            ^^^^
+> > 
+> > It's been noted/stated/admitted that MFDs have not followed the ACS
+> > rules, and thus the quirks may/are needed.
+> > 
+> > Linux default code should not be opposite of the spec, i.e., if no
+> > ACS, then P2P is possible, thus all fcns are part of an IOMMU group.
+> > The spec states that ACS support must be provided if p2p traffic
+> > with other functions is supported.  
+> 
+> Linux is definately the opposite of this.
+> 
+> Alex would you agree to reverse this logic for MFDs? If the MFD does
+> not have ACS cap then the MFD does not do internal loopback P2P?
+> 
+> I think that solves all the MFD related problems.
 
->
-> Also now that you mention it, I need to create that pci_probe_wq and flush it :-)
+Sorry, I'm way, way late to responding to this, but I interpret this to
+mean that if a multifunction device implements an ACS capability, it
+must implement ACS P2P RR if it supports P2P between functions.  If the
+ACS capability does not implement ACS P2P RR then we can assume that the
+device does not support P2P between functions, but if the device does
+not implement an ACS capability at all, we cannot assume anything.
 
-OK, another wq :-)
+This is effectively why NIC vendors like Intel started implementing an
+empty ACS capability, such that we can infer that there is no P2P
+between functions.
 
-Cheers,
-Longman
+I'm just catching up from some extended PTO, but this statement in the
+cover of the new series is setting off red flags for me:
+
+  For multi-function-devices, a PCIe topology like:
+
+                    -- MFD 00:1f.0 ACS not supported
+    Root 00:00.00 --|- MFD 00:1f.2 ACS not supported
+                    |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
+
+  Will group [1f.0, 1f.2] and 1f.6 gets a single device group. However from
+  a spec perspective each device should get its own group, because ACS not
+  supported can assume no loopback is possible by spec.
+
+The ACS capability was only introduced in PCIe 2.0 and vendors have
+only become more diligent about implementing it as it's become
+important for device isolation and assignment.  IMO, we can't assume
+anything at all about a multifunction device that does not implement
+ACS.  Thanks,
+
+Alex
 
 
