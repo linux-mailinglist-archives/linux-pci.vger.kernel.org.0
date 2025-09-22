@@ -1,127 +1,106 @@
-Return-Path: <linux-pci+bounces-36695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B404B920D0
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 17:49:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E60B920E8
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 17:50:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2BE57B24D9
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:48:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 907062A2159
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A91D30C612;
-	Mon, 22 Sep 2025 15:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C712E0B71;
+	Mon, 22 Sep 2025 15:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="UGWLSg85"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3/hIOqU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618443043AF;
-	Mon, 22 Sep 2025 15:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EAB27B516;
+	Mon, 22 Sep 2025 15:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758556182; cv=none; b=AuubtDTRyIMpfEcNqDZLW8TUidgUNwgKTSZz7dmHcZfCTaWgwN+YK6IReEZa1pe10RHf9JuAnEC2KeeUzVysbimWYW1r/EMhuYAqWmZ/xaTSZmNmVSAv6HaE4HYPrNbjROPFZcF9IAohLYDTzze2yINN3yJpTWUuK1rXI1lJ6d4=
+	t=1758556256; cv=none; b=aq8SN9/IfxTHkXbF7F9Cm6TEj7aDj/DH7HuIO+s3v6s46RCkR3piNvp2rtwXkA7tWltz2ra3lhNeW907JtO8J1q9vIWCa5f9iYwrKw+MsAwGg1CMxovLkUY3pZLBSby7P0IM96YjdlqF8mRTGjCFAbZiFrW94WUba0pfNIIj8rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758556182; c=relaxed/simple;
-	bh=6v63gcck4IdmcUss0gS+xnAwi2ypo7VV2cbS2eFvqzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FC5HEpuaPHDuRyalRvr0wRAWbaqfa5OO+HSj6X/Tz9nap5eybx944wK7RwdFHTH4UDyZDujpKVTgnEVnWt8toziTN1HeX3fZDNFo05IenOkd3v1UT45a2d+tuk871UVSCfZwlsQcu1Fz2drdaAFifXSc62rPLBxAy8NGAn88yC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=UGWLSg85; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4cVnc13Bdbz9tQs;
-	Mon, 22 Sep 2025 17:49:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758556177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BMSiwDHMdiBzB9w1xv0vr5ZmlYI62jGSNhhuXuilP0k=;
-	b=UGWLSg85wjKNKW1OEWsiZdg2gYaxpk8LlMUCrOEvNPrGaJtWJvNOLputAaZC1++F1hgyVj
-	JtJZsmc7PQzyljacRyNgDeq20MoI9v0fHgY+kjRiidpbQ//Ksm9B9B9IVCnkEPctrtDIC7
-	gGcgfJQa+h3xq21bBnpCnjWMkr4LcyMrLjAKxbZQgKVrLjxpqIwpG4mk4lWnp3FlsB+6jz
-	eeT1Qf5GDw2Gxvea4KtihMqWqMu1W0GndP78SeNqlcTGoiqXyNaPtB87rlVygddybMjpkV
-	TTa/3jR8D3Vmjc/V36Z5OhQRCQMCL/aQI+ZXDXjsujFZK5ZTis36Vxkhu/qF3g==
-Message-ID: <c34424d5-b1ac-483e-a1e1-8dd8bfdc2c51@mailbox.org>
-Date: Mon, 22 Sep 2025 17:49:34 +0200
+	s=arc-20240116; t=1758556256; c=relaxed/simple;
+	bh=vbMWpitNm5DxTqLLDH+qpPPtWqFkWWec0kTvC3CnpIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXC6fftUHdZsQ7e4C8sJYkkrwOxA/I3iLNs9dYDFsdSpkH4yU9//Pt67ycvlWJSyeDxt3TYhZ2dYCb//1IRrs4h8uYxNWqmy7zLrrJDPyJBY3JvaQV8FIZLu+6K7wQ0YF6wPvKg621wct3HIfj//TANRXUJnE3VL+FxxqvOcJ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3/hIOqU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E990C4CEF0;
+	Mon, 22 Sep 2025 15:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758556255;
+	bh=vbMWpitNm5DxTqLLDH+qpPPtWqFkWWec0kTvC3CnpIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g3/hIOqUGt7lMUrCdD6KiF2I0jx9XcFlOlEkom9VEIoyZlauSSBxyIAauJWW6meE9
+	 CtB/Jy8U8SKffhmKvaLp2hc2TQKqT1EOkWr5EyPwDIzAXyb7gP0n83QvuLvz78sHFE
+	 XhL91XDLSF4+JnnKPKi8E5s7KO0ayFhjSFSXqX3n7v8VQADUM7K8Lo4IzqoP4WyDTR
+	 zW3dUiUUdQq60f2+U16QPNRp+Gpr5mCZ1rc8Yc8iyosATMNsojw6RJYnEaptLBJyIj
+	 6ENvvD4G3x25o+b3tWndQlEh80qPVfoqyQFj6NT9hB7BBx9C6h8MYpXD9OjWmO2sg4
+	 3xnTgNRwUcmxw==
+Date: Mon, 22 Sep 2025 10:50:54 -0500
+From: Rob Herring <robh@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] dt-bindings: pci-imx6: Add external reference
+ clock mode support
+Message-ID: <20250922155054.GA38670-robh@kernel.org>
+References: <20250915035348.3252353-1-hongxing.zhu@nxp.com>
+ <20250915035348.3252353-3-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY
- initialization
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
- <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-renesas-soc@vger.kernel.org
-References: <20250915235910.47768-1-marek.vasut+renesas@mailbox.org>
- <CAMuHMdXAK6EhxPoNoqwqWSjGtwM24gL4qjSf6_n+NMCcpDf1HA@mail.gmail.com>
- <6fdc7d1e-8eaa-4244-a6b4-4a07e719dd73@mailbox.org>
- <CAMuHMdVrw1Mr_hKvgve03DQwvpqSPNaN5XUnYRJPXMeX1wvv0A@mail.gmail.com>
- <de4e4003-214f-4260-854c-d15efc81bb74@mailbox.org>
- <CAMuHMdVgFNb-3TgL7a+AJMYE6tqOiMpGYFDhXnQoz9R5gLz=-A@mail.gmail.com>
- <12b54030-5505-416b-9e4e-2338263c5c7a@mailbox.org>
- <CAMuHMdUnKqHQpaTkiuYUmR1kQ2GwVvj0SeML-9x3Rc+srtXW+w@mail.gmail.com>
- <3e6544a4-a202-4a1b-8cef-a864936db5f2@mailbox.org>
- <CAMuHMdUZ0U4OZOgOMXVKque55JwuSjA7kxBg7htmFjzca6+DyQ@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <CAMuHMdUZ0U4OZOgOMXVKque55JwuSjA7kxBg7htmFjzca6+DyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: f137d8bedb6dea5bb3f
-X-MBO-RS-META: ewya93e5otsbcmyrpq8ipiuqh9w9opna
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250915035348.3252353-3-hongxing.zhu@nxp.com>
 
-On 9/22/25 5:33 PM, Geert Uytterhoeven wrote:
-
-Hello Geert,
-
-> On Mon, 22 Sept 2025 at 17:17, Marek Vasut <marek.vasut@mailbox.org> wrote:
->> On 9/22/25 12:10 PM, Geert Uytterhoeven wrote:
->>>> I have instead posted what I think are proper fixes for that SError:
->>>>
->>>> PCI: rcar-gen4: Add missing 1ms delay after PWR reset assertion
->>>> https://patchwork.kernel.org/project/linux-pci/patch/20250918030058.330960-1-marek.vasut+renesas@mailbox.org/
->>>
->>> I used v3 instead.
->>> While that patch seems to fix the SError after a hard reset (hardware
->>> reset), it is not sufficient after a soft reset (typing "reboot").
->>>
->>>> clk: renesas: cpg-mssr: Add missing 1ms delay into reset toggle callback
->>>> https://patchwork.kernel.org/project/linux-clk/patch/20250918030552.331389-1-marek.vasut+renesas@mailbox.org/
->>>
->>> This does not fix the SError, as expected (pcie-rcar-gen4.c does not
->>> call reset_control_reset(), but reset_control_{,de}assert()).
->>>
->>>> clk: renesas: cpg-mssr: Read back reset registers to assure values latched
->>>> https://patchwork.kernel.org/project/linux-clk/patch/20250918030723.331634-1-marek.vasut+renesas@mailbox.org/
->>>
->>> I used v2 instead, which seems to fix the SError.
->>
->> Those three patches have to be used together, and this inverted break
->> condition fix should be applied too.
->>
->> The first two are corrections which align the code behavior with
->> reference manual. This inverted break fix is another correction. The
->> last patch in the list above actually fixes the asynchronized reset
->> behavior and turns it into synchronized reset behavior, therefore fixing
->> the SError in the process.
+On Mon, Sep 15, 2025 at 11:53:47AM +0800, Richard Zhu wrote:
+> On i.MX, PCIe has two reference clock inputs: one from the internal PLL
+> and one from an external clock source. Only one needs to be used,
+> depending on the board design. Add the external reference clock source
+> for reference clock.
 > 
-> FTR, I always had the inverted break condition fix applied.
-> All 3 fixes on top should be fine.
-Maybe I can finally properly deserve your TB on this patch with this 
-option (C) , all three patches applied.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index ca5f2970f217..6be45abe6e52 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -219,7 +219,12 @@ allOf:
+>              - const: pcie_bus
+>              - const: pcie_phy
+>              - const: pcie_aux
+> -            - const: ref
+> +            - description: PCIe reference clock.
+> +              oneOf:
+> +                - description: The controller has two reference clock
+> +                    inputs, internal system PLL and external clock
+> +                    source. Only one needs to be used.
+> +                  enum: [ref, extref]
+
+This seems wrong to me. There's still only 1 ref input to the PCIe 
+block. If you had 10 possible choices for the ref clock source, would 
+you add 10 clock names here? No!
+
+Can't you detect what the parent clock is for the 'ref' clock? and 
+configure the GPR register appropriately. Or that mux should be modeled 
+as a clock provider.
+
+Rob
 
