@@ -1,235 +1,103 @@
-Return-Path: <linux-pci+bounces-36674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D6C4B91952
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:08:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CD65B9197E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:09:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B499B1900ECE
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:08:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6898424FF9
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:09:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD901C5F37;
-	Mon, 22 Sep 2025 14:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1515F1A238C;
+	Mon, 22 Sep 2025 14:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T5GskFl7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y3Ervkkc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T5GskFl7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y3Ervkkc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/8vuWAA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A701A9F99
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05701990D9;
+	Mon, 22 Sep 2025 14:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758550071; cv=none; b=Nc/vE+rs+7ChkDvFihxcWBdk27Jdy1IZwHqTh8Xru6Gp3bS8WV5v4dzGmRQAbyBH7rXEp1OTtMGYRh1XNkvw6P0cQn9NWuqeuvM8EuaMn8IArjgVGRELwavFo1GvWlK8z5oNbecFqWnfeMFGp7b937ihb70cssnyy7YPldDB28Q=
+	t=1758550145; cv=none; b=VZBbsZVVUV8+1TQq2aI87YEjD3UXWCbTUC6csGbF0Eq9ThW9/W0HX18qrihfRy9QDq0/8AnWUM8vm+M7o0TjHeOJuHU7h3QAmRQ1BxxvmWTu6j22/wJvHIFCAIBQnc19DXvddAAM4m4otkIjkLTvbIYhwKB5+dvpPK6AdbLc4ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758550071; c=relaxed/simple;
-	bh=WqYi7C7rPVPMchWD3Tm/mWLYvFm7Ms2J7l9sot1F8V4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kj+/mHnUhuPfNFRVI/ExE4yoeDdnWgZ4fH0EH1WDAXPPSyruNs3/TWC1wdZAam9U0uRt1tAW5RMCThh2y9Wge5RGLFJxRKtMz/6Q6soNKyNIEyMWiwWA/h2jyNNdbTpqO5N4fgUf2fxdKzASk1+c59e0qm+pUcY2cbGdB5xy/00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T5GskFl7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y3Ervkkc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T5GskFl7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y3Ervkkc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 680DC21E89;
-	Mon, 22 Sep 2025 14:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758550068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
-	b=T5GskFl792iJc+ydo0xeGMBXRXGfst8/vFHPYscSYhHlez9L6VIXv4u5ksxRo7NCINOPS6
-	O9hwvd2neeDeHkQL0Mm22lxRxo8LNKkHJFN6tHizuVRYCGRDgGHhUeL3Pnk6hEddK2N/vv
-	8oSsO75GD7Vbc6CLC2OAdg+k8wtA7mM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758550068;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
-	b=Y3Ervkkc+c9IT/VS6vwPm5mlkV2ozDDrvGYH/D6b8hVfg7X5tbWNBshBrUr3WhSWnn/XfJ
-	Iv0KCW+WAC45UzCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=T5GskFl7;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Y3Ervkkc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758550068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
-	b=T5GskFl792iJc+ydo0xeGMBXRXGfst8/vFHPYscSYhHlez9L6VIXv4u5ksxRo7NCINOPS6
-	O9hwvd2neeDeHkQL0Mm22lxRxo8LNKkHJFN6tHizuVRYCGRDgGHhUeL3Pnk6hEddK2N/vv
-	8oSsO75GD7Vbc6CLC2OAdg+k8wtA7mM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758550068;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
-	b=Y3Ervkkc+c9IT/VS6vwPm5mlkV2ozDDrvGYH/D6b8hVfg7X5tbWNBshBrUr3WhSWnn/XfJ
-	Iv0KCW+WAC45UzCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 200F713A78;
-	Mon, 22 Sep 2025 14:07:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8KZ8BjRY0WhCCQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 22 Sep 2025 14:07:48 +0000
-Date: Mon, 22 Sep 2025 16:07:47 +0200
-Message-ID: <87zfammvgs.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Zhang Qilong <zhangqilong3@huawei.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 1/3] PM: runtime: Add auto-cleanup macros for "resume and get" operations
-In-Reply-To: <CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
-References: <6204724.lOV4Wx5bFT@rafael.j.wysocki>
-	<3388279.44csPzL39Z@rafael.j.wysocki>
-	<875xdaevab.wl-tiwai@suse.de>
-	<CAJZ5v0hSBDg4fD7Gy6yEX31xO-3USJG_jFps71BRJJ2f0Oh90A@mail.gmail.com>
-	<87348eobnv.wl-tiwai@suse.de>
-	<CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1758550145; c=relaxed/simple;
+	bh=hR+dZORAkM1FuLefHVjbtsllJasGfjrI/YD41PaH/CQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ozhTA9Uzdd6o1S8xefI2oGRP8tsghi1AR4Ho9EWS0TFjYc1C8rybAMzJv2PoNJ5xd+FRKaUPk1lgFwYXLntRMzjQbT1NjpoxfrCupBabHQtBHEMHVHBgvWeHGEnxUecAL9qlsQ3LOQFVUYhd3xLOzHsYpNSVnOAHEY8H4Ybyc+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/8vuWAA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95435C4CEF0;
+	Mon, 22 Sep 2025 14:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758550144;
+	bh=hR+dZORAkM1FuLefHVjbtsllJasGfjrI/YD41PaH/CQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n/8vuWAAjMKxXYntpFPKTjTp988sy+E+VQAcHy8ihLPAUKCqwVDx82cuq//7o2wq+
+	 IqgrU7esRF2tRGVBTzI+NXVblNWx0106CmGSlHcfEY0rD0fuqZknvwhPnS2UFBrLol
+	 O00tQgHff6Nocr2af5rVrBC8GJNT1PpB7eB/hoMpqXLzaRvBrDhmSXy6tqi8OnG/h7
+	 NXMZkIV9X5ooatBrugv65c+suty0ncoYGl4ZKYvthLup50oAA5ytvnaqbTrXbIQXMC
+	 IGuREGwNGC6lE9Xsopbnvdm3cvNDdpuzw6fF7fZhm30p4L4KgO0apmMhr1xSt/yOPC
+	 m2OqovgKla/TA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Vidya Sagar <vidyas@nvidia.com>
+Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Thierry Reding <treding@nvidia.com>,
+	linux-pci@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v2 0/3] tegra194 PCI endpoint fixes
+Date: Mon, 22 Sep 2025 16:08:23 +0200
+Message-ID: <20250922140822.519796-5-cassel@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=921; i=cassel@kernel.org; h=from:subject; bh=hR+dZORAkM1FuLefHVjbtsllJasGfjrI/YD41PaH/CQ=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIuRoR1FWQf+H70YbR+uVnZA4Uz58O7WRMNZq5mfVXcb NDt8m5eRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACayLp/hf+X2Lf8Ypot7H3T1 V3xVH5Il/+ZuyWqT80feTnf+ndPEGsbI8L6vKH6G1/NnT5lmmJquXPpwp42v97tooTPTNPkjZGx mswMA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 680DC21E89
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
 
-On Mon, 22 Sep 2025 15:44:51 +0200,
-Rafael J. Wysocki wrote:
-> 
-> On Mon, Sep 22, 2025 at 3:32 PM Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > On Mon, 22 Sep 2025 14:50:32 +0200,
-> > Rafael J. Wysocki wrote:
-> > >
-> > > On Mon, Sep 22, 2025 at 10:38 AM Takashi Iwai <tiwai@suse.de> wrote:
-> > > >
-> > > > On Sat, 20 Sep 2025 12:54:58 +0200,
-> > > > Rafael J. Wysocki wrote:
-> > > > >
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > It is generally useful to be able to automatically drop a device's
-> > > > > runtime PM usage counter incremented by runtime PM operations that
-> > > > > resume a device and bump up its usage counter [1].
-> > > > >
-> > > > > To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
-> > > > > and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
-> > > > > those cases.
-> > > > >
-> > > > > Simply put, a piece of code like below:
-> > > > >
-> > > > >       pm_runtime_get_sync(dev);
-> > > > >       .....
-> > > > >       pm_runtime_put(dev);
-> > > > >       return 0;
-> > > > >
-> > > > > can be transformed with CLASS() like:
-> > > > >
-> > > > >       CLASS(pm_runtime_get_active, pm)(dev);
-> > > > >       if (IS_ERR(pm))
-> > > > >               return PTR_ERR(pm);
-> > > > >       .....
-> > > > >       return 0;
-> > > > >
-> > > > > (note the new resume error handling).
-> > > >
-> > > > Do we still allow the code without the error check even using CLASS()?
-> > > > Although the error check should be handled, it's not mandatory for
-> > > > now.  That said, the above example could be still in a form like:
-> > > >
-> > > >         CLASS(pm_runtime_get_active, pm)(dev);
-> > > >         .....
-> > > >         return 0;
-> > > >
-> > > > while adding the proper error check is recommended?
-> > >
-> > > I'd rather not encourage doing this.
-> > >
-> > > While it may still produce working code in some cases, one needs to
-> > > remember that in case of a runtime resume error it will be running
-> > > without a runtime PM reference it has attempted to acquire.
-> >
-> > Fair enough.  Then it'd be also good to mention that in the
-> > description, too.
-> 
-> I can also add classes for the cases in which resume errors can be
-> neglected, like these:
-> 
-> DEFINE_CLASS(pm_runtime_get_sync, struct device *,
->          if (_T) pm_runtime_put(_T),
->          ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
-> 
-> DEFINE_CLASS(pm_runtime_get_sync_auto, struct device *,
->          if (_T) pm_runtime_put_autosuspend(_T),
->          ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
-> 
-> with a comment explaining what they are for.
+Hello there,
 
-It might be helpful, indeed, since the error handling isn't always
-straightforward, and this still allows us to convert to the
-auto-cleanup safely.  It's still worth to mention that those aren't
-recommended options, though.
+Shin'ichiro and I have recently been trying to get the Jetson to run the
+PCI endpoint kselftests on a tegra based board. These patches ensure that
+the BAR test cases and MSI test cases pass. The MSI-X test cases still fail.
 
 
-thanks,
+Dependency
+==========
+"PCI: tegra194: Fix broken tegra_pcie_ep_raise_msi_irq()" requires commit
+27fce9e8c6f0 ("PCI: endpoint: Drop superfluous pci_epc_features initialization")
+which is currently queued on branch pci/endpoint.
 
-Takashi
+
+Changes since v1:
+-Improved commit messages.
+-Added CC-stable and Fixes tags.
+
+
+Niklas Cassel (2):
+  PCI: tegra194: Fix broken tegra_pcie_ep_raise_msi_irq()
+  PCI: tegra194: Reset BARs when running in PCIe endpoint mode
+
+Vidya Sagar (1):
+  PCI: tegra194: Handle errors in BPMP response
+
+ drivers/pci/controller/dwc/pcie-tegra194.c | 33 +++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 4 deletions(-)
+
+-- 
+2.51.0
+
 
