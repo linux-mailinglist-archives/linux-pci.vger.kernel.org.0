@@ -1,106 +1,114 @@
-Return-Path: <linux-pci+bounces-36696-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36697-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6E60B920E8
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 17:50:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BED7B9212A
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 17:54:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 907062A2159
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:50:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E19912A296B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:54:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C712E0B71;
-	Mon, 22 Sep 2025 15:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85EDE30EF6F;
+	Mon, 22 Sep 2025 15:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3/hIOqU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C06HFul/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EAB27B516;
-	Mon, 22 Sep 2025 15:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5664B30E82A;
+	Mon, 22 Sep 2025 15:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758556256; cv=none; b=aq8SN9/IfxTHkXbF7F9Cm6TEj7aDj/DH7HuIO+s3v6s46RCkR3piNvp2rtwXkA7tWltz2ra3lhNeW907JtO8J1q9vIWCa5f9iYwrKw+MsAwGg1CMxovLkUY3pZLBSby7P0IM96YjdlqF8mRTGjCFAbZiFrW94WUba0pfNIIj8rg=
+	t=1758556431; cv=none; b=bA2dLQvXcgimXg4b5Gjlt0SauStDVDF4JsLpV8f+HHx9mjmJn1aAm6ZjHhhORx4rGgmXR/ANY0DveRL1FQO1v+PTt+lLq85bkSnoLISTHvTKdIMtdr/t9PivqAwxXols5tJxvo/ccEgnM3lCPl4FDg1oTj08W7azGRyKErJl3/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758556256; c=relaxed/simple;
-	bh=vbMWpitNm5DxTqLLDH+qpPPtWqFkWWec0kTvC3CnpIw=;
+	s=arc-20240116; t=1758556431; c=relaxed/simple;
+	bh=aRbXPB1JpMvAIJq5asAovoC0H16Nxldusb6Zozv6hHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXC6fftUHdZsQ7e4C8sJYkkrwOxA/I3iLNs9dYDFsdSpkH4yU9//Pt67ycvlWJSyeDxt3TYhZ2dYCb//1IRrs4h8uYxNWqmy7zLrrJDPyJBY3JvaQV8FIZLu+6K7wQ0YF6wPvKg621wct3HIfj//TANRXUJnE3VL+FxxqvOcJ5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3/hIOqU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E990C4CEF0;
-	Mon, 22 Sep 2025 15:50:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UGyMT9NNjAuHCQidNOT2/anOOuc5/y1tc9sxiWcoQ5rm6ooA4nFQB2zifMjyGNcgTlHtknC8mVafG6CwyrStHvVm/M1MmzxHLFih7EEYW5ktC6gTNctUZO2ULkdNgE6my0La8lGzcSe8gOnC32GMNucBnuDB6MPvD09oxeDukiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C06HFul/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED55EC4CEF0;
+	Mon, 22 Sep 2025 15:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758556255;
-	bh=vbMWpitNm5DxTqLLDH+qpPPtWqFkWWec0kTvC3CnpIw=;
+	s=k20201202; t=1758556430;
+	bh=aRbXPB1JpMvAIJq5asAovoC0H16Nxldusb6Zozv6hHg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3/hIOqUGt7lMUrCdD6KiF2I0jx9XcFlOlEkom9VEIoyZlauSSBxyIAauJWW6meE9
-	 CtB/Jy8U8SKffhmKvaLp2hc2TQKqT1EOkWr5EyPwDIzAXyb7gP0n83QvuLvz78sHFE
-	 XhL91XDLSF4+JnnKPKi8E5s7KO0ayFhjSFSXqX3n7v8VQADUM7K8Lo4IzqoP4WyDTR
-	 zW3dUiUUdQq60f2+U16QPNRp+Gpr5mCZ1rc8Yc8iyosATMNsojw6RJYnEaptLBJyIj
-	 6ENvvD4G3x25o+b3tWndQlEh80qPVfoqyQFj6NT9hB7BBx9C6h8MYpXD9OjWmO2sg4
-	 3xnTgNRwUcmxw==
-Date: Mon, 22 Sep 2025 10:50:54 -0500
-From: Rob Herring <robh@kernel.org>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dt-bindings: pci-imx6: Add external reference
- clock mode support
-Message-ID: <20250922155054.GA38670-robh@kernel.org>
-References: <20250915035348.3252353-1-hongxing.zhu@nxp.com>
- <20250915035348.3252353-3-hongxing.zhu@nxp.com>
+	b=C06HFul/szSJI0xrMjnZM1Ks1trKCXzVjBMOMrKb2VFViBpRuvzgO+pmJkv1umK2C
+	 JnSK7Nyww7INSIyb/94rRMQm6binnV5LaXoLcngcUWamHTE5fCbpMCyhJFIE96WxB2
+	 l/MZIDaLi3jj0kF3lcEbm3Cd+82Y1Ir4bM+q9X5NOXMlCEduS+V+5VTCOIuwGtnmU9
+	 bgsQhrpaKfRqdXPFVz/1Rg7ndFcKCEaMoHIHZ4PawV8hKiR61Gm11baBOQuJFjGo+s
+	 EAg28HFex3cQCPMFUIXUOQoTgW4JEcsHt11sauBMZS6A8YVXNICsQUYOdY+FquElN+
+	 OcHa8LIlTl2Kw==
+Date: Mon, 22 Sep 2025 21:23:41 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	"David E. Box" <david.e.box@linux.intel.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Chia-Lin Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH 1/2] PCI/ASPM: Override the ASPM and Clock PM states set
+ by BIOS for devicetree platforms
+Message-ID: <oc23e5sgo74wpjpaaefc6or5f54crfaeyer5zwst3wyyiauhxg@ess265fdcbeu>
+References: <frmzvhnhljy23xds7lnmo23zg35wxpzu4pvabnc6v6vz7qn2lj@gk25cglbpn3q>
+ <20250917112218.GA1844955@bhelgaas>
+ <jgidvwogoopfgtmxywllxl76lap42s4fhzt23ldncgtzfvy5ir@xs7pnhuz2nxs>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250915035348.3252353-3-hongxing.zhu@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <jgidvwogoopfgtmxywllxl76lap42s4fhzt23ldncgtzfvy5ir@xs7pnhuz2nxs>
 
-On Mon, Sep 15, 2025 at 11:53:47AM +0800, Richard Zhu wrote:
-> On i.MX, PCIe has two reference clock inputs: one from the internal PLL
-> and one from an external clock source. Only one needs to be used,
-> depending on the board design. Add the external reference clock source
-> for reference clock.
+On Wed, Sep 17, 2025 at 06:33:53PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Sep 17, 2025 at 06:22:18AM GMT, Bjorn Helgaas wrote:
+> > [+cc Kai-Heng, Rafael, Heiner, AceLan; response to
+> > https://lore.kernel.org/r/20250916-pci-dt-aspm-v1-1-778fe907c9ad@oss.qualcomm.com]
+> > 
+> > On Wed, Sep 17, 2025 at 04:14:42PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Sep 16, 2025 at 12:15:46PM GMT, Bjorn Helgaas wrote:
+> > > > On Tue, Sep 16, 2025 at 09:42:52PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > > So far, the PCI subsystem has honored the ASPM and Clock PM states set by
+> > > > > the BIOS (through LNKCTL) during device initialization. This was done
+> > > > > conservatively to avoid issues with the buggy devices that advertise
+> > > > > ASPM capabilities, but behave erratically if the ASPM states are enabled.
+> > > > > So the PCI subsystem ended up trusting the BIOS to enable only the ASPM
+> > > > > states that were known to work for the devices.
+> > > ...
+> > 
+> > > > For debuggability, I wonder if we should have a pci_dbg() at the point
+> > > > where we actually update PCI_EXP_LNKCTL, PCI_L1SS_CTL1, etc?  I could
+> > > > even argue for pci_info() since this should be a low-frequency and
+> > > > relatively high-risk event.
+> > > 
+> > > I don't know why we should print register settings since we are explicitly
+> > > printing out what states are getting enabled.
+> > 
+> > My thinking here is that we care about is what is actually written to
+> > the device, not what we *intend* to write to the device.
+> > 
+> > There's a lot of complicated aspm.c code between setting
+> > link->clkpm_default/aspm_default and actually programming the device,
+> > and when debugging a problem, I don't want to have to parse all that
+> > code to derive the register values.
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Sure, but that is not strictly related to this series I believe. I will add a
+> patch for that at the start of this series so that you can merge it
+> independently.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> index ca5f2970f217..6be45abe6e52 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> @@ -219,7 +219,12 @@ allOf:
->              - const: pcie_bus
->              - const: pcie_phy
->              - const: pcie_aux
-> -            - const: ref
-> +            - description: PCIe reference clock.
-> +              oneOf:
-> +                - description: The controller has two reference clock
-> +                    inputs, internal system PLL and external clock
-> +                    source. Only one needs to be used.
-> +                  enum: [ref, extref]
 
-This seems wrong to me. There's still only 1 ref input to the PCIe 
-block. If you had 10 possible choices for the ref clock source, would 
-you add 10 clock names here? No!
+I'm going to send this patch separately from this series.
 
-Can't you detect what the parent clock is for the 'ref' clock? and 
-configure the GPR register appropriately. Or that mux should be modeled 
-as a clock provider.
+- Mani
 
-Rob
+-- 
+மணிவண்ணன் சதாசிவம்
 
