@@ -1,135 +1,184 @@
-Return-Path: <linux-pci+bounces-36703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06308B92354
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:21:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A4BCB923D5
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:33:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF124189AFE3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:21:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60BA71894117
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2620F3115AD;
-	Mon, 22 Sep 2025 16:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71DB311C22;
+	Mon, 22 Sep 2025 16:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gERRg5Kb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ir7EXn7S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D012FE566
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 16:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B96330C625;
+	Mon, 22 Sep 2025 16:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758558087; cv=none; b=dzdJUdqJET+ghKRODxJNdNJY9MgLRgbIHaut/9qLyGjiq4MQeSwtBDOXMgBFt7gYonTijZCM4tyVm/5MdnkWIWl1e12IfuAATphAcIItfs7lRkbZVAhKdSm0EuYwX5yd34SWpY62Rlz9J7Yx0TzsGAug+lLxJ7//O95yhNCugdI=
+	t=1758558801; cv=none; b=iYWWkxHRzVL6abThiMi/e0+uDGi1S5fQgqFg/IsVRXQolpNItJiOSX9zJ7LErujk0ZfdklAmfioqAew2w8Y9OvJyNmqLuSc0Ihl09Sh6Aq7jowkiHEt9JlM8dSSYejBsVwSqOXhgAUJ4aCVPtjkvwZ6NYb77g8fUx8lNOHdQO2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758558087; c=relaxed/simple;
-	bh=TsSo5v20e3QCGi81nt9NTXKtnhDrJ6hOgG/6U8OU58g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c/dwrvUBaIa2rm0zH1QwfuHEeAo1RKN47R+DTKMwTB/nVw5vb+PHFUmbZJDD2NcSwGaVSy6tei//riZD0bEedpde/saWsEXb9eoE3DSEnGMUnK5Z4Em7SjUekEG3sLrll30iQmG9Pc/YSb8Js8jE5uP0Iq3OQKHfEJEw5VMKhVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gERRg5Kb; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-36639c30bb7so24768981fa.3
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 09:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758558084; x=1759162884; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=q0t8TkngeWBa24L4rwJYazMbCKONZc82MDv2pY9DHfo=;
-        b=gERRg5KbOnkLNG+n71Z0kZxHPK2RWyEAGi9qjp/QAb4mSMlMLz8Yg33GAYQEgN8Ed2
-         ceT0E48GaRX5hMOL+L4LcLPXxDBeb2QA3RAzYBIIgY+Q8riqVBoFOlM8V3MIaaGKbr8i
-         VFf0vtiIh5G4OYooMrLblcZIH9y0ZW/5genuO2IFxHfMA+t/MldEs3Qdhyb+IaVjoVGj
-         ylKKTP2ui+oAQYCN2w+F5Ku2T9Of9wQxYCPCXZ8l8xAkrB4gP9bQCFBZg1iocMuUaP/Q
-         /mdOUUdA0g6gjBhzkE9Y6nRkWba5V924Y3fstWT7kqj2iIEPuIK6vlzfm5IWyTjrKXKz
-         fRGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758558084; x=1759162884;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q0t8TkngeWBa24L4rwJYazMbCKONZc82MDv2pY9DHfo=;
-        b=Jlvh+TYxVke5yqeQUUYavGxTz7KAYwtDF6p9u+PNHiLGdT+qXNEBmIOc6d9Ppop8eZ
-         RZtBbW2CaM3n6y3tTMgVXtdK+BdJkyI1Jdy4i9gxXwTEKUgrurI30vcEaGHKNe0+IY/D
-         0ax3SA8YKFuNHY0Lxl1Ey+P++C4F+KaV3L/WCheyJ4yZMgdPwW5uk5z7lM3co+NGNin2
-         JVDWONfAiMOC3nfP/xm287sQVNR9kU4O83R54v4jNzjnxxanHgZfHxpSW0/71O7C+Cju
-         WPe06GCEaMNhOedxhtvq8uoob+oblkbTSB5A6z2T5UmqxPdmJ8tOHdQYBfzt+TUDqHJW
-         sl5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVr63N+f+jtTzCvpoGeHgPu3iarB4F8lUOaZfumyjiVQQQRrbqwTWf1nEHDhmtPdpiLK1VFc9brt6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXmNWdxqhIrEmQ73hX9WrDSlfLWH+oSypG3yh4jSps0mYH06aK
-	9FDXYPZtUbFgSvasih6C/noWRlpaJixZ6zlREvs3Hc3X8pXwhzNQSd0DqXI95mwx0ilBsQo0X9l
-	OnRgKTJoXSayt7I3BKapBswbPkdmWXGY=
-X-Gm-Gg: ASbGnctBVALg2Zas8qGzVNVBYhk3zZT8xgI9M1E8OHxjleWcOHe+mgcOjLWlvKU70uo
-	HBt9D0kcB0HVRnFEjCKYf8HyB5iLW7oXSWxD5nonhpcKSmZ0wl0xu4ih0OppK4xkEhZekZuG7Ad
-	AQEDWtoZvdDg4sRxi000Rgoju6t1BYRZ9kVTC2Ko0tTlmVg9DzcI74mQ5aWLMZYTZJEQJCf1Qqi
-	k5tmDutdg==
-X-Google-Smtp-Source: AGHT+IHyflDhXEZ8d6nRs6K93Y7D5RspOmec4aU7ZWi2YQAy9LSUsWlc9YgLICF8EsksTaHkPC11zFyDPlCzZsUl2N4=
-X-Received: by 2002:a05:651c:1547:b0:365:a58c:3ca with SMTP id
- 38308e7fff4ca-365a58c08c2mr38832981fa.40.1758558083309; Mon, 22 Sep 2025
- 09:21:23 -0700 (PDT)
+	s=arc-20240116; t=1758558801; c=relaxed/simple;
+	bh=xMmGNRC++VxwgdXGhecb5pzo/fRO7nnjJ1/3o+lBhYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EFafA9z95KMG2OTf+/BZ6dwGqoN2Io9xsfz6JoGXRT5tx5xvq1CjPriXVkUviAr9vHFbp5vzr4l7h3yAqG3pRHtrooEdytzFiBL0B2ptfkW2WNeQoyvFE7xaIqc9vdv8atGxSS/BGPCp1RLzhmC9M++iV+HtlEY5YOO7P/rKNg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ir7EXn7S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBF5C4CEF0;
+	Mon, 22 Sep 2025 16:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758558801;
+	bh=xMmGNRC++VxwgdXGhecb5pzo/fRO7nnjJ1/3o+lBhYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ir7EXn7SDJYv8gLjFwbbEPemzVsmpLsvC4+b1mSdgUeMwJP6u/5u656Rm9CDKjHba
+	 eG9x9/oIt0ijkGY35g0zrAQOK1TtLyAegIsdEuo6zZhzGQ4QZPtCjZi/LoXGavaU6i
+	 Y6kvuq2LAgBytIPKaVn5blQvGnyqNV0zArFbX/hT4N5DvrLvXdZuozjXESdBt+uBY8
+	 ZOGzkd4dbRHA6Bbh81mOJuhxIr51BnuGIbzq4jwVgpn0uV0YVqEymlfSPYjMX95Drs
+	 UGmcJXLXLAaGv4GMizdHYcZ7ggxvySUwF5jKwrFBCA++B4c7P0L8jWNzSvUGKHCDEA
+	 qp6ECsjgOnfrA==
+Date: Mon, 22 Sep 2025 22:03:12 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 4/4] PCI: qcom: Allow pwrctrl core to control PERST#
+ if 'reset-gpios' property is available
+Message-ID: <zlogycfwvdclx2wpxyzhdm7m5edsckcfscz4ddor5seyhmiyf4@kd7ueiga6aaq>
+References: <nxcr6ymgspcdofoy7cv4lok34qqucwrm4cxn7a7spqrszgmvin@x3mhucqy2tb3>
+ <20250922160041.GA1972113@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHP4M8W+uMHkzcx-fHJ0NxYf4hrkdFBQTGWwax5wHLa0Qf37Nw@mail.gmail.com>
- <20250919104123.7c6ba069.alex.williamson@redhat.com> <CAHP4M8XQw5_2LX4OpYeO+8bbAEEaRmjQ39+nPzk0qXzwG7uaUQ@mail.gmail.com>
- <20250920083441.306d58d0.alex.williamson@redhat.com> <CAHP4M8WOkDvEf6DYe6w+V9PVHkqcu2-8YrKa7jwLBYRAqLVS+g@mail.gmail.com>
- <20250922083221.5c6a68c0.alex.williamson@redhat.com>
-In-Reply-To: <20250922083221.5c6a68c0.alex.williamson@redhat.com>
-From: Ajay Garg <ajaygargnsit@gmail.com>
-Date: Mon, 22 Sep 2025 21:51:09 +0530
-X-Gm-Features: AS18NWDDojf2RGP6S7lgnWI-3L1sM5khCOx-a1BaBWqJqq4H9fDzSEOwXpAUtKA
-Message-ID: <CAHP4M8X89SUY=qoSO3xy8-TE0ubWGkOqP-WwP6niyn+NQLKUvQ@mail.gmail.com>
-Subject: Re: How are iommu-mappings set up in guest-OS for dma_alloc_coherent
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250922160041.GA1972113@bhelgaas>
 
->
-> VFIO doesn't make PCI devices disappear from the host.  Maybe you're
-> referring to unbinding the host function driver, which might make your
-> NIC/HBA/GPU device disappear from the host as the PCI device is bound
-> to vfio-pci instead.
->
+On Mon, Sep 22, 2025 at 11:00:41AM -0500, Bjorn Helgaas wrote:
+> On Fri, Sep 19, 2025 at 01:45:51PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Sep 18, 2025 at 01:53:56PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Sep 17, 2025 at 03:53:25PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Sep 16, 2025 at 03:48:10PM GMT, Bjorn Helgaas wrote:
+> > > > > On Fri, Sep 12, 2025 at 02:05:04PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > > > > > 
+> > > > > > For historic reasons, the pcie-qcom driver was controlling the
+> > > > > > power supply and PERST# GPIO of the PCIe slot.
+> > > > > 
+> > > > > > This turned out to be an issue as the power supply requirements
+> > > > > > differ between components. For instance, some of the WLAN
+> > > > > > chipsets used in Qualcomm systems were connected to the Root
+> > > > > > Port in a non-standard way using their own connectors.
+> > > > > 
+> > > > > This is kind of hand-wavy.  I don't know what a non-standard
+> > > > > connector has to do with this.  I assume there's still a PCIe link
+> > > > > from Root Port to WLAN, and there's still a PERST# signal to the
+> > > > > WLAN device and a Root Port GPIO that asserts/deasserts it.
+> > > > 
+> > > > If we have a non-standard connector, then the power supply
+> > > > requirements change.  There is no longer the standard 3.3v, 3.3Vaux,
+> > > > 1.8v supplies, but plenty more.  For instance, take a look at the
+> > > > WCN6855 WiFi/BT combo chip in the Lenovo X13s laptop:
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts#n414
+> > > > 
+> > > > These supplies directly go from the host PMIC to the WCN6855 chip
+> > > > integrated in the PCB itself. And these supplies need to be turned
+> > > > on/off in a sequence also, together with the EN/SWCTRL GPIOs, while
+> > > > sharing with the Bluetooth driver.
+> > > 
+> > > It sounds like the WCN6855 power supplies have nothing to do with the
+> > > qcom PCIe controller, the Root Port, or any switches leading to the
+> > > WCN6855.  And I guess the same for the wlan-enable, bt-enable, and
+> > > swctrl GPIOs?
+> > > 
+> > >   wcn6855-pmu {
+> > >           compatible = "qcom,wcn6855-pmu";
+> > >           wlan-enable-gpios = <&tlmm 134 GPIO_ACTIVE_HIGH>;
+> > >           bt-enable-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
+> > >           swctrl-gpios = <&tlmm 132 GPIO_ACTIVE_HIGH>;
+> > >           regulators {
+> > >                   vreg_pmu_rfa_cmn_0p8: ldo0 {
+> > >                           regulator-name = "vreg_pmu_rfa_cmn_0p8";
+> > >                   ...
+> > > 
+> > >   &pcie4_port0 {
+> > >           wifi@0 {
+> > >                   compatible = "pci17cb,1103";
+> > >                   vddrfacmn-supply = <&vreg_pmu_rfa_cmn_0p8>;
+> > >                   ...
+> > > 
+> > > But I guess PERST# isn't described in the same place (not in
+> > > wcn6855-pmu)?  Looks like maybe it's this, which IIUC is part of the
+> > > pcie4 host bridge?
+> > > 
+> > >   &pcie4 {
+> > >           max-link-speed = <2>;
+> > >           perst-gpios = <&tlmm 141 GPIO_ACTIVE_LOW>;
+> > >           wake-gpios = <&tlmm 139 GPIO_ACTIVE_LOW>;
+> > > 
+> > > Does that mean this PERST# signal is driven by a GPIO and routed
+> > > directly to the WCN6855?  Seems like there's some affinity between the
+> > > WCN6855 power supplies and the WCN6855 PERST# signal, and maybe they
+> > > would be better described together?
+> > 
+> > Yes, 'perst-gpios' is the PERST# signal that goes from the host
+> > system to the WCN6855 chip. But we cannot define this signal in the
+> > WCN6855 node as the DT binding only allows to define it in the PCI
+> > bridge nodes. This is why it is currently defined in the host bridge
+> > node. But when this platform switches to the per-Root Port binding,
+> > this property will be moved to the Root Port node as 'reset-gpios'.
+> 
+> I'm questioning what the right place is to describe PERST#.  Neither
+> the host bridge/Root Complex nor the Root Port has any architected
+> support for asserting PERST#, so we can't write generic code to handle
+> it.
+> 
 
-Yep Alex, that's what I meant.
-I am sorry for (unintentionally) causing ambiguity.
+True.
 
-> There are ways to multiplex devices between host and guest, SR-IOV is
-> currently the most common way to do this.  Here you'd have a physical
-> function (PF) with a host function driver, which can create multiple
-> virtual functions (VFs), each of which have a unique requester ID and
-> therefore a unique set of page tables allowing them to operate in
-> independent IOVA spaces for VMs.  You can imagine here that your PF
-> remains bound to the host function driver and continues to provide host
-> services, while the VFs can be assigned to VMs.
+> The PERST# signal is defined by the CEM specs, so can be physically
+> included in a standard connector or cable that carries the Link.  The
+> Link is originated by a Downstream Port, and the PCIe spec tells us
+> how to operate the Link using the DP's Link Control, Link Status, etc.
+> 
+> But PERST# might not originate in the Downstream Port, and the spec
+> doesn't tell us how to assert/deassert it, so I'm not sure it really
+> fits in the same class as things like 'max-link-speed' and
+> 'num-lanes'.  Maybe it doesn't need to be in either the host bridge or
+> the Root Port?
+> 
 
-Perfect, thanks Alex ..
+While I agree that PERST# has nothing to do with the Downstream Port, we don't
+have any better way to represent it in devicetree. Either this has to be defined
+in Host Bridge or Root Port/Bridge or Endpoint node. Currently, the devicetree
+spec allows it to be defined in both Host Bridge and Root Port nodes, but not in
+the Endpoint node. AFAIU, this is due to the fact that PERST# is a host
+controlled signal, not device (unlike WAKE#). So we cannot put it in the
+Endpoint node.
 
->
-> PASID is another way to do this and is often described in an SIOV
-> (Scalable IOV) framework, where we rely more on software to expose an
-> assignable entity which makes use of the combination of the physical
-> requester ID along with PASID to create a unique IOVA space through two
-> levels of IOMMU page tables.
+Moreover, if it is defined in the Host Bridge node, then we cannot do
+PERST#<->device mapping in the case of multiple PERST# signals. So defining it
+in the Root Port/Bridge node seemed to be the ideal place (till when there is a
+single PERST# per slot/downstream port).
 
-Perfect again, many thanks again Alex ..
+Maybe Rob could share more of the insight.
 
->
-> In either case, having an SR-IOV or PASID capability on the device
-> doesn't automatically enable device multiplexing, there's software
-> required to enable these features, more so in the direction of SIOV
-> support as the scalability trade-off is to push more of the basic
-> device emulation into software.
+- Mani
 
-Thanks a ton Alex for all the help !
-Thank you for always being there whenever we get stuck .. !!
-
-
-Thanks and Regards,
-Ajay
+-- 
+மணிவண்ணன் சதாசிவம்
 
