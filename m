@@ -1,312 +1,233 @@
-Return-Path: <linux-pci+bounces-36651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3F37B9055B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:23:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C277B90581
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:26:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D6A2189ADB5
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 11:23:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B7F9189B751
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 11:26:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72FBB27F000;
-	Mon, 22 Sep 2025 11:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA80304BB7;
+	Mon, 22 Sep 2025 11:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fAu4GSj1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a186c2oz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010031.outbound.protection.outlook.com [52.101.46.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F9B25DB12
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 11:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.31
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758540178; cv=fail; b=ZFqa88U3UASzbIN/BAoLZAqR+/kdVSdxO49sBaPFJAphh4HC3Q1S5dXY3/kqZMbrqVNGNAUtR+6SsozhrLk2vyVzSWNfgxe16s8i7jvSxlrKiQ8Dgqogq3q+2tj4YYqL72n6OL8pDtF9M2o7AwwC790GE1iwkPfQ22NY/m5ivWU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758540178; c=relaxed/simple;
-	bh=leuA3rCLXJBbLVo8hGncO3NXp+cfOI5E9vS04yRqrXc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q8fHJrbWNV0QVe6CHx6d/W/AyZSG45Ny7n1zHwynKJp6qkPDzCkmlzD8vqRmB3FhnX27mi2eHX14tckNciF97ag5yMVVwhAl8Xqgt4IFgPoLPObobPOmOgjrMH6fkzo6pkdjBs6xNPPRMdkMIrxufw9mR72Bwkx1fzf0bNN7L2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fAu4GSj1; arc=fail smtp.client-ip=52.101.46.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lvtQOg4jT/vdg1LTqc3RN+lp+oHELTK1CJ8XEHiBnMs7YT8RzJ0NYSjzVtFbZT6dwWqx+ps0OfRc7A5OhfpsGZzEN+AMiZWgYTLpcokGFpURCAJHmjz9ntBEKyH9ZyXZnax5caGwHJI+3V4w5nUea+izB33RcWX09+ymQyl+imr2EbqN02hbr4mJcbm9SY6F6NWLnHe7sUaFhX/2AvYEECrvDXkJnG7qnh8Y2E05OPmN6fWocbVbhwE6zyultQw9DFRHxNaP1QIZQb/RQZexhgaTYHMqZbI+1yfm/s/M8HCDfDLoFusQ9izj3EN7T50o3NTZVvJfTmcodYhdExa8Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KvVLV2yfj/5pR39Cs3wkgnt3sAVT2gzLG1m/v8M0YPM=;
- b=kJYTVP0HX7MGFazjvOdZbvzHvV6wGNyvvPvz6CF9TmZRWActaNCYgBeUCqklKffatwc6E8m82d66t9gyT7ozqUdrQ1m28RB40TSGeOQWo11QMuZ2XdW9H6UJNXSonXC0lPMj+SzcTgKOI9b97PlBR0d0GUxiFDgZW96P6+4M3amfBomDUQnhIoeo6IVUFWPSSo4VonS9Nvz9XxUG/5LxMjsjeYZJGOj3+9e2wjSgOU0Y+wrp9Lwv/3C5X3FvAw6oBbURhSmJ6x/X5pk0fiY8Uue/JgglT/4zOVFFpwvTZMSCym3sZq5yFzrEboGasnDrtr0w1JItsyhd1AYFbD2DQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KvVLV2yfj/5pR39Cs3wkgnt3sAVT2gzLG1m/v8M0YPM=;
- b=fAu4GSj110rpI1Anf+/q0zkP8u//a3uulxHeULMPFjkSalnBLsgbgdlN9C1d4W17zDfw6eHMV3UlK3fKOwtje2jkLv/R7jsB3p0G6VIg+4NUhDzcfW/DqfO9EVWXtNNhH14rbzCpuDN80pd5M3tZUrT/8oKuvzoE7b6nF1M9iYY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SN7PR12MB8131.namprd12.prod.outlook.com (2603:10b6:806:32d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Mon, 22 Sep
- 2025 11:22:54 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9137.018; Mon, 22 Sep 2025
- 11:22:54 +0000
-Message-ID: <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
-Date: Mon, 22 Sep 2025 13:22:49 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Simona Vetter <simona.vetter@ffwll.ch>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20250915072428.1712837-1-vivek.kasireddy@intel.com>
- <20250915072428.1712837-2-vivek.kasireddy@intel.com>
- <20250916175709.GA1324871@nvidia.com>
- <IA0PR11MB7185186F6AB160AA7F8F0FF3F816A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250918120431.GL1391379@nvidia.com>
- <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0127.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9e::15) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC6EC120;
+	Mon, 22 Sep 2025 11:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758540386; cv=none; b=dyH7ywXbXDPN4d4+aqgkgm0YaAQvFK7AK/WgiHspc/sKlVuyu+RIi6kpk2c4tnTzg1Fxd941g9XUSvYb6DdMPnZY2g1XrFKMDXTwIXFuJafvcVoE+cO873NFjHrAF8v0uCDO12flCHQx2bHOHK+r1TEQ5oTiSg4R4CHQfpar7SM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758540386; c=relaxed/simple;
+	bh=9JQedTHdHctfJGT11PtE1ZER88ziPva3c5zByj/E2cA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=miDWSicUZL0wjVPLNvLi0zjXysa+q0OvM9PbFGw8lI1LdGskAzS1W+u5rcbf+l68/7NTvAHHSk7W3t8jAI7jq+mAuvbLhjjUVaS8wiEzeLqG3m+A3w93cJ+PxMsE0eP0THjUmsIJsWzc5ItasUD5/y/+/n6+jkm2HWf49WrnkKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a186c2oz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3BAC4CEF0;
+	Mon, 22 Sep 2025 11:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758540386;
+	bh=9JQedTHdHctfJGT11PtE1ZER88ziPva3c5zByj/E2cA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a186c2ozsEjuVX0cAaANqNZGa3frykYXft/EdxosHYevKrOTCM+d0s5O0vQrrN5K7
+	 MzMCxNaChm7DVirKgDOBYxulGsvrsYyz8yGMb74fjqEiwEkUs3EKUAAanoF9D3fnB4
+	 D462ka0eD9dzNCiolfkCDGnfv9ML12SifwOOE+LyznuqRhm1GTz4p9hnjG5/vnP+T7
+	 QeIvFQGs45VhhsUqsEevJw1JawgDX5zDwrhlWuDkb/SacVW25gl4qaW3+ZOdVUSt1K
+	 35wOSbgLDicbQ/bryJMAlVp7K3kVZinNRE9fNZ8DbNnHDA5bKm063NQH5dNKz1/wkp
+	 8hmar9DpNTAMQ==
+Date: Mon, 22 Sep 2025 16:56:17 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>, 
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/6] PCI: dwc: Don't poll L2 if QUIRK_NOL2POLL_IN_PM
+ is existing in suspend
+Message-ID: <agtozwcmgwj7kfmzkrglqcba5vaqmd2hv3matzmksbckkrrno3@zdteyblgvpyr>
+References: <20250902080151.3748965-1-hongxing.zhu@nxp.com>
+ <20250902080151.3748965-3-hongxing.zhu@nxp.com>
+ <p4hqjnhpih2uy5hzf7llrd3ah7ov6sijkuqjecpvv5j2iqrsji@kxj5xwb7a5p4>
+ <AS8PR04MB88335CEA526C3B5E957EF0C88C12A@AS8PR04MB8833.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SN7PR12MB8131:EE_
-X-MS-Office365-Filtering-Correlation-Id: b27a8bff-4463-4eac-8081-08ddf9ca5f7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UUxvTjhyS0V4QjNCT3dyMUFTeHhMTm1LaytxMld5OTZreFVVZ1FqbDdIb1Ru?=
- =?utf-8?B?R3FESTVhdUZWeStia0R6ZVJnQXV5eXlpY3VyZzhWQXJaS3BWbzFSZ01BdGVH?=
- =?utf-8?B?WHF6U2psWWtKVHFNZFlqNHBaR3FpSDNubjVyVjVobmFvazBKeVZ1M1pQQ2hh?=
- =?utf-8?B?bU9MUXk2WGRSMVNtMk1NcUNqaVBnbkJtVm02K29lN2hGNjBjTzROWkszbVl6?=
- =?utf-8?B?azRLYVdnQU1GaE5FU2lHMlpjVlJZTTRtcnZOcm5qRGxlVEN6enNRQmw5eStP?=
- =?utf-8?B?S1hDRFAvNC9xYTJyZWdDeENaL1VKaXRQWEEwT0hwUHNvMlVwdSt6NjVzSVdJ?=
- =?utf-8?B?ZFFzQktjSFVmMGNCei9za1JKZWZmV1psaHZLbDU5TUZ3OWZHSEkrQjYwZDVx?=
- =?utf-8?B?VXllTWVQTnA1WGFDeEZkNnExdk5lWUNjekxoSDFrMjRZbXphSngxdEtwOXJZ?=
- =?utf-8?B?YWlpdmRicVo1VWdkelArSWRwbFErK2doTkE3WEp0eFRZQVMyTmFmN3YrL0k0?=
- =?utf-8?B?dU9SRkk1OTZId3l2QytBOE9Tam5jV0tRSU9HTmVWTDVnSUF6b3FMSmVyZHJY?=
- =?utf-8?B?bnNPTEVhaG42Nmd6WmNjTHVWYTluWGlIdVRwU0ZkUG55OWtPYm9aeDlBL3Fq?=
- =?utf-8?B?QkgwSmlZdTFRVXFRb3kzcllDNnFPeHU2Z3R5WGUxOVQreXlQeWhUSVRHSlpt?=
- =?utf-8?B?UDU3YXloMXFhT2I4bDZMUUFibDh1MU15YzhINWNsMktKcURvaU4xU2FFcTQr?=
- =?utf-8?B?NGNjdDAvV2MxNERiVEQvK1o5Smt3UytWVmg3dVIvYU01ZWdZcHEwaVhPVE4x?=
- =?utf-8?B?QTdsZVJmYnd1U1RMZWRUb0VvTDlHQmJQcVVhUWFBbi9MZUt5aGVQZEwrem5v?=
- =?utf-8?B?VGJ5QWh3NGZ2b1c1VmVWOUg4Rk9hUkhUaytvY25HTERjZE9KUzFVUmhDTSts?=
- =?utf-8?B?Z3BZZlhTcFNuK2wvRXJ6S0hGbUMwdGZPUXN5NHplV2twYUk2dGk1OThlMVFT?=
- =?utf-8?B?V2EvZ1l2MnJzaWtGeHZkcHhVamJUWCtyQlBCRGxyTUxEaXBDSGI4RUM0cXBE?=
- =?utf-8?B?d3ZKTnhqUXlrN09HOWV1WCtYWWVZYzdJOVA1OVhPdXJvNjB3SEZiYWV0dmUv?=
- =?utf-8?B?a3pMZk5lRWJwRVN6R1ZzY1pUY1lZSlBmKzNMOEluQnk0VG1PcmhyRDZ4Z0x6?=
- =?utf-8?B?S0FCMW5WNmpRbUcxVVZ2TzcvMVluRStremo2SUwrTXNNK1NiUTZtc093Z29l?=
- =?utf-8?B?dnRiUnhRN0dxY0dHeXFOcmxXWWYvOStJTkVoNFdTSTZ0b1g3Z3RhZHBzeFB0?=
- =?utf-8?B?K0dmeEdWU0M5VC93ZmZta01ISE9MaWZJbnZlUHNZY2xQR1FuUFVjMzVvWVFi?=
- =?utf-8?B?ZDNwYit1L3UyVmZsbURPTjkyRGpra2lDTWZ2RVM5aENlalVMR2lndGozYzQv?=
- =?utf-8?B?SXBiTVNXOHBFYjRra3cvdlpBSEtYN1ZBa1JzbjVpNGNSSlduRXI3TzF0OUZV?=
- =?utf-8?B?RjNoTEo4YWV0MFdDbmNXQlpSYmRTVW5DL2lKYlNaQmtNSW1XSDducVBpUElM?=
- =?utf-8?B?QnorV1VVNmNFNTRjTjhMUjhnbjVLS0I5Q3RoSW90SXU5NGxobk1Pb1k5dHNC?=
- =?utf-8?B?ckdGNjNSaWFKN1ZVd2RybWpJREdBQnRMMzhRam1RLzc2NXMvVzE1VUFtMmE4?=
- =?utf-8?B?UUpyMnM5R3hxeDF4M1JNS3BJYlJKYzRNVUErUWlyNE0xY2RWMVY2aUFtSGla?=
- =?utf-8?B?YjJadFM0T3ZIM2dJTmtGdmJKU3pZRklxNTVaZzlOalFoSzREd3FxZlhnOHJo?=
- =?utf-8?B?d0J3NDJ5ZU5SWURUVnVzbWhzZGJhM0xWMHllUzBveUwwRUFHdTlMVmpPNkRG?=
- =?utf-8?B?Undmc2EzQkphSG01WEw5OUp1NCtvdFpOV2Nlc2tuRXd0N3hjcHdFODZBb3dM?=
- =?utf-8?Q?I9J9X4Dq6g0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MVdmUUtWSVNpaWl5OWZESjhCUDNmK0lHZndNRUFjdnl2b0gxcTRXRmYwOWlU?=
- =?utf-8?B?RmhpUHdud3NJK2xoN1lHNWY5T3dRem1mVFF5SnQ3L3VsZjBVdWprU0Q3ZUNV?=
- =?utf-8?B?UXZ5eVlVN200a0VsNTM5QU1KUnZhVjcrL3FsR1FQQmxLWllkMFNvclpzelp4?=
- =?utf-8?B?bGRWeEwyTWFVS1VKbUxwMHdCNTBsRDkrL0IzeUFQNFg4T0hJaFpkdFc5NHFZ?=
- =?utf-8?B?WlY5dDJycTJURVdueHY1N0FORWxWQXlXRWYydFZOaGtJL0VuNHFCWE9oNFZ5?=
- =?utf-8?B?WmkvUVNNYzdqNk11TnE3cHRBMDhIRCtqMUJRWHQzcUR4V2s3Q0IzRWJhZXd2?=
- =?utf-8?B?WmVGR1U2NEt2Sk9hUUZXUzB3Zjl4YWhMVFpONGVMV3JCWWx4TWFVOTVXcGtk?=
- =?utf-8?B?eEFZdWEyOXAyV3NzYTd3djg4N2hyaFFxZFc4YWRSUDhCeUF2VXFQOHF1L3NU?=
- =?utf-8?B?ZWFwVnZiRGR3MGFMOFZtVEtSN3JqUFFtc0g4Z2V0UDVxMUhaeUo1MDc4Y210?=
- =?utf-8?B?OWRKdm9qVXJVR1VwSDg3YitRMit2QTJzblRaTmcydCt5QUdlT0dicGp5NHZ4?=
- =?utf-8?B?VVdnTld3UHR4UjNxZm11WTAyNUkySE4wOWV6SkswTzlhNkpCTVY0b3BaQld5?=
- =?utf-8?B?cC8zTWk3UHRtVzR6MWpEZkhDdzFJTkVWcGcwRy9MQTRxdjM4OVp2Z0IyQTYx?=
- =?utf-8?B?YnlIM3hLWmRGMXRYa09jQXVGTy9NdVZ1dzdXOU5NdFVFQ2FCaVZXdDh6cjZG?=
- =?utf-8?B?K01SKzZEZ2VKM1UzS0Z4aGVOa3g5NFdZSnAzT1c4NmtnVjN5aVUvcHM5b2Rw?=
- =?utf-8?B?anZZMFBrY255bUY0ZW9mRkwvM2pxTi9PS1lzdmFlOG1mc3FHM2cyZkQ4QUFW?=
- =?utf-8?B?cEpaWm9LbUlaQjJwNmg0NTA0MENwMGEzUUFMSDNTZWRBN20wR0d4aXJlMm4w?=
- =?utf-8?B?TUc0YzVBZng5YVBaZUFMUVNzWmZtSkovQ0p3czN2THo4SjFUc0ZxNGVWWHBs?=
- =?utf-8?B?WHI1aG91ZjQxT1hnYXR5cEk4d3IxRTBrV20vcDdFSklHSHVTcUdvU0pkTE9a?=
- =?utf-8?B?eFY5Z1BKeEZTMFZFd0xkVFhDY3RRS1U2Z1V6STAweGphek9kd3RuRmZVbkZY?=
- =?utf-8?B?NUZJb0JFUWlkSEJJWnRsVE94MnNUVEgzUjlZWU5MbVJMZGM0M05WKzY4dEg0?=
- =?utf-8?B?NkpIUnlxSThIcUhoSHB5OS9LdDNGMTkyVitLSlpBZkdRNlZmK3ZJK2luRmFV?=
- =?utf-8?B?ZWJtUmxwMGhKWklXOUxuNllzeFpwQUlvOWkyZmllSU8waE4xcE85L0s1RHFi?=
- =?utf-8?B?YjNpcWNMN1RUSW1UUlk1VG1yV1FrL0x6SmlOUEh0cktaV3hxbTlmeGVNOFBI?=
- =?utf-8?B?eE5rU1VSaDJtUmp5OUtaMG5UUHVPbnpVUjgxR1V5RUNObEVRWEtobkEyZC9K?=
- =?utf-8?B?QzQyTmlCY2wxRTJ6VHpxdTBuYlRSSHlrdC94WkQyMEVJQWdSM2FPVzNXVENV?=
- =?utf-8?B?QnNMUzdMMFcvMFdadFhTQnNjcktNdDRpSDI3ZHJ2aTY5OC8yZnZUT2VnSTYx?=
- =?utf-8?B?WDUxc3YybnJMNEFuVmFlZjNTTzh5NlY1SFpvc3JncGZlZTI3YXVNS1ZNY0s4?=
- =?utf-8?B?NkcwMUgxb3gwNWQySE5XbUlma2dpa2liVnArS2xPTFJOaXNSQjF4UmkrRG1V?=
- =?utf-8?B?UVloeWVqUHBWdWh0ZjdoMFg5bW00SDBGdzdEMUxQUkJ2WFQwS0llTmgxcGNX?=
- =?utf-8?B?bTNGN3ZEKzdSamRlbEU1M3JFUS9EelVYdXdGdS9EVHNpcVFRRkRJdWw4a05V?=
- =?utf-8?B?cWZXaGxsYW4wcUZiUUFWSXZyZHN3d0dYM1ZnZTNJNjdPU2thNXR4UngrbUNE?=
- =?utf-8?B?d3pSbmZjU01OUmtWUlNuTFMxNXovY3NGS0JRanhJK1Q4Vmc3SlNsNUFaZUVN?=
- =?utf-8?B?RC9BNE9lUjNydkFYdW9YUnI4bzNsRVpMT2x6ZlVldHZDbGVpRElZS2lzQjl5?=
- =?utf-8?B?VVI0R2s2Z3BXY2NLdGJrZWVCQzlHZWZIcU9vNnVDdmdqbFJrRWc0UUdzWHIw?=
- =?utf-8?B?Q1VzUDAyUXJ1SWZSTGlvd3kwbndUR21ZWTQyd1UwRWVHOENFcHZMVXlIMWpK?=
- =?utf-8?Q?wOFQ=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b27a8bff-4463-4eac-8081-08ddf9ca5f7f
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2025 11:22:54.0780
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mi1yMsiX1QYXMhNuYtSYgbLhpo9dMqMLVOpM6NMInGWa4v4cxIqxXRBvY9tGmFHs
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8131
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB88335CEA526C3B5E957EF0C88C12A@AS8PR04MB8833.eurprd04.prod.outlook.com>
 
-Hi guys,
+On Mon, Sep 22, 2025 at 09:18:20AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > Sent: 2025年9月20日 14:29
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Frank Li <frank.li@nxp.com>; jingoohan1@gmail.com;
+> > l.stach@pengutronix.de; lpieralisi@kernel.org; kwilczynski@kernel.org;
+> > robh@kernel.org; bhelgaas@google.com; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > imx@lists.linux.dev; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 2/6] PCI: dwc: Don't poll L2 if QUIRK_NOL2POLL_IN_PM
+> > is existing in suspend
+> > 
+> > On Tue, Sep 02, 2025 at 04:01:47PM +0800, Richard Zhu wrote:
+> > > Refer to PCIe r6.0, sec 5.2, fig 5-1 Link Power Management State Flow
+> > > Diagram. Both L0 and L2/L3 Ready can be transferred to LDn directly.
+> > >
+> > > It's harmless to let dw_pcie_suspend_noirq() proceed suspend after the
+> > > PME_Turn_Off is sent out, whatever the LTSSM state is in L2 or L3
+> > > after a recommended 10ms max wait refer to PCIe r6.0, sec 5.3.3.2.1
+> > > PME Synchronization.
+> > >
+> > > The LTSSM states are inaccessible on i.MX6QP and i.MX7D after the
+> > > PME_Turn_Off is sent out.
+> > >
+> > 
+> > This statement is not accurate. A single register read cannot cause hang AFAIK.
+> > I'm guessing that the link down (LDn) happens after initiating PME_Turn_Off
+> > and the access to CSR register (LTSSM) causes hang.
+> > 
+> > Is my understanding correct? 
+> The access of LTSSM is not relied on the link is up or not. For example,
+>  the LTSSM stats can be accessed when the link is in the training
+>  and not up yet.
+> 
+> Per to the discussion with Bjorn, the most possible reason is that the
+>  LTSSM isn't powered anymore on i.MX6/7 when PME_Turn_Off is kicked off.
+> https://lore.kernel.org/imx/20250819192838.GA526045@bhelgaas/
+> 
 
-On 22.09.25 08:59, Kasireddy, Vivek wrote:
-> Hi Jason,
-> 
->> Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
->> functions of Intel GPUs
->>
->> On Fri, Sep 19, 2025 at 06:22:45AM +0000, Kasireddy, Vivek wrote:
->>>> In this case messing with ACS is completely wrong. If the intention is
->>>> to convay a some kind of "private" address representing the physical
->>>> VRAM then you need to use a DMABUF mechanism to do that, not
->> deliver a
->>>> P2P address that the other side cannot access.
->>
->>> I think using a PCI BAR Address works just fine in this case because the Xe
->>> driver bound to PF on the Host can easily determine that it belongs to one
->>> of the VFs and translate it into VRAM Address.
->>
->> That isn't how the P2P or ACS mechansim works in Linux, it is about
->> the actual address used for DMA.
-> Right, but this is not dealing with P2P DMA access between two random,
-> unrelated devices. Instead, this is a special situation involving a GPU PF
-> trying to access the VRAM of a VF that it provisioned and holds a reference
-> on (note that the backing object for VF's VRAM is pinned by Xe on Host
-> as part of resource provisioning). But it gets treated as regular P2P DMA
-> because the exporters rely on pci_p2pdma_distance() or
-> pci_p2pdma_map_type() to determine P2P compatibility.
-> 
-> In other words, I am trying to look at this problem differently: how can the
-> PF be allowed to access the VF's resource that it provisioned, particularly
-> when the VF itself requests the PF to access it and when a hardware path
-> (via PCIe fabric) is not required/supported or doesn't exist at all?
+I'm not sure though. Could you try to read any DBI register at this point and
+see if the hang is observed or not?
 
-Well what exactly is happening here? You have a PF assigned to the host and a VF passed through to a guest, correct?
+LTSSM states are expressed through the DBI registers. So as per my
+understanding, unless the whole DBI register space is inaccessible, LTSSM
+registers should be accessible.
 
-And now the PF (from the host side) wants to access a BAR of the VF?
+- Mani
 
-Regards,
-Christian.
+> Best Regards
+> Richard Zhu
+> > 
+> > > To support this case, don't poll L2 state and apply a simple delay of
+> > > PCIE_PME_TO_L2_TIMEOUT_US(10ms) if the QUIRK_NOL2POLL_IN_PM flag
+> > is
+> > > set in suspend.
+> > >
+> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > 
+> > We need Fixes tag also and you do need to set the flag in relevant glue driver
+> > in this patch itself so that it can cleanly be backported.
+> > 
+> > - Mani
+> > 
+> > > ---
+> > >  .../pci/controller/dwc/pcie-designware-host.c | 34
+> > > +++++++++++++------  drivers/pci/controller/dwc/pcie-designware.h  |
+> > > 4 +++
+> > >  2 files changed, 28 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 9d46d1f0334b..57a1ba08c427 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -1016,15 +1016,29 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+> > >  			return ret;
+> > >  	}
+> > >
+> > > -	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> > > -				val == DW_PCIE_LTSSM_L2_IDLE ||
+> > > -				val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> > > -				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> > > -				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> > > -	if (ret) {
+> > > -		/* Only log message when LTSSM isn't in DETECT or POLL */
+> > > -		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n",
+> > val);
+> > > -		return ret;
+> > > +	if (dwc_quirk(pci, QUIRK_NOL2POLL_IN_PM)) {
+> > > +		/*
+> > > +		 * Add the QUIRK_NOL2_POLL_IN_PM case to avoid the read hang,
+> > > +		 * when LTSSM is not powered in L2/L3/LDn properly.
+> > > +		 *
+> > > +		 * Refer to PCIe r6.0, sec 5.2, fig 5-1 Link Power Management
+> > > +		 * State Flow Diagram. Both L0 and L2/L3 Ready can be
+> > > +		 * transferred to LDn directly. On the LTSSM states poll broken
+> > > +		 * platforms, add a max 10ms delay refer to PCIe r6.0,
+> > > +		 * sec 5.3.3.2.1 PME Synchronization.
+> > > +		 */
+> > > +		mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
+> > > +	} else {
+> > > +		ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> > > +					val == DW_PCIE_LTSSM_L2_IDLE ||
+> > > +					val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> > > +					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> > > +					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> > > +		if (ret) {
+> > > +			/* Only log message when LTSSM isn't in DETECT or POLL */
+> > > +			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n",
+> > val);
+> > > +			return ret;
+> > > +		}
+> > >  	}
+> > >
+> > >  	/*
+> > > @@ -1040,7 +1054,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+> > >
+> > >  	pci->suspended = true;
+> > >
+> > > -	return ret;
+> > > +	return 0;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index 00f52d472dcd..4e5bf6cb6ce8 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -295,6 +295,9 @@
+> > >  /* Default eDMA LLP memory size */
+> > >  #define DMA_LLP_MEM_SIZE		PAGE_SIZE
+> > >
+> > > +#define QUIRK_NOL2POLL_IN_PM		BIT(0)
+> > > +#define dwc_quirk(pci, val)		(pci->quirk_flag & val)
+> > > +
+> > >  struct dw_pcie;
+> > >  struct dw_pcie_rp;
+> > >  struct dw_pcie_ep;
+> > > @@ -504,6 +507,7 @@ struct dw_pcie {
+> > >  	const struct dw_pcie_ops *ops;
+> > >  	u32			version;
+> > >  	u32			type;
+> > > +	u32			quirk_flag;
+> > >  	unsigned long		caps;
+> > >  	int			num_lanes;
+> > >  	int			max_link_speed;
+> > > --
+> > > 2.37.1
+> > >
+> > 
+> > --
+> > மணிவண்ணன் சதாசிவம்
 
-> 
-> Furthermore, note that on a server system with a whitelisted PCIe upstream
-> bridge, this quirk would not be needed at all as pci_p2pdma_map_type()
-> would not have failed and this would have been a purely Xe driver specific
-> problem to solve that would have required just the translation logic and no
-> further changes anywhere. But my goal is to fix it across systems like
-> workstations/desktops that do not typically have whitelisted PCIe upstream
-> bridges.
-> 
->>
->> You can't translate a dma_addr_t to anything in the Xe PF driver
->> anyhow, once it goes through the IOMMU the necessary information is lost.
-> Well, I already tested this path (via IOMMU, with your earlier vfio-pci +
-> dmabuf patch that used dma_map_resource() and also with Leon's latest
-> version) and found that I could still do the translation in the Xe PF driver
-> after first calling iommu_iova_to_phys().
-> 
->> This is a fundamentally broken design to dma map something and
->> then try to reverse engineer the dma_addr_t back to something with
->> meaning.
-> IIUC, I don't think this is a new or radical idea. I think the concept is slightly
-> similar to using bounce buffers to address hardware DMA limitations except
-> that there are no memory copies and the CPU is not involved. And, I don't see
-> any other way to do this because I don't believe the exporter can provide a
-> DMA address that the importer can use directly without any translation, which
-> seems unavoidable in this case.
-> 
->>
->>>> Christian told me dmabuf has such a private address mechanism, so
->>>> please figure out a way to use it..
->>>
->>> Even if such as a mechanism exists, we still need a way to prevent
->>> pci_p2pdma_map_type() from failing when invoked by the exporter (vfio-
->> pci).
->>> Does it make sense to move this quirk into the exporter?
->>
->> When you export a private address through dmabuf the VFIO exporter
->> will not call p2pdma paths when generating it.
-> I have cc'd Christian and Simona. Hopefully, they can help explain how
-> the dmabuf private address mechanism can be used to address my
-> use-case. And, I sincerely hope that it will work, otherwise I don't see
-> any viable path forward for what I am trying to do other than using this
-> quirk and translation. Note that the main reason why I am doing this
-> is because I am seeing at-least ~35% performance gain when running
-> light 3D/Gfx workloads.
-> 
->>
->>> Also, AFAICS, translating BAR Address to VRAM Address can only be
->>> done by the Xe driver bound to PF because it has access to provisioning
->>> data. In other words, vfio-pci would not be able to share any other
->>> address other than the BAR Address because it wouldn't know how to
->>> translate it to VRAM Address.
->>
->> If you have a vfio varient driver then the VF vfio driver could call
->> the Xe driver to create a suitable dmabuf using the private
->> addressing. This is probably what is required here if this is what you
->> are trying to do.
-> Could this not be done via the vendor agnostic vfio-pci (+ dmabuf) driver
-> instead of having to use a separate VF/vfio variant driver?
-> 
->>
->>>> No, don't, it is completely wrong to mess with ACS flags for the
->>>> problem you are trying to solve.
->>
->>> But I am not messing with any ACS flags here. I am just adding a quirk to
->>> sidestep the ACS enforcement check given that the PF to VF access does
->>> not involve the PCIe fabric in this case.
->>
->> Which is completely wrong. These are all based on fabric capability,
->> not based on code in drivers to wrongly "translate" the dma_addr_t.
-> I am not sure why you consider translation to be wrong in this case
-> given that it is done by a trusted entity (Xe PF driver) that is bound to
-> the GPU PF and provisioned the resource that it is trying to access.
-> What limitations do you see with this approach?
-> 
-> Also, the quirk being added in this patch is indeed meant to address a
-> specific case (GPU PF to VF access) to workaround a potential hardware
-> limitation (non-existence of a direct PF to VF DMA access path via the
-> PCIe fabric). Isn't that one of the main ideas behind using quirks -- to
-> address hardware limitations?
-> 
-> Thanks,
-> Vivek
-> 
->>
->> Jason
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
