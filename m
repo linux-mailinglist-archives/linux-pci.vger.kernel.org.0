@@ -1,219 +1,418 @@
-Return-Path: <linux-pci+bounces-36713-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36714-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF265B93295
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 22:04:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A20BB934FE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 23:00:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85A4944446A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 20:04:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3E36168AC8
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 21:00:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C53CE317711;
-	Mon, 22 Sep 2025 20:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00520279DC9;
+	Mon, 22 Sep 2025 21:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BERVX5zb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KVzzMELp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABB01494DB
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 20:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F33244660
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 21:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758571462; cv=none; b=kMfbfQex6lSb6zvStegihmzPMjY+71WfNrK3UrCqUhM/zFhkk0W4RCqkN1mTnoqXNGy7gozaqOxsOSMqyZLNHBU3CsmHD3Gxt3RQNXWqoqx0JiJgef4s87tFDsx+aVyYo+Bdx1ZdtyyUBvURcJiteXHeNso7orPDb89Ilgd/FMY=
+	t=1758574844; cv=none; b=eIUpTtGqhJVG54IFzs5uEtiZSZnz/RlNEtoJ3PapOXeNVgldj63YZjcRn8Sn2AeZO1znBNSNP/NwUV7KqDSkFL/aGOTvX+FKmdZjY9LucxFLktUqIFNB+LK6QFlPkE+S/9Oo5zRKKzW7PpdSc4chbzy8yUttB/sVu04yzjM7fBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758571462; c=relaxed/simple;
-	bh=EmnVXT/LYGFOkZ1qzWiZn9+oG3HTclZfH0SiuSscwf0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=c4jn9pKJWriFn1Xz7JOLWZ/VivHTa8kL2vCAVlhLFWpjDvA7ARpeSQaSuny1tNTH7fpoZiUqj5d/8HtmbmkMQT3ZRUWPsQgLKv8eQWhrg6PF6yCoGXc3Oj9MpsEUueH/OVYhbQAF97IypzMJgTHoAYWyhlNT+lNFkvLPvFbvJdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BERVX5zb; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758571461; x=1790107461;
-  h=date:from:to:cc:subject:message-id;
-  bh=EmnVXT/LYGFOkZ1qzWiZn9+oG3HTclZfH0SiuSscwf0=;
-  b=BERVX5zb8/lQbcdoLKhBMeGZQMZtF+pS1nkknJfEcoIbI4K7FNvNxUqo
-   ddc+1cxEfA03z9SvrBsP5rTtKsTXcguu1xQhYieu32Mlp8GCm/Lc34Psh
-   eR4KxMacqgS1ZOutDoRFUWrmwrCod1d7xnvm9puau7V8mPwaP4HZ2ZSmN
-   SJOjRBAGZ2WTur0Nf/vUiITzlr9XeAvOMfSzABxTAM9GwFIRuBKPXjA1j
-   KOCHHWY63YVW27X7GnVgAtXKrbwpX4HOiSPo0ezHSU/G1sMvBvEWlDj8T
-   wHIjh4o7UKekEbeN5uhEAVAQ+JepXMdaJTD0l32u9SEyiriPUWAI5ufZp
-   g==;
-X-CSE-ConnectionGUID: JDst0OEZR6Gf0vQWXYbuYw==
-X-CSE-MsgGUID: rfskHaCYSSantsdOT+znlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60782612"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60782612"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 13:04:20 -0700
-X-CSE-ConnectionGUID: OFHpUlLZR/OdX4/IkqBMaw==
-X-CSE-MsgGUID: nsnhr71RQbiv9c9jqLhcBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
-   d="scan'208";a="176174205"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 22 Sep 2025 13:04:19 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v0mlk-0002S9-2l;
-	Mon, 22 Sep 2025 20:04:16 +0000
-Date: Tue, 23 Sep 2025 04:03:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/tegra] BUILD SUCCESS
- 4f152338e384a3a47dd61909e1457539fa93f5a4
-Message-ID: <202509230438.FNRF3WTe-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1758574844; c=relaxed/simple;
+	bh=r3BZKXh93YGgH/dUToiacxXnRoM0iGzJBY4eyKdtWC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XugVVuJH02m+mh7LBp3jgvqZNDgJ711xBP08hpdAzdo62qCEJqq1RirKy3aLKds5at0E0DDIgeSPLdjXLDh8pA/autHCjSWEI+gbJ/bi8HNlj1fVIF94k5qNoyHHGT7cg83BFHqP/2S4dPjM7sMqu5QwAHKKY2uKvSfzkPVPWEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KVzzMELp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758574842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u976ILMXRioS/uyYdClouLABKNXfjZw/zLt8Qjs8X1U=;
+	b=KVzzMELpWgWsqQDiNWA9G1E2a5oTTvDz4Gh9Wo00/3Z86jUbaH5NmjkpWVlUBXtIu75QdK
+	Jl3MpbRMx+ejOQNHva/NvIM/S0z2AiyQLs50ADROxSGg/+Tnj7TKdA0khcv9qn1RtjySer
+	ytrljgqktLD90dqqEAsnriPsEF4B99I=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-1HYb0cYHM9eH9QSokdifzg-1; Mon, 22 Sep 2025 17:00:37 -0400
+X-MC-Unique: 1HYb0cYHM9eH9QSokdifzg-1
+X-Mimecast-MFC-AGG-ID: 1HYb0cYHM9eH9QSokdifzg_1758574837
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-4246f1a9723so11507895ab.0
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:00:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758574837; x=1759179637;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u976ILMXRioS/uyYdClouLABKNXfjZw/zLt8Qjs8X1U=;
+        b=cWMlwIvYhVO11E+nDjyrxib5vwclRxFaUpMjO+PiknvjFuZ54zV0QC3xoMy0dQniaT
+         JHckhyzlbY8353fssQstY42ckz/0qYih1h2n0CftrCZFTrO+Kf6+wRf94nkWd+YtUJrv
+         fQetYdGSPsNK+Ci3YWFsju+IZ5p69dn9/5g/wxfS0tGqvA9Obi+TjlHkLON3kBUCj4DG
+         cWcX2l424wTL0kOP0oRr+nXaUvgHnrcS5+eaxPTfNteHBXWTLMfX5RxsIPi2osv7xJQJ
+         A/ZNwbgKZN8Z4pKaJm8Ueh0Dx8LxdpOUKeQWgC+0pvUQCGSQYuClJiaCxcp8lf+lw3IY
+         wYjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOlaU3+Ev/KtG98g45i8Bpym5kksIm3LsXs8gK9TkdhBbt3wfJTqCNuTVBVP30Lno6XuK7AtdxY2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSMgbkiYDQ5rMAF1kqaflRDkBT/LEWPGqkWjXn5ykbaHqne4LP
+	G6PMfKi5a1mKAdb63i9ORISb3dc9Gulj8kBhE1/uuGfpvuBpGZRNLz0DKR9J4rIUyK2ZXF+WBxq
+	KNn2+YX/BGhiXG+6Di3oCcLMmaW4oEy4B1EFCpiePAcv63a7QE9zP5JgOYmHPYA==
+X-Gm-Gg: ASbGncvohQ8zdmQ3yp/pL16dyzz7GszDvIXUjdswsDVULw+gTJnY0fgZFZ9ETQMT/GR
+	b2nm2DFbVp5/xKPQIGCIL4w4ShgN4HxtvBWeKj8TapjO4CPDeDvELuYbbHs7E5FCDHAM+mUtZJv
+	kSAWMgQc6kekjYYc9rIv78KBQH+va4ly2hMTMbslWSunrzwS68iUb23eqrcCGUHhCzac2N6qzmN
+	93IfRyFWMnSUqq0vNicTbUc97kJEr7B7/uzbgI3OqJ80+qqSFXUyDMtfWV00UmXREkceKPK7qAb
+	I7OjokAi4DkD0OaCLSDEwmnK5DkiHl18lotTWfdQDy4=
+X-Received: by 2002:a05:6e02:1564:b0:424:1774:6908 with SMTP id e9e14a558f8ab-42581d411aemr2507595ab.0.1758574836532;
+        Mon, 22 Sep 2025 14:00:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHevCmO0qja9+CaJmqTAnyT70ByyebOs+GgzBvQQPshgkX8jExSjBAAuoPEqWA6rRJFVM2cg==
+X-Received: by 2002:a05:6e02:1564:b0:424:1774:6908 with SMTP id e9e14a558f8ab-42581d411aemr2507095ab.0.1758574835992;
+        Mon, 22 Sep 2025 14:00:35 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d3e337bebsm6192605173.28.2025.09.22.14.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Sep 2025 14:00:35 -0700 (PDT)
+Date: Mon, 22 Sep 2025 15:00:32 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Leon Romanovsky <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org,
+ iommu@lists.linux.dev, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
+ <joro@8bytes.org>, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ Logan Gunthorpe <logang@deltatee.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Sumit
+ Semwal <sumit.semwal@linaro.org>, Vivek Kasireddy
+ <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
+ functionality from memory allocation
+Message-ID: <20250922150032.3e3da410.alex.williamson@redhat.com>
+In-Reply-To: <1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
+References: <cover.1757589589.git.leon@kernel.org>
+	<1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/tegra
-branch HEAD: 4f152338e384a3a47dd61909e1457539fa93f5a4  PCI: tegra194: Fix duplicate PLL disable in pex_ep_event_pex_rst_assert()
+On Thu, 11 Sep 2025 14:33:07 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
 
-elapsed time: 727m
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Refactor the PCI P2PDMA subsystem to separate the core peer-to-peer DMA
+> functionality from the optional memory allocation layer. This creates a
+> two-tier architecture:
+> 
+> The core layer provides P2P mapping functionality for physical addresses
+> based on PCI device MMIO BARs and integrates with the DMA API for
+> mapping operations. This layer is required for all P2PDMA users.
+> 
+> The optional upper layer provides memory allocation capabilities
+> including gen_pool allocator, struct page support, and sysfs interface
+> for user space access.
+> 
+> This separation allows subsystems like VFIO to use only the core P2P
+> mapping functionality without the overhead of memory allocation features
+> they don't need. The core functionality is now available through the
+> new pci_p2pdma_enable() function that returns a p2pdma_provider
+> structure.
+> 
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/pci/p2pdma.c       | 129 +++++++++++++++++++++++++++----------
+>  include/linux/pci-p2pdma.h |   5 ++
+>  2 files changed, 100 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 176a99232fdca..c22cbb3a26030 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -25,11 +25,12 @@ struct pci_p2pdma {
+>  	struct gen_pool *pool;
+>  	bool p2pmem_published;
+>  	struct xarray map_types;
+> +	struct p2pdma_provider mem[PCI_STD_NUM_BARS];
+>  };
+>  
+>  struct pci_p2pdma_pagemap {
+>  	struct dev_pagemap pgmap;
+> -	struct p2pdma_provider mem;
+> +	struct p2pdma_provider *mem;
+>  };
+>  
+>  static struct pci_p2pdma_pagemap *to_p2p_pgmap(struct dev_pagemap *pgmap)
+> @@ -204,7 +205,7 @@ static void p2pdma_page_free(struct page *page)
+>  	struct pci_p2pdma_pagemap *pgmap = to_p2p_pgmap(page_pgmap(page));
+>  	/* safe to dereference while a reference is held to the percpu ref */
+>  	struct pci_p2pdma *p2pdma = rcu_dereference_protected(
+> -		to_pci_dev(pgmap->mem.owner)->p2pdma, 1);
+> +		to_pci_dev(pgmap->mem->owner)->p2pdma, 1);
+>  	struct percpu_ref *ref;
+>  
+>  	gen_pool_free_owner(p2pdma->pool, (uintptr_t)page_to_virt(page),
+> @@ -227,44 +228,93 @@ static void pci_p2pdma_release(void *data)
+>  
+>  	/* Flush and disable pci_alloc_p2p_mem() */
+>  	pdev->p2pdma = NULL;
+> -	synchronize_rcu();
+> +	if (p2pdma->pool)
+> +		synchronize_rcu();
+> +	xa_destroy(&p2pdma->map_types);
+> +
+> +	if (!p2pdma->pool)
+> +		return;
+>  
+>  	gen_pool_destroy(p2pdma->pool);
+>  	sysfs_remove_group(&pdev->dev.kobj, &p2pmem_group);
+> -	xa_destroy(&p2pdma->map_types);
+>  }
+>  
+> -static int pci_p2pdma_setup(struct pci_dev *pdev)
+> +/**
+> + * pcim_p2pdma_enable - Enable peer-to-peer DMA support for a PCI device
+> + * @pdev: The PCI device to enable P2PDMA for
+> + * @bar: BAR index to get provider
+> + *
+> + * This function initializes the peer-to-peer DMA infrastructure for a PCI
+> + * device. It allocates and sets up the necessary data structures to support
+> + * P2PDMA operations, including mapping type tracking.
+> + */
+> +struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar)
+>  {
+> -	int error = -ENOMEM;
+>  	struct pci_p2pdma *p2p;
+> +	int i, ret;
+> +
+> +	p2p = rcu_dereference_protected(pdev->p2pdma, 1);
+> +	if (p2p)
+> +		/* PCI device was "rebound" to the driver */
+> +		return &p2p->mem[bar];
+>  
 
-configs tested: 126
-configs skipped: 5
+This seems like two separate functions rolled into one, an 'initialize
+providers' and a 'get provider for BAR'.  The comment above even makes
+it sound like only a driver re-probing a device would encounter this
+branch, but the use case later in vfio-pci shows it to be the common
+case to iterate BARs for a device.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+But then later in patch 8/ and again in 10/ why exactly do we cache
+the provider on the vfio_pci_core_device rather than ask for it on
+demand from the p2pdma?
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250922    gcc-8.5.0
-arc                   randconfig-002-20250922    gcc-9.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                       imx_v6_v7_defconfig    clang-16
-arm                   randconfig-001-20250922    clang-22
-arm                   randconfig-002-20250922    gcc-12.5.0
-arm                   randconfig-003-20250922    clang-17
-arm                   randconfig-004-20250922    gcc-8.5.0
-arm                    vt8500_v6_v7_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250922    gcc-8.5.0
-arm64                 randconfig-002-20250922    gcc-15.1.0
-arm64                 randconfig-003-20250922    clang-22
-arm64                 randconfig-004-20250922    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250922    gcc-15.1.0
-csky                  randconfig-002-20250922    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250922    clang-20
-hexagon               randconfig-002-20250922    clang-19
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20250922    clang-20
-i386        buildonly-randconfig-002-20250922    gcc-14
-i386        buildonly-randconfig-003-20250922    gcc-14
-i386        buildonly-randconfig-004-20250922    gcc-14
-i386        buildonly-randconfig-005-20250922    clang-20
-i386        buildonly-randconfig-006-20250922    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250922    clang-22
-loongarch             randconfig-002-20250922    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           jazz_defconfig    clang-17
-mips                   sb1250_swarm_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250922    gcc-11.5.0
-nios2                 randconfig-002-20250922    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                    or1ksim_defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250922    gcc-8.5.0
-parisc                randconfig-002-20250922    gcc-9.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250922    clang-22
-powerpc               randconfig-002-20250922    gcc-12.5.0
-powerpc               randconfig-003-20250922    clang-17
-powerpc64             randconfig-002-20250922    clang-20
-powerpc64             randconfig-003-20250922    clang-17
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250922    clang-22
-riscv                 randconfig-002-20250922    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250922    gcc-8.5.0
-s390                  randconfig-002-20250922    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                 kfr2r09-romimage_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250922    gcc-15.1.0
-sh                    randconfig-002-20250922    gcc-11.5.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250922    gcc-15.1.0
-sparc                 randconfig-002-20250922    gcc-14.3.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250922    gcc-12.5.0
-sparc64               randconfig-002-20250922    gcc-14.3.0
-um                               alldefconfig    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20250922    gcc-14
-um                    randconfig-002-20250922    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250922    clang-20
-x86_64      buildonly-randconfig-002-20250922    gcc-13
-x86_64      buildonly-randconfig-003-20250922    gcc-13
-x86_64      buildonly-randconfig-004-20250922    clang-20
-x86_64      buildonly-randconfig-005-20250922    clang-20
-x86_64      buildonly-randconfig-006-20250922    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250922    gcc-9.5.0
-xtensa                randconfig-002-20250922    gcc-11.5.0
+It also seems like the coordination of a valid provider is ad-hoc
+between p2pdma and vfio-pci.  For example, this only fills providers
+for MMIO BARs and vfio-pci validates that dmabuf operations are for
+MMIO BARs, but it would be more consistent if vfio-pci relied on p2pdma
+to give it a valid provider for a given BAR.  Thanks,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alex
+
+>  	p2p = devm_kzalloc(&pdev->dev, sizeof(*p2p), GFP_KERNEL);
+>  	if (!p2p)
+> -		return -ENOMEM;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	xa_init(&p2p->map_types);
+> +	/*
+> +	 * Iterate over all standard PCI BARs and record only those that
+> +	 * correspond to MMIO regions. Skip non-memory resources (e.g. I/O
+> +	 * port BARs) since they cannot be used for peer-to-peer (P2P)
+> +	 * transactions.
+> +	 */
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (!(pci_resource_flags(pdev, i) & IORESOURCE_MEM))
+> +			continue;
+>  
+> -	p2p->pool = gen_pool_create(PAGE_SHIFT, dev_to_node(&pdev->dev));
+> -	if (!p2p->pool)
+> -		goto out;
+> +		p2p->mem[i].owner = &pdev->dev;
+> +		p2p->mem[i].bus_offset =
+> +			pci_bus_address(pdev, i) - pci_resource_start(pdev, i);
+> +	}
+>  
+> -	error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_release, pdev);
+> -	if (error)
+> -		goto out_pool_destroy;
+> +	ret = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_release, pdev);
+> +	if (ret)
+> +		goto out_p2p;
+>  
+> -	error = sysfs_create_group(&pdev->dev.kobj, &p2pmem_group);
+> -	if (error)
+> +	rcu_assign_pointer(pdev->p2pdma, p2p);
+> +	return &p2p->mem[bar];
+> +
+> +out_p2p:
+> +	devm_kfree(&pdev->dev, p2p);
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(pcim_p2pdma_enable);
+> +
+> +static int pci_p2pdma_setup_pool(struct pci_dev *pdev)
+> +{
+> +	struct pci_p2pdma *p2pdma;
+> +	int ret;
+> +
+> +	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+> +	if (p2pdma->pool)
+> +		/* We already setup pools, do nothing, */
+> +		return 0;
+> +
+> +	p2pdma->pool = gen_pool_create(PAGE_SHIFT, dev_to_node(&pdev->dev));
+> +	if (!p2pdma->pool)
+> +		return -ENOMEM;
+> +
+> +	ret = sysfs_create_group(&pdev->dev.kobj, &p2pmem_group);
+> +	if (ret)
+>  		goto out_pool_destroy;
+>  
+> -	rcu_assign_pointer(pdev->p2pdma, p2p);
+>  	return 0;
+>  
+>  out_pool_destroy:
+> -	gen_pool_destroy(p2p->pool);
+> -out:
+> -	devm_kfree(&pdev->dev, p2p);
+> -	return error;
+> +	gen_pool_destroy(p2pdma->pool);
+> +	p2pdma->pool = NULL;
+> +	return ret;
+>  }
+>  
+>  static void pci_p2pdma_unmap_mappings(void *data)
+> @@ -276,7 +326,7 @@ static void pci_p2pdma_unmap_mappings(void *data)
+>  	 * unmap_mapping_range() on the inode, teardown any existing userspace
+>  	 * mappings and prevent new ones from being created.
+>  	 */
+> -	sysfs_remove_file_from_group(&p2p_pgmap->mem.owner->kobj,
+> +	sysfs_remove_file_from_group(&p2p_pgmap->mem->owner->kobj,
+>  				     &p2pmem_alloc_attr.attr,
+>  				     p2pmem_group.name);
+>  }
+> @@ -295,6 +345,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  			    u64 offset)
+>  {
+>  	struct pci_p2pdma_pagemap *p2p_pgmap;
+> +	struct p2pdma_provider *mem;
+>  	struct dev_pagemap *pgmap;
+>  	struct pci_p2pdma *p2pdma;
+>  	void *addr;
+> @@ -312,15 +363,25 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  	if (size + offset > pci_resource_len(pdev, bar))
+>  		return -EINVAL;
+>  
+> -	if (!pdev->p2pdma) {
+> -		error = pci_p2pdma_setup(pdev);
+> +	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+> +	if (!p2pdma) {
+> +		mem = pcim_p2pdma_enable(pdev, bar);
+> +		if (IS_ERR(mem))
+> +			return PTR_ERR(mem);
+> +
+> +		error = pci_p2pdma_setup_pool(pdev);
+>  		if (error)
+>  			return error;
+> -	}
+> +
+> +		p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+> +	} else
+> +		mem = &p2pdma->mem[bar];
+>  
+>  	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
+> -	if (!p2p_pgmap)
+> -		return -ENOMEM;
+> +	if (!p2p_pgmap) {
+> +		error = -ENOMEM;
+> +		goto free_pool;
+> +	}
+>  
+>  	pgmap = &p2p_pgmap->pgmap;
+>  	pgmap->range.start = pci_resource_start(pdev, bar) + offset;
+> @@ -328,9 +389,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  	pgmap->nr_range = 1;
+>  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
+>  	pgmap->ops = &p2pdma_pgmap_ops;
+> -	p2p_pgmap->mem.owner = &pdev->dev;
+> -	p2p_pgmap->mem.bus_offset =
+> -		pci_bus_address(pdev, bar) - pci_resource_start(pdev, bar);
+> +	p2p_pgmap->mem = mem;
+>  
+>  	addr = devm_memremap_pages(&pdev->dev, pgmap);
+>  	if (IS_ERR(addr)) {
+> @@ -343,7 +402,6 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  	if (error)
+>  		goto pages_free;
+>  
+> -	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+>  	error = gen_pool_add_owner(p2pdma->pool, (unsigned long)addr,
+>  			pci_bus_address(pdev, bar) + offset,
+>  			range_len(&pgmap->range), dev_to_node(&pdev->dev),
+> @@ -359,7 +417,10 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  pages_free:
+>  	devm_memunmap_pages(&pdev->dev, pgmap);
+>  pgmap_free:
+> -	devm_kfree(&pdev->dev, pgmap);
+> +	devm_kfree(&pdev->dev, p2p_pgmap);
+> +free_pool:
+> +	sysfs_remove_group(&pdev->dev.kobj, &p2pmem_group);
+> +	gen_pool_destroy(p2pdma->pool);
+>  	return error;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
+> @@ -1008,11 +1069,11 @@ void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
+>  {
+>  	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(page_pgmap(page));
+>  
+> -	if (state->mem == &p2p_pgmap->mem)
+> +	if (state->mem == p2p_pgmap->mem)
+>  		return;
+>  
+> -	state->mem = &p2p_pgmap->mem;
+> -	state->map = pci_p2pdma_map_type(&p2p_pgmap->mem, dev);
+> +	state->mem = p2p_pgmap->mem;
+> +	state->map = pci_p2pdma_map_type(p2p_pgmap->mem, dev);
+>  }
+>  
+>  /**
+> diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+> index eef96636c67e6..888ad7b0c54cf 100644
+> --- a/include/linux/pci-p2pdma.h
+> +++ b/include/linux/pci-p2pdma.h
+> @@ -27,6 +27,7 @@ struct p2pdma_provider {
+>  };
+>  
+>  #ifdef CONFIG_PCI_P2PDMA
+> +struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar);
+>  int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  		u64 offset);
+>  int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+> @@ -45,6 +46,10 @@ int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
+>  ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
+>  			       bool use_p2pdma);
+>  #else /* CONFIG_PCI_P2PDMA */
+> +static inline struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+>  static inline int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar,
+>  		size_t size, u64 offset)
+>  {
+
 
