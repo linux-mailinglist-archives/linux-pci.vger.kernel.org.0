@@ -1,418 +1,245 @@
-Return-Path: <linux-pci+bounces-36714-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36715-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A20BB934FE
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 23:00:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3A2FB93676
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 23:52:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3E36168AC8
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 21:00:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE1F5162700
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 21:52:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00520279DC9;
-	Mon, 22 Sep 2025 21:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090ED25A34F;
+	Mon, 22 Sep 2025 21:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KVzzMELp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hnP47hnX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F33244660
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 21:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B9D2F49F2
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 21:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758574844; cv=none; b=eIUpTtGqhJVG54IFzs5uEtiZSZnz/RlNEtoJ3PapOXeNVgldj63YZjcRn8Sn2AeZO1znBNSNP/NwUV7KqDSkFL/aGOTvX+FKmdZjY9LucxFLktUqIFNB+LK6QFlPkE+S/9Oo5zRKKzW7PpdSc4chbzy8yUttB/sVu04yzjM7fBY=
+	t=1758577910; cv=none; b=Z3WC6B6xO4b9GLQ/mQ9g8TI0B8bjyDd3afhK60D/gvnTydO3zoD86mcf+08vYbGRTtJONyMexlux4CRnUarjY8ap/2PhoNMAjexgc5LxfrF5rLS2upNnGoItjyCLT0pKCcSQXrqMAD1qg8gknO5X9RlQ51hG+PHlEG2K5ySv0Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758574844; c=relaxed/simple;
-	bh=r3BZKXh93YGgH/dUToiacxXnRoM0iGzJBY4eyKdtWC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XugVVuJH02m+mh7LBp3jgvqZNDgJ711xBP08hpdAzdo62qCEJqq1RirKy3aLKds5at0E0DDIgeSPLdjXLDh8pA/autHCjSWEI+gbJ/bi8HNlj1fVIF94k5qNoyHHGT7cg83BFHqP/2S4dPjM7sMqu5QwAHKKY2uKvSfzkPVPWEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KVzzMELp; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1758577910; c=relaxed/simple;
+	bh=IO+2VJI4ZMWwrOEJVHLzPh+dWD6p3JDoCjrwZpVkmHA=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZL1hu97FppYz2KAfHH6z3sEdI4Elc8ftxAc3lhuhgRo4P7RHpAseNXvXtOHfob9WHsPGrjk30uz+dopDwuawTsgNM2ilmzlUFXvVudlR2scLc9TjKRbBrolcHC2YgGi71T6PdW8Sao030jxINFsnHQ6JCbm3m+IOnvM5cogo3gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hnP47hnX; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758574842;
+	s=mimecast20190719; t=1758577904;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u976ILMXRioS/uyYdClouLABKNXfjZw/zLt8Qjs8X1U=;
-	b=KVzzMELpWgWsqQDiNWA9G1E2a5oTTvDz4Gh9Wo00/3Z86jUbaH5NmjkpWVlUBXtIu75QdK
-	Jl3MpbRMx+ejOQNHva/NvIM/S0z2AiyQLs50ADROxSGg/+Tnj7TKdA0khcv9qn1RtjySer
-	ytrljgqktLD90dqqEAsnriPsEF4B99I=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=FEinhsYu5ZAzzk9ZjrHV61k9LGkgCm2NxTV8yeK83cc=;
+	b=hnP47hnXJOhxb3/VmTwR7sAj+ymhfMGtm/GL4R5JlMvdjiUQe9aV0I6j5GZ5o35mR2OhXs
+	8noZK0NTTzTSjk3uj2UWYh9naSvhbXcc4VTry5hn3dafERUk4zpipdsz42NvlBeXLsLscC
+	5LKG16WlD2z4HIokLDUhXY+jP5QdrNA=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-128-1HYb0cYHM9eH9QSokdifzg-1; Mon, 22 Sep 2025 17:00:37 -0400
-X-MC-Unique: 1HYb0cYHM9eH9QSokdifzg-1
-X-Mimecast-MFC-AGG-ID: 1HYb0cYHM9eH9QSokdifzg_1758574837
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-4246f1a9723so11507895ab.0
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:00:37 -0700 (PDT)
+ us-mta-321-9RxdZM_QPbKAOjOTG4r0GQ-1; Mon, 22 Sep 2025 17:51:42 -0400
+X-MC-Unique: 9RxdZM_QPbKAOjOTG4r0GQ-1
+X-Mimecast-MFC-AGG-ID: 9RxdZM_QPbKAOjOTG4r0GQ_1758577902
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-804512c4373so976043585a.3
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:51:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758574837; x=1759179637;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u976ILMXRioS/uyYdClouLABKNXfjZw/zLt8Qjs8X1U=;
-        b=cWMlwIvYhVO11E+nDjyrxib5vwclRxFaUpMjO+PiknvjFuZ54zV0QC3xoMy0dQniaT
-         JHckhyzlbY8353fssQstY42ckz/0qYih1h2n0CftrCZFTrO+Kf6+wRf94nkWd+YtUJrv
-         fQetYdGSPsNK+Ci3YWFsju+IZ5p69dn9/5g/wxfS0tGqvA9Obi+TjlHkLON3kBUCj4DG
-         cWcX2l424wTL0kOP0oRr+nXaUvgHnrcS5+eaxPTfNteHBXWTLMfX5RxsIPi2osv7xJQJ
-         A/ZNwbgKZN8Z4pKaJm8Ueh0Dx8LxdpOUKeQWgC+0pvUQCGSQYuClJiaCxcp8lf+lw3IY
-         wYjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOlaU3+Ev/KtG98g45i8Bpym5kksIm3LsXs8gK9TkdhBbt3wfJTqCNuTVBVP30Lno6XuK7AtdxY2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSMgbkiYDQ5rMAF1kqaflRDkBT/LEWPGqkWjXn5ykbaHqne4LP
-	G6PMfKi5a1mKAdb63i9ORISb3dc9Gulj8kBhE1/uuGfpvuBpGZRNLz0DKR9J4rIUyK2ZXF+WBxq
-	KNn2+YX/BGhiXG+6Di3oCcLMmaW4oEy4B1EFCpiePAcv63a7QE9zP5JgOYmHPYA==
-X-Gm-Gg: ASbGncvohQ8zdmQ3yp/pL16dyzz7GszDvIXUjdswsDVULw+gTJnY0fgZFZ9ETQMT/GR
-	b2nm2DFbVp5/xKPQIGCIL4w4ShgN4HxtvBWeKj8TapjO4CPDeDvELuYbbHs7E5FCDHAM+mUtZJv
-	kSAWMgQc6kekjYYc9rIv78KBQH+va4ly2hMTMbslWSunrzwS68iUb23eqrcCGUHhCzac2N6qzmN
-	93IfRyFWMnSUqq0vNicTbUc97kJEr7B7/uzbgI3OqJ80+qqSFXUyDMtfWV00UmXREkceKPK7qAb
-	I7OjokAi4DkD0OaCLSDEwmnK5DkiHl18lotTWfdQDy4=
-X-Received: by 2002:a05:6e02:1564:b0:424:1774:6908 with SMTP id e9e14a558f8ab-42581d411aemr2507595ab.0.1758574836532;
-        Mon, 22 Sep 2025 14:00:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHevCmO0qja9+CaJmqTAnyT70ByyebOs+GgzBvQQPshgkX8jExSjBAAuoPEqWA6rRJFVM2cg==
-X-Received: by 2002:a05:6e02:1564:b0:424:1774:6908 with SMTP id e9e14a558f8ab-42581d411aemr2507095ab.0.1758574835992;
-        Mon, 22 Sep 2025 14:00:35 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d3e337bebsm6192605173.28.2025.09.22.14.00.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 14:00:35 -0700 (PDT)
-Date: Mon, 22 Sep 2025 15:00:32 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org,
- iommu@lists.linux.dev, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
- <joro@8bytes.org>, kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
- Logan Gunthorpe <logang@deltatee.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Sumit
- Semwal <sumit.semwal@linaro.org>, Vivek Kasireddy
- <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
- functionality from memory allocation
-Message-ID: <20250922150032.3e3da410.alex.williamson@redhat.com>
-In-Reply-To: <1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
-References: <cover.1757589589.git.leon@kernel.org>
-	<1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
-Organization: Red Hat
+        d=1e100.net; s=20230601; t=1758577902; x=1759182702;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FEinhsYu5ZAzzk9ZjrHV61k9LGkgCm2NxTV8yeK83cc=;
+        b=S4XPHkQNlmKHTNEQHQIJZqskfRi2BnN8gHnUw+cjcxMHLdK+bY9iTxB6oy7iGVllqY
+         mPDbQ9liP7qp00guXyN2ADZvI3eTpNVm2xYXGgkgQCJAjOB097+6CHGAK4AfsvlyE5bn
+         lYS9w/RTJdbwZuQEx0xf2HOkh7x7ANfNITGWIHUgKoGZuRK/UALwZxXTLqFW7aOMBm9E
+         Wfs3HY1tuiANg+9fdNeUNTNoFe3zbb7bxZTEifkFiLzMn2/0tiVooGa0uT6niAs7+yN4
+         UhbiRd6PVAvIoELOd2D0huSXiensXnvfENWqxkmya2WnioekYWSs4x/HmwZ5CE9BDJaF
+         x3Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXH02JjwZTzop01m+Dl9N1AV8CfETWpTpgNIHYeQh4HAqvMtRfrv01UQxe+MNgJkFdv79pRtFT597c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkLUMOjo6xLq/kvkFp1/9nGR2F3j789Ti4nSUN6aNBS5ZuOjJ+
+	tHYcq/MDE25a6BpEJDYfNcqoJJQ5AHbDS6Ymp2lgI7mtC7XYHS34RXZ4UUqU1JWI0bSWJok0qAa
+	wNC6Qi/zunVqYCkjmXyu6HFqB0awE8Bv6eqTyLwgGOQkq8Nwxm8RFcWGlOP0WyA==
+X-Gm-Gg: ASbGnctxWQVFgIYuF64el/xCqXAPApsLwsZnXlcx+ordwPIJCwW701DLx11ZqnlQsQS
+	jU5SZQh5CELGZuTURGErGNv6DXEsJ8MfPvtfDPFV7MFLUqgiefoVGFykV0LmG8WNgYOuwpdjx9x
+	LtXGw96DvarPApKBoCiNluG5PNPr3QEHTYWNM01wsn7a9v/uuLK1SCyWccFBgFhnQQZEROJk9Qi
+	lCzWN8dsHjcX69ND3v4DE9gLubT36UjPlIalfyegBl2N8Snlgnhc/Zkhnx2JRQhmYlg7mwnShYI
+	KngGU+quZXDut2542wb5lenJhdhLEcQV+PsJGvTzdq0rJl4BlW3Kpu9qH1nqR9DuQK5fgV33dIN
+	UUq8e7THjJaM=
+X-Received: by 2002:a05:620a:2687:b0:833:b213:c062 with SMTP id af79cd13be357-85173701bf6mr62640585a.40.1758577901725;
+        Mon, 22 Sep 2025 14:51:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJb1ojM9Iwcf/vhwYlmDHzcaqEu1qarCseJ6sSvAXpTXynFpjhKro6kJnwCmmx+9EwGXyDTw==
+X-Received: by 2002:a05:620a:2687:b0:833:b213:c062 with SMTP id af79cd13be357-85173701bf6mr62637285a.40.1758577901241;
+        Mon, 22 Sep 2025 14:51:41 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8363198b0fbsm869143885a.50.2025.09.22.14.51.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Sep 2025 14:51:40 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <f1545ac2-9a4e-49e9-b918-205f617ec900@redhat.com>
+Date: Mon, 22 Sep 2025 17:51:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/33] PCI: Protect against concurrent change of
+ housekeeping cpumask
+To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Peter Zijlstra <peterz@infradead.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, linux-pci@vger.kernel.org
+References: <20250829154814.47015-1-frederic@kernel.org>
+ <20250829154814.47015-3-frederic@kernel.org>
+ <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
+ <aMwQcVZeTwuk2Q8A@localhost.localdomain>
+Content-Language: en-US
+In-Reply-To: <aMwQcVZeTwuk2Q8A@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Sep 2025 14:33:07 +0300
-Leon Romanovsky <leon@kernel.org> wrote:
+On 9/18/25 10:00 AM, Frederic Weisbecker wrote:
+> Le Fri, Aug 29, 2025 at 06:01:17PM -0400, Waiman Long a écrit :
+>> On 8/29/25 11:47 AM, Frederic Weisbecker wrote:
+>>> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
+>>> therefore be made modifyable at runtime. Synchronize against the cpumask
+>>> update using RCU.
+>>>
+>>> The RCU locked section includes both the housekeeping CPU target
+>>> election for the PCI probe work and the work enqueue.
+>>>
+>>> This way the housekeeping update side will simply need to flush the
+>>> pending related works after updating the housekeeping mask in order to
+>>> make sure that no PCI work ever executes on an isolated CPU.
+>>>
+>>> Signed-off-by: Frederic Weisbecker<frederic@kernel.org>
+>>> ---
+>>>    drivers/pci/pci-driver.c | 40 +++++++++++++++++++++++++++++++---------
+>>>    1 file changed, 31 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>> index 63665240ae87..cf2b83004886 100644
+>>> --- a/drivers/pci/pci-driver.c
+>>> +++ b/drivers/pci/pci-driver.c
+>>> @@ -302,9 +302,8 @@ struct drv_dev_and_id {
+>>>    	const struct pci_device_id *id;
+>>>    };
+>>> -static long local_pci_probe(void *_ddi)
+>>> +static int local_pci_probe(struct drv_dev_and_id *ddi)
+>>>    {
+>>> -	struct drv_dev_and_id *ddi = _ddi;
+>>>    	struct pci_dev *pci_dev = ddi->dev;
+>>>    	struct pci_driver *pci_drv = ddi->drv;
+>>>    	struct device *dev = &pci_dev->dev;
+>>> @@ -338,6 +337,19 @@ static long local_pci_probe(void *_ddi)
+>>>    	return 0;
+>>>    }
+>>> +struct pci_probe_arg {
+>>> +	struct drv_dev_and_id *ddi;
+>>> +	struct work_struct work;
+>>> +	int ret;
+>>> +};
+>>> +
+>>> +static void local_pci_probe_callback(struct work_struct *work)
+>>> +{
+>>> +	struct pci_probe_arg *arg = container_of(work, struct pci_probe_arg, work);
+>>> +
+>>> +	arg->ret = local_pci_probe(arg->ddi);
+>>> +}
+>>> +
+>>>    static bool pci_physfn_is_probed(struct pci_dev *dev)
+>>>    {
+>>>    #ifdef CONFIG_PCI_IOV
+>>> @@ -362,34 +374,44 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>>>    	dev->is_probed = 1;
+>>>    	cpu_hotplug_disable();
+>>> -
+>>>    	/*
+>>>    	 * Prevent nesting work_on_cpu() for the case where a Virtual Function
+>>>    	 * device is probed from work_on_cpu() of the Physical device.
+>>>    	 */
+>>>    	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
+>>>    	    pci_physfn_is_probed(dev)) {
+>>> -		cpu = nr_cpu_ids;
+>>> +		error = local_pci_probe(&ddi);
+>>>    	} else {
+>>>    		cpumask_var_t wq_domain_mask;
+>>> +		struct pci_probe_arg arg = { .ddi = &ddi };
+>>> +
+>>> +		INIT_WORK_ONSTACK(&arg.work, local_pci_probe_callback);
+>>>    		if (!zalloc_cpumask_var(&wq_domain_mask, GFP_KERNEL)) {
+>>>    			error = -ENOMEM;
+>>>    			goto out;
+>>>    		}
+>>> +
+>>> +		rcu_read_lock();
+>>>    		cpumask_and(wq_domain_mask,
+>>>    			    housekeeping_cpumask(HK_TYPE_WQ),
+>>>    			    housekeeping_cpumask(HK_TYPE_DOMAIN));
+>>>    		cpu = cpumask_any_and(cpumask_of_node(node),
+>>>    				      wq_domain_mask);
+>>> +		if (cpu < nr_cpu_ids) {
+>>> +			schedule_work_on(cpu, &arg.work);
+>>> +			rcu_read_unlock();
+>>> +			flush_work(&arg.work);
+>>> +			error = arg.ret;
+>>> +		} else {
+>>> +			rcu_read_unlock();
+>>> +			error = local_pci_probe(&ddi);
+>>> +		}
+>>> +
+>>>    		free_cpumask_var(wq_domain_mask);
+>>> +		destroy_work_on_stack(&arg.work);
+>>>    	}
+>>> -
+>>> -	if (cpu < nr_cpu_ids)
+>>> -		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+>>> -	else
+>>> -		error = local_pci_probe(&ddi);
+>>>    out:
+>>>    	dev->is_probed = 0;
+>>>    	cpu_hotplug_enable();
+>> A question. Is the purpose of open-coding work_on_cpu() to avoid calling
+>> INIT_WORK_ONSTACK() and destroy_work_on_stack() in RCU read-side critical
+>> section? These two macro/function may call debugobjects code which I don't
+>> know if they are allowed inside rcu_read_lock() critical section.
+>>
+>> Cheers, Longman
+> No the point is that I need to keep the target selection
+> (housekeeping_cpumask() read) and the work queue within the same
+> RCU critical section so that things are synchronized that way:
+>
+>      CPU 0                                          CPU 1
+>      -----                                          -----
+>      rcu_read_lock()                                housekeeping_update()
+>      cpu = cpumask_any(housekeeping_cpumask(...))       housekeeping_cpumask &= ~val
+>      queue_work_on(cpu, pci_probe_wq, work)             synchronize_rcu()
+>      rcu_read_unlock()                                  flush_workqueue(pci_probe_wq)
+>      flush_work(work)
+>          
+> And I can't include the whole work_on_cpu() within rcu_read_lock() because
+> flush_work() may sleep.
 
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Refactor the PCI P2PDMA subsystem to separate the core peer-to-peer DMA
-> functionality from the optional memory allocation layer. This creates a
-> two-tier architecture:
-> 
-> The core layer provides P2P mapping functionality for physical addresses
-> based on PCI device MMIO BARs and integrates with the DMA API for
-> mapping operations. This layer is required for all P2PDMA users.
-> 
-> The optional upper layer provides memory allocation capabilities
-> including gen_pool allocator, struct page support, and sysfs interface
-> for user space access.
-> 
-> This separation allows subsystems like VFIO to use only the core P2P
-> mapping functionality without the overhead of memory allocation features
-> they don't need. The core functionality is now available through the
-> new pci_p2pdma_enable() function that returns a p2pdma_provider
-> structure.
-> 
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/pci/p2pdma.c       | 129 +++++++++++++++++++++++++++----------
->  include/linux/pci-p2pdma.h |   5 ++
->  2 files changed, 100 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 176a99232fdca..c22cbb3a26030 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -25,11 +25,12 @@ struct pci_p2pdma {
->  	struct gen_pool *pool;
->  	bool p2pmem_published;
->  	struct xarray map_types;
-> +	struct p2pdma_provider mem[PCI_STD_NUM_BARS];
->  };
->  
->  struct pci_p2pdma_pagemap {
->  	struct dev_pagemap pgmap;
-> -	struct p2pdma_provider mem;
-> +	struct p2pdma_provider *mem;
->  };
->  
->  static struct pci_p2pdma_pagemap *to_p2p_pgmap(struct dev_pagemap *pgmap)
-> @@ -204,7 +205,7 @@ static void p2pdma_page_free(struct page *page)
->  	struct pci_p2pdma_pagemap *pgmap = to_p2p_pgmap(page_pgmap(page));
->  	/* safe to dereference while a reference is held to the percpu ref */
->  	struct pci_p2pdma *p2pdma = rcu_dereference_protected(
-> -		to_pci_dev(pgmap->mem.owner)->p2pdma, 1);
-> +		to_pci_dev(pgmap->mem->owner)->p2pdma, 1);
->  	struct percpu_ref *ref;
->  
->  	gen_pool_free_owner(p2pdma->pool, (uintptr_t)page_to_virt(page),
-> @@ -227,44 +228,93 @@ static void pci_p2pdma_release(void *data)
->  
->  	/* Flush and disable pci_alloc_p2p_mem() */
->  	pdev->p2pdma = NULL;
-> -	synchronize_rcu();
-> +	if (p2pdma->pool)
-> +		synchronize_rcu();
-> +	xa_destroy(&p2pdma->map_types);
-> +
-> +	if (!p2pdma->pool)
-> +		return;
->  
->  	gen_pool_destroy(p2pdma->pool);
->  	sysfs_remove_group(&pdev->dev.kobj, &p2pmem_group);
-> -	xa_destroy(&p2pdma->map_types);
->  }
->  
-> -static int pci_p2pdma_setup(struct pci_dev *pdev)
-> +/**
-> + * pcim_p2pdma_enable - Enable peer-to-peer DMA support for a PCI device
-> + * @pdev: The PCI device to enable P2PDMA for
-> + * @bar: BAR index to get provider
-> + *
-> + * This function initializes the peer-to-peer DMA infrastructure for a PCI
-> + * device. It allocates and sets up the necessary data structures to support
-> + * P2PDMA operations, including mapping type tracking.
-> + */
-> +struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar)
->  {
-> -	int error = -ENOMEM;
->  	struct pci_p2pdma *p2p;
-> +	int i, ret;
-> +
-> +	p2p = rcu_dereference_protected(pdev->p2pdma, 1);
-> +	if (p2p)
-> +		/* PCI device was "rebound" to the driver */
-> +		return &p2p->mem[bar];
->  
+Right, you are trying to avoid flush_work() within rcu_read_lock() 
+critical section. It makes it easier to review if you mention that in 
+the commit log.
 
-This seems like two separate functions rolled into one, an 'initialize
-providers' and a 'get provider for BAR'.  The comment above even makes
-it sound like only a driver re-probing a device would encounter this
-branch, but the use case later in vfio-pci shows it to be the common
-case to iterate BARs for a device.
+>
+> Also now that you mention it, I need to create that pci_probe_wq and flush it :-)
 
-But then later in patch 8/ and again in 10/ why exactly do we cache
-the provider on the vfio_pci_core_device rather than ask for it on
-demand from the p2pdma?
+OK, another wq :-)
 
-It also seems like the coordination of a valid provider is ad-hoc
-between p2pdma and vfio-pci.  For example, this only fills providers
-for MMIO BARs and vfio-pci validates that dmabuf operations are for
-MMIO BARs, but it would be more consistent if vfio-pci relied on p2pdma
-to give it a valid provider for a given BAR.  Thanks,
-
-Alex
-
->  	p2p = devm_kzalloc(&pdev->dev, sizeof(*p2p), GFP_KERNEL);
->  	if (!p2p)
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	xa_init(&p2p->map_types);
-> +	/*
-> +	 * Iterate over all standard PCI BARs and record only those that
-> +	 * correspond to MMIO regions. Skip non-memory resources (e.g. I/O
-> +	 * port BARs) since they cannot be used for peer-to-peer (P2P)
-> +	 * transactions.
-> +	 */
-> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		if (!(pci_resource_flags(pdev, i) & IORESOURCE_MEM))
-> +			continue;
->  
-> -	p2p->pool = gen_pool_create(PAGE_SHIFT, dev_to_node(&pdev->dev));
-> -	if (!p2p->pool)
-> -		goto out;
-> +		p2p->mem[i].owner = &pdev->dev;
-> +		p2p->mem[i].bus_offset =
-> +			pci_bus_address(pdev, i) - pci_resource_start(pdev, i);
-> +	}
->  
-> -	error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_release, pdev);
-> -	if (error)
-> -		goto out_pool_destroy;
-> +	ret = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_release, pdev);
-> +	if (ret)
-> +		goto out_p2p;
->  
-> -	error = sysfs_create_group(&pdev->dev.kobj, &p2pmem_group);
-> -	if (error)
-> +	rcu_assign_pointer(pdev->p2pdma, p2p);
-> +	return &p2p->mem[bar];
-> +
-> +out_p2p:
-> +	devm_kfree(&pdev->dev, p2p);
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(pcim_p2pdma_enable);
-> +
-> +static int pci_p2pdma_setup_pool(struct pci_dev *pdev)
-> +{
-> +	struct pci_p2pdma *p2pdma;
-> +	int ret;
-> +
-> +	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
-> +	if (p2pdma->pool)
-> +		/* We already setup pools, do nothing, */
-> +		return 0;
-> +
-> +	p2pdma->pool = gen_pool_create(PAGE_SHIFT, dev_to_node(&pdev->dev));
-> +	if (!p2pdma->pool)
-> +		return -ENOMEM;
-> +
-> +	ret = sysfs_create_group(&pdev->dev.kobj, &p2pmem_group);
-> +	if (ret)
->  		goto out_pool_destroy;
->  
-> -	rcu_assign_pointer(pdev->p2pdma, p2p);
->  	return 0;
->  
->  out_pool_destroy:
-> -	gen_pool_destroy(p2p->pool);
-> -out:
-> -	devm_kfree(&pdev->dev, p2p);
-> -	return error;
-> +	gen_pool_destroy(p2pdma->pool);
-> +	p2pdma->pool = NULL;
-> +	return ret;
->  }
->  
->  static void pci_p2pdma_unmap_mappings(void *data)
-> @@ -276,7 +326,7 @@ static void pci_p2pdma_unmap_mappings(void *data)
->  	 * unmap_mapping_range() on the inode, teardown any existing userspace
->  	 * mappings and prevent new ones from being created.
->  	 */
-> -	sysfs_remove_file_from_group(&p2p_pgmap->mem.owner->kobj,
-> +	sysfs_remove_file_from_group(&p2p_pgmap->mem->owner->kobj,
->  				     &p2pmem_alloc_attr.attr,
->  				     p2pmem_group.name);
->  }
-> @@ -295,6 +345,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  			    u64 offset)
->  {
->  	struct pci_p2pdma_pagemap *p2p_pgmap;
-> +	struct p2pdma_provider *mem;
->  	struct dev_pagemap *pgmap;
->  	struct pci_p2pdma *p2pdma;
->  	void *addr;
-> @@ -312,15 +363,25 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	if (size + offset > pci_resource_len(pdev, bar))
->  		return -EINVAL;
->  
-> -	if (!pdev->p2pdma) {
-> -		error = pci_p2pdma_setup(pdev);
-> +	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
-> +	if (!p2pdma) {
-> +		mem = pcim_p2pdma_enable(pdev, bar);
-> +		if (IS_ERR(mem))
-> +			return PTR_ERR(mem);
-> +
-> +		error = pci_p2pdma_setup_pool(pdev);
->  		if (error)
->  			return error;
-> -	}
-> +
-> +		p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
-> +	} else
-> +		mem = &p2pdma->mem[bar];
->  
->  	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
-> -	if (!p2p_pgmap)
-> -		return -ENOMEM;
-> +	if (!p2p_pgmap) {
-> +		error = -ENOMEM;
-> +		goto free_pool;
-> +	}
->  
->  	pgmap = &p2p_pgmap->pgmap;
->  	pgmap->range.start = pci_resource_start(pdev, bar) + offset;
-> @@ -328,9 +389,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	pgmap->nr_range = 1;
->  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
->  	pgmap->ops = &p2pdma_pgmap_ops;
-> -	p2p_pgmap->mem.owner = &pdev->dev;
-> -	p2p_pgmap->mem.bus_offset =
-> -		pci_bus_address(pdev, bar) - pci_resource_start(pdev, bar);
-> +	p2p_pgmap->mem = mem;
->  
->  	addr = devm_memremap_pages(&pdev->dev, pgmap);
->  	if (IS_ERR(addr)) {
-> @@ -343,7 +402,6 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	if (error)
->  		goto pages_free;
->  
-> -	p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
->  	error = gen_pool_add_owner(p2pdma->pool, (unsigned long)addr,
->  			pci_bus_address(pdev, bar) + offset,
->  			range_len(&pgmap->range), dev_to_node(&pdev->dev),
-> @@ -359,7 +417,10 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  pages_free:
->  	devm_memunmap_pages(&pdev->dev, pgmap);
->  pgmap_free:
-> -	devm_kfree(&pdev->dev, pgmap);
-> +	devm_kfree(&pdev->dev, p2p_pgmap);
-> +free_pool:
-> +	sysfs_remove_group(&pdev->dev.kobj, &p2pmem_group);
-> +	gen_pool_destroy(p2pdma->pool);
->  	return error;
->  }
->  EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
-> @@ -1008,11 +1069,11 @@ void __pci_p2pdma_update_state(struct pci_p2pdma_map_state *state,
->  {
->  	struct pci_p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(page_pgmap(page));
->  
-> -	if (state->mem == &p2p_pgmap->mem)
-> +	if (state->mem == p2p_pgmap->mem)
->  		return;
->  
-> -	state->mem = &p2p_pgmap->mem;
-> -	state->map = pci_p2pdma_map_type(&p2p_pgmap->mem, dev);
-> +	state->mem = p2p_pgmap->mem;
-> +	state->map = pci_p2pdma_map_type(p2p_pgmap->mem, dev);
->  }
->  
->  /**
-> diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
-> index eef96636c67e6..888ad7b0c54cf 100644
-> --- a/include/linux/pci-p2pdma.h
-> +++ b/include/linux/pci-p2pdma.h
-> @@ -27,6 +27,7 @@ struct p2pdma_provider {
->  };
->  
->  #ifdef CONFIG_PCI_P2PDMA
-> +struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar);
->  int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  		u64 offset);
->  int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
-> @@ -45,6 +46,10 @@ int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
->  ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
->  			       bool use_p2pdma);
->  #else /* CONFIG_PCI_P2PDMA */
-> +static inline struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar)
-> +{
-> +	return ERR_PTR(-EOPNOTSUPP);
-> +}
->  static inline int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar,
->  		size_t size, u64 offset)
->  {
+Cheers,
+Longman
 
 
