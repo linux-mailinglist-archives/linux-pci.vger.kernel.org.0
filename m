@@ -1,140 +1,176 @@
-Return-Path: <linux-pci+bounces-36612-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A398B8EE7F
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 06:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 46631B8F152
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 08:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29A437AC6AE
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 04:06:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40CD67AB90E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 06:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9904C1D5ABF;
-	Mon, 22 Sep 2025 04:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EFC4248F69;
+	Mon, 22 Sep 2025 06:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJ1BmRC9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtkR8yio"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C2C249E5;
-	Mon, 22 Sep 2025 04:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31FC2441A0;
+	Mon, 22 Sep 2025 06:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758514055; cv=none; b=EfnVqhoaXReg70xbBq0GAiYYd74EUju3rgIuAPzajmcONy0zZQ34Oh/VloU/CtoZWRMt1qMZNeaKdxEmUMhXzXuDQ6OF3Pv0X0SkNqmp4EHd7s67pXll0d0DR3HHjg8HnBLq6vdi1qA+oKiDhrwFKeRQHI6pKNLnGFC5RwN9zGs=
+	t=1758521566; cv=none; b=HOl+vrfS8kS5uG4165VxVu7bGm/His1V0j8e56h2wOICQ9llEUGqZh8ekWxVmVSSRrLTpYsByvO6gkwbk9yjHXoSS/LsoJ/pvRkwbj6Arh/Z3DbAnnqhEGTcXBf6+2m6VWIAhR3C38zyB4LNlV6tqJ/r54HwYSDcgDVeuXkTx98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758514055; c=relaxed/simple;
-	bh=G2V1IzI07Lo+cAvCBkq1btsiFZLerly8BvX9QTJo0j4=;
+	s=arc-20240116; t=1758521566; c=relaxed/simple;
+	bh=3UerwbZ38Y6F51/AVZvwT7fXNyINz/eAUpivcoyBoKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqaVoYoHLi6p40MLEV0CcgnRKwfnJl/76pkX3kbW45U8pJBR4clyCyELy6Gu8Ui9uc410RjSRH1QlXo86/8MVN/e1WfjkOL8zyNHPhTzqZ43O9CTFWHbOeZn5osfh44awWbJG5LsQkjMO06Pbn6b6RvxsSlXeJV/h318Xci04Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJ1BmRC9; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758514054; x=1790050054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G2V1IzI07Lo+cAvCBkq1btsiFZLerly8BvX9QTJo0j4=;
-  b=CJ1BmRC9bMJTpqOz9ku4zrsiOPR/+v6dV64QWGpGj5nTSKvyNKQycTEe
-   gNiq7OfLjsaYMiqzpLRC5rKZAroy306un1yLedDy18pyCYsg1tdw4dBbd
-   M2XClBTdnm36UQk3tWI1gR3/TyIB8fBCDyt08giHBJA31lvkW58f0puNF
-   Hh2zS6LlL3T2QGCwmvK+VrzyGpxnzAzk61EG48FSc76yb5DqO/igQvyEb
-   vnYkx9Eea2s+gSPlC5okSTn72cDnRqC6epJXthW/nqXH8QaVj974GFA84
-   QNfnBHuM7aixYvPltYjC1sexaa2S2HwQtPnYnX1D3SIKCSJtMh3VfhlW5
-   Q==;
-X-CSE-ConnectionGUID: IrhIvvCnQGep4OrHCSv72w==
-X-CSE-MsgGUID: Wxgn5edHQaedScR3LhDyqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11560"; a="59809004"
-X-IronPort-AV: E=Sophos;i="6.18,284,1751266800"; 
-   d="scan'208";a="59809004"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2025 21:07:33 -0700
-X-CSE-ConnectionGUID: zqpl9hnCTuyexJ28zpHKKg==
-X-CSE-MsgGUID: yfvJgNhsSFqEUX/ZvNjTxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,284,1751266800"; 
-   d="scan'208";a="176811092"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 21 Sep 2025 21:07:28 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v0Xpl-0001J3-1y;
-	Mon, 22 Sep 2025 04:07:25 +0000
-Date: Mon, 22 Sep 2025 12:07:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>, chester62515@gmail.com,
-	mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, s32@nxp.com,
-	bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com,
-	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com,
-	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com,
-	Frank.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, cassel@kernel.org
-Subject: Re: [PATCH 2/3 v2] PCI: s32g: Add initial PCIe support (RC)
-Message-ID: <202509221101.JBhoJaEX-lkp@intel.com>
-References: <20250919155821.95334-3-vincent.guittot@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFS0h263HgTHk8XTpnWJHGa8vFMH/wZ9wFtOQoo6lMCVezeDObDBoeI4OKnfxk7f2O8tII7yfpgMxLSm9srM43LJ8DCpPTdv7zJ7hppPy6hHkY/BK0urTjxBenFSIZhimRIh1kNdSMeYWxUeVfSTqZmN7XDGBO3nXItsk1KQEqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtkR8yio; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34ED8C4CEF0;
+	Mon, 22 Sep 2025 06:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758521565;
+	bh=3UerwbZ38Y6F51/AVZvwT7fXNyINz/eAUpivcoyBoKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FtkR8yioGMhFkuF+Cn1wzH4ievrnmc6BCRXFotZptl2hU5vAkAIKzb6bxFPJl1/5V
+	 t4Mn1u5euXTtsl6AZUiQoeTQxskVNc45ObI32dW7n0Te3qyvGjRzhenrKBLO5oHYKl
+	 yUKTm4Sv3J7vPNKLXw44JzFxh23XziKUMADmJi2MTFy4Jsv2SnxqwWjSA4XwdmqybH
+	 zELfSwj198PjLJt2gM0PVjIdfM9qO99QCK9ZGD/5Wis0BX6pNvKy85B9mHiUi1S1A1
+	 cogT9I5lshWFzf1pOdPgdgwi/Sqwx0jL/p8E70994AcP5fUyojYjW0lHrviiFFZB5+
+	 mPj2bZghG6pFg==
+Date: Mon, 22 Sep 2025 11:42:36 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, jingoohan1@gmail.com, l.stach@pengutronix.de, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] PCI: imx6: Add a method to handle CLKREQ#
+ override active low
+Message-ID: <hsmebnz6opoj45zztdd2svmdtrwwwrngjaidpltbunnkdvvdqz@lhyejtlwkkes>
+References: <20250922023741.906024-1-hongxing.zhu@nxp.com>
+ <20250922023741.906024-3-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250919155821.95334-3-vincent.guittot@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250922023741.906024-3-hongxing.zhu@nxp.com>
 
-Hi Vincent,
+On Mon, Sep 22, 2025 at 10:37:41AM +0800, Richard Zhu wrote:
+> The CLKREQ# is an open drain, active low signal that is driven low by
+> the card to request reference clock. It's an optional signal added in
+> PCIe CEM r4.0, sec 2. Thus, this signal wouldn't be driven low if it's
+> reserved.
+> 
+> Since the reference clock controlled by CLKREQ# may be required by i.MX
+> PCIe host too. To make sure this clock is ready even when the CLKREQ#
+> isn't driven low by the card(e.x the scenario described above), force
+> CLKREQ# override active low for i.MX PCIe host during initialization.
+> 
+> The CLKREQ# override can be cleared safely when supports-clkreq is
+> present and PCIe link is up later. Because the CLKREQ# would be driven
+> low by the card at this time.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 35 +++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 80e48746bbaf..a73632b47e2d 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -52,6 +52,8 @@
+>  #define IMX95_PCIE_REF_CLKEN			BIT(23)
+>  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
+>  #define IMX95_PCIE_SS_RW_REG_1			0xf4
+> +#define IMX95_PCIE_CLKREQ_OVERRIDE_EN		BIT(8)
+> +#define IMX95_PCIE_CLKREQ_OVERRIDE_VAL		BIT(9)
+>  #define IMX95_PCIE_SYS_AUX_PWR_DET		BIT(31)
+>  
+>  #define IMX95_PE0_GEN_CTRL_1			0x1050
+> @@ -136,6 +138,7 @@ struct imx_pcie_drvdata {
+>  	int (*enable_ref_clk)(struct imx_pcie *pcie, bool enable);
+>  	int (*core_reset)(struct imx_pcie *pcie, bool assert);
+>  	int (*wait_pll_lock)(struct imx_pcie *pcie);
+> +	void (*clr_clkreq_override)(struct imx_pcie *pcie);
+>  	const struct dw_pcie_host_ops *ops;
+>  };
+>  
+> @@ -149,6 +152,7 @@ struct imx_pcie {
+>  	struct gpio_desc	*reset_gpiod;
+>  	struct clk_bulk_data	*clks;
+>  	int			num_clks;
+> +	bool			supports_clkreq;
+>  	struct regmap		*iomuxc_gpr;
+>  	u16			msi_ctrl;
+>  	u32			controller_id;
+> @@ -267,6 +271,13 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
+>  			   IMX95_PCIE_REF_CLKEN,
+>  			   IMX95_PCIE_REF_CLKEN);
+>  
+> +	/* Force CLKREQ# low by override */
+> +	regmap_update_bits(imx_pcie->iomuxc_gpr,
+> +			   IMX95_PCIE_SS_RW_REG_1,
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_EN |
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_VAL,
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_EN |
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_VAL);
 
-kernel test robot noticed the following build warnings:
+This should be:
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.17-rc7 next-20250919]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+	imx95_pcie_clkreq_override(imx_pcie, true);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Guittot/PCI-s32g-Add-initial-PCIe-support-RC/20250920-005919
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250919155821.95334-3-vincent.guittot%40linaro.org
-patch subject: [PATCH 2/3 v2] PCI: s32g: Add initial PCIe support (RC)
-config: openrisc-randconfig-r132-20250922 (https://download.01.org/0day-ci/archive/20250922/202509221101.JBhoJaEX-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250922/202509221101.JBhoJaEX-lkp@intel.com/reproduce)
+refer below...
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509221101.JBhoJaEX-lkp@intel.com/
+>  	return 0;
+>  }
+>  
+> @@ -1298,6 +1309,18 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+>  		regulator_disable(imx_pcie->vpcie);
+>  }
+>  
+> +static void imx8mm_pcie_clr_clkreq_override(struct imx_pcie *imx_pcie)
+> +{
+> +	imx8mm_pcie_enable_ref_clk(imx_pcie, false);
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-s32g.c:133:20: sparse: sparse: symbol 's32g_pcie_ops' was not declared. Should it be static?
-   drivers/pci/controller/dwc/pcie-s32g.c: note: in included file (through drivers/pci/controller/dwc/pcie-designware.h):
->> drivers/pci/controller/dwc/../../pci.h:632:17: sparse: sparse: cast from restricted pci_channel_state_t
->> drivers/pci/controller/dwc/../../pci.h:632:17: sparse: sparse: cast to restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:635:23: sparse: sparse: cast from restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:635:23: sparse: sparse: cast from restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:635:23: sparse: sparse: cast to restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:639:23: sparse: sparse: cast from restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:639:23: sparse: sparse: cast from restricted pci_channel_state_t
-   drivers/pci/controller/dwc/../../pci.h:639:23: sparse: sparse: cast to restricted pci_channel_state_t
+Just noticed this discrepancy. 'imx8mm_pcie_enable_ref_clk(, false)' is enabling
+the CLKREQ# override, thereby enabling the refclk. But only for imx8mm, this
+helper is called as imx8mm_pcie_enable_ref_clk(). But for imx95, the equivalent
+function is called as imx95_pcie_clr_clkreq_override(). This is causing
+confusion.
 
-vim +/s32g_pcie_ops +133 drivers/pci/controller/dwc/pcie-s32g.c
+Maybe you should just call both functions as:
 
-   132	
- > 133	struct dw_pcie_ops s32g_pcie_ops = {
-   134		.get_ltssm = s32g_pcie_get_ltssm,
-   135		.link_up = s32g_pcie_link_up,
-   136		.start_link = s32g_pcie_start_link,
-   137		.stop_link = s32g_pcie_stop_link,
-   138	};
-   139	
+	imx8mm_pcie_clkreq_override(imx_pcie, bool enable);
+	imx95_pcie_clkreq_override(imx_pcie, bool enable);
+
+Then,
+
+	imx8mm_pcie_clr_clkreq_override(struct imx_pcie *imx_pcie)
+	{
+		imx8mm_pcie_clkreq_override(imx_pcie, false)
+	}
+
+	imx95_pcie_clr_clkreq_override(struct imx_pcie *imx_pcie)
+	{
+		imx95_pcie_clkreq_override(imx_pcie, false)
+	}
+
+and populate the clr_clkreq_override() callback.
+
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
