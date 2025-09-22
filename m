@@ -1,149 +1,220 @@
-Return-Path: <linux-pci+bounces-36671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36672-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32B4DB917DA
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:45:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CAFBB91884
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 15:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B24FD3AC967
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:45:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBB1018969F9
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFCE530EF6B;
-	Mon, 22 Sep 2025 13:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42B3826FDB6;
+	Mon, 22 Sep 2025 13:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5ZdUQEa"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="niBdQoQ0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012002.outbound.protection.outlook.com [40.93.195.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA6C30E0FB
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 13:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758548709; cv=none; b=DzApxwxq3Xpi0EOKpWDUPNg75Gk6eFhLf9tE/PnznxIvvPjcf9+tsXWQ0QEwOPGKDGFVOuKRnjXFJWpJHSy7zvdy/RzjuDjGuuG7tzpDT9VB8C3ucQjXj/AjlPTar/vFJtP843NCcFzAd8EHGY3Mcf+FqowRFLNNPqAsH6n0mMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758548709; c=relaxed/simple;
-	bh=yo+GwMmo6IqHg5jSwlrmlB+4Ql115C3OcUJbrFU0ui4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7zhi2kbeWw+2UruA0ROY0s9jxNpx/cPey93cCu8aExe/rsDNRZR1WmG+bP1ZIbYZXFHkGUXhSYm5JlkYrLIOYO0FVIE9rjWuBm64p5bjcBE+VpxhD6EDtW8bRcpbxr/Cu+e6nY0sYdJws1rIYQxS5PPXjh5TX9yUYXvc3/xdGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5ZdUQEa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C603C116B1
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 13:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758548709;
-	bh=yo+GwMmo6IqHg5jSwlrmlB+4Ql115C3OcUJbrFU0ui4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D5ZdUQEazNRHt4zlCXFkdS8b+eLsfD8zSIsZqIdM05oHpe3fPubctfwEVc4u44UIr
-	 yyBIpAElTiJrxVRi8q0IffjelJoVCd8QU5HIwJxxKt9yF8vGcbWNCTJ6RAMkQqiylk
-	 y8R86pHNwJ5BZPXrDKjMq2ZsdqRONnUYMrjmI9HFRxYODKn+tUUYJsbcuyJTm2D02W
-	 Wme1FeIpGNX5eWxdpIPZS7ieDoyqsl27djoUiQgF/eO6mLA5TcFaTF7A9flRqujqMJ
-	 usEPw1c74uJJaS1VDk2Uc8bIHxid7127DdLjDClE3XH+piaktccKe31eWsWmYBp06q
-	 +9wgs+RZrVf3g==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7459de59821so2870335a34.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 06:45:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUOwBcmoKBua2O6uB2+WxFNd2x/EQvupOSVKibRuzYEKJ/kyEEx2NnF6vxkOwZfv4THtSQHsesCHrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVIxa6qHBTMharlN7NxD2lCyJDJK+92ZSgnc3iXVxSAX5LHyTt
-	VMe4v8OtDJBxa4QcW5GZRDPwL7GIy5QLoG5mH3tHIK4Wm1xbsX7cdm0XHG8blSw9jA/wCRjzeQJ
-	Gdmrl8VL640QIKoEnBwvd4Jc+yUlbDvc=
-X-Google-Smtp-Source: AGHT+IE3v9i1z6PMKQVA+qzzJogaf/1oZSw9uCFQPf1C2IPbpzQiamNkuy+/XF5qgJGAVHXGDr6FzelDdqgBbUigq18=
-X-Received: by 2002:a05:6808:1822:b0:43f:21bb:32ad with SMTP id
- 5614622812f47-43f21bb48acmr605468b6e.17.1758548708575; Mon, 22 Sep 2025
- 06:45:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1CB192B66
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 13:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758549433; cv=fail; b=SQwBbaRN7uzi2++ubfSGbDO3QfaYT3K2/QUwibO9vkWNN7EvEWBEd3ytd1b/kaiqvpUQ5o114EASd9UTGWT5po5yONTNmC8u2Xt7MT4ddW5iLcd0QOMYJj/NJA/sFkQIt+qHSTcUSKIAjzgEvuf54mTPZSqFZ4VbWRq8TUqUKZo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758549433; c=relaxed/simple;
+	bh=tKhmNVeC2/O9WN7Iqv7NxRVo7Fkh7OKOPyur+R7e4D8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=l/3kNayZyWf9F0WR04JyQkJF+E8EjyiI0C3nnLYWX22gim8a4ZcwG1rOUgGQpMpeRK8bYQzynbtmiKrRUKnwKqG2Sz/fpNqGfMAU1z65BcN74W2kI037Xtn3oUjS63WCMpGK7tGRaIfIWEP5Vn3CmsgQC1G2IMwNmMmAkAf+Wfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=niBdQoQ0; arc=fail smtp.client-ip=40.93.195.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ur682Wn2DomcRNGbYo8CcWdFkNAHW3MMvbkXoTrWGQnNjBgPYjkTY8U1QyDdpuIYXI7Zkg84dJrgHX/RiFtXA710RwpS6BVsausOAK1w1yTNfwlgD5LQTF++4wYpgngYXiykOySzM5ECFuSovDZ83s4tMYlr7HxGyciKyvPr9hLZkwcabqvCV67Ca6cZP4F+d+I6fW2b6M06aQU4qkCOe/NCJhRJZ6ZRIXU0m07sPnb3SstJqfaHXKvYzWP1kZHQM0DugVWO2gn1yOU/H3/pbRa8bm7sfHBEKSXqQxd9//h2Whabj8PDyc+FQM3yj+pvyYDcmMYPRi/ITQ95bZFTCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kS1Y7WrwZMKmaQ3pLvF2J6U1mr8unnbzz3y61nUrzFc=;
+ b=Z4OIKsN+/A1t16+bk5GCJczqInx2rpLj4jgJ/Kw01G5Jti2s0EzDM5cXRZSa6/ntUTXkuq2SkKYWxWC1t21rkWCegz13pL5Cf6WPyqZX1OKIdSYwhcV3i/lhlDBhmjfp6hqhdY8R2evrmHHx13nWMQzNxOcieADXvkSSD/hF5rPKmS0urOOUiQ32C3wGZRqrp8A+G51k4S4qxRFrml/64a2WpiHc+Qu81tiKxCLPj3IzXNz11HnQKeWVvSNmGS6tLUxazaF/wdmhtLvsUfbNJTr29dzhD4S02tX9TG4a3KufNK3pGN+YqSt6Z4Um29lusoKIJqH/lkX7cJn0N6b02A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kS1Y7WrwZMKmaQ3pLvF2J6U1mr8unnbzz3y61nUrzFc=;
+ b=niBdQoQ0f+ZpcNoxZGkRgQs/VMHTfCaJy73Z5eLgY31JOSR2hccUNKiWW1tEKpDDyuTNAbr3EbG/FDacgqkFvF/EAKry0LCvD5KkO/v4lgZzEyYUV8mhZI+ozODuKrCQkg5YJTrHZjv1YhsGaXL4GPCT7sW5+rt1O3XBSH2Wgvk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DM4PR12MB6279.namprd12.prod.outlook.com (2603:10b6:8:a3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Mon, 22 Sep
+ 2025 13:57:08 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9137.018; Mon, 22 Sep 2025
+ 13:57:08 +0000
+Message-ID: <42f45fa2-6ea3-44c7-870a-dc1973894a87@amd.com>
+Date: Mon, 22 Sep 2025 15:57:02 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+ functions of Intel GPUs
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <IA0PR11MB7185186F6AB160AA7F8F0FF3F816A@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <20250918120431.GL1391379@nvidia.com>
+ <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <20250919122931.GR1391379@nvidia.com>
+ <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
+ <20250922122018.GU1391379@nvidia.com>
+ <4e3919c3-3d1b-4f34-a1e4-5e9e7a5e6e14@amd.com>
+ <20250922122900.GV1391379@nvidia.com>
+ <fbb6bbe7-8141-4532-812e-2b93cc2fcb1b@amd.com>
+ <20250922132720.GY1391379@nvidia.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250922132720.GY1391379@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0114.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:bb::15) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6204724.lOV4Wx5bFT@rafael.j.wysocki> <3388279.44csPzL39Z@rafael.j.wysocki>
- <875xdaevab.wl-tiwai@suse.de> <CAJZ5v0hSBDg4fD7Gy6yEX31xO-3USJG_jFps71BRJJ2f0Oh90A@mail.gmail.com>
- <87348eobnv.wl-tiwai@suse.de>
-In-Reply-To: <87348eobnv.wl-tiwai@suse.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 22 Sep 2025 15:44:51 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
-X-Gm-Features: AS18NWDJpWOsRKJj3jEkl0KecqFPw7RUo_dkS-UdqiA38Sun7bqU2195a6GsOlc
-Message-ID: <CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] PM: runtime: Add auto-cleanup macros for "resume
- and get" operations
-To: Takashi Iwai <tiwai@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Alex Williamson <alex.williamson@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Zhang Qilong <zhangqilong3@huawei.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DM4PR12MB6279:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce4548a8-61c5-4ffd-b70f-08ddf9dfeb8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UFZSWmdDRlU4YlZBN1pIWXFyV21ZUHRJM00veG5seS9hMW9MaHpVWU5sNkRI?=
+ =?utf-8?B?SlJGa3B0VUE5dytqZUtLUjVYVjhKQ2Z5MU1tamhCRmVHZ1JicEpIVVQ5VTN2?=
+ =?utf-8?B?K2pXQ1FaTzhJbjYwS3N5aUNGalg5NWN0ODByZ01MNXpkZ1lsRDJTakxvZ2tv?=
+ =?utf-8?B?TVNoSmkwaEdQRVlqeUNoejJKdUlXZnlvWENaeThMcDVxKzlCMGNpUGtoMFVK?=
+ =?utf-8?B?QkxwSGh2ZlF1TDhVYzBVRGRnNmsva2RCZE0zVHZwVm02ODNkcUs1a3Q0Lzhj?=
+ =?utf-8?B?RjNVUU9kaUZWTU5pNU9oZnpjanNTL3NTclcyaStBRHIxOUdIaklVdWlaSGxN?=
+ =?utf-8?B?QW56UmU4aDhxYmx5Y1VEM0pYb2ptdm9ZZjV1RTE2VjEyVkFGQzBNMlhjSFdo?=
+ =?utf-8?B?Tm43SlJodXlQNlJETlRuOGIxd1lPUDNobXpTWVZ5VVFpRWh6V0VMNXlXdjFQ?=
+ =?utf-8?B?YVpIY2l6M2NmQ29zVXRHZVljR05DSEhrRndVVWtkMGhTOGVjd29nWjN2THV3?=
+ =?utf-8?B?MkJqYU1JZUhselRqK2o3MUMvc1RpVy81amc1RGtMT1lhVVJWVDZFVmxTOVZW?=
+ =?utf-8?B?dXRlWS9vd2hJdC91MlRvRUp2NHJKV3JYWTNIaEs0eFdoTXIvYkxlZGVoci9R?=
+ =?utf-8?B?a3Q5Mm1FSlU0bjJVdERmdVpiTHFLOWxNbXBGMlRvY1NuVHNLVFZkc1RVc3Rm?=
+ =?utf-8?B?U3QwVEJEbk91TnNZc294bGs0d0daRDZNQjRycmNBUHNiZ1BESjQ1T3FBZ3Av?=
+ =?utf-8?B?VnB2cDBWM2NlM3VpdnZwMVAwUm9FT2NYRWFCVXRlVjh4NURzSElrQllnWElE?=
+ =?utf-8?B?TDNwWUxJQk5WOXFzUkJHcVFYRDJTZmM1KzhhTnoyNHlHQndZRWdmRWo4cmxV?=
+ =?utf-8?B?SjBlL3VoS1M0Mm1mUlI3R2dqekdlT3phTFNkZjU5RVR3eDU4dXluTUZsRCtw?=
+ =?utf-8?B?bWtaNTUwZzlTL1B5aTZWaWQ5dVZyT04rbGtOL0dRTkhKRVo5T3l6N1VDK2cz?=
+ =?utf-8?B?UWpDWDRmRjJmaElnSFgzREZ5Z05YbDdhcTgvK241WExlajV3VklHUkxIc29p?=
+ =?utf-8?B?ZmpDbjdScjBiWDg4a3REVTQzUkdUSkw2Y2E0Rk16ZkdmYzRYVUpyakkrWktJ?=
+ =?utf-8?B?aXhPbkdzZEp2N1IrbVBRRnVkZmp6RE1hc1dDaHhXWHpMVE1wYlBIaFJUd0pw?=
+ =?utf-8?B?TVpJMUkyWnhmbzdWaHR3ZnVEL2ltdysrZUE5eEZFcjV6dEpIV054M2sxRVVs?=
+ =?utf-8?B?T1Q5Ym8zWS82ekpacHlWQU84a0EzbUFDeDRPK0hZVjQ3NU9kdEdrbTQ3SHVy?=
+ =?utf-8?B?Y1VYd1hkRGZlcG5QOGxPb1ZIZy91MTlxd29CSGljNktmYk9tc0d2Q1FBTU04?=
+ =?utf-8?B?b2ltaXZqTVg3Q0l4UUd5dU12RU4zTGlTNm1iWUl3dmFVenhiRUllZ1pxcFZI?=
+ =?utf-8?B?ZVFuR2hqR2tCY25zazhsaEM5RVprK1BrVG1yenZ5ZDlRMHAveU0wM3FvNkM5?=
+ =?utf-8?B?c1k3YVJ3NWZvN2daYyt1d3c0bXJuYitpcG1uK3RLTHNKbUJkZG45ek9QNFRT?=
+ =?utf-8?B?OVIrN28yUjFvczBXNlcxaXpaa2ZrOUpOY3N0T2t6bDdmRVp4c2dzakJ2a2hN?=
+ =?utf-8?B?Y2pFMmdreDdpWWtDTmFVMHBVaXBIbGdxTFY3bSttUkZwZ0MyQ2NDSkR5Sm8r?=
+ =?utf-8?B?SzQzdW10TDFKTnRWQkl4SlRqcmplMEZPZllOMi9kNDNCeGp0c01sZjVnUGNx?=
+ =?utf-8?B?UnowZklHK3U5OWc0RExBUFdHT2ZsNVZwb0dRWXl2VVYyTVJNZUdLVGJ5bGtY?=
+ =?utf-8?B?aVl1U3hNaUJ1bjNFNlU5dldCVURuVGlrVktwT1k0bVZ0NmpIL3NZWHdZL1pO?=
+ =?utf-8?B?MFpVSUtKOGV6RGlrNlZDb1pkVmhxY21FWUYvTGpxb3ViSnhhU2drS2lubzBG?=
+ =?utf-8?Q?Ee8RgZBeuzY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QXdOR1ZaSkl5L01mNTd5T2dCUWFGejI1TFBTaW9BSG1HYnMvM1dtMEgzNnBM?=
+ =?utf-8?B?WlJGSGhjUVg3c1R6RCtiS3JzcCtUeXQyVnRBby9qcWZrRkdiUytzdnhQVmFS?=
+ =?utf-8?B?K0FiekFVM0srakMxM1NiQUhVZVB5ZzVwWTluZml0cjFpNFdSaHNTcWwzZmkr?=
+ =?utf-8?B?TjNMVjI5dU14OFNhZDhWdTUrM1FpdUJBNGxXSEpTbi93Ti9mbHVvaGM3bWds?=
+ =?utf-8?B?Ly9iODZKTE9IaFgvai9xeFhrWTh1RXlNK0FjUDNEUkpPOGd5UktTZUwzVi85?=
+ =?utf-8?B?dk5zcDlUZW9KVE1XTWI3bzJYSlJHbXNRTFdDektPRlYvbkJUeVAzWU16czdS?=
+ =?utf-8?B?Wi90UStnd2V3bzVJT2grcktYekFyV3c4bVNtb1cxb2o5dityZ3NEOFZSMFA0?=
+ =?utf-8?B?Qlh2eEZQZHUrOVFQSUY4aFFGRGd3ZW9jSndhWmZNVDRjdFFuMjZJb1JtVHIz?=
+ =?utf-8?B?WUkyaFNobEh3aWE3Qkh0ekJzS3BvMjFqQ0Ntd1czbHFhd2l0TDNjdFY2cEdp?=
+ =?utf-8?B?RGxvekx6TWxqaStwQ3p1NXVyZFFGdG9La0F6Q0FST3B6U1h4TEFTYkRIQ0Y4?=
+ =?utf-8?B?UnEzQ2hKb0JvemZWYThCdzZQcHFJbWswa0ZpTXRISUdjWXNGeXpmTllKRTFw?=
+ =?utf-8?B?WVdHOW5HMjk5S09wdlMvVXZ1cTM5cWErRUs4cjFmV2lGU1p2cHJmVlFQeFlh?=
+ =?utf-8?B?c3NhbkQwbCtiU3R1YTZjOVNzZnEveEdNUHVKN1p0TDNCditxVEdPdHA1dUpx?=
+ =?utf-8?B?MlNuaGNtNnhsMzVaK1l1MTdSNUdad1g4N2RZOTR3dXRLNmFna0hrR3RUU0RJ?=
+ =?utf-8?B?UVBSanZUaTRlc3NHZkFnZGV2OFdwb3dKNUIwNnZESFdoa3oyZTMzRDRuRkJ3?=
+ =?utf-8?B?M1E0YVlmR3REcjZ6WWxwakR1WGRodmxOYkx6RklpdC9OdDh4SW9HTUJGSFU1?=
+ =?utf-8?B?eC9tNHhMTUpoeGh1Z0dDWDI2dFcxRUFHTWptMk5kY2RsR3YvNzBxZzN2ak5v?=
+ =?utf-8?B?R3kyMWd6cVBNNE8zTEMwaXU4YnA0TGtqSXBjL2tVdnQzbTRsM3hGUkZQOXZT?=
+ =?utf-8?B?dXo3YlBYajhvVXBBVWtkY3dFUWpjN3N4RWlLOTN6RWdXalZncDI2ak9iYnZt?=
+ =?utf-8?B?OHBrRWNEbk9jWDFKYUJ3NGZFakdiYWgweklFNnhGRlNxb1VQNWdRdWhObUVR?=
+ =?utf-8?B?MjNmTjh2U3ZHUWVJT1VjNlg5ZUpJTWcycTVNbnNyTzZKK0pZeHE0RXN5WG1v?=
+ =?utf-8?B?ZkZWNGR2UjhkRS93ZGtkV1JlWk5VdVVwamZpdGxuU1daMCszVzIyRHRZZmJR?=
+ =?utf-8?B?S0dlU3YwUzQzVjNBWlJqSGJlalQ3dVMxOEZ6YlZGR2xjT041UThYWUNWT2du?=
+ =?utf-8?B?akliMEpiTmViZ2I5dVZoWVU5blk5VlNHdzY1THY4UEFLdkJlR3RENlQ5bWxw?=
+ =?utf-8?B?a3hUOUMvSS95M0xiM3F4N1p6bjhvWlVvUEM2bjVmT0orM3Z2bkFncGhXcUpt?=
+ =?utf-8?B?bjhUZlBySFRiK01XS09yVGxPK1Y1MlFwaGtlQzBVblVPSkF6Tkc0anZEaDJH?=
+ =?utf-8?B?czQxZmM0bS9nRlFnV0RUbFc3ZFY3UnF0WXMzNzlCWVdURkkxL2VnT1c2cFE5?=
+ =?utf-8?B?MXIzb2hPRTN0SEZvYmE4cThuZTdQTVNGajJIMW1OSkQ1aTk2eCtCUzFqU0Nv?=
+ =?utf-8?B?Q0w0bHQ0SC9sL1g0NFJLb0M4VHNGd3ZYaVpuM1U2WjdwMEhQU2N5NnAwTXR3?=
+ =?utf-8?B?Y0xGOUt2VmRVMnUwMFo1aWNDc0lZdTdnU0czcDBJaEdaSkNqR3lVNEZ0ZjA2?=
+ =?utf-8?B?NU5yMENtTTVZaFd3ZCtyQTdsYllFYzRaUXIzV0k4MlRLenhXd2o2Z21QV2Mr?=
+ =?utf-8?B?eXNnQUNTNVlWNklUNWZOa0drYWYvMG1RczlQdDc3c1pOVUxtTElJTjRVR2Fn?=
+ =?utf-8?B?M2xUSG5XU2JVT3VRWElsL3lTWERlMno2VW5rZzdTWlRHN0t4dnA3b0UxOVZs?=
+ =?utf-8?B?THNJL0FvMUZ0S001aE1IM1pEd0ExZENnL2pWQ1psdmtZVW1ybjJjWlhSZ2RP?=
+ =?utf-8?B?RXRLZnVhUWkxNVpkZzZKK0ZPSVRhZ0RPczkwODNUYXdlVVdCKzlFdlMrU3lO?=
+ =?utf-8?Q?Zc4gn8gghtn3CQGXco/JlXUd0?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce4548a8-61c5-4ffd-b70f-08ddf9dfeb8d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2025 13:57:08.4148
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0OaXXStIe+S2Kfu0LNhckkHp0tkhuHaEV8eaBPYi87RQA90oybYCnkBNiloPkGi+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6279
 
-On Mon, Sep 22, 2025 at 3:32=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Mon, 22 Sep 2025 14:50:32 +0200,
-> Rafael J. Wysocki wrote:
-> >
-> > On Mon, Sep 22, 2025 at 10:38=E2=80=AFAM Takashi Iwai <tiwai@suse.de> w=
-rote:
-> > >
-> > > On Sat, 20 Sep 2025 12:54:58 +0200,
-> > > Rafael J. Wysocki wrote:
-> > > >
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > It is generally useful to be able to automatically drop a device's
-> > > > runtime PM usage counter incremented by runtime PM operations that
-> > > > resume a device and bump up its usage counter [1].
-> > > >
-> > > > To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
-> > > > and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
-> > > > those cases.
-> > > >
-> > > > Simply put, a piece of code like below:
-> > > >
-> > > >       pm_runtime_get_sync(dev);
-> > > >       .....
-> > > >       pm_runtime_put(dev);
-> > > >       return 0;
-> > > >
-> > > > can be transformed with CLASS() like:
-> > > >
-> > > >       CLASS(pm_runtime_get_active, pm)(dev);
-> > > >       if (IS_ERR(pm))
-> > > >               return PTR_ERR(pm);
-> > > >       .....
-> > > >       return 0;
-> > > >
-> > > > (note the new resume error handling).
-> > >
-> > > Do we still allow the code without the error check even using CLASS()=
-?
-> > > Although the error check should be handled, it's not mandatory for
-> > > now.  That said, the above example could be still in a form like:
-> > >
-> > >         CLASS(pm_runtime_get_active, pm)(dev);
-> > >         .....
-> > >         return 0;
-> > >
-> > > while adding the proper error check is recommended?
-> >
-> > I'd rather not encourage doing this.
-> >
-> > While it may still produce working code in some cases, one needs to
-> > remember that in case of a runtime resume error it will be running
-> > without a runtime PM reference it has attempted to acquire.
->
-> Fair enough.  Then it'd be also good to mention that in the
-> description, too.
+On 22.09.25 15:27, Jason Gunthorpe wrote:
+> On Mon, Sep 22, 2025 at 03:20:49PM +0200, Christian König wrote:
+> 
+>> At least on AMD GPUs when you want to have a DMA-buf for a specific
+>> part of the VFs resources then you ask the hypervisor driver
+>> managing the PF for that and not the VFIO driver.
+> 
+> Having a UAPI on the PF to give DMABUFs for arbitary VRAM seems
+> security exciting. I'd probably want to insist the calling process
+> prove to the PF driver that it also has access to the VF.
 
-I can also add classes for the cases in which resume errors can be
-neglected, like these:
+Good point. In our use case it's the userspace hypervisor component (running as root) talking to the kernel hypervisor driver and it is only used to collect very specific crash information.
 
-DEFINE_CLASS(pm_runtime_get_sync, struct device *,
-         if (_T) pm_runtime_put(_T),
-         ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
+> Having the VF create the DMABUF is one way to do that, but I imagine
+> there are other options.
 
-DEFINE_CLASS(pm_runtime_get_sync_auto, struct device *,
-         if (_T) pm_runtime_put_autosuspend(_T),
-         ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
+Well how does the guest communicate to the host which parts of the VRAM should be exposed as DMA-buf in the first place?
 
-with a comment explaining what they are for.
+> 
+> But sure, if you can solve, or ignore, the security proof it makes a
+> lot more sense.
+
+I mean what I'm still missing is the whole picture. E.g. what is the reason why you want a DMA-buf of portions of the VFs resource on the host in the first place?
+
+Is that for postmortem crash analysis? Providing some kind of service to the guest? Something completely different?
+
+Regards,
+Christian.
+
+> 
+> Jason
+
 
