@@ -1,121 +1,135 @@
-Return-Path: <linux-pci+bounces-36649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC08AB904EC
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:10:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0FC4B90540
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 13:17:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 783947ABE36
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 11:09:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFF857ADDFE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 11:16:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B7ED2AEE4;
-	Mon, 22 Sep 2025 11:10:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8776D2FDC3C;
+	Mon, 22 Sep 2025 11:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKJGz7DA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1779627F72C
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 11:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2D9192B66;
+	Mon, 22 Sep 2025 11:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758539450; cv=none; b=gXkCGyKrcd+WIpbwjR4Aevg0ZgTUPxPoSyMQ2q7/I+UIV+AaxG3K3CMEthjnJAw8HAcZ7qXXc7xfw/BJHuI5q2jN/eS9VtWP0pI34TYr+UvqZMZb95AI2qFl4zh4YVOLruIG33sDBQgKqc5zqSsUp8q0R/Fp81+crtlCpzFAKFw=
+	t=1758539870; cv=none; b=kHidg+N7aKqaT/i7hsvQHGiS2c9wbNJ4d00W2Iqe4s2fL7AJVOv6uqiAZ3t8Y5dcSuVjUn5YyLV6e5SwUYbeet7YmoYo3ijNfgU7AQdsDcq96EnKiTSrH+iv0YfaXEAMMXaBD+jeppE6x4Lk1YBiap/oS52hWTz9uwXIjTeQlYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758539450; c=relaxed/simple;
-	bh=cTOWHSZz0CbR5QVq9JJxTyPwu6atT+ebquYnqCSMr7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hb0L0rLgPz0to2K8KDMcxzxh5PYG7ETzS20MpvDZ3grbEIdjRCjVLfa0emt6rChMDEzw7ErkavZ2Hwth8r3qi8qN7buXlczT9ySI/7gGhPdRYYjr9FjdvhxbxMM+UR8b99Tg2TfGMILb7phNhKLXP3DGND0NYAIQyqcNKytSPX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-5a2b3bb803bso403267137.0
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 04:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758539447; x=1759144247;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IV/+B9dZihk2EaYjeu+uEgh+MclsoCpinoB+GYo0npw=;
-        b=IaG7o2qteY2UV+Ze7PSaTRcRqgbk7ObEy0LTCY5laAFNHEjGjnBZYfzX332jpy+a5e
-         J+dAhxZul34MBp07nUEYITSPO4V2mSfWdRZ5LS3ptJ4kEQOQ8ffGJ9kg0DnnCumqV7Ae
-         40Ujxqw60XX2v5HMdYqsxgQapwlD4LfIYXOij0lrHloiW4DT8jX+yb+YPp0QOZpSbBNy
-         nERt9TQ/L6isrJKVkYZz3j+B35EH/b7Xq4Pag7MRREWJljEPBbByB658OhOFBp6nO2RB
-         /KDKrn2T9gXTdEdn4ENSTAPYnbgEm+iKoraX7JxrTe1JFkxApyF0EeeOwoA/1FRtqfPR
-         Ul0g==
-X-Gm-Message-State: AOJu0YyxUsUsSeDC2xUYP0UAji/oIur8/cvR5Ou+h/PCxO6iZXe0PPa9
-	O3hfSlX5+E+LFw/oWVAvEhCDJe1huPKR7cqbhABRE5+5/xOvfYdLsH1KZfdQiOnT
-X-Gm-Gg: ASbGnct8ZhlSplcNPboAYH+HtCJ9hLfZ/FdOdG2WUkQgvquO3bsZrT/PefYSElfyhh9
-	+PHZzYBUOChielfbKeNRk+CQuIuAr4V9D5tS8lY8jZNqb0KouZYo6+jBe3M1OD+sIZsKNj2qt/Q
-	6UNSgkwwsgVbVHthd4Hly8N3Y4sfUEbm364XphyPwaTpkDnvjLugJzti/AmB6RUP1RJ+T9Vk6PN
-	+Y0hwI6fu2h0HtBGjoFe+oYdISxOniWEF98ZEVnVuOWRzLHgS2/GZV+3TsNU2bqW1XJi/rBoSKl
-	QrFO1Mfq3WQmNJnboH8iHMbVDN/2XsfAGk+maobBNeDlr1OXC8mNWWJrPmgCj3ghXMHZkg+UX9u
-	mie6CY4Xn3L6yRkSZaVrzsrSpFuV+t5KQ0L0A+ryaOlciVO7TKemXn9pc2/qQ
-X-Google-Smtp-Source: AGHT+IHPh9vyKoMpULfDyDftvL04B810NroXomg+av6/k19sYJfCMsCUGJd2dmwd0Sln5VTmIamAnw==
-X-Received: by 2002:a05:6102:3c84:b0:537:f1db:76cb with SMTP id ada2fe7eead31-588f42ba8f6mr3623662137.30.1758539447519;
-        Mon, 22 Sep 2025 04:10:47 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-589a3be2687sm2531389137.3.2025.09.22.04.10.46
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Sep 2025 04:10:46 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8e3239afdf2so2817861241.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 04:10:46 -0700 (PDT)
-X-Received: by 2002:a05:6102:6499:10b0:59e:37f3:688e with SMTP id
- ada2fe7eead31-59e37f39589mr1254098137.26.1758539446124; Mon, 22 Sep 2025
- 04:10:46 -0700 (PDT)
+	s=arc-20240116; t=1758539870; c=relaxed/simple;
+	bh=P/WkZtU1feRYKGYIu/69vRBdYK8dAJ5LkCF7pU4LxlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KEs9pedC4MMpAfQt6ic+0y2rXXF6pPcmc7meoSegZ6xs+7vMpvcrkc6JeQMKGIOCabT8rXt/a8/WQDERLBq/qTKxf0l6Syy8nPkm+TUJdNMN/p6fr1b2GfIbI+mBeIVKURARYKTYfECm+SXwE5opmLpAoiVXhFokLE1e3JLatNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKJGz7DA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E89C4CEF7;
+	Mon, 22 Sep 2025 11:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758539869;
+	bh=P/WkZtU1feRYKGYIu/69vRBdYK8dAJ5LkCF7pU4LxlM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AKJGz7DAwj69nbNV0Rne3G36MBMl3WicbxYo6d7/PZP9HsdCs9jzrSchd9/jHIKqh
+	 eC2bZZEHCsGN4N4ZjON/bMrnCwOhqa0Os1N7KJWuMjSw+XaigO4bNnPP29mIoyGd3+
+	 7F3hGlAzdzUOX0U1gYbhMMaEGa0tDc/aQuhAs7hz7pJe2DJhVHfiseVb88nyqnfL3J
+	 oAjYyS3B2+9/8BOmeNggh52hqwFR1obtXc3pkg/gGB4Zc0JcV2tc1rgT96yL5RiGN3
+	 Tekq60Op8YyvRVW4fusY5YxcIylwCl8inJOMdsraDdJTZflRMrJi11D9bDCTifMqOI
+	 hPpMTm27c61NA==
+Date: Mon, 22 Sep 2025 16:47:39 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, christian.bruel@foss.st.com, 
+	quic_wenbyao@quicinc.com, inochiama@gmail.com, mayank.rana@oss.qualcomm.com, 
+	thippeswamy.havalige@amd.com, shradha.t@samsung.com, cassel@kernel.org, kishon@kernel.org, 
+	sergio.paracuellos@gmail.com, 18255117159@163.com, rongqianfeng@vivo.com, jirislaby@kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v3 0/4] PCI: Keystone: Enable loadable module support
+Message-ID: <qdz2d57q3hyosmvh7xzxy2qdhpjyxkl2mh6dr4or4nj4qakpoh@gg6ihzpaynst>
+References: <20250922071222.2814937-1-s-vadapalli@ti.com>
+ <175852954905.18749.5091036983349477093.b4-ty@kernel.org>
+ <3sjuplupmdoxqhyz2i2p4he5vw7krqokixoy6ddoiox6p536n6@xzfcyhwjx3hv>
+ <590d183c-8971-4728-9aa3-4e02bd3d0845@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919134644.208098-1-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250919134644.208098-1-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 22 Sep 2025 13:10:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU1z3ePD+1cyghfu0WbnP1X1_k4Jviv04hSxWtn=tt-xg@mail.gmail.com>
-X-Gm-Features: AS18NWB5GAhd387xFzdau5HTt1U0YcFo9PHbJ6-t9ZIWuzYYbXO-r5xYHoFbkes
-Message-ID: <CAMuHMdU1z3ePD+1cyghfu0WbnP1X1_k4Jviv04hSxWtn=tt-xg@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: rcar-gen4: Add missing 1ms delay after PWR reset assertion
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-pci@vger.kernel.org, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <590d183c-8971-4728-9aa3-4e02bd3d0845@ti.com>
 
-On Fri, 19 Sept 2025 at 15:47, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> R-Car V4H Reference Manual R19UH0186EJ0130 Rev.1.30 Apr. 21, 2025 page 585
-> Figure 9.3.2 Software Reset flow (B) indicates that for peripherals in HSC
-> domain, after reset has been asserted by writing a matching reset bit into
-> register SRCR, it is mandatory to wait 1ms.
->
-> Because it is the controller driver which can determine whether or not the
-> controller is in HSC domain based on its compatible string, add the missing
-> delay into the controller driver.
->
-> This 1ms delay is documented on R-Car V4H and V4M, it is currently unclear
-> whether S4 is affected as well. This patch does apply the extra delay on
-> R-Car S4 as well.
->
-> Fixes: 0d0c551011df ("PCI: rcar-gen4: Add R-Car Gen4 PCIe controller support for host mode")
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+On Mon, Sep 22, 2025 at 02:55:05PM +0530, Siddharth Vadapalli wrote:
+> On Mon, Sep 22, 2025 at 02:02:43PM +0530, Manivannan Sadhasivam wrote:
+> 
+> Hello Mani,
+> 
+> > On Mon, Sep 22, 2025 at 01:56:08PM +0530, Manivannan Sadhasivam wrote:
+> > > 
+> > > On Mon, 22 Sep 2025 12:42:12 +0530, Siddharth Vadapalli wrote:
+> > > > This series enables support for the 'pci-keystone.c' driver to be built
+> > > > as a loadable module. The motivation for the series is that PCIe is not
+> > > > a necessity for booting Linux due to which the 'pci-keystone.c' driver
+> > > > does not need to be built-in.
+> > > > 
+> > > > Series is based on commit
+> > > > dc72930fe22e Merge branch 'pci/misc'
+> > > > of pci/next.
+> > > > 
+> > > > [...]
+> > > 
+> > > Applied, thanks!
+> > > 
+> > > [1/4] PCI: Export pci_get_host_bridge_device() for use by pci-keystone
+> > >       commit: c514ba0fa8938ae09370beecb77257868c1568a7
+> > > [2/4] PCI: dwc: Export dw_pcie_allocate_domains() and dw_pcie_ep_raise_msix_irq()
+> > >       commit: db9ff606a5535aee94bf41682f03aba500ff3ad6
+> > > [3/4] PCI: keystone: Exit ks_pcie_probe() for invalid mode
+> > >       commit: 76d23c87a3e06af003ae3a08053279d06141c716
+> > > [4/4] PCI: keystone: Add support to build as a loadable module
+> > >       commit: e82d56b5f3844189f2b2240b1c3eaeeafc8f1fd2
+> > > 
+> > 
+> > I just noticed the build dependency mentioned in the cover letter after applying
+> > the series. This is problematic since there is no guarantee that the dependent
+> > commit will reach mainline first. So if this series gets applied by Linus first,
+> > then building this driver as module will break the build. We should not have the
+> > build error at any cost.
+> 
+> As feedback for the future, is there a better way that I could have
+> highlighted the build dependency? I agree that a build failure is
+> unacceptable which is why I tried to highlight the dependency, but, it
+> probably wasn't the best approach to point it out by mentioning it in
+> the cover letter. Please let me know if I could make it easier for you
+> and other Maintainers to notice such stated dependencies.
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Mentioning the build dependency in the cover letter is the right thing to do.
+But somehow I failed to spot it as it was not highlighted enough (just for my
+eyes).
 
-Gr{oetje,eeting}s,
+Maybe you could mention the dependencies under a sub-section. Like,
 
-                        Geert
+Dependency
+==========
+
+Some people also mark the patches as DNM (Do Not Merge), but that's for patches
+not intended to be merged as is. Not for this series though.
+
+Anyhow, I take the blame of not going through the cover letter properly, but you
+did the right thing.
+
+- Mani
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+மணிவண்ணன் சதாசிவம்
 
