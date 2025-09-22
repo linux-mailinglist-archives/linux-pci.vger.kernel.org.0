@@ -1,258 +1,133 @@
-Return-Path: <linux-pci+bounces-36710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37554B92AE3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 20:58:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49A2AB92A47
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 20:48:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E54021783C1
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:58:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DACA1896A9F
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:49:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FD031770B;
-	Mon, 22 Sep 2025 18:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A5E3313525;
+	Mon, 22 Sep 2025 18:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="EB46b3kd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EMZMCUwR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9DD313525;
-	Mon, 22 Sep 2025 18:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59DC4315A
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 18:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758567483; cv=none; b=biDCk4F6Gt6FFp98yTcVQ4ZHaBEba/ruqIYxmGg1CM8eazvxDHn3rGGInRV+/9hdAOQF6a3wTrL/8+wsJ/htpYgQD1u8nVA+VlL0VgVnUYMsGXZikK9bgbQIbhk8DCgoDXt7PVHFnjawiatTv5IM5CWyGf0sIzI2b3lZqakZFbs=
+	t=1758566923; cv=none; b=aI1ZXSeCoS3EnVBmUhxIyrjG+MGI9Xgyux6+iA6eYLbqSvy1lGUGSwbkc5TzoweadlFIqtSQfRlZ+dXxMqfEmzEJS8szxT8PV1RjeMLoUOHjg/bGY0IUHZaQgwXMK6sFaaPz1kX9RyZ3aLMBHCVpsunq+0NQC/ozbDn7pELXJDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758567483; c=relaxed/simple;
-	bh=gIxHO3bd6VWvXQH4ocpPz5/pzsLIHtRehBIodT6MuV8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mt+6cFs/c+n9Zg+64UVjeJOMD2GJBcMg+vUuHD56opYR1DybBPUivSdwNCa1vhxcT+kvaKgw00oNMBrktUOPo8bVv8q2zhYVms5fsoj6pIYin45wrdapK28KlpSari/bk660Ux0qONyWajj8kblumlkBQKwFnDftYtr7BtguQfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=EB46b3kd; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4cVsLp1kH5zDWX;
-	Mon, 22 Sep 2025 14:38:26 -0400 (EDT)
-Received: from [10.50.4.39] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4cVsLd62b1z4K1J;
-	Mon, 22 Sep 2025 14:38:17 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1758566298; bh=gIxHO3bd6VWvXQH4ocpPz5/pzsLIHtRehBIodT6MuV8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=EB46b3kdjBxwGcRKe6eDGpvh5blP0ne7Vo1x7yWkGdMYQq4MzQ2XiEHoFu2tEa7If
-	 /ob5jKb1J2Is+52eMcM0LAeiiUEAH1mojr9ajTXSrwviTDYEMsPWLx8IEqlEN66BVe
-	 XE34+7KflLgHEnI6D/RiyBA8WQdmND3WQ0e/Z9pU=
-Message-ID: <1180051f-58a9-4f7e-9acb-4caa527a2ce6@panix.com>
-Date: Mon, 22 Sep 2025 11:38:16 -0700
+	s=arc-20240116; t=1758566923; c=relaxed/simple;
+	bh=62BWT+ChZietzG21mZwYd1nPiVzg6h9wIs2Www+JfAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7RyhGODTLWJxYGebZ69p2h0UoKuaqeVYS4cFh2Zk1CZVn0yJ7sHnN+Og+fKfyToIFcGEr8aR3H/FH4kKR+K4z5dxky8fRYcuRk84PxQLjMYJrzS0e9rI9ns6iqYJofs+TNAMLsswnwRDt98X33Ocqwsc+bRANvPDfcMvUpMLUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EMZMCUwR; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-77f41f819ebso973635b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 11:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1758566921; x=1759171721; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=62BWT+ChZietzG21mZwYd1nPiVzg6h9wIs2Www+JfAc=;
+        b=EMZMCUwRqkqCT7w8Zq8rDm4OrkZdVUjuWagkuWRFgsBEcR4H0ab3y255zQb8kv+8Ku
+         mI6iIbZXgUt/HcTQtAXojjSmTFH5pEDAV/unjNJ1AQbxdtTAvt5gWZ0uF+8Qll98vd/v
+         CUyzL9+3Z/ozswqE+LwhUbfGoUUkQLfUckDx8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758566921; x=1759171721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=62BWT+ChZietzG21mZwYd1nPiVzg6h9wIs2Www+JfAc=;
+        b=LqZuzqERIACCUwfz7Ue8gy2d1u/EW8sy881K0PHPVfUa9l2rCHSuX3oe7ziKYNwl2A
+         mLqJsAoFqlJDsdRdoRmt06Dln3Br8U1JfoHVG7R0pQqYmwKCWGf9NE1WRVSRVqUaFEZy
+         0uWOaJQ6kWBgee3N44GaOpEwqavWzsK31Ou8Y5xYnyMmyd8m1sNSEOABGU4mr5MF0NQq
+         xi1bfeE5QU2/CIaSu6+5hCOCvzvsv7GffA9t+JTYgA8aRIiAWTnCj4CsJwTr0dS14zFI
+         MXZIazA+kmAyskP+b4Pzq3bVy8RfOmV9vdIaKdd6gt4GzEem6emsTmIALnNmSG3RnW9S
+         Laig==
+X-Forwarded-Encrypted: i=1; AJvYcCUCQRfX0TI98/AM8Rj6eYoGTiT/AjBWmPcatujVEo09Vy8nuufTGcSmqXSB3dk0UNp4yfN/3mKsS/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBhG2Vz0yMCJx3zyjU72gHcaGjGk8ivZWMX1ir2Xnf3gnuBg2D
+	9vVAHRzjYRPefxJtVpjxd2caLe2e7vgkcWwnw/8GjDIZ5Xhnze2Qg8yzhF8OJCTuDg==
+X-Gm-Gg: ASbGncvDG9KoXvaSCIuvMAnx8W3EH7AvD7WZtvKUpXShj/P5QNykEC7ViwiDYFBWpF5
+	6asJvCtPoTYRbT7VEOjXFzBoB4UeGPPC1XLm0wCkC7E8bHMweLB5uRnqVFMAAUIvcduDYZdn/wa
+	8Wj+3fcjRPOw3prU9IXsH48vUrqDVDnDzjogfAEr7yzJoAvOJIU7biIpVZ2ZEhxtbAE5ibobrH4
+	+Z3XnRpZmgxbuOf5H8t2+/q6Mt9p9x9DLw1hp1M0Q9qob7h+QK9X04TFn7s134F9WVQZd/IMs+t
+	preGrm83aFjsofgCeRwD4HbB6zRl5h5BTOsO4ppLAtnHcDY5n27BK7DJiR0P//nqQDhY2nCWKgR
+	daxQ9b0wDpvV8JLzsQJpafd7AFLjaOf9ItqH3IxkBthtW+O/feDoptej0B5Zw
+X-Google-Smtp-Source: AGHT+IEwQZB9OJP+yIk47lHkNRnpblDU+mAiC3pniWHHE9+nReBcI884SHHQG9F+tJn/QrVZqfu7fA==
+X-Received: by 2002:a05:6a00:390b:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-77e4cd35838mr16708833b3a.4.1758566921098;
+        Mon, 22 Sep 2025 11:48:41 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e7c:8:f126:ac9b:b8ac:e280])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-77f34d416a9sm4169794b3a.101.2025.09.22.11.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Sep 2025 11:48:40 -0700 (PDT)
+Date: Mon, 22 Sep 2025 11:48:38 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	kunit-dev@googlegroups.com,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH 0/4] PCI: Add support and tests for FIXUP quirks in
+ modules
+Message-ID: <aNGaBiUOb6_n8w8P@google.com>
+References: <20250912230208.967129-1-briannorris@chromium.org>
+ <aMgZJgU7p57KC0DL@infradead.org>
+ <aMhd4REssOE-AlYw@google.com>
+ <aNGR0x185VGHxSde@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
- ASPM/CLKPM link state
-From: Kenneth Crudup <kenny@panix.com>
-To: "David E. Box" <david.e.box@linux.intel.com>, rafael@kernel.org,
- bhelgaas@google.com, vicamo.yang@canonical.com,
- ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com, mani@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kenneth C <kenny@panix.com>
-References: <20250825203542.3502368-1-david.e.box@linux.intel.com>
- <603984dc-f29b-498d-9723-1d6aa27bc7fd@panix.com>
-Content-Language: en-US
-In-Reply-To: <603984dc-f29b-498d-9723-1d6aa27bc7fd@panix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNGR0x185VGHxSde@infradead.org>
 
-Any movement on this?
+On Mon, Sep 22, 2025 at 11:13:39AM -0700, Christoph Hellwig wrote:
+> Controller drivers are a special case I guess, but I'd rather still
+> not open it up to any random driver.
 
-Anything keeping it from being in pm-next (at least I haven't seen it in 
-a precursory look for it)?
+I don't really see why this particular thing should develop restrictions
+beyond "can it work in modules?", but if you have an idea for how to do
+that reasonably, my ears are open.
 
-Thanks,
+> When did we allow modular
+> controller drivers anyway?
 
--Kenny
+An approximate count:
 
-On 9/4/25 14:11, Kenneth Crudup wrote:
-> 
-> Tested-by: Kenneth R. Crudup <kenny@panix.com>
-> 
-> On 8/25/25 13:35, David E. Box wrote:
->> Synthetic PCIe hierarchies, such as those created by Intel VMD, are not
->> enumerated by firmware and do not receive BIOS-provided ASPM or CLKPM
->> defaults. Devices in such domains may therefore run without the intended
->> power management.
->>
->> Add a host-bridge mechanism that lets controller drivers supply their own
->> defaults. A new aspm_default_link_state field in struct 
->> pci_host_bridge is
->> set via pci_host_set_default_pcie_link_state(). During link 
->> initialization,
->> if this field is non-zero, ASPM and CLKPM defaults come from it 
->> instead of
->> BIOS.
->>
->> This enables drivers like VMD to align link power management with 
->> platform
->> expectations and avoids embedding controller-specific quirks in ASPM core
->> logic.
->>
->> Link: https://patchwork.ozlabs.org/project/linux-pci/ 
->> patch/20250720190140.2639200-1-david.e.box%40linux.intel.com/
->> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
->> Tested-by: Manivannan Sadhasivam <mani@kernel.org>
->> Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
->> ---
->> Changes in V3:
->>    -- Changed pci_host_get_default_pcie_link_state() argument name from
->>       parent to dev.
->>    -- Applied changelog tags
->>
->> Changes in V2:
->>
->>    -- Host field name changed to aspm_default_link_state.
->>    -- Added get/set functions for aspm_default_link_state. Only the
->>       setter is exported. Added a kernel-doc describing usage and
->>       particulars around meaning of 0.
->>
->> Changes in V1 from RFC:
->>
->>    -- Rename field to aspm_dflt_link_state since it stores
->>       PCIE_LINK_STATE_XXX flags, not a policy enum.
->>    -- Move the field to struct pci_host_bridge since it's being 
->> applied to
->>       the entire host bridge per Mani's suggestion.
->>    -- During testing noticed that clkpm remained disabled and this was
->>       also handled by the formerly used pci_enable_link_state(). Add a
->>       check in pcie_clkpm_cap_init() as well to enable clkpm during init.
->>
->>   drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++--
->>   include/linux/pci.h     |  9 +++++++++
->>   2 files changed, 49 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->> index 919a05b97647..851ca3d68e55 100644
->> --- a/drivers/pci/pcie/aspm.c
->> +++ b/drivers/pci/pcie/aspm.c
->> @@ -373,6 +373,39 @@ static void pcie_set_clkpm(struct pcie_link_state 
->> *link, int enable)
->>       pcie_set_clkpm_nocheck(link, enable);
->>   }
->> +/**
->> + * pci_host_set_default_pcie_link_state - set controller-provided 
->> default ASPM/CLKPM mask
->> + * @host: host bridge on which to apply the defaults
->> + * @state: PCIE_LINK_STATE_XXX flags
->> + *
->> + * Allows a PCIe controller driver to specify the default ASPM and/or
->> + * Clock Power Management (CLKPM) link state mask that will be used
->> + * for links under this host bridge during ASPM/CLKPM capability init.
->> + *
->> + * The value is consumed in pcie_aspm_cap_init() and 
->> pcie_clkpm_cap_init()
->> + * to override the firmware-discovered defaults.
->> + *
->> + * Interpretation of aspm_default_link_state:
->> + *   - Nonzero: bitmask of PCIE_LINK_STATE_* values to be used as 
->> defaults
->> + *   - Zero:    no override provided; ASPM/CLKPM defaults fall back to
->> + *              values discovered in hardware/firmware
->> + *
->> + * Note: zero is always treated as "unset", not as "force ASPM/CLKPM 
->> off".
->> + */
->> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
->> +                      unsigned int state)
->> +{
->> +    host->aspm_default_link_state = state;
->> +}
->> +EXPORT_SYMBOL_GPL(pci_host_set_default_pcie_link_state);
->> +
->> +static u32 pci_host_get_default_pcie_link_state(struct pci_dev *dev)
->> +{
->> +    struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +
->> +    return host ? host->aspm_default_link_state : 0;
->> +}
->> +
->>   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int 
->> blacklist)
->>   {
->>       int capable = 1, enabled = 1;
->> @@ -394,7 +427,10 @@ static void pcie_clkpm_cap_init(struct 
->> pcie_link_state *link, int blacklist)
->>               enabled = 0;
->>       }
->>       link->clkpm_enabled = enabled;
->> -    link->clkpm_default = enabled;
->> +    if (pci_host_get_default_pcie_link_state(link->pdev) & 
->> PCIE_LINK_STATE_CLKPM)
->> +        link->clkpm_default = 1;
->> +    else
->> +        link->clkpm_default = enabled;
->>       link->clkpm_capable = capable;
->>       link->clkpm_disable = blacklist ? 1 : 0;
->>   }
->> @@ -866,7 +902,9 @@ static void pcie_aspm_cap_init(struct 
->> pcie_link_state *link, int blacklist)
->>       }
->>       /* Save default state */
->> -    link->aspm_default = link->aspm_enabled;
->> +    link->aspm_default = pci_host_get_default_pcie_link_state(parent);
->> +    if (!link->aspm_default)
->> +        link->aspm_default = link->aspm_enabled;
->>       /* Setup initial capable state. Will be updated later */
->>       link->aspm_capable = link->aspm_support;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 59876de13860..8947cbaf9fa6 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -620,6 +620,10 @@ struct pci_host_bridge {
->>       unsigned int    size_windows:1;        /* Enable root bus sizing */
->>       unsigned int    msi_domain:1;        /* Bridge wants MSI domain */
->> +#ifdef CONFIG_PCIEASPM
->> +    unsigned int    aspm_default_link_state;    /* Controller- 
->> provided default */
->> +#endif
->> +
->>       /* Resource alignment requirements */
->>       resource_size_t (*align_resource)(struct pci_dev *dev,
->>               const struct resource *res,
->> @@ -1849,6 +1853,8 @@ int pci_disable_link_state(struct pci_dev *pdev, 
->> int state);
->>   int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
->>   int pci_enable_link_state(struct pci_dev *pdev, int state);
->>   int pci_enable_link_state_locked(struct pci_dev *pdev, int state);
->> +void pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
->> +                      unsigned int state);
->>   void pcie_no_aspm(void);
->>   bool pcie_aspm_support_enabled(void);
->>   bool pcie_aspm_enabled(struct pci_dev *pdev);
->> @@ -1861,6 +1867,9 @@ static inline int pci_enable_link_state(struct 
->> pci_dev *pdev, int state)
->>   { return 0; }
->>   static inline int pci_enable_link_state_locked(struct pci_dev *pdev, 
->> int state)
->>   { return 0; }
->> +static inline void
->> +pci_host_set_default_pcie_link_state(struct pci_host_bridge *host,
->> +                     unsigned int state) { }
->>   static inline void pcie_no_aspm(void) { }
->>   static inline bool pcie_aspm_support_enabled(void) { return false; }
->>   static inline bool pcie_aspm_enabled(struct pci_dev *pdev) { return 
->> false; }
->>
->> base-commit: c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-> 
+$ git grep tristate ./drivers/pci/controller/ | wc -l
+39
 
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+There's been a steady trickle of module-related changes over the years.
+And several modular controller drivers predate the
+drivers/pci/controller/ creation in 2018 at commit 6e0832fa432e ("PCI:
+Collect all native drivers under drivers/pci/controller/").
 
+> That feels like a somewhat bad idea, too.
+
+Any particular reason behind that feeling? Most other bus frameworks I'm
+familiar with support modular drivers.
+
+Brian
 
