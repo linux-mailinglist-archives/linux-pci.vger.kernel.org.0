@@ -1,182 +1,185 @@
-Return-Path: <linux-pci+bounces-36699-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C845B922AC
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:17:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27BCCB9230D
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 18:19:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7832C1902F7A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:17:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1903E1903BAD
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:19:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8203112A1;
-	Mon, 22 Sep 2025 16:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1052F2E2850;
+	Mon, 22 Sep 2025 16:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYSOnV80"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+y0W5jr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE041662E7;
-	Mon, 22 Sep 2025 16:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C383112C6
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 16:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758557814; cv=none; b=qiuOqeUxvf3UvQPObnrGTCmpAL7+uIqKNki3RqT/V6lmfqsgKNxk/Ugd6oIdUXf7sqUAPEsm/pozsNMkpSNmEnfaY2D6peBTgDb1UpGidXAxALGQh9MwJVML7DZ00m6r2NfUsjKtQX6uWBSb1oNbJKIB6mg4Y6145vJ3Qsu/VX4=
+	t=1758557916; cv=none; b=kvVkUuLC0kHVEJgcboImY2aAYO/TGMcISkb/hm0KXil0lJSqY0Qf4vPoA2OicId86O0v4Ew5WAeieJkEcLPb09aorvfwpp1dX3pvhDPt/8PivmfA2l/preW5PMwt6g8kj9N6K8WDAYHvyXwPqbp5wL5pZTxyWmxV/5cAWHzNvHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758557814; c=relaxed/simple;
-	bh=40eGwaZGt0426y8h5tNB3LgiDgmJeajd/RksG77m4nE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tXPFZyEkHXkBo87MI3gzsBghWdlDKRu6fMmHJmCJJmbMC1mnuxt2FGsM+1iS2wF4+qT6ociJMFkudMGDnGXYKpfzZ6reJkKla1kT1QdRvmVF/SECntNiUKXcc5oF3q9p9COv8/ad2FaUere/IJj0BuRvTreANqpmTOEeysrN0Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYSOnV80; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79C88C4CEF7;
-	Mon, 22 Sep 2025 16:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758557814;
-	bh=40eGwaZGt0426y8h5tNB3LgiDgmJeajd/RksG77m4nE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rYSOnV80/tC/gg2PuDA/UErh9WG8OaOyBxFLDAEgpw+vaIaA0EMEQJtmokhIfNyQ1
-	 yWwIx3QWIxFBkYZjE/PTSwOkAqQ00kqQUkyPe0KEm4dcDSQTP5mgj0DopToHIthvcK
-	 FlZQ4x4m3BYbYJlUS16vxZGR9iIJWsfDtIGsujjw7BAZO6ytU8E6Zb69q6/vltHCrB
-	 jF/s+quYxO1oAF9B+QaWhY5nuoEA6yOhqC+H68WgcGSaofxRW9dsPwzUZJMLMn3U3u
-	 eNQ0a+75otjlcXUyMgzF6Chf15BWNVcLAJxXDfE+s5GUnTh7eAE5uGkP4mmsqiaKJc
-	 SIfXGGnxDK3bQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1ABCA100F;
-	Mon, 22 Sep 2025 16:16:54 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 22 Sep 2025 21:46:45 +0530
-Subject: [PATCH v2 2/2] PCI: qcom: Remove the custom ASPM enablement code
+	s=arc-20240116; t=1758557916; c=relaxed/simple;
+	bh=/6cwwyx95yFe2VTI7rjAQhARkqn7dtwQ1pD0HDEwEf8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AIqsIkCzD7W//EFLxfvdHwo35mAxWBO7Uiw0VZj1iZTss6sdp7am6sBWcv1TTjbLt62PTmsSsJl3SGPw3cZCErbZxjxB2nIPwaDJNnjQ8zdmxEe0wV1gvLd79r7Z6+oojjfXRg8a3yRmDnvefyDoHysikiWZA4arGqmMCMgL/QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+y0W5jr; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-57e03279bfeso1858303e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 09:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758557913; x=1759162713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QWRtWQb4tDxw+RDTltwl4oqgAah0j63IckQcO9ISpds=;
+        b=B+y0W5jrON3vUgE9gMEjzzqgeI4CAYy4nBbbY2kwy2f/A4ITKm4642WsSqHc1IOO7e
+         kCfaNepv0TA2wrq50eHN8JORs97F/CWkyN80iYj0zTvTtfFFw80J1JcpskcK9rjvLBnw
+         ZfnqfoBg1IOxhV+nznb386tOUfe0nDG4tTkxWU3Kq8rsEI4WvT6CVftMsqtvitG4CnM+
+         3u4mhK16x0Z4Ltlk8nRYp9OngR9AqX0OglLpLql1cGh+R2IhXef2PBUbBYB+1jLflowd
+         44wWRm9omEbwWDF08trX2f4sJnETtd7KirofR85e6rEMxxl0XCKJNbS+Qiavt+5hlYJa
+         rcNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758557913; x=1759162713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QWRtWQb4tDxw+RDTltwl4oqgAah0j63IckQcO9ISpds=;
+        b=QlW1GjFsCcq1T8fdmD/FWTgksOX22UVl5Lonw+5D6/8W9ICakuLJqSCmyz3298VJ1p
+         +wV7674PXBAvvRdove6mOdNS1bm6EwjnrgfjsyHXvmHiOLoRXQ5Qhv1UK5yM6XB5oFaG
+         fEXXLyo4RYVrR5uVntRg2KUHv8mICJFDkJ4Q2YViDZHii0PNSTYMCyb8Hzv9u+t7E739
+         BgPPiQnxvcY7f1tUYgubxZ42GSBF5xM0w2sXkvve4/ODrTmQcR+JGkp3/pXoSeh8HX7m
+         wSl1I3geexZgdIAB5sKd7wBPOI9AisZ63D6VUmki8MnAv4LAzHJwDr/BHRX27Zs6c2lw
+         gu6g==
+X-Forwarded-Encrypted: i=1; AJvYcCU78e1ECr0xHZLEvGeoX9od4UX4HVkEK0HkhpQurEoEe14pcOUeZo9dPJKD2C7gIM5bRypiueRv8hw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmNRZehBdQckoFltNGLjWKpmd3jemQzwHHU+2LFKR1Eucno1XR
+	/Vk+VmReLsVXxieCYhgwusFFw7YM9GaFz4ABrI1ZhzGltPDTVtyj4xo5nM6Z6lb1GpJXsKR5oMi
+	N/m4wCg421p77glQsU8xzGVGSP/D72jw=
+X-Gm-Gg: ASbGnctzqbxlXGQgHp3xm6vLdIB5dq6qyV6rAHIWROCgzu9J9pxwQGLbWqDzHVtW6IB
+	ytDnfgwUYDXKQEGrwEVJgjKAU7ZFSnLC4Zql9lZcYbdpVR1/9vt47NqmI1hOpRnvYoTnL+/7/uV
+	UaArxSe3nJ2c3SZj7RekuHHV3N9+cmIhe/+zUxVoPKWdqj/nnyIeN829JreLCpLGd/2hCORmg6j
+	5IJmHs=
+X-Google-Smtp-Source: AGHT+IHbkCgbJFbDcK840KctNsVPKayfAg5z4hva0W8zSa5d3VGIBMvbwMO4roIb9UisDL440+gagdm9md1t8goV1+E=
+X-Received: by 2002:a05:6512:4504:b0:57d:d62e:b1fe with SMTP id
+ 2adb3069b0e04-57dd62eb499mr1348510e87.10.1758557912953; Mon, 22 Sep 2025
+ 09:18:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250922-pci-dt-aspm-v2-2-2a65cf84e326@oss.qualcomm.com>
-References: <20250922-pci-dt-aspm-v2-0-2a65cf84e326@oss.qualcomm.com>
-In-Reply-To: <20250922-pci-dt-aspm-v2-0-2a65cf84e326@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>, 
- Kai-Heng Feng <kai.heng.feng@canonical.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Chia-Lin Kao <acelan.kao@canonical.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3174;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=tvss3MdfYHL+rXNvlS+8nnRAEkq4Tu6jTREwynbA5UI=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBo0XZ0zMPEa/DPJ+/ZwL1+RCq8cOUUe8oEBjqgD
- MnAAtPBIMSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaNF2dAAKCRBVnxHm/pHO
- 9RYKB/9IT1Etlbn5Ys0d/XY24CXy3zkX6IKyRfYR1n1iRay5ZzhNSw3l8xWyKGzikZhWbZKvqCN
- YFb4fC/NV2gRjhsUUL78m0950MpeXr7LsIw//RAVZoHXCsbj6nVGq8A+uBSN4B9s9t2E8O6xTeu
- zn+ufAd3a1LhgLxmzLrEVXe9Dp3DHdi9F5JxMC4jXhX1QJ4xiQI4iMkwEJAOoZQaPm21/XV6TTF
- aRWtnJxR/DTo5hXi7swpOxEdC7ToW8sgb8z49qDWWk7BE2m5WOd3g/9FX7OAxGP/63Xzm4JYRg9
- w2gqZY7EgfwuNYrphxzXvjgzEHnAToXve4Xsweck19w9g0iI
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+References: <20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com>
+ <CALHNRZ9tOJccZ5sQjvkoPe4-+VUtWRxAzAOUainGUCs4+_RBCw@mail.gmail.com>
+ <omchhpbmsydfcsm6mzmbdiupsrxmxxvkxqf33fgi563akn76vf@vkc7k2zhlvee> <CALHNRZ8PZzseaTSCvhM6o7jMVYtVdHTczurXh1q+DY5MG62+DA@mail.gmail.com>
+In-Reply-To: <CALHNRZ8PZzseaTSCvhM6o7jMVYtVdHTczurXh1q+DY5MG62+DA@mail.gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 22 Sep 2025 11:18:21 -0500
+X-Gm-Features: AS18NWCkrA0Swv5I_sKNAMQ_VfnE8PJr0_nR10ONiX1dW-00lBFelqUkDRsus4A
+Message-ID: <CALHNRZ8mKZRS=ddyuscoTqu4h8GDR3fM8k36gbjth-csd10GGg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] PCI: tegra: Allow building as a module
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+On Mon, Aug 18, 2025 at 1:39=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
+ wrote:
+>
+> On Fri, Aug 1, 2025 at 1:01=E2=80=AFAM Manivannan Sadhasivam <mani@kernel=
+.org> wrote:
+> >
+> > On Thu, Jul 31, 2025 at 05:01:55PM GMT, Aaron Kling wrote:
+> > > On Thu, Jul 31, 2025 at 4:59=E2=80=AFPM Aaron Kling via B4 Relay
+> > > <devnull+webgeek1234.gmail.com@kernel.org> wrote:
+> > > >
+> > > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > > > ---
+> > > > Changes in v7:
+> > > > - Rebased on 6.16
+> > > > - Updated mailing address list
+> > > > - Link to v6: https://lore.kernel.org/r/20250507-pci-tegra-module-v=
+6-0-5fe363eaa302@gmail.com
+> > > >
+> > > > Changes in v6:
+> > > > - Remove unused debugfs cleanup function, as caught by kernel ci
+> > > > - Link to v5: https://lore.kernel.org/r/20250505-pci-tegra-module-v=
+5-0-827aaac998ba@gmail.com
+> > > >
+> > > > Changes in v5:
+> > > > - Copy commit message exactly word for word on patch 1, as required=
+ by reviewer
+> > > > - Delete remove callback in patch 3, per request
+> > > > - Don't clean up debugfs, per request, which drops patch 4 entirely
+> > > > - Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v=
+4-0-088b552c4b1a@gmail.com
+> > > >
+> > > > Changes in v4:
+> > > > - Updated commit messages for patches 1 and 2, per review
+> > > > - Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v=
+3-0-556a49732d70@gmail.com
+> > > >
+> > > > Changes in v3:
+> > > > - Add patch to drop remove callback, per request
+> > > > - Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v=
+2-0-c11a4b912446@gmail.com
+> > > >
+> > > > Changes in v2:
+> > > > - Add patch to export tegra_cpuidle_pcie_irqs_in_use as required wh=
+en
+> > > >   building pci-tegra as a module for arm
+> > > > - Drop module exit to prevent module unloading, as requested
+> > > > - Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v=
+1-0-c0a1f831354a@gmail.com
+> > > >
+> > > > ---
+> > > > Aaron Kling (3):
+> > > >       irqdomain: Export irq_domain_free_irqs
+> > > >       cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
+> > > >       PCI: tegra: Allow building as a module
+> > > >
+> > > >  drivers/cpuidle/cpuidle-tegra.c    |  1 +
+> > > >  drivers/pci/controller/Kconfig     |  2 +-
+> > > >  drivers/pci/controller/pci-tegra.c | 35 ++++----------------------=
+---------
+> > > >  kernel/irq/irqdomain.c             |  1 +
+> > > >  4 files changed, 7 insertions(+), 32 deletions(-)
+> > > > ---
+> > > > base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+> > > > change-id: 20250313-pci-tegra-module-7cbd1c5e70af
+> > > >
+> > > > Best regards,
+> > > > --
+> > > > Aaron Kling <webgeek1234@gmail.com>
+> > > >
+> > > >
+> > >
+> > > Continuing the conversation from the last revision [0]. Is there any
+> > > path forward for this series?
+> > >
+> >
+> > Daniel, could you please look into the cpufreq patch?
+>
+> Another two weeks with no response to a review request. And over two
+> months total since the cpuidle maintainers were initially asked to
+> look. Is there a policy for dealing with lack of responses?
 
-Since the PCI subsystem has started enabling all ASPM states for all
-devicetree based platforms, the ASPM enablement code from this driver can
-now be dropped.
+Another month with no response. Can something be done with this,
+please? If the subsystem maintainers don't respond, can they be
+overridden by anyone? Who would the next step up even be? Does it go
+directly from subsystem maintainers to Torvalds himself?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Link: https://patch.msgid.link/20250916-pci-dt-aspm-v1-2-778fe907c9ad@oss.qualcomm.com
----
- drivers/pci/controller/dwc/pcie-qcom.c | 32 --------------------------------
- 1 file changed, 32 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 294babe1816e4d0c2b2343fe22d89af72afcd6cd..a1c4a9c31f9241e9ca679533323e33c0b972e678 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -247,7 +247,6 @@ struct qcom_pcie_ops {
- 	int (*get_resources)(struct qcom_pcie *pcie);
- 	int (*init)(struct qcom_pcie *pcie);
- 	int (*post_init)(struct qcom_pcie *pcie);
--	void (*host_post_init)(struct qcom_pcie *pcie);
- 	void (*deinit)(struct qcom_pcie *pcie);
- 	void (*ltssm_enable)(struct qcom_pcie *pcie);
- 	int (*config_sid)(struct qcom_pcie *pcie);
-@@ -1040,25 +1039,6 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
--static int qcom_pcie_enable_aspm(struct pci_dev *pdev, void *userdata)
--{
--	/*
--	 * Downstream devices need to be in D0 state before enabling PCI PM
--	 * substates.
--	 */
--	pci_set_power_state_locked(pdev, PCI_D0);
--	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
--
--	return 0;
--}
--
--static void qcom_pcie_host_post_init_2_7_0(struct qcom_pcie *pcie)
--{
--	struct dw_pcie_rp *pp = &pcie->pci->pp;
--
--	pci_walk_bus(pp->bridge->bus, qcom_pcie_enable_aspm, NULL);
--}
--
- static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-@@ -1358,19 +1338,9 @@ static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
- 	pcie->cfg->ops->deinit(pcie);
- }
- 
--static void qcom_pcie_host_post_init(struct dw_pcie_rp *pp)
--{
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct qcom_pcie *pcie = to_qcom_pcie(pci);
--
--	if (pcie->cfg->ops->host_post_init)
--		pcie->cfg->ops->host_post_init(pcie);
--}
--
- static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.init		= qcom_pcie_host_init,
- 	.deinit		= qcom_pcie_host_deinit,
--	.post_init	= qcom_pcie_host_post_init,
- };
- 
- /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-@@ -1432,7 +1402,6 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
- 	.init = qcom_pcie_init_2_7_0,
- 	.post_init = qcom_pcie_post_init_2_7_0,
--	.host_post_init = qcom_pcie_host_post_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- 	.config_sid = qcom_pcie_config_sid_1_9_0,
-@@ -1443,7 +1412,6 @@ static const struct qcom_pcie_ops ops_1_21_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
- 	.init = qcom_pcie_init_2_7_0,
- 	.post_init = qcom_pcie_post_init_2_7_0,
--	.host_post_init = qcom_pcie_host_post_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
-
--- 
-2.48.1
-
-
+Aaron
 
