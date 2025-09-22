@@ -1,202 +1,235 @@
-Return-Path: <linux-pci+bounces-36673-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36674-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65DD9B91903
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:01:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6C4B91952
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:08:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37EF8189D97C
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:01:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B499B1900ECE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E871D5AD4;
-	Mon, 22 Sep 2025 14:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD901C5F37;
+	Mon, 22 Sep 2025 14:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ftZWN0yf"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T5GskFl7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y3Ervkkc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T5GskFl7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y3Ervkkc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011024.outbound.protection.outlook.com [40.107.208.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85F71B0439
-	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758549632; cv=fail; b=XWXmC+RaHsSNpICZW4uxLtCQuF6u43PsdYYeUiU3aJMf1tip+POjNyw3iuN6g/VfO6cVJKleA+QUKqo7XTN0tUDKP6ICXHB5stiaVGju4lREdi1Z9j8kc7sw96l11znllo8f1nXBWz/r1ctCOYjPB5wvogW7CIodEptrRaHWEdA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758549632; c=relaxed/simple;
-	bh=RyWCt3UaIJBsoHpteLuqdCoX9TEAGgdnOOffYyEnPoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NuxmWA2AvC7JhGi7p+pD1DmsgXV93tkOp/bHXAJ+go7POo4IlTagE/4huVyXfQ7spitweSWZAWsXeZ8//8Ao+0vZswikOFQD0mLBrbjDzhQISUV4mn8qJy1Ea11yYpCfPy0mcQ7/iTtlSMPO8CSFp4VIZLWyDoJCS3mMWjkF3/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ftZWN0yf; arc=fail smtp.client-ip=40.107.208.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Eoeikjf3H0b4/NVrZaeKpMx7hKgX/lHfaYco6mlCnazF0MIYd+KbIVr7KWQ1vFEdLQNKuL5xNqfu0B98FmTQVWTkhgwfAEAeA5ZS8B6jYIS1MAExUR965WAEW1esDWvIWylCgRJtyBin9VLX4zwYDfq0U+YI2qBxgCXP043f59TaOezbNwJ/aWOytHBYjRx3Vyluh+E1z/UJCr0zUKhEARE/viJo7G5zDPlX2C/lGR+6eB227M3S9D3mDhTygA2WhWxSJuHeLpYDebUaiIgdbwDBunZzaOaD9ymSlUj5fLK0Nxf/GVZi4CcNiPTWSOCe9qLEH8GSlpXkUcHookNLIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lzXB+xZiNWCmRtVgbtaoq3+RQxpc9Rkvgoq4yvsA/ws=;
- b=iBvAuy7N7m9qdEC9CW8aCVxXVeW1wNl8ImfhqDjedO/pkrTslH7RFIXyRMOYg4uf5Y6xH4lrw5wXAT3IzPbg3ZQDlhrIL+z0okTxOj4zI6/vEdKsDLCrGHJ0SfFmuxWuwtYSqkfLONSQD/ATkzDXJyXnBdvXdCdS/59GGTa6Tb7UkZ1vi+8GVcHynf6IohXj4IYLYp2EFacwGOblEhOO+YrOAExIJMdEYcLn5WAk3UsP13wzKIZh1FgAw+lxsHDJ6XQufaTk/qC0WC3vw9dOmwTc6pL7EUJis0AWFnu3EAGiEkw5f6NNEuA6mZjtsYJC9y2TIfzn/JAGElxBmbm7aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lzXB+xZiNWCmRtVgbtaoq3+RQxpc9Rkvgoq4yvsA/ws=;
- b=ftZWN0yfgjBla2mJH1PCjRS6eJbgrhPFhd3fTpwGS7EBT2McP8w2UtczJ9+cZfHtcqTDgMlUEAvCIAc9hTVkEyewvZ73ku3U/2WXRaGWa8zi/zzYwz7ONl/SF4UqdaWY7SBMASJcCoqDr3fa4DrFs8DdzEdEogWBtuiZ6WnSEGaWlVKlnJ+2VA45RXbryGqZpILrR1ND18ixgBE4MpSRYRbb8YOCCBe8hLEqkiFDY1gb7Ct4fVGVIzFhtdv4VnIHVGh4CSbLO06A0qj8YegoKs+84NeyEf/WK2Qi2apFdit8FFBr+CxE3syozZB5dotbrPT+p6imkYVhUemQcmtz9Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by SN7PR12MB6863.namprd12.prod.outlook.com (2603:10b6:806:264::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Mon, 22 Sep
- 2025 14:00:26 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.018; Mon, 22 Sep 2025
- 14:00:26 +0000
-Date: Mon, 22 Sep 2025 11:00:24 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Message-ID: <20250922140024.GZ1391379@nvidia.com>
-References: <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <4e3919c3-3d1b-4f34-a1e4-5e9e7a5e6e14@amd.com>
- <20250922122900.GV1391379@nvidia.com>
- <fbb6bbe7-8141-4532-812e-2b93cc2fcb1b@amd.com>
- <20250922132720.GY1391379@nvidia.com>
- <42f45fa2-6ea3-44c7-870a-dc1973894a87@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42f45fa2-6ea3-44c7-870a-dc1973894a87@amd.com>
-X-ClientProxiedBy: MN2PR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:208:23a::14) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A701A9F99
+	for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 14:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758550071; cv=none; b=Nc/vE+rs+7ChkDvFihxcWBdk27Jdy1IZwHqTh8Xru6Gp3bS8WV5v4dzGmRQAbyBH7rXEp1OTtMGYRh1XNkvw6P0cQn9NWuqeuvM8EuaMn8IArjgVGRELwavFo1GvWlK8z5oNbecFqWnfeMFGp7b937ihb70cssnyy7YPldDB28Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758550071; c=relaxed/simple;
+	bh=WqYi7C7rPVPMchWD3Tm/mWLYvFm7Ms2J7l9sot1F8V4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kj+/mHnUhuPfNFRVI/ExE4yoeDdnWgZ4fH0EH1WDAXPPSyruNs3/TWC1wdZAam9U0uRt1tAW5RMCThh2y9Wge5RGLFJxRKtMz/6Q6soNKyNIEyMWiwWA/h2jyNNdbTpqO5N4fgUf2fxdKzASk1+c59e0qm+pUcY2cbGdB5xy/00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T5GskFl7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y3Ervkkc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T5GskFl7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y3Ervkkc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 680DC21E89;
+	Mon, 22 Sep 2025 14:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758550068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
+	b=T5GskFl792iJc+ydo0xeGMBXRXGfst8/vFHPYscSYhHlez9L6VIXv4u5ksxRo7NCINOPS6
+	O9hwvd2neeDeHkQL0Mm22lxRxo8LNKkHJFN6tHizuVRYCGRDgGHhUeL3Pnk6hEddK2N/vv
+	8oSsO75GD7Vbc6CLC2OAdg+k8wtA7mM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758550068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
+	b=Y3Ervkkc+c9IT/VS6vwPm5mlkV2ozDDrvGYH/D6b8hVfg7X5tbWNBshBrUr3WhSWnn/XfJ
+	Iv0KCW+WAC45UzCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=T5GskFl7;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Y3Ervkkc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758550068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
+	b=T5GskFl792iJc+ydo0xeGMBXRXGfst8/vFHPYscSYhHlez9L6VIXv4u5ksxRo7NCINOPS6
+	O9hwvd2neeDeHkQL0Mm22lxRxo8LNKkHJFN6tHizuVRYCGRDgGHhUeL3Pnk6hEddK2N/vv
+	8oSsO75GD7Vbc6CLC2OAdg+k8wtA7mM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758550068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VGHYx5pOu3PjDgbMOcAjQn1OWUKG2IfHDuHiMX4Epn0=;
+	b=Y3Ervkkc+c9IT/VS6vwPm5mlkV2ozDDrvGYH/D6b8hVfg7X5tbWNBshBrUr3WhSWnn/XfJ
+	Iv0KCW+WAC45UzCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 200F713A78;
+	Mon, 22 Sep 2025 14:07:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8KZ8BjRY0WhCCQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 22 Sep 2025 14:07:48 +0000
+Date: Mon, 22 Sep 2025 16:07:47 +0200
+Message-ID: <87zfammvgs.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Zhang Qilong <zhangqilong3@huawei.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/3] PM: runtime: Add auto-cleanup macros for "resume and get" operations
+In-Reply-To: <CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
+References: <6204724.lOV4Wx5bFT@rafael.j.wysocki>
+	<3388279.44csPzL39Z@rafael.j.wysocki>
+	<875xdaevab.wl-tiwai@suse.de>
+	<CAJZ5v0hSBDg4fD7Gy6yEX31xO-3USJG_jFps71BRJJ2f0Oh90A@mail.gmail.com>
+	<87348eobnv.wl-tiwai@suse.de>
+	<CAJZ5v0iwNuFxiu3x3-fWO9dkLUq_=c3H=G2OgFmPfVguw0U4Sw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|SN7PR12MB6863:EE_
-X-MS-Office365-Filtering-Correlation-Id: 540daa7d-b905-4132-85cd-08ddf9e06190
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGZ2WjlLR0JsQjlPbHEzdDdOTk1CSDMzS2VNcGpPeTZzQVFmT0R1TCtlMlBi?=
- =?utf-8?B?bStJajR2QytrY3ZtbDZhNDM4UWozMDVuVGtPR2Eya0dndURnaEFhdkRETDBq?=
- =?utf-8?B?dVN6RzZuYTVoRG5lbkp3QW95d1Evd1BXMGVRRE9UTzQ5RVdCM1VwaFUyUFJQ?=
- =?utf-8?B?bUVEeDh4OC9waHhvM1hCSjY5MEdLNHNvdTNMK0JTVGhJRVZBUjc3TmFSRkoz?=
- =?utf-8?B?NkpGWlQxeERadFM0K0hYMFlrcW1CVFE4a05xUGlWVkVpOWVlbXNMMmR2SHpr?=
- =?utf-8?B?Szd2aTlWSzRxVlc5ZkkvVGJFdlljMVZFbW8rZGhGNkg0a3FrZkpDaC90ZlUr?=
- =?utf-8?B?bTZDMHNBSFlUSithSWlmc2llODJjOU5DcmNiUzA4ZlBRT3orNGMzL1M5R2ls?=
- =?utf-8?B?N2tyMi9QTFZtUXFRSzJ6U0dxRzBKdmp1d3FFSmJHQVhSZ1VBVEl0dk5ZbURJ?=
- =?utf-8?B?ejAvczE5TjFROHFGVnBtOUU2YmhmanFFR2ZGOFplemRxQU1GWGJubVFxMHZx?=
- =?utf-8?B?cnNmdXRvZmdiSVRrSEV2eVkwdmpRTFQwVlZpQjVocjZKMHA0WDJSbkE1bHNU?=
- =?utf-8?B?Mnc3WGgwaHozSkZiWVZkSE9IeGZCRkk4UGNneVM0Z25qbHBGdmQ0SHZETGVR?=
- =?utf-8?B?Y1V3NWUzNkw2MHp1VWIwMHNldmNXTXdQMHVsUFBmMEdaQ0dqYUdUVE5RRm1h?=
- =?utf-8?B?NC93djF2ZDZGT0NEdzUwSTRwTUk5NUgzT3hUcmIvOU0wSGNuVHVCT2g3WDdF?=
- =?utf-8?B?ek1YYjNoandmcTQyaGtoWUJPanpybWZkZlFCYkhoZVd5VnM1bWR2MDMwYXMw?=
- =?utf-8?B?Qks1a1lJWXN6QlEzbzRRSnFublNvZENVMG5wekltYVBJQzFuTDRzME1ibXg2?=
- =?utf-8?B?b0xlRDVvbllyZkdpS3hJNU5LRHF4R0RHUDFMaDJXOU9UaFdodHlGN3AvZ1Zj?=
- =?utf-8?B?RXlWcnZvRSt2OEsxRWpWMFR1M2dHbzAyVnl6TFh2a3lVUFdNVHZrVEl5WWVn?=
- =?utf-8?B?YStGcy9KUDY0WmozQkphMUtQellIc0REZ0RuTFM5Q0tJTWxFT1VUeVBpYmJt?=
- =?utf-8?B?RmE2T05PK3ZPbVkrcHIxanVRSzJyREJQMUlCR3g0cHZEN2psYWlLVlJYWm5s?=
- =?utf-8?B?YUM2ZVhwYXVTU21oUnpyblllSmZpWEVLUUQzNHBNa0ZPMktMbFhydjFmYmhj?=
- =?utf-8?B?ZXRlTVo1bmw5VzhPcjRZUGJXZVpKTHJxOEs1OEplNGJRbGRUbUFwNEk2UzRa?=
- =?utf-8?B?TE50ZmdjdEVMRDAvUjN0L2ExakpDQU4wYzBTOTV5YW9EQkxtZnhmQVp0TjNa?=
- =?utf-8?B?UXRPRXErZ0tXeEl4MVc2clVrT2xIMFlpdnJabjVUK00wcS9FeHhycHhJZjdG?=
- =?utf-8?B?RjFramJ5VmZPQUdxTFVhWi9GbXhKZHNJQ1lrZkh4OENwYlA4L3FSSk9hTFV3?=
- =?utf-8?B?eUZFVTRkY1BDMlRpM0VWTmFPYitxVzdwZXRmYVZieU9NNEhqWlVmNkhqdUc5?=
- =?utf-8?B?eTBXVDc0SGZNQ0lqU1BzYWVkR1hmcks2WmpMU3hCNCs4VzZmMnI5S2c2elVG?=
- =?utf-8?B?dlgxdmQxME9EMlRIQm5yQ0hFSEpnd0QwZzFvd3VTekU4L3I3NklxbHlUOEMw?=
- =?utf-8?B?bU1MTUlkeXJIblpIZzlKaThkZkxNejZ3aS94NGZQY2JtSmN2SWtaVmhsbTc0?=
- =?utf-8?B?eDQ4V21EaEx4USt3UGJWdXBMa1ljMkRzb0ZHbEhsQjVuWlNJNzZ4eTJVRzFP?=
- =?utf-8?B?SWxVUUxiVStDMXA5R3NlUzZqWE9PWGFYMTRpL1Examl6aVhub2ZFRlhVKzRO?=
- =?utf-8?B?MlN1K0NWdjZHZ0NiRTFmdUxQSVZWMGQxN0FsMmszMzhXb3E3ci85bGJQejM5?=
- =?utf-8?B?ekpCRWk0T3FKdG9ubisxem5meW9BUVBIVkdweTZPZ1l3ZFVoSDNRM0dNeGxZ?=
- =?utf-8?Q?Fe9+dGIpq18=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZWhjckk1OHYxbWFFR1ZXRmRqV3RibnV6cTZVK2c2aFlCWlRlcmh3dUJIdVM4?=
- =?utf-8?B?eCtPcTlUemFrdzh1dmtYdG4rU0hSbjFZRWtUWVppZmJBb0F5YVIyWnZZK0Fz?=
- =?utf-8?B?cWE5VjhEOWI2V2R0RmdRNWNUeXZPODFZQW16Y1JzU2t4YVVsdmlERGl4cndU?=
- =?utf-8?B?VXV5T2ZJU3hET3VCNjJVR01sa2pxY0N2ZDRROGxIeGJ2d3FLTm9rQjFqRzRY?=
- =?utf-8?B?RmUyOGRLYXZjYkZkUjdPZ0Vxc3VzRVlObDgxRWh4ejE1bzMzV0Z1RHJPZWlh?=
- =?utf-8?B?UTl4R2JRN3RhdFYyOXBnclV0dnl0RVNSYWdCSVExdlg4UnAwU0UvY0hGWEdG?=
- =?utf-8?B?cGF6Snl1aDhXUSsvclg3ZDhjalB6TUFJLzg2d2ZRVEE4ZGdjekxHV3IrZW1l?=
- =?utf-8?B?VXlYUnNTaU9Mc2VGNHF0ZG9yUkl1UGM5Z25uREFxbXZobVEzUlNtcVM0T0ly?=
- =?utf-8?B?YXlSeDBEdVB0ekJ1L3d5dnBXeDRDSGRYT20zR3FhdktqM2FNczVMenNpOWVM?=
- =?utf-8?B?VTMwdEJ1NlJTNWI4TlFTVW9uajhUZVQ0ck5lYzBDQWNZN1FEaWtVaXkvbFBz?=
- =?utf-8?B?b0REN1B5ZHNkQ2tnekp6b1lwK2lGN2dYT1MyWFppVDRkSjRzNzQzdExLWUdJ?=
- =?utf-8?B?VHROc3BrekE5MVlmVlNCbTVjWTdjRWR5cERGZWJiYnBZWFFwRjNlbGNRQ0Zh?=
- =?utf-8?B?cDVZQkthZVI4STFIOXpaaW5YeVREeXFCa3VLTnRiS2l3aUdjSHhFVzhjUHlY?=
- =?utf-8?B?UkxpTXhTU1FjeTNRYXM4b3pqelZVMk1sMjltVFE4RXNnNEVzVUlYNk55Wmtr?=
- =?utf-8?B?ZEtzM01jczJPblJEbFhUa2s1d01OTzNYUUhUR09KdUdDWG1MaytaVHZieks4?=
- =?utf-8?B?cFQ1WlV4cnV4Ykg0cExkbkpZTGdpRUFId0N6VjRRamIrWFptUS9zd2F0UENu?=
- =?utf-8?B?ejdmTTNldWxXSE00V1BFYkVpOEM5bjFxbWVtZ2RBa3lBWWxXYkNtdFN1VDFk?=
- =?utf-8?B?RlREZTh4azZ0S3AyVnVDZkVCdTgzaUE5MHJlalhyTkdla05wemdvYjlTYkhS?=
- =?utf-8?B?OTZ6NUllQjlPUm1QRDBja214aXhLVGNsR2JKeHNQOVN0c1BINUF0SlhjN3VG?=
- =?utf-8?B?UlpTMWtTeGIybndsOHlIcFVTcWJQU0lQc04yT1k3SVYyalRkUlRLMzJhaHVI?=
- =?utf-8?B?QjRoWncwcFRPNXdScWVUMThPNklVQTdxQXQ1SkZJc0owTW1Mc1VKWlFXVE9z?=
- =?utf-8?B?emNuSm83c3RVRlZOMUs4ZEFkeGt1Ky9mdDVKanQzNGpaZW56UnF5Z2ZnTVdw?=
- =?utf-8?B?VXVPOFl2d3l1THI3THNnTlZtQ1RKZis4dHdUb21DdlFLVS9WWDNUWXRMek81?=
- =?utf-8?B?Mzl1emE5NSswUk1SRm9CdEF6ZzhaTnZ4TlplcGRyZWJRak1MRE1VRFdLKytF?=
- =?utf-8?B?MjAzL0UvWlJuVDFXZWordStXSkdNM0RwU1ZSeDBLeEIvUm12elFUYmN0WGtM?=
- =?utf-8?B?TWY2Sk9UNmRVQ1BsaWpUSFg2YUptcnZuSXFrbDBjN3g0RVRlampxYkZlbjdS?=
- =?utf-8?B?MXNmT1JlblIvazAyZmpjTWN0MXNFeTVPUWh6OFMxTTVqb09zWUFvT0NhK3Nr?=
- =?utf-8?B?QjlGOGNqKzZPODc0MEpBWmg1NzBHeGNZajhOUkNDSy95ODhicWl6M0t6aW5J?=
- =?utf-8?B?a2p4MTVWK2VzcHc2eVA0T1JIMTdFdkxqN2VVMklnYXdpaGRCZmVpejltRlB6?=
- =?utf-8?B?ODZkM1pSb2ZRREM0M0ZySUFOQ3FYT0Z6cTgrRDFzY1FyY0M4Z0oycHhIOG41?=
- =?utf-8?B?SzRpVzhVRmxKa2lZd0svRUJBUG81RENNU0lmRXhJZVNQWDhXcnIrbDdydWpZ?=
- =?utf-8?B?OHA3MXZqaHJLS1FZOUpKRy9Qb0YzNU5TWUdmcElJL0R4M1QrV2hZcXpIRlJa?=
- =?utf-8?B?Qjc1Mm9UelYvQ2h5dWFqdkhNcXowR0VFbTI5ZlBjMitoRVpuN3pOZGtYS1BY?=
- =?utf-8?B?SmdWcms1ekllVEg2U1VDVHJhMVl0eC9tYzFFZE5xOU1TTGw1RHZpK3U2R1pn?=
- =?utf-8?B?RldOdzM2MHJTRGN1T0RtRFVMNHNiRll0Z3Z1dktxSWhxdFlrNjJDanpSSlk4?=
- =?utf-8?Q?tTd7t1t11T6VA2Ds2eq5Td7ed?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 540daa7d-b905-4132-85cd-08ddf9e06190
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2025 14:00:26.4439
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E7/i7EcZLfqWN9uYTQpqzM88oLSZxEDOMVUQ3KuEc9oXCZK6x5mxPfPHTPauql4q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6863
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 680DC21E89
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
+	TO_DN_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.51
 
-On Mon, Sep 22, 2025 at 03:57:02PM +0200, Christian König wrote:
+On Mon, 22 Sep 2025 15:44:51 +0200,
+Rafael J. Wysocki wrote:
+> 
+> On Mon, Sep 22, 2025 at 3:32 PM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Mon, 22 Sep 2025 14:50:32 +0200,
+> > Rafael J. Wysocki wrote:
+> > >
+> > > On Mon, Sep 22, 2025 at 10:38 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > > >
+> > > > On Sat, 20 Sep 2025 12:54:58 +0200,
+> > > > Rafael J. Wysocki wrote:
+> > > > >
+> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >
+> > > > > It is generally useful to be able to automatically drop a device's
+> > > > > runtime PM usage counter incremented by runtime PM operations that
+> > > > > resume a device and bump up its usage counter [1].
+> > > > >
+> > > > > To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
+> > > > > and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
+> > > > > those cases.
+> > > > >
+> > > > > Simply put, a piece of code like below:
+> > > > >
+> > > > >       pm_runtime_get_sync(dev);
+> > > > >       .....
+> > > > >       pm_runtime_put(dev);
+> > > > >       return 0;
+> > > > >
+> > > > > can be transformed with CLASS() like:
+> > > > >
+> > > > >       CLASS(pm_runtime_get_active, pm)(dev);
+> > > > >       if (IS_ERR(pm))
+> > > > >               return PTR_ERR(pm);
+> > > > >       .....
+> > > > >       return 0;
+> > > > >
+> > > > > (note the new resume error handling).
+> > > >
+> > > > Do we still allow the code without the error check even using CLASS()?
+> > > > Although the error check should be handled, it's not mandatory for
+> > > > now.  That said, the above example could be still in a form like:
+> > > >
+> > > >         CLASS(pm_runtime_get_active, pm)(dev);
+> > > >         .....
+> > > >         return 0;
+> > > >
+> > > > while adding the proper error check is recommended?
+> > >
+> > > I'd rather not encourage doing this.
+> > >
+> > > While it may still produce working code in some cases, one needs to
+> > > remember that in case of a runtime resume error it will be running
+> > > without a runtime PM reference it has attempted to acquire.
+> >
+> > Fair enough.  Then it'd be also good to mention that in the
+> > description, too.
+> 
+> I can also add classes for the cases in which resume errors can be
+> neglected, like these:
+> 
+> DEFINE_CLASS(pm_runtime_get_sync, struct device *,
+>          if (_T) pm_runtime_put(_T),
+>          ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
+> 
+> DEFINE_CLASS(pm_runtime_get_sync_auto, struct device *,
+>          if (_T) pm_runtime_put_autosuspend(_T),
+>          ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
+> 
+> with a comment explaining what they are for.
 
-> Is that for postmortem crash analysis? Providing some kind of
-> service to the guest? Something completely different?
+It might be helpful, indeed, since the error handling isn't always
+straightforward, and this still allows us to convert to the
+auto-cleanup safely.  It's still worth to mention that those aren't
+recommended options, though.
 
-From the cover letter:
 
- With this patch series applied, it would become possible to display
- (via Qemu GTK UI) Guest VM compositor's framebuffer (created in its
- LMEM) on the Host without having to make any copies of it or a
- costly roundtrip to System RAM. And, weston-simple-egl can now
- achieve ~59 FPS while running with Gnome Wayland in the Guest VM.
- 
-Jason
+thanks,
+
+Takashi
 
