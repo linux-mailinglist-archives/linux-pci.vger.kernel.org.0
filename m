@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-36676-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36677-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A95FEB91987
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:09:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E351FB91981
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 16:09:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2EDA190193A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:09:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FAE4425230
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Sep 2025 14:09:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F331C19AD8B;
-	Mon, 22 Sep 2025 14:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0064219F111;
+	Mon, 22 Sep 2025 14:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="giZt3pqm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSEMSSml"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DAB1957FC;
-	Mon, 22 Sep 2025 14:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C362310F1;
+	Mon, 22 Sep 2025 14:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758550148; cv=none; b=ceNIPnB7uVvqk+8iYRIbemP43LkUQDO9rg2B5thmY3CVmsvfPwhp4maxU2xgQXRCPQf9KnzbLILGTRqC+NfrFVUb6wCOv22q5mcV1yY7STgdv2dgsPjDJWnyOnAWbZKDJOMiCoPwEqgERpL+clSNXXcPzfX22LYRFxVnk68CCSI=
+	t=1758550152; cv=none; b=agXIl6zwMblsCIamrDyUhFj1kDckkub8FgrcfELdV/GscS5y3UcrgoStKFkDAs2TAllw1u1YHebOeg9AH82X+K1hUhWkfkdltsfeGleTySOJDTqwfwuKnTIptqq1jFx98Ic7BswFaw/PZvcdsblDtahyKQilYM2dfuBPoU/DSPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758550148; c=relaxed/simple;
-	bh=XPokvl0rX7B5xeL1hJsNi035/3mVkbm8hvJVhqmk+EU=;
+	s=arc-20240116; t=1758550152; c=relaxed/simple;
+	bh=4M9LLrRqO8uLW1VI4POLcnk+eKzxPkR/nl5/vtK8sOQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jlxEH1BlyJcQ7kFgHpjRNczZJoaKorkpfyNr8JnODT2P6TtzKqRPe8XVXVL4E51BmxaNMoFyUKEY8Yj1vROjn3tgZqJx1mx6QR27E2zUjwzqMBrCmFNCgqcUmlLf8jRtPdfq6Ur8HJED7nr0NNUjkZx7SjkZub3+I+Bheyi3GpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=giZt3pqm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FFE5C4CEF0;
-	Mon, 22 Sep 2025 14:09:05 +0000 (UTC)
+	 MIME-Version; b=UWbEB9NcCDDni0VPc7RTq6+ZxmuaAOMn8e6fxOAVjHiw9KiwBheGbmKnmIhn+GGoZV7PZ7j8OGLm4FyVI/2FbmCWRjLioNis7uew9NicyPF21ANvyysCXN3H+bY1jG+FEankVtT/8aSjg3Aw6MQ44oT0NKCrER46V1C3jB17XG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSEMSSml; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2DBC4CEF0;
+	Mon, 22 Sep 2025 14:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758550148;
-	bh=XPokvl0rX7B5xeL1hJsNi035/3mVkbm8hvJVhqmk+EU=;
+	s=k20201202; t=1758550152;
+	bh=4M9LLrRqO8uLW1VI4POLcnk+eKzxPkR/nl5/vtK8sOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=giZt3pqm+etsmnNGUP8PaSlj/3RBqSE4q5nF1GGCl3yUwPnuxGaprI3q9x7s4bGWa
-	 2GvtBPvKglj1zR5zo5855mOJis5A/5Bn8+8xEx3qmkgTa1Gb6ne3sWpydkCOE7q882
-	 isu5XG9fSV/3KAJd9cR/rQLgqscZs7IjpW3tML9fp824snkF9YsLjzfdqhUESbVCk3
-	 K8jvRxwzxCkQivLDyUqD99E4ZHRX6zOAlnAC9F/NiEj/ymtRaB3ZZ3r6zQIutnhKD+
-	 bvN5MbRDMgNGqPD9N4GJuGVvzLZnglppl+uPWSIx8e4hK5Dy2sLMdVab7sxqB94MZl
-	 xilct3M74aNuw==
+	b=hSEMSSml3H0XqR740SQMhUyWdok8LD672ySmcHi2NVNycGTCwm2Fy3/ZZuEfLlbMB
+	 Dzi07jWzqmnMYuCst2Z6pHejcBSBEZwUbTon6sGf4sSX8m6j2yykzhyn3htf9dTjih
+	 HKqn36CZcwL2ohPfAmsZU4nufwVnLO6HaQK6Kk5YVnfgKbp/YFu6w85igHLsQFGBNb
+	 3TAfU+MjS2zdCzx+h82ML5ll3T3tRR6+LWnPni/FNFJ2SZ5fg8ASUW0dKGbWwo1s5j
+	 pCxh2CEdRVveL7BvIqx5m7n5rIvFPn1rvrvjj77Bs6E9hOFBOcdkwVyH1kN0CzZIt4
+	 oYHpwANbRG1OA==
 From: Niklas Cassel <cassel@kernel.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
@@ -56,9 +56,9 @@ Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
 	Thierry Reding <treding@nvidia.com>,
 	linux-pci@vger.kernel.org,
 	linux-tegra@vger.kernel.org
-Subject: [PATCH v2 1/3] PCI: tegra194: Fix broken tegra_pcie_ep_raise_msi_irq()
-Date: Mon, 22 Sep 2025 16:08:24 +0200
-Message-ID: <20250922140822.519796-6-cassel@kernel.org>
+Subject: [PATCH v2 2/3] PCI: tegra194: Reset BARs when running in PCIe endpoint mode
+Date: Mon, 22 Sep 2025 16:08:25 +0200
+Message-ID: <20250922140822.519796-7-cassel@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250922140822.519796-5-cassel@kernel.org>
 References: <20250922140822.519796-5-cassel@kernel.org>
@@ -68,55 +68,71 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1738; i=cassel@kernel.org; h=from:subject; bh=XPokvl0rX7B5xeL1hJsNi035/3mVkbm8hvJVhqmk+EU=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIuRsTZJj+9cuG1AJeYpevTM9/vaIveXHBX84OPbnmix 44Tc4sUO0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjARExlGhh2cO7w7DT2vP4lq f55xIqN1gf+JdKXkS6k3r1otaYhW3sjIsOnV9OOJk8+I7WD5pCLeyidweznj29pXdr3eD03jwq7 84wYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2484; i=cassel@kernel.org; h=from:subject; bh=4M9LLrRqO8uLW1VI4POLcnk+eKzxPkR/nl5/vtK8sOQ=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGDIuRsS985WN9cj34LyXt/lNjdcipxZj78A//6ZH2bTG6 q9fJfm/o5SFQYyLQVZMkcX3h8v+4m73KccV79jAzGFlAhnCwMUpABOZEMbIsDHaeLKZXE3zusS3 Kvt/ihU4zeN6wfYsw4U5eIJ+C9tHC4b/LssZ7sdwhUvZ2v60eP3GoP92zxvf17U+1Z8WprWFll7 lBgA=
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-The pci_epc_raise_irq() supplies a MSI or MSI-X interrupt number in range
-(1-N), see kdoc for pci_epc_raise_irq().
+Tegra already defines all BARs expect for BAR0 as BAR_RESERVED.
+This is sufficient for pci-epf-test to not allocate backing memory and to
+not call set_bar() for those BARs. However, marking a BAR as BAR_RESERVED
+does not mean that the BAR get disabled.
 
-Thus, for MSI pci_epc_raise_irq() will supply interrupt number 1-32.
+The host side driver, pci_endpoint_test, simply does an ioremap for all
+enabled BARs, and will run tests against all enabled BARs. (I.e. it will
+run tests also against the BARs marked as BAR_RESERVED.)
 
-Convert the interrupt number to an MSI vector.
+After running the BARs tests (which will write to all enabled BARs), the
+inbound address translation is broken.
+This is because the tegra controller exposes the ATU Port Logic Structure
+in BAR4. So when BAR4 is written, the inbound address translation settings
+get overwritten.
 
-With this, the PCI endpoint kselftest test case MSI_TEST passes.
+To avoid this, implement the dw_pcie_ep_ops .init() callback and start off
+by disabling all BARs (pci-epf-test will later enable/configure BARs that
+are not defined as BAR_RESERVED).
 
-Also, set msi_capable to true, as the driver obviously supports MSI.
-This helps pci_endpoint_test to use the optimal IRQ type when using
-PCITEST_IRQ_TYPE_AUTO.
+This matches the behavior of other PCIe endpoint drivers:
+dra7xx, imx6, layerscape-ep, artpec6, dw-rockchip, qcom-ep, rcar-gen4, and
+uniphier-ep.
+
+With this, the PCI endpoint kselftest test case CONSECUTIVE_BAR_TEST
+(which was specifically made to detect address translation issues) passes.
 
 Cc: stable@vger.kernel.org
 Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 7c295ec6f0f16..63d310e5335f4 100644
+index 63d310e5335f4..7eb48cc13648e 100644
 --- a/drivers/pci/controller/dwc/pcie-tegra194.c
 +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1969,10 +1969,10 @@ static int tegra_pcie_ep_raise_intx_irq(struct tegra_pcie_dw *pcie, u16 irq)
- 
- static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
- {
--	if (unlikely(irq > 31))
-+	if (unlikely(irq > 32))
- 		return -EINVAL;
- 
--	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
-+	appl_writel(pcie, BIT(irq - 1), APPL_MSI_CTRL_1);
- 
- 	return 0;
+@@ -1955,6 +1955,15 @@ static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
+ 	return IRQ_HANDLED;
  }
-@@ -2012,6 +2012,7 @@ static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
  
- static const struct pci_epc_features tegra_pcie_epc_features = {
- 	.linkup_notifier = true,
-+	.msi_capable = true,
- 	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M,
- 			.only_64bit = true, },
- 	.bar[BAR_1] = { .type = BAR_RESERVED, },
++static void tegra_pcie_ep_init(struct dw_pcie_ep *ep)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	enum pci_barno bar;
++
++	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
++		dw_pcie_ep_reset_bar(pci, bar);
++};
++
+ static int tegra_pcie_ep_raise_intx_irq(struct tegra_pcie_dw *pcie, u16 irq)
+ {
+ 	/* Tegra194 supports only INTA */
+@@ -2030,6 +2039,7 @@ tegra_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ }
+ 
+ static const struct dw_pcie_ep_ops pcie_ep_ops = {
++	.init = tegra_pcie_ep_init,
+ 	.raise_irq = tegra_pcie_ep_raise_irq,
+ 	.get_features = tegra_pcie_ep_get_features,
+ };
 -- 
 2.51.0
 
