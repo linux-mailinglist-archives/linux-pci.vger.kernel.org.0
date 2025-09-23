@@ -1,420 +1,221 @@
-Return-Path: <linux-pci+bounces-36806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43BCBB976BB
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:51:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B341B97722
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 22:07:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2781178A7A
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:51:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1CEC17D54C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 20:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6459279780;
-	Tue, 23 Sep 2025 19:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480343019D8;
+	Tue, 23 Sep 2025 20:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DEtTN/J4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLFqnU6d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013030.outbound.protection.outlook.com [52.101.72.30])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AEB15624D;
-	Tue, 23 Sep 2025 19:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758657114; cv=fail; b=Y/CkgqMOXF5buy4enRwgXxOHtUYplrDqPwEj9oJGqywHhEbafYvQDIwuoChkVjCM2zQC3vacVc1X39i+sUuaKzC5yczE6RlRFvKD340XjeuFayu416rzInHZVzMZWO9zRvC89wi+ksUcbBi8+cvSAMabipl36hg+LHanad32JIo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758657114; c=relaxed/simple;
-	bh=rklk29x8xucgUJSHdZOBNE9tWgEonHkpgHiWpdUCMVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=e5mLnV4XymNHOUSJHKKerUWhBwlSu4V14uS7oHT/UAN9pjCnlx86SZArMavuvWCFmPgQe/LLeNoiIr7gs2IQ7f9WLJHiE6cd0koffdjAgGaaJjN9ff+rV1UecHMZKxT/4WbERxWWsrctlLIEiknNStifDnY9Ugwfcf8shHl2nz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DEtTN/J4; arc=fail smtp.client-ip=52.101.72.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jxmvY5KHYhIaA8CPWqfoM/fIthncSuQ+MM/2lqulj6gw8JX6Ke/A9Wqx3O35RA0B4SG4ttSesDNcc6X2ivI91LFxXqI0RtFUFJHN8ZGOAlE52LcLrqBHeO2rlMh9rDvNX23pzgvyOtN+P28CYXGykkiUmIaBsEYb9xkyOx0/LsZDkugM3Fy9PB8sS13H2HYL0chNzijpwfqps/DoG9Bu9raf6ZkRjKBa3UzkX3aGGSbZH5AuqRUBIQPiMP+DA5OXSpSPRbBo0/zurPgiKaKfBAnEYD22FuWQdPyeE0xsj7M6MeOKJ+Bzi5Jf8vv2+xTk7texAaoXhDO8oYXxrHYBdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kQq0vSPj3yQnJt1X2HoPnEaAq6S/QV3bD64zYFGMuo0=;
- b=gYqOKEJdEaSpdUaIe7esWwM5PBywsrCnlXWzIzCvw504cL+kCWIggN7651nwtpodgRXs7TaRFNsHBwXJa7eoyx9PSqjtC2+q7BDgCtPiTaMsdsPvL/7fAAbyG+ekVt8esHNE+qEAWpN1JHbnFWNcqbWSzc3v6Lhrk+E0y7PLkRNjOG4p2R+5nFLA6T8TSJDa/buTWbcGlFLkkjqONe9fR3rLqoC2hVZEnE1kIgbTqkYTVsWx5qST1/Cmtz6VCxRbBuFtLlg8ivkSzaMw8txjShDaVHiAH4ppexu1U0Tz0XkzHbs4PmHS2bGE3Uao/89CETWqfDO2fAN/KXW+bRVRaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kQq0vSPj3yQnJt1X2HoPnEaAq6S/QV3bD64zYFGMuo0=;
- b=DEtTN/J4NPiYyDm1H/dpf4Eql/aNZJqcPP02262gVZem4D5yr9qT87U4VZQRTCE6UYzXVgRf3lqKuDUpFBc4NuC+QwP/QiA7tAAH7bLtJm9Qa5P7yyYTuJOSudYxQKMm9TTDIewyk5VPjtJxFEvQqggyt45oa/i3HmR6QMRSxaHZ6aJr4HoUsKW+Na3PXAY95VQfRMPqu6pGpVW5WNXgNq5SWuSvSb+KhLImhrHxQAUnM7dF+deieNRfexkNloqfZCm7IZocqaCSpCY2sslZn4Adk6x+1tKiHSwlNeDXMAYDrC0mzs+HIma83FDQbaZtJYBlMlJ501tcIvyBMMqSrw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9621.eurprd04.prod.outlook.com (2603:10a6:20b:4ff::22)
- by AM8PR04MB7923.eurprd04.prod.outlook.com (2603:10a6:20b:24b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Tue, 23 Sep
- 2025 19:51:49 +0000
-Received: from AS4PR04MB9621.eurprd04.prod.outlook.com
- ([fe80::a84d:82bf:a9ff:171e]) by AS4PR04MB9621.eurprd04.prod.outlook.com
- ([fe80::a84d:82bf:a9ff:171e%4]) with mapi id 15.20.9160.008; Tue, 23 Sep 2025
- 19:51:49 +0000
-Date: Tue, 23 Sep 2025 15:51:41 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Zhang Qilong <zhangqilong3@huawei.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 1/3] PM: runtime: Add auto-cleanup macros for "resume
- and get" operations
-Message-ID: <aNL6TQ4vHtfoNE2d@lizhi-Precision-Tower-5810>
-References: <12763087.O9o76ZdvQC@rafael.j.wysocki>
- <2399578.ElGaqSPkdT@rafael.j.wysocki>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2399578.ElGaqSPkdT@rafael.j.wysocki>
-X-ClientProxiedBy: BY5PR03CA0030.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::40) To AS4PR04MB9621.eurprd04.prod.outlook.com
- (2603:10a6:20b:4ff::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AA82EBDE0
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 20:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758658053; cv=none; b=ejsm33BxJ44LKcrOyAMLFiiIiFbR9WhGITLhwnAr9JRazFkhb/G7c9pUdmcEgenX9MXEK4a2nYNNCkaafgU3KsYIJJ8JNm45FXMDbmICdYl2RGBWxegdbHK94niCd7bUW6tGkBczRnR/w1mso9fFWIEB9Rkbl7DywUyGc+hfvC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758658053; c=relaxed/simple;
+	bh=/cNMCmhs2+2GgzKjW2K7MV1lRjCXVMAS8z1dlxsrJ7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LFHtCmunNjDPdRP/dgaiHu9fsbkOH4h7u3KWNnjXWwD98O4+lIf3AZt1IlIPi/bjLXTjsKHixKW6Zm03tLs6N5pkloAlvy3fftmHJTDJg8VTClVVfgsEJ2aaqnFqWJl3dGoY5vXM+GVqysDOdpzwQeFBOGx8Ob41iK0sRKojBBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZLFqnU6d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758658050;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkF/1TIVCdQ8I35UWInq/5XGtjT7LO6t3DfocUuGzJk=;
+	b=ZLFqnU6d+6znjZm1pAwJ06tM7mu3sevqZlUrT8MjnxwlkXnkTcyAXiAA6TG2ugWnXotjoI
+	TdSoPOFUBZUupSa72gNvmK6pOUe++iUCJ2LAaZQ+ZbW03xt+Z/3dlVMHZjvF6jguJV9+zY
+	anHh/hhO8vGM/0FtG3uQIIO8IH4Ytj4=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-8CimaSlfNRq09BJjDtaxHQ-1; Tue, 23 Sep 2025 16:07:29 -0400
+X-MC-Unique: 8CimaSlfNRq09BJjDtaxHQ-1
+X-Mimecast-MFC-AGG-ID: 8CimaSlfNRq09BJjDtaxHQ_1758658048
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8c24aa3f7f5so39434039f.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 13:07:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758658048; x=1759262848;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TkF/1TIVCdQ8I35UWInq/5XGtjT7LO6t3DfocUuGzJk=;
+        b=Ft/jOtGA2Rr9d2FQj4dGcv/HALuB7vkrag3BgP7bztRx3DC5fS16QsBCJ0GJ46D0Xq
+         UMSiJ+54b0PmNRVOs8cXLyapfVus1UtVq2fA9fHN4725NxD31KnBOxrBthd+EkgTzfBr
+         5ZL4BqY0QTExf1KjSyOiyf28zILx4hpp1sJd1Utouqq7vTfoc0eBWI1koWBrxVVf9oB0
+         sE8mM9d84VG5IaLI+JqbXwkDuDXRD/0KaCz4kg4I7ys5QmCDC1IpiexCznOCuYAC5a8+
+         NkAcl9KbLl9msq6zu80HKiPlfc0ylBRmsb4M0XOpvu8pm0yK2EIUnkAyqwCY+5VxeeXc
+         TqOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQTvOAsunypnRCItb0DeG43PiX4TY1ew3mXig6uTOJjXhaldrPfgyaUTRyI7HTOPhzJO+7U3nsP/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzrHBnhvWnob4K5jSq7uEtTXg2N0GTbEx+KtpHVtBCj6EvVnDY
+	3Vuhzi+JDCvkdxnt8/PaGZG+ewtyBliqCqAXUz3Fp0sSXnhnZdCyq8Q9+2DCdvNagSx2SVGEufI
+	bwUbjeVl1XmosC5C2apwhhXxiZSTYWTB/ba8JAxLLdvJqhxOvHPPXxrn/RQKa+Q==
+X-Gm-Gg: ASbGncsmMkK3+k+iFBw6lAHMG0wc9odTnGyZAzV4lbhfQNYhv6hdjvoXtobj5NdeKR8
+	orHZp8jy7Gp0890HDOU4h4hZ7aRf2xdJchd2JP/xS9VP9Ui1EA5reJxmKTanumEjzRxIkYGScDO
+	/iHi2b5NOLFt8HEPP/RJUMfMZSwE1Ghe+YsgxEARhaE4wayvDKodJUUvqCRs5rZuELqWfIEPaT4
+	nZO8YmXZc/4IXX72y+4vEvpJ89LDnEduOQ5WUy6dsy6s5uih8oKSkcBLf+rK5WmviU20aafEjog
+	DaPC2Hfv80aRC4908vWhPnnogVpH0WGxw6l9Jc80LFA=
+X-Received: by 2002:a05:6e02:b27:b0:423:fd07:d3fe with SMTP id e9e14a558f8ab-42581e0924amr21638565ab.2.1758658048115;
+        Tue, 23 Sep 2025 13:07:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmMxIqHNMDHwq6jPuldjwSxK84807XGPUliuEF5qCvF8SuPWmF0LqQLkrDELCWNHqAt6pi1g==
+X-Received: by 2002:a05:6e02:b27:b0:423:fd07:d3fe with SMTP id e9e14a558f8ab-42581e0924amr21638385ab.2.1758658047638;
+        Tue, 23 Sep 2025 13:07:27 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-425813f3053sm15141865ab.21.2025.09.23.13.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 13:07:26 -0700 (PDT)
+Date: Tue, 23 Sep 2025 14:07:23 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Christian
+ =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
+ <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
+ <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
+ Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
+ functionality from memory allocation
+Message-ID: <20250923140723.14c63741.alex.williamson@redhat.com>
+In-Reply-To: <20250923171228.GL10800@unreal>
+References: <cover.1757589589.git.leon@kernel.org>
+	<1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
+	<20250922150032.3e3da410.alex.williamson@redhat.com>
+	<20250923171228.GL10800@unreal>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9621:EE_|AM8PR04MB7923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ee80dac-52c0-4315-65f4-08ddfadaa21a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|19092799006|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Vs1RkYZVXBD+gEiLtLn5j6EbBrcsN6fXDy74qxRGISLWX7y0pwp+4S3cVpU3?=
- =?us-ascii?Q?zgot6eIGONZBdiRv+O3pdSPwjn479TEHXCS0Rgixa4qKWwEYLTmHpADXEFCC?=
- =?us-ascii?Q?EUkOl7Vc60Uz9TAHVJPC0OvMRvRklPqOwXv9zvN5qPQ6mn41/kwHIRaa2JVg?=
- =?us-ascii?Q?oVg5wm0MA03RaAWZCMM1ZLJIV0JuC9ILLDgWw6lzyQBi4brdDnkq5D/wUEjy?=
- =?us-ascii?Q?wJfO537C6jKd1JBccvB19n7BOL1NCEuIhe7SHs9sxPzWf91obeUzduFkaiAN?=
- =?us-ascii?Q?0t9Ic/DDMJFeh29NxPjGoWyIbFaGO/ZiXS5p7MZEEPH9VN8L2iHheruPO4qg?=
- =?us-ascii?Q?j3mnfbwrEQ6GAk6odXJEQgJDYw4mO1ABBsGwGRDiEUGHd7fa/ouK9ubjbaa9?=
- =?us-ascii?Q?ZuwKCcPQeg9Hy950nENcKCeH5EfXWNw7JoaN8Abp6RPUipv5xKX5foPrX+xY?=
- =?us-ascii?Q?A384Fvc8EFmAPB8u2Sa+Mf9IYMhEgDuMk3DIeezkNYt99VqSnYBwsH/xhnHj?=
- =?us-ascii?Q?ccYwKmazUbdPJtj6T7VAznH6Vk2wWk7TCoWe9K/L6MYTc/mPStGkmyozkl+G?=
- =?us-ascii?Q?R+lA9T4di8LSgopl9Obw6MGZaSW3T/zIjjC+Gow8JE8tVc4WicGG68PJ1afy?=
- =?us-ascii?Q?5nkEUIF+/7sVEo7HsitN8DBdoRT2hEyQmrmNY1XxxNyOI4xJvFYdCoptX/Mf?=
- =?us-ascii?Q?SkTYnS6OgfKBR0fv0qDa6uldTjlyY5JDHZiEVoxLZunuQOnVJYXrLSa6PbIa?=
- =?us-ascii?Q?lBbnz+Hyw5SszevFFM73/2ehX9Wi84GaB2oadL4oSlzTtQnVohvKEtkrvl5P?=
- =?us-ascii?Q?/fTck71W44zOLuSm/iEnQuBv8mCRpYEcAl7HR9y9kORf4OC3MBht+HY61Abr?=
- =?us-ascii?Q?y6AVenH1MRoQgIHQ7cOBZfyyLnla8r76QYQ83nL8HCAhLdBOr/+BSSRfF7aX?=
- =?us-ascii?Q?qOkAFvZ3mH45e3w0ZrPWWELLl7k5C5qCG6VwWgqTrFeGyO1RJ6CoebEVadHs?=
- =?us-ascii?Q?pibWJuTWFGB22wfNBSqf51Xvaqx2oB10GA55HIdNyaPaSN9Mf54Sk7ATHrZ7?=
- =?us-ascii?Q?eyOqNDPqAocNw7Zev/JibO6CXET9LUkbYGkJIonNvD9nIESrIJclB0Z5iHSh?=
- =?us-ascii?Q?yRp6dajPjACrqXo7E7CKTQf3Y+2/pL21kU+42vx1fL1/W8SC0pQhgDTHNMpK?=
- =?us-ascii?Q?QqCAu975/U1OqaQdNk1GhUWzQK6vQSPG8ymdlfe7kqWrF3GZDjcgbAMBSz9V?=
- =?us-ascii?Q?PD6ZugZvE9LOyrAgcTF3idkwJx/rufrrIb1mTquFRA69WyAM7p8G+kkTlm8V?=
- =?us-ascii?Q?GgdrKehQaIzpdIforrT5K5f9Ga6xRwAv0+XrcHZFMPR6jRtcJPdpPAqvoNiI?=
- =?us-ascii?Q?jskaXtcpJdZPZjyu7Q8b16fqfzt57m0WvfNXMsiTItWa5K6tWUD5PGB3lTll?=
- =?us-ascii?Q?Zdoirx1jvDN5A2030vXRnrKErly0nVWJl5vpuMSc6u3XdzCYg4Yow1yjaKJn?=
- =?us-ascii?Q?HQav5qm0SvoGaME=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9621.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(19092799006)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9fdTZJ6hifDZ/ClfE22H/2zcV7tmtCp1tJ/CiZFINV642R5/1w6M73NLYWju?=
- =?us-ascii?Q?UgiSAITWboS6Z/6giLu3RZhHktzYFdoe41XvkQD14Dbu6lpinB2sDVe2c+yi?=
- =?us-ascii?Q?0GxIWU3KC9+7mlECM4VDQPsMxWVKSCPGNT7tTAm0mEzBBBdOsTNWByYKPoHx?=
- =?us-ascii?Q?sCnfjBVohgHSFQ7LDWXAbdGqwdG+tsqIbQCLeYlwfW9T6WpsISBwJY8iYi1D?=
- =?us-ascii?Q?anMqaLiMQwsVwDnHD1Lvz43SO7Rw9HSOIqs/PnKCTdfQq6XpKKqOpV86mBre?=
- =?us-ascii?Q?GFw8MDcmjLGCF0vNeC7pzaV8G04DCqIjdviWuJs9DdaieJgjTGupJD+Giqxb?=
- =?us-ascii?Q?zlk+L+CIPHTOIVgwOLj8vksXaCTIy2irS4fmrfw8O+pwnZWZJA5ZH6jFwOpp?=
- =?us-ascii?Q?DNdpiXmS8KQfDucX07XAt5iKI1kehUT6PEJiKGLttoIctdNa0gf1NOmX3A3B?=
- =?us-ascii?Q?mlAeElymwK3kb1nkp/xeQGAfmo+LhCHzfNR6943+Vm6FDBDLvc+K0nKRstIA?=
- =?us-ascii?Q?+bTDgvx50c6yAw8nbvo34JbNY92D85G2egDcbXvIebf27H/DUiKr7Z/ao1lK?=
- =?us-ascii?Q?qiZAjq/+BwQ1d9xy2bHE8o4r3sE9HH9f7tIba/M8MRFIbnAP/Pp5IFWyIKV9?=
- =?us-ascii?Q?t42RkThjkBPuLWKHqCwRuxmhBRskHgq8Un1VUWW25PLj3zpKRzpAgKsG9CCI?=
- =?us-ascii?Q?2usnsrbscmLjXxa00VsBnmk3MdGo68+8DF3+SEfKU7G7NHC0Wt1+bqC9nlE3?=
- =?us-ascii?Q?0gtc3lesvpzECqo1iuVyQJuO+ZsQF13TcW1FkeUUqVOZR2wObL6YcqECR8sM?=
- =?us-ascii?Q?J0DRGj8cLOeJ0q/qjU7dw84HeWOAbK0jRX0dXWKw3fKLtAUMpLNQikDxLYO4?=
- =?us-ascii?Q?hjbM1HGZqHMPQCDwWQIRV5HPYT7mHt/owp6wkJdEx1k+ibsuUkyHbIMoBFcV?=
- =?us-ascii?Q?q3Z2vzWO9Ywj+Tp+oha+SIdujFqSkj53ah9WfC4vHFMKz9tQ2Cp6FBUMmLVV?=
- =?us-ascii?Q?eyx3S2JIwIUagbAhUmSfiXHvgiki2RGK69pQ9UVHhWZRdfpZTe7CeltNwo81?=
- =?us-ascii?Q?FBn7+1gEvRre2YsFgOOptMSX+0VAS+N9YC5aWSON2fqX9TMgdc34Lvg727G3?=
- =?us-ascii?Q?6v6KwvI2s858ezNPWkmQkDGtfb0uhXZQZhYcE1kKrxvd1up5rqwQVcLfF+3c?=
- =?us-ascii?Q?t29nT4JDMoQYVvEiB+JVggEt2A0fmaqf0a5nDFKaqxuAs/A/NZAzjbkdtq60?=
- =?us-ascii?Q?k88Yuv/xnac1e92R8aDzuprPY05HL+/C40RdeiMB+W66+21QM/wLGp0ndTTt?=
- =?us-ascii?Q?tvrdYP+r8jXRXiRusuBIgVlf0NYe21x2zAj56hQVyDm5LdXx60KhePChws8A?=
- =?us-ascii?Q?SbCTQ91xaxVbe96//Vn+C1gW8Oz5dPlaurb3+HBOXRwZrEhNpKcf9Za6OV5q?=
- =?us-ascii?Q?FLFNFusm+t//R0TYBmbC5nV4bZxB1F8Cqs6k1WgZ1bZqr1e9f+KMQGEJyGce?=
- =?us-ascii?Q?6ISDaQFJs+ZpXgMS5poK2dTJ5W2YE+7ANNQcjIMlcgY9O8uVGNA44ap5B1Kf?=
- =?us-ascii?Q?wUMRh8Mx29nl7nvGCqpyjZRBtATZs+rdyN9h56Yc?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ee80dac-52c0-4315-65f4-08ddfadaa21a
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 19:51:48.8812
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oF6OmVNfHlfjAS/z/XX256tBOdF+5GPnZ0gqC2kYXXSf8jyeTCtFqpEmp9F35sxi1mFZL5OBfl3L2niUOO92Ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7923
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 22, 2025 at 05:30:43PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> It is generally useful to be able to automatically drop a device's
-> runtime PM usage counter incremented by runtime PM operations that
-> resume a device and bump up its usage counter [1].
->
-> To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
-> and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
-> those cases.
->
-> Simply put, a piece of code like below:
->
-> 	pm_runtime_get_sync(dev);
-> 	.....
-> 	pm_runtime_put(dev);
-> 	return 0;
->
-> can be transformed with CLASS(pm_runtime_get_sync) like:
->
-> 	guard(pm_runtime_get_sync)(dev);
-> 	.....
-> 	return 0;
->
-> (see pm_runtime_put() call is gone).
->
-> However, it is better to do proper error handling in the majority of
-> cases, so doing something like this instead of the above is recommended:
->
-> 	CLASS(pm_runtime_get_active, pm)(dev);
-> 	if (IS_ERR(pm))
-> 		return PTR_ERR(pm);
-> 	.....
-> 	return 0;
->
-> In all of the cases in which runtime PM is known to be enabled for the
-> given device or the device can be regarded as operational (and so it can
-> be accessed) with runtime PM disabled, a piece of code like:
->
-> 	ret = pm_runtime_resume_and_get(dev);
-> 	if (ret < 0)
-> 		return ret;
-> 	.....
-> 	pm_runtime_put(dev);
-> 	return 0;
->
-> can be simplified with CLASS() like:
->
-> 	CLASS(pm_runtime_get_active, pm)(dev);
-> 	if (IS_ERR(pm))
-> 		return PTR_ERR(pm);
-> 	.....
-> 	return 0;
->
-> (again, see pm_runtime_put() call is gone).
->
-> Still, if the device cannot be accessed unless runtime PM has been
-> enabled for it, the CLASS(pm_runtime_get_active_enabled) variant
-> needs to be used, that is (in the context of the example above):
->
-> 	CLASS(pm_runtime_get_active_enabled, pm)(dev);
-> 	if (IS_ERR(pm))
-> 		return PTR_ERR(pm);
-> 	.....
-> 	return 0;
->
-> When the original code calls pm_runtime_put_autosuspend(), use one
-> of the "auto" class variants, CLASS(pm_runtime_get_active_auto) or
-> CLASS(pm_runtime_get_active_enabled_auto), so for example, a piece
-> of code like:
->
-> 	ret = pm_runtime_resume_and_get(dev);
-> 	if (ret < 0)
-> 		return ret;
-> 	.....
-> 	pm_runtime_put_autosuspend(dev);
-> 	return 0;
->
-> will become:
->
-> 	CLASS(pm_runtime_get_active_enabled_auto, pm)(dev);
-> 	if (IS_ERR(pm))
-> 		return PTR_ERR(pm);
-> 	.....
-> 	return 0;
->
-> Note that the cases in which the return value of pm_runtime_get_sync()
-> is checked can also be handled with the help of the new class macros.
-> For example, a piece of code like:
->
-> 	ret = pm_runtime_get_sync(dev);
-> 	if (ret < 0) {
-> 		pm_runtime_put(dev);
-> 		return ret;
-> 	}
-> 	.....
-> 	pm_runtime_put(dev);
-> 	return 0;
->
-> can be rewritten as:
->
-> 	CLASS(pm_runtime_get_active_enabled, pm)(dev);
-> 	if (IS_ERR(pm))
-> 		return PTR_ERR(pm);
-> 	.....
-> 	return 0;
->
-> or CLASS(pm_runtime_get_active) can be used if transparent handling of
-> disabled runtime PM is desirable.
->
-> Link: https://lore.kernel.org/linux-pm/878qimv24u.wl-tiwai@suse.de/ [1]
-> Co-developed-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
+On Tue, 23 Sep 2025 20:12:28 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
 
-Nice feature.
+> On Mon, Sep 22, 2025 at 03:00:32PM -0600, Alex Williamson wrote:
+> > On Thu, 11 Sep 2025 14:33:07 +0300
+> > Leon Romanovsky <leon@kernel.org> wrote:
+> >   
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > 
+> > > Refactor the PCI P2PDMA subsystem to separate the core peer-to-peer DMA
+> > > functionality from the optional memory allocation layer. This creates a
+> > > two-tier architecture:
+> > > 
+> > > The core layer provides P2P mapping functionality for physical addresses
+> > > based on PCI device MMIO BARs and integrates with the DMA API for
+> > > mapping operations. This layer is required for all P2PDMA users.
+> > > 
+> > > The optional upper layer provides memory allocation capabilities
+> > > including gen_pool allocator, struct page support, and sysfs interface
+> > > for user space access.
+> > > 
+> > > This separation allows subsystems like VFIO to use only the core P2P
+> > > mapping functionality without the overhead of memory allocation features
+> > > they don't need. The core functionality is now available through the
+> > > new pci_p2pdma_enable() function that returns a p2pdma_provider
+> > > structure.
+> > > 
+> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > ---
+> > >  drivers/pci/p2pdma.c       | 129 +++++++++++++++++++++++++++----------
+> > >  include/linux/pci-p2pdma.h |   5 ++
+> > >  2 files changed, 100 insertions(+), 34 deletions(-)  
+> 
+> <...>
+> 
+> > > -static int pci_p2pdma_setup(struct pci_dev *pdev)
+> > > +/**
+> > > + * pcim_p2pdma_enable - Enable peer-to-peer DMA support for a PCI device
+> > > + * @pdev: The PCI device to enable P2PDMA for
+> > > + * @bar: BAR index to get provider
+> > > + *
+> > > + * This function initializes the peer-to-peer DMA infrastructure for a PCI
+> > > + * device. It allocates and sets up the necessary data structures to support
+> > > + * P2PDMA operations, including mapping type tracking.
+> > > + */
+> > > +struct p2pdma_provider *pcim_p2pdma_enable(struct pci_dev *pdev, int bar)
+> > >  {
+> > > -	int error = -ENOMEM;
+> > >  	struct pci_p2pdma *p2p;
+> > > +	int i, ret;
+> > > +
+> > > +	p2p = rcu_dereference_protected(pdev->p2pdma, 1);
+> > > +	if (p2p)
+> > > +		/* PCI device was "rebound" to the driver */
+> > > +		return &p2p->mem[bar];
+> > >    
+> > 
+> > This seems like two separate functions rolled into one, an 'initialize
+> > providers' and a 'get provider for BAR'.  The comment above even makes
+> > it sound like only a driver re-probing a device would encounter this
+> > branch, but the use case later in vfio-pci shows it to be the common
+> > case to iterate BARs for a device.
+> > 
+> > But then later in patch 8/ and again in 10/ why exactly do we cache
+> > the provider on the vfio_pci_core_device rather than ask for it on
+> > demand from the p2pdma?  
+> 
+> In addition to what Jason said about locking. The whole p2pdma.c is
+> written with assumption that "pdev->p2pdma" pointer is assigned only
+> once during PCI device lifetime. For example, see how sysfs files
+> are exposed and accessed in p2pdma.c.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Except as Jason identifies in the other thread, the p2pdma is a devm
+object, so it's assigned once during the lifetime of the driver, not
+the device.  It seems that to get the sysfs attributes exposed, a
+driver would need to call pci_p2pdma_add_resource() to setup a pool,
+but that pool setup is only done if pci_p2pdma_add_resource() itself
+calls pcim_p2pdma_enable():
 
->
-> v2 -> v3:
->    * Two more class definitions for the case in which resume errors can be
->      neglected.
->    * Update of new code comments (for more clarity).
->    * Changelog update.
->
-> v1 -> v2:
->    * Rename the new classes and the new static inline helper.
->    * Add two classes for handling disabled runtime PM.
->    * Expand the changelog.
->    * Adjust the subject.
->
-> ---
->  drivers/base/power/runtime.c |    2 +
->  include/linux/pm_runtime.h   |   82 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 84 insertions(+)
->
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -796,6 +796,8 @@ static int rpm_resume(struct device *dev
->  		if (dev->power.runtime_status == RPM_ACTIVE &&
->  		    dev->power.last_status == RPM_ACTIVE)
->  			retval = 1;
-> +		else if (rpmflags & RPM_TRANSPARENT)
-> +			goto out;
->  		else
->  			retval = -EACCES;
->  	}
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -21,6 +21,7 @@
->  #define RPM_GET_PUT		0x04	/* Increment/decrement the
->  					    usage_count */
->  #define RPM_AUTO		0x08	/* Use autosuspend_delay */
-> +#define RPM_TRANSPARENT	0x10	/* Succeed if runtime PM is disabled */
->
->  /*
->   * Use this for defining a set of PM operations to be used in all situations
-> @@ -533,6 +534,32 @@ static inline int pm_runtime_resume_and_
->  }
->
->  /**
-> + * pm_runtime_get_active_dev - Resume a device and bump up its usage counter.
-> + * @dev: Target device.
-> + * @rpmflags: Additional runtime PM flags to combine with RPM_GET_PUT.
-> + *
-> + * Resume @dev synchronously and if that is successful, increment its runtime
-> + * PM usage counter.
-> + *
-> + * Return:
-> + * * 0 if the runtime PM usage counter of @dev has been incremented.
-> + * * Negative error code otherwise.
-> + */
-> +static inline struct device *pm_runtime_get_active_dev(struct device *dev,
-> +						       int rpmflags)
-> +{
-> +	int ret;
-> +
-> +	ret = __pm_runtime_resume(dev, RPM_GET_PUT | rpmflags);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(dev);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	return dev;
-> +}
-> +
-> +/**
->   * pm_runtime_put - Drop device usage counter and queue up "idle check" if 0.
->   * @dev: Target device.
->   *
-> @@ -606,6 +633,61 @@ static inline int pm_runtime_put_autosus
->  	return __pm_runtime_put_autosuspend(dev);
->  }
->
-> +/*
-> + * The way to use the classes defined below is to define a class variable and
-> + * use it going forward for representing the target device until it goes out of
-> + * the scope.  For example:
-> + *
-> + * CLASS(pm_runtime_get_active, active_dev)(dev);
-> + * if (IS_ERR(active_dev))
-> + *         return PTR_ERR(active_dev);
-> + *
-> + * ... do something with active_dev (which is guaranteed to never suspend) ...
-> + *
-> + * If an error occurs, the runtime PM usage counter of dev will not be
-> + * incremented, so using these classes without error handling is not
-> + * recommended.
-> + */
-> +DEFINE_CLASS(pm_runtime_get_active, struct device *,
-> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put(_T),
-> +	     pm_runtime_get_active_dev(dev, RPM_TRANSPARENT), struct device *dev)
-> +
-> +DEFINE_CLASS(pm_runtime_get_active_auto, struct device *,
-> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put_autosuspend(_T),
-> +	     pm_runtime_get_active_dev(dev, RPM_TRANSPARENT), struct device *dev)
-> +
-> +/*
-> + * The following two classes are analogous to the two classes defined above,
-> + * respectively, but they produce an error pointer if runtime PM has been
-> + * disabled for the given device.
-> + *
-> + * They should be used only when runtime PM may be disabled for the given device
-> + * and if that happens, the device is not regarded as operational and so it
-> + * cannot be accessed.  The classes defined above should be used instead in all
-> + * of the other cases.
-> + */
-> +DEFINE_CLASS(pm_runtime_get_active_enabled, struct device *,
-> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put(_T),
-> +	     pm_runtime_get_active_dev(dev, 0), struct device *dev)
-> +
-> +DEFINE_CLASS(pm_runtime_get_active_enabled_auto, struct device *,
-> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put_autosuspend(_T),
-> +	     pm_runtime_get_active_dev(dev, 0), struct device *dev)
-> +
-> +/*
-> + * The following classes may be used instead of the above if resume failures can
-> + * be neglected.  However, such cases are not expected to be prevalent, so using
-> + * one of these classes should always be regarded as an exception and explained
-> + * in an adjacent code comment.
-> + */
-> +DEFINE_CLASS(pm_runtime_get_sync, struct device *,
-> +	     if (_T) pm_runtime_put(_T),
-> +	     ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
-> +
-> +DEFINE_CLASS(pm_runtime_get_sync_auto, struct device *,
-> +	     if (_T) pm_runtime_put_autosuspend(_T),
-> +	     ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
-> +
->  /**
->   * pm_runtime_put_sync - Drop device usage counter and run "idle check" if 0.
->   * @dev: Target device.
->
->
->
+        p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+        if (!p2pdma) {
+                mem = pcim_p2pdma_enable(pdev, bar);
+                if (IS_ERR(mem))
+                        return PTR_ERR(mem);
+
+                error = pci_p2pdma_setup_pool(pdev);
+		...
+        } else
+                mem = &p2pdma->mem[bar];
+
+Therefore as proposed here a device bound to vfio-pci would never have
+these sysfs attributes.
+
+> Once you initialize p2pdma, it is much easier to initialize all BARs at
+> the same time.
+
+I didn't phrase my question above well.  We can setup all the providers
+on the p2pdma at once, that's fine.  My comment is related to the
+awkward API we're creating and what seems to be gratuitously caching
+the providers on the vfio_pci_core_device when it seems much more
+logical to get the provider for a specific dmabuf and cache it on the
+vfio_pci_dma_buf object in the device feature ioctl.  We could also
+validate the provider at that point rather than the ad-hoc, parallel
+checks for MMIO BARs.  Thanks,
+
+Alex
+
 
