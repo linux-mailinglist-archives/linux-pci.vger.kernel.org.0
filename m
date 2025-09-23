@@ -1,49 +1,50 @@
-Return-Path: <linux-pci+bounces-36760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 013F6B95A96
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:28:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C79E2B95AA2
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:28:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 477352E29EF
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:27:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAA9C2E6C55
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1AA1322549;
-	Tue, 23 Sep 2025 11:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7E5322A0A;
+	Tue, 23 Sep 2025 11:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxRtRGp0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSGF6VcZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41FF3218DB;
-	Tue, 23 Sep 2025 11:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFEE322A04;
+	Tue, 23 Sep 2025 11:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758626837; cv=none; b=sExbbX0YxNBcdhfWAkfMkoR/Po319c2IkQKDF1h5sj92jkJystrsa4w5sxT80D+n/PySQTok+mHSUaFZpC5wPP1XWwjmGuGlVlrIb2y+koA8rALjRwbHu3YWBlubTTr31N4UdUtiK9KzaxoRxv8glNl9oQ+DD64eSL9XID2lWTE=
+	t=1758626840; cv=none; b=SxCjDDcm7kHGuBDOtSmNrnA5cgZI4EtnEkLbQjbK3UmtITvsfVB+8v76SqinV1O58R71uLbYhUQWnLKC9ClF5767mxWgXJyNprxdDZzTjzEQ5kFeGmv5ilrVhBdaI2+98Yu+DIiem7Eg6AbULHf3Al8XLICm73PlmVfoz4w6zLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758626837; c=relaxed/simple;
-	bh=Q2ZPEdzb2gnORGVGeGO0IjeJe1l44gLt8XXnAyUuDs8=;
+	s=arc-20240116; t=1758626840; c=relaxed/simple;
+	bh=Y6Ks5wTiGs+ByHpP/pFcc1umqPWY5L5vAWv9OUX9xY4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S27+JcBDweGWrdOAJC2la6EBWvLZv0+mBy5KI6tVAugcIJmEv+MSM9S4LFjfqcYIVpavarKv8lhF4PsMgCyb+hA53GCQNtPf33Z57IltB1rLIb6YKLwlvpEkDT11ZZmDREbumN1Alc8i/xT2YQFEgXibrhShs2vq4CsBmBkMGH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxRtRGp0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0099FC4CEF5;
-	Tue, 23 Sep 2025 11:27:10 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=NL41A1zmQxDgX7YDivuTsPgTa7lUswkZJLXlMbtDpHSrF+T951tV/PHeorq8ImKlmh7AHfN5qob7WokZzBMJtoi3DDgOuQWpVPgdL5NEtGtRcF+6HSHi5fPPxYEf3dKdqT2TLqlPl7LS0YX0u42bQtAFhoPSIs70FGpsciMn8Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSGF6VcZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C285CC113D0;
+	Tue, 23 Sep 2025 11:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758626835;
-	bh=Q2ZPEdzb2gnORGVGeGO0IjeJe1l44gLt8XXnAyUuDs8=;
+	s=k20201202; t=1758626839;
+	bh=Y6Ks5wTiGs+ByHpP/pFcc1umqPWY5L5vAWv9OUX9xY4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UxRtRGp0z2xiTUUUBesIglAe4niKZKHngVBoyIw1OLjXZASD0/gfb/9uUh3qYLF+f
-	 I+OSFxsO0MM/oKN2Y0M0bJ4CL/duS1RDbQpITlg+xF+IqPDWqAzJ87l7nIcYq9zU4N
-	 L6LBN0l5aQ/JGBf22gIflpZsEOat4+1e/YoJdR9v8mUTd4wu02nu4jCOovCQZyjwyO
-	 BfnrGSyxliKgtCyfHqCRx7c44rCN1hRg6utdmQMAq7CfL3KeHjQOdnOEono7sG1M1i
-	 LhKDYe4SM0SbPg87LBVmfHGn+6k+1RP61sq+giwLdc1SF5LpjUgDrwxkAERN1kbVJ5
-	 oDNT6UT7kYyoA==
+	b=lSGF6VcZInmak+B2nWzBYISkHvSHzLyb6KqUZmybeHjCUvZ2zSZiSshpUWaFIC/+/
+	 KIPPH90NuiZ4PJdQZKOuFQ7eEIgQM0euVR+UDpHvINhha8BkeinZ3AYrz0xE5yAo8D
+	 dMqGfU0SipM0Q+y9ea1s1z3c5Ta1eRaYNWgs8SdQw0BVKSbOs4ii/e14hImcGW1Smq
+	 jcUa9swNvFFk0vqERZNOlCdftDtXcughtKx7esxyNbeNVrv5kBQYp33YyoDd5mIzOm
+	 w0Z8xUuYHY+V0/ZTe4p/GP6OhH5OUVT5TR1xBXD/8jSrX+0htFJEKvOmj6EgPCnyJF
+	 AAl/AeT1DgpWQ==
 From: Manivannan Sadhasivam <mani@kernel.org>
-Date: Tue, 23 Sep 2025 16:56:53 +0530
-Subject: [PATCH v10 3/4] PCI: qcom: Prepare for the DWC ECAM enablement
+Date: Tue, 23 Sep 2025 16:56:54 +0530
+Subject: [PATCH v10 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
+ 'CFG Shift Feature'
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250923-controller-dwc-ecam-v10-3-e84390ba75fa@kernel.org>
+Message-Id: <20250923-controller-dwc-ecam-v10-4-e84390ba75fa@kernel.org>
 References: <20250923-controller-dwc-ecam-v10-0-e84390ba75fa@kernel.org>
 In-Reply-To: <20250923-controller-dwc-ecam-v10-0-e84390ba75fa@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
@@ -67,159 +68,152 @@ Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
  Manivannan Sadhasivam <mani@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5560; i=mani@kernel.org;
- h=from:subject:message-id; bh=ollTmHdc+LRKjxsyHOHDxETPk2GcR9fbJFLU7EjwZyE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBo0oP+ERpPcf1S7vPHdvG9W21uHfJMNRjASUUzA
- ipFx2XcwvOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaNKD/gAKCRBVnxHm/pHO
- 9WY5B/9wApen9liIm5MjwGfbgjrWAUdg6N4ans9uzmaEz7ZJDErDwNWt2pzQKs5uIj4REIOoJLV
- K0nmecB67wCHl92/nL2A8Kbdufyj/9sY9C2njmqAAXsiUgLapYZIBYvBuA4tMF/mksJYlnLiDrB
- RpRyZSBHoN04M8YM9k4r3l03XOABh1r+ZnJTt6h7tIox1Flvt80Cq3upYYae94M2OQN/R84xuVX
- ybbU2jFc7D1q5PAIIoANGUXGXQS9k7B0Nr08Q0W2UaErot8KP8cXEDleAPkxWRHATHlYq19J7di
- +8iHLaf5WgBTjiQaoYse59r0XpcJLXuNHzBXvnc7woEDmMDR
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5632; i=mani@kernel.org;
+ h=from:subject:message-id; bh=lqpEGDikWMpJGoh9O49BHabw0FX3kIuCt8c+nBt0Fho=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBo0oP+nT1B3irIDsL2tBTAYHWeInJiZBrMnFQ05
+ AMvJOLqXayJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaNKD/gAKCRBVnxHm/pHO
+ 9cUGB/9mDuyKuvKq+CVaMM99wK7fYEnjT595IwhOdIKIy2KvO0vicoCYdJhIcC7gnv+JM/ndKqe
+ ZZonzGWZ5UnI7h1e7FRGc8jXLsRoc5ho3EP6I3R8dpXV634QumVCUglmAiiy9AQh8yun3XEnH0p
+ XAZQhQ7gIUR38caj7YWj1PkqHikqkT4zBlaH+NybnNkTOYfOFxKxQMm5E+3rqHEOQ7huyyBXtYR
+ E03eue8AmKHIHFfTEZ9rLA2Oxnwtoh2W7rSKqBksRdmQI+jVnlVNAXdiEeKCKV3A9yTeDT/S0sX
+ zvWMVWZ/ThtygcydYXhWiOQX7Rv23g7d5Mu8EqVjT/F2LGI6
 X-Developer-Key: i=mani@kernel.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-To support the DWC ECAM mechanism, prepare the driver by performing below
-configurations:
+Designware databook r5.20a, sec 3.10.10.3 documents the 'CFG Shift Feature'
+of the internal Address Translation Unit (iATU). When this feature is
+enabled, it shifts/maps the BDF contained in the bits [27:12] of the target
+address in MEM TLP to become BDF of the CFG TLP. This essentially
+implements the Enhanced Configuration Address Mapping (ECAM) mechanism as
+defined in PCIe r6.0, sec 7.2.2.
 
-  1. Since the ELBI region will be covered by the ECAM 'config' space,
-     override the 'elbi_base' with the address derived from 'dbi_base' and
-     the offset from PARF_SLV_DBI_ELBI register.
+Currently, the driver is not making use of this CFG shift feature, thereby
+creating the iATU outbound map for each config access to the devices,
+causing latency and wasting CPU cycles.
 
-  2. Block the transactions from the host bridge to devices other than Root
-     Port on the root bus to return all F's. This is required when the 'CFG
-     Shift Feature' of iATU is enabled.
+So to avoid this, configure the controller to enable CFG shift feature by
+enabling the 'CFG Shift' bit of the 'iATU Control 2 Register'.
+
+As a result of enabling CFG shift (ECAM), there is longer a need to map the
+DBI register space separately as the DBI region falls under the 'config'
+space used for ECAM (as DBI is used to access the Root Port).
+
+For enabling ECAM using CFG shift, the platform has to satisfy following
+requirements:
+
+  1. Size of the 'config' memory space to be used as ECAM memory should be
+     able to accommodate the number of buses defined in the 'bus-range'
+     property of the host bridge DT node.
+
+  2. The 'config' memory space should be 256 MiB aligned. This requirement
+     comes from PCIe r6.0, sec 7.2.2, which says the base address of ECAM
+     memory should be aligned to a 2^(n+20) byte address boundary. For the
+     DWC cores, n is 8, so this results in 2^28 byte alignment requirement.
+
+It should be noted that some DWC vendor glue drivers like pcie-al may use
+their own ECAM mechanism. For those controllers, set
+'dw_pcie_rp::native_ecam' flag and skip enabling the CFG Shift feature in
+the DWC core.
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-[mani: code split, reworded subject/description and comments]
+[mani: code split, reworded subject/description, comment, native_ecam flag]
 Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 68 ++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ drivers/pci/controller/dwc/pcie-al.c              |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c | 32 +++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+ 3 files changed, 34 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index c48a20602d7fa4c50056ccf6502d3b5bf0a8287f..e6d2a6b0c087151781ddaf6bf7612f87e2445d17 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -55,6 +55,7 @@
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
- #define PARF_Q2A_FLUSH				0x1ac
- #define PARF_LTSSM				0x1b0
-+#define PARF_SLV_DBI_ELBI			0x1b4
- #define PARF_INT_ALL_STATUS			0x224
- #define PARF_INT_ALL_CLEAR			0x228
- #define PARF_INT_ALL_MASK			0x22c
-@@ -64,6 +65,16 @@
- #define PARF_DBI_BASE_ADDR_V2_HI		0x354
- #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
- #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
-+#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
-+#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
-+#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
-+#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
-+#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
-+#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
-+#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
-+#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
-+#define PARF_ECAM_BASE				0x380
-+#define PARF_ECAM_BASE_HI			0x384
- #define PARF_NO_SNOOP_OVERRIDE			0x3d4
- #define PARF_ATU_BASE_ADDR			0x634
- #define PARF_ATU_BASE_ADDR_HI			0x638
-@@ -87,6 +98,7 @@
+diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+index 643115f74092d1c9319e9738db6e94b2752d30c4..345c281c74fefd2113233ef5461f96834b3765de 100644
+--- a/drivers/pci/controller/dwc/pcie-al.c
++++ b/drivers/pci/controller/dwc/pcie-al.c
+@@ -352,6 +352,7 @@ static int al_pcie_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 	}
+ 	al_pcie->ecam_size = resource_size(ecam_res);
++	pci->pp.native_ecam = true;
  
- /* PARF_SYS_CTRL register fields */
- #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
-+#define PCIE_ECAM_BLOCKER_EN			BIT(26)
- #define MST_WAKEUP_EN				BIT(13)
- #define SLV_WAKEUP_EN				BIT(12)
- #define MSTR_ACLK_CGC_DIS			BIT(10)
-@@ -134,6 +146,9 @@
- /* PARF_LTSSM register fields */
- #define LTSSM_EN				BIT(8)
+ 	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+ 						      "controller");
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 94e0fe11a0b062d0f14e09fe586e20bde46a4266..20c9333bcb1c4812e2fd96047a49944574df1e6f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -8,6 +8,7 @@
+  * Author: Jingoo Han <jg1.han@samsung.com>
+  */
  
-+/* PARF_SLV_DBI_ELBI */
-+#define SLV_DBI_ELBI_ADDR_BASE			GENMASK(11, 0)
++#include <linux/align.h>
+ #include <linux/iopoll.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/irq-msi-lib.h>
+@@ -32,6 +33,8 @@ static struct pci_ops dw_child_pcie_ops;
+ 				     MSI_FLAG_PCI_MSIX			| \
+ 				     MSI_GENERIC_FLAGS_MASK)
+ 
++#define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
 +
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_UP			BIT(13)
- #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-@@ -312,6 +327,47 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- 	qcom_perst_assert(pcie, false);
+ static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
+ 	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
+ 	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
+@@ -474,6 +477,34 @@ static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *re
+ 	return 0;
  }
  
-+static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
++static bool dw_pcie_ecam_enabled(struct dw_pcie_rp *pp, struct resource *config_res)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u64 addr, addr_end;
-+	u32 val;
++	struct resource *bus_range;
++	u64 nr_buses;
 +
-+	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
-+	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
++	/* Vendor glue drivers may implement their own ECAM mechanism */
++	if (pp->native_ecam)
++		return false;
 +
 +	/*
-+	 * The only device on the root bus is a single Root Port. If we try to
-+	 * access any devices other than Device/Function 00.0 on Bus 0, the TLP
-+	 * will go outside of the controller to the PCI bus. But with CFG Shift
-+	 * Feature (ECAM) enabled in iATU, there is no guarantee that the
-+	 * response is going to be all F's. Hence, to make sure that the
-+	 * requester gets all F's response for accesses other than the Root
-+	 * Port, configure iATU to block the transactions starting from
-+	 * function 1 of the root bus to the end of the root bus (i.e., from
-+	 * dbi_base + 4KB to dbi_base + 1MB).
++	 * PCIe spec r6.0, sec 7.2.2 mandates the base address used for ECAM to
++	 * be aligned on a 2^(n+20) byte boundary, where n is the number of bits
++	 * used for representing 'bus' in BDF. Since the DWC cores always use 8
++	 * bits for representing 'bus', the base address has to be aligned to
++	 * 2^28 byte boundary, which is 256 MiB.
 +	 */
-+	addr = pci->dbi_phys_addr + SZ_4K;
-+	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
-+	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
++	if (!IS_256MB_ALIGNED(config_res->start))
++		return false;
 +
-+	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
-+	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
++	bus_range = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
++	if (!bus_range)
++		return false;
 +
-+	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
++	nr_buses = resource_size(config_res) >> PCIE_ECAM_BUS_SHIFT;
 +
-+	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
-+	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
-+
-+	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
-+	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
-+
-+	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
-+	val |= PCIE_ECAM_BLOCKER_EN;
-+	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
++	return nr_buses >= resource_size(bus_range);
 +}
 +
- static int qcom_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-@@ -1284,6 +1340,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
  {
  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u16 offset;
- 	int ret;
+@@ -492,6 +523,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+ 	pp->cfg0_size = resource_size(res);
+ 	pp->cfg0_base = res->start;
  
- 	qcom_ep_reset_assert(pcie);
-@@ -1292,6 +1349,17 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		return ret;
++	pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
+ 	if (pp->ecam_enabled) {
+ 		ret = dw_pcie_create_ecam_window(pp, res);
+ 		if (ret)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 779868e8fa8fd78e5f35cd0fa2575f52cc07c335..625320565360c0134ee9345bcc2e54a6ce83326a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -429,6 +429,7 @@ struct dw_pcie_rp {
+ 	struct pci_eq_presets	presets;
+ 	struct pci_config_window *cfg;
+ 	bool			ecam_enabled;
++	bool			native_ecam;
+ };
  
-+	if (pp->ecam_enabled) {
-+		/*
-+		 * Override ELBI when ECAM is enabled, as when ECAM is enabled,
-+		 * ELBI moves under the 'config' space.
-+		 */
-+		offset = FIELD_GET(SLV_DBI_ELBI_ADDR_BASE, readl(pcie->parf + PARF_SLV_DBI_ELBI));
-+		pci->elbi_base = pci->dbi_base + offset;
-+
-+		qcom_pci_config_ecam(pp);
-+	}
-+
- 	ret = qcom_pcie_phy_power_on(pcie);
- 	if (ret)
- 		goto err_deinit;
+ struct dw_pcie_ep_ops {
 
 -- 
 2.48.1
