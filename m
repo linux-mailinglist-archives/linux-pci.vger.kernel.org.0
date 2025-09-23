@@ -1,284 +1,295 @@
-Return-Path: <linux-pci+bounces-36767-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36768-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D55B95DD8
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 14:45:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48CCCB95E50
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 14:55:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 261421891072
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 12:45:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC5A93BFE42
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 12:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C30F184;
-	Tue, 23 Sep 2025 12:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA8F8322DCC;
+	Tue, 23 Sep 2025 12:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="t8YtKf2j"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cqWc4AFf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011011.outbound.protection.outlook.com [52.101.62.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11C257853
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 12:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758631521; cv=fail; b=CZDJw+miWE37xyGzJUUinNRMXs+LI2phLhx0B0TOjVckDXaUM612U17FkI4c8i3WlVbz9IjDoS/b4mRqvd/krdbJHvYISLbT4+xl8ALVA5iGCkSBUxf1Xljjbt09aZfLH6N2mjl855rTVDALkm2hbriAdAyaHsbZ2dqY+kH5iws=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758631521; c=relaxed/simple;
-	bh=tVbY3aNAz/kWpzT7EfEfD8nRPGqKrVWexuV7dTpHsJw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FNqd22tfEKS/tRIYLd63W5IQFcLOYDGQ3OX/hgm/0UlI38jID1e98MXUV1HEPY96MAQZnEGn80xQ/VXNVtgOu0H0F8hiTk69wBK3rkytlxL1daWmzQ+IdynnqHGKdXR6YYqcGeTpx5QGljWMyJ0t1CweB8hfZ9HoJMsYo/vXWFI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=t8YtKf2j; arc=fail smtp.client-ip=52.101.62.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j0CZTvVDrMxG8geC+/nL5TTx17/PeeAOblchtE6KPUhJ34xkyRFlyZl3VNp2F7qvmd2q2D/q0NIKg7KXJn1uR8YLpYJhrXniQZ247hMqTvW739UlcVMh3sBKtHsDej1NsWCilw97S4UZSid9iitzhjKSYTv6TeisNf/zFVtXPb0a2sfmpprcIXgIxFsSBNjEkaRWUgczf5n9EAZjPMyC8rNX6pJnAsmPZ2ZBjqEhM3aXyv2Y4VSsjrsVNkcQxvlTTFW54jBnx3/4F18J7CQlW9AmTKG53Dm3cKCGw0Mzvy6eh40bup768Iw5TCu43wq2QEQa5sAUfqC9SAlW33bLCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=loJ8eFnru7Z+p0gz9mVJYD9OonC5X86F0Tu1HqFr+EU=;
- b=xO4+uE7dJEhx8a7kwie9ur/JuDCD5BP23P0CqgLCPS8tGMqKy1Axb9FLf0pN6jJ6f04Ig7LhkpU9u9khqHbSfuOGGoRdMByFlwS5tD7Z3mubtg7AgOIiXHpcCZk0RmVxflBSn5DfyJdNnET8gEmzvc00it5557H6MqHwjBmAjC3589dmxkynLthhRdDrNESpYqkwUOacNrJOp/fM1KVnj35T9sClBqtWJ7rnpTBUHFGJDRpgaSLSAmrQ1oXxi1ZIU+8rmmKY/IPUdrh2zRLJ1qOG3ot6tmrgnkcJuyGLcXAif0vg4J4IvzvdlEQ0uhZuJxg3nZMuM2EDQQ+K1gl0oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=loJ8eFnru7Z+p0gz9mVJYD9OonC5X86F0Tu1HqFr+EU=;
- b=t8YtKf2jI9mv6jRbjiJmmlzljf6/peiIpqWqApmpDUAB7lT4f1ddOXa6oohI+F0+AnCXCxtFiYZHrCjiZCfLxk/DnaOcOdLF2Ieb0Da/3gjOsOLdzNhPv6jGCLJSGYHHlgTd35M/O+L1f57L+aHPphidwzu8SdAkrrSapul0EcY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH3PR12MB9079.namprd12.prod.outlook.com (2603:10b6:610:1a1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.20; Tue, 23 Sep
- 2025 12:45:16 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
- 12:45:16 +0000
-Message-ID: <522d3d83-78b5-4682-bb02-d2ae2468d30a@amd.com>
-Date: Tue, 23 Sep 2025 14:45:10 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Matthew Brost <matthew.brost@intel.com>,
- "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
- Simona Vetter <simona.vetter@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-References: <20250918120431.GL1391379@nvidia.com>
- <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
- <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
- <80d2d0d1-db44-4f0a-8481-c81058d47196@amd.com>
- <20250923121528.GH1391379@nvidia.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250923121528.GH1391379@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YT1PR01CA0053.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2e::22) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9AB3164A0
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 12:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758632139; cv=none; b=iaoCQ8fJjVNjtXRCh51oHaYF14myQGFMQinZyMyCrUmpEZ50+R5NdnsMkmSyZmoNQ4xQ93qyaSp+t3+fwq7/Nh3Wgi4qj6H+RIEcg7bUL7pYFCFiovLE7h9o7QTzC20lY1TjlMWxIbquJmIdqjQkGtd+L901pO3qynLp5NXJ4Hg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758632139; c=relaxed/simple;
+	bh=eLS+3L+WH/3oUK1KdScdYxGZmccSVzRYZZWCamfUCQc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SD53ZmEJ1Ml9AnTA+Yytv30r0/5php+eOh+zLnvse1CRvlP1/Pymbtjc1UwFtyOYmGo32Z65TXKec+Xe0ofVROSGF9WSxHS0EjetmtYYDFiLN5S5n/RfX7CaSyfgPZNFbTvJk7DXKdFgxvZzWN1PMEBF01vFS0LzRdieSxzKlIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cqWc4AFf; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3f0ae439b56so2914139f8f.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 05:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1758632136; x=1759236936; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xaIg4jDl9jFZTYzzE1kP2lbNTLyhNR0UhkVfuAOFPbU=;
+        b=cqWc4AFfAM96UtCVjz/5MIqSxFEpPwa+74UA3pacyceoShYe+nPmCjrueOs5X0idj9
+         QQEkIR2ZLsFpbqHA4WKPfAH/jyks3sNE4h6MlCnyGtpZE483XMy+nPYx3HQb11vjAmHX
+         yIJAZEp7V6PPxkPnC0fsMhlNGX8TJ/4q97r5AUEoY7wEBQLZMgjbCMbauzInMaWflFOx
+         iUO7aisFvjVCpxvgqKND8a0nJh05mzOTqR1t58tnmgsTV2QuotTYxa/PDbBi3rSxkdRz
+         K+cX3GmR2q3RSba0Jrq1vX1nAj1Km4dEEbA/5rjg5MLgr8cEv2GzieHQzp7xKIxxoYl0
+         j6kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758632136; x=1759236936;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xaIg4jDl9jFZTYzzE1kP2lbNTLyhNR0UhkVfuAOFPbU=;
+        b=MCyq/Xfg/poj8jo/L/yw69D2oZLPW3e+boCIL03dv1wwymTBAp5RrPPJIblabvAigU
+         lGZUmIMZbXfaTb2VLOl+llA7M/BiIRvdmxzTmHjZpBIzcpjjaRlvsSUd7QCJT+Qj9O4A
+         l08vQPz8fhqbEfj+YkA6zpwKmPsQxcsw5Lil0gFy/gaRCBZsQv+tilgEQ/3ymEbbyshy
+         VKp/nHQrC6r4WNlnjGXGyetSOV46Pf6TBu0yRyvUiJFR6hgajxzTkNxdVGWpd5YSEr9a
+         VT3LIycmJ/gMxijbIbcrxoG3b8pSsKzuo3ToSOamRL6fgPoXBtiWmW0fXU48m70tlml4
+         NkSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUAQgnbf8qh0gDHjxfpwVYQhbW7pf36hMsNrTTIDa3/5flYdPmvsCJCcd55LnQxu+hmSQ2l2I+DCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg4RmtcAIckWQ5ox3mpfjeRmUZuU9Cize8hh5uB3hAokt+mbid
+	S6zXOdbwk5FlOEMMENU7iF+R1FSaKFR+Q9N4LmxcDE8JlFxAGnefoFNilRpUy/CWppY=
+X-Gm-Gg: ASbGncvWlicP3cNcjJQgSQtC9p4sIzRMeL8Ce98HntRjo4XfweyMvjGZYsBfNBnVRpQ
+	B7We1hEs4GRKDG671j/mbsomvZpLehyXA1Rc78/iga1aOKpQympZZb0VvzKxUbPgpltvVLeqXk4
+	WGW5giwLRTapN8Rt3H0RuSmSqudkzO619k5wL+CVHcRJXwl+/gqteoZGQUTv3TRDxBZcoZO92ia
+	uxEYPs59eeRhoAoznaUN9vcPN1PeI7/CXp7DDJOxyrFRdjxpWgtvSCBsRYD2vjOS0ZUhz+rlYt4
+	PSnAtBVguf8stjAeAZTnu5F40Dg3sd/tJXv6gq9XeigHDvJfw2iiaftebyvTchntqfkjSEb5hwZ
+	3ayiO1FQM5akCHvlVK0gJkLjjx98nrze69Kth2P7z0AA=
+X-Google-Smtp-Source: AGHT+IG0uyoZNs0i41rqkNkMaZFqouCej55fWirbDUl/J5m3XVuK1w9+Aykmm/3MDPy3vac3H7+Wyg==
+X-Received: by 2002:a05:6000:4025:b0:3e4:957d:d00 with SMTP id ffacd0b85a97d-405cb9a5225mr1756055f8f.58.1758632135758;
+        Tue, 23 Sep 2025 05:55:35 -0700 (PDT)
+Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-464f5a286edsm273702715e9.16.2025.09.23.05.55.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Sep 2025 05:55:35 -0700 (PDT)
+Message-ID: <c84d6952-7977-47cd-8f09-6ea223217337@suse.com>
+Date: Tue, 23 Sep 2025 14:55:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB9079:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6d6dab3-ecfd-4122-82ce-08ddfa9f0b95
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RlNFVGJCWjFheDRnMVZtK0diS2p5TzRKbUxHVk5lcDRiSEFKellxLzV6eFNP?=
- =?utf-8?B?c29lN3pTUmtyZUw1bmx1U3lPSGl1WGJieUlReFUrQVJVN2xNSlFvOGlwS1M3?=
- =?utf-8?B?UFRMWGlpam4zTVR4REZHSTN1ektzdHI2cXZtcUkzTVhPalN3emRjQ1lOSy8x?=
- =?utf-8?B?T1QxT3BqcXpwb05PRWFMOVM5SkFyUVVjZzNtekQ4UEQ0a2Z1RVFTUlB6LzlQ?=
- =?utf-8?B?VURoMEVtdnZlK0Y0WnoxdEZPTWJiT0JabytnbXBTd3FwVS9LL2ZSdXduSjRu?=
- =?utf-8?B?QzRVeS95WS83aWlNSHlwRzFBNms5OS9ad0RxcnhJZ0p4NEkzZlljWEg3d3VD?=
- =?utf-8?B?RkdPRUEyTjFyNWVsWGsvZFllVUZDNDVnMG1udi9FSzVuWWQrMkxDWlVTUmk3?=
- =?utf-8?B?NjZBem5RNVZJamFLcjNTbHREblJyV2wvd0NuUlJYYUdWZTdzcDA2dzl4UG93?=
- =?utf-8?B?QWZiMldyT3RqelAybXd5WDFjTHZuNWZlTkhmdDNkcWNsOWc1ZVNXMzRQYUdv?=
- =?utf-8?B?MVU2RWFuYjZScVRQaDRPRlh1UlBONmN0ZHJYTkZ3bFMvcy9HSUdrUDk4Y1ds?=
- =?utf-8?B?VXl3aG5GSmZDYWFicEhDcFBsa3ZkNGNKNTNHb1N5Yms3QTFHanlFdXYrR1M0?=
- =?utf-8?B?ZFVyajduMnRsemZMa09XSEpHN3FrVVdTM1d1dkwrZzdNTG9zUWxkclpmU0dE?=
- =?utf-8?B?ek93N0NsVUVpSENSMUkrdm01dk1vVDlzNnFoZTJSRS9USDhsVEN0UkZWVTBO?=
- =?utf-8?B?bUNaeXE4T0ZpV1VPZ3Bmek4ya2I0M2NKNU5xVmszYWZOYWlNMXhCZEpCTzJJ?=
- =?utf-8?B?TXhUUlRBWDY0OWEycm9SVWNSc1lBVmMyKzlCSUhkN28xRDZzdDRaVlg1K2lT?=
- =?utf-8?B?R3BPNk5DTzJ1SzUzN0gxNWVkSUNLdDdaTWEvaXE1Y3RVdlBPMDZaenJhck9y?=
- =?utf-8?B?UTlsVHhiQVVqb0RNMHROQTFYR2lHckRPTzlLVlBFcEtFYWUxZXk4cTFwR2ZT?=
- =?utf-8?B?OG0vaWI4aEdQK3FsdGw2TlkxUmxiTytWMFgvd3lFaTA3T1NTQUh4dGhjWDdS?=
- =?utf-8?B?U1B5clVyUTZ1NVVHTzF0TW1YTm1uczJPRU5XYjRDRXE0dElyMkN0aUd5T0d4?=
- =?utf-8?B?cFpKb0pubGEwRTJPc0Q5VDU2U0t2eUtzS0NTZ0NQeVNCYXVUSDF0ZFVFYlIx?=
- =?utf-8?B?QSttaHhrRUowY1pnQUJkZ2IrSXcyKzlRODFiNHVXT1BwTERhMWYvdFpFY0hy?=
- =?utf-8?B?UExJbnMzQzJUc0RtTVVqY09UWThydVNHWHQ4bHFXZmgwdTY5bXJyT1VBVVRG?=
- =?utf-8?B?bm0vRG9RMmpTZ1ZjOUhzclBGMlhEWk9xRXM5M3ZYZ2xQbzNHYSswclc0TU5K?=
- =?utf-8?B?NjFmQm5VY3ZyYWhYQ1IyM1RwclZhUVR4cTl2QXRYZm5zcWN0Z1NrbGkwTFBj?=
- =?utf-8?B?UWlMSXltMXl2emFpZVBKZkJCOEpqZjYrMzZTRFNpZ24valp6RWlmbTFxdHBw?=
- =?utf-8?B?Nm1YNFdWUExnRm0yeHFhcUZFNEl1aEQ2a1U2RStVZjJFd3NmYkRyZUx5bjZV?=
- =?utf-8?B?dnFmU3BOM0h0MnZNbVZIVWJCcEVEL2VvTjBxR3RDZmdlY1JsUktQejFZOVpl?=
- =?utf-8?B?cHk1cm51Q29XTmt3M2RZQ0FCVnRNVHlCQ0lFM1RHYml2UGRrcFBvWGNndzNS?=
- =?utf-8?B?UGhrdmhMdUdVL2ZqMFM5QnpuaVZKRmVXYmswUnNveTBXTnJxRXRaMjVmd1gy?=
- =?utf-8?B?cnNjNFJvU1UxVXBOUDBlWi8wLzVZWG9nSlM5ZE5rcTlCTFJvUGQySHNCbnEv?=
- =?utf-8?B?bllQT3hIdXc0cUgxeTdqMC8rTEtnakdzdlRKSkhJUzVPcFdjOTdVTVNQUHRx?=
- =?utf-8?B?TWI1dzNZcW4wVnBuMFJjQmdvTnVyT3BucjlRMGViQ05HR3VLOUtSUDJWMVg5?=
- =?utf-8?Q?PXPP1n4Fwkw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?akw4a2lBVGNoZjVnbnd1aFpTSWlFVkwvSk5nNUphRzYvMlRRQzVXbDg3ZnYx?=
- =?utf-8?B?eUxTeEFMVXhPQWpVNFVkSGt1ZWFRZEZoMTVJb3kzdnJra3g4Q21tY25tc3lZ?=
- =?utf-8?B?aUc4R2YwRFVPbWNRRGVmM1JWMVZlK1M4SThFcnVXaEt1dCsyRmk0Nng2c1px?=
- =?utf-8?B?RTV6YTFWdHNjZVhZZVdOWFhveTBjZzNHdjUxanFpZC8rVWNIems2TkxqYW9C?=
- =?utf-8?B?OVE5ejNzNkVaN1Z0blN5UFFsVlVLY1grVUx5ZkRSUEl5cng1OU10NjlPTjBa?=
- =?utf-8?B?b2dlVmFManNZYnN1bXpwYXp0SUtuM3lBMXFLeTY4OCtCOGtJeUYySXhzVmFI?=
- =?utf-8?B?SXFQQWZMNDJnYkVZay9YYlhMVHVEVHVmYUVYSzVySmlPRXFyYWtHa0E4ZXov?=
- =?utf-8?B?clgzaWNFTUplSWp5b09SODR0Njd2V0hMc1V2cldzb204RjRrNE4xOGVEMG84?=
- =?utf-8?B?dEw2REZjVW9qeTFVZmdOQVZabllmZG1nUlRJTFlzWTU3MmJjQ1FRdTZTQWpP?=
- =?utf-8?B?SU4zV2VXd2FucVRlRE9sNlQ0ZElDN3Z1SG5qQ1F3aHRwa3RJd0gzbDNTWnJK?=
- =?utf-8?B?aGEvVWVzclJwdlIvd05NVE9kdWdxTzY5S1l5N1lPMTVJby9lb1hCK2RkS1R2?=
- =?utf-8?B?UDRvZkxwRFFZZWtuWmtKUHNibmpEaUVKbmNvUFJabFR5aDRpREIvdjdpQ1VK?=
- =?utf-8?B?MHg2MGcxZ3YzL0NIN2tyVEtTOVpQWnhaZWUyb0RzdHpjSXJ4aHF5Z2lpa0Mv?=
- =?utf-8?B?MDZhVVBHUlliWWdielBncXBDWU5mamNlbFNTWlgrYi9wYWE2bmk0dHJJM29D?=
- =?utf-8?B?Zk01aFg5NFdYZ0xZSkg0ZE1VcnVhVnNaL1JEWUorY0tKRlhDODBXWGdrOG9j?=
- =?utf-8?B?RFpjaXZkZ2Q4amZIYzBZOExoOXZrSVlrdkFWUDN3d2JxWVFOZVdOc3NHcWxq?=
- =?utf-8?B?ZU5URDRmNXdzUHRJeHJHT0Y3YjVhQWIrUmFnK0kyS2RwV0VON2ZHaTRtL1VT?=
- =?utf-8?B?K2UyVWJadnI3TnlUcnFoV1o0VmVKVEdmSDdYQnIvLzFzVWpNSS9xZmxvMVc3?=
- =?utf-8?B?aVR3SjNvZFdZS2RUVi81REt1djN1VFNhbCtMdjc1eUlYaXByQkRuQUtVditG?=
- =?utf-8?B?SEpyeTl5SDB6MkF5ZGxFSVova1ZlbThYNno2Um5UT25NY1NWYU1ncWUrMUhw?=
- =?utf-8?B?cmN5ZGdJbjZCQkh5NnU5TmhVVmpEeE5WN1pDaktJMlc5bTg4ejFVR3R0SGZj?=
- =?utf-8?B?RlB0TGh2VUZHK1RoMExRa3MrZnFCeGY3M0kwTjdiSjF0QkFmTUZjTFVvV1M2?=
- =?utf-8?B?MHNsMTVvVTJYbmo0Wlg4bVNLS0d4WXVmWk1yYis3UDdwMm9jSjR5NzZXbSsy?=
- =?utf-8?B?azFYdENPM2NOYTV2VWJyWG15eWZVYjQzdjRBVUVjZzhBUDRiRzdtbVJndjVl?=
- =?utf-8?B?d3c5OXJ0c2Z0RUZEd0Nha3EvemJlUkZVRm9jNVFOdFF6QVFSZVp5cnBOSzkr?=
- =?utf-8?B?RzNWV2ExVHZpMlBTOURHQ0h3N0xPSUlGaVJUU21UYmZoN2E4c1NqUkxjdHRm?=
- =?utf-8?B?dE4rUmNPSUhFS3dPTTBTbnFFbTM2NWFmRlVyWFNZNkZFWGlYVmNiaE5ZM0pj?=
- =?utf-8?B?eTVXbERqdCtCejQrNFAyQzZiZzM2ckkyVjFYQWJrcWY5YjhocEdZbTQ4UVZ3?=
- =?utf-8?B?ZlJ4UGlvOHlTQUhicURPcVU3KzZqaTBNd3c3NWw5Z01SYU9xMmRFV2N4LzBw?=
- =?utf-8?B?K3ZGN0ZGcUJLU3dnY3RMSm5pU2xJZlI5TVY0YXJhbDdlc21PRmRBaGNoY3h2?=
- =?utf-8?B?dHdYUjNJWUlKSk5mU1hGcmkrN0ZYZDM0eVhvRmhFSDVSaXJxSTRrWFlPOXFI?=
- =?utf-8?B?NmdXT2lCOEdBNkErVzRDaUdpTUtQNG81dURlV1RRL1RlTXJ0TXBhUHNlQWla?=
- =?utf-8?B?M0hRV3drRmd5RXRWSEozOWFWK0tZNkZzUGxSdmF4ZFQzN0YxUjlPcyt5ckpC?=
- =?utf-8?B?T2Rab1daV2c1Snl1S0QxeVVvK1JZRzhkT2xjWEJGdzA4ZW4zMDRhVEwrS1JX?=
- =?utf-8?B?N2FSQmNPNG9IVm1uWjBQb0JSaFE2Y3RaOHY1TmxuekxaOGJXMmw4eUNEckRq?=
- =?utf-8?Q?JTFtmGguj3Z3+gr0t6Srq1vSs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6d6dab3-ecfd-4122-82ce-08ddfa9f0b95
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 12:45:15.9165
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BxI/HHIvDRo1jkWOXGYQXYaE9L3mMBHyrEiRt5stNipbenPY5n1Kl+PxavySh8Qa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9079
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] PCI: Support FIXUP quirks in modules
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
+ linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
+ Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Sami Tolvanen <samitolvanen@google.com>, Richard Weinberger
+ <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, kunit-dev@googlegroups.com,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, linux-um@lists.infradead.org
+References: <20250912230208.967129-1-briannorris@chromium.org>
+ <20250912230208.967129-2-briannorris@chromium.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250912230208.967129-2-briannorris@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 23.09.25 14:15, Jason Gunthorpe wrote:
-> On Tue, Sep 23, 2025 at 09:52:04AM +0200, Christian König wrote:
->> For example the ISP driver part of amdgpu provides the V4L2
->> interface and when we interchange a DMA-buf with it we recognize that
->> it is actually the same device we work with.
+On 9/13/25 12:59 AM, Brian Norris wrote:
+> The PCI framework supports "quirks" for PCI devices via several
+> DECLARE_PCI_FIXUP_*() macros. These macros allow arch or driver code to
+> match device IDs to provide customizations or workarounds for broken
+> devices.
 > 
-> One of the issues here is the mis-use of dma_map_resource() to create
-> dma_addr_t for PCI devices. This was never correct.
-
-That is not a mis-use at all but rather exactly what dma_map_resource() was created for.
-
-If dma_map_resource() is not ACS aware than we should add that.
-
-> VFIO is using a new correct ACS aware DMA mapping API that I would
-> expect all the DMABUF world to slowly migrate to. This API prevents
-> mappings in cases that don't work in HW.
+> This mechanism is generally used in code that can only be built into the
+> kernel, but there are a few occasions where this mechanism is used in
+> drivers that can be modules. For example, see commit 574f29036fce ("PCI:
+> iproc: Apply quirk_paxc_bridge() for module as well as built-in").
 > 
-> So a design where you have to DMA map something then throw away the
-> DMA map after doing some "shortcut" check isn't going to work.
+> The PCI fixup mechanism only works for built-in code, however, because
+> pci_fixup_device() only scans the ".pci_fixup_*" linker sections found
+> in the main kernel; it never touches modules.
 > 
-> We need some way for the importer/exporter to negotiate what kind of
-> address they want to exchange without forcing a dma mapping.
-
-That is already in place. We don't DMA map anything in those use cases.
-
->>>> I've read through this thread—Jason, correct me if I'm wrong—but I
->>>> believe what you're suggesting is that instead of using PCIe P2P
->>>> (dma_map_resource) to communicate the VF's VRAM offset to the PF, we
->>>> should teach dma-buf to natively understand a VF's VRAM offset. I don't
->>>> think this is currently built into dma-buf, but it probably should be,
->>>> as it could benefit other use cases as well (e.g., UALink, NVLink,
->>>> etc.).
->>>>
->>>> In both examples above, the PCIe P2P fabric is used for communication,
->>>> whereas in the VF→PF case, it's only using the PCIe P2P address to
->>>> extract the VF's VRAM offset, rather than serving as a communication
->>>> path. I believe that's Jason's objection. Again, Jason, correct me if
->>>> I'm misunderstanding here.
+> Extend the fixup approach to modules.
 > 
-> Yes, this is my point.
+> I don't attempt to be clever here; the algorithm here scales with the
+> number of modules in the system.
 > 
-> We have many cases now where a dma_addr_t is not the appropriate way
-> to exchange addressing information from importer/exporter and we need
-> more flexibility.
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
 > 
-> I also consider the KVM and iommufd use cases that must have a
-> phys_addr_t in this statement.
-
-Abusing phys_addr_t is also the completely wrong approach in that moment.
-
-When you want to communicate addresses in a device specific address space you need a device specific type for that and not abuse phys_addr_t.
-
->> What you can do is to either export the DMA-buf from the driver who
->> feels responsible for the PF directly (that's what we do in amdgpu
->> because the VRAM is actually not fully accessible through the BAR).
+>  drivers/pci/quirks.c   | 62 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/module.h | 18 ++++++++++++
+>  kernel/module/main.c   | 26 ++++++++++++++++++
+>  3 files changed, 106 insertions(+)
 > 
-> Again, considering security somehow as there should not be uAPI to
-> just give uncontrolled access to VRAM.
-> 
-> From a security side having the VF create the DMABUF is better as you
-> get that security proof that it is permitted to access the VRAM.
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d97335a40193..db5e0ac82ed7 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -207,6 +207,62 @@ extern struct pci_fixup __end_pci_fixups_suspend_late[];
+>  
+>  static bool pci_apply_fixup_final_quirks;
+>  
+> +struct pci_fixup_arg {
+> +	struct pci_dev *dev;
+> +	enum pci_fixup_pass pass;
+> +};
+> +
+> +static int pci_module_fixup(struct module *mod, void *parm)
+> +{
+> +	struct pci_fixup_arg *arg = parm;
+> +	void *start;
+> +	unsigned int size;
+> +
+> +	switch (arg->pass) {
+> +	case pci_fixup_early:
+> +		start = mod->pci_fixup_early;
+> +		size = mod->pci_fixup_early_size;
+> +		break;
+> +	case pci_fixup_header:
+> +		start = mod->pci_fixup_header;
+> +		size = mod->pci_fixup_header_size;
+> +		break;
+> +	case pci_fixup_final:
+> +		start = mod->pci_fixup_final;
+> +		size = mod->pci_fixup_final_size;
+> +		break;
+> +	case pci_fixup_enable:
+> +		start = mod->pci_fixup_enable;
+> +		size = mod->pci_fixup_enable_size;
+> +		break;
+> +	case pci_fixup_resume:
+> +		start = mod->pci_fixup_resume;
+> +		size = mod->pci_fixup_resume_size;
+> +		break;
+> +	case pci_fixup_suspend:
+> +		start = mod->pci_fixup_suspend;
+> +		size = mod->pci_fixup_suspend_size;
+> +		break;
+> +	case pci_fixup_resume_early:
+> +		start = mod->pci_fixup_resume_early;
+> +		size = mod->pci_fixup_resume_early_size;
+> +		break;
+> +	case pci_fixup_suspend_late:
+> +		start = mod->pci_fixup_suspend_late;
+> +		size = mod->pci_fixup_suspend_late_size;
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	if (!size)
+> +		return 0;
+> +
+> +	pci_do_fixups(arg->dev, start, start + size);
+> +
+> +	return 0;
+> +}
+> +
+>  void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
+>  {
+>  	struct pci_fixup *start, *end;
+> @@ -259,6 +315,12 @@ void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
+>  		return;
+>  	}
+>  	pci_do_fixups(dev, start, end);
+> +
+> +	struct pci_fixup_arg arg = {
+> +		.dev = dev,
+> +		.pass = pass,
+> +	};
+> +	module_for_each_mod(pci_module_fixup, &arg);
 
-Well the VF is basically just a window into the HW of the PF.
+The function module_for_each_mod() walks not only modules that are LIVE,
+but also those in the COMING and GOING states. This means that this code
+can potentially execute a PCI fixup from a module before its init
+function is invoked, and similarly, a fixup can be executed after the
+exit function has already run. Is this intentional?
 
-The real question is where does the VFIO gets the necessary information which parts of the BAR to expose?
+>  }
+>  EXPORT_SYMBOL(pci_fixup_device);
+>  
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 3319a5269d28..7faa8987b9eb 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -539,6 +539,24 @@ struct module {
+>  	int num_kunit_suites;
+>  	struct kunit_suite **kunit_suites;
+>  #endif
+> +#ifdef CONFIG_PCI_QUIRKS
+> +	void *pci_fixup_early;
+> +	unsigned int pci_fixup_early_size;
+> +	void *pci_fixup_header;
+> +	unsigned int pci_fixup_header_size;
+> +	void *pci_fixup_final;
+> +	unsigned int pci_fixup_final_size;
+> +	void *pci_fixup_enable;
+> +	unsigned int pci_fixup_enable_size;
+> +	void *pci_fixup_resume;
+> +	unsigned int pci_fixup_resume_size;
+> +	void *pci_fixup_suspend;
+> +	unsigned int pci_fixup_suspend_size;
+> +	void *pci_fixup_resume_early;
+> +	unsigned int pci_fixup_resume_early_size;
+> +	void *pci_fixup_suspend_late;
+> +	unsigned int pci_fixup_suspend_late_size;
+> +#endif
+>  
+>  
+>  #ifdef CONFIG_LIVEPATCH
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index c66b26184936..50a80c875adc 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2702,6 +2702,32 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>  					      sizeof(*mod->kunit_init_suites),
+>  					      &mod->num_kunit_init_suites);
+>  #endif
+> +#ifdef CONFIG_PCI_QUIRKS
+> +	mod->pci_fixup_early = section_objs(info, ".pci_fixup_early",
+> +					    sizeof(*mod->pci_fixup_early),
+> +					    &mod->pci_fixup_early_size);
+> +	mod->pci_fixup_header = section_objs(info, ".pci_fixup_header",
+> +					     sizeof(*mod->pci_fixup_header),
+> +					     &mod->pci_fixup_header_size);
+> +	mod->pci_fixup_final = section_objs(info, ".pci_fixup_final",
+> +					    sizeof(*mod->pci_fixup_final),
+> +					    &mod->pci_fixup_final_size);
+> +	mod->pci_fixup_enable = section_objs(info, ".pci_fixup_enable",
+> +					     sizeof(*mod->pci_fixup_enable),
+> +					     &mod->pci_fixup_enable_size);
+> +	mod->pci_fixup_resume = section_objs(info, ".pci_fixup_resume",
+> +					     sizeof(*mod->pci_fixup_resume),
+> +					     &mod->pci_fixup_resume_size);
+> +	mod->pci_fixup_suspend = section_objs(info, ".pci_fixup_suspend",
+> +					      sizeof(*mod->pci_fixup_suspend),
+> +					      &mod->pci_fixup_suspend_size);
+> +	mod->pci_fixup_resume_early = section_objs(info, ".pci_fixup_resume_early",
+> +						   sizeof(*mod->pci_fixup_resume_early),
+> +						   &mod->pci_fixup_resume_early_size);
+> +	mod->pci_fixup_suspend_late = section_objs(info, ".pci_fixup_suspend_late",
+> +						   sizeof(*mod->pci_fixup_suspend_late),
+> +						   &mod->pci_fixup_suspend_late_size);
+> +#endif
+>  
+>  	mod->extable = section_objs(info, "__ex_table",
+>  				    sizeof(*mod->extable), &mod->num_exentries);
 
-> From this thread I think if VFIO had the negotiated option to export a
-> CPU phys_addr_t then the Xe PF driver can reliably convert that to a
-> VRAM offset.
-> 
-> We need to add a CPU phys_addr_t option for VFIO to iommufd and KVM
-> anyhow, those cases can't use dma_addr_t.
+Nit: I suggest writing the object_size argument passed to section_objs()
+here directly as "1" instead of using sizeof(*mod->pci_fixup_...) =
+sizeof(void). This makes the style consistent with the other code in
+find_module_sections().
 
-Clear NAK to using CPU phys_addr_t. This is just a horrible idea.
-
-Regards,
-Christian.
-
-> 
->>>> I'd prefer to leave the provisioning data to the PF if possible. I
->>>> haven't fully wrapped my head around the flow yet, but it should be
->>>> feasible for the VF → VFIO → PF path to pass along the initial VF
->>>> scatter-gather (SG) list in the dma-buf, which includes VF-specific
->>>> PFNs. The PF can then use this, along with its provisioning information,
->>>> to resolve the physical address.
->>
->> Well don't put that into the sg_table but rather into an xarray or
->> similar, but in general that's the correct idea.
-> 
-> Yes, please lets move away from re-using dma_addr_t to represent
-> things that are not created by the DMA API.
-> 
-> Jason
-
+-- 
+Thanks,
+Petr
 
