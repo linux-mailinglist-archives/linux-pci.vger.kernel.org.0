@@ -1,86 +1,63 @@
-Return-Path: <linux-pci+bounces-36818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A960CB97C84
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:07:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A146B97C9C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:14:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D80521AE0527
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:08:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5D2D4A6DA7
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:14:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431403112D2;
-	Tue, 23 Sep 2025 23:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2CE30F930;
+	Tue, 23 Sep 2025 23:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XpigEz1u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4h1dMVT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E0230FC18
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 23:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA69E27A47F;
+	Tue, 23 Sep 2025 23:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758668854; cv=none; b=AmkdVtSlc/cS9CoHK07QvqW61xsGkm54zIDGMqfKOkzulDMGywKOxWWR5OKJgnMOlUB6CQUn9UB39jYR9gHnzLz4Le6iv5JvRojXMSkF2lZlOzC813jIE8i0zVt2QgZlS2UlZGIv7WbN660ptUz3xszPxwsgUopoYRHR1YTTx58=
+	t=1758669282; cv=none; b=WGDmQ2hrBSyYWF2XSqjTdfVXd7G8+DLNOYmxvLPvcn6chxPA+LsivlIXYSU+Ha21ooKzjuoMcbOKgh1WUWjhvpe/6hUfgrq2e+3WSEginT6zZD3cFn5UzxgdHFQwMYBi3DrY5TF/C3yV0Ow8H+dgg0rYwiiJGcJUWYvT6Hiv3eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758668854; c=relaxed/simple;
-	bh=YnYd/gKeEekdgcs7OqQ/sMRYsiqPBgufePpEuqafhLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTAYSV8JtTsILG07/YwQ6Ar+PxXOFufafuAA82jzxveilh4qDrZK2LjvukDwvNxewK82Q1JbhMe3Y5ORK1i1mKVozkMx1K3G5uvoJuES4bZ2gPfqpDpdwfqQVVJzdrVSjVe9uFYVtCPqua5c6obpMSNJSyVywn+yunTMQY5d1zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XpigEz1u; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-271d1305ad7so42774265ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 16:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1758668852; x=1759273652; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nFOv8LRjpZLWIF9uYfzl4ykO48TjCgwNklWa0BlqT0g=;
-        b=XpigEz1uCSrov6c/1QrojDRCSgFjddeMlxAm1zT2fDyVz5yLJ38QjdUCX+2S83rBYN
-         bDZmuDv8DrRmhLMjqGD4CT3mjuu8aHaCqdxvRcUXYvgv7HzJl5SJIrBJt5ZI1Oh2gOJd
-         JetNBFmqHg5tk8eQKXh+XuUYksZD7icSMioxE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758668852; x=1759273652;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nFOv8LRjpZLWIF9uYfzl4ykO48TjCgwNklWa0BlqT0g=;
-        b=fdKiEDWAnQ++H3XppZTrE7QqxhCRjAR66Mdb2aGgZbvXC/Nk6n2oupx6j34AhbXG02
-         dxa8FhGmR35wMz9fzcN4EBxvaXPTR9oYVuq863ucddkBt8QS4/kWgwL9fLnY8c8qHpa3
-         t/WmXhex/lrvRzryRCKV575aJPLh3BAE8VGducPAe1GA2PepwRdJLUi6ualkT1+cLRov
-         8xMWfwvk2wSSNwE1j6K3om59JkPVaZAj0L+7uFV55Fupf6DL5OOO2wyM3PzZBs6DQ4zU
-         wb4ERytJ/MSCS9Bt3zlGgOjI6sscIcNEb8lN6C7WUriJkMnZDD613qNcN6m7Zyfu42A8
-         7lQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLCwNkEJCZkQyvyoGbAkuzae8h005BBR8KEoSZ9QAx01N2WY4VLb3520pQTXVAcwPamcMC+YUu/1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymFsN2hdMPDnfjGxMUpGY2R87f404SYwCCq12ms73w4by8UpBb
-	mdr9nH4Bsv0ewieltj4vU6vJ8T05BodGzPRgn9q3gF4RsdD4ge+QbvSxm9xHZmGykuW5DVk+265
-	D8+E=
-X-Gm-Gg: ASbGncunxpgiP2GMdTqaFe1hIQ8ce6ddHCv+XWCMYRQLUkpeh62w4SN8S5a6AClZrzq
-	XvIgYE3nHNo2CiAD3VvAFUGPiMtHuOWvgtGzGoNAK2ODhCH8vSSGtWhM3UcXpKiNDObUTqxYH7+
-	Mr6AmG8YLDjfGOSx8/JWKyobxHo7Dkk8PRaL38yKLwJDgQ3jGzN6JI5OK6rc95daErnT6crLobD
-	4k45DBCXmm50cyT6XXEffrOnMQYW5HcRORDDTz/gq3Oa/dxBDQu0Nc/jfYC9vYJvIZjDCs1uUnP
-	Bd55rccyCzB1SSe/yvoJATN8faoLXaQAWKkKRy21900w/s679mSJYcSsY2oCUwPuCxk8z47qfeM
-	VaN2q6X89QUTsxJSse2Co+y4McgT9JigUn6/VgcpKE7qMTKxnfNRN/Cd+aI9N
-X-Google-Smtp-Source: AGHT+IFVPYMKnS8TWlnAQXccka7DEPTB/RihRAWX3su86ixXqz/GV9aDNk1vsFjQk0na0d8kYCF0SQ==
-X-Received: by 2002:a17:903:37c7:b0:269:7427:fe37 with SMTP id d9443c01a7336-27cc678593amr52570955ad.29.1758668851792;
-        Tue, 23 Sep 2025 16:07:31 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e7c:8:26d9:5758:328a:50f8])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3341bdc1cfesm262574a91.23.2025.09.23.16.07.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Sep 2025 16:07:31 -0700 (PDT)
-Date: Tue, 23 Sep 2025 16:07:29 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	Ethan Zhao <etzhao1900@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Subject: Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
-Message-ID: <aNMoMY17CTR2_jQz@google.com>
-References: <20250820102607.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
- <20250923190231.GA2052830@bhelgaas>
+	s=arc-20240116; t=1758669282; c=relaxed/simple;
+	bh=FIo/pZaUigBm9Ky7Kd/tXc9ekuQLyR4YIZcaFzQCtiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=J30FNZNYpzbaO5Bys7KVu7Xdx7RyCmLJC+deNgYoATgTDdHnCsNPkXa+qoqGLUPm8aH+x91VoH4HYG7gHlDx5dztF/HoHAmi7BwggXUDoISgKJUHm9z8Bd7wCUndQSh9kS7VSjjZf+OEBq93ZKwRyoR7p4UWaLCHTIVvEgM/QJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4h1dMVT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EF1BC4CEF5;
+	Tue, 23 Sep 2025 23:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758669282;
+	bh=FIo/pZaUigBm9Ky7Kd/tXc9ekuQLyR4YIZcaFzQCtiQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=i4h1dMVTNiSeEphauTed/sdFxAoQJwSsKrYvSrjvRA3dmEMTjfizecbRhCzSVHQbS
+	 eumTmaGee2OFoXPPcfJwKGIgYGuTXtGV1I0C5DbfjZ9a3HJOC7d6TwutwXwSvu/wpb
+	 PhVrkytG1zzKd7I0McAZQGrOSUjmde4TfevYlohf8zsOAc+XQ/4AVLXaJb+A/qrmcW
+	 ru/NfMUL+3MnX4x6rV9/FxqRYsxj/mEDS4XHxBGPs/RCojAuoAdhNMzn3c+OHoI1bS
+	 XF/ozk5qgvAZIiNFG+CmnxPQHqpVfTiSQMzrK5Kjt7VlCk92TAweuX/fd4YYffmSnh
+	 +n0Rh8Ln+RwXA==
+Date: Tue, 23 Sep 2025 18:14:40 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH v2 0/2] PCI/ASPM: Enable ASPM and Clock PM by default on
+ devicetree platforms
+Message-ID: <20250923231440.GA2088746@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,93 +66,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250923190231.GA2052830@bhelgaas>
+In-Reply-To: <20250922-pci-dt-aspm-v2-0-2a65cf84e326@oss.qualcomm.com>
 
-Hi Bjorn,
-
-On Tue, Sep 23, 2025 at 02:02:31PM -0500, Bjorn Helgaas wrote:
-> [+cc Ethan, Andrey]
+On Mon, Sep 22, 2025 at 09:46:43PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> Hi,
 > 
-> On Wed, Aug 20, 2025 at 10:26:08AM -0700, Brian Norris wrote:
-> > From: Brian Norris <briannorris@google.com>
-> > 
-> > max_link_speed, max_link_width, current_link_speed, current_link_width,
-> > secondary_bus_number, and subordinate_bus_number all access config
-> > registers, but they don't check the runtime PM state. If the device is
-> > in D3cold, we may see -EINVAL or even bogus values.
-> > 
-> > Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
-> > rest of the similar sysfs attributes.
+> This series is one of the 'let's bite the bullet' kind, where we have decided to
+> enable all ASPM and Clock PM states by default on devicetree platforms [1]. The
+> reason why devicetree platforms were chosen because, it will be of minimal
+> impact compared to the ACPI platforms. So seemed ideal to test the waters.
 > 
-> Protecting the config reads seems right to me.
+> Problem Statement
+> =================
 > 
-> If the device is in D3cold, a config read will result in a Completion
-> Timeout.  On most x86 platforms that's "fine" and merely results in ~0
-> data.  But that's merely convention, not a PCIe spec requirement.
+> Historically, PCI subsystem relied on the BIOS to enable ASPM and Clock PM
+> states for PCI devices before the kernel boot if the default states are
+> selected using:
 > 
-> I think it's a potential issue with PCIe controllers used on arm64 and
-> might result in an SError or synchronous abort from which we don't
-> recover well.  I'd love to hear actual experience about how reading
-> "current_link_speed" works on a device in D3cold in an arm64 system.
+> * Kconfig: CONFIG_PCIEASPM_DEFAULT=y, or
+> * cmdline: "pcie_aspm=off", or
+> * FADT: ACPI_FADT_NO_ASPM
+> 
+> This was done to avoid enabling ASPM for the buggy devices that are known to
+> create issues with ASPM (even though they advertise the ASPM capability). But
+> BIOS is not at all a thing on most of the non-x86 platforms. For instance, the
+> majority of the Embedded and Compute ARM based platforms using devicetree have
+> something called bootloader, which is not anyway near the standard BIOS used in
+> x86 based platforms. And these bootloaders wouldn't touch PCIe at all, unless
+> they boot using PCIe storage, even then there would be no guarantee that the
+> ASPM states will get enabled. Another example is the Intel's VMD domain that is
+> not at all configured by the BIOS. But, this series is not enabling ASPM/Clock
+> PM for VMD domain. I hope it will be done similarly in the future patches.
+> 
+> Solution
+> ========
+> 
+> So to avoid relying on BIOS, it was agreed [2] that the PCI subsystem has to
+> enable ASPM and Clock PM states based on the device capability. If any devices
+> misbehave, then they should be quirked accordingly.
+> 
+> First patch of this series introduces two helper functions to enable all ASPM
+> and Clock PM states if of_have_populated_dt() is true. Second patch drops the
+> custom ASPM enablement code from the pcie-qcom driver as it is no longer needed.
+> 
+> Testing
+> =======
+> 
+> This series is tested on Lenovo Thinkpad T14s based on Snapdragon X1 SoC. All
+> supported ASPM states are getting enabled for both the NVMe and WLAN devices by
+> default.
+> 
+> [1] https://lore.kernel.org/linux-pci/a47sg5ahflhvzyzqnfxvpk3dw4clkhqlhznjxzwqpf4nyjx5dk@bcghz5o6zolk
+> [2] https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
+> 
+> Changes in v2:
+> 
+> - Used of_have_populated_dt() instead of CONFIG_OF to identify devicetree
+>   platforms
+> - Renamed the override helpers and changed the override print
+> - Moved setting the default state back to the original place and only kept the
+>   override in helpers
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+> Manivannan Sadhasivam (2):
+>       PCI/ASPM: Override the ASPM and Clock PM states set by BIOS for devicetree platforms
+>       PCI: qcom: Remove the custom ASPM enablement code
+> 
+>  drivers/pci/controller/dwc/pcie-qcom.c | 32 --------------------------
+>  drivers/pci/pcie/aspm.c                | 42 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 40 insertions(+), 34 deletions(-)
 
-I'm working on a few such arm64 systems :) (pcie-qcom Chromebooks, and
-non-upstream DWC-based Pixel phones; I have a little more knowledge of
-the latter.) The answers may vary by SoC, and especially by PCIe
-implementation. ARM SoCs are notoriously ... diverse.
+I tentatively put this on pci/aspm and included it in pci/next.
 
-To my knowledge, it can be several of the above on arm64 + DWC.
-
-* pci_generic_config_read() -> pci_ops::map_bus() may return NULL, in
-  which case we get PCIBIOS_DEVICE_NOT_FOUND / -EINVAL. And specifically
-  on arm64 with DWC PCIe, dw_pcie_other_conf_map_bus() may see the link
-  down on a suspended bridge and return NULL.
-
-* The map_bus() check is admittedly racy, so we might still *actually*
-  hit the hardware, at which point this gets even more
-  implementation-defined:
-
-  (a) if the PCIe HW is not powered (for example, if we put the link to
-      L3 and fully powered off the controller to save power), we might
-      not even get a completion timeout, and it depends on how the
-      SoC is wired up. But I believe this tends to be SError, and a
-      crash.
-
-  (b) if the PCIe HW is powered but something else is down (e.g., link
-      in L2, device in D3cold, etc.), we'll get a Completion Timeout,
-      and a ~0 response. I also was under the impression a ~0 response
-      is not spec-mandated, but I believe it's noted in the Synopsys
-      documentation.
-
-NB: I'm not sure there is really great upstream support for arm64 +
-D3cold yet. If they're not using ACPI (as few arm64 systems do), they
-probably don't have the appropriate platform_pci_* hooks to really
-manage it properly. There have been some prior attempts at adding
-non-x86/ACPI hooks for this, although for different reasons:
-
-    https://lore.kernel.org/linux-pci/a38e76d6f3a90d7c968c32cee97604f3c41cbccf.camel@mediatek.com/
-    [PATCH] PCI:PM: Support platforms that do not implement ACPI
-
-That submission stalled because it didn't really have the whole picture
-(in that case, the wwan/modem driver in question).
-
-> As Ethan and Andrey pointed out, we could skip max_link_speed_show()
-> because pcie_get_speed_cap() already uses a cached value and doesn't
-> do a config access.
-
-Ack, I'll drop that part of the change.
-
-> max_link_width_show() is similar and also comes from PCI_EXP_LNKCAP
-> but is not currently cached, so I think we do need that one.  Worth a
-> comment to explain the non-obvious difference.
-
-Sure, I'll add a comment for max_link_width.
-
-> PCI_EXP_LNKCAP is ostensibly read-only and could conceivably be
-> cached, but the ASPM exit latencies can change based on the Common
-> Clock Configuration.
-
-I'll plan not to add additional caching, unless excess wakeups becomes a
-problem.
-
-Brian
+I think it's too late in the cycle to include this for v6.18, so I'll
+probably defer it until v6.19, but maybe we can start getting a little
+more testing.
 
