@@ -1,84 +1,95 @@
-Return-Path: <linux-pci+bounces-36755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5354CB9591B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:08:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C28CAB95948
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:11:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5856617F5B3
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:08:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42D403B9BD8
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4783218D0;
-	Tue, 23 Sep 2025 11:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959523218C4;
+	Tue, 23 Sep 2025 11:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2zANbbo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmrbaONM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E429281530;
-	Tue, 23 Sep 2025 11:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26922F6184
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 11:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758625672; cv=none; b=tTsOcvGd9tHh+rSH5C0g9ZbPcX7i0Kc96eAkSAWyk3wX5zIY9JRy2U1o+Cm9RK4hjcy7CrUhgORGtZZdYn1+CD/Cjcft1eDlViqpIP6mTUs8W43pSmkNq6aucsU353NZFaAvweAC3Ui/p0GMZRlOygNgnhY3aQddpEz6uPCFxCk=
+	t=1758625847; cv=none; b=W+QX2SaX/i9pMYlMbvxIfv1P0r3XCQrmQMUtb1/ccbG6HuMmAdh71X/ZAGKsA9dIbfiPS4cU5QsrD8dgMHjv7+d/8TUPQb6dqs7dRQAAQW3oO5w77LD7mHE0R+Ib8AjEhZuK1ijz08So8cdCB11uvwaogYp4vhL9g02x9qh3Jsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758625672; c=relaxed/simple;
-	bh=Uf9bs5k9QG+5nyGAjqLHS32cg0hRvydRERDb3MH2K7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICzNH6pCJaVtURPoryv6Fx+/J9WdBysKDPV18tCZt+pgjq2zU2qeUVPw11jCQ6aeRD2QnnXu7m93WScSPCFgolDjGIZ47kgpByOhDo4esPY7MWDZefFrT5a4WKyN2m3VWmrUYU/mA3X8wcvZfBj6CB/qkX8h4piqsCqYX7V1Oo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2zANbbo; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758625671; x=1790161671;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Uf9bs5k9QG+5nyGAjqLHS32cg0hRvydRERDb3MH2K7s=;
-  b=j2zANbboPtxqqd35ajaF+PWJDU5URuSY6RNzKxf/hFEDY77Zyswdd86V
-   dWSqh2cz2PzTe0/v8OmCaPwAZnBfLl+lGdfvD51WOR8G7nUntKrAV49KV
-   W4/965nyqolq6+VNUeCrHHe8GKEfeiFnQjxIv7KJrbyIANbKAuevc/1Rs
-   cWrzzgmgO2utNIwqe+OKhbSg60dfu1dE8AVQZAcW8nPBvQgCXjkyJzc0H
-   Vd5Br+bFGnRdlUcngenQiexbDSNjdiGYx3IPw7pFImCLRrJZiT9YcbMyQ
-   LhMFnaCUT23gV9inWP11InT7CWqrd2G/OdZV7OGS4JMcqOFdZtISFcU1u
-   Q==;
-X-CSE-ConnectionGUID: ibS4eyNpT+GWpjPYlIIcwg==
-X-CSE-MsgGUID: y8LFd0ZcS9iXBoEjG/x0uQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="60119383"
-X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="60119383"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 04:07:50 -0700
-X-CSE-ConnectionGUID: A0hX7eCORfmMYV+pqUM0xw==
-X-CSE-MsgGUID: XFw+UBKWTTafDHqYtEDBUA==
-X-ExtLoop1: 1
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 23 Sep 2025 04:07:46 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v10s4-00032v-1w;
-	Tue, 23 Sep 2025 11:07:44 +0000
-Date: Tue, 23 Sep 2025 19:06:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+	s=arc-20240116; t=1758625847; c=relaxed/simple;
+	bh=L8If8mhhgNYtNxzT0sBTVnoIcsxkhNehSrPzVwevgF0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYbxRayZROLMKpJDMyOvhx19lfD7i/gt0+to87kSiJJcsPQv1nyV/g4nixcYf+dqe+oq2ge8rDgxBC80xNVr6EiU52gJhaePIcvlaziVcSxG4Df7+gn1Dyzog0i8mNphSRfgmgC3ib9C6TZ8jY9bIOo2IELEUdNAppREIUeQQyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmrbaONM; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-46256e402fdso8026305e9.2
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 04:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758625844; x=1759230644; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/M4chbTCwJie6GL25HuGRFhPc1V63zKjOJLKGItv6qU=;
+        b=GmrbaONMY567lYbR6vFpTH7gDvClnvBS96L6i7cxNJQyNpbldeX/PEB3xls2N49FEK
+         BMNuOctp1084ZTlxDwzeIsmyFRnvmWEj1fYBJ2UspJaYUxvrwMoZXRxfT0r1SFKeUr0r
+         ZiFWvMeUS/UCGkzIKbs24gOwhL681sh/wvvZY4qUZt7Q+AxzA6iPRCOof4pB2i5XAKNK
+         WAj9Y2AE5TvbsXVm4iZt+JzxERe9qLmvbZazZZo7+rYCy+DChCD8WctOTbtYD3ucCzng
+         4X2BR/6uqBd9Hq5VAZgRfr9oR90y2HqAIwJlLG4J1aq95N6oT0G6vZ++KJvqsUsFW0Nj
+         0+DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758625844; x=1759230644;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/M4chbTCwJie6GL25HuGRFhPc1V63zKjOJLKGItv6qU=;
+        b=gGtY0IOPIM1DCHrOauroTA9+B965bxMEgPWPjZZCxKbTiuftputeJNeV02MWwkAseP
+         jJBK5C07OHgeQ9vAHAT4SVAUch0F9TabScT09JcNjOuSmr52PMidHABSpoEZTrKo/r+j
+         UjMbWLNUePqi44vA2I7AUZu6iPbJx5ZdO4o6IetvVBni/Rp/gH7inbKq82jWaiT8eSyA
+         33xMY1Ik1ilsBd32Sm8h5HjR5FXtlMRJtlM5DTc5t40J7W1fuJON4SyxJgy5i3HiNm1n
+         90VXf7yZ1C7M2zccpQiz8h9U+NP59rjmYWcZRrWmWMuj54ibq8/jHcImVzcHixSkUeWU
+         ftig==
+X-Forwarded-Encrypted: i=1; AJvYcCW8H+wMhlTHJrPpAh59vGVd25NnrA7iBhcDRDIjHG0KF7TL+z8YhY1A0CYmUq47L533mCmeo7TDA2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZQaCh/Omdj/ywVnFq4vzZLFi6AQpmNv+2G9fj+rlEYVLV6PLS
+	R9bQTNZqpFNew2J4QfALcFk7huQm/uR8pBL+AFj+ze+PL4ljrdGAg5eJ
+X-Gm-Gg: ASbGnctnzvjUL8XQMDhY+Onx2C22UrSNeeyuquKaanZmOWeq7Xu1wRRTnJv3QQwGcoV
+	7hrFqkIa4JLufSKCFEnNqdSE/nsQ2c77Q3t2nfXgi1/Yy+uX672eyy/IxHtwimJhKZUnREdxvcI
+	esk/Y6bToc8HiRugftEJXUI0V1UDzga12TyKNtRdnzjK6gO8d4CFuiOmz7YdCRBj043YQFGlAEa
+	3UyoVUXbKZbAd3qUVUibHFEUhAj0f4CjFJuKG8i31YTQmgaEvb/qO2sCOOjAbeJepZ38lLqlcNV
+	OZ0sSH/vQux9njlTjPAt05VsYSoXYmKPV0mKE7y6ZbkQ02ELWxxqzmaf2/hsicY9cqKVubY9iaw
+	yXT0YArfI70d7rqwIDxhe/bs=
+X-Google-Smtp-Source: AGHT+IHhlp7t8Mif75guovtxrXuNcYEIzhCdfujdY3LaIWfy1jJmzn6mmtcb1ThUszzhbFiPUhqUdw==
+X-Received: by 2002:a05:600c:4ed3:b0:45f:2919:5e8d with SMTP id 5b1f17b1804b1-46e1d98c40bmr12841095e9.1.1758625842783;
+        Tue, 23 Sep 2025 04:10:42 -0700 (PDT)
+Received: from skbuf ([2a02:2f04:d005:3b00:2e0a:df05:253e:8b85])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e23adcce3sm3208595e9.11.2025.09.23.04.10.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 04:10:41 -0700 (PDT)
+From: Vladimir Oltean <olteanv@gmail.com>
+X-Google-Original-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Date: Tue, 23 Sep 2025 14:10:38 +0300
+To: Shawn Guo <shawnguo@kernel.org>, Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] PCI: rcar-host: Add static assertion to check
- !PCI_LOCKLESS_CONFIG
-Message-ID: <202509231859.HdRgUtEm-lkp@intel.com>
-References: <20250922153352.99197-1-marek.vasut+renesas@mailbox.org>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Olof Johansson <olof@lixom.net>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 3/3] arm64: dts: fsl-lx2160a: include rev2 chip's dts
+Message-ID: <20250923111038.qluh2kjmc534ytig@skbuf>
+References: <20240826-2160r2-v1-0-106340d538d6@nxp.com>
+ <20240826-2160r2-v1-3-106340d538d6@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,72 +98,73 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250922153352.99197-1-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20240826-2160r2-v1-3-106340d538d6@nxp.com>
 
-Hi Marek,
+Hi Shawn,
 
-kernel test robot noticed the following build errors:
+On Mon, Aug 26, 2024 at 05:38:34PM -0400, Frank Li wrote:
+> The mass production lx2160 rev2 use designware PCIe Controller. Old Rev1
+> which use mobivel PCIe controller was not supported. Although uboot
+> fixup can change compatible string fsl,lx2160a-pcie to fsl,ls2088a-pcie
+> since 2019, it is quite confused and should correctly reflect hardware
+> status in dtb. Change freescale's board to use rev2's dtsi firstly.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> index 4d721197d837e..71d0d6745e44a 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> @@ -6,7 +6,7 @@
+>  
+>  /dts-v1/;
+>  
+> -#include "fsl-lx2160a.dtsi"
+> +#include "fsl-lx2160a-rev2.dtsi"
+>  
+>  / {
+>  	model = "NXP Layerscape LX2160AQDS";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> index 0c44b3cbef773..2373e1c371e8c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> @@ -6,7 +6,7 @@
+>  
+>  /dts-v1/;
+>  
+> -#include "fsl-lx2160a.dtsi"
+> +#include "fsl-lx2160a-rev2.dtsi"
+>  
+>  / {
+>  	model = "NXP Layerscape LX2160ARDB";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
+> index 9f5ff1ffe7d5e..7a595fddc0273 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
+> @@ -6,7 +6,7 @@
+>  
+>  /dts-v1/;
+>  
+> -#include "fsl-lx2160a.dtsi"
+> +#include "fsl-lx2160a-rev2.dtsi"
+>  
+>  / {
+>  	model = "NXP Layerscape LX2162AQDS";
+> 
+> -- 
+> 2.34.1
+> 
+> 
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.17-rc7 next-20250922]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Sorry for digging up an old thread, but I'm curious why you applied
+patch 2/3 but not this one? Currently,
+arch/arm64/boot/dts/freescale/fsl-lx2160a-rev2.dtsi has no user.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Marek-Vasut/PCI-rcar-host-Add-static-assertion-to-check-PCI_LOCKLESS_CONFIG/20250922-233709
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250922153352.99197-1-marek.vasut%2Brenesas%40mailbox.org
-patch subject: [PATCH] PCI: rcar-host: Add static assertion to check !PCI_LOCKLESS_CONFIG
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250923/202509231859.HdRgUtEm-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250923/202509231859.HdRgUtEm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509231859.HdRgUtEm-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/bits.h:30,
-                    from include/linux/bitops.h:6,
-                    from drivers/pci/controller/pcie-rcar-host.c:14:
->> include/linux/build_bug.h:78:41: error: static assertion failed: "!IS_ENABLED(CONFIG_PCI_LOCKLESS_CONFIG)"
-      78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-         |                                         ^~~~~~~~~~~~~~
-   include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
-      77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-         |                                  ^~~~~~~~~~~~~~~
-   drivers/pci/controller/pcie-rcar-host.c:43:1: note: in expansion of macro 'static_assert'
-      43 | static_assert(!IS_ENABLED(CONFIG_PCI_LOCKLESS_CONFIG));
-         | ^~~~~~~~~~~~~
-
-
-vim +78 include/linux/build_bug.h
-
-bc6245e5efd70c Ian Abbott       2017-07-10  60  
-6bab69c65013be Rasmus Villemoes 2019-03-07  61  /**
-6bab69c65013be Rasmus Villemoes 2019-03-07  62   * static_assert - check integer constant expression at build time
-6bab69c65013be Rasmus Villemoes 2019-03-07  63   *
-6bab69c65013be Rasmus Villemoes 2019-03-07  64   * static_assert() is a wrapper for the C11 _Static_assert, with a
-6bab69c65013be Rasmus Villemoes 2019-03-07  65   * little macro magic to make the message optional (defaulting to the
-6bab69c65013be Rasmus Villemoes 2019-03-07  66   * stringification of the tested expression).
-6bab69c65013be Rasmus Villemoes 2019-03-07  67   *
-6bab69c65013be Rasmus Villemoes 2019-03-07  68   * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
-6bab69c65013be Rasmus Villemoes 2019-03-07  69   * scope, but requires the expression to be an integer constant
-6bab69c65013be Rasmus Villemoes 2019-03-07  70   * expression (i.e., it is not enough that __builtin_constant_p() is
-6bab69c65013be Rasmus Villemoes 2019-03-07  71   * true for expr).
-6bab69c65013be Rasmus Villemoes 2019-03-07  72   *
-6bab69c65013be Rasmus Villemoes 2019-03-07  73   * Also note that BUILD_BUG_ON() fails the build if the condition is
-6bab69c65013be Rasmus Villemoes 2019-03-07  74   * true, while static_assert() fails the build if the expression is
-6bab69c65013be Rasmus Villemoes 2019-03-07  75   * false.
-6bab69c65013be Rasmus Villemoes 2019-03-07  76   */
-6bab69c65013be Rasmus Villemoes 2019-03-07  77  #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-6bab69c65013be Rasmus Villemoes 2019-03-07 @78  #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-6bab69c65013be Rasmus Villemoes 2019-03-07  79  
-07a368b3f55a79 Maxim Levitsky   2022-10-25  80  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thread here.
+https://lore.kernel.org/lkml/20240826-2160r2-v1-0-106340d538d6@nxp.com/
 
