@@ -1,182 +1,272 @@
-Return-Path: <linux-pci+bounces-36813-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36814-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8094B977DB
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 22:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 48841B97923
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:30:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B2052A3A42
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 20:27:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AE4A2E7917
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3BA22E1F06;
-	Tue, 23 Sep 2025 20:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6124E27A44A;
+	Tue, 23 Sep 2025 21:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kB/fUGeY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MNU5+1Zn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC6C23FC41;
-	Tue, 23 Sep 2025 20:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0C123A989
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 21:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758659223; cv=none; b=e44l1AZfo5+CAjYxmUUpkKLGzkkhHulbFobU3aPUmvoLhLIpDq6eKuLva6LmcCntLlBmHIHrKpbTG6Wqt40cWkjAdD9KdFQNaOBVf9/ukiQOWlvVGagQpAaFsvf00AtVXCbvSuwxLH/8xKsaHpXuEXdNbh8p8m8wHJc5mFRm4UI=
+	t=1758663002; cv=none; b=ZUNlc3QWT/lCip7zMLm9CCFgW0jaX3T9jprJcYEQmyLS7W7B+oQcn5U8cIx4AvojJtQ7wQLOAwGUaLUxfOo9MAmoBUK1dDJuqAjtI0ILtU2cQzu+n55DiMpQgyfKUK+VUvruk++xk4FPPEx5wmmw3O0O9pHW05816WIA77LXc0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758659223; c=relaxed/simple;
-	bh=5R1UgSJEvi2l7Eky/zK0SWAZ6XGW6n1hioaDt4+Pst0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tmFHUcOggF1xFQIgOyzUUR/UYl6kkrFha2SZcAXIeNDqQFHIjxB9fbZUa0M/2O957J7ERUlhCQcNSL+c64x9OkcMOhz72VmsP/NieiMrZ/weK6mouKkuaMtpS20ZkJv7HzXOeqry6nYs6/2fVtlgzTn3qGateJ5TLTNm0H4LF6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kB/fUGeY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF24C4CEF5;
-	Tue, 23 Sep 2025 20:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758659223;
-	bh=5R1UgSJEvi2l7Eky/zK0SWAZ6XGW6n1hioaDt4+Pst0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kB/fUGeY9zXTc4xPBZoZWjD3qp6VSnfAqGsuI8BUOqwXv+4EuypaIp/21qo0AezRk
-	 yxVGTVgxYyfwkUdl2FiFp958j2mhNZAXdFn9bDGTQGRkv2f5WUjCGuu1WvFY0QsAX8
-	 LRzDfs9CAzDu1EUm86IzUyq3T5qbZFi+mod4jpABZNu+LXGCxQCXFDU//T4xBLvY4n
-	 SrxWQ8K2rqus9E/6EQ3aUZL4HHVqxfBA6ro9THUrzfwOmLL65Hxk6OQjXrV7Jt+vHh
-	 NesA3/VJ1fWliqJLHfSdJDnDDzNKWBbNUwadOp7KOVaq14azf5xBl1x1UyWJ0+X9LZ
-	 2Agmeiu2uVyvA==
-Date: Tue, 23 Sep 2025 15:27:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-	Xingang Wang <wangxingang5@huawei.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] iommu/of: Call pci_request_acs() before enumerating
- the Root Port device
-Message-ID: <20250923202701.GA2055736@bhelgaas>
+	s=arc-20240116; t=1758663002; c=relaxed/simple;
+	bh=diLmI3F9ueElFIp3AVZrlwoYbNK3yJmxfOshhCFqkqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ix2zl/+YWsVoz5Yki5/WxTfgAXDvJUmiMDfSZC6669Pe7oi7Z53cHO0uv6bque8rLW3LlQkPnpB7A1FcXcc7EzbhFX1uJ36saswcJ6+TNeVsQ/uKRfpxUXpiJkbQY1yDDbqsUO5cfI/3nOadyEmdNxlHDSeGUH4z98pKhzlWHSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MNU5+1Zn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758662999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BXIM6CPTozGtmiCIPPeqmZu4P29aqw7ByjaXAGTyiDo=;
+	b=MNU5+1ZnmiuNxMRXXWR88W6eGv/QrfCNNCcL9ELUlfGe3YgRYessLPKeobiGtC8RneWK7M
+	9eZxbdUQS2GYU5mRvgH6H+XKOpy7Ew9Q/SdxOxjFnSVNeJrke0MyXsNUMqzm98n4T4BcGi
+	bm4NTkWctpF5lxgviqA0iTBqItKuaEg=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-319-pzxgzZiWMuy-Bvk6HrlPLw-1; Tue, 23 Sep 2025 17:29:58 -0400
+X-MC-Unique: pzxgzZiWMuy-Bvk6HrlPLw-1
+X-Mimecast-MFC-AGG-ID: pzxgzZiWMuy-Bvk6HrlPLw_1758662997
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8873042483fso90729439f.2
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 14:29:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758662997; x=1759267797;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BXIM6CPTozGtmiCIPPeqmZu4P29aqw7ByjaXAGTyiDo=;
+        b=FofFV3jXJ3MLUpsBGhsdOyMNuEVOJBBd6NEk5UTx8QcmetOejNaY807H60F9tHlKsN
+         YqzvfI+HavGxk/x2uMLN/KsVTTN9X1E/IvTyGlCYM4M7noFUq1x0hitZsdDNYZIB0/FZ
+         ixvvoFfdVLZDzEFc15e8toDi1HND7pZmKpM8A78rueuzMQ11WvjDPm21wh6lIfb/jR9G
+         YCswpZdiE0KnkLFESllCrezZxJ4jy5clNkIJ6ThbqKOUCv3DV+rcdkihoTgaRugKkMYD
+         /Tx1dkjU7OjBCiDHZeO2XJuxclNA5r+hkTxOuO2noo9Jio/tlJMgAg+QHeej0Fnsw/7H
+         z/9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWuA1yxbSXwjOHZC6wqqDDLoi7DaCRotjCYyN5U6PNIXVNN/uWMTZSlc+xDgXswywr0v2dActQYSZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxARVHrDHcd93MvZbjk4OWcEK1DrHOBFfkdi6pUQJgwk3+HHTZ5
+	okzF5jvTHDAtuFadGjHPl/JnetnTU+XgqPgFdSX6lXLyESTBUVBHzx7PiEyRAlztoObejad8ybV
+	b0fno9yFDW/CgR0avTt2KOuOQJMFj4zyu53NZ0AhNocrWLuGLn2kaZo6ExO/QPw==
+X-Gm-Gg: ASbGncvBKiaK1RYgsxw3QRFM+Qe3CDuDLlnDXrdfWKFgXr3B6/PDLaRvSN4qDW+cqxR
+	I3f9yXg37FOpgYzWY+CO5lHcq80AIy2nELuHhKSir+jrxtHcq9Z7asdYpqL1n5aVl5T3ZNAhMsD
+	LhVMHdHFHGMVy/XgcZkGecOWj551AQu3qyypRmyUJj8xbJ6Mne4bspDxDvexSznh7bGqB7QKD6z
+	b0vn6Gjp5Jup+Q2Vh5xuD+pnpSI1+zqXI3so3CgoV6Msj6LJXfh9JjLmrKnHPJreO6AJKpxcsbL
+	mYhUQQT/ZVZ5GE3B1e8UdXVkr/s6SIQ0zAJ1uSQCraI=
+X-Received: by 2002:a05:6e02:b27:b0:423:fd07:d3fe with SMTP id e9e14a558f8ab-42581e0924amr22860095ab.2.1758662997136;
+        Tue, 23 Sep 2025 14:29:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFUOBnlXrTOWgoZY/P7THmX3Jn4R3nM9Okb+VwIix6He0SbPySRgexEN+IvhQOjyWjxMklug==
+X-Received: by 2002:a05:6e02:b27:b0:423:fd07:d3fe with SMTP id e9e14a558f8ab-42581e0924amr22859855ab.2.1758662996625;
+        Tue, 23 Sep 2025 14:29:56 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4257c9b22afsm25902175ab.26.2025.09.23.14.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 14:29:55 -0700 (PDT)
+Date: Tue, 23 Sep 2025 15:29:52 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Donald Dutile <ddutile@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
+ linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Will Deacon
+ <will@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ galshalom@nvidia.com, Joerg Roedel <jroedel@suse.de>, Kevin Tian
+ <kevin.tian@intel.com>, kvm@vger.kernel.org, maorg@nvidia.com,
+ patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH 03/11] iommu: Compute iommu_groups properly for PCIe
+ switches
+Message-ID: <20250923152952.1f6c4b2f.alex.williamson@redhat.com>
+In-Reply-To: <20250923130341.GJ1391379@nvidia.com>
+References: <3-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
+	<20250701132905.67d29191.alex.williamson@redhat.com>
+	<20250702010407.GB1051729@nvidia.com>
+	<c05104a1-7c8e-4ce9-bfa3-bcbc8c9e0ef5@redhat.com>
+	<20250717202744.GA2250220@nvidia.com>
+	<2cb00715-bfa8-427a-a785-fa36667f91f9@redhat.com>
+	<20250718133259.GD2250220@nvidia.com>
+	<20250922163200.14025a41.alex.williamson@redhat.com>
+	<20250922231541.GF1391379@nvidia.com>
+	<20250922191029.7a000d64.alex.williamson@redhat.com>
+	<20250923130341.GJ1391379@nvidia.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250910-pci-acs-v1-2-fe9adb65ad7d@oss.qualcomm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 10, 2025 at 11:09:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Xingang Wang <wangxingang5@huawei.com>
+On Tue, 23 Sep 2025 10:03:41 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Mon, Sep 22, 2025 at 07:10:29PM -0600, Alex Williamson wrote:
+> > On Mon, 22 Sep 2025 20:15:41 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >   
+> > > On Mon, Sep 22, 2025 at 04:32:00PM -0600, Alex Williamson wrote:  
+> > > > The ACS capability was only introduced in PCIe 2.0 and vendors have
+> > > > only become more diligent about implementing it as it's become
+> > > > important for device isolation and assignment.      
+> > > 
+> > > IDK about this, I have very new systems and they still not have ACS
+> > > flags according to this interpretation.  
+> > 
+> > But how can we assume that lack of a non-required capability means
+> > anything at all??
+> >    
+> > > > IMO, we can't assume anything at all about a multifunction device
+> > > > that does not implement ACS.    
+> > > 
+> > > Yeah this is all true. 
+> > > 
+> > > But we are already assuming. Today we assume MFDs without caps must
+> > > have internal loopback in some cases, and then in other cases we
+> > > assume they don't.  
+> > 
+> > Where?  Is this in reference to our handling of multi-function
+> > endpoints vs whether downstream switch ports are represented as
+> > multi-function vs multi-slot?  
 > 
-> When booting with devicetree, ACS is enabled for all ACS capable PCI
-> devices except the first Root Port enumerated in the system. This is due to
-> calling pci_request_acs() after the enumeration and initialization of the
-> Root Port device. 
+> If you have a MFD Linux with no ACS it will group the whole MFD if any
+> of it lacks ACS caps because it assumes there is an internal loopback
+> between functions.
 
-I suppose you're referring to a path like below, where we *check*
-pci_acs_enable during PCI enumeration, but we don't *set* it until we
-add the device and look for a driver for it?
+Yes
 
-  pci_host_common_init
-    devm_pci_alloc_host_bridge
-      devm_of_pci_bridge_init
-        pci_request_acs
-          pci_acs_enable = 1                    # ++ new set here
-    pci_host_probe
-      pci_scan_root_bus_bridge
-        pci_scan_device
-          pci_init_capabilities
-            pci_enable_acs
-              if (pci_acs_enable)               # test here
-                ...
-      pci_bus_add_devices
-        driver_probe_device
-          pci_dma_configure
-            of_dma_configure
-              of_dma_configure_id
-                of_iommu_configure
-                  pci_request_acs
-                    pci_acs_enable = 1          # -- previously set here
+> If the MFD has a single function with ACS then only that function is
+> removed from the group. The only way we can understand this as correct
+> by our grouping definition is to require the MFD have no internal
+> loopback. ACS is an egress control, not an ingress control.
 
-> But afterwards, ACS is getting enabled for the rest of the PCI
-> devices, since pci_request_acs() sets the 'pci_acs_enable' flag and
-> the PCI core uses this flag to enable ACS for the rest of the ACS
-> capable devices.
+Yes, current grouping is focused on creating sets of devices that
+cannot perform DMA outside of their group without passing through a
+translation agent.  It doesn't account for ingress from other devices.
 
-I don't quite understand why ACS would be enabled for *any* of the
-devices because we generally enumerate all of them, which includes the
-pci_init_capabilities() and pci_enable_acs(), before adding and
-attaching drivers to them.
+One of the few examples of this that seems to exist is something like
+you're describing where we have a MFD and one of the functions is
+quirked or reports an empty ACS capability to create another group.
+The ACS/quirk device is believed not to have the capability to DMA into
+the non-ACS/quirk devices, but the opposite is not guaranteed.  In
+practice the ACS/quirk device is typically the only device that's
+worthwhile to assign, so the host is still isolated from the userspace
+driver.  Arguably the userspace device may not be isolated from the
+host devices, but without things like TDISP, there's already a degree
+of trust in other host drivers and devices.
 
-But it does seem kind of dumb that we set the system-wide "enable ACS"
-property in a per-device place like an individual device probe.
+I'm afraid that including the ingress potential in the group
+configuration is going to blow up existing groups, for not much
+practical gain.  I wonder if there's an approach where a group split in
+this way might taint the non-ACS/quirk group to prevent vfio use cases
+and whether that would sufficiently close this gap with minimal
+breakage.
 
-> Ideally, pci_request_acs() should only be called if the 'iommu-map' DT
-> property is set for the host bridge device. Hence, call pci_request_acs()
-> from devm_of_pci_bridge_init() if the 'iommu-map' property is present in
-> the host bridge DT node. This aligns with the implementation of the ARM64
-> ACPI driver (drivers/acpi/arm64/iort.c) as well.
+> If a MFD function is a bridge/port then the group doesn't propogate
+> the group downstream of the bridge - again this requires assuming
+> there is no internal loopback between functions.
+
+I think that if we have a multi-function root port without ACS/quirks
+that all the functions and downstream devices are grouped together.
+For a long while this was the typical case on consumer grade hardware,
+CPU root ports were multifunction without ACS and we only had
+ACS/quirks for chipset-based root ports on such systems.
+
+> It is taking the undefined behavior in the spec and selectively making
+> both interpretations at once.
+
+The intention is that undefined behavior should be considered
+non-isolated.  We try to define that boundary of a group based on
+provable egress DMA.
+
+> > > Assuming the MFD does not have internal loopback, while not entirely
+> > > satisfactory, is the one that gives the least practical breakage.  
+> > 
+> > Seems like it's fixing one gap and opening another.  I don't see that we
+> > can implement ingress and egress isolation without breakage.    
 > 
-> With this change, ACS will be enabled for all the PCI devices including the
-> first Root Port device of the DT platforms.
+> Yeah, either we risk more insecurities or we risk large group sizes.
 > 
-> Cc: stable@vger.kernel.org # 5.6
-> Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when configuring IOMMU linkage")
-> Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
-> Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
-> [mani: reworded subject, description and comment]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  drivers/iommu/of_iommu.c | 1 -
->  drivers/pci/of.c         | 8 +++++++-
->  2 files changed, 7 insertions(+), 2 deletions(-)
+> > We may need an opt-in to continue egress only isolation.  
 > 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 6b989a62def20ecafd833f00a3a92ce8dca192e0..c31369924944d36a3afd3d4ff08c86fc6daf55de 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -141,7 +141,6 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
->  			.np = master_np,
->  		};
->  
-> -		pci_request_acs();
->  		err = pci_for_each_dma_alias(to_pci_dev(dev),
->  					     of_pci_iommu_init, &info);
->  		of_pci_check_device_ats(dev, master_np);
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 3579265f119845637e163d9051437c89662762f8..98c2523f898667b1618c37451d1759959d523da1 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -638,9 +638,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
->  
->  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
->  {
-> -	if (!dev->of_node)
-> +	struct device_node *node = dev->of_node;
-> +
-> +	if (!node)
->  		return 0;
->  
-> +	/* Enable ACS if IOMMU mapping is detected for the host bridge */
-> +	if (of_property_read_bool(node, "iommu-map"))
-> +		pci_request_acs();
+> It isn't "egress only isolation" - the thing is I can't really
+> articulate what the current rules even fully are..
+> 
+> I'm not keen on an opt in. I'd rather find some rules we can live
+> with.
+> 
+> How about we answer the question "does this MFD have internal
+> loopback" as:
+>  - NO if any function has an appropriate ACS cap or quirk.
 
-I'm not really convinced that the existence of 'iommu-map' in
-devicetree is a clear signal that ACS should be enabled, so I'm a
-little hesitant about this part.
+In this case rather than split the one ACS/quirk function into a group
+we split each function into a group.  Now we potentially have singleton
+groups for non-ACS/quirk functions that we really have no basis to
+believe are isolated from other similar devices.  Currently the poor
+grouping of such devices generally deters assignment, narrowing the
+exposure.
 
-Is it possible to boot using a devicetree with 'iommu-map', but with
-the IOMMU disabled or the IOMMU driver not present?  Or other
-situations where we don't need ACS?
+>  - NO if any function is bridge/port
 
->  	bridge->swizzle_irq = pci_common_swizzle;
->  	bridge->map_irq = of_irq_parse_and_map_pci;
->  
+This would hand-wave away grouping multi-function downstream ports
+without ACS/quirks with no justification afaict.
+
+>  - YES otherwise - all functions are end functions and no ACS declared
 > 
-> -- 
-> 2.45.2
+> As above this is quite a bit closer to what Linux is doing now. It is
+> a practical estimation of the undefined spec behavior based on the
+> historical security posture of Linux.
+
+It's really not what we're doing now.  We currently consider undefined
+behavior to be non-isolated, or we try to.  The above makes broad and
+unwarranted (IMO) isolation claims.
+
+> > And hardware vendors are going to volunteer that they lack p2p
+> > isolation and we need to add a quirk to reduce the isolation...
+> > dynamics are not in our favor.  Hardware vendors have no incentive to
+> > do the right thing.   
 > 
+> They do, otherwise they have major security holes in
+> virtualization. In an enterprise setting I have no doubt it is already
+> being done right, and has been for a decade.
 > 
+> I think the above rules will broadly be pessimistic toward add in
+> cards and optimistic toward the root complex.
+
+This puts data at risk more so than assuming undefined behavior is
+non-isolated.  Currently bad grouping makes it difficult to attach
+devices to userspace drivers.  If the bad grouping reaches a
+sufficiently high profile and is the result of lack of ACS then we
+reach out to the hardware vendor to determine if isolation is actually
+present, create quirks if confirmed, and encourage use of ACS to avoid
+such problems in the future.  If not confirmed, then the grouping is
+unfortunate, users can and do patch their kernel to create overrides,
+but they're on their own when they meet unreliable behavior.  I think
+this model has been working.
+
+Should we re-evaluate how we handle downstream switch ports exposed as
+separate slots, certainly.  Should we consider how to handle a
+potential lack of ingress isolation, probably, though we really need a
+compelling example.  Should we fundamentally reverse various policies
+we've been using for over a decade in determining DMA isolation, IMO no.
+Thanks,
+
+Alex
+
 
