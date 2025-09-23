@@ -1,84 +1,81 @@
-Return-Path: <linux-pci+bounces-36805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80140B97679
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:48:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43BCBB976BB
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:51:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A0B61B22186
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:49:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2781178A7A
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:51:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C2D305E3A;
-	Tue, 23 Sep 2025 19:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6459279780;
+	Tue, 23 Sep 2025 19:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bSxFfaBX"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DEtTN/J4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012046.outbound.protection.outlook.com [52.101.66.46])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013030.outbound.protection.outlook.com [52.101.72.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE213303A2A;
-	Tue, 23 Sep 2025 19:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AEB15624D;
+	Tue, 23 Sep 2025 19:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.30
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758656853; cv=fail; b=Z3zneHTPi91AMc8hJUlRZOwyurHt9cZTE9+zKi3mabqVU9yyVIoxBI2dj802+G40uwL831jWh9EZQjse58mhmvTv0Sd0AZFiGNrTqWnSQ7HtbLClSvSG6r3XfD4mm13Sw7jMAavtPKCvD79xHas0U0wMEnQ3wqOD7bsxZs6wjOE=
+	t=1758657114; cv=fail; b=Y/CkgqMOXF5buy4enRwgXxOHtUYplrDqPwEj9oJGqywHhEbafYvQDIwuoChkVjCM2zQC3vacVc1X39i+sUuaKzC5yczE6RlRFvKD340XjeuFayu416rzInHZVzMZWO9zRvC89wi+ksUcbBi8+cvSAMabipl36hg+LHanad32JIo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758656853; c=relaxed/simple;
-	bh=yEm8wcoZDoPx22rq0Pselif3ENrLNSDxuIMUqkbh/YY=;
+	s=arc-20240116; t=1758657114; c=relaxed/simple;
+	bh=rklk29x8xucgUJSHdZOBNE9tWgEonHkpgHiWpdUCMVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ds8brcTe5gB4bIPhqFxp9A60KEXk0e/K7lnjs0/WAk9M1EbtVb8nA2zU4uP/J4SSe8316F/onFHayIXFGxFRvLGQVhChmWaxUdak98xUiEYwgYIdZRMFe2nZo12fPvDUl2w4Wujn4cgzEf0YHpERabVAqpXcuVG8oxYXoDylgh4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bSxFfaBX; arc=fail smtp.client-ip=52.101.66.46
+	 Content-Disposition:In-Reply-To:MIME-Version; b=e5mLnV4XymNHOUSJHKKerUWhBwlSu4V14uS7oHT/UAN9pjCnlx86SZArMavuvWCFmPgQe/LLeNoiIr7gs2IQ7f9WLJHiE6cd0koffdjAgGaaJjN9ff+rV1UecHMZKxT/4WbERxWWsrctlLIEiknNStifDnY9Ugwfcf8shHl2nz0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DEtTN/J4; arc=fail smtp.client-ip=52.101.72.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CUevHH6K5Ze+ecOF9158xxt6elvsDP8JxG8HIarQrnRSeKoZpmlCX22LR+S/vc8+UIvUPQE8LYzzKluIHZzcbHFf9LiQJTK5K41Qj6BJCkqJZxalL7MRgl2V0/vyLxFye2M1+uTMk1DDMPUXF5eeUNmgoyXCvtVxVrJb9ifi/WFQZxL0sK8tYDMXsf09jskhfhRxdY6WulYDoW5QXVyxJ2R5qH6Tc9JvDKgCxIYueBs4xgNBqmsk/XPZMomc7q8wGUqejZDXv+FigRGngBcQ5aQJL3BmbRi6nm4N1Zwrgf+R9GbQxOG0jaF8P2LqIrog/AUs4wsbjjlZZMI4bFm0vQ==
+ b=jxmvY5KHYhIaA8CPWqfoM/fIthncSuQ+MM/2lqulj6gw8JX6Ke/A9Wqx3O35RA0B4SG4ttSesDNcc6X2ivI91LFxXqI0RtFUFJHN8ZGOAlE52LcLrqBHeO2rlMh9rDvNX23pzgvyOtN+P28CYXGykkiUmIaBsEYb9xkyOx0/LsZDkugM3Fy9PB8sS13H2HYL0chNzijpwfqps/DoG9Bu9raf6ZkRjKBa3UzkX3aGGSbZH5AuqRUBIQPiMP+DA5OXSpSPRbBo0/zurPgiKaKfBAnEYD22FuWQdPyeE0xsj7M6MeOKJ+Bzi5Jf8vv2+xTk7texAaoXhDO8oYXxrHYBdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lucVpkL6HYRi3VBB/xPXa0OmszIrosyw4hgA0/zekBk=;
- b=xJfw4WUeQHXFe/fD/jpON9YB+x8vXg9zwU5bLrU55DoMdFcsCzFuY/293nT8ZbqsTVuQCeGACw3Q3uqARR/fhF5+aqaQXY0ZeGVy3Y0YsfC6vW5P2hQwGUjo01W7zNPo3LfFs3neX8FUfoagcddNrCsQQAdyEa+Z8hlMV9IgLyfykIjbeloJmIWHYY1Nfg5sCEV9HsnTgCAyVpbBt0CGukwMnWwtB/KCUiG6hWsi+14BvoL4uxsUMQQKwqM1HzdpmmiPokIvmbbmp9v2yLW5DM9upDYpVxIzfbQvDDeW5rwBY2MDBhvfmNtZ/Dd47xg8qpWoIwYYjfaE7gKtJSnJSg==
+ bh=kQq0vSPj3yQnJt1X2HoPnEaAq6S/QV3bD64zYFGMuo0=;
+ b=gYqOKEJdEaSpdUaIe7esWwM5PBywsrCnlXWzIzCvw504cL+kCWIggN7651nwtpodgRXs7TaRFNsHBwXJa7eoyx9PSqjtC2+q7BDgCtPiTaMsdsPvL/7fAAbyG+ekVt8esHNE+qEAWpN1JHbnFWNcqbWSzc3v6Lhrk+E0y7PLkRNjOG4p2R+5nFLA6T8TSJDa/buTWbcGlFLkkjqONe9fR3rLqoC2hVZEnE1kIgbTqkYTVsWx5qST1/Cmtz6VCxRbBuFtLlg8ivkSzaMw8txjShDaVHiAH4ppexu1U0Tz0XkzHbs4PmHS2bGE3Uao/89CETWqfDO2fAN/KXW+bRVRaA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lucVpkL6HYRi3VBB/xPXa0OmszIrosyw4hgA0/zekBk=;
- b=bSxFfaBX9RbOvtBFGsHlgGBECBE2hJRAdx3eEIn2SaJSj2uz1v/8K9KKoiJ2h2LEXCKw+YLYoVGLH9ub0pxyGlFl0Bsp7JGAsu4/eN81Z/VfmeS0Io1DxsWlPmqT32oNZMvYZnmhXTciPKhrb/9JMXKwUCx6u7zy8SOtUtZy5Iz3m9bVywal2hjH2fc7ksLwaxH6C31MLp28v4GcwavkiyFMd9RqQNEqC4TKsGcjDqi2MmmfzZDVhmqlyCF/LoC1fr7oa+qS+V2SC1mrga7pgv+b95yseycRt6EofKTnLzMPNePtNV0CgUR4va5Unq2x1n9T/a2Y/hYWMArqcHezaw==
+ bh=kQq0vSPj3yQnJt1X2HoPnEaAq6S/QV3bD64zYFGMuo0=;
+ b=DEtTN/J4NPiYyDm1H/dpf4Eql/aNZJqcPP02262gVZem4D5yr9qT87U4VZQRTCE6UYzXVgRf3lqKuDUpFBc4NuC+QwP/QiA7tAAH7bLtJm9Qa5P7yyYTuJOSudYxQKMm9TTDIewyk5VPjtJxFEvQqggyt45oa/i3HmR6QMRSxaHZ6aJr4HoUsKW+Na3PXAY95VQfRMPqu6pGpVW5WNXgNq5SWuSvSb+KhLImhrHxQAUnM7dF+deieNRfexkNloqfZCm7IZocqaCSpCY2sslZn4Adk6x+1tKiHSwlNeDXMAYDrC0mzs+HIma83FDQbaZtJYBlMlJ501tcIvyBMMqSrw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AS4PR04MB9621.eurprd04.prod.outlook.com (2603:10a6:20b:4ff::22)
  by AM8PR04MB7923.eurprd04.prod.outlook.com (2603:10a6:20b:24b::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Tue, 23 Sep
- 2025 19:47:27 +0000
+ 2025 19:51:49 +0000
 Received: from AS4PR04MB9621.eurprd04.prod.outlook.com
  ([fe80::a84d:82bf:a9ff:171e]) by AS4PR04MB9621.eurprd04.prod.outlook.com
  ([fe80::a84d:82bf:a9ff:171e%4]) with mapi id 15.20.9160.008; Tue, 23 Sep 2025
- 19:47:26 +0000
-Date: Tue, 23 Sep 2025 15:47:16 -0400
+ 19:51:49 +0000
+Date: Tue, 23 Sep 2025 15:51:41 -0400
 From: Frank Li <Frank.li@nxp.com>
-To: zhangsenchuan@eswincomputing.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org,
-	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
-	Yanghui Ou <ouyanghui@eswincomputing.com>
-Subject: Re: [PATCH v3 2/2] PCI: EIC7700: Add Eswin PCIe host controller
- driver
-Message-ID: <aNL5RO77A3PuJMYy@lizhi-Precision-Tower-5810>
-References: <20250923120946.1218-1-zhangsenchuan@eswincomputing.com>
- <20250923121228.1255-1-zhangsenchuan@eswincomputing.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Zhang Qilong <zhangqilong3@huawei.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 1/3] PM: runtime: Add auto-cleanup macros for "resume
+ and get" operations
+Message-ID: <aNL6TQ4vHtfoNE2d@lizhi-Precision-Tower-5810>
+References: <12763087.O9o76ZdvQC@rafael.j.wysocki>
+ <2399578.ElGaqSPkdT@rafael.j.wysocki>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250923121228.1255-1-zhangsenchuan@eswincomputing.com>
-X-ClientProxiedBy: SJ0PR03CA0294.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::29) To AS4PR04MB9621.eurprd04.prod.outlook.com
+In-Reply-To: <2399578.ElGaqSPkdT@rafael.j.wysocki>
+X-ClientProxiedBy: BY5PR03CA0030.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::40) To AS4PR04MB9621.eurprd04.prod.outlook.com
  (2603:10a6:20b:4ff::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -88,293 +85,336 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS4PR04MB9621:EE_|AM8PR04MB7923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60210087-e33e-4fd4-17c2-08ddfada05f5
+X-MS-Office365-Filtering-Correlation-Id: 9ee80dac-52c0-4315-65f4-08ddfadaa21a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|19092799006|52116014|7416014|376014|7053199007|38350700014;
+	BCL:0;ARA:13230040|52116014|19092799006|376014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?i7m+JwOF3N2GsnwSDnJbJSqaKZi3jCsgQUOSSbbOi8M96R7nuF9f9aF+IIJR?=
- =?us-ascii?Q?kMSiYk0RWX5+ofyTuW2VtQ/nbPrVl8/379OkBINEcpjU3Hf7hXadJEACmIol?=
- =?us-ascii?Q?DQGETSFly1H2azuz1ba/EsHh/Hdws/q/TVZRfzFpGiknp1YAKpyu0Fux6UnT?=
- =?us-ascii?Q?vuEEqfROU4kHQ16dSEj+3TfVKm7MieyEyke4qAuZGui3plBi649Io+hsSZ3U?=
- =?us-ascii?Q?Y35fZuoomkDRQok6U/ijo4RZFIUL++VQv3oIxNcc+Jjl7AnzmAXlK1zgBshm?=
- =?us-ascii?Q?5aCM1kjuVKx9HF9Y32Voh0y+pdCdmb82y9vAQqTlUnE5u6mkb4iplsfa8EMm?=
- =?us-ascii?Q?H+u1tSxH1Zo2JG7bSCb8r7rmNEk8UUAWCRvv1M7vnvb0xtHSZVND9naW3rtS?=
- =?us-ascii?Q?rQhXCjQGbeCQiSRLEFp5chIRbCSABbBGkPuEflwhTp4Ol+TZMobMWazT3K5j?=
- =?us-ascii?Q?tf/qsjfTp/tUithyI6uxLIBDKAq7kk0WBGxt7wqjcc0hOo+GSWt2jarejyH+?=
- =?us-ascii?Q?LbNajAWjGMIgtkF/TvHZcSm5XQm6iL2D3oHmi5Q5D4bxu3m7z2RBCqHVQXh+?=
- =?us-ascii?Q?xe9efRZKayxHSX3MpUi6ML1oIO7GJTQmn8Im4geM46fN4vIYfIrghtfrp/Rf?=
- =?us-ascii?Q?dWvhDAKcpcQ5YgubH0sxt+ETovjpH9VS/sPrnUgTZlxbsJk6AhJl9WRRHJhe?=
- =?us-ascii?Q?MThvoWscXLmWqSrXKhQIqDqWdfnL/dF8NQWk5x6lpoMlPtPE5pmDevjRdHPT?=
- =?us-ascii?Q?8tBJAQ9WJuQT48zZXm9pjIH0PUyUsPpdoQQpL9G9BBqH7bnRVsDdoWN6DKvN?=
- =?us-ascii?Q?8xDtARg+IRolpSgIqE88s3cauId1DrvlUBLGrlJ/yxEfSAbAbvfHsT0CxwTP?=
- =?us-ascii?Q?6mqgjk8CajDDVVEaNpazEHQuaKbS/9OwK9bs8IOSNHFuJA9Dho1SaJh5PGLY?=
- =?us-ascii?Q?5LlERczrP3i6a5VOB6GUAe4O3AhfrO+NnXo8R/LNiN2DQT3nXtdHxviAIz4i?=
- =?us-ascii?Q?/JFSPGPKYCeXyWEW3cczQRA76NBDjy0l6D25UBzL/ngzRVLBIWoYRcI40TWS?=
- =?us-ascii?Q?/knZyXuxkmloM57Wj/Bjaz+4MAVOYtX5SVXwNafInO6UFHpyaTElapAy/U9K?=
- =?us-ascii?Q?dCZojB1kGbZQE8Ve1pVhzzp7Jd1kDpZ8mnhvuegt1NTdXo77E6sIlTWugPKD?=
- =?us-ascii?Q?vYs6lZgwH8hyMfPvcHMO4+P18+M4jPUkXZu9/h9rLYERmU34A+CyYVtkvWKl?=
- =?us-ascii?Q?aEUWc74z2DjvSXY2ipiZdnnNIWXcWHfCygAZhqPXiZ7tjs3uwh9cDUy/BGRq?=
- =?us-ascii?Q?4A6E55ZFUxlqGWrUOs+X1473/kgQWnmtJ5rF0kevoIOFCx8v7Itsgm597S3X?=
- =?us-ascii?Q?uf+//yMTzP/BYZughoH2gxXVhN+Md77S0CkiIBayPyIkcppyH7VOoQ64hz5E?=
- =?us-ascii?Q?N1A2UpkNgrStBeFKz/XxkvK3H4YOCVm+5eEhjUKxg+t+2wf8J+ze0Q=3D=3D?=
+	=?us-ascii?Q?Vs1RkYZVXBD+gEiLtLn5j6EbBrcsN6fXDy74qxRGISLWX7y0pwp+4S3cVpU3?=
+ =?us-ascii?Q?zgot6eIGONZBdiRv+O3pdSPwjn479TEHXCS0Rgixa4qKWwEYLTmHpADXEFCC?=
+ =?us-ascii?Q?EUkOl7Vc60Uz9TAHVJPC0OvMRvRklPqOwXv9zvN5qPQ6mn41/kwHIRaa2JVg?=
+ =?us-ascii?Q?oVg5wm0MA03RaAWZCMM1ZLJIV0JuC9ILLDgWw6lzyQBi4brdDnkq5D/wUEjy?=
+ =?us-ascii?Q?wJfO537C6jKd1JBccvB19n7BOL1NCEuIhe7SHs9sxPzWf91obeUzduFkaiAN?=
+ =?us-ascii?Q?0t9Ic/DDMJFeh29NxPjGoWyIbFaGO/ZiXS5p7MZEEPH9VN8L2iHheruPO4qg?=
+ =?us-ascii?Q?j3mnfbwrEQ6GAk6odXJEQgJDYw4mO1ABBsGwGRDiEUGHd7fa/ouK9ubjbaa9?=
+ =?us-ascii?Q?ZuwKCcPQeg9Hy950nENcKCeH5EfXWNw7JoaN8Abp6RPUipv5xKX5foPrX+xY?=
+ =?us-ascii?Q?A384Fvc8EFmAPB8u2Sa+Mf9IYMhEgDuMk3DIeezkNYt99VqSnYBwsH/xhnHj?=
+ =?us-ascii?Q?ccYwKmazUbdPJtj6T7VAznH6Vk2wWk7TCoWe9K/L6MYTc/mPStGkmyozkl+G?=
+ =?us-ascii?Q?R+lA9T4di8LSgopl9Obw6MGZaSW3T/zIjjC+Gow8JE8tVc4WicGG68PJ1afy?=
+ =?us-ascii?Q?5nkEUIF+/7sVEo7HsitN8DBdoRT2hEyQmrmNY1XxxNyOI4xJvFYdCoptX/Mf?=
+ =?us-ascii?Q?SkTYnS6OgfKBR0fv0qDa6uldTjlyY5JDHZiEVoxLZunuQOnVJYXrLSa6PbIa?=
+ =?us-ascii?Q?lBbnz+Hyw5SszevFFM73/2ehX9Wi84GaB2oadL4oSlzTtQnVohvKEtkrvl5P?=
+ =?us-ascii?Q?/fTck71W44zOLuSm/iEnQuBv8mCRpYEcAl7HR9y9kORf4OC3MBht+HY61Abr?=
+ =?us-ascii?Q?y6AVenH1MRoQgIHQ7cOBZfyyLnla8r76QYQ83nL8HCAhLdBOr/+BSSRfF7aX?=
+ =?us-ascii?Q?qOkAFvZ3mH45e3w0ZrPWWELLl7k5C5qCG6VwWgqTrFeGyO1RJ6CoebEVadHs?=
+ =?us-ascii?Q?pibWJuTWFGB22wfNBSqf51Xvaqx2oB10GA55HIdNyaPaSN9Mf54Sk7ATHrZ7?=
+ =?us-ascii?Q?eyOqNDPqAocNw7Zev/JibO6CXET9LUkbYGkJIonNvD9nIESrIJclB0Z5iHSh?=
+ =?us-ascii?Q?yRp6dajPjACrqXo7E7CKTQf3Y+2/pL21kU+42vx1fL1/W8SC0pQhgDTHNMpK?=
+ =?us-ascii?Q?QqCAu975/U1OqaQdNk1GhUWzQK6vQSPG8ymdlfe7kqWrF3GZDjcgbAMBSz9V?=
+ =?us-ascii?Q?PD6ZugZvE9LOyrAgcTF3idkwJx/rufrrIb1mTquFRA69WyAM7p8G+kkTlm8V?=
+ =?us-ascii?Q?GgdrKehQaIzpdIforrT5K5f9Ga6xRwAv0+XrcHZFMPR6jRtcJPdpPAqvoNiI?=
+ =?us-ascii?Q?jskaXtcpJdZPZjyu7Q8b16fqfzt57m0WvfNXMsiTItWa5K6tWUD5PGB3lTll?=
+ =?us-ascii?Q?Zdoirx1jvDN5A2030vXRnrKErly0nVWJl5vpuMSc6u3XdzCYg4Yow1yjaKJn?=
+ =?us-ascii?Q?HQav5qm0SvoGaME=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9621.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(52116014)(7416014)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9621.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(19092799006)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?R5bc6GiTf7Xcyb6e7EFUxaHyurKPPGHqezXGzYZSsWrmCdlE4Tf72ch4OYoZ?=
- =?us-ascii?Q?PSD2BC9mvJeCgl0oQg9gRN6MiJ0Ayihf+wQWO8TXvhcHaLEMxi0fe2+w4aQy?=
- =?us-ascii?Q?ALumrJYVCUoP9aPZPFJKP7NBGTfvBZJedvCFNwdlhZsvECiBwjF8SMnUweO7?=
- =?us-ascii?Q?ejuhukQ+cAgF5zRbucZNkZLIYJ1uOMVTHWctkB7ykdDAX5a8Gubxei/ZQCdB?=
- =?us-ascii?Q?jmtTaFqGmIt7tjXHdOwRFErWsXII7/S38C+HMLPX1356DVicphr5jPpcS4Fy?=
- =?us-ascii?Q?GdsQvWz2jU/iIgMbiJquZUNeTc86fDVIHhLRJCrsaCjgdOeC1fUUcZ3gAKSH?=
- =?us-ascii?Q?+2idHI7Vjc6oxA+lEpFbAHnKIToXKrrOpoh3sODOhmFJyoMPfTh3tM24zWQ8?=
- =?us-ascii?Q?r2dE0FRNa07XT+AAepsDCvQ69CH/twhdrIzEj+YRpgGCW/qHaWp83FUypwL6?=
- =?us-ascii?Q?IKy8fypni8+UZ13avF0VdtgkKLLmKkvqiDb7fglxgBFpaeXufZVtRTrp8HZF?=
- =?us-ascii?Q?vihbcB+ZQbgzVC7wIVA3STWxlV5Vf/7BzShh6rEN5M1VvwJu9MV0UMsOU9ej?=
- =?us-ascii?Q?7ETozVNgJ0Wf6MPLOUqp5q5AvZaUJ/O2UY4esDa6IR2Nx/fqr6SK7RwbEMj7?=
- =?us-ascii?Q?s/Tfx42VfPR/bvMre4f40H+4Eoh6X8OQaA/zdskaXiU/nfqM1X4OHACwoQj/?=
- =?us-ascii?Q?8x70nGoNcEaIyadVy7nRni7BJsWHMbQ5/qXgCuqyEIBFZou44n3x5XW/LQoA?=
- =?us-ascii?Q?16jL5q0El+jYpfTIjC0IB3/urI8E0LfETyimUE0YRYDWN04L+3BGP0vkPOOT?=
- =?us-ascii?Q?wZ5nDOZpIhbpA84+Kd4w9Xeh0lKCWAXGs1nDAQ9gMwXDvNhYnKRvUPbRVd7j?=
- =?us-ascii?Q?7po69wZ0y8i+qIBWirtLTe2JP0HxH+MvOFmcdj5EYndUIWnf+xbd1Xvk/6+3?=
- =?us-ascii?Q?WwNbw3b+NTS6aXE2NHQPeZ5ykgCzaOKsmAqKjhxQWblP4NEI7S0qx2yKiVEf?=
- =?us-ascii?Q?YQ82DodvBBD+cBNlMLdkOlkJT3ub5Dm8+bz0pubAgnnTggK6UN7dHgRp4KDJ?=
- =?us-ascii?Q?XbaEyLOng2JZIGHqBWUrwo/H+9OacDVmHy+GArdEu3chBr5M3cLjLzOxuFQq?=
- =?us-ascii?Q?jD6pMXilePNqGJPGdPV9tcGQyG4qlW2f9sKOT5riAfmGE0/OFajY1a2PGXQ5?=
- =?us-ascii?Q?e2+JP0FRf9FouaI+tMsp9/liMb+QzGgVlT4LrO7aOGe8fMwj3OhHRngIQMnG?=
- =?us-ascii?Q?UNElDtv2xZUayyBrXorluCMv+Zma4shu62Jowe83CO6fTHfUbo4b4cgjiW7G?=
- =?us-ascii?Q?a3ynGFCRCQSN8pF6ThfvN2wB4+APYnMfSSl9YkdiRoKsMros2KMwMbjngQpj?=
- =?us-ascii?Q?J44ljHm9KHoTRPuL9f66VoIb7YR/XxGfcdQlrtcKi+LL2NO0p1WHa4py/LYp?=
- =?us-ascii?Q?k5vfC/SedFiBoJvlyWjSiss5yvL7qCLi5DtoAdE3zNUeKVmMjQCfYdFrH7xc?=
- =?us-ascii?Q?9H0lLBSwdGScg0wpF2vHLnyj2AUzQm2hHTQMv6Aswp5yLvFy6WDIcZC3vYiB?=
- =?us-ascii?Q?I4WpzX18iLvPGA9gGdd3LBQg4U96kgef9i6YG557?=
+	=?us-ascii?Q?9fdTZJ6hifDZ/ClfE22H/2zcV7tmtCp1tJ/CiZFINV642R5/1w6M73NLYWju?=
+ =?us-ascii?Q?UgiSAITWboS6Z/6giLu3RZhHktzYFdoe41XvkQD14Dbu6lpinB2sDVe2c+yi?=
+ =?us-ascii?Q?0GxIWU3KC9+7mlECM4VDQPsMxWVKSCPGNT7tTAm0mEzBBBdOsTNWByYKPoHx?=
+ =?us-ascii?Q?sCnfjBVohgHSFQ7LDWXAbdGqwdG+tsqIbQCLeYlwfW9T6WpsISBwJY8iYi1D?=
+ =?us-ascii?Q?anMqaLiMQwsVwDnHD1Lvz43SO7Rw9HSOIqs/PnKCTdfQq6XpKKqOpV86mBre?=
+ =?us-ascii?Q?GFw8MDcmjLGCF0vNeC7pzaV8G04DCqIjdviWuJs9DdaieJgjTGupJD+Giqxb?=
+ =?us-ascii?Q?zlk+L+CIPHTOIVgwOLj8vksXaCTIy2irS4fmrfw8O+pwnZWZJA5ZH6jFwOpp?=
+ =?us-ascii?Q?DNdpiXmS8KQfDucX07XAt5iKI1kehUT6PEJiKGLttoIctdNa0gf1NOmX3A3B?=
+ =?us-ascii?Q?mlAeElymwK3kb1nkp/xeQGAfmo+LhCHzfNR6943+Vm6FDBDLvc+K0nKRstIA?=
+ =?us-ascii?Q?+bTDgvx50c6yAw8nbvo34JbNY92D85G2egDcbXvIebf27H/DUiKr7Z/ao1lK?=
+ =?us-ascii?Q?qiZAjq/+BwQ1d9xy2bHE8o4r3sE9HH9f7tIba/M8MRFIbnAP/Pp5IFWyIKV9?=
+ =?us-ascii?Q?t42RkThjkBPuLWKHqCwRuxmhBRskHgq8Un1VUWW25PLj3zpKRzpAgKsG9CCI?=
+ =?us-ascii?Q?2usnsrbscmLjXxa00VsBnmk3MdGo68+8DF3+SEfKU7G7NHC0Wt1+bqC9nlE3?=
+ =?us-ascii?Q?0gtc3lesvpzECqo1iuVyQJuO+ZsQF13TcW1FkeUUqVOZR2wObL6YcqECR8sM?=
+ =?us-ascii?Q?J0DRGj8cLOeJ0q/qjU7dw84HeWOAbK0jRX0dXWKw3fKLtAUMpLNQikDxLYO4?=
+ =?us-ascii?Q?hjbM1HGZqHMPQCDwWQIRV5HPYT7mHt/owp6wkJdEx1k+ibsuUkyHbIMoBFcV?=
+ =?us-ascii?Q?q3Z2vzWO9Ywj+Tp+oha+SIdujFqSkj53ah9WfC4vHFMKz9tQ2Cp6FBUMmLVV?=
+ =?us-ascii?Q?eyx3S2JIwIUagbAhUmSfiXHvgiki2RGK69pQ9UVHhWZRdfpZTe7CeltNwo81?=
+ =?us-ascii?Q?FBn7+1gEvRre2YsFgOOptMSX+0VAS+N9YC5aWSON2fqX9TMgdc34Lvg727G3?=
+ =?us-ascii?Q?6v6KwvI2s858ezNPWkmQkDGtfb0uhXZQZhYcE1kKrxvd1up5rqwQVcLfF+3c?=
+ =?us-ascii?Q?t29nT4JDMoQYVvEiB+JVggEt2A0fmaqf0a5nDFKaqxuAs/A/NZAzjbkdtq60?=
+ =?us-ascii?Q?k88Yuv/xnac1e92R8aDzuprPY05HL+/C40RdeiMB+W66+21QM/wLGp0ndTTt?=
+ =?us-ascii?Q?tvrdYP+r8jXRXiRusuBIgVlf0NYe21x2zAj56hQVyDm5LdXx60KhePChws8A?=
+ =?us-ascii?Q?SbCTQ91xaxVbe96//Vn+C1gW8Oz5dPlaurb3+HBOXRwZrEhNpKcf9Za6OV5q?=
+ =?us-ascii?Q?FLFNFusm+t//R0TYBmbC5nV4bZxB1F8Cqs6k1WgZ1bZqr1e9f+KMQGEJyGce?=
+ =?us-ascii?Q?6ISDaQFJs+ZpXgMS5poK2dTJ5W2YE+7ANNQcjIMlcgY9O8uVGNA44ap5B1Kf?=
+ =?us-ascii?Q?wUMRh8Mx29nl7nvGCqpyjZRBtATZs+rdyN9h56Yc?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60210087-e33e-4fd4-17c2-08ddfada05f5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ee80dac-52c0-4315-65f4-08ddfadaa21a
 X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 19:47:26.8278
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 19:51:48.8812
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6sk9ZAr3XUO5V+LouKxbqZs9fevWHl/5+bzDB0ju67Edq6Ujq0ItB3uGr2AP0KuD4joeBia8m9Xlz69R/eWoiA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: oF6OmVNfHlfjAS/z/XX256tBOdF+5GPnZ0gqC2kYXXSf8jyeTCtFqpEmp9F35sxi1mFZL5OBfl3L2niUOO92Ow==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7923
 
-On Tue, Sep 23, 2025 at 08:12:27PM +0800, zhangsenchuan@eswincomputing.com wrote:
-> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+On Mon, Sep 22, 2025 at 05:30:43PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >
-> Add driver for the Eswin EIC7700 PCIe host controller,the controller is
-> based on the DesignWare PCIe core, IP revision 6.00a The PCIe Gen.3
-> controller supports a data rate of 8 GT/s and 4 channels, support INTX
-> and MSI interrupts.
+> It is generally useful to be able to automatically drop a device's
+> runtime PM usage counter incremented by runtime PM operations that
+> resume a device and bump up its usage counter [1].
 >
-> Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
-> Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
-> Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+> To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
+> and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
+> those cases.
+>
+> Simply put, a piece of code like below:
+>
+> 	pm_runtime_get_sync(dev);
+> 	.....
+> 	pm_runtime_put(dev);
+> 	return 0;
+>
+> can be transformed with CLASS(pm_runtime_get_sync) like:
+>
+> 	guard(pm_runtime_get_sync)(dev);
+> 	.....
+> 	return 0;
+>
+> (see pm_runtime_put() call is gone).
+>
+> However, it is better to do proper error handling in the majority of
+> cases, so doing something like this instead of the above is recommended:
+>
+> 	CLASS(pm_runtime_get_active, pm)(dev);
+> 	if (IS_ERR(pm))
+> 		return PTR_ERR(pm);
+> 	.....
+> 	return 0;
+>
+> In all of the cases in which runtime PM is known to be enabled for the
+> given device or the device can be regarded as operational (and so it can
+> be accessed) with runtime PM disabled, a piece of code like:
+>
+> 	ret = pm_runtime_resume_and_get(dev);
+> 	if (ret < 0)
+> 		return ret;
+> 	.....
+> 	pm_runtime_put(dev);
+> 	return 0;
+>
+> can be simplified with CLASS() like:
+>
+> 	CLASS(pm_runtime_get_active, pm)(dev);
+> 	if (IS_ERR(pm))
+> 		return PTR_ERR(pm);
+> 	.....
+> 	return 0;
+>
+> (again, see pm_runtime_put() call is gone).
+>
+> Still, if the device cannot be accessed unless runtime PM has been
+> enabled for it, the CLASS(pm_runtime_get_active_enabled) variant
+> needs to be used, that is (in the context of the example above):
+>
+> 	CLASS(pm_runtime_get_active_enabled, pm)(dev);
+> 	if (IS_ERR(pm))
+> 		return PTR_ERR(pm);
+> 	.....
+> 	return 0;
+>
+> When the original code calls pm_runtime_put_autosuspend(), use one
+> of the "auto" class variants, CLASS(pm_runtime_get_active_auto) or
+> CLASS(pm_runtime_get_active_enabled_auto), so for example, a piece
+> of code like:
+>
+> 	ret = pm_runtime_resume_and_get(dev);
+> 	if (ret < 0)
+> 		return ret;
+> 	.....
+> 	pm_runtime_put_autosuspend(dev);
+> 	return 0;
+>
+> will become:
+>
+> 	CLASS(pm_runtime_get_active_enabled_auto, pm)(dev);
+> 	if (IS_ERR(pm))
+> 		return PTR_ERR(pm);
+> 	.....
+> 	return 0;
+>
+> Note that the cases in which the return value of pm_runtime_get_sync()
+> is checked can also be handled with the help of the new class macros.
+> For example, a piece of code like:
+>
+> 	ret = pm_runtime_get_sync(dev);
+> 	if (ret < 0) {
+> 		pm_runtime_put(dev);
+> 		return ret;
+> 	}
+> 	.....
+> 	pm_runtime_put(dev);
+> 	return 0;
+>
+> can be rewritten as:
+>
+> 	CLASS(pm_runtime_get_active_enabled, pm)(dev);
+> 	if (IS_ERR(pm))
+> 		return PTR_ERR(pm);
+> 	.....
+> 	return 0;
+>
+> or CLASS(pm_runtime_get_active) can be used if transparent handling of
+> disabled runtime PM is desirable.
+>
+> Link: https://lore.kernel.org/linux-pm/878qimv24u.wl-tiwai@suse.de/ [1]
+> Co-developed-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  drivers/pci/controller/dwc/Kconfig        |  11 +
->  drivers/pci/controller/dwc/Makefile       |   1 +
->  drivers/pci/controller/dwc/pcie-eic7700.c | 446 ++++++++++++++++++++++
->  3 files changed, 458 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
->
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index ff6b6d9e18ec..8474bc6356f7 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -375,6 +375,17 @@ config PCI_EXYNOS
->  	  hardware and therefore the driver re-uses the DesignWare core
->  	  functions to implement the driver.
->
-...
-> +
-> +static void eswin_pcie_hide_broken_msix_cap(struct dw_pcie *pci)
-> +{
-> +	u16 offset, val;
-> +
-> +	/*
-> +	 * Hardware doesn't support MSI-X but it advertises MSI-X capability,
-> +	 * to avoid this problem, the MSI-X capability in the PCIe capabilities
-> +	 * linked-list needs to be disabled. Since the PCI Express capability
-> +	 * structure's next pointer points to the MSI-X capability, and the
-> +	 * MSI-X capability's next pointer is null (00H), so only the PCI
-> +	 * Express capability structure's next pointer needs to be set 00H.
-> +	 */
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	val = dw_pcie_readl_dbi(pci, offset);
-> +	val &= ~PCIE_MSIX_DISABLE_MASK;
 
-supposed PCIE_MSIX_DISABLE_MASK is standard defination for PCI_CAP_ID_EXP
-register, it should be in pci.h
+Nice feature.
 
-> +	dw_pcie_writel_dbi(pci, offset, val);
-> +}
-> +
-> +static int eswin_pcie_host_init(struct dw_pcie_rp *pp)
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+>
+> v2 -> v3:
+>    * Two more class definitions for the case in which resume errors can be
+>      neglected.
+>    * Update of new code comments (for more clarity).
+>    * Changelog update.
+>
+> v1 -> v2:
+>    * Rename the new classes and the new static inline helper.
+>    * Add two classes for handling disabled runtime PM.
+>    * Expand the changelog.
+>    * Adjust the subject.
+>
+> ---
+>  drivers/base/power/runtime.c |    2 +
+>  include/linux/pm_runtime.h   |   82 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 84 insertions(+)
+>
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -796,6 +796,8 @@ static int rpm_resume(struct device *dev
+>  		if (dev->power.runtime_status == RPM_ACTIVE &&
+>  		    dev->power.last_status == RPM_ACTIVE)
+>  			retval = 1;
+> +		else if (rpmflags & RPM_TRANSPARENT)
+> +			goto out;
+>  		else
+>  			retval = -EACCES;
+>  	}
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -21,6 +21,7 @@
+>  #define RPM_GET_PUT		0x04	/* Increment/decrement the
+>  					    usage_count */
+>  #define RPM_AUTO		0x08	/* Use autosuspend_delay */
+> +#define RPM_TRANSPARENT	0x10	/* Succeed if runtime PM is disabled */
+>
+>  /*
+>   * Use this for defining a set of PM operations to be used in all situations
+> @@ -533,6 +534,32 @@ static inline int pm_runtime_resume_and_
+>  }
+>
+>  /**
+> + * pm_runtime_get_active_dev - Resume a device and bump up its usage counter.
+> + * @dev: Target device.
+> + * @rpmflags: Additional runtime PM flags to combine with RPM_GET_PUT.
+> + *
+> + * Resume @dev synchronously and if that is successful, increment its runtime
+> + * PM usage counter.
+> + *
+> + * Return:
+> + * * 0 if the runtime PM usage counter of @dev has been incremented.
+> + * * Negative error code otherwise.
+> + */
+> +static inline struct device *pm_runtime_get_active_dev(struct device *dev,
+> +						       int rpmflags)
 > +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct eswin_pcie *pcie = to_eswin_pcie(pci);
-> +	struct eswin_pcie_port *port;
-> +	u32 retries;
-> +	u8 msi_cap;
-> +	u32 val;
 > +	int ret;
 > +
-> +	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
-> +	if (pcie->num_clks < 0)
-> +		return dev_err_probe(pci->dev, pcie->num_clks,
-> +				     "Failed to get pcie clocks\n");
-> +
-> +	ret = eswin_pcie_deassert(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Configure root port type */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= ~PCIEMGMT_CTRL0_ROOT_PORT_MASK;
-> +	writel_relaxed(val | PCI_EXP_TYPE_ROOT_PORT,
-> +		       pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	list_for_each_entry(port, &pcie->ports, list) {
-> +		ret = eswin_pcie_perst_deassert(port, pcie);
-> +			if (ret)
-> +				goto err_perst;
+> +	ret = __pm_runtime_resume(dev, RPM_GET_PUT | rpmflags);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(dev);
+> +		return ERR_PTR(ret);
 > +	}
 > +
-> +	/* Configure app_hold_phy_rst */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= ~PCIEMGMT_APP_HOLD_PHY_RST;
-> +	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	/* The maximum waiting time for the clock switch lock is 20ms */
-> +	retries = 20;
-> +	do {
-> +		val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-> +		if (!(val & PCIEMGMT_PM_SEL_AUX_CLK))
-> +			break;
-> +		fsleep(1000);
-> +		retries--;
-> +	} while (retries);
-
-use readl_poll_timeout()
-
-> +
-> +	if (!retries) {
-> +		dev_err(pci->dev, "Timeout waiting for PM_SEL_AUX_CLK ready\n");
-> +		ret = -ETIMEDOUT;
-> +		goto err_phy_init;
-> +	}
-> +
-> +	/*
-> +	 * Configure ESWIN VID:DID for Root Port as the default values are
-> +	 * invalid.
-> +	 */
-> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, VENDOR_ID_VALUE);
-> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, DEVICE_ID_VALUE);
-> +
-> +	/* Configure support 32 MSI vectors */
-> +	msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-> +	val = dw_pcie_readw_dbi(pci, msi_cap + PCI_MSI_FLAGS);
-> +	val &= ~PCI_MSI_FLAGS_QMASK;
-> +	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, 5);
-> +	dw_pcie_writew_dbi(pci, msi_cap + PCI_MSI_FLAGS, val);
-> +
-> +	/* Configure disable MSI-X cap */
-> +	if (!pcie->msix_cap)
-> +		eswin_pcie_hide_broken_msix_cap(pci);
-> +
-> +	return 0;
-> +
-> +err_phy_init:
-> +	list_for_each_entry(port, &pcie->ports, list)
-> +		reset_control_assert(port->perst);
-> +err_perst:
-> +	eswin_pcie_assert(pcie);
-> +
-> +	return ret;
+> +	return dev;
 > +}
 > +
-...
+> +/**
+>   * pm_runtime_put - Drop device usage counter and queue up "idle check" if 0.
+>   * @dev: Target device.
+>   *
+> @@ -606,6 +633,61 @@ static inline int pm_runtime_put_autosus
+>  	return __pm_runtime_put_autosuspend(dev);
+>  }
+>
+> +/*
+> + * The way to use the classes defined below is to define a class variable and
+> + * use it going forward for representing the target device until it goes out of
+> + * the scope.  For example:
+> + *
+> + * CLASS(pm_runtime_get_active, active_dev)(dev);
+> + * if (IS_ERR(active_dev))
+> + *         return PTR_ERR(active_dev);
+> + *
+> + * ... do something with active_dev (which is guaranteed to never suspend) ...
+> + *
+> + * If an error occurs, the runtime PM usage counter of dev will not be
+> + * incremented, so using these classes without error handling is not
+> + * recommended.
+> + */
+> +DEFINE_CLASS(pm_runtime_get_active, struct device *,
+> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put(_T),
+> +	     pm_runtime_get_active_dev(dev, RPM_TRANSPARENT), struct device *dev)
 > +
-> +static int eswin_pcie_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	struct eswin_pcie_port *port;
+> +DEFINE_CLASS(pm_runtime_get_active_auto, struct device *,
+> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put_autosuspend(_T),
+> +	     pm_runtime_get_active_dev(dev, RPM_TRANSPARENT), struct device *dev)
 > +
-> +	/*
-> +	 * For controllers with active devices, resources are retained and
-> +	 * cannot be turned off.
-> +	 */
-> +	if (!dw_pcie_link_up(&pcie->pci)) {
-> +		list_for_each_entry(port, &pcie->ports, list)
-> +			reset_control_assert(port->perst);
-> +		eswin_pcie_assert(pcie);
-> +		clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-> +		pcie->suspended = true;
-> +	}
+> +/*
+> + * The following two classes are analogous to the two classes defined above,
+> + * respectively, but they produce an error pointer if runtime PM has been
+> + * disabled for the given device.
+> + *
+> + * They should be used only when runtime PM may be disabled for the given device
+> + * and if that happens, the device is not regarded as operational and so it
+> + * cannot be accessed.  The classes defined above should be used instead in all
+> + * of the other cases.
+> + */
+> +DEFINE_CLASS(pm_runtime_get_active_enabled, struct device *,
+> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put(_T),
+> +	     pm_runtime_get_active_dev(dev, 0), struct device *dev)
 > +
-> +	return 0;
-> +}
-
-does dw_pcie_resume_noirq() work for you? If not, please update common
-one.
-
+> +DEFINE_CLASS(pm_runtime_get_active_enabled_auto, struct device *,
+> +	     if (!IS_ERR_OR_NULL(_T)) pm_runtime_put_autosuspend(_T),
+> +	     pm_runtime_get_active_dev(dev, 0), struct device *dev)
 > +
-> +static int eswin_pcie_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
+> +/*
+> + * The following classes may be used instead of the above if resume failures can
+> + * be neglected.  However, such cases are not expected to be prevalent, so using
+> + * one of these classes should always be regarded as an exception and explained
+> + * in an adjacent code comment.
+> + */
+> +DEFINE_CLASS(pm_runtime_get_sync, struct device *,
+> +	     if (_T) pm_runtime_put(_T),
+> +	     ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
 > +
-> +	if (!pcie->suspended)
-> +		return 0;
+> +DEFINE_CLASS(pm_runtime_get_sync_auto, struct device *,
+> +	     if (_T) pm_runtime_put_autosuspend(_T),
+> +	     ({ pm_runtime_get_sync(dev); dev; }), struct device *dev)
 > +
-> +	ret = eswin_pcie_host_init(&pcie->pci.pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init host: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dw_pcie_setup_rc(&pcie->pci.pp);
-> +	eswin_pcie_start_link(&pcie->pci);
-> +	dw_pcie_wait_for_link(&pcie->pci);
-> +
-> +	pcie->suspended = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops eswin_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(eswin_pcie_suspend, eswin_pcie_resume)
-> +};
-> +
-> +static const struct eswin_pcie_data eswin_7700_data = {
-> +	.msix_cap = false,
-> +};
-> +
-> +static const struct of_device_id eswin_pcie_of_match[] = {
-> +	{ .compatible = "eswin,eic7700-pcie", .data = &eswin_7700_data },
-> +	{},
-> +};
-> +
-> +static struct platform_driver eswin_pcie_driver = {
-> +	.probe = eswin_pcie_probe,
-> +	.driver = {
-> +		.name = "eic7700-pcie",
-> +		.of_match_table = eswin_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +		.pm = &eswin_pcie_pm_ops,
-> +	},
-> +};
-> +builtin_platform_driver(eswin_pcie_driver);
-> +
-> +MODULE_DESCRIPTION("PCIe host controller driver for EIC7700 SoCs");
-> +MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
-> +MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
-> +MODULE_AUTHOR("Yanghui Ou <ouyanghui@eswincomputing.com>");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.1
+>  /**
+>   * pm_runtime_put_sync - Drop device usage counter and run "idle check" if 0.
+>   * @dev: Target device.
+>
+>
 >
 
