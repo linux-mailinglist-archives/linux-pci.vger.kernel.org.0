@@ -1,122 +1,276 @@
-Return-Path: <linux-pci+bounces-36752-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36753-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70DA6B95388
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:21:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71B57B95786
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 12:43:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87105188658E
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 09:21:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A5FF189178C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 10:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51992DEA79;
-	Tue, 23 Sep 2025 09:21:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A84931A062;
+	Tue, 23 Sep 2025 10:43:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4u4AjKV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQ2F43NW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E792745E
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 09:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6448E2BEC3F
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 10:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758619278; cv=none; b=nYwD9LL/D+6r5Ab2GkBGF//aGHvWQcGbWWVNjyZ8SKyZv+PrzPepDNrlhBseHoQDA/9rzxKks8n+qAsQOAWw1Pv5h8NvTt8z9oeW526HHX0blwBI7OxJFezCimyouy/nuo18WZSxPqx1LKLja83bVQHDaRYzIUnI0pIrrUc5dzU=
+	t=1758624215; cv=none; b=jxYxfWPyL1Ank32pAdAdQWi84qhelNeemvR5bspHJl1g7xzKvdCt7oSrzN5gKDXF1aPBfWgUBEy/FjWD9zwhEk5698vRNUaCRJqFbMkiHLyIKHM9UasWjKfKv6zv1ZjMLzL98n8mlN2g3DCSQBWd9jxdBcL5Ku62iykzzhDzbHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758619278; c=relaxed/simple;
-	bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
+	s=arc-20240116; t=1758624215; c=relaxed/simple;
+	bh=PhQpgWYmL6Ae77aouOTVMF6UGjtRp/UBfJ/i4TcIbd0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pLGURh88MSUgiLo5PRvVMN9RhLovohTMrzutK0U8uysJG0Meun4A0iGkrHmTNFrlwz9oz+OQek3WUFcgveiewG7uRFTavY3irSqMvUv0i6FuHqMEryBI8gcUk5FPREUHaCFRHHsdIMZWOOcr5E/3OwlV58GUC5Hf4D2N0w7Qs6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4u4AjKV; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-26c209802c0so37264705ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 02:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758619276; x=1759224076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
-        b=h4u4AjKVfmAEskwkOvwzqAgL88xwomHfGrvqa/5xhZTFEvKPRDxQ3mzuuNdgvUhCoK
-         kf8eytRgKJqhaVcHEnd14tfDLk4r7F0OulEsicASVZuyYg0kGQVOdiS3RVqTmXs+RKfF
-         5CMt5HxvdXkogUdqNdiB6nrFAVo7BZlFfk5fDdN7/YUVJGhWfK2vX2Czbky8A8EHk9Wz
-         xmheSDvK9GN7pax/RoyTCabh7iBQUZAZHIhVaSIRi7HFJOdLpxbjv/FrtG/4C3KHWm3T
-         6nxbMtXQ462veq5po0xK5zqGjkv5OfgiVKrhGSWLHCy56WGWB2HWeV5rrvxhxsKaxH7a
-         vkAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758619276; x=1759224076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cswo0LzDGBX49wI8j9kkVMGd7/Ano3IZZWfL4sip6E0=;
-        b=IDD8CpJ1ErlzjHcECiQHFA2Q7jK30svusLqXkyF018k2eYFXVLJreW8SNDHwGbah77
-         e3CgY8qY9gp5IZLfA10C7hf6Y+X3KXRUuQVAfMI8/NdpC25DWS2/m7MtDQK66c/e9MZW
-         lxsuCpL2CbNeGiLDjjHOUbWnvr5tXvGRLz2eQPxHWOAJzSzqoL7sr1weSBilOeaq/M4P
-         JOmYmYf/pU9E+S6mb+MsslD59HozyxJSgmFdO6w3wFzJsz9gozzXKqZfmwhKJnkyA348
-         Uw+NjYMh2Sw1rTJFdLzsRjDdxnSgtovfEec0hLp7WD5WI/GZYfd00WD/VpxB0PIY37kl
-         4f8w==
-X-Forwarded-Encrypted: i=1; AJvYcCU2cyineZU0mnA+qLOLhWvjnTgg3aU5jIBzgf/dBoqCrlXrU8GVVsbQsAT4rvQwNTnwqq2k/eS7uY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBmqTnoKOwIUGs/2uomHoCz5s0i3Bgk4TxyPMlBn9XPsP6h5qd
-	74ITIjKKXSBUZyv8T9nJF3byo66AazEoCGzH605P5B00dm3U9zKQXt7+L7peeFUm1X8mb9dmM+z
-	ECZ9sZ2sth9pUyLHqB8CD8w+uJMQQ6k8=
-X-Gm-Gg: ASbGncs9Rhrz+1y9922NntJOsb9ExlPBYzJ1GCjmsqCxMtgh4uLZViR2AP3cgs0kpYF
-	/9s9YFde72Y2pOw/L+CMraxCOoRr7XYSyJIzQjhMnlffCcpbEnF/3CSyT3UYYLJfgClqkhpSF40
-	EUqf82mdPaSbIHaVi8FhZXM/ZjVYTRrsJ5rseotlgk79LzHdwjA9iidCld/flqlkM9YLPVU91JK
-	Z4YW0I=
-X-Google-Smtp-Source: AGHT+IEXMKhCjwTKhodebRPoXK/OAjJWAlGGH8OjPPnekcnhylOt4yiZehwUT2NqIW2Pj2CyhcJ/iwqTogEC2ndcvmA=
-X-Received: by 2002:a17:902:e790:b0:269:a4c5:f442 with SMTP id
- d9443c01a7336-27cc712289emr25047665ad.47.1758619276576; Tue, 23 Sep 2025
- 02:21:16 -0700 (PDT)
+	 To:Cc:Content-Type; b=non7lEiJj9N25hSoItfmDZCRec8RPM6AG31bXrKv16Yiwxt2YmNz0z/v/adqNJL+pUwph49Giv/o1wRXHN44rYrwZWsJCZ4Z/hXw+DHwJ+25EUvh7VFspQ696lxsvQqQwfoxDuZio+U+c0Cpr55X/gbaaAESyAyBeon8kzxGNtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQ2F43NW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12853C16AAE
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 10:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758624215;
+	bh=PhQpgWYmL6Ae77aouOTVMF6UGjtRp/UBfJ/i4TcIbd0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YQ2F43NWbByqrPCdddc/rVVBmCEvRgTnluFwtJEZv5CaSpjqrTAjdVNMbyYw9O35k
+	 RpeaHf6wbFOfUXNiwmVVJnBvkqdz5RcwN6cxbXrKjblVI9EEA0kazVejxEjDSyRiAT
+	 nAcEwvOeHXtufkX7PZcjBxqxqIlk9TzKhXYL6axRZTFyHwknZ0IVS85slDmFpcj6bB
+	 +8ZF/gxw1Y3Sq4LCAYUluLG4ryAM3o5OkxZjMjGx65GduWRB/omMa4uwxM+O+wGOGS
+	 AJgVNdMIFDP7HOYAhO6OJzUKnCrnVUUh0sY3SNuhGFpnxXA9jXiLU3PWHU6+84fkRC
+	 Xqp3+23OdyYPg==
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-786e9b51248so657290a34.0
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 03:43:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUN5zi+9rb4vRG9k71NzgJxGtgHrFU1yTWi9bXueUiOjQ8rl+ccPyUiAZDMHxghugmb8HGqXFuGV/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxGMJa0DeDhKNBbyg/yugQ1OhQ7igJEowDGaW88XQb917nqaZ2
+	rB5M0dpc9MGTKX0CxbzAVWiBK0glPGU2CpN0rxkUZrp/iO6XFdzQkKkCrE/lhkLJq89bkvy7R7M
+	m3lptQbqJWDzfDnEbjS8lUOcO1DLdcmc=
+X-Google-Smtp-Source: AGHT+IFyv5x60tWKoEAiSRwgxwhv9eam3iNHMg3iUvzjO4YHNL7dKEIF4G8fxRLk2ZGca7oSTQprEjlgDvrig+jusGk=
+X-Received: by 2002:a05:6808:2f0d:b0:439:27db:51cb with SMTP id
+ 5614622812f47-43f2d11320emr1095633b6e.0.1758624214306; Tue, 23 Sep 2025
+ 03:43:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827013539.903682-1-terry.bowman@amd.com> <aNIUAy6VbNdSzplJ@gourry-fedora-PF4VCD3F>
-In-Reply-To: <aNIUAy6VbNdSzplJ@gourry-fedora-PF4VCD3F>
-From: Srinivasulu Thanneeru <dev.srinivasulu@gmail.com>
-Date: Tue, 23 Sep 2025 14:51:04 +0530
-X-Gm-Features: AS18NWBwICuC4DXdolnXhBDgNb4F3syXj6-2puxjUsRmcPuIhwxe03vFc-A6n2I
-Message-ID: <CAMtOeKLe-HtjpNze4WPj-knDDZTw3GRq6qMwpig6ygKH+Mq7AQ@mail.gmail.com>
-Subject: Re: [PATCH v11 00/23] Enable CXL PCIe Port Protocol Error handling
- and logging
-To: Gregory Price <gourry@gourry.net>
-Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net, jonathan.cameron@huawei.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, dan.j.williams@intel.com, 
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com, 
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com, 
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com, 
-	lukas@wunner.de, Benjamin.Cheatham@amd.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org, 
-	alucerop@amd.com, ira.weiny@intel.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
+References: <12763087.O9o76ZdvQC@rafael.j.wysocki> <2399578.ElGaqSPkdT@rafael.j.wysocki>
+ <20250923085323.sbetukdirhppecz5@lcpd911>
+In-Reply-To: <20250923085323.sbetukdirhppecz5@lcpd911>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 23 Sep 2025 12:43:21 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gF93Qm0_0jGQjAAo6qBJHmEEzByE243nZAyEccsvj=Bw@mail.gmail.com>
+X-Gm-Features: AS18NWDk9lzGqwPKuYxUK1IyDKA3OtAPmmtEchpQcRPiibkxHOk0SbKyhUU2I38
+Message-ID: <CAJZ5v0gF93Qm0_0jGQjAAo6qBJHmEEzByE243nZAyEccsvj=Bw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] PM: runtime: Add auto-cleanup macros for "resume
+ and get" operations
+To: Dhruva Gole <d-gole@ti.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Takashi Iwai <tiwai@suse.de>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Alex Williamson <alex.williamson@redhat.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I had tested these series, Thank you Terry.
-
-Tested-by: Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-
-On Tue, Sep 23, 2025 at 8:59=E2=80=AFAM Gregory Price <gourry@gourry.net> w=
-rote:
+On Tue, Sep 23, 2025 at 10:53=E2=80=AFAM Dhruva Gole <d-gole@ti.com> wrote:
 >
-> On Tue, Aug 26, 2025 at 08:35:15PM -0500, Terry Bowman wrote:
-> > This patchset adds CXL Protocol Error handling for CXL Ports and update=
-s CXL
-> > Endpoints (EP) handling. Previous versions of this series can be found =
-here:
-> > https://lore.kernel.org/linux-cxl/20250626224252.1415009-1-terry.bowman=
-@amd.com/
+> On Sep 22, 2025 at 17:30:43 +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > It is generally useful to be able to automatically drop a device's
+> > runtime PM usage counter incremented by runtime PM operations that
+> > resume a device and bump up its usage counter [1].
+> >
+> > To that end, add DEFINE_CLASS() macros allowing pm_runtime_put()
+> > and pm_runtime_put_autosuspend() to be used for the auto-cleanup in
+> > those cases.
+> >
+> > Simply put, a piece of code like below:
+> >
+> >       pm_runtime_get_sync(dev);
+> >       .....
+> >       pm_runtime_put(dev);
+> >       return 0;
+> >
+> > can be transformed with CLASS(pm_runtime_get_sync) like:
+> >
+> >       guard(pm_runtime_get_sync)(dev);
+> >       .....
+> >       return 0;
+> >
+> > (see pm_runtime_put() call is gone).
+> >
+> > However, it is better to do proper error handling in the majority of
+> > cases, so doing something like this instead of the above is recommended=
+:
+> >
+> >       CLASS(pm_runtime_get_active, pm)(dev);
+> >       if (IS_ERR(pm))
+> >               return PTR_ERR(pm);
+> >       .....
+> >       return 0;
+> >
+> > In all of the cases in which runtime PM is known to be enabled for the
+> > given device or the device can be regarded as operational (and so it ca=
+n
+> > be accessed) with runtime PM disabled, a piece of code like:
+> >
+> >       ret =3D pm_runtime_resume_and_get(dev);
+> >       if (ret < 0)
+> >               return ret;
+> >       .....
+> >       pm_runtime_put(dev);
+> >       return 0;
+> >
+> > can be simplified with CLASS() like:
+> >
+> >       CLASS(pm_runtime_get_active, pm)(dev);
+> >       if (IS_ERR(pm))
+> >               return PTR_ERR(pm);
+> >       .....
+> >       return 0;
+> >
+> > (again, see pm_runtime_put() call is gone).
+> >
+> > Still, if the device cannot be accessed unless runtime PM has been
+> > enabled for it, the CLASS(pm_runtime_get_active_enabled) variant
+> > needs to be used, that is (in the context of the example above):
+> >
+> >       CLASS(pm_runtime_get_active_enabled, pm)(dev);
+> >       if (IS_ERR(pm))
+> >               return PTR_ERR(pm);
+> >       .....
+> >       return 0;
+> >
+> > When the original code calls pm_runtime_put_autosuspend(), use one
+> > of the "auto" class variants, CLASS(pm_runtime_get_active_auto) or
+> > CLASS(pm_runtime_get_active_enabled_auto), so for example, a piece
+> > of code like:
+> >
+> >       ret =3D pm_runtime_resume_and_get(dev);
+> >       if (ret < 0)
+> >               return ret;
+> >       .....
+> >       pm_runtime_put_autosuspend(dev);
+> >       return 0;
+> >
+> > will become:
+> >
+> >       CLASS(pm_runtime_get_active_enabled_auto, pm)(dev);
+> >       if (IS_ERR(pm))
+> >               return PTR_ERR(pm);
+> >       .....
+> >       return 0;
+> >
+> > Note that the cases in which the return value of pm_runtime_get_sync()
+> > is checked can also be handled with the help of the new class macros.
+> > For example, a piece of code like:
+> >
+> >       ret =3D pm_runtime_get_sync(dev);
+> >       if (ret < 0) {
+> >               pm_runtime_put(dev);
+> >               return ret;
+> >       }
+> >       .....
+> >       pm_runtime_put(dev);
+> >       return 0;
+> >
+> > can be rewritten as:
+> >
+> >       CLASS(pm_runtime_get_active_enabled, pm)(dev);
+> >       if (IS_ERR(pm))
+> >               return PTR_ERR(pm);
+> >       .....
+> >       return 0;
+> >
+> > or CLASS(pm_runtime_get_active) can be used if transparent handling of
+> > disabled runtime PM is desirable.
 > >
 >
-> I know there's still some in-flight work, but for the series so far:
+> Firstly, please can we add all this documentation in runtime_pm [1]
+> Otherwise there's just far less developers aware of the new APIs getting
+> introduced other than people directly involved. Not everyone is going to
+> come down here to look at git log for API docs (even though we proud
+> ourselves in having git log as our main source of Documentation in
+> kernel ;) )
 >
-> Tested-by: Gregory Price <gourry@gourry.net>
+> [1] https://docs.kernel.org/power/runtime_pm.html
+
+That will happen when the early adopters tell me that it works for them.
+
+> > Link: https://lore.kernel.org/linux-pm/878qimv24u.wl-tiwai@suse.de/ [1]
+> > Co-developed-by: Takashi Iwai <tiwai@suse.de>
+> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > v2 -> v3:
+> >    * Two more class definitions for the case in which resume errors can=
+ be
+> >      neglected.
+> >    * Update of new code comments (for more clarity).
+> >    * Changelog update.
+> >
+> > v1 -> v2:
+> >    * Rename the new classes and the new static inline helper.
+> >    * Add two classes for handling disabled runtime PM.
+> >    * Expand the changelog.
+> >    * Adjust the subject.
+> >
+> > ---
+> >  drivers/base/power/runtime.c |    2 +
+> >  include/linux/pm_runtime.h   |   82 ++++++++++++++++++++++++++++++++++=
++++++++++
+> >  2 files changed, 84 insertions(+)
 >
-> Please ping me if major logical rework gets done and i'll roll through it=
- again.
+> >
+> > --- a/drivers/base/power/runtime.c
+> > +++ b/drivers/base/power/runtime.c
+> > @@ -796,6 +796,8 @@ static int rpm_resume(struct device *dev
+> >               if (dev->power.runtime_status =3D=3D RPM_ACTIVE &&
+> >                   dev->power.last_status =3D=3D RPM_ACTIVE)
+> >                       retval =3D 1;
+> > +             else if (rpmflags & RPM_TRANSPARENT)
+> > +                     goto out;
 >
+> "TRANSPARENT" doesn't tell you exactly what happens. It should be somethi=
+ng like
+> RPM_IGNORE_DISABLED or RPM_ALLOW_DISABLED IMO.
+
+There is a description in the header file and TRANSPARENT is shorter
+than the alternatives.  Besides, this is mostly for internal use.
+
+> >               else
+> >                       retval =3D -EACCES;
+> >       }
+> > --- a/include/linux/pm_runtime.h
+> > +++ b/include/linux/pm_runtime.h
+> > @@ -21,6 +21,7 @@
+> >  #define RPM_GET_PUT          0x04    /* Increment/decrement the
+> >                                           usage_count */
+> >  #define RPM_AUTO             0x08    /* Use autosuspend_delay */
+> > +#define RPM_TRANSPARENT      0x10    /* Succeed if runtime PM is disab=
+led */
+> >
+> >  /*
+> >   * Use this for defining a set of PM operations to be used in all situ=
+ations
+> > @@ -533,6 +534,32 @@ static inline int pm_runtime_resume_and_
+> >  }
+> >
+> >  /**
+> > + * pm_runtime_get_active_dev - Resume a device and bump up its usage c=
+ounter.
+>
+> I am getting no clue as to why this is different than regular
+> pm_runtime_get_sync then? Can we describe this API better?
+
+Again, this is for internal use.
+
+I may as well drop the kerneldoc for this function altogether, but I'm
+not going to send a v4 just for this purpose.
 
