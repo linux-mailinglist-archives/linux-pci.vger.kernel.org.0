@@ -1,155 +1,89 @@
-Return-Path: <linux-pci+bounces-36823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCFA1B97D18
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:47:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94342B97EB2
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 02:43:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5C881AE23AC
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:47:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2C2747B195C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 00:41:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D91C2FD7BD;
-	Tue, 23 Sep 2025 23:47:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B8A11A254E;
+	Wed, 24 Sep 2025 00:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="t6zq26Tf";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="uRo8Vx5j"
+	dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b="YWw9ySG3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from sender4-g3-154.zohomail360.com (sender4-g3-154.zohomail360.com [136.143.188.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD6B223DF1;
-	Tue, 23 Sep 2025 23:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758671229; cv=none; b=e23S4TS6iCwaKWlNGVNhvwSywHEKCjqeWySw8bx7teH0jd6vj2CGr9W/+Xih/MT8FPCdLNxR3Xe62O7KdxoJFuWv4vdn+fCK+5jKotPPPdiGIntWchJD+K6MWRJ4LhN/3q6Ang4KvYt5mPor21GQmN5nxRxmRp0eRiL34T2x89E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758671229; c=relaxed/simple;
-	bh=8YgpqE03TuFSZdkW7VrnoXlZj2IFVZpYR2gJHtHFLPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sSsS1aWkUQyI6QTrKoovB8kLmT9q+U6S/LX7D6DFaBjcviMhn/vagAOz6JoxX2SgHTqSPQRqJXIrF1seBMGPpmwAzteZVXxU3OKDhhOa6EY1JmnNOTxrZdPQIyKHo7y+KHpMAQeN1mPZNtRJ2d59qw50a7PRldmNVnaOMuW2JlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=t6zq26Tf; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=uRo8Vx5j; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4cWc8N3L1Tz9t0f;
-	Wed, 24 Sep 2025 01:47:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758671220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=itgmMwd0vgP5PZhXQStLZwyQ5NKDgt2vMyRJtHWxfhY=;
-	b=t6zq26TfpmPurufgNe3Zr1qEwXCVwvEXQwTXv89gast/lvK/9D4xxihA3Fp0AwU2Zlkjhf
-	1tq+cD7uvxhZp8nTtk1wecIiyTJagtmz4FT3ls6fhq1cdLTd+hnq9xY2tULzEV3UmPt1Ot
-	S+pUXu3Li0KuavilQIi1oBtrb7X71vQaKN5ZPD82wXUoph+rlcMT/+rh0GpjywHmDIkRZR
-	eD4jD6BbVnPbTymh/uHYfOY+QOj6o+lj7R722vBfanmRKjNkWORKN1M3lNAgbj3TtJr7bv
-	s/SGpinoDhPOesEjQZvVUQh8DEj0dnJysgKVrvjTuxnB0g4RmIs+dD99E2zFtQ==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=uRo8Vx5j;
-	spf=pass (outgoing_mbo_mout: domain of marek.vasut+renesas@mailbox.org designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=marek.vasut+renesas@mailbox.org
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1758671218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=itgmMwd0vgP5PZhXQStLZwyQ5NKDgt2vMyRJtHWxfhY=;
-	b=uRo8Vx5jveMoobMXiFFJ7yE5V1j4GJBisPxrTO3Y1HPd0fRzWCw/+4IxgTQhiwKetqJ/e6
-	IE7TB5pVU0nDcysPMGsJEV7Vr1jx7hDH8GRczOJnUhWcGNKMmIdGUwzway/crNztzfwkV1
-	IoelGxcNFv7CDcNkpiZpJzSIpVdsG0prbl0Xhsi7mnUnXQEwVLtPRPdqN9qEz9PK97B61S
-	bHWkir6FejYAAcLURVj9xNTRwcugtaXEuHul/qmZcMsBaxSEBkApQMQizE0ZBFfbdotjKc
-	tyHvYoAu2N74yZ7ZRqbaaY0zC4pcxTbT36Wkv4EFM4sxS5Y5ce3ukhGhfhB3qQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CB019DF8D
+	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 00:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.154
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758674594; cv=pass; b=KRES1z9e1ZHvcI9vKN3bndzYKMl8L8toix3WkZwJ1cTkHUjsf5m9AvwVEdQ+NVIt5HxCo8QRKP5tW/D1/IJgLr5bkB2GDeUnkgItlAhbpYHFjIFGPRUatRBsqiXADYwIkmDfngVMwQ9OvVK49bkpr5281TGnEgaNGJJq+TQ6BDI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758674594; c=relaxed/simple;
+	bh=aoNNPfKPv1nQCxMUDWRRco2OCSqRNAmFqAOXyKDLe58=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=I8XICTluPLGbpl11CxuQAAGBHJZftZVm/WnkTEAoYQpMJUAhNEbeuVnYcMkuO5A2q+7Z7q0kqjpt42GfMVptXZd0p7Od9F1Q0QtELmlSZQew7rxA0V3kM4ftyR4Az0vCyTFSiKAuo+anlWGsAl/tPSd/PIVMoaXhewMkzccM9pI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx; dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b=YWw9ySG3; arc=pass smtp.client-ip=136.143.188.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx
+ARC-Seal: i=1; a=rsa-sha256; t=1758674592; cv=none; 
+	d=us.zohomail360.com; s=zohoarc; 
+	b=VHMB0HTf7nW6jvS3KHT3Jb+ojt7mvhwFMpsu+6NUMQPrHRdlhfLTIrdIDkNCeIWvJwW/Z68Wvnbr3maE8XKxh6onQnmLwU5LxpQA/Kn+ttPw16WS0n2YjvHM9+cNUMsreye+W3mRjzPN36gsbgjBTjdAgIl77PGCcRkBfIhXXEQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=us.zohomail360.com; s=zohoarc; 
+	t=1758674592; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
+	bh=aoNNPfKPv1nQCxMUDWRRco2OCSqRNAmFqAOXyKDLe58=; 
+	b=t3J7TzqJtAQ/5lzqzxjMv7AFvnvRwbglMXVgo3BJz/UmiX9Sy0TuaBY+QOxp1WriqB+wt/LBpc5ljl7gWNW7CR4tzpVZAqa4rf5CzKmK0CPLAP1X7CfdQIuS+5eFQkI0qgaxAjE0DoAK8FfvvhBbr9ODKZwom/tW36ZNE14sfqw=
+ARC-Authentication-Results: i=1; mx.us.zohomail360.com;
+	dkim=pass  header.i=maguitec.com.mx;
+	spf=pass  smtp.mailfrom=investorrelations+9aa09b20-98d8-11f0-9ce0-52540088df93_vt1@bounce-zem.maguitec.com.mx;
+	dmarc=pass header.from=<investorrelations@maguitec.com.mx>
+Received: by mx.zohomail.com with SMTPS id 1758671653150821.1932103067533;
+	Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
+DKIM-Signature: a=rsa-sha256; b=YWw9ySG3SZMtvlOlkbotGbHoPmofQxI8YgvvAM4/4gMGP8U78JLYfhrZgyAIJIlfbNQgY4eOWBy6iBpma2iKIqVcMsQk8LHBr3fQzT9S6fwDo7nWcNe/oCkedriRrOguTUTurYjTFXRLuEUcu1C7X+ry8iLdiWZmGB+WEe8joc8=; c=relaxed/relaxed; s=15205840; d=maguitec.com.mx; v=1; bh=aoNNPfKPv1nQCxMUDWRRco2OCSqRNAmFqAOXyKDLe58=; h=date:from:reply-to:to:message-id:subject:mime-version:content-type:content-transfer-encoding:date:from:reply-to:to:message-id:subject;
+Date: Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
+From: Al Sayyid Sultan <investorrelations@maguitec.com.mx>
+Reply-To: investorrelations@alhaitham-investment.ae
 To: linux-pci@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2] PCI: rcar-host: Add static assertion to check !PCI_LOCKLESS_CONFIG
-Date: Wed, 24 Sep 2025 01:46:18 +0200
-Message-ID: <20250923234644.82890-1-marek.vasut+renesas@mailbox.org>
+Message-ID: <2d6f.1aedd99b146bc1ac.m1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2@bounce-zem.maguitec.com.mx>
+Subject: Thematic Funds Letter Of Intent
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: e57ee752eec6cf1c657
-X-MBO-RS-META: cwmw45enrhaw5sa8tr4qxzks97g1geux
-X-Rspamd-Queue-Id: 4cWc8N3L1Tz9t0f
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+content-transfer-encoding-Orig: quoted-printable
+content-type-Orig: text/plain;\r\n\tcharset="utf-8"
+Original-Envelope-Id: 2d6f.1aedd99b146bc1ac.m1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2
+X-JID: 2d6f.1aedd99b146bc1ac.s1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2
+TM-MAIL-JID: 2d6f.1aedd99b146bc1ac.m1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2
+X-App-Message-ID: 2d6f.1aedd99b146bc1ac.m1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2
+X-Report-Abuse: <abuse+2d6f.1aedd99b146bc1ac.m1.9aa09b20-98d8-11f0-9ce0-52540088df93.19978ffc5d2@zeptomail.com>
+X-ZohoMailClient: External
 
-This driver can not function correctly without PCIe subsystem level
-config space access serialization. In case PCI_LOCKLESS_CONFIG is
-ever enabled on ARM, complain loudly so the driver can be updated
-accordingly.
+To: linux-pci@vger.kernel.org
+Date: 24-09-2025
+Thematic Funds Letter Of Intent
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Cc: "Krzysztof Wilczyński" <kwilczynski@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: Add depends on !PCI_LOCKLESS_CONFIG into Kconfig file, to prevent
-    this from being built when PCI_LOCKLESS_CONFIG is not set at all
----
- drivers/pci/controller/Kconfig          | 1 +
- drivers/pci/controller/pcie-rcar-host.c | 8 ++++++++
- 2 files changed, 9 insertions(+)
+It's a pleasure to connect with you
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 41748d083b933..3f489bed289fb 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -244,6 +244,7 @@ config PCIE_RCAR_HOST
- 	bool "Renesas R-Car PCIe controller (host mode)"
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	depends on PCI_MSI
-+	depends on !PCI_LOCKLESS_CONFIG
- 	select IRQ_MSI_LIB
- 	help
- 	  Say Y here if you want PCIe controller support on R-Car SoCs in host
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 213028052aa58..29e13f7ff7ff1 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -35,6 +35,14 @@
- 
- #include "pcie-rcar.h"
- 
-+/*
-+ * This driver can not function correctly without PCIe subsystem level
-+ * config space access serialization. In case PCI_LOCKLESS_CONFIG is
-+ * ever enabled on ARM, complain loudly so the driver can be updated
-+ * accordingly.
-+ */
-+static_assert(!IS_ENABLED(CONFIG_PCI_LOCKLESS_CONFIG));
-+
- struct rcar_msi {
- 	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
- 	struct irq_domain *domain;
--- 
-2.51.0
+Having been referred to your investment by my team, we would be=20
+honored to review your available investment projects for onward=20
+referral to my principal investors who can allocate capital for=20
+the financing of it.
 
+kindly advise at your convenience
+
+Best Regards,
+
+Respectfully,
+Al Sayyid Sultan Yarub Al Busaidi
+Director
 
