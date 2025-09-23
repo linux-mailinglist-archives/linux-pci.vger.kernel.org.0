@@ -1,269 +1,218 @@
-Return-Path: <linux-pci+bounces-36786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63D8DB96D6A
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 18:33:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61BE6B96E4B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F51E19C375B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 16:33:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19A2B481543
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 17:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A007327A33;
-	Tue, 23 Sep 2025 16:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56CB81D5146;
+	Tue, 23 Sep 2025 17:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ieh7IMNu"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PO0ddrxw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010064.outbound.protection.outlook.com [52.101.84.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DB72E5B1B;
-	Tue, 23 Sep 2025 16:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758645176; cv=none; b=cX9lLbktUVydV8POOCxQ4Rvn3L7+WvlmJeCFyhDuggDw8CNMWM3khZh9d3KfDeii+nG1Sa61yhg0SXOivcpoOXgQq23fnsrBrQFx/PDW/DdV5Y8ExnxVVpsZKW30WIKO6dn/WYmd71Nn7PsX1l8K7NdGSLifzPnSxIM4gv24rA0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758645176; c=relaxed/simple;
-	bh=nXg/n5hpWCZLMQ+84dFs6XsSa3daE8FI7ZQaMSHDtw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Dl8wf+/SNZ2i4Zxdyeips5Sz/zKy4QJxznp73lvsXOISxldmk6j1wCNNNM20cIlSFc7bucTZjNllMimpe6Fy988xNc9LbgQvd+E8sYnSSqR9NleObla+wMQuGWHWY0lklhW3lpGagqucmtwHDL85kJgRLecNv8Yk7CBS22JKLhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ieh7IMNu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB33C4CEF5;
-	Tue, 23 Sep 2025 16:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758645175;
-	bh=nXg/n5hpWCZLMQ+84dFs6XsSa3daE8FI7ZQaMSHDtw4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Ieh7IMNuWw1otot5GgD04hmcV4NCpwDR/tGMiwk4kPz2q60eWO87q4IJicdsVGqiA
-	 6JWmmkE36Y1PyI+XCZC67Q+XaJyAMXFU4K+0iVRZCHybewZwE/VqapHTWzmdX56NcE
-	 XoPM/nlaFTgFztZth9FMt+2h+p1x5/sLhh/+zN4D9MvIQAHDPd06pbc+Mua2CLNjtK
-	 bPlyyBqNHE4pJ3MUVE1txmF8EEjnHGBal4TplCcZaqLbJhVqQJL5L3YQvtEzdc8nIZ
-	 RGVZMZdCeN/grQU5bxQCtFeyBFhOdruEsA64RWW83IGdy2+MYM8CpXmZv7iOWfJrDW
-	 IeqfTl1qQgENA==
-Date: Tue, 23 Sep 2025 11:32:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: zhangsenchuan@eswincomputing.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, johan+linaro@kernel.org,
-	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
-	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
-	inochiama@gmail.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
-	Yanghui Ou <ouyanghui@eswincomputing.com>
-Subject: Re: [PATCH v3 2/2] PCI: EIC7700: Add Eswin PCIe host controller
- driver
-Message-ID: <20250923163254.GA2042659@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254271BCA07;
+	Tue, 23 Sep 2025 17:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758646854; cv=fail; b=UmlIAu/dTxYj04h5VIFj2Yn0RgR5ZKILMBIrP4UjzD5JrhvlNQKXKrRS1TvEN3j7ZWNotsy5621sp1y6tF/+ZuiHuWDLKaAAfNRZfGWwudDTLMTlHvKXGWXrN+4qGqh9jsb3eKROmWk4v1eBkLWAgom1RSU+Ix4PDfaFOqIopLw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758646854; c=relaxed/simple;
+	bh=dxDmWJLk/VWHhZACSjszWNQjigwgfsFvCLYGjOZZOeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=V4ksudocGGtMcqiclGAIyNcMQkVi3oxWvTp9EHz/hm+b+uGqHqa2RncB+kgRPViz6aPmxogoX19LkqtETgADcuMFEySQaPr35yxWz/WFFFmSxyJNT8ile6hYQiDjFuX496AZpYh0lEyZ/VKaT1WzACWDs91m6z4ND8q05utTrO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PO0ddrxw; arc=fail smtp.client-ip=52.101.84.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fTi61w/Ktq9pvdUvVXNX2Su/p4a+YksKidmKD4Ea0NFqWzkrtyl7VqmBXE7QonrZIeXU9UYB9ILCLjZYs2ZBv7Dc3h/GmJU2VVjeECRnbIa/LeBqZbG5HwLacwK9ie4Fm6KPCEJtxaHX2gpYkikabs03hMrxwRqSOTEohnKBhGkIiQ8VC2KbQBIlqs5c5gA/bS8qs1xTebuUy0/gYZZzsVVVgHBb1c2nGp6R/ExAAN33pTL2dfj7Mk4mfsmK8r3aZy061YWdlvelsPOAKjbIFoEg0yusitW1r+QLiJqnRGdwuvCVaeuchCZ0EnjXPmszkkeNtW2+B5cPSsa2RXgyAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8PJCryrcGZlLyn2yOaE6LhwVAHu35o09M608LkhpNsM=;
+ b=JeJ7MMUntL2Hk9czy4KBq/pEa4mhowPdjuO+CauZ5XMLjKEjO5QDXGPQqFOOTFRkHKUJJCUaE5QTI8NyPg1zfEyErpOA1gFUH07DJCKMkhNER4Tb4+e34c4Hf+oMqW0tIvOwQKvMjAJH6btOkVjG91qS3m/73vYF9gdZjXYqLQEBuuVU9sgbRgkuY01FqUJ8NNHlm6snQZNPKmXyiTb4i4CXxEWDlw7dDamDXlTkPbScakClg8Jghx1MtOQEh9dj812DuH1OQ4dbiDqiDzJ0dJtwnP2OckFDAdNIzbaUGv7eo1vmonS7K9Q7lYwpJR8f9Guhw4CM3kuYPqSK6+GZFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8PJCryrcGZlLyn2yOaE6LhwVAHu35o09M608LkhpNsM=;
+ b=PO0ddrxwSt8J5yEhMKP0NN24H0U/Sa/HsI57XfoCvkn6nJCpSrkZDiNQB9uY+AuB38Hp6kATroZPKur6QxQ5qI7oBUBWUURCgoMHyNYUgkhWm6nEhcRlpGY+w4yn7l158Z3m2ECXUGXZrlDDIesVhOlywRKHmRCNIS1NQzgzo5IXHrgqop8NG6IOX9EOUtyXd4prbJCHQ8SXuJgBvkMbWk43pIVANW6xrAOq4LHDJPcrae/c/340McrsdcRr+o06iSK2wMW+9F0wDYi13feqU6oNtsIKKJgu6mczLCuWwxUdUU8faJJbB3/e4YXQ0ZOD8P8SrMHo49cfHZWBPDyBvg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9621.eurprd04.prod.outlook.com (2603:10a6:20b:4ff::22)
+ by VI0PR04MB10613.eurprd04.prod.outlook.com (2603:10a6:800:25f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Tue, 23 Sep
+ 2025 17:00:49 +0000
+Received: from AS4PR04MB9621.eurprd04.prod.outlook.com
+ ([fe80::a84d:82bf:a9ff:171e]) by AS4PR04MB9621.eurprd04.prod.outlook.com
+ ([fe80::a84d:82bf:a9ff:171e%4]) with mapi id 15.20.9160.008; Tue, 23 Sep 2025
+ 17:00:49 +0000
+Date: Tue, 23 Sep 2025 13:00:39 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, l.stach@pengutronix.de,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] dt-bindings: pci-imx6: Add external reference
+ clock mode support
+Message-ID: <aNLSN5Ix2iZyxeng@lizhi-Precision-Tower-5810>
+References: <20250915035348.3252353-1-hongxing.zhu@nxp.com>
+ <20250915035348.3252353-3-hongxing.zhu@nxp.com>
+ <20250922155054.GA38670-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250922155054.GA38670-robh@kernel.org>
+X-ClientProxiedBy: SJ0PR13CA0042.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::17) To AS4PR04MB9621.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4ff::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250923121228.1255-1-zhangsenchuan@eswincomputing.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9621:EE_|VI0PR04MB10613:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71dee60e-e4b4-4596-29ec-08ddfac2beaa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|52116014|376014|7416014|366016|1800799024|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sjIt1bO04rdiTUFRQWw/I2Oh5uDZa+2aS4AcmO7+VfMtbsflZ2fTdSPvKMZd?=
+ =?us-ascii?Q?VwfzGMf8XWQRbmmfJ93ArgFNPwfx0xarx7hWIiQYBcmBd/3KIs5ssZrKg1Sb?=
+ =?us-ascii?Q?Jez6C+VtO5rbiBhRubf+g/HdzihlqGsO8mY2ObDxSnZf/vBiFVf38U5s4z4P?=
+ =?us-ascii?Q?/5ALuxPkC9aVe5n/6gs9bNc4Pn5W6UkJLeUTB4w3sKW+uPABkv+Upyis3HaV?=
+ =?us-ascii?Q?545fxgk7VrxMAppkYXRAHCwiyftyWNjNzL2aLZ8/Ng+pFYbMkYiZRNsZ4l43?=
+ =?us-ascii?Q?9W445KjZoXY5RYnoOfvJzFDfkhKBQddXbJ7yKpL9JjzPMOezzPfCTOe8EL4z?=
+ =?us-ascii?Q?NFB374Z+D11MOM62vIvDBur685hts/IKW5UequhuU6/gIx76LMBjVIzcXCUu?=
+ =?us-ascii?Q?iLo7vF/XJpNzLMhJqepyCKWyz6dO9yV36vAQ1y5HRc1UtUfPVbiSe0P/onI+?=
+ =?us-ascii?Q?MU/ofcBSD5W35tt2liWoQope9vwcbpHTWxMwHsRHUZLfqdCBRlT4IH6Q//rQ?=
+ =?us-ascii?Q?+O9ZCmTRrbx3cnqL8S40HDfo35SnoA5v9cmREekk3dVrvW7rN+tO15fAMH75?=
+ =?us-ascii?Q?T3u4vOzEV5Fzt0pAJHIHyuVNxZO5Sua5hFZjk6ppYvWWy4ryCSlJ2LjvcMdJ?=
+ =?us-ascii?Q?JRegZcqi1/Ly3mhdfqMPoxc8D1xEv8OQSxuv6vEpfomkW3BAs5m4MbBl2yHG?=
+ =?us-ascii?Q?FM5Pb7xgFmD37OnW24jOwVC9HfEDesp44CoYAuYGBOsIi2oJqiA9S7uVfW0x?=
+ =?us-ascii?Q?WQDnFcDxKJ9JekVdDy8kS4vLb7QJc2okzg97jSD1YoD0Ej2a/C4u4aG4ymAj?=
+ =?us-ascii?Q?oFpmFguAkuy5KmjfvnKngTyUZhsEkgNKdSsIseziEbrLMWNk1jerWW8+W/MQ?=
+ =?us-ascii?Q?bTHyNPyIYNGEMzSvH833J/I7hAI+SNh+TDln9FAb12Ttp9pu0+assjIQrKPP?=
+ =?us-ascii?Q?OE8AKhdR2LNjzrY9+/Y95Lfo8Rwxe2sm9oL70x5+ZRDNdDORu0fZQBndYYvM?=
+ =?us-ascii?Q?ExS54eMEApPxuiqNzLCiHrifQl3vI9gDCamYkd7J8EeQrPZtLZhS3V4Zl0sV?=
+ =?us-ascii?Q?u/VqCl0LbsLi4tp7/tN9hiU3C2KEEhjSSvv/a6GZm8rh4LBuBZmH+Pwgqyqj?=
+ =?us-ascii?Q?CvWTsUw6YNoCSgQsnFwQPC/OYhS/LZkSzrSG+bVIKJrTrhsyxGdXkuKWyRmg?=
+ =?us-ascii?Q?Lq4k2ggexfVsFIa/GInuLL5LLNFUANWUnasTkhBR/QIMk5aJ569cc+h1AmAt?=
+ =?us-ascii?Q?i/wKviRJt4I0dBihEogQTHUISsQf0fE6zCCbQ/B3xHtuWIx0Q7g/E06gVffv?=
+ =?us-ascii?Q?A08Wwqa9+tj8RWN6g3wcEL1sB6d3e9L/p9vx8iP9RI5t7SqD/0ryeykcxq5R?=
+ =?us-ascii?Q?F9dZcVN7imVkRcFvF0YJyORBhswE9Itj8hsOSt1TV3pDZMINY2vuREweKSko?=
+ =?us-ascii?Q?q4RpxCdiog6tQSpbYJ3eRoG9fsGwiDk6BuWILgmlxTyInpsW8nZ1bbEbdVJ3?=
+ =?us-ascii?Q?2J6EYKBpwv/1boE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9621.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(52116014)(376014)(7416014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aj2NUpMeoBRjBAMZP2coGd6/BO+xq1fEeCm0E94ohwnO1XFAoAv2lo0N7Lgy?=
+ =?us-ascii?Q?9pFi5zSjEj0aAU/Syi+GBqfabKbMa+Pl1FDU5PxhQlUISqXah3tby3vrvl4o?=
+ =?us-ascii?Q?aDaRYmsOCMV6l8fRUI21MB6LPgMEU+FPUKmAN7HdhqmRw0aOESPD9/HLo6TZ?=
+ =?us-ascii?Q?Qg48jyTGMGczI1lI9IJ31pKDAH1jRNyT/VbkWYGigw2M4ZsDL4ugOwv1649P?=
+ =?us-ascii?Q?2sjB6Otm+jRFtLOwC3OfGxjQMmWNEIQ/v5EPGNeNWbxk2AOAyNjimWW4EkgS?=
+ =?us-ascii?Q?f7S0Af4nq3Z7C8WcSM2ZafYzAsCBr8LM9WAoKVYWMpanJy7UWv5UuBucpoA5?=
+ =?us-ascii?Q?nKJywp5ptmi/VQqBO8XEyQ5RsjT3pRNnlMP5DgdnSWEIZZCuS0n5IXpkBGqS?=
+ =?us-ascii?Q?lISUbsrtb9oY9wcRmYVSDUPdNS6scFoC4qNf6Iv61aQwqx9S9yZQVi/gibiZ?=
+ =?us-ascii?Q?3yw8GpwOruZPjIN2e+O/AKcVkiG5597DFqt2M4T/XE5u8IYPcBmmhTsLBjn8?=
+ =?us-ascii?Q?CFVt06fOLyMprHubrxBl7X8xJrrFR5szI5eCFN3/NeIXOLvYgrTUfgDUZtti?=
+ =?us-ascii?Q?cJUvAN5iPkmlgyj7Ros2I0IUiAYcutLiHmapb10TxQBvrq58TCC8rqcdYIhe?=
+ =?us-ascii?Q?vGqAJi2eaV7qL6/KWyw3t0/EDPe43ei693klPIsSyV8XVdn85zPmKR+axjkq?=
+ =?us-ascii?Q?yG4cfrHHwAhs2oNPDoe7exqjgjQYwiUSltJxNvHZviC5VxbXZZvVaPLsgvrH?=
+ =?us-ascii?Q?CbuCMUiTBmlQZrjmJENsxJVe5Pol0V58n+ZToV0gSAsd8zfzO/JX7rKv7UL+?=
+ =?us-ascii?Q?SZjH9Q/TtT4XOl0O2KelyU4aDRHR4aWEcPzqv1Upgpvotwy6u5iCwHt5gOJT?=
+ =?us-ascii?Q?g2L+7+ieJldsHzO+Iu7s6Bz60x9FwrFs362jhtHA09N/+dWqcS/dOz5uyVuc?=
+ =?us-ascii?Q?Z8EykDa4us1OsR4lVDYZeDd3VXoyMIRgVaox8NCJ0bMaKXFE0J/qhFlayuSI?=
+ =?us-ascii?Q?YuGQAl05Dk2sWqvipmw4RQXkEsm/5gmIH+TizDslkL3IW1Xc09ROmEutF/Ls?=
+ =?us-ascii?Q?pPJer7pqce4rNHSH4CeiHilfzaD/PxbmB2wutV4ZJ1AudzaVPwj7uEqQPQJV?=
+ =?us-ascii?Q?xre6exs5PGKc3J1R3lVRN4cjDrO2ELPLyo4fYafQmxiv/Cbb5aOmcTwmOR7l?=
+ =?us-ascii?Q?m+2XcIEzgOgOfLV9G93z94IT9ThYltvXt7AAfP1nP60U2wKFiyKSNwd05nfw?=
+ =?us-ascii?Q?RA8O3F0kXCtmC9HpsfzTwf9Xr2EJYRZYTfs8zTZsIIhP95S3jaT1EhS5gCsr?=
+ =?us-ascii?Q?y+3S3dLAkMZeWgWF1toNKeVfuJ6WvvR31kJe2NCBBGmaElLpRyiekZMXuJ9q?=
+ =?us-ascii?Q?zE6pFCh7XIARHgf3rI0OoN40cnOktBxgsXr8GQoRDx/TMxLwKNKYRJKKqVl0?=
+ =?us-ascii?Q?tv77EQ4Tem0LSpCMdBWteKQAlHTGIlELgOkLo0IU3tQEhi+sBSXdlW4J2AhX?=
+ =?us-ascii?Q?RAfx+hnHq5YeUOC4kt52mkrXuL6GmXFmKh94ma1CgcjxAwmBRe/+KovA7Xpc?=
+ =?us-ascii?Q?z8OvtsrUD1zp+ni1a6CGK8HDcAkKupRzWLMVlVRJ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71dee60e-e4b4-4596-29ec-08ddfac2beaa
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 17:00:48.9410
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Lib635bzvERGXr/8bxiCxSzzy7OmiBuvPu7pkdi9SGrj0FJyN+j6H3M304alpNd66xSO8hNFjNYkKmv7fq1Uiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10613
 
-On Tue, Sep 23, 2025 at 08:12:27PM +0800, zhangsenchuan@eswincomputing.com wrote:
-> Add driver for the Eswin EIC7700 PCIe host controller,the controller is
-> based on the DesignWare PCIe core, IP revision 6.00a The PCIe Gen.3
-> controller supports a data rate of 8 GT/s and 4 channels, support INTX
-> and MSI interrupts.
+On Mon, Sep 22, 2025 at 10:50:54AM -0500, Rob Herring wrote:
+> On Mon, Sep 15, 2025 at 11:53:47AM +0800, Richard Zhu wrote:
+> > On i.MX, PCIe has two reference clock inputs: one from the internal PLL
+> > and one from an external clock source. Only one needs to be used,
+> > depending on the board design. Add the external reference clock source
+> > for reference clock.
+> >
+> > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > index ca5f2970f217..6be45abe6e52 100644
+> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > @@ -219,7 +219,12 @@ allOf:
+> >              - const: pcie_bus
+> >              - const: pcie_phy
+> >              - const: pcie_aux
+> > -            - const: ref
+> > +            - description: PCIe reference clock.
+> > +              oneOf:
+> > +                - description: The controller has two reference clock
+> > +                    inputs, internal system PLL and external clock
+> > +                    source. Only one needs to be used.
+> > +                  enum: [ref, extref]
+>
+> This seems wrong to me. There's still only 1 ref input to the PCIe
+> block. If you had 10 possible choices for the ref clock source, would
+> you add 10 clock names here? No!
+>
+> Can't you detect what the parent clock is for the 'ref' clock?
 
-s/host controller,the controller is/host controller, which is/
+In include/linux/clk.h, I have not found any API to get clk providor's
+information. let me know if I missed it.
 
-Add period at end of first sentence.
+> and
+> configure the GPR register appropriately. Or that mux should be modeled
+> as a clock provider.
 
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -375,6 +375,17 @@ config PCI_EXYNOS
->  	  hardware and therefore the driver re-uses the DesignWare core
->  	  functions to implement the driver.
->  
-> +config PCIE_EIC7700
-> +	bool "ESWIN PCIe controller"
-> +	depends on ARCH_ESWIN || COMPILE_TEST
-> +	depends on PCI_MSI
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say Y here if you want PCIe controller support for the ESWIN.
-> +	  The PCIe controller on Eswin is based on DesignWare hardware,
-> +	  enables support for the PCIe controller in the Eswin SoC to
-> +	  work in host mode.
+The mux is inside PCIe controller IP. Similar case in S32 RTC, which have
+4 clk inputs and mux is inside IP.
 
-Alphabetize by vendor name so the kconfig menus stay sorted:
+https://lore.kernel.org/all/20241104152934.GA129622-robh@kernel.org/
 
-  Baikal-T1 PCIe controller
-  ESWIN PCIe controller
-  Freescale i.MX6/7/8 PCIe controller (host mode)
+We met many similar cases. Actually s32 rtc's first version modeled as
+clock provider, but this way is rejected because no clock output.
 
-> +++ b/drivers/pci/controller/dwc/pcie-eic7700.c
+Frank
 
-> +/* Vendor and device id value */
-> +#define VENDOR_ID_VALUE			0x1fe1
-> +#define DEVICE_ID_VALUE			0x2030
-
-Use something like this to match definitions in
-include/linux/pci_ids.h, where this might eventually be moved if used
-in other drivers:
-
-  #define PCI_VENDOR_ID_ESWIN            0x1fe1
-
-> +/* Disable MSI-X cap register fields */
-> +#define PCIE_MSIX_DISABLE_MASK		GENMASK(15, 8)
-
-I think this value has nothing to do with MSI-X; it's just the "Next
-Capability Pointer" in the capability header, i.e., the
-PCI_CAP_LIST_NEXT_MASK added here:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=37d1ade89606
-
-That commit is queued but not merged, so you can't use it yet.  If
-this driver is merged after v6.17, you can switch to using it.
-
-> +static int eswin_pcie_parse_ports(struct eswin_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->pci.dev;
-> +	struct eswin_pcie_port *port, *tmp;
-> +	int ret;
-> +
-> +	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
-> +		ret = eswin_pcie_parse_port(pcie, of_port);
-> +		if (ret)
-> +			goto err_port;
-> +	}
-> +
-> +	return ret;
-
-"ret" is potentially uninitialized here, but you never get here if
-eswin_pcie_parse_port() fails, so I think you should "return 0"
-directly instead.
-
-> +static int eswin_pcie_probe(struct platform_device *pdev)
-> +{
-> +	const struct eswin_pcie_data *data;
-> +	struct eswin_pcie_port *port, *tmp;
-> +	struct device *dev = &pdev->dev;
-> +	struct eswin_pcie *pcie;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	data = of_device_get_match_data(dev);
-> +	if (!data)
-> +		return dev_err_probe(dev, -EINVAL, "OF data missing\n");
-> +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(&pcie->ports);
-> +
-> +	pci = &pcie->pci;
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +	pci->pp.ops = &eswin_pcie_host_ops;
-> +	pcie->msix_cap = data->msix_cap;
-> +
-> +	pcie->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
-> +	if (IS_ERR(pcie->mgmt_base))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->mgmt_base),
-> +				     "Failed to map mgmt registers\n");
-> +
-> +	pcie->powerup_rst = devm_reset_control_get(&pdev->dev, "powerup");
-> +	if (IS_ERR(pcie->powerup_rst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->powerup_rst),
-> +				     "Failed to get powerup reset\n");
-> +
-> +	pcie->cfg_rst = devm_reset_control_get(&pdev->dev, "cfg");
-> +	if (IS_ERR(pcie->cfg_rst))
-> +		return dev_err_probe(dev, PTR_ERR(pcie->cfg_rst),
-> +				     "Failed to get cfg reset\n");
-> +
-> +	ret = eswin_pcie_parse_ports(pcie);
-> +	if (ret)
-> +		dev_err_probe(pci->dev, ret,
-> +			      "Failed to parse Root Port: %d\n", ret);
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	ret = dw_pcie_host_init(&pci->pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize host\n");
-> +		goto err_init;
-> +	}
-> +
-> +	return ret;
-
-Can "return 0" here since we know the value.
-
-> +err_init:
-> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> +		list_del(&port->list);
-> +		reset_control_put(port->perst);
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int eswin_pcie_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	struct eswin_pcie_port *port;
-> +
-> +	/*
-> +	 * For controllers with active devices, resources are retained and
-> +	 * cannot be turned off.
-> +	 */
-> +	if (!dw_pcie_link_up(&pcie->pci)) {
-> +		list_for_each_entry(port, &pcie->ports, list)
-> +			reset_control_assert(port->perst);
-> +		eswin_pcie_assert(pcie);
-> +		clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-> +		pcie->suspended = true;
-
-I'm a little dubious about this since none of the other drivers check
-dw_pcie_link_up().
-
-It also seems a little bit racy since dw_pcie_link_up() can always
-change after it's called.
-
-And tracking pcie->suspended is also unusual if not unique.
-
-Should dw_pcie_suspend_noirq() and dw_pcie_resume_noirq() be used
-here?
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (!pcie->suspended)
-> +		return 0;
-> +
-> +	ret = eswin_pcie_host_init(&pcie->pci.pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init host: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dw_pcie_setup_rc(&pcie->pci.pp);
-> +	eswin_pcie_start_link(&pcie->pci);
-> +	dw_pcie_wait_for_link(&pcie->pci);
-> +
-> +	pcie->suspended = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops eswin_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(eswin_pcie_suspend, eswin_pcie_resume)
-
-Suggest adding "_noirq" to the end of these function names since this
-sets .suspend_noirq, .resume_noirq, etc.  Also will match other drivers.
+>
+> Rob
 
