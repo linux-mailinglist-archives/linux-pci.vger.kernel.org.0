@@ -1,221 +1,175 @@
-Return-Path: <linux-pci+bounces-36761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C79E2B95AA2
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:28:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B251B95C94
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 14:11:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAA9C2E6C55
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:28:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E6FC2E5BFF
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 12:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7E5322A0A;
-	Tue, 23 Sep 2025 11:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSGF6VcZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9EA8322DAC;
+	Tue, 23 Sep 2025 12:10:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFEE322A04;
-	Tue, 23 Sep 2025 11:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [4.193.249.245])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCF55322DCC;
+	Tue, 23 Sep 2025 12:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.193.249.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758626840; cv=none; b=SxCjDDcm7kHGuBDOtSmNrnA5cgZI4EtnEkLbQjbK3UmtITvsfVB+8v76SqinV1O58R71uLbYhUQWnLKC9ClF5767mxWgXJyNprxdDZzTjzEQ5kFeGmv5ilrVhBdaI2+98Yu+DIiem7Eg6AbULHf3Al8XLICm73PlmVfoz4w6zLg=
+	t=1758629450; cv=none; b=IXCYFEc+TcGPNgUkKoKpN8A5v06ecf/Nbc6hI/zFW3o7zY21TqCIFNX9n6Kw4ulDU0CwfcPEpqI6RnSD2wUau0kiFgdd21G5Wo/h5OynxY0HfA4KXXta2N0M0hRsYS2VHAXR7WUWMXENVv2p0+TYl7ot29p8UnkoE6G5m7dpS5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758626840; c=relaxed/simple;
-	bh=Y6Ks5wTiGs+ByHpP/pFcc1umqPWY5L5vAWv9OUX9xY4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NL41A1zmQxDgX7YDivuTsPgTa7lUswkZJLXlMbtDpHSrF+T951tV/PHeorq8ImKlmh7AHfN5qob7WokZzBMJtoi3DDgOuQWpVPgdL5NEtGtRcF+6HSHi5fPPxYEf3dKdqT2TLqlPl7LS0YX0u42bQtAFhoPSIs70FGpsciMn8Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSGF6VcZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C285CC113D0;
-	Tue, 23 Sep 2025 11:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758626839;
-	bh=Y6Ks5wTiGs+ByHpP/pFcc1umqPWY5L5vAWv9OUX9xY4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lSGF6VcZInmak+B2nWzBYISkHvSHzLyb6KqUZmybeHjCUvZ2zSZiSshpUWaFIC/+/
-	 KIPPH90NuiZ4PJdQZKOuFQ7eEIgQM0euVR+UDpHvINhha8BkeinZ3AYrz0xE5yAo8D
-	 dMqGfU0SipM0Q+y9ea1s1z3c5Ta1eRaYNWgs8SdQw0BVKSbOs4ii/e14hImcGW1Smq
-	 jcUa9swNvFFk0vqERZNOlCdftDtXcughtKx7esxyNbeNVrv5kBQYp33YyoDd5mIzOm
-	 w0Z8xUuYHY+V0/ZTe4p/GP6OhH5OUVT5TR1xBXD/8jSrX+0htFJEKvOmj6EgPCnyJF
-	 AAl/AeT1DgpWQ==
-From: Manivannan Sadhasivam <mani@kernel.org>
-Date: Tue, 23 Sep 2025 16:56:54 +0530
-Subject: [PATCH v10 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
+	s=arc-20240116; t=1758629450; c=relaxed/simple;
+	bh=8lFhuOZPId9KLsfs+kyMwu30eZP9d7zFnNiEhXXo9ao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=czRC+FWKqzliO9Z9+KHhgHXhBNBqOBG/iAVRExBEDjP4MMa2uGVxrdqtC1iHkCNT4cLsFYR+JOYD445d6GRCBDKnMhE8Ia6r1AjNSasqgTV4On759hnro6GUqWPU6vZk8EyFL8omh7myQPQK6sUe+8PmaiJ0pQldCbKbmSkb6Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=4.193.249.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
+	by app2 (Coremail) with SMTP id TQJkCgA315UUjtJoWSnYAA--.40057S2;
+	Tue, 23 Sep 2025 20:10:00 +0800 (CST)
+From: zhangsenchuan@eswincomputing.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de,
+	johan+linaro@kernel.org,
+	quic_schintav@quicinc.com,
+	shradha.t@samsung.com,
+	cassel@kernel.org,
+	thippeswamy.havalige@amd.com,
+	mayank.rana@oss.qualcomm.com,
+	inochiama@gmail.com
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+Subject: [PATCH v3 0/2] Add driver support for Eswin EIC7700 SoC PCIe controller
+Date: Tue, 23 Sep 2025 20:09:45 +0800
+Message-ID: <20250923120946.1218-1-zhangsenchuan@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250923-controller-dwc-ecam-v10-4-e84390ba75fa@kernel.org>
-References: <20250923-controller-dwc-ecam-v10-0-e84390ba75fa@kernel.org>
-In-Reply-To: <20250923-controller-dwc-ecam-v10-0-e84390ba75fa@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Jonathan Chocron <jonnyc@amazon.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Manivannan Sadhasivam <mani@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5632; i=mani@kernel.org;
- h=from:subject:message-id; bh=lqpEGDikWMpJGoh9O49BHabw0FX3kIuCt8c+nBt0Fho=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBo0oP+nT1B3irIDsL2tBTAYHWeInJiZBrMnFQ05
- AMvJOLqXayJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaNKD/gAKCRBVnxHm/pHO
- 9cUGB/9mDuyKuvKq+CVaMM99wK7fYEnjT595IwhOdIKIy2KvO0vicoCYdJhIcC7gnv+JM/ndKqe
- ZZonzGWZ5UnI7h1e7FRGc8jXLsRoc5ho3EP6I3R8dpXV634QumVCUglmAiiy9AQh8yun3XEnH0p
- XAZQhQ7gIUR38caj7YWj1PkqHikqkT4zBlaH+NybnNkTOYfOFxKxQMm5E+3rqHEOQ7huyyBXtYR
- E03eue8AmKHIHFfTEZ9rLA2Oxnwtoh2W7rSKqBksRdmQI+jVnlVNAXdiEeKCKV3A9yTeDT/S0sX
- zvWMVWZ/ThtygcydYXhWiOQX7Rv23g7d5Mu8EqVjT/F2LGI6
-X-Developer-Key: i=mani@kernel.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgA315UUjtJoWSnYAA--.40057S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy8ZrW5Cw4UZryDCFy8Krg_yoWrtr15pF
+	ZrKFWYkr95Jr43Zws7Aa109FyfXanxJFy5GwnFg347ua13Cas7trykKFWFva4UGr92vryF
+	qa1jqan5CFn8AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRi7KItUUUUU==
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
 
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 
-Designware databook r5.20a, sec 3.10.10.3 documents the 'CFG Shift Feature'
-of the internal Address Translation Unit (iATU). When this feature is
-enabled, it shifts/maps the BDF contained in the bits [27:12] of the target
-address in MEM TLP to become BDF of the CFG TLP. This essentially
-implements the Enhanced Configuration Address Mapping (ECAM) mechanism as
-defined in PCIe r6.0, sec 7.2.2.
+Changes in v3:
+- Updates: eswin,eic7700-pcie.yaml
+  - Based on the last patch yaml file, devicetree separates the root port
+    node, changing it significantly. Therefore, "Reviewed-by: Krzysztof
+    Kozlowski <krzysztof.kozlowski@linaro.org>" is not added.
+  - Clock and reset drivers are under review. In yaml, macro definitions
+    used in clock and reset can only be replaced by constant values.
+  - Move the num-lanes and perst resets to the PCIe Root Port node, make
+    it easier to support multiple Root Ports in future versions of the
+    hardware.
+  - Update the num-lanes attribute and modify define num-lanes as decimal.
+  - Optimize the ranges attribute and clear the relocatable flag (bit 31)
+    for any regions.
+  - Update comment: inte~inth are actual interrupts and these names align
+    with the interrupt names in the hardware IP, inte~inth interrupts
+    corresponds to Deassert_INTA~Deassert_INTD.
+  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
 
-Currently, the driver is not making use of this CFG shift feature, thereby
-creating the iATU outbound map for each config access to the devices,
-causing latency and wasting CPU cycles.
+- Updates: pcie-eic7700.c
+  - Update the submission comment and add DWC IP revision, data rate, lane
+    information.
+  - Optimize the "config PCIE_EIC7700" configuration.
+  - Optimize the macro definition, add bitfield definition for the mask,
+    and remove redundant comments. optimize comments, make use of 80
+    columns for comments.
+  - Use the dw_pcie_find_capability function to obtain the offset by
+    traversing the function list.
+  - Remove the sets MPS code and configure it by PCI core.
+  - Alphabetize so the menuconfig entries remain sorted by vendor.
+  - Configure ESWIN VID:DID for Root Port as the default values are
+	invalid,and remove the redundant lane config.
+  - Use reverse Xmas order for all local variables in this driver
+  - Hardware doesn't support MSI-X but it advertises MSI-X capability, set
+    a flag and clear it conditionally.
+  - Resets are all necessary, Update the interface function for resets.
+  - Since driver does not depend on any parent to power on any resource,
+    the pm runtime related functions are removed.
+  - Remove "eswin_pcie_shutdown" function, our comment on the shutdown
+    function is incorrect. Moreover, when the host powers reboots,it will
+    enter the shutdown function, we are using host reset and do not need
+    to assert perst. Therefore, the shutdown function is not necessary.
+  - remove "eswin_pcie_remove", because it is not safe to remove it during
+    runtime, and this driver has been modified to builtin_platform_driver
+    and does not support hot plugging, therefore, the remove function is
+    not needed.
+  - The Suspend function adds link state judgment, and for controllers
+    with active devices, resources cannot be turned off.
+  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
+- Link to V2: https://lore.kernel.org/linux-pci/20250829082021.49-1-zhangsenchuan@eswincomputing.com/
 
-So to avoid this, configure the controller to enable CFG shift feature by
-enabling the 'CFG Shift' bit of the 'iATU Control 2 Register'.
+Changes in v2:
+- Updates: eswin,eic7700-pcie.yaml
+  - Optimize the naming of "clock-names" and "reset-names".
+  - Add a reference to "$ref: /schemas/pci/pci-host-bridge.yaml#".
+    (The name of the reset attribute in the "snps,dw-pcie-common.yaml"
+    file is different from our reset attribute and "snps,dw-pcie.yaml"
+    file cannot be directly referenced)
+  - Follow DTS coding style to optimize yaml attributes.
+  - Remove status = "disabled" from yaml.
 
-As a result of enabling CFG shift (ECAM), there is longer a need to map the
-DBI register space separately as the DBI region falls under the 'config'
-space used for ECAM (as DBI is used to access the Root Port).
+- Updates: pcie-eic7700.c
+  - Remove unnecessary imported header files.
+  - Use dev_err instead of pr_err and remove the WARN_ON function.
+  - The eswin_evb_socket_power_on function is removed and not supported.
+  - The eswin_pcie_remove function is placed after the probe function.
+  - Optimize function alignment.
+  - Manage the clock using the devm_clk_bulk_get_all_enabled function.
+  - Handle the release of resources after the dw_pcie_host_init function
+    call fails.
+  - Remove the dev_dbg function and remove __exit_p.
+  - Add support for the system pm function.
+- Link to V1: https://lore.kernel.org/all/20250516094057.1300-1-zhangsenchuan@eswincomputing.com/
 
-For enabling ECAM using CFG shift, the platform has to satisfy following
-requirements:
+Senchuan Zhang (2):
+  dt-bindings: PCI: EIC7700: Add Eswin PCIe host controller
+  PCI: EIC7700: Add Eswin PCIe host controller driver
 
-  1. Size of the 'config' memory space to be used as ECAM memory should be
-     able to accommodate the number of buses defined in the 'bus-range'
-     property of the host bridge DT node.
+ .../bindings/pci/eswin,eic7700-pcie.yaml      | 173 +++++++
+ drivers/pci/controller/dwc/Kconfig            |  11 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-eic7700.c     | 446 ++++++++++++++++++
+ 4 files changed, 631 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
 
-  2. The 'config' memory space should be 256 MiB aligned. This requirement
-     comes from PCIe r6.0, sec 7.2.2, which says the base address of ECAM
-     memory should be aligned to a 2^(n+20) byte address boundary. For the
-     DWC cores, n is 8, so this results in 2^28 byte alignment requirement.
-
-It should be noted that some DWC vendor glue drivers like pcie-al may use
-their own ECAM mechanism. For those controllers, set
-'dw_pcie_rp::native_ecam' flag and skip enabling the CFG Shift feature in
-the DWC core.
-
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-[mani: code split, reworded subject/description, comment, native_ecam flag]
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/pci/controller/dwc/pcie-al.c              |  1 +
- drivers/pci/controller/dwc/pcie-designware-host.c | 32 +++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 3 files changed, 34 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index 643115f74092d1c9319e9738db6e94b2752d30c4..345c281c74fefd2113233ef5461f96834b3765de 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -352,6 +352,7 @@ static int al_pcie_probe(struct platform_device *pdev)
- 		return -ENOENT;
- 	}
- 	al_pcie->ecam_size = resource_size(ecam_res);
-+	pci->pp.native_ecam = true;
- 
- 	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						      "controller");
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 94e0fe11a0b062d0f14e09fe586e20bde46a4266..20c9333bcb1c4812e2fd96047a49944574df1e6f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -8,6 +8,7 @@
-  * Author: Jingoo Han <jg1.han@samsung.com>
-  */
- 
-+#include <linux/align.h>
- #include <linux/iopoll.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/irq-msi-lib.h>
-@@ -32,6 +33,8 @@ static struct pci_ops dw_child_pcie_ops;
- 				     MSI_FLAG_PCI_MSIX			| \
- 				     MSI_GENERIC_FLAGS_MASK)
- 
-+#define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
-+
- static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
- 	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
- 	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
-@@ -474,6 +477,34 @@ static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *re
- 	return 0;
- }
- 
-+static bool dw_pcie_ecam_enabled(struct dw_pcie_rp *pp, struct resource *config_res)
-+{
-+	struct resource *bus_range;
-+	u64 nr_buses;
-+
-+	/* Vendor glue drivers may implement their own ECAM mechanism */
-+	if (pp->native_ecam)
-+		return false;
-+
-+	/*
-+	 * PCIe spec r6.0, sec 7.2.2 mandates the base address used for ECAM to
-+	 * be aligned on a 2^(n+20) byte boundary, where n is the number of bits
-+	 * used for representing 'bus' in BDF. Since the DWC cores always use 8
-+	 * bits for representing 'bus', the base address has to be aligned to
-+	 * 2^28 byte boundary, which is 256 MiB.
-+	 */
-+	if (!IS_256MB_ALIGNED(config_res->start))
-+		return false;
-+
-+	bus_range = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
-+	if (!bus_range)
-+		return false;
-+
-+	nr_buses = resource_size(config_res) >> PCIE_ECAM_BUS_SHIFT;
-+
-+	return nr_buses >= resource_size(bus_range);
-+}
-+
- static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -492,6 +523,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
- 	pp->cfg0_size = resource_size(res);
- 	pp->cfg0_base = res->start;
- 
-+	pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
- 	if (pp->ecam_enabled) {
- 		ret = dw_pcie_create_ecam_window(pp, res);
- 		if (ret)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 779868e8fa8fd78e5f35cd0fa2575f52cc07c335..625320565360c0134ee9345bcc2e54a6ce83326a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -429,6 +429,7 @@ struct dw_pcie_rp {
- 	struct pci_eq_presets	presets;
- 	struct pci_config_window *cfg;
- 	bool			ecam_enabled;
-+	bool			native_ecam;
- };
- 
- struct dw_pcie_ep_ops {
-
--- 
-2.48.1
+--
+2.25.1
 
 
