@@ -1,341 +1,168 @@
-Return-Path: <linux-pci+bounces-36815-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36816-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBD4EB97B4D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 00:23:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45670B97C3C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:00:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FBB42E81CD
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 22:23:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3695619C8132
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61B0930E0E2;
-	Tue, 23 Sep 2025 22:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B4E72236E8;
+	Tue, 23 Sep 2025 23:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXFBTS+d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfW/Ygyh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5184F305068
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 22:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A37C253B40
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 23:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758666227; cv=none; b=Smt6OCKWIaGNZikZU0RCEG0U+eD2rMlEPr5z69zsLBvTISvjwgufMG7GtzVP9KVi2GCnwOC5nENAbNfkm1zN+9TkmVQfNWYAVemp0ZPs4Tj/8z0tghZgBSdGIjlFI7vMPrrL2A38TZGz08wBmhi2SYoRAZiMIfUXaA/6lJ0iH1g=
+	t=1758668408; cv=none; b=ZHfszVw4keo9679wsijoFm/Nonrl/5u5yed3/DJDdcoDRyLCZvOhv1Xd2pdaMBLqwZ/78JzybSZBUrFXGwlj1r0e5NsfaI8CrqoaoZek0SswJZw2oyG1RyheFvdqDyejlB4qAPOiCO1MLm28CB2R5VbxpimZwHWCS4SkSN0ZYkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758666227; c=relaxed/simple;
-	bh=uTuOhaiVnMw8+HEd6YtKuov7vIEq+l91UdYka5tjKSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QeqPFlqpgYmsI9UoQZJJmFCd21YkinOmqrDwGogg1OOGo+exERg9GrWl9k+TMJ9OmNxCnq46AIubBCsNzxFMBt5GjPsqmhNJaaNAD5LeacqiawwOlqBeUdcKXJOF7Fo8xesEUMuf7gqME/++NX0vc+w7sTgW/YIQIHzXPihJhaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EXFBTS+d; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758666224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1CMpiBPmpDazoQg8tDEg8758JA66nYm58i1c8T8sygQ=;
-	b=EXFBTS+dp7QN9pjvpaKyrTHGNqNkw3s1/bLEncu3tswU87JIEua77eJmndGgVXtwf4HeDC
-	h4cX2XY6bjOOU7Hfg3qMtbxH5SAmUqVQZzAdrm6eK9SSBrQNZOjhs7TzHdSMs2zHWrgsmR
-	Pmiw4m7TowAKe7XmZCnodjUrlnD2Ncw=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-279-dWL2cTnmOiSr-xZZHkRCAA-1; Tue, 23 Sep 2025 18:23:42 -0400
-X-MC-Unique: dWL2cTnmOiSr-xZZHkRCAA-1
-X-Mimecast-MFC-AGG-ID: dWL2cTnmOiSr-xZZHkRCAA_1758666222
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-42571642af9so9926975ab.0
-        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 15:23:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758666222; x=1759271022;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1CMpiBPmpDazoQg8tDEg8758JA66nYm58i1c8T8sygQ=;
-        b=mlyZ3ne+Jy/v2/y1gB8tM9rKTL5+YMZHcUicen33SWmw28oBlSafON+4mHfqZsGQyk
-         7piauGtS/MPYZVmiEDfdhdPfwklvfsZ7v1snncuGUCV6Bxz/JBpSeSiJEmEo8UryUSSE
-         /E3u1z7RxKsS19OD2HTnxBnWEtL7fj2Rhe1YnBELcfTBfvuU52t4YLX5zTdcnSTiP56P
-         Faw1lY8VF555fYHCrfPGv35EiPNn80azDfhHluYYJsFBb+E/OuBpbyN4+UDCiLtEO0en
-         R1/GbOsuBjpQGkqIjeH6CntT/td7RQRMLPczWC3vhMvp01ledgChy9jTMRIAS4kcpKg0
-         Z50w==
-X-Forwarded-Encrypted: i=1; AJvYcCV6DFqEQ2t6T8vI4ha0ZfsgtblaitXjTcr+Umm9T5gfd+W4G1D2ZniEtJnDs9zxuQ/q5JGt/fVBlnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrO8JShLF905mNkOg5n4DrvkfZZhCE68mvz88Xm7uALhwblwoV
-	nqrgUH17Dr6g5vn97WkeYLyBOuOZ4BcFkwSU95fT5kXK67XJnN1DYfAMsUUmxQyNXtfON88+idL
-	O1wvBq527w0HdkNtz+Sn5L+vRaRL7Ho6VZONdDKweG30o8QHL6TpdZ0HNQl/w/Q==
-X-Gm-Gg: ASbGncv3GSXxA56kwCW5dtB6eE4Nh/EVaSES+wvBP4QX5gY4ZdiCUTYtcRZyzwPKHBY
-	Js/V0vPYqA6EpPFU6PwDDy1ZGNmW3n43cz0yTjkM3XSRF8ZniMqSs4w2pxQOzFme3m0CMhWTT2s
-	aONeF+ije7JbcneTQF0aajix9RfGToOvblcolUYkyjE67sAVO1B+lvTMB6nPDlA+limhP9Ns298
-	XZF7ZUa2UkjLLdMQtOAPxld0BIgYFSGq1pW/0i33idiKFvXc3fE9SMNPeBCymXi3J7g6NhJ5+4H
-	pImNwgFemBWYLiw2n7PJOxvMvs74A6vZ1/T5lKZ21Rs=
-X-Received: by 2002:a05:6e02:1062:b0:425:84b6:a7de with SMTP id e9e14a558f8ab-42584b6aa30mr16612255ab.0.1758666221854;
-        Tue, 23 Sep 2025 15:23:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEYi+vOF7CkWzpb7ZxI27OTwSRimDBvfOl9asq3cQr41YZxMUP1z+tPEOTecgdneH3kKaeZg==
-X-Received: by 2002:a05:6e02:1062:b0:425:84b6:a7de with SMTP id e9e14a558f8ab-42584b6aa30mr16612005ab.0.1758666221303;
-        Tue, 23 Sep 2025 15:23:41 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4257c9b22afsm26303895ab.26.2025.09.23.15.23.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 15:23:40 -0700 (PDT)
-Date: Tue, 23 Sep 2025 16:23:37 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Donald Dutile <ddutile@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
- linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Will Deacon
- <will@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- galshalom@nvidia.com, Joerg Roedel <jroedel@suse.de>, Kevin Tian
- <kevin.tian@intel.com>, kvm@vger.kernel.org, maorg@nvidia.com,
- patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-Subject: Re: [PATCH v3 00/11] Fix incorrect iommu_groups with PCIe ACS
-Message-ID: <20250923162337.5ab1fe89.alex.williamson@redhat.com>
-In-Reply-To: <0eb2e721-8b9c-40d0-afe7-c81c6b765f49@redhat.com>
-References: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
-	<20250922163947.5a8304d4.alex.williamson@redhat.com>
-	<e9d4f76a-5355-4068-a322-a6d5c081e406@redhat.com>
-	<20250922200654.1d4ff8b8.alex.williamson@redhat.com>
-	<0eb2e721-8b9c-40d0-afe7-c81c6b765f49@redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1758668408; c=relaxed/simple;
+	bh=DQfhhXIzQ4/yFuFqui8X9lnmS2vFtBgCOgajr6FqQaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hpRn65CSqNvIuLFaBC9O5eX2bIZZE5UqW/7YDuk5MD84kXVG6b1Q3XSWgthOqL/CLTg7YfJiv/2X/bEcqDKlpyuMC+pbtaLbDKB9LzRYjl162i0x6H1LOg7UqEDdAGyxGuJZWUns117NwokBhEGXDaURibVngQoQ1Rf7yd5bFwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfW/Ygyh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7FFBC4CEF5;
+	Tue, 23 Sep 2025 23:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758668407;
+	bh=DQfhhXIzQ4/yFuFqui8X9lnmS2vFtBgCOgajr6FqQaU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QfW/YgyhyF5gh9jlYNRZMfum65QehClQ1uQ9XSa31Qw9PNqwDM0CJyr+xbAz7uMIJ
+	 aCtu6dVFnHG6V5LPSyJrQCF78N+ImKYN5VIoT8H21ncoQTxAJ2HQfwRkoTzjLypqXj
+	 bRuV8rmVymuPtlqmpDrQaxzME5gInH0vF5a/G1BGlrl1yf00/oeiZY+aWP4GSbm2+K
+	 +ABo3dnbqHhjjCrYbnyUCqYkLqptYgbKJfpeSv3sLsrd3uVwO0R8c/dvSe6ZkGvNC+
+	 ZT8qODVwe7WZMbpCIRlAto/7jaQtJCTqITcIAO13UfyejxeTe/t6zpFfX6wFqWu6iQ
+	 g1hLuHmjYIGOQ==
+Date: Tue, 23 Sep 2025 18:00:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "He, Guocai (CN)" <Guocai.He.CN@windriver.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-imx@nxp.com" <linux-imx@nxp.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"Wang, Xiaolei" <Xiaolei.Wang@windriver.com>
+Subject: Re: [i.MX8 PCIe] PCIe link fails after kexec
+Message-ID: <20250923230006.GA2086105@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CO6PR11MB558624C238AA9C39C9C6A936CD1DA@CO6PR11MB5586.namprd11.prod.outlook.com>
 
-On Mon, 22 Sep 2025 22:42:37 -0400
-Donald Dutile <ddutile@redhat.com> wrote:
-
-> On 9/22/25 10:06 PM, Alex Williamson wrote:
-> > On Mon, 22 Sep 2025 21:44:27 -0400
-> > Donald Dutile <ddutile@redhat.com> wrote:
-> >   
-> >> On 9/22/25 6:39 PM, Alex Williamson wrote:  
-> >>> On Fri,  5 Sep 2025 15:06:15 -0300
-> >>> Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >>>      
-> >>>> The series patches have extensive descriptions as to the problem and
-> >>>> solution, but in short the ACS flags are not analyzed according to the
-> >>>> spec to form the iommu_groups that VFIO is expecting for security.
-> >>>>
-> >>>> ACS is an egress control only. For a path the ACS flags on each hop only
-> >>>> effect what other devices the TLP is allowed to reach. It does not prevent
-> >>>> other devices from reaching into this path.
-> >>>>
-> >>>> For VFIO if device A is permitted to access device B's MMIO then A and B
-> >>>> must be grouped together. This says that even if a path has isolating ACS
-> >>>> flags on each hop, off-path devices with non-isolating ACS can still reach
-> >>>> into that path and must be grouped gother.
-> >>>>
-> >>>> For switches, a PCIe topology like:
-> >>>>
-> >>>>                                  -- DSP 02:00.0 -> End Point A
-> >>>>    Root 00:00.0 -> USP 01:00.0 --|
-> >>>>                                  -- DSP 02:03.0 -> End Point B
-> >>>>
-> >>>> Will generate unique single device groups for every device even if ACS is
-> >>>> not enabled on the two DSP ports. It should at least group A/B together
-> >>>> because no ACS means A can reach the MMIO of B. This is a serious failure
-> >>>> for the VFIO security model.
-> >>>>
-> >>>> For multi-function-devices, a PCIe topology like:
-> >>>>
-> >>>>                     -- MFD 00:1f.0 ACS not supported
-> >>>>     Root 00:00.00 --|- MFD 00:1f.2 ACS not supported
-> >>>>                     |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
-> >>>>
-> >>>> Will group [1f.0, 1f.2] and 1f.6 gets a single device group. However from
-> >>>> a spec perspective each device should get its own group, because ACS not
-> >>>> supported can assume no loopback is possible by spec.  
-> >>>
-> >>> I just dug through the thread with Don that I think tries to justify
-> >>> this, but I have a lot of concerns about this.  I think the "must be
-> >>> implemented by Functions that support peer-to-peer traffic with other
-> >>> Functions" language is specifying that IF the device implements an ACS
-> >>> capability AND does not implement the specific ACS P2P flag being
-> >>> described, then and only then can we assume that form of P2P is not
-> >>> supported.  OTOH, we cannot assume anything regarding internal P2P of an
-> >>> MFD that does not implement an ACS capability at all.
-> >>>      
-> >> The first, non-IF'd, non-AND'd req in PCIe spec 7.0, section 6.12.1.2 is:
-> >> "ACS P2P Request Redirect: must be implemented by Functions that
-> >> support peer-to-peer traffic with other Functions. This includes
-> >> SR-IOV Virtual Functions (VFs)." There is not further statement about
-> >> control of peer-to-peer traffic, just the ability to do so, or not.
-> >>
-> >> Note: ACS P2P Request Redirect.
-> >>
-> >> Later in that section it says:
-> >> ACS P2P Completion Redirect: must be implemented by Functions that
-> >> implement ACS P2P Request Redirect.
-> >>
-> >> That can be read as an 'IF Request-Redirect is implemented, than ACS
-> >> Completion Request must be implemented. IOW, the Completion Direct
-> >> control is required if Request Redirect is implemented, and not
-> >> necessary if Request Redirect is omitted.
-> >>
-> >> If ACS P2P Require Redirect isn't implemented, than per the first
-> >> requirement for MFDs, the PCIe device does not support peer-to-peer
-> >> traffic amongst its function or virtual functions.
-> >>
-> >> It goes on...
-> >> ACS Direct Translated P2P: must be implemented if the Function
-> >> supports Address Translation Services (ATS) and also peer-to-peer
-> >> traffic with other Functions.
-> >>
-> >> If an MFD does not do peer-to-peer, and P2P Request Redirect would be
-> >> implemented if it did, than this ACS control does not have to be
-> >> implemented either.
-> >>
-> >> Egress control structures are either optional or dependent on Request
-> >> Redirect &/or Direct Translated P2P control, which have been
-> >> addressed above as not needed if on peer-to-peer btwn functions in an
-> >> MFD (and their VFs).
-> >>
-> >>
-> >> Now, if previous PCIe spec versions (which I didn't read & re-read &
-> >> re-read like the 6.12 section of PCIe spec 7.0) had more IF and ANDs,
-> >> than that could be cause for less than clear specmanship enabling
-> >> vendors of MFDs to yield a non-PCIe-7.0 conformant MFD wrt ACS
-> >> structures. I searched section 6.12.1.2 for if/IF and AND/and, and
-> >> did not yield any conditions not stated above.  
-> > 
-> > Back up to 6.12.1:
-> > 
-> >    ACS functionality is reported and managed via ACS Extended Capability
-> >    structures. PCI Express components are permitted to implement ACS
-> >    Extended Capability structures in some, none, or all of their
-> >    applicable Functions. The extent of what is implemented is
-> >    communicated through capability bits in each ACS Extended Capability
-> >    structure. A given Function with an ACS Extended Capability structure
-> >    may be required or forbidden to implement certain capabilities,
-> >    depending upon the specific type of the Function and whether it is
-> >    part of a Multi-Function Device.
-> >   
-> Right, depending on type of function or part of MFD.
-> Maybe I mis-understood your point, or vice-versa:
-> section 6.12.1.2 is for MFDs, and I was only discussing MFD ACS structs.
-> I did not mean to imply the sections I was quoting was for anything but an MFD.
-
-I'm really going after the first half of that last sentence rather than
-any specific device type:
-
-  A given Function with an ACS Extended Capability structure may be
-  required or forbidden to implement certain capabilities...
-
-"...[WITH] an ACS Extended Capbility structure..."
-
-"implement certain capabilities" is referring to the capabilities
-exposed within the capability register of the overall ACS extended
-capability structure.
-
-Therefore when section 6.12.1.2 goes on to say:
-
-  ACS P2P Request Redirect: must be implemented by Functions that
-  support peer-to-peer traffic with other Functions.
-
-This is saying this type of function _with_ an ACS extended capability
-(carrying forward from 6.12.1) must implement the p2p RR bit of the ACS
-capability register (a specific bit within the register, not the ACS
-extended capability) if it is capable of p2p traffic with other
-functions.  We can only infer the function is not capable of p2p traffic
-with other functions if it both implements an ACS extended capability
-and the p2p RR bit of the capability register is zero.
-
-> > What you're quoting are the requirements for the individual p2p
-> > capabilities IF the ACS extended capability is implemented.
-> >   
-> No, I'm not.  I'm quoting 6.12.1.2, which is MFD-specific.
+On Tue, Sep 23, 2025 at 03:35:56AM +0000, He, Guocai (CN) wrote:
+> Hi all,
 > 
-> > Section 6.12.1.1 describing ACS for downstream ports begins:
-> > 
-> >    This section applies to Root Ports and Switch Downstream Ports
-> >   that implement an ACS Extended Capability structure.
-> > 
-> > Section 6.12.1.2 for SR-IOV, SIOV and MFDs begins:
-> > 
-> >    This section applies to Multi-Function Device ACS Functions,
-> >   with the exception of Downstream Port Functions, which are
-> >   covered in the preceding section.
-> >   
-> Right.  I wasn't discussing Downstream port functions.
+> We are seeing a PCIe issue on i.MX8-based board when using kexec on
+> Linux kernel 6.6,  we would appreciate your help to clarify whether
+> this is a known problem or if there is a recommended fix.
+
+Can you boot a recent kernel, e.g., v6.16 or v6.17-rc7, to make sure
+you're not seeing an already-fixed problem?
+
+If you can't try a recent kernel, please include your devicetree and
+the complete dmesg log including both the initial boot and the kexec.
+
+> ## Board & Setup
+> Linux version 6.6.103-yocto-standard (oe-user@oe-host) (aarch64-wrs-linux-gcc (GCC) 13.4.0, GNU ld (GNU Binutils) 2
+> .42.0.20240723) #1 SMP PREEMPT Wed Sep  3 20:13:35 UTC 2025
 > 
-> > While not as explicit, what is a Multi-Function Device ACS Function
-> >   if not a function of a MFD that implements ACS?
-> >   
-> I think you are inferring too much into that less-than-optimally
->   worded section.
+> Machine model: Freescale i.MX8QM MEK
+> PCIe device: Intel Corporation Wireless 7260
 > 
-> >>> I believe we even reached agreement with some NIC vendors in the
-> >>> early days of IOMMU groups that they needed to implement an
-> >>>   "empty" ACS capability on their multifunction NICs such that
-> >>>   they could describe in this way that internal P2P is not
-> >>>   supported by the device.  Thanks,  
-> >> In the early days -- gen1->gen3 (2009->2015) I could see that
-> >> happening. I think time (a decade) has closed those defaults to
-> >> less-common quirks. If 'empty ACS' is how they liked to do it back
-> >> than, sure. [A definition of empty ACS may be needed to fully
-> >> appreciate that statement, though.] If this patch series needs to
-> >> support an 'empty ACS' for this older case, let's add it now, or
-> >> follow-up with another fix.  
-> > 
-> > An "empty" ACS capability is an ACS extended capability where the
-> >   ACS capability register reads as zero, precisely to match the
-> >   spec in indicating that the device does not support p2p.  Again,
-> >   I don't see how time passing plays a role here.  A MFD must
-> >   implement ACS to infer anything about internal p2p behavior.
-> >     
-> Again, I don't read the 'must' in the spec.
-> Although I'll agree that your definition of an empty ACS makes it
->   unambiguous.
 > 
-> >> In summary, I still haven't found the IF and AND you refer to in
-> >> section 6.12.1.2 for MFDs, so if you want to quote those sections I
-> >> mis-read, or mis-interpreted their (subtle?) existence, than I'm
-> >>   not immovable on the spec interpretation.  
-> > 
-> > As above, I think it's covered by 6.12.1 and the introductory
-> >   sentence of 6.12.1.2 defining the requirements for ACS functions.
-> >    Thanks, 
-> 6.12.1 is not specific enough about what MFDs must or must not
->   support; it's a broad description of ACS in different PCIe
->   functions. As for 6.12.1.2, I stand by the statement that ACS P2P
->   Request Redirect must be implemented if peer-to-peer is implemented
->   in an MFD. It's not inferred, it's not unambiguous.
-> You are intepreting the first sentence in 6.12.1.2 as indirectly
->   saying that the reqs only apply to an MFD with ACS.  The title of
->   the section is: "ACS Functions in SR-IOV, SIOV, and Multi-Function
->   Devices"  not ACS requirements for ACS-controlled SR-IOV, SIOV, and
->   Multi-Function Devices", in which case, I could agree with the
->   interpretation you gave of that first sentence.
+> ##Boot flow:
+> #step 1: Initial boot: Linux kernel boot from tftp .
+> setenv ipaddr 128.224.165.120
+> setenv gatewayip 128.224.165.1
+> setenv netmask 255.255.255.0
+> setenv serverip 128.224.165.20
 > 
-> I think it's time to reach out to the PCI-SIG, and the authors of
->   this section to dissect these interpretations and get some clarity.
-
-You're welcome to.  I think it's sufficiently clear.
-
-The specification is stating that if a function exposes an ACS extended
-capability and the function supports p2p with other functions, it must
-implement that specific bit in the ACS capability register of the ACS
-extended capability.
-
-Therefore if the function implements an ACS extended capability and
-does not implement this bit in the ACS capability register, we can
-infer that the device does is not capable of p2p with other functions.
-It would violate the spec otherwise.
-
-However, if the function does not implement an ACS extended capability,
-we can infer nothing.
-
-It's logically impossible for the specification to add an optional
-extended capability where the lack of a function implementing the
-extended capability implies some specific behavior.  It's not backwards
-compatible, which is a fundamental requirement of the PCI spec.  Thanks,
-
-Alex
-
+> tftp 0x8a0000000 vlm-boards/29106/kernel
+> tftp 0x8d0000000 vlm-boards/29106/dtb
+> booti 0x8a0000000 - 0x8d0000000
+> 
+> 
+> #step 2: Switch to another kernel on disk using kexec
+> Reproduction steps
+> root@nxp-imx8:~# mkdir /mnt/sdisk
+> root@nxp-imx8:~# mount /dev/mmcblk0p1 /mnt/sdisk/
+> root@nxp-imx8:~# scp ghe-cn@128.224.153.151:/folk/ghe-cn/images/Image /mnt/sdisk/kernel     //the images is the same.
+> 
+> root@nxp-imx8:~# kexec -l /mnt/sdisk/kernel --append="console=ttyLP0,115200 video=HDMI-A-1:1920x1080-32@60 rw root=
+> /dev/nfs nfsroot=128.224.165.20:/export/pxeboot/vlm-boards/29105/rootfs,tcp,v3 ip=128.224.165.120:128.224.165.20:12
+> 8.224.165.1:255.255.255.0::eth0:off selinux=0 enforcing=0"
+> 
+> root@nxp-imx8:~# kexec -e
+> 
+> 
+> #After the second kernel boots, the PCIe link does not come up.
+> #Key log differences
+> 
+> #####  boot (boot_cold.log):
+> imx6q-pcie 5f010000.pcie: host bridge /bus@5f000000/pcie@5f010000 ranges:
+> imx-drm display-subsystem: bound imx-drm-dpu-bliteng.2 (ops dpu_bliteng_ops)
+> imx6q-pcie 5f000000.pcie: host bridge /bus@5f000000/pcie@5f000000 ranges:
+> imx6q-pcie 5f000000.pcie:       IO 0x006ff80000..0x006ff8ffff -> 0x0000000000
+> imx6q-pcie 5f000000.pcie:      MEM 0x0060000000..0x006fefffff -> 0x0060000000
+> imx6q-pcie 5f000000.pcie: iATU: unroll F, 6 ob, 6 ib, align 4K, limit 4G
+> imx6q-pcie 5f000000.pcie: eDMA: unroll F, 1 wr, 1 rd
+> imx6q-pcie 5f000000.pcie: PCIe Gen.1 x1 link up
+> imx6q-pcie 5f000000.pcie: PCIe Gen.1 x1 link up
+> imx6q-pcie 5f000000.pcie: Link up, Gen1
+> imx6q-pcie 5f000000.pcie: PCIe Gen.1 x1 link up
+> imx6q-pcie 5f000000.pcie: PCI host bridge to bus 0000:00
+> 
+> #→ Link up successfully
+> 
+> root@nxp-imx8:~# lspci
+> 00:00.0 PCI bridge: Freescale Semiconductor Inc Device 0000 (rev 01)
+> 01:00.0 Network controller: Intel Corporation Wireless 7260 (rev 6b)
+> root@nxp-imx8:~#
+> 
+> 
+> #####After kexec (boot_kexec.log):
+> 
+> imx6q-pcie 5f000000.pcie:       IO 0x006ff80000..0x006ff8ffff -> 0x0000000000
+> imx6q-pcie 5f000000.pcie: iATU: unroll F, 6 ob, 6 ib, align 4K, limit 4G
+> imx6q-pcie 5f000000.pcie: eDMA: unroll F, 1 wr, 1 rd
+> 
+> imx6q-pcie 5f000000.pcie: Phy link never came up
+> imx6q-pcie 5f000000.pcie: Phy link never came up
+> imx6q-pcie 5f000000.pcie: PCI host bridge to bus 0000:00
+> 
+> #→ Link never comes up, no PCIe devices detected.
+> 
+> root@nxp-imx8:~# lspci
+> 00:00.0 PCI bridge: Freescale Semiconductor Inc Device 0000 (rev 01)
+> root@nxp-imx8:~#
+> 
+> 
+> #Questions
+> Are there existing patches or recommended workarounds for this scenario?
+> Thanks for your time and any guidance you can provide.
+> 
+> Best regards,
+> 
+> Guocai
 
