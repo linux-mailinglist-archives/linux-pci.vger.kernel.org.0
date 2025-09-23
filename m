@@ -1,155 +1,130 @@
-Return-Path: <linux-pci+bounces-36821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DAFB97CC4
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:27:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79DD4B97CF7
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B86BD4C15CA
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:27:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F3892E785F
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC50E30C617;
-	Tue, 23 Sep 2025 23:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B4430F942;
+	Tue, 23 Sep 2025 23:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IleXtZkN"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="k1oUZo7v";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="OianGu9j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED5E28466F;
-	Tue, 23 Sep 2025 23:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04A017A5BE;
+	Tue, 23 Sep 2025 23:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758670034; cv=none; b=YlCmTpk1L8CeOC6yxtulfLaGllSff9H2N4QEJ4NfDE1HVQ5p7hkdC0ybpSR1vaBJDUTYTWgdN25/YZY+H2rqxabI+baA1sA/2D8Wyu90rb0fV+hvi7PS1karxHvb0n15t52dYcgdO4ZkqlbdX5vPwWGf3nIDT5L3/1xmms63g7I=
+	t=1758670958; cv=none; b=q/TcolVzlqa/a8fN6KpotChfSqBw27mMKBJlFdBAL+9RIc0gGZy/t3G4sMr5Gk1t/IAG8hIrZh8yLoCA3H/Bekmk/db98iB1QeDanoz3GvFk4XvwMnUBep+RrsSM9obkrFDsUUDFf5nPW3jSaJCkuC7SGSNCX/qFxlr8uZ0w/0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758670034; c=relaxed/simple;
-	bh=oO7CnjqU+Nx4PqWdiK10pJe8/7xLNQvRZTwRq0LL+CM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AHhwhIIayI/cV5cJuhub6ikSVnUetsURGvyW/ue+GSxBeNrzKw5fj2Ng+BDjHYKU6hWW7ZYTjlRL4+BVKjsZGQBULJX3fnq40RnpnnLApbkq62MNB988917y+vgshRXO0bFHjssoydmVzpWYLmLC2O0S7ORgF20ZWTtEvTrZ0ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IleXtZkN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7FCC4CEF5;
-	Tue, 23 Sep 2025 23:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758670034;
-	bh=oO7CnjqU+Nx4PqWdiK10pJe8/7xLNQvRZTwRq0LL+CM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IleXtZkNbWZ7zFyFJ9/X/oN5lkJonldXHhDVnLIaqqCSrkN6e2NwqB6/HKbSkpeba
-	 HFGxPtUkd5iHkingsfTwDWbvhrg7tn6PsbfBLSg382o+YChZwLu7ADu4vOey9dkz6y
-	 7gqoEpNB6FeIBa91tkMkhEvELDUTrNyAsjIvGjB2Ja6/4BZ5VWs3NElEbmUc2Kolot
-	 pJe5+Dkg9wl2oz3socbnwFLvrIlc74QBZddMV0LQ8VtEOEYt0dbbyTXgYI5wd0FChk
-	 XSJXEstsAmHQepN7XApl32z4maU/AxS6C2XRAo648GwcNm8aEYMQv3fjtIUDuGr0Ur
-	 yyyFO/eDpninQ==
-Date: Tue, 23 Sep 2025 18:27:12 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	Ethan Zhao <etzhao1900@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Subject: Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
-Message-ID: <20250923232712.GA2092207@bhelgaas>
+	s=arc-20240116; t=1758670958; c=relaxed/simple;
+	bh=zQbD8DNnhInHmxj6cJ/kQbwd1SEYY4Ub6EuQKSRTR9w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BjTYwLL77G+asE6pTL8GxvhLlI0gqf4nW/dDndIj+3E767vAR+MvCoWF/0GMn0jJskh0FO7qKAWZQOWV1D60epb0IZ8S9IClAayq8I8eciLiLWQnydA95GNCDMg7dmCt4GeufTU/SCCTKid3kqLA0P91AOwCCEcy7pgFUCtf9qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=k1oUZo7v; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=OianGu9j; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4cWc391br4z9smg;
+	Wed, 24 Sep 2025 01:42:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758670949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v0tO2Xj2ANtxwUz+K9Ts0AqWNrmWxz9Ns88vd8fr+ts=;
+	b=k1oUZo7vwaAYqHE2CEIx3dVHc4tk0T6oYNWU7yIYgdQz1zpAVwpck/PuRylQiamWRSEPd2
+	xxmRf/QU/tFBANWR2qOCEw66GKIuKbimsi04I+pgbh2BhmjCua+wsIe7etD4owl5keueJE
+	Rk2ZtTW0UinZ+3itlURW9GtKO3WBFAOaXekl9tJaT1YBM+izDu8hIYkrkIXsbUaCoU8X/4
+	3ySpkGBiM59Nlg7fw3B8elyHPMkRTYTps6bvFjvRVRAcGS7Pbx0LZ9CM4JTJ1OVQu6FJCo
+	3RygT9bAaneSr7UR6xPEAZ4epgaUysD7QrYa6x6c73wvIpAAvfr9sFaOAmt/IQ==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=OianGu9j;
+	spf=pass (outgoing_mbo_mout: domain of marek.vasut@mailbox.org designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=marek.vasut@mailbox.org
+Message-ID: <c1da4b74-0fd0-437a-88da-c31c681b6c5d@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758670947;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v0tO2Xj2ANtxwUz+K9Ts0AqWNrmWxz9Ns88vd8fr+ts=;
+	b=OianGu9jHaLhKjjXNf1fTjhbivWz7aNm/Y6mKQBB/7V3CswSDOAHWxrzpEkU2h0Id//Sk7
+	17t6eboiPbGpQ2yfwf01wy0E9/gLD4qmg4lV1pqFrV+bP3LshOWUKbT7E53GYPVUdCPBIp
+	U01Mau4bxeKZIQOd2S5+QoeuukRsTu60F6vNKQV64vlt0lZ9vtPWN/j8hF2W8OumyyCFwf
+	yrIF9TV3r06qpbo9wqGsRtdIgX7vbMRIxRw/JcmL1jbDcZiiiiTi+BbZ6c+Ace6cq9RYum
+	Fom7IQPEq6J1rrLWzVhgqHjFWL8VtJgEb1pVncP/Hrarhn/b5zcq0fnIsKu6cg==
+Date: Wed, 24 Sep 2025 01:42:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aNMoMY17CTR2_jQz@google.com>
+Subject: Re: [PATCH] PCI: rcar-host: Add static assertion to check
+ !PCI_LOCKLESS_CONFIG
+From: Marek Vasut <marek.vasut@mailbox.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam
+ <mani@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>,
+ Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250922153352.99197-1-marek.vasut+renesas@mailbox.org>
+ <CAMuHMdUG_y-gb6kGd+Bgo5AQvqv009RYwVjwN5dDC0WFOuyPcg@mail.gmail.com>
+ <974b6f7f-e769-48ff-9bd9-0ed0c8f48b1e@mailbox.org>
+Content-Language: en-US
+In-Reply-To: <974b6f7f-e769-48ff-9bd9-0ed0c8f48b1e@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: ffada4ad991afe6718a
+X-MBO-RS-META: nwjtf1iw9sxucig7h1wrcutk8mbxmfut
+X-Rspamd-Queue-Id: 4cWc391br4z9smg
 
-On Tue, Sep 23, 2025 at 04:07:29PM -0700, Brian Norris wrote:
-> On Tue, Sep 23, 2025 at 02:02:31PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Aug 20, 2025 at 10:26:08AM -0700, Brian Norris wrote:
-> > > From: Brian Norris <briannorris@google.com>
-> > > 
-> > > max_link_speed, max_link_width, current_link_speed, current_link_width,
-> > > secondary_bus_number, and subordinate_bus_number all access config
-> > > registers, but they don't check the runtime PM state. If the device is
-> > > in D3cold, we may see -EINVAL or even bogus values.
-> > > 
-> > > Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
-> > > rest of the similar sysfs attributes.
-> > 
-> > Protecting the config reads seems right to me.
-> > 
-> > If the device is in D3cold, a config read will result in a Completion
-> > Timeout.  On most x86 platforms that's "fine" and merely results in ~0
-> > data.  But that's merely convention, not a PCIe spec requirement.
-> > 
-> > I think it's a potential issue with PCIe controllers used on arm64 and
-> > might result in an SError or synchronous abort from which we don't
-> > recover well.  I'd love to hear actual experience about how reading
-> > "current_link_speed" works on a device in D3cold in an arm64 system.
-> 
-> I'm working on a few such arm64 systems :) (pcie-qcom Chromebooks, and
-> non-upstream DWC-based Pixel phones; I have a little more knowledge of
-> the latter.) The answers may vary by SoC, and especially by PCIe
-> implementation. ARM SoCs are notoriously ... diverse.
-> 
-> To my knowledge, it can be several of the above on arm64 + DWC.
-> 
-> * pci_generic_config_read() -> pci_ops::map_bus() may return NULL, in
->   which case we get PCIBIOS_DEVICE_NOT_FOUND / -EINVAL. And specifically
->   on arm64 with DWC PCIe, dw_pcie_other_conf_map_bus() may see the link
->   down on a suspended bridge and return NULL.
-> 
-> * The map_bus() check is admittedly racy, so we might still *actually*
->   hit the hardware, at which point this gets even more
->   implementation-defined:
-> 
->   (a) if the PCIe HW is not powered (for example, if we put the link to
->       L3 and fully powered off the controller to save power), we might
->       not even get a completion timeout, and it depends on how the
->       SoC is wired up. But I believe this tends to be SError, and a
->       crash.
-> 
->   (b) if the PCIe HW is powered but something else is down (e.g., link
->       in L2, device in D3cold, etc.), we'll get a Completion Timeout,
->       and a ~0 response. I also was under the impression a ~0 response
->       is not spec-mandated, but I believe it's noted in the Synopsys
->       documentation.
+On 9/22/25 5:48 PM, Marek Vasut wrote:
 
-The ~0 response is not required by the PCIe spec, although there's at
-least one implementation note to the effect that a Root Complex
-intended for use with software that depends on ~0 data when a config
-request fails with Unsupported Request must synthesize that value
-(this one is from PCIe r7.0, sec 2.3.2).
+Hello Geert,
 
-> NB: I'm not sure there is really great upstream support for arm64 +
-> D3cold yet. If they're not using ACPI (as few arm64 systems do), they
-> probably don't have the appropriate platform_pci_* hooks to really
-> manage it properly. There have been some prior attempts at adding
-> non-x86/ACPI hooks for this, although for different reasons:
-> 
->     https://lore.kernel.org/linux-pci/a38e76d6f3a90d7c968c32cee97604f3c41cbccf.camel@mediatek.com/
->     [PATCH] PCI:PM: Support platforms that do not implement ACPI
-> 
-> That submission stalled because it didn't really have the whole picture
-> (in that case, the wwan/modem driver in question).
-> 
-> > As Ethan and Andrey pointed out, we could skip max_link_speed_show()
-> > because pcie_get_speed_cap() already uses a cached value and doesn't
-> > do a config access.
-> 
-> Ack, I'll drop that part of the change.
-> 
-> > max_link_width_show() is similar and also comes from PCI_EXP_LNKCAP
-> > but is not currently cached, so I think we do need that one.  Worth a
-> > comment to explain the non-obvious difference.
-> 
-> Sure, I'll add a comment for max_link_width.
-> 
-> > PCI_EXP_LNKCAP is ostensibly read-only and could conceivably be
-> > cached, but the ASPM exit latencies can change based on the Common
-> > Clock Configuration.
-> 
-> I'll plan not to add additional caching, unless excess wakeups becomes a
-> problem.
+>>> +/*
+>>> + * This driver can not function correctly without PCIe subsystem level
+>>> + * config space access serialization. In case PCI_LOCKLESS_CONFIG is
+>>> + * ever enabled on ARM, complain loudly so the driver can be updated
+>>> + * accordingly.
+>>> + */
+>>> +static_assert(!IS_ENABLED(CONFIG_PCI_LOCKLESS_CONFIG));
+>>> +
+>>>   struct rcar_msi {
+>>>          DECLARE_BITMAP(used, INT_PCI_MSI_NR);
+>>>          struct irq_domain *domain;
+>>
+>> This causes a build failure when compile-testing, e.g. x86 allmodconfig.
+>> Using "depends on !PCI_LOCKLESS_CONFIG" instead would avoid that,
+>> but indeed has the disadvantage that it wouldn't complain loudly when
+>> PCI_LOCKLESS_CONFIG would ever be enabled on ARM64...
+> All right, let's also wait for input from PCI maintainers. It seems both 
+> alternatives -- static_assert() and !PCI_LOCKLESS_CONFIG have their own 
+> disadvantages, maybe there is a third option.
 
-Perfect, thanks, I'll watch for this.
+Maybe we can try with both.
 
-Bjorn
+-- 
+Best regards,
+Marek Vasut
 
