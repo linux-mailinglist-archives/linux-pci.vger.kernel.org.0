@@ -1,313 +1,196 @@
-Return-Path: <linux-pci+bounces-36746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E71F9B94DBB
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 09:52:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85C4AB94ECC
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 10:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA33D1903219
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 07:52:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CDCD1659E9
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 08:10:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E0F3168EC;
-	Tue, 23 Sep 2025 07:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BA4318152;
+	Tue, 23 Sep 2025 08:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ICcjIrK9"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FJCjAhIf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013044.outbound.protection.outlook.com [40.93.196.44])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EA93164B7
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 07:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758613935; cv=fail; b=aLGkMOXc3eNjDFyp5m7lievIHWeEteS6+D324nV43UmfnLDbgqq2jedpQHq6Q9GX9XWNBbs+4PETA4nSTVHbK35xO2Wil7AsGAOordMYfms0wfmKfBMkUapKiLypqpTW/20ImEmZNddbt41dGHyimc9iQSs79/k2wz0MYG3ZS+s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758613935; c=relaxed/simple;
-	bh=Jwc2FGLokhFrEVsnTuhPQs88V55MrFFr7S1KZKZ6TOk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FOMp7iJyW4g5sYQOI/gV1eh7HqFVQYsL02+7nr/hnoC7BLiRc8+CIXUYvCC476BAS7nUXKyQG3ZnD1A9Xdqt5gaEtOWFULTvaln91o/vkj+ysqAgrpd5kcmix7H3UGFk+iUJ50VHf748svpY2MxEX6XWI/Ray7HZvQks+CkzWpQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ICcjIrK9; arc=fail smtp.client-ip=40.93.196.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wCRi+KdrTg/th8d2VzAv+kfYGlEgNM1zjJdpWhUxZhdESerkro2m8P2RtpV97fPRlltL9Ns4h6eLLH6kriYqNdNBgqIeF2sBZsa/vex5KvIk31jnJiE/QhAyApQwzD/yPEo3/dxyK+o6haxnRt4CiEwfZwgF+MamFLedqIjGNCkKYP5eoAeoa/J8U7EuFzAUD+sbF3ovRfYV4gt2u025TJJRDGWjAl5lGJpSx41za/quLPxmIrQba6mWUVJ2vvLeKUyP2MdU5/f5GX/M9IYZCdNydHAM95rQaVQRh2F8JbZ7idwFxZSmaWWTIEZGlt0zY6MbN3YJMhoZJAqEc573wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wBPeAnQwkgzS51gyA7o+2XNojjJDlGWLuFQRFkMBe1M=;
- b=BL4p2In/8wRQq8D0/pu/22ECZRPtK6NkNYD0BTtB5Edp+6s2N2xve/LEfhOh/2jFMaxiQ1oVdL3iEZ2rnVG7g4JUKJgDxn/hRZDllaupJkyK2Zk2Z6UgwO3knc5UMPzHd89DjE+rRnKYnYTm7Rdgp9I02FNXVHB/BDul0Sz4wroDorfeCpZle9svln1bvL6iznieBpAdCf2LKgHgjuWl2b0jCOSCgx52iQXt4nrIBjsba/JvdXOzD8bBarkwecotfRxukNk4Q9X5RvcQTOHLKSRdvSZL7OaIhzT9NM0lS8+CAc76jOZ/5LY78fbj31wgE7AOEKh+olbchVQHvsssBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wBPeAnQwkgzS51gyA7o+2XNojjJDlGWLuFQRFkMBe1M=;
- b=ICcjIrK9ccH5HCHDl9p1erVBps05pAd/8ldktbK+DqFfsXKwgviJ4xQiK1zzD0xUbDps3tmN1tFvduS0XEFGlVQOVtPP37zuJeA8XQLCiafJWxdejPqBOScbrPQQqkt1NMU4AW2yKJnZqLmDvAXIkaIC5VoNOTJVqkVRRibM+f8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH1PR12MB9598.namprd12.prod.outlook.com (2603:10b6:610:2ae::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Tue, 23 Sep
- 2025 07:52:09 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
- 07:52:08 +0000
-Message-ID: <80d2d0d1-db44-4f0a-8481-c81058d47196@amd.com>
-Date: Tue, 23 Sep 2025 09:52:04 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-To: Matthew Brost <matthew.brost@intel.com>,
- "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Simona Vetter <simona.vetter@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-References: <20250916175709.GA1324871@nvidia.com>
- <IA0PR11MB7185186F6AB160AA7F8F0FF3F816A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250918120431.GL1391379@nvidia.com>
- <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
- <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0312.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f6::19) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F3A31815E;
+	Tue, 23 Sep 2025 08:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758615009; cv=none; b=IydRj0fp9X5VCdtH4azWqp6xjybCkMZJlCEkNt7fqRKr7T+hv13efRwcN55d7NoymwoY2nGfuSf3dYITmWxId3o0HSlY916AA3QbSN3zCsDsgL/60+kYIPyNAOhvxRPILSEuu2O1a9SIwTf7z5eBLGhF+U4ia+8uOkQ7dd5FVf0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758615009; c=relaxed/simple;
+	bh=GK6W2o2yxoO4wKeHSfnhUxQ3k4NiNOnEOep+Li3hwfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JCi3x9TdsXWAfVWtzaWZYLWG9soJX30RS9fQMQ5eLEWuvj1QXfjvlMar7QsWpJbw6U6kbdesww/r/WKhKhJ7lRpQdHDCJp5w3QyD5B2Xg9iiOSFRckknFlwZ+FaqMJs667XI/6SnSYcl/IioK2/qocbHl9MYW5TKk0sKxrOL6AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FJCjAhIf; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1758614997; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=kgV6N3k9/Wc8oyqFWj6fu9j0StoO2o5pi55D5FleEKo=;
+	b=FJCjAhIfcQv786hJJ5GzRUglpGucqmdS1N85jhjQrn+AL4ztiZVRXtTORKMmvZ/rYzII+TeS/CLja3MbcHFCyImHAr7DfF3lCcTJG+LkYHJsCP0EqkMFzImG57gAJfaheKLqJp89LOJ0n8lVHU6P/Ni9iPhXkSMI0VmmGZNqMrc=
+Received: from 30.246.179.19(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WoeFI1T_1758614994 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Sep 2025 16:09:55 +0800
+Message-ID: <8706188e-23b2-4cb1-b279-3b462ba9b9de@linux.alibaba.com>
+Date: Tue, 23 Sep 2025 16:09:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH1PR12MB9598:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3e12350-4d93-4d29-1d4c-08ddfa7618d9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MFd4bG5WamhjWEh0ZVdFa0FkUzdnbXFqRTd4RTRPeGNmMmdqUlNKeE5wMThJ?=
- =?utf-8?B?SGhGU3RaZE05cDhISXZ4WEdvSFVvNnB2WUdNcnFxaElySzRSZmZVQ01sNWxn?=
- =?utf-8?B?TytzckNZb04zUTA4bVRSMEU3OExWRUxoWjY5Y1dFMlBGV2NleitYYXRjelRx?=
- =?utf-8?B?TXFVTTFKZUNMTXVpYk1qZTFFbjBhQVJ3Rm5WaXVpcDFraWxBbTN0cXZ3NGY2?=
- =?utf-8?B?NFd4SkhDbmhROXByTXY2dlNPMU1vWFVRWktSdEIweUVBaG9iME9nSjYzM2Nz?=
- =?utf-8?B?TDY3d2FEcTZ0c0VaVXN5NDRLdlh5L0h3cVRwWS9SbWJGSlQwN2lscTFyR2pC?=
- =?utf-8?B?VDFXZzZFUVZWWCthQnQrMTZSUFRRVTlORWc0ZFpHUi9XQXBqOFZRNWZGRFpB?=
- =?utf-8?B?NVlFV1BkbEd5YzhkRE9sVGRiVFlRUndSTXRYZURNYmRHVVFHREFOLzRnSVpN?=
- =?utf-8?B?Ump4aU96R3FyUDYybmVDdTZRUjJ4SzQ0M0E5Z2hzQStMUzdzdFU0VWdtU29a?=
- =?utf-8?B?TkRtTi92dm5iNm1uYUpjMGdaRWtxNTkxMUMxeFVnRjRKdXBLK1JYb3huV0tl?=
- =?utf-8?B?SVhnY09qNDFnTU0xeXVLMi9Hb2ZaU1d1em5XWVMwdytpT2Q0TmN1Q0RSaG5j?=
- =?utf-8?B?THo4a1JPdkxPSDVab1g0N1AvTWxMODRRenVLbVVTNHNrclFMd2Z0SUNGVjkx?=
- =?utf-8?B?K01WbVByYlYrV3ZNQ0p1REVyZTFGQm0wOXkvcXVKZ2djQXhKUTIydFMrSHJs?=
- =?utf-8?B?U1pFSTJKdUVhZmhreTFOQVF3MmxkaHlocXdnUHlnN1BsR2ovUEx6QlRBMzdt?=
- =?utf-8?B?emFCcFQ2aFhDcFJNeFFKeVJ0VTBpU2FrYzRuSTdrZ3J4Q0Evc1dwMWVKcUND?=
- =?utf-8?B?d21sYkRzb0NERWtYeEVadytTSmxtVGdpMkczdUs2YllqeU9XN2hLWTlOQ0Ur?=
- =?utf-8?B?azIzZEREMUtta2YrWVVESStsZWdWeUx3RVZETjh5RGQyZ3FybTc3eUZsT1Yx?=
- =?utf-8?B?ZnpROXVNNlMydTNjclJCVVl0YXhRSVVVazUzWG8yc1Y3TUdMcXRka0ZMMFQz?=
- =?utf-8?B?eFdUSjZPdGlOSTZUUUN4VHB0S0hYaUVnRW55Z0hTZkovMVpFTTZMU0JnYVpn?=
- =?utf-8?B?RFJrb2luSmxVZjl3R3l5UFN0bmNQZDduUGRrbzVHbFJVc054Vkczd3YyL05H?=
- =?utf-8?B?OUd6c0J2ZVVaaVJKeFZzS25JczFQRmljK3FyZTdwMWdja28zUEM0V2tVeGtu?=
- =?utf-8?B?R0o3c0U3MjFpWnloMWV5Q09KU092bXJ2K2J0c0p0Ymo1aEd4U01NMTVMelpy?=
- =?utf-8?B?WlNPZ2kyT2dibGRvUS91SlhDcThhOHMzQjc3TDU4SXNWd3VnWnQxQXVOaFVy?=
- =?utf-8?B?QXVjcUdpZXlPR3ljcmZyTUJQc2QrOXdxSFNkTDdmSzRxcXRVNEFZNlJDMmVn?=
- =?utf-8?B?WEx3aWJsQUNUSTMva3BkOUhpak1nYXpYOWZYNkQwbUtqWXcvdDJDS09pdU1I?=
- =?utf-8?B?cDcxYVN6L015eW04THF0RFpDTGN6bDBnUjA3eHpLU1o5UG8zUUoyRDF1L2pE?=
- =?utf-8?B?a3ZNcW9mMDh3SXI0QzlzV3V2VTlGUGtFMDFGSkI3UjhMRUk1Q1JWRVdkYk9F?=
- =?utf-8?B?ODBUd2pqOVZLTUFZZnR1cnBLUjV1TUZpd3laNFhTSDRweE1rbldYSEluc2NF?=
- =?utf-8?B?a1YrUUJoL3J3dzEwVzRJR3dVbFROVERHOGo1UFRYZi9XaDN2WkEzUGlqVjZG?=
- =?utf-8?B?Tk1BWkdHQlhwODVGMmxIbzg5ZWxaeVlJa1JvTFdaVUV1R3JvQ1BuYSs3VW9G?=
- =?utf-8?B?SHdqVmNRaFpyQ09jK1krdVBvcDJZQlVUc0Nta2lHakdNTTVFQVFWK05TWXlF?=
- =?utf-8?B?UkFwOGRzcy9TZEQ0U2hrclBxZlZTRE5ZL2Q5ZjVseFRQUkRGK29uczVXaVkx?=
- =?utf-8?Q?t4jk9DSz8zs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?enJhSkN5dWxxMHJ0MnVjZ3JPWjM2MVF2MXZoU2xvT3RxKzQ1TzZialpjRkF0?=
- =?utf-8?B?RnJxN2gyMmJMVGEwalZzdmZNSFNPYW5Wd3R5alU5K0V3T0wxVTdXUXVKWVdI?=
- =?utf-8?B?a1FYUTU1L2hKbDRiSXJ3ZVpPdmtxUjVqcjRMVkZRbGFab1hqV0NPYlgveDdN?=
- =?utf-8?B?c1h3ZUhEQWpXSExOaUR1WXdwQ2tKVGg0SStaWlVzY2haVHlKc0VBZnJDQ0tZ?=
- =?utf-8?B?YnNLWVR6MkJLODl1RGJWWXZQRDhaWUhLeVlWdzJ4TlgyMUxVN0tvaGtQSFNJ?=
- =?utf-8?B?azM3OERvYXdwQlI3dmVTNnVHdXFuOWlwM3puNlBrNldINkc3SEcvdDRNY1dD?=
- =?utf-8?B?TGVHbW1mOWVjQUJRc3RiSWY1dDNVd1E5elBDUU5tZDZ6TlVvV0ZSREVDZlEy?=
- =?utf-8?B?ODNsQnNTSWxtNGovWmJzWUJLblp0OHFwclFTL2h5UkJ0VW92dlNDb0VYOWtP?=
- =?utf-8?B?WWRnUXlqekc0QTlzUXlEeWlEcFRrRFFyNXdCVklXNS9Ka0tmRTNDdVRnY1Rt?=
- =?utf-8?B?MkpwcmJRenVzT0NoMHFZUlFNQ0VJTE1ZOWd2L2psWXRpZVNRWTQ1MURZeW5n?=
- =?utf-8?B?ZU43Y08wbXdXTVpRKy9ZQXhmTlhGTTJxK2xaUmRKOVZ6VVF2UXlHN3ltR0t1?=
- =?utf-8?B?SmhSTUpWeVRUWTNISjBmelQ3QjlKRUNjQUs1YUE4VG82VnArVDhTVGNpajZT?=
- =?utf-8?B?YjRMdnF5LzJiSmRTQlBmblk0cG00SzZ6UHhiM244bjRIZUFLTUZ6dmMzM212?=
- =?utf-8?B?Z3BYbDNPM0Nnc01XUTYzUGlzUFBJbVR0Y1JDNjdlU3NLZXVHS09SZWg4cEV2?=
- =?utf-8?B?STNSb0tlNjNldzBkNmY2UTJpbkwwSXpNUTdiSXRZZkl1YzVvOEQyT3hCL3lD?=
- =?utf-8?B?eUljanlWM0Nxc003NWtZU0VESDFkeDRDV3Q4U2FVLzVSYmhSaGNQL3RtK25V?=
- =?utf-8?B?OEhDZ3B1UnpLc09zTkNUVFRuS1E2azBkMkNxbGs5Z3hlK25RZkF3cXdkblRZ?=
- =?utf-8?B?M3N2dEZWeWxIRkIwMkFYcFNzSE9mdWc4MDZxQVlQYVJWRFphYzJ3N2NwZng1?=
- =?utf-8?B?SjlxOEcxODJzWDU1TkhQS2lzUjBaN0l0K29icVJBVTMySXBUSjdOTGZsZVZC?=
- =?utf-8?B?STVNdzdmeHdUN1d3UUtGUnF2dWozcERzQWdCOFVRZGttK0wvSnpaOUxsZnNH?=
- =?utf-8?B?RE8ydjliVWhiWlcrTHpFYWpnNGJiRWVRcVlTWEVSZDVzZ0xCY2Q1OGVLNmdI?=
- =?utf-8?B?TTBJa3c1U21yY2JFU1pvQzNOWHFkUEdGT3hmaE5tOE45SDhWWUZJdWxadHVr?=
- =?utf-8?B?cWx0Wm9ZeXZJVGFDOVhsdlRIWnVocTVmR0FFK056SkZxMndsQmgvdW9JSnNT?=
- =?utf-8?B?OEQrQUxpcEhvSDFyMThsTnVDQ0JPQmp0dThocWxSV2dQVEVIVWpWQ2ZXdTgy?=
- =?utf-8?B?VDdUUitwZ2hFb0JOTXlmTXNXTWFRN3hFa0VQQkJUMXlsVkFlUWVrYlluR2Rr?=
- =?utf-8?B?SWFqY0Rxa1ZsUFRmZHJaa0tNTUZnS3VRajJ1OHVYNms2RUp6aFJxZTBZaHQz?=
- =?utf-8?B?TzhJSnlEVXQxdm5HMmtRVnp6S2k5UTNZbTNvNzl0RExCN1VvQU1QdVVXaFdj?=
- =?utf-8?B?R0FRUkgxYlhNV25nQXlmaXFvYlRMZ0hYSlExeDBPN2ZsLy9janV6eFJkM1U1?=
- =?utf-8?B?ek5hL0JGZGJhNlRDRW5uckFiN3F3VHFmN05Dam1LNVM0TDNoczNOaHdxOS9v?=
- =?utf-8?B?ODhNN1NpdnRmenptQ0hEMkprWVRnQUowd2dmRnc2bGJDcDVFOTdCeVNEZVk4?=
- =?utf-8?B?YmRoVWFoaXV0MzZRcDdPWlVIVVZkQktPb2l6WXV5Qi9ManhncG5wTmJVaGF3?=
- =?utf-8?B?WE9VYWZHZnZUM3pNSndPK0JaQmNaSUZ2U0VZc2ozNkROcDdKRVA4MWZBWFZr?=
- =?utf-8?B?UWNHZ1Nrd2VxTUFDZ1l1dzc5ZUk3ZGx5QXI1L3d3VlpqczdRVGZmaTBvNVY2?=
- =?utf-8?B?bDE2VUtMMVVZMUg3bDltU0c2bXBoR2lKUjVYNWJzeFVBNFUrQ1F1KzVkYmpS?=
- =?utf-8?B?ZEE0VWZhUC9yWVp0TDFRUk04QVNmTFVkcHdGSmI3NHF4bDJPOEZvcHFXWVBx?=
- =?utf-8?Q?wYVI4/65DFTV3aP0ai91GpzBG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e12350-4d93-4d29-1d4c-08ddfa7618d9
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 07:52:08.7932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y9lOnPW3j/XIG3sgYSXM4nITz17jiog2wWl9NwotOntm1afdhicztcTT83n/5/mj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9598
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 1/3] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, mattc@purestorage.com, Jonathan.Cameron@huawei.com,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250920060117.866-1-xueshuai@linux.alibaba.com>
+ <20250920060117.866-2-xueshuai@linux.alibaba.com>
+ <6bab311a-d5ba-133c-fddd-52899959445c@linux.intel.com>
+ <12c84bff-6863-4730-b08a-631df904aa12@linux.alibaba.com>
+ <fe2abb10-3847-af1c-12c2-193c32befe0c@linux.intel.com>
+ <fb87ff46-ebcf-450d-bfd5-b1ef52cda4be@linux.alibaba.com>
+ <acfde737-23b3-7b0a-65c6-01082a71e5e8@linux.intel.com>
+ <453b792a-23f9-6d72-f35a-60526b3e04e0@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <453b792a-23f9-6d72-f35a-60526b3e04e0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi guys,
 
-trying to not let the mail thread branch to much, I'm just replying on the newest mail.
 
-Please let me know if I missed some question.
-
-On 23.09.25 08:44, Matthew Brost wrote:
-> On Mon, Sep 22, 2025 at 11:25:47PM -0700, Matthew Brost wrote:
->> On Mon, Sep 22, 2025 at 11:53:06PM -0600, Kasireddy, Vivek wrote:
->>> Hi Jason,
+在 2025/9/23 15:34, Ilpo Järvinen 写道:
+> On Tue, 23 Sep 2025, Ilpo Järvinen wrote:
+> 
+>> On Tue, 23 Sep 2025, Shuai Xue wrote:
+>>
 >>>
->>>> Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
->>>> functions of Intel GPUs
+>>>
+>>> 在 2025/9/23 14:46, Ilpo Järvinen 写道:
+>>>> On Tue, 23 Sep 2025, Shuai Xue wrote:
 >>>>
->>>> On Mon, Sep 22, 2025 at 01:22:49PM +0200, Christian König wrote:
->>>>
->>>>> Well what exactly is happening here? You have a PF assigned to the
->>>>> host and a VF passed through to a guest, correct?
 >>>>>
->>>>> And now the PF (from the host side) wants to access a BAR of the VF?
+>>>>>
+>>>>> 在 2025/9/22 21:10, Ilpo Järvinen 写道:
+>>>>>> On Sat, 20 Sep 2025, Shuai Xue wrote:
+>>>>>>
+>>>>>>> Hotplug events are critical indicators for analyzing hardware health,
+>>>>>>> and surprise link downs can significantly impact system performance
+>>>>>>> and
+>>>>>>> reliability.
+>>>>>>>
+>>>>>>> Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+>>>>>>> for hotplug event to help health checks. Add enum pci_hotplug_event in
+>>>>>>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>>>>>>> tracepoint event handlers for it.
+>>>>>>>
+>>>>>>> The following output is generated when a device is hotplugged:
+>>>>>>>
+>>>>>>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>>>>>>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>>>>>>       irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event:
+>>>>>>> 0000:00:02.0 slot:10, event:CARD_PRESENT
+>>>>>>>
+>>>>>>>       irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event:
+>>>>>>> 0000:00:02.0 slot:10, event:LINK_UP
+>>>>>>>
+>>>>>>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>>>>>>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>>>>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>>>>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>>>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>>>> ---
+>>>>>>>     drivers/pci/Makefile              |  2 +
+>>>>>>>     drivers/pci/hotplug/Makefile      |  3 +-
+>>>>>>>     drivers/pci/hotplug/pciehp_ctrl.c | 31 ++++++++++++---
+>>>>>>>     drivers/pci/trace.c               | 11 ++++++
+>>>>>>>     include/trace/events/pci.h        | 63
+>>>>>>> +++++++++++++++++++++++++++++++
+>>>>>>>     include/uapi/linux/pci.h          |  7 ++++
+>>>>>>>     6 files changed, 110 insertions(+), 7 deletions(-)
+>>>>>>>     create mode 100644 drivers/pci/trace.c
+>>>>>>>     create mode 100644 include/trace/events/pci.h
+>>>>>>>
+>>>>>>> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+>>>>>>> index 67647f1880fb..bf389bc4dd3c 100644
+>>>>>>> --- a/drivers/pci/Makefile
+>>>>>>> +++ b/drivers/pci/Makefile
+>>>>>>> @@ -45,3 +45,5 @@ obj-y				+= controller/
+>>>>>>>     obj-y				+= switch/
+>>>>>>>       subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+>>>>>>> +
+>>>>>>> +CFLAGS_trace.o := -I$(src)
+>>>>>>> diff --git a/drivers/pci/hotplug/Makefile
+>>>>>>> b/drivers/pci/hotplug/Makefile
+>>>>>>> index 40aaf31fe338..d41f7050b072 100644
+>>>>>>> --- a/drivers/pci/hotplug/Makefile
+>>>>>>> +++ b/drivers/pci/hotplug/Makefile
+>>>>>>> @@ -65,7 +65,8 @@ rpadlpar_io-objs	:=	rpadlpar_core.o \
+>>>>>>>     pciehp-objs		:=	pciehp_core.o	\
+>>>>>>>     				pciehp_ctrl.o	\
+>>>>>>>     				pciehp_pci.o	\
+>>>>>>> -				pciehp_hpc.o
+>>>>>>> +				pciehp_hpc.o	\
+>>>>>>> +				../trace.o
+>>>>>>
+>>>>>> To make it useful for any PCI tracing, not juse hotplug, this object
+>>>>>> file
+>>>>>> should be added in drivers/pci/Makefile, not here.
+>>>>>
+>>>>> Make sence. How about adding to the main CONFIG_PCI object:
+>>>>>
+>>>>> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+>>>>> index bf389bc4dd3c..d7f83d06351d 100644
+>>>>> --- a/drivers/pci/Makefile
+>>>>> +++ b/drivers/pci/Makefile
+>>>>> @@ -5,7 +5,7 @@
+>>>>>    obj-$(CONFIG_PCI)              += access.o bus.o probe.o host-bridge.o \
+>>>>>                                      remove.o pci.o pci-driver.o search.o \
+>>>>>                                      rom.o setup-res.o irq.o vpd.o \
+>>>>> -                                  setup-bus.o vc.o mmap.o devres.o
+>>>>> +                                  setup-bus.o vc.o mmap.o devres.o
+>>>>> trace.o
+>>>>>
+>>>>>    obj-$(CONFIG_PCI)              += msi/
+>>>>>    obj-$(CONFIG_PCI)              += pcie/
 >>>>
->>>> Not quite.
+>>>> Yes, that's the right place to add it.
 >>>>
->>>> It is a GPU so it has a pool of VRAM. The PF can access all VRAM and
->>>> the VF can access some VRAM.
->>>>
->>>> They want to get a DMABUF handle for a bit of the VF's reachable VRAM
->>>> that the PF can import and use through it's own funciton.
->>>>
->>>> The use of the VF's BAR in this series is an ugly hack.
->>> IIUC, it is a common practice among GPU drivers including Xe and Amdgpu
->>> to never expose VRAM Addresses and instead have BAR addresses as DMA
->>> addresses when exporting dmabufs to other devices. Here is the relevant code
->>> snippet in Xe:
-
-That sounds a bit mixed up. There are two different concepts which can be used here:
-
-1. Driver exposing DMA addresses to PCIe BARs.
-
-For example this is done by amdgpu and XE to give other drivers access to MMIO registers as well as VRAM when it isn't backed by struct pages.
-
-2. Drivers short cutting internally access paths.
-
-This is used in amdgpu and a lot of other drivers when it finds that an DMA-buf was exported by itself.
-
-For example the ISP driver part of amdgpu provides the V4L2 interface and when we interchange a DMA-buf with it we recognize that it is actually the same device we work with.
-
-Currently the implementation is based on approach #1, but as far as I can see what's actually needed is approach #2.
-
->> I've read through this thread—Jason, correct me if I'm wrong—but I
->> believe what you're suggesting is that instead of using PCIe P2P
->> (dma_map_resource) to communicate the VF's VRAM offset to the PF, we
->> should teach dma-buf to natively understand a VF's VRAM offset. I don't
->> think this is currently built into dma-buf, but it probably should be,
->> as it could benefit other use cases as well (e.g., UALink, NVLink,
->> etc.).
->>
->> In both examples above, the PCIe P2P fabric is used for communication,
->> whereas in the VF→PF case, it's only using the PCIe P2P address to
->> extract the VF's VRAM offset, rather than serving as a communication
->> path. I believe that's Jason's objection. Again, Jason, correct me if
->> I'm misunderstanding here.
->>
->> Assuming I'm understanding Jason's comments correctly, I tend to agree
->> with him.
-
-Yeah, agree that here is just an extremely ugly hack.
-
->>>> The PF never actually uses the VF BAR
->>> That's because the PF can't use it directly, most likely due to hardware limitations.
 >>>
->>>> it just hackily converts the dma_addr_t back
->>>> to CPU physical and figures out where it is in the VRAM pool and then
->>>> uses a PF centric address for it.
->>>>
->>>> All they want is either the actual VRAM address or the CPU physical.
->>> The problem here is that the CPU physical (aka BAR Address) is only
->>> usable by the CPU. Since the GPU PF only understands VRAM addresses,
->>> the current exporter (vfio-pci) or any VF/VFIO variant driver cannot provide
->>> the VRAM addresses that the GPU PF can use directly because they do not
->>> have access to the provisioning data.
->>>
+>>> Thanks for confirm.
+>>> Will send a new version to fix it.
 >>
->> Right, we need to provide the offset within the VRAM provisioning, which
->> the PF can resolve to a physical address based on the provisioning data.
->> The series already does this—the problem is how the VF provides
->> this offset. It shouldn't be a P2P address, but rather a native
->> dma-buf-provided offset that everyone involved in the attachment
->> understands.
+>> I actually now started to wonder if it should be made depend on some
+>> tracing related config (sending this out quickly if you were just
+>> waiting for my confirmation to send quickly... I'm still investigating
+>> what other subsystems do).
+> 
+> Probably this is what we actually want:
+> 
+> obj-$(CONFIG_TRACING)			+= trace.o
+> 
 
-What you can do is to either export the DMA-buf from the driver who feels responsible for the PF directly (that's what we do in amdgpu because the VRAM is actually not fully accessible through the BAR).
 
-Or you could extend the VFIO driver with a private interface for the PF to exposing the offsets into the BAR instead of the DMA addresses.
+Thanks for the input, lots of trace.o, e.g. for cxl and nvme, are compiled
+under CONFIG_TRACING.
 
->>  
->>> However, it is possible that if vfio-pci or a VF/VFIO variant driver had access
->>> to the VF's provisioning data, then it might be able to create a dmabuf with
->>> VRAM addresses that the PF can use directly. But I am not sure if exposing
->>> provisioning data to VFIO drivers is ok from a security standpoint or not.
->>>
+Will use CONFIG_TRACING :)
 
-How are those offsets into the BAR communicated from the guest to the host in the first place?
-
->> I'd prefer to leave the provisioning data to the PF if possible. I
->> haven't fully wrapped my head around the flow yet, but it should be
->> feasible for the VF → VFIO → PF path to pass along the initial VF
->> scatter-gather (SG) list in the dma-buf, which includes VF-specific
->> PFNs. The PF can then use this, along with its provisioning information,
->> to resolve the physical address.
-
-Well don't put that into the sg_table but rather into an xarray or similar, but in general that's the correct idea.
-
-Regards,
-Christian.
-
->>
->> Matt
->>
->>> Thanks,
->>> Vivek
->>>
->>>>
->>>> Jason
-
+Thanks.
+Shuai
 
