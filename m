@@ -1,121 +1,110 @@
-Return-Path: <linux-pci+bounces-36749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DFC5B9515B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 10:55:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49D99B9524B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:08:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8ADC2E4530
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 08:55:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4AB24820B4
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 09:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB0431D393;
-	Tue, 23 Sep 2025 08:55:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44353203A0;
+	Tue, 23 Sep 2025 09:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EN9DwI3Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7xolvTO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C847230EF7C;
-	Tue, 23 Sep 2025 08:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA3C320394;
+	Tue, 23 Sep 2025 09:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758617703; cv=none; b=d/JXPYFc+yKQ0SyK7CIjoDL0ELy6gPbCW3adL1ZhlbGJiwvAYfb1Puwa/4cFLnJsT+aGh2B6VbBuO1VS6rqHyxbbpdFcM55/z1hoGhIb90Eo+SGQaFZXGHbsrgXweeoYAT6kYgl2moFRKD6TkKXSkWDx8gzCR01dkEQFVr3IpbU=
+	t=1758618475; cv=none; b=EXxS3IOVEEwALIUBJWf44K01/0wMuvmR/4TKs8Rl35TEHHRyabTjuxG4bXp05c+nE/i6RZ2KC5cTRPmTgInmrKlfl53uQ3QzWO5zTtBeEllnJahXmme6/8Q8F2YB/oLLjL34ygWIXw6QNMYpsuV4H1ie9OkrxHOBKMVBNJuUtlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758617703; c=relaxed/simple;
-	bh=vZlgA378dXJ6IEORBC8flAJLCUujYqv1wPXQt3NpFLA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElHyRT/NPO+6Up8BqtdYWKe/yQg0h4i5rkNR1phsTPBlp75hRZjqv/3nSP9+NWuO6J4teoVlHyheB50d3/rOMTi0r1Xi6k+tQFbP5/vzq8rbvoZc5zzw9iqStsGKr/IpoycjhTMVYoMX/EuiqRp5gWL/QUxxTX6W5RUswvkzdZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EN9DwI3Z; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58N8sX0S1419674;
-	Tue, 23 Sep 2025 03:54:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1758617673;
-	bh=Rbn5FSmJF2fzCLKPlTqn2gmIfa7r4g3/4yDGMiXqG20=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=EN9DwI3ZGgG7AOxIY0JYym95uutGInhiMyI+Y5Y+9bnV3BcAPIJqxYhuH03qk2lTb
-	 UXif/I4ima7OVj8AjLdX0umnOOq1FbawIL3TpB50ey3tQ+w51nRmrWpOlW3acY4QSx
-	 rNAvSrHXBg8WwG8Z/jQNsOeYpbEaReOVnc7HLyPA=
-Received: from DFLE206.ent.ti.com (dfle206.ent.ti.com [10.64.6.64])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58N8sXSk1536878
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Sep 2025 03:54:33 -0500
-Received: from DFLE205.ent.ti.com (10.64.6.63) by DFLE206.ent.ti.com
- (10.64.6.64) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 23 Sep
- 2025 03:54:32 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE205.ent.ti.com
- (10.64.6.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 23 Sep 2025 03:54:32 -0500
-Received: from localhost (lcpd911.dhcp.ti.com [172.24.233.130])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58N8sVIM3978416;
-	Tue, 23 Sep 2025 03:54:32 -0500
-Date: Tue, 23 Sep 2025 14:24:31 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Linux PM <linux-pm@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        LKML
-	<linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Alex
- Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Zhang Qilong <zhangqilong3@huawei.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 3/3] PM: runtime: Drop DEFINE_FREE() for
- pm_runtime_put()
-Message-ID: <20250923085431.svhwkiug3y7gz5m7@lcpd911>
-References: <12763087.O9o76ZdvQC@rafael.j.wysocki>
- <13866828.uLZWGnKmhe@rafael.j.wysocki>
+	s=arc-20240116; t=1758618475; c=relaxed/simple;
+	bh=YTaf33Yn1aN3Byqi5MfTrO7CQtFjPyXYYrb2D3agh+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hu2SvZ+VmS4cSUsogi2v9eiUIq01ZC2ZPIZVfWpPGjn9r2uNzgg9l66ZvPIom2v2W0YMhpF8B66rWj+UfyDkC4axZbFh0qCRPq42zEGrJ2oY+7N10xqElRlGFhST732ZWG/n0HYxnEKjtBoI3dt1I0hJ8+tWarzIOxuxyxiXepA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7xolvTO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7480C4CEF7;
+	Tue, 23 Sep 2025 09:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758618475;
+	bh=YTaf33Yn1aN3Byqi5MfTrO7CQtFjPyXYYrb2D3agh+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n7xolvTOByhDzBfdCH01j+f71GY30ZjKq16ZmDuIJBx3aLT6M6N6vEVATJhWJDGi9
+	 I1RIl0PVu7gAmpUKPEuJOrx3pdMRbAc0wgoJWbPi2weP+7hr6Us7na7up4jY2UZ/Pk
+	 Punp8E/Py20bhFC5mYKjYQVVLuJywCfF7nKQT06uXkUSWm6I6EzLapugQCbdsAGZIe
+	 yfAhN8svXk6PC+0hjBrP5QpkvTZm6nkxIThSBhCWdZArWxxjY3RqLUkwL/IdFazv1d
+	 e/xp1V9XLfMY2OIUkDt3o8VdUyq7uF5Ucs7+6D43/zucn/posdGiOpfmt/2vdWX4Ts
+	 mYk6LfUuRT9mA==
+Date: Tue, 23 Sep 2025 11:07:51 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 02/33] PCI: Protect against concurrent change of
+ housekeeping cpumask
+Message-ID: <aNJjZ9ouRSkkyyxU@2a01cb069018a810e4ede1071806178f.ipv6.abo.wanadoo.fr>
+References: <20250829154814.47015-1-frederic@kernel.org>
+ <20250829154814.47015-3-frederic@kernel.org>
+ <458c5db8-0c31-4c02-9c41-b7eca851d04a@redhat.com>
+ <aMwQcVZeTwuk2Q8A@localhost.localdomain>
+ <f1545ac2-9a4e-49e9-b918-205f617ec900@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <13866828.uLZWGnKmhe@rafael.j.wysocki>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f1545ac2-9a4e-49e9-b918-205f617ec900@redhat.com>
 
-On Sep 22, 2025 at 17:33:07 +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Le Mon, Sep 22, 2025 at 05:51:39PM -0400, Waiman Long a écrit :
+> On 9/18/25 10:00 AM, Frederic Weisbecker wrote:
+> > No the point is that I need to keep the target selection
+> > (housekeeping_cpumask() read) and the work queue within the same
+> > RCU critical section so that things are synchronized that way:
+> > 
+> >      CPU 0                                          CPU 1
+> >      -----                                          -----
+> >      rcu_read_lock()                                housekeeping_update()
+> >      cpu = cpumask_any(housekeeping_cpumask(...))       housekeeping_cpumask &= ~val
+> >      queue_work_on(cpu, pci_probe_wq, work)             synchronize_rcu()
+> >      rcu_read_unlock()                                  flush_workqueue(pci_probe_wq)
+> >      flush_work(work)
+> > And I can't include the whole work_on_cpu() within rcu_read_lock() because
+> > flush_work() may sleep.
 > 
-> The DEFINE_FREE() for pm_runtime_put has been superseded by recently
-> introduced runtime PM auto-cleanup macros and its only user has been
-> converted to using one of the new macros, so drop it.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> v2 -> v3: No changes
-> 
-> v1 -> v2: No changes
-> 
-> ---
->  include/linux/pm_runtime.h |    2 --
->  1 file changed, 2 deletions(-)
-> 
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -582,8 +582,6 @@ static inline int pm_runtime_put(struct
->  	return __pm_runtime_idle(dev, RPM_GET_PUT | RPM_ASYNC);
->  }
->  
-> -DEFINE_FREE(pm_runtime_put, struct device *, if (_T) pm_runtime_put(_T))
-> -
->  /**
+> Right, you are trying to avoid flush_work() within rcu_read_lock() critical
+> section. It makes it easier to review if you mention that in the commit log.
 
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Good point!
+
+> 
+> > 
+> > Also now that you mention it, I need to create that pci_probe_wq and flush it :-)
+> 
+> OK, another wq :-)
+
+Yeah I know :-s
+
+> 
+> Cheers,
+> Longman
+> 
 
 -- 
-Best regards,
-Dhruva Gole
-Texas Instruments Incorporated
+Frederic Weisbecker
+SUSE Labs
 
