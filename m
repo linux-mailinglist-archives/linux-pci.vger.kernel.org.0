@@ -1,179 +1,322 @@
-Return-Path: <linux-pci+bounces-36721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19674B93D18
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 03:18:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AD50B93E5C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 03:44:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDED517F3E4
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 01:18:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06A817A8605
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 01:43:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA75149C6F;
-	Tue, 23 Sep 2025 01:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35539257842;
+	Tue, 23 Sep 2025 01:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUOkvj2S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFuIdSOD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8107C1F4CBC
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 01:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A91C26A0BD
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 01:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758590271; cv=none; b=kHj3gbI5Pmj8Gr5pL0rGzBkMFopYZM0J9KmwCxQAJX+4iUdY9XQjEv8IVi1m5jYS/AUv5dN4sbZYli2yCp6Z2teXt/ZhSWfEF4e2QyEtmXL6RG20/Wj3ZVUfX5fjyBz2+4TBoh+CMYGcqiD8hRRy65QyDo1ymIHEo38NPB7hsA4=
+	t=1758591878; cv=none; b=KNt3FkUVXTxC/s9AiYsR9KAxvdnCYQPuPUYI8xtc37HJF3I9ne7LXtduthdWHZPERpBQGoK9SiLTHoIF+aKXW5cduHw9BZUVHpoAcW0G7eazcapBAtSqvVVhbxAL2sYJNEHc/5nk9ukcmZ0m19/nUPIQVuF0zSdNC7s9mxOtGpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758590271; c=relaxed/simple;
-	bh=1/e3AyiZPS/c0G1aMUyRNLYzo4gjhYckdUnHLFkO2mw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UgtFurFJGdxV/WY0XRVIJwdtfYzAErPJgXpX4RRYriu5tylgB8DFZVFHz/fpxoHQrwxUbnOjvKCmtUOaEe97JOh66nphXIhOrBI8he5eXFKUHmJTb1e/CuSZ4HcnKc7BroUFuXOt1Y84n3ZprZcO7oizzyOj+3jFdwTWK4Yfec8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YUOkvj2S; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1758591878; c=relaxed/simple;
+	bh=REeKONxzHrKHqwLFoWoVGsJJiR0Ao7sF4r5sCYsb6DI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DXPWur+4gah4/WFqu8iAPCqkp3QMw3V/rAy4ggvQZddxWgIbA1RqFuL7vP+PnYbU0bzT/orVMID20VZKoBSNTKq3T4gGojk/ItQZxkMOdyQ6NI/gj3TvTm2QzUH/4N40U3mwNP887KXuD3hRSIUbhi09tIbOfI+YkLHWnlxXZ3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFuIdSOD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758590268;
+	s=mimecast20190719; t=1758591874;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ut+zQ+Ol2AC0M60Dd4+aidn6RjiEypu7DiFVdYxlNks=;
-	b=YUOkvj2SX71CbkRsIo2DhrD+1mtLHARYkIpq/UcXnT37OEsViRXyIoZM+so2xM0vw3m0px
-	c3blxIbyShH1RpZfTJ57BjImZeZIpSBbDeOjnKpNMFWBJG9kgZLj1BA5I3LCrs/oR0g+15
-	tr9U3xSM9jZd8FkuvIHCG1DxmKD5NWI=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=j5kMPJaEnWeByXWtxUQ7jMf0TquG1zkt+HOk0PWkdrU=;
+	b=gFuIdSODRh8HEz/xCFWA8WtVYo8B3RJ+Wx52PjHC5aV3W9RknSyw4GiFEniF0wKhHZKgnC
+	r1lZ7Qz0mvVKmD541x63ovvVnxvTgQhNxtEOOnYcVNpZOkFkqKlXnrDYyoExS2oiKBYpk1
+	YFqpkEkgeE87GpXBf9S5cYiNKxfXsFE=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-nMAXed3yP6alMCUCHNUiVg-1; Mon, 22 Sep 2025 21:17:40 -0400
-X-MC-Unique: nMAXed3yP6alMCUCHNUiVg-1
-X-Mimecast-MFC-AGG-ID: nMAXed3yP6alMCUCHNUiVg_1758590260
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-3413a52b3fdso484911fac.3
-        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 18:17:40 -0700 (PDT)
+ us-mta-224-OQR_QkqtOVu-29Z8WXPRfQ-1; Mon, 22 Sep 2025 21:44:32 -0400
+X-MC-Unique: OQR_QkqtOVu-29Z8WXPRfQ-1
+X-Mimecast-MFC-AGG-ID: OQR_QkqtOVu-29Z8WXPRfQ_1758591870
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b345aff439so103244431cf.0
+        for <linux-pci@vger.kernel.org>; Mon, 22 Sep 2025 18:44:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758590260; x=1759195060;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ut+zQ+Ol2AC0M60Dd4+aidn6RjiEypu7DiFVdYxlNks=;
-        b=kac53u0xYkv5Ra2cVTgVKnycUmu/DxkuGfgmlmMhKPSAIARtB8pE9GxiKD28xfCacD
-         nt3dw+OVxl8cib8rrYUF+SQi3Ym9A//FKyf4K7uTnHXhQkz4kq4MwLFgiEIZm26eshYs
-         aGXtcdLeruNpC2y+tjQ8GzSCkM65nRTzsks6ACaStwmboVxRRlG7HT0wOlUhN3/uGPt8
-         pCJgJnrgvM9SlP4FYgkHm2agVQGA5WddkF5Zu/axtwYpRde80oO0Jbc7OgIYfNLpMo+5
-         F4GtJmmyMcnIMdQjONWVCLtwYz76qsGXkTyzg/ALqdbD/LAi9gR/+uQsrlUQ31D/w/w3
-         E+3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU5NR1k0EbXzJtLVHf8VEIm1SX4CShtDJ95eoDCPiudpehc611oz3cXybRBNGN89ucrnx9RLLGF/t8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIDHb/mlCLqP5ho8Yb7VVTYXRa6DCEVX/aWj7fEmQBR51lVMnK
-	elK3pRbz2VncJORcTuMipsf6hvAX/UhmLVE67zJfTpf3rXhOZkNMAIjAwap8i1IhOhvXY3Yu7ku
-	Utb2krGo8Ojcdcz3qp1X5n9Wd8GaK332W78Qm6cI6KDy76IhG31CfkAmRhX8iyA==
-X-Gm-Gg: ASbGnctu+1k+VmLaDv4tetKEIJtctnLjKKJ6EUVSTtk3bqeTaA15TVwH3xMidogKwat
-	SZu3WpN+eKMGlRXzftl7YPuDtHCq6J/ou+GAF0SPKW11QWGPs+EpCeJBRsu4qvz+OJ4/xjisB+E
-	GL7AwoRDusnd+6Ap6ex48Vab1BBWqD9S91YzdSEFrdC8yn0RqP+35Wv86cOEEXGH6gX0KUhwJil
-	i/zZh3c06w2p1pIFQzAA7IIEqhq8pyoS3zjLF6V9ZJThB4DstmURU6Ty78xzNVFvxUXTho1dMhb
-	KX4O3fbJ8E7GLCNU3Ou5sWxrP36AgdWW0hWlA2G1mGs=
-X-Received: by 2002:a05:6808:308d:b0:43d:3c37:a342 with SMTP id 5614622812f47-43f2d12e4d7mr161929b6e.0.1758590260135;
-        Mon, 22 Sep 2025 18:17:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFq9zHgq75BiE7ApXBV1Yytp3xnXFPeZg11oR2JKDr/lqHrXhwW6Di8HRCOFBIdLqEvOuYtIw==
-X-Received: by 2002:a05:6808:308d:b0:43d:3c37:a342 with SMTP id 5614622812f47-43f2d12e4d7mr161918b6e.0.1758590259726;
-        Mon, 22 Sep 2025 18:17:39 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-43e20b45410sm3700113b6e.12.2025.09.22.18.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 18:17:39 -0700 (PDT)
-Date: Mon, 22 Sep 2025 19:17:37 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Donald Dutile <ddutile@redhat.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
- linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Will Deacon
- <will@kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- galshalom@nvidia.com, Joerg Roedel <jroedel@suse.de>, Kevin Tian
- <kevin.tian@intel.com>, kvm@vger.kernel.org, maorg@nvidia.com,
- patches@lists.linux.dev, tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
-Subject: Re: [PATCH 03/11] iommu: Compute iommu_groups properly for PCIe
- switches
-Message-ID: <20250922191737.0df0dbed.alex.williamson@redhat.com>
-In-Reply-To: <1845b412-e96d-438a-8c05-680ef70c04e6@redhat.com>
-References: <0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
-	<3-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com>
-	<20250701132905.67d29191.alex.williamson@redhat.com>
-	<20250702010407.GB1051729@nvidia.com>
-	<c05104a1-7c8e-4ce9-bfa3-bcbc8c9e0ef5@redhat.com>
-	<20250717202744.GA2250220@nvidia.com>
-	<2cb00715-bfa8-427a-a785-fa36667f91f9@redhat.com>
-	<20250718133259.GD2250220@nvidia.com>
-	<20250922163200.14025a41.alex.williamson@redhat.com>
-	<20250922231541.GF1391379@nvidia.com>
-	<1845b412-e96d-438a-8c05-680ef70c04e6@redhat.com>
-Organization: Red Hat
+        d=1e100.net; s=20230601; t=1758591870; x=1759196670;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j5kMPJaEnWeByXWtxUQ7jMf0TquG1zkt+HOk0PWkdrU=;
+        b=IU+/agtpOfiUeEPJvoVszQ21NDAnh7YfPlp9vWxRYIVG3aKEhugHajCEq78zw/oAHx
+         AycPXPtaTOVR/br9o4YnBtDG5ruJyxhQUvrgtjumsvloYXhrcqxP9AaT5PnjOVbcb8Gz
+         zJ6QPUdvDSM/qZOb49qCe8/eUHMcI1ECIOBzUCqT9khJqLgWuvSqYPyjwTIFswT2BDNI
+         uKA+2no922uYEdW/ql/Pu1uT3bZRSAU9zFYaYBosHrz214Tz3yXjLPCr3N+RqJCt/HZ/
+         cKBawHmQbeEniMvqUgHuJmqxsC9u/EPd2RWYRjscLzRgRZSjTKEzUYdu5OVLVGxIT3hA
+         w0Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUsWuVO+JU38CKCr9YKn5xZISpqZp84/7LF7UazY1ypo7y0ZjKkI3gZtvjvTex8kCZOypB4AAUPrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXWN6MJWYJHSYAS7Vd7bKubGYd7bTsx/mIfm0664is7HviyIYU
+	DqvscK7A5ulLh23/e3sSqsBVhLBlbk6PC4tPwKKKnfICqBVv8ERRmrpcMvoIdhqbZQ0cO8KKnae
+	PvNUSaOQPFBzgT1MuIFgd+qQu+JKB/EQhMjHrjRV3Y1krlVYtKNTD4p066s5R/Q==
+X-Gm-Gg: ASbGncvgY7USf7tDdqi6At7WM070dJyQ7NQpgehz+qHdm0DuMS/AhXfrD/2dS8KlDaT
+	g+973rQ82EiqLRBlpEn71+XvZHaV/4Mzck5m79eoCDSelF5DKpJ08SqrMramnPT4olkLDo9qqw+
+	SdnVkFXPN0YkL2Tu583ggCNem87cbfg0seQz1L64tIBlrAUAzNJCiEaaq2pgShgelNLmecAg3Bf
+	R/+QUQe5suX9jm7qJ52TLL0ovrs5lkh4UX9dm2yKkVaItwE15C4kB9SOUN4Eiw0pm21DSSbEMlM
+	AQN67P2qPf7LOiYdn8kZyn71M1G2IZ/IvI9p8e0j
+X-Received: by 2002:a05:622a:5913:b0:4b5:d639:e111 with SMTP id d75a77b69052e-4d37265f9b0mr8460541cf.72.1758591869959;
+        Mon, 22 Sep 2025 18:44:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHQzA6rlo56VmUSUVIORuHzSbBuxKSgkECj4TN2He1ZYfzf9PR3v9AhQsYohVi34Jw7kJBJ8w==
+X-Received: by 2002:a05:622a:5913:b0:4b5:d639:e111 with SMTP id d75a77b69052e-4d37265f9b0mr8460411cf.72.1758591869433;
+        Mon, 22 Sep 2025 18:44:29 -0700 (PDT)
+Received: from [192.168.40.164] ([70.105.235.240])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-836317a1ba7sm916557185a.47.2025.09.22.18.44.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Sep 2025 18:44:28 -0700 (PDT)
+Message-ID: <e9d4f76a-5355-4068-a322-a6d5c081e406@redhat.com>
+Date: Mon, 22 Sep 2025 21:44:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] Fix incorrect iommu_groups with PCIe ACS
+Content-Language: en-US
+To: Alex Williamson <alex.williamson@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+ Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+ kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+ tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+References: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+ <20250922163947.5a8304d4.alex.williamson@redhat.com>
+From: Donald Dutile <ddutile@redhat.com>
+In-Reply-To: <20250922163947.5a8304d4.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Sep 2025 20:51:31 -0400
-Donald Dutile <ddutile@redhat.com> wrote:
 
-> On 9/22/25 7:15 PM, Jason Gunthorpe wrote:
-> > On Mon, Sep 22, 2025 at 04:32:00PM -0600, Alex Williamson wrote:  
-> >> The ACS capability was only introduced in PCIe 2.0 and vendors have
-> >> only become more diligent about implementing it as it's become
-> >> important for device isolation and assignment.  
-> PCIe-2.0 spec-wise, was released in 2007, 18 years ago.
-> If hw is on a 3-yr lifecycle, that's 6 generations (7th including this year releases, assuming
-> gen-1 was 2007); assuming a 5yr hw cycle, that's 4 generations of hardware.
+
+On 9/22/25 6:39 PM, Alex Williamson wrote:
+> On Fri,  5 Sep 2025 15:06:15 -0300
+> Jason Gunthorpe <jgg@nvidia.com> wrote:
 > 
-> Maybe a more interesting date is when DC servers implemented device-assignment/SRIOV
-> in full-scale, and then, determine number of hw generations from that point on as
-> 'learning -> devel-changing' years.
-> I recall we had in in 'enterprise' customers in 2010, which only shaves one generation
-> from above counts.
-
-I don't see the relevance of these timelines.  A vendor with their head
-in the sand still has their head in the sand regardless of time
-passing.  Device assignment has a heavy non-enterprise user base.
-
-> > IDK about this, I have very new systems and they still not have ACS
-> > flags according to this interpretation.
-> >   
-> >> IMO, we can't assume anything at all about a multifunction device
-> >> that does not implement ACS.  
-> > 
-> > Yeah this is all true.
-> > 
-> > But we are already assuming. Today we assume MFDs without caps must
-> > have internal loopback in some cases, and then in other cases we
-> > assume they don't.
-> > 
-> > I've sent and people have tested various different rules - please tell
-> > me what you can live with.
-> > 
-> > Assuming the MFD does not have internal loopback, while not entirely
-> > satisfactory, is the one that gives the least practical breakage.
-> > 
-> > I think it most accurately reflects the majority of real hardware out
-> > there.
-> > 
-> > We can quirk to fix the remainder.
-> > 
-> > This is the best plan I've got..
-> > 
-> > Jason
-> >   
+>> The series patches have extensive descriptions as to the problem and
+>> solution, but in short the ACS flags are not analyzed according to the
+>> spec to form the iommu_groups that VFIO is expecting for security.
+>>
+>> ACS is an egress control only. For a path the ACS flags on each hop only
+>> effect what other devices the TLP is allowed to reach. It does not prevent
+>> other devices from reaching into this path.
+>>
+>> For VFIO if device A is permitted to access device B's MMIO then A and B
+>> must be grouped together. This says that even if a path has isolating ACS
+>> flags on each hop, off-path devices with non-isolating ACS can still reach
+>> into that path and must be grouped gother.
+>>
+>> For switches, a PCIe topology like:
+>>
+>>                                 -- DSP 02:00.0 -> End Point A
+>>   Root 00:00.0 -> USP 01:00.0 --|
+>>                                 -- DSP 02:03.0 -> End Point B
+>>
+>> Will generate unique single device groups for every device even if ACS is
+>> not enabled on the two DSP ports. It should at least group A/B together
+>> because no ACS means A can reach the MMIO of B. This is a serious failure
+>> for the VFIO security model.
+>>
+>> For multi-function-devices, a PCIe topology like:
+>>
+>>                    -- MFD 00:1f.0 ACS not supported
+>>    Root 00:00.00 --|- MFD 00:1f.2 ACS not supported
+>>                    |- MFD 00:1f.6 ACS = REQ_ACS_FLAGS
+>>
+>> Will group [1f.0, 1f.2] and 1f.6 gets a single device group. However from
+>> a spec perspective each device should get its own group, because ACS not
+>> supported can assume no loopback is possible by spec.
 > 
-> +1 to Jason's conclusions.
-> We should design the quirk hook to add ACS hooks for MFDs that do
-> not adhere to the spec., which should be the minority, and that's what
-> quirks are suppose to handle -- the odd cases.
+> I just dug through the thread with Don that I think tries to justify
+> this, but I have a lot of concerns about this.  I think the "must be
+> implemented by Functions that support peer-to-peer traffic with other
+> Functions" language is specifying that IF the device implements an ACS
+> capability AND does not implement the specific ACS P2P flag being
+> described, then and only then can we assume that form of P2P is not
+> supported.  OTOH, we cannot assume anything regarding internal P2P of an
+> MFD that does not implement an ACS capability at all.
+> 
+The first, non-IF'd, non-AND'd req in PCIe spec 7.0, section 6.12.1.2 is:
+"ACS P2P Request Redirect: must be implemented by Functions that support peer-to-peer traffic with other
+Functions. This includes SR-IOV Virtual Functions (VFs)."
+There is not further statement about control of peer-to-peer traffic, just the ability to do so, or not.
 
-Sorry, I can't agree.  I think we're conflating lack of a specific ACS
-p2p capability to imply lack of internal p2p with lack of an ACS
-capability at all.  I don't believe we can infer anything from the
-latter.  Thanks,
+Note: ACS P2P Request Redirect.
 
-Alex
+Later in that section it says:
+ACS P2P Completion Redirect: must be implemented by Functions that implement ACS P2P Request Redirect.
+
+That can be read as an 'IF Request-Redirect is implemented, than ACS Completion Request must be implemented.
+IOW, the Completion Direct control is required if Request Redirect is implemented, and not necessary if
+Request Redirect is omitted.
+
+If ACS P2P Require Redirect isn't implemented, than per the first requirement for MFDs,
+the PCIe device does not support peer-to-peer traffic amongst its function or virtual functions.
+
+It goes on...
+ACS Direct Translated P2P: must be implemented if the Function supports Address Translation Services (ATS)
+and also peer-to-peer traffic with other Functions.
+
+If an MFD does not do peer-to-peer, and P2P Request Redirect would be implemented if it did,
+than this ACS control does not have to be implemented either.
+
+Egress control structures are either optional or dependent on Request Redirect &/or Direct Translated P2P control,
+which have been addressed above as not needed if on peer-to-peer btwn functions in an MFD (and their VFs).
+
+
+Now, if previous PCIe spec versions (which I didn't read & re-read & re-read like the 6.12 section of PCIe spec 7.0)
+had more IF and ANDs, than that could be cause for less than clear specmanship enabling vendors of MFDs
+to yield a non-PCIe-7.0 conformant MFD wrt ACS structures.
+I searched section 6.12.1.2 for if/IF and AND/and, and did not yield any conditions not stated above.
+
+> I believe we even reached agreement with some NIC vendors in the early
+> days of IOMMU groups that they needed to implement an "empty" ACS
+> capability on their multifunction NICs such that they could describe in
+> this way that internal P2P is not supported by the device.  Thanks,
+> 
+In the early days -- gen1->gen3 (2009->2015) I could see that happening.
+I think time (a decade) has closed those defaults to less-common quirks.
+If 'empty ACS' is how they liked to do it back than, sure.
+[A definition of empty ACS may be needed to fully appreciate that statement, though.]
+If this patch series needs to support an 'empty ACS' for this older case, let's add it now,
+or follow-up with another fix.
+
+In summary, I still haven't found the IF and AND you refer to in section 6.12.1.2 for MFDs,
+so if you want to quote those sections I mis-read, or mis-interpreted their (subtle?) existence,
+than I'm not immovable on the spec interpretation.
+
+- Don
+
+> Alex
+> 
+>>
+>> For root-ports a PCIe topology like:
+>>                                           -- Dev 01:00.0
+>>    Root  00:00.00 --- Root Port 00:01.0 --|
+>>                    |                      -- Dev 01:00.1
+>> 		  |- Dev 00:17.0
+>>
+>> Previously would group [00:01.0, 01:00.0, 01:00.1] together if there is no
+>> ACS capability in the root port.
+>>
+>> While ACS on root ports is underspecified in the spec, it should still
+>> function as an egress control and limit access to either the MMIO of the
+>> root port itself, or perhaps some other devices upstream of the root
+>> complex - 00:17.0 perhaps in this example.
+>>
+>> Historically the grouping in Linux has assumed the root port routes all
+>> traffic into the TA/IOMMU and never bypasses the TA to go to other
+>> functions in the root complex. Following the new understanding that ACS is
+>> required for internal loopback also treat root ports with no ACS
+>> capability as lacking internal loopback as well.
+>>
+>> There is also some confusing spec language about how ACS and SRIOV works
+>> which this series does not address.
+>>
+>>
+>> This entire series goes further and makes some additional improvements to
+>> the ACS validation found while studying this problem. The groups around a
+>> PCIe to PCI bridge are shrunk to not include the PCIe bridge.
+>>
+>> The last patches implement "ACS Enhanced" on top of it. Due to how ACS
+>> Enhanced was defined as a non-backward compatible feature it is important
+>> to get SW support out there.
+>>
+>> Due to the potential of iommu_groups becoming wider and thus non-usable
+>> for VFIO this should go to a linux-next tree to give it some more
+>> exposure.
+>>
+>> I have now tested this a few systems I could get:
+>>
+>>   - Various Intel client systems:
+>>     * Raptor Lake, with VMD enabled and using the real_dev mechanism
+>>     * 6/7th generation 100 Series/C320
+>>     * 5/6th generation 100 Series/C320 with a NIC MFD quirk
+>>     * Tiger Lake
+>>     * 5/6th generation Sunrise Point
+>>
+>>    The 6/7th gen system has a root port without an ACS capability and it
+>>    becomes ungrouped as described above.
+>>
+>>    All systems have changes, the MFDs in the root complex all become ungrouped.
+>>
+>>   - NVIDIA Grace system with 5 different PCI switches from two vendors
+>>     Bug fix widening the iommu_groups works as expected here
+>>
+>> This is on github: https://github.com/jgunthorpe/linux/commits/pcie_switch_groups
+>>
+>> v3:
+>>   - Rebase to v6.17-rc4
+>>   - Drop the quirks related patches
+>>   - Change the MFD logic to process no ACS cap as meaning no internal
+>>     loopback. This avoids creating non-isolated groups for MFD root ports in
+>>     common AMD and Intel systems
+>>   - Fix matching MFDs to ignore SRIOV VFs
+>>   - Fix some kbuild splats
+>> v2: https://patch.msgid.link/r/0-v2-4a9b9c983431+10e2-pcie_switch_groups_jgg@nvidia.com
+>>   - Revise comments and commit messages
+>>   - Rename struct pci_alias_set to pci_reachable_set
+>>   - Make more sense of the special bus->self = NULL case for SRIOV
+>>   - Add pci_group_alloc_non_isolated() for readability
+>>   - Rename BUS_DATA_PCI_UNISOLATED to BUS_DATA_PCI_NON_ISOLATED
+>>   - Propogate BUS_DATA_PCI_NON_ISOLATED downstream from a MFD in case a MFD
+>>     function is a bridge
+>>   - New patches to add pci_mfd_isolation() to retain more cases of narrow
+>>     groups on MFDs with missing ACS.
+>>   - Redescribe the MFD related change as a bug fix. For a MFD to be
+>>     isolated all functions must have egress control on their P2P.
+>> v1: https://patch.msgid.link/r/0-v1-74184c5043c6+195-pcie_switch_groups_jgg@nvidia.com
+>>
+>> Cc: galshalom@nvidia.com
+>> Cc: tdave@nvidia.com
+>> Cc: maorg@nvidia.com
+>> Cc: kvm@vger.kernel.org
+>> Cc: Ceric Le Goater" <clg@redhat.com>
+>> Cc: Donald Dutile <ddutile@redhat.com>
+>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+>>
+>> Jason Gunthorpe (11):
+>>    PCI: Move REQ_ACS_FLAGS into pci_regs.h as PCI_ACS_ISOLATED
+>>    PCI: Add pci_bus_isolated()
+>>    iommu: Compute iommu_groups properly for PCIe switches
+>>    iommu: Organize iommu_group by member size
+>>    PCI: Add pci_reachable_set()
+>>    iommu: Compute iommu_groups properly for PCIe MFDs
+>>    iommu: Validate that pci_for_each_dma_alias() matches the groups
+>>    PCI: Add the ACS Enhanced Capability definitions
+>>    PCI: Enable ACS Enhanced bits for enable_acs and config_acs
+>>    PCI: Check ACS DSP/USP redirect bits in pci_enable_pasid()
+>>    PCI: Check ACS Extended flags for pci_bus_isolated()
+>>
+>>   drivers/iommu/iommu.c         | 510 +++++++++++++++++++++++-----------
+>>   drivers/pci/ats.c             |   4 +-
+>>   drivers/pci/pci.c             |  73 ++++-
+>>   drivers/pci/search.c          | 274 ++++++++++++++++++
+>>   include/linux/pci.h           |  46 +++
+>>   include/uapi/linux/pci_regs.h |  18 ++
+>>   6 files changed, 759 insertions(+), 166 deletions(-)
+>>
+>>
+>> base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+> 
 
 
