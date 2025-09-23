@@ -1,170 +1,163 @@
-Return-Path: <linux-pci+bounces-36756-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36757-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C28CAB95948
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:11:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7AD0B95A63
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 13:27:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42D403B9BD8
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:10:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DE373A8A6E
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 11:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959523218C4;
-	Tue, 23 Sep 2025 11:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A83453218DB;
+	Tue, 23 Sep 2025 11:26:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmrbaONM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dacKl6Ps"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26922F6184
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 11:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778B42DCF44;
+	Tue, 23 Sep 2025 11:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758625847; cv=none; b=W+QX2SaX/i9pMYlMbvxIfv1P0r3XCQrmQMUtb1/ccbG6HuMmAdh71X/ZAGKsA9dIbfiPS4cU5QsrD8dgMHjv7+d/8TUPQb6dqs7dRQAAQW3oO5w77LD7mHE0R+Ib8AjEhZuK1ijz08So8cdCB11uvwaogYp4vhL9g02x9qh3Jsw=
+	t=1758626819; cv=none; b=p5ye/NORxU3IGc4IEUYt4jeBQMkMYrY3yTnd8crm4frVy1aMQ/MXaNyPEqIjzB11uhVkHpwzP9HeIirVuwV+I+D/KZ1rm4ASkuqi4y3p4HFwUpfk+nD/+7pOdFwD2pIAh0qzt1luBRms7yo483nWdwKCADxwVRK0b560b5EcVaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758625847; c=relaxed/simple;
-	bh=L8If8mhhgNYtNxzT0sBTVnoIcsxkhNehSrPzVwevgF0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYbxRayZROLMKpJDMyOvhx19lfD7i/gt0+to87kSiJJcsPQv1nyV/g4nixcYf+dqe+oq2ge8rDgxBC80xNVr6EiU52gJhaePIcvlaziVcSxG4Df7+gn1Dyzog0i8mNphSRfgmgC3ib9C6TZ8jY9bIOo2IELEUdNAppREIUeQQyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmrbaONM; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-46256e402fdso8026305e9.2
-        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 04:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758625844; x=1759230644; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/M4chbTCwJie6GL25HuGRFhPc1V63zKjOJLKGItv6qU=;
-        b=GmrbaONMY567lYbR6vFpTH7gDvClnvBS96L6i7cxNJQyNpbldeX/PEB3xls2N49FEK
-         BMNuOctp1084ZTlxDwzeIsmyFRnvmWEj1fYBJ2UspJaYUxvrwMoZXRxfT0r1SFKeUr0r
-         ZiFWvMeUS/UCGkzIKbs24gOwhL681sh/wvvZY4qUZt7Q+AxzA6iPRCOof4pB2i5XAKNK
-         WAj9Y2AE5TvbsXVm4iZt+JzxERe9qLmvbZazZZo7+rYCy+DChCD8WctOTbtYD3ucCzng
-         4X2BR/6uqBd9Hq5VAZgRfr9oR90y2HqAIwJlLG4J1aq95N6oT0G6vZ++KJvqsUsFW0Nj
-         0+DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758625844; x=1759230644;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/M4chbTCwJie6GL25HuGRFhPc1V63zKjOJLKGItv6qU=;
-        b=gGtY0IOPIM1DCHrOauroTA9+B965bxMEgPWPjZZCxKbTiuftputeJNeV02MWwkAseP
-         jJBK5C07OHgeQ9vAHAT4SVAUch0F9TabScT09JcNjOuSmr52PMidHABSpoEZTrKo/r+j
-         UjMbWLNUePqi44vA2I7AUZu6iPbJx5ZdO4o6IetvVBni/Rp/gH7inbKq82jWaiT8eSyA
-         33xMY1Ik1ilsBd32Sm8h5HjR5FXtlMRJtlM5DTc5t40J7W1fuJON4SyxJgy5i3HiNm1n
-         90VXf7yZ1C7M2zccpQiz8h9U+NP59rjmYWcZRrWmWMuj54ibq8/jHcImVzcHixSkUeWU
-         ftig==
-X-Forwarded-Encrypted: i=1; AJvYcCW8H+wMhlTHJrPpAh59vGVd25NnrA7iBhcDRDIjHG0KF7TL+z8YhY1A0CYmUq47L533mCmeo7TDA2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZQaCh/Omdj/ywVnFq4vzZLFi6AQpmNv+2G9fj+rlEYVLV6PLS
-	R9bQTNZqpFNew2J4QfALcFk7huQm/uR8pBL+AFj+ze+PL4ljrdGAg5eJ
-X-Gm-Gg: ASbGnctnzvjUL8XQMDhY+Onx2C22UrSNeeyuquKaanZmOWeq7Xu1wRRTnJv3QQwGcoV
-	7hrFqkIa4JLufSKCFEnNqdSE/nsQ2c77Q3t2nfXgi1/Yy+uX672eyy/IxHtwimJhKZUnREdxvcI
-	esk/Y6bToc8HiRugftEJXUI0V1UDzga12TyKNtRdnzjK6gO8d4CFuiOmz7YdCRBj043YQFGlAEa
-	3UyoVUXbKZbAd3qUVUibHFEUhAj0f4CjFJuKG8i31YTQmgaEvb/qO2sCOOjAbeJepZ38lLqlcNV
-	OZ0sSH/vQux9njlTjPAt05VsYSoXYmKPV0mKE7y6ZbkQ02ELWxxqzmaf2/hsicY9cqKVubY9iaw
-	yXT0YArfI70d7rqwIDxhe/bs=
-X-Google-Smtp-Source: AGHT+IHhlp7t8Mif75guovtxrXuNcYEIzhCdfujdY3LaIWfy1jJmzn6mmtcb1ThUszzhbFiPUhqUdw==
-X-Received: by 2002:a05:600c:4ed3:b0:45f:2919:5e8d with SMTP id 5b1f17b1804b1-46e1d98c40bmr12841095e9.1.1758625842783;
-        Tue, 23 Sep 2025 04:10:42 -0700 (PDT)
-Received: from skbuf ([2a02:2f04:d005:3b00:2e0a:df05:253e:8b85])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e23adcce3sm3208595e9.11.2025.09.23.04.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 04:10:41 -0700 (PDT)
-From: Vladimir Oltean <olteanv@gmail.com>
-X-Google-Original-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Date: Tue, 23 Sep 2025 14:10:38 +0300
-To: Shawn Guo <shawnguo@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Olof Johansson <olof@lixom.net>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 3/3] arm64: dts: fsl-lx2160a: include rev2 chip's dts
-Message-ID: <20250923111038.qluh2kjmc534ytig@skbuf>
-References: <20240826-2160r2-v1-0-106340d538d6@nxp.com>
- <20240826-2160r2-v1-3-106340d538d6@nxp.com>
+	s=arc-20240116; t=1758626819; c=relaxed/simple;
+	bh=IpaBRdasnDHpzr3HxE+/OTJ26uvSLSqswF1CIRDtBCQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VjUPBPuKcJD1dokKbZIpAcm8C/OlKNQj0uWzndDvleM03v9Lo/ovZ9/VQ6NfzsIHxRMgaY3bVsACrlHINoM8IU6QUykH7UqyCY7jedBgNf+qBsqxJn876bwfF34jNfIF3jwKMH4eWxWO+LTKBm9KAHUmzFDhO5yxJtRp62uYNdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dacKl6Ps; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C25C4CEF5;
+	Tue, 23 Sep 2025 11:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758626819;
+	bh=IpaBRdasnDHpzr3HxE+/OTJ26uvSLSqswF1CIRDtBCQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=dacKl6PsYA4kqWF3ywX7LoRb5A0Gv6EOQQw6F9Tg/ANRiI1szo40LC7Mkt5e/YeK7
+	 OONZWOXnBAFKMFLZ68dqNoJnVmmIGblajdSJ2p5BzTxXIzuEyKHMlo59H6/9CE6PkS
+	 Y1W/zpo58Zp+xOrYIoy1U1woksLIjtqGvAcNL79yeVH24AAw/GHGp2tedeAjIQC0xg
+	 whO3PJvZOzJhLL7nODEuiPzQ5QJTqsP+ybCVEq1OVX4ZjqFGwFzBOrnRHa2LseCTrb
+	 atemI+uZ2z7WelY9KUwchCyVNmCG/cDRXAShqrelcW3tOIruA679CAy+3jjHk1iMUi
+	 kH7JHN+86LSsQ==
+From: Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH v10 0/4] PCI: dwc: Add ECAM support with iATU configuration
+Date: Tue, 23 Sep 2025 16:56:50 +0530
+Message-Id: <20250923-controller-dwc-ecam-v10-0-e84390ba75fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240826-2160r2-v1-3-106340d538d6@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPqD0mgC/22Nyw6CMBBFf4XM2jEtlEdZ+R+GBbYjNGJrpgQ1h
+ H+3krhzeU5yz10hEjuK0GYrMC0uuuATSHHIwIy9HwidTQJykZdCiwZN8DOHaSJG+zRIpr+jMrU
+ pZFFZkgrS8sF0da89e+4Sjy7Ogd/7y6K/9tfTf3uLRoG1LS9VKRslrD3diD1Nx8ADdNu2fQBoh
+ tH+uAAAAA==
+X-Change-ID: 20250908-controller-dwc-ecam-4c7c3136de14
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, Jonathan Chocron <jonnyc@amazon.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3739; i=mani@kernel.org;
+ h=from:subject:message-id; bh=IpaBRdasnDHpzr3HxE+/OTJ26uvSLSqswF1CIRDtBCQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBo0oP+agCPD5sI9myrKqi+guGHohOWmsjTBZyxl
+ YrrHBL6SJCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaNKD/gAKCRBVnxHm/pHO
+ 9fxsCACHK7T3Irtv+RCeEVOWqHNrHTj3d/OzhEtl/dBmBv9I2LC29DOb29Ingrf6quZjSfFV2h4
+ t+8iV/01xvHfwjM6B27MhmqvMXc0j/KgKaK7QclQStDkchpt4hKtWsQJ6BByPvl8adRk5bjYgnc
+ wATZtnJcI4YyFaDOnt6WYrBu7crfh/lFpcgXY9OoOKDRS73QBXFlYBL9JEkoF0GPPV1InNjpfzp
+ GeLdKBIwaF5DPw40zVCNmft8Ap7V5ne6ou/0ZH/7jAwG2lOcg2JPWcXfgrNQOHtRB/0Wk/sihGd
+ LsKfoEx6eR1L5w7pyQ9MCOhbPvw3Jv2nm3nfSZUiEAp2tZ97
+X-Developer-Key: i=mani@kernel.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Hi Shawn,
+The current implementation requires iATU for every configuration
+space access which increases latency & cpu utilization.
 
-On Mon, Aug 26, 2024 at 05:38:34PM -0400, Frank Li wrote:
-> The mass production lx2160 rev2 use designware PCIe Controller. Old Rev1
-> which use mobivel PCIe controller was not supported. Although uboot
-> fixup can change compatible string fsl,lx2160a-pcie to fsl,ls2088a-pcie
-> since 2019, it is quite confused and should correctly reflect hardware
-> status in dtb. Change freescale's board to use rev2's dtsi firstly.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts | 2 +-
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 2 +-
->  arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> index 4d721197d837e..71d0d6745e44a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> @@ -6,7 +6,7 @@
->  
->  /dts-v1/;
->  
-> -#include "fsl-lx2160a.dtsi"
-> +#include "fsl-lx2160a-rev2.dtsi"
->  
->  / {
->  	model = "NXP Layerscape LX2160AQDS";
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> index 0c44b3cbef773..2373e1c371e8c 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> @@ -6,7 +6,7 @@
->  
->  /dts-v1/;
->  
-> -#include "fsl-lx2160a.dtsi"
-> +#include "fsl-lx2160a-rev2.dtsi"
->  
->  / {
->  	model = "NXP Layerscape LX2160ARDB";
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
-> index 9f5ff1ffe7d5e..7a595fddc0273 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dts
-> @@ -6,7 +6,7 @@
->  
->  /dts-v1/;
->  
-> -#include "fsl-lx2160a.dtsi"
-> +#include "fsl-lx2160a-rev2.dtsi"
->  
->  / {
->  	model = "NXP Layerscape LX2162AQDS";
-> 
-> -- 
-> 2.34.1
-> 
-> 
+Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
+which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
+would be matched against the Base and Limit addresses) of the incoming
+CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
 
-Sorry for digging up an old thread, but I'm curious why you applied
-patch 2/3 but not this one? Currently,
-arch/arm64/boot/dts/freescale/fsl-lx2160a-rev2.dtsi has no user.
+Configuring iATU in config shift mode enables ECAM feature to access the
+config space, which avoids iATU configuration for every config access.
 
-Thread here.
-https://lore.kernel.org/lkml/20240826-2160r2-v1-0-106340d538d6@nxp.com/
+Add cfg_shft_mode into struct dw_pcie_ob_atu_cfg to enable config shift mode.
+
+As DBI comes under config space, this avoids remapping of DBI space
+separately. Instead, it uses the mapped config space address returned from
+ECAM initialization. Change the order of dw_pcie_get_resources() execution
+to acheive this.
+
+Enable the ECAM feature if the config space size is equal to size required
+to represent number of buses in the bus range property.
+
+ELBI registers are optional registers which are part of dwc. So move
+ELBI resource mapping to dwc. Also change the dtbinding and devicetree
+to make the elbi registers as optional one. Having ELBI as the required
+one is making the ecam feature complicated.
+
+The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
+gives us the offset from which ELBI starts. so use this offset and cfg
+win to map these regions instead of doing the ioremap again.
+
+On root bus, we have only the root port. Any access other than that
+should not go out of the link and should return all F's. Since the iATU
+is configured for the buses which starts after root bus, block the
+transactions starting from function 1 of the root bus to the end of
+the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
+outside the link through ECAM blocker through PARF registers.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
+Changes in v10:
+- Moved qcom_pci_config_ecam() to qcom_pcie_host_init()
+- Reworded the comment in patch 3
+- Rebased on top of pci/controller/qcom 
+- Link to v9: https://lore.kernel.org/r/20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org
+
+Changes in v9:
+ - Splitted the ECAM enablement change to avoid bisect hole and excluded pcie-al
+   driver from DWC ECAM since it uses its own ECAM mechanism.
+ - Squashed the patches 2 and 3 as patch 2 won't work without 3.
+
+For the rest of the history, please refer v8 changeset:
+https://lore.kernel.org/linux-pci/20250828-ecam_v4-v8-0-92a30e0fa02d@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (4):
+      PCI: dwc: Add support for ELBI resource mapping
+      PCI: dwc: Prepare the driver for enabling ECAM mechanism using iATU 'CFG Shift Feature'
+      PCI: qcom: Prepare for the DWC ECAM enablement
+      PCI: dwc: Support ECAM mechanism by enabling iATU 'CFG Shift Feature'
+
+ drivers/pci/controller/dwc/Kconfig                |   1 +
+ drivers/pci/controller/dwc/pci-exynos.c           |  62 ++++-----
+ drivers/pci/controller/dwc/pcie-al.c              |   1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c | 148 ++++++++++++++++++++--
+ drivers/pci/controller/dwc/pcie-designware.c      |  10 +-
+ drivers/pci/controller/dwc/pcie-designware.h      |   7 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c         |  15 +--
+ drivers/pci/controller/dwc/pcie-qcom.c            |  84 ++++++++++--
+ 8 files changed, 261 insertions(+), 67 deletions(-)
+---
+base-commit: af8df709bf365f5583d31091280354e1ef0b201f
+change-id: 20250908-controller-dwc-ecam-4c7c3136de14
+
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
+
 
