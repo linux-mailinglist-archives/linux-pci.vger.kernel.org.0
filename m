@@ -1,112 +1,110 @@
-Return-Path: <linux-pci+bounces-36735-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36736-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D536B94878
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 08:16:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 753C5B948D2
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 08:26:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 434C818A77BE
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 06:17:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E8BD7A1A70
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 06:24:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F955261B83;
-	Tue, 23 Sep 2025 06:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25DD130F546;
+	Tue, 23 Sep 2025 06:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ym+VI7q4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WFZAoS0v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7015B26B971
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 06:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76BA145B27
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 06:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758608211; cv=fail; b=RNO1jW2zPZEUUXy+XivvSaB6k4dmUC20xelsnEeguB7Q0uZXG6XuhH6+Z5ExkdTvgjSSYbwte7D9ok/aqSzPDUBfoOmlUszmDIhZLA2Rt0JxFVvB3lJ5n84zSSwgQw4pg/GzNMRMhiazKohyCrDlFuITV6yeK9IkIShpGFTzH8Y=
+	t=1758608764; cv=fail; b=jrHwIxhTaiMpGOgOF1q3QWl4qQkyQJIab7/68nJoK2m084DiIHZkCEiYlBNVy6KSZfuAmIGZyOb9ukTa/tpIyhhgW0SvKcGThBR79nvXO6oZCvmHCgfUtYUJqrpdv7QmbDnXehD1+gqP9RK6JfQ4kYph64H82LzeJButMHayLDM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758608211; c=relaxed/simple;
-	bh=5iODTsWa2qbLTWDhM1DUTa5gBRUjZH+sN9Pfw6SQ/dM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SlwsgRmsu+099ODBvijEUjovfymaOxGGZG4Io1op0r1YAk3qPu4WqYkVUeXARb6Rg2/UGjwn4RLy6/4jdhozBxwOV9uxobLSJ85PM6hBfJDzjQvGnjaukPS/I240RJyZOeUHHZcwbfwn5dArP2FrVI/M+4fyjUm0d3g8zuBkCbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ym+VI7q4; arc=fail smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1758608764; c=relaxed/simple;
+	bh=6MSGrQ8Hj9U+UmiCusFa4W/DBv+soG9txOe7iVCeIdg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GtNqQ7QR/auXEMTJVyE3vaY7ihaMzteU5VIFEHmEczzH7ZJATJwXbhxZixoGNDQHnZXyiGcCZibjWjEq18/UZNQ3KLfsk3I6p11v+ME3lArsfBMAmOFMJvpfm7FKYAI1e7X/EPHSsSTszj5mPaCJuflg57n6ePOO9cTS1EdQPh8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WFZAoS0v; arc=fail smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758608209; x=1790144209;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5iODTsWa2qbLTWDhM1DUTa5gBRUjZH+sN9Pfw6SQ/dM=;
-  b=Ym+VI7q4Rvvr3rR1HqedxNybotujTRuBsYcT7VqV88fkDTtKZhFxPo06
-   zrOsRpLvLzY+kEuWMlMQidOy8Pwea2tPb3XqyPIkDXQ+KhP1zk3+rzKzA
-   PhVy4hmR/65kFkYN+E8+fSQQowKAk1RsocVVLPne6M+1efIUTeyPSmEBr
-   4w5+1Kme7Jzdgp/fZrGCvzVNeWAiAuySvXSPfkx9SdbLHQPz/jczM7MrE
-   UkVO5ZhnzyOnh3FDuYfqTGwOe6OMlEyzo4BqxirvoMBRwLfpOCqRDPnHx
-   teUYsGXey7uFfjRbe7jZrjANeBhOaJH5ujfsyfok4F03kxpq+kZ1MG/El
-   w==;
-X-CSE-ConnectionGUID: v5i3sZ6WQMezlnxmINve7w==
-X-CSE-MsgGUID: NFyu28o6RXqitPFwVn4n1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60796582"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60796582"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:16:49 -0700
-X-CSE-ConnectionGUID: M9fIrzfPQP+yzWw4ORQK8g==
-X-CSE-MsgGUID: UCWRY+yaSM+bCO6eDEIvLg==
+  t=1758608762; x=1790144762;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=6MSGrQ8Hj9U+UmiCusFa4W/DBv+soG9txOe7iVCeIdg=;
+  b=WFZAoS0vEdTeWYoG8JXnC3PgSB3sWLUIQ7KxsHG14UcHuyS2MuclQIEb
+   CQLhe6Bj7EsEKWTb57ym8Hiavg6ckg9V8ZvIjOQCEiuiKZzMDGhDItIJ3
+   BSFLNohcMCTRJ3eNoE3ZzY7cbYkN2UJx+AOcu1Scsqw6MrMWymGxb0Vu9
+   bMnAw7oH/vaHguXV08rcjkAUl60zLXq9LyVFht4G4k+OyGowsueycpkdJ
+   9WVc4bpPyEpntqjklvPyDLXkukN6/ZcOK+lpOaJOQ5x0OwFFgqXphtUyd
+   G9hC98dgF+V9JMG82ZkTmYrMtFqBMKYXEpzbjAdYwG6aooRljzrwHT6qT
+   A==;
+X-CSE-ConnectionGUID: LW6OZ059TFiOFPy4FK95Jw==
+X-CSE-MsgGUID: VrDQFy2uTyeYUn4OS/40GA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="64704954"
+X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
+   d="scan'208";a="64704954"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:26:00 -0700
+X-CSE-ConnectionGUID: t7ORBKSLSn2cFiecI0UHuw==
+X-CSE-MsgGUID: kl0/7c1WSQOw7tcafGHMrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="177053955"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:16:48 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+   d="scan'208";a="175969021"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 23:25:59 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 22 Sep 2025 23:16:47 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ 15.2.2562.17; Mon, 22 Sep 2025 23:25:58 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Mon, 22 Sep 2025 23:16:47 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.42) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ 15.2.2562.17 via Frontend Transport; Mon, 22 Sep 2025 23:25:58 -0700
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.3) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 22 Sep 2025 23:16:45 -0700
+ 15.2.2562.17; Mon, 22 Sep 2025 23:25:58 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BoI0g5bux+DXQqnz9iYJ+pE0A4aKbr536OoJlANkLUiQdVbxN4n7IcZn/eGRjCQntCAZfOnc+eCXHtMhWujaNGp7RrdZ/H2k3LO1LkcVFgiFNRF01bXy+xbEfSy+tgNkodWr2NUA1pX2+atJoWiliY2CmYwxlSH8Xi8V6qyxhWAncdgIQKtOmg2uBySwIKQPEN5jPf1X7Lvc/e5DC+NFWZvxtuFsfS4WStK0cGhoQj1p/R82YiK0jbdSeCZ23NoOGtJT7s/hWoSLaqptzfcZJarue+wTGcjCn06hRUGEi83ezby401MtZZVLAKlp7a9Uud+RDdyCsbv0WN3w3TFwcw==
+ b=Z48CJ4b4nKHDCCgj48A/jm2EfQXmZTfLhFW96zGICfiST8heVrEOavUkk2FyMUzRGMUHh4jecVGMdmE+w88zx3hkgACucBZNsCQyOL6K/bI6hiF3pgOzUmhpukEU00Zl/qqgIiGU1MevnwvEaWyZJrosnEkEE3s1YQqJjWjOd74SqziOaUql1GWHrhf+T4ZmZIqAyoAEgR69PcsKlzcw+V1sFaL8f3qbswdqnldTk8oTpeGTNgfAmH7dEIIFROKSapFeH2V4UXmAJQXMofALkQlkww33RfX/Y8QZsTQfruhYXD7EYlkrXdaR+p2s4xTtjTBUDqRqhXWI+Qp4cHUcrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5iODTsWa2qbLTWDhM1DUTa5gBRUjZH+sN9Pfw6SQ/dM=;
- b=q2SfnZIjdrPSd7U61hlD4wj9sxO073Vpm2ImqzTlR6/tFJb+BOJY5GA4RVmpIYXRWd5zOOW1unRkTfQU0sdkpdqOSLJvKWF9FVAeTXQSQgMgCykZVTkI2/LNxBn1dns1qiWGY9geC1IfMmM4/co6Uye06HX5ezOWwDoxZMvfJxJXipbSUieVFcFJnvuzU0w7XFET5lG8ETrQi0H91nc7y3YFNiK5RmS9/9S61ZDLEtWWL3T/r5Plbt2D/tegWTI4JAK+BVg/i1I87Nx+DXg0KrfmAX0oYxIYbv7PePHqi8RsIYENljNWgzOtzj8/ZByK4lcJrACt1KeNAlWr6g9ycw==
+ bh=5Y/rdPEOiBCOYSoBHCARrEsLTUKohFXIaY4ElCFxlqE=;
+ b=whxgbKeVb3DffaVHncdbmJU8MS+51Zkq+daZm+H1oDl21gJGRgg4HjRNdsRgx0HWeMqrL+o25VLqQZZDjNiKYVw0OFfbSw+VumxCxl2UOYduq+LNvpc8NzDsyrwVoY2uwz6fVXFGQ0IPsR2QOSesn59CN8yMuywMHmLZl71UjskkNeqBFaAzLzXL+0wyWj2GmEVr00YX3sL2xiv0jQ3w+gKCWIeFwOZdFdk1wLmFBOQFsHrj29kJoa3HCHytfqpPn9wXWgcWCubhDWaukYDtUon3FULeXUpEiQ38b7Z5B7x90LcwbG4G8AWlE39oVjUWRBptYUVB0l3jN86uu/2anw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
- by PH8PR11MB6853.namprd11.prod.outlook.com (2603:10b6:510:22e::15) with
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by LV8PR11MB8748.namprd11.prod.outlook.com (2603:10b6:408:200::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Tue, 23 Sep
- 2025 06:01:34 +0000
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b%4]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
- 06:01:34 +0000
-From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-To: =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>, Simona Vetter <simona.vetter@ffwll.ch>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ 2025 06:25:50 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%4]) with mapi id 15.20.9137.018; Tue, 23 Sep 2025
+ 06:25:50 +0000
+Date: Mon, 22 Sep 2025 23:25:47 -0700
+From: Matthew Brost <matthew.brost@intel.com>
+To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, Christian =?iso-8859-1?Q?K=F6nig?=
+	<christian.koenig@amd.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
 	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, "Bjorn
  Helgaas" <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	=?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	"Brost, Matthew" <matthew.brost@intel.com>
-Subject: RE: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thomas
+ =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
  functions of Intel GPUs
-Thread-Topic: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Thread-Index: AQHcJhH5Hi/XzGn7NEC5e+4cxcvJFLSWGoCAgAIWItCAAKwBgIAASuAwgAFOcYCAAGQ08IAEQCiAgACVwZA=
-Date: Tue, 23 Sep 2025 06:01:34 +0000
-Message-ID: <IA0PR11MB7185067FA8CE8A95419D06F5F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
-References: <20250915072428.1712837-1-vivek.kasireddy@intel.com>
- <20250915072428.1712837-2-vivek.kasireddy@intel.com>
+Message-ID: <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
+References: <20250915072428.1712837-2-vivek.kasireddy@intel.com>
  <20250916175709.GA1324871@nvidia.com>
  <IA0PR11MB7185186F6AB160AA7F8F0FF3F816A@IA0PR11MB7185.namprd11.prod.outlook.com>
  <20250918120431.GL1391379@nvidia.com>
@@ -114,326 +112,231 @@ References: <20250915072428.1712837-1-vivek.kasireddy@intel.com>
  <20250919122931.GR1391379@nvidia.com>
  <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
  <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
-In-Reply-To: <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|PH8PR11MB6853:EE_
-x-ms-office365-filtering-correlation-id: ced5488c-fb5f-4106-7428-08ddfa66a6a0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?CstptbxbLxqyHl8B+oOzjrWEA0p8E/H1yWdF0Toq0kDV+9n4Mphse6JKHO?=
- =?iso-8859-1?Q?6NvcUKu7pokIVb8VDY0SxoSLs2RAyITkc9CK1yvD13z2INwtqR9MbSRW4U?=
- =?iso-8859-1?Q?fxuUjcgjDCdYXUixJvr52KlFDDEXuMTKTf6vRJNPVbSd1FKujRRETMX9z7?=
- =?iso-8859-1?Q?XU5+HY14kp746ubYjIhkqC+K6vpfAoYOUUTRv4pIWXYTZaM4Yx8h+f+Gxn?=
- =?iso-8859-1?Q?ltx3W0NJZtFCKbhXvM/c9QTZ/ImgfR7//EkdN1BMzvlJCV6gYUSspOw14l?=
- =?iso-8859-1?Q?/iFK7uK2utNoYdtcI+fIHlCj6AatoqXUJD62HWt+QqpONtteh1Osi2HNZ0?=
- =?iso-8859-1?Q?Mib6YfBUBtpFNU4IJ6C4DL7tjscaQigAbXAVf9UaaGA06Y2aQ9QKnItMQW?=
- =?iso-8859-1?Q?CT24KZ/vOTbWxxRDzqEH3f6TWBUBmFsDZYgBnTIW9OsJdegpmyJllf34Z1?=
- =?iso-8859-1?Q?G6n4l/RXa0nYIzNHouk9mA+9gYzaGEzF2YX4730UVEuX7057iX87Clkhe7?=
- =?iso-8859-1?Q?h95DiTvfhpukJ0WPYZNPLSBh6tmnqBYhB0cJN01DEAnPTibF1asOQJa30R?=
- =?iso-8859-1?Q?N1RDm47RI5h7L3a37/SZFj3Z/GhA1GJle0zV+aMGSZ+AkqelIcIH7pMLAw?=
- =?iso-8859-1?Q?Bqv/PQx+1NncPruea5kIRWbCLN4z2jhdoh0o3eMCZKmJ5GGLJoVl+pMUKT?=
- =?iso-8859-1?Q?5Ntif2gFHQ9ksBQuiTtCULFRBhHcDlwbKpVvRWatbUyPonhIQKOVFMYB/p?=
- =?iso-8859-1?Q?x5Wp2Eft7Q9eodBOl1DA1PUPB5z8xPl9dy+zMx5AjRdiYfUsbic997UgtD?=
- =?iso-8859-1?Q?7nx4n4tb5uiAoWfqSv1dUWw1bkDm7j+o8JtxKLKAJ1gMLvae7mJ9lTdYOo?=
- =?iso-8859-1?Q?rIiDItJ6OzKEbbFJoSHDctwIHT850jnKr7aYV8tyd1HiLhxucApXl/sZgF?=
- =?iso-8859-1?Q?DLLxTeY01Tn3h36A9af9lIHVw3/IHQgcpr8NC9ImjGc+mVu+1CfRQlbUDh?=
- =?iso-8859-1?Q?FVkqEHhepriyDVIpsv8UylHkz65gWSgE8iZUkQTBCu2gYoZ+NHHGgyfuVM?=
- =?iso-8859-1?Q?fQTlecuP9LXXgYiXJyrJRg0G3vAQrgiv3P/Gg/F+tMfrMXyd+OPDZy4JZd?=
- =?iso-8859-1?Q?Qjm8uUAh+nEmMWZ9Cz2tE0d0S2HIpzbkZT6PhiFZjckZMFwVBzoKyDATsD?=
- =?iso-8859-1?Q?2l+K11XyoG0hJoL2iuZZbyXHQh477Uzz364aGQFJaj8FWrPjko90f7JEOM?=
- =?iso-8859-1?Q?eNV0Oz6lCMhJsp+vYRd86JKR2N8qeweOe7UNuvSRaxWaah8SsbHNG1i2ji?=
- =?iso-8859-1?Q?aFWR9IomWBwcyqnmPkptY7p4OLx1TrQfrKCoR3vP0Ie3mND0gZuW5a4hYp?=
- =?iso-8859-1?Q?hLOSUsFw9hQj1QsNynqKQdcZvAhSL4q4o5RIuMQ4QmgEP7xCPmr50zZNIK?=
- =?iso-8859-1?Q?xGvtQN9aXeA7Czhp8Il8djI9qx+PZiJ3lEIZlUKaSQ6oel6tth64KkIdIP?=
- =?iso-8859-1?Q?EUKl8zuV5SoRY4G7roNXKQuoXdW9/bMg6n/boZwTY0+gmAYlysqlRyL8iB?=
- =?iso-8859-1?Q?DVQ1AkY=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?lOQE4OeuuImMkCulji2zYeWDFEQOXubOGtrEyjfStGtg2/00s46uAsgz4R?=
- =?iso-8859-1?Q?clSXTsr0+0RgoboOtxhCjDn7bxgVWvKBynGU+A20X0bKZ5NsG45l0vRv8n?=
- =?iso-8859-1?Q?ki8H4aFNI601rPWQ3VyvsN2SUCDQoAdiGcg55sTatH/F2e6mr3GkphSr+5?=
- =?iso-8859-1?Q?p2S1dejvhxsKAS9CJ30ZDlMP+5qoCPmIaMYZElxXG1ipoIHSN/1CI5dEGV?=
- =?iso-8859-1?Q?CEWBzjH7YvV7dhTPiPGOh1rR7LDCkTmXgmxT8PEFPTyAWhM+DBcoOiJgR7?=
- =?iso-8859-1?Q?Tb+A1ZR4cgjFIjSrz8iPOX3FqS8erN/6fl9EiEiwjPtMN3paHrHrd+T/jU?=
- =?iso-8859-1?Q?UULWHxPz7t0dkoOLivRU3Q8/z37vsfBlftzbsvdnAkh/N56ZUqH6odpB1A?=
- =?iso-8859-1?Q?WDia5cCoZ9y3VZh1qd8X1hTNCRrSJHV/dlufUNTwEPiiKtCkmf5eWgAOmT?=
- =?iso-8859-1?Q?pnUn8vVVyCsngu7sYGjGmgFs1tmGGGntZCauXD/4eUaEqBlEKKoeb3KB+d?=
- =?iso-8859-1?Q?pc9WAqZynGK8rMAdndPnLaaFnFQawtalWZLqHz0UDPkxIy6Y3BGt3H1BKl?=
- =?iso-8859-1?Q?bA9bz2pwpvrq3L5JvoGcXiYdiTrix5yOyV+nPUlx+opcC/q3/NrXSae08N?=
- =?iso-8859-1?Q?lPC6sOI7o+NJEF0oX5cR262At7lIwR7Z4DfSgr17+BvUt01jvFyX2foQJt?=
- =?iso-8859-1?Q?jn4mJkshJDwPypJPjfd7xvCpd6DwGd4BZdcAlGpFsGtlgQrS/951q0m+fW?=
- =?iso-8859-1?Q?bn/cuU0JlyYrkGKAvYz32xNrobMXQZ/VFN7PHfKx2oWc4LBZfJ0ujFtXgI?=
- =?iso-8859-1?Q?4SxHcl2eFRP7efHOCeXZYvRatgz6jNHVyXKprfbCpEifyk4riE+lh3KW0f?=
- =?iso-8859-1?Q?08MtMWaRzTxtATgIZbxGFh3VnYNPLVjQpj+binya5bF6obsWhGajGko3lH?=
- =?iso-8859-1?Q?w3uLA0iCwGVBpAnvPAcX5ASyJbYCHSTsZywzMWvPCEsEGJVZ/BWU8Fd5ey?=
- =?iso-8859-1?Q?+5XE8N5LlsB1LAP3PKHlPRGQwcBmYWQN0Nffmpw3XIJK+PU+JvVwCDCBQi?=
- =?iso-8859-1?Q?6wKkq+T5oXh/qKLkJc9FaG4oDWqkNWTsQv0TawdObesrGcCVq6zuj6101w?=
- =?iso-8859-1?Q?vYSgQ3QaU/r3bgzxSxN4zwg7UqJJL+EISk3oiy+DkxjqcD0LNkrWkYKsVm?=
- =?iso-8859-1?Q?1kfJlqe4bzMeNyFfDROYLG+X/YE8/BpYDCRBZQ/topfxadWAzfr5ltBgHe?=
- =?iso-8859-1?Q?Vs9HKHnmRlGHJEVfgMme1YC2vBQF6X11temoAV67cW7IsVGbfed+baSxwu?=
- =?iso-8859-1?Q?ET69juJBLn88r4+jbvNzPMuKBFrdpWhQuJZlBucWnl0xvY7KrKbBUCsRJs?=
- =?iso-8859-1?Q?D9Upmc8b+L4jUGtLg+C00hvQrfQmIRP9sjbbtd2axj7ywzAu5eR4Z201hS?=
- =?iso-8859-1?Q?ywWe+zvu5gP7Znr6qJ82OzKp/HKUZASl+7X6RLltumLX2QnOB21Dr3DJia?=
- =?iso-8859-1?Q?Iie6VoMX2mPl3mmrKYAFGkDrvaGcrfRhXDQsuD15EZgr3XoXmJGBTrRRSb?=
- =?iso-8859-1?Q?nRKnD/h3IhGIi0AHDb6MzZ5O/L00l12HQLe0K0Zyr9sXWmzzFERQH1vf6C?=
- =?iso-8859-1?Q?804hy+ASxNrS/oYwB/kKX2h8lcPJukNdJ8?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ <20250922122018.GU1391379@nvidia.com>
+ <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
+X-ClientProxiedBy: MW4PR03CA0081.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::26) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|LV8PR11MB8748:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f790488-47a9-41de-5ef2-08ddfa6a0a34
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?dVdiNXpsOStMeVZ6QzdnOGtGYkwyM0JPSUdHT1NuNkpaVHlpS29Eazd2NkR4?=
+ =?utf-8?B?cFhFL2JBMzVSQi9jeFFSdGwxczRHRHQwSnVaN3JDbW1vZmloZEZsUlZNUHFh?=
+ =?utf-8?B?Q3dtTWROZmp5Q2E2YlBqUVAzbUdVMmx5YTQwRERnalA4a1U4bkRSdmluZ1Nh?=
+ =?utf-8?B?V21udGZla1FMUElMVUxMYkhIOEhnOUd1TzcyL2h6VFNBWHNzVTVycEdzdXZu?=
+ =?utf-8?B?MXNSaHNLVUlQRThiUzJvYk92SjB2TEEwamV3ZitRd1Vxelo0TEwyd2tsaFNV?=
+ =?utf-8?B?VTdxT1hLcUppUmtSUTNIYjhLcEN3OTJESEFGTTNBK1k4NUJTcnNLR2h1a1dy?=
+ =?utf-8?B?bFF6YjJzNmJUSW5uWDd0bi9LSFJNVFpRQ1dIdHI5bzFwVGlwb2wzMG5HUTVP?=
+ =?utf-8?B?VXRzNHo5akt1VDc4bExUU29ub3RKODZtZmEyZW9RWVpmTmQ4UnBsOThyQ25T?=
+ =?utf-8?B?b1pLd2NGSnZIaFFDRGtyekdmRUxHUFdmdHZFR3U1dEE5dGRadGJDVDdtTi9r?=
+ =?utf-8?B?TnBBWUZQdWZWeFlRUE5FR3dnb1hRUTZVNFVMSERtYW9Yc3ZDbllwUm1BN0dF?=
+ =?utf-8?B?RVFFeG0wTjRlaUwybjlybjJyazRDOVNiaGR4KzJVTklOZ1pyTGlLT3B1b1g2?=
+ =?utf-8?B?U3FuTTBSRUJQQmdIdG5oZXRTRjZOQ3JGK0lZb3pJcldXRDF4dzB0ZEsySFJO?=
+ =?utf-8?B?dG9WNlpyS1ZYQm9GUm9TbmoybTVwUm1jMDRCa0MwYWswRkl6OW8vbUVCSFZp?=
+ =?utf-8?B?TXZFcXpOL28rQ1pPdGdIL2ZxQzlMdDdGOSsrb0psajNFanVmeThUSjdUNmU4?=
+ =?utf-8?B?Mys5QTNiS2NLMnBzeE5WeTNzR0hSUTM5RzBOS3ZSTjFUVHVLWGZJcEdZVzhF?=
+ =?utf-8?B?aU5JRVRTYyswY0toYW54Z1o2Q3JITHF5MVVqeVhaeEhRTFBUNmhLN09wNlNm?=
+ =?utf-8?B?dExmQVZWQTg1Z09xdjFVOGlKZWFrNzRDeHJWSzI0VXFrQVFYSzRQR0NHajJH?=
+ =?utf-8?B?bTJCaElXdG1PT1g4Q2NwTTFrQytNUHVkVHVBRnh0VVovWTlhOENsWWQ2SkVp?=
+ =?utf-8?B?eWxEUjkvaGR5dW1BYzNMcDNZTDI2TG90OHAvT1AyeDdvL056dlZ2Z2NWNmVV?=
+ =?utf-8?B?TnJXRWl3M25FK3NiVlNHVXl6WStUU3dJOE1ZVWJodjBLT1pqMjZUK2NKclZV?=
+ =?utf-8?B?SVBibjRLZGJ0bUNyekU0OVZSVW5OUnBrNTJsVm15RllCN1BmbHA0Zk54Tm5E?=
+ =?utf-8?B?YUgreVhmTDJTTXRzTExHMzdFVDJjVmRWK20yNHhlak8vYTFXKzk4aytWL1NK?=
+ =?utf-8?B?eHlEQ3ZIODNDU2U3M1ZOdmt0VktNcnlKV1JvcnpHdmF2ZGN1SzV0QWxZV1Zz?=
+ =?utf-8?B?a3hsNi9BQ3BmK0l6L2liZXpHckRRV1RNTmxqV3hjSmUzeHF6QWl4ZVpVRmhj?=
+ =?utf-8?B?eDRZc05VcS9OYjF4Uk8zUnZIYzltWEpkN0YzT1h1d0pUY1htMXd0anRYeFRY?=
+ =?utf-8?B?ZktjT0ducXlTT045cU1GaUlUMWJ3NGU4emJGMEJxRU5MMVM3ZjFINnFPRmxj?=
+ =?utf-8?B?bmxBcXhzUFRNN3RZQlBkSzB6cklNQ2V0UnZ6MTlJR3lJZGlRUW9sTFV3Tndu?=
+ =?utf-8?B?RDQycWJBN01CeElHb2ZlUWUvSllNQ2FVZEpMUTNUSUJ6WThVZUk0RzkvQVRO?=
+ =?utf-8?B?enZqWFZQenRVOUM0eDIvL0FNdVRrNkVXcWhpRVZmUklmOEFLS21Obk04VGwx?=
+ =?utf-8?B?UDJVRzZKR1VlMTcrNUNyZGFvMWxpTnZyVGd1dEk4N0JJMXhMMHJzaVFUSHNO?=
+ =?utf-8?B?cVArVlIranpsaWs2VTNUVkl2NWQzalNuWDZhNERqektWV3U3NzJHUWJiOE1F?=
+ =?utf-8?B?eHN2Y1doYU5TZERLWE0zOXN1SVY0c0ZCbFI1VmQ5aGJKM1RhRGxxSHZQdFcr?=
+ =?utf-8?Q?ynpUSL/9DV8=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RHF4TCsvaFQ5eklQZ1hSSlF4UUJIVytvS0NCbjNrS2l6TFkvSFNlblJkZ3l6?=
+ =?utf-8?B?d0hOaWtOOEI2SWY3N3VoOVdsRkhwUkZQSGpTUTV3SmR3TXVFbE5HVWJLK2JX?=
+ =?utf-8?B?RFI5cGdFb2h0YllxTGlPTmFQUm5vTkN0S1FJNEhmajBxdnNYbTlpRDFqUlg3?=
+ =?utf-8?B?TEQ2YXYyY3NDQWplWTdXei92VDZhWE9Sd1VYOHBnV0VESTJnU2loVkpERXJu?=
+ =?utf-8?B?WFM3T1VndStPUXkwL3pxajZLT3NTSU1COVc5cnVwWEZBQm0vdCt5L3hsKzBW?=
+ =?utf-8?B?bWJiL0sreS9PZ1VBaVRlSGxHMjc0M280R2VEallQWHF0T29iTXJoOXc0QXdz?=
+ =?utf-8?B?NnhvaWFIRlk5ODNRWUt2TGxBL3RwZVlRTmN2Y1FkK2gxczBvTVl6alA5a3hX?=
+ =?utf-8?B?cXppOEhrMzZGVnBrc3FLTk12czNOZ2F5RVVPQy9ueEZvZFlUQnV1RlJjajIz?=
+ =?utf-8?B?OWpPTGtUQk1RMjFhRExsYUNFaWh6akxzNHNWVk05Zk5YR0hia2RMdUh1S200?=
+ =?utf-8?B?WVRjTDdzOHVQT2ZmVTBXc2VFTk44akR0YWJDOWNPVnZpUlQyZmNIclZBNGdI?=
+ =?utf-8?B?L2x2YjNzaEJva2NCS2Vhd3BZKzBzSURXNSsxMnFhSElZWFcreWw2c09BaUVz?=
+ =?utf-8?B?NW1RMC8yVHMrVExleHlKMy82TW95Yk1MSGlxV1JaTjVnVU4zMzVENGJ6MktL?=
+ =?utf-8?B?MnhveGFWTHNWZmc1S2NrdlpxRndDcWRYSlFOcEN6a0tTM3ZZT2hHd0RVVjlm?=
+ =?utf-8?B?UW1UYVlVZ0IzTm53UkJoMVNSUEdnLzNvWVZycnJyaWhUbndxSVBXcUl2RkJo?=
+ =?utf-8?B?akpoczN6d2txdkRKd0JrZVJPNnBXOUJKQjh4clZoM1FJVk9PRW9ZdERjU05u?=
+ =?utf-8?B?Tm9rMWdkZ1V4VlFJK2poMlB0K05wRmxVS2MvV3ZLZm5xaTljS1JvelJSbmJP?=
+ =?utf-8?B?akNIanhvaGdwc1h3NHAwTjdTZjZCT3RBR25LcmJCZnN0RlgxWndwWmw0VEx2?=
+ =?utf-8?B?SnUyL08vMGg3TUpaY1R4VitMa1VOMjhxaVMxekRYWTFBMXVEUEErMk8raXJs?=
+ =?utf-8?B?TGVHTTh2MHJmZ2thdFVZYzVpM3ZSdUdPMjdueW81Nmo3Mm1QaVZUR2x4VFJZ?=
+ =?utf-8?B?Y1Y0ejlId0lOTkJWSmY1VDVKVEtpTytlVWRPc1lzUkNCK1dPNHlWSWdycXdp?=
+ =?utf-8?B?a3pOTGE5bVFzL3E0cUJJZXJxU2phNHFPbkxZcHkvK0JiM2lRRlA0akRjWENh?=
+ =?utf-8?B?WHBlSEcrd2pxSy8rZFIyYitKb0RkcXZrUkZueW9UNkdYWjhRbEtCUGpZdXpI?=
+ =?utf-8?B?KzBvQ0pocUVlTVR5d2xrQkkvQXlKQzFpSnExT29EOExKRzNON29YMmg1VDVr?=
+ =?utf-8?B?SmRWa29ZaHMwSzJmN2U2WWIrSXR5OWtlck1VY0dWdEJ4ZUhlcGc1OGVuNlNO?=
+ =?utf-8?B?TytCcHdibWJWcUNSTWd5TVVlMnB3aGJPeFJuZkxDb2VGQkk0b01VbXNhSGha?=
+ =?utf-8?B?c2ZWSmdSc05JdUszQm9POVl1SnFlcmx4T1UyRW1tcGtnTE9BeGZjaTF4WG5s?=
+ =?utf-8?B?SlhUSFpHVjdhRlJicFF0NGpITHlpTSthc0xWZU96ZlJhL2htWXkzU3lkQnhx?=
+ =?utf-8?B?UTRtYlNDZXFJNVJCTk5nOWprajA3anZhdzZ1QzNyNWtRWjRmMXg5NGZnYmYy?=
+ =?utf-8?B?dVk4eWZYOVVkbkx5aXBpM3N4VGo2c016dE5kMGJFWkx2dG1CQlQ2TGVuZzNu?=
+ =?utf-8?B?elJWazY2dW5odnNqb1oyL1VKUmZhSnlFd0t6SlZYWGpidWJoRVJJNkYrYjEw?=
+ =?utf-8?B?b1dnYlJyVWxqRGtWLzdxZWlYMGhMYzdtWURWb21YQ25yY012NzcvYTBZVE5w?=
+ =?utf-8?B?SlI1bWVkVjB0RmlhZW9WZmdtdzRpTDYvYk5uTlBYVzE2UERwM0NuV0FSUHQz?=
+ =?utf-8?B?emIydTNOa24zem1BcVcxekdpVjd1enBHdTFJZDNrVHYzeDQzME5CNzRQSUls?=
+ =?utf-8?B?SktxN2piaHpBN290eU1ERWdZOEJUejF3YkFneWZlUk9OYVIrUjVrQ01ZN2h5?=
+ =?utf-8?B?UW0zVzYzcjRoMmZ4RmQrTTlvTXE5RUM3dFZlbERqVmVzYlF1bmhXUGtNT0F0?=
+ =?utf-8?B?NzM1TThFa1VIdnZDLzYvbVo1VEs2SGtxK1BBNFFIOTdDa0JMYnNxZ1BnWHJs?=
+ =?utf-8?B?N2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f790488-47a9-41de-5ef2-08ddfa6a0a34
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ced5488c-fb5f-4106-7428-08ddfa66a6a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2025 06:01:34.5246
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 06:25:50.2638
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E5jAkapFU9TTb7IKQprrOMC+nNSZihR81VHSWL3f1J1iT9+JPzDXun2LTazlyIub54g0hXAwbsOVkYlIRmtywjbHAg6Sks2BRb7ScdYLeaU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6853
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EbGnLP8/nVcTQZP7lpN5EuCdRCFcv2V6S8sEHjGLXnZyFy028VgEzPePWzW4vkGU73vaCdpR8fCK1OzFej8JxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8748
 X-OriginatorOrg: intel.com
 
-Hi Christian,
+On Mon, Sep 22, 2025 at 11:53:06PM -0600, Kasireddy, Vivek wrote:
+> Hi Jason,
+> 
+> > Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+> > functions of Intel GPUs
+> > 
+> > On Mon, Sep 22, 2025 at 01:22:49PM +0200, Christian König wrote:
+> > 
+> > > Well what exactly is happening here? You have a PF assigned to the
+> > > host and a VF passed through to a guest, correct?
+> > >
+> > > And now the PF (from the host side) wants to access a BAR of the VF?
+> > 
+> > Not quite.
+> > 
+> > It is a GPU so it has a pool of VRAM. The PF can access all VRAM and
+> > the VF can access some VRAM.
+> > 
+> > They want to get a DMABUF handle for a bit of the VF's reachable VRAM
+> > that the PF can import and use through it's own funciton.
+> > 
+> > The use of the VF's BAR in this series is an ugly hack.
+> IIUC, it is a common practice among GPU drivers including Xe and Amdgpu
+> to never expose VRAM Addresses and instead have BAR addresses as DMA
+> addresses when exporting dmabufs to other devices. Here is the relevant code
+> snippet in Xe:
+>                 phys_addr_t phys = cursor.start + xe_vram_region_io_start(tile->mem.vram);             
+>                 size_t size = min_t(u64, cursor.size, SZ_2G);                         
+>                 dma_addr_t addr;                                                      
+>                                                                                       
+>                 addr = dma_map_resource(dev, phys, size, dir,                         
+>                                         DMA_ATTR_SKIP_CPU_SYNC);
+> 
+> And, here is the one in amdgpu:
+>         for_each_sgtable_sg((*sgt), sg, i) {
+>                 phys_addr_t phys = cursor.start + adev->gmc.aper_base;
+>                 unsigned long size = min(cursor.size, AMDGPU_MAX_SG_SEGMENT_SIZE);
+>                 dma_addr_t addr;
+> 
+>                 addr = dma_map_resource(dev, phys, size, dir,
+>                                         DMA_ATTR_SKIP_CPU_SYNC);
+> 
 
->=20
-> Hi guys,
->=20
-> On 22.09.25 08:59, Kasireddy, Vivek wrote:
-> > Hi Jason,
-> >
-> >> Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for
-> device
-> >> functions of Intel GPUs
-> >>
-> >> On Fri, Sep 19, 2025 at 06:22:45AM +0000, Kasireddy, Vivek wrote:
-> >>>> In this case messing with ACS is completely wrong. If the intention =
-is
-> >>>> to convay a some kind of "private" address representing the physical
-> >>>> VRAM then you need to use a DMABUF mechanism to do that, not
-> >> deliver a
-> >>>> P2P address that the other side cannot access.
-> >>
-> >>> I think using a PCI BAR Address works just fine in this case because =
-the
-> Xe
-> >>> driver bound to PF on the Host can easily determine that it belongs t=
-o
-> one
-> >>> of the VFs and translate it into VRAM Address.
-> >>
-> >> That isn't how the P2P or ACS mechansim works in Linux, it is about
-> >> the actual address used for DMA.
-> > Right, but this is not dealing with P2P DMA access between two random,
-> > unrelated devices. Instead, this is a special situation involving a GPU=
- PF
-> > trying to access the VRAM of a VF that it provisioned and holds a
-> reference
-> > on (note that the backing object for VF's VRAM is pinned by Xe on Host
-> > as part of resource provisioning). But it gets treated as regular P2P D=
-MA
-> > because the exporters rely on pci_p2pdma_distance() or
-> > pci_p2pdma_map_type() to determine P2P compatibility.
-> >
-> > In other words, I am trying to look at this problem differently: how ca=
-n the
-> > PF be allowed to access the VF's resource that it provisioned, particul=
-arly
-> > when the VF itself requests the PF to access it and when a hardware pat=
-h
-> > (via PCIe fabric) is not required/supported or doesn't exist at all?
->=20
-> Well what exactly is happening here? You have a PF assigned to the host
-> and a VF passed through to a guest, correct?
-Yes, correct.
+I've read through this thread—Jason, correct me if I'm wrong—but I
+believe what you're suggesting is that instead of using PCIe P2P
+(dma_map_resource) to communicate the VF's VRAM offset to the PF, we
+should teach dma-buf to natively understand a VF's VRAM offset. I don't
+think this is currently built into dma-buf, but it probably should be,
+as it could benefit other use cases as well (e.g., UALink, NVLink,
+etc.).
 
->=20
-> And now the PF (from the host side) wants to access a BAR of the VF?
-Yes, that is indeed the use-case, except that the PF cannot access a buffer
-located in VF's VRAM portion via the BAR because this path is likely not
-supported by our hardware. Therefore, my proposal (via this patch series)
-is to translate the BAR addresses into VRAM addresses in Xe driver (on the =
-Host).
+In both examples above, the PCIe P2P fabric is used for communication,
+whereas in the VF→PF case, it's only using the PCIe P2P address to
+extract the VF's VRAM offset, rather than serving as a communication
+path. I believe that's Jason's objection. Again, Jason, correct me if
+I'm misunderstanding here.
 
-Here are some more details about the use-case (copied from an earlier reply
-to Jason):
-- Xe Graphics driver, bound to GPU PF on the Host provisions its resources
-including VRAM among all the VFs.
+Assuming I'm understanding Jason's comments correctly, I tend to agree
+with him.
 
-- A GPU VF device is bound to vfio-pci and assigned to a Linux VM which
-is launched via Qemu.
+> And, AFAICS, most of these drivers don't see use the BAR addresses directly
+> if they import a dmabuf that they exported earlier and instead do this:
+> 
+>         if (dma_buf->ops == &xe_dmabuf_ops) {
+>                 obj = dma_buf->priv;
+>                 if (obj->dev == dev &&
+>                     !XE_TEST_ONLY(test && test->force_different_devices)) {
+>                         /*
+>                          * Importing dmabuf exported from out own gem increases
+>                          * refcount on gem itself instead of f_count of dmabuf.
+>                          */
+>                         drm_gem_object_get(obj);
+>                         return obj;
+>                 }
+>         }
 
-- The Xe Graphics driver running inside the Linux VM creates a buffer
-(Gnome Wayland compositor's framebuffer) in the VF's portion (or share)
-of the VRAM and this buffer is shared with Qemu. Qemu then requests
-vfio-pci driver to create a dmabuf associated with this buffer.
+This code won't be triggered on the VF→PF path, as obj->dev == dev will
+fail.
 
-- Next, Qemu (UI layer) requests the GPU PF (via the Xe driver) to import
-the dmabuf (for display purposes) located in VF's portion of the VRAM. This
-is where two problems occur:=20
+> 
+> >The PF never actually uses the VF BAR
+> That's because the PF can't use it directly, most likely due to hardware limitations.
+> 
+> >it just hackily converts the dma_addr_t back
+> > to CPU physical and figures out where it is in the VRAM pool and then
+> > uses a PF centric address for it.
+> > 
+> > All they want is either the actual VRAM address or the CPU physical.
+> The problem here is that the CPU physical (aka BAR Address) is only
+> usable by the CPU. Since the GPU PF only understands VRAM addresses,
+> the current exporter (vfio-pci) or any VF/VFIO variant driver cannot provide
+> the VRAM addresses that the GPU PF can use directly because they do not
+> have access to the provisioning data.
+>
 
-1) The exporter (vfio-pci driver in this case) calls pci_p2pdma_map_type()
-to determine the mapping type (or check P2P compatibility) between both
-devices (GPU VF and PF) but it fails due to the ACS enforcement check becau=
-se
-the PCIe upstream bridge is not whitelisted, which is a common problem on
-workstations/desktops/laptops.
+Right, we need to provide the offset within the VRAM provisioning, which
+the PF can resolve to a physical address based on the provisioning data.
+The series already does this—the problem is how the VF provides
+this offset. It shouldn't be a P2P address, but rather a native
+dma-buf-provided offset that everyone involved in the attachment
+understands.
+ 
+> However, it is possible that if vfio-pci or a VF/VFIO variant driver had access
+> to the VF's provisioning data, then it might be able to create a dmabuf with
+> VRAM addresses that the PF can use directly. But I am not sure if exposing
+> provisioning data to VFIO drivers is ok from a security standpoint or not.
+> 
 
-2) Assuming that pci_p2pdma_map_type() did not fail (likely on server syste=
-ms
-with whitelisted PCIe bridges), based on my experiments, the GPU PF is unab=
-le
-to access the buffer located in VF's VRAM portion directly because it is re=
-presented
-using PCI BAR addresses. (note that, the PCI BAR address is the DMA address
-here which seems to be a common practice among GPU drivers including Xe and
-Amdgpu when exporting dmabufs to other devices).
+I'd prefer to leave the provisioning data to the PF if possible. I
+haven't fully wrapped my head around the flow yet, but it should be
+feasible for the VF → VFIO → PF path to pass along the initial VF
+scatter-gather (SG) list in the dma-buf, which includes VF-specific
+PFNs. The PF can then use this, along with its provisioning information,
+to resolve the physical address.
 
-The only way this seems to be work at the moment is if the BAR addresses
-are translated into VRAM addresses that the GPU PF understands (this is don=
-e
-done inside Xe driver on the Host using provisioning data). Note that this =
-buffer
-is accessible by the CPU using BAR addresses but it is very slow.
+Matt
 
-So, in summary, given that the GPU PF does not need to use PCIe fabric in
-order to access the buffer located in GPU VF's portion of the VRAM in this
-use-case, I figured adding a quirk (to not enforce ACS check) would solve 1=
-)
-and implementing the BAR to VRAM address translation in Xe driver on the
-Host would solve 2) above.
-
-Also, Jason suggested that using dmabuf private address mechanism would
-help with my use-case. Could you please share details about how it can be
-used here?
-
-Thanks,
-Vivek
-
->=20
-> Regards,
-> Christian.
->=20
-> >
-> > Furthermore, note that on a server system with a whitelisted PCIe
-> upstream
-> > bridge, this quirk would not be needed at all as pci_p2pdma_map_type()
-> > would not have failed and this would have been a purely Xe driver speci=
-fic
-> > problem to solve that would have required just the translation logic an=
-d
-> no
-> > further changes anywhere. But my goal is to fix it across systems like
-> > workstations/desktops that do not typically have whitelisted PCIe
-> upstream
-> > bridges.
-> >
-> >>
-> >> You can't translate a dma_addr_t to anything in the Xe PF driver
-> >> anyhow, once it goes through the IOMMU the necessary information is
-> lost.
-> > Well, I already tested this path (via IOMMU, with your earlier vfio-pci=
- +
-> > dmabuf patch that used dma_map_resource() and also with Leon's latest
-> > version) and found that I could still do the translation in the Xe PF d=
-river
-> > after first calling iommu_iova_to_phys().
-> >
-> >> This is a fundamentally broken design to dma map something and
-> >> then try to reverse engineer the dma_addr_t back to something with
-> >> meaning.
-> > IIUC, I don't think this is a new or radical idea. I think the concept =
-is
-> slightly
-> > similar to using bounce buffers to address hardware DMA limitations
-> except
-> > that there are no memory copies and the CPU is not involved. And, I don=
-'t
-> see
-> > any other way to do this because I don't believe the exporter can provi=
-de
-> a
-> > DMA address that the importer can use directly without any translation,
-> which
-> > seems unavoidable in this case.
-> >
-> >>
-> >>>> Christian told me dmabuf has such a private address mechanism, so
-> >>>> please figure out a way to use it..
-> >>>
-> >>> Even if such as a mechanism exists, we still need a way to prevent
-> >>> pci_p2pdma_map_type() from failing when invoked by the exporter
-> (vfio-
-> >> pci).
-> >>> Does it make sense to move this quirk into the exporter?
-> >>
-> >> When you export a private address through dmabuf the VFIO exporter
-> >> will not call p2pdma paths when generating it.
-> > I have cc'd Christian and Simona. Hopefully, they can help explain how
-> > the dmabuf private address mechanism can be used to address my
-> > use-case. And, I sincerely hope that it will work, otherwise I don't se=
-e
-> > any viable path forward for what I am trying to do other than using thi=
-s
-> > quirk and translation. Note that the main reason why I am doing this
-> > is because I am seeing at-least ~35% performance gain when running
-> > light 3D/Gfx workloads.
-> >
-> >>
-> >>> Also, AFAICS, translating BAR Address to VRAM Address can only be
-> >>> done by the Xe driver bound to PF because it has access to provisioni=
-ng
-> >>> data. In other words, vfio-pci would not be able to share any other
-> >>> address other than the BAR Address because it wouldn't know how to
-> >>> translate it to VRAM Address.
-> >>
-> >> If you have a vfio varient driver then the VF vfio driver could call
-> >> the Xe driver to create a suitable dmabuf using the private
-> >> addressing. This is probably what is required here if this is what you
-> >> are trying to do.
-> > Could this not be done via the vendor agnostic vfio-pci (+ dmabuf) driv=
-er
-> > instead of having to use a separate VF/vfio variant driver?
-> >
-> >>
-> >>>> No, don't, it is completely wrong to mess with ACS flags for the
-> >>>> problem you are trying to solve.
-> >>
-> >>> But I am not messing with any ACS flags here. I am just adding a quir=
-k to
-> >>> sidestep the ACS enforcement check given that the PF to VF access doe=
-s
-> >>> not involve the PCIe fabric in this case.
-> >>
-> >> Which is completely wrong. These are all based on fabric capability,
-> >> not based on code in drivers to wrongly "translate" the dma_addr_t.
-> > I am not sure why you consider translation to be wrong in this case
-> > given that it is done by a trusted entity (Xe PF driver) that is bound =
-to
-> > the GPU PF and provisioned the resource that it is trying to access.
-> > What limitations do you see with this approach?
-> >
-> > Also, the quirk being added in this patch is indeed meant to address a
-> > specific case (GPU PF to VF access) to workaround a potential hardware
-> > limitation (non-existence of a direct PF to VF DMA access path via the
-> > PCIe fabric). Isn't that one of the main ideas behind using quirks -- t=
-o
-> > address hardware limitations?
-> >
-> > Thanks,
-> > Vivek
-> >
-> >>
-> >> Jason
-
+> Thanks,
+> Vivek
+> 
+> > 
+> > Jason
 
