@@ -1,76 +1,78 @@
-Return-Path: <linux-pci+bounces-36800-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36801-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B318B97489
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:07:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF68DB974A1
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:07:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EAD41725AD
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:07:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8462E19C5E17
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FFB13019D6;
-	Tue, 23 Sep 2025 19:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC6E304968;
+	Tue, 23 Sep 2025 19:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqfmJOOK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dI8sVTq8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0D302749
-	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 19:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA5B303A1D
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 19:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758654442; cv=none; b=IsvEfV8wEJQfoZ1m2YmkYQYyyY92h1ll/E7+JdipQBM5kRB+0bcAf7xenNiSylzmol5t3WkM0IXM/EbwHUOAt/FzeZAoKHPRmFpBbB0WDfTkZeiBtJC/3u2Y1uf69wVK8vqdAq/dr5RYKKQZzoPtmYDWB1n9+Ab3ugxSRGhuWPg=
+	t=1758654446; cv=none; b=MuukBMbNuEh1hYc/RSU5i/aSG0Ydrw0D2DIxffWIN+GYMKRz28qfLgNATPywQszh1eg0qb6qG+m2dcMuOe3kK2djWGoAc4BooOvTDq8A5AQz3LUBZ9ZZJvDmHvEeV2TmBvryq+b8RY3jEKGVfavHM5njDObV7+liiZH/kMT4T5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758654442; c=relaxed/simple;
-	bh=QgVgbq4g9r3DsKzKpUEjKl9QE2+bdP8si2aMkXfho5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5KyzTWyJiOq+6YDffgVOLn9mv02hYNxmHo6sDnql2LCvY8AvzM7AgWAX0sjK4LogbSSiPjDNTTCDeaS1tdzbADmhr1WhW65P5rKy3hpyu3UGcNT9KRqcgYF4Y3CidgpiXsRvcclGqBSkTAdR1O3UYl8HJwzxGdEquSVKp6U1g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqfmJOOK; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1758654446; c=relaxed/simple;
+	bh=zdGNgePx0iG5TdC4PLAwgN6HlxLRLnRyX/Uw1iUB1ZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aMhtre/gXLcdeF/NNfnS45uyOtvgsH6b/Ff2XyRR1EI7N+qoDwMqWO/5RhdfeP+SdyOz1ofFyI/BO7AVdhLXTljFMljpBFsqOGU8cVkQepGUjMlLJao0C44NnRZcK6LRKacF8eBU2rLeLuZ1lutqzC5HXAad8g/xLlxWnO/Y9NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dI8sVTq8; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3ee64bc6b85so4381009f8f.3
-        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 12:07:20 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-46dfd711172so19964725e9.1
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 12:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758654439; x=1759259239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iIzcezubwlq0RFm/fy2Wz7m1elEGd+5wrncON0Sn1iM=;
-        b=RqfmJOOKyAdZWFBWvEk01sIkCGVdRj+oqpn+amAuciY6dICRvStUkyb7ejPfI/NpKq
-         rPVJOXM9n9dOO+DR6T9voctkYUzWoSMMUppU5IyUqimcxZXbJ4MRLR9o2yYNxfBKeUvF
-         ZZ+aUxYG8GYaTnLI0Bry0qxoFRR23xMmyrr5tQpJDE6znuDcqwXmGy7vh8iHn9iZ2D6c
-         hrIJKiAVpMjf5DqCUP26DvEt/9d5UrLZJrxt3ojIP+Ioq0GHThIUZkyd8I1ovaabDcCt
-         qFhNpoWyFYxoMHS7I9C7hfEQ7V1syy44TGNybg4LaUNZCPXqzyA7+HoqvOg399GCdI9j
-         6vFw==
+        d=gmail.com; s=20230601; t=1758654441; x=1759259241; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rlIfyIuKUfu0Giv/t2LPO4IvsJ2XIyV5+eVLug5OMo8=;
+        b=dI8sVTq8eldQu5ZiKhybJdHZq+g7GVV1+DnBjxOp3GuLo654huGMp5DGVsXCu4kszp
+         UOhCZjFErqE1W3pS92GTPmBhZjVkLslKwtJB7qgHn41Tn3ccsSDn0e8MAnkGte18F+n8
+         cHZwku61Wu2og1kMqqynYdC9hln1PAJ5262pagCWIsRE0Pa8uRTGxMGNqPjY/fxqZpAl
+         gOivuSrjT2Cf6PgLeXeP1Sv6an5g6T2fVdYPinKsxZpynZ8J7Dcm/HbvUWqpPX94qsAR
+         P8xTIxLX0ezaP/ut6jFvNPtxijx2COVxNuJh6LSWOh9FVjd0/nrLZiZGaw94K7MKM680
+         g6hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758654439; x=1759259239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iIzcezubwlq0RFm/fy2Wz7m1elEGd+5wrncON0Sn1iM=;
-        b=Ch8WpwPi6121zfKhZeaR4PUMvty7ufsPH+OJWkJljpKnWr+E3WwEAV6SCFZMD/sUcT
-         ZE3lrcLl1TgDs+PLRzsB6eGcRa4zvkhEEhNiymKOnDlsEFrAO6ryWlWj60VeSUJVW5+d
-         j2XmVeVlobxuutghhuQ05lWkRKmMtE4kiQIISiR0bO8CK9siVKf6rdxIPknOFtcA46GS
-         rI+DDskQ9HXydAnX6bFc9R43aC+KjENBHsSkheymEQbh13e/G5CYoexGZ8wB5ZXMOSvw
-         /td6f7RNxg/PpCWpQgSpua28kUGGLTjZ/sKo6KGHAxnRRfd7FdxXWNHwY10FpmIntwx/
-         lpjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMfPrNq2XjGSozcMKLNmc44sRAYIFJbKf/kTMOOA7g4cIFv8X6vG4ejq2D8yYPs8P0+KlqwKcPCIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe/0FB4KUkLm1nWxOqPpotE65oDmdL86cypwd8OcZM5Ps2uGlz
-	wrchPirJZSGrBreF+9yH4lbZlbPBw0alIraJcujhplCEpYgtB4qSDBbs
-X-Gm-Gg: ASbGncvaIssy8vquJLn7ht5LFMcX39Ej4WdFL/cZTyUOLzEPOTdlWuDpSYhLdDM4CEI
-	xJQfI94HjK++0bGncI9i0d7xIJPpKwrd4KgWwYAFFTfDAY8FdbHkU5ywcW53prW9EN40aTsPYJ1
-	DYW42GID87pVVhwnHDqH0KECJVXjOB8ZNyKUXOIzyRcVsBJbV3e+W+ozLMXeue42L4YHq7TAZ4j
-	DAPdxTqNqB2W2K/DH/o35emP+TH6Tp09AGKoe/AM9daQBT5FqIkr9mpaXAFOiWE/YYTHmkBnMSr
-	AJF5eRq0JDzdTrjKa8rMVZ7wagqm12/tDrbtWh1UOwfmuyJ4zr+hynIt9nqDtzQbuqn7sNi+Q9c
-	xvROHPHcP9UPvFkK5RlX2VG6lqJaf/ufxP0bX7L1JQnI7HV/nmdzmjXH6j+u4zeSvP6RKrbU=
-X-Google-Smtp-Source: AGHT+IFMC5WZipXFwAc0jOhdCUt9YzXLNEh2M6BwA3JZ+CheIOjLK/BQJ1BA+7EBMR0NC+aWeWWvaA==
-X-Received: by 2002:a5d:588e:0:b0:3fb:7afc:c17 with SMTP id ffacd0b85a97d-405c7c5e8d2mr3394096f8f.28.1758654438709;
-        Tue, 23 Sep 2025 12:07:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758654441; x=1759259241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rlIfyIuKUfu0Giv/t2LPO4IvsJ2XIyV5+eVLug5OMo8=;
+        b=vsj4P/61z1nwsJmwH/7BzoFfWemeX8juTlowD8MJrQiGJnqtFO3u8ssjHr+SIiy6v9
+         GRgMHJa3bZs7z3iEeQpxOVUGPBbfvAwfm4ejjsZJ9+ytMGBbmfAd4EXUW08Jrl0ERl6/
+         3u+ooTgGl09u0ELpHK/nUELKxEmWZ7waqDmUstnXAq7kYP5rWX1g48MXNDt9RhDVQ3Uz
+         xNbrmqjHU34e48GVF7vNsD3CUnp9EITVcdz5+dDZOxrL6b4WNQmGVj/Sbax0dM/jflh6
+         ZTuT5MOXxSzmK+3xm9v8XESRhVB61+j/SWuHwcKe4nAnz11s021t4iSjag1i3YleQYAw
+         AujQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8gdXUa7uZcFKrwdncMH0khyr0iCXmJyQ3mSrqIfZhqrvi9EyY1uneuLUHLmHXzTM1enZUga7e+HU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4RUJY94z3VJgE68LHFhSMStdB8/t/f/Qvy6g5N4nwruFPdTyJ
+	aLasPCBlLfXf/3yqKHHoZAbK97gyk2adG6uzZmyUZlmpjJeaK/3PnaC5php0MQ==
+X-Gm-Gg: ASbGncuyYbICM+o0ECEkzCRO1WmgRT632bAygPdRHvsAhYLLjVDow7RV9OWQPcvxRWw
+	Wgv2ejEKbe1WuBh6HYM8PNQvG77/qSGkcJhp1zZPJ5v4A9NO3uW9tG/t8z6mm6L97oFJiQRdHDa
+	425AjQAHJNk7pT96kSOz7XTN/Bj9rIYnwCLBn9+Fr1+fvPjD0nzHnCUdTRH8MY6FJAkByHr3BzS
+	r6iapBTYAbwZdcZXLoc2UFl/SXY0mRSMp+JYMjj6Do6rWW1i+YlCCG6EbjrwnjZ3NxlURJL8Ed3
+	2FPaug2P8PXRGwKQV0QKQH46XvSg2eeDIlBsKdpi2Jm9UzG4bNtvk2/rKtcRqRWbKqqa+A8aAs0
+	pHGiLBP+2DEd3zSdm1SLB4AHiAiZ1z1vkdfc9j9M6q/Ka1wEi5Vb39ZddJ0a+Sd6OwTDUlzo=
+X-Google-Smtp-Source: AGHT+IFoxRtCJp+VI5Tw8FmClZ4lUAsWofpK0fvdL3jcvd8nDXAM5pqPxbH7pHIHEhBDKvkDPaydXg==
+X-Received: by 2002:a05:600c:45d4:b0:46e:1b89:77f1 with SMTP id 5b1f17b1804b1-46e1d98004emr43610015e9.9.1758654440543;
+        Tue, 23 Sep 2025 12:07:20 -0700 (PDT)
 Received: from Ansuel-XPS24 (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-464f0d8a2bfsm265240915e9.2.2025.09.23.12.07.16
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-464f0d8a2bfsm265240915e9.2.2025.09.23.12.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 12:07:18 -0700 (PDT)
+        Tue, 23 Sep 2025 12:07:20 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Ryder Lee <ryder.lee@mediatek.com>,
 	Jianjun Wang <jianjun.wang@mediatek.com>,
@@ -90,10 +92,12 @@ To: Ryder Lee <ryder.lee@mediatek.com>,
 	linux-arm-kernel@lists.infradead.org,
 	upstream@airoha.com
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: PCI: mediatek-gen3: Add support for Airoha AN7583
-Date: Tue, 23 Sep 2025 21:06:59 +0200
-Message-ID: <20250923190711.23304-1-ansuelsmth@gmail.com>
+Subject: [PATCH v2 2/2] PCI: mediatek-gen3: add support for Airoha AN7583 SoC
+Date: Tue, 23 Sep 2025 21:07:00 +0200
+Message-ID: <20250923190711.23304-2-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250923190711.23304-1-ansuelsmth@gmail.com>
+References: <20250923190711.23304-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,59 +106,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce Airoha AN7583 SoC compatible in mediatek-gen3 PCIe controller
-binding.
+Add support for Airoha AN7583 SoC that implement the same logic of
+Airoha EN7581 with the only difference that only 1 PCIe line is
+supported (for GEN3).
 
-This differ from the Airoha EN7581 SoC by the fact that only one Gen3
-PCIe controller is present on the SoC.
+A dedicated compatible is defined with the pdata struct with the 1 reset
+line.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
 Changes v2:
 - Fix alphabetical order
 
- .../bindings/pci/mediatek-pcie-gen3.yaml      | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/pci/controller/pcie-mediatek-gen3.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 0278845701ce..1ca9594a9739 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -58,6 +58,7 @@ properties:
-           - const: mediatek,mt8196-pcie
-       - const: mediatek,mt8192-pcie
-       - const: mediatek,mt8196-pcie
-+      - const: airoha,an7583-pcie-gen3
-       - const: airoha,en7581-pcie
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 75ddb8bee168..6e68ed75b564 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -1360,7 +1360,17 @@ static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_en7581 = {
+ 	.flags = SKIP_PCIE_RSTB,
+ };
  
-   reg:
-@@ -276,6 +277,26 @@ allOf:
- 
-         mediatek,pbus-csr: false
- 
-+  - if:
-+      properties:
-+        compatible:
-+          const: airoha,an7583-pcie-gen3
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 1
++static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_an7583 = {
++	.power_up = mtk_pcie_en7581_power_up,
++	.phy_resets = {
++		.id[0] = "phy-lane0",
++		.num_resets = 1,
++	},
++	.flags = SKIP_PCIE_RSTB,
++};
 +
-+        clock-names:
-+          items:
-+            - const: sys-ck
-+
-+        resets:
-+          minItems: 1
-+
-+        reset-names:
-+          items:
-+            - const: phy-lane0
-+
-   - if:
-       properties:
-         compatible:
+ static const struct of_device_id mtk_pcie_of_match[] = {
++	{ .compatible = "airoha,an7583-pcie-gen3", .data = &mtk_pcie_soc_an7583 },
+ 	{ .compatible = "airoha,en7581-pcie", .data = &mtk_pcie_soc_en7581 },
+ 	{ .compatible = "mediatek,mt8192-pcie", .data = &mtk_pcie_soc_mt8192 },
+ 	{ .compatible = "mediatek,mt8196-pcie", .data = &mtk_pcie_soc_mt8196 },
 -- 
 2.51.0
 
