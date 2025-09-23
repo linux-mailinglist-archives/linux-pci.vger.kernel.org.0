@@ -1,195 +1,161 @@
-Return-Path: <linux-pci+bounces-36799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52263B9743E
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:02:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B318B97489
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 21:07:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6CE2F1889118
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:03:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EAD41725AD
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 19:07:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B283D2DAFC4;
-	Tue, 23 Sep 2025 19:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FFB13019D6;
+	Tue, 23 Sep 2025 19:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+bSPE6m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqfmJOOK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836B51D5146;
-	Tue, 23 Sep 2025 19:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0D302749
+	for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 19:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758654153; cv=none; b=c/Xd3zOIX6dwknkwY+FcNq8sdQSFkydFyBLEGLAeJGCIFJKti8i0iOnWtOJ7elvjdqWBOQq2Np2zaBaVbp7ZAN+ikB2+lZSRd2yNF6GWIlYHfD77HxN9lmkVbpgrLoA/TDAoxQrm2WX7g9A+0AiNS8ieJdLiO2iPeP08Uvw+TYs=
+	t=1758654442; cv=none; b=IsvEfV8wEJQfoZ1m2YmkYQYyyY92h1ll/E7+JdipQBM5kRB+0bcAf7xenNiSylzmol5t3WkM0IXM/EbwHUOAt/FzeZAoKHPRmFpBbB0WDfTkZeiBtJC/3u2Y1uf69wVK8vqdAq/dr5RYKKQZzoPtmYDWB1n9+Ab3ugxSRGhuWPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758654153; c=relaxed/simple;
-	bh=LV33iPLSDG1tCcsSWNRhPuvny3ml8/FBH9uZJIGBaM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZaNT26Drg+Xj/9WqjhTi3CJw0R+keH2GBKXpxq+yW31sonHQDTMxFb7L0ACyo6aDWLv5MjGXamTeCQem2yk6MFIHvxbg2Arq4JA6i0PnZndsUsa6csw1CKS0M0Cx1bgvWbwRlkWpl0N4zMq713Msjwmdkf14a8mpIf8qju165NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+bSPE6m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35482C4CEF5;
-	Tue, 23 Sep 2025 19:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758654153;
-	bh=LV33iPLSDG1tCcsSWNRhPuvny3ml8/FBH9uZJIGBaM8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W+bSPE6mq+aeOvROdlX7UJAfxUJysHpH4OQYisWgniaW0HjZ73LieV8iMjxpjnZ6P
-	 Q03icIvrmFfOy66SVzfLN/OnMxNbNu2mkpkhML18CzHzHRFzmEl/tq0yCezgjhQztb
-	 h7zEeocTMJj6d+J7wr/rUb0HAZTKF2Q8F+pyl2tUWJr+GpVX/EvY9z3jNyh+g8gdpU
-	 yzi3tVme5eOlNnY2o5O7xOet2P6tTeDVA0s/k6FyW55n+HBE8eEbG6/0FzT20BWgQw
-	 spCtlm/cXPm0xNtvzQuXxgkPbAJ7A/fKG2mQ+OOndXKJusLiVxBdkltEL1Ejmu29Ea
-	 zH3CUvSc/rRXQ==
-Date: Tue, 23 Sep 2025 14:02:31 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Brian Norris <briannorris@google.com>,
-	stable@vger.kernel.org, Ethan Zhao <etzhao1900@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Subject: Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
-Message-ID: <20250923190231.GA2052830@bhelgaas>
+	s=arc-20240116; t=1758654442; c=relaxed/simple;
+	bh=QgVgbq4g9r3DsKzKpUEjKl9QE2+bdP8si2aMkXfho5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5KyzTWyJiOq+6YDffgVOLn9mv02hYNxmHo6sDnql2LCvY8AvzM7AgWAX0sjK4LogbSSiPjDNTTCDeaS1tdzbADmhr1WhW65P5rKy3hpyu3UGcNT9KRqcgYF4Y3CidgpiXsRvcclGqBSkTAdR1O3UYl8HJwzxGdEquSVKp6U1g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqfmJOOK; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3ee64bc6b85so4381009f8f.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Sep 2025 12:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758654439; x=1759259239; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iIzcezubwlq0RFm/fy2Wz7m1elEGd+5wrncON0Sn1iM=;
+        b=RqfmJOOKyAdZWFBWvEk01sIkCGVdRj+oqpn+amAuciY6dICRvStUkyb7ejPfI/NpKq
+         rPVJOXM9n9dOO+DR6T9voctkYUzWoSMMUppU5IyUqimcxZXbJ4MRLR9o2yYNxfBKeUvF
+         ZZ+aUxYG8GYaTnLI0Bry0qxoFRR23xMmyrr5tQpJDE6znuDcqwXmGy7vh8iHn9iZ2D6c
+         hrIJKiAVpMjf5DqCUP26DvEt/9d5UrLZJrxt3ojIP+Ioq0GHThIUZkyd8I1ovaabDcCt
+         qFhNpoWyFYxoMHS7I9C7hfEQ7V1syy44TGNybg4LaUNZCPXqzyA7+HoqvOg399GCdI9j
+         6vFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758654439; x=1759259239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iIzcezubwlq0RFm/fy2Wz7m1elEGd+5wrncON0Sn1iM=;
+        b=Ch8WpwPi6121zfKhZeaR4PUMvty7ufsPH+OJWkJljpKnWr+E3WwEAV6SCFZMD/sUcT
+         ZE3lrcLl1TgDs+PLRzsB6eGcRa4zvkhEEhNiymKOnDlsEFrAO6ryWlWj60VeSUJVW5+d
+         j2XmVeVlobxuutghhuQ05lWkRKmMtE4kiQIISiR0bO8CK9siVKf6rdxIPknOFtcA46GS
+         rI+DDskQ9HXydAnX6bFc9R43aC+KjENBHsSkheymEQbh13e/G5CYoexGZ8wB5ZXMOSvw
+         /td6f7RNxg/PpCWpQgSpua28kUGGLTjZ/sKo6KGHAxnRRfd7FdxXWNHwY10FpmIntwx/
+         lpjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMfPrNq2XjGSozcMKLNmc44sRAYIFJbKf/kTMOOA7g4cIFv8X6vG4ejq2D8yYPs8P0+KlqwKcPCIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe/0FB4KUkLm1nWxOqPpotE65oDmdL86cypwd8OcZM5Ps2uGlz
+	wrchPirJZSGrBreF+9yH4lbZlbPBw0alIraJcujhplCEpYgtB4qSDBbs
+X-Gm-Gg: ASbGncvaIssy8vquJLn7ht5LFMcX39Ej4WdFL/cZTyUOLzEPOTdlWuDpSYhLdDM4CEI
+	xJQfI94HjK++0bGncI9i0d7xIJPpKwrd4KgWwYAFFTfDAY8FdbHkU5ywcW53prW9EN40aTsPYJ1
+	DYW42GID87pVVhwnHDqH0KECJVXjOB8ZNyKUXOIzyRcVsBJbV3e+W+ozLMXeue42L4YHq7TAZ4j
+	DAPdxTqNqB2W2K/DH/o35emP+TH6Tp09AGKoe/AM9daQBT5FqIkr9mpaXAFOiWE/YYTHmkBnMSr
+	AJF5eRq0JDzdTrjKa8rMVZ7wagqm12/tDrbtWh1UOwfmuyJ4zr+hynIt9nqDtzQbuqn7sNi+Q9c
+	xvROHPHcP9UPvFkK5RlX2VG6lqJaf/ufxP0bX7L1JQnI7HV/nmdzmjXH6j+u4zeSvP6RKrbU=
+X-Google-Smtp-Source: AGHT+IFMC5WZipXFwAc0jOhdCUt9YzXLNEh2M6BwA3JZ+CheIOjLK/BQJ1BA+7EBMR0NC+aWeWWvaA==
+X-Received: by 2002:a5d:588e:0:b0:3fb:7afc:c17 with SMTP id ffacd0b85a97d-405c7c5e8d2mr3394096f8f.28.1758654438709;
+        Tue, 23 Sep 2025 12:07:18 -0700 (PDT)
+Received: from Ansuel-XPS24 (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-464f0d8a2bfsm265240915e9.2.2025.09.23.12.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 12:07:18 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: PCI: mediatek-gen3: Add support for Airoha AN7583
+Date: Tue, 23 Sep 2025 21:06:59 +0200
+Message-ID: <20250923190711.23304-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250820102607.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
+Content-Transfer-Encoding: 8bit
 
-[+cc Ethan, Andrey]
+Introduce Airoha AN7583 SoC compatible in mediatek-gen3 PCIe controller
+binding.
 
-On Wed, Aug 20, 2025 at 10:26:08AM -0700, Brian Norris wrote:
-> From: Brian Norris <briannorris@google.com>
-> 
-> max_link_speed, max_link_width, current_link_speed, current_link_width,
-> secondary_bus_number, and subordinate_bus_number all access config
-> registers, but they don't check the runtime PM state. If the device is
-> in D3cold, we may see -EINVAL or even bogus values.
-> 
-> Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
-> rest of the similar sysfs attributes.
+This differ from the Airoha EN7581 SoC by the fact that only one Gen3
+PCIe controller is present on the SoC.
 
-Protecting the config reads seems right to me.
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+Changes v2:
+- Fix alphabetical order
 
-If the device is in D3cold, a config read will result in a Completion
-Timeout.  On most x86 platforms that's "fine" and merely results in ~0
-data.  But that's merely convention, not a PCIe spec requirement.
+ .../bindings/pci/mediatek-pcie-gen3.yaml      | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-I think it's a potential issue with PCIe controllers used on arm64 and
-might result in an SError or synchronous abort from which we don't
-recover well.  I'd love to hear actual experience about how reading
-"current_link_speed" works on a device in D3cold in an arm64 system.
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+index 0278845701ce..1ca9594a9739 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+@@ -58,6 +58,7 @@ properties:
+           - const: mediatek,mt8196-pcie
+       - const: mediatek,mt8192-pcie
+       - const: mediatek,mt8196-pcie
++      - const: airoha,an7583-pcie-gen3
+       - const: airoha,en7581-pcie
+ 
+   reg:
+@@ -276,6 +277,26 @@ allOf:
+ 
+         mediatek,pbus-csr: false
+ 
++  - if:
++      properties:
++        compatible:
++          const: airoha,an7583-pcie-gen3
++    then:
++      properties:
++        clocks:
++          maxItems: 1
++
++        clock-names:
++          items:
++            - const: sys-ck
++
++        resets:
++          minItems: 1
++
++        reset-names:
++          items:
++            - const: phy-lane0
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.51.0
 
-As Ethan and Andrey pointed out, we could skip max_link_speed_show()
-because pcie_get_speed_cap() already uses a cached value and doesn't
-do a config access.
-
-max_link_width_show() is similar and also comes from PCI_EXP_LNKCAP
-but is not currently cached, so I think we do need that one.  Worth a
-comment to explain the non-obvious difference.
-
-PCI_EXP_LNKCAP is ostensibly read-only and could conceivably be
-cached, but the ASPM exit latencies can change based on the Common
-Clock Configuration.
-
-> Fixes: 56c1af4606f0 ("PCI: Add sysfs max_link_speed/width, current_link_speed/width, etc")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> 
->  drivers/pci/pci-sysfs.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 5eea14c1f7f5..160df897dc5e 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -191,9 +191,16 @@ static ssize_t max_link_speed_show(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
-> +	ssize_t ret;
-> +
-> +	pci_config_pm_runtime_get(pdev);
->  
-> -	return sysfs_emit(buf, "%s\n",
-> -			  pci_speed_string(pcie_get_speed_cap(pdev)));
-> +	ret = sysfs_emit(buf, "%s\n",
-> +			 pci_speed_string(pcie_get_speed_cap(pdev)));
-> +
-> +	pci_config_pm_runtime_put(pdev);
-> +
-> +	return ret;
->  }
->  static DEVICE_ATTR_RO(max_link_speed);
->  
-> @@ -201,8 +208,15 @@ static ssize_t max_link_width_show(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
-> +	ssize_t ret;
-> +
-> +	pci_config_pm_runtime_get(pdev);
-> +
-> +	ret = sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
->  
-> -	return sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
-> +	pci_config_pm_runtime_put(pdev);
-> +
-> +	return ret;
->  }
->  static DEVICE_ATTR_RO(max_link_width);
->  
-> @@ -214,7 +228,10 @@ static ssize_t current_link_speed_show(struct device *dev,
->  	int err;
->  	enum pci_bus_speed speed;
->  
-> +	pci_config_pm_runtime_get(pci_dev);
->  	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-> +	pci_config_pm_runtime_put(pci_dev);
-> +
->  	if (err)
->  		return -EINVAL;
->  
-> @@ -231,7 +248,10 @@ static ssize_t current_link_width_show(struct device *dev,
->  	u16 linkstat;
->  	int err;
->  
-> +	pci_config_pm_runtime_get(pci_dev);
->  	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-> +	pci_config_pm_runtime_put(pci_dev);
-> +
->  	if (err)
->  		return -EINVAL;
->  
-> @@ -247,7 +267,10 @@ static ssize_t secondary_bus_number_show(struct device *dev,
->  	u8 sec_bus;
->  	int err;
->  
-> +	pci_config_pm_runtime_get(pci_dev);
->  	err = pci_read_config_byte(pci_dev, PCI_SECONDARY_BUS, &sec_bus);
-> +	pci_config_pm_runtime_put(pci_dev);
-> +
->  	if (err)
->  		return -EINVAL;
->  
-> @@ -263,7 +286,10 @@ static ssize_t subordinate_bus_number_show(struct device *dev,
->  	u8 sub_bus;
->  	int err;
->  
-> +	pci_config_pm_runtime_get(pci_dev);
->  	err = pci_read_config_byte(pci_dev, PCI_SUBORDINATE_BUS, &sub_bus);
-> +	pci_config_pm_runtime_put(pci_dev);
-> +
->  	if (err)
->  		return -EINVAL;
->  
-> -- 
-> 2.51.0.rc1.193.gad69d77794-goog
-> 
 
