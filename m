@@ -1,117 +1,155 @@
-Return-Path: <linux-pci+bounces-36820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AABA8B97CA5
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:15:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 03DAFB97CC4
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 01:27:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BF513B0841
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:15:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B86BD4C15CA
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Sep 2025 23:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33BD279DB4;
-	Tue, 23 Sep 2025 23:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC50E30C617;
+	Tue, 23 Sep 2025 23:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSjI8deF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IleXtZkN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26A314EC73;
-	Tue, 23 Sep 2025 23:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED5E28466F;
+	Tue, 23 Sep 2025 23:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758669345; cv=none; b=Z2ocxhEaSVk/PHAguCqsCprPfLH3PawUlEH8Ns1/i120tqEu+pZw4Yhc4Kkc/ySp1fBP3GDyPxafjjf1hF15apeeOrglLqldtY50zD8YmJTd+eaf+CJ0NvL7wq69YT4ztZmzmsnKxoq3FZopxAb5ZGj2soZeUtbY1B/9nmqFrXI=
+	t=1758670034; cv=none; b=YlCmTpk1L8CeOC6yxtulfLaGllSff9H2N4QEJ4NfDE1HVQ5p7hkdC0ybpSR1vaBJDUTYTWgdN25/YZY+H2rqxabI+baA1sA/2D8Wyu90rb0fV+hvi7PS1karxHvb0n15t52dYcgdO4ZkqlbdX5vPwWGf3nIDT5L3/1xmms63g7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758669345; c=relaxed/simple;
-	bh=pvYfKhTpW3bGdjpAO4fy40xvT7yPgb7fyXYDyfDid0A=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=UxCnKERTBWu8LweGRteuFKcB2rmrAtEoAuf2HXAcYG6TBuvSnfWVQ1+LNJWrMDOrARwaKH7qnIjWK231pkPAbKqeH+ZHcMlVFVFi8b8nP4nfo29ygWYzFA+7vnRQI1ZH5oturURoER92lCg2HM3wTVWJcumq3C8XjqPu1azzTwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSjI8deF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14A9AC4CEF5;
-	Tue, 23 Sep 2025 23:15:45 +0000 (UTC)
+	s=arc-20240116; t=1758670034; c=relaxed/simple;
+	bh=oO7CnjqU+Nx4PqWdiK10pJe8/7xLNQvRZTwRq0LL+CM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AHhwhIIayI/cV5cJuhub6ikSVnUetsURGvyW/ue+GSxBeNrzKw5fj2Ng+BDjHYKU6hWW7ZYTjlRL4+BVKjsZGQBULJX3fnq40RnpnnLApbkq62MNB988917y+vgshRXO0bFHjssoydmVzpWYLmLC2O0S7ORgF20ZWTtEvTrZ0ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IleXtZkN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7FCC4CEF5;
+	Tue, 23 Sep 2025 23:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758669345;
-	bh=pvYfKhTpW3bGdjpAO4fy40xvT7yPgb7fyXYDyfDid0A=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=cSjI8deF/T3Mix8vrvDs9Z9batQCsKLVzSU5rsijTocNND7sNti50XVFJjAh1zS8H
-	 dtLgwJuwWxDE3dTC8l0dLRYeAqtwzCHe/KB898BmFRWK74hJZITRdYuy5NTo5bL/C7
-	 rV3tRB2OlIjYLo0yY0cnkXFeeHS0FbYbSJY6JewMxjbcvNZNQ2CxzqZoD5W7pvaO6d
-	 q3ktcxqi2f+sl1QnqRf2I3SH/gdlsf0nq3RGg7uDqXvwyYh1ScMm/sli1e2WR4zOk/
-	 RSVg0S/0ySBriMcnbO+Th7axxEWa8PMA231+9bpQgnc+mpwwU13b0WoB+MgYT/ZwBI
-	 q+k+eNHNkzwfw==
-Date: Tue, 23 Sep 2025 18:15:44 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1758670034;
+	bh=oO7CnjqU+Nx4PqWdiK10pJe8/7xLNQvRZTwRq0LL+CM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IleXtZkNbWZ7zFyFJ9/X/oN5lkJonldXHhDVnLIaqqCSrkN6e2NwqB6/HKbSkpeba
+	 HFGxPtUkd5iHkingsfTwDWbvhrg7tn6PsbfBLSg382o+YChZwLu7ADu4vOey9dkz6y
+	 7gqoEpNB6FeIBa91tkMkhEvELDUTrNyAsjIvGjB2Ja6/4BZ5VWs3NElEbmUc2Kolot
+	 pJe5+Dkg9wl2oz3socbnwFLvrIlc74QBZddMV0LQ8VtEOEYt0dbbyTXgYI5wd0FChk
+	 XSJXEstsAmHQepN7XApl32z4maU/AxS6C2XRAo648GwcNm8aEYMQv3fjtIUDuGr0Ur
+	 yyyFO/eDpninQ==
+Date: Tue, 23 Sep 2025 18:27:12 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, stable@vger.kernel.org,
+	Ethan Zhao <etzhao1900@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Subject: Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
+Message-ID: <20250923232712.GA2092207@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, 
- Stephen Boyd <sboyd@kernel.org>, upstream@airoha.com, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, devicetree@vger.kernel.org, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Ryder Lee <ryder.lee@mediatek.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-In-Reply-To: <20250923201244.952-2-ansuelsmth@gmail.com>
-References: <20250923201244.952-1-ansuelsmth@gmail.com>
- <20250923201244.952-2-ansuelsmth@gmail.com>
-Message-Id: <175866934419.400019.15611978179247377029.robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: clock: mediatek: Fix wrong
- compatible list for hifsys YAML
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNMoMY17CTR2_jQz@google.com>
 
-
-On Tue, 23 Sep 2025 22:12:29 +0200, Christian Marangi wrote:
-> While converting the hifsys to YAML schema, the "syscon" compatible was
-> dropped for the mt7623 and the mt2701 compatible.
+On Tue, Sep 23, 2025 at 04:07:29PM -0700, Brian Norris wrote:
+> On Tue, Sep 23, 2025 at 02:02:31PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Aug 20, 2025 at 10:26:08AM -0700, Brian Norris wrote:
+> > > From: Brian Norris <briannorris@google.com>
+> > > 
+> > > max_link_speed, max_link_width, current_link_speed, current_link_width,
+> > > secondary_bus_number, and subordinate_bus_number all access config
+> > > registers, but they don't check the runtime PM state. If the device is
+> > > in D3cold, we may see -EINVAL or even bogus values.
+> > > 
+> > > Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
+> > > rest of the similar sysfs attributes.
+> > 
+> > Protecting the config reads seems right to me.
+> > 
+> > If the device is in D3cold, a config read will result in a Completion
+> > Timeout.  On most x86 platforms that's "fine" and merely results in ~0
+> > data.  But that's merely convention, not a PCIe spec requirement.
+> > 
+> > I think it's a potential issue with PCIe controllers used on arm64 and
+> > might result in an SError or synchronous abort from which we don't
+> > recover well.  I'd love to hear actual experience about how reading
+> > "current_link_speed" works on a device in D3cold in an arm64 system.
 > 
-> Add back the compatible to mute DTBs warning on "make dtbs_check" and
-> reflect real state of the .dtsi.
+> I'm working on a few such arm64 systems :) (pcie-qcom Chromebooks, and
+> non-upstream DWC-based Pixel phones; I have a little more knowledge of
+> the latter.) The answers may vary by SoC, and especially by PCIe
+> implementation. ARM SoCs are notoriously ... diverse.
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> To my knowledge, it can be several of the above on arm64 + DWC.
 > 
+> * pci_generic_config_read() -> pci_ops::map_bus() may return NULL, in
+>   which case we get PCIBIOS_DEVICE_NOT_FOUND / -EINVAL. And specifically
+>   on arm64 with DWC PCIe, dw_pcie_other_conf_map_bus() may see the link
+>   down on a suspended bridge and return NULL.
+> 
+> * The map_bus() check is admittedly racy, so we might still *actually*
+>   hit the hardware, at which point this gets even more
+>   implementation-defined:
+> 
+>   (a) if the PCIe HW is not powered (for example, if we put the link to
+>       L3 and fully powered off the controller to save power), we might
+>       not even get a completion timeout, and it depends on how the
+>       SoC is wired up. But I believe this tends to be SError, and a
+>       crash.
+> 
+>   (b) if the PCIe HW is powered but something else is down (e.g., link
+>       in L2, device in D3cold, etc.), we'll get a Completion Timeout,
+>       and a ~0 response. I also was under the impression a ~0 response
+>       is not spec-mandated, but I believe it's noted in the Synopsys
+>       documentation.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The ~0 response is not required by the PCIe spec, although there's at
+least one implementation note to the effect that a Root Complex
+intended for use with software that depends on ~0 data when a config
+request fails with Unsupported Request must synthesize that value
+(this one is from PCIe r7.0, sec 2.3.2).
 
-yamllint warnings/errors:
+> NB: I'm not sure there is really great upstream support for arm64 +
+> D3cold yet. If they're not using ACPI (as few arm64 systems do), they
+> probably don't have the appropriate platform_pci_* hooks to really
+> manage it properly. There have been some prior attempts at adding
+> non-x86/ACPI hooks for this, although for different reasons:
+> 
+>     https://lore.kernel.org/linux-pci/a38e76d6f3a90d7c968c32cee97604f3c41cbccf.camel@mediatek.com/
+>     [PATCH] PCI:PM: Support platforms that do not implement ACPI
+> 
+> That submission stalled because it didn't really have the whole picture
+> (in that case, the wwan/modem driver in question).
+> 
+> > As Ethan and Andrey pointed out, we could skip max_link_speed_show()
+> > because pcie_get_speed_cap() already uses a cached value and doesn't
+> > do a config access.
+> 
+> Ack, I'll drop that part of the change.
+> 
+> > max_link_width_show() is similar and also comes from PCI_EXP_LNKCAP
+> > but is not currently cached, so I think we do need that one.  Worth a
+> > comment to explain the non-obvious difference.
+> 
+> Sure, I'll add a comment for max_link_width.
+> 
+> > PCI_EXP_LNKCAP is ostensibly read-only and could conceivably be
+> > cached, but the ASPM exit latencies can change based on the Common
+> > Clock Configuration.
+> 
+> I'll plan not to add additional caching, unless excess wakeups becomes a
+> problem.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.example.dtb: clock-controller@1a000000 (mediatek,mt2701-hifsys): compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt2701-hifsys'] is too short
-	'mediatek,mt7622-hifsys' was expected
-	'mediatek,mt2701-hifsys' is not one of ['mediatek,mt7623-hifsys']
-	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt2701-hifsys.yaml#
+Perfect, thanks, I'll watch for this.
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250923201244.952-2-ansuelsmth@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Bjorn
 
