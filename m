@@ -1,189 +1,197 @@
-Return-Path: <linux-pci+bounces-36868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36881-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46123B9AEF0
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:57:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0C3BB9B1B4
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 19:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2CF7167D9A
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 16:57:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7E151B24F87
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 17:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E9F83148D9;
-	Wed, 24 Sep 2025 16:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1078B21C176;
+	Wed, 24 Sep 2025 17:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ejo8DnM3"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bGeyoRDG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012040.outbound.protection.outlook.com [40.93.195.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632B32EC54A
-	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 16:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758733049; cv=none; b=YKf77YjuMS4x2A9icw/vu0OcLKJx2KrjmP3j62yYeddnEwQf7JJMgdIPvcv83cTnlfNIYpEVu3UlYPuPKd7AgTcC+RaDGf2YM9uElSYDQzGpueT0pLnBlc79ihgbgvcX5HFIs5sNlHbTbHxZZy189vDxXzrFS1UALE+PlNDgzr4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758733049; c=relaxed/simple;
-	bh=tPg4Wqz8J2TompQpzQza/5UmS8Zm70sbPvTEcMI6BDU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZsEslXqMfhSumxs7GP4ZcRtYx33PMCbiXhgY2uVPcncaw6NBMHvTW0SbuKGKqoiBf178pKGC4BlhAZSUK4gBYaZHNol3qatoGggGq7PeoXueW5umgL2PLmLKMnA2qXwzujNjHwr73cjVv6mmUxPBZLG2+rzfcYtrson5Gj9fPlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ejo8DnM3; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-77f38a9de0bso84476b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 09:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1758733047; x=1759337847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w7w7BZfusfh40TgUumBQVrwOU9Hw6Y9fKIpILWJTmpI=;
-        b=Ejo8DnM3kav7ByBkn3OXAdhFpXyC3Cdwo1tBD3NLsbxCprYwu36tZ6bcmMNBDKRe8X
-         17NwpQ6yXn0U8HM+UG1D/FjL27nQ9gpUCvxpQxVyt/koee3pfix4asxuG3spdJ03HPr+
-         AbHfXGURHM0/SYnLsdEH+yn5DdtyPRlkCndbk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758733047; x=1759337847;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w7w7BZfusfh40TgUumBQVrwOU9Hw6Y9fKIpILWJTmpI=;
-        b=uo8UL2gan0aEmakhdRsSbTOU7LF7DDgkVQ5RF0wUwASAkhJqynuQyW5zjhwPbwX3gH
-         S2UDEHIkls0hJuKg3+NvK0pUk8qJ2NbasJlu5+mbiuEx6TEvLhERWkwLcxC1eN96bHjr
-         mJ9+jYR5h9Cq8NJSixaMF8N6cG3vLBYHWgyXN7jfSj8VI8FEfX5oOdjSMJOjHuPRliq8
-         Y3p8PnwOiVi8PKEcLIBGNCeHUBuOm2qumyZSQcR4sx0AbHroKNjNiUJarVCJRT5B0nHD
-         EusqoMAKOekYE6vhM/7Vhu209+hmrfeSmwwugfOJH5BWEhsLMeXhna4DPV/YxGmuxpvR
-         A72Q==
-X-Gm-Message-State: AOJu0YxJCcOuybTiEpdyusGzu8maW+bGXdljLhuHI+4Utr96IIyct5uN
-	EthstVgBNCBeFeumazgm3nrjQtXFS13fnXfVxCuQGyjh/p1wPrSPOw36KI/GjbX5ww==
-X-Gm-Gg: ASbGnctwvVqTbpYvKGDyGYZoOLxwNwdp+Wtb024Sa1pyJEf/wkRQvD7meAsR+ZteDd5
-	tmMruiaNxryUKeeEJ5ULuz2IfZREKqK2x/JCYX/lON18lDfZ8tloVgtOlYcNTmJCU3rJ/TLbHmL
-	K5HbFf7lf7ERMeUfZSf8gKelkbNo+DlulVrpzjzaC/f7r4rHxEbaPqYEd+OUofc+PQ1PHbnO/qV
-	X4I5wgWvYg2zn5b3F5cgSvJULvzc2NpTJG72HmEIxvkktdeHb0dBvrZ6771tFzYJIMMd8qoVjBE
-	05bq1u9NaULVqJHkTmSgwAFGN6Tqg+FJX+c8D9mxck9vOd9DKTCAneHvYXssauthIP1yIn6E6Rr
-	pSLp3DXLZK4jIu1wsoh36rxYYmcTTIvZNZQt6Fi56enpGzMWqK0o5+xlrd0BZ
-X-Google-Smtp-Source: AGHT+IGx9dCGSc8hHfADXStah33h7Nc5K9qEOotJoi6vkmLXbBDnOjcgbEXkXllnVBgpY/TI8WgxrA==
-X-Received: by 2002:a05:6a00:8703:b0:77f:3a99:77b1 with SMTP id d2e1a72fcca58-780fce13c75mr503942b3a.9.1758733046668;
-        Wed, 24 Sep 2025 09:57:26 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e7c:8:26d9:5758:328a:50f8])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-77e0bb98790sm16815959b3a.9.2025.09.24.09.57.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Sep 2025 09:57:26 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Ethan Zhao <etzhao1900@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Brian Norris <briannorris@google.com>,
-	stable@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2] PCI/sysfs: Ensure devices are powered for config reads
-Date: Wed, 24 Sep 2025 09:57:11 -0700
-Message-ID: <20250924095711.v2.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
-X-Mailer: git-send-email 2.51.0.536.g15c5d4f767-goog
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894D88834
+	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 17:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758736142; cv=fail; b=ingqPt08nQSMmpIpbDb4m1vFfyV7u/xLzqelPBcliQqYW6g8MmoMwQmNkkYKllqjpVIokj8Mz49YuhKKJCSEfWKlnnjtaVpVe5wAAODHz3W+9tKezGvXhEH1ZtzJXuf5tFuIemLBtcZxjilCywb5yEJ7pHdG5Gvd/MkrVXRQ0OU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758736142; c=relaxed/simple;
+	bh=Nc4zENBvKwj22eFjWluXrtmxvSw0hASaZ5haf6vvm5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IobjveueuhOvoUGzFs2R2u89/DDjzPwsFBZe+NUBLNSFshNc1mp1CrwPq97VAfkTnhjKEx/nSGIvhSD2zcJnRjwTIXSS4Y0rP4W+Z2bxz9mqn/N6TR0V7HZqyyjvOBlEkjzYiRknwZDxbldSOs+2KhY409oHvnqct3I4sKUZq8Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bGeyoRDG; arc=fail smtp.client-ip=40.93.195.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pxXwpD60hL7S9eN3BRRT8IulUg5kyjisH9tYvw3sd9G0pC3R7Y/+FFhMAd+zGG/go6ptQ4NxYB/PXatsIWBwEinDjzMX31uVmq9bpwOOd3PJfqZAia7ru3P7wKzperhGuXu4rnjjznPVHNsRk6YlcrNfpRKFqndtmbEIxmpffar843TBpSayRtzY8QBTC6Dl9OErxC9U0wNyB72cOLHHXKwuh3oIpl4h3oYKDau9tNcGw6J8DGOKbHGLs3xxxSOXKke7Njqm1UIIRv1HSXoxyIRPq0NjMR5/oyC/yB1XqBTLOplUw0JrMhDbslLXWzsBtcIlReH5bVQ46VqFHyLffA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=75VgPazCsRhrv/0RWmNjdJr8sqYrXbU49MhiGHIbeZA=;
+ b=nDoR8hhu0tKfw/fCCCIHE8Iz0nQigEj6D6ApeV7xKBruHnuNnJQbdVmVTJ9+332cfQimW6vmWlmgL25gOetAzgEi+vR/s+qMNH3m+xmnvSwmTD9yiVlxNaTC/BYu/EEDo7xQq/S5jEEWSumcz/TF8GVpCWNgASkA806Hy/fCEHOuHBpbCDvaUW+Po9NBjdqcENnEBg+7WuxR6tX1hzMVV9wdCZAP+S/04uUX23trZCvimTFk5esAUVyxzUoQVPruGoOdcxj9AOQmeWd33SxLKNp1BJtatsuCseQn4gN3k2S79fglXacezWhnE6t35whfWfTvLd11Y6wAepYiqtP7jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=75VgPazCsRhrv/0RWmNjdJr8sqYrXbU49MhiGHIbeZA=;
+ b=bGeyoRDGeiUBny3tWsxUU2Y+DjRWrl6YMskvap/J2MAX6QCDWf/adRKh0flQyUWSa4uwWOTqBG8AjWLvO7S5ayz8kx0mGhTdR9RuKvOROcNphDTunLTG/vqkyND3zmRihBuFK4fkw7ALdafSdOZ470F6obPb8OKmc/OFHcKNMG6s/aZCMKeEn4+xhsmpu27GW45NmNV67KwTUnyUHg+9zzGcmlafN6LYKTu3jGkRbfI7RedK4aS4bTMWmJnYN+TcQXvX4bBeXyTvkJg3eBv3gsRPorBMQDkHTv2ykNBmzrrnpu7IvN71me3JZuY6eAQNdmCY0PXsCaUKUnUFGQfk/w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by MN2PR12MB4456.namprd12.prod.outlook.com (2603:10b6:208:266::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Wed, 24 Sep
+ 2025 17:48:56 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.021; Wed, 24 Sep 2025
+ 17:48:56 +0000
+Date: Wed, 24 Sep 2025 14:12:50 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Simon Richter <Simon.Richter@hogyros.de>
+Cc: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+ functions of Intel GPUs
+Message-ID: <20250924171250.GH2617119@nvidia.com>
+References: <20250922132720.GY1391379@nvidia.com>
+ <fbb6bbe7-8141-4532-812e-2b93cc2fcb1b@amd.com>
+ <20250922122900.GV1391379@nvidia.com>
+ <4e3919c3-3d1b-4f34-a1e4-5e9e7a5e6e14@amd.com>
+ <20250922122018.GU1391379@nvidia.com>
+ <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
+ <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <20250919122931.GR1391379@nvidia.com>
+ <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <20250924161356.GA3273841@psionic12.psi5.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250924161356.GA3273841@psionic12.psi5.com>
+X-ClientProxiedBy: BY3PR05CA0040.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::15) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|MN2PR12MB4456:EE_
+X-MS-Office365-Filtering-Correlation-Id: 81b50fe8-d479-4704-9701-08ddfb92a246
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YyuwUtssaS9AVhgy/dvbyZ6SFEDz/faZvlRmHdZyp4999PB9U7qr8heCAINT?=
+ =?us-ascii?Q?fdd3oh+nJ/SgjtuC7Zc7HbrQTJT4TRwFONSVgSja1PHHSn3bVDty9VbP/xmD?=
+ =?us-ascii?Q?7HB8kTJY+8e7mwyI69KxPwZml8nBflyASA70drApMEO7JXecVxGNO/mHObuY?=
+ =?us-ascii?Q?YUJgEi3wB/zeGOKOfuqrdOcaBuKTlHxk0BcJ5vqA5Pn8XBgn3hmva0Zm4WHI?=
+ =?us-ascii?Q?BdUx/y/OZuP3xIuLrQnMwUGJupv0gxzzDkyVfKEMUXh3ltTZKLtfyBjCs+YV?=
+ =?us-ascii?Q?bYtS7/mJ+cDdlaEJc34bck+I9NUB60hAFGHU4Rfts3nMaETNnVAHR7PS2zrv?=
+ =?us-ascii?Q?WzGyNPfNxS3oe/Pwaa403TfoHCf3rTX2goKk1LvP8xT43grTEHAcJwbgbpGv?=
+ =?us-ascii?Q?RQKgmTM9dSQHK04SMTtnjzXNoLJMNALQnF0BeNVR945uAmQz2vz47N5UboL1?=
+ =?us-ascii?Q?qukzFRiiC2MlGC1i+MlB5PksAVGF4cmsRRp/LNBEtkzUBqdGghS61h99OWYh?=
+ =?us-ascii?Q?WepuiWQ0yL5KmlY8l+a7/9grUD1bljU4Y9/ULCWK2nHFC6yL2K32iOKroHDx?=
+ =?us-ascii?Q?RsUN9ra9qzk8CyAbCqeDpkPYtIrSsPnKR1c3J1C7DinTlJue6Uf7VpRbMpJP?=
+ =?us-ascii?Q?vcTC63UWnM+EV3S6Ezz9WJMykw0hFEaBblvDrExa3xgBJhJGfKW4kmFo6Gef?=
+ =?us-ascii?Q?pP1o+OibGZR6uKPCCWoORlIjRWBPp+2JovkcIU+muGQQX0xRQ3Umu50ljF/n?=
+ =?us-ascii?Q?sC/MyDwAFtzXunhZq5C2h1SMaZtr/kzzM+Dfc9aEwS5WjljafXBEXVqoXtu/?=
+ =?us-ascii?Q?nR8Qom3YCqtsbZxJ7g3l/e4d4EPVUUJkylY6LDBk2Bqq9uVBw/S9PIDvfTj0?=
+ =?us-ascii?Q?W0waOrWu5NXO+P2XNJjGOdStKEvk6hAQmXWlRQ0Dg9+qUMRW2lWcAUMrlLrs?=
+ =?us-ascii?Q?aE9kXqUG0nf54dsUB134dRc4ywoXLybt9NsLDMSXZYR0aBpwWPWYS6+Tv4kA?=
+ =?us-ascii?Q?Z6OIWjG2Tj6rEWIzjqjTTXOmhkAqnsQ8Ovp1R0Nvvpp5qLFD5JQj2pXSAF6g?=
+ =?us-ascii?Q?so9Ks2nWECFtHe2lvcs0n6RygosC77sYHpUl/h6R0tA2INPeN/pqt7khQRrl?=
+ =?us-ascii?Q?gBdKI9rPA64ERnTRNGf8HAuuZZppQZNHANqXvnvOUPWVSSW6D3SgydqgW528?=
+ =?us-ascii?Q?kUZt3sXOgXmrSxa5Z/y3ce5sN7ahcJCZZIzB/JGBvStzF5L4eRL4rmh2ML4f?=
+ =?us-ascii?Q?iPlIX7omSCFhcNyOAPUSDIDiDiknEBsJjCwWihJrYzsZjpRb1reNJBBIO1Uu?=
+ =?us-ascii?Q?24v55MhCIKRwGT0XSguYGef/Z/JAj+ESOveMAzOS/S9IIs1yDG6PRDPs/274?=
+ =?us-ascii?Q?rFfMNRPFNbmMr5AmhylA/1jhTkVC4g7i1YzhaU1a4jHfjJPCcw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eoSbsxbo5RaQERmiHOWXcm77dOBIs5Y5D6daRNGUrkm5yekd6jEIMQxovfBS?=
+ =?us-ascii?Q?YlfH/PXMP8cMt3htsMnycJsYypwxBQEQ3XwDV5bZsMFIWwqSTjjKbFy220dQ?=
+ =?us-ascii?Q?R8NwzqZUz+79t3df9YQyugMrdqrdEtkIK3XUlBN6mTeszuDjLtf2dx4VRqG2?=
+ =?us-ascii?Q?DtD39G5oODXZicBLl1+BZmpSoz6zngkc7x46UGibRFgdYdfGLVEYLp+wU62v?=
+ =?us-ascii?Q?U3qJpE2xGaZ5eIAWOEdTP97lsGNVzPd8dG2HExvVkrzq2UCAGFnZ9Kwz3GjV?=
+ =?us-ascii?Q?jgXL8IKPzD7moW1WpxdIgEkMEBdMyqbvGxFBCas9pm33xoBIUrs5nIqXemin?=
+ =?us-ascii?Q?vuqiGO0txJZuBWGMaezKRbsaX6mh1er+y72LqJdXL966aSDUIWOiylTz2Fzf?=
+ =?us-ascii?Q?eutxdnF38Q/RnKLdpFXZWHOFes9Q2Pbjla8yaeP1keW2DHBdprCqiluEcs2p?=
+ =?us-ascii?Q?kMt43BZc8kuWhyA037upaUVzwM+EVp7lunt2zahqzBw6g/203drhP1p/6kPX?=
+ =?us-ascii?Q?rMHMaaHvfgtoDAcfJB1LpgiDgRUVdKmIoxmRJAWdN1turbyVBw8czvXN3wnt?=
+ =?us-ascii?Q?qhMN74ax+F2dBV2cqMBoZdr7MfuGbVjZeZfZ8CvGcfnjBGykhXyHEWvDYsqB?=
+ =?us-ascii?Q?kXLHGX/ZCWvJDUSpWp5KrvwljEgUD9XQxrmROm5lqI2rPtr21ZLvp8iT98mv?=
+ =?us-ascii?Q?zZpV1pn9chJ6K/avxNx1QYYRnoHfkqlD6OrTkxCuiSyPyTNuQW5hBIrr5HpV?=
+ =?us-ascii?Q?aawmjE+U73vM9OprUfaveWRHLgllud9DtqKxvulz8NExV4Ek0EozamFqWjDL?=
+ =?us-ascii?Q?XHaEEPKHCAE6CZTaXT/n4waPvwAw69jLWVc3KsE5hJiUUHVwzQ34mmOtWLvC?=
+ =?us-ascii?Q?jdKvkRATZyDULDH1x8SNvxwZKdfXAX/MuQ8ooXuLwAzzTkkwMDaUvULrOgw4?=
+ =?us-ascii?Q?QDNLb+Rr1+IV/A2TkEfoTYfjWMlNPwjsoQxrRGSr6WsorAVIAPw9keVMQ5S/?=
+ =?us-ascii?Q?5ETdMehKWHDantKqh8bTIJeoq27O7/VSoKZOlf5FQ7ni84HvBnHeWDy4j16l?=
+ =?us-ascii?Q?Ag8bv21bwEzsSJLIFb96JQ23fEhSXtDKgE6xPkkuuRJxTUlKoyiNML2JuooE?=
+ =?us-ascii?Q?Ibkj4e2kh9rIrSWNeeOTXo1TF1Kb08tYUbLY7cvTTHZApqt15pKVzaSYSKPO?=
+ =?us-ascii?Q?sNNWYdJqBpghC3fSPkDqmdNrcW2CHHlLaPtupaqlnGpKQMzmOGnmcPRkrryg?=
+ =?us-ascii?Q?jIj4Q6JVMg1IGpjI53cNwfoGKMuZLBfNTvrMRUNH6sHcGibXaExgoqJUiI+k?=
+ =?us-ascii?Q?mL2R2f/S9LXRKhOgEKGm8kq7DwzVlw9NUI+OFMtJdoWa3COR/AQxkdG4KE6F?=
+ =?us-ascii?Q?uZf7Ig0eVmI2JPYkh+XsEoP+6vZ2eDD0FyiAuEtL/BrZLWsOG81/j1Hr2gjB?=
+ =?us-ascii?Q?b12iPpJ7XtgI53oMEd/XArqH/tAZPnZURNLlrCirTNxZ97RNnuINuZukEKLZ?=
+ =?us-ascii?Q?Isw/KGl/0EymJi/rBLy+6bBaP5jpvHw6IYdWr59pT1KfbOKw3lR+3SeLCjDk?=
+ =?us-ascii?Q?uM3TJmlLSDfd29sF7A0GtcQ1KFHC7soLx5/TGVGh?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81b50fe8-d479-4704-9701-08ddfb92a246
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2025 17:48:56.5811
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DNscCfeTTAwZaFSQ9jQQ/8oGiJtpwp2HFOYW6YIZCWECejI7WfqDflbIkMLHGEs4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4456
 
-From: Brian Norris <briannorris@google.com>
+On Wed, Sep 24, 2025 at 06:13:56PM +0200, Simon Richter wrote:
+> > The problem here is that the CPU physical (aka BAR Address) is only
+> > usable by the CPU.
+> 
+> The address you receive from mapping a dma_buf for a particular device
+> is not a CPU physical address, even if it is identical on pretty much
+> all PC hardware because it is uncommon to configure the root bridge with
+> a translation there.
 
-max_link_width, current_link_speed, current_link_width,
-secondary_bus_number, and subordinate_bus_number all access config
-registers, but they don't check the runtime PM state. If the device is
-in D3cold or a parent bridge is suspended, we may see -EINVAL, bogus
-values, or worse, depending on implementation details.
+I said already, you cannot convert from a dma_addr_t back to a
+phys_addr_t. There is just no universal API for this and your examples
+like PPC explain why it cannot work even if some hacks appear to be
+okay on one x86 system.
 
-Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
-rest of the similar sysfs attributes.
+I think Christian's suggestion is to pass a
+(struct pci_dev *, bar index, bar offset) between dmabuf
+exporter/importer
 
-Notably, max_link_speed does not access config registers; it returns a
-cached value [1]. So it needs no changes.
+That would work for alot of use case, we could make iommufd and kvm
+work with that.
 
-[1] Caching was added to pcie_get_speed_cap() in v6.13 via commit
-    d2bd39c0456b ("PCI: Store all PCIe Supported Link Speeds").
+The Xe PF driver could detect the vram by checking if the pci_dev * is
+a VF of itself and then using its internal knowledge of the
+provisioned VF BAR to compute the VRAM location.
 
-Fixes: 56c1af4606f0 ("PCI: Add sysfs max_link_speed/width, current_link_speed/width, etc")
-Cc: stable@vger.kernel.org
-Signed-off-by: Brian Norris <briannorris@google.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
+If it is not this case then it would fall back to the normal 'exporter
+does dma map' fllow.
 
-Changes in v2:
- * Don't touch max_link_speed; it's cached, so we don't actually touch
-   the hardware
- * Improve commit message
-
- drivers/pci/pci-sysfs.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index f28fdf6dfa02..af74cf02bb90 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -209,8 +209,14 @@ static ssize_t max_link_width_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t ret;
- 
--	return sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
-+	/* We read PCI_EXP_LNKCAP, so we need the device to be accessible. */
-+	pci_config_pm_runtime_get(pdev);
-+	ret = sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
-+	pci_config_pm_runtime_put(pdev);
-+
-+	return ret;
- }
- static DEVICE_ATTR_RO(max_link_width);
- 
-@@ -222,7 +228,10 @@ static ssize_t current_link_speed_show(struct device *dev,
- 	int err;
- 	enum pci_bus_speed speed;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -239,7 +248,10 @@ static ssize_t current_link_width_show(struct device *dev,
- 	u16 linkstat;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -255,7 +267,10 @@ static ssize_t secondary_bus_number_show(struct device *dev,
- 	u8 sec_bus;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pci_read_config_byte(pci_dev, PCI_SECONDARY_BUS, &sec_bus);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
-@@ -271,7 +286,10 @@ static ssize_t subordinate_bus_number_show(struct device *dev,
- 	u8 sub_bus;
- 	int err;
- 
-+	pci_config_pm_runtime_get(pci_dev);
- 	err = pci_read_config_byte(pci_dev, PCI_SUBORDINATE_BUS, &sub_bus);
-+	pci_config_pm_runtime_put(pci_dev);
-+
- 	if (err)
- 		return -EINVAL;
- 
--- 
-2.51.0.536.g15c5d4f767-goog
-
+Jason
 
