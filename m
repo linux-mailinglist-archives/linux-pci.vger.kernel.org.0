@@ -1,63 +1,55 @@
-Return-Path: <linux-pci+bounces-36888-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36889-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F32D2B9B93A
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 20:58:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26FEFB9B967
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 21:05:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE1B9421E8E
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:58:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 680B67A26CE
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 19:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D85731A549;
-	Wed, 24 Sep 2025 18:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA9424DCEF;
+	Wed, 24 Sep 2025 19:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PlSdWkwQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2LDnpd4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B56B31A544;
-	Wed, 24 Sep 2025 18:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B019C546;
+	Wed, 24 Sep 2025 19:05:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758740272; cv=none; b=HIYgGhJbo0US19f5Vm5bP8XQJybQVDHdqucPvP6zGCviXt+/BuWxF6rxJ31bVNUlwtSZb4cacHKKQsnQMice3NRRh3TjJMZ1qCHwNJ0TO9eoB18f7mTldZrYhwltVWK5JwZi619bbBcqklnqXpCusJmu1F0pAMVNnKFzCknWiS8=
+	t=1758740739; cv=none; b=IYQcDWXyy74usA0Fe21amO45OyHysrImJe7tP37Z6tUDmj4rQgJMASBIqLD/gBaO9WVnWd5qhrJWVe6SjPcwZceBsmSixJL27osK/bF+ZEKRZxirfHOwS7sfXvM5eEEC5+KKKvPEGs0NgjLSeBkmShX1Vw1Rpz++ylK+dRUk/LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758740272; c=relaxed/simple;
-	bh=35YRdu2J8sWMGROMyochqoZvrd7G7WRu+ry6ZOJVoAM=;
+	s=arc-20240116; t=1758740739; c=relaxed/simple;
+	bh=M1mxGbbckg8qR97+HGVkyqNUuMJBbv43CfnA5Cf+OxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nq3SK8qwYq6906H7lHiUgWNDnfhMH/L1yXJO/33yffg1PdyiYkeGAo7ji1hiRDeGV1CwQS7w8T1lqP8Dnl9OoCLTkmZVqi13zkO/lAVh9Q9MLkZlfctCeFyO2ekFoBHtcYJGt8Xfw9llHLOs6thiYjVBPE39riSfpW4QekcXHBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PlSdWkwQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DCBC4CEF4;
-	Wed, 24 Sep 2025 18:57:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=KISXYNrfcxSZSCavsaP2vqsCq84K7bHcleDhfIYr6xshkPnDq8Hy9Wd8xZv4ywf86v+cPEQeuQrwpzp68UyBLxgZGOxzYYkE1uqrhZuYDpAnW4CjJhpIIvfNukcP4fjc1A7+xTi4bVI+fiZVnD8Srqh2+abQFeVaebvbmbnTHkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2LDnpd4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC6BDC4CEE7;
+	Wed, 24 Sep 2025 19:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758740271;
-	bh=35YRdu2J8sWMGROMyochqoZvrd7G7WRu+ry6ZOJVoAM=;
+	s=k20201202; t=1758740738;
+	bh=M1mxGbbckg8qR97+HGVkyqNUuMJBbv43CfnA5Cf+OxU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PlSdWkwQgD6ksTvSQxLI+5aU42KKabCIXMs8fRCpY6F+9HecD/F4r4Sa2i7z320fg
-	 v9rcS2xnEofIGLO6sV8RKkad14F/jnRLzPx5edAUnhv+GYp1YHAzjHvl8ZIKl3EY4k
-	 cmTDFt1SYet80418qmtlhO2CzTriTPXFm1eMjJE8nupTcOWmiCYlfolFQLsrO5R6/1
-	 O+fA12ZnGodSOPt+wlwJAWtI2U/dbiai4xQYOHVMh6lTieL/5WwU1BnvgWo5Qwm6Kv
-	 5ArwGKuKLBwcI+MldKwwuKLJvs894vxtO+BjHKbzQcGUUIhRiuG78jfKmfkOac9Lq7
-	 k8xny3C/55wiw==
-Date: Wed, 24 Sep 2025 13:57:50 -0500
+	b=B2LDnpd4mhQMVJZpa6WYJ8l/CTjOZ+68iZKaQDLzvap2W2F9Tjo5yN9IP3jKiop2T
+	 8fk4IUXfY+cYgQVE2ElzbO5zfF0sppcnVre4yhhdsdK5FuWvv7AUluMxIyPgzp5qjJ
+	 /pQVQddfqMbcQG37ju7wuwEqA4uYCPgJ4jzTIsAwo1qQEQzs8TpKCcmZZ/nstXP5bZ
+	 UfVDXdYSfr2Zr9qWGMnId/3aYv5VFXXX0A3rMFkG7DmOaFn6YJ4bSZUHWxXahmeyLS
+	 D52ZOlx92lVEQL4cIxldA4GYjnDES0elvBjRFs5e4C7tlOdXJ/ZWPjuQOrTZ33i14g
+	 Splf1ebAC19Vg==
+Date: Wed, 24 Sep 2025 14:05:37 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com,
-	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-	Xingang Wang <wangxingang5@huawei.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] iommu/of: Call pci_request_acs() before enumerating
- the Root Port device
-Message-ID: <20250924185750.GA2128243@bhelgaas>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ethan Zhao <etzhao1900@gmail.com>, linux-kernel@vger.kernel.org,
+	Brian Norris <briannorris@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/sysfs: Ensure devices are powered for config reads
+Message-ID: <20250924190537.GA2129023@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,136 +58,108 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e4fjukl3xkfcxcm5p6jo4davplqlrx4xrpbjhdsduqjlv7oz7l@zilbaf3h6py2>
+In-Reply-To: <20250924095711.v2.1.Ibb5b6ca1e2c059e04ec53140cd98a44f2684c668@changeid>
 
-On Wed, Sep 24, 2025 at 02:20:52PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Sep 23, 2025 at 03:27:01PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Sep 10, 2025 at 11:09:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > From: Xingang Wang <wangxingang5@huawei.com>
-> > > 
-> > > When booting with devicetree, ACS is enabled for all ACS capable
-> > > PCI devices except the first Root Port enumerated in the system.
-> > > This is due to calling pci_request_acs() after the enumeration
-> > > and initialization of the Root Port device. 
-> > 
-> > I suppose you're referring to a path like below, where we *check*
-> > pci_acs_enable during PCI enumeration, but we don't *set* it until
-> > we add the device and look for a driver for it?
-> > 
-> >   pci_host_common_init
-> >     devm_pci_alloc_host_bridge
-> >       devm_of_pci_bridge_init
-> >         pci_request_acs
-> >           pci_acs_enable = 1                    # ++ new set here
-> >     pci_host_probe
-> >       pci_scan_root_bus_bridge
-> >         pci_scan_device
-> >           pci_init_capabilities
-> >             pci_enable_acs
-> >               if (pci_acs_enable)               # test here
-> >                 ...
-> >       pci_bus_add_devices
-> >         driver_probe_device
-> >           pci_dma_configure
-> >             of_dma_configure
-> >               of_dma_configure_id
-> >                 of_iommu_configure
-> >                   pci_request_acs
-> >                     pci_acs_enable = 1          # -- previously set here
-> > 
+On Wed, Sep 24, 2025 at 09:57:11AM -0700, Brian Norris wrote:
+> From: Brian Norris <briannorris@google.com>
 > 
-> Yes!
+> max_link_width, current_link_speed, current_link_width,
+> secondary_bus_number, and subordinate_bus_number all access config
+> registers, but they don't check the runtime PM state. If the device is
+> in D3cold or a parent bridge is suspended, we may see -EINVAL, bogus
+> values, or worse, depending on implementation details.
 > 
-> > > But afterwards, ACS is getting enabled for the rest of the PCI
-> > > devices, since pci_request_acs() sets the 'pci_acs_enable' flag
-> > > and the PCI core uses this flag to enable ACS for the rest of
-> > > the ACS capable devices.
-> > 
-> > I don't quite understand why ACS would be enabled for *any* of the
-> > devices because we generally enumerate all of them, which includes
-> > the pci_init_capabilities() and pci_enable_acs(), before adding
-> > and attaching drivers to them.
-> > 
-> > But it does seem kind of dumb that we set the system-wide "enable
-> > ACS" property in a per-device place like an individual device
-> > probe.
+> Wrap these access in pci_config_pm_runtime_{get,put}() like most of the
+> rest of the similar sysfs attributes.
 > 
-> I had the same opinion when I saw the 'pci_acs_enable' flag. But I
-> think the intention was to enable ACS only if the controller is
-> capable of assigning different IOMMU groups per device. Otherwise,
-> ACS is more or less of no use.
+> Notably, max_link_speed does not access config registers; it returns a
+> cached value [1]. So it needs no changes.
 > 
-> > > Ideally, pci_request_acs() should only be called if the
-> > > 'iommu-map' DT property is set for the host bridge device.
-> > > Hence, call pci_request_acs() from devm_of_pci_bridge_init() if
-> > > the 'iommu-map' property is present in the host bridge DT node.
-> > > This aligns with the implementation of the ARM64 ACPI driver
-> > > (drivers/acpi/arm64/iort.c) as well.
-> > > 
-> > > With this change, ACS will be enabled for all the PCI devices
-> > > including the first Root Port device of the DT platforms.
-> > > 
-> > > Cc: stable@vger.kernel.org # 5.6
-> > > Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when configuring IOMMU linkage")
-> > > Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
-> > > Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
-> > > [mani: reworded subject, description and comment]
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > ---
-> > >  drivers/iommu/of_iommu.c | 1 -
-> > >  drivers/pci/of.c         | 8 +++++++-
-> > >  2 files changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> > > index 6b989a62def20ecafd833f00a3a92ce8dca192e0..c31369924944d36a3afd3d4ff08c86fc6daf55de 100644
-> > > --- a/drivers/iommu/of_iommu.c
-> > > +++ b/drivers/iommu/of_iommu.c
-> > > @@ -141,7 +141,6 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
-> > >  			.np = master_np,
-> > >  		};
-> > >  
-> > > -		pci_request_acs();
-> > >  		err = pci_for_each_dma_alias(to_pci_dev(dev),
-> > >  					     of_pci_iommu_init, &info);
-> > >  		of_pci_check_device_ats(dev, master_np);
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index 3579265f119845637e163d9051437c89662762f8..98c2523f898667b1618c37451d1759959d523da1 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -638,9 +638,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
-> > >  
-> > >  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
-> > >  {
-> > > -	if (!dev->of_node)
-> > > +	struct device_node *node = dev->of_node;
-> > > +
-> > > +	if (!node)
-> > >  		return 0;
-> > >  
-> > > +	/* Enable ACS if IOMMU mapping is detected for the host bridge */
-> > > +	if (of_property_read_bool(node, "iommu-map"))
-> > > +		pci_request_acs();
-> > 
-> > I'm not really convinced that the existence of 'iommu-map' in
-> > devicetree is a clear signal that ACS should be enabled, so I'm a
-> > little hesitant about this part.
-> > 
-> > Is it possible to boot using a devicetree with 'iommu-map', but
-> > with the IOMMU disabled or the IOMMU driver not present?  Or other
-> > situations where we don't need ACS?
+> [1] Caching was added to pcie_get_speed_cap() in v6.13 via commit
+>     d2bd39c0456b ("PCI: Store all PCIe Supported Link Speeds").
 > 
-> Certainly possible. But the issue is, we cannot reliably detect the
-> presence of IOMMU until the first pci_dev is created, which will be
-> too late as pci_acs_init() is called during pci_device_add().
-> 
-> This seems to be the case for ACPI platforms also.
+> Fixes: 56c1af4606f0 ("PCI: Add sysfs max_link_speed/width, current_link_speed/width, etc")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Brian Norris <briannorris@google.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-I don't doubt that the current code doesn't detect presence or use of
-IOMMU until later.  But that feels like an implementation defect
-because logically the IOMMU is upstream of any PCI device that uses
-it, so architecturally I would expect it to be *possible* to detect it
-before PCI enumeration.
+Applied to pci/pm for v 6.18, thanks!
 
-More to the point, it's not at all obvious how to infer that
-'iommu-map' in the devicetree means the IOMMU will be used.
+> ---
+> 
+> Changes in v2:
+>  * Don't touch max_link_speed; it's cached, so we don't actually touch
+>    the hardware
+>  * Improve commit message
+> 
+>  drivers/pci/pci-sysfs.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index f28fdf6dfa02..af74cf02bb90 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -209,8 +209,14 @@ static ssize_t max_link_width_show(struct device *dev,
+>  				   struct device_attribute *attr, char *buf)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+> +	ssize_t ret;
+>  
+> -	return sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
+> +	/* We read PCI_EXP_LNKCAP, so we need the device to be accessible. */
+> +	pci_config_pm_runtime_get(pdev);
+> +	ret = sysfs_emit(buf, "%u\n", pcie_get_width_cap(pdev));
+> +	pci_config_pm_runtime_put(pdev);
+> +
+> +	return ret;
+>  }
+>  static DEVICE_ATTR_RO(max_link_width);
+>  
+> @@ -222,7 +228,10 @@ static ssize_t current_link_speed_show(struct device *dev,
+>  	int err;
+>  	enum pci_bus_speed speed;
+>  
+> +	pci_config_pm_runtime_get(pci_dev);
+>  	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
+> +	pci_config_pm_runtime_put(pci_dev);
+> +
+>  	if (err)
+>  		return -EINVAL;
+>  
+> @@ -239,7 +248,10 @@ static ssize_t current_link_width_show(struct device *dev,
+>  	u16 linkstat;
+>  	int err;
+>  
+> +	pci_config_pm_runtime_get(pci_dev);
+>  	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
+> +	pci_config_pm_runtime_put(pci_dev);
+> +
+>  	if (err)
+>  		return -EINVAL;
+>  
+> @@ -255,7 +267,10 @@ static ssize_t secondary_bus_number_show(struct device *dev,
+>  	u8 sec_bus;
+>  	int err;
+>  
+> +	pci_config_pm_runtime_get(pci_dev);
+>  	err = pci_read_config_byte(pci_dev, PCI_SECONDARY_BUS, &sec_bus);
+> +	pci_config_pm_runtime_put(pci_dev);
+> +
+>  	if (err)
+>  		return -EINVAL;
+>  
+> @@ -271,7 +286,10 @@ static ssize_t subordinate_bus_number_show(struct device *dev,
+>  	u8 sub_bus;
+>  	int err;
+>  
+> +	pci_config_pm_runtime_get(pci_dev);
+>  	err = pci_read_config_byte(pci_dev, PCI_SUBORDINATE_BUS, &sub_bus);
+> +	pci_config_pm_runtime_put(pci_dev);
+> +
+>  	if (err)
+>  		return -EINVAL;
+>  
+> -- 
+> 2.51.0.536.g15c5d4f767-goog
+> 
 
