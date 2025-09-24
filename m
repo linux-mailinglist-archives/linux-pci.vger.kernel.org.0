@@ -1,110 +1,242 @@
-Return-Path: <linux-pci+bounces-36839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D249DB98C94
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 10:21:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE533B98E3D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 10:32:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F05CE19C72FA
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 08:22:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3DBF3BCA3D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 08:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95404275B01;
-	Wed, 24 Sep 2025 08:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED2872F56;
+	Wed, 24 Sep 2025 08:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdNDeoVE"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dFGbH/xI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011010.outbound.protection.outlook.com [40.107.208.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EFA2248A5;
-	Wed, 24 Sep 2025 08:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758702093; cv=none; b=fpXZVagucqCeRyRPRbEVJLDxqCsO3GxMORTl13cSTXQOgLgxBSJ6wtW4h39Gm66zdbQDsKuo4hnF13B9lgVCTkQNBGSn/sx0TEOlWxEMK+T92/Pu8b9wRwk18qvYPBf6d2CmaluHylSDqddVsJLf7YUalRz38jrpbZYj6YvZMtY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758702093; c=relaxed/simple;
-	bh=UI+LGXvxoHRFGbjRfV+A4wqbLa/YUdmYzLCl0Mrv0Zk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M1h94fNjY6S1yVx8p/38lLIoszWq7yH1RKKPyggzZhuOLOAxPRuZnQLu1/qZDeW7qx0YCTU7Qj0G2qISanpgjCJJSRXNobo5KICKah97YUBIn3z1c+1J1kXnzoZlJP5gJXjkHDfvifzWuMCb99ITqq4MmWx98XSPt1lSvvVvMEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdNDeoVE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8002C4CEE7;
-	Wed, 24 Sep 2025 08:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758702092;
-	bh=UI+LGXvxoHRFGbjRfV+A4wqbLa/YUdmYzLCl0Mrv0Zk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bdNDeoVE/eb0pX3zlIW+r0D/iJ1u1izTyWJVH1EXYvZPgiHzWc+6AZU8CEmm9zQzV
-	 3l64jhAX6o1C99QhPNd7M8s0Uix4UOzlEjY5aduo7SeqpjrOYdv5M+6+cplfWCST+w
-	 cqvaus5s6BYwL8QxymBDRpBCOtcPUw60MYQjhbT93BV5/bJA6HEBX8tCODGwkGb5ht
-	 KTd9VpdvQY/4D840ogT/fvlgjOwDRg8aLdfiIVYcJ5HBbLrpyrIlQWvbjBnhcMpL0u
-	 uAiyytgPNT3B3LlZ4A2J2HijqAFLR5/zPGFmbVjLxVhQvVNUufkkM5lLzBvWQ+R529
-	 hEto4nJZYSqGg==
-Date: Wed, 24 Sep 2025 13:51:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>, 
-	iommu@lists.linux.dev, Anders Roxell <anders.roxell@linaro.org>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Pavankumar Kondeti <quic_pkondeti@quicinc.com>, 
-	Xingang Wang <wangxingang5@huawei.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: Fix ACS enablement for Root Ports in DT
- platforms
-Message-ID: <oig5w7dnrdpgvzuqu4johs526qe57x7dkurd2abllqyvpavvti@s3pwtoduusfr>
-References: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
- <20250918141102.GO1326709@ziepe.ca>
- <tzlbsnsoymhjlri5rm7dw5btb2m2tpzemtyqhjpa2eu3josf5c@uivuvkpx3wep>
- <20250923162139.GC2547959@ziepe.ca>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564D427877B
+	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 08:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758702560; cv=fail; b=n77pmLeUI1J4RgMHJXm74RUPmcrnAiXtgorjkBGqO9xNNg3o9beiV7BrHczVQxmTWw9ldzoTyppf2NtAyod2t3jM7PHKi8IqDvfW8r8eVUOkWdXsH4sfNTXrPDpH0qCNrIeGB2pBn4lh7xPXg+qO3+seAUgZNgkTA6KUDv4Jbto=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758702560; c=relaxed/simple;
+	bh=GHBhHSclRIPCjwcbB8NwNm2zB/CS3EzZR0pw2DYmLhg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Sj5yenX6RhMBofYTpPm8IJvb9rcJxF1Wf+E56AV6TfiJgR2qwx7dkQpG1P474VWOa9ksGT3GD4Dq3R1uDTE39L9Q4yd62dsT4H5LRy6G8preQe9ARmCu+9MwbspWDQkvwmKc+EikVJw9X5wVyTrA5bOdFDsO5wxS+VkB6jgz4LU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dFGbH/xI; arc=fail smtp.client-ip=40.107.208.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cf7FKdykaB+bSSJb3sYXWwaQg0dL6yUjyw+wFHuM8DoIL+Au/IxMVeDv2sn0pNaamRQ2PrcxdSG04TNMPUXG9x9f559tWYj58pESf2rUnvRV+8E3rpWR9WrAcw40MhwkKqkCoBNnx9YYpc/OXBfNFRn2CQc6hXgC+G6qG7M+ZZGvCUxVZZZOMaCdoyOjd3foDVynzcR+hZUUpJl4YkED29R+SMoHAHrwXJtbi1rvt2n2x0Swy0+wN9Z3Daq8cVwKq4hrqiHiaHTrXlEv/j/jMNBKMMSZYTSA/dQoQrRGfboNA0tkgGfHmeW+BNroZWRI+xq4yKjjJan1dt3vTL95bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zNKnK2w3aTzboXd/hZxnLh75yLm1kQe8BI1tK0f3XVE=;
+ b=oe6LM1HSZy0ufdiI0wuCTqBArPmTY0Yfu582U/osz+CjtDyyG9VLAY6ToKh04w/yl7QRu6M7ydX1i06vWSp8Zq7F9S7EWKc4c/JmwQd2fpKN5P+iUwGKusYyfxZ0KT7NPJ63Nveumw0Hjx+Oru8tTjiCcEWJ4GihtHuExYvAioKR42KoJuEq4UXBiry4VKPc+trLVZ1nfo/Ei2DjRSDxweHKrkI2x9U1F+eFN6m/NpPGZ4QzOzehTmilOcgETH7Xrt0LBS5y45smGXjWe6vwXgkjJBZMA8TJOGM7gNii8C6HQLFQwOsKq1M/624QBuvhu2HbYU8nd1ur93A4KIlCeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zNKnK2w3aTzboXd/hZxnLh75yLm1kQe8BI1tK0f3XVE=;
+ b=dFGbH/xIbJ5H9+Ovnvua6m56NUyD4UO7m5uH8tv6FUZO2bmfC4WhVGi7/s1DqlNYhBtbEdisRa06OYoyvPKYncH1HwrfmVmBxxuYcC+pOPjK35LbACFbBAZoaAJO7KkQ6vdW22/q8YNiMAkw52sr/x1w7sxe1/K8lOJv8W2J8DM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA1PR12MB7200.namprd12.prod.outlook.com (2603:10b6:806:2bb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Wed, 24 Sep
+ 2025 08:29:15 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9137.018; Wed, 24 Sep 2025
+ 08:29:15 +0000
+Message-ID: <863cb79a-36d1-4db5-bc76-e46812c85601@amd.com>
+Date: Wed, 24 Sep 2025 10:29:10 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
+ functions of Intel GPUs
+To: Matthew Brost <matthew.brost@intel.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+ "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+References: <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
+ <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
+ <80d2d0d1-db44-4f0a-8481-c81058d47196@amd.com>
+ <20250923121528.GH1391379@nvidia.com>
+ <522d3d83-78b5-4682-bb02-d2ae2468d30a@amd.com>
+ <20250923131247.GK1391379@nvidia.com>
+ <8da25244-be1e-4d88-86bc-5a6f377bdbc1@amd.com>
+ <20250923133839.GL1391379@nvidia.com>
+ <5f9f8cb6-2279-4692-b83d-570cf81886ab@amd.com>
+ <aNMnHJwWfFPgGYbW@lstrano-desk.jf.intel.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <aNMnHJwWfFPgGYbW@lstrano-desk.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR2P281CA0064.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::12) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250923162139.GC2547959@ziepe.ca>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB7200:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d78ad4a-236c-4195-e5f8-08ddfb447239
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?czErOTN3c1VoVkc2endQZk1EN1h0Q2hJemtDeWVOOWw3QU9EWS8wQnBIZXZ2?=
+ =?utf-8?B?aWVLeWp1SFJRQ1I5ZTRVQVFtejZVUW1YMGpteWh4Z0E3OUYyWnlFbnBmZU9U?=
+ =?utf-8?B?ZEQ3Mjl4RGN2c0VyZkY0RVE0cWI3UWJWNGVTYnBYeW5uUXRsTE00ZkFGZWE5?=
+ =?utf-8?B?WitPK3g1MDBNT3lkYkZZTEdtNFdmUzkraS9uZHZsSTJuZ3dQMVloNHhZUldU?=
+ =?utf-8?B?cGwzU2FweFl3ZU1uRnFVSnNSQXUyOWcxVzBRbEIzOXV3K1RUVDdqY1RjRE9u?=
+ =?utf-8?B?VnZsVVNMTEVBcUFDbmZtQlBrVnlwNUpvK1dDYkhId3FXai9rWEJqa1R2UTBJ?=
+ =?utf-8?B?WlJYV0JSZHJiNW42SXFzMTUvc29LWllBWWRWalNKMUViVkN0bWRoVzhiS1hB?=
+ =?utf-8?B?dkpaaUdmUGh4ay91VFQ3WEdKU2x4NTZRUU8xMVZpVnkrR0dWNW1vejUyU0t1?=
+ =?utf-8?B?MkNscmdCQkpGUzY4WlVTNzhWdTVSRWh4cWJwbjVkM09NOE5NWE5JSjZHTzV2?=
+ =?utf-8?B?TGVLSEpiYVVobEJ6d3J0Y0c2dmlPWFRFdmdpd3dOakd3Rzd5eDBsT0kwMC9m?=
+ =?utf-8?B?cWNLRDA0cCtoengybmtobWlEUEhQcTFVcFZoK3ZzRWNDVDZuMDZZMm1aTmNl?=
+ =?utf-8?B?MENvOUx5eUdwWGw4TVpEL3ZnaGJKZm82aWlBMmdQWTdoSEdISysxdWs3Vk9s?=
+ =?utf-8?B?ZHBlQTlLM25UbzNVQWN4R3JmTWJFZkxlUXFDVEsyVnRvcFRwMy9JTGNVZHB4?=
+ =?utf-8?B?RTI1SVIwaXJkK0M3dDJ2eDJ5cVNwTHpsRUlwYmYwSm13UWdVRXFtRytQZzlN?=
+ =?utf-8?B?TVRVelZxeGpsRDlvdjRsRVdJRStnYXdGWTBMcFFKR3RwZHRyYlFROTU3R29I?=
+ =?utf-8?B?VW5aYlptK0ppUTFpMm9BRWVVQm9Gd3pNNjdIVCsxUlpxbGRCQWZuZTBoWDM2?=
+ =?utf-8?B?UzI0cmdocFN0Y0o4aGd0aDdXUXIrb3p2T3ZlalZ6cTJjUzF5Mm45OHA5WFhr?=
+ =?utf-8?B?NER6OGM3UGFRSXF1b2FQaE9MdnhKbnd4aXVnbUdBOGZzUHBwQThNaHEwOE5h?=
+ =?utf-8?B?SVovVTFkNnJLRkdLK1AzcVJWYmt1bW5CTTNyZTgrL1RqdkJEM2pPakFzeElm?=
+ =?utf-8?B?QmQwOXV3QnI5UzBRKzBDc2cweXRvVjJkWWNmQ1VZbXlSMnNLT0tCT2dVVkhW?=
+ =?utf-8?B?UHF2SmRoK3dFZ3cyWXk3ZlNDMUcyL3hyUC9ycjFteGZiVUdTUDBjem5hYzFy?=
+ =?utf-8?B?M1g0RkM1VTI5bkM5U1lDV0ZpVkh0anVEQmlaSUNrTWN4WVJlSDROK1Q2RFRw?=
+ =?utf-8?B?VURNYmp0aVZJYlMyNWQ3UjgwWEJ4YW1JRGhhR2JLdUJwMmZXcGlTcnJnKzIr?=
+ =?utf-8?B?ZW9OVWtiSmVkOW54TnFLelhtS2xDNkhWSzF2WE9WajJRWjNaOWNlR3ZsMTBp?=
+ =?utf-8?B?a3FjQUJJTVJVRzFLVFA1em1nakdhZC9UVXRWYmNSTk1HekdEZnpIenVickRX?=
+ =?utf-8?B?TFpFTmdZdFJqb1NrMm5ZM0dZYitHVldqd1NzWUYyRXFCT3B0UmIyRXF4SlhI?=
+ =?utf-8?B?N3cvRVBsWjVlRjNlMVBtTjlzNlRkTHg3YS9uQmIyVEd6YjhZeVpJYlFOb2VU?=
+ =?utf-8?B?Q2FjZzFNTldVYlA5aDRTOUZpVDRUMUk1ZEgzbmFNWlhMTTJNbjhieWhROXdt?=
+ =?utf-8?B?STh3ZGc4eEpvU0F6ZzNMNldtc0VLN3hzQ2FoSlJRY2dHQ2lDWlI1Nzg2WEZU?=
+ =?utf-8?B?T2hMMDNkN2VHa0FaWlpBT3hWZHpDYjdCSytSc2U5THRpY2pwSmR1VGF5ZXJa?=
+ =?utf-8?B?V2tRUTNLcDdFVzdCaTFFZWpxVEZNRlIzWjRDczJ6SVdNamp5WkF1OHRJUTJx?=
+ =?utf-8?B?c25tajdFT2prZnJUM0cyS25jcE5PdGZnUXFKVmJhY3o4M0E5UnFoTXNKTHhl?=
+ =?utf-8?Q?F4B7YbYBCfo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SVZITEVCVGpNVUx3bU5SRXRVM0FSSDdqcUZDM3FSN0VldDlMVEYzcnQvcGxY?=
+ =?utf-8?B?M1N3bjRTTnJxVkZ3SUhzZVZwNEYyR3lJY29OMURmaks1S0Z5b2pOSysrMkls?=
+ =?utf-8?B?bHhlR0s1SXFqSS95aHp2eEhHQlVyNnU4RHVrNnArWmZ4bE9yb2hXN043YmpC?=
+ =?utf-8?B?Rm0yMFpveE9XLzdKeEpob0o3cmZTZ1hLd2ljdWNDeC95VW4rZnd2NmJYci9Z?=
+ =?utf-8?B?VzlYK1NLaW1TRStvb3hqT0lMNEN0Z2ladll6WERDVW9tckJUOU1Wa0Z3eE8z?=
+ =?utf-8?B?NmFNNDdWVWpFZS95L2hmd29PQUdMQXNUd2ZucmswZ3UzRkVDTFZQdGZFL2lF?=
+ =?utf-8?B?M2tLSXpHc2RrcCtvQVRIM3g4a0w3aUs0U0VGTkdoejB5Z1dhWVhUZWlENlVF?=
+ =?utf-8?B?ZmY2SFNRVkdlc1pEUkNuY2Z4SkJ2R0hadlEwSXNzUDdVYVFaVDUyaE1nUWcv?=
+ =?utf-8?B?MzhWY0gvTUU5dVJONVhQS2swN1R5YXpZdzlzb29OcWx2aUhYUWZ2c1FBZWVN?=
+ =?utf-8?B?QTFXcmhUcmJ4ZEtPTW5XY2RQMkQrejVPV2ZXb1lzbC85eGJWNDMyRWRlUm9Z?=
+ =?utf-8?B?TmVtU0kxeVhWc3lzUHRuYkR5ZkZZYXM4ZnhyYXZuTGh0MFpWMDA0VkYxLzUz?=
+ =?utf-8?B?SnVkWDk2MzdqbERnSG11S3Z4OElCaGVaMEV4RC9senN1YzBWdVYvTXJmekhm?=
+ =?utf-8?B?WW5HbTFWNUM1c2dEdHRwdDdHOThFRzJad0hVZHRaaHFGODBzY2FsVnRXYUVH?=
+ =?utf-8?B?cDNzR2tnbnZqMkpwUzhXTUpnbDAwT3hjZjlWd1NndlFqVnc2bXBtVThQNlJN?=
+ =?utf-8?B?ZnhSSnNYekkvU0taVHlqd2hQSExQcUJoUmVFM2hqZlowc0ZBUVRrbHB3cXNK?=
+ =?utf-8?B?cHJuRDU0MDBGamFaeThiS1hwQVZualg4VlJUQktCQ2szRVpOTXpXVklsWFVo?=
+ =?utf-8?B?bmVJSnl0OWx3SDBaTnh6WFltSkMrTmk5dmtvdEt4d1EwVjkyNU9CM3JyYnVV?=
+ =?utf-8?B?NzdoZlVXRGN3ajNyNlJQMHdtbGZuai9pYThWd3c3YUVkemdhSXZ4SDdVeWcr?=
+ =?utf-8?B?cTBLVVMwYmxGbXI0YkF1NzNxbVF2Vi9CcVczblVzT1AvanQvUHJiQ09XcFZK?=
+ =?utf-8?B?aEREYnVNejQzTDRYcmhGdEZmQW8ybGRiT3VkZVpTMFkxLzBFMEswV1phZlR2?=
+ =?utf-8?B?NksxU1RuUVlFTm9URi9Oc1o2UG1QMnJIMjZyV2wvbTNaQXJoSGdJbEw4VTZ0?=
+ =?utf-8?B?S3ZwSXVIM2VxQlhDSUpEKzBFQ0tGMEZYUmVkbTl6TldRRXk3dkxtcjhIaG9y?=
+ =?utf-8?B?WnczeGdhR0xvU09wOVREM29XZ1lmY0xPRktJc0IxdXRuOHJlRlcxSTZYYVVN?=
+ =?utf-8?B?djNuS0tnUHQ2K3ZtWnVqa0dpcTlkcTNSMmZWL0gwZXppKy9PbitWNjFOWG1m?=
+ =?utf-8?B?bDROdm9ISS9yZlR1aGpWb2dnNk9Pb3p6emN2L0ZpRVBnaDE4U2g1U09iUTZU?=
+ =?utf-8?B?RmRRL3V2L0doSFkvdnk4aHdDcDJnUloyVE5NT0ZBWHV1MU4yQXFFanRMbjh4?=
+ =?utf-8?B?VlBLN3hjMURSdnhPUmJHNFNMYm5BcEFoSHhDczV5ekpFOUkva0IwcHp4QXNL?=
+ =?utf-8?B?eWc2MlZzZ2hWS3J4cjlLOC9kVHBEZ1FnS3UxZDJORUIrY09BSEpUbEdUZG5s?=
+ =?utf-8?B?eXp2a2JNS29HODIybzFUWXVqNUNwbEpMOGlWNjdJWFdKTXZYekRWdk9jcVRC?=
+ =?utf-8?B?Qm9JdGkxK3AyZkVkN1F0UzlNdGpXWmRocUJ1VGJRYzVPSGMrdmF2Vi9SVGVh?=
+ =?utf-8?B?TWFVSlBib2hWT080REVqQnBDaFVqNmRBTzlNaytvQUxPR2phRnozODNGcTBx?=
+ =?utf-8?B?Y0FMNGNsRXhNTkU2Z05POHo2WmdQbUtLYm9Ma0NXNjdVT21hak81S0JrSnMv?=
+ =?utf-8?B?K2VSVWZpZjhVVS9GOUZNT1drblM4b05pZWJqMVlPTXRjSVpWSUZuWGJmV2Fp?=
+ =?utf-8?B?a1BtRzBncEF6MjJtUDFqMDR2dW1NdHFQWEUyOU1uREtmbFgwdk1BWWw3TWNv?=
+ =?utf-8?B?QWVDUEtuZHUzSHd6MG8rSElucEZtVjJwNk8yTEltY0hsRjVzZUtrL1NLOGh3?=
+ =?utf-8?Q?Vk+JGzBm+DMK46IRnkDIQwoSl?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d78ad4a-236c-4195-e5f8-08ddfb447239
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2025 08:29:15.0506
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xEof1FFqJMBjuNVRSSG4HG4GDjEgjNW71FjG83WY+YocEgsa/ht7TPVS8YFe1O51
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7200
 
-On Tue, Sep 23, 2025 at 01:21:39PM -0300, Jason Gunthorpe wrote:
-> On Tue, Sep 23, 2025 at 09:07:49PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Sep 18, 2025 at 11:11:02AM -0300, Jason Gunthorpe wrote:
-> > > On Wed, Sep 10, 2025 at 11:09:19PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > > This issue was already found and addressed with a quirk for a different device
-> > > > from Microsemi with 'commit, aa667c6408d2 ("PCI: Workaround IDT switch ACS
-> > > > Source Validation erratum")'. Apparently, this issue seems to be documented in
-> > > > the erratum #36 of IDT 89H32H8G3-YC, which is not publicly available.
-> > > 
-> > > This is a pretty broken device! I'm not sure this fix is good enough
-> > > though.
-> > > 
-> > > For instance if you reset a downstream device it should loose its RID
-> > > and then the config cycles waiting for reset to complete will trigger SV
-> > > and reset will fail?
-> > > 
-> > 
-> > No. Resetting the Ethernet controller connected to the switch downstream port
-> > doesn't fail and we could see that the reset succeeds.
+On 24.09.25 01:02, Matthew Brost wrote:
+>>>> What Simona agreed on is exactly what I proposed as well, that you
+>>>> get a private interface for exactly that use case.
 > 
-> Reset it by up/down the PCI link?
+> Do you have a link to the conversation with Simona? I'd lean towards a
+> kernel-wide generic interface if possible.
+
+Oh, finding that exactly mail is tricky.
+
+IIRC she wrote something along the lines of "this should be done in a vfio/iommufd interface", but maybe my memory is a bit selective.
+
+We can of course still leverage the DMA-buf lifetime, synchronization and other functionalities.
+
+But this is so vfio specific that this is not going to fly as general DMA-buf interface I think.
+
+> Regarding phys_addr_t vs. dma_addr_t, I don't have a strong opinion. But
+> what about using an array of unsigned long with the order encoded
+> similarly to HMM PFNs? Drivers can interpret the address portion of the
+> data based on their individual use cases.
+
+That's basically what I had in mind for replacing the sg_table.
+
+> Also, to make this complete—do you think we'd need to teach TTM to
+> understand this new type of dma-buf, like we do for SG list dma-bufs? It
+> would seem a bit pointless if we just had to convert this new dma-buf
+> back into an SG list to pass it along to TTM.
+
+Using an sg_table / SG list in DMA-buf and TTM was a bad idea to begin with. At least for amdgpu we have switched over to just have that around temporary for most use cases.
+
+What we need is a container for efficient dma_addr_t storage (e.g. using low bits for the size/order of the area). Then iterators/cursors to go over that container.
+
+Switching between an sg_table and that new container is then just switching out the iterators.
+
+> The scope of this seems considerably larger than the original series. It
+> would be good for all stakeholders to reach an agreement so Vivek can
+> move forward.
+
+Yeah, agree.
+
+Regards,
+Christian.
+
 > 
-
-We did both FLR (dev/reset) and SBR (bus/reset_subordinate), both succeeds.
-
-> > Maybe the bus number was still captured by the device.
+> Matt
 > 
-> Maybe, but I don't think that is spec conformat behavior.
-> 
+>>>
+>>> A "private" interface to exchange phys_addr_t between at least
+>>> VFIO/KVM/iommufd - sure no complaint with that.
+>>>
+>>> Jason
+>>
 
-This device is not spec conformant in many areas tbh. But my suggestion would be
-to follow the vendor suggested erratum until any reported issues.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
