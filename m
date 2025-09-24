@@ -1,120 +1,185 @@
-Return-Path: <linux-pci+bounces-36853-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36854-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5D90B99F06
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 14:56:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E971BB99F2E
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 14:58:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64B8C327CB1
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 12:56:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D70A3284AB
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 12:58:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565D22FD7BA;
-	Wed, 24 Sep 2025 12:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Kkn6onVP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A705B303C85;
+	Wed, 24 Sep 2025 12:58:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27EB2FB98F
-	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 12:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90736302CAA
+	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 12:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758718560; cv=none; b=myRsjaTLYEmGOM9429/HGnt9w95mjFsIh5JZNiCdY8VInxwxXx2LRbeE65Ku2O6G/SwvoGT5f5nldrcFMde3J0cfgpjjS/JDS7ygjG/WIfTD9eeiZmLAXJzGX995MFwjnh3+8UnL8lBoMuSutDWT4rdYMeo7ARvSsDoT0Ou/f5s=
+	t=1758718711; cv=none; b=EASvN2ChIvHwgRZIwFPQGCCS9MRork4ycDLtD/oGokmBXjGmOzQBVTilJcy3FVAMF3CiOz+8G2PuOTOgZ+09H0O/OPzhwY4M7M1XQ+3E3Kt4tNhMmdFr3FZRh3sFTt2bhb9/lErglN/4qI4EV12u4jdSUWRDo+oT+XHvt6WuXqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758718560; c=relaxed/simple;
-	bh=8qhfbs5/dOfdODZ9W2ISGsgvtvUAf69XpGYPjAvdJ34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gfufm3Rbsq/kcf+snd4yFKBn9bmTPrRYmowaS3lxMf7hENxRvebTeB/4dFTiwudZxfMkwhOXfCNU71JwX8gkCV3KWgNB0XySON6bu/bVECPgMecP39aMnFLr1RA5R32Pw97EojnmZdRvTU8nUwOxgKypvM/QYJM7gqekiB9tKEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Kkn6onVP; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-74382048b8cso5352908a34.3
-        for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 05:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1758718558; x=1759323358; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8qhfbs5/dOfdODZ9W2ISGsgvtvUAf69XpGYPjAvdJ34=;
-        b=Kkn6onVPAMSNNklmFFZI3aNKbFGXU6nBTzblm3E/Pqfzu0p10WCUO6yPajm/5VwuAM
-         0R/CuTowYLBmljyJC/Kn5QN5Wdco/tdBRn5ekpqnGP38SrN+Ac0292QFuzXolu4Ur2ly
-         nMR4TkZHt1hXvq1/mclPrqQIzGGal2GIP/5UvgAk/Mdh0Y0kr2haii3hP91cObbCQxQO
-         TXW0yvCQfwfgC0aETgt+VkrOzjRw8DVOxHJKZ7J67EtCgL7I4b5l0Qgvqt8gtTaq90iZ
-         SZ+0Z7skuhxl+n3wGdTfN6yE1HSJh0h4Qq/SfGrjta4rO8mi9X8xjGNQPxika3XSUOJm
-         Ns3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758718558; x=1759323358;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8qhfbs5/dOfdODZ9W2ISGsgvtvUAf69XpGYPjAvdJ34=;
-        b=iIM4Plfw4nSigC02fs64fdf1RctV4IviBJvxSleFdU+Q00sK1L9kWPcvFFaxrk3gUr
-         rXTP/aKlkz4dL7bAiHYzl+UEf7J3Tq5Yf2OIyXOS9gjCfGn3mZlzB50AfIrxuL+WP9qV
-         echexdYUZ3CovVvGp0Vn90Zw06MgpY6wfhcr2t+9gk03pK0lMzQvC3iMz9gUuTHvZJf1
-         z/rhtwCsnCvd5bJyma6M4aOd/xs+Rv3tFiMgzPzqWd/k+FhoMLAGovJF3xjc2Cnr0L7F
-         mPX0UlTI6H6gzJYL19iS6O6sSa3c7F6sedLv2JWNmrZ71QLzVyc8ENSMhOLZ2cUN9xbS
-         KyPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjuOUmqzLlR5xnCNBj8eI/CSm5Jf/YPcqxPdirsHLUXjt85dAzokLniHOONCD97EgiSCCf8TlKT98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCy/9IPfqdBFCupogqaTuPUSyS7Xqll5dVGUjgaFxN7wQyevc5
-	ZG+83AvLoy+F944+9VOhJ40XfJ9FcILImp5chUVuPKofecMxVJ6GTLoWsFxc1Q4ZQ1s=
-X-Gm-Gg: ASbGncscW+O0PWk98v7/U6Lz0CyIKSZIcE9vFCvB3BqK82JGaogbByCC4GXWQLyn+64
-	RyK32WyE1tx80lPvS1JwZ1pkw4OC7/HO/PzXkZBAdgx84DJ+8Y9ZHCR4lx27uJ17vi4iC0/n76l
-	Xu/4B8XcsvVyckgMjL5w3hH0M9xGEl8E9RfZSYDRML89HNJqB49vNzJ6v6lwVlfh4LZAm84yAVy
-	KL/dJM4xOnPAXcOE5y5JKpjI3Do29IW+2gbLrA1A+qHA2fX5ah8znwJIb+lYE/Yrnua5Ms17dss
-	qh4ff9fp4CMRpSzSk+LazRZYtAlGMAGYI9lOlWyBK4Gelm2B2qUGSzMMg/Ul0i4yXhn+cfsk
-X-Google-Smtp-Source: AGHT+IHQ1WFwERflWPT6pleBXcoHSBQbFQS1yTbSrGY2yC7WZRjb2FbqLBgkt00nf34cnENXHwUiCg==
-X-Received: by 2002:a05:6830:65c3:10b0:746:dc05:8604 with SMTP id 46e09a7af769-79153cba081mr2694566a34.20.1758718557920;
-        Wed, 24 Sep 2025 05:55:57 -0700 (PDT)
-Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7692af2f9desm7576308a34.31.2025.09.24.05.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 05:55:57 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1v1P2J-0000000B800-3i6s;
-	Wed, 24 Sep 2025 09:55:55 -0300
-Date: Wed, 24 Sep 2025 09:55:55 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-	Xingang Wang <wangxingang5@huawei.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: Fix ACS enablement for Root Ports in DT
- platforms
-Message-ID: <20250924125555.GJ2547959@ziepe.ca>
-References: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
- <20250918141102.GO1326709@ziepe.ca>
- <tzlbsnsoymhjlri5rm7dw5btb2m2tpzemtyqhjpa2eu3josf5c@uivuvkpx3wep>
- <20250923162139.GC2547959@ziepe.ca>
- <oig5w7dnrdpgvzuqu4johs526qe57x7dkurd2abllqyvpavvti@s3pwtoduusfr>
+	s=arc-20240116; t=1758718711; c=relaxed/simple;
+	bh=tcrGELuphN2j2IYPyqGBbzuDcws8nzHybciZp6hIHpI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ty0iMKqOv1ZYG1NeIp+BDWCTuvs91QwnaxQ6tmB66/v+4lR33HFh0zNmmy7e54YN1b0qsZ56J6uWC2hFZgjP1MNVzOY03/E9VdbPb0GNZXoiwhMiIPCEOnf9hx75cnYKnFrae+I1PjgAxZqnWz/vuNqkDrSxPWH3U0ewLn6Zzlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 58OCwIeM007328
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Sep 2025 20:58:18 +0800 (+08)
+	(envelope-from randolph@andestech.com)
+Received: from swlinux02 (10.0.15.183) by ATCPCS31.andestech.com (10.0.1.89)
+ with Microsoft SMTP Server id 14.3.498.0; Wed, 24 Sep 2025 20:58:18 +0800
+Date: Wed, 24 Sep 2025 20:58:11 +0800
+From: Randolph Lin <randolph@andestech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <jingoohan1@gmail.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
+        <kwilczynski@kernel.org>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alex@ghiti.fr>,
+        <aou@eecs.berkeley.edu>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <ben717@andestech.com>,
+        <inochiama@gmail.com>, <thippeswamy.havalige@amd.com>,
+        <namcao@linutronix.de>, <shradha.t@samsung.com>,
+        <randolph.sklin@gmail.com>, <tim609@andestech.com>
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Skip failed outbound iATU and continue
+Message-ID: <aNPq42O1Ml3ppF2M@swlinux02>
+References: <20250923113647.895686-2-randolph@andestech.com>
+ <20250923144223.GA2032427@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <oig5w7dnrdpgvzuqu4johs526qe57x7dkurd2abllqyvpavvti@s3pwtoduusfr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250923144223.GA2032427@bhelgaas>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 58OCwIeM007328
 
-On Wed, Sep 24, 2025 at 01:51:23PM +0530, Manivannan Sadhasivam wrote:
+Hi Bjorn,
 
-> This device is not spec conformant in many areas tbh. But my
-> suggestion would be to follow the vendor suggested erratum until any
-> reported issues.
+Sorry, I forgot to reply to the email before sending the patch.
+I missed the email.
 
-I mean the ethernet chip retaining it's SBR after a FLR or link up/down
-is probably not a spec requirement..
+On Tue, Sep 23, 2025 at 09:42:23AM -0500, Bjorn Helgaas wrote:
+> [EXTERNAL MAIL]
+> 
+> On Tue, Sep 23, 2025 at 07:36:43PM +0800, Randolph Lin wrote:
+> > Previously, outbound iATU programming included range checks based
+> > on hardware limitations. If a configuration did not meet these
+> > constraints, the loop would stop immediately.
+> >
+> > This patch updates the behavior to enhance flexibility. Instead of
+> > stopping at the first issue, it now logs a warning with details of
+> > the affected window and proceeds to program the remaining iATU
+> > entries.
+> >
+> > This enables partial configuration to complete in cases where some
+> > iATU windows may not meet requirements, improving overall
+> > compatibility.
+> 
+> It's not really clear why this is needed.  I assume it's related to
+> dropping qilai_pcie_outbound_atu_addr_valid().
+> 
 
-Jason
+Yes, I want to drop the previous atu_addr_valid function.
+
+> I guess dw_pcie_prog_outbound_atu() must return an error for one of
+> the QiLai ranges?  Which one, and what exactly is the problem?  I
+> still suspect something wrong in the devicetree description.
+> 
+
+The main issue is not the returned error; just need to avoid terminating
+the process when the configuration exceeds the hardware’s expected limits.
+
+There are two methods to fix the issue on the Qilai SoC:
+
+1. Simply skip the entries that do not match the designware hardware iATU limitations.
+An error will be returned, but it can be ignored. On the Qilai SoC, the iATU
+limitation is the 4GB boundary. Qilai SoC only need to configure iATU support
+to translate addresses below the "32-bits" address range. Although 64-bits
+addresses do not match the designware hardware iATU limitations, there is no
+need to configure 64-bits addresses, since the connection is hard-wired.
+
+2. Set the devicetree only 2 viewport for iATU and force using devicetree value.
+This is a workaround in the devicetree, but the fix logic is not easy to document.
+Instead, we should enforce the use of the viewport defined in the devicetree and
+modify the designware generic code accordingly — using the viewport values
+from the devicetree instead of reading them from the designware registers.
+Since only two viewports are available for iATU, we should reserve one for
+the configuration registers and the other for 32-bit address access.
+Therefore, reverse logic still needs to be added to the designware generic code.
+
+Method 2 adds excessive complexity to the designware generic code. Instead,
+directly configuring the iATU and reporting an error when the configuration
+exceeds the hardware iATU limitations is a simpler and more effective
+approach to applying the fix.
+
+Conclusion:
+1. The iATU needs to be configured for 32-bits address space.
+   In compliance with hardware limitations.
+2. The iATU needs to be configured for config space.
+   In compliance with hardware limitations.
+3. The iATU needs to be configured for 64-bit address space.
+   This does not comply with hardware limitations and will print an error.
+   As long as it does not return an error value that terminates subsequent
+   operations, it is acceptable.
+   Simply skipping this entry when configuring the iATU is acceptable.
+
+> > Signed-off-by: Randolph Lin <randolph@andestech.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-host.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 952f8594b501..91ee6b903934 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -756,7 +756,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> >               if (resource_type(entry->res) != IORESOURCE_MEM)
+> >                       continue;
+> >
+> > -             if (pci->num_ob_windows <= ++i)
+> > +             if (pci->num_ob_windows <= i)
+> >                       break;
+> >
+> >               atu.index = i;
+> > @@ -773,9 +773,10 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> >
+> >               ret = dw_pcie_prog_outbound_atu(pci, &atu);
+> >               if (ret) {
+> > -                     dev_err(pci->dev, "Failed to set MEM range %pr\n",
+> > -                             entry->res);
+> > -                     return ret;
+> > +                     dev_warn(pci->dev, "Failed to set MEM range %pr\n",
+> > +                              entry->res);
+> > +             } else {
+> > +                     i++;
+> >               }
+> >       }
+> >
+> > --
+> > 2.34.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+Sincerely,
+Randolph
 
