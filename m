@@ -1,56 +1,53 @@
-Return-Path: <linux-pci+bounces-36910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BA6EB9CB62
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 01:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 806D5B9CB6E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 01:48:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 733E11B259AB
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 23:48:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 896851B27E04
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 23:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1F2C156F20;
-	Wed, 24 Sep 2025 23:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9BC8273D6F;
+	Wed, 24 Sep 2025 23:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKnu8Apl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F86ehh5+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99894611E;
-	Wed, 24 Sep 2025 23:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA55611E;
+	Wed, 24 Sep 2025 23:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758757687; cv=none; b=ORZVFRVTQ3aiEX83Okv2bi8XtCMmZsw9pUCQs005Y7i5pS498dl2CChSYtRD80Oxj9yqobtPdHUhelVUIPOhmov+nK6wmk7fMKP+/T69LNsOY4mlqmNoj8d0HZdidnp8XVRtZJCj05CLihh+L70s5fjUA78pQgIDRfScyazrp7U=
+	t=1758757709; cv=none; b=oQUt36HHDIWeENpbVBQvi49sVG9ba3gjbjGHQA9snKVCLARQx+4Y8GDDXjq9szQtdwO/xlDOs29QFlRSaHRPuVe3C68qL817fLMFKK1f0QVUOq2+fbJX26ZJJG/aKvkUxyp/mqvBlKrCIEI7PPezKKkn+PmovN2QRmCsgN9xQYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758757687; c=relaxed/simple;
-	bh=KuT5OYotedPvp6otwFAF+gYzvWPXraYRxTdHI1877ZI=;
+	s=arc-20240116; t=1758757709; c=relaxed/simple;
+	bh=WhjUmH6pVhrmr65bjdt4qxwE7j+BOahAh7bAwCu0juQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F1HqbHcPbT1B7ks4CB6tKTR6HvvA3PdrObc1jWVKPE6cYSMqJ22sjYSjFvGtASySbqv04jGWcvfsYakr/0BOPlomRNIXr4gSzfDPKLR5Eq0E5Hrm0fHSvwgcNNsKwpzs6nDaH5wp+1rKuGfJo/SXNui42w8eIeDpzOTI7JPVMJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKnu8Apl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 096ABC4CEE7;
-	Wed, 24 Sep 2025 23:48:06 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Yj9ud/GxGMlKjh8sypM6vqfvqvmd5rymzNtCRe/MxDdJLVBvMKb0dDgAZntK/rANVU2fhSsqcDFR652wVHvWoVIVJfKzc7DRQPEoxfMxL3K9b/iIdkyR4zUbfYnxLJcfUgwozcgN1aPjo0yHe2pclA8dOCpfPROu2gicrMaPl/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F86ehh5+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA69C4CEE7;
+	Wed, 24 Sep 2025 23:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758757687;
-	bh=KuT5OYotedPvp6otwFAF+gYzvWPXraYRxTdHI1877ZI=;
+	s=k20201202; t=1758757709;
+	bh=WhjUmH6pVhrmr65bjdt4qxwE7j+BOahAh7bAwCu0juQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AKnu8AplhYCS5zzyvD5otEqDjJKSa+MA2V+jI7eG/MdBGPx06drJvtSwVWFWWwE6D
-	 v/7LlmCeKgF5mVWL30E+o1CF61+O0Kxz1KpkU39AJaBAbS8a1Cv4xJRSwwjDuVhyiF
-	 lGw7UYS5Yo2VRJu5pyAdvuSmGBZHsx+9bQ28j/rUGwQmMRzQwhoNCErGEfMPrh9PUg
-	 4FhiMVC3/KEP9xmFOK1EbH6qP07npoWqKzFPLDqmfVc6GQIKVx6ff9KuBkDfSkazFx
-	 naZx1eRf3IwdkueX+7ZM5fW8GMuQnDuRqWgx3Hd9LFOQfwX4Li8ddnUG1gnOxuTGS+
-	 1XCJ6r83KAL5w==
-Date: Wed, 24 Sep 2025 18:48:05 -0500
+	b=F86ehh5+ie9GQ/pUou6FyEKwTrpVexaEzT7rvik40FeC9i9drso1aMFyoksmd6E6N
+	 v0f5oGWcdU44KAUZyT4W0LCJIM/I0FryaFWUEiaNxrnI7uuxxODb5Tjk2OHn8nGo5C
+	 6yJboMoKdtcAMgs+yKn7CzYz5hqPYVl0c/F28fkQiq82AkeWNTkTtyuLjfH6BNTLBk
+	 F/e/QTemaqjBSaE/DiGCIJJ1inVtDANPPoKp5cgV3BwYnNV6EzcjoGOTnyyU2RDTfN
+	 8hbNQ/fOfmXMG6s/CVWwau7u+xslo+kZAwEEpoyD3B6dFbQXyYLAuurkESG/WWfQJH
+	 OijVhJF4tla/Q==
+Date: Wed, 24 Sep 2025 18:48:28 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: Re: [PATCH 0/2] PCI: Fix bogus resource overlaps
-Message-ID: <20250924234805.GA2142481@bhelgaas>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Don't print stale information about resource
+Message-ID: <20250924234828.GA2143336@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,43 +57,89 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250924134228.1663-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250924135641.3399-1-ilpo.jarvinen@linux.intel.com>
 
-On Wed, Sep 24, 2025 at 04:42:26PM +0300, Ilpo Järvinen wrote:
-> Hi all,
+On Wed, Sep 24, 2025 at 04:56:41PM +0300, Ilpo Järvinen wrote:
+> pbus_size_mem() logs the bridge window resource using pci_info() before
+> the start and end fields of the resource have been updated which then
+> prints stale information.
 > 
-> I noticed a few bogus resource overlaps in logs which occurred for PNP
-> resource addresses that collided with large zero-based resources
-> (typically IOV resources). It turns out, the problem boils down to not
-> marking resources properly with IORESOURCE_UNSET when BAR is read into
-> the struct resource.
+> Set resource addresses earlier to make understanding logs easier.
+> Regrettably, this results in setting the addresses multiple times but
+> that seems unavoidable.
 > 
-> I've long wanted to mark resource not within their window with
-> IORESOURCE_UNSET as done in patch 2, however, my first attempt to do it
-> failed because the bridge window resources were not yet available. I
-> assumed the bridge window change would require more extensive changes
-> and postponed it, but it turns there were no big complications from it
-> (at least so far).
-> 
-> But things may be more complicated than I know so if you think there's
-> a good reason why the filling of bridge resources is delayed to the
-> second read, please speak up!
-> 
-> There are extra notes in both patches under --- line, please check
-> them as well.
-> 
-> This series does not removed the second read of the bridge resources,
-> it's probably unnecessary work now but confirming that requires more
-> testing and code reading than I currently have time for so just sending
-> the obvious fix series out (and adding a TODO entry for myself for
-> later).
-> 
-> Ilpo Järvinen (2):
->   PCI: Setup bridge resources earlier
->   PCI: Resources outside their window must set IORESOURCE_UNSET
-> 
->  drivers/pci/probe.c | 45 ++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 42 insertions(+), 3 deletions(-)
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 Applied to pci/resource for v6.18, thanks!
+
+> ---
+> 
+> Based on top of pci/resource branch.
+> 
+>  drivers/pci/setup-bus.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index d264f16772b9..362ad108794d 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1317,6 +1317,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+>  	resource_size_t children_add_align = 0;
+>  	resource_size_t add_align = 0;
+>  	resource_size_t relaxed_align;
+> +	resource_size_t old_size;
+>  
+>  	if (!b_res)
+>  		return;
+> @@ -1387,20 +1388,24 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+>  		}
+>  	}
+>  
+> +	old_size = resource_size(b_res);
+>  	win_align = window_alignment(bus, b_res->flags);
+>  	min_align = calculate_mem_align(aligns, max_order);
+>  	min_align = max(min_align, win_align);
+> -	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
+> +	size0 = calculate_memsize(size, min_size, 0, 0, old_size, min_align);
+>  
+> -	if (size0)
+> +	if (size0) {
+> +		resource_set_range(b_res, min_align, size0);
+>  		b_res->flags &= ~IORESOURCE_DISABLED;
+> +	}
+>  
+>  	if (bus->self && size0 &&
+>  	    !pbus_upstream_space_available(bus, b_res, size0, min_align)) {
+>  		relaxed_align = 1ULL << (max_order + __ffs(SZ_1M));
+>  		relaxed_align = max(relaxed_align, win_align);
+>  		min_align = min(min_align, relaxed_align);
+> -		size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), win_align);
+> +		size0 = calculate_memsize(size, min_size, 0, 0, old_size, win_align);
+> +		resource_set_range(b_res, min_align, size0);
+>  		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
+>  			 b_res, &bus->busn_res);
+>  	}
+> @@ -1408,7 +1413,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+>  	if (realloc_head && (add_size > 0 || children_add_size > 0)) {
+>  		add_align = max(min_align, add_align);
+>  		size1 = calculate_memsize(size, min_size, add_size, children_add_size,
+> -					  resource_size(b_res), add_align);
+> +					  old_size, add_align);
+>  
+>  		if (bus->self && size1 &&
+>  		    !pbus_upstream_space_available(bus, b_res, size1, add_align)) {
+> @@ -1416,7 +1421,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+>  			relaxed_align = max(relaxed_align, win_align);
+>  			min_align = min(min_align, relaxed_align);
+>  			size1 = calculate_memsize(size, min_size, add_size, children_add_size,
+> -						  resource_size(b_res), win_align);
+> +						  old_size, win_align);
+>  			pci_info(bus->self,
+>  				 "bridge window %pR to %pR requires relaxed alignment rules\n",
+>  				 b_res, &bus->busn_res);
+> 
+> base-commit: 43b4f7cd064b2ae11742f33e2af195adae00c617
+> -- 
+> 2.39.5
+> 
 
