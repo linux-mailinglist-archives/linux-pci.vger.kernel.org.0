@@ -1,241 +1,201 @@
-Return-Path: <linux-pci+bounces-36887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE49AB9B8CE
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 20:44:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F32D2B9B93A
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 20:58:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDD1B1BC1CB6
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:44:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE1B9421E8E
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CE231690A;
-	Wed, 24 Sep 2025 18:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D85731A549;
+	Wed, 24 Sep 2025 18:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="T1smw1jE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PlSdWkwQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012052.outbound.protection.outlook.com [40.107.209.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D473081BE;
-	Wed, 24 Sep 2025 18:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758739435; cv=fail; b=YjW9AyhZdauQFhuKaRz+RTv/8bShEXUOrUpQPuuLi5jurm/rq4sWJRyCd/UeN9y1oX+qLOvmawM6qUjHj68ajnI8bxGWAVPZ9gnr3USZKg3K9S+xgoSQL7ruUNIPaQEcL6IpowX4SEMMjU5rqFQZ+lOrsPjztOCZZD+ucTbwl5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758739435; c=relaxed/simple;
-	bh=x+iySf7xybApmKEzeIcKGEqQ6zUdLQmw2qtHw/yLHhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Mf+ADejASmWSOlEn1IMNeXox7iRoCkRNxyuOXpjXO5Tkb6NBT+btuzLXsHcxYhDHWJL7QFOi5lP2weoe1P+lILmiB21HWuVrWVklzSE6dWLKnz7V/Qyr5tMwCXg9Cvvgsgwkz5VEpBCquvFEt0QeSH5RCu7El11aWCkk4DIVAxI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=T1smw1jE; arc=fail smtp.client-ip=40.107.209.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T+sP7dTezXeV1UcfvipGrOusthP5rUCPZu4wwMqCiHTTPYxAtJRRgjBFiKLiwdBE0zv6Ped9D8vHid/uZ0aTI5Plw53GcgP+p3u55B7euGsAH2t653cns0eoxvDPUxM+bVmFciEsbbHb8SwnH3Zpc3x3WMSTHdoy4FIUpjrXzSQNRnzB7JMiyg6RVXFnp/ffmzIx4S6+j0Wqzb7/lOK62xzL+Jjuuyrn4ywm0Bs4Z7rLBt3W7V5z8PEks3dUulFuILYVnn7wUrK3dk3MHNYoV4CF69MAvzub5Hk0utzTWGfvSl5rEIq7r8hffJenS3JwtvnPsOxNhpBpZ8jhGJplng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zzw2HcUr2PoxiD2L8KvFNGIWovYFKTJxOLFmSXX3o4I=;
- b=u+zArf6UEFsDmICQEqAOEQpXyC/9Ec9fDa/bZ6CMkGd6aSxjcmJ1JV8v793igmZv9aBuPH3+jTgMP98rfnGEP1DJxkcY40yorKrB3oQ8Npnd8IDha9LCaBM/c5MlwUzExk3QBnNaYQdgyYqiLjeHcaiOF5G6GaKQPn/+YKuePIvv2URDO2oSb97VC1aBNyfytxJViVLddVXKCtLRVsnLUXzYPXaRje9r79zBKYG3XKU+z/W4hotvFNS11KweGnqgdIOLPDfE11ckEr7Y3N/o6tKXmB+TeL6RRepgsbfDYw4uDR7iYM9nr44gpHJHoj0LwJZ7udd/Zm2icnm94GpsCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zzw2HcUr2PoxiD2L8KvFNGIWovYFKTJxOLFmSXX3o4I=;
- b=T1smw1jEJ6t6m3HbKUvD/VTjTzS1HQMyF33AmonXc3Dk2BPzzswgNQg+HtckYdJeFVspUhHZdvt9vJp+n/IvWM/RHNMCArS35lwiF8B8GN9gfwN7oryLZZETx+QoyhlL5SttyGVuFFQVuqYYpCmNICc6R843Ftp4ZhxQL1qfajghIaod8XPvg3Ejc5zHJ/QmPBfnrPMG+oVWRfHzFtnW/YhGhNiC2/1wkPwkg22OTtcsq3VbgyHdiB1sT73wypSr/A3xcd67pknkb1NDzQ6m6mCl5ttABleBdDHlYMeXAhUQKOaZMRzo7xs60TQyYEG8s3C7yewjwjTWi6vMqdE32w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by CY8PR12MB7338.namprd12.prod.outlook.com (2603:10b6:930:52::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.10; Wed, 24 Sep
- 2025 18:43:49 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.021; Wed, 24 Sep 2025
- 18:43:49 +0000
-Date: Wed, 24 Sep 2025 15:43:46 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: joro@8bytes.org, bhelgaas@google.com, suravee.suthikulpanit@amd.com,
-	will@kernel.org, robin.murphy@arm.com, sven@kernel.org,
-	j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev,
-	robin.clark@oss.qualcomm.com, m.szyprowski@samsung.com,
-	krzk@kernel.org, alim.akhtar@samsung.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, kevin.tian@intel.com,
-	yong.wu@mediatek.com, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, tjeznach@rivosinc.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, heiko@sntech.de, schnelle@linux.ibm.com,
-	mjrosato@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com,
-	zhang.lyra@gmail.com, wens@csie.org, jernej.skrabec@gmail.com,
-	samuel@sholland.org, jean-philippe@linaro.org, rafael@kernel.org,
-	lenb@kernel.org, yi.l.liu@intel.com, cwabbott0@gmail.com,
-	quic_pbrahma@quicinc.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, patches@lists.linux.dev,
-	vsethi@nvidia.com, helgaas@kernel.org, etzhao1900@gmail.com
-Subject: Re: [PATCH v4 4/7] iommu: Pass in old domain to attach_dev callback
- functions
-Message-ID: <20250924184346.GI2617119@nvidia.com>
-References: <cover.1756682135.git.nicolinc@nvidia.com>
- <19570f350d15528e13447168b7dcd95795afdbf3.1756682135.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19570f350d15528e13447168b7dcd95795afdbf3.1756682135.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: MN0PR02CA0008.namprd02.prod.outlook.com
- (2603:10b6:208:530::10) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B56B31A544;
+	Wed, 24 Sep 2025 18:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758740272; cv=none; b=HIYgGhJbo0US19f5Vm5bP8XQJybQVDHdqucPvP6zGCviXt+/BuWxF6rxJ31bVNUlwtSZb4cacHKKQsnQMice3NRRh3TjJMZ1qCHwNJ0TO9eoB18f7mTldZrYhwltVWK5JwZi619bbBcqklnqXpCusJmu1F0pAMVNnKFzCknWiS8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758740272; c=relaxed/simple;
+	bh=35YRdu2J8sWMGROMyochqoZvrd7G7WRu+ry6ZOJVoAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nq3SK8qwYq6906H7lHiUgWNDnfhMH/L1yXJO/33yffg1PdyiYkeGAo7ji1hiRDeGV1CwQS7w8T1lqP8Dnl9OoCLTkmZVqi13zkO/lAVh9Q9MLkZlfctCeFyO2ekFoBHtcYJGt8Xfw9llHLOs6thiYjVBPE39riSfpW4QekcXHBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PlSdWkwQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DCBC4CEF4;
+	Wed, 24 Sep 2025 18:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758740271;
+	bh=35YRdu2J8sWMGROMyochqoZvrd7G7WRu+ry6ZOJVoAM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=PlSdWkwQgD6ksTvSQxLI+5aU42KKabCIXMs8fRCpY6F+9HecD/F4r4Sa2i7z320fg
+	 v9rcS2xnEofIGLO6sV8RKkad14F/jnRLzPx5edAUnhv+GYp1YHAzjHvl8ZIKl3EY4k
+	 cmTDFt1SYet80418qmtlhO2CzTriTPXFm1eMjJE8nupTcOWmiCYlfolFQLsrO5R6/1
+	 O+fA12ZnGodSOPt+wlwJAWtI2U/dbiai4xQYOHVMh6lTieL/5WwU1BnvgWo5Qwm6Kv
+	 5ArwGKuKLBwcI+MldKwwuKLJvs894vxtO+BjHKbzQcGUUIhRiuG78jfKmfkOac9Lq7
+	 k8xny3C/55wiw==
+Date: Wed, 24 Sep 2025 13:57:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
+	Xingang Wang <wangxingang5@huawei.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/of: Call pci_request_acs() before enumerating
+ the Root Port device
+Message-ID: <20250924185750.GA2128243@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|CY8PR12MB7338:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8b9e5f1-5f96-49f0-8549-08ddfb9a4cc8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?G6VfVzphA3BUM/5NT8fGXajxuh7mocbcDHI7udJMAfyxKaiYqcJw24ikh0Ob?=
- =?us-ascii?Q?O727qpk0e/LorIWGJGH1QUccC8m3Kuk50pAsBYecnpotg5FMrmdz6R/9FLBt?=
- =?us-ascii?Q?YWZafNXe11UwP/f1upN00Aanc12HmAtNmU3Xi29Mg7OCXQ5WkL+PTmNjTkPm?=
- =?us-ascii?Q?yGEv1yKa+Z39Y0EBV6qoXhU6FNrxu7BXGxAamYkDqgPxQFLzRS4taASvJUS6?=
- =?us-ascii?Q?Phliu5otHt7qngp2Sk8tpg685O8gaMbbl9NevPBjT2bRKFs/CU4oZ3nSWUfN?=
- =?us-ascii?Q?IcGLJKnKtwHgmrErRJ2Odc3hHkxzugI6G6i6hG3sgRArlPtMdRLiMinF2/C0?=
- =?us-ascii?Q?cC1KGmJ/nbEq0m23NpPL0RXKUI8fqAT08GAgKQ9A4xshJCtTTbpIrt6iEwwX?=
- =?us-ascii?Q?MU9ZY7IHRPN0OxE3p7u9YeN8WtF8KI5tepMcAtQSYNv+W61CDWfEd3yGFrTN?=
- =?us-ascii?Q?rWP5DylQuyufayxAJuXfeF1mk5OTurGjdmFuCbXYrfk0jn+myZDx0A8UdACS?=
- =?us-ascii?Q?WPQxiMhcsphEC80UKhc5hrHFF9pqTtpasOXDprKoGGR06vshhMqlQcBp+YWC?=
- =?us-ascii?Q?EUApAYrXF43graJuh9ZGnZZ+vuQ+aXL5gyTobVDgi0nspi53o2FzxvJnAOKj?=
- =?us-ascii?Q?ig+huXVn1agsPXOPjIk6tui2NB9wb1arvH7X8eoj+MIH6XIt7IItS0RIsF6m?=
- =?us-ascii?Q?niIMHDyhE8iBxoWrR2OgodO6glDajrPpQPbaZPpS06sD0oWKcPQtA5Dwv03h?=
- =?us-ascii?Q?X9oLBRY/SQzVcYv1d2IFq6moFRxMn7MCs/RhJ9p7vwDe2TdVqTLZiXjPwjsR?=
- =?us-ascii?Q?SlN/nkouKEcu3OPDcPO2r9s9yIHwUZDU+IDn6gTdHqScSyes7voDWA5Ns3yU?=
- =?us-ascii?Q?NPh+TfmuGQ/yCGfNjuhHwKZl4kNuVsnIwVuxRfDjYfoGpQnerX/dRNDCmmc8?=
- =?us-ascii?Q?RD2SrKG6+YJ39bjsjlLahfaKuwI3wfqFoU2LF5IaFZGm+QVMF4KsIwSz8oQV?=
- =?us-ascii?Q?6zpQw3KaSrleAV8zIuierheHtlKniU4TlJ4YeflovjE3FdrReg5gJKAOJW37?=
- =?us-ascii?Q?dD6v5dTZY/2cgQBRN/3OlEP20gE0CV38WDzAYmjmq/gIopg50x8XfRP20pQJ?=
- =?us-ascii?Q?6oqAJWwB8uCgg+48SsBysQdVt+nzFG1Ejc9u616ULITgPxRZOAUApWYQsozn?=
- =?us-ascii?Q?+21ZPKkgeMBMf4GQzdKpYwCXreVDA7qQZ6twKwuwmGDWubu6ova6Y8SzkchR?=
- =?us-ascii?Q?McJZ02qk6HhbY1dkWkaBjHwAkaySIE6R/aaG1EThPgd0aU2kidtVlye82xmI?=
- =?us-ascii?Q?xmtegP65ZF7axJ6ARwdYoDGDp6p6pnb5Z5hOnaK4v6IX348qt03DfrmSziTu?=
- =?us-ascii?Q?WKXoHlewug7dVgG8Ace0Btmc8TevnlZrZL4awc9RclduJpL9EH5d40qHDPw7?=
- =?us-ascii?Q?9Jxtrp9Cxo5AkGqyPXFNsMjrOehxHQ27?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Xz2aH2uvI8r0Vvi1YRYUXGs1Cq0LJYr+OBhN2nXW5LKpQrV8iAxu3idGAAQC?=
- =?us-ascii?Q?pvIlrpcQXa3Md9J7i0Iww9gjTybbHumYz/88ZhEYOJP1kXmG97ErDsUgXurS?=
- =?us-ascii?Q?qkbTe+bNp+LJ11KuusJmoPhqpvbCkVrjo9Iu5IbNV41Tn2o90MLCMOUmtMeO?=
- =?us-ascii?Q?kzRfVPYJ80x0oFsCmSRnJMmazU0SXGxMorg2ygBeT7Q+upbHv4f06sHOCBKQ?=
- =?us-ascii?Q?bHLen5NWWNMJZ0isreFIYpkUwfwAl+wy63MZxSaftiKYlyCq36vMbkAeuehk?=
- =?us-ascii?Q?ChpvDjIipdiK7zg6KcX71dGZl5A72JhvU8CLfyUczdr1hytSEbkh5Q4odbzL?=
- =?us-ascii?Q?pzuEPqZye4YdbO/nImLyflA7BqD8pSMN6EhqGHgBGvCEr6b/lD+0rrfvmvQp?=
- =?us-ascii?Q?H0wtLYLHseA/3WLuuPJW3RqPfDfL8+SYi+nSG6PhW4wPV5koZxG7y5LrBgNv?=
- =?us-ascii?Q?P12wfzsIKflBPwUEjwukR2SNbsup7JwKV/yHaqlL0rxMF+0NsKPYjK+Vze9x?=
- =?us-ascii?Q?l9d48QMixrL1fmIHNSfpK6tG5myF1CTH+/UY7DsFpCAfnM7iyDBQYqZd3tXE?=
- =?us-ascii?Q?5MU1Yl+p0Yv1ABBakMLeOBV48TZgeDfTmQUU+fh6fnRbR9ghwemJwoPr603N?=
- =?us-ascii?Q?wC7Oh7pLsmgSsajS7eM5AULB6wPNvk8Bgkw1DPLWe2Z78g7mFBRVYOu8y5Ko?=
- =?us-ascii?Q?tOPJKBerkNHvggF86J8QTZLueKgiLy/IRpaQDcdwubr3A2tuNqWQCLVUCg5N?=
- =?us-ascii?Q?wSlepXoTSIaLYzhCetl8F1Io8WwGF3cb/92E0wR9IoTzhjGCdbu9cL7Tth7S?=
- =?us-ascii?Q?Ac9wFmbVf8ItXSVMQFA5hVAz2owa9yJqfWIqDWpOpvKafrHCYwDGHqvZ3wp/?=
- =?us-ascii?Q?Cy0hCbJVWcr3y6olO/a4Hg+0kw3gAdkwI3MTvLT/vtfyRYf2TMM0aTRoP6zF?=
- =?us-ascii?Q?1V0J3uNTr1U1cdsMiPQf3vBAOWa8WrLtW1lJ+5IlyGc+qCWA+1BNE57S/sZD?=
- =?us-ascii?Q?ogKIjNzHRiHZZ5Kz7WUKAbIvcUPhnLATWFA3uVbgj7YxE6dnGh7yZZf+obSa?=
- =?us-ascii?Q?tXL1H2wH3s0/S8ZBEzfIWrSynGv3SYOxeF+G/TmKYDUmbEBdHE3GE4gTAFEu?=
- =?us-ascii?Q?urH0y1s2nMcbw66KoPdX/NjU17CxKUaLsL+UvUaROnTXsGyWejJvY8f4KWXn?=
- =?us-ascii?Q?gtIjBfDKXzRTZkBn8S9exF9cFyvurs5KeFYAcearvMqpKhbrqbEi9pHZ/ULM?=
- =?us-ascii?Q?3C3oYRB2erRBlypCRmHJXblU0EL0cxXWRboCytCKaZZlWWTmimX73apEhPTe?=
- =?us-ascii?Q?vFZiNTiheD6Y97H0TdRDi4WIGc0sU+iFRDqCdTjjXcGidVA2MHWmSTYCRoG1?=
- =?us-ascii?Q?GnWTJEgRfIp9De/iyprb2VpxBN61sNCcKQe3nJlIgpfA+CrulLUjSg+l+kXW?=
- =?us-ascii?Q?3wJIgRGB+4xW+dnE2AAxgkUdCAHdOYaTeh7SUivNaLZNQQ4OBtfcTd20g8Tj?=
- =?us-ascii?Q?eRvjSp7Zf360xxSd86yMQG7wEanH9cf9vUxSrZIE6lPvhHOKsRXmP3A/R9V9?=
- =?us-ascii?Q?1yeKIm2VWz2mBHLy/FS8zOkeNWg1XFQcLgzd3s6e?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8b9e5f1-5f96-49f0-8549-08ddfb9a4cc8
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2025 18:43:49.0037
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QdQX4Qrt+nHrxWju+c6sUOvaW9aPLjI//2RpiMBFJ6ofulFb6twFfXsqmruG3Tsm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7338
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4fjukl3xkfcxcm5p6jo4davplqlrx4xrpbjhdsduqjlv7oz7l@zilbaf3h6py2>
 
-On Sun, Aug 31, 2025 at 04:31:56PM -0700, Nicolin Chen wrote:
-> The IOMMU core attaches each device to a default domain on probe(). Then,
-> every new "attach" operation has a fundamental meaning of two-fold:
->  - detach from its currently attached (old) domain
->  - attach to a given new domain
+On Wed, Sep 24, 2025 at 02:20:52PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Sep 23, 2025 at 03:27:01PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Sep 10, 2025 at 11:09:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > From: Xingang Wang <wangxingang5@huawei.com>
+> > > 
+> > > When booting with devicetree, ACS is enabled for all ACS capable
+> > > PCI devices except the first Root Port enumerated in the system.
+> > > This is due to calling pci_request_acs() after the enumeration
+> > > and initialization of the Root Port device. 
+> > 
+> > I suppose you're referring to a path like below, where we *check*
+> > pci_acs_enable during PCI enumeration, but we don't *set* it until
+> > we add the device and look for a driver for it?
+> > 
+> >   pci_host_common_init
+> >     devm_pci_alloc_host_bridge
+> >       devm_of_pci_bridge_init
+> >         pci_request_acs
+> >           pci_acs_enable = 1                    # ++ new set here
+> >     pci_host_probe
+> >       pci_scan_root_bus_bridge
+> >         pci_scan_device
+> >           pci_init_capabilities
+> >             pci_enable_acs
+> >               if (pci_acs_enable)               # test here
+> >                 ...
+> >       pci_bus_add_devices
+> >         driver_probe_device
+> >           pci_dma_configure
+> >             of_dma_configure
+> >               of_dma_configure_id
+> >                 of_iommu_configure
+> >                   pci_request_acs
+> >                     pci_acs_enable = 1          # -- previously set here
+> > 
 > 
-> Modern IOMMU drivers following this pattern usually want to clean up the
-> things related to the old domain, so they call iommu_get_domain_for_dev()
-> to fetch the old domain.
+> Yes!
 > 
-> Pass in the old domain pointer from the core to drivers, aligning with the
-> set_dev_pasid op that passes in already.
+> > > But afterwards, ACS is getting enabled for the rest of the PCI
+> > > devices, since pci_request_acs() sets the 'pci_acs_enable' flag
+> > > and the PCI core uses this flag to enable ACS for the rest of
+> > > the ACS capable devices.
+> > 
+> > I don't quite understand why ACS would be enabled for *any* of the
+> > devices because we generally enumerate all of them, which includes
+> > the pci_init_capabilities() and pci_enable_acs(), before adding
+> > and attaching drivers to them.
+> > 
+> > But it does seem kind of dumb that we set the system-wide "enable
+> > ACS" property in a per-device place like an individual device
+> > probe.
 > 
-> Ensure all low-level attach fcuntions in the core can forward the correct
-> old domain pointer. Thus, rework those functions as well.
+> I had the same opinion when I saw the 'pci_acs_enable' flag. But I
+> think the intention was to enable ACS only if the controller is
+> capable of assigning different IOMMU groups per device. Otherwise,
+> ACS is more or less of no use.
 > 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommu.h                         |  3 +-
->  drivers/iommu/amd/iommu.c                     | 11 ++++---
->  drivers/iommu/apple-dart.c                    |  9 +++--
->  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     |  5 +--
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   | 33 ++++++++++++-------
->  drivers/iommu/arm/arm-smmu/arm-smmu.c         |  9 +++--
->  drivers/iommu/arm/arm-smmu/qcom_iommu.c       | 11 ++++---
->  drivers/iommu/exynos-iommu.c                  |  6 ++--
->  drivers/iommu/fsl_pamu_domain.c               | 12 +++----
->  drivers/iommu/intel/iommu.c                   | 10 ++++--
->  drivers/iommu/intel/nested.c                  |  2 +-
->  drivers/iommu/iommu.c                         | 26 +++++++++------
->  drivers/iommu/iommufd/selftest.c              |  2 +-
->  drivers/iommu/ipmmu-vmsa.c                    | 10 +++---
->  drivers/iommu/msm_iommu.c                     |  8 ++---
->  drivers/iommu/mtk_iommu.c                     |  8 ++---
->  drivers/iommu/mtk_iommu_v1.c                  |  7 ++--
->  drivers/iommu/omap-iommu.c                    | 12 +++----
->  drivers/iommu/riscv/iommu.c                   |  9 +++--
->  drivers/iommu/rockchip-iommu.c                | 20 ++++++++---
->  drivers/iommu/s390-iommu.c                    |  9 +++--
->  drivers/iommu/sprd-iommu.c                    |  3 +-
->  drivers/iommu/sun50i-iommu.c                  |  8 +++--
->  drivers/iommu/tegra-smmu.c                    | 10 +++---
->  drivers/iommu/virtio-iommu.c                  |  6 ++--
->  25 files changed, 152 insertions(+), 97 deletions(-)
+> > > Ideally, pci_request_acs() should only be called if the
+> > > 'iommu-map' DT property is set for the host bridge device.
+> > > Hence, call pci_request_acs() from devm_of_pci_bridge_init() if
+> > > the 'iommu-map' property is present in the host bridge DT node.
+> > > This aligns with the implementation of the ARM64 ACPI driver
+> > > (drivers/acpi/arm64/iort.c) as well.
+> > > 
+> > > With this change, ACS will be enabled for all the PCI devices
+> > > including the first Root Port device of the DT platforms.
+> > > 
+> > > Cc: stable@vger.kernel.org # 5.6
+> > > Fixes: 6bf6c24720d33 ("iommu/of: Request ACS from the PCI core when configuring IOMMU linkage")
+> > > Signed-off-by: Xingang Wang <wangxingang5@huawei.com>
+> > > Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
+> > > [mani: reworded subject, description and comment]
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > > ---
+> > >  drivers/iommu/of_iommu.c | 1 -
+> > >  drivers/pci/of.c         | 8 +++++++-
+> > >  2 files changed, 7 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> > > index 6b989a62def20ecafd833f00a3a92ce8dca192e0..c31369924944d36a3afd3d4ff08c86fc6daf55de 100644
+> > > --- a/drivers/iommu/of_iommu.c
+> > > +++ b/drivers/iommu/of_iommu.c
+> > > @@ -141,7 +141,6 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+> > >  			.np = master_np,
+> > >  		};
+> > >  
+> > > -		pci_request_acs();
+> > >  		err = pci_for_each_dma_alias(to_pci_dev(dev),
+> > >  					     of_pci_iommu_init, &info);
+> > >  		of_pci_check_device_ats(dev, master_np);
+> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > index 3579265f119845637e163d9051437c89662762f8..98c2523f898667b1618c37451d1759959d523da1 100644
+> > > --- a/drivers/pci/of.c
+> > > +++ b/drivers/pci/of.c
+> > > @@ -638,9 +638,15 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+> > >  
+> > >  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+> > >  {
+> > > -	if (!dev->of_node)
+> > > +	struct device_node *node = dev->of_node;
+> > > +
+> > > +	if (!node)
+> > >  		return 0;
+> > >  
+> > > +	/* Enable ACS if IOMMU mapping is detected for the host bridge */
+> > > +	if (of_property_read_bool(node, "iommu-map"))
+> > > +		pci_request_acs();
+> > 
+> > I'm not really convinced that the existence of 'iommu-map' in
+> > devicetree is a clear signal that ACS should be enabled, so I'm a
+> > little hesitant about this part.
+> > 
+> > Is it possible to boot using a devicetree with 'iommu-map', but
+> > with the IOMMU disabled or the IOMMU driver not present?  Or other
+> > situations where we don't need ACS?
+> 
+> Certainly possible. But the issue is, we cannot reliably detect the
+> presence of IOMMU until the first pci_dev is created, which will be
+> too late as pci_acs_init() is called during pci_device_add().
+> 
+> This seems to be the case for ACPI platforms also.
 
-I've split things like this into more patches before, but this
-actually isn't too bad, so I wouldn't push for it.
+I don't doubt that the current code doesn't detect presence or use of
+IOMMU until later.  But that feels like an implementation defect
+because logically the IOMMU is upstream of any PCI device that uses
+it, so architecturally I would expect it to be *possible* to detect it
+before PCI enumeration.
 
-A series version would be:
- - add a new op 'attach_dev2' or whatever
- - Convert all drivers that just change the signature
- - Convert drivers that have a trivial iommu_get_domain_for_dev()
- - N patches to convert more complex drivers one by one
- - Remove old op attach_dev
-
-Again, looks Ok as-is:
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Jason
+More to the point, it's not at all obvious how to infer that
+'iommu-map' in the devicetree means the IOMMU will be used.
 
