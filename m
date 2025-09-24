@@ -1,235 +1,107 @@
-Return-Path: <linux-pci+bounces-36863-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36864-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3CDDB9AD27
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:14:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 447E0B9AD39
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:16:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7788A3A4A92
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 16:14:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05D0B7A0618
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 16:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A7330C0E7;
-	Wed, 24 Sep 2025 16:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E8032264DB;
+	Wed, 24 Sep 2025 16:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a31fF5Ul"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from psionic.psi5.com (psionic.psi5.com [185.187.169.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823BB4A1E
-	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 16:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.187.169.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D8E1D8E01;
+	Wed, 24 Sep 2025 16:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758730447; cv=none; b=CONsDZjXr8IFv+lckhe35ff52gxiwFuL/hKlWzW0SKnnvR13zlf/dtDCCGaQaDbWIAJpS5Sh047z9c0vOD7QSBypLqphkMdgr8z+KtvpegngvUsj+Mos+Zv1gO8OBmgiunEODVgHOXyitdZgeiFoCmfvIE1eo3NkwW692iKYCxs=
+	t=1758730564; cv=none; b=T4liP11VZ8EguOSlI151n6cDeao2vEiMmSZ+Nj4UMYW5y3cZPr38VNCiQRVPVnPZumxvuWXR590SHueW0kMk3QqFGDk4COkyILD/qn8o4Zo32ux6hxNgw7F32oWYbnBqlyLv2ObPd2XBw9GBjy+2pAej69D63ewo3OgBRH6dNPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758730447; c=relaxed/simple;
-	bh=SjXq+/hv4Z5wCO+dYpwHYq+sr2ecxQuwDY/cbpbp5UM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sPLSD6yCAUQiyW5MeZWVysBa5rG4HCfAQcU2NH/ApoE5pUuyPT7OnWTJNr7+BYERAGW2wD9Jvj7pjgu3uQNdlvtYVB3Z4OPogFus4BFqFo41yXgB8JP79DNckNHzUJEJutsWsrqLmmuZqr60AdeCac4GaWgVCaCwhms0Im/Gvh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de; spf=pass smtp.mailfrom=hogyros.de; arc=none smtp.client-ip=185.187.169.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hogyros.de
-Received: by psionic.psi5.com (Postfix, from userid 1002)
-	id 12B8C3F1BA; Wed, 24 Sep 2025 18:13:56 +0200 (CEST)
-Date: Wed, 24 Sep 2025 18:13:56 +0200
-From: Simon Richter <Simon.Richter@hogyros.de>
-To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Message-ID: <20250924161356.GA3273841@psionic12.psi5.com>
+	s=arc-20240116; t=1758730564; c=relaxed/simple;
+	bh=kkjtwtL1939kS3KHWd3nmrExrzEMNg8o8jRFiH4e5wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o6NXzQMiFk8+BLxlPiLRRroH8UlDiYFOLKHW5Y/roelr1ptdFVAMGKEwbFmvPzMmAI+R2Tjc0d+G0ZyNNUsB3Bp5CInqrByEawbBdKgDuIm0sM0gV2mb7aRmqhrUrqDFmbhXGD+hmyAVPSZ7KzVNXV3o0GX77Sn+PpNv2zarsVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a31fF5Ul; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF22BC4CEE7;
+	Wed, 24 Sep 2025 16:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758730563;
+	bh=kkjtwtL1939kS3KHWd3nmrExrzEMNg8o8jRFiH4e5wY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a31fF5Ul5zvpwWOxxnlwJU+KT1ObHYc8kGdqsb+sllZg6T0IanElHtNYLCzbXTCaF
+	 yLdWcyMZW+h0mPUZqoantXB8CtStYV/1h8R5DnRpcTpQMa9MM5ZdD+Fxm9DpfdoMoU
+	 Vkp7zRZv1Jp5ceggGyokQYvJm5UlojNKw+fUG5eF/27997l6QrC6VZTUcY0mEgZ1D5
+	 04LVRuAY+sNnTuALBu2NIMDfM03KZi2HEdjFcO4y0UGERgTJmJW4hbbZE+9TwV9nOp
+	 UYZb5FeA/J/r54rf0a99FTXMO5U/fIjPGbEq+INas7R6vwvk5N5VuXxPGhDJsuHNGW
+	 rLA7L0NuAwDoA==
+Date: Wed, 24 Sep 2025 21:45:55 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra194: Reset BARs when running in PCIe endpoint
+ mode
+Message-ID: <emyizd7i6wo2ljh2d6bvryvqlrqkcnzztrof6b5ue3jwoyiakd@rlgw3aymft2a>
+References: <20250919131646.167330-2-cassel@kernel.org>
+ <lrox3l5cafqsom3eier6n7wpbfatlic42rxs5q5utrhg4fekls@kj3b5ue7ggt7>
+ <aNFJ8awYYwxb2o6B@ryzen>
+ <elejp25mi7fwrhoavwrxsp4ekh645r57ajn3rq7pzi7qmxlnvg@56dov3itxoie>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250922121253.GT1391379@nvidia.com>
- <IA0PR11MB7185067FA8CE8A95419D06F5F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <aNKiXTGs75fldDYS@infradead.org>
- <1d9065f3-8784-4497-b92c-001ae0e78b63@amd.com>
- <IA0PR11MB71855457D1061D0A2344A5CFF81CA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <aNMnHJwWfFPgGYbW@lstrano-desk.jf.intel.com>
- <5f9f8cb6-2279-4692-b83d-570cf81886ab@amd.com>
- <20250923133839.GL1391379@nvidia.com>
- <8da25244-be1e-4d88-86bc-5a6f377bdbc1@amd.com>
- <20250923131247.GK1391379@nvidia.com>
- <522d3d83-78b5-4682-bb02-d2ae2468d30a@amd.com>
- <20250923121528.GH1391379@nvidia.com>
- <80d2d0d1-db44-4f0a-8481-c81058d47196@amd.com>
- <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
- <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
- <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250922140024.GZ1391379@nvidia.com>
- <42f45fa2-6ea3-44c7-870a-dc1973894a87@amd.com>
- <20250922132720.GY1391379@nvidia.com>
- <fbb6bbe7-8141-4532-812e-2b93cc2fcb1b@amd.com>
- <20250922122900.GV1391379@nvidia.com>
- <4e3919c3-3d1b-4f34-a1e4-5e9e7a5e6e14@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <elejp25mi7fwrhoavwrxsp4ekh645r57ajn3rq7pzi7qmxlnvg@56dov3itxoie>
 
-Hi,
+On Wed, Sep 24, 2025 at 09:27:48PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Sep 22, 2025 at 03:06:57PM +0200, Niklas Cassel wrote:
+> > On Sat, Sep 20, 2025 at 09:04:01PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Sep 19, 2025 at 03:16:47PM +0200, Niklas Cassel wrote:
+> > > > Tegra already defines all BARs expect for BAR0 as BAR_RESERVED.
+> > > > This is sufficient for pci-epf-test to not allocate backing memory and to
+> > > > not call set_bar() for those BARs.
+> > > > 
+> > > > However, the host side driver, pci_endpoint_test, simply does an ioremap
+> > > > for all enabled BARs, and will run tests against all enabled BARs.
+> > > > 
+> > > > After running the BARs tests (which will write to all enabled BARs), the
+> > > > inbound address translation is broken.
+> > > > This is because the tegra controller exposes the ATU Port Logic Structure
+> > > > in BAR4. So when BAR4 is written, the inbound address translation settings
+> > > > get overwritten.
+> > > > 
+> > > 
+> > > BAR4 or BAR0?
+> > 
+> > BAR4.
+> > Just because a BAR is marked as BAR_RESERVED does not mean that the BAR is
+> > disabled. Hence this patch.
+> > I can make this clearer in V2.
+> > 
+> 
+> First paragraph says that BAR0 is marked as BAR_RESERVED, and here you were
+> saying BAR4, hence I asked the question without cross checking the driver. Now,
+> I checked the driver and I think you mistakenly said BAR0 instead of BAR4.
+> 
 
-since I'm late to the party I'll reply to the entire thread in one go.
+Oops.. I misread it, actually. All fine.
 
-On Fri, Sep 19, 2025 at 06:22:45AM +0000, Kasireddy, Vivek wrote:
+- Mani
 
-> I think using a PCI BAR Address works just fine in this case because the Xe
-> driver bound to PF on the Host can easily determine that it belongs to one
-> of the VFs and translate it into VRAM Address.
-
-There are PCIe bridges that support address translation, and might apply
-different translations for different PASIDs, so this determination would
-need to walk the device tree on both guest and host in a way that does
-not confer trust to the guest or allows it to gain access to resources
-through race conditions.
-
-The difficulty here is that you are building a communication mechanism
-that bypasses a trust boundary in the virtualization framework, so it
-becomes part of the virtualization framework. I believe we can avoid
-that to some extent by exchanging handles instead of raw pointers.
-
-I can see the point in using the dmabuf API, because it integrates well
-with existing 3D APIs in userspace, although I don't quite understand
-what the VK_KHR_external_memory_dma_buf extension actually does, besides
-defining a flag bit -- it seems the heavy lifting is done by the
-VK_KHR_external_memory_fd extension anyway. But yes, we probably want
-the interface to be compatible to existing sharing APIs on the host side
-at least, to allow the guest's "on-screen" images to be easily imported.
-
-There is some potential for a shortcut here as well, giving these
-buffers directly to the host's desktop compositor instead of having an
-application react to updates by copying the data from the area shared
-with the VF to the area shared between the application and the
-compositor -- that would also be a reason to remain close to the
-existing interface.
-
-It's not entirely necessary for this interface to be a dma_buf, as long
-as we have a conversion between a file descriptor and a BO.  On the
-other hand, it may be desirable to allow re-exporting it as a dma_buf if
-we want to access it from another device as well.
-
-I'm not sure that is a likely use case though, even the horrible
-contraption I'm building here that has a Thunderbolt device send data
-directly to VRAM does not require that, because the guest would process
-the data and then send a different buffer to the host. Still would be
-nice for completeness.
-
-The other thing that seems to be looming on the horizon is that dma_buf
-is too limited for VRAM buffers, because once it's imported, it is
-pinned as well, but we'd like to keep it moveable (there was another
-thread on the xe mailing list about that). That might even be more
-important if we have limited BAR space, because then we might not want
-to make the memory accessible through the BAR unless imported by
-something that needs access through the BAR, which we've established the
-main use case doesn't (because it doesn't even need any kind of access).
-
-I think passing objects between trust domains should take the form of an
-opaque handle that is not predictable, and refers to an internal data
-structure with the actual parameters (so we pass these internally as
-well, and avoid all the awkwardness of host and guest having different
-world views. It doesn't matter if that path is slow, it should only be
-used rather seldom (at VM start and when the VM changes screen
-resolution).
-
-For VM startup, we probably want to provision guest "on-screen" memory
-and semaphores really early -- maybe it makes sense to just give each VF
-a sensible shared mapping like 16 MB (rounded up from 2*1080p*32bit) by
-default, and/or present a ROM with EFI and OpenFirmware drivers -- can
-VFs do that on current hardware?
-
-On Tue, Sep 23, 2025 at 05:53:06AM +0000, Kasireddy, Vivek wrote:
-
-> IIUC, it is a common practice among GPU drivers including Xe and Amdgpu
-> to never expose VRAM Addresses and instead have BAR addresses as DMA
-> addresses when exporting dmabufs to other devices.
-
-Yes, because that is how the other devices access that memory.
-
-> The problem here is that the CPU physical (aka BAR Address) is only
-> usable by the CPU.
-
-The address you receive from mapping a dma_buf for a particular device
-is not a CPU physical address, even if it is identical on pretty much
-all PC hardware because it is uncommon to configure the root bridge with
-a translation there.
-
-On my POWER9 machine, the situation is a bit different: a range in the
-lower 4 GB is reserved for 32-bit BARs, the memory with those physical
-addresses is remapped so it appears after the end of physical RAM from
-the point of view of PCIe devices, and the 32 bit BARs appear at the
-base of the PCIe bus (after the legacy ports).
-
-So, as an example (reality is a bit more complex :> ) the memory map
-might look like
-
-0000000000000000..0000001fffffffff    RAM
-0060000000000000..006001ffffffffff    PCIe domain 1
-0060020000000000..006003ffffffffff    PCIe domain 2
-...
-
-and the phys_addr_t I get on the CPU refers to this mapping. However, a
-device attached to PCIe domain 1 would see
-
-0000000000000000..000000000000ffff    Legacy I/O in PCIe domain 1
-0000000000010000..00000000000fffff    Legacy VGA mappings
-0000000000100000..000000007fffffff    32-bit BARs in PCIe domain 1
-0000000080000000..00000000ffffffff    RAM (accessible to 32 bit devices)
-0000000100000000..0000001fffffffff    RAM (requires 64 bit addressing)
-0000002000000000..000000207fffffff    RAM (CPU physical address 0..2GB)
-0060000080000000..006001ffffffffff    64-bit BARs in PCIe domain 1
-0060020000000000..006003ffffffffff    PCIe domain 2
-
-This allows 32 bit devices to access other 32 bit devices on the same
-bus, and (some) physical memory, but we need to sacrifice the 1:1
-mapping for host memory. The actual mapping is a bit more complex,
-because 64 bit BARs get mapped into the "32 bit" space to keep them
-accessible for 32 bit cards in the same domain, and this would also be a
-valid reason not to extend the BAR size even if we can.
-
-The default 256 MB aperture ends up in the "32 bit" range, so unless the
-BAR is resized and reallocated, the CPU and DMA addresses for the
-aperture *will* differ.
-
-So when a DMA buffer is created that ends up in the first 2 GB of RAM,
-the dma_addr_t returned for this device will have 0x2000000000 added to
-it, because that is the address that the device will have to use, and
-DMA buffers for 32 bit devices will be taken from the 2GB..4GB range
-because neither the first 2 GB nor anything beyond 4 GB are accessible
-to this device.
-
-If there is a 32 bit BAR at 0x10000000 in domain 1, then the CPU will
-see it at 0x60000010000000, but mapping it from another device in the
-same domain will return a dma_addr_t of 0x10000000 -- because that is
-the address that is routeable in the PCIe fabric, this is the BAR
-address configured into the device so it will actually respond, and the
-TLP will not leave the bus because it is downstream of the root bridge,
-so it does not affect the physical RAM.
-
-Actual numbers will be different to handle even more corner cases and I
-don't remember exactly how many zeroes are in each range, but you get
-the idea -- and this is before we've even started creating virtual
-machines with a different view of physical addresses.
-
-On Tue, Sep 23, 2025 at 06:01:34AM +0000, Kasireddy, Vivek wrote:
-
-> - The Xe Graphics driver running inside the Linux VM creates a buffer
-> (Gnome Wayland compositor's framebuffer) in the VF's portion (or share)
-> of the VRAM and this buffer is shared with Qemu. Qemu then requests
-> vfio-pci driver to create a dmabuf associated with this buffer.
-
-That's a bit late. What is EFI supposed to do?
-
-   Simon
+-- 
+மணிவண்ணன் சதாசிவம்
 
