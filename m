@@ -1,105 +1,125 @@
-Return-Path: <linux-pci+bounces-36866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1531DB9AE03
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:27:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3932B9AE12
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 18:28:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C988D17B60D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 16:27:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94EF83B9689
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 16:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E2818C034;
-	Wed, 24 Sep 2025 16:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD38B31355D;
+	Wed, 24 Sep 2025 16:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCzIJm8w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCicOj1f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDED30C622;
-	Wed, 24 Sep 2025 16:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE3F30277D;
+	Wed, 24 Sep 2025 16:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758731271; cv=none; b=mLrO1SgawucxkE46NVWqTdHshoCa0lJBfF7i5gvuzAkv/wSUlZCkDUqrwm4D/zyExp1BxKvXTUdafHYjs7Q6KD2vrFryoZotAmXIVzW5ppv33usO5ATXPM9iju9fe8q/qWGB5Rr010nGYYc0yakmdo5WbSFuPuAnrgw/4j1xLYU=
+	t=1758731309; cv=none; b=F80jdX4Kc4NAe3LFBiW9QSJKshxjriqmwLC6IgLCQ43R1j1De7+upeIQvpW+4Wdy/q67u8byu9GKnO+RMgMYzlSO2VsMpPVfv7m/9Uw1o5Qe62nEugYkYDxNdBj8q8HRhRu6bjJ1C6zTedduRkfEqZ9yNUOM1XobcpAucRbIVQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758731271; c=relaxed/simple;
-	bh=S0GG/oxsHIj92A6uVZuJnqQfoDoVTBR11CukgPlll5M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ijeixneoLdINP0QZd3le5SOl5RTL/03Z0poDUo2gMTG/OP9Zd+NbejqF6EJOJCqc2MiDJhKjvOfaMkYU8LCb6ZtuU9+Teai9ASJaqUKCBRkLHFS9V9KU8WmgaNObHq13vIjx81nlBreyJItu3pC6vRMJNmcgvsyVZIWDUs11aoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCzIJm8w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D439EC4CEE7;
-	Wed, 24 Sep 2025 16:27:45 +0000 (UTC)
+	s=arc-20240116; t=1758731309; c=relaxed/simple;
+	bh=Sdd1N12H8OGYuTD3SOGENzDlN7OsiF3NDcttGVhvRt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHcR5buTMLZOwHv7L4s95Jc/i9dPqaEPdaJYe0U+qnChfYPYTl32Pa41LRAxJU2mdn9px2P6489MwIzeY9ke7JlmGIFVGrsbzW7wUAzo4SBLnTFbvCuOuMCkwtV8UMOFJfSem/YJsZQ1/AzbJTxjA36UDxaqmuBTv706Bo16vYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCicOj1f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C951AC4CEE7;
+	Wed, 24 Sep 2025 16:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758731270;
-	bh=S0GG/oxsHIj92A6uVZuJnqQfoDoVTBR11CukgPlll5M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QCzIJm8wheGfCeQC4Pq/vfEozaghr7NcMHZveSg8o6mn2I/E0brSFXikr8yw+Y+sc
-	 BJ477OUu4UF1iE4O7JZZLvQMN+nLnLmNUAObpnsS8a4KJRSRsGiVdcK3OAIOe2oMvt
-	 qZ5CZCM+rtEPaF6plk5zTNgmHrn3QDW/SBOSaGkK6CjBZqNCWx3csKT1oM7k2z74Wh
-	 MgzC/7DgOWdrz8lK/KUbGFGukIBiFYOGQhwk0oM4n2AqXs4JFNj3feGibVSyhTrSSU
-	 slafTR9wMoF1pWjKU84XM4kMGaPJ+hwVvmpnuU7t5CPU4TUgUL+53TeHQPeNUkkz6H
-	 AlDgzV2uPdHTA==
+	s=k20201202; t=1758731309;
+	bh=Sdd1N12H8OGYuTD3SOGENzDlN7OsiF3NDcttGVhvRt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rCicOj1fOUCV32N6e4+UEuWRFluW+S6Dp4SauhY13O0TFkZy6jNvVFuA4mn3WOHeH
+	 fWNU5SQHOqXAqpAQCx3nZ4aRo29J/vZN1+Jx8oq3bNwM8ctxmTnHw6Gf46iYzzIa6s
+	 UbQB+novrjxWgG9MUQ/qmOb7RhjrSSl9Xn8hgMd30suXXn8pE6w1cfT/Ilco0eyAzp
+	 Wc6Hka6+r26Q28Avq71ZaOC1mGxBiHsOKJ3egdYqDSjIjJYCXKizUQb+vPefb4Fo6f
+	 zXc2Wn+F9QwuIFf/59EI1rLT5US6ku6PXSnx2oATJZuJifUL/K9/jFLoFKSnRXREff
+	 PR0Eh0fYsu2JQ==
+Date: Wed, 24 Sep 2025 21:58:20 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Thierry Reding <treding@nvidia.com>,
-	linux-pci@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] tegra194 PCI endpoint fixes
-Date: Wed, 24 Sep 2025 21:57:40 +0530
-Message-ID: <175873117614.9403.12977856551944635014.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250922140822.519796-5-cassel@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>, 
+	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: tegra194: Fix broken
+ tegra_pcie_ep_raise_msi_irq()
+Message-ID: <u7xhhqz6pzfe2keqmlq5acbad5rydzsfw43puj6lugpvz47rtm@ua7zoenz5ivx>
 References: <20250922140822.519796-5-cassel@kernel.org>
+ <20250922140822.519796-6-cassel@kernel.org>
+ <va2vktobo5dwfh6mkl6emilsnkeleh6ubkbiylv4zoxr2cezpa@s7h3yuytcpv4>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <va2vktobo5dwfh6mkl6emilsnkeleh6ubkbiylv4zoxr2cezpa@s7h3yuytcpv4>
 
-
-On Mon, 22 Sep 2025 16:08:23 +0200, Niklas Cassel wrote:
-> Shin'ichiro and I have recently been trying to get the Jetson to run the
-> PCI endpoint kselftests on a tegra based board. These patches ensure that
-> the BAR test cases and MSI test cases pass. The MSI-X test cases still fail.
+On Wed, Sep 24, 2025 at 09:24:09PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Sep 22, 2025 at 04:08:24PM +0200, Niklas Cassel wrote:
+> > The pci_epc_raise_irq() supplies a MSI or MSI-X interrupt number in range
+> > (1-N), see kdoc for pci_epc_raise_irq().
+> > 
+> > Thus, for MSI pci_epc_raise_irq() will supply interrupt number 1-32.
+> > 
+> > Convert the interrupt number to an MSI vector.
+> > 
+> > With this, the PCI endpoint kselftest test case MSI_TEST passes.
+> > 
+> > Also, set msi_capable to true, as the driver obviously supports MSI.
+> > This helps pci_endpoint_test to use the optimal IRQ type when using
+> > PCITEST_IRQ_TYPE_AUTO.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-tegra194.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > index 7c295ec6f0f16..63d310e5335f4 100644
+> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > @@ -1969,10 +1969,10 @@ static int tegra_pcie_ep_raise_intx_irq(struct tegra_pcie_dw *pcie, u16 irq)
+> >  
+> >  static int tegra_pcie_ep_raise_msi_irq(struct tegra_pcie_dw *pcie, u16 irq)
+> >  {
+> > -	if (unlikely(irq > 31))
+> > +	if (unlikely(irq > 32))
+> >  		return -EINVAL;
+> >  
+> > -	appl_writel(pcie, BIT(irq), APPL_MSI_CTRL_1);
+> > +	appl_writel(pcie, BIT(irq - 1), APPL_MSI_CTRL_1);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -2012,6 +2012,7 @@ static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  
+> >  static const struct pci_epc_features tegra_pcie_epc_features = {
+> >  	.linkup_notifier = true,
+> > +	.msi_capable = true,
 > 
+> This change is unrelated to the above tegra_pcie_ep_raise_msi_irq() fix. So this
+> change should be in a separate patch.
 > 
-> Dependency
-> ==========
-> "PCI: tegra194: Fix broken tegra_pcie_ep_raise_msi_irq()" requires commit
-> 27fce9e8c6f0 ("PCI: endpoint: Drop superfluous pci_epc_features initialization")
-> which is currently queued on branch pci/endpoint.
-> 
-> [...]
 
-Applied, thanks!
-
-[1/3] PCI: tegra194: Fix broken tegra_pcie_ep_raise_msi_irq()
-      commit: b640d42a6ac9ba01abe65ec34f7c73aaf6758ab8
-[2/3] PCI: tegra194: Reset BARs when running in PCIe endpoint mode
-      commit: 308c6d4cf3ef9725054c431b1b8e3db0dc38de34
-[3/3] PCI: tegra194: Handle errors in BPMP response
-      commit: b308dcd8b385f93c7d210be3a48aaa590739ba17
-
-Note: I've splitted the patch 1 into two to keep the bug fix separate:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=endpoint&id=82f1cc171ce95544c024837c20a54d1954a67a76
+I did the split and applied the series, thanks!
 
 - Mani
 
-Best regards,
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+மணிவண்ணன் சதாசிவம்
 
