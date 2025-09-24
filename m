@@ -1,182 +1,110 @@
-Return-Path: <linux-pci+bounces-36838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91758B98B0C
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 09:53:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D249DB98C94
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 10:21:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C8D73B20B2
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 07:53:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F05CE19C72FA
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 08:22:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8120A285052;
-	Wed, 24 Sep 2025 07:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95404275B01;
+	Wed, 24 Sep 2025 08:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vgo3cKoc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdNDeoVE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A73284B25
-	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 07:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EFA2248A5;
+	Wed, 24 Sep 2025 08:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758700133; cv=none; b=Yt0aMALdSP5uEJw8Q35vRDSNpMnu30v6LpOU8EoC7wFmo7H3hNnWqB6TOiKHi8G7ANGPHasnx4ncLOjB4uRILeJn7+80Acgm7V5Labcl7915CJtlGy8zeq0iPlfnCS5HtZ3yw+JT8SI4PUiGjyD1LlomWLkPtDYaxb+G9U6jCzc=
+	t=1758702093; cv=none; b=fpXZVagucqCeRyRPRbEVJLDxqCsO3GxMORTl13cSTXQOgLgxBSJ6wtW4h39Gm66zdbQDsKuo4hnF13B9lgVCTkQNBGSn/sx0TEOlWxEMK+T92/Pu8b9wRwk18qvYPBf6d2CmaluHylSDqddVsJLf7YUalRz38jrpbZYj6YvZMtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758700133; c=relaxed/simple;
-	bh=ntgz0WoIRVipjrzOQMbzUgc/QyjDqtJ9eBcmpETq3SI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j+KZHKzgKMwhBVvzz6KKvXLk/1qHP6w7DOJq8RVbVHY6YnuPl2yaFTZS5yVL1UiqmBrgfgFEsNHWUxcBsEuLSG4cZcgXvyRuWXeTxnngZOcPvHDRXroQud6L4Dn6SMexdyfKZMvA997z8+fMbX2VjOW0JIaPj8oBYu4/OokYzOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vgo3cKoc; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45e03730f83so28386805e9.0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 00:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1758700129; x=1759304929; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R8l3AdnOSsRSws2FudDrnNOobQlzeM81boeBiHgd3uA=;
-        b=Vgo3cKocO9IKPAvFAUXQCY1KpmVTN2f1h1FQPIA+GpkLA4VqhPu6o1VF71lkxX2sjT
-         zHfHdxfX+1Pi66GTtnma5ywW3EgNB/Ej/3mtC8EY5IEz1z5rupqzP9vlXq2RmYMLrKSR
-         eVxYeA7Uq6u/aZR0ZOQREL77KOqHgj8BN4nPj6F7H6DMuaBMKGZTwvKTg9ggwLPiXEDv
-         JW5brNLHUaM6ZHpNTb//6VTK9l6UwfzpLhDP2x1xqauShDf478VAj+74iGhiQP5Qax/L
-         Zhz5Xsi/aNWIPufa7BYGyoeT9PzuRDd0gzPahqUgE0TMOMUcTFeoi/KG4IznyHZ4tp+b
-         FU1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758700129; x=1759304929;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R8l3AdnOSsRSws2FudDrnNOobQlzeM81boeBiHgd3uA=;
-        b=dua1EBUeyzlG3pQj4pvOf5/gNrCgihVZFBXNkd4ln6T1sqgDBRyvyI9tVhKXVdLt50
-         bCl45cyWRnDpp0eLQP4E2byldTzbHQM7y9JcjKoogyziLwq7WBGWJH2cEmVjejVxk66x
-         paVxMSguRHAfcuQacAxjpJi+HA7APnVVcauNjRGk9NT5Bwk+yhlM1hIrVT/vxvrSQ0Nx
-         HAedTPmFfx/w1ODbtQkeKJY/u2/qCDekvTf7/2nMgINgAUC3K82qNVJ5BW1m/rLtUMfl
-         U9LqZFb42UoomJCFG5JZfZikEibND8s8Qnbd/5W54mw5cIZl0BG2azzyfSSEWkrtYXRe
-         g3Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcftP1LSTkzMolOOnxy80jBsjvh0X7JFGGo2Md3BRjClCtPiIVtJMJY0LGFxtAhEO8qnXDiy8+ncY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR3NpUfw6FF6KMvUkDuGPYkmuwt4/e74es14IoAbTI1iJyci66
-	YKY88S9iCjEAUdubKjmL9ZWod1zmZ8yFANq0C/IHJT2Oa5m8gOgOHpFXaqdqSRO0QE0=
-X-Gm-Gg: ASbGncuDu66+wDjRFUEVkYclbZ2Q1McZQJMlXsrTRntswhb/vhjvm8NWHF9c6Gq8W8W
-	JIIA3rvPRRils/3847m3VLP4lPGi2/mgmBcg/sgD3aPWHd2HXTFmTB8lJ2IOEle5brEGUhOpLrF
-	yVdnlXHr3vFBFJokQ2JRh4XsKMCiL4+Uku6GqsfJveAfv3p47BAZzBD+vqc51GITSJgBWvd5Tim
-	M7VERLaK176POapElrhCz3ZONmeapMk1CrILsAmSix+Rw6yOLfDeESVooaLKb2HgCOeUFR0xtMy
-	Ga50YxpxzqVx5L7WDudrK+S+3/ii8Mw5QMWUBopDX8OcGwSIKf5wXdjBgh64et73FPv+spfZcwV
-	xBdMCjLP/FIU3sI9ra53RZoaL1N3wgcH9PFT6YlxIscPr3Y3N5hc=
-X-Google-Smtp-Source: AGHT+IFwNQTWzI6GYN83BC1thuAIQC8cKI7ga+QSPsI75xrmILyCBppuSPCKc3GbCcHRTNLHchQcjw==
-X-Received: by 2002:a05:600c:1c87:b0:456:19eb:2e09 with SMTP id 5b1f17b1804b1-46e1d9746d5mr69959415e9.8.1758700128971;
-        Wed, 24 Sep 2025 00:48:48 -0700 (PDT)
-Received: from [10.0.1.22] (109-81-1-107.rct.o2.cz. [109.81.1.107])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e2a9af289sm20857535e9.6.2025.09.24.00.48.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Sep 2025 00:48:48 -0700 (PDT)
-Message-ID: <2071b071-874c-4f85-8500-033c73dfaaab@suse.com>
-Date: Wed, 24 Sep 2025 09:48:47 +0200
+	s=arc-20240116; t=1758702093; c=relaxed/simple;
+	bh=UI+LGXvxoHRFGbjRfV+A4wqbLa/YUdmYzLCl0Mrv0Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M1h94fNjY6S1yVx8p/38lLIoszWq7yH1RKKPyggzZhuOLOAxPRuZnQLu1/qZDeW7qx0YCTU7Qj0G2qISanpgjCJJSRXNobo5KICKah97YUBIn3z1c+1J1kXnzoZlJP5gJXjkHDfvifzWuMCb99ITqq4MmWx98XSPt1lSvvVvMEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdNDeoVE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8002C4CEE7;
+	Wed, 24 Sep 2025 08:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758702092;
+	bh=UI+LGXvxoHRFGbjRfV+A4wqbLa/YUdmYzLCl0Mrv0Zk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bdNDeoVE/eb0pX3zlIW+r0D/iJ1u1izTyWJVH1EXYvZPgiHzWc+6AZU8CEmm9zQzV
+	 3l64jhAX6o1C99QhPNd7M8s0Uix4UOzlEjY5aduo7SeqpjrOYdv5M+6+cplfWCST+w
+	 cqvaus5s6BYwL8QxymBDRpBCOtcPUw60MYQjhbT93BV5/bJA6HEBX8tCODGwkGb5ht
+	 KTd9VpdvQY/4D840ogT/fvlgjOwDRg8aLdfiIVYcJ5HBbLrpyrIlQWvbjBnhcMpL0u
+	 uAiyytgPNT3B3LlZ4A2J2HijqAFLR5/zPGFmbVjLxVhQvVNUufkkM5lLzBvWQ+R529
+	 hEto4nJZYSqGg==
+Date: Wed, 24 Sep 2025 13:51:23 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>, 
+	iommu@lists.linux.dev, Anders Roxell <anders.roxell@linaro.org>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, Pavankumar Kondeti <quic_pkondeti@quicinc.com>, 
+	Xingang Wang <wangxingang5@huawei.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: Fix ACS enablement for Root Ports in DT
+ platforms
+Message-ID: <oig5w7dnrdpgvzuqu4johs526qe57x7dkurd2abllqyvpavvti@s3pwtoduusfr>
+References: <20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com>
+ <20250918141102.GO1326709@ziepe.ca>
+ <tzlbsnsoymhjlri5rm7dw5btb2m2tpzemtyqhjpa2eu3josf5c@uivuvkpx3wep>
+ <20250923162139.GC2547959@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] PCI: Support FIXUP quirks in modules
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain
- <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
- linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
- Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
- Johannes Berg <johannes@sipsolutions.net>,
- Sami Tolvanen <samitolvanen@google.com>, Richard Weinberger
- <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
- Brendan Higgins <brendan.higgins@linux.dev>, kunit-dev@googlegroups.com,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, linux-um@lists.infradead.org
-References: <20250912230208.967129-1-briannorris@chromium.org>
- <20250912230208.967129-2-briannorris@chromium.org>
- <c84d6952-7977-47cd-8f09-6ea223217337@suse.com> <aNLb9g0AbBXZCJ4m@google.com>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <aNLb9g0AbBXZCJ4m@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250923162139.GC2547959@ziepe.ca>
 
-On 9/23/25 7:42 PM, Brian Norris wrote:
-> Hi Petr,
+On Tue, Sep 23, 2025 at 01:21:39PM -0300, Jason Gunthorpe wrote:
+> On Tue, Sep 23, 2025 at 09:07:49PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Sep 18, 2025 at 11:11:02AM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Sep 10, 2025 at 11:09:19PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > This issue was already found and addressed with a quirk for a different device
+> > > > from Microsemi with 'commit, aa667c6408d2 ("PCI: Workaround IDT switch ACS
+> > > > Source Validation erratum")'. Apparently, this issue seems to be documented in
+> > > > the erratum #36 of IDT 89H32H8G3-YC, which is not publicly available.
+> > > 
+> > > This is a pretty broken device! I'm not sure this fix is good enough
+> > > though.
+> > > 
+> > > For instance if you reset a downstream device it should loose its RID
+> > > and then the config cycles waiting for reset to complete will trigger SV
+> > > and reset will fail?
+> > > 
+> > 
+> > No. Resetting the Ethernet controller connected to the switch downstream port
+> > doesn't fail and we could see that the reset succeeds.
 > 
-> On Tue, Sep 23, 2025 at 02:55:34PM +0200, Petr Pavlu wrote:
->> On 9/13/25 12:59 AM, Brian Norris wrote:
->>> @@ -259,6 +315,12 @@ void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
->>>  		return;
->>>  	}
->>>  	pci_do_fixups(dev, start, end);
->>> +
->>> +	struct pci_fixup_arg arg = {
->>> +		.dev = dev,
->>> +		.pass = pass,
->>> +	};
->>> +	module_for_each_mod(pci_module_fixup, &arg);
->>
->> The function module_for_each_mod() walks not only modules that are LIVE,
->> but also those in the COMING and GOING states. This means that this code
->> can potentially execute a PCI fixup from a module before its init
->> function is invoked, and similarly, a fixup can be executed after the
->> exit function has already run. Is this intentional?
+> Reset it by up/down the PCI link?
 > 
-> Thanks for the callout. I didn't really give this part much thought
-> previously.
-> 
-> Per the comments, COMING means "Full formed, running module_init". I
-> believe that is a good thing, actually; specifically for controller
-> drivers, module_init() might be probing the controller and enumerating
-> child PCI devices to which we should apply these FIXUPs. That is a key
-> case to support.
-> 
-> GOING is not clearly defined in the header comments, but it seems like
-> it's a relatively narrow window between determining there are no module
-> refcounts (and transition to GOING) and starting to really tear it down
-> (transitioning to UNFORMED before any significant teardown).
-> module_exit() runs in the GOING phase.
-> 
-> I think it does not make sense to execute FIXUPs on a GOING module; I'll
-> make that change.
 
-Note that when walking the modules list using module_for_each_mod(),
-the delete_module() operation can concurrently transition a module to
-MODULE_STATE_GOING. If you are thinking about simply having
-pci_module_fixup() check that mod->state isn't MODULE_STATE_GOING,
-I believe this won't quite work.
+We did both FLR (dev/reset) and SBR (bus/reset_subordinate), both succeeds.
 
+> > Maybe the bus number was still captured by the device.
 > 
-> Re-quoting one piece:
->> This means that this code
->> can potentially execute a PCI fixup from a module before its init
->> function is invoked,
+> Maybe, but I don't think that is spec conformat behavior.
 > 
-> IIUC, this part is not true? A module is put into COMING state before
-> its init function is invoked.
 
-When loading a module, the load_module() function calls
-complete_formation(), which puts the module into the COMING state. At
-this point, the new code in pci_fixup_device() can see the new module
-and potentially attempt to invoke its PCI fixups. However, such a module
-has still a bit of way to go before its init function is called from
-do_init_module(). The module hasn't yet had its arguments parsed, is not
-linked in sysfs, isn't fully registered with codetag support, and hasn't
-invoked its constructors (needed for gcov/kasan support).
+This device is not spec conformant in many areas tbh. But my suggestion would be
+to follow the vendor suggested erratum until any reported issues.
 
-I don't know enough about PCI fixups and what is allowable in them, but
-I suspect it would be better to ensure that no fixup can be invoked from
-the module during this period.
-
-If the above makes sense, I think using module_for_each_mod() might not
-be the right approach. Alternative options include registering a module
-notifier or having modules explicitly register their PCI fixups in their
-init function.
+- Mani
 
 -- 
-Cheers,
-Petr
+மணிவண்ணன் சதாசிவம்
 
