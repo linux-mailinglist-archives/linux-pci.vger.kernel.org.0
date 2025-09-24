@@ -1,197 +1,226 @@
-Return-Path: <linux-pci+bounces-36881-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0C3BB9B1B4
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 19:49:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F07BB9B038
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 19:18:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7E151B24F87
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 17:49:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE7CF4C7C64
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Sep 2025 17:17:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1078B21C176;
-	Wed, 24 Sep 2025 17:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD3731B117;
+	Wed, 24 Sep 2025 17:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bGeyoRDG"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IhacpZRd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012040.outbound.protection.outlook.com [40.93.195.40])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894D88834
-	for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 17:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758736142; cv=fail; b=ingqPt08nQSMmpIpbDb4m1vFfyV7u/xLzqelPBcliQqYW6g8MmoMwQmNkkYKllqjpVIokj8Mz49YuhKKJCSEfWKlnnjtaVpVe5wAAODHz3W+9tKezGvXhEH1ZtzJXuf5tFuIemLBtcZxjilCywb5yEJ7pHdG5Gvd/MkrVXRQ0OU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758736142; c=relaxed/simple;
-	bh=Nc4zENBvKwj22eFjWluXrtmxvSw0hASaZ5haf6vvm5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IobjveueuhOvoUGzFs2R2u89/DDjzPwsFBZe+NUBLNSFshNc1mp1CrwPq97VAfkTnhjKEx/nSGIvhSD2zcJnRjwTIXSS4Y0rP4W+Z2bxz9mqn/N6TR0V7HZqyyjvOBlEkjzYiRknwZDxbldSOs+2KhY409oHvnqct3I4sKUZq8Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bGeyoRDG; arc=fail smtp.client-ip=40.93.195.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pxXwpD60hL7S9eN3BRRT8IulUg5kyjisH9tYvw3sd9G0pC3R7Y/+FFhMAd+zGG/go6ptQ4NxYB/PXatsIWBwEinDjzMX31uVmq9bpwOOd3PJfqZAia7ru3P7wKzperhGuXu4rnjjznPVHNsRk6YlcrNfpRKFqndtmbEIxmpffar843TBpSayRtzY8QBTC6Dl9OErxC9U0wNyB72cOLHHXKwuh3oIpl4h3oYKDau9tNcGw6J8DGOKbHGLs3xxxSOXKke7Njqm1UIIRv1HSXoxyIRPq0NjMR5/oyC/yB1XqBTLOplUw0JrMhDbslLXWzsBtcIlReH5bVQ46VqFHyLffA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=75VgPazCsRhrv/0RWmNjdJr8sqYrXbU49MhiGHIbeZA=;
- b=nDoR8hhu0tKfw/fCCCIHE8Iz0nQigEj6D6ApeV7xKBruHnuNnJQbdVmVTJ9+332cfQimW6vmWlmgL25gOetAzgEi+vR/s+qMNH3m+xmnvSwmTD9yiVlxNaTC/BYu/EEDo7xQq/S5jEEWSumcz/TF8GVpCWNgASkA806Hy/fCEHOuHBpbCDvaUW+Po9NBjdqcENnEBg+7WuxR6tX1hzMVV9wdCZAP+S/04uUX23trZCvimTFk5esAUVyxzUoQVPruGoOdcxj9AOQmeWd33SxLKNp1BJtatsuCseQn4gN3k2S79fglXacezWhnE6t35whfWfTvLd11Y6wAepYiqtP7jA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=75VgPazCsRhrv/0RWmNjdJr8sqYrXbU49MhiGHIbeZA=;
- b=bGeyoRDGeiUBny3tWsxUU2Y+DjRWrl6YMskvap/J2MAX6QCDWf/adRKh0flQyUWSa4uwWOTqBG8AjWLvO7S5ayz8kx0mGhTdR9RuKvOROcNphDTunLTG/vqkyND3zmRihBuFK4fkw7ALdafSdOZ470F6obPb8OKmc/OFHcKNMG6s/aZCMKeEn4+xhsmpu27GW45NmNV67KwTUnyUHg+9zzGcmlafN6LYKTu3jGkRbfI7RedK4aS4bTMWmJnYN+TcQXvX4bBeXyTvkJg3eBv3gsRPorBMQDkHTv2ykNBmzrrnpu7IvN71me3JZuY6eAQNdmCY0PXsCaUKUnUFGQfk/w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
- by MN2PR12MB4456.namprd12.prod.outlook.com (2603:10b6:208:266::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Wed, 24 Sep
- 2025 17:48:56 +0000
-Received: from PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
- ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9137.021; Wed, 24 Sep 2025
- 17:48:56 +0000
-Date: Wed, 24 Sep 2025 14:12:50 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Simon Richter <Simon.Richter@hogyros.de>
-Cc: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Message-ID: <20250924171250.GH2617119@nvidia.com>
-References: <20250922132720.GY1391379@nvidia.com>
- <fbb6bbe7-8141-4532-812e-2b93cc2fcb1b@amd.com>
- <20250922122900.GV1391379@nvidia.com>
- <4e3919c3-3d1b-4f34-a1e4-5e9e7a5e6e14@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <IA0PR11MB718504F59BFA080EC0963E94F812A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250919122931.GR1391379@nvidia.com>
- <IA0PR11MB7185C96268ADB5530B343ABBF811A@IA0PR11MB7185.namprd11.prod.outlook.com>
- <20250924161356.GA3273841@psionic12.psi5.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250924161356.GA3273841@psionic12.psi5.com>
-X-ClientProxiedBy: BY3PR05CA0040.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::15) To PH7PR12MB5757.namprd12.prod.outlook.com
- (2603:10b6:510:1d0::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0FA31A54C;
+	Wed, 24 Sep 2025 17:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758734207; cv=none; b=qpnz/opuUkdldhNApDNE2dUJsUWA8y+1KYt+CPBFuEbS4LU0k4z+c4TdmYcW9UINx/2xYPxOq+Eh076HaEYCbdhRM+6uKzRiZRGqn6YSq+D0+v5/xSLbdOEACE4RdlqKnOHWB4aDAfk1JK8zpnQ7iyOdVu4xKYrgwIQKPCZRqyI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758734207; c=relaxed/simple;
+	bh=7BsFpPoAD9bYmcifCn7GMUkssy9BTWjgueFIRUBcovI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EbZgYVp6p0+hIpsbFzQdq4Wx5Q4UkYZ3fN6wjpVFGbIvv6qaDcTu6qANugrnNSgK9bNtiaUqK2g6w03IhJ8R0MEoTvaZk87NzQB3/SEE82N/ctlTy70G6kE6Rv2O9R3Lu9OELyF/wBuGmOR26xX4F88ssYWR8nZux/dsz0A114k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IhacpZRd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58O9mQDa006772;
+	Wed, 24 Sep 2025 17:16:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=+WIxBLRAqRqMY8m8jQ11BatcRHy0t0JoDxU9+bNFJ
+	F0=; b=IhacpZRdIe3c8qaTSlJorBozBpYkETqGA4Wlh/6+4S/W79Uz0zX/4VDOp
+	zWOF5+sSiinV4DaVlN2/58P6PRdd+8H2wxwwjaI90FaKt12HXYcYWn37F+HAt/mw
+	s9MtmejvOSmsRTf5MJ8rsbmkqi5YgIVuQY/sL3g0GAu+wKlxUmsRh1T1arzR1HaT
+	4l1DdCjfZduWdfntSTZPDB0HLNuRn4abTbvJ/cmix57RdhV/4YdBU1jK5DqN5EoR
+	lD4DmXbVHXfhEcN56mUy0jGIXTqGfmwey6gX/Ca7l2TsDzccRMWuCbsxBrZ9wFck
+	O78cvCCPkMHN/yAMtUNpRujm8M2oQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499jpkgb3a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Sep 2025 17:16:34 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58OE45UY013329;
+	Wed, 24 Sep 2025 17:16:34 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49cj348u4v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Sep 2025 17:16:34 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58OHGXSa31064710
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Sep 2025 17:16:33 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0077C58063;
+	Wed, 24 Sep 2025 17:16:33 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 417495805A;
+	Wed, 24 Sep 2025 17:16:32 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.252.148])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 24 Sep 2025 17:16:32 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
+        alifm@linux.ibm.com, schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+Subject: [PATCH v4 00/10] Error recovery for vfio-pci devices on s390x
+Date: Wed, 24 Sep 2025 10:16:18 -0700
+Message-ID: <20250924171628.826-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|MN2PR12MB4456:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81b50fe8-d479-4704-9701-08ddfb92a246
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YyuwUtssaS9AVhgy/dvbyZ6SFEDz/faZvlRmHdZyp4999PB9U7qr8heCAINT?=
- =?us-ascii?Q?fdd3oh+nJ/SgjtuC7Zc7HbrQTJT4TRwFONSVgSja1PHHSn3bVDty9VbP/xmD?=
- =?us-ascii?Q?7HB8kTJY+8e7mwyI69KxPwZml8nBflyASA70drApMEO7JXecVxGNO/mHObuY?=
- =?us-ascii?Q?YUJgEi3wB/zeGOKOfuqrdOcaBuKTlHxk0BcJ5vqA5Pn8XBgn3hmva0Zm4WHI?=
- =?us-ascii?Q?BdUx/y/OZuP3xIuLrQnMwUGJupv0gxzzDkyVfKEMUXh3ltTZKLtfyBjCs+YV?=
- =?us-ascii?Q?bYtS7/mJ+cDdlaEJc34bck+I9NUB60hAFGHU4Rfts3nMaETNnVAHR7PS2zrv?=
- =?us-ascii?Q?WzGyNPfNxS3oe/Pwaa403TfoHCf3rTX2goKk1LvP8xT43grTEHAcJwbgbpGv?=
- =?us-ascii?Q?RQKgmTM9dSQHK04SMTtnjzXNoLJMNALQnF0BeNVR945uAmQz2vz47N5UboL1?=
- =?us-ascii?Q?qukzFRiiC2MlGC1i+MlB5PksAVGF4cmsRRp/LNBEtkzUBqdGghS61h99OWYh?=
- =?us-ascii?Q?WepuiWQ0yL5KmlY8l+a7/9grUD1bljU4Y9/ULCWK2nHFC6yL2K32iOKroHDx?=
- =?us-ascii?Q?RsUN9ra9qzk8CyAbCqeDpkPYtIrSsPnKR1c3J1C7DinTlJue6Uf7VpRbMpJP?=
- =?us-ascii?Q?vcTC63UWnM+EV3S6Ezz9WJMykw0hFEaBblvDrExa3xgBJhJGfKW4kmFo6Gef?=
- =?us-ascii?Q?pP1o+OibGZR6uKPCCWoORlIjRWBPp+2JovkcIU+muGQQX0xRQ3Umu50ljF/n?=
- =?us-ascii?Q?sC/MyDwAFtzXunhZq5C2h1SMaZtr/kzzM+Dfc9aEwS5WjljafXBEXVqoXtu/?=
- =?us-ascii?Q?nR8Qom3YCqtsbZxJ7g3l/e4d4EPVUUJkylY6LDBk2Bqq9uVBw/S9PIDvfTj0?=
- =?us-ascii?Q?W0waOrWu5NXO+P2XNJjGOdStKEvk6hAQmXWlRQ0Dg9+qUMRW2lWcAUMrlLrs?=
- =?us-ascii?Q?aE9kXqUG0nf54dsUB134dRc4ywoXLybt9NsLDMSXZYR0aBpwWPWYS6+Tv4kA?=
- =?us-ascii?Q?Z6OIWjG2Tj6rEWIzjqjTTXOmhkAqnsQ8Ovp1R0Nvvpp5qLFD5JQj2pXSAF6g?=
- =?us-ascii?Q?so9Ks2nWECFtHe2lvcs0n6RygosC77sYHpUl/h6R0tA2INPeN/pqt7khQRrl?=
- =?us-ascii?Q?gBdKI9rPA64ERnTRNGf8HAuuZZppQZNHANqXvnvOUPWVSSW6D3SgydqgW528?=
- =?us-ascii?Q?kUZt3sXOgXmrSxa5Z/y3ce5sN7ahcJCZZIzB/JGBvStzF5L4eRL4rmh2ML4f?=
- =?us-ascii?Q?iPlIX7omSCFhcNyOAPUSDIDiDiknEBsJjCwWihJrYzsZjpRb1reNJBBIO1Uu?=
- =?us-ascii?Q?24v55MhCIKRwGT0XSguYGef/Z/JAj+ESOveMAzOS/S9IIs1yDG6PRDPs/274?=
- =?us-ascii?Q?rFfMNRPFNbmMr5AmhylA/1jhTkVC4g7i1YzhaU1a4jHfjJPCcw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eoSbsxbo5RaQERmiHOWXcm77dOBIs5Y5D6daRNGUrkm5yekd6jEIMQxovfBS?=
- =?us-ascii?Q?YlfH/PXMP8cMt3htsMnycJsYypwxBQEQ3XwDV5bZsMFIWwqSTjjKbFy220dQ?=
- =?us-ascii?Q?R8NwzqZUz+79t3df9YQyugMrdqrdEtkIK3XUlBN6mTeszuDjLtf2dx4VRqG2?=
- =?us-ascii?Q?DtD39G5oODXZicBLl1+BZmpSoz6zngkc7x46UGibRFgdYdfGLVEYLp+wU62v?=
- =?us-ascii?Q?U3qJpE2xGaZ5eIAWOEdTP97lsGNVzPd8dG2HExvVkrzq2UCAGFnZ9Kwz3GjV?=
- =?us-ascii?Q?jgXL8IKPzD7moW1WpxdIgEkMEBdMyqbvGxFBCas9pm33xoBIUrs5nIqXemin?=
- =?us-ascii?Q?vuqiGO0txJZuBWGMaezKRbsaX6mh1er+y72LqJdXL966aSDUIWOiylTz2Fzf?=
- =?us-ascii?Q?eutxdnF38Q/RnKLdpFXZWHOFes9Q2Pbjla8yaeP1keW2DHBdprCqiluEcs2p?=
- =?us-ascii?Q?kMt43BZc8kuWhyA037upaUVzwM+EVp7lunt2zahqzBw6g/203drhP1p/6kPX?=
- =?us-ascii?Q?rMHMaaHvfgtoDAcfJB1LpgiDgRUVdKmIoxmRJAWdN1turbyVBw8czvXN3wnt?=
- =?us-ascii?Q?qhMN74ax+F2dBV2cqMBoZdr7MfuGbVjZeZfZ8CvGcfnjBGykhXyHEWvDYsqB?=
- =?us-ascii?Q?kXLHGX/ZCWvJDUSpWp5KrvwljEgUD9XQxrmROm5lqI2rPtr21ZLvp8iT98mv?=
- =?us-ascii?Q?zZpV1pn9chJ6K/avxNx1QYYRnoHfkqlD6OrTkxCuiSyPyTNuQW5hBIrr5HpV?=
- =?us-ascii?Q?aawmjE+U73vM9OprUfaveWRHLgllud9DtqKxvulz8NExV4Ek0EozamFqWjDL?=
- =?us-ascii?Q?XHaEEPKHCAE6CZTaXT/n4waPvwAw69jLWVc3KsE5hJiUUHVwzQ34mmOtWLvC?=
- =?us-ascii?Q?jdKvkRATZyDULDH1x8SNvxwZKdfXAX/MuQ8ooXuLwAzzTkkwMDaUvULrOgw4?=
- =?us-ascii?Q?QDNLb+Rr1+IV/A2TkEfoTYfjWMlNPwjsoQxrRGSr6WsorAVIAPw9keVMQ5S/?=
- =?us-ascii?Q?5ETdMehKWHDantKqh8bTIJeoq27O7/VSoKZOlf5FQ7ni84HvBnHeWDy4j16l?=
- =?us-ascii?Q?Ag8bv21bwEzsSJLIFb96JQ23fEhSXtDKgE6xPkkuuRJxTUlKoyiNML2JuooE?=
- =?us-ascii?Q?Ibkj4e2kh9rIrSWNeeOTXo1TF1Kb08tYUbLY7cvTTHZApqt15pKVzaSYSKPO?=
- =?us-ascii?Q?sNNWYdJqBpghC3fSPkDqmdNrcW2CHHlLaPtupaqlnGpKQMzmOGnmcPRkrryg?=
- =?us-ascii?Q?jIj4Q6JVMg1IGpjI53cNwfoGKMuZLBfNTvrMRUNH6sHcGibXaExgoqJUiI+k?=
- =?us-ascii?Q?mL2R2f/S9LXRKhOgEKGm8kq7DwzVlw9NUI+OFMtJdoWa3COR/AQxkdG4KE6F?=
- =?us-ascii?Q?uZf7Ig0eVmI2JPYkh+XsEoP+6vZ2eDD0FyiAuEtL/BrZLWsOG81/j1Hr2gjB?=
- =?us-ascii?Q?b12iPpJ7XtgI53oMEd/XArqH/tAZPnZURNLlrCirTNxZ97RNnuINuZukEKLZ?=
- =?us-ascii?Q?Isw/KGl/0EymJi/rBLy+6bBaP5jpvHw6IYdWr59pT1KfbOKw3lR+3SeLCjDk?=
- =?us-ascii?Q?uM3TJmlLSDfd29sF7A0GtcQ1KFHC7soLx5/TGVGh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81b50fe8-d479-4704-9701-08ddfb92a246
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2025 17:48:56.5811
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DNscCfeTTAwZaFSQ9jQQ/8oGiJtpwp2HFOYW6YIZCWECejI7WfqDflbIkMLHGEs4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4456
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=L50dQ/T8 c=1 sm=1 tr=0 ts=68d42772 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=KfgF-uyYEtRdSbNldRsA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAxMCBTYWx0ZWRfX083S8Yda7W0N
+ o+EoMJPRhLzloMjx4gaFuti8adomrfCbJ1nqLP3Ek4cReFgy3Zf1CVa6nnhraTVGqFdmWai/4/0
+ TaC/RzgaWlGQdfnVahbG+zFCKLHeM4K8EcaVySd88j9kaGD1P42YAkdXg60F086cecBkz6eqPNd
+ PWqFRsc/j2Jryg422hT8iSDkaHUAoo8fG2OuBtVxPG7EnQvpjqVWov3JgGI/CR8CAKuFCCoy5FO
+ 7bcX2Iy71wk/mylb4UZ9AIWEofqp3TCKmL4Ggzs861OQgkQ2QPumTZAy4ifdhM5ZbbDaTX5vfNF
+ g6aWfYsisy7I/scsQSO5B8r3W2dFFjlww6YXWIKlGxQI7Bsv9O09RNXYbEjVnJIRm7B3sjf6A3L
+ X8oseDlH
+X-Proofpoint-ORIG-GUID: r0CmJPbnkYnL9GLY8VrKOX4w89L6LVyo
+X-Proofpoint-GUID: r0CmJPbnkYnL9GLY8VrKOX4w89L6LVyo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-24_04,2025-09-24_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200010
 
-On Wed, Sep 24, 2025 at 06:13:56PM +0200, Simon Richter wrote:
-> > The problem here is that the CPU physical (aka BAR Address) is only
-> > usable by the CPU.
-> 
-> The address you receive from mapping a dma_buf for a particular device
-> is not a CPU physical address, even if it is identical on pretty much
-> all PC hardware because it is uncommon to configure the root bridge with
-> a translation there.
+Hi,
 
-I said already, you cannot convert from a dma_addr_t back to a
-phys_addr_t. There is just no universal API for this and your examples
-like PPC explain why it cannot work even if some hacks appear to be
-okay on one x86 system.
+This Linux kernel patch series introduces support for error recovery for
+passthrough PCI devices on System Z (s390x). 
 
-I think Christian's suggestion is to pass a
-(struct pci_dev *, bar index, bar offset) between dmabuf
-exporter/importer
+Background
+----------
+For PCI devices on s390x an operating system receives platform specific
+error events from firmware rather than through AER.Today for
+passthrough/userspace devices, we don't attempt any error recovery and
+ignore any error events for the devices. The passthrough/userspace devices
+are managed by the vfio-pci driver. The driver does register error handling
+callbacks (error_detected), and on an error trigger an eventfd to
+userspace.  But we need a mechanism to notify userspace
+(QEMU/guest/userspace drivers) about the error event. 
 
-That would work for alot of use case, we could make iommufd and kvm
-work with that.
+Proposal
+--------
+We can expose this error information (currently only the PCI Error Code)
+via a device feature. Userspace can then obtain the error information 
+via VFIO_DEVICE_FEATURE ioctl and take appropriate actions such as driving 
+a device reset.
 
-The Xe PF driver could detect the vram by checking if the pci_dev * is
-a VF of itself and then using its internal knowledge of the
-provisioned VF BAR to compute the VRAM location.
+I would appreciate some feedback on this series. Part of the series touches
+PCI common code, so would like to get some feedback on those patches.
 
-If it is not this case then it would fall back to the normal 'exporter
-does dma map' fllow.
+Thanks
+Farhan
 
-Jason
+ChangeLog
+---------
+v3 series https://lore.kernel.org/all/20250911183307.1910-1-alifm@linux.ibm.com/
+v3 -> v4
+    - Remove warn messages for each PCI capability not restored (patch 1)
+
+    - Check PCI_COMMAND and PCI_STATUS register for error value instead of device id 
+    (patch 1)
+
+    - Fix kernel crash in patch 3
+
+    - Added reviewed by tags
+
+    - Address comments from Niklas's (patches 4, 5, 7)
+
+    - Fix compilation error non s390x system (patch 8)
+
+    - Explicitly align struct vfio_device_feature_zpci_err (patch 8)
+
+
+v2 series https://lore.kernel.org/all/20250825171226.1602-1-alifm@linux.ibm.com/
+v2 -> v3
+   - Patch 1 avoids saving any config space state if the device is in error
+   (suggested by Alex)
+
+   - Patch 2 adds additional check only for FLR reset to try other function 
+     reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions. Creates a new flag pci_slot to allow per function slot.
+
+   - Patch 4 fixes a bug in s390 for resource to bus address translation.
+
+   - Rebase on 6.17-rc5
+
+
+v1 series https://lore.kernel.org/all/20250813170821.1115-1-alifm@linux.ibm.com/
+v1 - > v2
+   - Patches 1 and 2 adds some additional checks for FLR/PM reset to 
+     try other function reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions.
+
+   - Patch 7 adds a new device feature for zPCI devices for the VFIO_DEVICE_FEATURE 
+     ioctl. The ioctl is used by userspace to retriece any PCI error
+     information for the device (suggested by Alex).
+
+   - Patch 8 adds a reset_done() callback for the vfio-pci driver, to
+     restore the state of the device after a reset.
+
+   - Patch 9 removes the pcie check for triggering VFIO_PCI_ERR_IRQ_INDEX.
+
+
+Farhan Ali (10):
+  PCI: Avoid saving error values for config space
+  PCI: Add additional checks for flr reset
+  PCI: Allow per function PCI slots
+  s390/pci: Add architecture specific resource/bus address translation
+  s390/pci: Restore IRQ unconditionally for the zPCI device
+  s390/pci: Update the logic for detecting passthrough device
+  s390/pci: Store PCI error information for passthrough devices
+  vfio-pci/zdev: Add a device feature for error information
+  vfio: Add a reset_done callback for vfio-pci driver
+  vfio: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
+
+ arch/s390/include/asm/pci.h        |  30 +++++++-
+ arch/s390/pci/pci.c                |  75 ++++++++++++++++++++
+ arch/s390/pci/pci_event.c          | 107 ++++++++++++++++-------------
+ arch/s390/pci/pci_irq.c            |   9 +--
+ drivers/pci/host-bridge.c          |   4 +-
+ drivers/pci/hotplug/s390_pci_hpc.c |  10 ++-
+ drivers/pci/pci.c                  |  37 ++++++++--
+ drivers/pci/pcie/aer.c             |   3 +
+ drivers/pci/pcie/dpc.c             |   3 +
+ drivers/pci/pcie/ptm.c             |   3 +
+ drivers/pci/slot.c                 |  14 +++-
+ drivers/pci/tph.c                  |   3 +
+ drivers/pci/vc.c                   |   3 +
+ drivers/vfio/pci/vfio_pci_core.c   |  20 ++++--
+ drivers/vfio/pci/vfio_pci_intrs.c  |   3 +-
+ drivers/vfio/pci/vfio_pci_priv.h   |   8 +++
+ drivers/vfio/pci/vfio_pci_zdev.c   |  45 +++++++++++-
+ include/linux/pci.h                |   1 +
+ include/uapi/linux/vfio.h          |  15 ++++
+ 19 files changed, 318 insertions(+), 75 deletions(-)
+
+-- 
+2.43.0
+
 
