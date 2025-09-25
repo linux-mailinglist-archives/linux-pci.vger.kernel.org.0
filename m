@@ -1,63 +1,65 @@
-Return-Path: <linux-pci+bounces-36994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36995-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 292D6BA08E5
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:10:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECF40BA0916
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:19:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 165107B2BB2
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:08:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9855D3AEA6C
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06670301718;
-	Thu, 25 Sep 2025 16:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7992DEA67;
+	Thu, 25 Sep 2025 16:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwOkjw5J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzkHAeNY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A6119EEC2;
-	Thu, 25 Sep 2025 16:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC103596B;
+	Thu, 25 Sep 2025 16:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758816597; cv=none; b=JSWUkQX2lnNo6YU6wzKLlfBm+2tTQTHLj2XnMMLyo6eCOFtbFesHPOxGWKkD04hSlOLks9Zr0XFPALObUbZ8ElVZIO6EzVteSKi44NvA4UaMV9oTCIso8K0ACLyGLVrogFYKJYRxtz3Ho51CosJpMH3eYY9L4SKCCE+qpSos9ZQ=
+	t=1758817171; cv=none; b=qoE9EWZ/e/kyuOpBRFymy7Hg8wcaW7Ijy3iDvyxdXI+wZZo/1/LQNr229WfYjjQ8Vml/gv6FxzU6hDiNCZxgTIRP/r2VFakAkLX4o1YK6sgbQTx+VMGNPwcjY5yESCehu6RKMLzeNa+imJq91IZQ3ym5S7GvFg0Zm2R/bihn3xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758816597; c=relaxed/simple;
-	bh=bC9Ji/IqcBnINVQco0aIlsNkjuCLB8waAAlmgiPhwf8=;
+	s=arc-20240116; t=1758817171; c=relaxed/simple;
+	bh=7AVIF0kZTDey6ZhzfUZ3+wr+sPFo2gu91AUy+CefXhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QN8JjcSIUenRvw4lthTEC6J9uKt3O5rqLyKA3AJO1dgtofzGJawSUYPMLP8j3ksyKf6Ic9F39m2jCpK88j1wBICqxrsz7IZxVe0BXh+/A1v9UDKQyqo5EFMu5Z8Kd+7+4nHtngTjCndv96rrrWesFn1NgXe0qAFwUGBCeQ+d+mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwOkjw5J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 154F8C4CEF0;
-	Thu, 25 Sep 2025 16:09:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=tkZuSzXgdwRzea6NJNHgueoeAWklUd0jdpn6dCKfxWz1hF8JwStJvGFr9eqyzFT/F2BwXNfX+W+hY5El/LBrrWEqynBTM0iEjvWnR+OzLtPAIpqc97YS4kJMg2wYBBtiKkXJbmtob8S6F0D8M1SVFx7ODg/CRStCap9ZSTanbIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzkHAeNY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630F7C4CEF0;
+	Thu, 25 Sep 2025 16:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758816597;
-	bh=bC9Ji/IqcBnINVQco0aIlsNkjuCLB8waAAlmgiPhwf8=;
+	s=k20201202; t=1758817171;
+	bh=7AVIF0kZTDey6ZhzfUZ3+wr+sPFo2gu91AUy+CefXhE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LwOkjw5JdrfQ88fNWqEHmFXBNEdFbsXbX7/S3Zb5CMlBKAoGMvpBgn9MAFDwX5Tfk
-	 jmvFoI+gln786L05fyAi4cXDWurnTPoCSy0uFQKKbapHDfeBY5089+CN8ylBJuFItP
-	 mxIHtlwg/GnYawWoopvtplk3e0FWGJ/UqJ0b+GMXTxBuCyL3qQLMrfU3eridXfGXLi
-	 88VzQKRDIYu0fyhCKTkQwlrKWtTnqwU3l3ZUVDYmzg8/R8l792G1NRjJgnBOXQ7SJ0
-	 +9Aabu6lNzvrD05M2iLphWTPeEEJt45B53+O+P7ijyhzDZuk7zT+o7PLHRkAivh0KO
-	 1iUl0EfpE/kTg==
-Date: Thu, 25 Sep 2025 21:39:48 +0530
+	b=qzkHAeNYo5rE0NLdPInOl3hThl6qLGz2kZnyIJDc6EeGnmbJvruBBlPhY7BeAxkVT
+	 MEoDIdw1opJyCmSwj7oCaYEdBJeAnbj2sjy8FQvePRZWoWe+S4Wg42NHmrNkpxwN5s
+	 pS00wtIxFfgXaDwvKOLchauboc8dNg/LM8+y46xtFylfHCtRLqpO6jKNdbgUP9RN1K
+	 8J9lgZWVl9JOXq5rqwwDs1/nz40tWBCznax8SFnqRCAUfxUx6QV8+xrNdQhbM+8RvS
+	 ZX8rcuWoimFqMOMQw2Onlh544FODNe4ukX4d8goFyHIgoCTSaxxW7KUlUSg8H1bzvr
+	 AM+9voZqJoRFw==
+Date: Thu, 25 Sep 2025 21:49:16 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
-	Allen Hubbe <allenbh@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ntb@lists.linux.dev, imx@lists.linux.dev
-Subject: Re: [PATCH v2 3/3] PCI: endpoint: pci-epf-vntb: Add MSI doorbell
- support
-Message-ID: <ex3lip5baeop6pj4bjq5z6icq5eif3t4ss57kllplgzbaoubjv@dsn57mraytfs>
-References: <20250915-vntb_msi_doorbell-v2-0-ca71605e3444@nxp.com>
- <20250915-vntb_msi_doorbell-v2-3-ca71605e3444@nxp.com>
- <ejhs6fb2nmfhnjswhrvd7iwyddwvvr5nv6bu7dt4aypbiecyfb@wza667q2x4qp>
- <aNRZxAU0n1hvYeEZ@lizhi-Precision-Tower-5810>
- <qm7jvvvywqmegynkghxbfn6pwfdlkboowa45sqbvygpetkiyj4@ovve44f7qvpr>
- <aNVe9UIbFE3/1Rql@lizhi-Precision-Tower-5810>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, chaitanya chundru <quic_krichai@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com, 
+	amitk@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com, 
+	linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v6 5/9] PCI: dwc: Implement .start_link(), .stop_link()
+ hooks
+Message-ID: <yofmk5uyykyv4jxzem622dtuyzknk7ipd5xlkzdrfl5v7tgojy@5aarg5wj6bar>
+References: <20250828-qps615_v4_1-v6-5-985f90a7dd03@oss.qualcomm.com>
+ <20250925145416.GA2164008@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,91 +69,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aNVe9UIbFE3/1Rql@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250925145416.GA2164008@bhelgaas>
 
-On Thu, Sep 25, 2025 at 11:25:41AM -0400, Frank Li wrote:
-
-[...]
-
-> > > > > +static int epf_ntb_db_bar_init_msi_doorbell(struct epf_ntb *ntb,
-> > > > > +					    struct pci_epf_bar *db_bar,
-> > > > > +					    const struct pci_epc_features *epc_features,
-> > > > > +					    enum pci_barno barno)
-> > > > > +{
-> > > > > +	struct pci_epf *epf = ntb->epf;
-> > > > > +	dma_addr_t low, high;
-> > > > > +	struct msi_msg *msg;
-> > > > > +	size_t sz;
-> > > > > +	int ret;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	ret = pci_epf_alloc_doorbell(epf,  ntb->db_count);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	for (i = 0; i < ntb->db_count; i++) {
-> > > > > +		ret = request_irq(epf->db_msg[i].virq, epf_ntb_doorbell_handler,
-> > > > > +				  0, "vntb_db", ntb);
-> > > > > +
-> > > > > +		if (ret) {
-> > > > > +			dev_err(&epf->dev,
-> > > > > +				"Failed to request doorbell IRQ: %d\n",
-> > > > > +				epf->db_msg[i].virq);
-> > > > > +			goto err_request_irq;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	msg = &epf->db_msg[0].msg;
-> > > > > +
-> > > > > +	high = 0;
-> > > > > +	low = (u64)msg->address_hi << 32 | msg->address_lo;
-> > > > > +
-> > > > > +	for (i = 0; i < ntb->db_count; i++) {
-> > > > > +		struct msi_msg *msg = &epf->db_msg[i].msg;
-> > > > > +		dma_addr_t addr = (u64)msg->address_hi << 32 | msg->address_lo;
-> > > > > +
-> > > > > +		low = min(low, addr);
-> > > > > +		high = max(high, addr);
-> > > > > +	}
-> > > > > +
-> > > > > +	sz = high - low + sizeof(u32);
-> > > > > +
-> > > > > +	ret = pci_epf_set_inbound_space(epf, sz, barno,
-> > > > > +					epc_features, 0, low);
-> > > >
-> > > > Should this new API be used in pci-epf-test also?
-> > >
-> > > Needn't, because pcie-epf-test default set system memory as bar's space.
-> > > switch to MMIO when enable doorbell and switch back to system memory.
-> > >
-> > > size alignment already consider at bar initilization, and we can't change
-> > > bar's size after bind now.
-> > >
-> >
-> > The memory and size are allocated during pci_epf_test_bind(), I agree. But
-> > that's for memory allocated through pci_epf_alloc_space(). So if the MSI region
-> > has size restrictions (as taken care by this API), it should be handled in the
-> > pci-epf-test driver as well.
+On Thu, Sep 25, 2025 at 09:54:16AM -0500, Bjorn Helgaas wrote:
+> On Thu, Aug 28, 2025 at 05:39:02PM +0530, Krishna Chaitanya Chundru wrote:
+> > Implement stop_link() and  start_link() function op for dwc drivers.
+> > 
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..bcdc4a0e4b4747f2d62e1b67bc1aeda16e35acdd 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -722,10 +722,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+> >  }
+> >  EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+> >  
+> > +static int dw_pcie_op_start_link(struct pci_bus *bus)
+> > +{
+> > +	struct dw_pcie_rp *pp = bus->sysdata;
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +
+> > +	return dw_pcie_host_start_link(pci);
 > 
-> pci_epf_alloc_space() is not only allocate memory, but also set bar's size.
+> This takes a pci_bus *, which could be any PCI bus, but this only
+> works for root buses because it affects the link from a Root Port.
 > 
-> But we can't change bar's size, for example allocated 64K at
-> pci_epf_alloc_space()
+> I know the TC9563 is directly below the Root Port in the current
+> topology, but it seems like the ability to configure a Switch with I2C
+> or similar is potentially of general interest, even if the switch is
+> deeper in the hierarchy.
 > 
-> but MSI map only require 4K. Current framework can't change bar's size.
-> still have to use 64K for doorbell even MSI just require 4k.
-> 
-> >
-> > Otherwise, we will end up with different implementations between EPF drivers.
-> 
-> pci_epf_test is special use case for doorbell. No one switch a bar to MSI
-> as doorbell dynamtically. Generally, allocated a dedicated bar for
-> doorbell.
+> Is there a generic way to inhibit link training, e.g., with the Link
+> Disable bit in the Link Control register?  If so, this could
+> potentially be done in a way that would work for any vendor and for
+> any Downstream Port, including Root Ports and Switch Downstream Ports.
 > 
 
-Ok! I think we would ideally need to expose doorbell registers in any used BAR,
-not just in a dedicated BAR. But I believe it is difficult to have multiple
-inbound mappings for the same BAR with ATUs.
+FWIW, the link should not be stopped for a single device, since it could affect
+other devices in the bus. Imagine if this switch is connected to one of the
+downstream port of another switch. Then stopping and starting the link will
+affect other devices connected to the upstream switch as well.
+
+This driver is doing it right now just because, there is no other way to
+control the switch state machine. Ideally, we would want the PERST# to be in
+asserted stage to keep the device from starting the state machine, then program
+the registers over I2C and deassert PERST#. This will work across all of the
+host controller drivers (if they support pwrctrl framework).
+
+But since we don't have PERST# support for the pwrctrl framework, we can have
+this as an adhoc solution. I don't think we should try to generalize it.
 
 - Mani
 
