@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-37027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EE83BA1B5E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 23:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53CFDBA1BB7
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 00:04:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D22A8189604F
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 21:58:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 606AF1891429
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 22:04:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC17272E42;
-	Thu, 25 Sep 2025 21:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F60E2EA491;
+	Thu, 25 Sep 2025 22:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9jw1uPI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXxKBSfh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC7F1F91D6;
-	Thu, 25 Sep 2025 21:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000E325CC4D;
+	Thu, 25 Sep 2025 22:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758837479; cv=none; b=PVJhMGF2VucX/38X5bUmVDfvmxVEmeXrB2t9mjSWVxt6CnMyQAptnhgbkGDTwRoUIxJW00gdXAzL/ntEz4S8EnaZZ6ZSttkASuA3ciQAAz7ETfJ5u1KKNstE7wXXViBNFfq13kA6zHSolHoaqizF0rt6m7v/IyGD8mkw9QmHrLU=
+	t=1758837843; cv=none; b=NxsVApHrTuJrW3DvY5dtcE7KAy8Ns4qyetoDvgco6GEH69ZvzOjPb4YLunPNChywD8RqkncqQs2883amkMA2ahfkpG4FrzSIAAlUk5ZVaw6eWYMSCCALwFusxQrA9diFgxYstVDromCHjRYSIpPJWnN1zhiyOR5nNTW2u6JLA1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758837479; c=relaxed/simple;
-	bh=XSHViZo3Pi55CeXnpkwa+76DxWBGmZaI9vptrJBuf3Y=;
+	s=arc-20240116; t=1758837843; c=relaxed/simple;
+	bh=hu1EQlTMo9DEgndmffGfA29c8ETyA13nPng1Cr0CAtg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=h4b03vz3DckNkv9z4G+rMTTgvDSkhcJgXYtL1Ua2Tn84Dge3yIIO2w9ZAwmf9zFd7roeY01XZMrm+3xzGF3pt+mJ0vpd4B9pet9S56p3GJopV9ZjzxTQtiSCqN5s8bBF3qg9TZuP5/3dkgUEsDaR7mQiFcfu08PC2ld4Bxah82Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9jw1uPI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA3EC4CEF0;
-	Thu, 25 Sep 2025 21:57:58 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=eFEXUU+TP2Q4YgplCCDBI5BruEGXvOcmEdp/vVpMtKtruyahsoHPf0mWlkiTQOgithWhwcQ+AflqAkpQhN4E4XW9sFIfYBK7ub5yN3X/eO/HqOXYJiziOiJ76dxdGZp5tBUD6MbwaoyZINe9POkM0Yc4/KhL5rXmD+qVkZ/o2DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXxKBSfh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5307EC4CEF0;
+	Thu, 25 Sep 2025 22:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758837478;
-	bh=XSHViZo3Pi55CeXnpkwa+76DxWBGmZaI9vptrJBuf3Y=;
+	s=k20201202; t=1758837842;
+	bh=hu1EQlTMo9DEgndmffGfA29c8ETyA13nPng1Cr0CAtg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=O9jw1uPIi82h87JIKbVTIqu+AZDAM6k59eR34EetiOXMbG80a0szGPh5gViG08yGl
-	 /QUNaZ27F2FodFn/W1wqFbHSTGFO+dbS9UK1VEVHUI+BOYgO2wr1LrUSvIiwx54EFj
-	 cC+Ynvw9g8wd/RcH0Lki2jVBgwo4GQrA+OPJWkK+gAokG3V9doBxAQ33aIz9teJGqx
-	 T6ow1SftLrX7eYgxfMNiRvsdTzW2miiSy0qxTChgG4uzufaUT1Ggrb3a/wVsa9kXg2
-	 MQEDzbZm4IlpLxs8hQ+Xm7FZhfoQ4HPZGXSHRve9tmG1jLdMjHGj8PfS5dXyYWU/sO
-	 saYoyggiS0edA==
-Date: Thu, 25 Sep 2025 16:57:57 -0500
+	b=WXxKBSfhlZuO/9iTAPjDoEIbxiyc4T01O3tEd3IewRO54u1LHJhSmheRJUv8PjifK
+	 Vy566N/ZKcqcKOcEZkN+ctd9tfksRHYsr67PMz8XU0xmgymQfmTqu+im2AC28t6rZf
+	 X6m9BoTU6SL2OC2JiH7Dy1SA6tcVu9umVmiZXeB7yTiFDzE1KdmbBTCb35Yfo/JvOt
+	 gCbzeyA1YBvo5jXgTAnKy+bKmPCwthKzmC8v0Z/AyPE9hhKu/BjMwAW9Z7dMuNzNRQ
+	 ecDVr6neMzdaC8WEveVvVBfwG4+DRwEcsDSzbhtVYd5hVlivxpYeYOv+z2iNdTan/K
+	 09VwIoe6gDSyQ==
+Date: Thu, 25 Sep 2025 17:04:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Richard Zhu <hongxing.zhu@nxp.com>
 Cc: frank.li@nxp.com, jingoohan1@gmail.com, l.stach@pengutronix.de,
@@ -52,7 +52,7 @@ Cc: frank.li@nxp.com, jingoohan1@gmail.com, l.stach@pengutronix.de,
 	imx@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 2/2] PCI: imx6: Add a method to handle CLKREQ#
  override active low
-Message-ID: <20250925215757.GA2205491@bhelgaas>
+Message-ID: <20250925220400.GA2206333@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,7 +77,13 @@ On Tue, Sep 23, 2025 at 03:39:13PM +0800, Richard Zhu wrote:
 > The CLKREQ# override can be cleared safely when supports-clkreq is
 > present and PCIe link is up later. Because the CLKREQ# would be driven
 > low by the card at this time.
-> 
+
+What happens if we clear the CLKREQ# override (so the host doesn't
+assert it), and the link is up but the card never asserts CLKREQ#
+(since it's an optional signal)?
+
+Does the i.MX host still work?
+
 > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > ---
@@ -211,14 +217,6 @@ On Tue, Sep 23, 2025 at 03:39:13PM +0800, Richard Zhu wrote:
 >  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
 >  		.enable_ref_clk = imx8mm_pcie_enable_ref_clk,
 > +		.clr_clkreq_override = imx8mm_pcie_clr_clkreq_override,
-
-imx8mm_pcie_enable_ref_clk() and imx8mm_pcie_clr_clkreq_override()
-both call imx8mm_pcie_clkreq_override().
-
-All these devices that use imx8mm_pcie_clr_clkreq_override() also
-enable the refclk in .init() by overriding clkreq, so .post_init()
-clears that override.
-
 >  	},
 >  	[IMX8Q] = {
 >  		.variant = IMX8Q,
@@ -227,11 +225,6 @@ clears that override.
 >  		.init_phy = imx95_pcie_init_phy,
 >  		.wait_pll_lock = imx95_pcie_wait_for_phy_pll_lock,
 > +		.clr_clkreq_override = imx95_pcie_clr_clkreq_override,
-
-But here there's no .enable_ref_clk() method, so I guess this device
-must override clkreq automatically and the driver doesn't have to
-enable that?
-
 >  	},
 >  	[IMX8MQ_EP] = {
 >  		.variant = IMX8MQ_EP,
