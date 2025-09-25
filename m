@@ -1,130 +1,137 @@
-Return-Path: <linux-pci+bounces-36995-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36996-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECF40BA0916
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:19:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FC7EBA093D
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:23:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9855D3AEA6C
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:19:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A6014E60D1
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:23:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7992DEA67;
-	Thu, 25 Sep 2025 16:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B85B3054D8;
+	Thu, 25 Sep 2025 16:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzkHAeNY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRgbaoiE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC103596B;
-	Thu, 25 Sep 2025 16:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3BE21E091
+	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 16:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758817171; cv=none; b=qoE9EWZ/e/kyuOpBRFymy7Hg8wcaW7Ijy3iDvyxdXI+wZZo/1/LQNr229WfYjjQ8Vml/gv6FxzU6hDiNCZxgTIRP/r2VFakAkLX4o1YK6sgbQTx+VMGNPwcjY5yESCehu6RKMLzeNa+imJq91IZQ3ym5S7GvFg0Zm2R/bihn3xk=
+	t=1758817428; cv=none; b=CXa9rbjprCLR1AHeM7s4Gikwe2JOnt8I9r09eFRc7c020rskMHs6jAsN26k2OrlefBApdHY6FLq+RgTBE2ghUOFmCqio2Q5r8xqiQu1AFXcvwAc8vMLmNK4zhum88Gr5QuX/MGt/buNNG4J2nAd4Us2BDJk/NSOBOyCI+BWJc9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758817171; c=relaxed/simple;
-	bh=7AVIF0kZTDey6ZhzfUZ3+wr+sPFo2gu91AUy+CefXhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tkZuSzXgdwRzea6NJNHgueoeAWklUd0jdpn6dCKfxWz1hF8JwStJvGFr9eqyzFT/F2BwXNfX+W+hY5El/LBrrWEqynBTM0iEjvWnR+OzLtPAIpqc97YS4kJMg2wYBBtiKkXJbmtob8S6F0D8M1SVFx7ODg/CRStCap9ZSTanbIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzkHAeNY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630F7C4CEF0;
-	Thu, 25 Sep 2025 16:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758817171;
-	bh=7AVIF0kZTDey6ZhzfUZ3+wr+sPFo2gu91AUy+CefXhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qzkHAeNYo5rE0NLdPInOl3hThl6qLGz2kZnyIJDc6EeGnmbJvruBBlPhY7BeAxkVT
-	 MEoDIdw1opJyCmSwj7oCaYEdBJeAnbj2sjy8FQvePRZWoWe+S4Wg42NHmrNkpxwN5s
-	 pS00wtIxFfgXaDwvKOLchauboc8dNg/LM8+y46xtFylfHCtRLqpO6jKNdbgUP9RN1K
-	 8J9lgZWVl9JOXq5rqwwDs1/nz40tWBCznax8SFnqRCAUfxUx6QV8+xrNdQhbM+8RvS
-	 ZX8rcuWoimFqMOMQw2Onlh544FODNe4ukX4d8goFyHIgoCTSaxxW7KUlUSg8H1bzvr
-	 AM+9voZqJoRFw==
-Date: Thu, 25 Sep 2025 21:49:16 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, chaitanya chundru <quic_krichai@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com, 
-	amitk@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com, 
-	linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v6 5/9] PCI: dwc: Implement .start_link(), .stop_link()
- hooks
-Message-ID: <yofmk5uyykyv4jxzem622dtuyzknk7ipd5xlkzdrfl5v7tgojy@5aarg5wj6bar>
-References: <20250828-qps615_v4_1-v6-5-985f90a7dd03@oss.qualcomm.com>
- <20250925145416.GA2164008@bhelgaas>
+	s=arc-20240116; t=1758817428; c=relaxed/simple;
+	bh=gOo1rVsZR6VdqU5z395vlT+SO32oa08uQ/tUj6wgFd4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=TDi1O7/DWy7ExtzZF2075kPs7VYdJ+YyMHn0Eq+s3uaJvA5+NkMYU6LYSGrgznsoiY1/QqMMoilVWqchGxGLKT/KGD3U/OIS+m8M4HfA7SFoROCsWDNGLni+KEP16Tr1SHQS95Uy05UJgap+2NLsyEIFZlmSNKOiWd9quZM3Kps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRgbaoiE; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3ee130237a8so914367f8f.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 09:23:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758817425; x=1759422225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MTyvmotOb0/PgMOHsXh4gvDuOiENNfX5B0XL/LoNWUk=;
+        b=QRgbaoiEXx7xp7ZNWhKTDtac8hbujoKZUQ2SfmHyvK19p/gId2x095Eyjh9baRHkWR
+         44Xli413yV5yhmVER/RqnMGDb4RQ8EwxqUGrVq1sIWQ0WMFYAVDonhrCKenFS97Wq5k8
+         lwH2Ss46HmdcdxmTooGgvJVZYMH8XO2nFmFRr8V6DozhaD2po4XhWGPvFGpK0gFYaHNN
+         BrMhdXO88rRbnbEXOfKLzB5snUpUER38cQr4Q0zeyA81+uAsCBr35wIL0MUAoBserXlA
+         c/TutBxD3gNAMvj1Uq7FeZEwc6eJ2N1i51DNY5nIcy7POL2uxAhOekqGf11V6yBeaSPv
+         g3aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758817425; x=1759422225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MTyvmotOb0/PgMOHsXh4gvDuOiENNfX5B0XL/LoNWUk=;
+        b=LkWbbe5jlCSpNZT7xTZ46wj1JndXyyhMzlbM6g6CD9RxNYPx7kj1ZFCtaCobbKB+i1
+         zKN/xsXbD+ThYHa8zUE8GBtrrU07JZQTHCt0ZhcSR43gvS/sKEhe6dxyLyjyPv5gSWU5
+         UXRGNwSdCEjW8QLH8Hfg67FBvCx3OqB/zb1MN7fL++t9ZO+IrgezRKI+LmcpiHJmxrqu
+         0MNsJjn/IH53xNJJPMiOnc6GAafV82yTmisBS7ynufuyTfPfwO+/9R2Wm+JLkU8eZHxG
+         63gEd3IZatAMQZrk5kkdnzkhL5o8LY/1yubwhXsu544AeNKmQ10FSmJdDMOIWithVURe
+         arDA==
+X-Forwarded-Encrypted: i=1; AJvYcCULwF62DJKazze8KJNLrJARvopjcIMAwZeKX+90xPlRU5n/tXR2zEaDYzxc19cEOZGL6s2VTIXz/TI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbxW/2zrod51+vz+ngSR6tQWmGo9+lBTHWkptLh+e/nVRqpYvD
+	RpHczbyiQ7gAWWQ+othlRMoIrYszJ9brtOL4GP6uuznyhmFsJnUAej/q
+X-Gm-Gg: ASbGnctl1LfuzPsYwacwWf+/0QrWi5cuahoFngVtspzy+Pzis7Nc+eQn/H8fA+7DRv6
+	GOHajuEAgnmHiS+qHhvMSMI7nSp++URzpXoNoC+dngrnIkX/vMmhfSnw1SDxkrdlDIW/RLwBe3B
+	34RjxXqq/A76lCX3Wpg58Pj8LPPqtnImeMJ9Y5tjBxXoWkg6u4XfvwK4h+KZsMdA5hHUriU48Bd
+	QgqNSUVb4L4Uy7VmZCgnom3aVbfcTUtt0wxUqh9z6gUa3B+CHsT5Cvijn963s1FISku/hg1DS3D
+	92qJu9LqiishvpFOuPqh4kIwshdevJRb6Mf2M849xr/DTELoW0NZ8R21+knmfp8p9J+Q2hp/gVW
+	b7VCudMksMLTP7lCCLy/qG2Qh6fVEZ0lqzc+nuONFeD8Rs+xQVNk8f1m34dx9VZUkjTl9eAE=
+X-Google-Smtp-Source: AGHT+IG8wt7D2RVybhrtsXF08OvAI7r2C+qCPryu+R0Ya0aCRRAJKGzbWS2JdRSo8S3uobYjXYxcdw==
+X-Received: by 2002:a05:6000:655:b0:40f:288e:996f with SMTP id ffacd0b85a97d-40f288e9f05mr2728379f8f.63.1758817425041;
+        Thu, 25 Sep 2025 09:23:45 -0700 (PDT)
+Received: from Ansuel-XPS24 (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-40fb985e080sm3534819f8f.24.2025.09.25.09.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Sep 2025 09:23:44 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Subject: [PATCH v3 0/4] PCI: mediatek: add support AN7583 + YAML rework
+Date: Thu, 25 Sep 2025 18:23:14 +0200
+Message-ID: <20250925162332.9794-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250925145416.GA2164008@bhelgaas>
 
-On Thu, Sep 25, 2025 at 09:54:16AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 28, 2025 at 05:39:02PM +0530, Krishna Chaitanya Chundru wrote:
-> > Implement stop_link() and  start_link() function op for dwc drivers.
-> > 
-> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..bcdc4a0e4b4747f2d62e1b67bc1aeda16e35acdd 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -722,10 +722,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
-> >  }
-> >  EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
-> >  
-> > +static int dw_pcie_op_start_link(struct pci_bus *bus)
-> > +{
-> > +	struct dw_pcie_rp *pp = bus->sysdata;
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +
-> > +	return dw_pcie_host_start_link(pci);
-> 
-> This takes a pci_bus *, which could be any PCI bus, but this only
-> works for root buses because it affects the link from a Root Port.
-> 
-> I know the TC9563 is directly below the Root Port in the current
-> topology, but it seems like the ability to configure a Switch with I2C
-> or similar is potentially of general interest, even if the switch is
-> deeper in the hierarchy.
-> 
-> Is there a generic way to inhibit link training, e.g., with the Link
-> Disable bit in the Link Control register?  If so, this could
-> potentially be done in a way that would work for any vendor and for
-> any Downstream Port, including Root Ports and Switch Downstream Ports.
-> 
+This little series convert the PCIe GEN2 Documentation to YAML schema
+and adds support for Airoha AN7583 GEN2 PCIe Controller.
 
-FWIW, the link should not be stopped for a single device, since it could affect
-other devices in the bus. Imagine if this switch is connected to one of the
-downstream port of another switch. Then stopping and starting the link will
-affect other devices connected to the upstream switch as well.
+Changes v3:
+- Rework patch 1 to drop syscon compatible
+Changes v2:
+- Add cover letter
+- Describe skip_pcie_rstb variable
+- Fix hifsys schema (missing syscon)
+- Address comments on the YAML schema for PCIe GEN2
+- Keep alphabetical order for AN7583
 
-This driver is doing it right now just because, there is no other way to
-control the switch state machine. Ideally, we would want the PERST# to be in
-asserted stage to keep the device from starting the state machine, then program
-the registers over I2C and deassert PERST#. This will work across all of the
-host controller drivers (if they support pwrctrl framework).
+Christian Marangi (4):
+  ARM: dts: mediatek: drop wrong syscon hifsys compatible for
+    MT2701/7623
+  dt-bindings: PCI: mediatek: Convert to YAML schema
+  dt-bindings: PCI: mediatek: Add support for Airoha AN7583
+  PCI: mediatek: add support for Airoha AN7583 SoC
 
-But since we don't have PERST# support for the pwrctrl framework, we can have
-this as an adhoc solution. I don't think we should try to generalize it.
-
-- Mani
+ .../bindings/pci/mediatek-pcie-mt7623.yaml    | 173 ++++++
+ .../devicetree/bindings/pci/mediatek-pcie.txt | 289 ----------
+ .../bindings/pci/mediatek-pcie.yaml           | 514 ++++++++++++++++++
+ arch/arm/boot/dts/mediatek/mt2701.dtsi        |   2 +-
+ arch/arm/boot/dts/mediatek/mt7623.dtsi        |   3 +-
+ drivers/pci/controller/pcie-mediatek.c        |  85 ++-
+ 6 files changed, 752 insertions(+), 314 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-mt7623.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.51.0
+
 
