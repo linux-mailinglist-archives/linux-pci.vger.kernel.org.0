@@ -1,97 +1,125 @@
-Return-Path: <linux-pci+bounces-36980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7E0B9FD55
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6329DB9FD6D
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:09:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6762E188820B
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 14:05:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA7C018973CF
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 14:06:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC2A29D279;
-	Thu, 25 Sep 2025 13:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Er++w98i"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F58B286D55;
+	Thu, 25 Sep 2025 14:01:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFE328641E;
-	Thu, 25 Sep 2025 13:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C7B2882CC;
+	Thu, 25 Sep 2025 14:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758808714; cv=none; b=QDjZqPTvqjN2b8FtfK9oAqqN2zq46nS98+V5DIVOvudUHgJDbDLHQgXATkOQh1OpqekTGejcFwsKNf2gu1uIiSEjtG37Hvw1t0OaocAcwEnjyeuYFOOgMZOkpECwNjJrFbgF66C5cwRO9U/Gw63gjJHpXukrrF4w4djnmoQLLzo=
+	t=1758808887; cv=none; b=lf6b9rrYnogiH03mgVkCv63gqwZx7z85ljMch2LA429sPju8jLNAxsJ5UaDRKWEykXzK72hYztsev2kdcCxm1v/9hWeENjreWWbsvpr7763k3xvKsrj+GVUOj29rAWGydqVUIZ7/F33s8z3nob77hx31OEC3WICzcGQIEvMth78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758808714; c=relaxed/simple;
-	bh=xnoV6wlPNkvlSxbWnXdWvM4zVH7V3UY93H+fTN/zUnc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DFRfLGvsWfJ9VUqJwOdF6NqID1ISD8ISN5bC9Ue02Dj9wijudS+pX0MHV+H7x0n5dsLSU+40tpgvayxG4nCQzcG8a3l5gbWUSRWJxkENtprCt8ZzbNG2o4I9FzI+OLrDqjt+TIwiW3IhpQya8zS+//gQ1qcNT0MPpzMkXJFypXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Er++w98i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52038C2BCB6;
-	Thu, 25 Sep 2025 13:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758808713;
-	bh=xnoV6wlPNkvlSxbWnXdWvM4zVH7V3UY93H+fTN/zUnc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Er++w98iIL0/aiXKl0iTmpJ8CHU1c/0rnH7l0yUMJq0zp2YTiHJkVu3pIG46NRM2/
-	 VYOb8P+60CSllsIM/MlgTDxGYdwIQymgZqfIOeT44I9lSQPrMNVC76KfHm07eD5dVK
-	 CQUB5knmE9z7MnC+NGQ4prq3hbdUv1ewKnbXIbzhBANRlCdyzcyyNFDtiyfwShDhdO
-	 EBphcp1sH0qNAOKuWBV+y/ZzZI3nc+E26LjMcvaql6cZoCwRXszsK12qDXEN4X/380
-	 1PoLvWV5h+WwsqM4R42NA9Si0kRizlHd/GqtY08t1wj7SjMYKeNbV3QwibDxNrGh9R
-	 j/9/p+OLCOjtQ==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: linux-pci@vger.kernel.org, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: Duy Nguyen <duy.nguyen.rh@renesas.com>, 
- Thuan Nguyen <thuan.nguyen-hong@banvien.com.vn>, stable@vger.kernel.org, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Magnus Damm <magnus.damm@gmail.com>, Marc Zyngier <maz@kernel.org>, 
- Rob Herring <robh@kernel.org>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- linux-renesas-soc@vger.kernel.org
-In-Reply-To: <20250909162707.13927-1-marek.vasut+renesas@mailbox.org>
-References: <20250909162707.13927-1-marek.vasut+renesas@mailbox.org>
-Subject: Re: [PATCH 1/2] PCI: rcar-host: Drop PMSR spinlock
-Message-Id: <175880870894.21505.16125464866256198408.b4-ty@kernel.org>
-Date: Thu, 25 Sep 2025 19:28:28 +0530
+	s=arc-20240116; t=1758808887; c=relaxed/simple;
+	bh=UEga0Cn1cNdtXR+ZlCqCnDhbrofbpXwOxocUKJa8dws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VV2uhD7jyKcjUuG0b4KiIWzT0WmaRwU5g4ER+mOjLbdY545wbtjNQifH2yqDHVBO413irT16Gt4CwyI0rNJgzlfNriUe7i51plKOx9Tx3nY2qPvPm8RpDBQbH2Jl881fUYcssfQQxIqWaS9iStSLA2YFICPmq3cFTF7cN/Z5Ygo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED797C4CEF0;
+	Thu, 25 Sep 2025 14:01:13 +0000 (UTC)
+Date: Thu, 25 Sep 2025 15:01:11 +0100
+From: Mark Brown <broonie@debian.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	netdev@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/19] rust: replace `kernel::c_str!` with C-Strings
+Message-ID: <111409f1-33cd-4cd1-b3fd-e38402a82c9f@sirena.org.uk>
+References: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JGFFBrCHdqJdDJfa"
+Content-Disposition: inline
+In-Reply-To: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
+X-Cookie: Shipping not included.
 
 
-On Tue, 09 Sep 2025 18:26:24 +0200, Marek Vasut wrote:
-> The pmsr_lock spinlock used to be necessary to synchronize access to the
-> PMSR register, because that access could have been triggered from either
-> config space access in rcar_pcie_config_access() or an exception handler
-> rcar_pcie_aarch32_abort_handler().
-> 
-> The rcar_pcie_aarch32_abort_handler() case is no longer applicable since
-> commit 6e36203bc14c ("PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read
-> which triggered an exception"), which performs more accurate, controlled
-> invocation of the exception, and a fixup.
-> 
-> [...]
+--JGFFBrCHdqJdDJfa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+On Thu, Sep 25, 2025 at 09:53:48AM -0400, Tamir Duberstein wrote:
+> This series depends on step 3[0].
+>=20
+> Subsystem maintainers: I would appreciate your `Acked-by`s so that this
+> can be taken through Miguel's tree (where the previous series must go).
 
-[1/2] PCI: rcar-host: Drop PMSR spinlock
-      commit: 0a8f173d9dad13930d5888505dc4c4fd6a1d4262
-[2/2] PCI: rcar-host: Convert struct rcar_msi mask_lock into raw spinlock
-      commit: 945878aa8b574f66ead4ab1844185376c0d0add4
+Given that we're almost at the merge window isn't it likely that these
+will get applied once the current rust tree is in mainline?
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+--JGFFBrCHdqJdDJfa
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjVSyYACgkQJNaLcl1U
+h9C17Qf/YgEwpltWEUIGgUaSbpdA0l3EOpF8ChVfeUiB5k9dCOndChZptDoIsg85
+PB++cSfnFQkgzNH3wYTfwtUmYyk2V+NSPaWGooIfOVBrnzE60Vp/buyAVu2FMFa+
+eCzJ5UP9/CxqrpD00TxXBCEuTh1ejksRqsawy2e47xND1j1+WdeUp6QSVg4O+gyv
+f/AsLvo8yACTbYWgqONdC3AWxUlaCHmuZLXaNbtmaKsZaOeeE2nPDfNGK0XA8dFm
+OW+b38cPKCdFYtkOoP/uQGu9lyKqrwDfJNRuO1ca8Rv4Ey8eHwQ2EmMCBs76yorL
++4uyntn5a+EHzOE3s+95LwAANHWJXA==
+=8lId
+-----END PGP SIGNATURE-----
+
+--JGFFBrCHdqJdDJfa--
 
