@@ -1,136 +1,243 @@
-Return-Path: <linux-pci+bounces-36957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FF3B9F9F8
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 15:41:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E208B9FA9E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 15:50:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7E254C6E0C
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 13:41:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 621AA7A4316
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 13:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B98326E6FE;
-	Thu, 25 Sep 2025 13:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58EB92848B3;
+	Thu, 25 Sep 2025 13:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="bAAaVkeg";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ZbzmUISU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA4626C3AC
-	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 13:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B35323D287;
+	Thu, 25 Sep 2025 13:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758807689; cv=none; b=WtOV5z/+oWmpIQp2wqAwsbVajzx7VQ8p5cHd41SVKPB7n5WCIhRS0c4OsE0BT7b7UHoI7Ibq5gvmCWPzEUT2sbp+DbYoLkqOia0N4sTBT8A1tgt9FQIby52O4eZ8TVsd8DSc7w4BW/qmvdt+16E5l8tk3+fTHz96sqp/AEX/D48=
+	t=1758808238; cv=none; b=rDzTfm/uNa/EU+2jIwfnExCDMceHhUsE0SP1mSmT8S6uIVe1fxGxmB/ndL/ztlvT9vksmOJzieb/jAfDqGzCAGWnEV/WjPu/0qnSeNEnWq03twQbplYgAFIPnJPghUYpQy95funTy0dlN7nBVzuH81YF78nmXN4gjzJPjgC6UeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758807689; c=relaxed/simple;
-	bh=yWrAvDUxWQXIzW56d3MPuuqkacdrARQS1P4pA07i/9Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HixO9qqVNHd+CQK4TK7+c6Ur48FnORKiHdk5FXOiNM5kOv/tbuGW0lrX1sveZ3qRsf2nwdMLIEt6qh9f41R9oryO3PWFYrta3IA5j5fRaeGQ9DAWdqd1zK0WiER9m7+0H7jk3SNzbdaTs8IOEb+2dFOCSMSUOY6BmNbCD3VB6bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8e30a19da78so826743241.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 06:41:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758807686; x=1759412486;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jKlrAAnA60Lnd9KAaHPo/7FLM3eM2qdMm6o85zpT6R4=;
-        b=tnHIsInfqpd1bvWIxUB3HPCb7BlyXgGF623hR/2wr3HS6FfZ6ojIOEGCdMsbJ7xaNp
-         CfI3UqWqhmVbo4Tp/4YHw6cVds7XTpjU6O+3RsGxM9GS+hljrsRRkgVa9lCrxLUB5PcB
-         vo6OKDCS8tH34TDB94i++oIEZx4oqaxL6e6Sa2Lb8PK2HFwY+bl2WXJRY0hH7YLbGooa
-         skj04TCEpA+aTi23woJAjnfSfhQIaBb0v2TW6ngJcFIjL6tVcQKVk/8dribsO4wUXjd3
-         E2phr26p+h2z8ClutJbJC3/LbET1wBBmdLdFxBsiKAFYHp1coRvl+4Q/entqkMi3T5L7
-         bMhA==
-X-Gm-Message-State: AOJu0YyxdPbIUs1T5FyHOVRhVfliLP1rlOENB4viXrlooQug3o2+ZPNQ
-	l5HccZ6ux6UEXsDubnY6A26gLhWGiMa0DGBxR9GDIdfmm02+C+OYY4cXjzfWXt3x
-X-Gm-Gg: ASbGncsJuvVDc3IiMOJgbIhk2ARmvWE0f8xd6GL+lz88gM93HDCL36ytZHWSoX173dj
-	C32ZQ1y6GYmI6zcgDwrHV5ENhcB1CFxCpzrYk4DoBNqSNHDGknZLY2lauXRMULYRkR3Sjg4MJ0z
-	8NhNhpOb66vfWAC+kAFJ2QmoqBXu/IpM4HcpzT9NL6u5lMq3QGsEhQLT48c8V7taxwj8HbagHmu
-	HjEd3tNoQRQLIDcMEigZjaoyHbJiKevJ4oOx0RfJ/O5ZkESdM1SIu7pN0wvKKqEXMMbwl3Advfz
-	M9ie4i3SfmPnZl5OXWichlrUIFVMYCP+eF7QnrREfu6t2RZnLKJ6vLCFgUmmtI/QcTaBrCaM5AD
-	b9DwjDN2BBNpDBYqVJrqiPtomfbgBmFPsF0L9AIZBEG1bh2WGYhILDX21eFwN
-X-Google-Smtp-Source: AGHT+IHQZYc9x8ShB3nFwl7K9uop1YHbSkqhwDg+Pwm4lO499y9gyPlUGEIgTESRaD19IgM/0AH95g==
-X-Received: by 2002:a05:6122:c2c8:20b0:545:ed72:fdf6 with SMTP id 71dfb90a1353d-54bea0cd7ccmr1115648e0c.1.1758807686027;
-        Thu, 25 Sep 2025 06:41:26 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54beddbbc3fsm335208e0c.22.2025.09.25.06.41.25
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Sep 2025 06:41:25 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-8e30a19da78so826718241.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 06:41:25 -0700 (PDT)
-X-Received: by 2002:a05:6102:442c:b0:5a3:eb34:6105 with SMTP id
- ada2fe7eead31-5acd1c8364bmr1477467137.26.1758807685387; Thu, 25 Sep 2025
- 06:41:25 -0700 (PDT)
+	s=arc-20240116; t=1758808238; c=relaxed/simple;
+	bh=5VZtnlz8SLZh1hJUOEN8X4K2QYuKaXR8uZPnfTSelpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kd2vg1mj29TKfSTy3tEdIHsxICtcEw3/O/nNzuR3NlKKiacDVLPRqPl+6I8VmSuQUbkOES0HaWGDIn4Rfw34oBiTadhJQbhMWLiGXpz8PmVRhqUxoLjBFoIgyU5wNVVkS/y4YQQcOwEnA+nF1IU+nG9KQlmLrC5C0Z9wgHoQ7rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=bAAaVkeg; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ZbzmUISU; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4cXZqG19Nyz9tSd;
+	Thu, 25 Sep 2025 15:50:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758808234;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sa813ro74wVcAWbPynO8r+wVmbDbagBCRzrt3WOCBcE=;
+	b=bAAaVkeg3qkXwX4rxpXeQjO8w10KWFZmVYNUDH7FNzbMijDNrep6/AKissmRy9wjMpwrzz
+	T4THZTRE54LcehdU0EbyAT4X1bDXrrwydEHw9nAanK8WXC1lYRey98BjpLmEl5cWIrJurf
+	3BEFs/ZWNZv/LYiW2thKb8W3L+KYEWesRiFQB/1fRubC+KxbEHDy0Nm8Zb9qhAbhnbO2sd
+	Zg56IGGbo5DuIJ+8h6od+r/nP9Gf7Wqdy4RW8UVnk6hjGfaBdsZtqsWGCzGbFxe11B9XS3
+	jtNNRWLmqYtdNfVInSeVa0q3TzIrhiLaUk0QgXIflOn2WWDEVtu2wSB0lvR+WA==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=ZbzmUISU;
+	spf=pass (outgoing_mbo_mout: domain of marek.vasut+renesas@mailbox.org designates 2001:67c:2050:b231:465::102 as permitted sender) smtp.mailfrom=marek.vasut+renesas@mailbox.org
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1758808232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sa813ro74wVcAWbPynO8r+wVmbDbagBCRzrt3WOCBcE=;
+	b=ZbzmUISU3AA94pt7HWxwPSTM7AvtX6UBi+I5ZnfPym7FYxSHMJGwr5gPIhNGsQG/k75DY/
+	tWQSgjxuNJXdNaaKAT/C0EOlQBmTdABiqjk6MFYq5WWANbVAT8f0CskqtKWwcHEv5/EV4h
+	kHoZJIvJ0tZ8jy3aCZPpOfEUaL+AaGl8TY3x0mXB0oBN6MEw3nC0DHHrlbBXqPqSGyaMH9
+	ui+gT7pT0g9oXKBfJRuUtOY590loBkng5cjtO+u/D89AKWHCfRWOUUDwIZKmRvzkpexuhb
+	TXKaiq/UVk9ii11Id9x1uSMJjbShuk23ZC5IcVO7rFYEsBdqhAqcxi4tRVwydA==
+To: linux-pci@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian Bruel <christian.bruel@foss.st.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mayank Rana <mayank.rana@oss.qualcomm.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Shradha Todi <shradha.t@samsung.com>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] PCI: controller: Mark controllers which cannot do lockless config access with !PCI_LOCKLESS_CONFIG
+Date: Thu, 25 Sep 2025 15:49:45 +0200
+Message-ID: <20250925135014.66865-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250924005610.96484-1-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250924005610.96484-1-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 25 Sep 2025 15:41:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW1efNhhW1ROSULP2WGBKiUDiCDHd5KHPa8RS-5tUqZww@mail.gmail.com>
-X-Gm-Features: AS18NWDJuUpAWpHtyOB9jrnXGaOx0X3jXoCYo7hnHhvcwX_HD2k5hjD-20MZx-4
-Message-ID: <CAMuHMdW1efNhhW1ROSULP2WGBKiUDiCDHd5KHPa8RS-5tUqZww@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar-gen4: Assure reset occurs before DBI access
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-pci@vger.kernel.org, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: 9387870ca75cff30f0d
+X-MBO-RS-META: askstgdrzeiry8fg1788yjagpq6u8187
+X-Rspamd-Queue-Id: 4cXZqG19Nyz9tSd
 
-Hi Marek,
+Add 'depends on !PCI_LOCKLESS_CONFIG' to controllers which cannot do config
+access without PCI subsystem level spinlock. If PCI_LOCKLESS_CONFIG is ever
+enabled, those controllers would have to be updated accordingly.
 
-On Wed, 24 Sept 2025 at 02:56, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> Assure the reset is latched and the core is ready for DBI access.
-> On R-Car V4H, the PCIe reset is asynchronized and does not take
-> effect immediately, but needs a short time to complete. In case
-> DBI access happens in that short time, that access generates an
-> SError. Make sure that condition can never happen, read back the
-> state of the reset which should turn the asynchronized reset into
-> synchronized one, and wait a little over 1ms to add additional
-> safety margin.
->
-> Fixes: 0d0c551011df ("PCI: rcar-gen4: Add R-Car Gen4 PCIe controller support for host mode")
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Cc: "Krzysztof Wilczyński" <kwilczynski@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Christian Bruel <christian.bruel@foss.st.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Mayank Rana <mayank.rana@oss.qualcomm.com>
+Cc: Nam Cao <namcao@linutronix.de>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Shradha Todi <shradha.t@samsung.com>
+Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+NOTE: I hope I got them all
+---
+ drivers/pci/controller/Kconfig      | 6 ++++++
+ drivers/pci/controller/dwc/Kconfig  | 5 +++++
+ drivers/pci/controller/plda/Kconfig | 1 +
+ 3 files changed, 12 insertions(+)
 
-Thanks for your patch!
-
-I have tested this on White Hawk, with (in any order) and without[1],
-with and without CONFIG_DEBUG_LOCK_ALLOC.
-
-> NOTE: This fix could be removed once the matching fix lands in linux-clk
->       https://patchwork.kernel.org/project/linux-clk/patch/20250922162113.113223-1-marek.vasut+renesas@mailbox.org/
->       This fix is implemented to assure PCIe is not broken in case the
->       fix sent to linux-clk is applied asynchronized.
-
-Indeed.
-
-Note that to avoid regressions, this patch ("[PATCH] PCI: rcar-gen4:
-Assure reset occurs before DBI access ") must be applied _before_ [1].
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-[1] "[PATCH] PCI: rcar-gen4: Fix inverted break condition in PHY initialization"
-    (https://lore.kernel.org/all/CAMuHMdXAK6EhxPoNoqwqWSjGtwM24gL4qjSf6_n+NMCcpDf1HA@mail.gmail.com/)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 41748d083b933..1a6e937cca929 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -12,6 +12,7 @@ config PCI_AARDVARK
+ 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCI_BRIDGE_EMUL
+ 	select IRQ_MSI_LIB
+ 	help
+@@ -205,6 +206,7 @@ config PCIE_MEDIATEK_GEN3
+ 	tristate "MediaTek Gen3 PCIe controller"
+ 	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select IRQ_MSI_LIB
+ 	help
+ 	  Adds support for PCIe Gen3 MAC controller for MediaTek SoCs.
+@@ -244,6 +246,7 @@ config PCIE_RCAR_HOST
+ 	bool "Renesas R-Car PCIe controller (host mode)"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select IRQ_MSI_LIB
+ 	help
+ 	  Say Y here if you want PCIe controller support on R-Car SoCs in host
+@@ -332,6 +335,7 @@ config PCIE_XILINX_DMA_PL
+ 	bool "Xilinx DMA PL PCIe host bridge support"
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCI_HOST_COMMON
+ 	select IRQ_MSI_LIB
+ 	help
+@@ -344,6 +348,7 @@ config PCIE_XILINX_NWL
+ 	bool "Xilinx NWL PCIe controller"
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select IRQ_MSI_LIB
+ 	help
+ 	 Say 'Y' here if you want kernel support for Xilinx
+@@ -354,6 +359,7 @@ config PCIE_XILINX_NWL
+ config PCIE_XILINX_CPM
+ 	bool "Xilinx Versal CPM PCI controller"
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCI_HOST_COMMON
+ 	help
+ 	  Say 'Y' here if you want kernel support for the
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 34abc859c1071..8eab27775195f 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -2,6 +2,7 @@
+ 
+ menu "DesignWare-based PCIe controllers"
+ 	depends on PCI
++	depends on !PCI_LOCKLESS_CONFIG
+ 
+ config PCIE_DW
+ 	bool
+@@ -322,6 +323,7 @@ config PCIE_RCAR_GEN4_HOST
+ 	tristate "Renesas R-Car Gen4 PCIe controller (host mode)"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCIE_DW_HOST
+ 	select PCIE_RCAR_GEN4
+ 	help
+@@ -390,6 +392,7 @@ config PCIE_UNIPHIER
+ 	depends on ARCH_UNIPHIER || COMPILE_TEST
+ 	depends on OF && HAS_IOMEM
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCIE_DW_HOST
+ 	help
+ 	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
+@@ -410,6 +413,7 @@ config PCIE_SOPHGO_DW
+ 	depends on ARCH_SOPHGO || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	depends on OF
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCIE_DW_HOST
+ 	help
+ 	  Say Y here if you want PCIe host controller support on
+@@ -488,6 +492,7 @@ config PCI_KEYSTONE_HOST
+ 	bool "TI Keystone PCIe controller (host mode)"
+ 	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+ 	depends on PCI_MSI
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCIE_DW_HOST
+ 	select PCI_KEYSTONE
+ 	help
+diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
+index 62120101139cb..2a400678312eb 100644
+--- a/drivers/pci/controller/plda/Kconfig
++++ b/drivers/pci/controller/plda/Kconfig
+@@ -10,6 +10,7 @@ config PCIE_PLDA_HOST
+ config PCIE_MICROCHIP_HOST
+ 	tristate "Microchip AXI PCIe controller"
+ 	depends on PCI_MSI && OF
++	depends on !PCI_LOCKLESS_CONFIG
+ 	select PCI_HOST_COMMON
+ 	select PCIE_PLDA_HOST
+ 	help
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.51.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
