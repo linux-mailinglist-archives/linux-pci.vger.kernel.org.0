@@ -1,163 +1,160 @@
-Return-Path: <linux-pci+bounces-36993-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36994-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92E1CBA08B1
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:07:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292D6BA08E5
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BE381896D78
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:07:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 165107B2BB2
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643162F2611;
-	Thu, 25 Sep 2025 16:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06670301718;
+	Thu, 25 Sep 2025 16:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIBV1NA/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwOkjw5J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE162EC08C
-	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 16:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A6119EEC2;
+	Thu, 25 Sep 2025 16:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758816421; cv=none; b=RzagbByIMb7B4wfV6QQrVTKCF+hkK9Qiox4XJDFa7P7qINmCQy2mIK5UzVMgj3CCvvSPT5bhAROf6uuWrKe4ZDN11e1AzO7onDFlMJ/2xDidBl1ikYv1Ee9/NAN/ZP3fL5Dbbr8T6e7RyDnTa1b+zFbGwsAA+lssk0gphCoNnbs=
+	t=1758816597; cv=none; b=JSWUkQX2lnNo6YU6wzKLlfBm+2tTQTHLj2XnMMLyo6eCOFtbFesHPOxGWKkD04hSlOLks9Zr0XFPALObUbZ8ElVZIO6EzVteSKi44NvA4UaMV9oTCIso8K0ACLyGLVrogFYKJYRxtz3Ho51CosJpMH3eYY9L4SKCCE+qpSos9ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758816421; c=relaxed/simple;
-	bh=BpXsWsbIWOdqk7uF/WtIMG7A8mOG0ib8Ejk2jxL4vcY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LhRi58wVk+bXf4cncWocia1x+i8c8WDqR66Qe5I5wjou8s6MWeH4oJRzmsYexDPe9TSKnFkvNvgniCTti8Tm1SIpTW3+ixycIxmQJ7iAHvJ4zojIpIwZE5F6ru4j69m0S6jqlemDLGtvTbOhZ5SzDdp8nsuRkhodb+DoRrlZdmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BIBV1NA/; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3f2ae6fadb4so1197435f8f.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 09:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758816418; x=1759421218; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+lassDmCrGUqK1j75W06mPpLprXWJRC5SDVpvwTaVY=;
-        b=BIBV1NA/0JnyvO/lqOUBARKBtEQFtciN9/cKnCyRy+nfEteg8ShWM1CM0xBpmQPjVS
-         TX9JXzb3EH1MiuFbdcAU/a9RUEhOh3idfouUNu3l3dmKMTL+uU8s25cPK8JS3A/+8BZC
-         sEPoxzGcb7Q8Ogc8J5N7c7V2+T9+E5agCkrtt8heHUJcaaaMNwbpmDD0KkGTu7nBjdi/
-         kfcZ7KSDnT1GmohZbRgb1BLkLK91j784ooFeBT9B8lEvOfN9ezpBCGCEDWdxwIAHnti3
-         goVzJIiYEhEdExoRhKk+9xCbeEqA++P1nZKRygnH+vWBgixId0Hz3GSlEEEYtaC1T3va
-         HIjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758816418; x=1759421218;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+lassDmCrGUqK1j75W06mPpLprXWJRC5SDVpvwTaVY=;
-        b=uo9HNZ/k/58dupcTHJWF0XxhLKLdAzx19jiMqRUyFaymWqMhSIOkcXp1CI3+GPw2EK
-         QyYCyCyP34kqagh2HFOHidKQt68/RL6t9RmDpDfT9rMxc0jm3ocpXitgWCSuZvxpLx/T
-         y2VtOM9KQTMe7iZkTJpmOnl0WkzodNsi1I9wMpnqNbgFlaMx0PHpa4EWP5aqeOHzxaVJ
-         HQGui1nIITF5lVibrtsRb9P1Q7Lvyh2TBAyvC5HS1AiWt0UmqdARqjXt8N7IWxhpOYAq
-         5jiOp9VOiYjWj8vKp+pQMguvbiSTsG/2thLBFWOYTM7/ktnEfHFqUXjKzEHA2ltTApqO
-         1rKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPyg1WHpqWbwYJRiv4FH6gs7cQzVBHBPHrFpy2iLXV6YBTQ/IAATgreyYQ9rRr6tw3sTmO+epeo4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4CkdztD3DToqmEfATgpwCxfLkTG71AUxBOymNDhibGGVVWmNY
-	C60VqKeZBd4FhVYDSFcLEqvQ0PaM7HVU020FJ5PJAmfNEU2dLA2qcZBr
-X-Gm-Gg: ASbGnctrDl37i6Tp9B1rif3LENz+XpU+ql4nKSFd+hAn0E7EP19Ki4xTY5RtqUBvKk1
-	mnjK0iKLrwWAMbu/wyZmTqCzTW/CaSqxLChnrYBmy6hBZgJab3ZSiPnfb5FxaQQKREeoWr9+uDY
-	j1rF22Oxyz4vsXQmB9VxF/YuvsvrVk8Z++/tc87y0M02fQ02t2Rozf6DLnoGhb64GW9wCGJOj/I
-	yOjq2uc+qeY/nPQyCrlzaCZzev6wC67gyj/LuFGs7rKKtHIRSvou+WkzKVKxfuUe72vZt5RVAqI
-	HOSAlx7vAy2xwan8rAbMNHP3ixljh6YfsMaAhcuZe9RQt1ELLycLGwsVNiiFs1Tv7peV+mtrQzH
-	ZaTTfAzNDkpmiIBGJqUaPHI0yhzmvKo+r6xesEMFh9fqqUTe9c9lX7ebAKwlEVuA+z8bjXM3fRP
-	CpdcAX
-X-Google-Smtp-Source: AGHT+IEHMIJU9u8ueZDndaal17u8mfKe0TgyHQU77XQdzJ/EbxOIGOMX4Q6Ld8eqXuhgbWlq5qhIfQ==
-X-Received: by 2002:a05:6000:2486:b0:3d4:f5c2:d805 with SMTP id ffacd0b85a97d-40e4458c89bmr4101481f8f.16.1758816417869;
-        Thu, 25 Sep 2025 09:06:57 -0700 (PDT)
-Received: from Ansuel-XPS. (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e32c49541sm20807025e9.5.2025.09.25.09.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 09:06:56 -0700 (PDT)
-Message-ID: <68d568a0.050a0220.19f5c.8cb6@mx.google.com>
-X-Google-Original-Message-ID: <aNVonSpnm70dLOUL@Ansuel-XPS.>
-Date: Thu, 25 Sep 2025 18:06:53 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: clock: mediatek: Fix wrong
- compatible list for hifsys YAML
-References: <20250923201244.952-1-ansuelsmth@gmail.com>
- <20250923201244.952-2-ansuelsmth@gmail.com>
- <20250924140347.GA1556090-robh@kernel.org>
+	s=arc-20240116; t=1758816597; c=relaxed/simple;
+	bh=bC9Ji/IqcBnINVQco0aIlsNkjuCLB8waAAlmgiPhwf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QN8JjcSIUenRvw4lthTEC6J9uKt3O5rqLyKA3AJO1dgtofzGJawSUYPMLP8j3ksyKf6Ic9F39m2jCpK88j1wBICqxrsz7IZxVe0BXh+/A1v9UDKQyqo5EFMu5Z8Kd+7+4nHtngTjCndv96rrrWesFn1NgXe0qAFwUGBCeQ+d+mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwOkjw5J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 154F8C4CEF0;
+	Thu, 25 Sep 2025 16:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758816597;
+	bh=bC9Ji/IqcBnINVQco0aIlsNkjuCLB8waAAlmgiPhwf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LwOkjw5JdrfQ88fNWqEHmFXBNEdFbsXbX7/S3Zb5CMlBKAoGMvpBgn9MAFDwX5Tfk
+	 jmvFoI+gln786L05fyAi4cXDWurnTPoCSy0uFQKKbapHDfeBY5089+CN8ylBJuFItP
+	 mxIHtlwg/GnYawWoopvtplk3e0FWGJ/UqJ0b+GMXTxBuCyL3qQLMrfU3eridXfGXLi
+	 88VzQKRDIYu0fyhCKTkQwlrKWtTnqwU3l3ZUVDYmzg8/R8l792G1NRjJgnBOXQ7SJ0
+	 +9Aabu6lNzvrD05M2iLphWTPeEEJt45B53+O+P7ijyhzDZuk7zT+o7PLHRkAivh0KO
+	 1iUl0EfpE/kTg==
+Date: Thu, 25 Sep 2025 21:39:48 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
+	Allen Hubbe <allenbh@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ntb@lists.linux.dev, imx@lists.linux.dev
+Subject: Re: [PATCH v2 3/3] PCI: endpoint: pci-epf-vntb: Add MSI doorbell
+ support
+Message-ID: <ex3lip5baeop6pj4bjq5z6icq5eif3t4ss57kllplgzbaoubjv@dsn57mraytfs>
+References: <20250915-vntb_msi_doorbell-v2-0-ca71605e3444@nxp.com>
+ <20250915-vntb_msi_doorbell-v2-3-ca71605e3444@nxp.com>
+ <ejhs6fb2nmfhnjswhrvd7iwyddwvvr5nv6bu7dt4aypbiecyfb@wza667q2x4qp>
+ <aNRZxAU0n1hvYeEZ@lizhi-Precision-Tower-5810>
+ <qm7jvvvywqmegynkghxbfn6pwfdlkboowa45sqbvygpetkiyj4@ovve44f7qvpr>
+ <aNVe9UIbFE3/1Rql@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250924140347.GA1556090-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aNVe9UIbFE3/1Rql@lizhi-Precision-Tower-5810>
 
-On Wed, Sep 24, 2025 at 09:03:47AM -0500, Rob Herring wrote:
-> On Tue, Sep 23, 2025 at 10:12:29PM +0200, Christian Marangi wrote:
-> > While converting the hifsys to YAML schema, the "syscon" compatible was
-> > dropped for the mt7623 and the mt2701 compatible.
+On Thu, Sep 25, 2025 at 11:25:41AM -0400, Frank Li wrote:
+
+[...]
+
+> > > > > +static int epf_ntb_db_bar_init_msi_doorbell(struct epf_ntb *ntb,
+> > > > > +					    struct pci_epf_bar *db_bar,
+> > > > > +					    const struct pci_epc_features *epc_features,
+> > > > > +					    enum pci_barno barno)
+> > > > > +{
+> > > > > +	struct pci_epf *epf = ntb->epf;
+> > > > > +	dma_addr_t low, high;
+> > > > > +	struct msi_msg *msg;
+> > > > > +	size_t sz;
+> > > > > +	int ret;
+> > > > > +	int i;
+> > > > > +
+> > > > > +	ret = pci_epf_alloc_doorbell(epf,  ntb->db_count);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	for (i = 0; i < ntb->db_count; i++) {
+> > > > > +		ret = request_irq(epf->db_msg[i].virq, epf_ntb_doorbell_handler,
+> > > > > +				  0, "vntb_db", ntb);
+> > > > > +
+> > > > > +		if (ret) {
+> > > > > +			dev_err(&epf->dev,
+> > > > > +				"Failed to request doorbell IRQ: %d\n",
+> > > > > +				epf->db_msg[i].virq);
+> > > > > +			goto err_request_irq;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	msg = &epf->db_msg[0].msg;
+> > > > > +
+> > > > > +	high = 0;
+> > > > > +	low = (u64)msg->address_hi << 32 | msg->address_lo;
+> > > > > +
+> > > > > +	for (i = 0; i < ntb->db_count; i++) {
+> > > > > +		struct msi_msg *msg = &epf->db_msg[i].msg;
+> > > > > +		dma_addr_t addr = (u64)msg->address_hi << 32 | msg->address_lo;
+> > > > > +
+> > > > > +		low = min(low, addr);
+> > > > > +		high = max(high, addr);
+> > > > > +	}
+> > > > > +
+> > > > > +	sz = high - low + sizeof(u32);
+> > > > > +
+> > > > > +	ret = pci_epf_set_inbound_space(epf, sz, barno,
+> > > > > +					epc_features, 0, low);
+> > > >
+> > > > Should this new API be used in pci-epf-test also?
+> > >
+> > > Needn't, because pcie-epf-test default set system memory as bar's space.
+> > > switch to MMIO when enable doorbell and switch back to system memory.
+> > >
+> > > size alignment already consider at bar initilization, and we can't change
+> > > bar's size after bind now.
+> > >
+> >
+> > The memory and size are allocated during pci_epf_test_bind(), I agree. But
+> > that's for memory allocated through pci_epf_alloc_space(). So if the MSI region
+> > has size restrictions (as taken care by this API), it should be handled in the
+> > pci-epf-test driver as well.
 > 
-> Is "syscon" really needed? AFAICT, the clock and reset drivers don't 
-> need it.
->
+> pci_epf_alloc_space() is not only allocate memory, but also set bar's size.
+> 
+> But we can't change bar's size, for example allocated 64K at
+> pci_epf_alloc_space()
+> 
+> but MSI map only require 4K. Current framework can't change bar's size.
+> still have to use 64K for doorbell even MSI just require 4k.
+> 
+> >
+> > Otherwise, we will end up with different implementations between EPF drivers.
+> 
+> pci_epf_test is special use case for doorbell. No one switch a bar to MSI
+> as doorbell dynamtically. Generally, allocated a dedicated bar for
+> doorbell.
+> 
 
-Ok I also searched downstream and can't find any patch that would make
-use of syscon. Guess I will replace this patch with a patch that drop
-the syscon from the dts.
+Ok! I think we would ideally need to expose doorbell registers in any used BAR,
+not just in a dedicated BAR. But I believe it is difficult to have multiple
+inbound mappings for the same BAR with ATUs.
 
-> > 
-> > Add back the compatible to mute DTBs warning on "make dtbs_check" and
-> > reflect real state of the .dtsi.
-> > 
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > ---
-> >  .../devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml
-> > index 9e7c725093aa..aa3345ea8283 100644
-> > --- a/Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml
-> > @@ -16,13 +16,15 @@ maintainers:
-> >  properties:
-> >    compatible:
-> >      oneOf:
-> > -      - enum:
-> > -          - mediatek,mt2701-hifsys
-> > -          - mediatek,mt7622-hifsys
-> > +      - items:
-> > +          - const: mediatek,mt2701-hifsys
-> > +          - const: syscon
-> > +      - const: mediatek,mt7622-hifsys
-> >        - items:
-> >            - enum:
-> >                - mediatek,mt7623-hifsys
-> >            - const: mediatek,mt2701-hifsys
-> > +          - const: syscon
-> >  
-> >    reg:
-> >      maxItems: 1
-> > -- 
-> > 2.51.0
-> > 
+- Mani
 
 -- 
-	Ansuel
+மணிவண்ணன் சதாசிவம்
 
