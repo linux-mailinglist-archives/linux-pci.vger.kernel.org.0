@@ -1,250 +1,239 @@
-Return-Path: <linux-pci+bounces-36917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36918-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DFC3B9D0AF
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 03:39:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F04BB9D246
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 04:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 402511B25D6D
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 01:39:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 333B72E7BDB
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 02:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1AB82D24B3;
-	Thu, 25 Sep 2025 01:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC242D8DD6;
+	Thu, 25 Sep 2025 02:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kxMe1K2e"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kMJ9nqtc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012002.outbound.protection.outlook.com [40.93.195.2])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275D6E55A;
-	Thu, 25 Sep 2025 01:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758764346; cv=fail; b=IitZ4e6JCZAa3RidNCwixfasP4d3BImNu1ACFbFY0pHG5eaI/hO7NlERScaDB6T6+B7xYft5As1AK+FU0hH7zadrwGNZFJfQdBOO1/YZuJrAyD9j1QsKn47rRY1CDoA1dV2KLIorO5VibpvpPK04HPDDQ+wXW+kvTGldV01w48U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758764346; c=relaxed/simple;
-	bh=fCSSmDoZGQuGr/zTyNMx8tA/gH3yO2wQcAjtXtOWQnI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ULEfPER7OvCjiPjEJSMofHMAHsHaIJj6UFatT3+2pe2oj5TDDN+muWp5azFwAtLjc2A5zG9WkVqhXJAo47luMQbtdktdkGavCDpYTEfJWE+K3RvCrCcU52V9uWyjLuwVU1ahkB9B45aGCFtb12WgnCRRz6R2G7n85CKdhk+j2bU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kxMe1K2e; arc=fail smtp.client-ip=40.93.195.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZwdfhCTJR4GNvwv+0stSIkY0Y+4oRudQBC43EFJBDKGEjZ1MaLtrba4Gp1Vx5g0D2koK6/ga6imnuahQF/FTxVfu2JApuBaG/n1jxcCQOqScLzjQe9oa9zSzeNrg+lsX6vSL1klI4Goy9iCQlnBugNIDfunOMfS+6SYcenGzdGx/EJ2j6h4MlV0dUHSo0VciyBzS0eb8ZBXdDgkHxr5fuAz8fEP5UE6Kr/H7Gez0+pem99wHPX4gTca5F7gAlrfnTJXhGJJDz4JDIjucaxiqZvYwMjy/InTHfpMefZMVrSGo2KqM1KPpIPwdNcIijSaVmRMqau/4ct8gBNvLk0Bprw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=umJ6j//XXlmncV8yIUu/SMJAkuMKMQYgckX+105Wl9k=;
- b=FKQLL7rcYfcwmKyg9I72J86fkdGNiNyiSrjGLH1oQvvyueJz4J0FoO18eGpLJ6H5mpzCUHZ/lBPI4+TuLzHsgFuXy38r2pmFlCtmPdP6t6fO6Du6eLIJlZ2+7Y3krBYATmfi8Xm8BCfW7xs7xtzJACgDIQs0Q6BiO49It08MIa9CUA8ktG0FKMJmsRUNdcw0RD4YC9bL2HOkMDX4iItk8mID7lI5irHrp2M8qWWoVLv5OUNnEsOM4n2Vrj/gjFLT2M6xpWrx336feuvYB0qaZ9p4RsNh8Zjvf3eVzFYCgSLVnJGezhXyFQffrn+ki96KnxLTSLVM8ftaXjxT+X/22g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=umJ6j//XXlmncV8yIUu/SMJAkuMKMQYgckX+105Wl9k=;
- b=kxMe1K2eGrdBBeFI4VbKGVT9UiR5D5v3hwveWc/CJpv97BqP52nRk2MJb9wG9wGTt1osWv3c3et0OXx43CW3BS3NF2/oEchue0OJ8cm/3m6GdvCrU8oUdnwX154mezn3ERg5sZrT2Zck+7xxpH+WKLKYPQ5hINx+j8HD3e+y5ES52UQ7tTOJPc+slBka23d7CPtS9FA9hMn6YRMQO5ZAKacmDwGJz1ZaOSZ8B5QlX34i7rLAF8/Fe+Fj1RS1j9zbjaadyqIy/FkhccOEqkhf6K0YaHIfOVUTR8UQPqrOxG/c7vPknsRBW8XAk6wxBNDgHcyuGa2SONBLzL7PCyD+5A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4116.namprd12.prod.outlook.com (2603:10b6:a03:210::13)
- by SJ0PR12MB6879.namprd12.prod.outlook.com (2603:10b6:a03:484::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.20; Thu, 25 Sep
- 2025 01:39:00 +0000
-Received: from BY5PR12MB4116.namprd12.prod.outlook.com
- ([fe80::81b6:1af8:921b:3fb4]) by BY5PR12MB4116.namprd12.prod.outlook.com
- ([fe80::81b6:1af8:921b:3fb4%4]) with mapi id 15.20.9137.018; Thu, 25 Sep 2025
- 01:39:00 +0000
-Message-ID: <02809090-539e-433f-a13b-14bd17bafe54@nvidia.com>
-Date: Wed, 24 Sep 2025 18:38:35 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] rust: pci: display symbolic PCI vendor names
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
- Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
- rust-for-linux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20250925013359.414526-1-jhubbard@nvidia.com>
- <20250925013359.414526-3-jhubbard@nvidia.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <20250925013359.414526-3-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0119.namprd03.prod.outlook.com
- (2603:10b6:a03:333::34) To BY5PR12MB4116.namprd12.prod.outlook.com
- (2603:10b6:a03:210::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7BF2727E7
+	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 02:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758767304; cv=none; b=B437t5AcPiqLNVqQU/NQ6Z0h6tWUO1aRKANRZBvBM/oys/dLrdRhy+cHN7hwyx8cHZGd1EUTo0+qF49dfyMQnTqM53ogMc8kT866H5+h1PiEzT83UOL+bt+475Q/xQXC0FKcpxmYTj8VpjQ8ZLMbYFBh/SUfAcQmQI+VCTmmP1g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758767304; c=relaxed/simple;
+	bh=VeW+/dxWBFokkjVS0wYtTsWpjpgB19ZpOQMGvhrWa2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCntJh53Bxx2geR0I4U+4MQFBdFlqikF6k5iplPj1OhWNskMPVMFDe9CY1BxxLcf2TPHKDl9QCYDUKx9nqhrhnNf6X6pfgiH2eujdZxAZVBBnanxb25dedtZhhSGxIlTE6chGu0IMzqAhwXeV3kYx49e7lmeeM5Y07yr3xrWAs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kMJ9nqtc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58P1B9fv003835
+	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 02:28:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=wXSfj1wi08RKzF1L2ephokkz
+	/QuwdGIgQuSB3kutQM8=; b=kMJ9nqtcoBmAhHEvQshcaEBd68YJo37OKD8KDaQu
+	IjF+2n/fEIA87dyZpcu8b1ho+xbcqXGUXCQVHGvHhxUpQdymjPQoUkg9MDAp+MeZ
+	4RnYUJ98E7cA5NSsXzKBFF08xLTCKqsOhCX5tYhIUV7SUYJIaVL/+28GOai7mAiU
+	9pNRwJYaUjdgKyAHmXcD8J3yfoqnz4d7yVPapdBfbFrX76Ew4w4EYod7IjH3zfeR
+	LOJHic8ZdFBNOSmPETGO2HBHp1JYzY6FxVSCWPhB00jVYjB/ztt2bhZ+4PtGBF5T
+	fjfs97a/RdhC1aoDkWmaz9uvRpJQbQcFDLgXTiwVmiQCVg==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49bajf0ys1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 02:28:21 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4d905ce4749so9397821cf.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Sep 2025 19:28:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758767300; x=1759372100;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wXSfj1wi08RKzF1L2ephokkz/QuwdGIgQuSB3kutQM8=;
+        b=sC1nYRUTfKiXtX2gta+kIYNNInEfhwIKSZISM8eib8Yyv4CxKmasmN4kSNj/BVZGZ9
+         L8EuKB3oS+iTv9ln24GE5Sa1kUtYEZYRWp92BTVwWUfSd2XIkYd1ni9QVWaIyIDYo+MT
+         qbEkwDDwHv94p54IkC3IhQtUjzR+e/cMwD0kLiLaju5FNVzWq9KGZB8sh9iwYKI+jZu4
+         p4EJOt8bjfbutzC3SfejpqhGEMWKwjMDcO1RKfXsmr71C/4i/TBnlnZiOJVwtlWOS0ar
+         tKtZHnFSNM0/mVsZtJzJrVgvzRogcA9dP+Qw6bZIztWXlHXWjAQayuPabtOzohCg656z
+         51sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBZ+lECcdPey6Nad7q/ach/3HW7OpJ3UvQeoAlz44uVvqtJC/yKHLNqIkQ49LVmiIhvFj41K8tACo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvS9HqVmQW4gsP3+oHJj//0kBhQBpiphRVvHgGPwAGVMDv7b89
+	7gQqb5d+5kFSY9y1jpi8PijjSy0lybfHmsZ+D3nJKvML6C/dI4jkFiW8oT2Rw3s/DgZ7DOmyqyR
+	RcYfvBuQZGbznPI1E58CMqGVqcj0um9WMjVCcXSo6IzG36HB9b+0QqyBCqdl3SwU=
+X-Gm-Gg: ASbGnctdiM43AmY9T88UBq2njyh2ko6rLraV2aCKklcpCPb7w3TmYgZE+wXGVB8g1jL
+	0nrR4NCqU3VEnF4qgGB1rblPNhdpxgYOYi7kh68s5sJwLu5UyvOx4Egquy6xCgi1K3oHOu/Wvd+
+	GoywoUAeRgfB/h4uqHdsAGVZzUS2QoRwpULgtYfM2JzHWpPdA66slmTFDBJNaMR1jqEKhQANnHA
+	9KpiJg8VFzcshYfbmDBHXJOhI1cEMNe+HUHsB5c1wR4PbkwmBGTe9HnGYI3yigMn4rPtKRuxKZG
+	kV8ggh7GyaSppi6zYPp97dOWPxw3x5d+aUt7uiDDVdNhLZdK/JP8d0JxgOY9orWzSryWkn7n25b
+	17gh6yHKbrZuPPBXS5OlRsPxb0LQxjEmrh+UFtrQn5FSPVGQYEeEb
+X-Received: by 2002:ac8:5856:0:b0:4b6:2be2:e816 with SMTP id d75a77b69052e-4da4735508amr26619031cf.8.1758767300256;
+        Wed, 24 Sep 2025 19:28:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4UEfkhO1mpjxW8ifjJvdLmt7J0vNk2R3BrhhdTbo1+/m7PrsyR8BHP8zagES/AEoTWgsM8A==
+X-Received: by 2002:ac8:5856:0:b0:4b6:2be2:e816 with SMTP id d75a77b69052e-4da4735508amr26618921cf.8.1758767299822;
+        Wed, 24 Sep 2025 19:28:19 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-583166561c0sm243601e87.81.2025.09.24.19.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Sep 2025 19:28:18 -0700 (PDT)
+Date: Thu, 25 Sep 2025 05:28:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org, aiqun.yu@oss.qualcomm.com,
+        tingwei.zhang@oss.qualcomm.com, trilok.soni@oss.qualcomm.com,
+        yijie.yang@oss.qualcomm.com, Qiang Yu <qiang.yu@oss.qualcomm.com>
+Subject: Re: [PATCH 3/6] phy: qcom-qmp: qserdes-txrx: Add QMP PCIe PHY
+ v8-specific register offsets
+Message-ID: <fw5hf4p2mjybvfo756dhdm6wwlgnkzks4uwgo7k3dy7hyjhzyr@bv4p7msxapcb>
+References: <20250924-knp-pcie-v1-0-5fb59e398b83@oss.qualcomm.com>
+ <20250924-knp-pcie-v1-3-5fb59e398b83@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4116:EE_|SJ0PR12MB6879:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19e35f72-08b8-40b3-e7ff-08ddfbd44d4e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bzV2MERFYmZ6dVJMcFlDdFloK3JxeXk2cDhmUlVGTnErenRyZ2dRV3JTbEoy?=
- =?utf-8?B?eFBEeXZST1JiWkRwd1lVUyt5ZmZsSTVPR2UrQWZVMWxIVmJjWi9vZUwrWnU4?=
- =?utf-8?B?cVg0cjE5WkJJSDFZMWVSTHpqenUyTXVZWFl0NCtkUDJKOVBPY3BWc1d4ZHlt?=
- =?utf-8?B?RWU1NnZxQ3dCekFuNXRtYStvZm5uUEZ2ZTBHdmhyZnIxYW1WeERNalJqK2h0?=
- =?utf-8?B?b1ZuQUJ3NnZlZE40R1IrQjRNTlJtUHluQVR6eUFDRDZocTB0Nm85eFI4S2Mw?=
- =?utf-8?B?R2VEQVpFVk9wSFZ3TFJmUVJ1Vjd5Y0hiZkd6OEp4N3BBRURuTEQvbW9ieFpH?=
- =?utf-8?B?YTBIdGFyNkRheGMzcS9Ydk5GSDBLVmF2bkkzVlNNTDZaYyt5S21pejY4Zk1v?=
- =?utf-8?B?ZVZXZFFXVTZ1SVUwbHVpc2d6dThZRWpTVnF4STRYL1J2RWlHNVJHNG1CY2hh?=
- =?utf-8?B?Zm9IZFp6aUx2SVpTa2hkcVBsVkFTMW9HRVFtSURuUXhWQXFsOW9FUWlZdkY5?=
- =?utf-8?B?NGdEODdEb3NmNnRqWE51RCtZcUpmekxIVGNXdmpzNkNMK0tEVWdmcW52Si9K?=
- =?utf-8?B?dDlBTk4wcjF5YUpYRklMekhtM3NEVVdkcFhCV3VjN01sUWxiT2F3MktscGY0?=
- =?utf-8?B?ZVJCWnNwYUp0akk3cmovb2R2QUZhbVk2MWxKL2hodFp5K1BBdXVsSVl4MGtu?=
- =?utf-8?B?ZlRNQkh0b2tBMUhEdmV1NXl3ZU1PSk5meUo3WFVsY3BEemNaei9TOXFFN0Yx?=
- =?utf-8?B?NHhiT2hsQUVWWUU4dk9uZEIra0RkMlVQODFaL044MVo2ZzBBMEFpMkE4WXJR?=
- =?utf-8?B?YmNrVE9DZ1BWd3plSmZPdXhoMlVaT2srYTlybjlOTCt3MXZWN2ZJTWplTDM0?=
- =?utf-8?B?SXdaY3hYU2NwQlJUSU5YUTIvdmQwTThUdDRSaGJVM294SWpPWjZNY1NyVVRX?=
- =?utf-8?B?ZFFXNGtFRytWZTBTTEZRMGhXcStHQTlMT2cwSTFvZDFaTm80VlFPV1VCOHN2?=
- =?utf-8?B?TXVXWDZ5a1pkWXkzbDFldXVYZ0xkdEtDM3V4ZjU5MVhpQVgzZG1jOWZWbGl3?=
- =?utf-8?B?STVTY2dWT2k3czJSc2hkM0YvUXIremhMekRMai9Bc2hJWmYwdGJJeTFRNHgr?=
- =?utf-8?B?ZHlKZmZnZk9EL2UyRlpsLzJmQmtRa2pveWJZc3dYVExBN1VHb2dzNDhvc21P?=
- =?utf-8?B?bUtLUGl0QWxrOTZtWHF6UUlNdmVxZzcxYTY2UkYwdWY0UGFNeTFvR3ZkV3V0?=
- =?utf-8?B?NUk4WS9yTG1mdG9LeU1YelhWWXVjU25QdmdFSG9OMTMzcmplY0pRcmJQRnMv?=
- =?utf-8?B?a3NpQTRsbVlwUFNzOXI1WGRCdGRzWktvaEE3aFBHWjYrYVRYYk5tNUdXV2FH?=
- =?utf-8?B?ejBLY0ZwVDk0bDJWR3EwZVQrSHFlaGRkZk9pOVpkdGcydHJZYXBLK3AwdkN5?=
- =?utf-8?B?Nk1mU3l5cTkwUkE0SGs0YVhrd3liRm1icmhIdEVIbEVWTEVNWm5qdURPZDhY?=
- =?utf-8?B?UnBTNzg0eWZxMU84YU9DNDNuQ3hlVWIxaHdzc1pseFhBeURkM1BuTEdlMUI1?=
- =?utf-8?B?cDZtTldEOWhydzNDSDIrcUk1NGlwZlQ4a0hDa0pHR3FUajB2TzJjZEdWcEIz?=
- =?utf-8?B?K2ZuWkxlK1RrNUhlK1U0bksvZW1JWUJwd2xqbENlelAwSFV3dCtCcjZRaUk1?=
- =?utf-8?B?TDVkRnRMUWU0K3lLK3BYMVN4YTd4QUg5YzBRSUtNSXUwdTJoOFhqYnZzTUhr?=
- =?utf-8?B?eklKVExmU3FvOENFOUQwQXgxSW9LQTdaZ0V0aER3MC9xQzhHMzZSSnBFbm5V?=
- =?utf-8?B?SFFzTFZHNWxhYVJDd3JmYWNKTzUyU2x4dGVWd25HNlI1dngxMkxpSzZiNmZj?=
- =?utf-8?B?VjdSbm5zNHRlM3hpNmdrVE0wVThSWWxkMFZCTi9Za3VBVXUvdml0WkhjUDVh?=
- =?utf-8?Q?/sSGkaMVECW2gHYGKvyQomGVmqrmnRDu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cnRlNFVrS0V1WjJOQWVBaVpWa0Z1TUV0UElYTWJyTmc0U2FTMTJtK090aGV5?=
- =?utf-8?B?U2ZJWE9FVlZzM1EzeG9MTE5qaGJ1RjdVbHJmcWZIUGFmY2hNQjVNbkJhb0RS?=
- =?utf-8?B?YmNVQUFWUWpWQ1UzRFJjU1BoekJPV3VJcnljK0FuQnhWSjE2VkpsaW9KUzQz?=
- =?utf-8?B?VlRGZFBQaVU5M0oycUYwczZIcW43cUtvaU13Y2t6NjJrRGs0UFhBR1NFcWpi?=
- =?utf-8?B?YTBic2dOYktUbjRadG1IaFBKTmtRL2VmUTZ6NmdQM1p6WkFSMUZPc281cHNw?=
- =?utf-8?B?TjJQb0NFVWozK2ZBZko4LzFoeG4rQ3R5MGZvQkVhSGw4WG52b2N1bng0anl1?=
- =?utf-8?B?T3llek4vdWJKdm85RXdySnlNZlB0SXoxWkVUaS9hZEk4ZVFIK1hkT3pyWGp4?=
- =?utf-8?B?ZGF0UUZkS3I0UXVVSVZYYVZvWGphY0VZM0s2RGlCaUxXWHFJMEhpeFhmY2tp?=
- =?utf-8?B?elpSdUx1RTRtRHl1STZKN0JOWGhwOTFBYmNIeFdLNjlsRDZBemx5QkVLOEdq?=
- =?utf-8?B?eFlCZWFXbVdaZlFaTEZta0s0aFpzVlA5VXlSVis1enZ2b1dmSHV5eko4OFFH?=
- =?utf-8?B?S1RwRmdBTTdXa2hnUmNXQXUvM3FUcC8xUkExSXBMeGE1RnFFeENobmN3MlJo?=
- =?utf-8?B?TmNFd3BrOGc5MldIVDgyZlYyNUU1M09RckFYN1BrZWU0UHU3TTVHcnRtOXU4?=
- =?utf-8?B?S1E2RVd3SnhUMktYMHdEWFB6aFhsNmxaTCsrekpyWHprWkZNSUQ0Rm9kdlVO?=
- =?utf-8?B?R0RQSm9HWGlQZDZCUU85RWZxSC8yNUVzYVA0RVNpZ3kvQnU1SnpJYUk2U0lz?=
- =?utf-8?B?eGlJUFRheUgrODF4bzlQTGg1UlQvZ29lYm4wMmZCRmpVRWplL3I1ckZmbkc2?=
- =?utf-8?B?RzR2WXhUeTQ1QlBaaHI1ck1NMXlWYmtSQTZNMDhCNG95K0oydks0VXpMV0w2?=
- =?utf-8?B?QTFWQ0dYTm1mYzJYR3hhbCsvVW1jUGkybXpOVHBmWTU3bER0ODE2VThRZ1ov?=
- =?utf-8?B?bFBKdzAyTldjSGtaTjJicHpCWXp4bHA0RmluY0ZyT01IZi9kYllDejNlRmtV?=
- =?utf-8?B?VFRoeVV0RmIxbTBieGlBQUVKdjNHWjloZERvN2hwWFNnb1JSNFFtOVQvY21E?=
- =?utf-8?B?dng0YjgxSXpTcVpjeDhKOXAwUVNMMVJ5M1RTa1FDZWo2M3kwT1g2bEhsVWJs?=
- =?utf-8?B?SlJVTGdOb2VQWXFUKy9MSzdtQ3M2SHc3VUVaTDd1cjV4bklpOTdZYzRibndH?=
- =?utf-8?B?SzJmRlluTVQzRGdLSFZ4aFIrNzkveEw0SWxzcS8yWnhjY0dET2NVT0xuTGRs?=
- =?utf-8?B?S3dpMGorNXN0MXdTblJTSzJTZTZEMXNoNzJnOFBtdUQrNDJXY1FDZ3RNa01U?=
- =?utf-8?B?UlQzWDB1aVU4ZHRuTTErOG5Ma1IzenQwOTRoT2tVTG9qZ0VBYWlReS9mcjZp?=
- =?utf-8?B?Rld4TlF5c2FkK2V1dFJpZ3A0RXZBQUNISUFWekl2Y1R4RXV4U1lNVjJOZThF?=
- =?utf-8?B?bzNWdUhsdGFIbWZaZG1yWkR4Y3V4YldMOHViTzB6TUZYNmNUQUk4amxrRWJq?=
- =?utf-8?B?M1BwM0ZLWWhRcDZFeElaYVRwelRidG5QMVIvZkpuSW9DSk9MYXR6MGtLQmY3?=
- =?utf-8?B?dlByb3poeTFHVU1kM0d6bVE5N0NiOW1OL0Nya2FsWGxGbThZbWtncEhuMjlu?=
- =?utf-8?B?Z0ZQOGJSTmRsRDl6M2NRajVJczQyKytCUS9kMWpvREdwTGJodlVDMU9LSW9s?=
- =?utf-8?B?MGNYRUc2WjlaSWRtUjk5RHdEbE5FUDB6ZTJyQklqUk5oSGgwTUloLzJMRW5S?=
- =?utf-8?B?dFNLTDZwRklLTjZGMzVBRWR4OGthUUhoS3lOSXpUaVI4YTltQS9KSnpvYVk5?=
- =?utf-8?B?OXlKQXFvRFhqUmVBejNvN1A5YzdWN0lzL3FqVERjSGQ1NnBHTFhqWFFxU3hv?=
- =?utf-8?B?TWdpSjUvUGxiSmhKa2grLzlKZ1B5eEtUZ0FYMmdTUjcwOGoyc3d5ejY1VGlV?=
- =?utf-8?B?VEMrV3cvUkpLbFRFTkxHb21tRm1VMjBFellnRmpxMjd0aXAzemVsSmJpcERR?=
- =?utf-8?B?dExNQXdmV2lWeEFYbGY5ZUppRk1kUUZrWm44SnlEUk5NSFlpeXJ4bmRTYW11?=
- =?utf-8?Q?lIZibITfMn+buLH7lpXbvJXnl?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19e35f72-08b8-40b3-e7ff-08ddfbd44d4e
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4116.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2025 01:39:00.6274
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oUFtd9lCG1Q55/jTLHuSHT7g5/6xNshNY1X2Jaqez9qrv7QG95lZ8LuyM4Vexr14nx2ujMElla2M35ijeIs3aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6879
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250924-knp-pcie-v1-3-5fb59e398b83@oss.qualcomm.com>
+X-Proofpoint-GUID: GmP50EwLa9Ip7obYKEzeNCiJ9hwfWQ2X
+X-Authority-Analysis: v=2.4 cv=fY2ty1QF c=1 sm=1 tr=0 ts=68d4a8c5 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=KS3u3L2nYUaZ2k-SVKIA:9 a=CjuIK1q_8ugA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIyMDE2OCBTYWx0ZWRfX36Jje0Qi+G1j
+ 7HJN3Xun3hThJjCCUS5+ICJpNvMFvJ4pPLQCX2vfGZRxtwQUq8R02B2eBrLJrsUpPbt9EgjaZny
+ B6dRNP5P821WkE6WSfwtWkPEsWitnlXME9EG1H6Q+AgN1g80pLbo4djKka9PUwsygxZJo7N3hGk
+ DqWwcvC1NqpSo3vgDFcZtguveH6LLk4WjrL7tLA2DpoxonXkWIJE7IBQb3I53s495V11N9jOwyf
+ P983D2rPVBxUVBFIzuBBSIjElAPfr42wmB7G6e1tfMmhiIj2uUizjVtjTQZsnRxnPgl3kpeGIut
+ g7mAZWRMmWaIy0XmtbiogL9FsTmozs1uuubIAVPjfOuFdgQWC7znBSVCZhpp6HMd+E2teS2kNZj
+ Ht6XCGAC
+X-Proofpoint-ORIG-GUID: GmP50EwLa9Ip7obYKEzeNCiJ9hwfWQ2X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-24_07,2025-09-24_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509220168
 
-On 9/24/25 6:33 PM, John Hubbard wrote:
-> The Display implementation for Vendor was forwarding directly to Debug
-> printing, resulting in raw hex values instead of PCI Vendor strings.
+On Wed, Sep 24, 2025 at 04:33:19PM -0700, Jingyi Wang wrote:
+> From: Qiang Yu <qiang.yu@oss.qualcomm.com>
 > 
-> Improve things by doing a stringify!() call for each PCI Vendor item.
-> This now prints symbolic names such as "NVIDIA", instead of
-> "Vendor(0x10de)". It still falls back to Debug formatting for unknown
-> class values.
+> Kaanapali SoC uses QMP PHY with version v8 for PCIe Gen3 x2, but its
+> qserdes-txrx register offsets differ from the existing v8 offsets. To
+> accommodate these differences, add the qserdes-txrx specific offsets in
+> a dedicated header file.
+
+With this approach it's not obvious, which register names are shared
+with the existing header and which fields are unique. Please provide a
+full set of defines in this header.
+
 > 
-> Suggested-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> Signed-off-by: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
 > ---
->  rust/kernel/pci/id.rs | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+>  .../qualcomm/phy-qcom-qmp-qserdes-txrx-pcie-v8.h   | 71 ++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
 > 
-> diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-> index 6e081de30faf..63db4d5f5617 100644
-> --- a/rust/kernel/pci/id.rs
-> +++ b/rust/kernel/pci/id.rs
-> @@ -135,6 +135,18 @@ impl Vendor {
->                  pub const $variant: Self = Self($binding as u16);
->              )+
->          }
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-pcie-v8.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-pcie-v8.h
+> new file mode 100644
+> index 000000000000..181846e08c0f
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-pcie-v8.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries. All rights reserved.
+> + */
 > +
-> +        impl fmt::Display for Vendor {
-> +            #[inline]
+> +#ifndef QCOM_PHY_QMP_QSERDES_TXRX_PCIE_V8_H_
+> +#define QCOM_PHY_QMP_QSERDES_TXRX_PCIE_V8_H_
+> +
+> +#define QSERDES_V8_PCIE_TX_RES_CODE_LANE_OFFSET_TX		0x030
+> +#define QSERDES_V8_PCIE_TX_RES_CODE_LANE_OFFSET_RX		0x034
+> +#define QSERDES_V8_PCIE_TX_LANE_MODE_1		0x07c
+> +#define QSERDES_V8_PCIE_TX_LANE_MODE_2		0x080
+> +#define QSERDES_V8_PCIE_TX_LANE_MODE_3		0x084
+> +#define QSERDES_V8_PCIE_TX_TRAN_DRVR_EMP_EN		0x0b4
+> +#define QSERDES_V8_PCIE_TX_TX_BAND0		0x0e0
+> +#define QSERDES_V8_PCIE_TX_TX_BAND1		0x0e4
+> +#define QSERDES_V8_PCIE_TX_SEL_10B_8B		0x0f4
+> +#define QSERDES_V8_PCIE_TX_SEL_20B_10B		0x0f8
+> +#define QSERDES_V8_PCIE_TX_PARRATE_REC_DETECT_IDLE_EN		0x058
+> +#define QSERDES_V8_PCIE_TX_TX_ADAPT_POST_THRESH1		0x118
+> +#define QSERDES_V8_PCIE_TX_TX_ADAPT_POST_THRESH2		0x11c
+> +#define QSERDES_V8_PCIE_TX_PHPRE_CTRL		0x128
+> +#define QSERDES_V8_PCIE_TX_EQ_RCF_CTRL_RATE3		0x148
+> +#define QSERDES_V8_PCIE_TX_EQ_RCF_CTRL_RATE4		0x14c
+> +
+> +#define QSERDES_V8_PCIE_RX_UCDR_FO_GAIN_RATE4		0x0dc
+> +#define QSERDES_V8_PCIE_RX_UCDR_SO_GAIN_RATE3		0x0ec
+> +#define QSERDES_V8_PCIE_RX_UCDR_SO_GAIN_RATE4		0x0f0
+> +#define QSERDES_V8_PCIE_RX_UCDR_PI_CONTROLS		0x0f4
+> +#define QSERDES_V8_PCIE_RX_VGA_CAL_CNTRL1		0x170
+> +#define QSERDES_V8_PCIE_RX_VGA_CAL_MAN_VAL		0x178
+> +#define QSERDES_V8_PCIE_RX_RX_EQU_ADAPTOR_CNTRL4		0x1b4
+> +#define QSERDES_V8_PCIE_RX_SIGDET_ENABLES			0x1d8
+> +#define QSERDES_V8_PCIE_RX_SIGDET_LVL			0x1e0
+> +#define QSERDES_V8_PCIE_RX_RXCLK_DIV2_CTRL			0x0b8
+> +#define QSERDES_V8_PCIE_RX_RX_BAND_CTRL0			0x0bc
+> +#define QSERDES_V8_PCIE_RX_RX_TERM_BW_CTRL0			0x0c4
+> +#define QSERDES_V8_PCIE_RX_RX_TERM_BW_CTRL1			0x0c8
+> +#define QSERDES_V8_PCIE_RX_SVS_MODE_CTRL			0x0b4
+> +#define QSERDES_V8_PCIE_RX_UCDR_PI_CTRL1			0x058
+> +#define QSERDES_V8_PCIE_RX_UCDR_PI_CTRL2			0x05c
+> +#define QSERDES_V8_PCIE_RX_UCDR_SB2_THRESH2_RATE3			0x084
+> +#define QSERDES_V8_PCIE_RX_UCDR_SB2_GAIN1_RATE3			0x098
+> +#define QSERDES_V8_PCIE_RX_UCDR_SB2_GAIN2_RATE3			0x0ac
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE_0_1_B0			0x218
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE_0_1_B1			0x21c
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE_0_1_B2			0x220
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE_0_1_B4			0x228
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE_0_1_B7			0x234
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE3_B0			0x260
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE3_B1			0x264
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE3_B2			0x268
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE3_B3			0x26c
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE3_B4			0x270
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B0			0x284
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B1			0x288
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B2			0x28c
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B3			0x290
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B4			0x294
+> +#define QSERDES_V8_PCIE_RX_RX_MODE_RATE4_SA_B5			0x298
+> +#define QSERDES_V8_PCIE_RX_Q_PI_INTRINSIC_BIAS_RATE32			0x31c
+> +#define QSERDES_V8_PCIE_RX_Q_PI_INTRINSIC_BIAS_RATE4			0x320
+> +#define QSERDES_V8_PCIE_RX_EOM_MAX_ERR_LIMIT_LSB			0x11c
+> +#define QSERDES_V8_PCIE_RX_EOM_MAX_ERR_LIMIT_MSB			0x120
+> +#define QSERDES_V8_PCIE_RX_AUXDATA_BIN_RATE23			0x108
+> +#define QSERDES_V8_PCIE_RX_AUXDATA_BIN_RATE4			0x10c
+> +#define QSERDES_V8_PCIE_RX_VTHRESH_CAL_MAN_VAL_RATE3			0x198
+> +#define QSERDES_V8_PCIE_RX_VTHRESH_CAL_MAN_VAL_RATE4			0x19c
+> +#define QSERDES_V8_PCIE_RX_GM_CAL			0x1a0
+> +
+> +#endif
+> 
+> -- 
+> 2.25.1
+> 
 
-That #[inline] snuck in somehow (it's not in Class), but it should
-not be there, because this expands to many lines of implementation.
-
-If there is a v2 I'll remove it, otherwise maybe we can just ask
-the maintainer to snip out that line.
-
-thanks,
-John Hubbard
-
-> +            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-> +                match self {
-> +                    $(
-> +                        &Self::$variant => write!(f, stringify!($variant)),
-> +                    )+
-> +                    _ => <Self as fmt::Debug>::fmt(self, f),
-> +                }
-> +            }
-> +        }
->      };
->  }
->  
-> @@ -160,13 +172,6 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
->      }
->  }
->  
-> -impl fmt::Display for Vendor {
-> -    #[inline]
-> -    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-> -        <Self as fmt::Debug>::fmt(self, f)
-> -    }
-> -}
-> -
->  define_all_pci_classes! {
->      NOT_DEFINED                = bindings::PCI_CLASS_NOT_DEFINED,                // 0x000000
->      NOT_DEFINED_VGA            = bindings::PCI_CLASS_NOT_DEFINED_VGA,            // 0x000100
-
-
+-- 
+With best wishes
+Dmitry
 
