@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-36932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-36933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE09DB9DD82
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 09:25:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57068B9DE86
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 09:48:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 111157A6AB3
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 07:23:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 097724281AE
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 07:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044242BB13;
-	Thu, 25 Sep 2025 07:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AD806FC5;
+	Thu, 25 Sep 2025 07:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lEZCB2kg"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Uqt15nMA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712311917CD;
-	Thu, 25 Sep 2025 07:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7820C1A4F12;
+	Thu, 25 Sep 2025 07:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758785121; cv=none; b=HV80UdkfMH4wqu0Fmokp4by2v2XbE1tz8/OSY0HzkyEN0CQI/0ACulHdNuYfoBcM7EXeOh/wOS8EkT3ols07P6vlA3lvH7lr1wV4g5NMSwkr8HNR633TSs8i3NB2UzEUZdVzrQm1pMO9+tTMnwXfPQAgLe8FSD7+/29jX+DOoVo=
+	t=1758786499; cv=none; b=IjEiY8LmiWrMJQ9zC26F5fiI1XlHwpKIUTIgPCxVWs8aNQ3mfym0dgcgz/W8k9WvC39GCk0HyUuYe0UEFVQ9Dfdhp6/mjok7ruyriIRhFQgovx0610OiaLyKD30Sn5Wko3lMLa0kq3oxQDgXwvVvyOobWWMlBMBKGoIV26SiU6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758785121; c=relaxed/simple;
-	bh=nxWFw1jl1j40mAPraFTeSf1jXNOafkVXS05FdGMnnDQ=;
+	s=arc-20240116; t=1758786499; c=relaxed/simple;
+	bh=96zpyVLXb0/xXQ3jhEnIZnbG0HfQSRlcYlVpln0QGPE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HM4+eY0uMY6L+4vdDF6SdYhBJMj+ttQAq2ISt02dtrrWYwxvAOqcgUtBixmKgXonOo2rLGz9Rcnk3g5nu8XXw2IeUWm5ZS51hNw8fdbxLruyP7vvpQZBStgafi/9onKhHbdAcjQN/kdknfVcBNmYQOywKSbZx6DHnP8ghPG0Voo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lEZCB2kg; arc=none smtp.client-ip=148.163.156.1
+	 Content-Type:MIME-Version; b=BH5rxXVnn6U9yFev8t/p7ekw9ldE6IVNt0afBdKwVZfyw6d3zJnj2MnrOioy+T0mIX40+pAOOSWOfMO4qmpMj5ohEQ7zbZKag4avznqUlDf5nin2kyylBFgXHg3jvJyIFRhSNwS0TTfss7Kv//6N6Sat28kDYevDsID/4yku8T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Uqt15nMA; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58OICfJ6017068;
-	Thu, 25 Sep 2025 07:25:17 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58OL71nG003982;
+	Thu, 25 Sep 2025 07:48:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=oelXLP
-	9S2Lvd2qZxyPFyJALvYp5VEJj9SFCRV8uEpdg=; b=lEZCB2kgudyDSUXje2/j8M
-	VEgZwFDIhfovqKxeMYNkpfAAwxRNoCiuiO7bpmHSDvqSxi8Phj4M7qY7S9EHRS35
-	YG/NdyyqD5l814g9ajybp6ZS+sfDRlAXxBMrG1nCWh9e0iF2HXySFNYTbVoScyJH
-	Ad0srs3UHLVpQF1RJ+Th03BHfSgiI6Xy8jxHKnWGrAgnkykBL3Fj2pyMPCNV2ffR
-	ZQRn1aOrQiE5rFd9PZVz81Y2rdI+UUdLlGBjXIzRjAbV3p42ph6xBCeWsx1F8J3J
-	NiRn4Fq51cIkw9fs5eSmlGT6WggP/SOIphb3Uhk8TqbcAjRAw/NuMp8aZcUx+fCQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=evErLQ
+	dsuI+irJgrBXX0L6SyF4tqxBvXiIrNeagjD/Q=; b=Uqt15nMADd4LtT2h9nKLQK
+	qsogtZGjD3JyX209jBAZu9isHbwG1/v5uHyV69OhWcidvp7txAi0Ev9TdmevOoFJ
+	AwkliDrZPs2lXQPK19JGwBSu61Sa72VeFQszrBnyaMcm8dhwZrBsUfB3W0//meOc
+	Tu2forYY/GAOwlshvmRBgv2DgeIsDO4Hw6cXoJn+mCgMMfX9A8TU6nkAYTNaw1fg
+	/HiDHobT89XXqDk5lMCd5xpAcrlUFH6uhpDP6LPzwRzUpoNZ1n9SAhXlUw4rwZGP
+	uWbm6fJyqVR9UhQ1shc5b69lW06qDaXGH0ClNRY4YTMj47hGKCMI/qHP6+G7kivA
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ky6c7t5-1
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499kwyueea-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Sep 2025 07:25:16 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58P74vAl030345;
-	Thu, 25 Sep 2025 07:25:15 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 49a9a1ccc6-1
+	Thu, 25 Sep 2025 07:48:12 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58P6SQVH020211;
+	Thu, 25 Sep 2025 07:48:12 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a83kcm4e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Sep 2025 07:25:15 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58P7P3dh27329242
+	Thu, 25 Sep 2025 07:48:12 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58P7mAFT31064530
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Sep 2025 07:25:03 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 18F8958061;
-	Thu, 25 Sep 2025 07:25:14 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5772358043;
-	Thu, 25 Sep 2025 07:25:11 +0000 (GMT)
+	Thu, 25 Sep 2025 07:48:10 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9C87F58056;
+	Thu, 25 Sep 2025 07:48:10 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E20CE5804E;
+	Thu, 25 Sep 2025 07:48:07 +0000 (GMT)
 Received: from [9.111.71.247] (unknown [9.111.71.247])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Sep 2025 07:25:11 +0000 (GMT)
-Message-ID: <ac80630fda0c85ee1194ab08974aaf5f93e09cf9.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] PCI: Add lockdep assertion in
- pci_stop_and_remove_bus_device()
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Sep 2025 07:48:07 +0000 (GMT)
+Message-ID: <9fb43fc399ac5917605b7bc721c4b0affb8ca255.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/2] PCI/IOV: Add missing PCI rescan-remove locking when
+ enabling/disabling SR-IOV
 From: Niklas Schnelle <schnelle@linux.ibm.com>
 To: Farhan Ali <alifm@linux.ibm.com>, Bjorn Helgaas <helgaas@kernel.org>,
         Lukas Wunner <lukas@wunner.de>
@@ -85,11 +85,11 @@ Cc: Keith Busch <kbusch@kernel.org>, Gerd Bayer <gbayer@linux.ibm.com>,
  <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date: Thu, 25 Sep 2025 09:25:10 +0200
-In-Reply-To: <48360cde-81d9-4161-8c32-0029e193c685@linux.ibm.com>
+Date: Thu, 25 Sep 2025 09:48:07 +0200
+In-Reply-To: <d346c265-6b0e-42ce-8275-7969c8e549da@linux.ibm.com>
 References: <20250826-pci_fix_sriov_disable-v1-0-2d0bc938f2a3@linux.ibm.com>
-	 <20250826-pci_fix_sriov_disable-v1-2-2d0bc938f2a3@linux.ibm.com>
-	 <48360cde-81d9-4161-8c32-0029e193c685@linux.ibm.com>
+	 <20250826-pci_fix_sriov_disable-v1-1-2d0bc938f2a3@linux.ibm.com>
+	 <d346c265-6b0e-42ce-8275-7969c8e549da@linux.ibm.com>
 Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
  keydata=mQINBGHm3M8BEAC+MIQkfoPIAKdjjk84OSQ8erd2OICj98+GdhMQpIjHXn/RJdCZLa58k
  /ay5x0xIHkWzx1JJOm4Lki7WEzRbYDexQEJP0xUia0U+4Yg7PJL4Dg/W4Ho28dRBROoJjgJSLSHwc
@@ -155,73 +155,124 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6J7bma58VEgekfdFMDTKOyDUaeYB7oZQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAyMCBTYWx0ZWRfX4ln8H2+mjOuR
- ou6YFj+XANFG6EoILNDVuIfl05Nr2waFFUzUugWr6t+tE/OkGSe0Nf8/UD3onwGnJqph/ZxSGCH
- bA0y54G7Jb6+PTV82rn25ASkMoiV2rBYQanwaCwslaIbBcsjR8N3gGCqEm3cHR4CJ5BJwLgNPqC
- zSDw29LfSNWGLR/fv9wf+3iUch8WmA9o3EV9kDArwhCE50/9a8h5Ddu+Kx1sHc21Vr4vGrXinWu
- Ne0Gmtf4Gd9ARWYuQWURSjT6O4I5OD6BvUZvpoE/ndj4iSSsizC3zf0+ugOyI8CrJrZw0nRAApC
- jTzJXBseScDG515prV90mfhgrZNYcBVTxIOaompi0T/8erXmmHLSZSEaz0sEhIJB4vqV05PSOlo
- ogErLF06
-X-Authority-Analysis: v=2.4 cv=XYGJzJ55 c=1 sm=1 tr=0 ts=68d4ee5c cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=SWXGiXNOFDov8wDKaFwA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 6J7bma58VEgekfdFMDTKOyDUaeYB7oZQ
+X-Authority-Analysis: v=2.4 cv=J5Cq7BnS c=1 sm=1 tr=0 ts=68d4f3bc cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=tmWI2QDjmt9rcYb-4t0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: o89TCv57fsfiIcqbj50abCdBm-KM_9T3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAxNSBTYWx0ZWRfXzjxFyCHKbiNV
+ fMCYfc4BsunVq3fHcFocs82BrutgGkkPd3r61vFpF0TCOU8Kr7LBdbatZFF7OVXJXyhDHJSZzgQ
+ K2riwqDkpvt+CvVniwXs4xk1arSGy8aZk6VqsLg+4wQmf/2AAxeSNxZntWU7rV0mOk5WAi4+fiu
+ Uwqs+WyiJjd+HZ13YRizl1IY3Geog3Iue8IEDRzMGbh7THU80Tfd7sBb6NrTptgBbzZ4FyBn2oI
+ UEJmU3L/G8ylgTCoLZ1WFiXUaG9vkQLm8YMrkjTkn76kx2niXE6n9F8q9COyEgDfKbDUHgM6i23
+ MxqVMuqwMtNLe55ETr9PYfYHbBNUd8MulskWorfhqOF69kRkIAM56k5bAu3rG9K+yluroHeW64i
+ PLpeC8W6
+X-Proofpoint-ORIG-GUID: o89TCv57fsfiIcqbj50abCdBm-KM_9T3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-09-24_07,2025-09-24_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 malwarescore=0
- suspectscore=0 impostorscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200020
+ priorityscore=1501 impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 clxscore=1015 adultscore=0 suspectscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2509200015
 
-On Wed, 2025-09-24 at 11:06 -0700, Farhan Ali wrote:
+On Wed, 2025-09-24 at 10:57 -0700, Farhan Ali wrote:
 > On 8/26/2025 1:52 AM, Niklas Schnelle wrote:
-> > Removing a PCI devices requires holding pci_rescan_remove_lock. Prompte=
-d
-> > by this being missed in sriov_disable() and going unnoticed since its
-> > inception add a lockdep assert so this doesn't get missed again in the
-> > future.
+> > Before disabling SR-IOV via config space accesses to the parent PF,
+> > sriov_disable() first removes the PCI devices representing the VFs.
 > >=20
+> > Since commit 9d16947b7583 ("PCI: Add global pci_lock_rescan_remove()")
+> > such removal operations are serialized against concurrent remove and
+> > rescan using the pci_rescan_remove_lock. No such locking was ever added
+> > in sriov_disable() however. In particular when commit 18f9e9d150fc
+> > ("PCI/IOV: Factor out sriov_add_vfs()") factored out the PCI device
+> > removal into sriov_del_vfs() there was still no locking around the
+> > pci_iov_remove_virtfn() calls.
+> >=20
+> > On s390 the lack of serialization in sriov_disable() may cause double
+> > remove and list corruption with the below (amended) trace being observe=
+d:
+> >=20
+> >   PSW:  0704c00180000000 0000000c914e4b38 (klist_put+56)
+> >   GPRS: 000003800313fb48 0000000000000000 0000000100000001 000000000000=
+0001
+> >         00000000f9b520a8 0000000000000000 0000000000002fbd 00000000f4cc=
+9480
+> >         0000000000000001 0000000000000000 0000000000000000 000000018069=
+2828
+> >         00000000818e8000 000003800313fe2c 000003800313fb20 000003800313=
+fad8
+> >   #0 [3800313fb20] device_del at c9158ad5c
+> >   #1 [3800313fb88] pci_remove_bus_device at c915105ba
+> >   #2 [3800313fbd0] pci_iov_remove_virtfn at c9152f198
+> >   #3 [3800313fc28] zpci_iov_remove_virtfn at c90fb67c0
+> >   #4 [3800313fc60] zpci_bus_remove_device at c90fb6104
+> >   #5 [3800313fca0] __zpci_event_availability at c90fb3dca
+> >   #6 [3800313fd08] chsc_process_sei_nt0 at c918fe4a2
+> >   #7 [3800313fd60] crw_collect_info at c91905822
+> >   #8 [3800313fe10] kthread at c90feb390
+> >   #9 [3800313fe68] __ret_from_fork at c90f6aa64
+> >   #10 [3800313fe98] ret_from_fork at c9194f3f2.
+> >=20
+> > This is because in addition to sriov_disable() removing the VFs, the
+> > platform also generates hot-unplug events for the VFs. This being
+> > the reverse operation to the hotplug events generated by sriov_enable()
+> > and handled via pdev->no_vf_scan. And while the event processing takes
+> > pci_rescan_remove_lock and checks whether the struct pci_dev still
+> > exists, the lack of synchronization makes this checking racy.
+> >=20
+> > Other races may also be possible of course though given that this lack
+> > of locking persisted so long obversable races seem very rare. Even on
+> > s390 the list corruption was only observed with certain devices since
+> > the platform events are only triggered by the config accesses that come
+> > after the removal, so as long as the removal finnished synchronously
+> > they would not race. Either way the locking is missing so fix this by
+> > adding it to the sriov_del_vfs() helper.
+> >=20
+> > Just lik PCI rescan-remove locking is also missing in sriov_add_vfs()
+> > including for the error case where pci_stop_ad_remove_bus_device() is
+> > called without the PCI rescan-remove lock being held. Even in the non
+> > error case adding new PCI devices and busses should be serialized via
+> > the PCI rescan-remove lock. Add the necessary locking.
+> >=20
+> > Cc: stable@vger.kernel.org
+> > Fixes: 18f9e9d150fc ("PCI/IOV: Factor out sriov_add_vfs()")
 > > Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
 > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > > ---
-> >   drivers/pci/pci.h    | 2 ++
-> >   drivers/pci/probe.c  | 2 +-
-> >   drivers/pci/remove.c | 1 +
-> >   3 files changed, 4 insertions(+), 1 deletion(-)
+> >   drivers/pci/iov.c | 5 +++++
+> >   1 file changed, 5 insertions(+)
 > >=20
---- snip ---
-> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> > index 445afdfa6498edc88f1ef89df279af1419025495..0b9a609392cecba36a818bc=
-496a0af64061c259a 100644
-> > --- a/drivers/pci/remove.c
-> > +++ b/drivers/pci/remove.c
-> > @@ -138,6 +138,7 @@ static void pci_remove_bus_device(struct pci_dev *d=
-ev)
-> >    */
-> >   void pci_stop_and_remove_bus_device(struct pci_dev *dev)
-> >   {
-> > +	lockdep_assert_held(&pci_rescan_remove_lock);
-> >   	pci_stop_bus_device(dev);
-> >   	pci_remove_bus_device(dev);
-> >   }
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index ac4375954c9479b5f4a0e666b5215094fdaeefc2..77dee43b785838d215b58db=
+2d22088e9346e0583 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -629,15 +629,18 @@ static int sriov_add_vfs(struct pci_dev *dev, u16=
+ num_vfs)
+> >   	if (dev->no_vf_scan)
+> >   		return 0;
+> >  =20
+> > +	pci_lock_rescan_remove();
+> >   	for (i =3D 0; i < num_vfs; i++) {
+> >   		rc =3D pci_iov_add_virtfn(dev, i);
 >=20
-> We also have the function pci_stop_and_remove_bus_device_locked() as=20
-> Gerd mentioned, so is pci_stop_and_remove_bus_device meant to be called=
+> Should we move the lock/unlock to pci_iov_add_virtfn? As that's where=20
+> the device is added to the bus? Similarly move the locking/unlocking to=
 =20
-> without the rescan_remove_lock held? This is a little confusing as we=20
-> shouldn't be adding/removing from the bus without the lock AFAIU, but=20
-> maybe I am missing something?
+> pci_iov_remove_virtfn?
 >=20
 > Thanks
 > Farhan
+>=20
+>=20
 
-As far as I understand one would use pci_stop_and_remove_bus_device()
-if one is already holding the pci_rescan_remove_lock and
-pci_stop_and_remove_bus_device_locked() if one only needs to take it
-for that call. I think this is kind of easy to get confused about so
-this lockdep assertion is even more useful.
+I contemplated this as well. Most of the existing uses of
+pci_lock/unlock_rescan_remove() are relatively coarse grained covering
+e.g. the scanning of a whole bus. So I tried to keep this in line with
+that such that all the VFs are added in a single critical section.
+
+Thanks,
+Niklas
 
