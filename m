@@ -1,257 +1,182 @@
-Return-Path: <linux-pci+bounces-37000-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37001-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E38B1BA0955
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:24:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70505BA09AF
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 822EC4E3ABA
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:24:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83CE61C21AAD
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:29:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC11230B527;
-	Thu, 25 Sep 2025 16:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB103054F6;
+	Thu, 25 Sep 2025 16:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwcIO6K4"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CbGMM5Bu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C8F305E20
-	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 16:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539AF21E091;
+	Thu, 25 Sep 2025 16:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758817436; cv=none; b=E2RG7p3RQmHSRELXuPeSUYLTzz5tkGE2RebbbFGSg1Cn/+dLaZ5JBgtGM/ZyoSl0zNmydzViO7pv2dKAkYvAFHYJH+yGnnHv+3JSLeVfTncOjsVS47Si9MAiMk2RA7VpvoZcuLkaVcju9nU8752X/FNgBRVjPxI2n/Yg0d+61Nk=
+	t=1758817767; cv=none; b=qKXJNMjJVLwkWXH/LgMa9RN5EE1OtJbytvgyMUYGE0TtVDJoi3OfSq0zOxM1nqD6v0PCYBypvU9JTCwPWryQ4A3kcydDFpa8fn9Bd+WikTLJh0gmCVKn42f0b3vSn5zZFoR3dY9au0QqVdc/32Hnr7TtQ/Couj+4ELOCEZWvx2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758817436; c=relaxed/simple;
-	bh=gQpZKL9PYN00DxqOhZ2zLTrFv9ZJsPxReul3Hvo1omc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ne0XSThVPRPWMoQyWPFjGjXdeKNEs9AXB5HTLgBMZLVY2wu+z83rMLMLVQXEU3se7J5vdfv9Vlo06q30csLvpheJumue+N0p5AE60MlzQvDkz+4Q8hlsb2ZvLYMVo+zlZiSCbFATLP7otEjXfqduQM2NFKxjBIIcoM54g8eFLpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwcIO6K4; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-468973c184bso7299915e9.3
-        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 09:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758817432; x=1759422232; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aly97HE4DbfA98BoW1r98QzzxmSOsTSspnaWMcDHFeI=;
-        b=RwcIO6K4UkCEIzl3A+n2uk8TzfU+nJlneRBdYxKx3rk+WkD10IRJG/jY09S0gZhkWY
-         5QveVH3Akfc8KD2o/jnCVYOo/SxQR8A8MrhTmRXCRn2ouMB5145n/JtTrbTXr9CFXM5r
-         OMBnteRFgfZIOy+YHL7YUjxVAKEVypqZncVErVp2uSHBeND+ZiwO29xi/4uWtzY/XDdM
-         XfTRv8W06+/uAr9rX+TMvLf/3epqGAHURMexrLpo8g6yxAiRX+7AP7hFqMoAIlrHTLqs
-         ljkiLeqrGGQZyPlw/WGOH/u27rInhEhB56mL8yD/IJyFJm1M0PPKVqgB3ga5BsWO2A9d
-         6Yhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758817432; x=1759422232;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aly97HE4DbfA98BoW1r98QzzxmSOsTSspnaWMcDHFeI=;
-        b=jI7K6Q0CojjdXcM6/vLDjr+3hhCfx1OhRIAN56qnF5RXC2y5LPGzKPQ+q9xJqlwK08
-         aDDWT3/9g426W46ARbowm8cT9ktOdiDyS4DctOEqB/7PbPWnxRwcCcxWER4/h2rkOrKw
-         qpc2BHjpUquu3gsrSBwovQEuLXZBc7IGhpkY29w1EM0V02QZ4kzY/xtziwIhi362bMhS
-         qNnEF5Xp3cALQ6Bsy9/0bbKCdG8HNvsviCGvlOahHU5qxSVT5KzeMmXOOSI2hCNZ5Gx1
-         0SObhRY+nE1GaAXIUVGwoJcdo5jkUClETV47/Zh7I7IVH+O+ePFG7r5BShspXEYbTmOh
-         Ea2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ4tK7UcnMlDqdmwR/wRDQnbJcy+IilkP4Obu/iPepfhQZiNqaRbUik4Z2gEXusMWcp+2YAHiXB3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3LA7fzXH+waRtpLl9nOTGSJsxI3GCSs7NFLFfhqUQn+BjWI3k
-	3x12lwLI2RCRif/3SM+603lBKHbOYvDDj0vt17hn8C7gzUS/rzLmQak5
-X-Gm-Gg: ASbGncvArONvaroLuJVpXuiToOKcVW1rX6WOfHsIkdG/MdtP5miDkAoJPAoxS3Yf6mt
-	bK23mgMaDrlI037og0CRBuruX0dUryPvsUs2jdHO3EA6OVlnmoyPJm89qtLO9BGAUqnQSjdx+sM
-	eE6+cZyO9tpKPIfeW/UDzFevgSgN3LMXS3tEc13QQ1+ano915IP2TlLkMz/hmgMS9mXUPQFjkic
-	BDU2HBHYHqyaqYH19kCDsQGV+2iH+aFwHv0rEoFP5EyoxWE3BHYCqZsMb/gQOIEKZoHkF9ye0SB
-	DzUg1aTnTOWtwFLgyvL/YA+XCJQ/E8kz2KKy+ckhF+Y/StCl93LJfd0V4Ip94f5T6cKh+P3IN0c
-	puxN4Ics/0obpoSHBgOFv8kHzB5+DCqEn0BkW8ARJUZcfdvXZYLAHuHlaWDRpnrq7uSOpj/4=
-X-Google-Smtp-Source: AGHT+IFhkM3OKIYZ93q3zFo4tpZKrSRaN1CT2/veh5W7Rq8BDbOwn+wtTdHslVzv0uNMo1/McPbcEg==
-X-Received: by 2002:a05:600c:489a:b0:459:d8c2:80b2 with SMTP id 5b1f17b1804b1-46e329af060mr29111225e9.7.1758817432312;
-        Thu, 25 Sep 2025 09:23:52 -0700 (PDT)
-Received: from Ansuel-XPS24 (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-40fb985e080sm3534819f8f.24.2025.09.25.09.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 09:23:51 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com
-Subject: [PATCH v3 4/4] PCI: mediatek: add support for Airoha AN7583 SoC
-Date: Thu, 25 Sep 2025 18:23:18 +0200
-Message-ID: <20250925162332.9794-5-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250925162332.9794-1-ansuelsmth@gmail.com>
-References: <20250925162332.9794-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1758817767; c=relaxed/simple;
+	bh=JUkaMlRnrLdVlEQcDzazaCH86J3W+GxapAK8XNF3xAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CSpLtUUy98EDBawhrO4j6Y00qqmrYwnEms77fwOKeHnqeyV2GdfT9ktgqjB8m1DCBN/AIjrrxWSGIynUxtErnys2X2TPqIP/SXIFOIdoi0KLHNFl1rbPqCJUDuNgLnavUc5WvMWpEY3ev/1Up/PNFQ2SBbWOCMl0Dx4Gd+jySSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CbGMM5Bu; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58PDMIMu022074;
+	Thu, 25 Sep 2025 16:29:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=F/EeUH
+	OmIBEUQQ325bs5/e9x8/Cev2WLTj4miF9tEyg=; b=CbGMM5BumYDwhqOxP+e6ZV
+	or11EmtNvoQqrqhaJEK/8NKXm6KeRi2F4L8Mu7GmA+MD9zVaOQtsE8j8x5Oz6pjX
+	i1x2trldIbDOuOhOUnB4ihXdMVV2+u/kEwT2BzXwY+XyN+dReYHcqbEF5dRkttVn
+	D1jyIWXkInIptYemtcLhlcdppYIDrioFjighpY2/4wMFn6YFOs59k8F65t1T0ux1
+	8N1iv80a7NRob9+102V3RKsCioK72Rs9GDYAzvhpxL+lCWHDEsPCB7MYasfiCMoz
+	Ye4MKjL5pcewqbqTNOKqU+zuHkck6l2fga/pDKwXwOqMAwQYkMt3bNsTYrdYjioQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ksc72tv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Sep 2025 16:29:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58PG7Fiw008294;
+	Thu, 25 Sep 2025 16:29:18 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a6yy71n1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Sep 2025 16:29:18 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58PGTHeF33686064
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Sep 2025 16:29:17 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 634B658059;
+	Thu, 25 Sep 2025 16:29:17 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF99758055;
+	Thu, 25 Sep 2025 16:29:16 +0000 (GMT)
+Received: from [9.61.240.76] (unknown [9.61.240.76])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Sep 2025 16:29:16 +0000 (GMT)
+Message-ID: <e8def2b9-bb37-4595-9e2e-0d1947e8f197@linux.ibm.com>
+Date: Thu, 25 Sep 2025 09:29:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/10] s390/pci: Store PCI error information for
+ passthrough devices
+To: Niklas Schnelle <schnelle@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc: alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
+        mjrosato@linux.ibm.com
+References: <20250924171628.826-1-alifm@linux.ibm.com>
+ <20250924171628.826-8-alifm@linux.ibm.com>
+ <d22cb26b864362454ace07ed5fcb9758c40ee32e.camel@linux.ibm.com>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <d22cb26b864362454ace07ed5fcb9758c40ee32e.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ri0q2tuMKLdxT4k6o-H2gx71sLmpXsiM
+X-Proofpoint-GUID: Ri0q2tuMKLdxT4k6o-H2gx71sLmpXsiM
+X-Authority-Analysis: v=2.4 cv=SdH3duRu c=1 sm=1 tr=0 ts=68d56de0 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=gxxouCQkyeS9uqHApw0A:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAyMCBTYWx0ZWRfX0JDCNMHq+Xql
+ yxmf6bkUHiSvJG3GoHsv86LspvTaFoObfxiULJSvskdUe0G/3Y89hi7wGlXm37Uw9gafbPsEQkX
+ O6PEfVkAXRnMY3gLbCtyD0Bp5nkSs4FF2u+xzoI1WH3zodKq/bHE9GysQjA+nuVii3roNvxRU2O
+ WyVg3B1gaqgOqNGKA1QbfxOR8IEG0t2HoTT/HrOTvds6AZIUesCfN/wSJnb9OVdPm6A9fzlmIni
+ 2S4hSwj5wttHc5tatjc5kCBVr4Nqt0Ef+/GyfZTxYiiMkbv9arN/EaeMQu0fzgy/cUcERcFtkSM
+ NZapFR+/xrZW5GkQMderJ/4BGFMLk9fi3QsIxOvEEQhc58NStuIpXctVzBflpHMn/78/4sxGtOq
+ k2ZgY+BU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-25_01,2025-09-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200020
 
-Add support for the second PCIe line present on Airoha AN7583 SoC.
+>> +void zpci_cleanup_pending_errors(struct zpci_dev *zdev)
+>> +{
+>> +	struct pci_dev *pdev = NULL;
+>> +
+>> +	mutex_lock(&zdev->pending_errs_lock);
+>> +	pdev = pci_get_slot(zdev->zbus->bus, zdev->devfn);
+> I think you missed my comment on the previous version. This is missing
+> the matching pci_dev_put() for the pci_get_slot().
 
-This is based on the Mediatek Gen1/2 PCIe driver and similar to Gen3
-also require workaround for the reset signals.
+Ah yes indeed i missed that comment, my apologies. Will fixup.
 
-Introduce a new bool to skip having to reset signals and also introduce
-some additional logic to configure the PBUS registers required for
-Airoha SoC.
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/pci/controller/pcie-mediatek.c | 85 +++++++++++++++++++-------
- 1 file changed, 63 insertions(+), 22 deletions(-)
+>
+>> +	if (zdev->pending_errs.count)
+>> +		pr_info("%s: Unhandled PCI error events count=%d",
+>> +				pci_name(pdev), zdev->pending_errs.count);
+>> +	memset(&zdev->pending_errs, 0, sizeof(struct zpci_ccdf_pending));
+>> +	mutex_unlock(&zdev->pending_errs_lock);
+>> +}
+>> +EXPORT_SYMBOL_GPL(zpci_cleanup_pending_errors);
+>> +
+>>
+> --- snip ---
+>>   
+>> @@ -322,12 +340,13 @@ static void __zpci_event_error(struct zpci_ccdf_err *ccdf)
+>>   		break;
+>>   	case 0x0040: /* Service Action or Error Recovery Failed */
+>>   	case 0x003b:
+>> -		zpci_event_io_failure(pdev, pci_channel_io_perm_failure);
+>> +		zpci_event_io_failure(pdev, pci_channel_io_perm_failure, ccdf);
+>>   		break;
+>>   	default: /* PCI function left in the error state attempt to recover */
+>> -		ers_res = zpci_event_attempt_error_recovery(pdev);
+>> +		ers_res = zpci_event_attempt_error_recovery(pdev, ccdf);
+>>   		if (ers_res != PCI_ERS_RESULT_RECOVERED)
+>> -			zpci_event_io_failure(pdev, pci_channel_io_perm_failure);
+>> +			zpci_event_io_failure(pdev, pci_channel_io_perm_failure,
+>> +					ccdf);
+> Nit: I'd just keep the above on one line. It's still below the 100
+> columns limit and just cleaner on one line.
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 24cc30a2ab6c..640d1f1a6478 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -147,6 +147,7 @@ struct mtk_pcie_port;
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-  * @need_fix_device_id: whether this host's device ID needed to be fixed or not
-  * @no_msi: Bridge has no MSI support, and relies on an external block
-+ * @skip_pcie_rstb: Skip calling RSTB bits on PCIe probe
-  * @device_id: device ID which this host need to be fixed
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-@@ -156,6 +157,7 @@ struct mtk_pcie_soc {
- 	bool need_fix_class_id;
- 	bool need_fix_device_id;
- 	bool no_msi;
-+	bool skip_pcie_rstb;
- 	unsigned int device_id;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
-@@ -679,28 +681,30 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		regmap_update_bits(pcie->cfg, PCIE_SYS_CFG_V2, val, val);
- 	}
- 
--	/* Assert all reset signals */
--	writel(0, port->base + PCIE_RST_CTRL);
--
--	/*
--	 * Enable PCIe link down reset, if link status changed from link up to
--	 * link down, this will reset MAC control registers and configuration
--	 * space.
--	 */
--	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
--
--	/*
--	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
--	 * 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
--	 * be delayed 100ms (TPVPERL) for the power and clock to become stable.
--	 */
--	msleep(100);
--
--	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
--	val = readl(port->base + PCIE_RST_CTRL);
--	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
--	       PCIE_MAC_SRSTB | PCIE_CRSTB;
--	writel(val, port->base + PCIE_RST_CTRL);
-+	if (!soc->skip_pcie_rstb) {
-+		/* Assert all reset signals */
-+		writel(0, port->base + PCIE_RST_CTRL);
-+
-+		/*
-+		 * Enable PCIe link down reset, if link status changed from link up to
-+		 * link down, this will reset MAC control registers and configuration
-+		 * space.
-+		 */
-+		writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
-+
-+		/*
-+		 * Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
-+		 * 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
-+		 * be delayed 100ms (TPVPERL) for the power and clock to become stable.
-+		 */
-+		msleep(100);
-+
-+		/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
-+		val = readl(port->base + PCIE_RST_CTRL);
-+		val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
-+		       PCIE_MAC_SRSTB | PCIE_CRSTB;
-+		writel(val, port->base + PCIE_RST_CTRL);
-+	}
- 
- 	/* Set up vendor ID and class code */
- 	if (soc->need_fix_class_id) {
-@@ -1105,6 +1109,33 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto put_resources;
- 
-+	if (device_is_compatible(dev, "airoha,an7583-pcie")) {
-+		struct resource_entry *entry;
-+		struct regmap *pbus_regmap;
-+		resource_size_t addr;
-+		u32 args[2], size;
-+
-+		/*
-+		 * Configure PBus base address and base address mask to allow the
-+		 * hw to detect if a given address is accessible on PCIe controller.
-+		 */
-+		pbus_regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node,
-+								   "mediatek,pbus-csr",
-+								   ARRAY_SIZE(args),
-+								   args);
-+		if (IS_ERR(pbus_regmap))
-+			return PTR_ERR(pbus_regmap);
-+
-+		entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
-+		if (!entry)
-+			return -ENODEV;
-+
-+		addr = entry->res->start - entry->offset;
-+		regmap_write(pbus_regmap, args[0], lower_32_bits(addr));
-+		size = lower_32_bits(resource_size(entry->res));
-+		regmap_write(pbus_regmap, args[1], GENMASK(31, __fls(size)));
-+	}
-+
- 	return 0;
- 
- put_resources:
-@@ -1205,6 +1236,15 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.setup_irq = mtk_pcie_setup_irq,
- };
- 
-+static const struct mtk_pcie_soc mtk_pcie_soc_an7583 = {
-+	.skip_pcie_rstb = true,
-+	.need_fix_class_id = true,
-+	.need_fix_device_id = false,
-+	.ops = &mtk_pcie_ops_v2,
-+	.startup = mtk_pcie_startup_port_v2,
-+	.setup_irq = mtk_pcie_setup_irq,
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
- 	.need_fix_class_id = true,
- 	.need_fix_device_id = true,
-@@ -1215,6 +1255,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
- };
- 
- static const struct of_device_id mtk_pcie_ids[] = {
-+	{ .compatible = "airoha,an7583-pcie", .data = &mtk_pcie_soc_an7583 },
- 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
--- 
-2.51.0
+I think I did this for checkpatch warning, but can move it back and see 
+if the warning happens.
 
+Thanks
+Farhan
+
+>
+>>   		break;
+>>   	}
+>>   	pci_dev_put(pdev);
+>> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+>> index a7bc23ce8483..2be37eab9279 100644
+>> --- a/drivers/vfio/pci/vfio_pci_zdev.c
+>> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
+>> @@ -168,6 +168,8 @@ void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
+>>   
+>>   	zdev->mediated_recovery = false;
+>>   
+>> +	zpci_cleanup_pending_errors(zdev);
+>> +
+>>   	if (!vdev->vdev.kvm)
+>>   		return;
+>>   
 
