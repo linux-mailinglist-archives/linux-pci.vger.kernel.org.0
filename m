@@ -1,91 +1,89 @@
-Return-Path: <linux-pci+bounces-37006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91802BA0AE0
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:42:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A148BA0AF6
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 18:45:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 593A016B6ED
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:42:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 158793A406E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 16:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C996307ACE;
-	Thu, 25 Sep 2025 16:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0AEF1EDA2C;
+	Thu, 25 Sep 2025 16:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1UcREtj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAe2Y+Xf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E3422B8AB;
-	Thu, 25 Sep 2025 16:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A782AD25;
+	Thu, 25 Sep 2025 16:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758818572; cv=none; b=iMtaqlTHgvU7UxhDJIVPyUVQ3nKa/Yev0iPVSQmoeZ/gqES+foAVotvethWl6f6PEagmMrZa43oRKtb+kKuaPrk52N3WB5G0geg6OiVuM5GnrcKCKtUuqtjfockYB/3nW/SuYWNDph3aTVP7PTEHoUBD1cGkHpGRcktiRr3lP3U=
+	t=1758818713; cv=none; b=b0lYGqW8tOy7J+RSa+907TSTsAdSMv9qyGQrcnaeOpSl7IuUF8BXNWUnM5Tz6dak2Gfl3nL3hOUfZnx2wBH6aYYRhUG4NW1NCsnYuCSa1VT3uPkBLtpwy9RwdK0tnviCveuVarFf/YQ/Dlo5gXsIRPTEam+tASuKzVM8y9sxfmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758818572; c=relaxed/simple;
-	bh=5i6ha+N8IEneXDI60JExaJWalQFZv2+fTq6zUyyVfEI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=javXilQF7PsVHnMH0Bp75F91MPTGZ1xdSJrq1uLpvZKeNJilernE5EgGlFLkr4phhdtwu4aLUuFZLWWplNSWFgYOPJrqLhnDR8zMogFx4E4zIRmkbnTECP3zkL1iSaRv4HZV4vnGolMXRBVAdOWb3lvTcOVTN11j3TE2u7Ueg3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1UcREtj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3384BC4CEF0;
-	Thu, 25 Sep 2025 16:42:46 +0000 (UTC)
+	s=arc-20240116; t=1758818713; c=relaxed/simple;
+	bh=7elF26Ve0F+Q3ywVODITsdvGWDRWqWm36UM6j8I3SsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BCGSvP4aYgRfqRLk5JNXQPpZ+UuNljQ7tp+569bJJHVQ1bAdpewmkiwRmjULrjwxECu9RkfoSgtdTkdF+e3dGukmxvzk19Umy1Rdk1EhGTYWxdNUeCobdjJXW052oQGUZoHD+cecB/50iDVc3X54YeAlWiVz7VzGZTPr2N1GBLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAe2Y+Xf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A047C4CEF5;
+	Thu, 25 Sep 2025 16:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758818571;
-	bh=5i6ha+N8IEneXDI60JExaJWalQFZv2+fTq6zUyyVfEI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=T1UcREtjMCiQRCxVKqys2FBCPxFP2kBwEpP31NIbI9agCgzAiQDdB61Vq47QCZASe
-	 g6ql46VT2P2wPYnPy2H7lCnsx0eZHIdTtRNFRgspXDm6Om152EICwOP0hCsqSNz9ER
-	 BiojBWy4Ve3jUwvXlxpdSp3J9/KTKC3tjY2wuwSYOBfezy5NynaxKtzRmYwhqli7l/
-	 qh+PLHc3B2o2x1ibgRvopyqXNQH6XJ9dli0MZn96lUOkWYsjlLOCdmD2sgPqWT7n8a
-	 /TWiaeLjJovaQmt2Ld29UPijqk/xTOIvIAwxq8mN1FW9o6i8ikbdIlulbhdCyUsdVF
-	 ZRu3BaLy/9lLA==
+	s=k20201202; t=1758818712;
+	bh=7elF26Ve0F+Q3ywVODITsdvGWDRWqWm36UM6j8I3SsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HAe2Y+XfLGw8ezGLmJQPvcRPz8r7cF5kqq+YWqLlb91oiUusYo4U/WAEgFIuN5Dl4
+	 SLFmvWeW7KtxhCwOzhEIkd7Jp2J5F294napTDCYr2oaKRDOggWEC9mlHSh+t80sWbq
+	 KbEPmxQWsDesKAir3uPhaWhmr4EzDF9w1Z7fykLSTNVL/udUl+1IDlxXHV4iTgQXDD
+	 lJK1L2uoG+U539wlftgeuZLT6zHF4/FTeFqoeIChJauq1/qJ+QcJkDxT/EjdL10s00
+	 0tnzjpS/tcwX/+T8xjmOupfTCb3D5pwiZazIkP/ClZtaD4J8R/T31UT5NZlP3cO1Gv
+	 3iNQr39tuwwZw==
+Date: Thu, 25 Sep 2025 22:15:03 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: linux-pci@vger.kernel.org, 
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: stable@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, 
- linux-tegra@vger.kernel.org
-In-Reply-To: <20250922150811.88450-1-marek.vasut+renesas@mailbox.org>
-References: <20250922150811.88450-1-marek.vasut+renesas@mailbox.org>
-Subject: Re: [PATCH] PCI: tegra: Convert struct tegra_msi mask_lock into
- raw spinlock
-Message-Id: <175881856680.391347.7490964130330685469.b4-ty@kernel.org>
-Date: Thu, 25 Sep 2025 22:12:46 +0530
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	linux-pci@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: rcar-gen4: Add missing 1ms delay after PWR reset
+ assertion
+Message-ID: <befzloabtpkvgcehzllqa7iy7657citnge7zzoq6kqbbsvy32d@hxhlyoltqvp4>
+References: <20250919134644.208098-1-marek.vasut+renesas@mailbox.org>
+ <20250919141340.GA709855@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250919141340.GA709855@rocinante>
 
-
-On Mon, 22 Sep 2025 17:07:48 +0200, Marek Vasut wrote:
-> The tegra_msi_irq_unmask() function may be called from a PCI driver
-> request_threaded_irq() function. This triggers kernel/irq/manage.c
-> __setup_irq() which locks raw spinlock &desc->lock descriptor lock
-> and with that descriptor lock held, calls tegra_msi_irq_unmask().
-> 
-> Since the &desc->lock descriptor lock is a raw spinlock , and the
-> tegra_msi .mask_lock is not a raw spinlock, this setup triggers
-> 'BUG: Invalid wait context' with CONFIG_PROVE_RAW_LOCK_NESTING=y .
+On Fri, Sep 19, 2025 at 11:13:40PM +0900, Krzysztof Wilczyński wrote:
+> Hello,
 > 
 > [...]
+> > Fixes: 0d0c551011df ("PCI: rcar-gen4: Add R-Car Gen4 PCIe controller support for host mode")
+> > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> 
+> Missed a tag from me. :)  But we can add it when applying, no worries.
+> 
 
-Applied, thanks!
+I've added your tag while applying:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/rcar-gen4&id=23291403391180b0312405bb3d8fa8546124c643
 
-[1/1] PCI: tegra: Convert struct tegra_msi mask_lock into raw spinlock
-      commit: 39ec28d01d565030aa28d87a212d201c252c072e
+Thanks, Krzysztof!
 
-Best regards,
+- Mani
+
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
