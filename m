@@ -1,142 +1,141 @@
-Return-Path: <linux-pci+bounces-37017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E14A7BA0D19
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 19:23:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A5A1BA0D37
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 19:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 955C37BE9A7
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 17:14:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE9A33B1F39
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Sep 2025 17:25:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A1F125A0;
-	Thu, 25 Sep 2025 17:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E638830CD95;
+	Thu, 25 Sep 2025 17:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1r06cGW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkwYG/vU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7F91C75E2
-	for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 17:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7196217704;
+	Thu, 25 Sep 2025 17:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758820576; cv=none; b=g+jsmnHfo3zU9uaMWAW3EB1TGXeKL6uWGhV9dzW7duonf7hcqosyS1k7RHp3tLlJFnZRFPeKBqZkkpgxjltilrky+PWaECaLTyOQonBm2lO1ZF9Wvwx4H+XIG6F/QUOzDgBhUDYyM5ZcGgiDFyVY1pD6jzqOXpoHRYmaxsDjnQs=
+	t=1758821119; cv=none; b=OabjhWRgoZu1+X+hKH/9Ya7XyIMDK2HSMT5bXew5SS/3xvoUQI3MCD1vR77Yyb9fAp3U+sDXNlnWxQMLBx6OZNk9CHjPJJCYzzXsVk9FJhVrCwhZKQw3l9+yNZiqhmvonoEyoy5izGbG7hUvCDd35i9PIsNRgOiz57xFLNVFJqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758820576; c=relaxed/simple;
-	bh=Zv82gIXaLAAzi9Py9v1c5XK2EiDFpXVZ/NJKU+kigKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZEG5QMxlrFgkANLCY/xzNS9/Wy8rtysMCOY5OIlypgue7q//SIbuEqG9S2xv0zaLXJyM3AyFdFK1aHtql+fJe5u4bx1+C1NaualZ4IefviAx3OLaBeIlgtQyyizMDMUsQKtTlsczO/90XdZRk0vmQPkTkiyuVOcDOHd0pePLYLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s1r06cGW; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-62fc28843ecso1531615a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Sep 2025 10:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758820573; x=1759425373; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gfSUBmjDQGS07XOuZOfB4dv6p+6TOkn4sFnsfwrItDc=;
-        b=s1r06cGWbBgRKji5umAfulK1J80i1/kiXpCjnMxS1IkEdryInPSC1MjkBM/+Rc5lL+
-         KgAw3dS3Mq/2JMZuJBZU+cDUjTyqYT0isBUfXsev30dNqGjBk5c4wfhgjoDsm6DuYktY
-         +onO1nc8/sDbW9HLpsOJrTEaCGdF7g0/h3zwQ90SO3WNAzfGGFOkqTL/A4nCqmO30AVM
-         I9hTClY3pOr8Rh3GVOThPiv+/D90KeC9H25dBwB7DQbeG4PzE7Ih9y/NskQDyYF7lfoh
-         GNURJ5S5BnSWKt3lTJnXjKg7FCMeCsDSMY+oF2OQYrxKoIti+EeXcdCtAznJx64/hQrk
-         bRbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758820573; x=1759425373;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gfSUBmjDQGS07XOuZOfB4dv6p+6TOkn4sFnsfwrItDc=;
-        b=DH6jkd8Pgp4dykUjHCxXQFzeG7dHThmq/8FaQMnuxXppUvvb7PcjvjFzHtx8Bd8iNC
-         rjzYVpeiFQ3dWhG2qFZljKK8YB9V68QVVIGpklPOi5lROzwr3LhG35y8SEGp7uoiDvRM
-         OTOTN6zT9ltUeq6iHALwUMkJZBTvrPoQVoebFIVXMx5a/AQ2rYwoxxqTammGXID8J4bM
-         HgebLdLaiPKLKuX8QTUDxI1PZUxIkdKziayTDJIvne4bXskc+mC5c0zHBIwvClkOFEeX
-         bl2K5AqzW2s6kvNu/xk+ou6lKkWa0WXIV/QoYOiWvZqjevulN5zbXKL4BlsfNRHxnqGb
-         lvlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgmFEEYS9TrUpVWQF87FtPsK5k/0PNSTgVLIHCFOosnMUlNiFc9Zi/jC5g+qJOTn4WXEIZqaRAbCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykHthQz364BoWKmOWMG0+R/EwXn+I8fGKGG3f1NdravTvpA8if
-	mffsmEQqitm2BFqXrRsAg+dNrPpjQkoZPHk0rIF7zR10aXJJDZPZ4bGL8cvKUz37r8q6xxOCSXr
-	yKEN4vUHuFRT+74VS0aJiZerKj14aNLLX6T4bUsxd5MbNGJhp7ArF
-X-Gm-Gg: ASbGnct1snyVEqabzRRgI2BxeFmHAWPv+3ixQ+i8iTjvx720HUWsMO6L49pNdlZywMr
-	NUg7e1uzRP6/BwgU4Pw7wzDZ3Tr0ZnfeMaMuDsbm4uiOoABd/LDyv4GRNbUE32dbi1AaO89Iy76
-	df3/JK8DR2scU0TWo0p+gnDa1mESQicaiCAeNUheYNtLPPiBp56AEAlmk2YZVt+4SE5L/rpj8/E
-	5qMVClnVA6k0+e+XCQkDvGnWRRRFLiTxW5Y
-X-Google-Smtp-Source: AGHT+IGDhhdx+YuZcr8I4Tult1/nPYdF84/cpZUAmbh+gOazNWoxtTztWVZU1nAmJ8EOHh1jeTaA57QtgllGSnlOLdQ=
-X-Received: by 2002:aa7:d441:0:b0:62f:68c3:57d0 with SMTP id
- 4fb4d7f45d1cf-6349f9cbc18mr2542494a12.4.1758820572615; Thu, 25 Sep 2025
- 10:16:12 -0700 (PDT)
+	s=arc-20240116; t=1758821119; c=relaxed/simple;
+	bh=vdDtnd7eralUvO1XlLeDfYnMfW2wY9yiVB9StQbyH5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cSHLXtB6pTdZGGuvJ4/zqsd2M5ne+IC5KzDnLmTNnF4SYuUs0x0PFy3VYEhA4TJf56ObSGuLEFpCRZvVW3uixcM4velkYapmy2narCNeqNVzl5joC3agYVD4e/Amlc5oSfEzGEWwYdvbPUPKpWkkHc1x1Utmtm6ZDqQpTPkSPgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkwYG/vU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16DF0C4CEF0;
+	Thu, 25 Sep 2025 17:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758821119;
+	bh=vdDtnd7eralUvO1XlLeDfYnMfW2wY9yiVB9StQbyH5g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lkwYG/vUo/EzJ1jKlWOOEn0aUxEoQ862XOvuqFQ1HWIWXVCw8SLuwWFk4Fx7INazg
+	 AYxo/tvw14FhUtCBX+5CzFGq5H8eG0qu7nk+QpdwPBzV6YlVt/Fivwrs25d2uisYZA
+	 LXv4LQr6Q7yfS3zg3wG8Eu/JsXLyuQurV9HquIahNtTZ0Wm+vCI0BUTRXZasvWNvOj
+	 GaSOYG1/rqSFThGrnD2AqDnGj78ARhBTvhJ6DX84WQ0L2+NubSUymF2znFkLIY+SbF
+	 M7zqNIZqk4GuJ/HEedGgXWBInI8ICSRT0nk5HRIXSOvRG/epW6AglVRqX/fQk7cB6i
+	 8kMkZJC0QZuaQ==
+Date: Thu, 25 Sep 2025 12:25:17 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com,
+	amitk@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v6 5/9] PCI: dwc: Implement .start_link(), .stop_link()
+ hooks
+Message-ID: <20250925172517.GA2169496@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919155821.95334-1-vincent.guittot@linaro.org>
- <20250919155821.95334-4-vincent.guittot@linaro.org> <aM2L0C4SsGTzLQwi@lizhi-Precision-Tower-5810>
-In-Reply-To: <aM2L0C4SsGTzLQwi@lizhi-Precision-Tower-5810>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 25 Sep 2025 19:16:01 +0200
-X-Gm-Features: AS18NWCvFPXEZU7r1XpqWeh25XNcMYT0B_gX-68ydY8oAsZKJCM-yUYMplLol9w
-Message-ID: <CAKfTPtC4TS-PwMa7-BSV6qS=YjnFczwj42USqJ8=YX3X0cdTxA@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v2] MAINTAINERS: Add MAINTAINER for NXP S32G PCIe driver
-To: Frank Li <Frank.li@nxp.com>
-Cc: chester62515@gmail.com, mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, 
-	s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
-	Ghennadi.Procopciuc@nxp.com, ciprianmarian.costea@nxp.com, 
-	bogdan.hamciuc@nxp.com, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, cassel@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yofmk5uyykyv4jxzem622dtuyzknk7ipd5xlkzdrfl5v7tgojy@5aarg5wj6bar>
 
-On Fri, 19 Sept 2025 at 18:59, Frank Li <Frank.li@nxp.com> wrote:
->
-> On Fri, Sep 19, 2025 at 05:58:21PM +0200, Vincent Guittot wrote:
-> > Add the s32g PCIe driver under the ARM/NXP S32G ARCHITECTURE entry.
->
-> I think common ARCH maintainer part should only include core port of SOC.
->
-> PCI driver should be sperated entry.
+On Thu, Sep 25, 2025 at 09:49:16PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Sep 25, 2025 at 09:54:16AM -0500, Bjorn Helgaas wrote:
+> > On Thu, Aug 28, 2025 at 05:39:02PM +0530, Krishna Chaitanya Chundru wrote:
+> > > Implement stop_link() and  start_link() function op for dwc drivers.
+> > > 
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..bcdc4a0e4b4747f2d62e1b67bc1aeda16e35acdd 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -722,10 +722,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+> > >  
+> > > +static int dw_pcie_op_start_link(struct pci_bus *bus)
+> > > +{
+> > > +	struct dw_pcie_rp *pp = bus->sysdata;
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +
+> > > +	return dw_pcie_host_start_link(pci);
+> > 
+> > This takes a pci_bus *, which could be any PCI bus, but this only
+> > works for root buses because it affects the link from a Root Port.
+> > 
+> > I know the TC9563 is directly below the Root Port in the current
+> > topology, but it seems like the ability to configure a Switch with
+> > I2C or similar is potentially of general interest, even if the
+> > switch is deeper in the hierarchy.
+> > 
+> > Is there a generic way to inhibit link training, e.g., with the
+> > Link Disable bit in the Link Control register?  If so, this could
+> > potentially be done in a way that would work for any vendor and
+> > for any Downstream Port, including Root Ports and Switch
+> > Downstream Ports.
+> 
+> FWIW, the link should not be stopped for a single device, since it
+> could affect other devices in the bus. Imagine if this switch is
+> connected to one of the downstream port of another switch. Then
+> stopping and starting the link will affect other devices connected
+> to the upstream switch as well.
 
-I can make a dedicated entry for s32g PCI
+Link Disable would affect all devices downstream of the bridge where
+it is set, same as dw_pcie_op_stop_link().
 
+> This driver is doing it right now just because, there is no other
+> way to control the switch state machine. Ideally, we would want the
+> PERST# to be in asserted stage to keep the device from starting the
+> state machine, then program the registers over I2C and deassert
+> PERST#. This will work across all of the host controller drivers (if
+> they support pwrctrl framework).
 
->
-> see PCI DRIVER FOR IMX6
->
-> Frank
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  MAINTAINERS | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index cd7ff55b5d32..fa45862cb1ea 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3084,12 +3084,16 @@ R:    Chester Lin <chester62515@gmail.com>
-> >  R:   Matthias Brugger <mbrugger@suse.com>
-> >  R:   Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-> >  R:   NXP S32 Linux Team <s32@nxp.com>
-> > +L:   imx@lists.linux.dev
-> >  L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> >  S:   Maintained
-> > +F:   Documentation/devicetree/bindings/pci/nxp,s32-pcie.yaml
-> >  F:   Documentation/devicetree/bindings/rtc/nxp,s32g-rtc.yaml
-> >  F:   arch/arm64/boot/dts/freescale/s32g*.dts*
-> > +F:   drivers/pci/controller/dwc/pci-s32g*
-> >  F:   drivers/pinctrl/nxp/
-> >  F:   drivers/rtc/rtc-s32g.c
-> > +F:   include/linux/pcie/nxp-s32g-pcie-phy-submode.h
-> >
-> >  ARM/NXP S32G/S32R DWMAC ETHERNET DRIVER
-> >  M:   Jan Petrous <jan.petrous@oss.nxp.com>
-> > --
-> > 2.43.0
-> >
+I don't think there's a way to implement .start_link() and
+.stop_link() for ACPI unless it's by using Link Disable, which is why
+I asked about this.  If Link Disable *does* work, it would be a very
+generic way to do this because it's part of the PCIe base spec.
+
+Bjorn
 
