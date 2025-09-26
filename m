@@ -1,68 +1,72 @@
-Return-Path: <linux-pci+bounces-37129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE3B4BA50EB
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 22:25:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2165BA5148
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 22:39:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D36751B26AFC
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:25:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3A2F1C00DDB
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8D2285060;
-	Fri, 26 Sep 2025 20:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCA827FD44;
+	Fri, 26 Sep 2025 20:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tp/CxQ5g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="siIOIe/J"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702F4284669;
-	Fri, 26 Sep 2025 20:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E953B13BC3F;
+	Fri, 26 Sep 2025 20:39:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758918323; cv=none; b=mvClH3MSIRadHswWgEL04HY4baQS07YFsJbjIzlPB9AEDYzh1GWjaux4OssOl2M730h4SGdDbGkJ+7tjf8SgXp0A9HzEpZiha4Bkltg0uPpm7c8zFOXFZKLsb6hULkk7+upB2wyIbhcamE37Mp8l6AXXYm+7fysuVSlm3+15nGY=
+	t=1758919159; cv=none; b=aZuaAH8MpheAM2ClY37CC++JAZjeUomXmtRIPib+nJTriem63lD8LRcdUOI5K6VieX0jBcJA8/SohQNcyevGOXR1EjE6sWPInI0yPuuSdL0eWBK0rpr6vEY7gMj72m2GbamhmT3HECFCjSmc7kYXvuasmMZbalCWMz1KrHHyFIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758918323; c=relaxed/simple;
-	bh=QtssM2JLS2bcwQ9EUpp9ZJifiBkLbCEIm03Xx4xumZE=;
+	s=arc-20240116; t=1758919159; c=relaxed/simple;
+	bh=DN6Qwr15i5uFVBUupd5QlMIvaTum5HUKi8sCfH8FrpI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kEURuPUP6n+kmnJThZU0ZruHZ6/Yzca+FURS5UwE3bdy2sjJoof2Y4kzqH3bAVy3f57OpOQgR7gG88XYw2BzJ3CyWoKEvVS1LAlXXPPiq9NVZrWiaw5XjNx+DzfKDKredt9WS6CZElXGfbAAuRaMld0dsgjr+h1dwUsI29DQkCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tp/CxQ5g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3850C4CEF7;
-	Fri, 26 Sep 2025 20:25:22 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hPhcyx7UNI5gsq63kqMCqq64VLP4b2BNRNjFJzpkWrkRlZ0W1g0v9t2slpnglLO3ZD+oJOKqLKF+I0tTwe4drfLBGchD52tERmjQcwAchtKZO5/SebsGle9Kc4CnR9nMZK1IYZ/RLITnhUQ3XsPUjii0DNvN0Ou7DGQSWR666H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=siIOIe/J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42628C4CEF4;
+	Fri, 26 Sep 2025 20:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758918323;
-	bh=QtssM2JLS2bcwQ9EUpp9ZJifiBkLbCEIm03Xx4xumZE=;
+	s=k20201202; t=1758919158;
+	bh=DN6Qwr15i5uFVBUupd5QlMIvaTum5HUKi8sCfH8FrpI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tp/CxQ5gjwcR342fUAjKaT8ALiUmpYRJfJAcdPoLHdJYV1GLl8fSuaUbGpu61WYOu
-	 3h9xNS1xaKSS+Erz5jQiXcpVAjr+qmx4ecf57WcVHgxLTY6uV0DkmN0c0G16diwqM5
-	 2ZoBgH3sro0maUU3PZ3riXz7b5kkCPr3ar/tRrlnME/xJWlVn2k72sbjwKggA91yiR
-	 H/WXyL11Cbz9Y37qBe5EhWHTpiFCozCwm6sI8qdYuY9IC9nHKVm8riBvo8QkgRRENZ
-	 +aR/C871KI/mc9f/d5GhS87lPZT0aQpAV5ZJ4R1Mf4f1Exb3/veHOKgMmk0mz+ZruX
-	 On7+mzH0lzm0w==
-Date: Fri, 26 Sep 2025 15:25:21 -0500
+	b=siIOIe/Jddewm5lK6in8+WPYGB83DvHTHmJw3qcHCKgl88DH9uAFCnU/alvTGc771
+	 HZ12gzaoeJTS2ZkiYCJxQzvubH66i1yvLvWqsXZThEA2S4AUp8IBYfDtF3wmLthmwl
+	 Zv8lVXGvZWxl0wCFVwRTCzbA3kl76iI3kx4k3oF027IRHXN1J6qdwSPh/+LecMZDVL
+	 IJ4rK4CW9SH0NU08vEURQ0FbvY3v57TZWJfd05qWly7IM3b6wd/kCvJcAt/i1j4SHI
+	 qQlk5c1Tb+Pp3R8+mV3n7mdHgce6ljgKFjzO3hdzrCwrBoTxvDZwZxk12Nzlxs7NlL
+	 5yD7MXLqyUDtw==
+Date: Fri, 26 Sep 2025 15:39:16 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] PCI: imx6: Add a method to handle CLKREQ#
- override active low
-Message-ID: <20250926202521.GA2235281@bhelgaas>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com,
+	amitk@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v6 5/9] PCI: dwc: Implement .start_link(), .stop_link()
+ hooks
+Message-ID: <20250926203916.GA2266029@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,70 +75,77 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR04MB8833BEF8C043CB239DA074E38C1EA@AS8PR04MB8833.eurprd04.prod.outlook.com>
+In-Reply-To: <4a3f9494-27a2-47d6-bdef-0b1bcbd99903@oss.qualcomm.com>
 
-On Fri, Sep 26, 2025 at 03:08:30AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-
-> > On Fri, Sep 26, 2025 at 02:19:37AM +0000, Hongxing Zhu wrote:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas <helgaas@kernel.org> On Tue, Sep 23, 2025 at
-> > > > 03:39:13PM +0800, Richard Zhu wrote:
-> > > > > The CLKREQ# is an open drain, active low signal that is
-> > > > > driven low by the card to request reference clock. It's an
-> > > > > optional signal added in PCIe CEM r4.0, sec 2. Thus, this
-> > > > > signal wouldn't be driven low if it's reserved.
-> > > > >
-> > > > > Since the reference clock controlled by CLKREQ# may be
-> > > > > required by i.MX PCIe host too. To make sure this clock is
-> > > > > ready even when the CLKREQ# isn't driven low by the card(e.x
-> > > > > the scenario described above), force CLKREQ# override active
-> > > > > low for i.MX PCIe host during initialization.
-> > > > >
-> > > > > The CLKREQ# override can be cleared safely when
-> > > > > supports-clkreq is present and PCIe link is up later.
-> > > > > Because the CLKREQ# would be driven low by the card at this
-> > > > > time.
-> > > >
-> > > > What happens if we clear the CLKREQ# override (so the host
-> > > > doesn't assert it), and the link is up but the card never
-> > > > asserts CLKREQ# (since it's an optional signal)?
-> > > >
-> > > > Does the i.MX host still work?
-> > >
-> > > The CLKREQ# override active low only be cleared when link is up
-> > > and supports-clkreq is present. In the other words, there is a
-> > > remote endpoint  device, and the CLKREQ# would be driven active
-> > > low by this endpoint device.
+On Fri, Sep 26, 2025 at 07:09:17PM +0530, Krishna Chaitanya Chundru wrote:
+> On 9/25/2025 10:55 PM, Bjorn Helgaas wrote:
+> > On Thu, Sep 25, 2025 at 09:49:16PM +0530, Manivannan Sadhasivam wrote:
+> > > On Thu, Sep 25, 2025 at 09:54:16AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Aug 28, 2025 at 05:39:02PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > Implement stop_link() and  start_link() function op for dwc drivers.
+> > > > > 
+> > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > > > ---
+> > > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
+> > > > >   1 file changed, 18 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..bcdc4a0e4b4747f2d62e1b67bc1aeda16e35acdd 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > @@ -722,10 +722,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+> > > > >   }
+> > > > >   EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+> > > > > +static int dw_pcie_op_start_link(struct pci_bus *bus)
+> > > > > +{
+> > > > > +	struct dw_pcie_rp *pp = bus->sysdata;
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > > +
+> > > > > +	return dw_pcie_host_start_link(pci);
+> > > > 
+> > > > This takes a pci_bus *, which could be any PCI bus, but this only
+> > > > works for root buses because it affects the link from a Root Port.
+> > > > 
+> > > > I know the TC9563 is directly below the Root Port in the current
+> > > > topology, but it seems like the ability to configure a Switch with
+> > > > I2C or similar is potentially of general interest, even if the
+> > > > switch is deeper in the hierarchy.
+> > > > 
+> > > > Is there a generic way to inhibit link training, e.g., with the
+> > > > Link Disable bit in the Link Control register?  If so, this could
+> > > > potentially be done in a way that would work for any vendor and
+> > > > for any Downstream Port, including Root Ports and Switch
+> > > > Downstream Ports.
+> > > 
+> > > FWIW, the link should not be stopped for a single device, since it
+> > > could affect other devices in the bus. Imagine if this switch is
+> > > connected to one of the downstream port of another switch. Then
+> > > stopping and starting the link will affect other devices connected
+> > > to the upstream switch as well.
 > > 
-> > Assume an endpoint designed to CEM r2.0.  CLKREQ# doesn't exist in
-> > CEM r2.0, so even if the endpoint is present and the link is up,
-> > the endpoint will not assert CLKREQ#.
+> > Link Disable would affect all devices downstream of the bridge where
+> > it is set, same as dw_pcie_op_stop_link().
 > > 
-> > Will the i.MX host still work?
+> > > This driver is doing it right now just because, there is no other
+> > > way to control the switch state machine. Ideally, we would want the
+> > > PERST# to be in asserted stage to keep the device from starting the
+> > > state machine, then program the registers over I2C and deassert
+> > > PERST#. This will work across all of the host controller drivers (if
+> > > they support pwrctrl framework).
+> > 
+> > I don't think there's a way to implement .start_link() and
+> > .stop_link() for ACPI unless it's by using Link Disable, which is why
+> > I asked about this.  If Link Disable *does* work, it would be a very
+> > generic way to do this because it's part of the PCIe base spec.
+> 
+> We did test as you suggested but unfortunately the setting are not
+> getting reflected we need to explicitly assert perst to make sure
+> pcie is in reset state while applying these settings.
 
-> Yes, i.MX host still work. 
-> If the endpoint designed to CEM r2.0, and CLKREQ# is reserved. The
-> property suppots-clkreq wouldn't present in this scenario. Thus, the
-> CLKREQ# override active low set by host driver wouldn't be cleared
-> later, although the link is up and an endpoint is present.
+Maybe ".stop_link()" is the wrong name if what's actually required is
+PERST#?
 
-Do you mean 'supports-clkreq' describes the *endpoint*, and you need
-to change the devicetree depending on which endpoint is connected?
-
-The schema says 'supports-clkreq' tells us whether CLKREQ# signal
-routing exists, not whether the downstream device actually supports
-CLKREQ#:
-
-  https://github.com/devicetree-org/dt-schema/blob/4b28bc79fdc552f3e0b870ef1362bb711925f4f3/dtschema/schemas/pci/pci-bus-common.yaml#L155
-
-I don't see 'supports-clkreq' in any devicetree related to imx6, so
-I'm not sure this patch is needed yet.  Does it fix an existing
-problem?
-
-If it enables some future functionality, maybe we should defer it
-until we're actually ready to enable that functionality?
-
-Bjorn
+This feels like the kind of problem we are likely to see again in
+different topologies, e.g., a switch in an external enclosure that
+needs configuration.
 
