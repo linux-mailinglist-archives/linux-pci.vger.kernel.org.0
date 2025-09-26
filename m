@@ -1,88 +1,119 @@
-Return-Path: <linux-pci+bounces-37118-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37119-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5F95BA4DA3
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:12:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84091BA4DBE
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:13:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B14AF7BCF39
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 18:10:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A873A1C027CE
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 18:14:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D7B242D9A;
-	Fri, 26 Sep 2025 18:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883B42D5C68;
+	Fri, 26 Sep 2025 18:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B4X653Qs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3I4Cx8L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013050.outbound.protection.outlook.com [40.107.159.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B18223705;
-	Fri, 26 Sep 2025 18:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E382741AC;
+	Fri, 26 Sep 2025 18:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758910345; cv=fail; b=n9Da1T/ZL1nMCaJmdHDd/leL9DfWcV9ZbNG3xeaom9l4SqxmCCUbpZWnNu5ejlGwIq3165E1dh4eCywj+8MLC5S1LJFtWeBP9Wfa3w4mhIFboRKUimwcqZQmsMKS7dagAOmCOqm+e97/XQvJsnNZ05/sNFzKZfl505Wp6TpezE4=
+	t=1758910434; cv=fail; b=danZq9JA8Tc6wfCIZXPnSyg0t8eQsEGcPi4uJChse7viL6xHfe+owKlFAtQSAehVHaProBIg7PDiHmGbctvRuEkE6AKBRYOkTnkGhMeulG0iDDqSlTwxU++4wpPGWGRr4H3ANtczh/ooXnH7JH9M1VjKlC94VmJeJO25O+HeI3w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758910345; c=relaxed/simple;
-	bh=AChC5EzBTKC48XnSdgDvNbJR+jOmj1qyGSiLroI8G8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ARQDf4y9ZVSYV3n9Ums4bXabCRTW8MUGiv4Dyiqc9ou/y+998vWwdmi522UBuc0Y/RBDB/0tNRmWw8giUmaramFsyf832nIlSwqiFMJka1jnepITLO4Zx5wdk3We9DuP2XnmFulsLaRCg6MLgjKKPm6SC3Z2JRR2yDopoA8BrWQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B4X653Qs; arc=fail smtp.client-ip=40.107.159.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1758910434; c=relaxed/simple;
+	bh=wDKTBuceSgs05HHHvFRJUROhP17qOS6qTezAud9sMxk=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=g3PQl7vA5nP+Dfz1Xaexb4ir2PDvSe07kMWlrGlfZlAtrntUcA7it687iZzwm1Ued0Lx77HSvdHR1U8jXlVC1G1ydiyYynxxMshMAYdXwFHL/Pi0U369zOzGMR34ryFiJMhBidGyikxXx3M9xeB+YJrdRbzSeE6s4OIs31rzpc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3I4Cx8L; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758910433; x=1790446433;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=wDKTBuceSgs05HHHvFRJUROhP17qOS6qTezAud9sMxk=;
+  b=X3I4Cx8LSeaZtMJLizTNwdBJ4Xv253+oLrYZuBAFy6d74YoJ5sJIovIi
+   fTQHnh+HK5pi+urKMUVQxFLPWbzFB34DZDmUg9mQ1ZS/y8Y8mh10RBBdT
+   Qpd0Ur/c858MoJht6z701oLqGHSSWhgcXILX8ChMP3pCGz36macHqGaX9
+   jBBHfmib6SkqMWENRB/2pVAHt/NgfcGhLKDswnVJBYZbP5Nd0xJals8Mc
+   O2MBbhQt763zuP38pHz8z2pKSUwJ5cNsNkMK89IEX7ZjzHl0SIIxh8ZT+
+   SFEk6CZ+n2k36joiEjmBmhNmg5ItWXWNAO4PwtScBzU3gfTimWfd9c6dW
+   w==;
+X-CSE-ConnectionGUID: OwmzwSHdSN+euii+4Wes9Q==
+X-CSE-MsgGUID: dgmALmmdRxSdjEWeAPjf0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61202864"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="61202864"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 11:13:52 -0700
+X-CSE-ConnectionGUID: 0Nea/e3IRLmS+liPIu7tLg==
+X-CSE-MsgGUID: zqjMgFuyTmmGV5f2DexXig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,295,1751266800"; 
+   d="scan'208";a="201369666"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 11:13:51 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Fri, 26 Sep 2025 11:13:51 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Fri, 26 Sep 2025 11:13:51 -0700
+Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.54) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Fri, 26 Sep 2025 11:13:50 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HKFNVonMNByUFLvcw241xR9gZOOldhKWmn57dOZ5K2XZi2MxNDMequ1g2Lrh6Fsd5vRPGUAA7TcBzQkOvVzMlGlakcmdHtW0KbxOy5i6yBQ7viwYevBfy3Z3anp4bJCNVxie16ol2jmhKceLYZVQZXKiYPHT8yGRsBe8vs+aNAr9ThTCk83+X06bPscegty1eOEeKbLfYbdZ0KI56+RZvvx4rNK4wfYRLjWc0Rznzmom3YsIpVL7DQKi10Im+5YjSDIh27AHyd/lTMCk9otXDzrnJa2WxITqzagwlXL1VHWoL1jeqrVKWy748mnCohQJahpkru47Hm6yrZ9U5F8eBg==
+ b=H5uBx0Jo7kXB++IRWBPYu8GaEEbzteNRhVG4hRAlM3gg/vs/7xbWbnwE6TM99aSUi9mILSF14QCmuZMdS7OiMr7rbdTeD9RHDYS9LTLrCqeCJ8hJeLJlIj0ICza+y1iCkCLnL2HpnMmp0OFp9dkujuAcWIuaOet/PkeA/HWsILaYa12zUjXGfumAZQc4ForHbo2G7hclwHPAT0RPRw6v+oMQGOkudA5wVxIaQHKW/ai3qsjM6awQrC36Mbp4x93eapuqX5VxmECNPtl+lHhBXxhhrxKvopt1XurfXdIHfi591pw8pSWU1rrm6m84rE13lXe3ldIuJ4BhL9XS67EKpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Vtt67kG1geaGqCSHT87qrfkxm9TxMKyp888OMKq4qkk=;
- b=arsK/0XLS5aYXRftGkccHjSy63lBo5gmDDdOKNiyUzQkz2wnhE8jXdLU2DRDZh2KX5ZrXEOiESgb2toXOC+CZdV76e9fc54EEMAU4JckKuVdDlhM+561zQvRO2+qFk8fM8y9hv5oIyIwq5eDQvD++Lnlb2LQ7F3hmV3RiJFXr9tyzJCDPDaRqeoLJXCt/z/dnSd0rZ9fjHz6YrtqcspZPIEyOw6rgc+a07zw3ljCSnBKb9FjDXNxHB5sZSY3eR91dJ0OAWxoET3HxwUdsvhoEw0xEEZI17wSQtuJori9NB2sdF4f4y5G04mP62x6dHFeVY9UIlOaTayALprXTPKNwQ==
+ bh=EtlCuFQhZgH8waiCNG51pAOQL/KmXeZIC4+iZKujOlY=;
+ b=A5NVlieYgbtfkI6F96Lwp92j07+8JlZtdJuLopIWwoX9JEdzVLWymvo88Dr+eFC1tPfBGMj0mkiJj6HborbrKViRs/ecveaM2isYgTVDOEw426/ScGk3EjpZn7RYNTS+N0iw8c/BAltUZvVMbLZXKZKVTIwDjZxgUkLqdk9yOrJPVnO2+R4JdIFIuy3/PGAt6FYSWOJAzFjlH2WFT8jjTTzL2ke8mPK6C3QLBe8JuKLu75jMgCfSZi0WSOzVMhLNYDBBPngmH9vJJLZLAt3wgcAFpW7pDEdC7YVl+NkhBTkdvcJpMShypCzV4Af6XeZW2DZNl11668bdibMQe35cKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vtt67kG1geaGqCSHT87qrfkxm9TxMKyp888OMKq4qkk=;
- b=B4X653QskcrPv11eRtBSYnUCI2zFBkBXULhHlO14gGJirXsPmKymPOfPdFTSZeK8I4y5B8tl7K31Nct08hjvj4vLjNYUaKkokb4JeBE4mGPVuBrJMOHUMpoi+KK3O/mQ3wAtFne0D0sWiDkEtpvf5jbZgUU0pb/H+zrfUBOv/cC22IVJ3lXUfbM4mVYulDGUgSRt7/+oeh8vnUpnFzj98UPakKxTMOmem4haGKnMkK8sjOPNpLs2N85jSt/Qz4wrpx1k8u3867Qxdk+zSxY6tC/SGWRvC9YWP+44JeJ5UAm5sSU3t2LUI0me6B8yJUT8VKNj8A6c5UMliryMzoriXg==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by AM9PR04MB8257.eurprd04.prod.outlook.com (2603:10a6:20b:3b6::18) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB9480.namprd11.prod.outlook.com (2603:10b6:8:28d::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.13; Fri, 26 Sep
- 2025 18:12:19 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::55ef:fa41:b021:b5dd]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::55ef:fa41:b021:b5dd%5]) with mapi id 15.20.9160.008; Fri, 26 Sep 2025
- 18:12:19 +0000
-Date: Fri, 26 Sep 2025 14:12:04 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/5] PCI: tegra: Simplify clock handling by using
- clk_bulk*() functions
-Message-ID: <aNbXdFPrDr8V2a+1@lizhi-Precision-Tower-5810>
-References: <20250926072905.126737-1-linux.amoon@gmail.com>
- <20250926072905.126737-3-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250926072905.126737-3-linux.amoon@gmail.com>
-X-ClientProxiedBy: PH7P220CA0062.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:32c::28) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.10; Fri, 26 Sep
+ 2025 18:13:49 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%2]) with mapi id 15.20.9160.008; Fri, 26 Sep 2025
+ 18:13:49 +0000
+From: <dan.j.williams@intel.com>
+Date: Fri, 26 Sep 2025 11:13:47 -0700
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM
+	<linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux PCI
+	<linux-pci@vger.kernel.org>, Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Takashi Iwai <tiwai@suse.de>, "Zhang
+ Qilong" <zhangqilong3@huawei.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Dan
+ Williams" <dan.j.williams@intel.com>
+Message-ID: <68d6d7dbd18b4_10520100c8@dwillia2-mobl4.notmuch>
+In-Reply-To: <CAJZ5v0gnqoJ8bALZT61ZvTA=chp8y5QBiA7ZpNQ6fFJuQzZUnA@mail.gmail.com>
+References: <5049058.31r3eYUQgx@rafael.j.wysocki>
+ <2245131.irdbgypaU6@rafael.j.wysocki>
+ <20250926144947.00002f75@huawei.com>
+ <CAJZ5v0gnqoJ8bALZT61ZvTA=chp8y5QBiA7ZpNQ6fFJuQzZUnA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] PCI/sysfs: Use PM runtime class macro for auto
+ cleanup in reset_method_store()
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MW4PR04CA0068.namprd04.prod.outlook.com
+ (2603:10b6:303:6b::13) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,394 +121,175 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AM9PR04MB8257:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2344175-d80a-42c7-e216-08ddfd283b3b
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB9480:EE_
+X-MS-Office365-Filtering-Correlation-Id: f00d9f65-54d9-4686-08c0-08ddfd287103
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|19092799006|52116014|376014|7416014|366016|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dmHpbsZ0oPELCar7JynEVT28LayOLUyBe6kzZVxWp80L7/KkTY6fzjvHY3KY?=
- =?us-ascii?Q?FiQeXGQ6P9Wgrh+LmKhyLIB09mFZfN00P+8HdFuv8pbLELhGDLz7Z9tv8hdL?=
- =?us-ascii?Q?zT0cDObMRhBSIHS4MomqZaq/csLzjlN74ZEpHjrvVufdstjy/Ka2REyUfLv6?=
- =?us-ascii?Q?1fYhy68LwDAPtnrmPMyGlLdlqb2NQJWM4UtD07NG+0rdLo2rCGbzq82P5Qhe?=
- =?us-ascii?Q?cmMXclzZL3fEsPpZ9t0fLG+TWlhpUK7caNO/FT0W1sqqkI2MkfOc04Js+Hag?=
- =?us-ascii?Q?U53KXDZPdcFnfHHI5Er64u8788AWEzrkWk+cOWbI2yseBCm7bH+HVdKGS4HN?=
- =?us-ascii?Q?CX8+cMR8Qp6hL+xofjXFV5uiF74BjuZpZfwucImpKPkbjMXCCyx6L0W8+0+T?=
- =?us-ascii?Q?kJqS4f//YhVJfgXZvUYkOazEcifL2BHlWaEtNhqcembwih4RqSSJKI2BW1Bt?=
- =?us-ascii?Q?Ky5ySU0D3teVr+LiVbGztjBm4zsvDjg1JPysqwvWapJ0/UHZ9RE+QfXdcXBs?=
- =?us-ascii?Q?VOxfwvSbjR/APfG//UlIezaxLwBXuF6BlB7HE4YAGd2nk+wVXv+pRZNdvlpa?=
- =?us-ascii?Q?P2uGycHWFLBPOxUnrwA8steCJysG7jp+4Yf4TT7W3DhIRDgHI8ja0JIiEIxH?=
- =?us-ascii?Q?X8NtK3yBgzRR/ki811XrelitaPA6ORTf0azL52fPNCU7LN5RUK2SGSZCfP0H?=
- =?us-ascii?Q?qn58cC3Ga+2beK6BgxXOvCoE2sRD/4GC8W0vL2Eyxhy3cR6mqEXypyZjCDrm?=
- =?us-ascii?Q?uP25xNyaskRsSdLEgH6Q0uFnx8niogsIujkUFb2Vq0g5HXeVIT3/D8cpkGi2?=
- =?us-ascii?Q?+cMuARqlnO3cuZJzMmdqQz6xEutL0YnOHpCnKiXc3NjzQJbVqW7RvckVStxd?=
- =?us-ascii?Q?TOlEjb8AnoxYoA65/QDg+iSsGKW+uiiRwf6YitUkJ6wohe/MinnWhnPwPwHT?=
- =?us-ascii?Q?1RXh8Si+bhx2ZQOK6OvU3w2Qoq+2RaAe/VXZl4HJY0LxKn0AgoTzzwzb30Ha?=
- =?us-ascii?Q?mjZaBYSlNQdgSG3w0z5ZWJVQb9uObPTnjBAt+wXN5xyx0hWuUtJGfwDYEIve?=
- =?us-ascii?Q?Kr0fLrUwHouCZnEkYYLfqmaiYuaopdqaPlmRx9uqzHCeh6lwag//NFIR78Fk?=
- =?us-ascii?Q?sGYEw5xBVg8JDSn6eXVp5BkfNGOjRFtxfAuDONmfnZswIujy7smWEf+RR/5h?=
- =?us-ascii?Q?Y04t+p2RBcvv/7IjCvqQ5zVoQfVg9h1gBc8th2KmRU+Qw0RTk4QjeutJ7j1e?=
- =?us-ascii?Q?H+1zC6ADx+OOgqPyV73nbMVpyRzARx7jF3TnZq9uuppR5t9TKletvZof3oqg?=
- =?us-ascii?Q?2yAJJnqh363a5GbKgWxWEOIi1vQ19KePEp9BLxhqU/mPHo+x7NC51HYo9qr2?=
- =?us-ascii?Q?Dd4Qn/M3us8WWlUgZdr6PdbE0eHkAIaqfli+hBT6f3cAEVvY0maiULnwQcrC?=
- =?us-ascii?Q?WnXX/vmGlOsSG1wT+jsawf1SBSfedzzGh4tKpwMymtWGGo+H++Lqatc448x3?=
- =?us-ascii?Q?Oceyik3LY06e7r4I+SLVeO0ab1MJQls+cG3n?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(52116014)(376014)(7416014)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?R3B4cUhseGNkVVB2ci9jMkR3SStGVXp5cVpIWVUyZk9MTUdKcTd5Ui80azMw?=
+ =?utf-8?B?NWlsMFk4RXJwYWppNmVSb05pSVhaQm01Rk1lNVBzVDV6dHEvTUNuWE5oa0d4?=
+ =?utf-8?B?RndWRllNazZzWHVJUHdEeXcrVzhXU1ZsZEtDWGVuUUdKMXg0ak1Jdy9TN1VE?=
+ =?utf-8?B?RHE1SUxFcFBtMEcxZVJhcytWcW1GOUhRck5sZFFFRnNORzJHQ2gyZ3hXRFV5?=
+ =?utf-8?B?VHJiQWZyQUNEUi9saXpETVRTR0lodjF5aTVyRGlyQUZyZ1o5cTNnaVdrNTJJ?=
+ =?utf-8?B?WTJma3lhZm5YOEVZV01jOGthT3Q1aThjL0NKTjgzSGU5b0k4TlNxcU1MbjB6?=
+ =?utf-8?B?WjFEWXVwdVQ0TkhKbGM2SnpiS3ZZdFdFTjJ0VzVHd25ZZjA0bGY2R2lwSEl3?=
+ =?utf-8?B?QlRTc2taQUJmeXVYNDB4cDUyOE9pMk9rZXR6YlBjN05xdFhnZTB1b3lqSmIr?=
+ =?utf-8?B?U3l5d29RUlBSVjBHRHZPNC9ocmduU1VhVUQyd0EzRDc4dTdWaStSRnY3OVI2?=
+ =?utf-8?B?bEMxZ1hWMW50Z0paVGNsTkI0UVNHbGNoSEQxUjhYRmJmdTlocmJOQkRaUjEy?=
+ =?utf-8?B?VmlsWXVvMnBjaWk3cHpXY0wvWUhVcjFVU0JjMUVRK1ZRejFxbnlrN1lxYmVl?=
+ =?utf-8?B?cjlSNkJmcVBMbVo5b3ZMSEE2SThFNXMvNkFWempSSURoSHBiTjVMUGZjMVdt?=
+ =?utf-8?B?b1pRU05lMjlHeEdFeXpYL0Z1WVpPZUhZaCtMV3pUWklLVjFLUTJYTkJZSHIr?=
+ =?utf-8?B?a21QR1RwVGxZbTBQRVIwR3p5ZDZuRDA5aXJYbGg1ZTYxU3JLa1FZSXB3TXFx?=
+ =?utf-8?B?amUrdnZoMnB1MkU1WGIwWmREUmY4aXJ2TlZFRHl2cVdLTWtqbFBBN0ZvWlRo?=
+ =?utf-8?B?eDVsV1A1NmhaUFFQOFVVd1R5VFRJQXZzRWk2aERLZ3Y0K0xtdG9JeTV6QlN6?=
+ =?utf-8?B?NThoYXVUcy9lVGlTSFU2amtNSU1vVE52ZWo0VUxDQ0NZZk1BdkVtRndRNE5H?=
+ =?utf-8?B?VXZTNFp4WE9scm4vNm9iendINmhBQzZ4TFBYT3lpaEJIU2pDUTBYTUdrbWRx?=
+ =?utf-8?B?R1ozY0FRQmpNbzkza0hhVStMVklTUFJLbjU4dy9rcTdJcW1mRE5wQlA1dlhL?=
+ =?utf-8?B?L1VhS0VQdVJJQ01Bd3NWU3NudDFETHJUTmVHTmtnOEIwNTB4akpwbU05NGJU?=
+ =?utf-8?B?S1BuNFJsT2dFc2l6TjFCSitRcWRLQ2lybkVpL1duNFg3eGU5eVpaNWFyUjJG?=
+ =?utf-8?B?VEMxbmhGNlVNYU12MUhtTHpROXNiaFdpSW90WXk4aWJoUVNROFM0bTNUbXh1?=
+ =?utf-8?B?U2hyb3dzWnYrZFdaUUo5OVo0bkYwalF3VW5JUCt0QnE2N0xKeVB1eVQ5M0JC?=
+ =?utf-8?B?WVNkSDR5eVVmYlBzcGRkWHpJcmlQS1NwVmZXejJMN2xJaFlMa0xjTHlKRytU?=
+ =?utf-8?B?UkpDS2dEWnpKSFR2OUtESlVaeGFMWUt1N3JMT2szZm15T3M2aHQwL09sUGdW?=
+ =?utf-8?B?cmtVbWdYN0sxMnUzUkljS1FtZUVlRWFyejU0RzlYdUkyZVI2V094UG5UTVQv?=
+ =?utf-8?B?Q2s5bTJXZEp4dndmc1pvZVFKUWN3c3RFZGo5Tm11ZnR0Q0RaZnlvc3ZIem4w?=
+ =?utf-8?B?V2JsQ3FKakp3NnVJdlZFMWFXN3RBWk1aeUc5d080ZzNpZUZsanYwcGtwTHZU?=
+ =?utf-8?B?eUZ0bE14NmxJQnRxM2dtL2ZjQVFrYi9rdk1BNnEySmx6aytEaDZtcWFvcCtD?=
+ =?utf-8?B?UExCbkk5TElnalljVzVPMjJYRDRvWEQ3ZTA4R2FmaGZEbVVsNWtFZGgyMkVh?=
+ =?utf-8?B?RzZqQlF0MjFOanJyT3BYMkkwRmVCbGxKR0hSakozMThIZys1NncyUkhiZk9E?=
+ =?utf-8?B?UzZPWUxONW1QVFFVRnUvajA4WkJKOFl1VW5ISnV4bzRHYS9wWjhDbXF6eGpo?=
+ =?utf-8?B?NVNlUlpQc0lia0hoN0llK2dmUW9obHFZRXhsb1lvVW1BU2x4bXlZaklEZXBu?=
+ =?utf-8?B?aElwTDZzbk1RPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9sql8JG0Sm3sPGsOOiz+tLzupedIaOqxbdN8wygg9mkKuR+mH0w4Ap0j9Pwg?=
- =?us-ascii?Q?nvxj/LZH9xOWRcwqOLRh+ZBRaEIYfwYvv4TrHcqpBFH8aEwGAo7WEP1/q7ld?=
- =?us-ascii?Q?MBkygmLHgEPBaxyd1VZ5e31NHxS4WMw65hxbNxTZKxPks2ihggniLDpFHwEC?=
- =?us-ascii?Q?bqcMpu2ikoEwunHQa9y69sjclV3GwUFckO3uEZ/He9yGdDn6f6Ib3XkYxcOV?=
- =?us-ascii?Q?yXk/FCeBCT4pIXo0oJK2z7XF9dfwhhRMl5lOaK8enLzkuhg33+ufZ+z/TL17?=
- =?us-ascii?Q?oW2TH03j4YwC611dsT2J3yRl1AN6iFa+urW5twE2M3ycp3LI8bsBQPPNw+iq?=
- =?us-ascii?Q?uWqemZbRwECJy5RvgB+o2a7UIC9AuJ9PVt3VY9Oyl+UAXfeNKNgjs8oXpWxk?=
- =?us-ascii?Q?PfWUvDgStY3UT7QcKhZ03YUktMydjXp6EqGPaTCH59dbvLVPtpb3XVvz9Q3L?=
- =?us-ascii?Q?oeVePYG/usxuoRA2sYiUrhMkN2luVPZd/CNaOFbS3fUPduk2Kk/LLg/Iiu7M?=
- =?us-ascii?Q?Zzzcf7tmuoFLMnKeTEuZ/lw0OW3MNhmv4lH/q7EV3x30gJKJ5xx3dAOqWjtr?=
- =?us-ascii?Q?2hYoaYiV49i4ymm4rdsFHG1Z8zKG4Gu9ZgxZ4w1fgn9qR81PzIRM+TuEyvYA?=
- =?us-ascii?Q?K3bwto3o1HuM4RyJ69iDlDoKKMiGhOcdl+au3vtZregpkw0t79NdBsE7obtW?=
- =?us-ascii?Q?vzsGu49hdFuG4YaNlEUXFJZn4mZLNRjx/SZV8Em/YdpXNqMZ2fWn+DNzB5kQ?=
- =?us-ascii?Q?Wtlo8sAldVH1I5IKe+cd8TwgmNIMQ8Tvlf/amEqXRznCd9k20vtHJ+bAjdyW?=
- =?us-ascii?Q?pmo7m2vkj2xe1NPzkwMZwOKAlX6GUB2coxp1PNkvI0B0JEzfB54SIODdYb1C?=
- =?us-ascii?Q?6hAwdY5Tg0sMmowAoE25r/Z+srjZKdJtYlPuw988mvYRNyoMuCxbgEZzA68n?=
- =?us-ascii?Q?hxyLJAtMB/Etfd9lu3IFUMLYeLT7h0QnZ1oRHSCdODyJncMv3jDyboQJVFQb?=
- =?us-ascii?Q?kA7aG8ls2HzlCErLzogWtqsLpEco2LjhBZ6YApHWhaBaV0hNSaprkc7nWS9W?=
- =?us-ascii?Q?QATFd0RGhcIU/ebvImaxk4QzQHq2KFNjoXluwkboDFKFkU32TESdjs4g4HAM?=
- =?us-ascii?Q?30NPXLqDkJoR9LndgqZPVkCMPftYqAT7ZUW+ZsRqpjDLpzH0vdfwa+lauvY9?=
- =?us-ascii?Q?yZp/NZ1j/rlHCabNxK8Qq9wF/SWVP826oOOliFUQIwM8QA0xobkwX8Xm3nVI?=
- =?us-ascii?Q?Pbb8X+pFF/BZ7rMKrlg43btPXJ83hNZsCL0MhUAhXiuevNJfz6KQ4RxKr65Y?=
- =?us-ascii?Q?jznKhro9ACkyKdx+eQy7p+eWGIVeIfwS6lrrg6RNS/1VlKjfJHpzcqkuTQMF?=
- =?us-ascii?Q?6lu67dgqk+a+xT5wLid8KFFWofmEGdbemEZpjGCFJyvsD0N9efBmHRde0hY7?=
- =?us-ascii?Q?TOG84+I+wWftiEXcMRK5ET5IupxgqUvaiS069G5NULdsMwe1UIwzglUMdaVK?=
- =?us-ascii?Q?8NGqhFAPor9sCWRwMjeGcikSunh8QuJp90MKbZ4siNNEXvCqIjRGEfl1rdqE?=
- =?us-ascii?Q?CJQu8JSl9DjT5V8PHwg=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2344175-d80a-42c7-e216-08ddfd283b3b
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SllRVjBhUUFCUHJOUGc3b2txWGF3NlplbUNqWmQ1RThRL3IvNFJFYzEwaVRw?=
+ =?utf-8?B?SW9wTVMwTmk2TEdxNkgrWkpHTSs0aFJsNG1ZYkxaTXUrTXg4dzU1a2RRSk5S?=
+ =?utf-8?B?b1hVOUV0alUyV2RGaGRUOWxpbldNZGkyU1owWmw1VE0zREFJK2ptN1ZCV29k?=
+ =?utf-8?B?cnhrbFd4SjBEZlNOVlgrenAxVy9NM1hZZERpSzd4enhNWEJpbW9ZRHJaUXVa?=
+ =?utf-8?B?dFdla1JPWTJCdFlCWU5YWGZVeGhYdC9XbS93eFBWK1dadlZzTW9WbkoyVGtO?=
+ =?utf-8?B?VGFPYzRRMnV0RVZlVUdiT2VlcmNUbHUyTktwaXQ3eTdhVWJJOFh4NmN5em03?=
+ =?utf-8?B?MWRvaE9mSklTZlpDV2NzNmdPdDJEWkRsbGErdG1JWjhJQUgvQUdFNlhmazBu?=
+ =?utf-8?B?OXk3OW1qSXpRdzdkeER4NnR6d3VHbTFXSCt0Z3NTNVFhN3d6YzNuemdvWDMx?=
+ =?utf-8?B?TVJweVNRS1RDbWNnRFlqaWt2ZXFmZzFLSlFhT1dYdXNaWGpkaDA5U2FPdS9D?=
+ =?utf-8?B?d05pZjNKOG1LNlZNOVdtbkgrN0FmWDV0Y1dxUUJtbGkxSnV4TnBOYjVKUmNO?=
+ =?utf-8?B?STNjdGJSQ01FOTI1VXRRT2thbUUzOXUxOE5xaW1LdytxcUJKSVhyQjR6ZlMz?=
+ =?utf-8?B?aXlxTEZxRGpKV2NmRUVuNHlITmx5Z1ZjMW9Zc0tHQkwvNmo2ZUwrT002SHV6?=
+ =?utf-8?B?bmRneElvSDJNem5Ybncyd0Yxeit3YVJvSlR5RHBuVXQ2bEh4Mm51Vi9yMjFX?=
+ =?utf-8?B?cXVZQkphakJ6QnMveG10TzBjT3ZKY3o1L3BtQnk5V25uQk1jdXByRzhNRE1v?=
+ =?utf-8?B?bElkdHR2WXU4N3JzdlluRlBUZkNud3RlZ3FSUFlrTGNyL1lVb2lJMzEzYWFY?=
+ =?utf-8?B?Q0cwNHhsSG5NOFczcTlyRkNjbTVDNm5JQXhpNHJud1I2VEhRa0JrcEN4TVBj?=
+ =?utf-8?B?SkdIbXVwNVBWTTB6cWwzNmUwYkJ0Y3JlbTRFSCswVWZid2Q1bTNDWm1jeFZh?=
+ =?utf-8?B?enBEdXB0Rm9YUmJZRTVCcWhHb2xoZnBFNzF4SVkzVzdIY1l5TjFzdEswVHR0?=
+ =?utf-8?B?T2hxMlFSRk0wbHRGNnlzeWZ0UmdCeFR0OTBrZG1xeXdYSERGbUxWY244MkQ0?=
+ =?utf-8?B?SWdXV21ESGxwRUxITmZxOUViU2ZuaGxGeTNxd1J0M1NkZExVRlpBajh4Nlc5?=
+ =?utf-8?B?RHVDWDVXQ2lDSjdqU3dGN01Vd0N2TzFsOXVrS1QvWlNLU1NOOUtUbXpmdWg5?=
+ =?utf-8?B?SDU2ejNKRXNVcGc0UVVnWHlvUlk0bmpqeEhrcUl0bkZGd1Qxa1Z6ZkZJQ2d5?=
+ =?utf-8?B?ci9uWmYyejZCVlpFNVRYZFAyMVk2bHZBbE9EQ2xrclk1bHpvdU1tYmtQY3Nm?=
+ =?utf-8?B?cG5HVVc4MVZhSE1CcjZKM1Zxak1ndjNnalZESkdoRVhjRG92Wjd6alQxTDc2?=
+ =?utf-8?B?amt4NTNlV1paVWt0WjF0eUZmTXVycUxUUEF4bUMxYVJnS3JwMTVTcnBCcnZp?=
+ =?utf-8?B?R3BsY3ZLMWdrQzZYTEFWY0ptc2Q4UXVJdmszcURyeTZmNVhTL0ZIbWJIdDdQ?=
+ =?utf-8?B?TXd1Z21UV3RJMzNaOWFDUVd3Vlk0RjBnSDBpMGxwTWtpa1lScTZLdXlrU0Mw?=
+ =?utf-8?B?c2pHR1Rody94V0ZVb2ZqM3NyaGFTNTRXa2wyQnBxa0FXMHFqQkZXUXdEWHM2?=
+ =?utf-8?B?VWd1VnBKVjdidWF2T1U4QWc0S0dVUVBhZUtwQm95WURWTGtaZjd3YzZzcWtn?=
+ =?utf-8?B?M1ZScnk0ZGs1WDhDRHgvaXJBR0NRVFNBYVhCc1VRaEk2ZDlISy9KTXQ5dTc1?=
+ =?utf-8?B?UERmaCtwY1Z5SVcrOFBZM0pYNEtHMzF3eHRxSDZVQzRQZTBYbGxZZGxEMHVL?=
+ =?utf-8?B?TC9GMGVmeXVxTjBUVnpLMGF3MGc4L1dqTkx0ZFVoZHpnV0JCeTlQWTI3eDZj?=
+ =?utf-8?B?WSticlA4OXBjYXBOZ256TllMdGkyNkZObWhEOXZ2Mk1qb2lLaDc2ZUxhMUFS?=
+ =?utf-8?B?RmpQOVVseGJTeFRqYnowcENVQ2lFdW91cnpnTXF0U2ZrVW1qdWN5KzZ4QWYz?=
+ =?utf-8?B?bkJ0NW5yMVdzcUZtRmFha2laQ0g0MzJsRnZvV09QSUY5WFdtRGJ6cjBKeU8z?=
+ =?utf-8?B?VG5ZZ2RQOHowTlRRa1VvVlFqd2VNWHJ2U0JHUWI2dElUbDJVV3BXRUpRUTg2?=
+ =?utf-8?B?Znc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f00d9f65-54d9-4686-08c0-08ddfd287103
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2025 18:12:19.2645
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2025 18:13:49.4392
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SCngIUy7vwzawVggdlV3mJR0YINfptcJ0ZblYl8ymmlPlomMaBjhwYggos3QJO3mlSZg2j99Yi2XSxxtl3aGOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8257
+X-MS-Exchange-CrossTenant-UserPrincipalName: X/SzGMK6vKQXP1aqcqrEqv7/XVmBGKmVwBlDmyhA8sdETo1+gS42GMlGc8iPYYxpYcPvIX35Gwz2kakLBdTcmT9iYxuDCNAaks4uJzl0QKw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB9480
+X-OriginatorOrg: intel.com
 
-On Fri, Sep 26, 2025 at 12:57:43PM +0530, Anand Moon wrote:
-> Currently, the driver acquires clocks and prepare/enable/disable/unprepare
-> the clocks individually thereby making the driver complex to read.
->
-> The driver can be simplified by using the clk_bulk*() APIs.
->
-> Use:
->   - devm_clk_bulk_get() API to acquire all the clocks
->   - clk_bulk_prepare_enable() to prepare/enable clocks
->   - clk_bulk_disable_unprepare() APIs to disable/unprepare them in bulk
->
-> Following change also removes the legacy has_cml_clk flag and its associated
-> conditional logic. Instead, the driver now relies on the clock definitions from
-> the device tree to determine the correct clock sequencing.
-> This reduces hardcoded dependencies and improves the driver's maintainability.
->
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> v1: Switch from devm_clk_bulk_get_all() -> devm_clk_bulk_get() with
-> 	fix clks array.
+Rafael J. Wysocki wrote:
+> On Fri, Sep 26, 2025 at 3:49=E2=80=AFPM Jonathan Cameron
+> <jonathan.cameron@huawei.com> wrote:
+> >
+> > On Fri, 19 Sep 2025 18:38:42 +0200
+> > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> >
+> > > From: Takashi Iwai <tiwai@suse.de>
+> > >
+> > > The newly introduced class macro can simplify the code.
+> > >
+> > > Also, add the proper error handling for the PM runtime get.
+> > >
+> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > [ rjw: Adjust subject and error handling ]
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >  drivers/pci/pci-sysfs.c |    5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > --- a/drivers/pci/pci-sysfs.c
+> > > +++ b/drivers/pci/pci-sysfs.c
+> > > @@ -1475,8 +1475,9 @@ static ssize_t reset_method_store(struct
+> > >               return count;
+> > >       }
+> > >
+> > > -     pm_runtime_get_sync(dev);
+> > > -     struct device *pmdev __free(pm_runtime_put) =3D dev;
+> > > +     CLASS(pm_runtime_resume_and_get, pmdev)(dev);
+> > > +     if (IS_ERR(pmdev))
+> > > +             return -ENXIO;
+> > Hi Rafael,
+> >
+> > Why this approach rather than treating runtime pm state like a conditio=
+nal
+> > lock (we use it much like one) and using ACQUIRE() / ACQUIRE_ERR()?
+>=20
+> Mostly because devices are not locks.
+>=20
+> > Ultimately that's a wrapper around the same infrastructure but
+> > perhaps neater as it removes need to have that explicit magic pmdev.
+>=20
+> You'll need to have a magic pmdev or similar regardless IIUC.
+>=20
+> Say there is
+>=20
+> DEFINE_GUARD(pm_runtime_active, struct device *,
+> pm_runtime_get_sync(_T), pm_runtime_put(_T))
+> DEFINE_GUARD_COND(pm_runtime_active, _try, pm_runtime_resume_and_get(_T))
+>=20
+> so the user of this will do
+>=20
+> ACQUIRE(pm_runtime_active_try, pm)(dev);
+> if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+>         return -ENXIO;
 
-why not use devm_clk_bulk_get_all()?
+FWIW this looks better to me than the open-coded CLASS(). The pattern,
+admittedly coding-style bending, we are using in drivers/cxl/ for
+compactness and error code fidelity is:
 
-Frank
->
-> nvidia,tegra20-pcie and nvidia,tegra186-pcie uses three clocks
->         pex, afi, pll_e
-> where as nvidia,tegra30-pcie, nvidia,tegra124-pcie, nvidia,tegra210-pcie
-> uses four clks
->         pex, afi, pll_e, cml
-> ---
-> ---
->  drivers/pci/controller/pci-tegra.c | 100 +++++++++++++----------------
->  1 file changed, 45 insertions(+), 55 deletions(-)
->
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 467ddc701adc..07a61d902eae 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -287,6 +287,8 @@ struct tegra_pcie_port_soc {
->  struct tegra_pcie_soc {
->  	unsigned int num_ports;
->  	const struct tegra_pcie_port_soc *ports;
-> +	const char * const *clk_names;
-> +	unsigned int num_clks;
->  	unsigned int msi_base_shift;
->  	unsigned long afi_pex2_ctrl;
->  	u32 pads_pll_ctl;
-> @@ -297,7 +299,6 @@ struct tegra_pcie_soc {
->  	bool has_pex_clkreq_en;
->  	bool has_pex_bias_ctrl;
->  	bool has_intr_prsnt_sense;
-> -	bool has_cml_clk;
->  	bool has_gen2;
->  	bool force_pca_enable;
->  	bool program_uphy;
-> @@ -330,10 +331,7 @@ struct tegra_pcie {
->
->  	struct resource cs;
->
-> -	struct clk *pex_clk;
-> -	struct clk *afi_clk;
-> -	struct clk *pll_e;
-> -	struct clk *cml_clk;
-> +	struct clk_bulk_data *clks;
->
->  	struct reset_control *pex_rst;
->  	struct reset_control *afi_rst;
-> @@ -1158,10 +1156,7 @@ static void tegra_pcie_power_off(struct tegra_pcie *pcie)
->
->  	reset_control_assert(pcie->afi_rst);
->
-> -	clk_disable_unprepare(pcie->pll_e);
-> -	if (soc->has_cml_clk)
-> -		clk_disable_unprepare(pcie->cml_clk);
-> -	clk_disable_unprepare(pcie->afi_clk);
-> +	clk_bulk_disable_unprepare(soc->num_clks, pcie->clks);
->
->  	if (!dev->pm_domain)
->  		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-> @@ -1202,35 +1197,16 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
->  		}
->  	}
->
-> -	err = clk_prepare_enable(pcie->afi_clk);
-> +	err = clk_bulk_prepare_enable(soc->num_clks, pcie->clks);
->  	if (err < 0) {
-> -		dev_err(dev, "failed to enable AFI clock: %d\n", err);
-> +		dev_err(dev, "filed to enable clocks: %d\n", err);
->  		goto powergate;
->  	}
->
-> -	if (soc->has_cml_clk) {
-> -		err = clk_prepare_enable(pcie->cml_clk);
-> -		if (err < 0) {
-> -			dev_err(dev, "failed to enable CML clock: %d\n", err);
-> -			goto disable_afi_clk;
-> -		}
-> -	}
-> -
-> -	err = clk_prepare_enable(pcie->pll_e);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
-> -		goto disable_cml_clk;
-> -	}
-> -
->  	reset_control_deassert(pcie->afi_rst);
->
->  	return 0;
->
-> -disable_cml_clk:
-> -	if (soc->has_cml_clk)
-> -		clk_disable_unprepare(pcie->cml_clk);
-> -disable_afi_clk:
-> -	clk_disable_unprepare(pcie->afi_clk);
->  powergate:
->  	if (!dev->pm_domain)
->  		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
-> @@ -1255,26 +1231,21 @@ static int tegra_pcie_clocks_get(struct tegra_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
->  	const struct tegra_pcie_soc *soc = pcie->soc;
-> +	int ret, i;
->
-> -	pcie->pex_clk = devm_clk_get(dev, "pex");
-> -	if (IS_ERR(pcie->pex_clk))
-> -		return PTR_ERR(pcie->pex_clk);
-> -
-> -	pcie->afi_clk = devm_clk_get(dev, "afi");
-> -	if (IS_ERR(pcie->afi_clk))
-> -		return PTR_ERR(pcie->afi_clk);
-> +	pcie->clks = devm_kcalloc(dev, soc->num_clks, sizeof(*pcie->clks),
-> +				  GFP_KERNEL);
-> +	if (!pcie->clks)
-> +		return -ENOMEM;
->
-> -	pcie->pll_e = devm_clk_get(dev, "pll_e");
-> -	if (IS_ERR(pcie->pll_e))
-> -		return PTR_ERR(pcie->pll_e);
-> +	for (i = 0; i < soc->num_clks; i++)
-> +		pcie->clks[i].id = soc->clk_names[i];
->
-> -	if (soc->has_cml_clk) {
-> -		pcie->cml_clk = devm_clk_get(dev, "cml");
-> -		if (IS_ERR(pcie->cml_clk))
-> -			return PTR_ERR(pcie->cml_clk);
-> -	}
-> +	ret = devm_clk_bulk_get(dev, soc->num_clks, pcie->clks);
-> +	if (ret)
-> +		dev_err(dev, "failed to get PCIe clocks: %d\n", ret);
->
-> -	return 0;
-> +	return ret;
->  }
->
->  static int tegra_pcie_resets_get(struct tegra_pcie *pcie)
-> @@ -2335,9 +2306,17 @@ static const struct tegra_pcie_port_soc tegra20_pcie_ports[] = {
->  	{ .pme.turnoff_bit = 8, .pme.ack_bit = 10 },
->  };
->
-> +static const char * const tegra20_pcie_clks[] = {
-> +	"pex",
-> +	"afi",
-> +	"pll_e",
-> +};
-> +
->  static const struct tegra_pcie_soc tegra20_pcie = {
->  	.num_ports = 2,
->  	.ports = tegra20_pcie_ports,
-> +	.clk_names = tegra20_pcie_clks,
-> +	.num_clks = ARRAY_SIZE(tegra20_pcie_clks),
->  	.msi_base_shift = 0,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
-> @@ -2345,7 +2324,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
->  	.has_pex_clkreq_en = false,
->  	.has_pex_bias_ctrl = false,
->  	.has_intr_prsnt_sense = false,
-> -	.has_cml_clk = false,
->  	.has_gen2 = false,
->  	.force_pca_enable = false,
->  	.program_uphy = true,
-> @@ -2356,6 +2334,13 @@ static const struct tegra_pcie_soc tegra20_pcie = {
->  	.ectl.enable = false,
->  };
->
-> +static const char * const tegra30_pcie_clks[] = {
-> +	"pex",
-> +	"afi",
-> +	"pll_e",
-> +	"cml",
-> +};
-> +
->  static const struct tegra_pcie_port_soc tegra30_pcie_ports[] = {
->  	{ .pme.turnoff_bit =  0, .pme.ack_bit =  5 },
->  	{ .pme.turnoff_bit =  8, .pme.ack_bit = 10 },
-> @@ -2365,6 +2350,8 @@ static const struct tegra_pcie_port_soc tegra30_pcie_ports[] = {
->  static const struct tegra_pcie_soc tegra30_pcie = {
->  	.num_ports = 3,
->  	.ports = tegra30_pcie_ports,
-> +	.clk_names = tegra30_pcie_clks,
-> +	.num_clks = ARRAY_SIZE(tegra30_pcie_clks),
->  	.msi_base_shift = 8,
->  	.afi_pex2_ctrl = 0x128,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
-> @@ -2374,7 +2361,6 @@ static const struct tegra_pcie_soc tegra30_pcie = {
->  	.has_pex_clkreq_en = true,
->  	.has_pex_bias_ctrl = true,
->  	.has_intr_prsnt_sense = true,
-> -	.has_cml_clk = true,
->  	.has_gen2 = false,
->  	.force_pca_enable = false,
->  	.program_uphy = true,
-> @@ -2388,6 +2374,8 @@ static const struct tegra_pcie_soc tegra30_pcie = {
->  static const struct tegra_pcie_soc tegra124_pcie = {
->  	.num_ports = 2,
->  	.ports = tegra20_pcie_ports,
-> +	.clk_names = tegra30_pcie_clks,
-> +	.num_clks = ARRAY_SIZE(tegra30_pcie_clks),
->  	.msi_base_shift = 8,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
-> @@ -2395,7 +2383,6 @@ static const struct tegra_pcie_soc tegra124_pcie = {
->  	.has_pex_clkreq_en = true,
->  	.has_pex_bias_ctrl = true,
->  	.has_intr_prsnt_sense = true,
-> -	.has_cml_clk = true,
->  	.has_gen2 = true,
->  	.force_pca_enable = false,
->  	.program_uphy = true,
-> @@ -2409,6 +2396,8 @@ static const struct tegra_pcie_soc tegra124_pcie = {
->  static const struct tegra_pcie_soc tegra210_pcie = {
->  	.num_ports = 2,
->  	.ports = tegra20_pcie_ports,
-> +	.clk_names = tegra30_pcie_clks,
-> +	.num_clks = ARRAY_SIZE(tegra30_pcie_clks),
->  	.msi_base_shift = 8,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
->  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
-> @@ -2418,7 +2407,6 @@ static const struct tegra_pcie_soc tegra210_pcie = {
->  	.has_pex_clkreq_en = true,
->  	.has_pex_bias_ctrl = true,
->  	.has_intr_prsnt_sense = true,
-> -	.has_cml_clk = true,
->  	.has_gen2 = true,
->  	.force_pca_enable = true,
->  	.program_uphy = true,
-> @@ -2450,6 +2438,8 @@ static const struct tegra_pcie_port_soc tegra186_pcie_ports[] = {
->  static const struct tegra_pcie_soc tegra186_pcie = {
->  	.num_ports = 3,
->  	.ports = tegra186_pcie_ports,
-> +	.clk_names = tegra20_pcie_clks,
-> +	.num_clks = ARRAY_SIZE(tegra20_pcie_clks),
->  	.msi_base_shift = 8,
->  	.afi_pex2_ctrl = 0x19c,
->  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
-> @@ -2459,7 +2449,6 @@ static const struct tegra_pcie_soc tegra186_pcie = {
->  	.has_pex_clkreq_en = true,
->  	.has_pex_bias_ctrl = true,
->  	.has_intr_prsnt_sense = true,
-> -	.has_cml_clk = false,
->  	.has_gen2 = true,
->  	.force_pca_enable = false,
->  	.program_uphy = false,
-> @@ -2651,6 +2640,7 @@ static void tegra_pcie_remove(struct platform_device *pdev)
->  static int tegra_pcie_pm_suspend(struct device *dev)
->  {
->  	struct tegra_pcie *pcie = dev_get_drvdata(dev);
-> +	const struct tegra_pcie_soc *soc = pcie->soc;
->  	struct tegra_pcie_port *port;
->  	int err;
->
-> @@ -2672,7 +2662,7 @@ static int tegra_pcie_pm_suspend(struct device *dev)
->  	}
->
->  	reset_control_assert(pcie->pex_rst);
-> -	clk_disable_unprepare(pcie->pex_clk);
-> +	clk_bulk_disable_unprepare(soc->num_clks, pcie->clks);
->
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		tegra_pcie_disable_msi(pcie);
-> @@ -2686,6 +2676,7 @@ static int tegra_pcie_pm_suspend(struct device *dev)
->  static int tegra_pcie_pm_resume(struct device *dev)
->  {
->  	struct tegra_pcie *pcie = dev_get_drvdata(dev);
-> +	const struct tegra_pcie_soc *soc = pcie->soc;
->  	int err;
->
->  	err = tegra_pcie_power_on(pcie);
-> @@ -2706,9 +2697,9 @@ static int tegra_pcie_pm_resume(struct device *dev)
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		tegra_pcie_enable_msi(pcie);
->
-> -	err = clk_prepare_enable(pcie->pex_clk);
-> +	err = clk_bulk_prepare_enable(soc->num_clks, pcie->clks);
->  	if (err) {
-> -		dev_err(dev, "failed to enable PEX clock: %d\n", err);
-> +		dev_err(dev, "failed to enable clock: %d\n", err);
->  		goto pex_dpd_enable;
->  	}
->
-> @@ -2729,7 +2720,6 @@ static int tegra_pcie_pm_resume(struct device *dev)
->
->  disable_pex_clk:
->  	reset_control_assert(pcie->pex_rst);
-> -	clk_disable_unprepare(pcie->pex_clk);
->  pex_dpd_enable:
->  	pinctrl_pm_select_idle_state(dev);
->  poweroff:
-> --
-> 2.50.1
->
+   ACQUIRE(pm_runtime_active_try, pm)(dev);
+   if ((ret =3D ACQUIRE_ERR(pm_runtime_active_try, &pm)))
+           return ret;
+
+> and there's a "magic" pm though pm is not a struct device pointer.
+>=20
+> Maybe it's nicer.  I guess people may be more used to dealing with int
+> error variables.
+>=20
+> Let me try this and see how far I can get with this.
+>=20
+> > +CC Dan as he can probably remember the discussions around ACQUIRE()
+> > vs the way you have here better than I can.
+
+Yes, effectively a new open-coded CLASS() prompted the ACQUIRE()
+proposal [1]. This pm-active-state reference management indeed looks
+more like a guard() of the active state than an object constructor
+auto-unwind-on-error case.
+
+[1]: http://lore.kernel.org/20250507072145.3614298-1-dan.j.williams@intel.c=
+om=
 
