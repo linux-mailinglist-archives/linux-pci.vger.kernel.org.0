@@ -1,221 +1,129 @@
-Return-Path: <linux-pci+bounces-37123-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37124-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D966BA4E97
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:44:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FA70BA4EBB
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:46:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51C163AD36B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 18:44:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 915237AE893
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 18:44:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67201E1C22;
-	Fri, 26 Sep 2025 18:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520EA30DD17;
+	Fri, 26 Sep 2025 18:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DSmk+3aL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ir8tCqGS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B24C81;
-	Fri, 26 Sep 2025 18:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61827B342
+	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 18:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758912286; cv=none; b=UQ2yMT3WFH3E72V79x5yr+E08DXhAiW/eBzKkJjcVv3Oalrk4u+sCxOGFhD/kux8NLtuum4nb3jA9t9OAIPueAUgX4UXOVQBJ2nJk5TyEgRG6qJJ5UWCr4o3K4RlFPHNRRVS2VRLQR/KIbfd910bbczpjfWhdyz/DMTIHNy/cik=
+	t=1758912378; cv=none; b=ASJaDGFbgke4iCg/P566Vp8BW2fcHHP7AJ7LLlA9Cdw011VUB8J6QPZlDn8aCAnXW2q1K+yPy6BsdaevCuC/EeHHTz/MjoLU4KeLCHiwPuz//yg3mfRkCPSBcb5cA3J8SGL7Uv1dMkDsmJbrNyAF6Prz4hDgrodl0Ux8fTNiPiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758912286; c=relaxed/simple;
-	bh=A7Le6uma8JN9KcppDV8PAkPLPeqr+dPSkrokTaOlNJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bADHiEZOq2XQSNELpb5vQ7wmfrNN9Fq8JTd2ObUUNyW4MoN9iGP8HP3EVm3eW51fqxkU69Cl8tehvz18dnMsCom7/sWjVs/PyktXaVktXdga1mk1bi4ITaF2TuloFR47a+yIHXaLc2JEvhRnfCRxoZh83LZK10LgkgFlVoRsm1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DSmk+3aL; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58QHF1Km029912;
-	Fri, 26 Sep 2025 18:44:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=U0bIX0y+m98lPphIhY6ko7upQV06c9wlXoyPw1mEOlo=; b=DSmk+3aLqS1a
-	iV1hm+QaqnW9taWOstMD0E7rqiQgbFFXcYZ/eZ7qXI6E8qhlcTjp2uzU8C8jV3e0
-	K+01PhIg1nvZ0YS4qq/afaMadovxHIIac7BUmH010arbMxkSD/qfvQdZx14dAAUq
-	9PaWulupUG6+FNHkOqpeahyVuWp8xfcHI3nMyt4jjBHahCTTYqVfyjESz3/6SpAX
-	ogAujVxe1DaxfrgiSFlJOE8Q6pDwm0YNXrN6ohmY3B/ywS2HDFNA1K1MxfixlG1p
-	I+BwZ7RQZpf/XmwnWhYfRB1yDt3Px8O5PeS0pukD2O+pctY6d5vvkLrLBZiiANWP
-	nSQhphh0ew==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49dbbapgys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Sep 2025 18:44:43 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58QIb7Mk013648;
-	Fri, 26 Sep 2025 18:44:43 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49dbbapgyp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Sep 2025 18:44:43 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58QHH71s025848;
-	Fri, 26 Sep 2025 18:44:42 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49dawpwq5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Sep 2025 18:44:42 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58QIifEs40632834
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Sep 2025 18:44:41 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F50B5805D;
-	Fri, 26 Sep 2025 18:44:41 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1F20158043;
-	Fri, 26 Sep 2025 18:44:40 +0000 (GMT)
-Received: from [9.61.248.170] (unknown [9.61.248.170])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Sep 2025 18:44:40 +0000 (GMT)
-Message-ID: <fa1db8bb-a99f-4efe-af72-4858ee638bd1@linux.ibm.com>
-Date: Fri, 26 Sep 2025 13:44:39 -0500
+	s=arc-20240116; t=1758912378; c=relaxed/simple;
+	bh=99NoFsVWszwLzL0dGnY2jV/Q+uR4we2DXyveOu+4Occ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KOLAhbPLmmtDQR+KafL50W/SxZy6yGvVO+zSF96Fsi3F98a+gZOsEH8J8X8ys4IYzqFV9JZ7lgyGWdnnUEBF4ApA8gx4OEYxL4PQ/KeRNanOl3OeWDCEop46FfcZ7FuEe/d7FcWydCb4QbUv/oyrVD8eHZ0tTe067q7vrf0mrdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ir8tCqGS; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-269ba651d06so4167315ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 11:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758912375; x=1759517175; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=99NoFsVWszwLzL0dGnY2jV/Q+uR4we2DXyveOu+4Occ=;
+        b=Ir8tCqGSjY7fG2+bMbC96eCICN3DWieYr8p8kZM26oAb8TrwhFr29tYMG/ONxQzbhI
+         puWXlM8u0Q/ag9hzXKOcnG1H1gYk+GWzOmRqMqf7QZRDOhSEBjPgwtjTGkIuxzGNe76m
+         senx55Q/JSlzOXZdLQGNP3dWBDTDFPDc9TqBj2LwayJlJSz85XEg6iYkKtAOn6cEcejK
+         gZdDrDv4o0ljXNe4ocrYkDiz0lHnPxTft6uGPnUXIJA0bMU3+UDSpSEkJrLr5/ipVEZ2
+         k8xjcViUkWhGBy4OvfS093phtP+nnKdokgXmth9qax+zdJJNV6oYPZaGVtL6zKq5gg5o
+         Y6NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758912375; x=1759517175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=99NoFsVWszwLzL0dGnY2jV/Q+uR4we2DXyveOu+4Occ=;
+        b=MTPKmNrawL6BvfvZsh3H8WwpG+YaTLKNOcfhNkVYRMs29iOsKcPLjUEfTd65/J+1cF
+         JMIUWl2gXGJkiPBGUPLyFRjm/KsP63RBLjES84Pt53yBywBVlpLOFRXm1PFnKf0g6vCh
+         ufauQqcogJpbiiC3Dbrr1i2CTO7Z//dvuD3fiPh1TyFTSa1+NZMYmlfx7FygaRQBayyD
+         AIiV5A6i+/WaulalUxJCv1L209900N14QxngqNuYsg84BzMCRG9dpgkz7gxNn2NGDfhy
+         6mEUFHa92YTqObaW4Z5nOCse/UcgTjmSZnSWlyotr4Ogbm4SJFwosC/6l2uJbpb8qlJr
+         Le1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXJigfNUcO6mimplkKrwKHUkwVrVYYZ1RB8eiOqmawvNE/G9PAN+o+0DsuqLArKSx7xrF/PlvDi5+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv3mdLe8F7L15Qahdrxze4ovCqfDzDs9NJOvVp7BMW6FMSymMn
+	BsnR/3baMn+e68Wko8tKeqawfdNlsGW/K7DQ5YQ0IeU7cvVh4m+MFwMVxHk8iZaH0TmoKyJlZEJ
+	2DeXgmgee95E3dFquf/WsFtdBXEfqmCA=
+X-Gm-Gg: ASbGncvGHkcm4ZDyDle/dWLbC4KjL18nS/m4/2s7REpAlPXWYxI+bz6bH5WpHpkscEF
+	vAgD4XkT3TB/8pbwZ0+F9Kzrm4U5MoLaw2tuR+TG9Ok7xTby6bn3AYHJQ5jWhZH37G7VbSu/bMm
+	Tn8Vphov2Dfrw8v2srewITjD2WZ5Bd/8PSuhjdxQsJV4JDQsWulnJn9Rkypda9QV/zI5VM9fXm9
+	OxwjLmRoHBtg+oFeABfUpCFmKfnBvQ3WzW3foARMSCf+gW/7JjCtStcZAsvKV3Fkaq7jJIzs+5J
+	txhdRBY6wANYpBQC+cg8YrpMCg==
+X-Google-Smtp-Source: AGHT+IGICCMscDDR09yJt5H0iPKTO2HVhFlo2/cy7JDDWeiBMU3GNUjCo5LwRgqW0USPT3MDqhixj3g/rTT4Pi3J0GM=
+X-Received: by 2002:a17:902:d508:b0:269:96d2:9c96 with SMTP id
+ d9443c01a7336-27ed5b0a538mr51481475ad.0.1758912374667; Fri, 26 Sep 2025
+ 11:46:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: ramesh@linux.ibm.com
-Subject: Re: [PATCH] PCI: s390: Expose the UID as an arch specific PCI slot
- attribute
-To: Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Julian Ruess <julianr@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20250924-uid_slot-v1-1-09ae04f48c57@linux.ibm.com>
- <4dd8a92a-0843-4009-a9c6-3a1336dbf217@linux.ibm.com>
- <67de8faa7eca891c7c39ae83540f74369de5b783.camel@linux.ibm.com>
-Content-Language: en-US
-From: Ramesh Errabolu <ramesh@linux.ibm.com>
-In-Reply-To: <67de8faa7eca891c7c39ae83540f74369de5b783.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GXVjw1JWOBH-6ExwKV31-tyAsnJ3yX_U
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI1MDE3NCBTYWx0ZWRfX4cPn1zzTv9lq
- c7qUbcqcBBPivfcDg6jaM8yGmhLmehlWGPUF5qAE7wFvk+TI6lkHiUjoARN52yIgBbmvwpR5XRy
- 9ijDbXagICWt6LnwYjqqMSlbOTtRXB/Fe/Ky92CzfcqpYMyUo8tMz4G9Hf3ULX//ZbTDZE7m4mJ
- cgp5726H5fSWXh76IRrda0z05bqhlMkJg5m3sbZ9MO6LwZ53mAz/IV83Xpqc7B3k1kUgO8xd9+b
- J/feguT6Lu32OhDNuJH1DLRFgd3FEjZfeu0ghIAGjcCGgeE7E4MGlMQRsoqYkuZ2iCMJbnUlJbG
- HfLobgoY1X/MegYI9roNwlfm+VWeXAEvq2CPXF+wgIyaGsQ/GXJzyXKfSdQoA9B2fIf+XL4bKme
- GX8Vpaos4luwcHwreA2Q8uI4wIBHtw==
-X-Proofpoint-ORIG-GUID: Di6Ss-odSHoAP8UaCHCd-0pAfJps-Ity
-X-Authority-Analysis: v=2.4 cv=B6W0EetM c=1 sm=1 tr=0 ts=68d6df1b cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=UMODVSnWySmH3eSmB1kA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-26_06,2025-09-26_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- phishscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2509250174
+References: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com> <111409f1-33cd-4cd1-b3fd-e38402a82c9f@sirena.org.uk>
+In-Reply-To: <111409f1-33cd-4cd1-b3fd-e38402a82c9f@sirena.org.uk>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 26 Sep 2025 20:46:02 +0200
+X-Gm-Features: AS18NWDpMwmpfdQtAlAM5mfbOpZzjcwdG8Vuf5peZ5dotzDbBFdbC1UDMcnVE7M
+Message-ID: <CANiq72kNr32NKHGn=gfH52C5VLr9S0Xk0HNzroPqYhx4GngkXA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/19] rust: replace `kernel::c_str!` with C-Strings
+To: Mark Brown <broonie@debian.org>
+Cc: Tamir Duberstein <tamird@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Breno Leitao <leitao@debian.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 25, 2025 at 4:01=E2=80=AFPM Mark Brown <broonie@debian.org> wro=
+te:
+>
+> Given that we're almost at the merge window isn't it likely that these
+> will get applied once the current rust tree is in mainline?
 
-On 9/26/2025 1:36 PM, Niklas Schnelle wrote:
-> On Fri, 2025-09-26 at 11:34 -0500, Ramesh Errabolu wrote:
->> On 9/24/2025 8:14 AM, Niklas Schnelle wrote:
->>
->>> On s390, an individual PCI function can generally be identified by two
->>> IDs, depending on the scope and the platform configuration.
->> It would help to name the two IDs - FID and ???
-> How about:
-> "On s390, an individual PCI function can generally be identified by two
-> identifiers, the FID and the UID. Which identifier is used depends on
-> the scope and the platform configuration."
->
-> And then reword the below without "so-called".
-That will help a lot
->>> The first ID is the so-called FID, which is always available and
->>> identifies a PCI device uniquely within a machine. The FID may be
->>> virtualized by hypervisors, but on the LPAR level, the machine scope
->>> makes it impossible to reuse the same configuration based on FIDs on two
->>> different LPARs.
->>>
->>> Such matching LPAR configurations are useful, though, allowing
->>> standardized setups and booting a Linux installation on different
->>> machines. To allow this, a second user-defined identifier called UID was
->>> introduced. It is only guaranteed to be unique within an LPAR and only
->>> if the platform indicates so via the UID Checking flag.
->> The paragraph as I read is not clear. Your intention is to highlight the
->> need for UID to allow standardized setups.
-> Yes, that was my intention. Also here is where the second ID is
-> introduced so I'll reword this a bit if the name is already mentioned
-> in the first paragraph.
-Will await your next update
->>> On s390, which uses a machine hypervisor, a per PCI function hotplug
->>> model is used. The shortcoming with the UID then is, that it is not
->>> visible to the user without first attaching the PCI function and
->>> accessing the "uid" device attribute. The FID, on the other hand, is
->>> used as slot number and is thus known even with the PCI function in
->>> standby.
->>>
->>> Remedy this shortcoming by providing the UID as an attribute on the slot
->>> allowing the user to identify a PCI function based on the UID without
->>> having to first attach it. Do this via a macro mechanism analogous to
->>> what was introduced by commit 265baca69a07 ("s390/pci: Stop usurping
->>> pdev->dev.groups") for the PCI device attributes.
->>>
->>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->>> ---
->>> Note: I considered adding the UID as a generic "index" via the hotplug
->>> slot driver but opted for a minimal solution to open the discussion. In
->>> particular my concern with a generic attribute is that it would be hard
->>> to find a format that fits everyone. For example on PCI devices we also
->>> use the "index" attribute for UIDs analogous to SMBIOS but having it in
->>> decimal is odd on s390 where these are usual in hexadecimal.
->>> ---
->>>    arch/s390/include/asm/pci.h |  4 ++++
->>>    arch/s390/pci/pci_sysfs.c   | 20 ++++++++++++++++++++
->>>    drivers/pci/slot.c          | 13 ++++++++++++-
->>>    3 files changed, 36 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
->>> index 41f900f693d92522ff729829e446b581977ef3ff..23eed78d9dce72ef466679f31c78aca52ba00f99 100644
->>> --- a/arch/s390/include/asm/pci.h
->>> +++ b/arch/s390/include/asm/pci.h
->>> @@ -207,6 +207,10 @@ extern const struct attribute_group zpci_ident_attr_group;
->>>    			    &pfip_attr_group,		 \
->>>    			    &zpci_ident_attr_group,
->>>    
->>> +extern const struct attribute_group zpci_slot_attr_group;
->>> +
->>> +#define ARCH_PCI_SLOT_GROUPS (&zpci_slot_attr_group)
->>> +
->>>    extern unsigned int s390_pci_force_floating __initdata;
->>>    extern unsigned int s390_pci_no_rid;
->>>    
->> Will this not lead to linking error when the patch is built on non-s390
->> architecture. You could refer to zpci_slot_attr_group using a
->> CONFIG_..... and discard the #define ARCH_PCI_SLOT_GROUPS. I didn't find
->> a relevant CONFIG_... that could be used.
-> This code is in arch/s390/ it will not be build on non-s390. For the
-> non s390 case ARCH_PCI_SLOT_GROUPS will be undefined and the #ifdef in
-> slot.c makes sure we're not trying to insert ARCH_PCI_SLOT_GROUPs in
-> the array as it is not defined.
-You are right, I completely overlooked it. My comment is incorrect.
->
-> Thanks,
->
-> Niklas
+Yeah, I am submitting the PR to Linus very soon anyway.
+
+Cheers,
+Miguel
 
