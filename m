@@ -1,132 +1,172 @@
-Return-Path: <linux-pci+bounces-37098-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88B82BA408C
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 16:06:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0326BA4129
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 16:14:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42ADA4C22C9
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 14:06:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7550E3BD269
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 14:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62D32F7AD8;
-	Fri, 26 Sep 2025 14:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 331E4136E3F;
+	Fri, 26 Sep 2025 14:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cxjHGb2o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1558119E83C;
-	Fri, 26 Sep 2025 14:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBBC2FB08D
+	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 14:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758895584; cv=none; b=i1wtaWi9zGrKHHOWKSw+bCe00vomjlrOW0cCkk6RZC6bQYKUO4SZ6x7wMvIt4nn6+aSt+/1WuRVnvOhy3sgVzjdn4cv6JRmyoirs9zSdIiE5w9w1nk80IapwJGagn6PBMVXjGyDdyxkMSb5/koLXj/Lca8pv3+HcL6XHZYukipQ=
+	t=1758896046; cv=none; b=B+rOUsfHTrWnvB9cGKWv6oPPpXm1umzTCaA9C2otmcvFX+MOQwH7R5foWeADhqclNIr17In//NSNnRclYa4e3cgoIpm60cRJLsJTY73a3XJxK5mqneZwPFjPA/fFdjbUhaqH1irkTlQzg5eAoDua3a8EMwOAYHtrVLBu2DvQdFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758895584; c=relaxed/simple;
-	bh=nanZszz1JglngHCKknFjMrK0HjwD/8Fh7QHdgVjsl8M=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EyzxYvMti06NMuHnwYuRi9u2kar5O5w4MB1ZKK3LaQC9N8udp/w5dNgp93TaIWaU3D2pfDzu5cz+JDuUYN9jPjRS95UX5/y6gmrds3miTMuhKXBSn0jiMYpgCXdq0uxyInY/4b7cf7+Pb52ReKn0iL1Rs2sWjxOkGpxBajaL33w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cYC4f6zlXz6L53p;
-	Fri, 26 Sep 2025 22:04:18 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id EDB3C1402ED;
-	Fri, 26 Sep 2025 22:06:17 +0800 (CST)
-Received: from localhost (10.47.75.77) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 26 Sep
- 2025 15:06:17 +0100
-Date: Fri, 26 Sep 2025 15:06:13 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM
-	<linux-pm@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, LKML
-	<linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, "Alex
- Williamson" <alex.williamson@redhat.com>, Zhang Qilong
-	<zhangqilong3@huawei.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Dan
- Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v3 2/3] PCI/sysfs: Use runtime PM class macro for
- auto-cleanup
-Message-ID: <20250926150613.000073a4@huawei.com>
-In-Reply-To: <20250922185036.GA1983521@bhelgaas>
-References: <1950293.tdWV9SEqCh@rafael.j.wysocki>
-	<20250922185036.GA1983521@bhelgaas>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1758896046; c=relaxed/simple;
+	bh=9Uil3utnUf/+NIj0PyQtmrf2+9Z0RwwOZFba/4yoRVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c5Iv7JAn8C+U80iRfG3t+QPRW23FLqW/gFpW/8tkBKPZDUfxJdTCVm/uG3ZTKUP7SvAmXl3TzJZ1vf8Z3gNUN1K0a9IwsLaSGxLyQa8h/fNNNWlKH3jR92qTb4AXiLSYXo4pk/TvgDDrJAPNoBqy/p25Iaqk83buNqNFvoLR6pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cxjHGb2o; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758896042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qYsj9+8I0Zx27jHpluvCkiN1087KEQYq4tnoUW0GI60=;
+	b=cxjHGb2oCvS7Tj16XeTZCPXdz81ue7gEVfTFHJ//M4j4N6L2z9Qhd/+dm7uXeSXbmTliry
+	M5scn3SSkzxJSdMt3sjgIBCqZdA5lfwSbQpIRpGEXQRkpycZgBnvjWN/jliGEQ18Pw1b4l
+	LwaUU22aXtFg4wwE7DaejjRTQ9tpZ0I=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-sLCHbCM6OVyJNA3-DafEFQ-1; Fri, 26 Sep 2025 10:14:00 -0400
+X-MC-Unique: sLCHbCM6OVyJNA3-DafEFQ-1
+X-Mimecast-MFC-AGG-ID: sLCHbCM6OVyJNA3-DafEFQ_1758896034
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-427350656e3so1754105ab.1
+        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 07:14:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758896034; x=1759500834;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qYsj9+8I0Zx27jHpluvCkiN1087KEQYq4tnoUW0GI60=;
+        b=rzmOmFM2ZObkNrGsP2JmMrXdZKCH+8bWNYZiFcuGGyG1vaUfMaBT3HbmzFmIL5UeD5
+         avuQfaZp+huv8OrVd1TpNJuZTnRdZAZ0EtgNBrX/0jjuJ4ABU8QJf58YvPx8WxzDm/sH
+         6MXJF972UTtkybkk3jyHpkT/hwtOsulwyfsB5yaOIGZrmd8SEPpXMM4dFIm25F1m8zwK
+         ZNY+WUi0zVNj9oqsjyTvmnG4N7sRvhW+IoZXntauB2PBQ3JgfBezarp37w8gX2FFgxk9
+         Adqolpsd9yc320e8+bFpLg566aJWKX6DOkYUqqfSCdoQjILYAolCjjMbnGcVB/hoiu6P
+         q6hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAhz9W4W8qiQUtFkdt113ObRl+SBuo/R6ESjdQiz7nlSxyHOgStxL69Iaow+2KhNZlASqRwDfF3Fg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+RlWbfiKOLzOSc8Q3aoYV4pzuWB5rBeH1fzstNylEBA1psOC0
+	D5IItrNO8+kVAOSc2c5A02HKGIzBcdG3DbVsXJtbwqX0RY1CHN9VRsuQcnTuyK87LZfrQUsg/A2
+	24NSulOLdiF4qgkTItpYDn4rNjWcKhRL6Ymo6V+fR2YP9ReTgQ3+xs5bNQLSEHw==
+X-Gm-Gg: ASbGnctS+uJ3DVcsv8OY4wPa48Wj0JizETjsVrIXhOG2R0EIUgmLW5GNK0U2iqmXMHZ
+	2hsOEFGvl6tzNOCRY7rFcA/1Cd+LVcaNQn2J2ZepZH1CaXDVkx7ErhHMvByp/O/p6R692RhRsDw
+	QOdRIcVsA1E69P1XvYGVg1z7hbevmQTW/nANl2cG/TDI5bzhgOEit8fVv5Xu5F9LLgMnM1hvHnE
+	1E7HkXjii2bxnudAOBEfrxEBduINSHXz32OJ2Ahr8bpOXMzKy5oBjJmQY08qaA8kif8D4ypGAvj
+	nBKFVmTzFOWxkAACZ/k84nKHWUOWcsOjdPRy3xhGpkE=
+X-Received: by 2002:a05:6e02:1b08:b0:424:6c8e:6187 with SMTP id e9e14a558f8ab-425955e4dfdmr37293795ab.2.1758896034425;
+        Fri, 26 Sep 2025 07:13:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHfT8sSg9RrO7oeIo38sP5Lm5q3G5XmCIbUcAskNNx/V0hMD+Gb0yPcLZiy3wfp8DzV0Dz7Q==
+X-Received: by 2002:a05:6e02:1b08:b0:424:6c8e:6187 with SMTP id e9e14a558f8ab-425955e4dfdmr37293545ab.2.1758896033974;
+        Fri, 26 Sep 2025 07:13:53 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-56a6a5b1ec5sm1833727173.67.2025.09.26.07.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 07:13:52 -0700 (PDT)
+Date: Fri, 26 Sep 2025 08:13:50 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Christian
+ =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
+ <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
+ <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
+ Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
+ functionality from memory allocation
+Message-ID: <20250926081350.16bb66c8.alex.williamson@redhat.com>
+In-Reply-To: <20250925230236.GB2617119@nvidia.com>
+References: <cover.1757589589.git.leon@kernel.org>
+	<1e2cb89ea76a92949d06a804e3ab97478e7cacbb.1757589589.git.leon@kernel.org>
+	<20250922150032.3e3da410.alex.williamson@redhat.com>
+	<20250923150414.GA2608121@nvidia.com>
+	<20250923113041.38bee711.alex.williamson@redhat.com>
+	<20250923174333.GE2608121@nvidia.com>
+	<20250923120932.47df57b2.alex.williamson@redhat.com>
+	<20250925070314.GA12165@unreal>
+	<20250925115308.GT2617119@nvidia.com>
+	<20250925163131.22a2c09b.alex.williamson@redhat.com>
+	<20250925230236.GB2617119@nvidia.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, 22 Sep 2025 13:50:36 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, 25 Sep 2025 20:02:36 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> On Mon, Sep 22, 2025 at 05:31:53PM +0200, Rafael J. Wysocki wrote:
-> > From: Takashi Iwai <tiwai@suse.de>
-> > 
-> > Use the newly introduced class macro to simplify the code.
-> > 
-> > Also, add the proper error handling for the PM runtime get errors.
-> > 
-> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > Link: https://patch.msgid.link/20250919163147.4743-3-tiwai@suse.de
-> > [ rjw: Adjusted the subject and the name of the class ]
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>  
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Being half asleep I went and  replied to v1 when v2 and indeed this v3
-were already out. Sorry about that.
-
-Anyhow question is why not ACQUIRE() and ACQUIRE_ERR()?
-
-original discussion on how those came about rather that direct use of
-class that you have here was I think here:
-https://lore.kernel.org/all/20250509104028.GL4439@noisy.programming.kicks-ass.net/
-
-Though note, we didn't end up with the parallel universe that is talking about.
-
-+CC Dan,
-
-Jonathan
-
-> 
-> > ---
-> > 
-> > v2 -> v3: No changes
-> > 
-> > v1 -> v2:
-> >    * Adjust the name of the class to handle the disabled runtime PM case
-> >      transparently (like the original code).
-> > 
-> > ---
-> >  drivers/pci/pci-sysfs.c |    5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -1475,8 +1475,9 @@ static ssize_t reset_method_store(struct
-> >  		return count;
-> >  	}
-> >  
-> > -	pm_runtime_get_sync(dev);
-> > -	struct device *pmdev __free(pm_runtime_put) = dev;
-> > +	CLASS(pm_runtime_get_active, pmdev)(dev);
-> > +	if (IS_ERR(pmdev))
-> > +		return -ENXIO;
-> >  
-> >  	if (sysfs_streq(buf, "default")) {
-> >  		pci_init_reset_methods(pdev);
-> > 
-> > 
+> On Thu, Sep 25, 2025 at 04:31:31PM -0600, Alex Williamson wrote:
+> > On Thu, 25 Sep 2025 08:53:08 -0300
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
 > >   
+> > > On Thu, Sep 25, 2025 at 10:03:14AM +0300, Leon Romanovsky wrote:
+> > >   
+> > > > > It would at least make sense to me then to store the provider on the
+> > > > > vfio_pci_dma_buf object at the time of the get feature call rather than
+> > > > > vfio_pci_core_init_dev() though.  That would eliminate patch 08/ and
+> > > > > the inline #ifdefs.    
+> > > > 
+> > > > I'll change it now. If "enable" function goes to be "get" function, we
+> > > > won't need to store anything in vfio_pci_dma_buf too. At the end, we
+> > > > have exactly two lines "provider = priv->vdev->provider[priv->bar];",
+> > > > which can easily be changed to be "provider = pcim_p2pdma_provider(priv->vdev->pdev, priv->bar)"    
+> > > 
+> > > Not without some kind of locking change. I'd keep the
+> > > priv->vdev->provider[priv->bar] because setup during probe doesn't
+> > > need special locking.  
+> > 
+> > Why do we need to store the provider on the vfio_pci_core_device at
+> > probe though, we can get it later via pcim_p2pdma_provider().   
 > 
+> Because you'd need some new locking to prevent races.
+
+The race is avoided if we simply call pcim_p2pdma_provider() during
+probe.  We don't need to save the returned provider.  That's where it
+seems like pulling the setup out to a separate function would eliminate
+this annoying BAR# arg.
+ 
+> Besides, the model here should be to call the function once during
+> probe and get back the allocated provider. The fact internally it is
+> kind of nutzo still shouldn't leak out as a property of the ABI.
+> 
+> I would like to remove this weird behavior where it caches things
+> inside the struct device. That's not normal for an API to do that, it
+> is only done for the genalloc path that this doesn't use.
+
+My goal in caching the provider on the vfio p2pdma object was to avoid
+caching it on the vfio_pci_core_device, but now we're storing it on the
+struct device, the vfio_pci_core_device, AND the vfio p2pdma object.
+Given the current state that it's stored on the struct device, I think
+we only need a setup call during probe (that could be stubbed out
+rather than #ifdef'd), then cache the provider on the vfio p2pdma
+object when a dmabuf is configured.  Thanks,
+
+Alex
 
 
