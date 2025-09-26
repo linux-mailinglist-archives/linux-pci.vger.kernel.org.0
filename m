@@ -1,409 +1,142 @@
-Return-Path: <linux-pci+bounces-37079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BDA6BA27F8
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 08:12:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B58FBA2C6A
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 09:30:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA30F2A4EF5
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 06:12:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8B863A3C13
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 07:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7843327A442;
-	Fri, 26 Sep 2025 06:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548EC287265;
+	Fri, 26 Sep 2025 07:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CotwOiFS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K60Oi0or"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD4F25FA05
-	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 06:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758867159; cv=fail; b=NLzHONPEZ3+nJ/wUoTeDJ3N/Yff6cFemOJTWIuC59C4xswqbOOhvH4VYM+InFpWRWiDeolRL49tgnMXRA2co3To9y2SPHzDpmbdY+lRbvtwnTOtWgNYQfX7r1NjDDNJgaX5S/q/MvgSWqcxkD9jVZRs52eAT6d6F5E2HoyCbAdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758867159; c=relaxed/simple;
-	bh=3b1DoHvwlfCM+66B6GpuiOg8jxgg+U/X4cmVSyKherM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=reod/D/TzIGij5lSveuBmqzI4xNvCiBKw5sE8CwM8NHUot2lDiMfSz8Wj7sLQd2vbAZXMYohdZcrwFBkNQDWAChq3G6d5ItChustMhBbVWJXxuTIBjaScMpPOEXPDlPEflpX99Pxe0jnympOuH7GHut/+H2UgU5XZ3du1SBV1+k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CotwOiFS; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758867158; x=1790403158;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=3b1DoHvwlfCM+66B6GpuiOg8jxgg+U/X4cmVSyKherM=;
-  b=CotwOiFSZMwew6i/p/GhyyGlj93+sp3MoeBsMoH0p9yel7/0JH+yWY5a
-   GWwCt/kPTh66VEh9hpIip6OWwgcpEVKa4+sdWg6FVRHO37mtda8IkY/Go
-   /dJXnkFYLVjxhMT9DqHbY+hQQYCTLaJYhS2msFofVxz5rjI5MmU1iWwvM
-   +yZxuC8WVRwxPmGw69VFuJa4jB6ErVIm9jOCGycdkT5yKuFfj2TRPjeFb
-   Duv6nOIBONULT/Xk3ZFz4eTG0JzD/4tEpC3U5pp88J/UdyWlD5u4QIWiE
-   t/Pjvx9E8Qugu4hrsTtwbpNmFBV70VpaqXTsbHy/B17u1fJ7nagPyCZiO
-   w==;
-X-CSE-ConnectionGUID: C/dowyNCSmqJ52unNgBP8Q==
-X-CSE-MsgGUID: If5t75FgTEWDipjbpMiLOw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="61303749"
-X-IronPort-AV: E=Sophos;i="6.18,294,1751266800"; 
-   d="scan'208";a="61303749"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 23:12:37 -0700
-X-CSE-ConnectionGUID: OR2xvG1LTae+xiBzbN33JA==
-X-CSE-MsgGUID: Q7jgc+IgRR2ctQfXAt/GvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,294,1751266800"; 
-   d="scan'208";a="214662782"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 23:12:32 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 25 Sep 2025 23:12:27 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 25 Sep 2025 23:12:27 -0700
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.70) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 25 Sep 2025 23:12:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O06XAUOmXH6RvdwGvSXnxCPwCWuuslRPOMWgFFpT4uyFM4XHWsPMfxBrM0ujhyCh2ICg5kUwNSgJ7lNKQ0MP4xnaxFfkN/hUhj+cg1f89FU9H01nsPeGk5kG5f0KX1uTcmOJid/vBTRWi9rhrJasZhHcCu5eOBctUcrxyS2zJCJDVSUQClfeWGtgYC1xXyLMrus4XqZPhzli0VfOTIyY829AR0djVo+lGMAY2HKL45mviaJ4pQ/6c9W+M9cEjOvGze4VZ2wOlhb6CU/1WfujccBWzxpduREGHnvwi7tg3jAQDk3Dd3egXUYFAOeU1AqwizVNPjytX6+iAyZiRjOwwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XSoUAZXA8uAYektDRGn+5sb/wDHtcC88kjE4G6Rpoo0=;
- b=LE7cTgWWfUzsyNhbcnE8gqNs05qSG07aVQMA0j8t6T7UyDWpfzgeiC616Ael54/9u7FnMF99rZg7ZoFijn5sf1z/InfkKZqSJOmfbC5vCMjDeyjoPwFHpH2EaylMLIN2v403IwLbON2buJ80NyERULNypj9BVKnWigmYKNwPw6JqlHyfB8hLuu4jP1hE0e/XXM1NWzsJiBn3HHApgIzF9vmSpDOzXmfRfD33tkRynC+Vi1xftE17JnSfmwreEEyx7XnFlugm6gRfmH0oFTHNvJMevninPj7FiUCZ39WzFI9QFsf/8jMn8wOlAG1Tex13Ssqt0O8MWPKn0zvwB4QFog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
- by PH8PR11MB7047.namprd11.prod.outlook.com (2603:10b6:510:215::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.9; Fri, 26 Sep
- 2025 06:12:19 +0000
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b%4]) with mapi id 15.20.9160.008; Fri, 26 Sep 2025
- 06:12:19 +0000
-From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-To: =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-	=?iso-8859-1?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, Jason
- Gunthorpe <jgg@nvidia.com>
-CC: "Brost, Matthew" <matthew.brost@intel.com>, Simona Vetter
-	<simona.vetter@ffwll.ch>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "intel-xe@lists.freedesktop.org"
-	<intel-xe@lists.freedesktop.org>, Bjorn Helgaas <bhelgaas@google.com>, "Logan
- Gunthorpe" <logang@deltatee.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: RE: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Thread-Topic: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for device
- functions of Intel GPUs
-Thread-Index: AQHcJhH5Hi/XzGn7NEC5e+4cxcvJFLSWGoCAgAIWItCAAKwBgIAASuAwgAFOcYCAAGQ08IAEQCiAgAAQEACAAJXxIIAAmVaAgAAFRQCAABLXAIAASZgAgAAITACAAAe3gIAABICAgAACuoCAAALjgIAAnAEggACKBICAAR26cIAAr2mAgAAKW4CAAIVB4A==
-Date: Fri, 26 Sep 2025 06:12:19 +0000
-Message-ID: <IA0PR11MB7185C8F6E826139E42ED29CBF81EA@IA0PR11MB7185.namprd11.prod.outlook.com>
-References: <045c6892-9b15-4f31-aa6a-1f45528500f1@amd.com>
- <20250922122018.GU1391379@nvidia.com>
- <IA0PR11MB718580B723FA2BEDCFAB71E9F81DA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <aNI9a6o0RtQmDYPp@lstrano-desk.jf.intel.com>
- <aNJB1r51eC2v2rXh@lstrano-desk.jf.intel.com>
- <80d2d0d1-db44-4f0a-8481-c81058d47196@amd.com>
- <20250923121528.GH1391379@nvidia.com>
- <522d3d83-78b5-4682-bb02-d2ae2468d30a@amd.com>
- <20250923131247.GK1391379@nvidia.com>
- <8da25244-be1e-4d88-86bc-5a6f377bdbc1@amd.com>
- <20250923133839.GL1391379@nvidia.com>
- <5f9f8cb6-2279-4692-b83d-570cf81886ab@amd.com>
- <IA0PR11MB71855457D1061D0A2344A5CFF81CA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <1d9065f3-8784-4497-b92c-001ae0e78b63@amd.com>
- <IA0PR11MB7185239DB2331A899561AA7DF81FA@IA0PR11MB7185.namprd11.prod.outlook.com>
- <ab09c09638c4482f99047672680c247b98c961c9.camel@linux.intel.com>
- <50c946f3-08c5-421e-80bf-61834a58eddf@amd.com>
-In-Reply-To: <50c946f3-08c5-421e-80bf-61834a58eddf@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|PH8PR11MB7047:EE_
-x-ms-office365-filtering-correlation-id: 67d104d8-8eed-4b18-4f6a-08ddfcc3a64e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?XJ3zbGZfzdbt5nHQrYJAnCm3EyK5+Sz14X8eqDqDxIHztzJxIbcLfzzzX3?=
- =?iso-8859-1?Q?yDpsuZ2474BUujOIfCRZmHH7KQ8+Rxwrz4cKqNWqzzBGUJmC9pv/WLuTgQ?=
- =?iso-8859-1?Q?T/qCmFFfGp/riPxRetDPfiKoq8YkJNco0gdKei49rSFR1kfWCsOmXdu3+0?=
- =?iso-8859-1?Q?XO4JBuazQRFe7iRfWXexxQG3CAjT525Ju6GESW0LVDRa+BPqRECOmGr5zG?=
- =?iso-8859-1?Q?CP2PddAcXI+dYXAe5u81zTUdVI+XSfI93jdmK5kQOK25banwPwAAxhQdio?=
- =?iso-8859-1?Q?ZpDFVUFYUczbyABqWWRbimIrj5w0dARUAyN1p2bYDT+jdcTeAx/CgvJLiV?=
- =?iso-8859-1?Q?Vtshtq9onirX9KQ1TAn7qr83mDMoxx2RgbMW3oPel3H9ffioeS3amkdrJr?=
- =?iso-8859-1?Q?RBPTeeWdF/ulKVtr+TnlNRc9tc/pnq+yhysG/cMC0kkhzQfMf2nhF2AHRX?=
- =?iso-8859-1?Q?VB6V4W2TDxhMRGuf2F7AO232iuyVMcj+pLtGGnDorJxL7fzysUoPVKdDxI?=
- =?iso-8859-1?Q?i/Ej07sP8/Xsa7twJYrLeq6ZWXHGiU32KM4KFE128SP7ot4gQ9BZMCVVx+?=
- =?iso-8859-1?Q?i3j1fOcngbz0gWlfmv7KM1glJcFD3e3k/0E9hvyc0gpBjh+JkZQF+4gI4+?=
- =?iso-8859-1?Q?xKAOkj/RkKUYh59qWjSK2hkhAW5zQ3F5xmGKb67kdnb0I8IV5Ub2ukN0C+?=
- =?iso-8859-1?Q?JbEMGCS/COHXsLtZnGukYP+VJrr2B/SZ3eA06tE98AJ2j52+EGRl65UY9T?=
- =?iso-8859-1?Q?n4Tc8MvQ+UqVsCGyCZmOVFWhCvjAtilIPzwu9gg4t1zT2nv6hr5pg2HH/p?=
- =?iso-8859-1?Q?pZm3S63G5tZ2pcb7L3VBg4fuj/luFQAjIEZNUo9Me41Y9BZf7I7glgOQZt?=
- =?iso-8859-1?Q?/NtJEeS+BCooSgAlQ69tieE+ovVXMNUS2xOXaQ6YC65qMSx/jc0KPWJfgp?=
- =?iso-8859-1?Q?GKfGngHfBuV66VxH8t6fhm3kMXyNBDcK6WUwnw4kCiNe7rH1j85DvvEZh0?=
- =?iso-8859-1?Q?BJjUkKnpfreUf5mGMlo5wbniMjvHbpOUqKjN9zVV7zMFJGJ1hkF/3JVJ18?=
- =?iso-8859-1?Q?ROEg83zB0OOeZSK2lKdn4jJndQmQO/wNNDHHaiqyDQII1AZSMgD6wZDaCu?=
- =?iso-8859-1?Q?EznHbewZeS0xAdupv1/l70RDAVDafgSZmk1XAbiSxmhdIqU//Shz18cvif?=
- =?iso-8859-1?Q?j9gjQ0R9/hYtIuj04VtKcysI8X6XOj2kMtfaUwHxnPNq5WYCl2tp34AHM+?=
- =?iso-8859-1?Q?2P6pkZBxvBdTWwcQjJIB3cj5tksg7g/z/beqajcOf5TzUmzzM93Kx367om?=
- =?iso-8859-1?Q?ip7eRf/s3Dm5Y/DngC2irDuLi+Tr+FTo9mu0uYt7wTXi59UiT5lMU279Qu?=
- =?iso-8859-1?Q?wuCD2t/BvDERbzlROTFqVGNw33/nF/wVBCU8YCt/RxqLJc39qhAr1WIGOW?=
- =?iso-8859-1?Q?2S/pxm1RTNrE5n8IaRtci1mEnweizW5wAuaYa0z98YFMeq9B3jNO6wbc5n?=
- =?iso-8859-1?Q?MR2SrjcSGIEzEYNe4xa0KGg6SJA20lUkieJs6NghitFw=3D=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?2TmXVdogZ50Plw0y0yxUAh4uG1mppKNQvEbB7aI9qYB5Ob5Boj5WqEAL/4?=
- =?iso-8859-1?Q?amY7f1wRo3O/OBUig42HQySqCBF5naGPgSQ29dybrSk95gRFiRQVLaKH5n?=
- =?iso-8859-1?Q?ZIOn7MJZsjZeGCEZZ4QWvn4rX+mr5jcxUH98Nx63OGmfG5kdGp+stgSMus?=
- =?iso-8859-1?Q?BNxXbV1zLvTKNgoCdGa09imC+0/GGcpyy60lTLSJDrRd0FP7haFJbnhkJT?=
- =?iso-8859-1?Q?TLwt4pZRnWQSrGGsBVVJjOXRHXJ29RL1aFfGRRcXcQqddqafw3n0WifjqT?=
- =?iso-8859-1?Q?Dmf7jpPqhLC6f0f2Ps/gx9AdXSnt7cBJBmSO6wFzwWhUEifl0NtGz7xLJw?=
- =?iso-8859-1?Q?Q1XuAaKhPhBv876jGIYIZDtU4MuMy0gr80lEFIla6cENStrmpPkN4ANodi?=
- =?iso-8859-1?Q?+vxaJgOeLh1cBvzc9f5DPpmGWoH4I6BCfzJKyMNC7p20Cr0fQKH36dE/mz?=
- =?iso-8859-1?Q?QoABMjicjtZmE80PlG8L+0lMvnSVisOA3wvQLy5g40HKvcRzAKeinzDKtD?=
- =?iso-8859-1?Q?hhHqUFQuiMtjCNc/PtGpNEr6gYO3in6FwcuVCslAM48HrsSK3a+sZwP79g?=
- =?iso-8859-1?Q?tw5q+jkIPMIPe24inlwPwWJsewfj2NnguFxT0usE3EhBoTf5USI+JorDNF?=
- =?iso-8859-1?Q?MYvZoTJi2dr8lq9ie1VOV5QJFEpLIJPO1eBVN5CufoDQfK0vlwvpLN2jAR?=
- =?iso-8859-1?Q?tqXt4Ap9aBnguWbUCjh7bneOkWGkNEnLEpfXlPf4Xg7rfuC5LWyNhZNZOB?=
- =?iso-8859-1?Q?cvNnMbJg6bbmVyjXwc77lqFBEj6Oata7VKCKgo/nEDKyOPRn/P2PfA5gW+?=
- =?iso-8859-1?Q?MTobZWJ90ardS4y+wY0TnD2E/WN6OhaZyAgAxm0xGA424B+H79Sh3fsc9G?=
- =?iso-8859-1?Q?F5Rc+T/XOpol2L+wPafCTJfM02RaEYqngV42B/hZB30SW0VrHlYOfGLZSc?=
- =?iso-8859-1?Q?0IPbMOOJ3HriL8fjURWg0CH0nOSpU8A32R6otX4uZWD4My7jNy+XvdU82s?=
- =?iso-8859-1?Q?h8Pl+LHr1vj9qiSBsCtTFQgR3loXOAN/SX2Lzb5X6Uz1zN4uRsni2o+7Cz?=
- =?iso-8859-1?Q?GvEY2Wvyc6xAnWVpLlUReegvJw/u7wAH8MCEjMgTPl6pUTOwHH9hudd2oM?=
- =?iso-8859-1?Q?onjs8BGAUjJd6zKvi6fAf++Y6tC+NWoxAnyt6peccZ/+3nWX9mPfEjzCZF?=
- =?iso-8859-1?Q?YvYQecP68NdML0B12mFKk88xWJtcSa8XBt/DIhmeIPTZRZhdgnQ0A4Uwm4?=
- =?iso-8859-1?Q?i/1/uLf1TqSpfXg7w4ONgskRzs1cKc1KG0k/UA3soUomRSpkI+beEZ3hIo?=
- =?iso-8859-1?Q?ykfcrYWG8z5Mh9cAC3n3efZroQFKqO0RrgYbTNu+MpIHEMaHTmgwazX5wh?=
- =?iso-8859-1?Q?ejfoOZYbmafs2GCQiPZsgsssj5tzqulaPIgk7Eeysgk8+HjueBxcQNllcZ?=
- =?iso-8859-1?Q?qwOLfflSwbZNAHfq2dDCXqBqJibk863t3Y7DMc/f0df2kWXyEMVpWtvEy+?=
- =?iso-8859-1?Q?yKdgK1qjmNRH1VYXd6h+PPr8HFD36c+HurJRbNKzlLKlikc55++Dga7VR9?=
- =?iso-8859-1?Q?44vUu5cJ3ke5I/5bFgWHb/t7ERqcu9OQ3syOs9/oIMX9c4VLta16T2X7JP?=
- =?iso-8859-1?Q?eH2PXLDMHYK/ElaWYQnj57pWoAUDzWlqtO?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994A7286D6D
+	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 07:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758871757; cv=none; b=AEtvdDhNwbN3vMVgWfUVx9SJ3cHPFDzhoTjkkynspqsUakz8KzqoiCWL9cDvHvG3NMzPdj7gVgtkM8FHMW0i1eQwH7opIQaxpqyda+ZLvxcE9A/n+fVkUX/skJGHqSWaXh/hIb7X5k8qc+52n8HULIG/sP+/3P0o6NyexUyrzsA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758871757; c=relaxed/simple;
+	bh=KKeLdXdxMAxZlR0cCMx0pVd79S7jNFLhBZQcQpx/FbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z2UTxHSqH4R99xvROPjvnFME9LOCI/gb3jBxiZQnldm5GvYUPiKOnm9pMFrXdH/EOrxsIH/r/asGnQdKSawXH0Q80XpK869dCTrCASsb+p6KFRZoXNVe8P57RBSOrZpUSX9w1xH5kJJ4q7kigbijAvxIbO6W6ZuAOeBTmWlHh0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K60Oi0or; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b555ab7fabaso1764475a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 00:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758871755; x=1759476555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYEa9oczgUXfiwew8zKgW7hYIrVnSKo3dCzTihagGEA=;
+        b=K60Oi0or+zeuFSRcfSW8SlDcSOy8uPXFPwzMAf5qQoPB80pri9tfrIDwjbgkh8SYeq
+         2BQTdXCSBywy8aZ3361KKcxu7n8NFqmhUahbEh77zDC526ZLO8h6UxOJonN7tgKOYjwy
+         7r053WIPNTbitgzAgHW8cXp6ERniOzs0vKtitG8pnEnEB5MKyp4BSQ4m1jdZY1upwSUH
+         yI6Oy5CfZ93IS8ADUnvKJTq6o1KyszSvB20/bBttcj12RVMAZ/whBZXBuwJADmpiV+j8
+         Ud9vcH/uDaDBG2DQ+5YhxyuXXciYBiQPVX4L+TdeQ6UjZcPaglgF9sYysJL9JeO+DS/i
+         lNlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758871755; x=1759476555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eYEa9oczgUXfiwew8zKgW7hYIrVnSKo3dCzTihagGEA=;
+        b=CoqrdEDT0qmz4zw/2Jg9grDw/RDHC4lFoFYLF2AVKLnuAKevMzqah1m59qqDQYvJ8P
+         11pFqDlITo21Z24HPGATLy8x3FdzDf8vFnyD/7TDOS8yJT0HkSX5fSc9KqRtjPNR/XCZ
+         F8cVAYx+rgl1sH1oHCRif6o+LngjkvXMha+RoxemvwiSMzick2aATnTYUZOh5uuLBTzg
+         fPCB9vwfa7lDUda+E30TBApFfLe3jFqR0f4D5B3Mlod2GfEuDrrc40xyzKrfXy7ZsN24
+         wjs/GFQIJIQENHwwamq1XNyUZIv7N/XxG5AcfqYutIdktIwR7LiJkwfzedUebWYEiMMT
+         tttA==
+X-Forwarded-Encrypted: i=1; AJvYcCXB51y5ptepxI4V8U1nfzSOldk5uiDYj4cTh7+W1pFwr4r1VxGZo0r4wjJktwQdsHS5xV7S0Cpdy2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDRmy/z1oVtECzeYiAXk4c6Yrhj6FOPg8SIQ2QO1KPs1b/Gfsf
+	FCuOIcncf2aUKkfwgHax+RiWNGW4FYIGyeI4a6k+7vmO8cdHpXljzmEJ
+X-Gm-Gg: ASbGncs06kpIt87GDe2Fdq1iVtRZGVx0Pcp2f/MKruBrl13C8PFIEMbNxSX/moMmG/i
+	r9848HaqTEBvn1Yk7SXU/e8Z//VloHyqTrCtgxTyV4kaXFQCaAG5+b4yRv3EZNKrz71YWKnXj9m
+	I9NtV96fITbupSLays2im7BkNjMEVr6RtsRJnCgOUGeCx3PL586EuiFBep/HsjBQ0GUBcki/K67
+	kP7/7k+qBomiXeZ2Qjv2UsT8xYeIr6UtOhOfTrwpqaBu1Xpu72EcUzWB8X+N+oQ4y2RaYefKHy+
+	ajlUBlr8CthL1HKuVrG6aM7R+eEnG0Ghy3gVH0+05/d1IJHGDrmsWC1suZZkw4QlYXpuMJ49Yis
+	5vJ/7n+NxataJzhqV+Naj
+X-Google-Smtp-Source: AGHT+IFnyJDdAuSLIa/C8964VsLcbnuC5hHMVE2YI+68PeLlsmcnEA8Npkepb0UD0ObLZTs0q3j5XQ==
+X-Received: by 2002:a17:903:22c7:b0:26b:3aab:f6b8 with SMTP id d9443c01a7336-27ed4a603dcmr74120275ad.58.1758871754907;
+        Fri, 26 Sep 2025 00:29:14 -0700 (PDT)
+Received: from rockpi-5b ([45.112.0.216])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed69a98b9sm44083065ad.111.2025.09.26.00.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 00:29:14 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v1 0/5] PCI: tegra: A couple of cleanups
+Date: Fri, 26 Sep 2025 12:57:41 +0530
+Message-ID: <20250926072905.126737-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67d104d8-8eed-4b18-4f6a-08ddfcc3a64e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2025 06:12:19.4837
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qNjR0xOTXvrL2zUeMLIUmplC5Fe7IsU+x4yziuLU86R2ueL8waYR6UN5YT3QvkSUdES+3e+kn4zJ/dWKWTUyRuAkbqFBwP6K4auIHnGYBGU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7047
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Christian, Thomas,
+Hi All,
 
-> Subject: Re: [PATCH v4 1/5] PCI/P2PDMA: Don't enforce ACS check for devic=
-e
-> functions of Intel GPUs
->=20
-> On 25.09.25 12:51, Thomas Hellstr=F6m wrote:
-> >>> In that case I strongly suggest to add a private DMA-buf interface
-> >>> for the DMA-
-> >>> bufs exported by vfio-pci which returns which BAR and offset the
-> >>> DMA-buf
-> >>> represents.
-> >
-> > @Christian, Is what you're referring to here the "dma_buf private
-> > interconnect" we've been discussing previously, now only between vfio-
-> > pci and any interested importers instead of private to a known exporter
-> > and importer?
-> >
-> > If so I have a POC I can post as an RFC on a way to negotiate such an
-> > interconnect.
-I'll start testing with the RFC patches Thomas posted and see how they can
-be improved to make them suitable not only for this use-case but also for
-the other (iommufd/kvm) use-cases as well.
+This small series provides two cleanup patches for the Tegra PCIe driver.
+The overall goal is to replace custom, open-coded logic with standard
+kernel helper functions.
 
->=20
-> I was just about to write something up as well, but feel free to go ahead=
- if
-> you already have something.
->=20
-> >> Does this private dmabuf interface already exist or does it need to
-> >> be created
-> >> from the ground up?
->=20
-> Every driver which supports both exporting and importing DMA-buf has
-> code to detect when somebody tries to re-import a buffer previously
-> exported from the same device.
->=20
-> Now some drivers like amdgpu and I think XE as well also detect if the bu=
-ffer
-> is from another device handled by the same driver which potentially have
-> private interconnects (XGMI or similar).
->=20
-> See function amdgpu_dmabuf_is_xgmi_accessible() in amdgpu_dma_buf.c
-> for an example.
->=20
-> >> If it already exists, could you please share an example/reference of
-> >> how you
-> >> have used it with amdgpu or other drivers?
->=20
-> Well what's new is that we need to do this between two drivers unreleated
-> to each other.
-Right, that is a key difference.
+These changes improve the driver's readability and maintainability by
+everaging modern, well-tested APIs for clock management and register
+polling.
 
->=20
-> As far as I know previously that was all inside AMD drivers for example,
-> while in this case vfio is a common vendor agnostic driver.
->=20
-> So we should probably make sure to get that right and vendor agnostic
-> etc....
->=20
-> >> If it doesn't exist, I was wondering if it should be based on any
-> >> particular best
-> >> practices/ideas (or design patterns) that already exist in other
-> >> drivers?
-> >
-> > @Vivek, another question: Also on the guest side we're exporting dma-
-> > mapped adresses that are imported and somehow decoded by the guest
-> > virtio-gpu driver? Is something similar needed there?
-AFAICS, nothing else is needed because Qemu is the one that decodes or
-resolves the dma-mapped addresses (that are imported by virtio-gpu) and
-identifies the right memory region (and its owner, which could be a vfio-de=
-v
-or system memory). Details are found in the last patch of this Qemu series:
-https://lore.kernel.org/qemu-devel/20250903054438.1179384-1-vivek.kasireddy=
-@intel.com/
+v1 Added new devicetree binding nvidia,tegra-pcie.yaml file.
+   Switch from devm_clk_bulk_get_all() -> devm_clk_bulk_get() api.
+   Fixed checkpatch warnings.
 
-> >
-> > Also how would the guest side VF driver know that what is assumed to be
-> > a PF on the same device is actually a PF on the same device and not a
-> > completely different device with another driver? (In which case I
-> > assume it would like to export a system dma-buf)?
-Good question. AFAICS, there is no definitive way for the Xe VF driver to
-know who is the ultimate consumer of its buffer on the Host side. In other
-words, the real question is how should it decide whether to create the
-dmabuf from VRAM or migrate the backing object to system memory and
-then create the dmabuf. Here are a few options I have tried so far:
-1) If the importer (virtio-gpu) has allow_peer2peer set to true, and if Xe
-is running in VF mode, then assume that PF of the same device is active
-on the Host side and thus create a dmabuf from VRAM.
+Tested on Jetson Nano 4 GB ram.
 
-2) Rely on the user (or admin) that is launching Qemu to determine if the P=
-F
-on the Host and the VF are compatible (same device) and therefore configure
-virtio-gpu and the VF device to be virtual P2P peers like this:
-   qemu-system-x86_64 -m 4096m ....
-  -device ioh3420,id=3Droot_port1,bus=3Dpcie.0
-  -device x3130-upstream,id=3Dupstream1,bus=3Droot_port1
-  -device xio3130-downstream,id=3Ddownstream1,bus=3Dupstream1,chassis=3D9
-  -device xio3130-downstream,id=3Ddownstream2,bus=3Dupstream1,chassis=3D10
-  -device vfio-pci,host=3D0000:03:00.1,bus=3Ddownstream1
-  -device virtio-gpu,max_outputs=3D1,blob=3Dtrue,xres=3D1920,yres=3D1080,bu=
-s=3Ddownstream2
-  -display gtk,gl=3Don
+RFC : https://lore.kernel.org/linux-tegra/20250831190055.7952-2-linux.amoon@gmail.com/
 
-I am sure there may be better ideas but I think the first option above is a=
- lot
-more straightforward. However, currently, virtio-gpu's allow_peer2peer is
-always set to true but I'd like to set it to false and add a Qemu option to=
- toggle=20
-it while launching the VM. This way the user gets to decide (based on what
-GPU device is active on the Host) whether the Xe VF driver can create the
-dmabuf from system memory or VRAM.
+Thanks
+-Anand
 
->=20
-> Another question is how is lifetime handled? E.g. does the guest know tha=
-t
-> a DMA-buf exists for it's BAR area?
-Yes, the Guest VM knows that. The virtio-gpu driver (a dynamic importer)
-which imports the scanout buffer from Xe VF driver calls dma_buf_pin().
-So, the backing object stays pinned until Host/Qemu signals (via a fence)
-that it is done accessing (or using) the Guest's buffer.
+Anand Moon (5):
+  dt-bindings: PCI: Convert the existing nvidia,tegra-pcie.txt bindings
+    documentation into a YAML schema
+  PCI: tegra: Simplify clock handling by using clk_bulk*() functions
+  PCI: tegra: Use readl_poll_timeout() for link status polling
+  PCI: tegra: Use BIT() and GENMASK() macros for register definitions
+  PCI: tegra: Document map_lock and mask_lock usage
 
-Also, note that since virtio-gpu registers a move_notify() callback, it can
-let Qemu know of any location changes associated with the backing store
-of the imported scanout buffer by sending attach_backing and
-detach_backing cmds.
+ .../bindings/pci/nvidia,tegra-pcie.yaml       | 651 +++++++++++++++++
+ .../bindings/pci/nvidia,tegra20-pcie.txt      | 670 ------------------
+ drivers/pci/controller/pci-tegra.c            | 268 ++++---
+ 3 files changed, 777 insertions(+), 812 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
 
-Thanks,
-Vivek
 
->=20
-> Regards,
-> Christian.
->=20
-> >
-> > Thanks,
-> > Thomas
-> >
-> >
-> >
-> >>
-> >>>
-> >>> Ideally using the same structure Qemu used to provide the offset to
-> >>> the vfio-
-> >>> pci driver, but not a must have.
-> >>>
-> >>> This way the driver for the GPU PF (XE) can leverage this
-> >>> interface, validates
-> >>> that the DMA-buf comes from a VF it feels responsible for and do
-> >>> the math to
-> >>> figure out in which parts of the VRAM needs to be accessed to
-> >>> scanout the
-> >>> picture.
-> >> Sounds good. This is definitely a viable path forward and it looks
-> >> like we are all
-> >> in agreement with this idea.
-> >>
-> >> I guess we can start exploring how to implement the private dmabuf
-> >> interface
-> >> mechanism right away.
-> >>
-> >> Thanks,
-> >> Vivek
-> >>
-> >>>
-> >>> This way this private vfio-pci interface can also be used by
-> >>> iommufd for
-> >>> example.
-> >>>
-> >>> Regards,
-> >>> Christian.
-> >>>
-> >>>>
-> >>>> Thanks,
-> >>>> Vivek
-> >>>>
-> >>>>>
-> >>>>> Regards,
-> >>>>> Christian.
-> >>>>>
-> >>>>>>
-> >>>>>>> What Simona agreed on is exactly what I proposed as well,
-> >>>>>>> that you
-> >>>>>>> get a private interface for exactly that use case.
-> >>>>>>
-> >>>>>> A "private" interface to exchange phys_addr_t between at
-> >>>>>> least
-> >>>>>> VFIO/KVM/iommufd - sure no complaint with that.
-> >>>>>>
-> >>>>>> Jason
-> >>>>
-> >>
-> >
+base-commit: 4ff71af020ae59ae2d83b174646fc2ad9fcd4dc4
+-- 
+2.50.1
 
 
