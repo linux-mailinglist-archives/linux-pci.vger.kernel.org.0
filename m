@@ -1,85 +1,86 @@
-Return-Path: <linux-pci+bounces-37088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 594F4BA3356
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 11:45:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DF48BA33C2
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 11:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 917EF1B27982
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 09:46:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED7A4383AA4
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 09:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF6A27602E;
-	Fri, 26 Sep 2025 09:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB325265623;
+	Fri, 26 Sep 2025 09:50:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4400F1FF7C7
-	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 09:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C05529DB61
+	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 09:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758879940; cv=none; b=JY/Pyl79YNKptJJGAslV1DSSn98Mpz5nxt3x6aK1ZEaTlxrWBuytFWuDRa2bZLHH5X568Felg+lPLgfKpe+MvReEIYWuG8mAuzRziRpAgV6or2zx/nJpg/5AfZkRJw9j2NjDyYZLn8ln7ov8xbgw2eh73QkXXECgsVEzCh/CtqY=
+	t=1758880213; cv=none; b=Yr5EVn8GyOzN6iMW67IU33qf4LmzQoQHKtNcO5x1nPp8gfM/q48PcewEYZ7AvXVpQ9VwjTxHMO1uxX7aG96vFnh6hZvUjAT84n/YdHQNNrur11zLfv4nvEXUMLdwXDdhY3mKJG+4i0djIzgMCfKUyK1BjScaa/VtsJ6fEXjz76o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758879940; c=relaxed/simple;
-	bh=yNpF3gakBewbf4gWfzySUblL/HPEFTHdWDap5s8c2rw=;
+	s=arc-20240116; t=1758880213; c=relaxed/simple;
+	bh=9MP05zHbL6Vtrf5lONjgCVq9CWhR1Q+9cXrMd2Yezk0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ssmT1HVRekXbczEe1ke/dLeTz8WYwz3t8Dqj17T0waT6F7a7jAE3FnvE4mE/vA4aFjuUFlveSCNjwthS/8tX3PM+oedY6ukRXCAJCCpHGTa2buyBDLfZ7Rrw+mINfni64DMQyTxNYcLVuBwBjOLBCAThfORKfsdOoV7SXrJTzR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
+	 To:Cc:Content-Type; b=mtRNUWDPCQGQMYYVAbWqtiCt7FMygvpbv9t+Fwc4UyhD34t+qn+++dDVseAVdJeelI/eESiHSPgan4d9JF1sKv+EpBj7Hw4VT52kxl8dPm5CGhpa/DtbS6Ck7vHkYSCJ9A7389uX63rTSrFKOvIcOW/XbeHE20tCUROkSvRA7jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-8900fcc0330so1722502241.0
-        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 02:45:39 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-54aa6a0babeso2080132e0c.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 02:50:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758879938; x=1759484738;
+        d=1e100.net; s=20230601; t=1758880211; x=1759485011;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Wz1Y2OO7aX1FKDkec9bCJzTd14gDBikA8iaq+l9tIyk=;
-        b=qChbE43eGASiOSaEJy5jGhmDEFECPkEeDSqDSuMA5nQd+l9xgjs8QB1e5oab6npwZs
-         ZcT3I6gaEtyWdLjhUUQzrxIAoiNFAHmuQwhhTXSb+ppZqc650MhEqpJ6Cf2KMI/3EH+o
-         8W4/UOZCXk4sobmzJm8jABkoAkjGPBV2xOOs3dSaerXaJEuee+5ZylH7B1zuyCJgqE/m
-         +KMRYsuzsgbUHGfhny5HF+0bagvXTB+i/TXOm972zA/rvL9jtMTupB9fK1CWh5z/ESYI
-         q7PgPAG1HH3tO7Voz4l2+StMAQ0sMbKH+k79/uXa8K9B4aeOThs+iUaqRVEt4lqqkUh6
-         hLDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlXt122rjgOLUMD5ehO2MCA7DeWt0QFY2fCrMQa7trrZY1BpFAMirnsNCbR1P7QkfybdjMKKmN0ZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFDjgUyEP4oqim1gmsgJMngWS4BdVFoaSXy+jjOGVMbzM+dxAs
-	A5qeCmKCUkxP0Yc468fZeGFCY/xYEXnvGkuKzIUMsLqlDYFeVBmy7w3xvzPNDalH
-X-Gm-Gg: ASbGncsXTF++C9M4IGUTi3cLeK6hiWbt4YVNuiEmosUITLhY3StbWALqp5gGrQ+SQ2I
-	S2ShjAYyyNFAINOosvgjKqRJ83rpmBnb3EWE8M6806lHoAWPGMNB/O64Ix2aNHTcSDyAVHRhnzN
-	HKhdsdwAoC+MsgzQwrpKFg9/KMk1l6HAQRzeYfJbjnl34sMJE2tMyJAgVqz2/XFtaBgqaaEqsBc
-	UwUuiKcL8D7OI4qErYDDF86Hv2Tjq8so6jtzaualiDaGyyXO6DQdkZNqFLd5Wpj+Ku6B3YVObKJ
-	labpS7znv8ghPEcC3r+d6m/SW+cXwdDWAwfZydK4QbQ45ydv9tCGgyiElFtmkzCNKMxGfu15Fo0
-	w17uP3PkuDossOINeuoC5IDLSwBlnXmd6JZAtv3qMFOIVzn6PVgT+k01B+cDQ
-X-Google-Smtp-Source: AGHT+IEAlqTnVfXNnDZAHgtlrs4+rul0ZcRBJD2cOAlM9gGmn92iLQ2nX2v92YLibiI5P/d263pZNw==
-X-Received: by 2002:a05:6102:548f:b0:530:f657:c2e with SMTP id ada2fe7eead31-5ae1bc31166mr2722331137.13.1758879937895;
-        Fri, 26 Sep 2025 02:45:37 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5ae302ee7f1sm1156277137.2.2025.09.26.02.45.37
+        bh=WcBsC1askobQesMf5dT3EOt6tZwDclh2s0/BCRcco7k=;
+        b=OL11+lQjmTLgmLvxiRDG5/iWC8iz96F251Kmut376V6drp+6zVZ8Yn5MU8+qPSMKOS
+         4Nw2PUBLYnoHLIOZnaYqYH5dqsAro7ivuMMZ/lkeClAxTEwl2otoL2Ji8oWb7IVxHE6l
+         8c9Zs1Zj8MynSpl/NoEzaSDJY13q6vOk/om4EHqCyz1CcVg40XXHUpv+kXRvVgxxP6qa
+         X2VzoM0sI2rvCuEHLw05x7bRO1MRKKCaaqlf27xFgcjHxqczSG5FXqFB5wZmIH5l4pJ1
+         CipE2rzNB5BZuoNAWMpPl6KsGgf28yqRUkySFuHZULKJ2TnkypELz8UuDBH2e8uTiIQY
+         Ngzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsxnN01hVXBc7CEW8eddW6WOdQh1EXXIWSHJKwBSD2eQBqJX6y0xBcct83AMTAAGxbEHzNch324xc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6k9Wqo5Z1l3sXRTqNlYN/GIm5PlzQGuI9ksyTLlrT3wG/DuF8
+	xrXBH3mWZIuHRE9wZ0RgKNHZmcjHF5pj4r0BdaO/n0qveYVdDHw3cCeKUq4Q++lG
+X-Gm-Gg: ASbGncsDusF9H734WTNkHyGyu+6KVJmQh2DadAxAwhukfwzSzAK3iTQZyScXmJZNnr3
+	gFTiJBeGd9XICXbN5qt0AXTel+t4Y2eey9kPLSF8D1vuRRruUb3lt4TND6ZV92U5yM3B9R2hWzi
+	Tdu+3SKrNHjc2LakspTG2UgqnwbozJ85QMRzavxohcE4H2rTOTT4gVS6AeQ0PX7SebXQHFl7Vnw
+	5UjQgbKVH1SW80+MWo1tzxV9fFQQnIEsIrt2mOMy5VxdEkKd4csbOrGt5m7CIrrqpENjz1sCS9Z
+	4qDekz1VqdTIgdqnItDSh2V1GyTpBQxtaPdCEE1fUE+CQ5wJyP3Jxj8rJNrOi5C7A+5Vm98C/r2
+	/4jbkRsmsnz8NWY6RVn3aZUny8Zi8jIDikO3pHvyHZTQ2ISfV8/m5KVMFw2d8EQ4O/4F/woCca6
+	8=
+X-Google-Smtp-Source: AGHT+IEN0Wm/gaAMNCX8sgfLsZP3xTdwTh+i/WsH/ndEg8cjXFsSquIMS1/2+nNKZcOXGfnRHBOxDg==
+X-Received: by 2002:a05:6122:2027:b0:54a:a782:47d6 with SMTP id 71dfb90a1353d-54bed4ce580mr2387438e0c.7.1758880211228;
+        Fri, 26 Sep 2025 02:50:11 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54beddf1213sm808532e0c.27.2025.09.26.02.50.08
         for <linux-pci@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Sep 2025 02:45:37 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5565a83f796so1548110137.1
-        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 02:45:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWZDZtJ9+SKeVIFLefTRycgTXnyA+fp6oeIP30RAc/6LBjmz3LOJ+IXaY2ydHjsSY+RvrxQmNWveIE=@vger.kernel.org
-X-Received: by 2002:a05:6102:1452:20b0:58f:1e8b:a1c1 with SMTP id
- ada2fe7eead31-5ae14991836mr1929645137.2.1758879937242; Fri, 26 Sep 2025
- 02:45:37 -0700 (PDT)
+        Fri, 26 Sep 2025 02:50:09 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-54aa6a0babeso2080086e0c.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 02:50:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXe/80Smbr3yMdCbADc5cRBgvagVUOe5eoJGO6jyNK3XRIOuympz71khts0LX/jAy7iFYkSDzNLvuM=@vger.kernel.org
+X-Received: by 2002:a67:e098:0:b0:59f:54cb:205a with SMTP id
+ ada2fe7eead31-5ae1f222b9dmr1619909137.13.1758880208278; Fri, 26 Sep 2025
+ 02:50:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com> <20250912122444.3870284-4-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250912122444.3870284-4-claudiu.beznea.uj@bp.renesas.com>
+References: <20250912122444.3870284-1-claudiu.beznea.uj@bp.renesas.com> <20250912122444.3870284-6-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250912122444.3870284-6-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 26 Sep 2025 11:45:25 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWmjj_bKhGqhWcRvWap1U5izT347Ffo5wqs6OP9BvO8PA@mail.gmail.com>
-X-Gm-Features: AS18NWDiRHr7QXCMqaoImEEYFri-rFsQBU5GFbqAD2ZmUrWNkjrXvGfEFMFxCMM
-Message-ID: <CAMuHMdWmjj_bKhGqhWcRvWap1U5izT347Ffo5wqs6OP9BvO8PA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/6] arm64: dts: renesas: r9a08g045: Add PCIe node
+Date: Fri, 26 Sep 2025 11:49:57 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXn-sd7CXgxRzwfHQFUUxzboyYP-2eqSTaVgmh5hjT_xA@mail.gmail.com>
+X-Gm-Features: AS18NWBXsS1FJ_qFsvTSOsChWy-NgmX0zNmCcExyFfSBImph2esks2SOJO6KK2A
+Message-ID: <CAMuHMdXn-sd7CXgxRzwfHQFUUxzboyYP-2eqSTaVgmh5hjT_xA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] arm64: dts: renesas: rzg3s-smarc: Enable PCIe
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
 	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
@@ -90,43 +91,15 @@ Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Clausiu,
-
 On Fri, 12 Sept 2025 at 14:24, Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> The RZ/G3S SoC has a variant (R9A08G045S33) which supports PCIe. Add the
-> PCIe node.
+> The RZ Smarc Carrier-II board has PCIe headers mounted on it. Enable PCIe
+> support.
 >
 > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v4:
-> - moved the node to r9a08g045.dtsi
-> - dropped the "s33" from the compatible string
-> - added port node
-> - re-ordered properties to have them grouped together
 
-Thanks for the update!
-
-> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-> @@ -717,6 +717,72 @@ eth1: ethernet@11c40000 {
->                         status = "disabled";
->                 };
->
-> +               pcie: pcie@11e40000 {
-> +                       compatible = "renesas,r9a08g045-pcie";
-> +                       reg = <0 0x11e40000 0 0x10000>;
-> +                       ranges = <0x02000000 0 0x30000000 0 0x30000000 0 0x8000000>;
-> +                       /* Map all possible DRAM ranges (4 GB). */
-> +                       dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0x1 0x0>;
-
-I would write the last part as "1 0x00000000", for consistency with
-other 36-bit addresses and lengths.
-
-The rest LGTM, so
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
