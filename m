@@ -1,360 +1,197 @@
-Return-Path: <linux-pci+bounces-37151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 758BBBA561B
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Sep 2025 01:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 29544BA5660
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Sep 2025 01:48:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 887291B23C82
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:27:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43C531C06A1B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26CD02BE024;
-	Fri, 26 Sep 2025 23:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 049D422DF99;
+	Fri, 26 Sep 2025 23:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZR6x4T8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="blmOgeq/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DBE8834;
-	Fri, 26 Sep 2025 23:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523C486359
+	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 23:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758929216; cv=none; b=kb2ynRZdDSEMtSt2B6p2Y6Xn+s4w0Y8hSduMQX1QOhfAEd4pn8gYWRtUYclnkuTsibIiWORqhgzKsTvuoJK0QsWVo81SCzsSi6qRSkspL5qgBWq+FQ131BBuhLz1rr/CAoROS+Swxffizp2tc43eaqjXuwMeLdV2GqhmxIArfGI=
+	t=1758930513; cv=none; b=i1H8xEl7e5L+CgOBCQKImyw8mF8Ek4vHSWCiS0NU2V7TDS9XvOVk7qxF9gBkSumPer0+bUPVIMyPfF1a6+y/1rsnp5CIY8ERCKn9B1rwAPC4tr/sCzpGNVUToDQpQTmzVaPluIVZkYwFjq4a7aBqOH4Ru+HFJRVDsJlSjjt2Xug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758929216; c=relaxed/simple;
-	bh=pJeIjqGBwe+U7kx0K3qcjUZt2mpDEceDRMGQq8WSAAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ni23oCCI/Ayh3+2zzwZb5oJLbumOs+De5WtyzTvD933Tp20EXkwu6aD/T1BkBP9sL12yoJOB/Se4B6YNzNqq/T+vWGEpx8FZ/Q9Oj4aUo9W6MrV5//yB8X8nxXFRjv0a4MsD+TbO86nKdazypgb5oFkU+VGxcjiAvJQs15Uf3cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZR6x4T8; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1758930513; c=relaxed/simple;
+	bh=l2k3jleh6f42I4HosmC3N1NP0B4yYyFHEs6bFBnNt+k=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eiy6OugBtQSXfGdOXv6bMO+j7trTth6mPZR/LGw0MuYDRO5DibcQc5KAoKVlG6srH2D7scwQKai8fWg+0yw79RXJqOWDYXIEBbrCz4YW70AGhY7CaH2YxkFH+etnOiqBsg9Hm9dYRGqyAH4iXaL1L6NmzRNUgsj97SmDGtVZV6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=blmOgeq/; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758929214; x=1790465214;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pJeIjqGBwe+U7kx0K3qcjUZt2mpDEceDRMGQq8WSAAI=;
-  b=QZR6x4T8hchMhWQZauUXQu3YJADzJMSpzBIFGKFhe4pwxLB/ws97D8AU
-   hLUNMjNAvY7G+zLrBk70GoJt8jYBwXtxmTuyPFEJuwK0by7ru3ZQzzGCY
-   o7DmhloNk3Zk6NMmlHR58T5Ir7NZpiWbtRchjbTyAHqbEdJuLeEkVYo6r
-   Cf1DBnV82tOdxXxsjt74/q5UezcQfkaUYLsgaO5yCJICP7SzwVpoDe4TG
-   d8dTVJXwlOORfR2Q33OY3MOcgFSCHvIZ4MEj36/3ygHXpvfg1QnRXLoyh
-   xEp0OHSFbW9uFYqD94LKvHjOI8YZiqx6n3heQLalpLhXKS3LqI4fg0rP5
-   Q==;
-X-CSE-ConnectionGUID: jzqc9fX4SrmT948YfpU0ag==
-X-CSE-MsgGUID: NWoxRKKfTMmy+6DIpCzvgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="60303571"
+  t=1758930513; x=1790466513;
+  h=date:from:to:cc:subject:message-id;
+  bh=l2k3jleh6f42I4HosmC3N1NP0B4yYyFHEs6bFBnNt+k=;
+  b=blmOgeq/oQpTId+Uk3+9PkU6kHeG30cxqoUTturq/8T9neq9Yr8QunWv
+   N97BtRhtzLi4aTQc3Ggo/MrDKKVlGzyRSpOwz0nOur7k2rumJhxAkMN22
+   gYAs/NH0lfDfokFu6YLOSaK6dysQGZKR0o5b/lNGhLMqYNOpeAaJFTeLc
+   8aZbLjOgyrEterXiGLoAXWdvS0w1b9p/28zOSOBBoib51Qix4sV5apSU6
+   2WNmumEEJp6ncHDuZYvAHrRjzXBbiX6d+KQ4wq6/eTSbS/I1SnlIleqvp
+   ewxfZFlsBBGCwnCCC1iKgP1/5OvPnat6SXnl11Qm/jGlCCd2vYeKY5Wij
+   g==;
+X-CSE-ConnectionGUID: PxCT/X/xRFi/3JxVGaKssg==
+X-CSE-MsgGUID: o7RjnxOdQKSW/wrXE+B9Uw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="83878423"
 X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="60303571"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:26:53 -0700
-X-CSE-ConnectionGUID: 5ic3nTkeSFe3NlSdTZpRbQ==
-X-CSE-MsgGUID: CCDPoB8nSI+r90I5QBd41w==
+   d="scan'208";a="83878423"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:48:32 -0700
+X-CSE-ConnectionGUID: pQKXyFoCQs6QfAedd1nMDQ==
+X-CSE-MsgGUID: TKGCstqITW2CV9suhBab6A==
 X-ExtLoop1: 1
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.69]) ([10.125.109.69])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:26:50 -0700
-Message-ID: <f028d71d-0f0c-49e4-a90d-57176fcb7d45@intel.com>
-Date: Fri, 26 Sep 2025 16:26:49 -0700
+X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
+   d="scan'208";a="183008607"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 26 Sep 2025 16:48:31 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v2IAu-0006fD-29;
+	Fri, 26 Sep 2025 23:48:28 +0000
+Date: Sat, 27 Sep 2025 07:47:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rcar-gen4] BUILD SUCCESS
+ 2bdf1d428f48e1077791bb7f88fd00262118256d
+Message-ID: <202509270739.DsqtQmZI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 20/25] PCI/AER: Dequeue forwarded CXL error
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-21-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250925223440.3539069-21-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-gen4
+branch HEAD: 2bdf1d428f48e1077791bb7f88fd00262118256d  PCI: rcar-gen4: Fix inverted break condition in PHY initialization
 
+elapsed time: 1461m
 
-On 9/25/25 3:34 PM, Terry Bowman wrote:
-> The AER driver is now designed to forward CXL protocol errors to the CXL
-> driver. Update the CXL driver with functionality to dequeue the forwarded
-> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
-> error handling processing using the work received from the FIFO.
-> 
-> Update function cxl_proto_err_work_fn() to dequeue work forwarded by the
-> AER service driver. This will begin the CXL protocol error processing with
-> a call to cxl_handle_proto_error().
-> 
-> Introduce logic to take the SBDF values from 'struct cxl_proto_error_info'
-> and use in discovering the erring PCI device. The call to pci_get_domain_bus_and_slot()
-> will return a reference counted 'struct pci_dev *'. This will serve as
-> reference count to prevent releasing the CXL Endpoint's mapped RAS while
-> handling the error. Use scope base __free() to put the reference count.
-> This will change when adding support for CXL port devices in the future.
-> 
-> Implement cxl_handle_proto_error() to differentiate between Restricted CXL
-> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
-> Maintain the existing RCH handling. Export the AER driver's pcie_walk_rcec()
-> allowing the CXL driver to walk the RCEC's secondary bus.
-> 
-> VH correctable error (CE) processing will call the CXL CE handler. VH
-> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
-> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
-> and pci_clean_device_status() used to clean up AER status after handling.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> ---
-> Changes in v11->v12:
-> - Add guard for CE case in cxl_handle_proto_error() (Dave)
-> 
-> Changes in v10->v11:
-> - Reword patch commit message to remove RCiEP details (Jonathan)
-> - Add #include <linux/bitfield.h> (Terry)
-> - is_cxl_rcd() - Fix short comment message wrap  (Jonathan)
-> - is_cxl_rcd() - Combine return calls into 1  (Jonathan)
-> - cxl_handle_proto_error() - Move comment earlier  (Jonathan)
-> - Usse FIELD_GET() in discovering class code (Jonathan)
-> - Remove BDF from cxl_proto_err_work_data. Use 'struct
-> pci_dev *' (Dan)
-> ---
->  drivers/cxl/core/ras.c  | 72 ++++++++++++++++++++++++++++++++++-------
->  drivers/pci/pci.c       |  1 +
->  drivers/pci/pci.h       |  7 ----
->  drivers/pci/pcie/aer.c  |  1 +
->  drivers/pci/pcie/rcec.c |  1 +
->  include/linux/aer.h     |  2 ++
->  include/linux/pci.h     |  9 ++++++
->  7 files changed, 75 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 39472d82d586..9acfe24ba3bb 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -117,17 +117,6 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  }
->  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  
-> -int cxl_ras_init(void)
-> -{
-> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> -}
-> -
-> -void cxl_ras_exit(void)
-> -{
-> -	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
-> -	cancel_work_sync(&cxl_cper_prot_err_work);
-> -}
-> -
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
->  
-> @@ -331,6 +320,10 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
->  
-> +static void cxl_do_recovery(struct device *dev)
-> +{
-> +}
-> +
->  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
->  {
->  	void __iomem *addr;
-> @@ -472,3 +465,60 @@ pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
->  	return rc;
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
-> +
-> +static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
-> +{
-> +	struct pci_dev *pdev = err_info->pdev;
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+configs tested: 104
+configs skipped: 4
 
-The pci_dev device lock needs to be held and cxl_pci_drv_bound() needs to be checked before this is called.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *host_dev __free(put_device) = get_device(&cxlmd->dev);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		int aer = pdev->aer_cap;
-> +
-> +		guard(device)(&pdev->dev);
-> +
-> +		if (aer)
-> +			pci_clear_and_set_config_dword(pdev,
-> +						       aer + PCI_ERR_COR_STATUS,
-> +						       0, PCI_ERR_COR_INTERNAL);
-> +
-> +		if (!cxl_pci_drv_bound(pdev))
-> +			return;
-> +
-> +		cxl_cor_error_detected(&cxlmd->dev);
-> +		pcie_clear_device_status(pdev);
-> +	} else {
-> +		cxl_do_recovery(&cxlmd->dev);
-> +	}
-> +}
-> +
-> +static void cxl_proto_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_proto_err_work_data wd;
-> +
-> +	while (cxl_proto_err_kfifo_get(&wd))
-> +		cxl_handle_proto_error(&wd);
-> +}
-> +
-> +static struct work_struct cxl_proto_err_work;
-> +static DECLARE_WORK(cxl_proto_err_work, cxl_proto_err_work_fn);
-> +
-> +int cxl_ras_init(void)
-> +{
-> +	if (cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work))
-> +		pr_err("Failed to initialize CXL RAS CPER\n");
-> +
-> +	cxl_register_proto_err_work(&cxl_proto_err_work);
-> +
-> +	return 0;
-> +}
-> +
-> +void cxl_ras_exit(void)
-> +{
-> +	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
-> +	cancel_work_sync(&cxl_cper_prot_err_work);
-> +
-> +	cxl_unregister_proto_err_work();
-> +	cancel_work_sync(&cxl_proto_err_work);
-> +}
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 1a4f61caa0db..c8f17233a18e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2328,6 +2328,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
->  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
->  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
->  }
-> +EXPORT_SYMBOL_NS_GPL(pcie_clear_device_status, "CXL");
->  #endif>  
->  /**
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 22e8f9a18a09..189b22ab2b1b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -692,16 +692,10 @@ static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
->  void pci_rcec_init(struct pci_dev *dev);
->  void pci_rcec_exit(struct pci_dev *dev);
->  void pcie_link_rcec(struct pci_dev *rcec);
-> -void pcie_walk_rcec(struct pci_dev *rcec,
-> -		    int (*cb)(struct pci_dev *, void *),
-> -		    void *userdata);
->  #else
->  static inline void pci_rcec_init(struct pci_dev *dev) { }
->  static inline void pci_rcec_exit(struct pci_dev *dev) { }
->  static inline void pcie_link_rcec(struct pci_dev *rcec) { }
-> -static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> -				  int (*cb)(struct pci_dev *, void *),
-> -				  void *userdata) { }
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> @@ -1081,7 +1075,6 @@ void pci_restore_aer_state(struct pci_dev *dev);
->  static inline void pci_no_aer(void) { }
->  static inline void pci_aer_init(struct pci_dev *d) { }
->  static inline void pci_aer_exit(struct pci_dev *d) { }
-> -static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->  static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline void pci_save_aer_state(struct pci_dev *dev) { }
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ccefbcfe5145..e018531f5982 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -288,6 +288,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->  	if (status)
->  		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->  }
-> +EXPORT_SYMBOL_GPL(pci_aer_clear_fatal_status);
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250926    gcc-8.5.0
+arc                   randconfig-002-20250926    gcc-9.5.0
+arm                               allnoconfig    clang-22
+arm                          exynos_defconfig    clang-22
+arm                          gemini_defconfig    clang-20
+arm                   randconfig-001-20250926    clang-22
+arm                   randconfig-002-20250926    clang-17
+arm                   randconfig-003-20250926    clang-22
+arm                   randconfig-004-20250926    clang-22
+arm                        spear3xx_defconfig    clang-17
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250926    gcc-8.5.0
+arm64                 randconfig-002-20250926    gcc-12.5.0
+arm64                 randconfig-003-20250926    gcc-9.5.0
+arm64                 randconfig-004-20250926    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250926    gcc-15.1.0
+csky                  randconfig-002-20250926    gcc-14.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250926    clang-22
+hexagon               randconfig-002-20250926    clang-22
+i386        buildonly-randconfig-001-20250926    clang-20
+i386        buildonly-randconfig-002-20250926    clang-20
+i386        buildonly-randconfig-003-20250926    clang-20
+i386        buildonly-randconfig-004-20250926    clang-20
+i386        buildonly-randconfig-005-20250926    clang-20
+i386        buildonly-randconfig-006-20250926    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250926    gcc-15.1.0
+loongarch             randconfig-002-20250926    clang-22
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250926    gcc-11.5.0
+nios2                 randconfig-002-20250926    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250926    gcc-10.5.0
+parisc                randconfig-002-20250926    gcc-10.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                   lite5200b_defconfig    clang-22
+powerpc               randconfig-001-20250926    clang-22
+powerpc               randconfig-002-20250926    clang-18
+powerpc               randconfig-003-20250926    clang-22
+powerpc64             randconfig-001-20250926    clang-22
+powerpc64             randconfig-002-20250926    clang-16
+powerpc64             randconfig-003-20250926    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250926    clang-22
+riscv                 randconfig-002-20250926    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                          debug_defconfig    gcc-15.1.0
+s390                  randconfig-001-20250926    clang-22
+s390                  randconfig-002-20250926    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250926    gcc-12.5.0
+sh                    randconfig-002-20250926    gcc-15.1.0
+sh                          rsk7264_defconfig    gcc-15.1.0
+sparc                            alldefconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250926    gcc-14.3.0
+sparc                 randconfig-002-20250926    gcc-15.1.0
+sparc64               randconfig-001-20250926    gcc-12.5.0
+sparc64               randconfig-002-20250926    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                    randconfig-001-20250926    clang-22
+um                    randconfig-002-20250926    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20250926    clang-20
+x86_64      buildonly-randconfig-002-20250926    clang-20
+x86_64      buildonly-randconfig-003-20250926    gcc-14
+x86_64      buildonly-randconfig-004-20250926    gcc-14
+x86_64      buildonly-randconfig-005-20250926    gcc-14
+x86_64      buildonly-randconfig-006-20250926    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250926    gcc-14.3.0
+xtensa                randconfig-002-20250926    gcc-8.5.0
 
-Not seeing this being used anywhee. Should this go to a different patch?
-
->  
->  /**
->   * pci_aer_raw_clear_status - Clear AER error registers.
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index d0bcd141ac9c..fb6cf6449a1d 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -145,6 +145,7 @@ void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
->  
->  	walk_rcec(walk_rcec_helper, &rcec_data);
->  }
-> +EXPORT_SYMBOL_NS_GPL(pcie_walk_rcec, "CXL");
-
-Not seeing this being used in this patch either.
-
-DJ
-
->  
->  void pci_rcec_init(struct pci_dev *dev)
->  {
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 6b2c87d1b5b6..64aef69fb546 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -66,6 +66,7 @@ struct cxl_proto_err_work_data {
->  
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> +void pci_aer_clear_fatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
->  void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  #else
-> @@ -73,6 +74,7 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
-> +static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
->  #endif
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index bc3a7b6d0f94..b8e36bde346c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1825,6 +1825,9 @@ extern bool pcie_ports_native;
->  
->  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  			  bool use_lt);
-> +void pcie_walk_rcec(struct pci_dev *rcec,
-> +		    int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->  #else
->  #define pcie_ports_disabled	true
->  #define pcie_ports_native	false
-> @@ -1835,8 +1838,14 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
->  {
->  	return -EOPNOTSUPP;
->  }
-> +
-> +static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> +				  int (*cb)(struct pci_dev *, void *),
-> +				  void *userdata) { }
->  #endif
->  
-> +void pcie_clear_device_status(struct pci_dev *dev);
-> +
->  #define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
->  #define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
->  #define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
