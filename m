@@ -1,189 +1,136 @@
-Return-Path: <linux-pci+bounces-37116-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37117-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 893ACBA4C2A
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 19:15:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 346BDBA4D97
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 20:11:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA391189FA12
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 17:15:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D9FC18931F9
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 18:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B3630CB52;
-	Fri, 26 Sep 2025 17:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22B2277807;
+	Fri, 26 Sep 2025 18:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNGR1qfG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwEHATXi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5026030CB50;
-	Fri, 26 Sep 2025 17:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435826ADD;
+	Fri, 26 Sep 2025 18:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758906879; cv=none; b=Bi/O+gEx/2C+HpxYXtwWYF5qXWiSBog+LkLcUJS5BTnJzIR21eqUUrqDxCBLByA5O2Pkm7MsL5UHEI2yLKYhGTcX5CwdaMCUPOxfiDbWPMMw0JeAHcovECh5lzS7YvTJxwusdZ3lcqHjM6YmyJARg0m/lUY9fepHvXfGovWaN8w=
+	t=1758910308; cv=none; b=djsbpsfBtuX7Z2Wprp6AAIDA3dBvAZzyySboDi0/a9GQ/hCkhwAnfDr/drgmv5uZt+FpgUbmwtIWYpbrhZ1h/OJzdY0vLVMKx+99to7uRlaLCJDuqAx3/W6P0MX/X+i+RqDD5WpfDuwcwM5XNzxIqmTCkY7a6vNZJ+QUD+WplcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758906879; c=relaxed/simple;
-	bh=ACLLyTH6WzBUIy6EmJzPFE4VsZS26yNgY1PV+Hi3dKY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=D3LW1Nxs9rz/0s9qkpznoNFUO1ZMGquH4oKev+gyZLavwfAeQoXQvswrGy5sLtHRSTo4tlWfW13wxJjQnCQF0NDexCILhoBROMNrcrZ/bp/XjlwEwv9sujq7hmZzA8aHryWEEby/aCw4b/OTe8NgSPsQeBWCi/vl7wDtcr4w9YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNGR1qfG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E54C4CEF4;
-	Fri, 26 Sep 2025 17:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758906878;
-	bh=ACLLyTH6WzBUIy6EmJzPFE4VsZS26yNgY1PV+Hi3dKY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=sNGR1qfG42JFYCO5k/n7dorfGNrwgbW3MmFZpb9Bh9LRS0VuauOd+I8wsQI055OJ5
-	 0+USKbkaWUCDwGKK/ytGyq6CdleSufXYI47qWpWuVptTTjWVJFVLMgoAHtcPQomU1K
-	 j/zEtcH2r6x8k1F0VfjzYHyMkj6Db8CJ+5awYzyRRP+HW/3wkHqAUxF0mmwvUtJtyG
-	 ZY1yEIy1hsMp+lOMFX48jaWUGvKKyshAPbU9S1PUwUp1l8Idqo02JVsEZhXwB0wswL
-	 ttDs7oQx2yu6TLYdAh/5u1eA1n+DSo6OK0qKBA3TjC71rlacqDcwscaYFjUWu8f8va
-	 fPjiQa5UVfOAw==
-Date: Fri, 26 Sep 2025 19:14:38 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-CC: Manivannan Sadhasivam <mani@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ntb@lists.linux.dev,
- imx@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_1/3=5D_PCI=3A_endpoint=3A_Add_help?=
- =?US-ASCII?Q?er_function_pci=5Fepf=5Fget=5Fbar=5Frequired=5Fsize=28=29?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <aNbI+KrPJW4kgy4e@lizhi-Precision-Tower-5810>
-References: <20250925-vntb_msi_doorbell-v3-0-ae0b0c93caae@nxp.com> <20250925-vntb_msi_doorbell-v3-1-ae0b0c93caae@nxp.com> <aNaHrj0rwLTtSRS3@ryzen> <aNaprpfaeXIcqeGD@lizhi-Precision-Tower-5810> <aNauaSVs5ytzsVFt@ryzen> <aNbI+KrPJW4kgy4e@lizhi-Precision-Tower-5810>
-Message-ID: <924D03A9-0206-4FCA-AE83-4724643561C2@kernel.org>
+	s=arc-20240116; t=1758910308; c=relaxed/simple;
+	bh=6YcsbRUDVjvq90+XUsFM49RpOjc9gYPwErAKkZrcQYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UU9GsVGfGl3dRabMSoaxWjzoMezrExri4QUlfWQfH/RcoHlw928h+rethxPcNh2BrSDZm6TdIbwUj+bQcoO6iFukJWBDNP6Mwd7GF7RWhgGagsYCEWOHzO7LDvj80OGqEJ2VmWzv+uqCpn1R2EyZQrawUA4R+YpSf4gBGEJbfgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwEHATXi; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758910307; x=1790446307;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6YcsbRUDVjvq90+XUsFM49RpOjc9gYPwErAKkZrcQYM=;
+  b=SwEHATXi1Ez58+mLU4c/3gOL9lCuV6LUdwpmDe03g8zTKvDit4Id/XVu
+   xfVS1gt3jYM44/Ci8RvOjmPM90/r0BiJ7mtHtAzV8N7+jHChflUQM3ZMl
+   3egfUC/G3lu8swaP2RorDYy3EwFlaYZvK6TwqRdSe/Oq9iTzHjrnNbEhH
+   mgPUCek0MzHgbrxSRKVG6DFMUUgWar06XwvdFlLShV2gdlzXhnqwb/GWK
+   L9NBImxxd+akJC/Jia6lE4zzy1dtsk0jI4TNuMOyY5hpP+Xv5dkBFSjUL
+   jz1DMt6H0r9nyg1XVKX+S3fbVYTG9JNlv+sgRFDiPJPn1TxFeGDdNi5oj
+   g==;
+X-CSE-ConnectionGUID: ibDvskkkReWo/MSP07Xwkw==
+X-CSE-MsgGUID: /NbPAI27RBe8+vAiZWgWag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="61139391"
+X-IronPort-AV: E=Sophos;i="6.18,295,1751266800"; 
+   d="scan'208";a="61139391"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 11:11:47 -0700
+X-CSE-ConnectionGUID: SYiM7HY/RyymKO/bcCngbg==
+X-CSE-MsgGUID: JoNP3XxBQKiatP6zgF2zcQ==
+X-ExtLoop1: 1
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 26 Sep 2025 11:11:42 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v2CuS-0006Ud-0o;
+	Fri, 26 Sep 2025 18:11:16 +0000
+Date: Sat, 27 Sep 2025 02:10:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, terry.bowman@amd.com
+Subject: Re: [PATCH v12 22/25] CXL/PCI: Export and rename merge_result() to
+ pci_ers_merge_result()
+Message-ID: <202509270131.UIdODBaV-lkp@intel.com>
+References: <20250925223440.3539069-23-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250925223440.3539069-23-terry.bowman@amd.com>
 
-On 26 September 2025 19:10:16 CEST, Frank Li <Frank=2Eli@nxp=2Ecom> wrote:
->On Fri, Sep 26, 2025 at 05:16:57PM +0200, Niklas Cassel wrote:
->> On Fri, Sep 26, 2025 at 10:56:46AM -0400, Frank Li wrote:
->> > On Fri, Sep 26, 2025 at 02:31:42PM +0200, Niklas Cassel wrote:
->> > > On Thu, Sep 25, 2025 at 01:01:47PM -0400, Frank Li wrote:
->> > > > Introduce pci_epf_get_bar_required_size() to retrieve the require=
-d BAR
->> > > > size and memory size=2E Prepare for adding support to set an MMIO=
- address to
->> > > > a specific BAR=2E
->> > > >
->> > > > Use two variables 'aligned_bar_size' and 'aligned_mem_size' to av=
-oid
->> > > > confuse=2E
->> > >
->> > > s/confuse/confusion/
->> > >
->> > >
->> > > >
->> > > > No functional changes=2E
->> > > >
->> > > > Signed-off-by: Frank Li <Frank=2ELi@nxp=2Ecom>
->> > > > ---
->> > > > change in v3
->> > > > - change return value to int=2E
->> > > > - use two pointers return bar size aligned and memory start addre=
-ss aligned
->> > > > - update comments about why need memory align size=2E Actually iA=
-TU require
->> > > > start address match aligned requirement=2E Since kernel return al=
-ign to
->> > > > size's address=2E
->> > > > - use two varible aligned_bar_size and aligned_mem_size to avoid =
-confuse
->> > > > use 'size'=2E
->> > > >
->> > > > change in v2
->> > > > - new patch
->> > > > ---
->> > > >  drivers/pci/endpoint/pci-epf-core=2Ec | 84 +++++++++++++++++++++=
-++--------------
->> > > >  1 file changed, 53 insertions(+), 31 deletions(-)
->> > > >
->> > > > diff --git a/drivers/pci/endpoint/pci-epf-core=2Ec b/drivers/pci/=
-endpoint/pci-epf-core=2Ec
->> > > > index d54e18872aefc07c655c94c104a347328ff7a432=2E=2E2cd0257831f98=
-85a4381c087ed8f3326f5960966 100644
->> > > > --- a/drivers/pci/endpoint/pci-epf-core=2Ec
->> > > > +++ b/drivers/pci/endpoint/pci-epf-core=2Ec
->> > > > @@ -208,6 +208,49 @@ void pci_epf_remove_vepf(struct pci_epf *epf=
-_pf, struct pci_epf *epf_vf)
->> > > >  }
->> > > >  EXPORT_SYMBOL_GPL(pci_epf_remove_vepf);
->> > > >
->> > > > +static int
->> > > > +pci_epf_get_bar_required_size(struct pci_epf *epf, size_t size,
->> > > > +			      size_t *aligned_bar_size,
->> > > > +			      size_t *aligned_mem_size,
->> > > > +			      enum pci_barno bar,
->> > > > +			      const struct pci_epc_features *epc_features,
->> > > > +			      enum pci_epc_interface_type type)
->> > > > +{
->> > > > +	u64 bar_fixed_size =3D epc_features->bar[bar]=2Efixed_size;
->> > > > +	size_t align =3D epc_features->align;
->> > > > +
->> > > > +	if (size < 128)
->> > > > +		size =3D 128;
->> > > > +
->> > > > +	/* According to PCIe base spec, min size for a resizable BAR is=
- 1 MB=2E */
->> > > > +	if (epc_features->bar[bar]=2Etype =3D=3D BAR_RESIZABLE && size =
-< SZ_1M)
->> > > > +		size =3D SZ_1M;
->> > > > +
->> > > > +	if (epc_features->bar[bar]=2Etype =3D=3D BAR_FIXED && bar_fixed=
-_size) {
->> > > > +		if (size > bar_fixed_size) {
->> > > > +			dev_err(&epf->dev,
->> > > > +				"requested BAR size is larger than fixed size\n");
->> > > > +			return -ENOMEM;
->> > > > +		}
->> > > > +		size =3D bar_fixed_size;
->> > > > +	} else {
->> > > > +		/* BAR size must be power of two */
->> > > > +		size =3D roundup_pow_of_two(size);
->> > > > +	}
->> > > > +
->> > > > +	*aligned_bar_size =3D size;
->> > >
->> > > I think this name is wrong=2E
->> > > The BAR size has not been aligned to anything=2E
->> > > The BAR size has to be a power of two, but that is a requirement of=
- the PCI
->> > > specification, so that in an inherent property of a BAR=2E
->> > >
->> > > Perhaps just name it size or bar_size?
->> >
->> > there already have 'size' for input=2E  It should match epc required'=
-s size=2E
->>
->> Why do you need both "size_t size" and "size_t *bar_size"?
->>
->> Isn't it enough with "size_t *bar_size" ?
->>
->> The user can supply a value, and the function could update that value=
-=2E
->
->If not 'aligned_mem_size' in list, it looks fine=2E But after add
->'aligned_mem_size', I think use difference varible for two outputs will b=
-e
->clear and consistent and easy to understand=2E
+Hi Terry,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 46037455cbb748c5e85071c95f2244e81986eb58]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/cxl-pci-Remove-unnecessary-CXL-Endpoint-handling-helper-functions/20250926-064816
+base:   46037455cbb748c5e85071c95f2244e81986eb58
+patch link:    https://lore.kernel.org/r/20250925223440.3539069-23-terry.bowman%40amd.com
+patch subject: [PATCH v12 22/25] CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20250927/202509270131.UIdODBaV-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250927/202509270131.UIdODBaV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509270131.UIdODBaV-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/powerpc/kernel/eeh_driver.c:68:28: warning: conflicting types for 'pci_ers_merge_result' due to enum/integer mismatch; have 'enum pci_ers_result(enum pci_ers_result,  enum pci_ers_result)' [-Wenum-int-mismatch]
+      68 | static enum pci_ers_result pci_ers_merge_result(enum pci_ers_result old,
+         |                            ^~~~~~~~~~~~~~~~~~~~
+   arch/powerpc/kernel/eeh_driver.c:68:28: error: static declaration of 'pci_ers_merge_result' follows non-static declaration
+   In file included from arch/powerpc/kernel/eeh_driver.c:13:
+   include/linux/pci.h:1897:18: note: previous declaration of 'pci_ers_merge_result' with type 'pci_ers_result_t(enum pci_ers_result,  enum pci_ers_result)' {aka 'unsigned int(enum pci_ers_result,  enum pci_ers_result)'}
+    1897 | pci_ers_result_t pci_ers_merge_result(enum pci_ers_result orig,
+         |                  ^~~~~~~~~~~~~~~~~~~~
 
 
-What am trying to say is:
-Why not make "size_t *bar_size" both an input and an output?
+vim +68 arch/powerpc/kernel/eeh_driver.c
 
+20b344971433da Sam Bobroff 2018-05-25  67  
+30424e386a30d1 Sam Bobroff 2018-05-25 @68  static enum pci_ers_result pci_ers_merge_result(enum pci_ers_result old,
+30424e386a30d1 Sam Bobroff 2018-05-25  69  						enum pci_ers_result new)
+30424e386a30d1 Sam Bobroff 2018-05-25  70  {
+30424e386a30d1 Sam Bobroff 2018-05-25  71  	if (eeh_result_priority(new) > eeh_result_priority(old))
+30424e386a30d1 Sam Bobroff 2018-05-25  72  		return new;
+30424e386a30d1 Sam Bobroff 2018-05-25  73  	return old;
+30424e386a30d1 Sam Bobroff 2018-05-25  74  }
+30424e386a30d1 Sam Bobroff 2018-05-25  75  
 
-Kind regards,
-Niklas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
