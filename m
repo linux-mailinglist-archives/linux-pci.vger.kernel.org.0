@@ -1,103 +1,151 @@
-Return-Path: <linux-pci+bounces-37140-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37141-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30B15BA532B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:25:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD534BA532E
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:26:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23F993B3F75
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 21:25:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7ED12381FE5
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 21:26:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12D7280338;
-	Fri, 26 Sep 2025 21:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75662A1CA;
+	Fri, 26 Sep 2025 21:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9ANDHgy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hoLzZOtT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF2581ACA;
-	Fri, 26 Sep 2025 21:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B48B1D9324;
+	Fri, 26 Sep 2025 21:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758921921; cv=none; b=RJgYR+azV4jA7AYZ8YawTNw9Pzq4u2mmnLjCzBOoH52eaCAya+KRTgvSPEkAcpkSvnxiUgZz7PEkgeX4DsdnYwFWH7Th6Y1VEXTC7eCFTirrtB/v686WTogq9e6+Vl6BNPwvBze1PTdgrP7+hwqMHNga6/qiHOHBOtdJAOKyrgc=
+	t=1758921966; cv=none; b=CEC0GCNcKtcm/7N9QSawikyAf6hC4a6zH0oefebXRfNzNimPhABSxH5haKioshJX2NAFyTR3IzQalxd1xgruS0tgQnHhdspjywUt85TjkPLirl+WSXez14F4n/6u8abaAc+LJfrNB6FkvEqZlHWinZXBeY/K6P/sprUitkEJZ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758921921; c=relaxed/simple;
-	bh=PQumnt7XyXrVYC0j2mqUHUvbODDCGmvh8dmipPDpD7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=RRMWyB5Md3z88xd18XgyBENj+mEWclrGg28RXS70p7F4PaAqcvpmn/OV4Zx2pry2zxifD9+74KWmEeIDwBoO7hUqwSdimsfEejO23oP4lSFN0HLnzCZ73GgRhtqEyzQh72AASDBo9LBld0BwO4jbv6iEYEWTa1lgs70z7lC35TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9ANDHgy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15B4C4CEF4;
-	Fri, 26 Sep 2025 21:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758921921;
-	bh=PQumnt7XyXrVYC0j2mqUHUvbODDCGmvh8dmipPDpD7o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=t9ANDHgyhv0ECBteSk6v9OQDSzqchAwI26CuEpIlcgrTJPfqA3gjwDp54B7Pkq56T
-	 gX8pE5rN8XWYHRdh9WoNdzgzAZLLZLRb0/BhI9TUGnhJZ8Rnp+Zbl0oq7MtrSttBap
-	 /85PM93NuKCnaeaLpeJzFL3UuGctNgWCJKSgV8+BUZY2JVX4vdqWNHtkkfb27xJCOF
-	 IfGgdyuWZ7BXaTAeFOSWMmNWtd9oKXidcKmHM6nFdcScB/u0ERfk/k/K5zGy0pvjv9
-	 vdEu4VAz6kzpbWoVbo+1qZDS5t0JK7u5iBk+IBVvHr64OeB9RzBeaVYs3LigM930hI
-	 cChXC1+T2nI4Q==
-Date: Fri, 26 Sep 2025 16:25:19 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: webgeek1234@gmail.com, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] cpuidle: tegra: Export
- tegra_cpuidle_pcie_irqs_in_use
-Message-ID: <20250926212519.GA2268653@bhelgaas>
+	s=arc-20240116; t=1758921966; c=relaxed/simple;
+	bh=qLf+NYdvcCf3oU4Vb7zAhtUhczGd0GCFHpCg1pVFT0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C3obPoBO6NWUr1m6P0TV8EY+un5qIRbHMp/no8UNldNeESZ+WijBq30fQ9TJs3yaXAn6RCi2DdiTOzeE5QuiCYPOgcElZwuk3a51NULfQLlkykw7y8aEBWdqY938SMwnqfeVpsFc72MdStBBlva51+FM5i+sN/HMHqV/wNyKUrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hoLzZOtT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758921965; x=1790457965;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qLf+NYdvcCf3oU4Vb7zAhtUhczGd0GCFHpCg1pVFT0Q=;
+  b=hoLzZOtTE/0Awfia1pxV3OubzmpIoJNeQ19Ync6EBoU5W9+l2JXDjlMr
+   I7TzLFQQdc7LuXjpWLtb66kG4sSZol0V2FYw3dzSxQHTXssomrGoV4Ull
+   B6C+fe8/w+1M9LwRpAQOxvwKQmLz4cLimHjfFa43RsdflrHJ732JmvvOI
+   X2XHFlCBhuQuzxfBvQNMIuYbXCumE8PPg5ACdf4qZuhheHOm/K6JMMNtb
+   +/Xm7ajZGxNSRlsr93CMAvhTnM8RCU2+DmArKajxWijajVnSfgpR5933v
+   DzEzFs3nxxYUB8SIPgZAZC72+SZQ4o0+xgn0ZXfHu1A0KXrg7mI5jiixN
+   Q==;
+X-CSE-ConnectionGUID: vaJwsi6fQDWpwOwDS4t7ow==
+X-CSE-MsgGUID: x0euilLDQq6fGVAYgACsoA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="61428254"
+X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
+   d="scan'208";a="61428254"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 14:26:03 -0700
+X-CSE-ConnectionGUID: z/NfbGmATNupqUifnChzmg==
+X-CSE-MsgGUID: R84/w1B4S9efXt5xnirSXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
+   d="scan'208";a="177765649"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.69]) ([10.125.109.69])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 14:26:02 -0700
+Message-ID: <ba93061a-09dd-4132-bde0-6af319a56405@intel.com>
+Date: Fri, 26 Sep 2025 14:26:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250731-pci-tegra-module-v7-2-cad4b088b8fb@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 16/25] CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-17-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250925223440.3539069-17-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-[cc->to: Rafael, Daniel, any feedback or ack?  Would like to resolve
-this (part of Aaron's series at
-https://lore.kernel.org/r/20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com)]
 
-On Thu, Jul 31, 2025 at 04:59:25PM -0500, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
+
+On 9/25/25 3:34 PM, Terry Bowman wrote:
+> The CXL driver's error handling for uncorrectable errors (UCE) will be
+> updated in the future. A required change is for the error handlers to
+> to force a system panic when a UCE is detected.
 > 
-> Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
-> pci-tegra can be loaded as a module.
+> Introduce PCI_ERS_RESULT_PANIC as a 'enum pci_ers_result' type. This will
+> be used by CXL UCE fatal and non-fatal recovery in future patches. Update
+> PCIe recovery documentation with details of PCI_ERS_RESULT_PANIC.
 > 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
 > ---
->  drivers/cpuidle/cpuidle-tegra.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-> index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
-> --- a/drivers/cpuidle/cpuidle-tegra.c
-> +++ b/drivers/cpuidle/cpuidle-tegra.c
-> @@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
->  	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
->  	tegra_cpuidle_disable_state(TEGRA_CC6);
->  }
-> +EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
+> Changes v11 -> v12:
+> - Documentation requested by (Lukas)
+> ---
+>  Documentation/PCI/pci-error-recovery.rst | 6 ++++++
+>  include/linux/pci.h                      | 3 +++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+> index 42e1e78353f3..f823a6c1fb23 100644
+> --- a/Documentation/PCI/pci-error-recovery.rst
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -102,6 +102,8 @@ Possible return values are::
+>  		PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
+>  		PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
+>  		PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
+> +		PCI_ERS_RESULT_NO_AER_DRIVER, /* No AER capabilities registered for the driver */
+> +		PCI_ERS_RESULT_PANIC,       /* System is unstable, panic. Is CXL specific */
+>  	};
+>  
+>  A driver does not have to implement all of these callbacks; however,
+> @@ -116,6 +118,10 @@ The actual steps taken by a platform to recover from a PCI error
+>  event will be platform-dependent, but will follow the general
+>  sequence described below.
+>  
+> +PCI_ERS_RESULT_PANIC is currently unique to CXL and handled in CXL
+> +cxl_do_recdovery(). The PCI pcie_do_recovery() routine does not report or
+> +handle PCI_ERS_RESULT_PANIC.
+> +
+>  STEP 0: Error Event
+>  -------------------
+>  A PCI bus error is detected by the PCI hardware.  On powerpc, the slot
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 53a45e92c635..bc3a7b6d0f94 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -889,6 +889,9 @@ enum pci_ers_result {
+>  
+>  	/* No AER capabilities registered for the driver */
+>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic. Is CXL specific */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+>  };
+>  
+>  /* PCI bus error event callbacks */
 
-tegra_cpuidle_pcie_irqs_in_use() looks like a workaround for a Tegra20
-hardware defect, and having no knowledge of typical Tegra20 systems,
-my questions would be "Why do we even bother with this?  Should
-cpuidle-tegra.c just disable CC6 always, unconditionally?  The whole
-thing, and all of include/soc/tegra/cpuidle.h, looks like it might be
-more trouble than it's worth."
-
-Bjorn
 
