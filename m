@@ -1,57 +1,62 @@
-Return-Path: <linux-pci+bounces-37139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A699BA52F8
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:15:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 30B15BA532B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:25:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A38A73A770C
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 21:15:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23F993B3F75
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 21:25:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B4225F98E;
-	Fri, 26 Sep 2025 21:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12D7280338;
+	Fri, 26 Sep 2025 21:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDN1MGZl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9ANDHgy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4AA2A1CA;
-	Fri, 26 Sep 2025 21:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF2581ACA;
+	Fri, 26 Sep 2025 21:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758921324; cv=none; b=ct0eQTGPw8Lo+w/PuTrz4myyA9l1xpTNcsRmfzf5I5790trAaLQ1Sw5IHbvy4QrrsoggSQzR8nplVTdwok1Of06IEycbkhcDXqQPu+gAElmiWQQcjsIAcADIARA3m1SkXMEZo68hjoxzHTvDa1eZeFSFxQ9B8CscKNf35Epk1ac=
+	t=1758921921; cv=none; b=RJgYR+azV4jA7AYZ8YawTNw9Pzq4u2mmnLjCzBOoH52eaCAya+KRTgvSPEkAcpkSvnxiUgZz7PEkgeX4DsdnYwFWH7Th6Y1VEXTC7eCFTirrtB/v686WTogq9e6+Vl6BNPwvBze1PTdgrP7+hwqMHNga6/qiHOHBOtdJAOKyrgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758921324; c=relaxed/simple;
-	bh=Yt5ah+ukL8YQL9amE2ctvppRu5edmQMR6fjalQAWkqw=;
+	s=arc-20240116; t=1758921921; c=relaxed/simple;
+	bh=PQumnt7XyXrVYC0j2mqUHUvbODDCGmvh8dmipPDpD7o=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H7YaSJwj2SpOSep9T9rZF2DZskAU+pY6can9TQAfeselJjBAHdhsE+XTBpNVbLAeb2PjKBGriV8HmfldrL674yGoN1fHLiVYy0/kaHYyrZvtUd8qOsYZ1c6Yx0aod+Ybf0s3tBZJxddlNV+X52Rf56H40Q/8p3XAp5QugpzhbCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDN1MGZl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDDAC4CEF4;
-	Fri, 26 Sep 2025 21:15:23 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=RRMWyB5Md3z88xd18XgyBENj+mEWclrGg28RXS70p7F4PaAqcvpmn/OV4Zx2pry2zxifD9+74KWmEeIDwBoO7hUqwSdimsfEejO23oP4lSFN0HLnzCZ73GgRhtqEyzQh72AASDBo9LBld0BwO4jbv6iEYEWTa1lgs70z7lC35TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9ANDHgy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15B4C4CEF4;
+	Fri, 26 Sep 2025 21:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758921324;
-	bh=Yt5ah+ukL8YQL9amE2ctvppRu5edmQMR6fjalQAWkqw=;
+	s=k20201202; t=1758921921;
+	bh=PQumnt7XyXrVYC0j2mqUHUvbODDCGmvh8dmipPDpD7o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gDN1MGZl4IN1IyRowVPsIts6jmFM0cezDT03rNKZRaMFqCOuO/oUyzbJnSK4GpM3L
-	 kiqgC1Tf+R7XrhowXWG8RYVOvBYcAWCP9rDvNcPgVdSGeUm+YSop5kMU3uBiws+5J+
-	 byzljg6y3jwd/Hg2/EJD58kPE9sEb3mkKqPhhg2/ul/fX9pXjlhckM8xWPCSbq+bQ9
-	 zLnMpdRlRBnwV7nNf70Z5EaSkS9OnpcCTj6jAjOgOD/2mlAk36LjyyZsRCPV1/tC50
-	 KGI+ksNzkclHrGw3G+6dvom4KAbtHfrawBrZ47e+76Nu8E9yOGkc4Q1B12/FmftjtP
-	 r6AWpOly8hFcA==
-Date: Fri, 26 Sep 2025 16:15:22 -0500
+	b=t9ANDHgyhv0ECBteSk6v9OQDSzqchAwI26CuEpIlcgrTJPfqA3gjwDp54B7Pkq56T
+	 gX8pE5rN8XWYHRdh9WoNdzgzAZLLZLRb0/BhI9TUGnhJZ8Rnp+Zbl0oq7MtrSttBap
+	 /85PM93NuKCnaeaLpeJzFL3UuGctNgWCJKSgV8+BUZY2JVX4vdqWNHtkkfb27xJCOF
+	 IfGgdyuWZ7BXaTAeFOSWMmNWtd9oKXidcKmHM6nFdcScB/u0ERfk/k/K5zGy0pvjv9
+	 vdEu4VAz6kzpbWoVbo+1qZDS5t0JK7u5iBk+IBVvHr64OeB9RzBeaVYs3LigM930hI
+	 cChXC1+T2nI4Q==
+Date: Fri, 26 Sep 2025 16:25:19 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, andersson@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom,pcie-x1e80100: Set clocks
- minItems for the fifth Glymur PCIe Controller
-Message-ID: <20250926211522.GA2268583@bhelgaas>
+To: webgeek1234@gmail.com, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7 2/3] cpuidle: tegra: Export
+ tegra_cpuidle_pcie_irqs_in_use
+Message-ID: <20250926212519.GA2268653@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,42 +65,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250919142325.1090059-1-pankaj.patil@oss.qualcomm.com>
+In-Reply-To: <20250731-pci-tegra-module-v7-2-cad4b088b8fb@gmail.com>
 
-On Fri, Sep 19, 2025 at 07:53:25PM +0530, Pankaj Patil wrote:
-> From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+[cc->to: Rafael, Daniel, any feedback or ack?  Would like to resolve
+this (part of Aaron's series at
+https://lore.kernel.org/r/20250731-pci-tegra-module-v7-0-cad4b088b8fb@gmail.com)]
+
+On Thu, Jul 31, 2025 at 04:59:25PM -0500, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
 > 
-> On the Qualcomm Glymur platform, the fifth PCIe host is compatible with
-> the DWC controller present on the X1E80100 platform, but does not have
-> cnoc_sf_axi clock. Hence, set minItems of clocks and clock-names to six.
+> Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
+> pci-tegra can be loaded as a module.
 > 
-> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-
-Applied with Rob's ack to pci/dt-binding for v6.18, thanks!
-
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 > ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/cpuidle/cpuidle-tegra.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-> index 257068a18264..61581ffbfb24 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-> @@ -32,10 +32,11 @@ properties:
->        - const: mhi # MHI registers
->  
->    clocks:
-> -    minItems: 7
-> +    minItems: 6
->      maxItems: 7
->  
->    clock-names:
-> +    minItems: 6
->      items:
->        - const: aux # Auxiliary clock
->        - const: cfg # Configuration clock
-> -- 
-> 2.34.1
-> 
+> diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+> index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
+> --- a/drivers/cpuidle/cpuidle-tegra.c
+> +++ b/drivers/cpuidle/cpuidle-tegra.c
+> @@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
+>  	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
+>  	tegra_cpuidle_disable_state(TEGRA_CC6);
+>  }
+> +EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
+
+tegra_cpuidle_pcie_irqs_in_use() looks like a workaround for a Tegra20
+hardware defect, and having no knowledge of typical Tegra20 systems,
+my questions would be "Why do we even bother with this?  Should
+cpuidle-tegra.c just disable CC6 always, unconditionally?  The whole
+thing, and all of include/soc/tegra/cpuidle.h, looks like it might be
+more trouble than it's worth."
+
+Bjorn
 
