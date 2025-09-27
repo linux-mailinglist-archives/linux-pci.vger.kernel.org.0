@@ -1,239 +1,154 @@
-Return-Path: <linux-pci+bounces-37154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08577BA5675
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Sep 2025 01:55:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2DCDBA58AD
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Sep 2025 05:52:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6A1D3B8341
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Sep 2025 23:55:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C2C8326FCD
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Sep 2025 03:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A48014B953;
-	Fri, 26 Sep 2025 23:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 497631C8603;
+	Sat, 27 Sep 2025 03:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vijd5+QH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afLb2RSq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488B71F4613
-	for <linux-pci@vger.kernel.org>; Fri, 26 Sep 2025 23:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1307F18DF8D;
+	Sat, 27 Sep 2025 03:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758930941; cv=none; b=LwByLrvP4+3ynFqIQK0yB3naC36sW4/zA2ndGGgrbKH8CwwGo5OvSUfQS12msWb51z+aXWhiZFoSt+k3tT4pQSA4imvUDYclIiOeo8Dxp32XIdtX/DUkWuIWcow9onWUrFodEGh/rAGJEtVWyvNUc5B1LcFieQRpQ5mwTOxr3TY=
+	t=1758945174; cv=none; b=eA9KZpbAxExoMPwATXNUq6tvHreuhHQwSjf5xWIKIpHb2mK7uU88YLwegJsy/OCLaOX8waj7MKWy7xbHySeZrB3i/pp2wrZwQgpwo/W3p6I7O7KZN4ilTObfUm7dmv89LBfk6RfNRa3SrFV31KxIzl+jzHIjoT4RHRUrcxw9iVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758930941; c=relaxed/simple;
-	bh=F/zA8wPTGBAtw29GYAIyVyOv59hcPfFe9+WEFbbq9ZU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=su4M5NTjtjDgry5cn4XtVxY+SmTZtmQOdMiJRMa56nD9VzCGVrX8qFwzf3y6/A0wdDZjSwQN6yCg0aKQsKihlXYUn7lOFMWB1Xsnn/IHZL+hzyAQXIMEns5kfIAODdwN9Yxz8l3h2fIz7cENyoQC8UJha/6hZo3mFpyG7aHezi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vijd5+QH; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758930939; x=1790466939;
-  h=date:from:to:cc:subject:message-id;
-  bh=F/zA8wPTGBAtw29GYAIyVyOv59hcPfFe9+WEFbbq9ZU=;
-  b=Vijd5+QHKYUhuaU+ymRpYp81hzpu5j5J6qwDxkxQaqTQY8uk7FOCmu99
-   QQxHJ8FaI6TpaRLuIPqQO8mBU6Eo2+chLEkbWIIeg4Vgbc9nt/k95c9TO
-   zz0UCdMS8NUkt0xXgtAsMZgUE3A7MG2R2Cs1fuSBx1JbE4b1E/ngsAPFM
-   tCJRA8raNQtlBXY35YWKw0HfJJOuO6RKwCyubS45On7Iv3KQh960xhh1T
-   bf597TJgzNE4e6PpdcawUZXReprh6+WugnqR5QDf12DypI5/rvITfCHYj
-   AtHyXh6z654BiKq5nkcyOUpGtCfNnmJlst9YpMiHiW3Lp3V9ElALjb4Wl
-   g==;
-X-CSE-ConnectionGUID: GOwaEE6OSz+kR7J2ZYT4Og==
-X-CSE-MsgGUID: ZOSfvS5IS8281u/BKnpzbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11565"; a="64899901"
-X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="64899901"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 16:55:39 -0700
-X-CSE-ConnectionGUID: uF/isTlBRcKTkN6SDCU+jg==
-X-CSE-MsgGUID: 8e1kmhWKSqiVrrwEK56JCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="182039012"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 26 Sep 2025 16:55:38 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v2IHj-0006fT-0u;
-	Fri, 26 Sep 2025 23:55:32 +0000
-Date: Sat, 27 Sep 2025 07:55:06 +0800
-From: kernel test robot <lkp@intel.com>
+	s=arc-20240116; t=1758945174; c=relaxed/simple;
+	bh=W/z5cqAffsitkvS3CbuGOrlcjmQu/FBVIDqgLsCp8p8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O3QSen6//xwP3tm9wYg8DKckyd22OHNEWBImx6yznPS7/um6PjrtJIHczgyZf1RoREi0vh5d7IVI31B1xmw2lCwTGg+S1mzsve1eZ3C2LCkqGuOqPeaptIlcH8hScC9P2tBVNICOtApLbsWBsQhQ8l05WQ5W/qpnvrDbYjqJato=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afLb2RSq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACF4C4CEE7;
+	Sat, 27 Sep 2025 03:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758945173;
+	bh=W/z5cqAffsitkvS3CbuGOrlcjmQu/FBVIDqgLsCp8p8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=afLb2RSqGIIpgahmXAMZRfTysN7c1Dd/ZiZIsaQk5XOLHULfcAdf4deyC2gcAOHfx
+	 BWgtesSCx/m/1oPyP18AO7ij+rcOpqM7jaDuyOGijs3UY9j6G3NswqLY5WsPcqk2PA
+	 SIZ2JesLIyC30hmZP5h90FESCR1VIwjaS/0xy+9gXZDqhbr0qMAOjjgIoG57x0pw92
+	 /qucid6M0/DYR3toxdvqvMh9HWbvrFtRJtCIwNa/oXPTiwfNkwLej/iKwBfOsLR1Gg
+	 mViNAN8nqAlZSheI95C2THZMAGXjxGnLvzHnIPsPu4lzwdZnasycb4bORvZFdiYRsb
+	 JjKXwMSmipjEQ==
+Date: Sat, 27 Sep 2025 09:22:41 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rcar-host] BUILD SUCCESS
- 5ed35b4d490d8735021cce9b715b62a418310864
-Message-ID: <202509270759.2zlwArFk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, chaitanya chundru <quic_krichai@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, quic_vbadigan@quicnic.com, 
+	amitk@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com, 
+	linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v6 5/9] PCI: dwc: Implement .start_link(), .stop_link()
+ hooks
+Message-ID: <3tuxxskusi5ck7cu2nqfkilqdqvzqjy77qgpvuo4nhcugdebug@geqxeslmxmdr>
+References: <4a3f9494-27a2-47d6-bdef-0b1bcbd99903@oss.qualcomm.com>
+ <20250926203916.GA2266029@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250926203916.GA2266029@bhelgaas>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-host
-branch HEAD: 5ed35b4d490d8735021cce9b715b62a418310864  PCI: rcar-host: Convert struct rcar_msi mask_lock into raw spinlock
+On Fri, Sep 26, 2025 at 03:39:16PM -0500, Bjorn Helgaas wrote:
+> On Fri, Sep 26, 2025 at 07:09:17PM +0530, Krishna Chaitanya Chundru wrote:
+> > On 9/25/2025 10:55 PM, Bjorn Helgaas wrote:
+> > > On Thu, Sep 25, 2025 at 09:49:16PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Thu, Sep 25, 2025 at 09:54:16AM -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Aug 28, 2025 at 05:39:02PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > > > Implement stop_link() and  start_link() function op for dwc drivers.
+> > > > > > 
+> > > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > > > > ---
+> > > > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 18 ++++++++++++++++++
+> > > > > >   1 file changed, 18 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > index 952f8594b501254d2b2de5d5e056e16d2aa8d4b7..bcdc4a0e4b4747f2d62e1b67bc1aeda16e35acdd 100644
+> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > @@ -722,10 +722,28 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+> > > > > >   }
+> > > > > >   EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+> > > > > > +static int dw_pcie_op_start_link(struct pci_bus *bus)
+> > > > > > +{
+> > > > > > +	struct dw_pcie_rp *pp = bus->sysdata;
+> > > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > > > +
+> > > > > > +	return dw_pcie_host_start_link(pci);
+> > > > > 
+> > > > > This takes a pci_bus *, which could be any PCI bus, but this only
+> > > > > works for root buses because it affects the link from a Root Port.
+> > > > > 
+> > > > > I know the TC9563 is directly below the Root Port in the current
+> > > > > topology, but it seems like the ability to configure a Switch with
+> > > > > I2C or similar is potentially of general interest, even if the
+> > > > > switch is deeper in the hierarchy.
+> > > > > 
+> > > > > Is there a generic way to inhibit link training, e.g., with the
+> > > > > Link Disable bit in the Link Control register?  If so, this could
+> > > > > potentially be done in a way that would work for any vendor and
+> > > > > for any Downstream Port, including Root Ports and Switch
+> > > > > Downstream Ports.
+> > > > 
+> > > > FWIW, the link should not be stopped for a single device, since it
+> > > > could affect other devices in the bus. Imagine if this switch is
+> > > > connected to one of the downstream port of another switch. Then
+> > > > stopping and starting the link will affect other devices connected
+> > > > to the upstream switch as well.
+> > > 
+> > > Link Disable would affect all devices downstream of the bridge where
+> > > it is set, same as dw_pcie_op_stop_link().
+> > > 
+> > > > This driver is doing it right now just because, there is no other
+> > > > way to control the switch state machine. Ideally, we would want the
+> > > > PERST# to be in asserted stage to keep the device from starting the
+> > > > state machine, then program the registers over I2C and deassert
+> > > > PERST#. This will work across all of the host controller drivers (if
+> > > > they support pwrctrl framework).
+> > > 
+> > > I don't think there's a way to implement .start_link() and
+> > > .stop_link() for ACPI unless it's by using Link Disable, which is why
+> > > I asked about this.  If Link Disable *does* work, it would be a very
+> > > generic way to do this because it's part of the PCIe base spec.
+> > 
+> > We did test as you suggested but unfortunately the setting are not
+> > getting reflected we need to explicitly assert perst to make sure
+> > pcie is in reset state while applying these settings.
+> 
+> Maybe ".stop_link()" is the wrong name if what's actually required is
+> PERST#?
+> 
 
-elapsed time: 1469m
+If we rename this callback to foo_perst(), then it will be similar to my Pwrctrl
+PERST# integration series [1]. I'm wondering why shouldn't we merge it instead
+and get rid of this callback from this series for good?
 
-configs tested: 146
-configs skipped: 3
+- Mani
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[1] https://lore.kernel.org/linux-pci/20250912-pci-pwrctrl-perst-v3-0-3c0ac62b032c@oss.qualcomm.com/
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250926    gcc-8.5.0
-arc                   randconfig-002-20250926    gcc-9.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                            dove_defconfig    gcc-15.1.0
-arm                         nhk8815_defconfig    clang-22
-arm                          pxa910_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250926    clang-22
-arm                   randconfig-002-20250926    clang-17
-arm                   randconfig-003-20250926    clang-22
-arm                   randconfig-004-20250926    clang-22
-arm64                            alldefconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250926    gcc-8.5.0
-arm64                 randconfig-002-20250926    gcc-12.5.0
-arm64                 randconfig-003-20250926    gcc-9.5.0
-arm64                 randconfig-004-20250926    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250926    gcc-15.1.0
-csky                  randconfig-002-20250926    gcc-14.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250926    clang-22
-hexagon               randconfig-002-20250926    clang-22
-i386        buildonly-randconfig-001-20250926    clang-20
-i386        buildonly-randconfig-002-20250926    clang-20
-i386        buildonly-randconfig-003-20250926    clang-20
-i386        buildonly-randconfig-004-20250926    clang-20
-i386        buildonly-randconfig-005-20250926    clang-20
-i386        buildonly-randconfig-006-20250926    clang-20
-i386                  randconfig-001-20250927    gcc-14
-i386                  randconfig-002-20250927    gcc-14
-i386                  randconfig-003-20250927    gcc-14
-i386                  randconfig-004-20250927    gcc-14
-i386                  randconfig-005-20250927    gcc-14
-i386                  randconfig-006-20250927    gcc-14
-i386                  randconfig-007-20250927    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250926    gcc-15.1.0
-loongarch             randconfig-002-20250926    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                          multi_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm63xx_defconfig    clang-22
-nios2                         3c120_defconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250926    gcc-11.5.0
-nios2                 randconfig-002-20250926    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250926    gcc-10.5.0
-parisc                randconfig-002-20250926    gcc-10.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc               randconfig-001-20250926    clang-22
-powerpc               randconfig-002-20250926    clang-18
-powerpc               randconfig-003-20250926    clang-22
-powerpc64             randconfig-001-20250926    clang-22
-powerpc64             randconfig-002-20250926    clang-16
-powerpc64             randconfig-003-20250926    gcc-15.1.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-riscv                 randconfig-001-20250926    clang-22
-riscv                 randconfig-002-20250926    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250926    clang-22
-s390                  randconfig-002-20250926    gcc-8.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250926    gcc-12.5.0
-sh                    randconfig-002-20250926    gcc-15.1.0
-sh                           se7343_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250926    gcc-14.3.0
-sparc                 randconfig-002-20250926    gcc-15.1.0
-sparc64               randconfig-001-20250926    gcc-12.5.0
-sparc64               randconfig-002-20250926    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                    randconfig-001-20250926    clang-22
-um                    randconfig-002-20250926    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250926    clang-20
-x86_64      buildonly-randconfig-002-20250926    clang-20
-x86_64      buildonly-randconfig-003-20250926    gcc-14
-x86_64      buildonly-randconfig-004-20250926    gcc-14
-x86_64      buildonly-randconfig-005-20250926    gcc-14
-x86_64      buildonly-randconfig-006-20250926    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250927    clang-20
-x86_64                randconfig-002-20250927    clang-20
-x86_64                randconfig-003-20250927    clang-20
-x86_64                randconfig-004-20250927    clang-20
-x86_64                randconfig-005-20250927    clang-20
-x86_64                randconfig-006-20250927    clang-20
-x86_64                randconfig-007-20250927    clang-20
-x86_64                randconfig-008-20250927    clang-20
-x86_64                randconfig-071-20250927    gcc-14
-x86_64                randconfig-072-20250927    gcc-14
-x86_64                randconfig-073-20250927    gcc-14
-x86_64                randconfig-074-20250927    gcc-14
-x86_64                randconfig-075-20250927    gcc-14
-x86_64                randconfig-076-20250927    gcc-14
-x86_64                randconfig-077-20250927    gcc-14
-x86_64                randconfig-078-20250927    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250926    gcc-14.3.0
-xtensa                randconfig-002-20250926    gcc-8.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+மணிவண்ணன் சதாசிவம்
 
