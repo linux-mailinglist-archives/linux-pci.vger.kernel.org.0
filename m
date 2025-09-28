@@ -1,150 +1,142 @@
-Return-Path: <linux-pci+bounces-37166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E8C0BA6940
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 08:40:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0932CBA6AAF
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 10:15:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2F5A17D8CB
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 06:40:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 742131894002
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 08:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6912BD5B4;
-	Sun, 28 Sep 2025 06:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029CD2BE7C0;
+	Sun, 28 Sep 2025 08:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TPTD7scr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMtmLekY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6D229E115;
-	Sun, 28 Sep 2025 06:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAE11D8A10;
+	Sun, 28 Sep 2025 08:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759041626; cv=none; b=EvTIyhzIEpC84vpABVfFladpM9eDVBXVh8n4JvL86P+ztxKT+xSGGDSd/j2MKVKTuoIXX2tqsXSnNND5l6vjR1fULK9kW+D7Kam4RwGvOWy0iKerEH4Sq0LmPt90r+GZE08quHVJOLOePEOhwDEmioEfQnQUH0EmwU1/V6Xotn8=
+	t=1759047317; cv=none; b=dFk6be9dL8e0O2Ppb5kL9QLtxa0geMyzqGN0aBl1exmR4j6Wrv4eVrwFL0wQE2JlCgjjLsOsPcbCjv+bFIaNMIFozqoFjvnjeVnV10xUxC06ui4Q95PdShkEZsqRKEqxPkFWvf4mfUfGuvQIRjA16jQpDhxUu84UGxrAPtueb28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759041626; c=relaxed/simple;
-	bh=cDTxcb4B+ODUAizKTHRF3o2YDVPO24Wtl1sX30pmf1Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sSe7K2lcqeY8yBv8cj9JRt0Lcv1CMij5zIAVwBaKCumbtQYgKYSgZ++nUgC6EcblcOzRiiTadS938QDkjH0npoe5VomBHgbSjILsEKFaNI6U2umvqPSpSCoLLDzzsx7c+qYtPPyK2dXwwVvuCVfjPD8V/+us1N7QxF0Pj6AN7+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TPTD7scr; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759041625; x=1790577625;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cDTxcb4B+ODUAizKTHRF3o2YDVPO24Wtl1sX30pmf1Q=;
-  b=TPTD7scr1CnpetPMDZOV29mFBXRku93aWeeoN42UVwBG14y9t20xtYec
-   hgkVqDQvcxFo4O1qaptzTBONZFKsLKIh4wM7P6SvzLsyx5pWYSeDr9iW/
-   tdd9sR7nF916MCcRl/WyTbj0XPBQ4SUAyY7pKeqsz+VPTQJf00awsj/7n
-   vl468+R/ghY0MTxJSowtETu4snM5ksTONve1zqK15y3k6X6LAu23iDbd8
-   iCFYSX9Hnd3F67V85IkP/Lvaed0wUMrjZ+RKJ0wyuUYrd1cbbEQYR+X3I
-   SfMijTEtLyOyS8AFWLeAqVxQHKpgyQk6Ea+lcE1OWZhJvwA8hm5jeHs/z
-   A==;
-X-CSE-ConnectionGUID: 8SYQ1ekNR2SI325oCifSow==
-X-CSE-MsgGUID: ee/IpVXTTh+aeSySfj4cAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61228546"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="61228546"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2025 23:40:24 -0700
-X-CSE-ConnectionGUID: VDyHmiQCR06ImWbm1f2Vhg==
-X-CSE-MsgGUID: yfO1NG4ISXmJrNPikFM3iA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,299,1751266800"; 
-   d="scan'208";a="177088889"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 27 Sep 2025 23:40:22 -0700
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: yilun.xu@intel.com,
-	yilun.xu@linux.intel.com,
-	baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com,
-	aneesh.kumar@kernel.org,
-	bhelgaas@google.com,
-	aik@amd.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] coco/tdx-host: Illustrate IDE Address Association Register setup
-Date: Sun, 28 Sep 2025 14:27:56 +0800
-Message-Id: <20250928062756.2188329-4-yilun.xu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250928062756.2188329-1-yilun.xu@linux.intel.com>
-References: <20250928062756.2188329-1-yilun.xu@linux.intel.com>
+	s=arc-20240116; t=1759047317; c=relaxed/simple;
+	bh=de9qzleZA+R2N/Kmiw9QQMnYG50hXtyYa8gfYsMACWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnwNpZnbMcT99uc/0dJTGiDZyFcS1kImFebtn6n2DZ6YV31y/XFUEqpRyKkuZlJR7aAZWKf8rMDKf1b4XurCoRmtFBlq9c4+ExLqCgp0eaBgd0zpR9c5bw6LE7L1hPTRgLu49FJMlvK6vw7PyQLqZeNVTZiGoVs6ZSJcIiogtys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMtmLekY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 846E1C4CEF0;
+	Sun, 28 Sep 2025 08:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759047317;
+	bh=de9qzleZA+R2N/Kmiw9QQMnYG50hXtyYa8gfYsMACWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KMtmLekYVZUE7aRFSU9mkhSkk4d2ntkHA9S03kyf74bsqgqfKRQVhafqnCSWyOedv
+	 j3ALK52bH8Ib0Qcjq73RywxOiTyDmFQWvZrSLzgQu7h6BfCe96um8PU6yXa3j1+99V
+	 FGKhJMG48c569FGlH//UPB1ED5dl4Ifq6JGVIKZvrAca3dREYBHHST1Q5so4+z4eaY
+	 ccYycjRt92s6L0ewEIaOyQRQPsYgpAgUNUX7hHBLNc2rys8+IT/z1BVurmh2ZP0TbU
+	 V0pJks/SLiWWs/cl5dVESCI2dRN+y9HXnOHfSrklek/YOtBiMhW81kGRirOKn9C5ba
+	 xbPCNcierbgCQ==
+Date: Sun, 28 Sep 2025 11:15:12 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 03/10] PCI/P2PDMA: Refactor to separate core P2P
+ functionality from memory allocation
+Message-ID: <20250928081512.GD12165@unreal>
+References: <20250922150032.3e3da410.alex.williamson@redhat.com>
+ <20250923150414.GA2608121@nvidia.com>
+ <20250923113041.38bee711.alex.williamson@redhat.com>
+ <20250923174333.GE2608121@nvidia.com>
+ <20250923120932.47df57b2.alex.williamson@redhat.com>
+ <20250925070314.GA12165@unreal>
+ <20250925115308.GT2617119@nvidia.com>
+ <20250925163131.22a2c09b.alex.williamson@redhat.com>
+ <20250925230236.GB2617119@nvidia.com>
+ <20250926081350.16bb66c8.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250926081350.16bb66c8.alex.williamson@redhat.com>
 
-Not for devsec-staging. Just illustrate, can't compile. Please wait for:
+On Fri, Sep 26, 2025 at 08:13:50AM -0600, Alex Williamson wrote:
+> On Thu, 25 Sep 2025 20:02:36 -0300
+> Jason Gunthorpe <jgg@nvidia.com> wrote:
+> 
+> > On Thu, Sep 25, 2025 at 04:31:31PM -0600, Alex Williamson wrote:
+> > > On Thu, 25 Sep 2025 08:53:08 -0300
+> > > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > >   
+> > > > On Thu, Sep 25, 2025 at 10:03:14AM +0300, Leon Romanovsky wrote:
+> > > >   
+> > > > > > It would at least make sense to me then to store the provider on the
+> > > > > > vfio_pci_dma_buf object at the time of the get feature call rather than
+> > > > > > vfio_pci_core_init_dev() though.  That would eliminate patch 08/ and
+> > > > > > the inline #ifdefs.    
+> > > > > 
+> > > > > I'll change it now. If "enable" function goes to be "get" function, we
+> > > > > won't need to store anything in vfio_pci_dma_buf too. At the end, we
+> > > > > have exactly two lines "provider = priv->vdev->provider[priv->bar];",
+> > > > > which can easily be changed to be "provider = pcim_p2pdma_provider(priv->vdev->pdev, priv->bar)"    
+> > > > 
+> > > > Not without some kind of locking change. I'd keep the
+> > > > priv->vdev->provider[priv->bar] because setup during probe doesn't
+> > > > need special locking.  
+> > > 
+> > > Why do we need to store the provider on the vfio_pci_core_device at
+> > > probe though, we can get it later via pcim_p2pdma_provider().   
+> > 
+> > Because you'd need some new locking to prevent races.
+> 
+> The race is avoided if we simply call pcim_p2pdma_provider() during
+> probe.  We don't need to save the returned provider.  That's where it
+> seems like pulling the setup out to a separate function would eliminate
+> this annoying BAR# arg.
+>  
+> > Besides, the model here should be to call the function once during
+> > probe and get back the allocated provider. The fact internally it is
+> > kind of nutzo still shouldn't leak out as a property of the ABI.
+> > 
+> > I would like to remove this weird behavior where it caches things
+> > inside the struct device. That's not normal for an API to do that, it
+> > is only done for the genalloc path that this doesn't use.
+> 
+> My goal in caching the provider on the vfio p2pdma object was to avoid
+> caching it on the vfio_pci_core_device, but now we're storing it on the
+> struct device, the vfio_pci_core_device, AND the vfio p2pdma object.
+> Given the current state that it's stored on the struct device, I think
+> we only need a setup call during probe (that could be stubbed out
+> rather than #ifdef'd), then cache the provider on the vfio p2pdma
+> object when a dmabuf is configured.  Thanks,
 
-  [RFC PATCH v2 00/27] PCI/TSM: TDX Connect: SPDM Session and IDE Establishment
+I can do it.
 
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
----
- drivers/virt/coco/tdx-host/tdx-host.c | 33 ++++-----------------------
- 1 file changed, 4 insertions(+), 29 deletions(-)
+Thanks
 
-diff --git a/drivers/virt/coco/tdx-host/tdx-host.c b/drivers/virt/coco/tdx-host/tdx-host.c
-index 5553c63b4083..58777225b51e 100644
---- a/drivers/virt/coco/tdx-host/tdx-host.c
-+++ b/drivers/virt/coco/tdx-host/tdx-host.c
-@@ -387,29 +387,6 @@ static void tdx_ide_stream_key_stop(struct tdx_link *tlink)
- 
- DEFINE_FREE(tdx_ide_stream_key_stop, struct tdx_link *, if (!IS_ERR_OR_NULL(_T)) tdx_ide_stream_key_stop(_T))
- 
--/* OPEN: Should we add general address range support in pci/ide.c ? */
--static void setup_addr_range(struct pci_dev *pdev,
--			     resource_size_t *start, resource_size_t *end)
--{
--	struct device *dev;
--	u32 devid;
--	int i;
--
--	add_pdev_to_addr_range(pdev, start, end);
--
--	for (i = 0; i < pci_num_vf(pdev); i++) {
--		devid = PCI_DEVID(pci_iov_virtfn_bus(pdev, i),
--				  pci_iov_virtfn_devfn(pdev, i));
--
--		dev = bus_find_device(&pci_bus_type, NULL, &devid,
--				      match_pci_dev_by_devid);
--		if (dev) {
--			add_pdev_to_addr_range(to_pci_dev(dev), start, end);
--			put_device(dev);
--		}
--	}
--}
--
- static void sel_stream_block_setup(struct pci_dev *pdev, struct pci_ide *ide,
- 				   u64 *rid_assoc1, u64 *rid_assoc2,
- 				   u64 *addr_assoc1, u64 *addr_assoc2,
-@@ -422,12 +399,10 @@ static void sel_stream_block_setup(struct pci_dev *pdev, struct pci_ide *ide,
- 	*rid_assoc1 = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT, setting->rid_end);
- 	*rid_assoc2 = PREP_PCI_IDE_SEL_RID_2(setting->rid_start, pci_ide_domain(pdev));
- 
--	/* Only one address association register block */
--	setup_addr_range(pdev, &start, &end);
--
--	*addr_assoc1 = PREP_PCI_IDE_SEL_ADDR1(start, end);
--	*addr_assoc2 = FIELD_GET(SEL_ADDR_UPPER, end);
--	*addr_assoc3 = FIELD_GET(SEL_ADDR_UPPER, start);
-+	/* TDX Module enforces only one address association register block */
-+	*addr_assoc1 = PREP_PCI_IDE_SEL_ADDR1(setting->mem64.start, setting->mem64.end);
-+	*addr_assoc2 = FIELD_GET(SEL_ADDR_UPPER, setting->mem64.end);
-+	*addr_assoc3 = FIELD_GET(SEL_ADDR_UPPER, setting->mem64.start);
- }
- 
- #define STREAM_INFO_RP_DEVFN		GENMASK_ULL(7, 0)
--- 
-2.25.1
-
+> 
+> Alex
+> 
 
