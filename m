@@ -1,225 +1,187 @@
-Return-Path: <linux-pci+bounces-37168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E625BA704E
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 14:03:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 698ACBA71D8
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 16:51:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84703189856D
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 12:03:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2069E17A757
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Sep 2025 14:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEBC22D4FF;
-	Sun, 28 Sep 2025 12:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77BF1221550;
+	Sun, 28 Sep 2025 14:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A2h/zYWC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1lrDqVG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F6B1FBEA6
-	for <linux-pci@vger.kernel.org>; Sun, 28 Sep 2025 12:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34170830;
+	Sun, 28 Sep 2025 14:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759060991; cv=none; b=OaWRHtAhc9Ijq8WDGjKnircxNZRy/krUUcbmoAPqWUx9F1uZYdPFittAJzDqSl/DhDibq//8ONsfDTlbbztaRvTRwznHv99/10TOy5VojwZtOIpP8BSTeZq3faJvgfjSbKioAD8mlRNNtFKB1rgpFF0IKjquod2umrYa2xQ0uVQ=
+	t=1759071064; cv=none; b=qq4+clprPUydh0FZE/owhm/cGCzzg1C7v0gZY4SBSDHYv7kPkuPj8DyoQc9V5I4zdIA3MciYmB4bpSchIlYz8mrw4ittDkVV/nvh2tMIvY9fIbBlPEvqn0mCsG24QUv/SznsF0Jrjs6UyRPmq4adOsJKuLkCETykDD675XZPCqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759060991; c=relaxed/simple;
-	bh=d/KsFGpnkhj/Q5UqfdQepfouH6530/mE4rBs+q7DSh8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=aStbetDPou1F8/4WbsgsLncosU5zM3XslcYBts3OfLf/h1wXcM2sVWZ3qVSI5EwJt11CFZLY0jw7bJLULvOdaXoXXeHI60IYN9du+gMmevSnxlktWndCcZ9yR/Wif4wroR5Vc8L52iNSVRt5QbmwY8MnECoN7279NrtNeyGDOIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A2h/zYWC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759060989; x=1790596989;
-  h=date:from:to:cc:subject:message-id;
-  bh=d/KsFGpnkhj/Q5UqfdQepfouH6530/mE4rBs+q7DSh8=;
-  b=A2h/zYWC/IczV9A/fro4xrl7wbaGEg18ga5yQalTMcOgzVnvCms+VMgp
-   VoGYnQ0un7n+yYE+6uaUHzUfi8rzVESkRvjSLyXoL4ECf6hvgCZrzddDc
-   gtrxgcbERrWGAnddwGqqEumQMK0hQZWg+o7UfldpI8uHKcZkp3txq3X+A
-   /DVn4Zbe1SNtVns314ISXWr/9qjGcEOavMDUkXHhyvsLK/SS55JmAAt7x
-   oPR6zWX3DqRbFsillZXxeamMs+CxHyJ4Li55JVVLJg7ORuwfM4kI2vIi1
-   kVL1VRNjPIBlTKxejMak4JE8CEbGnZ9zSedHKbQyoAAAyhAxM8KDodeAz
-   g==;
-X-CSE-ConnectionGUID: CYaoX80KRa+KrPVWphEAsQ==
-X-CSE-MsgGUID: o6rZywJARIO+1j/W8y73Zw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11566"; a="72760653"
-X-IronPort-AV: E=Sophos;i="6.18,299,1751266800"; 
-   d="scan'208";a="72760653"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2025 05:03:09 -0700
-X-CSE-ConnectionGUID: 9mjsqtRmTI+3EShhCx3pKA==
-X-CSE-MsgGUID: MdkClPfdSd256h1KkCLq5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,299,1751266800"; 
-   d="scan'208";a="177131288"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 28 Sep 2025 05:03:07 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v2q7N-0007ml-0n;
-	Sun, 28 Sep 2025 12:03:05 +0000
-Date: Sun, 28 Sep 2025 20:02:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- c28eb27d98c2eeae24a65c7c6be41f5640d4f3d9
-Message-ID: <202509282014.WVzXgVk0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1759071064; c=relaxed/simple;
+	bh=VONrYQxoP8oMQLxNnSkk6QmAw8wYtiFvRYSA+pjUd/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sZmij0jjpvkNeM0ghoVpmPiRydEyup2E7JAzvCM4ZvVat5ApLYe6zgjSCTQTya6j30d7t74+LkovXUc6Zlhxdi7v/9nFO4h20IeyT5JvNh1FJO/0nKFUN+JNEPTgVGKzcsWIJK6PlLyiFsxfXwN0jMz8OyIyWiYoS8S7c7rOe9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1lrDqVG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C12B8C4CEF0;
+	Sun, 28 Sep 2025 14:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759071063;
+	bh=VONrYQxoP8oMQLxNnSkk6QmAw8wYtiFvRYSA+pjUd/Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p1lrDqVGm2h+IqmbzC4UeijKf/SHWc96sqEQB14/cn33jk/4ux8kg2qVwIdK4UCpD
+	 IMdOltqVGarClLfgYb5XVTOwWA+k8XuhwlcMjKhmhXpYAfmib613trJBppLraR6Wu8
+	 c2kfH5kMirZCHheP+4wFCx7QF/33w6BTMVk7ga7F7wtVipUwR6ihbsyuG20ou8kDk1
+	 n7Yk0lGafNQ2GKdPzJIcwuNthHp5p1B2AtWUTZz/ZrBu585+LFPUMVt4+9TRGc2k8d
+	 iS7qUSt1b8trgjdkGXO9SBYuFHbCnFJCHOBZgNPacPxJDLTo6w3CwRMHhp3uvPGGod
+	 1b5YsB3cm6Bbg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH v4 00/10] vfio/pci: Allow MMIO regions to be exported through dma-buf
+Date: Sun, 28 Sep 2025 17:50:10 +0300
+Message-ID: <cover.1759070796.git.leon@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: c28eb27d98c2eeae24a65c7c6be41f5640d4f3d9  Merge branch 'pci/misc'
+Changelog:
+v4:
+ * Split pcim_p2pdma_provider() to two functions, one that initializes
+   array of providers and another to return right provider pointer.
+v3: https://lore.kernel.org/all/cover.1758804980.git.leon@kernel.org
+ * Changed pcim_p2pdma_enable() to be pcim_p2pdma_provider().
+ * Cache provider in vfio_pci_dma_buf struct instead of BAR index.
+ * Removed misleading comment from pcim_p2pdma_provider().
+ * Moved MMIO check to be in pcim_p2pdma_provider().
+v2: https://lore.kernel.org/all/cover.1757589589.git.leon@kernel.org/
+ * Added extra patch which adds new CONFIG, so next patches can reuse it.
+ * Squashed "PCI/P2PDMA: Remove redundant bus_offset from map state"
+   into the other patch.
+ * Fixed revoke calls to be aligned with true->false semantics.
+ * Extended p2pdma_providers to be per-BAR and not global to whole device.
+ * Fixed possible race between dmabuf states and revoke.
+ * Moved revoke to PCI BAR zap block.
+v1: https://lore.kernel.org/all/cover.1754311439.git.leon@kernel.org
+ * Changed commit messages.
+ * Reused DMA_ATTR_MMIO attribute.
+ * Returned support for multiple DMA ranges per-dMABUF.
+v0: https://lore.kernel.org/all/cover.1753274085.git.leonro@nvidia.com
 
-elapsed time: 1177m
+---------------------------------------------------------------------------
+Based on "[PATCH v6 00/16] dma-mapping: migrate to physical address-based API"
+https://lore.kernel.org/all/cover.1757423202.git.leonro@nvidia.com/ series.
+---------------------------------------------------------------------------
 
-configs tested: 132
-configs skipped: 4
+This series extends the VFIO PCI subsystem to support exporting MMIO
+regions from PCI device BARs as dma-buf objects, enabling safe sharing of
+non-struct page memory with controlled lifetime management. This allows RDMA
+and other subsystems to import dma-buf FDs and build them into memory regions
+for PCI P2P operations.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The series supports a use case for SPDK where a NVMe device will be
+owned by SPDK through VFIO but interacting with a RDMA device. The RDMA
+device may directly access the NVMe CMB or directly manipulate the NVMe
+device's doorbell using PCI P2P.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250928    gcc-8.5.0
-arc                   randconfig-002-20250928    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                         nhk8815_defconfig    clang-22
-arm                   randconfig-001-20250928    clang-22
-arm                   randconfig-002-20250928    clang-22
-arm                   randconfig-003-20250928    clang-22
-arm                   randconfig-004-20250928    clang-22
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250928    gcc-15.1.0
-arm64                 randconfig-002-20250928    gcc-9.5.0
-arm64                 randconfig-003-20250928    clang-17
-arm64                 randconfig-004-20250928    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250928    gcc-14.3.0
-csky                  randconfig-002-20250928    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250928    clang-22
-hexagon               randconfig-002-20250928    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20250928    clang-20
-i386        buildonly-randconfig-002-20250928    clang-20
-i386        buildonly-randconfig-003-20250928    gcc-14
-i386        buildonly-randconfig-004-20250928    clang-20
-i386        buildonly-randconfig-005-20250928    clang-20
-i386        buildonly-randconfig-006-20250928    clang-20
-i386                                defconfig    clang-20
-loongarch                        alldefconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                 loongson3_defconfig    clang-22
-loongarch             randconfig-001-20250928    gcc-15.1.0
-loongarch             randconfig-002-20250928    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           ip30_defconfig    gcc-15.1.0
-mips                          rb532_defconfig    clang-18
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250928    gcc-11.5.0
-nios2                 randconfig-002-20250928    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250928    gcc-14.3.0
-parisc                randconfig-002-20250928    gcc-15.1.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250928    gcc-8.5.0
-powerpc               randconfig-002-20250928    clang-22
-powerpc               randconfig-003-20250928    gcc-8.5.0
-powerpc                     tqm8555_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250928    gcc-10.5.0
-powerpc64             randconfig-002-20250928    clang-20
-powerpc64             randconfig-003-20250928    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250928    gcc-11.5.0
-riscv                 randconfig-002-20250928    gcc-13.4.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250928    gcc-8.5.0
-s390                  randconfig-002-20250928    clang-18
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250928    gcc-15.1.0
-sh                    randconfig-002-20250928    gcc-11.5.0
-sh                     sh7710voipgw_defconfig    gcc-15.1.0
-sh                   sh7770_generic_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250928    gcc-15.1.0
-sparc                 randconfig-002-20250928    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250928    gcc-8.5.0
-sparc64               randconfig-002-20250928    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20250928    gcc-14
-um                    randconfig-002-20250928    clang-19
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250928    gcc-14
-x86_64      buildonly-randconfig-002-20250928    gcc-14
-x86_64      buildonly-randconfig-003-20250928    gcc-14
-x86_64      buildonly-randconfig-004-20250928    gcc-14
-x86_64      buildonly-randconfig-005-20250928    clang-20
-x86_64      buildonly-randconfig-006-20250928    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250928    gcc-8.5.0
-xtensa                randconfig-002-20250928    gcc-10.5.0
+However, as a general mechanism, it can support many other scenarios with
+VFIO. This dmabuf approach can be usable by iommufd as well for generic
+and safe P2P mappings.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+In addition to the SPDK use-case mentioned above, the capability added
+in this patch series can also be useful when a buffer (located in device
+memory such as VRAM) needs to be shared between any two dGPU devices or
+instances (assuming one of them is bound to VFIO PCI) as long as they
+are P2P DMA compatible.
+
+The implementation provides a revocable attachment mechanism using dma-buf
+move operations. MMIO regions are normally pinned as BARs don't change
+physical addresses, but access is revoked when the VFIO device is closed
+or a PCI reset is issued. This ensures kernel self-defense against
+potentially hostile userspace.
+
+The series includes significant refactoring of the PCI P2PDMA subsystem
+to separate core P2P functionality from memory allocation features,
+making it more modular and suitable for VFIO use cases that don't need
+struct page support.
+
+-----------------------------------------------------------------------
+The series is based originally on
+https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
+but heavily rewritten to be based on DMA physical API.
+-----------------------------------------------------------------------
+The WIP branch can be found here:
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=dmabuf-vfio-v4
+
+Thanks
+
+Leon Romanovsky (8):
+  PCI/P2PDMA: Separate the mmap() support from the core logic
+  PCI/P2PDMA: Simplify bus address mapping API
+  PCI/P2PDMA: Refactor to separate core P2P functionality from memory
+    allocation
+  PCI/P2PDMA: Export pci_p2pdma_map_type() function
+  types: move phys_vec definition to common header
+  vfio/pci: Add dma-buf export config for MMIO regions
+  vfio/pci: Enable peer-to-peer DMA transactions by default
+  vfio/pci: Add dma-buf export support for MMIO regions
+
+Vivek Kasireddy (2):
+  vfio: Export vfio device get and put registration helpers
+  vfio/pci: Share the core device pointer while invoking feature
+    functions
+
+ block/blk-mq-dma.c                 |   7 +-
+ drivers/iommu/dma-iommu.c          |   4 +-
+ drivers/pci/p2pdma.c               | 177 +++++++++----
+ drivers/vfio/pci/Kconfig           |  20 ++
+ drivers/vfio/pci/Makefile          |   2 +
+ drivers/vfio/pci/vfio_pci_config.c |  22 +-
+ drivers/vfio/pci/vfio_pci_core.c   |  56 ++--
+ drivers/vfio/pci/vfio_pci_dmabuf.c | 398 +++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_priv.h   |  23 ++
+ drivers/vfio/vfio_main.c           |   2 +
+ include/linux/pci-p2pdma.h         | 120 +++++----
+ include/linux/types.h              |   5 +
+ include/linux/vfio.h               |   2 +
+ include/linux/vfio_pci_core.h      |   3 +
+ include/uapi/linux/vfio.h          |  25 ++
+ kernel/dma/direct.c                |   4 +-
+ mm/hmm.c                           |   2 +-
+ 17 files changed, 750 insertions(+), 122 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_pci_dmabuf.c
+
+-- 
+2.51.0
+
 
