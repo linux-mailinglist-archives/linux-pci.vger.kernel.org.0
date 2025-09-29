@@ -1,179 +1,146 @@
-Return-Path: <linux-pci+bounces-37210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA512BA9C0F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:04:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E388CBA9C27
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:10:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64E703AD88C
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:04:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A095A178A7F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:10:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 321F9306B08;
-	Mon, 29 Sep 2025 15:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC9E2EACF0;
+	Mon, 29 Sep 2025 15:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMtQQ9ko"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OXvpWG2x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102126F2BD;
-	Mon, 29 Sep 2025 15:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A722306B08;
+	Mon, 29 Sep 2025 15:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759158270; cv=none; b=aXTVIwSTcNQr8/gA1gmld+AH810yKki5HY+pFgpp+6PfsLesMYx4q3Ryo08Xl12PV7f60pmx1c54sAofVppTs6nyXRoaRdcicjMugy5k+BfkMAZ+j4uJoi/kPRy4803fl+wlDhVMr0mLp0HCgkNdMfvUUMZqOigEX4Xn7e43qlk=
+	t=1759158607; cv=none; b=Y8665Jp+s+/kmeac5d6vAR7X8nwAEswGXx8NiMCacfC2zhWxC9sWhfym/GQ1pc1jhLTfjhUQajnptITl+i6JIDivOuLV8j0+0+vuSSHfKhfRleEjeWgQcWL7SjwUgQKnqxYf3e+Ew3zy9aaw5ppEFSATju+9Hx12pAMaPev7wBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759158270; c=relaxed/simple;
-	bh=WgLOirqnRuyUHkGKrX+OqYLUKjAVPYcz7Hc+OWcmhyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dSnERQhl+3lcYhu4vKHDiwUaO4adOrogAL/GmMKLTPMKrjrga6FVVcXzuPqSSW+ySz4OR37+AtfYZYMYJryvvY576Y0dYoL+VI2z+UD3bdkka3f+yAyaiIvUJKEgY2Oxem+i8kwa+vWNgP6mrXKaBYtqMNVCMYA1RAsquONicrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMtQQ9ko; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256D7C4CEF4;
-	Mon, 29 Sep 2025 15:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759158268;
-	bh=WgLOirqnRuyUHkGKrX+OqYLUKjAVPYcz7Hc+OWcmhyk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KMtQQ9koq4ya3jXNewcZz5hHqHUlZALafDT20H6VyPac1kR2ipc//bs4dPKZGiRCX
-	 KoNdkcsuIexHTiM3gQdRiCgb+lIBYkz6Ig45lbRtZaYSittcKniqf9vyTS6MOPuB8F
-	 UhklAWkuTyrAYh2t7ms2vle4v5Tqrwh03w6n7W4tjAVrUb3t5DAdfK4S8fkWiLprnE
-	 YSQgrc+1+uVgNggUAfOK/wP7s5Nc0wA+pnJyM/9JcAbydcaLWkUQmDiwKnzvq8gZCP
-	 Tc/XK68gyK4SUVZN+v2rwgO5ejI2P/H/dPdA12/kfRepjqsqOH7jOmH39uXXh2qRy/
-	 od3BcG4ITAEAw==
-Date: Mon, 29 Sep 2025 10:04:25 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH v2 00/10] LUO: PCI subsystem (phase I)
-Message-ID: <20250929150425.GA111624@bhelgaas>
+	s=arc-20240116; t=1759158607; c=relaxed/simple;
+	bh=n5QdAwV9GL/hI15XCi4gHWJImJrNkPzAtoinWYP2mKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uerAhwm8Jo02T+NrAZEq1ICxUbgLviEr5mqAJ6siqvPrZ3MlsUEpIriQJ2jYDXhVFGBt1Poej2ZP9bIS/6dcyMU2+VbTtAxAKW9Enp8v2/D0GDVnrTeOq3BX5FAuYbl2Gwamlk+q5nxiAADTg/uIpm1F6bpf8LRxgqXMjuOM3CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OXvpWG2x; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759158606; x=1790694606;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=n5QdAwV9GL/hI15XCi4gHWJImJrNkPzAtoinWYP2mKw=;
+  b=OXvpWG2xuXQ5Fzt6BQeCGZQxMm6I6kK/h4pSnXyJtFR981csfNAVIDDr
+   n+2uuQJMwC/9I9N6pQ5N22nnlTugQ6eh+XVXGnUErYKRFxEnYH075abAe
+   1EFoTH6Qp921LS5n4vJ9KUPAAygEOTX9VB1867rwhvlzLPvvAoZdqrmQG
+   UxPCOFFFB5ySvFlpEAwQzSSgKKyCtFRcDzWb7jmP3ZFOfmBY68SidR24R
+   i3qPCOkTI0bBAlVplRCj/8YSRduYkVmEDbjKqR/LFtlfgCIfwhwehEoFh
+   IfY/LJgnDomphVG/Tv6XrwuPo2u9ByvHMz1o7miU9WGKCEmnW7MuOVgfC
+   Q==;
+X-CSE-ConnectionGUID: OvI0mQ4ETsedd0SBcQtf6Q==
+X-CSE-MsgGUID: KNdx7UbqReSBqBDmFiYvGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65217339"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="65217339"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 08:10:05 -0700
+X-CSE-ConnectionGUID: /YEP9TeGQ/StrMSbFoGWVA==
+X-CSE-MsgGUID: KANyAnmdQYurhc68KUp4Eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
+   d="scan'208";a="182544766"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 08:10:04 -0700
+Received: from [10.124.221.178] (unknown [10.124.221.178])
+	by linux.intel.com (Postfix) with ESMTP id 8817020B5713;
+	Mon, 29 Sep 2025 08:10:03 -0700 (PDT)
+Message-ID: <7b5c1235-df92-4f18-936c-3d7c0d3a6cb3@linux.intel.com>
+Date: Mon, 29 Sep 2025 08:10:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bAbB8YsheCwLi0ztY5LLWMyQ6He3sbYru697Ogq5+hR+Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] PCI/AER: Check for NULL aer_info before
+ ratelimiting in pci_print_aer()
+To: Breno Leitao <leitao@debian.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jon Pan-Doh <pandoh@google.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
+References: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 27, 2025 at 02:05:38PM -0400, Pasha Tatashin wrote:
-> Hi Bjorn,
-> 
-> My latest submission is the following:
-> https://lore.kernel.org/all/20250807014442.3829950-1-pasha.tatashin@soleen.com/
-> 
-> And github repo is in cover letter:
-> 
-> https://github.com/googleprodkernel/linux-liveupdate/tree/luo/v3
-> 
-> It applies cleanly against the mainline without the first three
-> patches, as they were already merged.
 
-Not sure what I'm missing.  I've tried various things but none apply
-cleanly:
+On 9/29/25 2:15 AM, Breno Leitao wrote:
+> Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
+> when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
+> calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
+> does not rate limit, given this is fatal.
+>
+> This prevents a kernel crash triggered by dereferencing a NULL pointer
+> in aer_ratelimit(), ensuring safer handling of PCI devices that lack
+> AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
+> which already performs this NULL check.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal error logging")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> - This problem is still happening in upstream, and unfortunately no action
+>    was done in the previous discussion.
+> - Link to previous post:
+>    https://lore.kernel.org/r/20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org
+> ---
 
-  $ git remote add luo https://github.com/googleprodkernel/linux-liveupdate.git
-  $ git fetch luo
-  From https://github.com/googleprodkernel/linux-liveupdate
-   * [new branch]                hack_pci_pf_stub_demo -> luo/hack_pci_pf_stub_demo
-   * [new branch]                iommu/rfc-v1          -> luo/iommu/rfc-v1
-   * [new branch]                kho/v5                -> luo/kho/v5
-   * [new branch]                kho/v6                -> luo/kho/v6
-   * [new branch]                kho/v7                -> luo/kho/v7
-   * [new branch]                kho/v8                -> luo/kho/v8
-   * [new branch]                lucx/v1               -> luo/lucx/v1
-   * [new branch]                luo/kho-v8            -> luo/luo/kho-v8
-   * [new branch]                luo/memfd-v0.1        -> luo/luo/memfd-v0.1
-   * [new branch]                luo/rfc-v1            -> luo/luo/rfc-v1
-   * [new branch]                luo/rfc-v2            -> luo/luo/rfc-v2
-   * [new branch]                luo/v1                -> luo/luo/v1
-   * [new branch]                luo/v2                -> luo/luo/v2
-   * [new branch]                luo/v3                -> luo/luo/v3
-   * [new branch]                luo/v4                -> luo/luo/v4
-   * [new branch]                master                -> luo/master
+Although we haven't identified the path that triggers this issue, adding this check is harmless.
 
-  $ b4 am -om/ https://lore.kernel.org/r/20250916-luo-pci-v2-0-c494053c3c08@kernel.org
-  Grabbing thread from lore.kernel.org/all/20250916-luo-pci-v2-0-c494053c3c08@kernel.org/t.mbox.gz
-  Analyzing 13 messages in the thread
-  Looking for additional code-review trailers on lore.kernel.org
-  Checking attestation on all messages, may take a moment...
-  ---
-    ✓ [PATCH v2 1/10] PCI/LUO: Register with Liveupdate Orchestrator
-    ✓ [PATCH v2 2/10] PCI/LUO: Create requested liveupdate device list
-    ✓ [PATCH v2 3/10] PCI/LUO: Forward prepare()/freeze()/cancel() callbacks to driver
-    ✓ [PATCH v2 4/10] PCI/LUO: Restore state at PCI enumeration
-    ✓ [PATCH v2 5/10] PCI/LUO: Forward finish callbacks to drivers
-    ✓ [PATCH v2 6/10] PCI/LUO: Save and restore driver name
-    ✓ [PATCH v2 7/10] PCI/LUO: Add liveupdate to pcieport driver
-    ✓ [PATCH v2 8/10] PCI/LUO: Add pci_liveupdate_get_driver_data()
-    ✓ [PATCH v2 9/10] PCI/LUO: Avoid write to bus master at boot
-    ✓ [PATCH v2 10/10] PCI: pci-lu-stub: Add a stub driver for Live Update testing
-    ---
-    ✓ Signed: DKIM/kernel.org
-  ---
-  Total patches: 10
-  ---
-  Cover: m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.cover
-   Link: https://lore.kernel.org/r/20250916-luo-pci-v2-0-c494053c3c08@kernel.org
-   Base: base-commit 9ab803064e3d1be9673d2829785a69fd0578b24e not known, ignoring
-   Base: not specified
-	 git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/rfc-v2; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
-  Updating files: 100% (21294/21294), done.
-  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/rfc-v2'.
-  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
-  Applying: PCI/LUO: Register with Liveupdate Orchestrator
-  Applying: PCI/LUO: Create requested liveupdate device list
-  Applying: PCI/LUO: Forward prepare()/freeze()/cancel() callbacks to driver
-  Applying: PCI/LUO: Restore state at PCI enumeration
-  Applying: PCI/LUO: Forward finish callbacks to drivers
-  Applying: PCI/LUO: Save and restore driver name
-  error: patch failed: drivers/pci/probe.c:2714
-  error: drivers/pci/probe.c: patch does not apply
-  Patch failed at 0006 PCI/LUO: Save and restore driver name
-  hint: Use 'git am --show-current-patch=diff' to see the failed patch
-  When you have resolved this problem, run "git am --continue".
-  If you prefer to skip this patch, run "git am --skip" instead.
-  To restore the original branch and stop patching, run "git am --abort".
 
-  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/v2; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
-  Updating files: 100% (12217/12217), done.
-  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/v2'.
-  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
-  Applying: PCI/LUO: Register with Liveupdate Orchestrator
-  error: patch failed: MAINTAINERS:14014
-  error: MAINTAINERS: patch does not apply
-  Patch failed at 0001 PCI/LUO: Register with Liveupdate Orchestrator
-  hint: Use 'git am --show-current-patch=diff' to see the failed patch
-  When you have resolved this problem, run "git am --continue".
-  If you prefer to skip this patch, run "git am --skip" instead.
-  To restore the original branch and stop patching, run "git am --abort".
 
-  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/v3; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
-  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/v3'.
-  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
-  Applying: PCI/LUO: Register with Liveupdate Orchestrator
-  error: patch failed: MAINTAINERS:14014
-  error: MAINTAINERS: patch does not apply
-  Patch failed at 0001 PCI/LUO: Register with Liveupdate Orchestrator
-  hint: Use 'git am --show-current-patch=diff' to see the failed patch
-  When you have resolved this problem, run "git am --continue".
-  If you prefer to skip this patch, run "git am --skip" instead.
-  To restore the original branch and stop patching, run "git am --abort".
+>   drivers/pci/pcie/aer.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index e286c197d7167..55abc5e17b8b1 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   
+>   static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+>   {
+> +	if (!dev->aer_info)
+> +		return 1;
+> +
+>   	switch (severity) {
+>   	case AER_NONFATAL:
+>   		return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
+>
+> ---
+> base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+> change-id: 20250801-aer_crash_2-b21cc2ef0d00
+>
+> Best regards,
+> --
+> Breno Leitao <leitao@debian.org>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
