@@ -1,240 +1,228 @@
-Return-Path: <linux-pci+bounces-37199-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37200-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE51EBA95DE
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:37:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D6ED4BA9695
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:49:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CD76189EEEF
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 13:38:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40C091921109
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 13:49:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F1621C167;
-	Mon, 29 Sep 2025 13:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17BCE2AD24;
+	Mon, 29 Sep 2025 13:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLhOEXDn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChFsUBXA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DA619066D;
-	Mon, 29 Sep 2025 13:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759153070; cv=fail; b=vCKW2XwuSw4h1obH8qtOw5XqtwPMAle5jt4ecnWEh2bMPYHJuHmUNKkpg5LD7ssH8Wmf3qgn+l7gdimAl3Lh/q1jnUzSmH0U7PJVS24LIxF6r1Xk4FtgcOLI5igp9WGAeoSeYrT3ONWuZiSJV53VwCWkxho/4G5SxbOjaPOKWE8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759153070; c=relaxed/simple;
-	bh=TsJTvXoIUvJvsuAC4C7ZMc4OqDcmqHtEv2ljx+OHFIM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BlVR+ZtS71NLIM1l0nDLuJVq2MmiouVwImCdvrLS1N1JzxGc0837ew11BeSYnAs0Ju+AsGWcpHQVXMujxfQZn+8BaEUE1snTILvkC8NPMVQDxiWzWjjuIX090KF/zHYOqQYK93l3QDn1H47yElT1AmwPvel6arjLev2c+EUNXo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLhOEXDn; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759153068; x=1790689068;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=TsJTvXoIUvJvsuAC4C7ZMc4OqDcmqHtEv2ljx+OHFIM=;
-  b=KLhOEXDnite0uYX404IWMrChKzUVMnAA8iYPO6GAIc9kRkWpAq7/7uF7
-   4plhO0JEE5Dk+uLTmHoewLF/yknnob7hOCz06ruwnERxYHRNeSA6+KwZC
-   I2SIgZs0X84xGHCM5ZdeLfN+TjMJmYeqM/q5zSbyq1FRaG+MfwDGIT7ho
-   zf2uiFKtLogGChFGE9UMaB2PjywDiogPJuQHKYBkePxn82VXPHIyEvKeM
-   iItpXrELG6m+PVBbNZ6VeC+kCU3fcWYIcL3CqULOQktlDjctUqJuv9yYs
-   6WLy55+lzX3exw3QO4bQhOoncwxBJCje0mGpO5OINOqDVrwm5REnD5H9v
-   w==;
-X-CSE-ConnectionGUID: 4stCFyMAQQuOV3QavJS8ww==
-X-CSE-MsgGUID: PmrIFhI7S32iaJ+xeMX68w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="65245026"
-X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
-   d="scan'208";a="65245026"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 06:37:45 -0700
-X-CSE-ConnectionGUID: SLwXrDgmQGGsjo7+Px8eUg==
-X-CSE-MsgGUID: 1hwnnea3SjOg9Ui00iljEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
-   d="scan'208";a="215388720"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 06:37:45 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 29 Sep 2025 06:37:44 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Mon, 29 Sep 2025 06:37:44 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.12) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Mon, 29 Sep 2025 06:37:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fyqczDwX/FNdDg2xXIoLdcYvw5T04ONOG3b0DLELvcQNn0lG7wAhxyxh5cA5YJ7xV6ndvuftNPLSDQ6sEfLQxOcdkE+R18HFQ4Mzp1+CCD5ppzcBMePTmwRZoNm1mlO+d6w72HBe3Oa5vTxMAhiwmBCGRdD/58/QZhKAFN9Sc+me4Izj8L7AyTcYWkIT0uDGXAyCSA1XRPcdImDcNApAQGXhoto61sFACUBdbjOzJs7l2E6C3JWzFWJPuL7oCDACHVdCTWOTcZkjpcebu51LOeMaWcH70eFatrPllja+xmAnEL5imqHuybnDAUZ5g1UeQIeQTW76uQj2jm55SBRNQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vrMt8B78kojDzxs/H6dj+hq8comEcdbVtAUV2ixTc6o=;
- b=EvHFUp74cmZ+AWriPZtL3eWKav41xdAWPT9WJyxd4n72sZSNH/0ZQh71AoEvi8PFvbAxWGO+q7e2FBTPRtWXuqkhMMN6l883o3oRV2qy8bHoZWmiBgWidiFKec8TsaH3U92+vrzZPIY/OOVim/6seWu1ABKx7bYWomjfMrPVUs+mY6jKnPog3h0jjFdV9GjJfbwf21pZsJxwvLQ1v0C0wYLkRKC19wUtSaw13wWeYWchXbY962+f6qhJ0E75ePiRSItNvyZ7HpZIiZkFnEn+c1+WhvPf8Gex1EE5KAd/ec2pRKGUb4oCzLQoDwl7MPwl4cEExMIumVTWXDuLt46FMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by SA3PR11MB8120.namprd11.prod.outlook.com (2603:10b6:806:2f3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.15; Mon, 29 Sep
- 2025 13:37:42 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9160.015; Mon, 29 Sep 2025
- 13:37:42 +0000
-Date: Mon, 29 Sep 2025 08:37:38 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: <intel-xe@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>
-CC: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, "Icenowy
- Zheng" <uwu@icenowy.me>, Vivian Wang <wangruikang@iscas.ac.cn>, Thomas
- =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Richter
-	<Simon.Richter@hogyros.de>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/xe: Move rebar to be done earlier
-Message-ID: <5osrqzgrh47n6rpjulvsixwbhbh5vwxrrn6p6hpodnwisjfung@lmivgjb66oed>
-References: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com>
- <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com>
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com>
-X-ClientProxiedBy: SJ0PR13CA0047.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::22) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6062306D57
+	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 13:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759153740; cv=none; b=HX1M8d4EF+X038dtIYdIOODulRKwFQt/6v4dHENw2T3LfLInxskYXbqoDUax0VqOhHJ0n4Xp//5dGzuikeYRY1FbGaIm9aQKb17K1j9fb4ueuvcWukDd7vxXRdiNHsVW5o972i3YVsP2S3Sk70a5Cjw0NagCeDP12xFtIC6Joko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759153740; c=relaxed/simple;
+	bh=UMhXzzOUFx5OVA5APFYm6wVdOFYJfiFDk0hdKAQMemU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s9HgKrSuOysoh5bQnSf/IR98KGZBW5SCrjtIKqqsLBkyCltAV4K0m80vsm5PutcqeTgvuzGVt9R7GDswQVA6DZOtQyYqE0HfXt5BEvQXPDCkSSgRgttT24nuQG14s/9aTMKE95OlOsiCfyMS+gmEXr623S9PMmEHvICHTh/GDCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChFsUBXA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B840CC4CEF7
+	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 13:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759153739;
+	bh=UMhXzzOUFx5OVA5APFYm6wVdOFYJfiFDk0hdKAQMemU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ChFsUBXAfmJ9duD7PypxJDnR5EfU3aOqzqY6pWB9R2ARXYCjGbhWGtYDwgM21ZSf1
+	 zdHS2PRQaB1QX0pIN1n0OBeDITboPEXBKmUtGkoA1qagfx/xW2en7HV35W+VTx9i0R
+	 VLMwrcoBmtNjWeVJp5ZL92D9VKQhtyT0kVOiLsHKHblofZ+Dx+D38SRTiO/azLYJ6W
+	 mGeAPZF6phSRpXIy21fXgc1fty5fpWCDxJvMjJeExdDjqojW+9D5+6xQniy3bN6tVi
+	 9Tg//avx4ODQRozm8nuXNm1exO2m4lkz0n4HZ1Ee+DXc+/FKdyRQXrloOHwMUnLabo
+	 IOCdiohpyVzSA==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-62ec5f750f7so6783563a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 06:48:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3rZaqnskUZCIvlJuI9jMG0xcZYqUCqd/RHOJ3eH2OKEAPuE8AYPH2FE0mBNtZ9iqGykk8ITaHSKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpEu55FFmCA5oAElxi3ivOoGt96nMl39BxoqLWPovtjKhq9+39
+	iaCT9dgD84C4Xjt9A9FVOXRXAwfRvOcOCPSS0bkAw8tW9QW4k9YjrgepB+hGwjvNSAD2I4tO/11
+	lcz1Lj4cuvJie3Tf4aC1NBeccnzYFwg==
+X-Google-Smtp-Source: AGHT+IGp3P9nyueKP0M2BInqNV2Yp9Q8g79qJkdJ0eIQaWWP9lVHyb/0kaXduZAtR3IUytj5WfB2U3A52fbCay57ueY=
+X-Received: by 2002:a05:6402:1e90:b0:634:9e1c:dec4 with SMTP id
+ 4fb4d7f45d1cf-6349f71301bmr15430745a12.0.1759153738337; Mon, 29 Sep 2025
+ 06:48:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|SA3PR11MB8120:EE_
-X-MS-Office365-Filtering-Correlation-Id: e11e9dbd-7313-4ff9-8718-08ddff5d5d5c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?o0aQLd8g24zoUYvAVbA6L+jtXhTEGzFqZzh9mLVzaCF7v9/e4nspGKgeVsa4?=
- =?us-ascii?Q?GWggnR5DTq3eZL+0xBzjdnRFd2ggO6QfvuFEQOAOrRNjVQ+7FpZPgxWa4eP9?=
- =?us-ascii?Q?68gJDwtfS21aGJAxQdEy8aWJQdKWXB3MAp+C1TDhxbEnDwBX76L4AlhTlBZr?=
- =?us-ascii?Q?JF+RslvVjIV0Lz/Sc7zqUt3b157H5VHsiemGzAKccbb1BaND+f2Ot6q7Q0LW?=
- =?us-ascii?Q?pME6YkuKZmxsAzNdP50aUHrSUNgXTpyLuUnQUiNVF1Ru7gfugFibypyPHkzL?=
- =?us-ascii?Q?Hk72rc7DHXOzVTmi52+80GZa75+HEvfqGyo6jS8ig1mItHdhwHa9ozRaDtgI?=
- =?us-ascii?Q?c5cf5mo0vWVPCkHY2QT5b+efV2prrUWLTt/Sbu9ouNm0mv3T3xFLm8o41gll?=
- =?us-ascii?Q?Nv/ZCj0qoFWI2WzaLBtNow/ijfZeA5XpVsMGwv78WGa6h6VLXDGaZdEWrw3N?=
- =?us-ascii?Q?s/IlpXijXmQvXtPvpvYLpZo/h6hs9XOfeJYapMu1/etTu7AYaYEI21m4Ta2i?=
- =?us-ascii?Q?EZBWvrbzX2TIBbP/KJG2ovEfJOv+NdRTZkpvwAMgs50EQDRl+e91cLyu3INh?=
- =?us-ascii?Q?SBf5YD9OrW/EIOInLH2FhTDYopZ16qKW7gXPOBHmO13weKHnCyC6lpPLDuSE?=
- =?us-ascii?Q?RyKFMpb+PP7mvDJusPhOQPQ1eMDqSTmLytdx5Kq0Bi77zBP84Ad92TnygMdw?=
- =?us-ascii?Q?o0uFuBfuiJbC7Til5JtqYn2Mmm/BS8fSqsOjmTvW6C3lG2a1m+AFIAxAbG3J?=
- =?us-ascii?Q?B3zZq/GPemkVXy/T+4e13TnuGhcz9hNeooFGBWH+8JzOvk5HyTeGIq4Rs1Mt?=
- =?us-ascii?Q?vW0XdZT/C1iVHmimMXWlZ32EVm/0I9FcJZUsN/RIrF5OtFD0QlqjyxV7gosu?=
- =?us-ascii?Q?0pAG1NCfav19ll/4/ThonwhJSRLLROy+LAAEIzktqF5N9ojnkIgWbkpCSGPu?=
- =?us-ascii?Q?Pvznr1m48/AE/Ui0k7nKJz9k60xTyauKPlv8vPw6E0H1p+ONMdbrP9yVS5l9?=
- =?us-ascii?Q?DEhuv60qRS7DgdoMs7w2EUNdGBhO19VMZOV/3iuDv/8MoVwzUWPAL9Q/Gc31?=
- =?us-ascii?Q?V/NqxUJdrcgVSOAhIhNwncDWiMITghZ9MOjlntIGwJBaU9hKeBsx3nc6erPJ?=
- =?us-ascii?Q?KpU9kqYzf6nn57T5rCwB9O/gttrlaP0HCMhaDlSexXQGiB9O3tu80ThknSd1?=
- =?us-ascii?Q?3pbjW7rZmCuqQ0xqxbcr/SMfN7FO1bUz3ip3i7EViGkwu3c8QZ9dwbhjniMH?=
- =?us-ascii?Q?jXKjbi544fhDFCO3ewQSnW/LI/xQhnuO8/lhuCHE8L8eSkrLWbs+2+jxjfYw?=
- =?us-ascii?Q?+O8oqV/kpBaMb/bRgSgyuxyQHr7RcblULuT/FU0Xababu+ZNB/0CfhROkQec?=
- =?us-ascii?Q?4KFPkBfZq6x04N0DzZa3mOEutxaqjyNjSPk3o3aD7cW7wLyFryCIOGwgYh7X?=
- =?us-ascii?Q?WYrmwXLNUGUFafu+/wmAlKm9DnRfKifK?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Qr59/icnYGvQ3UKW+ySKchMrrn5sGYJ+zlCc+OMWeE60zu2hOd1LuaQIofWH?=
- =?us-ascii?Q?WYB3QiW1ORIicupWshBup+DpH5VAvPc6+537954ocWOvmjqQMa4AAlBatX2W?=
- =?us-ascii?Q?ZZVQ+/izOesVEF3q6OPVzaKjW5rh8krbeTJErujLIiBDlvLkay1IOVQkkr+N?=
- =?us-ascii?Q?xF5DX/aRua+/zmZ3mxhTP1QdtRpdBJKWFBWHLZPVAZbiJ/iipiKdWuGkCJ4u?=
- =?us-ascii?Q?xro2EJTc4XfzO/vBVa06u4rGShvw+JTeRgiEKnlNDKL+u4uiNf/IpfkrCQA3?=
- =?us-ascii?Q?SBrTJRCaqG4gwL4yp6vITVTdLVuI8mCjK0GuKkf5FjPphkiVPLpq5Y56ldR8?=
- =?us-ascii?Q?v9fm9f6d834/FItBe1YURPmi/LnItLWn/PRBI7trgn5E1DjZ1D4BPQpYRdeR?=
- =?us-ascii?Q?Gy6utD78wNHQRRFwISSPixbacptGqDyNZxsR1U/BwZJPm6/QArX6vSuJiqoG?=
- =?us-ascii?Q?H7R71gnpubEdVYA+pANJNcnS1yIjp2Me5fx8kPmTrOQB6TQzsnXBWX3m0Ib/?=
- =?us-ascii?Q?r5E31WarvgkVS1qrSuwj2VNUv32x4RrIJhGsDfaEmjt31EmzRWQa7Qbva8Wo?=
- =?us-ascii?Q?vTdXlbW8eQL9K8sASEmIZbVa12K3rG2DVb8LWHzo40FcQ3VPU5F2k4GaD/Cg?=
- =?us-ascii?Q?kPdT9C3eZuvVy3dieburQ1NTgov/uxb5+7TKQpzrJiwvmNHpo0nyHkpGaAhG?=
- =?us-ascii?Q?QpMgUrVi+q+pHAAhKYcC76OZRPK1+68gm4vtkuOawGqVDlu1YvM6VrtpyNDt?=
- =?us-ascii?Q?0gjBohnBuOb41Nb00kvZGxtSpEU2jauGzBial2+VCiY3bXsBIb1w7PsFrNzr?=
- =?us-ascii?Q?YRzUw4hHKwEeFd2UybMuAJMgIwHqHCmvOpJ+DKMG4M5pWcyHLQ2gR/s94L42?=
- =?us-ascii?Q?fJa/aNZUKo+0+/eeI39ynOHnRAUTAnU4WV0v9wE4DbF0vvdKnWBH9PWRUbSN?=
- =?us-ascii?Q?Fa2IyxtoouyRRqEyRw6IYotQTDxFUyLEO+5mTJa9gCpTextT3qpi5xDh14Te?=
- =?us-ascii?Q?RjQZ102lYDeJ+o1JlBKGadPrJAc/f4WJf5D/qOOJn2n+IKbpUA+XqY3yB83y?=
- =?us-ascii?Q?Wd2hGNmsVtQk3RAkLjh8BZMytCFoh0gUYbuNSpMgObYNy826mMc8bWFr9DLn?=
- =?us-ascii?Q?BmeL427zSv70VH9VCnbWfKGdgDmfCVpnv//JzE+6T4547dmAd00R26jy125D?=
- =?us-ascii?Q?v6Wks0y9hyj0CU3fiIP1jw+5Pf//TP0lp7fdNiFDPNZH9ii3ijD7hkzyLOJs?=
- =?us-ascii?Q?n8NeKsBoK8LPkSrbLfVbrhpxwfeXMCUifD4p68VoudP01hsiPWXTAknmj/oM?=
- =?us-ascii?Q?AyzsZXooJXILyC6NhS8jjZmdX7LKEgQxOZnfrsjKlgaLTr56prlJRrnb1YV7?=
- =?us-ascii?Q?dFuMd3aJFS102upHgmSUUuJ21ctcTuU2WJ0sTJoR1Z1DcOjsbcNRGYnCAN9a?=
- =?us-ascii?Q?2TLk43deHB7AW53O5X85tweOQtp22AFxu7+U2pJ4vrv5VtS6hTtrhLQCeLvZ?=
- =?us-ascii?Q?8ZTnSkd7fkAe3sdFzfgEtOWpH9bqHSdz0KqKQURjCwmXBUt6YSNMUUk6Gfnx?=
- =?us-ascii?Q?TwKx3BAKBAheoNVvY7lRMnZO7dHgDAGPKnTtothhf02cuBKCaMDUOIyR7NLV?=
- =?us-ascii?Q?9Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e11e9dbd-7313-4ff9-8718-08ddff5d5d5c
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2025 13:37:42.2382
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +PYDcTE9jnCqCG/1aXZXzl8eXidTUc3GJrur5Hu+vblM9vnnjov1rcqvLY5oNTnw4e9ryu84Su6J4Vn0tqK+isqmK/PsDqNo40KDDpqAHzY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8120
-X-OriginatorOrg: intel.com
+References: <20250926072905.126737-1-linux.amoon@gmail.com>
+ <20250926072905.126737-2-linux.amoon@gmail.com> <CAL_JsqJr+h7pTvbRR=7eB4ognK70D1pgNXEORGXo=ndND=pMjw@mail.gmail.com>
+ <CANAwSgT3jo35xBvkH4GmQcZuZH=D+SRKJ6e9fSBRz45zwuCmYw@mail.gmail.com>
+In-Reply-To: <CANAwSgT3jo35xBvkH4GmQcZuZH=D+SRKJ6e9fSBRz45zwuCmYw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 29 Sep 2025 08:48:46 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLsEDFv4T1ZMmjaoFfs7WNAjVvOk9o1eTXL2EeGF8uuDA@mail.gmail.com>
+X-Gm-Features: AS18NWDakHhHSWT3Jre9Ui6cjFqDPCfR0uwc3QfRpTuxBBAWT7q1IOrL5oK7MiE
+Message-ID: <CAL_JsqLsEDFv4T1ZMmjaoFfs7WNAjVvOk9o1eTXL2EeGF8uuDA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: Convert the existing
+ nvidia,tegra-pcie.txt bindings documentation into a YAML schema
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Sep 29, 2025 at 2:40=E2=80=AFAM Anand Moon <linux.amoon@gmail.com> =
+wrote:
+>
+> Hi Rob,
+>
+> Thanks for your review comments
+>
+> On Fri, 26 Sept 2025 at 19:26, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Sep 26, 2025 at 2:29=E2=80=AFAM Anand Moon <linux.amoon@gmail.c=
+om> wrote:
+> > >
+> > > Convert the legacy text-based binding documentation for
+> > > nvidia,tegra-pcie into a nvidia,tegra-pcie.yaml YAML schema, followin=
+g
+> >
+> > s/YAML/DT/
+> >
+> Ok,
+> > > the Devicetree Schema format. This improves validation coverage and e=
+nables
+> > > dtbs_check compliance for Tegra PCIe nodes.
+> >
+> > Your subject needs some work too. 'existing' and 'bindings
+> > documentation' are redundant.
+> >
+> Here is the simplified version
+>
+> dt-bindings: PCI: Convert the nvidia,tegra-pcie bindings documentation
+> into a YAML schema
 
-On Thu, Sep 18, 2025 at 01:58:57PM -0700, Lucas De Marchi wrote:
->There may be cases in which the BAR0 also needs to move to accommodate
->the bigger BAR2. However if it's not released, the BAR2 resize fails.
->During the vram probe it can't be released as it's already in use by
->xe_mmio for early register access.
->
->Add a new function in xe_vram and let xe_pci call it directly before
->even early device probe. This allows the BAR2 to resize in cases BAR0
->also needs to move:
->
->	[] xe 0000:03:00.0: vgaarb: deactivate vga console
->	[] xe 0000:03:00.0: [drm] Attempting to resize bar from 8192MiB -> 16384MiB
->	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: releasing
->	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
->	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
->	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x41ffffffff 64bit pref]: releasing
->	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
->	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
->	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x43ffffffff 64bit pref]: assigned
->	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: assigned
->	[] pcieport 0000:00:01.0: PCI bridge to [bus 01-04]
->	[] pcieport 0000:00:01.0:   bridge window [mem 0x83000000-0x840fffff]
->	[] pcieport 0000:00:01.0:   bridge window [mem 0x4000000000-0x44007fffff 64bit pref]
->	[] pcieport 0000:01:00.0: PCI bridge to [bus 02-04]
->	[] pcieport 0000:01:00.0:   bridge window [mem 0x83000000-0x840fffff]
->	[] pcieport 0000:01:00.0:   bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]
->	[] pcieport 0000:02:01.0: PCI bridge to [bus 03]
->	[] pcieport 0000:02:01.0:   bridge window [mem 0x83000000-0x83ffffff]
->	[] pcieport 0000:02:01.0:   bridge window [mem 0x4000000000-0x43ffffffff 64bit pref]
->	[] xe 0000:03:00.0: [drm] BAR2 resized to 16384M
->	[] xe 0000:03:00.0: [drm:xe_pci_probe [xe]] BATTLEMAGE  e221:0000 dgfx:1 gfx:Xe2_HPG (20.02) ...
->
->As shown above, it happens even before we try to read any register for
->platform identification.
->
->All the rebar logic is more pci-specific than xe-specific and can be
->done very early in the probe sequence. In future it would be good to
->move it out of xe_vram.c, but this refactor is left for later.
+Still doesn't fit on one line and you say bindings twice:
 
-Ilpo, can you take a look on this patch? It fixed the issue that I had
-with BMG. It needs the first patch for the full fix, but the fixes are
-more or less orthogonal.
+dt-bindings: PCI: Convert nvidia,tegra-pcie to DT schema
 
-thanks
-Lucas De Marchi
+>
+> Convert the existing text-based DT bindings documentation for the
+> NVIDIA Tegra PCIe host controller to a YAML schema format.
+
+s/YAML/DT/
+
+Lots of things are YAML. Only one thing is DT schema.
+
+>
+> > >
+> > > Cc: Jon Hunter <jonathanh@nvidia.com>
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > > v1: new patch in this series.
+> > > ---
+> > >  .../bindings/pci/nvidia,tegra-pcie.yaml       | 651 ++++++++++++++++=
++
+> > >  .../bindings/pci/nvidia,tegra20-pcie.txt      | 670 ----------------=
+--
+> > >  2 files changed, 651 insertions(+), 670 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegr=
+a-pcie.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegr=
+a20-pcie.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.=
+yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
+> > > new file mode 100644
+> > > index 000000000000..dd8cba125b53
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
+> > > @@ -0,0 +1,651 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: NVIDIA Tegra PCIe Controller
+> > > +
+> > > +maintainers:
+> > > +  - Thierry Reding <thierry.reding@gmail.com>
+> > > +  - Jon Hunter <jonathanh@nvidia.com>
+> > > +
+> > > +description: |
+> >
+> > Don't need '|'.
+> >
+> Ok
+> > > +  PCIe controller found on NVIDIA Tegra SoCs including Tgra20, Tegra=
+30,
+> > > +  Tegra124, Tegra210, and Tegra186. Supports multiple root ports and
+> > > +  platform-specific clock, reset, and power supply configurations.
+> >
+> > I would suggest not listing every SoC here unless the list is not going=
+ to grow.
+> >
+> Here is the short format.
+>   PCIe controller found on NVIDIA Tegra SoCs which supports multiple
+>   root ports and platform-specific clock, reset, and power supply
+>   configurations.
+> Ok
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> >
+> > Only 1 entry here, don't need 'oneOf'.
+>
+> I am observing the following warning if I remove this.
+>
+>  make ARCH=3Darm64 -j$(nproc) dt_binding_check
+> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pci/nvidia,tegra-pcie=
+.yaml
+>   CHKDT   ./Documentation/devicetree/bindings
+> /media/nvme0/mainline/linux-tegra-6.y-devel/Documentation/devicetree/bind=
+ings/pci/nvidia,tegra-pcie.yaml:
+> properties:compatible: [{'items': [{'enum': ['nvidia,tegra20-pcie',
+> 'nvidia,tegra30-pcie', 'nvidia,tegra124-pcie', 'nvidia,tegra210-pcie',
+> 'nvidia,tegra186-pcie']}]}] is not of type 'object', 'boolean'
+
+Because you made 'compatible' a list rather than a schema/map/dict.
+IOW, You need to remove the '-' as well.
+
+
+> > > +  nvidia,num-lanes:
+> > > +    description: Number of PCIe lanes used
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >
+> > The examples show this in child nodes.
+> yes it patternProperties example I missed this.
+>
+> patternProperties:
+>   "^pci@[0-9a-f]+$":
+>     type: object
+>
+>     properties:
+>       reg:
+>         maxItems: 1
+>
+>       nvidia,num-lanes:
+>         description: Number of PCIe lanes used
+>         $ref: /schemas/types.yaml#/definitions/uint32
+>         minimum: 1
+>
+>     unevaluatedProperties: false
+
+What about all the other properties in the child nodes? You need a
+$ref to pci-pci-bridge.yaml as well.
+
+Rob
 
