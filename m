@@ -1,58 +1,56 @@
-Return-Path: <linux-pci+bounces-37225-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37226-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 180E8BAA3FC
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 20:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 79AFDBAA42D
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 20:12:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 645507A18C9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 18:04:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3F277A291A
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 18:10:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A61F22422E;
-	Mon, 29 Sep 2025 18:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED78B19F13F;
+	Mon, 29 Sep 2025 18:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="klcrZ7ZU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCq1ym8k"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037B1D515;
-	Mon, 29 Sep 2025 18:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FC3944F
+	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 18:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759169187; cv=none; b=n5wAk+kJVSseGf6BMVU4BxHgBhEvvV1eQFtW7C0Uc11cK94f4+ypfwbqCNEeL3vSNXtLxM0cqL5MBHtiHj80B+A32zl3VgLW7vqewIAVKOWurhD2u6t6by4oODulMCG1XklIzDjNkVbQ6ao6Ly/XHmBde4xjubU/u0w4xWPVw4Y=
+	t=1759169526; cv=none; b=H4XoFVas/QvpBX8L0NjjhR71IqRAgmjBVqn6qu0f3fhIa9otVQ/0uaht1KQUvtK3pzYKfFnBeluAflucLj39MRslyBNRTibJ+isEPqeVj5kLuWS23AEhWcjIDWnxnGhNODDtqwZPx9S5C3RrRLQzqhr2xHwYw8ZWhYnRM5GOncU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759169187; c=relaxed/simple;
-	bh=aXF6dblNZTmlNaQRE73OUxEz9KeOhfncEzYh4mOBv34=;
+	s=arc-20240116; t=1759169526; c=relaxed/simple;
+	bh=E7HxvpD4V+N42NMQeOiwvjvpti75ReuRn7JHmnzFtTA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ucGUCPxhTJfgp0hipdIpVlIWAJdwmWxbsMgQdBo2TTUfQKQqrZ6xfEiRzd8GA/wjKB7ciUbqKIkB3roMX09rZF3kXOUKShCTe2CZLXCxFgLrVehugViYDyOHhjPcpE438l584xNAkLFkFs9vuyLeu8pbsydd3L+TqjN9/j5uPts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=klcrZ7ZU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA06C4CEF4;
-	Mon, 29 Sep 2025 18:06:20 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ln7wnGspmDHzZ7/gdZROY1KLcZAQSaHp6RvLjh6NFo4UGxwlqjy8Hfej6N/zS1whSkia8xfL/SCFOQZYJnVCVLKHnLVC45Fozzpa68X09xtKhtssUs1iBLCU9pSe5iQPbywu6vcWzg30tVEy7pfmFZkYI/U86rQcdxUnSX3psZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCq1ym8k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B91AC4CEF4;
+	Mon, 29 Sep 2025 18:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759169186;
-	bh=aXF6dblNZTmlNaQRE73OUxEz9KeOhfncEzYh4mOBv34=;
+	s=k20201202; t=1759169526;
+	bh=E7HxvpD4V+N42NMQeOiwvjvpti75ReuRn7JHmnzFtTA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=klcrZ7ZUFDGA8KX4HAryBRfyd2QyRv0g2WQkq8/HCU1OXGe0kN2UlS3NIhlkE0t6/
-	 PyzM7dnrMjhVj3pvZcDwQ1ev2pM3Za7lVGjZxumRHVZtZLO7gXrpDcAr2DJA+vsbS8
-	 xrRAxEY7SJxWX7StZzS1p2tgG9bQIKV83TYAn3cSDNTZ+T7DC7gFAu1vMZgg6T1frf
-	 FfwVNOM61NC4z3KVG2ji9CrFe1Ub/BSvvEn6ONz+39nlfHG8Qw0icDCpEyiulhzPkA
-	 BlK4aQ1jUULq8sEUbx5zjK6QYVEHk1VSjGy+nPvLHMZ1CWjTOkaakOR3op/Vo2Pdgl
-	 zRVDCXJRnaYwA==
+	b=gCq1ym8kyN82Q0bVIvzNZUHFJ1XIM7xc6eq0G54qgg36pZUEoAFqfSqu9UFUnT+vC
+	 4C699rWCPpkWQqtEdT4G2STeA+0sVXW2N6DfYdpjq69C7VpUtbtqP7oWxHb0+LJRWZ
+	 fE9TFxL3gnSByrDC49DJn6NAnfq7k3R5OePwFKHaBJ6ZO9oYzk9gkKorfJnJq55kbY
+	 p8IMms2tdUL6aBoM/bYl8GYGRnz7TD7UrdPeD6jeUDWc5TD9IlIaqD9B3kFQlh7XnG
+	 3uqvNlI1xainyyf1HomM3arS/L4jfAmNBfF1n+/dtjO90ku47W2asIfIXH3aLB/7Sy
+	 trxL3SmH/AORQ==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: vigneshr@ti.com, s-vadapalli@ti.com, lpieralisi@kernel.org, 
- kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, 
- linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
-References: <20250905211436.3048282-1-alok.a.tiwari@oracle.com>
-Subject: Re: [PATCH] PCI: j721e: Fix incorrect error message in probe
-Message-Id: <175916918016.21534.16971810252510733613.b4-ty@kernel.org>
-Date: Mon, 29 Sep 2025 23:36:20 +0530
+To: bhelgaas@google.com, michal.simek@amd.com, thippeswamy.havalige@amd.com, 
+ kwilczynski@kernel.org, lpieralisi@kernel.org, robh@kernel.org, 
+ Jani Nurminen <jani.nurminen@windriver.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <e83a2af2-af0b-4670-bcf5-ad408571c2b0@windriver.com>
+References: <e83a2af2-af0b-4670-bcf5-ad408571c2b0@windriver.com>
+Subject: Re: [PATCH] PCI: xilinx-nwl: Fix ECAM programming
+Message-Id: <175916952065.22239.10260112301115518368.b4-ty@kernel.org>
+Date: Mon, 29 Sep 2025 23:42:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,20 +62,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 05 Sep 2025 14:14:34 -0700, Alok Tiwari wrote:
-> The probe function printed "pm_runtime_get_sync failed" when
-> j721e_pcie_ctrl_init() returned an error. This is misleading since
-> the failure was not from pm_runtime but from the controller init
-> routine. Update the error message to correctly reflect the source.
+On Fri, 12 Sep 2025 11:09:48 +0200, Jani Nurminen wrote:
+> When PCIe has been set up by the bootloader, the ecam_size field in the
+> E_ECAM_CONTROL register already contains a value.
 > 
-> No functional changes.
+> The value used to be 0xc (for 16 busses; 16 MB), but was bumped to 0x10
+> (for 256 busses; 256 MB) by the commit 2fccd11518f1 ("PCI: xilinx-nwl:
+> Modify ECAM size to enable support for 256 buses").
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] PCI: j721e: Fix incorrect error message in probe
-      commit: cfcd6cab2f33c24a68517f9e3131480b4000c2be
+[1/1] PCI: xilinx-nwl: Fix ECAM programming
+      commit: 9f0fd0b2f7a4aa1925ddfa4aed537a195879e0fa
 
 Best regards,
 -- 
