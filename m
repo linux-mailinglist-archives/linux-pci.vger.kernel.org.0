@@ -1,56 +1,61 @@
-Return-Path: <linux-pci+bounces-37206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 593D1BA97B1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 16:08:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CA0DBA9935
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 16:28:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD14F1884FF8
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 14:08:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BD803C3957
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 14:28:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C380F3064AA;
-	Mon, 29 Sep 2025 14:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B00430BB9D;
+	Mon, 29 Sep 2025 14:26:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCccVy9f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNfA+TYy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AF82D3EEE;
-	Mon, 29 Sep 2025 14:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D0A30BB98;
+	Mon, 29 Sep 2025 14:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759154881; cv=none; b=i6EqYObId3CRK39+XpRB/K0oALxnVM3rk1Co+Ytd0m0kL8T2JH7seYmLlOMKBaomIdqTMHmUv9bpkxvJqubafE6x1ZrHcUfB/IAofWNS6b2aeO+g0mxIBCZ+6/qjuZV7ZWzrKVkYyRIxobE+Rjmdeggr3eUST24o2hADLVpy38c=
+	t=1759155967; cv=none; b=e3JD1am/vLtf0HFn2njlx7bDX7yVZqka+oDoo5VdTSugBiGOmzzpLtPEsX1+Fajp93Qq5LF3pumWmtGVp35Kiz9u99/ibMlGhZqnMcX50bPtqisK3t9EkSZUSJjXk3Vws6Nw2OsS6BGhnoZL2tQSqFNFxREn+LXpusTCfUWVJ8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759154881; c=relaxed/simple;
-	bh=FoBBpl8ccxWYD9w4lpYelOu0xiY0jrMgcodo+JP8v2A=;
+	s=arc-20240116; t=1759155967; c=relaxed/simple;
+	bh=hTD3Nt4DpaJRy7P/xGnOsnI2J/j1t6BOJMHTcrErYBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSVm+/fDRT8XajROr2OcFofPFrQgn4FVoup+wBK6f6nKE/K0AL20LRyyrZJdI5DIx1hRBkDSeOtZVxnYWsscoTEyGJJamiqCbSTm+fWfHwydH4NE48OLCfxoY6X/vAnMAwy0QEY0Xvkfaljoi9jrdpzCJA1kA5+HlSGgqRUCdM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCccVy9f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BAA8C113D0;
-	Mon, 29 Sep 2025 14:07:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=U0Y16zbp7IwbhzOH/co5+ONkeS1OkSVv7lev1OTTsSS3CDhrF/HGnGc+yTiSgFvDj0fjtQzd3GHZbuTjIpL/D6I7ALE2rJMclI5tV0PRJvDiWyLnyNgyXTvCDMTS1+KDSCouj+SaIAUymMpwfyuJ1zXZV4gwP1xRf5uHiU9qcfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNfA+TYy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B7CC4CEF4;
+	Mon, 29 Sep 2025 14:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759154881;
-	bh=FoBBpl8ccxWYD9w4lpYelOu0xiY0jrMgcodo+JP8v2A=;
+	s=k20201202; t=1759155966;
+	bh=hTD3Nt4DpaJRy7P/xGnOsnI2J/j1t6BOJMHTcrErYBM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fCccVy9fg8QWar7rFeiqes3QOPgFphlHINvGJQtp3FU8hB2GoG8Bux4JM8BJcRu3D
-	 sAg9bSlRlYJnOB82tStjHNqcTaW5qYE547OoknF+XJztejHje9Jqm+XEO32XmCvoWq
-	 3mV4YFhyOnwAjYuhfyIQJ0YfhV203tQy0/kyM3eTbfdZOv2JdbYBTXSrheHEQXrMvZ
-	 4feBWuf7tGvqGOikHeKhZd/oGaTlOWH3Q+/DANIjXGPgU79me5f3ePwNE9wErqrbiq
-	 zLcMcwI3elA+/xgPXe/vtUhtOS+KLdD9OJF02HqE6PfSTfpQ3jRLP63szJX20zihfx
-	 Rc+VwwwQw6Uhg==
-Date: Mon, 29 Sep 2025 19:37:49 +0530
+	b=QNfA+TYysm0r/r7mJIUX1cdDvGFGBTYzwOKXfuZgsoVZioa6sP+OU8gDYuRo+zqpu
+	 Rx2oqwpImf+kGSC0dtL0SGLVSUn+VAayC8BnlCCLcD6MybTCv/DakzG8I8UcBDFc/1
+	 d9cIWsyVYAT2IiatXZ/oNPEf0jt7+4+oMT/u7y37tGTWIj7jOm5hWxyudkcSil0ONf
+	 JBlkyG29FZqqyaYUt1SuDxXmD/oYcLtTCpm9Vub3AQAwtV/al/GcCpEXU11zDmtD2l
+	 bHeSrIl1E3dFC6gsYuLc0wd4CS1PNoV8/TZO/F40ekErsZSM7nbJrJk7UgBj6cRZ6v
+	 jFhxV5Lirvcgg==
+Date: Mon, 29 Sep 2025 19:55:50 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ravi Kumar Bandi <ravib@amazon.com>, thippeswamy.havalige@amd.com
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, michal.simek@amd.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
-Message-ID: <ffnsnm67kc546xrx673yvuepolafapueyfboykmcfododbpb2o@cjcmlqcvu76v>
-References: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
- <20250920225232.18757-1-ravib@amazon.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Randolph Lin <randolph@andestech.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, alex@ghiti.fr, 
+	aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	ben717@andestech.com, inochiama@gmail.com, thippeswamy.havalige@amd.com, 
+	namcao@linutronix.de, shradha.t@samsung.com, randolph.sklin@gmail.com, 
+	tim609@andestech.com
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Skip failed outbound iATU and continue
+Message-ID: <ihappv6m5k7hvbfn7h65j7e52jqben7mgrvg7sem3hskfzgxyn@meq5xq33hgpc>
+References: <aNPq42O1Ml3ppF2M@swlinux02>
+ <20250926211023.GA2128495@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,60 +65,69 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250920225232.18757-1-ravib@amazon.com>
+In-Reply-To: <20250926211023.GA2128495@bhelgaas>
 
-On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi wrote:
-> The pcie-xilinx-dma-pl driver does not enable INTx interrupts
-> after initializing the port, preventing INTx interrupts from
-> PCIe endpoints from flowing through the Xilinx XDMA root port
-> bridge. This issue affects kernel 6.6.0 and later versions.
-> 
-> This patch allows INTx interrupts generated by PCIe endpoints
-> to flow through the root port. Tested the fix on a board with
-> two endpoints generating INTx interrupts. Interrupts are
-> properly detected and serviced. The /proc/interrupts output
-> shows:
-> 
-> [...]
-> 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
-> 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
-> [...]
-> 
-> Changes since v1::
-> - Fixed commit message per reviewer's comments
-> 
-> Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
+On Fri, Sep 26, 2025 at 04:10:23PM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 24, 2025 at 08:58:11PM +0800, Randolph Lin wrote:
+> > On Tue, Sep 23, 2025 at 09:42:23AM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Sep 23, 2025 at 07:36:43PM +0800, Randolph Lin wrote:
+> > > > Previously, outbound iATU programming included range checks
+> > > > based on hardware limitations. If a configuration did not meet
+> > > > these constraints, the loop would stop immediately.
+> > > >
+> > > > This patch updates the behavior to enhance flexibility. Instead
+> > > > of stopping at the first issue, it now logs a warning with
+> > > > details of the affected window and proceeds to program the
+> > > > remaining iATU entries.
+> > > >
+> > > > This enables partial configuration to complete in cases where
+> > > > some iATU windows may not meet requirements, improving overall
+> > > > compatibility.
+> > > 
+> > > It's not really clear why this is needed.  I assume it's related
+> > > to dropping qilai_pcie_outbound_atu_addr_valid().
+> > 
+> > Yes, I want to drop the previous atu_addr_valid function.
+> > 
+> > > I guess dw_pcie_prog_outbound_atu() must return an error for one
+> > > of the QiLai ranges?  Which one, and what exactly is the problem?
+> > > I still suspect something wrong in the devicetree description.
+> > 
+> > The main issue is not the returned error; just need to avoid
+> > terminating the process when the configuration exceeds the
+> > hardware’s expected limits.
+> > 
+> > There are two methods to fix the issue on the Qilai SoC:
+> > 
+> > 1. Simply skip the entries that do not match the designware hardware
+> > iATU limitations.  An error will be returned, but it can be ignored.
+> > On the Qilai SoC, the iATU limitation is the 4GB boundary. Qilai SoC
+> > only need to configure iATU support to translate addresses below the
+> > "32-bits" address range. Although 64-bits addresses do not match the
+> > designware hardware iATU limitations, there is no need to configure
+> > 64-bits addresses, since the connection is hard-wired.
+> > 
 
-Thippeswamy, are you fine with this change?
+Why does the DT supplies broken 'ranges' in the first place? DT describes the
+hardware and if the hardware only supports 32bit OB window, then DT has to
+supply the range accordingly. It is not currently clear on what issue you are
+trying to solve by skipping the range check for broken resources.
+
+> > 2. Set the devicetree only 2 viewport for iATU and force using
+> > devicetree value.  This is a workaround in the devicetree, but the
+> > fix logic is not easy to document.  Instead, we should enforce the
+> > use of the viewport defined in the devicetree and modify the
+> > designware generic code accordingly — using the viewport values from
+> > the devicetree instead of reading them from the designware
+> > registers.  Since only two viewports are available for iATU, we
+> > should reserve one for the configuration registers and the other for
+> > 32-bit address access.  Therefore, reverse logic still needs to be
+> > added to the designware generic code.
+> > 
+
+'num-viewport' property is deprecated. So should not be used in new DTs.
 
 - Mani
-
-> ---
->  drivers/pci/controller/pcie-xilinx-dma-pl.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> index b037c8f315e4..cc539292d10a 100644
-> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> @@ -659,6 +659,12 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
->  		return err;
->  	}
->  
-> +	/* Enable interrupts */
-> +	pcie_write(port, XILINX_PCIE_DMA_IMR_ALL_MASK,
-> +		   XILINX_PCIE_DMA_REG_IMR);
-> +	pcie_write(port, XILINX_PCIE_DMA_IDRN_MASK,
-> +		   XILINX_PCIE_DMA_REG_IDRN_MASK);
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.47.3
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
