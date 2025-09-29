@@ -1,115 +1,95 @@
-Return-Path: <linux-pci+bounces-37184-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37185-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33CD7BA865B
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 10:30:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C1E2BA879C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 10:56:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD3827A7BB5
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 08:28:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7645D189C958
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 08:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D2C26A0B3;
-	Mon, 29 Sep 2025 08:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C8527A442;
+	Mon, 29 Sep 2025 08:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cA62By0g"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gwtrv46Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910DE269CE1
-	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 08:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B0E2045B7;
+	Mon, 29 Sep 2025 08:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759134606; cv=none; b=fj9IORk7jc4ktkz3FHTLymSGey84Uy1SNrL16ezdKq/QZX6ISO28RDI8gQtjv7k01vClFmEbiL3WinOfpQ9aO1Vt/0Uqbu3R5S5fqRXEKvXX5hzmLxwJ56gP7/OcHhcP0kdTJC96/RuEZhgF9hyP1GexBVEJzQqdPIdvAWeFJ2o=
+	t=1759136195; cv=none; b=M6ww0H4PD2gfxQooBH146UslzJiLyvtFcjJvUBltrbWrX5ZwkuYp4md3c6BQRWCBbeUom/6GzIz6AKLvDXMToLjZq+QP+swuV8cHqzExGggMMt4CxEQK4Cas8vzXwHpLpguMNSF4sQ98AM9A1VQQQg4mpU/BXJAbiBGIQgKNlP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759134606; c=relaxed/simple;
-	bh=k2eTDDi94ezrIdVH06+ZP4tcnT3DAAyl073d6nRhiyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p3fihbUq0y/1h/Znztox52qGzKUuHMocrr1kFhueJMOhIgWweB7hN2MUcrlpQ2gJPFi0Zf0ChdRoqmdISJPNUyhYeG22IL7C5plFDxkYAvwHP7tj9FgHpoyXRiclfA4AxmC775pFP8gUOpSg3dfrle9eja1JSviMp4T2sBt4tYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cA62By0g; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759134605; x=1790670605;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=k2eTDDi94ezrIdVH06+ZP4tcnT3DAAyl073d6nRhiyI=;
-  b=cA62By0g967OSo0lmlBHFQ8rSzTZQBr69UVXUuzGZKAvi8Z9pTbGbYBU
-   wp7y1/ftBwrjJZLD2o6OcO5nOIxRYiOdVLnx5l0lnb3hJy8hrpudmBr1t
-   VlpVAWzKvn82YfZ+7MIA2PnyVResiPijvwKlk0/E3/BqWwGEcu3Vx3NS+
-   dCdSkSb7AWl6egKcxymd88OVf2LybOje3BtOY5XdMaZol4vUzGT+jd61X
-   VAi57uzuP7ilO81j0dCHmDuap7UGLpTQcfFT/HGmybs0fac/JYWn5ATPd
-   yA4zBB8TPRkN81LqDMxvL8Ib4xPbDec0v6OaRY4s4v+vJtTr/nSdGKF7z
-   A==;
-X-CSE-ConnectionGUID: ajyqqpueQbWumCJMC6bcKA==
-X-CSE-MsgGUID: M5+Q3kPZQ3mNdzAZS8pc6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11567"; a="61289677"
-X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
-   d="scan'208";a="61289677"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 01:30:04 -0700
-X-CSE-ConnectionGUID: 6PvGOIDWQue1wmsPfjxsdw==
-X-CSE-MsgGUID: Wyo8CMvgRqWxFgsQ8YMTPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
-   d="scan'208";a="183358578"
-Received: from baandr0id001.iind.intel.com ([10.66.253.151])
-  by orviesa005.jf.intel.com with ESMTP; 29 Sep 2025 01:30:02 -0700
-From: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-Subject: [PATCH] proc: Remove redundant size checks in proc_bus_pci_read/write()
-Date: Mon, 29 Sep 2025 13:58:15 +0530
-Message-Id: <20250929082815.238143-1-kaushlendra.kumar@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1759136195; c=relaxed/simple;
+	bh=ae5nf/2ulTFGr40DaWU8qznNB7MHcDdaiOtwnoNEP5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bpr1MJYN9PQyFLqNQknqF/8DUPoXy8HX0/5zQvaAzXg9/PsJbNXdTWJ0Qw3jvlU8dH5cL4XzgAVwrtGeypIEothPFbgi/HM8nqf+jgvEQfj/t5/wNGBYLT1wH1lb6aW312Uq5nWCaYx21w2QlST7Zu/2NZ1yyrBBLXy8Z3+HxUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Gwtrv46Z; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5RLyKFm4jgkZLyCw57ehihBsj/peM8c/q1zO/wcZ87g=; b=Gwtrv46ZtYa7Hznfg8/cNCvLhg
+	d1ztE/AZ6uW5BQC26hBLrk0J1Q/o6YElZu4Kgbn+QRBmq8de+buG4cpE5tXkPbl0XUp48d71c5Tm2
+	NRJEba0mQ15/9JnRSlIhH8Rm6m3nKDM7x+X/i+c5/hDlo0qw9J4igZhjBlVn300bshhjZeSVFXcsd
+	2hbcWS6xZP7PmFfXRCVrALhUvinh4tR3mdDIzqGsp4AKRcAp1ETQ6oFAuJ225cQ/J1zXfRNrsRNGK
+	4ottAuC74oP6TWT3Ve8uq+LwhsBO/VKhoVGKLFb1hKCXsLlkYSqh2J8dfq6CMpm+Mq3Owbm+jpG6F
+	alNJ9cEg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v39gO-00000001qe5-1y6t;
+	Mon, 29 Sep 2025 08:56:32 +0000
+Date: Mon, 29 Sep 2025 01:56:32 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	kunit-dev@googlegroups.com,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH 0/4] PCI: Add support and tests for FIXUP quirks in
+ modules
+Message-ID: <aNpJwH1gSZFedysz@infradead.org>
+References: <20250912230208.967129-1-briannorris@chromium.org>
+ <aMgZJgU7p57KC0DL@infradead.org>
+ <aMhd4REssOE-AlYw@google.com>
+ <aNGR0x185VGHxSde@infradead.org>
+ <aNGaBiUOb6_n8w8P@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNGaBiUOb6_n8w8P@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Remove redundant "if (nbytes >= size)" checks in proc_bus_pci_read()
-and proc_bus_pci_write() functions. The subsequent "if (pos + nbytes
-> size)" check already handles this condition by adjusting nbytes to
-"size - pos", making the earlier check unnecessary.
+On Mon, Sep 22, 2025 at 11:48:38AM -0700, Brian Norris wrote:
+> On Mon, Sep 22, 2025 at 11:13:39AM -0700, Christoph Hellwig wrote:
+> > Controller drivers are a special case I guess, but I'd rather still
+> > not open it up to any random driver.
+> 
+> I don't really see why this particular thing should develop restrictions
+> beyond "can it work in modules?", but if you have an idea for how to do
+> that reasonably, my ears are open.
 
-This simplifies the logic without changing functionality since both
-checks serve the same purpose of preventing reads/writes beyond the
-available size.
-
-Signed-off-by: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
----
- drivers/pci/proc.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 9348a0fb8084..da19e6a65ee4 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -47,8 +47,6 @@ static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
- 
- 	if (pos >= size)
- 		return 0;
--	if (nbytes >= size)
--		nbytes = size;
- 	if (pos + nbytes > size)
- 		nbytes = size - pos;
- 	cnt = nbytes;
-@@ -123,8 +121,6 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
- 
- 	if (pos >= size)
- 		return 0;
--	if (nbytes >= size)
--		nbytes = size;
- 	if (pos + nbytes > size)
- 		nbytes = size - pos;
- 	cnt = nbytes;
--- 
-2.34.1
+PCI Controller seem pretty special in that they provide infrastructure.
 
 
