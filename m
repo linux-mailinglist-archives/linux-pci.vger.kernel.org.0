@@ -1,169 +1,124 @@
-Return-Path: <linux-pci+bounces-37223-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37224-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46BC3BAA3BC
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 19:54:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EBC0BAA3D4
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 19:57:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2E5816880F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:54:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC57616A1B0
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 127E1221544;
-	Mon, 29 Sep 2025 17:54:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFE2221FAC;
+	Mon, 29 Sep 2025 17:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6Aw+r6B"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="n4gAIY7B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D474317736;
-	Mon, 29 Sep 2025 17:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C3133086
+	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 17:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759168445; cv=none; b=hZSqu2GRfbusDN8QwKUJqRMDBHn0AJFw7Njwj7jEhhmQs/Zao9+NRpbiV0OS6ZGZM/jGvPBbF4pgq1p11ni54aDICox9zkoQhBI4+X9WS4cWxdVmlor85BZN0ZH5EYNdKtiOYF1FLDXKKqRGdavgkWDhzum8C+SZue1/EQGE59w=
+	t=1759168628; cv=none; b=fdWC3gsYokrq55RTdQWASgg/VKmvtyv2tOhlzpAdU8Cvo+3/VMi2nm7qzEMoNyeYRBT7eYoWtbDRYCOchI1qJpWXASGaUai8Mt9+GO5Graa+8pFi7DQgO+0E5KnBNuCCN+GBVJwcT7Bv9ChZ0MTiujPzi7u0x2tQFFTOqrxwnl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759168445; c=relaxed/simple;
-	bh=PCBsGpd6X+jILembqK+s34pLQKhI31Q5FYULNljasxM=;
+	s=arc-20240116; t=1759168628; c=relaxed/simple;
+	bh=Ej3spbu5J2zc+b/KtZHQNvatQD77mVd1Ebq6G/Cw2xA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o5H/T8T/WBa2Nfw1BEASPMFeV78PRZoINN2qN+YEEyfJ/bs5lET92HKGj/yGl5CUEi5DduD1haMKB8cSCCZ0eq+mMtGaM+3Gz714bDsoreKqB5m2rkCNu0i5IS8fKyhKgsdWx27cam6+LGVP14swYByUpeWekLbED4pAAuM1WE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6Aw+r6B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8505C4CEF4;
-	Mon, 29 Sep 2025 17:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759168444;
-	bh=PCBsGpd6X+jILembqK+s34pLQKhI31Q5FYULNljasxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6Aw+r6BjzzxfKFcBe/Nv0S1rnnX5W58Hs1c3XgOomQENJXR8Zwnc4g6/gnZT8uu3
-	 wx0Mczsv+HtV0RRh4kxOtbuBN4XMxTBxp51zweJaOjVsMU7jVtvzxOUAw2pdotgqdY
-	 DKqPGjpxCGTMRC/WMpEZaUg+E3kuBSvo9UBDojsUi5o5L2oCC0W89+i7sNuU5adssl
-	 tRtPn8vOb1Q8s5khRimhywdBN8/9pqqogd6LRfbV3fNHLW/6MbobM2KtzFNuVX+rk4
-	 DAIR/yA9yeK76Pj77KA0UO8RaloXMWp+poUjrknigQfLqAimNS5QjmlTG0rE8jngn8
-	 VvMthvBQl2MSg==
-Date: Mon, 29 Sep 2025 23:23:49 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Petr Mladek <pmladek@suse.com>, Tejun Heo <tj@kernel.org>, 
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Fix sleeping function being
- called from atomic context
-Message-ID: <te2mzunvwphcoiypwdb6oee3m54jquxk4br6f4tjxlp625whbr@kzzhai5eg2xv>
-References: <20250917161817.15776-1-bhanuseshukumar@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=erTOc4OndYofT/ViddzIbsn8xntHNOQqVVk4G6QUx34Ar+0wqHJ5T/Bg+pNbMzwbIDQoJlMyH2lzuwTTIVDz6MKjQsjxSBk2jq+7v6mkkNNf54hI5DbjDTYj7NI7zEm1uzagSi0TZsRHxgmzJxvgtGVtoMMJKO+oWF6I5z7vFXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=n4gAIY7B; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-78100be28easo3640016b3a.1
+        for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 10:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1759168626; x=1759773426; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSEfWA1uLs7j42NbWHoxDuAcJfkgLIbQX7B0j4gXr2A=;
+        b=n4gAIY7B8jsesZlN+FKLD1ej3sA5WauGkdqVcsunFs1umteoPa98rMUQIpe7uEC4of
+         w/0NfQpJ+JMDf9zb2YEJZtkvhMAqgCaEHtNFoF15QtSuvViNxJFPquhVE/DEPYbz0tKu
+         lGEl2VNCrbrSIxKG54fCHDzlX08fJdfYT78zusa2cSX6IB/EGzD2A+KdfZQZ+yRzBW8X
+         9N5xStq6aNuuwZZU4PZ0jJz5OXOS59fHPk7UPG8u/trlSinu1TYkU+0ow5q9C3ETmsII
+         aE0KMk0ceP+s2a+kKot1rP5MA6bI8Tvh2+CfrNGKclaNJZh96UANYrEqToSLsPzLiQ1h
+         Q0Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759168626; x=1759773426;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GSEfWA1uLs7j42NbWHoxDuAcJfkgLIbQX7B0j4gXr2A=;
+        b=dRs69MDOn9/tT8bNkoFMBH+zqyFl4GvJJcMCj5+TJx6Ib7F0SwhLNi5MpGrdQ5egqI
+         gSu+M3Vtkc1bPMNTcNE9NLROsan279P1ISy/pjpuLvAMpYhkgZatyU2RHiv9wAu2a/3e
+         TlE7+AVtWhwJq+UWnJER7NUdmEK1l7QBs8O06M9ExbxWwn3vSBq+uOxMycCommn/0Ydk
+         J1NAzN/g7IZQ7zizBk8Xj3pu6Gh7UsJ0B89d4tDYrikIKcoG3TsTa0I03mAkMBdszP6z
+         IAhf5pQvOaTv+hWu7F0GnyAx5PSt01J1LgEQ8LjZS7uIWF1e172SFaLURbHc4YdD8flF
+         efyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVUbjhm950cWjmEX8Ro4d2su/i+2xZ+i14S/6zd2mKasb8oqZ6wGgQ3gLkPkDbXyD+141sVTwkWao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqK9G52opoeAbYfjVrbCIcO2b0B3Cl2ktd4H7MkOzB76uQQ+eO
+	kIpmZyPk1JuKAul2uFXLYwdVttlYHPspqY7ZEchhq/TrNZXFgE99xlsM4TIi4MQIyk4=
+X-Gm-Gg: ASbGnctlP0YL8Yn+3HcH8WcIm/6Y99k5odWXRU/nkXwDXxfwIbWGpDWrV0fT0yxocCv
+	MhC6B3/OrNEkl7+goFS6kb5+LkevKS0LJ/gT2MlfxZJsI3V9w2I0riRPkvtwCjPSzGH+nb5ZclB
+	Ab/FPLEibmSW/O+nrcUVRgWwd9xSF3bNdHFQ+uhz+YA0/KGyrCVmorL056w11eaUMTWX5mNeyQR
+	qG6qiyUyaHHhkRDLYAvFkGfnXyHZ+mKOLdLVMYy6CBOyLwnou8MA2aOQEjg800cpDhS6/wETJ0v
+	UrjrRDiWPeJ9MO3d4sfUD3pJdnltsqA6Y6WkmJhr88gs2KhPptT8ilqfUV/73bDIGIf7E5hh
+X-Google-Smtp-Source: AGHT+IEC8oBuuW4/Xw28rIvKPHz1CFCYAk3QHNI8WxtedXpOGhzC8bhDdJWSvjwEZ8vuUpUfIyJQTQ==
+X-Received: by 2002:a05:6a20:9712:b0:2fa:e8f4:618b with SMTP id adf61e73a8af0-2fae922592amr10511358637.26.1759168626501;
+        Mon, 29 Sep 2025 10:57:06 -0700 (PDT)
+Received: from ziepe.ca ([130.41.10.202])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b57c52eee5fsm12037328a12.0.2025.09.29.10.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Sep 2025 10:57:05 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1v3I7U-0000000CNpB-3RFT;
+	Mon, 29 Sep 2025 14:57:04 -0300
+Date: Mon, 29 Sep 2025 14:57:04 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Chris Li <chrisl@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
+Message-ID: <20250929175704.GK2695987@ziepe.ca>
+References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
+ <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250917161817.15776-1-bhanuseshukumar@gmail.com>
+In-Reply-To: <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
 
-On Wed, Sep 17, 2025 at 09:48:17PM +0530, Bhanu Seshu Kumar Valluri wrote:
-> When Root Complex(RC) triggers a Doorbell MSI interrupt to Endpoint(EP) it triggers a warning
-> in the EP. pci_endpoint kselftest target is compiled and used to run the Doorbell test in RC.
+On Tue, Sep 16, 2025 at 12:45:14AM -0700, Chris Li wrote:
+> Save the PCI driver name into "struct pci_dev_ser" during the PCI
+> prepare callback.
 > 
-> [  474.686193] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:271
-> [  474.694656] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/0
-> [  474.702473] preempt_count: 10001, expected: 0
-> [  474.706819] RCU nest depth: 0, expected: 0
-> [  474.710913] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.17.0-rc5-g7aac71907bde #12 PREEMPT
-> [  474.710926] Hardware name: Texas Instruments AM642 EVM (DT)
-> [  474.710934] Call trace:
-> [  474.710940]  show_stack+0x20/0x38 (C)
-> [  474.710969]  dump_stack_lvl+0x70/0x88
-> [  474.710984]  dump_stack+0x18/0x28
-> [  474.710995]  __might_resched+0x130/0x158
-> [  474.711011]  __might_sleep+0x70/0x88
-> [  474.711023]  mutex_lock+0x2c/0x80
-> [  474.711036]  pci_epc_get_msi+0x78/0xd8
-> [  474.711052]  pci_epf_test_raise_irq.isra.0+0x74/0x138
-> [  474.711063]  pci_epf_test_doorbell_handler+0x34/0x50
-> [  474.711072]  __handle_irq_event_percpu+0xac/0x1f0
-> [  474.711086]  handle_irq_event+0x54/0xb8
-> [  474.711096]  handle_fasteoi_irq+0x150/0x220
-> [  474.711110]  handle_irq_desc+0x48/0x68
-> [  474.711121]  generic_handle_domain_irq+0x24/0x38
-> [  474.711131]  gic_handle_irq+0x4c/0xc8
-> [  474.711141]  call_on_irq_stack+0x30/0x70
-> [  474.711151]  do_interrupt_handler+0x70/0x98
-> [  474.711163]  el1_interrupt+0x34/0x68
-> [  474.711176]  el1h_64_irq_handler+0x18/0x28
-> [  474.711189]  el1h_64_irq+0x6c/0x70
-> [  474.711198]  default_idle_call+0x10c/0x120 (P)
-> [  474.711208]  do_idle+0x128/0x268
-> [  474.711220]  cpu_startup_entry+0x3c/0x48
-> [  474.711231]  rest_init+0xe0/0xe8
-> [  474.711240]  start_kernel+0x6d4/0x760
-> [  474.711255]  __primary_switched+0x88/0x98
-> 
+> After kexec, use driver_set_override() to ensure the device is
+> bound only to the saved driver.
 
-You do not need to use full call trace. Refer:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.17#n761
+This doesn't seem like a great idea, driver name should not be made
+ABI.
 
-> Warnings can be reproduced by following steps below.
-> *On EP side:
-> 1. Configure the pci-epf-test function using steps given below
->    mount -t configfs none /sys/kernel/config
->    cd /sys/kernel/config/pci_ep/
->    mkdir functions/pci_epf_test/func1
->    echo 0x104c > functions/pci_epf_test/func1/vendorid
->    echo 0xb010 > functions/pci_epf_test/func1/deviceid
->    echo 32 > functions/pci_epf_test/func1/msi_interrupts
->    echo 2048 > functions/pci_epf_test/func1/msix_interrupts
->    ln -s functions/pci_epf_test/func1 controllers/f102000.pcie-ep/
->    echo 1 > controllers/f102000.pcie-ep/start
-> 
-> *On RC side:
-> 1. Once EP side configuration is done do pci rescan.
->    echo 1 > /sys/bus/pci/rescan
-> 2. Run Doorbell MSI test using pci_endpoint_test kselftest app.
->   ./pci_endpoint_test -r pcie_ep_doorbell.DOORBELL_TEST
+I would drop this patch and punt to the initrd. We need a more
+flexible way to manage driver auto binding for CC under initrd control
+anyhow, the same should be reused for hypervisors to shift driver
+binding policy to userspace.
 
-This info is already part of the kernel documentation. So it is redundant here.
-It could be probably added in the comment section (where you added the Note).
-
->   Note: Kernel is compiled with CONFIG_DEBUG_KERNEL enabled.
-> 
-> The BUG arises because the EP's Doorbell MSI hard interrupt handler is making an
-> indirect call to pci_epc_get_msi, which uses mutex inside, from interrupt context.
-> 
-> This patch converts hard irq handler to a threaded irq handler to allow it
-> to call functions that can sleep during bottom half execution. The threaded
-> irq handler is registered with IRQF_ONESHOT and keeps interrupt line disabled
-> until the threaded irq handler completes execution.
-> 
-> Fixes: eff0c286aa916221a69126 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
-
-Use 12 char commit SHA.
-
-> Signed-off-by: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
-> ---
->  Note : It is compiled and tested on TI am642 board.
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e091193bd..b9c1ad931 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -680,7 +680,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
->  	}
->  }
->  
-> -static irqreturn_t pci_epf_test_doorbell_handler(int irq, void *data)
-> +static irqreturn_t pci_epf_test_doorbell_irq_thread(int irq, void *data)
-
-No need to change the function name.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Jason
 
