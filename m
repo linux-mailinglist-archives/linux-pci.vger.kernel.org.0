@@ -1,66 +1,70 @@
-Return-Path: <linux-pci+bounces-37228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37229-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7975EBAA46E
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 20:22:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 268C9BAA49E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 20:29:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 328361C4590
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 18:22:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C8F97A16BE
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 18:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0454230264;
-	Mon, 29 Sep 2025 18:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2EEC23B62C;
+	Mon, 29 Sep 2025 18:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gzohR3+m"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tTpZknqU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-65.smtpout.orange.fr [80.12.242.65])
+Received: from smtp.smtpout.orange.fr (smtp-79.smtpout.orange.fr [80.12.242.79])
 	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF16B222565;
-	Mon, 29 Sep 2025 18:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28CA19F13F;
+	Mon, 29 Sep 2025 18:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759170147; cv=none; b=ueWytO+/xW7g3sSkhvFQx2/WRlgn1jJKoG0GoC7LAQau3QWd5l7lZr2WZ0H9NXGkrF5AfOBpuDYZvxxqQ5LwRMozx0s9VZ8hJpZfHnljESyfEa7xsxUj3QMkgJsJqElJdXCQ7r7Qxxo17PczvuRQhemboQ3WwifwprKsK/dGv+I=
+	t=1759170532; cv=none; b=Ou4l8aE4/QqmBi0oFbYfn6G+NAcxh5T7i7yW94c8WgIyMSHcWQmgrjQM+vcM4e4hKfuSEqDj3N+xNzEchRtZLE3QHlemKGbiv74BrWskZq8A+x8K4GYwP3eUSuC2bSd6qcT9GUv7wgI/iQc/HCPy5k2YVA9TI47p93v0JQnedL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759170147; c=relaxed/simple;
-	bh=R31Eudw3sKURmOO2Aq8qBpLMf6lzPrcyDJZurOnal2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y79i6vDVMpAv+CLRe5VX8llLMwITJVskfEOKfV63ASiYXQ/Y8A1NXQkEYjiOS7NecC+ajfQHV2keuCImf9qCDJgKkA40lHFG2RGvVVIcdBEkon5n4GFCQB9h3r7gI0UqkekgEg0/qeOQK9S/unYwuJVqOdnAFHXPN1RUhHASHHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gzohR3+m; arc=none smtp.client-ip=80.12.242.65
+	s=arc-20240116; t=1759170532; c=relaxed/simple;
+	bh=vgCxGCSK27MQPtQozsmkHWiMKjltThhDC6HzpUXtL5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DwynHSKrQXItp09VMpQdcOhbRmXlMr5GwFOvSEv0DvJQEihHvxmAYG9tUPDbZ+d9a8NJ6ywPlLq0nEKYCmW9C8wIIXul7MpN0GDAsOJLfqk3edBrr6ool3GaiFkT6T+WA9N0OPXn3LKn5f2C7x9v7bu4X6lPylb38OZ4bVN1vEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tTpZknqU; arc=none smtp.client-ip=80.12.242.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Received: from fedora ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
 	by smtp.orange.fr with ESMTPA
-	id 3INMv36YvVNU73INMvuMjv; Mon, 29 Sep 2025 20:13:28 +0200
+	id 3ITEvqX6XRHxd3ITEvYxTM; Mon, 29 Sep 2025 20:19:34 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1759169608;
-	bh=Mc4Pc8eiwGSdwox5Cd2amTY3CAyX0P3Mao0oIJvCrC8=;
+	s=t20230301; t=1759169974;
+	bh=wTnIMh7xoEfksOfJHKUgA8+GhzjMgsbCB2sGq5dPA74=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gzohR3+mgdUJmeN8Tcn+jIYki/8ypM1DgxTe7QV9jewtYnhrqSPtlbjBxsXZqjTp2
-	 vA3hWBleVatFKif4pu53VjCAOdR+US7l3IClbd3tIRoDQMCl+VV2swcKpbZth5US23
-	 Crfu5G99OH5e18fTBGFRBaxuo4dWo07kTE8VKRKJHSmugQA79DBP4xXYggP2MzFiQs
-	 Jfe1lWWILbshMMMKsspHj2ZF63pmZc9r+DhGUhJ3eTRWiBJf0md/Ot3cCbjYCQDHSd
-	 V0V0kHPjhdXFVcTkxL8ib2V71Beuhtf1MGbECDnuQMvtFcKUAwuIZlctVID4NpuJAX
-	 2JedxpCYkmI9w==
+	b=tTpZknqUSmXo+Xqm8X+UH3zMbiw1hD8niVucVZrWGfDeodUlaV2SCMACaBSqPqB5Y
+	 XaBQ1i8OAwB6Yi4sogD+qHfYCpqrPPdrpau769Y6lB2GceUIJCspANhI82oD56OaAE
+	 jIoxVCmWIf4k2scI7jjIHs4tq4pCkP2Wqi+cmK2V2Vp1j/YVWcHUWCRYF3wdrO27gr
+	 h0j5uOmTjVUc7ruZ/Bd0AwpllqoEe9ASIGVsBKHdurEde2whEJ3asMnih0IKIoPtMc
+	 V4hBEmaVaJqE5g8uTbdLE3cPRSC+GC8SmuG2fPhcyMd0kAUwRUXOhj4S3NSGab0TaO
+	 sNKxpsF2TK7Dg==
 X-ME-Helo: fedora
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 29 Sep 2025 20:13:28 +0200
+X-ME-Date: Mon, 29 Sep 2025 20:19:34 +0200
 X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Christian Bruel <christian.bruel@foss.st.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Manivannan Sadhasivam <mani@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Chen Wang <unicorn_wang@outlook.com>
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: sg2042: Fix a reference count issue in sg2042_pcie_remove()
-Date: Mon, 29 Sep 2025 20:13:22 +0200
-Message-ID: <242eca0ff6601de7966a53706e9950fbcb10aac8.1759169586.git.christophe.jaillet@wanadoo.fr>
+	linux-pci@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: stm32: Re-use existing error handling path in stm32_pcie_probe()
+Date: Mon, 29 Sep 2025 20:19:30 +0200
+Message-ID: <e69ade3edcec4da2d5bfc66e0d03bbcb5a857021.1759169956.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -70,37 +74,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-devm_pm_runtime_enable() is used in the probe, so pm_runtime_disable()
-should not be called explicitly in the remove function.
+An error handling path is already available, so use it instead of hand
+writing the same code.
 
-Fixes: 1c72774df028 ("PCI: sg2042: Add Sophgo SG2042 PCIe driver")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-Compile tested only
----
- drivers/pci/controller/cadence/pcie-sg2042.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-stm32.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-sg2042.c b/drivers/pci/controller/cadence/pcie-sg2042.c
-index a077b28d4894..0c50c74d03ee 100644
---- a/drivers/pci/controller/cadence/pcie-sg2042.c
-+++ b/drivers/pci/controller/cadence/pcie-sg2042.c
-@@ -74,15 +74,12 @@ static int sg2042_pcie_probe(struct platform_device *pdev)
- static void sg2042_pcie_remove(struct platform_device *pdev)
- {
- 	struct cdns_pcie *pcie = platform_get_drvdata(pdev);
--	struct device *dev = &pdev->dev;
- 	struct cdns_pcie_rc *rc;
+diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
+index 964fa6f674c8..96a5fb893af4 100644
+--- a/drivers/pci/controller/dwc/pcie-stm32.c
++++ b/drivers/pci/controller/dwc/pcie-stm32.c
+@@ -287,18 +287,16 @@ static int stm32_pcie_probe(struct platform_device *pdev)
  
- 	rc = container_of(pcie, struct cdns_pcie_rc, pcie);
- 	cdns_pcie_host_disable(rc);
+ 	ret = pm_runtime_set_active(dev);
+ 	if (ret < 0) {
+-		clk_disable_unprepare(stm32_pcie->clk);
+-		stm32_remove_pcie_port(stm32_pcie);
+-		return dev_err_probe(dev, ret, "Failed to activate runtime PM\n");
++		dev_err_probe(dev, ret, "Failed to activate runtime PM\n");
++		goto err_disable_clk;
+ 	}
  
- 	cdns_pcie_disable_phy(pcie);
--
--	pm_runtime_disable(dev);
- }
+ 	pm_runtime_no_callbacks(dev);
  
- static int sg2042_pcie_suspend_noirq(struct device *dev)
+ 	ret = devm_pm_runtime_enable(dev);
+ 	if (ret < 0) {
+-		clk_disable_unprepare(stm32_pcie->clk);
+-		stm32_remove_pcie_port(stm32_pcie);
+-		return dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
++		dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
++		goto err_disable_clk;
+ 	}
+ 
+ 	ret = dw_pcie_host_init(&stm32_pcie->pci.pp);
 -- 
 2.51.0
 
