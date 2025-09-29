@@ -1,228 +1,168 @@
-Return-Path: <linux-pci+bounces-37200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6ED4BA9695
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 291A8BA9713
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:56:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40C091921109
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 13:49:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD073189E61C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 13:56:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17BCE2AD24;
-	Mon, 29 Sep 2025 13:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C36830507B;
+	Mon, 29 Sep 2025 13:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChFsUBXA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY2be1ap"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6062306D57
-	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 13:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782C01A9FBD;
+	Mon, 29 Sep 2025 13:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759153740; cv=none; b=HX1M8d4EF+X038dtIYdIOODulRKwFQt/6v4dHENw2T3LfLInxskYXbqoDUax0VqOhHJ0n4Xp//5dGzuikeYRY1FbGaIm9aQKb17K1j9fb4ueuvcWukDd7vxXRdiNHsVW5o972i3YVsP2S3Sk70a5Cjw0NagCeDP12xFtIC6Joko=
+	t=1759154174; cv=none; b=IrhZ6NSW9+eKfhnJJ6gmiSKA2cIJDiQUCV72mHgkxaRkOrzdXkvcunUYL7HoT/d/U4MfLdXO3pRbG2ERGhGkIJ7SX7CxH00Qd3xnmmZQerj240E7ZAJzXD1ZUk5nOVH6Glk2b5S/TD8haCqWJzMP5JFGH1KgPU/A5JKPD3bqhRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759153740; c=relaxed/simple;
-	bh=UMhXzzOUFx5OVA5APFYm6wVdOFYJfiFDk0hdKAQMemU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9HgKrSuOysoh5bQnSf/IR98KGZBW5SCrjtIKqqsLBkyCltAV4K0m80vsm5PutcqeTgvuzGVt9R7GDswQVA6DZOtQyYqE0HfXt5BEvQXPDCkSSgRgttT24nuQG14s/9aTMKE95OlOsiCfyMS+gmEXr623S9PMmEHvICHTh/GDCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChFsUBXA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B840CC4CEF7
-	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 13:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759153739;
-	bh=UMhXzzOUFx5OVA5APFYm6wVdOFYJfiFDk0hdKAQMemU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ChFsUBXAfmJ9duD7PypxJDnR5EfU3aOqzqY6pWB9R2ARXYCjGbhWGtYDwgM21ZSf1
-	 zdHS2PRQaB1QX0pIN1n0OBeDITboPEXBKmUtGkoA1qagfx/xW2en7HV35W+VTx9i0R
-	 VLMwrcoBmtNjWeVJp5ZL92D9VKQhtyT0kVOiLsHKHblofZ+Dx+D38SRTiO/azLYJ6W
-	 mGeAPZF6phSRpXIy21fXgc1fty5fpWCDxJvMjJeExdDjqojW+9D5+6xQniy3bN6tVi
-	 9Tg//avx4ODQRozm8nuXNm1exO2m4lkz0n4HZ1Ee+DXc+/FKdyRQXrloOHwMUnLabo
-	 IOCdiohpyVzSA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-62ec5f750f7so6783563a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 06:48:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV3rZaqnskUZCIvlJuI9jMG0xcZYqUCqd/RHOJ3eH2OKEAPuE8AYPH2FE0mBNtZ9iqGykk8ITaHSKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpEu55FFmCA5oAElxi3ivOoGt96nMl39BxoqLWPovtjKhq9+39
-	iaCT9dgD84C4Xjt9A9FVOXRXAwfRvOcOCPSS0bkAw8tW9QW4k9YjrgepB+hGwjvNSAD2I4tO/11
-	lcz1Lj4cuvJie3Tf4aC1NBeccnzYFwg==
-X-Google-Smtp-Source: AGHT+IGp3P9nyueKP0M2BInqNV2Yp9Q8g79qJkdJ0eIQaWWP9lVHyb/0kaXduZAtR3IUytj5WfB2U3A52fbCay57ueY=
-X-Received: by 2002:a05:6402:1e90:b0:634:9e1c:dec4 with SMTP id
- 4fb4d7f45d1cf-6349f71301bmr15430745a12.0.1759153738337; Mon, 29 Sep 2025
- 06:48:58 -0700 (PDT)
+	s=arc-20240116; t=1759154174; c=relaxed/simple;
+	bh=InW/YTaTkD8Una1CgxcS+Sd39MuweMYKZK1qU0gW9hU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MttSkkUg2xgJKkIZ8JPZTncHMDHVYQbS9zNCH/ZNno8aNx+PTqDYgFHwAWujcvDY7DgTTT2aVdnweS+Q7WIZHiQQGTulob8qjlURNJYUmL1eCQQU+IZzxHskbOZkDxDgOd8whPqPnLq9ihlQ6nAXjwOQ2aBc3V848Y0torErUCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY2be1ap; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759154172; x=1790690172;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=InW/YTaTkD8Una1CgxcS+Sd39MuweMYKZK1qU0gW9hU=;
+  b=hY2be1apm2in9h4tc46OFoBsMRt/s6pjPp3enLQHuimKPJbZaLZ1Jb31
+   4J0cY0fcyslHVbz95EKnyYrAgXy+z13tjx1FOGO+wp35QZYN6nUqUBDVD
+   aYSscPcHbMvZZ5JUxPc+BcWh49saIqGSSmskTBmiPMy1SL4o8UvZitDSF
+   7f2jVYjxC1AJxT3PqiM/oTZ2HkbCtaXdKjc1Ai36w1pxKhm7N5GtFQ6G4
+   oWW9qToIukRHkW7Ax7wQZ/CNVttjIrEXky8NQIjOvqHK6xju+E4klFec8
+   pjvjyMqiryUPm3DzHj+9rqHxHjc0md6K9JQiGsheeL0WECxYjWifqwP1X
+   g==;
+X-CSE-ConnectionGUID: E8iFxJQZR7qua2YwOalQXQ==
+X-CSE-MsgGUID: 7YVE4DvESeGQfoe5aUSh9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="61560597"
+X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
+   d="scan'208";a="61560597"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 06:56:12 -0700
+X-CSE-ConnectionGUID: p5/xDExsSWqsaFWuk/LpIA==
+X-CSE-MsgGUID: 8VheNZ6BRFOYiVFSCPX/2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,301,1751266800"; 
+   d="scan'208";a="178989233"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 06:56:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Sep 2025 16:56:03 +0300 (EEST)
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+cc: intel-xe@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+    dri-devel@lists.freedesktop.org, Icenowy Zheng <uwu@icenowy.me>, 
+    Vivian Wang <wangruikang@iscas.ac.cn>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Simon Richter <Simon.Richter@hogyros.de>, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/xe: Move rebar to be done earlier
+In-Reply-To: <5osrqzgrh47n6rpjulvsixwbhbh5vwxrrn6p6hpodnwisjfung@lmivgjb66oed>
+Message-ID: <dfdd45b2-5a8c-cfea-ecd3-495e947022d1@linux.intel.com>
+References: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com> <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com> <5osrqzgrh47n6rpjulvsixwbhbh5vwxrrn6p6hpodnwisjfung@lmivgjb66oed>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250926072905.126737-1-linux.amoon@gmail.com>
- <20250926072905.126737-2-linux.amoon@gmail.com> <CAL_JsqJr+h7pTvbRR=7eB4ognK70D1pgNXEORGXo=ndND=pMjw@mail.gmail.com>
- <CANAwSgT3jo35xBvkH4GmQcZuZH=D+SRKJ6e9fSBRz45zwuCmYw@mail.gmail.com>
-In-Reply-To: <CANAwSgT3jo35xBvkH4GmQcZuZH=D+SRKJ6e9fSBRz45zwuCmYw@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 29 Sep 2025 08:48:46 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLsEDFv4T1ZMmjaoFfs7WNAjVvOk9o1eTXL2EeGF8uuDA@mail.gmail.com>
-X-Gm-Features: AS18NWDakHhHSWT3Jre9Ui6cjFqDPCfR0uwc3QfRpTuxBBAWT7q1IOrL5oK7MiE
-Message-ID: <CAL_JsqLsEDFv4T1ZMmjaoFfs7WNAjVvOk9o1eTXL2EeGF8uuDA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: Convert the existing
- nvidia,tegra-pcie.txt bindings documentation into a YAML schema
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323328-1975384521-1759154048=:943"
+Content-ID: <f64c7704-7852-3757-2f7c-098909d873f5@linux.intel.com>
 
-On Mon, Sep 29, 2025 at 2:40=E2=80=AFAM Anand Moon <linux.amoon@gmail.com> =
-wrote:
->
-> Hi Rob,
->
-> Thanks for your review comments
->
-> On Fri, 26 Sept 2025 at 19:26, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri, Sep 26, 2025 at 2:29=E2=80=AFAM Anand Moon <linux.amoon@gmail.c=
-om> wrote:
-> > >
-> > > Convert the legacy text-based binding documentation for
-> > > nvidia,tegra-pcie into a nvidia,tegra-pcie.yaml YAML schema, followin=
-g
-> >
-> > s/YAML/DT/
-> >
-> Ok,
-> > > the Devicetree Schema format. This improves validation coverage and e=
-nables
-> > > dtbs_check compliance for Tegra PCIe nodes.
-> >
-> > Your subject needs some work too. 'existing' and 'bindings
-> > documentation' are redundant.
-> >
-> Here is the simplified version
->
-> dt-bindings: PCI: Convert the nvidia,tegra-pcie bindings documentation
-> into a YAML schema
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Still doesn't fit on one line and you say bindings twice:
+--8323328-1975384521-1759154048=:943
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <abbc543f-2c76-119f-fada-3f12d93deccf@linux.intel.com>
 
-dt-bindings: PCI: Convert nvidia,tegra-pcie to DT schema
+On Mon, 29 Sep 2025, Lucas De Marchi wrote:
 
->
-> Convert the existing text-based DT bindings documentation for the
-> NVIDIA Tegra PCIe host controller to a YAML schema format.
+> Hi,
+>=20
+> On Thu, Sep 18, 2025 at 01:58:57PM -0700, Lucas De Marchi wrote:
+> > There may be cases in which the BAR0 also needs to move to accommodate
+> > the bigger BAR2. However if it's not released, the BAR2 resize fails.
+> > During the vram probe it can't be released as it's already in use by
+> > xe_mmio for early register access.
+> >=20
+> > Add a new function in xe_vram and let xe_pci call it directly before
+> > even early device probe. This allows the BAR2 to resize in cases BAR0
+> > also needs to move:
+> >=20
+> > =09[] xe 0000:03:00.0: vgaarb: deactivate vga console
+> > =09[] xe 0000:03:00.0: [drm] Attempting to resize bar from 8192MiB ->
+> > 16384MiB
+> > =09[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: releasi=
+ng
+> > =09[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x41ffffffff 64bit pref]=
+:
+> > releasing
+> > =09[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x41ffffff=
+ff
+> > 64bit pref]: releasing
+> > =09[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x41ffffff=
+ff
+> > 64bit pref]: releasing
+> > =09[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x43ffffff=
+ff
+> > 64bit pref]: assigned
+> > =09[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x43ffffff=
+ff
+> > 64bit pref]: assigned
+> > =09[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x43ffffffff 64bit pref]=
+:
+> > assigned
+> > =09[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: assigne=
+d
+> > =09[] pcieport 0000:00:01.0: PCI bridge to [bus 01-04]
+> > =09[] pcieport 0000:00:01.0:   bridge window [mem 0x83000000-0x840fffff=
+]
+> > =09[] pcieport 0000:00:01.0:   bridge window [mem
+> > 0x4000000000-0x44007fffff 64bit pref]
+> > =09[] pcieport 0000:01:00.0: PCI bridge to [bus 02-04]
+> > =09[] pcieport 0000:01:00.0:   bridge window [mem 0x83000000-0x840fffff=
+]
+> > =09[] pcieport 0000:01:00.0:   bridge window [mem
+> > 0x4000000000-0x43ffffffff 64bit pref]
+> > =09[] pcieport 0000:02:01.0: PCI bridge to [bus 03]
+> > =09[] pcieport 0000:02:01.0:   bridge window [mem 0x83000000-0x83ffffff=
+]
+> > =09[] pcieport 0000:02:01.0:   bridge window [mem
+> > 0x4000000000-0x43ffffffff 64bit pref]
+> > =09[] xe 0000:03:00.0: [drm] BAR2 resized to 16384M
+> > =09[] xe 0000:03:00.0: [drm:xe_pci_probe [xe]] BATTLEMAGE  e221:0000
+> > dgfx:1 gfx:Xe2_HPG (20.02) ...
+> >=20
+> > As shown above, it happens even before we try to read any register for
+> > platform identification.
+> >=20
+> > All the rebar logic is more pci-specific than xe-specific and can be
+> > done very early in the probe sequence. In future it would be good to
+> > move it out of xe_vram.c, but this refactor is left for later.
+>=20
+> Ilpo, can you take a look on this patch? It fixed the issue that I had
+> with BMG. It needs the first patch for the full fix, but the fixes are
+> more or less orthogonal.
 
-s/YAML/DT/
+FWIW, it looks okay to me from PCI perspective,
 
-Lots of things are YAML. Only one thing is DT schema.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
->
-> > >
-> > > Cc: Jon Hunter <jonathanh@nvidia.com>
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > ---
-> > > v1: new patch in this series.
-> > > ---
-> > >  .../bindings/pci/nvidia,tegra-pcie.yaml       | 651 ++++++++++++++++=
-+
-> > >  .../bindings/pci/nvidia,tegra20-pcie.txt      | 670 ----------------=
---
-> > >  2 files changed, 651 insertions(+), 670 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegr=
-a-pcie.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegr=
-a20-pcie.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.=
-yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > > new file mode 100644
-> > > index 000000000000..dd8cba125b53
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > > @@ -0,0 +1,651 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: NVIDIA Tegra PCIe Controller
-> > > +
-> > > +maintainers:
-> > > +  - Thierry Reding <thierry.reding@gmail.com>
-> > > +  - Jon Hunter <jonathanh@nvidia.com>
-> > > +
-> > > +description: |
-> >
-> > Don't need '|'.
-> >
-> Ok
-> > > +  PCIe controller found on NVIDIA Tegra SoCs including Tgra20, Tegra=
-30,
-> > > +  Tegra124, Tegra210, and Tegra186. Supports multiple root ports and
-> > > +  platform-specific clock, reset, and power supply configurations.
-> >
-> > I would suggest not listing every SoC here unless the list is not going=
- to grow.
-> >
-> Here is the short format.
->   PCIe controller found on NVIDIA Tegra SoCs which supports multiple
->   root ports and platform-specific clock, reset, and power supply
->   configurations.
-> Ok
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> >
-> > Only 1 entry here, don't need 'oneOf'.
->
-> I am observing the following warning if I remove this.
->
->  make ARCH=3Darm64 -j$(nproc) dt_binding_check
-> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pci/nvidia,tegra-pcie=
-.yaml
->   CHKDT   ./Documentation/devicetree/bindings
-> /media/nvme0/mainline/linux-tegra-6.y-devel/Documentation/devicetree/bind=
-ings/pci/nvidia,tegra-pcie.yaml:
-> properties:compatible: [{'items': [{'enum': ['nvidia,tegra20-pcie',
-> 'nvidia,tegra30-pcie', 'nvidia,tegra124-pcie', 'nvidia,tegra210-pcie',
-> 'nvidia,tegra186-pcie']}]}] is not of type 'object', 'boolean'
-
-Because you made 'compatible' a list rather than a schema/map/dict.
-IOW, You need to remove the '-' as well.
-
-
-> > > +  nvidia,num-lanes:
-> > > +    description: Number of PCIe lanes used
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > The examples show this in child nodes.
-> yes it patternProperties example I missed this.
->
-> patternProperties:
->   "^pci@[0-9a-f]+$":
->     type: object
->
->     properties:
->       reg:
->         maxItems: 1
->
->       nvidia,num-lanes:
->         description: Number of PCIe lanes used
->         $ref: /schemas/types.yaml#/definitions/uint32
->         minimum: 1
->
->     unevaluatedProperties: false
-
-What about all the other properties in the child nodes? You need a
-$ref to pci-pci-bridge.yaml as well.
-
-Rob
+--=20
+ i.
+--8323328-1975384521-1759154048=:943--
 
