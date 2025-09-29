@@ -1,95 +1,149 @@
-Return-Path: <linux-pci+bounces-37185-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37186-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C1E2BA879C
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 10:56:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9E63BA8917
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 11:16:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7645D189C958
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 08:57:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C57A33AAFCE
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 09:16:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C8527A442;
-	Mon, 29 Sep 2025 08:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gwtrv46Z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D5D2676F4;
+	Mon, 29 Sep 2025 09:15:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B0E2045B7;
-	Mon, 29 Sep 2025 08:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E0A286894
+	for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 09:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759136195; cv=none; b=M6ww0H4PD2gfxQooBH146UslzJiLyvtFcjJvUBltrbWrX5ZwkuYp4md3c6BQRWCBbeUom/6GzIz6AKLvDXMToLjZq+QP+swuV8cHqzExGggMMt4CxEQK4Cas8vzXwHpLpguMNSF4sQ98AM9A1VQQQg4mpU/BXJAbiBGIQgKNlP4=
+	t=1759137356; cv=none; b=Cva9QUrPNNY8GzX5XFeDmObV4fxO5aI9TKSpe6sJW4Fov01ZgmSm7uo1wxAb696HHia23nHDqu0g34G7dcJ5IgVXVUx63ucJ04V71QwoXCyTfDJ8HV43zoGpgl7VTtUVY6rIJpxIaFZrPWT7cvG3dWCNNWeA6YA66E2U2hWV/5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759136195; c=relaxed/simple;
-	bh=ae5nf/2ulTFGr40DaWU8qznNB7MHcDdaiOtwnoNEP5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bpr1MJYN9PQyFLqNQknqF/8DUPoXy8HX0/5zQvaAzXg9/PsJbNXdTWJ0Qw3jvlU8dH5cL4XzgAVwrtGeypIEothPFbgi/HM8nqf+jgvEQfj/t5/wNGBYLT1wH1lb6aW312Uq5nWCaYx21w2QlST7Zu/2NZ1yyrBBLXy8Z3+HxUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Gwtrv46Z; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5RLyKFm4jgkZLyCw57ehihBsj/peM8c/q1zO/wcZ87g=; b=Gwtrv46ZtYa7Hznfg8/cNCvLhg
-	d1ztE/AZ6uW5BQC26hBLrk0J1Q/o6YElZu4Kgbn+QRBmq8de+buG4cpE5tXkPbl0XUp48d71c5Tm2
-	NRJEba0mQ15/9JnRSlIhH8Rm6m3nKDM7x+X/i+c5/hDlo0qw9J4igZhjBlVn300bshhjZeSVFXcsd
-	2hbcWS6xZP7PmFfXRCVrALhUvinh4tR3mdDIzqGsp4AKRcAp1ETQ6oFAuJ225cQ/J1zXfRNrsRNGK
-	4ottAuC74oP6TWT3Ve8uq+LwhsBO/VKhoVGKLFb1hKCXsLlkYSqh2J8dfq6CMpm+Mq3Owbm+jpG6F
-	alNJ9cEg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v39gO-00000001qe5-1y6t;
-	Mon, 29 Sep 2025 08:56:32 +0000
-Date: Mon, 29 Sep 2025 01:56:32 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	kunit-dev@googlegroups.com,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH 0/4] PCI: Add support and tests for FIXUP quirks in
- modules
-Message-ID: <aNpJwH1gSZFedysz@infradead.org>
-References: <20250912230208.967129-1-briannorris@chromium.org>
- <aMgZJgU7p57KC0DL@infradead.org>
- <aMhd4REssOE-AlYw@google.com>
- <aNGR0x185VGHxSde@infradead.org>
- <aNGaBiUOb6_n8w8P@google.com>
+	s=arc-20240116; t=1759137356; c=relaxed/simple;
+	bh=R9u55K8LEYMCF9T8YoRD0SE7dnNGouw1ZbsiBle69qs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Yyk9kaZ0oyROvo9sdkx9plQrAPcDtYieGf6olIJPoJX4ZBF7Bn+vyA1ezhZfs//aGUwhEQqLFmjEWQ8DD2L5yDGfHhTOoqDhLz01Z/uk1V3Go+SAq/33s9UofvO74C77nDVHrXkz3+PyyBr+J9EEmFWxP5goUZWLP4Dm8LJUVkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b3e9d633b78so185339166b.1
+        for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 02:15:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759137352; x=1759742152;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S/ySJWiSpFmZf4ki4sz6ItaQY50Q4llbhd6F9+5mYqA=;
+        b=G72RMcvgOkfklug8jsmk+NodK3DROlJMzrlMT/Q349Hk0+jSKCASNZ1dLfLJCIBnHR
+         b2dKXnM0/qzNzTrNbTFmYeaCYnxx+qKW8Z1GPJsqojWSR03bqSQNU4bb8vTZKs1jIOlz
+         /GdsUk/2Lhrj7vsruuaO5hSFm1GckisGBSnxRCSUbcpQDD52LuJNVHX0J0SDK8OuIKjp
+         Xhc/gkrtSRRHnxzqxX+NO6wg8czSM1aEgajGCQ9/7jRC/idv+5v2R913JtqPmM4Dzz7j
+         ryXsQ42P/tBo3U7bnBVQ4vcIb+a0VspsiODyuM8ehUw1yaM46i+t+Jevq2haZ2WGqTmS
+         jgCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/BDpkw1PyiQL2ykPekHGbSPabUU7qoorh/s8Seig4mqDWoIWn79DnCyuqmomsYkeXXcgrm/M2lyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3LFO50U9Gro0s9xfJZb8elDld7+Cuiu/prKo30cCqfJzYmvCk
+	ifmWtoq01LruUdzZpJdN6cVe02/U+JYSTbBPigkVCSBZvf4Bn62Wvys7
+X-Gm-Gg: ASbGncsQIJlvClT6VhDRhjjKa8TF1uGpgs+z5QXYE+Z2WSTz7pl0O/C2hzxkGEzubBC
+	GfBCNs6Eo6Oz7I+ZfZUp828xQxmG26K8FfOY8YoUOC123a9f2JU7N/zJgNcAF8I6nrHFdfUnBmn
+	ZjgYWxMC2Iqk1Y1xH/dNCr73TpvOTpB2SeW8ou9SKMxLAn54gSlFcbh+fBlvP+jVRyPqjMLeRSj
+	Xs+FE7B3ofDGrfl73it2IaJZvZsL4HBhiTaygNauLLypUXp5vgbae+lruP4TQg0rLXCKb1xNIJ1
+	/viR8NlH3Wf13+3QJFTJYTieZHr6LEvtKiI/2Qy8m7KRl2J4erjJ/pDsBo7ESTk04bGBuUPAtf3
+	JiUuXwTA/8hCbdqdWUF/H2P+y
+X-Google-Smtp-Source: AGHT+IEC99o6I5U43x9BBzmjUVvHusJBZH+ekQ9yM0YzCDDYFnPxzInOLc7bxYYRuE1LOgqfOeyByg==
+X-Received: by 2002:a17:907:72c2:b0:b2a:10a3:7112 with SMTP id a640c23a62f3a-b354c244b09mr1746488166b.24.1759137352124;
+        Mon, 29 Sep 2025 02:15:52 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:72::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b401d3d4124sm73171066b.75.2025.09.29.02.15.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Sep 2025 02:15:51 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 29 Sep 2025 02:15:47 -0700
+Subject: [PATCH RESEND] PCI/AER: Check for NULL aer_info before
+ ratelimiting in pci_print_aer()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aNGaBiUOb6_n8w8P@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
+X-B4-Tracking: v=1; b=H4sIAEJO2mgC/1XNsQqDMBCA4VcJN5tyF1TEqUNdO7RjEYnJqbdou
+ RRpEd+9IF06//D9GyRW4QS12UB5lSTLDLWhzECY/DyylQi1AYeuwArJetYuqE9T52zvKATHA0Z
+ EyAw8lQd5H9oDbs29uV6gzQxMkl6Lfo7JSkf9efmft5IlO0Qsi9IFqnx+jtyLn0+LjtDu+/4FS
+ 7EPWq8AAAA=
+X-Change-ID: 20250801-aer_crash_2-b21cc2ef0d00
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+ Jon Pan-Doh <pandoh@google.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-dd21f
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1622; i=leitao@debian.org;
+ h=from:subject:message-id; bh=R9u55K8LEYMCF9T8YoRD0SE7dnNGouw1ZbsiBle69qs=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBo2k5GJj10pwZeQhabxuZAbcMVQsml8bUkcz4E+
+ uow6oJeyWuJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaNpORgAKCRA1o5Of/Hh3
+ bernD/wLDmkL54OkzUb+m61lGMHj30To7QCHn/pKBW3LjFUzHdsfPC/WPjAtG16FZUFGQD373ko
+ vqogdRC36R/Cd3umTq7Rw+Vg0rKhmqaqdfGsKmWUQyNgDI3XwmKmNnBFHfWfMjAOi8bSjsN9PNj
+ Y3cML4P2gFuQGkdhAcI/Hhyc43UvRAqZB/T2R+4uz/jQdi+6Icg0qPVzMOw6/AIhg6QPStFayZl
+ 9c8/LNHcphpjuH8MMz7H1PPEb5dkpotusBK20Wzakvo0rhtUhN/GDprXoILypTRlTlstl97JVSd
+ 3sdj8/maZdbMNLtcT1LFNqRg40L41Sfb2X8a90aIJe2JHnRKfiy4ja/ISGeOgc9fG0D9YCA3o8z
+ rZTKK7jLhgd9hrkTp77nI6/gDoiKU/g5XXHYCtA5AEiD9mFFXW+2d/3UCm9+M9VJdKbdIpxU+8y
+ HFVCz2x4TKz9vr2tNea2Md9/m1GUhriYdrOKT/qj7FUpt8/dKZwsIi99BYyul1P42u4UXerh6Hn
+ j5UfcNFRODwlmCq+62PsRjUZ13UWAQK5CGgS5OGj/lslHqNmocE822/74Y66pITfKBAzun4FaUz
+ XOOcyLobFtZQJVjhSnHcuAureBrxPBESEGKI31kGTArSOMVm4yhrp8ilJIWkI0O9OVKyUzf1dAf
+ jPjB5zbIZkILgqA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Mon, Sep 22, 2025 at 11:48:38AM -0700, Brian Norris wrote:
-> On Mon, Sep 22, 2025 at 11:13:39AM -0700, Christoph Hellwig wrote:
-> > Controller drivers are a special case I guess, but I'd rather still
-> > not open it up to any random driver.
-> 
-> I don't really see why this particular thing should develop restrictions
-> beyond "can it work in modules?", but if you have an idea for how to do
-> that reasonably, my ears are open.
+Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
+when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
+calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
+does not rate limit, given this is fatal.
 
-PCI Controller seem pretty special in that they provide infrastructure.
+This prevents a kernel crash triggered by dereferencing a NULL pointer
+in aer_ratelimit(), ensuring safer handling of PCI devices that lack
+AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
+which already performs this NULL check.
+
+Cc: stable@vger.kernel.org
+Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal error logging")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+- This problem is still happening in upstream, and unfortunately no action
+  was done in the previous discussion.
+- Link to previous post:
+  https://lore.kernel.org/r/20250804-aer_crash_2-v1-1-fd06562c18a4@debian.org
+---
+ drivers/pci/pcie/aer.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e286c197d7167..55abc5e17b8b1 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+ 
+ static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+ {
++	if (!dev->aer_info)
++		return 1;
++
+ 	switch (severity) {
+ 	case AER_NONFATAL:
+ 		return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
+
+---
+base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+change-id: 20250801-aer_crash_2-b21cc2ef0d00
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
 
