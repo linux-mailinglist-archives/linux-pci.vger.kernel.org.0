@@ -1,271 +1,179 @@
-Return-Path: <linux-pci+bounces-37209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79198BA9A40
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 16:41:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA512BA9C0F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:04:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DDC57A47D4
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 14:39:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64E703AD88C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 15:04:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01C5C30B509;
-	Mon, 29 Sep 2025 14:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 321F9306B08;
+	Mon, 29 Sep 2025 15:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2A2NXZC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMtQQ9ko"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C6030B500;
-	Mon, 29 Sep 2025 14:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102126F2BD;
+	Mon, 29 Sep 2025 15:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759156824; cv=none; b=EkUyCXlBDbnp8CUQtlJb8l8F8orRcizyh4TgP6p7lherNUpCtUA8tPBA2gyjH/TsOOWGVxQEG5LngTQlCWL93QHv1WdE9gcLG7gMmvb/Q/WZJFxWsx2V+u2hMUu0q9CdOiItR6FJX806D6Me/GSiyZz+bv68gio7im3oJsXr7+U=
+	t=1759158270; cv=none; b=aXTVIwSTcNQr8/gA1gmld+AH810yKki5HY+pFgpp+6PfsLesMYx4q3Ryo08Xl12PV7f60pmx1c54sAofVppTs6nyXRoaRdcicjMugy5k+BfkMAZ+j4uJoi/kPRy4803fl+wlDhVMr0mLp0HCgkNdMfvUUMZqOigEX4Xn7e43qlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759156824; c=relaxed/simple;
-	bh=HPTDRYIkQ98sc0e+r+R4VGK7Iy87o2rFwoVWJNtJgAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TZ4A5IeTpCDXZZR8MSFJVONebBfXG3Uw/e1F5Ddb6utyIrfQY94iy0yNgb79XARNoISkcoXBRgMivkPpaOJTXRuWnPhyDzeOlN35KRea+7GLPSeeoaKk88J+xYs/GH+c+2tZLaozg51WMMvlAV14qu51rSR9LwBwClwQvMsmk2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2A2NXZC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22704C4CEF7;
-	Mon, 29 Sep 2025 14:40:24 +0000 (UTC)
+	s=arc-20240116; t=1759158270; c=relaxed/simple;
+	bh=WgLOirqnRuyUHkGKrX+OqYLUKjAVPYcz7Hc+OWcmhyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dSnERQhl+3lcYhu4vKHDiwUaO4adOrogAL/GmMKLTPMKrjrga6FVVcXzuPqSSW+ySz4OR37+AtfYZYMYJryvvY576Y0dYoL+VI2z+UD3bdkka3f+yAyaiIvUJKEgY2Oxem+i8kwa+vWNgP6mrXKaBYtqMNVCMYA1RAsquONicrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMtQQ9ko; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256D7C4CEF4;
+	Mon, 29 Sep 2025 15:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759156824;
-	bh=HPTDRYIkQ98sc0e+r+R4VGK7Iy87o2rFwoVWJNtJgAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z2A2NXZCqN5MtuZNW+W12uuSdgwhWSq/PmM06GYl+XIWyAAzW53QOmCe9g+S1Cuj1
-	 PC3mSm+BNg+pSH/J8wsDk6tO5RtWCqA7Tv33IuHss1lMqmDJwKeOkx1DEVTiRiyr86
-	 wY4qFWEXxvPHyAD91Qy170zF8jMM9fCSfzBnK9wBVIk5eO+1Ue0qfSaSnDPS04dnsF
-	 59Sk9KOfzunRJjf0V+vJEFn3q5Eh3jO4KHawZmlvVdxjMJ22ys1fwxPjwBgJLJb4IN
-	 0GNcHTG+oGtvR5wmOy7icrsbqIXcq5Ge3h6uOZI1wVIdEz/8o1ZVpSSAP+BA876s45
-	 p/oFaWfZQzTRg==
-Date: Mon, 29 Sep 2025 09:40:23 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 3/5] dt-bindings: PCI: mediatek: Add support for
- Airoha AN7583
-Message-ID: <20250929144023.GA4111165-robh@kernel.org>
-References: <20250929113806.2484-1-ansuelsmth@gmail.com>
- <20250929113806.2484-4-ansuelsmth@gmail.com>
+	s=k20201202; t=1759158268;
+	bh=WgLOirqnRuyUHkGKrX+OqYLUKjAVPYcz7Hc+OWcmhyk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KMtQQ9koq4ya3jXNewcZz5hHqHUlZALafDT20H6VyPac1kR2ipc//bs4dPKZGiRCX
+	 KoNdkcsuIexHTiM3gQdRiCgb+lIBYkz6Ig45lbRtZaYSittcKniqf9vyTS6MOPuB8F
+	 UhklAWkuTyrAYh2t7ms2vle4v5Tqrwh03w6n7W4tjAVrUb3t5DAdfK4S8fkWiLprnE
+	 YSQgrc+1+uVgNggUAfOK/wP7s5Nc0wA+pnJyM/9JcAbydcaLWkUQmDiwKnzvq8gZCP
+	 Tc/XK68gyK4SUVZN+v2rwgO5ejI2P/H/dPdA12/kfRepjqsqOH7jOmH39uXXh2qRy/
+	 od3BcG4ITAEAw==
+Date: Mon, 29 Sep 2025 10:04:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH v2 00/10] LUO: PCI subsystem (phase I)
+Message-ID: <20250929150425.GA111624@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250929113806.2484-4-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bAbB8YsheCwLi0ztY5LLWMyQ6He3sbYru697Ogq5+hR+Q@mail.gmail.com>
 
-On Mon, Sep 29, 2025 at 01:38:02PM +0200, Christian Marangi wrote:
-> Introduce Airoha AN7583 SoC compatible in mediatek PCIe controller
-> binding.
+On Sat, Sep 27, 2025 at 02:05:38PM -0400, Pasha Tatashin wrote:
+> Hi Bjorn,
 > 
-> Similar to GEN3, the Airoha AN7583 GEN2 PCIe controller require the
-> PBUS csr property to permit the correct functionality of the PCIe
-> controller.
-
-I guess I didn't get my point across before. Test your crap before 
-sending or I'm going to stop reviewing your stuff.
-
+> My latest submission is the following:
+> https://lore.kernel.org/all/20250807014442.3829950-1-pasha.tatashin@soleen.com/
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../bindings/pci/mediatek-pcie.yaml           | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
+> And github repo is in cover letter:
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
-> index fca6cb20d18b..b91b13a0220c 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
-> @@ -13,6 +13,7 @@ properties:
->    compatible:
->      oneOf:
->        - enum:
-> +          - airoha,an7583-pcie
->            - mediatek,mt2712-pcie
->            - mediatek,mt7622-pcie
->            - mediatek,mt7629-pcie
-> @@ -55,6 +56,17 @@ properties:
->    power-domains:
->      maxItems: 1
->  
-> +  mediatek,pbus-csr:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: phandle to pbus-csr syscon
-> +          - description: offset of pbus-csr base address register
-> +          - description: offset of pbus-csr base address mask register
-> +    description:
-> +      Phandle with two arguments to the syscon node used to detect if
-> +      a given address is accessible on PCIe controller.
-> +
->    '#interrupt-cells':
->      const: 1
->  
-> @@ -90,6 +102,45 @@ required:
->  allOf:
->    - $ref: /schemas/pci/pci-host-bridge.yaml#
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: airoha,an7583-pcie
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-
-That's already the maximum. Drop.
-
-> +
-> +        reg-names:
-> +          const: port1
-> +
-> +        clocks:
-> +          maxItems: 1
-> +
-> +        clock-names:
-> +          const: sys_ck1
-> +
-> +        reset:
-> +          maxItems: 1
-
-That's already the maximum. Drop.
-
-> +
-> +        reset-names:
-> +          const: pcie-rst1
-> +
-> +        phys:
-> +          maxItems: 1
-
-That's already the maximum. Drop.
-
-> +
-> +        phy-names:
-> +          const: pcie-phy1
-> +
-> +        power-domain: false
-> +
-> +      required:
-> +        - resets
-> +        - reset-names
-> +        - phys
-> +        - phy-names
-> +        - mediatek,pbus-csr
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -106,6 +157,8 @@ allOf:
->  
->          power-domains: false
->  
-> +        mediatek,pbus-csr: false
-> +
->        required:
->          - phys
->          - phy-names
-> @@ -123,6 +176,8 @@ allOf:
->  
->          phy-names: false
->  
-> +        mediatek,pbus-csr: false
-> +
->        required:
->          - power-domains
->  
-> @@ -135,6 +190,8 @@ allOf:
->          clocks:
->            minItems: 6
->  
-> +        mediatek,pbus-csr: false
-> +
->        required:
->          - power-domains
->  
-> @@ -157,6 +214,8 @@ allOf:
->  
->          power-domain: false
->  
-> +        mediatek,pbus-csr: false
-> +
->  unevaluatedProperties: false
->  
->  examples:
-> @@ -316,3 +375,54 @@ examples:
->              };
->          };
->      };
-> +
-> +  # AN7583
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/en7523-clk.h>
-> +
-> +    soc_3 {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie@1fa92000 {
-> +            compatible = "airoha,an7583-pcie";
-> +            device_type = "pci";
-> +            linux,pci-domain = <1>;
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +
-> +            reg = <0x0 0x1fa92000 0x0 0x1670>;
-> +            reg-names = "port1";
-> +
-> +            clocks = <&scuclk EN7523_CLK_PCIE>;
-> +            clock-names = "sys_ck1";
-> +
-> +            phys = <&pciephy>;
-> +            phy-names = "pcie-phy1";
-> +
-> +            ranges = <0x02000000 0 0x24000000 0x0 0x24000000 0 0x4000000>;
-> +
-> +            resets = <&scuclk>; /* AN7583_PCIE1_RST */
-> +            reset-names = "pcie-rst1";
-> +
-> +            mediatek,pbus-csr = <&pbus_csr 0x8 0xc>;
-> +
-> +            interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "pcie_irq";
-> +            bus-range = <0x00 0xff>;
-> +            #interrupt-cells = <1>;
-> +            interrupt-map-mask = <0 0 0 7>;
-> +            interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-> +                            <0 0 0 2 &pcie_intc1 1>,
-> +                            <0 0 0 3 &pcie_intc1 2>,
-> +                            <0 0 0 4 &pcie_intc1 3>;
-> +
-> +            pcie_intc1_4: interrupt-controller {
-> +                interrupt-controller;
-> +                #address-cells = <0>;
-> +                #interrupt-cells = <1>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.51.0
+> https://github.com/googleprodkernel/linux-liveupdate/tree/luo/v3
 > 
+> It applies cleanly against the mainline without the first three
+> patches, as they were already merged.
+
+Not sure what I'm missing.  I've tried various things but none apply
+cleanly:
+
+  $ git remote add luo https://github.com/googleprodkernel/linux-liveupdate.git
+  $ git fetch luo
+  From https://github.com/googleprodkernel/linux-liveupdate
+   * [new branch]                hack_pci_pf_stub_demo -> luo/hack_pci_pf_stub_demo
+   * [new branch]                iommu/rfc-v1          -> luo/iommu/rfc-v1
+   * [new branch]                kho/v5                -> luo/kho/v5
+   * [new branch]                kho/v6                -> luo/kho/v6
+   * [new branch]                kho/v7                -> luo/kho/v7
+   * [new branch]                kho/v8                -> luo/kho/v8
+   * [new branch]                lucx/v1               -> luo/lucx/v1
+   * [new branch]                luo/kho-v8            -> luo/luo/kho-v8
+   * [new branch]                luo/memfd-v0.1        -> luo/luo/memfd-v0.1
+   * [new branch]                luo/rfc-v1            -> luo/luo/rfc-v1
+   * [new branch]                luo/rfc-v2            -> luo/luo/rfc-v2
+   * [new branch]                luo/v1                -> luo/luo/v1
+   * [new branch]                luo/v2                -> luo/luo/v2
+   * [new branch]                luo/v3                -> luo/luo/v3
+   * [new branch]                luo/v4                -> luo/luo/v4
+   * [new branch]                master                -> luo/master
+
+  $ b4 am -om/ https://lore.kernel.org/r/20250916-luo-pci-v2-0-c494053c3c08@kernel.org
+  Grabbing thread from lore.kernel.org/all/20250916-luo-pci-v2-0-c494053c3c08@kernel.org/t.mbox.gz
+  Analyzing 13 messages in the thread
+  Looking for additional code-review trailers on lore.kernel.org
+  Checking attestation on all messages, may take a moment...
+  ---
+    ✓ [PATCH v2 1/10] PCI/LUO: Register with Liveupdate Orchestrator
+    ✓ [PATCH v2 2/10] PCI/LUO: Create requested liveupdate device list
+    ✓ [PATCH v2 3/10] PCI/LUO: Forward prepare()/freeze()/cancel() callbacks to driver
+    ✓ [PATCH v2 4/10] PCI/LUO: Restore state at PCI enumeration
+    ✓ [PATCH v2 5/10] PCI/LUO: Forward finish callbacks to drivers
+    ✓ [PATCH v2 6/10] PCI/LUO: Save and restore driver name
+    ✓ [PATCH v2 7/10] PCI/LUO: Add liveupdate to pcieport driver
+    ✓ [PATCH v2 8/10] PCI/LUO: Add pci_liveupdate_get_driver_data()
+    ✓ [PATCH v2 9/10] PCI/LUO: Avoid write to bus master at boot
+    ✓ [PATCH v2 10/10] PCI: pci-lu-stub: Add a stub driver for Live Update testing
+    ---
+    ✓ Signed: DKIM/kernel.org
+  ---
+  Total patches: 10
+  ---
+  Cover: m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.cover
+   Link: https://lore.kernel.org/r/20250916-luo-pci-v2-0-c494053c3c08@kernel.org
+   Base: base-commit 9ab803064e3d1be9673d2829785a69fd0578b24e not known, ignoring
+   Base: not specified
+	 git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
+
+  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/rfc-v2; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
+  Updating files: 100% (21294/21294), done.
+  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/rfc-v2'.
+  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
+  Applying: PCI/LUO: Register with Liveupdate Orchestrator
+  Applying: PCI/LUO: Create requested liveupdate device list
+  Applying: PCI/LUO: Forward prepare()/freeze()/cancel() callbacks to driver
+  Applying: PCI/LUO: Restore state at PCI enumeration
+  Applying: PCI/LUO: Forward finish callbacks to drivers
+  Applying: PCI/LUO: Save and restore driver name
+  error: patch failed: drivers/pci/probe.c:2714
+  error: drivers/pci/probe.c: patch does not apply
+  Patch failed at 0006 PCI/LUO: Save and restore driver name
+  hint: Use 'git am --show-current-patch=diff' to see the failed patch
+  When you have resolved this problem, run "git am --continue".
+  If you prefer to skip this patch, run "git am --skip" instead.
+  To restore the original branch and stop patching, run "git am --abort".
+
+  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/v2; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
+  Updating files: 100% (12217/12217), done.
+  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/v2'.
+  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
+  Applying: PCI/LUO: Register with Liveupdate Orchestrator
+  error: patch failed: MAINTAINERS:14014
+  error: MAINTAINERS: patch does not apply
+  Patch failed at 0001 PCI/LUO: Register with Liveupdate Orchestrator
+  hint: Use 'git am --show-current-patch=diff' to see the failed patch
+  When you have resolved this problem, run "git am --continue".
+  If you prefer to skip this patch, run "git am --skip" instead.
+  To restore the original branch and stop patching, run "git am --abort".
+
+  $ git checkout -b wip/2509-chris-luo-pci-v2 luo/luo/v3; git am m/v2_20250916_chrisl_luo_pci_subsystem_phase_i.mbx
+  branch 'wip/2509-chris-luo-pci-v2' set up to track 'luo/luo/v3'.
+  Switched to a new branch 'wip/2509-chris-luo-pci-v2'
+  Applying: PCI/LUO: Register with Liveupdate Orchestrator
+  error: patch failed: MAINTAINERS:14014
+  error: MAINTAINERS: patch does not apply
+  Patch failed at 0001 PCI/LUO: Register with Liveupdate Orchestrator
+  hint: Use 'git am --show-current-patch=diff' to see the failed patch
+  When you have resolved this problem, run "git am --continue".
+  If you prefer to skip this patch, run "git am --skip" instead.
+  To restore the original branch and stop patching, run "git am --abort".
+
 
