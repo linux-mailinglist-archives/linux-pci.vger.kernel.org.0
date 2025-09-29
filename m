@@ -1,132 +1,156 @@
-Return-Path: <linux-pci+bounces-37218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2262BAA23C
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 19:21:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65968BAA1CD
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 19:14:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C2B2161A70
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:20:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7E427A2564
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Sep 2025 17:12:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2186F30ACE0;
-	Mon, 29 Sep 2025 17:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479F4303A2F;
+	Mon, 29 Sep 2025 17:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIWQ5XK+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAD7304BB8;
-	Mon, 29 Sep 2025 17:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A2EE555;
+	Mon, 29 Sep 2025 17:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759166438; cv=none; b=CCJlEqtORc02SYJ+WK8n8x0ylXSZZ36abUMq/GO+maelrgbEWtJ4NOCEIcFCAqTK/HHldyPPFdHL+1EWGgtq4gGGh9XoPzFylpx1vnJNxyQflu1qRzeSYrPh/uteKGFhaAa2MxIzvxNvccX0+rkuj9ijPDwq1xO61RVC1NfgXpE=
+	t=1759166049; cv=none; b=Nlz4oYpmgMmwgx2Y3kEl49418BSk8XumrFZRA996KBjz5FF1d3XsPe+VU77Wsnafafda2us8KqvTiz7LUbtyDwXvmW4MmPk+ipDyQiHBZvbi4UTRrUQBKltOGGfJot3qjQ4Li6btUoHEH/twqW6MRmVpP0WXizZAIWfOY31kXUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759166438; c=relaxed/simple;
-	bh=LucnvV2vMc9inXFj/pxYEy58mJflY9oqWuavF2W1VoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U0/oCFlxdJDe8W6Ch6XyfaGll2IS3slMdFtAHrlpG57dpg272BPpqTEzCoOjgnEqCuF8HyzojTB5eSTXLJI7JIQ/KLBWbgE8qRntDRAmqpLs1MJGFhr610xXvZ7QzY1M1TrlbQwnSuVPYmKJ9nEo+Rfc989b3f7IR/EVjV0SWds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cb6t02VLnz9sS8;
-	Mon, 29 Sep 2025 19:01:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id PjXqacDyzuvU; Mon, 29 Sep 2025 19:01:44 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cb6t01lRmz9sRs;
-	Mon, 29 Sep 2025 19:01:44 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 28E228B786;
-	Mon, 29 Sep 2025 19:01:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id LLWkJrEfX4ME; Mon, 29 Sep 2025 19:01:44 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 96C498B783;
-	Mon, 29 Sep 2025 19:01:43 +0200 (CEST)
-Message-ID: <ea7cd581-d6cd-4b0d-986c-d0b43b613858@csgroup.eu>
-Date: Mon, 29 Sep 2025 19:01:43 +0200
+	s=arc-20240116; t=1759166049; c=relaxed/simple;
+	bh=/d3YDoclVIlotjgBNpaaRR/z5leUIlKIPL2Fbh02IS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=N9iAR6Yxk8z+qjD1Iwuo33CTslaQ6IQHeltMGYemjWMydppTBa6//yZaD3HywGbmkaoWIITBLxGHstdGx63lEzOqQoHrxIS+e/bl/if/mL3XGRffEQ8mE7Xjx2g6kx41REy1j3YnhaC0th4hv0w7Och9j4oDtFmQWAAM/LTnR5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIWQ5XK+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5ABC4CEF4;
+	Mon, 29 Sep 2025 17:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759166048;
+	bh=/d3YDoclVIlotjgBNpaaRR/z5leUIlKIPL2Fbh02IS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cIWQ5XK+sJVQ4JPDDmMvNFShMRkkjBzGA+dZGLnibe9k69UGY5dB+dbuJppS9xMDV
+	 DKQKoCj8NfywFTn+1tu1Z1aYOFLqPLJ2lt6tzBq+A7/IifvxTWse4/+x5UQxemJnZW
+	 xi3c3pPcJX5j8zvVJlbuabWOKKN9QsSABeP672iD2FnA50rhfRZxDaxRm3Wzv/mgZ7
+	 qGdJKfqpj0CQorjULZk48n2GAUSGN/6jaYzOmzMMB8Q9yFqD/y+goyBvpWY77AY3cs
+	 PgNbGKFImlE2juCHY7HckaQZQfhODu/xWVgylrPj3HNLYCGBZgF8ghRALH7nqWkRji
+	 FxbwEM3gHJM0Q==
+Date: Mon, 29 Sep 2025 12:14:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Chris Li <chrisl@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH v2 09/10] PCI/LUO: Avoid write to bus master at boot
+Message-ID: <20250929171406.GA116545@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] PCI/AER: Check for NULL aer_info before
- ratelimiting in pci_print_aer()
-To: Breno Leitao <leitao@debian.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Jon Pan-Doh <pandoh@google.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
-References: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250916-luo-pci-v2-9-c494053c3c08@kernel.org>
 
-
-
-Le 29/09/2025 à 11:15, Breno Leitao a écrit :
-> Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
-> when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
-> calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
-> does not rate limit, given this is fatal.
+On Tue, Sep 16, 2025 at 12:45:17AM -0700, Chris Li wrote:
+> If the liveupdate flag has LU_BUSMASTER or LU_BUSMASTER_BRIDGE, the
+> device is participating in the liveupdate preserving bus master bit in the
+> PCI config space command register.
 > 
-> This prevents a kernel crash triggered by dereferencing a NULL pointer
-> in aer_ratelimit(), ensuring safer handling of PCI devices that lack
-> AER info. This change aligns pci_print_aer() with pci_dev_aer_stats_incr()
-> which already performs this NULL check.
+> Avoid writing to the PCI command register for the bus master bit during
+> boot up.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal error logging")
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Chris Li <chrisl@kernel.org>
 > ---
-> - This problem is still happening in upstream, and unfortunately no action
->    was done in the previous discussion.
-> - Link to previous post:
->    https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fr%2F20250804-aer_crash_2-v1-1-fd06562c18a4%40debian.org&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7Cf48f0ae03ec542e13e5408ddff38d9d9%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638947341818450358%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZzJDmrmyDpWh4JZQQzKFZVf%2BeYucLdNOr5L6tgytNPE%3D&reserved=0
-> ---
->   drivers/pci/pcie/aer.c | 3 +++
->   1 file changed, 3 insertions(+)
+>  drivers/pci/liveupdate.c | 6 ++++++
+>  drivers/pci/pci.c        | 7 +++++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e286c197d7167..55abc5e17b8b1 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
->   
->   static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
->   {
-> +	if (!dev->aer_info)
-> +		return 1;
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index 1b12fc0649f479c6f45ffb26e6e3754f41054ea8..a09a166b6ee271b96bce763716c3b62b24f3edbb 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -377,6 +377,12 @@ static void pci_dev_do_restore(struct pci_dev *dev, struct pci_dev_ser *s)
+>  	pci_info(dev, "liveupdate restore flags %x driver: %s data: [%llx]\n",
+>  		 s->flags, s->driver_name, s->driver_data);
+>  	list_move_tail(&dev->dev.lu.lu_next, &probe_devices);
+> +	if (s->flags & (LU_BUSMASTER | LU_BUSMASTER_BRIDGE)) {
+> +		u16 pci_command;
 > +
+> +		pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+> +		WARN_ON(!(pci_command & PCI_COMMAND_MASTER));
+> +	}
+>  }
+>  
+>  void pci_liveupdate_restore(struct pci_dev *dev)
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9e42090fb108920995ebe34bd2535a0e23fef7fd..2339ac1bd57616a78d2105ba3a4fc72bbf49973e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2248,7 +2248,8 @@ static void do_pci_disable_device(struct pci_dev *dev)
+>  	pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+>  	if (pci_command & PCI_COMMAND_MASTER) {
+>  		pci_command &= ~PCI_COMMAND_MASTER;
+> -		pci_write_config_word(dev, PCI_COMMAND, pci_command);
+> +		if (!(dev->dev.lu.flags & (LU_BUSMASTER | LU_BUSMASTER_BRIDGE)))
+> +			pci_write_config_word(dev, PCI_COMMAND, pci_command);
 
-This is a static function, it cannot be called from outside aer.c . Why 
-do you need such a check ?
+I think changing the semantics of interfaces like this is a problem
+because callers rely on the existing semantics, and it's hard to
+reason about how this change would affect them.  How would you update
+the kernel-doc to reflect this change?
 
-I a check was to be made it should be in pci_aer_init() and in fact if 
-kmalloc fails then all the probe should be made to fail.
+do_pci_disable_device() is used in the PM suspend, freeze, and
+poweroff paths.  I suppose those paths are allowed even when devices
+have been marked with LU_BUSMASTER/LU_BUSMASTER_BRIDGE?  And I assume
+you probably would want the existing semantics there?
 
->   	switch (severity) {
->   	case AER_NONFATAL:
->   		return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
-> 
-> ---
-> base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
-> change-id: 20250801-aer_crash_2-b21cc2ef0d00
-> 
-> Best regards,
-> --
-> Breno Leitao <leitao@debian.org>
-> 
-> 
+I.e., if a device has been marked with LU_BUSMASTER, you want to keep
+its bus mastering enabled across a liveupdate kexec.  But if we
+suspend before doing the kexec, I assume we would still want to clear
+bus mastering on suspend and restore bus mastering on resume?
 
+The other path that uses do_pci_disable_device() is
+pci_disable_device(), which is primarily used in driver .remove()
+methods.  You have to modify drivers to support liveupdate anyway, so
+if we call driver .remove() methods during a liveupdate kexec, I think
+you should change the .remove() method so it only calls
+pci_disable_device() when you want bus mastering disabled.
+
+>  	}
+>  
+>  	pcibios_disable_device(dev);
+> @@ -4276,7 +4277,9 @@ static void __pci_set_master(struct pci_dev *dev, bool enable)
+>  	if (cmd != old_cmd) {
+>  		pci_dbg(dev, "%s bus mastering\n",
+>  			enable ? "enabling" : "disabling");
+> -		pci_write_config_word(dev, PCI_COMMAND, cmd);
+> +
+> +		if (!(dev->dev.lu.flags & (LU_BUSMASTER | LU_BUSMASTER_BRIDGE)))
+> +			pci_write_config_word(dev, PCI_COMMAND, cmd);
+>  	}
+>  	dev->is_busmaster = enable;
+>  }
+> 
+> -- 
+> 2.51.0.384.g4c02a37b29-goog
+> 
 
