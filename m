@@ -1,190 +1,425 @@
-Return-Path: <linux-pci+bounces-37273-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37274-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09AB7BAE031
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32EA5BAE043
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:09:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFE58177FF2
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:08:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C69317D36F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:09:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA74A2343B6;
-	Tue, 30 Sep 2025 16:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C1C92248A0;
+	Tue, 30 Sep 2025 16:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hW0AqKgz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHNA7fAU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333BE2248A0
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 16:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54C21B196;
+	Tue, 30 Sep 2025 16:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759248501; cv=none; b=GMVm8kAJ7ZoITGFE3COxl6tSLLgmcew3atgl5PsixJSm+IXlTooSZR7zXIq9/yIWxkIh16KAQ3nt9VxAgjng63mnh42GDCLad+VkPGmWykacvmkflnOaGxn6J5bIXEPHuZhS3+Xrhdbg2Y0e1qv2r4Qfa5mRcajypA5cq+92QYM=
+	t=1759248558; cv=none; b=ZTq6qMH+N53YrsiOqHdqF5+gI6JUmmPtqOz2uMvAzyv5CZ4ku0FCvegmpVPuD651SmXMnukrEbyFGyyHyz3cbpPXgwmzkTTdfu4ULoDu6zGvswrowejoifGPwz1CJK2V219v2nU9fSlM0FxsDjmhNnNbWElj2LXWyV9UDY9S4qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759248501; c=relaxed/simple;
-	bh=snlcpuhg9ToSlXPE+QrSoUGnOciOVCfFz6OxetVNkco=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gf0BtFje5LT6zv1k/AbX3PP6iHJhGDqZpAaVT6Rtq3UPnt6rvEoa1UTTvq282v5Sewi/9ALHm1lb1f5t/s3FZY3rdJATJofwscQJSG6sKMLGPrJwUTOjlJ8YCjrp2pA0LUrj4sr5EqwXTUhsaOzsQ0fW5K2NJhkRwfMvKr5C+mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hW0AqKgz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759248497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wSk9NtZOWjVSHAXaMNsatYeAsaJr+OLKF/ipGZAl/7o=;
-	b=hW0AqKgzjYRoQhjuKFEcQ7xhnMnyMh8jyfQLbv8lkhDued1WbuFigohHJiLcIlq4d4QMem
-	OH7dtaFxpjPcAhvMNzyDRDKHPnrHB/h3ZPpddPi2SbvhKfm5QN126L/xi99qIyfJ2/lM0E
-	0EjWH7mbR5sejpoeg3QFAULw8O85rbI=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-136-ykQgKCxgNhGD__yEOSmZug-1; Tue, 30 Sep 2025 12:08:04 -0400
-X-MC-Unique: ykQgKCxgNhGD__yEOSmZug-1
-X-Mimecast-MFC-AGG-ID: ykQgKCxgNhGD__yEOSmZug_1759248484
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-7b30885170eso1098972a34.1
-        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 09:08:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759248484; x=1759853284;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wSk9NtZOWjVSHAXaMNsatYeAsaJr+OLKF/ipGZAl/7o=;
-        b=XGoqWosyroEVeP42fAd1UdIimVrqJ3C5VCVFd5LxdjVtDeszr2SnBYlAWBKutt03vF
-         JNGO15ZcOAPPwozDI+gBhbgz8r01wmzuo2NTTlzxOgzYUdbGVlxzkVOK3IU8YkmRt4Hb
-         C4hdRQhvL/FF/wHdZgkegUCXr9/Pl8Pgkdv18aYeBymZVF8mBmN79PnPBBN04+kHV6HQ
-         YOclhO/ksFRiey8Wvoe5YTrIIy+Cd2yPyL4PAvlIRuSo878RUZ4i5EOY/p7sgmiXX2Pm
-         Ot70R0emACjbyl9BGPssyYHrJN+dS/t+riO+SLelG6edbKPjWa9B9SDh2tYWDwCjiS8B
-         +JAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI7dnTS8S3x4XhksB2WKmK4XFq9FqAmPQ9rxtIIpNwf2WK6UXWTFV2CKPEVKizAiGGwqYP+DyXvu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSyf+N1xBmc5ISOAP4rpUTNhcAVe4+S0o9XODlJMkmbNObtj7I
-	Mc14OO7+UikqYjiMJ7OhRLsVvKxg8UgdUqRjm6qYNKkphf9mAEq/kTCNIdAJ9wGpiXXppGl3BsB
-	KgM4zOgDuA8861vrIIcw5RMUc3UqMorvUmS7RHeIOe6LJ7GYu5Rv0ZRobxh0YBg==
-X-Gm-Gg: ASbGncuzcAndbPLVVXDYSwTPYO3zhUccDN5qConanjovMeRQFsP2ZINPFDjCMMKQerP
-	hwsxAO6cDEGE52nPw5ni3tDSJ10a/C/A9sunImwL5m0jUt+RcbD+lFtJXtrNK4e2zOtzQyTuKXU
-	iiUmE1lmFBAUwU2XDCfXFImGRAm5EDY2blPAubi0yl61nlJhLK8+uQytGRYuLdw2xtsdMyy36rI
-	NpdA7yghgKvQIgwZgz3g8rLwOHZh4gneWYTxC1u2qYWsOduxPR7nvFnU2vJC2RMN/nuNPXPu6q8
-	t3wY3hW0Bkp22vIec6DZQY+K//TT8eFPOrEY7pqpDNesrVnG
-X-Received: by 2002:a05:6820:5082:b0:621:2845:6daa with SMTP id 006d021491bc7-64bb6545f8bmr113859eaf.0.1759248483601;
-        Tue, 30 Sep 2025 09:08:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJseUyrGoKfdwzuhrG64O9kfcQryt5nehwMqyr+Cc6sT4mD/DyY2Du1MoSsHbbw6RCv1mcDg==
-X-Received: by 2002:a05:6820:5082:b0:621:2845:6daa with SMTP id 006d021491bc7-64bb6545f8bmr113843eaf.0.1759248483252;
-        Tue, 30 Sep 2025 09:08:03 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7b4c0e92da9sm1836631a34.26.2025.09.30.09.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Sep 2025 09:08:02 -0700 (PDT)
-Date: Tue, 30 Sep 2025 10:07:58 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Christian
- =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
- <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
- <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
- Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 07/10] vfio/pci: Add dma-buf export config for MMIO
- regions
-Message-ID: <20250930100758.1605d5a5.alex.williamson@redhat.com>
-In-Reply-To: <20250930075748.GF324804@unreal>
-References: <cover.1759070796.git.leon@kernel.org>
-	<b1b44823f93fd9e7fa73dc165141d716cb74fa90.1759070796.git.leon@kernel.org>
-	<20250929151740.21f001e3.alex.williamson@redhat.com>
-	<20250930075748.GF324804@unreal>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1759248558; c=relaxed/simple;
+	bh=NU8qZxJpMKi+qfpPLhLMxxBu0n4q8ILjeAe2/L4iN1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RrL0R8zCma5F/advWVsD93ZVG3f/VL0G4bk+qDm8FBfEBPCgIAg6tg6HVAg5o9by+KyXxCpZSdMlT5MOhhI1kDJQmmdczLaV8tZw+UXXy9bd58z7yWFAlIufho7zqtp6hd9GEC6BtG6NS3HZbUn+9Zbrk7T4ZyYdgi7h11+MLl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHNA7fAU; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759248555; x=1790784555;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NU8qZxJpMKi+qfpPLhLMxxBu0n4q8ILjeAe2/L4iN1c=;
+  b=gHNA7fAUG3W28ukGIbhgkgqQLVK2WFE72P77xyF7mzzpwj+2FvNKquaw
+   XW2MBx0TaNIhnsHWFYGXf4VkDQo9XFSQ/Vux0icF5QmCL3dWsCJ/uAhPi
+   bKAzBcsqbVlpOJYpxy6bpKeB16w4sWdSQ13Cwl+DSMz8lpxA+VlQw6Y5J
+   oVuxzxPDEWpVOd6EIT3YV6yQO0k2Rs7LySjp4UmIL/0FgK473WBTN984/
+   jxNAbxGaUs6lVoPtBtNWkgio3Y5H2bNZDI/RcDdROeP9d6uinNP27LSIY
+   KeDMv/Pls4XoK1lEj2tp+zMzlVeRX9rK5Y7euaIzCIBJxQ+0KidokH65B
+   A==;
+X-CSE-ConnectionGUID: UECYZ0k/QGSLTSHRzsxazw==
+X-CSE-MsgGUID: U+fl7pIfS56yOIvXJLN4fQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="65148505"
+X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
+   d="scan'208";a="65148505"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:09:13 -0700
+X-CSE-ConnectionGUID: Uyiaxj7wR1m/WpO8kT9U4A==
+X-CSE-MsgGUID: bC7h43oISpyUzdLHkE1CpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
+   d="scan'208";a="178347353"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.162]) ([10.125.109.162])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:09:12 -0700
+Message-ID: <452c087b-17c2-4841-8169-0d9e1f90a31b@intel.com>
+Date: Tue, 30 Sep 2025 09:09:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 17/25] cxl/pci: Introduce CXL Endpoint protocol error
+ handlers
+To: "Bowman, Terry" <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-18-terry.bowman@amd.com>
+ <beecc304-f201-4fa2-b2a7-810c82668be2@intel.com>
+ <7d54aa5d-bef9-4611-b0ae-04279bb7dae2@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <7d54aa5d-bef9-4611-b0ae-04279bb7dae2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Sep 2025 10:57:48 +0300
-Leon Romanovsky <leon@kernel.org> wrote:
 
-> On Mon, Sep 29, 2025 at 03:17:40PM -0600, Alex Williamson wrote:
-> > On Sun, 28 Sep 2025 17:50:17 +0300
-> > Leon Romanovsky <leon@kernel.org> wrote:
-> >   
-> > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > 
-> > > Add new kernel config which indicates support for dma-buf export
-> > > of MMIO regions, which implementation is provided in next patches.
-> > > 
-> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > ---
-> > >  drivers/vfio/pci/Kconfig | 20 ++++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> > > index 2b0172f54665..55ae888bf26a 100644
-> > > --- a/drivers/vfio/pci/Kconfig
-> > > +++ b/drivers/vfio/pci/Kconfig
-> > > @@ -55,6 +55,26 @@ config VFIO_PCI_ZDEV_KVM
-> > >  
-> > >  	  To enable s390x KVM vfio-pci extensions, say Y.
-> > >  
-> > > +config VFIO_PCI_DMABUF
-> > > +	bool "VFIO PCI extensions for DMA-BUF"
-> > > +	depends on VFIO_PCI_CORE
-> > > +	depends on PCI_P2PDMA && DMA_SHARED_BUFFER
-> > > +	default y
-> > > +	help
-> > > +	  Enable support for VFIO PCI extensions that allow exporting
-> > > +	  device MMIO regions as DMA-BUFs for peer devices to access via
-> > > +	  peer-to-peer (P2P) DMA.
-> > > +
-> > > +	  This feature enables a VFIO-managed PCI device to export a portion
-> > > +	  of its MMIO BAR as a DMA-BUF file descriptor, which can be passed
-> > > +	  to other userspace drivers or kernel subsystems capable of
-> > > +	  initiating DMA to that region.
-> > > +
-> > > +	  Say Y here if you want to enable VFIO DMABUF-based MMIO export
-> > > +	  support for peer-to-peer DMA use cases.
-> > > +
-> > > +	  If unsure, say N.
-> > > +
-> > >  source "drivers/vfio/pci/mlx5/Kconfig"
-> > >  
-> > >  source "drivers/vfio/pci/hisilicon/Kconfig"  
-> > 
-> > This is only necessary if we think there's a need to build a kernel with
-> > P2PDMA and VFIO_PCI, but not VFIO_PCI_DMABUF.  Does that need really
-> > exist?  
+
+On 9/30/25 7:06 AM, Bowman, Terry wrote:
 > 
-> It is used to filter build of vfio_pci_dmabuf.c - drivers/vfio/pci/Makefile:
-> vfio-pci-core-$(CONFIG_VFIO_PCI_DMABUF) += vfio_pci_dmabuf.o
-
-Maybe my question of whether it needs to exist at all is too broad.
-Does it need to be a user visible Kconfig option?  Where do we see the
-need to preclude this feature from vfio-pci if the dependencies are
-enabled?
-
-> > I also find it unusual to create the Kconfig before adding the
-> > supporting code.  Maybe this could be popped to the end or rolled into
-> > the last patch if we decided to keep it.  Thanks,  
 > 
-> It is leftover from previous version, I can squash it, but first we need
-> to decide what to do with pcim_p2pdma_init() call, if it needs to be
-> guarded or not.
+> On 9/26/2025 5:04 PM, Dave Jiang wrote:
+>> On 9/25/25 3:34 PM, Terry Bowman wrote:
+>>> CXL Endpoint protocol errors are currently handled using PCI error
+>>> handlers. The CXL Endpoint requires CXL specific handling in the case of
+>>> uncorrectable error (UCE) handling not provided by the PCI handlers.
+>>>
+>>> Add CXL specific handlers for CXL Endpoints. Rename the existing
+>>> cxl_error_handlers to be pci_error_handlers to more correctly indicate
+>>> the error type and follow naming consistency.
+>>>
+>>> The PCI handlers will be called if the CXL device is not trained for
+>>> alternate protocol (CXL). Update the CXL Endpoint PCI handlers to call the
+>>> CXL UCE handlers.
+>>>
+>>> The existing EP UCE handler includes checks for various results. These are
+>>> no longer needed because CXL UCE recovery will not be attempted. Implement
+>>> cxl_handle_ras() to return PCI_ERS_RESULT_NONE or PCI_ERS_RESULT_PANIC. The
+>>> CXL UCE handler is called by cxl_do_recovery() that acts on the return
+>>> value. In the case of the PCI handler path, call panic() if the result is
+>>> PCI_ERS_RESULT_PANIC.
+>>>
+>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>
+>>> ---
+>>>
+>>> Changes in v11->v12:
+>>> - None
+>>>
+>>> Changes in v10->v11:
+>>> - cxl_error_detected() - Change handlers' scoped_guard() to guard() (Jonathan)
+>>> - cxl_error_detected() - Remove extra line (Shiju)
+>>> - Changes moved to core/ras.c (Terry)
+>>> - cxl_error_detected(), remove 'ue' and return with function call. (Jonathan)
+>>> - Remove extra space in documentation for PCI_ERS_RESULT_PANIC definition
+>>> - Move #include "pci.h from cxl.h to core.h (Terry)
+>>> - Remove unnecessary includes of cxl.h and core.h in mem.c (Terry)
+>>> ---
+>>>  drivers/cxl/core/core.h |  17 +++++++
+>>>  drivers/cxl/core/ras.c  | 110 +++++++++++++++++++---------------------
+>>>  drivers/cxl/cxlpci.h    |  15 ------
+>>>  drivers/cxl/pci.c       |   9 ++--
+>>>  4 files changed, 75 insertions(+), 76 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>>> index 8c51a2631716..74c64d458f12 100644
+>>> --- a/drivers/cxl/core/core.h
+>>> +++ b/drivers/cxl/core/core.h
+>>> @@ -6,6 +6,7 @@
+>>>  
+>>>  #include <cxl/mailbox.h>
+>>>  #include <linux/rwsem.h>
+>>> +#include <linux/pci.h>
+>>>  
+>>>  extern const struct device_type cxl_nvdimm_bridge_type;
+>>>  extern const struct device_type cxl_nvdimm_type;
+>>> @@ -150,6 +151,11 @@ void cxl_ras_exit(void);
+>>>  void cxl_switch_port_init_ras(struct cxl_port *port);
+>>>  void cxl_endpoint_port_init_ras(struct cxl_port *ep);
+>>>  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
+>>> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +				    pci_channel_state_t error);
+>>> +void pci_cor_error_detected(struct pci_dev *pdev);
+>>> +void cxl_cor_error_detected(struct device *dev);
+>>> +pci_ers_result_t cxl_error_detected(struct device *dev);
+>>>  #else
+>>>  static inline int cxl_ras_init(void)
+>>>  {
+>>> @@ -163,6 +169,17 @@ static inline void cxl_switch_port_init_ras(struct cxl_port *port) { }
+>>>  static inline void cxl_endpoint_port_init_ras(struct cxl_port *ep) { }
+>>>  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
+>>>  						struct device *host) { }
+>>> +static inline pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +						  pci_channel_state_t error)
+>>> +{
+>>> +	return PCI_ERS_RESULT_NONE;
+>>> +}
+>>> +static inline void pci_cor_error_detected(struct pci_dev *pdev) { }
+>>> +static inline void cxl_cor_error_detected(struct device *dev) { }
+>>> +static inline pci_ers_result_t cxl_error_detected(struct device *dev)
+>>> +{
+>>> +	return PCI_ERS_RESULT_NONE;
+>>> +}
+>>>  #endif // CONFIG_CXL_RAS
+>>>  
+>>>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+>>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>>> index 14a434bd68f0..39472d82d586 100644
+>>> --- a/drivers/cxl/core/ras.c
+>>> +++ b/drivers/cxl/core/ras.c
+>>> @@ -129,7 +129,7 @@ void cxl_ras_exit(void)
+>>>  }
+>>>  
+>>>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base);
+>>>  
+>>>  #ifdef CONFIG_CXL_RCH_RAS
+>>>  static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+>>> @@ -371,7 +371,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>>>   * Log the state of the RAS status registers and prepare them to log the
+>>>   * next error status. Return 1 if reset needed.
+>>>   */
+>>> -static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>>> +static pci_ers_result_t cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>>>  {
+>>>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>>>  	void __iomem *addr;
+>>> @@ -380,13 +380,13 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
+>>>  
+>>>  	if (!ras_base) {
+>>>  		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>>> -		return false;
+>>> +		return PCI_ERS_RESULT_NONE;
+>>>  	}
+>>>  
+>>>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+>>>  	status = readl(addr);
+>>>  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+>>> -		return false;
+>>> +		return PCI_ERS_RESULT_NONE;
+>>>  
+>>>  	/* If multiple errors, log header points to first error from ctrl reg */
+>>>  	if (hweight32(status) > 1) {
+>>> @@ -403,76 +403,72 @@ static bool cxl_handle_ras(struct device *dev, u64 serial, void __iomem *ras_bas
+>>>  	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl, serial);
+>>>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>>>  
+>>> -	return true;
+>>> +	return PCI_ERS_RESULT_PANIC;
+>>>  }
+>>>  
+>>> -void cxl_cor_error_detected(struct pci_dev *pdev)
+>>> +void cxl_cor_error_detected(struct device *dev)
+>> Why change the input parameter to 'struct device' to just convert it back in the first parameter? I understand that later on cxl_handle_proto_error() will pass in a 'dev', but since it's going to be a pci_dev anyways, can you just pass in a pci_dev instead of doing all this back and forth?
+> 
+> Dan made a point in previous revision that handling functions should work on 
+> devices (to include the parameter). This is to be consistent with CXL device/port error 
+> handling rather than PCIe error handling. Let me know how to proceed.
 
-As in the other thread, I think it would be cleaner in an IS_ENABLED
-branch.  I'm tempted to suggest we filter out EOPNOTSUPP to allow it to
-be unconditional, but I understand your point with the list_head
-initialization.  Thanks,
 
-Alex
+Well, these are all PCI AER based handlers so they operate only on PCI devices.... If we are keeping it as 'struct device', I think we should add a check to make sure it's a pci device before doing any conversion from device to pci_dev. 
+
+DJ
+
+> 
+> Terry
+>>>  {
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>> -	struct device *dev = &cxlds->cxlmd->dev;
+>>> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
+>>>  
+>>> -	scoped_guard(device, dev) {
+>>> -		if (!dev->driver) {
+>>> -			dev_warn(&pdev->dev,
+>>> -				 "%s: memdev disabled, abort error handling\n",
+>>> -				 dev_name(dev));
+>>> -			return;
+>>> -		}
+>>> +	guard(device)(cxlmd_dev);
+>>>  
+>>> -		if (cxlds->rcd)
+>>> -			cxl_handle_rdport_errors(cxlds);
+>>> -
+>>> -		cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>> +	if (!cxlmd_dev->driver) {
+>>> +		dev_warn(&pdev->dev, "%s: memdev disabled, abort error handling", dev_name(dev));
+>>> +		return;
+>>>  	}
+>>> +
+>>> +	if (cxlds->rcd)
+>>> +		cxl_handle_rdport_errors(cxlds);
+>>> +
+>>> +	cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>>  }
+>>>  EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, "CXL");
+>>>  
+>>> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -				    pci_channel_state_t state)
+>>> +void pci_cor_error_detected(struct pci_dev *pdev)
+>>>  {
+>>> +	cxl_cor_error_detected(&pdev->dev);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(pci_cor_error_detected, "CXL");
+>>> +
+>>> +pci_ers_result_t cxl_error_detected(struct device *dev)
+>> Same comment as above.
+>>
+>> DJ
+>>
+>>> +{
+>>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+>>> -	struct device *dev = &cxlmd->dev;
+>>> -	bool ue;
+>>> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
+>>>  
+>>> -	scoped_guard(device, dev) {
+>>> -		if (!dev->driver) {
+>>> -			dev_warn(&pdev->dev,
+>>> -				 "%s: memdev disabled, abort error handling\n",
+>>> -				 dev_name(dev));
+>>> -			return PCI_ERS_RESULT_DISCONNECT;
+>>> -		}
+>>> +	guard(device)(cxlmd_dev);
+>>>  
+>>> -		if (cxlds->rcd)
+>>> -			cxl_handle_rdport_errors(cxlds);
+>>> -		/*
+>>> -		 * A frozen channel indicates an impending reset which is fatal to
+>>> -		 * CXL.mem operation, and will likely crash the system. On the off
+>>> -		 * chance the situation is recoverable dump the status of the RAS
+>>> -		 * capability registers and bounce the active state of the memdev.
+>>> -		 */
+>>> -		ue = cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>> -	}
+>>> -
+>>> -
+>>> -	switch (state) {
+>>> -	case pci_channel_io_normal:
+>>> -		if (ue) {
+>>> -			device_release_driver(dev);
+>>> -			return PCI_ERS_RESULT_NEED_RESET;
+>>> -		}
+>>> -		return PCI_ERS_RESULT_CAN_RECOVER;
+>>> -	case pci_channel_io_frozen:
+>>> +	if (!dev->driver) {
+>>>  		dev_warn(&pdev->dev,
+>>> -			 "%s: frozen state error detected, disable CXL.mem\n",
+>>> +			 "%s: memdev disabled, abort error handling\n",
+>>>  			 dev_name(dev));
+>>> -		device_release_driver(dev);
+>>> -		return PCI_ERS_RESULT_NEED_RESET;
+>>> -	case pci_channel_io_perm_failure:
+>>> -		dev_warn(&pdev->dev,
+>>> -			 "failure state error detected, request disconnect\n");
+>>>  		return PCI_ERS_RESULT_DISCONNECT;
+>>>  	}
+>>> -	return PCI_ERS_RESULT_NEED_RESET;
+>>> +
+>>> +	if (cxlds->rcd)
+>>> +		cxl_handle_rdport_errors(cxlds);
+>>> +
+>>> +	/*
+>>> +	 * A frozen channel indicates an impending reset which is fatal to
+>>> +	 * CXL.mem operation, and will likely crash the system. On the off
+>>> +	 * chance the situation is recoverable dump the status of the RAS
+>>> +	 * capability registers and bounce the active state of the memdev.
+>>> +	 */
+>>> +	return cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
+>>>  }
+>>>  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+>>> +
+>>> +pci_ers_result_t pci_error_detected(struct pci_dev *pdev,
+>>> +				    pci_channel_state_t error)
+>>> +{
+>>> +	pci_ers_result_t rc;
+>>> +
+>>> +	rc = cxl_error_detected(&pdev->dev);
+>>> +	if (rc == PCI_ERS_RESULT_PANIC)
+>>> +		panic("CXL cachemem error.");
+>>> +
+>>> +	return rc;
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(pci_error_detected, "CXL");
+>>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+>>> index 3882a089ae77..189cd8fabc2c 100644
+>>> --- a/drivers/cxl/cxlpci.h
+>>> +++ b/drivers/cxl/cxlpci.h
+>>> @@ -77,19 +77,4 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+>>>  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>>>  struct cxl_dev_state;
+>>>  void read_cdat_data(struct cxl_port *port);
+>>> -
+>>> -#ifdef CONFIG_CXL_RAS
+>>> -void cxl_cor_error_detected(struct pci_dev *pdev);
+>>> -pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -				    pci_channel_state_t state);
+>>> -#else
+>>> -static inline void cxl_cor_error_detected(struct pci_dev *pdev) { }
+>>> -
+>>> -static inline pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>>> -						  pci_channel_state_t state)
+>>> -{
+>>> -	return PCI_ERS_RESULT_NONE;
+>>> -}
+>>> -#endif
+>>> -
+>>>  #endif /* __CXL_PCI_H__ */
+>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>> index bd95be1f3d5c..71fb8709081e 100644
+>>> --- a/drivers/cxl/pci.c
+>>> +++ b/drivers/cxl/pci.c
+>>> @@ -16,6 +16,7 @@
+>>>  #include "cxlpci.h"
+>>>  #include "cxl.h"
+>>>  #include "pmu.h"
+>>> +#include "core/core.h"
+>>>  
+>>>  /**
+>>>   * DOC: cxl pci
+>>> @@ -1112,11 +1113,11 @@ static void cxl_reset_done(struct pci_dev *pdev)
+>>>  	}
+>>>  }
+>>>  
+>>> -static const struct pci_error_handlers cxl_error_handlers = {
+>>> -	.error_detected	= cxl_error_detected,
+>>> +static const struct pci_error_handlers pci_error_handlers = {
+>>> +	.error_detected	= pci_error_detected,
+>>>  	.slot_reset	= cxl_slot_reset,
+>>>  	.resume		= cxl_error_resume,
+>>> -	.cor_error_detected	= cxl_cor_error_detected,
+>>> +	.cor_error_detected	= pci_cor_error_detected,
+>>>  	.reset_done	= cxl_reset_done,
+>>>  };
+>>>  
+>>> @@ -1124,7 +1125,7 @@ static struct pci_driver cxl_pci_driver = {
+>>>  	.name			= KBUILD_MODNAME,
+>>>  	.id_table		= cxl_mem_pci_tbl,
+>>>  	.probe			= cxl_pci_probe,
+>>> -	.err_handler		= &cxl_error_handlers,
+>>> +	.err_handler		= &pci_error_handlers,
+>>>  	.dev_groups		= cxl_rcd_groups,
+>>>  	.driver	= {
+>>>  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> 
 
 
