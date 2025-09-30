@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-37245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A88EEBABEEE
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 09:57:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 50707BAC286
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 11:01:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69D991C4F14
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 07:57:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FE9A320BFF
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 09:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DC12D3220;
-	Tue, 30 Sep 2025 07:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73312BE7D0;
+	Tue, 30 Sep 2025 09:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKEnQkLh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0lc8Tee"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BF67D07D;
-	Tue, 30 Sep 2025 07:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7903C6D1A7;
+	Tue, 30 Sep 2025 09:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759219074; cv=none; b=KvQ6NmYq+awl+IxbDe+G1D31Tix11F6CM/f/vLM/LuA+bvG26tvHs+wLWL49VI1qQWvz0B6ycusrdGM6r4XcJcI9Wyeu9cUt3AniuMSZG2MuRfoan2us11+M9WVgIa572BaYarYTfhyYRv27MH40w3ap/bVOJdJxN+8NaOKlQkQ=
+	t=1759222853; cv=none; b=ioGcblSGgD0lEXbQHL3ngeK9xVuS8kNc3q2NPn7jb8aqIKa9FnWF+jMs18Nyr77hXyM2CJsJQH61HkJUPjPzdZQqKdmKR8mXCG1mu/zVpzvYeOpV3Mgsjt5A3+xn5jrV5z9XUcKS6HI6msoBXJenOJiVnTrUDAFAgfgilF+AI18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759219074; c=relaxed/simple;
-	bh=i3BtTTr7nZIJz33RyVUpfLlfxu4epWOssHy+VLrcscQ=;
+	s=arc-20240116; t=1759222853; c=relaxed/simple;
+	bh=Bz59FJNr6hSVIp1bIOKqTXqbYBhR+8gIiV4mOYWby0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNryZTMOREUpenBbTyZBZLuPwgBU+IJWtbAEVHEATQUGRgwQkm5CQrEouCeQvoXNkqTUCZH0zaLHzw22fwBq0MfenYPPn6iVjxfEnO80ddOZ/zm0PyAQhOzc1ni8lQIUQfnsiinHLc6r9RFaQtPlNLHUo2B1sbqD1fHrvnMcNzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKEnQkLh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879DEC4CEF0;
-	Tue, 30 Sep 2025 07:57:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=AG2fjDpsjN6PMlA46bwoj88H0eQaqCyUT0iDRdNs/TOyrZSHcabBO0Ws+GVPRlrhgRTi1bo+lyb2o/LpIUzGib5lu8IZmRWyyGJyNFS3x6yfW4wsOe0VMlqb3kH/b0G6s6bL93uuSPXB6w8YC9Ic2j5jBpnJ/elTHj02tVrVwEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0lc8Tee; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F3BC4CEF0;
+	Tue, 30 Sep 2025 09:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759219073;
-	bh=i3BtTTr7nZIJz33RyVUpfLlfxu4epWOssHy+VLrcscQ=;
+	s=k20201202; t=1759222853;
+	bh=Bz59FJNr6hSVIp1bIOKqTXqbYBhR+8gIiV4mOYWby0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKEnQkLh/7QlrpMJsb5yRxE5AbBpzJMJNRvLELIbdmZqsMudIfJkl5IIjVlvWd45t
-	 9CdHZPBwdsFyTXltr7C+E/ikvBD8M3GKILT1uJbM/dqVtkzxxeI95NEbtW/zrd+Ep5
-	 UJKj7ByQ5cHM7iDUE5YdLldljkvDneKjj7T0/Jl4BAwLIv6rMPS82rffMeFvtqMlii
-	 rJtHqvVmDH+CUonBV/bnseaOumQHFjDS8yuzzqj15+2YNU8QWaz2EfS70aqZHG3yUz
-	 GrVG3wKTr88ok96rH2QGVO9OvriGTC+fSkO/DeP0k5odor2Iw88fzatiG+tDDQkt+a
-	 OH7f8EY3JlCxQ==
-Date: Tue, 30 Sep 2025 10:57:48 +0300
+	b=B0lc8TeeFVkyKURqnlVC8tfbwXSnH5yhCiwnKUCAVw0XfnT/duR62IEit4doNOgit
+	 w0LQw67ADMu98aes/9UNSiFxePK8v71jREbYBwtX/hzTPbV9ZNh+ClsZ59o+JePTg3
+	 7DlSSNkO0ONIVmZkOrw6MQIgp6fEnwHYHtWOw8MrkSOFnIHrN5Kx6VbBkf0YlGbfZl
+	 MZQKCXYSs/sX24JFCduenUzxV3P1gFAK9MVDaD5Pry90wsMm4HClRFRF0dd4+CpJU+
+	 CF4BMSEI+7doVyxI4NIwXinKl4wjhKMt6rRd8SGJfdPJXpDQlmUgZ8z+R4E8IeipQt
+	 +xlwP9a2p+IWQ==
+Date: Tue, 30 Sep 2025 12:00:48 +0300
 From: Leon Romanovsky <leon@kernel.org>
 To: Alex Williamson <alex.williamson@redhat.com>
 Cc: Jason Gunthorpe <jgg@nvidia.com>,
@@ -59,12 +59,12 @@ Cc: Jason Gunthorpe <jgg@nvidia.com>,
 	Sumit Semwal <sumit.semwal@linaro.org>,
 	Vivek Kasireddy <vivek.kasireddy@intel.com>,
 	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 07/10] vfio/pci: Add dma-buf export config for MMIO
+Subject: Re: [PATCH v4 10/10] vfio/pci: Add dma-buf export support for MMIO
  regions
-Message-ID: <20250930075748.GF324804@unreal>
+Message-ID: <20250930090048.GG324804@unreal>
 References: <cover.1759070796.git.leon@kernel.org>
- <b1b44823f93fd9e7fa73dc165141d716cb74fa90.1759070796.git.leon@kernel.org>
- <20250929151740.21f001e3.alex.williamson@redhat.com>
+ <53f3ea1947919a5e657b4f83e74ca53aa45814d4.1759070796.git.leon@kernel.org>
+ <20250929151749.2007b192.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,73 +73,137 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250929151740.21f001e3.alex.williamson@redhat.com>
+In-Reply-To: <20250929151749.2007b192.alex.williamson@redhat.com>
 
-On Mon, Sep 29, 2025 at 03:17:40PM -0600, Alex Williamson wrote:
-> On Sun, 28 Sep 2025 17:50:17 +0300
+On Mon, Sep 29, 2025 at 03:17:49PM -0600, Alex Williamson wrote:
+> On Sun, 28 Sep 2025 17:50:20 +0300
 > Leon Romanovsky <leon@kernel.org> wrote:
+> > +static int validate_dmabuf_input(struct vfio_pci_core_device *vdev,
+> > +				 struct vfio_device_feature_dma_buf *dma_buf,
+> > +				 struct vfio_region_dma_range *dma_ranges,
+> > +				 struct p2pdma_provider **provider)
+> > +{
+> > +	struct pci_dev *pdev = vdev->pdev;
+> > +	u32 bar = dma_buf->region_index;
+> > +	resource_size_t bar_size;
+> > +	u64 sum;
+> > +	int i;
+> > +
+> > +	if (dma_buf->flags)
+> > +		return -EINVAL;
+> > +	/*
+> > +	 * For PCI the region_index is the BAR number like  everything else.
+> > +	 */
+> > +	if (bar >= VFIO_PCI_ROM_REGION_INDEX)
+> > +		return -ENODEV;
+> > +
+> > +	*provider = pcim_p2pdma_provider(pdev, bar);
+> > +	if (!provider)
 > 
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Add new kernel config which indicates support for dma-buf export
-> > of MMIO regions, which implementation is provided in next patches.
-> > 
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/vfio/pci/Kconfig | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> > index 2b0172f54665..55ae888bf26a 100644
-> > --- a/drivers/vfio/pci/Kconfig
-> > +++ b/drivers/vfio/pci/Kconfig
-> > @@ -55,6 +55,26 @@ config VFIO_PCI_ZDEV_KVM
-> >  
-> >  	  To enable s390x KVM vfio-pci extensions, say Y.
-> >  
-> > +config VFIO_PCI_DMABUF
-> > +	bool "VFIO PCI extensions for DMA-BUF"
-> > +	depends on VFIO_PCI_CORE
-> > +	depends on PCI_P2PDMA && DMA_SHARED_BUFFER
-> > +	default y
-> > +	help
-> > +	  Enable support for VFIO PCI extensions that allow exporting
-> > +	  device MMIO regions as DMA-BUFs for peer devices to access via
-> > +	  peer-to-peer (P2P) DMA.
-> > +
-> > +	  This feature enables a VFIO-managed PCI device to export a portion
-> > +	  of its MMIO BAR as a DMA-BUF file descriptor, which can be passed
-> > +	  to other userspace drivers or kernel subsystems capable of
-> > +	  initiating DMA to that region.
-> > +
-> > +	  Say Y here if you want to enable VFIO DMABUF-based MMIO export
-> > +	  support for peer-to-peer DMA use cases.
-> > +
-> > +	  If unsure, say N.
-> > +
-> >  source "drivers/vfio/pci/mlx5/Kconfig"
-> >  
-> >  source "drivers/vfio/pci/hisilicon/Kconfig"
-> 
-> This is only necessary if we think there's a need to build a kernel with
-> P2PDMA and VFIO_PCI, but not VFIO_PCI_DMABUF.  Does that need really
-> exist?
+> This needs to be IS_ERR_OR_NULL() or the function needs to settle on a
+> consistent error return value regardless of CONFIG_PCI_P2PDMA.
 
-It is used to filter build of vfio_pci_dmabuf.c - drivers/vfio/pci/Makefile:
-vfio-pci-core-$(CONFIG_VFIO_PCI_DMABUF) += vfio_pci_dmabuf.o
+pcim_p2pdma_provider() doesn't return errors after split to _init() and _get().
+The more accurate check needs to be if (!*provider) and not what is written.
 
 > 
-> I also find it unusual to create the Kconfig before adding the
-> supporting code.  Maybe this could be popped to the end or rolled into
-> the last patch if we decided to keep it.  Thanks,
+> > +		return -EINVAL;
+> > +
+> > +	bar_size = pci_resource_len(pdev, bar);
+> 
+> We get to this feature via vfio_pci_core_ioctl_feature(), which is used
+> by several variant drivers, some of which mangle the BAR size exposed
+> to the user, ex. hisi_acc.  I'm afraid this might actually be giving
+> dmabuf access to a portion of the BAR that isn't exposed otherwise.
 
-It is leftover from previous version, I can squash it, but first we need
-to decide what to do with pcim_p2pdma_init() call, if it needs to be
-guarded or not.
+Doe you mean that part?
+
+  1185 static int hisi_acc_vf_qm_init(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+  1186 {
+...
+  1204          * Also the HiSilicon ACC VF devices supported by this driver on
+  1205          * HiSilicon hardware platforms are integrated end point devices
+  1206          * and the platform lacks the capability to perform any PCIe P2P
+  1207          * between these devices.
+  1208          */
+  1209
+  1210         vf_qm->io_base =
+  1211                 ioremap(pci_resource_start(vf_dev, VFIO_PCI_BAR2_REGION_INDEX),
+  1212                         pci_resource_len(vf_dev, VFIO_PCI_BAR2_REGION_INDEX));
+  1213         if (!vf_qm->io_base)
+  1214                 return -EIO;
+  1215
+
+According to the comment, it doesn't support p2p and in any case we will
+fail that platform in vfio_pci_dma_buf_attach() by taking "default" case:
+
+   34         switch (pci_p2pdma_map_type(priv->provider, attachment->dev)) {
+   35         case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+   36                 break;
+   37         case PCI_P2PDMA_MAP_BUS_ADDR:
+   38                 /*
+   39                  * There is no need in IOVA at all for this flow.
+   40                  * We rely on attachment->priv == NULL as a marker
+   41                  * for this mode.
+   42                  */
+   43                 return 0;
+   44         default:
+   45                 return -EINVAL;
+   46         }
+   47
+
+> 
+> > +	for (i = 0; i < dma_buf->nr_ranges; i++) {
+> > +		u64 offset = dma_ranges[i].offset;
+> > +		u64 len = dma_ranges[i].length;
+> > +
+> > +		if (!PAGE_ALIGNED(offset) || !PAGE_ALIGNED(len))
+> > +			return -EINVAL;
+> > +
+> > +		if (check_add_overflow(offset, len, &sum) || sum > bar_size)
+> > +			return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int vfio_pci_core_feature_dma_buf(struct vfio_pci_core_device *vdev, u32 flags,
+> > +				  struct vfio_device_feature_dma_buf __user *arg,
+> > +				  size_t argsz)
+> > +{
+> > +	struct vfio_device_feature_dma_buf get_dma_buf = {};
+> > +	struct vfio_region_dma_range *dma_ranges;
+> > +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+> > +	struct p2pdma_provider *provider;
+> > +	struct vfio_pci_dma_buf *priv;
+> > +	int ret;
+> > +
+> > +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
+> > +				 sizeof(get_dma_buf));
+> > +	if (ret != 1)
+> > +		return ret;
+> > +
+> > +	if (copy_from_user(&get_dma_buf, arg, sizeof(get_dma_buf)))
+> > +		return -EFAULT;
+> > +
+> > +	if (!get_dma_buf.nr_ranges)
+> > +		return -EINVAL;
+> > +
+> > +	dma_ranges = memdup_array_user(&arg->dma_ranges, get_dma_buf.nr_ranges,
+> > +				       sizeof(*dma_ranges));
+> > +	if (IS_ERR(dma_ranges))
+> > +		return PTR_ERR(dma_ranges);
+> > +
+> > +	ret = validate_dmabuf_input(vdev, &get_dma_buf, dma_ranges, &provider);
+> > +	if (ret)
+> > +		return ret;
+> 
+> goto err_free_ranges;
 
 Thanks
 
 > 
+> Thanks,
 > Alex
 > 
 > 
