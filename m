@@ -1,170 +1,179 @@
-Return-Path: <linux-pci+bounces-37253-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37254-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61FE0BACF5B
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:03:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AA92BAD082
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:20:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD07B1924FEB
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 13:03:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDC3E322774
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 13:20:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4652D3237;
-	Tue, 30 Sep 2025 13:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E533B3043CC;
+	Tue, 30 Sep 2025 13:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TWiuystH"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fUYgshD4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013027.outbound.protection.outlook.com [40.107.201.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C53253957
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 13:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759237404; cv=none; b=Ws1BefrdypMIpp99xOtpLVey8Kj/ytBx67PNHswSlJWm8+NeIyXus1rDzkntDbN2nYxzLubrg3Yj5x5/oHajKXtuntJyVyjMlRoZTaVgo6RXoQsN63k25HS1nX85zr50c5MalOyVsdrz2G4cM2H+hRCoYN3xsnP0J+SIG3/WW7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759237404; c=relaxed/simple;
-	bh=tNy5hIlubLvYXn7jng64XrQQhZOwIs4X532FSAnk+BQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PgwgPLFFTCCCwcWM9kxXssvn1kugq5i3/YEusL25VpCMx/UlPhx5qvBdSg9x9xPRkz4Trpy0O4zwx5033mDfBgeC83j9TXw+X+k3QvWAVa/2hJXYSMxWWVBVwvxLZJUaBx4mjNqcONzInpxuJKvAer+axJ0cGyUP0DlOh0KitIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b=TWiuystH; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-86278558d6fso308384285a.1
-        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 06:03:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1759237401; x=1759842201; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uC1oKAVwY5VttRhmKJUPbe7CpWFm1J+jVh6aRaRkZ4s=;
-        b=TWiuystHBuXRlefecO6hfqPhr5LMIcm928h305R2enDO3PMEIhDYpP2qWvHmQMv/NV
-         6omRIUYqI/nZWl1PrIHz3dNcDDJCy5kPQQD45bg+gCdD+NVoz/xKufiQqakbmE3vqZub
-         sfsEv3xNFHDR7/+nSTrBxNi90O2DKu4Mtb4smrAnPaGUlTywBpMd1Xk2a6E5U86aCRBs
-         V1NoUY+0HLLl1h+3HFb+YnG5ruSG3SyVMVHWx0H7MCyKOeT9yT8dgSIIZi79zRD6WmK2
-         z9IBv411xGSkgOgGlvof5eBHFAn1XgS8x7cnkwgJtukZb7+vlMuX1kNCMQi4DFq+UUhN
-         WRUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759237401; x=1759842201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uC1oKAVwY5VttRhmKJUPbe7CpWFm1J+jVh6aRaRkZ4s=;
-        b=G6l7PnQxDmMQw6XIX6b0s7MyHcgdHVv1j25tjS4LER03mN6IxG9TN16xtohoLJcweS
-         eQr4YZ59EXA6kn0n4quq6HPBd0eYGd2BTTZrxuOECMy/wRkrVqO1abC88T4CZVyu9aBA
-         abXTsuuFawvLH20DsBDy1655mX2nz8cwSGi/Jdfy7RiOPRw3Tufbtpx2qkrrd5+hI0XT
-         ktP4DF/hRJbrM7OjXueJzp697eArYte1odAvclcCxsJkNatAt4rRhRG56c1Jf8R34Woc
-         Gw/9eacJnPT3whQzHbrXtbUA0bQwUEN+b7Vt6Gmd6jglBxhK9FpUYJa7uRhHkx1kwkEw
-         1AFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBQfVAkcAcFcyfT5Zpf8s7ChMuKyPY2ywuyHEZavTfVJa6KQ8bO5wgtCy0ZwKpHb3uq8X3cWgMOkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJSPtUhpsO5pf2kQvKNXij8Isuq/xomxKIvn9cKoMYV9f0Zfqs
-	DrPd4G6UpMXXDGcvPEwgeUgj1cMAglXt2J8R7D9DuSoV/Oyx1/DM3qDaNu3dB5KiFMmr4LxRPDt
-	4imlPLpTBVEZEfhSD+N+w0/Yw6FU61zDfjQtBwiPt2Q==
-X-Gm-Gg: ASbGncuDltOELtiUnSoMmWD/BUFLpvojXRIcyHgG/jlj9et89yMd+IXYMBMw+9wuTjl
-	ZaePRHDGXTK3QyaXLYdNPsdVw8vV9gcazwJannhJMqQXImTn3A4WrASKThRo5P4hp/mmGGm2kuy
-	OoX1NW5LAAsUp0fRX7QoB65KOmNFDLy/fOEtrbKx0gwzT/rL0AGq8dGC5wy8wZqq7dIhH3ifKJK
-	Su/xostIc1/l6CybsS2T0Fs+CCsmXDf5tU8Jt0=
-X-Google-Smtp-Source: AGHT+IEXsl0l6CFv2XrbeldBTkph/BWzHMDIl1mPG9fMR2Gop2fULhnOuqxlzYbsJ40ATbeEXf4K4rr4nreQirK4/i4=
-X-Received: by 2002:a05:620a:640b:b0:85b:cd94:71ff with SMTP id
- af79cd13be357-85bcd947af3mr1982298785a.48.1759237401174; Tue, 30 Sep 2025
- 06:03:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63D23043C5;
+	Tue, 30 Sep 2025 13:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759238288; cv=fail; b=pUZF6e3IzdcQ5qsCpOOaTFQvjt/VQjsBYMK9SQdwpe4P0ttYUtuBS8nBpZ27JZO+AKXe1Xech1veoTyE9BSrOxenVkCpn3yhVDJZhIjqy9ainM18gHF74P2v/1ZNhYJvT6VOv8VjRQLPSCHb1gIsMoSeTIXw0Svbz9Mj1YkK7lg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759238288; c=relaxed/simple;
+	bh=D46ARqk356im1/6n1MhQN+8qIaVW2jTQGmrV7AuOqQc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cppno/n0+11PRsxhJbosOTdvYawvAzHC/akSP2/XG+qg9BM3LTaip2Fp5U2pqkuB3YANJG+dGTnlD7bHTL+tFG9Q25dZd53As3MiIFJ/8LX581kKrGmDnWJXlPHapLaS3+s2xMpdKj1ysxl5+sEO8kINLpFmm1C/9TZ7CIFqwLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fUYgshD4; arc=fail smtp.client-ip=40.107.201.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dobO1LiXxsSof8FutwBleJOw+wQNUpFZtsy7IRfqPUBqzvKegdnuhmux313Rryz3oH/EbKBPcRELgX6Oic8fX18IoU6Emu/ytoB1f4bQsnbIHJsF4pMvkuwEWl53jmalDt8sokPDYOybET3O3imVVfnmOikn8v1NEE6b2w0LuSft1qWoDLqvD0CLdEzutxBBOuOZN862EbbGPiRaIagFd6AF0Agn3h5uIRdtbEzzyP83H/VFOmfWUPQf0PLmuQEL+GBCF3G9DHC6IMzAXSHwsrU88xz2VAuQH8gngJm+P/nS9v7o+U+phvcHLDwL/JWe+vo4U7/oVQoyBsk/636JPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=igsW4tD1eLCjzTZaWUX9e5VZCIUEaQn2U1Z8eQVXZkY=;
+ b=J43Zly1+yWZWf6yAqpeQAHXe+GgcXQI5mM0fCTQOWUE5nLo8yn/xovbCR+zsfhP8pL1G43nxV7wzyrO27SxfYkoaFEe+84WA1EtLXizi6rnL5Auc5BLo5VOJhCq1WPJ5dvdZJoXVhpsV9zNRI6nwgmcNufCYoFFvYHlEZiAVCUBGW+ueADZ8bgPZsW1mM1ViQhwu1Vs1lI8eLKRpm9isA0h4Q6tDsYvgh3Z7uJToBkolGLbD/oF+jGG9MfXe37WJvAY+Sl1/z8/h501RPOitL3PobnpgN7zGn3JyUDoT9LBf7yuPD/QzY0CesvMDNSzC4CkAinal6tWoe+7wyaFBNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=igsW4tD1eLCjzTZaWUX9e5VZCIUEaQn2U1Z8eQVXZkY=;
+ b=fUYgshD4FMBSFZHfpAHes9B56AYOlmpbMBCAkgojx5f1umJfSyc8+qn6/HFLrZQ2kHVF+jkvxthu8ErZ9M9rYCMCKoNZIo2JdZaRj3SDGwtokCda1XS5a0SGCEEBwvW6Dz1l0yYncOZn98uV2IL2w/gL94847vd9e5pYbqFcT68=
+Received: from BL1PR13CA0097.namprd13.prod.outlook.com (2603:10b6:208:2b9::12)
+ by PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
+ 2025 13:17:59 +0000
+Received: from BN3PEPF0000B075.namprd04.prod.outlook.com
+ (2603:10b6:208:2b9:cafe::1b) by BL1PR13CA0097.outlook.office365.com
+ (2603:10b6:208:2b9::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9182.14 via Frontend Transport; Tue,
+ 30 Sep 2025 13:17:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN3PEPF0000B075.mail.protection.outlook.com (10.167.243.120) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9160.9 via Frontend Transport; Tue, 30 Sep 2025 13:17:59 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Tue, 30 Sep
+ 2025 06:17:58 -0700
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 30 Sep
+ 2025 08:17:57 -0500
+Received: from xhdapps-pcie2.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 30 Sep 2025 06:17:55 -0700
+From: Devendra K Verma <devendra.verma@amd.com>
+To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>
+Subject: [RESEND PATCH v4 0/2] Add AMD MDB Endpoint and non-LL mode Support
+Date: Tue, 30 Sep 2025 18:47:53 +0530
+Message-ID: <20250930131755.3844-1-devendra.verma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-6-c494053c3c08@kernel.org> <20250929175704.GK2695987@ziepe.ca>
- <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
-In-Reply-To: <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 30 Sep 2025 09:02:44 -0400
-X-Gm-Features: AS18NWASRT0LPsx9qEKAelbHRFbMF3MsrgJioJy2jlydT_xCYMVTX_yMZN6zf_g
-Message-ID: <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
-To: Chris Li <chrisl@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Leon Romanovsky <leon@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: devendra.verma@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B075:EE_|PH8PR12MB7277:EE_
+X-MS-Office365-Filtering-Correlation-Id: 61dd2bd4-f58b-450b-08ee-08de0023c70f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bp7B5b1F4FyGCI4oFLZsLBCYEC38ECg5sUhhdAFKSYRb63CmQBGOsBCKYifl?=
+ =?us-ascii?Q?WvjMkjBrX7q07pQpTh20Q+va2sABhpNyay44re13eFw1NLGyJvLBqlc2dsYP?=
+ =?us-ascii?Q?cO2/saVwih3zZQMUL9Qxftds/eugIDIMdWWereb/rECW65XLd275hqARTROw?=
+ =?us-ascii?Q?SAqLHg9KMe9mIY33BJevf0zrSP9EF/12ACE9RlTA03BFLF/lhMYQQl1KOWWC?=
+ =?us-ascii?Q?dyiKCAVKhG2JuYv+hAMrWZa/RrVTp+w6KNOq09h3RS8GyB5f/JOoSdxHtPAf?=
+ =?us-ascii?Q?UeZKq38t66c/FPONoiAr6qLhP+FDgzL53RlzyW5RZaBcxZBeXcELiE1ZT0S2?=
+ =?us-ascii?Q?fxJAmTbBKL+NvnnnsmQh2Wsl3PhHT3MKZjrRcFeer+AfwPkdJ0xhQKqqxuEL?=
+ =?us-ascii?Q?1FYneBHUSiOfwIs8tx+jpk/tCau4O/zrpdOqeb3zdg0hpM2iN5cfBhFX04P6?=
+ =?us-ascii?Q?1x7IF+IdwpaLjl7945QiqNOaXrlbGzveDPau3RfO0E6LChB5ExT7vg9ZBryA?=
+ =?us-ascii?Q?5nOTYJOqr5UJfCVf80fexUq0W27yWLHXghyKyY7LI2WV4uaWcPuismksivRb?=
+ =?us-ascii?Q?aJAXXll0QF7UERTe+CuzSMhXVj0sE9fFPpi4WmmR2gL5B9Q/0g0l2uWa0/Ou?=
+ =?us-ascii?Q?fqQdQUIOie28lHFlyKeiG7IvqNhiuetLkQfiIfJv8ZOPIVCw7icDQmWrTWi4?=
+ =?us-ascii?Q?/Htm7zgDchFE0fb+JhkHCLymEQSE5i+12WbHtZyYciTNjVzGb3ENGqW8D7s4?=
+ =?us-ascii?Q?gfO2hvBNO4ku+LxcJ9Jd4TON7QjIn4PgWB6Ux/oxSBemaU69/XouXcAUd1pZ?=
+ =?us-ascii?Q?QhafxAE01guPnF9zFPv6Dp6edF5A4sC7CeMefSoaks/YSez7/8jzjeyPP5K9?=
+ =?us-ascii?Q?VF2W7n3dW37wHc51XFuux6wSccc22CJ6my/LDJwDGBsSomQmSPPrLuAlCzII?=
+ =?us-ascii?Q?sRK2/Bz70Oj0/hGRw757LMKYhikTOEFI663WFZfUrOgarxIONY2gu9dZHnb1?=
+ =?us-ascii?Q?uEfNjjJp9zj5afbkiwJHpfSVgHD+PHAD+fWxReMAKe+i3qCjy9SBJtbtXJWl?=
+ =?us-ascii?Q?Dhx28t7Iazlnnt/sB0/XQICjX5ph+G9dx0bDvPfiVDLApF99xBwhN7NiDVH3?=
+ =?us-ascii?Q?bHrncCCqS5IyLvbWDh18Ee9F+nN1dXBXg2iiqG2powaH39AsbkylMXVbEaaY?=
+ =?us-ascii?Q?YOQrHaL7tkFYCVqoRG46bvSN1pCac/LLIsDMENfRs9nX/8MKPzrkJZpbGvas?=
+ =?us-ascii?Q?pt3cSU+Q/IOwZ3xhzcg4tTbJ7u9OqaoXd2gqQowW+C+Du+RpPdwHT1baSTal?=
+ =?us-ascii?Q?tsntvBq69mywma6hfP0bIPLYc24xSXjaF2zz0GV59Bb8t+60utMC99Ofe7hP?=
+ =?us-ascii?Q?Pn8/eqIc5CwrqGvsiWFAHuPRF3eMWLCp4SLlheTJDWI+nwOjYyKqktX3je5y?=
+ =?us-ascii?Q?WkTn/tSKtjgBibiOs9SMqFkMo+I29WkaCYYGjJGl7C/1LFdefK/BcW6DCPwQ?=
+ =?us-ascii?Q?UtqyGl0tvEh7gM3RmOV3whLZmSWFLyjGb+0MTc9j3uBSug/eL6wWbbPayCgx?=
+ =?us-ascii?Q?87RGNiecxQqzKb+fO04=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 13:17:59.6257
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61dd2bd4-f58b-450b-08ee-08de0023c70f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B075.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7277
 
-On Mon, Sep 29, 2025 at 10:10=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote=
-:
->
-> On Mon, Sep 29, 2025 at 10:57=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> w=
-rote:
-> >
-> > On Tue, Sep 16, 2025 at 12:45:14AM -0700, Chris Li wrote:
-> > > Save the PCI driver name into "struct pci_dev_ser" during the PCI
-> > > prepare callback.
-> > >
-> > > After kexec, use driver_set_override() to ensure the device is
-> > > bound only to the saved driver.
-> >
-> > This doesn't seem like a great idea, driver name should not be made
-> > ABI.
->
-> Let's break it down with baby steps.
->
-> 1) Do you agree the liveupdated PCI device needs to bind to the exact
-> same driver after kexec?
-> To me that is a firm yes. If the driver binds to another driver, we
-> can't expect the other driver will understand the original driver's
-> saved state.
+This series of patch support the following:
 
-Hi Chris,
+ - AMD MDB Endpoint Support, as part of this patch following are
+   added:
+   o AMD supported device ID and vendor ID (Xilinx)
+   o AMD MDB specific driver data
+   o AMD specific VSEC capabilities to retrieve the base of
+     phys address of MDB side DDR
+   o Logic to assign the offsets to LL and data blocks if
+     more number of channels are enabled than configured
+     in the given pci_data struct.
 
-Driver name does not have to be an ABI. Drivers that support live
-updates should provide a live update-specific ABI to detect
-compatibility with the preserved data. We can use a preservation
-schema GUID for this.
+ - Addition of non-LL mode
+   o The IP supported non-LL mode functions
+   o Flexibility to choose non-LL mode via dma_slave_config
+     param peripheral_config, by the client
+   o Allow IP utilization if LL mode is not available
 
-> 2) Assume the 1) is yes from you. Are you just not happy that the
-> kernel saves the driver name? You want user space to save it, is that
-> it?
-> How does it reference the driver after kexec otherwise?
+Devendra K Verma (2):
+  dmaengine: dw-edma: Add AMD MDB Endpoint Support
+  dmaengine: dw-edma: Add non-LL mode
 
-If we use GUID, drivers would advertise the GUIDs they support and we
-would modify the core device-driver matching process to use this
-information.
+ drivers/dma/dw-edma/dw-edma-core.c    |  38 +++++-
+ drivers/dma/dw-edma/dw-edma-core.h    |   1 +
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 160 ++++++++++++++++++++++++--
+ drivers/dma/dw-edma/dw-hdma-v0-core.c |  62 +++++++++-
+ include/linux/dma/edma.h              |   1 +
+ 5 files changed, 248 insertions(+), 14 deletions(-)
 
-Each driver that supports this mechanism would need to declare an
-array of GUIDs it is compatible with. This would be a new field in its
-struct pci_driver.
+-- 
+2.43.0
 
-static const guid_t my_driver_guids[] =3D {
-    GUID_INIT(0x123e4567, ...), // Schema V1
-    GUID_INIT(0x987a6543, ...), // Schema V2
-    {},
-};
-
-static struct pci_driver my_pci_driver =3D {
-    .name       =3D "my_driver",
-    .id_table   =3D my_pci_ids,
-    .probe      =3D my_probe,
-    .live_update_guids =3D my_driver_guids,
-};
-
-The kernel's PCI core would perform an extra check before falling back
-to the standard PCI ID matching.
-1. When a PCI device is discovered, the core first asks the Live
-Update framework: "Is there a preserved GUID for this device?"
-2. If a GUID is found, the core will only attempt to bind drivers that
-both match the device's PCI ID and have that specific GUID in their
-live_update_guids list.
-3. If no GUID is preserved for the device, the core proceeds with the
-normal matching logic
-4. If no driver matches the GUID, the device is left unbound. The
-state gets removed during finish(), and the device is reset.
-
-Pasha
 
