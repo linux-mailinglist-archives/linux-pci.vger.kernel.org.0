@@ -1,215 +1,247 @@
-Return-Path: <linux-pci+bounces-37269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37270-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D25B2BADF15
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:41:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47471BADF7B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:47:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 754A33C5E15
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:41:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECB5B32275D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:47:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E64C2FB0BE;
-	Tue, 30 Sep 2025 15:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdbmKi6t"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F5D3043DD;
+	Tue, 30 Sep 2025 15:47:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698EE1C5F27
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 15:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D0E303A16
+	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 15:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759246901; cv=none; b=mG+/dwy2hEtaTUNh4CKc8XNEfY0MDLkhplOOMNkqZZ28EtH95ZFCSnF8nCdrNsKFI7foiTpu4Sg6ownQL3iImflbA3LXhZz77bWuP+8n66uDIN7EguhpmEEXduIzIPZQfleROz1o7jXFoYSqvsCZQWQXjy+yyXXJ7lpk7ocM8qc=
+	t=1759247253; cv=none; b=fratLr+NTeY0afDfy4hFaQl2pm+WiUUbdDc17Eqg4k2DamjIKWe8DZegQWnR8aSKPNaNkLUaaI5/MY8r+A7qoEoEI/5y9lj0De5REe7Qw3PvgoMssbuwRJGOxIZn+iCN4BQSKQE34+SvbE9RMWM/RkApZwvcClmfGoG2RW2x5vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759246901; c=relaxed/simple;
-	bh=HILxtH794LxX2LcYx+WlJIIQjfNADL2/g651LbTPUOc=;
+	s=arc-20240116; t=1759247253; c=relaxed/simple;
+	bh=/GTRr+rLD7K2TzCWfU4DUzYHCm/dB5H1CMW4shlEIrA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CTAGdYHxYhzuO2h3td5GPVkiWHiOjPsz00g8sqx282KD6nEOYFXqTJmU3+pLGl3mUim9o49koZGb28zyQf/mqGrDUBF9aAzepfg3z3PJwbNIi93JirSvKG3/oY/RHM4gjmRXAxVmMZIyBi0nbYBdw7cFnsUHxYMn2IgS9wiVc3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdbmKi6t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E8EC116B1
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 15:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759246901;
-	bh=HILxtH794LxX2LcYx+WlJIIQjfNADL2/g651LbTPUOc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BdbmKi6tvVzFmjHbsVeVkLjsBZ9qDcSj9aG63FfB6EDuPc16FlGZXfduhRvzMr6DH
-	 89izW2OnYO3FgchULt0G1ZVHo3AqhPv5nGEelG5LdtoKy0si9aOu9N2DNIPh8FMWrO
-	 dzsJAx73MP2rJxZZoJnO8kwSW+4f9/rWRwVTN2L0nvnsdh6+XA72CVREhGyAbyK4a2
-	 NHOMWgJOvxwGUrts1XUdHAbeQNIu6tw7LFDoIWmO8oYMf8uFXI9k73qsP3vcQr6c97
-	 gsJqPuGKKjjkS2s2eif53grnF4znqa/UEvsCxHYtqmsKltw2EXsdatVN6s1RC8A3iV
-	 JTEp67P1oNr2g==
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-6352a77add0so5356619d50.1
-        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 08:41:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUesfmxL9retrWHaxiTJSB16GaNtAsERLovevc3+LWNWW2Vr1ZVZ+K8RFC0m+ezEfszg6TmKgXXdHE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXe+iHQK/fX5zzxMcivZAtn6v5ITBornIZlHtjvApgIznIUK2w
-	s/hPiW1J6hte2Gek5KSf+14NeFjjOBoFUrPhWNG56mxC0cRhAMNhEvaAo81eT2tJPb0SmXO9AI7
-	UuWWXn/mAnBYNglzG4GXODY+LoA3ecuHXluoiyFmqug==
-X-Google-Smtp-Source: AGHT+IHnEWysjUTlXzGqmjNk0BACH5wHQsyC/hdMpqw50UGr2zQD5Mmp3w6QC1LocfY4iWrCYlcFLiJbaQADAeNE4wM=
-X-Received: by 2002:a05:690e:4298:10b0:637:eb5f:7425 with SMTP id
- 956f58d0204a3-63b6fd8a203mr499756d50.0.1759246900278; Tue, 30 Sep 2025
- 08:41:40 -0700 (PDT)
+	 To:Cc:Content-Type; b=YjH+V3hslQqcsXs0nVSCgiexcEJ6xOAjcZhQi8kC2tydiuIleIxJeBrQGSTRnix9PJ2Hqq+yRNgvqUzl6wxo9PoKNr0+9roL99rIlbZefK7wyvE79kSu9796AjVwCMiCmlJ1sqyzraCJ52FZ7saTVCYt1OdbBNOP6kME9cfH3uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-54a86cc950dso1046911e0c.2
+        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 08:47:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759247249; x=1759852049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t1oYdI5DgHZdeROfFJCaPLP7qCG2FJdSJntNb3cbOMs=;
+        b=gcl0H59mEb2aQfV3gIbedhe1jxvZaDYqUdV8zQszCtEyX2Z/hq1JFL30I+01033S9z
+         PDCT5qTQiFTSzWIxj55Dbv82CJuCfeH47niV1PU1MSW0mtGY4VlbzyoH+vTyuLhDFGoY
+         TIXPyjL4mITCGRjUzrGJibVlsMaeLoqdijnKaUC3ZC+ixP4nMlrQIKkfijcVQZySRQcJ
+         DxD5oorMpdOGtZ50r4DyA2q+S4pCBDRNekaFhUBJzhStyFGspDnH7EkpOp6gdeKoeHez
+         hdMZWsC8TAsDwEYREmSeH0LXvFDx3WnVpBLl4D7FN1rI5o0z3YmPP3ZGj85Svety+ifk
+         3t4Q==
+X-Gm-Message-State: AOJu0Yy4PSxjJV3Xsdgyd/Czgh0FU8wae0JzXBxnVNsU+D5pNaQdZp6i
+	dX78RNbmf2X/mKOptrmqFD9GktclTGnH0YnRC6Io1V/nDd7PpJbhNhkYjYkRDqkk
+X-Gm-Gg: ASbGncsNJMwrnNN5/a/idWAlYuL3siizpSn9F9r90i2vGfVOsW0WFr3fLH6TMVqW5am
+	5urwErO3Ucvlq9uF3jE/KYImA7r9P3kMB08CUPYfkNjsr94Qt5oduaPNgbxGAFMKhjsuTNLJVWb
+	QXtSnsFzxNYuRsagl4JLki2r+EluFp2mKSXPOgr8iv6oKdtK1uv75Af53RUY2uPiyXWkou7h0Zq
+	4iXDF0SpSml4SRlW3DtMqUTfGn1+kohb/oAn/rsgn8zR4lAatgnc/xE0rBDcFvBUaLaaIpFsq+D
+	S359nXHGwgjqd10VRu3NpNLP3UvLzzfcQeGLtaR0GNvu0XsO+QQ4D77d8CyazdMFGSJtvLstJag
+	FMxcTDl3l9eq42OI5pOOiiuLJkaqx15bqK3JNMuQqSHRnRd2WT3BSNqpr0lnlbN0IQnx7r1++Ue
+	yQ4bAlSjmhuVZy
+X-Google-Smtp-Source: AGHT+IHzzhbUzO11AgXeQmaJXeE10Rac1mWXgyLuhF/bYgKFulxy7z0m76t3hFw+4N8akF+6/lVZQA==
+X-Received: by 2002:a05:6122:c2d3:10b0:54a:a782:47de with SMTP id 71dfb90a1353d-5522d3bbe9fmr34283e0c.13.1759247249118;
+        Tue, 30 Sep 2025 08:47:29 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54cccc23afbsm1700992e0c.13.2025.09.30.08.47.28
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Sep 2025 08:47:28 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-54a81bf36ebso942227e0c.3
+        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 08:47:28 -0700 (PDT)
+X-Received: by 2002:a05:6122:d98:b0:538:d49b:719 with SMTP id
+ 71dfb90a1353d-5522d1b261emr65053e0c.1.1759247247997; Tue, 30 Sep 2025
+ 08:47:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-6-c494053c3c08@kernel.org> <20250929175704.GK2695987@ziepe.ca>
- <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
- <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com> <2025093030-shrewdly-defiant-1f3e@gregkh>
-In-Reply-To: <2025093030-shrewdly-defiant-1f3e@gregkh>
-From: Chris Li <chrisl@kernel.org>
-Date: Tue, 30 Sep 2025 08:41:29 -0700
-X-Gmail-Original-Message-ID: <CACePvbXrbR=A43UveqPrBmQHAfvjuJGtw9XyUQvpYe941KwzuA@mail.gmail.com>
-X-Gm-Features: AS18NWAC4fHMXW0R7YRu79v-JcoJYTEAG3XCAfO8__KvhcCcqK-49zqgQNbiKuQ
-Message-ID: <CACePvbXrbR=A43UveqPrBmQHAfvjuJGtw9XyUQvpYe941KwzuA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Leon Romanovsky <leon@kernel.org>
+References: <20250924134228.1663-1-ilpo.jarvinen@linux.intel.com> <20250924134228.1663-3-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20250924134228.1663-3-ilpo.jarvinen@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Sep 2025 17:47:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVtVzcL3AX0uetNhKr-gLij37Ww+fcWXxnYpO3xRAOthA@mail.gmail.com>
+X-Gm-Features: AS18NWCo0u0uKjaP0aHUnOkHmV_Iy_nS2MkwIx0vpZfnx2vg_M_a1UQOALbe6hg
+Message-ID: <CAMuHMdVtVzcL3AX0uetNhKr-gLij37Ww+fcWXxnYpO3xRAOthA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: Resources outside their window must set IORESOURCE_UNSET
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, 
+	Lucas De Marchi <lucas.demarchi@intel.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 30, 2025 at 6:41=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Ilpo,
+
+On Fri, 26 Sept 2025 at 04:40, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+> PNP resources are checked for conflicts with the other resource in the
+> system by quirk_system_pci_resources() that walks through all PCI
+> resources. quirk_system_pci_resources() correctly filters out resource
+> with IORESOURCE_UNSET.
 >
-> On Tue, Sep 30, 2025 at 09:02:44AM -0400, Pasha Tatashin wrote:
-> > On Mon, Sep 29, 2025 at 10:10=E2=80=AFPM Chris Li <chrisl@kernel.org> w=
-rote:
-> > >
-> > > On Mon, Sep 29, 2025 at 10:57=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.c=
-a> wrote:
-> > > >
-> > > > On Tue, Sep 16, 2025 at 12:45:14AM -0700, Chris Li wrote:
-> > > > > Save the PCI driver name into "struct pci_dev_ser" during the PCI
-> > > > > prepare callback.
-> > > > >
-> > > > > After kexec, use driver_set_override() to ensure the device is
-> > > > > bound only to the saved driver.
-> > > >
-> > > > This doesn't seem like a great idea, driver name should not be made
-> > > > ABI.
-> > >
-> > > Let's break it down with baby steps.
-> > >
-> > > 1) Do you agree the liveupdated PCI device needs to bind to the exact
-> > > same driver after kexec?
-> > > To me that is a firm yes. If the driver binds to another driver, we
-> > > can't expect the other driver will understand the original driver's
-> > > saved state.
-> >
-> > Hi Chris,
-> >
-> > Driver name does not have to be an ABI.
+> Resources that do not reside within their bridge window, however, are
+> not properly initialized with IORESOURCE_UNSET resulting in bogus
+> conflicts detected in quirk_system_pci_resources():
 >
-> A driver name can NEVER be an abi, please don't do that.
-
-Can you please clarify that.
-
-for example, the pci has this sysfs control api:
-
-"/sys/bus/pci/devices/0000:04:00.0/driver_override" which takes the
-*driver name* as data to override what driver is allowed to bind to
-this device.
-Does this driver_override consider it as using the driver name as part
-of the abi? If not, why?
-
-What live update wants is to make that driver_override persistent over
-kexec. It does not introduce the "driver_override" API. That is
-pre-existing conditions. The PCI liveupdate just wants to use it.
-
-I want to get some basic understanding before adventure into the more
-complex solutions.
-
-> > Drivers that support live
-> > updates should provide a live update-specific ABI to detect
-> > compatibility with the preserved data. We can use a preservation
-> > schema GUID for this.
-> >
-> > > 2) Assume the 1) is yes from you. Are you just not happy that the
-> > > kernel saves the driver name? You want user space to save it, is that
-> > > it?
-> > > How does it reference the driver after kexec otherwise?
-> >
-> > If we use GUID, drivers would advertise the GUIDs they support and we
-> > would modify the core device-driver matching process to use this
-> > information.
-> >
-> > Each driver that supports this mechanism would need to declare an
-> > array of GUIDs it is compatible with. This would be a new field in its
-> > struct pci_driver.
-> >
-> > static const guid_t my_driver_guids[] =3D {
-> >     GUID_INIT(0x123e4567, ...), // Schema V1
-> >     GUID_INIT(0x987a6543, ...), // Schema V2
-> >     {},
-> > };
+> pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0x1fffffff 64bit pref]
+> pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0xdfffffff 64bit pref]: contai=
+ns BAR 2 for 7 VFs
+> ...
+> pci 0000:03:00.0: VF BAR 2 [mem 0x00000000-0x1ffffffff 64bit pref]
+> pci 0000:03:00.0: VF BAR 2 [mem 0x00000000-0x3dffffffff 64bit pref]: cont=
+ains BAR 2 for 31 VFs
+> ...
+> pnp 00:04: disabling [mem 0xfc000000-0xfc00ffff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xc0000000-0xcfffffff] because it overlaps 0000=
+:00:02.0 BAR 9 [mem 0x00000000-0xdfffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfedc0000-0xfedc7fff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfeda0000-0xfeda0fff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfeda1000-0xfeda1fff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xc0000000-0xcfffffff disabled] because it over=
+laps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfed20000-0xfed7ffff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfed90000-0xfed93fff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfed45000-0xfed8ffff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
+> pnp 00:05: disabling [mem 0xfee00000-0xfeefffff] because it overlaps 0000=
+:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
 >
-> That's crazy, who is going to be adding all of that to all drivers?  And
-> knowing to bump this if the internal data representaion changes?  And it
-> will change underneath it without the driver even knowing?  This feels
-> really really wrong, unless I'm missing something.
+> Mark resources that are not contained within their bridge window with
+> IORESOURCE_UNSET in __pci_read_base() which resolves the false
+> positives for the overlap check in quirk_system_pci_resources().
+>
+> Fixes: f7834c092c42 ("PNP: Don't check for overlaps with unassigned PCI B=
+ARs")
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-The GUID is more complex than a driver name. I am fine with not using
-GUID if you are so strongly opposed to it.
+Thanks for your patch, which is now commit 06b77d5647a4d6a7 ("PCI:
+Mark resources IORESOURCE_UNSET when outside bridge windows") in
+linux-next/master next-20250929 pci/next
 
-You are saying don't do A(driver name) and B(GUID). I am waiting for
-the part where you say "please do C instead".
+This replaces the actual resources by their sizes in the boot log on
+e.g. on R-Car M2-W:
 
-Do you have any other suggestion how to prevent the live update PCI
-device bind to a different driver after kexec? I am happy to work on
-the direction you point out and turn that into a patch for the
-discussion purpose.
+     pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
+     pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
+-> 0x00ee080000
+     pci-rcar-gen2 ee090000.pci: PCI: revision 11
+     pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
+     pci_bus 0000:00: root bus resource [bus 00]
+     pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+     pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional
+PCI endpoint
+    -pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
+    -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
+    +pci 0000:00:00.0: BAR 0 [mem size 0x00000400]
+    +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
+     pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 conventional
+PCI endpoint
+    -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]
+    +pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
+     pci 0000:00:01.0: supports D1 D2
+     pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
+     pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 conventional
+PCI endpoint
+    -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]
+    +pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
+     pci 0000:00:02.0: supports D1 D2
+     pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
+     PCI: bus0: Fast back to back transfers disabled
+     pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigned
+     pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigned
+     pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
 
-Thanks
+Is that intentional?
 
-Chris
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -205,6 +205,26 @@ static void __pci_size_rom(struct pci_dev *dev, unsi=
+gned int pos, u32 *sizes)
+>         __pci_size_bars(dev, 1, pos, sizes, true);
+>  }
+>
+> +static struct resource *pbus_select_window_for_res_addr(
+> +                                       const struct pci_bus *bus,
+> +                                       const struct resource *res)
+> +{
+> +       unsigned long type =3D res->flags & IORESOURCE_TYPE_BITS;
+> +       struct resource *r;
+> +
+> +       pci_bus_for_each_resource(bus, r) {
+> +               if (!r || r =3D=3D &ioport_resource || r =3D=3D &iomem_re=
+source)
+> +                       continue;
+> +
+> +               if ((r->flags & IORESOURCE_TYPE_BITS) !=3D type)
+> +                       continue;
+> +
+> +               if (resource_contains(r, res))
+> +                       return r;
+> +       }
+> +       return NULL;
+> +}
+> +
+>  /**
+>   * __pci_read_base - Read a PCI BAR
+>   * @dev: the PCI device
+> @@ -329,6 +349,18 @@ int __pci_read_base(struct pci_dev *dev, enum pci_ba=
+r_type type,
+>                          res_name, (unsigned long long)region.start);
+>         }
+>
+> +       if (!(res->flags & IORESOURCE_UNSET)) {
+> +               struct resource *b_res;
+> +
+> +               b_res =3D pbus_select_window_for_res_addr(dev->bus, res);
+> +               if (!b_res ||
+> +                   b_res->flags & (IORESOURCE_UNSET | IORESOURCE_DISABLE=
+D)) {
+> +                       pci_dbg(dev, "%s %pR: no initial claim (no window=
+)\n",
+> +                               res_name, res);
+> +                       res->flags |=3D IORESOURCE_UNSET;
+> +               }
+> +       }
+> +
+>         goto out;
+>
+>
 
-> > static struct pci_driver my_pci_driver =3D {
-> >     .name       =3D "my_driver",
-> >     .id_table   =3D my_pci_ids,
-> >     .probe      =3D my_probe,
-> >     .live_update_guids =3D my_driver_guids,
-> > };
-> >
-> > The kernel's PCI core would perform an extra check before falling back
-> > to the standard PCI ID matching.
-> > 1. When a PCI device is discovered, the core first asks the Live
-> > Update framework: "Is there a preserved GUID for this device?"
-> > 2. If a GUID is found, the core will only attempt to bind drivers that
-> > both match the device's PCI ID and have that specific GUID in their
-> > live_update_guids list.
->
-> What "core" is doing this?  And how exactly?
->
-> And why is PCI somehow special here?
->
-> > 3. If no GUID is preserved for the device, the core proceeds with the
-> > normal matching logic
-> > 4. If no driver matches the GUID, the device is left unbound. The
-> > state gets removed during finish(), and the device is reset.
->
-> How do you reset a device you are not bound to?  That feels ripe for
-> causing problems (think multi-function devices...)
->
-> And what about PCI drivers that are really just a aux-bus "root" point?
-> How is the sharing of all of the child devices going to work?
->
-> This feels really rough and might possibly work if you squint hard
-> enough and test it in a very limited way with almost no real hardware :)
->
-> good luck!
->
-> greg k-h
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
