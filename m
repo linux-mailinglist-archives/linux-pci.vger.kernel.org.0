@@ -1,88 +1,90 @@
-Return-Path: <linux-pci+bounces-37281-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F08A6BAE114
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:37:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90B01BAE11A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:38:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F15A1944A5A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:38:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50E7C3BAFA5
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:38:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992B023D7F7;
-	Tue, 30 Sep 2025 16:37:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 165EA239570;
+	Tue, 30 Sep 2025 16:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QXDWdEhq"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QxSog5oQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECBD23AB9F
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 16:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AC319FA93
+	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 16:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759250256; cv=none; b=RPnS8ILdQF4nlFKU+S7jJPknxHdl4S9hyXE6vXz+lLhGmpRUc9KAZ7cUDg5ZLTpMgt1FB5R0M5IGPsxN/kLmH8r+XDp37QgbGoFhNuuv//1C71pen6zU13HnAZzgTVnG/wXBcT2tVKQ8Qe5Jc7a6YuwOW0V534WylcfNnhCx3Lc=
+	t=1759250321; cv=none; b=dTrp5AREJ3mkWC27BuBD0yTbKIu30ZTmpCJC4yKZYV6LY69KPycJCeJ/Y0PbQPTmW0vFj943Sba9Tq4AtuduwJ3GquI/3n5AIPudSI/lR7wBMsT/H0Lp8jWoJCiyol42yr76sQ+jCueiPqO9/K/DgyXRoZ/DBH6GnLFPkE4Bx80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759250256; c=relaxed/simple;
-	bh=wZlnhLVWjCo/EoZ8rwJ+2WNDjewuk+/wknr5aB3MEkU=;
+	s=arc-20240116; t=1759250321; c=relaxed/simple;
+	bh=7ZvWWTmbwpz938UNoot7kYAQyxONzvQpdhOgp4f0kCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADDQV9I6eFzZZsY9Jji6aFU6B0mpnujC9tAxHVEVFmeTbiiwS5MO27/jsNd1A5y5MNpcTzZHRd0vK1UR2YsinbKnhADM1VGFBvxRBoIMmA94h6CnJcjqvpiKSGv/ikUY/OGYXVjGB+AiHUOKSqJfKen8RmouydRybNNHIIrLUCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=QXDWdEhq; arc=none smtp.client-ip=209.85.219.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=CktsD6+N4G+H0vVfc+09APrnVaL6mKxmb3P4c1+s4ol/txkYVDlrA0ymYmnqc1glhqQKP83DQck8yOSpQQqLlUHmKWKt03rUwVzgR1kL9Y2uqZcTYFahONVVS6uBauOVowu7IDqdeqW8GoElXSqPWfqfw62xWc5MhPF0C2HWCnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=QxSog5oQ; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-7ea50f94045so642126d6.1
-        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 09:37:34 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8599c274188so599937285a.1
+        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 09:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1759250254; x=1759855054; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wZlnhLVWjCo/EoZ8rwJ+2WNDjewuk+/wknr5aB3MEkU=;
-        b=QXDWdEhq6DrEERhYXLsV8N2u8lhNdFUKfN8/cQK5terzImXnW+c1KYzeNEIrcu6r9a
-         TGXDMnJGDgaqn/+1ZZJR6eJtflG+y+ULwaeQMlVMtRknJLEpbJg1lUcm5ynEWvDjJKye
-         O4apiuqGYsjUrhwhNeq01OHMy0TC1Xw4xluczD39vGkXSA3BiiVQMtYd6RKtI7Y0geji
-         mXkar18DiCFacXLx42+pZU/mZvibP01gvp0tmUfNezH6mSJ5r9fDjHePGhIvcylzJy42
-         beBP2C8wWvZZBgxhGV2ytQMyIvnvWJIlry90DAgF9jz3Ab0fGAb4Dvxu2myyCbWCf259
-         2I9A==
+        d=ziepe.ca; s=google; t=1759250318; x=1759855118; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xMgANQFX+SgjbJ7utrDVcHclI2GXnTTwQrJXxesWGK0=;
+        b=QxSog5oQqgvxLnngv8jU+x203/kOQ7zDjATvuDF14qUIVMjHN5ZldBQUXyEXnnU4kN
+         uXewgRecH2LdxHNHyZPgIA7NcMm9IH9jwHBlwY+FVw5DfnhkOCQwrxfyatDiN8yIb3nm
+         QjWuIdPAppqdsn0s7FbQW3Lqo4aKEwwFlL1rc1Sg259MIgyht5gvEcmREVej/4fgYIHd
+         WDXddj5iajsW79DTuJIFWkkJA3ksnFksI0q9eMHcuHGly/AsvGl077KPsLj1bMDoj+nT
+         AtB+pxM+QJM4OD7HgOVrAEXhgDdCgfCd9GBia/VUo9cS+4blIE4Cp6eVD9q681zKVQnR
+         CgXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759250254; x=1759855054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZlnhLVWjCo/EoZ8rwJ+2WNDjewuk+/wknr5aB3MEkU=;
-        b=DvXV0yb3ZhBgh1w/x1WC8D6BkeSfcu5t7t5cOwoq7V8g9v5MwlfmSuCqN5Tf/DPpw/
-         uPS3fRukrRzUT5pxPn2C2Ac73zodiCK/lDozmc9/itf05zRl8WkBwzTRsMxRycPz5V/u
-         QvAFyqV5WZbmpZDkg8VaEwsBzfDZkMybz1oxisZ8d49JQolagLLrgrUmYG7dHpY8449w
-         Q7WTmOPMwJAyfw6nlWJSGZWybFP/f8jAkZsgR69S7ZmE1ap4DGp+Wp3AkLKX5ZXFnihe
-         prUJkt4foG8MQGHaSd9siLIoosxTX7oLWYOIRW6S/4P4ZfO8lfOjXeNdSINMGFjBljRU
-         gS9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWBt9G/kKeR6z0TdbbiahMqr0nrYJmbFU+AFGifA9DpA3SQjoU0cP6/jT/jMTBTyrd1XtWm4ko+yQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn5tiWprxNPrV9wnboLdRUgqleZxgFtiTZ3KiJAwSvZKSuuI57
-	3j8xG0X22yGV0oyP4AQGwsIEviN9VJoG7geaBHyd54aona7wlny6oE0PetnLJj4XwSk=
-X-Gm-Gg: ASbGncv3H+ynOtWk3k08uJumft4jmMqgt/B8dUc0XAoPIeHElfOvRCKACGUMx0WFYDM
-	5YR/qb5HP1db+bOkMI07H/OVtYRVoJTtbYpqDKMEX5jm57a9b30FKP5lXI6cKtShRsBPizlnJec
-	uyCmI6yKt1PwN5rtHpmGytTD4qdnTvghBRhYKxNZCsunSuwhxarqr7Aq8q5+jJ3Pn+izJcX31of
-	wHzVO6gmqQWdevit7tx86R3RlX6dohIbziayHaJJKgmt5WBNx5otZEoN+ATg+AA2XPZ8+RjbFGQ
-	YIhlZ6WqY02sEzwXbwJ1XWa2zqdha0+9Awk63fxF8OULT6EtjmMtf7I2+ZLnKLalhYebu7KFg2t
-	QNMrP832NEplPISJhQREcMpXc3dNwAOo=
-X-Google-Smtp-Source: AGHT+IFTUouLZO/CN3csdEu5i5OdgDUNjmGvNmvgmP5gfS05E7lB9xEJ9dOZVQrm6wg7EiUAZUUmJg==
-X-Received: by 2002:a05:6214:c83:b0:7a7:b219:635f with SMTP id 6a1803df08f44-8737bbfd4ddmr7502266d6.16.1759250253744;
-        Tue, 30 Sep 2025 09:37:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759250318; x=1759855118;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xMgANQFX+SgjbJ7utrDVcHclI2GXnTTwQrJXxesWGK0=;
+        b=YS/tiJCYILUYV+6oxS2YhtpthHnGtWgd5th7qamQxZ8xovKWODaJ92Jbli054IUvO3
+         b8G6nsOU5uoob2cLNlPByLYlX731ButMGhN38kSHl2Zr/mH8Bh5BPIh7ABj9Co7PbkSU
+         Cvopf+GsWz4x26wecEBY1jtpMrTeRIZvrDpsk0gEA93MxP8lBMOwEVLlejfJQrKmasGD
+         aKAljnvwf6RIe/z0rw/N4nPK+FVDrOMnsMdep4mqz1UdzqvctJcAuQYKyiMeLenRSZfH
+         72BJeOcYeCwZCpiexZIIqxqzXMpaNAifUJqbYcyZ+UVK0PY8Jl6x7KsgmTG1jqYQh6wm
+         UKRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeSWDdXws6tw3h+jl+Af6ZZOBmM84743DuG+Tu9nZrfK//c9n1cPFQJpOkZl8TrukZ0G07ZobNLjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu9zFdXw05HB0ehQkliYSHaXH5sv6QvTo9xEYB2zgfr2XQlIHn
+	8mKFI7f6B46DH27zI43zADHuXxQe+oKDlZhxvmBDWHfR4VoVaB6jzh8KLPfMMDsdFmk=
+X-Gm-Gg: ASbGncud83SaD/9Iog6ocMPy8cpqCqqZ8EW5BLCu19SV25F3HFSfkhCw5XhlWADsds4
+	Q4wf93jrHYO0lSq9icI8a3qNBXdgYVtePBruPslM5Uj7CDdwYTVsKPt0bUHMEPjr5MM1k0jxLOb
+	q3fVnSLeLmZmwcop/5rnNXY/k/4LcstwWzTzVXVyfgDqwku46qlnZVpX8TOgNKUp7LeoBF0O/gh
+	6bG5nWXz8Kz1M7Mmu4rBxboYDcqTOvPhTTNLZoE4nOStiKQGox4PiT8/oipi8jacDmlppvRI4Uo
+	O+7kCCzfCBJGf8z6sAiMX8McnJnd9qrB8EXMnBPh3mbBvfYXipnszKepokal8GruMo3fgt8EZsJ
+	aKUY8U0h6ZaszdPI9thdNLaCD7EYVU6g=
+X-Google-Smtp-Source: AGHT+IHPJOCF3mi5Y/iQEx0Qz4nnWU+loAsRCrx0f3/7Rw3nO0AV/kHYsW/UKUUR5t5JJw+wAlT2Yw==
+X-Received: by 2002:a05:620a:4544:b0:85b:cd94:71fe with SMTP id af79cd13be357-87374cdab36mr68636085a.33.1759250318426;
+        Tue, 30 Sep 2025 09:38:38 -0700 (PDT)
 Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-801351c328esm99532066d6.9.2025.09.30.09.37.33
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-85c307ad101sm1065322985a.36.2025.09.30.09.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Sep 2025 09:37:33 -0700 (PDT)
+        Tue, 30 Sep 2025 09:38:37 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1v3dM4-0000000CbmJ-21fb;
-	Tue, 30 Sep 2025 13:37:32 -0300
-Date: Tue, 30 Sep 2025 13:37:32 -0300
+	id 1v3dN7-0000000Cbmj-1CPI;
+	Tue, 30 Sep 2025 13:38:37 -0300
+Date: Tue, 30 Sep 2025 13:38:37 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+To: Chris Li <chrisl@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
 	Pasha Tatashin <tatashin@google.com>,
@@ -91,38 +93,48 @@ Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
 	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
-Message-ID: <20250930163732.GP2695987@ziepe.ca>
+Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
+ callbacks to driver
+Message-ID: <20250930163837.GQ2695987@ziepe.ca>
 References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
- <20250929175704.GK2695987@ziepe.ca>
- <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
- <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
+ <20250916-luo-pci-v2-3-c494053c3c08@kernel.org>
+ <20250929174831.GJ2695987@ziepe.ca>
+ <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
 
-On Tue, Sep 30, 2025 at 09:02:44AM -0400, Pasha Tatashin wrote:
-> The kernel's PCI core would perform an extra check before falling back
-> to the standard PCI ID matching.
+On Mon, Sep 29, 2025 at 07:11:06PM -0700, Chris Li wrote:
+> On Mon, Sep 29, 2025 at 10:48 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, Sep 16, 2025 at 12:45:11AM -0700, Chris Li wrote:
+> > > After the list of preserved devices is constructed, the PCI subsystem can
+> > > now forward the liveupdate request to the driver.
+> >
+> > This also seems completely backwards for how iommufd should be
+> > working. It doesn't want callbacks triggered on prepare, it wants to
+> > drive everything from its own ioctl.
+> 
+> This series is about basic PCI device support, not IOMMUFD.
+> 
+> > Let's just do one thing at a time please and make this series about
+> > iommufd to match the other luo series for iommufd.
+> 
+> I am confused by you.
+> 
+> > non-iommufd cases can be proposed in their own series.
+> 
+> This is that non-iommufd series.
 
-This still seems very complex just to solve the VFIO case.
-
-As I said, I would punt all of this to the initrd and let the initrd
-explicitly bind drivers.
-
-The only behavior we need from the kernel is to not autobind some
-drivers so userspace can control it, and in a LUO type environment
-userspace should well know what drivers go where - or can get it from
-a preceeding kernel from a memfd.
-
-This is broadly the same thing we need for Confidential Compute anyhow.
+Then don't do generic devices until we get iommufd done and you have a
+meaningful in-tree driver to consume what you are adding.
 
 Jason
 
