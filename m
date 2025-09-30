@@ -1,281 +1,195 @@
-Return-Path: <linux-pci+bounces-37276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CDB6BAE06B
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:13:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FBE2BAE07E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 18:21:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CC4D166B65
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:13:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06B9F4A6384
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:21:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A94296BD0;
-	Tue, 30 Sep 2025 16:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734EA22F74E;
+	Tue, 30 Sep 2025 16:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A1++i4u2"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="p2Z0d9Cv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011009.outbound.protection.outlook.com [52.101.52.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF57A4501A;
-	Tue, 30 Sep 2025 16:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759248833; cv=none; b=uzNuJarV/WkxHY8U6nGanWSaROnF5hCrmDCdbrX8UzrsuOZSYkWYGm358QAx99qZhaEfaAYE9AuKQM1O5GCP6XMrhWnU6BqMCNbBCbEdDWjwt1i901FRP3l6xbSNBl/DJIUZNYV2rNDl5lT1yl3yBdTMMlBjoK89LTMg/vn4syk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759248833; c=relaxed/simple;
-	bh=5+T6dQJkhqnXsd8OU+/4OXe2jUb92hyssTPkFheuZf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hL9tWOI+zXOh24k/ac1z4pc4KV1yUjGSUfxDas9lhFFAzRyXUfmUNBDI2haio3RmfFkjISHhLgrz8BCvbkQQIFp49pyBZN48h41b6Zstm0CYHj9JN2e2fnvbWQV6+gHDZR00ejd8vFuZmvXJGLPAvwMYqHgxNoA6OyEHCuyqHVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A1++i4u2; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759248832; x=1790784832;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5+T6dQJkhqnXsd8OU+/4OXe2jUb92hyssTPkFheuZf4=;
-  b=A1++i4u2CEy5eilh1uE0ELW/7qtCStAT8pGcQ8WmU5Wd9N/jgvzz3Qdj
-   nKXzkodmcqD2JDo++UcTLPiGcvonkNoaxhQdhxcm1lermEe7EBUffj3Gb
-   5cUwUsrrLr/mZKEeKZUzM3tSpUzCKeMV1Lto8atGJdLMA0JwDYmpmrvf0
-   JOxcNkoUhrImr+XOAc2lFbMAEUM4fT8tGCmllq3mjFK8Cy+TKw4X51dBn
-   VcefeUl1SfTPafoA2Adp0CB6m0I1Ls0wSscWoWtf2LwhYAe/KA38o/Qh6
-   PyqK2mgX9paGPtNbUCMdat/fkXKSDO7Me4EcAAKds+JYcoS2JlqkxpAeH
-   g==;
-X-CSE-ConnectionGUID: q3f08OtGTICoqO1lIrzQlQ==
-X-CSE-MsgGUID: OtYRpGkKRwKh49TD6mnyrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="79162120"
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="79162120"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:13:50 -0700
-X-CSE-ConnectionGUID: LZTaY9RiSya9cIQd0xvE+w==
-X-CSE-MsgGUID: k5JAID56SiKd4RsivZBBgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="178975308"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.162]) ([10.125.109.162])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 09:13:48 -0700
-Message-ID: <5706b8ca-6046-4f96-a93b-8dd677494352@intel.com>
-Date: Tue, 30 Sep 2025 09:13:46 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0196C148;
+	Tue, 30 Sep 2025 16:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759249309; cv=fail; b=MqZncPtXCCjShTxWNkQ4w/PDWMkeyZ4KKqjoIYfYWzHOnezDaEM/lHta8vApSBrkNOO3h8OwlX70VVi7/I/ab31SVg7wVxkUurp/Ta2NakTEyOl7jDINrn2Ob+998nJ/J88X9fTo78qrjSZo9cU0KKBHx7PqrTjGnNFUISX6EGk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759249309; c=relaxed/simple;
+	bh=1NF3t2NZqEeH7Bh91LETh3ry+CigVFjmh4zEAmSn/98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=n+7OabK+l76TVsLcEwsMIC/kispOrgXVImbn/1Y0r1F6DAj8B4DbSdB34UXVC5VDN0K2PA8G4+reDchq3tg/xz9qs0rpRzecFmxly9z8OR3s3z7f/3YPvHMu7MB3LiaKvdszRffnNuuoLM7GWR/LiFUZdHbFf7Yh7eKzkt8QD5o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=p2Z0d9Cv; arc=fail smtp.client-ip=52.101.52.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H3+mcMPKUlDY02wyr0kml0LujVj3Ik/xBMWsp4omUAMQMJiDBuBtUfzOq4I0wY7kZ03OqJCywL1WNK+Xct8A4jLe3usLxXBysXm08xjdHkSlhpq15D6MzxVjH5visQIQ8tlyGuo6Rfvb++ks837DJQ5FNKy17FDBhwPYHMTPH+Y2mbvKHGwqG6ICAAtUPr/O53M9Nah3xeq5p+iWXLQnIjUk5yJxnkPsv5e3Va0yhI5NDHLzCjsWo9v0MgviGI81nLl7fEnEhuBpcmkddI0ycTynnjziKQpEPIpDOWMqgEqIuu9GD6xlL/db2Acgxl/eOyfO9VbtCW5OrvUhziJ21A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2YFHQzcvaTWuYi6YgUsvlCJgD2VqXiuU6wwVWn+MV7I=;
+ b=Z/Yudw2lofcd/u6axONzp1929iKvoJGBafjq1STkv301lfEGBg5WcfAszNzOeacMDLIxrPJBZNX+40UKEh+5Uz3+kak48l4ddGljYFJWa2lkmPeF6b4cxnqmctQ5FYDYsLFzeCUsadqk2ajlBEVzDrkf6YuxiGcvHqzAUFP0QKRGUKaEYF4a0756tpCz5qcAXuKDSOsSHNCoNWAWGlO7JFfb5NHmGJ0ti6MHOvCDmCPLLvYCZxwwx94ECTjOzwBQA1fKg8wz56fPUfr+/s+06cpskZhx3K6LAwSc4mv+MaQrwsyMyYoIjd8JbAtO5m7G6x5IxvimQEtrFj/DECL99g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2YFHQzcvaTWuYi6YgUsvlCJgD2VqXiuU6wwVWn+MV7I=;
+ b=p2Z0d9Cvrk+uJ8CeDCEWr5Fc2+Rr8/oYRCld8MqSZyUIEDf2B9facV7gNaVC6pzDY65GSbUFiakDlDUIYwpTnL/iwVgN2klwmJ3myw+BAafpB49EuZt01adr3HJrWc57vMr9Zu/W9ythrk8EH9AiH49f8ozjduqxAf1+JvZKsnmWj3pUAjJOxMXMu4U2OPFIYz0OnXPBEl11sW/yebJxeCmlkIcsZfjtGTBNpvev8fN6dGAvifDae53MuxZs1RK5wOFUrVYf9V6oaIrQQaqBI8Kw1SJLtH0jUKYV3EAKuo+yCphK+lSeg2H9fZ1GCm0ptWYQdGJGgouMwh3dELQsJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by SN7PR12MB7129.namprd12.prod.outlook.com (2603:10b6:806:2a1::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.15; Tue, 30 Sep
+ 2025 16:21:42 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9160.014; Tue, 30 Sep 2025
+ 16:21:42 +0000
+Date: Tue, 30 Sep 2025 13:21:40 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Donald Dutile <ddutile@redhat.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Joerg Roedel <joro@8bytes.org>, linux-pci@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, galshalom@nvidia.com,
+	Joerg Roedel <jroedel@suse.de>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, maorg@nvidia.com, patches@lists.linux.dev,
+	tdave@nvidia.com, Tony Zhu <tony.zhu@intel.com>
+Subject: Re: [PATCH v3 00/11] Fix incorrect iommu_groups with PCIe ACS
+Message-ID: <20250930162140.GJ2942991@nvidia.com>
+References: <0-v3-8827cc7fc4e0+23f-pcie_switch_groups_jgg@nvidia.com>
+ <20250922163947.5a8304d4.alex.williamson@redhat.com>
+ <e9d4f76a-5355-4068-a322-a6d5c081e406@redhat.com>
+ <20250922200654.1d4ff8b8.alex.williamson@redhat.com>
+ <0eb2e721-8b9c-40d0-afe7-c81c6b765f49@redhat.com>
+ <20250923162337.5ab1fe89.alex.williamson@redhat.com>
+ <8e679dad-b16d-45e3-b844-fa30b5a574ee@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e679dad-b16d-45e3-b844-fa30b5a574ee@redhat.com>
+X-ClientProxiedBy: SA1PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::17) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 23/25] CXL/PCI: Introduce CXL uncorrectable protocol
- error recovery
-To: "Bowman, Terry" <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250925223440.3539069-1-terry.bowman@amd.com>
- <20250925223440.3539069-24-terry.bowman@amd.com>
- <d3d3ab84-8cdd-4386-82dd-de8149159985@intel.com>
- <a2b5d6f0-7f6a-4ac3-b302-73fb3c1a92b2@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <a2b5d6f0-7f6a-4ac3-b302-73fb3c1a92b2@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|SN7PR12MB7129:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3cd92ca7-10c3-416c-cf33-08de003d70e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?07f7h2QU9xWlAuSccdM6yjSNXiApDLFWHl8H6K8d9x+0i0vkyhWCJROfOFqF?=
+ =?us-ascii?Q?YLeo/S+Uj1ZWZDb+XserM5iOCXiSTfXhcLKjcyK2j/ssm/fbwyyDXdJ8uamU?=
+ =?us-ascii?Q?pK5ZhZDROSbA0z4VBZkxthPdWkXeFEe/QVFB+eipxdHkb91BL42BKz58j6S+?=
+ =?us-ascii?Q?DEaXqz7DpPvMvAJ4f/b8pVUJXYaXu/hDvbYK6aYcmHp725eBo3iZSbV55kr1?=
+ =?us-ascii?Q?2EvuFZW3LmvSlsQsk40YpPTp1SCq4clkxhNTbqoLodGi1/31B7MfDWkQIICN?=
+ =?us-ascii?Q?2VlnnqPUxM/Jcnm/XhOBAbrc6KeNzDUITfY60VAHA80TOU956FiWyR/ZJeyA?=
+ =?us-ascii?Q?EcFBuRcpTSVQdqMtdhJHETY7z1bE4PZ8dQhNfPfhSQgz8plzqYf+1S0o+G8T?=
+ =?us-ascii?Q?Wyb6tV4zAazWrBZofwTv1M5+An0fDPuiTrV3cenjbqhmycPc7ZvREQO9DKAI?=
+ =?us-ascii?Q?8hHsQ58ybwkhpXNyQ3gehbMnZ+68SzDZne1wCchDBMn3YjChRk2WRnJSDkDK?=
+ =?us-ascii?Q?MdLI5y0jAmhGvgPOIAwtvES2i0FUgE9wQedvoIc3BZCSdTZBD+pSNqVoTGZn?=
+ =?us-ascii?Q?T+L4dpRcpXOvsZOYMWyqPmlu2AjEHNstfg0PSO5JZRZSFpwobKSoBj1jel7k?=
+ =?us-ascii?Q?CWyVj7xLeNQGiXlKTRrphrzx32uYZzpsJreAxAv077T8zcsVo3KvrTn+4gX3?=
+ =?us-ascii?Q?+nuyoTvuUH3fE0UvXiMCZKpMI5jm/nSo1bNhsz9yWuSCfTA53f7LG4QS4dys?=
+ =?us-ascii?Q?SR9UGc7CF404Me8gLzCF+gWMNe19hEuxY8AvISmcrspZ8a+5Rq1k9ByppdE8?=
+ =?us-ascii?Q?d40mhxEw34yqSceRPnI5PT1FkwPS7PEmL9JlhdVleNudLF4Y7azrPJTD/hE5?=
+ =?us-ascii?Q?QJpyQOrFhTY/WCkxthtbP9CDu33mmh00BmnHC9slaXfb8crsvLKxsduSHLab?=
+ =?us-ascii?Q?moeUk7EpHnUZxskxoQfleKCiq5cfdf1ZY6GTUmQG0rJuB2UnY92ypRY1A9C+?=
+ =?us-ascii?Q?hk1clChOwkR8lEBwtI0+ruhh1It4/oLVQ7fxWyCnySENzbE4wwgPwEdExUYx?=
+ =?us-ascii?Q?TzjLozPIebAuRr0Xx5IQHkwZ+H8MyJmiF5+6A5BA3cGxHrn9Gm67Dp1V4iRT?=
+ =?us-ascii?Q?d7T7Zf+eTSaI3ADQXraKAjRQL4K9WjBLPqYA4dKoroX1h/tnhyRfVv2M9tMn?=
+ =?us-ascii?Q?jo5fKlnbUpCWXMrQVe66SaBRwwEsFqcVhnzcHmGamMG9jXVfINww78DbePQg?=
+ =?us-ascii?Q?G1z40Td312gwWC6nzz7szjPE6tt8i11rdCfl6lOrE5FFoZJflSGZ9Yv0cO9/?=
+ =?us-ascii?Q?pQmlvRvZylhDu3YMpkAHVV5+zOwD0C696i/Kf1WPNp5UpjlV/XLPqgpvQGwQ?=
+ =?us-ascii?Q?yV4PqF1YFpG/P62ze7n4PoKsBGpKIlOof2FlniUl/0cSHWZ5JQ0szl1B68lx?=
+ =?us-ascii?Q?H9NxGqx6WKR/U0ZUVBTogyDJxJVoUCyX?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iYE3FUkpCH6YfIvEeLUpl7ejmQoIZbXv8kT4nSN3JPQSl7an6inU95m3con/?=
+ =?us-ascii?Q?xA222kX8hBCqqC7OGYHuB6m4mXBbu1WyjomCi3sZUGE2Jdzegh1cZiXSlKQM?=
+ =?us-ascii?Q?ZJLeaHeWalFLQYSD8FBquU5sRp3qlleqiP62W+SlnX115o7elGhBD49qxgCv?=
+ =?us-ascii?Q?G7ZHHlGrsFYjVsmn1ppoBmd7TINJcsNcATrj+tI3qhVBTliiQti6tTO8KnMP?=
+ =?us-ascii?Q?ITIRbwrQhk29F9nfFeuFVLuXev8bH5z9YPYZrqPBaUkdAV6qCzOKF4ar0s99?=
+ =?us-ascii?Q?34vVvtIOhFIJuBXliVyOnVYn/wTzlBc4mavVhoBmrZu1gCZjj/AvFiyPXKm4?=
+ =?us-ascii?Q?TJsL0Vp/ULP/w3pBdcXJTHbulCXv7OaNFQslLgXBSvBFk17RUs8HwBq6iiHZ?=
+ =?us-ascii?Q?8b5TW0O5f0Kr8tjtrQ4Dnl9VUN9GBD2RCEFwTFWAcIVDnY1sbt0gAJlXvWTQ?=
+ =?us-ascii?Q?LAUrf49aLHivDMwcGUwRF1iiRGVRsE6XP1ei2IJEdNH3zXry4+A9n6VXwhMo?=
+ =?us-ascii?Q?zLM9cg2/PLndgNAwnifNBwoqmrpHdIZDgRpmfqpqReHXtRFYS/DPF1yuX8s4?=
+ =?us-ascii?Q?iF3ZIGyCtzeqH2KLWqWwfxbS/5Rg17AxvfzrrXxq21s5mFCSvBjkvDerWS78?=
+ =?us-ascii?Q?/OzlRX7LrRnMvuWas0K9rxyRl6ZeBkwuk4EpiGdf4XIKREpQNXDEX8RU+m8T?=
+ =?us-ascii?Q?8CBqorJrNa1tNt0o9dt2WRPGZTRyRusRRj9nqkQsjYQrdwOFBFV2SsqfNSNA?=
+ =?us-ascii?Q?mxq9LQzcGBn31fzblGYfsiKdh4UJEg/MfxjgAz7nFV0hKntec0X0z4ZT2TLE?=
+ =?us-ascii?Q?aleLyR1wPH1TSitYRRGb1cIrpsGATl5kYGl6SFuyQi/qgXxZR/qiPkkry2GS?=
+ =?us-ascii?Q?hWB7wxIABL2qqC0lJ1c4krVyASA4jxuYfzKmeL339pRN6sUr1Vm7vZxUDmWn?=
+ =?us-ascii?Q?JaUk8cAINzeLyOz+KMJkIfplYs2tyvJJuRX+gXmOmDmjPCNn2VAtn904btdI?=
+ =?us-ascii?Q?G73Qo49uIgXQegFkwljy059RBi4zNSMdv94HO0MJcqjyqGEAnN0UqYpAqoYr?=
+ =?us-ascii?Q?UBzASD67vqyuIn7GvTtxjFHQ4OSk14Sq1eReRx7p+tP+JJdG2lA7qGiXATMm?=
+ =?us-ascii?Q?R7/KL+FmMr1lVhijqmSfLeL0tasWRZg6nJkFRwgMrlYhMxJY2XBD3unXUW9J?=
+ =?us-ascii?Q?8/7keNLG0XXJZT7yzT5uGjgSIwsJGAbpMeDQZKiUHeWVlDeMxYulvuUCZ5FX?=
+ =?us-ascii?Q?4VHpnJNBhOmwIvOqqq59GH+7xes2GR8Ij2pk+sfWIn5AadPOewWuvFhFqsdg?=
+ =?us-ascii?Q?bEnMN8M4DBYgnIseHg47PnPHzUozsuAEDjMNH+nvoraJos5yEQJTcuKhq2E3?=
+ =?us-ascii?Q?SdKjTqOZ3ye7hVHwnim23/Qzd0s7OCFx5d/wfm6D0dvIvdON3IQd6CpgJ1dV?=
+ =?us-ascii?Q?4Vy/+LkdAp1NVRGoogyuGJyrWnQzSIkNRSXnN8ZXYRx4Ln5iUegFhdMcY24Z?=
+ =?us-ascii?Q?qqrQ7YnCgs1i58sfWrwN2Ol7uXiA1ngZ6CGM+8lhREMxCU/fzAVeJMvjjfgx?=
+ =?us-ascii?Q?aps1Vrjt870cv08Xwp5237iFCbz0mFe3COW4eytf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cd92ca7-10c3-416c-cf33-08de003d70e4
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 16:21:42.1608
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yHX+2f97RKKKMArdJ0v8GvAW7H1bFA3a1VusSzT81ala6Zg3YlCRlJSQED1egMu8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7129
 
+On Tue, Sep 30, 2025 at 11:23:06AM -0400, Donald Dutile wrote:
 
+> This is boiling down to an interpretation of the spec.
 
-On 9/30/25 7:38 AM, Bowman, Terry wrote:
-> 
-> 
-> On 9/29/2025 7:26 PM, Dave Jiang wrote:
->>
->> On 9/25/25 3:34 PM, Terry Bowman wrote:
->>> Populate the cxl_do_recovery() function with uncorrectable protocol error (UCE)
->>> handling. Follow similar design as found in PCIe error driver,
->>> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
->>> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
->>>
->>> Introduce cxl_walk_port(). Make this analogous to pci_walk_bridge() but walking
->>> CXL ports instead. This will iterate through the CXL topology from the
->>> erroring device through the downstream CXL Ports and Endpoints.
->>>
->>> Export pci_aer_clear_fatal_status() for CXL to use if a UCE is not found.
->>>
->>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->>>
->>> ---
->>>
->>> Changes in v11->v12:
->>> - Cleaned up port discovery in cxl_do_recovery() (Dave)
->>> - Added PCI_EXP_TYPE_RC_END to type check in cxl_report_error_detected()
->>>
->>> Changes in v10->v11:
->>> - pci_ers_merge_results() - Move to earlier patch
->>> ---
->>>  drivers/cxl/core/ras.c | 111 +++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 111 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
->>> index 7e8d63c32d72..45f92defca64 100644
->>> --- a/drivers/cxl/core/ras.c
->>> +++ b/drivers/cxl/core/ras.c
->>> @@ -443,8 +443,119 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
->>>  }
->>>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
->>>  
->>> +static int cxl_report_error_detected(struct device *dev, void *data)
->>> +{
->>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>> +	pci_ers_result_t vote, *result = data;
->>> +
->>> +	guard(device)(dev);
->>> +
->>> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) ||
->>> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)) {
->>> +		if (!cxl_pci_drv_bound(pdev))
->>> +			return 0;
->>> +
->>> +		vote = cxl_error_detected(dev);
->>> +	} else {
->>> +		vote = cxl_port_error_detected(dev);
->>> +	}
->>> +
->>> +	*result = pci_ers_merge_result(*result, vote);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int match_port_by_parent_dport(struct device *dev, const void *dport_dev)
->>> +{
->>> +	struct cxl_port *port;
->>> +
->>> +	if (!is_cxl_port(dev))
->>> +		return 0;
->>> +
->>> +	port = to_cxl_port(dev);
->>> +
->>> +	return port->parent_dport->dport_dev == dport_dev;
->>> +}
->>> +
->>> +static void cxl_walk_port(struct device *port_dev,
->>> +			  int (*cb)(struct device *, void *),
->>> +			  void *userdata)
->>> +{
->>> +	struct cxl_dport *dport = NULL;
->>> +	struct cxl_port *port;
->>> +	unsigned long index;
->>> +
->>> +	if (!port_dev)
->>> +		return;
->>> +
->>> +	port = to_cxl_port(port_dev);
->>> +	if (port->uport_dev && dev_is_pci(port->uport_dev))
->>> +		cb(port->uport_dev, userdata);
->> Could use some comments on what is being walked. Also an explanation of what is happening here would be good.
-> Ok
->> If this is an endpoint port, this would be the PCI endpoint device.
->> If it's a switch port, then this is the upstream port.
->> If it's a root port, this is skipped.
->>
->>> +
->>> +	xa_for_each(&port->dports, index, dport)
->>> +	{
->>> +		struct device *child_port_dev __free(put_device) =
->>> +			bus_find_device(&cxl_bus_type, &port->dev, dport->dport_dev,
->>> +					match_port_by_parent_dport);
->>> +
->>> +		cb(dport->dport_dev, userdata);
->> This is going through all the downstream ports
->>> +
->>> +		cxl_walk_port(child_port_dev, cxl_report_error_detected, userdata);
->>> +	}
->>> +
->>> +	if (is_cxl_endpoint(port))
->>> +		cb(port->uport_dev->parent, userdata);
->> And this is the downstream parent port of the endpoint device
->>
->> Why not move this before the xa_for_each() and return early? endpoint ports don't have dports, no need to even try to run that block above.
-> Sure, I'll change that.
->> So in the current implementation,
->> 1. Endpoint. It checks the device, and then it checks the downstream parent port for errors. Is checking the parent dport necessary?
->> 2. Switch. It checks the upstream port, then it checks all the downstream ports for errors.
->> 3. Root port. It checks all the downstream ports for errors.
->> Is this the correct understanding of what this function does?
-> 
-> Yes. The ordering is different as you pointed out. I can move the endpoint 
-> check earlier with an early return. 
+I think we all agree a reasonable intepretation of the spec is that no
+ACS means *undefined*
 
-As the endpoint, what is the reason the check the parent dport? Pardon my ignorance.
+But Linux cannot work on undefined. It needs to assume a definition
+because it needs to make security decisions.
 
->>> +}
->>> +
->>>  static void cxl_do_recovery(struct device *dev)
->>>  {
->>> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>> +	struct cxl_port *port = NULL;
->>> +
->>> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
->>> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
->>> +		struct cxl_dport *dport;
->>> +		struct cxl_port *rp_port __free(put_cxl_port) = find_cxl_port(&pdev->dev, &dport);
->>> +
->>> +		port = rp_port;
->>> +
->>> +	} else	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM) {
->>> +		struct cxl_port *us_port __free(put_cxl_port) = find_cxl_port_by_uport(&pdev->dev);
->>> +
->>> +		port = us_port;
->>> +
->>> +	} else	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) ||
->>> +		    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)) {
->>> +		struct cxl_dev_state *cxlds;
->>> +
->>> +		if (!cxl_pci_drv_bound(pdev))
->>> +			return;
->> Need to have the pci dev lock before checking driver bound.
->> DJ
-> 
-> Ok, I'll try to add that into cxl_pci_drv_bound(). Terry
+So I think this entirely a Linux discussion about how we should
+respond to this undefined behavior in the spec.
 
-Do you need the lock beyond just checking the driver data? Maybe do it outside cxl_pci_drv_bound(). I would have an assert in the function though to ensure lock is held when calling this function.
+Every heuristic option should be consider even if not directly
+supported by the spec. Our current behavior isn't strongly spec
+supported either :\
 
-DJ
->>> +
->>> +		cxlds = pci_get_drvdata(pdev);
->>> +		port = cxlds->cxlmd->endpoint;
->>> +	}
->>> +
->>> +	if (!port) {
->>> +		dev_err(dev, "Failed to find the CXL device\n");
->>> +		return;
->>> +	}
->>> +
->>> +	cxl_walk_port(&port->dev, cxl_report_error_detected, &status);
->>> +	if (status == PCI_ERS_RESULT_PANIC)
->>> +		panic("CXL cachemem error.");
->>> +
->>> +	/*
->>> +	 * If we have native control of AER, clear error status in the device
->>> +	 * that detected the error.  If the platform retained control of AER,
->>> +	 * it is responsible for clearing this status.  In that case, the
->>> +	 * signaling device may not even be visible to the OS.
->>> +	 */
->>> +	if (cxl_error_is_native(pdev)) {
->>> +		pcie_clear_device_status(pdev);
->>> +		pci_aer_clear_nonfatal_status(pdev);
->>> +		pci_aer_clear_fatal_status(pdev);
->>> +	}
->>>  }
->>>  
->>>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
-> 
-> 
+> I believe a definitive answer from the PCI-SIG would be best, especially wrt
+> backward compatibility.  
 
+IMHO they will say it is undefined. Device are allowed to implement
+both internal loopback and block internal loopback.
+
+This position is useless for the OS, but it is how PCI SIG has acted
+historically. They don't retroactively make existing devices
+non-compliant.
+
+Jason
 
