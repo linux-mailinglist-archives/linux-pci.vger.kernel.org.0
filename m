@@ -1,343 +1,170 @@
-Return-Path: <linux-pci+bounces-37248-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B33FDBAC569
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 11:42:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB23BAC65A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 12:03:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0A897AA9E8
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 09:40:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 152EC188773D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 10:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5835F2F617E;
-	Tue, 30 Sep 2025 09:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3222F3C3F;
+	Tue, 30 Sep 2025 10:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="awLbNM5o"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s+YO5Euq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DF92F5318;
-	Tue, 30 Sep 2025 09:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759225174; cv=fail; b=KSqb/WBsOzmS3LQJ5q3oWVuIc0PSaP4OQQDBej49N225dFW766z03Z2qv2zyHNFc+jhXOLIiFE08BiioeGNflPY3mFSq8aUCX97VNsq5205LkqswFH0OLE/KQVH2fX3YC7wFDVc2jkVcapMaUwNHJDiRHQXjBr1bzXfm831O970=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759225174; c=relaxed/simple;
-	bh=Kn4VbegCSC3y85S39bTsqA2TktmzvhcRuGv1tmitWb8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jV9ZjsdhNRlDBZDJ4KOvqlO6yG9R+HnmZxnIR6vG2001W9UyfFEMTb372oC0qi/10HSOpoyQbvNnCiY5sk034aZcnXtyRjcNBVZxuyMPT3dYWi832RO1n7+QUQrNb6vHe0eA80tqtmKrHmgLDokxZXPDLRxB0NH+mh3MR7emR/c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=awLbNM5o; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759225173; x=1790761173;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Kn4VbegCSC3y85S39bTsqA2TktmzvhcRuGv1tmitWb8=;
-  b=awLbNM5otZnDjN+IbQ32iCfydscY1pB0kx8QzKYD1m+Op4u2anCA8+9/
-   M7PGJUELoVm/9NHky8vKRa15qsJiL8Ccku1uQdQmJy9E6btrf1refCXS6
-   ejanP/Nlxhu0JD2sAYFwIynEDEMhmpI5Fi3Bgx9359/BAwi1NYU0ECQMQ
-   NHr5M79U0VJKXMRIU4OAGvYTGt9srSQwRdDgMasapxX76aThwntbVmS3E
-   voF6jL9cpd8dQYHyiJI7wiPMRD4bSvhUvaE4uYpmwFXHGY/D658sndQ6y
-   WHCM8eyrwO/MOMqiQTUmbi2MvIGcavWf2qtjLGYgddRp7/rwdE8CcHd1G
-   A==;
-X-CSE-ConnectionGUID: LVj8HNogTNivO2LMnbhisQ==
-X-CSE-MsgGUID: AgAewA4sS8m3qQVmgY9PFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="84094108"
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="84094108"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 02:39:32 -0700
-X-CSE-ConnectionGUID: qOgvbrb1Qxe2FQjIwhO4wg==
-X-CSE-MsgGUID: GnwdQRwCR9OHbBjxJhicqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="182770456"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 02:39:31 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 30 Sep 2025 02:39:30 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Tue, 30 Sep 2025 02:39:30 -0700
-Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.45) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 30 Sep 2025 02:39:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qUnEi5g+cXFRhX3MUQIaF6nYJK5hdAZd80iz6gTJMaG69qVGEqmkLM+vO1X0Yrms7LEaRBqbwHu6dDe9bjXuBfYStFbnc8QLko/fd1773Za/1LsfL1FDPezxDj8FAUEnLitorNb8zv7rwlQnrQpWiDhKTXEEYuSCCOdMKcJ+2U4IwP2bxViTawSqij5zf5t+ElrXRUp0+c/vy1R8s6FNjgPzYFIV7eTDZZNWmvi7nsX7Ph4HsrrWJDmUP3kD8+uUpDq0SBm+MuPFHMcAbqKpQIKJ+83oVBgbP/EHS0YJfru65MY17NlwIo2uzgErOZI3v+zD2UxeRWWKq0IRbSz2NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=17nxHuo6Tbq0Q5sirHach9IpHjbmTk2CnY2U1+UZg5c=;
- b=ktqSMAxIUz47sh5OJ+ro10C+bDTGp6Yak3C/ianUPHOmQrocp7pP6wFe8sP2Hm+BGvIzykTgEpH/HxIibGg88c2zmdKCtUx8cry9pBiUi9TfOuZqeBj8x5NuyOqGboJ5QFUxlsBuahLbHj/BHpG4xiUFgTTma2UlVZLgJDEHgprvCuQF/pAU2cyfEXe5QArU01x0kmivos7JzD0NEbbuZ0ftJnDkzoRi4++q2QHC9lhhrp8+GxrWKh/fgRQlK39Q6jZo7yAFQYuZfz4T14i/ohCtosSH5yPxbLJqX0QoOu0ikH4UT/kz9tORV6xaeFnh5NAouLHmrsmkxutiAdlUVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN9PR11MB5530.namprd11.prod.outlook.com (2603:10b6:408:103::8)
- by CH3PR11MB8209.namprd11.prod.outlook.com (2603:10b6:610:15d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
- 2025 09:39:28 +0000
-Received: from BN9PR11MB5530.namprd11.prod.outlook.com
- ([fe80::13bd:eb49:2046:32a9]) by BN9PR11MB5530.namprd11.prod.outlook.com
- ([fe80::13bd:eb49:2046:32a9%4]) with mapi id 15.20.9160.015; Tue, 30 Sep 2025
- 09:39:28 +0000
-Message-ID: <deddb713-8352-47b5-9705-4cea0200d54d@intel.com>
-Date: Tue, 30 Sep 2025 15:09:19 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] PCI/ACPI: Add PERST# Assertion Delay _DSM method
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <intel-xe@lists.freedesktop.org>, <linux-acpi@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <anshuman.gupta@intel.com>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <bhelgaas@google.com>, <ilpo.jarvinen@linux.intel.com>,
-	<lucas.demarchi@intel.com>, <rodrigo.vivi@intel.com>,
-	<varun.gupta@intel.com>, <ville.syrjala@linux.intel.com>,
-	<uma.shankar@intel.com>
-References: <20250904184427.GA1271351@bhelgaas>
-Content-Language: en-US
-From: "Nilawar, Badal" <badal.nilawar@intel.com>
-In-Reply-To: <20250904184427.GA1271351@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:af::8) To BN9PR11MB5530.namprd11.prod.outlook.com
- (2603:10b6:408:103::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961202144C7;
+	Tue, 30 Sep 2025 10:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759226613; cv=none; b=AXhr8g8cX8bb+t+86xvvRt+eHDF9yKHF4sn656Kw63TaT1CUzjT36h0KnRe0SH9u6Kn82pCbq65Pgq76450iiMivBo5yqMq0mt4SuX65J9K/fh9uDI/09psnEueC+n2hHbkfvuS6AFaT2y/sjoFiNjc1wv2LARjZMB3by14IJyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759226613; c=relaxed/simple;
+	bh=C+uDptFGPX/XX4u4uX2laDXbZLRztM/wuZjt8KMmf5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hCgChOxpDRjsBqbq8TsCb6+qc0+9rdVliLd4ymTMEBlzdor84iVpyrzxdE8Xhya2r3yNbUCzZydEx6Q6PO5j3aPc0GD37gAtMZk/KJMZwRhpn7QPrLVyObRKJJN9Eka6Hm2uYXmg9znTAWHHYBdIWE2c1kzkyXjRChG+7ICi2LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s+YO5Euq; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58TLfT63030414;
+	Tue, 30 Sep 2025 10:03:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:sender:subject:to; s=pp1;
+	 bh=MMjnW8ZGY5JsHDTDmnnEqn4fKP+OrNKDNH+uh8F2tUM=; b=s+YO5EuqJV6A
+	jVerq/WC5ng0P43OgyRV6NWlC2S6jF0BaCIOtkasYLn9mBTyiZOz8h2Xd99A/C13
+	n00B0b17MIwkqbShKIauba2S38l7eN7XceUx7lJfwpcLIsv96X4QqT4JI3ZcCW91
+	2OijYGI7zPX6Uxy0Y8XeELSW4WKOu8xqyRjFb9eJluc4YSFtR2xHwiWo4WQufyHi
+	/x37E2xvQd2Szl503rh6xjoVFO/9/YO2bY6/GKAEXXr4aCyPh9s789c3RPM5/XB0
+	jmFyXzYYeffor633ExkuE3sCfqPKbBQIm92qt9P/oX3lQKABoQuAdnkf0bNoydop
+	w8jcBTBZOQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49e6bhfqka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Sep 2025 10:03:26 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58U7v1Of020064;
+	Tue, 30 Sep 2025 10:03:25 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 49et8s2yu7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Sep 2025 10:03:25 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58UA3MR840763648
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Sep 2025 10:03:22 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F68A20067;
+	Tue, 30 Sep 2025 10:03:22 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0ECC920063;
+	Tue, 30 Sep 2025 10:03:22 +0000 (GMT)
+Received: from p1gen4-pw042f0m (unknown [9.152.212.180])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 30 Sep 2025 10:03:22 +0000 (GMT)
+Received: from bblock by p1gen4-pw042f0m with local (Exim 4.98.2)
+	(envelope-from <bblock@linux.ibm.com>)
+	id 1v3XCb-00000000m9T-3RZ6;
+	Tue, 30 Sep 2025 12:03:21 +0200
+Date: Tue, 30 Sep 2025 12:03:21 +0200
+From: Benjamin Block <bblock@linux.ibm.com>
+To: Farhan Ali <alifm@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
+        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+Subject: Re: [PATCH v4 02/10] PCI: Add additional checks for flr reset
+Message-ID: <20250930100321.GB15786@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+References: <20250924171628.826-1-alifm@linux.ibm.com>
+ <20250924171628.826-3-alifm@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR11MB5530:EE_|CH3PR11MB8209:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95345fa9-1d0e-4031-ab98-08de00053ff5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?enYxd0FYNlZQdTdyUlorK1FnMW9PdW43SGJLYlUwYVcvQlhJcHpXN3JyRDVP?=
- =?utf-8?B?MWF5eUpDWC9JNS95MUVOem5BT202TTNDM1dJZlQwOUhxQ2FlZDNBR1Fpazl6?=
- =?utf-8?B?TGVEaEV0TWhMN1ZVY2pGcTYySVRLNGpGQThZSWsrVzl0TWhuZ3lVcWtIRksx?=
- =?utf-8?B?YzV3Snh0T0wxRmhwRlpvR3hyNDRPbjI1UTVRRnpZYm9zaHZXeUdURlVnQ1dm?=
- =?utf-8?B?c0JlMSs0V3NoeWtIMUJqbEcvZnpVeVphMVlybVpYZmVjT2NJVFdrNnJ0MWY2?=
- =?utf-8?B?TWRPNUF2cTltV2tLNS9MaWZJYnJ1aGI4K0p4TyswRjVSdVNZY0xONHZNTURu?=
- =?utf-8?B?eDJkaHpOdjJUNloxcFRZclRvYTJzODZLMXB0UFhlcDR6bUNkK3o0RmxTMU40?=
- =?utf-8?B?NzY2cVZPSWJEejVSMnpJZGdVVmFiMlNDRVZwZzlzRGxUK1BHWHVaS3VJanFw?=
- =?utf-8?B?ajBNeng2MlhEN1IyK3AyMTN3U3FIQVg0ZlNmL0F1WHBJTU1Ub2kwVU9YdzIv?=
- =?utf-8?B?UHo2UE01UHhCazJZRUN3eTdFd0ttT1hKVEZVN2crKzZhcHZSdHBOTzY2MzRB?=
- =?utf-8?B?eVpwMS9PUGd3TnpWRXE0bytYS3hBVEY2QUZJdDEyV0dRaHd6MDdOZU5vdFF6?=
- =?utf-8?B?Z1NnWHcvWndzMUlkdkxCcmxSMm1NTFZLblhBYVdvTStxQkxTTVc5S1YzN2Va?=
- =?utf-8?B?cFZ2bkwzbFRGc001ZjZQUkNGRW9CK3k0WWgyVmhkU2Z5ak02STZtYVBNSmxC?=
- =?utf-8?B?TEFDc09LWkloUXR1TitmVFIrVEkzSDkzSFhZNDdLeWltYkV1STNsVmhxNnV4?=
- =?utf-8?B?MHFyakMvV0pDZGxyN3UrM1pkUFJuY0NtQ2RmWmQrMXZ1RUUyOURnN01hMjg0?=
- =?utf-8?B?bFZTSVAvSVpxTnRESldMbXk0ZFNZQ0F5S3NRMkxUUjJwS3BCMG5INTM3YklP?=
- =?utf-8?B?c2Q4MU1qZlpENmoxcmF3UnVrc0F3dVkxcUlnRGQvcWlPd0t6TzVVWkdid0Vi?=
- =?utf-8?B?R1BiY0x0OE91c3VLUk55NVJZaExnWXlLU3F5aFlIdkNjVDRKc3JTSTdDMmVO?=
- =?utf-8?B?K1VUZ25pRkdZSHViT29xdUNsZmNSc3M0WFVyNDVKT3FiQjVjR2N6NXVURGJ6?=
- =?utf-8?B?TDEzMTd3TWpyZkJ6NlQ3d3VvRG11eFN0bDZxU1RUcjFTc2dtLy9HNjdLVkU1?=
- =?utf-8?B?M2RaV1VubHNnQllhZWIzMitZUkVJZTBNTlFRS2gzbVVYWUJZUGdwUzBPNGht?=
- =?utf-8?B?ektIdnFEMStnbE85OWhud0lQVkhCby9BaXN1Rjd0Y0dSZGwvdkpLWkd3Rmxw?=
- =?utf-8?B?LytRYWc0Tnp5TldjODk0VHJLQ2VwL0NLN2hORW9RQzc0WFh2UFB5Q0VlUDZ6?=
- =?utf-8?B?cnp0bHpxanJzVTB6VVAwandib3RXQ2YybkZHQ2tTSTR5ZGdkelhqOWdzT3Zt?=
- =?utf-8?B?Z2xQZjBpYjBCQTI2eStNbDNCamhXRUNxYm5xbm1xRXRVQUNYUGNzUENQU1ZH?=
- =?utf-8?B?cmpKOUw1K21LMDFva0pETTZVR1dPSkhxdjFkWFdVTzhrZlM3V2ZTQnJpYVJu?=
- =?utf-8?B?OTZpdUdDQ2dPR1g5VTM1cVA4QlJiZVVzREFLbllxMXQycWprZmdzSzdycnRw?=
- =?utf-8?B?ekt4N0RGT1BZcmhHQ1k3N0l3WE82WW15VVZoYlJWT1hPcWNqQzlvL2tqVVR1?=
- =?utf-8?B?U0ZpdmI3UGZGcSttQkhoRmRESXQzazh5UkV2Mmk3MGcrMW5nMTRxMlArMjY5?=
- =?utf-8?B?U2U5citmUWZnRjlJQTdORjM0L1JzRGh0V2RGTWllb0dpQ0Yzancvd2FNckZH?=
- =?utf-8?B?UWU4blRVVHBVTmNsYVpjMnpCY2pqYU5rRHh6YjgrdFJERFRrNjJMRlRSTU40?=
- =?utf-8?B?Z1VhZzlnOEoyczYrRzFIbk4yWUhLR0k5UzQraDg2cit4Z3R2dHNJcmN2ZCsv?=
- =?utf-8?Q?HRNe06HXR8f61q1GzZhyG/CT208yovTk?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5530.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MnplMm9JN1B1dHAvbjR6aHJWSzlQTU1Jd0NEY3ZOY0Y2QXRDT3dBblFwYVJM?=
- =?utf-8?B?QmVsRkJTZ2JzQndvYVY1ak9nUUNoM3lKcFlMdnJRQ1M0Nm5mQ0U4VVB3TmRD?=
- =?utf-8?B?WFBObndYQXR3UURVb0JacmVOdHpSYlJMVFF2SnIrWmhib3NPVnBlTTVudzFi?=
- =?utf-8?B?dTB6L3MvN0V0T2hxdTlKdmZnalZzWVcrQUtPdENlV0l0STJpS0FtcDBubVFR?=
- =?utf-8?B?d3RWdHppRzZ1OE1WWnEzclZpSXk3MjhBeXFvMVpqR2w5a3hDTmhHdXhxMnZs?=
- =?utf-8?B?OGU5cXpOSkZlQ1JQdkxMM0NlMGZPaWcySUZvM1B1eEhtcVRqRkNpNmYzN1Ru?=
- =?utf-8?B?NG5saVIwcUtPREN0U0wvZ2Q3VkxhemhzVTFrSVZEZGxFdHZkbStUSGlNZDQ5?=
- =?utf-8?B?dEJHT1hIOWk2SGQwQTNwRU1OakhtVEdCOFYvTkpEWlV4S1p4OEpDRDQxa0ZN?=
- =?utf-8?B?N052a0F4N0RyT0pFOUZ3WEFDSHlnU3U1T2JzMm5QSzJOVkhtM3RXZS9yTXBx?=
- =?utf-8?B?YlIxOXlIR3pyNDhQZWhNODY2dEowTFVhVmlrUkxQdXUwWWN2ZXgzRWQ2WHNN?=
- =?utf-8?B?MHY2a29TNzNhQ2l5MmhCZ0t0elBUbER5QW0rTjVzUnZzSXRuNzN3S05Yd0ZK?=
- =?utf-8?B?RHpvRmYzQXVKRXQ5K2NOUU05Z1NBMmNJdHliM0s2RVZnM1JrV3U0Z09BRlJH?=
- =?utf-8?B?RXAvV3grY1Bra2RaNTZZeWExeUVjNDBSWEdhMHFockhESWcvenQwamxwRUF3?=
- =?utf-8?B?MUw4a1pJUGx3bDMxZE5ybWxubFZmazFHeGtnTGtsOTZWb3NhT09WMTVzT3Fo?=
- =?utf-8?B?MzJDRWJVVDdmRmdmSDJpWDFhRGk5U1piSWQwanNMaTNScXRBSHBVUTROK1pl?=
- =?utf-8?B?ekl1ZDJWRGM5MTEyTktzNjkxSXR0cVUwYXMyYjhsSWFRMmJoTkE0dER1Z3RQ?=
- =?utf-8?B?eFpEVnNZQUE1eHRJRFlHYXl6dkRkckIrTkVGTmVnT2swMFF5QnpEaE5UT2cv?=
- =?utf-8?B?VTVFN3VlNzJFdzByVGxGeEtzUURiTHpTd2czR1VDc21XeFc5VFFZRWZMWmU4?=
- =?utf-8?B?UzZCQXlYVVhlWXgrVXZocTkxRnVlcmcyc1hyZ1d1b3YwVElNeXR4UVRoK0Zn?=
- =?utf-8?B?SmtvMnJ2UUJueUZuRHFXYWRTNEpGSGdPNlgwcHNuUnBaUE5ldG1YWVVnckx1?=
- =?utf-8?B?RDNmNDZOMDBnNTNuUUEzZ3gwRjJZajFBcmlYaDBGaWc0QkQ5UjQraksyRFF6?=
- =?utf-8?B?b2FtYVEzQnZlMEd5ZlZXNzF1R09ZNXdSeDVLWFhNeGRYd2hwd2ZDeUhZUElO?=
- =?utf-8?B?a0ZJMmd5UlJDcHRnTEM5ZmJzaFpKaGhOTDg0S3dYaVl0UnlicXNHa2djalJh?=
- =?utf-8?B?T3EzdklkT3c1eTdLa1lFNUJUbFlNR2J3a0Q4b1pIdnNCd2RjaWRWOUxhSVBR?=
- =?utf-8?B?OTdyVERtT1VaNmVIMklxQ2RudUZ1U0hVUlhoU3pZQ09ybkxpQ1ZxbVBJTVdG?=
- =?utf-8?B?aUY5aC9Ia0ZYTTNqTWxGL2sxNEViVjdzNnQzMFpCYWw3ZloyNkl3VWI1ZXRm?=
- =?utf-8?B?MDRKNUhLL3l2N2JjZlBJeWlRcm9Ua2ZUcGh0OUhFS3R6ZHRMaStCR0dYYktj?=
- =?utf-8?B?VnZuUHFuNlNGdXdLbWFXdDBES3BKc1k1S1pyK2t2M3V1aTRpNkNQRm9sdjdL?=
- =?utf-8?B?cWdWQlppK0p5cG0yZ3BqdUI1anZIK1U2NldrWlNhMWVrNDNtZ1R5ZEFLNU1H?=
- =?utf-8?B?dVcyc3BwMEJBVUUzN2RsYzJlbHl6T1BRdFF3STU2emVhWFpjS21kaHp5ZHdx?=
- =?utf-8?B?bWtCZHVtY2E2a3pFUnZINWxXTURZbEd0QXFvN2lnL2dVd2hqNG1JMCtYRnVq?=
- =?utf-8?B?NGNXQTRmdEcreVVXWUhZOXcxcDJyTGR6eXcwcmxLMnB5REcyWGRGZkZya3hy?=
- =?utf-8?B?dVJlY1ovN3hRd2dXOTNTRmtMZWg1WlY1cGs4VnVNMEJISTdpNTVncmpOT3FJ?=
- =?utf-8?B?T3FqQitoK1o0S0pYWUJqK056Nkg0OWNHRDZSeUFEc1crQW1TWXl0SUhUTW5X?=
- =?utf-8?B?UEJadnRWUVd3d2dNVTlxd0lVMzFaMDZjY3VDci9mTnJwUmxNOXczV09LTjBX?=
- =?utf-8?B?WWlOOGJLYlJhWGhvWlZQYUNRYXE2R0FSWGRDVlp1eC9tY1dra3BNekkrUWth?=
- =?utf-8?B?NWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95345fa9-1d0e-4031-ab98-08de00053ff5
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5530.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 09:39:28.4903
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 372B45hrz6D54fQ6a8fr+Vr/RqPrJhqyDsUqaorEEuZ5ts76xM0ZzQUu5dsAbAHBk5ZLqKC9WmyNGQQVidUeeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8209
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250924171628.826-3-alifm@linux.ibm.com>
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Se/6t/Ru c=1 sm=1 tr=0 ts=68dbaaee cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=8nJEP1OIZ-IA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=2Qdhaze4vaRhrbKc8xAA:9
+ a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI3MDAxMCBTYWx0ZWRfXwOnINJ1dUPG6
+ rzozq1J9kNxyzuL+TWL+XBQ30Ym8MbuPfLi/2O46LtF76sJW0P8byyLTrrWvxzmYR1MM8ogeG2i
+ IshuVSXujzD6+bXhj8ZoMYg1Y34+g1auQwVQEgBBrri+w5AdlJf0UvVOJy2dsAwjOObD7iADVPk
+ DJgb+E9dG1p0UncWzCV85a1oosxbcNsBJCMw5AmBUlxP0wCM9Atz4OTMeGQoSYfzsGvzMs4M/lv
+ vSMyRVHIMBejKZZeTqDYUNNsMkFmBiBYpmG0kzgS+aUtqil4TC3ttMG165gY3QP/sQ29r8qSb3C
+ +Qi5HyyQeeXpOj6W+ZrYPeu/kfixYbsi3ngbyhe6h5B1Ut1HcOIypJclPzq4iTF20LDcUoLzRBl
+ ugJ8AjhoHVpJ/MWd07WIOn9gOqbpuw==
+X-Proofpoint-GUID: 3QCoety8nuQyFRoJJfZ-pCKRmkH81s2D
+X-Proofpoint-ORIG-GUID: 3QCoety8nuQyFRoJJfZ-pCKRmkH81s2D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-30_01,2025-09-29_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1011 phishscore=0 priorityscore=1501 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2509270010
+
+On Wed, Sep 24, 2025 at 10:16:20AM -0700, Farhan Ali wrote:
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a3d93d1baee7..327fefc6a1eb 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4576,12 +4576,19 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+>   */
+>  int pcie_reset_flr(struct pci_dev *dev, bool probe)
+>  {
+> +	u32 reg;
+> +
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>  		return -ENOTTY;
+>  
+>  	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
+>  		return -ENOTTY;
+>  
+> +	if (pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &reg)) {
+> +		pci_warn(dev, "Device unable to do an FLR\n");
+> +		return -ENOTTY;
+> +	}
+
+Just thinking out loud, not sure whether it make sense, but since you already
+read an up-to-date value from the config space, would it make sense to
+pull the check above `dev->devcap & PCI_EXP_DEVCAP_FLR` below this read, and
+check on the just read `reg`?
+
+Also wondering whether it makes sense to stable-tag this? We've recently seen
+"unpleasant" recovery attempts that look like this in the kernel logs:
+
+    [  663.330053] vfio-pci 0007:00:00.1: timed out waiting for pending transaction; performing function level reset anyway
+    [  664.730051] vfio-pci 0007:00:00.1: not ready 1023ms after FLR; waiting
+    [  665.830023] vfio-pci 0007:00:00.1: not ready 2047ms after FLR; waiting
+    [  667.910023] vfio-pci 0007:00:00.1: not ready 4095ms after FLR; waiting
+    [  672.070022] vfio-pci 0007:00:00.1: not ready 8191ms after FLR; waiting
+    [  680.550025] vfio-pci 0007:00:00.1: not ready 16383ms after FLR; waiting
+    [  697.190023] vfio-pci 0007:00:00.1: not ready 32767ms after FLR; waiting
+    [  730.470021] vfio-pci 0007:00:00.1: not ready 65535ms after FLR; giving up
+
+The VF here was already dead in the water at that point, so I suspect
+`pci_read_config_dword()` might have failed, and so this check would have
+failed, and we wouldn't have "wasted" the minute waiting for a FLR that was
+never going to happen anyway.
 
 
-On 05-09-2025 00:14, Bjorn Helgaas wrote:
-> On Thu, May 29, 2025 at 04:46:46PM +0530, Badal Nilawar wrote:
->> From: Anshuman Gupta <anshuman.gupta@intel.com>
->>
->> Implement _DSM Method 0Bh as per PCI firmware specs
->> section 4.6.11 Rev 3.3.
-> Update citation as for the other _DSM function.
-Sure.
->
->> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
->> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
->> ---
->>   drivers/pci/pci-acpi.c   | 57 ++++++++++++++++++++++++++++++++++++++++
->>   include/linux/pci-acpi.h |  8 +++++-
->>   2 files changed, 64 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index d33efba4ca94..88044491feaa 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -1531,6 +1531,63 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>   }
->>   EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
->>   
->> +/**
->> + * pci_acpi_add_perst_assertion_delay - Request PERST# delay via ACPI DSM
->> + * @dev: PCI device instance
->> + * @delay_us: Requested delay_us
->> + *
->> + * This function sends a request to the host BIOS via ACPI _DSM to grant the
->> + * required PERST# delay for the specified PCI device. It evaluates the _DSM
->> + * to request the PERST# delay and handles the response accordingly.
-> Reword in imperative mood.
->
-> Like pci_acpi_request_d3cold_aux_power(), I think the driver should
-> call this with its device, not the Root Port.
-Ok.
->
->> + * Return: returns 0 on success and errno on failure.
->> + */
->> +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
->> +{
->> +	union acpi_object in_obj = {
->> +		.integer.type = ACPI_TYPE_INTEGER,
->> +		.integer.value = delay_us,
->> +	};
->> +
->> +	union acpi_object *out_obj;
->> +	acpi_handle handle;
->> +	int result, ret = -EINVAL;
->> +
->> +	if (!dev)
->> +		return -EINVAL;
->> +
->> +	handle = ACPI_HANDLE(&dev->dev);
->> +	if (!handle)
->> +		return -EINVAL;
->> +
->> +	if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4, 1 << DSM_PCI_PERST_ASSERTION_DELAY)) {
->> +		pci_dbg(dev, "ACPI _DSM 0%Xh not supported\n", DSM_PCI_PERST_ASSERTION_DELAY);
->> +		return -ENODEV;
->> +	}
->> +
->> +	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
->> +					  DSM_PCI_PERST_ASSERTION_DELAY,
->> +					  &in_obj, ACPI_TYPE_INTEGER);
->> +	if (!out_obj)
->> +		return -EINVAL;
->> +
->> +	result = out_obj->integer.value;
->> +
->> +	if (result == delay_us) {
->> +		pci_info(dev, "PERST# Assertion Delay set to %u microseconds\n", delay_us);
->> +		ret = 0;
->> +	} else if (result == 0) {
->> +		pci_warn(dev, "PERST# Assertion Delay request failed, no previous valid request\n");
->> +	} else {
->> +		pci_warn(dev, "PERST# Assertion Delay request failed, Previous valid delay: %u microseconds\n",
->> +			 result);
->> +	}
->> +
->> +	ACPI_FREE(out_obj);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(pci_acpi_add_perst_assertion_delay);
->> +
->>   static void pci_acpi_set_external_facing(struct pci_dev *dev)
->>   {
->>   	u8 val;
->> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
->> index 6079306ad754..e53d4893cf56 100644
->> --- a/include/linux/pci-acpi.h
->> +++ b/include/linux/pci-acpi.h
->> @@ -122,6 +122,7 @@ extern const guid_t pci_acpi_dsm_guid;
->>   #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
->>   #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
->>   #define DSM_PCI_D3COLD_AUX_POWER_LIMIT		0x0A
->> +#define DSM_PCI_PERST_ASSERTION_DELAY		0x0B
->>   
->>   #ifdef CONFIG_PCIE_EDR
->>   void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
->> @@ -135,7 +136,7 @@ int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_de
->>   void pci_acpi_clear_companion_lookup_hook(void);
->>   int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power,
->>   				      u32 *retry_interval);
->> -
->> +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us);
->>   #else	/* CONFIG_ACPI */
->>   static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->>   static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
->> @@ -144,6 +145,11 @@ static inline int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 req
->>   {
->>   	return -EOPNOTSUPP;
->>   }
->> +
->> +static inline int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
-> Wrap to fit in 80 columns like the rest of the file.
-
-Ok.
-
-Thanks,
-Badal
-
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->>   #endif	/* CONFIG_ACPI */
->>   
->>   #endif	/* _PCI_ACPI_H_ */
->> -- 
->> 2.34.1
->>
+-- 
+Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
+IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
+Vors. Aufs.-R.: Wolfgang Wendt         /        Geschäftsführung: David Faller
+Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
 
