@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-37265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BA9EBADE61
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:31:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBE12BADE6A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:31:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4C50F4E181C
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:31:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CF523807FD
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:31:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66353081B4;
-	Tue, 30 Sep 2025 15:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790DF308F2E;
+	Tue, 30 Sep 2025 15:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YnBwf57d"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P1AWzQlf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7333B3081AA;
-	Tue, 30 Sep 2025 15:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC5B308F16;
+	Tue, 30 Sep 2025 15:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759246248; cv=none; b=HCGdaikecOuw4HJbBwMO3RU6OKEcNZaX+Fe21F573l+sO7P+8WNatZLNPS2gEGKwO8FKM3oYrSA30WlbZeA5jgZm5SlG/3Y8AnhOr5I0VP8yRgBeNjXmJd/3zdLTbQHT1/kaTGRgQjlB5Ee7R1fpA/uZqW4qvRvl3eesoHmonEM=
+	t=1759246251; cv=none; b=LDad9l4/O09rQxekijVXJxDM/MDVeYxQpYDTFh+w/BjuUhK4lf4iZLKiWneyjoe0F70eITb4rpPC/ItY5Lsrm1ZOhOGd3OcEAE25tnPg/ezRe+XKZQmzRbfsWmEWG0OaAp13YLKCguA3U5PH1DHvbvUSqaVqH+MWbRsq13YwmTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759246248; c=relaxed/simple;
-	bh=pdHwn0a7TyAYIR38zmFhOPQydyY2hJcTXaAoNlmI2+4=;
+	s=arc-20240116; t=1759246251; c=relaxed/simple;
+	bh=ooCBmh9/CIFksOUqUMHAhlpwhUo/LkdrKCdrIJqspQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bQ5WN47g3GiVdWke3eSCYr8JKw1RCRCFAUX/FyUJ1TK3eAzDwrJibG07KMh5DfhOhdcsFKGGy7hDg9l61QQITgq9Ik837H2O621OQMpqQhGoItYtKdrn08JpXrMwgtMkFDgsajy8ynATgkB/IxffV0yWEFUkyK0frxVl4bVAVBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YnBwf57d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD3AC113D0;
-	Tue, 30 Sep 2025 15:30:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+Yx4F7FWZUmOZWVoNxjUNSk+yW2T9X34ba2BhEXafo1wcTxMMgSY8R9XLMtTePF2SElcoBVkRNXY7LyVmlUVtBtUmeYq/aku/wpjfF4V/Iqxotq5EUTUlxaoWw1oLNE1AgDfvaVMA14uqannBHPphgRiXQX61h9h11XNSty7k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P1AWzQlf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E4CC116B1;
+	Tue, 30 Sep 2025 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759246248;
-	bh=pdHwn0a7TyAYIR38zmFhOPQydyY2hJcTXaAoNlmI2+4=;
+	s=korg; t=1759246251;
+	bh=ooCBmh9/CIFksOUqUMHAhlpwhUo/LkdrKCdrIJqspQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YnBwf57diahlJNaU9UC1SjIOB4x9SmaIrTEscPaQYz+OeQMWDrLZvXJj/dzeeJEKs
-	 jHWzZq4K42o0Hy3qgXq447wEsWEpyeitpDgZ5KtIOd8wtslNxVKhjj4nBj6AmvGZ8m
-	 m7ZuQ543HHFgirYOHorVlpQd3znOl2bCgRdWpScE=
-Date: Tue, 30 Sep 2025 17:15:45 +0200
+	b=P1AWzQlf/lNFmWR+oBolQ1gpkB7lj3kSS+2c2XsKANZ4fe0hKeMEOzggQX8Iubj+/
+	 Ys5tZkqKhkAlfn/OGjFzHu49RZLryle+q3Bd7XdOrrj0JTXQLfVb46MPKp/0LFsTSm
+	 j8K2Z0Ic6yreOfAgQ7o0vASDaSF8Tx9rCk+gDL1M=
+Date: Tue, 30 Sep 2025 17:17:10 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Chris Li <chrisl@kernel.org>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,
@@ -55,7 +55,7 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>
 Subject: Re: [PATCH v2 01/10] PCI/LUO: Register with Liveupdate Orchestrator
-Message-ID: <2025093018-snugly-twisty-91b1@gregkh>
+Message-ID: <2025093014-qualify-scoop-c406@gregkh>
 References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
  <20250916-luo-pci-v2-1-c494053c3c08@kernel.org>
 Precedence: bulk
@@ -131,11 +131,51 @@ On Tue, Sep 16, 2025 at 12:45:09AM -0700, Chris Li wrote:
 > +static int pci_liveupdate_prepare(void *arg, u64 *data)
 > +{
 > +	pr_info("prepare data[%llx]\n", *data);
+> +	return 0;
+> +}
+> +
+> +static int pci_liveupdate_freeze(void *arg, u64 *data)
+> +{
+> +	pr_info("freeze data[%llx]\n", *data);
+> +	return 0;
+> +}
+> +
+> +static void pci_liveupdate_cancel(void *arg, u64 data)
+> +{
+> +	pr_info("cancel data[%llx]\n", data);
+> +}
+> +
+> +static void pci_liveupdate_finish(void *arg, u64 data)
+> +{
+> +	pr_info("finish data[%llx]\n", data);
+> +}
+> +
+> +struct liveupdate_subsystem pci_liveupdate_ops = {
+> +	.prepare = pci_liveupdate_prepare,
+> +	.freeze = pci_liveupdate_freeze,
+> +	.cancel = pci_liveupdate_cancel,
+> +	.finish = pci_liveupdate_finish,
+> +	.name = PCI_SUBSYSTEM_NAME,
+> +};
+> +
+> +static int __init pci_liveupdate_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = liveupdate_register_subsystem(&pci_liveupdate_ops);
+> +	if (ret && liveupdate_state_updated())
+> +		panic("PCI liveupdate: Register subsystem failed: %d", ret);
+> +	WARN(ret, "PCI liveupdate: Register subsystem failed %d", ret);
 
-You do know that's a security bug, right?
+But this didn't fail.
 
-Please don't do this, even in "debug" code, as it can escape into the
-wild...
+And you just crashed the box if panic-on-warn is enabled, so if some
+test infrastructure builds this first patch, boom.
+
+{sigh}
+
+If you are going to do a "dummy" driver, please make it at least work
+and not do anything bad.
 
 thanks,
 
