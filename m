@@ -1,290 +1,362 @@
-Return-Path: <linux-pci+bounces-37260-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37261-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CC83BAD353
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:37:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32510BAD36E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 16:38:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 749DF194093F
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 14:37:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2CB9A7A02C3
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 14:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677DB2522A1;
-	Tue, 30 Sep 2025 14:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACFB21CC4B;
+	Tue, 30 Sep 2025 14:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkRN56Td"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aBDnfQJA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010067.outbound.protection.outlook.com [40.93.198.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427221DE2BD
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 14:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759243045; cv=none; b=hBUaVwkZbuMzM14Snl6ilEe8myual61SjiXJ+imlmDdhFn74Ws1kDsdWuUUwrzQCFrE61+VLJxejz3uMs5wYV0x+IRszshYIcBiEY5AIYqcboLTzMBVa8v4p8472uQZ9ZRj99N1FXbso1X1xV9Xx3b/u4dMP81kjyZLKs48HzYw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759243045; c=relaxed/simple;
-	bh=tv8tP3CbvwVbP03SYbdUFItd/4hYvZNZmJe7AJScMmk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F+CkRzEl+VIAhp1hZzMT0dEY3ddmYFVoY6voUQrEabZKQM3CX94uRMU9h9tzErTdJ4jl2W0kZTWgIt+BR9xcqVXQNVrymbktuDe/9TqfVhPPY2xYqgrrQQTtdK5Z+x3SJt+6tETR81KbE4ISygJ+iiV83BIXOGSqPVT03pbEPOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkRN56Td; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F2AC116B1
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 14:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759243044;
-	bh=tv8tP3CbvwVbP03SYbdUFItd/4hYvZNZmJe7AJScMmk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CkRN56Td6SCuDMPQ18ZU2JIavowHvwXlGeNXcE4Pu8tuVn3e1qRJyRYaECvwrxUoc
-	 YF15h6PZvs9Id8iUBeOOZxPeZTPArNGixSxZZioZgZdFYvwUNEPruOfLGLC72WcGt8
-	 +7qDDhOconCwpRvM9AIOC/UWsQ/R9qt+Lil4XT/bm6QQJ3kecCrvE0Tt71vtg/g5Xy
-	 gPdiSXTVVCwbRqS+ZV7DJQz4ctVnAjj0ZfmXoAbcvotnwwTBnTk38w1P/53DAXYS0D
-	 h9TJQM1PdzRWb0utOd+jqjSeUDjHXwCgtShGoyho9rsa2jYFvgR52S8KZw6IisaTO5
-	 5M6m6A0cOB9aA==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-afcb7322da8so1178111966b.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 07:37:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7fgf2WuooJMg8jcydQqXTMwYOOny9h5OhTUAPbyUeZyp78aJ9NWhDh08ccfbR/jPLEePDTHNGWUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWT1KdEF/8sXUZmImWtsk1RqXUQnZQopPPvYCQl9htAnyXitEf
-	GzyGhbWwhirG62nYlk5afDVU63aHItuhKrSNGttQe2V0ec5tHwmiVxN7aUijC9L5r2M4fNOH/e1
-	cBmtQHqJGBhrPAk8RlyB1qXr+QgJT4A==
-X-Google-Smtp-Source: AGHT+IGgfxlodiz/IYQsAOQn6MLDa6csKlZJbZKJV75KAR1g4FNwPa42/5n0tcTx0LqLcbqk236kB6rAIkWIDfZAheg=
-X-Received: by 2002:a17:907:d19:b0:b46:31be:e8fe with SMTP id
- a640c23a62f3a-b4631ce4b96mr125333766b.11.1759243043364; Tue, 30 Sep 2025
- 07:37:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA35D8F7D;
+	Tue, 30 Sep 2025 14:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759243119; cv=fail; b=johyj3NPn6x92fEcHFT95a36fVvpXAhusFf+09l1TaIkPBbKDXbkBXYEggMuAefc09ilOguPwtuu8bufsIs8v2ycpL+4H2QZhsnYJb6ZNE0ums9AzRVYA49FUl/o5bIy/uQ5mBaZcTtoJogn92EcCqraxo2eGrIJnaGU4ha5nxM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759243119; c=relaxed/simple;
+	bh=tMPowJU5U294+3/z46mtAJxkQffvbXqHJZOEVp66vLc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IhOcl15puXQ5aQhtZFiKk0LDvhKsdzVdBkn9Q+j8WGJ+P8HsRXMNlDtsgTsm++xdwW3/VTPeJOxr3let6ulv3gzJsGjU1rzz81Mf4uN7qTfyfOoVbNY+XigcG+bF7weKH/HCNPZRCmdJbGWCYckr++xdXj/jVPEU4RIdSR+KZhE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aBDnfQJA; arc=fail smtp.client-ip=40.93.198.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PkWB6O0CQ1NDTELY6/J+rftsQWuh5keuzzKIG9vcuOyExToARsQOIeTy3RPlxZX/1wJgZ3z+GoLTpTV9FsR0C/u0VbQo9jVgKBSR5g3vkTZ4mK3dU4bADDkwxZ4YfPvgBpoq0rdEbIpBdJ70DQ7tzlfEUJuZA7aQrpR120lPcKQmc3fel3aTmRd6EGopHU1pwDiYYUtDVTQPkt0Hj1B61FtrfHmrr1askC2y0JY+/r43Lo7YyagX1lgaoXSMskBCgJePjpuNnE0vARvAaq/A2UdlI91MjIv9WRqdgrCjV+lmm2+eRg0W6vKsy41Oi8geI5iADwr+opMw2zvaKBkX/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N5l7eyGneU0Z9wp2nROIroWAf+PLWvccDyvTxWME/zs=;
+ b=VDJvAsQxDBCLFyyboQIh4JVPGmxxupoNLZ62nU175YsCg5cCStN8WwNSh//Ivh0rOOestKfPMFdzP3S7yGk+VupKG34UK+y4PDMXoE0Q1/ZxwWvxASewKjPpT6y+kWYufWSXa8NdjWmKbYRimNPwFOucarvTenIBcXTI6CmNlOZQ0brKBiRhX6SyH71XmTpVJmjNFPjXWuq1mRUwInLBpXDwQI7T/qfKrPALp1CCZMkZ/SjCoxMxeExVZT6xF+KP70k6MICxX/FppVX8Kv2WdMf00T7ykT0a3TGGTqmGM6EJvYOTnG6Dn2jr9q/GqX+9HIMOcUhG0fK2fU3phAJ6cQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5l7eyGneU0Z9wp2nROIroWAf+PLWvccDyvTxWME/zs=;
+ b=aBDnfQJAQZfdjR6JtpWRljYu9T1aVhc8jaOnlKozyZYyT2kIbF/TYHQ3nPCV547REDa3ZxDUfZIQe/gysBf/YzSDpRlF/IzlQI1eRuLZCWw8Sg6uUDpa9CgG1z2eeZHaG3d/GMg7IKCEYiRq2e994D0xAyEBiJZjMLYnDBdt2AI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by DS0PR12MB8319.namprd12.prod.outlook.com (2603:10b6:8:f7::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
+ 2025 14:38:35 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14%5]) with mapi id 15.20.9160.015; Tue, 30 Sep 2025
+ 14:38:35 +0000
+Message-ID: <a2b5d6f0-7f6a-4ac3-b302-73fb3c1a92b2@amd.com>
+Date: Tue, 30 Sep 2025 09:38:31 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 23/25] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+To: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-24-terry.bowman@amd.com>
+ <d3d3ab84-8cdd-4386-82dd-de8149159985@intel.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <d3d3ab84-8cdd-4386-82dd-de8149159985@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR04CA0054.namprd04.prod.outlook.com
+ (2603:10b6:806:120::29) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250926072905.126737-1-linux.amoon@gmail.com>
- <20250926072905.126737-2-linux.amoon@gmail.com> <CAL_JsqJr+h7pTvbRR=7eB4ognK70D1pgNXEORGXo=ndND=pMjw@mail.gmail.com>
- <CANAwSgT3jo35xBvkH4GmQcZuZH=D+SRKJ6e9fSBRz45zwuCmYw@mail.gmail.com>
- <CAL_JsqLsEDFv4T1ZMmjaoFfs7WNAjVvOk9o1eTXL2EeGF8uuDA@mail.gmail.com> <CANAwSgTuX3t2-SNPe4OAzGuDpL5RotxX8t+Zx+gcwFKdj3ZEng@mail.gmail.com>
-In-Reply-To: <CANAwSgTuX3t2-SNPe4OAzGuDpL5RotxX8t+Zx+gcwFKdj3ZEng@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 30 Sep 2025 09:37:11 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKBhzPwxYguy+N=eddG2nwB54dzw307A6KT5NJpRSh-Mg@mail.gmail.com>
-X-Gm-Features: AS18NWCO_YKNXT00tTFZtChritiXVTRzlLdNG8gyHODI9fKqf3yCIJP6TlxUrps
-Message-ID: <CAL_JsqKBhzPwxYguy+N=eddG2nwB54dzw307A6KT5NJpRSh-Mg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: Convert the existing
- nvidia,tegra-pcie.txt bindings documentation into a YAML schema
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|DS0PR12MB8319:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71897a6c-2b6f-4683-ede8-08de002f0937
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SXdKVTN1aTE3dEZWUlBxNUxqTkQyMUtLRVBHYnVzRVZwMnNvRDZhdTQ5RG0x?=
+ =?utf-8?B?MFhZWmJva1hNZHdZZnh0RytCYkMxZm9Rak9WdDJCaTRYU05xQm9wZm9JbEpa?=
+ =?utf-8?B?RGZTUWl6bXQwOW4yVHNrTUdQVS9sbTZoZ2pCSWdObnEyQXYxc2ZUZ2pNL2dv?=
+ =?utf-8?B?ZXA5ckhxVWhCTVpnbFJBTVk3Y1Y4UGZDS3ZURjBKQnhJdG4wZzNUN2lhZzlY?=
+ =?utf-8?B?ZElnZGxyWFlscmc2SnlOUllQVUpvUjYzcGwzZVQ3UjR3M2E2OS8rMHVsejBa?=
+ =?utf-8?B?dDZOZXZScENCcklJSVk0Nnh5QnF6eHl4YUdlWk5HU0RDQzd4Skp4OGU0T2lk?=
+ =?utf-8?B?elJQSkZzbXRBK2l3SDFsbXNXcDl2RW5kUHdXVWVDaGZQWDdYOXZ5TXNzeHdR?=
+ =?utf-8?B?RDNvckV2YTBNanRmb0ZpZGVwV3FheWlXRlh0SUJ1L1JSS0kzZFRtcVhWV0FH?=
+ =?utf-8?B?ajBneUpqeFVnS2pyYVkyRDF5aXlGVisyMjZ3RVhkelVORGtBR1NxTmJqWGp6?=
+ =?utf-8?B?V0djVU1xWkg3ZWVRTHN2UlA3NG53MW9CZUI4UVljV05FSnBYbEdMVnhrbnAy?=
+ =?utf-8?B?WHJJbDdEUFJFNnA0SXZGVEwxWVZxczhJZzVDQi9CcHVyUUtIZDZ0MkZGUTNU?=
+ =?utf-8?B?Z0ZRQkFSWGRNWitkVHBQWDBScUFyWTRGbzVKZ1kxNHZwTndVN0ppRkY2YXp2?=
+ =?utf-8?B?dlhrV2kwL2FOS21MQ0xKN3hBRTRNZkdZazRlUXk2S3N5M2hvSEE0d29xMmxS?=
+ =?utf-8?B?aUEzc2ZmOCs3Vkd4NkJBZ3lPNHVacFpnQkdUS21WbDZEbGtnZ3lIWEdvZ2JY?=
+ =?utf-8?B?K1B4d3JXVG9mc3U3anR5Ly9KVjlrcE50aWpkOUU5eVNaOEgzdHVBdStLSVRr?=
+ =?utf-8?B?MHZGU29EM05nanZRd1FicS9VUE1meFpROGFYN3RCWFFrek9SdWkxUzUrU2RE?=
+ =?utf-8?B?QlFrYm9aOXNSREREMEdxUmpOMmJMV0FPNUplUTFDT1gzKzdKVFVNUzA3RC9k?=
+ =?utf-8?B?QnV3SUdkRU1BdEdXQWc1ajR1MnovWUE3YlZXV1I3VERSQXZVeVh0ZXhEeTdL?=
+ =?utf-8?B?bmNpMEtnalNPTTF2VVdYK3pKUm0xMUNwZUV4bGUyVDNYS0dQMnZmRTZMMk81?=
+ =?utf-8?B?MjdxeEVTUWJXWDJBbDBmZlkrNXlLVEZaZmZkZjZMTVhtWGNuRkd3WXJQdnNU?=
+ =?utf-8?B?M0VjR1Y1R25icEpuaEQvNkpvZHNtOFJRc3FwVGtwQVQ0YzhSL0UyemE5K3Qv?=
+ =?utf-8?B?MmNlUW5lMWRsdVRlUk8rZEpVSmI4VWZwMXVNVmt3d3FJaUVwRVk1NVdxaXJY?=
+ =?utf-8?B?YWNuSmNZTDR4NGUxWXZlZmVFSkV5QXdEQkxLcGJlRUxuOHdhZkVMRWNkQWlo?=
+ =?utf-8?B?c0tLK0FJWEd0SGlKYjB6eG11cnRORVE4dFcxWVJjZ2ZiVzAvK3JKMTdsOVNt?=
+ =?utf-8?B?SFVUc1NNVFp1dC8vTDFkRGJVUjVySFVCdHBQQ0J4Wk5VdG9rNHV5TVFnK0pv?=
+ =?utf-8?B?Wm42Wnc4U29qNnoyQThWUG1LVWJON2JxUE5NNzNKUVRaazFkNUgzWnU1K2xS?=
+ =?utf-8?B?Ulo2V0Z4eHpOTzcxME1pK2JuV3pQNEc1a1VobUtwT04vK3N4SWwvTzB4UVVW?=
+ =?utf-8?B?dDg2ZkpXTVRkL0diUlhhOENNU3p6WDkrQ21Vb2NVSk90ekVBbkFVNXpqWFFo?=
+ =?utf-8?B?R29oa1h6dHBtNUJJUngrS2tSS212WkYwQ0pDRGRRNjlvK09CbmYvcDZtMnRN?=
+ =?utf-8?B?U3N3S3Yyd05lM0EwbVZxVHFFYWwzSStRVXc1TUJCWFZzOXNVWDBOano1M3JN?=
+ =?utf-8?B?dFkrU3B0NTlQZFpFTkt4YmduYndjd0F4Ym15NXVlcmxPcUdSN0pYVFcxNHFt?=
+ =?utf-8?B?U3hJZmFHYVVXaHlrZXVCRStkVk9jdStPSDVxWldaY1ZteVErK3BTN2tZQlJU?=
+ =?utf-8?B?RHh0WFVHR1Z5SlBOVzFSUGZSVUlPSkcrM3NwWEtZNWpUci9HSnFUK2Rmc1h0?=
+ =?utf-8?Q?KrpG3/10et9RrQWa6e8PO0AFQCNTMk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TUFVaE1sRlBjdGRyLzlSK0NHWHpBUG01Rk05MlVRL1ZuSGw5ZE1aZ1RlQmh4?=
+ =?utf-8?B?bjdqMzdYWHlRMWZHM1lSeGhDbG54TDJxdTMwY3Y0elQ1Z3JkK09EVGt2OU5o?=
+ =?utf-8?B?c04zMU84MDlCajlaeXRzMklrQnpKa2FkRzNZa0NycGd5bHFCNmxibGpmUk1h?=
+ =?utf-8?B?UzMvQmVvYWcyUXowM2VoMDlGWUc3Qk5Sem90S2dwcXp6V1hDV1ZxZVZEWFAw?=
+ =?utf-8?B?YTJpbmwxeXBIeXZtenpNS3lhaHdOUlZ4RUJmN0VCRkNBVHpNUVVmOWlWYkhR?=
+ =?utf-8?B?V29Gb0RjdjdqakRRVGJDcmMvN2Z4OURWaGZnR29ocDN2b21Zc2t4TWp5dzJy?=
+ =?utf-8?B?UmNFSTVzSDI2SHhDQmdOQlJ3ODU1TjFRL3RESStPOW1ZWHhONGJSWWlKTUZJ?=
+ =?utf-8?B?QTZpaUtFWGtDSzhUV2hNU0xNTHk0ZU1rckFKWmhCRitzTkpKZ0lia2xTUmFI?=
+ =?utf-8?B?M3hBMUZaTUZwZFlYUlVBZytOVDh3dm1qUEZPSlcyV1hRN1pvYnNzMFM2eUhH?=
+ =?utf-8?B?SDZlaERoNXhyd0R4Nk14TmxSQnBaQW95a1VYV3NsV1pyMWptZmZKVVNNNHZJ?=
+ =?utf-8?B?V1JSblJtaXZJZVpsZFNFRXYvR3NsMkFwV004dzcvRnJGUndoQS9VZzFJTVdJ?=
+ =?utf-8?B?VW8ydnk0cWE2UDhyaU54NFV5cHZCVW4yanJJZTY4cUxjK0R4ZUJQOEdjVGJu?=
+ =?utf-8?B?NXgrYnB4Q01rK2grOUlFOVN5cHNGVnFJNUx4VS9za05PeU81YWUwMDBPQTlZ?=
+ =?utf-8?B?dTBtOVBVYloxSnVnR1lxZm9xaXBmamlzMnhtUXg2RUZOZTlKRXI0ZXd6clM2?=
+ =?utf-8?B?ditndDhRd00xdGxST2JLaldiaUFsYy9USFJ1MGFGUnZyZ0lHRDRzLzhuanZI?=
+ =?utf-8?B?WXBxMllSVWRLdWtJQVU3UXNoV2ZvbFpQWjVuMG8vd01ocEZQUDQ0Zmg1NHhu?=
+ =?utf-8?B?emd6ZVBBMVVvRVZRU2dYbTljbklqbjVBSndVeGRHemhIVVM1TndxdElXS0RE?=
+ =?utf-8?B?Y3QwbTVPTnQyMFcvZVRkcGVpSjFmVlBIWlhSVk4walViU29GQUIvdW5hcGd2?=
+ =?utf-8?B?a0lXdFNZa1NLOUNMMjMzd0FxU2RFcjk5ZXdFZXRkRmlnT2RtVS9vNDRrOEty?=
+ =?utf-8?B?cjFGOTM0c1JGQmhNTlFQRDZtUDQvOEZzNXBiYTBnakhnc2dlK2pCQzV3eWJN?=
+ =?utf-8?B?TGtYNUZNYUZvUzluanE4aFFNTzBFZVloeFFlTStzWTBlYjJaaW1oYy9FK3FB?=
+ =?utf-8?B?czFFT1laYU1JSi9uOFpiWTJpWUNPR0dDbUFWSlVnejVZdkNtVndEeUI2Vnhv?=
+ =?utf-8?B?UzAzZ0VGWTVFWjdvaDBDaU5mK0UyTmdLWURnY2IwclkxNWUvSmRVUXJCTzV2?=
+ =?utf-8?B?OGpxVUNZbnlPY0tqVGc1ZzlaNjNVMDloS2hoQXBRVFl0Mmp3NjhXbjNWTkxR?=
+ =?utf-8?B?eHMwb1d1ZWx0NDNrdWdiMkZ4TGY2Qk01SGs4WjRFRlpXMllGN2tRSGc5dEl3?=
+ =?utf-8?B?d1NNME9adXEzMlptQ0h0UzNtUTh5dU5TMzlzaUdwbmt4U3QvMHBJdXBNMmRL?=
+ =?utf-8?B?enVaZElCaG5kRHdOWW1kc0dqWDJBRisxc1VSaDg2T1VqVDQ2T1ZjbW9vUVgx?=
+ =?utf-8?B?UkxwMFl0UHltVHJ2RmdaY3FGRWEvYlo3VTQwVXIvVlVoVTBzdXR5TGhNbXg1?=
+ =?utf-8?B?Z2hOZnRQeFg1T2ZxU2taOVZZaW0rencyWFdwWXZXWmJPMzFsYmVTaHFxNTBF?=
+ =?utf-8?B?Mkgwd0twYlJvVitKeVhtSDVKTFNHeG9ZanhETzFKcUJVN2dla1RXOU03aEpZ?=
+ =?utf-8?B?TGZ6cjR1TDdJa0FhNXg1dnZlcWdGSThtY0hLRlZ0RGMrZ2l6cm1xTFVaQlBO?=
+ =?utf-8?B?TDZRRzhnR3ViSlpKNllFZXBZWHo2b0hGKzViaEYzYTNabnZoUm5STzRLVWpZ?=
+ =?utf-8?B?QU16cEpaSnVKUU90N25zb3l4SUIwZlIwZFNNTGtjOHJacytvQmdBNzFMZ0o5?=
+ =?utf-8?B?UXdCNHcvWDBrcDJ1Sk9rbTR3RVlCVkdqLzZGZW9qZEVPWk1Td3RXNnM3MHhz?=
+ =?utf-8?B?SHpMYlhVUHdIL3MwT1k1OHhSeUROOG1CbGZTK3J3SExvTE1RL1Nzbzl1UnhT?=
+ =?utf-8?Q?zQgANuYIZXKNqMrhFm00O3zvz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71897a6c-2b6f-4683-ede8-08de002f0937
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 14:38:35.2828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5WPhgn0kQxXcjIcCzHIvVeH5SihKHXkB14xZkmHnr2DJ8cYG/w4xruYOntb5ImDc4lDXYMZRpglqd8bcRQp0gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8319
 
-On Mon, Sep 29, 2025 at 10:25=E2=80=AFAM Anand Moon <linux.amoon@gmail.com>=
- wrote:
+
+
+On 9/29/2025 7:26 PM, Dave Jiang wrote:
 >
-> Hi Rob
+> On 9/25/25 3:34 PM, Terry Bowman wrote:
+>> Populate the cxl_do_recovery() function with uncorrectable protocol error (UCE)
+>> handling. Follow similar design as found in PCIe error driver,
+>> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
+>> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
+>>
+>> Introduce cxl_walk_port(). Make this analogous to pci_walk_bridge() but walking
+>> CXL ports instead. This will iterate through the CXL topology from the
+>> erroring device through the downstream CXL Ports and Endpoints.
+>>
+>> Export pci_aer_clear_fatal_status() for CXL to use if a UCE is not found.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>
+>> ---
+>>
+>> Changes in v11->v12:
+>> - Cleaned up port discovery in cxl_do_recovery() (Dave)
+>> - Added PCI_EXP_TYPE_RC_END to type check in cxl_report_error_detected()
+>>
+>> Changes in v10->v11:
+>> - pci_ers_merge_results() - Move to earlier patch
+>> ---
+>>  drivers/cxl/core/ras.c | 111 +++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 111 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>> index 7e8d63c32d72..45f92defca64 100644
+>> --- a/drivers/cxl/core/ras.c
+>> +++ b/drivers/cxl/core/ras.c
+>> @@ -443,8 +443,119 @@ void cxl_endpoint_port_init_ras(struct cxl_port *ep)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_port_init_ras, "CXL");
+>>  
+>> +static int cxl_report_error_detected(struct device *dev, void *data)
+>> +{
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	pci_ers_result_t vote, *result = data;
+>> +
+>> +	guard(device)(dev);
+>> +
+>> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) ||
+>> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)) {
+>> +		if (!cxl_pci_drv_bound(pdev))
+>> +			return 0;
+>> +
+>> +		vote = cxl_error_detected(dev);
+>> +	} else {
+>> +		vote = cxl_port_error_detected(dev);
+>> +	}
+>> +
+>> +	*result = pci_ers_merge_result(*result, vote);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int match_port_by_parent_dport(struct device *dev, const void *dport_dev)
+>> +{
+>> +	struct cxl_port *port;
+>> +
+>> +	if (!is_cxl_port(dev))
+>> +		return 0;
+>> +
+>> +	port = to_cxl_port(dev);
+>> +
+>> +	return port->parent_dport->dport_dev == dport_dev;
+>> +}
+>> +
+>> +static void cxl_walk_port(struct device *port_dev,
+>> +			  int (*cb)(struct device *, void *),
+>> +			  void *userdata)
+>> +{
+>> +	struct cxl_dport *dport = NULL;
+>> +	struct cxl_port *port;
+>> +	unsigned long index;
+>> +
+>> +	if (!port_dev)
+>> +		return;
+>> +
+>> +	port = to_cxl_port(port_dev);
+>> +	if (port->uport_dev && dev_is_pci(port->uport_dev))
+>> +		cb(port->uport_dev, userdata);
+> Could use some comments on what is being walked. Also an explanation of what is happening here would be good.
+Ok
+> If this is an endpoint port, this would be the PCI endpoint device.
+> If it's a switch port, then this is the upstream port.
+> If it's a root port, this is skipped.
 >
-> On Mon, 29 Sept 2025 at 19:19, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Sep 29, 2025 at 2:40=E2=80=AFAM Anand Moon <linux.amoon@gmail.c=
-om> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > Thanks for your review comments
-> > >
-> > > On Fri, 26 Sept 2025 at 19:26, Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Fri, Sep 26, 2025 at 2:29=E2=80=AFAM Anand Moon <linux.amoon@gma=
-il.com> wrote:
-> > > > >
-> > > > > Convert the legacy text-based binding documentation for
-> > > > > nvidia,tegra-pcie into a nvidia,tegra-pcie.yaml YAML schema, foll=
-owing
-> > > >
-> > > > s/YAML/DT/
-> > > >
-> > > Ok,
-> > > > > the Devicetree Schema format. This improves validation coverage a=
-nd enables
-> > > > > dtbs_check compliance for Tegra PCIe nodes.
-> > > >
-> > > > Your subject needs some work too. 'existing' and 'bindings
-> > > > documentation' are redundant.
-> > > >
-> > > Here is the simplified version
-> > >
-> > > dt-bindings: PCI: Convert the nvidia,tegra-pcie bindings documentatio=
-n
-> > > into a YAML schema
-> >
-> > Still doesn't fit on one line and you say bindings twice:
-> >
-> > dt-bindings: PCI: Convert nvidia,tegra-pcie to DT schema
-> >
-> Ok
-> > >
-> > > Convert the existing text-based DT bindings documentation for the
-> > > NVIDIA Tegra PCIe host controller to a YAML schema format.
-> >
-> > s/YAML/DT/
-> >
-> > Lots of things are YAML. Only one thing is DT schema.
-> Ok, understood.
-> >
-> > >
-> > > > >
-> > > > > Cc: Jon Hunter <jonathanh@nvidia.com>
-> > > > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > > > ---
-> > > > > v1: new patch in this series.
-> > > > > ---
-> > > > >  .../bindings/pci/nvidia,tegra-pcie.yaml       | 651 ++++++++++++=
-+++++
-> > > > >  .../bindings/pci/nvidia,tegra20-pcie.txt      | 670 ------------=
-------
-> > > > >  2 files changed, 651 insertions(+), 670 deletions(-)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,=
-tegra-pcie.yaml
-> > > > >  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,=
-tegra20-pcie.txt
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra-p=
-cie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..dd8cba125b53
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yam=
-l
-> > > > > @@ -0,0 +1,651 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: NVIDIA Tegra PCIe Controller
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Thierry Reding <thierry.reding@gmail.com>
-> > > > > +  - Jon Hunter <jonathanh@nvidia.com>
-> > > > > +
-> > > > > +description: |
-> > > >
-> > > > Don't need '|'.
-> > > >
-> > > Ok
-> > > > > +  PCIe controller found on NVIDIA Tegra SoCs including Tgra20, T=
-egra30,
-> > > > > +  Tegra124, Tegra210, and Tegra186. Supports multiple root ports=
- and
-> > > > > +  platform-specific clock, reset, and power supply configuration=
-s.
-> > > >
-> > > > I would suggest not listing every SoC here unless the list is not g=
-oing to grow.
-> > > >
-> > > Here is the short format.
-> > >   PCIe controller found on NVIDIA Tegra SoCs which supports multiple
-> > >   root ports and platform-specific clock, reset, and power supply
-> > >   configurations.
-> > > Ok
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    oneOf:
-> > > >
-> > > > Only 1 entry here, don't need 'oneOf'.
-> > >
-> > > I am observing the following warning if I remove this.
-> > >
-> > >  make ARCH=3Darm64 -j$(nproc) dt_binding_check
-> > > DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pci/nvidia,tegra-=
-pcie.yaml
-> > >   CHKDT   ./Documentation/devicetree/bindings
-> > > /media/nvme0/mainline/linux-tegra-6.y-devel/Documentation/devicetree/=
-bindings/pci/nvidia,tegra-pcie.yaml:
-> > > properties:compatible: [{'items': [{'enum': ['nvidia,tegra20-pcie',
-> > > 'nvidia,tegra30-pcie', 'nvidia,tegra124-pcie', 'nvidia,tegra210-pcie'=
-,
-> > > 'nvidia,tegra186-pcie']}]}] is not of type 'object', 'boolean'
-> >
-> > Because you made 'compatible' a list rather than a schema/map/dict.
-> > IOW, You need to remove the '-' as well.
-> >
-> Ok fixed.
-> >
-> > > > > +  nvidia,num-lanes:
-> > > > > +    description: Number of PCIe lanes used
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > >
-> > > > The examples show this in child nodes.
-> > > yes it patternProperties example I missed this.
-> > >
-> > > patternProperties:
-> > >   "^pci@[0-9a-f]+$":
-> > >     type: object
-> > >
-> > >     properties:
-> > >       reg:
-> > >         maxItems: 1
-> > >
-> > >       nvidia,num-lanes:
-> > >         description: Number of PCIe lanes used
-> > >         $ref: /schemas/types.yaml#/definitions/uint32
-> > >         minimum: 1
-> > >
-> > >     unevaluatedProperties: false
-> >
-> > What about all the other properties in the child nodes? You need a
-> > $ref to pci-pci-bridge.yaml as well.
-> Thanks for the input.
+>> +
+>> +	xa_for_each(&port->dports, index, dport)
+>> +	{
+>> +		struct device *child_port_dev __free(put_device) =
+>> +			bus_find_device(&cxl_bus_type, &port->dev, dport->dport_dev,
+>> +					match_port_by_parent_dport);
+>> +
+>> +		cb(dport->dport_dev, userdata);
+> This is going through all the downstream ports
+>> +
+>> +		cxl_walk_port(child_port_dev, cxl_report_error_detected, userdata);
+>> +	}
+>> +
+>> +	if (is_cxl_endpoint(port))
+>> +		cb(port->uport_dev->parent, userdata);
+> And this is the downstream parent port of the endpoint device
 >
-> patternProperties:
->   "^pci@[0-9a-f]+$":
->     type: object
->     allOf:
->       - $ref: /schemas/pci/pci-host-bridge.yaml#
+> Why not move this before the xa_for_each() and return early? endpoint ports don't have dports, no need to even try to run that block above.
+Sure, I'll change that.
+> So in the current implementation,
+> 1. Endpoint. It checks the device, and then it checks the downstream parent port for errors. Is checking the parent dport necessary?
+> 2. Switch. It checks the upstream port, then it checks all the downstream ports for errors.
+> 3. Root port. It checks all the downstream ports for errors.
+> Is this the correct understanding of what this function does?
 
-That's not the one you need. Read my reply again.
+Yes. The ordering is different as you pointed out. I can move the endpoint 
+check earlier with an early return. 
+>> +}
+>> +
+>>  static void cxl_do_recovery(struct device *dev)
+>>  {
+>> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>> +	struct pci_dev *pdev = to_pci_dev(dev);
+>> +	struct cxl_port *port = NULL;
+>> +
+>> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
+>> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+>> +		struct cxl_dport *dport;
+>> +		struct cxl_port *rp_port __free(put_cxl_port) = find_cxl_port(&pdev->dev, &dport);
+>> +
+>> +		port = rp_port;
+>> +
+>> +	} else	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_UPSTREAM) {
+>> +		struct cxl_port *us_port __free(put_cxl_port) = find_cxl_port_by_uport(&pdev->dev);
+>> +
+>> +		port = us_port;
+>> +
+>> +	} else	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) ||
+>> +		    (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)) {
+>> +		struct cxl_dev_state *cxlds;
+>> +
+>> +		if (!cxl_pci_drv_bound(pdev))
+>> +			return;
+> Need to have the pci dev lock before checking driver bound.
+> DJ
 
->       - properties:
+Ok, I'll try to add that into cxl_pci_drv_bound(). Terry
+>> +
+>> +		cxlds = pci_get_drvdata(pdev);
+>> +		port = cxlds->cxlmd->endpoint;
+>> +	}
+>> +
+>> +	if (!port) {
+>> +		dev_err(dev, "Failed to find the CXL device\n");
+>> +		return;
+>> +	}
+>> +
+>> +	cxl_walk_port(&port->dev, cxl_report_error_detected, &status);
+>> +	if (status == PCI_ERS_RESULT_PANIC)
+>> +		panic("CXL cachemem error.");
+>> +
+>> +	/*
+>> +	 * If we have native control of AER, clear error status in the device
+>> +	 * that detected the error.  If the platform retained control of AER,
+>> +	 * it is responsible for clearing this status.  In that case, the
+>> +	 * signaling device may not even be visible to the OS.
+>> +	 */
+>> +	if (cxl_error_is_native(pdev)) {
+>> +		pcie_clear_device_status(pdev);
+>> +		pci_aer_clear_nonfatal_status(pdev);
+>> +		pci_aer_clear_fatal_status(pdev);
+>> +	}
+>>  }
+>>  
+>>  static void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
 
-properties doesn't need to go under allOf. Actually, don't need allOf
-here at all.
-
->           reg:
->             maxItems: 1
-
->           "#address-cells":
->             const: 3
->           "#size-cells":
->             const: 2
-
-These 2 are already defined in the referenced schema.
-
->           nvidia,num-lanes:
->             description: Number of PCIe lanes used
->             $ref: /schemas/types.yaml#/definitions/uint32
->             minimum: 1
-
-I assume there's a maximum <=3D16?
-
-blank line here and between all DT properties.
-
->         required:
->           - "#address-cells"
->           - "#size-cells"
-
-These 2 are already required in the referenced schema.
-
->           - nvidia,num-lanes
->     unevaluatedProperties: false
->
-> > Rob
->
-> Thanks
-> -Anand
->
 
