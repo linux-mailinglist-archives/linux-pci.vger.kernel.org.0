@@ -1,213 +1,213 @@
-Return-Path: <linux-pci+bounces-37303-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37304-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9BFFBAEB61
-	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 00:45:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 821C9BAEC8E
+	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 01:39:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96BBC3B2DB8
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 22:45:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D82A3A7058
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 23:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0099D149E17;
-	Tue, 30 Sep 2025 22:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6602D1931;
+	Tue, 30 Sep 2025 23:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DyIIl1qY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tT+DMFav"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382B8BA3D
-	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 22:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9A92C3251
+	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 23:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759272350; cv=none; b=CktSBd9euhn6v+mucogcg7xmyQP8YT9x6R4ZXYfLChmgQ7MfrzDT7COKf+4+rVDMO9128zYkDA7iWuH1sqk/KKcxYaa5sLzW8arlxSoMAVc5uo+c/TduTZg29CCTMFKRjyd1C1bfBku4txtquiDgj1LzEk3meS/CYTWZBXdSbc4=
+	t=1759275542; cv=none; b=s5+5zA/eQEPHQ4MAd9DTSjfX8h1FXRBNHIl9x6jaUE8GNsVU7LLIXGi9sSkq7X0GWnhA5kR8GxmJpqU/OpzRTMQIluB4mkHxM0GxIXc2/BdO7eQtuUva6dWG10EJGb9N6q9S5LMHu90OEIA+RWs2UZLiThTtHk+XYiN3Dcvz6oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759272350; c=relaxed/simple;
-	bh=D9+lsggmbaL/9LZ7UrEOVPjUZhw5sAFSbQz8rzrXeK0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mTYeAAoHMc97qCbM98pQhY+u2xQ0Vk5xwQRG0sB8/xHUqz9lQeBt0//dyad3O3p5s5x8Xt4PXr2bxDOmp+QRzEsir6dKiXqxfnJ0BAtZ5pY+fM9xxOq8sylD/iCxxGWGntKAU0spuCMyvKY+ryN3rc8d+VJUlEo4nIfvVEHyHL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DyIIl1qY; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759272349; x=1790808349;
-  h=date:from:to:cc:subject:message-id;
-  bh=D9+lsggmbaL/9LZ7UrEOVPjUZhw5sAFSbQz8rzrXeK0=;
-  b=DyIIl1qY5KRjstbgtBapHvypx4yG+ABjW3Nz0s45SLw17U7bIP34q+lo
-   9Vi1TDaC1vczkWnGd371lmq2RQtiNVmMlI/tsmicdQJMGhaxXjV8MKBcv
-   /XQm3hafYTsJc7vd1o1SZyAWHeN24sNP7I8QH4XJSv6tKt52dd4yheHv5
-   yxSpkM/Nw3DqBLBtBpBCYct5dt1crCa11pw2EPt/cIU2yUWGZ9axecKzp
-   5o82SwEtZKN/oJN+Bli2nyiOS9aNkEfzYU2p5aQvj91qnh4Y1wuOFc2GI
-   /FJSWFauUrvVkqGHnMmcUq2NkexeD7Ce7AB9Wv3luLULIgKSI8aGpYboL
-   w==;
-X-CSE-ConnectionGUID: lRszTbftQUumWkjOrjglkA==
-X-CSE-MsgGUID: rbF5amMPSBmXHz2cv7LcCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="79191912"
-X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
-   d="scan'208";a="79191912"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 15:45:49 -0700
-X-CSE-ConnectionGUID: KINRVdSvSqWJnN8gHDXUqw==
-X-CSE-MsgGUID: rmmvz9e7QsKXG7cQxCgW+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
-   d="scan'208";a="202324756"
-Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 30 Sep 2025 15:45:47 -0700
-Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v3j6P-0002X1-2W;
-	Tue, 30 Sep 2025 22:45:45 +0000
-Date: Wed, 01 Oct 2025 06:44:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- f03dd319d057286f837a6d058a54d6f336981343
-Message-ID: <202510010648.UOodACjV-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1759275542; c=relaxed/simple;
+	bh=uoEaags9cvj4V9dXTIwpOjvo5TRbqVrRX+MjXZnzWmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eNVP5NBGHlchJjL+cvP8LcpatBA0TX97vJfI7ynVDMxS/w7ppl9tQihe3ILel5B61r5HtidvXsLUA4J0zko44NfXadvbNeEraTpo+ejCODD5MtPs45L3SsM4xIOBLfXyD98MJvsY5JYpejPZVXnf+jr9of9/UxOWdqDW+xaqEqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tT+DMFav; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F60C2BCB0
+	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 23:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759275542;
+	bh=uoEaags9cvj4V9dXTIwpOjvo5TRbqVrRX+MjXZnzWmw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tT+DMFav2SKIcffHWszSEBTJkLenbg0LY5P3EtljDtV9tivPOw2a0ZAuIsWvejumj
+	 Xcvkbu/ZQ0b7q5+v6CSuYDn18iP5m7pBz76KjVV/TSmXhLJktGJveSb1sklgKfsnl2
+	 VevDH/gnLH3PhNjZ1qrVMQwbGJ9+skVOQGhdlV6IeweujomYDm2M3da2ahBX/rXZnN
+	 ORBr76YYyzh2ScNZO/T8bmDwnaWJu9hGvyogJ6XiqpoBAPYOqO7Jq82Z7cX2ukp/lc
+	 7C0hBTaaabO/PDM6C3pd5b1Oh2VoOpzdKt6sbzOHb/qcUIrVuIq5lVisBGkM00n+H/
+	 0le6spp1E58ZQ==
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-46e3bcf272aso26585e9.0
+        for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 16:39:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUEAjesVHsn3XxUzUwnY5Q+El50M8hWxAlwFvoGUXHNqWJh5q1L1UDR3Or46VjRcbqAoq9s+VCjLa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnucDNbNuxerFAVrKFt6Mgc8J1sJhHNwcY+7OcPU4GbZ+MPx5Q
+	Gl2FH0wZKCSZ/NZBZhtaTQ4WuRARaziZ6XBQC5B2UQy2achv9EZF0RVQtnb2RQvq7uGzUaHgv1v
+	uDVfrVixMQpoCRkGJotOlk+9SpzxutCEC8Xu5sG8L
+X-Google-Smtp-Source: AGHT+IGW2/qdhioiWERpaECvrg9VQsaWlrzDEBJ3gDhsR0VtryFnP36E7HLr3RLdANnbgkm+pmRQW55NN3zTH4k4qSk=
+X-Received: by 2002:a05:600c:a10b:b0:453:672b:5b64 with SMTP id
+ 5b1f17b1804b1-46e61b8a883mr619555e9.2.1759275540420; Tue, 30 Sep 2025
+ 16:39:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
+ <20250916-luo-pci-v2-1-c494053c3c08@kernel.org> <2025093014-qualify-scoop-c406@gregkh>
+In-Reply-To: <2025093014-qualify-scoop-c406@gregkh>
+From: Chris Li <chrisl@kernel.org>
+Date: Tue, 30 Sep 2025 16:38:48 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuMXJ+JE=mJCNyz6ETNQ5evMh15VKo2wFreuZ=6Jz0aGWg@mail.gmail.com>
+X-Gm-Features: AS18NWAUSgFUxtTB2q7O9k-Pi7VfFzzfrFZp7BtTF7h7cgw0DwnfuCv6HX1IMTE
+Message-ID: <CAF8kJuMXJ+JE=mJCNyz6ETNQ5evMh15VKo2wFreuZ=6Jz0aGWg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] PCI/LUO: Register with Liveupdate Orchestrator
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: f03dd319d057286f837a6d058a54d6f336981343  Merge branch 'pci/misc'
+On Tue, Sep 30, 2025 at 8:31=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Sep 16, 2025 at 12:45:09AM -0700, Chris Li wrote:
+> > Register PCI subsystem with the Liveupdate Orchestrator
+> > and provide noop liveupdate callbacks.
+> >
+> > Signed-off-by: Chris Li <chrisl@kernel.org>
+> > ---
+> >  MAINTAINERS              |  2 ++
+> >  drivers/pci/Makefile     |  1 +
+> >  drivers/pci/liveupdate.c | 54 ++++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 57 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 91cec3288cc81aea199f730924eee1f5fda1fd72..85749a5da69f88544ccc749=
+e9d723b1b54c0e3b7 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14014,11 +14014,13 @@ F:  tools/testing/selftests/livepatch/
+> >
+> >  LIVE UPDATE
+> >  M:   Pasha Tatashin <pasha.tatashin@soleen.com>
+> > +M:   Chris Li <chrisl@kernel.org>
+> >  L:   linux-kernel@vger.kernel.org
+> >  S:   Maintained
+> >  F:   Documentation/ABI/testing/sysfs-kernel-liveupdate
+> >  F:   Documentation/admin-guide/liveupdate.rst
+> >  F:   drivers/misc/liveupdate/
+> > +F:   drivers/pci/liveupdate/
+> >  F:   include/linux/liveupdate.h
+> >  F:   include/uapi/linux/liveupdate.h
+> >  F:   tools/testing/selftests/liveupdate/
+> > diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> > index 67647f1880fb8fb0629d680398f5b88d69aac660..aa1bac7aed7d12c641a6b55=
+e56176fb3cdde4c91 100644
+> > --- a/drivers/pci/Makefile
+> > +++ b/drivers/pci/Makefile
+> > @@ -37,6 +37,7 @@ obj-$(CONFIG_PCI_DOE)               +=3D doe.o
+> >  obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) +=3D of_property.o
+> >  obj-$(CONFIG_PCI_NPEM)               +=3D npem.o
+> >  obj-$(CONFIG_PCIE_TPH)               +=3D tph.o
+> > +obj-$(CONFIG_LIVEUPDATE)     +=3D liveupdate.o
+> >
+> >  # Endpoint library must be initialized before its users
+> >  obj-$(CONFIG_PCI_ENDPOINT)   +=3D endpoint/
+> > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..86b4f3a2fb44781c6e323ba=
+029db510450556fa9
+> > --- /dev/null
+> > +++ b/drivers/pci/liveupdate.c
+> > @@ -0,0 +1,54 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/*
+> > + * Copyright (c) 2025, Google LLC.
+> > + * Chris Li <chrisl@kernel.org>
+> > + */
+> > +
+> > +#define pr_fmt(fmt) "PCI liveupdate: " fmt
+> > +
+> > +#include <linux/liveupdate.h>
+> > +
+> > +#define PCI_SUBSYSTEM_NAME "pci"
+> > +
+> > +static int pci_liveupdate_prepare(void *arg, u64 *data)
+> > +{
+> > +     pr_info("prepare data[%llx]\n", *data);
+> > +     return 0;
+> > +}
+> > +
+> > +static int pci_liveupdate_freeze(void *arg, u64 *data)
+> > +{
+> > +     pr_info("freeze data[%llx]\n", *data);
+> > +     return 0;
+> > +}
+> > +
+> > +static void pci_liveupdate_cancel(void *arg, u64 data)
+> > +{
+> > +     pr_info("cancel data[%llx]\n", data);
+> > +}
+> > +
+> > +static void pci_liveupdate_finish(void *arg, u64 data)
+> > +{
+> > +     pr_info("finish data[%llx]\n", data);
+> > +}
+> > +
+> > +struct liveupdate_subsystem pci_liveupdate_ops =3D {
+> > +     .prepare =3D pci_liveupdate_prepare,
+> > +     .freeze =3D pci_liveupdate_freeze,
+> > +     .cancel =3D pci_liveupdate_cancel,
+> > +     .finish =3D pci_liveupdate_finish,
+> > +     .name =3D PCI_SUBSYSTEM_NAME,
+> > +};
+> > +
+> > +static int __init pci_liveupdate_init(void)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret =3D liveupdate_register_subsystem(&pci_liveupdate_ops);
+> > +     if (ret && liveupdate_state_updated())
+> > +             panic("PCI liveupdate: Register subsystem failed: %d", re=
+t);
+> > +     WARN(ret, "PCI liveupdate: Register subsystem failed %d", ret);
+>
+> But this didn't fail.
+>
+> And you just crashed the box if panic-on-warn is enabled, so if some
+> test infrastructure builds this first patch, boom.
 
-elapsed time: 1465m
+Sorry that the second WARN should be removed. That is something during
+the rebase conflict resolution somehow slipped through the crack.
 
-configs tested: 120
-configs skipped: 6
+I will remove the second WARN() there.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks for catching it.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20250930    gcc-9.5.0
-arc                   randconfig-002-20250930    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                            hisi_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250930    gcc-13.4.0
-arm                   randconfig-002-20250930    gcc-8.5.0
-arm                   randconfig-003-20250930    gcc-8.5.0
-arm                   randconfig-004-20250930    gcc-10.5.0
-arm                           sama7_defconfig    clang-22
-arm                        shmobile_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250930    clang-18
-arm64                 randconfig-002-20250930    clang-22
-arm64                 randconfig-003-20250930    clang-18
-arm64                 randconfig-004-20250930    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250930    gcc-13.4.0
-csky                  randconfig-002-20250930    gcc-13.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250930    clang-22
-hexagon               randconfig-002-20250930    clang-22
-i386        buildonly-randconfig-001-20250930    gcc-12
-i386        buildonly-randconfig-002-20250930    gcc-14
-i386        buildonly-randconfig-003-20250930    clang-20
-i386        buildonly-randconfig-004-20250930    gcc-14
-i386        buildonly-randconfig-005-20250930    clang-20
-i386        buildonly-randconfig-006-20250930    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250930    clang-22
-loongarch             randconfig-002-20250930    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250930    gcc-8.5.0
-nios2                 randconfig-002-20250930    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250930    gcc-12.5.0
-parisc                randconfig-002-20250930    gcc-9.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                          g5_defconfig    gcc-15.1.0
-powerpc                     mpc512x_defconfig    clang-22
-powerpc               mpc834x_itxgp_defconfig    clang-22
-powerpc               randconfig-001-20250930    gcc-8.5.0
-powerpc               randconfig-002-20250930    gcc-14.3.0
-powerpc               randconfig-003-20250930    gcc-15.1.0
-powerpc64             randconfig-001-20250930    gcc-14.3.0
-powerpc64             randconfig-002-20250930    gcc-12.5.0
-powerpc64             randconfig-003-20250930    gcc-11.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250930    gcc-10.5.0
-riscv                 randconfig-002-20250930    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250930    gcc-12.5.0
-s390                  randconfig-002-20250930    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250930    gcc-15.1.0
-sh                    randconfig-002-20250930    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250930    gcc-11.5.0
-sparc                 randconfig-002-20250930    gcc-8.5.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250930    clang-22
-sparc64               randconfig-002-20250930    gcc-9.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20250930    gcc-14
-um                    randconfig-002-20250930    gcc-12
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250930    clang-20
-x86_64      buildonly-randconfig-002-20250930    gcc-14
-x86_64      buildonly-randconfig-003-20250930    gcc-14
-x86_64      buildonly-randconfig-004-20250930    clang-20
-x86_64      buildonly-randconfig-005-20250930    gcc-14
-x86_64      buildonly-randconfig-006-20250930    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250930    gcc-12.5.0
-xtensa                randconfig-002-20250930    gcc-11.5.0
+>
+> {sigh}
+>
+> If you are going to do a "dummy" driver, please make it at least work
+> and not do anything bad.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I did test it with a real machine and real PCI device, but I did not
+have the panic-on-warn.
+
+Again my bad. Sorry about that.
+
+Chris
 
