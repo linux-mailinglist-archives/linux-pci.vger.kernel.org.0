@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-37264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8962EBADE59
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:30:47 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BA9EBADE61
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 17:31:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2DCCC4E1BCC
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:30:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4C50F4E181C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 15:31:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F0B723A562;
-	Tue, 30 Sep 2025 15:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66353081B4;
+	Tue, 30 Sep 2025 15:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QNuYAsAU"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YnBwf57d"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E98FBF6;
-	Tue, 30 Sep 2025 15:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7333B3081AA;
+	Tue, 30 Sep 2025 15:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759246245; cv=none; b=jtqLB5b0p7TbzxQKLxlCkBrhZ6n6qPBQB5VglK6uovQW4ITqrauVDGwzWt2kfNAMlTaXgGCVLwOMAIgBKTJlkvJKF0O9I+S8UTJg1WOG0j2LOoiCM7rvqRUM/94Im2UZob/CEy15UurXbHFJkk8gW4iSEhBKOY55mJCqUtHI8iY=
+	t=1759246248; cv=none; b=HCGdaikecOuw4HJbBwMO3RU6OKEcNZaX+Fe21F573l+sO7P+8WNatZLNPS2gEGKwO8FKM3oYrSA30WlbZeA5jgZm5SlG/3Y8AnhOr5I0VP8yRgBeNjXmJd/3zdLTbQHT1/kaTGRgQjlB5Ee7R1fpA/uZqW4qvRvl3eesoHmonEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759246245; c=relaxed/simple;
-	bh=A9R2TyQIO4GxIihckYzb4VIyZgxkBqYddQJmUyHABaQ=;
+	s=arc-20240116; t=1759246248; c=relaxed/simple;
+	bh=pdHwn0a7TyAYIR38zmFhOPQydyY2hJcTXaAoNlmI2+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oP063NWuV0cx8FJQ7MCUWAzlQ7mylmA+zEe9blK3QEv8rGnGnsGW96s7VBAq1mJSF81SkjRUkGj4ljVEtaxsIfHWYtQm4dTaaBJr4GTgJkkaokvEA0cDKdMjBVKJyYK+O9rPQ/3mPBY/XJAVNGBHiRFlRVOeaTlzv3k39e1Uyx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QNuYAsAU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7408BC4CEF0;
-	Tue, 30 Sep 2025 15:30:44 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQ5WN47g3GiVdWke3eSCYr8JKw1RCRCFAUX/FyUJ1TK3eAzDwrJibG07KMh5DfhOhdcsFKGGy7hDg9l61QQITgq9Ik837H2O621OQMpqQhGoItYtKdrn08JpXrMwgtMkFDgsajy8ynATgkB/IxffV0yWEFUkyK0frxVl4bVAVBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YnBwf57d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD3AC113D0;
+	Tue, 30 Sep 2025 15:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759246245;
-	bh=A9R2TyQIO4GxIihckYzb4VIyZgxkBqYddQJmUyHABaQ=;
+	s=korg; t=1759246248;
+	bh=pdHwn0a7TyAYIR38zmFhOPQydyY2hJcTXaAoNlmI2+4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QNuYAsAU7VjX/BXD2hf8k5eJDOKTw+Ss9A7S5FcnqOprLXfQQq4L3me1uLc0EfUUZ
-	 jqABN3XAaCJ3zL6xhzFebkEU6DE7ATuhKiq7heCrT0f1fcUOgzfxY5EGeP+kE3up7W
-	 wysVBoS21q0SB7JJpJoHAOVVKKe5HSL8svdpsRgU=
-Date: Tue, 30 Sep 2025 17:08:37 +0200
+	b=YnBwf57diahlJNaU9UC1SjIOB4x9SmaIrTEscPaQYz+OeQMWDrLZvXJj/dzeeJEKs
+	 jHWzZq4K42o0Hy3qgXq447wEsWEpyeitpDgZ5KtIOd8wtslNxVKhjj4nBj6AmvGZ8m
+	 m7ZuQ543HHFgirYOHorVlpQd3znOl2bCgRdWpScE=
+Date: Tue, 30 Sep 2025 17:15:45 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Chris Li <chrisl@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Chris Li <chrisl@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
 	Pasha Tatashin <tatashin@google.com>,
@@ -52,106 +52,90 @@ Cc: Chris Li <chrisl@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
 	Saeed Mahameed <saeedm@nvidia.com>,
 	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
-Message-ID: <2025093052-resupply-unmixable-e9bb@gregkh>
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH v2 01/10] PCI/LUO: Register with Liveupdate Orchestrator
+Message-ID: <2025093018-snugly-twisty-91b1@gregkh>
 References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
- <20250929175704.GK2695987@ziepe.ca>
- <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
- <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
- <2025093030-shrewdly-defiant-1f3e@gregkh>
- <CA+CK2bDH=7H58kbwDM1zQ37uN_k61H_Fu8np1TjuG_uEVfT1oA@mail.gmail.com>
+ <20250916-luo-pci-v2-1-c494053c3c08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bDH=7H58kbwDM1zQ37uN_k61H_Fu8np1TjuG_uEVfT1oA@mail.gmail.com>
+In-Reply-To: <20250916-luo-pci-v2-1-c494053c3c08@kernel.org>
 
-On Tue, Sep 30, 2025 at 10:53:50AM -0400, Pasha Tatashin wrote:
-> On Tue, Sep 30, 2025 at 9:41 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Sep 30, 2025 at 09:02:44AM -0400, Pasha Tatashin wrote:
-> > > On Mon, Sep 29, 2025 at 10:10 PM Chris Li <chrisl@kernel.org> wrote:
-> > > >
-> > > > On Mon, Sep 29, 2025 at 10:57 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > >
-> > > > > On Tue, Sep 16, 2025 at 12:45:14AM -0700, Chris Li wrote:
-> > > > > > Save the PCI driver name into "struct pci_dev_ser" during the PCI
-> > > > > > prepare callback.
-> > > > > >
-> > > > > > After kexec, use driver_set_override() to ensure the device is
-> > > > > > bound only to the saved driver.
-> > > > >
-> > > > > This doesn't seem like a great idea, driver name should not be made
-> > > > > ABI.
-> > > >
-> > > > Let's break it down with baby steps.
-> > > >
-> > > > 1) Do you agree the liveupdated PCI device needs to bind to the exact
-> > > > same driver after kexec?
-> > > > To me that is a firm yes. If the driver binds to another driver, we
-> > > > can't expect the other driver will understand the original driver's
-> > > > saved state.
-> > >
-> > > Hi Chris,
-> > >
-> > > Driver name does not have to be an ABI.
-> >
-> > A driver name can NEVER be an abi, please don't do that.
-> >
-> > > Drivers that support live
-> > > updates should provide a live update-specific ABI to detect
-> > > compatibility with the preserved data. We can use a preservation
-> > > schema GUID for this.
-> > >
-> > > > 2) Assume the 1) is yes from you. Are you just not happy that the
-> > > > kernel saves the driver name? You want user space to save it, is that
-> > > > it?
-> > > > How does it reference the driver after kexec otherwise?
-> > >
-> > > If we use GUID, drivers would advertise the GUIDs they support and we
-> > > would modify the core device-driver matching process to use this
-> > > information.
-> > >
-> > > Each driver that supports this mechanism would need to declare an
-> > > array of GUIDs it is compatible with. This would be a new field in its
-> > > struct pci_driver.
-> > >
-> > > static const guid_t my_driver_guids[] = {
-> > >     GUID_INIT(0x123e4567, ...), // Schema V1
-> > >     GUID_INIT(0x987a6543, ...), // Schema V2
-> > >     {},
-> > > };
-> >
-> > That's crazy, who is going to be adding all of that to all drivers?  And
+On Tue, Sep 16, 2025 at 12:45:09AM -0700, Chris Li wrote:
+> Register PCI subsystem with the Liveupdate Orchestrator
+> and provide noop liveupdate callbacks.
 > 
-> Only to the drivers that support live updates, that would be just a few drivers.
+> Signed-off-by: Chris Li <chrisl@kernel.org>
+> ---
+>  MAINTAINERS              |  2 ++
+>  drivers/pci/Makefile     |  1 +
+>  drivers/pci/liveupdate.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 57 insertions(+)
 > 
-> > knowing to bump this if the internal data representaion changes?  And it
-> > will change underneath it without the driver even knowing?  This feels
-> > really really wrong, unless I'm missing something.
-> 
-> A driver that preserves state across a reboot already has an implicit
-> contract with its future self about that data's format. The GUID
-> simply makes that contract explicit and machine-checkable. It does not
-> have to be GUID, but nevertheless there has to be a specific contract.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 91cec3288cc81aea199f730924eee1f5fda1fd72..85749a5da69f88544ccc749e9d723b1b54c0e3b7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14014,11 +14014,13 @@ F:	tools/testing/selftests/livepatch/
+>  
+>  LIVE UPDATE
+>  M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+> +M:	Chris Li <chrisl@kernel.org>
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-kernel-liveupdate
+>  F:	Documentation/admin-guide/liveupdate.rst
+>  F:	drivers/misc/liveupdate/
+> +F:	drivers/pci/liveupdate/
+>  F:	include/linux/liveupdate.h
+>  F:	include/uapi/linux/liveupdate.h
+>  F:	tools/testing/selftests/liveupdate/
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 67647f1880fb8fb0629d680398f5b88d69aac660..aa1bac7aed7d12c641a6b55e56176fb3cdde4c91 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_PCI_DOE)		+= doe.o
+>  obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
+>  obj-$(CONFIG_PCI_NPEM)		+= npem.o
+>  obj-$(CONFIG_PCIE_TPH)		+= tph.o
+> +obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
+>  
+>  # Endpoint library must be initialized before its users
+>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..86b4f3a2fb44781c6e323ba029db510450556fa9
+> --- /dev/null
+> +++ b/drivers/pci/liveupdate.c
+> @@ -0,0 +1,54 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (c) 2025, Google LLC.
+> + * Chris Li <chrisl@kernel.org>
+> + */
+> +
+> +#define pr_fmt(fmt) "PCI liveupdate: " fmt
+> +
+> +#include <linux/liveupdate.h>
+> +
+> +#define PCI_SUBSYSTEM_NAME "pci"
+> +
+> +static int pci_liveupdate_prepare(void *arg, u64 *data)
+> +{
+> +	pr_info("prepare data[%llx]\n", *data);
 
-So how are you going to "version" these GUID?  I see you use "schema Vx"
-above, but how is that really going to work in the end?  Lots of data
-structures change underneath the base driver that it knows nothing
-about, not to mention basic things like compiler flags and the like
-(think about how we have changed things for spectre issues over the
-years...)
+You do know that's a security bug, right?
 
-And when can you delete an old "schema"?  This feels like you are
-forcing future developers to maintain things "for forever"...
+Please don't do this, even in "debug" code, as it can escape into the
+wild...
 
 thanks,
 
