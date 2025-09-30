@@ -1,211 +1,192 @@
-Return-Path: <linux-pci+bounces-37237-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37238-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 457E6BAACFC
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 02:43:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85948BAAE9F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 03:49:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAF1C1C18CD
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 00:43:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD1D37A1CB2
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Sep 2025 01:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994FA7261E;
-	Tue, 30 Sep 2025 00:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA62919CC3E;
+	Tue, 30 Sep 2025 01:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mciW/yKD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VENu9R5T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010001.outbound.protection.outlook.com [52.103.67.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AC8168BD;
-	Tue, 30 Sep 2025 00:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759193002; cv=fail; b=WBHjMwcxOidY0ncoaC30AVWz0Ss4u+wow/zfrZ2lQ7nKI0H5JcbKZ+Z4j3ZXVAdkjce9GFA5LRKFhJn3fDRIO7UvrjF4CGNC7bZUew+wybM5nzV9o4FFleRUAXReH66AGe6TloBA2+xJmd4hBS//4U2x0AsBRZT7WNrac74aFyw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759193002; c=relaxed/simple;
-	bh=KWcjAwzJnEOm+LrabzMkReSrrx1oonWhX61Hg34hE3k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=djjuEFmbj9ZnBtQKamzE0I/cWg8B2bckxa238a1ArYHS09t4lh9q67F+b9Y/71vGtyHReJskuyC4XiE8tClDVl9YvIukEzA4DavwcluiGNn35ValPGQyjzeO64xffyM73k3+V5ckSmsAylnQNZdBUu8knJUsemqZGLRJ8A/mRx0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mciW/yKD; arc=fail smtp.client-ip=52.103.67.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vLIDC6dDVy8FAGzeLLZEL+FpRRS8cLNDYWqXxIjrR7Wa9VIiJdHGdmY1S6FoChTMO6sX7iwKClOb4Y661hB1VIBvMlcGgoyFiKqfWkbrUUcI6zfvY99aKYSASU8pccJA7RRUuBX1WkTeQMr8F45AjPZqRn6z01hE7DJ/wbNhkHRDlBGN+S39EBWVhXiU1Es7klIqIsAxwIWLNEK/25q4zckNJV9FIiEh+sxes9Tv1+EljGRDxD1vFzPPnsOhWMvnDlqMpgbJXbi5fAaUz0GV7vPTKXDmtgvrn+/negStCBG/QuoyMTKpVa17wGE8ymAtGmupY/evEm5TbE9fTjhnag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0wSDB9zlWNjiBfgr4k47x84jmi/L0ndv5v6T2wzoBDo=;
- b=s4fpF6Uhu6O4HRSdjZcif29BwOgljs2Kf0jpRUrp1qgRiUekF8DyfV3LhuA8+s1G+1J9nKJb8oA278MxrduYhxqg3AVfRkiSraJDrZKwjSZvlyIZgfzIcGClt6ULBfQXZ9EYJFMw9MfXaiOjU72qgPsY2ev0Is27GA0++35Jd/E4zCLIdnqcWOt6r9ZKWDzbMvHuojq9cPVqO86DQIAYGo/FrEr8vGe0UdbcJ7ldFZhExbHTBUtGqBw30Kae0vZ4gWnGxiQeLFuXwZXGy+Upjr/KQ5qh3p3YqNR2sg9At3vbmjEOMrx8Qqi7kkCQzJi6kBqAN2QufSp5jGGqpQbWCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0wSDB9zlWNjiBfgr4k47x84jmi/L0ndv5v6T2wzoBDo=;
- b=mciW/yKDp0mQCb2fBAuFfLTvPpxiEl/2n2mQHKHwR83nDtzJ3oVVCFho2N2ntCWvW4ZT0U3sr55s471M+DvIgCQ8CQPCcf7rD7MW0aONg7HA2Osjx/adp3UIQ7WNzM8YUngnkuOB9ZxePkZLjF323+B8/s39aQhM/uuxpq4FvTiG2qR0W8Ykz9Vm4jdfr1VTZHP/PIKDnG332at0ikGxK42cWjASx7MBWKc7M3XfMfSeB4SzVspRuhYLDwI38t8QT1XgI67gLp567jdlloaQJxSY0x10ltIaUSGJEdlv2YTorCQ5OwCI/j1RTidfdGk70OlNRTHDlCJp6FslCxrTSw==
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16) by PN2PR01MB9601.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:fa::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
- 2025 00:43:15 +0000
-Received: from MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b]) by MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::5dff:3ee7:86ee:6e4b%5]) with mapi id 15.20.9160.014; Tue, 30 Sep 2025
- 00:43:15 +0000
-Message-ID:
- <MAUPR01MB1107269A4F21DE5CC8C575077FE1AA@MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM>
-Date: Tue, 30 Sep 2025 08:43:12 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: sg2042: Fix a reference count issue in
- sg2042_pcie_remove()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <242eca0ff6601de7966a53706e9950fbcb10aac8.1759169586.git.christophe.jaillet@wanadoo.fr>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <242eca0ff6601de7966a53706e9950fbcb10aac8.1759169586.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR01CA0113.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::17) To MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:16f::16)
-X-Microsoft-Original-Message-ID:
- <f1887014-17b5-405c-bba2-1a441d50e1f8@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9DC14F121
+	for <linux-pci@vger.kernel.org>; Tue, 30 Sep 2025 01:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759196955; cv=none; b=df3Q7l+7Ly/KcRwLbOkUDXvo1CbkeGnnoB+OhnjV3KX1Dfc2JA1EpBzf1ZW9YbgA10i09QE3RTm96Xab2GW1qYqB7x4wW/q7yOyGxsCDhY031DWWxPCmhz9SsliJllr5aRWdQ8IHq/oGkRkzRpFj0p8iHjddT+FM9AZU9c6+MX8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759196955; c=relaxed/simple;
+	bh=tDBBezcPYlp7FmqilK/rpFOYzXgomJ6GsoGy48Fxknc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zv1xcEXgmDJ6OAqYP5PEwE+DDRwn75U5Wunt1xDi7eSDh6WMBRO9pKMaYAwdHbjgnyDiBn6vCQQNk8Sis17syNpAJFpcMXFsmiE4kSDCFQbmLQwXnaYMbRiRRjXrQz09vSbYirvZE4Qbt+Cy2cxmDBMBLAwBLxSX3BuT+bF2HgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VENu9R5T; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-28832ad6f64so21959265ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 29 Sep 2025 18:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759196953; x=1759801753; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s95NyL2H6y5qz+puhM9dU0vSSqG26p81gIOvv61Fd4I=;
+        b=VENu9R5TS0L0rJoHqJHQNnF9BYN5p4MgfEWaj4E02tCNQ7erB9cQyHQ1BziJlCE5Lv
+         We6MWI6VvkHzOilOHUiS54ujweABhSFy+azDLV5AvnXVtOkEXEZWAfWazFqkcCwyIaeo
+         mUXWxyUn8eT5GCsi7x9FKC7K8KvDmmCiDZ50ueCuif6vvSvoB4eMmDIkVgRgfcj5+acm
+         ifDLvBfSkPBq9lPiC/bvHqF63QOLgB8+R4eKtwWeV9xovK04FL2C9kl9LmFUQZmiNBQ3
+         8Xnndgw7iU0CyT/dSjNsnv6xVHRyiiA7R8g+FakxhKyxJucB9DdDgU439d0gdah5hXvr
+         s38Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759196953; x=1759801753;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s95NyL2H6y5qz+puhM9dU0vSSqG26p81gIOvv61Fd4I=;
+        b=aTNlv8lZguoLtyPuTxGGBynS6SrdSXCvMwtFSKz58AfEfUY1ladbJjU1mllYXJvjxd
+         uY0LQL1ZCq1Ga4QDKCrNUqkDbZG9PKl+LNvR4UNktBulmJcBT922GEhtwmWHSWmX46OM
+         Sam7inxernEAr/p2jxCao9bUkg0UooglOPuFDmrNXmRmwo8TRFXfBNa0rOgKYCOXBAek
+         inNMCyZT1pX4jOYNP2KCq6tyM5lfeUM8OIC/YnEga7qnrfoT7cjx4XOAvSC35WX6P2aZ
+         jnoF+6OjBKB5oD9POWSRP7QezQp0RPlz1Q6A8tgoKh7TxbMNRqM0KX619gEbYZR7wiDA
+         Bu0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUMYqwKolYoj/x+Ek3trH6dCv5lbgEYrAbCwaPs6GoZvOWWUcYrjYJID9RDSp5Hvy3IMKcD4vKUk2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKNkt3SVM69JRkXGIwJft8lEc4KX6IbHcz6oH4gT0CIpbNcnnF
+	m1DoSA5WtR94OJm/TLRy4V9EWzBcvUM6EqlofpNbt/ZkRKDnu+iM+5sd
+X-Gm-Gg: ASbGnct2ecEBzQI3ncmqBs6ix34Ns0qpZ3o/Q/CGWiEjq7FhflD0ZPPvCM3gdt4lrJa
+	eIfFfXFsBKCda6aeHyvzcoJiM2hdegoCWsFpUm84inc/z4BSfLc0GUGx2qCWTlUkvqo/ThRy/Ae
+	Vii00a03qESuggvMAQnssWNxSuRyQRGJLkE0eKChllMdrh9pJ4KaRz0QRZI6IShyyZuoCDZ8+DX
+	Nq5Y9k791U9orYu2m5XISJfTfyfd0OS9nClFlhcwWmzgvFonMupOfXcYht/rOhiQYR9UbjCdn17
+	iLPq7w3sOTlCynQOaPMd2d/7s8HlCcVO2MuyvNB7d0PeoQ7oRzVNKH2D0ZeBmXOJt0PpT9FbQ14
+	fQay6014moj6IhzekkIlfniTeTgWeloBK6kMbeFRI8IAqMqwSSDDvWGEDbGKAJG+vAtiUT+WBK9
+	KbCTgkbQ==
+X-Google-Smtp-Source: AGHT+IHzKvtC312CNJHcPe3ofw05o8d9J5ChUEJRc4azx7isiQPUjOFoLRuYybPURIbTEG+xme86tQ==
+X-Received: by 2002:a17:903:1b63:b0:269:a4ed:13c3 with SMTP id d9443c01a7336-27ed49df688mr248573895ad.5.1759196953248;
+        Mon, 29 Sep 2025 18:49:13 -0700 (PDT)
+Received: from [10.0.2.15] ([157.50.103.22])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed6702cf9sm142315065ad.38.2025.09.29.18.49.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Sep 2025 18:49:12 -0700 (PDT)
+Message-ID: <6d6d18be-69ab-41f0-bae5-db7d0a12196d@gmail.com>
+Date: Tue, 30 Sep 2025 07:19:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MAUPR01MB11072:EE_|PN2PR01MB9601:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e51795d-75c5-4cb6-4983-08ddffba5737
-X-MS-Exchange-SLBlob-MailProps:
-	9IecXKUgicBJ8NNsyPoVvrHIv5xlNgd3t/ebQooYZHhS6lYj5x7nUtVDjlQUf9yj1tbZ9yOHeBKKNn2CncyJ6ZySwTdRLZl1EH3oqRm/cdkzHc8n7Rxtm8YF7Igi8o1oUtcGC3I60wNYDfyWoVBmtG3fheJ+duhcd/9uCSOzO3hjO+zPerD1dXVCH3YrZn4Q7EGYeRmaMUYXF+vcVWkJ+TwEPeoZUKCtWtukTxBXWF9DwHiJGjW3cb25u6qhFfJ15apdo/jdAUsHqTDMEjuiygqQdRGi0n2ZITsUOug/9OknU5Jpci2BUUoxTgioIlJkb1mmBfd50g7546GYfNBehRA8ncL53byjoAXCfS0ohhQL8sEFhVkrS8WYLJHhWz88DqZCcXT91n5lC9nXZkZlnOOcT0l4qPSYQjRQUjFJ5KrxdC0ula+l+zG4pmw8IIR7noqJJRRaQFiVmo8xFagImq+QBuz0IVKP7oyEg10o48zW9GDXkgiK028mf4kdGIrnGm4vpnzPhvAsED27avwsbaWHcxGMRPEr+2lbloivW0T7zgamxrvIaq9S0nyfrQLvepZVxNH9gQAADm65IIIj/rIXgIWC95/vfgRPVnd+G3k07Nk0GpV51/l//5Siw/TcuuSfc1BN99vPL97QSfXpcUw21N6gIuC/jJqopzscqBx3fBifqCwQoVhIrLZJ7ly9JQwkB+HzC53b/0n6G/D9GDj+mPlhLyoWhlYGuhn0V5b1z9UkMM/Wwg==
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799015|23021999003|15080799012|19110799012|5072599009|461199028|6090799003|52005399003|440099028|40105399003|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bDV5QzRoZDFUcXJ6eTdVN0NpSkZ4b1hlK3hHY2hMZ0hzOUZIbnIyVlRFSktE?=
- =?utf-8?B?VmdCY2g3RVd6a0JTc2RxYis2OWZQTndsTWNtOFBjVG5raFcvWGRtRXBPSFZ4?=
- =?utf-8?B?OXgwTzJxa1JVZk8yQzhsN2JSaGxub2piUFRYZjlHcVJVSVJkRzAxb0hNTDJD?=
- =?utf-8?B?RlljVlVDQTlsOTBaRVNIR1Z3MmlwQVpuMzVwTVhWWGJhdlAzRHhVeHZUSUpu?=
- =?utf-8?B?UGV0MU5yNlE2d0V2UHhmL0tkMVhnUWFLSmRNT1ZxY241YkdQc2JLNjgvdm1k?=
- =?utf-8?B?RnlodmVFQ2JzbHZSQlg0V3lXUlBBaFhLaUxEZG9ocFVDVTBtMG5waXhZSjBV?=
- =?utf-8?B?bG9qU2d5eVYwQlFUdFk0eU1EWU9VcXBuUVc0ZUtNdFlRZCtDNWhubzVrVU5z?=
- =?utf-8?B?SmxUamxKZVdFdUJlZVBJT3JWNDV4elBsem1Ta1FpeFZPWXQxVkpMODFJVlRL?=
- =?utf-8?B?NGJNcm52WENLbVVoVHlCQUl1MUtZamxDVHVtOHlNb04rMFFaRVRsT2d2N1Bv?=
- =?utf-8?B?TEYxZmp6VG1sWm9TL0RPNjIvTVE3K2FIRWdhOXRIcWlSK1hJa1B3M2RjeWFt?=
- =?utf-8?B?RlI0OHBzWGRSVTNENlYzRDduYktLZ0FHc25SR0lncG13ckN6VjRoNFlZOGp1?=
- =?utf-8?B?VWlnUFQva3VoQ0lnamhGN29ya2xMRkNBeVhNL3V4Z2htUmw2ZjF1T2RhK0ZX?=
- =?utf-8?B?WEJ5QmxKOGQxTzd4Mm1pak11TWY1di9maGFESzNXK0lNZ1NmOGllOExXOTlW?=
- =?utf-8?B?dXpmTDFMdDd6QldRdC9abFZKcjdOVkx5dnJ4cFAxVHlzRUVrMUgxK2VEczFk?=
- =?utf-8?B?c1Uwb0hobkYxMEJpZ1dpTFQzaXIyZ3NlSXJpcjF1VUhnaFBxRjE0L2doS012?=
- =?utf-8?B?TGJPRXl1YWlUVS9aQkZ1QnZwOUpIdlFiMHBPZVFoV1VnbFJMcitOODNYbDdm?=
- =?utf-8?B?YktibzAzSGU3Y3NycE41SDYwdGV5dnVkOVNFdGgvS3NmekpQN0pYOXJmMGN4?=
- =?utf-8?B?ZURIL3F1eHNqYlhSWklwUmpMeTl6bGE3SThsVXIxZ0hmcC9CMXVRY21GWDdC?=
- =?utf-8?B?bHg3RGVMRGhzSm5BTGpXb0toa1NQZzNjZTBhT2xaT2NvQjJVZ3ZqR2phdUJo?=
- =?utf-8?B?YzZxYVRaREc2dFVNYWQ5UjFxTWR4UnB2SHpOaVZ6R09SdGtBdGdhaVMzZXZC?=
- =?utf-8?B?dVY0L3Q2UnZxcThFNDJWZW8zNHFFQUpUdTRBRXAxKzJxUmh2ZTlxL1hLSm9V?=
- =?utf-8?B?d2dISzM2b3o1UXNLZnUxdSt2Z250M1RBMzl0Q1hQcTlrcVp1MTZ6WlpKc1V4?=
- =?utf-8?B?eXNUUndyZVl1dHY3UU03cno1K09LUlMyNXFGdkRxL3dGRE1QV2RlRk5TQzVm?=
- =?utf-8?B?SFlpWWJENGIrQ2grZ2pBTVRpd2l2VXBGK2s5OWdvSC8zQnZ0QmF3RE5ycEhY?=
- =?utf-8?B?Z2lwOUZCSjA1L0pYdW1NWXBUVkd1N1RWV05IcXZpaHBUWnZNYW5HVHVJUXJH?=
- =?utf-8?B?T2NTQW1WbHhUV0VETDVwVDhBMjJRZXFGblI5K1YzYVkzNjM1azdpOWJVTHFJ?=
- =?utf-8?B?SFNzRm91YlN3TnVmNERqWDZaMGhQRm5ud2pxaVd4NlVwSUFWWld6Nnhnc1N6?=
- =?utf-8?B?OHJPUjBFaG5qMzRiOXBSeXVQdHphZGc9PQ==?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UVp3aFdSaUIrZGtTOHE5VkJwYWhiU1ptUmZPekxweTlIRmhSc09xclE4Q0VB?=
- =?utf-8?B?MTBtdW5mb1loQ1NBQUJPSVdlU0Iyc3NQS3FJTjFha0dNdVBZempFTkp5YXA4?=
- =?utf-8?B?S3Y2VFIweE84WWRvZDNGY3JXWE9EcEVJWXowRi8yd1VwaWUrU0VaLytnWmFs?=
- =?utf-8?B?Rjh3WTFyNjU0c2VNM0NhWUxpdVJlZWNRZWlTcWpEa0h5T1FMdGplY3c3Wi9z?=
- =?utf-8?B?Y0lTYWIrUnQxQTFkTThTZkMwNFlBK096Y0loeGUvUGk3MGpxV3lJU3VYRmUz?=
- =?utf-8?B?cXpwQU9qU2ZlNVRWbGZlZEJ4cXlJRUx3T2JOMnowU1VwVndUaE0vSGdsbWxF?=
- =?utf-8?B?UFJaYU1WWTZyVVJkSk5yQ28rOSszUXJvOWx5aTNUSGY1Wk9BYXZsczJZK0Fa?=
- =?utf-8?B?MlZlbXlpNElIMVFEenJLR1l6MGZ3U1JtdDlGS2oxSWZQUTNwVjlRMzBSRWNm?=
- =?utf-8?B?cFVSRkZaaUx1SExwQjVRd2JsSGpNL21EdmwyQzcrdXo3M2VVOVdadWJPODht?=
- =?utf-8?B?czZiN0hmTVNiWSt1eUkrNGRXek10cEZXVEYrZHdva1ZmKzd1WHdKNDZ0UXNi?=
- =?utf-8?B?WXFMdnBjM2VRc0s0MmxLOFRIY25XeGd1MjcxK3pvY1o4T3F6c200WEQzVktt?=
- =?utf-8?B?OHl4SWJCTkFrdkpoTU1SRTVaSnRva0t4RUlnMS9RVXlLVjlZMk1XUHRpOHAr?=
- =?utf-8?B?QlZwMStITEwwRXpUNVhnU3R3QThNN0pjK2pTSmZpQkVqMWpaMDVoSnRYdUVr?=
- =?utf-8?B?M3c5T1VuSlFtYWVxV0FoYVVDM3NzZzZpdW1iZEpMcFdyaStiaTZteFZJSlhF?=
- =?utf-8?B?NWh5UVovVU1XaVZjVFc2OFl0S1Avcy8wN29nTEJya2U1QkJDbTExenJFLzMy?=
- =?utf-8?B?V3J1ODNNYldycTlhMTI4a0pjVnRCNktwTUdpVDFrRnFHNkhBTzd2bGVsVlpt?=
- =?utf-8?B?TGk2Mndid25Xa2VWRGkrcDRVRHBFTGhLeG1nM3o2aUFjcFE3ZExXSGdsWlhL?=
- =?utf-8?B?Rm04Y2tjVXRFWVdBc2laWUdjeFFHYkZzYlJoODdtWm5MU3NmOENBOUxsWWNG?=
- =?utf-8?B?anI3UWpEMVhkbUZHaHFMQUpYNTlZMHp4WG1hOUtvZTRvSFg3SUNvdnc3VmtO?=
- =?utf-8?B?MVNuUUZNMWdUMkdXb2tTMG41dFRJNzFEZFkvRlN1ZHU2azJWUllicmlEMEJN?=
- =?utf-8?B?NDVlclhzdHFENEpRcWpOOVE5enl2THJYWFlqR2YvR1JtSDZUWTJwRHlNb1d3?=
- =?utf-8?B?dTZYM1daWUxqRHRKT2FXc3Y2RmhTNjc5c3ZEYk5yUERiYk1ISnlQRkp5clBo?=
- =?utf-8?B?TUtDdUs4NUFobnBhVVBvWGtMY2tZcGYxdGsvbjNQbjZlOW5qeDdjcU1yL3po?=
- =?utf-8?B?disxa3dJYjU0aFNKdzJibXU0ZmczSnN1LzhvejRlK1JXNk0weDhIVEZEOUps?=
- =?utf-8?B?VVhiZzVFbGdGRHBpZnEwaFZiV3dTczNIZEVzaWpBZ0hWSEhhdkpDU1JpdkJE?=
- =?utf-8?B?L3ZZTXdCcGY0aFpOaGhyRCtEUGx6R1ZUbmRiRFhGTmVkaTNxMnB1dlVUcE5V?=
- =?utf-8?B?ZnV2MERLdGs1QUMwTkE3RTB1SXA0TUZiVUEwWjlmN0tBMTBjNFE5dlhQZVNv?=
- =?utf-8?B?M3VmTWlmRE9zTlp4MHhGUGZ1SXcvQ3ZPUXBFbU5zMnhaZlEySlB1NmU5M0FH?=
- =?utf-8?B?VVI3R1lLM1h0RHlSd3ZBN3ArRDQwNCtaMUdRU3EreVh2Z09YM2ExZFkxdWdn?=
- =?utf-8?Q?reNMLwwoclphKKE7s2f6HbimjKzgg2lMDLL92TZ?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e51795d-75c5-4cb6-4983-08ddffba5737
-X-MS-Exchange-CrossTenant-AuthSource: MAUPR01MB11072.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 00:43:15.1525
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9601
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Fix sleeping function being
+ called from atomic context
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Petr Mladek <pmladek@suse.com>,
+ Tejun Heo <tj@kernel.org>, Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>, Frank Li <Frank.Li@nxp.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
+References: <20250917161817.15776-1-bhanuseshukumar@gmail.com>
+ <te2mzunvwphcoiypwdb6oee3m54jquxk4br6f4tjxlp625whbr@kzzhai5eg2xv>
+Content-Language: en-US
+From: bhanuseshukumar <bhanuseshukumar@gmail.com>
+In-Reply-To: <te2mzunvwphcoiypwdb6oee3m54jquxk4br6f4tjxlp625whbr@kzzhai5eg2xv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 29/09/25 23:23, Manivannan Sadhasivam wrote:
+> On Wed, Sep 17, 2025 at 09:48:17PM +0530, Bhanu Seshu Kumar Valluri wrote:
+>> When Root Complex(RC) triggers a Doorbell MSI interrupt to Endpoint(EP) it triggers a warning
+>> in the EP. pci_endpoint kselftest target is compiled and used to run the Doorbell test in RC.
+>>
+>> [  474.686193] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:271
+>> [  474.694656] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/0
+>> [  474.702473] preempt_count: 10001, expected: 0
+>> [  474.706819] RCU nest depth: 0, expected: 0
+>> [  474.710913] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.17.0-rc5-g7aac71907bde #12 PREEMPT
+>> [  474.710926] Hardware name: Texas Instruments AM642 EVM (DT)
+>> [  474.710934] Call trace:
+>> [  474.710940]  show_stack+0x20/0x38 (C)
+>> [  474.710969]  dump_stack_lvl+0x70/0x88
+>> [  474.710984]  dump_stack+0x18/0x28
+>> [  474.710995]  __might_resched+0x130/0x158
+>> [  474.711011]  __might_sleep+0x70/0x88
+>> [  474.711023]  mutex_lock+0x2c/0x80
+>> [  474.711036]  pci_epc_get_msi+0x78/0xd8
+>> [  474.711052]  pci_epf_test_raise_irq.isra.0+0x74/0x138
+>> [  474.711063]  pci_epf_test_doorbell_handler+0x34/0x50
+>> [  474.711072]  __handle_irq_event_percpu+0xac/0x1f0
+>> [  474.711086]  handle_irq_event+0x54/0xb8
+>> [  474.711096]  handle_fasteoi_irq+0x150/0x220
+>> [  474.711110]  handle_irq_desc+0x48/0x68
+>> [  474.711121]  generic_handle_domain_irq+0x24/0x38
+>> [  474.711131]  gic_handle_irq+0x4c/0xc8
+>> [  474.711141]  call_on_irq_stack+0x30/0x70
+>> [  474.711151]  do_interrupt_handler+0x70/0x98
+>> [  474.711163]  el1_interrupt+0x34/0x68
+>> [  474.711176]  el1h_64_irq_handler+0x18/0x28
+>> [  474.711189]  el1h_64_irq+0x6c/0x70
+>> [  474.711198]  default_idle_call+0x10c/0x120 (P)
+>> [  474.711208]  do_idle+0x128/0x268
+>> [  474.711220]  cpu_startup_entry+0x3c/0x48
+>> [  474.711231]  rest_init+0xe0/0xe8
+>> [  474.711240]  start_kernel+0x6d4/0x760
+>> [  474.711255]  __primary_switched+0x88/0x98
+>>
+> 
+> You do not need to use full call trace. Refer:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.17#n761
+> 
+>> Warnings can be reproduced by following steps below.
+>> *On EP side:
+>> 1. Configure the pci-epf-test function using steps given below
+>>    mount -t configfs none /sys/kernel/config
+>>    cd /sys/kernel/config/pci_ep/
+>>    mkdir functions/pci_epf_test/func1
+>>    echo 0x104c > functions/pci_epf_test/func1/vendorid
+>>    echo 0xb010 > functions/pci_epf_test/func1/deviceid
+>>    echo 32 > functions/pci_epf_test/func1/msi_interrupts
+>>    echo 2048 > functions/pci_epf_test/func1/msix_interrupts
+>>    ln -s functions/pci_epf_test/func1 controllers/f102000.pcie-ep/
+>>    echo 1 > controllers/f102000.pcie-ep/start
+>>
+>> *On RC side:
+>> 1. Once EP side configuration is done do pci rescan.
+>>    echo 1 > /sys/bus/pci/rescan
+>> 2. Run Doorbell MSI test using pci_endpoint_test kselftest app.
+>>   ./pci_endpoint_test -r pcie_ep_doorbell.DOORBELL_TEST
+> 
+> This info is already part of the kernel documentation. So it is redundant here.
+> It could be probably added in the comment section (where you added the Note).
+> 
+>>   Note: Kernel is compiled with CONFIG_DEBUG_KERNEL enabled.
+>>
+>> The BUG arises because the EP's Doorbell MSI hard interrupt handler is making an
+>> indirect call to pci_epc_get_msi, which uses mutex inside, from interrupt context.
+>>
+>> This patch converts hard irq handler to a threaded irq handler to allow it
+>> to call functions that can sleep during bottom half execution. The threaded
+>> irq handler is registered with IRQF_ONESHOT and keeps interrupt line disabled
+>> until the threaded irq handler completes execution.
+>>
+>> Fixes: eff0c286aa916221a69126 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
+> 
+> Use 12 char commit SHA.
+> 
+>> -static irqreturn_t pci_epf_test_doorbell_handler(int irq, void *data)
+>> +static irqreturn_t pci_epf_test_doorbell_irq_thread(int irq, void *data)
+> 
+> No need to change the function name.
 
-On 9/30/2025 2:13 AM, Christophe JAILLET wrote:
-> devm_pm_runtime_enable() is used in the probe, so pm_runtime_disable()
-> should not be called explicitly in the remove function.
->
-> Fixes: 1c72774df028 ("PCI: sg2042: Add Sophgo SG2042 PCIe driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Thank you Mani for your helpful comments on the patch. I will send a v2 patch to address above review comments.
 
-LGTM.
+-Bhanu Seshu Kumar Valluri
 
-Acked-by: Chen Wang <unicorn_wang@outlook.com>
-
-Tested-by: Chen Wang <unicorn_wang@outlook.com> # on Pioneerbox.
-
-Thanks,
-
-Chen
-
-> ---
-> Compile tested only
-> ---
->   drivers/pci/controller/cadence/pcie-sg2042.c | 3 ---
->   1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/cadence/pcie-sg2042.c b/drivers/pci/controller/cadence/pcie-sg2042.c
-> index a077b28d4894..0c50c74d03ee 100644
-> --- a/drivers/pci/controller/cadence/pcie-sg2042.c
-> +++ b/drivers/pci/controller/cadence/pcie-sg2042.c
-> @@ -74,15 +74,12 @@ static int sg2042_pcie_probe(struct platform_device *pdev)
->   static void sg2042_pcie_remove(struct platform_device *pdev)
->   {
->   	struct cdns_pcie *pcie = platform_get_drvdata(pdev);
-> -	struct device *dev = &pdev->dev;
->   	struct cdns_pcie_rc *rc;
->   
->   	rc = container_of(pcie, struct cdns_pcie_rc, pcie);
->   	cdns_pcie_host_disable(rc);
->   
->   	cdns_pcie_disable_phy(pcie);
-> -
-> -	pm_runtime_disable(dev);
->   }
->   
->   static int sg2042_pcie_suspend_noirq(struct device *dev)
 
