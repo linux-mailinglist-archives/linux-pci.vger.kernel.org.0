@@ -1,177 +1,196 @@
-Return-Path: <linux-pci+bounces-37329-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37330-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6733FBAFA75
-	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 10:33:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D3F5BAFC2E
+	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 11:04:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 632C47AFDC7
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 08:32:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BFDA216F5D5
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 09:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4F5248878;
-	Wed,  1 Oct 2025 08:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E909239E67;
+	Wed,  1 Oct 2025 09:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XXsZ90Nw"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="gq5cdMSm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822D1226D17;
-	Wed,  1 Oct 2025 08:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817EB2D94A2;
+	Wed,  1 Oct 2025 09:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759307620; cv=none; b=ke69nPiS+yGfqpaRB+Ha4gjvtb9H8l45uZmWPVr5aLHtuCviya43BwKPnO8wbMZAEle41hA5W0FxbcEybg5ShU+5NaxxvpQTajoXae9EAVKIU7O8psKe9OKSWiYALXIpprZpSTd95Zt8gYVskdVUyj1gLdKAESO0YYMGgShDqfc=
+	t=1759309435; cv=none; b=IRbQTYhkh1m+d3zTgEEjkm8/HJouDgh180OkuUDtJeF6lQSRZJeWE5KlT7Omy+V+Ink3xAJ7J3Ix0bamHimx6V8+81Mxv2L6El1RyHQUxur6AOfEtAPPg/eu11qBs/rKwvAV92JVFj3hyN02F7RGcnUzdKrmNZOAPQH5RlbSwGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759307620; c=relaxed/simple;
-	bh=9A+KfhdYh8LaOB+g1RUzkpSHt6pT+lse1tnongyRkCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LJpj6umULTawK6GlljIt2j+/HGlQ+oIu7nk1rCvh33wq007/+nZ+x1aFWoNgUaTpudy36BSyVRNYKdJQPiEm1x1P6up41JPOB3zAL8LknzJuFUgUZhNDlGK4ukoyrZEIdJ4H1U+x/2DR+CUVUqUfBm/dY6ja4k0Z26suA/7KGt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XXsZ90Nw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5915AWf7030392;
-	Wed, 1 Oct 2025 08:33:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:sender:subject:to; s=pp1;
-	 bh=kChBbUHvSPPdRIDmV3EOM8sUaY9q/Dx7lYU4bBN7TcA=; b=XXsZ90NwIUxI
-	i7w8Z/I7aGiFMG0jHJfqhVDk6z6qcRuP8C/OYEnq12rZdLc6+lxt+9fVZcV4lpHI
-	YEjYrQG/v/2/xNaEzMfQIO6m8zWyRoXI7RaSJQ4Zr8ny5dfCUMux9P6DlA/v2wRQ
-	vmtFSSnVhFjl4rvfWcPKZwyimzi2aKq99XmG7MehP+CewRYIatBRJrpQjE3utlEk
-	seREA+ZTkAbHCU+djyVwKlN3p/D/8zu8ZKaB35n4PRyjYawmwGf1z6CthbA/itbu
-	apbhv5ojLlK+cmiF40GpIOxeGX2b4TF1gnHVCQV5sLdyQoyDN4IYjwthq8jfLL0h
-	ZSpgLcA6Tw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49e7e7e93v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Oct 2025 08:33:31 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59180G3E020074;
-	Wed, 1 Oct 2025 08:33:30 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 49et8s81fs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Oct 2025 08:33:30 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5918XQdY56426980
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 1 Oct 2025 08:33:26 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A577D20043;
-	Wed,  1 Oct 2025 08:33:26 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9438E20040;
-	Wed,  1 Oct 2025 08:33:26 +0000 (GMT)
-Received: from p1gen4-pw042f0m (unknown [9.152.212.180])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  1 Oct 2025 08:33:26 +0000 (GMT)
-Received: from bblock by p1gen4-pw042f0m with local (Exim 4.98.2)
-	(envelope-from <bblock@linux.ibm.com>)
-	id 1v3sH8-00000001DfE-1RV8;
-	Wed, 01 Oct 2025 10:33:26 +0200
-Date: Wed, 1 Oct 2025 10:33:26 +0200
-From: Benjamin Block <bblock@linux.ibm.com>
-To: Farhan Ali <alifm@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
-Subject: Re: [PATCH v4 02/10] PCI: Add additional checks for flr reset
-Message-ID: <20251001083326.GC15786@p1gen4-pw042f0m.boeblingen.de.ibm.com>
-References: <20250924171628.826-1-alifm@linux.ibm.com>
- <20250924171628.826-3-alifm@linux.ibm.com>
- <20250930100321.GB15786@p1gen4-pw042f0m.boeblingen.de.ibm.com>
- <1f5abbae-7a7d-402d-ac6e-029cdc3b0d63@linux.ibm.com>
+	s=arc-20240116; t=1759309435; c=relaxed/simple;
+	bh=JGTVZKqlDvgAlmZDqY993i//RJ29Pi67qV7iYqgd7q8=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DMIAkRz4PINchqccHB2/JSUvo19y+xilXZiS7wLNrdmIK1vBqP1Ko3JZov037JGEwP5ufdQoFfgXsrdfwH1Wl85X+KGkmVbZmzjvOMgYL8NMolW12ayUQuXmjxsBOPi8K0te9t9xtHfZWiWuuHpspuejUQBRSUjO6I8JRpmyhHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=gq5cdMSm; arc=none smtp.client-ip=57.129.93.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1759309417; x=1759568617;
+	bh=k2cd0h/lNPW6oKirfHBNFEiPHjT+8NPzCf04+VSLOsg=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=gq5cdMSmMRJ5eEdQ74b46Afg4C59ln8vt80/KmbouM+MFTl2033f/pBX9xzcIeq3c
+	 enT4MAXopZCXXM6u8MfmhBxjUT6n5m1ghFZIaA2NLIUKRLBpebo7Nl/W+xz25bSdkL
+	 pM227Wrf+Pf1aQ+0s6p0RpRpMvHjcnf3aX8YNIB7KGbhAhc8bcRGXGXurIHssikDkl
+	 1q8ZroZcQt16iBc6K+0cXAsicmMEPNQQEwLMybDsThZ0uWpfeXrXHudarIT9Ec323i
+	 DZ8DMK1X2WbiT+Fk9grZNvAGMjnvy5Kb/X5WF3YPKUnQOnedseFZJOWs8WudYT4Zme
+	 ksS29du6VknaQ==
+Date: Wed, 01 Oct 2025 09:03:31 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, Viresh Kumar
+	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Asahi Lina <lina+kernel@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v12 0/4] New trait OwnableRefCounted for ARef<->Owned conversion.
+Message-ID: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 05f6e75cf8354eecb1d79bcf61223bca92da5f3d
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1f5abbae-7a7d-402d-ac6e-029cdc3b0d63@linux.ibm.com>
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: N2EGonN2OkUwauiOa_CIsZ3N0dyYEjd-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI3MDAyMCBTYWx0ZWRfXzb2Xtv+D8Kx+
- CJriuNPdAh/D2tNK2GnmySwxicyRCspFp2KuOPN6QQezHiea+X608uJVwUYXMkxAoSOqLwkxx6N
- w/oQiYnf4u4Smo6MEup3tRke6hW38l7bgne5QpI9WbuNjPB5Kr7f1m1N1k7U/JRlIHUCopcf2BB
- CZtohS60AzGa0pCwXcExxMBKPnsDX9+L6znUR4IJxvigRbVjQO2RobinbggnRYzkHQ9/78TJzBI
- cBhvAyNZMGMY+p8noIvcM76080rkfDlhoJb2++4lFFiIdoJahdnMMF2/TZ3p+S2ile5VJvmgRbo
- V4bxMClNmRjkQoKEW0jg9qjamzV+ssVo0+nE/olP/PLuCoRxgtc5Jdz2sDHSi/ENZ76y9O/KK91
- p6REunvNn+mxcZg+BXhcKWvvwTfj+A==
-X-Proofpoint-GUID: N2EGonN2OkUwauiOa_CIsZ3N0dyYEjd-
-X-Authority-Analysis: v=2.4 cv=Jvj8bc4C c=1 sm=1 tr=0 ts=68dce75b cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=8nJEP1OIZ-IA:10 a=x6icFKpwvdMA:10 a=VnNF1IyMAAAA:8 a=ersEkfyWTpBJs_UulfkA:9
- a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-01_02,2025-09-29_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 phishscore=0 bulkscore=0 clxscore=1015 spamscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2509150000
- definitions=main-2509270020
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 30, 2025 at 10:04:25AM -0700, Farhan Ali wrote:
-> 
-> On 9/30/2025 3:03 AM, Benjamin Block wrote:
-> > On Wed, Sep 24, 2025 at 10:16:20AM -0700, Farhan Ali wrote:
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index a3d93d1baee7..327fefc6a1eb 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
---8<--
-> >> +	if (pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &reg)) {
-> >> +		pci_warn(dev, "Device unable to do an FLR\n");
-> >> +		return -ENOTTY;
-> >> +	}
-> > Just thinking out loud, not sure whether it make sense, but since you already
-> > read an up-to-date value from the config space, would it make sense to
-> > pull the check above `dev->devcap & PCI_EXP_DEVCAP_FLR` below this read, and
-> > check on the just read `reg`?
-> 
-> My thinking was we could exit early if the device never had FLR 
-> capability (and so was not cached in devcap). This way we avoid an extra 
-> PCI read.
+This allows to convert between ARef<T> and Owned<T> by
+implementing the new trait OwnedRefCounted.
 
-That makes sense.
+This way we will have a shared/unique reference counting scheme
+for types with built-in refcounts in analogy to Arc/UniqueArc.
 
-> > Also wondering whether it makes sense to stable-tag this? We've recently seen
-> > "unpleasant" recovery attempts that look like this in the kernel logs:
-> >
-> >      [  663.330053] vfio-pci 0007:00:00.1: timed out waiting for pending transaction; performing function level reset anyway
-> >      [  664.730051] vfio-pci 0007:00:00.1: not ready 1023ms after FLR; waiting
-> >      [  665.830023] vfio-pci 0007:00:00.1: not ready 2047ms after FLR; waiting
-> >      [  667.910023] vfio-pci 0007:00:00.1: not ready 4095ms after FLR; waiting
-> >      [  672.070022] vfio-pci 0007:00:00.1: not ready 8191ms after FLR; waiting
-> >      [  680.550025] vfio-pci 0007:00:00.1: not ready 16383ms after FLR; waiting
-> >      [  697.190023] vfio-pci 0007:00:00.1: not ready 32767ms after FLR; waiting
-> >      [  730.470021] vfio-pci 0007:00:00.1: not ready 65535ms after FLR; giving up
-> >
-> > The VF here was already dead in the water at that point, so I suspect
-> > `pci_read_config_dword()` might have failed, and so this check would have
-> > failed, and we wouldn't have "wasted" the minute waiting for a FLR that was
-> > never going to happen anyway.
->
-> I think maybe we could? I don't think this patch fixes anything that's 
-> "broken" but rather improves the behavior to escalate to other reset 
-> method if the device is already in a bad state. I will cc stable.
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+---
+Changes in v12:
+-
+- Rebase onto v6.17-rc1 (Andreas's work).
+- moved kernel/types/ownable.rs to kernel/owned.rs
+- Drop OwnableMut, make DerefMut depend on Unpin instead. I understood
+  ML discussion as that being okay, but probably needs further scrunity.
+- Lots of more documentation changes suggested by reviewers.
+- Usage example for Ownable/Owned.
+- Link to v11: https://lore.kernel.org/r/20250618-unique-ref-v11-0-49eadcdc=
+0aa6@pm.me
 
-Right, adding a Fixes tag doesn't really make sense. But it does help with
-accelerating recoveries, so maybe a stable tag will work :)
+Changes in v11:
+- Rework of documentation. I tried to honor all requests for changes "in
+  spirit" plus some clearifications and corrections of my own.
+- Dropping `SimpleOwnedRefCounted` by request from Alice, as it creates a
+  potentially problematic blanket implementation (which a derive macro that
+  could be created later would not have).
+- Dropping Miguel's "kbuild: provide `RUSTC_HAS_DO_NOT_RECOMMEND` symbol"
+  patch, as it is not needed anymore after dropping `SimpleOwnedRefCounted`=
+.
+  (I can add it again, if it is considered useful anyway).
+- Link to v10: https://lore.kernel.org/r/20250502-unique-ref-v10-0-25de64c0=
+307f@pm.me
+
+Changes in v10:
+- Moved kernel/ownable.rs to kernel/types/ownable.rs
+- Fixes in documentation / comments as suggested by Andreas Hindborg
+- Added Reviewed-by comment for Andreas Hindborg
+- Fix rustfmt of pid_namespace.rs
+- Link to v9: https://lore.kernel.org/r/20250325-unique-ref-v9-0-e91618c1de=
+26@pm.me
+
+Changes in v9:
+- Rebase onto v6.14-rc7
+- Move Ownable/OwnedRefCounted/Ownable, etc., into separate module
+- Documentation fixes to Ownable/OwnableMut/OwnableRefCounted
+- Add missing SAFETY documentation to ARef example
+- Link to v8: https://lore.kernel.org/r/20250313-unique-ref-v8-0-3082ffc67a=
+31@pm.me
+
+Changes in v8:
+- Fix Co-developed-by and Suggested-by tags as suggested by Miguel and Boqu=
+n
+- Some small documentation fixes in Owned/Ownable patch
+- removing redundant trait constraint on DerefMut for Owned as suggested by=
+ Boqun Feng
+- make SimpleOwnedRefCounted no longer implement RefCounted as suggested by=
+ Boqun Feng
+- documentation for RefCounted as suggested by Boqun Feng
+- Link to v7: https://lore.kernel.org/r/20250310-unique-ref-v7-0-4caddb78aa=
+05@pm.me
+
+Changes in v7:
+- Squash patch to make Owned::from_raw/into_raw public into parent
+- Added Signed-off-by to other people's commits
+- Link to v6: https://lore.kernel.org/r/20250310-unique-ref-v6-0-1ff5355861=
+7e@pm.me
+
+Changes in v6:
+- Changed comments/formatting as suggested by Miguel Ojeda
+- Included and used new config flag RUSTC_HAS_DO_NOT_RECOMMEND,
+  thus no changes to types.rs will be needed when the attribute
+  becomes available.
+- Fixed commit message for Owned patch.
+- Link to v5: https://lore.kernel.org/r/20250307-unique-ref-v5-0-bffeb63327=
+7e@pm.me
+
+Changes in v5:
+- Rebase the whole thing on top of the Ownable/Owned traits by Asahi Lina.
+- Rename AlwaysRefCounted to RefCounted and make AlwaysRefCounted a
+  marker trait instead to allow to obtain an ARef<T> from an &T,
+  which (as Alice pointed out) is unsound when combined with UniqueRef/Owne=
+d.
+- Change the Trait design and naming to implement this feature,
+  UniqueRef/UniqueRefCounted is dropped in favor of Ownable/Owned and
+  OwnableRefCounted is used to provide the functions to convert
+  between Owned and ARef.
+- Link to v4: https://lore.kernel.org/r/20250305-unique-ref-v4-1-a8fdef7b1c=
+2c@pm.me
+
+Changes in v4:
+- Just a minor change in naming by request from Andreas Hindborg,
+  try_shared_to_unique() -> try_from_shared(),
+  unique_to_shared() -> into_shared(),
+  which is more in line with standard Rust naming conventions.
+- Link to v3: https://lore.kernel.org/r/Z8Wuud2UQX6Yukyr@mango
+
+---
+Asahi Lina (1):
+      rust: types: Add Ownable/Owned types
+
+Oliver Mangold (3):
+      `AlwaysRefCounted` is renamed to `RefCounted`.
+      rust: Add missing SAFETY documentation for `ARef` example
+      rust: Add `OwnableRefCounted`
+
+ rust/kernel/auxiliary.rs        |   7 +-
+ rust/kernel/block/mq/request.rs |  14 +-
+ rust/kernel/cred.rs             |   7 +-
+ rust/kernel/device.rs           |   9 +-
+ rust/kernel/device/property.rs  |   7 +-
+ rust/kernel/drm/device.rs       |   9 +-
+ rust/kernel/drm/gem/mod.rs      |   7 +-
+ rust/kernel/fs/file.rs          |  13 +-
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/mm.rs               |  12 +-
+ rust/kernel/mm/mmput_async.rs   |   7 +-
+ rust/kernel/opp.rs              |   7 +-
+ rust/kernel/owned.rs            | 318 ++++++++++++++++++++++++++++++++++++=
+++++
+ rust/kernel/pci.rs              |   7 +-
+ rust/kernel/pid_namespace.rs    |   7 +-
+ rust/kernel/platform.rs         |   7 +-
+ rust/kernel/sync/aref.rs        |  67 ++++++---
+ rust/kernel/task.rs             |   7 +-
+ rust/kernel/types.rs            |   4 +-
+ 19 files changed, 474 insertions(+), 43 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250305-unique-ref-29fcd675f9e9
+
+Best regards,
+--=20
+Oliver Mangold <oliver.mangold@pm.me>
 
 
--- 
-Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
-IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
-Vors. Aufs.-R.: Wolfgang Wendt         /        Geschäftsführung: David Faller
-Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
 
