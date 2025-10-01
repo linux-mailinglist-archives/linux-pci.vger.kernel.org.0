@@ -1,194 +1,111 @@
-Return-Path: <linux-pci+bounces-37325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCDBEBAF20E
-	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 07:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D98E8BAF2A9
+	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 08:00:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DCDB4A0A14
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 05:13:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 622A43AA395
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 06:00:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4642D837B;
-	Wed,  1 Oct 2025 05:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22CB2D73AA;
+	Wed,  1 Oct 2025 06:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aRRn3uRP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hleH5zoV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222B01519AC;
-	Wed,  1 Oct 2025 05:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEAF1BF58
+	for <linux-pci@vger.kernel.org>; Wed,  1 Oct 2025 06:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759295599; cv=none; b=KHdbzsdVNm1H6hvTWDQ3BoCnI53uWXGJNKmRmbgMSjvT2nr9l5qTeqgF5lbrlCWjZws/qRUENqo6PxNclJG5zkFjIMzoJ7yBsiSqQbFUn5KDGHz7XyrfcphwwUMx/7UDGPkSjJDzenjcSC+JR8HHAP0GZxDGMr39HbwwDXJNl9M=
+	t=1759298412; cv=none; b=rD4vSvhod8aw8Wvljn9W/RGVqjEto+tU5sXblu+UktUZ6MrBhC69JBP5GPKmmdJYOuQ1x4iw7cTwJTiyXZUC+l7f+JDxoyu/NfwLt7MsPXX4nsLc/S4EBQXWgXRt8C3/pi6oyAc3g/43Cg94tuuRgISPu2GO46x71uXalkWpEoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759295599; c=relaxed/simple;
-	bh=VvaiPspEseNBWmlTfnUJizAdnLXv1vNWDyVyfzYotQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVhLG+HLlkjORlD331ue3V/aqCxg8qac/ufi8kJ88vgELY1qyrjliEu1y4WzOqMrFNlJYs2TNU8dMSPvcPaoCLIr2baDaujw5crZtmWTtnkXJyWkQWVerxW0+c+Tsf8rCbNhgIzg1S0wzTVe6FBSUpeuKkSjbBpk9Ys5YQcmkBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aRRn3uRP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFFDC4CEF4;
-	Wed,  1 Oct 2025 05:13:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759295598;
-	bh=VvaiPspEseNBWmlTfnUJizAdnLXv1vNWDyVyfzYotQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aRRn3uRPDYgG/iCHCmJLXOA28x2twSrKCJiIYE5ZR5wMQpi813k3W2sXJj2b39mJ5
-	 iZEviHXdNys/+7umcTaaJf18ZmmZ9iiLvZrQGxrDUmf3nEVjBculp1HMZrKkeAyyNa
-	 zMcS0tC8yy/CtWILDQ3nY5ZvTA7tCF7xkJK2DHdQ=
-Date: Wed, 1 Oct 2025 07:13:15 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Chris Li <chrisl@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
-Message-ID: <2025100142-slick-deserving-4aed@gregkh>
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
- <20250929175704.GK2695987@ziepe.ca>
- <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
- <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
- <2025093030-shrewdly-defiant-1f3e@gregkh>
- <CACePvbXrbR=A43UveqPrBmQHAfvjuJGtw9XyUQvpYe941KwzuA@mail.gmail.com>
+	s=arc-20240116; t=1759298412; c=relaxed/simple;
+	bh=IWlx0e8YyPwi5puoG7i06fzEK6gMQDybXLrNITU43+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M2o6vPnhXB7x9rIKfPwgkpeBh79SJ893IgmiuR0rHJs2JL2B+xoRFjzBMH/S2Ou74yQyUZIua0Xdbs+hNXGXi18XkmPLRA5ETcFLOqBYdwzEI8VtH2xM8RSvez6Fqrv2ds5MWbgk7w2/5OonXOAvD2NipdoEx1R8ztJCaObhxvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hleH5zoV; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759298411; x=1790834411;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IWlx0e8YyPwi5puoG7i06fzEK6gMQDybXLrNITU43+s=;
+  b=hleH5zoVn6CRgUoApHd0v4Uuy02MfsETpPliBdRy+ZKpQi7au7UhJ+RB
+   YCidQbw8lvTzze+4k8JhNka3uzBBXYwgz966/HMCk0RMhB2hlgtxW3GQ9
+   xf+HHX5Zx46Fj8Q5HCitZh2149621P+xjyNVNV5WhoZVhH4uh+iZFgc6T
+   nsHRzl3jFqyWsJxGxvauOjN3QqnHmg9YEt/7urlcWlTzfEgCTRXwBM1dN
+   y8s6LKzUlLHKryddtPxXIBDMmzkNvhBpRK0jOnT6rI7hrDFXNLvCwIvwy
+   YBt1KrYTDi7gbGTWwqhRVkVDERCV5126WDktmEGXOMvQ1/GMmAv7Wq4xf
+   Q==;
+X-CSE-ConnectionGUID: s/9NQekcRyaIq/5pR3g/qA==
+X-CSE-MsgGUID: 6GcnvhejTI+k1yU6HaU69A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="87012648"
+X-IronPort-AV: E=Sophos;i="6.18,306,1751266800"; 
+   d="scan'208";a="87012648"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 23:00:02 -0700
+X-CSE-ConnectionGUID: VhPdm4bVQSi00jnTxS4eHA==
+X-CSE-MsgGUID: gVyVpzqqRp+jgBRhLcttJA==
+X-ExtLoop1: 1
+Received: from baandr0id001.iind.intel.com ([10.66.253.151])
+  by fmviesa003.fm.intel.com with ESMTP; 30 Sep 2025 23:00:00 -0700
+From: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+Subject: [PATCH] PCI/VGA: release vga_user_lock before vga_put()
+Date: Wed,  1 Oct 2025 11:28:13 +0530
+Message-Id: <20251001055813.264300-1-kaushlendra.kumar@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACePvbXrbR=A43UveqPrBmQHAfvjuJGtw9XyUQvpYe941KwzuA@mail.gmail.com>
 
-On Tue, Sep 30, 2025 at 08:41:29AM -0700, Chris Li wrote:
-> On Tue, Sep 30, 2025 at 6:41 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Sep 30, 2025 at 09:02:44AM -0400, Pasha Tatashin wrote:
-> > > On Mon, Sep 29, 2025 at 10:10 PM Chris Li <chrisl@kernel.org> wrote:
-> > > >
-> > > > On Mon, Sep 29, 2025 at 10:57 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > >
-> > > > > On Tue, Sep 16, 2025 at 12:45:14AM -0700, Chris Li wrote:
-> > > > > > Save the PCI driver name into "struct pci_dev_ser" during the PCI
-> > > > > > prepare callback.
-> > > > > >
-> > > > > > After kexec, use driver_set_override() to ensure the device is
-> > > > > > bound only to the saved driver.
-> > > > >
-> > > > > This doesn't seem like a great idea, driver name should not be made
-> > > > > ABI.
-> > > >
-> > > > Let's break it down with baby steps.
-> > > >
-> > > > 1) Do you agree the liveupdated PCI device needs to bind to the exact
-> > > > same driver after kexec?
-> > > > To me that is a firm yes. If the driver binds to another driver, we
-> > > > can't expect the other driver will understand the original driver's
-> > > > saved state.
-> > >
-> > > Hi Chris,
-> > >
-> > > Driver name does not have to be an ABI.
-> >
-> > A driver name can NEVER be an abi, please don't do that.
-> 
-> Can you please clarify that.
-> 
-> for example, the pci has this sysfs control api:
-> 
-> "/sys/bus/pci/devices/0000:04:00.0/driver_override" which takes the
-> *driver name* as data to override what driver is allowed to bind to
-> this device.
-> Does this driver_override consider it as using the driver name as part
-> of the abi? If not, why?
+Release vga_user_lock immediately after list_del() and before calling
+vga_put(). The vga_put() function acquires vga_lock internally, and
+holding vga_user_lock while calling vga_put(). The VGA resource
+operations and loop iteration don't require lock protection, only
+the list removal needs lock protection.
 
-Because the bind/unbind/override was created as a debug facility for
-doing kernel development and then people have turned it into a "let's
-operate our massive cloud systems with this fragile feature".
+This ensures consistent lock ordering and eliminates the deadlock risk
+during VGA resource cleanup operations.
 
-We have never said that driver names will remain the same across
-releases, and they have changed over time.  Device ids have also moved
-from one driver to another as well, making the "control" of the device
-seem to have changed names.
+Signed-off-by: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+---
+ drivers/pci/vgaarb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> What live update wants is to make that driver_override persistent over
-> kexec. It does not introduce the "driver_override" API. That is
-> pre-existing conditions. The PCI liveupdate just wants to use it.
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 78748e8d2dba..e86fe7fa3d6f 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -1445,6 +1445,7 @@ static int vga_arb_release(struct inode *inode, struct file *file)
+ 
+ 	spin_lock_irqsave(&vga_user_lock, flags);
+ 	list_del(&priv->list);
++	spin_unlock_irqrestore(&vga_user_lock, flags);
+ 	for (i = 0; i < MAX_USER_CARDS; i++) {
+ 		uc = &priv->cards[i];
+ 		if (uc->pdev == NULL)
+@@ -1456,7 +1457,6 @@ static int vga_arb_release(struct inode *inode, struct file *file)
+ 		while (uc->mem_cnt--)
+ 			vga_put(uc->pdev, VGA_RSRC_LEGACY_MEM);
+ 	}
+-	spin_unlock_irqrestore(&vga_user_lock, flags);
+ 
+ 	kfree(priv);
+ 
+-- 
+2.34.1
 
-That does not mean that this is the correct api to use at all.  Again,
-this was a debugging aid, to help with users who wanted to add a device
-id to a driver without having to rebuild it.  Don't make it something
-that it was never intended to be.
-
-Why not just make a new api as you are doing something new here?  That
-way you get to define it to work exactly the way you need?
-
-> I want to get some basic understanding before adventure into the more
-> complex solutions.
-
-You mean "real" solutions :)
-
-> > > Drivers that support live
-> > > updates should provide a live update-specific ABI to detect
-> > > compatibility with the preserved data. We can use a preservation
-> > > schema GUID for this.
-> > >
-> > > > 2) Assume the 1) is yes from you. Are you just not happy that the
-> > > > kernel saves the driver name? You want user space to save it, is that
-> > > > it?
-> > > > How does it reference the driver after kexec otherwise?
-> > >
-> > > If we use GUID, drivers would advertise the GUIDs they support and we
-> > > would modify the core device-driver matching process to use this
-> > > information.
-> > >
-> > > Each driver that supports this mechanism would need to declare an
-> > > array of GUIDs it is compatible with. This would be a new field in its
-> > > struct pci_driver.
-> > >
-> > > static const guid_t my_driver_guids[] = {
-> > >     GUID_INIT(0x123e4567, ...), // Schema V1
-> > >     GUID_INIT(0x987a6543, ...), // Schema V2
-> > >     {},
-> > > };
-> >
-> > That's crazy, who is going to be adding all of that to all drivers?  And
-> > knowing to bump this if the internal data representaion changes?  And it
-> > will change underneath it without the driver even knowing?  This feels
-> > really really wrong, unless I'm missing something.
-> 
-> The GUID is more complex than a driver name. I am fine with not using
-> GUID if you are so strongly opposed to it.
-> 
-> You are saying don't do A(driver name) and B(GUID). I am waiting for
-> the part where you say "please do C instead".
-
-It's not my requirement to say "here is C", but rather I am saying "B is
-not going to scale over time as GUIDs are a pain to manage".
-
-> Do you have any other suggestion how to prevent the live update PCI
-> device bind to a different driver after kexec? I am happy to work on
-> the direction you point out and turn that into a patch for the
-> discussion purpose.
-
-Why prevent it?  Why not just have a special api just for drivers that
-want to use this new feature?
-
-thanks,
-
-greg k-h
 
