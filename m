@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-37364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA17BB1525
-	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 19:12:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52C11BB16F7
+	for <lists+linux-pci@lfdr.de>; Wed, 01 Oct 2025 20:02:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8BCE519462E8
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 17:12:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 284FB7A6C63
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Oct 2025 18:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44C22D29A9;
-	Wed,  1 Oct 2025 17:12:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDD1E2D3A86;
+	Wed,  1 Oct 2025 18:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o65fI6Fr"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ps7x5FCI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01177208961;
-	Wed,  1 Oct 2025 17:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466FE258EF0;
+	Wed,  1 Oct 2025 18:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759338736; cv=none; b=aYrTu9kWdddCqTH1+j+4NK2jClvNCY/4u4K+Ic3tNxVfXkt0qZa08/MFwZYp3WOgX/qQ2qHpxhhi/plN0IhYUY7MrNSRqz+9MQstqq/uafeVRJKFk7PYPoRWOjtLTeUcrm2qU89bMl/pFY2sBARli4ygraOtTLzbDd9GEAv2ZXc=
+	t=1759341720; cv=none; b=XuxPebwFLkWlqzvblWhhTzibftXflV7XvP3crWMLKV2V1Bjfr681dSR086IkcHd3eAUHS/32uu+Ix7Saq/raUlNcB6rxB5vqdw6OWKhW3Wh4dKzmBCFM8SxlzOTd+RAbcImidYr4BiyBPfh5bv/CBTC2j+Pr7yjgZMZk/2WUfwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759338736; c=relaxed/simple;
-	bh=34+af5IfF8veVSpDh8Qy62YfotRj59YHSDUjGOuN8fA=;
+	s=arc-20240116; t=1759341720; c=relaxed/simple;
+	bh=OZTt/xPPJXX+7TnJZBoKo37mlN/sUWHl7tztDTk/5Iw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KvIyXKEOEvWRIljN00DcNsS7A7A/JZS7Zg8MPUztRt03lb6V7LL25EiTTpZT9l/zh7fnaGfG5URAZGj+fTqHnKAZTQQvV53AyxCx1pkn0yEMMCyO99xmBV+ksY/ZXhZlVwD0BWyT/0kLZoQ9+y9CXenz1bo41WU4rhGd8v7Er6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=o65fI6Fr; arc=none smtp.client-ip=148.163.158.5
+	 In-Reply-To:Content-Type; b=tpMBUNo0l7d2yLnF+fm6M8dW2Qx6AJN+VdrK72/SDvooIASctYsW87qoL48AlTA2Ude7UpfQupPaSG7hmkdRFaqLXfQl8t4dErTOvn/j21K/UZOM2xh54yOws5aG7dAf5cMEcgFhcNWXn4W9GTB5ZsADMFbZtpkCZY98eEWeF0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ps7x5FCI; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 591F8Goi031811;
-	Wed, 1 Oct 2025 17:12:07 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 591AauF2018941;
+	Wed, 1 Oct 2025 18:01:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=+vB7oY
-	6MwN17dyHDtLI+zfPEG2gHbxQn1oTiIwFJfPE=; b=o65fI6FrV9QJCbRTpnOymC
-	NvVKAHoMM1plcGdaTDsyKb3df106qog05jSXN8ILRJtPYEUyj4hAv58ThKErCIMk
-	AR2ZFji2OppeUS29MAxNViHfRDXBNGhYZP+xTxCO91NzwL/xa5CB44gk7GgWsffd
-	A7rMUch/zCH2tblCXBWHWYvHsUWU4I2FTWXQh5fQ2nja4Tjfy8V/x2KeGhIZl26c
-	hyhiHQswex+T5bAroGUU0X3fpkXcyN+L9uUjC2cSHyysASUFnBnQJGlz5trVizIK
-	QilqvFX7liP5pGUM8b6ryxe7p6L5n9498771/072gjoaW8mynnm9XC4vJ8lDQceg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YuggLZ
+	X5iMXvtB6YQ9ETrPfHB3UZ2uFjZQlbGISsB5A=; b=ps7x5FCIAm81ZrYqN1SCpX
+	Fwu/yJWw6zILHk/+JiTKeK8NUHWJt07e5X9NQQBmw0wbqMrdVIuSYexghvc8QUMj
+	YbtpliRWpQJ/3nJbXbvKxjNnDTMz2hNO57HMsVF1BruUiLa6SDC3I3jnQvigiyL1
+	BjG8JW8bTZgmvBNkbmS1aefDL0aSrz46EDkwB3f7AYrSN18fD/LOc6sxP5Swrq4F
+	5nxq7dUis/Ta67hLi0rtaZ/QA/YynLMHZVZTTHSPUV/SosWB24IWdNhqJshub4Ik
+	LYWFDracWf+KT78WTQqhGS2yy5w7HUSjOK7NcA7Qe3imaGujcLPzbRknwn4P1Yag
 	==
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49e5br0bq0-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49e7n81262-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Oct 2025 17:12:06 +0000 (GMT)
+	Wed, 01 Oct 2025 18:01:53 +0000 (GMT)
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 591ECEpN024198;
-	Wed, 1 Oct 2025 17:12:05 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 49evy19mwa-1
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 591GwL6P024151;
+	Wed, 1 Oct 2025 18:01:51 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 49evy19v5q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Oct 2025 17:12:05 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 591HC42j32244350
+	Wed, 01 Oct 2025 18:01:51 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 591I1cSF24445610
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 1 Oct 2025 17:12:04 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C807E58052;
-	Wed,  1 Oct 2025 17:12:04 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 082655805A;
-	Wed,  1 Oct 2025 17:12:04 +0000 (GMT)
+	Wed, 1 Oct 2025 18:01:38 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A22A458067;
+	Wed,  1 Oct 2025 18:01:49 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8849F5805F;
+	Wed,  1 Oct 2025 18:01:48 +0000 (GMT)
 Received: from [9.61.247.182] (unknown [9.61.247.182])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  1 Oct 2025 17:12:03 +0000 (GMT)
-Message-ID: <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
-Date: Wed, 1 Oct 2025 10:12:03 -0700
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  1 Oct 2025 18:01:48 +0000 (GMT)
+Message-ID: <a4c448b2-6909-4efb-b41d-396ea8ececd3@linux.ibm.com>
+Date: Wed, 1 Oct 2025 11:01:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,134 +77,100 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
-To: Benjamin Block <bblock@linux.ibm.com>
+Subject: Re: [PATCH v4 04/10] s390/pci: Add architecture specific resource/bus
+ address translation
+To: Benjamin Block <bblock@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
 Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+        mjrosato@linux.ibm.com
 References: <20250924171628.826-1-alifm@linux.ibm.com>
- <20250924171628.826-2-alifm@linux.ibm.com>
- <20251001151543.GB408411@p1gen4-pw042f0m>
+ <20250924171628.826-5-alifm@linux.ibm.com>
+ <2d049d60868c0f61e53e70a73881f8674368537a.camel@linux.ibm.com>
+ <20251001160415.GC408411@p1gen4-pw042f0m>
 Content-Language: en-US
 From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <20251001151543.GB408411@p1gen4-pw042f0m>
+In-Reply-To: <20251001160415.GC408411@p1gen4-pw042f0m>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI2MDIxNCBTYWx0ZWRfX/fTUB/Q0no6h
- 6GMzLMz+Fy/SliM4qS9S+RJRnuOfcKiqlbNCafUyG0QB4GgKuDU142iYc4BRIvq1hZfP7xt/a7k
- CrVRVOJMimT1vkFA1mmE/nweTgApUdd/wpr96cgx1WRaeTsoRWX/ZAEiW2hetOl0H40s3hYPFyQ
- 1PL9Q0Rvur3LjU4PyuooKfmNzrX69ekahGsqPHf2rnd2hXDube+jLD7OFCxKhB2cAzhfhbBzDTv
- /GIx1FKl1iOPH+DMUKK1Vy++VfJdVp31R3e8Y/tr42y/WXdNFNHH/wDhm+qcJf3Clf3U6fzkmEb
- GOEZM33fRM1YZQcYZkvA+a1ZZvk4zw1+i+O6NzaEgAtLsbsIGqt4ByfScx1rrF82HrOPB+7jpWT
- f7EBAAAggmsUeTHvA1A7RkvGgtROQA==
-X-Proofpoint-GUID: 1McfUhojab5bfGNOEFYPJnj_Ovr4WebU
-X-Authority-Analysis: v=2.4 cv=LLZrgZW9 c=1 sm=1 tr=0 ts=68dd60e6 cx=c_pps
+X-Proofpoint-ORIG-GUID: OjM4jqVCkUZIXqsN743-_l4_-nJXb7Th
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTI3MDAyNSBTYWx0ZWRfX87MJU4BoLddX
+ N6TC4yhszZJHvAXE2CA9JgcyUio9K1GzaP6XX8BB7rnwwkV1oNm/YXQ2+ZdTI5uxuDDUcjgEfi7
+ eOYEHSMR4FZ8ufZnTfcSc5hhHLYLoXXSUP5RpHWk5+8fIZ40kbQCJpsb1OHL0MkVauSI7BdyuP0
+ BN/nLFI012nbswP4Sqd2nq1VyMsztm+9P+yzptR76G/oww93PGL0ZE2dwndre1U9h8uslkvAOOy
+ GEcjMUQE+suRuQn/aGMm/yzoEVWNY5laQLO/U3I6zndQzuSl/+YUFa2rlss7A0rzV9Wp2zr8bnp
+ JduLWYpJdI3CtRA6AgqH8MDodxKwbAB8ynHUKgj9x2R7smp+QehAfqgtf7ihxHvm2E36P0YxxbY
+ 10halkeAeAuNIkzh1kwVp+o1sZ2FcQ==
+X-Proofpoint-GUID: OjM4jqVCkUZIXqsN743-_l4_-nJXb7Th
+X-Authority-Analysis: v=2.4 cv=T7qBjvKQ c=1 sm=1 tr=0 ts=68dd6c91 cx=c_pps
  a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=T5_8E-leH3MX88Le9nUA:9
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=q6S6Oyswo6crDdrvCj4A:9
  a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: 1McfUhojab5bfGNOEFYPJnj_Ovr4WebU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-01_05,2025-09-29_04,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 phishscore=0 lowpriorityscore=0 adultscore=0
+ adultscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2509260214
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2509270025
 
 
-On 10/1/2025 8:15 AM, Benjamin Block wrote:
-> On Wed, Sep 24, 2025 at 10:16:19AM -0700, Farhan Ali wrote:
->> @@ -1792,6 +1798,14 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
->>   int pci_save_state(struct pci_dev *dev)
->>   {
->>   	int i;
->> +	u32 val;
->> +
->> +	pci_read_config_dword(dev, PCI_COMMAND, &val);
->> +	if (PCI_POSSIBLE_ERROR(val)) {
->> +		pci_warn(dev, "Device config space inaccessible, will only be partially restored\n");
->> +		return -EIO;
-> Should it set `dev->state_saved` to `false`, to be on the save side?
-> Not sure whether we run a risk of restoring an old, outdated state otherwise.
-
-AFAIU if the state_saved flag was set to true then any state that we 
-have saved should be valid and should be okay to be restored from. We 
-just want to avoid saving any invalid data.
-
-
+On 10/1/2025 9:04 AM, Benjamin Block wrote:
+> On Thu, Sep 25, 2025 at 12:54:07PM +0200, Niklas Schnelle wrote:
+>> On Wed, 2025-09-24 at 10:16 -0700, Farhan Ali wrote:
+>>> +void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
+>>> +			     struct resource *res)
+>>> +{
+>>> +	struct zpci_bus *zbus = bus->sysdata;
+>>> +	struct zpci_bar_struct *zbar;
+>>> +	struct zpci_dev *zdev;
+>>> +
+>>> +	region->start = res->start;
+>>> +	region->end = res->end;
+>> When we don't find a BAR matching the resource this would become the
+>> region used. I'm not sure what a better value would be if we don't find
+>> a match though and that should hopefully not happen in sensible uses.
+>> Also this would keep the existing behavior so seems fine.
+> I was wondering the same things, but I guess it matches what happens elsewhere
+> as well, if no match is found
 >
->> +	}
->> +
->>   	/* XXX: 100% dword access ok here? */
->>   	for (i = 0; i < 16; i++) {
->>   		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
->> @@ -1854,6 +1868,14 @@ static void pci_restore_config_space_range(struct pci_dev *pdev,
->>   
->>   static void pci_restore_config_space(struct pci_dev *pdev)
->>   {
->> +	if (!pdev->state_saved) {
->> +		pci_warn(pdev, "No saved config space, restoring BARs\n");
->> +		pci_restore_bars(pdev);
->> +		pci_write_config_word(pdev, PCI_COMMAND,
->> +				PCI_COMMAND_MEMORY | PCI_COMMAND_IO);
-> Is this really something that ought to be universally enabled? I thought this
-> depends on whether attached resources are IO and/or MEM?
->
-> 	int pci_enable_resources(struct pci_dev *dev, int mask)
+> 	void __weak pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
+> 				     struct resource *res)
 > 	{
 > 		...
-> 		pci_dev_for_each_resource(dev, r, i) {
-> 			...
-> 			if (r->flags & IORESOURCE_IO)
-> 				cmd |= PCI_COMMAND_IO;
-> 			if (r->flags & IORESOURCE_MEM)
-> 				cmd |= PCI_COMMAND_MEMORY;
+> 		resource_size_t offset = 0;
+>
+> 		resource_list_for_each_entry(window, &bridge->windows) {
+> 			if (resource_contains(window->res, res)) {
+> 				offset = window->offset;
+> 				break;
+> 			}
 > 		}
-> 		...
+>
+> 		region->start = res->start - offset;
+> 		region->end = res->end - offset;
 > 	}
 >
-> Also IIRC, especially on s390, we never have IO resources?
+> So I guess that is fine.
 >
-> 	int zpci_setup_bus_resources(struct zpci_dev *zdev)
-> 	{
-> 		...
-> 		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> 			...
-> 			/* only MMIO is supported */
-> 			flags = IORESOURCE_MEM;
-> 			if (zdev->bars[i].val & 8)
-> 				flags |= IORESOURCE_PREFETCH;
-> 			if (zdev->bars[i].val & 4)
-> 				flags |= IORESOURCE_MEM_64;
-> 			...
-> 		}
-> 		...
-> 	}
->
-> So I guess this would have to have some form of the same logic as in
-> `pci_enable_resources()`, after restoring the BARs.
->
-> Or am I missing something?
+> The thing I'm also unclear on is whether it is OK to "throw out" this whole
+> logic about `resource_contains(window->res, res)` here and
+> `region_contains(&bus_region, region)` in the other original function?
+> I mean, the original function don't search for perfect matches, but also
+> matches where are contained in a given resource/region, which is different
+> from what we do here. Are we OK with not doing that at all?
 
-As per my understanding of the spec, setting both I/O Space and Memory 
-Space should be safe. The spec also mentions if a function doesn't 
-support IO/Memory space access it could hardwire the bit to zero. We 
-could add the logic to iterate through all the resources and set the 
-bits accordingly, but in this case trying a best effort restoration it 
-should be fine?
-
-Also I didn't see any issues testing on s390x with the NVMe, RoCE and 
-NETD devices, but I could have missed something.
+I had thought about doing the range check, similar to 
+resource_contains/region_contains rather than doing exact checks. But I 
+think the way we expose the topology of the devices, the offset in our 
+(s390x) case is zero. So I thought it should be safe to just doing exact 
+match and might help us catch any issues if its not exact.
 
 Thanks
 
 Farhan
 
-
->
->> +		return;
->> +	}
 
