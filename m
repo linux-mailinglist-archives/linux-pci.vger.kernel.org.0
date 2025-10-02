@@ -1,631 +1,207 @@
-Return-Path: <linux-pci+bounces-37430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37431-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E84F8BB40C0
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 15:31:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F711BB413D
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 15:42:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 94E902A8514
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 13:31:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B57E21891530
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 13:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D03B31354A;
-	Thu,  2 Oct 2025 13:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BA32FFF86;
+	Thu,  2 Oct 2025 13:42:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHCp6t6V"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DLVbD5yq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013017.outbound.protection.outlook.com [40.93.196.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFBD313544;
-	Thu,  2 Oct 2025 13:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759411847; cv=none; b=moiPaGZumCW7LKHA63zhQ9u6gs9vc6T5nk/8ahXei6IFQWuVY2P9tPH1BTNK1o3mJXtKtPWYMv20irY8LwGypmlfQJxH3wzyTWEKq87/tXkxPH0L+J1Qx7jaPpIEOOtt4yHdYKybzZ+bjjbHt/779WxgNpNkUi0WhDnHNYgEeZ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759411847; c=relaxed/simple;
-	bh=+ABiHpsDLSEB54zWZR+RxbOrDxj3riKvPPAfnTqD4Qw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ID0qtFiDVHLl60mGmcdHbmWd/hRUTkAhK3LvDF9dDQEN5Go3d+aagqNb5WAr3WSXh7SKSKJKWseRBKyA4i4lB6RGJPJYS1sQS1nDWIsjCljSisgrMAAg5FhqWX/aLG7DSxLWY1wcs23LqrGxRWp51hvXClofzO0z5OqMOlQ3/RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHCp6t6V; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759411845; x=1790947845;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+ABiHpsDLSEB54zWZR+RxbOrDxj3riKvPPAfnTqD4Qw=;
-  b=gHCp6t6VjHsiQD198AHDAe1d9xO5YUiMMlw3p3NQ9hQ9h98lI968H9Yv
-   tG9EzuloWF6K2sp8nv/zSn5yPFWNNH2XCThKbLcJKl8djNdgfBzvqmhA9
-   kkk1ZdprVZjg+OFT9E5EReHt55zy1Wp8ZpyL8Z/oaLGwXpDzqpCPCo7wb
-   htQGTZD1Lj2lwWc5szVlO5pUZ75NuBgfj530Nm8c69/TWZhQ6vEO7Kiax
-   vwmys/eA+0XjRqnfS6qoAqKYsSgg07B5MkaeDpuUzZAmxHTp5gtNV6KFl
-   VSaTIwps5/X+yB2rb0XIgEhlL8U1t+hKfCIqX5+krNdEF7gb1ohb2O2uK
-   g==;
-X-CSE-ConnectionGUID: UhvqwNFZT7KcBcilny+Mdg==
-X-CSE-MsgGUID: f4nc/fAvQ/SKX1AtNIu49A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="72366497"
-X-IronPort-AV: E=Sophos;i="6.18,309,1751266800"; 
-   d="scan'208";a="72366497"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 06:30:44 -0700
-X-CSE-ConnectionGUID: Uo9yfzIPSUSr/ZZEgvkP8w==
-X-CSE-MsgGUID: 0h67OrxvToivsHsTs964rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,309,1751266800"; 
-   d="scan'208";a="178150411"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 06:30:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 2 Oct 2025 16:30:36 +0300 (EEST)
-To: dan.j.williams@intel.com
-cc: Xu Yilun <yilun.xu@linux.intel.com>, linux-coco@lists.linux.dev, 
-    linux-pci@vger.kernel.org, yilun.xu@intel.com, baolu.lu@linux.intel.com, 
-    zhenzhong.duan@intel.com, aneesh.kumar@kernel.org, bhelgaas@google.com, 
-    aik@amd.com, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] PCI/IDE: Add Address Association Register setup for
- RP
-In-Reply-To: <68dd8d20aafb4_1fa2100f0@dwillia2-mobl4.notmuch>
-Message-ID: <481228e4-72d4-bfbb-5e25-660bfea1327d@linux.intel.com>
-References: <20250928062756.2188329-1-yilun.xu@linux.intel.com> <20250928062756.2188329-3-yilun.xu@linux.intel.com> <68dd8d20aafb4_1fa2100f0@dwillia2-mobl4.notmuch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5553D279DD3;
+	Thu,  2 Oct 2025 13:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759412548; cv=fail; b=kJboAqtbdbJQPhCKQSe+M6O+UmdfBqOa8yGv0H2w3Uegvrk3sSyiGXMAsvXpYaL1hyGhA+n8Hu7GKJkTToYgSunALZU5xkLTlXur3sf7ZOFmtSE48PdJsGWfzhglowopKi3KXDbg0/XeQX6uT0FD+Z15NFyxouclCZHeWq4Dpoc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759412548; c=relaxed/simple;
+	bh=hvToXLAGvngHik1JQAqfkBRVI+UZ3fIr0rw83lL2VTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Q3TGgfVrS4Z1qNRQLcZCKPuaZPWp3NKPjzsO2s4UPtJdQYjeVNBZFgpVpxhhyI33o4pklE9kcaYa/H7SPiCV/sA+jYaEo+TQaqPDSLKc3dg7P9RGQi4POEO0AXAzwmz2Nr+jM0CQ+3uSheTRu0VCezGBwSuJLrnovjvOqGjbZy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DLVbD5yq; arc=fail smtp.client-ip=40.93.196.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=abWblL4oEE9ZQR53p26hUGyuUZXCOVS/mf7BhYFcy3e2HkTaQDOc7ZCkoQ+wlnhZa/xVt0Xcggg/3ZzPI5IPo6g9QY0StKnrTB/O2CP3TbvxTrESgXL3azqFbz0CSaazHlFC8Jrf7xH74fMHopidy4dumiu8eoxqJvToF4BG3t8VurGs8sDiwa4wCmIc4Kn3WNkzpRWLelKdRjpi8N1ddStPq3yrTFAwQdqL2xP66fJ/Fx4m0JF+26OCFuRpeycWhHnMz7ASbopDg3ekhJYP7aMBEVepxxcvzQsAcC/gSJUkcShNJVtoiTMtEoEw6Xmpe0XBkUTFrVJ4r33pKMnu9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OPW+f9QVI2n1N8G5TGUiw+3k6HIscInUjGLMYwwZD/Y=;
+ b=ViuqNi85b3hxfXI061pNn4wqj9fjoXIEH/qu1TDtK/024C1nT9sp7bkoVuvf7m0nic7QczyWmN48OF6QMsuE2MMXuhDNU6A6DO1C4cdDaxsSEWNyz0ahElHv8sOGnRrAbTY64E0aNcquf55nirVT5Y0h3mkQFCOX3ab2HHaneXzHQBzYTneQ4qouaG0th1XWvQHLG40XbGZD6z3I4xJgDZFR4HBttif20i99emzIr+9kAG5An0Lenvq1pBQw+DhPpYOpg76UoVmV9ECQ32BHblpjc7JLY7jL8PeDW5ZZS8bMEOJVcGKA4N1OzS41mscp7fQssmT9tG1g2yY1OT5umQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OPW+f9QVI2n1N8G5TGUiw+3k6HIscInUjGLMYwwZD/Y=;
+ b=DLVbD5yqvSDtXJLoNN1WhjUY17DPKmZga3sYXHbRQX47NEjhbpOTkgEWNzAQsl8y/q2l7oK2OnYaen/KTsfXqJtjVGtYhLHvRXqp1MoWvUsTQPHG1Rv+wzelWCIDbo2vgD25in9tSkEDGw7UzKHPqtxYqI6i3Eax0yG53Nsm0WfHn25U74TzFNTFjg22DA1UX9IlB1Iw5AaD1Ikikye5lWV2DbUH6Tu//4nUeEZQ2pVWypya0CR4XKngIRahMitFP2REHZZmsnuTkFKg2jM1i7M0vufjIajo0NlsZ4IgjisWIfLahUM2jwK5oLZiRxn01PQbciJVwxxOWUPtd0Rn+Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com (2603:10b6:510:1d0::13)
+ by MW4PR12MB7168.namprd12.prod.outlook.com (2603:10b6:303:22d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.18; Thu, 2 Oct
+ 2025 13:42:23 +0000
+Received: from PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632]) by PH7PR12MB5757.namprd12.prod.outlook.com
+ ([fe80::f012:300c:6bf4:7632%2]) with mapi id 15.20.9160.015; Thu, 2 Oct 2025
+ 13:42:23 +0000
+Date: Thu, 2 Oct 2025 10:42:21 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	Surath Mitra <smitra@nvidia.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH 0/2] rust: pci: expose is_virtfn() and reject VFs in
+ nova-core
+Message-ID: <20251002134221.GA3266220@nvidia.com>
+References: <20250930220759.288528-1-jhubbard@nvidia.com>
+ <DD6K5GQ143FZ.KGWUVMLB3Z26@nvidia.com>
+ <fb5c2be5-b104-4314-a1f5-728317d0ca53@nvidia.com>
+ <DD6LORTLMF02.6M7ZD36XOLJP@nvidia.com>
+ <12076511-7113-4c53-83e8-92c5ea0eb125@nvidia.com>
+ <5da095e6-040d-4531-91f9-cd3cf4f4c80d@nvidia.com>
+ <20251001144814.GB3024065@nvidia.com>
+ <c56bd720-d935-4b51-b507-d794df3f66f4@nvidia.com>
+ <20251002115851.GB3195801@nvidia.com>
+ <ea82af0d-663f-4038-b8c9-cf1eba5bc4df@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea82af0d-663f-4038-b8c9-cf1eba5bc4df@nvidia.com>
+X-ClientProxiedBy: DM6PR03CA0091.namprd03.prod.outlook.com
+ (2603:10b6:5:333::24) To PH7PR12MB5757.namprd12.prod.outlook.com
+ (2603:10b6:510:1d0::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5757:EE_|MW4PR12MB7168:EE_
+X-MS-Office365-Filtering-Correlation-Id: d283150b-829e-4642-643a-08de01b98464
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5wf1ASRQkuXlsA5SapXxD7GuuIENN1bcxGvl8x8K1cam0ZyELoXbRtr5VAOY?=
+ =?us-ascii?Q?wSnY+eBga84cSIm6ZqH22GdI9s++EgIk1Ocv3Cwez/hBhnzFMydId8iMe8hD?=
+ =?us-ascii?Q?SX/fqGABA+QMraULtrTQh77mbrjGG/4mct9hwTGsh5YaG89PpbeVGgO9KSzQ?=
+ =?us-ascii?Q?l6+y/fD1uEvfe+hQrh2E6OcPEv1AyZJqy+2HVyImGR3nZOZD8HIEpxo9B/oM?=
+ =?us-ascii?Q?T8asE2WElvQoia7PO9IPV/gZ11Rzkiza7Cu54gbtznmH8OuhTGwKS1temfJD?=
+ =?us-ascii?Q?yvz8hGdUoyq8Vp8p4ZgOIWYmJUX0XbwYw533IVNSca/FOZVPfocYihJGkeq/?=
+ =?us-ascii?Q?zvTfc10PQZSvVKBkLAxftUO8T2kHLUwFaG99QHmJbxEGAgog22QKKqA7vEIf?=
+ =?us-ascii?Q?G0noeGUdAXQB+FhMSdAzPxzvxgNtWn5iiNhr6djuIjbO3oVgK/H3u8K+CMyX?=
+ =?us-ascii?Q?cUXVfcF84hPQ1itzLiNUZm9rutR4qRax3W9WLESlAZfJ6UOMOA7EnAAHDqaw?=
+ =?us-ascii?Q?slvnqNbQpL9ryC74UIRtN5TU6n6+FUAjFN7CpvW0tEb6PIpXINzrH+uqDpyW?=
+ =?us-ascii?Q?9/TluQyVBWO+KSMgv1fhsqpUd7KKNQvlMUA1qgUNgkW1pXxJbeKl/ozxPI3P?=
+ =?us-ascii?Q?GMJdTmDzKE0ufeTm3m6N+lQ8Q3bdOjl0arUDerGmvwFstgeEgfPd1kT15b/W?=
+ =?us-ascii?Q?hu0NJGUnQIHHVdpnG2tpFjysXCwx1MHl8lqelZWLbZJ/Z3w7lAUauNJI8UdQ?=
+ =?us-ascii?Q?EMRv/Mt3pUxGMrO7ayPctuv8o0k21geBJcr4qyD7tdBCAWvWZ1+WBTqdlWTY?=
+ =?us-ascii?Q?kwfCSJJ1K4v9XmKxBt6jM8ImriQp4QE3T55Ku3gvbUDw/A0rAvpv8Ue4X6Yo?=
+ =?us-ascii?Q?CkzNaxqtw4XMy0dXKvLEiEwCDnG3T5u/EWRIPqUs46k5fgTN4cWxZ1s+egeo?=
+ =?us-ascii?Q?oM7ApzBOKW2cCirk4/Xi2mYXsHl9wjyVAOo97p1XpGUb6+ZpbBDRR+JuozaA?=
+ =?us-ascii?Q?fq3NwgebjujyntMVpQ1algv+irR3En14AhRg+SFAT0DT2nL73gzAsA1uFkK/?=
+ =?us-ascii?Q?r8//zMnxIVa9sJgjdV6E/82Kxv210/57UClKJn7+h2UkN+BGVd1+mbVEu1i5?=
+ =?us-ascii?Q?mqKW/eb3jK/3U4M6i5VkiGMguQy9O6pUKz6DkU7jkqVE+Ql4YmbCXpbD4tEV?=
+ =?us-ascii?Q?mfXwnQtSuU00nBON7VkaFfpyPb7MoTVqC1iX+RHK7Pm4bUCLoHquHBt3Eizw?=
+ =?us-ascii?Q?DUYHieXqkdksAwOaPKxgr1GolSAdxuaSHJMgSUVdY19BfNTxS1OcqhWYumbK?=
+ =?us-ascii?Q?vC+pe2KFVwRXRxpM1SzVcXPLBX9cX/9usE8HTxg8OhTE6WUgVvqhMf0qfFNh?=
+ =?us-ascii?Q?R2dHSpk5oBtqXu1cERd044YJfpf4uZs74/ljbvF3fPkYzHJ6VH0pANV+yLxK?=
+ =?us-ascii?Q?tEMMOYdXDMjw9KADxVacieId7MLzQHn6?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5757.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LdMeAVmL7+Un1Fmfil9RkgVsW4q7WBHu+Y9pjJobOxkwSuzctDbQ13dTAOSF?=
+ =?us-ascii?Q?XNWSrm/Rxr0z8aR1DXrhLLLwZILZ5QVzo3rTR/PFv2yjbXR4F8szk0M3dH0G?=
+ =?us-ascii?Q?dtUe0xQnb/cz0Lv3+v3KLW8mNvZb8J64fgauZM4SjJyAYZIlmLN1Ndn7TSbe?=
+ =?us-ascii?Q?+6GQgdLA33Y/MExyCx3jwp6F5VNQb4y5l0+DAbJoYH0CE9URuFDB+/V5lLS0?=
+ =?us-ascii?Q?0LjhqWPKIwgAIenW71g7pHxWPYPxJdbosU6mAesXDDh83posh0AbHwlncqhy?=
+ =?us-ascii?Q?CGUvBUnfXmzzkJQb9udOoxCy1SuO8EaULN2cWLC3X/FEHQWMehaMaBACrAZU?=
+ =?us-ascii?Q?Ppq0+1vCCEiqPpbxsJnr8PSyPRhjW6wwIxTSDlM++O5SaLhoatUyOTxNWuL/?=
+ =?us-ascii?Q?pYabpeguh5KiQhxWqthNtunsknj4QpiWtngQgy+wN9pmW5aT7/557KGdZ9bu?=
+ =?us-ascii?Q?d0BOKiYbrFN+Kgn8s3BI64z9zsQ3WRv1LhQ4imCpNsmbJzqPCqUkSRf5OgHI?=
+ =?us-ascii?Q?Q3fhT0a7wFj8IH18D+4M03DDMmxBJOrNdbgcpa4R9h9h+gNv+3vBosr7J+yB?=
+ =?us-ascii?Q?0527w76tggAfGCURc+XKC0PbXaNltLusgb/YwwJK38u3FFzeXiE/8JsthqPq?=
+ =?us-ascii?Q?bU5ceCTSXIwoN1VKAESin6RJNezTFAxO45UTjHJ5+6YiEVGbIfM4D8OMpwU3?=
+ =?us-ascii?Q?moSD3CYbu5zRtVY6fDAg0t8+Xi+MucGQevX32/n8Vj7edNLu+1L2ZePzVBmG?=
+ =?us-ascii?Q?tzzlPBJ38vil68R5aTIx9HS57aWUDN8Yov6GZYNzcpc8dtr7eoCH4NHoDPIc?=
+ =?us-ascii?Q?LCX2CMME8oyjkhKLR7/DY+9dRP4Q9xj1fgsgXKJ9DvtqHoDHisSaDrxerz42?=
+ =?us-ascii?Q?ak9iuDUaPcPgxJmQc9eH4n2wdtgejgwShPEULRgehbke17Ki0iajv8YZmcLv?=
+ =?us-ascii?Q?Wc+Cwzqze3o5ka7FwjhdD0bUrvXIeM98Kx6gn9M4c7S+j0cWFfzibMH38Jdl?=
+ =?us-ascii?Q?979wK+2SULkJYmGOD5GCj8UzSEbwP+ygvfAWOLrT3NUnCJ++NrRtzDlo7q2s?=
+ =?us-ascii?Q?d3NF7K+Vn6Sa/56Wft9Ts24UAJO4LorxWvnJW8dT94VJxyJNEc3x31Zv+qFE?=
+ =?us-ascii?Q?l/xR5NGbyRH2pAw4YPLkQNlfUlT+sCrOr8imPxTdahC0NNc2Ys2lI5eyiuCb?=
+ =?us-ascii?Q?GCyLlsYFJ5ZLNuezyUxlppdQEuaUZKQYJsIOSo4tkwrQbBhsJKlhaWBpFFYC?=
+ =?us-ascii?Q?r07Lodg40F9TjkOl4X6Mws8vyEE6Vrt8NScfLio/krG3/0QWQTm4tNrKDsGA?=
+ =?us-ascii?Q?+559rCy3OTeKUGiBVyc2Y+jGHbXidcFL58WKeh5FDCXddYoSa8rPZlz0QQ+d?=
+ =?us-ascii?Q?e8Bnn8dj+/hwEipESTx8kEzQCXN1d16wsIlId5YN49iXAO3NfwVxRk+2azVl?=
+ =?us-ascii?Q?cjlT5euwFT5ooM++kI3cqqarxv04TLvpr6rl6G5YBamqkpV1FjMVXo4ZRpVo?=
+ =?us-ascii?Q?BkME9sHh6s8p+My6PXg88ftIXZztYraZ56kH7ZDiSqISEqun0/BjPbYwfc0g?=
+ =?us-ascii?Q?oGrU9icP5QTxPD9PweNLXC/jU2x94X8jlnmQ+LN2?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d283150b-829e-4642-643a-08de01b98464
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5757.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2025 13:42:23.7177
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jLx+FZe8r8mUW/TZN/mm86aHA5uu7VTkhFNq+bWT75zU160Gg1FLD0mYK5LK4klm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7168
 
-On Wed, 1 Oct 2025, dan.j.williams@intel.com wrote:
-
-> [ Add Ilpo for resource_assigned() usage proposal below ]
-> 
-> Xu Yilun wrote:
-> > Add Address Association Register setup for Root Ports.
-> 
-> Perhaps it would be more accurate to call this "Address Association for
-> downstream MMIO" to clearly distinguish it from memory cycles targetting
-> the root port.
-> 
-> > The address ranges for RP side Address Association Registers should
-> > cover memory addresses for all PFs/VFs/downstream devices of the DSM
-> > device. A simple solution is to get the aggregated 32-bit and 64-bit
-> > address ranges from directly connected downstream port (either an RP or
-> > a switch port) and set into 2 Address Association Register blocks.
-> 
-> For the bridge the split is not 32-bit vs 64-bit. The split is
-> non-prefetchable vs prefetchable where the latter is potentially 64-bit,
-> but not always.
-> 
-> > There is a case the platform doesn't require Address Association
-> > Registers setup and provides no register block for RP (AMD). Will skip
-> > the setup in pci_ide_stream_setup().
-> 
-> Instead of calling out architecture specific details this can say
-> 
-> "Just like RID association, address associations will be set by default
-> if hardware sets 'Number of Address Association Register Blocks' in the
-> 'Selective IDE Stream Capability Register' to a non-zero value.
-> Alternatively, TSM drivers can opt-out of the settings by zero'ing out
-> the probed region."
-> 
-> > Also imaging another case where there is only one block for RP.
-> > Prioritize 64-bit address ranges setup for it. No strong reason for the
-> > preference until a real use case comes.
-> 
-> Rather than invent a new a policy just follow the PCI bridge
-> specification precedent where memory is mandatory and
-> prefetchable-memory is optional. If a bridge maps both, check if the
-> device needs both. If the device needs both and the platform only
-> provides 1 address association block then setup the non-optional BAR
-> first. If that results in an incomplete solution that is a quirk that
-> the vendor needs to solve, not the core PCI implementation.
-> 
-> Specifically, if that happens, the solution might be either a quirk to
-> disable address associations, or a quirk to disable one of the ranges.
-> Which path to take is unknown until there is a practical problem to
-> solve.
-> 
-> > The Address Association Register setup for Endpoint Side is still
-> > uncertain so isn't supported in this patch.
+On Thu, Oct 02, 2025 at 12:59:59PM +0000, Zhi Wang wrote:
+> On 2.10.2025 14.58, Jason Gunthorpe wrote:
+> > On Wed, Oct 01, 2025 at 09:13:33PM +0000, Zhi Wang wrote:
 > > 
-> > Take the oppotunity to export some mini helpers for Address Association
-> > Registers setup. TDX Connect needs the provided aggregated address
-> > ranges but will use specific firmware calls for actual setup instead of
-> > pci_ide_stream_setup().
+> >> Right, I also mentioned the same use cases of NIC/GPU in another reply
+> >> to Danilo. But what I get is NVIDIA doesn't use bare metal VF to support
+> >> linux container, 
 > > 
-> > Co-developed-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> > Co-developed-by: Arto Merilainen <amerilainen@nvidia.com>
-> > Signed-off-by: Arto Merilainen <amerilainen@nvidia.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  include/linux/pci-ide.h | 11 +++++++
-> >  drivers/pci/ide.c       | 64 ++++++++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 74 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-> > index 5adbd8b81f65..ac84fb611963 100644
-> > --- a/include/linux/pci-ide.h
-> > +++ b/include/linux/pci-ide.h
-> > @@ -6,6 +6,15 @@
-> >  #ifndef __PCI_IDE_H__
-> >  #define __PCI_IDE_H__
-> >  
-> > +#define SEL_ADDR1_LOWER GENMASK(31, 20)
-> > +#define SEL_ADDR_UPPER GENMASK_ULL(63, 32)
-> > +#define PREP_PCI_IDE_SEL_ADDR1(base, limit)                    \
-> > +	(FIELD_PREP(PCI_IDE_SEL_ADDR_1_VALID, 1) |             \
-> > +	 FIELD_PREP(PCI_IDE_SEL_ADDR_1_BASE_LOW,          \
-> > +		    FIELD_GET(SEL_ADDR1_LOWER, (base))) | \
-> > +	 FIELD_PREP(PCI_IDE_SEL_ADDR_1_LIMIT_LOW,         \
-> > +		    FIELD_GET(SEL_ADDR1_LOWER, (limit))))
-> > +
-> >  #define PREP_PCI_IDE_SEL_RID_2(base, domain)               \
-> >  	(FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |          \
-> >  	 FIELD_PREP(PCI_IDE_SEL_RID_2_BASE, (base)) | \
-> > @@ -42,6 +51,8 @@ struct pci_ide_partner {
-> >  	unsigned int default_stream:1;
-> >  	unsigned int setup:1;
-> >  	unsigned int enable:1;
-> > +	struct range mem32;
-> > +	struct range mem64;
-> >  };
-> >  
-> >  /**
-> > diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> > index 7633b8e52399..8db1163737e5 100644
-> > --- a/drivers/pci/ide.c
-> > +++ b/drivers/pci/ide.c
-> > @@ -159,7 +159,11 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
-> >  	struct stream_index __stream[PCI_IDE_HB + 1];
-> >  	struct pci_host_bridge *hb;
-> >  	struct pci_dev *rp;
-> > +	struct pci_dev *br;
-> >  	int num_vf, rid_end;
-> > +	struct range mem32 = {}, mem64 = {};
+> > I don't think it matter what "NVIDIA" does - this is the upstream
+> > architecture it should be followed unless there is some significant
+> > reason.
 > 
-> Per-above these should be mem_assoc, and pref_assoc;
+> Hmm. Can you elaborate why?
 > 
-> > +	struct pci_bus_region region;
-> > +	struct resource *res;
-> >  
-> >  	if (!pci_is_pcie(pdev))
-> >  		return NULL;
-> > @@ -206,6 +210,24 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
-> >  	else
-> >  		rid_end = pci_dev_id(pdev);
-> >  
-> > +	br = pci_upstream_bridge(pdev);
-> > +	if (!br)
-> > +		return NULL;
-> > +
-> > +	res = &br->resource[PCI_BRIDGE_MEM_WINDOW];
-> > +	if (res->flags & IORESOURCE_MEM) {
-> 
-> Per Ilpo this can now just be a size check.
+> From the device vendor's stance, they know what is the best approach
+> to offer the better the user experience according to their device
+> characteristic.
 
-I don't know why you said this about size as you implemented it below 
-correctly using res->parent check (inside resource_assigned()).
+You can easially push the code to nova core not vfio and make it work
+generically, some significant reason is needed beyond "the vendor
+doesn't want to".
 
-> > +		pcibios_resource_to_bus(br->bus, &region, res);
-> > +		mem32.start = region.start;
-> > +		mem32.end = region.end;
-> > +	}
-> > +
-> > +	res = &br->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> > +	if (res->flags & IORESOURCE_PREFETCH) {
-> > +		pcibios_resource_to_bus(br->bus, &region, res);
-> > +		mem64.start = region.start;
-> > +		mem64.end = region.end;
-> > +	}
-> > +
-> >  	*ide = (struct pci_ide) {
-> >  		.pdev = pdev,
-> >  		.partner = {
-> > @@ -218,6 +240,8 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
-> >  				.rid_start = pci_dev_id(pdev),
-> >  				.rid_end = rid_end,
-> >  				.stream_index = no_free_ptr(rp_stream)->stream_index,
-> > +				.mem32 = mem32,
-> > +				.mem64 = mem64,
-> >  			},
-> >  		},
-> >  		.host_bridge_stream = no_free_ptr(hb_stream)->stream_index,
-> > @@ -397,6 +421,21 @@ static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide,
-> >  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, val);
-> >  }
-> >  
-> > +static void set_ide_sel_addr(struct pci_dev *pdev, int pos, int assoc_idx,
-> > +			     struct range *mem)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = PREP_PCI_IDE_SEL_ADDR1(mem->start, mem->end);
-> > +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(assoc_idx), val);
-> > +
-> > +	val = FIELD_GET(SEL_ADDR_UPPER, mem->end);
-> > +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(assoc_idx), val);
-> > +
-> > +	val = FIELD_GET(SEL_ADDR_UPPER, mem->start);
-> > +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(assoc_idx), val);
-> > +}
-> > +
-> >  /**
-> >   * pci_ide_stream_setup() - program settings to Selective IDE Stream registers
-> >   * @pdev: PCIe device object for either a Root Port or Endpoint Partner Port
-> > @@ -410,6 +449,7 @@ static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide,
-> >  void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
-> >  {
-> >  	struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
-> > +	u8 assoc_idx = 0;
-> >  	int pos;
-> >  	u32 val;
-> >  
-> > @@ -424,6 +464,21 @@ void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
-> >  	val = PREP_PCI_IDE_SEL_RID_2(settings->rid_start, pci_ide_domain(pdev));
-> >  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-> >  
-> > +	/*
-> > +	 * Feel free to change the default stratagy, Intel & AMD don't directly
-> > +	 * setup RP registers.
-> > +	 *
-> > +	 * 64 bit memory first, assuming it's more popular.
-> > +	 */
-> > +	if (assoc_idx < pdev->nr_ide_mem && settings->mem64.end != 0) {
-> > +		set_ide_sel_addr(pdev, pos, assoc_idx, &settings->mem64);
-> > +		assoc_idx++;
-> > +	}
-> > +
-> > +	/* 64 bit memory in lower block and 32 bit in higher block, any risk? */
-> > +	if (assoc_idx < pdev->nr_ide_mem && settings->mem32.end != 0)
-> > +		set_ide_sel_addr(pdev, pos, assoc_idx, &settings->mem32);
-> > +
-> 
-> Per-above, just drop the 64-bit policy and assumption. It will naturally
-> fail if the required number of address associations is insufficient.
-> I.e. either we are in the AMD situation and no amount of address
-> association is required, or we are in the ARM / Intel situation where it
-> assigns memory then prefetch-memory (if both are present). If both of
-> those are required and the hardware only supports 1 address association
-> then that hardware vendor is responsible for figuring out a quirk.
-> 
-> Otherwise Linux expects that any hardware that requires address
-> association always produces at least 2 address association blocks at the
-> root port, or otherwise arranges for only one memory window type to be
-> active.
-> 
-> >  	/*
-> >  	 * Setup control register early for devices that expect
-> >  	 * stream_id is set during key programming.
-> > @@ -445,7 +500,7 @@ EXPORT_SYMBOL_GPL(pci_ide_stream_setup);
-> >  void pci_ide_stream_teardown(struct pci_dev *pdev, struct pci_ide *ide)
-> >  {
-> >  	struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
-> > -	int pos;
-> > +	int pos, i;
-> >  
-> >  	if (!settings)
-> >  		return;
-> > @@ -453,6 +508,13 @@ void pci_ide_stream_teardown(struct pci_dev *pdev, struct pci_ide *ide)
-> >  	pos = sel_ide_offset(pdev, settings);
-> >  
-> >  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, 0);
-> > +
-> > +	for (i = 0; i < pdev->nr_ide_mem; i++) {
-> > +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), 0);
-> > +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), 0);
-> > +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), 0);
-> > +	}
-> 
-> Hmm, if we are going to clear all on stop then probably should also
-> clear all unused on setup just to be consistent.
-> 
-> > +
-> >  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, 0);
-> >  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, 0);
-> >  	settings->setup = 0;
-> > -- 
-> > 2.25.1
-> > 
-> 
-> Here are the proposed incremental changes addressing the above. The new
-> pci_ide_stream_to_regs() helper can later be exported to TSM drivers
-> that need a formatted copy of the register settings. I prefer that to
-> exporting the internals (the PREP_() macros for register setup and the
-> pci_ide_domain()).
-> 
-> -- >8 --
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index b46e42bcafe3..e7c14ce1b1d0 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -336,6 +336,12 @@ static inline bool resource_union(const struct resource *r1, const struct resour
->  	return true;
->  }
->  
-> +/* Check if this resource is added to a resource tree or detached. */
-> +static inline bool resource_assigned(struct resource *res)
-> +{
-> +	return res->parent != NULL;
-> +}
-> +
->  int find_resource_space(struct resource *root, struct resource *new,
->  			resource_size_t size, struct resource_constraint *constraint);
->  
-> diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-> index ad4fcde75a56..4e33fa6944a1 100644
-> --- a/include/linux/pci-ide.h
-> +++ b/include/linux/pci-ide.h
-> @@ -28,6 +28,9 @@ enum pci_ide_partner_select {
->   * @rid_start: Partner Port Requester ID range start
->   * @rid_end: Partner Port Requester ID range end
->   * @stream_index: Selective IDE Stream Register Block selection
-> + * @mem_assoc: PCI bus memory address association for targetting peer partner
-> + * @pref_assoc: (optional) PCI bus prefetchable memory address association for
-> + *		targetting peer partner
->   * @default_stream: Endpoint uses this stream for all upstream TLPs regardless of
->   *		    address and RID association registers
->   * @setup: flag to track whether to run pci_ide_stream_teardown() for this
-> @@ -38,11 +41,33 @@ struct pci_ide_partner {
->  	u16 rid_start;
->  	u16 rid_end;
->  	u8 stream_index;
-> +	struct pci_bus_region mem_assoc;
-> +	struct pci_bus_region pref_assoc;
->  	unsigned int default_stream:1;
->  	unsigned int setup:1;
->  	unsigned int enable:1;
-> -	struct range mem32;
-> -	struct range mem64;
-> +};
-> +
-> +/**
-> + * struct pci_ide_regs - Hardware register association settings for Selective
-> + *			 IDE Streams
-> + * @rid_1: IDE RID Association Register 1
-> + * @rid_2: IDE RID Association Register 2
-> + * @addr: Up to two address association blocks (IDE Address Association Register
-> + *	  1 through 3) for MMIO and prefetchable MMIO
-> + * @nr_addr: Number of address association blocks initialized
-> + *
-> + * See pci_ide_stream_to_regs()
-> + */
-> +struct pci_ide_regs {
-> +	u32 rid_1;
-> +	u32 rid_2;
-> +	struct {
-> +		u32 assoc1;
-> +		u32 assoc2;
-> +		u32 assoc3;
-> +	} addr[2];
-> +	int nr_addr;
->  };
->  
->  /**
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 3a71f30211a5..ca97590de116 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -877,6 +877,11 @@ struct pci_bus_region {
->  	pci_bus_addr_t	end;
->  };
->  
-> +static inline pci_bus_addr_t pci_bus_region_size(const struct pci_bus_region *region)
-> +{
-> +	return region->end - region->start + 1;
-> +}
-> +
->  struct pci_dynids {
->  	spinlock_t		lock;	/* Protects list, index */
->  	struct list_head	list;	/* For IDs added at runtime */
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> index 7b2aa0b30376..8e30b75f1f4d 100644
-> --- a/drivers/pci/ide.c
-> +++ b/drivers/pci/ide.c
-> @@ -157,13 +157,13 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
->  {
->  	/* EP, RP, + HB Stream allocation */
->  	struct stream_index __stream[PCI_IDE_HB + 1];
-> +	struct pci_bus_region pref_assoc = { 0, -1 };
-> +	struct pci_bus_region mem_assoc = { 0, -1 };
-> +	struct resource *res, *mem, *pref;
->  	struct pci_host_bridge *hb;
-> +	int num_vf, rid_end;
->  	struct pci_dev *rp;
->  	struct pci_dev *br;
-> -	int num_vf, rid_end;
-> -	struct range mem32 = {}, mem64 = {};
-> -	struct pci_bus_region region;
-> -	struct resource *res;
->  
->  	if (!pci_is_pcie(pdev))
->  		return NULL;
-> @@ -214,18 +214,20 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
->  	if (!br)
->  		return NULL;
->  
-> -	res = &br->resource[PCI_BRIDGE_MEM_WINDOW];
-> -	if (res->flags & IORESOURCE_MEM) {
-> -		pcibios_resource_to_bus(br->bus, &region, res);
-> -		mem32.start = region.start;
-> -		mem32.end = region.end;
-> -	}
-> -
-> -	res = &br->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> -	if (res->flags & IORESOURCE_PREFETCH) {
-> -		pcibios_resource_to_bus(br->bus, &region, res);
-> -		mem64.start = region.start;
-> -		mem64.end = region.end;
-> +	/*
-> +	 * Check if the device consumes memory and/or prefetch-memory. Setup
-> +	 * downstream address association ranges for each.
-> +	 */
-> +	mem = pci_resource_n(br, PCI_BRIDGE_MEM_WINDOW);
-> +	pref = pci_resource_n(br, PCI_BRIDGE_PREF_MEM_WINDOW);
-> +	pci_dev_for_each_resource(pdev, res) {
-> +		if (resource_assigned(mem) && resource_contains(mem, res) &&
-> +		    !pci_bus_region_size(&mem_assoc))
-> +			pcibios_resource_to_bus(br->bus, &mem_assoc, mem);
-> +
-> +		if (resource_assigned(pref) && resource_contains(pref, res) &&
-> +		    !pci_bus_region_size(&pref_assoc))
-> +			pcibios_resource_to_bus(br->bus, &pref_assoc, pref);
->  	}
->  
->  	*ide = (struct pci_ide) {
-> @@ -235,13 +237,16 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
->  				.rid_start = pci_dev_id(rp),
->  				.rid_end = pci_dev_id(rp),
->  				.stream_index = no_free_ptr(ep_stream)->stream_index,
-> +				/* Disable upstream address association */
-> +				.mem_assoc = { 0, -1 },
-> +				.pref_assoc = { 0, -1 },
->  			},
->  			[PCI_IDE_RP] = {
->  				.rid_start = pci_dev_id(pdev),
->  				.rid_end = rid_end,
->  				.stream_index = no_free_ptr(rp_stream)->stream_index,
-> -				.mem32 = mem32,
-> -				.mem64 = mem64,
-> +				.mem_assoc = mem_assoc,
-> +				.pref_assoc = pref_assoc,
->  			},
->  		},
->  		.host_bridge_stream = no_free_ptr(hb_stream)->stream_index,
-> @@ -420,19 +425,61 @@ static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide,
->  	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, val);
->  }
->  
-> -static void set_ide_sel_addr(struct pci_dev *pdev, int pos, int assoc_idx,
-> -			     struct range *mem)
-> +#define SEL_ADDR1_LOWER GENMASK(31, 20)
-> +#define SEL_ADDR_UPPER GENMASK_ULL(63, 32)
-> +#define PREP_PCI_IDE_SEL_ADDR1(base, limit)               \
-> +	(FIELD_PREP(PCI_IDE_SEL_ADDR_1_VALID, 1) |        \
-> +	 FIELD_PREP(PCI_IDE_SEL_ADDR_1_BASE_LOW,          \
-> +		    FIELD_GET(SEL_ADDR1_LOWER, (base))) | \
-> +	 FIELD_PREP(PCI_IDE_SEL_ADDR_1_LIMIT_LOW,         \
-> +		    FIELD_GET(SEL_ADDR1_LOWER, (limit))))
-> +
-> +static void mem_assoc_to_regs(struct pci_bus_region *region,
-> +			      struct pci_ide_regs *regs, int idx)
->  {
-> -	u32 val;
-> +	regs->addr[idx].assoc1 =
-> +		PREP_PCI_IDE_SEL_ADDR1(region->start, region->end);
-> +	regs->addr[idx].assoc2 = FIELD_GET(SEL_ADDR_UPPER, region->end);
-> +	regs->addr[idx].assoc3 = FIELD_GET(SEL_ADDR_UPPER, region->start);
-> +}
-> +
-> +/**
-> + * pci_ide_stream_to_regs() - convert IDE settings to association register values
-> + * @pdev: PCIe device object for either a Root Port or Endpoint Partner Port
-> + * @ide: registered IDE settings descriptor
-> + * @regs: output register values
-> + */
-> +static void pci_ide_stream_to_regs(struct pci_dev *pdev, struct pci_ide *ide,
-> +				   struct pci_ide_regs *regs)
-> +{
-> +	struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
-> +	int pos, assoc_idx = 0;
-> +
-> +	memset(regs, 0, sizeof(*regs));
-> +
-> +	if (!settings)
-> +		return;
->  
-> -	val = PREP_PCI_IDE_SEL_ADDR1(mem->start, mem->end);
-> -	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(assoc_idx), val);
-> +	pos = sel_ide_offset(pdev, settings);
-> +
-> +	regs->rid_1 = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT, settings->rid_end);
-> +
-> +	regs->rid_2 = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-> +		      FIELD_PREP(PCI_IDE_SEL_RID_2_BASE, settings->rid_start) |
-> +		      FIELD_PREP(PCI_IDE_SEL_RID_2_SEG, pci_ide_domain(pdev));
-> +
-> +	if (pdev->nr_ide_mem && pci_bus_region_size(&settings->mem_assoc)) {
-> +		mem_assoc_to_regs(&settings->mem_assoc, regs, assoc_idx);
-> +		assoc_idx++;
-> +	}
->  
-> -	val = FIELD_GET(SEL_ADDR_UPPER, mem->end);
-> -	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(assoc_idx), val);
-> +	if (pdev->nr_ide_mem > assoc_idx &&
-> +	    pci_bus_region_size(&settings->pref_assoc)) {
-> +		mem_assoc_to_regs(&settings->pref_assoc, regs, assoc_idx);
-> +		assoc_idx++;
-> +	}
->  
-> -	val = FIELD_GET(SEL_ADDR_UPPER, mem->start);
-> -	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(assoc_idx), val);
-> +	regs->nr_addr = assoc_idx;
->  }
->  
->  /**
-> @@ -448,38 +495,34 @@ static void set_ide_sel_addr(struct pci_dev *pdev, int pos, int assoc_idx,
->  void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
->  {
->  	struct pci_ide_partner *settings = pci_ide_to_settings(pdev, ide);
-> -	u8 assoc_idx = 0;
-> +	struct pci_ide_regs regs;
->  	int pos;
-> -	u32 val;
->  
->  	if (!settings)
->  		return;
->  
-> -	pos = sel_ide_offset(pdev, settings);
-> +	pci_ide_stream_to_regs(pdev, ide, &regs);
->  
-> -	val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT, settings->rid_end);
-> -	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
-> -
-> -	val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-> -	      FIELD_PREP(PCI_IDE_SEL_RID_2_BASE, settings->rid_start) |
-> -	      FIELD_PREP(PCI_IDE_SEL_RID_2_SEG, pci_ide_domain(pdev));
-> +	pos = sel_ide_offset(pdev, settings);
->  
-> -	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-> +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, regs.rid_1);
-> +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, regs.rid_2);
->  
-> -	/*
-> -	 * Feel free to change the default stratagy, Intel & AMD don't directly
-> -	 * setup RP registers.
-> -	 *
-> -	 * 64 bit memory first, assuming it's more popular.
-> -	 */
-> -	if (assoc_idx < pdev->nr_ide_mem && settings->mem64.end != 0) {
-> -		set_ide_sel_addr(pdev, pos, assoc_idx, &settings->mem64);
-> -		assoc_idx++;
-> +	for (int i = 0; i < regs.nr_addr; i++) {
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i),
-> +				       regs.addr[i].assoc1);
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i),
-> +				       regs.addr[i].assoc2);
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i),
-> +				       regs.addr[i].assoc3);
->  	}
->  
-> -	/* 64 bit memory in lower block and 32 bit in higher block, any risk? */
-> -	if (assoc_idx < pdev->nr_ide_mem && settings->mem32.end != 0)
-> -		set_ide_sel_addr(pdev, pos, assoc_idx, &settings->mem32);
-> +	/* clear extra unused address association blocks */
-> +	for (int i = regs.nr_addr; i < pdev->nr_ide_mem; i++) {
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), 0);
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), 0);
-> +		pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), 0);
-> +	}
->  
->  	/*
->  	 * Setup control register early for devices that expect
-> 
-
--- 
- i.
-
+Jason
 
