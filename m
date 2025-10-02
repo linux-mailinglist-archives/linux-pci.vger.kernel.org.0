@@ -1,150 +1,126 @@
-Return-Path: <linux-pci+bounces-37407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37412-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F703BB39F5
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 12:20:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB1BBB3B25
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 12:50:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 226CD188CA4D
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 10:21:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F8F019C3C5A
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 10:50:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175752F9C2A;
-	Thu,  2 Oct 2025 10:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A1A30E852;
+	Thu,  2 Oct 2025 10:50:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64C52EDD52;
-	Thu,  2 Oct 2025 10:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB9630C63D;
+	Thu,  2 Oct 2025 10:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759400438; cv=none; b=CqBQ8miqsvEhPG+zH0iK6iw9R0KU2IYiYHmH4Dc7T4Zqm3MrviVwK3PtOF95U+q348Vrj5lk9e+BSCa2xwXvHBovpXgLyzG+8bqiYjOuOR7+YDYwiDB2/+5YZiCBslRwRBkOIfcZQR5/tAJA7nae5dzLC8hnyh8BPCXthELKuD8=
+	t=1759402213; cv=none; b=BP35zFneyhwd+ncKMokYzEEi8R6bh8CudUxET6owQKGxKZ4NS7wNEsWnIgJh9u2gBDTcENfzdgD4tzMy6t4I33fwXmU7AyNLm7E900jyYz8wsc0qpSy42J8eYweyE+r8ytZEemzfWavd4ItQ4ARDtqalJIUVDal3E9kevoesYPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759400438; c=relaxed/simple;
-	bh=US6asV8i0eIu1t+KJRb7YRcaFr03ZIyKY5f4wIwvZPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XVD5eoIlRujTkYyrxfhqKt5tUP4YvazBXS7itauEnl+a80Hiaybggq/EX+8D1m5w7sZUWolWUT+nmtYBpMZEPEtruGC1HR9zyJ5TdMMewikewMtNPaEXNluSZ14+n0FVY+tHEmiN9rCHnO+ujIrMqq3liDqKzVbdaRnj3mq1Svs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ccnWf6vw3z9sSg;
-	Thu,  2 Oct 2025 12:06:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Mj6qsATOgVWG; Thu,  2 Oct 2025 12:06:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ccnWf5Jssz9sSd;
-	Thu,  2 Oct 2025 12:06:38 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 87D8F8B773;
-	Thu,  2 Oct 2025 12:06:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 0QNfI8vOuITt; Thu,  2 Oct 2025 12:06:38 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0759F8B769;
-	Thu,  2 Oct 2025 12:06:37 +0200 (CEST)
-Message-ID: <a63012d4-0c98-4022-8183-5a3488ca66e9@csgroup.eu>
-Date: Thu, 2 Oct 2025 12:06:37 +0200
+	s=arc-20240116; t=1759402213; c=relaxed/simple;
+	bh=csUIQuReDTDBN+CK9c2wrTCx7C6gd+2od27eRvAh6io=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Koar+85pR4FX71tgBqOMV7VG7JA73DCIWZcyjCkNgTjF7342EL5KhuZEpc0BirUzBQB9rdxxzikPwX17l5Rd0fD8ymNwzGI+qySGcnFdazgq926VqxqKtcJpFbJqRtqbAXX65aTIH9eAcJWWuBO92Pb/OpSi6tZ16fQmrnavR4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 592Ak6kS068536
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Oct 2025 18:46:06 +0800 (+08)
+	(envelope-from randolph@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Thu, 2 Oct 2025
+ 18:46:06 +0800
+From: Randolph Lin <randolph@andestech.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <jingoohan1@gmail.com>,
+        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <alex@ghiti.fr>, <aou@eecs.berkeley.edu>,
+        <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+        <ben717@andestech.com>, <inochiama@gmail.com>,
+        <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
+        <shradha.t@samsung.com>, <pjw@kernel.org>, <randolph.sklin@gmail.com>,
+        <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
+Subject: [PATCH v5 0/5] Add support for Andes Qilai SoC PCIe controller
+Date: Thu, 2 Oct 2025 18:45:53 +0800
+Message-ID: <20251002104558.4068668-1-randolph@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] PCI/AER: Check for NULL aer_info before
- ratelimiting in pci_print_aer()
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Breno Leitao <leitao@debian.org>, Mahesh J Salgaonkar
- <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Jon Pan-Doh <pandoh@google.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
-References: <20250929-aer_crash_2-v1-1-68ec4f81c356@debian.org>
- <7b5c1235-df92-4f18-936c-3d7c0d3a6cb3@linux.intel.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <7b5c1235-df92-4f18-936c-3d7c0d3a6cb3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 592Ak6kS068536
 
+Add support for Andes Qilai SoC PCIe controller
 
+These patches introduce driver support for the PCIe controller on the
+Andes Qilai SoC.
 
-Le 29/09/2025 à 17:10, Sathyanarayanan Kuppuswamy a écrit :
-> 
-> On 9/29/25 2:15 AM, Breno Leitao wrote:
->> Similarly to pci_dev_aer_stats_incr(), pci_print_aer() may be called
->> when dev->aer_info is NULL. Add a NULL check before proceeding to avoid
->> calling aer_ratelimit() with a NULL aer_info pointer, returning 1, which
->> does not rate limit, given this is fatal.
->>
->> This prevents a kernel crash triggered by dereferencing a NULL pointer
->> in aer_ratelimit(), ensuring safer handling of PCI devices that lack
->> AER info. This change aligns pci_print_aer() with 
->> pci_dev_aer_stats_incr()
->> which already performs this NULL check.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: a57f2bfb4a5863 ("PCI/AER: Ratelimit correctable and non-fatal 
->> error logging")
->> Signed-off-by: Breno Leitao <leitao@debian.org>
->> ---
->> - This problem is still happening in upstream, and unfortunately no 
->> action
->>    was done in the previous discussion.
->> - Link to previous post:
->>    https://eur01.safelinks.protection.outlook.com/? 
->> url=https%3A%2F%2Flore.kernel.org%2Fr%2F20250804-aer_crash_2-v1-1- 
->> fd06562c18a4%40debian.org&data=05%7C02%7Cchristophe.leroy2%40cs- 
->> soprasteria.com%7Cfd3d2f1b4e8448a8e67608ddff6a4e70%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638947554250805439%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=6yTN1%2Fq%2Fy0VKX%2BXpE%2BiKxBrn19AkY4IPj01N2ZdxEkg%3D&reserved=0
->> ---
-> 
-> Although we haven't identified the path that triggers this issue, adding 
-> this check is harmless.
+Signed-off-by: Randolph Lin <randolph@andestech.com>
 
-Is it really harmless ?
+---
+Changes in v5:
+- Add support to adjust the number of OB/IB windows in the glue driver.
+- Fix the number of OB windows in the Qilai PCIe driver.
+- Remove meaningless properties from the device tree.
+- Made minor adjustments based on the reviewer's suggestions.
 
-The purpose of the function is to ratelimit logs. Here by returning 1 
-when dev->aer_info is NULL it says: don't ratelimit. Isn't it an opened 
-door to Denial of Service by overloading with logs ?
+---
+Changes in v4:
+- Add .post_init callback for enabling IOCP cache.  
+- Sort by vender name in Kconfig 
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
 
-Christophe
+---
+Changes in v3:
+- Remove outbound ATU address range validation callback and logic.
+- Add logic to skip failed outbound iATU configuration and continue.
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
 
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan 
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> 
-> 
->>   drivers/pci/pcie/aer.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index e286c197d7167..55abc5e17b8b1 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -786,6 +786,9 @@ static void pci_rootport_aer_stats_incr(struct 
->> pci_dev *pdev,
->>   static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
->>   {
->> +    if (!dev->aer_info)
->> +        return 1;
->> +
->>       switch (severity) {
->>       case AER_NONFATAL:
->>           return __ratelimit(&dev->aer_info->nonfatal_ratelimit);
->>
->> ---
->> base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
->> change-id: 20250801-aer_crash_2-b21cc2ef0d00
->>
->> Best regards,
->> -- 
->> Breno Leitao <leitao@debian.org>
->>
+---
+Changes in v2:
+- Remove the patch that adds the dma-ranges property to the SoC node.
+- Add dma-ranges to the PCIe parent node bus node.
+- Refactor and rename outbound ATU address range validation callback and logic.
+- Use parent_bus_offset instead of cpu_addr_fixup().
+- Using PROBE_DEFAULT_STRATEGY as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+Randolph Lin (5):
+  PCI: dwc: Allow adjusting the number of ob/ib windows in glue driver
+  dt-bindings: PCI: Add Andes QiLai PCIe support
+  riscv: dts: andes: Add PCIe node into the QiLai SoC
+  PCI: andes: Add Andes QiLai SoC PCIe host driver support
+  MAINTAINERS: Add maintainers for Andes QiLai PCIe driver
+
+ .../bindings/pci/andestech,qilai-pcie.yaml    |  97 +++++++
+ MAINTAINERS                                   |   7 +
+ arch/riscv/boot/dts/andes/qilai.dtsi          | 106 ++++++++
+ drivers/pci/controller/dwc/Kconfig            |  13 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-andes-qilai.c | 240 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c  |  12 +-
+ 7 files changed, 474 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-andes-qilai.c
+
+-- 
+2.34.1
 
 
