@@ -1,307 +1,133 @@
-Return-Path: <linux-pci+bounces-37436-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09ECABB437A
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 16:54:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A5A9BB4473
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 17:11:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8845A19C7192
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 14:54:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D01EF7AABEE
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 15:09:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DB5634EC;
-	Thu,  2 Oct 2025 14:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B5A17A306;
+	Thu,  2 Oct 2025 15:11:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jx9Aa44+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7LAEI6A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9414A01;
-	Thu,  2 Oct 2025 14:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A7186342;
+	Thu,  2 Oct 2025 15:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759416861; cv=none; b=jKLVN//BJk9KTCnuNXF3EXFMIJ6U47i/b6pVXMohA+G9f8RUU44kf2fxwwD1W8pDQM3OYBbqzSYv/8F6P4XtHbohvCZ6LJ+NOdet4W67lwq1HK3rQiJgy8a3l/x+t6SdNdSFD3mPbxPLIV4MgXMGvgrwKlCjgI035sfniUf4GKQ=
+	t=1759417868; cv=none; b=eP8aUtuOG8BCRSgNdmlmHLa4truSAuPSnM/MyH/RKZt+9B3n1WJ9D+cq+hngxHJDRbJfEqqNFvrMjAZydjn8b8GvRyOkYV234hdbhJHVrGsu9nD4+9EWErPJMrYZJdNY+AzU6TV2pazOk4sCv2PhgOa+qjCQzpl9MRt8/4ggrik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759416861; c=relaxed/simple;
-	bh=6rLn1aZBCCQeZO05QrGDkxTGMMTUPAhFYfX7Y5GteVo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VhoOCNMr0OC0AgtAKgZrvX4U5rHWTIbKv+98InjNTBAW4TjhLyA0zEMnkTNDU89Gg31mS26gDBEqxi6irgYepf7kks64o9LrSxM5Fich6OAd+4dLE7dj9/8YYlYGKksDTGk6InDypIjrTSoxHVqrnTtETog2NEuHNfnlECGz0nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jx9Aa44+; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759416859; x=1790952859;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6rLn1aZBCCQeZO05QrGDkxTGMMTUPAhFYfX7Y5GteVo=;
-  b=Jx9Aa44+E66BHeDuyyMziPZphg77OQ0dJBMDDcrs9ap7Y1lYjdrx0BDa
-   Iex13wFKK2h9qvv64B/O2lQdC17mF665FhpZGi+kkTMSgDenG1NNLlfD7
-   x/c101NWXBbRVi8CfNSJwRr4Xo6AP//K2Q9bvA03h9rAfV3kh8sRTLEDE
-   RljfPz7gDYz52Pca15rnJwwLO7skvYh8adroR3irNBCESyaZyzax5hwaJ
-   V5Cc6nhKJK2uk6zBHdSbCrQB03vmeOLezSMslzgQGvZ4Zp6MdrcoN2haD
-   0m+Snrabg4nsyDOxQ2yTWFOgoZrx31D8mDj1LHKDP/BWW+31QJjHQrgAy
-   Q==;
-X-CSE-ConnectionGUID: g6wlG2F+Q1iJ6JwEuLm8Tw==
-X-CSE-MsgGUID: zyBpOlIRRfOXovkAisCtNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="60740067"
-X-IronPort-AV: E=Sophos;i="6.18,309,1751266800"; 
-   d="scan'208";a="60740067"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 07:54:17 -0700
-X-CSE-ConnectionGUID: qkx929+7RY64TKgRJ4EUgw==
-X-CSE-MsgGUID: HOrkj3FtSDqSRQbl6gabuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,309,1751266800"; 
-   d="scan'208";a="178332386"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 07:54:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 2 Oct 2025 17:54:10 +0300 (EEST)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI: Resources outside their window must set
- IORESOURCE_UNSET
-In-Reply-To: <CAMuHMdVbyKdzbptA10F82Oj=6ktxnGAk4fz7dBLVdxALb8-WWg@mail.gmail.com>
-Message-ID: <2d5e9b78-8a90-3035-ff42-e881d61f4b7c@linux.intel.com>
-References: <20250924134228.1663-1-ilpo.jarvinen@linux.intel.com> <20250924134228.1663-3-ilpo.jarvinen@linux.intel.com> <CAMuHMdVtVzcL3AX0uetNhKr-gLij37Ww+fcWXxnYpO3xRAOthA@mail.gmail.com> <4c28cd58-fd0d-1dff-ad31-df3c488c464f@linux.intel.com>
- <CAMuHMdUbaQDXsowZETimLJ-=gLCofeP+LnJp_txetuBQ0hmcPQ@mail.gmail.com> <c17c5ec1-132d-3588-2a4d-a0e6639cf748@linux.intel.com> <CAMuHMdVbyKdzbptA10F82Oj=6ktxnGAk4fz7dBLVdxALb8-WWg@mail.gmail.com>
+	s=arc-20240116; t=1759417868; c=relaxed/simple;
+	bh=FNclR2C69WQjyAgJd3PWTF23QQxMqsFUS9Q5YQBoudQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=fWwXIKIVDaQwaR92ZuWrcCAlnPjIxPIA3kJkGGsCWoPOZT6CjNMRcAK2QeTZ7VavCMD+Rrb48fMwaHq3kL1/7jnK5b0WBgzt4sl3X1WGFboK5T52G5nWuuepFxT956tyTVH4OdlDRZFJWJFvEZ/6gPt5khvRv63/D0WWkMSBlaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7LAEI6A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A8D0C4CEF4;
+	Thu,  2 Oct 2025 15:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759417867;
+	bh=FNclR2C69WQjyAgJd3PWTF23QQxMqsFUS9Q5YQBoudQ=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=b7LAEI6A6X546xyoF4Ubb8NI3YdGNvaf/frUPbRe5r73qhmkrRjcLnf/9Lbbl05x1
+	 bceaUsBFQNzE+rDRu+V+2H/e/ibmjucWQvWLj1U5YnwDZmfg2fOroR+TpcUwqsFbGK
+	 AUNsL/ekG3Ksyie+AtPSMbscI1/ffKm24o2Q6lhfdJoMo/JDZO3PJKoAn7BpOcpO47
+	 gYjqSYKmpIDbQ6iKO0owh/TeE4cZF3BWlJQ4TZc3gB2EnzP6jVkO/Qz7jTlloYYn+p
+	 2n8nv942OpFmUZbjSSVNs2qwMEyzQYidZcNpQuSHHFGwGY9xI52RlmA5jOyMyRavCG
+	 +Py3BykTxtXAQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1265333908-1759416850=:947"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1265333908-1759416850=:947
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Date: Thu, 02 Oct 2025 17:11:01 +0200
+Message-Id: <DD7XKV6T2PS7.35C66VPOP6B3C@kernel.org>
+Subject: Re: [PATCH v2 1/2] rust: pci: skip probing VFs if driver doesn't
+ support VFs
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>, "Zhi
+ Wang" <zhiw@nvidia.com>, "Surath Mitra" <smitra@nvidia.com>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Alex Williamson"
+ <alex.williamson@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>
+To: "Jason Gunthorpe" <jgg@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251002020010.315944-1-jhubbard@nvidia.com>
+ <20251002020010.315944-2-jhubbard@nvidia.com>
+ <20251002121110.GE3195801@nvidia.com>
+ <DD7TWUPD83M9.5IO0VX7PP1UK@kernel.org>
+ <20251002123921.GG3195801@nvidia.com>
+ <DD7UVCEVB21H.SQ00WZLLPINP@kernel.org>
+ <20251002135600.GB3266220@nvidia.com>
+In-Reply-To: <20251002135600.GB3266220@nvidia.com>
 
-On Wed, 1 Oct 2025, Geert Uytterhoeven wrote:
-> On Wed, 1 Oct 2025 at 15:06, Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> > On Wed, 1 Oct 2025, Geert Uytterhoeven wrote:
-> > > On Tue, 30 Sept 2025 at 18:32, Ilpo J=C3=A4rvinen
-> > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > On Tue, 30 Sep 2025, Geert Uytterhoeven wrote:
-> > > > > On Fri, 26 Sept 2025 at 04:40, Ilpo J=C3=A4rvinen
-> > > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > > PNP resources are checked for conflicts with the other resource=
- in the
-> > > > > > system by quirk_system_pci_resources() that walks through all P=
-CI
-> > > > > > resources. quirk_system_pci_resources() correctly filters out r=
-esource
-> > > > > > with IORESOURCE_UNSET.
-> > > > > >
-> > > > > > Resources that do not reside within their bridge window, howeve=
-r, are
-> > > > > > not properly initialized with IORESOURCE_UNSET resulting in bog=
-us
-> > > > > > conflicts detected in quirk_system_pci_resources():
-> > > > > >
-> > > > > > pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0x1fffffff 64bit pre=
-f]
-> > > > > > pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0xdfffffff 64bit pre=
-f]: contains BAR 2 for 7 VFs
-> > > > > > ...
-> > > > > > pci 0000:03:00.0: VF BAR 2 [mem 0x00000000-0x1ffffffff 64bit pr=
-ef]
-> > > > > > pci 0000:03:00.0: VF BAR 2 [mem 0x00000000-0x3dffffffff 64bit p=
-ref]: contains BAR 2 for 31 VFs
-> > > > > > ...
-> > > > > > pnp 00:04: disabling [mem 0xfc000000-0xfc00ffff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xc0000000-0xcfffffff] because it ove=
-rlaps 0000:00:02.0 BAR 9 [mem 0x00000000-0xdfffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfedc0000-0xfedc7fff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfeda0000-0xfeda0fff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfeda1000-0xfeda1fff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xc0000000-0xcfffffff disabled] becau=
-se it overlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfed20000-0xfed7ffff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfed90000-0xfed93fff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfed45000-0xfed8ffff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > > pnp 00:05: disabling [mem 0xfee00000-0xfeefffff] because it ove=
-rlaps 0000:03:00.0 BAR 9 [mem 0x00000000-0x3dffffffff 64bit pref]
-> > > > > >
-> > > > > > Mark resources that are not contained within their bridge windo=
-w with
-> > > > > > IORESOURCE_UNSET in __pci_read_base() which resolves the false
-> > > > > > positives for the overlap check in quirk_system_pci_resources()=
-=2E
-> > > > > >
-> > > > > > Fixes: f7834c092c42 ("PNP: Don't check for overlaps with unassi=
-gned PCI BARs")
-> > > > > > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.co=
-m>
-> > > > >
-> > > > > Thanks for your patch, which is now commit 06b77d5647a4d6a7 ("PCI=
-:
-> > > > > Mark resources IORESOURCE_UNSET when outside bridge windows") in
-> > > > > linux-next/master next-20250929 pci/next
-> > >
-> > > > > This replaces the actual resources by their sizes in the boot log=
- on
-> > > > > e.g. on R-Car M2-W:
-> > > > >
-> > > > >      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ra=
-nges:
-> > > > >      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08f=
-fff -> 0x00ee080000
-> > > > >      pci-rcar-gen2 ee090000.pci: PCI: revision 11
-> > > > >      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
-> > > > >      pci_bus 0000:00: root bus resource [bus 00]
-> > > > >      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08fff=
-f]
-> > > > >      pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 convent=
-ional PCI endpoint
-> > > > >     -pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
-> > > > >     -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
-> > > >
-> > > > What is going to be the parent of these resources? They don't seem =
-to fall
-> > > > under the root bus resource above in which case the output change i=
-s
-> > > > intentional so they don't appear as if address range would be "okay=
-".
-> > >
-> > > >From /proc/iomem:
-> > >
-> > >     ee080000-ee08ffff : pci@ee090000
-> > >       ee080000-ee080fff : 0000:00:01.0
-> > >         ee080000-ee080fff : ohci_hcd
-> > >       ee081000-ee0810ff : 0000:00:02.0
-> > >         ee081000-ee0810ff : ehci_hcd
-> > >     ee090000-ee090bff : ee090000.pci pci@ee090000
-> >
-> > Okay, so this seem to appear in the resource tree but not among the roo=
-t
-> > bus resources.
-> >
-> > >     ee0c0000-ee0cffff : pci@ee0d0000
-> > >       ee0c0000-ee0c0fff : 0001:01:01.0
-> > >         ee0c0000-ee0c0fff : ohci_hcd
-> > >       ee0c1000-ee0c10ff : 0001:01:02.0
-> > >         ee0c1000-ee0c10ff : ehci_hcd
-> > >
-> > > > When IORESOURCE_UNSET is set in a resource, %pR does not print the =
-start
-> > > > and end addresses.
-> > >
-> > > Yeah, that's how I found this commit, without bisecting ;-)
-> > >
-> > > > >     +pci 0000:00:00.0: BAR 0 [mem size 0x00000400]
-> > > > >     +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
-> > > > >      pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 convent=
-ional PCI endpoint
-> > > > >     -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]
-> > > > >     +pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
-> > > >
-> > > > For this resource, it's very much intentional. It's a zero-based BA=
-R which
-> > > > was left without IORESOURCE_UNSET prior to my patch leading to othe=
-rs part
-> > > > of the kernel to think that resource range valid and in use (in you=
-r
-> > > > case it's so small it wouldn't collide with anything but it wasn't
-> > > > properly set up resource, nonetheless).
-> > > >
-> > > > >      pci 0000:00:01.0: supports D1 D2
-> > > > >      pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
-> > > > >      pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 convent=
-ional PCI endpoint
-> > > > >     -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]
-> > > > >     +pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
-> > > >
-> > > > And this as well is very much intentional.
-> > > >
-> > > > >      pci 0000:00:02.0: supports D1 D2
-> > > > >      pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
-> > > > >      PCI: bus0: Fast back to back transfers disabled
-> > > > >      pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigne=
-d
-> > > > >      pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigne=
-d
-> > > > >      pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
-> > > > >
-> > > > > Is that intentional?
-> > > >
-> > > > There's also that pci_dbg() in the patch which would show the origi=
-nal
-> > > > addresses (print the resource before setting IORESOURCE_UNSET) but =
-to see
-> > > > it one would need to enable it with dyndbg=3D... Bjorn was thinking=
- of
-> > > > making that pci_info() though so it would appear always.
-> > > >
-> > > > Was this the entire PCI related diff? I don't see those 0000:00:00.=
-0 BARs
-> > > > getting assigned anywhere.
-> > >
-> > > The above log is almost complete (lacked enabling the device afterwar=
-ds).
-> > >
-> > > AFAIU, the BARs come from the reg and ranges properties in the
-> > > PCI controller nodes;
-> > > https://elixir.bootlin.com/linux/v6.17/source/arch/arm/boot/dts/renes=
-as/r8a7791.dtsi#L1562
-> >
-> > Thanks, although I had already found this line by grep. I was just
-> > expecting the address appear among root bus resources too.
-> >
-> > Curiously enough, pci_register_host_bridge() seems to try to add some
-> > resource from that list into bus and it's what prints those "root bus
-> > resource" lines and ee090000 is not among the printed lines despite
-> > appearing in /proc/iomem. As is, the resource tree and PCI bus view on =
-the
-> > resources seems to be in disagreement and I'm not sure what to make of =
-it.
-> >
-> > But before considering going into that direction or figuring out why th=
-is
-> > ee090000 resource does not appear among root bus resources, could you
-> > check if the attached patch changes behavior for the resource which are
-> > non-zero based?
->=20
-> This patch has no impact on dmesg, lspci output, or /proc/iomem
-> for pci-rcar-gen2.
+On Thu Oct 2, 2025 at 3:56 PM CEST, Jason Gunthorpe wrote:
+> On Thu, Oct 02, 2025 at 03:03:38PM +0200, Danilo Krummrich wrote:
+>
+>> I think it's not unreasonable to have a driver for the PF and a separate=
+ driver
+>> for the VFs if they are different enough; the drivers can still share co=
+mmon
+>> code of course.
+>
+> This isn't feasible without different PCI IDs.
 
-It would have been too easy... :-(
+At least on the host you can obviously differentiate them.
 
-I'm sorry I don't really know these platform well and I'm currently trying=
-=20
-to understand what adds that ee090000 resource into the resource tree
-and so far I've not been very successful.
+>> Surely, you can argue that if they have different enough requirements th=
+ey
+>> should have different device IDs, but "different enough requirements" is=
+ pretty
+>> vague and it's not under our control either.
+>
+> If you want two drivers in Linux you need two PCI IDs.
+>
+> We can't reliably select different drivers based on VFness because
+> VFness is wiped out during virtualization.
 
-Perhaps it would be easiest to print a stacktrace when the resource is=20
-added but there are many possible functions. I think all of them=20
-converge in __request_resource() so I suggest adding:
+Sure, but I thought the whole point is that some VFs are not given directly=
+ to
+the VM, but have some kind of intermediate layer, such as vGPU. I.e. some k=
+ind
+of hybrid approach between full pass-through and mediated devices?
 
-WARN_ON(new->start =3D=3D 0xee090000);
+>> But, if there is another solution for VFs already, e.g. in the case of n=
+ova-core
+>> vGPU, why restrict drivers from opt-out of VFs. (In a previous reply I m=
+entioned
+>> I prefer opt-in, but you convinced me that it should rather be
+>> opt-out.)
+>
+> I think nova-core has a temporary (OOT even!) issue that should be
+> resolved - that doesn't justify adding core kernel infrastructure that
+> will encourage more drivers to go away from our kernel design goals of
+> drivers working equally in host and VM.
 
-before __request_resource() does anything.
+My understanding is that vGPU will ensure that the device exposed to the VM=
+ will
+be set up to be (at least mostly) compatible with nova-core's PF code paths=
+?
 
+So, there is a semantical difference between vGPU and nova-core that makes =
+a
+differentiation between VF and PF meaningful and justified.
 
---=20
- i.
-
---8323328-1265333908-1759416850=:947--
+But maybe this understanding is not correct. If so, please educate me.
 
