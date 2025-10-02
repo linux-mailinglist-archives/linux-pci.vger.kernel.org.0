@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-37410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E713BB3B1C
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 12:50:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF41BB3B13
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 12:49:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 53C394E1D91
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 10:50:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D5AB3B52B1
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 10:49:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA6930E83C;
-	Thu,  2 Oct 2025 10:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8434930E0C8;
+	Thu,  2 Oct 2025 10:49:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E8A30C619;
-	Thu,  2 Oct 2025 10:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD283064AB;
+	Thu,  2 Oct 2025 10:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759402213; cv=none; b=R6PpC7ZMYCvHHg1+PHejx6KvsXJMaFHzSFa9ZRbINmiZ6HageHKZWEHijRgcy/v3cvCP84dAqAw1YnUnIu1zKETXZV8hJ4gy70St3cPpgKLfQVp/8DSQ1mVpI7MjDira6N0qCJrqcAVeZ8F/VmQ1K0Qov3U9piSalUkLq8BluIg=
+	t=1759402192; cv=none; b=DP4CsU+39sreM2JmiJiJR8QWF8ZnHcGPUCDqoU8E7szY032M+fQUmInqikt6wr8IR6vuixxm05Iq7oWz2knRu3FpuUBpSIlcjJiPtxT4YAbskzkUkcBcTr5kMt+vNCaW5bU3ZMwaa8+qMB82Hx3XUX+eRQcCuTezzL5zzUJEwoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759402213; c=relaxed/simple;
-	bh=PKecwM/mZ85/ywZpLUituzzgGYQUen5SD3hixPMczGo=;
+	s=arc-20240116; t=1759402192; c=relaxed/simple;
+	bh=+8k0N5zfXey/PhwbJ7b5IzAzg5tujuDfGrEQCaPcweg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=brTRTClnV8jAFs/or1je7iCwYpPmCypckiQ8Ij3KLqPfetrhNK2vWjtsFt4IuiTCuM0/6f/isfWXfplY01hX8jAu+6EayNU45QZ5G2KcQ1O1PX0kN7PJnZsSpFFq07NBuwSoOz6T0KPQc9w7/AnGNK3Se9hKwP+renFdaaDhbo0=
+	 MIME-Version:Content-Type; b=ICxEUoF0VZ0rjgqvPhX5aeRgSFcLZUgrXeAY6+UAYL+p0MDBHjI3F2B6M7Afo29PnkE8zIkC9HpgbqkkF0RawfRLt65392qWY6NwakLEoCjElBuadqox+8mYjeGrpqGiP+g7kjAuZa4BGbIc5FTXTZFqgd0vYH8g7mPFPXxfCRU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 592AkCsm068599
+	by Atcsqr.andestech.com with ESMTPS id 592AkDt4068606
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Oct 2025 18:46:12 +0800 (+08)
+	Thu, 2 Oct 2025 18:46:13 +0800 (+08)
 	(envelope-from randolph@andestech.com)
 Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS31.andestech.com
  (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Thu, 2 Oct 2025
- 18:46:12 +0800
+ 18:46:13 +0800
 From: Randolph Lin <randolph@andestech.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
@@ -49,9 +49,9 @@ CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
         <shradha.t@samsung.com>, <pjw@kernel.org>, <randolph.sklin@gmail.com>,
         <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
-Subject: [PATCH v5 1/5] PCI: dwc: Allow adjusting the number of ob/ib windows in glue driver
-Date: Thu, 2 Oct 2025 18:45:54 +0800
-Message-ID: <20251002104558.4068668-2-randolph@andestech.com>
+Subject: [PATCH v5 2/5] dt-bindings: PCI: Add Andes QiLai PCIe support
+Date: Thu, 2 Oct 2025 18:45:55 +0800
+Message-ID: <20251002104558.4068668-3-randolph@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251002104558.4068668-1-randolph@andestech.com>
 References: <20251002104558.4068668-1-randolph@andestech.com>
@@ -66,44 +66,120 @@ Content-Type: text/plain
 X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 592AkCsm068599
+X-MAIL:Atcsqr.andestech.com 592AkDt4068606
 
-The number of ob/ib windows is determined through write-read loops
-on registers in the core driver. Some glue drivers need to adjust
-the number of ob/ib windows to meet specific requirements,such as
-hardware limitations. This change allows the glue driver to adjust
-the number of ob/ib windows to satisfy platform-specific constraints.
-The glue driver may adjust the number of ob/ib windows, but the values
-must stay within hardware limits.
+Add the Andes QiLai PCIe node, which includes 3 Root Complexes.
+Only one example is required in the DTS bindings YAML file.
 
 Signed-off-by: Randolph Lin <randolph@andestech.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ .../bindings/pci/andestech,qilai-pcie.yaml    | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 89aad5a08928..8ca7777a73e0 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -907,8 +907,16 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 		max = 0;
- 	}
- 
--	pci->num_ob_windows = ob;
--	pci->num_ib_windows = ib;
-+	if (!pci->num_ob_windows)
-+		pci->num_ob_windows = ob;
-+	else if (pci->num_ob_windows > ob)
-+		dev_err(pci->dev, "Adjusted ob windows exceed the limit\n");
+diff --git a/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml b/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+new file mode 100644
+index 000000000000..419468430e7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/andestech,qilai-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!pci->num_ib_windows)
-+		pci->num_ib_windows = ib;
-+	else if (pci->num_ob_windows > ob)
-+		dev_err(pci->dev, "Adjusted ib windows exceed the limit\n");
++title: Andes QiLai PCIe host controller
 +
- 	pci->region_align = 1 << fls(min);
- 	pci->region_limit = (max << 32) | (SZ_4G - 1);
- 
++description:
++  Andes QiLai PCIe host controller is based on the Synopsys DesignWare
++  PCI core. It shares common features with the PCIe DesignWare core and
++  inherits common properties defined in
++  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
++
++maintainers:
++  - Randolph Lin <randolph@andestech.com>
++
++allOf:
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    const: andestech,qilai-pcie
++
++  reg:
++    items:
++      - description: Data Bus Interface (DBI) registers.
++      - description: APB registers.
++      - description: PCIe configuration space region.
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: apb
++      - const: config
++
++  ranges:
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-map: true
++
++required:
++  - reg
++  - reg-names
++  - "#interrupt-cells"
++  - interrupts
++  - interrupt-names
++  - interrupt-map-mask
++  - interrupt-map
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      bus@80000000 {
++        compatible = "simple-bus";
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie@80000000 {
++          compatible = "andestech,qilai-pcie";
++          device_type = "pci";
++          reg = <0x0 0x80000000 0x0 0x20000000>,
++                <0x0 0x04000000 0x0 0x00001000>,
++                <0x0 0x00000000 0x0 0x00010000>;
++          reg-names = "dbi", "apb", "config";
++
++          linux,pci-domain = <0>;
++          #address-cells = <3>;
++          #size-cells = <2>;
++          ranges = <0x02000000 0x00 0x10000000 0x00 0x10000000 0x0 0xf0000000>,
++                   <0x43000000 0x01 0x00000000 0x01 0x0000000 0x1f 0x00000000>;
++
++          #interrupt-cells = <1>;
++          interrupts = <0xf>;
++          interrupt-names = "msi";
++          interrupt-parent = <&plic0>;
++          interrupt-map-mask = <0 0 0 7>;
++          interrupt-map = <0 0 0 1 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                          <0 0 0 2 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                          <0 0 0 3 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                          <0 0 0 4 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>;
++        };
++      };
++    };
 -- 
 2.34.1
 
