@@ -1,144 +1,121 @@
-Return-Path: <linux-pci+bounces-37468-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B1B0BB503A
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 21:36:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A220EBB5231
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 22:39:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E95D18894C3
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 19:36:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33A794850BA
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 20:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188F02820B2;
-	Thu,  2 Oct 2025 19:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A9A253F2B;
+	Thu,  2 Oct 2025 20:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdjtIipV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moLwMfiQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD15027B325;
-	Thu,  2 Oct 2025 19:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87D31C1F13
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 20:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759433785; cv=none; b=tcxUl0JDFL3llmI0pZc4PaZFRb159K+EVRegsx2CthbbkXgbPfzQzsaK0p1bL0LdZYA0DFf2Ot6V1ZPbbWvkPkAWJqf6mWlDnfxy3FvYxNwP8bquFDvlYIKUSS7KFVeodV3JO0d0biJZtzX1nc4Y0a1K/xiqn5HT9PN74nZi3bI=
+	t=1759437549; cv=none; b=D25RhrRDzQkoQJcgCq/Bc9XgEY3ZulefYZBTIGIglzEpDw8OlDximnPfbT213KdtHfTnhZBEj/EjAEzYFEbmT2ZxsQLw+LHqbDMHfLLPtjjD6/NN+QXuS4BisreKT+wiiHaNlBbWiTDaNkNOc7NX/5IeZVWI+aGSLmtORpqYk8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759433785; c=relaxed/simple;
-	bh=2KEOHJzy9FGeh4KvBIePLQ1m8QALxmsTaAdrHMcDGwg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=AUw1NFzfckqRobbbcJsLvM1qf/qLiwaKjZZHMHt8tRI0IGy66ZLvrtYjxjAZCOUz1cVfI5utajX7kOxYhjjmp45maWccv6MhNKvtMIpH33XIZ7I3ZBAYopu4brMVOu0Il2lkiUwLaXFivxQpkvqC6xpoSLYNgF4pJLb4g+QR9fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdjtIipV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1257C4CEF4;
-	Thu,  2 Oct 2025 19:36:19 +0000 (UTC)
+	s=arc-20240116; t=1759437549; c=relaxed/simple;
+	bh=7/AuhGoWi1V0uAa5z01NsipBf1OVW30L+AI0uY5qLCQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hco+GK7pRA4HJLB5LHiBgz+wbVtQB0s55ZtRGcwrIUgY6l059V4SPmPFgXfrVmWFPU7ass1x5ZWTTrgRnIcXXGDRmTDw8iFpUKmXgJ84wbyYXT0FvbKJic8J52X1gPpSIe3BgvLvrPpMpEd0y1vb4MtDIqVXFNI2VaiSrmoyAFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moLwMfiQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFF0C4CEF9
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 20:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759433784;
-	bh=2KEOHJzy9FGeh4KvBIePLQ1m8QALxmsTaAdrHMcDGwg=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=tdjtIipVZc4EbvIJCjCG3dVwyx7VM/6ZabxllImlXmi5u8K/CZuc+4ril0c9q4Ivn
-	 Kd64F+qIaAvxplzsvSp/0p0HSF233hyKfaTujIYidnd5PIKm0WbspFfRo39ujzNnHb
-	 /e/dqFA1c6TVOlgt7IhhIkRp9ZAF57GmMYzpQpWCkeefO2Kpd9VV7QQ+n4SqVT0NVx
-	 kZ7tw8VAKPV7no3ryezBjRCXCrspcAN43eT07CCPvS7P+PDQq6W1zlCbKhjmmVNwoq
-	 wkjl7EqLC5zW/+zA+gsoG3zd2REGEtaj+RmHA/pFW9pTc83zKjRXVEm1udfUnJNKE/
-	 YxcqYdPG1ZaLw==
+	s=k20201202; t=1759437548;
+	bh=7/AuhGoWi1V0uAa5z01NsipBf1OVW30L+AI0uY5qLCQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=moLwMfiQQN0ZCC+ecnLTENcC5TPm1sfReyCy98sGYt6n2eFyDvcCGxOLUNl9a/stn
+	 C93n6kFu5FIDxLblqT/FkLTlSh4aiwP622pp3Ukhp49RoqKj5O9b3PjTwSCSmQXKai
+	 hzAKXS/Cvv0YMYP195h0vgXj2fkpvTwrZjC0sKboAS7rM5+/fMvKshImJZzme0dXHS
+	 +WOga8zYZoIQUwWZcecPDT8kgssrOxn+thy5Jw3FnDGk8JcH20ef7gicnSmzb2VWEW
+	 peWF+3hnQgR9j7CVMcGSZqFod4rxh9oSZ+omSu41dpPWGWGevhlr81N1uoVus9FP2h
+	 cOsErPMz4QeKQ==
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-74f6974175dso18768647b3.3
+        for <linux-pci@vger.kernel.org>; Thu, 02 Oct 2025 13:39:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXbX9UNswu9e2Wh/pOf7xVmSSb4O/G/wTFcf6JZJT3/VH2ClvvDaDnu5B4PICFa1iycdOvfN5llNi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEyocIYTuPj0ed1PrSJgPI9XtYeLTFVlpTLuMAo7Wn11uzq2MT
+	QO46w5jtpnAWvQCaOmYkoGQ0IHNIzqPXEqeIoqMtegkfjd07cElFgcn5eqRMIXiidiy9EmBwGld
+	a1TgxhCkj1GPsW1teQ69a0H5PLapCyconAc9D6M36TQ==
+X-Google-Smtp-Source: AGHT+IGDTPBhR6qaSfQtBFveyqgG74j4Ur0lJQ2edVW2LAGHeYnfcwgpDW2WYqwQfIovdxGAn898aHgZBJK2Slh3kr8=
+X-Received: by 2002:a05:690e:251c:10b0:635:4ecc:fc2b with SMTP id
+ 956f58d0204a3-63b9a10bbbcmr497679d50.51.1759437547537; Thu, 02 Oct 2025
+ 13:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
+ <20250916-luo-pci-v2-3-c494053c3c08@kernel.org> <2025093044-icky-treat-e1c3@gregkh>
+In-Reply-To: <2025093044-icky-treat-e1c3@gregkh>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 2 Oct 2025 13:38:56 -0700
+X-Gmail-Original-Message-ID: <CACePvbUr42mj0kbcaw4cgKnd7v1f8z8Jhq4+_QN7Z5Nvicd1cw@mail.gmail.com>
+X-Gm-Features: AS18NWCZM0LPAxyjDszHoc42H9U7_N-0OszxH4rR8NC46m34FcHMMwIeG9Tp_iA
+Message-ID: <CACePvbUr42mj0kbcaw4cgKnd7v1f8z8Jhq4+_QN7Z5Nvicd1cw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
+ callbacks to driver
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 02 Oct 2025 21:36:17 +0200
-Message-Id: <DD837Z9VQY0H.1NGRRI2ZRLG4F@kernel.org>
-Subject: Re: [PATCH v2 1/2] rust: pci: skip probing VFs if driver doesn't
- support VFs
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
- Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>, "Zhi
- Wang" <zhiw@nvidia.com>, "Surath Mitra" <smitra@nvidia.com>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Alex Williamson"
- <alex.williamson@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>
-To: "Jason Gunthorpe" <jgg@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20251002152346.GA3298749@nvidia.com>
- <DD7YQK3PQIA1.15L4J6TTR9JFZ@kernel.org>
- <20251002170506.GA3299207@nvidia.com>
- <DD80P7SKMLI2.1FNMP21LJZFCI@kernel.org>
- <DD80R10HBCHR.1BZNEAAQI36LE@kernel.org>
- <af4b7ce4-eb13-4f8d-a208-3a527476d470@nvidia.com>
- <20251002180525.GC3299207@nvidia.com>
- <3ab338fb-3336-4294-bd21-abd26bc18392@kernel.org>
- <20251002183114.GD3299207@nvidia.com>
- <56daf2fe-5554-4d52-94b3-feec4834c5be@kernel.org>
- <20251002185616.GG3299207@nvidia.com>
-In-Reply-To: <20251002185616.GG3299207@nvidia.com>
 
-On Thu Oct 2, 2025 at 8:56 PM CEST, Jason Gunthorpe wrote:
-> On Thu, Oct 02, 2025 at 08:42:58PM +0200, Danilo Krummrich wrote:
->> On 10/2/25 8:31 PM, Jason Gunthorpe wrote:
->> > This exactly how this function is used.
->> >=20
->> > The core PF driver provides an API:
->> >=20
->> > struct mlx5_core_dev *mlx5_vf_get_core_dev(struct pci_dev *pdev)
->> >=20
->> > Which takes in the VF as pdev and internally it invokes:
->> >=20
->> > 	mdev =3D pci_iov_get_pf_drvdata(pdev, &mlx5_core_driver);
->>=20
->> Oh, I see, that makes sense then. Thanks for clarifying. I think I alrea=
-dy had
->> in mind how this would look like in the Rust abstraction, and there we d=
-on't
->> need pci_iov_get_pf_drvdata() to achieve the same thing.
+On Tue, Sep 30, 2025 at 8:30=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> I'm skeptical, there is nothing about rust that should avoid having to
-> us pci_iov_get_pf_drvdata().. It does a number of safety checks
-> related to the linux driver model that are not optional.
-
-The checks will be the same, but using pci_iov_get_pf_drvdata() directly is=
- not
-workable because of how the abstractions are layered.
-
-If we want to obtain the driver's private data from a device outside the sc=
-ope
-of bus callbacks, we always need to ensure that the device is guaranteed to=
- be
-bound and we also need to prove the type of the private data, since a devic=
-e
-structure can't be generic over its bound driver.
-
-Usually that's not an issue because other entry points into the driver, e.g=
-.
-subsystem callbacks have their own private data through the class device, I=
-RQs
-have their own private data in the IRQ registration, etc.
-
->> Yes, I already thought about this. In the context of adding support for =
-SR-IOV
->> in the Rust abstractions I'm planning on sending an RFC to let the subsy=
-stem
->> provide this guarantee instead (at least under certain conditions).
+> On Tue, Sep 16, 2025 at 12:45:11AM -0700, Chris Li wrote:
+> >  include/linux/dev_liveupdate.h |  23 +++++
+> >  include/linux/device/driver.h  |   6 ++
 >
-> Certain conditions may be workable, some drivers seem to have
-> preferences not to call disable, though I think that is wrong :\
+> Driver core changes under the guise of only PCI changes?  Please no.
 
-I fully agree! I was told that this is because apparently some PF drivers a=
-re
-only loaded to enable SR-IOV and then removed to shrink the potential attac=
-k
-surface. Personally, I think that's slightly paranoid, if the driver would =
-not
-do anything else than enable / disable SR-IOV, but I think we can work arou=
-nd
-this use-case if people really want it.
+There is a reason why I use the device struct rather than the pci_dev
+struct even though liveupdate currently only works with PCI devices.
+It comes down to the fact that the pci_bus and pci_host_bridge are not
+pci_dev struct. We need something that is common across all those
+three types of PCI related struct I care about(pci_dev, pci_bus,
+pci_host_bridge). The device struct is just common around those. I can
+move the dev_liveupdate struct into pci_bus, pci_host_bridge and
+pci_dev independently. That will be more contained inside PCI, not
+touching the device struct. The patch would be bigger because the data
+structure is spread into different structs. Do you have a preference
+which way to go?
+
+> Break this series out properly, get the driver core stuff working FIRST,
+> then show how multiple busses will work with them (i.e. you usually need
+> 3 to know if you got it right).
+
+Multiple buses you mean different types of bus, e.g. USB, PCI and
+others or 3 pci_bus is good enough? Right now we have no intention to
+support bus types other than PCI devices. The liveupdate is about
+preserving the GPU context cross kernel upgrade. Suggestion welcome.
+
+> I'm guessing you will need/want PCI, platform, and something else?
+
+This series only cares about PCI. The LUO series has subsystems. The
+PCI livedupate code is registered as an LUO subsystem. I guess the
+subsystem is close to the platform you have in mind? LUO also has the
+memfd in addition to the subsystem.
+
+Chris
 
