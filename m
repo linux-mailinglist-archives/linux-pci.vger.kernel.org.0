@@ -1,120 +1,84 @@
-Return-Path: <linux-pci+bounces-37447-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37448-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DB94BB49C1
-	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 19:00:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D46FDBB49D9
+	for <lists+linux-pci@lfdr.de>; Thu, 02 Oct 2025 19:04:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F1E5321FD0
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 17:00:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56A9C3B38B9
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 17:04:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26A6269CE6;
-	Thu,  2 Oct 2025 17:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9803D19992C;
+	Thu,  2 Oct 2025 17:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfYrp3gD"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="ekTjCOTF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B451419A9;
-	Thu,  2 Oct 2025 17:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4072F872
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 17:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759424414; cv=none; b=tpy+LGvQHJ2ay5mNEJCUEiGQtUq+qBYK8zacJrq7hed8v1G0AFFqG/BdYDe39FT9TAD0Ov6PHa8Y7OYdlpVXcUoEdNXGjlSKP8LS/lQNzlCjPPZfJIpwT/p0NU7CxQm9yfYvpDBcZBfnLYk5kiusI/A40OaeSyqb57g01FcHgqA=
+	t=1759424668; cv=none; b=ZQwdI10DwB+pGhCwbHCyoE9Iqfv9BVJDlYt6Oy4Wf5jndME8pizJ+ZquwL9XH56D/PSaPglPXCLekkwiNf6pvLYQTf9AQKUU1VWqiivc41WJhf39QMNZk1f0/zWkDFODH43hUZ1QNat2iHWil8202cx/If5aawtIhW6WGv0j4+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759424414; c=relaxed/simple;
-	bh=JeDo0/gU/aESo9xjFaYoM9qP44UP1j9qzQZuprvxYBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=au0+3Ugwvb1at0VENwkxMjh3nmtGDv0wrD1n1J6Ha6JHo17xgSqsz9xfTBhD9P9b7EaH73LPkuQJTMKxglOzX8hb0+Wzzau2kUGJpcfSPip1LIK5rwDLYV2hYOIxb/ZwGuiqXxnv1iZRqHSYrjwHdrLt9QuZuTdgszFHgVuUDgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfYrp3gD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75414C4CEF4;
-	Thu,  2 Oct 2025 17:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759424414;
-	bh=JeDo0/gU/aESo9xjFaYoM9qP44UP1j9qzQZuprvxYBc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tfYrp3gDrkm1utxo4ziuF3mm7o/zWzsSnOByeTqhVl2Z8gFpwqyj5Bhaf5nfQ5Tao
-	 wxU0PkCLscfjB40FmXWgjsJipOSll3imjERGnUBvScnrDniapFuomAMA/Ru3PtSX1z
-	 SZZLFC7ycSg7qMv6hmde4oNMp8AePiVz68I2Ca3nwF08dMUYpsTovXEhqmvh8ZrSEA
-	 ds7nwIQEVMnbbyGowfMPme3HhOQxuCs7wv4etQCAHAqEga8uJUX08Ad3AfLi0qIOoH
-	 rqjpd9hETAVn8khrUBKUz1sXmuhylGLB3x+S474ZpfzV2Hwbg1JksEp39XllqIxDyA
-	 FD8Bw5/b7U/Bw==
-Date: Thu, 2 Oct 2025 12:00:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	alex.williamson@redhat.com, clg@redhat.com, mjrosato@linux.ibm.com,
-	Farhan Ali <alifm@linux.ibm.com>, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 04/10] s390/pci: Add architecture specific
- resource/bus address translation
-Message-ID: <20251002170013.GA278722@bhelgaas>
+	s=arc-20240116; t=1759424668; c=relaxed/simple;
+	bh=9U3yKM+D3fmFazXwrZT5rqb/bJdhzG/21rrqO5A83hc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=R/bb7jJmKJbS1gwO2aq390yl4S+Q8m8fxoEijRaBPKLMYKAEnuRPn7T5FiZA3iB28Ogngq9sBcbcCVcijaCpTPYzfg8s95ELUiRIf9dZz41E2FaVMppKVWg8EzD78oU7ldhsW5xRetrFFls5e1L+e42N5hppffYaYQ9eqdSMK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=ekTjCOTF; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from [10.50.4.39] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4ccynZ1fX1z4WDD;
+	Thu,  2 Oct 2025 13:04:18 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1759424658; bh=9U3yKM+D3fmFazXwrZT5rqb/bJdhzG/21rrqO5A83hc=;
+	h=Date:To:Cc:From:Subject;
+	b=ekTjCOTFdH8oke6PmCVpcDf805kT1GDDIEzYYYr9LPr+cDVAdRLkVNuWx+9FMaqPq
+	 2TwcJAgchN5KnQW8EMZ7k6RsHk95SFXUYN1Gtn3ytb5Dx6PPbUg12SYYmEBcNYnvpT
+	 yBhPKLJuEukZtamRHfpKpP3TcqDeFOlByTH1tx2I=
+Message-ID: <af5f1790-c3b3-4f43-97d5-759d43e09c7b@panix.com>
+Date: Thu, 2 Oct 2025 10:04:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5ab698977f724e9121f81b9cfec9503d9decc72.camel@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: inochiama@gmail.com
+Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com,
+ linux-pci@vger.kernel.org, Me <kenny@panix.com>
+From: Kenneth Crudup <kenny@panix.com>
+Subject: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
+ domains") causing boot hangs on my laptop
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 02, 2025 at 02:58:45PM +0200, Niklas Schnelle wrote:
-> On Wed, 2025-09-24 at 10:16 -0700, Farhan Ali wrote:
-> > On s390 today we overwrite the PCI BAR resource address to either an
-> > artificial cookie address or MIO address. However this address is different
-> > from the bus address of the BARs programmed by firmware. The artificial
-> > cookie address was created to index into an array of function handles
-> > (zpci_iomap_start). The MIO (mapped I/O) addresses are provided by firmware
-> > but maybe different from the bus address. This creates an issue when trying
-> > to convert the BAR resource address to bus address using the generic
-> > pcibios_resource_to_bus().
-> > 
-> > Implement an architecture specific pcibios_resource_to_bus() function to
-> > correctly translate PCI BAR resource addresses to bus addresses for s390.
-> > Similarly add architecture specific pcibios_bus_to_resource function to do
-> > the reverse translation.
-> > 
-> > Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> > ---
-> >  arch/s390/pci/pci.c       | 74 +++++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/host-bridge.c |  4 +--
-> >  2 files changed, 76 insertions(+), 2 deletions(-)
-> > 
-> 
-> @Bjorn, interesting new development. This actually fixes a current
-> linux-next breakage for us. In linux-next commit 06b77d5647a4 ("PCI:
-> Mark resources IORESOURCE_UNSET when outside bridge windows") from Ilpo
-> (added) breaks PCI on s390 because the check he added in
-> __pci_read_base() doesn't find the resource because the BAR address
-> does not match our MIO / address cookie addresses. With this patch
-> added however the pcibios_bus_to_resource() in __pci_read_base()
-> converts  the region correctly and then Ilpo's check works. I was
-> looking at this code quite intensely today wondering about Benjamin's
-> comment if we do need to check for containment rather than exact match.
-> I concluded that I think it is fine as is and was about to give my R-b
-> before Gerd had tracked down the linux-next issue and I found that this
-> fixes it.
-> 
-> So now I wonder if we might want to pick this one already to fix the
-> linux-next regression? Either way I'd like to add my:
-> 
-> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-Hmmm, thanks for the report.  I'm about ready to send the pull
-request, and I hate to include something that is known to break s390
-and would require a fix before v6.18.  At the same time, I hate to add
-non-trivial code, including more weak functions, this late in the
-window.
+I'm running Linus' master (as of 7f7072574).
 
-06b77d5647a4 ("PCI: Mark resources IORESOURCE_UNSET when outside
-bridge windows") fixes some bogus messages, but I'm not sure that it's
-actually a functional change.  So maybe the simplest at this point
-would be to defer that commit until we can do it and the s390 change
-together.
+I bisected it to the above named commit (but had to back out ba9d484ed3 
+(""PCI/MSI: Remove the conditional parent [un]mask logic") and then 
+727e914bbfbbd ("PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in 
+cond_[startup|shutdown]_parent()") first for a clean revert.)
 
-Bjorn
+I have a Dell XPS-9320 laptop, and booting would hang before it switched 
+to the xe video driver from the EFI FB driver (not sure if this is a 
+symptom or partial cause) and I'd see a message akin to "not being able 
+to set up DP tunnels, destroying" as the last thing printed before it 
+hangs. (If it's important to see those messages I believe I can force a 
+pstore crash to get them where they can be saved off, let me know).
+
+LMK if you need further info,
+
+-Kenny
+
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
+
 
