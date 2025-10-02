@@ -1,119 +1,123 @@
-Return-Path: <linux-pci+bounces-37478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F553BB58A7
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 00:29:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF8EBB58B3
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 00:30:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D5BCB4E2EDE
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 22:28:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AB913A7D12
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Oct 2025 22:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B219255F28;
-	Thu,  2 Oct 2025 22:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C65128371;
+	Thu,  2 Oct 2025 22:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJgKeatG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcNcVw2b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76AB245023
-	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 22:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF42F2D
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 22:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759444134; cv=none; b=THhUHJRS/DEW26LBaG33iNSwy7OI91MhXQPTgyD4TVWOAzCrYFf8VtRKeEF19D6x6aIu3bsfPgaHjR18LYBecTcCByAUMe6+YpbI+cbzs8rtLI5aVVwhgW0Yay+aEQcBKmjwrh7t86ucCniadSCChvdPG6ANYkkip4EbaoS7Ph0=
+	t=1759444236; cv=none; b=gu9qyWGB22JijijULLlQgghTNZxC89heSFPfUDJuXZOOtKGA9ujZW2SzmaXpAa/PdaECEuTBlWcrFwY43mZnQxRwc4UG2mB5j6MoL87Z36IqgYZ/rb6S+GVK+QrxZZciC5kmdQI4P1I+mkXY63hy3FZtVC320hKXTU3TcYmmsyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759444134; c=relaxed/simple;
-	bh=dqgAhKd7BQrihK2iidqb02v4x//Kt9aXUe4EEIyggoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxH2fqdosoqCIUrMW4d722nHoIeWu3+lpb8Du4Z3PfTIepl7gyumDw2KYvlhA8SJc3RJKB8YjBtwKj6JfjB2zjDEo6XflDWen3m+Pti03DuM+BF3TcnRlqzKc8uaWh1u0Gqchy9ShJoqYvhIqVnJtBuKzi3EAWesew7/ntwsJS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJgKeatG; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7833765433cso2185507b3a.0
-        for <linux-pci@vger.kernel.org>; Thu, 02 Oct 2025 15:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759444132; x=1760048932; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mykXEANGb9m/pxHxlW/Bcifojvn2/EYPaGAn9FHin3A=;
-        b=fJgKeatGq8oHxjrWaAUmFRY7+hMso6wm0m4a50dLe2uYkgX8M7M1xn2RPUS2DrNkOr
-         lAW/YYnnuRm23fzFSzCsARgifmFz9PKu4FVd8KJPlioHH1i5EoHoaUm84xWG8jVNCNUA
-         85xuCMuj7+IDpiEjkrvnvIjn4A+on08Za1TZBX4sMH8tcF59xb9swZYTX6u+7qH+RSmz
-         corv+AMZcAbopxm4KpUzd4ka1SorQASyPQ/ZLmILR7wjFWUMw5nuYyD2qRE79DtmyASq
-         uWCt4aUL2wCscAcgEvn54q44Wp5Wn/8AZjlUs4qNMdpPZ7RShclCwBzzNmYgYOe2g0+G
-         dnjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759444132; x=1760048932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mykXEANGb9m/pxHxlW/Bcifojvn2/EYPaGAn9FHin3A=;
-        b=kvlXYy6Ct00PWnPbnlIeoHNJBTBLnzd5Yt8ix4qLdfslCVi/0ju2r+C4uCRtcY5VWA
-         hCTueSKSvWDDRU0MVKgW6VxO0/tFes1EtlDTy+1OJMEaTy7vqXj3x3jX3Rz/DB2zncpo
-         ud6ne4Me1OYz0eSGD4O7K2e6SnzxMLpUmi8fSB9lpDgJQqYGDtMCAHOaMgO2+H6/voFx
-         W0iauq35i3btpduqcwYI7e2Eo6MzaBeynbSVNOkGE1xy3l33pom9/lmeTKG5qYhUWh7z
-         ICdXRIQZhW3lYkcjzWBAR/4Ehd7qnvdhKNkFUNRMLG/TeYjM0g7LmbiazX5bhjVo9tbU
-         XK/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWanQhjooFRI8f7GesouwfFV0SPe+Rxu7x8crh5B0F0bXgNuws246DhQYj4kIP0JgYkNx45Wy15XB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE4OYIXCRwgmMUqWb9ajNd1FkwdNMHxsCX9Avpk61UPxhsRhaH
-	Fk5AJWY5AO0dYylNgfPKcIwz9wTLB7IcdpDRSP9MN//gqTQjr3iQgYkm
-X-Gm-Gg: ASbGnctL2/qUCYoQ3r2Dq3BhEVx3u4XHorPL4rCdxB76tx2XiJhLD1FitBNOfR2b74u
-	ra1UOy+7b4C2ZjbaEDOjz0Dt8YzO+Ez+e1mw6WIjI5vXfXsqWOlZCmzc3pAVccuSY4h9FNJjHfe
-	C23UPGNE+F9mb9pOnR0z+zpEl3dm0DaKTDZ3Gz00ZZ5PEOwe60iXVELjRyOMNgWhoMa6X0NXD4P
-	7R1iyYPSk1edgZ14tU57HZ6AfwZk1RSxIk7AHnSCa9xZd+Hju4wUED59jodHGvlPQ28fNRcUnx/
-	yEekxRE6xXE6tQuf/Qk7WVkPJ0WeUFLoH3U2frSfw+FTSf2hO1QKcgwLuFfYgdPYaZhfuEV7tcQ
-	pjW+CUeVNtC4qvDp9nQT3DTOdNaJQ5tVwxcVMBpEPUTJT35E+T5IMtUhw
-X-Google-Smtp-Source: AGHT+IFsYWU3SRspqkrXIjGDOVkLJ+kQyKDDSNyZCQDEDegtnCI0D74q2dClnukHDD8W6Usm+Tcxow==
-X-Received: by 2002:a05:6a00:b8c:b0:77f:4b9b:8c3e with SMTP id d2e1a72fcca58-78c98dfda99mr1179792b3a.22.1759444131826;
-        Thu, 02 Oct 2025 15:28:51 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-78b0204edf0sm3085103b3a.44.2025.10.02.15.28.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 15:28:50 -0700 (PDT)
-Date: Fri, 3 Oct 2025 06:28:16 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Kenneth Crudup <kenny@panix.com>, inochiama@gmail.com
-Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com, 
-	linux-pci@vger.kernel.org
-Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
- domains") causing boot hangs on my laptop
-Message-ID: <c6yky4m3ziocmvgblepbdr33j4irwlzew7z4ch2hnhj44otpwf@n2yo5sselj73>
-References: <af5f1790-c3b3-4f43-97d5-759d43e09c7b@panix.com>
+	s=arc-20240116; t=1759444236; c=relaxed/simple;
+	bh=mclwb4BLPmCejXVZg2cR82rxkFBq0yH1/DlDBXyjY74=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gtFb9jh+7kcS2bQ8y7qRARJtt+tJJNhnwIeVy2qBeo1XPj3d/jvlrFkXs3mfPjfRUixw2UDgZO0wnjUSC9XVZaGrHvDO7ClQWO/Loj93Fh7K99drJAPNomH3osRTudLEKOTE8gexjHx+SYuw9xdVhK7JI4JIpBtVNDq8jO2/M7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcNcVw2b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E59C113D0
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 22:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759444235;
+	bh=mclwb4BLPmCejXVZg2cR82rxkFBq0yH1/DlDBXyjY74=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZcNcVw2bBfizYT3syecFR74oq8jg0ZM0QoFIkNJhekVil48dSD9CJOrHTQe+UXGZS
+	 XyukVruIMo55D3gW2VGpMca6347oLdOIOjpmN3RQA1CLvzAsQr0+k7fC2pWFFrYPEq
+	 UuCZMqIzlhEQQ0xJKxIRb169HgxbNTyyQL3Pfh9A9Yt3qnrl+Gx7K9jJBM8qV41RDN
+	 gwGPbRa6KOAZkTxnk8APDEz2mGcnQPLs9PrBzjkUi76E847gXDUr+GbHfZ7Bpwy9IC
+	 PkcHdQRyg6bMRVadQFk4/LxaRJmADo0csj8EdYKzT1R3jlLyQ7yBh5ErbDM6qvphxF
+	 Xo1ypXm6IGgaw==
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-6353f2937f3so1704443d50.3
+        for <linux-pci@vger.kernel.org>; Thu, 02 Oct 2025 15:30:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVFFJ3fE5UtbUIElJZ0Y8+Amr5oZvzQwNRFVzvhb+fda/SUCevMHXTPMLODrYmvU11xtbED/gU+Lkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3eRK/JN1MajljnZD5ZwROk+EQbF8qTc57leT1BmCb2HMswQe6
+	L8rzUn5GUtDX5f3o9AokjD9YH30TMDv01vHhSTbgVRd6PGT7/76kT2H6xdLcUovHv7BX6ijPQo8
+	BLkMQ74HlrdKoCUNe74U5NiBWJBTZFZMPkQ8zHhYYkA==
+X-Google-Smtp-Source: AGHT+IER8jPAUzVQN0o6Ky1MS7KVMc0a4lSY1AA2ChRrKcHMDDcDaZNsOD3pjWILpiKV4YkdhpOWKKWWlyCIVXeH7GA=
+X-Received: by 2002:a05:690e:2513:20b0:5f4:55cb:80d4 with SMTP id
+ 956f58d0204a3-63b9a074d1emr857849d50.17.1759444235020; Thu, 02 Oct 2025
+ 15:30:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af5f1790-c3b3-4f43-97d5-759d43e09c7b@panix.com>
+References: <20250916-luo-pci-v2-6-c494053c3c08@kernel.org>
+ <20250929175704.GK2695987@ziepe.ca> <CAF8kJuNfCG08FU=BmLtoh6+Z4V5vPHOMew9NMyCWQxJ=2MLfxg@mail.gmail.com>
+ <CA+CK2bBFZn7EGOJakvQs3SX3i-b_YiTLf5_RhW_B4pLjm2WBuw@mail.gmail.com>
+ <2025093030-shrewdly-defiant-1f3e@gregkh> <CA+CK2bDH=7H58kbwDM1zQ37uN_k61H_Fu8np1TjuG_uEVfT1oA@mail.gmail.com>
+ <2025093052-resupply-unmixable-e9bb@gregkh> <CA+CK2bCBFZDsaEywbfCzDJrH3oXyMmSffV-x7bOs8qC7NT7nAg@mail.gmail.com>
+ <2025100147-scrubbed-untold-fc55@gregkh> <CA+CK2bA0acjg-CEKufERu_ov4up3E4XTkJ6kbEDCny0iASrFVQ@mail.gmail.com>
+ <2025100225-abridge-shifty-3d50@gregkh>
+In-Reply-To: <2025100225-abridge-shifty-3d50@gregkh>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 2 Oct 2025 15:30:24 -0700
+X-Gmail-Original-Message-ID: <CACePvbWw9G=y_cycWFMXxRbmuAE8yFCM0Z3y=Ojw30ENDkDL-g@mail.gmail.com>
+X-Gm-Features: AS18NWBKklIiW19M0HLe-eu5UU3jj0bpgI_sv1S6en5UzgvXxCD0FefovaS2CF8
+Message-ID: <CACePvbWw9G=y_cycWFMXxRbmuAE8yFCM0Z3y=Ojw30ENDkDL-g@mail.gmail.com>
+Subject: Re: [PATCH v2 06/10] PCI/LUO: Save and restore driver name
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Leon Romanovsky <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 02, 2025 at 10:04:17AM -0700, Kenneth Crudup wrote:
-> 
-> I'm running Linus' master (as of 7f7072574).
-> 
-> I bisected it to the above named commit (but had to back out ba9d484ed3
-> (""PCI/MSI: Remove the conditional parent [un]mask logic") and then
-> 727e914bbfbbd ("PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
-> cond_[startup|shutdown]_parent()") first for a clean revert.)
-> 
-> I have a Dell XPS-9320 laptop, and booting would hang before it switched to
-> the xe video driver from the EFI FB driver (not sure if this is a symptom or
-> partial cause) and I'd see a message akin to "not being able to set up DP
-> tunnels, destroying" as the last thing printed before it hangs. (If it's
-> important to see those messages I believe I can force a pstore crash to get
-> them where they can be saved off, let me know).
-> 
-> LMK if you need further info,
-> 
+On Wed, Oct 1, 2025 at 11:09=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> Just keeping a device "alive" while rebooting into the same exact kernel
+> image seems odd to me given that this is almost never what people
+> actually do.  They update their kernel with the weekly stable release to
+> get the new bugfixes (remember we fix 13 CVEs a day), and away you go.
+> You are saying that this workload would not actually be supported, so
+> why do you want live update at all?  Who needs this?
 
-I think this has been fixed and the patch is merged in the latest
-mainline. Can you try
-https://lore.kernel.org/all/20250827230943.17829-1-inochiama@gmail.com
+I saw Pasha reply to a lot of your questions. I can take a stab on who
+needs it. Others feel free to add/correct me. The major cloud vendor
+(you know who is the usual suspect) providing GPU to the VM will want
+it. The usage case is that the VM is controlled by the customer. The
+cloud provider has a contract on how many maintenance downtimes to the
+VM. Let's say X second maintenance downtime per year. When upgrading
+the host kernel, typically the VM can be migrated to another host
+without much interruption, so it does not take much from the down time
+budget. However when you have a GPU attached to the VM, the GPU is
+running some ML jobs, there is no good way to migrate that GPU context
+to another machine. Instead, we can do a liveupdate from the host
+kernel. During the liveupdate, the old kernel saves the liveupdate
+state. VM is paused to memory while the GPU as a PCI device is kept on
+running.  ML jobs are still up.  The kernel liveupdate kexec to the
+new kernel version. Restore and reconstruct the software side of the
+device state. VM re-attached to the file descriptor to get the
+previous context. In the end the VM can resume running with the new
+kernel while the GPU keeps running the ML job. From the VM point of
+view, there are Y seconds the VM does not respond during the kexec.
+The GPU did not lose the context and VM did not reboot. The benefit is
+that Y second is much smaller than the time to reboot the VM  and
+restart the GPU ML jobs. So that Y can fit into the X second
+maintenance downtime per year in the service contract.
 
-Regards,
-Inochi
+Hope that explanation makes sense to you.
+
+Chris
 
