@@ -1,128 +1,144 @@
-Return-Path: <linux-pci+bounces-37540-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFB69BB6A7E
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 14:29:00 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9551BB6F77
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 15:18:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D58C428652
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 12:28:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2AC53345BF5
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 13:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 573D62DE700;
-	Fri,  3 Oct 2025 12:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53072145A05;
+	Fri,  3 Oct 2025 13:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YJrORMrM"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="e8/5q6r2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209C62EC08B;
-	Fri,  3 Oct 2025 12:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDCF35942
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 13:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759494415; cv=none; b=GTcjSfNwoVwjImymFbGVKYdHnEvqj6VK1eYnIu6eL8X2JnXUrq4njKvBSISyjIdRnrMZpC3klsZd0JQq4ziz/p7NQt7NYr7sZQ9rPS3T1gxAX0ogbY3mYPgDZuZdGUrtLaRO+S0B3Y0xmZlwA4emfkiIWoPyWhVm8j9xUsIRaJM=
+	t=1759497499; cv=none; b=B4wsNLi0rSOWQCN1Y4GsHjkKL7+X7gx6KQ3j9eoP68UnHLYIGPBgKu7y91tu1HZfGR22yOnMvDyPRJuYHx4PAy7l/yAR1HQC0MwZiTxr/feB5ThVfdkT263Y7VF9CNO2DBCWoLhXJfkA5IDqQ9X+NeTyfpimqbTTI8UqIXxGVWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759494415; c=relaxed/simple;
-	bh=E50tYDM8gx3UL88zFxIT0tdZnck8P/wORg9Z1QAH7NU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGbwCeqeH6FJip9IebWO++ieyOK4oaqYVNhv2Z8jljjB0cJygHV5Hs8XDXziseVZeC6wUgvzZsztNWJEM6INWjTnx3QTIQXqUfb90N576QextNmPVsOnMwrB20lu0/ZYWG6kwjexvkx4mL7z/sacCgyDs1UWBEHvJSOYluyhukQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YJrORMrM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD10C4CEF5;
-	Fri,  3 Oct 2025 12:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1759494414;
-	bh=E50tYDM8gx3UL88zFxIT0tdZnck8P/wORg9Z1QAH7NU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJrORMrMKsahcSf+ABvPJxYuR649yPV6EPT6kk/nl5ydKl+Dq/9x6kmRRIruXWl8V
-	 K+wEm8s52EL6acpxIiMyfD7ge4JfCd1Ueqo6eECnk2sAqxOQ+N6cmQL0gQDS8QOm+E
-	 Hix9M8xQdZnnqFgUo6LmEH5rpAs2703I2/LQrBSM=
-Date: Fri, 3 Oct 2025 14:26:51 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Chris Li <chrisl@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
- callbacks to driver
-Message-ID: <2025100317-backroom-upside-c788@gregkh>
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-3-c494053c3c08@kernel.org>
- <2025093044-icky-treat-e1c3@gregkh>
- <CACePvbUr42mj0kbcaw4cgKnd7v1f8z8Jhq4+_QN7Z5Nvicd1cw@mail.gmail.com>
- <2025100323-sneer-perennial-55e1@gregkh>
- <CAF8kJuNPFbSJezynwXWpMx0ihV32YvAgdfygj7bx1nhxtmB8-w@mail.gmail.com>
+	s=arc-20240116; t=1759497499; c=relaxed/simple;
+	bh=pGdrEcqpje2NTQWu37aM/RqYR9TY3cPIGZNvXOSgwUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oN8iuZQXMWXZbCoCd8bqiq5m5pertR6WBhDOlT08on+icw+33e5+2iQfo8DsL9P0nK1SOvQjHiAoaI4NpAeDFCpIa7bqJjYchUkg+z9Zrtog73+6xq1OWYuQX45+/9kaNvtJIGwhmKr3VIUg129FgPJdd5QZpHCIn3VqIYZVcyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=e8/5q6r2; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from [10.50.4.39] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4cdTkG49j8z4DL6;
+	Fri,  3 Oct 2025 09:18:14 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1759497495; bh=pGdrEcqpje2NTQWu37aM/RqYR9TY3cPIGZNvXOSgwUM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=e8/5q6r2qUXtCDkJgrVRneYWdyt7pS0f8ubYxJY3mpXJgnC84SjQ73P1GUXOBu7jY
+	 3PTVq4O7lWEm7P6jNfCciyw6FIxTDxdpK0kBPjOWa9ea9lMY7bNsmsFRFVPQeIr94J
+	 sYXCjw1V4o6/O55IS3WJlTKz4a5hrDR+bnNk1qaw=
+Message-ID: <7a21fb05-f7bd-4010-8488-10870b404bbc@panix.com>
+Date: Fri, 3 Oct 2025 06:18:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF8kJuNPFbSJezynwXWpMx0ihV32YvAgdfygj7bx1nhxtmB8-w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
+ domains") causing boot hangs on my laptop
+To: Inochi Amaoto <inochiama@gmail.com>,
+ "David E. Box" <david.e.box@linux.intel.com>, Kenneth C <kenny@panix.com>
+Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com,
+ linux-pci@vger.kernel.org
+References: <8a923590-5b3a-406f-a324-7bd1cf894d8f@panix.com>
+ <hxyz7e6ebp3hmwyv3ivhy5kwc5skpynzl4djyylusheuv3fmqf@tmh2bygaex4r>
+ <05f38588-7759-42ce-9202-2c48c29e2f23@panix.com>
+ <feedlab62syxyk56uzclvrltwhaui7qgaxsynsgpfrudmpue52@vbt6zahn5kif>
+ <gtmre52no2rqbno2tkuh77a6kjd4i7hrjbmfenucduglgqv6hw@gv4idxswvyng>
+ <b955d5a6-5553-4659-b02a-a763993fcd82@panix.com>
+ <wfdzfzzemspxjecijckhrzurdfuxebnxff4lyyrcw4zrqcxio5@z4uaz3hcty6f>
+ <69a89a6f-1708-4e34-86a4-f8f3a74e4da2@panix.com>
+ <qs2vydzm6xngul77xuwjli7h757gzfhmb4siiklzogihz5oplw@gsvgn75lib6t>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <qs2vydzm6xngul77xuwjli7h757gzfhmb4siiklzogihz5oplw@gsvgn75lib6t>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 03, 2025 at 12:26:01AM -0700, Chris Li wrote:
-> On Thu, Oct 2, 2025 at 11:19 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Oct 02, 2025 at 01:38:56PM -0700, Chris Li wrote:
-> > > On Tue, Sep 30, 2025 at 8:30 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Sep 16, 2025 at 12:45:11AM -0700, Chris Li wrote:
-> > > > >  include/linux/dev_liveupdate.h |  23 +++++
-> > > > >  include/linux/device/driver.h  |   6 ++
-> > > >
-> > > > Driver core changes under the guise of only PCI changes?  Please no.
-> > >
-> > > There is a reason why I use the device struct rather than the pci_dev
-> > > struct even though liveupdate currently only works with PCI devices.
-> > > It comes down to the fact that the pci_bus and pci_host_bridge are not
-> > > pci_dev struct. We need something that is common across all those
-> > > three types of PCI related struct I care about(pci_dev, pci_bus,
-> > > pci_host_bridge). The device struct is just common around those. I can
-> > > move the dev_liveupdate struct into pci_bus, pci_host_bridge and
-> > > pci_dev independently. That will be more contained inside PCI, not
-> > > touching the device struct. The patch would be bigger because the data
-> > > structure is spread into different structs. Do you have a preference
-> > > which way to go?
-> >
-> > If you only are caring about one single driver, don't mess with a
-> > subsystem or the driver core, just change the driver.  My objection here
+
+That seems to have done the trick, thank you.
+
+LMK when you need me to test the formal solution.
+
+BTW, the VMD has been somewhat problematic (for unrelated PM reasons), 
+so I've added the/a VMD devel (David Box) to this discussion, in case 
+you guys should sync up.
+
+-Kenny
+
+On 10/3/25 05:01, Inochi Amaoto wrote:
+> On Thu, Oct 02, 2025 at 10:36:35PM -0700, Kenneth Crudup wrote:
+>>
+>> On 10/2/25 19:03, Inochi Amaoto wrote:
+>>
+>>> Weird, this seems like affects more than the vmd itself.
+>>> I think I need to know hierarchical information of the irq
+>>> controller. Can you do me a favor for rebuilding a kernel
+>>> with CONFIG_GENERIC_IRQ_DEBUGFS enabled and check the
+>>> irq information under /sys/kernel/debug/irq/. Any of the
+>>> vmd irq and NVMe irq should show the information for it.
+>>>
+>>> Regards,
+>>> Inochi
+>>>
+>>
+>> /proc/interrupts and egrep -r . /sys/kernel/debug/irq attached.
+>>
+>>
+>> Also, FWIW if I revert back to the commit in the Subject (but no further),
+>> and comment out the
+>> .irq_startup entry in the MSIX msi_domain_template struct, the system boots
+>> normally.
+>>
 > 
-> It is more than just one driver, we have vfio-pci, idpf, pci-pf-stub
-> and possible nvme driver.
-
-Why is nvme considered a "GPU" that needs context saved?
-
-> The change needs to happen in the PCI enumeration and probing as well,
-> that is outside of the driver code.
-
-So all just PCI drivers?  Then keep this in PCI-only please, and don't
-touch the driver core.
-
-> > was that you were claiming it was a PCI change, yet it was actually only
-> > touching the driver core which means that all devices in the systems for
+> I think I know why, the reason for this behavior is because I register
+> the irq_startup and irq_shutdown in the template msi domain, which is
+> called in the irq_startup() and irq_shutdown() and mask the enable/disable
+> callback.
 > 
-> In theory all the devices can be liveupdate preserved. But now we only
-> support PCI.
+> And there is a diff for you to verify what I say (Just for verification,
+> not a formal patch), it should work for you.
+> 
+> ```
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 1bd5bf4a6097..8abca46c9b73 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -309,6 +309,8 @@ static bool vmd_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+>   	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
+>   		return false;
+>   
+> +	info->chip->irq_startup		= NULL;
+> +	info->chip->irq_shutdown	= NULL;
+>   	info->chip->irq_enable		= vmd_pci_msi_enable;
+>   	info->chip->irq_disable		= vmd_pci_msi_disable;
+>   	return true;
+> ```
+> 
+> If this is worked, I think I should find an formal way to adapt the
+> new behavior. (convert this into startup/shutdown or maybe mask/umask).
+> 
+> Regards,
+> Inochi
+> 
 
-Then for now, only focus on PCI.
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
 
-thanks,
-
-greg k-h
 
