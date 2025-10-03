@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-37524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD580BB64C3
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 11:04:03 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C3FBBB64CC
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 11:04:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 677654E276F
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 09:04:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D617F344B5D
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 09:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37D7281376;
-	Fri,  3 Oct 2025 09:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5B1D28033C;
+	Fri,  3 Oct 2025 09:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="KDDwukY6"
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="oJOYB9T4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pdx-out-008.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-008.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.42.203.116])
+Received: from pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com [34.218.115.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68B828150F;
-	Fri,  3 Oct 2025 09:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.42.203.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75371D88D0;
+	Fri,  3 Oct 2025 09:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.218.115.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759482239; cv=none; b=ezcbLtdj/ptqHnXi5Q16XHiXzIWuAmhny9WCNsDQoZC26RFbz7cppcJkEhCyKNRHjNGicSlYtqyusF3a2uP57hI9ozP1GAjARRm09htodjuVXlmsRtcYxp8GTFpP4YpVnXBHwZJ20+AqPiA5oLao620E2BB9AwHGut6kfEt7Voc=
+	t=1759482263; cv=none; b=o11o5v44cD/19E+1pkTjFF/4sBf/ygFGhD0iPDDLxmAOChecb8HcfHoGKpt+aCiKNPdc3P3q8Zggupp2A3FoBYvhskMG0SEbgHj9iIs5VcxptXryn7Nt29Jcn5FBknDuoQwcClLfE9lNKz3hp2cyI5+UtWj7WTC72aaHM54mosk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759482239; c=relaxed/simple;
-	bh=YUIXWB9DQpkrQk4uATLGgMYEq0Q2/OSHXmRDBN8np6c=;
+	s=arc-20240116; t=1759482263; c=relaxed/simple;
+	bh=dIoo5Wn/TwilQe/1KY9uprCu5D7mZvUDyVyVfixKjRA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A9PRNIi2Xi+P3B9H/7Vx6F3Y7wfRp4Y9dy+DzYBE200N+zvPWQYBGigthlktMzB2UVXtShs9g5wbLmsZ1bSVCEKZ8kcffHApY21g5ZulqAwioyY2BkFKagzU1Nf325OCplwk4g8sphNlsWKVzQpXEfZ4WSgt0P+KoWxxtfKjKA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=KDDwukY6; arc=none smtp.client-ip=52.42.203.116
+	 MIME-Version:Content-Type; b=n07dATntMXOe3D0t9FTa44gVTOAIC/GuZdEJpHF7Qi5bWL/Lf+KyhaNxJ8Y09YsK8doEprtGEeM9bUmll4r/D5IrRtZxd21DdTE6aLmHSLj14CSf07vDHVmKja+onj+xRPxbB2TSnWRZsidWyCOTgSMnBqy/iMs4Oma/A4cpvpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=oJOYB9T4; arc=none smtp.client-ip=34.218.115.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1759482237; x=1791018237;
+  t=1759482261; x=1791018261;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0Mvwx7/lH7MVq6cdziprtPczRXASQRPlRUci+PHX/9w=;
-  b=KDDwukY62IKgrBL423ocvq4gLQ3o87xILNLA+USF+bwlzegOXOgaTtvr
-   VzRms54muyRySYPoVnm3rzVjnM2oBoPGpaccwIR8Xvn6y6FlW3+khE/5Z
-   T58yL4vCM2vOFLxWUsC+C6UmW2ES0W1HDtFCisVK8V8v0t3NXIonW71gb
-   PAvSctz+8BJ+oGheIo7/Hh6fw3WlKRju+MDbBZxaL+zRe6LgZXuecvKya
-   NGIHqUvhohvpqYxtLB9TwkAWwT57ojm9p7soD31nOx+vlKNXMyBlQDVR7
-   AxkSQzung3jVzCLNwgwV/xqMIhhiBb2golexPl0gbXSRQSnZimoC5Pun3
+  bh=P9MVvP96kcAAq5QcR/4ak3wqiSOgfOY+p+dSjZVM698=;
+  b=oJOYB9T4d/8mKYT0O/u7u8YCEn4/i4TcdCIBkBzs38dYZLYDU0NJVAh4
+   Bl7gTPAzNCGyNm9nYPPdtQnd1mcaYoLzYvt7JJp8dyUKLdX/uFPQHc5gS
+   choKP4OHvDEMSRuSMLbuHTHBXDo+N/pBTFIhp0hmBeFuvnXXojJYH5ITc
+   YCV8Stl0YekOvRNLB4BJdJCED8gC+s5R/QNuWjVm5pFLrgompFYiEg7I5
+   yVHtjElYexZhsKoJ5KIFHs79dvMpgqmvBxzn6Gf9hX76j7uihnt8XWdVW
+   8xhKN4PG2bDkjUceJM8XgSMuhpzcH//NLU2qB/CmA2NTPJOj1G2qn1d1/
    w==;
-X-CSE-ConnectionGUID: +lIA1xYvRnynGPZfiLR4Eg==
-X-CSE-MsgGUID: rVagEA40RwuFBQnOSMwBMg==
+X-CSE-ConnectionGUID: ZxfWATLIREerzXHQdn60hQ==
+X-CSE-MsgGUID: UeR53ARTReqAwdtAycqv4Q==
 X-IronPort-AV: E=Sophos;i="6.18,312,1751241600"; 
-   d="scan'208";a="4203485"
+   d="scan'208";a="4024614"
 Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-008.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 09:03:55 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:63163]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.20.71:2525] with esmtp (Farcaster)
- id 97b22730-fdc0-482d-b08f-52743c9bdbae; Fri, 3 Oct 2025 09:03:55 +0000 (UTC)
-X-Farcaster-Flow-ID: 97b22730-fdc0-482d-b08f-52743c9bdbae
+  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 09:04:19 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:13370]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.25.156:2525] with esmtp (Farcaster)
+ id 2d0a494a-5863-4724-ba7a-105b85049e1a; Fri, 3 Oct 2025 09:04:19 +0000 (UTC)
+X-Farcaster-Flow-ID: 2d0a494a-5863-4724-ba7a-105b85049e1a
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 3 Oct 2025 09:03:54 +0000
+ Fri, 3 Oct 2025 09:04:19 +0000
 Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
  (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 3 Oct 2025
- 09:03:52 +0000
+ 09:04:16 +0000
 From: Evangelos Petrongonas <epetron@amazon.de>
 To: Bjorn Helgaas <bhelgaas@google.com>, Alex Williamson
 	<alex.williamson@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Len
@@ -74,9 +74,9 @@ CC: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin
  Spassov" <stanspas@amazon.de>, <linux-pci@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<nh-open-source@amazon.com>
-Subject: [RFC PATCH 06/13] pci: pcsc: handle device resets
-Date: Fri, 3 Oct 2025 09:00:42 +0000
-Message-ID: <0fa6f46439b535eedaa82c360e1ea19e7f052fca.1759312886.git.epetron@amazon.de>
+Subject: [RFC PATCH 07/13] pci: pcsc: introduce statistic gathering tools
+Date: Fri, 3 Oct 2025 09:00:43 +0000
+Message-ID: <762a6242ba9688aeb432c738e297cc8d039d0273.1759312886.git.epetron@amazon.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1759312886.git.epetron@amazon.de>
 References: <cover.1759312886.git.epetron@amazon.de>
@@ -86,320 +86,361 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D036UWB001.ant.amazon.com (10.13.139.133) To
+X-ClientProxiedBy: EX19D032UWB004.ant.amazon.com (10.13.139.136) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-The PCI Configuration Space Cache (PCSC) maintains cached values of
-configuration space registers for performance optimization. When a PCI
-device is reset or bus operations are dynamically changed, cached values
-become stale and can cause incorrect behavior. This patch ensures cache
-coherency by invalidating the PCSC cache in all scenarios where the
-underlying configuration space values may have changed.
+Introduce optional statistics gathering for the PCI Configuration Space
+Cache to measure cache effectiveness and performance impact.
 
-Device Reset Handling:
-----------------------
-When PCI devices are reset, their configuration space registers return
-to default values. Add pcsc_device_reset() calls after all device reset
-operations to invalidate stale cached values:
+When CONFIG_PCSC_STATS is enabled, the implementation tracks:
+- Cache hits and misses
+- Uncacheable reads
+- Write operations and cache invalidations
+- Total reads and hardware reads
+- Time spent in cache vs hardware accesses
+- Number of Device Resets
 
-- Function Level Resets (FLR) in `pcie_flr()`
-- Advanced Features FLR in `pci_af_flr()`
-- Power Management resets (D3hot->D0 transition) in `pci_pm_reset()`
-- Device-specific resets in `pci_dev_specific_reset()`
-- D3cold power state transitions in `__pci_set_power_state()`
-- ACPI-based resets in `pci_dev_acpi_reset()`
-- Bus restore operations in `pci_bus_restore_locked()`
-- Slot restore operations in `pci_slot_restore_locked()`
-- Secondary bus resets in `pci_bridge_secondary_bus_reset()`
-
-For secondary bus resets, `pcsc_reset_bus_recursively()` invalidates the
-cache for all devices on the secondary bus and subordinate buses. This
-also covers hotplug slot reset operations since `pciehp_reset_slot()`
-calls `pci_bridge_secondary_bus_reset()`.
-
-In addition, functions like `pci_dev_wait` are configured to bypass the
-cahce and reads the actual HW values.
-
-Dynamic Ops Changes:
---------------------
-The patch also addresses cache consistency issues when bus operations
-are dynamically changed via `pci_bus_set_ops()``. Different ops
-implementations may return different values for the same registers, and
-hardware state may have changed while using the different ops. This
-commit resets the cache for all devices on the affected bus
-
-Implementation Details:
------------------------
-The cache invalidation clears the cached_bitmask while preserving the
-cacheable_bitmask, as the configuration space layout remains unchanged
-after a reset. This allows the cache to be repopulated with fresh values
-on subsequent configuration space accesses.
-
-Known Limitations:
-------------------
-- There is currently a gap in handling PowerPC secondary bus resets, as
-the architecture-specific `pcibios_reset_secondary_bus()` can bypass the
-generic `pci_reset_secondary_bus()` where our cache invalidation occurs.
+Statistics are exposed via /sys/bus/pci/pcsc/stats in a human-readable
+format including calculated hit rates and access times in microseconds.
 
 Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
 ---
- drivers/pci/access.c   | 13 ++++++---
- drivers/pci/pci-acpi.c |  4 +++
- drivers/pci/pci.c      | 60 +++++++++++++++++++++++++++++++++++++++++-
- drivers/pci/pcsc.c     | 17 ++++++++++++
- drivers/pci/quirks.c   |  7 ++++-
- include/linux/pcsc.h   | 11 ++++++++
- 6 files changed, 106 insertions(+), 6 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-pci-pcsc |   9 +
+ drivers/pci/Kconfig                          |   7 +
+ drivers/pci/pcsc.c                           | 183 ++++++++++++++++++-
+ 3 files changed, 196 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index b89e9210d330..0a5de8d76bfe 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -245,11 +245,16 @@ struct pci_ops *pci_bus_set_ops(struct pci_bus *bus, struct pci_ops *ops)
- 		/*
- 		 * IMPORTANT: Dynamic ops changes after PCSC injection can lead to
- 		 * cache consistency issues if operations were performed that should
--		 * have invalidated the cache. We re-inject PCSC ops here, but the
--		 * caller is responsible for ensuring cache consistency if needed.
--		 * This will be fixed in a future commit, when PCSC resets are
--		 * introduced.
-+		 * have invalidated the cache. We must reset the cache for all
-+		 * devices on this bus to ensure consistency. (No need for recursive
-+		 * reset on subordinate buses)
- 		 */
-+		struct pci_dev *dev;
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci-pcsc b/Documentation/ABI/testing/sysfs-bus-pci-pcsc
+index ee92bf087816..daf0d06c89c8 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci-pcsc
++++ b/Documentation/ABI/testing/sysfs-bus-pci-pcsc
+@@ -18,3 +18,12 @@ Description:
+ 				is utilizing the cache, while when on "0" the
+ 				system bypasses it. This setting can also be controlled
+ parameter.
 +
-+		list_for_each_entry(dev, &bus->devices, bus_list) {
-+			if (dev->pcsc && dev->pcsc->cached_bitmask)
-+				bitmap_zero(dev->pcsc->cached_bitmask, PCSC_CFG_SPC_SIZE);
-+		}
++What:			/sys/bus/pci/pcsc/stats
++Date:			March 2025
++Contact:		Evangelos Petrongonas <epetron@amazon.de>
++Description:
++				PCI Configuration Space Cache (PCSC) if the PCSC
++				Statistics are enabled via the PCSC_STATS
++				configuration option, the statistics can be recovered
++				via reading this sysfs.
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index c26162b58365..9b5275ef2d16 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -50,6 +50,13 @@ config PCSC
+ 	  intercepts configuration space operations and maintains cached
+ 	  copies of register values
  
- 		pr_warn("PCSC: Dynamic ops change detected on bus %04x:%02x, resetting cache\n",
- 			pci_domain_nr(bus), bus->number);
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 9369377725fa..0b638115c7c7 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -983,6 +983,10 @@ int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
- 		return -ENOTTY;
- 	}
- 
-+#ifdef CONFIG_PCSC
-+	pcsc_device_reset(dev);
-+#endif
++config PCSC_STATS
++	bool "PCI Configuration Space Cache Statistics"
++	depends on PCSC
++	default n
++	help
++	  This option allows the collection of statistics for the PCSC.
 +
- 	return 0;
+ source "drivers/pci/pcie/Kconfig"
+ 
+ config PCI_MSI
+diff --git a/drivers/pci/pcsc.c b/drivers/pci/pcsc.c
+index 5412dea23446..304239b7ff8a 100644
+--- a/drivers/pci/pcsc.c
++++ b/drivers/pci/pcsc.c
+@@ -25,9 +25,84 @@ static int __init pcsc_enabled_setup(char *str)
  }
+ __setup("pcsc_enabled=", pcsc_enabled_setup);
  
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f518cfa266b5..db940f8fd408 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -26,6 +26,7 @@
- #include <linux/device.h>
- #include <linux/pm_runtime.h>
- #include <linux/pci_hotplug.h>
-+#include <linux/pcsc.h>
- #include <linux/vmalloc.h>
- #include <asm/dma.h>
- #include <linux/aer.h>
-@@ -1248,11 +1249,19 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- 		}
- 
- 		if (root && root->config_rrs_sv) {
-+#ifdef CONFIG_PCSC
-+			pcsc_hw_config_read(dev->bus, dev->devfn, PCI_VENDOR_ID, 4, &id);
-+#else
- 			pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
-+#endif
- 			if (!pci_bus_rrs_vendor_id(id))
- 				break;
- 		} else {
-+#ifdef CONFIG_PCSC
-+			pcsc_hw_config_read(dev->bus, dev->devfn, PCI_COMMAND, 4, &id);
-+#else
- 			pci_read_config_dword(dev, PCI_COMMAND, &id);
-+#endif
- 			if (!PCI_POSSIBLE_ERROR(id))
- 				break;
- 		}
-@@ -1564,7 +1573,9 @@ static int __pci_set_power_state(struct pci_dev *dev, pci_power_t state, bool lo
- 
- 		if (pci_platform_power_transition(dev, PCI_D3cold))
- 			return error;
--
-+	#ifdef CONFIG_PCSC
-+		pcsc_device_reset(dev);
-+	#endif
- 		/* Powering off a bridge may power off the whole hierarchy */
- 		if (dev->current_state == PCI_D3cold)
- 			__pci_bus_set_current_state(dev->subordinate, PCI_D3cold, locked);
-@@ -4493,6 +4504,10 @@ int pcie_flr(struct pci_dev *dev)
- 	 */
- 	msleep(100);
- 
-+#ifdef CONFIG_PCSC
-+	pcsc_device_reset(dev);
++#ifdef CONFIG_PCSC_STATS
++struct pcsc_stats {
++	/* Operation Counters */
++	unsigned long cache_hits;
++	unsigned long cache_misses;
++	unsigned long uncachable_reads;
++	unsigned long writes;
++	unsigned long cache_invalidations;
++	unsigned long total_reads;
++	unsigned long hw_reads;
++	unsigned long device_resets;
++	u64 total_cache_access_time; /* in milliseconds */
++	u64 total_hw_access_time; /* in milliseconds */
++	u64 hw_access_time_due_to_misses; /* in milliseconds */
++};
 +#endif
 +
- 	return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
- }
- EXPORT_SYMBOL_GPL(pcie_flr);
-@@ -4560,6 +4575,10 @@ static int pci_af_flr(struct pci_dev *dev, bool probe)
- 	 */
- 	msleep(100);
+ static bool pcsc_initialised;
+ static atomic_t num_nodes = ATOMIC_INIT(0);
  
-+#ifdef CONFIG_PCSC
-+	pcsc_device_reset(dev);
-+#endif
++#ifdef CONFIG_PCSC_STATS
++struct pcsc_stats pcsc_stats;
 +
- 	return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
- }
- 
-@@ -4605,6 +4624,10 @@ static int pci_pm_reset(struct pci_dev *dev, bool probe)
- 	pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
- 	pci_dev_d3_sleep(dev);
- 
-+#ifdef CONFIG_PCSC
-+	pcsc_device_reset(dev);
-+#endif
-+
- 	return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
- }
- 
-@@ -4904,6 +4927,31 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 			    PCIE_RESET_READY_POLL_MS - delay);
- }
- 
-+#ifdef CONFIG_PCSC
-+/**
-+ * pcsc_reset_bus_recursively - Recursively reset PCSC cache for all devices
-+ * in bus hierarchy
-+ * @bus: PCI bus to process
-+ *
-+ * Recursively invalidate PCSC cache for all devices on the given bus
-+ * and all subordinate buses.
-+ */
-+static void pcsc_reset_bus_recursively(struct pci_bus *bus)
++static inline void pcsc_count_cache_hit(void)
 +{
-+	struct pci_dev *dev;
++	pcsc_stats.cache_hits++;
++	pcsc_stats.total_reads++;
++}
 +
-+	if (!bus)
-+		return;
++static inline void pcsc_count_cache_miss(void)
++{
++	pcsc_stats.cache_misses++;
++	pcsc_stats.total_reads++;
++	pcsc_stats.hw_reads++;
++}
 +
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		pcsc_device_reset(dev);
-+		/* If this device is a bridge, recursively process its subordinate bus */
-+		if (dev->subordinate)
-+			pcsc_reset_bus_recursively(dev->subordinate);
-+	}
++static inline void pcsc_count_uncachable_read(void)
++{
++	pcsc_stats.uncachable_reads++;
++	pcsc_stats.total_reads++;
++	pcsc_stats.hw_reads++;
++}
++
++static inline void pcsc_count_write(void)
++{
++	pcsc_stats.writes++;
++}
++
++static inline void pcsc_count_cache_invalidation(void)
++{
++	pcsc_stats.cache_invalidations++;
++}
++
++static inline void pcsc_count_device_reset(void)
++{
++	pcsc_stats.device_resets++;
++}
++#else
++static inline void pcsc_count_cache_hit(void)
++{
++}
++static inline void pcsc_count_cache_miss(void)
++{
++}
++static inline void pcsc_count_uncachable_read(void)
++{
++}
++static inline void pcsc_count_write(void)
++{
++}
++static inline void pcsc_count_cache_invalidation(void)
++{
++}
++static inline void pcsc_count_device_reset(void)
++{
 +}
 +#endif
 +
- void pci_reset_secondary_bus(struct pci_dev *dev)
+ inline bool pcsc_is_initialised(void)
  {
- 	u16 ctrl;
-@@ -4920,6 +4968,10 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+ 	return pcsc_initialised && pcsc_enabled;
+@@ -727,6 +802,10 @@ static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
+ 	u32 word_cached = 0;
+ 	u8 byte_val;
+ 	int rc, i;
++#ifdef CONFIG_PCSC_STATS
++	ktime_t start_time;
++	u64 duration;
++#endif
  
- 	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
- 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+ 	if (WARN_ON(!dev || !bus || !word))
+ 		return -EINVAL;
+@@ -734,7 +813,6 @@ static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
+ 	if (WARN_ON(size != 1 && size != 2 && size != 4))
+ 		return -EINVAL;
+ 
+-	/* Check bounds */
+ 	if (where + size > PCSC_CFG_SPC_SIZE)
+ 		return -EINVAL;
+ 
+@@ -746,8 +824,17 @@ static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
+ 			pcsc_get_byte(dev, where + i, &byte_val);
+ 			word_cached |= ((u32)byte_val << (i * 8));
+ 		}
++		pcsc_count_cache_hit();
+ 	} else {
++#ifdef CONFIG_PCSC_STATS
++		start_time = ktime_get();
++#endif
+ 		rc = pcsc_hw_config_read(bus, devfn, where, size, &word_cached);
++#ifdef CONFIG_PCSC_STATS
++		duration = ktime_to_ns(ktime_sub(ktime_get(), start_time));
++		pcsc_stats.hw_access_time_due_to_misses += duration;
++		pcsc_stats.total_hw_access_time += duration;
++#endif
+ 		if (rc) {
+ 			pci_err(dev,
+ 				"%s: Failed to read CFG Space where=%d size=%d",
+@@ -762,6 +849,7 @@ static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
+ 			byte_val = (word_cached >> (i * 8)) & 0xFF;
+ 			pcsc_update_byte(dev, where + i, byte_val);
+ 		}
++		pcsc_count_cache_miss();
+ 	}
+ 
+ 	*word = word_cached;
+@@ -773,6 +861,17 @@ int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+ {
+ 	int rc;
+ 	struct pci_dev *dev;
++#ifdef CONFIG_PCSC_STATS
++	ktime_t hw_start_time;
++	u64 hw_duration;
++#endif
 +
-+#ifdef CONFIG_PCSC
-+	pcsc_reset_bus_recursively(dev->subordinate);
++#ifdef CONFIG_PCSC_STATS
++	u64 duration;
++	ktime_t start_time;
++
++	start_time = ktime_get();
 +#endif
+ 
+ 	if (unlikely(!pcsc_is_initialised()))
+ 		goto read_from_dev;
+@@ -790,6 +889,10 @@ int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+ 	    pcsc_is_access_cacheable(dev, where, size)) {
+ 		rc = pcsc_get_and_insert_multiple(dev, bus, devfn, where, val,
+ 						  size);
++#ifdef CONFIG_PCSC_STATS
++		duration = ktime_to_ns(ktime_sub(ktime_get(), start_time));
++		pcsc_stats.total_cache_access_time += duration;
++#endif
+ 		if (likely(!rc)) {
+ 			pci_dev_put(dev);
+ 			return 0;
+@@ -797,11 +900,23 @@ int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+ 		/* if reading from the cache failed continue and try reading
+ 		 * from the actual device
+ 		 */
++	} else {
++		if (dev->hdr_type == PCI_HEADER_TYPE_NORMAL)
++			pcsc_count_uncachable_read();
+ 	}
+ read_from_dev:
++#ifdef CONFIG_PCSC_STATS
++	hw_start_time = ktime_get();
++#endif
+ 	if (dev)
+ 		pci_dev_put(dev);
+-	return pcsc_hw_config_read(bus, devfn, where, size, val);
++	rc = pcsc_hw_config_read(bus, devfn, where, size, val);
++#ifdef CONFIG_PCSC_STATS
++	hw_duration = ktime_to_ns(ktime_sub(ktime_get(), hw_start_time));
++	/* Add timing for uncacheable reads */
++	pcsc_stats.total_hw_access_time += hw_duration;
++#endif
++	return rc;
  }
+ EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
  
- void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
-@@ -5542,6 +5594,9 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
+@@ -810,6 +925,11 @@ int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+ {
+ 	int i;
+ 	struct pci_dev *dev;
++	int rc;
++#ifdef CONFIG_PCSC_STATS
++	ktime_t hw_start_time;
++	u64 hw_duration;
++#endif
  
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		pci_dev_restore(dev);
-+#ifdef CONFIG_PCSC
-+		pcsc_device_reset(dev);
+ 	if (unlikely(!pcsc_is_initialised()))
+ 		goto write_to_dev;
+@@ -828,12 +948,22 @@ int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+ 		if (pcsc_is_access_cacheable(dev, where, size)) {
+ 			for (i = 0; i < size; i++)
+ 				pcsc_set_cached(dev, where + i, false);
++			pcsc_count_cache_invalidation();
+ 		}
+ 	}
+ write_to_dev:
++	pcsc_count_write();
+ 	if (dev)
+ 		pci_dev_put(dev);
+-	return pcsc_hw_config_write(bus, devfn, where, size, val);
++#ifdef CONFIG_PCSC_STATS
++	hw_start_time = ktime_get();
 +#endif
- 		if (dev->subordinate) {
- 			pci_bridge_wait_for_secondary_bus(dev, "bus reset");
- 			pci_bus_restore_locked(dev->subordinate);
-@@ -5579,6 +5634,9 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
- 		pci_dev_restore(dev);
-+#ifdef CONFIG_PCSC
-+		pcsc_device_reset(dev);
++	rc = pcsc_hw_config_write(bus, devfn, where, size, val);
++#ifdef CONFIG_PCSC_STATS
++	hw_duration = ktime_to_ns(ktime_sub(ktime_get(), hw_start_time));
++	pcsc_stats.total_hw_access_time += hw_duration;
 +#endif
- 		if (dev->subordinate) {
- 			pci_bridge_wait_for_secondary_bus(dev, "slot reset");
- 			pci_bus_restore_locked(dev->subordinate);
-diff --git a/drivers/pci/pcsc.c b/drivers/pci/pcsc.c
-index 44d842733230..5412dea23446 100644
---- a/drivers/pci/pcsc.c
-+++ b/drivers/pci/pcsc.c
-@@ -837,6 +837,23 @@ int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
++	return rc;
  }
  EXPORT_SYMBOL_GPL(pcsc_cached_config_write);
  
-+int pcsc_device_reset(struct pci_dev *dev)
+@@ -851,6 +981,7 @@ int pcsc_device_reset(struct pci_dev *dev)
+ 	 * some of the HWInt values that are going to remain constant after a reset.
+ 	 */
+ 	bitmap_zero(dev->pcsc->cached_bitmask, PCSC_CFG_SPC_SIZE);
++	pcsc_count_device_reset();
+ 	return 0;
+ }
+ 
+@@ -948,8 +1079,50 @@ static ssize_t pcsc_enabled_store(struct kobject *kobj,
+ static struct kobj_attribute pcsc_enabled_attribute =
+ 	__ATTR(enabled, 0644, pcsc_enabled_show, pcsc_enabled_store);
+ 
++#ifdef CONFIG_PCSC_STATS
++static ssize_t pcsc_stats_show(struct kobject *kobj,
++			       struct kobj_attribute *attr, char *buf)
 +{
-+	if (unlikely((!dev)))
-+		return -EINVAL;
-+
-+	if (unlikely(!pcsc_is_initialised()))
-+		return 0;
-+
-+	/* The layout of the CFG Space is not going to change after a device
-+	 * reset, whether the reset is FLR or conventional. Only the values
-+	 * are going to change. We could further optimise the cache to maintain
-+	 * some of the HWInt values that are going to remain constant after a reset.
-+	 */
-+	bitmap_zero(dev->pcsc->cached_bitmask, PCSC_CFG_SPC_SIZE);
-+	return 0;
++	return sysfs_emit(
++		buf,
++		"Cache Hits: %lu\n"
++		"Cache Misses: %lu\n"
++		"Uncachable Reads: %lu\n"
++		"Writes: %lu\n"
++		"Cache Invalidations: %lu\n"
++		"Device Resets: %lu\n"
++		"Total Reads: %lu\n"
++		"Hardware Reads: %lu\n"
++		"Hit Rate: %lu%%\n"
++		"Total Cache Access Time: %llu us\n"
++		"Cache Access Time (without HW reads due to Misses): %llu us\n"
++		"HW Access Time due to misses: %llu us\n"
++		"Total Hardware Access Time: %llu us\n",
++		pcsc_stats.cache_hits, pcsc_stats.cache_misses,
++		pcsc_stats.uncachable_reads, pcsc_stats.writes,
++		pcsc_stats.cache_invalidations, pcsc_stats.device_resets,
++		pcsc_stats.total_reads,
++		pcsc_stats.hw_reads,
++		pcsc_stats.total_reads ?
++			      (pcsc_stats.cache_hits * 100) / pcsc_stats.total_reads :
++			      0,
++		pcsc_stats.total_cache_access_time / 1000,
++		(pcsc_stats.total_cache_access_time -
++		 pcsc_stats.hw_access_time_due_to_misses) /
++			1000,
++		pcsc_stats.hw_access_time_due_to_misses / 1000,
++		pcsc_stats.total_hw_access_time / 1000);
 +}
 +
- static struct pci_ops pcsc_ops = {
- 	.add_bus = pcsc_add_bus,
- 	.remove_bus = pcsc_remove_bus,
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 6eb3d20386e9..97555fbba938 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4239,8 +4239,13 @@ int pci_dev_specific_reset(struct pci_dev *dev, bool probe)
- 		if ((i->vendor == dev->vendor ||
- 		     i->vendor == (u16)PCI_ANY_ID) &&
- 		    (i->device == dev->device ||
--		     i->device == (u16)PCI_ANY_ID))
-+		     i->device == (u16)PCI_ANY_ID)) {
-+#ifdef CONFIG_PCSC
-+			if (!probe)
-+				pcsc_device_reset(dev);
++static struct kobj_attribute pcsc_stats_attribute =
++	__ATTR(stats, 0444, pcsc_stats_show, NULL);
 +#endif
- 			return i->reset(dev, probe);
-+		}
- 	}
- 
- 	return -ENOTTY;
-diff --git a/include/linux/pcsc.h b/include/linux/pcsc.h
-index 516d73931608..85471273c0a9 100644
---- a/include/linux/pcsc.h
-+++ b/include/linux/pcsc.h
-@@ -121,4 +121,15 @@ int pcsc_remove_device(struct pci_dev *dev);
-  */
- bool pcsc_is_initialised(void);
- 
-+/**
-+ * pcsc_device_reset - Handle PCI device reset
-+ * @dev: PCI device being reset
-+ *
-+ * This function should be called when a PCI device is being reset
-+ * to ensure the cache is properly invalidated.
-+ *
-+ * Returns: 0 on success, negative error code on failure
-+ */
-+int pcsc_device_reset(struct pci_dev *dev);
 +
- #endif /* _LINUX_PCSC_H */
+ static struct attribute *pcsc_attrs[] = {
+ 	&pcsc_enabled_attribute.attr,
++#ifdef CONFIG_PCSC_STATS
++	&pcsc_stats_attribute.attr,
++#endif
+ 	NULL,
+ };
+ 
+@@ -995,6 +1168,10 @@ static int __init pcsc_init(void)
+ 	/* Try to create sysfs entry, but don't fail if PCI bus isn't ready yet */
+ 	pcsc_create_sysfs();
+ 
++#ifdef CONFIG_PCSC_STATS
++	memset(&pcsc_stats, 0, sizeof(pcsc_stats));
++#endif
++
+ 	pcsc_initialised = true;
+ 	pr_info("initialised (enabled=%d)\n", pcsc_enabled);
+ 
 -- 
 2.47.3
 
