@@ -1,174 +1,182 @@
-Return-Path: <linux-pci+bounces-37559-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37560-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0427BB7A5A
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 19:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C40EBB7B3C
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 19:22:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4528F19E5C22
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 17:05:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 985B71B20820
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 17:22:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094F22D8367;
-	Fri,  3 Oct 2025 17:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3ED2D9EE2;
+	Fri,  3 Oct 2025 17:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NjkSElPJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th30eFDg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A3F2D7DFC
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 17:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5AE2D0628;
+	Fri,  3 Oct 2025 17:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759511085; cv=none; b=cENkRx9PaepeXOdQbN9vwrUajCcIes9hziaymab/skcBKYWsG7Z9V6msmitT+uXcDNMk7wOzIMrkrpLmx+Fe5xR6/Rq24McUHcjKyp+MHGl3jHqT38CP/pv6LQ6P+njI2d1Tu4NYuNEbR01mja2yIZPnNP6ISOw7ouGuNuZBB3k=
+	t=1759512118; cv=none; b=J1flTy+edtpedrcC7W1sgNH8L4hawjLgQDSkB/Ia/tnustoXEhXUDJF3jSqAxFg9C9UleSM1PmdwoZ7tTx5V+WoDTiAwdj5XjA/XNVoaG9F21KEsCRTpnleFtCoOXSXantQu7GYBK6BRiYMIo/jNumY3TNIOPVrfF3DdojbcH/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759511085; c=relaxed/simple;
-	bh=0P4l5HE9JICpSWU5DgWz3pTjZ6YmStuMYlU7hTnIXF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bTsybNR8qKiQAdF6qz2vjQrOGjm8P4nOtWTJBtJYbwjI4tc+xrjo7ayQbMlZp8t8iUauzwRgzR+mUmlyzfKV47Mg+G4UQEq7fBP4OlRG6j3+If8unxX88dh8rHOxfcn7Ilp9pMlZ1KrxRbIVta978NiFcnIoYvOjWWpCHTZXuX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NjkSElPJ; arc=none smtp.client-ip=209.85.166.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-42e758963e4so14383595ab.2
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 10:04:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759511083; x=1760115883;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pVnrp7WE13kwvvN6B2l11O4oBl8ExmT/hll5Efsm98E=;
-        b=FU0cquaR68jurE3iZ6o57UwsGkuUEWyIP7B0j5wFQ3TZbe6XAqWG/ilzBQQQ0SuhvK
-         PR8uq3YahLXiBB628NTZGnBF2LolZWcw3r01J8uvh7zZ/jfd6nla7ZcfqROqfJOJl1Tz
-         +bvoutt5gpwq1+4Itwm3XaRUJ8vnX8hcFgJo4T58IWDiODSfj1NKh89qe1KDcNSPbYAS
-         PlJcNaT2QPxJCZnVX/JgpM8F4XeDYOc78WgqjnNCBQVn6D6HMF5LMD44a5sND+JeSewy
-         HRjTNcVtS6lxkNb/zKZFncDKSeoEerlH7WRYHnpYDEINCPQMeDSAGCPdzER+uLVYIoYh
-         IuCg==
-X-Gm-Message-State: AOJu0Yx1I/mAxPf1pRHBmQGTfK9lv/0G5BYTQaWh83khD5AweL8Y5KbL
-	mn57XtbXfe3SVgk2k3OyfktvXaEpVUlMYr46ieb3E6kb+o4Qo5Mlr80gbVl8GVAdPo9geiG1KsU
-	BzskZ0BqaQhCvcrp4X0jAwUTbJrkUJ3/LdxRgir4rUhCiHN1ondOVBceHwhKLqz0V5GY4NIOxdd
-	0Oe+/4/dQMx0mNfK1lojwbQ2M1NJl7DDyIAcp4/nHqYBnDg6GOjrat0TUw6JzE7TyAcz0y5N9K1
-	/fhKgh4EkJSTUR0
-X-Gm-Gg: ASbGncsxNGdWD348Z0BVHD4sSd07MR3yWjI/1RmPfikLw6tQKVOhn7N1WL1dNX7vFwB
-	Pkrz6aeH63u9xf3EGK5x5xWApM3MwUpf0eraiCjaxwSVGPdpmow2ZH6zfTQ8Ka+wQDOggXxXcH6
-	tiy8E+K+PiGkq0zPsy++V1r4Y1yCDfgyPaeK6bLGgE8OjdctnPi+pRpzxGQRFNMCRqZfSTgXNiL
-	/hUUC9OWn5/9Xa/DoN4mIDYqlf8CFG1c7giI010yhqUHbrWYjrpLVsZe1cA4x1a3TueCIQ+yst3
-	auakaiVc/OBxhiR1yc1RM9d3udCMYgvbptyGBR3nYS536X+1fSdyiwMBo2FRUAP6DJzZPv+vBWs
-	XLkZHkFJ6C/qN/by+Ra0q1xaAnHOOBh/RfU9Zp2zp9x1175oX02XKArbS4tAbt2KfwuYp0hX1ze
-	hb8ZpU4P0o
-X-Google-Smtp-Source: AGHT+IEmrbYmM283aDdLTvSPiun1uA3nSLqx3Ls03leTT6bhVAX3cKXT+hRBIQwHXrDVOeyPa+qz3IfuZ5wF
-X-Received: by 2002:a05:6e02:3e8b:b0:42d:8afd:4444 with SMTP id e9e14a558f8ab-42e7adaaa0emr46855145ab.26.1759511082847;
-        Fri, 03 Oct 2025 10:04:42 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-100.dlp.protect.broadcom.com. [144.49.247.100])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-57b5eb026easm403433173.19.2025.10.03.10.04.42
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Oct 2025 10:04:42 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-871614ad3efso487563685a.0
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 10:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1759511081; x=1760115881; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pVnrp7WE13kwvvN6B2l11O4oBl8ExmT/hll5Efsm98E=;
-        b=NjkSElPJrg6Cery3jkYLti++z60ATRSNwnOaRSblHPoZ4aVXl/gr2yKt5N2HFi3Tjm
-         BuuItWeC+KD0Ux7UcRBgKIpnSkLTCTeHsiV1LJM04kLxM2uKHEq4yI34W22N0NTVS6Ib
-         8fpqwjqmFGOo9sDIeBE00xVR4CwQfDxcPQWCE=
-X-Received: by 2002:a05:620a:414d:b0:84d:26f0:613 with SMTP id af79cd13be357-87a37cb2c5dmr525099985a.33.1759511081397;
-        Fri, 03 Oct 2025 10:04:41 -0700 (PDT)
-X-Received: by 2002:a05:620a:414d:b0:84d:26f0:613 with SMTP id af79cd13be357-87a37cb2c5dmr525092085a.33.1759511080652;
-        Fri, 03 Oct 2025 10:04:40 -0700 (PDT)
-Received: from stband-bld-1.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4e55a34b6bfsm46472271cf.7.2025.10.03.10.04.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Oct 2025 10:04:39 -0700 (PDT)
-From: Jim Quinlan <james.quinlan@broadcom.com>
-To: linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	jim2101024@gmail.com,
-	james.quinlan@broadcom.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] PCI: brcmstb: Fix use of incorrect constant
-Date: Fri,  3 Oct 2025 13:04:36 -0400
-Message-Id: <20251003170436.1446030-1-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1759512118; c=relaxed/simple;
+	bh=gJyCL8uxswVnUfA7Rwci8BgxqWn7pX8aafHn3LwvUy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RFke0WYugHNX9tWa2M+eWon/KBt2WySX2H18ONFIQfFhlRjah8Ri30BXsO6OfacWa9f7CDlUePFkwLoBR66YFPZCyhKgaB9yHh3tb+MTnWEfeYoC+FEGUgS+nUcKRGA5UnW4cIpm6WdT7s4VUYPibe8yZgwL6e6XnWE/MMpVzPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Th30eFDg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CAA7C4CEF5;
+	Fri,  3 Oct 2025 17:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759512118;
+	bh=gJyCL8uxswVnUfA7Rwci8BgxqWn7pX8aafHn3LwvUy4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Th30eFDgAR9AWh5/pYf4m8ToHxrvKDRYPxME7aMWPS78o9w6gaabq4RznHz9NaAnS
+	 enA90sfpO8CF4nZDNrI2p9vx6Lxa0w8WyWiyKWt9qPLhqwDRlKue3a2Ztc4IuizavR
+	 3grRXBqmsYav+iOJPUZMm/yL6sxnnD4sT7ULhx1jO4XpwMMVwJp0Ry9Ao6mIhIMp2b
+	 z1fVIFXRsKi03U4uoop5AHsw6kYxWdbiFeHGugBOH/VIvdWIuMiy3L/tX77YCFWJR/
+	 Hymy2LuptIJQ3z3E6sgLQKSyEmAhn8sypAVkhCU64Wav5pqtBza9OWr/uET8lAK97p
+	 cGMcNG+TdjDkQ==
+Date: Fri, 3 Oct 2025 12:21:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Hongxing Zhu <hongxing.zhu@nxp.com>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] PCI: imx6: Add a method to handle CLKREQ#
+ override active low
+Message-ID: <20251003172156.GA357448@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNcXxC7cJ6yha+ff@lizhi-Precision-Tower-5810>
 
-The driver was using the PCIE_LINK_STATE_L1 constant as a field mask for
-setting the private PCI_EXP_LNKCAP register, but this constant is
-Linux-created and has nothing to do with the PCIe spec.  Serendipitously,
-the value of this constant was correct for its usage until after 6.1, when
-its value changed from BIT(1) to BIT(2);
+On Fri, Sep 26, 2025 at 06:46:28PM -0400, Frank Li wrote:
+> On Fri, Sep 26, 2025 at 03:25:21PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Sep 26, 2025 at 03:08:30AM +0000, Hongxing Zhu wrote:
+> > > > -----Original Message-----
+> > > > From: Bjorn Helgaas <helgaas@kernel.org>
+> >
+> > > > On Fri, Sep 26, 2025 at 02:19:37AM +0000, Hongxing Zhu wrote:
+> > > > > > -----Original Message-----
+> > > > > > From: Bjorn Helgaas <helgaas@kernel.org> On Tue, Sep 23, 2025 at
+> > > > > > 03:39:13PM +0800, Richard Zhu wrote:
+> > > > > > > The CLKREQ# is an open drain, active low signal that is
+> > > > > > > driven low by the card to request reference clock. It's an
+> > > > > > > optional signal added in PCIe CEM r4.0, sec 2. Thus, this
+> > > > > > > signal wouldn't be driven low if it's reserved.
+> > > > > > >
+> > > > > > > Since the reference clock controlled by CLKREQ# may be
+> > > > > > > required by i.MX PCIe host too. To make sure this clock is
+> > > > > > > ready even when the CLKREQ# isn't driven low by the card(e.x
+> > > > > > > the scenario described above), force CLKREQ# override active
+> > > > > > > low for i.MX PCIe host during initialization.
+> > > > > > >
+> > > > > > > The CLKREQ# override can be cleared safely when
+> > > > > > > supports-clkreq is present and PCIe link is up later.
+> > > > > > > Because the CLKREQ# would be driven low by the card at this
+> > > > > > > time.
+> > > > > >
+> > > > > > What happens if we clear the CLKREQ# override (so the host
+> > > > > > doesn't assert it), and the link is up but the card never
+> > > > > > asserts CLKREQ# (since it's an optional signal)?
+> > > > > >
+> > > > > > Does the i.MX host still work?
+> > > > >
+> > > > > The CLKREQ# override active low only be cleared when link is up
+> > > > > and supports-clkreq is present. In the other words, there is a
+> > > > > remote endpoint  device, and the CLKREQ# would be driven active
+> > > > > low by this endpoint device.
+> > > >
+> > > > Assume an endpoint designed to CEM r2.0.  CLKREQ# doesn't exist in
+> > > > CEM r2.0, so even if the endpoint is present and the link is up,
+> > > > the endpoint will not assert CLKREQ#.
+> > > >
+> > > > Will the i.MX host still work?
+> >
+> > > Yes, i.MX host still work.
+> > > If the endpoint designed to CEM r2.0, and CLKREQ# is reserved. The
+> > > property suppots-clkreq wouldn't present in this scenario. Thus, the
+> > > CLKREQ# override active low set by host driver wouldn't be cleared
+> > > later, although the link is up and an endpoint is present.
+> >
+> > Do you mean 'supports-clkreq' describes the *endpoint*, and you need
+> > to change the devicetree depending on which endpoint is connected?
+> 
+> It is NOT descript *endpoint*. supports-clkreq descript the board design,
+> which connect CLKREQ# signal. Because standard slot's CLKREQ# (PIN12) is
+> reserved in beggin, so some old PCIe card have not pull down this signal as
+> latest spec requirement.
+> 
+> PCIe Standard slot with INTEL E2000 1G ethernet card, which is producted
+> around 10 year ago, PIN12 is reserved.
+> 
+> So we don't set supports-clkreq for stardard PCI slot, only set it for
+> M.2 slot. So stardard PCI slot in imx95 evk can support most cards. We have
+> not vendor card lists, which already connect/not connect CLKREQ#, so we
+> have to fallback to disconnect CLKREQ# situation by clarm our evk board
+> have not connect CLKREQ# to make all card works, eventhough it lost power
+> save feature. work is more impantant then power saving.
+> 
+> > The schema says 'supports-clkreq' tells us whether CLKREQ# signal
+> > routing exists, not whether the downstream device actually supports
+> > CLKREQ#:
+> >
+> >   https://github.com/devicetree-org/dt-schema/blob/4b28bc79fdc552f3e0b870ef1362bb711925f4f3/dtschema/schemas/pci/pci-bus-common.yaml#L155
+> >
+> > I don't see 'supports-clkreq' in any devicetree related to imx6, so
+> > I'm not sure this patch is needed yet.  Does it fix an existing
+> > problem?
+> 
+> The patch adding 'supports-clkreq' in dts is on going. No funtional broken
+> because it just impact l1ss power saving features.
+> 
+> > If it enables some future functionality, maybe we should defer it
+> > until we're actually ready to enable that functionality?
+> 
+> Actually, it fixes i.MX95 19x19 EVK second slot problem. At least
+> INTEL E2000 1G ethernet card can't work at i.MX95 EVK boards at main
+> stream kernel without this patch.
 
-In addition, the driver was assuming that the HW is ASPM L1 capable when it
-should not be telling the HW what it is capable of.
+I deferred these two patches so we have time to tidy these up:
 
-Fixes: caab002d5069 ("PCI: brcmstb: Disable L0s component of ASPM if requested")
-Reported-by: Bjorn Helgaas <bhelgaas@google.com>
+  - Coordinate with adding 'supports-clkreq' in devicetrees.
 
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+  - Fix the imx95 refclk enable that was missed in the v5 series.
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 9afbd02ded35..7e9b2f6a604a 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -48,7 +48,6 @@
- 
- #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
- #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
--#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
- 
- #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
- #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
-@@ -1075,7 +1074,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	void __iomem *base = pcie->base;
- 	struct pci_host_bridge *bridge;
- 	struct resource_entry *entry;
--	u32 tmp, burst, aspm_support, num_lanes, num_lanes_cap;
-+	u32 tmp, burst, num_lanes, num_lanes_cap;
- 	u8 num_out_wins = 0;
- 	int num_inbound_wins = 0;
- 	int memc, ret;
-@@ -1175,12 +1174,9 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 
- 
- 	/* Don't advertise L0s capability if 'aspm-no-l0s' */
--	aspm_support = PCIE_LINK_STATE_L1;
--	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
--		aspm_support |= PCIE_LINK_STATE_L0S;
- 	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
--	u32p_replace_bits(&tmp, aspm_support,
--		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-+	if (of_property_read_bool(pcie->np, "aspm-no-l0s"))
-+		tmp &= ~PCI_EXP_LNKCAP_ASPM_L0S;
- 	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
- 
- 	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
+  - Consider making imx95 refclk enable parallel to the other
+    versions, e.g., by using .enable_ref_clk() instead of doing it in
+    imx95_pcie_init_phy().
 
-base-commit: 4ff71af020ae59ae2d83b174646fc2ad9fcd4dc4
--- 
-2.34.1
+  - Describe the "i.MX95 19x19 EVK second slot problem" in the commit
+    log.  Possibly split that into a second patch if it can be
+    separated from the CLKREQ# override.  It sounds like this part
+    doesn't depend on 'supports-clkreq' in a devicetree?
 
+Maybe we can also figure out how to explain why CLKREQ# override is an
+issue for imx6 but not for other DWC-based drivers.
+
+Bjorn
 
