@@ -1,141 +1,128 @@
-Return-Path: <linux-pci+bounces-37557-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37558-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE5A0BB7962
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3220CBB7A0D
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:57:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C9C748655B
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:42:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E43194880ED
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:57:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A56AC2C15B7;
-	Fri,  3 Oct 2025 16:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB342D47F5;
+	Fri,  3 Oct 2025 16:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s1K9103b"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyIpRZ10"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF041DF25C
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C282D46D6
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759509751; cv=none; b=IDECCIxtdHpkkyVCPdRfZD1sHeKtceXd+MZenYulOobMSkhQ7Ze2b3Y44NCAvhivcX65phErTqTNOqjUGbeijG9OD8wEKYvUSa8AeFwnwroNhHorvGiDdv/XVvlxQ/ecGsTfiqwACI/i2ZYp5ov3yyppn3k3f7/KP5/NP46SH+I=
+	t=1759510635; cv=none; b=MTk2VkLUsv81PBGrmV3CHAO7rudjigXV20LMe0DdtN9WX/znNzi6iTwoT/N9hwNF5tTLyIe3o2TPxmMZf8dqt1IX4s4Q2dwkuRBW5gOcY4vXpPKT+12qUre6Ax8rzhzg/VKqvtFL6bP8wuqtVVhlRB4CoOemDUgUWrUdrhdgq0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759509751; c=relaxed/simple;
-	bh=tT4rIjRvSYCPH1NNHSlV3mpq6XJdV6RRM306+mUs0Lw=;
+	s=arc-20240116; t=1759510635; c=relaxed/simple;
+	bh=fhtGb8MKf0acPfP7W+qYvuGjDAQFV/6NeqY3BWv6/q8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tAgakHQD8OW0KZWPIqEFBx77iKdSNvd9xY6SK87rEUDzRSxlp+RQDglP4eQXI0usRPd3AwuUpQtvFekiRelVUgpdIMa+RaI4BWgMLVZupUIKg/cJHjVMhbYJVSl2nEEf0RoIWodjf/ub1EFvXhLLr8ndw8+LXGPi8LMLPFVVZ4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s1K9103b; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=nUqfm6CSaysKJyQokQuX+ncXAUu41TzBkQl5A61HMiIOigO+VhO77GWfADMEZ13mz32lZrS4HNi61knMeVVqCw52nMlFMOuMwpxUJgryCdzMW4167SSZJk/E5QB6V25GpPAwFRo8i+0E7DD4cZ5eao04aHqAao7Hg0oJ3FW2sMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WyIpRZ10; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-587bdad8919so133e87.0
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 09:42:29 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-36bf096b092so7140941fa.1
+        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 09:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759509748; x=1760114548; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759510632; x=1760115432; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tT4rIjRvSYCPH1NNHSlV3mpq6XJdV6RRM306+mUs0Lw=;
-        b=s1K9103bTXwFzGA5D4M2+gkP8jFXCU7oqI4NO0/LgobXbnvZHs7G6voEgOQ12nn7Ws
-         qfb3M7VV9ZM+64yJkJatLOzNnMnliTlWC6iwyGpjqrVHeMhTxa+wJEk0zJlgE05j2URB
-         qsKVdXALewru0BAuuGcNe4VCFCMHpNxVpnWgtxw+IvJP0KUacnDQR4L1iei0R9Uq0x9P
-         DYVaGJsmFvlFVt1i6oqttQPjF/OPxR5uWOa8NxB0coZ3eDODd+nEIyoUST8IZwU29rwB
-         7hkt3U3/u79xLHhTIfgskU0BdHVu7jUmpKGqWeLsZ2pIwsP/JrewtDfJjwLw4VnbpA7g
-         bhCw==
+        bh=fhtGb8MKf0acPfP7W+qYvuGjDAQFV/6NeqY3BWv6/q8=;
+        b=WyIpRZ10LdSclUQ8BdebSdYqLgOQ3eTHafYx0s/J+Kt7ysDDbj9dtN1qOuye1XNGdH
+         UCdpg7qDKeHmV+LbkcztEttYXPUrckY3DKoAApTBtgTlaFD1zI7tXMlj2/SWJDJKr7oo
+         Yf4tgc5MSJ2aakoZqx83xODWvAzWpkNaPp5uxTSSN0DxWFuz4IbROtU3cqcyB8t2+hdU
+         ZbuYD/YhP832Jp3e5+bKkHQ1eiZWEGGK32d+BjB5a0FkQFN6PFoP8X52riru3mdvG6XH
+         hMMtaMr8WFYH4PyGcu+sPCcM/Xx6hJ1kjAhO00Nb2q9VM2I5oknDlnkzJETofbciIuB0
+         cM3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759509748; x=1760114548;
+        d=1e100.net; s=20230601; t=1759510632; x=1760115432;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tT4rIjRvSYCPH1NNHSlV3mpq6XJdV6RRM306+mUs0Lw=;
-        b=UkW9XSxSPaYWjWcqFZ3dYgy3yi8uVGXp6aO6h23MyeaRIdnJjGVpTTbDmRkfTJczVU
-         d6H+8Ig3TfdYR5hJnLdrZ/+IhfXFoBGB8KLf2l99vbF1pYVwWQiUOlpnX/5wAIi43zaw
-         vLO2DDGLTAkCd/4uDB8FNC/UZ/3BGlZ2+XbcyQq7W912BT6BXhL26yktOjk2wfIq+V/9
-         ZJzK/dD7QYp9v005WkH9xgmzSFPF+V8vpBge1KYRK8PR7piQcjiGaUuJUCnG1Pk4NiDL
-         GvNtdYFbVyUD4dUzQX5mEEq6d8myXyrvvTEtDJm3ouCodrAynayV16ANyO3ACZpR8ufo
-         XYSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWy4gagHmgWg00QT04j8pz7W+ptrJcTb9CiZoLtYCIpIg1qreBh5QEyM5IsBeIe/40GUPFFhUaIl7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHc6NxuYpZSJHO8NkziBC9Y9lQWQB2pwFaeBEGSAQDnKulmNN7
-	QBx56yWGfVw/TLC1SpEHmJfwznNAoSM9UA/3c+ilffPkPJ0OYrZ4VozpZc9CSpERTeH5H/jki78
-	y0QQmurtDJ4x7GoyGrAZQSE2nxxH9ay26gRPyUxmY
-X-Gm-Gg: ASbGncteUJyxRFJr2P96703YrfQXITY7gTXo89ZEvLOmqSV8/HXZQxnz4goHTDzXntG
-	H5Rg61XHzGmpQLnNQIOVqYjynxoPfZjE3/RJvm24oOBAMkVk4P5XkVAfN+m+JKVIKQtk/s3ySrx
-	1JyCONOjnZWr/bB0eILySJrLLJq5Quv2q+joTem6B5S013TeqVBtgqrLHBZCWmUl+wQQghjMibu
-	vqhLA3oHavKuqqVm0xIK8pUUHzNnD9M+y5w4w==
-X-Google-Smtp-Source: AGHT+IFqcHHNLXDZwKQTjsXX4M2eYXbNbIBvJRQGHDGc0LD+gyEovYNCEF4ZnQT0KPGBrO6LNIQACl17PxjlNaBzO0E=
-X-Received: by 2002:ac2:4191:0:b0:579:78f4:9c37 with SMTP id
- 2adb3069b0e04-58cd9097003mr243088e87.7.1759509747606; Fri, 03 Oct 2025
- 09:42:27 -0700 (PDT)
+        bh=fhtGb8MKf0acPfP7W+qYvuGjDAQFV/6NeqY3BWv6/q8=;
+        b=f4uOqr7X//KWBOKgZICpTNJxIhR11SocRzCYb/Bsvl2ezvivlOtqPVJa21t2yaVzCH
+         RyiJfmn3eK3VZYtzNmHIWKnLrSKKFKvtJoZ8+dudh/NDXV8BXgpXzcblS+9nah0fsebE
+         K2aOnSaFy5FCKO+NvA6VdGUlGZnjrtcuR5pEBt27roplJYmHZ4bCR6TlgEfFJoDEgq5I
+         dzUszwhk5BHKETwfzcC0xrbdzaPkjOkn7ij4mduhN8skSArNGDY1ymMegZkhCv9gCFiu
+         ztOjOxGTKhMPwJB6KbZzaOPsFpqR/ZWxSkQZ/ujYdiuXVb0CKiG9TmG2rz/UEsK72GLO
+         /efg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPWomsnqlinCb3Pe6B/FJYw2GZAk6gr317T00e90OyVqcPuID5GtCnxoCkwOrsmJtMwsz9LHioqls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxEi1d3P7koGBfoXuU/Wlh3QWra6ToDGPW2wweJxPkZRyvHzrk
+	4LNuYrKsZp7hyitUcZBF8dALJVQFZ7w16EJTfIJLFgpK3cAA1+0sBfaIzIGx4d0ykE2ul+uSpyV
+	C2erBrPZqgK54D8NvSsCi68BHGBJfTz3xcaFwyaIU
+X-Gm-Gg: ASbGncvgz0UUihvQMbhKHxDLA01jCpV9W2osiPYaWy7Jaz1k4VMiAi1cdz2CQNya/9y
+	REMpLEL2MxB/xjpeVSpEIBGgIWqXsdVOnJCX1xH9gmQkEud+3AzFp5c5nOqGGcJRRVenLwh49Qp
+	/65TuSAQYi6fp6P5Nl8xki9skAMbfTBBbaGyvzdaKIJPMXH3aoLZIrcecoxNR89nC7sNr7hEP48
+	HWV/GnhB41oWY9Lf7/FmMT/Odm6U5IaFeEpZCeRNsq0zIzrB604JSyH9EI=
+X-Google-Smtp-Source: AGHT+IHx4msmP8R5V9b/xox6XRZLBn0CUiuZpFE8vOZ7vDw17w2ogkYyO9PNCJUCLBBZcfaX3qrzD8wpS9Karp2Eb1U=
+X-Received: by 2002:a2e:bc0b:0:b0:368:2cf8:5121 with SMTP id
+ 38308e7fff4ca-374c37e9321mr11855241fa.27.1759510631679; Fri, 03 Oct 2025
+ 09:57:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-3-c494053c3c08@kernel.org> <20250929174831.GJ2695987@ziepe.ca>
- <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
+References: <20250929174831.GJ2695987@ziepe.ca> <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
  <20250930163837.GQ2695987@ziepe.ca> <aN7KUNGoHrFHzagu@google.com>
  <CACePvbX6GfThDnwLdOUsdQ_54eqF3Ff=4hrGhDJ0Ba00-Q1qBw@mail.gmail.com>
  <CALzav=cKoG4QLp6YtqMLc9S_qP6v9SpEt5XVOmJN8WVYLxRmRw@mail.gmail.com>
- <20251002232153.GK3195829@ziepe.ca> <CACePvbXdzx5rfS1qKkFYtL-yizQiht_evge-jWo0F2ruobgkZA@mail.gmail.com>
- <20251003120638.GM3195829@ziepe.ca> <CALzav=eGXp3uHxRytfsKQdrtAV8xg8teoAs9n_sggqdAp_Hznw@mail.gmail.com>
-In-Reply-To: <CALzav=eGXp3uHxRytfsKQdrtAV8xg8teoAs9n_sggqdAp_Hznw@mail.gmail.com>
-From: Vipin Sharma <vipinsh@google.com>
-Date: Fri, 3 Oct 2025 09:41:49 -0700
-X-Gm-Features: AS18NWAMnBsWWTpg4HgFgRyPlVOWpaiA-3tsEKIhlCcWxe4qMo14DNvQzaeShVI
-Message-ID: <CAHVum0caxqVdKfoXNLa92NFEBLwTbLCRgbH6y6kvnsWQPgcbwA@mail.gmail.com>
+ <20251002232153.GK3195829@ziepe.ca> <CALzav=cYBmn_t1w2jHicSbnX57whJYD9Cu84KJekL0n2gZxfmw@mail.gmail.com>
+ <20251003120358.GL3195829@ziepe.ca> <CALzav=fci3jPft+SXJ6tPG3=jRX7jjJPwnP=zWAb2Sui++vKPw@mail.gmail.com>
+ <20251003161642.GQ3195829@ziepe.ca> <CA+CK2bBLuGAMwVgj87p_H12P9yy6J99WwX8vwZbFfY0RTYsXDA@mail.gmail.com>
+In-Reply-To: <CA+CK2bBLuGAMwVgj87p_H12P9yy6J99WwX8vwZbFfY0RTYsXDA@mail.gmail.com>
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 3 Oct 2025 09:56:44 -0700
+X-Gm-Features: AS18NWCIcQQViHOaxbODIYnXboXPFcH0JzxYcP4VPxMerxQhIMypGFFdK4P9F68
+Message-ID: <CALzav=c9wJvN2Hy+XNjZfmKFEPomTyMBVfCXQ4601_CtN7SXfw@mail.gmail.com>
 Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
  callbacks to driver
-To: David Matlack <dmatlack@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>, Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
 	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
 	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Leon Romanovsky <leon@kernel.org>
+	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>, Brian Vazquez <brianvv@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 3, 2025 at 9:27=E2=80=AFAM David Matlack <dmatlack@google.com> =
-wrote:
+On Fri, Oct 3, 2025 at 9:28=E2=80=AFAM Pasha Tatashin <pasha.tatashin@solee=
+n.com> wrote:
 >
-> On Fri, Oct 3, 2025 at 5:06=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wro=
-te:
+> On Fri, Oct 3, 2025 at 12:16=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wr=
+ote:
 > >
-> > On Thu, Oct 02, 2025 at 10:24:59PM -0700, Chris Li wrote:
+> > On Fri, Oct 03, 2025 at 09:03:36AM -0700, David Matlack wrote:
+> > > > Shutting down enough of the PF kernel driver to safely kexec is alm=
+ost
+> > > > the same as unbinding it completely.
+> > >
+> > > I think it's totally fair to tell us to replace pci-pf-stub with
+> > > vfio-pci. That gets rid of one PF driver.
+> > >
+> > > idpf cannot be easily replaced with vfio-pci, since the PF is also
+> > > used for host networking.
 > >
-> > > As David pointed out in the other email, the PCI also supports other
-> > > non vfio PCI devices which do not have the FD and FD related sessions=
-.
-> > > That is the original intent for the LUO PCI subsystem.
-> >
-> > This doesn't make sense. We don't know how to solve this problem yet,
-> > but I'm pretty confident we will need to inject a FD and session into
-> > these drivers too.
+> > Run host networking on a VF instead?
 >
-> Google's LUO PCI subsystem (i.e. this series) predated a lot of the
-> discussion about FD preservation and needed to support the legacy vfio
-> container/group model. Outside of vfio-pci, the only other drivers
-> that participate are the PF drivers (pci-pf-stub and idpf), but they
-> just register empty callbacks.
->
-> So from an upstream perspective we don't really have a usecase for
-> callbacks. Chris ,I saw in your other email that you agree with
-> dropping them in the next version, so it sounds like we are aligned
-> then.
->
-> Vipin Sharma is working on the vfio-pci MVP series. Vipin, if you
-> anticipate VFIO is going to need driver callbacks on top of the LUO FD
-> callbacks, please chime in here.
+> There is a plan for this, but not immediately. In upstream, I suspect
+> vfio-pci is all we need, and other drivers can be added when it really
+> necessary.
 
-Currently, LUO FD callbacks are the only ones I need. I think we are
-fine for now without PCI callbacks. I will have better clarity next
-week but for now I am only using LUO FD callbacks.
+Sounds good to me.
 
