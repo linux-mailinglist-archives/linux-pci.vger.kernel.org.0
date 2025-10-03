@@ -1,114 +1,140 @@
-Return-Path: <linux-pci+bounces-37592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AFA2BB82B9
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 23:10:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAD4BBB8557
+	for <lists+linux-pci@lfdr.de>; Sat, 04 Oct 2025 00:41:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F21FE19E4025
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 21:10:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5D4A4C183B
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 22:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F5325C809;
-	Fri,  3 Oct 2025 21:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7EC272E5A;
+	Fri,  3 Oct 2025 22:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKkjCDp3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="juXrh8uB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4481C25A33A
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 21:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57E42727E3
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 22:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759525813; cv=none; b=cEE8KzsUg+EAp17UWV/EwsujyvZYolNi93xAQg2HMPpTuXuN52AVg2uKW8s4oq5KEGNvMK1QiNDLf8xiELAzaotTHmdbBHfLSAQqWFo1Gr/pztadGgNsas26KDd8UV+VgmxHjfgdSxAAS5pSzfI2+g87JyLlO3FTiSFpvSmB+VE=
+	t=1759531270; cv=none; b=Xy7m0e/J8DcCXnwTgCr+yCYfPIjEdCsTjGFH/i0AQUJolZKyG00mW3gE9Enir3vhAnq2wxS5AP1JkOglpMyr9c+xETLRw7YvajMmKQDtyUGppIdTZOSlBZou+xChqXYizixPqpAuYhK1i4t8Woe5BepuXvGLWle8fVWTc/L8c/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759525813; c=relaxed/simple;
-	bh=dop2CffQ6z/331nTr4zwzO8M3dzvJ69PFQZ6dAIoGgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HHuNqd7TYQnU80DKEmWZDPeSDwZI5B2y/vpdT0s4u/zvm5x95am0qDcH+ghtX4/shWY0fWNAHiWPwLMtWEkdxCUq7xlYZ6eafhq6Sy2UR8QWIXkgC/iDuNATtE1goJjLndsiNV7Sx/48/XFpSoWB6DhIsh49TN7naGEke+4P9Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKkjCDp3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD913C4CEFA
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 21:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759525812;
-	bh=dop2CffQ6z/331nTr4zwzO8M3dzvJ69PFQZ6dAIoGgk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lKkjCDp3Nt7kSvz+JMeJe2S2z7EWk5lNLv/gkWtcCUpqUixSesTHV9p1SlenPu6SR
-	 clRBkoxqOAGk/N2K9JQo/Y6GvWW3DPCTLtFVV6zPihb1i/qQU4wRcm7PYCWbW7tVpA
-	 oZ1yaXvBu65oyJv+zadXVQbvwA1BetH13pCIigEDwZgo4QFEwnNQwmKVBiVusHE4+S
-	 I6UBmV7AA0d6Aic836riuZc0AXI/6Tn5w0IBM/2DdNJOBjFLF4zYD6JmFbW2KEdQ6G
-	 LrMSbmYO/6JJXMlJ++ELCPrmPJz72W2RwHM1MnI/iJ12r849onvaTbwNmKnP6L5HQQ
-	 ISSPDvuIlW2xw==
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-71d603b60cbso29099857b3.1
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 14:10:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbJBetcjm4w/bNpI25nz9M1u+enG1zIF5fb7jmW6b6u64iFdpbuP/PfbnkALTg/AIetRHgBcJgquA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUggEhZxkFCuCCQ2ifdAzjeN51f8lZNfwRv08dt6CyBAzhtq+O
-	jFTmdbJPIYeHCTiARNAv3QZi8oTWOt2RxB8ZH0qwE9a3fo2rhb/RITNX0DA5PwSLQtXp/2ti2cu
-	VS+Coze1CPnkqY5xRngmFnIe5so/+DfgYrBSiKBJEkQ==
-X-Google-Smtp-Source: AGHT+IFJr7BiUayheYtB01AyImhAOf9wqzzEYmC0SkKmmA6WyBELYscGL+EKGMFFmZXYioQm/V7KmDabskfxKC6Q5vA=
-X-Received: by 2002:a53:c053:0:20b0:631:d1f8:38b4 with SMTP id
- 956f58d0204a3-63b9a05e073mr3596797d50.4.1759525812076; Fri, 03 Oct 2025
- 14:10:12 -0700 (PDT)
+	s=arc-20240116; t=1759531270; c=relaxed/simple;
+	bh=Vrqm526ny5yTVpXvwE3LjdEtjEskvLSj+n2tmpclw6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G76FSMaxJMi9nLavW5/K8AgSlFtjoVuuBqlLP14/NDnFhZEHgpI4jB5TKcYQIYjwkaeQRs0FFQhuRknvy135qhryhUjfdASGR3z6XEIOzxIrCDh6e+DhmSakLEVsccDNgeB5S/9fLxVm3zz15SwZZ7fxlWvc9A41GrLzkV4LUwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=juXrh8uB; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-77e6495c999so2956264b3a.3
+        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 15:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1759531268; x=1760136068; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LeicDYAmN1c9l354hBnKMGXATeP19C1JWHBKyR4ISl4=;
+        b=juXrh8uB0u3TCSnPfmH+6PLd/ZqqgtZIVvf7wC4hwkhQZRTpafvN2eScML4P3bHeuh
+         wUrNUBcKxwQUoGmwFLr6kOUVKkwh2B1DfbbjP73M4Ab1iv/cwZQus+x6vvl3uOsNiWZA
+         Xh2G16M3VC3ffeBiOqhLiLSvLeGduWMfK0yOQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759531268; x=1760136068;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LeicDYAmN1c9l354hBnKMGXATeP19C1JWHBKyR4ISl4=;
+        b=vLrTdm/XgFZOTplh0fLP9qPKdRcz1QYgC0GI2jz+T3FYdoYokkesWauPJBJpreSXe9
+         FMjs+IOK9CcF6G4TiyXdcP/2LHf8bV7FO+dV3Wup/7WSUndToeNZSOCmezZi8M3odoAO
+         +GnEIDuMYJ0/GA2M7QzJXucu2mt7pVKCrcfCBD6vb4LNSAmqlNvqXgsr3QqZaasZz/mn
+         Ks4LKRZixj2ZAlP42qx1Im+bhUYBh3WQJ+j3sn0WhIVp49R6GYk98lHmztK5ClPm9RKg
+         wJEy9LkJARzvvSxcqZt+70+Un+QSm3TyJM9cTVDmplTt65cWUEbDoLdeqtseIdlLg4SL
+         J78w==
+X-Forwarded-Encrypted: i=1; AJvYcCWZtiIZJai4UFP3TmpR9ecRvAQAq9lqenyznjKpcspzO9DrIfMEPMnh5S6jpb4H3swCBW91+J6QCJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9k12xRFeEyGy2Kn7q2jAdNLvy2mlj1706GUR4Qm3v/GW+v0P+
+	OuhIrAjZKimWmp1K01wxbqvXic7iYIGMt3GQO40nQ3TecphcES3JOlH98/2KWX+k1Q==
+X-Gm-Gg: ASbGncugmwu+82HAC4WyhY9Y9JVLA8AvejGOlDs3PYt7WwDrVDh0HZqakvTGZMa0YiV
+	GJ36C7Tn/D85lSxdPQBfCulnf/JUPpKveD226+k1vWW0vBS5SJBbM22LdruJZ1vg6FGwAkDOIE/
+	lDuuGmk6zSWuJr22xvcQQnQHQyyVvMVt2sGOwTq63Oa+SghNVYq5gZni6Bau68qGsWCGvl83/Il
+	jlM1Rp7m0HfeGl5egroafJCvReI6HjrpCUvlOUNH3EAn7wVXjPfiHJB2M8AxnZ6AJS93umanlfk
+	i8zZxdtjaGFSbIE8jpzfRGvpcwStVC3hxy9nj2YWAQcr1AL4+exxDc8u6b0BGC2E1zKZJs72Ryv
+	jzCEKBGx/ccuHDUVkuO76QUbIbmX4UmKv7PLmMppTL2Lcl0mArT+I5alQ8WE7ISm5KjILg+NTw/
+	izccCK3R8QVl9qtfhy9w==
+X-Google-Smtp-Source: AGHT+IHuxZQfqBTYgVR3eorEaq34j8jAIC8x1/0Ean6DRRMQBKylmJCxcOPARTWj8v8GLQv95Shadw==
+X-Received: by 2002:a05:6a00:139e:b0:776:228c:4ac0 with SMTP id d2e1a72fcca58-78c98a6a73bmr5556620b3a.11.1759531268189;
+        Fri, 03 Oct 2025 15:41:08 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e7c:8:9212:ce9:ffd0:9173])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-78b01f9a364sm5892754b3a.6.2025.10.03.15.41.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Oct 2025 15:41:07 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Brian Norris <briannorris@google.com>,
+	stable@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH] PCI/PM: Avoid redundant delays on D3hot->D3cold
+Date: Fri,  3 Oct 2025 15:40:09 -0700
+Message-ID: <20251003154008.1.I7a21c240b30062c66471329567a96dceb6274358@changeid>
+X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-3-c494053c3c08@kernel.org> <2025093044-icky-treat-e1c3@gregkh>
- <CACePvbUr42mj0kbcaw4cgKnd7v1f8z8Jhq4+_QN7Z5Nvicd1cw@mail.gmail.com>
- <2025100323-sneer-perennial-55e1@gregkh> <CAF8kJuNPFbSJezynwXWpMx0ihV32YvAgdfygj7bx1nhxtmB8-w@mail.gmail.com>
- <2025100317-backroom-upside-c788@gregkh> <CACePvbW031fW8dqswwXp=Z6H3jv2BiBSJFyGiXCKzZUSKRnxqQ@mail.gmail.com>
- <CALzav=edEDvz98KKtmMLWcW33PgE4aTy6K7YLSK0_jx1PdRqBw@mail.gmail.com>
-In-Reply-To: <CALzav=edEDvz98KKtmMLWcW33PgE4aTy6K7YLSK0_jx1PdRqBw@mail.gmail.com>
-From: Chris Li <chrisl@kernel.org>
-Date: Fri, 3 Oct 2025 14:10:01 -0700
-X-Gmail-Original-Message-ID: <CACePvbWbW-YVHAL0rO-6Ao16LELnd8R70Gj0+QZHptVRk0C50A@mail.gmail.com>
-X-Gm-Features: AS18NWDm6P1reKqIX5KYR5IcC1q6_QkQpinihwQ1iy-jdQBkz0LnX3DWVnmxEi4
-Message-ID: <CACePvbWbW-YVHAL0rO-6Ao16LELnd8R70Gj0+QZHptVRk0C50A@mail.gmail.com>
-Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
- callbacks to driver
-To: David Matlack <dmatlack@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
-	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
-	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 3, 2025 at 11:28=E2=80=AFAM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On Fri, Oct 3, 2025 at 10:49=E2=80=AFAM Chris Li <chrisl@kernel.org> wrot=
-e:
-> >
-> > On Fri, Oct 3, 2025 at 5:26=E2=80=AFAM Greg Kroah-Hartman
-> > NVME is not a GPU. The internal reason to have NVME participate in the
-> > liveupdate is because the NVME shutdown of the IO queue is very slow,
-> > it contributes the largest chunk of delay in the black out window for
-> > liveupdate. The NVME participation is just an optimization to avoid
-> > resetting the NVME queue. Consider it as (optional ) speed
-> > optimization.
->
-> This is not true. We haven't made any changes to the nvme driver
-> within Google for Live Update.
->
-> The reason I mentioned nvme in another email chain is because Google
-> has some hosts where we want to preserve VFs bound to vfio-pci across
-> Live Update where the PF is bound to nvme. But Jason is suggesting we
-> seriously explore switching the PF driver to vfio-pci before trying to
-> upstream nvme support for Live Update, which I think is fair.
+From: Brian Norris <briannorris@google.com>
 
-Ah, thanks for the clarification and sorry for my confusion. I think I
-was thinking of a different storage driver, not the NVME you have in
-mind.
+When transitioning to D3cold, __pci_set_power_state() will first
+transition a device to D3hot. If the device was already in D3hot, this
+will add excess work:
+(a) read/modify/write PMCSR; and
+(b) excess delay (pci_dev_d3_sleep()).
 
-Chris
+For (b), we already performed the necessary delay on the previous D3hot
+entry; this was extra noticeable when evaluating runtime PM transition
+latency.
+
+Check whether we're already in the target state before continuing.
+
+Note that __pci_set_power_state() already does this same check for other
+state transitions, but D3cold is special because __pci_set_power_state()
+converts it to D3hot for the purposes of PMCSR.
+
+This seems to be an oversight in commit 0aacdc957401 ("PCI/PM: Clean up
+pci_set_low_power_state()").
+
+Fixes: 0aacdc957401 ("PCI/PM: Clean up pci_set_low_power_state()")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Brian Norris <briannorris@google.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+
+ drivers/pci/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b0f4d98036cd..7517f1380201 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1539,6 +1539,9 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
+ 	   || (state == PCI_D2 && !dev->d2_support))
+ 		return -EIO;
+ 
++	if (state == dev->current_state)
++		return 0;
++
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+ 		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
+-- 
+2.51.0.618.g983fd99d29-goog
+
 
