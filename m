@@ -1,219 +1,130 @@
-Return-Path: <linux-pci+bounces-37498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 311C8BB5CD2
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 04:26:32 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81893BB5E1B
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 05:39:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AAD2D1AE5028
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 02:26:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 843CE4E2868
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 03:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C17BA1459FA;
-	Fri,  3 Oct 2025 02:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/NIgkx2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A962E22A9;
+	Fri,  3 Oct 2025 03:39:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750DC242D91;
-	Fri,  3 Oct 2025 02:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759458388; cv=fail; b=WO264e4etW6QFqvH3JxadDHCjh3G933Hys43hQMgC028hvm931REkpKNiUtsM8PlmfDeWJP3KvqzSSda59rozasYWHbXVMyulYMWTPhv2nZif4quyTpjdwcd+Buj4YqHkQ8oCesmbr6C7smWXlSKc3yXUG8PHaC40uXX9JAFBls=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759458388; c=relaxed/simple;
-	bh=SRACL4zBDI55koCF/D4aEgiUBZ60YV3LqqHy1qI/vvg=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=tUz1mo5uUG0/K87Tb46UIQkgYQZAz0GVxdwArMNeB8T6srLq9/K5jakVHyYpq5SQvnoUyB25pwFf4BZ/DydlC9hwq/8G0NVuYCBt53q+cPksXOMj+fPF+7LTOXKXKFWpSc19aewW7S4JaVr8/cPi4tYwiBb4xxUjd4N+aW/Dn1k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/NIgkx2; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759458383; x=1790994383;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=SRACL4zBDI55koCF/D4aEgiUBZ60YV3LqqHy1qI/vvg=;
-  b=M/NIgkx2HNyiQD/ozoPSGBGZP+HMTHKgbL6LYs4NNkiJ383gJFVlm20r
-   77p69i3q38bvxPQOBF441vYXJ52bdKf/53mKgxAmiRnTV+72dt6a7Om67
-   MUnXSKwHNUjruiY7m//aUfx88wRcvSoFJKyi0U5rUgCt73Gwcq4O/Oo6/
-   XDdRBiXufAQ1sUyFRryBmK5Yb3YcymAAqTOsV8JCpXBNLv/f95Xs2luBN
-   YCEzUgRthptdP66ey4Oqtax4dRl9TUkIBRGAkry1wqyjVbFbHceeX0qyT
-   DfOn3/vzxTN984/qfj9x9lDi/qhTbt3eSq1+IbYFnRA7aeAn+zrB6e5/w
-   g==;
-X-CSE-ConnectionGUID: OjppMrf+SYuH01K5dUAuyQ==
-X-CSE-MsgGUID: nG5u6DwiTuS2WC0k3Tuk5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="61791731"
-X-IronPort-AV: E=Sophos;i="6.18,311,1751266800"; 
-   d="scan'208";a="61791731"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 19:26:23 -0700
-X-CSE-ConnectionGUID: wybeS5QCSbGiALCamsaG9g==
-X-CSE-MsgGUID: BSjL6quySoCp6yjdr/JnIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,311,1751266800"; 
-   d="scan'208";a="178302445"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 19:26:23 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 2 Oct 2025 19:26:21 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 2 Oct 2025 19:26:21 -0700
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.52) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 2 Oct 2025 19:26:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SnmTxi1skrR6ByACIvrQk9SqyCKsq/Z8zOzuAt9ejevIfMqn/Syz66+SE+9XKLh9YOVXQ266N9bPHRGzHAlRwTtb41yHxa9cxwflI4EWCKw0Yh/GgNesJwFpReIXWAgOCSH/27bxpgkgZa4P3y/61LyDY2sCT+MuBF9cGmUfZ4DQm5mskuxahCV/38/xT+kddbj32+0WdDPA53KD+UCpQIBjOvFCBS9/YVq14al5l6z0js2TWD8NYl7WqGPAxdD9LmIJ1W4p3ShyTSF5TUL+sTiDj8TNJ67vbBQTpQQOXllo9Vx44e6Kol/v7bMuGqhZAKo0YDvzkyHXzUB69CF/nQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SRACL4zBDI55koCF/D4aEgiUBZ60YV3LqqHy1qI/vvg=;
- b=Wf9FV31E5zcmRiYteO9zIEEAEgtreB0EvOqP8lo5XfSlkRg9I7slf1kCNInIP7rCHmWw0AHH4k0CpkR6COB2/bULFLyAaviGW8FGXjDKPO7lp9MVJ3JQPFARPCfqE6AYQmkArNeL466vGMmwb6PfyqEuBAuL3mZH8RLvzURvtbwFgMEY+ZCg+8gqD2rM23WvVccIJ2jqkZg+Sro2hKxuRFA6IFOtTqDTN1mRCB092/+K173baICiCxtT12Ex+Jz45gkGZ0INiYuEnmu+TVQZuOxFpBXTqcOw4yvCpG13lMHTXguUOUNmZT6D515bCA8pU5+hZ2Yt0RiJzzqWrSD9zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA4PR11MB9010.namprd11.prod.outlook.com (2603:10b6:208:564::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Fri, 3 Oct
- 2025 02:26:10 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9182.015; Fri, 3 Oct 2025
- 02:26:10 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 2 Oct 2025 19:26:08 -0700
-To: Xu Yilun <yilun.xu@linux.intel.com>, <dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
-	<yilun.xu@intel.com>, <baolu.lu@linux.intel.com>, <zhenzhong.duan@intel.com>,
-	<aneesh.kumar@kernel.org>, <bhelgaas@google.com>, <aik@amd.com>,
-	<linux-kernel@vger.kernel.org>
-Message-ID: <68df344061e22_1fa2100e6@dwillia2-mobl4.notmuch>
-In-Reply-To: <aN8uEHZzd2cCOYoK@yilunxu-OptiPlex-7050>
-References: <20250928062756.2188329-1-yilun.xu@linux.intel.com>
- <20250928062756.2188329-2-yilun.xu@linux.intel.com>
- <68dc74a6b7348_1fa210058@dwillia2-mobl4.notmuch>
- <aN8uEHZzd2cCOYoK@yilunxu-OptiPlex-7050>
-Subject: Re: [PATCH 1/3] PCI/IDE: Add/export mini helpers for platform TSM
- drivers
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0043.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C232DC350;
+	Fri,  3 Oct 2025 03:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759462758; cv=none; b=kYwt32CEmskIFmBOCuPbv5be/HVGSi7CBNVn2LQfZOo4nEkLCnCde+Bq0ifXzVgh15wQBex49/L+LECYDZtYH8XKGGLI9v44fyeiZ4NUxdfLXGxVS1EDQ6l2zmwwu51HAJUQLiiJ2YO0PJFUNLsuceD4UhV//MeAIiJZ/q5HDhs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759462758; c=relaxed/simple;
+	bh=oB3+pikzo1u/9bJXUFVCCM1BiW5U2kaDO8edghe8f/8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=khL00uYu6wagAbEXMFqyooy2E7BQDEqcpVGOb+1/tcGFRiLE3nuMY7pGdWN0uBIttHZsxrQ1mvUrW4VY+SNayfYPnGoxP54VM7luk5qQoGRzIph60RSquypt3bNQkgUwzwkg56/YljK0mtMkFDieSWSGSDBcGlGWpw72Re3/qT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 5932ZYAP070264
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 Oct 2025 10:35:34 +0800 (+08)
+	(envelope-from randolph@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Fri, 3 Oct 2025
+ 10:35:34 +0800
+From: Randolph Lin <randolph@andestech.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <jingoohan1@gmail.com>,
+        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <alex@ghiti.fr>, <aou@eecs.berkeley.edu>,
+        <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+        <ben717@andestech.com>, <inochiama@gmail.com>,
+        <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
+        <shradha.t@samsung.com>, <pjw@kernel.org>, <randolph.sklin@gmail.com>,
+        <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
+Subject: [PATCH v6 0/5] Add support for Andes Qilai SoC PCIe controller
+Date: Fri, 3 Oct 2025 10:35:22 +0800
+Message-ID: <20251003023527.3284787-1-randolph@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA4PR11MB9010:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b1dea91-393b-4682-5a9a-08de022436f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?OWZtTzZ4Wk5MRFYreUs3ZllTQ3BuNmRBNll5cU1DYkVQSm5SZGFIVjYzUHhm?=
- =?utf-8?B?NUpFREY4YzJIOVhoNVUrQTdYalJtekRPN3RUUWVSR2VTS2N2aFdXMXRCb1BQ?=
- =?utf-8?B?a2laZ3NkOG44bFlDWnp4bncyUzdRTWRia3dLY3Nmc2szazNPdE5oOEEyN0xp?=
- =?utf-8?B?WUkzWVJEd2pwRmpIVitkd2RvbGx1eGh0MXhHeEtkWmFXdEpwYWFTcVdST0dR?=
- =?utf-8?B?U1ExNGlsMFkxRDBZMGl2OTVzb283b1dyT1o4ODA1UXM3UFBJbmpsdnNoOU9j?=
- =?utf-8?B?MDcvZkxjSWlMblQyVk1Va2hseG96dDByVWxvcXV2WlVHQWdLOGNhUTlMV0NP?=
- =?utf-8?B?bE02UzB4TXErY2IvT25EZ0hIZENvMGRCTm1ScnpCdEJvVC9qMDhiaysvTHFU?=
- =?utf-8?B?SVEyNUlpMTRBMlJmY2JrdGhML1FWNVZudVdDZ09MVkFLOFFWZUxRWjZWMWt0?=
- =?utf-8?B?ZldQU2QyakN1VitsMlRHZjQ3aHVORUFpUTFycHdibmk1azNubGF3SE1mT2Yv?=
- =?utf-8?B?V2JpWVFBQ0dtSk9wNmg3cUdDT0tFSWYwN2d6Y3NsbFN5b00zUzQxNnFKQ0x1?=
- =?utf-8?B?TFl5ckpONHJUbnhqMjJkWXZvczhKUUE2Yk8yZUpPa1lUVzB5ck1NdDgwY1dJ?=
- =?utf-8?B?OG1BdmdSeTcvSmdYekJOTjVQa293VFVFNGJpWHphc3lpTGlvRXpoa0tRa0pN?=
- =?utf-8?B?U2tzblA5SUxud0VXQ3JZaFhuZW5iUE9ybXBsVEJvQy9Yb1RWdWsxV2FBRGMw?=
- =?utf-8?B?M1BaMlVtQjl2SnNwQlhXL2J3aVhQcW5Ha3VWc1VpV3hDUG5NSE14NXlqWktD?=
- =?utf-8?B?QVEycFlEWitFK05MMkJhZzN2NHo2TnZKVEhzdTNIT0I5WTNWSGtKckgvdXFm?=
- =?utf-8?B?L3IzUzFsYVA2YzZsNkhhdk1lNW81ZDZIM3hsTW81L0FrWm1Pd2JOeTFJUGEv?=
- =?utf-8?B?K1QzeTBSWUJjLytvbVFKNE9xSHVMdnlTNGhyaU42VHdMM1FRb0ljNmxCcGlG?=
- =?utf-8?B?d1JmTHMxR25lTThkamQ4U25rVHFlcWlldFJSaE9CUXlvRkd1THJNempyajBN?=
- =?utf-8?B?Mi9hY1hWZ0pGdy9CQVFsaHE3M01uTW9IU2dYaUU3U3daemJ4QVd3aWdIVlJ0?=
- =?utf-8?B?aThvVzlpNmVvSG9QV2I1ZGdSNy9yT2VvRU0yT0JyazRMeHkwWXVOZXhLRFNK?=
- =?utf-8?B?OXE3R0EwNkEzYlh6dk80dWxYRVZGM3oyRHhBdlgrVzludytSeFhoczk5aXlM?=
- =?utf-8?B?VDQ1Y2hBVS9wVEdDR1FoN1Z5VGlScVFmalVGZEVxQzlNVkRYVzk5YVFVYnR1?=
- =?utf-8?B?MkJ6RmdjZERObmk3UGY0N3NBd2RLNVdnQmhHNmpUTUlNTVdQd3cyb3BoQWJJ?=
- =?utf-8?B?QzFucjUvN1A1RDZXZXduTkl6TlllcjJCRUZyRTRUWEhTMWc1YjA5Mm40a2tl?=
- =?utf-8?B?cENYcHd4L0k2NWZaK0dlYlo3WldKOGN4anRNb2VsejB3WGVObEU4NFYzNnR2?=
- =?utf-8?B?Vkh0VG5yU0ZmYjBYcU11MFh0cEFXUUlyWlNwMCttTlc3YldTTlZjV2xrTWRY?=
- =?utf-8?B?YVljcUNQb245TVZtOFRSU1FzTVBFY2w5TXo4UWtNYWNOeHRQOTlZczJrd1U1?=
- =?utf-8?B?d29kQjMxcWsrc1VYamcvZEZ6NWNBejZzWkVDeVBPNklWZ3JQMWV0TlpMR3ZS?=
- =?utf-8?B?V2tXdTduaDhqTm5haFB4U0JUVmVjdmRoV1g0UDNMdWJSaWlYSDhJRHlpa25q?=
- =?utf-8?B?Z280UUdJRGFuU3lJQTc3dmZLNDA3dU9wQlN5aXp3aklyenVHblRmWU1aN1Rp?=
- =?utf-8?B?NWV6dmlBSGpFMno0bTUwc01WaHRZbDZRZUhGN0xjT0tBdnMvRm91MnhCTjg0?=
- =?utf-8?B?WnZMVmRmeStsbDVHT05uNm92WVNYbDB2N2FVbWVDbHZTSVE9PQ==?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cStkTWJBQzl1OFlOMDA4R3liVW1ZcnBhZFUzaHYrZ1V1aEgycjVGbDFRSkZJ?=
- =?utf-8?B?OWxiTDQ0ek83c3FPMkg5ZDNrUHgvcVRNdkZzMmQzNitLckFGOHNjeFZMQSsv?=
- =?utf-8?B?ZlNtNGdLVk1DcE84Z3dZMTBQaUFPV3p1Y3lQRVF2cVFCbVkzcWZuY0R1czl3?=
- =?utf-8?B?WENzdkkyeFJUWGZBcXhUM0c1TGRtckdIaXVsbXo1YU13eGNyOWN2Y040YWFx?=
- =?utf-8?B?WTNNVmZOSm9aYkxmVzR6eGxaekV4dUxnM3VjL3phUXdwZ291MHZwelVxOG9V?=
- =?utf-8?B?a3lHRFZmRXVLbnJuZkwvb3BIb25BUC9iQ2tpRkFySkdMa2RkQ2RERjczcXdk?=
- =?utf-8?B?RzgzYnNZZ1orWVZqV1RRWjhtWFd1MUU5OXJSR1JiZ3pieXRUVkxrK1h0a1Jw?=
- =?utf-8?B?U1NkQ0J3eUFvQUpNeHNSbHJSdVpCTjNabDNGVldKczZDdmdIbWdGdW9EclU1?=
- =?utf-8?B?clZSUjZFbVRzNUYzdkQwclh3Z0VUNWl3Um9WNGdrWVJYUnI4UzA1R3E2UUJ2?=
- =?utf-8?B?Q3VlYkpQUHdUR2h5R2ZxNUtwYVMybndSL1RTeUtWREsrWlZaMHFVOEw2bHlU?=
- =?utf-8?B?QzdBQXUvUVRSaC9YaWJqRWNvL3VBUlVBTWtaVXVzVlBOaU1kQ2lnRm9DRzhI?=
- =?utf-8?B?QkRvTkZNQ29FeTVONDBWQW53NXVxbEZsWGFoYis0WE1QTFZKMGRJQ0g0b2dD?=
- =?utf-8?B?RnhWQzA5UGNMZWo0SnpROUpHOTI1VjVNNHFEcjdLcHpZS1NvZlV2SVZOZkU3?=
- =?utf-8?B?c1ozQTI3WWpaNWpGTzZwVEJwT2ZzRXhVZ01TZm5vNkgzamsxMWpjTmRnVTNk?=
- =?utf-8?B?cTAzVHlldWhVM0tQdnJiell4RWdXZ28rSFBRMllUWkQ2UXhtdEQzZVo3Zmlx?=
- =?utf-8?B?K0NTQWVlVU8xekxEVlZITC9hSHNTK2JQQ1VUT2pqT1RCaFlxemhBOWQ4aWo1?=
- =?utf-8?B?NzVUM215d2Y4S1ZCZ2kzL2xTYkVRcEovQWZaWGlmU0Jia2lMMXc4akIrQ1Ex?=
- =?utf-8?B?UTBFc21TQmd3alhCQ0ZPemQ2eVRvM3B4RkptRjRKeVF4OUlWbk5VTFEyb1Vu?=
- =?utf-8?B?YW5DSXdqcWNHc2VBR2M0WXRQS2k3Z3plcW9VQjRyeWhqLzdpcFg5MnhNbFZo?=
- =?utf-8?B?dGliV2tTTGZrOUFlWDVVUTBLRUdNdG01NHVSN0w5aGpubTVqeTZPM0RGN2Vh?=
- =?utf-8?B?ZGtuNHp2d1lWNXdWaUNrNDJiWUhQVzdEL1pMUHFZdVFQaDhiTGdwYU1BZTJr?=
- =?utf-8?B?MVIya2JEQ3ZjeEFmbXVEazZPbkdtTTdHWFBhZmU4TDJOTVNDckJVRkdyTVNp?=
- =?utf-8?B?bkF2N3lrNE9oc2FYUGk0Ry9uSVZMUDk5UzYyWnJTVzMrRXN2WnZuNnJ3cHRJ?=
- =?utf-8?B?UCs0cGpTY2twK2ljYVRkSTdFNjZ2SmVFZkdFbE1WUmM2L0lYU3QvbFRRS2Z2?=
- =?utf-8?B?VmtDb3FhNnlUelZzLytLRFR6aVVOalpadFpUKzdrN3M5cG1OYVhoMUNOSHh0?=
- =?utf-8?B?UGYzKzdobmRibnZqZlBGVG9FdWhKQlFoUlhFeGpic1ZXVzEvYlhnZjhBNytC?=
- =?utf-8?B?aEVaQWFTMkRrU3Q5MXBoeWRhaEh4WnhaM25mbHVqM0VDL3Y5K3VoQTJOd05h?=
- =?utf-8?B?RyswajlTcTgvOTFPOVdGRVRNVUt5TVpOQm5FM3N4dkxOMEVoMHR0SG5UL0Jz?=
- =?utf-8?B?QTVaQ2VhR29PaS9LT2pLRHlrTjVnVTlacUxibzEzM1B3cHhuUU5oVG16cTJD?=
- =?utf-8?B?S1lkZkNsQ1FXYmRyaDNWdmV1aEdJU3Vtck4wQkpGVmMxQTVJejBCTEp3cGpv?=
- =?utf-8?B?Zzg1NFFhcUFLdjdLV3Y5VVl2UTZMUk92WitaQ2pxUW04a3RlVUp4TUNXOW1B?=
- =?utf-8?B?Q25FTGcvK3hiWU02UFQ2eThTOTBiMGJQRUxFYVArSHRmbmpDN2VEeHRMSi8y?=
- =?utf-8?B?M25jVGkyQXZZOUZTb0o0RTdxaG1wNjJWTEc1RTRYdlVXalhtMGZsaE1HZGVZ?=
- =?utf-8?B?TzJIUit3U2RreGZ6a2VEdWRDdFhkQitQZ1pVa1hWdy9RRXNhaHJBWGlGS29F?=
- =?utf-8?B?UVRmbWs3Unpsck0xVzhqSWFJU283WWg3SGpEeGt4L1ViL3poejZ0M3dTT0d2?=
- =?utf-8?B?d0l4SFNubURnWlpPSytUVEttY2Q0U0Y2NDNZbFBaaWZoeUo5a0pwd043Q3pZ?=
- =?utf-8?B?dXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b1dea91-393b-4682-5a9a-08de022436f7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2025 02:26:10.0201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ePshrhBGhije8US3Dy0Zwk8+DLcqxi8ltjoSoljOjCzrDlvU9YGWBTvSJ+BvAR37xtl/rloiyQqEea7dpnFWXFUJQxAlmZDzZbpnNcxBi44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9010
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 5932ZYAP070264
 
-Xu Yilun wrote:
-[..]
-> Do you mean PCI IDE should provide the collapsed raw RID/Address
-> Association Register values for platform TSM drivers? TDX needs these
-> raw values for SEAMCALLs.
+Add support for Andes Qilai SoC PCIe controller
 
-Right, see pci_ide_stream_to_regs() [1] as the proposal for TSM drivers that
-want to share the same register value setup code as the PCI/TSM core.
+These patches introduce driver support for the PCIe controller on the
+Andes Qilai SoC.
 
-[1]: http://lore.kernel.org/68dd8d20aafb4_1fa2100f0@dwillia2-mobl4.notmuch
+Signed-off-by: Randolph Lin <randolph@andestech.com>
+
+---
+Changes in v6:
+- Fix typo in the logic for adjusting the number of OB/IB windows
+
+---
+Changes in v5:
+- Add support to adjust the number of OB/IB windows in the glue driver.
+- Fix the number of OB windows in the Qilai PCIe driver.
+- Remove meaningless properties from the device tree.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v4:
+- Add .post_init callback for enabling IOCP cache.  
+- Sort by vender name in Kconfig 
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v3:
+- Remove outbound ATU address range validation callback and logic.
+- Add logic to skip failed outbound iATU configuration and continue.
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v2:
+- Remove the patch that adds the dma-ranges property to the SoC node.
+- Add dma-ranges to the PCIe parent node bus node.
+- Refactor and rename outbound ATU address range validation callback and logic.
+- Use parent_bus_offset instead of cpu_addr_fixup().
+- Using PROBE_DEFAULT_STRATEGY as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+Randolph Lin (5):
+  PCI: dwc: Allow adjusting the number of ob/ib windows in glue driver
+  dt-bindings: PCI: Add Andes QiLai PCIe support
+  riscv: dts: andes: Add PCIe node into the QiLai SoC
+  PCI: andes: Add Andes QiLai SoC PCIe host driver support
+  MAINTAINERS: Add maintainers for Andes QiLai PCIe driver
+
+ .../bindings/pci/andestech,qilai-pcie.yaml    |  97 +++++++
+ MAINTAINERS                                   |   7 +
+ arch/riscv/boot/dts/andes/qilai.dtsi          | 106 ++++++++
+ drivers/pci/controller/dwc/Kconfig            |  13 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-andes-qilai.c | 240 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c  |  12 +-
+ 7 files changed, 474 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-andes-qilai.c
+
+-- 
+2.34.1
+
 
