@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-37519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37520-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 288F4BB647B
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 11:01:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 046F8BB649C
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 11:02:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9FE94344AC4
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 09:01:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F7B81AE01E8
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 09:02:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3EC927F4D5;
-	Fri,  3 Oct 2025 09:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 088AA28505A;
+	Fri,  3 Oct 2025 09:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="p+Ftlmij"
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="PZpIdR2Y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.77.92])
+Received: from pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.245.243.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A835275860;
-	Fri,  3 Oct 2025 09:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.246.77.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D858527B4E5;
+	Fri,  3 Oct 2025 09:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.245.243.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759482111; cv=none; b=oDE7Vb4OBu0l2Fpdx5gfiL6AJrMjO56+d1oyWiGRRUoIiiTy2gtrWljCSn2MGJQi3BARyYcmY8tW57xl69X4fd3FsdMU57QRhUz6B1Nk0LOhfsY1cv7tq1wP9BdYgSSZN82w7myBBgQZgdBRRTMfcYZdpcnn2MFe7iOWO51+ipc=
+	t=1759482138; cv=none; b=ftYxDUawK+auGYxctd99tyh5bKL5LmJZH/MhD11XiEUxVy5+m5s4+Al62zy/D+0YAjRViz6zOwmSU1PkILWUj9MEy8ULdlv5FhShujD9/d2Og5f7v91l5yjNGi6tK/aJ+tl/yNO074KM6IL61wxKMW8PLW65okFeHSM+EFt/r50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759482111; c=relaxed/simple;
-	bh=1Mjt8IXBt8f6Mhe+VfcjXU6q0F0NTRgXpDiZCPaONLI=;
+	s=arc-20240116; t=1759482138; c=relaxed/simple;
+	bh=fbuf55nZc0A5Jk8cQxMMStl3mJZ8VqE9MP24zvoQpUo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ItIuTGzZXdibJpWW9eDL/5KySCWkDxe3sc3ruwr6UITV+m5//A8IQfvDhyh8C5+gEcNmmMsTKQMk1y4Ge1iqYru/sF5nRlHNQuVagwKTUFskiMKwT2YTH7N9D+da6ALZ9jvp6jLWqbtu9XZF2DV15QpfWUMEptlza6ecJ5VUGR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=p+Ftlmij; arc=none smtp.client-ip=44.246.77.92
+	 MIME-Version:Content-Type; b=RQY7yuEEzJODX2i4Hb/alX/FcGWFkoGmLb23uwcqPhohzXaG3jHeWKrWsIADWQ+LMjGtW/m3jJEh08hXSCkkYnvY73qMtznIcvB5PKZNjuLlAO5VxyJ7G8Qgv+xANpOc9Lbh/FWpjANS7BR8jhY4xhGvK96uzw67IR67GB9T7Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=PZpIdR2Y; arc=none smtp.client-ip=44.245.243.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1759482109; x=1791018109;
+  t=1759482136; x=1791018136;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=w4ijJ021O6Jl00VOy/IsHrHY4ShgXRWyy/Q296Dl1D8=;
-  b=p+Ftlmij/3ethZZM1eGkgqBwAvNnOEgeWdrEaIC9Mq/B8qOSG5slkTgs
-   yokM6a18bR8rIrEUAd/C/cyeoeCYBe8rD11l0oCN8TZngtnUEXcpB07NX
-   p7Uz6FoZAiFBXgfV7iMt6B6RRfCciNyqo6NQxFqsH7iJUv1n+ipZ6ODX3
-   8SqGfpt2pkUnWHDOeW+5yzcGNoOngxnn0TiQEO2Q2jBm9HnaUy0BtwWP+
-   WP4wAg9QXNGOmTERsfzr6XblrRbbWpRoXefkZAeLQOzSL5jE2R6Yg6kuR
-   TIF7+29Fzn8FWoiIRA5cMdAmrzJah/rPF3ZhtMvZO15OiWGIch6ylwyWV
+  bh=ViRJy4MQR6VeNiIo5EZJ98n4zWE+Nw0q/T2qMHtTtP0=;
+  b=PZpIdR2YJHRpNlt54GxceHh4bIA7/jA2dcqMhjEO3CH1Zo8jcvSHqMyK
+   3hPPMBLpsnvGPXOZpY/7Ki7yWAnCKUxCC4hfPTdiZGH5yh7bhIaTHuVLj
+   fmGl/L1R/T713kt8Bc6OCYKeNio154AmlV40tmR32bsEVsUBfFvv3+62f
+   4YcANPskUlbfJXWU3BXEnjAqeRTra9EjZjxlkVrjEp7CqCtnztlvb7+CQ
+   w0HmVsKjx/9T+UeeCjRHyprFNzzvi4LRCdxWgr8lEVma5k0OUUnRN5mYn
+   ImkE9JgEK/JyNWTA9iSPimNe1ll6KSmzBAmS02R5CotpcqkAn/jBpx+jA
    w==;
-X-CSE-ConnectionGUID: IUUx5IXdSKaFBlcCyvINtQ==
-X-CSE-MsgGUID: KIDT40C7SVOC9NKKnRQ6Vg==
-X-IronPort-AV: E=Sophos;i="6.18,312,1751241600"; 
-   d="scan'208";a="4214776"
+X-CSE-ConnectionGUID: qyaBFtYbQeqL/50QWO6EeA==
+X-CSE-MsgGUID: MP4XAZg6TIWmKZnUf88AuA==
+X-IronPort-AV: E=Sophos;i="6.18,281,1751241600"; 
+   d="scan'208";a="4212724"
 Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 09:01:47 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:43651]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.57.112:2525] with esmtp (Farcaster)
- id 3d6eac18-9bf1-44d8-9ac7-a134f3d0e68e; Fri, 3 Oct 2025 09:01:47 +0000 (UTC)
-X-Farcaster-Flow-ID: 3d6eac18-9bf1-44d8-9ac7-a134f3d0e68e
+  by internal-pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 09:02:14 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:2067]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.25.156:2525] with esmtp (Farcaster)
+ id a9e0fec6-f742-42a7-870c-e33a1c45b9f5; Fri, 3 Oct 2025 09:02:14 +0000 (UTC)
+X-Farcaster-Flow-ID: a9e0fec6-f742-42a7-870c-e33a1c45b9f5
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 3 Oct 2025 09:01:47 +0000
+ Fri, 3 Oct 2025 09:02:14 +0000
 Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
  (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 3 Oct 2025
- 09:01:44 +0000
+ 09:02:11 +0000
 From: Evangelos Petrongonas <epetron@amazon.de>
 To: Bjorn Helgaas <bhelgaas@google.com>, Alex Williamson
 	<alex.williamson@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Len
@@ -74,9 +74,9 @@ CC: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin
  Spassov" <stanspas@amazon.de>, <linux-pci@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<nh-open-source@amazon.com>
-Subject: [RFC PATCH 01/13] pci: pcsc: Add plumbing for the PCI Configuration Space Cache (PCSC)
-Date: Fri, 3 Oct 2025 09:00:37 +0000
-Message-ID: <ecfa9cca72b51e20505093e145246054e91fe9a4.1759312886.git.epetron@amazon.de>
+Subject: [RFC PATCH 02/13] pci: pcsc: implement basic functionality
+Date: Fri, 3 Oct 2025 09:00:38 +0000
+Message-ID: <de485efebd203fc0f69aabccd45917b8360ce47a.1759312886.git.epetron@amazon.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1759312886.git.epetron@amazon.de>
 References: <cover.1759312886.git.epetron@amazon.de>
@@ -86,597 +86,453 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D045UWA001.ant.amazon.com (10.13.139.83) To
+X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Introduce the basic infrastructure for the PCI Configuration Space Cache
-(PCSC), a mechanism to cache PCI configuration space accesses to reduce
-latency and bus traffic.
+Implement the core functionality of the PCI Configuration Space Cache
+using per-device cache nodes attached to struct pci_dev.
 
-The PCSC implements a transparent interception layer for PCI config
-space operations by dynamically injecting its own ops into the PCI bus
-hierarchy. The design preserves existing PCI ops while allowing PCSC to
-intercept and cache accesses:
+Each cache node stores:
+- A 256-byte array (4KB for PCIe) representing the configuration space
+- A cacheable bitmask indicating which registers can be cached
+- A cached bitmask tracking which bytes are currently cached
 
-The` struct pci_bus` is extended to hold the original `pci_ops`, while
-the cache ones are injected via `pcsc_inject_bus_ops()`. The cache ops
-are injected when new buses are added via registering it to a bus
-notifier and integrating it at:
-  * `pci_register_host_bridge()` - for root buses
-  * `pci_alloc_child_bus()` - for child buses
-  * `pci_bus_set_ops()` - when ops are dynamically changed
+The implementation attaches cache nodes directly to pci_dev structures
+during `pci_device_add()` and removes them during `pci_device_remove()`.
 
-The implementation includes weak pcsc_hw_config_read/write functions
-that handle calling the original op, when access to the actual HW is
-required.
+The cache implements a write-invalidate policy where writes are
+propagated to the device while invalidating the cache. This design
+choice improves robustness and increases the number of cacheable
+registers, particularly for operations like BAR sizing which use
+write-read sequences to detect read-only bits.
 
-This approach ensures complete transparency - existing drivers and
-subsystems continue to use standard PCI config access functions while
-PCSC can intercept and cache accesses as needed. The weak functions also
-allow architecture-specific implementations to override the default
-behavior.
+Currently, the cacheable bitmask is zero-initialized,
+effectively disabling the cache. This will be changed in the next
+commits.
 
-The `core` initcall level is chosen so the cache is initialised before
-the PCI driver, ensuring that all config space access go through the
-cache.
-
-Kconfig options are added for both PCSC and PCIe PCSC support, with the
-latter extending the cache to handle 4KB PCIe configuration space.
-
-In this initial patch, the cache simply passes through all accesses to
-the hardware via the original ops - actual caching functionality will be
-added in subsequent patches.
-
-There is one caveat in this patch. The map_bus operations can
-potentially alter the cache, without invalidating / updating the cache.
-This is not an issue for the current upstream usages, as it is only
-being used in Root complexes and the
-`pci_generic_config_{read,write}{,32}`
+This implementation only supports endpoint devices; bridges and
+root complexes are not cached.
 
 Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
 ---
- drivers/pci/Kconfig      |  10 ++
- drivers/pci/Makefile     |   1 +
- drivers/pci/access.c     |  81 ++++++++++++++-
- drivers/pci/pcie/Kconfig |   9 ++
- drivers/pci/pcsc.c       | 208 +++++++++++++++++++++++++++++++++++++++
- drivers/pci/probe.c      |  24 ++++-
- include/linux/pci.h      |   3 +
- include/linux/pcsc.h     |  86 ++++++++++++++++
- 8 files changed, 419 insertions(+), 3 deletions(-)
- create mode 100644 drivers/pci/pcsc.c
- create mode 100644 include/linux/pcsc.h
+ drivers/pci/pci-driver.c |   5 +
+ drivers/pci/pcsc.c       | 244 ++++++++++++++++++++++++++++++++++++++-
+ drivers/pci/probe.c      |   9 ++
+ include/linux/pci.h      |   5 +
+ include/linux/pcsc.h     |  38 ++++++
+ 5 files changed, 299 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 9a249c65aedc..c26162b58365 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -40,6 +40,16 @@ config PCI_DOMAINS_GENERIC
- config PCI_SYSCALL
- 	bool
- 
-+config PCSC
-+	bool "PCI Configuration Space Cache"
-+	depends on PCI
-+	default n
-+	help
-+	  This option enables support for the PCI Configuration Space Cache
-+	  (PCSC). PCSC is a transparent caching layer that
-+	  intercepts configuration space operations and maintains cached
-+	  copies of register values
-+
- source "drivers/pci/pcie/Kconfig"
- 
- config PCI_MSI
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 67647f1880fb..012561b97e32 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PCI_DOE)		+= doe.o
- obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
- obj-$(CONFIG_PCI_NPEM)		+= npem.o
- obj-$(CONFIG_PCIE_TPH)		+= tph.o
-+obj-$(CONFIG_PCSC)			+= pcsc.o
- 
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index b123da16b63b..b89e9210d330 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/pci.h>
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 302d61783f6c..7c0cbbd50b32 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -21,6 +21,7 @@
+ #include <linux/acpi.h>
+ #include <linux/dma-map-ops.h>
+ #include <linux/iommu.h>
 +#include <linux/pcsc.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/ioport.h>
-@@ -189,15 +190,93 @@ EXPORT_SYMBOL_GPL(pci_generic_config_write32);
-  * @ops:	new raw operations
-  *
-  * Return previous raw operations
-+ *
-+ * When PCSC is enabled, this function maintains transparency by:
-+ * - Returning the original non-PCSC ops to the caller
-+ * - Properly handling the case where PCSC ops are already injected
-+ * - Re-injecting PCSC ops after setting new ops when appropriate
-  */
- struct pci_ops *pci_bus_set_ops(struct pci_bus *bus, struct pci_ops *ops)
- {
- 	struct pci_ops *old_ops;
- 	unsigned long flags;
-+#ifdef CONFIG_PCSC
-+	bool pcsc_was_injected = false;
-+	struct pci_ops *pcsc_ops_ptr = NULL;
-+#endif
+ #include "pci.h"
+ #include "pcie/portdrv.h"
  
- 	raw_spin_lock_irqsave(&pci_lock, flags);
--	old_ops = bus->ops;
-+
-+#ifdef CONFIG_PCSC
-+	/*
-+	 * Check if PCSC ops are currently injected. If so, we need to:
-+	 * 1. Return the original (non-PCSC) ops to maintain transparency
-+	 * 2. Update orig_ops to point to the new ops
-+	 * 3. Re-inject PCSC ops if the new ops are different from PCSC ops
-+	 */
-+	if (bus->orig_ops) {
-+		pcsc_was_injected = true;
-+		pcsc_ops_ptr = bus->ops;  /* Save current PCSC ops */
-+		old_ops = bus->orig_ops;   /* Return the real original ops */
-+
-+		/*
-+		 * If the caller is trying to restore the PCSC ops themselves,
-+		 * just keep the current setup and return the original ops
-+		 */
-+		if (ops == pcsc_ops_ptr)
-+			goto out_unlock;
-+
-+		/* Clear orig_ops temporarily to allow re-injection */
-+		bus->orig_ops = NULL;
-+	} else
+@@ -497,7 +498,11 @@ static void pci_device_remove(struct device *dev)
+ 	 * horrible the crap we have to deal with is when we are awake...
+ 	 */
+ 
++ #ifdef CONFIG_PCSC
++	pcsc_remove_device(pci_dev);
 +#endif
-+	{
-+		old_ops = bus->ops;
-+	}
+ 	pci_dev_put(pci_dev);
 +
- 	bus->ops = ops;
-+
-+#ifdef CONFIG_PCSC
-+	/*
-+	 * Re-inject PCSC ops if they were previously injected and the new ops
-+	 * are not the PCSC ops themselves. This maintains caching transparency.
-+	 */
-+	if (pcsc_was_injected && ops != pcsc_ops_ptr) {
-+		/*
-+		 * IMPORTANT: Dynamic ops changes after PCSC injection can lead to
-+		 * cache consistency issues if operations were performed that should
-+		 * have invalidated the cache. We re-inject PCSC ops here, but the
-+		 * caller is responsible for ensuring cache consistency if needed.
-+		 * This will be fixed in a future commit, when PCSC resets are
-+		 * introduced.
-+		 */
-+
-+		pr_warn("PCSC: Dynamic ops change detected on bus %04x:%02x, resetting cache\n",
-+			pci_domain_nr(bus), bus->number);
-+
-+		if (pcsc_inject_bus_ops(bus)) {
-+			pr_err("PCSC: Failed to re-inject ops after ops change on bus %04x:%02x\n",
-+				pci_domain_nr(bus), bus->number);
-+			/*
-+			 * If re-injection fails, we've lost caching but at least
-+			 * the caller's requested ops are in place. Log it
-+			 */
-+			pr_warn("PCSC: Cache disabled for bus %04x:%02x after ops change\n",
-+				pci_domain_nr(bus), bus->number);
-+		} else {
-+			pr_debug("PCSC: Successfully re-injected ops after ops change on bus %04x:%02x\n",
-+				pci_domain_nr(bus), bus->number);
-+		}
-+	} else if (!pcsc_was_injected) {
-+		/* First-time injection for this bus */
-+		if (pcsc_inject_bus_ops(bus)) {
-+			pr_err("PCSC: Failed to inject ops on bus %04x:%02x\n",
-+				pci_domain_nr(bus), bus->number);
-+		}
-+	}
-+
-+out_unlock:
-+#endif
- 	raw_spin_unlock_irqrestore(&pci_lock, flags);
- 	return old_ops;
  }
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 17919b99fa66..2f1efc41afcc 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -155,3 +155,12 @@ config PCIE_EDR
- 	  the PCI Firmware Specification r3.2.  Enable this if you want to
- 	  support hybrid DPC model which uses both firmware and OS to
- 	  implement DPC.
-+
-+config PCIE_PCSC
-+	bool "PCI Configuration Space Cache PCIE Support"
-+	depends on PCSC
-+	default y
-+	help
-+	This option adds PCIe support to the PCSC, by expanding the
-+	configuration space to 4K and adding support for PCIe Capabilities.
-+	For more information check PCSC and `/drivers/pci/pcsc.c`
+ 
+ static void pci_device_shutdown(struct device *dev)
 diff --git a/drivers/pci/pcsc.c b/drivers/pci/pcsc.c
-new file mode 100644
-index 000000000000..dec7c51b5cfd
---- /dev/null
+index dec7c51b5cfd..7531217925e8 100644
+--- a/drivers/pci/pcsc.c
 +++ b/drivers/pci/pcsc.c
-@@ -0,0 +1,208 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2025 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ * Author: Evangelos Petrongonas <epetron@amazon.de>
-+ *
-+ * Implementation of the PCI Configuration Space Cache (PCSC)
-+ * PCSC is a module which caches the PCI Configuration Space Accesses
-+ * It implements a write-invalidate policy, meaning that writes are
-+ * propagated to the device and invalidating the cache. The registers that
-+ * we are caching are based on the values that are safe to cache and we
-+ * are not expecting them to change without OS actions.
-+ *
-+ */
+@@ -14,9 +14,16 @@
+ 
+  #define pr_fmt(fmt) "PCSC: " fmt
+ 
++#include <linux/atomic.h>
+ #include <linux/pcsc.h>
+ 
+ static bool pcsc_initialised;
++static atomic_t num_nodes = ATOMIC_INIT(0);
 +
-+ #define pr_fmt(fmt) "PCSC: " fmt
-+
-+#include <linux/pcsc.h>
-+
-+static bool pcsc_initialised;
-+
-+static int pcsc_add_bus(struct pci_bus *bus)
++inline bool pcsc_is_initialised(void)
 +{
-+	if (!bus->orig_ops || !bus->orig_ops->add_bus)
-+		return 0;
-+	return bus->orig_ops->add_bus(bus);
++	return pcsc_initialised;
++}
+ 
+ static int pcsc_add_bus(struct pci_bus *bus)
+ {
+@@ -103,13 +110,225 @@ int __weak pcsc_hw_config_write(struct pci_bus *bus, unsigned int devfn,
+ }
+ EXPORT_SYMBOL_GPL(pcsc_hw_config_write);
+ 
++static inline int _test_bits(int where, int size, const void *addr)
++{
++	int i;
++	int res = 1;
++
++	for (i = 0; i < size; i++)
++		res &= test_bit(where + i, addr);
++	return res;
 +}
 +
-+static void pcsc_remove_bus(struct pci_bus *bus)
++static int pcsc_is_access_cacheable(struct pci_dev *dev, int where, int size)
 +{
-+	if (bus->orig_ops && bus->orig_ops->remove_bus)
-+		bus->orig_ops->remove_bus(bus);
-+}
-+
-+/**
-+ * pcsc_map_bus - Map PCI configuration space for memory-mapped access
-+ * @bus: PCI bus structure
-+ * @devfn: Device and function number
-+ * @where: Offset in configuration space
-+ *
-+ * WARNING: Cache Bypass Issue
-+ * This function returns a memory-mapped I/O address that provides direct
-+ * access to PCI configuration space, completely bypassing the PCSC cache.
-+ *
-+ * Any reads or writes performed through the returned MMIO address will NOT:
-+ * - Use cached values for reads
-+ * - Update cached values on reads
-+ * - Invalidate cached values on writes
-+ *
-+ * This can lead to cache inconsistency where:
-+ * 1. PCSC cache contains stale data after MMIO writes
-+ * 2. Subsequent cached reads return outdated values
-+ * 3. Cache coherency is lost until the next cache invalidation
-+ *
-+ * Current users include:
-+ * - (pci_generic_config_{read,write}{,32}) which are already handled
-+ * - operations on RCs that are not supported by PCSC.
-+ * Therefore, there is no risk of cache inconsistency here.
-+ * However, any future use of map_bus after cache population poses risks.
-+ *
-+ * IMPORTANT: Callers using the returned MMIO address are responsible for
-+ * maintaining cache consistency. Consider invalidating relevant cache entries
-+ * after MMIO operations if the device's cache may be active.
-+ *
-+ * Return: Virtual address for memory-mapped config space access, or NULL
-+ */
-+static void __iomem *pcsc_map_bus(struct pci_bus *bus, unsigned int devfn,
-+				  int where)
-+{
-+	if (!bus->orig_ops || !bus->orig_ops->map_bus)
-+		return NULL;
-+	return bus->orig_ops->map_bus(bus, devfn, where);
-+}
-+
-+/* Weak references to allow architecture-specific overrides */
-+int __weak pcsc_hw_config_read(struct pci_bus *bus, unsigned int devfn,
-+			       int where, int size, u32 *val)
-+{
-+	/*
-+	 * This function is only called from pcsc_cached_config_read,
-+	 * which means PCSC ops have already been injected and orig_ops
-+	 * should be valid.
-+	 */
-+	if (bus->orig_ops && bus->orig_ops->read)
-+		return bus->orig_ops->read(bus, devfn, where, size, val);
-+
-+	*val = 0xffffffff;
-+	return PCIBIOS_FUNC_NOT_SUPPORTED;
-+}
-+EXPORT_SYMBOL_GPL(pcsc_hw_config_read);
-+
-+int __weak pcsc_hw_config_write(struct pci_bus *bus, unsigned int devfn,
-+				int where, int size, u32 val)
-+{
-+	/*
-+	 * This function is only called from pcsc_cached_config_write,
-+	 * which means PCSC ops have already been injected and orig_ops
-+	 * should be valid.
-+	 */
-+	if (bus->orig_ops && bus->orig_ops->write)
-+		return bus->orig_ops->write(bus, devfn, where, size, val);
-+
-+	return PCIBIOS_FUNC_NOT_SUPPORTED;
-+}
-+EXPORT_SYMBOL_GPL(pcsc_hw_config_write);
-+
-+int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
-+			    int size, u32 *val)
-+{
-+	if (!pcsc_initialised)
-+		goto read_from_dev;
-+
-+read_from_dev:
-+	return pcsc_hw_config_read(bus, devfn, where, size, val);
-+}
-+EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
-+
-+int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
-+			     int size, u32 val)
-+{
-+	if (!pcsc_initialised)
-+		goto write_to_dev;
-+
-+write_to_dev:
-+	return pcsc_hw_config_write(bus, devfn, where, size, val);
-+}
-+EXPORT_SYMBOL_GPL(pcsc_cached_config_write);
-+
-+static struct pci_ops pcsc_ops = {
-+	.add_bus = pcsc_add_bus,
-+	.remove_bus = pcsc_remove_bus,
-+	.map_bus = pcsc_map_bus,
-+	.read = pcsc_cached_config_read,
-+	.write = pcsc_cached_config_write,
-+};
-+
-+int pcsc_inject_bus_ops(struct pci_bus *bus)
-+{
-+	if (!bus)
-+		return -EINVAL;
-+
-+	if (!bus->ops) {
-+		WARN_ONCE(
-+			1,
-+			"PCSC: Cannot inject ops - bus %04x:%02x ops not defined\n",
-+			pci_domain_nr(bus), bus->number);
-+		return -EINVAL;
-+	}
-+
-+	if (bus->ops->read == pcsc_cached_config_read || bus->orig_ops)
++	if (unlikely(!dev || (where + size > PCSC_CFG_SPC_SIZE)))
 +		return 0;
 +
-+	bus->orig_ops = bus->ops;
-+	bus->ops = &pcsc_ops;
++	return _test_bits(where, size, dev->pcsc->cachable_bitmask);
++}
 +
-+	pci_dbg(bus, "PCSC: Injected ops for bus");
++static inline bool pcsc_is_cached(struct pci_dev *dev, int where, int size)
++{
++	if (unlikely(!dev || !dev->pcsc || !dev->pcsc->cfg_space ||
++		     (where + size > PCSC_CFG_SPC_SIZE)))
++		return 0;
++
++	return _test_bits(where, size, dev->pcsc->cached_bitmask);
++}
++
++static inline void pcsc_set_cached(struct pci_dev *dev, int where, bool cached)
++{
++	if (WARN_ON(!dev))
++		return;
++
++	if (WARN_ON(where >= PCSC_CFG_SPC_SIZE))
++		return;
++
++	if (cached)
++		set_bit(where, dev->pcsc->cached_bitmask);
++	else
++		clear_bit(where, dev->pcsc->cached_bitmask);
++}
++
++static int pcsc_get_byte(struct pci_dev *dev, int where, u8 *val)
++{
++	if (WARN_ON(!dev || !dev->pcsc || !dev->pcsc->cfg_space))
++		return -EINVAL;
++
++	if (WARN_ON(where >= PCSC_CFG_SPC_SIZE))
++		return -EPERM;
++	*val = dev->pcsc->cfg_space[where];
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(pcsc_inject_bus_ops);
 +
-+static void pcsc_remove_bus_ops(struct pci_bus *bus)
++static int pcsc_update_byte(struct pci_dev *dev, int where, u8 val)
 +{
-+	if (bus->orig_ops && bus->ops == &pcsc_ops) {
-+		bus->ops = bus->orig_ops;
-+		bus->orig_ops = NULL;
-+	}
++	if (WARN_ON(!dev || !dev->pcsc || !dev->pcsc->cfg_space))
++		return -EINVAL;
++
++	if (WARN_ON(where >= PCSC_CFG_SPC_SIZE))
++		return -EPERM;
++	dev->pcsc->cfg_space[where] = val;
++	pcsc_set_cached(dev, where, true);
++
++	return 0;
 +}
 +
-+static int pcsc_bus_notify(struct notifier_block *nb, unsigned long action,
-+			   void *data)
++int pcsc_add_device(struct pci_dev *dev)
 +{
-+	struct device *dev = data;
++	struct pcsc_node *node;
 +	struct pci_bus *bus;
 +
-+	bus = to_pci_bus(dev);
-+	if (!bus)
-+		return NOTIFY_OK;
++	if (WARN_ON(!dev))
++		return -EINVAL;
 +
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		pcsc_inject_bus_ops(bus);
-+		break;
-+	case BUS_NOTIFY_DEL_DEVICE:
-+		/*
-+		 * Remove on DEL_DEVICE to unhook before device_del() completes.
-+		 * This ensures caching is disabled before the final cleanup.
-+		 */
-+		pcsc_remove_bus_ops(bus);
-+		break;
++	bus = dev->bus;
++
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
++	if (!node)
++		return -ENOMEM;
++
++	dev->pcsc = node;
++	/* The current version of the PCSC supports only endpoint devices.
++	 * Bridges and RCs are not supported, but we are still creating
++	 * nodes for these devices, as it simplifies the code flow
++	 */
++	if (dev->hdr_type == PCI_HEADER_TYPE_NORMAL) {
++		dev->pcsc->cfg_space = kzalloc(PCSC_CFG_SPC_SIZE, GFP_KERNEL);
++		if (!dev->pcsc->cfg_space)
++			goto err_free_node;
++
++	} else {
++		dev->pcsc->cfg_space = NULL;
 +	}
 +
-+	return NOTIFY_OK;
++	atomic_inc(&num_nodes);
++	pci_dbg(dev, "PCSC: Created cache node\n");
++
++	return 0;
++
++err_free_node:
++	dev->pcsc = NULL;
++	kfree(node);
++	return -ENOMEM;
 +}
++EXPORT_SYMBOL_GPL(pcsc_add_device);
 +
-+static struct notifier_block pcsc_bus_nb = {
-+	.notifier_call = pcsc_bus_notify,
-+};
-+
-+static int __init pcsc_init(void)
++int pcsc_remove_device(struct pci_dev *dev)
 +{
-+	bus_register_notifier(&pci_bus_type, &pcsc_bus_nb);
++	if (WARN_ON(!dev))
++		return -EINVAL;
 +
-+	pcsc_initialised = true;
-+	pr_info("initialised\n");
++	pci_dbg(dev, "PCSC: Removing cache node");
++
++	atomic_dec(&num_nodes);
++
++	if (dev->pcsc && dev->pcsc->cfg_space) {
++		kfree(dev->pcsc->cfg_space);
++		kfree(dev->pcsc);
++	}
++	dev->pcsc = NULL;
 +
 +	return 0;
 +}
-+
-+core_initcall(pcsc_init);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 37f5bd476f39..33a186e4bf1e 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -8,6 +8,7 @@
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/pci.h>
-+#include <linux/pcsc.h>
- #include <linux/msi.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
-@@ -1039,6 +1040,11 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	}
- #endif
- 
-+#ifdef CONFIG_PCSC
-+	if (pcsc_inject_bus_ops(bus))
-+		pci_err(bus, "PCSC: Failed to inject ops\n");
-+#endif
-+
- 	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
- 	if (b) {
- 		/* Ignore it if we already got here via a different bridge */
-@@ -1236,10 +1242,24 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
- 	child->bus_flags = parent->bus_flags;
- 
- 	host = pci_find_host_bridge(parent);
--	if (host->child_ops)
-+	if (host->child_ops) {
- 		child->ops = host->child_ops;
--	else
-+#ifdef CONFIG_PCSC
-+		child->orig_ops = host->child_ops;
-+#endif
-+	} else {
- 		child->ops = parent->ops;
-+#ifdef CONFIG_PCSC
-+		child->orig_ops = parent->orig_ops;
-+#endif
-+	}
-+
-+#ifdef CONFIG_PCSC
-+	if (child->ops) {
-+		if (pcsc_inject_bus_ops(child))
-+			pci_err(child, "PCSC: Failed to inject ops\n");
-+	}
-+#endif
- 
- 	/*
- 	 * Initialize some portions of the bus device, but don't register
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d1fdf81fbe1e..b6cbf93db644 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -669,6 +669,9 @@ struct pci_bus {
- 	struct resource busn_res;	/* Bus numbers routed to this bus */
- 
- 	struct pci_ops	*ops;		/* Configuration access functions */
-+#ifdef CONFIG_PCSC
-+	struct pci_ops	*orig_ops;	/* Original ops before PCSC injection */
-+#endif
- 	void		*sysdata;	/* Hook for sys-specific extension */
- 	struct proc_dir_entry *procdir;	/* Directory entry in /proc/bus/pci */
- 
-diff --git a/include/linux/pcsc.h b/include/linux/pcsc.h
-new file mode 100644
-index 000000000000..45816eb2b2c8
---- /dev/null
-+++ b/include/linux/pcsc.h
-@@ -0,0 +1,86 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2025 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ * Author: Evangelos Petrongonas <epetron@amazon.de>
-+ *
-+ */
-+
-+#ifndef _LINUX_PCSC_H
-+#define _LINUX_PCSC_H
-+
-+#include <linux/pci.h>
++EXPORT_SYMBOL_GPL(pcsc_remove_device);
 +
 +/**
-+ * pcsc_hw_config_read - Direct hardware PCI config space read
-+ * @bus: PCI bus
-+ * @devfn: PCI device function
-+ * @where: offset in PCI config space
-+ * @size: size of data to read
-+ * @val: pointer to store read data
++ * pcsc_get_and_insert_multiple - Read multiple bytes from PCI cache or HW
++ * @dev: PCI device to read from
++ * @bus: PCI bus to read from
++ * @devfn: device and function number
++ * @where: offset in config space
++ * @word: pointer to store read value
++ * @size: number of bytes to read (1, 2 or 4)
 + *
-+ * This function performs a direct hardware read from PCI configuration space,
-+ * bypassing the PCSC cache. It is a weak function that can be overridden by
-+ * architecture-specific implementations.
-+ *
-+ * Return: 0 on success, non-zero error code on failure
-+ */
-+int pcsc_hw_config_read(struct pci_bus *bus, unsigned int devfn, int where,
-+			int size, u32 *val);
-+
-+/**
-+ * pcsc_hw_config_write - Direct hardware PCI config space write
-+ * @bus: PCI bus
-+ * @devfn: PCI device function
-+ * @where: offset in PCI config space
-+ * @size: size of data to write
-+ * @val: value to write
-+ *
-+ * This function performs a direct hardware write to PCI configuration space,
-+ * bypassing the PCSC cache. It is a weak function that can be overridden by
-+ * architecture-specific implementations.
-+ *
-+ * Return: 0 on success, non-zero error code on failure
-+ */
-+int pcsc_hw_config_write(struct pci_bus *bus, unsigned int devfn, int where,
-+			 int size, u32 val);
-+
-+/**
-+ * pcsc_cached_config_read - Read PCI config space register via PCSC
-+ * @bus: PCI bus
-+ * @devfn: PCI device function
-+ * @where: offset in PCI config space
-+ * @size: size of data to read
-+ * @val: pointer to store read data
-+ *
-+ * Reads a register from the PCI configuration space of a device using the
-+ * PCSC infrastructure.
-+ *
-+ * Return: 0 on success, non-zero error code on failure
-+ */
-+int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
-+			    int size, u32 *val);
-+
-+/**
-+ * pcsc_cached_config_write - Write PCI config space register via PCSC
-+ * @bus: PCI bus
-+ * @devfn: PCI device function
-+ * @where: offset in PCI config space
-+ * @size: size of data to write
-+ * @val: value to write
-+ *
-+ * Writes a value to a register in the PCI configuration space of a device using
-+ * the PCSC infrastructure.
-+ *
-+ * Return: 0 on success, non-zero error code on failure
-+ */
-+int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
-+			     int size, u32 val);
-+
-+/**
-+ * pcsc_inject_bus_ops Inject the pcsc ops into bus pci_ops
-+ * @bus: the bus in which to inject the ops
++ * Reads consecutive bytes from PCI cache or hardware. If values are not cached,
++ * reads from hardware and inserts into cache.
 + *
 + * Return: 0 on success, negative error code on failure
 + */
-+int pcsc_inject_bus_ops(struct pci_bus *bus);
-+#endif /* _LINUX_PCSC_H */
++static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
++					struct pci_bus *bus, unsigned int devfn,
++					int where, u32 *word, int size)
++{
++	u32 word_cached = 0;
++	u8 byte_val;
++	int rc, i;
++
++	if (WARN_ON(!dev || !bus || !word))
++		return -EINVAL;
++
++	if (WARN_ON(size != 1 && size != 2 && size != 4))
++		return -EINVAL;
++
++	/* Check bounds */
++	if (where + size > PCSC_CFG_SPC_SIZE)
++		return -EINVAL;
++
++	if (pcsc_is_cached(dev, where, size)) {
++		/* Read bytes from cache and assemble them into word_cached
++		 * in little-endian order (as per PCI spec)
++		 */
++		for (i = 0; i < size; i++) {
++			pcsc_get_byte(dev, where + i, &byte_val);
++			word_cached |= ((u32)byte_val << (i * 8));
++		}
++	} else {
++		rc = pcsc_hw_config_read(bus, devfn, where, size, &word_cached);
++		if (rc) {
++			pci_err(dev,
++				"%s: Failed to read CFG Space where=%d size=%d",
++				__func__, where, size);
++			return rc;
++		}
++
++		/* Extract bytes from word_cached in little-endian order
++		 * and store them in cache.
++		 */
++		for (i = 0; i < size; i++) {
++			byte_val = (word_cached >> (i * 8)) & 0xFF;
++			pcsc_update_byte(dev, where + i, byte_val);
++		}
++	}
++
++	*word = word_cached;
++	return 0;
++}
++
+ int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
+ 			    int size, u32 *val)
+ {
+-	if (!pcsc_initialised)
++	int rc;
++	struct pci_dev *dev;
++
++	if (unlikely(!pcsc_is_initialised()))
+ 		goto read_from_dev;
+ 
++	if (WARN_ON(!bus || !val || (size != 1 && size != 2 && size != 4) ||
++		    where + size > PCSC_CFG_SPC_SIZE))
++		return -EINVAL;
++
++	dev = pci_get_slot(bus, devfn);
++
++	if (unlikely(!dev || !dev->pcsc))
++		goto read_from_dev;
++
++	if (dev->pcsc->cfg_space &&
++	    pcsc_is_access_cacheable(dev, where, size)) {
++		rc = pcsc_get_and_insert_multiple(dev, bus, devfn, where, val,
++						  size);
++		if (likely(!rc)) {
++			pci_dev_put(dev);
++			return 0;
++		}
++		/* if reading from the cache failed continue and try reading
++		 * from the actual device
++		 */
++	}
+ read_from_dev:
++	if (dev)
++		pci_dev_put(dev);
+ 	return pcsc_hw_config_read(bus, devfn, where, size, val);
+ }
+ EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
+@@ -117,10 +336,31 @@ EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
+ int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+ 			     int size, u32 val)
+ {
+-	if (!pcsc_initialised)
++	int i;
++	struct pci_dev *dev;
++
++	if (unlikely(!pcsc_is_initialised()))
+ 		goto write_to_dev;
+ 
++	if (WARN_ON(!bus || (size != 1 && size != 2 && size != 4) ||
++		    where + size > PCSC_CFG_SPC_SIZE))
++		return -EINVAL;
++
++	dev = pci_get_slot(bus, devfn);
++
++	if (unlikely(!dev || !dev->pcsc || !dev->pcsc->cfg_space)) {
++		/* Do not add nodes on arbitrary writes  */
++		goto write_to_dev;
++	} else {
++		/* Mark the cache as dirty */
++		if (pcsc_is_access_cacheable(dev, where, size)) {
++			for (i = 0; i < size; i++)
++				pcsc_set_cached(dev, where + i, false);
++		}
++	}
+ write_to_dev:
++	if (dev)
++		pci_dev_put(dev);
+ 	return pcsc_hw_config_write(bus, devfn, where, size, val);
+ }
+ EXPORT_SYMBOL_GPL(pcsc_cached_config_write);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 33a186e4bf1e..c231e09e5a6e 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -23,6 +23,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bitfield.h>
++#include <linux/pcsc.h>
+ #include "pci.h"
+ 
+ #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+@@ -2801,6 +2802,14 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+ 
+ 	dev->state_saved = false;
+ 
++#ifdef CONFIG_PCSC
++	if (likely(pcsc_is_initialised()))
++		if (!dev->pcsc)
++			if (pcsc_add_device(dev))
++				pci_warn(dev,
++					 "Failed to add PCI device to PCSC\n");
++#endif
++
+ 	pci_init_capabilities(dev);
+ 
+ 	/*
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b6cbf93db644..e59b585f96bb 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -42,6 +42,7 @@
+ #include <uapi/linux/pci.h>
+ 
+ #include <linux/pci_ids.h>
++#include <linux/pcsc.h>
+ 
+ #define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
+ 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+@@ -560,6 +561,10 @@ struct pci_dev {
+ 	u8		tph_mode;	/* TPH mode */
+ 	u8		tph_req_type;	/* TPH requester type */
+ #endif
++
++#ifdef CONFIG_PCSC
++	struct pcsc_node *pcsc;
++#endif
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+diff --git a/include/linux/pcsc.h b/include/linux/pcsc.h
+index 45816eb2b2c8..516d73931608 100644
+--- a/include/linux/pcsc.h
++++ b/include/linux/pcsc.h
+@@ -9,6 +9,20 @@
+ #define _LINUX_PCSC_H
+ 
+ #include <linux/pci.h>
++#include <linux/sizes.h>
++#include <linux/bitmap.h>
++
++#ifdef CONFIG_PCIE_PCSC
++#define PCSC_CFG_SPC_SIZE (4 * SZ_1K)
++#else
++#define PCSC_CFG_SPC_SIZE 256
++#endif
++
++struct pcsc_node {
++	u8 *cfg_space;
++	DECLARE_BITMAP(cachable_bitmask, PCSC_CFG_SPC_SIZE);
++	DECLARE_BITMAP(cached_bitmask, PCSC_CFG_SPC_SIZE);
++};
+ 
+ /**
+  * pcsc_hw_config_read - Direct hardware PCI config space read
+@@ -83,4 +97,28 @@ int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
+  * Return: 0 on success, negative error code on failure
+  */
+ int pcsc_inject_bus_ops(struct pci_bus *bus);
++
++/**
++ * pcsc_add_device - Allocate and initialize a new PCSC node
++ * This should only be called once for each device
++ * @dev: PCI device to initialise the cache for
++ *
++ * Returns: 0 on success error code on failure
++ */
++int pcsc_add_device(struct pci_dev *dev);
++
++/**
++ * pcsc_remove_device - Clear up any PCSC data
++ * @dev: PCI device to remove
++ *
++ * Returns: 0 on success, -EINVAL if dev is NULL
++ */
++int pcsc_remove_device(struct pci_dev *dev);
++
++/**
++ * @brief Returns if the PCSC infrastructure is initialised
++ *
++ */
++bool pcsc_is_initialised(void);
++
+ #endif /* _LINUX_PCSC_H */
 -- 
 2.47.3
 
