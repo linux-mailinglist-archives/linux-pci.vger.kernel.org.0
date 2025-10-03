@@ -1,126 +1,94 @@
-Return-Path: <linux-pci+bounces-37532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37533-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCB4EBB668E
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 11:56:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25207BB6847
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 13:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 781E3344E57
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 09:56:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D90493B39E0
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 11:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C0A2C21DF;
-	Fri,  3 Oct 2025 09:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080112EAD0A;
+	Fri,  3 Oct 2025 11:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdDiHLvt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SylRB0m1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5245E1E5213
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 09:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF91081720;
+	Fri,  3 Oct 2025 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759485374; cv=none; b=FxdLnagUp8PZ4alWcmoqIp5Rs4tAmPDYMMSRSsNTUuwd1x6wBS9KX+iP/dYWpE7UVB54MLiA/asvZAVhehA9RfXu0U4jtbJMwswsnvnZvHUfyv2J0q+PrU+YKd3cQXtd1PwnKlVLelqBlx3mkdd7bVEyp4jEF4lTL8mh+xn28D4=
+	t=1759489732; cv=none; b=DHRgFjzQUuiY/bkq9PJXct1yVPXYuiLQLCMDJN+XyHGeeI4hbypCjwU+6htdTJOcbiYH1pdAmewsjOD2iFMeFMtbuF2JaVUZlXgKa9mUXH+UL2/6TpmNSCtWZ32/vNZvo/0AA0lqXPOr0GFVSc8uf+yKWQQkAHXFDv8yh3JDW44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759485374; c=relaxed/simple;
-	bh=QqW0rxC7Vf1nAEG6EJAGWXwKs5VrONY7vi4gfK9d5Ak=;
+	s=arc-20240116; t=1759489732; c=relaxed/simple;
+	bh=Qqb8NIJ7UArlqzST4/1DpbR3N4j0f9ZT/J3xqzy6rm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PShflgXz6OjJwZXNX2a9I+adknVZY164gHAQFyUYye+66ZfZRT/jGEJ1FH2AunbqPq8vKDJs9S2B4jFH/Pfm5kB8ZRJBW7fLJes/+VUgxqbVyBcF6bCGQJSA0P75r3zQzcXWW+sUTc8n+vVBLTKJS3ycXwj8TUg3yz6U/yw2TTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hdDiHLvt; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7811fa91774so1712268b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 02:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759485372; x=1760090172; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HjkSzcHQCRHxGjAdHJ76YWjL7H9j4QRw11Hc/S45qjM=;
-        b=hdDiHLvt9Ie6e2LmmmZsmnnx7Rm1fw4L1xxtN0gw90sXWu64AHsKLXJ+6Im3iHJ4qV
-         O7Utg51WQBaijUL8DuLd/8XmI1WYZHHk8fk/V/w4rf8Dyd8pJv3rsDaIqfeGs7sH3dbB
-         sqDivGxO7HiARQkQtRiBqDw2iC4tjJ4A3x7acEBge09U45/nSB7hRfqYKxy3AwqPHIwZ
-         IKjF7ZjRnAg7mpbUCY64n0l5iwSoK0Lpz47n3sCgesKKl6YA/Rm2/avpwwoMdg0WsULK
-         ILblMyXZEkAOnN4meWaFi2nsR7RDLiC33GXPzj9oydJzwY5UEnjiR9voLSn19fj5lMCj
-         6GIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759485372; x=1760090172;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HjkSzcHQCRHxGjAdHJ76YWjL7H9j4QRw11Hc/S45qjM=;
-        b=BIqZpVdEZIQj3l3XAUPRcLR3pAxAcPn/lC6QIjpYzayNxO6tNPQPD/RGAvJEcLkZ2Z
-         L7x5LAAarNBt/O+yElovP2XY68MRTHw9uTsrWajdWSfRwoqG26KVm+1FKLpUwlLeD3sR
-         0VzscKXz1Wy9nmr0qaC9n7ActxUnQp2Py/uXgtlN6NxPGam2q+Sb8T7wLZ8pBFadGvHF
-         Jz7NpAKBfnsHzmhKTHZ8yQYWDDwYTOWTq6n+Zz9U0+MpYXVP0R6l1Yuzg/rom7YYhy90
-         qkXJjTo16p1Fs/eYMpZyfHv9hupX1bVobhKhZGdse8xMRmr7ycOI6qm7yM3t2RwN0wOV
-         ZA9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVv7M2BTHs0WeKFFII/eskJ2fRzt8R5SgYCuzwIxbnycqSLp2rLBh1oVOGYYDVyhlCxTojc4HlMXMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+Uv9h31HejKWKRLAoxlDmKns225BU3d/DrlI/N27IJySvVwr
-	kr8NwjTb+1+dUkRT5uCDcD6NGzXIoVjRXnMyalBvAWsf724ZHxE48rau
-X-Gm-Gg: ASbGnct6Pq5D/sbHwLMFVPqO1O22E+fcLh/92d7gMJ4aIwumYB809htHvDP8NZ6yLBz
-	0GaBoLYmkcM/5wyFapxenzlOz7if0Rp8YU0AW8tP8b6mkB5dRg2KzJ3E1wHK9Q3O0LwgjR282wu
-	vPaJpIav1vYhTRRX8gSREPlKAD0hjdoc4k4vscJW8zfTbAjpTxU1uKpEDnuX1I1r+iqb6jECmBX
-	dLmIZ+MogaNV3VSSwoUE8gDu37xmIHB8GLKjyvp/Kg4+/ZTicE2aJqG8pK8HaXkpMsdn4idp6ax
-	z0YQyNinKtnvHW5YjJHRY5zvEXLCNhzn4cvjmemqAtddE6REb/hvccF0AGxr0t8dtOElhZS5u71
-	FtWeUq8Ndmjw+TOQf8fDNgknUPj9AOlsl5A==
-X-Google-Smtp-Source: AGHT+IFgG1sDmJWIInobrT6MYZozHk7ObDc757Ax6SKK+T4qAyB9z8lgZO3RUGk1fZnpjVO1SGBv+Q==
-X-Received: by 2002:a05:6a20:6a1a:b0:250:429b:9e6d with SMTP id adf61e73a8af0-32b620db8bcmr3216562637.44.1759485372467;
-        Fri, 03 Oct 2025 02:56:12 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:2c45::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-78b01fb1a9fsm4407283b3a.20.2025.10.03.02.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Oct 2025 02:56:11 -0700 (PDT)
-Date: Fri, 3 Oct 2025 06:56:04 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH v3 2/3] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <aN-dtHxYTspw3rvQ@geday>
-References: <cover.1749582046.git.geraldogabriel@gmail.com>
- <b7c09279b4a7dbdba92543db9b9af169776bd90c.1749582046.git.geraldogabriel@gmail.com>
- <ac48d142-7aec-4fdd-92a4-6f9bc10a7928@rock-chips.com>
- <aHnAcbXuFqcMXy_5@geday>
- <067e1833-8527-4c66-90f5-d284f7d2ca5c@rock-chips.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9MnjbEREavdvg69s1bgGOZEPzmZnnC7ODgyVoXLO5qHYK228JP11Pcwig9UDGJFB1kiBCJWmFEo/rUoV+mYd7pqfoZarWlCFwJ/aD/cxjOc2z6p/pVgzk7hTAGVw1AwILKXZEdepwaOfA1oDVdlGq5/ISrIVXHap/82XxItp1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SylRB0m1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC87C4CEF5;
+	Fri,  3 Oct 2025 11:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759489731;
+	bh=Qqb8NIJ7UArlqzST4/1DpbR3N4j0f9ZT/J3xqzy6rm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SylRB0m1joaKYgTLulMhzX0MhuAOpn1eXp4TfFtk0pZo/05IfVuRdOjO8tTc4r5fu
+	 OPsI/A8OUydTasL9A1Huva9QI7rCvLCuhmpO7PcN8eSGAhuthsxaAnw38wXXsKFm5V
+	 3xSJ+vmnC6Qowu0IPnRzTU3eWA2J6V+gcU363dPg3L4AXN4JY0lTYcwo1Mwz40BpJb
+	 D5otfzN8xfbKUMUKfBq7LvsKw3kEXicexcKMRD+A74CzQY824oWgeYO+a/AYslFexu
+	 BFxpBe4/z0d2+h/UL/vdN9qT8wF28Rf4YAy1Yg3lq8FI/l6C7Xg0qCJPET1CO7qLHm
+	 mOeuLVCLE4Nxw==
+Date: Fri, 3 Oct 2025 12:08:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: lgirdwood@gmail.com, linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kw@linux.com
+Subject: Re: [PATCH 3/7] ASoC: Intel: soc-acpi: add NVL match tables
+Message-ID: <533d2d46-27dc-467f-b121-f4535f325aaf@sirena.org.uk>
+References: <20251002084252.7305-1-peter.ujfalusi@linux.intel.com>
+ <20251002084252.7305-4-peter.ujfalusi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VASl+GsgNTamOKDS"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <067e1833-8527-4c66-90f5-d284f7d2ca5c@rock-chips.com>
+In-Reply-To: <20251002084252.7305-4-peter.ujfalusi@linux.intel.com>
+X-Cookie: hangover, n.:
 
-On Fri, Jul 18, 2025 at 11:46:33AM +0800, Shawn Lin wrote:
-> 在 2025/07/18 星期五 11:33, Geraldo Nascimento 写道:
-> > 
-> > Also, since you're asking me to test some code, I think it is only fair
-> > if I ask you to test my code, too. It shouldn't be too hard for you to
-> > find a otherwise working NVMe SSD that refuses to complete link training
-> > with current code. Connect this SSD please to a RK3399 board and let us
-> > know if my proposed code change does anything to ameliorate the
-> > long-standing issue of SSD that refuses to cooperate.
-> 
-> Sure, I don't have Samsung PM981a SSD now, but I could try to test all
-> my SSDs to find if I could pick up one that won't work.
->
 
-Hi Shawn,
+--VASl+GsgNTamOKDS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Haven't heard back from you so I assume you tested with SSD that should
-work but does not and that the test failed?
+On Thu, Oct 02, 2025 at 11:42:48AM +0300, Peter Ujfalusi wrote:
+> For now the tables are basic for mockup devices
 
-Thanks,
-Geraldo Nascimento
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--VASl+GsgNTamOKDS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjfrr0ACgkQJNaLcl1U
+h9Ds+wf+MrJG8kPzbDNK6JVOiuQ+1zsUWpPTaD0XC4TLarOyqTj9Ft0bXqi620+T
+1CsqxbRxhw6rVde8ji8rSF6EfVQNk8BJxU1cB7Rq3oPlHcZaUxmEo5Ws76GhJ/Xp
+8r3uPW8sfGS47IRdm3NM6CcZOB9xO9X7v6fpnBhT5UliPm3XFgvF4X56BXJBlo7c
+m5ozNFXRjhn/yCi0b5CDj4zvV9SML1YXgvW2xmGowLGzFL85ds7046eVX8gVWCmP
+NMgrJtKaVWj9f/biUBqM91vO82VTjkIy7Q7BbMAyidivul4Fokg4qNySMXcWpfn3
+Kx63ky8E0taJ/y6jFdowLG1v/5TUmw==
+=X7Tt
+-----END PGP SIGNATURE-----
+
+--VASl+GsgNTamOKDS--
 
