@@ -1,142 +1,150 @@
-Return-Path: <linux-pci+bounces-37548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5685DBB76F7
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:04:16 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 227B4BB7727
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15B573A740C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:04:15 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C189F346CD3
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:05:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A2929D26D;
-	Fri,  3 Oct 2025 16:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF452BD013;
+	Fri,  3 Oct 2025 16:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pG5pggDT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/LXDzz4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477504A23
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E219229BDB5
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759507452; cv=none; b=aozr7RmTPRRdqMu8DYOmCiIrgptSn8AolovbhDzOT0cS2Ui91E/YbejaVobolHThEb1ogsUVH86m7N6lLTsFOcjDPL/IjHhTLo4aHuYcSa1cbLzpl7Sg/3MP1yyzohEG6u9+G6rGQM7c9DrGyH0LhO9WfFYHpKzVg8gBEqwCwYw=
+	t=1759507524; cv=none; b=JimF4ihE1MY4rtvPo45P26dIeQBy0QBVfMFUZCRQlPGDrYgElCGxdUVqOCl7H3KN8jPx77xYveb01p9RvQW0U6sMotDicB7yriGPHnXixZivot3RmH9T7KyXd1LejukCxulZ8aWwcTrPLHAnBy2r76XhfvhKG4bYt82qJhT3dek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759507452; c=relaxed/simple;
-	bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mOhVryD+XdKTW1lvCIGJKUX7SHSLZ7T2M0co+ygfIUJ6/RJFrkucuBgw2RwgJCWl4h2GAmG7xskPEVLCH2ZCg9YGg3xbKwAGJE8qnwUJUIkVgqamnqvRromWXs3aMYuHdgaYEQXcZkp2vs8Fvfwi4E2JjhSqN8MUOWD4Tekc9II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pG5pggDT; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-36a448c8aa2so19724411fa.0
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 09:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759507448; x=1760112248; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
-        b=pG5pggDTbkayQAHuailvhLOQaSc7f0QDJZxtRM5Ocgsg5GDVrJBKJYml1uV4MqtlH5
-         x6gFylrPQoj14fnjLJtft8eE5mJStAZwpuuG4y1RSgajHoErEk7lTog7+i7P9Fbj8fQC
-         v8+iTZRS4yLXZ+yDB2yq/aEZSPImwQ81G3zGAgghEPHumCrqaIp/Pfh1ucyrdvPoaPQO
-         HrLFFL/+5zNSBZAWQHOsa2ZF63roT64VPM3vIEZDCiz0GHId6csOem/75byf9Knq0vlU
-         +D+WQCfFWe1BGu2weYdIbdpc3cn75jBTgpqIFr64U7Dp6qxvExPMiE4UaTuP2c8o594+
-         hoDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759507448; x=1760112248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
-        b=mnbF74MIo9KvZFbHNcO6m9wx0+aGStAy/S+40XM7bCNSpiYXJPYQu8qtEJJ07j9Isj
-         zNnKgBtyeVTxLCX91wW0lM5zYMiy5aF7UETGq+7eBo61G2KfwmVMiPvVQxzclYml/BBL
-         5RXnhXjHUtaCGeEekrA+6akJifdKbG399ft4eaLul2G2Mn6g/WS8s4k4lu/Xgw3TwEd4
-         eG1xClSussrLiJ/Fd+dJXwbdRZBPH/UgrYOy5T5KFWgNjJvE0O9pZoC4GJdVAnP0jNLA
-         JIOo6JJ9bTnHAz1PW1d8HjurX+rUCeXgTS0v9M9+QRRgCOYgF8/dB8GsA473PttirIMr
-         HADg==
-X-Forwarded-Encrypted: i=1; AJvYcCXky8ysyz62ERUuimKGTuCypYk2oyLsy6T0qR8zZO+DAvHkN6NgXNH9hjfo7G/zxaN27NnaijgZM38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYpK7+qK75n7kX+VPsCJqMC0mwFDZWbeLT8Dl93RvLywCXxaOk
-	Gdtq+nDfPv6gT+zDyI0WE2oyiJFbohQJJTx/jv1r9LTyMSXlxmzhkfJpAD06jiCCfaG/IdNkcdI
-	zZ+SJ32yRyRf2EYGUjA00GGG01h6nV585/9rw7DWB
-X-Gm-Gg: ASbGncv1P0CLF+ey7g8WDPIFIo6DOVN9DEBq6652OssRgbUCeS5sm9Q3K7XBkGZAUUU
-	IItvUz4psUU0yOc8iVMQJo1xjvhaEnMcGIwbojOIr1+kjWedesRmawEPHPh2nx8Rw31rxdXc00Y
-	pkFEKiRP3xkELLMFbn2/433LGLLuRYKUSgCzukRJdEJL3e2ZsE1BwvJHdB4F4IW+YIH9a7B6Qyx
-	t4WodprgNy4tgE0PRVN67aDi/j0SytfcpBTp5hzt0l/Tln/
-X-Google-Smtp-Source: AGHT+IGiMd7rKjwQRWLNmQV2ARjJ6CbLBvJ4uJ7+GgX8fPI3wLEN++8hxxM01GxQ22Ve+kjEe3XbnxIJhiOoe+F2QoQ=
-X-Received: by 2002:a2e:be20:0:b0:371:fb14:39bb with SMTP id
- 38308e7fff4ca-374c36cbf1bmr11636561fa.16.1759507447942; Fri, 03 Oct 2025
- 09:04:07 -0700 (PDT)
+	s=arc-20240116; t=1759507524; c=relaxed/simple;
+	bh=jtupfp2W3ZW5DUNFQWpOwE3JhmuEzZnG/5d/lWKCbhA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AuMnIJkYzGqyZzRrf1XSUcdNJxblvRi/bgxWsvx+PpkhRTL/7vziKtGMp3k70Fttjhet1QXQwg29C1OneKPbveweqWfQONb2XAn4jPrl8YMrdgfrfxsH0RZnSAesiDC+xx4e98SDRjTXbf6a1h0X17Z6Ppn2KlzguRjyBmsm7+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/LXDzz4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1759507521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=u91ZKQE68Be0swDMaJzbkLnRizpHM6eTbx4qcG+71Js=;
+	b=N/LXDzz4DaE8C6MgRNXL9DYX5YC5vHTS+kJomatVeYv29uABIvCl6OC0bmhxh1H2uNJM5D
+	gJ9OCXur3b0Q8vCzPOjgVT5cfCuvU3qSrcp3YpslbJTJXhv7meXBEZOZJFBucm6/SkGJKP
+	jCOLssc0jl5NyQrgLAQL2BoJ5rin4Yo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-245-_cJUHfh7PpS-uNP1oZvc1w-1; Fri,
+ 03 Oct 2025 12:05:18 -0400
+X-MC-Unique: _cJUHfh7PpS-uNP1oZvc1w-1
+X-Mimecast-MFC-AGG-ID: _cJUHfh7PpS-uNP1oZvc1w_1759507517
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07505180057F;
+	Fri,  3 Oct 2025 16:05:17 +0000 (UTC)
+Received: from thinkpad-p1.localdomain.com (unknown [10.22.65.162])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7754719560BA;
+	Fri,  3 Oct 2025 16:05:14 +0000 (UTC)
+From: Radu Rendec <rrendec@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Brian Masney <bmasney@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Alessandro Carminati <acarmina@redhat.com>,
+	Jared Kangas <jkangas@redhat.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Enable MSI affinity support for dwc PCI
+Date: Fri,  3 Oct 2025 12:04:18 -0400
+Message-ID: <20251003160421.951448-1-rrendec@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
- <20250916-luo-pci-v2-3-c494053c3c08@kernel.org> <20250929174831.GJ2695987@ziepe.ca>
- <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
- <20250930163837.GQ2695987@ziepe.ca> <aN7KUNGoHrFHzagu@google.com>
- <CACePvbX6GfThDnwLdOUsdQ_54eqF3Ff=4hrGhDJ0Ba00-Q1qBw@mail.gmail.com>
- <CALzav=cKoG4QLp6YtqMLc9S_qP6v9SpEt5XVOmJN8WVYLxRmRw@mail.gmail.com>
- <20251002232153.GK3195829@ziepe.ca> <CALzav=cYBmn_t1w2jHicSbnX57whJYD9Cu84KJekL0n2gZxfmw@mail.gmail.com>
- <20251003120358.GL3195829@ziepe.ca>
-In-Reply-To: <20251003120358.GL3195829@ziepe.ca>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 3 Oct 2025 09:03:36 -0700
-X-Gm-Features: AS18NWC303vSFWFcWUMQr9iYimndopgbWOTEn34kaHamJm2L82qyIyCjJfpVv7M
-Message-ID: <CALzav=fci3jPft+SXJ6tPG3=jRX7jjJPwnP=zWAb2Sui++vKPw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
- callbacks to driver
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
-	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
-	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>, Brian Vazquez <brianvv@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, Oct 3, 2025 at 5:04=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wrote=
-:
->
-> On Thu, Oct 02, 2025 at 04:42:17PM -0700, David Matlack wrote:
-> > On Thu, Oct 2, 2025 at 4:21=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> w=
-rote:
-> > > On Thu, Oct 02, 2025 at 02:31:08PM -0700, David Matlack wrote:
-> > > > And we don't care about PF drivers until we get to
-> > > > supporting SR-IOV. So the driver callbacks all seem unnecessary at
-> > > > this point.
-> > >
-> > > I guess we will see, but I'm hoping we can get quite far using
-> > > vfio-pci as the SRIOV PF driver and don't need to try to get a big PF
-> > > in-kernel driver entangled in this.
-> >
-> > So far we have had to support vfio-pci, pci-pf-stub, and idpf as PF
-> > drivers, and nvme looks like it's coming soon :(
->
-> How much effort did you put into moving them to vfio though? Hack Hack
-> in the kernel is easy, but upstreaming may be very hard :\
->
-> Shutting down enough of the PF kernel driver to safely kexec is almost
-> the same as unbinding it completely.
+Various attempts have been made so far to support CPU affinity control
+for (de)multiplexed interrupts. Some examples are [1] and [2]. That work
+was centered around the idea to control the parent interrupt's CPU
+affinity, since the child interrupt handler runs in the context of the
+parent interrupt handler, on whatever CPU it was triggered.
 
-I think it's totally fair to tell us to replace pci-pf-stub with
-vfio-pci. That gets rid of one PF driver.
+This is a new attempt based on a different approach. Instead of touching
+the parent interrupt's CPU affinity, the child interrupt is allowed to
+freely change its affinity setting, independently of the parent. If the
+interrupt handler happens to be triggered on an "incompatible" CPU (a
+CPU that's not part of the child interrupt's affinity mask), the handler
+is redirected and runs in IRQ work context on a "compatible" CPU. This
+is a direct follow up to the (unsubmitted) patches that Thomas Gleixner
+proposed in [3].
 
-idpf cannot be easily replaced with vfio-pci, since the PF is also
-used for host networking. Brian Vazquez from Google will be giving a
-talk about the idpf support at LPC so we can revisit this topic there.
-We took the approach of only preserving the SR-IOV configuration in
-the PF, everything else gets reset (so no DMA mapping preservation, no
-driver state preservation, etc.).
+The first patch adds support for interrupt redirection to the IRQ core,
+without making any functional change to irqchip drivers. The other two
+patches modify the dwc PCI core driver to enable interrupt redirection
+using the new infrastructure added in the first patch.
 
-We haven't looked into nvme yet so we'll have to revisit that discussion la=
-ter.
+Thomas, however, I made a small design change to your original patches.
+Instead of keeping track of the parent interrupt's affinity setting (or
+rather the first CPU in its affinity mask) and attempting to pick the
+same CPU for the child (as the target CPU) if possible, I just check if
+the child handler fires on a CPU that's part of its affinity mask (which
+is already stored anyway). As an optimization for the case when the
+current CPU is *not* part of the mask and the handler needs to be
+redirected, I pre-calculate and store the first CPU in the mask, at the
+time when the child affinity is set. In my opinion, this is simpler and
+cleaner, at the expense of a cpumask_test_cpu() call on the fast path,
+because:
+- It no longer needs to keep track of the parent interrupt's affinity
+  setting.
+- If the parent interrupt can run on more than one CPU, the child can
+  also run on any of those CPUs without being redirected (in case the
+  child's affinity mask is the same as the parent's or a superset).
+
+Last but not least, since most of the code in these patches is your
+code, I took the liberty to add your From and Signed-off-by tags to
+properly attribute authorship. I hope that's all right, and if for any
+reason you don't want that, then please accept my apologies and I will
+remove them in a future version. Of course, you can always remove them
+yourself if you want (assuming the patches are merged at some point),
+since you are the maintainer :)
+
+[1] https://lore.kernel.org/all/20220502102137.764606ee@thinkpad/
+[2] https://lore.kernel.org/all/20230530214550.864894-1-rrendec@redhat.com/
+[3] https://lore.kernel.org/linux-pci/878qpg4o4t.ffs@tglx/
+
+Radu Rendec (3):
+  genirq: Add interrupt redirection infrastructure
+  PCI: dwc: Code cleanup
+  PCI: dwc: Enable MSI affinity support
+
+ .../pci/controller/dwc/pcie-designware-host.c | 123 ++++++++----------
+ drivers/pci/controller/dwc/pcie-designware.h  |   7 +-
+ include/linux/irq.h                           |   6 +
+ include/linux/irqdesc.h                       |  11 +-
+ kernel/irq/chip.c                             |  20 +++
+ kernel/irq/irqdesc.c                          |  51 +++++++-
+ kernel/irq/manage.c                           |  16 ++-
+ 7 files changed, 154 insertions(+), 80 deletions(-)
+
+-- 
+2.51.0
+
 
