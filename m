@@ -1,114 +1,172 @@
-Return-Path: <linux-pci+bounces-37487-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 187B0BB5AFF
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 02:53:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD2CEBB5B14
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 02:58:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1737F4E241C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 00:53:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D0CD4A689E
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 00:58:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4097F1A38F9;
-	Fri,  3 Oct 2025 00:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F332F1A38F9;
+	Fri,  3 Oct 2025 00:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFoPod4b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBZc1qsh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA899DF72
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 00:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA773BBF2;
+	Fri,  3 Oct 2025 00:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759452826; cv=none; b=rupv7RiFfYHlSICgO380FRbE3Uxpi9QZ7V7L6SvcxVZq2A17zVinw6VBcOxGy7UWygXj532xLb7SiDl8p34aoP1YvZ8uCK2og8kwAaTWZEwSkoifG2LoxGc1T+U9JQfwSQZQcKDpU9Vs6B5U4p4U2aGzrS7r5M+JqeXdk18hMIA=
+	t=1759453080; cv=none; b=aWo2YfZOjDOLLLkZkr/wpW5rEdw/0+pwRCFbq/VaF3m//E65a5Oei16zvUkZNYf0MYL5JKLROPVyo8kIAKdrsSnMfgQiBMlJ2Da4+zQ69MHrlFOtzFuJCuw1ovQRoQgZ1Vw8MxjfIsTfPePE96802kwLZC2GBVlkd+tTwWoluLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759452826; c=relaxed/simple;
-	bh=B220hJ25PUFK7FBdbYTH0TjO4X/r2HPn7ZpHiAioGf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JvPV+eXxsK4OfexgYcWge7U9gb8CKM3U4bmbNhnT+ZR2uV2aw2+VdcRHAbnisnTcpa1rQb1XJpUoDmcOnD11PeENBMGTn14E5rfIZ9ML1HdCC5FnW+pHNafmFE98rLsf64AtO4LLjd0iqcesPlb98STAvM44xabs38TOIeqscAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bFoPod4b; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b553412a19bso1197609a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 02 Oct 2025 17:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759452824; x=1760057624; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=S5uyOHpI2Au3C0gDg4sk6CizGa6egbK3UkaPqAi7z9Q=;
-        b=bFoPod4be0kjyUNF5AiyF+uZ9hs2eZBiKcxiLbmVIT2zyazhzm39220bFTRAGDgBWU
-         eofcWmQj9k6bEZtFb6nvpYZzIv4FP81GcsRdVbcjFyIQ6Tki1thE3+ikPIx/xOkKofe6
-         1BkpZ/8RFEK8GxHzSOU/ImQMrL4hasUGayXVVup9KSUXQb648eKaA5hNptdVVSjh0o+T
-         aa45iCVuBvpJwez0f8sr2UTFPe0vrgnh5Bi8iEedV0fxO86gH4VF6jojiyjTjc7rjU+o
-         4Fnq/l4EXyR1nwpzuUkPDHU1wA7M9zKRfD3r3XRzpKGAJb3s241dfisew6SdIGHdMage
-         7itg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759452824; x=1760057624;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S5uyOHpI2Au3C0gDg4sk6CizGa6egbK3UkaPqAi7z9Q=;
-        b=WqeH3Z6cJkAjqqmFW/2d1sa3MO1FhDWyqEadggfrFisIaHYMTVy1akW1P3P05NLGnw
-         m45XmTLcHrtr8FvnCk3jb5E4X055b03T+oxBq68+6G8uBSP1r7bklfJPmBM2ul0JJoR3
-         jammzg/lIZSSXVWo6CdMV9LFoUiIZsZa5Pz6xOo7DhEP9S0l3UxpjGpduXSKSGPjgh/H
-         OMeDPbTkqdh+YyuFuuIWkXs7bQCew5RpvfmI1sNrv2szGrPCZVt5EzrATPBwKfG2oj72
-         8If3rqmydoHmAH+4ml2TIi2T7OG7ErDdkIweWMwxOX6H96dRmrFyVd9Eo/in7ICU0dct
-         QaIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvqhMtrzm5BhuO+ttgJcZ/aJulwsaISWZhD1AYttNWH7BQBKfjA1GbetCqvPk0FsxwvednJawKTqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyfV8Onu98sMlxzWa6bdZpQnUziRhOOLdaI2pNjoxIzcG2KOiK
-	6KQf6MnIFDHPrvGYoppksKemTTDJvWDhkuVNSN3qeL7Z2PKEye6DwycX
-X-Gm-Gg: ASbGncvoyfL5LEB9RK7r9vk1z+WEa3V7elUA3wimF1iRSlQig12m98w1TG+k0bCTy9w
-	bc3N57kjNfYDSUpI5i6L1JAz30EqWXHNIQ/IDLs6gKeXe29n/73FWjK4crH1PT3bPmLTxEpJQ4S
-	QWmmuKX76t9RwcQh83PYWNHl0NG3zelC64CzJuDDrzSksYv574MRiDJ1rqQB6G7SSOHDAPzdanp
-	sVJbXFxaGSQTt1W9Z2EiwqvOLOoaLOS1ND94sbgGkGR5So/EMofkYBKoROxG0B56NvyhR+L+Umy
-	SNfiF08whciSr9q0PDyZ1daTOdOwD6z305iTUv1C4mruTm+cRvWadB72+2g8VsYXT/maRDwhFj/
-	pocKcCEf6+KgVuN+66P0q+zTVulhc4jPT+r5Y6b+y2SPQm2/XswAFQ6nd
-X-Google-Smtp-Source: AGHT+IGdxtFt+56PiTL282mlbn7E9q06odMFjzXKAWEcpqB67cy6Wg2N2QZUSTfY1sLAvl2nVxaWKA==
-X-Received: by 2002:a17:903:2f4c:b0:270:4964:ad82 with SMTP id d9443c01a7336-28e9a6292bfmr12750695ad.38.1759452823807;
-        Thu, 02 Oct 2025 17:53:43 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-28e8d12b4d8sm33058045ad.54.2025.10.02.17.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 17:53:43 -0700 (PDT)
-Date: Fri, 3 Oct 2025 08:53:10 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: "Kenneth R. Crudup" <kenny@panix.com>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com, 
-	linux-pci@vger.kernel.org
-Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per
- device?  domains") causing boot hangs on my laptop
-Message-ID: <b2yvi26tcyctaqjk55iym3wt2gmp7sdr6h5ptay6w7dzgk5zy6@vwn2uiqcgyjb>
-References: <lhrbiugb4o0da3rtcvl0aduk.1759451570558@email.android.com>
- <68df1c05.050a0220.31415.096bSMTPIN_ADDED_MISSING@mx.google.com>
+	s=arc-20240116; t=1759453080; c=relaxed/simple;
+	bh=gGh/Qei7nmlKhJsFz5d/aOUzsnnKuTRbbLHu6gETIL8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=useYmpGTj7UmYDyn9IpKI48HrxuaAShQRHkC9bUWyLXBu9JoY0bCT8jsCkB28/Tuh9s+5PDjrV3y+pF/eyHtvpjkzPz4uhwKfO9yfxHPnEuXlS7E5VI4Qxeuwi5voVrUsvwbaE0xTLGzBfv9TVVI5SKOm7QrhpaMAYv7ZH4k8xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBZc1qsh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30AC0C4CEF4;
+	Fri,  3 Oct 2025 00:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759453080;
+	bh=gGh/Qei7nmlKhJsFz5d/aOUzsnnKuTRbbLHu6gETIL8=;
+	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
+	b=aBZc1qshQFME0il50O32b479A0SKwLY3NxmXgsaQ6+wEJYnrPpN/hLGQELMJlI8Hw
+	 rKCU8sUyvUMDGkrbbu5rU8cydiXTeLFMOFdjRMjFocVNuBeXFd0zOMUKhoMca/w+w9
+	 jJLkq7SNWwFZBHpolw3xw28U48UPunczKExPaY7bXolnWVvim8byQYL8XMItUiVhAi
+	 EeJ8hlUV8GP45FbHce0LNH4oDkyWDRzLZKX2aVDQM6GIu4rLbbZN2nZlJkauXAjlsG
+	 S8gIr38HKrTx+dmzMj5B6ZauV+jqNs8polvqTtPk+f8ocyGKuNt4v9MQabV/vLCDm3
+	 SKHNJ6OhRXYCQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68df1c05.050a0220.31415.096bSMTPIN_ADDED_MISSING@mx.google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 03 Oct 2025 02:57:53 +0200
+Message-Id: <DD8A27ESH61G.306ZAIGZCMJ97@kernel.org>
+To: "Jason Gunthorpe" <jgg@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v2 1/2] rust: pci: skip probing VFs if driver doesn't
+ support VFs
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>, "Zhi
+ Wang" <zhiw@nvidia.com>, "Surath Mitra" <smitra@nvidia.com>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Alex Williamson"
+ <alex.williamson@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>
+References: <af4b7ce4-eb13-4f8d-a208-3a527476d470@nvidia.com>
+ <20251002180525.GC3299207@nvidia.com>
+ <3ab338fb-3336-4294-bd21-abd26bc18392@kernel.org>
+ <20251002183114.GD3299207@nvidia.com>
+ <56daf2fe-5554-4d52-94b3-feec4834c5be@kernel.org>
+ <20251002185616.GG3299207@nvidia.com>
+ <DD837Z9VQY0H.1NGRRI2ZRLG4F@kernel.org>
+ <20251002210433.GH3299207@nvidia.com>
+ <bba17237-2401-4e9b-912b-29d31af748e1@kernel.org>
+ <DD85P4NV5B5Y.367RGWFHBR0RF@kernel.org>
+ <20251002234010.GI3299207@nvidia.com>
+In-Reply-To: <20251002234010.GI3299207@nvidia.com>
 
-On Thu, Oct 02, 2025 at 05:42:44PM -0700, Kenneth R. Crudup wrote:
-> Yeah, it's definitely IRQ/NVMe related (this is a Google Lens transcription of a camera picture, but it's close enough):----1206] thunderbolt 0000:00:00.3: 0:5 <-> 1:13 (DP): not active, tearing down T167] thunderbolt 0000:00:00.3: 0:6 <-> 1:13 (DP): not active, tearing down199] nume nume0: 1/0 tag 20 (1014) QID O timeout, completion polled11511 nume nume0: 20/0/0 default/read/poll queues-----... and it does limp forward and continues a bit, then oops in an IRQ routine somewhere (getting that next).So, anything I can try to solve this? (I've since updated to Linus' master as of a few mins ago, FWIW).Thanks, Kenny--Sent from my Tab S9+
-> -------- Original message --------From: Inochi Amaoto <inochiama@gmail.com> Date: 10/2/25  16:46  (GMT-08:00) To: Kenneth Crudup <kenny@panix.com>, Inochi Amaoto <inochiama@gmail.com> Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com, linux-pci@vger.kernel.org Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
->   domains") causing boot hangs on my laptop On Thu, Oct 02, 2025 at 04:42:40PM -0700, Kenneth Crudup wrote:> > On 10/2/25 16:37, Inochi Amaoto wrote:> > > I think it is good to have some more information like call trace to know> > whether is caused by this change, or the side effect from other commit.> > Yeah, let me make a branch with the commits back in place, then see if I can> get the traces in pstore.> > > I also suggest adding someone related to the xe driver ...> Nah, I honestly think it may be related to VMD or my NVMe; it's like it does> everything it can except do disk I/O.> If this is related to the NVMe, I think you can check dmesg to see if there issome log like "nvme nvme0: I/O tag XXX (XXX) QID XX timeout, completion polled",which indicate the NVMe is broken.Regards,Inochi
+On Fri Oct 3, 2025 at 1:40 AM CEST, Jason Gunthorpe wrote:
+> On Thu, Oct 02, 2025 at 11:32:44PM +0200, Danilo Krummrich wrote:
+>
+>> So, when we call pdev.physfn().drvdata_borrow::<NovaCore>() the checks a=
+re
+>> included already.
+>
+> I'm not keen on hiding this reasoning inside an physfn() accessor like
+> this. ie one that returns a Device<Bound>. The reasoning for this is
+> tricky and special. We have enough cases where physfn won't be a bound
+> driver. I think it is big stretch just to declare that unconditionally
+> safe.
 
-I think the first thing is to figure out the whole trigger
-path for this interrupt. So we can check whether there is
-something missed.
+In this example physfn() would return a &pci::Device<Bound>.
 
-I suggest rebuilding a workable kernel with config
-"CONFIG_GENERIC_IRQ_DEBUGFS" set, then check the related
-debugfs entry of the NVMe irqs. I am happy if you can post
-it as I can know which driver is used by checking it.
+This is what I mentioned previously; I want the subsystem to guarantee (at =
+least
+under certain circumstances) that if the VF device is bound that the PF dev=
+ice
+must be bound as well.
 
-Regards,
-Inochi
+> There is a reason pci_iov_get_pf_drvdata() has such a big comment..
+>
+> So I'd rather see you follow the C design and have an explicit helper
+> function to convert a VF bound device to a PF bound device
+
+Well, this is exactly what physfn() does (with the precondition that we can=
+ get
+the guarantee from the subsystem).
+
+> and check
+> the owner, basically split up pci_iov_get_pf_drvdata() into a part to
+> get the struct device and an inline to get the drvdata. Rust still has an
+> ops pointer it can pass in so it can be consistent with the C code
+
+Which ops pointer are you referring to? Do you mean the struct pci_driver
+pointer? If so, no we can't access this one. We could make it accessible, b=
+ut it
+would result into horrible code, wouldn't make it possible to implement the
+check generically for any device (which we need anyways) and would have som=
+e
+other bad implications.
+
+I try to be as consistent as possible with C code, but sometimes it just do=
+esn't
+fit at all and would even hurt. This is one of those cases.
+
+To give at least some background: A driver structure (like struct pci_drive=
+r) is
+embedded in a module structure, which is a global static and intentionally =
+not
+directly accessible for drivers.
+
+Even if we'd make it accessible, the driver field within a module structure
+depends on the exact implementation, i.e. it depends on whether a module is
+declared "by hand", or whether it is generated by a module_driver!() macro =
+(e.g.
+module_pci_driver!().
+
+It probably also helps to have a look at samples/rust/rust_driver_auxiliary=
+.rs,
+which open codes driver registrations, since it registers two drivers in th=
+e
+same module for the purpose of illustrating an auxiliary connection, i.e. i=
+t
+doesn't use a module_driver!() macro.
+
+The struct struct auxiliary_driver resides within the
+driver::Registration<auxiliary::Adapter<T>>, where driver::Registration is =
+a
+generic type for registering drivers, auxiliary::Adapter defines the auxili=
+ary
+specific bits for this registration and T is the driver specific type that
+implements the auxiliary::Driver trait, containing the bus callbacks etc.
+
+> even if it does another check inside its drvdata_borrow.
+
+It's the exact same check; just a better fitting implementation.
+
+I.e. instead of checking a pointer which is hard to access, we check if the=
+ type
+ID we gave to the device matches the driver specific type (the T in
+driver::Registration<auxiliary::Adapter<T>>).
+
+Semantically, there is no difference, but it results in less cumbersome and=
+ more
+flexible code.
 
