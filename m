@@ -1,211 +1,142 @@
-Return-Path: <linux-pci+bounces-37547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE411BB7639
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 17:50:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5685DBB76F7
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7E084A2731
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 15:49:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15B573A740C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5791B23875D;
-	Fri,  3 Oct 2025 15:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A2929D26D;
+	Fri,  3 Oct 2025 16:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/1PkIzO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pG5pggDT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD4C2857C6
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 15:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477504A23
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759506571; cv=none; b=AECibZ6h9xHf0cI/GEDpWneRsn/G2m5pBmuRnnVcGZEA+hW05Jet7zMQ2zNUCC+nmwhnDGMOdsXwlg9dgib9x0nnAP4vZa/BkrB/ZFolaoGzbnjFgCIpyTibIH3WINOhmnYgMKu5/YuLPIbptvPGNnCQTdfo5Z8rMWSUJHPPSRk=
+	t=1759507452; cv=none; b=aozr7RmTPRRdqMu8DYOmCiIrgptSn8AolovbhDzOT0cS2Ui91E/YbejaVobolHThEb1ogsUVH86m7N6lLTsFOcjDPL/IjHhTLo4aHuYcSa1cbLzpl7Sg/3MP1yyzohEG6u9+G6rGQM7c9DrGyH0LhO9WfFYHpKzVg8gBEqwCwYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759506571; c=relaxed/simple;
-	bh=YVRbYjlXif6gQT+y+d34fts9L/WA3Ks5Ixg1ytg4hJw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=K+2JiVl/mbfNJIYvAOl8J1om4K7tIU7VdCVBUQQbsemZxl98SWGMUoS1lLOEOEqq1nQiR+7HWWitpGssNKTk5xiCFLcZhlz+M9lf/E9NdSCDZqpDj5UZ+83vrzuoJfXsiQMQ4PfqflSjXLoDF1Hr7Qf9o6z7rD9Q9Ln+aR8zd6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/1PkIzO; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759506569; x=1791042569;
-  h=date:from:to:cc:subject:message-id;
-  bh=YVRbYjlXif6gQT+y+d34fts9L/WA3Ks5Ixg1ytg4hJw=;
-  b=a/1PkIzO1xJqfDuEcmbsUR3ME5R0lkHN3sohBgujtx+dedoqlOa6v7fd
-   6JuBoJnWWSYr7uebpSlY7swW1KxmXWQrDNTFk8E6m3vAVpDEg+2YO5zwK
-   ep7/V1bUGazb9sSFdZQhmhI55PRygO4OGNOwf/8x/tuSKp7MfYxLvk0J7
-   4+3NwcJ2pfENsGShLFTewasAGjiYPM/pjej4AuvzP/uODuRwVz1TERBtz
-   Dw/4xx/k/k/gZxXjk8BZRRnZ+jkEoAyY1Q2QP5d7N2gC6TvmxQqHnAagf
-   +7sDF7l9DJaL/570S5R/j4eL3i36S1zQ8lRfZZFV6DVMrS4wRXu5c1qqT
-   A==;
-X-CSE-ConnectionGUID: uyD5pY6sQBaHVjjvQYrzCw==
-X-CSE-MsgGUID: TDJwRF/qSuCMx/ZyfvtHTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11571"; a="61954571"
-X-IronPort-AV: E=Sophos;i="6.18,312,1751266800"; 
-   d="scan'208";a="61954571"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 08:49:29 -0700
-X-CSE-ConnectionGUID: OmjfxDkrTPu/wmGS33vlrw==
-X-CSE-MsgGUID: e+2HnSG7Qz2lM0vx7BGDsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,312,1751266800"; 
-   d="scan'208";a="184507670"
-Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 03 Oct 2025 08:49:28 -0700
-Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v4i29-0004dP-0i;
-	Fri, 03 Oct 2025 15:49:25 +0000
-Date: Fri, 03 Oct 2025 23:49:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/keystone] BUILD SUCCESS
- e51d05f523e43ce5d2bad957943a2b14f68078cd
-Message-ID: <202510032351.FuKR8g6J-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1759507452; c=relaxed/simple;
+	bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mOhVryD+XdKTW1lvCIGJKUX7SHSLZ7T2M0co+ygfIUJ6/RJFrkucuBgw2RwgJCWl4h2GAmG7xskPEVLCH2ZCg9YGg3xbKwAGJE8qnwUJUIkVgqamnqvRromWXs3aMYuHdgaYEQXcZkp2vs8Fvfwi4E2JjhSqN8MUOWD4Tekc9II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pG5pggDT; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-36a448c8aa2so19724411fa.0
+        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 09:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759507448; x=1760112248; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
+        b=pG5pggDTbkayQAHuailvhLOQaSc7f0QDJZxtRM5Ocgsg5GDVrJBKJYml1uV4MqtlH5
+         x6gFylrPQoj14fnjLJtft8eE5mJStAZwpuuG4y1RSgajHoErEk7lTog7+i7P9Fbj8fQC
+         v8+iTZRS4yLXZ+yDB2yq/aEZSPImwQ81G3zGAgghEPHumCrqaIp/Pfh1ucyrdvPoaPQO
+         HrLFFL/+5zNSBZAWQHOsa2ZF63roT64VPM3vIEZDCiz0GHId6csOem/75byf9Knq0vlU
+         +D+WQCfFWe1BGu2weYdIbdpc3cn75jBTgpqIFr64U7Dp6qxvExPMiE4UaTuP2c8o594+
+         hoDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759507448; x=1760112248;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mllrto1lI0Irl+/LejjLWiH35HKm+L9bOb7k3YgQoI4=;
+        b=mnbF74MIo9KvZFbHNcO6m9wx0+aGStAy/S+40XM7bCNSpiYXJPYQu8qtEJJ07j9Isj
+         zNnKgBtyeVTxLCX91wW0lM5zYMiy5aF7UETGq+7eBo61G2KfwmVMiPvVQxzclYml/BBL
+         5RXnhXjHUtaCGeEekrA+6akJifdKbG399ft4eaLul2G2Mn6g/WS8s4k4lu/Xgw3TwEd4
+         eG1xClSussrLiJ/Fd+dJXwbdRZBPH/UgrYOy5T5KFWgNjJvE0O9pZoC4GJdVAnP0jNLA
+         JIOo6JJ9bTnHAz1PW1d8HjurX+rUCeXgTS0v9M9+QRRgCOYgF8/dB8GsA473PttirIMr
+         HADg==
+X-Forwarded-Encrypted: i=1; AJvYcCXky8ysyz62ERUuimKGTuCypYk2oyLsy6T0qR8zZO+DAvHkN6NgXNH9hjfo7G/zxaN27NnaijgZM38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYpK7+qK75n7kX+VPsCJqMC0mwFDZWbeLT8Dl93RvLywCXxaOk
+	Gdtq+nDfPv6gT+zDyI0WE2oyiJFbohQJJTx/jv1r9LTyMSXlxmzhkfJpAD06jiCCfaG/IdNkcdI
+	zZ+SJ32yRyRf2EYGUjA00GGG01h6nV585/9rw7DWB
+X-Gm-Gg: ASbGncv1P0CLF+ey7g8WDPIFIo6DOVN9DEBq6652OssRgbUCeS5sm9Q3K7XBkGZAUUU
+	IItvUz4psUU0yOc8iVMQJo1xjvhaEnMcGIwbojOIr1+kjWedesRmawEPHPh2nx8Rw31rxdXc00Y
+	pkFEKiRP3xkELLMFbn2/433LGLLuRYKUSgCzukRJdEJL3e2ZsE1BwvJHdB4F4IW+YIH9a7B6Qyx
+	t4WodprgNy4tgE0PRVN67aDi/j0SytfcpBTp5hzt0l/Tln/
+X-Google-Smtp-Source: AGHT+IGiMd7rKjwQRWLNmQV2ARjJ6CbLBvJ4uJ7+GgX8fPI3wLEN++8hxxM01GxQ22Ve+kjEe3XbnxIJhiOoe+F2QoQ=
+X-Received: by 2002:a2e:be20:0:b0:371:fb14:39bb with SMTP id
+ 38308e7fff4ca-374c36cbf1bmr11636561fa.16.1759507447942; Fri, 03 Oct 2025
+ 09:04:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250916-luo-pci-v2-0-c494053c3c08@kernel.org>
+ <20250916-luo-pci-v2-3-c494053c3c08@kernel.org> <20250929174831.GJ2695987@ziepe.ca>
+ <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
+ <20250930163837.GQ2695987@ziepe.ca> <aN7KUNGoHrFHzagu@google.com>
+ <CACePvbX6GfThDnwLdOUsdQ_54eqF3Ff=4hrGhDJ0Ba00-Q1qBw@mail.gmail.com>
+ <CALzav=cKoG4QLp6YtqMLc9S_qP6v9SpEt5XVOmJN8WVYLxRmRw@mail.gmail.com>
+ <20251002232153.GK3195829@ziepe.ca> <CALzav=cYBmn_t1w2jHicSbnX57whJYD9Cu84KJekL0n2gZxfmw@mail.gmail.com>
+ <20251003120358.GL3195829@ziepe.ca>
+In-Reply-To: <20251003120358.GL3195829@ziepe.ca>
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 3 Oct 2025 09:03:36 -0700
+X-Gm-Features: AS18NWC303vSFWFcWUMQr9iYimndopgbWOTEn34kaHamJm2L82qyIyCjJfpVv7M
+Message-ID: <CALzav=fci3jPft+SXJ6tPG3=jRX7jjJPwnP=zWAb2Sui++vKPw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
+ callbacks to driver
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Chris Li <chrisl@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
+	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Leon Romanovsky <leon@kernel.org>, Brian Vazquez <brianvv@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/keystone
-branch HEAD: e51d05f523e43ce5d2bad957943a2b14f68078cd  PCI: keystone: Use devm_request_irq() to free "ks-pcie-error-irq" on exit
+On Fri, Oct 3, 2025 at 5:04=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wrote=
+:
+>
+> On Thu, Oct 02, 2025 at 04:42:17PM -0700, David Matlack wrote:
+> > On Thu, Oct 2, 2025 at 4:21=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> w=
+rote:
+> > > On Thu, Oct 02, 2025 at 02:31:08PM -0700, David Matlack wrote:
+> > > > And we don't care about PF drivers until we get to
+> > > > supporting SR-IOV. So the driver callbacks all seem unnecessary at
+> > > > this point.
+> > >
+> > > I guess we will see, but I'm hoping we can get quite far using
+> > > vfio-pci as the SRIOV PF driver and don't need to try to get a big PF
+> > > in-kernel driver entangled in this.
+> >
+> > So far we have had to support vfio-pci, pci-pf-stub, and idpf as PF
+> > drivers, and nvme looks like it's coming soon :(
+>
+> How much effort did you put into moving them to vfio though? Hack Hack
+> in the kernel is easy, but upstreaming may be very hard :\
+>
+> Shutting down enough of the PF kernel driver to safely kexec is almost
+> the same as unbinding it completely.
 
-elapsed time: 1458m
+I think it's totally fair to tell us to replace pci-pf-stub with
+vfio-pci. That gets rid of one PF driver.
 
-configs tested: 118
-configs skipped: 3
+idpf cannot be easily replaced with vfio-pci, since the PF is also
+used for host networking. Brian Vazquez from Google will be giving a
+talk about the idpf support at LPC so we can revisit this topic there.
+We took the approach of only preserving the SR-IOV configuration in
+the PF, everything else gets reset (so no DMA mapping preservation, no
+driver state preservation, etc.).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251003    gcc-11.5.0
-arc                   randconfig-002-20251003    gcc-13.4.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-001-20251003    gcc-12.5.0
-arm                   randconfig-002-20251003    clang-22
-arm                   randconfig-003-20251003    gcc-13.4.0
-arm                   randconfig-004-20251003    gcc-13.4.0
-arm                        spear6xx_defconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251003    gcc-13.4.0
-arm64                 randconfig-002-20251003    clang-22
-arm64                 randconfig-003-20251003    gcc-10.5.0
-arm64                 randconfig-004-20251003    gcc-13.4.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251003    gcc-15.1.0
-csky                  randconfig-002-20251003    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20251003    clang-22
-hexagon               randconfig-002-20251003    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251002    clang-20
-i386        buildonly-randconfig-002-20251002    gcc-14
-i386        buildonly-randconfig-003-20251002    clang-20
-i386        buildonly-randconfig-004-20251002    clang-20
-i386        buildonly-randconfig-005-20251002    gcc-14
-i386        buildonly-randconfig-006-20251002    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20251003    gcc-15.1.0
-loongarch             randconfig-002-20251003    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                          hp300_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           xway_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251003    gcc-8.5.0
-nios2                 randconfig-002-20251003    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251003    gcc-9.5.0
-parisc                randconfig-002-20251003    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251003    clang-22
-powerpc               randconfig-002-20251003    gcc-8.5.0
-powerpc               randconfig-003-20251003    clang-22
-powerpc                     redwood_defconfig    clang-22
-powerpc64             randconfig-001-20251003    gcc-12.5.0
-powerpc64             randconfig-002-20251003    gcc-10.5.0
-powerpc64             randconfig-003-20251003    clang-18
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv             nommu_k210_sdcard_defconfig    gcc-15.1.0
-riscv                 randconfig-001-20251002    clang-22
-riscv                 randconfig-002-20251002    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251002    gcc-14.3.0
-s390                  randconfig-002-20251002    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251002    gcc-13.4.0
-sh                    randconfig-002-20251002    gcc-15.1.0
-sh                          sdk7780_defconfig    gcc-15.1.0
-sh                        sh7757lcr_defconfig    gcc-15.1.0
-sh                        sh7785lcr_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251002    gcc-8.5.0
-sparc                 randconfig-002-20251002    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251002    clang-22
-sparc64               randconfig-002-20251002    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251002    clang-22
-um                    randconfig-002-20251002    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251002    gcc-13
-x86_64      buildonly-randconfig-002-20251002    clang-20
-x86_64      buildonly-randconfig-003-20251002    clang-20
-x86_64      buildonly-randconfig-004-20251002    clang-20
-x86_64      buildonly-randconfig-005-20251002    gcc-14
-x86_64      buildonly-randconfig-006-20251002    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251002    gcc-8.5.0
-xtensa                randconfig-002-20251002    gcc-12.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+We haven't looked into nvme yet so we'll have to revisit that discussion la=
+ter.
 
