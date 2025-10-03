@@ -1,108 +1,95 @@
-Return-Path: <linux-pci+bounces-37490-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D4F0BB5B3B
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 03:07:13 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BD63BB5BEF
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 03:34:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9D5D4A840C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 01:07:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8BB1B4E314D
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 01:34:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365514369A;
-	Fri,  3 Oct 2025 01:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3459A3BB44;
+	Fri,  3 Oct 2025 01:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fke8mVGT"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="nHO82ek/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067961A294
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 01:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362231A294
+	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 01:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759453629; cv=none; b=FEKneG4/hcnL6EsETgKbbwKYf3dhdnMsL9cVixz0gLabEJJoygjblw1hZtWp+uyqeVztmNb8sXUtAwUrmD+oe8iqNd05wRtBySesrWCMpPxz23J7z0Qcb7AktDIm8NP5eHFSUwQMPWmQbuCT6dvr7p1aC+26kVGlwJ34PtVcKvM=
+	t=1759455294; cv=none; b=jzw9CFaPwIDF6YblEfzPgkdmecS1GgOMq0mPfF/zHgP5nE2tukoLQjmIlJJRAypSUv+3OBFL0MIKrO7EDTfVat7qALKUc63bMvrL3vLdKYPlntyxlWksoXtumsj5Ujr8ahd5Mj9sIxrDLLYPo1dzGwrIPxDLG+OPCaoouTAaagM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759453629; c=relaxed/simple;
-	bh=9f/gIVlJJ+LwYVu6qnE30sjrI2v3VzDVVBsDziqBohc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DAHHVTwKM1/MEU7ML+Zwf1MesL7EMmgWbIytQwD/aBIbQQObek2GOd5OL492dF1ZYA+1zbusGy/7h4AV7z64vx7jOF01o0/KaqxmaxrmuVvHfpYBIxW/SVRD/8HXPcCxf9HB5HDDdi76iT30ZiMED6PfyMeUgo0Q8Cplk2XrEQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fke8mVGT; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7811a02316bso1266821b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 02 Oct 2025 18:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759453623; x=1760058423; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PoW5Oxn4GhLPhMEGmpjaaZfGyS2IpoZEyg+/gtuQD+o=;
-        b=fke8mVGTdssFTgwCB3+tcRyvImGyYP/KYRNzbzBbBxtx7MVmsg41tncxNcY7xaMNy5
-         NHGJFXqRV5kWwyANWr5LgvVbvMKA+tRAOTdw5a/JYgnT3bdXWfxNdXVaMwWsJ4rlOKHS
-         uz8GjpUFcPZp7TmAdXjrn1mEfWHhU29oFBsGSuh6LJkH2i4soP8+U/t04Wb+GqwarecV
-         5yLl4q54cSGJs701p6pT5DBvQ77sYo2HRpikQ242bA1x1tyLGJ0admuKLklCv6Fr/dgW
-         XVAVRoqoMgtaEx6v+XQ/vQL8ZdkF6EdQ+bq9coene2YWSdZRzagSTocTBMm8goyiR+nj
-         BJeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759453623; x=1760058423;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PoW5Oxn4GhLPhMEGmpjaaZfGyS2IpoZEyg+/gtuQD+o=;
-        b=tJYx2M7BgKvd7VQVG7UrpeaNFW5RbVJHDRkJMw4v7N+TlpGq5N3WLBW2Z2rF4Bnp7S
-         Ot+Nlkj6bXgSUt0QUJ7f7RaK4zpGIMnm8eCVV8nSjuqCjJNRPFYzQF5vwaKNvVOfDNab
-         MvN3plQcPFvYuC8aujI0awYFOIMHbR8Gvmopwm9s3024D2PqyfqH93rHYR7gyEPa9xm+
-         1u0Sr48sSkJYk2eW4oBaM/Zu9GAav5W3W1c77+7KNMp/eYWWtOOLahfwOdjyrA6ig1Tw
-         5gdfDbhFeffw+dq6ItMtZPzPdNct6xrqjc6TzSUkjgibatEy2guEPCe4bQ4MK5PnlH+s
-         N+oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXatbF8hqDB56EqyEXVZStjdG/do9CRp+ohp8iaY+N5HAPuu2+pjWDq7wiKLXyxVJ7DrCD9rnycTOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOCrJBITLEKjtJXZKPikU1Y0SUF7PdalyHt3efmPwlsf5v8AAt
-	Fixk9fNdh2QUdq+MeBTPbO5zbr6sCIScl6oYtUj1WVq557/he2H8/XKS
-X-Gm-Gg: ASbGncuAFnLD9l8T4b8ZWQwTCTvzlltScFaU7NFAeTMoiliYNEP9l6FFj8aYnWwkcED
-	kChufzJ/Hxk3Q2qKwtmqLjWNYgCDLPD68sYL8da+YVMaRYEv4r7C8ZZkvKOgPgA1ouY1WFb98xr
-	6TBJo35cSgS5LHPMBhIjvDzTAY63s83jLbnHAdrIHUoQVat5Q58aOCu0/d/NZ9QYdqPVieXGbIN
-	HXRbFPfSX/rqWjSyhpF7I8iAviVgTurU1+tZT5Nn2HHwtCFYEPyxkJiI1hhjLViQZFPt2yz+/Sp
-	U7mocEpMUZgiyY9DKJc+bBz706RNzB+dFIkYJrOBzQRGyVhqFxjb9Bo1e1/RQ6fQMrN6Yu1uo5m
-	xcgjTnLVlwr9wf8Is0uf8iCBZ6OB7Z0W7cPEVHXlztMWZ9QjWQRM+HXLy
-X-Google-Smtp-Source: AGHT+IGXKJeo9z9ttudICnuKpj/hhhY2SFC/IvyLZZRB/DNgswXBKBCi6JMOOswunvBo5i5JHOiNPA==
-X-Received: by 2002:a05:6a20:42a3:b0:263:b547:d0c3 with SMTP id adf61e73a8af0-32b6209d11emr1744920637.36.1759453623257;
-        Thu, 02 Oct 2025 18:07:03 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-78b020537d2sm3259647b3a.58.2025.10.02.18.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 18:07:02 -0700 (PDT)
-Date: Fri, 3 Oct 2025 09:06:29 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Kenneth Crudup <kenny@panix.com>, Inochi Amaoto <inochiama@gmail.com>
-Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com, 
-	linux-pci@vger.kernel.org
-Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
- domains") causing boot hangs on my laptop
-Message-ID: <hxyz7e6ebp3hmwyv3ivhy5kwc5skpynzl4djyylusheuv3fmqf@tmh2bygaex4r>
-References: <8a923590-5b3a-406f-a324-7bd1cf894d8f@panix.com>
+	s=arc-20240116; t=1759455294; c=relaxed/simple;
+	bh=QXRImLRy9oSywKiR7BENIxwerMx7Sqcu+ntqwE/ssfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TWbeGFLP4LHPymmEKoT7gxh6wKMyzMjdo7tYKtCF1sLWd3cuW6dwspXL6muZgtSk6gtXfXFuloIKElfvTm3io6MQkYr1+UFBYlxWGGxGHekc4UIqy+DlPTVeC5z4R7euv3J7Wbg61pAEUID6Wa5gctkD19lZ1AcnppW+nHkVkCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=nHO82ek/; arc=none smtp.client-ip=166.84.1.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
+	(No client certificate requested)
+	by l2mail1.panix.com (Postfix) with ESMTPS id 4cd9dZ02lrzDPf
+	for <linux-pci@vger.kernel.org>; Thu,  2 Oct 2025 21:13:06 -0400 (EDT)
+Received: from [10.50.4.39] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4cd9Wm2QL8z15Qc;
+	Thu,  2 Oct 2025 21:08:04 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1759453684; bh=QXRImLRy9oSywKiR7BENIxwerMx7Sqcu+ntqwE/ssfk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nHO82ek/Et2IOGqlIMb3ueAl1nkJZNqE5OgGtv4wNWmSLySUc56YydL7zkvFwQOZh
+	 JAQulzjItf4LuD53W0Yajfx11JV2EMHt8G8X+SBUizjVIlB4Mg9sYnneqcsPIMjiNa
+	 cvvexEljaAgnoa18p1mNx3jGN5v9JtOkO0NegsZA=
+Message-ID: <e9f17b5d-48d7-4540-9f91-cff3c631218b@panix.com>
+Date: Thu, 2 Oct 2025 18:08:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a923590-5b3a-406f-a324-7bd1cf894d8f@panix.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
+ domains") causing boot hangs on my laptop
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com,
+ linux-pci@vger.kernel.org
+References: <8a923590-5b3a-406f-a324-7bd1cf894d8f@panix.com>
+ <hxyz7e6ebp3hmwyv3ivhy5kwc5skpynzl4djyylusheuv3fmqf@tmh2bygaex4r>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <hxyz7e6ebp3hmwyv3ivhy5kwc5skpynzl4djyylusheuv3fmqf@tmh2bygaex4r>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 02, 2025 at 05:58:59PM -0700, Kenneth Crudup wrote:
+
+vmd
+
+On 10/2/25 18:06, Inochi Amaoto wrote:
+> On Thu, Oct 02, 2025 at 05:58:59PM -0700, Kenneth Crudup wrote:
+>>
+>> Resending to re-add linux-pci (Vger thinks my tablet's MUA is "Spammy")
+>>
+>> I'm going to figure out which line is is that's killing my NVMe IRQs.
+>>
+>> FWIW, my NVMe is behind a VMD bridge(? I guess that's what it is):
+>>
 > 
-> Resending to re-add linux-pci (Vger thinks my tablet's MUA is "Spammy")
+> I think so, can you do "lspci -k" for this bridge? So I can know the driver
+> for it.
 > 
-> I'm going to figure out which line is is that's killing my NVMe IRQs.
-> 
-> FWIW, my NVMe is behind a VMD bridge(? I guess that's what it is):
+> Regards,
+> Inochi
 > 
 
-I think so, can you do "lspci -k" for this bridge? So I can know the driver
-for it.
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
 
-Regards,
-Inochi
 
