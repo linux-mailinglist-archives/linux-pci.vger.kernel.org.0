@@ -1,143 +1,141 @@
-Return-Path: <linux-pci+bounces-37555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CCF9BB78CF
-	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:29:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A379BB78E1
+	for <lists+linux-pci@lfdr.de>; Fri, 03 Oct 2025 18:33:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 10A904EDEDF
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:28:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07D231B21131
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Oct 2025 16:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3822C028A;
-	Fri,  3 Oct 2025 16:28:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E467274B59;
+	Fri,  3 Oct 2025 16:33:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="asnvuUgI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBeIaDQM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0662C0294
-	for <linux-pci@vger.kernel.org>; Fri,  3 Oct 2025 16:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247622629F;
+	Fri,  3 Oct 2025 16:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759508920; cv=none; b=KKtiNpE86FPrO1sDQvQIjgIrN3rbQg6itqw2ZXj6HnH3KKWEEhtVEbIJdsR7+ccWaLpA8xe5u0XeCPDtSa71i2m873KhreBkI3+QoTX/qkIqn8CKJwqNVeX6Vl1jB74st1g2hSOwdEl7gxReoNLHh/j42eJp9169JwN+CYlRNrQ=
+	t=1759509181; cv=none; b=CKOpx8rPcrJRgBZSZO7bf1DZHFhXqGh+OU8cdjBXgPVqzmf4GFjNBk0RKIaWjKqDBn2LKpvX0usSDXZeNbkPL+ouCP2r+0dpu1C26kyGS2dLTJdtY807IT8pMVgnXgC6ZYZECLfCPYl73NZlxgZkoBNXDzZ1v2aMdvmECGr9CZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759508920; c=relaxed/simple;
-	bh=cwz04LCVXZfN+AY4Qan7hQEjgfaTBfDS1fi9Fkv3U1k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HwAYGJ+1/VM960D5cnDCg5vJ8A0a0kJQSNBgtN8xVlw6k1CnXUkSmbfl/fLhTktxGPHtC9647mxgjgUiUc5bnAvrLMBEipxuiDL2iK2RHC9ZYFJKxksN0LNTmzOhQX1AyS03pEIEU9FQWGK1hzoxoZFd3DL1H8XvTdM/PlX/8Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b=asnvuUgI; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8571a0947d1so254593785a.0
-        for <linux-pci@vger.kernel.org>; Fri, 03 Oct 2025 09:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1759508918; x=1760113718; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cwz04LCVXZfN+AY4Qan7hQEjgfaTBfDS1fi9Fkv3U1k=;
-        b=asnvuUgIJjQW1TanNasuRjI68hE/nnrni1rN3PR2na11AOQUVszaMw8psQjJb4fNnl
-         ee4VmFQW9feoia5QiAeYH4K8Y5dAcp5/EmhRGekaU21Wv6h6DMJsAJkyTDUg2EUEbkiZ
-         IUWMGsEEBJk0Z8sydOPTiKw9k0Cx0MOLnHX7yHCx3luDRo4WdY6oEkLmolAWtUGrQqm3
-         eAhoH7dURIfPCUG362VgTJ29H0FdZj+N2A1D3TWH4xMmiXgofW6FKFBiqA/XjigNmAA2
-         GTcV5+b6gnbf18MPeuXxA/56YHvU0szvnaPGdImqRJwWT/Stlk4dAHGZEIejnPFDwm9x
-         wDQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759508918; x=1760113718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cwz04LCVXZfN+AY4Qan7hQEjgfaTBfDS1fi9Fkv3U1k=;
-        b=fyI8JjxDl2AtbUmm26bTfQkYmQTT3zCTQQhRnk/nb98i1zMh1YvdrB1K0oO0KdRe0d
-         cedq/utIohfL8s9rAtiQ5BgNU7zFZC4zjjZ1x+HEHSvbdrOb3Za81SK3Pnjcx1Hqdw+r
-         Itzy0LXhJXF+VMLtkZtojhOlmqYcgeAMvWThKpJW1Dhn7zp4b0VwiQjbpHteB6nrOGh2
-         B6m2Hxlvucwz2klTPiX2GnvzxXBThY1oqOL/QlrRnv+ZslUrzY5UUrsH25jVAhGvkqFc
-         p0g/1RYP9If+5e4X/w38kOO3xwLQXmuoJ9Wk6RAzy/EPHRXK+kgek95e5n0t5BGaXIWq
-         rZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/bF5j8S96D3ISo3gQ20twjU2JAAomjnxXoJVlnkcG85V9J9vYYUC84BvXbi5qhGjcIBV4RlLRllI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqcaYMNI9tYmNTeJ9SJKOQQPfCLLFIRU+hLu2AVWKAvJJCRC4G
-	5ACV+H5apQKIyxqI1im/ANYqYMqUapVsyn5ZIGY8PlyjEfJ4u7RsgXz5+8aTwPkI4w4pMmXtpP8
-	gxQaTH+JsvcMLCgTOzmXALMB1OM78Z3vOwRVhq7F7Zg==
-X-Gm-Gg: ASbGncubsZhoswdodswqlDjsQej4pkkl3RAD7hHv+5v0I0PQpV6CQ+SJmhv+DRfoqRx
-	vnrusqD4/LKiqBiaJhA2a2mLNaXgaAwCWB3Hc2f6t1dG21D2xXmVXyD3ddjuj54LVQ0JW1x24Xf
-	hDFYoH55crk/ljDrFK/fJaBuLCnqlVpWhmGz8tmuSp5vs3ocsCWwbKMo0cWETA/UH8I2zYwIzGt
-	8Wxt5Um8oDgI4x6XKCb3sP85s8r
-X-Google-Smtp-Source: AGHT+IGRIixVdtmeOFjO118a8JrECEI1Y4RPdInhz/esowkW/CRBGY/zsPPIbjs9YJ/9fXBRw/M8yAQgEqAmqYkP/Tc=
-X-Received: by 2002:a05:620a:4004:b0:85e:95d9:8997 with SMTP id
- af79cd13be357-8776d89ab34mr1063023685a.43.1759508917927; Fri, 03 Oct 2025
- 09:28:37 -0700 (PDT)
+	s=arc-20240116; t=1759509181; c=relaxed/simple;
+	bh=xjCMZ9zx/9N/YgtUdATz1CyU1rO+qsBvdWTyI6D60Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLV0DIaMlvLEMITNqGIbq/+sP45/+aXWIpcYnkAgB8awyuKMmGHpcRgmi3eUgxuwry3a8cLB85vAKerMIb/OIEEtMIaeRydVFYdlMunvEq8F3jSPkHe9aFh4itxP3is2VR8H75psFQVUdt0J168WgJ2ymPUzf7JS4rRPG0YaPkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBeIaDQM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FDD2C4CEF5;
+	Fri,  3 Oct 2025 16:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759509180;
+	bh=xjCMZ9zx/9N/YgtUdATz1CyU1rO+qsBvdWTyI6D60Nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IBeIaDQMZy5tKvwyXaY7Zy+GovegU8BGcPFoBx27LDnfz94ysV0VegYj66ySVjj+q
+	 tTGmeKqjbuV/JVQoRtagA7GxrPLWO1K8bgTVztUS0ks6tSvqZOzkngZoHL6b3mth3l
+	 tQ6lZRdG2fevEz9kqqYuw4QFbtvo4qTF5B9DPDEovt8o6u6me3ttx6KiLssbjUz6tn
+	 JwrrSSxq5AK8AE/MmPWzOBTi4pYg+DEXQEKC5UkQjL+JG2OpAGr1o41eiyFVell/FX
+	 Jox4/VnGzuvZY9POriPHvjFqwKPAgC9vvLBGUwIk2wHnW8TFtxMwhtdsfV8iiNu7/T
+	 kzvxQ/HXJAvWQ==
+Date: Fri, 3 Oct 2025 22:02:37 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Radu Rendec <rrendec@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, Brian Masney <bmasney@redhat.com>, 
+	Eric Chanudet <echanude@redhat.com>, Alessandro Carminati <acarmina@redhat.com>, 
+	Jared Kangas <jkangas@redhat.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Tsai <danielsftsai@google.com>, Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, 
+	Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Subject: Re: [PATCH 0/3] Enable MSI affinity support for dwc PCI
+Message-ID: <wzegusdukhm4e3bogyx7lfgjvjqd342mfielw2gzynquohnugf@wzqdbycndn6i>
+References: <20251003160421.951448-1-rrendec@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250929174831.GJ2695987@ziepe.ca> <CAF8kJuNZPYxf2LYTPYVzho_NM-Rtp8i+pP3bFTwkM_h3v=LwbQ@mail.gmail.com>
- <20250930163837.GQ2695987@ziepe.ca> <aN7KUNGoHrFHzagu@google.com>
- <CACePvbX6GfThDnwLdOUsdQ_54eqF3Ff=4hrGhDJ0Ba00-Q1qBw@mail.gmail.com>
- <CALzav=cKoG4QLp6YtqMLc9S_qP6v9SpEt5XVOmJN8WVYLxRmRw@mail.gmail.com>
- <20251002232153.GK3195829@ziepe.ca> <CALzav=cYBmn_t1w2jHicSbnX57whJYD9Cu84KJekL0n2gZxfmw@mail.gmail.com>
- <20251003120358.GL3195829@ziepe.ca> <CALzav=fci3jPft+SXJ6tPG3=jRX7jjJPwnP=zWAb2Sui++vKPw@mail.gmail.com>
- <20251003161642.GQ3195829@ziepe.ca>
-In-Reply-To: <20251003161642.GQ3195829@ziepe.ca>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 3 Oct 2025 12:28:00 -0400
-X-Gm-Features: AS18NWC4qysxRWQgrKLz5j3weby2D_QNJ0TOooL4n65xeseqNhqAU98HM21pC0c
-Message-ID: <CA+CK2bBLuGAMwVgj87p_H12P9yy6J99WwX8vwZbFfY0RTYsXDA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/10] PCI/LUO: Forward prepare()/freeze()/cancel()
- callbacks to driver
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: David Matlack <dmatlack@google.com>, Chris Li <chrisl@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Pasha Tatashin <tatashin@google.com>, 
-	Jason Miu <jasonmiu@google.com>, Vipin Sharma <vipinsh@google.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Leon Romanovsky <leon@kernel.org>, Brian Vazquez <brianvv@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251003160421.951448-1-rrendec@redhat.com>
 
-On Fri, Oct 3, 2025 at 12:16=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrot=
-e:
->
-> On Fri, Oct 03, 2025 at 09:03:36AM -0700, David Matlack wrote:
-> > > Shutting down enough of the PF kernel driver to safely kexec is almos=
-t
-> > > the same as unbinding it completely.
-> >
-> > I think it's totally fair to tell us to replace pci-pf-stub with
-> > vfio-pci. That gets rid of one PF driver.
-> >
-> > idpf cannot be easily replaced with vfio-pci, since the PF is also
-> > used for host networking.
->
-> Run host networking on a VF instead?
++ folks who were part of previous attempts
 
-There is a plan for this, but not immediately. In upstream, I suspect
-vfio-pci is all we need, and other drivers can be added when it really
-necessary.
+On Fri, Oct 03, 2025 at 12:04:18PM -0400, Radu Rendec wrote:
+> Various attempts have been made so far to support CPU affinity control
+> for (de)multiplexed interrupts. Some examples are [1] and [2]. That work
+> was centered around the idea to control the parent interrupt's CPU
+> affinity, since the child interrupt handler runs in the context of the
+> parent interrupt handler, on whatever CPU it was triggered.
+> 
+> This is a new attempt based on a different approach. Instead of touching
+> the parent interrupt's CPU affinity, the child interrupt is allowed to
+> freely change its affinity setting, independently of the parent. If the
+> interrupt handler happens to be triggered on an "incompatible" CPU (a
+> CPU that's not part of the child interrupt's affinity mask), the handler
+> is redirected and runs in IRQ work context on a "compatible" CPU. This
+> is a direct follow up to the (unsubmitted) patches that Thomas Gleixner
+> proposed in [3].
+> 
+> The first patch adds support for interrupt redirection to the IRQ core,
+> without making any functional change to irqchip drivers. The other two
+> patches modify the dwc PCI core driver to enable interrupt redirection
+> using the new infrastructure added in the first patch.
+> 
+> Thomas, however, I made a small design change to your original patches.
+> Instead of keeping track of the parent interrupt's affinity setting (or
+> rather the first CPU in its affinity mask) and attempting to pick the
+> same CPU for the child (as the target CPU) if possible, I just check if
+> the child handler fires on a CPU that's part of its affinity mask (which
+> is already stored anyway). As an optimization for the case when the
+> current CPU is *not* part of the mask and the handler needs to be
+> redirected, I pre-calculate and store the first CPU in the mask, at the
+> time when the child affinity is set. In my opinion, this is simpler and
+> cleaner, at the expense of a cpumask_test_cpu() call on the fast path,
+> because:
+> - It no longer needs to keep track of the parent interrupt's affinity
+>   setting.
+> - If the parent interrupt can run on more than one CPU, the child can
+>   also run on any of those CPUs without being redirected (in case the
+>   child's affinity mask is the same as the parent's or a superset).
+> 
+> Last but not least, since most of the code in these patches is your
+> code, I took the liberty to add your From and Signed-off-by tags to
+> properly attribute authorship. I hope that's all right, and if for any
+> reason you don't want that, then please accept my apologies and I will
+> remove them in a future version. Of course, you can always remove them
+> yourself if you want (assuming the patches are merged at some point),
+> since you are the maintainer :)
+> 
+> [1] https://lore.kernel.org/all/20220502102137.764606ee@thinkpad/
+> [2] https://lore.kernel.org/all/20230530214550.864894-1-rrendec@redhat.com/
+> [3] https://lore.kernel.org/linux-pci/878qpg4o4t.ffs@tglx/
+> 
+> Radu Rendec (3):
+>   genirq: Add interrupt redirection infrastructure
+>   PCI: dwc: Code cleanup
+>   PCI: dwc: Enable MSI affinity support
+> 
+>  .../pci/controller/dwc/pcie-designware-host.c | 123 ++++++++----------
+>  drivers/pci/controller/dwc/pcie-designware.h  |   7 +-
+>  include/linux/irq.h                           |   6 +
+>  include/linux/irqdesc.h                       |  11 +-
+>  kernel/irq/chip.c                             |  20 +++
+>  kernel/irq/irqdesc.c                          |  51 +++++++-
+>  kernel/irq/manage.c                           |  16 ++-
+>  7 files changed, 154 insertions(+), 80 deletions(-)
+> 
+> -- 
+> 2.51.0
+> 
 
->
-> > Brian Vazquez from Google will be giving a
-> > talk about the idpf support at LPC so we can revisit this topic there.
-> > We took the approach of only preserving the SR-IOV configuration in
-> > the PF, everything else gets reset (so no DMA mapping preservation, no
-> > driver state preservation, etc.).
->
-> Yes, that's pretty much what you'd have to do, it sure would be nice
-> to have some helper to manage this to minimize driver work. It really
-> is remove the existing driver and just leave it idle unless luo fails
-> then rebind it..
->
-> > We haven't looked into nvme yet so we'll have to revisit that discussio=
-n later.
->
-> Put any host storage on a NVMe VF?
->
-> Jason
+-- 
+மணிவண்ணன் சதாசிவம்
 
