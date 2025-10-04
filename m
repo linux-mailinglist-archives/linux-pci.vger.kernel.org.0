@@ -1,111 +1,132 @@
-Return-Path: <linux-pci+bounces-37598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7200CBB8F1C
-	for <lists+linux-pci@lfdr.de>; Sat, 04 Oct 2025 16:54:45 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66689BB908E
+	for <lists+linux-pci@lfdr.de>; Sat, 04 Oct 2025 19:35:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C16F3C59A6
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Oct 2025 14:54:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 622323462FB
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Oct 2025 17:35:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCD6C221269;
-	Sat,  4 Oct 2025 14:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B56222FE10;
+	Sat,  4 Oct 2025 17:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCjJKPd2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB9521C9F4;
-	Sat,  4 Oct 2025 14:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B71450FE;
+	Sat,  4 Oct 2025 17:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759589680; cv=none; b=IeTa4hReoF8DD9J44hp6qLAThPCLTKYOnP1neeiL0IN0s2IcGyBZ0vHGiAyuGDhIt8UN4dJwGqGEKffjcvYgg7CBRTNbrToEIOc7CtCQEHjwwhI8gTQ9vUt0AFIQIrgJltkf5KRoe8hkfNHhAxFosbpO5QI8l3SfAqei18BhFx0=
+	t=1759599299; cv=none; b=gdwODxE8t9ZXVic7YayrAflk1sT31OQqYjWnhl1PjJP2Flrs3MYOALMxyKbAmnr1/32nhmwkLdTEbfJztoYrw3pxmWzqeGe43xv/zcAsXzj7/0cG90nkrVkcaHVZIzfMT/FOTYJkW569MGNOrY3i6nVcPMWwJ27eNmgiFzmCP4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759589680; c=relaxed/simple;
-	bh=E1PELn3f9+vSNYanvcwk+NzMgS4y/154mPXdeM8POKE=;
+	s=arc-20240116; t=1759599299; c=relaxed/simple;
+	bh=QrmbzFWdXVjrkXP1XKgkDdSN8NwVcE41VeySN7cDksE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPRHuc3nYGgCsrDejhvSuSJRtgCIMGEJ8zPVdp9BFjj3t0sVyVjsvvqTcg1Po8v4nqSQe/xIAWCagMQH8cEQAoO02DN/gdpfumfTcqhBJT5hPrMf9vn7TaQwtcZndq7Yfv3g6Q1VqJSSoqB64SqvEQOVEzUfHAnob4paDZoxP3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 06EE82C06845;
-	Sat,  4 Oct 2025 16:54:29 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E3D2DFDCBB; Sat,  4 Oct 2025 16:54:28 +0200 (CEST)
-Date: Sat, 4 Oct 2025 16:54:28 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Farhan Ali <alifm@linux.ibm.com>
-Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-	helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
-	mjrosato@linux.ibm.com
-Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
-Message-ID: <aOE1JMryY_Oa663e@wunner.de>
-References: <20250924171628.826-1-alifm@linux.ibm.com>
- <20250924171628.826-2-alifm@linux.ibm.com>
- <20251001151543.GB408411@p1gen4-pw042f0m>
- <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5O68sdoNZFgyP1dr00YTfDjhlbM45aFf4DQj3Ej/TYhbBigP9fl6OS5N288nfmm3A4BlDIu70GxAAbajibnVvq8nmxUraIIB8RPOMR9aRF6077lpzZXayMoWApyIYjlrlLXBWHWA/aeJK98sYnLt6N6AvM8xcrE+vuWAHqBvmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCjJKPd2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02629C4CEF1;
+	Sat,  4 Oct 2025 17:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759599298;
+	bh=QrmbzFWdXVjrkXP1XKgkDdSN8NwVcE41VeySN7cDksE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eCjJKPd2kPpbJvaqPjAXAInrSnxBDV5nb0AMICsS9hQMMliN3fJvCdbrmwXy3fIUV
+	 ohrVoxpkW+be4EVH/w9nbxZM7Ak/E6/EDK9Lp0NCknVpI1GCETARXpO07wmg2ZpD/+
+	 DByXFfpXXyYeZlQkVVLtzRVnyK8TVARObjp8O7/bLifZSMLL3hFAVhw59jraHJGJSU
+	 jJr5Bwc/tv5Yfh1bMT1CVVujvmV4wENVMTyccM7ocR9rWZd+tiM8xB2zSxYZLMMv7w
+	 gkh7Ny1wYGPxEy8eZ5XMWwF7ZVqYYm7f++8qAjKK70TwSHcLWR4seTowQlJ4Il6NDN
+	 EngbGLHwMM0Sg==
+Date: Sat, 4 Oct 2025 23:04:35 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Joerg Roedel <jroedel@suse.de>, iommu@lists.linux.dev, Anders Roxell <anders.roxell@linaro.org>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, Pavankumar Kondeti <quic_pkondeti@quicinc.com>, 
+	Xingang Wang <wangxingang5@huawei.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/of: Call pci_request_acs() before enumerating
+ the Root Port device
+Message-ID: <5f4uclyawwh57u5pdwlk5q36keeg3oyhk5hw42xgnryz6xs7ph@rrkulj4ex2xb>
+References: <20250924185750.GA2128243@bhelgaas>
+ <b8a871d8-d84b-4c86-8f63-f4e1b2a5fccf@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8a871d8-d84b-4c86-8f63-f4e1b2a5fccf@arm.com>
 
-On Wed, Oct 01, 2025 at 10:12:03AM -0700, Farhan Ali wrote:
-> AFAIU if the state_saved flag was set to true then any state that we have
-> saved should be valid and should be okay to be restored from. We just want
-> to avoid saving any invalid data.
+On Wed, Sep 24, 2025 at 08:49:26PM +0100, Robin Murphy wrote:
 
-The state_saved flag is used by the PCI core to detect whether a driver
-has called pci_save_state() in one of its suspend callbacks.  If it did,
-the PCI core assumes that the driver has taken on the responsibility to
-put the device into a low power state.  The PCI core will thus not put
-the device into a low power state itself and it won't (again) call
-pci_save_state().
+[...]
 
-Hence state_saved is cleared before the driver suspend callbacks are
-invoked and it is checked afterwards.
+> > I don't doubt that the current code doesn't detect presence or use of
+> > IOMMU until later.  But that feels like an implementation defect
+> > because logically the IOMMU is upstream of any PCI device that uses
+> > it, so architecturally I would expect it to be *possible* to detect it
+> > before PCI enumeration.
+> > 
+> > More to the point, it's not at all obvious how to infer that
+> > 'iommu-map' in the devicetree means the IOMMU will be used.
+> 
+> Indeed, I would say the way to go down that route would be to echo what we
+> do for "iommus", and defer probing the entire host controller driver until
+> the targets of an "iommu-map" are either present or assumed to never be
+> appearing. (And of course an ACPI equivalent for that would be tricky...)
+> 
 
-Clearing the state_saved flag in pci_restore_state() merely serves the
-purpose of ensuring that the flag is cleared ahead of the next suspend
-and resume cycle.
+Maybe we should just call pci_enable_acs() only when the iommu is detected for
+the device? But ofc, this is not possible for non-OF platforms as they tend to
+call pci_request_acs() pretty early.
 
-It is a fallacy to think that state_saved indicates validity of the
-saved state.
+> However, even that isn't necessarily the full solution, as just as it's not
+> really appropriate for PCI to force ACS without knowing whether an IOMMU is
+> actually present to make it meaningful, it's also not strictly appropriate
+> for an IOMMU driver to request ACS globally without knowing that it actually
+> serves any relevant PCIe devices. Even in the ideal scenario, I think the
+> point of actually knowing is still a bit too late for the current API
+> design:
+> 
+>   pci_device_add
+>     pci_init_capabilities
+>       pci_acs_init
+>         pci_enable_acs
+>     device_add
+>       iommu_bus_notifier
+>         iommu_probe_device
+>           //logically, request ACS for dev here
+> 
+> (at the moment, iommu_probe_device() will actually end up calling into the
+> same of_iommu_configure()->pci_request_acs() path, but the plan is still to
+> eventually shorten and streamline that.)
+> 
 
-Unfortunately pci_restore_state() was amended by c82f63e411f1 to
-bail out if state_saved is false.  This has arguably caused more
-problems than it solved, so I have prepared this development branch
-which essentially reverts the commit and undoes most of the awful
-workarounds that it necessitated:
+What is worrying me is that of_iommu_configure() is called for each PCI device,
+as opposed to just one time on other platforms. But I think that's a good thing
+to have as the IOMMU driver can have a per-device ACS policy, instead of a
+global one.
 
-https://github.com/l1k/linux/commits/aer_reset_v1
+> I guess we might want to separate the actual ACS enablement from the basic
+> capability init, or at least perhaps just call pci_enable_acs() again after
+> the IOMMU notifier may have changed the policy?
+> 
 
-I intend to submit this after the merge window has closed.
+Is this applicable to other platforms as well? Not just OF?
 
-The motivation of c82f63e411f1 was to prevent restoring state if
-pci_save_state() hasn't been called before.  I am solving that by
-calling pci_save_state() on device addition, hence error
-recoverability is ensured at all times.
+- Mani
 
-I believe this also makes patch [01/10] in your series unnecessary.
-
-A lot of drivers call pci_save_state() in their probe hook and
-that continues to be correct if they modified Config Space
-vis-a-vis what was saved on device addition.
-
-Thanks,
-
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
