@@ -1,185 +1,208 @@
-Return-Path: <linux-pci+bounces-37625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39630BBF036
-	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 20:46:13 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74C4BBBF05D
+	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 20:52:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 003C118911DF
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 18:46:36 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EDEF734AC61
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 18:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA0962376EB;
-	Mon,  6 Oct 2025 18:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29CD72DEA83;
+	Mon,  6 Oct 2025 18:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="i3ClO5jk"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H9n6+Wua"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012050.outbound.protection.outlook.com [52.101.53.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1753A1F7098;
-	Mon,  6 Oct 2025 18:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759776368; cv=none; b=YGkDrpxr/XJACpQD0GHJOBnSpa7zuxxvyHFsBn2ONxj7/aozHc4pKVnEHHVh/p0/JME3GjzTYe003GaIHLYvg+TcNTlaC1DalLpwLvdXOtrzOgChZPRqSsXmL1YE+nkis2Iso6YXq4xmjmMNHgaOxJARQE8oL7jTNebhFnds1YU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759776368; c=relaxed/simple;
-	bh=ji018SfjwN2M+GQX18OazxVjUwdrp8zoeY53TXXqyco=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=RDFRGJVqIHPH1a1VHfLPqJ25vqwLNoEM6wxi3h0S6MVHVFTSE4CDFmd2TtdQzMv0N+crYGW5S7p9gMVZQSD7F+D169frhJB1Imuwnk3uN7al6VApzvOASDF1rQB9qlsikJaSCF6/GNONJ7hpPehe/9+nQf/QbGFyye6stsD9UKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=i3ClO5jk; arc=none smtp.client-ip=162.62.57.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1759776054; bh=bZ3DcGJ+3f3q61fb0vjsoxJFDfw3N9Ux8Yh2qfDnDUM=;
-	h=From:To:Cc:Subject:Date;
-	b=i3ClO5jkLjKeKrWTOIK63M40+zh6HnN7+UQ3tk00lljO6uniGsF20fnP78Hir2QhA
-	 cTvwD76kMVtjQZ2c/QraJBgZ5S6yOwTLv/mv+mls/Cl16funYAAhZxLtRffAF0aapM
-	 DTl2HZxjx528pcdgrLS8rM6rJmirzvgGmy4+0h5A=
-Received: from localhost.localdomain ([113.102.239.212])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 8AAA6AD2; Tue, 07 Oct 2025 02:34:42 +0800
-X-QQ-mid: xmsmtpt1759775682tu8rjbowu
-Message-ID: <tencent_B5CE9A8654E8B2476383AEC85C25BDA7BD05@qq.com>
-X-QQ-XMAILINFO: Nr4sKL92GIu+xw0M0OARNyF+E4+Q6kKkdYlgvVFn21lPEPwycQ8X9mZKdqBnWg
-	 CjGz+Aeyqmvsafo24cOfWru0TwE1wW0BO74CxxmKfnfZ0EaBOuJR7OnZnkgE1J0fI4FtqzZKKXP4
-	 bpwvGshsTHCeuC00dAqjSODOZJM0GoQ/nPoq7/dKndSVgMU9Rklptcan0h0uULL3IgOb4MxL+Bx0
-	 SxbiAxqlE1nU8zdBYPIMCXU7tjM+kHTC7BPrQRuTBqLOvwrh9Cg2OnhvImxkMPFsBNx36X5FILeE
-	 IP3oVBn1+UNC22xC+Qdld27GW9qovPLAb3lPsIOh9g7Zq5lUVF9Djpthb4q2bZcbPWyHYQifU8BE
-	 6nNf3DGpdrRbwM/vOlYD24afYN8s+iVRrJcF8qKuCL6MhDfyefJzaiTKuWz/C5AsWNn7iaGKxMIT
-	 OBd0630UgAED9xYoLg+nOpI7OvdR7MbrQylRHk2dCpYKADjRQKui4bg1AGy70iWmbXdCnrqt8MHI
-	 Ls7c97g3fq+0Qsygi7oBCNFmCRvBGj1c4lnHbZ0EOV+aepdVCMAvxnU2xdUw4Y3ySHYuCe34HQ6X
-	 Mmq9aRkUzr1R0YFy5a2EdWNhwLLNBuqq3laAOBGWYMJVH3vcjWAYctDGKiPxq3kzuvj4v1tsLWnC
-	 TKrA4BKsOkszwRoE5MVscrVlFqs0nL+vqV9dnORSxRt9tDuDl2p2FxfEVwKqIeta0wEppdRQn6/+
-	 9TFylGuaNusZ7CicdQqDnp6x9pSrf0ljSfSp4Ejz3/R5YP0XkRcddh4lAQTFpAmslikHIX0Q/Lby
-	 ESGc60m4T38R5ILqzrIhNOqs6q+NeaILUGTlrgjE10AkFsqDhYK/3KmmpY+xWDJasNGeGlTajcNX
-	 Q2uMKYNdxQJ0lxKhn4ecZJWO5b288c9TatzlTFkp5ZeC9zmva27fusX8tsMOxa/b7OQTnn/D5uXG
-	 CCMQp3QwmmXZVNALrdOE0jzGz9mQ+6HVzJHvKSM0dEAaZc5Eb4AUYwbqq7BzaPxN4kEMP43NZ6wh
-	 buizhcin5P7YEN/lo8GsBzocO5cZ4=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Guangbo Cui <2407018371@qq.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rt-devel@lists.linux.dev,
-	Waiman Long <longman@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Guangbo Cui <2407018371@qq.com>
-Subject: [PATCH] lockdep: Account for lockdep hardirq context in irq_forced_thread_fn under PREEMPT_RT
-Date: Mon,  6 Oct 2025 18:34:09 +0000
-X-OQ-MSGID: <20251006183408.41851-2-2407018371@qq.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C7C2DEA77;
+	Mon,  6 Oct 2025 18:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759776739; cv=fail; b=UFC2xpJcomt164NUaQhCU0lBu8qPYWtwazuDXKfRQKVgiBEEV23T5fwFTI1RBTko6nqSAXcFzMXp4wIXQ9qDaNwpbLeUEfHTErlabHInMfewiFb4hF4jLUiNF+2uaZKrUK9NpVwzjByl6loZiVz3uTTwtiO3+uyq4szbEvnj6q4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759776739; c=relaxed/simple;
+	bh=0x2yLKmycNtEU3AaTXudTLBIQTK9XdARFOhrjzwRcRU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BQzxM9zzncDI2wdg+JL69w/H2E3MAOwTIi83YE1N5og7zn+YHmwighsqacLhBNy58Ns/cf90t8l0Jv/vztJH9Eg02lTbg9rBGD8rrrgZXWEeWEKrVvMk4qhTDPbrDv71e3UheJUKjYEBZpZAMiOfJJCu/URUOkfCFWvEsSGqhBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=H9n6+Wua; arc=fail smtp.client-ip=52.101.53.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T7gSckPwUno8YsQzlNCqPsxHdwnd1JZDM2Wmt2VYsQCYWqpRKApf3ZCdnpz9kCrpisZRCoeutY+nz6boaqYh4bLy3mYcIYYwIPXA4SqsPLVRavKICX5N56FWvbGCuihi9IPtR1FBMH3Ug3cZ2q68MTHVZuk+xGEldVfZHxNFouaKyNC7QuM0p13f25+zmBCEVd1ovOKG5aNaDxyGj+aLGQL8cZnGeioEEkbI3X1M0so7CaWV2y33jcuMB1UaPoC4Z5rfd+Y1soypLHsjpD5x0Joghg63sGqUpHmsrQtLQgoLttFXltIeB2PmBJobejcTFDWxTnqPD1Q0RkkAY6+2EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s8sV6iEig+8cjs5N+/sUoN7+jT0L/9OOVW6OyhtcX8Y=;
+ b=ot0RghF57+nbySGlzLA770x6OukXaGLM2ucttL/l9TaJg6/40yIrdXjXNoS1i0jrhVw0JW1nm2H1t8BrkQsyu+jAUkLDPi0dewB+j7vV32vkSq6B80baWjjZjjAK/MpmC5sKvnkTemrDLZ4JSWVR/snv0///PnbfsWHuOyM1Q1jMuvBZmS5VAz0diri6Ojxy8v6MhdCI6m6wf+WFzSEm2rzSvXqrGlsAz1LeDKU8vGHC7TUTxwNQikCW5jWdNxe4yh3bLNm66ALcFO96CMDXnac+LUVRTv70i0aIf0oBpMwRptc48xqB3mecGbzVdyL3mHXFdhO7SvlNPHIX6T0f8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s8sV6iEig+8cjs5N+/sUoN7+jT0L/9OOVW6OyhtcX8Y=;
+ b=H9n6+WuaunCz7uWhaEQEcQoI7SCSbGGSGXSTxFGBqUqLozMf9cv9wtkNmEHw66v7jG1hc17CwiaSuS80FV9bPLBd4u2iHZFfQjG1FNh/wJJXweWkbwVVFwYcPuLj60+I/U1uyVrxNLY6NVNTx5lt1yddzhp7oRHWbuhPIsAdem8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by DM4PR12MB5963.namprd12.prod.outlook.com (2603:10b6:8:6a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9182.20; Mon, 6 Oct 2025 18:52:05 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14%5]) with mapi id 15.20.9182.017; Mon, 6 Oct 2025
+ 18:52:05 +0000
+Message-ID: <3920762d-67af-4a55-a763-825231572abb@amd.com>
+Date: Mon, 6 Oct 2025 13:52:00 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 05/25] cxl: Move CXL driver RCH error handling into
+ CONFIG_CXL_RCH_RAS conditional block
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: linux-pci@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+References: <20250925223440.3539069-1-terry.bowman@amd.com>
+ <20250925223440.3539069-6-terry.bowman@amd.com>
+ <c1b197a0-31b3-4321-94c0-9f0394b78065@amd.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <c1b197a0-31b3-4321-94c0-9f0394b78065@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1P221CA0001.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c5::12) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|DM4PR12MB5963:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e5e5e2d-ce0a-4132-1506-08de05097165
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGhuWnUwQ1dZK2dINTRiZDdhSnBNaVppQ3JNYllDeWJsOWxPaGxDUHpDbjdU?=
+ =?utf-8?B?d05LazQxeTlWaVFaV2ZmUGtMRGxKTXJiUGYyMklPM3RJM3ZHL09WeGRQdjEv?=
+ =?utf-8?B?WDRNOGJFVzZzSzFWbldtdzU2NTBxNTU3ZUg5ckgvR0dBTkhQYk1YYVB0MDNL?=
+ =?utf-8?B?QytEY3p3azNkM0NsREF4T3hvTE5WeldzcERPSjFIUkE2OHJjQ3pweCttNzVJ?=
+ =?utf-8?B?MDlUT3NBSDFOdlcrOUZObDB5MExXU1lTeHlESjM4TEpQZzl0QVhpS3piS3Ji?=
+ =?utf-8?B?WGtOSkpQWjVwNHBGWHpjb0I1Wk5yNWdEWThQYnNzWVM5S1BFMXRwQTVzZmRs?=
+ =?utf-8?B?RXl0aGw4aHIvRndtdm51RHdiYnhuZ2lReDh6cmR2Z3BJMjdFT0hEaFdQbEhV?=
+ =?utf-8?B?cU0zRFdRWUlQYmJmbFU2aWFCZkZCQmluYXM0aVFxR29OdVBEY01MM205Y2Mx?=
+ =?utf-8?B?dmNyUVhHNVZibVU0YXRHUVRyRW90QitwbERkSDZkVUZxd1hjRHQvTHNMZldz?=
+ =?utf-8?B?NXRLZDdWNlZSRGFPWHFTbUNnUlpSdkszWmc5QVBkWkZFNDhsTFVBYkFsb2lQ?=
+ =?utf-8?B?dUhNaUwwdE1pTzRrbGNpSm9JSkRPelZvZ01aTHZ6aUpUenJPQU43aGpqbi9t?=
+ =?utf-8?B?TVhXbitQeWU2MGQ0TDNZUTRZdFRLOXpWdU1BVFJkT1pXSmNoc3llUHpMcWlG?=
+ =?utf-8?B?NnhrbFhSVEZYT0dYcnZ4c2VHWkZFdEphcXRzS01XNDB1UWpMaXB4bm4vK0ps?=
+ =?utf-8?B?UmZSZFVDM1dvemMzdjFTajhQcStsUTlVZWtKOGxEZWNvUk5vZ1ZhV3o1V2ph?=
+ =?utf-8?B?SHFNTnFuM2kxZVJxTlBpeWJlY2NUSGx5cFl4RW1vMEVRRmdVVnRyQkc5YUJr?=
+ =?utf-8?B?NVNZck4rQWdBWDM3aVZPd0ROb1oySHNDTE5ZOVlwMEdpanVURW9TR3NJK0lh?=
+ =?utf-8?B?UTVldUQyZWpXb3lDbWliZy9lQ3Zvbkw0dEJSVm9wNUpOaVBzYXNML21zNjVQ?=
+ =?utf-8?B?K3psc2s5azRVdVBjaEFiSjlsUG5TWC9yTTZxU3I3RW5nSWFNQmxxVTRzN08x?=
+ =?utf-8?B?eHFVbTEwZzdlSm8ySnRNcjNjUHRsaDRXRURqWmhpZUxVY1JqN1cwWXlTeDZD?=
+ =?utf-8?B?U0NyNm9SSk4xdC9nQnAzdUZMS3lDOWRYekhpNG5GcjZOdmU0NTMrMUhqNk5V?=
+ =?utf-8?B?alJvSU0zTStvbmt2aG5mWCtKcWpmSmswUVpHMGVxTzFJN1JYckxWM0x1TThu?=
+ =?utf-8?B?aUdEMGJPUzM4cWRSbkZqZEJKekZlSmhxcnVFQ0Nwd1hlRVVnREZCV1VGbUo3?=
+ =?utf-8?B?ZVU0UDV0YzljMWtLQU9Va3paZDA3WnRtNE0rU04vZFIwMldBRnhtTE5ZTTR5?=
+ =?utf-8?B?TFlEQ1dRWllHWlhneFcvbjVFTTNhTlRMVVVldENmVHdDcVFkamxRMWllTFpM?=
+ =?utf-8?B?M1hNdnk3Qko3TC9kUFhTYm1SMWorTEJtVzQrd0c3SkJzZ2FyQ29MOGdjRjVT?=
+ =?utf-8?B?Q2Erd2xpUTdvRkR3TVNsNXpmNmUybjdwUE9ITVNwMEFHeEJTSGxsMm91ZTNF?=
+ =?utf-8?B?Sk45aTk4SmIyTFdiLzZJRXV0NXovczlpcXRBbFNIVDdkV2RQU2dXR1hhUUhh?=
+ =?utf-8?B?UDZ5YjNiUkhEUXJ5UVlnUFh6eXc5eFlKYWhyWWN0dm14Nk15S3RsVUNCcURZ?=
+ =?utf-8?B?K0RWRWJTWEJhcm5KTGdqZXpRRjBhSSt1UjIvR3RXQXlSTHhtVlZBeU1FNHRK?=
+ =?utf-8?B?TmZFc1JEdFdrSmsvSUdmVjhzM0lGbnlMdVhrM0dRS0F4UEtNOG1kU2R3QzZL?=
+ =?utf-8?B?Q0dPUlh4aG45OXdISzJtN1JYRWVXcE10cExPNVVBODZJQStTMjhDYUtkNFRZ?=
+ =?utf-8?B?UzA3bFNTNi9vSnZTNjlRcDAxRnM0cjhtQ0FqRGVSQXRtUVFqUXBmdGkrTHZ1?=
+ =?utf-8?Q?7H3f1cqWHrOVn/SiZ1nZOGqIhFQChwCs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NlRheGg4d20zVDR5RGd4WjdjV1NwM3RTa3B6VU9hK0cxS1VpK2xJTU8zVnZI?=
+ =?utf-8?B?ZWUzZnBBY1E5RUFkZCtORENYeXJkQ0MwU3NzVDVIUEtCVlRZVXZSaWlIMUFX?=
+ =?utf-8?B?RnI5RVkrUlhEcC83TlVWNlpReGs0NVl3M3Zsem90Q1F4MUV1cVZWZjVoaW5r?=
+ =?utf-8?B?Slo1QjRRazcyeUl6ajZMQTNUOUpVNTROUmgxVXN5V3l2NTBFV1ZTdm1KWVJ1?=
+ =?utf-8?B?Z0k1UWRHNVVwUlpvbVM3MTdtVTVNdEhYTkM2OVdlTFVURnFvNXJLV2Zvb1N2?=
+ =?utf-8?B?OVordHJpckt0ek5QU0hSaTNTUmtsREhvbzBja0xqVGlUUkR2emVmMThUQWcz?=
+ =?utf-8?B?dW05KzhGLzZaRG5nOHdFNjRKeVQydFhEV0xMdTA0bHF5UGNvSGJZV0RPYVNV?=
+ =?utf-8?B?b2RnL2xVRGJPQmUrOGNFSnlLRzJuUE5pV29NbGdYVHNaaThYaW15S0dkZTNS?=
+ =?utf-8?B?dk92RTU0QVV5ZFlvSjk1ZlRyeUJha1dsN2dsbzROWTdERmh4aWp1Y1FGNk1J?=
+ =?utf-8?B?ZndHelBWZHBLMXE5c3pxTmlxQTc3NzNoOEtrQ056WTBwU2pWNFdRdFB5ajNC?=
+ =?utf-8?B?Z1VBa3pPN0NRbnhZaDdLOHZlK25zVEQ0L0RpSUdxU0hZdmpwblh3OEhFN3lK?=
+ =?utf-8?B?eUlBcjMyakwrMFJYS0xudmpQcWhNbkx4TTJVZ1hCN3E0cDh3NExMd2ZrNVhV?=
+ =?utf-8?B?RXIzT0Ywa0hQaEM4OUovbTR1VkQ0ak1JMGpxNTV0RmNIblAvamRFR1VnSVBa?=
+ =?utf-8?B?ZUhHVTdDb2RHR0szTTJ0cWJkaXptWWR0OUdHd25qb0pnQSszY29iTnhoTnc5?=
+ =?utf-8?B?cnBLTThIendsRDZYcVRtN2RYd0FQMTJYY3dZWTk4cTlXSzNMbjhGNlhnTi84?=
+ =?utf-8?B?Yy9VemwvYURxdGl5YlFhSW9yclZia1FiR3oxK093OTA1ZEY5T3QrQUhVdWFO?=
+ =?utf-8?B?SDNRWDZuRmhtbnllUUgyTWJuTHhmVDdMTXo3R1dLeWZQbFY2c2oxSG9VZC9N?=
+ =?utf-8?B?REp5MEVydTR2blA0SEM0R3FVTmtueGliSmZabE9LdW5OZDVJaWtwbXJzL0Fa?=
+ =?utf-8?B?eEhud0tFT1FqUk4rNmNkM21uQ0pMWldpS2MvVnFaN2R1UktRVTdzVktZL2M2?=
+ =?utf-8?B?TThHUmUyL2VKQ0JGV0hRVFpCQTFqSDhWVTNzZ1ZUdlA2R1FOaDNzZm0zY1A1?=
+ =?utf-8?B?dm9LcDVLNTh5eEhlN3N2aFBGbjFlOTN4RmtkRTJCS0ovVTlSbWsxUnhad2g5?=
+ =?utf-8?B?OUdMVmtGcG5MVU9rOW84dnYyV0U4aHlMaUhjM285VXJlaFJoUVhSRU5PSDE0?=
+ =?utf-8?B?WEQ4UWhlOGRGdGVwMjF0K0FNb01OTDBrR253UlEzM0NzR0F5VXNnUjF3dWRN?=
+ =?utf-8?B?R0k1ekY5Rm51b0dJSmQvdUFpVjVQUmVONFdaMGdXTmpHQXM2ck9IUXF0OTBw?=
+ =?utf-8?B?UGEvWUV4TG90N0RIL0ZVeGxndzZsT0p6aUdFSTNJV0xsUXFidnhCblF4MnVj?=
+ =?utf-8?B?M0I1L0JZUXNmZjNwc05oRlUrTWdra3hDajhGWlkvSlAzTFI0dnM0cFVZdUlu?=
+ =?utf-8?B?YWVUZVZGQWpnNk1iZUw4aU9XZWZNWm1kS3MyTlpETzVzOVBsSzg2MlF1OG0v?=
+ =?utf-8?B?WDVRbklBMDg3MUZnVHFpMzF6WnYxNzhGK1lKQjYzQkk1QVFYY2IzdFRNOVJV?=
+ =?utf-8?B?SFZYbFg4VWU4cTJPamE1RGd5QkVMSmszbmJRMEZJVGFmL01wemJKbk5jT0pH?=
+ =?utf-8?B?dHI0aFRkSjZNdGgxS2kxL1NEYWVYZ1BQc0FMQmlRVEc5OXF0elRtYXpZRmdw?=
+ =?utf-8?B?VTRmNzRSYTlKaTNjSC9uMUloMDZOQ1ZsR1NYcWxDL1AramZja21MdUV2ZnJL?=
+ =?utf-8?B?ai84U2YybVNWMHlUYXNjenBpMXlzdC9RQjlmcTBTZ0dKR0l2OVd1U2NOSU9m?=
+ =?utf-8?B?REFHUkpEc01iQ2pBSGp3SnNkdkh4VWVKc0kvZHNTcDJ4eXdJUXpKUTNvTldF?=
+ =?utf-8?B?V2Z0N081ZXZoTjFtQVZQYWtWbDh3UG0zMmFuRnhBeTF1d0E2MW5kMk1LdXFn?=
+ =?utf-8?B?RTNPQWN1SVZVZEJwUTBCN1NEalFHYmw2ZmxwWG9Yb3k5K1dYSEVLNGxqOURK?=
+ =?utf-8?Q?Kyamv3byKamnc9WAEe0W8ZhuI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e5e5e2d-ce0a-4132-1506-08de05097165
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2025 18:52:05.0302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cgZqLnn9BUka1DXmoR/ww8JsSOYaNBLN/b4gHM0c4y20ksCu9KIsylnprYXIRFpTvOmQlLEqqGnIZvF6CHxAtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5963
 
-In PREEMPT_RT, IRQs are forced to run in threaded. However, lockdep did not correctly
-account for this case, causing false-positive warnings about hardirq context violations
-when analyzing lock acquisition in such threaded IRQs (see function `task_wait_context`).
 
-This patch updates `irq_forced_thread_fn` to explicitly call `lockdep_hardirq_enter()`
-and `lockdep_hardirq_exit()` when PREEMPT_RT is enabled, ensuring lockdep correctly
-tracks the hardirq context even when the IRQ is executed in a forced thread.
 
-This was discovered while testing PCIe AER error injection on an arm64 QEMU virtual machine:
+On 10/3/2025 3:11 PM, Cheatham, Benjamin wrote:
+> [snip]
+>
+>> +
+>> +config CXL_RCH_RAS
+>> +	bool "CXL: Restricted CXL Host (RCH) protocol error handling"
+>> +	def_bool n
+>> +	depends on CXL_RAS
+>> +	help
+>> +	  RAS support for Restricted CXL Host (RCH) defined in CXL1.1.
+> Seems a little terse for a config help message. Maybe something like: "RAS support for
+> Restricted CXL Hosts (RCH) as defined in the CXL 1.1 specification."?
+>
+> Do we also want to default to 'n' here? I realize that 1.1 devices aren't exactly popular
+> but 2.0+ devices/hosts are still pretty new. I haven't looked at the rest of the series yet,
+> but if this is the majority of the RCH support then it's small enough to include by default
+> imo.
+>
+> I'm fine with leaving 'n' as the default but I thought I'd make the argument for including
+> it by default just in case.
+Sure, the help message can be expanded. It would be good to use default 'n' if possible, 
+but, we can default 'y' if we see a need. I'm not aware of what degree, or if any, the RCH 
+is used.
 
-```
-  qemu-system-aarch64 \
-      -nographic \
-      -machine virt,highmem=off,gic-version=3 \
-      -cpu cortex-a72 \
-      -kernel arch/arm64/boot/Image \
-      -initrd initramfs.cpio.gz \
-      -append "console=ttyAMA0 root=/dev/ram rdinit=/linuxrc earlyprintk nokaslr" \
-      -m 2G \
-      -smp 1 \
-      -netdev user,id=net0,hostfwd=tcp::2223-:22 \
-      -device virtio-net-pci,netdev=net0 \
-      -device pcie-root-port,id=rp0,chassis=1,slot=0x0 \
-      -device pci-testdev -s -S
-```
-
-Injecting a correctable PCIe error via /dev/aer_inject caused a BUG
-report with "Invalid wait context" in the irq/PCIe thread.
-
-```
-~ # export HEX="00020000000000000100000000000000000000000000000000000000"
-~ # echo -n "$HEX" | xxd -r -p | tee /dev/aer_inject >/dev/null
-[ 1850.947170] pcieport 0000:00:02.0: aer_inject: Injecting errors 00000001/00000000 into device 0000:00:02.0
-[ 1850.949951]
-[ 1850.950479] =============================
-[ 1850.950780] [ BUG: Invalid wait context ]
-[ 1850.951152] 6.17.0-11316-g7a405dbb0f03-dirty #7 Not tainted
-[ 1850.951457] -----------------------------
-[ 1850.951680] irq/16-PCIe PME/56 is trying to lock:
-[ 1850.952004] ffff800082865238 (inject_lock){+.+.}-{3:3}, at: aer_inj_read_config+0x38/0x1dc
-[ 1850.952731] other info that might help us debug this:
-[ 1850.952997] context-{5:5}
-[ 1850.953192] 5 locks held by irq/16-PCIe PME/56:
-[ 1850.953415]  #0: ffff800082647390 (local_bh){.+.+}-{1:3}, at: __local_bh_disable_ip+0x30/0x268
-[ 1850.953931]  #1: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-[ 1850.954453]  #2: ffff000004bb6c58 (&data->lock){+...}-{3:3}, at: pcie_pme_irq+0x34/0xc4
-[ 1850.954949]  #3: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-[ 1850.955420]  #4: ffff800082863d10 (pci_lock){....}-{2:2}, at: pci_bus_read_config_dword+0x5c/0xd8
-[ 1850.955932] stack backtrace:
-[ 1850.956412] CPU: 0 UID: 0 PID: 56 Comm: irq/16-PCIe PME Not tainted 6.17.0-11316-g7a405dbb0f03-dirty #7 PREEMPT_{RT,(full)}
-[ 1850.957039] Hardware name: linux,dummy-virt (DT)
-[ 1850.957409] Call trace:
-[ 1850.957727]  show_stack+0x18/0x24 (C)
-[ 1850.958089]  dump_stack_lvl+0x40/0xbc
-[ 1850.958339]  dump_stack+0x18/0x24
-[ 1850.958586]  __lock_acquire+0xa84/0x3008
-[ 1850.958907]  lock_acquire+0x128/0x2a8
-[ 1850.959171]  rt_spin_lock+0x50/0x1b8
-[ 1850.959476]  aer_inj_read_config+0x38/0x1dc
-[ 1850.959821]  pci_bus_read_config_dword+0x80/0xd8
-[ 1850.960079]  pcie_capability_read_dword+0xac/0xd8
-[ 1850.960454]  pcie_pme_irq+0x44/0xc4
-[ 1850.960728]  irq_forced_thread_fn+0x30/0x94
-[ 1850.960984]  irq_thread+0x1ac/0x3a4
-[ 1850.961308]  kthread+0x1b4/0x208
-[ 1850.961557]  ret_from_fork+0x10/0x20
-[ 1850.963088] pcieport 0000:00:02.0: AER: Correctable error message received from 0000:00:02.0
-[ 1850.963330] pcieport 0000:00:02.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
-[ 1850.963351] pcieport 0000:00:02.0:   device [1b36:000c] error status/mask=00000001/0000e000
-[ 1850.963385] pcieport 0000:00:02.0:    [ 0] RxErr                  (First)
-```
-
-Signed-off-by: Guangbo Cui <2407018371@qq.com>
----
- kernel/irq/manage.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index c94837382037..80007bce5625 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1150,9 +1150,13 @@ static irqreturn_t irq_forced_thread_fn(struct irq_desc *desc, struct irqaction
- 	local_bh_disable();
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
- 		local_irq_disable();
-+	else
-+		lockdep_hardirq_enter();
- 	ret = irq_thread_fn(desc, action);
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
- 		local_irq_enable();
-+	else
-+		lockdep_hardirq_exit();
- 	local_bh_enable();
- 	return ret;
- }
--- 
-2.43.0
-
+Terry
 
