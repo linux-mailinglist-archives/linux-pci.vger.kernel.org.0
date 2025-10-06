@@ -1,95 +1,107 @@
-Return-Path: <linux-pci+bounces-37633-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37632-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B80ABBF1E1
-	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 21:43:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36FF6BBF1DE
+	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 21:42:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B077B34B53F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 19:43:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E16624F13AF
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 19:42:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35F2254B03;
-	Mon,  6 Oct 2025 19:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECEB25333F;
+	Mon,  6 Oct 2025 19:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="fkbzrcUe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIdRJjOU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0ED22AF1B;
-	Mon,  6 Oct 2025 19:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EEA2AF1B;
+	Mon,  6 Oct 2025 19:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759779769; cv=none; b=Hr+v092LQHXtIQ3NAZ6eE9GpW71hGLeXCS0zaVwq2LxQeTI/x4AzJRDoM0dsMVvi5rX3joouXjvnZz6nbhMO8ZE3UZgXHXHFoTgzlyG+47NDHotVYWkCo8gteuekD9UAX5vPQSziErzkBAZovew/kpPc6OGgqHVxewRfWhqELYg=
+	t=1759779762; cv=none; b=r1qUAyTT07z3Es4KRxdHACsLUFIUfCswgcW1MZMO6k35UHz0YSHl9/Br1OGTBL2MYxFuIss7vOBj2M0SyY0vcUqGmCLW9QJcowNumzN3zN59azIQkFh8dFlZsKzbGPospOtLbnzXk88Mr2gy5KzP9B/fTU5aHKI6paXkyKUU5PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759779769; c=relaxed/simple;
-	bh=agAOwGGk7/WaedOho35v/y7fkZ6L2K5cWMQgm+4Dw14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwf0va0z281/mv6XaMSdQyRoS2c6rmJo+XkuYKSU0MEhzgcqY4BqooK95aHsL9pqWO/T1lZPLiU6eVukcxF9x2NiLMiGoAaIW4OGgubDLPUX2YneOtqHJGyk7IcXbGiKq6CZqyKSrhy2IySUM/uBjyvHOXmvmDV18mEG+Xjm834=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=fkbzrcUe; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [10.50.4.39] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4cgV6R3H8kz4YbS;
-	Mon,  6 Oct 2025 15:42:39 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1759779760; bh=agAOwGGk7/WaedOho35v/y7fkZ6L2K5cWMQgm+4Dw14=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=fkbzrcUe0oF6iL72n91Lzd5KQVs4pQoGPto4C1OcdfCEW0GJsEV1bCkWDZ5uvhQhp
-	 chUB3eXfHVWORwYqfxJUYPNJLnwr+HVdQVlYxnxIEstR0Hy5cJxMqqY3OVIDe2F8it
-	 Y20ZU2sHt7dCISBbTqGO4DroK1MoE3Accp2BVReA=
-Message-ID: <b2f03b08-4361-4e5d-aaed-8b63ec7c4870@panix.com>
-Date: Mon, 6 Oct 2025 12:42:38 -0700
+	s=arc-20240116; t=1759779762; c=relaxed/simple;
+	bh=WmVauaY89mdmOO7C3ZW+vI9b3vibAHdUAOecbiQ0amU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=b7LevcCO6MOifGXSIrRyT4W5cV6vbtLTmmPKyn9NqQ6UlCqD+KX41gIAXDCGXBBbOn+nH/3IgIehFQpIVrsfS8ocLOERO4JhQsnQED6mMLtMeyv2YrRPiJOVm4OBIGiz+YsGqbC2KRoC61V4msZv94Ethhmc7BKazyTVh2doTOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIdRJjOU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5F2C4CEF5;
+	Mon,  6 Oct 2025 19:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759779762;
+	bh=WmVauaY89mdmOO7C3ZW+vI9b3vibAHdUAOecbiQ0amU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rIdRJjOU0UYrMsrmVlQAuZcbbgV7B3yR3Q8cO9iUXDyyixCQRvEWhakxwUM/2e+BN
+	 Sxxhw2Ntpbt2jKUykFR4kDix/3KHtgybkc8XUgESWJanNYUMFMsoqWiUC+c4FgUw/U
+	 cW5en5tlJrsTwraM8BTSjzdvP9nqd9x2JgZItsXOJJd2bdFLlDV/DxtjYV9M++g/B0
+	 b+/kE+p1iS0XrCFdhBH6+5KX3P4toN2aW8PYkDKVT2vL+Y1NW0YskxO+TGzQXUy5WX
+	 aF2gxZUmfII37qR9nZNrw4bWANNZZP0fHBARhd6h83Q4/a4sNmvWZqwdkD8faxCSDe
+	 FWb+Yx96gTw0Q==
+Date: Mon, 6 Oct 2025 14:42:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: ixp4xx: Guard ARM32-specific hook_fault_code()
+Message-ID: <20251006194241.GA537937@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] PCI/ASPM: Add host-bridge API to override default
- ASPM/CLKPM link state
-To: Manivannan Sadhasivam <mani@kernel.org>,
- "David E. Box" <david.e.box@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, rafael@kernel.org,
- bhelgaas@google.com, vicamo.yang@canonical.com,
- ilpo.jarvinen@linux.intel.com, nirmal.patel@linux.intel.com,
- linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kenneth C <kenny@panix.com>
-References: <20250904171158.GA1268495@bhelgaas>
- <121a26de-b5d4-42a2-ae52-02b386f17109@panix.com>
- <s7t5duadivgemkwmx4vjrzsaxy3xdeotwve734sq7iy477g2ur@lwusjd2iklxl>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <s7t5duadivgemkwmx4vjrzsaxy3xdeotwve734sq7iy477g2ur@lwusjd2iklxl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aNxCoN2fP4aEAH2i@shell.armlinux.org.uk>
 
+On Tue, Sep 30, 2025 at 09:50:40PM +0100, Russell King (Oracle) wrote:
+> On Tue, Sep 30, 2025 at 08:59:36PM +0200, Linus Walleij wrote:
+> > On Thu, Sep 25, 2025 at 10:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > hook_fault_code() is an ARM32-specific API.  Guard it and related code with
+> > > CONFIG_ARM #ifdefs so the driver can be compile tested on other
+> > > architectures.
+> > >
+> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > It looks OK to me
+> > Acked-by: Linus Walleij <linus.walleij@linar.org>
+> > 
+> > I see some other ARM32 drivers use it too, but we surely do
+> > not have a arch-agnostic way of handling bus errors so perhaps it
+> > need to be like this.
+> > 
+> > I think Russell created the fault hooks originally so CC:ing him
+> > in.
+> 
+> I wonder what the point of compile testing if it needs code to be
+> #ifdef'd out.
 
+We can still catch errors in the bulk of the drivers.
 
-On 9/23/25 23:12, Manivannan Sadhasivam wrote:
+> Wouldn't it be better to add something like:
+> 
+> #ifndef CONFIG_ARM
+> static inline void hook_fault_code(int n, int (*fn)(unsigned long, unsigned int,
+> 						    struct pt_regs *),
+> 				   int sig, int code, const char *name)
+> {
+> }
+> #endif
+> 
+> maybe to a local header that pci-imx6, pci-keystone, pcie-rcar-host
+> and pci-ixp4xx can all share?
 
-> ASPM patches targeting devicetree plaforms are now in pci/aspm and merged to
-> pci/next for testing. 
- > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=aspm
-
-Yes and I see they're in Linus' master now.
-
-> David could send a followup to add the VMD driver now
-> reusing the pcie_{aspm/clkpm}_override_default_link_state() helpers.
-
-David? Your old commit doesn't apply cleanly now; I'll give it a shot 
-trying to redo it with the new API from above, but as this is your baby 
-maybe you could refactor it as well?
-
-Thanks,
-
--Kenny
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
+I guess we could put a stub like that in drivers/pci/pci.h.  But all
+these drivers also have other CONFIG_ARM #ifdefs for the
+hook_fault_code() *handlers*, so I'm not sure it's any better to
+remove one #ifdef and leave the other.
 
