@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-37608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38570BBDF80
-	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 14:10:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A89FBBDF8F
+	for <lists+linux-pci@lfdr.de>; Mon, 06 Oct 2025 14:10:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B288B34B365
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 12:10:09 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D37FC34B374
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 12:10:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D8A27A935;
-	Mon,  6 Oct 2025 12:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C2527B505;
+	Mon,  6 Oct 2025 12:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="C+AQMfl2"
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="R94u915o"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33B21FF1BF;
-	Mon,  6 Oct 2025 12:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7BA27A45C;
+	Mon,  6 Oct 2025 12:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759752601; cv=none; b=dVRyfMHrQu6FsZ61JJ5n7YlNpINlNWSHqjOI+bKAulqEz23bC/eMiiR/DMmNN9Zv9I2cm431zNbm5pHspezK3fuwekypDEM+eLv3sA9wN9VjBFbqc1anUv7Wuss4wGLHVjiF6o+azmc4m66wNPrilFCmwkCcGI03whjqcPBrfGo=
+	t=1759752609; cv=none; b=o2iixzONjevNGb4Sl7FNxWyydW5YO3l0iDbms4rrcVj4wK2bu+Z0Gnp3yRgML6yfgAhmAaGw1eFeLPL89w1auk1NBz2ZwxG2D9RmtIqX2rBa6LEasiGZRFxJYXiDeiVb2lFV/2EZ18TVOTCze/RzxA11t9RJIs9t+aCgLJrQgys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759752601; c=relaxed/simple;
-	bh=DSYgXcHamOXVeBdcgtnClxPl3hrCqiebkarm5Ggia2Q=;
+	s=arc-20240116; t=1759752609; c=relaxed/simple;
+	bh=OMcjzqyHYFvX5Cr2mXN6248km4EoR9oE5IXrLXSuDck=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CvM3zl5tseC80QXMgQ7XF1M0AF5OhPF9c7ya0yqmfJbMv6nkbjg8bbfXpVabaSgH/zgAfhM6BdrCxbvKka/Lbo4O0l1ab3bQxyYhouyssDbDDoGlN4r0WySSanyU7Kdy0gGERjd0M1sxDYLRCY9ZRpXjMz8ITtcNGFDyMu7FAo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=C+AQMfl2; arc=none smtp.client-ip=212.227.15.14
+	 MIME-Version; b=hq1bPxmNGSEwbx+S+7wtU3qZZG4KBTnqP/2LnMp5GYQOw2OkapZw/akzfj3X1mhwvLVlb5UMUfOFXpUgctfle7K9vf/ozdUHnaK+BYQ/A3VY3q4ZMq6I7Q2HNDC6m7F1q0JSF6qkf3UbolZ2TgQelqdR73ftQXJsYl4h0dnC5Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=R94u915o; arc=none smtp.client-ip=212.227.15.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1759752591; x=1760357391; i=spasswolf@web.de;
-	bh=JLB8PIbw+N0LUkNlfemzeyl2cSVv1Y33puUJfyYXRrQ=;
+	s=s29768273; t=1759752592; x=1760357392; i=spasswolf@web.de;
+	bh=QL8VZtyw0/u7Oq0yLpGopt+0WuV9B2HS01+h5w8UVjM=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=C+AQMfl24FpVECbRXpddNfjmKQohob1whjIudoW/HX2GBf04Gsig46lcd36lB0ia
-	 GNVw5wIqwa4kOsPHBaNxK5J9obbjk7+PvqArJtw2UX2r3OzxPA+AwB6VPNAgfdTe7
-	 1qSbTGrk8gwD1aerGOPKFpYszfUbch44SyGTp6L9wwJSvRFv+OF9l1m0VKqCiW52r
-	 QIsQ8Po+i3JRTEoPM5a0qW4XDHkVyD8aE1jfijnRD6zR1IFDpnekcexzXBc8flgx0
-	 k+NVGfCLB5js0bbHESvUTwDopWSec5/6z9d0aAXWw50OfZWN+R378zM2lcVFtlYXl
-	 +TpIYELYZZkaeN7EvQ==
+	b=R94u915ovAfRv/qUBdXCjbbRrFNYSlNt9EzlYsj+lRuNQE5sjOmE5XDBZg7zTryg
+	 GhWJ0Bqr/XSXYxOrXSPhJd1miES3jKFRrvk5Hz/rSg8da07h6iSBNq0okrSIvygvi
+	 GoF0obiLijyZoXi+a3CK78iQkL2bOTr2OE5+gCHoBONZ65e332TwUsowNLJWTSFlv
+	 b+2XZWKRR8Aad/TPklwH6SF+kMjRPpH/xJYZMTfAnfYde0ugmtDpEeNbh3BFb1uG6
+	 5VSzOIktikcDwdUYIZw3PojjfbBzOVQVHfC4ZvAX836RDLLFvbHdSdRLXe7Oyg68K
+	 R5EAyuRwv1b8dYNG4w==
 X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
 Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
  (mrweb006 [213.165.67.108]) with ESMTPSA (Nemesis) id
- 1MVrbl-1ugCqJ31Yz-00QPsx; Mon, 06 Oct 2025 14:09:50 +0200
+ 1MLijs-1uoDBX43ge-00J1t8; Mon, 06 Oct 2025 14:09:52 +0200
 From: Bert Karwatzki <spasswolf@web.de>
 To: linux-kernel@vger.kernel.org
 Cc: Bert Karwatzki <spasswolf@web.de>,
@@ -59,9 +59,9 @@ Cc: Bert Karwatzki <spasswolf@web.de>,
 	Mario Limonciello <superm1@kernel.org>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
 	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [REGRESSION 02/04] Crash during resume of pcie bridge
-Date: Mon,  6 Oct 2025 14:09:41 +0200
-Message-ID: <20251006120944.7880-3-spasswolf@web.de>
+Subject: [REGRESSION 03/04] Crash during resume of pcie bridge
+Date: Mon,  6 Oct 2025 14:09:42 +0200
+Message-ID: <20251006120944.7880-4-spasswolf@web.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251006120944.7880-1-spasswolf@web.de>
 References: <20251006120944.7880-1-spasswolf@web.de>
@@ -72,340 +72,534 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mF1VfaeKK6Z0Q7Jw66XZvY88uyjqZSABj9lCKeKBY58OQ7X6jQG
- k9kJd9W1euWlNlEBez7Ihlq+cMHHA51z9aEudxhkrboMWDY3juh4QqhHYSWZ+ZGtEo2rU3K
- anlYwoWjTfPfappcP4Tzs5Lr37noUhKURXb+X9t842shwtjabkMaE4yLe6ScMJ8cSLCe95k
- cdLJdPzDTaplWN2zUWCVA==
+X-Provags-ID: V03:K1:m8dS2t/6d4noACAWJlbqVgv+fXwTk6g6gZPWiuU+qDT94px7sO/
+ szlPXfCeeGBB3DrT4pAnzh/+mUpzIzOzmFchwMkXnvsJq79PjN/G/j2ZdKBYk97ElODnfYz
+ JsS2KpVok4iOr4dXRPdzm/dT4y3EWsx/01oCqqihYWmmzkZ5Eh0aAHU0b8wTCCKjKbOHvN+
+ u63N+GwdqI283JFFvBrOQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oKa04mgs+9Q=;ZjuoQV5xeRtJtVfzqyMnZ09zO4P
- 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
+UI-OutboundReport: notjunk:1;M01:P0:1UyTuLUOY/A=;P2N4qUvBtWyFugn5wXDck97uqyu
+ bOJJkzH9CC9E1ceIjnbSyCIb+1F7NcvslvJThZTEeaeQDUSeu0gV+ML14M+gXyw88Tjv8qFgo
+ kc8X08+Y2F1bOoBelfBWL/k/aY6H4oiQQdnl+MvlUbr6jhADQBBDa+w+DYtHa+2mnU5j2kz82
+ oimRXIHyt43NzUphZXUs7s3eFeh08b2/LxfgTupl6dIL4o820XQwFvQjxwAtdlJvZB2niKvuC
+ rj9etzIXQJAU3J8PVvnmg1DNaisF7sy6MjVsxAP9jNkrny3bI4VzOVTKKo8xHrEVm2rHTPPmk
+ xt8OaVhvOEbSNF/H6C7RD4M69gQRXRNhxLcPX/pJ4ja88097c+lby/iCeRBFKLgqCatzhqU6U
+ vGMt5IQZ4LjppUFtXO1L6q0c3Oj6YyNGPoK7InM0qVm6618CO72HwpqFMhPQ9Vbhp+cnhzUoU
+ GnByaBsAXkpanfuD8nuJDrStkTK6bwIBHUaQvW5saicIgFOTreCx/qtRqJtnguISnHlAVmJfb
+ dQjIWUDSMDA0ve/GCGW1PYF3s9SpSlNtIzXGBQSUbRHpyXRj5QJ4EfD/t4h/O1FRNsz4IttIo
+ mtP+miz1fkPclmf+n+jWrYPdm5AE93uMfl5MBsNzjYTOdLFY1v73OIT7HMD97hljWA4+jbyQn
+ CnSqki0gFUVn5hec3V7LU3NsX72L5gNrmrQ69RGtUMqU3yILzKhBTCxlqGUDg8SBBXJ3nUW2d
+ QBrHzfh+amJCAGESvCo2V0VJANRs1/91YHNSX/13vMhDjOuZHAcDjLRkdJhCOpPJH6mM5zX0h
+ 2kk6+vThHIpV6+pPvAGzWSuvwblMO7uRZ/WzevLc9cQJCHbdEIwHSrHT5HfY9k0ZN5ohT9PCT
+ QBBqwscr1FuV5EQv951F1tup8/M0PDqGtKdnNTAf3PddEfHGSaH0fH/hACNmio4ml+qedjXWM
+ S4PV58jjQ3QL1qh0BlhHaeCIWo6qG8bHHu9PAdDjR3uvz8vRlri8VTXeMrgaetJ1xCNk7PGJs
+ Je2QX+jLWga/yu7+t6CIPnaefCichsTEObBNF/b3/QUbHOIJ0jVRNxmWwu1sWk1K6Gp6ahnjR
+ 7ehMnDaGp6nsveCDdd47LBtCDOzeAX8Wq0hmXjQNawqGH6ENhlUCFM2UoMH4jw0FN2MtAuEej
+ qHb78a9aKnGGbb5MxlQWbEwEzxsnqUjDpZPQA3vPUZ3XeZOLGNOnzvh+uCCa2ElIPHlCgvDv6
+ jWmip6wZxS3VO9yFdbbZNeoHin3cx0cbw+ifec/vQZseFV8+PR0vzaN+FWpMFVc7Vrni94jVc
+ j+wZdNfIqGi2GQWYqLSWM1qdX2R9PG/nMNefMW7nNJS5vvGPv/2PPiZeWxtlgIqDDVbh1KnJF
+ EUiogzNdVi6D+idj+SHfjZbMF4JZsd/9CSJPYBzyDhrEeZjla3ZywCisNyA6537UWlEBDS/sU
+ 6tHWcV05w9qG87XLhUNNkDxEZJVXzAQ/uCwBOhFdwFgnBpFW9yneZ+e9UEh3VWI2ovbolC0Kf
+ s4QEr/YWsySpCOBmY+2XpH2z1BzbLLkHiZA8PL8F2UMv6mWzhiBzZSfP3gouaOoQ0Yz+fCiLX
+ 0unW7IZKhI1BDU/HY76FOiN9X9pGZ8xQCLgwZLjABVjnq/ysSWABcAwPPATAvX34WzcPYSfw5
+ e6wREB9cxf31g2p4Rrn/jOk9s9BPB5vnylVjZUjDdSe3tBO1Z7u8m4VqFPFuXbmFwVcxev/gO
+ iDqcqQuZ/2gwr1zBBEt4FK1xn6pfjuaNMrGazHKIo0iwai3iXfDArcCFiDMcACVyPd6H/sTDC
+ BBjc6OqfS50Db7kZHtEaGPjWNsR39FF1uMM80ve2l6ZZNztXi+YGdg9rqOyQjDhfoAnInIf8/
+ ZLsLcBb/3znByUZEBU9Gyb1vCx4jvGdGP56gdmI91pujeX3PPjZJLAl+4YaijzsfhwNXEshni
+ QdUmQFzqkPWC77fnVEEB6xktAhDs9G7Hoi4HnGsTAQcYeauh2Sm5e049mOUnQxa16gDf7wjx+
+ bAKs6s0J2eQ21gZVnf3SvGLNDjWd09jcyT2Mez/XFoCC26hOpFj1FK+BVsJwwz0FdeaLht+RP
+ Vc/E4zzM9iA0FTDzYFznlVp4PwbTnpF31usldUHXoKkozQurrgSe8WwUEgBIGiveJKJEnl/LY
+ 6eEBp2Snd+ehM1e9VTXrKYlKe14afLRrH19hFuYf/VpeX0odOLBlEFroiVcuL6NEO8PgISZej
+ Bm5h8wgmB3hksu21+OZTvwLLNe+8fFFmQegRRUqKjYY9k4A7twnFofRGmophqua7ry1syrbdC
+ 0Bj0dmaWuPV0ewf26mYp5vlXxc6hsmmfd/TSYdJri/vrpMjdZabpuKO5oT/iBdqeYElMopMji
+ Jl3hvmDG0YTkM0xKNo2SybmM2juN9bCJq2ubriut6VZmcDfy2trJMoELJWt0aMnhZHFoJ973S
+ iqHSvE2OyjDKVmluKbQj/YWd/angjSlm+yksLpfth3JgXYQyi/YRrA5j34bM76d7LKfHe2ISc
+ wjQWuNbJrEw5/GCwnJ/9ChRZNptVFnnGFBXzFV2jHf319hYTGLsaAGYxMlJqxqGtYLv62o7tv
+ 6sfuV4DMPxeUKkR4sNVQk7Wt6Ui/T7wZFYcEmIlSM65Ik0dEY/AtGqOckVYxtv4vmocVV7qQ0
+ wzyx77eyfJ7A71/ujvQIR0bDVf/GHvJPcsUVYsE2D4o1eXmECwPfKV9MOLa87cYZ1Kbk3G5pc
+ PRMq/5WD9+R4S7PoXUHTCxgiSa9NIhw3OmZy9S5ROezq0TFmnzkQjpy6VR6j95HFi86X0mgsU
+ B91XmcPLxVQfLLlHz3EaZe/2kbgwxH9ES4GLLzCBs1MuO0g+J8hsKNgogWBPOqHuB6Pcpvuuy
+ bUeaujb5HSp/x4TUrP66Qef630SfZKA8CVZqviZtQM+ZyV67SGZK1GcfABwsKOw4XYEiIpNYP
+ 4146TXLZRkwiTBJpRx9KbH7FpM3zeHS9Ro+9i4+Lg1SqBVKWrN9s94rv1lN/iN7o3vkFNSFGw
+ +0PoJefdTsifJgaXirgttWbgLCSl1R0cwmXBE1GtNeAVCoakw2j5vJwFdq+G6ELuaHyCcC9GS
+ 8E22QAhOyvI4TBihP9HombBumo2hu4fxQn1/XR18FLs67yeSG+gotGPUnPdSakVn/WOXcHimg
+ ee0g5bX2oxMKJgkf51mKQyLUs1VNI4CAJ/8bSbE72n6spvJS8svbbNX/gNe0yczOaatnN5/AE
+ c81nZ5ZGcUVpOmD/ye19A51GfUVE7vsCzdy80sWlDWc6GmivGAO5hMfKgZYODgVWQhJuw2J2J
+ //Bd75NHdwCGbullGnsawEO1qU6wRLp6cnd0IkehXrtRh02ppYvi4SqoC6qeJlhOrVQDrGdt7
+ cHedMCIpJl7/aIJZmfm1730TsxXZhG9VIkWegHK0cN3uO3j0koCg3kdyDngCM9UngirrLaris
+ 0hRfpjV5JGN7TDafKRGjmxJikEgnFKYbXm0wca2AGUxqCwQM8grnKitT96O7HyRvD4+otd+nP
+ c/bKfQ8LfS8TU9MOZIv/5olKWHOLrzW4ZZq4T8C14GswjndrCflqsg4L3vyLKIQHdrDm/22Xl
+ RSCfxAV3wuwjNBa3wpo1QAfqMCxIocT6BVWndkLV7WE/ElkW1Wku91GBUdgrLwd1Y9YTvKaTT
+ IdvsKLRUmbNt6GWNtOmg0tRIazJIjW0zuHiJ1sccwtXZyU3mjy+TmTHdRlaCbb6aOMYoXvayT
+ OB7aauEn7TYvOh0+k3HjiY8aPkqSQoUjuZvaABOBbATwP5YXidzOcC5gHOn1ZLww2kq0H4NhC
+ hVJjrcSf0ffZCPpCu1sMbgN20Uzu7dD1K1trlmExuggJ8MQPwBwx2sl/AhV7ulWEg0o1d42Vv
+ BIhi/OvPdT4/QTGeCi1KW23dg+gFvmux1tpHY4LXQwu3UJ2B9t0ZYxH3rdKJKAafh2tE52iiS
+ Y8wml1lG15PLq0g3Uos8c0S/B+bupsBuIYUEmKDvdQsfXWgfaWWbHIJPnjitbf8DYUTj6mv0O
+ vKXAJtTrOnVsZLmq9olJnZbw6oqNg5CvRZNMfD+3SG/bfdtSyhDwI8PyawolqlDqMs3rV5z4l
+ lOH9oXxMiY8bEu7sQiRJpUs3qYBBH6U22MiXhYITIUnldKFJhwTNfUk+5L3bm1CKkXjHSTfy9
+ exMAs4L3yYDU6gp1Oc7WCoWEQd0ZwHju8WcWG5cAdIllbuT6f1tFk+cduD/GoGgEtw/wde1JG
+ qoeNOr0TxhoKDMxLFisx32dJQ6wWm8Fh3avVV3SJy4Lm6Xt5uiNBOlVboou05qzoj5EHFWU6N
+ bJbUljLzAdma3EjNxzu0XsWq0WIkx28l/5ulPrZ12/TYB6BxmaC1znU8+P/yNAeIAkLHsAIr8
+ nnVvUpSgN/eDhc0PS09Va+A6RsY2yrlaqiUnR5wL4MjhnD+hWvGY681omE2UV7gB+09+m9bDK
+ f5GsFYW4h14BEiogQWDsK1BFf94ZPpl6fwsPj6bel+XdiB05r98cDaRsox13YZPXFQnFAf4CI
+ ymwl6rN0ywzo5hqYqqfet76RAUFWPb/BNoJnTg8pc/3yfQG+PWcYokYZM45xuqTwY4E42JSNh
+ ntSrh9WJoLDhHmR7T24Wa9z2aet9yMkDAwE3njoD3VUclJ6h99l1pHp9TXM7oDXzA+TwZ/19M
+ QX/8FpsY4J5sVqOzWL+HprR/lGBB+EBOW7171SmBXi++ZC0KyEi9Bym6LMSO54fzx2KvDnnN2
+ MJCbgyiFk2WQdDI8UF6ZzSIsH9GMESovYgz2nuHtTz68awNVx/VtuAheQaHXWR1XKmGH6saPR
+ 4EL83ZCgLO6hxiz0EI3c7qg7NEuSz1W6x1v4bGcCZ/+ICEyeSOSnIQULwKLVA7wI0zMDh+olD
+ N3lTNP/5R6nMeESaTxZDzK2WDrU5WZtvzTysFde8VsExbiY8q8bmLsVuke8q6a621POXfHNa+
+ 25cr7OEgmT+AilMTTfUfE1Q7SfE330F8Zn4fcjuWhdkB6bI+JZC5k4EInVxmM75HyPHvVuymV
+ oUSobR8ezKQ3HX30NK0ljfBlt1e+qdnOZDUE/A5JleQ+QSX+9SbGZ3JQ0z1EXgpXt0j6euQVQ
+ tRNMg2DWu0XJfzkZiqiPaACAGOurPKEFBrerM9
 
-The next step is to monitor pm_runtime_get_sync(), rpm_resume() and __pm_r=
-untime_resume().
-Here we need to use conditional debugging output or else we get messages a=
-t a
-rate of about a million lines per minute.
+In order to get a working crash I removed some of the monitoring again:
 
-These is the additional debugging used in
-6.17.0-rc6-next-20250917-gpudebug-00024-g5c6b49b810db
-
+diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+index bc365c0dbe2f..a984ccd4a2a0 100644
+=2D-- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -514,60 +514,46 @@ static void acpi_bus_notify(acpi_handle handle, u32 =
+type, void *data)
+=20
+ 	switch (type) {
+ 	case ACPI_NOTIFY_BUS_CHECK:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_CHECK\n", __func__, __LINE__);
+ 		acpi_handle_debug(handle, "ACPI_NOTIFY_BUS_CHECK event\n");
+ 		break;
+=20
+ 	case ACPI_NOTIFY_DEVICE_CHECK:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK\n", __func__, __LINE_=
+_);
+ 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK event\n");
+ 		break;
+=20
+ 	case ACPI_NOTIFY_DEVICE_WAKE:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_WAKE\n", __func__, __LINE__=
+);
+ 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_WAKE event\n");
+ 		return;
+=20
+ 	case ACPI_NOTIFY_EJECT_REQUEST:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_EJECT_REQUEST\n", __func__, __LINE=
+__);
+ 		acpi_handle_debug(handle, "ACPI_NOTIFY_EJECT_REQUEST event\n");
+ 		break;
+=20
+ 	case ACPI_NOTIFY_DEVICE_CHECK_LIGHT:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK_LIGHT\n", __func__, _=
+_LINE__);
+ 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK_LIGHT event\n");
+ 		/* TBD: Exactly what does 'light' mean? */
+ 		return;
+=20
+ 	case ACPI_NOTIFY_FREQUENCY_MISMATCH:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_FREQUENCY_MISMATCH\n", __func__, _=
+_LINE__);
+ 		acpi_handle_err(handle, "Device cannot be configured due "
+ 				"to a frequency mismatch\n");
+ 		return;
+=20
+ 	case ACPI_NOTIFY_BUS_MODE_MISMATCH:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_MODE_MISMATCH\n", __func__, __=
+LINE__);
+ 		acpi_handle_err(handle, "Device cannot be configured due "
+ 				"to a bus mode mismatch\n");
+ 		return;
+=20
+ 	case ACPI_NOTIFY_POWER_FAULT:
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_POWER_FAULT\n", __func__, __LINE__=
+);
+ 		acpi_handle_err(handle, "Device has suffered a power fault\n");
+ 		return;
+=20
+ 	default:
+-		printk(KERN_INFO "%s %d: acpi unknown event type\n", __func__, __LINE__=
+);
+ 		acpi_handle_debug(handle, "Unknown event type 0x%x\n", type);
+ 		return;
+ 	}
+=20
+ 	adev =3D acpi_get_acpi_dev(handle);
+-	if (adev)
+-		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+-	else
+-		printk(KERN_INFO "%s %d: adev =3D NULL\n", __func__, __LINE__);
+-	=09
+=20
+ 	if (adev && ACPI_SUCCESS(acpi_hotplug_schedule(adev, type)))
+ 		return;
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 9a7dc432b50d..4e0583274b8f 100644
+=2D-- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -539,7 +539,6 @@ static void acpi_pm_notify_handler(acpi_handle handle,=
+ u32 val, void *not_used)
+ 	if (!adev)
+ 		return;
+=20
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 	mutex_lock(&acpi_pm_notifier_lock);
+=20
+ 	if (adev->wakeup.flags.notifier_present) {
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 0f6a16856119..5ff343096ece 100644
+=2D-- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -1167,7 +1167,6 @@ void acpi_os_wait_events_complete(void)
+ 	 * Make sure the GPE handler or the fixed event handler is not used
+ 	 * on another CPU after removal.
+ 	 */
+-	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
+ 	if (acpi_sci_irq_valid())
+ 		synchronize_hardirq(acpi_sci_irq);
+ 	flush_workqueue(kacpid_wq);
+@@ -1185,7 +1184,6 @@ static void acpi_hotplug_work_fn(struct work_struct =
+*work)
+ {
+ 	struct acpi_hp_work *hpw =3D container_of(work, struct acpi_hp_work, wor=
+k);
+=20
+-	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
+ 	acpi_os_wait_events_complete();
+ 	acpi_device_hotplug(hpw->adev, hpw->src);
+ 	kfree(hpw);
+@@ -1194,7 +1192,6 @@ static void acpi_hotplug_work_fn(struct work_struct =
+*work)
+ acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src)
+ {
+ 	struct acpi_hp_work *hpw;
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+=20
+ 	acpi_handle_debug(adev->handle,
+ 			  "Scheduling hotplug event %u for deferred handling\n",
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index d53be7e0388d..065abe56f440 100644
+=2D-- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -251,7 +251,6 @@ static int acpi_scan_check_and_detach(struct acpi_devi=
+ce *adev, void *p)
+ {
+ 	struct acpi_scan_handler *handler =3D adev->handler;
+ 	uintptr_t flags =3D (uintptr_t)p;
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+=20
+ 	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
+=20
+@@ -315,7 +314,6 @@ static void acpi_scan_check_subtree(struct acpi_device=
+ *adev)
+ {
+ 	uintptr_t flags =3D ACPI_SCAN_CHECK_FLAG_STATUS;
+=20
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 	acpi_scan_check_and_detach(adev, (void *)flags);
+ }
+=20
+@@ -371,7 +369,6 @@ static int acpi_scan_rescan_bus(struct acpi_device *ad=
+ev)
+ {
+ 	struct acpi_scan_handler *handler =3D adev->handler;
+ 	int ret;
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+=20
+ 	if (handler && handler->hotplug.scan_dependent)
+ 		ret =3D handler->hotplug.scan_dependent(adev);
+@@ -388,7 +385,6 @@ static int acpi_scan_device_check(struct acpi_device *=
+adev)
+ {
+ 	struct acpi_device *parent;
+=20
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 	acpi_scan_check_subtree(adev);
+=20
+ 	if (!acpi_device_is_present(adev))
+@@ -416,24 +412,19 @@ static int acpi_scan_device_check(struct acpi_device=
+ *adev)
+ static int acpi_scan_bus_check(struct acpi_device *adev)
+ {
+ 	acpi_scan_check_subtree(adev);
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+=20
+ 	return acpi_scan_rescan_bus(adev);
+ }
+=20
+ static int acpi_generic_hotplug_event(struct acpi_device *adev, u32 type)
+ {
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 	switch (type) {
+ 	case ACPI_NOTIFY_BUS_CHECK:
+-		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 		return acpi_scan_bus_check(adev);
+ 	case ACPI_NOTIFY_DEVICE_CHECK:
+-		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 		return acpi_scan_device_check(adev);
+ 	case ACPI_NOTIFY_EJECT_REQUEST:
+ 	case ACPI_OST_EC_OSPM_EJECT:
+-		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 		if (adev->handler && !adev->handler->hotplug.enabled) {
+ 			dev_info(&adev->dev, "Eject disabled\n");
+ 			return -EPERM;
+@@ -450,7 +441,6 @@ void acpi_device_hotplug(struct acpi_device *adev, u32=
+ src)
+ 	u32 ost_code =3D ACPI_OST_SC_NON_SPECIFIC_FAILURE;
+ 	int error =3D -ENODEV;
+=20
+-	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
+ 	lock_device_hotplug();
+ 	mutex_lock(&acpi_scan_lock);
+=20
+@@ -476,10 +466,9 @@ void acpi_device_hotplug(struct acpi_device *adev, u3=
+2 src)
+ 		 * There may be additional notify handlers for device objects
+ 		 * without the .event() callback, so ignore them here.
+ 		 */
+-		if (notify) {
+-			dev_info(&adev->dev, "%s %d: calling notify =3D %px\n", __func__, __LI=
+NE__, (void *) notify);
++		if (notify)
+ 			error =3D notify(adev, src);
+-		} else
++		else
+ 			goto out;
+ 	}
+ 	switch (error) {
 diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 7420b9851fe0..895898c3cd56 100644
+index 895898c3cd56..27cce7f1b1d3 100644
 =2D-- a/drivers/base/power/runtime.c
 +++ b/drivers/base/power/runtime.c
-@@ -787,12 +787,18 @@ static int rpm_resume(struct device *dev, int rpmfla=
-gs)
+@@ -142,6 +142,8 @@ EXPORT_SYMBOL_GPL(pm_runtime_suspended_time);
+  */
+ static void pm_runtime_deactivate_timer(struct device *dev)
+ {
++	if (!strcmp(dev_name(dev), "0000:00:01.1"))
++		dev_info(dev, "%s %d\n", __func__, __LINE__);
+ 	if (dev->power.timer_expires > 0) {
+ 		hrtimer_try_to_cancel(&dev->power.suspend_timer);
+ 		dev->power.timer_expires =3D 0;
+@@ -787,8 +789,6 @@ static int rpm_resume(struct device *dev, int rpmflags=
+)
  	struct device *parent =3D NULL;
  	int retval =3D 0;
 =20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
  	trace_rpm_resume(dev, rpmflags);
 =20
   repeat:
- 	if (dev->power.runtime_error) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		retval =3D -EINVAL;
- 	} else if (dev->power.disable_depth > 0) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		if (dev->power.runtime_status =3D=3D RPM_ACTIVE &&
- 		    dev->power.last_status =3D=3D RPM_ACTIVE)
- 			retval =3D 1;
-@@ -808,31 +814,45 @@ static int rpm_resume(struct device *dev, int rpmfla=
-gs)
- 	 * rather than cancelling it now only to restart it again in the near
+@@ -815,7 +815,7 @@ static int rpm_resume(struct device *dev, int rpmflags=
+)
  	 * future.
  	 */
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+ 	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
++		dev_info(dev, "%s %d dev =3D %px\n", __func__, __LINE__, dev);
  	dev->power.request =3D RPM_REQ_NONE;
  	if (!dev->power.timer_autosuspends)
  		pm_runtime_deactivate_timer(dev);
-=20
- 	if (dev->power.runtime_status =3D=3D RPM_ACTIVE) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		retval =3D 1;
- 		goto out;
- 	}
-=20
- 	if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
- 	    dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		DEFINE_WAIT(wait);
-=20
- 		if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
-+			if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+				dev_info(dev, "%s %d\n", __func__, __LINE__);
- 			if (dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
-+				if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+					dev_info(dev, "%s %d\n", __func__, __LINE__);
- 				dev->power.deferred_resume =3D true;
- 				if (rpmflags & RPM_NOWAIT)
- 					retval =3D -EINPROGRESS;
- 			} else {
-+				if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+					dev_info(dev, "%s %d\n", __func__, __LINE__);
- 				retval =3D -EINPROGRESS;
- 			}
- 			goto out;
- 		}
-=20
- 		if (dev->power.irq_safe) {
-+			if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+				dev_info(dev, "%s %d\n", __func__, __LINE__);
- 			spin_unlock(&dev->power.lock);
-=20
- 			cpu_relax();
-@@ -856,6 +876,8 @@ static int rpm_resume(struct device *dev, int rpmflags=
-)
- 			spin_lock_irq(&dev->power.lock);
- 		}
- 		finish_wait(&dev->power.wait_queue, &wait);
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		goto repeat;
- 	}
-=20
-@@ -865,22 +887,32 @@ static int rpm_resume(struct device *dev, int rpmfla=
-gs)
- 	 * the resume will actually succeed.
- 	 */
- 	if (dev->power.no_callbacks && !parent && dev->parent) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		spin_lock_nested(&dev->parent->power.lock, SINGLE_DEPTH_NESTING);
- 		if (dev->parent->power.disable_depth > 0 ||
- 		    dev->parent->power.ignore_children ||
- 		    dev->parent->power.runtime_status =3D=3D RPM_ACTIVE) {
-+			if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+				dev_info(dev, "%s %d\n", __func__, __LINE__);
- 			atomic_inc(&dev->parent->power.child_count);
- 			spin_unlock(&dev->parent->power.lock);
- 			retval =3D 1;
- 			goto no_callback;	/* Assume success. */
- 		}
- 		spin_unlock(&dev->parent->power.lock);
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	}
-=20
- 	/* Carry out an asynchronous or a synchronous resume. */
- 	if (rpmflags & RPM_ASYNC) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		dev->power.request =3D RPM_REQ_RESUME;
- 		if (!dev->power.request_pending) {
-+			if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+				dev_info(dev, "%s %d\n", __func__, __LINE__);
- 			dev->power.request_pending =3D true;
- 			queue_work(pm_wq, &dev->power.work);
- 		}
-@@ -894,6 +926,8 @@ static int rpm_resume(struct device *dev, int rpmflags=
-)
- 		 * necessary.  Not needed if dev is irq-safe; then the
- 		 * parent is permanently resumed.
- 		 */
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		parent =3D dev->parent;
- 		if (dev->power.irq_safe)
- 			goto skip_parent;
-@@ -909,6 +943,8 @@ static int rpm_resume(struct device *dev, int rpmflags=
-)
- 		 */
- 		if (!parent->power.disable_depth &&
- 		    !parent->power.ignore_children) {
-+			if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+				dev_info(dev, "%s %d\n", __func__, __LINE__);
- 			rpm_resume(parent, 0);
- 			if (parent->power.runtime_status !=3D RPM_ACTIVE)
- 				retval =3D -EBUSY;
-@@ -919,10 +955,14 @@ static int rpm_resume(struct device *dev, int rpmfla=
-gs)
- 		if (retval)
- 			goto out;
-=20
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		goto repeat;
- 	}
-  skip_parent:
-=20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	if (dev->power.no_callbacks)
- 		goto no_callback;	/* Assume success. */
-=20
-@@ -933,11 +973,15 @@ static int rpm_resume(struct device *dev, int rpmfla=
-gs)
- 	dev_pm_disable_wake_irq_check(dev, false);
- 	retval =3D rpm_callback(callback, dev);
- 	if (retval) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		__update_runtime_status(dev, RPM_SUSPENDED);
- 		pm_runtime_cancel_pending(dev);
- 		dev_pm_enable_wake_irq_check(dev, false);
- 	} else {
-  no_callback:
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		__update_runtime_status(dev, RPM_ACTIVE);
- 		pm_runtime_mark_last_busy(dev);
- 		if (parent)
-@@ -949,7 +993,11 @@ static int rpm_resume(struct device *dev, int rpmflag=
-s)
- 		rpm_idle(dev, RPM_ASYNC);
-=20
-  out:
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	if (parent && !dev->power.irq_safe) {
-+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+			dev_info(dev, "%s %d\n", __func__, __LINE__);
- 		spin_unlock_irq(&dev->power.lock);
-=20
- 		pm_runtime_put(parent);
-@@ -959,6 +1007,8 @@ static int rpm_resume(struct device *dev, int rpmflag=
-s)
-=20
- 	trace_rpm_return_int(dev, _THIS_IP_, retval);
-=20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	return retval;
- }
-=20
-@@ -1181,17 +1231,27 @@ int __pm_runtime_resume(struct device *dev, int rp=
+@@ -1231,22 +1231,16 @@ int __pm_runtime_resume(struct device *dev, int rp=
 mflags)
  {
  	unsigned long flags;
  	int retval;
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
 =20
  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
  			dev->power.runtime_status !=3D RPM_ACTIVE);
 =20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
  	if (rpmflags & RPM_GET_PUT)
  		atomic_inc(&dev->power.usage_count);
 =20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
  	spin_lock_irqsave(&dev->power.lock, flags);
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+ 	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s %d\n", __func__, __LINE__);
++		dev_info(dev, "%s %d dev =3D %px\n", __func__, __LINE__, dev);
  	retval =3D rpm_resume(dev, rpmflags);
  	spin_unlock_irqrestore(&dev->power.lock, flags);
 =20
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	return retval;
+diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpi=
+php_glue.c
+index e56ab308da20..e21255b97251 100644
+=2D-- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -484,7 +484,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
+l bridge)
+ 	struct pci_dev *dev;
+ 	struct pci_bus *bus =3D slot->bus;
+ 	struct acpiphp_func *func;
+-	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
+=20
+ 	if (bridge && bus->self && hotplug_is_native(bus->self)) {
+ 		/*
+@@ -495,14 +494,11 @@ static void enable_slot(struct acpiphp_slot *slot, b=
+ool bridge)
+ 		 * as a Thunderbolt host controller.
+ 		 */
+ 		for_each_pci_bridge(dev, bus) {
+-			dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
+ 			if (PCI_SLOT(dev->devfn) =3D=3D slot->device) {
+-				dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
+ 				acpiphp_native_scan_bridge(dev);
+ 			}
+ 		}
+ 	} else {
+-		printk(KERN_INFO "%s %d\n", __func__, __LINE__);
+ 		LIST_HEAD(add_list);
+ 		int max, pass;
+=20
+@@ -510,15 +506,12 @@ static void enable_slot(struct acpiphp_slot *slot, b=
+ool bridge)
+ 		max =3D acpiphp_max_busnr(bus);
+ 		for (pass =3D 0; pass < 2; pass++) {
+ 			for_each_pci_bridge(dev, bus) {
+-				dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
+ 				if (PCI_SLOT(dev->devfn) !=3D slot->device) {
+-					printk(KERN_INFO "%s %d\n", __func__, __LINE__);
+ 					continue;
+ 				}
+=20
+ 				max =3D pci_scan_bridge(bus, dev, max, pass);
+ 				if (pass && dev->subordinate) {
+-					dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
+ 					check_hotplug_bridge(slot, dev);
+ 					pcibios_resource_survey_bus(dev->subordinate);
+ 					__pci_bus_size_bridges(dev->subordinate,
+@@ -535,7 +528,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
+l bridge)
+=20
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		/* Assume that newly added devices are powered on already. */
+-		dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
+ 		if (!pci_dev_is_added(dev))
+ 			dev->current_state =3D PCI_D0;
+ 	}
+@@ -554,7 +546,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
+l bridge)
+ 		}
+ 		pci_dev_put(dev);
+ 	}
+-	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
  }
- EXPORT_SYMBOL_GPL(__pm_runtime_resume);
+=20
+ /**
+@@ -823,7 +814,6 @@ static void hotplug_event(u32 type, struct acpiphp_con=
+text *context)
+ 	switch (type) {
+ 	case ACPI_NOTIFY_BUS_CHECK:
+ 		/* bus re-enumerate */
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_CHECK\n", __func__, __LINE__);
+ 		acpi_handle_debug(handle, "Bus check in %s()\n", __func__);
+ 		if (bridge)
+ 			acpiphp_check_bridge(bridge);
+@@ -834,7 +824,6 @@ static void hotplug_event(u32 type, struct acpiphp_con=
+text *context)
+=20
+ 	case ACPI_NOTIFY_DEVICE_CHECK:
+ 		/* device check */
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK\n", __func__, __LINE_=
+_);
+ 		acpi_handle_debug(handle, "Device check in %s()\n", __func__);
+ 		if (bridge) {
+ 			acpiphp_check_bridge(bridge);
+@@ -850,23 +839,19 @@ static void hotplug_event(u32 type, struct acpiphp_c=
+ontext *context)
+=20
+ 	case ACPI_NOTIFY_EJECT_REQUEST:
+ 		/* request device eject */
+-		printk(KERN_INFO "%s %d: ACPI_NOTIFY_EJECT_REQUEST\n", __func__, __LINE=
+__);
+ 		acpi_handle_debug(handle, "Eject request in %s()\n", __func__);
+ 		acpiphp_disable_and_eject_slot(slot);
+ 		break;
+ 	}
+=20
+ 	pci_unlock_rescan_remove();
+-	printk(KERN_INFO "%s %d:\n", __func__, __LINE__);
+ 	if (bridge)
+ 		put_bridge(bridge);
+-	printk(KERN_INFO "%s %d:\n", __func__, __LINE__);
+ }
+=20
+ static int acpiphp_hotplug_notify(struct acpi_device *adev, u32 type)
+ {
+ 	struct acpiphp_context *context;
+-	dev_info(&adev->dev, "%s %d: %s =3D %px\n", __func__, __LINE__, __func__=
+, (void *) acpiphp_hotplug_notify);
+=20
+ 	context =3D acpiphp_grab_context(adev);
+ 	if (!context)
 diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index d88d6b6ccf5b..0888b0d5ec73 100644
+index 0888b0d5ec73..d88d6b6ccf5b 100644
 =2D-- a/include/linux/pm_runtime.h
 +++ b/include/linux/pm_runtime.h
-@@ -508,6 +508,8 @@ static inline int pm_runtime_get(struct device *dev)
+@@ -508,8 +508,6 @@ static inline int pm_runtime_get(struct device *dev)
   */
  static inline int pm_runtime_get_sync(struct device *dev)
  {
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s\n", __func__);
+-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+-		dev_info(dev, "%s\n", __func__);
  	return __pm_runtime_resume(dev, RPM_GET_PUT);
  }
 =20
-With this there is no crash after 60h uptime with ~3093 GPP0 notifies, pro=
-bably the
-printk()s are mitigating the crash in some way (i.e. there's a race and th=
-e printk()s
-are slowing down only one side ...).
+This is the message from 6.17.0-rc6-next-20250917-gpudebug-00028-gf99cf81b=
+1da7 crashing,
+captured via netconsole:
 
-It would be nice if we could get a crash while all the printk()s are in pl=
-ace,
-but I'm not sure if we can ...
+2025-10-06T04:52:35.932429+02:00 [T248]evmisc-0132 ev_queue_notify_reques:=
+ Dispatching Notify on [GPP0] (Device) Value 0x00 (Bus Check) Node 0000000=
+069c9623b
+2025-10-06T04:52:35.932429+02:00 [T177395]pcieport 0000:00:01.1: acpiphp_c=
+heck_bridge 708#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [T177395]pcieport 0000:00:01.1: __pm_runt=
+ime_resume 1243 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D=
++pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
+ 818 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:0=
+0:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: pm_runtime=
+_deactivate_timer 146#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
+ 930#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
+ 959#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
+ 818 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:0=
+0:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: pm_runtime=
+_deactivate_timer 146#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
+ 965#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
 
-Stopped 6.17.0-rc6-next-20250917-gpudebug-00024-g5c6b49b810db after 60h an=
-d 3093 GPP0 notifies without crash.
+So the crash seems to happen in this part of rpm_resume():
+
+[...]
+ skip_parent:
+
+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
+		dev_info(dev, "%s %d\n", __func__, __LINE__); // this is the last report=
+ed line
+	if (dev->power.no_callbacks)
+		goto no_callback;	/* Assume success. */
+
+	__update_runtime_status(dev, RPM_RESUMING);
+
+	callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
+
+	dev_pm_disable_wake_irq_check(dev, false);
+	retval =3D rpm_callback(callback, dev);
+	if (retval) {
+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
+			dev_info(dev, "%s %d\n", __func__, __LINE__);
+		__update_runtime_status(dev, RPM_SUSPENDED);
+		pm_runtime_cancel_pending(dev);
+		dev_pm_enable_wake_irq_check(dev, false);
+	} else {
+ no_callback:
+		if (!strcmp(dev_name(dev), "0000:00:01.1"))
+			dev_info(dev, "%s %d\n", __func__, __LINE__);
+[...]
 
 Bert Karwatzki
-
-
 
