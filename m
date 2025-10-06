@@ -1,219 +1,104 @@
-Return-Path: <linux-pci+bounces-37645-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 720DDBBFBA3
-	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 00:58:24 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24A42BBFC0D
+	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 01:13:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AEA1634BBD0
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 22:58:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1527E4E298E
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 23:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BEAA1B21BD;
-	Mon,  6 Oct 2025 22:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E00351D61BC;
+	Mon,  6 Oct 2025 23:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M4kP3F8h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onCPadsc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA01196C7C
-	for <linux-pci@vger.kernel.org>; Mon,  6 Oct 2025 22:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9AB15667D;
+	Mon,  6 Oct 2025 23:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759791497; cv=none; b=rBI/VRablcvMrk6r/81zFtCRo8rB5xVtFjW6iMliiAoIjuVhBzzmq0yJtiANruOKYJ0vKGj/DU5PxiUX+iDm230bxytAnSRe14jh7YK7l9mtG2MoTQ7SCfGSqWm2BAx/+Nnc5KG/VuRnNbqCkm6BNO6XZ3CUFqBl63sEVQr16bQ=
+	t=1759792408; cv=none; b=WOCd3MMyCKBlKpV2ykNYbEJWRp4egSdsMU6CLOjZQT9eoKWdBChnY8Frw1q9oOW42fZudVBPowuWhVXNOmsyCVpXyDrnPLssMBlH/DdfG4OEOZh7k0jp+QnO095Rgh+zX+OXv2Kf1C5D1hqd1BfEw8ciphFd+evKv5uVNnisIzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759791497; c=relaxed/simple;
-	bh=Lxcy5NL3Pu34Y9yZDrN3rk4ENVzLB2VJ2gFBFJRiZe4=;
+	s=arc-20240116; t=1759792408; c=relaxed/simple;
+	bh=bLiJ06jMARRE5CuLlJkwHNZ7cvjQTnOD4kHGO/M63F4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kssy0Ip+qqxTaiI24yb858ZLUK8MdqCeuVdZgPTBm4Y7eRrEURIqZDnDo9BvRwg8R5K3wn/0vwvznS9hq7M8CTQGhmTg0LXMMMPZ85i8fCItWW6EHyhDvVusH44pBMaRxLJWwcCcFN1w5ggWyRCUMVwu2m0CPaOJ1n+Ho0SlsRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M4kP3F8h; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-27c369f8986so54836125ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 06 Oct 2025 15:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1759791495; x=1760396295; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E/BzR3xcFJ27hJdoJBLSQ8cx3Y7ne92fXQ6+nL97RBI=;
-        b=M4kP3F8h1g2h/2LVC8k+gEdvyFalaLxxhi0boU2ms9csn7D1qhDuu9DZhemPuTizfP
-         LkiecPIxTfoI3hrpGqKq/4xfGOjtP/078WK/I8tW/0Idm0y75by/92PZg3m0dhXB8/sJ
-         yq4mBd5DO7cgp3BIdIRP3Wg7rdfxJg+brrp4Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759791495; x=1760396295;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/BzR3xcFJ27hJdoJBLSQ8cx3Y7ne92fXQ6+nL97RBI=;
-        b=Dn5U7dZN/WbJT8OzUvETSrR1ERNV0geGTB/4HFYfHiV5rsa3CS+8SzT6ghIDFfPM3s
-         Hx46lkzrTJlGAJtoSrQzEUNviSAZtdBWvgZqX4oaZDus3KutdjsDI/w2rOqJIBM6LRXe
-         iHFk/bQD9e2+7yOZf+GkOaDPL7ZHOIcpb3CfrJkYg+hl+uU+qCiAzayv+vOXaktMBMbJ
-         iyHhw31GH/jAjt0NO6K1DndjA5n9J1MG1pK12swosE8fNAgarQw9AszebU1ixWca5/sQ
-         h7sD7k1z6mZfq/xBLt9fTfs0MY6ML72AMZzSJ0K2cbo6kRw5ElWsEKL7FAw++49UReQj
-         XbdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6yETmxEmgZoj6dGY03rS413mWIHtKWHawTFbr9uW+ISdM+5R+i2mmnhXqjiW6fxvcz7Cp4fgTnSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE0THXnh9I4sejWyL2SCZ8wf6ZqOheiYsRER1QrOgylAVt7VEM
-	pzp4l0bGnJH6cQ2X9etq4S0XF5cZGKQoWjp/URHZtsjM8QoqPdQlv5SXaVte8CwrEA==
-X-Gm-Gg: ASbGncvb+ochv3eEt60boRwsWbHQGa3K+dEnJeEY/WlFNpj3h380egI6kdV+f913kdM
-	juWkfM2v0PCgj1YYr1EseotbPfhYR6/JDQa1ZHp2DAFBMqR8CuYRtkDid7ld7ZkwB1BC3ZounFu
-	/ybuMSErdCKCBPMJq/Shh1A4JfO+zoHunrOLAa34lnEEubP6WVMqPQ9PIyAtCNP566w9xOSE7gM
-	7mFUCXozlqSH2weoHf/UoQWcMDchvaAUpGDcEf6qTH8yWAQ3KafqRKwGXbmvNbictbl/ZwOE1WH
-	rfoY8wA3iyJXlB55ijC1+jJ65Kus3i3GC3NvnVmLK8M3jJCgIbUgrjgEbH42IX1AGyQ2uzEbTld
-	OiIKJn8v2Z9FJTtfUdz3MXHMg3KVledrZ178/q8xAbcGfBmo2LgN0pZIhVDgxLKJad3fySo17jO
-	g9IbLvTs75
-X-Google-Smtp-Source: AGHT+IGVZN5motWy2Ycd10vl3SQ+AaFTmr4hj0xbObvYJTiiiEPPzlHnJXWtgHFm0rxdlAP5PbSCnQ==
-X-Received: by 2002:a17:903:2ac3:b0:269:b2ff:5c0e with SMTP id d9443c01a7336-28e9a679f43mr160020265ad.46.1759791494873;
-        Mon, 06 Oct 2025 15:58:14 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e7c:8:299e:f3e3:eadb:de86])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-28e8d1d5e20sm143991805ad.97.2025.10.06.15.58.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Oct 2025 15:58:14 -0700 (PDT)
-Date: Mon, 6 Oct 2025 15:58:12 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Daniel Gomez <da.gomez@kernel.org>, linux-pci@vger.kernel.org,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Richard Weinberger <richard@nod.at>, Wei Liu <wei.liu@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	kunit-dev@googlegroups.com,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH 1/4] PCI: Support FIXUP quirks in modules
-Message-ID: <aORJhL1yAPyV7YAW@google.com>
-References: <20250912230208.967129-1-briannorris@chromium.org>
- <20250912230208.967129-2-briannorris@chromium.org>
- <c84d6952-7977-47cd-8f09-6ea223217337@suse.com>
- <aNLb9g0AbBXZCJ4m@google.com>
- <2071b071-874c-4f85-8500-033c73dfaaab@suse.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ud67I+A2s88HWLexp+XwoIRIVqyDeBtdKilzAP2J17Ea2RylN3A+E/6duU20qQRO6Ypb6EzOzWhWW991ZLSkbnT+FQcg7i2fQWJNDws+VVSwhbXpoJEZM1Pj2v4LN7xtJhudkDZedRHYHh5AW5xjoJSnHr5FzYyjXaDnLU1R05g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onCPadsc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8D9C4CEF5;
+	Mon,  6 Oct 2025 23:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759792408;
+	bh=bLiJ06jMARRE5CuLlJkwHNZ7cvjQTnOD4kHGO/M63F4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=onCPadscgHwmiNX6VAuSG58AVoDmwbuGqHAzguiMVkr1EbFUjVjW0Hr6GvQQOJqen
+	 2jqe3qeYfhuoq3abM9AdkKe5OU8kzk8016AXv4IOocS4lfhqJJly/pvGgq/vyaRJEB
+	 LfTUF6PaohM37Ex0Q2/dquHQEsGVTEEEAreWt8GX56w7dS8RVVbmPuDeLCFzWPas+Y
+	 RyNz2LzTCG2vDE43oHrgoNGsAWXPLrdiSl05tPOAe+KgtyFM+KZ39QucKZJGzUJoWe
+	 3v+0kiiQkB6v8l7jhTl6W1vEDH/rPgpjboFae1arODiem8LSgrKi77JzP7mKHQPDyS
+	 NKLCnaZNFZLbg==
+Date: Mon, 6 Oct 2025 16:13:26 -0700
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Avoid redundant delays on D3hot->D3cold
+Message-ID: <v7ynntv43urqjfdfzzbai2btsohaxpprni2pix2wnjfoazlfcl@xdbhvnpmoebt>
+References: <aOQLRhot8-MtXeE3@google.com>
+ <20251006193333.GA537409@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2071b071-874c-4f85-8500-033c73dfaaab@suse.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251006193333.GA537409@bhelgaas>
 
-Hi Petr,
-
-On Wed, Sep 24, 2025 at 09:48:47AM +0200, Petr Pavlu wrote:
-> On 9/23/25 7:42 PM, Brian Norris wrote:
-> > Hi Petr,
+On Mon, Oct 06, 2025 at 02:33:33PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 06, 2025 at 11:32:38AM -0700, Brian Norris wrote:
+> > On Mon, Oct 06, 2025 at 03:52:22PM +0200, Mika Westerberg wrote:
+> > > On Fri, Oct 03, 2025 at 03:40:09PM -0700, Brian Norris wrote:
+> > > > From: Brian Norris <briannorris@google.com>
+> > > > 
+> > > > When transitioning to D3cold, __pci_set_power_state() will first
+> > > > transition a device to D3hot. If the device was already in D3hot, this
+> > > > will add excess work:
+> > > > (a) read/modify/write PMCSR; and
+> > > > (b) excess delay (pci_dev_d3_sleep()).
+> > > 
+> > > How come the device is already in D3hot when __pci_set_power_state() is
+> > > called? IIRC PCI core will transition the device to low power state so that
+> > > it passes there the deepest possible state, and at that point the device is
+> > > still in D0. Then __pci_set_power_state() puts it into D3hot and then turns
+> > > if the power resource -> D3cold.
+> > > 
+> > > What I'm missing here?
 > > 
-> > On Tue, Sep 23, 2025 at 02:55:34PM +0200, Petr Pavlu wrote:
-> >> On 9/13/25 12:59 AM, Brian Norris wrote:
-> >>> @@ -259,6 +315,12 @@ void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
-> >>>  		return;
-> >>>  	}
-> >>>  	pci_do_fixups(dev, start, end);
-> >>> +
-> >>> +	struct pci_fixup_arg arg = {
-> >>> +		.dev = dev,
-> >>> +		.pass = pass,
-> >>> +	};
-> >>> +	module_for_each_mod(pci_module_fixup, &arg);
-> >>
-> >> The function module_for_each_mod() walks not only modules that are LIVE,
-> >> but also those in the COMING and GOING states. This means that this code
-> >> can potentially execute a PCI fixup from a module before its init
-> >> function is invoked, and similarly, a fixup can be executed after the
-> >> exit function has already run. Is this intentional?
-> > 
-> > Thanks for the callout. I didn't really give this part much thought
-> > previously.
-> > 
-> > Per the comments, COMING means "Full formed, running module_init". I
-> > believe that is a good thing, actually; specifically for controller
-> > drivers, module_init() might be probing the controller and enumerating
-> > child PCI devices to which we should apply these FIXUPs. That is a key
-> > case to support.
-> > 
-> > GOING is not clearly defined in the header comments, but it seems like
-> > it's a relatively narrow window between determining there are no module
-> > refcounts (and transition to GOING) and starting to really tear it down
-> > (transitioning to UNFORMED before any significant teardown).
-> > module_exit() runs in the GOING phase.
-> > 
-> > I think it does not make sense to execute FIXUPs on a GOING module; I'll
-> > make that change.
+> > Some PCI drivers call pci_set_power_state(..., PCI_D3hot) on their own
+> > when preparing for runtime or system suspend, so by the time they hit
+> > pci_finish_runtime_suspend(), they're in D3hot. Then, pci_target_state()
+> > may still pick a lower state (D3cold).
 > 
-> Note that when walking the modules list using module_for_each_mod(),
-> the delete_module() operation can concurrently transition a module to
-> MODULE_STATE_GOING. If you are thinking about simply having
-> pci_module_fixup() check that mod->state isn't MODULE_STATE_GOING,
-> I believe this won't quite work.
-
-Good point. I think this at least suggests that this should hook into
-some blocking point in the module-load sequence, such as the notifiers
-or even module_init() as you suggest below.
-
-> > Re-quoting one piece:
-> >> This means that this code
-> >> can potentially execute a PCI fixup from a module before its init
-> >> function is invoked,
-> > 
-> > IIUC, this part is not true? A module is put into COMING state before
-> > its init function is invoked.
+> We might need this change, but maybe this is also an opportunity to
+> remove some of those pci_set_power_state(..., PCI_D3hot) calls from
+> drivers.
 > 
-> When loading a module, the load_module() function calls
-> complete_formation(), which puts the module into the COMING state. At
-> this point, the new code in pci_fixup_device() can see the new module
-> and potentially attempt to invoke its PCI fixups. However, such a module
-> has still a bit of way to go before its init function is called from
-> do_init_module(). The module hasn't yet had its arguments parsed, is not
-> linked in sysfs, isn't fully registered with codetag support, and hasn't
-> invoked its constructors (needed for gcov/kasan support).
 
-It seems unlikely that sysfs, codetag, or arguments should matter much.
-gcov and kasan might be nice to have though.
+Agree. The PCI client drivers should have no business in opting for D3Hot in the
+suspend path. It should be the other way around, they should opt-out if they
+want by calling pci_save_state(), but that is also subject to discussion.
 
-> I don't know enough about PCI fixups and what is allowable in them, but
-> I suspect it would be better to ensure that no fixup can be invoked from
-> the module during this period.
+- Mani
 
-I don't know of general rules, but they generally do pretty minimal work
-to adjust various fields in and around 'struct pci_dev', to account for
-broken IDs. Sometimes they need to read a few PCI registers. They may
-even tweak PM-related features. It varies based
-on what kind of "quriky" devices need to be handled, but it's usually
-pretty straightforward and well-contained -- not relying on any kind of
-global state, or even all that much specific to the module in question
-besides constant IDs.
-
-(You can peruse drivers/pci/quirks.c or the various other files that use
-DECLARE_PCI_FIXUP_*() macros, if you're curious.)
-
-> If the above makes sense, I think using module_for_each_mod() might not
-> be the right approach. Alternative options include registering a module
-> notifier or having modules explicitly register their PCI fixups in their
-> init function.
-
-I agree module_for_each_mod() is probably not the right choice, but I'm
-not sure what the right choice is.
-
-register_module_notifier() + keying off MODULE_STATE_COMING before
-pulling in the '.pci_fixup*' list seems attractive, but it still comes
-before gcov/kasan.
-
-It seems like "first thing in module_init()" would be the right choice,
-but I don't know of a great way to do that. I could insert PCI-related
-calls directly into do_init_module() / delete_module(), but that doesn't
-seem very elegant. I could also mess with the module_{init,exit}()
-macros, but that seems a bit strange too.
-
-I'm open to suggestions. Or else maybe I'll just go with
-register_module_notifier(), and accept that there may some small
-downsides still.
-
-Thanks,
-Brian
+-- 
+மணிவண்ணன் சதாசிவம்
 
