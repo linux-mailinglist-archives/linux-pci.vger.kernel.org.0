@@ -1,57 +1,77 @@
-Return-Path: <linux-pci+bounces-37646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24A42BBFC0D
-	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 01:13:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89BF5BC02AB
+	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 07:00:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1527E4E298E
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Oct 2025 23:13:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3717D3C1FE4
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Oct 2025 05:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E00351D61BC;
-	Mon,  6 Oct 2025 23:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4B8155C88;
+	Tue,  7 Oct 2025 05:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onCPadsc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UIoOd3cq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9AB15667D;
-	Mon,  6 Oct 2025 23:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174FF1E511;
+	Tue,  7 Oct 2025 05:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759792408; cv=none; b=WOCd3MMyCKBlKpV2ykNYbEJWRp4egSdsMU6CLOjZQT9eoKWdBChnY8Frw1q9oOW42fZudVBPowuWhVXNOmsyCVpXyDrnPLssMBlH/DdfG4OEOZh7k0jp+QnO095Rgh+zX+OXv2Kf1C5D1hqd1BfEw8ciphFd+evKv5uVNnisIzc=
+	t=1759813214; cv=none; b=jOHEal9kLsdEGINGW1MWEiDTixZ3n0G/eGiZDFBWFkPmavks7KgTrbNq55HugfmeYJ5x5+FYwr616p7+cJgzPSEUqbjWb9DSCGtCrhFFDvn7/MgBVsi3/+T+mjUhx1lREQNjgHJs1f99wleVNc7Qs3O5SSx6UDTwCLcYKI0MFF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759792408; c=relaxed/simple;
-	bh=bLiJ06jMARRE5CuLlJkwHNZ7cvjQTnOD4kHGO/M63F4=;
+	s=arc-20240116; t=1759813214; c=relaxed/simple;
+	bh=RRW8gejwszwXbYJMA5aGPaiY4+xT+oMnY+DLrP0mF6Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ud67I+A2s88HWLexp+XwoIRIVqyDeBtdKilzAP2J17Ea2RylN3A+E/6duU20qQRO6Ypb6EzOzWhWW991ZLSkbnT+FQcg7i2fQWJNDws+VVSwhbXpoJEZM1Pj2v4LN7xtJhudkDZedRHYHh5AW5xjoJSnHr5FzYyjXaDnLU1R05g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onCPadsc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8D9C4CEF5;
-	Mon,  6 Oct 2025 23:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759792408;
-	bh=bLiJ06jMARRE5CuLlJkwHNZ7cvjQTnOD4kHGO/M63F4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=onCPadscgHwmiNX6VAuSG58AVoDmwbuGqHAzguiMVkr1EbFUjVjW0Hr6GvQQOJqen
-	 2jqe3qeYfhuoq3abM9AdkKe5OU8kzk8016AXv4IOocS4lfhqJJly/pvGgq/vyaRJEB
-	 LfTUF6PaohM37Ex0Q2/dquHQEsGVTEEEAreWt8GX56w7dS8RVVbmPuDeLCFzWPas+Y
-	 RyNz2LzTCG2vDE43oHrgoNGsAWXPLrdiSl05tPOAe+KgtyFM+KZ39QucKZJGzUJoWe
-	 3v+0kiiQkB6v8l7jhTl6W1vEDH/rPgpjboFae1arODiem8LSgrKi77JzP7mKHQPDyS
-	 NKLCnaZNFZLbg==
-Date: Mon, 6 Oct 2025 16:13:26 -0700
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Brian Norris <briannorris@chromium.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	 Content-Type:Content-Disposition:In-Reply-To; b=PMcCevRZrM9nZYUOFi+tOa345YqxEtXD9lL8wkrHZNVvc5nhtbsPHPBxLFQ3VeHVl7slzHw5S1xn+tJcG4QiOER9zcrhXifnfThg0ojacTy4jzRqJsh7ZrwUFlBtGnGx5Uq8kF4wX5cWcGUMSzSK6bGZNBfi8C4MrZy1Wr1N/+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UIoOd3cq; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759813213; x=1791349213;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RRW8gejwszwXbYJMA5aGPaiY4+xT+oMnY+DLrP0mF6Y=;
+  b=UIoOd3cqedFJMlfnrStr8smXb9h7clMyIkkF8Jt9VHZyM/BbcWwMmvYQ
+   UqsllNssmRyyu2wWSNb4qAJgqFu/UN92Ku/uIvIeBg/Wfm5gOFGJgrc6m
+   LpnmAOFXrtaRzcatctG8zZDTMRWRQpRKty/ZVIDpX6XgyQgS9C7p0IVDV
+   +wUuhDhhc5oDGd4SdTwVsCfWzAOgBuRCIjxwNh5jCpq0dqST8eKgAHkQB
+   U2jPuXsgcJvz2v7TUNjGa7A4OMeNqgaq3kjVXa3W1QC/9W60ljlkjGh5M
+   AcUAaZrAN/NIv4NGNyFUfywwMPSQaUIXmnjpdcz7NgjB5DL6z+MR+BnRi
+   g==;
+X-CSE-ConnectionGUID: UvoLs2iZQAyRaF/jQxqsfw==
+X-CSE-MsgGUID: NVLnnByhQ9y5Wdqno022UQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11574"; a="62035933"
+X-IronPort-AV: E=Sophos;i="6.18,321,1751266800"; 
+   d="scan'208";a="62035933"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2025 22:00:12 -0700
+X-CSE-ConnectionGUID: qCQmHVd3QD21jHU2ah0sTw==
+X-CSE-MsgGUID: m2t+dmmnT/yp6NfcUwn4LA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,321,1751266800"; 
+   d="scan'208";a="180105473"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 06 Oct 2025 22:00:10 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id A048895; Tue, 07 Oct 2025 07:00:08 +0200 (CEST)
+Date: Tue, 7 Oct 2025 07:00:08 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	stable@vger.kernel.org
 Subject: Re: [PATCH] PCI/PM: Avoid redundant delays on D3hot->D3cold
-Message-ID: <v7ynntv43urqjfdfzzbai2btsohaxpprni2pix2wnjfoazlfcl@xdbhvnpmoebt>
-References: <aOQLRhot8-MtXeE3@google.com>
- <20251006193333.GA537409@bhelgaas>
+Message-ID: <20251007050008.GE2912318@black.igk.intel.com>
+References: <20251003154008.1.I7a21c240b30062c66471329567a96dceb6274358@changeid>
+ <20251006135222.GD2912318@black.igk.intel.com>
+ <aOQLRhot8-MtXeE3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,45 +80,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251006193333.GA537409@bhelgaas>
+In-Reply-To: <aOQLRhot8-MtXeE3@google.com>
 
-On Mon, Oct 06, 2025 at 02:33:33PM -0500, Bjorn Helgaas wrote:
-> On Mon, Oct 06, 2025 at 11:32:38AM -0700, Brian Norris wrote:
-> > On Mon, Oct 06, 2025 at 03:52:22PM +0200, Mika Westerberg wrote:
-> > > On Fri, Oct 03, 2025 at 03:40:09PM -0700, Brian Norris wrote:
-> > > > From: Brian Norris <briannorris@google.com>
-> > > > 
-> > > > When transitioning to D3cold, __pci_set_power_state() will first
-> > > > transition a device to D3hot. If the device was already in D3hot, this
-> > > > will add excess work:
-> > > > (a) read/modify/write PMCSR; and
-> > > > (b) excess delay (pci_dev_d3_sleep()).
+Hi,
+
+On Mon, Oct 06, 2025 at 11:32:38AM -0700, Brian Norris wrote:
+> Hi Mika,
+> 
+> On Mon, Oct 06, 2025 at 03:52:22PM +0200, Mika Westerberg wrote:
+> > On Fri, Oct 03, 2025 at 03:40:09PM -0700, Brian Norris wrote:
+> > > From: Brian Norris <briannorris@google.com>
 > > > 
-> > > How come the device is already in D3hot when __pci_set_power_state() is
-> > > called? IIRC PCI core will transition the device to low power state so that
-> > > it passes there the deepest possible state, and at that point the device is
-> > > still in D0. Then __pci_set_power_state() puts it into D3hot and then turns
-> > > if the power resource -> D3cold.
-> > > 
-> > > What I'm missing here?
+> > > When transitioning to D3cold, __pci_set_power_state() will first
+> > > transition a device to D3hot. If the device was already in D3hot, this
+> > > will add excess work:
+> > > (a) read/modify/write PMCSR; and
+> > > (b) excess delay (pci_dev_d3_sleep()).
 > > 
-> > Some PCI drivers call pci_set_power_state(..., PCI_D3hot) on their own
-> > when preparing for runtime or system suspend, so by the time they hit
-> > pci_finish_runtime_suspend(), they're in D3hot. Then, pci_target_state()
-> > may still pick a lower state (D3cold).
+> > How come the device is already in D3hot when __pci_set_power_state() is
+> > called? IIRC PCI core will transition the device to low power state so that
+> > it passes there the deepest possible state, and at that point the device is
+> > still in D0. Then __pci_set_power_state() puts it into D3hot and then turns
+> > if the power resource -> D3cold.
+> > 
+> > What I'm missing here?
 > 
-> We might need this change, but maybe this is also an opportunity to
-> remove some of those pci_set_power_state(..., PCI_D3hot) calls from
-> drivers.
-> 
+> Some PCI drivers call pci_set_power_state(..., PCI_D3hot) on their own
+> when preparing for runtime or system suspend, so by the time they hit
+> pci_finish_runtime_suspend(), they're in D3hot. Then, pci_target_state()
+> may still pick a lower state (D3cold).
 
-Agree. The PCI client drivers should have no business in opting for D3Hot in the
-suspend path. It should be the other way around, they should opt-out if they
-want by calling pci_save_state(), but that is also subject to discussion.
+Ah, right. Thanks for clarification.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yeah, I agree with Bjorn and Mani that those calls should go away (PCI core
+does that already). That makes driver writes life simpler wrt. PCI PM.
 
