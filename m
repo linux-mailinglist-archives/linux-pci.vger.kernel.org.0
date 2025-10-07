@@ -1,127 +1,131 @@
-Return-Path: <linux-pci+bounces-37660-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37661-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id A28B5BC0FBA
-	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 12:14:53 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC2E2BC0FF9
+	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 12:22:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4F81B34B05C
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Oct 2025 10:14:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9F7FB4EA0AB
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Oct 2025 10:22:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FACA2D7DF7;
-	Tue,  7 Oct 2025 10:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coVJS50V"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F492D7DEB;
+	Tue,  7 Oct 2025 10:22:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ADD2D46C0;
-	Tue,  7 Oct 2025 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC71439ACF
+	for <linux-pci@vger.kernel.org>; Tue,  7 Oct 2025 10:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759832089; cv=none; b=Yf76STJZm/4/FHPur7Ao6mCR8A4xCIzJ7yvJmZ6Ht4iwIpj296dsBHlViyuPJJDhuTpfUwp17dWdRl+jGd5Fo837aTtvmWAxwrKd4N3FCx4/38CjZDpOZ+C+Ra+cn4Ep6lUhe+0peIId0dfaE7BYgoxjcLgKrCXYruCHcXMvms4=
+	t=1759832559; cv=none; b=radCvIos/QHCSEa6UvLXCY8IO3g4aOvOADnVRCGgKQGpjAG2jEJL9kVT8HD7+NGhI5ga+9oBBVaEFHntnFgoiwODt+J52R3iIhu/hslcyGqcH9ktIkU8CwnmP1TjDJUX8HOiGhteylCE4zYhU+OOwH4Ne4ECbiNWOiaOFBBNLcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759832089; c=relaxed/simple;
-	bh=Ju8nRdH0aqsvJyBikVF6BTkTxsWPAUsD1kJPBH9jKMI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=d+Z7rUwC+7BK1vvBrtWt1/UKQTUZbdlDURETJmQNRwWpOA/et4TYebvWGBxRJ/BRajggiuunNSJqn95KWbH9DnNK1djl7uzTrsgcfPj7T6hyqIT9Bz5d4UQ4rfjsTBMcUQxQSdrHwCj/Blg1imbFZuvUBO0L7dc1Iq2hD9CqeBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coVJS50V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C2CC4CEF1;
-	Tue,  7 Oct 2025 10:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759832089;
-	bh=Ju8nRdH0aqsvJyBikVF6BTkTxsWPAUsD1kJPBH9jKMI=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=coVJS50VC5DdgdFrzMctuKfI1jM4biaLANzzCd6NZGDn2h+6DSADWSF5xTGb2Om6P
-	 4ZlcxbeDB8Us2HWYQ9fzV96fbmcYuIDtHexC1rMhRax7Wnyjk1OO+/ztARKcDEpNN+
-	 xX3J56OFoWZ80iGc4bqhDj/Gkn5YiCalk9EIarkYSMxC790kDET80jnVnNDk2f8fn2
-	 /GRpcmRhxUUy68agWtK0rFr4UBiedswkMhz0GFmIUlQ9E8G4oBGpDpJ/KHgY/WBwAo
-	 Mp4llS+zLw8oVM7+n4+G8PM4kXFvPalhLBMcahKodaY3RPKCXnKoAhE4sJc2WaUesJ
-	 aUuRiolcXc/Xw==
+	s=arc-20240116; t=1759832559; c=relaxed/simple;
+	bh=X08yRMXxYQpEQFN6+DWg0rBxqMjXg4JwaZTEUg+jC/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O2rLbKk9gd0xvpPkZ7Bwxfw7lfNwnEcxsyndKouZkHEAEt+p8M8PCivUOmBJ0POxrXu1Us9mXk7sEtG9VSseF4XwgCs3voCl5Gd9k1tP4Gc4P1DEVseqNzSy6zV78+8KUA2ZT8m8UVozYYqw/UaxdcSbEi50WKdbIG276ZplJpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-54bd3158f7bso4585725e0c.0
+        for <linux-pci@vger.kernel.org>; Tue, 07 Oct 2025 03:22:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759832557; x=1760437357;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0UyUj3Qix+qDVReFl/Sm439a80dBofMDi/9/TOImgQQ=;
+        b=C4QIBFgm0xVzboGiweQ0sJLX60JPUO+kZFsfPZhvEh6FthML67i7QhqhdDdMQnmZec
+         oNXn8lUATFLo8KD5UoA8zV/xmWfDA9hGRoUNSc7R0G618zYl7AeWA9lp9KNf3wWz69LA
+         6I8ceFPTI4vZqasTIrwMgxr6NQ2nIvd0/bpT6lrzjuS4K+BfXajgBce2EtW0PVV8qI7n
+         56W4KHVWkSwTF39dEBhjk53Wqfib6qMdAlXSAckd6Yj6Fu+5/kRMN7+nRyGKPlR1fVF0
+         8d+Snor17WjJeOvFNAM01VjdjtRIDdkimBmZvytjLG8nw877Xs1WpHfFEk+Vz8qRrnOW
+         1VyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT6GTOw0L+vn+wpm1CzO8+US1W+PsHmJ6Pipd9aGkh6fMYaxV2Y5K/BnwzMHG7XVsD02C1BJUdjDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuOnA5ZQqVgVblo2paiOeKvABl8MUIgDvB2jMxfeW+RpTvTuU0
+	eux389w+/yp0uA3ZmGHx/rm4GuJaRvo2S1I1TDtZqFDvLji2oHhpEYLKnKGM8Aby
+X-Gm-Gg: ASbGnctSPvtu3ZYrEnm+e2v/4H6xAh2alIlpn0O6LIZZRJsXa4V1R2z5j4Wlzv9Xbxs
+	Yj1phhGNR0sr2HQGEC1lE8cauAdVqiQuBNBcfZrVj3gO7FD2HdRUhd7o/msnMaNzL+Qn2Fjr5kJ
+	ehfasBrJBOsEXvwebhw2NoSKEafXh7AGVXY6/Nom1t5Q/4Wh75mAflAqhEjJQxyUfF/bXxkTW4t
+	GAu3yEccEXmYDBoyCm9eHKztOBD4A9vr+qIe27zo8JNNR1gUEVfth1hvT9rSH8LgBibALRe6d2I
+	wqbMTsv8b8kroWJljD+90FEMbKHGKayFaIzZzFjk0UXJut6k88hk4Unsnj9MerXVLsOIfsdWXYA
+	uGwURH5T5ExiH7R6XOybo7ejCAryH4oUJfpshIZqF7a8HfZYLxehLCs1cgrFoqtPDzpGEmaMZYm
+	TTbP+XQj+9KfQAedHZKFr1wek=
+X-Google-Smtp-Source: AGHT+IFEskHbv6Up877/bTKJvsSCE0umNdOqevE9E5K8BFXpqkD+ZiLHnHFCHEPLt0a7QAQJ/x0ZSA==
+X-Received: by 2002:a05:6122:8293:b0:540:68c4:81a2 with SMTP id 71dfb90a1353d-5524ea9e945mr6374845e0c.14.1759832556440;
+        Tue, 07 Oct 2025 03:22:36 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5523ce202c6sm3649101e0c.5.2025.10.07.03.22.36
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Oct 2025 03:22:36 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5523142df73so4356146e0c.1
+        for <linux-pci@vger.kernel.org>; Tue, 07 Oct 2025 03:22:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXUn6sPjAZ7U1HP4wZOzjgO2ToDPPuqup/1B94t/+gn3idToc4uwP/EMltnDy3JYmlWsKfIy5s4OSM=@vger.kernel.org
+X-Received: by 2002:a05:6122:1e0d:b0:543:e262:ade2 with SMTP id
+ 71dfb90a1353d-5524ea6b0e4mr5683075e0c.12.1759832556074; Tue, 07 Oct 2025
+ 03:22:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 Oct 2025 12:14:42 +0200
-Message-Id: <DDC0EQ0793TC.2W132ZB3J9LPK@kernel.org>
-Subject: Re: [PATCH 0/2] rust: pci: expose is_virtfn() and reject VFs in
- nova-core
-Cc: "Jason Gunthorpe" <jgg@nvidia.com>, "John Hubbard"
- <jhubbard@nvidia.com>, "Alexandre Courbot" <acourbot@nvidia.com>, "Joel
- Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, "Surath Mitra" <smitra@nvidia.com>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>, "Alex Williamson"
- <alex.williamson@redhat.com>, "Neo Jia" <cjia@nvidia.com>
-To: "Zhi Wang" <zhiw@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <fb5c2be5-b104-4314-a1f5-728317d0ca53@nvidia.com>
- <DD6LORTLMF02.6M7ZD36XOLJP@nvidia.com>
- <12076511-7113-4c53-83e8-92c5ea0eb125@nvidia.com>
- <5da095e6-040d-4531-91f9-cd3cf4f4c80d@nvidia.com>
- <20251001144814.GB3024065@nvidia.com>
- <c56bd720-d935-4b51-b507-d794df3f66f4@nvidia.com>
- <20251002115851.GB3195801@nvidia.com>
- <ea82af0d-663f-4038-b8c9-cf1eba5bc4df@nvidia.com>
- <20251002134221.GA3266220@nvidia.com>
- <0c94b94b-68a7-47e2-acde-0a2082ed36bf@nvidia.com>
- <20251002143116.GA3268803@nvidia.com>
- <75316915-fbae-487a-b710-ce01f088a2ed@nvidia.com>
-In-Reply-To: <75316915-fbae-487a-b710-ce01f088a2ed@nvidia.com>
+MIME-Version: 1.0
+References: <20251007092313.755856-1-daniel@thingy.jp> <20251007092313.755856-4-daniel@thingy.jp>
+ <CAMuHMdWDfNgUUh-uU7ZFKmmAccEMqDdfDpwRXQYmwjMG6O_Trg@mail.gmail.com> <46382bc6cab2196a79780a946bee96dde402ae31.camel@physik.fu-berlin.de>
+In-Reply-To: <46382bc6cab2196a79780a946bee96dde402ae31.camel@physik.fu-berlin.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 7 Oct 2025 12:22:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUUAEoN+KBnk=aY6UnkxXnFp8KY0BV8qQGfGip=nNtfaQ@mail.gmail.com>
+X-Gm-Features: AS18NWAPkggXOuJ8Zyug-B_6vXxzZFwJxIAhU-W5_YEhuf5bM649C2kMw_p5v_Y
+Message-ID: <CAMuHMdUUAEoN+KBnk=aY6UnkxXnFp8KY0BV8qQGfGip=nNtfaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/5] m68k: amiga: Allow PCI
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Daniel Palmer <daniel@thingy.jp>, linux-m68k@lists.linux-m68k.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue Oct 7, 2025 at 8:51 AM CEST, Zhi Wang wrote:
-> From the device vendor=E2=80=99s perspective, we have no support or use c=
-ase for
-> a bare-metal VF model, not now and not in the foreseeable future.
+Hi Adrian,
 
-Who is we? I think there'd be a ton of users that do see such use-cases.
+On Tue, 7 Oct 2025 at 11:41, John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On Tue, 2025-10-07 at 11:37 +0200, Geert Uytterhoeven wrote:
+> > On Tue, 7 Oct 2025 at 11:33, Daniel Palmer <daniel@thingy.jp> wrote:
+> > > The Amiga has various options for adding a PCI bus so select HAVE_PCI.
+> > >
+> > > Signed-off-by: Daniel Palmer <daniel@thingy.jp>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/arch/m68k/Kconfig.machine
+> > > +++ b/arch/m68k/Kconfig.machine
+> > > @@ -7,6 +7,7 @@ config AMIGA
+> > >         bool "Amiga support"
+> > >         depends on MMU
+> > >         select LEGACY_TIMER_TICK
+> > > +       select HAVE_PCI
+> > >         help
+> > >           This option enables support for the Amiga series of computers. If
+> > >           you plan to use this kernel on an Amiga, say Y here and browse the
+> >
+> > This doesn't make much sense without upstream support for actual
+> > PCI host bridge controllers.
+>
+> Isn't this what patch 5 does?
 
-What does "no support" mean? Are there technical limitation that prevent an
-implementation (I haven't seen any so far)?
+Oops, sorry, I hadn't realized this is part of a series, as I somehow
+haven't received the other patches from the series yet...
 
-> Even
-> hypothetically, such support would not come from nova-core.ko, since
-> that would defeat the purpose of maintaining a trimmed-down kernel
-> module where minimizing the attack surface and preserving strict
-> security boundaries are primary design goals.
+Gr{oetje,eeting}s,
 
-I wouldn't say the *primary* design goal is to be as trimmed-down as possib=
-le.
+                        Geert
 
-The primary design goals are rather proper firmware abstraction, addressing
-design incompatibilities with modern graphics and compute APIs, memory safe=
-ty
-concerns and general maintainability.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-It does make sense to not run the vGPU use-case on top of all the additiona=
-l DRM
-stuff that will go into nova-drm, since this is clearly not needed in the v=
-GPU
-use-case. But, it doesn't mean that we have to keep everything out of nova-=
-core
-for this purpose.
-
-I think the bare-metal VF model is a very interesting use-case and if it is
-technically feasable we should support it. And I think it should be in
-nova-core. The difference between nova-core running on a bare metal VF and
-nova-core running on the same VF in a VM shouldn't be that different anyway=
-s,
-no?
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
