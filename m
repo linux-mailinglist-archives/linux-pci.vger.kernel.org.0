@@ -1,118 +1,127 @@
-Return-Path: <linux-pci+bounces-37659-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45DA3BC0E07
-	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 11:41:29 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id A28B5BC0FBA
+	for <lists+linux-pci@lfdr.de>; Tue, 07 Oct 2025 12:14:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEDBF3C206B
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Oct 2025 09:41:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4F81B34B05C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Oct 2025 10:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC7C2566E9;
-	Tue,  7 Oct 2025 09:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FACA2D7DF7;
+	Tue,  7 Oct 2025 10:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="alhuDt7s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coVJS50V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB270158874;
-	Tue,  7 Oct 2025 09:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ADD2D46C0;
+	Tue,  7 Oct 2025 10:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759830078; cv=none; b=jV6B8xfc6xUAEBhvWdQg93/i2A/A1Z3OFCZKPcitU/JjPBhpCcmmpLSAeDpBZor8aBgNtOjJRXo8m0kVzllnFDSDu5ucCvhBnzmyJ51B1LbeMzcqJ9949Y4G9MZjSKy+np+UI1v5KpBYUU+PT5xNsdbAKKWSw2r5mPfr+JZSFD0=
+	t=1759832089; cv=none; b=Yf76STJZm/4/FHPur7Ao6mCR8A4xCIzJ7yvJmZ6Ht4iwIpj296dsBHlViyuPJJDhuTpfUwp17dWdRl+jGd5Fo837aTtvmWAxwrKd4N3FCx4/38CjZDpOZ+C+Ra+cn4Ep6lUhe+0peIId0dfaE7BYgoxjcLgKrCXYruCHcXMvms4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759830078; c=relaxed/simple;
-	bh=Yl0b5wauRFDcVVfHTZ0ZzZ4C2ktVgGqGYjCXELOnT48=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dbGIb7wGXE3QpKRa29vy80ES4+QnAUJkF8kKNDGBVtLX5NgU82PgZWWcCDQn+rYd3nT+arAUOvXVQX/KS7QUz40HfmTIYgHSXZQwaiSErPqHz1ZeHeP9NhBfX5R+JBTsjvZejKlBhjx8CYdeR8dEr/+KgKrcrXQQCKOLbVASyxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=alhuDt7s; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
-	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=X13BoCz3JYAX7vIvmjbaXJVqzeYJjE6+iBmJX/F4R0M=; t=1759830075;
-	x=1760434875; b=alhuDt7sPMVPtfAANGwlazFLZmOtclQCT7HAgwx7o5BL9OboEqmR4V0Xve7nr
-	lvay+HIAIKn3EjSf6YY8Wby4ffRxseFnkB6Bk8UnyNkL06ptLCqES9liuroiQlKfGVnoCXt+pHuNL
-	C8Sy5zl7HdD22XY9iJ4CptUe22rl3Ae3xUreDkZuK3lPt8UCY6lwVzpJ0Bm5E0EE7fRTAXkxF8ehn
-	Tpq49PGE0a6FwH6MHwOdx78OZpTROFNkomVEQfUd02mUdy7P6neeRCT3wkKxHA9WTFnOq636zEVB2
-	+v8zoH98Q0x+AdedHjuysL5JcNU35dtqkJRS3aq59URXOwBBkg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1v64C0-00000001yfz-0Fim; Tue, 07 Oct 2025 11:41:12 +0200
-Received: from p5b13aa34.dip0.t-ipconnect.de ([91.19.170.52] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1v64Bz-00000001VNO-3RwC; Tue, 07 Oct 2025 11:41:12 +0200
-Message-ID: <46382bc6cab2196a79780a946bee96dde402ae31.camel@physik.fu-berlin.de>
-Subject: Re: [RFC PATCH 3/5] m68k: amiga: Allow PCI
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Daniel Palmer
- <daniel@thingy.jp>
-Cc: linux-m68k@lists.linux-m68k.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Tue, 07 Oct 2025 11:41:11 +0200
-In-Reply-To: <CAMuHMdWDfNgUUh-uU7ZFKmmAccEMqDdfDpwRXQYmwjMG6O_Trg@mail.gmail.com>
-References: <20251007092313.755856-1-daniel@thingy.jp>
-	 <20251007092313.755856-4-daniel@thingy.jp>
-	 <CAMuHMdWDfNgUUh-uU7ZFKmmAccEMqDdfDpwRXQYmwjMG6O_Trg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.0 
+	s=arc-20240116; t=1759832089; c=relaxed/simple;
+	bh=Ju8nRdH0aqsvJyBikVF6BTkTxsWPAUsD1kJPBH9jKMI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=d+Z7rUwC+7BK1vvBrtWt1/UKQTUZbdlDURETJmQNRwWpOA/et4TYebvWGBxRJ/BRajggiuunNSJqn95KWbH9DnNK1djl7uzTrsgcfPj7T6hyqIT9Bz5d4UQ4rfjsTBMcUQxQSdrHwCj/Blg1imbFZuvUBO0L7dc1Iq2hD9CqeBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coVJS50V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C2CC4CEF1;
+	Tue,  7 Oct 2025 10:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759832089;
+	bh=Ju8nRdH0aqsvJyBikVF6BTkTxsWPAUsD1kJPBH9jKMI=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=coVJS50VC5DdgdFrzMctuKfI1jM4biaLANzzCd6NZGDn2h+6DSADWSF5xTGb2Om6P
+	 4ZlcxbeDB8Us2HWYQ9fzV96fbmcYuIDtHexC1rMhRax7Wnyjk1OO+/ztARKcDEpNN+
+	 xX3J56OFoWZ80iGc4bqhDj/Gkn5YiCalk9EIarkYSMxC790kDET80jnVnNDk2f8fn2
+	 /GRpcmRhxUUy68agWtK0rFr4UBiedswkMhz0GFmIUlQ9E8G4oBGpDpJ/KHgY/WBwAo
+	 Mp4llS+zLw8oVM7+n4+G8PM4kXFvPalhLBMcahKodaY3RPKCXnKoAhE4sJc2WaUesJ
+	 aUuRiolcXc/Xw==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 07 Oct 2025 12:14:42 +0200
+Message-Id: <DDC0EQ0793TC.2W132ZB3J9LPK@kernel.org>
+Subject: Re: [PATCH 0/2] rust: pci: expose is_virtfn() and reject VFs in
+ nova-core
+Cc: "Jason Gunthorpe" <jgg@nvidia.com>, "John Hubbard"
+ <jhubbard@nvidia.com>, "Alexandre Courbot" <acourbot@nvidia.com>, "Joel
+ Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, "Surath Mitra" <smitra@nvidia.com>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>, "Alex Williamson"
+ <alex.williamson@redhat.com>, "Neo Jia" <cjia@nvidia.com>
+To: "Zhi Wang" <zhiw@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <fb5c2be5-b104-4314-a1f5-728317d0ca53@nvidia.com>
+ <DD6LORTLMF02.6M7ZD36XOLJP@nvidia.com>
+ <12076511-7113-4c53-83e8-92c5ea0eb125@nvidia.com>
+ <5da095e6-040d-4531-91f9-cd3cf4f4c80d@nvidia.com>
+ <20251001144814.GB3024065@nvidia.com>
+ <c56bd720-d935-4b51-b507-d794df3f66f4@nvidia.com>
+ <20251002115851.GB3195801@nvidia.com>
+ <ea82af0d-663f-4038-b8c9-cf1eba5bc4df@nvidia.com>
+ <20251002134221.GA3266220@nvidia.com>
+ <0c94b94b-68a7-47e2-acde-0a2082ed36bf@nvidia.com>
+ <20251002143116.GA3268803@nvidia.com>
+ <75316915-fbae-487a-b710-ce01f088a2ed@nvidia.com>
+In-Reply-To: <75316915-fbae-487a-b710-ce01f088a2ed@nvidia.com>
 
-Hi Geert,
+On Tue Oct 7, 2025 at 8:51 AM CEST, Zhi Wang wrote:
+> From the device vendor=E2=80=99s perspective, we have no support or use c=
+ase for
+> a bare-metal VF model, not now and not in the foreseeable future.
 
-On Tue, 2025-10-07 at 11:37 +0200, Geert Uytterhoeven wrote:
-> Hi Daniel,
->=20
-> On Tue, 7 Oct 2025 at 11:33, Daniel Palmer <daniel@thingy.jp> wrote:
-> > The Amiga has various options for adding a PCI bus so select HAVE_PCI.
-> >=20
-> > Signed-off-by: Daniel Palmer <daniel@thingy.jp>
->=20
-> Thanks for your patch!
->=20
-> > --- a/arch/m68k/Kconfig.machine
-> > +++ b/arch/m68k/Kconfig.machine
-> > @@ -7,6 +7,7 @@ config AMIGA
-> >         bool "Amiga support"
-> >         depends on MMU
-> >         select LEGACY_TIMER_TICK
-> > +       select HAVE_PCI
-> >         help
-> >           This option enables support for the Amiga series of computers=
-. If
-> >           you plan to use this kernel on an Amiga, say Y here and brows=
-e the
->=20
-> This doesn't make much sense without upstream support for actual
-> PCI host bridge controllers.
+Who is we? I think there'd be a ton of users that do see such use-cases.
 
-Isn't this what patch 5 does?
+What does "no support" mean? Are there technical limitation that prevent an
+implementation (I haven't seen any so far)?
 
-Adrian
+> Even
+> hypothetically, such support would not come from nova-core.ko, since
+> that would defeat the purpose of maintaining a trimmed-down kernel
+> module where minimizing the attack surface and preserving strict
+> security boundaries are primary design goals.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+I wouldn't say the *primary* design goal is to be as trimmed-down as possib=
+le.
+
+The primary design goals are rather proper firmware abstraction, addressing
+design incompatibilities with modern graphics and compute APIs, memory safe=
+ty
+concerns and general maintainability.
+
+It does make sense to not run the vGPU use-case on top of all the additiona=
+l DRM
+stuff that will go into nova-drm, since this is clearly not needed in the v=
+GPU
+use-case. But, it doesn't mean that we have to keep everything out of nova-=
+core
+for this purpose.
+
+I think the bare-metal VF model is a very interesting use-case and if it is
+technically feasable we should support it. And I think it should be in
+nova-core. The difference between nova-core running on a bare metal VF and
+nova-core running on the same VF in a VM shouldn't be that different anyway=
+s,
+no?
 
