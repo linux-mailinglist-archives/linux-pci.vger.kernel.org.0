@@ -1,106 +1,93 @@
-Return-Path: <linux-pci+bounces-37728-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37729-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21620BC66D0
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 21:10:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C36ABC680A
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 21:51:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D5DB44F45EB
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 19:09:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05BA5404D07
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 19:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5A82C0F96;
-	Wed,  8 Oct 2025 19:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3469265614;
+	Wed,  8 Oct 2025 19:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afsjEM19"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAcuD6ym"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEB42C0F62;
-	Wed,  8 Oct 2025 19:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE85523BD1F
+	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 19:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759950551; cv=none; b=t/xvTtX+7bZUB2Qt15pU7s6V6FJ/FksuRRbr1zisQ2FnU6fyDqkhPOICKAeaUINzN6/apPlYnpi4jbZvrmw9ko1sJEQ33wgC42DvyxmAWTndhQwM8DimHmYbMeCTy+mEG476HZZfiCXvEFHNVZ7GB53b8vi7ISySf1x9iBne/jw=
+	t=1759953099; cv=none; b=MiAu75Ctj2HgfHeepScqnaO/NvR9UpyxM1PE1kE8CmqBkny/Gi1idNjrniSaZsUSLHXMbXoWBR55/pBUWdtzcd+7PdVwpIBjYZNzTMAWWwP2xGrvCa84ozow85wIK2Wwio8h3wNY+Lnk48c1B7YYPlGDroAUBwsTzAsgc3KZpT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759950551; c=relaxed/simple;
-	bh=rDlZkxFVfeE5ywtDCiqrEgIGjXabJr8YNje3YP1LdYw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=fbEzqhptmKh7tm5W2TMNKBMnOlLQrjkrvs8I/o6JUNHXk3zpNf9R0AWTxlSxf4FPbTRw5eAgUaGUDGQCQBahqk+BG4PAwYtNjwcy2Pwc6mElZsQ3+tiJviVYkbG1gSz2vP0LL2WOgIt8xCHaoH0gok1L13forf8WYuZZG7LMOYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afsjEM19; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2976C4CEE7;
-	Wed,  8 Oct 2025 19:09:05 +0000 (UTC)
+	s=arc-20240116; t=1759953099; c=relaxed/simple;
+	bh=X8WscWl9Z2DK2YNQwSrDB6wnFX5g9gZRrRmOM3LJtUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KhebXGWTo7H8PJTW34IMQTQwmR862mFJUPiN3QMEcyF5eLzfllFMsA2iK/Odhy9QBNI9viglh19fzjIMVQ33xymKFBwjKgHciSBzua4YDYABLB5NbuAlrgifiUCahfZldxu/dYbhPOcZvIMJK4ez/OB3ijWBDp9J0JOhl1TzFT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAcuD6ym; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37BE9C4CEE7;
+	Wed,  8 Oct 2025 19:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759950550;
-	bh=rDlZkxFVfeE5ywtDCiqrEgIGjXabJr8YNje3YP1LdYw=;
-	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
-	b=afsjEM19mGNanXNHRwdTpCnuYUTj1bTYJ60bUAQ9o6bVhY5Ig7ZOP1iWsXGRUP/g0
-	 pRDVnHQm4UwIyQzUUDwTyrTQC9J3jmqn1LEa9+cXz1ALrcUQHk9gOi22UgACq4/0j0
-	 b6LaLvAn+yFs9mnFGgGTX3yhgmBkXj7z0i+PJ3EbFnzCV47DTr1AK+8EPGWn8bJ9lG
-	 d0G8TmeBOQ0RJU9504lwShlVaMcp3CD8S/2zdQf+smGa6CzpAEFY0B+71z3vcIgQoJ
-	 qZOl5jMY2kyAN5M24e2iwU3AshmU/EpClp8AHP05rKwWISEWFUcpAhsZdp1OVtY5Mj
-	 iK1sPEU6QfR/w==
+	s=k20201202; t=1759953098;
+	bh=X8WscWl9Z2DK2YNQwSrDB6wnFX5g9gZRrRmOM3LJtUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TAcuD6ym3YBqj5+34XPnATejDFCy+g6d9w3TH7DksLXOO+X3/syG+cVf7xh2e/WwJ
+	 aL76+8qjqGBoG1Wru79xkWPdlfeRPLsIaIuzq6K7s7hMi0AnrcjM3JoHPA0bet9xqj
+	 +e1wy4/OXcaQfvj9JH+ZnJ7w/eO8A3Lqh57XFIsAi90gklcRw7xnPWF3QV15CjUdGf
+	 iW7BrJJMVNJlEksF9wxIDo9aIgITGOoM4qe46T2ENkwIBJ1lGeSjdqqkGPCbilVbUW
+	 c+0ZUqvnliyU6jYb/8iGI8Emv2MA0C8i089ARGFBcLblAMecnoP3PLSLOUvmyiwc1A
+	 w/H2GpyZt5y+Q==
+Date: Wed, 8 Oct 2025 14:51:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Christian Zigotzky <info@xenosoft.de>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+	Darren Stevens <darren@stevens-zone.net>,
+	"debian-powerpc@lists.debian.org" <debian-powerpc@lists.debian.org>
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <20251008195136.GA634732@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 08 Oct 2025 21:09:04 +0200
-Message-Id: <DDD6EEB2MJGJ.1UNH7GMXXU9WC@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
- <nouveau@lists.freedesktop.org>, <rust-for-linux@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <acourbot@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "John Hubbard" <jhubbard@nvidia.com>,
- "Timur Tabi" <ttabi@nvidia.com>, <joel@joelfernandes.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: "Joel Fernandes" <joelagnelf@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v2] rust: pci: Allocate and manage PCI interrupt vectors
-References: <20251002183912.1096508-1-joelagnelf@nvidia.com>
- <DDAEL8DQFWKX.1BSBDMMN9I5B0@kernel.org>
- <58a26b94-bf06-413e-a61c-2e0d71de2ac7@nvidia.com>
-In-Reply-To: <58a26b94-bf06-413e-a61c-2e0d71de2ac7@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de>
 
-On Wed Oct 8, 2025 at 8:45 PM CEST, Joel Fernandes wrote:
-> Great idea, so paraphrasing for myself, your point is with the above code=
-,
-> someone could theoretically do:
->
->   1. Call new() directly on IrqVectorRegistration (bypassing alloc_irq_ve=
-ctors()).
->   2. Forget to call devres::register().
->   3. Store the IrqVectorRegistration somewhere.
->   4. Device gets unbound.
->   5. Later when IrqVectorRegistration::drop() runs, it tries to free vect=
-ors on
-> a device that's gone.
->
-> Is that right?
+On Wed, Oct 08, 2025 at 06:35:42PM +0200, Christian Zigotzky wrote:
+> Hello,
+> 
+> Our PPC boards [1] have boot problems since the pci-v6.18-changes. [2]
+> 
+> Without the pci-v6.18-changes, the PPC boards boot without any problems.
+> 
+> Boot log with error messages: https://github.com/user-attachments/files/22782016/Kernel_6.18_with_PCI_changes.log
+> 
+> Further information: https://github.com/chzigotzky/kernels/issues/17
+> 
+> Please check the pci-v6.18-changes. [2]
 
-Correct -- however, it's less about this could actually happen, since it's =
-not a
-public type. But it safes you writing invariants, unsafe calls, makes the c=
-ode
-cleaner and more self-contained.
+Thanks for the report, and sorry for the breakage.
 
-> So a better approach as you mentioned, is to do the devres registration d=
-uring
-> the construction of the IrqVectorRegistration, so there's no way to do on=
-e
-> without the other. Did I get that right? Anyway great point and I have ma=
-de this
-> change, thanks!
+Do you happen to have a similar log from a recent working kernel,
+e.g., v6.17, that we could compare with?
 
-Great, thanks!
+> [1]
+> - https://wiki.amiga.org/index.php/X5000
+> - https://en.wikipedia.org/wiki/AmigaOne_X1000
+> 
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
+
+#regzbot introduced: 2f2c7254931f ("Merge tag 'pci-v6.18-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci")
+#regzbot link: https://github.com/chzigotzky/kernels/issues/17
 
