@@ -1,321 +1,281 @@
-Return-Path: <linux-pci+bounces-37705-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1481BC4674
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 12:44:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41608BC47F5
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 13:05:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABC373B2779
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 10:44:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF69E3A596C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 11:05:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5C22F5A1C;
-	Wed,  8 Oct 2025 10:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B18102F6182;
+	Wed,  8 Oct 2025 11:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Map/iET7"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UDRPOjzr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72EE25D528
-	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 10:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198D319D082;
+	Wed,  8 Oct 2025 11:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759920240; cv=none; b=bGskiqQEk8U2G144wRVGrgpaTaniOpoERRsQxEuXRViWIy1/EOYNvXrpMULqKrOqZmetDQ7HQZ2k6RLL//M6ED1h7dbJTCCJPnyEGVCBbD1/uP1OIbJbC1ooAKd8PbGbvjM926II7b3zqdITnGT6ooDHPTUSMVwdrVBosP5TxFU=
+	t=1759921524; cv=none; b=NUkUYFwJheGprwppEAwEKh0yV5H2jTTHlIa89aZ0SkPuVF/cBkZiHyhcwbkHKM0C35bDwbMGQWrkiSz5i5JgvQChj5L0AcE/qCFuQO+tuz0JOUd/cLnAczKXkElix5tFgFE8/zM1AKvSKN4F4V47ZaXj9bvqa3dm30XPGcZlaCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759920240; c=relaxed/simple;
-	bh=0aBLwLiSC6wu0PXsNaYak799f35YP6f4Nw4DUtMR/rk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NuKyXD7yymk8OdFXIGbcbrQHhq7lL6xDQgF+7TbVzR4+AGsUj3F5vLs1cdncoJFrrMZY8C0P80S8hi1RwbrX9QfkhEEzoaGFhsy4JSj0d+wDtBho2myfg1cbWQWh6SuIy/hPh7oAl8u8sf6l+rSBNork09KPKKD//OcOb5mORDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Map/iET7; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759920239; x=1791456239;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0aBLwLiSC6wu0PXsNaYak799f35YP6f4Nw4DUtMR/rk=;
-  b=Map/iET7Xk7Ic6FjHb9zLlqDe/Zn/hUiptrtUCsJbE65Rmiw/G74JSBE
-   DOAhSuPVWVj6N+nFSmXP8GSOsIOcNWZLjEjqkQT4iX9qFjrSxIub+JsPF
-   2bvwZ157lagE/REVfkAhs1N1JHSWqOvb4vS99VM2d0nRUNgcNoztb0FHW
-   fBpnVWJ2JVEg3+2mhVfLgcYbqoDFlNDYedwYtJn0F/YAIFdcBKakrJkc9
-   cxyO1Kuz1Drvi/B8JranVjXoWMnWnc8bwsN/Y1/+wm5u8BlPVEd2TgMlX
-   t1NC2L94VKVzWPewEK8QYzcIYJL3gItbd+JXyeYqnTPOHLLrvxUuhiz/k
-   g==;
-X-CSE-ConnectionGUID: go3VnSjjTFOCYfOo65IPOA==
-X-CSE-MsgGUID: w0hZrWAjRCGPXXaR3qGSTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11575"; a="61145047"
-X-IronPort-AV: E=Sophos;i="6.19,323,1754982000"; 
-   d="scan'208";a="61145047"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 03:43:58 -0700
-X-CSE-ConnectionGUID: CWoHpxfaTDK7PiUc1dPUAQ==
-X-CSE-MsgGUID: Tm9HWhQQR16v+/xJUnqWYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,323,1754982000"; 
-   d="scan'208";a="211058242"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.117])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 03:43:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 Oct 2025 13:43:53 +0300 (EEST)
-To: Steve Oswald <stevepeter.oswald@gmail.com>
-cc: linux-pci@vger.kernel.org
-Subject: Re: [BUG] Thunderbolt eGPU PCI BARs incorrectly assigned, fails to
- assign memory
-In-Reply-To: <eb70b817-175c-7a34-d2bf-9472019afa47@linux.intel.com>
-Message-ID: <0263ea7c-8df9-1dba-f797-f18e253b3f30@linux.intel.com>
-References: <CAN95MYEaO8QYYL=5cN19nv_qDGuuP5QOD17pD_ed6a7UqFVZ-g@mail.gmail.com> <9254be77-46ea-992f-a1bd-98bea3943520@linux.intel.com> <f743efbe-56b7-ad85-f278-743af9385f10@linux.intel.com> <82ac5594-61c0-fece-1d9c-7c10316df384@linux.intel.com>
- <CAN95MYHpdz0u6-J_=7_enxq-TMzRJJJntfjYxBRgrG8UYbhQ1A@mail.gmail.com> <eb70b817-175c-7a34-d2bf-9472019afa47@linux.intel.com>
+	s=arc-20240116; t=1759921524; c=relaxed/simple;
+	bh=eyhQDVU9T6dAchxPpjBncs3Doq2Ryhjw7FWVD857p14=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nKbwydBHGTSmNN/eyLNyxak6xAWmz1knK1zBnKLDlD9itXarwZdevxS0oZ82xxq8leXpJ4fxjnHGduO5VsINdsK5RoJw/OBvh/NCCpLQfAMJ8RaN87Ari/+x7VLIkUYUkFskgVz/sxn58q4gtn9tWGYbznIUzi03o0qo5buEkQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UDRPOjzr; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59892uMK019687;
+	Wed, 8 Oct 2025 11:05:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=roK3ft
+	Ima9lI4ewb4qaQXF/wJOmXHoLth5v6Q+C4oPU=; b=UDRPOjzrmd3C01Wvsi40yt
+	NnC7yuu/3/UuV/PBIjWnP8bpNlySgfHy/JG+FFDQK3cul8I9IsLtT1fgui7YLrH7
+	Tm+8qs2b5WMWulbRYGf1VPryFdmYa44t8Rk96k7Kd+MlbYnn6mVs/kreHL3MNRQp
+	ASad0OJA6PeBlAFeRsGvX8OYsv5k/HOYYBHMNiNZPatKSCyV+SC5RqjZSviBaVX3
+	ZEj69aRpJ0J1vQ6uyUTK0NLG/XfEoH3iyv12aAdMgxtiK74SHV3Rh/PGaeKTD4u9
+	iCckWz0CdsJXA9p8yR2jPwtk9sjWUGX99/Mkbyvk71t2NOScWX1sVyTHfvqKXeLg
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49ju93mhwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Oct 2025 11:05:19 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5987OEBJ021174;
+	Wed, 8 Oct 2025 11:05:19 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 49kgm1ft4y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Oct 2025 11:05:19 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 598B5HRB22544732
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 Oct 2025 11:05:17 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E79985824D;
+	Wed,  8 Oct 2025 11:05:16 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D3615824C;
+	Wed,  8 Oct 2025 11:05:14 +0000 (GMT)
+Received: from [9.152.212.179] (unknown [9.152.212.179])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  8 Oct 2025 11:05:14 +0000 (GMT)
+Message-ID: <0a3936872d93511ac76cba04edc47f598950d7ee.camel@linux.ibm.com>
+Subject: Re: [PATCH] PCI: s390: Expose the UID as an arch specific PCI slot
+ attribute
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Benjamin Block <bblock@linux.ibm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Gerd Bayer	 <gbayer@linux.ibm.com>,
+        Matthew
+ Rosato <mjrosato@linux.ibm.com>,
+        Heiko Carstens	 <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev	
+ <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Julian Ruess
+	 <julianr@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Ramesh Errabolu <ramesh@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date: Wed, 08 Oct 2025 13:05:13 +0200
+In-Reply-To: <20250930090949.GA15786@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+References: <20250924-uid_slot-v1-1-09ae04f48c57@linux.ibm.com>
+	 <20250926142714.GB17059@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+	 <b8c610fa2ac725364c8e485e948c7bd6efd605fa.camel@linux.ibm.com>
+	 <20250930090949.GA15786@p1gen4-pw042f0m.boeblingen.de.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-369267070-1759920233=:950"
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 31FLnvb61FuAydXIb3qQj6aOOjuRdSJu
+X-Proofpoint-ORIG-GUID: 31FLnvb61FuAydXIb3qQj6aOOjuRdSJu
+X-Authority-Analysis: v=2.4 cv=Fec6BZ+6 c=1 sm=1 tr=0 ts=68e6456f cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=qVcVKhR9hfYBc-3bDrUA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAyMiBTYWx0ZWRfX9RehZV90IGfK
+ MY0UZ6niS1O+0m4Ba0xs1f6nprsry9/aY2xuoOw8q7xgUTRn7FopAoFg/e1u/9On0LI0Pt88F7Z
+ 1wW2nRXhqZofGj7J4jfdVKHWoURcvlgSBhWMm9b4sMML0nG8y70bIYyvGWvXfWNG8GM+skbracG
+ RbwBRBfTiTdNw+tYdVRy+YPWbmBRucsBst8MI2F7f7QEd/888u7T7Rl3bXg/NdDuwonUSr3iHiY
+ /Y/we53bNgvLnkMXyIs7buMR/OAWRa/4uLgiXXi8obUpI6m17frgCFP4tVKin+1YgNQZB+BrNyo
+ obsTQTUXhUsuRqSRd/ymNUqeXe8Wc+pnt7BK9jxb+DM5dio62iylUg8oTm9gg5ZWYpRJNwm7xXQ
+ dVP7lYNpoVAGpAh8m+HEBTViFA4wOA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-08_03,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040022
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-369267070-1759920233=:950
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 3 Sep 2025, Ilpo J=E4rvinen wrote:
-
-> On Mon, 1 Sep 2025, Steve Oswald wrote:
+On Tue, 2025-09-30 at 11:09 +0200, Benjamin Block wrote:
+> On Fri, Sep 26, 2025 at 08:25:07PM +0200, Niklas Schnelle wrote:
+> > On Fri, 2025-09-26 at 16:27 +0200, Benjamin Block wrote:
+> > > > +extern const struct attribute_group zpci_slot_attr_group;
+> > > > +
+> > > > +#define ARCH_PCI_SLOT_GROUPS (&zpci_slot_attr_group)
+> > >=20
+> > > I don't know the history exactly, but this can't be easily extended l=
+ike the
+> > > other group above `ARCH_PCI_DEV_GROUPS`.
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0(&zpci_slot_attr_group,  \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&zpci_slot_attr_group_b)
+> > >=20
+> > > Won't compile. The way `ARCH_PCI_DEV_GROUPS` does it, attaching a dif=
+ferent
+> > > group is just adding a new line.
+> >=20
+> > Without the parenthesis it should. I only added them because otherwise
+> > checkpatch complains and it's still valid for a single item to have
+> > parenthesis.
 >=20
-> > I've added the dmesg output fordyndbg=3D"file drivers/pci/*. I wasn't
-> > sure if I added it with the escaped quotes correctly.
-> > https://gist.github.com/stepeos/cd060c7d66ab195f51ab4d5675b4e4af/raw/9c=
-f5fc3a8c4f13588a33d61865f804f85e50470a/dmesg_linux_6.11.0_dyndbg.log
->=20
-> Hi again,
->=20
-> I think the patch below should solve your issue. If you manage to get it=
-=20
-> tested and are confident enough it fixed your issue, you may provide your=
-=20
-> Tested-by tag so I can include it into the official submission of the fix=
-=2E
+> It's not like checkpatch is the last arbiter of truth here, especially si=
+nd we
+> already have a case without parenthesis; but I guess if we ever need to e=
+xtend
+> the list, we can remove the parenthesis again.
 
-Hi Steve,
-
-Did you manage to test this patch?
-
---=20
- i.
+Yes that was my thought too.
 
 >=20
+> > > > diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
+> > > > index 0ee0924cfab7e5d22468fb197ee78cac679d8c13..997dff3796094680d9a=
+3f0b6eb27a89fa1ed30b2 100644
+> > > > --- a/arch/s390/pci/pci_sysfs.c
+> > > > +++ b/arch/s390/pci/pci_sysfs.c
+> > > > @@ -178,6 +178,17 @@ static ssize_t index_show(struct device *dev,
+> > > > =C2=A0}
+> > > > =C2=A0static DEVICE_ATTR_RO(index);
+> > > > =C2=A0
+> > > > --- snip ---
+> > > > +{
+> > > > +	struct zpci_dev *zdev =3D container_of(slot->hotplug, struct zpci=
+_dev,
+> > > > +					     hotplug_slot);
+> > > > +
+> > > > +	return sysfs_emit(buf, "0x%x\n", zdev->uid);
+> > >=20
+> > > Do we need a special case for when `uid` is 0? That would imply the u=
+id is
+> > > invalid, right? Would we want to return an error in that case (-EINVA=
+L, or
+> > > smth)?=20
+> > >=20
+> > > Also, do we want to use the same format as in `zpci_setup_bus_resourc=
+es()`
+> > > with the 4 leading 0's (`0x%04x`)?
+> >=20
+> > I chose to match the "uid" device attribute here ("zpci_attr(uid,
+> > "0x%x\n", uid)" in the beginning of the same file).
 >=20
-> From 1c8ef31c6ac6616869b447a473e879b233df62db Mon Sep 17 00:00:00 2001
-> From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.int=
-el.com>
-> Date: Wed, 3 Sep 2025 15:53:48 +0300
-> Subject: [PATCH 1/1] PCI: Prevent shrinking bridge window from its requir=
-ed
->  size
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=3DUTF-8
-> Content-Transfer-Encoding: 8bit
+> Ah right, fair enough.
 >=20
-> pci_bridge_distribute_available_resources() -> ... ->
-> adjust_bridge_window() is called in between __pci_bus_size_bridges()
-> and assigning the resources. Since the commit 948675736a77 ("PCI: Allow
-> adjust_bridge_window() to shrink resource if necessary")
-> adjust_bridge_window() can also shrink the bridge window to force it to
-> a smaller size. The shrunken size, however, conflicts what
-> __pci_bus_size_bridges() -> pbus_size_mem() calculated as the required
-> bridge window size. By shrinking the resource size,
-> adjust_bridge_window() prevents rest of the resource fitting algorithm
-> working as intended. Resource fitting logic is expecting assignment
-> failures when bridge windows need resizing, but there are cases where
-> failures are no longer happening after the commit 948675736a77 ("PCI:
-> Allow adjust_bridge_window() to shrink resource if necessary").
+> > This doesn't
+> > special case UID 0. You are right that this is an invalid UID though.
+> > It also still exposes the UID even if it is not guaranteed to be
+> > unique. But we'll make that setting known to user-space separately.
+> > I feel like knowing the UIDs can still be helpful even when they are
+> > not unique, for example to check that they've been set correctly from
+> > within Linux before enabling UID Checking.
 >=20
-> The commit 948675736a77 ("PCI: Allow adjust_bridge_window() to shrink
-> resource if necessary") justifies the change by the extra reservation
-> made due to hpmemsize parameter, however, the kernel code contradicts
-> with that statement. (For simplicity, finer-grained hpmmiosize and
-> hpmmiopref parameters that can be used to the same effect as hpmemsize
-> are ignored in this description.)
+> I don't mind the case where the UID is not checked for uniqueness (the na=
+ming
+> is confusing in any case, since the U doesn't stand for unique), I was ju=
+st
+> wondering whether printing an invalid UID makes sense. I think those are
+> distinct cases.=20
+> It might be easier to 'encode' this knowledge about an UID being "invalid=
+"
+> here, rather than 'encoding' it in every single user that might read this
+> attribute.
 >=20
-> pbus_size_mem() calls calculate_memsize() twice. First with add_size=3D0
-> to find out the minimal required resource size. The second call occurs
-> with add_size=3Dhpmemsize (effectively) but the result does not directly
-> affect the resource size only resulting in an entry on the realloc_head
-> list (a.k.a. add_list). Yet, adjust_bridge_window() directly changes
-> the resource size which does not include what is reserved due to
-> hpmemsize. Also, if the required size for the bridge window exceeds
-> hpmemsize, the parameter does not have any effect even on the second
-> size calculcation made by pbus_size_mem(); from calculate_memsize():
->=20
->   size =3D max(size, add_size) + children_add_size;
->=20
-> The commit ae4611f1d7e9 ("PCI: Set resource size directly in
-> adjust_bridge_window()") that precedes the commit 948675736a77 ("PCI:
-> Allow adjust_bridge_window() to shrink resource if necessary") is also
-> related to causing this problem. Its changelog explicitly states
-> adjust_bridge_window() wants to "guarantee" allocation success.
-> Guaranteed allocations, however, are incompatible with how the other
-> parts of the resource fitting algorithm work. The given justification
-> fails to explain why guaranteed allocations at this stage are required
-> nor why forcing window to a smaller value than what was calculated by
-> pbus_size_mem() is correct. The the change might have worked by chance
-> in some test scenario, too small bridge window does not "guarantee"
-> success from the point of view of the endpoint device resource
-> assignments. No issue is mentioned within the changelog so it's unclear
-> if the change was made to fix some observed issue nor and what that
-> issue was.
->=20
-> The unwanted shrinking of a bridge window occurs, e.g., when a device
-> with large BARs such as eGPU is attached using Thunderbolt and the Root
-> Port holds less than enough resource space for the eGPU. The GPU
-> resources are in order of GBs and the default hotplug allocation is
-> mere 2M (DEFAULT_HOTPLUG_MMIO_PREF_SIZE). The problem is illustrated by
-> this log (filtered to the relevant content only):
->=20
-> pci 0000:00:07.0: PCI bridge to [bus 03-2c]
-> pci 0000:00:07.0:   bridge window [mem 0x6000000000-0x601bffffff 64bit pr=
-ef]
-> pci 0000:03:00.0: PCI bridge to [bus 00]
-> pci 0000:03:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> pci 0000:03:00.0: bridge configuration invalid ([bus 00-00]), reconfiguri=
-ng
-> pci 0000:03:00.0: PCI bridge to [bus 04-2c]
-> pcieport 0000:00:07.0: Assigned bridge window [mem 0x6000000000-0x601bfff=
-fff 64bit pref] to [bus 03-2c] cannot fit 0xc00000000 required for 0000:03:=
-00.0 bridging to [bus 04-2c]
-> pci 0000:03:00.0: bridge window [mem 0x800000000-0x10003fffff 64bit pref]=
- to [bus 04-2c] add_size 100000 add_align 100000
-> pcieport 0000:00:07.0: distributing available resources
-> pci 0000:03:00.0: bridge window [mem 0x800000000-0x10003fffff 64bit pref]=
- shrunken by 0x00000007e4400000
-> pci 0000:03:00.0: bridge window [mem 0x6000000000-0x601bffffff 64bit pref=
-]: assigned
->=20
-> The initial size of the Root Port's window is 448MB (0x601bffffff -
-> 0x6000000000). __pci_bus_size_bridges() -> pbus_size_mem() calculates
-> the required size to be 32772 MB (0x10003fffff - 0x800000000) which
-> would fit the eGPU resources. adjust_bridge_window() then shrinks the
-> bridge window down to what is guaranteed to fit into the Root Port's
-> bridge window. The bridge window for 03:00.0 is also eliminated from
-> the add_list (a.k.a. realloc_head) list by adjust_bridge_window().
->=20
-> After adjustment, the resources are assigned and as the bridge window
-> for 03:00.0 is assigned successfully, no failure is recorded. Without a
-> failure, no attempt to resize the window of the Root Port is required.
-> The end result is eGPU not having large enough resources to work.
->=20
-> The commit 948675736a77 ("PCI: Allow adjust_bridge_window() to shrink
-> resource if necessary") also claims nested bridge windows are sized the
-> same, which is false. pbus_size_mem() calculates the size for the
-> parent bridge window by summing all the downstream resources so the
-> resource fitting calculates larger bridge window for the parent to
-> accomodate the childen. That is, hpmemsize does not result the same
-> size for the case where there are nested bridge windows.
->=20
-> In order to fix the most immediate problem, don't shrink the resource
-> size as hpmemsize had nothing to do with it. When considering add_size,
-> only reduce it up to what is added due to hpmemsize (if required size
-> is larger than hpmemsize, the parameter has no impact, see
-> calculate_memsize()).
->=20
-> This is not exactly a revert of the commits e4611f1d7e9 ("PCI: Set
-> resource size directly in adjust_bridge_window()") and 948675736a77
-> ("PCI: Allow adjust_bridge_window() to shrink resource if necessary")
-> as shrinking still remains in place but is implemented differently,
-> and the end result behaves very differently.
->=20
-> It is possible that those two commits fixed some other issue that is
-> not described with enough detail in the changelog and undoing parts of
-> them results in another regression due to behavioral change.
-> Nonetheless, as described above, the solution by those two commits was
-> flawed and the issue, if one exists, should be solved in a way that is
-> compatible with the rest of the resource fitting algorithm instead of
-> working against it.
->=20
-> Besides shrinking, the case where adjust_bridge_window() expands the
-> bridge window is likely somewhat wrong as well because it removes the
-> entry from add_list (a.k.a. realloc_head), but it is less damaging as
-> that only impacts optional resources and may have no impact if
-> expanding by hpmemsize is larger than what add_size was. Fixing it is
-> left as further work.
->=20
-> Reported-by: Steve Oswald <stevepeter.oswald@gmail.com>
-> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> ---
->  drivers/pci/setup-bus.c | 42 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 23082bc0ca37..4dd618bc4196 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1828,6 +1828,7 @@ static void adjust_bridge_window(struct pci_dev *br=
-idge, struct resource *res,
->  =09=09=09=09 resource_size_t new_size)
->  {
->  =09resource_size_t add_size, size =3D resource_size(res);
-> +=09struct pci_dev_resource *dev_res;
-> =20
->  =09if (res->parent)
->  =09=09return;
-> @@ -1840,9 +1841,46 @@ static void adjust_bridge_window(struct pci_dev *b=
-ridge, struct resource *res,
->  =09=09pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
->  =09=09=09&add_size);
->  =09} else if (new_size < size) {
-> +=09=09int idx =3D pci_resource_num(bridge, res);
-> +
-> +=09=09/*
-> +=09=09 * hpio/mmio/mmioprefsize hasn't been included at all? See the
-> +=09=09 * add_size param at the callsites of calculate_memsize().
-> +=09=09 */
-> +=09=09if (!add_list)
-> +=09=09=09return;
-> +
-> +=09=09/* Only shrink if the hotplug extra relates to window size. */
-> +=09=09switch (idx) {
-> +=09=09=09case PCI_BRIDGE_IO_WINDOW:
-> +=09=09=09=09if (size > pci_hotplug_io_size)
-> +=09=09=09=09=09return;
-> +=09=09=09=09break;
-> +=09=09=09case PCI_BRIDGE_MEM_WINDOW:
-> +=09=09=09=09if (size > pci_hotplug_mmio_size)
-> +=09=09=09=09=09return;
-> +=09=09=09=09break;
-> +=09=09=09case PCI_BRIDGE_PREF_MEM_WINDOW:
-> +=09=09=09=09if (size > pci_hotplug_mmio_pref_size)
-> +=09=09=09=09=09return;
-> +=09=09=09=09break;
-> +=09=09=09default:
-> +=09=09=09=09break;
-> +=09=09}
-> +
-> +=09=09dev_res =3D res_to_dev_res(add_list, res);
->  =09=09add_size =3D size - new_size;
-> -=09=09pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-> -=09=09=09&add_size);
-> +=09=09if (add_size < dev_res->add_size) {
-> +=09=09=09dev_res->add_size -=3D add_size;
-> +=09=09=09pci_dbg(bridge, "bridge window %pR optional size shrunken by %p=
-a\n",
-> +=09=09=09=09res, &add_size);
-> +=09=09} else {
-> +=09=09=09pci_dbg(bridge, "bridge window %pR optional size removed\n",
-> +=09=09=09=09res);
-> +=09=09=09remove_from_list(add_list, res);
-> +=09=09}
-> +=09=09return;
-> +
->  =09} else {
->  =09=09return;
->  =09}
->=20
-> base-commit: f6d41443f54856ceece0d5b584f47f681513bde4
->=20
---8323328-369267070-1759920233=:950--
+> I guess the same can be said for the old `uid` attribute that is attached=
+ to
+> the PCI device, but that was introduced by Sebastian a long time ago.
+
+My thought here is that any program that deals with this new uid
+attribute would potentially also deal with the existing per-device
+attribute. I'd not want to change the existing attribute so then I
+think it is best if applications just have to deal with a single "UID
+as '0x' prefixed hex with 0 meaning unset" encoding. It's also that
+this invalid/unset case does happen as the machine configuration does
+allow UIDs to be unset, so it's not really an error case.
+
+Thanks,
+Niklas
 
