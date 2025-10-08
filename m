@@ -1,260 +1,188 @@
-Return-Path: <linux-pci+bounces-37726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4500DBC6528
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 20:46:04 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48BE3BC66CA
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 21:09:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20E88189D2E5
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 18:46:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6AC7E4F4560
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 19:09:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CBC1E834B;
-	Wed,  8 Oct 2025 18:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28112C11FD;
+	Wed,  8 Oct 2025 19:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KOehvsgo"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PSdS5V7S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011013.outbound.protection.outlook.com [52.101.52.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1027F79CD;
-	Wed,  8 Oct 2025 18:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759949158; cv=fail; b=Jog+Np8CS/cFhbxfNl8z/vloK2a8EDtTqw+L2Iy4Ut2jatoCVe8BE1uNpnmXrL52OLIpFR8ixC2ixuzd2OWQ63aDhtBbLR9r7R2X/hXR9JJtXmJ5umK+kUkQWHrbI4Lq7rxFHq511lNLNG7BDuHCs/RvIk3wfrEcnGkcJ1gRWLA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759949158; c=relaxed/simple;
-	bh=D8N6RhE58oCMzJfdHpd9ejhsUbxpmiGCZlRAT4tKOnQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kuGzwZg3MIgEOEjTWI8YBV7r6z+TWNSBb8syZ6hbEooTJWFle6wOE8jmt+Hl1cNYaSgT5S4E/X/ycbXiPHXTCclekCnJbXDm3WSgIg97g6mlv/rDnDVftgju+zgjcL8rFn/Jie8C78yE9Xf0zhh/0GRo+OUSNdLOMVLZDFFd4dg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KOehvsgo; arc=fail smtp.client-ip=52.101.52.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NmQ+zEc9ONWglkPVQZCvR0zq0zDUOx7spiojG1Vv7D9RDhvcJsxx1CxSC6cU6SQgWQDxGSoTyjPfV52v/C3dPmSnVNPF+U+qj57yRPerlMatBiQTRiMhFKSMfGQL5a6LxLY+PuZfeTrMbNCtMOq/hkO1PiT/fQKY5ZB9/K/OEffkQS/fb/zEBhV31RLnxAvo8vxLEWYryHLjq7SLBsf43owH4mCuB/1J48z4bcXFJ7d6zDly7g2PpullQUrGYP6lIqJD0FuEsO0vw0RDVJSUWl7iEbpmGx1p+OTel/ghUJf20CRcJtE6rhsmC4PSvzvP/mKa5+4QXjFHiP38UJjjsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Un0f6hReUBUKQE3NZVfqf/poZCT7CJMXQSyxgEtsFGo=;
- b=jVi+jcFCgR4lnhFpjzGXuPoWAhz0tYzffvIjpNyKOKDzM6CoAYkVbhtgD59xwRP3vLBhK9Gmy6qrc1BmqyWQ5CKI0QMj9WT04BVbmKlNneFZhQMl2IxHP1yT+jEwYfVBrr1vphAQnAwoqIQf29bVr/YhVi5WwdO8Lbp2PbzquEd7rVuuE7rbliE0z2FacRcDzg7wzCBJG/gww8j2++Koq02TioTO5EvWPd7VOd+vsxUU5MGx/dGNGn+ae7HP3KERcvrZZ41XBFi/jzBsNQ0QJDsh0Zgis6ITt7vVU1zyxqoeB0l0Cv7QF0azFHMaGrs+bt24MP/fZTathZ4dpNFytA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Un0f6hReUBUKQE3NZVfqf/poZCT7CJMXQSyxgEtsFGo=;
- b=KOehvsgoU/DL0pkp8lUHk9LYqkYOdJXU4Gy6XkKyQX17LsI5f6uXdZcbIpslyJzDDSbf64MxQ4hMVQeuoVTfQR5XRd5wFJXEmq1Q4nE1v0Hf3yjJPQEJPau89sUSKwQ2zv1Ex5lx/CuzInW4+wR/9BG2C8HS1DjzfMd8Qu4ol2SI08hkHA7y34YVIXWPfTTG1TuMYmCwtlnqVMqquq1NkeEJ+Ca7v6bo8vuCQy3ImFLbsbwJdrnEeLVhK70PL9t9u40Xw3alK5meXiGKphC/6hSggv95uzQhL22jBYVfQnhkig8j9M8e5fYo4OvuJrlPNpZsdL/T3fxXdDl8Re2NUw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CY5PR12MB6384.namprd12.prod.outlook.com (2603:10b6:930:3c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.9; Wed, 8 Oct
- 2025 18:45:53 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9182.017; Wed, 8 Oct 2025
- 18:45:53 +0000
-Message-ID: <58a26b94-bf06-413e-a61c-2e0d71de2ac7@nvidia.com>
-Date: Wed, 8 Oct 2025 14:45:50 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rust: pci: Allocate and manage PCI interrupt vectors
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org, acourbot@nvidia.com,
- Alistair Popple <apopple@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, John Hubbard <jhubbard@nvidia.com>,
- Timur Tabi <ttabi@nvidia.com>, joel@joelfernandes.org,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-References: <20251002183912.1096508-1-joelagnelf@nvidia.com>
- <DDAEL8DQFWKX.1BSBDMMN9I5B0@kernel.org>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <DDAEL8DQFWKX.1BSBDMMN9I5B0@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR05CA0045.namprd05.prod.outlook.com
- (2603:10b6:208:335::25) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D228B2C0F76
+	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 19:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759950518; cv=none; b=fLFBEfCttkANnQDXkZuo4o9Qx8tbJ27QF0FtQXaLf05hlEECXwLGy7OKw2hlnbUOi9f8PH6nBngrziqeaaHpvFwISPycgxHB4IbAqzWoYS7FkT0GRR0YuwcTd4vUlTsK96WaYjD0+RT1rxpBFYoCtwsGBIP8W1VzmecmsMTlc1s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759950518; c=relaxed/simple;
+	bh=36H8OByZz4/Y/E0gK6HuNWj3lJs38jOo6haF23jGHnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B8GqPMGbJNrqpX1pu4Vo4200TB73s9EI8Pw40H2/TmvDsTfT+28lSKj//GOPMTAJyVjYYYrjUkoX7HSUr23b3gytE3BcB+rS95yx1cdtCRBeGP1aodUFUaqAB26FXLS7r4Nvjg2fNeCiPvjAOo5q7rz6m1ykhMclgGA9cT6Nqr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PSdS5V7S; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 598I5IsU027650
+	for <linux-pci@vger.kernel.org>; Wed, 8 Oct 2025 19:08:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Rw+KzFLht2yFEyIY3QTrtR4U
+	azMsrTevmU+uxmGDP9w=; b=PSdS5V7S4B5LBHn/bBi7uCxcLnpqO98yWb2aZxkL
+	lHs5i9bU4aIKC039KmHUdulwm0yCEhO4dWty9V8u9aY5N4T/vnWejxXYq64f/OZ7
+	S63MguaLUpJpbI968PxkYiryqfI1Z8c6uhPzDa2WjBu9GrRcv0HB9ABQ5qlvLTAN
+	la5vrp2lBgE1afSvxkRgwqZXXfwxNDosmbqLLrDPJAzNStM+qH3o4D+S/3f2DZdD
+	oQjt3tOvTfi0Yxzq3l9gWBAOkmsA1gINUmpL9RpSm/0e/AJZ+GKQFaMotmfLl8NJ
+	/JIn/yFtiD8sY+9NwjFQ6JPr1mQaZuQnKyaCF07D5mLYSQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49nv4nrb4p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 08 Oct 2025 19:08:35 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4e576157d54so5435891cf.1
+        for <linux-pci@vger.kernel.org>; Wed, 08 Oct 2025 12:08:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759950515; x=1760555315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rw+KzFLht2yFEyIY3QTrtR4UazMsrTevmU+uxmGDP9w=;
+        b=XuqqiSCFwJR7WCwU+8SbHxF3W1yEXWFnJEmkonGpn06xzleQ/opyph5DoE0jzCYsRW
+         9QUkwILggFUBSdoCFlDADgsKDJgVt6K32wh6EdChl1Zqo2M5839hWFlYWtxNgDnI46ul
+         qhlTlVkBceqxfw0Hk5dHRAs87K5UfJtrF51Kh4V+J03xFRuSsfs3qvL+HmuyYsbDM25e
+         2/cY2MFHw4hIzE7MntLzZX1sSjfPHg0bUwWPwBNHMFJVXKuk3xKtMXPDjCYKQtq5UccB
+         BKIjDxloIc6AM9EaXRzOAnMKSz+CyCtsCXzAxX8jGKIGgAHdbpT+hJiu8EHe0gEJtyJq
+         qtkw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4RWsXeTZ46ZGpLNvUBS1jBZL5RLqwuxbchR+d8A2dDv2oXqBxCo9DHZm5KF8FcRdNC5vHPRRc5Dw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmj3HbcmV/ZW/UJ1AJbM8Vs9W0bbNPLG/3eq+FJYowDxpwSwWm
+	Ip++J+mdKlI96OXXLoHg5xaOazWmXynuzZIbpzwmOtFqaaATXRdxb4SZedBY5U/Wh8YjB9m/E7L
+	WJcZ/SdaBO18EJQGn7J9CsgT/W6kGNsfsWreD4aVvqfGSiLeA8IU08bqgRkse/ik=
+X-Gm-Gg: ASbGnctkbFd0Ff5FKwo13MknSqaDsYMx8DcjTiUe8/EVQhULN2vGUlS6N1nDWZ2eZn4
+	XEf14IpgFGgcMUi7IiJdavmciu5UAwp0FsKgxuFcP4szL8bWgQCmpSrqIVxrABAuwNkwwBsweuf
+	yKypgdLI0wbI4s/UzjV6c05a+RFHf0T8IkmL/iFiOnEeB1RGa/f+I2CMIm+heX7BnYCSnQGojiD
+	zHVVsqiZLJQeEjK6slXfMBiA0dOVkdiBlj82e404HngFXzFNpneBB3pikdgfBRPG90sCVLsccvm
+	RRuU3HFb5aWsh+Mx0k70tUV9SsVVM5EDAhMIMR6jXY15wpbsFuTzTgynuVe1Vituf4eDUF7C4vO
+	I7ksMJe+R1ygPIL7O2///HRvs+c/4srKUNAphEUwWncI5K7EwV81YSHtx+A==
+X-Received: by 2002:a05:622a:4206:b0:4dd:e207:fce with SMTP id d75a77b69052e-4e6ead64a22mr57960201cf.70.1759950514849;
+        Wed, 08 Oct 2025 12:08:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9dfHI26F6tmDQPEhiuoqrcfAbe3ngcx7SImkYRwO78fn/4c/EYGv3VDRX+xMY9m3o8N3kCw==
+X-Received: by 2002:a05:622a:4206:b0:4dd:e207:fce with SMTP id d75a77b69052e-4e6ead64a22mr57959571cf.70.1759950514231;
+        Wed, 08 Oct 2025 12:08:34 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-375f39fdbc4sm22092051fa.17.2025.10.08.12.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 12:08:33 -0700 (PDT)
+Date: Wed, 8 Oct 2025 22:08:31 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sm8750: Add PCIe PHY and
+ controller node
+Message-ID: <qref5ooh6pl2sznf7iifrbric7hsap63ffbytkizdyrzt6mtqz@q5r27ho2sbq3>
+References: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
+ <20250826-pakala-v3-2-721627bd5bb0@oss.qualcomm.com>
+ <aN22lamy86iesAJj@hu-bjorande-lv.qualcomm.com>
+ <4d586f0f-c336-4bf6-81cb-c7c7b07fb3c5@oss.qualcomm.com>
+ <73e72e48-bc8e-4f92-b486-43a5f1f4afb0@oss.qualcomm.com>
+ <8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CY5PR12MB6384:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43542f72-7cb3-49bf-3cf6-08de069ae87d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cXdPanZsZW1kMk5iQ3puWkUrSE9vajBnMEtmQWNPb2lPLzlHcndMY3lOb0U5?=
- =?utf-8?B?WEVqVmtQdDhyL25WSjJ5OHo0N3gvWjFKWlRlcmQ3V24zL09aanJDbldJR0w1?=
- =?utf-8?B?Ry9DN0QweFJzS2tTRkY3Mk14RW5iYzVYWFN4RW5XNUI0c3MzN294d0dkSmo4?=
- =?utf-8?B?UmxTV0lSRFIvb0RmZmx0Q3U2L0c5K1ZpTDVaLyswdzBqVkpLNnJSc1h3TXY4?=
- =?utf-8?B?bk9SdElYdU1kWEs3Wk01Zng5citpUGlPUkY0YUtSR0NqZWNpajBQcFdDaVVr?=
- =?utf-8?B?eEJsTEo2SXkxYXBlRHI2SUhoMnMxWFNWdWtpS0krc2FJbWh4YlpEekROVFRR?=
- =?utf-8?B?TGpSd3JrMU9xRXF0OVlUdGQ3aGt4amYzeGsrdjd6ZE81U0I1cjRsOFFPeWlv?=
- =?utf-8?B?VFVLRzdJT1kvbjdSRFBLY0ozamVjdkhocmgwUVVqcWE1cncySzhWbUd4c2Zo?=
- =?utf-8?B?djRMcndvRU1ucHM3cFhibDJ5aSszYVBscW9WelUxOFFkTFpzK1dEYzNCeTBh?=
- =?utf-8?B?SmkwUXhnQkVhYXUyYmlCOFh0NzFCeHRYVWNsbzYyNTVJS3k4Umo2VnpodTdM?=
- =?utf-8?B?V205S2t0RzJmSE41RWl2Zzk0ZitMb1BpTVpseGplUHE5Z0tYZHhrRFBINEpG?=
- =?utf-8?B?UTdjOGR5KzhiaXg2WGx2RDl1Z3RCWmVRbHU3OUJYQVA4WlZQeiswNW1NckFw?=
- =?utf-8?B?dFBIWVJjeitFM0JJRFUweFRIU0hNa29iNFk5dkFqTWh3Ty9NQXpLMFNlN1ZQ?=
- =?utf-8?B?ZDRoY3FsRDNQNGFXUzlWLzhGNlNod0hlZ2NmUEFockROWVpxYlBYRGgwTzA1?=
- =?utf-8?B?VUZtaE5TaVFkSkFpUHlDbklSMFREeWJDUkpRbHJieDBjQkVJZHVXRy9zNWpw?=
- =?utf-8?B?eTJMODB1ZXVEVUpsTTBiS2JraGVkRGc1eHJ4a1lzNFh3cGdGdis0ZktYbm4v?=
- =?utf-8?B?V3FLMXRIdFZxQkY2REJXdGdmUklGZUd0SGJxVURETWlEbXdVK3ErUEowMVlj?=
- =?utf-8?B?S1Z0ZE5rM1lsY2J6Q2pHR3hSM09BckNqVGovN0tHZi9wdkJqUC9uV2hNSXhJ?=
- =?utf-8?B?WTMzeHN5RlF5RlZNcjRRdURRVFpBR3psaFpIUEJQWFVHdFl0VW80Qm1udktS?=
- =?utf-8?B?dzJWSmt0WFNJUWxIMVRkYlFhTFF3OHh4TE01RUZ6bFRkK2tDRWFKKy8rYi9I?=
- =?utf-8?B?dE9JRUltTTREbnpPb1ZmUnozajB2UGR6VFlnSmtMZ05ZcE1IaWZKVUwxNjVL?=
- =?utf-8?B?UjJkdEtJdlJtZDQrcHR0enVPdG4vR3V2MjVaVlZZM2V0ZUdqZ1FJM0hpTW1Y?=
- =?utf-8?B?SnpzYU1qaHlpUjlKNklhK29ra1ZwMlc0UUxjeUlSVjdnaHo0aVNYM2d6dHFK?=
- =?utf-8?B?VkdHOTdNaVdRdmhwTWRZSGdXZUhieUNZSmNiSytBaE9mS0RPWHhLZ3c2N1Fk?=
- =?utf-8?B?SlgydHdHNVNSclNla3RZS2tGcFpYVFZkTnhaUHg1cFljcEpQRDhLbmtrblc4?=
- =?utf-8?B?WUg2a2h2L0NuYkNtdHdhd1BVSFhkSmtWTkNrRjdwL3M1ZUhwaDk2MlZockZG?=
- =?utf-8?B?dUZESjZYc2k5dnh4ODN2TXlSQ0w4VE1XMFUwdTV4ZWlyaXBGZW12NmFzR1lM?=
- =?utf-8?B?bUF0dmNWdU9JbWptYkFrczYvaWZ4OGZDVXI3OS9vakl2dEV5VnAzckdTTUtT?=
- =?utf-8?B?a0dOTnBOelNaK0s3Z2tVa1VWa2hSMG9ya3lKYWduMHorRmw2cHRLTkxqRnJx?=
- =?utf-8?B?TDJvRlVnejdEdGZFanI0dXY3ZjB6TFE2WXRJQXZYUjEwbzRSd05NOUw0RlBP?=
- =?utf-8?B?d1NIU0phUHdNWHVHUEdDQUNGY0ZCRUxJSXYrcnZKUG1USXY2bUJEVHdoYktt?=
- =?utf-8?B?S1FweExHWlRKZ1k4SEY1bDA4UmpxaVdoQmt6UXNOcXdNK051ZWZGTXZGVytk?=
- =?utf-8?Q?BtBya4HL0RvaGUlGpljmjzx6N6U3mp18?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UjB6Z2I1OWJacjhtOFBkblVPbndYQVhxT285c0NKaWlvZW1PamJ1eEg2Uzlq?=
- =?utf-8?B?TnVlRm5tbnY4dmdUbGw3Ukc3bzNDeWRXMkMyMzlpU0d4Y0VHUmk4WG5ZUzl3?=
- =?utf-8?B?SEsxVDErM1RHNHlyLy9nNUxINjZuWHY4cVVVUndtcHA3YUFsbnNOOHd3RnR1?=
- =?utf-8?B?WGdvTEk2cEtwNFZ2enl6M2ErRExiejkxK3dlNkJqa2xSdE9uKzZ3Y0p3aVdm?=
- =?utf-8?B?U2NXS1lKRnUzdkg3RnBvc05VWFdUOW14M0lRV2pXWi9ROU1yWUh4NVBtaGVh?=
- =?utf-8?B?UEhYMkpFUmJBY3htYkMxQlUxQ3Q5eENmblNQUXpRQ3pMa25kVm9zRDRhUkM2?=
- =?utf-8?B?UzFQTXA1aGpSblZaZUkvVGxudElaYnVYOVNnaFNHMVpkTnVkZDFlSzVVYURT?=
- =?utf-8?B?Rkh1TjB2ZmRDRmFSWE4zQUtQUkNsay9LNFZteCttUXFUdnp5U0ZBa0tVYkZ6?=
- =?utf-8?B?QU1LTGpNei9RM1dnZVozZ0RUQkpHY21FUThua2VQVS9OM2wrMWdsNTlwNUN2?=
- =?utf-8?B?TXYzTDdCOVNlVWhUK0xLOWhvaVVycHp2eEZIQUNxRHRLN0w5UGlsOUZpdGFp?=
- =?utf-8?B?bnhZZlNhWHFDNzZCcnVUMFZxa3B4QythblFieEdRREFRS3cwVG5mYTgyWlBv?=
- =?utf-8?B?aCtCNVN6WFY4YXI4anNyVkxNUjNjcnBnZWpPZFJpLy9kdHdkbG1xTHBHaUJJ?=
- =?utf-8?B?RWFZTFo5cHpqaVBYeE5VOEYvK2N6VFh5VWdkMWJiWEpyQ1UxM05HLzVRWVky?=
- =?utf-8?B?cTFlN0NvbStKdlJIaEZscUZUdEdLK1l6N3RFRitTajdGeEIrWDNuWHhjRkFW?=
- =?utf-8?B?cHJRaVBZVHBlNEtnYmY4czI3RDNSSzhQM201d2hxa1lyL0tMcUEzWnZlTnJl?=
- =?utf-8?B?T3hJUmNDbG9WcnJaY1pKZXQ5WHNmcG9XYzlUb1BOSE1NMFloVTZ3dHJKYVBq?=
- =?utf-8?B?NnU2d1ppK2NyRUVacnQ0TXZtaWxod0dKRlJDWWtPdXFtQTlhMnhnS1h2TVRy?=
- =?utf-8?B?bUM2azEyVG1URlNWTmJ0bXlSZjhGcVdCNFlUS1pONnR5RHlrRERhcGUycmtC?=
- =?utf-8?B?UjJaWnBWTXF1ZUZxMjFvNysyNzlQbU0ydURrTzNTY0N4WmlmQit6UmdvSWFx?=
- =?utf-8?B?OFR5cFZGRlZGdDFEUndDNUM2WUZNWFM2QUljVWk2d3IvTElnY1JGUllZMWVp?=
- =?utf-8?B?cFV3MnozM1NoZXc1VnNmVGd3eTFqMFAxRkc4aDkyYldIQXhHY1F2d043cVlB?=
- =?utf-8?B?UVp5TlBEdGNRRkkxbFZEOTd5Y3NzS2d5SzdGeVBYNE5XYmRnZWN6cGwwcFR3?=
- =?utf-8?B?K3BVd0Fzd2pYUWROVkJGa2k1anZtZnNLZXp0TTU3dFAvVjJDMHhFSlhUQmd2?=
- =?utf-8?B?OERvby9zLy8rS2JEWWR5RldMNXlGNUVDOUpGeVNFREg0cDFiVFlpdzVWOExn?=
- =?utf-8?B?akxqS0s1YWQ3bGlRL1RmVUQ0M3RTbWREUFVKczRwQWxmSnhKMDdyTGJrOWVD?=
- =?utf-8?B?bzRNeC9UR3pTRXFjUUVhZnZyWHU5Y2dWUTRWemhDQzZKdFVzdTVoWnp5dlJh?=
- =?utf-8?B?OWZnZy9qZzlRZjdSazRpUXNGY2Z6bkRIZjVncGxERUIxYWFCQ0JaNXR2QTdv?=
- =?utf-8?B?Tlc5bVI2d0JCNWhmY0xUNkZFYi9teUtyK2VkclZIbVJ2K3VtL1hWSkNSeUJN?=
- =?utf-8?B?cjdtWHR5QTM1NXBaeGI2Rjh4SWpmTmNUSnlnMmFBZDJoRVYrbExTaS9TVytK?=
- =?utf-8?B?cHk4WnhPSUlUMEJlNElHL20xekpGVHNOMGJTWlpIbnlIbkJaYmM5YysxZCtP?=
- =?utf-8?B?T2Era2RibFNKZGhXbENzcVpCSUNZS2tyaUtQdDZaVzdySzVNZ2YxUkcyN2x4?=
- =?utf-8?B?NU5HKzNjZXFWUWcycjM5SE5aenZ2K0pTczFPR2hRa2RoTkNkZ2xRWkJ4SDRR?=
- =?utf-8?B?RHlDSHRWMW9yYWphd0EreEx1WWR6NjdDVlkzR0VNTHNmTWRkYkcxZGxmT0ZH?=
- =?utf-8?B?NE5acmxjbzBITVhpdGJYdTJCVit1WHJqbFRySTRVdkdCbnpzaE9RaXRPakVG?=
- =?utf-8?B?YWdySnB5Z3RBeVA2cUpFV1F0a2M4UlYvekFpSklSaFRucWIrc1BTSXBZTUJr?=
- =?utf-8?B?a0U0OVd3dUltMnMwSzlQay9lMGUxbE4zK2RYek9QU2s1ZlpGb2F5SE5OdExI?=
- =?utf-8?B?Z0E9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43542f72-7cb3-49bf-3cf6-08de069ae87d
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2025 18:45:52.9829
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jBnbN2HWf4oBwBNM3bbXRjJN8e2A/uvTDeRAvMQu6uQxKIviT+Wo4gdKho9s6Wwu7effXuGperpzrfiXe31pUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6384
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: XuUH07UYxA9piu8nMbZOEc-Fhv9AoXEp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX/CNwMEOEatgv
+ AIdCQpKaQtMpEiZFPTsm/oaYSWPp/km8ZqlyCupE11p0gxuBPjgVLgseurQO4xua/IGHc8ukSys
+ 5xGo6JKikqqGJuiBcB4PnnWSNNSspjaPK1Cqa3T+ZABSQus7Kge3kF1BoXAG+TKIpdd14b1qg3/
+ gnqAEDSGPb9ygwG5rP75TjVdi/HvLkxTNxVFPhQjEYwYgy4joLid8lPD4b9QMX/0Hn1j/rLWgLz
+ SQLJNncOwp1FeQqN+gmQ+2t40H4ngQ5TdrzOBgmxWCSSMtpzfLSzgM/fMXwJgUMkSe20IflNO6g
+ +34X2x/esst66KQsBy/wpPxmcZMCwitbmQ2WcnJHhgbY1igJQ+bU0HZTNq3TgV3ZOF7p5NuB6wd
+ +0Fulz/+pzCwKTK6avFGvL8Ic/w7TA==
+X-Proofpoint-GUID: XuUH07UYxA9piu8nMbZOEc-Fhv9AoXEp
+X-Authority-Analysis: v=2.4 cv=b6a/I9Gx c=1 sm=1 tr=0 ts=68e6b6b3 cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=8Rp3m3j2afKyq596a-UA:9
+ a=CjuIK1q_8ugA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-08_05,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
 
-Hi Danilo,
-
-On 10/5/2025 8:56 AM, Danilo Krummrich wrote:
+On Wed, Oct 08, 2025 at 11:11:43AM +0200, Konrad Dybcio wrote:
+> On 10/8/25 10:00 AM, Konrad Dybcio wrote:
+> > On 10/8/25 6:41 AM, Krishna Chaitanya Chundru wrote:
+> >>
+> >>
+> >> On 10/2/2025 5:07 AM, Bjorn Andersson wrote:
+> >>> On Tue, Aug 26, 2025 at 04:32:54PM +0530, Krishna Chaitanya Chundru wrote:
+> >>>> Add PCIe controller and PHY nodes which supports data rates of 8GT/s
+> >>>> and x2 lane.
+> >>>>
+> >>>
+> >>> I tried to boot the upstream kernel (next-20250925 defconfig) on my
+> >>> Pakala MTP with latest LA1.0 META and unless I disable &pcie0 the device
+> >>> is crashing during boot as PCIe is being probed.
+> >>>
+> >>> Is this a known problem? Is there any workaround/changes in flight that
+> >>> I'm missing?
+> >>>
+> >> Hi Bjorn,
+> >>
+> >> we need this fix for the PCIe to work properly. Please try it once.
+> >> https://lore.kernel.org/all/20251008-sm8750-v1-1-daeadfcae980@oss.qualcomm.com/
+> > 
+> > This surely shouldn't cause/fix any issues, no?
 > 
->> +    /// Allocate IRQ vectors for this PCI device with automatic cleanup.
->> +    ///
->> +    /// Allocates between `min_vecs` and `max_vecs` interrupt vectors for the device.
->> +    /// The allocation will use MSI-X, MSI, or legacy interrupts based on the `irq_types`
->> +    /// parameter and hardware capabilities. When multiple types are specified, the kernel
->> +    /// will try them in order of preference: MSI-X first, then MSI, then legacy interrupts.
->> +    ///
->> +    /// The allocated vectors are automatically freed when the device is unbound, using the
->> +    /// devres (device resource management) system.
->> +    ///
->> +    /// # Arguments
->> +    ///
->> +    /// * `min_vecs` - Minimum number of vectors required
->> +    /// * `max_vecs` - Maximum number of vectors to allocate
->> +    /// * `irq_types` - Types of interrupts that can be used
->> +    ///
->> +    /// # Returns
->> +    ///
->> +    /// Returns a range of IRQ vectors that were successfully allocated, or an error if the
->> +    /// allocation fails or cannot meet the minimum requirement.
->> +    ///
->> +    /// # Examples
->> +    ///
->> +    /// ```ignore
->> +    /// // Allocate using any available interrupt type in the order mentioned above.
->> +    /// let vectors = dev.alloc_irq_vectors(1, 32, IrqTypes::all())?;
->> +    ///
->> +    /// // Allocate MSI or MSI-X only (no legacy interrupts)
->> +    /// let msi_only = IrqTypes::default()
->> +    ///     .with(IrqType::Msi)
->> +    ///     .with(IrqType::MsiX);
->> +    /// let vectors = dev.alloc_irq_vectors(4, 16, msi_only)?;
->> +    /// ```
->> +    pub fn alloc_irq_vectors(
->> +        &self,
->> +        min_vecs: u32,
->> +        max_vecs: u32,
->> +        irq_types: IrqTypes,
->> +    ) -> Result<RangeInclusive<IrqVector<'_>>> {
->> +        let (irq_vecs, range) = IrqVectorRegistration::new(self, min_vecs, max_vecs, irq_types)?;
->> +
->> +        devres::register(self.as_ref(), irq_vecs, GFP_KERNEL)?;
->> If we move the call to devres::register() into IrqVectorRegistration::new()
-> (which I'd call IrqVectorRegistration::register() then) we can enforce the
-> guarantee that an IrqVectorRegistration must not out-live the device / driver
-> binding internally.
+> Apparently this is a real fix, because sm8750.dtsi defines the PCIe
+> PHY under a port node, while the MTP DT assigns perst-gpios to the RC
+> node, which the legacy binding ("everything under the RC node") parsing
+> code can't cope with (please mention that in the commit message, Krishna)
+> 
+> And I couldn't come up with a way to describe "either both are required
+> if any is present under the RC node or none are allowed" in yaml
 
-Great idea, so paraphrasing for myself, your point is with the above code,
-someone could theoretically do:
+What about:
 
-  1. Call new() directly on IrqVectorRegistration (bypassing alloc_irq_vectors()).
-  2. Forget to call devres::register().
-  3. Store the IrqVectorRegistration somewhere.
-  4. Device gets unbound.
-  5. Later when IrqVectorRegistration::drop() runs, it tries to free vectors on
-a device that's gone.
+oneOf:
+  - required:
+     - foo
+     - bar
+  - properties:
+     foo: false
+     bar: false
 
-Is that right?
-
-So a better approach as you mentioned, is to do the devres registration during
-the construction of the IrqVectorRegistration, so there's no way to do one
-without the other. Did I get that right? Anyway great point and I have made this
-change, thanks!
-
- - Joel
-
-
-
+-- 
+With best wishes
+Dmitry
 
