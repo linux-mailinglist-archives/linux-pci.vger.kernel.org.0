@@ -1,227 +1,171 @@
-Return-Path: <linux-pci+bounces-37722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 260F9BC636E
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 19:56:58 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9774BC6378
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 19:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6AC5405523
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 17:56:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 476934ED8E2
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 17:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263182BEC26;
-	Wed,  8 Oct 2025 17:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634CF2BEFF3;
+	Wed,  8 Oct 2025 17:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nhb3iT/2"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oOQ0AZXB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xYjUaq7U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D381A23BE;
-	Wed,  8 Oct 2025 17:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF972BE05B;
+	Wed,  8 Oct 2025 17:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759946213; cv=none; b=WipwThiBtJCYbdEkqlluPWDmcYlU05kLaao3oHQoXRvc2BwFvkkud/On+6FGt+l/PIarh9Enq8yMwY5b1jpK48Ib3LGF2BfNWYFOMtjHDXbnkBurDVns080KpXH/xFwZqjuDG14cVLbjQad2WI+4Izi/NKV7xgg7Xz2eLL3f2hA=
+	t=1759946228; cv=none; b=s97gcGoyPerotRI8E0WpZEzvZq5sAFsTp9nixXJ8n8bv/SvXeR+/m1G+W2hFUyBWBUtHSQmyNPBLrpw4bwBSJaGqJxk9wjfGniC96eMy8/hnXUBHH8whF7yi05wClyPbIgRRPWOFiG9IwT5/QWDBE8zfzM7wT1uJwwgMgBgtvlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759946213; c=relaxed/simple;
-	bh=v+oYzBJQWZLWE7QRgteYfMB2HjOGiuAm03ecAjKgBPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BVPeBaYWglNhnUcNoL4m+JG10ReI7YI/Oy68iCIBIU7ku16qHMrAJcB/G2XY0UdOy5CYurEhmnw3iJLoa5mYjvqjB5sfWmmA/dljJYa4FBfPNbDTfqkR8qmUE6owktm3jCGmM/DD54w5CRkjfuIB+GEIykeW2BqlL73x/cIefQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nhb3iT/2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 598HILeL014540;
-	Wed, 8 Oct 2025 17:56:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=H3kfyL
-	e/7Gl2BWrXvYdIwy/xfa3DOfvvs2jhgyzJe9Y=; b=nhb3iT/2xgu5SCKZta7cTT
-	ZmM0eEjQW3W9Wkr0HJCIQJcvkGEv66y3xyGbhaQ1b/BbpaZkKDGQaosoN+80jSYx
-	8mcjVGwaooOH9YkBIDQ5qQ/DUm//9UPpv0NNK0+78GxusXp4WGk2SqcBz4/R037h
-	1ttho90OngiafA2KmIj4GXto0WlaPBHJVrjCDJ4Knubigad8MmBEh3YvLmJ2W1P5
-	4p+OSMgrk13k7hOBTZ7A4/zH4Idx3hCTC06ho6shzfKa6gebhkkT/WhjTiaTQux4
-	EfyABfhpLVl0HNkK+8NoToYduD7mbVQEbT9o6k18TRho/3A75C/vp9rgf7sPGv4A
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv84g5aq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 17:56:39 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 598HNccQ008346;
-	Wed, 8 Oct 2025 17:56:39 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49nvanr3s3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 17:56:39 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 598Hubjl31261396
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 Oct 2025 17:56:37 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56CC85805F;
-	Wed,  8 Oct 2025 17:56:37 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D9A458051;
-	Wed,  8 Oct 2025 17:56:36 +0000 (GMT)
-Received: from [9.61.247.26] (unknown [9.61.247.26])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  8 Oct 2025 17:56:36 +0000 (GMT)
-Message-ID: <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
-Date: Wed, 8 Oct 2025 10:56:35 -0700
+	s=arc-20240116; t=1759946228; c=relaxed/simple;
+	bh=Cv+nLb8wjgCJYXNzCAf1iJJ/M9qyw5k7KAIDsAxuwB8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=oft3YIoZDXuSUToM0//k1yWxFIiRiG7VT3Q9JTSOBda/6wgchw0TomcMKC7Pj+HtJQD16n1pWrJfdOMXJc07gfKPhZhL7bHqw+gCsWTHpEizLlkoQ99A63coEGGpJH8AElKL9krC8mMJE6v+e7P27qh+3PIvQsytkp9pcFDD6mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oOQ0AZXB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xYjUaq7U; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 3FA341400009;
+	Wed,  8 Oct 2025 13:57:05 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 08 Oct 2025 13:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1759946225;
+	 x=1760032625; bh=P9ffyoQQV2jOME14ODmiVvONWLYIqARldGSMUGBbO8M=; b=
+	oOQ0AZXBE6Th1KoTWR7rg8bM7107U1pFQtunpwoxKfmvrMY4PceSgF88StxS/uAA
+	G8aqp5vywasoIkpOlvyDF2cCNgtPRjqMFPn7coUke3QPKvuEFxU9HKT/MghCatMM
+	RmWT21b43ZWjzAU6nyPl27TtOdZDumMKtbTGDdfrb/ouH4O+gPfhW1bfw8uIZFYg
+	ZTLmzPeuK3Jb5KNEjKd1IMZ/ZF5VGs3cx0BC7WKXta3FmtiHUyN8LmI3tls+sB67
+	Q2r3jOQnGUqylCh9kNm9h72anStX1p4wXT2VjwCPyUgyCMoYtN/F9pGeWoxUMgY2
+	PbZj0VyGSnXWUPO6GMeKqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1759946225; x=
+	1760032625; bh=P9ffyoQQV2jOME14ODmiVvONWLYIqARldGSMUGBbO8M=; b=x
+	YjUaq7UaXeolq+j075yn1CkvpSJMlXN+GTbMofEF1Qpx2a6oem1mQk1Unc0V7Byj
+	+qqMHueQ8Shxx3kFpc/6eziH7ua1YGuyBb737X13AoxzYllvNyns9q3vbQEy6guq
+	LqQhFY1asuGtyDV3OUP66ErPlGY/3u1TNbapZ+Xp8/xh1gqyihn5sDmJpIgSfuo2
+	Rr8iiKahxqWwFRdLTcaIORPOny7acO48gOWAhFGvRCJbQS/iUrRgMOtqntnSfF4w
+	lpU43oc3D+532xmDThPMZ6rTmkl3YzNmV/aWxFA9cqxdy50M+5dAZxaBXnpKrOGY
+	XcXmE6sdfQHx6uOtYxFfA==
+X-ME-Sender: <xms:8KXmaHfI4aCKyGgA7qPREFU7iBIZe6LfCfMKU-Hj5cG_SJt0bpbYIA>
+    <xme:8KXmaIAYgDXt-zII0IctqQt3gGks0cqiaq1VKcGeFFoVw5NM3JeM9KdRcmwUf6oBo
+    CKvZ7OyqTmSsf3PrfBgqCVHgkfLCwgaLc3Hj-lGyxAS13RRyiZOCN8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddutdefleeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdehpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegthhgvshhtvghriedvheduheesghhmrghilhdrtghomhdprhgtph
+    htthhopehjihhnghhoohhhrghnudesghhmrghilhdrtghomhdprhgtphhtthhopegshhgv
+    lhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptggrshhsvghlsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhifih
+    hltgiihihnshhkiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhpihgvrhgrlhhi
+    shhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghniheskhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:8KXmaA3wDIrJW9ljHhQjqC0rEnLXNwnDneYIzqdFULG53VnitRRbOw>
+    <xmx:8KXmaK9iDBrCTA99sfPOd8BMaMdGJxJAzV7okxRVSPR5KGIXodG6JQ>
+    <xmx:8KXmaGNFG0quGiFGqFXbnv4Y0Bej8JqGhgFJiBvha3qqWuZ1HFN53A>
+    <xmx:8KXmaGA06Mbvpq45lKuGGE8vEsM8IRUFNHNkcgqUQXqIa5zcwXR7LA>
+    <xmx:8aXmaCCKsByF2Lxor3unCFpiLI7dvwxNMG8TNND-xpq-CHbdKn6vEuQ5>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8FBA5700054; Wed,  8 Oct 2025 13:57:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-        helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-References: <20250924171628.826-1-alifm@linux.ibm.com>
- <20250924171628.826-2-alifm@linux.ibm.com>
- <20251001151543.GB408411@p1gen4-pw042f0m>
- <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
- <aOE1JMryY_Oa663e@wunner.de>
- <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
- <aOQX6ZTMvekd6gWy@wunner.de>
- <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
- <aOZoWDQV0TNh-NiM@wunner.de>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <aOZoWDQV0TNh-NiM@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=HKPO14tv c=1 sm=1 tr=0 ts=68e6a5d7 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=20KFwNOVAAAA:8 a=Jm_7_FXN7palLUutC2gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: LOzPvl3q4uO-sFKTsQmaEIEqZjZoyutq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX7lRmZlWZ+LJH
- PSR+4QXIVRwWWmdPkouXQXvz1+MMxBcnXaUzHJuSLK3zdvBpW53maL+fl/k5l1+ZLjxs9gwXg8k
- pThTn2hhU37lqsZoPfmCOVaASWxC3oVQW7l5ppEx45vH4rVzyE/ZB4NUso7JtVmHqUf5a0dYt3O
- X1thVeO47+G1sCIB3cOEkjYQyywBLOY/r1xfWhO8vgkW7F0o77RoJ0g/SlNbNBp2r9QmYawGTmV
- M9sEu2z5u/vLC1zk5BvdWK5vuIF2Zo6mLC/FzBr6hU9r7fs4A+zQJeo4gz0En881D0qjobybaiG
- JZidSj07YNczNUQ7WNH02FLYlFsWE5sZWEapGD026ewSfEQy8Ovcue2EPotcJswIQjwny9CybgS
- BKUplFR6dvR9EiLsV/VtfdECvne2ew==
-X-Proofpoint-ORIG-GUID: LOzPvl3q4uO-sFKTsQmaEIEqZjZoyutq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-08_05,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
+X-ThreadId: AIHrVq-NOQMk
+Date: Wed, 08 Oct 2025 19:56:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
+Cc: "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Chester Lin" <chester62515@gmail.com>,
+ "Matthias Brugger" <mbrugger@suse.com>,
+ "Ghennadi Procopciuc" <ghennadi.procopciuc@oss.nxp.com>,
+ "NXP S32 Linux Team" <s32@nxp.com>, bhelgaas@google.com,
+ jingoohan1@gmail.com,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Rob Herring" <robh@kernel.org>, krzk+dt@kernel.org,
+ "Conor Dooley" <conor+dt@kernel.org>, Ionut.Vicovan@nxp.com,
+ "Larisa Grigore" <larisa.grigore@nxp.com>,
+ "Ghennadi Procopciuc" <Ghennadi.Procopciuc@nxp.com>,
+ ciprianmarian.costea@nxp.com, "Bogdan Hamciuc" <bogdan.hamciuc@nxp.com>,
+ "Frank Li" <Frank.li@nxp.com>, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ "Niklas Cassel" <cassel@kernel.org>
+Message-Id: <3d480f73-15b4-4fb8-8d2b-f9961c1736ca@app.fastmail.com>
+In-Reply-To: 
+ <2erycpxudpckmme3k2cpn6wgti4ueyvupo2tzrvmu7aqp7tm6d@itfj7pfrpzzg>
+References: <20250919155821.95334-1-vincent.guittot@linaro.org>
+ <20250919155821.95334-2-vincent.guittot@linaro.org>
+ <iom65w7amxqf7miopujxeulyiglhkyjszjc3nd4ivknj5npcz2@bvxej6ymkecd>
+ <aOU0w5Brp6uxjZDr@lpieralisi>
+ <4rghtk5qv4u7vx4nogctquu3skvxis4npxfukgtqeilbofyclr@nhkrkojv3syh>
+ <eba7d968-209d-4acb-ba41-4bebf03e96ba@app.fastmail.com>
+ <4143977f-1e70-4a63-b23b-78f87d9fdcde@app.fastmail.com>
+ <2erycpxudpckmme3k2cpn6wgti4ueyvupo2tzrvmu7aqp7tm6d@itfj7pfrpzzg>
+Subject: Re: [PATCH 1/3 v2] dt-bindings: PCI: s32g: Add NXP PCIe controller
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-
-On 10/8/2025 6:34 AM, Lukas Wunner wrote:
-> On Mon, Oct 06, 2025 at 02:35:49PM -0700, Farhan Ali wrote:
->> On 10/6/2025 12:26 PM, Lukas Wunner wrote:
->>> On Mon, Oct 06, 2025 at 10:54:51AM -0700, Farhan Ali wrote:
->>>> On 10/4/2025 7:54 AM, Lukas Wunner wrote:
->>>>> I believe this also makes patch [01/10] in your series unnecessary.
->>>> I tested your patches + patches 2-10 of this series. It unfortunately didn't
->>>> completely help with the s390x use case. We still need the check to in
->>>> pci_save_state() from this patch to make sure we are not saving error
->>>> values, which can be written back to the device in pci_restore_state().
->>> What's the caller of pci_save_state() that needs this?
->>>
->>> Can you move the check for PCI_POSSIBLE_ERROR() to the caller?
->>> I think plenty of other callers don't need this, so it adds
->>> extra overhead for them and down the road it'll be difficult
->>> to untangle which caller needs it and which doesn't.
->> The caller would be pci_dev_save_and_disable(). Are you suggesting moving
->> the PCI_POSSIBLE_ERROR() prior to calling pci_save_state()?
-> I'm not sure yet.  Let's back up a little:  I'm missing an
-> architectural description how you're intending to do error
-> recovery in the VM.  If I understand correctly, you're
-> informing the VM of the error via the ->error_detected() callback.
+On Wed, Oct 8, 2025, at 17:19, Manivannan Sadhasivam wrote:
+> On Wed, Oct 08, 2025 at 10:35:34AM +0200, Arnd Bergmann wrote:
+>> On Wed, Oct 8, 2025, at 10:26, Arnd Bergmann wrote:
+>> > the physical addresses for RAM at 0x80000000 and on-chip devices
+>> > at 0x40000000. This probably works fine as long as the total
+>> > PCI memory space assignment stays below 0x40000000 but would
+>> > fail once addresses actually start clashing.
+>> 
+>> I got confused here myself, but what I should have said is that
+>> having the DMA address for the RAM overlap the BAR space
+>> as seen from PCI is problematic as the PCI host bridge
+>> cannot tell PCI P2P transfers from DMA to RAM, so one
+>> of them will be broken here.
+>> 
 >
-> You're saying you need to check for accessibility of the device
-> prior to resetting it from the VM, does that mean you're attempting
-> a reset from the ->error_detected() callback?
->
-> According to Documentation/PCI/pci-error-recovery.rst, the device
-> isn't supposed to be considered accessible in ->error_detected().
-> The first callback which allows access is ->mmio_enabled().
->
-> I also don't quite understand why the VM needs to perform a reset.
-> Why can't you just let the VM tell the host that a reset is needed
-> (PCI_ERS_RESULT_NEED_RESET) and then the host resets the device on
-> behalf of the VM?
+> No. The IP just sets up the outbound mapping here for the entire 'ranges'. When
+> P2P happens, it will use the inbound mapping translation.
 
-The ->error_detected() callback is used to inform userspace of an error. 
-In the case of a VM, using QEMU as a userspace, once notified of an 
-error QEMU will inject an error into the guest in s390x architecture 
-specific way [1] (probably should have linked the QEMU series in the 
-cover letter). Once notified of the error VM's device driver will drive 
-the recovery action. The recovery action require a reset of the device 
-and on s390x PCI devices are reset using architecture specific 
-instructions (zpci_device_hot_reset()). QEMU will intercept any low 
-level recovery instructions from the VM and then perform a reset of 
-device on behalf of the VM [2]. QEMU performs a reset by invoking the 
-VFIO_DEVICE_RESET ioctl, which attempts to reset the device 
-using pci_try_reset_function().
+That is not my impression from reading the code: At least for
+the case where both devices are on the same bridge and they
+use map_type=PCI_P2PDMA_MAP_BUS_ADDR, I would expect the DMA
+to use the plain PCI bus address, not going through the
+dma-ranges+ranges translation that would apply when they are
+on different host bridges.
 
-Once a device is in an error state, MMIO to the device is blocked and so 
-any PCI reads to the Config Space will return -1. Since 
-pci_try_reset_function() will try to save the state of device's Config 
-Space with pci_dev_save_and_disable(), it will end up saving -1 as the 
-state. Later when we try to restore the state after a reset, we end up 
-corrupting device registers which can send the device into an error 
-state again. I was trying to avoid this with the patch.
+> So your concern would be valid if the 'dma-ranges' (for which inbound
+> translation happens) overlapped with the RAM/MMIO range. But that is not the
+> case here.
 
-Hopefully, this answers your questions.
+dma-ranges should normally list all the memory controllers, so in
+this case at least the 0x80000000..0xffffffff range of PCI bus
+addresses must be routed from the host bridge to RAM. If a BAR
+is assigned to the same numbers, I would expect a PCI bridge
+to direct a DMA transfer downstream to that BAR instead
+of upstream to the CPU even before it gets to the host bridge.
 
-[1] QEMU series 
-https://lore.kernel.org/all/20250925174852.1302-1-alifm@linux.ibm.com/
-
-[2] v1 patch series discussion on some nuances of reset mechanism 
-https://lore.kernel.org/all/20250814145743.204ca19a.alex.williamson@redhat.com/
-
->
-> Furthermore, I'm thinking that you should be using pci_channel_offline()
-> to detect accessibility of the device, rather than reading from
-> Config Space and checking for PCI_POSSIBLE_ERROR().
->
->>> The state saved on device addition is just the initial state and
->>> it is fine if later on it gets updated (which is a nicer term than
->>> "overwritten").  E.g. when portdrv.c instantiates port services
->>> and drivers are bound to them, various registers in Config Space
->>> are changed, hence pcie_portdrv_probe() calls pci_save_state()
->>> again.
->>>
->>> However we can discuss whether pci_save_state() is still needed
->>> in pci_dev_save_and_disable().
->> The commit 8dd7f8036c12 ("PCI: add support for function level reset")
->> introduced the logic of saving/restoring the device state after an FLR. My
->> assumption is it was done to save the most recent state of the device (as
->> the state could be updated by drivers). So I think it would still make sense
->> to save the device state in pci_dev_save_and_disable() if the Config Space
->> is still accessible?
-> Yes, right now we can't assume that drivers call pci_save_state()
-> in their probe hook if they modified Config Space.  They may rely
-> on the state being saved prior to reset or a D3hot/D3cold transition.
-> So we need to keep the pci_dev_save_and_disable() call for now.
->
-> Generally the expectation is that Config Space is accessible when
-> performing a reset with pci_try_reset_function().  Since that's
-> apparently not guaranteed for your use case, I'm wondering if you
-> might be using the function in a context it's not supposed to be used.
-
-I am open to suggestions on how we can do this.
-
-Thanks
-
-Farhan
-
+      Arnd
 
