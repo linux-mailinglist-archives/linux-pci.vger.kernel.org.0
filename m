@@ -1,119 +1,227 @@
-Return-Path: <linux-pci+bounces-37721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5293BC6154
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 18:53:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 260F9BC636E
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 19:56:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5C3919E2B44
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 16:54:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6AC5405523
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 17:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1010725FA2D;
-	Wed,  8 Oct 2025 16:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263182BEC26;
+	Wed,  8 Oct 2025 17:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcd+Zt2Z"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nhb3iT/2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5132BE7C3
-	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 16:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D381A23BE;
+	Wed,  8 Oct 2025 17:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759942429; cv=none; b=JJQWF5IkaFnXKi7nNqtM9lvM/WEJ2FAUxDIQSVrnVCvKfqsswZOQn0Ql+zuLcqvbzJxm2d5/SofwTwRuU7pc3qO0A3GRYlmd1DzsakAHSA/d6Dp/pe2D33XyB3Bs8ZVcgBgwzFqeyaEMcClaZ9r0WucTyYRs7HO5d+sW2qX7HvA=
+	t=1759946213; cv=none; b=WipwThiBtJCYbdEkqlluPWDmcYlU05kLaao3oHQoXRvc2BwFvkkud/On+6FGt+l/PIarh9Enq8yMwY5b1jpK48Ib3LGF2BfNWYFOMtjHDXbnkBurDVns080KpXH/xFwZqjuDG14cVLbjQad2WI+4Izi/NKV7xgg7Xz2eLL3f2hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759942429; c=relaxed/simple;
-	bh=ax0LWZM9J1kHeBNaFbfBnu/IapGbJsY3j062UFsnR6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=XCustYpFuIsLx9Gh+eAioBDlWG+8CQE75Fp9KWQbLvgFT7P6gcPGEA2+dAKWczXEqHoMDUo+jiCBvPAz7WVJL8vhOpK6Mby+tFm91KtJxHC0qQ0mHO9ZaiGVFIF8ZlOuVZ8uyyUcrVss+/Q8m408cSWo13CTeqNMYz24nB8wn+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcd+Zt2Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45FD2C4CEE7;
-	Wed,  8 Oct 2025 16:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759942427;
-	bh=ax0LWZM9J1kHeBNaFbfBnu/IapGbJsY3j062UFsnR6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pcd+Zt2ZTjI92Bg3DjFOatrYu7fI7mPXMs2cQPobPwbp0QiGaB6SiWXyz5aOciMLn
-	 I+xts5QNvbe6CTpDDDqAOwPhZVPPzkWOLyOAsWdzNIgy42wuR/n6tZ7onZi+dIXiIf
-	 WMy6pKs4DsvVY52F9JeiBib9/L9AWEVFApUQAZfUDlnDBscfDETlpdciyavEKQGEwz
-	 xQENC9hOHQbVK8wWsWFH85Fv5ajbu+Zjf0f2MQeTpJQw8Gg31QKJXy/hyLq0mkvVto
-	 Q6YMfsUg2Tzqm0a1bm3dA2NydiXdaGH+oJT8vDGuu5GrTS1+l6RTrzQ7ftlP1uJTNY
-	 0hhgM6pum9Mlw==
-Date: Wed, 8 Oct 2025 11:53:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hui Wang <hui.wang@canonical.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
-	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
-	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Message-ID: <20251008165345.GA627277@bhelgaas>
+	s=arc-20240116; t=1759946213; c=relaxed/simple;
+	bh=v+oYzBJQWZLWE7QRgteYfMB2HjOGiuAm03ecAjKgBPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BVPeBaYWglNhnUcNoL4m+JG10ReI7YI/Oy68iCIBIU7ku16qHMrAJcB/G2XY0UdOy5CYurEhmnw3iJLoa5mYjvqjB5sfWmmA/dljJYa4FBfPNbDTfqkR8qmUE6owktm3jCGmM/DD54w5CRkjfuIB+GEIykeW2BqlL73x/cIefQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nhb3iT/2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 598HILeL014540;
+	Wed, 8 Oct 2025 17:56:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=H3kfyL
+	e/7Gl2BWrXvYdIwy/xfa3DOfvvs2jhgyzJe9Y=; b=nhb3iT/2xgu5SCKZta7cTT
+	ZmM0eEjQW3W9Wkr0HJCIQJcvkGEv66y3xyGbhaQ1b/BbpaZkKDGQaosoN+80jSYx
+	8mcjVGwaooOH9YkBIDQ5qQ/DUm//9UPpv0NNK0+78GxusXp4WGk2SqcBz4/R037h
+	1ttho90OngiafA2KmIj4GXto0WlaPBHJVrjCDJ4Knubigad8MmBEh3YvLmJ2W1P5
+	4p+OSMgrk13k7hOBTZ7A4/zH4Idx3hCTC06ho6shzfKa6gebhkkT/WhjTiaTQux4
+	EfyABfhpLVl0HNkK+8NoToYduD7mbVQEbT9o6k18TRho/3A75C/vp9rgf7sPGv4A
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv84g5aq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Oct 2025 17:56:39 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 598HNccQ008346;
+	Wed, 8 Oct 2025 17:56:39 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49nvanr3s3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Oct 2025 17:56:39 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 598Hubjl31261396
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 Oct 2025 17:56:37 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56CC85805F;
+	Wed,  8 Oct 2025 17:56:37 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D9A458051;
+	Wed,  8 Oct 2025 17:56:36 +0000 (GMT)
+Received: from [9.61.247.26] (unknown [9.61.247.26])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  8 Oct 2025 17:56:36 +0000 (GMT)
+Message-ID: <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
+Date: Wed, 8 Oct 2025 10:56:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alex.williamson@redhat.com,
+        helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+References: <20250924171628.826-1-alifm@linux.ibm.com>
+ <20250924171628.826-2-alifm@linux.ibm.com>
+ <20251001151543.GB408411@p1gen4-pw042f0m>
+ <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
+ <aOE1JMryY_Oa663e@wunner.de>
+ <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
+ <aOQX6ZTMvekd6gWy@wunner.de>
+ <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
+ <aOZoWDQV0TNh-NiM@wunner.de>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <aOZoWDQV0TNh-NiM@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250821163936.GA681451@bhelgaas>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=HKPO14tv c=1 sm=1 tr=0 ts=68e6a5d7 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=20KFwNOVAAAA:8 a=Jm_7_FXN7palLUutC2gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: LOzPvl3q4uO-sFKTsQmaEIEqZjZoyutq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX7lRmZlWZ+LJH
+ PSR+4QXIVRwWWmdPkouXQXvz1+MMxBcnXaUzHJuSLK3zdvBpW53maL+fl/k5l1+ZLjxs9gwXg8k
+ pThTn2hhU37lqsZoPfmCOVaASWxC3oVQW7l5ppEx45vH4rVzyE/ZB4NUso7JtVmHqUf5a0dYt3O
+ X1thVeO47+G1sCIB3cOEkjYQyywBLOY/r1xfWhO8vgkW7F0o77RoJ0g/SlNbNBp2r9QmYawGTmV
+ M9sEu2z5u/vLC1zk5BvdWK5vuIF2Zo6mLC/FzBr6hU9r7fs4A+zQJeo4gz0En881D0qjobybaiG
+ JZidSj07YNczNUQ7WNH02FLYlFsWE5sZWEapGD026ewSfEQy8Ovcue2EPotcJswIQjwny9CybgS
+ BKUplFR6dvR9EiLsV/VtfdECvne2ew==
+X-Proofpoint-ORIG-GUID: LOzPvl3q4uO-sFKTsQmaEIEqZjZoyutq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-08_05,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
 
-Nirmal, Jonathan, can you confirm that when RRS SV is enabled for VMD
-Root Ports, we should actually see the 0x0001 value when a device
-downstream of VMD responds with RRS?  From the log below, it appears
-that we actually get 0xffffffff when reading Device ID after a reset.
 
-On Thu, Aug 21, 2025 at 11:39:36AM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
-> > On 7/2/25 17:43, Hui Wang wrote:
-> > > On 7/2/25 07:23, Bjorn Helgaas wrote:
-> ...
+On 10/8/2025 6:34 AM, Lukas Wunner wrote:
+> On Mon, Oct 06, 2025 at 02:35:49PM -0700, Farhan Ali wrote:
+>> On 10/6/2025 12:26 PM, Lukas Wunner wrote:
+>>> On Mon, Oct 06, 2025 at 10:54:51AM -0700, Farhan Ali wrote:
+>>>> On 10/4/2025 7:54 AM, Lukas Wunner wrote:
+>>>>> I believe this also makes patch [01/10] in your series unnecessary.
+>>>> I tested your patches + patches 2-10 of this series. It unfortunately didn't
+>>>> completely help with the s390x use case. We still need the check to in
+>>>> pci_save_state() from this patch to make sure we are not saving error
+>>>> values, which can be written back to the device in pci_restore_state().
+>>> What's the caller of pci_save_state() that needs this?
+>>>
+>>> Can you move the check for PCI_POSSIBLE_ERROR() to the caller?
+>>> I think plenty of other callers don't need this, so it adds
+>>> extra overhead for them and down the road it'll be difficult
+>>> to untangle which caller needs it and which doesn't.
+>> The caller would be pci_dev_save_and_disable(). Are you suggesting moving
+>> the PCI_POSSIBLE_ERROR() prior to calling pci_save_state()?
+> I'm not sure yet.  Let's back up a little:  I'm missing an
+> architectural description how you're intending to do error
+> recovery in the VM.  If I understand correctly, you're
+> informing the VM of the error via the ->error_detected() callback.
+>
+> You're saying you need to check for accessibility of the device
+> prior to resetting it from the VM, does that mean you're attempting
+> a reset from the ->error_detected() callback?
+>
+> According to Documentation/PCI/pci-error-recovery.rst, the device
+> isn't supposed to be considered accessible in ->error_detected().
+> The first callback which allows access is ->mmio_enabled().
+>
+> I also don't quite understand why the VM needs to perform a reset.
+> Why can't you just let the VM tell the host that a reset is needed
+> (PCI_ERS_RESULT_NEED_RESET) and then the host resets the device on
+> behalf of the VM?
 
-> > > > Thank you!  It seems like we get 0xffffffff (probably PCIe error) for
-> > > > a long time after we think the device should be able to respond with
-> > > > RRS.
-> > > > 
-> > > > I always thought the spec required that after the delays, a device
-> > > > should respond with RRS if it's not ready, but now I guess I'm not
-> > > > 100% sure.  Maybe it's allowed to just do nothing, which would lead to
-> > > > the Root Port timing out and logging an Unsupported Request error.
-> > > > 
-> > > > Can I trouble you to try the patch below?  I think we might have to
-> > > > start explicitly checking for that error.  That probably would require
-> > > > some setup to enable the error, check for it, and clear it.  I hacked
-> > > > in some of that here, but ultimately some of it should go elsewhere.
-> ...
+The ->error_detected() callback is used to inform userspace of an error. 
+In the case of a VM, using QEMU as a userspace, once notified of an 
+error QEMU will inject an error into the guest in s390x architecture 
+specific way [1] (probably should have linked the QEMU series in the 
+cover letter). Once notified of the error VM's device driver will drive 
+the recovery action. The recovery action require a reset of the device 
+and on s390x PCI devices are reset using architecture specific 
+instructions (zpci_device_hot_reset()). QEMU will intercept any low 
+level recovery instructions from the VM and then perform a reset of 
+device on behalf of the VM [2]. QEMU performs a reset by invoking the 
+VFIO_DEVICE_RESET ioctl, which attempts to reset the device 
+using pci_try_reset_function().
 
-The patch is here:
-https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
-and the log with that patch is here:
+Once a device is in an error state, MMIO to the device is blocked and so 
+any PCI reads to the Config Space will return -1. Since 
+pci_try_reset_function() will try to save the state of device's Config 
+Space with pci_dev_save_and_disable(), it will end up saving -1 as the 
+state. Later when we try to restore the state after a reset, we end up 
+corrupting device registers which can send the device into an error 
+state again. I was trying to avoid this with the patch.
 
-> > This is the testing result and log.
-> > https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521/comments/65
+Hopefully, this answers your questions.
 
-> We're waiting for 01:00.0, and we're seeing the poll message for about
-> 375 ms:
+[1] QEMU series 
+https://lore.kernel.org/all/20250925174852.1302-1-alifm@linux.ibm.com/
 
-[   10.177356] pci 10000:00:02.0: PCI bridge to [bus 01]
-[   10.182278] pci 10000:01:00.0: [8086:0a54] type 00 class 0x010802 PCIe Endpoint
-[   10.195247] pci 10000:00:02.0: pci_reset_secondary_bus: PCI_BRIDGE_CTL_BUS_RESET deasserted
-[   10.195464] pci 10000:00:02.0: waiting 100 ms for downstream link, after activation
-[   10.195467] pci 10000:00:02.0: pcie_wait_for_link_delay: active 1 delay 100 link_active_reporting 1
-[   10.229269] pci 10000:00:02.0: pcie_wait_for_link_status: LNKSTA 0xb043
-[   10.334784] pci 10000:00:02.0: pcie_wait_for_link_delay: waited 100ms
+[2] v1 patch series discussion on some nuances of reset mechanism 
+https://lore.kernel.org/all/20250814145743.204ca19a.alex.williamson@redhat.com/
 
->   [   10.334786] pci 10000:01:00.0: pci_dev_wait: VF- bus reset timeout 59900
->   [   10.334792] pci 10000:00:02.0: pci_dev_wait: read 0xffffffff DEVSTA 0x0000
->   ...
->   [   10.708367] pci 10000:00:02.0: pci_dev_wait: read 0xffffffff DEVSTA 0x0000
-> 
-> The 00:02.0 Root Port has RRS SV enabled, but the config reads of the
-> 01:00.0 Vendor ID did not return the RRS value (0x0001).  Instead,
-> they returned 0xffffffff, which typically means an error on PCIe.
+>
+> Furthermore, I'm thinking that you should be using pci_channel_offline()
+> to detect accessibility of the device, rather than reading from
+> Config Space and checking for PCI_POSSIBLE_ERROR().
+>
+>>> The state saved on device addition is just the initial state and
+>>> it is fine if later on it gets updated (which is a nicer term than
+>>> "overwritten").  E.g. when portdrv.c instantiates port services
+>>> and drivers are bound to them, various registers in Config Space
+>>> are changed, hence pcie_portdrv_probe() calls pci_save_state()
+>>> again.
+>>>
+>>> However we can discuss whether pci_save_state() is still needed
+>>> in pci_dev_save_and_disable().
+>> The commit 8dd7f8036c12 ("PCI: add support for function level reset")
+>> introduced the logic of saving/restoring the device state after an FLR. My
+>> assumption is it was done to save the most recent state of the device (as
+>> the state could be updated by drivers). So I think it would still make sense
+>> to save the device state in pci_dev_save_and_disable() if the Config Space
+>> is still accessible?
+> Yes, right now we can't assume that drivers call pci_save_state()
+> in their probe hook if they modified Config Space.  They may rely
+> on the state being saved prior to reset or a D3hot/D3cold transition.
+> So we need to keep the pci_dev_save_and_disable() call for now.
+>
+> Generally the expectation is that Config Space is accessible when
+> performing a reset with pci_try_reset_function().  Since that's
+> apparently not guaranteed for your use case, I'm wondering if you
+> might be using the function in a context it's not supposed to be used.
+
+I am open to suggestions on how we can do this.
+
+Thanks
+
+Farhan
+
 
