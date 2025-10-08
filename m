@@ -1,80 +1,88 @@
-Return-Path: <linux-pci+bounces-37696-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37697-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 719B9BC372E
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 08:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BA09BC3BDF
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 10:00:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ECAC13514A4
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 06:15:42 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C84D1352313
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 08:00:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B826B2DECAA;
-	Wed,  8 Oct 2025 06:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6432F261F;
+	Wed,  8 Oct 2025 08:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nm/NHsEr"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RccIbxiO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208141F3FE9
-	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 06:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB311F4CB3
+	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 08:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759904135; cv=none; b=p0NA/O+Sgh7TKNI9R+IIYHDETC1+YVyQ+HmakGuaF8aRyXtPrhwZoEZyfPwuFLeWFcG2ehzPtoSsVZNn9sdcMEHoSr5/FGjMb9r2m+1xCsHE+BzGAzfxnH3j0T/rIL3daWhuS/kAHHfJaBQgoZKrPrGxqx1HQvO/tWO39feL5P0=
+	t=1759910433; cv=none; b=dJJtb+ADTiA2cNj46B5rftqdfq7ZkA+fMQasx11h0R1LREFkFvT3zeNAToee2wJE4NSTWwS7O6sPNut7fpB1h/ro0Mgwoi/UkwFp6THMIqupxMa+lKzL94WnsGeH8rsAhFijFP1vyRTMiJjLsJPgWtLPIEobHDDhyiMkTKUDXFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759904135; c=relaxed/simple;
-	bh=uKCxhwmwY0Ji0CDl09f49JOa6JF3kmVktdq4VvynfEc=;
+	s=arc-20240116; t=1759910433; c=relaxed/simple;
+	bh=/5xitTXiQ5eDNNCs1sAfErPkBv/6ZwwQcRGoSXhHsn0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=APELjcD+7/pFpF9I5mVIbLUxi3qOq2mb+Ue+wCbK4C2tMpXJncpjhK+iSHMM23AKIYD4BNAlFc/yv7mTwMQFEOA4Uxyh1kBsQZ2f/XgelyxFAW3AbzoiZVYKmqhLW0Pdk6SVfyY4+MIqX+M8aZ5omI3bXywKpt7CQm2szUze51k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nm/NHsEr; arc=none smtp.client-ip=209.85.210.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-781db5068b8so5889682b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 07 Oct 2025 23:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759904132; x=1760508932; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8WDMjYNVDGB7nxB23mvy74axT0H9whIV+VVsLhh4xxk=;
-        b=nm/NHsErBvRkgmDd+0qv7LcXmCSLMV7V3kGGbFaGdx+Q+J5Lu3h4n9sAmvvVi8gMDW
-         BKNYUj1wQkUIaiYfcuuY8Wh2lEKySQDMOxgV9GP/wIfwDkutppEYY+fj8910medXglQL
-         YCkwfLfysrMOK77Zk2i4UAYBu06ZALR7El3Khi2gfuq4gOlaN3/llsH9cvxx7G1pNZir
-         ALuhp9qIjsJDJcPDwoGr8cPGF0TkEUtJyCuehu4lARJn8xXB+xdQbjEzCJwEHSCVysL1
-         9VRAUjQzq1CLNggurqwSSbiTahViq/dWAr5qm4Cs+pfE2SnNQaVjn9ADgyBNidyvHizu
-         J/VA==
+	 In-Reply-To:Content-Type; b=TQvmciZxpASbDIQ+mO5J2Xbl7p2cu6DN6mz5qdPi5CNL2lTdm9vqZiqZTcvIARzssbNL//ns5yt7LZskQODhW20ptmHAxCTTcSgfGopVNuJP8bo9zUBfg+5I/2ZahToIliASWGFIfWRSCt9mZ2KGi/ftJzTL2VAtsO/mCttSmLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RccIbxiO; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5987b2TK010701
+	for <linux-pci@vger.kernel.org>; Wed, 8 Oct 2025 08:00:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OFBsMtCW5P8eEthAK5JuEKPN/rQgShEl32y8lMaMUYM=; b=RccIbxiO+wSUrXG7
+	riqHQZmZIfzrflvAq8w10eOLfSbRctyQIO8oJIp77PiBK7lL5oh9R58DALB7pqPB
+	L4TeCUX42QRRomR5XzSxnjtrIAiPpN7u6cQ07cftrynrZMR6olXl3BTPW4DYR+Ho
+	4L5E5vY8rcnz4+vNi//Q88dh/lKKovR0AEHa2o2ftO0CoR7hlLSM4sqoKi81uA4/
+	nhktj/GYKZcw/AuwfOoJIb0gRrUjTMQqKDmMpL7v0RHopgPx3MGWnpFdsMLV1Yi/
+	mFz4Zh1qEg3OUJu96jaZgEK9emn0uok6n9Mu53c09fMBl/J1M37sAQAB0DadNPwC
+	taV/zA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49junu9qxv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 08 Oct 2025 08:00:30 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-879826c55c8so15211086d6.2
+        for <linux-pci@vger.kernel.org>; Wed, 08 Oct 2025 01:00:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759904132; x=1760508932;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8WDMjYNVDGB7nxB23mvy74axT0H9whIV+VVsLhh4xxk=;
-        b=O6cK2B48sKciR5JPT0zYCru+b4A2yx2nQ6UvWTyEBPv1a2US7kIXAdu1sN9+KiEj76
-         1OH/TdKzkZlWRXLDgl6xt/+/AeCsy7e3kl5hwqRPR2ODYOoVry1RFY5XWKbDSRwLm0+2
-         t7BQ+2UQBrcJ5v7l4dOJY9ZyeKYLA4ITMPO7OXbM2iYlcKPpy59LlWG3BZzZY0B4cdC/
-         osuz2t/EklGsYEZmlhx5EZpqk+L8dsEtSsD0rtXjTiw/i7sP2wYXCiVl3bJs9ZMNYIWW
-         ESCWMy53DZsJEo2xpoNxnUb4XDBsgqDTz20+FYyDfxs+7IS12/hlxmvD9ifgtf2Um1b5
-         saAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/HGK+dAH2IAL4f6xuF46CaECE25vO/cMrNRXfVsz5JpIjbWZ1KZkciITGAe4SPLWVvV1PtvF/4sY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6It619Ma1xNO12B6ZYbbCJQVYP0jy1IxUfHZzEqOkeGMIBpnP
-	ri4gyunSesv68ITPD+Fw6vBd+rNvYKMEPmYL/JgRVolXZBokkXPmghI=
-X-Gm-Gg: ASbGncvp9hdl1jLPJtMRNwB32FNyIJA59nUlp3CwJktjLnD1ACtrZKXVb1nsqCu2BEx
-	HiyCuCPt+4036o4crGlurShvXiZbus/jptEQ5v+Hi37Vh1Z1tq0k+ZFbAXqmE3QW5PB9u5kBpQ1
-	P22qyUSoW3e+aBGs/di72Dk18xIBvMQiXsK2Hhwnow5m5qpYZu+sXHhcJAklmvvssC3bndUizK8
-	lMOGImNzQ5c61iUcpAfJ6XvUwgKUc7D+WLXbqOPZOGxN/b2kSxfD1Doj7Co23DdDMsATs3iroMR
-	lBn95PVLMwZgHcPoqfKdYTcNrkI2/TEkENEjtOqkQscvlAIMCgrohieVxLSSjzosVKJNBwxfSEY
-	k40cOEJRvFMRunsb6Cdzm5Y5cz/GriqdQtYPPH+a7zcaj9CPk35PrhELhBiLktpTTRw==
-X-Google-Smtp-Source: AGHT+IHVOUFBQzcyHHC2300S+MTlQPkVnUZmXbxHmKEFYJYegXscv3bRUT1/yEoYhhrLX7UroRd5+w==
-X-Received: by 2002:a05:6a20:7351:b0:2a2:850:5605 with SMTP id adf61e73a8af0-32da8130f75mr2873766637.23.1759904132236;
-        Tue, 07 Oct 2025 23:15:32 -0700 (PDT)
-Received: from [192.168.0.113] ([139.227.17.83])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b52a2522asm481872a91.8.2025.10.07.23.15.26
+        d=1e100.net; s=20230601; t=1759910430; x=1760515230;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OFBsMtCW5P8eEthAK5JuEKPN/rQgShEl32y8lMaMUYM=;
+        b=RW5YhcCluSPlKLkXC3aC0U8ZDmuW3pttZuuxsDiDgUTcQtzQwq0RV0NQaooPS0PDs0
+         eqRTkqitsfYu6MwAiBQtXTyi/QOfmujiM0y2U4utBu6LK2tFnaxyPmVvS+RAgXDxgfAB
+         4kdwqJJiyj5a2zKKt6X1iYeGxq9z4EilKRdhSmbMa8OssfKftqf5b2NX30g98DZVqiyT
+         cbFMTK+Q4fZANrjN5MF+/Ymp73UWBySqkVaWTCKMBKeoTg7D5LfYZNarLCdIcm42p3Mi
+         KFjliNk0MjB3XLk7bIoqrBvvwid/n+FOGOrRMmQ3PWTvbTuHHvSrk6SGf5vTSDekEMn1
+         eRJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVavASYJ5SqHMHUvRIS+VwGIK6RLgAI5Zc6a8ETdqJYctjv95IKtu3sPFCXPnvHf3y5mY6+DQqxmxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFY3jtHT0JPcllyJZvk535QJsTxXuZP6DmohTDURc9guJ9Mw1A
+	qv2Ldi2KjOhplB6afOiTIjwmErgumrnso5vhhiRnNI0Tuc1Dpqzy0hcZ3lueAlomEFVbOfGBgqL
+	y8L65QoUQKXE/pwiLhUGHyWqANAF46WTCk43SK9UmBG2IpC4PZUSqjA/mV47ovc0=
+X-Gm-Gg: ASbGnct+xRrVkmLXtZM+vgSCNWk9zxsI/VhR4/1huAHfRQyuxjHqgA7DoTzPubuClIB
+	oH4ox69qY3e90ZiyZ3PB1nuUPPN316YI+Zxj9NgwVAamMEMp389D8pBBOp0i8m84I3UQGfrPQ7E
+	524H0C/GevrGgHx+dsRf8iCFjCr2HuxoYWi9r9u+CrIwB0ZDifUPZ1tXk/XZ0dqslKzUTnwR9qa
+	vJDirXhrtIaf0leUjQl/Owm7m8cnomeS/0goCYqULCLWi9LPk385yduOpawvyH4OcTGK/ic3ArZ
+	mueuX5PdpvI7O2d20vSn5Mb0qvzFLi5/mlTl/VPjz4MwRMsLMEwxZ96G/Lu26RMPeCuiGymjTXy
+	oHL3kqB5bAb9XZkb0H/niKAWrrcc=
+X-Received: by 2002:a05:6214:240c:b0:81f:3abf:dc1f with SMTP id 6a1803df08f44-87b2ef94b05mr19467786d6.8.1759910429970;
+        Wed, 08 Oct 2025 01:00:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFI7CFIzMjiswdfQ2gg99EIIpUQZ3va0hQlGmy6utcIOqmtXbh7OWljL6IiZ8lPAjtXu1zVkQ==
+X-Received: by 2002:a05:6214:240c:b0:81f:3abf:dc1f with SMTP id 6a1803df08f44-87b2ef94b05mr19467286d6.8.1759910429070;
+        Wed, 08 Oct 2025 01:00:29 -0700 (PDT)
+Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63788112bbdsm14092770a12.41.2025.10.08.01.00.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Oct 2025 23:15:31 -0700 (PDT)
-Message-ID: <d2a58601-f458-421b-8df3-b11cf2aeb5e0@gmail.com>
-Date: Wed, 8 Oct 2025 14:15:01 +0800
+        Wed, 08 Oct 2025 01:00:28 -0700 (PDT)
+Message-ID: <73e72e48-bc8e-4f92-b486-43a5f1f4afb0@oss.qualcomm.com>
+Date: Wed, 8 Oct 2025 10:00:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,116 +90,79 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] x86/pci: Check signature before assigning shadow
- ROM
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250815162041.14826-1-tomitamoeko@gmail.com>
- <aKGkrSWUA8BTYniZ@wunner.de>
-From: Tomita Moeko <tomitamoeko@gmail.com>
-In-Reply-To: <aKGkrSWUA8BTYniZ@wunner.de>
+Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sm8750: Add PCIe PHY and
+ controller node
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Bjorn Helgaas
+ <bhelgaas@google.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
+ <20250826-pakala-v3-2-721627bd5bb0@oss.qualcomm.com>
+ <aN22lamy86iesAJj@hu-bjorande-lv.qualcomm.com>
+ <4d586f0f-c336-4bf6-81cb-c7c7b07fb3c5@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <4d586f0f-c336-4bf6-81cb-c7c7b07fb3c5@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: r3-aQwP-6NXZrZtasVKda1hVbi_IYTxr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAyMyBTYWx0ZWRfX4NLHeOVpTnow
+ 1MROr51+a9wuRGoFe+LgVuDynizbOOR805f6pwl3Cr+SN6TBxhhGL8jZIZqaZ2boDo1wc8ozYIA
+ QwrvPzRIMG9JE1IZAIXKNbwqdPuZmDJG3gFB9pPAsO+LiG1U5AgLNhGh5eoWvu8mOTnTEyfF4Qo
+ TmSnpPNqscaU+4lCtthe6xuWS8g/kiRjadRMloNjvctqlWzhq8dbxFk+886Wqyn5OK/IsAIziyj
+ wRD8b6gdI0KqXZkC+KkhSlFM6TvossL+FnANJ7QUHHFmqORlr0nA4Bs0XRp+AHpWU4eKKNQRuNF
+ fT70sDzQwXAM4PjPOqdpCUxcGHRpZqJbRGeq1ho939uFldLFTYlvUPF6uQF5//0BUWcLvIEFog3
+ WNY+FT7jPKhjkTt7mNRJwpLU7tsOoQ==
+X-Authority-Analysis: v=2.4 cv=CbIFJbrl c=1 sm=1 tr=0 ts=68e61a1e cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=w91pQayDMOQRg3Yv5IMA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-GUID: r3-aQwP-6NXZrZtasVKda1hVbi_IYTxr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-08_01,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 adultscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040023
 
-Sorry for my extreme late reply...I didn't noticed this message
-until I searched this topic in lore.kernel.org. Somehow it didn't
-reached my inbox, or maybe I deleted it by mistake :(
+On 10/8/25 6:41 AM, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 10/2/2025 5:07 AM, Bjorn Andersson wrote:
+>> On Tue, Aug 26, 2025 at 04:32:54PM +0530, Krishna Chaitanya Chundru wrote:
+>>> Add PCIe controller and PHY nodes which supports data rates of 8GT/s
+>>> and x2 lane.
+>>>
+>>
+>> I tried to boot the upstream kernel (next-20250925 defconfig) on my
+>> Pakala MTP with latest LA1.0 META and unless I disable &pcie0 the device
+>> is crashing during boot as PCIe is being probed.
+>>
+>> Is this a known problem? Is there any workaround/changes in flight that
+>> I'm missing?
+>>
+> Hi Bjorn,
+> 
+> we need this fix for the PCIe to work properly. Please try it once.
+> https://lore.kernel.org/all/20251008-sm8750-v1-1-daeadfcae980@oss.qualcomm.com/
 
-On 8/17/2025 5:45 PM, Lukas Wunner wrote:
-> On Sat, Aug 16, 2025 at 12:20:41AM +0800, Tomita Moeko wrote:
->> Modern platforms without VBIOS or UEFI CSM support do not contain
->> VGA ROM at 0xC0000, this is observed on Intel Ice Lake and later
->> systems. Check whether the VGA ROM region is a valid PCI option ROM
->> with 0xAA55 signature before assigning the shadow ROM to device.
-> 
-> Which spec is the 0xAA55 magic number coming from?
-> 
-> Could you add a spec reference for it in a code comment and the
-> commit message?
+This surely shouldn't cause/fix any issues, no?
 
-Sorry I am unable to find the exact spec as PCI-SIG only prvide spec
-access to their members. I think I should reuse the ROMSIGNATURE macro
-mentioned below.
-> I note that arch/x86/kernel/probe_roms.c contains ...
-> 
->   #define ROMSIGNATURE 0xaa55
-> 
-> ... and a function romsignature() to check the signature.
-> I'm wondering why that existing check isn't sufficient?
-> Why is it necessary to check again elsewhere?
-
-The check itself for accessing the Option ROM is sufficient, kernel reports
-"Invalid PCI ROM header signature: expecting 0xaa55, got 0x****" error when
-an invalid ROM is accessed.
-
-However, the issue here is that the VGA BIOS region is always exposed as
-PCI Option ROM on the primary VGA device, even when it doesn’t actually
-contain a valid Option ROM (for example, on modern platforms without
-VBIOS). In such cases, exposing this region as an Option ROM is unnecessary
-and results in misleading "Invalid PCI ROM header signature" errors.
-Checking the signature before exposing the region helps to avoid that.
->> +++ b/arch/x86/pci/fixup.c
->> @@ -317,6 +317,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
->>  	struct pci_bus *bus;
->>  	u16 config;
->>  	struct resource *res;
->> +	void __iomem *rom;
->>  
->>  	/* Is VGA routed to us? */
->>  	bus = pdev->bus;
->> @@ -338,9 +339,12 @@ static void pci_fixup_video(struct pci_dev *pdev)
->>  		}
->>  		bus = bus->parent;
->>  	}
->> -	if (!vga_default_device() || pdev == vga_default_device()) {
->> +
->> +	rom = ioremap(0xC0000, 0x20000);
-> 
-> There's a code comment preceding pci_fixup_video() which says that
-> "BIOS [is] copied to 0xC0000 in system RAM".  So this isn't MMIO,
-> it's system memory and you can use memremap() instead if ioremap().
-> 
-> Since you're only interested in the first two bytes, you don't need
-> to map the whole 0x20000 bytes.
-> 
-> Instead of amending the if-condition ...
-> 
->> +	if (rom && (!vga_default_device() || pdev == vga_default_device())) {
->>  		pci_read_config_word(pdev, PCI_COMMAND, &config);
->> -		if (config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
->> +		if ((config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) &&
->> +		    (readw(rom) == 0xAA55)) {
->>  			res = &pdev->resource[PCI_ROM_RESOURCE];
-> 
-> ... you could just return on failure to find a valid signature, i.e.:
-> 
-> +	rom = memremap(0xC0000, sizeof(sig), MEMREMAP_WB);
-> +	if (!rom)
-> +		return;
-> +
-> +	memcpy(&sig, rom, sizeof(sig));
-> +	memunmap(rom);
-> +	if (sig != 0xAA55)
-> +		return;
-> 
-> May want to emit an error on failure to memremap().
-> 
-> Amending the if-condition makes it messier to find an offending commit
-> with "git blame" (more iterations needed).  And returning early reduces
-> indentation levels per section 1 of Documentation/process/coding-style.rst.
-
-Got it, will fix in v2.
-
-Thanks,
-Moeko
-> 
-> Thanks,
-> 
-> Lukas
-> 
-
+Konrad
 
