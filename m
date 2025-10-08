@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-37737-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37738-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CD89BC6B47
-	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 23:51:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56565BC6B5C
+	for <lists+linux-pci@lfdr.de>; Wed, 08 Oct 2025 23:52:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 58A0D4E1063
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 21:51:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BFBE188C1F4
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Oct 2025 21:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AAD6258ECF;
-	Wed,  8 Oct 2025 21:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC2325DB1D;
+	Wed,  8 Oct 2025 21:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXH/hd1n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RimpMsks"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064BD15B971
-	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 21:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DFA1991D4
+	for <linux-pci@vger.kernel.org>; Wed,  8 Oct 2025 21:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759960276; cv=none; b=I8KeVTA4HBx0GC6wXAqUYwW8FRe0k1n3B7dSxbutIg3xdB0qiKFyebSxqP8n9bMqPFWcQdXEhwJuBLdLpuqwZb/8A4BT2tpygKU3EVhngAPRMcaemJVxLcFGpkbKd3xUBvoffN1td5bPPJW5PqOucQBbR+F2gRkKS/dTobjXrWo=
+	t=1759960354; cv=none; b=r6KFKiv6CRB3XoU6lqJvb03+m/rp1j/QIie3Oz702UssWsxiVVOav9Ol0nxPhG1tRlkiEsGU/eCCukjRjO9FSHchJ3FTJLQtQ3YnmCJOux+ckA4+vaP9Kmw2VEy2w8cKEgechPkaQfnuaRKHSpiXunMfT0lKoyuhCfOurWkCb1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759960276; c=relaxed/simple;
-	bh=dwMsqnLo/hXqtxU49SA8kAY9hX8V9kAjevYZpKlvr04=;
+	s=arc-20240116; t=1759960354; c=relaxed/simple;
+	bh=W+kv+eHZR0zp8QaEEErqhHZqhoaYA2/Qw0nf5SjNy28=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DZsNO7eiEUiEQb+EQXF3I9HF8Zk+UryAYeELZUUgieS3EN5QvU4kR2aONFcyixnxR6fYa5UNJEd0SgZgSsg3BnL0ODIL06kcVZhidjU2p2vvKnLg2eodRhUf1ZvD5LXJIlRZjPL85bBnV4Fa60ijyGKEEWAbbklcbuAgtPe0sgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXH/hd1n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F78C4CEE7;
-	Wed,  8 Oct 2025 21:51:15 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XHsf2ki3RcilD05XstTdnMwQVkG6NgY19O1GKxvJmrR76BNvNxtRp3gcBhNG7/Hx+3FE75omfhCiqe9vgpDBUSfK5UDHRuJk86z2/cVQdp4sOwXgrjGgXxW8LFu1nba3lDUTlFzOlB9P+Ppy74suzT7Low2/Z2nBO8/RKMonXRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RimpMsks; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46052C4CEE7;
+	Wed,  8 Oct 2025 21:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759960275;
-	bh=dwMsqnLo/hXqtxU49SA8kAY9hX8V9kAjevYZpKlvr04=;
+	s=k20201202; t=1759960354;
+	bh=W+kv+eHZR0zp8QaEEErqhHZqhoaYA2/Qw0nf5SjNy28=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SXH/hd1n33a8EtMpJ8aytjzV1zNNDC1uLkYgmz+2TGrhkmGqdW2PUWCqS3RUE17Zt
-	 gP0diIksDtr82+n8Lh1qs52vg29Fcczci81fC64MIirSKtJqhUdivwm0bGoj5aQaq7
-	 ap/brXHImETNP6+LriobpCxsmpCo3OpdHWjSnBfKmAUT2zwy9mGIsEvCYPbKs5BYfX
-	 ti4bul1wrVDUa+P6xHqaE634mIWuzrVKhnMSVVKHBZTs8KyYtqJNzQ/lFyp0BkoYTP
-	 i4sK8ZlgdlMg5O4NmYpOIDWSTU8B1toYaX+4GgTckTdaKu9E0UXQ88gnXwuL151EIn
-	 5riYivFuKgpEg==
-Date: Wed, 8 Oct 2025 16:51:14 -0500
+	b=RimpMsks3HtN3wFuxa9kCUdchmHk454Ktg8z5Y+hhZZPIs0itcZjihkFgOq0udC6g
+	 m9J8vjnfRo/hNkHbS6RLwTVdahcEFSAbFjO3PqWQBI6Zr0uS9nzfjxfQzAw0YpvFzd
+	 gU0KatPe+A7A2dXTtO9EAsRtuYvUMqZ94p4PNUTytZ1M9glt2VgYd+VkHioGNNulT0
+	 4rwc6j+bkj8/DMB9dY8lSlbtIt3GeS1lTVccWEJkuURrW+W9KGq2S+1nGs+C2p/cWm
+	 Sep+vc1G9wuj15ulIdbugDQfl78Sry6IK23802IkDDZWPg5+hztVdW9Q4sNMiQmcm2
+	 xQeAAhE7iuwgQ==
+Date: Wed, 8 Oct 2025 16:52:33 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Kenneth Crudup <kenny@panix.com>
 Cc: ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
@@ -49,7 +49,7 @@ Cc: ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
 Subject: Re: Commit 4292a1e45fd4 ("PCI: Refactor distributing available
  memory to use loops") gives errors enumerating TBolt devices behind my TB
  dock
-Message-ID: <20251008215114.GA644158@bhelgaas>
+Message-ID: <20251008215233.GA645164@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,30 +58,16 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d82c77b-78a7-4eb8-8940-3d3d2cafc800@panix.com>
+In-Reply-To: <b96b6c1e-a100-4eba-8efd-0ce4e8199356@panix.com>
 
-On Wed, Oct 08, 2025 at 02:20:40PM -0700, Kenneth Crudup wrote:
-> On 10/8/25 13:58, Bjorn Helgaas wrote:
+On Wed, Oct 08, 2025 at 02:14:58PM -0700, Kenneth Crudup wrote:
+> On 10/8/25 13:14, Bjorn Helgaas wrote:
 > 
-> > This worked for me:
-> > 
-> >    $ b4 am https://lore.kernel.org/r/tencent_8C54420E1B0FF8D804C1B4651DF970716309@qq.com
+> > Can you try this patch, which identified the same 4292a1e45fd4 commit?
+> > https://lore.kernel.org/r/tencent_8C54420E1B0FF8D804C1B4651DF970716309@qq.com
 > 
-> TIL about "b4"! Going to get it now.
+> This fixes it, thanks!
 
-Another awesome tool.  I also find lei + mutt indispensable,
-pointers:
-
-  https://b4.docs.kernel.org/en/latest/index.html
-  https://josefbacik.github.io/kernel/2021/10/18/lei-and-b4.html
-  https://people.kernel.org/monsieuricon/lore-lei-part-1-getting-started
-  https://people.kernel.org/monsieuricon/lore-lei-part-2-now-with-imap
-  https://youtu.be/mF10hgVIx9o?t=1474
-
-> > > I just "git remote"ed your tree, do you have a SHA? I'm not seeing it.
-> > 
-> > Should be 4230b93d836f
-> I must be using the wrong remote then, which should I be using?
-
-https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/commit/?id=4230b93d836f
+Great, thanks so much for testing it!  Can I include a link to your
+report and your Tested-by?
 
