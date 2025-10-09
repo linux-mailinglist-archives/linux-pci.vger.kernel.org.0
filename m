@@ -1,79 +1,99 @@
-Return-Path: <linux-pci+bounces-37746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 833C9BC73A1
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 04:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A2DABC7633
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 06:52:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A0B019E5CE6
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 02:40:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6471119E4BCD
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 04:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737531D6193;
-	Thu,  9 Oct 2025 02:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3RGwdrO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BE3A25BEFD;
+	Thu,  9 Oct 2025 04:52:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D28E1D5AC6;
-	Thu,  9 Oct 2025 02:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D746725BEE5;
+	Thu,  9 Oct 2025 04:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759977615; cv=none; b=q/VgTpSNCX0ZpJIh6lO/ypQH9AVx4f+FMQRTK0KINPG3Sf2Z6j789LdYFbCvwS9EuTWfOfRVbA4qNar+mo5cELQ06Or656cGNd/PoShK8wgXzazAPCd1NMPKlZGgLxbKoObclsi4IYlbzuk340EWZCpCZ42fFpx+g9vO68dcPCY=
+	t=1759985567; cv=none; b=qx8itO1hIsFa/WXgISxaY9mA37BOc2wYBsxf0Q3zG7i76HfeLcWx6ssniKDlcx0EvLEUpIxhCL0oZkWqGyI0a64sJCGY4JLThhUBHBkZT9aQGanQbNe9fX+3tAs6Az0UeysxeXnO9uZ+C3dDrlH97dw56lXDRnDE9iM6zqCoId8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759977615; c=relaxed/simple;
-	bh=3UWbihVfIEaTlVHcWiaDU7vqLnLvQEwuYUs5vWk9nNQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ImqHWnn4Y+B4X2wa3YqjpnbJzqTrRnnwdY1DTN7hIrF9y8N/dhTEUDlV6ebge5IfCGAzWTd6jWHpGzUDJodBB5t+N9jtIce95ledwNjwYAgUq4HMQ2pmZ+m8kUtO1HH4cdRNsQDDF8vnNeO50ANp82F7usCXCpTiatLEBXvC69E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3RGwdrO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218F6C4AF0B;
-	Thu,  9 Oct 2025 02:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759977615;
-	bh=3UWbihVfIEaTlVHcWiaDU7vqLnLvQEwuYUs5vWk9nNQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=O3RGwdrOP7bj4S2+HxL49ZboEI5IZhIZALo7JQJH9WwphTVQspS9kXai6DHDiTWCb
-	 y6siNuAuQfjqMm2RFJC+sQ219EH2C/g6eQ3B+nFNLEhd6QKiu0tJRmSMYdu+YsMTp7
-	 uAXT+Oc8OkpHMF+Hk9zcuTh2iDVEgtT+domceXjRWQ6ihCk5TzYmEt45dHkCZTtAcL
-	 N5fblh8BbggVcv7tRzttFsT02K03H3VCiJ2GedcSBy3UcNX4RBwQiGBX1MvskGQRTb
-	 /Oy8lwBu3ptAylsvfLezUziBNOe4xsKGSzpT5i/OAoyOc3sf6iOF2n7jiBHJBcbQqE
-	 MSJGZrzajT3wQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD903A41022;
-	Thu,  9 Oct 2025 02:40:04 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.18
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251008222545.GA648136@bhelgaas>
-References: <20251008222545.GA648136@bhelgaas>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20251008222545.GA648136@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.18-fixes-1
-X-PR-Tracked-Commit-Id: a154f141604acacc0ec64a445d8058a045c308ef
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 37bfdbc11b245119210ac9924a192aec8bd07d16
-Message-Id: <175997760321.3724664.6889093631436565732.pr-tracker-bot@kernel.org>
-Date: Thu, 09 Oct 2025 02:40:03 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Yangyu Chen <cyy@cyyself.name>, "Kenneth R. Crudup" <kenny@panix.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1759985567; c=relaxed/simple;
+	bh=Eg0o3cXJFUa57cyz0G/lNiiaYxdQ4CsTwGmcdV2/0R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RpRoygaxtNVGkfACO5Gkezo8XOTN1cl/fI+mYkSMiic/8oXIK11E/sBHMZ8KZUlet/pxZNuin+SRXgQQ9FHxCXgpWI+1yj5wZ3hbgbpW0xs33p3M5nUaxRsNFvyew9tTl9JL3CqqJC/0LYyr4kdN2i9e/QPCfOgbt94p9i77lJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8D3882C11C63;
+	Thu,  9 Oct 2025 06:52:35 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6003654C92; Thu,  9 Oct 2025 06:52:35 +0200 (CEST)
+Date: Thu, 9 Oct 2025 06:52:35 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Farhan Ali <alifm@linux.ibm.com>
+Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, alex.williamson@redhat.com,
+	helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
+	mjrosato@linux.ibm.com
+Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
+Message-ID: <aOc_k2MjZI6hYgKy@wunner.de>
+References: <20251001151543.GB408411@p1gen4-pw042f0m>
+ <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
+ <aOE1JMryY_Oa663e@wunner.de>
+ <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
+ <aOQX6ZTMvekd6gWy@wunner.de>
+ <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
+ <aOZoWDQV0TNh-NiM@wunner.de>
+ <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
+ <aOaqEhLOzWzswx8O@wunner.de>
+ <6c514ba0-7910-4770-903f-62c3e827a40b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c514ba0-7910-4770-903f-62c3e827a40b@linux.ibm.com>
 
-The pull request you sent on Wed, 8 Oct 2025 17:25:45 -0500:
+On Wed, Oct 08, 2025 at 02:55:56PM -0700, Farhan Ali wrote:
+> > > On 10/8/2025 6:34 AM, Lukas Wunner wrote:
+> > > > I also don't quite understand why the VM needs to perform a reset.
+> > > > Why can't you just let the VM tell the host that a reset is needed
+> > > > (PCI_ERS_RESULT_NEED_RESET) and then the host resets the device on
+> > > > behalf of the VM?
+> 
+> The reset is not performed by the VM, reset is still done by the host. My
+> approach for a VM to let the host know that reset was needed, was to
+> intercept any reset instructions for the PCI device in QEMU. QEMU would then
+> drive a reset via VFIO_DEVICE_RESET. Maybe I am missing something, but based
+> on what we have today in vfio driver, we don't have a mechanism for
+> userspace to reset a device other than VFIO_DEVICE_RESET and
+> VFIO_PCI_DEVICE_HOT_RESET ioctls.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.18-fixes-1
+The ask is for the host to notify the VM of the ->error_detected() event
+and the VM then responding with one of the "enum pci_ers_result" values.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/37bfdbc11b245119210ac9924a192aec8bd07d16
+If the VM returns PCI_ERS_RESULT_NEED_RESET from ->error_detected(),
+the host knows that it shall reset the device.  There is no need
+for the VM to initiate a reset through an ioctl.  Just integrate
+with the existing error handling flow described in
+Documentation/PCI/pci-error-recovery.rst and thereby use the
+existing mechanism to reset the device.
 
-Thank you!
+Thanks,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Lukas
 
