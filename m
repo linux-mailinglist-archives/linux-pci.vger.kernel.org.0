@@ -1,196 +1,84 @@
-Return-Path: <linux-pci+bounces-37763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37764-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55C4ABC9A3A
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 16:52:41 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA0F6BC9A46
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 16:54:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E71EE4FA2C1
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 14:49:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5D1404E0F66
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 14:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C5A2EA724;
-	Thu,  9 Oct 2025 14:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD2B62E8B71;
+	Thu,  9 Oct 2025 14:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4tFvlZH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7944020B21E;
-	Thu,  9 Oct 2025 14:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51101991CA;
+	Thu,  9 Oct 2025 14:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760021367; cv=none; b=PppmtBMwxgMIik4HcJyFu5YO+Ozb6SMZXO/E32ioNgtYCX4ye3fUJpeu/wTPtf+o6QVOyKRHdUW0cnGDe8F6mC08csy9yZL7oiCVSodY9PlJ0pbERZ66M1BC4vwIUYb767c6XmNr2WBy7cZtiU59+4+WzyC+3aSnIzxMMX+05/M=
+	t=1760021655; cv=none; b=J3VWHpbBadUKUXa92U4Y8V3tr/n5FcxRAku3bGupFsK8RlTXu/5t1AbsUTQNxno0THCqV74fAA4GwA56cttKZnrUSAudwPDvg84E6DM9oPfHeYvuv2+5XkAkh71KwFIzm9c4ojQS2fezjwz867xL6HXK8u/oB1r98iDejILPX58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760021367; c=relaxed/simple;
-	bh=9dpjBcmZz5pl+Hj8gon8cXH6oCPxRzysyVS2inFvLos=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BKErzglE1Zm/odF1bgACd2T4Vk4SNnhbH8vILodRZtpNQKODyhEnAACRWl/ZprnbTU4eQqM3w/5EZKsvynn9ubVZ8030VAcJhxeG7iu6wSe//fKCALpA6zlcgdWxLq6JJHMuessf68fRiHRnxG3/7OpMXQgZr7UAUqE7b4olkOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cjCPd6xhLz6L4v1;
-	Thu,  9 Oct 2025 22:46:45 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id CEE9B1402ED;
-	Thu,  9 Oct 2025 22:49:21 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 9 Oct
- 2025 15:49:20 +0100
-Date: Thu, 9 Oct 2025 15:49:19 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Evangelos Petrongonas <epetron@amazon.de>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Alex Williamson
-	<alex.williamson@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len
- Brown <lenb@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, David
- Matlack <dmatlack@google.com>, Vipin Sharma <vipinsh@google.com>, Chris Li
-	<chrisl@kernel.org>, Jason Miu <jasonmiu@google.com>, "Pratyush Yadav"
-	<pratyush@kernel.org>, Stanislav Spassov <stanspas@amazon.de>,
-	<linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
-Subject: Re: [RFC PATCH 06/13] pci: pcsc: handle device resets
-Message-ID: <20251009154919.00000ee2@huawei.com>
-In-Reply-To: <0fa6f46439b535eedaa82c360e1ea19e7f052fca.1759312886.git.epetron@amazon.de>
-References: <cover.1759312886.git.epetron@amazon.de>
-	<0fa6f46439b535eedaa82c360e1ea19e7f052fca.1759312886.git.epetron@amazon.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1760021655; c=relaxed/simple;
+	bh=u7qQWcO8WuaNEapEtwOxfNG9MDLshhzuiyQfAaxCNq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvGYgy0SnRPuUC7eTUtqoC3IYrPReYE2+kJE2hyXybfxvhEHnxr//KE8SKWC/PMhA+hyOWnYNdpihYFqsCK9ZXfKIioCTHYRZ2EmFe5LUIn9jYTO6DNPdFGeVmR0+lRldVDbD3h3R/sJ+jnSm29l0zLrVRX9G01D+0ZrA/TzQo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4tFvlZH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12FFC4CEE7;
+	Thu,  9 Oct 2025 14:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760021653;
+	bh=u7qQWcO8WuaNEapEtwOxfNG9MDLshhzuiyQfAaxCNq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M4tFvlZHi1CmZ/v1/t8WhmzVGJ/ahXbYNipr380L74A5fmGsamnPFhqDz7Ec0b34X
+	 Ir062HEqkFxgsQwy8klCqWLKs+JKkMDZL6dV8VsqYQto3yLuOWDcg3sMdRFL0RE7CS
+	 I89mYxbAMuwp/ItW1nY2F8gsEsQ79KgzEfpWfE2BeBevFG0Mpy5A3VJigBdTHxExR3
+	 nDGKO3G63wR+RwEF86pdkByEZtiPoQvxNPfY+HWWGFa3UYPuTUU9mVuXcs7PgWgIXt
+	 nHqJ3zikw+kx2/u3ZarPv78R/CvwWmyocmBrjEiVzRB0DaSzZgejBbvuCkTzHR7v7v
+	 efAtpQQzBRriA==
+Date: Thu, 9 Oct 2025 10:54:11 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	helgaas@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
+	robh@kernel.org, ilpo.jarvinen@linux.intel.com,
+	schnelle@linux.ibm.com, gbayer@linux.ibm.com, lukas@wunner.de,
+	arnd@kernel.org, geert@linux-m68k.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v15 6/6] PCI: cadence: Use cdns_pcie_find_*capability()
+ to avoid hardcoding offsets
+Message-ID: <aOfMk9BW8BH2P30V@laps>
+References: <20250813144529.303548-1-18255117159@163.com>
+ <20250813144529.303548-7-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250813144529.303548-7-18255117159@163.com>
 
-On Fri, 3 Oct 2025 09:00:42 +0000
-Evangelos Petrongonas <epetron@amazon.de> wrote:
+On Wed, Aug 13, 2025 at 10:45:29PM +0800, Hans Zhang wrote:
+>@@ -249,9 +252,10 @@ static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
+> {
+> 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+> 	struct cdns_pcie *pcie = &ep->pcie;
+>-	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+> 	u16 flags, mme;
+>+	u8 cap;
+>
+>+	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSIX);
 
-> The PCI Configuration Space Cache (PCSC) maintains cached values of
-> configuration space registers for performance optimization. When a PCI
-> device is reset or bus operations are dynamically changed, cached values
-> become stale and can cause incorrect behavior. This patch ensures cache
-> coherency by invalidating the PCSC cache in all scenarios where the
-> underlying configuration space values may have changed.
-> 
-> Device Reset Handling:
-> ----------------------
-> When PCI devices are reset, their configuration space registers return
-> to default values. Add pcsc_device_reset() calls after all device reset
-> operations to invalidate stale cached values:
-> 
-> - Function Level Resets (FLR) in `pcie_flr()`
-> - Advanced Features FLR in `pci_af_flr()`
-> - Power Management resets (D3hot->D0 transition) in `pci_pm_reset()`
-> - Device-specific resets in `pci_dev_specific_reset()`
-> - D3cold power state transitions in `__pci_set_power_state()`
-> - ACPI-based resets in `pci_dev_acpi_reset()`
-> - Bus restore operations in `pci_bus_restore_locked()`
-> - Slot restore operations in `pci_slot_restore_locked()`
-> - Secondary bus resets in `pci_bridge_secondary_bus_reset()`
+We should be passing PCI_CAP_ID_MSI, not PCI_CAP_ID_MSIX here, right?
 
-cxl bus reset? 
-
-> 
-> For secondary bus resets, `pcsc_reset_bus_recursively()` invalidates the
-> cache for all devices on the secondary bus and subordinate buses. This
-> also covers hotplug slot reset operations since `pciehp_reset_slot()`
-> calls `pci_bridge_secondary_bus_reset()`.
-> 
-> In addition, functions like `pci_dev_wait` are configured to bypass the
-> cahce and reads the actual HW values.
-
-cache
-
-> 
-> Dynamic Ops Changes:
-> --------------------
-> The patch also addresses cache consistency issues when bus operations
-> are dynamically changed via `pci_bus_set_ops()``. Different ops
-> implementations may return different values for the same registers, and
-> hardware state may have changed while using the different ops. This
-> commit resets the cache for all devices on the affected bus
-> 
-> Implementation Details:
-> -----------------------
-> The cache invalidation clears the cached_bitmask while preserving the
-> cacheable_bitmask, as the configuration space layout remains unchanged
-> after a reset. This allows the cache to be repopulated with fresh values
-> on subsequent configuration space accesses.
-> 
-> Known Limitations:
-> ------------------
-> - There is currently a gap in handling PowerPC secondary bus resets, as
-> the architecture-specific `pcibios_reset_secondary_bus()` can bypass the
-> generic `pci_reset_secondary_bus()` where our cache invalidation occurs.
-> 
-> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
-
-
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index f518cfa266b5..db940f8fd408 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -26,6 +26,7 @@
->  #include <linux/device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pci_hotplug.h>
-> +#include <linux/pcsc.h>
->  #include <linux/vmalloc.h>
->  #include <asm/dma.h>
->  #include <linux/aer.h>
-> @@ -1248,11 +1249,19 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  		}
->  
->  		if (root && root->config_rrs_sv) {
-> +#ifdef CONFIG_PCSC
-> +			pcsc_hw_config_read(dev->bus, dev->devfn, PCI_VENDOR_ID, 4, &id);
-> +#else
->  			pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
-> +#endif
->  			if (!pci_bus_rrs_vendor_id(id))
->  				break;
->  		} else {
-> +#ifdef CONFIG_PCSC
-> +			pcsc_hw_config_read(dev->bus, dev->devfn, PCI_COMMAND, 4, &id);
-In the !CONFIG case define this to be pci_read_config_dword()
-
-> +#else
->  			pci_read_config_dword(dev, PCI_COMMAND, &id);
-> +#endif
->  			if (!PCI_POSSIBLE_ERROR(id))
->  				break;
->  		}
-
->  void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
-> @@ -5542,6 +5594,9 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
->  
->  	list_for_each_entry(dev, &bus->devices, bus_list) {
->  		pci_dev_restore(dev);
-> +#ifdef CONFIG_PCSC
-> +		pcsc_device_reset(dev);
-> +#endif
->  		if (dev->subordinate) {
->  			pci_bridge_wait_for_secondary_bus(dev, "bus reset");
->  			pci_bus_restore_locked(dev->subordinate);
-> @@ -5579,6 +5634,9 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
->  		if (!dev->slot || dev->slot != slot)
->  			continue;
->  		pci_dev_restore(dev);
-> +#ifdef CONFIG_PCSC
-> +		pcsc_device_reset(dev);
-
-Definitely use a stub for these.
-
-> +#endif
->  		if (dev->subordinate) {
->  			pci_bridge_wait_for_secondary_bus(dev, "slot reset");
->  			pci_bus_restore_locked(dev->subordinate);
-
-
+-- 
+Thanks,
+Sasha
 
