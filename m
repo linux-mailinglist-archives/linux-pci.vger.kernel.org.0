@@ -1,148 +1,177 @@
-Return-Path: <linux-pci+bounces-37749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2F47BC7744
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 07:43:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C06ABC776E
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 07:51:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B43EF34E692
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 05:43:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44787188773B
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 05:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26370156661;
-	Thu,  9 Oct 2025 05:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E781225CC40;
+	Thu,  9 Oct 2025 05:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOfDOFHs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9064534BA49
-	for <linux-pci@vger.kernel.org>; Thu,  9 Oct 2025 05:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E2A238175
+	for <linux-pci@vger.kernel.org>; Thu,  9 Oct 2025 05:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759988620; cv=none; b=ZEMW7tUXoiVaQMcxCox1IWxdles34Qnd79g3jPLXx9hHweE89S+c+BI9KkMo6MVjEIO6tuQSKvqsNu5ewN70H7cCDyWWzvIU4mPwmA1xmpk93DqbAUHHcaXFNJH3GNPIPsIYloF0i5wwUwACRZJLNLJP73oGN17Ks6yzM3ItSwQ=
+	t=1759989084; cv=none; b=ju53lJI0g5xlz/sCk3FPtbXSceRL/CBEAxUvuBejtgVXvKs8GeisvyH+oRNbnWUocZqwltxidmjxRaFVNumWfMjhb78VJTXp0LgELJvuXZhBP0kXDWcOjTuNR9AoaJPEJoZhM1BLCcIlbtIfBUO8v3oTNOIPAKKaHk0ccMrsBAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759988620; c=relaxed/simple;
-	bh=VOVBebjpCzg4TRKJB/BXCbL8HZotuVtqC8n0FVw+9SM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhLIHogEqTGSQGE20r6gJWFomUQTB8TfnI8HLvsc2xyrGvZbWA1hRHLZadNJhkEFuon1YxmCC59mIYs7fhE3Rwur1jX9I84kmku5CsztsFm0vEN+ZfI0/61PN0Q9fYniHl4MRrbDMjGpqTOtyzWibOQZ69OnF4o1IFpTKwEYnDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id B668320083CC;
-	Thu,  9 Oct 2025 07:37:06 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A8524495692; Thu,  9 Oct 2025 07:37:06 +0200 (CEST)
-Date: Thu, 9 Oct 2025 07:37:06 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	mad skateman <madskateman@gmail.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	"debian-powerpc@lists.debian.org" <debian-powerpc@lists.debian.org>
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <aOdKAp8P0WwVfjbv@wunner.de>
-References: <20251008195136.GA634732@bhelgaas>
- <bf9ca58b-b54a-42fc-99f7-4edaa7e561f3@xenosoft.de>
+	s=arc-20240116; t=1759989084; c=relaxed/simple;
+	bh=sJApoGWiiM7TfhpCO3WW2HApEZkmUqf/CSSTe03auiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNLBM+3/ljuU9YNg7X0GV1JxeurAcdck5hZqazXl/BpQ5Bwts6rQTXqLj8biw5YJiEfS2hHVDN8+APYGr7tZH3dIlQvLLMmhfAaXPwcIPbr5z7WM/NZeAMdYJRgCLp1X6g7K3b9Ho0KYint8LPbcOkrf1mpxFwU8WQh70EYGNAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iOfDOFHs; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-77f605f22easo507745b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 08 Oct 2025 22:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759989082; x=1760593882; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1a1TDh3vUApkUWx9qh/h/KReuHUESkpSiNwCDqzWo4=;
+        b=iOfDOFHs+t9/d8eEXk/FrL9sb4AZAu04Xxi6vHVVLiLX9zgu0iF3XqEXIODKHZJhbT
+         ESjx45aYd0IVFSuPQM2KTPHFi3pZnAJgJ5NlA+QDkqViSUazHNmR8FY+YJ/FgnD6ZaLQ
+         dP4jXEAoxYq0wqLMBrbdQApCu0FJGqGnig4Wl8ci000ESdVYflDh0fNsvYx58zApDL6L
+         tfwqRADEv7XKUveRK5UBZwWajgxRGW8VXgsGw3ZWmytyaO0fLb7abd9m+5R6UUaBK5dN
+         Dtt043ZMexSv6PkDHfUMOVer3upwE2D4V5U8ontCuOLB/Ny12ofp5SEFE3vf9PM1373B
+         hOJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759989082; x=1760593882;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1a1TDh3vUApkUWx9qh/h/KReuHUESkpSiNwCDqzWo4=;
+        b=KDZALCONJ/2sosz4QrS89uzlFjyCxhQxvVpCIqpZPugeXjmkuagLpFZGLKEsAf39aF
+         Kio/n2EMOBOfNNk1EJWeGmfhOuLqOoYlwuYeiaecT3qOELbb9tsBKeCSnTw3yM8HWqf0
+         /pjc2d1uLawst0hB5/qsXLlTdSqv70RhMh4TVExS/EUAFcV/93zcihdl0v4IwqIBr7kg
+         VSoW2a5c5kZEMlfwYV67beqm0WEDBPzbfXoilKX7mbcysJQBgJ94ZwLwjRAcGU8/q0f+
+         uq9xTs3W4Jq04vsGWWM7jb2PtKcdmw2ZOjbSzOEUrGId+Nll2lqpPeBBN/1qDsVxqj1a
+         WVmg==
+X-Gm-Message-State: AOJu0YxmIjKItuDQ0e4Kc/HUdCnfhchP/rPqv/hnc5YUOcCYEYM1hxo2
+	wXYho2/UYkzdVnPld0g3urru60UlGqUEKaNusMBr0AliS+3pPuX7FN5C
+X-Gm-Gg: ASbGncsfnZ4jEiuxqTcEHSCEKdVj+0HXtH5pjJ2HeckzGf35/XSxK1CGchmBDGfVXAo
+	zIlEtpgpOC5TRMM69Ns8zx29QM4rbSsS6uTIzMLw9zy7bmIqRjxQyXhia1vIF1Lc8rV1lT2reC+
+	UZedcGdKNEm0pO+vKWCmx7d2Ayh8b01dIAobPSmlBlHBa28WL3Q6ZuNWuCqvnzOXPzcBHE8HaEh
+	0KtEVDn2H/kKCu1kmkjbzj118HQtjVBN93r2gE3AzQYyjc+kEBwDJsYtjsEb2HlYmooz4w1V8Je
+	JHGceBU7H34fNeGDSlFgJsMhFys4wTgvhd+9h/a0Ns4axLPLP4Wfz1jNIGfyU9Nl0Im3ktImjV3
+	bHnowvVwY4evm3G7Vqao0lk5D7BvsP7V7ji0ahgtFrneFfphS/KKaUPPj60r1Z1aZ+qoKCSGZa2
+	4R3Q==
+X-Google-Smtp-Source: AGHT+IElmlz9QnBe5OufyD6FnmFGzS7kcpowIwzns6/xXPnYi+RiCvWvyjbf/ljE8+s/ouEADwIAZA==
+X-Received: by 2002:a05:6a20:3d94:b0:2e3:a914:aacd with SMTP id adf61e73a8af0-32da80bb99cmr8268979637.2.1759989082478;
+        Wed, 08 Oct 2025 22:51:22 -0700 (PDT)
+Received: from [10.0.2.15] ([14.98.178.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6099d4cfbesm19950324a12.28.2025.10.08.22.51.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Oct 2025 22:51:22 -0700 (PDT)
+Message-ID: <162ad81c-a203-4196-985d-b48a6afeb4d7@gmail.com>
+Date: Thu, 9 Oct 2025 11:21:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf9ca58b-b54a-42fc-99f7-4edaa7e561f3@xenosoft.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Fix sleeping function
+ being called from atomic context
+To: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+ bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
+ dlemoal@kernel.org, christian.bruel@foss.st.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhanuseshukumar@gmail.com
+References: <20250930023809.7931-1-bhanuseshukumar@gmail.com>
+Content-Language: en-US
+From: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
+In-Reply-To: <20250930023809.7931-1-bhanuseshukumar@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 09, 2025 at 06:54:58AM +0200, Christian Zigotzky wrote:
-> On 08 October 2025 at 09:51 pm, Bjorn Helgaas wrote:
-> > On Wed, Oct 08, 2025 at 06:35:42PM +0200, Christian Zigotzky wrote:
-> > > Our PPC boards [1] have boot problems since the pci-v6.18-changes. [2]
-> > > 
-> > > Without the pci-v6.18-changes, the PPC boards boot without any problems.
-> > > 
-> > > Boot log with error messages:
-> > > https://github.com/user-attachments/files/22782016/Kernel_6.18_with_PCI_changes.log
-> > > 
-> > > Further information: https://github.com/chzigotzky/kernels/issues/17
-> > 
-> > Do you happen to have a similar log from a recent working kernel,
-> > e.g., v6.17, that we could compare with?
+On 30/09/25 08:08, Bhanu Seshu Kumar Valluri wrote:
+> When Root Complex(RC) triggers a Doorbell MSI interrupt to Endpoint(EP) it triggers a warning
+> in the EP. pci_endpoint kselftest target is compiled and used to run the Doorbell test in RC.
 > 
-> Thanks for your answer. Here is a similar log from the kernel 6.17.0:
-> https://github.com/user-attachments/files/22789946/Kernel_6.17.0_Cyrus_Plus_board_P5040.log
+> [  474.686193] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:271
+> [  474.710934] Call trace:
+> [  474.710995]  __might_resched+0x130/0x158
+> [  474.711011]  __might_sleep+0x70/0x88
+> [  474.711023]  mutex_lock+0x2c/0x80
+> [  474.711036]  pci_epc_get_msi+0x78/0xd8
+> [  474.711052]  pci_epf_test_raise_irq.isra.0+0x74/0x138
+> [  474.711063]  pci_epf_test_doorbell_handler+0x34/0x50
+> 
+> The BUG arises because the EP's pci_epf_test_doorbell_handler is making an
+> indirect call to pci_epc_get_msi, which uses mutex inside, from interrupt context.
+> 
+> To fix the issue convert hard irq handler to a threaded irq handler to allow it
+> to call functions that can sleep during bottom half execution. Register threaded
+> irq handler with IRQF_ONESHOT to keep interrupt line disabled until the threaded
+> irq handler completes execution.
+> 
+> Fixes: eff0c286aa91 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
+> Signed-off-by: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
+> ---
+>  Note : It is compiled and tested on TI am642 board.
+> 
+>  Change log. V1->V2: 
+>   Trimmed Call trace to include only essential calls.
+>   Used 12 digit commit ID in fixes tag.
+>   Steps to reproduce the bug are removed from commit log.
+>   Link to V1: https://lore.kernel.org/all/20250917161817.15776-1-bhanuseshukumar@gmail.com/
+>  	
+>  Warnings can be reproduced by following steps below.
+>  *On EP side:
+>  1. Configure the pci-epf-test function using steps given below
+>    mount -t configfs none /sys/kernel/config
+>    cd /sys/kernel/config/pci_ep/
+>    mkdir functions/pci_epf_test/func1
+>    echo 0x104c > functions/pci_epf_test/func1/vendorid
+>    echo 0xb010 > functions/pci_epf_test/func1/deviceid
+>    echo 32 > functions/pci_epf_test/func1/msi_interrupts
+>    echo 2048 > functions/pci_epf_test/func1/msix_interrupts
+>    ln -s functions/pci_epf_test/func1 controllers/f102000.pcie-ep/
+>    echo 1 > controllers/f102000.pcie-ep/start
+> 
+>  *On RC side:
+>  1. Once EP side configuration is done do pci rescan.
+>    echo 1 > /sys/bus/pci/rescan
+>  2. Run Doorbell MSI test using pci_endpoint_test kselftest app.
+>   ./pci_endpoint_test -r pcie_ep_doorbell.DOORBELL_TEST
+>   Note: Kernel is compiled with CONFIG_DEBUG_KERNEL enabled.
+> 
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index e091193bd8a8..c9e2eb930ad3 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -725,8 +725,8 @@ static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
+>  	if (bar < BAR_0)
+>  		goto err_doorbell_cleanup;
+>  
+> -	ret = request_irq(epf->db_msg[0].virq, pci_epf_test_doorbell_handler, 0,
+> -			  "pci-ep-test-doorbell", epf_test);
+> +	ret = request_threaded_irq(epf->db_msg[0].virq, NULL, pci_epf_test_doorbell_handler,
+> +				   IRQF_ONESHOT, "pci-ep-test-doorbell", epf_test);
+>  	if (ret) {
+>  		dev_err(&epf->dev,
+>  			"Failed to request doorbell IRQ: %d\n",
 
-These lines are added in v6.18:
+Hi,
 
-  pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-  pci 0000:01:00.0: ASPM: DT platform, enabling ClockPM
-  pci 0001:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-  pci 0001:01:00.0: ASPM: DT platform, enabling ClockPM
-  pci 0001:03:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-  pci 0001:03:00.0: ASPM: DT platform, enabling ClockPM
+I just wanted to check if you had a chance to review it or if any changes are needed from my side.
 
-Possible candidate:
+Regards,
+Bhanu Seshu Kumar Valluri
 
-f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-
-More lines are added in v6.18:
-
-  pci 0001:03:00.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 04] (unused)
-  pci 0001:02:01.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 03-04] (unused)
-  pci 0001:02:02.0: disabling bridge window [io  0x0000-0xffffffffffffffff] to [bus 05] (unused)
-  pci 0001:02:02.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 05] (unused)
-  pci 0001:02:02.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff] to [bus 05] (unused)
-  pci 0001:02:03.0: disabling bridge window [io  0x0000-0xffffffffffffffff] to [bus 06] (unused)
-  pci 0001:02:03.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 06] (unused)
-  pci 0001:02:03.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff] to [bus 06] (unused)
-  pci 0001:02:08.0: disabling bridge window [io  0x0000-0xffffffffffffffff] to [bus 07] (unused)
-  pci 0001:02:08.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 07] (unused)
-  pci 0001:02:08.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff] to [bus 07] (unused)
-  pci 0001:02:10.0: disabling bridge window [io  0x0000-0xffffffffffffffff] to [bus 08] (unused)
-  pci 0001:02:10.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 08] (unused)
-  pci 0001:02:10.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff] to [bus 08] (unused)
-  pci 0001:01:00.0: disabling bridge window [mem 0x00000000-0xffffffffffffffff 64bit pref] to [bus 02-08] (unused)
-  pci_bus 0001:02: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-422a445
-  pci_bus 0001:03: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-424a448,460
-  pci_bus 0001:04: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-  pci_bus 0001:05: resource 0 [io  0x0000-0xffffffffffffffff disabled]
-  pci_bus 0001:05: resource 1 [mem 0x00000000-0xffffffffffffffff disabled]
-  pci_bus 0001:05: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-  pci_bus 0001:06: resource 0 [io  0x0000-0xffffffffffffffff disabled]
-  pci_bus 0001:06: resource 1 [mem 0x00000000-0xffffffffffffffff disabled]
-  pci_bus 0001:06: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-  pci_bus 0001:07: resource 0 [io  0x0000-0xffffffffffffffff disabled]
-  pci_bus 0001:07: resource 1 [mem 0x00000000-0xffffffffffffffff disabled]
-  pci_bus 0001:07: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-  pci_bus 0001:08: resource 0 [io  0x0000-0xffffffffffffffff disabled]
-  pci_bus 0001:08: resource 1 [mem 0x00000000-0xffffffffffffffff disabled]
-  pci_bus 0001:08: resource 2 [mem 0x00000000-0xffffffffffffffff 64bit pref disabled]
-
-Possible candidate:
-
-fead6a0b15bf ("Merge branch 'pci/resource'")
-
-Adding Ilpo to cc.
-
-Unrelated, it looks like 6a1eda745967 ("PCI/AER: Consolidate Error
-Source ID logging in aer_isr_one_error_type()") erroneously omitted
-a closing brace in the "no details found" string:
-
-  pcieport 0001:00:00.0: AER: Correctable error message received from 0001:00:00.0 (no details found
-
-Thanks,
-
-Lukas
 
