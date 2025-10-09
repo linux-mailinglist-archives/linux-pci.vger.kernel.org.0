@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-37759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA5FDBC936E
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 15:13:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88653BC9771
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 16:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 848A93E2C6A
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 13:13:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CF6B3BCEFD
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 14:17:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B8262E6CDA;
-	Thu,  9 Oct 2025 13:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37CD2E8DF5;
+	Thu,  9 Oct 2025 14:17:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F6C2E6CDF;
-	Thu,  9 Oct 2025 13:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F61260590;
+	Thu,  9 Oct 2025 14:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015593; cv=none; b=Y2Jig4I3h/kn8UfArqOF/4xPT04zqOEnWfcVhc9eaAJZj1gwbyySuNVMmcoG6MOzeOLjLwzWkUgF17fGkgbYxneOjcidlTbLNMQ04/fvAIoMrp/QBObjVPGZlV1Cekptxp8/tWBme2uyvGQpU1oB3kpqf+h4z3+hze38nGKY+J0=
+	t=1760019464; cv=none; b=krUu82SIcmz4g0dbkcLT7j0OPbnVTedCpEdSDfQK+o+o//gouBqySVYF9BxXoUcHbNyJ/MGG7FBd1zciXMldXw3drWIV/P/JHn/aW1/iL89rOCcr2m2w7rJEiympERiIXQCIsMC08zcLIcF17siTqSaVf8Gjiw4MD6G4BKrkPVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015593; c=relaxed/simple;
-	bh=YmMkruOsvOrrXEBYVxe7Vw4brNWzYhyqCmO7lrXeEvw=;
+	s=arc-20240116; t=1760019464; c=relaxed/simple;
+	bh=H8+grDY8t7OnptbJxsbjpMKVSDaeAt6L4pI7ouKl/Eo=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mYbK1jb8wUKdVRyx1af1PCpn67y5tkaf/jBAl9hrPTtisw5v/ebi4d5mNo/OnyIsAsuzRjg+7PZ7Wvp9QtuiGPWaPX5ofPFTdQdb7PmB0d4tz0hRcnfCxGGHE8EQJFQAhYnO6dayOXwCcnLjyHzt/wqL/w9jTzq6MD4KEs7OoNo=
+	 MIME-Version:Content-Type; b=MDCqgsbO22SAdIu3meq8QzuzGfwEyVU+XdtxHyfaHg1JBtWK5sKCrL5rmUN2mgXatQoNpJhWXBC/DhGMgxYUz0yWsdUXEv8gqppbKjg8WOWILPrBeOO9tfyB/CReOzwWBXImGEwJlYxJsyECfcDeG2GOKIgB6fy05wWHWebIF04=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cj9Jf4T7tz6L58t;
-	Thu,  9 Oct 2025 21:12:18 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cjBj26gg3z6L4rs;
+	Thu,  9 Oct 2025 22:15:02 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3FBC21402F1;
-	Thu,  9 Oct 2025 21:13:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B5EE21400CA;
+	Thu,  9 Oct 2025 22:17:38 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 9 Oct
- 2025 14:13:00 +0100
-Date: Thu, 9 Oct 2025 14:12:58 +0100
+ 2025 15:17:37 +0100
+Date: Thu, 9 Oct 2025 15:17:36 +0100
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Evangelos Petrongonas <epetron@amazon.de>
 CC: Bjorn Helgaas <bhelgaas@google.com>, Alex Williamson
@@ -50,11 +50,12 @@ CC: Bjorn Helgaas <bhelgaas@google.com>, Alex Williamson
 	<pratyush@kernel.org>, Stanislav Spassov <stanspas@amazon.de>,
 	<linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
-Subject: Re: [RFC PATCH 02/13] pci: pcsc: implement basic functionality
-Message-ID: <20251009141258.00006a69@huawei.com>
-In-Reply-To: <de485efebd203fc0f69aabccd45917b8360ce47a.1759312886.git.epetron@amazon.de>
+Subject: Re: [RFC PATCH 03/13] pci: pcsc: infer cacheability of PCI
+ capabilities
+Message-ID: <20251009151736.00002f45@huawei.com>
+In-Reply-To: <fb2f262e4733a56bf0ebd9ef5c9325880aea05cd.1759312886.git.epetron@amazon.de>
 References: <cover.1759312886.git.epetron@amazon.de>
-	<de485efebd203fc0f69aabccd45917b8360ce47a.1759312886.git.epetron@amazon.de>
+	<fb2f262e4733a56bf0ebd9ef5c9325880aea05cd.1759312886.git.epetron@amazon.de>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -64,285 +65,177 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Fri, 3 Oct 2025 09:00:38 +0000
+On Fri, 3 Oct 2025 09:00:39 +0000
 Evangelos Petrongonas <epetron@amazon.de> wrote:
 
-> Implement the core functionality of the PCI Configuration Space Cache
-> using per-device cache nodes attached to struct pci_dev.
+> Implement cacheability inference for PCI capabilities to
+> determine which configuration space registers can be safely cached.
 > 
-> Each cache node stores:
-> - A 256-byte array (4KB for PCIe) representing the configuration space
-> - A cacheable bitmask indicating which registers can be cached
-> - A cached bitmask tracking which bytes are currently cached
+> The first 64 bytes of PCI configuration space follow a standardized
+> format, allowing straightforward cacheability determination. For
+> capability-specific registers, the implementation traverses the PCI
+> capability list to identify supported capabilities.
 > 
-> The implementation attaches cache nodes directly to pci_dev structures
-> during `pci_device_add()` and removes them during `pci_device_remove()`.
+> Cacheable registers are identified for the following capabilities:
+> - Power Management (PM)
+> - Message Signaled Interrupts (MSI)
+> - Message Signaled Interrupts Extensions (MSI-X)
+> - PCI Express
+> - PCI Advanced Features (AF)
+> - Enhanced Allocation (EA)
+> - Vital Product Data (VPD)
+> - Vendor Specific
 > 
-> The cache implements a write-invalidate policy where writes are
-> propagated to the device while invalidating the cache. This design
-> choice improves robustness and increases the number of cacheable
-> registers, particularly for operations like BAR sizing which use
-> write-read sequences to detect read-only bits.
+> The implementation pre-populates the cache with known values including
+> device/vendor IDs and header type to avoid unnecessary configuration
+> space reads during initialization.
 > 
-> Currently, the cacheable bitmask is zero-initialized,
-> effectively disabling the cache. This will be changed in the next
-> commits.
+> We are currently not caching the Command/Status registers.
 > 
-> This implementation only supports endpoint devices; bridges and
-> root complexes are not cached.
+> The cacheability of all capabilities apart from MSI, are straightforward
+> and can be deduced from the spec. Regarding MSI the MSI flags are read
+> and based on this, the cacheability is inferred.
 > 
 > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> ---
->  drivers/pci/pci-driver.c |   5 +
->  drivers/pci/pcsc.c       | 244 ++++++++++++++++++++++++++++++++++++++-
->  drivers/pci/probe.c      |   9 ++
->  include/linux/pci.h      |   5 +
->  include/linux/pcsc.h     |  38 ++++++
->  5 files changed, 299 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 302d61783f6c..7c0cbbd50b32 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -21,6 +21,7 @@
->  #include <linux/acpi.h>
->  #include <linux/dma-map-ops.h>
->  #include <linux/iommu.h>
-> +#include <linux/pcsc.h>
->  #include "pci.h"
->  #include "pcie/portdrv.h"
->  
-> @@ -497,7 +498,11 @@ static void pci_device_remove(struct device *dev)
->  	 * horrible the crap we have to deal with is when we are awake...
->  	 */
->  
-> + #ifdef CONFIG_PCSC
+> Signed-off-by: Stanislav Spassov <stanspas@amazon.de>
 
-if (IS_ENABLED()) or a stub.
+A few minor things below.
 
-> +	pcsc_remove_device(pci_dev);
-> +#endif
->  	pci_dev_put(pci_dev);
 > +
-Clean this out.
->  }
->  
->  static void pci_device_shutdown(struct device *dev)
-> diff --git a/drivers/pci/pcsc.c b/drivers/pci/pcsc.c
-> index dec7c51b5cfd..7531217925e8 100644
-> --- a/drivers/pci/pcsc.c
-> +++ b/drivers/pci/pcsc.c
->
-> +/**
-> + * pcsc_get_and_insert_multiple - Read multiple bytes from PCI cache or HW
-> + * @dev: PCI device to read from
-> + * @bus: PCI bus to read from
-> + * @devfn: device and function number
-
-Is this always the same as dev->devfn? 
-
-> + * @where: offset in config space
-> + * @word: pointer to store read value
-> + * @size: number of bytes to read (1, 2 or 4)
-> + *
-> + * Reads consecutive bytes from PCI cache or hardware. If values are not cached,
-> + * reads from hardware and inserts into cache.
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int pcsc_get_and_insert_multiple(struct pci_dev *dev,
-> +					struct pci_bus *bus, unsigned int devfn,
-> +					int where, u32 *word, int size)
+> +static void infer_capabilities_pointers(struct pci_dev *dev)
 > +{
-> +	u32 word_cached = 0;
-> +	u8 byte_val;
-> +	int rc, i;
+> +	u8 pos, cap_id, next_cap;
+> +	u32 val;
+> +	int i;
 > +
-> +	if (WARN_ON(!dev || !bus || !word))
-> +		return -EINVAL;
+> +	if (pcsc_hw_config_read(dev->bus, dev->devfn, PCI_CAPABILITY_LIST, 1,
+> +				&val) != PCIBIOS_SUCCESSFUL)
+> +		return;
 > +
-> +	if (WARN_ON(size != 1 && size != 2 && size != 4))
-> +		return -EINVAL;
-> +
-> +	/* Check bounds */
-> +	if (where + size > PCSC_CFG_SPC_SIZE)
-> +		return -EINVAL;
-> +
-> +	if (pcsc_is_cached(dev, where, size)) {
-> +		/* Read bytes from cache and assemble them into word_cached
+> +	pos = (val & 0xFF) & ~0x3;
 
-Multiline comment syntax as below. Same for others.
+Given single byte read, shouldn't need the 0xFF masking.
+Might be worth setting val = 0 at declaration though so that the compiler
+can see it is assigned if we reach here.
 
-> +		 * in little-endian order (as per PCI spec)
-> +		 */
-> +		for (i = 0; i < size; i++) {
-> +			pcsc_get_byte(dev, where + i, &byte_val);
-> +			word_cached |= ((u32)byte_val << (i * 8));
-> +		}
-> +	} else {
-> +		rc = pcsc_hw_config_read(bus, devfn, where, size, &word_cached);
-> +		if (rc) {
-> +			pci_err(dev,
-> +				"%s: Failed to read CFG Space where=%d size=%d",
-> +				__func__, where, size);
-> +			return rc;
+
+> +
+> +	while (pos) {
+> +		if (pos < 0x40 || pos > 0xFE)
+> +			break;
+> +
+> +		pos &= ~0x3;
+
+I couldn't immediately find a spec statement of the bottom two bits being 0 for
+the next capability pointers.  (There is one for the PCI_CAPABILITY_LIST)
+
+> +		if (pcsc_hw_config_read(dev->bus, dev->devfn, pos, 2, &val) !=
+> +		    PCIBIOS_SUCCESSFUL)
+> +			break;
+> +
+> +		cap_id = val & 0xFF; /* PCI_CAP_LIST_ID */
+> +		next_cap = (val >> 8) & 0xFF; /* PCI_CAP_LIST_NEXT */
+> +
+> +		bitmap_set(dev->pcsc->cachable_bitmask, pos, 2);
+> +		pcsc_update_byte(dev, pos, cap_id); /* PCI_CAP_LIST_ID */
+> +		pcsc_update_byte(dev, pos + 1,
+> +				 next_cap); /* PCI_CAP_LIST_NEXT */
+
+Could you do something like moving the bitmap_set before the pcsc_hw_config_read() and
+cal pcsc_cached_config_read() to fill the cache directly during the read?
+
+> +
+> +		pci_dbg(dev, "Capability ID %#x found at %#x\n", cap_id, pos);
+> +
+> +		/* Check if this is a supported capability and infer cacheability */
+> +		for (i = 0; i < ARRAY_SIZE(PCSC_SUPPORTED_CAPABILITIES); i++) {
+> +			if (cap_id == PCSC_SUPPORTED_CAPABILITIES[i]) {
+> +				infer_capability_cacheability(dev, pos, cap_id);
+> +				break;
+> +			}
 > +		}
 > +
-> +		/* Extract bytes from word_cached in little-endian order
-> +		 * and store them in cache.
-> +		 */
-> +		for (i = 0; i < size; i++) {
-> +			byte_val = (word_cached >> (i * 8)) & 0xFF;
-> +			pcsc_update_byte(dev, where + i, byte_val);
-> +		}
+> +		/* Move to next capability */
+> +		pos = next_cap;
 > +	}
-> +
-> +	*word = word_cached;
-> +	return 0;
 > +}
 > +
->  int pcsc_cached_config_read(struct pci_bus *bus, unsigned int devfn, int where,
->  			    int size, u32 *val)
->  {
-> -	if (!pcsc_initialised)
-> +	int rc;
-> +	struct pci_dev *dev;
+> +static void infer_cacheability(struct pci_dev *dev)
+> +{
+> +	if (WARN_ON(!dev || !dev->pcsc || !dev->pcsc->cfg_space))
+> +		return;
 > +
-> +	if (unlikely(!pcsc_is_initialised()))
-
-As below.  Just add a stub function to patch 1 for this.
-
->  		goto read_from_dev;
->  
-> +	if (WARN_ON(!bus || !val || (size != 1 && size != 2 && size != 4) ||
-> +		    where + size > PCSC_CFG_SPC_SIZE))
-> +		return -EINVAL;
+> +	bitmap_zero(dev->pcsc->cachable_bitmask, PCSC_CFG_SPC_SIZE);
 > +
-> +	dev = pci_get_slot(bus, devfn);
-> +
-> +	if (unlikely(!dev || !dev->pcsc))
+> +	/* Type 0 Configuration Space Header */
+> +	if (dev->hdr_type == PCI_HEADER_TYPE_NORMAL) {
+Unless you plan to add type 1 very soon I'd flip the logic to reduce
+indent of the code that follows.
 
-I'm curious how much difference that unlikely is making.  Generally don't
-use them unless you have the perf numbers to back them up.
-Letting the branch predictors do their thing is usually a better plan.
 
-> +		goto read_from_dev;
-> +
-> +	if (dev->pcsc->cfg_space &&
-> +	    pcsc_is_access_cacheable(dev, where, size)) {
-> +		rc = pcsc_get_and_insert_multiple(dev, bus, devfn, where, val,
-> +						  size);
-> +		if (likely(!rc)) {
-> +			pci_dev_put(dev);
-> +			return 0;
-> +		}
-> +		/* if reading from the cache failed continue and try reading
-
-Match multiline comment syntax for PCI.
-		/*
-		 * If reading...
-
-> +		 * from the actual device
+> +		/*
+> +		 * Mark cacheable registers in the PCI configuration space header.
+> +		 * We cache read-only and rarely changing registers:
+> +		 * - PCI_VENDOR_ID, PCI_DEVICE_ID (0x00-0x03)
+> +		 * - PCI_CLASS_REVISION through PCI_CAPABILITY_LIST (0x08-0x34)
+> +		 *   Includes: CLASS_REVISION, CACHE_LINE_SIZE, LATENCY_TIMER,
+> +		 *   HEADER_TYPE, BIST, BASE_ADDRESS_0-5, CARDBUS_CIS,
+> +		 *   SUBSYSTEM_VENDOR_ID, SUBSYSTEM_ID, ROM_ADDRESS, CAPABILITY_LIST
+> +		 * - PCI_INTERRUPT_LINE through PCI_MAX_LAT (0x3c-0x3f)
+> +		 *   Includes: INTERRUPT_LINE, INTERRUPT_PIN, MIN_GNT, MAX_LAT
 > +		 */
-> +	}
->  read_from_dev:
-> +	if (dev)
-> +		pci_dev_put(dev);
->  	return pcsc_hw_config_read(bus, devfn, where, size, val);
->  }
->  EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
-> @@ -117,10 +336,31 @@ EXPORT_SYMBOL_GPL(pcsc_cached_config_read);
->  int pcsc_cached_config_write(struct pci_bus *bus, unsigned int devfn, int where,
->  			     int size, u32 val)
->  {
-> -	if (!pcsc_initialised)
-> +	int i;
-> +	struct pci_dev *dev;
+> +		bitmap_set(dev->pcsc->cachable_bitmask, PCI_VENDOR_ID, 4);
+> +		bitmap_set(dev->pcsc->cachable_bitmask, PCI_CLASS_REVISION, 45);
+For this large range can you derive that 45 as something like
+
+PCI_CAPABILITY_LIST - PCI_CLASS_REVISION + 1
+
+Same applies for the other multifield bitmap sets
+
+
+> +		bitmap_set(dev->pcsc->cachable_bitmask, PCI_INTERRUPT_LINE, 4);
 > +
-> +	if (unlikely(!pcsc_is_initialised()))
+> +		/* Pre populate the cache with the values that we already know */
 
-Make it this from the start to reduce churn.
+I'm curious - do you have perf numbers to show it's worth writing these 5 bytes
+directly into the cache? Feels like complexity that maybe doesn't belong there
+in initial patch but should come along later in a patch with numbers to support
+the small amount of extra complexity.
 
->  		goto write_to_dev;
->  
-> +	if (WARN_ON(!bus || (size != 1 && size != 2 && size != 4) ||
-> +		    where + size > PCSC_CFG_SPC_SIZE))
-> +		return -EINVAL;
+> +		pcsc_update_byte(dev, PCI_HEADER_TYPE,
+> +				 dev->hdr_type |
+> +					 (dev->multifunction ? 0x80 : 0));
 > +
-> +	dev = pci_get_slot(bus, devfn);
-> +
-> +	if (unlikely(!dev || !dev->pcsc || !dev->pcsc->cfg_space)) {
-> +		/* Do not add nodes on arbitrary writes  */
-> +		goto write_to_dev;
-> +	} else {
-
-Can drop the else given the goto above.
-
-> +		/* Mark the cache as dirty */
-> +		if (pcsc_is_access_cacheable(dev, where, size)) {
-> +			for (i = 0; i < size; i++)
-> +				pcsc_set_cached(dev, where + i, false);
+> +		/*
+> +		 * SR-IOV VFs must return 0xFFFF (PCI_ANY_ID) for vendor/device ID
+> +		 * registers per PCIe spec.
+> +		 */
+> +		if (dev->is_virtfn) {
+> +			pcsc_update_byte(dev, PCI_VENDOR_ID, 0xFF);
+> +			pcsc_update_byte(dev, PCI_VENDOR_ID + 1, 0xFF);
+> +			pcsc_update_byte(dev, PCI_DEVICE_ID, 0xFF);
+> +			pcsc_update_byte(dev, PCI_DEVICE_ID + 1, 0xFF);
+> +		} else {
+> +			if (dev->vendor != PCI_ANY_ID) {
+> +				pcsc_update_byte(dev, PCI_VENDOR_ID,
+> +						 dev->vendor & 0xFF);
+> +				pcsc_update_byte(dev, PCI_VENDOR_ID + 1,
+> +						 (dev->vendor >> 8) & 0xFF);
+> +			}
+> +			if (dev->device != PCI_ANY_ID) {
+> +				pcsc_update_byte(dev, PCI_DEVICE_ID,
+> +						 dev->device & 0xFF);
+> +				pcsc_update_byte(dev, PCI_DEVICE_ID + 1,
+> +						 (dev->device >> 8) & 0xFF);
+> +			}
 > +		}
+> +
+> +		infer_capabilities_pointers(dev);
 > +	}
->  write_to_dev:
-> +	if (dev)
-> +		pci_dev_put(dev);
->  	return pcsc_hw_config_write(bus, devfn, where, size, val);
->  }
->  EXPORT_SYMBOL_GPL(pcsc_cached_config_write);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 33a186e4bf1e..c231e09e5a6e 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -23,6 +23,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/bitfield.h>
-> +#include <linux/pcsc.h>
->  #include "pci.h"
->  
->  #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
-> @@ -2801,6 +2802,14 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  
->  	dev->state_saved = false;
->  
-> +#ifdef CONFIG_PCSC
+> +}
 
-Similar request for if (IS_ENABLED()) etc.
-
-> +	if (likely(pcsc_is_initialised()))
-> +		if (!dev->pcsc)
-> +			if (pcsc_add_device(dev))
-
-Maybe combine some of that if stack.
-
-> +				pci_warn(dev,
-> +					 "Failed to add PCI device to PCSC\n");
-> +#endif
-> +
->  	pci_init_capabilities(dev);
->  
->  	/*
-
->  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-> diff --git a/include/linux/pcsc.h b/include/linux/pcsc.h
-> index 45816eb2b2c8..516d73931608 100644
-> --- a/include/linux/pcsc.h
-> +++ b/include/linux/pcsc.h
-
-> +/**
-> + * @brief Returns if the PCSC infrastructure is initialised
-> + *
-
-Run the kernel-doc script over these files it gets fussy about
-partial documentation etc. I'm fairly sure this will trip it up.
-
-> + */
-> +bool pcsc_is_initialised(void);
-> +
->  #endif /* _LINUX_PCSC_H */
 
 
