@@ -1,136 +1,156 @@
-Return-Path: <linux-pci+bounces-37751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B8C5BC7777
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 07:54:43 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27BEFBC7A6E
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 09:17:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77FEC188A2FA
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 05:55:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B11BF4E51E3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 07:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03642238175;
-	Thu,  9 Oct 2025 05:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8999F24E01D;
+	Thu,  9 Oct 2025 07:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f51rVZZi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxabBT8/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F2AD4B;
-	Thu,  9 Oct 2025 05:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CD81D5147;
+	Thu,  9 Oct 2025 07:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759989278; cv=none; b=iEqP6GQkWColEp/XdH+jnvYH6r+msIcInJAsVvpBYk18bSkc1C0iivUaFHKnq/lCihh2FMOXepDgT6fm1GbofzUT1qNAc3/CHrVBJ0a+yiatEFFxeJfrZu3IXPQ+f/0X1MqMWe6ZkBUeW2Ri6+3YlqTZ7B2FglwQHb+0Hn2Ufh4=
+	t=1759994243; cv=none; b=uoE/U5fCKjukOMIl6jcFAJ44K79vXd5CwLGcA4HR4JHPlPI/wgbOjdf2Dz78JEyvtxSBqbSBCmNK37zJ6N8DiTwGq2SO3WkIUuXq84L/3kghBMex/MH0oOKf6kxRvxmjxg4sy/S7/bvpKAbaRvjCz0bcFUAM0K1dWo/O9fXPDpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759989278; c=relaxed/simple;
-	bh=1Q+wmBbFXWTt8KRzTS2M2aX+iDE4wfTG3mxiGIUeyRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TM1VFcZvMWszsBHI7YGZe10pgxW+kWkhPHeReujYwwexJYjEPt5GlbIdbeUYUMdsGmLAq4Iv30RRO2osA5SctVaxFdLwAUjoRKdAXihpWyxEzadBLm6L2BpAAEFqZf4VLCzwttbYE43u0f2M9IU/qthDovRbT/msFPOA/vS8LLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f51rVZZi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F0BC4CEE7;
-	Thu,  9 Oct 2025 05:54:27 +0000 (UTC)
+	s=arc-20240116; t=1759994243; c=relaxed/simple;
+	bh=qpw+6J2ytukjMwUmxCZyRh0+7i8HVvt1dA1nhFhJDmU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BNC/oceX+tU1YGuoKylkuACpQ/f/PVh+ztmpYCG+vj0CNV+yTP3JbRlrKeeewH8y/OKpKH9uPRGD6KQpTFtByPKLOVzio4fmUFaPGrsyr6X2zXJIXSPJKA+ugPJTY8OaxyX+ibM9lwxQUfFzWp4PBjdoLVyuaR596FNKQuGT+W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxabBT8/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071D0C4CEE7;
+	Thu,  9 Oct 2025 07:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759989278;
-	bh=1Q+wmBbFXWTt8KRzTS2M2aX+iDE4wfTG3mxiGIUeyRk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f51rVZZi6jPd1WhJjTdxAPFMKFq1voYst9ySH5AeJ6jkOJSM0bv3jn0ffRbLPEoDE
-	 lQGZ/t/emT/0tPPQtVc6FhZ1Qrs9zpXEXUvii818U64WRtbovXt08pEiFvezy7UBnm
-	 YhJfIteyIAkfYX72UAGSpA9Yi+saR6Bvfos1rpiPDWuQIUXDqoaRA2XjLJHIjU3tJO
-	 xBIEZWVtDYgXAdrX8fCkB8sLXjVIsEJj48F1IDWxrniB7G2RnZXoUtDSQbFxyxVEhc
-	 /sB3JZ8NJ0plFUgevI0pa/rsWk0Uo/IiIN/aQgc6lNt6CyMpR2GI0lclSoAk0MGUqk
-	 NmnCtNLz0X3Eg==
-Message-ID: <2d00ed57-3c74-492e-83ae-88ca1ce98311@kernel.org>
-Date: Thu, 9 Oct 2025 07:54:19 +0200
+	s=k20201202; t=1759994242;
+	bh=qpw+6J2ytukjMwUmxCZyRh0+7i8HVvt1dA1nhFhJDmU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qxabBT8/OBr9oWRsRZC1T4SCz/d/UL9LHnDRBeT7LDEoOnY+JcC5Ohyn1VkvPB+TZ
+	 vSgOdO85UFh3UoszH9719MuF7wO7/Pskv+1/Ng2ROmVD4wyEZzJByKOKYSzPrDgHdb
+	 5c/DfzhDI9lL4N11239fttCX6M3z66/aZ84n4HgVDBIMwkGweyFNzW6dDYhckhE3iL
+	 Go5yre6HVBnDlrQJkT85vwQF03rQgOymEEf4UpDKpf7d52/HfC85wUVCSEC0Zu4fR1
+	 UZ9BqOKHsYBT2Q2vrMJV5xHTRfiQz8gFYwXjbM/wUvO97hAfsYzJERUJ5aJLr6sCNj
+	 1zcsL+43/ZMFw==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: dan.j.williams@intel.com, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>, gregkh@linuxfounation.org
+Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm
+ platform device
+In-Reply-To: <688d61b1c4c8c_55f09100f4@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-12-aneesh.kumar@kernel.org>
+ <20250729181045.0000100b@huawei.com> <20250729231948.GJ26511@ziepe.ca>
+ <yq5aqzxy9ij1.fsf@kernel.org> <20250730113827.000032b8@huawei.com>
+ <20250731121133.GP26511@ziepe.ca>
+ <688d61b1c4c8c_55f09100f4@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Thu, 09 Oct 2025 12:47:14 +0530
+Message-ID: <yq5aikgoa6it.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: pnv_php: Fix potential NULL dereference in slot
- allocator
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linux-pci <linux-pci@vger.kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- christophe leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Shawn Anastasio <sanastasio@raptorengineering.com>
-References: <1268570622.1359844.1752615109932.JavaMail.zimbra@raptorengineeringinc.com>
- <2013845045.1359852.1752615367790.JavaMail.zimbra@raptorengineeringinc.com>
- <bf390f9e-e06f-4743-a9dc-e0b995c2bab2@kernel.org>
- <304758063.1694752.1757427687463.JavaMail.zimbra@raptorengineeringinc.com>
- <97746540.1782404.1759973048120.JavaMail.zimbra@raptorengineeringinc.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <97746540.1782404.1759973048120.JavaMail.zimbra@raptorengineeringinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 09. 10. 25, 3:24, Timothy Pearson wrote:
-> A highly unlikely NULL dereference in the allocation error handling path was
-> introduced in 466861909255.  Avoid dereferencing php_slot->bus by using
-> dev_warn() instead of SLOT_WARN() in the error path.
-> 
-> Fixes: 466861909255 ("PCI: pnv_php: Clean up allocated IRQs on unplug")
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+<dan.j.williams@intel.com> writes:
 
-LGTM, perhaps also a lnk to the report:
-Link: 
-https://lore.kernel.org/all/304758063.1694752.1757427687463.JavaMail.zimbra@raptorengineeringinc.com/
+> Jason Gunthorpe wrote:
+>> On Wed, Jul 30, 2025 at 11:38:27AM +0100, Jonathan Cameron wrote:
+>> > On Wed, 30 Jul 2025 14:12:26 +0530
+>> > "Aneesh Kumar K.V" <aneesh.kumar@kernel.org> wrote:
+>> >=20
+>> > > Jason Gunthorpe <jgg@ziepe.ca> writes:
+>> > >=20
+>> > > > On Tue, Jul 29, 2025 at 06:10:45PM +0100, Jonathan Cameron wrote:
+>> > > >=20=20
+>> > > >> > +static struct platform_device cca_host_dev =3D {=20=20
+>> > > >> Hmm. Greg is getting increasingly (and correctly in my view) grum=
+py with
+>> > > >> platform devices being registered with no underlying resources et=
+c as glue
+>> > > >> layers.  Maybe some of that will come later.=20=20
+>> > > >
+>> > > > Is faux_device a better choice? I admit to not knowing entirely wh=
+at
+>> > > > it is for..
+>> >=20
+>> > I'll go with a cautious yes to faux_device. This case of a glue device
+>> > with no resources and no reason to be on a particular bus was definite=
+ly
+>> > the intent but I'm not 100% sure without trying it that we don't run
+>> > into any problems.
+>> >=20
+>> > Not that many examples yet, but cpuidle-psci.c looks like a vaguely si=
+milar
+>> > case to this one.=20=20
+>> >=20
+>> > All it really does is move the location of the device and
+>> > smash together the device registration with probe/remove.
+>> > That means the device disappears if probe() fails, which is cleaner
+>> > in many ways than leaving a pointless stub behind.
+>> >=20
+>> > Maybe it isn't appropriate it if is actually useful to rmmod/modprobe =
+the
+>> > driver.=20
+>>=20
+>> Yeah, exactly. Can a TSM driver even be modular? If it has to be built
+>> in then there is no reason to do this:
+>
+> For example, CRYPTO_DEV_CCP_DD, the AMD PCI device driver that will call
+> tsm_register(), is already modular.
+>
+>> > > The goal is to have tsm class device to be parented by the platform
+>> > > device.
+>>=20
+>> IMHO the only real point of that is to trigger module autoloading.
+>
+> Right. For TDX, and I expect CCA as well, the arch code that knows that
+> PCI/TSM functionality is available and can register a device, may be
+> running too early to attach a driver to that device.
+>
+> I.e. I would like to just use faux_device, but without the ability to do
+> EPROBE_DEFER, for example to await the plaform IOMMU driver. It needs to
+> move to its own bus so the attach event can be handled at a better time.
+>
 
+One of the issues I=E2=80=99ve run into after switching to the faux_device =
+model
+is determining how to automatically load the guest and host TSM drivers
+based on the availability of the device assignment feature.
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+The platform device previously provided a clean abstraction for this
+behavior, which made autoloading straightforward
 
-thanks,
--- 
-js
-suse labs
+>
+>> Otherwise the tsm core should accept NULL as the parent pointer during
+>> registration, it probably already does..
+>
+> Yes, NULL @parent "just works" with tsm_register().
+>
+> However, I expect all tsm_register() callers to be from modular drivers.
+
+-aneesh
 
