@@ -1,204 +1,172 @@
-Return-Path: <linux-pci+bounces-37770-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37771-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDD70BCA378
-	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 18:42:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84EDABCA4D1
+	for <lists+linux-pci@lfdr.de>; Thu, 09 Oct 2025 19:02:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7775C3E5D08
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 16:42:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33C54188B5A3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Oct 2025 17:02:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE672226CF1;
-	Thu,  9 Oct 2025 16:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E55A2264DC;
+	Thu,  9 Oct 2025 17:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kXEPNCUh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YulqAWs9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B7C223DD6
-	for <linux-pci@vger.kernel.org>; Thu,  9 Oct 2025 16:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BD11F5827;
+	Thu,  9 Oct 2025 17:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760028167; cv=none; b=uxnr5oRq3qzsKwDJ9ERVje5gW+/WWGHuc+Y19eGIZtKxIeWIXj2oNvTLsTRo1S8NFx92lEPTHELEJoOrfMNnEoe5wLQ92DwMkUGjp4p1zhY5Y03cPMaWY2GW99xbuBATBYo0xIJ8fyhp1uokoDKjB9UeCXFO0Vs6EyDrYjPmrrM=
+	t=1760029345; cv=none; b=bM8u7zBU+nNd1SVe7fKFc4dFVZNU/Y1bqLfDqQkuF39H2eNA2nbN/cxslL/cLFtn3zLDpBO9mdV7CUrCaalB7iPMZXIQtEYeEauW8cph1Cv7RvqUj5YmSwfm1O4aYOhku85vdMmmr9m0sqntC4BOxkfqebu6Eigdu018Om515Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760028167; c=relaxed/simple;
-	bh=jpEMqFlCEK47jrlh7cNwBVNuJFzpm9xEWzxYgXkTIbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=diyDC3eazBzpCEhH2N9D1b8eLJXvGXjhLasbGDDLzwe5lB1hxJrFbMbXY10xEgHqpsCFgU6XctdTgaN2cfEtz/9wo2P+7dfMIW/D58FYEVa47q+JwKr7TmBRiumHsowTVJk9cpZirGOthIL7PGI560Rn3fwLeih3reog/Eu0phg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kXEPNCUh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 599EKN03023267
-	for <linux-pci@vger.kernel.org>; Thu, 9 Oct 2025 16:42:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=agrtrs+DJSL7nf5oW/g8lusy
-	admL/3uHNzUwQtR+shY=; b=kXEPNCUh99s34FdTrDEhnVL9Tlwkm3qcVkRzxonM
-	1CQSiLwiRHPHdRWWhnrticBXCH3/nagiptcADiqpHh6iQTAHdhrwZbSN38KIpoIV
-	l5t3d0IYAKiR+1ivXhokKhIHVmETQC+KcpU04sP3goXxDeDmNqP778AloK71q7Wh
-	TVFmK9nMIZWk58TSa5BpjhQauerSARH4TIJfAFZPRR534N8G8hg0qQbLJC9XLya8
-	L5wE6cwr+wg1KutbOAEKUnhNkvAApZLHsTA8KSIKR+QOJOOMMiSDK3yZLrUT5TQ3
-	KaIfk60KfxJRw2FPuHbKvacL0pK5JHtGV1xlXRk/8pzEyg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49nv4m3nqj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 09 Oct 2025 16:42:44 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4d6a82099cfso41664101cf.2
-        for <linux-pci@vger.kernel.org>; Thu, 09 Oct 2025 09:42:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760028163; x=1760632963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=agrtrs+DJSL7nf5oW/g8lusyadmL/3uHNzUwQtR+shY=;
-        b=WOto+3/bp9ySw+mu/47wO5Urliod/yFaDVzybq8RcY3oXeMKafFTYzFXizKw8qJhh3
-         G5DAOUEabpgURm7cb9X7bwaVFACxZV5qxQHupYrfQ2JZNZRP+CstP9uc3NHwKZ5y3+9u
-         AWuiB+4UID9g/sHNgsuFP8FJTF0NS5Kex/NfHphV2dBBdo1ztn9Xr9mer6GtqIT2ZJqL
-         pLYe6KTSPk9bFvoVUTs/UxpLE/YeIEDg75ok/oIZf+12Thzx9sTWRH+r0VBvBD7+oDDd
-         vEaprC09L9K1vJMwOkpicq8mgexieKAUpuMOFUUxf56zxJUOyJoTZKl/hkveYzyCg372
-         5/dw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7/wWaWuKS0OtQAKKpnrgUGKM3R4JB0Cc040cbhwsm0macKHR+AlI9+mzcqMQxPSGMnQCXaYqHFO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWGSDiqyW58J7vKq6e1Fvk43DLTKPw12ZehaRl63Q2x9iIccIj
-	LWwqivBOCXWoClX2irLIveLMsgL9vbZLaABU4VvQ1W73Qjf8dMGApKCev8DjKtCGIwCnpPhHxSH
-	Lrdr3Z9Un1IEx+97uQyGnXjQzrtz47UdadxcNo43OXAVyZwYfdxJsOHr6sM7KNJA=
-X-Gm-Gg: ASbGncvgtQDeY70UHyxwwCg5x8HSkXHxJ6bscWTLq4YBk++vQeHdZhmFpWF73rTUUHL
-	/+fwoVTJg7Dc3mJY+yA7CFxzbiC+x9LD+CTCwy2GUpNmVDvtT1IgBt1Jcveinwj7JdeCSZpX+2N
-	NVGbbm4XODtZKmm6F5vsQHwyf50gKadEnrK7Mx6c2SHfypNp1sklidhwHa0oqVQnjxNvsAkjnEQ
-	H4zj2gPIiQ+wnb/balbIAtwztShGZEeTHYUcygwbk5xQsqgPQfx1oaJv3qt9IHn1djHm8paarLy
-	G8czozFds92Ec6gIEHLzfohRuLmzk0KBv7g58ijVZ2XpHU4Jd1b8Lk6ahWghQw8U3RMmdkQGssj
-	5rWre8rCxdevYSnFNiNskU1FkZHoYf3cagegPjwd+5V4CqYXKZj9YDgkznw==
-X-Received: by 2002:a05:622a:1a94:b0:4d8:372b:e16a with SMTP id d75a77b69052e-4e6eacc5dd8mr122162401cf.4.1760028163255;
-        Thu, 09 Oct 2025 09:42:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaQz67QvaR/gWsBxDITOOw9Xe6x4vHfjxb37JqA0HRLVHcGGuc5OS1bitAvcqNx2Bj+xJB/A==
-X-Received: by 2002:a05:622a:1a94:b0:4d8:372b:e16a with SMTP id d75a77b69052e-4e6eacc5dd8mr122161931cf.4.1760028162757;
-        Thu, 09 Oct 2025 09:42:42 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5907adb2705sm1174139e87.105.2025.10.09.09.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 09:42:40 -0700 (PDT)
-Date: Thu, 9 Oct 2025 19:42:37 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sm8750: Add PCIe PHY and
- controller node
-Message-ID: <53wepdhpn3fgvq5fum7u6n75su77dligfjtnxkfdh4r723a7yf@6u43pwkwt4yw>
-References: <20250826-pakala-v3-0-721627bd5bb0@oss.qualcomm.com>
- <20250826-pakala-v3-2-721627bd5bb0@oss.qualcomm.com>
- <aN22lamy86iesAJj@hu-bjorande-lv.qualcomm.com>
- <4d586f0f-c336-4bf6-81cb-c7c7b07fb3c5@oss.qualcomm.com>
- <73e72e48-bc8e-4f92-b486-43a5f1f4afb0@oss.qualcomm.com>
- <8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com>
- <qref5ooh6pl2sznf7iifrbric7hsap63ffbytkizdyrzt6mtqz@q5r27ho2sbq3>
- <b5538a86-c166-4f20-9c3a-8170d3596660@oss.qualcomm.com>
+	s=arc-20240116; t=1760029345; c=relaxed/simple;
+	bh=QgnR/HwhNhSQ9rPGYBD4UO6dcq7lD76CLURSX9hdWFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bRZQbEX8JrLX2kI+uRBzfPCutojTa4L/fblEJdDZfqi3hvy/0fsVttXaBBfSMwBW9kkaGpl4GnQbV5rkmN66y0SPbyjFT3ArBZ77NtCLxRoY3gYhaEh4yBWPyX2yWXvZhBe5R9qRrwYPWSj0crjwIDBSOx/571qmglM2d7znLsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YulqAWs9; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 599FCtkj030354;
+	Thu, 9 Oct 2025 17:02:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=7uVDGY
+	DGuD7pi8jbA4svzyEeWQPOvkF6IhUXF9ciUCQ=; b=YulqAWs9ZQC+9FGwk678il
+	/sPhxXN6mEIEgBvqddeQUXa7LX8AAkDIS2UMYgvPPI/nPg8freREb2OhGflL72Zb
+	gyffJmWGt+OeUC+4KOWNmH0/d30sVmW0fbEbkL+u5Mq67YYz7qiJdq3HWgi7diJY
+	g6dgYQx+bNk8aaPB7Cc4k6S7Q1q+1EfOS697LDvKV3VCaD2NwffRsCtpeL7W2FlT
+	pAHg1WXvTGQd/wapxzogbRa59gNQ9TRZIfFUrkMifvEh1qCwKiUC+arjnmoYw7Yv
+	fnIza5cr4o8eqPEqGkSfjh+XJbQTCDqxMSGxIf3K+2/3BufN1nrNTG5Z30BcxvDA
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv81p19h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Oct 2025 17:02:17 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 599FUJRe021016;
+	Thu, 9 Oct 2025 17:02:16 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49nv8snnht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Oct 2025 17:02:16 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 599H2ENJ26739184
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Oct 2025 17:02:15 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 982025805C;
+	Thu,  9 Oct 2025 17:02:14 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C444458051;
+	Thu,  9 Oct 2025 17:02:13 +0000 (GMT)
+Received: from [9.61.255.148] (unknown [9.61.255.148])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 Oct 2025 17:02:13 +0000 (GMT)
+Message-ID: <3df48e3e-48e1-4cfb-aca9-7af606481b7c@linux.ibm.com>
+Date: Thu, 9 Oct 2025 10:02:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5538a86-c166-4f20-9c3a-8170d3596660@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfXzCT+IfUnIfrx
- p4cYQwTNkhMzWYzpMZ5U6L5Zb2i5cWo4cgusOOkGbZPb73LT1+hDyXiUfheW+9DQreQvFg/NeQ3
- oq8z1ZCsxkP4HNbSAzZ/0tLdEVbcvGNt0B/oFsVuHQtBws3DsLlEvLg4ArUwa6LoIqJCTauqaFx
- PCefpXjkZige/6c+dvwdzQQBsL9FT8O3ADvVDQyWdyWM/JXhuAL5iSY26sPRCFym7zx7Uo4yPIm
- jaV9vFiky5euHTf9xpsJXIK7RpccKePJAAyhpkJuzu1zhVXr7B60nqBQdRItjd2aL2N2n0GNGS5
- kOzfV7JgnkQjV9tbP5A4tAm3niWrAnZMeTj5YofDB2MGUiNJP4UizS6+IonAh/G0JJVgZ94O4Em
- VnuA7y8A/hBbwRst8F/VSeAjUPIh8w==
-X-Authority-Analysis: v=2.4 cv=B6G0EetM c=1 sm=1 tr=0 ts=68e7e604 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=AjAdDlCQjSUW_Sxw7NwA:9
- a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: M3L9tvCN9hw1EcqdVtyE9bSg9NbxeaVO
-X-Proofpoint-ORIG-GUID: M3L9tvCN9hw1EcqdVtyE9bSg9NbxeaVO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, alex.williamson@redhat.com,
+        helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+References: <20251001151543.GB408411@p1gen4-pw042f0m>
+ <ae5b191d-ffc6-4d40-a44b-d08e04cac6be@linux.ibm.com>
+ <aOE1JMryY_Oa663e@wunner.de>
+ <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
+ <aOQX6ZTMvekd6gWy@wunner.de>
+ <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
+ <aOZoWDQV0TNh-NiM@wunner.de>
+ <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
+ <aOaqEhLOzWzswx8O@wunner.de>
+ <6c514ba0-7910-4770-903f-62c3e827a40b@linux.ibm.com>
+ <aOc_k2MjZI6hYgKy@wunner.de>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <aOc_k2MjZI6hYgKy@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bafFVx3f06gl-_Yidcp7EXRZxhZ3rqMO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX/qH7lxY8ol5y
+ Xo9Y5lGDGb5MYDIkjwe/UN7P5YbmY3DxROtMTHKu4+QTBPrlj95ySAboK6G2UIhyMdhFkzHjUbB
+ Inysn7MGvwPFfPBiKrfUHPgIUUdnPYtFWB3xFETRH5ynM8rcWlPovER2rUYhTU2ltsP60MNKgaj
+ poksRuo4rNHMac/qtvbKZK1f75pkArPdpvimKUzt5XUJ6tRQZG/gaoz6Yk30ZiT/9WgqS3VBH/O
+ BDAJeyIN2ZtGNPhRSttDMOz3ZnlsTtkvW1gsLSdt2odWs/hrU80M6Sz+uPAH9VFmPfQulM9reKu
+ TqQLnFY8CV9JdkcDo716BopusxQJzhCAmuyHiYb8Zh5oe4iu8k3AXPVgoi0NzRxhzK7+ZJqvUY1
+ xNE4B2/p3ixUnZXrcHaZWioanGCYmQ==
+X-Authority-Analysis: v=2.4 cv=cKntc1eN c=1 sm=1 tr=0 ts=68e7ea99 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=DbQBQAxenkTviduvMPIA:9
+ a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: bafFVx3f06gl-_Yidcp7EXRZxhZ3rqMO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-09_05,2025-10-06_01,2025-03-28_01
+ definitions=2025-10-09_06,2025-10-06_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
 
-On Thu, Oct 09, 2025 at 10:35:52AM +0200, Konrad Dybcio wrote:
-> On 10/8/25 9:08 PM, Dmitry Baryshkov wrote:
-> > On Wed, Oct 08, 2025 at 11:11:43AM +0200, Konrad Dybcio wrote:
-> >> On 10/8/25 10:00 AM, Konrad Dybcio wrote:
-> >>> On 10/8/25 6:41 AM, Krishna Chaitanya Chundru wrote:
-> >>>>
-> >>>>
-> >>>> On 10/2/2025 5:07 AM, Bjorn Andersson wrote:
-> >>>>> On Tue, Aug 26, 2025 at 04:32:54PM +0530, Krishna Chaitanya Chundru wrote:
-> >>>>>> Add PCIe controller and PHY nodes which supports data rates of 8GT/s
-> >>>>>> and x2 lane.
-> >>>>>>
-> >>>>>
-> >>>>> I tried to boot the upstream kernel (next-20250925 defconfig) on my
-> >>>>> Pakala MTP with latest LA1.0 META and unless I disable &pcie0 the device
-> >>>>> is crashing during boot as PCIe is being probed.
-> >>>>>
-> >>>>> Is this a known problem? Is there any workaround/changes in flight that
-> >>>>> I'm missing?
-> >>>>>
-> >>>> Hi Bjorn,
-> >>>>
-> >>>> we need this fix for the PCIe to work properly. Please try it once.
-> >>>> https://lore.kernel.org/all/20251008-sm8750-v1-1-daeadfcae980@oss.qualcomm.com/
-> >>>
-> >>> This surely shouldn't cause/fix any issues, no?
-> >>
-> >> Apparently this is a real fix, because sm8750.dtsi defines the PCIe
-> >> PHY under a port node, while the MTP DT assigns perst-gpios to the RC
-> >> node, which the legacy binding ("everything under the RC node") parsing
-> >> code can't cope with (please mention that in the commit message, Krishna)
-> >>
-> >> And I couldn't come up with a way to describe "either both are required
-> >> if any is present under the RC node or none are allowed" in yaml
-> > 
-> > What about:
-> > 
-> > oneOf:
-> >   - required:
-> >      - foo
-> >      - bar
-> >   - properties:
-> >      foo: false
-> >      bar: false
-> 
-> Oh yeah, this works.. would you mind submitting a patch like this, with a
 
-I'd prefer it it comes from somebody who is actually working on PCIe so
-that the explanations are not ridiculous. Mani?
+On 10/8/2025 9:52 PM, Lukas Wunner wrote:
+> On Wed, Oct 08, 2025 at 02:55:56PM -0700, Farhan Ali wrote:
+>>>> On 10/8/2025 6:34 AM, Lukas Wunner wrote:
+>>>>> I also don't quite understand why the VM needs to perform a reset.
+>>>>> Why can't you just let the VM tell the host that a reset is needed
+>>>>> (PCI_ERS_RESULT_NEED_RESET) and then the host resets the device on
+>>>>> behalf of the VM?
+>> The reset is not performed by the VM, reset is still done by the host. My
+>> approach for a VM to let the host know that reset was needed, was to
+>> intercept any reset instructions for the PCI device in QEMU. QEMU would then
+>> drive a reset via VFIO_DEVICE_RESET. Maybe I am missing something, but based
+>> on what we have today in vfio driver, we don't have a mechanism for
+>> userspace to reset a device other than VFIO_DEVICE_RESET and
+>> VFIO_PCI_DEVICE_HOT_RESET ioctls.
+> The ask is for the host to notify the VM of the ->error_detected() event
+> and the VM then responding with one of the "enum pci_ers_result" values.
 
-> 
-> # These properties must either both be under the RC node or both under the port node
-> 
-> or so?
-> 
-> Konrad> 
+Maybe there is some confusion here. Could you clarify what do you mean 
+by VM responding with "enum pci_ers_result" values? Is it a device 
+driver (for example an NVMe driver) running in the VM that should do 
+that? Or is it something else you are suggesting?
 
--- 
-With best wishes
-Dmitry
+Let me try to clarify what I am trying to do with this patch series. For 
+passthrough devices to a VM, the driver bound to the device on the host 
+is vfio-pci. vfio-pci driver does support the error_detected() callback 
+(vfio_pci_core_aer_err_detected()), and on an PCI error s390x recovery 
+code on the host will call the vfio-pci error_detected() callback. The 
+vfio-pci error_detected() callback will notify userspace/QEMU via an 
+eventfd, and return PCI_ERS_RESULT_CAN_RECOVER. At this point the s390x 
+error recovery on the host will skip any further action(see patch 7) and 
+let userspace drive the error recovery.
+
+Once userspace/QEMU is notified, it then inject this error into the VM 
+so device drivers in the VM can take recovery actions. For example for a 
+passthrough NVMe device, the VM's OS NVMe driver will access the device. 
+At this point the VM's NVMe driver's error_detected() will drive the 
+recovery by returning PCI_ERS_RESULT_NEED_RESET, and the s390x error 
+recovery in the VM's OS will try to do a reset. Resets are privileged 
+operations and so the VM will need intervention from QEMU to perform the 
+reset. QEMU will invoke the ioctls to now notify the host that the VM is 
+requesting a reset of the device. The vfio-pci driver on the host will 
+then perform the reset on the device.
+
+Thanks Farhan
+
 
