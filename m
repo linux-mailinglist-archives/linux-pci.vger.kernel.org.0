@@ -1,271 +1,286 @@
-Return-Path: <linux-pci+bounces-37786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5158BCBB26
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 07:18:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0D4CBCBE35
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 09:16:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCAC21899F86
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 05:18:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CF353B02C7
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 07:16:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74611DE3AC;
-	Fri, 10 Oct 2025 05:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BD20175D53;
+	Fri, 10 Oct 2025 07:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MVxWw1k6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zJKpNwev";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DRYvxN0h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB8F1A9F96;
-	Fri, 10 Oct 2025 05:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760073496; cv=fail; b=LTaKGazu+so0NIb/IzDclYcddtlaAZhI4nL8nK74lvqdB3Hao70ygVGVmKPqMRwZQK5YCZQ5WE/r3tXQN4uoUY4GYJv9Cq7zkZ/nsRzQQ0s8EgC6hNEtGjOaTh5zLlX54VeUfHocA5PGVSKROuudlkpyW9JIaMGOYZUCZ3Jzy3A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760073496; c=relaxed/simple;
-	bh=E7j14qcwzWpTxL+k0qaacvD1pC0B2f50TVA8EF8+v48=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mKwezC/Tegx7zaT7s1TXv965ny9fLHjzvmmakwtVCIiXY687ArHPImRqG9sHsFNJR1G5JqLE9NgGuTCEyorUi/2RUjqoHV1Xz6D+j8bmVOJfa2jDJull35mznMVue2yJl8oEPGD8QoGyMCCvJvE1CX3rd8tzmswVD8/u7x5R5Hc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MVxWw1k6; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760073494; x=1791609494;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=E7j14qcwzWpTxL+k0qaacvD1pC0B2f50TVA8EF8+v48=;
-  b=MVxWw1k6KR2SZRkaALyuYjg0PhHD2g9BOGxxH6a8aWyzvIFrmQqjNPBO
-   pJwuz8hMBZC6QhSJESg2sYiM+0wMy/OOncpWm+7U282XFo1fPQ+JNLb3i
-   MxwqoK8UgOSmpOUkKMKeL1rqoWw7PtvL+//W93xI3k2LbBfGPIOf9M30F
-   rez+kkeUnCjKMObyRjnUZWTcQr3joL5LUa/qIObgvvBg0AItBIXLbCbgY
-   0WwPB8xCVihE4SHtTUJLXUcDcbE+GqaumCLIdZRNn3c3WeqSSazbluxV8
-   RSCXZHo73kwfmzaZNtx/nEyvKlzWQ0sSp2OBP2ZTiI4JHmTIr4gTcKR0t
-   g==;
-X-CSE-ConnectionGUID: iTCa5gY7R7a2BPOCwHc/RQ==
-X-CSE-MsgGUID: gCq2vZMcRN6iYQjFHpsH+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73634651"
-X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="73634651"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 22:18:13 -0700
-X-CSE-ConnectionGUID: RkdhuccrQnOQ//kCk3TvnQ==
-X-CSE-MsgGUID: eK1ID/E9Ro+K0tdNluxQKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="180479565"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 22:18:13 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 9 Oct 2025 22:18:12 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 9 Oct 2025 22:18:12 -0700
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.23) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 9 Oct 2025 22:18:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h5boiKLOgWHRYgc+lpxkhcyJDcDfDTVLxAhzmoX1scBYqu0YlekoJtzi/qqdTnpcgrs2evVwYuFY4wXE5D61geyata8r01EYGNAH12TZk59rM7OeQhNN5xSCMWQ5KnvENEnsWuK92ZXoVXqOiMN7qkQIKgdiz5Zukcm293soMwo4592MdOT3QCU6DA2n3+gtEKXUELuPWHsHfIcQBdVtWmmCDP0KYsBryEUatk3b68/DUnDinbZQ9YZG3u3vxuzkUd9GQ7/m1bsvLgYWtUNlor4Ir5uyv4RAai3A+jiVSFR8ccbKPQ0ye0XO2uU+b5YnkDyEXOBdG7sJmVvGQyXOgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aGlXz7D/WJKGc1zHLX27WxHmi9sV8NI+0SACgG+oyfU=;
- b=hUq97LCTZpbqqjoHcfVPOrkOB6oc/LZDYN8Vxkp4HPk4vJLEgxC9lVrwKJekQRGFtH3oHn3QFYW6kJUzhki/lNUaDVZdWEZ6bUAzXK/kxwt+BRf8J523tR5TE+Z2a4VVacfs54+jjpnJgDqvOa9Mu+rGEA4Q7+m9kOYkUZZf0i8Bo8+I9lSlupdvmE72RofbfAOtFsCrm7O8zbUZQtHwwBEAkQZlFRUqpB/UolktI8fPfmHwnnXpHiv47jI/6yDN9xWSN2nXB+ZGsUW6ymEnc2s2we3hPmYMZfUbEm2hc08wLlRTbfbGNFmZveWSiUY+rS9NdphmLSDvCrL0EZrYdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by SA1PR11MB5827.namprd11.prod.outlook.com (2603:10b6:806:236::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.20; Fri, 10 Oct
- 2025 05:18:10 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9203.007; Fri, 10 Oct 2025
- 05:18:10 +0000
-Date: Fri, 10 Oct 2025 00:18:03 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: <intel-xe@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, Icenowy Zheng <uwu@icenowy.me>, "Vivian
- Wang" <wangruikang@iscas.ac.cn>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
-	<thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Simon Richter
-	<Simon.Richter@hogyros.de>, LKML <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/xe: Move rebar to be done earlier
-Message-ID: <epq2fe6hanziuyhvcihcrpgjgp24aik2wospyga2cjzbgsjk2h@7fr5zatwnbfg>
-References: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com>
- <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com>
- <5osrqzgrh47n6rpjulvsixwbhbh5vwxrrn6p6hpodnwisjfung@lmivgjb66oed>
- <dfdd45b2-5a8c-cfea-ecd3-495e947022d1@linux.intel.com>
-Content-Type: text/plain; charset="iso-8859-1"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dfdd45b2-5a8c-cfea-ecd3-495e947022d1@linux.intel.com>
-X-ClientProxiedBy: SJ0PR05CA0161.namprd05.prod.outlook.com
- (2603:10b6:a03:339::16) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92BA15E90;
+	Fri, 10 Oct 2025 07:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760080560; cv=none; b=TpGUk1aIqLu9P+XsBOmWoWy9L5EyHrsZoe8AvsTq+grMAzRnMnlYM8ENTd7ISaH0q9/nTdyzvv5y3+Ds3qa/o/gc+0y7JHq8WItXUWceLb2SCKAZdD6ZBXifpLt/BHi1/wB7FngfbilA4BINUcGO5xKlDA2xE6t/liM6QqSay0E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760080560; c=relaxed/simple;
+	bh=dRoOPR29iySi0tptZHIOHY6lhyS+1YJkli0s3czvg+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7Huy5YOnJ3W2V2n+XxRt6rouDrUSyxhXdXaEaNIy2tzbyErgNwQM+rszft3h7RC/HK4L2r4kTVGvS25/d0T750nJ1M5mZW4RPr+mkXrFs+f0qQPNynt4tqL9Jgz2n1t+/lz8Z3+v7cI40CiVVFrELOT0KvaG0inh4ZUE5WmCeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zJKpNwev; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DRYvxN0h; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Fri, 10 Oct 2025 09:15:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1760080557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Rp/JfHMIffiimy4DDTGv8kJRHufu9eKtuWQ4rilImI=;
+	b=zJKpNwev0yHJ34PKGzAOecp+Mu9MRZY8nhVl7+uc/mkG4AG5paz9fU31g/FI9cjCjD9wJk
+	IWDPuSv0+7s2oQfS5CsgP4ce62O7AzL2uPr9mtWCAaM2WdNJeT70pbqDH+dtOKHsxnIi8g
+	OvvsdXVhlMKluAQ9NraDjypJfDo/gVN/SrE83THY8HMDvjac5c7SkgpuobVW+cIrgDcLZ7
+	zQ3EX/pQw9WkHMzGsjuYNJHLyJQBlTN1r5ovA6NMFnseS7SbU0y8Qtzkc5Du2xxBxLE0pq
+	k7UNrBX8RMUpSOVUQJaQ60hJCBagwv6yOH6HHuDxmyeWknaJte5/ItouVS4hXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1760080557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Rp/JfHMIffiimy4DDTGv8kJRHufu9eKtuWQ4rilImI=;
+	b=DRYvxN0hkH+E9O3t7Xn7E/Kj+AoAN/uYU3ry8ffIZNJHJYAgmGfbwTrCoCMnPMlAIEMmw/
+	uheeLPCqC1RDLWDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+Cc: Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Waiman Long <longman@redhat.com>, linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci/aer_inject: switching inject_lock to
+ raw_spinlock_t
+Message-ID: <20251010071555.u4ubYPid@linutronix.de>
+References: <20251009150651.93618-1-jckeep.cuiguangbo@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|SA1PR11MB5827:EE_
-X-MS-Office365-Filtering-Correlation-Id: d312291e-cf31-4c7f-8e18-08de07bc6759
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?Ra4EtJH0FLbMr5elhncWG2RuxUgvoHDG/RR7z1mLArhIdknqyTwNDkMIUt?=
- =?iso-8859-1?Q?xWoOyL4IKf1Gn/Cp4zyVuyuuNe+KDDRdrPxD2rinvDGc8hH16CMOm8ZcTt?=
- =?iso-8859-1?Q?WmLeF5ay2nYilzk9+SaJA/G1kerSJnGJN0idOiwMR13xIPeGksB8dbSkMt?=
- =?iso-8859-1?Q?zXOIyUxZYdd5DJ3dlkMEfgkxglAG7ahcvZLj6o/sVEJwxI+F+rhSEyBlVS?=
- =?iso-8859-1?Q?1mB2SYoh1ipzJyMBNDYYcXbe5aw8uDO0xw17kY2kSlX9Dh4GKebdNLIMCX?=
- =?iso-8859-1?Q?TX+JQO00am2A2t3/UCRpA7ZPKnkmS2uHsuC5u9tontOiykn7vzhZq9xo16?=
- =?iso-8859-1?Q?esZqtOx+VIZxmOM7oPBr7EqVivzWrv9Lgp38l8kBCGrkQ/mAwoAOA7NaUS?=
- =?iso-8859-1?Q?Txip7Y7WHSrBoOBajxPNmAXAJbuSb5FVpMtBDOBZdX5e+gz31nqTy4rNpK?=
- =?iso-8859-1?Q?EaM/SdQef+spRM58kK3jySPMnLQtGL+Afkcl+7tfwotW6ZEdq7KvEcrYFg?=
- =?iso-8859-1?Q?gHjNd3RQDYABCUGJiQ7ABTBxiRWma86tqt6ruQoATudaStwpW65LiIxq58?=
- =?iso-8859-1?Q?cRrvqcYrrcY+uZVL+Kb+B2EXr2+s3xMj8dmRfWHMDFzpy96+q9MUs3BMRv?=
- =?iso-8859-1?Q?XNk+EN0hYV+pWs9vodq673LSGOhY4AelaJ8UfV+kUDAgLg0qzQOmaJv2/3?=
- =?iso-8859-1?Q?NEYgnGJ7+0XLySVmBrosM4kQm4ReKYYsjD8wJI34i/ZjauCNBCmXVamz2C?=
- =?iso-8859-1?Q?B0tHxb6FpYFCEvK3s75NnNN5cr+c1pA33EmFqxuVY69OamPk+XCRYYYWNK?=
- =?iso-8859-1?Q?M+EgCa6HUnnUm+UQgkXNDyi/Lkv53FR4rz24NSVZUWm3m/6l444GlYQ+IQ?=
- =?iso-8859-1?Q?fDg0vvIyXA3N/xEVzgkbP7rK+1V2hBWEr+sek6+2ae012QiKUggZJl73eY?=
- =?iso-8859-1?Q?O1WsyM9BBM/6Tji3/yGbS+yb4XK1k2aa3IvNdr1Uc2EMBQaCM0B/+F76NY?=
- =?iso-8859-1?Q?+IK8waDcfsXegk0jqfqLh+Ux92EtrHw150xpLqdFiFsMrjcg/jk1TdDZJY?=
- =?iso-8859-1?Q?036Sx4zLvjmGG1clXDxiIndRx3b9wIhPG00CGcCr2Nqb443qALYc1WY++x?=
- =?iso-8859-1?Q?zVJ5NEqofe3ZYuAbKpc3CVHjTzrHJn6ywlgo8wSgEZ/LNF6ZZTD1tIkwbk?=
- =?iso-8859-1?Q?qH9ZqnNz1lia4AGCr7E9fI1LKuhhBzo3MTRi2LKbJ6iN0zsZ0DJUPk4ZYh?=
- =?iso-8859-1?Q?nWxv3EE/MUJ7bzAbqOnTj+pKrjnpWaBmhtgHguPRIiGcqVrjTh4VFo2Ln+?=
- =?iso-8859-1?Q?kxPxKTBgCTRfxeXLsQCXKZxqgA7l4kh9xY2y6xn1YoNWUJsXWqKrIACRuN?=
- =?iso-8859-1?Q?qCtktRo5wfNFvHG1MqlJ46BaVWRpQNBsig4kKwDIMgVyKH/FTNctrfW0f/?=
- =?iso-8859-1?Q?UzApQPKzFlN1y/4a+GDlHrd6Jzz1NjJXi9UEtPc2pADO60ohedfJCVHrOj?=
- =?iso-8859-1?Q?nR8gUP1ac6nhZytTsnPBXG?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?g1n6JSnuCJJtRCfO10oTIEPyJMbfMglStxuwRUlIEuZ+dh1HUIE7ElR/SE?=
- =?iso-8859-1?Q?/hCU7sHz0Z/y3jmIVOmNKGLSGtPLXe7jpXpqgHBAKgjEX7ddy04RgYUBcO?=
- =?iso-8859-1?Q?CGdfootQ0cPtIkLuabFF/vqu26aCvKGPQV9ThSeHNPHoy0MQ4bjh31tLoY?=
- =?iso-8859-1?Q?MZ8EcljzvCbPLX67ZzhC9B1MgM9SJAp71nA2xLTkKTK8kzNO6rdA2gzoqW?=
- =?iso-8859-1?Q?4M9AT6UVlziFjV2Wr8fx93lPADGxIlQ7BKA3p/IsIdQDfBEANC7MxQF73j?=
- =?iso-8859-1?Q?CHKlOmFlr6533VTUhVjWHTAh70o8pWiZJ9xrRcjHD5lNNRoejk82C53Al9?=
- =?iso-8859-1?Q?LRU19SnEx59Mdqm9nRV/n4G/hsseC2dhZrireowmbuPpxGJikcrO66Nquz?=
- =?iso-8859-1?Q?qhK2Rd536uBz/Wk2uuioOpOLi4xSF53+wYSDC1fk+Q6ZMbdRCAhjiRPkB8?=
- =?iso-8859-1?Q?a1xeol8YqU60aMUZWYX91df7ZXgrzUqvus8UgDzPdyXxhY8c6jxArpmyZ1?=
- =?iso-8859-1?Q?CYUlmoKXDEWMx6WCxiQ4ekKhfhEtdSCWs9zCRR4YGTUEs3b8bmGrOk+Bry?=
- =?iso-8859-1?Q?QJqyrq/7TlGJp077md2+O2wV2SLvvAfKNdO2r4R4k7IJxwrGzunOm1Ru5F?=
- =?iso-8859-1?Q?gC3F7U1yS9/1qUo/puiG+sA0imLJm3j0cw8pMdwXExD5mLlZJ2303roEym?=
- =?iso-8859-1?Q?B6ebOKLElfHerUah7QUlqKovjvTIEBkuEuuwXmZs9J8+1GhNVxz8i9FSGR?=
- =?iso-8859-1?Q?+I0QopLTX8d7fI/bIBDhxV+6TdQSqv+c6bOS6QQgLMhfAUrDgWwhKTLSjG?=
- =?iso-8859-1?Q?FRDBMMgkWgTbZZ+wWUAoVUo2V29TIzdLyz2FbVpcgzSeKbKdaC7OWEdSX1?=
- =?iso-8859-1?Q?X9cw6NIZZ5aIgqVwKwtf0CWvG+vyGGAV/+5SXQE9MsRgmRrjNZRwPR4gJx?=
- =?iso-8859-1?Q?6hlDqG6Q+2HKYfbm+c4YlKdtIeV6qPezIRzqy6f3Gz4m83xbI1+a4GQIRe?=
- =?iso-8859-1?Q?0TmhMJJQirSkc1JnYLoF1gp64kFDdekrFiinoQ9eb4CV94x9ktrxlXQQA3?=
- =?iso-8859-1?Q?ofLsK0X1Sr5GTM+TJSrQHWbSLqIMsfgd2Ophas36iRu+3Bw9IiOgruf7Pu?=
- =?iso-8859-1?Q?ScpUCOE494slVVMV5Z+X9/+9gxA5tRw3K6cQk2xKaRyPlZ4sLZp8UXzGcG?=
- =?iso-8859-1?Q?zf3wGr1IYSaDsd3I1W/uI5tKx1MsNjD2BN8n53SdTGvNUK2kRHm6StlcvR?=
- =?iso-8859-1?Q?QPU+7W3v9+69WLWMqtCTjH9udy5d4fVj663SNFwmFP7fMlrDoDAD1tLIYP?=
- =?iso-8859-1?Q?7qU75AIEL0eerrvEci0uCfIiaCUvdDtRTx5+HyVURmbuE9kMEX/f5xsxQs?=
- =?iso-8859-1?Q?11bx4kn1SIm5wd6U7pzRL6ohyywDKNxMW2KeQ84LXtO6fIyYnFTWCbC9vH?=
- =?iso-8859-1?Q?CFOqSo8UlACJcNAmybC9JzIVaCXkgyAgCRJd6KiTOdL5iBYWjlKPB4brxV?=
- =?iso-8859-1?Q?Zj9zQTJgzqT39/o4Q0RX392u+howK4nQM2v9Cw2dPGH2Sz2/3wS1eVz6b9?=
- =?iso-8859-1?Q?wc4yo+VFmCDRWjHeE1O9foKr5Q63hq7BTN1VUp0Qdf4KFiSU/NYnIUZsaW?=
- =?iso-8859-1?Q?XnTE5T3ivFiXRHPAjt99nIzANuWJVA/LEqYH9kWH4ZHZXiRGEFUeUT6g?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d312291e-cf31-4c7f-8e18-08de07bc6759
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 05:18:10.5950
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TkW+PNXHSrHVg4gPUZtAl9yuDJ8Chz9j/df9O8fvKFoD53sH9Zo0jh87mhQXA4W+zPrY5f0+6QHYAIcQhlmabThdjZpFfgy6rwqL5PvMFa4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5827
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20251009150651.93618-1-jckeep.cuiguangbo@gmail.com>
 
-On Mon, Sep 29, 2025 at 04:56:03PM +0300, Ilpo Järvinen wrote:
->On Mon, 29 Sep 2025, Lucas De Marchi wrote:
->
->> Hi,
->>
->> On Thu, Sep 18, 2025 at 01:58:57PM -0700, Lucas De Marchi wrote:
->> > There may be cases in which the BAR0 also needs to move to accommodate
->> > the bigger BAR2. However if it's not released, the BAR2 resize fails.
->> > During the vram probe it can't be released as it's already in use by
->> > xe_mmio for early register access.
->> >
->> > Add a new function in xe_vram and let xe_pci call it directly before
->> > even early device probe. This allows the BAR2 to resize in cases BAR0
->> > also needs to move:
->> >
->> > 	[] xe 0000:03:00.0: vgaarb: deactivate vga console
->> > 	[] xe 0000:03:00.0: [drm] Attempting to resize bar from 8192MiB ->
->> > 16384MiB
->> > 	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: releasing
->> > 	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x41ffffffff 64bit pref]:
->> > releasing
->> > 	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x41ffffffff
->> > 64bit pref]: releasing
->> > 	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x41ffffffff
->> > 64bit pref]: releasing
->> > 	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x43ffffffff
->> > 64bit pref]: assigned
->> > 	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x43ffffffff
->> > 64bit pref]: assigned
->> > 	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x43ffffffff 64bit pref]:
->> > assigned
->> > 	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: assigned
->> > 	[] pcieport 0000:00:01.0: PCI bridge to [bus 01-04]
->> > 	[] pcieport 0000:00:01.0:   bridge window [mem 0x83000000-0x840fffff]
->> > 	[] pcieport 0000:00:01.0:   bridge window [mem
->> > 0x4000000000-0x44007fffff 64bit pref]
->> > 	[] pcieport 0000:01:00.0: PCI bridge to [bus 02-04]
->> > 	[] pcieport 0000:01:00.0:   bridge window [mem 0x83000000-0x840fffff]
->> > 	[] pcieport 0000:01:00.0:   bridge window [mem
->> > 0x4000000000-0x43ffffffff 64bit pref]
->> > 	[] pcieport 0000:02:01.0: PCI bridge to [bus 03]
->> > 	[] pcieport 0000:02:01.0:   bridge window [mem 0x83000000-0x83ffffff]
->> > 	[] pcieport 0000:02:01.0:   bridge window [mem
->> > 0x4000000000-0x43ffffffff 64bit pref]
->> > 	[] xe 0000:03:00.0: [drm] BAR2 resized to 16384M
->> > 	[] xe 0000:03:00.0: [drm:xe_pci_probe [xe]] BATTLEMAGE  e221:0000
->> > dgfx:1 gfx:Xe2_HPG (20.02) ...
->> >
->> > As shown above, it happens even before we try to read any register for
->> > platform identification.
->> >
->> > All the rebar logic is more pci-specific than xe-specific and can be
->> > done very early in the probe sequence. In future it would be good to
->> > move it out of xe_vram.c, but this refactor is left for later.
->>
->> Ilpo, can you take a look on this patch? It fixed the issue that I had
->> with BMG. It needs the first patch for the full fix, but the fixes are
->> more or less orthogonal.
->
->FWIW, it looks okay to me from PCI perspective,
->
->Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On 2025-10-09 15:06:50 [+0000], Guangbo Cui wrote:
+> When injecting AER errors under PREEMPT_RT, the kernel may trigger a
+> lockdep warning about an invalid wait context:
+>=20
+> ```
+> [ 1850.950780] [ BUG: Invalid wait context ]
+> [ 1850.951152] 6.17.0-11316-g7a405dbb0f03-dirty #7 Not tainted
+> [ 1850.951457] -----------------------------
+> [ 1850.951680] irq/16-PCIe PME/56 is trying to lock:
+> [ 1850.952004] ffff800082865238 (inject_lock){+.+.}-{3:3}, at: aer_inj_re=
+ad_config+0x38/0x1dc
+> [ 1850.952731] other info that might help us debug this:
+> [ 1850.952997] context-{5:5}
+> [ 1850.953192] 5 locks held by irq/16-PCIe PME/56:
+> [ 1850.953415]  #0: ffff800082647390 (local_bh){.+.+}-{1:3}, at: __local_=
+bh_disable_ip+0x30/0x268
+> [ 1850.953931]  #1: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu=
+_lock_acquire+0x4/0x48
+> [ 1850.954453]  #2: ffff000004bb6c58 (&data->lock){+...}-{3:3}, at: pcie_=
+pme_irq+0x34/0xc4
+> [ 1850.954949]  #3: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu=
+_lock_acquire+0x4/0x48
+> [ 1850.955420]  #4: ffff800082863d10 (pci_lock){....}-{2:2}, at: pci_bus_=
+read_config_dword+0x5c/0xd8
+> ```
+>=20
+> This happens because the AER injection path (`aer_inj_read_config()`)
+> is called in the context of the PCIe PME interrupt thread, which runs
+> through `irq_forced_thread_fn()` under PREEMPT_RT. In this context,
+> `pci_lock` (a raw_spinlock_t) is held with interrupts disabled
+> (`spin_lock_irqsave()`), and then `aer_inj_read_config()` tries to
+> acquire `inject_lock`, which is a `rt_spin_lock`. (Thanks Waiman Long)
 
-I'm pushing this to drm-xe-next. The first one may go through pci or drm
-tree when it's reviewed.
+This is way more verbose than it has to be. The key point here is that
+it is a "sleeping while atomic" condition because, as you correctly
+identified, a raw_spinlock_t is held while a sleeping lock und
+PREEMPT_RT is accessed. No need to paste halve of lockdep's output.
 
-Merged to drm-xe-next, thanks!
+> `rt_spin_lock` may sleep, so acquiring it while holding a raw spinlock
+> with IRQs disabled violates the lock ordering rules. This leads to
+> the =E2=80=9CInvalid wait context=E2=80=9D lockdep warning.
+>=20
+> In other words, the lock order looks like this:
+>=20
+> ```
+>   raw_spin_lock_irqsave(&pci_lock);
+>       =E2=86=93
+>   rt_spin_lock(&inject_lock);   <-- not allowed
+> ```
 
-[2/2] drm/xe: Move rebar to be done earlier
-       commit: 45e33f220fd625492c11e15733d8e9b4f9db82a4
+=2E..
 
-thanks
-Lucas De Marchi
+> To fix this, convert `inject_lock` from an `rt_spin_lock` to a
+> `raw_spinlock_t`, a raw spinlock is safe and consistent with the
+> surrounding locking scheme.
+
+Switching the lock type is a possible solution. It must not become the
+default solution if things like this happen. In this case it is okay as
+lock usage is limited and the only source of "unbound latencies" is the
+list it protects. This is of no concern as you explained it should not
+contain thousands of items _and_ it is used only for debugging and
+development.
+
+> This resolves the lockdep =E2=80=9CInvalid wait context=E2=80=9D warning =
+observed when
+> injecting correctable AER errors through `/dev/aer_inject` on PREEMPT_RT.
+>=20
+> This was discovered while testing PCIe AER error injection on an arm64
+> QEMU virtual machine:
+>=20
+> ```
+>   qemu-system-aarch64 \
+>       -nographic \
+>       -machine virt,highmem=3Doff,gic-version=3D3 \
+>       -cpu cortex-a72 \
+>       -kernel arch/arm64/boot/Image \
+>       -initrd initramfs.cpio.gz \
+>       -append "console=3DttyAMA0 root=3D/dev/ram rdinit=3D/linuxrc earlyp=
+rintk nokaslr" \
+>       -m 2G \
+>       -smp 1 \
+>       -netdev user,id=3Dnet0,hostfwd=3Dtcp::2223-:22 \
+>       -device virtio-net-pci,netdev=3Dnet0 \
+>       -device pcie-root-port,id=3Drp0,chassis=3D1,slot=3D0x0 \
+>       -device pci-testdev -s -S
+> ```
+>=20
+> Injecting a correctable PCIe error via /dev/aer_inject caused a BUG
+> report with "Invalid wait context" in the irq/PCIe thread.
+>=20
+> ```
+> ~ # export HEX=3D"0002000000000000010000000000000000000000000000000000000=
+0"
+> ~ # echo -n "$HEX" | xxd -r -p | tee /dev/aer_inject >/dev/null
+> [ 1850.947170] pcieport 0000:00:02.0: aer_inject: Injecting errors 000000=
+01/00000000 into device 0000:00:02.0
+> [ 1850.949951]
+> [ 1850.950479] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [ 1850.950780] [ BUG: Invalid wait context ]
+> [ 1850.951152] 6.17.0-11316-g7a405dbb0f03-dirty #7 Not tainted
+> [ 1850.951457] -----------------------------
+> [ 1850.951680] irq/16-PCIe PME/56 is trying to lock:
+> [ 1850.952004] ffff800082865238 (inject_lock){+.+.}-{3:3}, at: aer_inj_re=
+ad_config+0x38/0x1dc
+> [ 1850.952731] other info that might help us debug this:
+> [ 1850.952997] context-{5:5}
+> [ 1850.953192] 5 locks held by irq/16-PCIe PME/56:
+> [ 1850.953415]  #0: ffff800082647390 (local_bh){.+.+}-{1:3}, at: __local_=
+bh_disable_ip+0x30/0x268
+> [ 1850.953931]  #1: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu=
+_lock_acquire+0x4/0x48
+> [ 1850.954453]  #2: ffff000004bb6c58 (&data->lock){+...}-{3:3}, at: pcie_=
+pme_irq+0x34/0xc4
+> [ 1850.954949]  #3: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu=
+_lock_acquire+0x4/0x48
+> [ 1850.955420]  #4: ffff800082863d10 (pci_lock){....}-{2:2}, at: pci_bus_=
+read_config_dword+0x5c/0xd8
+> [ 1850.955932] stack backtrace:
+> [ 1850.956412] CPU: 0 UID: 0 PID: 56 Comm: irq/16-PCIe PME Not tainted 6.=
+17.0-11316-g7a405dbb0f03-dirty #7 PREEMPT_{RT,(full)}
+> [ 1850.957039] Hardware name: linux,dummy-virt (DT)
+> [ 1850.957409] Call trace:
+> [ 1850.957727]  show_stack+0x18/0x24 (C)
+> [ 1850.958089]  dump_stack_lvl+0x40/0xbc
+> [ 1850.958339]  dump_stack+0x18/0x24
+> [ 1850.958586]  __lock_acquire+0xa84/0x3008
+> [ 1850.958907]  lock_acquire+0x128/0x2a8
+> [ 1850.959171]  rt_spin_lock+0x50/0x1b8
+> [ 1850.959476]  aer_inj_read_config+0x38/0x1dc
+> [ 1850.959821]  pci_bus_read_config_dword+0x80/0xd8
+> [ 1850.960079]  pcie_capability_read_dword+0xac/0xd8
+> [ 1850.960454]  pcie_pme_irq+0x44/0xc4
+> [ 1850.960728]  irq_forced_thread_fn+0x30/0x94
+> [ 1850.960984]  irq_thread+0x1ac/0x3a4
+> [ 1850.961308]  kthread+0x1b4/0x208
+> [ 1850.961557]  ret_from_fork+0x10/0x20
+> [ 1850.963088] pcieport 0000:00:02.0: AER: Correctable error message rece=
+ived from 0000:00:02.0
+> [ 1850.963330] pcieport 0000:00:02.0: PCIe Bus Error: severity=3DCorrecta=
+ble, type=3DPhysical Layer, (Receiver ID)
+> [ 1850.963351] pcieport 0000:00:02.0:   device [1b36:000c] error status/m=
+ask=3D00000001/0000e000
+> [ 1850.963385] pcieport 0000:00:02.0:    [ 0] RxErr                  (Fir=
+st)
+> ```
+
+This is a lot. And I don't think this belongs here. The part how to use
+aer_inject should be described somewhere in Documentation/ as _this_ is
+not unique to your usage but a general problem of the driver.
+The commit message should describe the problem you are facing and your
+solution to it. Please take a look at
+	https://docs.kernel.org/process/submitting-patches.html#describe-your-chan=
+ges
+
+> Signed-off-by: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+> ---
+> index 91acc7b17f68..6dd231d9fccd 100644
+> --- a/drivers/pci/pcie/aer_inject.c
+> +++ b/drivers/pci/pcie/aer_inject.c
+> @@ -523,8 +523,8 @@ static int __init aer_inject_init(void)
+>  static void __exit aer_inject_exit(void)
+>  {
+>  	struct aer_error *err, *err_next;
+> -	unsigned long flags;
+>  	struct pci_bus_ops *bus_ops;
+> +	LIST_HEAD(einjected_to_free);
+> =20
+>  	misc_deregister(&aer_inject_device);
+> =20
+> @@ -533,12 +533,14 @@ static void __exit aer_inject_exit(void)
+>  		kfree(bus_ops);
+>  	}
+> =20
+> -	spin_lock_irqsave(&inject_lock, flags);
+> -	list_for_each_entry_safe(err, err_next, &einjected, list) {
+> +	scoped_guard(raw_spinlock_irqsave, &inject_lock) {
+> +		list_splice_init(&einjected, &einjected_to_free);
+> +	}
+
+I would either convert _all_ instance of the lock usage to guard
+notation or none. But not one.
+Also I wouldn't split everything to another list just to free it later.
+I would argue here that locking in aer_inject_exit() locking is not
+required because the misc device is removed (no one can keep it open as
+it would not allow module removal) and so this is the only possible
+user.
+Therefore you can iterate over the list and free items lock less.
+This reasoning of this change needs to be part of your commit
+description. Also _why_ this becomes a problem. You do not mention this
+change at all.
+
+> +	list_for_each_entry_safe(err, err_next, &einjected_to_free, list) {
+>  		list_del(&err->list);
+>  		kfree(err);
+>  	}
+> -	spin_unlock_irqrestore(&inject_lock, flags);
+>  }
+> =20
+>  module_init(aer_inject_init);
+
+Sebastian
 
