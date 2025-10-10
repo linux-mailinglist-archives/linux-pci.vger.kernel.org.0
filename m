@@ -1,137 +1,271 @@
-Return-Path: <linux-pci+bounces-37785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37786-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB74BBCBAFE
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 07:01:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5158BCBB26
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 07:18:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 57CE8353C16
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 05:01:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCAC21899F86
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 05:18:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DDFF846F;
-	Fri, 10 Oct 2025 05:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74611DE3AC;
+	Fri, 10 Oct 2025 05:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBil4LyQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MVxWw1k6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A34F4207A
-	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 05:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760072472; cv=none; b=DvuCxGsEAj3/XFWafVx+DaXXY+qmgBKGP18QTmk6K42ynCoMZOnwWq2EgIq4Sg5hRUjoSuAUuKUTvwRIjJvEoqB5KG9PLewMfYooq8He5CnSUi3UwnEwanUoiFc4MsfXk2L9iBTsRjBT09RYZX3jTLrXCc2cbyJ69MKARDUMkgI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760072472; c=relaxed/simple;
-	bh=3cnwdrJOwxkyJQe55hTvzk1zWVrendZOcMWkOmDMTZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MlcU9D4a51OPc2oRwODPCBBoVETPsSm3SrZAohX/+o+9RcOhrMe5SKbRM3RExMFMmShvMg8C69f7FPwMHI6UJG9En8Gix5pl1zBNrxponNDM+tWdFQsd2Ls6867ZPc9XhfRFSfODJKuqur4qOo9HSWZEWBVVUuYsDvSNLDgKpqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBil4LyQ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB8F1A9F96;
+	Fri, 10 Oct 2025 05:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760073496; cv=fail; b=LTaKGazu+so0NIb/IzDclYcddtlaAZhI4nL8nK74lvqdB3Hao70ygVGVmKPqMRwZQK5YCZQ5WE/r3tXQN4uoUY4GYJv9Cq7zkZ/nsRzQQ0s8EgC6hNEtGjOaTh5zLlX54VeUfHocA5PGVSKROuudlkpyW9JIaMGOYZUCZ3Jzy3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760073496; c=relaxed/simple;
+	bh=E7j14qcwzWpTxL+k0qaacvD1pC0B2f50TVA8EF8+v48=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mKwezC/Tegx7zaT7s1TXv965ny9fLHjzvmmakwtVCIiXY687ArHPImRqG9sHsFNJR1G5JqLE9NgGuTCEyorUi/2RUjqoHV1Xz6D+j8bmVOJfa2jDJull35mznMVue2yJl8oEPGD8QoGyMCCvJvE1CX3rd8tzmswVD8/u7x5R5Hc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MVxWw1k6; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760072471; x=1791608471;
+  t=1760073494; x=1791609494;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3cnwdrJOwxkyJQe55hTvzk1zWVrendZOcMWkOmDMTZg=;
-  b=FBil4LyQpb0eS8tkkL52ZLFWU/a0nioM9a2OZIrwzhxSAyRHD2xxlCxs
-   WgzGYrCijmMKF1/8GZWAgb1lmSOVp7QipDF9SbsaUw36R2z9ovtLRjTRU
-   8agX00J2G0BTvUSZtitBe4IEyk3XxBfteVGT9M0T0+wsdpCixYlhvTXXF
-   E0O4TC4Z+CBSg5SnCEtBIA+SfQ0oiR1wHbMbVGGlF7Fh+t7aA0vza5Ylz
-   gd4j2Z2S5/kJaWqb8Mk5WGwpn9FYkXyovdjNxtrS9Wd8G7Aa03OMfqpVQ
-   rwEHre/ITMkPHfxZdIfaIVitRpfH86aW3HQzPHF0q/Dz8yeUJ4I4in9N+
-   Q==;
-X-CSE-ConnectionGUID: 9R3XcyIrTjK04+/VqSpksA==
-X-CSE-MsgGUID: ZoVQWyOgTseSSqdRTLpwyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="79733361"
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=E7j14qcwzWpTxL+k0qaacvD1pC0B2f50TVA8EF8+v48=;
+  b=MVxWw1k6KR2SZRkaALyuYjg0PhHD2g9BOGxxH6a8aWyzvIFrmQqjNPBO
+   pJwuz8hMBZC6QhSJESg2sYiM+0wMy/OOncpWm+7U282XFo1fPQ+JNLb3i
+   MxwqoK8UgOSmpOUkKMKeL1rqoWw7PtvL+//W93xI3k2LbBfGPIOf9M30F
+   rez+kkeUnCjKMObyRjnUZWTcQr3joL5LUa/qIObgvvBg0AItBIXLbCbgY
+   0WwPB8xCVihE4SHtTUJLXUcDcbE+GqaumCLIdZRNn3c3WeqSSazbluxV8
+   RSCXZHo73kwfmzaZNtx/nEyvKlzWQ0sSp2OBP2ZTiI4JHmTIr4gTcKR0t
+   g==;
+X-CSE-ConnectionGUID: iTCa5gY7R7a2BPOCwHc/RQ==
+X-CSE-MsgGUID: gCq2vZMcRN6iYQjFHpsH+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73634651"
 X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="79733361"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 22:01:10 -0700
-X-CSE-ConnectionGUID: WUpT8L4SRQiUwNxPsMm76g==
-X-CSE-MsgGUID: Fv7Ita3jQmeNKt7wlPgS5w==
+   d="scan'208";a="73634651"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 22:18:13 -0700
+X-CSE-ConnectionGUID: RkdhuccrQnOQ//kCk3TvnQ==
+X-CSE-MsgGUID: eK1ID/E9Ro+K0tdNluxQKg==
 X-ExtLoop1: 1
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Oct 2025 22:01:08 -0700
-Date: Fri, 10 Oct 2025 12:48:17 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: dan.j.williams@intel.com
-Cc: Alexey Kardashevskiy <aik@amd.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
-	bhelgaas@google.com, aneesh.kumar@kernel.org
-Subject: Re: [PATCH 2/7] PCI/TSM: Add pci_tsm_guest_req() for managing TDIs
-Message-ID: <aOiQEc9+LYwNsFLH@yilunxu-OptiPlex-7050>
-References: <20250827035259.1356758-1-dan.j.williams@intel.com>
- <20250827035259.1356758-3-dan.j.williams@intel.com>
- <e680335b-bd40-4311-aa13-58bc2b0b802c@amd.com>
- <68b0d30e2a18c_75db10050@dwillia2-mobl4.notmuch>
- <101dc0bb-d6d1-4f29-81fb-fb1ff78891ba@amd.com>
- <68b2640726bd8_75db1000@dwillia2-mobl4.notmuch>
+X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
+   d="scan'208";a="180479565"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 22:18:13 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 9 Oct 2025 22:18:12 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Thu, 9 Oct 2025 22:18:12 -0700
+Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.23) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 9 Oct 2025 22:18:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h5boiKLOgWHRYgc+lpxkhcyJDcDfDTVLxAhzmoX1scBYqu0YlekoJtzi/qqdTnpcgrs2evVwYuFY4wXE5D61geyata8r01EYGNAH12TZk59rM7OeQhNN5xSCMWQ5KnvENEnsWuK92ZXoVXqOiMN7qkQIKgdiz5Zukcm293soMwo4592MdOT3QCU6DA2n3+gtEKXUELuPWHsHfIcQBdVtWmmCDP0KYsBryEUatk3b68/DUnDinbZQ9YZG3u3vxuzkUd9GQ7/m1bsvLgYWtUNlor4Ir5uyv4RAai3A+jiVSFR8ccbKPQ0ye0XO2uU+b5YnkDyEXOBdG7sJmVvGQyXOgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aGlXz7D/WJKGc1zHLX27WxHmi9sV8NI+0SACgG+oyfU=;
+ b=hUq97LCTZpbqqjoHcfVPOrkOB6oc/LZDYN8Vxkp4HPk4vJLEgxC9lVrwKJekQRGFtH3oHn3QFYW6kJUzhki/lNUaDVZdWEZ6bUAzXK/kxwt+BRf8J523tR5TE+Z2a4VVacfs54+jjpnJgDqvOa9Mu+rGEA4Q7+m9kOYkUZZf0i8Bo8+I9lSlupdvmE72RofbfAOtFsCrm7O8zbUZQtHwwBEAkQZlFRUqpB/UolktI8fPfmHwnnXpHiv47jI/6yDN9xWSN2nXB+ZGsUW6ymEnc2s2we3hPmYMZfUbEm2hc08wLlRTbfbGNFmZveWSiUY+rS9NdphmLSDvCrL0EZrYdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by SA1PR11MB5827.namprd11.prod.outlook.com (2603:10b6:806:236::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.20; Fri, 10 Oct
+ 2025 05:18:10 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9203.007; Fri, 10 Oct 2025
+ 05:18:10 +0000
+Date: Fri, 10 Oct 2025 00:18:03 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: <intel-xe@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, Icenowy Zheng <uwu@icenowy.me>, "Vivian
+ Wang" <wangruikang@iscas.ac.cn>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+	<thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Simon Richter
+	<Simon.Richter@hogyros.de>, LKML <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/xe: Move rebar to be done earlier
+Message-ID: <epq2fe6hanziuyhvcihcrpgjgp24aik2wospyga2cjzbgsjk2h@7fr5zatwnbfg>
+References: <20250918-xe-pci-rebar-2-v1-0-6c094702a074@intel.com>
+ <20250918-xe-pci-rebar-2-v1-2-6c094702a074@intel.com>
+ <5osrqzgrh47n6rpjulvsixwbhbh5vwxrrn6p6hpodnwisjfung@lmivgjb66oed>
+ <dfdd45b2-5a8c-cfea-ecd3-495e947022d1@linux.intel.com>
+Content-Type: text/plain; charset="iso-8859-1"; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dfdd45b2-5a8c-cfea-ecd3-495e947022d1@linux.intel.com>
+X-ClientProxiedBy: SJ0PR05CA0161.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::16) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68b2640726bd8_75db1000@dwillia2-mobl4.notmuch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|SA1PR11MB5827:EE_
+X-MS-Office365-Filtering-Correlation-Id: d312291e-cf31-4c7f-8e18-08de07bc6759
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?Ra4EtJH0FLbMr5elhncWG2RuxUgvoHDG/RR7z1mLArhIdknqyTwNDkMIUt?=
+ =?iso-8859-1?Q?xWoOyL4IKf1Gn/Cp4zyVuyuuNe+KDDRdrPxD2rinvDGc8hH16CMOm8ZcTt?=
+ =?iso-8859-1?Q?WmLeF5ay2nYilzk9+SaJA/G1kerSJnGJN0idOiwMR13xIPeGksB8dbSkMt?=
+ =?iso-8859-1?Q?zXOIyUxZYdd5DJ3dlkMEfgkxglAG7ahcvZLj6o/sVEJwxI+F+rhSEyBlVS?=
+ =?iso-8859-1?Q?1mB2SYoh1ipzJyMBNDYYcXbe5aw8uDO0xw17kY2kSlX9Dh4GKebdNLIMCX?=
+ =?iso-8859-1?Q?TX+JQO00am2A2t3/UCRpA7ZPKnkmS2uHsuC5u9tontOiykn7vzhZq9xo16?=
+ =?iso-8859-1?Q?esZqtOx+VIZxmOM7oPBr7EqVivzWrv9Lgp38l8kBCGrkQ/mAwoAOA7NaUS?=
+ =?iso-8859-1?Q?Txip7Y7WHSrBoOBajxPNmAXAJbuSb5FVpMtBDOBZdX5e+gz31nqTy4rNpK?=
+ =?iso-8859-1?Q?EaM/SdQef+spRM58kK3jySPMnLQtGL+Afkcl+7tfwotW6ZEdq7KvEcrYFg?=
+ =?iso-8859-1?Q?gHjNd3RQDYABCUGJiQ7ABTBxiRWma86tqt6ruQoATudaStwpW65LiIxq58?=
+ =?iso-8859-1?Q?cRrvqcYrrcY+uZVL+Kb+B2EXr2+s3xMj8dmRfWHMDFzpy96+q9MUs3BMRv?=
+ =?iso-8859-1?Q?XNk+EN0hYV+pWs9vodq673LSGOhY4AelaJ8UfV+kUDAgLg0qzQOmaJv2/3?=
+ =?iso-8859-1?Q?NEYgnGJ7+0XLySVmBrosM4kQm4ReKYYsjD8wJI34i/ZjauCNBCmXVamz2C?=
+ =?iso-8859-1?Q?B0tHxb6FpYFCEvK3s75NnNN5cr+c1pA33EmFqxuVY69OamPk+XCRYYYWNK?=
+ =?iso-8859-1?Q?M+EgCa6HUnnUm+UQgkXNDyi/Lkv53FR4rz24NSVZUWm3m/6l444GlYQ+IQ?=
+ =?iso-8859-1?Q?fDg0vvIyXA3N/xEVzgkbP7rK+1V2hBWEr+sek6+2ae012QiKUggZJl73eY?=
+ =?iso-8859-1?Q?O1WsyM9BBM/6Tji3/yGbS+yb4XK1k2aa3IvNdr1Uc2EMBQaCM0B/+F76NY?=
+ =?iso-8859-1?Q?+IK8waDcfsXegk0jqfqLh+Ux92EtrHw150xpLqdFiFsMrjcg/jk1TdDZJY?=
+ =?iso-8859-1?Q?036Sx4zLvjmGG1clXDxiIndRx3b9wIhPG00CGcCr2Nqb443qALYc1WY++x?=
+ =?iso-8859-1?Q?zVJ5NEqofe3ZYuAbKpc3CVHjTzrHJn6ywlgo8wSgEZ/LNF6ZZTD1tIkwbk?=
+ =?iso-8859-1?Q?qH9ZqnNz1lia4AGCr7E9fI1LKuhhBzo3MTRi2LKbJ6iN0zsZ0DJUPk4ZYh?=
+ =?iso-8859-1?Q?nWxv3EE/MUJ7bzAbqOnTj+pKrjnpWaBmhtgHguPRIiGcqVrjTh4VFo2Ln+?=
+ =?iso-8859-1?Q?kxPxKTBgCTRfxeXLsQCXKZxqgA7l4kh9xY2y6xn1YoNWUJsXWqKrIACRuN?=
+ =?iso-8859-1?Q?qCtktRo5wfNFvHG1MqlJ46BaVWRpQNBsig4kKwDIMgVyKH/FTNctrfW0f/?=
+ =?iso-8859-1?Q?UzApQPKzFlN1y/4a+GDlHrd6Jzz1NjJXi9UEtPc2pADO60ohedfJCVHrOj?=
+ =?iso-8859-1?Q?nR8gUP1ac6nhZytTsnPBXG?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?g1n6JSnuCJJtRCfO10oTIEPyJMbfMglStxuwRUlIEuZ+dh1HUIE7ElR/SE?=
+ =?iso-8859-1?Q?/hCU7sHz0Z/y3jmIVOmNKGLSGtPLXe7jpXpqgHBAKgjEX7ddy04RgYUBcO?=
+ =?iso-8859-1?Q?CGdfootQ0cPtIkLuabFF/vqu26aCvKGPQV9ThSeHNPHoy0MQ4bjh31tLoY?=
+ =?iso-8859-1?Q?MZ8EcljzvCbPLX67ZzhC9B1MgM9SJAp71nA2xLTkKTK8kzNO6rdA2gzoqW?=
+ =?iso-8859-1?Q?4M9AT6UVlziFjV2Wr8fx93lPADGxIlQ7BKA3p/IsIdQDfBEANC7MxQF73j?=
+ =?iso-8859-1?Q?CHKlOmFlr6533VTUhVjWHTAh70o8pWiZJ9xrRcjHD5lNNRoejk82C53Al9?=
+ =?iso-8859-1?Q?LRU19SnEx59Mdqm9nRV/n4G/hsseC2dhZrireowmbuPpxGJikcrO66Nquz?=
+ =?iso-8859-1?Q?qhK2Rd536uBz/Wk2uuioOpOLi4xSF53+wYSDC1fk+Q6ZMbdRCAhjiRPkB8?=
+ =?iso-8859-1?Q?a1xeol8YqU60aMUZWYX91df7ZXgrzUqvus8UgDzPdyXxhY8c6jxArpmyZ1?=
+ =?iso-8859-1?Q?CYUlmoKXDEWMx6WCxiQ4ekKhfhEtdSCWs9zCRR4YGTUEs3b8bmGrOk+Bry?=
+ =?iso-8859-1?Q?QJqyrq/7TlGJp077md2+O2wV2SLvvAfKNdO2r4R4k7IJxwrGzunOm1Ru5F?=
+ =?iso-8859-1?Q?gC3F7U1yS9/1qUo/puiG+sA0imLJm3j0cw8pMdwXExD5mLlZJ2303roEym?=
+ =?iso-8859-1?Q?B6ebOKLElfHerUah7QUlqKovjvTIEBkuEuuwXmZs9J8+1GhNVxz8i9FSGR?=
+ =?iso-8859-1?Q?+I0QopLTX8d7fI/bIBDhxV+6TdQSqv+c6bOS6QQgLMhfAUrDgWwhKTLSjG?=
+ =?iso-8859-1?Q?FRDBMMgkWgTbZZ+wWUAoVUo2V29TIzdLyz2FbVpcgzSeKbKdaC7OWEdSX1?=
+ =?iso-8859-1?Q?X9cw6NIZZ5aIgqVwKwtf0CWvG+vyGGAV/+5SXQE9MsRgmRrjNZRwPR4gJx?=
+ =?iso-8859-1?Q?6hlDqG6Q+2HKYfbm+c4YlKdtIeV6qPezIRzqy6f3Gz4m83xbI1+a4GQIRe?=
+ =?iso-8859-1?Q?0TmhMJJQirSkc1JnYLoF1gp64kFDdekrFiinoQ9eb4CV94x9ktrxlXQQA3?=
+ =?iso-8859-1?Q?ofLsK0X1Sr5GTM+TJSrQHWbSLqIMsfgd2Ophas36iRu+3Bw9IiOgruf7Pu?=
+ =?iso-8859-1?Q?ScpUCOE494slVVMV5Z+X9/+9gxA5tRw3K6cQk2xKaRyPlZ4sLZp8UXzGcG?=
+ =?iso-8859-1?Q?zf3wGr1IYSaDsd3I1W/uI5tKx1MsNjD2BN8n53SdTGvNUK2kRHm6StlcvR?=
+ =?iso-8859-1?Q?QPU+7W3v9+69WLWMqtCTjH9udy5d4fVj663SNFwmFP7fMlrDoDAD1tLIYP?=
+ =?iso-8859-1?Q?7qU75AIEL0eerrvEci0uCfIiaCUvdDtRTx5+HyVURmbuE9kMEX/f5xsxQs?=
+ =?iso-8859-1?Q?11bx4kn1SIm5wd6U7pzRL6ohyywDKNxMW2KeQ84LXtO6fIyYnFTWCbC9vH?=
+ =?iso-8859-1?Q?CFOqSo8UlACJcNAmybC9JzIVaCXkgyAgCRJd6KiTOdL5iBYWjlKPB4brxV?=
+ =?iso-8859-1?Q?Zj9zQTJgzqT39/o4Q0RX392u+howK4nQM2v9Cw2dPGH2Sz2/3wS1eVz6b9?=
+ =?iso-8859-1?Q?wc4yo+VFmCDRWjHeE1O9foKr5Q63hq7BTN1VUp0Qdf4KFiSU/NYnIUZsaW?=
+ =?iso-8859-1?Q?XnTE5T3ivFiXRHPAjt99nIzANuWJVA/LEqYH9kWH4ZHZXiRGEFUeUT6g?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d312291e-cf31-4c7f-8e18-08de07bc6759
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 05:18:10.5950
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TkW+PNXHSrHVg4gPUZtAl9yuDJ8Chz9j/df9O8fvKFoD53sH9Zo0jh87mhQXA4W+zPrY5f0+6QHYAIcQhlmabThdjZpFfgy6rwqL5PvMFa4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5827
+X-OriginatorOrg: intel.com
 
-> > >> Out of curiosity (probably could go to the commit log) - for what kind
-> > >> of request and on which platform we do not know the response size in
-> > >> advance? On AMD, the request and response sizes are fixed.
+On Mon, Sep 29, 2025 at 04:56:03PM +0300, Ilpo Järvinen wrote:
+>On Mon, 29 Sep 2025, Lucas De Marchi wrote:
+>
+>> Hi,
+>>
+>> On Thu, Sep 18, 2025 at 01:58:57PM -0700, Lucas De Marchi wrote:
+>> > There may be cases in which the BAR0 also needs to move to accommodate
+>> > the bigger BAR2. However if it's not released, the BAR2 resize fails.
+>> > During the vram probe it can't be released as it's already in use by
+>> > xe_mmio for early register access.
+>> >
+>> > Add a new function in xe_vram and let xe_pci call it directly before
+>> > even early device probe. This allows the BAR2 to resize in cases BAR0
+>> > also needs to move:
+>> >
+>> > 	[] xe 0000:03:00.0: vgaarb: deactivate vga console
+>> > 	[] xe 0000:03:00.0: [drm] Attempting to resize bar from 8192MiB ->
+>> > 16384MiB
+>> > 	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: releasing
+>> > 	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x41ffffffff 64bit pref]:
+>> > releasing
+>> > 	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x41ffffffff
+>> > 64bit pref]: releasing
+>> > 	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x41ffffffff
+>> > 64bit pref]: releasing
+>> > 	[] pcieport 0000:01:00.0: bridge window [mem 0x4000000000-0x43ffffffff
+>> > 64bit pref]: assigned
+>> > 	[] pcieport 0000:02:01.0: bridge window [mem 0x4000000000-0x43ffffffff
+>> > 64bit pref]: assigned
+>> > 	[] xe 0000:03:00.0: BAR 2 [mem 0x4000000000-0x43ffffffff 64bit pref]:
+>> > assigned
+>> > 	[] xe 0000:03:00.0: BAR 0 [mem 0x83000000-0x83ffffff 64bit]: assigned
+>> > 	[] pcieport 0000:00:01.0: PCI bridge to [bus 01-04]
+>> > 	[] pcieport 0000:00:01.0:   bridge window [mem 0x83000000-0x840fffff]
+>> > 	[] pcieport 0000:00:01.0:   bridge window [mem
+>> > 0x4000000000-0x44007fffff 64bit pref]
+>> > 	[] pcieport 0000:01:00.0: PCI bridge to [bus 02-04]
+>> > 	[] pcieport 0000:01:00.0:   bridge window [mem 0x83000000-0x840fffff]
+>> > 	[] pcieport 0000:01:00.0:   bridge window [mem
+>> > 0x4000000000-0x43ffffffff 64bit pref]
+>> > 	[] pcieport 0000:02:01.0: PCI bridge to [bus 03]
+>> > 	[] pcieport 0000:02:01.0:   bridge window [mem 0x83000000-0x83ffffff]
+>> > 	[] pcieport 0000:02:01.0:   bridge window [mem
+>> > 0x4000000000-0x43ffffffff 64bit pref]
+>> > 	[] xe 0000:03:00.0: [drm] BAR2 resized to 16384M
+>> > 	[] xe 0000:03:00.0: [drm:xe_pci_probe [xe]] BATTLEMAGE  e221:0000
+>> > dgfx:1 gfx:Xe2_HPG (20.02) ...
+>> >
+>> > As shown above, it happens even before we try to read any register for
+>> > platform identification.
+>> >
+>> > All the rebar logic is more pci-specific than xe-specific and can be
+>> > done very early in the probe sequence. In future it would be good to
+>> > move it out of xe_vram.c, but this refactor is left for later.
+>>
+>> Ilpo, can you take a look on this patch? It fixed the issue that I had
+>> with BMG. It needs the first patch for the full fix, but the fixes are
+>> more or less orthogonal.
+>
+>FWIW, it looks okay to me from PCI perspective,
+>
+>Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-For TDX, the maximum response size are decided by guest, that's because
-GHCI says guest should allocate request/response pages big enough for the
-GHCI call. But guest may not know the actual response data size generated
-by host.
+I'm pushing this to drm-xe-next. The first one may go through pci or drm
+tree when it's reviewed.
 
-> > > 
-> > > I don't know. Given this is to support any possible combination of TSM
-> > > and ABI I took inspiration from fwctl which is trying to solve a similar
-> > > common transport problem.
-> > 
-> > If guest_req() returns NULL - what is it - error (no response) or
-> > success ("request successfully accepted, no response needed")? The PSP
-> > returns fw_err (which I pass in my guest_request hook), does this
-> > interface suggest that my TSM dev should allocate a sizeof(fw_err)
-> > buffer at least, and if there is more - then
-> > sizeof(fw_err)+sizeof(response)? I thought TDX does return an error
-> > code too, surprised to see it missing here.
-> 
-> As we talked about on the CCC call it sounds like at least TDX also
-> wants to pass an explicit FW response code separate from the response
-> buffer, so I will fix this up to not follow fwctl.
+Merged to drm-xe-next, thanks!
 
-Now the API looks like:
+[2/2] drm/xe: Move rebar to be done earlier
+       commit: 45e33f220fd625492c11e15733d8e9b4f9db82a4
 
- int pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope scope,
-                       void *req_in, size_t in_len, void *req_out,
-                       size_t out_len, u64 *tsm_code)
-
-I understand the out_len should be the maximum response size decided by
-guest, then I need an extra parameter actual_out_len.
-
-
-Another thing is, the req_in/out bufers are user buffers passed in from
-QEMU, but IOMMUFD does't have to copy them. We could offload the work to
-TSM driver. It is because only TSM driver knows/cares the actual valid
-data size in these pages, it could do copy_from/to_user() in most
-efficient way.
-
-----8<----
-
- int pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope scope,
--                     void *req_in, size_t in_len, void *req_out,
--                     size_t out_len, u64 *tsm_code)
-+                     void __user *req_in, size_t in_len, void __user *req_out,
-+                     size_t out_len, size_t *actual_out_len, u64 *tsm_code)
-
-
-> 
-
-
+thanks
+Lucas De Marchi
 
