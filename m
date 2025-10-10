@@ -1,238 +1,101 @@
-Return-Path: <linux-pci+bounces-37783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AFC4BCB754
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 04:52:32 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C8ADBCBA1C
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 06:20:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62BBE19E5E48
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 02:52:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5915E4E3E2D
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 04:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9319A1531C1;
-	Fri, 10 Oct 2025 02:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D3B1FE471;
+	Fri, 10 Oct 2025 04:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h3W2G2ot"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQTDoKiq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9911919C542
-	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 02:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB991E5B70
+	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 04:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760064748; cv=none; b=daVBQJ8EinSIrJv2kO+414hVr5kR+IJ6LULpF99SKtJlGeEzQnOUXlDO3K1WwoCmsm6qdkPjAY3moRtws3RJeVzl39jwkpIPNuY4QgVe4DOY09uFCNIuTg4E3PhVTOz/dYzUXPRw6Fam52PaAu15m2QDDysNrWSH4/lNGnJUfDQ=
+	t=1760069978; cv=none; b=niA81w0oHJMOhJmCmmZ9p2CsCV7AcfIcziMUR3o1HKCwwTUi0EnpSy137NoyTeRDEZVGW5/PcB9tqrmJam9pb1he3Ju2Vm3+9vaM3A3mT9//+qjaobIqKC0HueRDI9SKNITkRVBWO/cw6Uy89+ALzlsuBYwUzwHF2qG7PlNDMuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760064748; c=relaxed/simple;
-	bh=BtPGX0SCKTWOO/2pmFrKk9ubExIp15TCY8Ta2rehDnA=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HgpH69YueyuqoA8yuaDZHG8gNqxm+66B8mvQBhfn42LQ4ee6LosEdnUwpLVJBQfmeOsNJHSjP7/bRXxn1gp9NahfaNYxTUeLYDcoaYyvYF2f3jnNltagPDpQuCVmwnM31fSyq7hLJLu3L85lMBxuL4eXhDPnWqb4/AfAsvtqtQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h3W2G2ot; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760064745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p77JZb+Mdci5/KEMJK1kpt1QjxLJZnP83075vW8bdvw=;
-	b=h3W2G2otOek2e79fsAMahCn4y5ymGHc7LM0BK/DQXBwaUg3fFQo9WT0lAuIL9XQyXoPc8N
-	EDcJeSK4U/DnYaLvdNY4jdtmo4cKoQFgByYxxJKJtG1DCnDSk+R4fQ82SR0DeIhYFioBle
-	9PjSm2+4uVy/JGhfQPKcZ7oQneltX30=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-320-k4MWJxmfMaa3hqzsnaV_fg-1; Thu, 09 Oct 2025 22:52:24 -0400
-X-MC-Unique: k4MWJxmfMaa3hqzsnaV_fg-1
-X-Mimecast-MFC-AGG-ID: k4MWJxmfMaa3hqzsnaV_fg_1760064743
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-79e48b76f68so73323206d6.3
-        for <linux-pci@vger.kernel.org>; Thu, 09 Oct 2025 19:52:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760064743; x=1760669543;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p77JZb+Mdci5/KEMJK1kpt1QjxLJZnP83075vW8bdvw=;
-        b=n5KN+nQMNjgGqkF3SIWGXqHVV7XpXC45BN0Fpt0e2t3XX9hOhIbLmE5+A/rLo/ip3z
-         RP5VliQH1/aUgB0fy1xRg+tJGH5xgy41j6KMq13KoYQ3EkKHDKCTmRlTp1rbPr3ObfMr
-         xpzXwylgRsZlj9QJq3oDkOwtcUD00CvLpTt7oYLMqUZ1t0GDZwwavLTbSThQB/kBQuS2
-         PTeA7g6smPE3tip/KEV0wAcaKPZ/2eBsOsSyRYx5H0qpTkC6UMqj8eUI1JMjupfkCw6l
-         bzfSH3FuDInLR4Sj7BS01EW507l691pixaJTIp2Y+P+wg+L0+keJIHyGSDHt1YH2+Caz
-         76aA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4od2UI9VIIPBK1f6h3m8UhwBJePMwTaqTLh1pWF6Uto4CROE3eLpqhMJIrFi/d5RZpcCloCQt84M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYx9BCBohJ8xaboSUha4zgkoTOxZ2JFYNyrB7jD73fR4f0Kgiq
-	4okyDYrKwdc/QX6nCmhkaUyoVDT9atu9FYIP9K35v7OQzBngmqLecsEG5UGcB2pp0DTJ7bJp8k9
-	T7WpQ83pXXOc5cWrwWfJrxciTt7I8HbgQQKGBcLklrtQH3xijE9hDfL2BKvDq7g==
-X-Gm-Gg: ASbGnctpdR+SpqiI/aZYqHhKvLxGruOFzfd2eQfmFhNgCDNTxBkQMELWM/kP0Fp0pXm
-	hkrNLoLFOEDtNDuqWvKWR7yXyWVMCy9hXQMbMkMhBF3l76c5vDfYteAtSB+hjNrEk9wN51zPN9N
-	Fvi11X62BoB4/5Hxf99Ps2p88CfD4NPClJc638mdX/bCv3wdj72wDYH/jj6lm6yGIhYlsvCBzcD
-	9RuvXXZiMHi5t2vr+Jzc7TAGd2nsDNiwTs3SOimRfOHpALfpuY68Vb2o7/tyrbfXt2LQ30TDCHa
-	62XsZdwitm/ddz0177RH9VQVOGOFOCFiDvMPA9KX058nxxFfRHW2YZbokbQ6+1N+pTHuVtCNvyR
-	k4YMrZg04JZ0=
-X-Received: by 2002:ad4:594b:0:b0:873:f6bc:abb8 with SMTP id 6a1803df08f44-87b2101d5d4mr127529096d6.15.1760064743563;
-        Thu, 09 Oct 2025 19:52:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0lkCcjXQD1DjvauUfSkRJqcrLhOc8z33VBbhKdHXGR8krbUUptEp7lztjXHaRk4Wn9gpyaw==
-X-Received: by 2002:ad4:594b:0:b0:873:f6bc:abb8 with SMTP id 6a1803df08f44-87b2101d5d4mr127528846d6.15.1760064743131;
-        Thu, 09 Oct 2025 19:52:23 -0700 (PDT)
-Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87bc345da68sm7842246d6.13.2025.10.09.19.52.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Oct 2025 19:52:22 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <3c20a451-ebc6-4057-be77-2caaf6d2317c@redhat.com>
-Date: Thu, 9 Oct 2025 22:52:21 -0400
+	s=arc-20240116; t=1760069978; c=relaxed/simple;
+	bh=bJV3A2ztZGaLQ6mgfvyHfdT7NOP/K+k71R0Kusejlnc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gazv0W2Nh1iliM1GFk3O//aoaLOl/1iMGghXdKxz75g4sRQWitpO37RdfJ7n74SYaCelm8zxufzUETFJGulRIlYnWMvP9k1EpKc8f02I/Lkz/zh+zJIzgy7jZVvQwHFnA4+kwIwQBVuWKR+yNO/OJUFVaAG0MA5cmW6A+x+vK0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQTDoKiq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 838B7C116C6
+	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 04:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760069978;
+	bh=bJV3A2ztZGaLQ6mgfvyHfdT7NOP/K+k71R0Kusejlnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BQTDoKiqaGFunGsyhh1cbd7kdKT7FDFjTs7auCjOhXVFIujP32wm8NR5H1D0qoO9X
+	 560grcEWL+xo7zPe9VtRzFChsZVCoL1+awasIcTBhFIA1XVXT9RWP8+V8UsT3xPYy3
+	 elf9PI+UPsydclMFBaaOjqgKdMDumtaiG70vJFxJNSTChwgdrzYQbd63b+EAkXU0vd
+	 zugWmoSv7FfkAaPwlDrNWONUSEKezzTneq1TLFPdiVhj/CzytW0xUF4m3/caiaoLo3
+	 rhszQMNCBU/Rsh5xshKWDmEcURG90gtzXSRdaxVLPDYt01bKwl41KEWCabfYYj+79M
+	 gzAcR8tsVnEKg==
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-633bca5451cso1712190d50.1
+        for <linux-pci@vger.kernel.org>; Thu, 09 Oct 2025 21:19:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXig8yEb3bvh6BwXKRH90zIV/7WICbVCpMfO5o5HaWbxmACRnPuHeDXEvgdhKzb/JiiMcN7Ufy5eDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzobiQmt60P2hZcZvVzLHE8oF9jkggx5oE9cV+9t6nXYsnTRuqy
+	F2V91H4JIIygWg4OFT1d3wIarKF71AI6LCO1GL84P3UPcBsKa+uhFxbpj2RUElssvsUuQdeA/+8
+	oAllS4U08Nw6caPU5gqj41CYn1bAsHzIEBBORAe7F6Q==
+X-Google-Smtp-Source: AGHT+IHLY3NQ877f+Hb/NGw3OlMwCbxviANquhSk208SkinMsbXRBhob17ACKUqhB6hbnqihTyuVE3CPYH0yMCZrPxs=
+X-Received: by 2002:a53:ea91:0:b0:636:fd5:ed02 with SMTP id
+ 956f58d0204a3-63ccb8ee9f6mr8057747d50.45.1760069977672; Thu, 09 Oct 2025
+ 21:19:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pci/aer_inject: switching inject_lock to
- raw_spinlock_t
-To: Guangbo Cui <jckeep.cuiguangbo@gmail.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
- linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20251009150651.93618-1-jckeep.cuiguangbo@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20251009150651.93618-1-jckeep.cuiguangbo@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CA+CK2bAbB8YsheCwLi0ztY5LLWMyQ6He3sbYru697Ogq5+hR+Q@mail.gmail.com>
+ <20250929150425.GA111624@bhelgaas> <CACePvbV+D6nu=gqjavv+hve4tcD+6WxQjC0O9TbNxLCeBhi5nQ@mail.gmail.com>
+ <CACePvbUJ6mxgCNVy_0PdMP+-98D0Un8peRhsR45mbr9czfMkEA@mail.gmail.com> <mafs0a51zmzjp.fsf@kernel.org>
+In-Reply-To: <mafs0a51zmzjp.fsf@kernel.org>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 9 Oct 2025 21:19:25 -0700
+X-Gmail-Original-Message-ID: <CACePvbW9eSBY7qRz4o6Wqh0Ji0qECrFP+RDxa+nn4aHRTt1zkQ@mail.gmail.com>
+X-Gm-Features: AS18NWCu3_vyHjoCV8Rj_bpQLVkf37Xx7I24e2eNWuCPz2Dl_PLLF000jx8A6IY
+Message-ID: <CACePvbW9eSBY7qRz4o6Wqh0Ji0qECrFP+RDxa+nn4aHRTt1zkQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] LUO: PCI subsystem (phase I)
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, David Matlack <dmatlack@google.com>, 
+	Pasha Tatashin <tatashin@google.com>, Jason Miu <jasonmiu@google.com>, 
+	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, skhawaja@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/9/25 11:06 AM, Guangbo Cui wrote:
-> When injecting AER errors under PREEMPT_RT, the kernel may trigger a
-> lockdep warning about an invalid wait context:
+On Thu, Oct 9, 2025 at 4:21=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org>=
+ wrote:
 >
-> ```
-> [ 1850.950780] [ BUG: Invalid wait context ]
-> [ 1850.951152] 6.17.0-11316-g7a405dbb0f03-dirty #7 Not tainted
-> [ 1850.951457] -----------------------------
-> [ 1850.951680] irq/16-PCIe PME/56 is trying to lock:
-> [ 1850.952004] ffff800082865238 (inject_lock){+.+.}-{3:3}, at: aer_inj_read_config+0x38/0x1dc
-> [ 1850.952731] other info that might help us debug this:
-> [ 1850.952997] context-{5:5}
-> [ 1850.953192] 5 locks held by irq/16-PCIe PME/56:
-> [ 1850.953415]  #0: ffff800082647390 (local_bh){.+.+}-{1:3}, at: __local_bh_disable_ip+0x30/0x268
-> [ 1850.953931]  #1: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-> [ 1850.954453]  #2: ffff000004bb6c58 (&data->lock){+...}-{3:3}, at: pcie_pme_irq+0x34/0xc4
-> [ 1850.954949]  #3: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-> [ 1850.955420]  #4: ffff800082863d10 (pci_lock){....}-{2:2}, at: pci_bus_read_config_dword+0x5c/0xd8
-> ```
+> On Tue, Oct 07 2025, Chris Li wrote:
 >
-> This happens because the AER injection path (`aer_inj_read_config()`)
-> is called in the context of the PCIe PME interrupt thread, which runs
-> through `irq_forced_thread_fn()` under PREEMPT_RT. In this context,
-> `pci_lock` (a raw_spinlock_t) is held with interrupts disabled
-> (`spin_lock_irqsave()`), and then `aer_inj_read_config()` tries to
-> acquire `inject_lock`, which is a `rt_spin_lock`. (Thanks Waiman Long)
+> [...]
+> > That will keep me busy for a while waiting for the VFIO series.
 >
-> `rt_spin_lock` may sleep, so acquiring it while holding a raw spinlock
-> with IRQs disabled violates the lock ordering rules. This leads to
-> the “Invalid wait context” lockdep warning.
->
-> In other words, the lock order looks like this:
->
-> ```
->    raw_spin_lock_irqsave(&pci_lock);
->        ↓
->    rt_spin_lock(&inject_lock);   <-- not allowed
-> ```
->
-> To fix this, convert `inject_lock` from an `rt_spin_lock` to a
-> `raw_spinlock_t`, a raw spinlock is safe and consistent with the
-> surrounding locking scheme.
->
-> This resolves the lockdep “Invalid wait context” warning observed when
-> injecting correctable AER errors through `/dev/aer_inject` on PREEMPT_RT.
->
-> This was discovered while testing PCIe AER error injection on an arm64
-> QEMU virtual machine:
->
-> ```
->    qemu-system-aarch64 \
->        -nographic \
->        -machine virt,highmem=off,gic-version=3 \
->        -cpu cortex-a72 \
->        -kernel arch/arm64/boot/Image \
->        -initrd initramfs.cpio.gz \
->        -append "console=ttyAMA0 root=/dev/ram rdinit=/linuxrc earlyprintk nokaslr" \
->        -m 2G \
->        -smp 1 \
->        -netdev user,id=net0,hostfwd=tcp::2223-:22 \
->        -device virtio-net-pci,netdev=net0 \
->        -device pcie-root-port,id=rp0,chassis=1,slot=0x0 \
->        -device pci-testdev -s -S
-> ```
->
-> Injecting a correctable PCIe error via /dev/aer_inject caused a BUG
-> report with "Invalid wait context" in the irq/PCIe thread.
->
-> ```
-> ~ # export HEX="00020000000000000100000000000000000000000000000000000000"
-> ~ # echo -n "$HEX" | xxd -r -p | tee /dev/aer_inject >/dev/null
-> [ 1850.947170] pcieport 0000:00:02.0: aer_inject: Injecting errors 00000001/00000000 into device 0000:00:02.0
-> [ 1850.949951]
-> [ 1850.950479] =============================
-> [ 1850.950780] [ BUG: Invalid wait context ]
-> [ 1850.951152] 6.17.0-11316-g7a405dbb0f03-dirty #7 Not tainted
-> [ 1850.951457] -----------------------------
-> [ 1850.951680] irq/16-PCIe PME/56 is trying to lock:
-> [ 1850.952004] ffff800082865238 (inject_lock){+.+.}-{3:3}, at: aer_inj_read_config+0x38/0x1dc
-> [ 1850.952731] other info that might help us debug this:
-> [ 1850.952997] context-{5:5}
-> [ 1850.953192] 5 locks held by irq/16-PCIe PME/56:
-> [ 1850.953415]  #0: ffff800082647390 (local_bh){.+.+}-{1:3}, at: __local_bh_disable_ip+0x30/0x268
-> [ 1850.953931]  #1: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-> [ 1850.954453]  #2: ffff000004bb6c58 (&data->lock){+...}-{3:3}, at: pcie_pme_irq+0x34/0xc4
-> [ 1850.954949]  #3: ffff8000826c6b38 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-> [ 1850.955420]  #4: ffff800082863d10 (pci_lock){....}-{2:2}, at: pci_bus_read_config_dword+0x5c/0xd8
-> [ 1850.955932] stack backtrace:
-> [ 1850.956412] CPU: 0 UID: 0 PID: 56 Comm: irq/16-PCIe PME Not tainted 6.17.0-11316-g7a405dbb0f03-dirty #7 PREEMPT_{RT,(full)}
-> [ 1850.957039] Hardware name: linux,dummy-virt (DT)
-> [ 1850.957409] Call trace:
-> [ 1850.957727]  show_stack+0x18/0x24 (C)
-> [ 1850.958089]  dump_stack_lvl+0x40/0xbc
-> [ 1850.958339]  dump_stack+0x18/0x24
-> [ 1850.958586]  __lock_acquire+0xa84/0x3008
-> [ 1850.958907]  lock_acquire+0x128/0x2a8
-> [ 1850.959171]  rt_spin_lock+0x50/0x1b8
-> [ 1850.959476]  aer_inj_read_config+0x38/0x1dc
-> [ 1850.959821]  pci_bus_read_config_dword+0x80/0xd8
-> [ 1850.960079]  pcie_capability_read_dword+0xac/0xd8
-> [ 1850.960454]  pcie_pme_irq+0x44/0xc4
-> [ 1850.960728]  irq_forced_thread_fn+0x30/0x94
-> [ 1850.960984]  irq_thread+0x1ac/0x3a4
-> [ 1850.961308]  kthread+0x1b4/0x208
-> [ 1850.961557]  ret_from_fork+0x10/0x20
-> [ 1850.963088] pcieport 0000:00:02.0: AER: Correctable error message received from 0000:00:02.0
-> [ 1850.963330] pcieport 0000:00:02.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
-> [ 1850.963351] pcieport 0000:00:02.0:   device [1b36:000c] error status/mask=00000001/0000e000
-> [ 1850.963385] pcieport 0000:00:02.0:    [ 0] RxErr                  (First)
-> ```
->
-> Signed-off-by: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
-> ---
-> Changes in v2:
-> - Pulling kfree() out from the lock critical section. (Thanks Waiman Long)
-> - Link to v1: https://lore.kernel.org/linux-pci/20251007060218.57222-1-jckeep.cuiguangbo@gmail.com/
+> I recall we talked in one of the biweekly meetings about some sanity
+> checking of folios right before reboot (make sure they are right order,
+> etc.) under a KEXEC_HANDOVER_DEBUG option. If you have some spare time
+> on your hands, would be cool to see some patches for that as well :-)
 
-As PCI error injection is mainly for debug/development, I think it is OK 
-to change inject_lock to a raw_spinlock. I think you should also mention 
-about moving kfree() out of the lock critical section in the commit log. 
-Or better yet, break it out as a separate patch. It is just a nit. So I 
-am fine with the current version too.
+Sure, I will add that to my "nice to have" list. No promised I got
+time to get to it with the PCI. It belong to the KHO series not PCI
+though.
 
-Now it is up to the PCI maintainer to decide if further change is needed.
-
-Acked-by: Waiman Long <longman@redhat.com>
-
+Chris
 
