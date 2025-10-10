@@ -1,85 +1,84 @@
-Return-Path: <linux-pci+bounces-37799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22DA7BCC5BD
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 11:32:58 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D47D0BCC5C0
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 11:33:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3945F4F285E
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 09:32:55 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8252B3542FF
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Oct 2025 09:33:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A3226B75B;
-	Fri, 10 Oct 2025 09:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C832367D7;
+	Fri, 10 Oct 2025 09:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lFoIQnvb"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hwj+0uhn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EEC22156B
-	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 09:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2C426560D
+	for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 09:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760088769; cv=none; b=cHr37nzvUFwPTTm56BY0JRNtBCjmb3kDKl6PendrETHwGtBRCZz5bj4EXdHyA7l2rGmDXIPsF6Skn80lDWh+MZCwtDfIA03eyXrtrN0iMhvfr4dILvypQkPKsfyIvjYxf1LibUHCIxXG8O3xKqOcJmM+L9pM1HfolquZINIMVnM=
+	t=1760088778; cv=none; b=SJs52fCz80iNGexogYW/QCRhgjCOUKAXsudkQm9zl3v1MnFM8XtaeMHzB9009aOW2UsBG/IbJU7ryolRIpMEQXuJFSUrZPGm48nPmy6hNdTkx7ccXaCHCgo/za3UL8Aqy1luBUhZe+XugcXKEazW1QaXISWR98VKVqoBOEQSmA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760088769; c=relaxed/simple;
-	bh=8jR7JCx6mX9Zjdm10k9TjKk7p7TSQ/2gxTGENPOyPzM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=k1x/cK1aJCZi1U/JpuzQ2kAnkrW+XP3NhhFCFOYqCoj0RY6AGXpiZ4FoXW2tElxKx/OZPjymnxGyRKjnKKZW9gRE9glWRijaEPaBM6f+p6VDwC8S2CCAhW8JtvB9WPV+qAwYoKs11mak8mkCE0RldmzwCN7KP42YRWBvr/yp4n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lFoIQnvb; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1760088778; c=relaxed/simple;
+	bh=6mprBf9rHm8t7EC0WKhRFNgUz+XHrcRxygL5v/apfQY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GZOM/m59Bp0qdcFByP/RfH8YVspD2e4mwdc6xH4Bo6zNYArOuOA1UzYuMymB2RFyyFzmfCGmoSQUFiDrcKwQMSqqo8vp5qD7nh+KGGGjSNdelGGEaHki/j8Bou7pbzVUoHCFdDN/67VTJGc1bJskWvBSi4ALh8lty+4404LjhNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hwj+0uhn; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-794f11334adso1670940b3a.3
-        for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 02:32:46 -0700 (PDT)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7811fa91774so1669098b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 10 Oct 2025 02:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1760088766; x=1760693566; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1760088776; x=1760693576; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=e1j4JQEBprrAt8CIDcRJp5F0vEJV3rg2M42iK6PPNrQ=;
-        b=lFoIQnvbzSz4sIbeEoGUrG35qqN3TGY0x3e78cgliwjD5buWtIvkJWchjDUgjhQEOe
-         AZnzMb8m4W+a++0efs09hx+QEn5gOWi6wreVraJKlK5nk4J9qFlPKwMxwwtt/jqHIcWq
-         WlyIU9zCrK+P1+dmq0/5lqhV+Nei3alHefEaFOuNAsRPv7pybR76qGA/PtzhfDcdrsND
-         8+fWARd/L9bVv1pha1w5Zc8HgfhCMpDmjW0QqH3Ld2l06Es3d+5VtF8XUkv0IgPirQyf
-         IkiBSpzFauVFTLdHszAQ2/u9hWoj5ccu7o2eRDhgVBFVo3eUBQDMAr12UBAgGnUHBpz1
-         Xz3w==
+        bh=OhN24A5UCW1ooWw6ilGbTrMsyp8dpaTZlf+HDDnFDSk=;
+        b=hwj+0uhnqFZen5RcA6FAvmGrtlpUZN53g3sD6rDpLuEt79/zQvLqZF8dscFxzSx42H
+         Iq/IJ/wr6YuhlAXUAIE2ozl1a2ycoULBpGbxMnOmAJnw0Ye1cTiqq9Q2SgkTMkBCUf7x
+         0Da7XhiTe8SrP8+4v0lNfei3wN8lolP+t5/13YuVsJGMw4B9K/OQPKElnKjB8zdgpzsU
+         aoBYRyfGFXt4j7cQnMVphINOtEZtkfIjbb5KY8AqYoPdNRRnlyD1h8ldeVzvWNiHpRrA
+         lBDQfRGQuCQEPBUvxGtiEdLPSTMbTRbyryZ7C+GY81PfF/GBsgOv8HxhapcF7nrDrhRP
+         H9FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760088766; x=1760693566;
+        d=1e100.net; s=20230601; t=1760088776; x=1760693576;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1j4JQEBprrAt8CIDcRJp5F0vEJV3rg2M42iK6PPNrQ=;
-        b=F4Qs6Fxm8vMeBUWmmrO3poaV0IHMKRnvzYaCkwSPHSO1Giic6n2OzachaHoMYPsVBF
-         doprezt4VTl7u6Y2sRqorzlPEpNEY1e+51pSj0qIC9IrDQEe+CnnNxX+tMTWIXcbJAlm
-         wwByuAAA3qFQKBZDReUGxR6Hcjvmp95JNUppwXmelwVEdPmJqjTK3N28EJQTVpoN3WhD
-         Y1NTh6ZlO6TVgVX3Qw/aKolt9wrJqM8e+MmA9RYMBeG0spLts7O776aloNgoeB77cDoZ
-         DUKiNz+DtcU/1lw1Fjv5glsu/Yqfou5vXYyIQmSi4wF0BlBhn1IFS/8o+nbopRf9d5l1
-         /yrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMYunp8bD4lv7gpJD3PBiaJMwIrvNcKuaJ66hu5XtWInzqw3ZvKqnaWEqykHlbJaVO973ajda0OoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4vxca7rZtlSChPtgA1qn2vsN+m9Am9Z8SE9NySX5oTi0uaDC5
-	iMlqlhR0Y/TvAzzkjZsDnz21ZtXXk3vMZMWAMNAuHBZlVp/PpU6Ewb5nWA+9w+61kGP5mXPSBZu
-	fwL4m
-X-Gm-Gg: ASbGncsl7in66htQ94k5g3qk5mrhQ2j09jbm1u2UoaLT6fKtUlLmF33UT5t1mnboEui
-	HPHl/TbfAqEbnklkb9JYdLCxvG6LCYPlQGjeaZz5hmX7z/XF8wo91vJEJEL4xU+F+fi+VwAzl6w
-	rEknnG7VZmMPZhIOGrnLOvXp7cqvw9ImEYHxMo7vmfkvckVwjP5hSqV7hvDgFTosxD5Bfe6/TX0
-	4ZjmmC3lYtH+ejicf9pNjnENsX/wKLuTVDRzFZ74xCPjIFxWxWX8CxOB1C/lJ5sr2n49FvHX9AM
-	5s4oTlWnaMD9Y2UVz9n5k+8afCPzV/f17s+s4E04BpZjNa5SD/TmXnajVXgD5OVxrMyhSHxSKoD
-	yOd7eNVI3I8GgVyeLD5kyY4sUdTHhuF7MA0+WrQfICsWVh7qlJt1wpjMQ/SueaaJnVjtq6XOeny
-	3fU4TqOlBz5l1kwqimTw==
-X-Google-Smtp-Source: AGHT+IEHvg8I+2J3GlYDkq/cIvoLiQvtAkgOU8NxYFWlvB/PSTBrQS6eSFQh8W9oHia17FqxPc8AoQ==
-X-Received: by 2002:a05:6a00:399d:b0:781:2656:1d6b with SMTP id d2e1a72fcca58-7938763251bmr13394405b3a.24.1760088766109;
-        Fri, 10 Oct 2025 02:32:46 -0700 (PDT)
+        bh=OhN24A5UCW1ooWw6ilGbTrMsyp8dpaTZlf+HDDnFDSk=;
+        b=S7pAiY56pJrDA/u74XAypz2+U0/AseYH8XXfbvABuA0DwR4Xf9UO0gY0uQHotl5jPq
+         tQAAp9bYgL+6U9yKRU+LRaMUUDBiUJuLy3hNTYTWfyg9xMuti9E6irF444dVk3gpnRum
+         a5LuVSIU2jmIfB8UYTks5e6iEsIxZKQ8tAVJXT1iKGIoTeDor8wMRnQhPD0nVvcR7fob
+         +vbo9YoJyX2k8+pmTXWVeBCDJKi5+ZDFSBsJ5RmQBxaeL7PKfivHHB4J935j/TFIIG0n
+         alx4LOjSSa8ERJN4r5dyNnGj0m6M5YywCtjCej6gieMBBylRfpzHE2cPm3XKBYjdYAhx
+         ukeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMwSioW0UdMAEyWjaM8hk1Ig5g/dBkugjFRxlVYQX4Env0Jirw5B1tDa+1yNcyq0PPWj7t7BAWETU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1utGqFyRD63uSZqL407gOyJU17GKcZiFONyz7Uy+jq/BXfaFS
+	EPE1wPTxKx6ZhjqmCGveP2w1KgKvEimB+aiBCgkbmi2vrNbnJzkvMQ5rqIW4oganxMg=
+X-Gm-Gg: ASbGncsBICL//6TkobUXcxyBN9ePiMoAQ97cXKFo1j26k6ntbNT4LCkEPJnRYWUBitl
+	gQXCyKU5nmt26RrO2fAPANoXnOG41zyum74P6fWgr2rX2vf9DVhx5zrBwYI4y33toOh0QYxux2G
+	DXA1AiNErn1NHVYIbGiBhHzQ9u5nGrQ4ilTkb3iOP/WMtl2pdKmTZWjfv3sp72So4INP8YCiRcT
+	Mpw9FDqU/NPx95uJ3lMGXW1aYwsGwcdsY6KpDIXg+rXUC/gxxTwwgrfcTFJTTBLpE/YNjVmeSTY
+	6mmrPD3044GKF2IZPAu08Tfo2ATKtbtfsH57/VKrzg0WtRdu5tzQoXtRYHzjjHD7RgXHlzJDj5D
+	HHatZfT42+MUITjiiwONGHAUzCSAyzxr4yVNYEYHS5Sj3aFS9prZyje+Ev9cIdRmIvy2wT69/Bg
+	ujTK73oopd1Q0TFLRW0uaofxN0fRbb
+X-Google-Smtp-Source: AGHT+IGToyfnFp6Nx9gf8NmRJnd4O/Y3pam9cbiDX+UZWPa17SsaNbTO7MXGaHWms2MZ1He/ASjT8A==
+X-Received: by 2002:a05:6a20:3d8c:b0:2b4:41d9:b068 with SMTP id adf61e73a8af0-32da8462f7emr12905134637.37.1760088775650;
+        Fri, 10 Oct 2025 02:32:55 -0700 (PDT)
 Received: from 5CG3510V44-KVS.bytedance.net ([139.177.225.247])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992d0e2d51sm2308775b3a.65.2025.10.10.02.32.43
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992d0e2d51sm2308775b3a.65.2025.10.10.02.32.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Oct 2025 02:32:45 -0700 (PDT)
+        Fri, 10 Oct 2025 02:32:55 -0700 (PDT)
 From: Jinhui Guo <guojinhui.liam@bytedance.com>
 To: bhelgaas@google.com
 Cc: guojinhui.liam@bytedance.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] PCI/sysfs: Fix potential double-free in pci_remove_resource_files()
-Date: Fri, 10 Oct 2025 17:30:22 +0800
-Message-Id: <20251010093023.2569-2-guojinhui.liam@bytedance.com>
+Subject: [PATCH 2/2] PCI: Print the error code when PCI sysfs or procfs creation fails
+Date: Fri, 10 Oct 2025 17:30:23 +0800
+Message-Id: <20251010093023.2569-3-guojinhui.liam@bytedance.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20251010093023.2569-1-guojinhui.liam@bytedance.com>
 References: <20251010093023.2569-1-guojinhui.liam@bytedance.com>
@@ -89,38 +88,45 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Avoid a double-free in pci_remove_resource_files() by clearing
-pdev->res_attr[i] and pdev->res_attr_wc[i] to NULL after kfree().
-If pci_create_resource_files() fails it immediately calls
-pci_remove_resource_files() to clean up, and the same function is
-invoked again when the device is later removed from the PCI tree.
-Without zeroing the pointers the second free would operate on stale
-addresses, causing use-after-free or a double-free panic.
+pci_bus_add_device() ignores the return values of
+pci_create_sysfs_dev_files() and pci_proc_attach_device(), so any
+sysfs/procfs creation errors are silently lost. To make PCI
+bring-up failures easier to diagnose, log the errno returned by
+pci_create_sysfs_dev_files() and pci_proc_attach_device() in
+pci_bus_add_device().
 
 Signed-off-by: Jinhui Guo <guojinhui.liam@bytedance.com>
 ---
- drivers/pci/pci-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/bus.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 9d6f74bd95f8..a8a27d6c62bb 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1222,12 +1222,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr[i] = NULL;
- 		}
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index f26aec6ff588..395a1c7bb4c7 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -344,6 +344,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+ {
+ 	struct device_node *dn = dev->dev.of_node;
+ 	struct platform_device *pdev;
++	int ret;
  
- 		res_attr = pdev->res_attr_wc[i];
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr_wc[i] = NULL;
- 		}
- 	}
- }
+ 	/*
+ 	 * Can not put in pci_device_add yet because resources
+@@ -353,8 +354,12 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 	pci_fixup_device(pci_fixup_final, dev);
+ 	if (pci_is_bridge(dev))
+ 		of_pci_make_dev_node(dev);
+-	pci_create_sysfs_dev_files(dev);
+-	pci_proc_attach_device(dev);
++	ret = pci_create_sysfs_dev_files(dev);
++	if (ret)
++		pci_err(dev, "created sysfs files error %d\n", ret);
++	ret = pci_proc_attach_device(dev);
++	if (ret)
++		pci_err(dev, "created procfs files error %d\n", ret);
+ 	pci_bridge_d3_update(dev);
+ 
+ 	/*
 -- 
 2.20.1
 
