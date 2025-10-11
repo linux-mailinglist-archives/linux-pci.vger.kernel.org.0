@@ -1,114 +1,184 @@
-Return-Path: <linux-pci+bounces-37839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DB6CBCF012
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Oct 2025 07:25:41 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F1A0BCF106
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Oct 2025 09:25:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57FBD3A67EC
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Oct 2025 05:25:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 084844E3D69
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Oct 2025 07:25:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D2911DB122;
-	Sat, 11 Oct 2025 05:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D95DE22579E;
+	Sat, 11 Oct 2025 07:25:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC34685626
-	for <linux-pci@vger.kernel.org>; Sat, 11 Oct 2025 05:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28121FFC7B;
+	Sat, 11 Oct 2025 07:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760160338; cv=none; b=MQJHxvTGZq2GQ7t3KXzpS2fy5FJ7aUV50Lu2NJr6PQxJjnPQeHkv7YXLdfd3R3J5fxUawtBC9kgCykLT8w8O505ckG9xDFF52XHYEP8QZ4msiL9Ge2smpUH7lTphvoCeOAfUEPCWTEPyB2g5QMIfhPgBKztBhkZT71mirBpz1nE=
+	t=1760167538; cv=none; b=tGuOCyG3b595kkNmTz7u2ZUVXoPcvnOm1BPcgL/r9bO+Qe1nF5coV8i17KPd4gyak4HtTWPaZgHDQUPAEwbioj76MLm5H+ZXafOkK1VOlwXT77naj6Fy2SIYyoTLUuSYRFVUGeNOmBSTRjTpbOnEwsgmByzF0ust5L8GMGxoVwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760160338; c=relaxed/simple;
-	bh=jnDEddd1YPP8astawqBpwuTquwaj7eZYM/w3d6YyLN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwCX+UnWkQjF88Fe/VP2cjQJZDzsWR2zdWCyTwDexCBue19iIOwacscqlUxLZxoWmJyJKUgjKUXGg5s+cozeWAYYVqyuXoQ9l6k0I3/UzuHVEOULhJoh+6/D5V60EHJY823VVKAlEcLR57VIBT91aE8eWnOThyvNZVhv/dWkenk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id C3D2E2C06F50;
-	Sat, 11 Oct 2025 07:25:26 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 852524A12; Sat, 11 Oct 2025 07:25:26 +0200 (CEST)
-Date: Sat, 11 Oct 2025 07:25:26 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	mad skateman <madskateman@gmail.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	"debian-powerpc@lists.debian.org" <debian-powerpc@lists.debian.org>
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <aOnqRqmHfaguJqyS@wunner.de>
-References: <20251008195136.GA634732@bhelgaas>
- <bf9ca58b-b54a-42fc-99f7-4edaa7e561f3@xenosoft.de>
- <aOdKAp8P0WwVfjbv@wunner.de>
- <d89576ac-c34c-4832-b51b-cf6f60c5c85c@xenosoft.de>
+	s=arc-20240116; t=1760167538; c=relaxed/simple;
+	bh=y9/4R1a4XJwiV/08vzlHpwiXmUsBzyQnpfsVyRNnDo8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=No5lVABlFcA8mX7NPlUOrU7+RWzaNIbwJsJ8AYnt4xHBuerLVvoXEppPXpkFN+FnqiVSuIcwHZsxIjCC1JyQ/64449tXTWZnNBGfmJqph0gkGAmy4x1ELCOW9n3Bu24Z+sqNe6nFqKga9ewjF9f4yj633aRwkrVwAzGY7vuHqRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Sat, 11 Oct 2025 15:25:10 +0800 (GMT+08:00)
+Date: Sat, 11 Oct 2025 15:25:10 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Frank Li" <Frank.li@nxp.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de, johan+linaro@kernel.org,
+	quic_schintav@quicinc.com, shradha.t@samsung.com, cassel@kernel.org,
+	thippeswamy.havalige@amd.com, mayank.rana@oss.qualcomm.com,
+	inochiama@gmail.com, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
+	"Yanghui Ou" <ouyanghui@eswincomputing.com>
+Subject: Re: Re: Re: [PATCH v3 2/2] PCI: EIC7700: Add Eswin PCIe host
+ controller driver
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <31b9a79e.17e8.1997ba143a1.Coremail.zhangsenchuan@eswincomputing.com>
+References: <20250923120946.1218-1-zhangsenchuan@eswincomputing.com>
+ <20250923121228.1255-1-zhangsenchuan@eswincomputing.com>
+ <aNL5RO77A3PuJMYy@lizhi-Precision-Tower-5810>
+ <31b9a79e.17e8.1997ba143a1.Coremail.zhangsenchuan@eswincomputing.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d89576ac-c34c-4832-b51b-cf6f60c5c85c@xenosoft.de>
+Message-ID: <655e3988.1d81.199d228c347.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgDHZpVWBupoD9QDAQ--.27194W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgEMBmjpN
+	VcYfwABsM
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-[cc += Mani]
-
-On Sat, Oct 11, 2025 at 07:12:49AM +0200, Christian Zigotzky wrote:
-> On 09 October 2025 at 07:37 am, Lukas Wunner wrote:
-> > On Thu, Oct 09, 2025 at 06:54:58AM +0200, Christian Zigotzky wrote:
-> > > On 08 October 2025 at 09:51 pm, Bjorn Helgaas wrote:
-> > > > On Wed, Oct 08, 2025 at 06:35:42PM +0200, Christian Zigotzky wrote:
-> > > > > Our PPC boards [1] have boot problems since the pci-v6.18-changes. [2]
-> > > > > 
-> > > > > Without the pci-v6.18-changes, the PPC boards boot without any problems.
-> > > > > 
-> > > > > Boot log with error messages:
-> > > > > https://github.com/user-attachments/files/22782016/Kernel_6.18_with_PCI_changes.log
-> > > > > 
-> > > > > Further information: https://github.com/chzigotzky/kernels/issues/17
-> > > > Do you happen to have a similar log from a recent working kernel,
-> > > > e.g., v6.17, that we could compare with?
-> > > Thanks for your answer. Here is a similar log from the kernel 6.17.0:
-> > > https://github.com/user-attachments/files/22789946/Kernel_6.17.0_Cyrus_Plus_board_P5040.log
-> > These lines are added in v6.18:
-> > 
-> >    pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-> >    pci 0000:01:00.0: ASPM: DT platform, enabling ClockPM
-> >    pci 0001:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-> >    pci 0001:01:00.0: ASPM: DT platform, enabling ClockPM
-> >    pci 0001:03:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-> >    pci 0001:03:00.0: ASPM: DT platform, enabling ClockPM
-> > 
-> > Possible candidate:
-> > 
-> > f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-> 
-> After reverting the commit f3ac2ff14834, the kernel boots without any
-> problems.
-> 
-> f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
-> platforms") is the bad commit.
-
-Hi Mani, your commit f3ac2ff14834 is causing a regression on certain
-powerpc machines.  Any ideas?
-
-Thanks,
-
-Lukas
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiB6aGFuZ3NlbmNodWFuIDx6
+aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiBTZW5kIHRpbWU6V2VkbmVzZGF5LCAy
+NC8wOS8yMDI1IDIwOjA5OjUwCj4gVG86ICJGcmFuayBMaSIgPEZyYW5rLmxpQG54cC5jb20+Cj4g
+Q2M6IGJoZWxnYWFzQGdvb2dsZS5jb20sIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5z
+a2lAa2VybmVsLm9yZywgbWFuaUBrZXJuZWwub3JnLCByb2JoQGtlcm5lbC5vcmcsIGtyemsrZHRA
+a2VybmVsLm9yZywgY29ub3IrZHRAa2VybmVsLm9yZywgbGludXgtcGNpQHZnZXIua2VybmVsLm9y
+ZywgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmcsIHAuemFiZWxAcGVuZ3V0cm9uaXguZGUsIGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnLCBxdWlj
+X3NjaGludGF2QHF1aWNpbmMuY29tLCBzaHJhZGhhLnRAc2Ftc3VuZy5jb20sIGNhc3NlbEBrZXJu
+ZWwub3JnLCB0aGlwcGVzd2FteS5oYXZhbGlnZUBhbWQuY29tLCBtYXlhbmsucmFuYUBvc3MucXVh
+bGNvbW0uY29tLCBpbm9jaGlhbWFAZ21haWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29t
+LCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlwcy5j
+b20sICJZYW5naHVpIE91IiA8b3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbT4KPiBTdWJqZWN0
+OiBSZTogUmU6IFtQQVRDSCB2MyAyLzJdIFBDSTogRUlDNzcwMDogQWRkIEVzd2luIFBDSWUgaG9z
+dCBjb250cm9sbGVyIGRyaXZlcgo+IAo+IAo+IAo+IAo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+cy0tLS0tCj4gPiBGcm9tOiAiRnJhbmsgTGkiIDxGcmFuay5saUBueHAuY29tPgo+ID4gU2VuZCB0
+aW1lOldlZG5lc2RheSwgMjQvMDkvMjAyNSAwMzo0NzoxNgo+ID4gVG86IHpoYW5nc2VuY2h1YW5A
+ZXN3aW5jb21wdXRpbmcuY29tCj4gPiBDYzogYmhlbGdhYXNAZ29vZ2xlLmNvbSwgbHBpZXJhbGlz
+aUBrZXJuZWwub3JnLCBrd2lsY3p5bnNraUBrZXJuZWwub3JnLCBtYW5pQGtlcm5lbC5vcmcsIHJv
+YmhAa2VybmVsLm9yZywga3J6aytkdEBrZXJuZWwub3JnLCBjb25vcitkdEBrZXJuZWwub3JnLCBs
+aW51eC1wY2lAdmdlci5rZXJuZWwub3JnLCBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZywgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgcC56YWJlbEBwZW5ndXRyb25peC5kZSwgam9oYW4r
+bGluYXJvQGtlcm5lbC5vcmcsIHF1aWNfc2NoaW50YXZAcXVpY2luYy5jb20sIHNocmFkaGEudEBz
+YW1zdW5nLmNvbSwgY2Fzc2VsQGtlcm5lbC5vcmcsIHRoaXBwZXN3YW15LmhhdmFsaWdlQGFtZC5j
+b20sIG1heWFuay5yYW5hQG9zcy5xdWFsY29tbS5jb20sIGlub2NoaWFtYUBnbWFpbC5jb20sIG5p
+bmd5dUBlc3dpbmNvbXB1dGluZy5jb20sIGxpbm1pbkBlc3dpbmNvbXB1dGluZy5jb20sIHBpbmtl
+c2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbSwgIllhbmdodWkgT3UiIDxvdXlhbmdodWlAZXN3aW5j
+b21wdXRpbmcuY29tPgo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIFBDSTogRUlDNzcw
+MDogQWRkIEVzd2luIFBDSWUgaG9zdCBjb250cm9sbGVyIGRyaXZlcgo+ID4gCj4gPiBPbiBUdWUs
+IFNlcCAyMywgMjAyNSBhdCAwODoxMjoyN1BNICswODAwLCB6aGFuZ3NlbmNodWFuQGVzd2luY29t
+cHV0aW5nLmNvbSB3cm90ZToKPiA+ID4gRnJvbTogU2VuY2h1YW4gWmhhbmcgPHpoYW5nc2VuY2h1
+YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gPgo+ID4gPiBBZGQgZHJpdmVyIGZvciB0aGUgRXN3
+aW4gRUlDNzcwMCBQQ0llIGhvc3QgY29udHJvbGxlcix0aGUgY29udHJvbGxlciBpcwo+ID4gPiBi
+YXNlZCBvbiB0aGUgRGVzaWduV2FyZSBQQ0llIGNvcmUsIElQIHJldmlzaW9uIDYuMDBhIFRoZSBQ
+Q0llIEdlbi4zCj4gPiA+IGNvbnRyb2xsZXIgc3VwcG9ydHMgYSBkYXRhIHJhdGUgb2YgOCBHVC9z
+IGFuZCA0IGNoYW5uZWxzLCBzdXBwb3J0IElOVFgKPiA+ID4gYW5kIE1TSSBpbnRlcnJ1cHRzLgo+
+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBZdSBOaW5nIDxuaW5neXVAZXN3aW5jb21wdXRpbmcu
+Y29tPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBZYW5naHVpIE91IDxvdXlhbmdodWlAZXN3aW5jb21w
+dXRpbmcuY29tPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5j
+aHVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiA+IC0tLQo+ID4gPiAgZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvS2NvbmZpZyAgICAgICAgfCAgMTEgKwo+ID4gPiAgZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvTWFrZWZpbGUgICAgICAgfCAgIDEgKwo+ID4gPiAgZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpZS1laWM3NzAwLmMgfCA0NDYgKysrKysrKysrKysrKysrKysrKysrKwo+
+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0NTggaW5zZXJ0aW9ucygrKQo+ID4gPiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZWljNzcwMC5jCj4gPiA+
+Cj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnIGIv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZwo+ID4gPiBpbmRleCBmZjZiNmQ5ZTE4
+ZWMuLjg0NzRiYzYzNTZmNyAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvS2NvbmZpZwo+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29u
+ZmlnCj4gPiA+IEBAIC0zNzUsNiArMzc1LDE3IEBAIGNvbmZpZyBQQ0lfRVhZTk9TCj4gPiA+ICAJ
+ICBoYXJkd2FyZSBhbmQgdGhlcmVmb3JlIHRoZSBkcml2ZXIgcmUtdXNlcyB0aGUgRGVzaWduV2Fy
+ZSBjb3JlCj4gPiA+ICAJICBmdW5jdGlvbnMgdG8gaW1wbGVtZW50IHRoZSBkcml2ZXIuCj4gPiA+
+Cj4gPiA+ICtzdGF0aWMgaW50IGVzd2luX3BjaWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYp
+Cj4gPiA+ICt7Cj4gPiA+ICsJc3RydWN0IGVzd2luX3BjaWUgKnBjaWUgPSBkZXZfZ2V0X2RydmRh
+dGEoZGV2KTsKPiA+ID4gKwlzdHJ1Y3QgZXN3aW5fcGNpZV9wb3J0ICpwb3J0Owo+ID4gPiArCj4g
+PiA+ICsJLyoKPiA+ID4gKwkgKiBGb3IgY29udHJvbGxlcnMgd2l0aCBhY3RpdmUgZGV2aWNlcywg
+cmVzb3VyY2VzIGFyZSByZXRhaW5lZCBhbmQKPiA+ID4gKwkgKiBjYW5ub3QgYmUgdHVybmVkIG9m
+Zi4KPiA+ID4gKwkgKi8KPiA+ID4gKwlpZiAoIWR3X3BjaWVfbGlua191cCgmcGNpZS0+cGNpKSkg
+ewo+ID4gPiArCQlsaXN0X2Zvcl9lYWNoX2VudHJ5KHBvcnQsICZwY2llLT5wb3J0cywgbGlzdCkK
+PiA+ID4gKwkJCXJlc2V0X2NvbnRyb2xfYXNzZXJ0KHBvcnQtPnBlcnN0KTsKPiA+ID4gKwkJZXN3
+aW5fcGNpZV9hc3NlcnQocGNpZSk7Cj4gPiA+ICsJCWNsa19idWxrX2Rpc2FibGVfdW5wcmVwYXJl
+KHBjaWUtPm51bV9jbGtzLCBwY2llLT5jbGtzKTsKPiA+ID4gKwkJcGNpZS0+c3VzcGVuZGVkID0g
+dHJ1ZTsKPiA+ID4gKwl9Cj4gPiA+ICsKPiA+ID4gKwlyZXR1cm4gMDsKPiA+ID4gK30KPiA+IAo+
+ID4gZG9lcyBkd19wY2llX3Jlc3VtZV9ub2lycSgpIHdvcmsgZm9yIHlvdT8gSWYgbm90LCBwbGVh
+c2UgdXBkYXRlIGNvbW1vbgo+ID4gb25lLgo+IAo+IGRlYXIgRnJhbmsKPiAKPiBUaGFuayB5b3Ug
+dmVyeSBtdWNoIGZvciB5b3VyIHJldmlldyBjb21tZW50cy4KPiBDbGFyaWZpY2F0aW9u77yaCj4g
+VGhlIGR3X3BjaWVfc3VzcGVuZF9ub2lycSBhbmQgZHdfcGNpZV9yZXN1bWVfbm9pcnEgY29kZSBp
+cyBhIG5pY2Ugd3JhcHBlZCAKPiBjb2xsZWN0aW9uIGZ1bmN0aW9uLCBidXQgdGhlIGR3X3BjaWVf
+c3VzcGVuZF9ub2lycSBmdW5jdGlvbiBpbXBsZW1lbnRzIAo+IHNlbmRpbmcgdGhlIFBNRV9UdXJu
+X09mZiBtZXNzYWdlLiBOb3RpZnkgdGhlIGRldmljZSB0byBlbnRlciBsb3cgcG93ZXIgCj4gY29u
+c3VtcHRpb24gYW5kIHdhaXQgZm9yIGl0IHRvIGVudGVyIHRoZSBMVFNTTV9MMiBzdGF0ZS4gT3Vy
+IGhhcmR3YXJlIG9ubHkKPiBzdXBwb3J0cyBlbnRlcmluZyB0aGUgTDAvTDEgc3RhdGUgYW5kIGRv
+ZXMgbm90IHN1cHBvcnQgZW50ZXJpbmcgdGhlIEQzY29kZSAKPiBhbmQgTDIvTDMgc3RhdGVzLiBJ
+dCB3aWxsIGNhdXNlIG1pc3Rha2VzIGFuZCBjYW4ndCByZXN1bWUuIFRoZXJlZm9yZSwgSSAKPiBj
+YW5ub3QgZGlyZWN0bHkgY2FsbCB0aGUgZHdfcGNpZV9zdXNwZW5kX25vaXJxIGZ1bmN0aW9uIGhl
+cmUuCj4gCj4gSSBzYXcgdGhhdCBvdGhlciB2ZW5kb3IgZGlkbid0IHVzZSBpdC4gRm9yIGV4YW1w
+bGU6Cj4gcGNpLWV4eW5vcy5jCj4gcGNpZS1pbnRlbC1ndy5jCj4gcGNpZS1xY29tLmMKClN1cHBs
+ZW1lbnRz77yaCklmIHRoZSBkd19wY2llX3N1c3BlbmRfbm9pcnEoKSBhbmQgZHdfcGNpZV9yZXN1
+bWVfbm9pcnEoKSBmdW5jdGlvbnMgCm5lZWQgdG8gYmUgdXNlZCwgdGhlcmUgYXJlIGN1cnJlbnRs
+eSB0d28gc29sdXRpb25z77yaCgpQbGFuIDHvvJoKSW4gdGhlIGR3X3BjaWVfc3VzcGVuZF9ub2ly
+cSBmdW5jdGlvbiwgYWRkIHRoZSBzdXNwcG9ydF9MMiBmbGFnIHRvIApkZXRlcm1pbmUgd2hldGhl
+ciB0byBibG9jayB0aGUgcG1lX3R1cm5fb2ZmIGFuZCByZWFkX3BvbGxfdGltZW91dCAKZnVuY3Rp
+b25zIGJ5IGNoZWNraW5nIHdoZXRoZXIgTDIgbGluayBzdGF0ZSBpcyBzdXBwb3J0ZWQuCgoJaWYg
+KCFwY2ktPnN1c3Bwb3J0X0wyKQoJCWdvdG8gc2tpcF9MMjsKICAgICAgICAgCiAgICAgICAgICAg
+ICAuLi4uLi4uCgogICAgIHNraXBfTDI6CiAgICAgICAgZHdfcGNpZV9zdG9wX2xpbmsocGNpKTsK
+CWlmIChwY2ktPnBwLm9wcy0+ZGVpbml0KQoJCXBjaS0+cHAub3BzLT5kZWluaXQoJnBjaS0+cHAp
+OwoKUGxhbiAy77yaClJlZ2lzdGVyIHRoZSBwbWVfdHVybl9vZmYgYW5kIGdldF9sdHNzbSBjYWxs
+YmFjayBmdW5jdGlvbnMgaW4gCm91ciBwbGF0Zm9ybSBkcml2ZXIuIFRoZSBjYWxsYmFjayBmdW5j
+dGlvbnMgZG8gbm90IGltcGxlbWVudCAKc3BlY2lmaWMgZnVuY3Rpb25zLCBPbmx5IGRpc3BsYXkg
+bG9nIGluZm9ybWF0aW9uLgoKVGhlIGZvbGxvd2luZyBpcyB0aGUgcmVnaXN0ZXJlZCBmdW5jdGlv
+bu+8mgpzdGF0aWMgdm9pZCBlc3dpbl9wY2llX3BtZV90dXJuX29mZihzdHJ1Y3QgZHdfcGNpZV9y
+cCAqcHApCnsKCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fcHAocHApOwoK
+CWRldl9pbmZvKHBjaS0+ZGV2LCAiQ2FuJ3Qgc2VuZCBQTUVfVFVSTl9PRkYgbWVzc2FnZVxuIik7
+Cn0KCnN0YXRpYyBlbnVtIGR3X3BjaWVfbHRzc20gZXN3aW5fcGNpZV9nZXRfbHRzc20oc3RydWN0
+IGR3X3BjaWUgKnBjaSkKewoKCWRldl9pbmZvKHBjaS0+ZGV2LCAiTFRTU01fTDIgbm90IHN1cHBv
+cnRlZFxuIik7CgoJcmV0dXJuIDA7Cn0KCldoYXQncyB5b3VyIG9waW5pb24/ICBXaGljaCBvbmUg
+ZG8geW91IHRoaW5rIGlzIGJldHRlciBvciBhcmUgCnRoZXJlIGFueSBvdGhlciBiZXR0ZXIgbWV0
+aG9kcy4KCkxvb2tpbmcgZm9yd2FyZCB0byB5b3VyIHJlcGx5LiBUaGFuayB5b3UgdmVyeSBtdWNo
+IQogICAgCj4gCj4gPiAKPiA+ID4gKwo+ID4gPiArc3RhdGljIGludCBlc3dpbl9wY2llX3Jlc3Vt
+ZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ICt7Cj4gPiA+ICsJc3RydWN0IGVzd2luX3BjaWUg
+KnBjaWUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiA+ID4gKwlpbnQgcmV0Owo+ID4gPiArCj4g
+PiA+ICsJaWYgKCFwY2llLT5zdXNwZW5kZWQpCj4gPiA+ICsJCXJldHVybiAwOwo+ID4gPiArCj4g
+PiA+ICsJcmV0ID0gZXN3aW5fcGNpZV9ob3N0X2luaXQoJnBjaWUtPnBjaS5wcCk7Cj4gPiA+ICsJ
+aWYgKHJldCkgewo+ID4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0IGhvc3Q6ICVk
+XG4iLCByZXQpOwo+ID4gPiArCQlyZXR1cm4gcmV0Owo+ID4gPiArCX0KPiA+ID4gKwo+ID4gPiAr
+CWR3X3BjaWVfc2V0dXBfcmMoJnBjaWUtPnBjaS5wcCk7Cj4gPiA+ICsJZXN3aW5fcGNpZV9zdGFy
+dF9saW5rKCZwY2llLT5wY2kpOwo+ID4gPiArCWR3X3BjaWVfd2FpdF9mb3JfbGluaygmcGNpZS0+
+cGNpKTsKPiA+ID4gKwo+ID4gPiArCXBjaWUtPnN1c3BlbmRlZCA9IGZhbHNlOwo+ID4gPiArCj4g
+PiA+ICsJcmV0dXJuIDA7Cj4gPiA+ICt9Cj4gPiA+ICsKCkJlc3QgUmVnYXJkcywKU2VuY2h1YW4g
+Wmhhbmc=
 
