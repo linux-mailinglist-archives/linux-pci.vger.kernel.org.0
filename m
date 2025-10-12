@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-37849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBF1FBD0070
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 09:53:26 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B604ABD0085
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 10:32:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7319B4E12EC
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 07:53:25 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CE592342F3D
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 08:32:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572CD21FF29;
-	Sun, 12 Oct 2025 07:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D011FDA89;
+	Sun, 12 Oct 2025 08:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="AqlMkZ04"
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="cv9xUd0U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.166])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5081400C
-	for <linux-pci@vger.kernel.org>; Sun, 12 Oct 2025 07:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC7C79F2
+	for <linux-pci@vger.kernel.org>; Sun, 12 Oct 2025 08:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760255603; cv=pass; b=sixWDstHIywHkywzWsqIXBBme7fZjWaVQam+4YWs1IYBxN7lZoravy5MNES7Hm4bp+GXjrAy8bFkcQdv6pBrMzlKFyJ0UVTp/bKyzYWQ9YvkzGgHWjsKBB+jzXSBU2v27ruxRWemJcTOVoik08yICJozgiGtPDI0a6HFYZbaE8U=
+	t=1760257965; cv=pass; b=N8fp8hpsA4sUkor7eVumbGeiMybGR1HmdtPikGr8KBpvrgHlkbRdcy7I0txfrNQytcikzmM0q4Ij6D3eRnZF8fuf8kSp2bogsX+Nh4opJNQNbg56IxcHwXd9DEMLO8ugbHXcN/kcYjY87f4Zei95aKW7n0EccvKG3NoS2Or2skw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760255603; c=relaxed/simple;
-	bh=6/9AH1c4i83b+7Km3Zc49MWAJxtzgGxDEQWvwIAC4b4=;
+	s=arc-20240116; t=1760257965; c=relaxed/simple;
+	bh=F9XvATEDL7Zktng3lFff/xNNgCupDLgL+/n/eUD5dTM=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=k74wRiDuxxSAgKOHx/zazu2JLmYyvV3mgTO3qvHvnp9UgDMkMn2Wx6nXTD2rzpHRP8/WROlcuaSjy991xO+T/HQb50I74Ifk5+Ir0t5bis9R9V9rCF/9byjSuTFw7vwmR0t1kG/HBjqr7TBkj77jEJqx6QwAik8240zy3Uk0+RA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=AqlMkZ04; arc=pass smtp.client-ip=81.169.146.166
+	 In-Reply-To:Content-Type; b=jhy/c5QwDy6GKlGGRZ2jAT1C+ezTrK/yIKQeSkOi6a6uWnkJ84uHu/WYjF09+GONIuYkrXUj+JYTyHZt5eguyainQdd2GmE9IlPnzFvKDR+tIQLDsi+zSk4+wbinwscZzKHl7QoR4LLhE1KFS8yCthBBAvZONeY+sh14gIVI/Ks=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=cv9xUd0U; arc=pass smtp.client-ip=85.215.255.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1760255236; cv=none;
+ARC-Seal: i=1; a=rsa-sha256; t=1760257593; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=jCPGN0wSzOvIFAcHgRB/NvFUUO8Ku/UTye3Vrnv0ZgeSFNJVkDpql006xOmjN8EuqP
-    DqeZK1x7yL1YMnoaN9Twfey+jenrsYqtRNwPhRCuObs5RAiqOexRZgiaAHGqK43BC4Yi
-    OLi8yU6rmk5CGNfz9XO4/UFqEL8Sqw9xhGl6O0bTIGJy8GjxiFGX/wW/hTCK27fUNaJm
-    eMJ28/qINrS/kzFUugQb3inA3GoeLc5uyXVHPCtERnGbYcC0RNxG1ENVPVA6Ai7+MQoI
-    /NUC+ou9soFrx+28jJbsHqVFe3fW+7JtvPY7JCLKcVU3rCwLaWSE/nSskuMKl7aQq6ov
-    0fng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760255236;
+    b=e20jC772tPtOhzcydNtV1vv10wpT7jPlARmKXu60u1jc72cB4s8brtRfV8AvEgVOTh
+    QYnRcMYug0PPzzItrqy+DCsrvvwXaJasSlaKpztuoGomma0dClvFBC735QwqBWAAoBy+
+    Rmo8k5I+5TLl6E34uCE11TPHpKtJx2kvR+YQPRl7XZX47CNBGbs2gctyjDbaKRFnO5o8
+    8b3Y67Pz1aw5ilYG2pTWMqqoHU+h6VgSw7b/pqrz4ikDArvkN/nhthvx8BDUYvzh6+x+
+    aEGFXYKjYNC+ejp3rep2V7O7RD4wu+T36Fn6HQhAMRTAsPJAx1L5P2AyM3iTT5qWX/Wp
+    AY6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760257593;
     s=strato-dkim-0002; d=strato.com;
     h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
     From:Subject:Sender;
-    bh=YJv1nwlpb1FE3XNGlM26PFKd0Hvc2WtDFiInGBfhNoM=;
-    b=NVKC4w60vXO3wJ5yZs91qX8GrOwiwqV8PC1rmSYYnVxwDBvAU6lUrSSUQnUGxuk4mD
-    oBIVOoYeE7yWd7RXyvYSdJHBCGa5BTLFxGx9/hbDvMXoczxl8s0HSsZBWVXn42pWLJvI
-    X0OsUv8MlR3M/r64GB138Sih9Y8j4GZgSfMzmL682NcmGH/B2A5qXD5a7EHWUW4SY0uj
-    43wUbKNyZKaLLpZF42/wYhWCHhxKzSzeAS8PGkCN9xcj1AaPATwjUCVrYxEbOkHuzOhl
-    HhoRRnPMibjVmwCbJ+X1If0vxpmm2R7Kcc6Nx/Jc9/10+BkULjW891tHyxhh8zgKmU4w
-    vYtg==
+    bh=9c0sKfGS7NQ99KLDwQHBbXcZ94VEUGg5GDwz27796Mw=;
+    b=rGonAidCoY0ZM8Bx4zfHqVVzAJ5LNjVvdaJFfJjohAb6aQO/WeaB3JS8dC6LrIHU/z
+    jT/aKQ9i9ThyxJlTgFfAQdYJOBaXh4pq06r6JyRqsi6ZM2ToHG9nH2xuotI3bdtPfAab
+    uUszcVYLXa4fWNG0/ZhPlCdpxZnefJOJTkjr99Up/luHxrVFf0WFvgJARuw90MyNq7iX
+    91XdGeOTghlOJDWTHOzKGAfCogznOSLmORM/lAkZfTNmY3sGJEChSn7vYAAS5fBZg85S
+    T/sX+Wpq5ehoIucc6zGr/OWqDQsHK7tN2/GEtNFWRbU27sOJ4QhkU74xjDdFKxEeFoDO
+    3oDw==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760255236;
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760257593;
     s=strato-dkim-0002; d=xenosoft.de;
     h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
     From:Subject:Sender;
-    bh=YJv1nwlpb1FE3XNGlM26PFKd0Hvc2WtDFiInGBfhNoM=;
-    b=AqlMkZ04GST4rXRXL/7c/oLwVo4rz8GDMnuy0pgdT1DcZ91Li/isofeLrIzdF2KHFP
-    h643wl3yFGZHZ3Xek0MmUMNg72c5NeRBU54dmbq71YEibl6pslJatkC6906g34Olh+C4
-    aM1hlgJa5Y3vBYG980rZI3X7Duj9yPTA/BahnP6WVkdrhVpRA1OCxm2HHYMU0iVahCfZ
-    MyKbisf83q/8csdehDe6VbyGpZbvDXHol07s+apVxwrg9l1V9AgzPCjf8MvV9mLwWJCA
-    2DYlivcFtZfp86MDkd4WHUi6a9G7SV0tw3SmBOcCMsmYyPGgpCYyHeFSTki3QrGLLHa7
-    ae0A==
+    bh=9c0sKfGS7NQ99KLDwQHBbXcZ94VEUGg5GDwz27796Mw=;
+    b=cv9xUd0UkCQGc1sojCJJLsZyK4RGULQBmc4Pn+nFKKa1AnwDoxmpPSmiTrWMbFgkIs
+    8I7qvjF987TIyzExnpEsGZYfqZbhlV0fWjgO6kOrqUOVyhC2xJw4zPhMKtSePjOFCAOQ
+    hqvWo0EhtCxITnA0hLPGQ6o289EbV7lyKjCWQXmrljNcNnvTgXKaplkNa6T8w4WtLIci
+    OTGrVfvPpcod2fOpR5lm5ay7IEjzcr+0ccOeTvzTAm7OtKfNsk6LWof0fq2U5O6AIzQ1
+    qUD8WSC6YB2kPfmFO9aa9+8gxfd23h+iR+jc+2Y1KqfXWBFk1lpqrRQOGKN4vpRWpRfN
+    SzOA==
 X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIi+m6Xc="
 Received: from [192.168.178.48]
     by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
-    with ESMTPSA id e2886619C7lFIMI
+    with ESMTPSA id e2886619C8QXIPX
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Sun, 12 Oct 2025 09:47:15 +0200 (CEST)
-Message-ID: <6ed8f4f0-8c8f-435e-a8df-2dc51773d9fe@xenosoft.de>
-Date: Sun, 12 Oct 2025 09:47:15 +0200
+    Sun, 12 Oct 2025 10:26:33 +0200 (CEST)
+Message-ID: <53520ba7-c97e-4622-ba75-a827f9a28ae4@xenosoft.de>
+Date: Sun, 12 Oct 2025 10:26:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,30 +94,40 @@ Cc: Lukas Wunner <lukas@wunner.de>,
  Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
 References: <iv63quznjowwaib5pispl47gibevmmbbhl67ow2abl6s7lziuw@23koanb5uy22>
  <10994220-B194-4577-A04B-EBC5DF8F622F@xenosoft.de>
+ <6ed8f4f0-8c8f-435e-a8df-2dc51773d9fe@xenosoft.de>
 Content-Language: de-DE
-In-Reply-To: <10994220-B194-4577-A04B-EBC5DF8F622F@xenosoft.de>
+In-Reply-To: <6ed8f4f0-8c8f-435e-a8df-2dc51773d9fe@xenosoft.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11 October 2025 at 09:34 pm, Christian Zigotzky wrote:
-> Hello Mani,
->
->> On 11. October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org> wrote:
+On 12 October 2025 at 09:47 am, Christian Zigotzky wrote:
+> On 11 October 2025 at 09:34 pm, Christian Zigotzky wrote:
+>> Hello Mani,
 >>
->> Hi Lukas,
+>>> On 11. October 2025 at 07:36 pm, Manivannan Sadhasivam 
+>>> <mani@kernel.org> wrote:
+>>>
+>>> Hi Lukas,
+>>>
+>>> Thanks for looping me in. The referenced commit forcefully enables 
+>>> ASPM on all
+>>> DT platforms as we decided to bite the bullet finally.
+>>>
+>>> Looks like the device (0000:01:00.0) doesn't play nice with ASPM 
+>>> even though it
+>>> advertises ASPM capability.
+>> It’s the XFX AMD Radeon HD6870.
 >>
->> Thanks for looping me in. The referenced commit forcefully enables ASPM on all
->> DT platforms as we decided to bite the bullet finally.
+>>> Christian, could you please test the below change and see if it 
+>>> fixes the issue?
+>> I will test it tomorrow.
 >>
->> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even though it
->> advertises ASPM capability.
-> It’s the XFX AMD Radeon HD6870.
+>> Thanks,
+>> Christian
+> I compiled the latest git kernel with your patch but unfortunately it 
+> doesn't solve the boot issue.
 >
->> Christian, could you please test the below change and see if it fixes the issue?
-> I will test it tomorrow.
->
-> Thanks,
-> Christian
-I compiled the latest git kernel with your patch but unfortunately it 
-doesn't solve the boot issue.
+I have created a reverting patch for the RC1: 
+https://github.com/chzigotzky/kernels/commit/88150a30aeaf903d5ed44b8514350232666de715 
+
 
