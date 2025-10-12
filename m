@@ -1,151 +1,126 @@
-Return-Path: <linux-pci+bounces-37845-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37846-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22CADBCFEE0
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 05:02:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F4ABCFFC8
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 08:30:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C54653BFFB9
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 03:02:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AA101891BFF
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 06:30:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABF48528E;
-	Sun, 12 Oct 2025 03:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663171F2C34;
+	Sun, 12 Oct 2025 06:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUqmgb7S"
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="OmU9rSPN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8F42B2D7;
-	Sun, 12 Oct 2025 03:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3439D2BAF9;
+	Sun, 12 Oct 2025 06:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760238118; cv=none; b=lrxtf9NdIerYMkZn6PHVSpydxAu0R3nDpT9zQG7t8BuDEuHWV0TBi3T92VPdgXgf1in0OGujm1BqbWI/gY+Mds/LIdltYinRMu04v7SDPiv9z9K1eSq9W3qwJXWG2RzYAUK+HsmnzEl6xBXrKdRx4PpNJejxdvYjsis/zzgAAOw=
+	t=1760250596; cv=none; b=BQRG+pxIqZGWzxvBajLWmovMWA/gZaWopP8zYu5qSkqCFo/UtyOsUzXmoJCLYQlCYOOILV8cI4chY4fRR+ApMIGdo7d47kVJj19YUfAbh0M2Ul5aX9PnwiMTCtKNFYUEIb4lPiB5g6EOm7h/q/KGDX1NC4Glc3m2ajtcFQhfi/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760238118; c=relaxed/simple;
-	bh=7uGW8tZKzB3sWjg7FgYq8BRxUDuNHFhXJDVn7AAo0zg=;
+	s=arc-20240116; t=1760250596; c=relaxed/simple;
+	bh=hW45rv1z6b6gGbDanGygno6nzHJAc11izoBe9pQAMzI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EJAB46VtwWPjQhg4bPj0t8l4dTrHYqux/iCNty1jdroPILip9XF2oTaKkQ6biTYHu9D6CGtA8hK6p+vKll+jaSTViztsqwSPwtPFZWTjMhLLg2WKZzT+9nqxla5RmgPXRBrc6lej4KZXwZsJ9nBkjObEi74ZRNpf34vU7EEPMU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUqmgb7S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D420C4CEF9;
-	Sun, 12 Oct 2025 03:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760238117;
-	bh=7uGW8tZKzB3sWjg7FgYq8BRxUDuNHFhXJDVn7AAo0zg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uUqmgb7SRsNizNab/qtPW4WAqIMthIHa6AX1U52JzPxoLrnRhMyiqzxzVjVZbo37p
-	 bhQt7ktpHOs4MvZB8Xuva5fir2ldRVTnGsnhpjfD7SgYBL+cCJQoxZ/xMYoEHG9IqK
-	 2kPD87Eq8FzZ6Hz7U9NW+GvUUfuVG8dFAlWDvxquqrN9epkFu5TejdVc0JqXzbkd4H
-	 JZEPgvbPNFAjpNqlJ3CoB05/VCKYl9zyXusZRZBHHSyhKYMBMBnM6HQwjLkSs0OUMy
-	 N5enJODK8DY0gdDP9/srAJg42gQsFNIzNXbKhvGGPu7fAVjP2ksesqTVlYuwxG39O9
-	 CXPAsvqYki2GA==
-Message-ID: <7dadc4bb-43a1-4d53-bd6a-68ff76f06555@kernel.org>
-Date: Sun, 12 Oct 2025 05:01:45 +0200
+	 In-Reply-To:Content-Type; b=NJQ0bdOFWQCVCMFrSFoqclHM0kIw9EQigCqSWgz10wR0W+gmLfsqV/kp+yechf5aFYjQSfUFVfUIVYa8/gDRsXNBPy7ZC8rAU0lAIh6a/MqjbubEVKos8lEHOqH15KDBKlwX64MNF00q+6eUpM2xhFDZPzdGleeNUei2lMGKV70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=OmU9rSPN; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+Message-ID: <310c8da6-6775-4c3c-b9b3-bad739cda46f@packett.cool>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1760250591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SjTYa9DE27qDleF7pkqz/JnprhOjulqOYrM2/CjzCN8=;
+	b=OmU9rSPNlKUThQPfF5AQPiTS854uRtl35zbOLoTsIvi7cSbrz8jBsl4bGGu8a8pLMEUsJo
+	zcex8Z0imXhwZKHWm/p+ogQ/vFbntvMv5CLcm015dIHCV18EE2le7xRDriCdPFHBGvuvpL
+	fsCHv7Q3Syg7xHI1I3d2GEsH4DPJShcAJhKSbOUcZqBzPJVK+lArPr8Ud0k8eQxOyiC7Pi
+	pvWCr2QRStz8hoJWDCI0QT2qGje3/ozrOtqMNxl92zSAolVwxUjHVNwgHLM57HKIeNmqWo
+	IJLK6ZZ2ZctcwvX3/UjcO96OsOflLfh7Ny32SENk1+pOpwZ3TXIYdnlwyhYJKQ==
+Date: Sun, 12 Oct 2025 03:29:42 -0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] dt-bindings: PCI: qcom: Document the Glymur PCIe
- Controller
-To: Abel Vesa <abel.vesa@linaro.org>, Wenbin Yao <wenbin.yao@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Bjorn Andersson <andersson@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com,
- qiang.yu@oss.qualcomm.com, Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-References: <20250903-glymur_pcie5-v4-0-c187c2d9d3bd@oss.qualcomm.com>
- <20250903-glymur_pcie5-v4-2-c187c2d9d3bd@oss.qualcomm.com>
- <w2r4yh2mgdjytteawyyh6h3kyxy36bnbfbfw4wir7jju7grldx@rypy6qjjy3a3>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: Setup bridge resources earlier
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Lucas De Marchi <lucas.demarchi@intel.com>
+References: <20250924134228.1663-1-ilpo.jarvinen@linux.intel.com>
+ <20250924134228.1663-2-ilpo.jarvinen@linux.intel.com>
+ <017ff8df-511c-4da8-b3cf-edf2cb7f1a67@packett.cool>
+ <f5eb0360-55bd-723c-eca2-b0f7d8971848@linux.intel.com>
+ <cd8a1d3c-1386-476b-a93d-1259b81c04e9@packett.cool>
+ <8f9c9950-1612-6e2d-388a-ce69cf3aae1a@linux.intel.com>
+ <2faffdc3-f956-4071-a6a4-de9b5889096d@packett.cool>
+ <094618f2-947e-a66e-dc27-f4dedc8b5bb5@linux.intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <w2r4yh2mgdjytteawyyh6h3kyxy36bnbfbfw4wir7jju7grldx@rypy6qjjy3a3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Val Packett <val@packett.cool>
+In-Reply-To: <094618f2-947e-a66e-dc27-f4dedc8b5bb5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 11/10/2025 14:15, Abel Vesa wrote:
->>  
->>  properties:
->>    compatible:
->> -    const: qcom,pcie-x1e80100
->> +    oneOf:
->> +      - const: qcom,pcie-x1e80100
->> +      - items:
->> +          - enum:
->> +              - qcom,glymur-pcie
->> +          - const: qcom,pcie-x1e80100
->>  
-> 
-> The cnoc_sf_axi clock is not found on Glymur, at least according to this:
-> 
-> https://lore.kernel.org/all/20250925-v3_glymur_introduction-v1-19-24b601bbecc0@oss.qualcomm.com/
-> 
-> And dtbs_check reports the following:
-> 
-> arch/arm64/boot/dts/qcom/glymur-crd.dtb: pci@1b40000 (qcom,glymur-pcie): clock-names: ['aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'noc_aggr'] is too short
->         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-> 
-> One more thing:
-> 
-> arch/arm64/boot/dts/qcom/glymur-crd.dtb: pci@1b40000 (qcom,glymur-pcie): max-link-speed: 5 is not one of [1, 2, 3, 4]
->         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-> 
+On 10/10/25 2:01 PM, Ilpo Järvinen wrote:
 
-So that's another Glymur patch which wasn't ever tested?
+> [..]
+> Even if you were very likely joking here, I'm still sorry for breaking it,
+> no matter which company's device.
+>
+> Perhaps I'll start Cc you in all upcoming resource changes as you seem to
+> be so willing to volunteer to review them. ;-D
 
-Best regards,
-Krzysztof
+Perhaps Intel corporate could pay me for QAing the patches :D
+
+> There seem to be cases where pci_assign_unassigned_root_bus_resources()
+> executes for bus 0000:04 before 0004:01:00.0 is scanned as it is only
+> recorded later.
+>
+> Hmm, qcom_pcie_global_irq_thread() seems to indicate the real enumeration
+> can only occur after the link up event has arrived, and it starts another
+> scan from there.
+
+Right, I've even seen things about the link-up sequence in the commits 
+for the PCIe driver, e.g. 4581403f6792 ("PCI: qcom: Enumerate endpoints 
+based on Link up event in 'global_irq' interrupt").
+
+Is this really that uncommon? Can we be sure that other drivers don't 
+behave similarly?
+
+> Perhaps this could be solved by inhibiting resource sizing and assignment
+> per host bridge until the bus could be enumerated for real. Otherwise the
+> resource assignment has no idea how the bridge windows should be sized
+> which then can lead to this cornering itself if the initial assignment
+> without knowledge of the necessary sizes.
+>
+> Could you please try if the patch below helps?
+> [..]
+> @@ -1825,6 +1826,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>   		bridge->sysdata = cfg;
+>   		bridge->ops = (struct pci_ops *)&pci_qcom_ecam_ops.pci_ops;
+>   		bridge->msi_domain = true;
+> +		// FIXME: Should this be specific to just some host bridges?
+> +		bridge->enumeration_pending = 1;
+>   
+>   		ret = pci_host_probe(bridge);
+>   		if (ret)
+
+..and nope, particularly that assignment did not run because at least on 
+x1e, the bridges are not firmware_managed, so they are enumerated normally.
+
+~val
+
 
