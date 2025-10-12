@@ -1,108 +1,123 @@
-Return-Path: <linux-pci+bounces-37848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CAA6BCFFDB
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 08:43:20 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBF1FBD0070
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 09:53:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 12197347CE9
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 06:43:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7319B4E12EC
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Oct 2025 07:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C7C1F872D;
-	Sun, 12 Oct 2025 06:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572CD21FF29;
+	Sun, 12 Oct 2025 07:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="AqlMkZ04"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1378D1EB5D6;
-	Sun, 12 Oct 2025 06:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760251395; cv=none; b=rvSBAM8Re+MMhRHG1javbVgQ0/T6qdx8hGy0dlMNwwMrWriSP7S3JWBtBXHpWjpXj35YZvPrRnGveFKOZWiB7GsA9elf9319HzomA+CavB5+N0qCTrgnWOph9+4t5+fFmAuMQcTdL9lDe8RB/Gby1vpMlRYo+lA4In6dm6chCSU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760251395; c=relaxed/simple;
-	bh=bcQXN32qsXPlYtfEKyarfkb1c85Nh2zRAf0ze6cI/Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tahx7tfjQWvyeCDHKxfHLYhblc8r9J0TmtU4vYjna7Y+xbSPcLgEAie8anOFeavFvfpLcaklMBT69ZuPApBJGVamvNIO+ZSmWSXl0JagO0VCpaERf7ZoKnY6VgSlT2+F7ihLfsyDivqyWwQgdelK1RNUTG2zlWnOfBAGm5fVIDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2905A2C06646;
-	Sun, 12 Oct 2025 08:43:10 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 1518D4A12; Sun, 12 Oct 2025 08:43:10 +0200 (CEST)
-Date: Sun, 12 Oct 2025 08:43:10 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Farhan Ali <alifm@linux.ibm.com>
-Cc: Benjamin Block <bblock@linux.ibm.com>, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-	helgaas@kernel.org, clg@redhat.com, schnelle@linux.ibm.com,
-	mjrosato@linux.ibm.com
-Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
-Message-ID: <aOtN_r_Mp-nQ6Ckj@wunner.de>
-References: <aOE1JMryY_Oa663e@wunner.de>
- <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
- <aOQX6ZTMvekd6gWy@wunner.de>
- <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
- <aOZoWDQV0TNh-NiM@wunner.de>
- <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
- <aOaqEhLOzWzswx8O@wunner.de>
- <6c514ba0-7910-4770-903f-62c3e827a40b@linux.ibm.com>
- <aOc_k2MjZI6hYgKy@wunner.de>
- <3df48e3e-48e1-4cfb-aca9-7af606481b7c@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5081400C
+	for <linux-pci@vger.kernel.org>; Sun, 12 Oct 2025 07:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.166
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760255603; cv=pass; b=sixWDstHIywHkywzWsqIXBBme7fZjWaVQam+4YWs1IYBxN7lZoravy5MNES7Hm4bp+GXjrAy8bFkcQdv6pBrMzlKFyJ0UVTp/bKyzYWQ9YvkzGgHWjsKBB+jzXSBU2v27ruxRWemJcTOVoik08yICJozgiGtPDI0a6HFYZbaE8U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760255603; c=relaxed/simple;
+	bh=6/9AH1c4i83b+7Km3Zc49MWAJxtzgGxDEQWvwIAC4b4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k74wRiDuxxSAgKOHx/zazu2JLmYyvV3mgTO3qvHvnp9UgDMkMn2Wx6nXTD2rzpHRP8/WROlcuaSjy991xO+T/HQb50I74Ifk5+Ir0t5bis9R9V9rCF/9byjSuTFw7vwmR0t1kG/HBjqr7TBkj77jEJqx6QwAik8240zy3Uk0+RA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=AqlMkZ04; arc=pass smtp.client-ip=81.169.146.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+ARC-Seal: i=1; a=rsa-sha256; t=1760255236; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=jCPGN0wSzOvIFAcHgRB/NvFUUO8Ku/UTye3Vrnv0ZgeSFNJVkDpql006xOmjN8EuqP
+    DqeZK1x7yL1YMnoaN9Twfey+jenrsYqtRNwPhRCuObs5RAiqOexRZgiaAHGqK43BC4Yi
+    OLi8yU6rmk5CGNfz9XO4/UFqEL8Sqw9xhGl6O0bTIGJy8GjxiFGX/wW/hTCK27fUNaJm
+    eMJ28/qINrS/kzFUugQb3inA3GoeLc5uyXVHPCtERnGbYcC0RNxG1ENVPVA6Ai7+MQoI
+    /NUC+ou9soFrx+28jJbsHqVFe3fW+7JtvPY7JCLKcVU3rCwLaWSE/nSskuMKl7aQq6ov
+    0fng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760255236;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=YJv1nwlpb1FE3XNGlM26PFKd0Hvc2WtDFiInGBfhNoM=;
+    b=NVKC4w60vXO3wJ5yZs91qX8GrOwiwqV8PC1rmSYYnVxwDBvAU6lUrSSUQnUGxuk4mD
+    oBIVOoYeE7yWd7RXyvYSdJHBCGa5BTLFxGx9/hbDvMXoczxl8s0HSsZBWVXn42pWLJvI
+    X0OsUv8MlR3M/r64GB138Sih9Y8j4GZgSfMzmL682NcmGH/B2A5qXD5a7EHWUW4SY0uj
+    43wUbKNyZKaLLpZF42/wYhWCHhxKzSzeAS8PGkCN9xcj1AaPATwjUCVrYxEbOkHuzOhl
+    HhoRRnPMibjVmwCbJ+X1If0vxpmm2R7Kcc6Nx/Jc9/10+BkULjW891tHyxhh8zgKmU4w
+    vYtg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760255236;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=YJv1nwlpb1FE3XNGlM26PFKd0Hvc2WtDFiInGBfhNoM=;
+    b=AqlMkZ04GST4rXRXL/7c/oLwVo4rz8GDMnuy0pgdT1DcZ91Li/isofeLrIzdF2KHFP
+    h643wl3yFGZHZ3Xek0MmUMNg72c5NeRBU54dmbq71YEibl6pslJatkC6906g34Olh+C4
+    aM1hlgJa5Y3vBYG980rZI3X7Duj9yPTA/BahnP6WVkdrhVpRA1OCxm2HHYMU0iVahCfZ
+    MyKbisf83q/8csdehDe6VbyGpZbvDXHol07s+apVxwrg9l1V9AgzPCjf8MvV9mLwWJCA
+    2DYlivcFtZfp86MDkd4WHUi6a9G7SV0tw3SmBOcCMsmYyPGgpCYyHeFSTki3QrGLLHa7
+    ae0A==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIi+m6Xc="
+Received: from [192.168.178.48]
+    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
+    with ESMTPSA id e2886619C7lFIMI
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sun, 12 Oct 2025 09:47:15 +0200 (CEST)
+Message-ID: <6ed8f4f0-8c8f-435e-a8df-2dc51773d9fe@xenosoft.de>
+Date: Sun, 12 Oct 2025 09:47:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3df48e3e-48e1-4cfb-aca9-7af606481b7c@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
+References: <iv63quznjowwaib5pispl47gibevmmbbhl67ow2abl6s7lziuw@23koanb5uy22>
+ <10994220-B194-4577-A04B-EBC5DF8F622F@xenosoft.de>
+Content-Language: de-DE
+In-Reply-To: <10994220-B194-4577-A04B-EBC5DF8F622F@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 09, 2025 at 10:02:12AM -0700, Farhan Ali wrote:
-> On 10/8/2025 9:52 PM, Lukas Wunner wrote:
-> > On Wed, Oct 08, 2025 at 02:55:56PM -0700, Farhan Ali wrote:
-> > > > > On 10/8/2025 6:34 AM, Lukas Wunner wrote:
-> > > > > > I also don't quite understand why the VM needs to perform a reset.
-> > > > > > Why can't you just let the VM tell the host that a reset is needed
-> > > > > > (PCI_ERS_RESULT_NEED_RESET) and then the host resets the device on
-> > > > > > behalf of the VM?
-> > > The reset is not performed by the VM, reset is still done by the host. My
-> > > approach for a VM to let the host know that reset was needed, was to
-> > > intercept any reset instructions for the PCI device in QEMU. QEMU would
-> > > then drive a reset via VFIO_DEVICE_RESET. Maybe I am missing something,
-> > > but based on what we have today in vfio driver, we don't have a mechanism
-> > > for userspace to reset a device other than VFIO_DEVICE_RESET and
-> > > VFIO_PCI_DEVICE_HOT_RESET ioctls.
-> > The ask is for the host to notify the VM of the ->error_detected() event
-> > and the VM then responding with one of the "enum pci_ers_result" values.
-> 
-> Maybe there is some confusion here. Could you clarify what do you mean by VM
-> responding with "enum pci_ers_result" values? Is it a device driver (for
-> example an NVMe driver) running in the VM that should do that? Or is it
-> something else you are suggesting?
-
-My expectation was that the host notifies the VM of the error,
-the kernel in the VM notifies the nvme driver of the error,
-the nvme driver returns a pci_ers_result return value from
-its pci_error_handlers which the VM passes back to the host,
-the host drives error recovery normally.
-
-I was missing the high-level architectural overview that Niklas
-subsequently provided.  You should provide it as part of your
-series because otherwise it's difficult for reviewers to understand
-what the individual patches are trying to achieve as a whole.
-
-Thanks,
-
-Lukas
+On 11 October 2025 at 09:34 pm, Christian Zigotzky wrote:
+> Hello Mani,
+>
+>> On 11. October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org> wrote:
+>>
+>> Hi Lukas,
+>>
+>> Thanks for looping me in. The referenced commit forcefully enables ASPM on all
+>> DT platforms as we decided to bite the bullet finally.
+>>
+>> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even though it
+>> advertises ASPM capability.
+> It’s the XFX AMD Radeon HD6870.
+>
+>> Christian, could you please test the below change and see if it fixes the issue?
+> I will test it tomorrow.
+>
+> Thanks,
+> Christian
+I compiled the latest git kernel with your patch but unfortunately it 
+doesn't solve the boot issue.
 
