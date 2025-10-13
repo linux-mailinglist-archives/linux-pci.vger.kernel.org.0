@@ -1,180 +1,170 @@
-Return-Path: <linux-pci+bounces-37925-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37926-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DB1EBD4C00
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:06:26 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1324BD515B
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:35:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52B123E74F3
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 15:56:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 322DC5027F0
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 15:58:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF95831063B;
-	Mon, 13 Oct 2025 15:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65EC530CDB0;
+	Mon, 13 Oct 2025 15:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fzkzm7ev"
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="HAWh8pZB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B329C31B807
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760369784; cv=none; b=J8m0JGBTYWtN4WgkAVTMks2LVP/PktclTTKgWKLIxB/695t++/h366qoyx8JAm0IWpy3o3+755gkp9iFIVuuLCQTG3fkkzBiQDpxb3dHhxMWxUAgIJBpK08Bu7lZfy6W/BgyGhszlbbTfbH4bY63UC+0BBBppE5Y8v1myXE0eLY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760369784; c=relaxed/simple;
-	bh=EcAScP8kWJYcjBhUA++ZM+u5kxXirSV8VoqH6FPC2o4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mZSdDBO8M7Kr5E86wY1XUK3lssp+mqhze3PWwqBxa5hCDhxoAAk8k/3c1b4aTxBO3DB7cvK+YmFrVEX/7LXmOkOHpvNTSe77r1b4ZPyxvPC7/KtWIoElfrtbD527XvQffx1fnRaDPA0fh0pUjr9ckDI8/6y+MZVQcwCamnMJAyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fzkzm7ev; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760369783; x=1791905783;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EcAScP8kWJYcjBhUA++ZM+u5kxXirSV8VoqH6FPC2o4=;
-  b=fzkzm7evallCOZHSqFBXs2YImswuBJCKn08Eq7dhVCZInoQBqCuojiA9
-   pN1Z18WkSvYDvX+jHHixhUlB/JqPTp4cbBSAbhran/D9DbhOv/1xZdmiS
-   niIxlGlzO5E3A6WHdHqhBBgFixgTSWoNUdRdTXoC/pinwxBfoz6etnxIs
-   56BCxKjR9aHHwgp/p8PybE51L4bTZWc68MvhhhnSzlAc50yTr9kxBsHhA
-   BYcwQW1tmNlLLw9p5gDmwmluT9hkXw1ViBfjeteAbLbAR3EQJQL2sU4jE
-   SMzC/xZcANRoiAD81ZwjV/dwW1jGFm9GinO/ZHdckMB5m81jSCEwqCZef
-   w==;
-X-CSE-ConnectionGUID: rxJeq5SeQX+YIP8e5k5iig==
-X-CSE-MsgGUID: eQ51SULUSc2BhbpdwG/4sQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="66335796"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="66335796"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 08:36:22 -0700
-X-CSE-ConnectionGUID: bb315DzDS56JlaeOxpuVYQ==
-X-CSE-MsgGUID: YCj5rocPRl+nK1ONFB7Rgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="205320380"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.77])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 08:36:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 13 Oct 2025 18:36:16 +0300 (EEST)
-To: Thomas Zimmermann <tzimmermann@suse.de>
-cc: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com, 
-    bhelgaas@google.com, Eric Biggers <ebiggers@kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/VGA: Select SCREEN_INFO
-In-Reply-To: <a7870faa-9c31-435b-b043-9f3ba1cbdcee@suse.de>
-Message-ID: <f4df0e28-5d45-44aa-e7b9-2d5d075ea649@linux.intel.com>
-References: <20251013135929.913441-1-superm1@kernel.org> <f36a943e-73bb-97ce-83bc-56aa0e1b5267@linux.intel.com> <6dd53ff9-2398-4756-9c13-c082f1c01d4b@kernel.org> <56b866bd-d1ad-3be3-a6a6-ed726aa1f9ef@linux.intel.com>
- <a7870faa-9c31-435b-b043-9f3ba1cbdcee@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D788C30CDB5
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760369944; cv=pass; b=lZ5rghJjn/f4enL2JR50fGTkIjhHUogrvqcVp6l3ffPggsyZKCZB+j1qcPFEnEXq0sdAlDRyjRfWWLnhrGVVT2tokQ8eCoD/ZvPeUeTZyHSvvBHFwAH66Y/g7PE7cSC/1s92xaU3xbjtJWqantMPIyMwRbqwaQlwtR131wMb+7w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760369944; c=relaxed/simple;
+	bh=pZoJ+aXFNmr86DL1Lk0XbQsR1qZreDFe5WSeKJQhZNc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=isuRP6xLbM8oJfNhcVCkVp2yTa+g1q4q0Y8cjlLq8y35YvpS5LEbQfQ/g9QuSfM5QhHlRHPRItx4o7901fY0wL27nIFIYW2ZtQ7Qg1+Pr4KHDqlyQT/xRD2lw4uy/Umak2JBPKGuhPkWgnIxV0N6F+YBNeuYg+iIHniqtHjjmqQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=HAWh8pZB; arc=pass smtp.client-ip=85.215.255.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+ARC-Seal: i=1; a=rsa-sha256; t=1760369913; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=sSIQKcycy2lIMDZGvnDXeAvGT3CXj1uS8mXJux6o9ydF5Ef5A/Os+5LLwgDT+BZ5UU
+    RSfrHs8b13SETiQtdqVCIdNQ6DS1moIEF5h33Sad1Od7f5sLpiwg4MqrBJeZnwmbgUQA
+    3WNiXxJtwiZowZ/FZLg+qhOEKH5Gop2IP2vOaQJdZBWc1M9UhGdQLZaubB2J+KIE7yWe
+    MNyMzhBbHxwXIl6dGJPt8z+6ymubfSqVk1LR+9SL8xrdBIoSc/WOjHki7VvZays8EfLH
+    iU93kdnvDndFSwayu2C7sgqTCZyd6qvhl9XhgyLBXeJjBoKu7RKVM4FrzXwlYGwLN9SU
+    FyvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760369913;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=LKE/O4y7+1OfjekBVid8dxAxNfUPFbbVDY0FXJfXgIM=;
+    b=r2Shdy48+BMtdRA1K0ev8ssncKhUAaZZUPzmfo7vL7OabtgTkGkMYa3x/e1AbM0tFI
+    yre9lOY+euIZvS48npfNEZ59OhPUJe6Fnh5atSg1i4MJ7F9aDQXxkQJC2Ngz+Vg6FU/z
+    iR80ko7x+VEitF58Bll1PabSmc6dSdwFwu7OK2qI6/R6sYJbh69C1yENuJ+mk3WuJDO4
+    8TPm90G1kZy44FFpe8bRW1q5dk0rwIhao2toAxWyf2IIf3M5iM1VMLLyrwDysIDAXt8X
+    Yc5IB/yYQGHX5wqZaSUFxTvkH2jIQdpXX4Q7P/hfaYAwKv8GbtXOxeYkxKUPidaQsF6p
+    FU6w==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760369913;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=LKE/O4y7+1OfjekBVid8dxAxNfUPFbbVDY0FXJfXgIM=;
+    b=HAWh8pZBUa95i9mg0UgBX+TIZDbJD/RP9zD9tCr1JAB9Yl3N6vXDiXYHwk11F9WaqY
+    m+H927qspm5OP98uGt/X6mwMhRAHDmJZx5ZXgRwJlroJ4dOKce503Pc1fI7urJR/Zcfu
+    pPORTgKiVSE7RM7yCYG8/NnHM+vlxSZMjTONs7tTSQll5vII3N/AhptGAJiTkBhQ9RQ8
+    hylj0atcPC6/VAhLug4KnIS2RSJbXHpZrfgj2aWwYJNImUmHR1x4udybZ8YI/+Ezmd4m
+    1obt9EMCjzcrljTh3/LY0UVjxwABETlGtcGVYTSug8qHcQ/h7DAOIaJsuWyo23tDaHLf
+    CoVA==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIS+m7hvg"
+Received: from [192.168.178.48]
+    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
+    with ESMTPSA id e2886619DFcWPXQ
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 13 Oct 2025 17:38:32 +0200 (CEST)
+Message-ID: <49e1adf6-3b14-4f14-8c99-9e92c549c8c0@xenosoft.de>
+Date: Mon, 13 Oct 2025 17:38:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2021188991-1760369776=:933"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
+References: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
+ <7FB0AB81-AD0F-420D-B2CB-F81C5E47ADF3@xenosoft.de>
+ <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
+ <69dc773c-e059-4a2d-96de-5e2952dc165c@xenosoft.de>
+Content-Language: de-DE
+In-Reply-To: <69dc773c-e059-4a2d-96de-5e2952dc165c@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 13 October 2025 at 05:02 pm, Christian Zigotzky wrote:
+> On 13 October 2025 at 04:50 pm, Christian Zigotzky wrote:
+>> On 13 October 2025 at 07:23 am, Christian Zigotzky wrote:
+>>> Better for testing (All AMD graphics cards):
+>>>
+>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>> index 214ed060ca1b..e006b0560b39 100644
+>>> --- a/drivers/pci/quirks.c
+>>> +++ b/drivers/pci/quirks.c
+>>> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct 
+>>> pci_dev *dev)
+>>> */
+>>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
+>>> quirk_disable_aspm_l0s_l1);
+>>>
+>>> +
+>>> +static void quirk_disable_aspm_all(struct pci_dev *dev)
+>>> +{
+>>> +       pci_info(dev, "Disabling ASPM\n");
+>>> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+>>> +}
+>>> +
+>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, 
+>>> quirk_disable_aspm_all);
+>>> +
+>>> /*
+>>> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe 
+>>> Retrain
+>>> * Link bit cleared after starting the link retrain process to allow 
+>>> this
+>> This patch has solved the boot issue but I get the following error 
+>> messages again and again:
+>>
+>> [  186.765644] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0 (no details found
+>> [  187.789034] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0
+>> [  187.789052] pcieport 0001:00:00.0: PCIe Bus Error: 
+>> severity=Correctable, type=Data Link Layer, (Transmitter ID)
+>> [  187.789058] pcieport 0001:00:00.0:   device [1957:0451] error 
+>> status/mask=00001000/00002000
+>> [  187.789066] pcieport 0001:00:00.0:    [12] Timeout
+>> [  187.789120] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0 (no details found
+>> [  187.789169] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0 (no details found
+>> [  187.789218] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0 (no details found
+>> [  188.812514] pcieport 0001:00:00.0: AER: Correctable error message 
+>> received from 0001:00:00.0
+>>
+>> I don't get these messages with the revert patch. [1]
+>>
+>> -- Christian
+>>
+>> [1] 
+>> https://github.com/chzigotzky/kernels/blob/main/patches/e5500/pci.patch
+>>
+>>
+> 0001:00:00.0 PCI bridge: Freescale Semiconductor Inc Device 0451 (rev 21)
+Solution?
 
---8323328-2021188991-1760369776=:933
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FSL, PCI_ANY_ID, 
+quirk_disable_aspm_all);
 
-On Mon, 13 Oct 2025, Thomas Zimmermann wrote:
-> Am 13.10.25 um 16:35 schrieb Ilpo J=C3=A4rvinen:
-> > On Mon, 13 Oct 2025, Mario Limonciello wrote:
-> >=20
-> > > On 10/13/25 9:16 AM, Ilpo J=C3=A4rvinen wrote:
-> > > > On Mon, 13 Oct 2025, Mario Limonciello (AMD) wrote:
-> > > >=20
-> > > > > commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default()=
- with
-> > > > > a screen info check") introduced an implicit dependency upon
-> > > > > SCREEN_INFO
-> > > > > by removing the open coded implementation.
-> > > > >=20
-> > > > > If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_defa=
-ult()
-> > > > > would now return false.  Add a select for SCREEN_INFO to ensure t=
-hat
-> > > > > the
-> > > > > VGA arbiter works as intended.
-> > > > >=20
-> > > > > Reported-by: Eric Biggers <ebiggers@kernel.org>
-> > > > > Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@s=
-ol/
-> > > > > Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-> > > > > Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default()=
- with
-> > > > > a
-> > > > > screen info check")
-> > > > > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> > > > > ---
-> > > > >    drivers/pci/Kconfig | 1 +
-> > > > >    1 file changed, 1 insertion(+)
-> > > > >=20
-> > > > > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > > > > index 7065a8e5f9b14..c35fed47addd5 100644
-> > > > > --- a/drivers/pci/Kconfig
-> > > > > +++ b/drivers/pci/Kconfig
-> > > > > @@ -306,6 +306,7 @@ config VGA_ARB
-> > > > >    =09bool "VGA Arbitration" if EXPERT
-> > > > >    =09default y
-> > > > >    =09depends on (PCI && !S390)
-> > > > > +=09select SCREEN_INFO
-> > > > >    =09help
-> > > > >    =09  Some "legacy" VGA devices implemented on PCI typically ha=
-ve
-> > > > > the same
-> > > > >    =09  hard-decoded addresses as they did on ISA. When multiple =
-PCI
-> > > > > devices
-> > > > The commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default=
-()
-> > > > with
-> > > > a screen info check") also changed to #ifdef CONFIG_SCREEN_INFO aro=
-und
-> > > > the
-> > > > call, but that now becomes superfluous with this select, no?
-> > > Thanks! Will adjust.
->=20
-> Yes, thanks. You can no longer run into this #else.
->=20
-> > >=20
-> > > > Looking into the history of the ifdefs here is quite odd pattern (o=
-nly
-> > > > the last one comes with some explanation but even that is on the va=
-gue
-> > > > side and fails to remove the actual now unnecessary ifdef :-/):
-> > > >=20
-> > > > #if defined(CONFIG_X86) -> #if defined(CONFIG_X86) -> select SCREEN=
-_INFO
-> > > >=20
-> > > > Was it intentional to allow building without CONFIG_SCREEN_INFO?
-> > > >=20
-> > > You mean in the VGA arbiter code?  Or just in general?
-> > Here in the VGA arbiter. I'm just trying to understand why the #else pa=
-rt
-> > was here post-337bf13aa9dda.
->=20
-> The #else branch used to return false (i.e., the device is not the defaul=
-t).=C2=A0
-> But this was only used internally by fbcon for minor features. So it real=
-ly
-> didn't matter that much.
->=20
-> Now we need the default for userspace, hence we likely should have an #el=
-se
-> branch at all.
 
-Thanks for the explanation.
-
---=20
- i.
-
---8323328-2021188991-1760369776=:933--
 
