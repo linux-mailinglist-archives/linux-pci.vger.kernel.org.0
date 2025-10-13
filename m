@@ -1,56 +1,54 @@
-Return-Path: <linux-pci+bounces-37988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37990-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B653BD6635
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 23:40:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B609DBD6683
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 23:50:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 429B14004B1
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 21:40:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7E75E4E9481
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 21:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BABD2EACF9;
-	Mon, 13 Oct 2025 21:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6BC2FA0F6;
+	Mon, 13 Oct 2025 21:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHFFebKj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPN1OHRT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52AD246778;
-	Mon, 13 Oct 2025 21:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643E42DF13A;
+	Mon, 13 Oct 2025 21:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760391634; cv=none; b=dcsQ5iXL+g9xaZDRGrM/j08h/XMXZYpilOt7plz4OZ/bX8S8gCJAH4abXFP5XFr1LaphcKbCuv/c1Qz5nZF2ALBY0ker2oUZaz2pDD34U9zZe/9PgqKFKQ6olop2WkOVnGSUybcSbXAVqKQI1DyPEJoVgVdyCHTShvuKKSGuYDQ=
+	t=1760392238; cv=none; b=AUD95xzJFZ2X29xg/Kftiqi7LTbW1Nm93Gir14mM2TiNSrCaM8gm/ds+brQLGHrvD8IoNqXGkb1SV2zClqGsrgWfFPrrgFNGi7Ti+2xSdDC8OcA/Olbaii/YUNiay2MuB8KN/iwNDsIbNoLwZLh/MULqIfZegG5HDKiJ2zSOVYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760391634; c=relaxed/simple;
-	bh=lSBBgblcFkXBDIkspp2NfyRR5bmbe73dKuE4WTS8jDQ=;
+	s=arc-20240116; t=1760392238; c=relaxed/simple;
+	bh=ymKuPXBsFv/u0TtxiDIqOl7RHihyuM04NYtYM3NNQT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=d5dNi61uV6IerjR9QsknmRjkKBjZAfFXqia+80UQct8lWuujHcpJElVxr2IUYnixmNEMXNWOEv8HHPXEtgty5Z2usF/0nFyRfyxNVe2Wpfp4kEgqvOEla44BwubkVFK0fVS1OE+XYmCKD55q8vf43p/DzjN1MbeJ2BMG+AO70Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHFFebKj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36141C4CEE7;
-	Mon, 13 Oct 2025 21:40:34 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qcRgzN300qb3UoC3HrU4xPCF+mGNDXfvySn5WaIuc/MOY2oZa42MC5EWdABEnAdwcZKGGayxh/13TSA2Z+ai78M8LC+gRSPfyyrbrqd7xRsaWRo9sTlE6i+xw8FwcCyIhx6wxP+Fn54k6Fi9rYKB3rlxPnsX2ZuFRI2PLJJjSgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPN1OHRT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C35A4C4CEE7;
+	Mon, 13 Oct 2025 21:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760391634;
-	bh=lSBBgblcFkXBDIkspp2NfyRR5bmbe73dKuE4WTS8jDQ=;
+	s=k20201202; t=1760392238;
+	bh=ymKuPXBsFv/u0TtxiDIqOl7RHihyuM04NYtYM3NNQT4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bHFFebKjDxDGEhGMg8dyCjd/ziBHfpvK4q3BORNkHxy6RFK/HkSlHnxHNZaJcU+fv
-	 zgYNkeG2NOCR2WMjzuK10Vf/JLGyt3NSAxSKOUzzT0w5JTXWhTMH32B9e0gORUeeLa
-	 1B12+EA2ExEmvA5CComPNc2hUZJEl5zFi6c8BmDYcKkO8PvsZJvnDB/9hor3cQUOGU
-	 /QUyqn6Dvok+J5IxdL81O7iIDzDNtYNb4ulIBvHSzB54DBrMiFmeTWmaggQA1X05Jp
-	 C15zzfjFk3IQ5Xx8Mer/RaiJfA7uvnXQ2Osayog3FfNYUjEDiteOy940e15RnpuBah
-	 9q8TNLDolTX2g==
-Date: Mon, 13 Oct 2025 16:40:33 -0500
+	b=JPN1OHRTtWDf0nED0mv2+IbTG9zMLmfBJ35p9foN1uFZfUrDBD6ivkKKSUtlSsbxT
+	 +RzZsIz5CLLCQexwpwHK16Msm+CiBwBk7owpJNOZZykzMpA/sqGd0fXsbMXBIDvRIh
+	 bs0PSU2rDAiLOstXQCcoqaCLXctKOLbjinLvNoooYZ2bZibiz/vtHyt7Fq0puhqt/d
+	 ZJDbzQ6umAz4HwqSFMHw2BBchHIV428LFrTd6uwuQgtwv+NDGxkXyaJ9jdui/fpZkA
+	 PdojRpu6gCI9X0zP5zw8oEPFoMmOLt7JjwtX0GbPgl7fosPYwczL3/AETk5V9t5kY7
+	 XwP/qteC0N/Ng==
+Date: Mon, 13 Oct 2025 16:50:36 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
-Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
-	dlemoal@kernel.org, christian.bruel@foss.st.com,
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	mani@kernel.org, robh@kernel.org, sashal@kernel.org,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Fix sleeping function
- being called from atomic context
-Message-ID: <20251013214033.GA865945@bhelgaas>
+Subject: Re: [PATCH v2] pci: cadence-ep: Fix incorrect MSI capability ID
+Message-ID: <20251013215036.GA866714@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,95 +57,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250930023809.7931-1-bhanuseshukumar@gmail.com>
+In-Reply-To: <20251010144307.12979-1-18255117159@163.com>
 
-On Tue, Sep 30, 2025 at 08:08:09AM +0530, Bhanu Seshu Kumar Valluri wrote:
-> When Root Complex(RC) triggers a Doorbell MSI interrupt to Endpoint(EP) it triggers a warning
-> in the EP. pci_endpoint kselftest target is compiled and used to run the Doorbell test in RC.
+On Fri, Oct 10, 2025 at 10:43:07PM +0800, Hans Zhang wrote:
+> In a previous change, the MSIX capability ID (PCI_CAP_ID_MSIX)
+> was mistakenly used when trying to locate the MSI capability in
+> cdns_pcie_ep_get_msi(). This is incorrect as the function handles
+> MSI functionality, not MSIX.
 > 
-> [  474.686193] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:271
-> [  474.710934] Call trace:
-> [  474.710995]  __might_resched+0x130/0x158
-> [  474.711011]  __might_sleep+0x70/0x88
-> [  474.711023]  mutex_lock+0x2c/0x80
-> [  474.711036]  pci_epc_get_msi+0x78/0xd8
-> [  474.711052]  pci_epf_test_raise_irq.isra.0+0x74/0x138
-> [  474.711063]  pci_epf_test_doorbell_handler+0x34/0x50
+> Fix this by replacing PCI_CAP_ID_MSIX with the correct MSI capability
+> ID(PCI_CAP_ID_MSI) when calling cdns_pcie_find_capability(). This
+> ensures the MSI capability is properly located, allowing MSI functionality
+> to work asintended.
 > 
-> The BUG arises because the EP's pci_epf_test_doorbell_handler is making an
-> indirect call to pci_epc_get_msi, which uses mutex inside, from interrupt context.
-> 
-> To fix the issue convert hard irq handler to a threaded irq handler to allow it
-> to call functions that can sleep during bottom half execution. Register threaded
-> irq handler with IRQF_ONESHOT to keep interrupt line disabled until the threaded
-> irq handler completes execution.
-> 
-> Fixes: eff0c286aa91 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
-> Signed-off-by: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
+> Fixes: 907912c1daa7 ("PCI: cadence: Use cdns_pcie_find_*capability() to avoid hardcoding offsets")
+> Reported-by: Sasha Levin <sashal@kernel.org>
+> Closes: https://lore.kernel.org/r/aOfMk9BW8BH2P30V@laps/
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 
-Thanks for the fix!  It looks like you posted it during the v6.18
-merge window, so it was a little bit too late to be included in the
-v6.18 changes, but it looks like good v6.19 material.
-
-Can you please:
-
-  - Rebase to pci/main (v6.18-rc1)
-  - Add a space before each "("
-  - Remove the timestamps because they're unnecessary distraction
-  - Add "()" after function names in commit log
-  - s/irq/IRQ/
-  - Rewrap the commit log to fit in 75 columns
-  - Rewrap the code below to fit in 78 columns because most of the
-    rest of the file does
-  - Carry Niklas' Reviewed-by when you post the v3
+Applied to pci/for-linus for v6.18, thanks!
 
 > ---
->  Note : It is compiled and tested on TI am642 board.
+> Dear Maintainer,
 > 
->  Change log. V1->V2: 
->   Trimmed Call trace to include only essential calls.
->   Used 12 digit commit ID in fixes tag.
->   Steps to reproduce the bug are removed from commit log.
->   Link to V1: https://lore.kernel.org/all/20250917161817.15776-1-bhanuseshukumar@gmail.com/
->  	
->  Warnings can be reproduced by following steps below.
->  *On EP side:
->  1. Configure the pci-epf-test function using steps given below
->    mount -t configfs none /sys/kernel/config
->    cd /sys/kernel/config/pci_ep/
->    mkdir functions/pci_epf_test/func1
->    echo 0x104c > functions/pci_epf_test/func1/vendorid
->    echo 0xb010 > functions/pci_epf_test/func1/deviceid
->    echo 32 > functions/pci_epf_test/func1/msi_interrupts
->    echo 2048 > functions/pci_epf_test/func1/msix_interrupts
->    ln -s functions/pci_epf_test/func1 controllers/f102000.pcie-ep/
->    echo 1 > controllers/f102000.pcie-ep/start
+> Since the previous patch mistakenly changed the MSI ID to MSIX ID,
+> a patch is submitted here to fix it. Thank you very much, Sasha, for
+> pointing it out.
 > 
->  *On RC side:
->  1. Once EP side configuration is done do pci rescan.
->    echo 1 > /sys/bus/pci/rescan
->  2. Run Doorbell MSI test using pci_endpoint_test kselftest app.
->   ./pci_endpoint_test -r pcie_ep_doorbell.DOORBELL_TEST
->   Note: Kernel is compiled with CONFIG_DEBUG_KERNEL enabled.
+> Best regards,
+> Hans
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e091193bd8a8..c9e2eb930ad3 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -725,8 +725,8 @@ static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
->  	if (bar < BAR_0)
->  		goto err_doorbell_cleanup;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 1eac012a8226..c0e1194a936b 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -255,7 +255,7 @@ static int cdns_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
+>  	u16 flags, mme;
+>  	u8 cap;
 >  
-> -	ret = request_irq(epf->db_msg[0].virq, pci_epf_test_doorbell_handler, 0,
-> -			  "pci-ep-test-doorbell", epf_test);
-> +	ret = request_threaded_irq(epf->db_msg[0].virq, NULL, pci_epf_test_doorbell_handler,
-> +				   IRQF_ONESHOT, "pci-ep-test-doorbell", epf_test);
->  	if (ret) {
->  		dev_err(&epf->dev,
->  			"Failed to request doorbell IRQ: %d\n",
+> -	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSIX);
+> +	cap = cdns_pcie_find_capability(pcie, PCI_CAP_ID_MSI);
+>  	fn = cdns_pcie_get_fn_from_vfn(pcie, fn, vfn);
+>  
+>  	/* Validate that the MSI feature is actually enabled. */
 > -- 
 > 2.34.1
 > 
