@@ -1,165 +1,125 @@
-Return-Path: <linux-pci+bounces-37898-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37899-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8DB2BD3533
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:03:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F243DBD37EF
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:24:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E3EF04E4F88
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 14:03:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7582E3A1CD2
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 14:23:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF38256C6D;
-	Mon, 13 Oct 2025 14:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897372727FE;
+	Mon, 13 Oct 2025 14:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4RbxTFX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iw290XCc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A5924A044
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 14:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7D7238D22
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 14:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760364199; cv=none; b=RmcgFnOWlvYBJzpOeWKbw39my9EdydL5+VGtBcUnsWL4c2jrn6hBxbl6tS132R1HJ3uRe1g2GfelS9/8y83FJv3OBNhrx3vtDdvDUJVZOuGmO+L3ZLbjiosgbCcR6kMjeyoCJHLnoF6YeStipiKLcsEOk0P/Dj4+5SsE2ABpDuI=
+	t=1760364996; cv=none; b=WS+I3+GvuGH1pSq2GRWk+Y5SkCTkFMjojcePJ/a3xHtBcfSuVqVSNqKFRN1ryue2oHsj3Yi1K2v0iYQkhRPAs0tg0QeOSep0vzF85WkzMV+PSGWU0PfRL09cSiagjqwS1l6siJUEnniRJ1H999r/PZJp/po1jRKzmOkmoCY5Hoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760364199; c=relaxed/simple;
-	bh=BU/7EF66SaZEq5fKsw17Zn90ugTD8GUecHTRIFKoZmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S505zUqLGltpXFMp9qTpCIIJZIOw+yv+BgvLZ6+oJO15PT9lmSbihFPVl8IzovPFxc/9eOnsYEY15MRLVer6h3eJUAatfpYX/G2YNZUBZwJuYhJ69N7SmSy17TGVrV6LByFK95TgnAI3K++UgEJBuOYtz5bgSSWOnJTY5FCZpX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4RbxTFX; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63b9da57cecso2008785a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 07:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760364196; x=1760968996; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BSsfnjXFCg6rG3NcR1UlA7/Xq7/GSJvjS3osS5RyZYU=;
-        b=D4RbxTFXDHN/Sh0BInz4RTK8RL61sjrkzpkAd/GSmEPwAGKb8uHalvpBGfaTuWoffz
-         TB6lZ6aLEveqCIdtLB9iT19LJ1nu6tLu63s0ONu8U9kDecvlkERFN2e1F8YXzHwTURwf
-         GKs813hR6lDZHRhCub53aGCnX1dIjCujamqvX0ObYa4ykameECYBAerm31LCzxqRNr0y
-         HSce08W5cXhnEkxs/WstVVCPhNfhakrGfW2VVad5fLV+dxZCftpL4cywASn1ZSB1sHeh
-         hkRFwrJaWLAQoGoaOwdNM/SP/TFU3fHIc8L69MfFXdo4WdwNV/KLvZo18+zmUuz/lmyE
-         l+aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760364196; x=1760968996;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BSsfnjXFCg6rG3NcR1UlA7/Xq7/GSJvjS3osS5RyZYU=;
-        b=s9EXtUiDeeMy0kClwWPUW2zVbRW4QZ0FF+1qjJGgk3XHEYBNUOu9FrRSoVnveROd/F
-         ZvjnaXXjhkSpqX2VSMtav6L3iN2U0686xby4Gfbdkzqv34d1dsMNweJVBLmAtGI3fhtV
-         MsKVdz86g6IUSvVD7sCvYMn7zP/s8ErCK6ak1+3ZEVZTEuXPYilLr2wri9FALMTltx3P
-         6cOaWjHRBHheDAkVZBjBPA+6xTEYcQGuKrCYP5OEAxne/+RynsUBvf0QbKovoWxabUPp
-         5E7f/IoDfJQrvAGkDz5Zpezl3TCCoZnmzicGn4zxBAVE5MrWId8vlbQHmS+v0FHg/KyZ
-         1nHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBvIY9htG8moyYBDPrgKmzuG/93/xIsZG/GMnEUHuNdhUCVbL96jIflRZs5dKNHcohKZBuIxrOzYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn/LAQCrQSNHfOhdcsJsch4KbmPH8LpUCGk72iVSenbwFuodzm
-	8ljMn1PQxzIX6HzaEfJSVGZ3oTupuXynVa4ewGICaPBAqDo+y1CN+Vq88REA6snyukvq9qL7FQu
-	XxzzepCqA3PVei6rS3GOlXgc8yWoGOSM=
-X-Gm-Gg: ASbGncvaArr4TZ+ybGeAkNNIcsVclQhlVtJHNcOOGfdkLIqJzZ15/O/6o+aKo3DB5Jk
-	DCBpt75okzaoU9yBh0K8YPTK1d9nE7f6lzWHdDtEg9EFA8r0NZrOF7Ft5U/MNAhS11LKxlJTono
-	IQnNMmJ0w67fzYLBaBjRp/crkmOHRvwHHXaDfw9GjQT56REqFVpn4ugUT+xP/uDEQg6edLbgHZx
-	NcykKOeNbppy+ga7o51L8d2QY8A4TpowTw=
-X-Google-Smtp-Source: AGHT+IG1H5x/3Hw2x99ssho3c2GS311XkT8BwdZCay2Lc0xiXSDo5L8TJutYi6w3Oy++gD7LUBz2wwFZk5Y65Fe3Ir4=
-X-Received: by 2002:a17:906:af19:b0:b55:d205:f40e with SMTP id
- a640c23a62f3a-b55d205f96cmr1243656866b.33.1760364195682; Mon, 13 Oct 2025
- 07:03:15 -0700 (PDT)
+	s=arc-20240116; t=1760364996; c=relaxed/simple;
+	bh=4eYDIhwL5zfITY3lWDNtamkTAv4948j+n0s1SB2BGfE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=unhv7y9ra03WZdstv72JpPM05EZgqjOx9SVOWM6o1t16RudsGCxgOorFvdnc91A5l4Uu32/fyYUo6a61ZFi3dfnKfEWRVN/fa852WdcGRm1dk69wpI/ohAiRDQfyUw8SkmlIXFSLcj2j+s+1TjqT44Who0zlWEVKcXySpGqRUzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iw290XCc; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760364995; x=1791900995;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4eYDIhwL5zfITY3lWDNtamkTAv4948j+n0s1SB2BGfE=;
+  b=Iw290XCc2rnFlMIABvrC1mJIzkpv2030/Iw407atpFRggOepPfFofMQK
+   ZBT7c9I7291XZ4CoWrasLQvNEZ9S0ZM28NgS5+Ph1vyxad/UWGlXUenzu
+   3l99IT+lVc96wkm6MW1mjlJ5dFifm8bGslqnzAdNBRsCXZKxJliTP0Dfp
+   9mDYQZneFjX+ORM9P19NnN1UfyXwaqygvzsUHOLcYm9RabIth9myieHa/
+   FSyGBfUDY6k//08eCbeTagJta1CwCUyN7sPQVqexe7SmIsWezoFOktcGx
+   pdfzM57LhdEKBye4yIy8Z6Prr4JSMrSJEwXzIfDBiAl+WznzX9yUM81I5
+   Q==;
+X-CSE-ConnectionGUID: DtS+FCL1SPWGFmG9BxfCsw==
+X-CSE-MsgGUID: NwAZbau4QEavSkQ1Nf0f7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="62394780"
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="62394780"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 07:16:34 -0700
+X-CSE-ConnectionGUID: gd5FyWlLTvCqAv38Wnq46g==
+X-CSE-MsgGUID: dA7HLYX4RUSEOkzUioXzjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="181419209"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.77])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 07:16:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 13 Oct 2025 17:16:27 +0300 (EEST)
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de, 
+    Eric Biggers <ebiggers@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/VGA: Select SCREEN_INFO
+In-Reply-To: <20251013135929.913441-1-superm1@kernel.org>
+Message-ID: <f36a943e-73bb-97ce-83bc-56aa0e1b5267@linux.intel.com>
+References: <20251013135929.913441-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013101727.129260-1-linux.amoon@gmail.com>
- <20251013101727.129260-2-linux.amoon@gmail.com> <11a8783345566d5ea6c696ecd007490289ba0b5f.camel@ti.com>
-In-Reply-To: <11a8783345566d5ea6c696ecd007490289ba0b5f.camel@ti.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 13 Oct 2025 19:32:59 +0530
-X-Gm-Features: AS18NWD3OIfNtpl-KFzVJ14mdZzPNIWP10Za43Y5NpiOwkGmGSbzZ3gomqupFk8
-Message-ID: <CANAwSgTXC0uOwZhZ69viUB3t4-jH+XArP8e4vukDb2zrSgOTuA@mail.gmail.com>
-Subject: Re: [RFC v1 1/2] PCI: j721e: Use devm_clk_get_optional_enabled() to
- get the clock
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-omap@vger.kernel.org>, 
-	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-pci@vger.kernel.org>, 
-	"moderated list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Siddharth,
+On Mon, 13 Oct 2025, Mario Limonciello (AMD) wrote:
 
-Thanks for your review comment
+> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+> a screen info check") introduced an implicit dependency upon SCREEN_INFO
+> by removing the open coded implementation.
+> 
+> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+> would now return false.  Add a select for SCREEN_INFO to ensure that the
+> VGA arbiter works as intended.
+> 
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+>  drivers/pci/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 7065a8e5f9b14..c35fed47addd5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -306,6 +306,7 @@ config VGA_ARB
+>  	bool "VGA Arbitration" if EXPERT
+>  	default y
+>  	depends on (PCI && !S390)
+> +	select SCREEN_INFO
+>  	help
+>  	  Some "legacy" VGA devices implemented on PCI typically have the same
+>  	  hard-decoded addresses as they did on ISA. When multiple PCI devices
 
-On Mon, 13 Oct 2025 at 16:43, Siddharth Vadapalli <s-vadapalli@ti.com> wrote:
->
-> On Mon, 2025-10-13 at 15:47 +0530, Anand Moon wrote:
-> > Use devm_clk_get_optional_enabled() helper instead of calling
-> > devm_clk_get_optional() and then clk_prepare_enable(). It simplifies
-> > the error handling and makes the code more compact. This changes removes
-> > the unnecessary clk variable and assigns the result of the
-> > devm_clk_get_optional_enabled() call directly to pcie->refclk.
-> > This makes the code more concise and readable without changing the
-> > behavior.
-> >
-> > Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  drivers/pci/controller/cadence/pci-j721e.c | 12 ++----------
-> >  1 file changed, 2 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > index 5bc5ab20aa6d..d6bbd04c615b 100644
-> > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> > @@ -479,7 +479,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
-> >       struct cdns_pcie_ep *ep = NULL;
-> >       struct gpio_desc *gpiod;
-> >       void __iomem *base;
-> > -     struct clk *clk;
-> >       u32 num_lanes;
-> >       u32 mode;
-> >       int ret;
-> > @@ -603,18 +602,11 @@ static int j721e_pcie_probe(struct platform_device *pdev)
-> >                       goto err_get_sync;
-> >               }
-> >
-> > -             clk = devm_clk_get_optional(dev, "pcie_refclk");
-> > -             if (IS_ERR(clk)) {
-> > -                     ret = dev_err_probe(dev, PTR_ERR(clk), "failed to get pcie_refclk\n");
-> > -                     goto err_pcie_setup;
-> > -             }
-> > -
-> > -             ret = clk_prepare_enable(clk);
-> > -             if (ret) {
-> > +             pcie->refclk = devm_clk_get_optional_enabled(dev, "pcie_refclk");
-> > +             if (IS_ERR(pcie->refclk)) {
-> >                       dev_err_probe(dev, ret, "failed to enable pcie_refclk\n");
-> >                       goto err_pcie_setup;
->
-> 'err_pcie_setup' returns 'ret' which isn't being updated above.
-> Maybe add:
->                 ret = pcie->refclk;
-> above dev_err_probe(...
-All return values from the dev_err_probe function appear to be missing
-in this file.
-I'll address this in the next revision through a separate patch.
->
-> >               }
-> > -             pcie->refclk = clk;
-> >
-> >               /*
-> >                * Section 2.2 of the PCI Express Card Electromechanical
->
-> Regards,
-> Siddharth.
+The commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+a screen info check") also changed to #ifdef CONFIG_SCREEN_INFO around the
+call, but that now becomes superfluous with this select, no?
 
-Thanks
--Anand
+Looking into the history of the ifdefs here is quite odd pattern (only 
+the last one comes with some explanation but even that is on the vague 
+side and fails to remove the actual now unnecessary ifdef :-/):
+
+#if defined(CONFIG_X86) -> #if defined(CONFIG_X86) -> select SCREEN_INFO
+
+Was it intentional to allow building without CONFIG_SCREEN_INFO?
+
+-- 
+ i.
+
 
