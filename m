@@ -1,204 +1,149 @@
-Return-Path: <linux-pci+bounces-37933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B67EBD5540
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 19:03:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0901BD51FD
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:39:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E17374FCD55
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:30:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9116318A5286
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F2D26E6F6;
-	Mon, 13 Oct 2025 16:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A870B2C21C3;
+	Mon, 13 Oct 2025 16:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ea0H0SUR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6nZ1NT6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45392236FD;
-	Mon, 13 Oct 2025 16:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0F328D83E
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 16:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760373012; cv=none; b=G+5JHtOrE4t43DP+QchTAtbONE7v46XkCizJUwj85fNbpbig2nLO9y4p2Ujm9lmhKAYRvpW/LdB4ftU9inNtZ3DzTwUEi8mxsWWAmfMuOqVuS/I86NQPaB46ngTdL5ui4tJD4ipJoHu/eR/QrJepDbhvIbdnH9WcPWFnaZfDrpk=
+	t=1760373582; cv=none; b=lo2cdifIlR9URIO4RwWTZz3JYzKstvGLe2ywT8UhtpYK5DBXNVtUCOl44csF/cXt9+/goFVoeAf0SoNBJ1lw4hahFH8j/50uHcAk/Wm7ybyS/lJqErQXHAxqGJ6/4qikUkhpbvTvV9TIWYd3boP9Bk8e09L7Pi2Syjnez+zANb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760373012; c=relaxed/simple;
-	bh=45x2Jb4bOksiYc+/gQKshlBk0WTvXWQ0lxteCKoIgwk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=krdHYVhFXduheLUVCnzCFGKcUlo060VZUF1ZbxS2soxS4CvXZpGXd2k8sq8dAcVehv52G1DX8ssCBtL5qVIx4o7Y643W50BeJ+z6NJ2bnHLDQETdON2jdMB4KKv8HkAae0272f1ZC8FzLiCuOdcgEyCgYxe++8KvYkpH0aVR83s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ea0H0SUR; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1760372988; x=1760977788; i=spasswolf@web.de;
-	bh=nqMyNCBrL+BlSohWKUpwCMTnwvgKLIa0I7oU0sG2VfE=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ea0H0SURKVpCNhu8yHfSl6Utd505xo6U+lCaCKtLD/TmSC4qc6YSZIGVBeRK0TAL
-	 LIwmjjJI/OYuLO6HPZaKgQ8VInZ+GzU7/WDFqkicE37BY156qL41xUuhi325QZd2G
-	 Cb5d1IIOpgVe7IWioTYQLLSZD1gasuJP1tKvHjxmy1GdbTbSZ2dYOWwt3K6rAhbSF
-	 1iYeGcFB6q0OtD9/IJxt3v2DqISKhV4PcGshG+rPShlfDECLa79IHMWJf3EMVaqgh
-	 0OD/z8do1dSRCCdfkEJNd78wW2QrF1SE/8l6I2e4wL5l4kFfLsDft0U19G84Wauay
-	 sH7OnA3tgXER5pt+yw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIyeG-1up9qo21ko-00R4KJ; Mon, 13
- Oct 2025 18:29:48 +0200
-Message-ID: <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
-Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
-From: Bert Karwatzki <spasswolf@web.de>
-To: Mario Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, Christian
- =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, 	spasswolf@web.de
-Date: Mon, 13 Oct 2025 18:29:46 +0200
-In-Reply-To: <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-References: <20251006120944.7880-1-spasswolf@web.de>
-	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1760373582; c=relaxed/simple;
+	bh=i/hiNKAuoibeo9OMvwYn5oMnRpXztBEJ1t/LyxW9bQs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Tos0pgF+SVLhcdm6+FlU2442TSqVwmFYiR4QSuJsDNYumwHUeWIqB78uQNEgfU70r5No2ZYedKDoywWsvoTWwhY5h9gbGqtbWi4bcTZbZPysxzl5dIT7L252UT8NSQ5atRufgYcN5qqwF6tq2bTi8osfs/XpHQw9thQEK5CMiRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6nZ1NT6; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760373580; x=1791909580;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=i/hiNKAuoibeo9OMvwYn5oMnRpXztBEJ1t/LyxW9bQs=;
+  b=C6nZ1NT6YCH4yFeO77J73mF8/hh8hmih35ooWmgNojbvuLmJgdD3JDPS
+   7H7LxTj0zqI0bBILgaHX0JdhAs+wNfH2jffVfVcqid5EkJK2B7gDDC6O8
+   /qpHggvdwsogNIoM6A0cRvDySU5+fniR9jemfA4uXKTPUw97TGvRNf4fq
+   mKyugxD+lFBPCIA+Vt3U39z6AIq8AtH32uLy1+vyDohion2wzfpBsB9Lu
+   4oiy99I4ImKHoTHA3e4lbIquBXidOHjLNoppRmSMnMmQl6q5UT4j5/SAM
+   DhFXYne5s4elLFgn4ZnjnvrDSGH2jP2yG0/p+giITvEsmDN30qYMGjlaZ
+   A==;
+X-CSE-ConnectionGUID: 88URaKZmSqeq2FLwet5VRg==
+X-CSE-MsgGUID: 6C61po9NTfWhmPLhjbUpCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="61725411"
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="61725411"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 09:39:26 -0700
+X-CSE-ConnectionGUID: xmKvltDLRAGccCmIur+UMg==
+X-CSE-MsgGUID: BCK3jwjhR6iBpEMEjDjHwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="182408186"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.77])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 09:39:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 13 Oct 2025 19:39:20 +0300 (EEST)
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de, 
+    Eric Biggers <ebiggers@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/VGA: Select SCREEN_INFO
+In-Reply-To: <20251013154441.1000875-1-superm1@kernel.org>
+Message-ID: <85690357-f7c2-5be0-d31e-1617aec3e950@linux.intel.com>
+References: <20251013154441.1000875-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:43GG+RGVT3i3a/y83/W1ei+fO9suSrJwpqVV1suZxFJViRLeSqz
- xkBmfjtGrawI3i77v66zpjlxaTET2VHe0liHMuANDp46wTq5VsbFu4dkdOSEjIBBuBdyzW+
- GtT6/7XQzzqmO97rSNUkJ1gNA363HI/h1ag0hmN3qQa2OS/y9nRRV8xLNzVnnHXEQNSCP2o
- kuRJnuuqodWaC4/haH2Ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LoPZVms++YQ=;gATdQA/iUlFHEQDdx2TUmwSgu67
- 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
- DqH4Q==
+Content-Type: multipart/mixed; boundary="8323328-1785228779-1760373560=:933"
 
-Am Dienstag, dem 07.10.2025 um 16:33 -0500 schrieb Mario Limonciello:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1785228779-1760373560=:933
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 13 Oct 2025, Mario Limonciello (AMD) wrote:
+
+> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+> a screen info check") introduced an implicit dependency upon SCREEN_INFO
+> by removing the open coded implementation.
 >=20
-> Can you still reproduce with amd_iommu=3Doff?
+> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+> would now return false.  Add a select for SCREEN_INFO to ensure that the
+> VGA arbiter works as intended. Also drop the now dead code.
+>=20
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a =
+screen info check")
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+> v2:
+>  * drop dead code (Ilpo)
+> ---
+>  drivers/pci/Kconfig  | 1 +
+>  drivers/pci/vgaarb.c | 8 +-------
+>  2 files changed, 2 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 7065a8e5f9b14..c35fed47addd5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -306,6 +306,7 @@ config VGA_ARB
+>  =09bool "VGA Arbitration" if EXPERT
+>  =09default y
+>  =09depends on (PCI && !S390)
+> +=09select SCREEN_INFO
+>  =09help
+>  =09  Some "legacy" VGA devices implemented on PCI typically have the sam=
+e
+>  =09  hard-decoded addresses as they did on ISA. When multiple PCI device=
+s
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index b58f94ee48916..8c8c420ff5b55 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
+> =20
+>  static bool vga_is_firmware_default(struct pci_dev *pdev)
+>  {
+> -#ifdef CONFIG_SCREEN_INFO
+> -=09struct screen_info *si =3D &screen_info;
+> -
+> -=09return pdev =3D=3D screen_info_pci_dev(si);
+> -#else
+> -=09return false;
+> -#endif
+> +=09return pdev =3D=3D screen_info_pci_dev(&screen_info);
+>  }
+> =20
+>  static bool vga_arb_integrated_gpu(struct device *dev)
 
-Reproducing this is at all is very difficult, so I'll try to find the exac=
-t spot
-where things break (i.e. when the pci bus breaks and no more message are t=
-ransmitted
-via netconsole) first. The current state of this search is that the crash =
-occurs in
-pci_pm_runtime_resume(), before pci_fixup_device() is called:
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-static int pci_pm_runtime_resume(struct device *dev)
-{
-	struct pci_dev *pci_dev =3D to_pci_dev(dev);
-	const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : NULL;
-	pci_power_t prev_state =3D pci_dev->current_state;
-	int error =3D 0;
-	// dev_info(dev, "%s =3D %px\n", __func__, (void *) pci_pm_runtime_resume=
-); // remove this so we don't get too much delay
-										  // This was still printed in the case of a crash
-										  // so the crash must happen below
+--=20
+ i.
 
-	/*
-	 * Restoring config space is necessary even if the device is not bound
-	 * to a driver because although we left it in D0, it may have gone to
-	 * D3cold when the bridge above it runtime suspended.
-	 */
-	pci_pm_default_resume_early(pci_dev);
-	if (!strcmp(dev_name(dev), "0000:00:01.1")) // This is the current test.
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	pci_resume_ptm(pci_dev);
-
-	if (!pci_dev->driver)
-		return 0;
-
-	//if (!strcmp(dev_name(dev), "0000:00:01.1"))         // This was not pri=
-nted when 6.17.0-rc6-next-20250917-gpudebug-00036-g4f7b4067c9ce
-	//	dev_info(dev, "%s %d\n", __func__, __LINE__); // crashed, so the crash=
- must happen above
-	pci_fixup_device(pci_fixup_resume_early, pci_dev);
-	pci_pm_default_resume(pci_dev);
-
-	if (prev_state =3D=3D PCI_D3cold)
-		pci_pm_bridge_power_up_actions(pci_dev);
-
-	if (pm && pm->runtime_resume)
-		error =3D pm->runtime_resume(dev);
-
-	return error;
-}
-
-
-Bert Karwatzki
+--8323328-1785228779-1760373560=:933--
 
