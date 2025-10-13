@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-37929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8440DBD55DE
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 19:08:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFB18BD4DE2
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:16:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E08705435E0
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:15:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12C301886491
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5ADF1EF36E;
-	Mon, 13 Oct 2025 15:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2093530C610;
+	Mon, 13 Oct 2025 16:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CG4lmLNh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkkiw79w"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F56D2AD32
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE13D30C605
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 16:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760371157; cv=none; b=nOmfq2ZNzZ9O3IdKg6GVEYlyUX3h8UhGlqm295zoDQh5zGEzFIM0430Uw58PS52xVL0Iidy2dTMyTCbdNkUMabv9/eXFFKIUmJb/00yF+8L9ozEAWGUzK9W+nPH4V5Gc3qV05gVL/6xnyy2l+quVZEzCD6+nRnzI8zCazVHCqI8=
+	t=1760371323; cv=none; b=iwf94llptLQXlqcZdCV2Peu8AGKJbDQiOetPQW8Wckxzgn2XMNM26xV2PFsZdeSFaXmWJsZGxQE0IWBWVTbUDHM+St94qC96nCTZz+08XylwJ7XQBmHfzDJYzRYwJuRXe3T1S3/l/Un2wKfTmR59L2gJa10SwxGRGz0H8DpAcyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760371157; c=relaxed/simple;
-	bh=YzPXSc9lA79Qdx1+RbYOvpF5Hc02Jrnk2byrQTnsdio=;
+	s=arc-20240116; t=1760371323; c=relaxed/simple;
+	bh=zmWs4tyPdA4WSf506TonoWwzqbFwMzD2ey7AUqVphrg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2CHGemWV1gV8g7f+H1njjEdbc3BAgOPo94TRNE32dKZPBgmUVJZ4/4QYS4vnQEGS0h3Na06s+Rb/cQoYJzWLiLWjUjqAT4PnwR/iEB36dTxi/K7sQyTNQ2WJ+K48J0dQevZ2yzMBZFgUvuyXG/GMwewd42oWJVMY2TjQlp4S/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CG4lmLNh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58933C4CEE7;
-	Mon, 13 Oct 2025 15:59:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=pmY+frwJsEz+/I6UpCJBaHxspGza1tdohp3DFIjHHv8mFpfJHniDMnTbU0dhNZb3MmgNoShDv78KVzYMifKf1up96yUnUC7rp7+mHLXYsPiZ71ImpSDmXPzlQvN2rhUWr4HFZrMag9Zm7OOgvMxysnsojvkgiRKdb/HxNpJQNjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkkiw79w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B548DC4CEE7;
+	Mon, 13 Oct 2025 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760371155;
-	bh=YzPXSc9lA79Qdx1+RbYOvpF5Hc02Jrnk2byrQTnsdio=;
+	s=k20201202; t=1760371322;
+	bh=zmWs4tyPdA4WSf506TonoWwzqbFwMzD2ey7AUqVphrg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CG4lmLNhQezyFadt+TIyiILI5E62iaE76Osv8KyQODyiT6ndsgdZTFdqmksAHRI4q
-	 WG94uqN2xbCFr8pejgVrQTz9tsOaFf3ELTbUUngJBoXdNbX7qFy+WDdAr/OaNWpN93
-	 498pQvp0uetu6l7gOx0vBl3/TFERJ1AQt1Jy4Hi9v2m1YW3Zt0aD8tJlQRQJVsPlCk
-	 XfDDeomHGVteG9e+QEpwFsemnjomC1GHRDehPGQihr51Iw/5FErSCHNNnm3qveEoe8
-	 WgG7eRXhoVnlJKDlgf8LStK62bOxQf9WcyOMwbTHF+UdjMLRyKOsCllacgvVXhQKc/
-	 MMi+lL3+eeFyQ==
-Date: Mon, 13 Oct 2025 21:28:59 +0530
+	b=kkkiw79wL7Hof/AILG3pyTbRsVPGf1cs703PPmyV0W7PsPP+ptpwEo7RZpZXBZ3Pb
+	 2BGDoaDCWx1H4lgm/h5JCR5oExPfQLwWzFx0QiA5GnlJd5eDQJXjYWSPemDe5u0ymJ
+	 YdKnQYUNVLsXYNch3R5eh9y8T1isFqieT/LsIqkdLS+VviZyvHKoYP84wO0g349LxI
+	 TdHODQT2CmgmeH2hkYIy8LpJqu85XrytPHLD6MhDstMEEfo5jgDfcXA82vqrYYbxAN
+	 UJ+Fw0wK/9inL5MM4f/DUA6O1no7TX9lKMeWy4fRYgD5aZ6gpIacYLgs+SBThvSmEd
+	 jPJahPvBexD4Q==
+Date: Mon, 13 Oct 2025 21:31:48 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Christian Zigotzky <chzigotzky@xenosoft.de>
 Cc: Lukas Wunner <lukas@wunner.de>, 
@@ -51,10 +51,9 @@ Cc: Lukas Wunner <lukas@wunner.de>,
 	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au, Darren Stevens <darren@stevens-zone.net>, 
 	debian-powerpc@lists.debian.org
 Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <mg2ahzgcwgm6h5mtgs4tsel3yrphrfqgfcjydfxgzgxq5h7kot@jtealdt6vvcz>
-References: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
- <7FB0AB81-AD0F-420D-B2CB-F81C5E47ADF3@xenosoft.de>
- <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
+Message-ID: <rmczfftmndkj7vofbol6i3enl26dbqv4mbbqsxyiruif6xjfd3@3yotxa4j2com>
+References: <0BE6C5AD-8DFD-4126-9B18-C012B522B442@xenosoft.de>
+ <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,67 +63,103 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
+In-Reply-To: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
 
-On Mon, Oct 13, 2025 at 04:50:31PM +0200, Christian Zigotzky wrote:
-> On 13 October 2025 at 07:23 am, Christian Zigotzky wrote:
-> > Better for testing (All AMD graphics cards):
+On Mon, Oct 13, 2025 at 07:02:19AM +0200, Christian Zigotzky wrote:
+> 
+> 
+> > On 13 October 2025 at 06:47 am, Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
 > > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 214ed060ca1b..e006b0560b39 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-> > */
-> > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> > ﻿
+> >> On 11 October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >> 
+> >> Hi Lukas,
+> >> 
+> >> Thanks for looping me in. The referenced commit forcefully enables ASPM on all
+> >> DT platforms as we decided to bite the bullet finally.
+> >> 
+> >> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even though it
+> >> advertises ASPM capability.
+> >> 
+> >> Christian, could you please test the below change and see if it fixes the issue?
+> >> 
+> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> >> index 214ed060ca1b..e006b0560b39 100644
+> >> --- a/drivers/pci/quirks.c
+> >> +++ b/drivers/pci/quirks.c
+> >> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> >> */
+> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> >> 
+> >> +
+> >> +static void quirk_disable_aspm_all(struct pci_dev *dev)
+> >> +{
+> >> +       pci_info(dev, "Disabling ASPM\n");
+> >> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+> >> +}
+> >> +
+> >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all);
+> >> +
+> >> /*
+> >> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+> >> * Link bit cleared after starting the link retrain process to allow this
+> >> 
+> >> 
+> >> Going forward, we should be quirking the devices if they behave erratically.
+> >> 
+> >> - Mani
+> >> 
+> >> --
+> >> மணிவண்ணன் சதாசிவம்
 > > 
-> > +
-> > +static void quirk_disable_aspm_all(struct pci_dev *dev)
-> > +{
-> > +       pci_info(dev, "Disabling ASPM\n");
-> > +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
-> > +}
-> > +
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, quirk_disable_aspm_all);
-> > +
-> > /*
-> > * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-> > * Link bit cleared after starting the link retrain process to allow this
-> This patch has solved the boot issue but I get the following error messages
-> again and again:
+> > Hello Mani,
+> > 
+> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all);
+> > 
+> > Is this only for my AMD Radeon HD6870?
+> > 
+> > My AMD Radeon HD5870 is also affected.
+> > 
+> > And I tested it with my AMD Radeon HD5870.
+> > 
+> > What would the line be for all AMD graphics cards?
+> > 
+> > Thanks,
+> > Christian
 > 
-> [  186.765644] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0 (no details found
-> [  187.789034] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0
-> [  187.789052] pcieport 0001:00:00.0: PCIe Bus Error: severity=Correctable,
-> type=Data Link Layer, (Transmitter ID)
-> [  187.789058] pcieport 0001:00:00.0:   device [1957:0451] error
-> status/mask=00001000/00002000
-> [  187.789066] pcieport 0001:00:00.0:    [12] Timeout
-> [  187.789120] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0 (no details found
-> [  187.789169] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0 (no details found
-> [  187.789218] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0 (no details found
-> [  188.812514] pcieport 0001:00:00.0: AER: Correctable error message
-> received from 0001:00:00.0
+> I see. 0x6738 is for the AMD Radeon HD 6800 series.
 > 
-> I don't get these messages with the revert patch. [1]
+> It could be, that your patch works because I tested it with an AMD Radeon HD5870 instead of an AMD Radeon HD6870. Sorry 
 > 
+> This could be the correct line for the HD5870:
+> 
+> >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6898, quirk_disable_aspm_all);
+> 
+> There are some more id numbers for the HD5870.
+> 
+> Correct:
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 214ed060ca1b..e006b0560b39 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> */
+> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> 
+> +
+> +static void quirk_disable_aspm_all(struct pci_dev *dev)
+> +{
+> +       pci_info(dev, "Disabling ASPM\n");
+> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+> +}
+> +
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all);
 
-Either the Root Port could be triggering these AER messages due to ASPM issue or
-due to the endpoint connected downstream.
-
-If possible, please share the whole dmesg log instead of the snippet so that we
-can be sure from where the AER messages are coming from.
-
-You can also add the below quirk and check:
-
-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FSL, 0x0451, quirk_disable_aspm_all);
-
-But it would be better to get the whole dmesg.
+As you've figured out, we need to add the quirks for individual devices. Btw, I
+just used PCIE_LINK_STATE_ALL to make sure the patch works. But for properly
+fixing the issue, we need to try disabling L0s, L1 separately and check which
+one (or both) is causing issue.
 
 - Mani
 
