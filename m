@@ -1,96 +1,66 @@
-Return-Path: <linux-pci+bounces-37869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF5E2BD1BB5
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 09:04:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950E8BD1C06
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 09:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9415E4E251F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 07:04:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F7683B7575
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 07:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05E927A122;
-	Mon, 13 Oct 2025 07:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3B82E8894;
+	Mon, 13 Oct 2025 07:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="studDxyd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0r1yXJUS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="studDxyd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0r1yXJUS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Y42ft8D6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39032820B7
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 07:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5923C610B
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 07:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760339071; cv=none; b=UMpnYlmX/9ofhN+bX65B214/V0uCNn26CW9ezL4eNxCXbIaP5mKDgm/sVIYIqtTl/ohN79f86AN4CebPIOS0hVPSsPkxM/GvkTKILSK6ecS/GTG7o0vUrEW/eoDZI/9s12MUrXKHh2xZlZQkW//hkRshCTJlKpeeSLXZfPQXX3o=
+	t=1760339706; cv=none; b=DMi1RfLT0qRGrbUlNkYMmWlwKHAZ4UY8qMvrdhgCplXnPcxXIr2HHCUXzzWid868fka0WPdHmbm97euDApTFF+cKUCQ5ZiviJQsF43m/gIR1DkHCo1UprLQTBgMY3GFbl43TnnkUiGCQ6fyMTpqnFNRpmbkFeR4VnC3i44vEs5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760339071; c=relaxed/simple;
-	bh=CT50q/G0l7JjhbZDkqiQz7BdoRNvFQ+kPqxXBIhUYOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VdlOWSpZBcHgPxsCTgIEXFOULMBLwhM4HfHJ1eYDKhYrg2lDSZvFbGpzC0MgEhgNXOFCE9X8l0L6KVs/xNmBPAIliVP7hxgXpCSsL8u+FopTymrFDo8C35/yTRx5Q4Huo4r84UA3NgXd2On+zCOTEGcZYCWWfpluBALaIUwjg2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=studDxyd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0r1yXJUS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=studDxyd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0r1yXJUS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A84F2116F;
-	Mon, 13 Oct 2025 07:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760339068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
-	b=studDxydwrQPLi4RJhTe3qzf8yvsjamS4rYLdNFBCQ/o7aoeW13iBwoD5vfNSE8qUoM6va
-	tCEqc6Mkx7r64bDSfzr+h/VMvg6Q/HebUuptd25uHS9uIgl9qGryuSi2tdKk1+49Cy185C
-	lMm6Y/MYznA5x9lWqxh1ZfAezJG6CY8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760339068;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
-	b=0r1yXJUSH/Lladk2s8BapKk11UXbZC8UHFSu4RO0CLFb6vfX1G5d20l04e7xleP3dZVkt1
-	OByfTvnI9cIkORBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=studDxyd;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0r1yXJUS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760339068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
-	b=studDxydwrQPLi4RJhTe3qzf8yvsjamS4rYLdNFBCQ/o7aoeW13iBwoD5vfNSE8qUoM6va
-	tCEqc6Mkx7r64bDSfzr+h/VMvg6Q/HebUuptd25uHS9uIgl9qGryuSi2tdKk1+49Cy185C
-	lMm6Y/MYznA5x9lWqxh1ZfAezJG6CY8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760339068;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
-	b=0r1yXJUSH/Lladk2s8BapKk11UXbZC8UHFSu4RO0CLFb6vfX1G5d20l04e7xleP3dZVkt1
-	OByfTvnI9cIkORBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A67A11374A;
-	Mon, 13 Oct 2025 07:04:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZDZxJ3uk7GjyWAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 13 Oct 2025 07:04:27 +0000
-Message-ID: <cf787bfa-2bf1-44bc-be46-fa4115319bd0@suse.de>
-Date: Mon, 13 Oct 2025 09:04:27 +0200
+	s=arc-20240116; t=1760339706; c=relaxed/simple;
+	bh=Dw25R2eZ8DMJQQOBcbI56rCIwt7zrBlY5WSN7481ImU=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=HR3EfiAuzIpRJqu5Xy2371wsI9vUII+xtOU6KsyudOf8RBk3o08ovUx2akT+1Z7yytqW1aUkkOLkYdAVSw1a1ZMLkZWNuhBOv3nA4HdnSzn2E3SH8Nm/H1ABuLe7J/qdNiWydMsf6GLdRQ4V0pNfpdEm5iPuE85rumVUqvtY8RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Y42ft8D6; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+Received: from eig-obgw-5006b.ext.cloudfilter.net ([10.0.29.217])
+	by cmsmtp with ESMTPS
+	id 7iZIvlEXXaPqL8CllvS75o; Mon, 13 Oct 2025 07:14:58 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 8ClkvVVOg0HUD8ClkvjTDA; Mon, 13 Oct 2025 07:14:56 +0000
+X-Authority-Analysis: v=2.4 cv=TIhFS0la c=1 sm=1 tr=0 ts=68eca6f1
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7vwVE5O1G3EA:10
+ a=MNViUi8bbABe4p9O268A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:Cc:Subject:From:To:
+	MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Qz0nb/M5vgl79rSNKrhGowcyULzQUz8RfrryvD4bgsg=; b=Y42ft8D6REzMdUPE5gEaTksNaB
+	QCJmQJMDmPuxO1E1eipVBMvzqEZkKjTFMGc2FvSwgpip0v9xELSj+ecED1ccbGUfzqgcMwLqxqaCZ
+	yrXIbZJ6EW3qufkjCAkSR/ubbxI798tfQ30JJ7U3JT3rW970faxcfKZZ/iCTYuVQKf3mSW4mhb4s8
+	x4TbKiYEZigbIOjGuzRMi0379/eNSCV/cwtUBw2UIfNJYMpFT7izftR2ikHJfIo0aQi2jnie7wfHm
+	UjIEYCARacl4Y89FfHCxAhf+lWRoiHzdFoNONRsDoZOGhRtUe/hn2wi/YIuxyn6MBIi6pPTP522iN
+	wwWMjOhQ==;
+Received: from c-73-92-56-26.hsd1.ca.comcast.net ([73.92.56.26]:41908 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1v8Clj-00000003JdT-2yvG;
+	Mon, 13 Oct 2025 01:14:55 -0600
+Message-ID: <eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net>
+Date: Mon, 13 Oct 2025 00:14:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,138 +68,80 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 2/4] PCI/VGA: Replace vga_is_firmware_default() with a
- screen info check
-To: Mario Limonciello <superm1@kernel.org>, Eric Biggers <ebiggers@kernel.org>
-Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>
-References: <20250811162606.587759-1-superm1@kernel.org>
- <20250811162606.587759-3-superm1@kernel.org> <20251012182302.GA3412@sol>
- <1be1a119-1fbd-435f-bb27-70f48d677ebf@kernel.org> <20251012184717.GB3412@sol>
- <65c24236-044c-4b65-baaa-dc0011ea69d8@kernel.org>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <65c24236-044c-4b65-baaa-dc0011ea69d8@kernel.org>
+To: bhelgaas@google.comk, rishna.chundru@oss.qualcomm.com, mani@kernel.org
+From: Ron Economos <re@w6rz.net>
+Subject: SiFive FU740 PCI driver fails on 6.18-rc1
+Cc: helgass@kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 0A84F2116F
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,google.com,amd.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,vger.kernel.org,nvidia.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.92.56.26
+X-Source-L: No
+X-Exim-ID: 1v8Clj-00000003JdT-2yvG
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-92-56-26.hsd1.ca.comcast.net ([10.0.1.116]) [73.92.56.26]:41908
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 3
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMuxRhPgQ21odQI0yMLoo20QDm7E763JDu/8MpZ/Ps8GCAXJ9Qe3idkI1M3ByDkxPiOpYUxDZgUbF2jMdanAO3VolvG65fv7ONg0LifeMOh7+PVdfhN6
+ Z8j6sOuJsq0nwO4t+PnoSiPsfqZCQyonY/lelIXqxyFxUmoirCLvUMuELFltDf9WeA9ku70jmq+ZV+V7pScaqzxDs5lGLJmAE3U=
 
-Hi Mario,
+The SiFive FU740 PCI driver fails on the HiFive Unmatched board with 
+Linux 6.18-rc1. The error message is:
 
-thanks for handling this report quickly.
+[    3.166624] fu740-pcie e00000000.pcie: host bridge 
+/soc/pcie@e00000000 ranges:
+[    3.166706] fu740-pcie e00000000.pcie:       IO 
+0x0060080000..0x006008ffff -> 0x0060080000
+[    3.166767] fu740-pcie e00000000.pcie:      MEM 
+0x0060090000..0x007fffffff -> 0x0060090000
+[    3.166805] fu740-pcie e00000000.pcie:      MEM 
+0x2000000000..0x3fffffffff -> 0x2000000000
+[    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem 
+0xdf0000000-0xdffffffff] for [bus 00-ff]
+[    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
+[    3.579552] fu740-pcie e00000000.pcie: Failed to configure iATU in 
+ECAM mode
+[    3.579655] fu740-pcie e00000000.pcie: probe with driver fu740-pcie 
+failed with error -22
 
-Am 12.10.25 um 21:06 schrieb Mario Limonciello:
-[...]
->> I don't have CONFIG_SCREEN_INFO enabled, so the commit changed
->> vga_is_firmware_default() to always return false.
->
-> Thanks, that definitely explains it.
->
->>
->> If DRM_AMDGPU depends on SCREEN_INFO now, it needs to select it.
->>
->> - Eric
->
-> Well the question now is which driver should actually select it.
->
-> Although it manifested for you in amdgpu, I don't think this is going 
-> to be an amdgpu unique issue.
->
-> Maybe this:
->
-> diff --git a/drivers/video/fbdev/core/Kconfig 
-> b/drivers/video/fbdev/core/Kconfig
-> index 006638eefa41..ce2544924b0e 100644
-> --- a/drivers/video/fbdev/core/Kconfig
-> +++ b/drivers/video/fbdev/core/Kconfig
-> @@ -5,6 +5,7 @@
->
->  config FB_CORE
->         select VIDEO
-> +       select SCREEN_INFO
+The normal message (on Linux 6.17.2) is:
 
-Let's select it from CONFIG_VGA_ARB. This will restore the old behavior 
-for x86. The else branch for CONFIG_SCREEN_INFO can then go away.
+[    3.381487] fu740-pcie e00000000.pcie: host bridge 
+/soc/pcie@e00000000 ranges:
+[    3.381584] fu740-pcie e00000000.pcie:       IO 
+0x0060080000..0x006008ffff -> 0x0060080000
+[    3.381682] fu740-pcie e00000000.pcie:      MEM 
+0x0060090000..0x007fffffff -> 0x0060090000
+[    3.381724] fu740-pcie e00000000.pcie:      MEM 
+0x2000000000..0x3fffffffff -> 0x2000000000
+[    3.484809] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, 
+align 4K, limit 4096G
+[    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
+[    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+[    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+[    3.988164] fu740-pcie e00000000.pcie: PCI host bridge to bus 0000:00
 
-Best regards
-Thomas
+Reverting the following commits solves the issue.
 
-> tristate
->
->  config FB_NOTIFY
+0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc: Support ECAM 
+mechanism by enabling iATU 'CFG Shift Feature'
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom: Prepare for the DWC 
+ECAM enablement
 
+f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc: Prepare the driver 
+for enabling ECAM mechanism using iATU 'CFG Shift Feature'
 
 
