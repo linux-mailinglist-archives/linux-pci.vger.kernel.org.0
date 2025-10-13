@@ -1,207 +1,259 @@
-Return-Path: <linux-pci+bounces-37871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29A74BD1FE9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 10:19:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FEF4BD221C
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 10:47:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1D7B3AED4F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 08:19:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 246013C0549
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 08:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78972F3C08;
-	Mon, 13 Oct 2025 08:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02BA2FA0F5;
+	Mon, 13 Oct 2025 08:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VgZJW0Ml"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZQp3ta/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E0B2F3600
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 08:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3FF2F60C9
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 08:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760343590; cv=none; b=YgmgTyNgqtsKy5vgQe8pzXmHY+OxlFjMcZGwYTMR2RsG6ycGUz24/fMa2Gg0fL7Ix6H8d+rZwiLD0/Ecx0wmjLQ75nIoOa3+CRM8idGdLkIrzyOQNWEr9a1yaDvmJOLCMwfQxOSLMx3gSjKLqK4N4wl3WY284rh9HVwn4cIMZcA=
+	t=1760345226; cv=none; b=KFoIQjEYHOFv4udpz123krJ1puiqAmaNyTLojcM8/1yqVyUxPCrH4t+cum83gyXf4AL/NvkN3YIhO/Yt2HHOvxi+XWeGVtap6WU6TV3aEwv5g3xlceroFT9Pcn4SA6nfIH+eGznUwlogIn6Cu3ZecdmsYjUGjeY6rUolJmBgo/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760343590; c=relaxed/simple;
-	bh=nbyUnGNC6iVkZvoDa9txOSKwAbxy+aGL/94mTbuV1Ek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gk0JmbKy/6QmgHmM9NV0jiZwB6rNiFKzSteu6AUiNifzqQbjN9Q7xF3K+jZMJzdo2JBq7N6hvsC4TR9EDiIB6Khkezkuh279o3UVeSwTO71Jjs/YoVXDTooDn/ipjj+3HiZDFT2Tks9BH0N88qkk4BYtvWLQaDTe/tU8FmLAIBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VgZJW0Ml; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59D2n6ak000377
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 08:19:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AjJaopS3DAoZEJ7/MA+CTzo8Z6j33qR5fjkH7kQjqNg=; b=VgZJW0Mlu3siiy2/
-	dVjYVlnPHzVjP9lGh2L4CxvtLD1ZJWRxVuOWU7z2//gS/WCGPSBk+4oRD3lipkzu
-	Feqw8Yl2cdhzNuIfllTorZnpEKYb8csWQM95K1CoPzhqA3oszsJL2F2UvJQpqy1W
-	01vlvhOEXU7zFPtH+3gXAgaVemPJe/WQWQJDVxZe1JkJh3+JaeLJgjkqIVO/5XmZ
-	vPExBQY1cPRbEeS1ovdFyLrUxXeJuA0AuNNgu1RIQ4ozfujr9sONY/5sRo8b2MUH
-	YnyD4/cFmJRT8Fr2YfuLc/8GGP+JG+MWx0pJdStLp/rGRpCzrBbo4ojRELyWuFrn
-	W6boFA==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49qferusrs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 08:19:46 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b630b4d8d52so7394393a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 01:19:46 -0700 (PDT)
+	s=arc-20240116; t=1760345226; c=relaxed/simple;
+	bh=6le6OQ8epL+jMQ5N4bnB/5a2+J6M0RilzV7rzr9sKXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFmEDx5R98WALe/YgTwIG/la/yYv3TF247c9f+Dqr45xHuF+Lsk5YOER89hR1jG7WvSqvBKqtxO5XAWELfgML2iey79vlHXe1YDLYYHUYcp39whsXDw/fxEUIJ3BbtQ7Pl3Nk7+dQ8jyS37k0KHQiInmG1FUCODrG7EkZxaY47g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZQp3ta/; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-26e68904f0eso39367535ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 01:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760345224; x=1760950024; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ly+HQRkobfn8QZ0F7iorzNkMZ8hHSqdbvWQJzpHPzWg=;
+        b=mZQp3ta/w+jpSTGgaPSYSj4A2YLyC5b7HH2THkgk9Vs2T6szxs33EBMXwT8eTCpjkk
+         b9WRfQi6eQhdkJihDqHkz05ASZisiJlnplUkHqWk4yEQ7UqGCSofORFdPIbyV7YDFmGN
+         nkBGlJEE5DJYb/H5JD3xuFBFzejqKZLvSt2SulQwShs4zIXqxqil68F0nLGCKV5l7mqr
+         /N42SEB0bO+CTDSq3hLY1zqV/bUCLvZE8tbY2t58FO0NvMXCpFUoMd8bppeFjKStOVJ6
+         i3VUfcbJcbylDIH5E4lxqLkc+Vhiza4MspoHBMfEgN9pJSBo0pFc91pl+QznWxaTZAGW
+         jiFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760343585; x=1760948385;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1760345224; x=1760950024;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AjJaopS3DAoZEJ7/MA+CTzo8Z6j33qR5fjkH7kQjqNg=;
-        b=i2C/7qrgbwHjqNfgzRTqJRHLGmBue43c+NpvA7hBggX6lQSTmGDHeUSjncGxFEtsR9
-         Zv92GdSx+VEikjgg4/CA2XxW/0GkCC2M5/k2f5gBfwPcjTwEA6cDG6drHyTd2HFtpPLR
-         7tF2pePAlNVgYUKtWhWI+stjdiP/5KFYfxIjDIa71OpxP5DcaIWENc1avduTyditDBlY
-         VCkx2Dg+0gnFKk3UT4083J8w4s90bX+PmGNb4eeQNlxmQQPc303lGbrEOUqZFVO0/zSy
-         Mh5L0ezMOu76o8GeFjPMWyzAsbNiz4SgP8E9etFhwwuuJW8b5eFYH8eWeL6k0gfWNdWW
-         Pdjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXYtZ+zD3CCJD6976GT9lvxVS65IrmdaoNtZjJJyJqcOv3hfcJJwsJTM/eFlPAUrRGnaP51NtKI1/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8jPQOehcfUB2yLAn5oYcBKgnLUBwhabv1SOPIuT1b25ECJtvB
-	G3JeNxu152VHwIKmIRCbjK7otGuAmPl/jF5ZrqRAJBnkzyuD4Gvui52fr/UAP5x9JSVFEoAGReb
-	rrWDxagBfinBnYA+vQPVJJNO/STXEghoV8O67luSLFB0OFOG14OhZN8exwnvtXdk=
-X-Gm-Gg: ASbGnctvii6nx3T4giW86pJkIFmDskBV++TJbYAw/aC8XC0JZqSpGLp0r0fuBw6o28e
-	2hCxeX9TLVXarvxemQmWQ4YW7SivghB9uDVU/OuKioDNYA5VaLe9qlGREfNlipFfVuFF+Q8j/Aq
-	spZ+cwThoHqZlp9Du0dJUNs5UVavyKGn4v6XkdrVnBDt7tus99E7fWcPfaby6a7BKJJ7Siy4gyD
-	dRSynVkcCNB3fTarsYD24J+/M6uYIq+NUgedyx/b1jrphmnfL5MVBYXPJkgsBYw8AB1nfabGvgJ
-	N31ODDycSOXgax06BmiKx1lmrjAgUWKhSFYWsDfMeU5ZKjoxSX7LLaPninHUPiXt0WTwL2/kXQ=
-	=
-X-Received: by 2002:a05:6a20:431a:b0:2ff:3752:8377 with SMTP id adf61e73a8af0-32da854263amr27466081637.59.1760343584828;
-        Mon, 13 Oct 2025 01:19:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHNAWKOFDk92n8UbYkabdHidddN3fqxBwTK3LAi4Pw/9wjCPtct6Ntx+TbA7ICVZ9FA1FWWw==
-X-Received: by 2002:a05:6a20:431a:b0:2ff:3752:8377 with SMTP id adf61e73a8af0-32da854263amr27466054637.59.1760343584368;
-        Mon, 13 Oct 2025 01:19:44 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992bb18e28sm10786156b3a.29.2025.10.13.01.19.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 01:19:44 -0700 (PDT)
-Message-ID: <bc7f397c-1739-465e-b195-e1a41c34504d@oss.qualcomm.com>
-Date: Mon, 13 Oct 2025 13:49:39 +0530
+        bh=Ly+HQRkobfn8QZ0F7iorzNkMZ8hHSqdbvWQJzpHPzWg=;
+        b=DkCeQtrGzRPHWqdX9oeO09qWiW1Quxmbvlc/M74W4y9oaQ+5o8Mwk3wChwDFGG8u0t
+         sNHe1FiTer/LIF6AeEsSMYfr9tNemaQYQzM200pwtlABnLKWnwrL/Sz8hLElF3q9w0eF
+         6d94GW6Lx/33mQnvy9zlmwqsDh9lGnQNtjmsZKvNF62cqv9zMmuLnzErD5S4DGkr4i8g
+         cNDmyi8wNsVNDlZKe/VpJTXP5enklct71ldG6HvhwnnoS91HSitqTJ+k+CRB3gdUjP4V
+         LjBEXwajYmp7YtpXnFhe//qZCyjOjSzksfwEk+slyLoOUburscfRdGnXQ71ploMx4c3H
+         +DCw==
+X-Gm-Message-State: AOJu0Yyf9JXkwGXLRR6oWjoBULuD3KgypXJoGGwpLgiKZbfDq7Rrkdwg
+	dxE9mdt9kBRacoEp3ajEFmEFeIPdoXze9btBx8rqgsxc7DmSiIRfyXom
+X-Gm-Gg: ASbGncsKYBg8VlNFhIh6IxscxIkS3Lb2fl9fW27BqXn63eSifOZwbX0/6GYI+unCcTF
+	w97DvaubxSt4ysjV/h3ZyQq0jYxwQiCd/E9WPJ+Zcr1T48wEgm3d66Be/DPbltFccfl94gXGrBU
+	X7aevC0rJRFUfDLvJr2/jIO68uAdufxA/upeWHiZZ44eexyZg7L9+lNAvXiSeoczCXvRnYIttx0
+	sdjMCH66/MRA1J9NaVF2pGyZrPSgS8OPQ34FXvmSiNGkbehUff+b5HTNfugIkirSIyMfyWN1oiR
+	RWVFjOEFuSXyNcfx7LNgVoTczrOq5WCb6/XRv0DlYjewvQzw0ZUOY56cpmtJnDQ5FKccq8bs+HV
+	TIKVGDzpLzfwgaOb76i9NVrVVzy49YSYteKwbIrmqtbZKCab3HkA=
+X-Google-Smtp-Source: AGHT+IF7w1EIeSODUr5AIUsDNw48vbrBIgBhYBiRRyhl8w2rgyXTNwbHm6KkbxbA5Bn+oLw+XAdTJw==
+X-Received: by 2002:a17:902:e550:b0:25f:fe5f:c927 with SMTP id d9443c01a7336-290272c0a06mr273302795ad.31.1760345224148;
+        Mon, 13 Oct 2025 01:47:04 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-29034de9febsm127921165ad.7.2025.10.13.01.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Oct 2025 01:47:03 -0700 (PDT)
+Date: Mon, 13 Oct 2025 16:46:18 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Genes Lists <lists@sapience.com>, Jens Axboe <axboe@kernel.dk>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc: linux-pci@vger.kernel.org
+Subject: Re: mainline boot fail nvme/block? [BISECTED]
+Message-ID: <trdjd7zhpldyeurmpvx4zpgjoz7hmf3ugayybz4gagu2iue56c@zswmzvauqnxk>
+References: <4b392af8847cc19720ffcd53865f60ab3edc56b3.camel@sapience.com>
+ <cf4e88c6-0319-4084-8311-a7ca28a78c81@kernel.dk>
+ <3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
-To: Ron Economos <re@w6rz.net>, bhelgaas@google.comk,
-        rishna.chundru@oss.qualcomm.com, mani@kernel.org
-Cc: helgass@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>
-References: <eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=R64O2NRX c=1 sm=1 tr=0 ts=68ecb622 cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=0_2MnD8HFQHHBmd3TK8A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-GUID: dq622zXBpy_LtMvnU-WSag2Q361GFrE2
-X-Proofpoint-ORIG-GUID: dq622zXBpy_LtMvnU-WSag2Q361GFrE2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxOCBTYWx0ZWRfX8WfR5H038LlG
- 2FOGHigu9dyXsf5ayRH77EFpKozUwjwF3LqywhiLUAjVlhGla67lsqx/Wr1Pd8IEUmsVZAkBpZA
- 4ClrqkrbRH9ZYogeSe1xO2ba0qK9p0xWL56oLh0jGCGao/6npU3iNa30V0ERjez3O4FW/9scIIv
- Rj596FpDS2nf0hwYRudwUX2KTtp9vmvjG2ej1ESLz9MaPgUKX0LC5XbDZbLfv9+E6uovl8DBtjb
- B68r7obdi/KKeQ3WdFYQXMFo/eZViZAriCjOZNt70tYbcyIcdP9uQHoUknglAHasGUgU19R+Nim
- vdOlj1UiUfUsJja4Rhs2xdgphVd/3fUyJZsAVn+RcYSwwJtxqXDjr71qw2m159BC8J5+DEiI5rM
- l0QVAOtFxJR32eE0CiDB1z+FEc3Qqg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-13_03,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110018
+In-Reply-To: <3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com>
 
+On Fri, Oct 10, 2025 at 07:49:34PM -0400, Genes Lists wrote:
+> On Fri, 2025-10-10 at 08:54 -0600, Jens Axboe wrote:
+> > On 10/10/25 8:29 AM, Genes Lists wrote:
+> > > Mainline fails to boot - 6.17.1 works fine.
+> > > Same kernel on an older laptop without any nvme works just fine.
+> > > 
+> > > It seems to get stuck enumerating disks within the initramfs
+> > > created by
+> > > dracut.
+> > > 
+> > > ,,,
+> > > 
+> > > Machine is dell xps 9320 laptop (firmware 2.23.0) with nvme
+> > > partitioned:
+> > > 
+> > >     # lsblk -f
+> > >     NAME        FSTYPE      FSVER LABEL FSAVAIL FSUSE%
+> > > MOUNTPOINTS    
+> > >     sr0
+> > >     nvme0n1
+> > >     ├─nvme0n1p1 vfat        FAT32 ESP   2.6G    12% /boot
+> > >     ├─nvme0n1p2 ext4        1.0   root  77.7G    42% / 
+> > >     └─nvme0n1p3 crypto_LUKS 2                          
+> > >       └─home    btrfs             home  1.3T    26% /opt
+> > >                                                    
+> > > /home             
+> > > 
+> > > 
+> > > 
+> > > Will try do bisect over the weekend.
+> > 
+> > That'd be great, because there's really not much to glean from this
+> > bug
+> > report.
+> 
+> Bisect landed here. (cc linux-pci@vger.kernel.org)
+> Hopefully it is helpful, even though I don't see MSI in lspci output
+> (which is provided below).
+> 
+> gene
+> 
+> 
+> 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b is the first bad commit
+> commit 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b (HEAD)
+> Author: Inochi Amaoto <inochiama@gmail.com>
+> Date:   Thu Aug 14 07:28:32 2025 +0800
+> 
+>     PCI/MSI: Add startup/shutdown for per device domains
+> 
+>     As the RISC-V PLIC cannot apply affinity settings without invoking
+>     irq_enable(), it will make the interrupt unavailble when used as an
+>     underlying interrupt chip for the MSI controller.
+> 
+>     Implement the irq_startup() and irq_shutdown() callbacks for the
+> PCI MSI
+>     and MSI-X templates.
+> 
+>     For chips that specify MSI_FLAG_PCI_MSI_STARTUP_PARENT, the parent
+> startup
+>     and shutdown functions are invoked. That allows the interrupt on
+> the parent
+>     chip to be enabled if the interrupt has not been enabled during
+>     allocation. This is necessary for MSI controllers which use PLIC as
+>     underlying parent interrupt chip.
+> 
+>     Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+>     Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+>     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>     Tested-by: Chen Wang <unicorn_wang@outlook.com> # Pioneerbox
+>     Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+>     Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Link: https://lore.kernel.org/all/20250813232835.43458-3-
+> inochiama@gmail.com
+> 
+>  drivers/pci/msi/irqdomain.c | 52
+> ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/msi.h         |  2 ++
+>  2 files changed, 54 insertions(+)
+> 
+> 
+> ----------------------------------------- lspci output ----------------
+> In case helpful here's lspci output:
+> 
+> 0000:00:00.0 Host bridge: Intel Corporation Raptor Lake-P/U 4p+8e cores
+> Host Bridge/DRAM Controller
+> 0000:00:02.0 VGA compatible controller: Intel Corporation Raptor Lake-P
+> [Iris Xe Graphics] (rev 04)
+> 0000:00:04.0 Signal processing controller: Intel Corporation Raptor
+> Lake Dynamic Platform and Thermal Framework Processor Participant
+> 0000:00:05.0 Multimedia controller: Intel Corporation Raptor Lake IPU
+> 0000:00:06.0 System peripheral: Intel Corporation RST VMD Managed
+> Controller
+> 0000:00:07.0 PCI bridge: Intel Corporation Raptor Lake-P Thunderbolt 4
+> PCI Express Root Port #0
+> 0000:00:07.2 PCI bridge: Intel Corporation Raptor Lake-P Thunderbolt 4
+> PCI Express Root Port #2
+> 0000:00:08.0 System peripheral: Intel Corporation GNA Scoring
+> Accelerator module
+> 0000:00:0a.0 Signal processing controller: Intel Corporation Raptor
+> Lake Crashlog and Telemetry (rev 01)
+> 0000:00:0d.0 USB controller: Intel Corporation Raptor Lake-P
+> Thunderbolt 4 USB Controller
+> 0000:00:0d.2 USB controller: Intel Corporation Raptor Lake-P
+> Thunderbolt 4 NHI #0
+> 0000:00:0d.3 USB controller: Intel Corporation Raptor Lake-P
+> Thunderbolt 4 NHI #1
+> 0000:00:0e.0 RAID bus controller: Intel Corporation Volume Management
+> Device NVMe RAID Controller Intel Corporation
+> 0000:00:12.0 Serial controller: Intel Corporation Alder Lake-P
+> Integrated Sensor Hub (rev 01)
+> 0000:00:14.0 USB controller: Intel Corporation Alder Lake PCH USB 3.2
+> xHCI Host Controller (rev 01)
+> 0000:00:14.2 RAM memory: Intel Corporation Alder Lake PCH Shared SRAM
+> (rev 01)
+> 0000:00:14.3 Network controller: Intel Corporation Raptor Lake PCH CNVi
+> WiFi (rev 01)
+> 0000:00:15.0 Serial bus controller: Intel Corporation Alder Lake PCH
+> Serial IO I2C Controller #0 (rev 01)
+> 0000:00:15.1 Serial bus controller: Intel Corporation Alder Lake PCH
+> Serial IO I2C Controller #1 (rev 01)
+> 0000:00:16.0 Communication controller: Intel Corporation Alder Lake PCH
+> HECI Controller (rev 01)
+> 0000:00:1e.0 Communication controller: Intel Corporation Alder Lake PCH
+> UART #0 (rev 01)
+> 0000:00:1e.3 Serial bus controller: Intel Corporation Alder Lake SPI
+> Controller (rev 01)
+> 0000:00:1f.0 ISA bridge: Intel Corporation Raptor Lake LPC/eSPI
+> Controller (rev 01)
+> 0000:00:1f.3 Multimedia audio controller: Intel Corporation Raptor
+> Lake-P/U/H cAVS (rev 01)
+> 0000:00:1f.4 SMBus: Intel Corporation Alder Lake PCH-P SMBus Host
+> Controller (rev 01)
+> 0000:00:1f.5 Serial bus controller: Intel Corporation Alder Lake-P PCH
+> SPI Controller (rev 01)
+> 0000:01:00.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 0000:02:00.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 0000:02:01.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 0000:02:02.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 0000:02:03.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 0000:02:04.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen
+> Ridge 2020] (rev 02)
+> 10000:e0:06.0 PCI bridge: Intel Corporation Raptor Lake PCIe 4.0
+> Graphics Port
+> 10000:e1:00.0 Non-Volatile memory controller: SK hynix Platinum
+> P41/PC801 NVMe Solid State Drive
+> 
+> 
+> -- 
+> Gene
 
+I think this is caused by VMD device, which I have a temporary solution
+here [1]. Since I have no idea about how VMD works, I hope if anyone
+can help to convert this as an formal fix.
 
-On 10/13/2025 12:44 PM, Ron Economos wrote:
-> The SiFive FU740 PCI driver fails on the HiFive Unmatched board with 
-> Linux 6.18-rc1. The error message is:
-> 
-> [    3.166624] fu740-pcie e00000000.pcie: host bridge 
-> /soc/pcie@e00000000 ranges:
-> [    3.166706] fu740-pcie e00000000.pcie:       IO 
-> 0x0060080000..0x006008ffff -> 0x0060080000
-> [    3.166767] fu740-pcie e00000000.pcie:      MEM 
-> 0x0060090000..0x007fffffff -> 0x0060090000
-> [    3.166805] fu740-pcie e00000000.pcie:      MEM 
-> 0x2000000000..0x3fffffffff -> 0x2000000000
-> [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem 
-> 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
-> [    3.579552] fu740-pcie e00000000.pcie: Failed to configure iATU in 
-> ECAM mode
-> [    3.579655] fu740-pcie e00000000.pcie: probe with driver fu740-pcie 
-> failed with error -22
-> 
-> The normal message (on Linux 6.17.2) is:
-> 
-> [    3.381487] fu740-pcie e00000000.pcie: host bridge 
-> /soc/pcie@e00000000 ranges:
-> [    3.381584] fu740-pcie e00000000.pcie:       IO 
-> 0x0060080000..0x006008ffff -> 0x0060080000
-> [    3.381682] fu740-pcie e00000000.pcie:      MEM 
-> 0x0060090000..0x007fffffff -> 0x0060090000
-> [    3.381724] fu740-pcie e00000000.pcie:      MEM 
-> 0x2000000000..0x3fffffffff -> 0x2000000000
-> [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, 
-> align 4K, limit 4096G
-> [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
-> [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> [    3.988164] fu740-pcie e00000000.pcie: PCI host bridge to bus 0000:00
-> 
-> Reverting the following commits solves the issue.
-> 
-> 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc: Support ECAM 
-> mechanism by enabling iATU 'CFG Shift Feature'
-> 
-> 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom: Prepare for the DWC 
-> ECAM enablement
-> 
-> f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc: Prepare the driver 
-> for enabling ECAM mechanism using iATU 'CFG Shift Feature'
-> 
-Hi Ron,
+[1] https://lore.kernel.org/all/qs2vydzm6xngul77xuwjli7h757gzfhmb4siiklzogihz5oplw@gsvgn75lib6t/
 
-can you try with this change.
-Looks like fu740-pcie driver has 256MB space of config space so dwc
-driver is trying to enable ecam and seeing failures while enabling.
-
-you can try two options 1 is to enable ecam if your hardware supports
-it and other is to use native method like below. If you want to enable
-ecam your config space should start with dbi address and should have
-256Mb aligned 256Mb memory of config space. Uf you want to enable ecam
-and had this memory requirement fulfilled, try to change your devicetree
-by starting config space with dbi start address and give it a try.
-
-diff --git a/drivers/pci/controller/dwc/pcie-fu740.c 
-b/drivers/pci/controller/dwc/pcie-fu740.c
-index 66367252032b..b5e0f016a580 100644
---- a/drivers/pci/controller/dwc/pcie-fu740.c
-+++ b/drivers/pci/controller/dwc/pcie-fu740.c
-@@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct platform_device 
-*pdev)
-
-         platform_set_drvdata(pdev, afp);
-
-+       pci->pp.native_ecam = true;
-+
-         return dw_pcie_host_init(&pci->pp);
-  }
-
-- Krishna Chaitanya.
-> 
+Regards,
+Inochi
 
