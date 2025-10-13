@@ -1,120 +1,154 @@
-Return-Path: <linux-pci+bounces-37935-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37936-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AE0DBD59C9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 19:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00551BD5A78
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:08:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8E793A2420
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 17:55:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A696D408259
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:08:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC5F267B94;
-	Mon, 13 Oct 2025 17:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D8C2D24BB;
+	Mon, 13 Oct 2025 18:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZ2usoal"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrGtBEGN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045C825D546
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 17:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF152D24BF
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 18:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760378126; cv=none; b=KHk2+BRcuqpoIikBtcXVLoa9eRDN1aqUp0Yv3fD1YPbrPjtnjmqPudTHaZaPojNGxV2udXxmv9CcsxntukFpqbMPa2wXxnsTwpZJGdv63G2Ws0TF2hlyynkxHkl4/WO/5jZUmlHV2q/9APPNFvY75UPxIKRjS8fg7lttDjkOgzg=
+	t=1760378858; cv=none; b=M2cezGrVLWw/ihY6i2novuMMEMbB4SDq0H4RsfSzBWquszZ8AH6R1Tp/O3GKweSY3C0sBJjwtzbswbn1ztpR96SdVsHbTqkbcnjvcxCRNH9+YPUmCFYusgjrXk+aRiXBz/kuwu9UkVy/j3zlxVAua0RS2Y+Cjg13PRmaLuzedQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760378126; c=relaxed/simple;
-	bh=sNy/pN36tv+R9jKy/e64kF/Gbg7wyEheooXi+qlh9Fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fi7fPGGCvbarSENJnlq+FOKnYJMN6MjMSXgK2nfyMIRYCFF4JDQGYVCvME8bQ4AKcpqaA6qUMWW7bfQr1WZ/L/tlnp4dOHsiQ7lvvi5cuac0xhWpMCc1bv234I43A6rYKK5yUjLnpi0Ro4YwS6va3ac8M0Rkgv8EgahD2cUEvkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZ2usoal; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9C3C4CEFE;
-	Mon, 13 Oct 2025 17:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760378125;
-	bh=sNy/pN36tv+R9jKy/e64kF/Gbg7wyEheooXi+qlh9Fw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iZ2usoalOt+ENVdv0BNae9iMgS5XSaIVWEJpSOJf09jgQTAMptg93CkzuGAZ0SMhX
-	 wnmvtE0uECk5bjEyV0ZxIBwhr+7thrTbKPMxFzjAq7TEwA0vSQmYdXoHcpaqD19KKo
-	 FoxhFbALgMccmdMInL8MBU1pdhtx8gzEL0E+hPFQiXy7GR2+aCO53qKodElRKrXqFg
-	 8fjdJHm8hijeX89KbYR+zZbBZIlrNE16PL0aGbbwHrfa5rEXUcKKxFTOdk0jTzLv70
-	 XSAYQpQUjapFx4hNJKTcXjceqFpMXM8LDHz3P8lIvoXL45Ve4bfGYLej0DecftXo0G
-	 a9f1cjiBw32QQ==
-Date: Mon, 13 Oct 2025 12:55:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de,
-	Eric Biggers <ebiggers@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/VGA: Select SCREEN_INFO
-Message-ID: <20251013175524.GA850308@bhelgaas>
+	s=arc-20240116; t=1760378858; c=relaxed/simple;
+	bh=SRcEE8YV5HY2pFR30/wTx++ndvKQEjZlTLtkK+heSDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oAKUzQFANvd5tq6ry9rCXoSKAsUBo5EOqXq0x4Ri4F/WEO49Js1CtN0oQpXCXncBmLG3utJYIEI+1lIwVSdMh7JC1mRI8faGcHJ87vh/7NKpU0rI3u2NVGkL94gQQ/8NdeS04uj1YTBfon35+jMaODy0AeOsI5/nakMKxvNMo/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HrGtBEGN; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-28e7cd6dbc0so51651925ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 11:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760378855; x=1760983655; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HZVtd+3iFQaa5U7x6mzDDU8bWv6e1dDHCquo2ZcGTC0=;
+        b=HrGtBEGN/4qvQZhx07+8LWsyYIRWFLMT9iRX4NrEiqcqlRwJ6/hGrJxa6x9cmvoYiI
+         q63tzguqTf8/LKoNSPMv8zKMbuLULNb4cnZZYoOhtO+Pv24l278nZiPLq1ZooXrUDcxB
+         W6kGd80V52PjNXM8YxRXTJx9Fv3/HgHHC39ki3S+kCBzH3R+lyO3BKG7MPk5wd6BSf4e
+         nLanb83BSHi7vOe/ioquc50Vl2KjrwPxCetODDBZLPI3fdqnUyGzTe4setZJISVesZdp
+         8gshEvawYukXr9nkGt5dWe6R4PJBr/wqpWZaGgkmBjg0NB7CJ0Ph2Tge73sd7C9Q2Emz
+         bFug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760378855; x=1760983655;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HZVtd+3iFQaa5U7x6mzDDU8bWv6e1dDHCquo2ZcGTC0=;
+        b=c/8euxM62F8vQBYjnogz9++FM9E3I/Q1Oz6t9YsPRNtBavEMo75zDTRidDvAWKmcjI
+         1PqIbwJsbmUxvOlFtXW45cmcphqldY5elSwLg2rDkHOlKzz190wIhLBtpZwBeUoXAp6j
+         0f03z+RFi+u4KinN6dp6Kzp5/rv1mZFBd2oTOde5ZLlQu1LiChci6XzYu9wkmWLsYlfQ
+         47pTV3RdDt7YO9ps7dNAW2LbNTpMsjO6jarTLv1xw42LQc692cilFJQ4U1MNKOIieQCD
+         9phsGQtGhcqqnxgywcYkpcBtMgjUmjlnrLepKdr9bivqBXyv7TMNAdLyIAuOaegqgSzX
+         IdMQ==
+X-Gm-Message-State: AOJu0Yzx54oM/sifIH2YW2xyG6Hw7B0+XZ7WMcle9h+zUGQC+eSSP0qm
+	f/03uxeHiS/J+HtwuuKGQsOOuTCNVZzhC9XorqnPOlF84sLpp3EzDj0x
+X-Gm-Gg: ASbGncvSvamaWjY6oySURbqtt7E5pzYtyJEpoo0v2Zgd3wXi9IFAFem3ui+EUQ3BKgx
+	M/wrd94A1ydUHXgtcvMExP4eUpeJcf/+XZ+UX0iIrxMyMHQmenWH2MdE/STTRmV5dU7i6HgIPvW
+	RL+bEB3PsMWBYlGdC5EKJjUo6pE9/dJxNDRHch8XBF/Rb+XhBXeLOMvav4SlKsKnz3mlLW7Jhqb
+	hGuSHCIsXviyJ2TpHX0CKjipxpWOio3TLJ58R3Do7RvLKSbPIUlRF1oT8oRKrSlwSXrEvQxps9s
+	OcDt193Cj77n71daNVqvJKG0p0xUgW9ONrTVyUkeJkE/JLsrPZg9GrKfMmeUK7uV5soIfxXeM6h
+	NoGOe3rwxKtmsgOPX+f9GZx+UPYwdhC2bUvrBstPoBFMQBHZEzZwUvw==
+X-Google-Smtp-Source: AGHT+IF5A7W5iglqkFaWR2GaobapUU63kWWiX/eVkJjMFSGgRqOgtD7ZdUd9FH8FlDqrG6ZJvOpaCQ==
+X-Received: by 2002:a17:903:1447:b0:275:3ff9:ab88 with SMTP id d9443c01a7336-290273ffcc7mr316143845ad.49.1760378854738;
+        Mon, 13 Oct 2025 11:07:34 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034e47341sm139032795ad.57.2025.10.13.11.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Oct 2025 11:07:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 13 Oct 2025 11:07:33 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>
+Subject: Re: [PATCH 1/2] PCI: Setup bridge resources earlier
+Message-ID: <df266709-a9b3-4fd8-af3a-c22eb3c9523a@roeck-us.net>
+References: <20250924134228.1663-1-ilpo.jarvinen@linux.intel.com>
+ <20250924134228.1663-2-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20251013154441.1000875-1-superm1@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250924134228.1663-2-ilpo.jarvinen@linux.intel.com>
 
-On Mon, Oct 13, 2025 at 10:44:23AM -0500, Mario Limonciello (AMD) wrote:
-> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
-> a screen info check") introduced an implicit dependency upon SCREEN_INFO
-> by removing the open coded implementation.
+Hi,
+
+On Wed, Sep 24, 2025 at 04:42:27PM +0300, Ilpo Järvinen wrote:
+> Bridge windows are read twice from PCI Config Space, the first read is
+> made from pci_read_bridge_windows() which does not setup the device's
+> resources. It causes problems down the road as child resources of the
+> bridge cannot check whether they reside within the bridge window or
+> not.
 > 
-> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
-> would now return false.  Add a select for SCREEN_INFO to ensure that the
-> VGA arbiter works as intended. Also drop the now dead code.
+> Setup the bridge windows already in pci_read_bridge_windows().
 > 
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
-> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-
-Applied to for-linus for v6.18, thanks!
-
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 > ---
-> v2:
->  * drop dead code (Ilpo)
-> ---
->  drivers/pci/Kconfig  | 1 +
->  drivers/pci/vgaarb.c | 8 +-------
->  2 files changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 7065a8e5f9b14..c35fed47addd5 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -306,6 +306,7 @@ config VGA_ARB
->  	bool "VGA Arbitration" if EXPERT
->  	default y
->  	depends on (PCI && !S390)
-> +	select SCREEN_INFO
->  	help
->  	  Some "legacy" VGA devices implemented on PCI typically have the same
->  	  hard-decoded addresses as they did on ISA. When multiple PCI devices
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index b58f94ee48916..8c8c420ff5b55 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
->  
->  static bool vga_is_firmware_default(struct pci_dev *pdev)
->  {
-> -#ifdef CONFIG_SCREEN_INFO
-> -	struct screen_info *si = &screen_info;
-> -
-> -	return pdev == screen_info_pci_dev(si);
-> -#else
-> -	return false;
-> -#endif
-> +	return pdev == screen_info_pci_dev(&screen_info);
->  }
->  
->  static bool vga_arb_integrated_gpu(struct device *dev)
-> -- 
-> 2.43.0
-> 
+
+This patch causes some boot test failures for me. Specifically, booting
+alpha images from PCI through a PCI bridge fails. Reverting it fixes
+the problem.
+
+Bisect log attached for reference.
+
+Guenter
+
+---
+# bad: [3a8660878839faadb4f1a6dd72c3179c1df56787] Linux 6.18-rc1
+# good: [e5f0a698b34ed76002dc5cff3804a61c80233a7a] Linux 6.17
+git bisect start 'HEAD' 'v6.17'
+# good: [58809f614e0e3f4e12b489bddf680bfeb31c0a20] Merge tag 'drm-next-2025-10-01' of https://gitlab.freedesktop.org/drm/kernel
+git bisect good 58809f614e0e3f4e12b489bddf680bfeb31c0a20
+# good: [bed0653fe2aacb0ca8196075cffc9e7062e74927] Merge tag 'iommu-updates-v6.18' of git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux
+git bisect good bed0653fe2aacb0ca8196075cffc9e7062e74927
+# good: [6a74422b9710e987c7d6b85a1ade7330b1e61626] Merge tag 'mips_6.18' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+git bisect good 6a74422b9710e987c7d6b85a1ade7330b1e61626
+# bad: [522ba450b56fff29f868b1552bdc2965f55de7ed] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+git bisect bad 522ba450b56fff29f868b1552bdc2965f55de7ed
+# bad: [256e3417065b2721f77bcd37331796b59483ef3b] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+git bisect bad 256e3417065b2721f77bcd37331796b59483ef3b
+# bad: [2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92] Merge tag 'pci-v6.18-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
+git bisect bad 2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
+# bad: [531abff0fa53bc3a2f7f69b2693386eb6bda96e5] Merge branch 'pci/controller/qcom'
+git bisect bad 531abff0fa53bc3a2f7f69b2693386eb6bda96e5
+# bad: [fead6a0b15bf3b33dba877efec6b4e7b4cc4abc3] Merge branch 'pci/resource'
+git bisect bad fead6a0b15bf3b33dba877efec6b4e7b4cc4abc3
+# good: [0bb65e32495e6235a069b60e787140da99e9c122] Merge branch 'pci/p2pdma'
+git bisect good 0bb65e32495e6235a069b60e787140da99e9c122
+# good: [ebe091ad81e1d3e5cbb1592ebc18175b5ca3d2bd] PCI: Use pbus_select_window_for_type() during IO window sizing
+git bisect good ebe091ad81e1d3e5cbb1592ebc18175b5ca3d2bd
+# good: [15c5867b0ae6a47914b45daf3b64e2d2aceb4ee5] PCI: Don't print stale information about resource
+git bisect good 15c5867b0ae6a47914b45daf3b64e2d2aceb4ee5
+# good: [dc32e9346b26ba33e84ec3034a1e53a9733700f9] PCI/pwrctrl: Fix device leak at device stop
+git bisect good dc32e9346b26ba33e84ec3034a1e53a9733700f9
+# good: [4c5cd8d64172de3730056366dc61392a3f2f003a] Merge branch 'pci/pm'
+git bisect good 4c5cd8d64172de3730056366dc61392a3f2f003a
+# bad: [a43ac325c7cbbfe72bdf9178059b3ee9f5a2c7dd] PCI: Set up bridge resources earlier
+git bisect bad a43ac325c7cbbfe72bdf9178059b3ee9f5a2c7dd
+# first bad commit: [a43ac325c7cbbfe72bdf9178059b3ee9f5a2c7dd] PCI: Set up bridge resources earlier
 
