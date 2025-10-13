@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-37866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D177EBD1641
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 06:46:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAD3EBD167D
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 07:03:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7DF9C346514
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 04:46:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6651B3B4106
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 05:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E98423AB8D;
-	Mon, 13 Oct 2025 04:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D13811DE4CD;
+	Mon, 13 Oct 2025 05:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="ZFXQUgOa"
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="WYPoIPp3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C166286410
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 04:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0219629D267
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 05:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760330814; cv=pass; b=Y9P4mck9BwvTK6Lc7djPWps0F1A63GQywefjKHy6JI4FZkkbDLO+EfHnH4M9+I5xUY5NiWWjEY+evwVOfm+wkithjyCb66q3JVHU1xTHvz89oc+2oGSutZ5iKcFUkYOcAa6RghqY1HxIkAjLWFBcfq413G12getX5pxnrgBNHhI=
+	t=1760331778; cv=pass; b=BOilExb7aWBsNF0iZaAMfHZm14wH0BNyaPWzTBZKccOlN2JIPt1VfOThN15RJTp73235eAot+C1sCNNonOpj1FnnPiSJBbkxVjnPgqyTiPlnSmhnTz4UvzknrffhnjDW4NwSUmex7oV5ao3jHiam0IBM0OAH/oCeJLIFOAjcnXA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760330814; c=relaxed/simple;
-	bh=/sUZbUC/NHx+EHE+TODSDoPxe7p7A45mWhxaNP+gbdc=;
+	s=arc-20240116; t=1760331778; c=relaxed/simple;
+	bh=6DDycNp0PGG/wTr/HwH5aK/OOPJRin6m5aXlYj2JmI8=;
 	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=FtAMpyzFAU8ojxMzhstrTMid6U6unjBAYoEMsImuzZVnZ5ntAnIWgR9aPoYhU2PgPbiSKNmDkbpzW8xiVWoUogk149OtRk1uASpXH2XO8A1tTIBy/nGDfJXWa42vpOdJ0Oa7FD3HZkxu47SfolZ8rYz30odxJmtZl2kbSvPYX30=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=ZFXQUgOa; arc=pass smtp.client-ip=85.215.255.52
+	 Cc:In-Reply-To:To; b=uKorK9c9GEmrge8xD1usEEaUCIFK681xnQH/OrHUnXzjzDFA5WMdb7FHp251qjXablgCVktXTKLbPcFFMljBhtsxO/4+fq5lFZLVz3wySmtTPWcPAP2KdPatI1es5JnflSXlsX+TomJHv2rPKpPYQz8pTjAhrCEUKBirJXYUICk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=WYPoIPp3; arc=pass smtp.client-ip=81.169.146.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1760330785; cv=none;
+ARC-Seal: i=1; a=rsa-sha256; t=1760331750; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=Ntccy0sy0hg9HwaKxQC5hSXVG7QYcmlmpYTjKmx/no6BHi3ws1mokKGIN68nPhWkuU
-    f7qgpxXYcJhaRXCqlkSfoSj9Xzz8LYAkXqmsKSkIuMe68sSVF08H7T42KUs54yxdRm0e
-    IpIUj12V2qHcN5rUv7ImsIuHitjdekt4ORyQ3K3Ro0JSL7aCnmok3FCppO6irS2eGEuQ
-    TgSXKQ5qyTgDLWvDCZF0230IN2x8DUIQ+Bj9+IqpY3YHh9EPDekhMxR/dV9q92zr2zpu
-    7zEp1sPYM/QiA1zV1jdpeELm4ZIEzjrxMSHtKU4NFlNlRp4ecIJKHf4jqECW/70Co8og
-    xeUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760330785;
+    b=pYL37jmRrQ3gym3yRsuIYqvqKmlwLg30biYmsqMutMOqXCC8/2MYsFP5WJwFwYfMqh
+    pJANmYkKn7L3viNGLV3+JMvj0UG+LkRVF9G/SiI8nsyVFSxjlMl+Qwaq6oIdo5v+t+7d
+    6G4rSJk6l+4B7D+TeBU0a+UWCL2pq09SXd58LN7qGcki9pOd9q7jnrgazRn9Atvgb1oq
+    f3xObDnv333CSOhYMjiw16swSUwBsXKCXfbZEzdIoi32ZglxaG/tK15CiSXfEOCAwITz
+    13GAEg202J14iUWMIomlEkW5RtdqZ3xaszdWQLo2GHu0aAqwgtsDGxGDVlTgARia3s6n
+    3EPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760331750;
     s=strato-dkim-0002; d=strato.com;
     h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
     From:Subject:Sender;
-    bh=fZxToLjYnoS353OgzuhhmLgCZy7eCZMC/R02n7ti78c=;
-    b=BrTyVuBWxP2HLFQxcOmsVBXOSBEkLHFYVbCPeAsAEhcOCB4H/u6GeZrlBADbUM2u6k
-    ERS+gR6tYAt6ZohKsKlCvRu+AkoykERVn+CxdyzsHZq7bHhof0Ualmqm4W3s2fk8S0F5
-    sunx6KHBp9n4UPgNnOt4Sy5UgQgNe1ogiuTU3v6NWx5q6+Dlu+kJIOSlmXps5i/kGAu/
-    Pgo7AK/W4cw3z2Oh5FUEnC9Sq41yQxPCb7EdDARHS3dZ5dQGpfkCNvqw5yZtv2gslBGW
-    mtQrPXD1y1nxSafStc3DDgYpRtss07HkjwOwjSIcjXEe9Qlpa8xLmGDROCpw994A0nGn
-    vwBg==
+    bh=ryGZqavNZb722eOgUiPZ5/ROVhbA5reqkn4KrrIkQbs=;
+    b=Gpc16gW1Asu1okQyxorpSctT1J1GvsIzwHxjXzKflfdl92+teWzPs5R6Xp8Wm0genF
+    qLAWiwD990WJWGj1ujwGvoWKm321t9YmF1Z4XoEtEuYGX+kl9klZX/Vv/9u9V0RUEIf7
+    YG4gbjDf3KL4WkRd/N//3hXBesA1LYFmGJEOE6diS+1Bso2EMWd+kuXLyWhr+Tn4myIh
+    LOgMddWboIqjD6swUgiUyVlW0WwPnJVLLbDcLTNKpSBbuRCerD+DtVl9k0haqMoO/o4q
+    3sK5N6KZk84Os7S/ndpa0q4O2nR+bs6rMMTyfX/MEzVk9zxeLbXrmmqJ+a6KH5bM5LD0
+    aBmQ==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760330785;
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760331750;
     s=strato-dkim-0002; d=xenosoft.de;
     h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
     From:Subject:Sender;
-    bh=fZxToLjYnoS353OgzuhhmLgCZy7eCZMC/R02n7ti78c=;
-    b=ZFXQUgOamnBtg8JQMgRsZfVbbGPDsqmHsUTESTBkXnrvclAtNnltdjwAKrYIPxpyWl
-    voUdCUIBiM307ie638VjS1esWBTPC1cKe92Y949Q7hyJkSY+bCkyS+m2siadD//Hm8f8
-    lXxxf7vB8jN029wDaYRB1/MpoB0r7oAwSTvjvalrIgd4De7dCV8vO64BfzO2jbIC9Nia
-    CFnR/h24XwKSCTIv67Rn9aVSMCZPPSL+mhNtzihOkaxQHwmd1GkBy7hIw1MMAXOYENcU
-    G9+RD8VRwmWddrbWvm9sfxclkfSooFnnQlr94e03xdn/V8O0PqSqKgS8D7z/tAOCOCnj
-    z45A==
+    bh=ryGZqavNZb722eOgUiPZ5/ROVhbA5reqkn4KrrIkQbs=;
+    b=WYPoIPp3sX72EU1b+vgjEENgaAPgfBot/3MmDJIUVONG4FTyf0wK7Pe9qtCWeXg/P3
+    9W/PbffX/yoeVztBIuA862CMMpNNgMrJiGz051JT515ZBZQu11RD2gamoz2QQ53Z2Nas
+    Ge0boC9BA+oSyEiLJr8/eiI1Qd6EaY2AC2GKLjU4NDxPWSEJefcXd/NDu8bBnHdyLC0q
+    kt9B+EAF4J0cleHBs0KM0Oz0Z+DN3fowHCu0oRk4YIYyBm36bVfOhXGxvcQW1+zsblQw
+    2leeM5ef9BGUe9SCLBNYoLZNg7vhLokTFwMXnigWI6o+lM/T2v+xUrZ7dq5IELvCgeIo
+    kjIg==
 X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7X5mws3+VAS+pE6REQPvdUsV9fT7R/x5YSqXopuk="
 Received: from smtpclient.apple
     by smtp.strato.de (RZmta 53.4.2 AUTH)
-    with ESMTPSA id e2886619D4kOKN9
+    with ESMTPSA id e2886619D52UKOY
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Mon, 13 Oct 2025 06:46:24 +0200 (CEST)
+    Mon, 13 Oct 2025 07:02:30 +0200 (CEST)
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 From: Christian Zigotzky <chzigotzky@xenosoft.de>
@@ -82,9 +82,9 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (1.0)
 Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Date: Mon, 13 Oct 2025 06:46:13 +0200
-Message-Id: <0BE6C5AD-8DFD-4126-9B18-C012B522B442@xenosoft.de>
-References: <iv63quznjowwaib5pispl47gibevmmbbhl67ow2abl6s7lziuw@23koanb5uy22>
+Date: Mon, 13 Oct 2025 07:02:19 +0200
+Message-Id: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
+References: <0BE6C5AD-8DFD-4126-9B18-C012B522B442@xenosoft.de>
 Cc: Lukas Wunner <lukas@wunner.de>,
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
  =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -93,76 +93,122 @@ Cc: Lukas Wunner <lukas@wunner.de>,
  Christian Zigotzky <info@xenosoft.de>,
  linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
  Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
-In-Reply-To: <iv63quznjowwaib5pispl47gibevmmbbhl67ow2abl6s7lziuw@23koanb5uy22>
+In-Reply-To: <0BE6C5AD-8DFD-4126-9B18-C012B522B442@xenosoft.de>
 To: Manivannan Sadhasivam <mani@kernel.org>
 X-Mailer: iPhone Mail (23A355)
 
 
-> On 11 October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org> wr=
-ote:
+
+> On 13 October 2025 at 06:47 am, Christian Zigotzky <chzigotzky@xenosoft.de=
+> wrote:
 >=20
-> Hi Lukas,
->=20
-> Thanks for looping me in. The referenced commit forcefully enables ASPM on=
- all
-> DT platforms as we decided to bite the bullet finally.
->=20
-> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even thou=
-gh it
-> advertises ASPM capability.
->=20
-> Christian, could you please test the below change and see if it fixes the i=
-ssue?
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 214ed060ca1b..e006b0560b39 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_de=
-v *dev)
->  */
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_=
-l0s_l1);
->=20
-> +
-> +static void quirk_disable_aspm_all(struct pci_dev *dev)
-> +{
-> +       pci_info(dev, "Disabling ASPM\n");
-> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
-> +}
-> +
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all=
-);
-> +
-> /*
->  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->  * Link bit cleared after starting the link retrain process to allow this
->=20
->=20
-> Going forward, we should be quirking the devices if they behave erraticall=
-y.
->=20
-> - Mani
->=20
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=
+> =EF=BB=BF
+>> On 11 October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org> w=
+rote:
+>>=20
+>> Hi Lukas,
+>>=20
+>> Thanks for looping me in. The referenced commit forcefully enables ASPM o=
+n all
+>> DT platforms as we decided to bite the bullet finally.
+>>=20
+>> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even tho=
+ugh it
+>> advertises ASPM capability.
+>>=20
+>> Christian, could you please test the below change and see if it fixes the=
+ issue?
+>>=20
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 214ed060ca1b..e006b0560b39 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_d=
+ev *dev)
+>> */
+>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm=
+_l0s_l1);
+>>=20
+>> +
+>> +static void quirk_disable_aspm_all(struct pci_dev *dev)
+>> +{
+>> +       pci_info(dev, "Disabling ASPM\n");
+>> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_al=
+l);
+>> +
+>> /*
+>> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+>> * Link bit cleared after starting the link retrain process to allow this
+>>=20
+>>=20
+>> Going forward, we should be quirking the devices if they behave erratical=
+ly.
+>>=20
+>> - Mani
+>>=20
+>> --
+>> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=
 =AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=AF=
 =8D
+>=20
+> Hello Mani,
+>=20
+>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all=
+);
+>=20
+> Is this only for my AMD Radeon HD6870?
+>=20
+> My AMD Radeon HD5870 is also affected.
+>=20
+> And I tested it with my AMD Radeon HD5870.
+>=20
+> What would the line be for all AMD graphics cards?
+>=20
+> Thanks,
+> Christian
 
-Hello Mani,
+I see. 0x6738 is for the AMD Radeon HD 6800 series.
 
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all)=
-;
+It could be, that your patch works because I tested it with an AMD Radeon HD=
+5870 instead of an AMD Radeon HD6870. Sorry=20
 
-Is this only for my AMD Radeon HD6870?
+This could be the correct line for the HD5870:
 
-My AMD Radeon HD5870 is also affected.
+>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6898, quirk_disable_aspm_all=
+);
 
-And I tested it with my AMD Radeon HD5870.
+There are some more id numbers for the HD5870.
 
-What would the line be for all AMD graphics cards?
+Correct:
 
-Thanks,
-Christian=
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 214ed060ca1b..e006b0560b39 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *=
+dev)
+*/
+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0=
+s_l1);
+
++
++static void quirk_disable_aspm_all(struct pci_dev *dev)
++{
++       pci_info(dev, "Disabling ASPM\n");
++       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
++}
++
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all);=
+
+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6898, quirk_disable_aspm_all);
+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6899, quirk_disable_aspm_all);
+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x689E, quirk_disable_aspm_all);
++
+/*
+* Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+* Link bit cleared after starting the link retrain process to allow this=
 
 
