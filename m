@@ -1,184 +1,117 @@
-Return-Path: <linux-pci+bounces-37927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DBA0BD50A1
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:29:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E9FBD5251
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:41:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DB09B567ACC
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 15:59:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F30A04836C5
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:07:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4411F311598;
-	Mon, 13 Oct 2025 15:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C2F26E6F6;
+	Mon, 13 Oct 2025 15:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkvy2/y7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itQRh3Gc"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16931311594;
-	Mon, 13 Oct 2025 15:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA0B27055F
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:44:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760369988; cv=none; b=giTGbkyx6D+7i7uyrI9oxgBopMbRXXPTluEjHrWjKH/KRCKcOmIm1a7bgNEysjzQ2ODN2+9Nl0mD7F21LmsdyZHExGymZ6xfF+ubTiBf5dZw+BHoS27e5lw6sWbdWaKSbRb5SyQI3pduV1q5+MBl09/AaSAM3iDiUczLzBMTL3E=
+	t=1760370286; cv=none; b=II7HvvkaVbuzClgxzYM3aoRrNa7bNK63v+v8Vwkey/hA2Yg4sqlvljlHPxl0nu0/atJng5NR8molfRLiAg7Y4Xqk8gKfUiY0H+AeehcbXrylX5kgYT1WgGlUqahCMeyncxIlpCPV/G6qyjmLjCysLCupu+LkEO60kFPjVmUPOjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760369988; c=relaxed/simple;
-	bh=XRgqPt8ELkRS40SVE58RMNMVvTbxBt/VeZAjuuaA3M4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=FmJqzba4BYYzUx7otuYfCeZ12ZFMajwefIFfP8VictpjxqovJmkxNKKchwAkpJAB7ymkeXHV8NY81ktyH+jNXUxHV78FxdCM0xLWhLAQ6G+oM5uRg1lz5OY56LB8xhAlOu3+OQKr2XpDT3UfcwCGhafAzqkzCNjI0nhj7Bw66+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkvy2/y7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA0CC4CEFE;
-	Mon, 13 Oct 2025 15:39:43 +0000 (UTC)
+	s=arc-20240116; t=1760370286; c=relaxed/simple;
+	bh=v8gVje8y7mwbbzBI0CEjTGhfPmhqtnINkr6KWrJuvW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aQkkZRSWqETb8P7efbWUuc5pO9MeyvGUiI+B19LR0NqDQCdykg0iJVklc5rmhLTg9BAj/DMuZykEcrtabEya/FzLhxJ/JUn+EeUaRvLZLnHdxd3J9uwSenHqVNA8IQH4RNgrFZUYihxE9k/v7IgJxQ2JEKy4Z2CiqhZX3Hpu0mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itQRh3Gc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07926C116B1;
+	Mon, 13 Oct 2025 15:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760369987;
-	bh=XRgqPt8ELkRS40SVE58RMNMVvTbxBt/VeZAjuuaA3M4=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=mkvy2/y7vTOu187LZixltm3qHwr20EFGugwcNe8cFE/WaTTzns28FHi1uDurmW3uI
-	 tANDFvmfF/wPxnM+OiyWJtEdhG9Bc99EcD9nPqachN3H22ONjtZFCXdf4xrTnQTX7C
-	 O61Ph3BOUT2H4/bv9FZEIq9ySW0bMhY8OGu8EbfI+VgS07tOZdiX5YvmD45RCKHFCD
-	 XR/CQE0n3Hsfu3sxcvkhu+pnzkZHr19kZ3vRZYkmzGxT9R8tF1jhgoQPvX913XQ5Bh
-	 i7rgGSlfyPl3l+TVUIT+rIFPCIfaTtChT7tuTspP0j1aMlWwvHoZpI3cKQ/bPADwFi
-	 tRkSz4rqInUEg==
+	s=k20201202; t=1760370286;
+	bh=v8gVje8y7mwbbzBI0CEjTGhfPmhqtnINkr6KWrJuvW4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=itQRh3Gcck5BFPD+mkzhg/RQ/ogNsQUiNWI2G+cAa0bh6HUK+t+Oju6qtCFNBARRs
+	 Xa4B++wBrXf5ZEU9zg6t9YHfwC/pMVUWV13E31XF6++g1e3Q6Q04myE3TCuLe3RWQ1
+	 x1pOC6ZKpgdvT03DSWzWCIng0NSY9cdv/MAYytyfFBJIoytm0FqyxStPrJXXDSfUkW
+	 c9ovZDDcIxYYfBjuCf0pnl+VgqaA3J4R+Xro9JJqknwkEmAnaF3cXB3GzgHLMu7mZ3
+	 hlDoSiCbAg3P+NTwL3DGV6fz0ntqmPbCpIiDrV9KpSK3dDAZs0+QlqGVsE4mLmWnfN
+	 KUidA68OeVebw==
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
+To: mario.limonciello@amd.com,
+	bhelgaas@google.com,
+	superm1@kernel.org,
+	tzimmermann@suse.de
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI/VGA: Select SCREEN_INFO
+Date: Mon, 13 Oct 2025 10:44:23 -0500
+Message-ID: <20251013154441.1000875-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 13 Oct 2025 17:39:41 +0200
-Message-Id: <DDHB2T3G9BUA.18YWV70J82Z01@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [RFC 0/6] rust: pci: add config space read/write support
-Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
- <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
- <targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
- <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
-To: "Zhi Wang" <zhiw@nvidia.com>
-References: <20251010080330.183559-1-zhiw@nvidia.com>
-In-Reply-To: <20251010080330.183559-1-zhiw@nvidia.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Zhi,
+commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+a screen info check") introduced an implicit dependency upon SCREEN_INFO
+by removing the open coded implementation.
 
-(Cc: Alex, Joel, John, Markus)
+If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+would now return false.  Add a select for SCREEN_INFO to ensure that the
+VGA arbiter works as intended. Also drop the now dead code.
 
-On Fri Oct 10, 2025 at 10:03 AM CEST, Zhi Wang wrote:
-> This ideas of this series are:
->
-> - Factor out a common trait IoRegion for other accessors to share the
->   same compiling/runtime check like before.
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+---
+v2:
+ * drop dead code (Ilpo)
+---
+ drivers/pci/Kconfig  | 1 +
+ drivers/pci/vgaarb.c | 8 +-------
+ 2 files changed, 2 insertions(+), 7 deletions(-)
 
-Yes, this is something we want to have in general:
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 7065a8e5f9b14..c35fed47addd5 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -306,6 +306,7 @@ config VGA_ARB
+ 	bool "VGA Arbitration" if EXPERT
+ 	default y
+ 	depends on (PCI && !S390)
++	select SCREEN_INFO
+ 	help
+ 	  Some "legacy" VGA devices implemented on PCI typically have the same
+ 	  hard-decoded addresses as they did on ISA. When multiple PCI devices
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index b58f94ee48916..8c8c420ff5b55 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
+ 
+ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ {
+-#ifdef CONFIG_SCREEN_INFO
+-	struct screen_info *si = &screen_info;
+-
+-	return pdev == screen_info_pci_dev(si);
+-#else
+-	return false;
+-#endif
++	return pdev == screen_info_pci_dev(&screen_info);
+ }
+ 
+ static bool vga_arb_integrated_gpu(struct device *dev)
+-- 
+2.43.0
 
-Currently, we have a single I/O backend (struct Io) which is used for gener=
-ic
-MMIO. However, we should make Io a trait instead and require a new MMIO typ=
-e to
-implement the trait, where the trait methods would remain to be
-{try_}{read,write}{8,16,..}().
-
-We need the same thing for other I/O backends, such as I2C, etc.
-
-@Markus: Most of the design aspects for the PCI configuration space below s=
-hould
-apply to I2C I/O accessors as well.
-
->   In detail:
->
->   * `struct ConfigSpace<SIZE>` wrapping a `pdev: ARef<Device>`.
-
-There are two cases:
-
-  (1) I/O backends that embedd a dedicated device resource. For instance, a
-      pci::Bar embedds an iomapped pointer that must be wrapped with Devres=
- to
-      ensure it can't outlive the driver being bound to its corresponding
-      device.
-
-      In this case we have a method pci::Device<Bound>::iomap_region(), whi=
-ch
-      returns a Devres<pci::Bar>.
-
-  (2) I/O backends that don't need to embedd a dedicated device resource be=
-cause
-      the resource is already attached to the device itself. This is the ca=
-se
-      with the PCI configuration space; drivers don't need to create their =
-own
-      mapping, but can access it directly through the device.
-
-      For this case we want a method pci::Device<Bound>::config_space() tha=
-t
-      returns a ConfigSpace<'a>, where 'a is the lifetime of the
-      &'a Device<Bound> given to config_space().
-
-      This ensures that the ConfigSpace structure still serves as I/O backe=
-nd
-      for the types generated by the register!() macro, but at the same tim=
-e
-      can't outlife the scope of the bound device.
-
-      (Drivers shouldn't be able to write the PCI configuration space of a
-      device they're not bound to.)
-
-Besides that, we should also use the register!() macro to create the common
-configuration space register types in the PCI core for driver to use.
-
-Of course, there is no need to (re-)implement the following one, but it's a
-good example:
-
-	register!(PCI_CONFIG_ID @ 0x0 {
-	    31:16   device_id ?=3D> pci::DeviceId, "Device ID";
-	    15:0    vendor_id ?=3D> pci::VendorId, "Vendor ID";
-	});
-
-	// Assume we have a `&pci::Device<Bound>`, e.g. from probe().
-	let pdev: &pci::Device<Bound> =3D ...;
-
-	// Grab the configuration space I/O backend; lives as long as `pdev`.
-	let config_space =3D pdev.config_space();
-
-	// Read the first standard register of the configuration space header.
-	let id =3D PCI_CONFIG_ID::read(config_space);
-
-	// `id.vendor()` returns a `pci::Vendor`. Since it implements `Display`
-	// the `dev_info()` call prints the actual vendor string.
-	dev_info!(pdev.as_ref(), "VendorId=3D{}\n", id.vendor());
-
-> Open:
->
-> The current kernel::Io MMIO read/write doesn't return a failure, because
-> {read, write}{b, w, l}() are always successful. This is not true in
-> pci_{read, write}_config{byte, word, dword}() because a PCI device
-> can be disconnected from the bus. Thus a failure is returned.
-
-This is in fact also true for the PCI configuration space. The PCI configur=
-ation
-space has a minimum size that is known at compile time. All registers withi=
-n
-this minimum size can be access in an infallible way with the non try_*()
-methods.
-
-The main idea behind the fallible and infallible accessors is that you can
-assert a minimum expected size of an I/O backend (e.g. a PCI bar). I.e. dri=
-vers
-know their minimum requirements of the size of the I/O region. If the I/O
-backend can fulfill the request we can be sure about the minimum size and h=
-ence
-accesses with offsets that are known at compile time can be infallible (bec=
-ause
-we know the minimum accepted size of the I/O backend at compile time as wel=
-l).
-
-Accesses with offsets that are not known at compile time still remain falli=
-ble
-of course. That's why we have both, e.g. write32() and try_write32().
 
