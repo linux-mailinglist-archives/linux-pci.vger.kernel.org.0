@@ -1,117 +1,133 @@
-Return-Path: <linux-pci+bounces-37928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37929-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12E9FBD5251
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 18:41:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8440DBD55DE
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 19:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F30A04836C5
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:07:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E08705435E0
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 16:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C2F26E6F6;
-	Mon, 13 Oct 2025 15:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5ADF1EF36E;
+	Mon, 13 Oct 2025 15:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itQRh3Gc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CG4lmLNh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA0B27055F
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F56D2AD32
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760370286; cv=none; b=II7HvvkaVbuzClgxzYM3aoRrNa7bNK63v+v8Vwkey/hA2Yg4sqlvljlHPxl0nu0/atJng5NR8molfRLiAg7Y4Xqk8gKfUiY0H+AeehcbXrylX5kgYT1WgGlUqahCMeyncxIlpCPV/G6qyjmLjCysLCupu+LkEO60kFPjVmUPOjk=
+	t=1760371157; cv=none; b=nOmfq2ZNzZ9O3IdKg6GVEYlyUX3h8UhGlqm295zoDQh5zGEzFIM0430Uw58PS52xVL0Iidy2dTMyTCbdNkUMabv9/eXFFKIUmJb/00yF+8L9ozEAWGUzK9W+nPH4V5Gc3qV05gVL/6xnyy2l+quVZEzCD6+nRnzI8zCazVHCqI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760370286; c=relaxed/simple;
-	bh=v8gVje8y7mwbbzBI0CEjTGhfPmhqtnINkr6KWrJuvW4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aQkkZRSWqETb8P7efbWUuc5pO9MeyvGUiI+B19LR0NqDQCdykg0iJVklc5rmhLTg9BAj/DMuZykEcrtabEya/FzLhxJ/JUn+EeUaRvLZLnHdxd3J9uwSenHqVNA8IQH4RNgrFZUYihxE9k/v7IgJxQ2JEKy4Z2CiqhZX3Hpu0mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itQRh3Gc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07926C116B1;
-	Mon, 13 Oct 2025 15:44:45 +0000 (UTC)
+	s=arc-20240116; t=1760371157; c=relaxed/simple;
+	bh=YzPXSc9lA79Qdx1+RbYOvpF5Hc02Jrnk2byrQTnsdio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l2CHGemWV1gV8g7f+H1njjEdbc3BAgOPo94TRNE32dKZPBgmUVJZ4/4QYS4vnQEGS0h3Na06s+Rb/cQoYJzWLiLWjUjqAT4PnwR/iEB36dTxi/K7sQyTNQ2WJ+K48J0dQevZ2yzMBZFgUvuyXG/GMwewd42oWJVMY2TjQlp4S/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CG4lmLNh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58933C4CEE7;
+	Mon, 13 Oct 2025 15:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760370286;
-	bh=v8gVje8y7mwbbzBI0CEjTGhfPmhqtnINkr6KWrJuvW4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=itQRh3Gcck5BFPD+mkzhg/RQ/ogNsQUiNWI2G+cAa0bh6HUK+t+Oju6qtCFNBARRs
-	 Xa4B++wBrXf5ZEU9zg6t9YHfwC/pMVUWV13E31XF6++g1e3Q6Q04myE3TCuLe3RWQ1
-	 x1pOC6ZKpgdvT03DSWzWCIng0NSY9cdv/MAYytyfFBJIoytm0FqyxStPrJXXDSfUkW
-	 c9ovZDDcIxYYfBjuCf0pnl+VgqaA3J4R+Xro9JJqknwkEmAnaF3cXB3GzgHLMu7mZ3
-	 hlDoSiCbAg3P+NTwL3DGV6fz0ntqmPbCpIiDrV9KpSK3dDAZs0+QlqGVsE4mLmWnfN
-	 KUidA68OeVebw==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	bhelgaas@google.com,
-	superm1@kernel.org,
-	tzimmermann@suse.de
-Cc: Eric Biggers <ebiggers@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2] PCI/VGA: Select SCREEN_INFO
-Date: Mon, 13 Oct 2025 10:44:23 -0500
-Message-ID: <20251013154441.1000875-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1760371155;
+	bh=YzPXSc9lA79Qdx1+RbYOvpF5Hc02Jrnk2byrQTnsdio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CG4lmLNhQezyFadt+TIyiILI5E62iaE76Osv8KyQODyiT6ndsgdZTFdqmksAHRI4q
+	 WG94uqN2xbCFr8pejgVrQTz9tsOaFf3ELTbUUngJBoXdNbX7qFy+WDdAr/OaNWpN93
+	 498pQvp0uetu6l7gOx0vBl3/TFERJ1AQt1Jy4Hi9v2m1YW3Zt0aD8tJlQRQJVsPlCk
+	 XfDDeomHGVteG9e+QEpwFsemnjomC1GHRDehPGQihr51Iw/5FErSCHNNnm3qveEoe8
+	 WgG7eRXhoVnlJKDlgf8LStK62bOxQf9WcyOMwbTHF+UdjMLRyKOsCllacgvVXhQKc/
+	 MMi+lL3+eeFyQ==
+Date: Mon, 13 Oct 2025 21:28:59 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Lukas Wunner <lukas@wunner.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, mad skateman <madskateman@gmail.com>, 
+	"R.T.Dickinson" <rtd2@xtra.co.nz>, Christian Zigotzky <info@xenosoft.de>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au, Darren Stevens <darren@stevens-zone.net>, 
+	debian-powerpc@lists.debian.org
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <mg2ahzgcwgm6h5mtgs4tsel3yrphrfqgfcjydfxgzgxq5h7kot@jtealdt6vvcz>
+References: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
+ <7FB0AB81-AD0F-420D-B2CB-F81C5E47ADF3@xenosoft.de>
+ <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
 
-commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
-a screen info check") introduced an implicit dependency upon SCREEN_INFO
-by removing the open coded implementation.
+On Mon, Oct 13, 2025 at 04:50:31PM +0200, Christian Zigotzky wrote:
+> On 13 October 2025 at 07:23 am, Christian Zigotzky wrote:
+> > Better for testing (All AMD graphics cards):
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 214ed060ca1b..e006b0560b39 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> > */
+> > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> > 
+> > +
+> > +static void quirk_disable_aspm_all(struct pci_dev *dev)
+> > +{
+> > +       pci_info(dev, "Disabling ASPM\n");
+> > +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+> > +}
+> > +
+> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, quirk_disable_aspm_all);
+> > +
+> > /*
+> > * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+> > * Link bit cleared after starting the link retrain process to allow this
+> This patch has solved the boot issue but I get the following error messages
+> again and again:
+> 
+> [  186.765644] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0 (no details found
+> [  187.789034] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0
+> [  187.789052] pcieport 0001:00:00.0: PCIe Bus Error: severity=Correctable,
+> type=Data Link Layer, (Transmitter ID)
+> [  187.789058] pcieport 0001:00:00.0:   device [1957:0451] error
+> status/mask=00001000/00002000
+> [  187.789066] pcieport 0001:00:00.0:    [12] Timeout
+> [  187.789120] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0 (no details found
+> [  187.789169] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0 (no details found
+> [  187.789218] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0 (no details found
+> [  188.812514] pcieport 0001:00:00.0: AER: Correctable error message
+> received from 0001:00:00.0
+> 
+> I don't get these messages with the revert patch. [1]
+> 
 
-If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
-would now return false.  Add a select for SCREEN_INFO to ensure that the
-VGA arbiter works as intended. Also drop the now dead code.
+Either the Root Port could be triggering these AER messages due to ASPM issue or
+due to the endpoint connected downstream.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
-Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
-v2:
- * drop dead code (Ilpo)
----
- drivers/pci/Kconfig  | 1 +
- drivers/pci/vgaarb.c | 8 +-------
- 2 files changed, 2 insertions(+), 7 deletions(-)
+If possible, please share the whole dmesg log instead of the snippet so that we
+can be sure from where the AER messages are coming from.
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 7065a8e5f9b14..c35fed47addd5 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -306,6 +306,7 @@ config VGA_ARB
- 	bool "VGA Arbitration" if EXPERT
- 	default y
- 	depends on (PCI && !S390)
-+	select SCREEN_INFO
- 	help
- 	  Some "legacy" VGA devices implemented on PCI typically have the same
- 	  hard-decoded addresses as they did on ISA. When multiple PCI devices
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index b58f94ee48916..8c8c420ff5b55 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
- 
- static bool vga_is_firmware_default(struct pci_dev *pdev)
- {
--#ifdef CONFIG_SCREEN_INFO
--	struct screen_info *si = &screen_info;
--
--	return pdev == screen_info_pci_dev(si);
--#else
--	return false;
--#endif
-+	return pdev == screen_info_pci_dev(&screen_info);
- }
- 
- static bool vga_arb_integrated_gpu(struct device *dev)
+You can also add the below quirk and check:
+
+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FSL, 0x0451, quirk_disable_aspm_all);
+
+But it would be better to get the whole dmesg.
+
+- Mani
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
