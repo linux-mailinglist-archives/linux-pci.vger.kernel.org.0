@@ -1,153 +1,139 @@
-Return-Path: <linux-pci+bounces-37942-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37943-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80B06BD6047
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 21:59:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41F26BD6069
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:03:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4B3584E2740
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 19:59:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A520B18A5407
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716DA2DAFB8;
-	Mon, 13 Oct 2025 19:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836A12DC79E;
+	Mon, 13 Oct 2025 20:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="qOK4jvgM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7Ou5ZpQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5BF1CA84
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 19:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558882D9EDF;
+	Mon, 13 Oct 2025 20:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760385547; cv=none; b=OYQh5bhQxQXvM4to44Xgp1FXR74CxFYdRo+/8RsCij9FAj3t+eiLVTz02Ci2DQJJv9UiWkPb0TOO/5K8HUnofskjcB+E+fsHmS9PmxYfpNtcBQhi02vn6F2U8wytYP6kspK/CuWNoM2Xyrav/9xiHj2M6jlGnj/JBkkGqlvQkE4=
+	t=1760385782; cv=none; b=QU7haE2C1sQHBIYxN/XnjIgjs+pqIbAycUJr4SwrW5vq59NKi9anZLKQkAvxI2Kxjh+cjeiQM+qGoTmjc9KauwiSjPLK+KfnU1vN4WNl3BQyFeNDN5oQgOXxyBNngHG8UGbz3BwrbUL9Q+CIj0K1hFr7xlsXrlnICtoF8rji1ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760385547; c=relaxed/simple;
-	bh=2xC2BT5SSRTARv/8Q/B++Gk5WzBtYPPy7jco2CUpOY0=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=G9frBpUef9wOzeym255N83srYiG02Aib8LaffDxPMXuySbgXWyF2Za7HEVBZstIYCPufKyvg4FYO7q8Xu3Oxec2nEsqLqHY/xKpNm0iqmMGT8KnLDmvupxFRsktRZ7M73n18X1j/wsoldA1KoYqk0qdZPANsyUuxJm2KADhU0eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=qOK4jvgM; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-273a0aeed57so68486785ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 12:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1760385545; x=1760990345; darn=vger.kernel.org;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HQ8PNoJEpyDk52pl2KDASPK99FC4rYriWn6lVf3OIlU=;
-        b=qOK4jvgMhKmiXIl+TgMQto4Jn0aJ0d8WkmpzZypwdumxDXSZGnYssPF510CDMUbpn+
-         4LE+LzB5duvc4zdgwAerJKBLd++UpQdBT541RGoZ51eRLucnsTTPaJUpJregFN3KCwop
-         d26hNufj88sfTVZQZdanOUdEysJrxZIQYDNgm3PGXHsdleB4sno7f1E8FK7LZQx9ETt0
-         DxqdjytRM+oOmARdwyHZ8nvChtByIKUY/VIGx1rW7rxN+4X9ojWgxqozUc8zVV0o6pmy
-         ICIk1kPVKfit8TWo0M6D+pNNNGzIZddI3FvQ6Yfvz/yOm3UVuUIMXnK1JtEC2cVSEeO7
-         Y86A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760385545; x=1760990345;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HQ8PNoJEpyDk52pl2KDASPK99FC4rYriWn6lVf3OIlU=;
-        b=FAT9U8g2CIdz09mvdFe4x5Q8NAXlX3rFjrtimjua+qfksjFMw8z84CF8pUGFHOhg2i
-         f5K8y/ol6zSmQq+PWWpsvXNOOaZ6ovqj0QeCcitcu6n7dYKY1DwGJ0o52Fm7U6NT0LRs
-         eAOHqEpd6dS3NtiWeVJcV1oHmW85YVVTSdyj5xudlu08pxBMVm1CrLf9mRs6YCdU14Tv
-         CcsuNTwUxdBchgFsQw009iTAjTnaW6y32zeaZkLi6Mtbrp6CFOh90rfa7ZCPmoa0+eq7
-         mwiqEtyb4A5NdJHhCmIcnkJNZ0fbeDWiWjnP9Th6XyDWmTY/11Ta4wzMfhCsrfLAhXni
-         oInw==
-X-Forwarded-Encrypted: i=1; AJvYcCXo7OC+haIvSpJGY7uTVOA4UswalrRsYWlq5puBl3zBHLYEBALVfT4xwFZr/RM0hsHNkTYVtu40oxg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnv7tr7rs8b4755q5KZvQioy4Im1S+9mAz1shHoqO6Jr1efiew
-	NavpYx2//7ikhyRYJgd2AYqymEXwKeULXZK7LhqmtpPzAp9Flec2t25tmRG1npHJ50IteVgOMwi
-	eyD0B
-X-Gm-Gg: ASbGncvNVNYgkqol7hv9qmO5ASXGzaDddQ2Wb41lG28qQzfAKdJ6omlbGpCsx4JGVFQ
-	97km5q1xIEm/lq6h4n5TV5JDAOVpHfPMN6bKUJx2vRiQ/ahRDKt1b7rS4Ek5drC+buqoG+Bn4SV
-	7oMJVX7SGshAggGs/liT+7BtwZbURJUt2iZtWO7ZGkP1xn6V90KOKp6MJ40fZcPCmgHoRdHrULi
-	PhadgleWocXRDbmNMp62eupF293m1H1NMklzvqehhdBUAXe18oGIqXN8XEBHSBpFLdj8v4L6gl/
-	QjF64TgwV2O1gWwaQHAC9ZZtywl3p7SnIPU7jksVSDs56OwjpnnjNxojL830xO4ToqUIq6KIfw2
-	M20Hxm3Ce+CTpfOD//PTrE1FkDPj9rwSPF3BwxVvTIPjZiw==
-X-Google-Smtp-Source: AGHT+IGiZ7YKY4EHVPetxEyJvU+DqCc0inotAcT+fduY8zMf1+Y6h4gho2MWNB2Gl/txfBWG5kpUOQ==
-X-Received: by 2002:a17:902:fa0e:b0:28e:cbbd:975f with SMTP id d9443c01a7336-28ecbbd9928mr192505825ad.1.1760385544814;
-        Mon, 13 Oct 2025 12:59:04 -0700 (PDT)
-Received: from 15dd6324cc71 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034e1cc8bsm141262975ad.38.2025.10.13.12.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 12:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1760385782; c=relaxed/simple;
+	bh=OEzmpW8gwiC+PBF+ovOPfuvy/Qf06cEgA6omJZRqpDw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=SOVjjWvuLuN4jewiWSCDb7pq4YOnTSRgWZjiZta6kGNIeAFH/y3ImAL3mf1y2HkDkhhSM9gr8H/zUj9OyClbV9MvX4nr5107as4Q6SGhKgiYM5Sdck3QO9L1U1X27Rc9Au3IfJwjeNlSGaDQYSgnGuJMFAneezEE9mzgTt0KDpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7Ou5ZpQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD533C4CEE7;
+	Mon, 13 Oct 2025 20:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760385781;
+	bh=OEzmpW8gwiC+PBF+ovOPfuvy/Qf06cEgA6omJZRqpDw=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=s7Ou5ZpQzxGFzobcQ8kByjKFNNPFY3c4jXYwjbEdCtvOE0MvY0aWLM5FNool/iPEM
+	 TMqvHj//MrvkDZ5U98eUef72i3kuq/O6DDKBTkiNZVpdGiQ8HPpW/M+dVuL6Cqg0iV
+	 2W0NtQKHVMylx4lTZ7ylY809J4MUsxGaebo84KjUzfJVWLT6EOga/Z/bbJyC6tWt2F
+	 hJKLiPBZjHjmWwAwXpfQFf5LNlvMDGUS50Uug4MX8QprjfTkR3cTrLY1x6hOBTenkO
+	 2Anl56g2ysFH8xB/vXXvyVsiwkygbVsBlw5OMVZexKDtaIz+nP7pW2+QMJlC+twdcv
+	 JBDoVZjcGuYCg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] linux-pci/for-linus: (build) undefined reference to
- `screen_info'
- in vmlinux.unstripped (driver...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: gus@collabora.com, linux-pci@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 13 Oct 2025 19:59:03 -0000
-Message-ID: <176038554347.1442.9483731885505420131@15dd6324cc71>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 13 Oct 2025 22:02:55 +0200
+Message-Id: <DDHGOCNZJRND.129VXJYMXMCZW@kernel.org>
+Subject: Re: [RFC 0/6] rust: pci: add config space read/write support
+Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+ <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+ <targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
+ <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
+To: "Zhi Wang" <zhiw@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251010080330.183559-1-zhiw@nvidia.com>
+ <DDHB2T3G9BUA.18YWV70J82Z01@kernel.org>
+ <20251013212518.555a19ad.zhiw@nvidia.com>
+In-Reply-To: <20251013212518.555a19ad.zhiw@nvidia.com>
 
+On Mon Oct 13, 2025 at 8:25 PM CEST, Zhi Wang wrote:
+> I was considering the same when writing this series. The concern is
+> mostly about having to change the drivers' MMIO code to adapt to the
+> re-factor.
 
+For this you need to adjust the register macro to take something that
+dereferences to `T: Io` instead of something that dereferences to `Io`.
 
+This change should be trivial.
 
+> IMHO, if we are seeing the necessity of this re-factor, we should do it
+> before it got more usage. This could be the part 1 of the next spin.
 
-Hello,
+Yes, you can do it in a separete series. But I'd also be fine if you do bot=
+h in
+a single one. The required code changes shouldn't be crazy.
 
-New build issue found on linux-pci/for-linus:
+> and adding pci::Device<Bound>::config_space() could be part 2 and
+> register! marco could be part 3.
 
----
- undefined reference to `screen_info' in vmlinux.unstripped (drivers/pci/vgaarb.c) [logspec:kbuild,kbuild.compiler.linker_error]
----
+Part 3 has to happen with part 1 anyways, otherwise it breaks compilation.
 
-- dashboard: https://d.kernelci.org/i/maestro:a076f080951a7880a0f9931f9afe60cddea91d87
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-- commit HEAD:  17643231e97742d29227e3ed065f9a16208d3740
+> I think the size of standard configuration space falls in "falliable
+> accessors", and the extended configuration space falls in "infalliable"
+> parts
 
+Both can be infallible. The standard configuration space size is constant, =
+hence
+all accesses to the standard configuration space with constant offsets can =
+be
+infallible.
 
+For the extended space it depends what a driver can assert, just like for a=
+ny
+MMIO space.
 
-Log excerpt:
-=====================================================
-  LD      .tmp_vmlinux1
-aarch64-linux-gnu-ld: drivers/pci/vgaarb.o: in function `vga_is_firmware_default':
-/tmp/kci/linux/drivers/pci/vgaarb.c:559: undefined reference to `screen_info'
-aarch64-linux-gnu-ld: drivers/pci/vgaarb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
-/tmp/kci/linux/drivers/pci/vgaarb.c:559:(.text+0xf00): dangerous relocation: unsupported relocation
-aarch64-linux-gnu-ld: /tmp/kci/linux/drivers/pci/vgaarb.c:559: undefined reference to `screen_info'
-aarch64-linux-gnu-ld: /tmp/kci/linux/drivers/pci/vgaarb.c:559: undefined reference to `screen_info'
-aarch64-linux-gnu-ld: drivers/pci/vgaarb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
-/tmp/kci/linux/drivers/pci/vgaarb.c:559:(.text+0x1214): dangerous relocation: unsupported relocation
-aarch64-linux-gnu-ld: /tmp/kci/linux/drivers/pci/vgaarb.c:559: undefined reference to `screen_info'
-aarch64-linux-gnu-ld: drivers/video/screen_info_pci.o: in function `screen_info_video_type':
-/tmp/kci/linux/./include/linux/screen_info.h:98: undefined reference to `screen_info'
-aarch64-linux-gnu-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
-/tmp/kci/linux/./include/linux/screen_info.h:98:(.text+0x16c): dangerous relocation: unsupported relocation
-aarch64-linux-gnu-ld: drivers/video/screen_info_pci.o:/tmp/kci/linux/./include/linux/screen_info.h:98: more undefined references to `screen_info' follow
-aarch64-linux-gnu-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
-drivers/video/screen_info_pci.o: in function `screen_info_video_type':
-/tmp/kci/linux/./include/linux/screen_info.h:98:(.text+0x2a8): dangerous relocation: unsupported relocation
+However, you seem to talk about whether a physical device is still present.
 
-=====================================================
+> But for the "infallible" part in PCI configuration space, the device
+> can be disconnected from the PCI bus. E.g. unresponsive device. In that
+> case, the current PCI core will mark the device as "disconnected" before
+> they causes more problems and any access to the configuration space
+> will fail with an error code. This can also happen on access to
+> "infalliable" part.
+>
+> How should we handle this case in "infallible" accessors of PCI
+> configuration space? Returning Result<> seems doesn't fit the concept
+> of "infallible", but causing a rust panic seems overkill...
 
+Panics are for the "the machine is unrecoverably dead" case, this clearly i=
+sn't
+one of them. :)
 
-# Builds where the incident occurred:
+I think we should do the same as with "normal" MMIO and just return the val=
+ue,
+i.e. all bits set (PCI_ERROR_RESPONSE).
 
-## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-chromeos-mediatek-68ed48bca6dc7c71db9ea92a/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ed48bca6dc7c71db9ea92a
+The window between physical unplug and the driver core unbinds the driver s=
+hould
+be pretty small and drivers have to be able to deal with garbage values rea=
+d
+from registers anyways.
 
-
-#kernelci issue maestro:a076f080951a7880a0f9931f9afe60cddea91d87
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+If we really want to handle it, you can only implement the try_*() methods =
+and
+for the non-try_*() methods throw a compile time error, but I don't see a r=
+eason
+for that.
 
