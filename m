@@ -1,107 +1,85 @@
-Return-Path: <linux-pci+bounces-37989-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ECE8BD663E
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 23:41:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 63D53BD657E
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 23:18:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E90140263B
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 21:41:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2389A3B35EF
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 21:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89662EACF9;
-	Mon, 13 Oct 2025 21:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 015791A9F9B;
+	Mon, 13 Oct 2025 21:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y02ovThe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3386246778;
-	Mon, 13 Oct 2025 21:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14CF2DEA6E
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 21:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760391681; cv=none; b=BvYSQARx8cQNtSvIuRQRuhKZ12x/l6T3HT+Hex565F8HiRJ913fGlB1HLkf9a3drYBO7HkxhiNHFAnS4IxFtEOCgmLx64/wAl1NO95LG8HOQVJNnQv/h9bWYR29+RetFv1JpcKORNXLA36OO5M50WtKQ0h7vv4L1hWzkePBaCeA=
+	t=1760390296; cv=none; b=mjt9Xs/cIiqzGXz3llxE/0pN1eXHN64bRoaSWeP3seXsl9mEh1hnXWcLzdmsXf6IUK3SS76Z/Nuca2z5xikoAGX5T+PEHtZJIgtgpdZYQQUhjDwE00jLU621YnvXUvQgkm0pwuHj82Ph3SKyRV22mGfmlvI1qCu2/YaH4zu/pTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760391681; c=relaxed/simple;
-	bh=VINIqmrGcK4Q5kNGL6kTupqRoKpcr1/Zsu3Lhu78K8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OeDVAnml6zLNnHrc8T++NruQXuCt1rpH691/y6q+9sJ+znTNG5yuy9cfZDWukSI7ou3aP2bxgJFVXc1dyJlPcoAW7+qKLQF6BCxrqushXAKEyqsziBcAHukkAYQUE1hJInvgD/kgqPLtiJqiSfrorymw+MdR4PAwpIE4D+mRrQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1v8Pv4-0000sq-00; Mon, 13 Oct 2025 23:17:26 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 5C1B0C0256; Mon, 13 Oct 2025 23:17:13 +0200 (CEST)
-Date: Mon, 13 Oct 2025 23:17:13 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, macro@orcam.me.uk
-Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
-Message-ID: <aO1sWdliSd03a2WC@alpha.franken.de>
-References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
- <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com>
- <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net>
+	s=arc-20240116; t=1760390296; c=relaxed/simple;
+	bh=3ONjSP63/u0x8AdOoa0cSrfqMGyNCxclDohik3JfmjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=W83wLIdwVv+K3OO5nmhb5ZZufYzPGK7ee7QIfZg/mTeRysOj/hqEouJvMDvblWpso0rtswSA3Dusal/Sp9QlPg2rr7vB2Dhjm1KBeZNUp/m3u+tAZNDTW/8+o2+2Y4M8vqZnaVdZ/5BAF3m2FqlxpXt88a1bOukt87BdIXlCWFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y02ovThe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40ADFC4CEE7;
+	Mon, 13 Oct 2025 21:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760390296;
+	bh=3ONjSP63/u0x8AdOoa0cSrfqMGyNCxclDohik3JfmjE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Y02ovThedtt8POGTv2TOHRZT0T4rf+IZPt0+09OdEaHZgPCRS5DtjQSLscrhCag8L
+	 GC++6xsC18zKB1n25o3rwblNMA1V1P7/e4JyEFf67K7gbz/ziDA46AGrSOqMjMNTct
+	 jueZNSB2nzKNDbbUoc+a1r/rJ0FZkPOj21COzMpuA0tzIoYnOM/p1CV2+pUE06J+4+
+	 kn/is6y+YG3a23kXfu9EIwf8oYkHsq9T8Efig89l88VW9IdMqf65eGDi3CEWw4xYL/
+	 7Lnvvu/7o3HXyCYUXyeIcAZF8CEOhXc15PUbAd2c2n4z1iku+RQEnlM/2cHpz3HGTL
+	 dQeRp+hxnrKgQ==
+Date: Mon, 13 Oct 2025 16:18:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: inochiama@gmail.com, tglx@linutronix.de, bhelgaas@google.com,
+	unicorn_wang@outlook.com, linux-pci@vger.kernel.org,
+	Genes Lists <lists@sapience.com>, Jens Axboe <axboe@kernel.dk>,
+	Todd Brandt <todd.e.brandt@intel.com>
+Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
+ domains") causing boot hangs on my laptop
+Message-ID: <20251013211815.GA864904@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net>
+In-Reply-To: <af5f1790-c3b3-4f43-97d5-759d43e09c7b@panix.com>
 
-On Mon, Oct 13, 2025 at 12:54:25PM -0700, Guenter Roeck wrote:
-> Hi,
+[+cc Gene, Jens, Todd]
+
+On Thu, Oct 02, 2025 at 10:04:17AM -0700, Kenneth Crudup wrote:
 > 
-> On Fri, Aug 29, 2025 at 04:10:52PM +0300, Ilpo Järvinen wrote:
-> > pci-legacy.c under MIPS has a copy of pci_enable_resources() named as
-> > pcibios_enable_resources(). Having own copy of same functionality could
-> > lead to inconsistencies in behavior, especially now as
-> > pci_enable_resources() and the bridge window resource flags behavior are
-> > going to be altered by upcoming changes.
-> > 
-> > The check for !r->start && r->end is already covered by the more generic
-> > checks done in pci_enable_resources().
-> > 
-> > Call pci_enable_resources() from MIPS's pcibios_enable_device() and remove
-> > pcibios_enable_resources().
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> I'm running Linus' master (as of 7f7072574).
 > 
-> This patch causes boot failures when trying to boot mips images from
-> ide drive in qemu. As far as I can see the interface no longer instantiates.
+> I bisected it to the above named commit (but had to back out ba9d484ed3
+> (""PCI/MSI: Remove the conditional parent [un]mask logic") and then
+> 727e914bbfbbd ("PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
+> cond_[startup|shutdown]_parent()") first for a clean revert.)
 > 
-> Reverting this patch fixes the problem. Bisect log attached for reference.
+> I have a Dell XPS-9320 laptop, and booting would hang before it switched to
+> the xe video driver from the EFI FB driver (not sure if this is a symptom or
+> partial cause) and I'd see a message akin to "not being able to set up DP
+> tunnels, destroying" as the last thing printed before it hangs. (If it's
+> important to see those messages I believe I can force a pstore crash to get
+> them where they can be saved off, let me know).
 
-Patch below fixes my qemu malta setup. Now I'm wondering, why this is
-needed. It was added with commit
-
-aa0980b80908 ("Fixes for system controllers for Atlas/Malta core cards.")
-
-Maciej, do you remember why this is needed ?
-
-Thomas.
-
-diff --git a/arch/mips/pci/pci-malta.c b/arch/mips/pci/pci-malta.c
-index 6aefdf20ca05..e0270b818b03 100644
---- a/arch/mips/pci/pci-malta.c
-+++ b/arch/mips/pci/pci-malta.c
-@@ -229,10 +229,6 @@ void __init mips_pcibios_init(void)
- 		return;
- 	}
- 
--	/* PIIX4 ACPI starts at 0x1000 */
--	if (controller->io_resource->start < 0x00001000UL)
--		controller->io_resource->start = 0x00001000UL;
--
- 	iomem_resource.end &= 0xfffffffffULL;			/* 64 GB */
- 	ioport_resource.end = controller->io_resource->end;
- 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+#regzbot introduced: 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device domains")
+#regzbot link: https://lore.kernel.org/all/3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com/
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=220658
 
