@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-37877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 256D0BD2834
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 12:17:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8364BD2840
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 12:18:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12E013B3707
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 10:17:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BB5D3B9335
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 10:18:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7765A2FD7D0;
-	Mon, 13 Oct 2025 10:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272652FF155;
+	Mon, 13 Oct 2025 10:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3qX2/5i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajHd53Uu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB26E1990A7
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 10:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565642FD1D7
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 10:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760350667; cv=none; b=NvZiAuIeFZRjNQQtw0rx2MBZLgPBN+Kua0EgMcHBV4/qhsyO1gsrs5o+bfoOVsgpgbpOXPyNCmk4vL1YPvKc96uw+ZZqOFp8189Qy+LBoSohW0EBNhzEzyagbVt54Wdo5aEqWcz89OjkbbrkNNZVRIyLoZaWjGCK433j0Hy7Bpk=
+	t=1760350675; cv=none; b=BVfL7tWVfpgsiMQ1yKxEKUUvQDDew4W8+eFxx7QDtheoj0dKNaeCJcEV1n5CDhdeZUVwKmBxZQdvck5vuu30Wx9p4KPOntZvyyAE2bLFy4oN+9QXZUdPbjVvbLUmTmdokRxvABVA7NEPVwSNrxkh5O8gpuSeemnHaaDGJoqO01M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760350667; c=relaxed/simple;
-	bh=fLqhCB9ZHaE35jEAvUwL/XlQACvFsJNj7NN+aAdIw+E=;
+	s=arc-20240116; t=1760350675; c=relaxed/simple;
+	bh=gNh1Q25ZNGRtB3EJ1DwzkXZengb0FpJ74GxfaGXFVu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UOuh+tP2pmc8qm/v35n6jMWTX6JSbCEPFxxPUqdbTeQ3YFVX94FizyojALMPuDMo2Ds7vwk4otZ2/O8dcN6YqkF2t+qDPn+WW0Xr7+HHWsJlRjRCNOvVeog83NL84DpGnfszfWygNwl27ob9DSWzWucpgSgF5o5N2nBUBbchi9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3qX2/5i; arc=none smtp.client-ip=209.85.216.41
+	 MIME-Version; b=ZBTbD08+NKDp+WhYXZkrxvhD0eehMPMiXk7EcSgYnORPv6Lew7dTE1z0k2KCFqgiZPDbFSxDvLZiQlLLWPrwBQzLD3d9EJs8hCQ5u317AQrLHdq2KIOB23/cOvFy6bjhuJ468dHzlhxS2/5835cfXM36mCwrouVXDslSBPig1X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajHd53Uu; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-339d7c403b6so3931074a91.2
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 03:17:45 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-32ed19ce5a3so3525399a91.0
+        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 03:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760350665; x=1760955465; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760350671; x=1760955471; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rL8Zvity0qBrpOIGKiLq2gATcEJ0bdlrudF1QRk85so=;
-        b=e3qX2/5iepCXH6WkrSyxJe7ORCQ8SRV46El9RZmkR9AV4HwElRyK5OFc4nLFWqN1tR
-         gnoeHcNW+nIS8o9uiAV/SE1Q7wl3F/qE9E+mee3jeFpwZk0rH2a3+8OAaUiapa5W9yfd
-         x2zFo6OEod/Fz/y2Q76TpjFZqPfhGw8ntS9SXeTAoD4jwQySMmTGK0eUUbI3pHLI6YVH
-         EQeXTy9Rf2qdt4Uj/zPNtaD5CEJN7UK1yXFM+T2gdrMiUykhhDWw4eN+Sr6J51Ep4aAB
-         DarIacU/aSAQE2TRaE39UJXVQ4L+HKfRfv5p7XX2mMicXKJ53h9IQOHM6kP2NtygFNKb
-         X4xA==
+        bh=19kHdtY5ZhpAxDQMVT/2nG/beuKDqoa8OjmMddMbQbE=;
+        b=ajHd53UudJG9M7Br4Ob6S4j01SwITX8ETUlwysJE9vrgDAva67AoEdTzmOOyypBe4Z
+         0500bfcaRTIOo5/VQ0h231a8WJZVJu1lrZOQ2uCEv07RQKH/fFkh2Se2ifBPDYGe42Qt
+         GXDbCp4iJQbf9gePk2Lp9A/6/EljtPvW5iSBEvrSUwvl3t+AxujQ1Ox2TsS6LtkDqEeL
+         uqAWH29HRRrB2sGVoQv0CLC10xr/4yq1UNa+7vEmu4oENc2q+NFKoaLFPt39FzIDx5ON
+         T90TmL7kTXu4EuZ/Poy9LKfE2rXeK6XjC4O8THgAdcWaRKYIPpEzDX2iZ5H7F0ibIA4Z
+         sWCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760350665; x=1760955465;
+        d=1e100.net; s=20230601; t=1760350671; x=1760955471;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rL8Zvity0qBrpOIGKiLq2gATcEJ0bdlrudF1QRk85so=;
-        b=ZeRp4zBGCLMfkJTh8Rok7sDldwxTYYCm5IT9WPm6rXyccM7ArXKyYFhpER8kAIEGtR
-         ZZn/62VW4NgZ9vX10RCZtqaHxo5F5tLAUl0lirYT2n7qsgOT1SgXzHYO/UJDWt33RvKq
-         W1WnPxIGg/BnAJ6psFu7ucS9X4i+stOKdRMDa+e0svuBdjWXDhzUkX5NlOF+dVLv9vlq
-         C8Ic5nmnTB2XqBeGYH9pUlPJPBpqfkbK8qIvXQY25Xn//yAEENSjqSu2r4XolJoRaSIt
-         Fz4MYyoTLCeeE0AzR1xx//Pqtjyq7olLKq4qAlPRAk9zbOUvazbmK86zPQjYSzpzzAz7
-         fHZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW46nA/3saJuEKytYOb5SI5L730uQ7Wd4TUVrKm4TQlfcosF9qQEKJqbk9LoqDW3ZBq/3HJX8ZEc+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeS+bt639WahZKygbizFnbXwr3ylkaeyTZk5k0hWcqR8SyyXu9
-	BMwHqgBcHveOc0e7YdA+6NBZFJc5m2ctzZHqL8mQzP8W7tVt1vsCRO1r
-X-Gm-Gg: ASbGnct3MsHhAqDw5/VpcHfKVrHPXqxB+MtffeTSwBl2OHDa8t9c+yBiR9R0jfnMTf7
-	U64ff9C98iy96RiYTvNvM0hy6jY1iMSXyjoADErPsK2sG9PfnDCzUSmVPeGXAwMlXxhJHg/JYnL
-	iInZnjREgwvHdJbb14QeOFzXveRIszB47u90VKVS8TnqIidQJGs0upHZ602KbJOH9cku9MhuMXe
-	gcDJhKF5rCvAdLXAgk9u/L1lyHpQMYVadK6uMNu7TfdcdMTo8cLGJDjNu6i83MvrBID873fzkCG
-	Xvf33JM0lcG3b2CSpB/crO6YS5GTIvnYT2NPG2Rfwz9NuXArt6v3fBKeZqO7sRl+uVHrXniRT1t
-	KZEHLXxN7t7bTbYB5FlVN8km0RnoOt5ZYFPkED6Ck+RhD8lzaIA==
-X-Google-Smtp-Source: AGHT+IHcngJ21CdNAU4iF9jGL+GrQ8wIh2V4zG56kXYLEpN2UR66JICC8m/eBuKADrldWfXWqWJEAw==
-X-Received: by 2002:a17:90b:3846:b0:339:a323:30fe with SMTP id 98e67ed59e1d1-33b51168e73mr29465661a91.14.1760350665091;
-        Mon, 13 Oct 2025 03:17:45 -0700 (PDT)
+        bh=19kHdtY5ZhpAxDQMVT/2nG/beuKDqoa8OjmMddMbQbE=;
+        b=kKCUBIXVj7buTnyMiR8SzeTph6hBuFMgDG/WCtueWRsT/6YhFSNsKRoKtsDTUL1xW4
+         EQXwqe5320fp4w4iPm7dc+OgTwgnOTUlftuVj53VSv41Zw0QQnqp05Vn9fe4Hqp6LpDV
+         zm3Twh3ZC+Jh5yPlEv3eDrqnyJdlrAFGqxNjuEj0etz3yRG4fXBbzHhqe4QiMPOg1880
+         5G92UnAbiqURVDgobfRMuikhMK8DiZWkZtX7KjDxbh3WyF/m/5aLE53hvWmFa3q0+Ix5
+         oldkBFXfEh6rX+5St8h7ampzCSGBNBdQUWrwN7btwwkvNwnEjTEqSlSNHs1sfr03Sgwt
+         wkpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLhdONvzleXHWvi03H4L7ymMSHffEQP2F3Ojb8pGjH5flr4T0ygCsNjbPztGhe9YH7V9wu/C6pgFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdY19Ptpa3cCcpbouX8pMTI8Hxx/mVetSkUmuQ2YQMh1ZwBMCr
+	QWIFWZUGCPUHykvavUowc2NhklL4/qwr5680iICqPvRNwU70L6UJfnmC
+X-Gm-Gg: ASbGncv1f4jKUHlqt8HpRSjVuvDYB2eHc48VXu3gukrlhO3+s2Xg2WrLY3sVW1jeqI9
+	ycO6nWLtlrIQsNMKCEQJg86y6GEnnvZLsMta2Qal04CNi33+RONwwviEsPwP9xabux6CfMLtz4k
+	h4R5jiVCHYqmnPycGF8rb8DJ4aOdX17biNOQZzdvtbbPod2BXHNPr9NOKkHiTqkLn9sXAdtwG80
+	A8gbL5E3/SmR6tVs2jzyQGQP/nA3ZxqH1R5weRVy0Qj+VoWP01pFLpbhTR1DI3Jn49JI66mbE6I
+	o/CGm8lPxRT8+k45fYIsvY0P1Oq+mFREYwAZeKqK0BFFrFPxsbzPPotAXIJYTIYEGSuze65hgL2
+	RBaS+40WqALK+YICT6ZLuDGdAgUB3hPo5RGLDWWQUxsoVZ1Z7og==
+X-Google-Smtp-Source: AGHT+IEyZirSf3fnKNnVB5Ye7lidBycAPJF9I2FEB25F5npassyZdVGtvN5Z0VaAFP1R3FsWO44BJg==
+X-Received: by 2002:a17:90b:4990:b0:338:3b73:39ce with SMTP id 98e67ed59e1d1-33b5138e3a7mr27708156a91.25.1760350671380;
+        Mon, 13 Oct 2025 03:17:51 -0700 (PDT)
 Received: from rockpi-5b ([45.112.0.108])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b52a5656dsm7422864a91.11.2025.10.13.03.17.39
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b52a5656dsm7422864a91.11.2025.10.13.03.17.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 03:17:44 -0700 (PDT)
+        Mon, 13 Oct 2025 03:17:50 -0700 (PDT)
 From: Anand Moon <linux.amoon@gmail.com>
 To: Vignesh Raghavendra <vigneshr@ti.com>,
 	Siddharth Vadapalli <s-vadapalli@ti.com>,
@@ -86,9 +86,9 @@ To: Vignesh Raghavendra <vigneshr@ti.com>,
 	linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR TI DRA7XX/J721E),
 	linux-kernel@vger.kernel.org (open list)
 Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [RFC v1 1/2] PCI: j721e: Use devm_clk_get_optional_enabled() to get the clock
-Date: Mon, 13 Oct 2025 15:47:23 +0530
-Message-ID: <20251013101727.129260-2-linux.amoon@gmail.com>
+Subject: [RFC v1 2/2] PCI: j721e: Use inline reset GPIO assignment and drop local variable
+Date: Mon, 13 Oct 2025 15:47:24 +0530
+Message-ID: <20251013101727.129260-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251013101727.129260-1-linux.amoon@gmail.com>
 References: <20251013101727.129260-1-linux.amoon@gmail.com>
@@ -100,53 +100,58 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use devm_clk_get_optional_enabled() helper instead of calling
-devm_clk_get_optional() and then clk_prepare_enable(). It simplifies
-the error handling and makes the code more compact. This changes removes
-the unnecessary clk variable and assigns the result of the
-devm_clk_get_optional_enabled() call directly to pcie->refclk.
+Change removes the unnecessary local gpiod variable and assigns the result
+of the devm_gpiod_get_optional() call directly to pcie->reset_gpio.
 This makes the code more concise and readable without changing the
 behavior.
 
 Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/pci/controller/cadence/pci-j721e.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 5bc5ab20aa6d..d6bbd04c615b 100644
+index d6bbd04c615b..1ece4b183dfa 100644
 --- a/drivers/pci/controller/cadence/pci-j721e.c
 +++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -479,7 +479,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+@@ -477,7 +477,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 	struct j721e_pcie *pcie;
+ 	struct cdns_pcie_rc *rc = NULL;
  	struct cdns_pcie_ep *ep = NULL;
- 	struct gpio_desc *gpiod;
+-	struct gpio_desc *gpiod;
  	void __iomem *base;
--	struct clk *clk;
  	u32 num_lanes;
  	u32 mode;
- 	int ret;
-@@ -603,18 +602,11 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+@@ -589,12 +588,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 	switch (mode) {
+ 	case PCI_MODE_RC:
+-		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+-		if (IS_ERR(gpiod)) {
+-			ret = dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get reset GPIO\n");
++		pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++		if (IS_ERR(pcie->reset_gpio)) {
++			ret = dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
++					    "Failed to get reset GPIO\n");
  			goto err_get_sync;
  		}
+-		pcie->reset_gpio = gpiod;
  
--		clk = devm_clk_get_optional(dev, "pcie_refclk");
--		if (IS_ERR(clk)) {
--			ret = dev_err_probe(dev, PTR_ERR(clk), "failed to get pcie_refclk\n");
--			goto err_pcie_setup;
--		}
--
--		ret = clk_prepare_enable(clk);
--		if (ret) {
-+		pcie->refclk = devm_clk_get_optional_enabled(dev, "pcie_refclk");
-+		if (IS_ERR(pcie->refclk)) {
- 			dev_err_probe(dev, ret, "failed to enable pcie_refclk\n");
- 			goto err_pcie_setup;
+ 		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+ 		if (ret) {
+@@ -615,9 +614,9 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 		 * This shall ensure that the power and the reference clock
+ 		 * are stable.
+ 		 */
+-		if (gpiod) {
++		if (pcie->reset_gpio) {
+ 			msleep(PCIE_T_PVPERL_MS);
+-			gpiod_set_value_cansleep(gpiod, 1);
++			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
  		}
--		pcie->refclk = clk;
  
- 		/*
- 		 * Section 2.2 of the PCI Express Card Electromechanical
+ 		ret = cdns_pcie_host_setup(rc);
 -- 
 2.50.1
 
