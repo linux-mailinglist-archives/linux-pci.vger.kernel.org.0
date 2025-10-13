@@ -1,222 +1,141 @@
-Return-Path: <linux-pci+bounces-37977-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37978-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B1AEBD637C
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A5A4BD63A9
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:45:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B75B188E324
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:44:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3262819204A9
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70EB530DD0D;
-	Mon, 13 Oct 2025 20:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNXB3QYp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D30230AACE;
+	Mon, 13 Oct 2025 20:42:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4046830B52B;
-	Mon, 13 Oct 2025 20:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F051A309EEE;
+	Mon, 13 Oct 2025 20:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760387773; cv=none; b=gQCCDVuN8AlBew5eTV9o7AMJ0Wz16kYGXHSCwSz53DRTQeFtWtp5bUvghzTTarlzvsTLGv/ELTimOs6mlfsmtndpru1E9ZiXdCgJ5z8/oY5nbFNUz5DNuglSJLLbFLMG4FrwFQx75jTIURWw5Xff8+kvD4IJRhn9QJ5zZu/FdwY=
+	t=1760388178; cv=none; b=mPHOQPMj248gduoP2gxMhh64mszspme9fLuAFnMOysNllgGi6jzKsw8eQIVXharmDEN/yfHh1hw15/X7Ji+r1LW1KHjJk13Hrj64+6xdSB8lnRYIJn8XyNKXoLcWoiJJIOM7vtoPxPhPpsY6pG7ORF7UzvlGU9j+oX/mIQyRlKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760387773; c=relaxed/simple;
-	bh=Jrc2SP9zuO/q8lVKXeMSZQ2TjjYp5fXU9+UkI2oxxh8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HoFZGWdCdS+K3Mu/wuTIxxSJAs7qthkVW7M58yBCvqiy+ztm0lrRk6QOzNycjYuDs014TgAgfap9NmYdUjdKlBMyFIF3Pn6hAQH7n44nTXAJFKVJaT8iTLgmmqmCuiJDcOcZHvYI3hARE4ePWx/SuH4nlsLifGu/4R3m0hl8KNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNXB3QYp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE06C4CEFE;
-	Mon, 13 Oct 2025 20:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760387772;
-	bh=Jrc2SP9zuO/q8lVKXeMSZQ2TjjYp5fXU9+UkI2oxxh8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MNXB3QYpRdiFAXcP7KGkH3KNjLbcjQHAsJUVDtmk1f1HjTTwa3KUIDoyy0ULi5OFa
-	 G1hHGn/dxaQZ5Faqttp9F5o8lS4K3lzl0oO8h4XvBxDmB4CI1ocOlhB7mpTBWczRpe
-	 cbVl6Dc2oGcHw4ioesDHnycePL5mRzpUCYfbh5z7fE5bL75KqCXtrMmz/4W+3XrleP
-	 oMKdy9NKWu7KiOETV1Hlg3Uaq2OhxJGJs/UZbbod9e6FJHRwmIGt7Ub1FGi7gJ7Djf
-	 hDJsEwtgnaPJvOgCNXijznnVNxp9lEDzhx4vKFkdU9oGt6aKkRvBpZLinF55YVRxcr
-	 7ZyPgB0llmwOw==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	cgroups@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 33/33] doc: Add housekeeping documentation
-Date: Mon, 13 Oct 2025 22:31:46 +0200
-Message-ID: <20251013203146.10162-34-frederic@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251013203146.10162-1-frederic@kernel.org>
-References: <20251013203146.10162-1-frederic@kernel.org>
+	s=arc-20240116; t=1760388178; c=relaxed/simple;
+	bh=xKtQgJRsuX5tKVTVViYkngB+tljb7gYCso27qJYidUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jRsotlBTjMno6AnkLEhotCkrxE6rsEnpen5GN4wA578CO/7zHQd4tZvOhk/2vsehR4Si5RTeW+6s62x/EHVYNy9Bu1cah4gaaVTrCmKTpcjYrUI0SpOcPMBYtnNsbW+M9DXHEwjhui2876orZnYPgiZCr78wMnJGQO8Mc0F5Twg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCE71063;
+	Mon, 13 Oct 2025 13:42:47 -0700 (PDT)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F12F3F738;
+	Mon, 13 Oct 2025 13:42:50 -0700 (PDT)
+Message-ID: <ef4c0cbc-bf5e-4e55-b495-8bafa8a84c32@arm.com>
+Date: Mon, 13 Oct 2025 15:42:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm platform
+ device
+To: Jason Gunthorpe <jgg@ziepe.ca>, dan.j.williams@intel.com
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, linux-coco@lists.linux.dev,
+ kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
+ Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>,
+ Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+ Steven Price <steven.price@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+References: <yq5aqzxy9ij1.fsf@kernel.org> <20250730113827.000032b8@huawei.com>
+ <20250730132333.00006fbf@huawei.com>
+ <2025073035-bulginess-rematch-b92e@gregkh>
+ <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
+ <20251010135922.GC3833649@ziepe.ca>
+ <4a7d84b2-2ec4-4773-a2d5-7b63d5c683cf@arm.com>
+ <20251010153046.GF3833649@ziepe.ca>
+ <f6cf20f6-0f19-4814-b917-4f92dad39648@arm.com>
+ <68e953f484464_1992810065@dwillia2-mobl4.notmuch>
+ <20251010223444.GA3938986@ziepe.ca>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20251010223444.GA3938986@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- Documentation/cpu_isolation/housekeeping.rst | 111 +++++++++++++++++++
- 1 file changed, 111 insertions(+)
- create mode 100644 Documentation/cpu_isolation/housekeeping.rst
+Hi,
 
-diff --git a/Documentation/cpu_isolation/housekeeping.rst b/Documentation/cpu_isolation/housekeeping.rst
-new file mode 100644
-index 000000000000..e5417302774c
---- /dev/null
-+++ b/Documentation/cpu_isolation/housekeeping.rst
-@@ -0,0 +1,111 @@
-+======================================
-+Housekeeping
-+======================================
-+
-+
-+CPU Isolation moves away kernel work that may otherwise run on any CPU.
-+The purpose of its related features is to reduce the OS jitter that some
-+extreme workloads can't stand, such as in some DPDK usecases.
-+
-+The kernel work moved away by CPU isolation is commonly described as
-+"housekeeping" because it includes ground work that performs cleanups,
-+statistics maintainance and actions relying on them, memory release,
-+various deferrals etc...
-+
-+Sometimes housekeeping is just some unbound work (unbound workqueues,
-+unbound timers, ...) that gets easily assigned to non-isolated CPUs.
-+But sometimes housekeeping is tied to a specific CPU and requires
-+elaborated tricks to be offloaded to non-isolated CPUs (RCU_NOCB, remote
-+scheduler tick, etc...).
-+
-+Thus, a housekeeping CPU can be considered as the reverse of an isolated
-+CPU. It is simply a CPU that can execute housekeeping work. There must
-+always be at least one online housekeeping CPU at any time. The CPUs that
-+are not	isolated are automatically assigned as housekeeping.
-+
-+Housekeeping is currently divided in four features described
-+by the ``enum hk_type type``:
-+
-+1.	HK_TYPE_DOMAIN matches the work moved away by scheduler domain
-+	isolation performed through ``isolcpus=domain`` boot parameter or
-+	isolated cpuset partitions in cgroup v2. This includes scheduler
-+	load balancing, unbound workqueues and timers.
-+
-+2.	HK_TYPE_KERNEL_NOISE matches the work moved away by tick isolation
-+	performed through ``nohz_full=`` or ``isolcpus=nohz`` boot
-+	parameters. This includes remote scheduler tick, vmstat and lockup
-+	watchdog.
-+
-+3.	HK_TYPE_MANAGED_IRQ matches the IRQ handlers moved away by managed
-+	IRQ isolation performed through ``isolcpus=managed_irq``.
-+
-+4.	HK_TYPE_DOMAIN_BOOT matches the work moved away by scheduler domain
-+	isolation performed through ``isolcpus=domain`` only. It is similar
-+	to HK_TYPE_DOMAIN except it ignores the isolation performed by
-+	cpusets.
-+
-+
-+Housekeeping cpumasks
-+=================================
-+
-+Housekeeping cpumasks include the CPUs that can execute the work moved
-+away by the matching isolation feature. These cpumasks are returned by
-+the following function::
-+
-+	const struct cpumask *housekeeping_cpumask(enum hk_type type)
-+
-+By default, if neither ``nohz_full=``, nor ``isolcpus``, nor cpuset's
-+isolated partitions are used, which covers most usecases, this function
-+returns the cpu_possible_mask.
-+
-+Otherwise the function returns the cpumask complement of the isolation
-+feature. For example:
-+
-+With isolcpus=domain,7 the following will return a mask with all possible
-+CPUs except 7::
-+
-+	housekeeping_cpumask(HK_TYPE_DOMAIN)
-+
-+Similarly with nohz_full=5,6 the following will return a mask with all
-+possible CPUs except 5,6::
-+
-+	housekeeping_cpumask(HK_TYPE_KERNEL_NOISE)
-+
-+
-+Synchronization against cpusets
-+=================================
-+
-+Cpuset can modify the HK_TYPE_DOMAIN housekeeping cpumask while creating,
-+modifying or deleting an isolated partition.
-+
-+The users of HK_TYPE_DOMAIN cpumask must then make sure to synchronize
-+properly against cpuset in order to make sure that:
-+
-+1.	The cpumask snapshot stays coherent.
-+
-+2.	No housekeeping work is queued on a newly made isolated CPU.
-+
-+3.	Pending housekeeping work that was queued to a non isolated
-+	CPU which just turned isolated through cpuset must be flushed
-+	before the related created/modified isolated partition is made
-+	available to userspace.
-+
-+This synchronization is maintained by an RCU based scheme. The cpuset update
-+side waits for an RCU grace period after updating the HK_TYPE_DOMAIN
-+cpumask and before flushing pending works. On the read side, care must be
-+taken to gather the housekeeping target election and the work enqueue within
-+the same RCU read side critical section.
-+
-+A typical layout example would look like this on the update side
-+(``housekeeping_update()``)::
-+
-+	rcu_assign_pointer(housekeeping_cpumasks[type], trial);
-+	synchronize_rcu();
-+	flush_workqueue(example_workqueue);
-+
-+And then on the read side::
-+
-+	rcu_read_lock();
-+	cpu = housekeeping_any_cpu(HK_TYPE_DOMAIN);
-+	queue_work_on(cpu, example_workqueue, work);
-+	rcu_read_unlock();
--- 
-2.51.0
+On 10/10/25 5:34 PM, Jason Gunthorpe wrote:
+> On Fri, Oct 10, 2025 at 11:44:04AM -0700, dan.j.williams@intel.com wrote:
+>> Jeremy Linton wrote:
+>>> On 10/10/25 10:30 AM, Jason Gunthorpe wrote:
+>>>> On Fri, Oct 10, 2025 at 10:28:36AM -0500, Jeremy Linton wrote:
+>>>>
+>>>>>> So you could use auxiliary_device, you'd consider SMC itself to be the
+>>>>>> shared HW block and all the auxiliary drivers are per-subsystem
+>>>>>> aspects of that shared SMC interface. It is not a terrible fit for
+>>>>>> what it was intended for at least.
+>>>>>
+>>>>> Turns out that changing any of this, will at the moment break systemd's
+>>>>> confidential vm detection, because they wanted the earliest indicator the
+>>>>> guest was capable and that turned out to be this platform device.
+>>>>
+>>>> Having systemd detect a software created platform device sounds
+>>>> compltely crazy, don't do that. Make a proper sysfs uapi for such a
+>>>> general idea please.
+>>>
+>>> Yes, I agree, its just at the time the statment was around what is the
+>>> most reliable early indicator, and since there isn't a hwcap or anything
+>>> that ended up being the choice, as disgusting as it is.
+>>>
+>>> Presumably once all this works out the sysfs/api surface will be more
+>>> 'defined'
+>>
+>> It has definition today.
+>>
+>> All guest-side TSM drivers currently call tsm_report_register(), that
+>> establishes /sys/kernel/config/tsm/report which is the common cross-arch
+>> transport for retrieving CVM launch attestation reports.
+> 
+> I suspect this ins't a TSM question but an existing question if any of
+> the underlying CC frameworks are enabled.
+> 
+> It is this stuff:
+> 
+> https://github.com/systemd/systemd/blob/main/src/basic/confidential-virt.c
+> https://github.com/systemd/systemd/commit/2572bf6a39b6c548acef07fd25f461c5a88560af
+> 
+>    Like the s390 detection logic, the sysfs path being checked is not labeled
+>    as ABI, and may change in the future. It was chosen because its
+>    directly tied to the kernel's detection of the realm service interface
+>    rather to the Trusted Security Module (TSM) which is what is being
+>    triggered by the device entry.
+> 
+> Maybe a /sys/firmware/smc/rsi file might be appropriate?
+
+Except that you can see from the code that this problem is being solved 
+in a hw platform dependent way for 4+ platforms now.
+
+Ideally the sysfs node would be common across all those hw platforms and 
+reflect the vm capabilities so the code doesn't' need #ifdef's. Meaning 
+it shouldn't have the smc/rsi arm'ism in the name, and maybe shouldn't 
+be in /sys/firmware
+
+
+Thanks,
+
+> 
+> Given how small a deployed fooprint ARM CCA has right now (ie none) it
+> would be good to fix this ASAP so it doesn't become entrenched.
+> 
+> Jason
 
 
