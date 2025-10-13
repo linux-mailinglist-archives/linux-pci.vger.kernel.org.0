@@ -1,141 +1,125 @@
-Return-Path: <linux-pci+bounces-37978-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37979-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A5A4BD63A9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:45:53 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CF21BD63FD
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:49:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3262819204A9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:45:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 66A604E611A
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:47:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D30230AACE;
-	Mon, 13 Oct 2025 20:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DD1B2C11F0;
+	Mon, 13 Oct 2025 20:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJMsDYlN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F051A309EEE;
-	Mon, 13 Oct 2025 20:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47208156CA
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 20:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760388178; cv=none; b=mPHOQPMj248gduoP2gxMhh64mszspme9fLuAFnMOysNllgGi6jzKsw8eQIVXharmDEN/yfHh1hw15/X7Ji+r1LW1KHjJk13Hrj64+6xdSB8lnRYIJn8XyNKXoLcWoiJJIOM7vtoPxPhPpsY6pG7ORF7UzvlGU9j+oX/mIQyRlKI=
+	t=1760388460; cv=none; b=lpfyfl80EfifkKwAWBWaNPTa9v+S1gjP4OzrMet2dOk1t42OaDkXR/6g8AhByKLvOyK+uYDE/4BgCXsMN5XiYlrrciOkn+X2hPIRHfGCnDzlrXNvDlmPzfh3oDdbiM/+sf8X8ipMDtpXHLJGnxh4/XwHrlJqhihY7HDPGtXAEoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760388178; c=relaxed/simple;
-	bh=xKtQgJRsuX5tKVTVViYkngB+tljb7gYCso27qJYidUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jRsotlBTjMno6AnkLEhotCkrxE6rsEnpen5GN4wA578CO/7zHQd4tZvOhk/2vsehR4Si5RTeW+6s62x/EHVYNy9Bu1cah4gaaVTrCmKTpcjYrUI0SpOcPMBYtnNsbW+M9DXHEwjhui2876orZnYPgiZCr78wMnJGQO8Mc0F5Twg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCE71063;
-	Mon, 13 Oct 2025 13:42:47 -0700 (PDT)
-Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F12F3F738;
-	Mon, 13 Oct 2025 13:42:50 -0700 (PDT)
-Message-ID: <ef4c0cbc-bf5e-4e55-b495-8bafa8a84c32@arm.com>
-Date: Mon, 13 Oct 2025 15:42:50 -0500
+	s=arc-20240116; t=1760388460; c=relaxed/simple;
+	bh=kYvQ6Hxo3oTP6IQRe2qtT/XA9KSMdq81htQikgmGJRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kGo+SyZTTis+q1TS7+ieZcNCQR0HeHxiMaFdfm9NlYXKiSw7e9bYgOYI4rvGb6Ni2sNKHrJXd6KBmxjOFBjo9BpwlNyB6h74gkocOvlS3H79FdJiY6Y3OD0nkPbiPUmAcopfUeeesitsIdhGMD3FTdX2p/WQg49FTuCGk03YUsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJMsDYlN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1744C4CEE7;
+	Mon, 13 Oct 2025 20:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760388459;
+	bh=kYvQ6Hxo3oTP6IQRe2qtT/XA9KSMdq81htQikgmGJRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HJMsDYlNsEUq6Xsj3YLeohufjHnbH7IezTaebVxN/cEWEfbuFt+f1L4nIFD0ho525
+	 JVlmIkMBL7hoTE+dL/bENGmYWa07THqVtpYONRcJLC5KUwGvAiEncfTSkRRkcAcPLa
+	 qGqyNyDnV5Qt0hRSHCNpk1SQzhazo6p4aWq/nxWYtGKkfb3CBsTqYa/smsOPF+Wa1y
+	 MV6kPQZnFU7GVMzpsLzgJvGA5P6y/p2JmaQzbFXypX7JIa+HYPdY41Zkwee7mBgRbb
+	 o3Or96vxaouUfX1EmywOXq7OAsGgLxK/IzZoh1WLOFhQWpnnMhR9u2A8oKwJKLELSA
+	 QdrcNkYQCKk+Q==
+Date: Mon, 13 Oct 2025 15:47:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de,
+	Eric Biggers <ebiggers@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/VGA: Select SCREEN_INFO
+Message-ID: <20251013204738.GA863114@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm platform
- device
-To: Jason Gunthorpe <jgg@ziepe.ca>, dan.j.williams@intel.com
-Cc: Greg KH <gregkh@linuxfoundation.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, linux-coco@lists.linux.dev,
- kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
- Samuel Ortiz <sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>,
- Suzuki K Poulose <Suzuki.Poulose@arm.com>,
- Steven Price <steven.price@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-References: <yq5aqzxy9ij1.fsf@kernel.org> <20250730113827.000032b8@huawei.com>
- <20250730132333.00006fbf@huawei.com>
- <2025073035-bulginess-rematch-b92e@gregkh>
- <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
- <20251010135922.GC3833649@ziepe.ca>
- <4a7d84b2-2ec4-4773-a2d5-7b63d5c683cf@arm.com>
- <20251010153046.GF3833649@ziepe.ca>
- <f6cf20f6-0f19-4814-b917-4f92dad39648@arm.com>
- <68e953f484464_1992810065@dwillia2-mobl4.notmuch>
- <20251010223444.GA3938986@ziepe.ca>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20251010223444.GA3938986@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251013175524.GA850308@bhelgaas>
 
-Hi,
-
-On 10/10/25 5:34 PM, Jason Gunthorpe wrote:
-> On Fri, Oct 10, 2025 at 11:44:04AM -0700, dan.j.williams@intel.com wrote:
->> Jeremy Linton wrote:
->>> On 10/10/25 10:30 AM, Jason Gunthorpe wrote:
->>>> On Fri, Oct 10, 2025 at 10:28:36AM -0500, Jeremy Linton wrote:
->>>>
->>>>>> So you could use auxiliary_device, you'd consider SMC itself to be the
->>>>>> shared HW block and all the auxiliary drivers are per-subsystem
->>>>>> aspects of that shared SMC interface. It is not a terrible fit for
->>>>>> what it was intended for at least.
->>>>>
->>>>> Turns out that changing any of this, will at the moment break systemd's
->>>>> confidential vm detection, because they wanted the earliest indicator the
->>>>> guest was capable and that turned out to be this platform device.
->>>>
->>>> Having systemd detect a software created platform device sounds
->>>> compltely crazy, don't do that. Make a proper sysfs uapi for such a
->>>> general idea please.
->>>
->>> Yes, I agree, its just at the time the statment was around what is the
->>> most reliable early indicator, and since there isn't a hwcap or anything
->>> that ended up being the choice, as disgusting as it is.
->>>
->>> Presumably once all this works out the sysfs/api surface will be more
->>> 'defined'
->>
->> It has definition today.
->>
->> All guest-side TSM drivers currently call tsm_report_register(), that
->> establishes /sys/kernel/config/tsm/report which is the common cross-arch
->> transport for retrieving CVM launch attestation reports.
+On Mon, Oct 13, 2025 at 12:55:25PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 13, 2025 at 10:44:23AM -0500, Mario Limonciello (AMD) wrote:
+> > commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+> > a screen info check") introduced an implicit dependency upon SCREEN_INFO
+> > by removing the open coded implementation.
+> > 
+> > If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+> > would now return false.  Add a select for SCREEN_INFO to ensure that the
+> > VGA arbiter works as intended. Also drop the now dead code.
+> > 
+> > Reported-by: Eric Biggers <ebiggers@kernel.org>
+> > Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+> > Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> > Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
+> > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 > 
-> I suspect this ins't a TSM question but an existing question if any of
-> the underlying CC frameworks are enabled.
-> 
-> It is this stuff:
-> 
-> https://github.com/systemd/systemd/blob/main/src/basic/confidential-virt.c
-> https://github.com/systemd/systemd/commit/2572bf6a39b6c548acef07fd25f461c5a88560af
-> 
->    Like the s390 detection logic, the sysfs path being checked is not labeled
->    as ABI, and may change in the future. It was chosen because its
->    directly tied to the kernel's detection of the realm service interface
->    rather to the Trusted Security Module (TSM) which is what is being
->    triggered by the device entry.
-> 
-> Maybe a /sys/firmware/smc/rsi file might be appropriate?
+> Applied to for-linus for v6.18, thanks!
 
-Except that you can see from the code that this problem is being solved 
-in a hw platform dependent way for 4+ platforms now.
+Oops, dropped because of this regression:
 
-Ideally the sysfs node would be common across all those hw platforms and 
-reflect the vm capabilities so the code doesn't' need #ifdef's. Meaning 
-it shouldn't have the smc/rsi arm'ism in the name, and maybe shouldn't 
-be in /sys/firmware
+  https://lore.kernel.org/r/176038554347.1442.9483731885505420131@15dd6324cc71
 
-
-Thanks,
-
-> 
-> Given how small a deployed fooprint ARM CCA has right now (ie none) it
-> would be good to fix this ASAP so it doesn't become entrenched.
-> 
-> Jason
-
+> > ---
+> > v2:
+> >  * drop dead code (Ilpo)
+> > ---
+> >  drivers/pci/Kconfig  | 1 +
+> >  drivers/pci/vgaarb.c | 8 +-------
+> >  2 files changed, 2 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> > index 7065a8e5f9b14..c35fed47addd5 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -306,6 +306,7 @@ config VGA_ARB
+> >  	bool "VGA Arbitration" if EXPERT
+> >  	default y
+> >  	depends on (PCI && !S390)
+> > +	select SCREEN_INFO
+> >  	help
+> >  	  Some "legacy" VGA devices implemented on PCI typically have the same
+> >  	  hard-decoded addresses as they did on ISA. When multiple PCI devices
+> > diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> > index b58f94ee48916..8c8c420ff5b55 100644
+> > --- a/drivers/pci/vgaarb.c
+> > +++ b/drivers/pci/vgaarb.c
+> > @@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
+> >  
+> >  static bool vga_is_firmware_default(struct pci_dev *pdev)
+> >  {
+> > -#ifdef CONFIG_SCREEN_INFO
+> > -	struct screen_info *si = &screen_info;
+> > -
+> > -	return pdev == screen_info_pci_dev(si);
+> > -#else
+> > -	return false;
+> > -#endif
+> > +	return pdev == screen_info_pci_dev(&screen_info);
+> >  }
+> >  
+> >  static bool vga_arb_integrated_gpu(struct device *dev)
+> > -- 
+> > 2.43.0
+> > 
 
