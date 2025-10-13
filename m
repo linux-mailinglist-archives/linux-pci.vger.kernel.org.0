@@ -1,236 +1,136 @@
-Return-Path: <linux-pci+bounces-37994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37995-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37323BD6A5D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 00:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21DA9BD6AE4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 01:00:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7436418A5460
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:40:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 757F71889508
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 23:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D30308F0F;
-	Mon, 13 Oct 2025 22:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnlunlRK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A582B21CC55;
+	Mon, 13 Oct 2025 23:00:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7AD30507F
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 22:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5786B2940B;
+	Mon, 13 Oct 2025 23:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760395055; cv=none; b=CrihmJQK+a8qFxC3m8dyWb7dsdY1dqdULvAENGZ5IHbOqYOnwmS//YGt9HTwRSQBLv+x58kHQaePXA7xSKwGQJjF7ZG/y7UGKI09cwf+IkDK2keouRrxFADwhc3F110Bbb9CDOOWNTB7oHJJDrkuECrtFuNBH6BmwUpgYiT7REc=
+	t=1760396438; cv=none; b=JUhOgYgUp4v9vp05+tZSTdiJFBXAq/uH2rDRj6z608jg4UoFdTWsT6YQqJJJXSZcMlOQ1S7bzr+h4JaU+Tb0f981ET7c9GvoPNBR6odKn8Ss0MytV5EFofDNe9eau+HQfTfa8Nn6xKCgD99z9WqUkP6/l9NHEeTybkqOSf8gsgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760395055; c=relaxed/simple;
-	bh=4zPbmz/GYQ9Xc4qksgNbJt7SIAPFTibdbVLdYd1h/gE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cwgxej6jNRTziwSadjWU8CP/7DRlBAHyTk4HVc1xdflGLc0kme9/b5hio7S2V0pZWXN1xkQOdGKTV3lLtc7V05ygxecqNUGyQgjrTueFMovrpIuJF5YAG55lTytLmtFdA5RKuK9sTyo/E8tmR+L2yakj26l+KehFJAPQNMRznkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnlunlRK; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-46e6674caa5so24172235e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 15:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760395052; x=1760999852; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=24Ftr7hy8LaAtQlSQs7NMC+zhhMlyRCsiGOHiR7triQ=;
-        b=dnlunlRK644J2QsmWvcBtfyWvA82YIqPFf+VOvLYpFv7Gztn22N6DqtI30tJqdkYF0
-         rU18qW5JSrU1ddKQon+W4nCG9bDiwRlaHDgoVgBw1MkurHlGlKMitcLHxXLmFbmsC89r
-         0ToxW6PG+8v5yWrykkurjBuG+0q9ffTmlxps9Q5DkMrlVx3SvnZJkebztuQgmwq2ZWJh
-         NaI2jb2N7y08lIjM8aZPQ8u6KCVJBbamEp1fmqrC386ZL3+c8bd8TxA7/ha6/Jy0h9P0
-         6E+CdaTisV9z6yK9CsZloeCSoKpo7x4TUfrQWgbbgvIerYj4bel6Uq1SsffgP8MGekKk
-         HFtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760395052; x=1760999852;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=24Ftr7hy8LaAtQlSQs7NMC+zhhMlyRCsiGOHiR7triQ=;
-        b=IG0hnIlqiOo8CfzP3V1iRCHyno26ZIx+1SJ/UXyv4GHilTZOoT2Ht7xHfTd0K4faNu
-         UXpsctBDbG57NuzOA5vmyDNLhetuhGBYm0MFS2EiBUf6w46PWW1/KHauJjDXYiLm3wmZ
-         IeD3JugPGGn/IVJrhXSSg/ToW0wmmMFl3dKlakQwKPFhNjvLIKpP5quqDCjRe7i6Xhui
-         rVpaKQxYiixFr1com87GvKlRvNBAnDDVNXpv5HoxldY7D7SwFVcgNVZOXUoKtMu+/VAW
-         MH5XHs7Z6Amv/0yoo30f+aDVdsGFYpGmVAPvOlqCnDW/NAT8rr/ie2Y+6aQBMSpYnUZ6
-         izow==
-X-Forwarded-Encrypted: i=1; AJvYcCXBlaDdebMdMPvw933SOR4zIZM6Sxp9XfGptZsL6ehe9l1PKSvO6WxK7XD9zmC/3S6xgQutJZsm9Eg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+a3E3bS3gY6f7Nx69cL3s28ep4nCRyX15geImBl2bdIJDIfp0
-	YToK0UiM3TEZx0Mda43vJAomSOKKAF8cLIkU2Odk2pkNXM9RFt88D/9f
-X-Gm-Gg: ASbGncunfx0J6WQtDfBHczSpusx/srZq+I9yqPb5W1v/EKlYR0YbuffU/Tcdp7weJs8
-	Ru3VqnWEm9r0wT5uDOvXtKu6d2sPKgOrbWtb8KJK1mJNI52nPrWyPCHg+gbm9mojD/Bts0hGC1y
-	yRfDnjkOqY9OPOxAdq1+uS8+iuRnU/YTTSuK2XrCVKBvnObZ3i8fr7OM39I0/g35RHSiCNPQZdV
-	wVRS1DAHFIdTdY/7XlTBpsY5yKMlNmUy40MtzZ2GTFVIRGzHtPfAU2TObfSZQS4PyxDgIIDoJHB
-	TeM1vneV/ZpqbnGxyHz1Zep2/uVEVd9LCLHSN19OWZluF8myZ+2EMF2T3ocvccigDU6wgpRJXMa
-	lgNCXCR/wUfkxtVkLx6XZrvnAF04ONxMTXIBIEVnOlqpcJQxgb0RG7iVHMvPhatgP6c5VKnS7eb
-	svNV6wCigG
-X-Google-Smtp-Source: AGHT+IEamLZvij5RfRNleTzFAVlezTx1ysHtzuQYGAsX+iOPJIp3KIAoTV4KFic1Q1UmEwJsLYhfCg==
-X-Received: by 2002:a7b:cc06:0:b0:46e:7dbf:6cc2 with SMTP id 5b1f17b1804b1-46fa296e763mr131783135e9.8.1760395051548;
-        Mon, 13 Oct 2025 15:37:31 -0700 (PDT)
-Received: from Ansuel-XPS24 (93-34-92-177.ip49.fastwebnet.it. [93.34.92.177])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-46fb49d0307sm204948955e9.18.2025.10.13.15.37.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 15:37:31 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	stable@vger.kernel.org,
-	=?UTF-8?q?Krzysztof=20Ha=C5=82asa?= <khalasa@piap.pl>
-Subject: [PATCH] PCI/sysfs: enforce single creation of sysfs entry for pdev
-Date: Tue, 14 Oct 2025 00:37:16 +0200
-Message-ID: <20251013223720.8157-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1760396438; c=relaxed/simple;
+	bh=EPKuwdJexlHb1O0c9HGWbRR5IYHP7Xw+ry5A6PSboGw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bRy0W9hwVwTgMllhAMLDRymO5iLWbsn4vJVHTRAEINcPwo3l3Hve9UqmcYehmoD34CabtP7I8Npdngn0h6oZxV+enQRrXqK3hiYH1bfvdZRfQTuonMhxZAqhPjwz5sFxNVnHQO5LQYAT8Uq7Y9k1AhHcN+CWqy18JH81XuuVQ2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 7DDCA92009C; Tue, 14 Oct 2025 01:00:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 76F2E92009B;
+	Tue, 14 Oct 2025 00:00:27 +0100 (BST)
+Date: Tue, 14 Oct 2025 00:00:27 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+cc: Guenter Roeck <linux@roeck-us.net>, 
+    =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
+In-Reply-To: <aO1sWdliSd03a2WC@alpha.franken.de>
+Message-ID: <alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk>
+References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com> <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com> <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net> <aO1sWdliSd03a2WC@alpha.franken.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-In some specific scenario it's possible that the
-pci_create_resource_files() gets called multiple times and the created
-entry actually gets wrongly deleted with extreme case of having a NULL
-pointer dereference when the PCI is removed.
+On Mon, 13 Oct 2025, Thomas Bogendoerfer wrote:
 
-This mainly happen due to bad timing where the PCI bus is adding PCI
-devices and at the same time the sysfs code is adding the entry causing
-double execution of the pci_create_resource_files function and kernel
-WARNING.
+> > This patch causes boot failures when trying to boot mips images from
+> > ide drive in qemu. As far as I can see the interface no longer instantiates.
+> > 
+> > Reverting this patch fixes the problem. Bisect log attached for reference.
+> 
+> Patch below fixes my qemu malta setup. Now I'm wondering, why this is
+> needed. It was added with commit
+> 
+> aa0980b80908 ("Fixes for system controllers for Atlas/Malta core cards.")
+> 
+> Maciej, do you remember why this is needed ?
 
-To be more precise there is a race between the late_initcall of
-pci-sysfs with pci_sysfs_init and PCI bus.c pci_bus_add_device that also
-call pci_create_sysfs_dev_files.
+ I do.  The reason is preventing PCI port I/O mappings below 0x100, which 
+interferes badly with how the PIIX4 decodes port I/O cycles.  That did 
+happen in the field, wreaking havoc and prompting my change.
 
-With correct amount of ""luck"" (or better say bad luck)
-pci_create_sysfs_dev_files in bus.c might be called with pci_sysfs_init
-is executing the loop.
+ By the look of the code it would definitely trigger for the Bonito64 
+system controller, which has a fixed port I/O target address range and, 
+depending on the settings left by the firmware, it might also trigger for 
+the Galileo GT64120A and SOC-it 101 system controllers, which have 
+variable port I/O target address ranges.
 
-This has been reported multiple times and on multiple system, like imx6
-system, ipq806x systems...
+ Here's an example map of Malta port I/O resources (SOC-it 101 variant):
 
-To address this, imlement multiple improvement to the implementation:
-1. Add a bool to pci_dev to flag when sysfs entry are created
-   (sysfs_init)
-2. Implement a simple completion to wait pci_sysfs_init execution.
-3. Permit additional call of pci_create_sysfs_dev_files only after
-   pci_sysfs_init has finished.
+00000000-0000001f : dma1
+00000020-00000021 : pic1
+00000040-0000005f : timer
+00000060-0000006f : keyboard
+00000070-00000077 : rtc0
+00000080-0000008f : dma page reg
+000000a0-000000a1 : pic2
+000000c0-000000df : dma2
+00000170-00000177 : ata_piix
+000001f0-000001f7 : ata_piix
+000002f8-000002ff : serial
+00000376-00000376 : ata_piix
+00000378-0000037a : parport0
+0000037b-0000037f : parport0
+000003f6-000003f6 : ata_piix
+000003f8-000003ff : serial
+00001000-00ffffff : MSC PCI I/O
+  00001000-0000103f : 0000:00:0a.3
+  00001040-0000105f : 0000:00:0a.2
+    00001040-0000105f : uhci_hcd
+  00001060-0000107f : 0000:00:0b.0
+    00001060-0000107f : pcnet32_probe_pci
+  00001080-000010ff : 0000:00:12.0
+    00001080-000010ff : defxx
+  00001100-0000110f : 0000:00:0a.3
+  00001400-000014ff : 0000:00:13.0
+  00001800-0000180f : 0000:00:0a.1
+    00001800-0000180f : ata_piix
 
-With such logic in place, we address al kind of timing problem with
-minimal change to any driver.
+As you can see there are holes in the map below 0x100, so e.g. if the bus 
+master IDE I/O space registers (claimed last in the list by `ata_piix') 
+were assigned to 00000030-0000003f, then all hell would break loose.  It 
+is exactly the mapping that happened in the absence of the code piece in 
+question IIRC.
 
-A notice worth to mention is that the remove function are not affected
-by this as the pci_remove_resource_files have enough check in place to
-always work and it's always called by pci_stop_dev.
+ The choice of 0x1000 as the lower boundary IIRC has something to do with 
+alignment; I think the decoding base has to be a multiple of 0x1000 and 
+given that the ACPI resource is decoded by a non-standard BAR at 0x40 in 
+the configuration space (set up by `malta_piix_func3_base_fixup' BTW) we 
+just need to match its setting.
 
-Cc: stable@vger.kernel.org
-Reported-by: Krzysztof Hałasa <khalasa@piap.pl>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215515
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/pci/pci-sysfs.c | 34 +++++++++++++++++++++++++++++-----
- include/linux/pci.h     |  1 +
- 2 files changed, 30 insertions(+), 5 deletions(-)
+ Can you please check what the port I/O map looks like with your setup 
+with and without your patch applied?
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 71a36f57ef57..cab3aa27f947 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -14,6 +14,7 @@
-  */
- 
- #include <linux/bitfield.h>
-+#include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/pci.h>
-@@ -37,6 +38,7 @@
- #endif
- 
- static int sysfs_initialized;	/* = 0 */
-+static DECLARE_COMPLETION(sysfs_init_completion);
- 
- /* show configuration fields */
- #define pci_config_attr(field, format_string)				\
-@@ -1652,12 +1654,32 @@ static const struct attribute_group pci_dev_resource_resize_group = {
- 	.is_visible = resource_resize_is_visible,
- };
- 
-+static int __pci_create_sysfs_dev_files(struct pci_dev *pdev)
-+{
-+	int ret;
-+
-+	ret = pci_create_resource_files(pdev);
-+	if (ret)
-+		return ret;
-+
-+	/* on success set sysfs correctly created */
-+	pdev->sysfs_init = true;
-+	return 0;
-+}
-+
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
--	return pci_create_resource_files(pdev);
-+	/* sysfs entry already created */
-+	if (pdev->sysfs_init)
-+		return 0;
-+
-+	/* wait for pci_sysfs_init */
-+	wait_for_completion(&sysfs_init_completion);
-+
-+	return __pci_create_sysfs_dev_files(pdev);
- }
- 
- /**
-@@ -1678,21 +1700,23 @@ static int __init pci_sysfs_init(void)
- {
- 	struct pci_dev *pdev = NULL;
- 	struct pci_bus *pbus = NULL;
--	int retval;
-+	int retval = 0;
- 
- 	sysfs_initialized = 1;
- 	for_each_pci_dev(pdev) {
--		retval = pci_create_sysfs_dev_files(pdev);
-+		retval = __pci_create_sysfs_dev_files(pdev);
- 		if (retval) {
- 			pci_dev_put(pdev);
--			return retval;
-+			goto exit;
- 		}
- 	}
- 
- 	while ((pbus = pci_find_next_bus(pbus)))
- 		pci_create_legacy_files(pbus);
- 
--	return 0;
-+exit:
-+	complete_all(&sysfs_init_completion);
-+	return retval;
- }
- late_initcall(pci_sysfs_init);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f3f6d6dee3ae..f417a0528f01 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -480,6 +480,7 @@ struct pci_dev {
- 	unsigned int	non_mappable_bars:1;	/* BARs can't be mapped to user-space  */
- 	pci_dev_flags_t dev_flags;
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
-+	bool		sysfs_init;	/* sysfs entry has been created */
- 
- 	spinlock_t	pcie_cap_lock;		/* Protects RMW ops in capability accessors */
- 	u32		saved_config_space[16]; /* Config space saved at suspend time */
--- 
-2.51.0
+ NB there is still something fishy with the setup of SOC-it 101's PCI 
+decoding windows, which is why I have forced `defxx' with a patch to use 
+port I/O, as reported above.  The driver uses MMIO unconditionally on PCI 
+systems nowadays, but using MMIO prevents it from working with the SOC-it 
+101 system controller and I yet need to debug it.  Conversely MMIO used to 
+work just fine with the Galileo GT64120A system controller while I still 
+had one operational.
 
+ HTH,
+
+  Maciej
 
