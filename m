@@ -1,250 +1,235 @@
-Return-Path: <linux-pci+bounces-37868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03B87BD16EC
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 07:23:37 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5E2BD1BB5
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 09:04:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95DFB3B351B
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 05:23:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9415E4E251F
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 07:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F25434BA34;
-	Mon, 13 Oct 2025 05:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05E927A122;
+	Mon, 13 Oct 2025 07:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="MK1YpM8u"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="studDxyd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0r1yXJUS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="studDxyd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0r1yXJUS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF6F17597
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 05:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760333012; cv=pass; b=lkwi8tiA9Zu5P7Poz2lqsJ7RvlA94YLbJ893R0sabU6izugqjWfuikrzCNoxl2wUHJOTWrzXorhnikVSw6wyRBaJkeb0qm9pafbmgmm+Pp9q2XyIotc+3y2RUsoTyzQyZ/AZCHMgQzQu//7KenzQIiKedfBfeSuTOKtLcptj/Vw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760333012; c=relaxed/simple;
-	bh=fK0kC+MJpwQh+2I4nZSkV/8b6cSnVbrSqAArg8QC2tY=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=MMbKcIDy+hC0I9ZlFEextlVp+KuePFIu5P51ACV1sRiRImRqXp2AIC/trqWALB7hv2fawVSMhf6ZQSLDJzkcFqEvCx+Af06V9L299eVsatoo/iyYPThfGdbQFYwW0hlbs8RCWjufhNbIlWz0s/UfO+LgG/nZMDHKtv+2MHWjdY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=MK1YpM8u; arc=pass smtp.client-ip=81.169.146.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1760332991; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=T0a1VJ97tS9rLBZqm5UShvFwdcTqh3p/u05fEBKzTa4pu2zkLlBKY6+y+ZG80ol53W
-    D91dG521BMz+OJqLhGUMbxx0uLAeY8FDy+H4tyMRxlJ8Q0CZw0g2sJjQC+6vFVqKBAq6
-    xXEGzAyewzeuWvOIHb++k7G0cuZZX16zg4V68jGC7TJ+boM9y4MqL/DC91So3gCPKgEy
-    0n4W26eQ+MWUpuDN7hqksWEitopI/zPQrkOeL3fMZA8QKxjb4OkaDrsW0MXPeWP2m/OJ
-    i7BHrUrsCinSZH2lW1wI0eYBeKNSm4t+OMY5nRWcG2p9RQh1OeU5u3FoG5Tul9NpSAra
-    54yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760332991;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=39jo6iHhEeNQVQFqXrBMkJyiskAoFnE5eOk14VPginY=;
-    b=BrdfKZ0FH4dzzOtlfIvRu0jctkhB5F/Bkj0N3bDRZcHqtYTglt9B9XCEp3JBo6URhJ
-    HD5V4ZWYl0IRUpgWwp+YNXWAUtbaK86QYJmADdUKOLeIk0d+SHDNAfN263vPnRG3kCUj
-    oz+jEQg3BUO33Cq8gYXhCM9F9b50oyM0TC2wa8D2Be8luYYGLvKMZW5Pif+ANS3nKNep
-    DXahy3RNPCarfbwVI/DsH7w/mSu2JTvXAYtC1YY0drJRpUcF/vozEnL5VnAn5qFT5CNG
-    V72VnGeqT69jOp2WKyt/6CoxTPXPiuaRosGssI3+EpJfECjec2R/40NSTqsKu7icqm/x
-    SAHA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760332991;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=39jo6iHhEeNQVQFqXrBMkJyiskAoFnE5eOk14VPginY=;
-    b=MK1YpM8uXesh31A9HhikWQ5XvRFUpUi9Epkgk83Cb31tap6FMHf9rE+jptDvhYy0UB
-    qfv5jEoV0iKmezpT+wJPrkOVXmLJQ3uz6voBpCiTq5WfnV7ESLQW0KpQnl2cv4ZCPJ+3
-    z5tlECvOpfx+8oY9sfEi5YQ8+7WYgctqqLnWgB6gsuTLlTAVJxG7PYDl+FQJQqc36hNI
-    txkcaa39iT6e1l9GtcY320X3qHJMRLfCYHdqiqYOlYtbbWfFZ/pb9XdeQwW12SwwIvvX
-    zc9u8ZcBTNdhQeDjXTZGYtzBK5csBo4CuHNSutnyUicp4Ej3qEReIKUIk3oBugm0Ep/+
-    tUgg==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7X5mws3+VAS+pQfdGEfuOCOWETzj1zszWa107enM="
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 53.4.2 AUTH)
-    with ESMTPSA id e2886619D5NBKT6
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 13 Oct 2025 07:23:11 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39032820B7
+	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 07:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760339071; cv=none; b=UMpnYlmX/9ofhN+bX65B214/V0uCNn26CW9ezL4eNxCXbIaP5mKDgm/sVIYIqtTl/ohN79f86AN4CebPIOS0hVPSsPkxM/GvkTKILSK6ecS/GTG7o0vUrEW/eoDZI/9s12MUrXKHh2xZlZQkW//hkRshCTJlKpeeSLXZfPQXX3o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760339071; c=relaxed/simple;
+	bh=CT50q/G0l7JjhbZDkqiQz7BdoRNvFQ+kPqxXBIhUYOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VdlOWSpZBcHgPxsCTgIEXFOULMBLwhM4HfHJ1eYDKhYrg2lDSZvFbGpzC0MgEhgNXOFCE9X8l0L6KVs/xNmBPAIliVP7hxgXpCSsL8u+FopTymrFDo8C35/yTRx5Q4Huo4r84UA3NgXd2On+zCOTEGcZYCWWfpluBALaIUwjg2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=studDxyd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0r1yXJUS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=studDxyd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0r1yXJUS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0A84F2116F;
+	Mon, 13 Oct 2025 07:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1760339068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
+	b=studDxydwrQPLi4RJhTe3qzf8yvsjamS4rYLdNFBCQ/o7aoeW13iBwoD5vfNSE8qUoM6va
+	tCEqc6Mkx7r64bDSfzr+h/VMvg6Q/HebUuptd25uHS9uIgl9qGryuSi2tdKk1+49Cy185C
+	lMm6Y/MYznA5x9lWqxh1ZfAezJG6CY8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1760339068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
+	b=0r1yXJUSH/Lladk2s8BapKk11UXbZC8UHFSu4RO0CLFb6vfX1G5d20l04e7xleP3dZVkt1
+	OByfTvnI9cIkORBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=studDxyd;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0r1yXJUS
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1760339068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
+	b=studDxydwrQPLi4RJhTe3qzf8yvsjamS4rYLdNFBCQ/o7aoeW13iBwoD5vfNSE8qUoM6va
+	tCEqc6Mkx7r64bDSfzr+h/VMvg6Q/HebUuptd25uHS9uIgl9qGryuSi2tdKk1+49Cy185C
+	lMm6Y/MYznA5x9lWqxh1ZfAezJG6CY8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1760339068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O4jZ++cJ1+/PzTBjlc4vZFMri/kbLBIYc/FVqcnbnfI=;
+	b=0r1yXJUSH/Lladk2s8BapKk11UXbZC8UHFSu4RO0CLFb6vfX1G5d20l04e7xleP3dZVkt1
+	OByfTvnI9cIkORBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A67A11374A;
+	Mon, 13 Oct 2025 07:04:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZDZxJ3uk7GjyWAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 13 Oct 2025 07:04:27 +0000
+Message-ID: <cf787bfa-2bf1-44bc-be46-fa4115319bd0@suse.de>
+Date: Mon, 13 Oct 2025 09:04:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Date: Mon, 13 Oct 2025 07:23:00 +0200
-Message-Id: <7FB0AB81-AD0F-420D-B2CB-F81C5E47ADF3@xenosoft.de>
-References: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
-Cc: Lukas Wunner <lukas@wunner.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
-In-Reply-To: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
-To: Manivannan Sadhasivam <mani@kernel.org>
-X-Mailer: iPhone Mail (23A355)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 2/4] PCI/VGA: Replace vga_is_firmware_default() with a
+ screen info check
+To: Mario Limonciello <superm1@kernel.org>, Eric Biggers <ebiggers@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>
+References: <20250811162606.587759-1-superm1@kernel.org>
+ <20250811162606.587759-3-superm1@kernel.org> <20251012182302.GA3412@sol>
+ <1be1a119-1fbd-435f-bb27-70f48d677ebf@kernel.org> <20251012184717.GB3412@sol>
+ <65c24236-044c-4b65-baaa-dc0011ea69d8@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <65c24236-044c-4b65-baaa-dc0011ea69d8@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 0A84F2116F
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,google.com,amd.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,vger.kernel.org,nvidia.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
+Hi Mario,
 
+thanks for handling this report quickly.
 
-> On 13. October 2025 at 07:03 am, Christian Zigotzky <chzigotzky@xenosoft.d=
-e> wrote:
->=20
-> =EF=BB=BF
->=20
->> On 13 October 2025 at 06:47 am, Christian Zigotzky <chzigotzky@xenosoft.d=
-e> wrote:
->>=20
->> =EF=BB=BF
->>>> On 11 October 2025 at 07:36 pm, Manivannan Sadhasivam <mani@kernel.org>=
- wrote:
->>>=20
->>> Hi Lukas,
->>>=20
->>> Thanks for looping me in. The referenced commit forcefully enables ASPM o=
-n all
->>> DT platforms as we decided to bite the bullet finally.
->>>=20
->>> Looks like the device (0000:01:00.0) doesn't play nice with ASPM even th=
-ough it
->>> advertises ASPM capability.
->>>=20
->>> Christian, could you please test the below change and see if it fixes th=
-e issue?
->>>=20
->>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>> index 214ed060ca1b..e006b0560b39 100644
->>> --- a/drivers/pci/quirks.c
->>> +++ b/drivers/pci/quirks.c
->>> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_=
-dev *dev)
->>> */
->>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_asp=
-m_l0s_l1);
->>>=20
->>> +
->>> +static void quirk_disable_aspm_all(struct pci_dev *dev)
->>> +{
->>> +       pci_info(dev, "Disabling ASPM\n");
->>> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
->>> +}
->>> +
->>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_a=
-ll);
->>> +
->>> /*
->>> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain=
+Am 12.10.25 um 21:06 schrieb Mario Limonciello:
+[...]
+>> I don't have CONFIG_SCREEN_INFO enabled, so the commit changed
+>> vga_is_firmware_default() to always return false.
+>
+> Thanks, that definitely explains it.
+>
+>>
+>> If DRM_AMDGPU depends on SCREEN_INFO now, it needs to select it.
+>>
+>> - Eric
+>
+> Well the question now is which driver should actually select it.
+>
+> Although it manifested for you in amdgpu, I don't think this is going 
+> to be an amdgpu unique issue.
+>
+> Maybe this:
+>
+> diff --git a/drivers/video/fbdev/core/Kconfig 
+> b/drivers/video/fbdev/core/Kconfig
+> index 006638eefa41..ce2544924b0e 100644
+> --- a/drivers/video/fbdev/core/Kconfig
+> +++ b/drivers/video/fbdev/core/Kconfig
+> @@ -5,6 +5,7 @@
+>
+>  config FB_CORE
+>         select VIDEO
+> +       select SCREEN_INFO
 
->>> * Link bit cleared after starting the link retrain process to allow this=
+Let's select it from CONFIG_VGA_ARB. This will restore the old behavior 
+for x86. The else branch for CONFIG_SCREEN_INFO can then go away.
 
->>>=20
->>>=20
->>> Going forward, we should be quirking the devices if they behave erratica=
-lly.
->>>=20
->>> - Mani
->>>=20
->>> --
->>> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=
-=AF=8D
->>=20
->> Hello Mani,
->>=20
->>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_al=
-l);
->>=20
->> Is this only for my AMD Radeon HD6870?
->>=20
->> My AMD Radeon HD5870 is also affected.
->>=20
->> And I tested it with my AMD Radeon HD5870.
->>=20
->> What would the line be for all AMD graphics cards?
->>=20
->> Thanks,
->> Christian
->=20
-> I see. 0x6738 is for the AMD Radeon HD 6800 series.
->=20
-> It could be, that your patch works because I tested it with an AMD Radeon H=
-D5870 instead of an AMD Radeon HD6870. Sorry
->=20
-> This could be the correct line for the HD5870:
->=20
->>> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6898, quirk_disable_aspm_al=
-l);
->=20
-> There are some more id numbers for the HD5870.
->=20
-> Correct:
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 214ed060ca1b..e006b0560b39 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_de=
-v *dev)
-> */
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_=
-l0s_l1);
->=20
-> +
-> +static void quirk_disable_aspm_all(struct pci_dev *dev)
-> +{
-> +       pci_info(dev, "Disabling ASPM\n");
-> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
-> +}
-> +
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6738, quirk_disable_aspm_all=
-);
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6898, quirk_disable_aspm_all)=
-;
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6899, quirk_disable_aspm_all)=
-;
-> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x689E, quirk_disable_aspm_all)=
-;
-> +
-> /*
-> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-> * Link bit cleared after starting the link retrain process to allow this
+Best regards
+Thomas
 
-Better for testing (All AMD graphics cards):
+> tristate
+>
+>  config FB_NOTIFY
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..e006b0560b39 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *=
-dev)
-*/
-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0=
-s_l1);
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-+
-+static void quirk_disable_aspm_all(struct pci_dev *dev)
-+{
-+       pci_info(dev, "Disabling ASPM\n");
-+       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
-+}
-+
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, quirk_disable_aspm_a=
-ll);
-+
-/*
-* Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-* Link bit cleared after starting the link retrain process to allow this=
 
 
