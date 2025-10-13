@@ -1,135 +1,91 @@
-Return-Path: <linux-pci+bounces-37980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A1DABD63FA
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:48:54 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3A2CBD64A8
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 22:55:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B13291882C35
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:49:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BB6114F342F
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 20:55:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B3421CFF7;
-	Mon, 13 Oct 2025 20:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF18523373D;
+	Mon, 13 Oct 2025 20:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZBuPTvl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5G5vHFP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646241CAA92
-	for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 20:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB634BA34;
+	Mon, 13 Oct 2025 20:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760388530; cv=none; b=MiyHe+RlzomlOhUX3vfVdaHQFB6Bczsgw5rWrkU4EGC/IWeP9ayXrYDfZdGqfzsSS8wmilZY2zPW72hUlcP3aUmFOYwpSKjO0jGfOCwDa0LcoEYYonLA8906EWJ4sbddxxaF2ktcn/KBFX2sN9ydWEass9JbAljb8nMjkhAXTzc=
+	t=1760388932; cv=none; b=X7qalSSv16kYak2apv/GKQbxKQbSolcQrRfbY1TpH2XRkfTKoYSkogMn+Brfda3qzbzV2VA5+bpDQW6H6yAH8Fdst7uYh0tRBDVHBAtU4mHWL4ONDTUWqYmddUHsN5yjh5OLUX1K7+U+lvATOoqrktHxKFaCSSWrTo1umE5V6bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760388530; c=relaxed/simple;
-	bh=pyDPp24I/7VnQHW/ZQI+4Jc0hftTq8BmO+KF8SAV8So=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=API8miOZDA/dqmexfSBLSg96ZavMj7GurhZHGsbBzx7yWGx6xl5pXbY2YTPaMbjyyJzwfcqnl3k8HjtO1HabMrQsRSAfYZn/xnlsfAi6RfXVYpMq9KhObjkmEHR+VwF/NdpDaotnX6LqsG3aSOqSzlCuKoRCkABs+sWnyubdbyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZBuPTvl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E995C4CEE7;
-	Mon, 13 Oct 2025 20:48:49 +0000 (UTC)
+	s=arc-20240116; t=1760388932; c=relaxed/simple;
+	bh=IvZ5qPiJg4nsDInLimGBW6RVw9VdP4KCLc7lgSkyw10=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lNTj+8d8qGXGqm/q23KfBGYZanv2l6dDqyBQQc6o+ey8GPAtijHiYWBIJnnxhdg2jOL7WWezgIO2NKUIEQ/KjQo/lyqDhVrfvxzNL8iWZUzdQ82fr2K1gEfydnvTvfQM9qamIBiindX9sQxcO7rPInq/y0SOQfbJXUNougB6zUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5G5vHFP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F502C4CEF8;
+	Mon, 13 Oct 2025 20:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760388529;
-	bh=pyDPp24I/7VnQHW/ZQI+4Jc0hftTq8BmO+KF8SAV8So=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eZBuPTvl7YK4vTzMT/FOV4DzPCgnGAazEQO31/oop7F6AJnDtk751tIXunUVBPN/u
-	 0Eoxd33JeK5nRYvYyz7HtAhS/h0GeQrl1rTo9EAQH63K/p17zVbb61nEA6V7tv09CP
-	 qdky9xyxdvO2KusAXjqJ/QsZdK5h9ybhI7ENU+jw74hEZDxUsTn7FIjUxGW9yFK+9T
-	 fvBUh0NekZXxsIZPgczjbWTTLobItormEzzdyAYpGVSwJmDYCUD/EAXqpEx/VPacAf
-	 dWk/9UKQjQbC+BA6F22Be2wRlylfV4tIRpSIwToLQqMkSbhnmOYvc2pY97yVyxTCvl
-	 E/u+nNsaSL5Gg==
-Message-ID: <6bb7a607-174d-4914-9452-fe0e36be9e2e@kernel.org>
-Date: Mon, 13 Oct 2025 15:48:48 -0500
+	s=k20201202; t=1760388932;
+	bh=IvZ5qPiJg4nsDInLimGBW6RVw9VdP4KCLc7lgSkyw10=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=T5G5vHFPwfAcHGzeDU91/NjU01oUDsKPTDIGWz+CamLMXtBTA5Iq/VDCzC86z8O5G
+	 79eKJ6WSDySyqA8FnEkp2QPNZr7rAiG7sbf74nRlQJ5IplElaiw5Q0NsA/uaYME0vr
+	 h6NW3fvu/dXA20Ydzib4rccOLFEHYe84IsaxZaqmMNzrkeW1+YZ/oKcsUbIpJ5zJEE
+	 xMdeP7LroxWj7ZUKYcplqw2BTHjfY6HEkSu9khTaioRfgwN379LKCoKsUa+hsdlxYS
+	 0S98arvkgF7hwNRckqPnF49sJlU/u8Ah7tQAqz4nWY5EsbF2hGH7RAxyh7fLJkNhdr
+	 ozG+/vvFuNj1w==
+Date: Mon, 13 Oct 2025 15:55:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>, regressions@lists.linux.dev
+Subject: Re: [PATCH v10 2/4] PCI/VGA: Replace vga_is_firmware_default() with
+ a screen info check
+Message-ID: <20251013205531.GA863704@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI/VGA: Select SCREEN_INFO
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de,
- Eric Biggers <ebiggers@kernel.org>, linux-pci@vger.kernel.org
-References: <20251013204738.GA863114@bhelgaas>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20251013204738.GA863114@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251012182302.GA3412@sol>
 
-On 10/13/25 3:47 PM, Bjorn Helgaas wrote:
-> On Mon, Oct 13, 2025 at 12:55:25PM -0500, Bjorn Helgaas wrote:
->> On Mon, Oct 13, 2025 at 10:44:23AM -0500, Mario Limonciello (AMD) wrote:
->>> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
->>> a screen info check") introduced an implicit dependency upon SCREEN_INFO
->>> by removing the open coded implementation.
->>>
->>> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
->>> would now return false.  Add a select for SCREEN_INFO to ensure that the
->>> VGA arbiter works as intended. Also drop the now dead code.
->>>
->>> Reported-by: Eric Biggers <ebiggers@kernel.org>
->>> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
->>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
->>> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
->>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
->>
->> Applied to for-linus for v6.18, thanks!
+[+cc regressions]
+
+On Sun, Oct 12, 2025 at 11:23:02AM -0700, Eric Biggers wrote:
+> On Mon, Aug 11, 2025 at 11:26:04AM -0500, Mario Limonciello (AMD) wrote:
+> > vga_is_firmware_default() checks firmware resources to find the owner
+> > framebuffer resources to find the firmware PCI device.  This is an
+> > open coded implementation of screen_info_pci_dev().  Switch to using
+> > screen_info_pci_dev() instead.
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 > 
-> Oops, dropped because of this regression:
-> 
->    https://lore.kernel.org/r/176038554347.1442.9483731885505420131@15dd6324cc71
+> I'm getting a black screen on boot on mainline, and it bisected to this
+> commit.  Reverting this commit fixed it.
 
-Ah thanks for that.  I hadn't had non-x86 to test.
-
-I'll try to cross compile to repro and come up with a solution.
-
-> 
->>> ---
->>> v2:
->>>   * drop dead code (Ilpo)
->>> ---
->>>   drivers/pci/Kconfig  | 1 +
->>>   drivers/pci/vgaarb.c | 8 +-------
->>>   2 files changed, 2 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
->>> index 7065a8e5f9b14..c35fed47addd5 100644
->>> --- a/drivers/pci/Kconfig
->>> +++ b/drivers/pci/Kconfig
->>> @@ -306,6 +306,7 @@ config VGA_ARB
->>>   	bool "VGA Arbitration" if EXPERT
->>>   	default y
->>>   	depends on (PCI && !S390)
->>> +	select SCREEN_INFO
->>>   	help
->>>   	  Some "legacy" VGA devices implemented on PCI typically have the same
->>>   	  hard-decoded addresses as they did on ISA. When multiple PCI devices
->>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->>> index b58f94ee48916..8c8c420ff5b55 100644
->>> --- a/drivers/pci/vgaarb.c
->>> +++ b/drivers/pci/vgaarb.c
->>> @@ -556,13 +556,7 @@ EXPORT_SYMBOL(vga_put);
->>>   
->>>   static bool vga_is_firmware_default(struct pci_dev *pdev)
->>>   {
->>> -#ifdef CONFIG_SCREEN_INFO
->>> -	struct screen_info *si = &screen_info;
->>> -
->>> -	return pdev == screen_info_pci_dev(si);
->>> -#else
->>> -	return false;
->>> -#endif
->>> +	return pdev == screen_info_pci_dev(&screen_info);
->>>   }
->>>   
->>>   static bool vga_arb_integrated_gpu(struct device *dev)
->>> -- 
->>> 2.43.0
->>>
-
+#regzbot introduced: 337bf13aa9dd ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
+#regzbot link: https://lore.kernel.org/r/20251013154441.1000875-1-superm1@kernel.org
 
