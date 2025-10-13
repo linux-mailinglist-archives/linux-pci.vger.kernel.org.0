@@ -1,123 +1,232 @@
-Return-Path: <linux-pci+bounces-37893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-37894-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D6C9BD2C3A
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 13:22:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73B51BD2D49
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 13:45:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB2D13A743A
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 11:22:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9679E189D5B7
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Oct 2025 11:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CAC4251793;
-	Mon, 13 Oct 2025 11:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674BF1BD9F0;
+	Mon, 13 Oct 2025 11:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFMaufMy"
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="i7ialYAl";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="NV+39r7V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2324A078;
-	Mon, 13 Oct 2025 11:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760354566; cv=none; b=bk0cPnnCRpUf+dNm9/VGq/QBQmXEk3So7qen1QU6ZP8sGHO3RaEi9gnn1QdE15c4yO4KvXrzM2f91yxDl1BNMm9890cgS7rtOlJmOk+CrwfqqGTE51BNn8NbMBqgs63ou3Yx5YG1Dl82dovYSDU4z5I0WgIJJXQ+IriK3uOuJhQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760354566; c=relaxed/simple;
-	bh=Rvt11bS7Q0WGAMjsegNSqMlzJoBkVoYheDKqU7sA+jI=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ilAEi4YzrUwVLtMlc+ErfeD/M5OoeQALXKg8m7D2TdrM8SM5bNtTsYo/rRkbwIfc9sC2S4hojtxA5ywrsNz+0tR+oNjmNP3vu5o6j+SGEk8cLXXlawIHrVwBY7lxGXoO/P94CfbGF9IN+thk+XduiNwcUDNrXzJJgEE3+SjsHHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EFMaufMy; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 59DBMbP6809985;
-	Mon, 13 Oct 2025 06:22:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1760354557;
-	bh=MnFF+a8BD8U8x2Sq8mYCuzT9ALRYLFSqBHsEqtzzUfY=;
-	h=Subject:From:To:CC:Date:In-Reply-To:References;
-	b=EFMaufMyJ/5V6nQXWS//kLmveHdQgtOzK2F7H4tvUBk10Xh11Bq5rolLcHpX2id9H
-	 GY3f0cOwfCo1ajVRhOMMMAywpv/VUCEXQtu39UBTqmIEpCNlr2+T47KggPhL1ZTohm
-	 zAMBVmfG1LS3DVDEsmXD7z3HuvVZwNVbeYooMeYQ=
-Received: from DLEE201.ent.ti.com (dlee201.ent.ti.com [157.170.170.76])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 59DBMbsQ2922316
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 13 Oct 2025 06:22:37 -0500
-Received: from DLEE204.ent.ti.com (157.170.170.84) by DLEE201.ent.ti.com
- (157.170.170.76) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 13 Oct
- 2025 06:22:36 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE204.ent.ti.com
- (157.170.170.84) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Mon, 13 Oct 2025 06:22:36 -0500
-Received: from [10.24.73.74] (uda0492258.dhcp.ti.com [10.24.73.74])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59DBMXxD1969614;
-	Mon, 13 Oct 2025 06:22:33 -0500
-Message-ID: <3c0f63162783f6eaa811901dbff9fbb4fe52c107.camel@ti.com>
-Subject: Re: [RFC v1 2/2] PCI: j721e: Use inline reset GPIO assignment and
- drop local variable
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Anand Moon <linux.amoon@gmail.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
-	<kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "open
- list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-omap@vger.kernel.org>,
-        "open
- list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-pci@vger.kernel.org>,
-        "moderated
- list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>
-Date: Mon, 13 Oct 2025 16:52:38 +0530
-In-Reply-To: <20251013101727.129260-3-linux.amoon@gmail.com>
-References: <20251013101727.129260-1-linux.amoon@gmail.com>
-	 <20251013101727.129260-3-linux.amoon@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2849320126A;
+	Mon, 13 Oct 2025 11:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760355915; cv=fail; b=Baqiey2WXDN0RjYxcvdg6Lx2FqZvpKq75ITICI3BJdhbzFyEj3jM8YMKWbSVtEjhqY14aaNOhu1Zxaj19jJHhPtQrxJVBI6WoquVnNzylFl4x6UJfKgpqo0sGBKyk0avOItjuf3SZpsYq/JWVFVsl1F8fT+6rW49ena7RzgBinA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760355915; c=relaxed/simple;
+	bh=D6ewRJampzjtF9Y4k1uKVqxX0juZ56XOrC4QRhC2+JU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oYwQGMqSibsJAqyoHkb2EuuPndFMPf/4Xe+nPJMP5vtyBoOK9ZWNyWLS+mPRFVFdw3mcprfHjXYci6k0B1STMj+qaSC3xbIZOnUdRVero1m0+0ey05e25gvIn7CsoTRl6fcqKWIjidliKEtg1Oxo8my3/GJ/4IOSbA5PLVzDl7Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=i7ialYAl; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=NV+39r7V; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 8285C4809DD;
+	Mon, 13 Oct 2025 07:45:06 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1760355906;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=D6ewRJampzjtF9Y4k1uKVqxX0juZ56XOrC4QRhC2+JU=;
+ b=i7ialYAlR4kNGPPahy5RkQVj/rvjLCDu3RfXQeOY8ST6Sw4tVsKiHUpO3Xgxt/YJ6ZN66
+ vdGqCua94qUhNmbBQ==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1760355906;
+	cv=none; b=pWp5AtkOrpB5Ft2NFJinKhXtHaiVVoh+Ib6xpygjuX1mo4ccQdJmK9OXhqiKnEtKm4OL3TWEKsLimquLOR52ktNurbUGgTuDflEQdVNfrlC7K/9pIUCAafTS6pR1qjxnSuP82o0rxHJX0oQD/rnnzZJfIednY7OCua+Bzq7GSK2cHLjD1ZT4BqeATI3OAkucQJ8tBh4vFeC7T5dxXcWVOZ50owK8o69KONjYjdqwe5np9bEN2hYsA7RPChrFBnoAVbRqYPOu4hmXjqiInUV2c/lCVS6BneY+amFo5xJoS537DftEWthy6t0rJj3IhY5zTJrt+qPhP3nIu5T6rrFohA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1760355906; c=relaxed/simple;
+	bh=D6ewRJampzjtF9Y4k1uKVqxX0juZ56XOrC4QRhC2+JU=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=ZkkPYQl++pamZ+uT1apN/h9TlCm1qC0R+Yx3QNlIlbzIvp0kA7PBPm0KQhA7w/FljSCpWW71kbuZJsYo3jRWfkP60vWNHoyaLU0JQkGpwaGhX6AtPcRamNiFU7aPLikQIYDgOTQu9iclWTFa7ioI6Bx5FTtN5p4KNZeOURGSQoUy4fVFHi2c9Q6KJhvYCUofNTmKYok39EZgGKrT5qCfK0AbIdD3H8WNd/ifPk5PdvWijwRdhSZdMefkKlRUzQJJFgB52/66m+bZA9IrYkkzenn6j5yQRWxs9/8ukpCTUcCAbhpyZJ3ecgLZ/1JSpYNxQM4Donq51AiBOTNfUrPM7Q==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1760355906;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=D6ewRJampzjtF9Y4k1uKVqxX0juZ56XOrC4QRhC2+JU=;
+ b=NV+39r7VusSqwveMXlPPszRaeC9O1hasF99s6ANTTHFxQn1DNROW67wxOmJumLt61WUWe
+ s2BBVVZi5aoEN3KnVnZq7ilQHbI+Qj9OW2nhfAZGO+gaOND8Xqcr483941oN9H8rH98d3L0
+ fGx8OWbOzfgutDe5t/uA/uPs9GlQ4nxdsT5EgOW7DqGVXpQ0Su8qJORJAEnG/3vF9qzMYyw
+ vrTqRrZGCuvRVxLmU1XJq+c4y83vSlV8z8B9+t12WieCvBepjudBXe9Wrzfyu+p3LJjIqu3
+ daS/+iVrO9KylBKN4/WVgVLnvvJDZw/TMpXl7C6Lw5rArbY2QzqsuNKDwC+Q==
+Received: by srv8.prv.sapience.com (Postfix) id 4AB4128001B;
+	Mon, 13 Oct 2025 07:45:06 -0400 (EDT)
+Message-ID: <622d6d7401b5cfd4bd5f359c7d7dc5b3bf8785d5.camel@sapience.com>
+Subject: Re: mainline boot fail nvme/block? [BISECTED]
+From: Genes Lists <lists@sapience.com>
+To: Inochi Amaoto <inochiama@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nvme@lists.infradead.org
+Cc: linux-pci@vger.kernel.org
+Date: Mon, 13 Oct 2025 07:45:05 -0400
+In-Reply-To: <trdjd7zhpldyeurmpvx4zpgjoz7hmf3ugayybz4gagu2iue56c@zswmzvauqnxk>
+References: <4b392af8847cc19720ffcd53865f60ab3edc56b3.camel@sapience.com>
+	 <cf4e88c6-0319-4084-8311-a7ca28a78c81@kernel.dk>
+	 <3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com>
+	 <trdjd7zhpldyeurmpvx4zpgjoz7hmf3ugayybz4gagu2iue56c@zswmzvauqnxk>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-dHWcg0gEsgsjYdWNT31Y"
+User-Agent: Evolution 3.58.1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 2025-10-13 at 15:47 +0530, Anand Moon wrote:
-> Change removes the unnecessary local gpiod variable and assigns the resul=
-t
-> of the devm_gpiod_get_optional() call directly to pcie->reset_gpio.
-> This makes the code more concise and readable without changing the
-> behavior.
+
+--=-dHWcg0gEsgsjYdWNT31Y
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 2025-10-13 at 16:46 +0800, Inochi Amaoto wrote:
+> On Fri, Oct 10, 2025 at 07:49:34PM -0400, Genes Lists wrote:
+> > On Fri, 2025-10-10 at 08:54 -0600, Jens Axboe wrote:
+> > > On 10/10/25 8:29 AM, Genes Lists wrote:
+> > > > Mainline fails to boot - 6.17.1 works fine.
+> > > > Same kernel on an older laptop without any nvme works just
+> > > > fine.
+> > > >=20
+> > > > It seems to get stuck enumerating disks within the initramfs
+> > > > created by
+> > > > dracut.
+> > > >=20
+> > > > ,
+...
+
+> > Bisect landed here. (cc linux-pci@vger.kernel.org)
+> > Hopefully it is helpful, even though I don't see MSI in lspci
+> > output
+> > (which is provided below).
+> >=20
+> > gene
+> >=20
+> >=20
+> > 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b is the first bad commit
+> > commit 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b (HEAD)
+> > Author: Inochi Amaoto <inochiama@gmail.com>
+> > Date:=C2=A0=C2=A0 Thu Aug 14 07:28:32 2025 +0800
+> >=20
+> > =C2=A0=C2=A0=C2=A0 PCI/MSI: Add startup/shutdown for per device domains
+> >=20
+> > =C2=A0=C2=A0=C2=A0 As the RISC-V PLIC cannot apply affinity settings wi=
+thout
+> > invoking
+> > =C2=A0=C2=A0=C2=A0 irq_enable(), it will make the interrupt unavailble =
+when used
+> > as an
+> > =C2=A0=C2=A0=C2=A0 underlying interrupt chip for the MSI controller.
+> >=20
+> > =C2=A0=C2=A0=C2=A0 Implement the irq_startup() and irq_shutdown() callb=
+acks for
+> > the
+> > PCI MSI
+> > =C2=A0=C2=A0=C2=A0 and MSI-X templates.
+> >=20
+> > =C2=A0=C2=A0=C2=A0 For chips that specify MSI_FLAG_PCI_MSI_STARTUP_PARE=
+NT, the
+> > parent
+> > startup
+> > =C2=A0=C2=A0=C2=A0 and shutdown functions are invoked. That allows the =
+interrupt
+> > on
+> > the parent
+> > =C2=A0=C2=A0=C2=A0 chip to be enabled if the interrupt has not been ena=
+bled during
+> > =C2=A0=C2=A0=C2=A0 allocation. This is necessary for MSI controllers wh=
+ich use
+> > PLIC as
+> > =C2=A0=C2=A0=C2=A0 underlying parent interrupt chip.
+> >=20
+> > =C2=A0=C2=A0=C2=A0 Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> > =C2=A0=C2=A0=C2=A0 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > =C2=A0=C2=A0=C2=A0 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > =C2=A0=C2=A0=C2=A0 Tested-by: Chen Wang <unicorn_wang@outlook.com> # Pi=
+oneerbox
+> > =C2=A0=C2=A0=C2=A0 Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+> > =C2=A0=C2=A0=C2=A0 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > =C2=A0=C2=A0=C2=A0 Link: https://lore.kernel.org/all/20250813232835.434=
+58-3-
+> > inochiama@gmail.com
+> >=20
+> > =C2=A0drivers/pci/msi/irqdomain.c | 52
+> > ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > =C2=A0include/linux/msi.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 2 ++
+> > =C2=A02 files changed, 54 insertions(+)
+> >=20
+> >=20
+...
+
 >=20
-> Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>=20
+> I think this is caused by VMD device, which I have a temporary
+> solution
+> here [1]. Since I have no idea about how VMD works, I hope if anyone
+> can help to convert this as an formal fix.
+>=20
+> [1]
+> https://lore.kernel.org/all/qs2vydzm6xngul77xuwjli7h757gzfhmb4siiklzo
+> gihz5oplw@gsvgn75lib6t/
+>=20
+> Regards,
+> Inochi
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Thank you Inochi
 
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+I tried this patch over 6.18-rc1.
 
-[TRIMMED]
+=C2=A0It get's further than without the patch but around the time I get
+prompted for passphrase for the luks partition
+(root is not encrypted) it crashes.=C2=A0
 
-I have also tested the series (despite my feedback on the first patch).
-Logs:
-https://gist.github.com/Siddharth-Vadapalli-at-TI/ca82a16e15a892b3349396be1=
-7b37643
+I have uploaded 2 images I took of the screen when this happens and
+uploaded them to here:
 
-Please address the feedback on the first patch.
+=C2=A0 =C2=A0=C2=A0https://0x0.st/KSNz.jpg
+=C2=A0 =C2=A0=C2=A0https://0x0.st/KSNi.jpg
 
-Regards,
-Siddharth.
+
+
+--=20
+Gene
+
+--=-dHWcg0gEsgsjYdWNT31Y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCaOzmQQAKCRA5BdB0L6Ze
+2793AQC4dSbOull9rvkIgpQMy3u8s0MnMnesKSkr8cl1aCcjhgEA8JsyZE0W3nxn
+TlbuPaLE0GUc3sJJApkeNtTtuSG0Eww=
+=3Ua6
+-----END PGP SIGNATURE-----
+
+--=-dHWcg0gEsgsjYdWNT31Y--
 
