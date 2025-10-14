@@ -1,152 +1,170 @@
-Return-Path: <linux-pci+bounces-38005-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 926F9BD724C
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 05:11:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CE43BD757A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 06:58:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E81A5188A490
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 03:11:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F25142365A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 04:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A5A306B14;
-	Tue, 14 Oct 2025 03:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8342D30DECA;
+	Tue, 14 Oct 2025 04:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/FxF6Tg"
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="TrpDSf/6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92BB1E9B12
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 03:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760411476; cv=none; b=NdRWRREYXNRMlpn9WVtn7bhzFt3/PhkWjZO4ESARSAisC/VO0cwuOIa3wuHeOZY8uZ04cP5HtK7BUWBM4qcGX0MS07ZEKOfvSTisGpejQqkoaOzDykYNX95x5gkHk4pOYlWXI63ImM24qdH31RAPAYgHfQGhYk/DWRaUUxfuq64=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760411476; c=relaxed/simple;
-	bh=AoITs1wqt8aAhVY0I091KuuI/ljkUUxvtJM1zCbONRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fIlEDZXU4f3DP70asPmxZDPNb1C3OkKFTnILdpy9oPTS1mt1RSfcpi6lorikBWntycNCqmQpt+FpRxTyJwZiRBQema2Z4Ujt+sOappCdD4kr74TVFW111i2Y/h0JezRNrQaZeeybVvhZAHWE27uwFRXS2DM35PUw27cDKgGMIvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/FxF6Tg; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-267facf9b58so27584535ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 20:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760411473; x=1761016273; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6k3KTz7Y9+KW5n+gpTPceuWzpZVn6mG+hVFn/lUavp8=;
-        b=Y/FxF6Tgj097QRHL6hhkNXpUozdWZ8ggzU+NztXJeBZIYp1YoZDnOaRthiu3NvUT8d
-         RoguM2FxaiPnmxqcl5kSq1zPIoRCI6EZUf5kgkFiLr4Jrqi2uO4Bdazosw2GsU6Iem+i
-         A4IMWSnOgCBZ6kKorBgauuK1nJLTLKCxFDK1/sUKZlj0OO3+PSdCvBTVw4nUlb3qYkyU
-         3PxNoTAaWUv0EidW/doWyQwVk0WP9VtB71AV2huptlRby7QJ6L+TV0l9wFEoY+IYM8kc
-         cXLIfurLIjcEHCqdgrq7b2B6vgMzGeubQidVzGHybzEyViuE3c2n7KkSYVZfqoGWqawd
-         0WiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760411473; x=1761016273;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6k3KTz7Y9+KW5n+gpTPceuWzpZVn6mG+hVFn/lUavp8=;
-        b=S04jABozcT2BsInQZTm5Ms9fLaLCLWCpXiv9GhSs5obnpwSnca4uiAnbi+yeFQ73UC
-         k2eU2yZR4mpQWifRYCYITJ0Q9Nyq5v7ZJ5vUycGF1j7YKJHYLs22fFuUkO6AN5cNicPy
-         qhYKLPK85JQIQ4e94TkWy1BSajD05K6RVPSNhdKKWg6jdoWpz5S1ECYdcyzTRdTHi1A7
-         I1gXp2cg6WbUMKne4NIqYR9+aYQs+0Af23A8kyFwW0R8qAAXcv4m3VuPq3CtfcTb6yHp
-         83V6QAR+3EGKGNDq7MbFpYzQp1jNol4Y4xPXoejDdFp5hxfC7ff+Q6dMubqUsupCj7ql
-         T7yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyjwNIRd9rVJolTS8OiCYHcxF8+uoQxsuZFh9Y7XnUH7O1tUg5LpEPXGHgzpqYfEeaB+sdePTtpxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5fX02LemfK2qFU3ftvQKzY99D+bW8DSBBL521P4ud8bXnraMC
-	xqqClyj1639oV8CXcbFP5by8z1ZXyz0pybcCOgm7uzojthGuCV8T8OlX
-X-Gm-Gg: ASbGncsfdOJUiPDwCPs6+FI+ULC7Rx7Ng4txHFec/jQ4NwwpjavdvZwODh+s0ysS8xM
-	gnRbztdmyby/s4fqtNEu3whR6eMlFhuAIVIQ8t2mQuGi6vhHAsH//qH8+TOSYuA2D8TTIRQVGDl
-	hp1RnOXZJWfHLuXT1hSQwbE8fK4O5SXov8vgr8+xo04E6sxasXZY4W189MnIg2k9C+S4GhJHPla
-	hrxuF+xj0jK+ouGx5Dy6Uze/OLvTpVal3aQuiNIAWGTvZkWtUHLBPTrorNx50zkP2uc25d9Ij6Q
-	dTLz4mTiNbEjFZTMFlxnsiDtFxCMpYyJHvt3ACtBvSH00ZfrKKu3ApBG2oasJwCW86M41ljtoqO
-	iVcASzg83WpTeU7E7edvKKDaemPH1D5jQmCLfmTH+8OHdG2XY79c=
-X-Google-Smtp-Source: AGHT+IEAI5crpM0rkwfs84IFpYUj1SAc0WOkcFeG4RmoeP6kp6OgtglVN+kmKOKV/fjestJbTDGaAA==
-X-Received: by 2002:a17:903:acb:b0:24b:270e:56cb with SMTP id d9443c01a7336-2902739b362mr290759145ad.27.1760411472917;
-        Mon, 13 Oct 2025 20:11:12 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-29034f3c700sm149274745ad.103.2025.10.13.20.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Oct 2025 20:11:12 -0700 (PDT)
-Date: Tue, 14 Oct 2025 11:10:27 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Kenneth Crudup <kenny@panix.com>, Inochi Amaoto <inochiama@gmail.com>
-Cc: tglx@linutronix.de, bhelgaas@google.com, unicorn_wang@outlook.com, 
-	linux-pci@vger.kernel.org
-Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
- domains") causing boot hangs on my laptop
-Message-ID: <rs54cbdr5q75fowr5gduk25z66elq7k6chigptjzhi546qs7fe@qxbqi6bliwin>
-References: <af5f1790-c3b3-4f43-97d5-759d43e09c7b@panix.com>
- <2hyxqqdootjw5yepbimacuuapfsf26c5mmu5w2jsdmamxvsjdq@gnibocldkuz5>
- <fb1f8015-b76d-4c12-9a92-7026cae41aae@panix.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A75030DD14
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 04:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760417739; cv=pass; b=TqvaNgoRFpXPKTO/d140PHD0eP3piV0CdNCbHU2KMkNpElwZrsMIhvPr3Byxo5IEleecSjcptjohiYmdNpfqxnp7ZlaO+QFa3S7qTqTvqGfXDD55ywHMntq/TpP/dli3eTog5ITvpfxwLdUKH53MSR12cVO3OGFdfCVbqiv1jCU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760417739; c=relaxed/simple;
+	bh=735jlNSHBcJQB5/MRnEO+0Ea7qjJFl2UcF9LvdYcpEA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HQkRYujFv0h9fAS2xzlhtpQYpA058Qf9R9i6CYs4P5TNG+7gAYi4AumGlTj2MdevxbqskirYK5Mqrc+tMQH/epQ1ZejBmazlx7GMCTmyD4n5ARGVpIkNv2YcofO80FpzZjMUJni8IX4cSpzEobF7Y/A6msQbiyg3UFqxt0ixQUA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=TrpDSf/6; arc=pass smtp.client-ip=85.215.255.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+ARC-Seal: i=1; a=rsa-sha256; t=1760417707; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=bbH6fXZIG3uRo/kY9a/ZoobMnmYOpuRDGr1KnINfIAWkngjd+3ZCjbqNyJAN5hd5I5
+    ME3CcG8DcxlG+7hh9RPBPoIfk/K88kce6+XNxuDkfqyTsun5GHVs636zFpldsp6/Dv0D
+    tYjkZVEwBDWusKWVy/mskZ8XiY6C6fHXsUPOMHkDRmrxe4n116WuaBy9bcfYhqiAq5oG
+    7nKjL230tk+S3hrNSQomRxoyWtAq1UDbMPo7yhC7OIn0ZLOhupXg5QHgIoS6h8HMkPn3
+    9Z1uPvHm03kAjP/FM4jc8EaGkAMXO3EmR+cOiknMUZ1/EmFVOhHdMVzEWrYp6qSr8QKI
+    qoIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760417707;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=hV8ZC/V0/OWSHfrniV/9zBloFxclLSNdoEiXRi/9DhY=;
+    b=kjh9APTo1XwZqBL1CwVyxffA6i7Oh5nqtqCqF0Qd+nIfvHAmWv+fyGpitST/ekH6WW
+    cfVaseBQOXNN+Rx//0EIckVoNzo148RkQ8TumWGypDggu9KD/PsKwnXLdUf4BZpQQNRX
+    LtvPJe9cp/CdCtO76BIDJhNhq9oyb3rZGrqx5h6uKOzXklV5F2qoe74m1aCT5ooIFIX8
+    p4lOo7xGxOEInWKb3pN9Alj+ERyzgUR6OnaBo5EL8Jy4GKWgikpE4Fq7SOq+jGvXcVEy
+    I4E2XHn9BgbFqX3wq6MMMBEyernSIQtqTvY3l2m3ipmOslqXehvEGXLZv/djyN3W77Fr
+    Oyaw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760417707;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:References:Cc:To:From:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=hV8ZC/V0/OWSHfrniV/9zBloFxclLSNdoEiXRi/9DhY=;
+    b=TrpDSf/6p/EEppeogIKAr0/s1DiJxomU9xs8jLgKiMbC5PTr1T96zpFnbzkwXlWdGD
+    MTsDS+kCyP+s4ry8NjQ5xrsfE7v3I0YcOILifuYx4fubImMG11VYB6/TDLa13m23sf1G
+    O30QRusdaeafhSLqMUqQRlXMfF0RMrv1AYBfGgcdkoU3SZnyk1URkaGbGDuE0h0pryFq
+    JGRW4VFBIdUaPifcfQTu7p/YAVHFD4TIs5jq62xy0EKd0NAfl4ONviSX5dVBkWUyQMrQ
+    LeA01IwlObDQDqI21Zl4DGnde5sXvgeXBDU4ERAwSLY30QX5bnRfE3rxrHQ9IJ+NDVYQ
+    0yWw==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIS+kgQ=="
+Received: from [192.168.178.48]
+    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
+    with ESMTPSA id e2886619E4t7QVS
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 14 Oct 2025 06:55:07 +0200 (CEST)
+Message-ID: <00fe408b-db39-4a9f-b996-0fad73724759@xenosoft.de>
+Date: Tue, 14 Oct 2025 06:55:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb1f8015-b76d-4c12-9a92-7026cae41aae@panix.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org
+References: <2E40B1CD-5EDA-4208-8914-D1FC02FE8185@xenosoft.de>
+ <7FB0AB81-AD0F-420D-B2CB-F81C5E47ADF3@xenosoft.de>
+ <3fba6283-c8e8-48aa-9f84-0217c4835fb8@xenosoft.de>
+ <mg2ahzgcwgm6h5mtgs4tsel3yrphrfqgfcjydfxgzgxq5h7kot@jtealdt6vvcz>
+ <a2ee06b1-28a5-4cb1-9940-b225f9e6d6ee@xenosoft.de>
+Content-Language: de-DE
+In-Reply-To: <a2ee06b1-28a5-4cb1-9940-b225f9e6d6ee@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 13, 2025 at 06:05:03PM -0700, Kenneth Crudup wrote:
-> 
-> Tested-By: Kenneth R. Crudup <kenny@panix.com>
-> 
-> 
-> > Hi, can you test the following?
-> > 
-> > ```
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 1bd5bf4a6097..b4b62b9ccc45 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -192,6 +192,12 @@ static void vmd_pci_msi_enable(struct irq_data *data)
-> >   	data->chip->irq_unmask(data);
-> >   }
-> > +static unsigned int vmd_pci_msi_startup(struct irq_data *data)
-> > +{
-> > +	vmd_pci_msi_enable(data);
-> > +	return 0;
-> > +}
-> > +
-> >   static void vmd_irq_disable(struct irq_data *data)
-> >   {
-> >   	struct vmd_irq *vmdirq = data->chip_data;
-> > @@ -210,6 +216,11 @@ static void vmd_pci_msi_disable(struct irq_data *data)
-> >   	vmd_irq_disable(data->parent_data);
-> >   }
-> > +static void vmd_pci_msi_shutdown(struct irq_data *data)
-> > +{
-> > +	vmd_pci_msi_disable(data);
-> > +}
-> > +
-> >   static struct irq_chip vmd_msi_controller = {
-> >   	.name			= "VMD-MSI",
-> >   	.irq_compose_msi_msg	= vmd_compose_msi_msg,
-> > @@ -309,6 +320,8 @@ static bool vmd_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-> >   	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-> >   		return false;
-> > +	info->chip->irq_startup		= vmd_pci_msi_startup;
-> > +	info->chip->irq_shutdown	= vmd_pci_msi_shutdown;
-> >   	info->chip->irq_enable		= vmd_pci_msi_enable;
-> >   	info->chip->irq_disable		= vmd_pci_msi_disable;
-> >   	return true;
-> > ```
-> > 
-> 
-> -- 
-> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County
-> CA
-> 
+On 13 October 2025 at 05:58 pm, Manivannan Sadhasivam wrote:
+ > Either the Root Port could be triggering these AER messages due to 
+ASPM issue or
+ > due to the endpoint connected downstream.
+ >
+ > If possible, please share the whole dmesg log instead of the snippet 
+so that we
+ > can be sure from where the AER messages are coming from.
+ >
+ > You can also add the below quirk and check:
+ >
+ > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FSL, 0x0451, 
+quirk_disable_aspm_all);
+ >
+ > But it would be better to get the whole dmesg.
+ >
+ > - Mani
 
-Great, I have sent a patch here 
-https://lore.kernel.org/all/20251014014607.612586-1-inochiama@gmail.com/
+Hello Mani,
 
-Regards,
-Inochi
+Thanks for your help.
+
+The kernel doesn't compile with PCI_VENDOR_ID_FSL but it compiles with 
+PCI_VENDOR_ID_FREESCALE.
+
+I tried it with the following patch:
+
+diff -rupN a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+--- a/drivers/pci/quirks.c    2025-10-12 22:42:36.000000000 +0200
++++ b/drivers/pci/quirks.c    2025-10-13 17:59:51.473097708 +0200
+@@ -2525,6 +2525,16 @@ static void quirk_disable_aspm_l0s_l1(st
+   */
+  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
+quirk_disable_aspm_l0s_l1);
+
++
++static void quirk_disable_aspm_all(struct pci_dev *dev)
++{
++       pci_info(dev, "Disabling ASPM\n");
++       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
++}
++
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, 
+quirk_disable_aspm_all);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, 
+quirk_disable_aspm_all);
++
+  /*
+   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+   * Link bit cleared after starting the link retrain process to allow this
+
+---
+
+Unfortunately it doesn't solve the issue with pcieport 0001:00:00.0.
+
+Here is the dmesg of the RC1 of kernel 6.18 with this patch applied: 
+https://github.com/user-attachments/files/22896410/dmesg_fsl_ppc.txt
+
+Cyrus Plus block diagram: 
+https://github.com/chzigotzky/kernels/issues/17#issuecomment-3400086860
+
+Thanks,
+Christian
+
+
 
