@@ -1,146 +1,264 @@
-Return-Path: <linux-pci+bounces-38077-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66296BDAED6
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:20:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC3C2BDAF84
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:49:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8BE824F10E4
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 18:20:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62823543C60
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 18:49:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0870627979A;
-	Tue, 14 Oct 2025 18:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CECE238C1B;
+	Tue, 14 Oct 2025 18:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd/HPIjL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCa/9J9v"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93A124DCEF;
-	Tue, 14 Oct 2025 18:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6E18A956;
+	Tue, 14 Oct 2025 18:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760466041; cv=none; b=ruoVZqluduQ71nDBVH4bAWouvWikoVf0Xtcp2AkDWnynPmtWE/denUCxiEnaMoeDhOaNKjZid6RIRdijV7hqRLskc8jwO78WzkxmqSPGV4/IiooPFmMcOEs80wDpH+S4nv34loxB7qzZcIZwH5qFMSqp22ArMWX6UTD+qt0+VcI=
+	t=1760467748; cv=none; b=XakxO5w+zid+utaTKpftrb3vagsVAMPBLr5P4j1mjblLik+l3t/HAEtz7gwMfvsSHhbC0W1EcyuBOoDZjKoQ4+JD/+BbwHoWmoXJjk8O2cru/0SGpQLBs/Bteze14UfvRMV4YxfJNxzBd36eN0NkJI8c+IPQDqg6yqu92lZfKC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760466041; c=relaxed/simple;
-	bh=vhrUh0btdlfm1Rn7+IWBcAWYcgyJkAEWuMqo9pzE76g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XPSeifnxguFtWLiE3v/1QmdxQBTzp19pfq6wxoR4P66QeuRzzfVLPnXowo+8RKTZHIKsGJcMi6F7sIh101EvkJ14lieqC7ue0m9nR172wiVUtVgAoh295Ih2LWTfjcKPkwgErEGTSxES1YDddQKXg+8WBuUOGP/VihQz0VaB3VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd/HPIjL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D328DC4CEE7;
-	Tue, 14 Oct 2025 18:20:37 +0000 (UTC)
+	s=arc-20240116; t=1760467748; c=relaxed/simple;
+	bh=xIe/RVY9JgGbZFMDn5+9AZKmOczVweO4u+DJfrtCq4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uDfSVUCT6IjKyzt1p+y1xJ0bPjTkbDjjxVjkL3DogkXISzbjCH62CTsrkLMvv+dWPx8Tt23US6+tESgMUkQERrotFpT8z31z3Dxeuw0DcHHzZoTeAkIJANQwx4qn8sLLkXDMy3PkiChVXJVmnlkf2NMZ7bOWce2/SMeUf4kIW/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCa/9J9v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B580C4CEE7;
+	Tue, 14 Oct 2025 18:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760466041;
-	bh=vhrUh0btdlfm1Rn7+IWBcAWYcgyJkAEWuMqo9pzE76g=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Nd/HPIjLaY9fzCI/JHtpdMSggma7txWn0D2HAisC3MyL5XOmJGUie/TapyUqPpLMO
-	 GpUh1OYC8Fev5kIPO4CUFfjnI2blZxjGD+/pE6zMTihuEqVv62jLHHqKh8x/lKSP0z
-	 9ixApxR15Fl8NYwdXvLJSxP+wbozCjbrNppfklKPLrYuohn1bjQBXI5+9zA0FvEp3u
-	 tb9v/svNZRoU4ETsbT4ctym6TKzdv1U8x/ZwA/ymZRnLPo/Zne1IMoIE/kCLsYQH2f
-	 Rq3WgEDfsSt2n5qnac7zR1Bn8DuTvTOtMRZjvrGSgTidR2cAGh/P6TfQP1mjL9zYWs
-	 VxjPZh0Tl0cug==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 14 Oct 2025 11:20:27 -0700
-Subject: [PATCH v2] PCI: rcar-host: Add OF Kconfig dependency to avoid
- objtool no-cfi warning
+	s=k20201202; t=1760467746;
+	bh=xIe/RVY9JgGbZFMDn5+9AZKmOczVweO4u+DJfrtCq4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HCa/9J9vBr5NheEAR9F1ZYa+nWbJS/qtndiJkrgqWh3gSLIApRChkPowX81HrXX7o
+	 ztxEA+yZV//7VaBQwgTMGfzpSnODn6GsPU1uzJWyBFP7i5IR7hF8HzBpqU80DFbyLr
+	 VNylT48Tcie55n4N8dAH7AEcjIxnPbSUPjVEgyuqZnScVcCMUCGrOotQKBA4o2jo5R
+	 XWR7nV/v63Xxl0xbits5Tg531kAxsNDNbB5yeWU6HrCz541Ohxpp23EdMkpowf53is
+	 yM17bi+NADLhQyKU+iJ5uS2ZwUq4b8TZTA6t8P1QJ8yFZmYoiXEbosyMMVeqcQQyHP
+	 I4xqIz6pb0AOw==
+Date: Tue, 14 Oct 2025 13:49:05 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: FUKAUMI Naoki <naoki@radxa.com>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <20251014184905.GA896847@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251014-rcar_pcie_probe-avoid-nocfi-objtool-warning-v2-1-6e0204b002c6@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGqU7mgC/53NQQ6CMBCF4auYrh1DkYK48h6GkLYMMEo6ZCCoI
- dzdyhFc/m/xvlVNKISTuh5WJbjQRBxipMeD8r0NHQI1sVWapEYn+gzirdSjJ6xHYYdgF6YGAvu
- WgN1jZh7gZSVQ6EDbsjDWe5e7XMXHUbCl967dq9g9TTPLZ8cX/Vv/cxYNGoxJL0XuyqxNstsTJ
- eBwYulUtW3bF1F8TKnnAAAA
-X-Change-ID: 20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-1a975accb6b6
-To: Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, Kees Cook <kees@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, linux-pci@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, kernel test robot <lkp@intel.com>, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2297; i=nathan@kernel.org;
- h=from:subject:message-id; bh=vhrUh0btdlfm1Rn7+IWBcAWYcgyJkAEWuMqo9pzE76g=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBnvppTqhJxlO/hk04K/4jbf3jRLapxanbeD6V+9U5LOg
- eofsvbrO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBE/JcyMszfPj/x8mrujrly
- Putjd3xadc/3WWm3g6+26v2z/H/lbBgZGY4l9P7POd94OPzbNuHAUnO2q/+vPWp5VLgtkS1qIdP
- zhYwA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
 
-After commit 894af4a1cde6 ("objtool: Validate kCFI calls"), compile
-testing pcie-rcar-host.c with CONFIG_FINEIBT=y and CONFIG_OF=n results
-in a no-cfi objtool warning in rcar_pcie_probe():
+[+cc regressions]
 
-  $ cat allno.config
-  CONFIG_CFI=y
-  CONFIG_COMPILE_TEST=y
-  CONFIG_CPU_MITIGATIONS=y
-  CONFIG_GENERIC_PHY=y
-  CONFIG_MITIGATION_RETPOLINE=y
-  CONFIG_MODULES=y
-  CONFIG_PCI=y
-  CONFIG_PCI_MSI=y
-  CONFIG_PCIE_RCAR_HOST=y
-  CONFIG_X86_KERNEL_IBT=y
+On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> Hi Manivannan Sadhasivam,
+> 
+> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> Rockchip RK3588(S) SoC.
+> 
+> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> MT7921E, and Intel AX210.
+> 
+> I've found that reverting the following commit (i.e., the patch I'm replying
+> to) resolves the problem:
+> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
 
-  $ make -skj"$(nproc)" ARCH=x86_64 KCONFIG_ALLCONFIG=1 LLVM=1 clean allnoconfig vmlinux
-  vmlinux.o: warning: objtool: rcar_pcie_probe+0x191: no-cfi indirect call!
+Thanks for the report, and sorry for the regression.
 
-When CONFIG_OF is unset, of_device_get_match_data() returns NULL, so
-LLVM knows this indirect call has no valid destination and drops the
-kCFI setup before the call, triggering the objtool check that makes sure
-all indirect calls have kCFI setup.
+Since this affects several devices from different manufacturers and (I
+assume) different drivers, it seems likely that there's some issue
+with the Rockchip end, since ASPM probably works on these devices in
+other systems.  So we should figure out if there's something wrong
+with the way we configure ASPM, which we could potentially fix, or if
+there's a hardware issue and we need some king of quirk to prevent
+usage of ASPM on the affected platforms.
 
-This driver depends on OF for probing with non-NULL data for every match
-so this call will never be NULL in practice. Add a hard Kconfig
-dependency on OF to avoid the warning.
+Can you collect a complete dmesg log when booting with
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202510092124.O2IX0Jek-lkp@intel.com/
-Closes: https://github.com/ClangBuiltLinux/linux/issues/2134
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Changes in v2:
-- Switch from NULL check to avoiding CONFIG_OF=n case altogether (Mani,
-  Geert).
-- Drop Peter and Kees's reviews, as solution is not the same.
-- Link to v1: https://patch.msgid.link/20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-v1-1-552876b94f04@kernel.org
----
- drivers/pci/controller/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+  ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 41748d083b93..d8688abc5b27 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -243,6 +243,7 @@ config PCI_TEGRA
- config PCIE_RCAR_HOST
- 	bool "Renesas R-Car PCIe controller (host mode)"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on OF
- 	depends on PCI_MSI
- 	select IRQ_MSI_LIB
- 	help
+and the output of "sudo lspci -vv"?
 
----
-base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-change-id: 20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-1a975accb6b6
+When the kernel freezes, can you give us any information about where,
+e.g., a log or screenshot?
 
-Best regards,
---  
-Nathan Chancellor <nathan@kernel.org>
+Do you know if any platforms other than Radxa ROCK 5A/5B have this
+problem?
 
+#regzbot introduced: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+#regzbot dup-of: https://github.com/chzigotzky/kernels/issues/17
+
+> On 9/23/25 01:16, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > 
+> > So far, the PCI subsystem has honored the ASPM and Clock PM states set by
+> > the BIOS (through LNKCTL) during device initialization, if it relies on the
+> > default state selected using:
+> > 
+> > * Kconfig: CONFIG_PCIEASPM_DEFAULT=y, or
+> > * cmdline: "pcie_aspm=off", or
+> > * FADT: ACPI_FADT_NO_ASPM
+> > 
+> > This was done conservatively to avoid issues with the buggy devices that
+> > advertise ASPM capabilities, but behave erratically if the ASPM states are
+> > enabled. So the PCI subsystem ended up trusting the BIOS to enable only the
+> > ASPM states that were known to work for the devices.
+> > 
+> > But this turned out to be a problem for devicetree platforms, especially
+> > the ARM based devicetree platforms powering Embedded and *some* Compute
+> > devices as they tend to run without any standard BIOS. So the ASPM states
+> > on these platforms were left disabled during boot and the PCI subsystem
+> > never bothered to enable them, unless the user has forcefully enabled the
+> > ASPM states through Kconfig, cmdline, and sysfs or the device drivers
+> > themselves, enabling the ASPM states through pci_enable_link_state() APIs.
+> > 
+> > This caused runtime power issues on those platforms. So a couple of
+> > approaches were tried to mitigate this BIOS dependency without user
+> > intervention by enabling the ASPM states in the PCI controller drivers
+> > after device enumeration, and overriding the ASPM/Clock PM states
+> > by the PCI controller drivers through an API before enumeration.
+> > 
+> > But it has been concluded that none of these mitigations should really be
+> > required and the PCI subsystem should enable the ASPM states advertised by
+> > the devices without relying on BIOS or the PCI controller drivers. If any
+> > device is found to be misbehaving after enabling ASPM states that they
+> > advertised, then those devices should be quirked to disable the problematic
+> > ASPM/Clock PM states.
+> > 
+> > In an effort to do so, start by overriding the ASPM and Clock PM states set
+> > by the BIOS for devicetree platforms first. Separate helper functions are
+> > introduced to override the BIOS set states by enabling all of them if
+> > of_have_populated_dt() returns true. To aid debugging, print the overridden
+> > ASPM and Clock PM states as well.
+> > 
+> > In the future, these helpers could be extended to allow other platforms
+> > like VMD, newer ACPI systems with a cutoff year etc... to follow the path.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
+> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > Link: https://patch.msgid.link/20250916-pci-dt-aspm-v1-1-778fe907c9ad@oss.qualcomm.com
+> > ---
+> >   drivers/pci/pcie/aspm.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+> >   1 file changed, 40 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 919a05b9764791c3cc469c9ada62ba5b2c405118..cda31150aec1b67b6a48b60569222ea3d1c3d41f 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -15,6 +15,7 @@
+> >   #include <linux/math.h>
+> >   #include <linux/module.h>
+> >   #include <linux/moduleparam.h>
+> > +#include <linux/of.h>
+> >   #include <linux/pci.h>
+> >   #include <linux/pci_regs.h>
+> >   #include <linux/errno.h>
+> > @@ -235,13 +236,15 @@ struct pcie_link_state {
+> >   	u32 aspm_support:7;		/* Supported ASPM state */
+> >   	u32 aspm_enabled:7;		/* Enabled ASPM state */
+> >   	u32 aspm_capable:7;		/* Capable ASPM state with latency */
+> > -	u32 aspm_default:7;		/* Default ASPM state by BIOS */
+> > +	u32 aspm_default:7;		/* Default ASPM state by BIOS or
+> > +					   override */
+> >   	u32 aspm_disable:7;		/* Disabled ASPM state */
+> >   	/* Clock PM state */
+> >   	u32 clkpm_capable:1;		/* Clock PM capable? */
+> >   	u32 clkpm_enabled:1;		/* Current Clock PM state */
+> > -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+> > +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+> > +					   override */
+> >   	u32 clkpm_disable:1;		/* Clock PM disabled */
+> >   };
+> > @@ -373,6 +376,18 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >   	pcie_set_clkpm_nocheck(link, enable);
+> >   }
+> > +static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+> > +						   int enabled)
+> > +{
+> > +	struct pci_dev *pdev = link->downstream;
+> > +
+> > +	/* Override the BIOS disabled Clock PM state for devicetree platforms */
+> > +	if (of_have_populated_dt() && !enabled) {
+> > +		link->clkpm_default = 1;
+> > +		pci_info(pdev, "Clock PM state overridden: ClockPM+\n");
+> > +	}
+> > +}
+> > +
+> >   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   {
+> >   	int capable = 1, enabled = 1;
+> > @@ -395,6 +410,7 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   	}
+> >   	link->clkpm_enabled = enabled;
+> >   	link->clkpm_default = enabled;
+> > +	pcie_clkpm_override_default_link_state(link, enabled);
+> >   	link->clkpm_capable = capable;
+> >   	link->clkpm_disable = blacklist ? 1 : 0;
+> >   }
+> > @@ -788,6 +804,26 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+> >   		aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
+> >   }
+> > +static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+> > +{
+> > +	struct pci_dev *pdev = link->downstream;
+> > +	u32 override;
+> > +
+> > +	/* Override the BIOS disabled ASPM states for devicetree platforms */
+> > +	if (of_have_populated_dt()) {
+> > +		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
+> > +		override = link->aspm_default & ~link->aspm_enabled;
+> > +		if (override)
+> > +			pci_info(pdev, "ASPM states overridden: %s%s%s%s%s%s\n",
+> > +				 (override & PCIE_LINK_STATE_L0S) ? "L0s+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1) ? "L1+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_1) ? "L1.1+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_2) ? "L1.2+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_1_PCIPM) ? "L1.1 PCI-PM+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_2_PCIPM) ? "L1.2 PCI-PM+" : "");
+> > +	}
+> > +}
+> > +
+> >   static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   {
+> >   	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> > @@ -868,6 +904,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   	/* Save default state */
+> >   	link->aspm_default = link->aspm_enabled;
+> > +	pcie_aspm_override_default_link_state(link);
+> > +
+> >   	/* Setup initial capable state. Will be updated later */
+> >   	link->aspm_capable = link->aspm_support;
+> > 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
