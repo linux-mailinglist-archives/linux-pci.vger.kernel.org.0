@@ -1,112 +1,138 @@
-Return-Path: <linux-pci+bounces-38041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FB0EBD918C
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 13:47:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D24BD93BB
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 14:09:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 39B2C4FA7FF
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 11:47:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 436821923B9C
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 12:09:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903E530E849;
-	Tue, 14 Oct 2025 11:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pVxqN0wP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AAD93126BF;
+	Tue, 14 Oct 2025 12:09:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D462FD1A1;
-	Tue, 14 Oct 2025 11:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4403126BC;
+	Tue, 14 Oct 2025 12:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760442456; cv=none; b=n6KGrKVJCfzGKZ3ucBOrkWddqJE+VLvE69xqQt/UbdRukGoNxp8o6BFwYijPomBwZTeS9O0garRd/leSyLKUmvksNdeYhp7MBVz7i637zwYnt1OGvk+pWmsZTCAvZoYh8g/8I4VNfzFfOHksXe0DEzzQ+icZK1GTyKFj2aqej7M=
+	t=1760443757; cv=none; b=jTtNEW3XJNpCqmiGTl9OjtchaXoB3OtkwZ01+NplD46/e+7G3cd2rYTPDAShmCVJPVQWIyweuUhO/Dr3VwyrYPFAfIGUHBPICSjSjuKOwMIGMmcf6/61KpllB91Jj10EpJdmzyAAMb8BvmIjVPGobpGN3VnSDQNtBYcfjtO99L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760442456; c=relaxed/simple;
-	bh=V9yoqwxESdZwxltRllnlJkbdQXUNmo1TpE4ddW0bRYo=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LpKlUJjLm+dqucO8ho0sXViEmPmHPfNENo5i1pCh0MWMuY42JPGsVsW8l9f40axDeGV7tkHvKG2Q9fK1BUtEAMSpgBjdgTqjwifA1umzexvRoYUl+PDaeds1ywd79HMDHDokL9J1PlhMw30wMDaKkG2c4E/P6RMBDeKPPryCz2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pVxqN0wP; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1760442452;
-	bh=V9yoqwxESdZwxltRllnlJkbdQXUNmo1TpE4ddW0bRYo=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=pVxqN0wPKBKaeJhkbaLkohXFCzia/ZgKznHPt9ULdyZ0+kDJSbe65XnV1f260+orS
-	 BC6ZKkJYG/M+dqwRVWiVnerOm2HZIYw5PSi0JIZGO01FUfTd8mPhrgCeWtjxSHwnuT
-	 RoYVrZbfJ46dEwddj1r/ryHtiMiZA0nHZd2kAIxOyldoahBy9jUu9A3vB7VqkwBjwr
-	 pdwLsI06AwXoCcNMW2gkxXQ65IVj/cK7Eq1o1LR3IjutCebOV5Jodg7TXcBjGZmuIp
-	 SnwShRldBluFHmBSUjVrv7zNItDL4qYq6IQK3kn3HG+tIqpcxTV3D5LtUQS9dV0Ur7
-	 62vyaIO71vA0w==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3254417E013C;
-	Tue, 14 Oct 2025 13:47:32 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Ryder Lee <ryder.lee@mediatek.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, linux-pci@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>
-In-Reply-To: <20251012205900.5948-1-ansuelsmth@gmail.com>
-References: <20251012205900.5948-1-ansuelsmth@gmail.com>
-Subject: Re: (subset) [PATCH v5 0/5] PCI: mediatek: add support AN7583 +
- YAML rework
-Message-Id: <176044245213.17852.7184723529222407322.b4-ty@collabora.com>
-Date: Tue, 14 Oct 2025 13:47:32 +0200
+	s=arc-20240116; t=1760443757; c=relaxed/simple;
+	bh=7mYHfYJGnJ8LQn5syQJYgViWI5ELtPzT8LnE/+d1KVs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=coP4oblRgcwv/wyfh0nWU/FL4wH7K7kyD7tifzg3kBTbOWwj1UdU7bhjoN5FvTKAHVmlwVGe74g/a92YD8eCmMs9LZSouEvD9sKnMiQ4BdwPHYRnEDJAkut+2/yHU6nT/nuxOvV2uJlNfyUUlHUXTfnJlCmeFP/8nsN2d8t68NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 59EC3ueQ060852
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 Oct 2025 20:03:56 +0800 (+08)
+	(envelope-from randolph@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Tue, 14 Oct 2025
+ 20:03:56 +0800
+From: Randolph Lin <randolph@andestech.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <jingoohan1@gmail.com>,
+        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <alex@ghiti.fr>, <aou@eecs.berkeley.edu>,
+        <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+        <ben717@andestech.com>, <inochiama@gmail.com>,
+        <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
+        <shradha.t@samsung.com>, <pjw@kernel.org>, <randolph.sklin@gmail.com>,
+        <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
+Subject: [PATCH v8 0/5] Add support for Andes Qilai SoC PCIe controller
+Date: Tue, 14 Oct 2025 20:03:44 +0800
+Message-ID: <20251014120349.656553-1-randolph@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 59EC3ueQ060852
 
-On Sun, 12 Oct 2025 22:56:54 +0200, Christian Marangi wrote:
-> This little series convert the PCIe GEN2 Documentation to YAML schema
-> and adds support for Airoha AN7583 GEN2 PCIe Controller.
-> 
-> Changes v5:
-> - Drop redudant entry from AN7583 patch
-> - Fix YAML error for AN7583 patch (sorry)
-> Changes v4:
-> - Additional fix/improvement for YAML conversion
-> - Add review tag
-> - Fix wording on hifsys patch
-> - Rework PCI driver to flags and improve PBus logic
-> Changes v3:
-> - Rework patch 1 to drop syscon compatible
-> Changes v2:
-> - Add cover letter
-> - Describe skip_pcie_rstb variable
-> - Fix hifsys schema (missing syscon)
-> - Address comments on the YAML schema for PCIe GEN2
-> - Keep alphabetical order for AN7583
-> 
-> [...]
+Add support for Andes Qilai SoC PCIe controller
 
-Applied to v6.18-next/dts32, thanks!
+These patches introduce driver support for the PCIe controller on the
+Andes Qilai SoC.
 
-[1/5] ARM: dts: mediatek: drop wrong syscon hifsys compatible for MT2701/7623
-      commit: 5416aeee4ef761b79d2e1c35f6d9a35bf3104709
+Signed-off-by: Randolph Lin <randolph@andestech.com>
 
-Cheers,
-Angelo
+---
+Changes in v8:
+- Fix the compile error reported by the kernel test robot.
 
+---
+Changes in v7:
+- Remove unnecessary nodes and property in DTS bindings
+
+---
+Changes in v6:
+- Fix typo in the logic for adjusting the number of OB/IB windows
+
+---
+Changes in v5:
+- Add support to adjust the number of OB/IB windows in the glue driver.
+- Fix the number of OB windows in the Qilai PCIe driver.
+- Remove meaningless properties from the device tree.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v4:
+- Add .post_init callback for enabling IOCP cache.  
+- Sort by vender name in Kconfig 
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v3:
+- Remove outbound ATU address range validation callback and logic.
+- Add logic to skip failed outbound iATU configuration and continue.
+- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+---
+Changes in v2:
+- Remove the patch that adds the dma-ranges property to the SoC node.
+- Add dma-ranges to the PCIe parent node bus node.
+- Refactor and rename outbound ATU address range validation callback and logic.
+- Use parent_bus_offset instead of cpu_addr_fixup().
+- Using PROBE_DEFAULT_STRATEGY as default probe type.
+- Made minor adjustments based on the reviewer's suggestions.
+
+Randolph Lin (5):
+  PCI: dwc: Allow adjusting the number of ob/ib windows in glue driver
+  dt-bindings: PCI: Add Andes QiLai PCIe support
+  riscv: dts: andes: Add PCIe node into the QiLai SoC
+  PCI: andes: Add Andes QiLai SoC PCIe host driver support
+  MAINTAINERS: Add maintainers for Andes QiLai PCIe driver
+
+ .../bindings/pci/andestech,qilai-pcie.yaml    |  84 ++++++
+ MAINTAINERS                                   |   7 +
+ arch/riscv/boot/dts/andes/qilai.dtsi          | 106 ++++++++
+ drivers/pci/controller/dwc/Kconfig            |  13 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-andes-qilai.c | 240 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c  |  12 +-
+ 7 files changed, 461 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-andes-qilai.c
+
+-- 
+2.34.1
 
 
