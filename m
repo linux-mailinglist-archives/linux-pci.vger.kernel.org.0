@@ -1,97 +1,177 @@
-Return-Path: <linux-pci+bounces-38060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 929D5BD97B7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 14:58:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7970BBD9946
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 15:11:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 766161891FFE
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 12:59:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7034119A2DD0
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 13:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CF493148B8;
-	Tue, 14 Oct 2025 12:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6563148BA;
+	Tue, 14 Oct 2025 13:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUwjqM/S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7340B313E18;
-	Tue, 14 Oct 2025 12:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C70313540;
+	Tue, 14 Oct 2025 13:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760446695; cv=none; b=gjOknC3aRQntBGnY3FArNgrHW31DrZ1T03/WS/A2JWyVTYCpPx4XD6aN/XuU9pxElSKMVjqFHeiVginj4zfIFoC11E/uC+hSnyDM9xMUYVrJLBi58fuh1bqLoNhQaI8UoAgQk3ODyIA7tGB4L0v4MnDyIBUvQ7gCQPYV/MgDQEk=
+	t=1760446991; cv=none; b=smiQCcmOYc0DudJ5+Zfc11P04NLKkgT+u3z328aM5Amv4E19dnAG+pAhl2nZLDat1+PIf5wrrySDvvGrN/MThPjWrPIx1l3j4B2YQ90K4ClqfguSC+Qc38XqNhXjdVKrdUrHhQAlsznEd6BTwUsbaKWyX6sbFzwsd/vNiGsCvFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760446695; c=relaxed/simple;
-	bh=jioduxtjG2D9UHtigEPZcxJXr8+DU/z9boK0Wb8p2yk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ez+8SuO0vqbO409lzn+iBezglr0cerv6FXA/oKNmP/PP2iLIZ9QzwRJj4NIVGVFqCLWYFMzE01GAN6GKfbeXpk+bnjkUdvXTTwVu6Jws86F5FY7PtHFjUUqlTFKKya/GdQ/1dw0Swyg2X+RRR8WxBHRYikHLm9NPGzZL4smQNfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 9084F92009C; Tue, 14 Oct 2025 14:58:10 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8A89692009B;
-	Tue, 14 Oct 2025 13:58:10 +0100 (BST)
-Date: Tue, 14 Oct 2025 13:58:10 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
-In-Reply-To: <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2510141349560.39634@angie.orcam.me.uk>
-References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com> <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com> <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net> <aO1sWdliSd03a2WC@alpha.franken.de> <alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk>
- <74ed2ce0-744a-264f-6042-df4bbec0f58e@linux.intel.com> <alpine.DEB.2.21.2510141232400.39634@angie.orcam.me.uk> <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1760446991; c=relaxed/simple;
+	bh=0v37jZyYyYbs1da6KxGG2cFegI9umxnQEvbsHhkFM28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lt0V9yKlN96fi9fZt3MNdkR4NzChxkmwKwgBO+wLPEBH62w5Vy7yXyRrdlpjRmEYUEFSAJ+Ciq3r+Opijq+WbjrCHUcEb5AU7yiSbSZEhwEPGXiTLSslnApQMd6OIkdWMPKjh07Ted+dNjKUUTafgLGC8cko2XSJbKXwLZ8D+Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUwjqM/S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B06C113D0;
+	Tue, 14 Oct 2025 13:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760446989;
+	bh=0v37jZyYyYbs1da6KxGG2cFegI9umxnQEvbsHhkFM28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gUwjqM/Sp7OkEWnxQ5EJqSzP//ahSQwGJ/3PIjk6jR+DkLYwOzYfX/z5GFKsvASfA
+	 nAQB75EFZ3pqVL5V1s0cRCTPZf994kcLHYtcjtxtgCsLdYCi0WKYZbEyRICnLGBmbS
+	 RSzd3zqn2NJfBH1MAoGqwh8tSjd4cnmlPTk06dv0i94pFfAOtYX1hLvUiSg8yEB+oq
+	 5KQamKGczN9IpOXVNd1BEVwDrTYJzmqAp8fGFiaYBBSPY5PlQIQxMYKUxqZU7d3unU
+	 vRyi1QMSY4bUicB5hLQSA/mYL5rTPKn7JsevbDqdUlklpDVB4bIB64/yEeCVLwX6sF
+	 JJM0cdAuM1Q6Q==
+Date: Tue, 14 Oct 2025 18:32:59 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	kernel test robot <lkp@intel.com>, Kees Cook <kees@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH] PCI: rcar-host: Avoid objtool no-cfi warning in
+ rcar_pcie_probe()
+Message-ID: <uebexl7d5gfjopb26gstftahu2ouab3ekonw4dzgegw3on5cwr@vqc2zmxiluvt>
+References: <20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-v1-1-552876b94f04@kernel.org>
+ <CAMuHMdXZvoTyWcgRp6TnkybnKY4ekfO9aB33iumPVaR7wvEXkw@mail.gmail.com>
+ <20251014083209.GA2696801@ax162>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251014083209.GA2696801@ax162>
 
-On Tue, 14 Oct 2025, Ilpo Järvinen wrote:
-
-> >  Well, PCIBIOS_MIN_IO is never set for Malta and therefore stays at 0.
+On Tue, Oct 14, 2025 at 01:32:09AM -0700, Nathan Chancellor wrote:
+> Hi Geert,
 > 
-> I meant whether pci-malta.c has to play with the ->start address at all 
-> if it would use PCIBIOS_MIN_IO.
-
- Yes, we need either, not both.
-
-> >  I'd have to go through the relevant datasheets to see whether it can 
-> > actually happen in reality.  Perhaps we can just hardwire PCIBIOS_MIN_IO 
-> > to 0x1000 instead, similarly to what other MIPS platforms do.
+> On Tue, Oct 14, 2025 at 09:16:58AM +0200, Geert Uytterhoeven wrote:
+> > On Mon, 13 Oct 2025 at 20:26, Nathan Chancellor <nathan@kernel.org> wrote:
+> > > ---
+> > > Another alternative is to make this driver depend on CONFIG_OF since it
+> > > clearly requires it but that would restrict compile testing so I went
+> > > with this first.
+> > > ---
+> > >  drivers/pci/controller/pcie-rcar-host.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> > > index 213028052aa5..15514c9c1927 100644
+> > > --- a/drivers/pci/controller/pcie-rcar-host.c
+> > > +++ b/drivers/pci/controller/pcie-rcar-host.c
+> > > @@ -981,7 +981,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+> > >                 goto err_clk_disable;
+> > >
+> > >         host->phy_init_fn = of_device_get_match_data(dev);
+> > > -       err = host->phy_init_fn(host);
+> > > +       err = host->phy_init_fn ? host->phy_init_fn(host) : -ENODEV;
+> > >         if (err) {
+> > >                 dev_err(dev, "failed to init PCIe PHY\n");
+> > >                 goto err_clk_disable;
+> > 
+> > I am afraid you're playing a big game of whack-a-mole, since we tend
+> > to remove these checks, as they can never happen in practice (driver
+> > is probed from DT only, and all entries in rcar_pcie_of_match[] have
+> > a non-NULL .data member)...
 > 
-> My patch did hardcode set it to 0x1000, I just noted before the patch that 
-> I'm not sure if the code should actually try to align the resulting "real 
-> start address" to 0x1000 if hose->io_resource->start != 0.
+> Thanks for the input! Yeah, that is fair, as I alluded to in the scissor
+> area. We could just do
 > 
-> Or are you saying also the the if () check should be removed as well?
-
- That's what I meant, sorry to be unclear.
-
-> >  NB there are commit c5de50dada14 ("MIPS: Malta: Change start address to 
-> > avoid conflicts.") and commit 27547abf36af ("MIPS: malta: Incorporate 
-> > PIIX4 ACPI I/O region in PCI controller resources") that fiddled with this 
-> > code piece.  Especially the latter one refers additional commits that may 
-> > give further insights.  And the former one removed a "FIXME" annotation, 
-> > which suggests I didn't consider the solution perfect back 20 years ago, 
-> > but given how long it stayed there it was surely good enough for its time.
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 41748d083b93..d8688abc5b27 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -243,6 +243,7 @@ config PCI_TEGRA
+>  config PCIE_RCAR_HOST
+>  	bool "Renesas R-Car PCIe controller (host mode)"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on OF
+>  	depends on PCI_MSI
+>  	select IRQ_MSI_LIB
+>  	help
 > 
-> It was "good enough" only because the arch specific 
-> pcibios_enable_resources() was lacking the check for whether the resource 
-> truly got assigned or not. The PIIX4 driver must worked just fine without 
-> those IO resources which is what most drivers do despite using 
-> pci(m)_enable_device() and not pci_enable_device_mem() (the latter 
-> doesn't even seem to come with m variant).
+> since it is required for the driver to function. Another alternative
+> would be something like either:
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> index 213028052aa5..c237e04392e6 100644
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+> @@ -941,6 +941,9 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+>  	u32 data;
+>  	int err;
+>  
+> +	if (!IS_ENABLED(CONFIG_OF))
+> +		return -ENODEV;
+> +
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
+>  	if (!bridge)
+>  		return -ENOMEM;
+> 
+> or
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> index 213028052aa5..2aee2e0d9a1d 100644
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+> @@ -980,8 +980,12 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+>  	if (err)
+>  		goto err_clk_disable;
+>  
+> -	host->phy_init_fn = of_device_get_match_data(dev);
+> -	err = host->phy_init_fn(host);
+> +	if (IS_ENABLED(CONFIG_OF)) {
+> +		host->phy_init_fn = of_device_get_match_data(dev);
+> +		err = host->phy_init_fn(host);
+> +	} else {
+> +		err = -ENODEV;
+> +	}
+>  	if (err) {
+>  		dev_err(dev, "failed to init PCIe PHY\n");
+>  		goto err_clk_disable;
+> 
+> to keep the ability to compile test the driver without CONFIG_OF while
+> having no impact on the final object code and avoiding the NULL call. I
+> am open to other thoughts and ideas as well.
+> 
 
- As /proc/ioport contents indicate the resources did get assigned or there 
-would be no claiming driver reported.  I'm sure I did double-check it back 
-in the day too.
+TBH, I hate both of these CONFIG_OF checks as most of the controller drivers
+are just OF drivers. If we were to sprinkle CONFIG_OF check, then it has to be
+done in almost all controller drivers (except VMD, Hyper-V).
 
-  Maciej
+If compiler is getting smart enough to detect these NULL invocations, then it
+may start to trigger the same issue for other OF APIs as well. So I'd prefer to
+have the OF dependency in Kconfig, sacrificing COMPILE_TEST on non-OF configs.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
