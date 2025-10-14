@@ -1,117 +1,121 @@
-Return-Path: <linux-pci+bounces-38094-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38095-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95A16BDBA51
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 00:25:35 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA27CBDBA57
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 00:27:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ABCD3A9E64
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:25:34 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 41381356763
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F2C30DD2C;
-	Tue, 14 Oct 2025 22:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1403081DC;
+	Tue, 14 Oct 2025 22:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liNf9T2K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkMu9J96"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4273081DC;
-	Tue, 14 Oct 2025 22:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66BD2EC0AC
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 22:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760480730; cv=none; b=K21/qt7ZVRnlptZrJHGSLuTyQNuNaJXysgbZN1lMHZKe5AmHXwgKQNsYT1r2TXEw8hRCCqiw6Fp+Rl1aOD8Juuo/Fng3oT5nPLDGVdtdFV3IBfgu3ibvSLn93v5pelwpaGf9iMbESEAxax/+V1u71DIFUmSJ7lBYM9JTGSVM4eQ=
+	t=1760480862; cv=none; b=Z63k8UtUmPIGA4gdmPoNXCz5M4/mRVTFdbN05BtVTGb4h/J1IXKK4iutaagu3Hn4AnZXwZ8w5yP8Q3aWvwIktXVY7v1fN4u0O1u51R0/hnFwWBbQGZ2oJCx24NGrPZKYO+nXHrM416R3k/3LQcvAXzp1/4hvuD2pZ0kSmaIW0wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760480730; c=relaxed/simple;
-	bh=Bk6tOAIjGpqsinKNke8LjcxZyyMelB7HsuLcZ9QiFLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fdl7AJbguhf2v+D5naFlYcEglvNwkhDnQlJCO6b/LU70ihiZ3aOyHuM9Im7Km+6fVvWUpkTptegklmjcMC7UQQK8cy2HYdlAP8s0d/TrwuPGWduTnTqxGX7TpDnxDxtERJSS8ug16NntBqSnQxusTV94oEz+P4CEEVuqVtD1YD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liNf9T2K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86892C4CEE7;
-	Tue, 14 Oct 2025 22:25:26 +0000 (UTC)
+	s=arc-20240116; t=1760480862; c=relaxed/simple;
+	bh=mMkV7AwkQ4nLcxstSTdjrBQgdkP2To/5xR41FohUtiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=DZDiulSCBj/d1/GwQWdzHEf8ScHiicWuhRoxTHnGgAu2V/Jb/M9jy7oh6OwaeKcxm7g4oGaBAkle7ScFtR1G4Qkcf+LZ6MDPoFJ5Zv8HTI459r3UZO15/XFndBHnJykNUttVsJhz7Z7F457bVPuVl1IqH6sLFzIv4Qo43tdA2Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkMu9J96; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144FEC4CEE7;
+	Tue, 14 Oct 2025 22:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760480729;
-	bh=Bk6tOAIjGpqsinKNke8LjcxZyyMelB7HsuLcZ9QiFLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=liNf9T2KgDoTlDWPXHp4RjShC+K3DUZ+0h4AqtoTd5a53VZ7d5YZsQ2xbliHSWX/H
-	 AVZ2IY44zySEwbu1omBXNYZLH3hUhe8RRfB39VKCokTuCCpYc0d8X02zjxX39tUJdm
-	 hgyif4WSm0OFWdEZGKoCakhz3nMqpit0SfXdsKF9xRyyqcyvlh00LD+8ncN3i9odYu
-	 dkVbGv31nI9iBdSvy7vdV6MLmC6dTL+Q9s1qEu8o6uEKcz1lSwBVd7a1Svb2mF+atm
-	 BXSXWAKUrLOtE4IViy4GK0RO9pud1srhd9PoYGgtAov5ET0ycGndYzdr/b7HMYM26w
-	 TayD5VD/3V7+A==
-Date: Tue, 14 Oct 2025 15:25:24 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, Kees Cook <kees@kernel.org>,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] PCI: rcar-host: Add OF Kconfig dependency to avoid
- objtool no-cfi warning
-Message-ID: <20251014222524.GA3575477@ax162>
-References: <20251014-rcar_pcie_probe-avoid-nocfi-objtool-warning-v2-1-6e0204b002c6@kernel.org>
- <20251014191330.GA899677@bhelgaas>
- <20251014194728.GD1206438@noisy.programming.kicks-ass.net>
+	s=k20201202; t=1760480862;
+	bh=mMkV7AwkQ4nLcxstSTdjrBQgdkP2To/5xR41FohUtiY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=AkMu9J96uBO8irm1HcPhKPFs8mUZF5672j+2SwrCE1sA+CF3kMpp802yprGuuIGYX
+	 kto+yT5qqiy7UdzrC06hhQrUiuZqOnppWCN1XcTJ9Dc6huIdvfw1BZkzw8Sa9QMK6L
+	 uTncqkGffyHoXOsE2Qw8i5g8Ep2VC7ibxtiiW+nYIO6Yv65QJyHvSwyIBVRSosfCN3
+	 MRknL82FUt7nwZKgYsYUBHzvvpB/dA7fDglp/gsyNWFpGfX4+NS9Fj7AbR96GAl7St
+	 HuBsrjiMy4SNFjWv4DvMt8nRnXKoF4FndmhEJ7jud78xLu66riYbs4Y6SD2aMqigoY
+	 bnNxZP5vwt0dQ==
+Date: Tue, 14 Oct 2025 17:27:40 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, bhelgaas@google.com, tzimmermann@suse.de,
+	Eric Biggers <ebiggers@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/VGA: Select SCREEN_INFO on X86
+Message-ID: <20251014222740.GA913183@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251014194728.GD1206438@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251013220829.1536292-1-superm1@kernel.org>
 
-On Tue, Oct 14, 2025 at 09:47:28PM +0200, Peter Zijlstra wrote:
-> On Tue, Oct 14, 2025 at 02:13:30PM -0500, Bjorn Helgaas wrote:
+On Mon, Oct 13, 2025 at 05:08:26PM -0500, Mario Limonciello (AMD) wrote:
+> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+> a screen info check") introduced an implicit dependency upon SCREEN_INFO
+> by removing the open coded implementation.
 > 
-> > Ugh.  This might be the best solution, but it's a bit problematic
-> > without a hint about why "depends on OF" is here.  Theoretically there
-> > are stubs for everything to make COMPILE_TEST work, so I think we're
-> > about to drop all the dependencies on OF.
+> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+> would now return false.  SCREEN_INFO is only used on X86 so add add a
+> conditional select for SCREEN_INFO to ensure that the VGA arbiter works
+> as intended.
 > 
-> Its those stubs are exactly the problem.
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-Yeah and I had thought about changing of_device_get_match_data() to use
-something like ERR_PTR() in the !OF case but that does not fix the issue
-since the call destination is still going to be invalid. To me, this is
-just one of the sharp edges of compile testing: you give up some code or
-configuration cleanliness/expectations for the flexibility of build
-testing.
+Applied to pci/for-linus for v6.18, thanks!
 
-> > This dependency to avoid a no-cfi warning looks like the kind of thing
-> > that could someday go away if the tools get smarter.  Maybe we can add
-> > a Kconfig comment here, but I don't really know enough to write one.
-> > Something like this?
+> ---
+>  drivers/pci/Kconfig  | 1 +
+>  drivers/pci/vgaarb.c | 6 ++----
+>  2 files changed, 3 insertions(+), 4 deletions(-)
 > 
-> Its not a CFI warning per-se, the compiler is hitting known UB
-> (unconditional NULL deref) and is currently emitting a NULL pointer
-> indirect call, but given how aggressive clang has been on encountering
-> UB it might just stop code-gen entirely and generate fall-through
-> warnings (been there done that).
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 7065a8e5f9b14..f94f5d384362e 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -306,6 +306,7 @@ config VGA_ARB
+>  	bool "VGA Arbitration" if EXPERT
+>  	default y
+>  	depends on (PCI && !S390)
+> +	select SCREEN_INFO if X86
+>  	help
+>  	  Some "legacy" VGA devices implemented on PCI typically have the same
+>  	  hard-decoded addresses as they did on ISA. When multiple PCI devices
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index b58f94ee48916..436fa7f4c3873 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -556,10 +556,8 @@ EXPORT_SYMBOL(vga_put);
+>  
+>  static bool vga_is_firmware_default(struct pci_dev *pdev)
+>  {
+> -#ifdef CONFIG_SCREEN_INFO
+> -	struct screen_info *si = &screen_info;
+> -
+> -	return pdev == screen_info_pci_dev(si);
+> +#if defined CONFIG_X86
+> +	return pdev == screen_info_pci_dev(&screen_info);
+>  #else
+>  	return false;
+>  #endif
+> -- 
+> 2.43.0
 > 
-> Smarter compiler here is only going to make this worse.
-
-Yeah, we are lucky that this is all LLVM does with this code.
-
-For what it's worth, there is plenty of "depends on OF" that appears
-across the tree and I see exactly one instance that has a comment above
-it (none with the comment on the same line). Perhaps these are all
-historical if there was a point where stubs were not provided for !OF. I
-do not mind adding a comment if really so desired but this driver does
-not do anything without CONFIG_OF so it feels like the dependency is
-natural anyways.
-
-Cheers,
-Nathan
 
