@@ -1,327 +1,251 @@
-Return-Path: <linux-pci+bounces-38029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EB30BD8B67
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 12:18:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE8ACBD8CFD
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 12:51:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29DEC4E4EBD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 10:18:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 082FC1922661
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 10:51:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF002F0C48;
-	Tue, 14 Oct 2025 10:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522CD2FB629;
+	Tue, 14 Oct 2025 10:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="tVK7s2Ic";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="LIerhxD4"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TIG4x3wj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011065.outbound.protection.outlook.com [40.93.194.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E152EC0B2;
-	Tue, 14 Oct 2025 10:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B802E3B03;
+	Tue, 14 Oct 2025 10:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760437113; cv=fail; b=DI428N52SXG9zaXE5voRfBZZQURR4gkFTsvCvw4021ymirWPlPdHQnyeS6PmmpMZPqOsYGetipcSq/zkwzdtv6D9pDrbkIEHUpMbMJYfpld3ta/fWw4RTI6t4/QVaM3/oBin5BVoXtIOQL6ncgolwM8QleTkz2uomYDJ0ijIn6g=
+	t=1760439056; cv=fail; b=ofKyBYrf0UKZSFxilmn7VQHKRNIleYpZpCHg+Xc3Ogs0r6EXLIPvUC+kjEqC0CkCX3uYAaPZ+b6huT8Na7aWb0JOguDSS/xiJxf9mUTkk4nO8IedLlsVFdw986q+iuZaEe0cLrNIclNL/ox8W6tOzhFG7oGv2hQGW3rZTmUx08A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760437113; c=relaxed/simple;
-	bh=mnk2Tp4BqBjzOf+Sk6D0bwEHtz+eplJR5KzvV6YMaCY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YXi6yFTUiTPd3a1qprGEhHI1V6D6ZPp6dGnjQ4icoN1tDQsIh8+frvwivnvIab6lv1hSIMMi/UERJ+9VLG1kMNz6iE0wuxtXBo06bjalMynBosuvkQi8kqyIf+pz9XHNQBo4sgxB0n7QDqBMl6LJvX1Jqu7s8zYNJ45dnNPQMjQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=tVK7s2Ic; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=LIerhxD4; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id BC0BC480A02;
-	Tue, 14 Oct 2025 06:18:29 -0400 (EDT)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1760437109;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=fP2AapzH0P5GM+gmZrivACasOzhAfhhFaaQEi0zlJ5s=;
- b=tVK7s2IcaXaRDIWeAu35hn0roBePdKh65fnWQz1zOp2UdusAkSYAdbtwtG+v6yicHiJVu
- EoqJvMFhj64Dw9ZDg==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1760437109;
-	cv=none; b=BtN3+NiPlJacmV56GGpzf12DJ+m/cwBFjsgSQqYCF58E+ivEG9l8BKnQ752WFT93Vn5bwD2n0I/qzBJU8Qy8UtO8bEqTsHxXBenVJXkjAj7BEWYGl0MqnAUOewuRx0tDjlKFq5XxRnmzp2f9HCUCdWAl0uyhNrKyQka9Sy3UUvV5E4mml0Cj9gT04D00ICRSttt6Hn7/2fMczbxC2C70Adpnc5iJT5Hko1JZKd1IPTzyxZNrRj9YFU2/4t2cDvGT4h1YGx5UwVBaBZeJXr5G6jKNWF4KFiowvpfnzUieDZk1skA2PDtJ2oUeI+RWawfpd0MOP8MyqndBVOnLbFpAfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1760437109; c=relaxed/simple;
-	bh=mnk2Tp4BqBjzOf+Sk6D0bwEHtz+eplJR5KzvV6YMaCY=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=UqanI4lIHEbfZRaCAtCv7qvzXH2ERepnNl5Kdv2bSfHfzy/5NtsdofsF8hsgIbo9qsI1MHuQ5fKpO8i2l2e2vbx8h8tH2ZMYmgKL23WD2j6YxEzk6pwVAwuRhpP++cFyltSUQlx+myuR3pQtlLYQf4OKjm2NUWAyRa/7rO3pR8/PSP27h0GiDopQftZs4EYm+j/RoEcTcpjZM+HUaPBGFLmBJ23gFZ2tEuuLMsMFUkjC6DZXLeiIABRyBlAuOFMNchdjX38MYIdMDJFPwK87J12P/tBKrhMSxVEJ6Yip6+dbrwxEGTtOzJFoJm8RnzGO4Z8uh1MNd+8tKSDaelBoSQ==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1760437109;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=fP2AapzH0P5GM+gmZrivACasOzhAfhhFaaQEi0zlJ5s=;
- b=LIerhxD4YIoXWA3FJUBcDvr2DQWmp5D+JzPNJmjtPXQP1UnZ7Cic4x9wiofZ7IY826l9/
- 7ZUwthBjm5HvjrGaHF2VG+cxesh6Qrd8F7aHQ4WgCLOPIQbHuW/7zPR1XNS0kzlDOwjsidJ
- mz11v2wXbzDE7GweHYarHflE6FlAIgKh7QqCFcRg8lMlyuvw65sTOa7ngrp8FKmYRMgV/Hv
- Y62mCA27aFLJ+eQBh49VbhrD4N0yiRPaVt3aaF7aH0mBb23nJlPF6d5pmCMTtOuOlTH24Xk
- XygZj26tYYx4dZbYyUCbMijx/DSroPLiSpUmfbDKKPHY1JLPn1D0F/7mW84Q==
-Received: by srv8.prv.sapience.com (Postfix) id 91E5428001B;
-	Tue, 14 Oct 2025 06:18:29 -0400 (EDT)
-Message-ID: <b30331816621cc1f6a154233482f01798cf57cea.camel@sapience.com>
-Subject: Re: mainline boot fail nvme/block? [BISECTED]
-From: Genes Lists <lists@sapience.com>
-To: Inochi Amaoto <inochiama@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nvme@lists.infradead.org
-Cc: linux-pci@vger.kernel.org
-Date: Tue, 14 Oct 2025 06:18:28 -0400
-In-Reply-To: <xfzcvv6ezleds24wvha2apkz5kirhcmoydm3on2hnfrxcwuc3g@koj6plovnvbd>
-References: <4b392af8847cc19720ffcd53865f60ab3edc56b3.camel@sapience.com>
-	 <cf4e88c6-0319-4084-8311-a7ca28a78c81@kernel.dk>
-	 <3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com>
-	 <trdjd7zhpldyeurmpvx4zpgjoz7hmf3ugayybz4gagu2iue56c@zswmzvauqnxk>
-	 <622d6d7401b5cfd4bd5f359c7d7dc5b3bf8785d5.camel@sapience.com>
-	 <xfzcvv6ezleds24wvha2apkz5kirhcmoydm3on2hnfrxcwuc3g@koj6plovnvbd>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-WzP+G+VsL1ZgoEfePPDq"
-User-Agent: Evolution 3.58.1 
+	s=arc-20240116; t=1760439056; c=relaxed/simple;
+	bh=8m8Wm4/v6+EnXFjX4KuFuTGdLYzcJmOUeElcmOYnMXg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TwSYuhhuekXtm0ZCmoHFT9AbzoQsonL6NWzQDMO1GtgNhCLbNlpsHEB9hm/wN184+cgt4PKDAMtXGJdU7NN8a6EgZACTNeIqgwB91ZdN9OAFUNXITwbif69i8KzOVGxl9m8nG2qQ+BrQeX5zGKx791gXTiyF+NkPn2F7tZ88MTc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TIG4x3wj; arc=fail smtp.client-ip=40.93.194.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AR9eeySjie7Ov++hJlk+hi3trsdITCvmXW6EHUWOO5eYnVDHGzeiy3ZR6IXXFWAypRPBnDNZf3NLJ1HN4Cus8KU6SMOx5kKsDoo2vbuPGzl0TghV5gfS73hI8w7ipeEZQpjId3uA0wDoImGpCaYEIz02bbsgwTFKmKYqfxhr3SxgP6Q6rOCvrcyQ5RzukukePHpEdfp5igL/6kFNzdmpAlfwzlIJKzMQm27P5ZCH3gtUfVwhgm7+qk6fmt1IgEjQ+r0jrPkFeFf0e6+VQGysWSNN3y5gX+0w0ZePG4MaImWPtoSTn8Rq+8RM1Z0pahiu64vQBWdFYl/mUOlMUFvH4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=blA2DTrGVdCyZIg8yrxBh13OprQ96S+2FeyBfMKLq8o=;
+ b=kKGXwqKT1hhTX+H76ghZmNRc9bk9A5VQol1nANl2KeIxiy6TOWUqCeU4KlRYJm775v4hfo6wDDipxOxr6YQB/OQguJYI8XquP+qkSYf6b9s767LW+WnNC0GQ0Zqpw3O4YocV/LFKqsytySmt7sDXkbBcKW42ljuY4NaQdcVsEVFba4pV/U+WOnBMG0exYTKUD7Za8UpSCOEIuva2TFKaaFvy3Kp3PazlSq3qcW+9+ZLV8eeOSO+FJKq5ufo4QGS1GUDKD6BzJQkr3gQ4Gzpe/7HJiT86HI4LkcrAlkKhqEwD6brpWxEwai5Z6hljBmlGQzNzVqUDsyHRlqnPZrmxHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=blA2DTrGVdCyZIg8yrxBh13OprQ96S+2FeyBfMKLq8o=;
+ b=TIG4x3wjSlnef/eMoPMFGNhair9nBhCRFqDNI8Vp2a5itjMvmdeudAbkpmemhxmMCoSLcUvLUB3bK29VJLn+8kh1V8PHUIIba1k67WRu6tyAY26VwV6x432lLRAkQbKt/g+ukJ2Mo469u4Wsq2GP6qRYY2T6k4xx3ogWBo3pNt8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CH2PR12MB4279.namprd12.prod.outlook.com (2603:10b6:610:af::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Tue, 14 Oct
+ 2025 10:50:50 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9203.009; Tue, 14 Oct 2025
+ 10:50:49 +0000
+Message-ID: <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
+Date: Tue, 14 Oct 2025 12:50:44 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
+To: Mario Limonciello <superm1@kernel.org>, Bert Karwatzki
+ <spasswolf@web.de>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20251006120944.7880-1-spasswolf@web.de>
+ <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+ <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+ <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR05CA0065.namprd05.prod.outlook.com
+ (2603:10b6:208:236::34) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH2PR12MB4279:EE_
+X-MS-Office365-Filtering-Correlation-Id: 754ea76c-5df0-4c98-90c2-08de0b0f89b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L0RSeXhveE9KZlc1T2JqWGxQaStRUExkWVA5Yy95aWNEaDRuM2tuYnYrWUF1?=
+ =?utf-8?B?bDVFNFZhU05xVFFnTW83cG44aUt5RU5aNFBSQ3Z2cFJFRWtIakpWYis0NmFL?=
+ =?utf-8?B?cWZoQXVMcDJDdVRKT1A4anF2TjJUTlBteE1UNUJWVHhIZ1lZb0JEeDVzQ2s1?=
+ =?utf-8?B?RkNyOFYwRjJlSFpyTHE4Z0t6QUpVYjZ5RS93Q1hLRmNwZkNGZVdGUEtmUmxJ?=
+ =?utf-8?B?c2oyZzZ3UXVRcWIweVR6Q2lQTGM0QlAxclNmeVkwQ1ZyNE5VR2FzbmJ5YXE3?=
+ =?utf-8?B?UWlMWUU4RjZVeDVhbXY0K1RkNFBpa3kyWWEwbktuN3YvSkZWVjR1U2FTZGtP?=
+ =?utf-8?B?V0dnbXAzaFVjcmtmMWtLRkRxdXpzbnJON1dLVmZ2MkZSV1NHeUtRRzRaZmJX?=
+ =?utf-8?B?TE43dHF1VWFPMW1zVVV2dXNreXVOeG8vS3N1dVZnOGZ5Sm9MSDh0VmZWVlIz?=
+ =?utf-8?B?ZEoxdFJSLzFpSDhLMFRHVS9NVEliZGo0SG1JZWxmNm82VHo2a0NRajhpVDJ6?=
+ =?utf-8?B?MGsvMlpUOEkwZCtXWmV1MmRJMStCZ2ZSSXpGam5hRUx1UlNuVDhxNFVDUEJI?=
+ =?utf-8?B?cE03YlFRWVRDRjRqaFdPUlVWOFJmU2JzWkVWOUZzSTBMVTJvN2dCM3grV25J?=
+ =?utf-8?B?dmY0enZaQmJSSlBqVkQxVjNDNUlIOUVvTmdEQkxURmljdWFzYWROTlY5ZFZX?=
+ =?utf-8?B?NEMra255MEQwMCtVQlRqUVhpdXRkT0czZjF2WmhmTVdLUFNyVThCbmhhb0tz?=
+ =?utf-8?B?NE9Eem4zRFdXczhGUXFBMUhGUGlTUXJpUlg5NDZSdTlHUjMxN0I2bStVNHFE?=
+ =?utf-8?B?dFl2clFGVU5BVmtGemM3WmducmYzT2cxbll3MSszcmtZRS96bWpKUXFXZGdm?=
+ =?utf-8?B?RVVGemoyQUNqUzZWMm5qSTB6bXY2Qm5uZkc5d2tYRFl6QStaYzdzbXRGNUE4?=
+ =?utf-8?B?QmdkN1lGUEVOczFSb0RkZzNoVHhGUklpcWZ2Q3ZKMXdJZVhsUjRHSkROY0Zw?=
+ =?utf-8?B?TGJpeXpBSjU5ZldVRkVqYlEzTlNVZ2RWV1ZDeG1USnlZd3A3MUZpU2Z1bGky?=
+ =?utf-8?B?bjRSOVBMNTBHVDUrT2hVakt5elFJVnRncm9uN1FsQTBUc2c5L01LalFHSFMz?=
+ =?utf-8?B?TXg4b0NLQjlmK2xCcFkwVUFCb01LbkNoSVJuWEhkOVRBcFdaQitLQkNManlx?=
+ =?utf-8?B?dGQ4YmM4NXRPVG45NW0veWQ5bGNEODh3RHJoSkNNQ0MwNGxsMDVhM3BDMGw0?=
+ =?utf-8?B?R1JwQ1NIa2Zjd0ZhalVZRDEvTjdiVlZ5QUNZdVp0NURCTmMydFJsck9CYm1D?=
+ =?utf-8?B?eFo5MkRSUXZqVGVsRkNRL3ZNZHllWHdWT3h5cThoNXVCNlo0TlZNVzhPVk1u?=
+ =?utf-8?B?Y3J1ZGJSU1B6NlJ0WWhmTTRua3VPZnJicXRzWTY2QTAxV2pWSVNNUlhMU0dZ?=
+ =?utf-8?B?N3BpK2IwcFI0MmdZbWVqSEhJa21aZEZTRTVlZ21zUllDbGs3ajNtNUUwVTlR?=
+ =?utf-8?B?dWpGRUwvQ08rdWVROFB3ckFiaWJjOEhrUnhvbXRGT0pYWk1FWHM5alVrWkNx?=
+ =?utf-8?B?Um5nYXMrS1E5dFlIaDlwNTJaZHROMk5LK2VUeDhSejVncldLSlZXLzNHRmE1?=
+ =?utf-8?B?VXRqZ2JjNk5IMmtRNENDL2srUGQ2VkI1R3NHeEZrWXFjVWp1b0Z5UU1rK044?=
+ =?utf-8?B?N3VTZFJDUU1CTWlqSWt0Q2kxODU0OXZrRE5SdUxqb1hhdUIycTNRcFZ4Zktj?=
+ =?utf-8?B?aW9lVHYzUXE0RWtBZ0ZsTzRNWTFrNU4xc2RtdDc3SzBaZnQyd3VzaCs2VHpP?=
+ =?utf-8?B?YS95VTMzUW16QkM2dHFQaE4ybFA4OUdNV05yWDZld1NWUG5QdnpBVlV6N0ZQ?=
+ =?utf-8?B?cndBV0phM3RLR2tQeGJZaysvRjBOVm4rVHZuMWZBc1FHNnc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MCt0d2lqSXpxMnlMQmJqK3grMDRuQVluVWlHOU1rNWRZOTltejBYaTZwd3Q5?=
+ =?utf-8?B?VGdSUDJpck42QkNLQU1vM1I0bndBQzdMMDVMNWRWdkVweHg3dEFTMDJudUt4?=
+ =?utf-8?B?T0x5RWVZNXhLR1J1N3BxaWVhVmcrd29VcjR1S1hYRXd3NEZHOG1vaW1ZczFw?=
+ =?utf-8?B?VWoxSm1hTm9CK1ZrcFV5cXRHbWRlVjVvMDkyVjl2Rzkrb1lxR2svYlRTOG9D?=
+ =?utf-8?B?bzZKS24rOFQ0dVh1OGZNOUU0SmI3NVlGNWlMOTQ2T3hqUGx3ODVDVEthdElo?=
+ =?utf-8?B?YVNRbmVJendxNFQ0UnhWUllQTXVSTm5nbUxKK1BWVjVKRG5RWVNJU0l5TGFP?=
+ =?utf-8?B?QndaMXdKemFhajhNcCtiRWF6R3dWV2Jwb1BOT3BBK3NPNTlMcy9sdzBGYUtO?=
+ =?utf-8?B?Mk04TE83dUV4V00wSFlrbWF6OWVFeXh3KytFdllLMmNUR2NnSXd6ZWVUQk8w?=
+ =?utf-8?B?L2tMUEUwNEpkNUdzTERMOVFoNTY2b3NaZlYrcXZ4ejVPcWRjZGsvOEsyTlov?=
+ =?utf-8?B?QkJhTU9HVjZ0S2hLdVlyWnBDMTY4Uml2dXBDM0VsbnZRY3k0WkpTZmxqUE10?=
+ =?utf-8?B?OTRURzJDSHRzYkV1enpmM1hxQzBIK3NRakpXTHBrWXNQQWYzeXZYNDU4QVgw?=
+ =?utf-8?B?L1ZQaDVrTDdqRGpNcG1NSUhjUHpiUU1kb216RVY1VVhRRW9oMndFWGdoUjht?=
+ =?utf-8?B?VjNZV0NISGI5cGVPdVliQStQb1lOazZ4SHVaUjlIcU5Bc0dPWENCTVBEN3NN?=
+ =?utf-8?B?WFZQaktLM0l0MlY5OHcraVZLb0xEdXFSczVKamF6NktGUkxpZ3VGc2JUd2c1?=
+ =?utf-8?B?OXhxUHByckRIZWM0VVZDVTlvVkZDQ0JKemdLMXlQY1prR0VFek5ZOHg0Uyt4?=
+ =?utf-8?B?eXVEdnZsRUJ3VnpWbWI5SGVyaHhtNGYzVkFVYVFFZ05iQTJ3N2F6alFscDJ1?=
+ =?utf-8?B?ZGs0V2tOUGN2WFlrdGFHejE0MmR3dTZUL2JiR3dBNThnRmJvY2tXbEtyclNo?=
+ =?utf-8?B?R1picmRnaXdIYkZXbUFZQUtHYno5bTdyWVNvWTBDK3E5T1V1N0FPY1VTR1BD?=
+ =?utf-8?B?STI5ZHIwZUhjeVZQSWM1UWV6ZERhUzV1TVM5WkVWTkRtd2wxQUpXUVRhTzhR?=
+ =?utf-8?B?MWx1SENGZktETzZmaUd5WXEvN1pqS1Q1c3Z5RkxIZU8rVzNtNlpuWk1TUHhV?=
+ =?utf-8?B?aVdwYjFFaTZ4bUxEL0tGeXUvTGFIVnRlZHREa2V6UlppVGRNeWEyZFlEbDc0?=
+ =?utf-8?B?ZWxKM3NISjhlanVybkNIWXgzdkJiZ1AvSWdZbWxPc01KU0U5M1RwQzRocm1G?=
+ =?utf-8?B?NEk0WGs4OHpuYnBEVWpZYzRjOHJRcVFsd3BwUThOZDBJOHV6V0NJS2NzUmtW?=
+ =?utf-8?B?elNscUlRdnBlaUV4UVQyMHIwUDdEMjZqUFJ3czlwRzlpbkVaajhvNjRUaElV?=
+ =?utf-8?B?dGhmaUkrd2FLVnk1Q05Yd2p2KzZ3bktNOXJzZk1zV3o0Z2VwLzN0cDE3aUJr?=
+ =?utf-8?B?dkRheTh3SnBnTkJIVi9iNGJ3M0hOMmpRVVF4SFk2aXNPOXFqMEJyeEgydGMx?=
+ =?utf-8?B?OGNGQ2s5Q0NTbGxPU1JHOUFCaW4wSjRjbkd1eGhHMDBsc3M3TktwOVZNZTdP?=
+ =?utf-8?B?MXBpSUxZVWczVG1XVXpjb0FBQnVRZ3JWZkFGR3dTQm1tMk53Y29zcXFOQ3ds?=
+ =?utf-8?B?VEJYdUJ5M2xzVURBQkdiVGcyYnA0d1FITlVyMHJkc0dUbE44QTFNdHdweFZR?=
+ =?utf-8?B?bDg3cUNSZGZON2tIK1laWFJRc1dNUEYwWGVWN0VQQ2g0cVY4bkJqRDdKelNL?=
+ =?utf-8?B?UHI3QVpKUmlHam0waXRZenFsQ2dYTlBDWmpsR2xsZjhWN0gydUpTUk00NkRM?=
+ =?utf-8?B?Mm9oVFhtZi82RXZJT0RqcU5DemxwZmNCdkd2YlgvZHdVbVBsQUpQQmF0bTJr?=
+ =?utf-8?B?WnBhZlU1NkxuR3pMSVE0YlBqWVdtK0pHRWUySVpQbnM0b0VONWd4M2ZQY3A3?=
+ =?utf-8?B?MzdUSzcwRitWcUdxbWN0eXN2eXZlSU5jMkVQejE4ODJzWDRCbmcxNWRuVGpR?=
+ =?utf-8?B?NWxhMWRXQ3FmVnpOT2wvSlRUdE0xNzYwZkp2YUxqNldKR0VKdTZuNzY3cEMv?=
+ =?utf-8?Q?uG59cItYnygy8RbfSKdyTCpEo?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 754ea76c-5df0-4c98-90c2-08de0b0f89b8
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 10:50:49.8009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dgy/a8FB0T5UE8/qle30TXhABDc2NMHEmqfU7qU1bMZdOch9HqiphoorAi9ZlvRR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4279
 
+On 13.10.25 20:51, Mario Limonciello wrote:
+> On 10/13/25 11:29 AM, Bert Karwatzki wrote:
+>> Am Dienstag, dem 07.10.2025 um 16:33 -0500 schrieb Mario Limonciello:
+>>>
+>>> Can you still reproduce with amd_iommu=off?
+>>
+>> Reproducing this is at all is very difficult, so I'll try to find the exact spot
+>> where things break (i.e. when the pci bus breaks and no more message are transmitted
+>> via netconsole) first. The current state of this search is that the crash occurs in
+>> pci_pm_runtime_resume(), before pci_fixup_device() is called:
+>>
+> 
+> One other (unfortunate) possibility is that the timing of this crash occurring is not deterministic.
 
---=-WzP+G+VsL1ZgoEfePPDq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yeah, completely agree.
 
-On Tue, 2025-10-14 at 08:54 +0800, Inochi Amaoto wrote:
-> On Mon, Oct 13, 2025 at 07:45:05AM -0400, Genes Lists wrote:
-> >=20
-...
+The exact spot where things break is actually pretty uninteresting I think. Background is that it is most likely not the spot which caused the issue.
 
-> > Thank you Inochi
-> >=20
-> > I tried this patch over 6.18-rc1.
-> >=20
-> > =C2=A0It get's further than without the patch but around the time I get
-> > prompted for passphrase for the luks partition
-> > (root is not encrypted) it crashes.=C2=A0
-> >=20
-> > I have uploaded 2 images I took of the screen when this happens and
-> > uploaded them to here:
-> >=20
-> > =C2=A0 =C2=A0=C2=A0https://0x0.st/KSNz.jpg
-> > =C2=A0 =C2=A0=C2=A0https://0x0.st/KSNi.jpg
-> >=20
->=20
-> This picture is only a WARNING from perf_get_x86_pmu_capability,
-> and no other information. So I am not sure whether it is caused
-> by this change. But from the original report I have, it solves
-> the problem at that time.
->=20
-> By the way, can you test the following change?
-> https://lore.kernel.org/all/2hyxqqdootjw5yepbimacuuapfsf26c5mmu5w2jsd
-> mamxvsjdq@gnibocldkuz5/
->=20
-> If it is OK, I will send a patch for it.
->=20
-> Regards,
-> Inochi
+Instead what happens is that something in the HW times out and you see a spontaneous reboot because of this.
 
+I would rather try to narrow down which operation or combination of things is causing the issue.
 
-With this patch it boots with the same/similar warning as before, which
-I will include below since it's text instead of image.
+Maybe also double check if runtime pm is actually working on the good kernel or if the issue might be that somebody fixed runtime pm and you are now seeing issues because you happen to have problematic HW which we need to add to the blacklist.
 
-Tested-by: Gene C <gene@sapience.com>
+Regards,
+Christian.
 
-Thank you
+> 
+> As an idea for debugging this issue, do you think maybe using kdumpst [1] might be helpful to get more information on the state during the crash?
+> 
+> Since NVME is missing you might need to boot off of USB or SD though so that kdumpst is able to save the vmcore out of RAM.
+> 
+> Link: https://blogs.igalia.com/gpiccoli/2024/07/presenting-kdumpst-or-how-to-collect-kernel-crash-logs-on-arch-linux/ [1]
+>> static int pci_pm_runtime_resume(struct device *dev)
+>> {
+>>     struct pci_dev *pci_dev = to_pci_dev(dev);
+>>     const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>>     pci_power_t prev_state = pci_dev->current_state;
+>>     int error = 0;
+>>     // dev_info(dev, "%s = %px\n", __func__, (void *) pci_pm_runtime_resume); // remove this so we don't get too much delay
+>>                                           // This was still printed in the case of a crash
+>>                                           // so the crash must happen below
+>>
+>>     /*
+>>      * Restoring config space is necessary even if the device is not bound
+>>      * to a driver because although we left it in D0, it may have gone to
+>>      * D3cold when the bridge above it runtime suspended.
+>>      */
+>>     pci_pm_default_resume_early(pci_dev);
+>>     if (!strcmp(dev_name(dev), "0000:00:01.1")) // This is the current test.
+>>         dev_info(dev, "%s %d\n", __func__, __LINE__);
+>>     pci_resume_ptm(pci_dev);
+>>
+>>     if (!pci_dev->driver)
+>>         return 0;
+>>
+>>     //if (!strcmp(dev_name(dev), "0000:00:01.1"))         // This was not printed when 6.17.0-rc6-next-20250917-gpudebug-00036-g4f7b4067c9ce
+>>     //    dev_info(dev, "%s %d\n", __func__, __LINE__); // crashed, so the crash must happen above
+>>     pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>>     pci_pm_default_resume(pci_dev);
+>>
+>>     if (prev_state == PCI_D3cold)
+>>         pci_pm_bridge_power_up_actions(pci_dev);
+>>
+>>     if (pm && pm->runtime_resume)
+>>         error = pm->runtime_resume(dev);
+>>
+>>     return error;
+>> }
+>>
+>>
+>> Bert Karwatzki
+> 
 
-gene
-
-Warning from 6.18-rc1 with above patch:
-
-
-[  +0.003929] ------------[ cut here ]------------
-[  +0.000004] WARNING: CPU: 7 PID: 584 at arch/x86/events/core.c:3089
-perf_get_x86_pmu_capability+0x11/0xb0
-[  +0.000010] Modules linked in: snd_hda_codec sr_mod(+) iwlmvm(+)
-kvm_intel(+) dm_crypt cdrom encrypted_keys snd_>
-[  +0.000060]  industrialio mei_me processor_thermal_wt_req i2c_smbus
-spi_intel_pci intel_ipu6 soundcore processor>
-[  +0.000058]  ghash_clmulni_intel aesni_intel video intel_ish_ipc
-drm_display_helper intel_lpss_pci thunderbolt i>
-[  +0.000025] CPU: 7 UID: 0 PID: 584 Comm: (udev-worker) Not tainted
-6.18.0-rc1-test-1-00002-ge9cc50c96bb9 #2 PREE>
-[  +0.000005] Hardware name: Dell Inc. XPS 9320/0CR6NC, BIOS 2.23.0
-07/03/2025
-[  +0.000002] RIP: 0010:perf_get_x86_pmu_capability+0x11/0xb0
-[  +0.000004] Code: eb 9c e8 22 38 f8 00 66 90 90 90 90 90 90 90 90 90
-90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 4>
-[  +0.000002] RSP: 0018:ffffd1e041edba58 EFLAGS: 00010202
-[  +0.000003] RAX: 0000000000000000 RBX: ffffffffc206f000 RCX:
-00000000c0000080
-[  +0.000003] RDX: ffffffffc1e396e0 RSI: ffffffffc1e39408 RDI:
-ffffffffc1e396e0
-[  +0.000001] RBP: 0000000000000001 R08: 0000000000000000 R09:
-ffffffffb0e763fb
-[  +0.000002] R10: ffff8d0fdad72460 R11: ffff8d0fc0042600 R12:
-0000000000000000
-[  +0.000001] R13: ffffffffc17e4ca0 R14: 000071be141fd2f2 R15:
-0000000000000000
-[  +0.000002] FS:  000071be140c6880(0000) GS:ffff8d177bf79000(0000)
-knlGS:0000000000000000
-[  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000002] CR2: 00007d5cd598b808 CR3: 0000000109583004 CR4:
-0000000000f70ef0
-[  +0.000002] PKRU: 55555554
-[  +0.000001] Call Trace:
-[  +0.000003]  <TASK>
-[  +0.000002]  kvm_init_pmu_capability+0x27/0x130 [kvm
-83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
-[  +0.000119]  kvm_x86_vendor_init+0x1de/0x19d0 [kvm
-83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
-[  +0.000085]  ? __pfx_vt_init+0x10/0x10 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000023]  vmx_init+0xf6/0x170 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000015]  vt_init+0xf/0x360 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000012]  do_one_initcall+0x5b/0x300
-[  +0.000009]  do_init_module+0x62/0x250
-[  +0.000005]  ? init_module_from_file+0x8a/0xe0
-[  +0.000004]  init_module_from_file+0x8a/0xe0
-[  +0.000006]  idempotent_init_module+0x114/0x310
-[  +0.000005]  __x64_sys_finit_module+0x6d/0xd0
-[  +0.000004]  ? syscall_trace_enter+0x8d/0x1d0
-[  +0.000003]  do_syscall_64+0x81/0x7f0
-[  +0.000005]  ? __wait_for_common+0x162/0x190
-[  +0.000005]  ? __pfx_schedule_timeout+0x10/0x10
-[  +0.000004]  ? __rseq_handle_notify_resume+0xa6/0x490
-[  +0.000005]  ? idempotent_init_module+0x1df/0x310
-[  +0.000005]  ? switch_fpu_return+0x4e/0xd0
-[  +0.000003]  ? do_syscall_64+0x226/0x7f0
-[  +0.000003]  ? do_syscall_64+0x226/0x7f0
-[  +0.000003]  ? do_user_addr_fault+0x21a/0x690
-[  +0.000006]  ? exc_page_fault+0x7e/0x1a0
-[  +0.000013] Bluetooth: hci0: Firmware SHA1: 0x937bca4a
-[  +0.003913] Bluetooth: hci0: Fseq status: Success (0x00)
-[  +0.000011] Bluetooth: hci0: Fseq executed: 00.00.02.41
-[  +0.000004] Bluetooth: hci0: Fseq BT Top: 00.00.02.41
-[  +8.297442] Key type trusted registered
-[  +0.014388] Key type encrypted registered
-[  +0.017993] sr 0:0:0:0: Power-on or device reset occurred
-[  +0.005943] sr 0:0:0:0: [sr0] scsi3-mmc drive: 24x/24x writer dvd-ram
-cd/rw xa/form2 cdda tray
-[  +0.000005] cdrom: Uniform CD-ROM driver Revision: 3.20
-[  +0.003929] ------------[ cut here ]------------
-[  +0.000004] WARNING: CPU: 7 PID: 584 at arch/x86/events/core.c:3089
-perf_get_x86_pmu_capability+0x11/0xb0
-[  +0.000010] Modules linked in: snd_hda_codec sr_mod(+) iwlmvm(+)
-kvm_intel(+) dm_crypt cdrom encrypted_keys snd_>
-[  +0.000060]  industrialio mei_me processor_thermal_wt_req i2c_smbus
-spi_intel_pci intel_ipu6 soundcore processor>
-[  +0.000058]  ghash_clmulni_intel aesni_intel video intel_ish_ipc
-drm_display_helper intel_lpss_pci thunderbolt i>
-[  +0.000025] CPU: 7 UID: 0 PID: 584 Comm: (udev-worker) Not tainted
-6.18.0-rc1-test-1-00002-ge9cc50c96bb9 #2 PREE>
-[  +0.000005] Hardware name: Dell Inc. XPS 9320/0CR6NC, BIOS 2.23.0
-07/03/2025
-[  +0.000002] RIP: 0010:perf_get_x86_pmu_capability+0x11/0xb0
-[  +0.000004] Code: eb 9c e8 22 38 f8 00 66 90 90 90 90 90 90 90 90 90
-90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 4>
-[  +0.000002] RSP: 0018:ffffd1e041edba58 EFLAGS: 00010202
-[  +0.000003] RAX: 0000000000000000 RBX: ffffffffc206f000 RCX:
-00000000c0000080
-[  +0.000003] RDX: ffffffffc1e396e0 RSI: ffffffffc1e39408 RDI:
-ffffffffc1e396e0
-[  +0.000001] RBP: 0000000000000001 R08: 0000000000000000 R09:
-ffffffffb0e763fb
-[  +0.000002] R10: ffff8d0fdad72460 R11: ffff8d0fc0042600 R12:
-0000000000000000
-[  +0.000001] R13: ffffffffc17e4ca0 R14: 000071be141fd2f2 R15:
-0000000000000000
-[  +0.000002] FS:  000071be140c6880(0000) GS:ffff8d177bf79000(0000)
-knlGS:0000000000000000
-[  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000002] CR2: 00007d5cd598b808 CR3: 0000000109583004 CR4:
-0000000000f70ef0
-[  +0.000002] PKRU: 55555554
-[  +0.000001] Call Trace:
-[  +0.000003]  <TASK>
-[  +0.000002]  kvm_init_pmu_capability+0x27/0x130 [kvm
-83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
-[  +0.000119]  kvm_x86_vendor_init+0x1de/0x19d0 [kvm
-83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
-[  +0.000085]  ? __pfx_vt_init+0x10/0x10 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000023]  vmx_init+0xf6/0x170 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000015]  vt_init+0xf/0x360 [kvm_intel
-5fa84b05f575edf3826c8f8519ca550622307061]
-[  +0.000012]  do_one_initcall+0x5b/0x300
-[  +0.000009]  do_init_module+0x62/0x250
-[  +0.000005]  ? init_module_from_file+0x8a/0xe0
-[  +0.000004]  init_module_from_file+0x8a/0xe0
-[  +0.000006]  idempotent_init_module+0x114/0x310
-[  +0.000005]  __x64_sys_finit_module+0x6d/0xd0
-[  +0.000004]  ? syscall_trace_enter+0x8d/0x1d0
-[  +0.000003]  do_syscall_64+0x81/0x7f0
-[  +0.000005]  ? __wait_for_common+0x162/0x190
-[  +0.000005]  ? __pfx_schedule_timeout+0x10/0x10
-[  +0.000004]  ? __rseq_handle_notify_resume+0xa6/0x490
-[  +0.000005]  ? idempotent_init_module+0x1df/0x310
-[  +0.000005]  ? switch_fpu_return+0x4e/0xd0
-[  +0.000003]  ? do_syscall_64+0x226/0x7f0
-[  +0.000003]  ? do_syscall_64+0x226/0x7f0
-[  +0.000003]  ? do_user_addr_fault+0x21a/0x690
-[  +0.000006]  ? exc_page_fault+0x7e/0x1a0
-[  +0.000004]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  +0.000003] RIP: 0033:0x71be1391876d
-[  +0.000045] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa
-48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c>
-[  +0.000002] RSP: 002b:00007ffdfcc7da58 EFLAGS: 00000246 ORIG_RAX:
-0000000000000139
-[  +0.000004] RAX: ffffffffffffffda RBX: 000064e3aeb57f80 RCX:
-000071be1391876d
-[  +0.000001] RDX: 0000000000000004 RSI: 000071be141fd2f2 RDI:
-0000000000000032
-[  +0.000002] RBP: 00007ffdfcc7daf0 R08: 0000000000000000 R09:
-000064e3aeb528f0
-[  +0.000001] R10: 0000000000000000 R11: 0000000000000246 R12:
-000071be141fd2f2
-[  +0.000001] R13: 0000000000020000 R14: 000064e3aeb507f0 R15:
-000064e3aeb57f80
-[  +0.000003]  </TASK>
-[  +0.000001] ---[ end trace 0000000000000000 ]---
-
-
-
---=20
-Gene
-
---=-WzP+G+VsL1ZgoEfePPDq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCaO4jdAAKCRA5BdB0L6Ze
-244RAQDk1/zoqO5wjghvcV/PzFr1pEfVFIEW5Kjc7eP+weAG3gD/ZhNV4oGBjWc0
-BxKw9gsEg3neYfcTDB9Bag9mtmFtJAQ=
-=xG1/
------END PGP SIGNATURE-----
-
---=-WzP+G+VsL1ZgoEfePPDq--
 
