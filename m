@@ -1,143 +1,149 @@
-Return-Path: <linux-pci+bounces-38091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E94B5BDB658
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 23:18:34 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6852BBDB877
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 00:02:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E112580118
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 21:18:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 946214F5587
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:02:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C99012D6401;
-	Tue, 14 Oct 2025 21:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E46A2E2DD4;
+	Tue, 14 Oct 2025 22:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLENNlmf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrYiVryD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23BD2C1590;
-	Tue, 14 Oct 2025 21:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A07D2DCF6B
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 22:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760476705; cv=none; b=dFXXD9xCIyFFvhEjXI1BdnD3T4/at1Hsbe7MLsIHq8UM7T6p1XjOeb3dRHPBCfHG2eBojp5GB0qvp7g+I6w+LhSnc3I3ptza0ygMDxEPZTW1EMnf2aApFXDCbgFaHgsyY33JQvRjHqgf7zriNJTqrFyNCCUaqFh6fu2VdEEGPpY=
+	t=1760479329; cv=none; b=tYIJcsD6G8hf1FqwuIeeYh55ihElR+/XnaMp72zXLCgfFRBRJs02XP0Zd/1XXp+hR1EHRd2Qs/tywOxS0G6NlGppJV8wbxnyQDBtGD37/9x0syanozYKPop4YqSacvpKaCdxSpEeTqs300MMr6gRTRZTbTd5/XUcCECyxnILa8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760476705; c=relaxed/simple;
-	bh=k9VLhEH66l0BqEGhD0Vjo1mGSRb3mjuRpsgnYAD5Zww=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QIqe0ns63KsAMxHdYevkZ8jH1ixzL2wImLAJGxCH5eq/aSG98sQaB+WOHLDswFBCapiy7eXkkKlpmoesYV4DIkqxgeukXo0etuGvH24HKFREi2Mwd316RwidsYWKHDlxk06FHYdIquh3/sh8QPtWEiHygF+IgjRS6czijSemfoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLENNlmf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE72C4CEF9;
-	Tue, 14 Oct 2025 21:18:25 +0000 (UTC)
+	s=arc-20240116; t=1760479329; c=relaxed/simple;
+	bh=GErVoxMZK5sxg6yobVVq0+8Y2gif4lFDMhw0Y3mRPZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KKOZ6Gem5mm5xXnwb+417tk7kONiDDTWWq+rIrmuIjzA0DteExueCsCM9npLGjvOl7r0FDncnQwynADLaRzz2etTfRs1JMqZE99YNyBvgl1O3uYJB7BVfwD6yy0yBqQwx2rXZ3Fm5hNeyCTpmmDXaztBXkyD0tXj2XKv1QpaQZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrYiVryD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B945C4CEF1;
+	Tue, 14 Oct 2025 22:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760476705;
-	bh=k9VLhEH66l0BqEGhD0Vjo1mGSRb3mjuRpsgnYAD5Zww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=vLENNlmfx+OiRdnI/YKOfKboL0Ji4hnfJ0whbjh5rEfh//U8FdlmwB+QotFfXnJNo
-	 ZAeHhDdvBNu70mA4OsHspXV24b0dk9OtZWZwx9E3ALnSeptyewaBnObSj2ABTelSac
-	 SwNaVbi+JYzPVcXnPZj0HO15LDENRByTXxnAm65jR0puoM3SXVhsy4SPL/TD4lCy8L
-	 rLdZ9NjjbbYox34/dF32Zm2YrYUIRPq12XHUBcHOZNC3XHfBTX0SAkfdtjoavSCLpw
-	 nDPOjEf+ukivM+Qsq5g2aK+EryW/v5UWTvxq40bVHwBEDyCxLuMUPYyPxAiekyG+QT
-	 An0SJMkFHxyCg==
-Date: Tue, 14 Oct 2025 16:18:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Kenneth Crudup <kenny@panix.com>, Genes Lists <lists@sapience.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] PCI: vmd: override irq_startup()/irq_shutdown() in
- vmd_init_dev_msi_info()
-Message-ID: <20251014211824.GA908020@bhelgaas>
+	s=k20201202; t=1760479325;
+	bh=GErVoxMZK5sxg6yobVVq0+8Y2gif4lFDMhw0Y3mRPZo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HrYiVryD/f5kJBSGEOWn7j+GHb+8EaUeN4hY2Wg+s2/ae/P7IO2oRJF1SoFe+W2WM
+	 gtVMOmGK2IcYH2q/kXGtefVkRr9ppQggNLF5etFqhMj2QLegjegEL+qWTinMzqtm1q
+	 6iAtPLQs/sYymwEBM1TY3NEUXfnJ2iQ5TtVW0FMlZ5+rWiRzIjwVUbljzmjrZOmzjE
+	 zq7E7lANdPBcYWK71femTB/Q9hFRmVtEU2JFU9Ze7PkYq994FQYLYZYxhHyrioS4Vd
+	 hCwojV+vlOXuFKInr7VQcJInCL1WYZVz/gzfuqKzxOkkLmpJo1FloGefU9h5Tpx9bH
+	 rZP5xFDuKaA0A==
+Message-ID: <2f857940-ae89-4459-b10e-25fadd722d5a@kernel.org>
+Date: Tue, 14 Oct 2025 17:02:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251014014607.612586-1-inochiama@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI/VGA: Select SCREEN_INFO on X86
+To: Thomas Zimmermann <tzimmermann@suse.de>, mario.limonciello@amd.com,
+ bhelgaas@google.com
+Cc: Eric Biggers <ebiggers@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-pci@vger.kernel.org
+References: <20251013220829.1536292-1-superm1@kernel.org>
+ <f05a530b-c5db-4db0-8458-1ba0443e4f2a@suse.de>
+Content-Language: en-US
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <f05a530b-c5db-4db0-8458-1ba0443e4f2a@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 14, 2025 at 09:46:07AM +0800, Inochi Amaoto wrote:
-> Since commit 54f45a30c0d0 ("PCI/MSI: Add startup/shutdown for per
-> device domains") set callback irq_startup() and irq_shutdown() of
-> the struct pci_msi[x]_template, __irq_startup() will always invokes
-> irq_startup() callback instead of irq_enable() callback overridden
-> in vmd_init_dev_msi_info(). This will not start the irq correctly.
-> 
-> Also override irq_startup()/irq_shutdown() in vmd_init_dev_msi_info(),
-> so the irq_startup() can invoke the real logic.
-> 
-> Fixes: 54f45a30c0d0 ("PCI/MSI: Add startup/shutdown for per device domains")
-> Reported-by: Kenneth Crudup <kenny@panix.com>
-> Closes: https://lore.kernel.org/all/8a923590-5b3a-406f-a324-7bd1cf894d8f@panix.com/
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> Tested-by: Kenneth R. Crudup <kenny@panix.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thomas, I'm happy to take this via PCI you prefer.  I acked it
-because you merged 54f45a30c0d0.
+On 10/14/2025 3:24 AM, Thomas Zimmermann wrote:
+> 
+> 
+> Am 14.10.25 um 00:08 schrieb Mario Limonciello (AMD):
+>> commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with
+>> a screen info check") introduced an implicit dependency upon SCREEN_INFO
+>> by removing the open coded implementation.
+>>
+>> If a user didn't have CONFIG_SCREEN_INFO set vga_is_firmware_default()
+>> would now return false.  SCREEN_INFO is only used on X86 so add add a
+>> conditional select for SCREEN_INFO to ensure that the VGA arbiter works
+>> as intended.
+>>
+>> Reported-by: Eric Biggers <ebiggers@kernel.org>
+>> Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
+>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with 
+>> a screen info check")
+>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> ---
+>>   drivers/pci/Kconfig  | 1 +
+>>   drivers/pci/vgaarb.c | 6 ++----
+>>   2 files changed, 3 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>> index 7065a8e5f9b14..f94f5d384362e 100644
+>> --- a/drivers/pci/Kconfig
+>> +++ b/drivers/pci/Kconfig
+>> @@ -306,6 +306,7 @@ config VGA_ARB
+>>       bool "VGA Arbitration" if EXPERT
+>>       default y
+>>       depends on (PCI && !S390)
+>> +    select SCREEN_INFO if X86
+> 
+> On x86 screen_info comes from [1]. On other systems it's at [2].
+> 
+> You can try selecting CONFIG_SYSFB instead, but that will likely run 
+> into trouble with CONFIG_EFI=n.
+> 
+> [1] https://elixir.bootlin.com/linux/v6.17.1/source/arch/x86/kernel/ 
+> setup.c#L214
+> [2] https://elixir.bootlin.com/linux/v6.17.1/source/drivers/firmware/ 
+> efi/efi-init.c#L63
+> 
+> I guess, the current patch should work for the use case. I'll keep in 
+> mind to make the screen_info state easier to select.
+> 
 
-If you take it, I wouldn't mind if you capitalized "Override" in the
-subject to match the history.
+Yeah I noticed these when I was putting this together and when I 
+compared the pre-337bf13aa9dda code I decided KISS is the better 
+approach, especially to fix the 6.18 regression.
 
-Obviously this is v6.18 material since 54f45a30c0d0 is a v6.18-rc1
-regression.
+> Best regards
+> Thomas
+> 
+>>       help
+>>         Some "legacy" VGA devices implemented on PCI typically have 
+>> the same
+>>         hard-decoded addresses as they did on ISA. When multiple PCI 
+>> devices
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index b58f94ee48916..436fa7f4c3873 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -556,10 +556,8 @@ EXPORT_SYMBOL(vga_put);
+>>   static bool vga_is_firmware_default(struct pci_dev *pdev)
+>>   {
+>> -#ifdef CONFIG_SCREEN_INFO
+>> -    struct screen_info *si = &screen_info;
+>> -
+>> -    return pdev == screen_info_pci_dev(si);
+>> +#if defined CONFIG_X86
+>> +    return pdev == screen_info_pci_dev(&screen_info);
+>>   #else
+>>       return false;
+>>   #endif
+> 
 
-> ---
->  drivers/pci/controller/vmd.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 1bd5bf4a6097..b4b62b9ccc45 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -192,6 +192,12 @@ static void vmd_pci_msi_enable(struct irq_data *data)
->  	data->chip->irq_unmask(data);
->  }
-> 
-> +static unsigned int vmd_pci_msi_startup(struct irq_data *data)
-> +{
-> +	vmd_pci_msi_enable(data);
-> +	return 0;
-> +}
-> +
->  static void vmd_irq_disable(struct irq_data *data)
->  {
->  	struct vmd_irq *vmdirq = data->chip_data;
-> @@ -210,6 +216,11 @@ static void vmd_pci_msi_disable(struct irq_data *data)
->  	vmd_irq_disable(data->parent_data);
->  }
-> 
-> +static void vmd_pci_msi_shutdown(struct irq_data *data)
-> +{
-> +	vmd_pci_msi_disable(data);
-> +}
-> +
->  static struct irq_chip vmd_msi_controller = {
->  	.name			= "VMD-MSI",
->  	.irq_compose_msi_msg	= vmd_compose_msi_msg,
-> @@ -309,6 +320,8 @@ static bool vmd_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
->  	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
->  		return false;
-> 
-> +	info->chip->irq_startup		= vmd_pci_msi_startup;
-> +	info->chip->irq_shutdown	= vmd_pci_msi_shutdown;
->  	info->chip->irq_enable		= vmd_pci_msi_enable;
->  	info->chip->irq_disable		= vmd_pci_msi_disable;
->  	return true;
-> --
-> 2.51.0
-> 
 
