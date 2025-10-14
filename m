@@ -1,88 +1,67 @@
-Return-Path: <linux-pci+bounces-38014-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38015-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A18B8BD7782
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:44:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBE1BD77EE
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:53:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC94318A4192
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 05:44:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E868402588
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 05:53:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9801629A9C8;
-	Tue, 14 Oct 2025 05:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1105C299959;
+	Tue, 14 Oct 2025 05:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TouYZXAU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="fs+OCGSr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20683235072
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 05:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE68299931
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 05:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760420635; cv=none; b=ijFlYHLj/Af2XJZnLx+fmCgwZdbkvPHj1CM4qiohRfo7ndkPhUq+VpHshwf5b85gmyMrRN+93LW0VedsOa7VvWKHD83YOCD0kzF9JD6O9lJAk4NiIGKBLfhysr0ZyrJtHT69kmozhuKgpiBIn5tZfsp8aagIBV4HXT+qkGLUiNw=
+	t=1760421185; cv=none; b=ZEmuZvygHdKKgucrGfmmB7BXxP0rZsmA6iSpniDw5bUyBDAEHJfnvAPhXFLsejlwXXUTUfiyB6dznyKzEPiUoAx4x27hS8VStLb6Ie2IMOJjaTwrAw8+nYVv83KYP1pXrqZysDmTC+SXuNC7xtWhMfa4klYRe6161dV4jLLz/z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760420635; c=relaxed/simple;
-	bh=E9ngMPpY0495YcRNIkMm3Z3r/sRF71WMCHTr09dpriw=;
+	s=arc-20240116; t=1760421185; c=relaxed/simple;
+	bh=G0/UGo0ozvQ4jmGDO22pHXhjbWpCehf6BxKXmQ1M/uE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C4PdoQ+LovVtucgEV89Er3jI62MQN8ccTCcVm97lPsEaqurHiy8/Ca1ToIOyk2QUtJyaUKq4NADDa8u9ExRgLFxE5gVY0Gdq0ojitoliuSKyEWOOmV1ZQw4ZUg769WD77Pd+Xv3GrNq3C27AZUGmkPF7DtzVAkbJK4/QB/7vtik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TouYZXAU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59DHDBsR003097
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 05:43:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9D4EEKufXMXkKelCHysJYJduF8pemtJ6oblHi3EHsuE=; b=TouYZXAULvQYEuTq
-	NdqyM1jsslyIuxM/et06k9vIoAeQw3vETY4vbTQ1+SKOlmVQXk/ZJ33Bl9+fE1H4
-	HWyMgO4vyqIukO6Dc+hPMmQlJpefIpwcHz/Cn04vCQTqOwTUcWb5zt7TxrIueYre
-	RDJtrBAiZfxY6Us3A9QSslwzyqXlzYf46LSd/xFTy/5bF7S04Mdv6y+fB/5C3JEz
-	kYsngKLZvXkOmiGcKK3nlCh2oI/7f/qIyg6lddLh9PJ2BIC5PxT0646Cv38KnvMa
-	XJnzuHUbw6JtMJtKkD0cBrroOz08VN8Rh2REMp6fZ1/er8oybTwuJWjFlcwCgGm4
-	UuN/Qw==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49qff0q8af-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 05:43:53 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-33428befbbaso11667469a91.0
-        for <linux-pci@vger.kernel.org>; Mon, 13 Oct 2025 22:43:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760420632; x=1761025432;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9D4EEKufXMXkKelCHysJYJduF8pemtJ6oblHi3EHsuE=;
-        b=JtHMgxD7lrCZ7VCMebZNLs2xJ28/tLWqXhSNbk4BxWVJ1N5pOYG7bh5z4r4rFxtrT8
-         QQxmU76YZ9Mes4amBp3+MJVyKx4aAnlPbqfqd6mJ1SlGKIgR51fB9CxoN3FFb3qTwntV
-         1H7SAYYRV1FR3GDdo7aUUSDWhBcqMaZb1ElDPPzSViNgrxtT/dTFh7jfooPPz9hybGDA
-         A/vFRk1mSlSPNB68VPNxI4TNa8hagYlTsuknhjsHYsnCL6iSey127/jWda3r4887rhiL
-         QxeInenZOJnQo3XVfAnicpILdi7zaBOvnel3etrfgurCSkBCmBiKe25tPvnmFwCL/yYa
-         IG2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX43UjvsH1xr6PbK7TpmzNm7GScZKpnCBSq6pcuVre8GxPppedFVHOjYXy6gkFrIzju53juQG2mb18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCvGi4/xfuB5TDagQP5wcJiMmfrF7OHaCLBS5yGbQI7VcmHy15
-	XMHtQNglqBy4CwH5c2jYbxEGx81BoOfmYZ2i7gG3Ku7hDDBsFw1HxGM6/4Dg8DGv/lIxSxXfzQt
-	XcJw8L/+ZJDo6MEgvQ10b/dPmlHX9rQlYetKmsH4PTM7l3c+k6zji0gZ0TKeHchc=
-X-Gm-Gg: ASbGnctaHPsL7x6Du6uFe5/Z8/wA3C5lYO8ACwnxJJKE97tUSfZjsUBrVo6nlbImvvU
-	7j82lFN8kCU29cAxPFQaOmZ2bSz1An5HNyQi4gMjoUTPxEsI0x8gqE1uGJHb3vd003MSqbR1Jv7
-	mehrDK8ZgX6Kc9NFjPyvHxrcqPnqNa5yidHlrdgafK/Ode/e44FKTyqElykWfYRZqhC0j3VCz+k
-	PLTmJ+HO3hOxjJ4vIUMdnGBslQ9cPh34o3Jy8Ws0yZB+AS3IZ/hHXk4Ko6i8EHCWpeHsiqTAmMy
-	eQswddInrd9KZI6BSyksBbSjab9PyEcChB96NyjnR6xQCeKnM12CvT1fOZJ74FW+PxhUOzImDg=
-	=
-X-Received: by 2002:a17:90a:e7c7:b0:32d:601d:f718 with SMTP id 98e67ed59e1d1-33b51393502mr30831454a91.31.1760420632507;
-        Mon, 13 Oct 2025 22:43:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3trdEiZsOPClRk6Dsifi/viN4KHN7PYNnvGAEG9JdzBt9jMbgdpd2Oj5WQlapWC0s77Wzcw==
-X-Received: by 2002:a17:90a:e7c7:b0:32d:601d:f718 with SMTP id 98e67ed59e1d1-33b51393502mr30831433a91.31.1760420632058;
-        Mon, 13 Oct 2025 22:43:52 -0700 (PDT)
-Received: from [10.218.42.132] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b678df48a83sm11470944a12.31.2025.10.13.22.43.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 22:43:51 -0700 (PDT)
-Message-ID: <cd84f10e-c264-43fb-9e3d-20338d85de19@oss.qualcomm.com>
-Date: Tue, 14 Oct 2025 11:13:42 +0530
+	 In-Reply-To:Content-Type; b=CoBvii39E8pl2qwlHOdbvBqnQPLRj8S71Pmyy2uVQ17YWQyNWApKv8oIxKbOPRRkfgsfTYRUck5O5QJcrr80HV7B/mO/qhZdAlouPMsRH36LPF33Wyjw108ZGeoOG/Iqn/VCn85ruj25TU/QYyNaTGgPcVuhJghe9PVkuK1IgDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=fs+OCGSr; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+Received: from eig-obgw-6005b.ext.cloudfilter.net ([10.0.30.162])
+	by cmsmtp with ESMTPS
+	id 8X8lvm8z6eNqi8XxuvHkC3; Tue, 14 Oct 2025 05:52:54 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 8XxtvzqFMLidY8XxtvrTJr; Tue, 14 Oct 2025 05:52:53 +0000
+X-Authority-Analysis: v=2.4 cv=bq1MBFai c=1 sm=1 tr=0 ts=68ede535
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7vwVE5O1G3EA:10 a=HaFmDPmJAAAA:8
+ a=rGH4yh80M_cO9nZo6tcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tjFZRGr9e1ufehZZIU8TnF6ufx2C24WBWJ4fCdRYGpU=; b=fs+OCGSrJSqmZXQAoNGP1aKdrc
+	clChslfPhCxPWvpV+0l00GWwfhcAQ0qMUErxiIMYL5kISvubmAj66dwFaeHCL2VNe0G9onknkQzns
+	St2AUPt5tVS227hzDCCXnRQevlu651pfYvbgi2ZbBZqcwx67JNHSmc8G5tM1a+c5gcAGsFpHRG1c4
+	FR5wyrBfFb+Yr9nhw+O6rU+Z/IO29NUwQG/rukoLCJgfsK0G7RfzsiYwY+4Xa/S2hJtVosxa1Fp4A
+	LDWtojpoZLj7kaHNhnwmWe5c+BCEujiasdTwpDt/s8mn/qXP1IjR/IYoEYdfNyeEqLIbn4QzQ9r92
+	mm/SRhpQ==;
+Received: from c-73-92-56-26.hsd1.ca.comcast.net ([73.92.56.26]:55152 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1v8Xxp-00000003IY1-3ScS;
+	Mon, 13 Oct 2025 23:52:49 -0600
+Message-ID: <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
+Date: Mon, 13 Oct 2025 22:52:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,151 +69,159 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] arm64: dts: qcom: Add PCIe 3 support for
- HAMOA-IOT-SOM platform
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>, andersson@kernel.org,
-        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
-        lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-        johan+linaro@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-        neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250922075509.3288419-1-ziyue.zhang@oss.qualcomm.com>
- <20250922075509.3288419-4-ziyue.zhang@oss.qualcomm.com>
+Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>
+Cc: bhelgaas@google.com, mani@kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv <linux-riscv@lists.infradead.org>,
+ Paul Walmsley <pjw@kernel.org>, Greentime Hu <greentime.hu@sifive.com>,
+ Samuel Holland <samuel.holland@sifive.com>, regressions@lists.linux.dev
+References: <20251013212801.GA865570@bhelgaas>
+ <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
+ <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
+ <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
 Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250922075509.3288419-4-ziyue.zhang@oss.qualcomm.com>
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxOCBTYWx0ZWRfXw8K0OPdFTYtu
- dgGTF4atR916BoXb6Ryp1MfKXC4wNRHHJ8/TURb/LPjFyRnSQHj1Aw+KDkDdcTvmlUt55dkTLps
- IsucTXnPY7QnsX+pvP1WlEEccChQRnCJkoxJK3GLMFtnnkKubUFxvERWGInU9RKJkf48s1mr2wc
- mY+TFViKm0GvfS3Dds9kol1j7XdvmRhcQKwR5FwWr8dz1reoseBItsgKCzIQdoT2sZrW0Z1WlRb
- p15HeQOkX64zN+0TcPtHa8AxLn38ch+tm+7msipbm2ZrXE6xcWlTFgJD+4RaE3kFHuXLcxZ5tDt
- GwiPN/Uz1ZARZhq+qdf+5zSr7mhr2kcL1Nidw2+NqLSfi1NWknwch8T5NdTTsXCN3L68JccJEiL
- N6CCHxqs90ZlYWSLA/Je1sVtJE3TCA==
-X-Proofpoint-GUID: 0_lvC9iz7MdJthwOpJtPR1eoF3KTEmdM
-X-Authority-Analysis: v=2.4 cv=PriergM3 c=1 sm=1 tr=0 ts=68ede319 cx=c_pps
- a=RP+M6JBNLl+fLTcSJhASfg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=kM70mR4GnouSU5tgWfoA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-ORIG-GUID: 0_lvC9iz7MdJthwOpJtPR1eoF3KTEmdM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-13_09,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510020000
- definitions=main-2510110018
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.92.56.26
+X-Source-L: No
+X-Exim-ID: 1v8Xxp-00000003IY1-3ScS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-92-56-26.hsd1.ca.comcast.net ([10.0.1.116]) [73.92.56.26]:55152
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 19
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKLEuou6thWfKwBm+YlM02mUvul/AJ9xRu6yWkhIq6BDK6ejFOkW6TA3SEXgsFMRX9Vw0TrZC7QXi5EWd5OaMRcQh0Ef0pPdBAiO2LCdfTyE/U4EDCIw
+ NW5XFuMvCgflauQul6dG4c3Uis3HS2yPCNfxutLNSgCwnzeh4qr15auGzfQ2jlM+aX04PMBd/IATLBk1P9+1gTlP/mfDZQWL9Bw=
 
+On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
+>
+>
+> On 10/14/2025 10:56 AM, Ron Economos wrote:
+>> On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
+>>>
+>>>
+>>> On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
+>>>> [+cc FU740 driver folks, Conor, regressions]
+>>>>
+>>>> On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
+>>>>> The SiFive FU740 PCI driver fails on the HiFive Unmatched board 
+>>>>> with Linux
+>>>>> 6.18-rc1. The error message is:
+>>>>>
+>>>>> [    3.166624] fu740-pcie e00000000.pcie: host bridge 
+>>>>> /soc/pcie@e00000000
+>>>>> ranges:
+>>>>> [    3.166706] fu740-pcie e00000000.pcie:       IO
+>>>>> 0x0060080000..0x006008ffff -> 0x0060080000
+>>>>> [    3.166767] fu740-pcie e00000000.pcie:      MEM
+>>>>> 0x0060090000..0x007fffffff -> 0x0060090000
+>>>>> [    3.166805] fu740-pcie e00000000.pcie:      MEM
+>>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
+>>>>> [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
+>>>>> 0xdf0000000-0xdffffffff] for [bus 00-ff]
+>>>>> [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
+>>>>> [    3.579552] fu740-pcie e00000000.pcie: Failed to configure iATU 
+>>>>> in ECAM
+>>>>> mode
+>>>>> [    3.579655] fu740-pcie e00000000.pcie: probe with driver 
+>>>>> fu740-pcie
+>>>>> failed with error -22
+>>>>>
+>>>>> The normal message (on Linux 6.17.2) is:
+>>>>>
+>>>>> [    3.381487] fu740-pcie e00000000.pcie: host bridge 
+>>>>> /soc/pcie@e00000000
+>>>>> ranges:
+>>>>> [    3.381584] fu740-pcie e00000000.pcie:       IO
+>>>>> 0x0060080000..0x006008ffff -> 0x0060080000
+>>>>> [    3.381682] fu740-pcie e00000000.pcie:      MEM
+>>>>> 0x0060090000..0x007fffffff -> 0x0060090000
+>>>>> [    3.381724] fu740-pcie e00000000.pcie:      MEM
+>>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
+>>>>> [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 
+>>>>> ib, align
+>>>>> 4K, limit 4096G
+>>>>> [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
+>>>>> [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+>>>>> [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+>>>>> [    3.988164] fu740-pcie e00000000.pcie: PCI host bridge to bus 
+>>>>> 0000:00
+>>>>>
+>>>>> Reverting the following commits solves the issue.
+>>>>>
+>>>>> 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc: Support ECAM 
+>>>>> mechanism by
+>>>>> enabling iATU 'CFG Shift Feature'
+>>>>>
+>>>>> 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom: Prepare for 
+>>>>> the DWC ECAM
+>>>>> enablement
+>>>>>
+>>>>> f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc: Prepare the 
+>>>>> driver for
+>>>>> enabling ECAM mechanism using iATU 'CFG Shift Feature'
+>>>>
+>>>> As Conor pointed out, we can't fix a code regression with a DT change.
+>>>>
+>>>> #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the driver 
+>>>> for enabling ECAM mechanism using iATU 'CFG Shift Feature'")
+>>> Hi Conor,
+>>>
+>>> Can you try with this patch and see if it is fixing the issue.
+>>> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c 
+>>> b/drivers/pci/controller/dwc/pcie-fu740.c
+>>> index 66367252032b..b5e0f016a580 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+>>> @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct 
+>>> platform_device *pdev)
+>>>
+>>>         platform_set_drvdata(pdev, afp);
+>>>
+>>> +       pci->pp.native_ecam = true;
+>>> +
+>>>         return dw_pcie_host_init(&pci->pp);
+>>>  }
+>>>
+>>> - Krishna Chaitanya.
+>>>
+>>>>
+>> I've already tried it. It doesn't work. Same error message as before.
+> Can you share us dmesg logs for this change.
+>
+> - Krishna Chaitanya.
+>>
+[    3.159763] fu740-pcie e00000000.pcie: host bridge 
+/soc/pcie@e00000000 ranges:
+[    3.159853] fu740-pcie e00000000.pcie:       IO 
+0x0060080000..0x006008ffff -> 0x0060080000
+[    3.159916] fu740-pcie e00000000.pcie:      MEM 
+0x0060090000..0x007fffffff -> 0x0060090000
+[    3.159953] fu740-pcie e00000000.pcie:      MEM 
+0x2000000000..0x3fffffffff -> 0x2000000000
+[    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem 
+0xdf0000000-0xdffffffff] for [bus 00-ff]
+[    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
+[    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in 
+ECAM mode
+[    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie 
+failed with error -22
 
+Same as before the change. The entire log is here:
 
-On 9/22/2025 1:25 PM, Ziyue Zhang wrote:
-> Update the HAMOA-IOT-SOM device tree to enable PCIe 3 support. Add perst
-> wake and clkreq sideband signals and required regulators in PCIe3
-> controller and PHY device tree node.
-> 
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com
-> ---
->   arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi | 70 +++++++++++++++++++++
->   1 file changed, 70 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-> index 0c8ae34c1f37..7486204a4a46 100644
-> --- a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-> @@ -390,6 +390,53 @@ &gpu_zap_shader {
->   	firmware-name = "qcom/x1e80100/gen70500_zap.mbn";
->   };
->   
-> +&pm8550ve_8_gpios {
-> +	pcie_x8_12v: pcie-12v-default-state {
-> +		pins = "gpio8";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +};
-> +
-> +&pmc8380_3_gpios {
-> +	pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
-> +		pins = "gpio8";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +
-> +	pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
-> +		pins = "gpio6";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +};
-Either squash patch 3/4 with 4/4 or move these pin configuration to
-patch 4/4.
+https://www.w6rz.net/dmesg.txt
 
-- Krishna Chaitanya.
-> +
-> +&pcie3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie3_default>;
-> +	perst-gpios = <&tlmm 143 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 145 GPIO_ACTIVE_LOW>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&pcie3_phy {
-> +	vdda-phy-supply = <&vreg_l3c_0p8>;
-> +	vdda-pll-supply = <&vreg_l3e_1p2>;
-> +
-> +	status = "okay";
-> +};
-> +
->   &pcie4 {
->   	perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
->   	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
-> @@ -471,6 +518,29 @@ &tlmm {
->   	gpio-reserved-ranges = <34 2>, /* TPM LP & INT */
->   			       <44 4>; /* SPI (TPM) */
->   
-> +	pcie3_default: pcie3-default-state {
-> +		clkreq-n-pins {
-> +			pins = "gpio144";
-> +			function = "pcie3_clk";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
-> +
-> +		perst-n-pins {
-> +			pins = "gpio143";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-down;
-> +		};
-> +
-> +		wake-n-pins {
-> +			pins = "gpio145";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
-> +	};
-> +
->   	pcie4_default: pcie4-default-state {
->   		clkreq-n-pins {
->   			pins = "gpio147";
 
