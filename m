@@ -1,146 +1,164 @@
-Return-Path: <linux-pci+bounces-38084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 352B0BDB272
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CE21BDB49B
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:39:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E47BB4E540A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:07:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1D8DE4E26B2
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91F53054FE;
-	Tue, 14 Oct 2025 20:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C81305946;
+	Tue, 14 Oct 2025 20:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGmlOR2E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U59UeFU0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3362FFDFB;
-	Tue, 14 Oct 2025 20:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B39C3002B4;
+	Tue, 14 Oct 2025 20:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760472423; cv=none; b=gYUhIJvjRk6Xlk9LLcWKqts/XSdbyNdzfJu5wbLxDR+R0Th8cwXib5evdAB5fT3hQVDce2LL3Q3bttEkP6kmeO8iQx4NQZ874TDWtdMi3PxQYYcxpvG1uWu6xsFaJ/axB2qXI3LVrH+W2nY+coNPkSe3AHl+VbQ8YKJ7DJtCQew=
+	t=1760474348; cv=none; b=kY6R8bLrWDhy3Jjqkl/6U0FopyPmh246M0fRVbyLYuvy3ZnTH4L1rVpg58Q8UZBilbXbimjUZvbzPwez6DFafGEQK2PK5gqeBkHzpe7b4CCdjvQapWN1G0O9bzXfO9FkxBgGkTaTOUxnDvRFifspBxs3gwS4kdShY69BAA45+kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760472423; c=relaxed/simple;
-	bh=Z0BJSHmaIit4mQsVLtMhOCrBGLBdeW7Lb3TblmP8GI4=;
+	s=arc-20240116; t=1760474348; c=relaxed/simple;
+	bh=gNKKSJedCDq4VTrEXDr+D3GoIVnPW42kIPJJkae+yU0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=WiDR5amnU+wLnx3SeIimCQNL1HXGrb6/fuk5LywvbffZedEsaOSGJSBF70hg8MsWoLPtrQmYt3iPeMwAk8Ale15HgNsg495IDTFHhjnV8WVDOaELzV9cwaAfc0NcTE9fCIAHY/6UFE51dXAaUUaSOaDip5uFX0yt7F/yzl+9Tes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGmlOR2E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE27DC4CEF9;
-	Tue, 14 Oct 2025 20:07:02 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=J3JAB0GCEUoRHrDtYJMvDDpg/rVsFlKpbQkMhyweBTSUv7495RhhGPRtR/MT4eYEehNxHDcBXvKNz+EOasWnksziTxjAfVROVWxpRpJZubYiYn1etsnubYsmorjVdQyXYT+d+IVYxTTMEPeJrgnzcw6LaY6tBuWmd9pPqsMyTdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U59UeFU0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA41BC4CEE7;
+	Tue, 14 Oct 2025 20:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760472423;
-	bh=Z0BJSHmaIit4mQsVLtMhOCrBGLBdeW7Lb3TblmP8GI4=;
+	s=k20201202; t=1760474348;
+	bh=gNKKSJedCDq4VTrEXDr+D3GoIVnPW42kIPJJkae+yU0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TGmlOR2EXwPxxN97KqShYy7FJo/4wQ2KKY1aUcKc1PZpbWv7DJPwNEVK4AQs4RJkt
-	 hmksT6eYwRPlKziW5efSLEPDKmHYfwMbawCDM8fvIKmMDNUJa3/3871mXSM4Kyhzj9
-	 LtQStn0kICY2XnqVUnVcCAQfUxg8ziUjg3p+xkNwPN8xwz2sUTBVU/XUt8fVYA9lnC
-	 V5wpIURwrifNyC46lleFxZ/pcU5cbrz7XeC+MQ3PREZQvwNW1dQHA9tEedRxImWNWU
-	 0N15LOhkh5AJ8OlIVKbdQtq6HmdJZL9cHbA1ZoWbTY8mKeTJMN9Kya2YV7/92ClKjo
-	 JQnONMpBw/04g==
-Date: Tue, 14 Oct 2025 15:07:01 -0500
+	b=U59UeFU0TkYuuZ4zmJIHAkrDJ6ps0t8x9ef21SJpvXmgCVQ1htm2ACHffb+NGPnWZ
+	 29MNS/kPB70U7X8c7e+o6c+7tyzrKsIHlSY5k3Gjz5/HNkHgUbsr26SWHJWTTopwTN
+	 kJR5clRQld7iA+j6ymsz8MNgvZGSMdzs6dGKrgp09cl+WwNDEXqAZqsqnbcLbOk9N0
+	 WckHl0XECmQjJpf7hD10a7AFBuvV0ompyUcYXbJBujKX1yviq03V0Nnk54pF2dJoBZ
+	 HrQ5RzRgTsDUk5JG+WsthUkK+y1sXFVSz/4p7T+tlCqFgavO+XGGWa1lIU68zMtRPi
+	 iec994y/FaTwg==
+Date: Tue, 14 Oct 2025 15:39:06 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vincent Liu <vincent.liu@nutanix.com>
-Cc: gregkh@linuxfoundation.org, dakr@kernel.org,
-	linux-kernel@vger.kernel.org, rafael@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] driver core: Check drivers_autoprobe for all added
- devices
-Message-ID: <20251014200701.GA859701@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Val Packett <val@packett.cool>,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH for-linus 1/1] PCI: Revert early bridge resource set up
+Message-ID: <20251014203906.GA905971@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251013181459.517736-1-vincent.liu@nutanix.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251014163602.17138-1-ilpo.jarvinen@linux.intel.com>
 
-On Mon, Oct 13, 2025 at 07:14:59PM +0100, Vincent Liu wrote:
-> When a device is hot-plugged, the drivers_autoprobe sysfs attribute is
-> not checked. This means that drivers_autoprobe is not working as
-> intended, e.g. hot-plugged PCIe devices will still be autoprobed and
-> bound to drivers even with drivers_autoprobe disabled.
+On Tue, Oct 14, 2025 at 07:36:02PM +0300, Ilpo Järvinen wrote:
+> The commit a43ac325c7cb ("PCI: Set up bridge resources earlier") moved
+> bridge window resources set up earlier than before. The change was
+> necessary to support another change that got pulled on the last minute
+> due to breaking s390 and other systems.
 > 
-> Make sure all devices check drivers_autoprobe by pushing the
-> drivers_autoprobe check into device_initial_probe. This will only
-> affect devices on the PCI bus for now as device_initial_probe is only
-> called by pci_bus_add_device and bus_probe_device (but bus_probe_device
-> already checks for autoprobe).
-
-> In particular for the PCI devices, only
-> hot-plugged PCIe devices/VFs should be affected as the default value of
-> pci/drivers_autoprobe remains 1 and can only be cleared from userland.
-
-I'm not sure what this last sentence is telling us.  Does
-"pci/drivers_autoprobe" refer to struct pci_sriov.drivers_autoprobe?
-If so, can you elaborate on the connection with struct
-subsys_private.drivers_autoprobe, which this patch tests?  I don't see
-anything in this patch related to pci_sriov.
-
-As far as I can tell, this patch is generic with respect to
-conventional PCI vs PCIe.  If so, I'd use "PCI" everywhere instead of
-a mix of PCI and PCIe.
-
-> Any future callers of device_initial_probe will respsect the
-> drivers_autoprobe sysfs attribute, but this should be the intended
-> purpose of drivers_autoprobe.
-
-Add "()" after function names to make them easily recognizable as
-functions.
-
-s/respsect/respect/
-s/but this should be the/which is the/  # maybe? not sure what you intend
-
-> Signed-off-by: Vincent Liu <vincent.liu@nutanix.com>
-> ---
-> v1->v2: Change commit subject to include driver core (no code change)
-> 	https://lore.kernel.org/20251001151508.1684592-1-vincent.liu@nutanix.com
-> ---
->  drivers/base/bus.c |  3 +--
->  drivers/base/dd.c  | 10 +++++++++-
->  2 files changed, 10 insertions(+), 3 deletions(-)
+> The presence of valid bridge window resources earlier than before
+> allows pci_assign_unassigned_root_bus_resources() call from
+> pci_host_probe() assign the bridge windows. Some host bridges, however,
+> have to wait first for the link up event before they can enumerate
+> successfully (see e.g. qcom_pcie_global_irq_thread()) and thus the bus
+> has not been enumerated yet while calling pci_host_probe().
 > 
-> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-> index 5e75e1bce551..320e155c6be7 100644
-> --- a/drivers/base/bus.c
-> +++ b/drivers/base/bus.c
-> @@ -533,8 +533,7 @@ void bus_probe_device(struct device *dev)
->  	if (!sp)
->  		return;
+> Calling pci_assign_unassigned_root_bus_resources() without results from
+> enumeration can result in sizing bridge windows with too small sizes
+> which cannot be later corrected after the enumeration has completed
+> because bridge windows have become pinned in place by the other
+> resources.
+> 
+> Interestingly, it seems pci_read_bridge_bases() is not called at all in
+> the problematic case and the bridge window resource type setup is done
+> by pci_bridge_check_ranges() and sizing by the usual resource fitting
+> logic.
+> 
+> The root problem behind all this looks pretty generic. If resource
+> fitting is called too early, the hotplug reservation and old size lower
+> bounding cause the bridge windows to be assigned without children but
+> with non-zero size, which leads to these pinning problems. As such,
+> this can likely be solved on the general level but the solution does
+> not look trivial.
+> 
+> As the commit a43ac325c7cb ("PCI: Set up bridge resources earlier") was
+> prequisite for other change that did not end up into kernel yet, revert
+> it to resolve the resource assignment failures and give time to code
+> and test a generic solution.
+> 
+> Reported-by: Val Packett <val@packett.cool>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: a43ac325c7cb ("PCI: Set up bridge resources earlier")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Applied to pci/for-linus for v6.18, thanks!
+
+> ---
+> 
+> This revert should go to for-linus.
+> 
+> 
+> I'm not sure whether Guenter's case is exactly the same problem as
+> described in the commit message, I only know for sure his bisection
+> landed on the same commit.
+> 
+> My plan is to retry these changes with more supporting changes. It
+> looks PCI core could delay assigning the bridge window resources if
+> there are no child resource to put into the bridge windows. Or
+> alternatively the resource fitting algorithm could release empty bridge
+> windows as the first step. But that is too complicated change to make
+> now and would benefit from time spent in -next.
+> 
+> ---
+>  drivers/pci/probe.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index c83e75a0ec12..0ce98e18b5a8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -538,14 +538,10 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
+>  	}
+>  	if (io) {
+>  		bridge->io_window = 1;
+> -		pci_read_bridge_io(bridge,
+> -				   pci_resource_n(bridge, PCI_BRIDGE_IO_WINDOW),
+> -				   true);
+> +		pci_read_bridge_io(bridge, &res, true);
+>  	}
 >  
-> -	if (sp->drivers_autoprobe)
-> -		device_initial_probe(dev);
-> +	device_initial_probe(dev);
+> -	pci_read_bridge_mmio(bridge,
+> -			     pci_resource_n(bridge, PCI_BRIDGE_MEM_WINDOW),
+> -			     true);
+> +	pci_read_bridge_mmio(bridge, &res, true);
 >  
->  	mutex_lock(&sp->mutex);
->  	list_for_each_entry(sif, &sp->interfaces, node)
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 13ab98e033ea..37fc57e44e54 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -1077,7 +1077,15 @@ EXPORT_SYMBOL_GPL(device_attach);
+>  	/*
+>  	 * DECchip 21050 pass 2 errata: the bridge may miss an address
+> @@ -583,10 +579,7 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
+>  			bridge->pref_64_window = 1;
+>  	}
 >  
->  void device_initial_probe(struct device *dev)
->  {
-> -	__device_attach(dev, true);
-> +	struct subsys_private *sp = bus_to_subsys(dev->bus);
-> +
-> +	if (!sp)
-> +		return;
-> +
-> +	if (sp->drivers_autoprobe)
-> +		__device_attach(dev, true);
-> +
-> +	subsys_put(sp);
+> -	pci_read_bridge_mmio_pref(bridge,
+> -				  pci_resource_n(bridge,
+> -						 PCI_BRIDGE_PREF_MEM_WINDOW),
+> -				  true);
+> +	pci_read_bridge_mmio_pref(bridge, &res, true);
 >  }
 >  
->  /*
+>  void pci_read_bridge_bases(struct pci_bus *child)
+> 
+> base-commit: 2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
 > -- 
-> 2.43.7
+> 2.39.5
 > 
 
