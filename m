@@ -1,79 +1,60 @@
-Return-Path: <linux-pci+bounces-38089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EC56BDB53D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:53:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD60EBDB5D6
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 23:10:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94B9854282B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:53:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 280D5580642
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 21:10:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9754307AD5;
-	Tue, 14 Oct 2025 20:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F7C30BF52;
+	Tue, 14 Oct 2025 21:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swyR28py"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GW8wcMO5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B373074AF;
-	Tue, 14 Oct 2025 20:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FEB3002AF;
+	Tue, 14 Oct 2025 21:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760475195; cv=none; b=CYo+PYno5QPB+tEBtRPMlA2M984Er5uIlrAjo8ChPrLXsXhTyqqd66hV/lmPXv8L6vcuXZ9qfO3PvLMzru35PYs0ViSSJ1wSJ9ezszTi1GnYwoxSi2Ca2nq7Jqc0R8Qd+grKu5w24F3I2o4ccnjVsq0NXHOCzfwjhcVdqSfIJfw=
+	t=1760476214; cv=none; b=Xbx3HuiQLv1KLBdM7ttCNEPg/yGyrQvjVAOLSSYonqmaabIQhlowDLHBkfTdTGEo4WyM+vEbQoVPHfcEnmz9sN9EjEC/WdTuCzUH1pwJSpO/lRuyeH7FBURg19Ef7Eoha8o76gcgvNt36I16d982Yz6DKfSsux0RCfHzxpzqmz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760475195; c=relaxed/simple;
-	bh=n/LR/VOVuEOFCI8XhFHTE8VhAsveYLysbT1xUiVBRoQ=;
+	s=arc-20240116; t=1760476214; c=relaxed/simple;
+	bh=Ro01wh06YC/uZxh8Xf1i50wfyiFHP8EhydOBit2DCIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mc75yd0ujlKgb/7QKM5kiZW43Gm9/6fNf3dNl8DMsxHxq2bKPlKtgWH8ud6ROrX1i18REc/rnAZFs0jPJcqiiju8EA6IiB0p7YlbZdiHUvYUpUAJWj+dzhrfcu4eFQUAGH+gXfhiLSvN8rt+iqmL7OwHX0SSpp+r14AOlGP0lPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swyR28py; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21D6C4CEF9;
-	Tue, 14 Oct 2025 20:53:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=be/flFp+iRsb8eigu8xI97ESMxkjewkmSCy4HWvMJ9OMRpNiHcLcu65OUiH0Ml6nrrQ4JFfuGO4ePqRqFFztk3Z8U5g2CJiWrYo9dOQnQ/pqbJPTlxo44SUKhhml3w7sTaxm6D19+oR9r7r5whAO9Bjcf3sjyJTBD50n5Ld01n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GW8wcMO5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC86C4CEE7;
+	Tue, 14 Oct 2025 21:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760475195;
-	bh=n/LR/VOVuEOFCI8XhFHTE8VhAsveYLysbT1xUiVBRoQ=;
+	s=k20201202; t=1760476212;
+	bh=Ro01wh06YC/uZxh8Xf1i50wfyiFHP8EhydOBit2DCIA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=swyR28pypyBnRwl4m3DigwMj3bUrxOd00mzjuGD5aTN0FjLn8NZloGgLtoSm4EWF6
-	 U+OQrImhcyFW1VE+1XOf7gsl+Z6u33VL59B3ZFGSMdhSCKfE10SSPf7PmGdnejwJFG
-	 4W7sgMSd47UsSs4bbQQC0m2b54v2j6riWSO3ueU6abtrZ6v3Z1APYa4Dz7eg+oMj1c
-	 E6GAg/xVIOaSHdCbI1G5jNYk9cUVlMAQIS1+cIiZKnhohliyM8TIACP4GiEgzG7+ha
-	 7oSYLyFf2hw0TAj9/uWSaVineqdRxAJldC0oB4sXW5a4J7HK8JAuGF/KcmG4Gk36Tb
-	 fkRsty8PnFzAw==
-Date: Tue, 14 Oct 2025 15:53:13 -0500
+	b=GW8wcMO5W09zp1zy1d9huR1auo0p1Vy9a7N/T7y1/wJ1g0pMn9VwIMZ8ZFCtInzBl
+	 MWmgLiCGX33oeoDlRQMoUXtopr2TKUpMUcir9sPyxyESh9JLGHALMYykMcX+s49sr6
+	 UaqbGcuq5TA5EIHVUwS32PDz6PoZsfhfs4nfdpkMSwtEd/UkoE2mjhQJM3boJ3BgmR
+	 dqi2PnaPi0Shr2zo28PO9TK8hWCGc0CQI7qWTmrwk2cMt6jN+N4L+ND7L2Cc+KMhBz
+	 P9Scq6Zuztb0NhfvQQ5dipbHILYe3Cg286c9SQG0zh3J5wepM+WoKWqbCh5vSyAjjh
+	 fhU5ISJrj45vg==
+Date: Tue, 14 Oct 2025 16:10:11 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 01/33] PCI: Prepare to protect against concurrent
- isolated cpuset change
-Message-ID: <20251014205313.GA906793@bhelgaas>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
+Subject: Re: [PATCH Resend] PCI: Limit islolated function probing on bus 0
+ for LoongArch
+Message-ID: <20251014211011.GA907236@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,20 +63,59 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251013203146.10162-2-frederic@kernel.org>
+In-Reply-To: <20251014074100.2149737-1-chenhuacai@loongson.cn>
 
-On Mon, Oct 13, 2025 at 10:31:14PM +0200, Frederic Weisbecker wrote:
-> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
-> therefore be made modifyable at runtime. Synchronize against the cpumask
-> update using RCU.
+On Tue, Oct 14, 2025 at 03:41:00PM +0800, Huacai Chen wrote:
+> We found some discrete AMD graphics devices hide funtion 0 and the whole
+> is not supposed to be probed.
 > 
-> The RCU locked section includes both the housekeeping CPU target
-> election for the PCI probe work and the work enqueue.
-> 
-> This way the housekeeping update side will simply need to flush the
-> pending related works after updating the housekeeping mask in order to
-> make sure that no PCI work ever executes on an isolated CPU. This part
-> will be handled in a subsequent patch.
+> Since our original purpose is to allow integrated devices (on bus 0) to
+> be probed without function 0, we can limit the islolated function probing
+> only on bus 0.
 
-s/modifyable/modifiable/ (also in several other commit logs)
+s/islolated/isolated/ (multiple)
+s/funtion/function/
+
+I suppose this fixes some problem where:
+
+  - An AMD GPU is on some bus other than 00
+  - The GPU has no function 0
+  - Without function 0, we normally don't probe other functions
+  - a02fd05661d7 means we *do* probe other functions on LoongArch
+  - Therefore we find some non-0 function we're not supposed to find
+
+If that's the case, what bad thing happens?  Is there some dmesg hint
+we can include in the commit log?
+
+I suppose this means such devices are potentially broken for s390 and
+jailhouse as well?
+
+> Cc: stable@vger.kernel.org
+> Fixes: a02fd05661d73a8 ("PCI: Extend isolated function probing to LoongArch")
+
+a02fd05661d7 (12-char SHA1 is conventional)
+
+> -static inline bool hypervisor_isolated_pci_functions(void)
+> +static inline bool hypervisor_isolated_pci_functions(int bus)
+>  {
+>  	if (IS_ENABLED(CONFIG_S390))
+>  		return true;
+>  
+> -	if (IS_ENABLED(CONFIG_LOONGARCH))
+> -		return true;
+> +	if (IS_ENABLED(CONFIG_LOONGARCH)) {
+> +		if (bus == 0)
+
+I don't really like this embedded assumption that the root bus is bus
+00.  That's not necessarily the case; we have many host bridges that
+lead to a bus other than 00.
+
+> +			return true;
+> +	}
+>  
+>  	return jailhouse_paravirt();
+>  }
+> -- 
+> 2.47.3
+> 
 
