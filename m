@@ -1,171 +1,167 @@
-Return-Path: <linux-pci+bounces-38017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB4B5BD7D6A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 09:17:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAC26BD7F4A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 09:36:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3C1934F7F67
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:17:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DC294257BF
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E22E2D94AF;
-	Tue, 14 Oct 2025 07:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61F1156F20;
+	Tue, 14 Oct 2025 07:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtIq29hI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7012630DEBE
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 07:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F37E2989B7
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 07:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760426235; cv=none; b=AD6mP4qkUYEX8FqWa9neu1lbclnHsbUHEkgfpbwrwv8JCaH9UyF4/26xWB/7YuE5Jh7EeHhg6YoJk/NHK5C54sZKqIVW4CwwycZyogvFMgpA+/MZXCydECZ761PBm8x59bbQO7tBWPCDR0qyM5hug5WpnSWpoEaJUm6lZTFuRvQ=
+	t=1760427239; cv=none; b=hpNnCPeXJbEzxTJvXN4ACZkQj+E5hrI8x7idEF+447iU8+cLcsV6UiPLpj2heoc+3EFWESj2M9M/o/bkdpwRXLNlnGQ6rkdyfD0C1Ocqosu+68UdWhmDLiO40jb345MctSIiXmkw21U6xQTeuqQVdI+phWncVzK3JlnWNek5HXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760426235; c=relaxed/simple;
-	bh=qcHTUS0wo1f43VFStYszqJZcg60j4r28QkB5kGixAXg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PrXr2rgue7YtDfQM2N451YNW5VUCb7meBtCzmWG/kNoVApTSBEEMsLRZImxzB5qw5rxBZ54SiFrOP50aPa0LFjEfOE8e3p0jIgW8FtrjdQR6bbprAvsN1nRv2UZuP+nfsSMNycARfXQ6IHFp+p+F6lshokUiRBHUwCm7d5F2yXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-5b62ab6687dso4989494137.0
-        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 00:17:12 -0700 (PDT)
+	s=arc-20240116; t=1760427239; c=relaxed/simple;
+	bh=rJZBVvFcCZfoZL/WIRUcWWYvpISm45B4Rwe3rWq54PY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VBaAcqL4ffM4zXsnBeBZGHkbddF4gEmdARR49OJvqIpT6Fpu4rztSqt+Sudk9Avd5Gg4vhNhXdIxnYs8dN3XFC1zAngtLCLZydA09Oa7BvIRi8DQ2bcG0dbvGxHCqlD8D62JCdCuIsdnPk8eQRHYMQ/KePrTLa06byn5d5bVdHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jtIq29hI; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3f0308469a4so2664958f8f.0
+        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 00:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760427235; x=1761032035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BwG/OchAZjwNRXsTLu0s9JIZNQmUXDtfcvX6l0dZWYY=;
+        b=jtIq29hIUJ3zZS24dAUTiBR7g0kefEjeW4tk79WyiSgMsnJD8bT2IZEgic2CC3IN/5
+         GjqUvPZwDFV9wpLEcsU59kzrhD/+1MV/AheU30IK0YPN1lbQMFHzq0lURGk0d3rq8lMo
+         spxzB2BBPqjeV36gK+VrRgiy0ovvDz/CsfHZRu6vvSIt/5+jwL90u7MqVFfUU+qIHKy1
+         cp4OjA6iTN/WB1OupyDUQwn5CxAR66Gz8EZkyZT+jrpxNne09uJI74Y3qQbRy/1EUaHE
+         DnyQE183t/YWpl65YiezcYRHe+O1dFD10WfLjkAOwZPl2HvenKQXqIaQW2SxQyh8FtI3
+         YWqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760426231; x=1761031031;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1760427235; x=1761032035;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1LJPJfcpv0pJD66G650kRDT3CGUnlnJtrjGpdse2lj8=;
-        b=JIXbMzqyxmAeufELNbOAPbEQlz3lPqgDhTyYNt0G5D2aDSc8/59LzFj6T4zyfDrBbW
-         aLoDfhTOJNeoiqOf/gch0soCa9zvUqmKtoxi7pJX2IacmVbJc7Aa1jdm0HSBLnDX7axX
-         ioV+pbA+/YrlsUQ91mIyWNTGPZZ16LAjf88X8oSt0QNUTf7DS2lmUrtHoAsEiEfcieef
-         qCErPoWjbAGOeAbGYvv89XylGic37ax4X2NF3upCKYOX4RjYb9+MuG44X2jLScvWsUT1
-         C30qySXWFZQO5Gw/QZj/c/svY4o9r4Xxei+dq37CrQAwv59CN2n/SZdk8GVAOMjFO5nz
-         YY1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXieLcBh6CXMRzleGDTcaetZtLP/8kL/QHGzpyd9K5lNbs3zv1NeClefjyNawlhAGjbwQch13SD/BQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Fn91WaSCWxDiIgXNhij0yq3dPYTgKUCQ+k/YehvP1ny3F7cA
-	SK9rMkT7nbSbQEyPspKTV82o8ZztmDGFKYOEfdlArrsRr6Oq3cWIQOsHsJzlliIh
-X-Gm-Gg: ASbGncubLJiHPN4ea+ifm7SMRtJVmACy+likb2SRQ0qfZMAmUItHQaQL6YFe0zLN8m6
-	0g4HWoX13L3XIPp5Qd3gU6xKmCygr3gLs/zLEHLPrnu1kzgq5yHhXqaHEqw16bMc2mEjez6AUSp
-	JvXz/UbyOvhtJzpWSeuM/n4xoO/JZKvF2YDzZSFx8kgIaCdzXsgDnX8mFmQcbqjcQdV1cNeDERm
-	hT0Dwd1s3FZKDSDwYf0M640BP3B8RKmjGbFNeML170cTHlIyQ4cNyO+aw3bIjrRamkIaWfmBvsy
-	5R12mybczQzDUINhRt+U3r3hvuAbHN7Vb2GDWj7IOd3UXe3t2ce69cD9Yk7npIJJVlI00cT1OQp
-	Qm6xpz2Dzc6ULQyqzesCouJJwobgztLIWkFG1/g1FnXW2peXLvbPVTecVtZugmPEwjoVRyQ0sZr
-	M4eBZHkrJiCZ1MpA==
-X-Google-Smtp-Source: AGHT+IHD/RqqIJr3zHOMfQjNcZTlet74xH/Q0VHCayUpC8FBx8q/fQMN4CNSUqhWMquNu189LBmtkg==
-X-Received: by 2002:a05:6102:3e1f:b0:530:f657:c40 with SMTP id ada2fe7eead31-5d5e232269amr10884607137.22.1760426230853;
-        Tue, 14 Oct 2025 00:17:10 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-930bf6ce034sm3408362241.7.2025.10.14.00.17.09
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Oct 2025 00:17:10 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5ce093debf6so4797748137.1
-        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 00:17:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV9sIXCB3x+2Ao4uDFDMz7I5JQWi0i/ChhdMQxvC6Wv5PkFEGGqhhwNL1N9U1AdGKqMKCVDoACg3Rw=@vger.kernel.org
-X-Received: by 2002:a05:6102:3c8e:b0:4fa:25a2:5804 with SMTP id
- ada2fe7eead31-5d5e220420bmr8840762137.10.1760426229660; Tue, 14 Oct 2025
- 00:17:09 -0700 (PDT)
+        bh=BwG/OchAZjwNRXsTLu0s9JIZNQmUXDtfcvX6l0dZWYY=;
+        b=o9Xui2Vj+gZ99NoHY4daoxTgE8gTdNmS+N/W5wEuQ/BIpulF1zvMCe3o+QhypwYZcc
+         KHDGkoFoL3jk5z68d/sQE4kZD4DP8eKqUIHSYUU1vy7Gs1PjCtgsZ3i5U+o+SPI+66Wl
+         diDsXC2c8fYxJXF4Q2QHHqTuAayOOjqrT9JK+8L3VqiwLmz0B3peVzwcaG6sc0bDMiaG
+         V7h65wTayomP/IC6cYk5E4EKSW+ESiLhbMlLX2UBzbERjB9wshAysHXuBi2NnrlLINEu
+         0jYRtJElFd9xrH44DbRfE1YE/T5bSveJ88Eh1OxLWMxL4GP5HFMgaLcof+Jbf9skO7R1
+         6Nbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbdh1ZPVykHpo2/Ud9rkJpfmoxxzZPpHYn8wCXV9mQ5P7HlQZ2UyUgWgSgACsqqdlyEWBN9Ll/G8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLkst3rWKLYU/mo0XDDImrGbSV1g+f3bMHwlEKPOCtXxS/Om1j
+	Wp5Njrz1DWenOeJSlSbkfL/QyntPHDaKW0dh2YE4enBYi6amKpo0kDK+oqmQE90IMh8=
+X-Gm-Gg: ASbGncvzMHfZPsVxLPttvOYUw9VlFd7K6TXndL+bWYj4OyOVVokrlO4hZwp3mP11vwl
+	RS3FD4IAkMkA3re2BpJH4rXZMxEpmAGyn2x8pu1DGr87cOyan1KEytxTn1x01pu7cfbj17bq8E0
+	e/iWFtvTVamFE5FgjAHf/+moyhk9Rjory1LmoC93Bcq5kcti87xwRhVMgOzUBsmxpLCGJ6s4ejs
+	NN24sBMVIBy0Cy/dQLEnF0WIOR/hGn6r5wqoOBFGiJrTgj3ewWY1z7rBTyTwo/Fv9E+VcDxMkBB
+	4/pxyuDIK2kfdYqTyuyxUAjzsBa8XqLYmrn6MtXDfrDjPseJHYHlBBxJiKreVEl3r67OBi0oaPO
+	HY67FPNdUINqT+wGjUPc/sq81xqh4+X01+IAVtGLiH2Cv1/YZNbc=
+X-Google-Smtp-Source: AGHT+IE0SibgFOUsTOWb11Xe06KS5AooYnMfuV3qZwF21RGoTYuiMhvM5xxFKgxQQAvf0jDG3bRS2A==
+X-Received: by 2002:a05:6000:1ac8:b0:3f7:b7ac:f3d4 with SMTP id ffacd0b85a97d-42666abbbc1mr17933769f8f.5.1760427235501;
+        Tue, 14 Oct 2025 00:33:55 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-426ce5e8a06sm22182799f8f.55.2025.10.14.00.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 00:33:55 -0700 (PDT)
+Date: Tue, 14 Oct 2025 10:33:51 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Randolph Lin <randolph@andestech.com>,
+	linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alex@ghiti.fr,
+	aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com,
+	ben717@andestech.com, inochiama@gmail.com,
+	thippeswamy.havalige@amd.com, namcao@linutronix.de,
+	shradha.t@samsung.com, pjw@kernel.org, randolph.sklin@gmail.com,
+	tim609@andestech.com, Randolph Lin <randolph@andestech.com>
+Subject: Re: [PATCH v6 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver
+ support
+Message-ID: <202510092111.fZmvx6jO-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-v1-1-552876b94f04@kernel.org>
-In-Reply-To: <20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-v1-1-552876b94f04@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 14 Oct 2025 09:16:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXZvoTyWcgRp6TnkybnKY4ekfO9aB33iumPVaR7wvEXkw@mail.gmail.com>
-X-Gm-Features: AS18NWBECJtooFXj8wIhcLw2_n3BPi6xXTVAMYxpuf1MNXW6QPz_d-TTeadxeIw
-Message-ID: <CAMuHMdXZvoTyWcgRp6TnkybnKY4ekfO9aB33iumPVaR7wvEXkw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar-host: Avoid objtool no-cfi warning in rcar_pcie_probe()
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	kernel test robot <lkp@intel.com>, Kees Cook <kees@kernel.org>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251003023527.3284787-5-randolph@andestech.com>
 
-Hi Nathan,
+Hi Randolph,
 
-On Mon, 13 Oct 2025 at 20:26, Nathan Chancellor <nathan@kernel.org> wrote:
-> After commit 894af4a1cde6 ("objtool: Validate kCFI calls"), compile
-> testing pcie-rcar-host.c with CONFIG_FINEIBT=y and CONFIG_OF=n results
-> in a no-cfi objtool warning in rcar_pcie_probe():
->
->   $ cat allno.config
->   CONFIG_CFI=y
->   CONFIG_COMPILE_TEST=y
->   CONFIG_CPU_MITIGATIONS=y
->   CONFIG_GENERIC_PHY=y
->   CONFIG_MITIGATION_RETPOLINE=y
->   CONFIG_MODULES=y
->   CONFIG_PCI=y
->   CONFIG_PCI_MSI=y
->   CONFIG_PCIE_RCAR_HOST=y
->   CONFIG_X86_KERNEL_IBT=y
->
->   $ make -skj"$(nproc)" ARCH=x86_64 KCONFIG_ALLCONFIG=1 LLVM=1 clean allnoconfig vmlinux
->   vmlinux.o: warning: objtool: rcar_pcie_probe+0x191: no-cfi indirect call!
->
-> When CONFIG_OF is unset, of_device_get_match_data() returns NULL, so
-> LLVM knows this indirect call has no valid destination and drops the
-> kCFI setup before the call, triggering the objtool check that makes sure
-> all indirect calls have kCFI setup.
->
-> Check that host->phy_init_fn is not NULL before calling it to avoid the
-> warning.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202510092124.O2IX0Jek-lkp@intel.com/
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+kernel test robot noticed the following build warnings:
 
-Thanks for your patch!
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> ---
-> Another alternative is to make this driver depend on CONFIG_OF since it
-> clearly requires it but that would restrict compile testing so I went
-> with this first.
-> ---
->  drivers/pci/controller/pcie-rcar-host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-> index 213028052aa5..15514c9c1927 100644
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -981,7 +981,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
->                 goto err_clk_disable;
->
->         host->phy_init_fn = of_device_get_match_data(dev);
-> -       err = host->phy_init_fn(host);
-> +       err = host->phy_init_fn ? host->phy_init_fn(host) : -ENODEV;
->         if (err) {
->                 dev_err(dev, "failed to init PCIe PHY\n");
->                 goto err_clk_disable;
+url:    https://github.com/intel-lab-lkp/linux/commits/Randolph-Lin/PCI-dwc-Allow-adjusting-the-number-of-ob-ib-windows-in-glue-driver/20251003-104100
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20251003023527.3284787-5-randolph%40andestech.com
+patch subject: [PATCH v6 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver support
+config: powerpc-randconfig-r071-20251009 (https://download.01.org/0day-ci/archive/20251009/202510092111.fZmvx6jO-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 39f292ffa13d7ca0d1edff27ac8fd55024bb4d19)
 
-I am afraid you're playing a big game of whack-a-mole, since we tend
-to remove these checks, as they can never happen in practice (driver
-is probed from DT only, and all entries in rcar_pcie_of_match[] have
-a non-NULL .data member)...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202510092111.fZmvx6jO-lkp@intel.com/
 
-Gr{oetje,eeting}s,
+smatch warnings:
+drivers/pci/controller/dwc/pcie-andes-qilai.c:157 qilai_pcie_host_fix_ob_iatu_count() error: uninitialized symbol 'ranges_32bits'.
 
-                        Geert
+vim +/ranges_32bits +157 drivers/pci/controller/dwc/pcie-andes-qilai.c
+
+816cad1ac60166 Randolph Lin 2025-10-03  133  static int qilai_pcie_host_fix_ob_iatu_count(struct dw_pcie_rp *pp)
+816cad1ac60166 Randolph Lin 2025-10-03  134  {
+816cad1ac60166 Randolph Lin 2025-10-03  135  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+816cad1ac60166 Randolph Lin 2025-10-03  136  	struct device *dev = pci->dev;
+816cad1ac60166 Randolph Lin 2025-10-03  137  	struct resource_entry *entry;
+816cad1ac60166 Randolph Lin 2025-10-03  138  	/* Reserved 1 ob iATU for config space */
+816cad1ac60166 Randolph Lin 2025-10-03  139  	int count = 1;
+816cad1ac60166 Randolph Lin 2025-10-03  140  	int ranges_32bits;
+
+This should be bool and initialized to false.
+
+816cad1ac60166 Randolph Lin 2025-10-03  141  	u64 pci_addr;
+816cad1ac60166 Randolph Lin 2025-10-03  142  	u64 size;
+816cad1ac60166 Randolph Lin 2025-10-03  143  
+816cad1ac60166 Randolph Lin 2025-10-03  144  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+816cad1ac60166 Randolph Lin 2025-10-03  145  		if (resource_type(entry->res) != IORESOURCE_MEM)
+816cad1ac60166 Randolph Lin 2025-10-03  146  			continue;
+816cad1ac60166 Randolph Lin 2025-10-03  147  
+816cad1ac60166 Randolph Lin 2025-10-03  148  		size = resource_size(entry->res);
+816cad1ac60166 Randolph Lin 2025-10-03  149  		if (size < SZ_4G)
+816cad1ac60166 Randolph Lin 2025-10-03  150  			count++;
+816cad1ac60166 Randolph Lin 2025-10-03  151  
+816cad1ac60166 Randolph Lin 2025-10-03  152  		pci_addr = entry->res->start - entry->offset;
+816cad1ac60166 Randolph Lin 2025-10-03  153  		if (pci_addr < SZ_4G)
+816cad1ac60166 Randolph Lin 2025-10-03  154  			ranges_32bits = true;
+816cad1ac60166 Randolph Lin 2025-10-03  155  	}
+816cad1ac60166 Randolph Lin 2025-10-03  156  
+816cad1ac60166 Randolph Lin 2025-10-03 @157  	if (!ranges_32bits) {
+816cad1ac60166 Randolph Lin 2025-10-03  158  		dev_err(dev, "Bridge window must contain 32-bits address\n");
+816cad1ac60166 Randolph Lin 2025-10-03  159  		return -EINVAL;
+816cad1ac60166 Randolph Lin 2025-10-03  160  	}
+816cad1ac60166 Randolph Lin 2025-10-03  161  
+816cad1ac60166 Randolph Lin 2025-10-03  162  	pci->num_ob_windows = count;
+816cad1ac60166 Randolph Lin 2025-10-03  163  
+816cad1ac60166 Randolph Lin 2025-10-03  164  	return 0;
+816cad1ac60166 Randolph Lin 2025-10-03  165  }
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
