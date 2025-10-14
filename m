@@ -1,222 +1,327 @@
-Return-Path: <linux-pci+bounces-38028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AADD1BD89CA
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 11:59:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EB30BD8B67
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 12:18:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8A7354E5DF8
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 09:59:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29DEC4E4EBD
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 10:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871D32ECE89;
-	Tue, 14 Oct 2025 09:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF002F0C48;
+	Tue, 14 Oct 2025 10:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgAAaxiV"
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="tVK7s2Ic";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="LIerhxD4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2F2EBDC5;
-	Tue, 14 Oct 2025 09:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760435949; cv=none; b=LLIhfwE+5OrO/H88sAtCIQaKEaIq5XDipK3fYPp/N/FeRBJFANprzLzHOOaojPhGI6dTpNkWSeYhR9GnSp4ConHUet0FCPz+gtRLSAJVP+dH9q0e86zUpKNNytYWT/sxvBvG2pTc9Zt/sISgHSyZbNUVw6i9Ui9klRcFoX/0tPw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760435949; c=relaxed/simple;
-	bh=Y0bEX5hkAWRJGif5UBaJSI/DJMYF6LpNlNLgCxXcdQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZUqGTotezM5C5Gfn+8aJ6LPYdZpoK7gaH6PWLtEpo0J225GgCtZVXQ2M5Xss0W5Dvhz9GFzGuyJ/lArhOyLh98khyOmjjLE5rBg91KQvs6AAGwlxdtNYAd+38KISVeS/WcnSILcrvFAK8IqbUMz6lDDuYKaCx9HYUNHNBLoDaKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgAAaxiV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075D9C4CEE7;
-	Tue, 14 Oct 2025 09:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760435948;
-	bh=Y0bEX5hkAWRJGif5UBaJSI/DJMYF6LpNlNLgCxXcdQ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OgAAaxiVcgTmp+m3JLTe9FVIKnHuVzIyx7Zd6lxzOOsRxgW/1jR+2UWkpI+lcgQ6V
-	 JlSRhEOKj6zTUaNJ5Kmqh6lGuXNMdrvEhycEn4LVjlCWPg6db+whgEjKao8qeDGPYE
-	 7iETeBDpoqKAYQPqksB+k5aNRuOcrO08Uoz8inrI6l1rhq90hn0XotgXYPhRNpz7Ne
-	 KqFbmn/fOWSGwzhT1ymEnGGg4+E5J2gnelPEofdRnhqOu+GD9J4GRyn07uHAJx+WIT
-	 zBxnNaP2PB4gCZOJ0+vDCnv81jPJ2BanIy+TF93TE1s5Qps/gH+rbjufpGJT4GX6zy
-	 H8EZYZg9jknmA==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Scott Branden <sbranden@broadcom.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: [PATCH v2 4/4] irqchip/gic-its: Rework platform MSI deviceID detection
-Date: Tue, 14 Oct 2025 11:58:45 +0200
-Message-ID: <20251014095845.1310624-5-lpieralisi@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251014095845.1310624-1-lpieralisi@kernel.org>
-References: <20251014095845.1310624-1-lpieralisi@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E152EC0B2;
+	Tue, 14 Oct 2025 10:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760437113; cv=fail; b=DI428N52SXG9zaXE5voRfBZZQURR4gkFTsvCvw4021ymirWPlPdHQnyeS6PmmpMZPqOsYGetipcSq/zkwzdtv6D9pDrbkIEHUpMbMJYfpld3ta/fWw4RTI6t4/QVaM3/oBin5BVoXtIOQL6ncgolwM8QleTkz2uomYDJ0ijIn6g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760437113; c=relaxed/simple;
+	bh=mnk2Tp4BqBjzOf+Sk6D0bwEHtz+eplJR5KzvV6YMaCY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YXi6yFTUiTPd3a1qprGEhHI1V6D6ZPp6dGnjQ4icoN1tDQsIh8+frvwivnvIab6lv1hSIMMi/UERJ+9VLG1kMNz6iE0wuxtXBo06bjalMynBosuvkQi8kqyIf+pz9XHNQBo4sgxB0n7QDqBMl6LJvX1Jqu7s8zYNJ45dnNPQMjQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=tVK7s2Ic; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=LIerhxD4; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id BC0BC480A02;
+	Tue, 14 Oct 2025 06:18:29 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1760437109;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=fP2AapzH0P5GM+gmZrivACasOzhAfhhFaaQEi0zlJ5s=;
+ b=tVK7s2IcaXaRDIWeAu35hn0roBePdKh65fnWQz1zOp2UdusAkSYAdbtwtG+v6yicHiJVu
+ EoqJvMFhj64Dw9ZDg==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1760437109;
+	cv=none; b=BtN3+NiPlJacmV56GGpzf12DJ+m/cwBFjsgSQqYCF58E+ivEG9l8BKnQ752WFT93Vn5bwD2n0I/qzBJU8Qy8UtO8bEqTsHxXBenVJXkjAj7BEWYGl0MqnAUOewuRx0tDjlKFq5XxRnmzp2f9HCUCdWAl0uyhNrKyQka9Sy3UUvV5E4mml0Cj9gT04D00ICRSttt6Hn7/2fMczbxC2C70Adpnc5iJT5Hko1JZKd1IPTzyxZNrRj9YFU2/4t2cDvGT4h1YGx5UwVBaBZeJXr5G6jKNWF4KFiowvpfnzUieDZk1skA2PDtJ2oUeI+RWawfpd0MOP8MyqndBVOnLbFpAfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1760437109; c=relaxed/simple;
+	bh=mnk2Tp4BqBjzOf+Sk6D0bwEHtz+eplJR5KzvV6YMaCY=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=UqanI4lIHEbfZRaCAtCv7qvzXH2ERepnNl5Kdv2bSfHfzy/5NtsdofsF8hsgIbo9qsI1MHuQ5fKpO8i2l2e2vbx8h8tH2ZMYmgKL23WD2j6YxEzk6pwVAwuRhpP++cFyltSUQlx+myuR3pQtlLYQf4OKjm2NUWAyRa/7rO3pR8/PSP27h0GiDopQftZs4EYm+j/RoEcTcpjZM+HUaPBGFLmBJ23gFZ2tEuuLMsMFUkjC6DZXLeiIABRyBlAuOFMNchdjX38MYIdMDJFPwK87J12P/tBKrhMSxVEJ6Yip6+dbrwxEGTtOzJFoJm8RnzGO4Z8uh1MNd+8tKSDaelBoSQ==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1760437109;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=fP2AapzH0P5GM+gmZrivACasOzhAfhhFaaQEi0zlJ5s=;
+ b=LIerhxD4YIoXWA3FJUBcDvr2DQWmp5D+JzPNJmjtPXQP1UnZ7Cic4x9wiofZ7IY826l9/
+ 7ZUwthBjm5HvjrGaHF2VG+cxesh6Qrd8F7aHQ4WgCLOPIQbHuW/7zPR1XNS0kzlDOwjsidJ
+ mz11v2wXbzDE7GweHYarHflE6FlAIgKh7QqCFcRg8lMlyuvw65sTOa7ngrp8FKmYRMgV/Hv
+ Y62mCA27aFLJ+eQBh49VbhrD4N0yiRPaVt3aaF7aH0mBb23nJlPF6d5pmCMTtOuOlTH24Xk
+ XygZj26tYYx4dZbYyUCbMijx/DSroPLiSpUmfbDKKPHY1JLPn1D0F/7mW84Q==
+Received: by srv8.prv.sapience.com (Postfix) id 91E5428001B;
+	Tue, 14 Oct 2025 06:18:29 -0400 (EDT)
+Message-ID: <b30331816621cc1f6a154233482f01798cf57cea.camel@sapience.com>
+Subject: Re: mainline boot fail nvme/block? [BISECTED]
+From: Genes Lists <lists@sapience.com>
+To: Inochi Amaoto <inochiama@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nvme@lists.infradead.org
+Cc: linux-pci@vger.kernel.org
+Date: Tue, 14 Oct 2025 06:18:28 -0400
+In-Reply-To: <xfzcvv6ezleds24wvha2apkz5kirhcmoydm3on2hnfrxcwuc3g@koj6plovnvbd>
+References: <4b392af8847cc19720ffcd53865f60ab3edc56b3.camel@sapience.com>
+	 <cf4e88c6-0319-4084-8311-a7ca28a78c81@kernel.dk>
+	 <3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com>
+	 <trdjd7zhpldyeurmpvx4zpgjoz7hmf3ugayybz4gagu2iue56c@zswmzvauqnxk>
+	 <622d6d7401b5cfd4bd5f359c7d7dc5b3bf8785d5.camel@sapience.com>
+	 <xfzcvv6ezleds24wvha2apkz5kirhcmoydm3on2hnfrxcwuc3g@koj6plovnvbd>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-WzP+G+VsL1ZgoEfePPDq"
+User-Agent: Evolution 3.58.1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Current code retrieving platform devices MSI devID in the GIC ITS MSI
-parent helpers suffers from some minor issues:
 
-- It leaks a struct device_node reference
-- It triggers an excessive WARN_ON on wrong of_phandle_args count detection
-- It is duplicated between GICv3 and GICv5 for no good reason
-- It does not use the OF phandle iterator code that simplifies
-  the msi-parent property parsing
+--=-WzP+G+VsL1ZgoEfePPDq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement a helper function that addresses the full set of issues in one go
-by consolidating GIC v3 and v5 code and converting the msi-parent parsing
-loop to the more modern OF phandle iterator API, fixing the
-struct device_node reference leak in the process.
+On Tue, 2025-10-14 at 08:54 +0800, Inochi Amaoto wrote:
+> On Mon, Oct 13, 2025 at 07:45:05AM -0400, Genes Lists wrote:
+> >=20
+...
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Sascha Bischoff <sascha.bischoff@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-its-msi-parent.c | 98 ++++++++----------------
- 1 file changed, 33 insertions(+), 65 deletions(-)
+> > Thank you Inochi
+> >=20
+> > I tried this patch over 6.18-rc1.
+> >=20
+> > =C2=A0It get's further than without the patch but around the time I get
+> > prompted for passphrase for the luks partition
+> > (root is not encrypted) it crashes.=C2=A0
+> >=20
+> > I have uploaded 2 images I took of the screen when this happens and
+> > uploaded them to here:
+> >=20
+> > =C2=A0 =C2=A0=C2=A0https://0x0.st/KSNz.jpg
+> > =C2=A0 =C2=A0=C2=A0https://0x0.st/KSNi.jpg
+> >=20
+>=20
+> This picture is only a WARNING from perf_get_x86_pmu_capability,
+> and no other information. So I am not sure whether it is caused
+> by this change. But from the original report I have, it solves
+> the problem at that time.
+>=20
+> By the way, can you test the following change?
+> https://lore.kernel.org/all/2hyxqqdootjw5yepbimacuuapfsf26c5mmu5w2jsd
+> mamxvsjdq@gnibocldkuz5/
+>=20
+> If it is OK, I will send a patch for it.
+>=20
+> Regards,
+> Inochi
 
-diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
-index eb1473f1448a..a65f762b7dd4 100644
---- a/drivers/irqchip/irq-gic-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-its-msi-parent.c
-@@ -142,83 +142,51 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- #define its_v5_pci_msi_prepare	NULL
- #endif /* !CONFIG_PCI_MSI */
- 
--static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
--				  u32 *dev_id)
-+static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-+				phys_addr_t *pa, bool is_v5)
- {
--	int ret, index = 0;
-+	struct of_phandle_iterator it;
-+	uint32_t args;
-+	int ret;
- 
- 	/* Suck the DeviceID out of the msi-parent property */
--	do {
--		struct of_phandle_args args;
-+	of_for_each_phandle(&it, ret, dev->of_node, "msi-parent", "#msi-cells", -1) {
-+		/* GICv5 ITS domain matches the MSI controller node parent */
-+		struct device_node *np __free(device_node) = is_v5 ? of_get_parent(it.node)
-+							     : of_node_get(it.node);
- 
--		ret = of_parse_phandle_with_args(dev->of_node,
--						 "msi-parent", "#msi-cells",
--						 index, &args);
--		if (args.np == irq_domain_get_of_node(domain)) {
--			if (WARN_ON(args.args_count != 1))
--				return -EINVAL;
--			*dev_id = args.args[0];
--			break;
-+		if (np == irq_domain_get_of_node(domain)) {
-+			if (of_phandle_iterator_args(&it, &args, 1) != 1) {
-+				dev_warn(dev, "Bogus msi-parent property\n");
-+				ret = -EINVAL;
-+			}
-+
-+			if (!ret && is_v5)
-+				ret = its_translate_frame_address(it.node, pa);
-+
-+			if (!ret)
-+				*dev_id = args;
-+
-+			of_node_put(it.node);
-+			return ret;
- 		}
--		index++;
--	} while (!ret);
--
--	if (ret) {
--		struct device_node *np = NULL;
--
--		ret = of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, dev_id);
--		if (np)
--			of_node_put(np);
- 	}
- 
--	return ret;
-+	struct device_node *msi_ctrl __free(device_node) = NULL;
-+
-+	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
-+}
-+
-+static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-+			      u32 *dev_id)
-+{
-+	return __of_pmsi_get_dev_id(domain, dev, dev_id, NULL, false);
- }
- 
- static int of_v5_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev,
- 				   u32 *dev_id, phys_addr_t *pa)
- {
--	int ret, index = 0;
--	/*
--	 * Retrieve the DeviceID and the ITS translate frame node pointer
--	 * out of the msi-parent property.
--	 */
--	do {
--		struct of_phandle_args args;
--
--		ret = of_parse_phandle_with_args(dev->of_node,
--						 "msi-parent", "#msi-cells",
--						 index, &args);
--		if (ret)
--			break;
--		/*
--		 * The IRQ domain fwnode is the msi controller parent
--		 * in GICv5 (where the msi controller nodes are the
--		 * ITS translate frames).
--		 */
--		if (args.np->parent == irq_domain_get_of_node(domain)) {
--			if (WARN_ON(args.args_count != 1))
--				return -EINVAL;
--			*dev_id = args.args[0];
--
--			ret = its_translate_frame_address(args.np, pa);
--			if (ret)
--				return -ENODEV;
--			break;
--		}
--		index++;
--	} while (!ret);
--
--	if (ret) {
--		struct device_node *np = NULL;
--
--		ret = of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, dev_id);
--		if (np) {
--			ret = its_translate_frame_address(np, pa);
--			of_node_put(np);
--		}
--	}
--
--	return ret;
-+	return __of_pmsi_get_dev_id(domain, dev, dev_id, pa, true);
- }
- 
- int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
--- 
-2.50.1
 
+With this patch it boots with the same/similar warning as before, which
+I will include below since it's text instead of image.
+
+Tested-by: Gene C <gene@sapience.com>
+
+Thank you
+
+gene
+
+Warning from 6.18-rc1 with above patch:
+
+
+[  +0.003929] ------------[ cut here ]------------
+[  +0.000004] WARNING: CPU: 7 PID: 584 at arch/x86/events/core.c:3089
+perf_get_x86_pmu_capability+0x11/0xb0
+[  +0.000010] Modules linked in: snd_hda_codec sr_mod(+) iwlmvm(+)
+kvm_intel(+) dm_crypt cdrom encrypted_keys snd_>
+[  +0.000060]  industrialio mei_me processor_thermal_wt_req i2c_smbus
+spi_intel_pci intel_ipu6 soundcore processor>
+[  +0.000058]  ghash_clmulni_intel aesni_intel video intel_ish_ipc
+drm_display_helper intel_lpss_pci thunderbolt i>
+[  +0.000025] CPU: 7 UID: 0 PID: 584 Comm: (udev-worker) Not tainted
+6.18.0-rc1-test-1-00002-ge9cc50c96bb9 #2 PREE>
+[  +0.000005] Hardware name: Dell Inc. XPS 9320/0CR6NC, BIOS 2.23.0
+07/03/2025
+[  +0.000002] RIP: 0010:perf_get_x86_pmu_capability+0x11/0xb0
+[  +0.000004] Code: eb 9c e8 22 38 f8 00 66 90 90 90 90 90 90 90 90 90
+90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 4>
+[  +0.000002] RSP: 0018:ffffd1e041edba58 EFLAGS: 00010202
+[  +0.000003] RAX: 0000000000000000 RBX: ffffffffc206f000 RCX:
+00000000c0000080
+[  +0.000003] RDX: ffffffffc1e396e0 RSI: ffffffffc1e39408 RDI:
+ffffffffc1e396e0
+[  +0.000001] RBP: 0000000000000001 R08: 0000000000000000 R09:
+ffffffffb0e763fb
+[  +0.000002] R10: ffff8d0fdad72460 R11: ffff8d0fc0042600 R12:
+0000000000000000
+[  +0.000001] R13: ffffffffc17e4ca0 R14: 000071be141fd2f2 R15:
+0000000000000000
+[  +0.000002] FS:  000071be140c6880(0000) GS:ffff8d177bf79000(0000)
+knlGS:0000000000000000
+[  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000002] CR2: 00007d5cd598b808 CR3: 0000000109583004 CR4:
+0000000000f70ef0
+[  +0.000002] PKRU: 55555554
+[  +0.000001] Call Trace:
+[  +0.000003]  <TASK>
+[  +0.000002]  kvm_init_pmu_capability+0x27/0x130 [kvm
+83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
+[  +0.000119]  kvm_x86_vendor_init+0x1de/0x19d0 [kvm
+83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
+[  +0.000085]  ? __pfx_vt_init+0x10/0x10 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000023]  vmx_init+0xf6/0x170 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000015]  vt_init+0xf/0x360 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000012]  do_one_initcall+0x5b/0x300
+[  +0.000009]  do_init_module+0x62/0x250
+[  +0.000005]  ? init_module_from_file+0x8a/0xe0
+[  +0.000004]  init_module_from_file+0x8a/0xe0
+[  +0.000006]  idempotent_init_module+0x114/0x310
+[  +0.000005]  __x64_sys_finit_module+0x6d/0xd0
+[  +0.000004]  ? syscall_trace_enter+0x8d/0x1d0
+[  +0.000003]  do_syscall_64+0x81/0x7f0
+[  +0.000005]  ? __wait_for_common+0x162/0x190
+[  +0.000005]  ? __pfx_schedule_timeout+0x10/0x10
+[  +0.000004]  ? __rseq_handle_notify_resume+0xa6/0x490
+[  +0.000005]  ? idempotent_init_module+0x1df/0x310
+[  +0.000005]  ? switch_fpu_return+0x4e/0xd0
+[  +0.000003]  ? do_syscall_64+0x226/0x7f0
+[  +0.000003]  ? do_syscall_64+0x226/0x7f0
+[  +0.000003]  ? do_user_addr_fault+0x21a/0x690
+[  +0.000006]  ? exc_page_fault+0x7e/0x1a0
+[  +0.000013] Bluetooth: hci0: Firmware SHA1: 0x937bca4a
+[  +0.003913] Bluetooth: hci0: Fseq status: Success (0x00)
+[  +0.000011] Bluetooth: hci0: Fseq executed: 00.00.02.41
+[  +0.000004] Bluetooth: hci0: Fseq BT Top: 00.00.02.41
+[  +8.297442] Key type trusted registered
+[  +0.014388] Key type encrypted registered
+[  +0.017993] sr 0:0:0:0: Power-on or device reset occurred
+[  +0.005943] sr 0:0:0:0: [sr0] scsi3-mmc drive: 24x/24x writer dvd-ram
+cd/rw xa/form2 cdda tray
+[  +0.000005] cdrom: Uniform CD-ROM driver Revision: 3.20
+[  +0.003929] ------------[ cut here ]------------
+[  +0.000004] WARNING: CPU: 7 PID: 584 at arch/x86/events/core.c:3089
+perf_get_x86_pmu_capability+0x11/0xb0
+[  +0.000010] Modules linked in: snd_hda_codec sr_mod(+) iwlmvm(+)
+kvm_intel(+) dm_crypt cdrom encrypted_keys snd_>
+[  +0.000060]  industrialio mei_me processor_thermal_wt_req i2c_smbus
+spi_intel_pci intel_ipu6 soundcore processor>
+[  +0.000058]  ghash_clmulni_intel aesni_intel video intel_ish_ipc
+drm_display_helper intel_lpss_pci thunderbolt i>
+[  +0.000025] CPU: 7 UID: 0 PID: 584 Comm: (udev-worker) Not tainted
+6.18.0-rc1-test-1-00002-ge9cc50c96bb9 #2 PREE>
+[  +0.000005] Hardware name: Dell Inc. XPS 9320/0CR6NC, BIOS 2.23.0
+07/03/2025
+[  +0.000002] RIP: 0010:perf_get_x86_pmu_capability+0x11/0xb0
+[  +0.000004] Code: eb 9c e8 22 38 f8 00 66 90 90 90 90 90 90 90 90 90
+90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 4>
+[  +0.000002] RSP: 0018:ffffd1e041edba58 EFLAGS: 00010202
+[  +0.000003] RAX: 0000000000000000 RBX: ffffffffc206f000 RCX:
+00000000c0000080
+[  +0.000003] RDX: ffffffffc1e396e0 RSI: ffffffffc1e39408 RDI:
+ffffffffc1e396e0
+[  +0.000001] RBP: 0000000000000001 R08: 0000000000000000 R09:
+ffffffffb0e763fb
+[  +0.000002] R10: ffff8d0fdad72460 R11: ffff8d0fc0042600 R12:
+0000000000000000
+[  +0.000001] R13: ffffffffc17e4ca0 R14: 000071be141fd2f2 R15:
+0000000000000000
+[  +0.000002] FS:  000071be140c6880(0000) GS:ffff8d177bf79000(0000)
+knlGS:0000000000000000
+[  +0.000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0.000002] CR2: 00007d5cd598b808 CR3: 0000000109583004 CR4:
+0000000000f70ef0
+[  +0.000002] PKRU: 55555554
+[  +0.000001] Call Trace:
+[  +0.000003]  <TASK>
+[  +0.000002]  kvm_init_pmu_capability+0x27/0x130 [kvm
+83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
+[  +0.000119]  kvm_x86_vendor_init+0x1de/0x19d0 [kvm
+83ffe9a0591f43a0ce126662332dfe4cf2561fa4]
+[  +0.000085]  ? __pfx_vt_init+0x10/0x10 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000023]  vmx_init+0xf6/0x170 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000015]  vt_init+0xf/0x360 [kvm_intel
+5fa84b05f575edf3826c8f8519ca550622307061]
+[  +0.000012]  do_one_initcall+0x5b/0x300
+[  +0.000009]  do_init_module+0x62/0x250
+[  +0.000005]  ? init_module_from_file+0x8a/0xe0
+[  +0.000004]  init_module_from_file+0x8a/0xe0
+[  +0.000006]  idempotent_init_module+0x114/0x310
+[  +0.000005]  __x64_sys_finit_module+0x6d/0xd0
+[  +0.000004]  ? syscall_trace_enter+0x8d/0x1d0
+[  +0.000003]  do_syscall_64+0x81/0x7f0
+[  +0.000005]  ? __wait_for_common+0x162/0x190
+[  +0.000005]  ? __pfx_schedule_timeout+0x10/0x10
+[  +0.000004]  ? __rseq_handle_notify_resume+0xa6/0x490
+[  +0.000005]  ? idempotent_init_module+0x1df/0x310
+[  +0.000005]  ? switch_fpu_return+0x4e/0xd0
+[  +0.000003]  ? do_syscall_64+0x226/0x7f0
+[  +0.000003]  ? do_syscall_64+0x226/0x7f0
+[  +0.000003]  ? do_user_addr_fault+0x21a/0x690
+[  +0.000006]  ? exc_page_fault+0x7e/0x1a0
+[  +0.000004]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  +0.000003] RIP: 0033:0x71be1391876d
+[  +0.000045] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa
+48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c>
+[  +0.000002] RSP: 002b:00007ffdfcc7da58 EFLAGS: 00000246 ORIG_RAX:
+0000000000000139
+[  +0.000004] RAX: ffffffffffffffda RBX: 000064e3aeb57f80 RCX:
+000071be1391876d
+[  +0.000001] RDX: 0000000000000004 RSI: 000071be141fd2f2 RDI:
+0000000000000032
+[  +0.000002] RBP: 00007ffdfcc7daf0 R08: 0000000000000000 R09:
+000064e3aeb528f0
+[  +0.000001] R10: 0000000000000000 R11: 0000000000000246 R12:
+000071be141fd2f2
+[  +0.000001] R13: 0000000000020000 R14: 000064e3aeb507f0 R15:
+000064e3aeb57f80
+[  +0.000003]  </TASK>
+[  +0.000001] ---[ end trace 0000000000000000 ]---
+
+
+
+--=20
+Gene
+
+--=-WzP+G+VsL1ZgoEfePPDq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCaO4jdAAKCRA5BdB0L6Ze
+244RAQDk1/zoqO5wjghvcV/PzFr1pEfVFIEW5Kjc7eP+weAG3gD/ZhNV4oGBjWc0
+BxKw9gsEg3neYfcTDB9Bag9mtmFtJAQ=
+=xG1/
+-----END PGP SIGNATURE-----
+
+--=-WzP+G+VsL1ZgoEfePPDq--
 
