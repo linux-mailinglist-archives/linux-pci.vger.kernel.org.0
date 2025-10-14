@@ -1,274 +1,90 @@
-Return-Path: <linux-pci+bounces-38075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08AD8BDABE2
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 19:12:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86478BDAD45
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 19:43:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DAB318A7EC8
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 17:12:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 459A4546968
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 17:43:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C62E304BDF;
-	Tue, 14 Oct 2025 17:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40EE2FBE01;
+	Tue, 14 Oct 2025 17:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ0SEbtr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBu/yDl9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7863002C8;
-	Tue, 14 Oct 2025 17:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8824221555;
+	Tue, 14 Oct 2025 17:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760461939; cv=none; b=TBm+qAjZNTvVtcPNuTjElRPeAJcw9bQ5KKfeRbeb9bBJYdW/mxwjJl3I/VqK1pq3m+nzWHvl/QAecrkyrRHOfWWQadJnQcJN4FkgRIid3XSLljkvXP7H57eZ/CiLjBBWK/dxfbOLm28Zbqlb0FA2cqwtQtatdzN31oyuGCgcU2w=
+	t=1760463832; cv=none; b=dJSRtNs9ne62ucmtR8xvJhUqwPk1v6X5SHQWuKosRKKobc9yB7JB3OqkPbBObZbeU9SI2J+otmJ4gTlCCFQyRzsLBuxhSDZ5hGewTHZ6aX5ZpLIwDcBQ297xOSM35h+wyK96hkGl193hgLb7xTa5jZZ/YOeebO+V9VoEesgunHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760461939; c=relaxed/simple;
-	bh=gUQLj+zrhbIXqImMpcwbt9bYrEb+FWMkhQNFTbc7ep0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=npqjZoaIGuRowxyEDqNznBbW41rDCSEA0wSDN0th5vTV4ZqCnmKQZYpfeQiJvXVex9YbVE54QOGmmWTEbkTW82NMlXeuz7RBFW54e9oY0/LimI2w7JLhzWJKCsT0evJivgneQ0/ru0T1raCPtniiOWHlTKPE/4LjjB/7BMNTzKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ0SEbtr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F517C4CEE7;
-	Tue, 14 Oct 2025 17:12:19 +0000 (UTC)
+	s=arc-20240116; t=1760463832; c=relaxed/simple;
+	bh=Qj9F9oPwsMZi//F1Yf1CYFenbsd0elLCIUlVgkFyfuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8blVqX/2vLeltycB7SoMcXPac5JabzWvocDCx/TbEoAbYm1KAM1IF7veozot70aKtJGaAqiJAn5otd48j/ZgBYMfyodwR6b2+AXfOtTpU2FnUL8TQFSvIk5Q2pSB6QKAKy6WTbOFNwXoATMA3DRxyXTM0isdToOwX5oTYdPjYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBu/yDl9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E376CC4CEE7;
+	Tue, 14 Oct 2025 17:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760461939;
-	bh=gUQLj+zrhbIXqImMpcwbt9bYrEb+FWMkhQNFTbc7ep0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kJ0SEbtrirjPrgwEKqk+LXVr9DF5kZmPFkeMtMt8UIPY+AeK5G4QzrZkd7hdHbhXN
-	 Hr83y0BeFfrjyUpA8q3LZXnDigrPHd9IkWyEkeLF4ipOEuwSORfVhjlLYk1M0xGYxR
-	 Rs0shzhHXJV9GmfyGyCogRSZRG570XMbb53SkzKW6QlZl+bXlXma4JvFtNI4eQ2819
-	 OHGDJnkXeVmeSPFIeTuFp0NSJGlCY61WYGRDUiSoKwPH85ax9S5yzo1ENb9QJqrVIQ
-	 SfjOiyiHdMh1yRcRG+czeOMwRYenW0e+4TbeZjdU64OAvGq/30Ze7m/eGEt59GHDUf
-	 Dm/LvYsiEDneQ==
-Received: from 82-132-238-238.dab.02.net ([82.132.238.238] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1v8iZM-0000000Dwp9-2kHH;
-	Tue, 14 Oct 2025 17:12:17 +0000
-Date: Tue, 14 Oct 2025 18:12:11 +0100
-Message-ID: <87ecr5xv9w.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-kernel@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,	linux-pci@vger.kernel.org,	Sascha Bischoff
- <sascha.bischoff@arm.com>,	Thomas Gleixner <tglx@linutronix.de>,	Rob
- Herring <robh@kernel.org>,	Frank Li <Frank.Li@nxp.com>,	Scott Branden
- <sbranden@broadcom.com>,	Bjorn Helgaas <bhelgaas@google.com>,	Ray Jui
- <rjui@broadcom.com>,	Manivannan Sadhasivam <mani@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v2 4/4] irqchip/gic-its: Rework platform MSI deviceID detection
-In-Reply-To: <20251014095845.1310624-5-lpieralisi@kernel.org>
-References: <20251014095845.1310624-1-lpieralisi@kernel.org>
-	<20251014095845.1310624-5-lpieralisi@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1760463832;
+	bh=Qj9F9oPwsMZi//F1Yf1CYFenbsd0elLCIUlVgkFyfuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HBu/yDl9xonPjSRqKRS4NHzJ2UKIC3XLtPhtWAerjwGGjfdkipHLL5cvHxz8WgV8L
+	 F/mjBQ5QcGzewZXo9dQ5z48LX107YQfUuxHWaNFvYwcNB9pgoA55ulxiG5r5BgdsF0
+	 1nARnJ5CsYiDdbrMQSv6DVorY4QFC7K5DZMldFPCkauojwWwPFLRSEfGjXzSkKxLkW
+	 YaanZ+PJsxq+I2ecUi/httb651Omst2R0jx0GMpsfxsxomiQukw1v5I3gtGRb0eMGQ
+	 IppErgD/9c7puBkt/6zJkNfe506aMoqeIudm8L57N1So2fViqt7KFnLXgO0sEAoe9x
+	 7fdAB1FoKYyCA==
+Date: Tue, 14 Oct 2025 10:43:45 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, kernel test robot <lkp@intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH] PCI: rcar-host: Avoid objtool no-cfi warning in
+ rcar_pcie_probe()
+Message-ID: <20251014174345.GA3062995@ax162>
+References: <20251013-rcar_pcie_probe-avoid-nocfi-objtool-warning-v1-1-552876b94f04@kernel.org>
+ <CAMuHMdXZvoTyWcgRp6TnkybnKY4ekfO9aB33iumPVaR7wvEXkw@mail.gmail.com>
+ <20251014083209.GA2696801@ax162>
+ <uebexl7d5gfjopb26gstftahu2ouab3ekonw4dzgegw3on5cwr@vqc2zmxiluvt>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.238.238
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, sascha.bischoff@arm.com, tglx@linutronix.de, robh@kernel.org, Frank.Li@nxp.com, sbranden@broadcom.com, bhelgaas@google.com, rjui@broadcom.com, mani@kernel.org, kwilczynski@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <uebexl7d5gfjopb26gstftahu2ouab3ekonw4dzgegw3on5cwr@vqc2zmxiluvt>
 
-On Tue, 14 Oct 2025 10:58:45 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Tue, Oct 14, 2025 at 06:32:59PM +0530, Manivannan Sadhasivam wrote:
+> TBH, I hate both of these CONFIG_OF checks as most of the controller drivers
+> are just OF drivers. If we were to sprinkle CONFIG_OF check, then it has to be
+> done in almost all controller drivers (except VMD, Hyper-V).
 > 
-> Current code retrieving platform devices MSI devID in the GIC ITS MSI
-> parent helpers suffers from some minor issues:
-> 
-> - It leaks a struct device_node reference
-> - It triggers an excessive WARN_ON on wrong of_phandle_args count detection
+> If compiler is getting smart enough to detect these NULL invocations, then it
+> may start to trigger the same issue for other OF APIs as well. So I'd prefer to
+> have the OF dependency in Kconfig, sacrificing COMPILE_TEST on non-OF configs.
 
-Well, if your DT is that rotten, maybe you actually deserve some
-console spamming, don't you think?
+Alright, fair enough. I will send a v2 soon just adding the dependency
+on OF.
 
-> - It is duplicated between GICv3 and GICv5 for no good reason
-> - It does not use the OF phandle iterator code that simplifies
->   the msi-parent property parsing
-> 
-> Implement a helper function that addresses the full set of issues in one go
-> by consolidating GIC v3 and v5 code and converting the msi-parent parsing
-> loop to the more modern OF phandle iterator API, fixing the
-> struct device_node reference leak in the process.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Sascha Bischoff <sascha.bischoff@arm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Frank Li <Frank.Li@nxp.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/irqchip/irq-gic-its-msi-parent.c | 98 ++++++++----------------
->  1 file changed, 33 insertions(+), 65 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
-> index eb1473f1448a..a65f762b7dd4 100644
-> --- a/drivers/irqchip/irq-gic-its-msi-parent.c
-> +++ b/drivers/irqchip/irq-gic-its-msi-parent.c
-> @@ -142,83 +142,51 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
->  #define its_v5_pci_msi_prepare	NULL
->  #endif /* !CONFIG_PCI_MSI */
->  
-> -static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-> -				  u32 *dev_id)
-> +static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-> +				phys_addr_t *pa, bool is_v5)
->  {
-> -	int ret, index = 0;
-> +	struct of_phandle_iterator it;
-> +	uint32_t args;
-
-Use u32, this is not userspace-visible (the OF code will cope). And
-move it to where it matters instead of having such a wide scope.
-
-> +	int ret;
->  
->  	/* Suck the DeviceID out of the msi-parent property */
-> -	do {
-> -		struct of_phandle_args args;
-> +	of_for_each_phandle(&it, ret, dev->of_node, "msi-parent", "#msi-cells", -1) {
-> +		/* GICv5 ITS domain matches the MSI controller node parent */
-> +		struct device_node *np __free(device_node) = is_v5 ? of_get_parent(it.node)
-> +							     : of_node_get(it.node);
->  
-> -		ret = of_parse_phandle_with_args(dev->of_node,
-> -						 "msi-parent", "#msi-cells",
-> -						 index, &args);
-> -		if (args.np == irq_domain_get_of_node(domain)) {
-> -			if (WARN_ON(args.args_count != 1))
-> -				return -EINVAL;
-> -			*dev_id = args.args[0];
-> -			break;
-> +		if (np == irq_domain_get_of_node(domain)) {
-> +			if (of_phandle_iterator_args(&it, &args, 1) != 1) {
-> +				dev_warn(dev, "Bogus msi-parent property\n");
-> +				ret = -EINVAL;
-> +			}
-> +
-> +			if (!ret && is_v5)
-> +				ret = its_translate_frame_address(it.node, pa);
-
-Why do you need this is_v5 hack, since the only case were you pass a
-pointer to get the translate register address is for v5?
-
-> +
-> +			if (!ret)
-> +				*dev_id = args;
-> +
-> +			of_node_put(it.node);
-> +			return ret;
->  		}
-> -		index++;
-> -	} while (!ret);
-> -
-> -	if (ret) {
-> -		struct device_node *np = NULL;
-> -
-> -		ret = of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, dev_id);
-> -		if (np)
-> -			of_node_put(np);
->  	}
->  
-> -	return ret;
-> +	struct device_node *msi_ctrl __free(device_node) = NULL;
-> +
-> +	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
-> +}
-> +
-> +static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-> +			      u32 *dev_id)
-> +{
-> +	return __of_pmsi_get_dev_id(domain, dev, dev_id, NULL, false);
->  }
-
-At this stage, we really don't need these on-liners, as they only
-obfuscate the logic. Just use the main helper directly. Something like
-the hack below.
-
-	M.
-
-diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
-index a65f762b7dd4d..7c82fd152655e 100644
---- a/drivers/irqchip/irq-gic-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-its-msi-parent.c
-@@ -142,26 +142,27 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
- #define its_v5_pci_msi_prepare	NULL
- #endif /* !CONFIG_PCI_MSI */
- 
--static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u32 *dev_id,
--				phys_addr_t *pa, bool is_v5)
-+static int of_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-+				phys_addr_t *pa)
- {
- 	struct of_phandle_iterator it;
--	uint32_t args;
- 	int ret;
- 
- 	/* Suck the DeviceID out of the msi-parent property */
- 	of_for_each_phandle(&it, ret, dev->of_node, "msi-parent", "#msi-cells", -1) {
- 		/* GICv5 ITS domain matches the MSI controller node parent */
--		struct device_node *np __free(device_node) = is_v5 ? of_get_parent(it.node)
-+		struct device_node *np __free(device_node) = pa ? of_get_parent(it.node)
- 							     : of_node_get(it.node);
- 
- 		if (np == irq_domain_get_of_node(domain)) {
-+			u32 args;
-+
- 			if (of_phandle_iterator_args(&it, &args, 1) != 1) {
- 				dev_warn(dev, "Bogus msi-parent property\n");
- 				ret = -EINVAL;
- 			}
- 
--			if (!ret && is_v5)
-+			if (!ret && pa)
- 				ret = its_translate_frame_address(it.node, pa);
- 
- 			if (!ret)
-@@ -177,18 +178,6 @@ static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u
- 	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
- }
- 
--static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
--			      u32 *dev_id)
--{
--	return __of_pmsi_get_dev_id(domain, dev, dev_id, NULL, false);
--}
--
--static int of_v5_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev,
--				   u32 *dev_id, phys_addr_t *pa)
--{
--	return __of_pmsi_get_dev_id(domain, dev, dev_id, pa, true);
--}
--
- int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
- {
- 	return -1;
-@@ -202,7 +191,7 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
- 	int ret;
- 
- 	if (dev->of_node)
--		ret = of_pmsi_get_dev_id(domain->parent, dev, &dev_id);
-+		ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, NULL);
- 	else
- 		ret = iort_pmsi_get_dev_id(dev, &dev_id);
- 	if (ret)
-@@ -230,7 +219,7 @@ static int its_v5_pmsi_prepare(struct irq_domain *domain, struct device *dev,
- 	if (!dev->of_node)
- 		return -ENODEV;
- 
--	ret = of_v5_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
-+	ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
- 	if (ret)
- 		return ret;
- 
-
--- 
-Jazz isn't dead. It just smells funny.
+Cheers,
+Nathan
 
