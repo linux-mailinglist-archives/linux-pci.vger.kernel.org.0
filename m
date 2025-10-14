@@ -1,105 +1,149 @@
-Return-Path: <linux-pci+bounces-38086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DC2CBDB4C3
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 473EBBDB4D1
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 22:45:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1245042245D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:43:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D25E426A94
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 20:44:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80032306D36;
-	Tue, 14 Oct 2025 20:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 206FC306D5F;
+	Tue, 14 Oct 2025 20:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqJaPGoL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGI9Dp2l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3A1306B3C;
-	Tue, 14 Oct 2025 20:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFAE306D58
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 20:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760474588; cv=none; b=mYTYNSdKOzojG55IRuEA1p1OJ4WlEDca60VUrziYTKwbIXqmqc+Rx5ubR4YOoUPT+rbOU44WPbx1lAXulLrbNtZe+wPxFfkLXoO1m7mu+KHWVrOpb2S9kFnDgIeIfNzIGwwSBfjaLhZClUhLZpM4FSom2qZo+zckNmHEkwTvTp0=
+	t=1760474692; cv=none; b=fymI31vyNIi3m7SyzkpzEtI4KAmnjLRUiQVLfmT1bo3P5E+y2iB/sD3eujELOEe3U0V+nd5agWA35qhhBjpfaMBHmU7MP6G6IYfnpJUTddZ1DHDf/9sFhVd1M379tWO/6utkdd+dsk1o3Kxa9MNMQDq/0QAELxDdXobIvc7A1is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760474588; c=relaxed/simple;
-	bh=d8Vxq0wiTdFgCOFDkpVk3E8XmeKIGyWvOmVftCw9KJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Eh8B8gXwFLUgAoNvTCY9G+AmwEF09iYiuGILqvy9fSMZ2Hu7tQ1TEPV6qDyCx7GfOTcqhehPBoUYivtijZxhsbHjQvvk6+pUs5k/v907tPvhmR8SlaSMTK9GWu0JaMbI8D89VCf5NSo8ddJL7NP5I8cKLVTMyIGaqNXVMUFnT6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqJaPGoL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A10C2C4CEE7;
-	Tue, 14 Oct 2025 20:43:07 +0000 (UTC)
+	s=arc-20240116; t=1760474692; c=relaxed/simple;
+	bh=sk3w75RtyWNWUZvXt6JftS1Ei1J9D/GDQ/pCitVq9j8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VD5gcK4b1YiEPpW9Zg2uyZfvLTbmAFpjQSXoZvFpgnp6PNTGF4mSRklAaF7SwbsTM+Urq53kNadp/KCGiJGuzjeHcWjFCMMInV5pl6pjhW/ZDLGd19rBqeRZRPixuE+hHdzQwEKRgMd/oZ6hLjVsj5uSNXUM1dySwP36qSykrdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGI9Dp2l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0392C116C6
+	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 20:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760474587;
-	bh=d8Vxq0wiTdFgCOFDkpVk3E8XmeKIGyWvOmVftCw9KJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IqJaPGoLwQEMWQAu8gCfNY7j1Mh4c9o70O/EwAc7sGx9/1OmwwFUWFOX5HjTdDXPs
-	 TgHy1LfciiwJruDHrciQHn7euxeGyJFflfj3n0tstlNRU64N2B8F5RRS69ECPMxxwA
-	 3XF/FkX/OgLWy+Z1ASXvxACV4Nq9zMQNv13rMj00eha0rnuvGZ6HuYn/v70RUZ0s6+
-	 aHudJzjvG6BPh0HHRt/VZ0njBbkrvusnwPzJjFHc2ZD4bHxGEQgbjZw6r1atuW4Gbj
-	 pBVhx2k86D1fvZvg/QRQXpx80K7IQwGxmGlWWB3ech/uDTYl1DDedTry057Tm4tntX
-	 f6p1/iTZdpK2w==
-Date: Tue, 14 Oct 2025 15:43:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Frank <Frank.Sae@motor-comm.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
-	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] PCI: Add vendor ID for Motorcomm Electronic
- Technology
-Message-ID: <20251014204306.GA906144@bhelgaas>
+	s=k20201202; t=1760474690;
+	bh=sk3w75RtyWNWUZvXt6JftS1Ei1J9D/GDQ/pCitVq9j8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iGI9Dp2lbMZSic7V9v9QaCCtcdhjrfbDhG6SsXEIClDNoHJyGQd92miF4ttS7CMNK
+	 G9gOmnLUg67QfgF32p8UfcztW3j2IQAnx/d6LbpCrm1UNBw2H7ODtlHcFZwGwZdlmw
+	 nJYk523/Aqxbh8xiDJ68Nbqz73+WN1xnvQ6qx/8Ffhv7ZDUBIc7yG/ts/BUPFCLHyU
+	 T4KgAT9uwGvid5+t/aFqArr+piYX2AIVnqXfRDiusp3Jhv8u6Iqlo6aFk9aJhI9Tlt
+	 uIVjE+Eo/SFliRKl5nilVVwigDb1CRNmxpSCszoqPJbyGxl6q+QVhz1hN9PM1r6zS6
+	 v+pmIvHot0tqQ==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-77fac63ba26so57839567b3.3
+        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 13:44:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmYY2rL2KYdKanGqR0Ihyy6fJVfuGWRI9pTK6d6X2HnypaW11mHU89jA/VTGAx4W0sFGRrMjQ/NQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD7rP+gAHu4d8CmKtFfAKDOL4dYoxbhHkIDCyU0TfpppPvofZC
+	+vnITezTYqh3VzwWbYW7PUBgAKFnvN3jalbWDkJPJ4SnemI5dcwLAcA40NRvWeHHG3durbe9WZO
+	hJC9p+QWr2xqbJ4a3c2yg7BWy13q+l0DjYA4Yt38laQ==
+X-Google-Smtp-Source: AGHT+IFJE1plANafJtInJCscm+heLOGPK8H3e3UnKYtheN5mGgUTBn2x78JByU4wjUGojfILO7wb17BQyddrhRF9+MA=
+X-Received: by 2002:a53:b4c4:0:b0:63c:f5a7:408 with SMTP id
+ 956f58d0204a3-63cf5a709c9mr8433411d50.60.1760474689167; Tue, 14 Oct 2025
+ 13:44:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251014164746.50696-3-ziyao@disroot.org>
+References: <CA+CK2bAbB8YsheCwLi0ztY5LLWMyQ6He3sbYru697Ogq5+hR+Q@mail.gmail.com>
+ <20250929150425.GA111624@bhelgaas> <CACePvbV+D6nu=gqjavv+hve4tcD+6WxQjC0O9TbNxLCeBhi5nQ@mail.gmail.com>
+ <CACePvbUJ6mxgCNVy_0PdMP+-98D0Un8peRhsR45mbr9czfMkEA@mail.gmail.com>
+ <mafs0a51zmzjp.fsf@kernel.org> <CACePvbW9eSBY7qRz4o6Wqh0Ji0qECrFP+RDxa+nn4aHRTt1zkQ@mail.gmail.com>
+ <CAHN2nPK34YfrysN+sraiFVjU_9Lw7E-yFVF-9x+nt1OUppZX8Q@mail.gmail.com> <mafs01pn6nbse.fsf@kernel.org>
+In-Reply-To: <mafs01pn6nbse.fsf@kernel.org>
+From: Chris Li <chrisl@kernel.org>
+Date: Tue, 14 Oct 2025 13:44:37 -0700
+X-Gmail-Original-Message-ID: <CACePvbWw9zWE7drUnaxfGk971Hv3o8WhLyYF74d4hDundhQ4jw@mail.gmail.com>
+X-Gm-Features: AS18NWCZdqV7l4n0ncE9tVNVDPwqC_rRLuITbh1FV52A2zBupxn8n08DI-DoFKE
+Message-ID: <CACePvbWw9zWE7drUnaxfGk971Hv3o8WhLyYF74d4hDundhQ4jw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] LUO: PCI subsystem (phase I)
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Jason Miu <jasonmiu@google.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Pasha Tatashin <tatashin@google.com>, 
+	Vipin Sharma <vipinsh@google.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Parav Pandit <parav@nvidia.com>, William Tu <witu@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, skhawaja@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 14, 2025 at 04:47:44PM +0000, Yao Zi wrote:
-> This company produces Ethernet controllers and PHYs. Add their vendor
-> ID, 0x1f0a[1], which is recorded by PCI-SIG and has been seen on their
-> PCI Ethernet cards.
-> 
-> Link: https://pcisig.com/membership/member-companies?combine=1f0a # [1]
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  include/linux/pci_ids.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 92ffc4373f6d..0824a1a7663d 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2631,6 +2631,8 @@
->  
->  #define PCI_VENDOR_ID_CXL		0x1e98
->  
-> +#define PCI_VENDOR_ID_MOTORCOMM		0x1f0a
+On Mon, Oct 13, 2025 at 6:58=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> On Fri, Oct 10 2025, Jason Miu wrote:
+>
+> > On Thu, Oct 9, 2025 at 9:19=E2=80=AFPM Chris Li <chrisl@kernel.org> wro=
+te:
+> >>
+> >> On Thu, Oct 9, 2025 at 4:21=E2=80=AFPM Pratyush Yadav <pratyush@kernel=
+.org> wrote:
+> >> >
+> >> > On Tue, Oct 07 2025, Chris Li wrote:
+> >> >
+> >> > [...]
+> >> > > That will keep me busy for a while waiting for the VFIO series.
+> >> >
+> >> > I recall we talked in one of the biweekly meetings about some sanity
+> >> > checking of folios right before reboot (make sure they are right ord=
+er,
+> >> > etc.) under a KEXEC_HANDOVER_DEBUG option. If you have some spare ti=
+me
+> >> > on your hands, would be cool to see some patches for that as well :-=
+)
+> >>
+> >> Sure, I will add that to my "nice to have" list. No promised I got
+> >> time to get to it with the PCI. It belong to the KHO series not PCI
+> >> though.
+> >>
+>
+> Right. It is only a "nice to have", and not a requirement. And certainly
+> not for the PCI series.
 
-If/when this is used by several drivers add it here.  Until then just
-define PCI_VENDOR_ID_MOTORCOMM in the driver that uses it (see the
-note at top of the file).
+Ack.
 
->  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
->  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
->  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
-> -- 
-> 2.50.1
-> 
+
+> >
+> > For the folio sanity check with KEXEC_HANDOVER_DEBUG, I can follow
+> > that up. Would you tell me what we like to check before reboot, I may
+> > have missed some context. Thanks!
+>
+> The idea is to sanity-check the preserved folios in the kexec-reboot
+> flow somewhere. The main check discussed was to make sure the folios are
+> of the same order as they were preserved with. This will help catch bugs
+> where folios might split after being preserved.
+
+Yes, the idea is that, for all folio that has been preserved, remember
+the folio order at the time of pserver_folio. Right before kexec
+reboot, maybe after the freeze() call, the KHO can go though the
+internal list of the preserved folio and verify the folio starting at
+that physical address still has the same order compare to the
+preservation time. In other words, the folio order hasn't change since
+the between preserve_folio() and kexec reboot, for the folio that has
+been preserved.
+
+> Maybe we can add some more checks too? Like making sure the folios
+> aren't freed after they were preserved. But that condition is a bit
+> trickier to catch. But at least the former should be simple enough to
+> do as a start.
+
+Agree, we can have more check there. We can also add those additional
+check as follow up patches in the same series or later series. They
+don't have to be done in one go.
+
+Chris
 
