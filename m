@@ -1,167 +1,132 @@
-Return-Path: <linux-pci+bounces-38018-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC26BD7F4A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 09:36:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E624BD7F95
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 09:39:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DC294257BF
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:34:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 973A418A32B2
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Oct 2025 07:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61F1156F20;
-	Tue, 14 Oct 2025 07:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtIq29hI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89E8B23D7FF;
+	Tue, 14 Oct 2025 07:39:48 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F37E2989B7
-	for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 07:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43C429BD81;
+	Tue, 14 Oct 2025 07:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760427239; cv=none; b=hpNnCPeXJbEzxTJvXN4ACZkQj+E5hrI8x7idEF+447iU8+cLcsV6UiPLpj2heoc+3EFWESj2M9M/o/bkdpwRXLNlnGQ6rkdyfD0C1Ocqosu+68UdWhmDLiO40jb345MctSIiXmkw21U6xQTeuqQVdI+phWncVzK3JlnWNek5HXU=
+	t=1760427588; cv=none; b=CMGJcEVxAxb/L8Y76nbY22mLhcu9uW5RpYfiEtWjT7apOuKj88YBvj6V/njrZCNIy+cUnZGVOq8z4hvA4mI2wCNbK0LNcY7+NAdM1qz23dJZCkoKeYiGhe/esxCAvZo8kYOQ1gclLaFobbJ6Q9mNDd2A+0inMN0ZrH47hlkD1To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760427239; c=relaxed/simple;
-	bh=rJZBVvFcCZfoZL/WIRUcWWYvpISm45B4Rwe3rWq54PY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VBaAcqL4ffM4zXsnBeBZGHkbddF4gEmdARR49OJvqIpT6Fpu4rztSqt+Sudk9Avd5Gg4vhNhXdIxnYs8dN3XFC1zAngtLCLZydA09Oa7BvIRi8DQ2bcG0dbvGxHCqlD8D62JCdCuIsdnPk8eQRHYMQ/KePrTLa06byn5d5bVdHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jtIq29hI; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3f0308469a4so2664958f8f.0
-        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 00:33:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760427235; x=1761032035; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BwG/OchAZjwNRXsTLu0s9JIZNQmUXDtfcvX6l0dZWYY=;
-        b=jtIq29hIUJ3zZS24dAUTiBR7g0kefEjeW4tk79WyiSgMsnJD8bT2IZEgic2CC3IN/5
-         GjqUvPZwDFV9wpLEcsU59kzrhD/+1MV/AheU30IK0YPN1lbQMFHzq0lURGk0d3rq8lMo
-         spxzB2BBPqjeV36gK+VrRgiy0ovvDz/CsfHZRu6vvSIt/5+jwL90u7MqVFfUU+qIHKy1
-         cp4OjA6iTN/WB1OupyDUQwn5CxAR66Gz8EZkyZT+jrpxNne09uJI74Y3qQbRy/1EUaHE
-         DnyQE183t/YWpl65YiezcYRHe+O1dFD10WfLjkAOwZPl2HvenKQXqIaQW2SxQyh8FtI3
-         YWqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760427235; x=1761032035;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BwG/OchAZjwNRXsTLu0s9JIZNQmUXDtfcvX6l0dZWYY=;
-        b=o9Xui2Vj+gZ99NoHY4daoxTgE8gTdNmS+N/W5wEuQ/BIpulF1zvMCe3o+QhypwYZcc
-         KHDGkoFoL3jk5z68d/sQE4kZD4DP8eKqUIHSYUU1vy7Gs1PjCtgsZ3i5U+o+SPI+66Wl
-         diDsXC2c8fYxJXF4Q2QHHqTuAayOOjqrT9JK+8L3VqiwLmz0B3peVzwcaG6sc0bDMiaG
-         V7h65wTayomP/IC6cYk5E4EKSW+ESiLhbMlLX2UBzbERjB9wshAysHXuBi2NnrlLINEu
-         0jYRtJElFd9xrH44DbRfE1YE/T5bSveJ88Eh1OxLWMxL4GP5HFMgaLcof+Jbf9skO7R1
-         6Nbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbdh1ZPVykHpo2/Ud9rkJpfmoxxzZPpHYn8wCXV9mQ5P7HlQZ2UyUgWgSgACsqqdlyEWBN9Ll/G8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLkst3rWKLYU/mo0XDDImrGbSV1g+f3bMHwlEKPOCtXxS/Om1j
-	Wp5Njrz1DWenOeJSlSbkfL/QyntPHDaKW0dh2YE4enBYi6amKpo0kDK+oqmQE90IMh8=
-X-Gm-Gg: ASbGncvzMHfZPsVxLPttvOYUw9VlFd7K6TXndL+bWYj4OyOVVokrlO4hZwp3mP11vwl
-	RS3FD4IAkMkA3re2BpJH4rXZMxEpmAGyn2x8pu1DGr87cOyan1KEytxTn1x01pu7cfbj17bq8E0
-	e/iWFtvTVamFE5FgjAHf/+moyhk9Rjory1LmoC93Bcq5kcti87xwRhVMgOzUBsmxpLCGJ6s4ejs
-	NN24sBMVIBy0Cy/dQLEnF0WIOR/hGn6r5wqoOBFGiJrTgj3ewWY1z7rBTyTwo/Fv9E+VcDxMkBB
-	4/pxyuDIK2kfdYqTyuyxUAjzsBa8XqLYmrn6MtXDfrDjPseJHYHlBBxJiKreVEl3r67OBi0oaPO
-	HY67FPNdUINqT+wGjUPc/sq81xqh4+X01+IAVtGLiH2Cv1/YZNbc=
-X-Google-Smtp-Source: AGHT+IE0SibgFOUsTOWb11Xe06KS5AooYnMfuV3qZwF21RGoTYuiMhvM5xxFKgxQQAvf0jDG3bRS2A==
-X-Received: by 2002:a05:6000:1ac8:b0:3f7:b7ac:f3d4 with SMTP id ffacd0b85a97d-42666abbbc1mr17933769f8f.5.1760427235501;
-        Tue, 14 Oct 2025 00:33:55 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-426ce5e8a06sm22182799f8f.55.2025.10.14.00.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Oct 2025 00:33:55 -0700 (PDT)
-Date: Tue, 14 Oct 2025 10:33:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Randolph Lin <randolph@andestech.com>,
-	linux-kernel@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alex@ghiti.fr,
-	aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com,
-	ben717@andestech.com, inochiama@gmail.com,
-	thippeswamy.havalige@amd.com, namcao@linutronix.de,
-	shradha.t@samsung.com, pjw@kernel.org, randolph.sklin@gmail.com,
-	tim609@andestech.com, Randolph Lin <randolph@andestech.com>
-Subject: Re: [PATCH v6 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver
- support
-Message-ID: <202510092111.fZmvx6jO-lkp@intel.com>
+	s=arc-20240116; t=1760427588; c=relaxed/simple;
+	bh=BQ9jer1zGLwz8HVUVnXNwihqaOBybFGc85+G5DL43uQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sstp+Z3vwLncn3DdWZx/RYUo6Yk164+QKV4YsPZeVgZOeXAOCyMlZ3D8neKH9BT6YYEcpfGscvKbwypzb9P2uxvprJ/x3yL3TP4lKnJZ4nm63bOV2QVMm16VOETJGtyi+xnkjTLr60p9LDbW6fxYyIE40wJn3HQqpqvyqSVZ8os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8CxK9I+_u1opesVAA--.45392S3;
+	Tue, 14 Oct 2025 15:39:42 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowJDxscI5_u1oWivhAA--.63490S2;
+	Tue, 14 Oct 2025 15:39:41 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH 03/15] PCI: Limit islolated function probing on bus 0 for LoongArch
+Date: Tue, 14 Oct 2025 15:39:29 +0800
+Message-ID: <20251014073929.2143907-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251003023527.3284787-5-randolph@andestech.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxscI5_u1oWivhAA--.63490S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJry8Cr43tF1DZFyxAFyxWFX_yoW8Ww18pF
+	Z5u3y8Ary8KFy3ArZxA3y0kr15K397A34UCFWUG345XanxJ3Wxtws8tF1aqrnrGrWIvFyF
+	qa1DZrW5u3WxA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxUc0eHDUUUU
 
-Hi Randolph,
+We found some discrete AMD graphics devices hide funtion 0 and the whole
+is not supposed to be probed.
 
-kernel test robot noticed the following build warnings:
+Since our original purpose is to allow integrated devices (on bus 0) to
+be probed without function 0, we can limit the islolated function probing
+only on bus 0.
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Cc: stable@vger.kernel.org
+Fixes: a02fd05661d73a8 ("PCI: Extend isolated function probing to LoongArch")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/pci/probe.c        | 2 +-
+ include/linux/hypervisor.h | 8 +++++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Randolph-Lin/PCI-dwc-Allow-adjusting-the-number-of-ob-ib-windows-in-glue-driver/20251003-104100
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20251003023527.3284787-5-randolph%40andestech.com
-patch subject: [PATCH v6 4/5] PCI: andes: Add Andes QiLai SoC PCIe host driver support
-config: powerpc-randconfig-r071-20251009 (https://download.01.org/0day-ci/archive/20251009/202510092111.fZmvx6jO-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 39f292ffa13d7ca0d1edff27ac8fd55024bb4d19)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202510092111.fZmvx6jO-lkp@intel.com/
-
-smatch warnings:
-drivers/pci/controller/dwc/pcie-andes-qilai.c:157 qilai_pcie_host_fix_ob_iatu_count() error: uninitialized symbol 'ranges_32bits'.
-
-vim +/ranges_32bits +157 drivers/pci/controller/dwc/pcie-andes-qilai.c
-
-816cad1ac60166 Randolph Lin 2025-10-03  133  static int qilai_pcie_host_fix_ob_iatu_count(struct dw_pcie_rp *pp)
-816cad1ac60166 Randolph Lin 2025-10-03  134  {
-816cad1ac60166 Randolph Lin 2025-10-03  135  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-816cad1ac60166 Randolph Lin 2025-10-03  136  	struct device *dev = pci->dev;
-816cad1ac60166 Randolph Lin 2025-10-03  137  	struct resource_entry *entry;
-816cad1ac60166 Randolph Lin 2025-10-03  138  	/* Reserved 1 ob iATU for config space */
-816cad1ac60166 Randolph Lin 2025-10-03  139  	int count = 1;
-816cad1ac60166 Randolph Lin 2025-10-03  140  	int ranges_32bits;
-
-This should be bool and initialized to false.
-
-816cad1ac60166 Randolph Lin 2025-10-03  141  	u64 pci_addr;
-816cad1ac60166 Randolph Lin 2025-10-03  142  	u64 size;
-816cad1ac60166 Randolph Lin 2025-10-03  143  
-816cad1ac60166 Randolph Lin 2025-10-03  144  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
-816cad1ac60166 Randolph Lin 2025-10-03  145  		if (resource_type(entry->res) != IORESOURCE_MEM)
-816cad1ac60166 Randolph Lin 2025-10-03  146  			continue;
-816cad1ac60166 Randolph Lin 2025-10-03  147  
-816cad1ac60166 Randolph Lin 2025-10-03  148  		size = resource_size(entry->res);
-816cad1ac60166 Randolph Lin 2025-10-03  149  		if (size < SZ_4G)
-816cad1ac60166 Randolph Lin 2025-10-03  150  			count++;
-816cad1ac60166 Randolph Lin 2025-10-03  151  
-816cad1ac60166 Randolph Lin 2025-10-03  152  		pci_addr = entry->res->start - entry->offset;
-816cad1ac60166 Randolph Lin 2025-10-03  153  		if (pci_addr < SZ_4G)
-816cad1ac60166 Randolph Lin 2025-10-03  154  			ranges_32bits = true;
-816cad1ac60166 Randolph Lin 2025-10-03  155  	}
-816cad1ac60166 Randolph Lin 2025-10-03  156  
-816cad1ac60166 Randolph Lin 2025-10-03 @157  	if (!ranges_32bits) {
-816cad1ac60166 Randolph Lin 2025-10-03  158  		dev_err(dev, "Bridge window must contain 32-bits address\n");
-816cad1ac60166 Randolph Lin 2025-10-03  159  		return -EINVAL;
-816cad1ac60166 Randolph Lin 2025-10-03  160  	}
-816cad1ac60166 Randolph Lin 2025-10-03  161  
-816cad1ac60166 Randolph Lin 2025-10-03  162  	pci->num_ob_windows = count;
-816cad1ac60166 Randolph Lin 2025-10-03  163  
-816cad1ac60166 Randolph Lin 2025-10-03  164  	return 0;
-816cad1ac60166 Randolph Lin 2025-10-03  165  }
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c83e75a0ec12..da6a2aef823a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2883,7 +2883,7 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ 			 * a hypervisor that passes through individual PCI
+ 			 * functions.
+ 			 */
+-			if (!hypervisor_isolated_pci_functions())
++			if (!hypervisor_isolated_pci_functions(bus->number))
+ 				break;
+ 		}
+ 		fn = next_fn(bus, dev, fn);
+diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
+index be5417303ecf..30ece04a16d9 100644
+--- a/include/linux/hypervisor.h
++++ b/include/linux/hypervisor.h
+@@ -32,13 +32,15 @@ static inline bool jailhouse_paravirt(void)
+ 
+ #endif /* !CONFIG_X86 */
+ 
+-static inline bool hypervisor_isolated_pci_functions(void)
++static inline bool hypervisor_isolated_pci_functions(int bus)
+ {
+ 	if (IS_ENABLED(CONFIG_S390))
+ 		return true;
+ 
+-	if (IS_ENABLED(CONFIG_LOONGARCH))
+-		return true;
++	if (IS_ENABLED(CONFIG_LOONGARCH)) {
++		if (bus == 0)
++			return true;
++	}
+ 
+ 	return jailhouse_paravirt();
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.3
 
 
