@@ -1,124 +1,179 @@
-Return-Path: <linux-pci+bounces-38122-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38123-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E6ACBDC8C8
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 06:50:57 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDA2CBDCB37
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 08:22:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 953553B5C8B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 04:50:48 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 53E9A35325F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 06:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2EF32FF675;
-	Wed, 15 Oct 2025 04:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC74E30FF02;
+	Wed, 15 Oct 2025 06:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iGTOqGbf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCjeq1O8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E922FF644;
-	Wed, 15 Oct 2025 04:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964D29D26E;
+	Wed, 15 Oct 2025 06:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760503827; cv=none; b=ARDXPixxj9zwVwsLJnc/85qRepQHfsBzVTxxxhFHGxxS0bcfaUwe/j/NWfj33YCSq1I62cmRmpyth05nSKLM83zXRgJBw6fU2Vg90ISKk6ARGeHpCB2a4RQmSlEpi2KIrdpB/u+o7Tz8DTsmU6HlM8DeZu/ofGG67DIyLuSqEbo=
+	t=1760509361; cv=none; b=lJ4U3pMujWBjYo+F2mxA1DCurJOg6h92WeMm/VOldHcSFpLI68cPET4Sn4/S9a6/d2S1mxodH9ZTUGK8E0apE4M505FdhL4eRoza8y6QCn6pS853MT3ET8y4GMKln0sTQj2cXYlxGpTr0ukZykS9gg2Vku4p8tzDcUrepoIvq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760503827; c=relaxed/simple;
-	bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
+	s=arc-20240116; t=1760509361; c=relaxed/simple;
+	bh=GiBaNBK3/IViNyRFvWPC3WNeXPpoK/LfTYw7Mrnj5Bs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZ9yIzdHHu4wv5M0WsLdfF9DzVuAjeAfclrQDrgIR1w0poKByAszVhkplde9oBv2Cnor9QtD853Wm9iKoJwZMFZ4WpRJebzSzfr9xMVjO3Xkcfk5v2PDhljjGPhCK8awIhoIdYRxhwGRopk0JNJPmJPYJAy2mlKER5OSGbhlw9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iGTOqGbf; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760503826; x=1792039826;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
-  b=iGTOqGbfxBzeb6KNkXvx1W8hfK+V+Kb50jM/2qZdw+SVpKNm8hvadJys
-   kvjmHm2WqDjEZP5q1lRD1RPPn/32J7/17vtJLCbgBcJBBXnwsQiWplTK8
-   YSiEJ13S/JN7vpdnZnjFCgwH4iwJ2fYeatFTZZBUOWWrYle94k6lOOxpZ
-   Kx+/5BaytbaGq10eCMyubBZrL7fyA+ZF2/ioA3hlD2wtTk4yLmVY7XlJc
-   BGOYIricWwIKXND8VDiaJp6wV4JggRnYZr0jn/8GzOv+sftLwJwrSqrqj
-   KY/xNEXxMQcTyk+bQ+uRB1crnTLxAStwemZb66CehndSnR7g0WmjY+TmP
-   w==;
-X-CSE-ConnectionGUID: dvfOls04RN+gLwMyihhF0Q==
-X-CSE-MsgGUID: 1fFmc6DuQm2bW0cojv7HzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62378065"
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="62378065"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 21:50:25 -0700
-X-CSE-ConnectionGUID: vTqsBFKDSgWS/FFl8+cgaA==
-X-CSE-MsgGUID: 1H+yDRUmRGWpZov5tgERsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="181625697"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 14 Oct 2025 21:50:20 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v8tSr-0003SB-1X;
-	Wed, 15 Oct 2025 04:50:17 +0000
-Date: Wed, 15 Oct 2025 12:49:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
-	lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
-	ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
-	Jonathan.Cameron@huawei.com
-Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
-	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, mark.rutland@arm.com, peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-Message-ID: <202510151212.ifOhr1Ak-lkp@intel.com>
-References: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVexC7ii43UEBfLpPCxCIhZEW2k1NnYWVo8kXQBD/+TV+sDKv4P6bzlFbkLwZ5TLhvO2mR6V28m8x/tNQqvBRjC9juPccRgqurgl9wCbhHoe3z81ZQhkoAkaiFxdgoGx93shEyEar6ioys1Ftg/zi97LWCHWMRYR3pwFfWDav8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCjeq1O8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E57AC4CEF8;
+	Wed, 15 Oct 2025 06:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760509360;
+	bh=GiBaNBK3/IViNyRFvWPC3WNeXPpoK/LfTYw7Mrnj5Bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kCjeq1O8SKcnC5uwXJkMGFAUZ9N0PYCklm8+0Bb1n3G9rVunCQUf+gtkbky+uaXYR
+	 3w32PUiWGPvCOgFRW9IpLRq5HaCoXNbp2UyffHJlwR5/n1TZh3Ft1xbCq74Lt0QhbT
+	 XhfO2BHxHuKbMfAOkBBR4188Ucr22ttit/xCnc9/kND+W6Kh6D8VHKs/G7mhbruvWI
+	 VoB9OgsMdnI9kiOB08eO4bX2g9g/dpOJQQG4xuZ6s226rd1vwe9tkgN1Aalkyra9uw
+	 YuBoWXL8cvkMZ8rX8T+5j9U/+8okzV6hKGfZRCuEKEVLuQGb8/E81RPFJb012ucGOq
+	 Dmv+lTF9PlF3w==
+Date: Wed, 15 Oct 2025 11:52:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Chia-Lin Kao <acelan.kao@canonical.com>, 
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <fxakjhx7lrikgs4x3nbwgnhhcwmlum3esxp2dj5d26xc5iyg22@wkbbwysh3due>
+References: <20251014184905.GA896847@bhelgaas>
+ <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org>
 
-Hi Shuai,
+On Wed, Oct 15, 2025 at 01:33:35AM +0200, Dragan Simic wrote:
+> Hello all,
+> 
+> On Tuesday, October 14, 2025 20:49 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> > > I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> > > Rockchip RK3588(S) SoC.
+> > > 
+> > > When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> > > freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> > > different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> > > MT7921E, and Intel AX210.
+> > > 
+> > > I've found that reverting the following commit (i.e., the patch I'm replying
+> > > to) resolves the problem:
+> > > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+> > 
+> > Thanks for the report, and sorry for the regression.
+> > 
+> > Since this affects several devices from different manufacturers and (I
+> > assume) different drivers, it seems likely that there's some issue
+> > with the Rockchip end, since ASPM probably works on these devices in
+> > other systems.  So we should figure out if there's something wrong
+> > with the way we configure ASPM, which we could potentially fix, or if
+> > there's a hardware issue and we need some king of quirk to prevent
+> > usage of ASPM on the affected platforms.
+> > 
+> > Can you collect a complete dmesg log when booting with
+> > 
+> >   ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
+> > 
+> > and the output of "sudo lspci -vv"?
+> > 
+> > When the kernel freezes, can you give us any information about where,
+> > e.g., a log or screenshot?
+> > 
+> > Do you know if any platforms other than Radxa ROCK 5A/5B have this
+> > problem?
+> 
+> After thinking quite a bit about it, I think we should revert this
+> patch and replace it with another patch that allows per-SoC, or
+> maybe even per-board, opting into the forced enablement of PCIe
+> ASPM.  Let me explain, please.
+> 
 
-kernel test robot noticed the following build errors:
+ASPM is a PCIe device specific feature, nothing related to SoC/board. Even if
+you limit it to certain platforms, there is no guarantee that it will be safe as
+the users can connect a buggy device to the slot and it could lead to the same
+issue.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.18-rc1 next-20251014]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> When a new feature is introduced, it's expected that it may fail
+> on some hardware or with some specific setups, so quirking off such
+> instances, as time passes, is perfectly fine.  Such a new feature
+> didn't work before it was implemented, so it's acceptable that it
+> fails in some instances after the introduction, and that it gets
+> quirked off as time passes and more testing is performed.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20251014-203432
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20251014123159.57764-3-xueshuai%40linux.alibaba.com
-patch subject: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
-config: sparc-randconfig-001-20251015 (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/reproduce)
+ASPM is not a new feature. It was introduced more than a decade before. But we
+somehow procastinated the enablement for so long until we realized that if we
+don't do it now, we wouldn't be able to do it anytime in the future.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510151212.ifOhr1Ak-lkp@intel.com/
+> However, when some widespread feature, such as PCIe, has already
+> been in production for quite a while, introducing high-risk changes
+> to it in a blanket fashion, while intending to have the incompatible
+> or not-yet-ready platforms quirked off over time, simply isn't the
+> way to go.  Breaking stuff intentionally to find out what actually
+> doesn't work is rarely a good option.
+> 
 
-All errors (new ones prefixed by >>):
+The issue is due to devices exposing ASPM capability, but behaving erratically
+when enabled. Until, we enable ASPM on these devices, we cannot know whether
+they are working or not. To avoid mass chaos, we decided to enable it only for
+devicetree platforms as a start.
 
-   sparc64-linux-ld: drivers/pci/trace.o: in function `trace_raw_output_pcie_link_event':
-   trace.c:(.text+0x1dc): undefined reference to `pci_speed_string'
->> sparc64-linux-ld: trace.c:(.text+0x1ec): undefined reference to `pci_speed_string'
+> Thus, I'd suggest that this patch is replaced with nother patches,
+> which would introduce an additional ASPM opt-in switch to the PCI
+> binding, allowing SoCs or boards to have it enabled _after_ proper
+> testing is performed.  The PCIe driver may emit a warning that ASPM
+> is to be enabled at some point in the future, to "bug" people about
+> the need to perform the testing, etc.
+
+Even if we emit a "YOUR DEVICE MAY BREAK" warning, nobody would care as long as
+the device works for them. We didn't decide to enable this feature overnight to
+trouble users. The fact that ASPM saves runtime power, which will benefit users
+and ofc the environment as a whole, should not be kept disabled.
+
+But does that mean, we wanted to have breakages, NO. We expected breakages as
+not all devices will play nicely with ASPM, but there is only one way to find
+out. And we do want to disable ASPM only for those devices.
+
+>  With all that in place, we
+> could expect that in a year or two PCIe ASPM could eventually be
+> enabled everywhere.  Getting everything tested is a massive endeavor,
+> but that's the only way not to break stuff.
+> 
+> Biting the bullet and hoping that it all goes well, I'd say, isn't
+> the right approach here.
+> 
+
+Your two year phased approach would never work as that's what we have hoped for
+more than a decade.
+
+- Mani
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
