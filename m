@@ -1,42 +1,42 @@
-Return-Path: <linux-pci+bounces-38103-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 609D5BDC2B5
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 04:42:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE2F1BDC2D9
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 04:42:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BBB054E06D3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 02:42:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF2C618A332C
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 02:43:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D21330C34A;
-	Wed, 15 Oct 2025 02:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22EB30E824;
+	Wed, 15 Oct 2025 02:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hxrOjOT4"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="MtUYEFMO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8EF30BBBB;
-	Wed, 15 Oct 2025 02:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F5530DEC9;
+	Wed, 15 Oct 2025 02:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760496130; cv=none; b=R9iVjOYs1zET1MPFrnz0neXOu+ikopu4zBCqe/nEmeHKB20RxlbS3Nlw/iW9kwBgSNHSDEDePcJx1Gm+RH38Rw2c4nLZ613/4DYP1Rm19nMn7MezVjBhstrvfpn41+sYcsEyY20HOtpGncTavUTuhpP2KUUyv4IogOLD+1G71DY=
+	t=1760496136; cv=none; b=M2Lrr80jzx35qOU6lbsm6aFXh2zaIjLnE0qFsbB9UM2iGpiOD8+eWN8XmiwP+IJ2yUAQceRfbKjnbgTVASTefq6QQ863v6sRm7ia86/f4h1Mr62rFboOK5kHWIXwiHLo7lVNNCw3zSXxNhQQz0X/m4fnCNnzv157q4niKlydBwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760496130; c=relaxed/simple;
-	bh=LBCqY7zUR//93PTgwEx4kk207wNigO+Bez3AEF3pSfQ=;
+	s=arc-20240116; t=1760496136; c=relaxed/simple;
+	bh=GJjKRnoqbYcyLTDemEJN+XuS5CLlU0kiEHY+WIN75fY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q/Ymcc1j0FOb5I7Az/NaCFAJYzhjLvx647e5aqTyo+xjRzbA8VuQ7mEh7VB8JxPkl8zf37/RM1nh8WVSI0EewBakZPSDho8ojh8Ic2AOl9Fj+pp92N8KT/mWI9KO88/XvkHkzCV78/wqWDajkXXBmyBT+wZq3zhqGW2nxWLmK2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hxrOjOT4; arc=none smtp.client-ip=115.124.30.98
+	 MIME-Version; b=R9IHeF/kkqtHlz4CaLnrMgQSSDkZPan+XmxzzCd+FS46eW/HYhadZ2H+/3ttFs9ibzDzbTc3/1ob97fSwV2b9EHyMpsFFO8TUgKJnLfDnf6yNfHFPEHgKilzyYYfGbE1xudCdI7YBC32eKEKVuqx2nQJy5dJxfvyzZ/BJyEbfRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=MtUYEFMO; arc=none smtp.client-ip=115.124.30.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1760496122; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=QXJAUGDYWc0L7efEoBkhFUMBAgY1wDEDmp5dyuIIeqY=;
-	b=hxrOjOT4M0Du6z4quVXcn+FObu9pEByggEjOnQ3aapEmZHCV7nHjwGDw6yU00vgBw5GB5S1WtfnzBVgmjhkhm1wMeqKmSI7rMVkKcHa6HorG7BYEcUrsm2vbCpk2G062YxKtSV37My8Yt1MdesmY3V+NyE7cdxQoasvEEkoYJZ0=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqEYD4b_1760496121 cluster:ay36)
+	t=1760496123; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=OTaoE+RCjvZNMMdQYvDttHSU2kdG8bBh9rxYPnlggrs=;
+	b=MtUYEFMOtUGuy+vE9Fbz3OhS4vKSTyqwfusqLsXCquPVs590KV/6jiRLM6Ba2dWDE21mj7ZubpLEEjiVlThImu9Q07fI9pfuDrmYXvyc+ByMdl5GsYO3I0k8n9SN51qq/RgWOnx7DRaTNfzTKENBWMUTy3GQ/WuWkb4ehAU4D6A=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqEYD5g_1760496122 cluster:ay36)
           by smtp.aliyun-inc.com;
           Wed, 15 Oct 2025 10:42:02 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
@@ -53,9 +53,9 @@ Cc: mahesh@linux.ibm.com,
 	terry.bowman@amd.com,
 	tianruidong@linux.alibaba.com,
 	lukas@wunner.de
-Subject: [PATCH v6 1/5] PCI/DPC: Clarify naming for error port in DPC Handling
-Date: Wed, 15 Oct 2025 10:41:55 +0800
-Message-Id: <20251015024159.56414-2-xueshuai@linux.alibaba.com>
+Subject: [PATCH v6 2/5] PCI/DPC: Run recovery on device that detected the error
+Date: Wed, 15 Oct 2025 10:41:56 +0800
+Message-Id: <20251015024159.56414-3-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
 References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
@@ -67,135 +67,150 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dpc_handler() is registered for error port which recevie DPC interrupt
-and acpi_dpc_port_get() locate the port that experienced the containment
-event.
+The current implementation of pcie_do_recovery() assumes that the
+recovery process is executed for the device that detected the error.
+However, the DPC driver currently passes the error port that experienced
+the DPC event to pcie_do_recovery().
 
-Rename edev and pdev to err_port for clear so that later patch will
-avoid misused err_port in pcie_do_recovery().
+Use the SOURCE ID register to correctly identify the device that
+detected the error. When passing the error device, the
+pcie_do_recovery() will find the upstream bridge and walk bridges
+potentially AER affected. And subsequent commits will be able to
+accurately access AER status of the error device.
 
-No functional changes intended.
+Should not observe any functional changes.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/dpc.c | 10 +++++-----
- drivers/pci/pcie/edr.c | 34 +++++++++++++++++-----------------
- 2 files changed, 22 insertions(+), 22 deletions(-)
+ drivers/pci/pci.h      |  2 +-
+ drivers/pci/pcie/dpc.c | 25 +++++++++++++++++++++----
+ drivers/pci/pcie/edr.c |  7 ++++---
+ 3 files changed, 26 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index fff30521ed83..6b0c55bed15b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -764,7 +764,7 @@ struct rcec_ea {
+ void pci_save_dpc_state(struct pci_dev *dev);
+ void pci_restore_dpc_state(struct pci_dev *dev);
+ void pci_dpc_init(struct pci_dev *pdev);
+-void dpc_process_error(struct pci_dev *pdev);
++struct pci_dev *dpc_process_error(struct pci_dev *pdev);
+ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
+ bool pci_dpc_recovered(struct pci_dev *pdev);
+ unsigned int dpc_tlp_log_len(struct pci_dev *dev);
 diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index fc18349614d7..bff29726c6a5 100644
+index bff29726c6a5..f6069f621683 100644
 --- a/drivers/pci/pcie/dpc.c
 +++ b/drivers/pci/pcie/dpc.c
-@@ -361,21 +361,21 @@ static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+@@ -260,10 +260,20 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+ 	return 1;
+ }
+ 
+-void dpc_process_error(struct pci_dev *pdev)
++/**
++ * dpc_process_error - handle the DPC error status
++ * @pdev: the port that experienced the containment event
++ *
++ * Return: the device that detected the error.
++ *
++ * NOTE: The device reference count is increased, the caller must decrement
++ * the reference count by calling pci_dev_put().
++ */
++struct pci_dev *dpc_process_error(struct pci_dev *pdev)
+ {
+ 	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+ 	struct aer_err_info info = {};
++	struct pci_dev *err_dev;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 
+@@ -279,6 +289,7 @@ void dpc_process_error(struct pci_dev *pdev)
+ 			pci_aer_clear_nonfatal_status(pdev);
+ 			pci_aer_clear_fatal_status(pdev);
+ 		}
++		err_dev = pci_dev_get(pdev);
+ 		break;
+ 	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
+ 	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
+@@ -290,6 +301,8 @@ void dpc_process_error(struct pci_dev *pdev)
+ 				"ERR_FATAL" : "ERR_NONFATAL",
+ 			 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
+ 			 PCI_SLOT(source), PCI_FUNC(source));
++		err_dev = pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
++					    PCI_BUS_NUM(source), source & 0xff);
+ 		break;
+ 	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
+ 		ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+@@ -304,8 +317,11 @@ void dpc_process_error(struct pci_dev *pdev)
+ 		if (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO &&
+ 		    pdev->dpc_rp_extensions)
+ 			dpc_process_rp_pio_error(pdev);
++		err_dev = pci_dev_get(pdev);
+ 		break;
+ 	}
++
++	return err_dev;
+ }
+ 
+ static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+@@ -361,7 +377,7 @@ static bool dpc_is_surprise_removal(struct pci_dev *pdev)
  
  static irqreturn_t dpc_handler(int irq, void *context)
  {
--	struct pci_dev *pdev = context;
-+	struct pci_dev *err_port = context;
+-	struct pci_dev *err_port = context;
++	struct pci_dev *err_port = context, *err_dev;
  
  	/*
  	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
- 	 * of async removal and should be ignored by software.
- 	 */
--	if (dpc_is_surprise_removal(pdev)) {
--		dpc_handle_surprise_removal(pdev);
-+	if (dpc_is_surprise_removal(err_port)) {
-+		dpc_handle_surprise_removal(err_port);
+@@ -372,10 +388,11 @@ static irqreturn_t dpc_handler(int irq, void *context)
  		return IRQ_HANDLED;
  	}
  
--	dpc_process_error(pdev);
-+	dpc_process_error(err_port);
+-	dpc_process_error(err_port);
++	err_dev = dpc_process_error(err_port);
  
  	/* We configure DPC so it only triggers on ERR_FATAL */
--	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
-+	pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
+-	pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
++	pcie_do_recovery(err_dev, pci_channel_io_frozen, dpc_reset_link);
++	pci_dev_put(err_dev);
  
  	return IRQ_HANDLED;
  }
 diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-index e86298dbbcff..521fca2f40cb 100644
+index 521fca2f40cb..b6e9d652297e 100644
 --- a/drivers/pci/pcie/edr.c
 +++ b/drivers/pci/pcie/edr.c
 @@ -150,7 +150,7 @@ static int acpi_send_edr_status(struct pci_dev *pdev, struct pci_dev *edev,
  
  static void edr_handle_event(acpi_handle handle, u32 event, void *data)
  {
--	struct pci_dev *pdev = data, *edev;
-+	struct pci_dev *pdev = data, *err_port;
+-	struct pci_dev *pdev = data, *err_port;
++	struct pci_dev *pdev = data, *err_port, *err_dev;
  	pci_ers_result_t estate = PCI_ERS_RESULT_DISCONNECT;
  	u16 status;
  
-@@ -169,36 +169,36 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
- 	 * may be that port or a parent of it (PCI Firmware r3.3, sec
- 	 * 4.6.13).
- 	 */
--	edev = acpi_dpc_port_get(pdev);
--	if (!edev) {
-+	err_port = acpi_dpc_port_get(pdev);
-+	if (!err_port) {
- 		pci_err(pdev, "Firmware failed to locate DPC port\n");
- 		return;
- 	}
- 
--	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(edev));
-+	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(err_port));
- 
- 	/* If port does not support DPC, just send the OST */
--	if (!edev->dpc_cap) {
--		pci_err(edev, FW_BUG "This device doesn't support DPC\n");
-+	if (!err_port->dpc_cap) {
-+		pci_err(err_port, FW_BUG "This device doesn't support DPC\n");
+@@ -190,7 +190,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
  		goto send_ost;
  	}
  
- 	/* Check if there is a valid DPC trigger */
--	pci_read_config_word(edev, edev->dpc_cap + PCI_EXP_DPC_STATUS, &status);
-+	pci_read_config_word(err_port, err_port->dpc_cap + PCI_EXP_DPC_STATUS, &status);
- 	if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
--		pci_err(edev, "Invalid DPC trigger %#010x\n", status);
-+		pci_err(err_port, "Invalid DPC trigger %#010x\n", status);
- 		goto send_ost;
- 	}
- 
--	dpc_process_error(edev);
--	pci_aer_raw_clear_status(edev);
-+	dpc_process_error(err_port);
-+	pci_aer_raw_clear_status(err_port);
+-	dpc_process_error(err_port);
++	err_dev = dpc_process_error(err_port);
+ 	pci_aer_raw_clear_status(err_port);
  
  	/*
- 	 * Irrespective of whether the DPC event is triggered by ERR_FATAL
+@@ -198,7 +198,8 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
  	 * or ERR_NONFATAL, since the link is already down, use the FATAL
  	 * error recovery path for both cases.
  	 */
--	estate = pcie_do_recovery(edev, pci_channel_io_frozen, dpc_reset_link);
-+	estate = pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
+-	estate = pcie_do_recovery(err_port, pci_channel_io_frozen, dpc_reset_link);
++	estate = pcie_do_recovery(err_dev, pci_channel_io_frozen, dpc_reset_link);
++	pci_dev_put(err_dev);
  
  send_ost:
  
-@@ -207,15 +207,15 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
- 	 * to firmware. If not successful, send _OST(0xF, BDF << 16 | 0x81).
- 	 */
- 	if (estate == PCI_ERS_RESULT_RECOVERED) {
--		pci_dbg(edev, "DPC port successfully recovered\n");
--		pcie_clear_device_status(edev);
--		acpi_send_edr_status(pdev, edev, EDR_OST_SUCCESS);
-+		pci_dbg(err_port, "DPC port successfully recovered\n");
-+		pcie_clear_device_status(err_port);
-+		acpi_send_edr_status(pdev, err_port, EDR_OST_SUCCESS);
- 	} else {
--		pci_dbg(edev, "DPC port recovery failed\n");
--		acpi_send_edr_status(pdev, edev, EDR_OST_FAILED);
-+		pci_dbg(err_port, "DPC port recovery failed\n");
-+		acpi_send_edr_status(pdev, err_port, EDR_OST_FAILED);
- 	}
- 
--	pci_dev_put(edev);
-+	pci_dev_put(err_port);
- }
- 
- void pci_acpi_add_edr_notifier(struct pci_dev *pdev)
 -- 
 2.39.3
 
