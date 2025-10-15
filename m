@@ -1,67 +1,67 @@
-Return-Path: <linux-pci+bounces-38224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1CC9BDEE10
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 15:59:43 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 909D3BDEE1A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 16:00:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABF554039C6
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 13:59:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 910594FD05F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 14:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730C02405E8;
-	Wed, 15 Oct 2025 13:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 844A124A06D;
+	Wed, 15 Oct 2025 14:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9i78eep"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxRVPNxT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446AB23BD1D;
-	Wed, 15 Oct 2025 13:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5627715B0EC;
+	Wed, 15 Oct 2025 14:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760536780; cv=none; b=JgHHmDjDEfcgBZV0YIGBudjY3R3jqrDFy8+ifB4IeifRl9WwdsdRCv1YkP8dSB7SVZ+k+hN2EUli1WiO1M/ybXvdO19mY8emUN7xQQUWf208expl/cXGIq9yXnfKeXHL7N8i/Ew8DsQZk20k0oopP3qzRpG+lnRl4J2A8Ydqz/w=
+	t=1760536816; cv=none; b=VaruXYebljN8W1ksrerUYzJpu7r6Mab6vnobNSi8f6m27nswHR1nYoGh5iugirkW7DCJBg5YuRwnUZ9cYA7f+PWvZSJPqltSUzNdlvkM2nQqk6qJIRTzcyiRmaywDG+3V4LVSIlYYvFH0KGqqx5TYGvtzh5LoiD4DgvcjWga+wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760536780; c=relaxed/simple;
-	bh=DwUHoZqWcYMyz1nussrz3FQ3Rsn+co8/zERGpsHFIEQ=;
+	s=arc-20240116; t=1760536816; c=relaxed/simple;
+	bh=CFCf1jlvWWOR/a6zkgwqZYSPmfb3AShgDFzbIXQWQOk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RhBEdfdLdeqoW8gG+zKRh94NgqajiucLvktK8cjmQjJ8Sz18YIs7Oi4rlqMiOmRTsf8T8GIhalVKiGNG9e+SdUrvUOKNqJt6l5rM7CaTjMcwVUDzteQrTZnw4w/Iken2+atkem56Ud7Vlt36uZjyjOkKDkpSsqlaWpmRBW+H7ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9i78eep; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F20AC4CEF8;
-	Wed, 15 Oct 2025 13:59:38 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=puKfAU0K801NdgXBpxKke1Oy0kyZ6FAd3MqYymWvhpuvfoYgKqpkQQaQtkxk+BTJ8/mBsP2r/2Gm2WYl/81mHINEl9aIKwwKRnKgZHL8IO8DwbHoXtyiA/BRzVLSk0kFo1dUK002Vh9FZ+23iXuC6yiGQS2o+pQZN5Tr+PKVjTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxRVPNxT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8C2C4CEF8;
+	Wed, 15 Oct 2025 14:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760536779;
-	bh=DwUHoZqWcYMyz1nussrz3FQ3Rsn+co8/zERGpsHFIEQ=;
+	s=k20201202; t=1760536815;
+	bh=CFCf1jlvWWOR/a6zkgwqZYSPmfb3AShgDFzbIXQWQOk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R9i78eep6JNFh+dgLuDlH5N5/XKr7p8sX9bdlHGb5p84TEWW/KHf6y4gPJ/+pSDAG
-	 jX//HgZzYp7+gI4qlRNXZZHMTsK44rlSr6m4/q5mq6s1H86Ifo7126uS/LyyO8apTw
-	 sV5uRoUjUJtIrz/1FdXmRQgBeOZ6w/mvj+ij6SRXuTKfait1Dz0CgjpIYJR033Yy79
-	 B2CfEoZ2ilfxIDuJ5mHK7kW29ZvLTVTWhIJYAm7QvnXpSsr7GVoRXWGidQT2bPOc6X
-	 0d5zfxS3obmsutrDBfpq6hEAsWba+gs+4IorVyAMbFH0XyW+pFGzPsHCx6KIpNNO98
-	 +CQ6h501WN8SA==
-Date: Wed, 15 Oct 2025 08:59:36 -0500
+	b=NxRVPNxTJEZrwlxkuY1eKTFhrZhKXnwRscbJ7VUzY9GgzJ+PQebmlbNSTi15ZBt9U
+	 xoDvIxMLiw6q1SUpss4Ae4UReY0SCbP3RUaDRJe4XhBemugb8m2gcy1+XWOpZW9zay
+	 Ii2jX7rVmR1IV/0HIM+QPn3kmfdUdtAWHrr2a3jOwoTmp5rGalA8ADoLmYFd3I1INe
+	 oTOS/zZBinBbqRbrOY3yrUE5Zj8KthPA7pGenTEKmJkRlmijzicanovCH69HkImXSh
+	 0feFCF2t43Of1zEgQ3lFk8H2Q+Zh0KGLSH5v3m08GXkHyMKQQZzpODL6enQq/4jsGw
+	 ST8ahiKMsFP3A==
+Date: Wed, 15 Oct 2025 09:00:13 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>,
 	linux-mediatek@lists.infradead.org,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, upstream@airoha.com,
-	linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, upstream@airoha.com,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
 	Jianjun Wang <jianjun.wang@mediatek.com>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] dt-bindings: PCI: mediatek: Convert to YAML schema
-Message-ID: <176053677610.3299416.10324456171470635844.robh@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/5] dt-bindings: PCI: mediatek: Add support for
+ Airoha AN7583
+Message-ID: <176053681339.3300147.17032986972081820170.robh@kernel.org>
 References: <20251012205900.5948-1-ansuelsmth@gmail.com>
- <20251012205900.5948-3-ansuelsmth@gmail.com>
+ <20251012205900.5948-4-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,30 +70,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251012205900.5948-3-ansuelsmth@gmail.com>
+In-Reply-To: <20251012205900.5948-4-ansuelsmth@gmail.com>
 
 
-On Sun, 12 Oct 2025 22:56:56 +0200, Christian Marangi wrote:
-> Convert the PCI mediatek Documentation to YAML schema to enable
-> validation of the supported GEN1/2 Mediatek PCIe controller.
+On Sun, 12 Oct 2025 22:56:57 +0200, Christian Marangi wrote:
+> Introduce Airoha AN7583 SoC compatible in mediatek PCIe controller
+> binding.
 > 
-> While converting, lots of cleanup were done from the .txt with better
-> specifying what is supported by the various PCIe controller variant and
-> drop of redundant info that are part of the standard PCIe Host Bridge
-> schema.
-> 
-> To reduce schema complexity the .txt is split in 2 YAML, one for
-> mt7623/mt2701 and the other for every other compatible.
+> Similar to GEN3, the Airoha AN7583 GEN2 PCIe controller require the
+> PBUS csr property to permit the correct functionality of the PCIe
+> controller.
 > 
 > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  .../bindings/pci/mediatek-pcie-mt7623.yaml    | 164 +++++++++
->  .../devicetree/bindings/pci/mediatek-pcie.txt | 289 ----------------
->  .../bindings/pci/mediatek-pcie.yaml           | 318 ++++++++++++++++++
->  3 files changed, 482 insertions(+), 289 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-mt7623.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.yaml
+>  .../bindings/pci/mediatek-pcie.yaml           | 120 ++++++++++++++++++
+>  1 file changed, 120 insertions(+)
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
