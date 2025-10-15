@@ -1,123 +1,194 @@
-Return-Path: <linux-pci+bounces-38203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E685BDE45B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 13:31:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A04FBDE555
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 13:50:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 81D6B4FD825
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:31:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C053919C4B9D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:51:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFAE21AC44D;
-	Wed, 15 Oct 2025 11:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC222322DB7;
+	Wed, 15 Oct 2025 11:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="jygzf2T8"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="e2c1oMHL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D61934BA5A
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 11:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760527892; cv=pass; b=eR+EUD9BaeyGuFyRaIEUh9wkcIi3mZZAR3PEHFVsvaMzUe4qXFfbgh5Egs56FQO68QbymqJCYT7f1OW2dzdn9GZd62KFH55IwQCA13q8ejZGM4NsBQirx3W7jm/07VbwRYylt9BlerruYjxV92OTee/XbBZRK+6vJqgAEjeAYkY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760527892; c=relaxed/simple;
-	bh=tiU1hck8P6+rhjduHLx572kUy9K4fLqigLL2LLhKmuw=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=plaEClOL7BlL1ewVWewbDZyVU3CFCXjkGlg3c9HgJnbkpYoQqIlFKtKcVdononrnZIWbyp8vFdrx/CIGi8C5k68dZ2l5U6o+f0KkhOD0IJeniQASedxzga1VE9piJ9Y/pCnVxI3SW3AW2jpKDU307KIr41vUlzda6V3p/yNws58=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=jygzf2T8; arc=pass smtp.client-ip=81.169.146.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1760527855; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=n/AEa3oZ9e4Gvabi/neXFnxSHRtgC57wuGH+ZkzJVjISSptuqAyfjZqCMLss6sEYDc
-    O490O6bXBAM6854dy+bWw2j2LFEdOTJHSjRNgVMnoSCSACwthAe7j2raRq/NdVW/IqwF
-    dRIPq4pTK2g6HdNU+cNb5tLe1M3mNlwHhhsFmHkhT6z4tQWljTW2JhvG6jxlShEqngkX
-    SE36iG2xznvkhbkXhOllvHHEYtSu/ah5XrkftAd5kLoL5IaRLMxuxz/urKAF6qttQLta
-    hBSCRQOYiiuknFY1FIpTtL5Z1OalD3NKSa7rcxf88FBqdXapCRQ8hS93DIDznd9iZmdv
-    RPoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760527855;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=tiU1hck8P6+rhjduHLx572kUy9K4fLqigLL2LLhKmuw=;
-    b=slth2aItOdCwsc91y8hIBPyf4VtCnynhFsdCD7LPSUsCYDJUXx4owp+vgc6kImEFEp
-    xg8Il3D3Azwc+TYAS7w5k/5j1pFEbGvZYx4zRTvIJhoTFMzfu0/qmfYpSj7timQz0xse
-    l1rzNbIdTqIFliqRx5lge1sM5ReYX0EYRkfNJ1pAmE57nOkgIIltJpj8SDaTy8d6kR4U
-    rRInuVncmDPyusd58pyBFHtFwQ6jBkCdJUghbOW+P8XXMP6zKO/f2its4KEw6mj3ZSQ0
-    OhVQpceI5BM8wzexQkY/eEuVSW83UK+2255hHV6L9W/e5wIc42gT6+sR5evykfwRe6wv
-    SxYQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760527855;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=tiU1hck8P6+rhjduHLx572kUy9K4fLqigLL2LLhKmuw=;
-    b=jygzf2T81XXxJeng1TAhAvfneo8m/Z2JARbCqv3s/KHuTTrgGm9SvnqaJ74SAaSlIE
-    jpUUFejdR0J6u+Noym1+2tKLHws5rEiNp1+KQlyiVZDqbsyC3+njBtU1cGaZqIP5qMJI
-    szo5pxuRS53A3yKNMOtMIxcN3gzIYPmINZwYmgnYd/IL5azia+fUkKwL1Xc4zSFUY5vy
-    NP1piqUUwdyZAa36kNFVRbTaLXzYe7M0a/OwDTwNrWFC2mX5+Bd44Cl0ObXTEpwkKnW5
-    cYYUZH659rVV23P1vmL+4xBR+Zw0VAbzabR6UWUY/k4hsbFj/3tiFnkJCBQ0gzNmvH4b
-    B7dA==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7X5qwsy/HXXayq4HHiz7trzKpc/q6JeX5UCXsvg=="
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 53.4.2 AUTH)
-    with ESMTPSA id e2886619FBUtX2E
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 15 Oct 2025 13:30:55 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DF53233FE
+	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 11:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760529048; cv=none; b=hVWMWeHDQ9WAaF56CyXSk8mmBEG8/iphh7Apx4AtPbSwgfsEHAj+GZBJcrQBB7o5Ti8eMGlmpGjybDziRbUcke6VSre+pzM4i2mhCGRtYaT727wHtzVV4ofVoKmG8fxGXGFZp43eikp20Zzd0xSmjaAOwuMK2RAlc7FURxoC0yk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760529048; c=relaxed/simple;
+	bh=tmowLdt/N2nbXuZaInudOLZY9PCI7SbE+aZIEDGepoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmDsSvz5xDbo5lO2EF2F+epJBqF7ZoxFA8i+o/a5fL+pHXH9+u4GaTAAZmlWlVZcXtgGe1pK5Hz5p7Ht9iYJE6CAMl35n1/7pdYdEbcJvvGl0Ox2bW0uRdHHr9X2EWkazSlkQUVcyfG7ZY2Bv75gwSgm6B+0ECkJYkoKnb9eKgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=e2c1oMHL; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-43f494764a2so3428030b6e.0
+        for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 04:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1760529046; x=1761133846; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vHmKb0ZIzx4zdIs4Lr+2KFKimyOcsEmfGR6+OHZivpc=;
+        b=e2c1oMHLRoMsONACHvkGo89STMQDv1H2DDH7z25YhyiSVBLk6In+ilLNIbmmI6V/rg
+         b+BiXsOnkfG/vQ/99VuKAB5ZkCuguagHNO24qE+6hPDTfRf81lLGQOA0QS77Z/Xd+fRp
+         lOnKwDAFW1wXkIgFKaD8K35yU8WbW2M5PPAfcneZVv3bMkI84YxqTfv4HVInxFQZFkAc
+         6KLFfb9FBBTgzp2f0RI/ZJ+6xYlLry2wsquidfueaiD33ccXHbRjZ2QvBQ1HJI5y6/nD
+         12uFaMuWNJIU9A8eEDakC81AdhcAhzmzBoDbAhyHHdDaOKY8KatZ6L63H1aBfNm0V9R7
+         mo9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760529046; x=1761133846;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vHmKb0ZIzx4zdIs4Lr+2KFKimyOcsEmfGR6+OHZivpc=;
+        b=aQbYLJ9O7Z0lOxmYjl1ZB47L8h1i84mKY9+1BMwJc6JrnRqwuV2h1tbeHZeTRc+qUR
+         SmQtVoPZQ1mm31DG387glKU9NrzYFnJrLofatmOSnK2mWNffJdGl0UxAV1BEUu7YXm7U
+         KWVQiQCmxMLrDqpD6h47uMbKkS2WX87evCNaG9YbMQ6T9EWuBF5n6YSeMYBQ1PiaIHcq
+         RUOx6ypW3kIZT9cJ2wbdZkUEjd9Enjm8WV3LYtWkROTVcQdXBx9XsmI87e2nqwnqlYSE
+         RnweZYZ90YfgykEWvYJf4Tv7gtOJJIRcQx1v/OZjBM7rBI1RyaDs2JmQfc8pMnUz97Ih
+         gZfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkK/9k31/lQUQd/hGLQrEdxDV0rwhDwiFsH6JI4DEqWbTW03QyE9QlrL5tcxVj7SQDLvFLLBcAQQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcodqXesJzlTRngiKKVfDsWu+qwKGocOu1o+03jx9tiqH6MqXC
+	TAHhoOUaF6XHiQr9CaLetAGt6zxerWN4HJflC8HtYp3VDAscbsh9t+Mi0v4AuZ81/vI=
+X-Gm-Gg: ASbGncuCitc/46H0VNKTS+XFsmFnl1H2OXE7W3h45p5Q+0d4abVGs/8TZEE65LzyZxx
+	e2FdPe4ChlyphajuSQB4CJGCIzjz1rzJXPEZf92282xZWN3BjrKWiPtnOmVDWY70hRFgoFBLqJm
+	UFelTXRWNH8n3oZn5W22Zb+41PZG1eV52sU7nNWXsd6m+S0O5SmjAN0gE8XfGhhRhQlO+C8F0m8
+	gOgMVX2QpE3zSLGDYib6wERMeaPRt7+HnX4flGlyAPD2E0/uGaPE8IENn2sZASPNMo6DvqSTB60
+	NT3XrZvUsGbLj9dOxc6tdIsu1ld0mF9aXRik63LrbHAnOs2/ebrD8oTbwAV/H9spnXLUKo4OG6H
+	HJl8SXLde+CKuGJMnMh2uNgOFxw==
+X-Google-Smtp-Source: AGHT+IF06YM32w1B97BvNmrLzOYC8WHnzl3Ay7SwG+FkmHKb9v+2SSicrsaLo8CLc8NQ8NePlRs7aQ==
+X-Received: by 2002:a05:6808:4486:b0:43f:5f5f:370e with SMTP id 5614622812f47-4417b2f0ca9mr13602594b6e.19.1760529045662;
+        Wed, 15 Oct 2025 04:50:45 -0700 (PDT)
+Received: from ziepe.ca ([130.41.10.202])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-441ca023222sm2814641b6e.11.2025.10.15.04.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Oct 2025 04:50:45 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1v901k-0000000HOR5-14cb;
+	Wed, 15 Oct 2025 08:50:44 -0300
+Date: Wed, 15 Oct 2025 08:50:44 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm platform
+ device
+Message-ID: <20251015115044.GE3938986@ziepe.ca>
+References: <20250729181045.0000100b@huawei.com>
+ <20250729231948.GJ26511@ziepe.ca>
+ <yq5aqzxy9ij1.fsf@kernel.org>
+ <20250730113827.000032b8@huawei.com>
+ <20250730132333.00006fbf@huawei.com>
+ <2025073035-bulginess-rematch-b92e@gregkh>
+ <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
+ <20251010135922.GC3833649@ziepe.ca>
+ <yq5a347kmqzn.fsf@kernel.org>
+ <2025101523-evil-dole-66a3@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Date: Wed, 15 Oct 2025 13:30:44 +0200
-Message-Id: <A11312DD-8A5A-4456-B0E3-BC8EF37B21A7@xenosoft.de>
-References: <20251015101304.3ec03e6b@bootlin.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-pci@vger.kernel.org, mad skateman <madskateman@gmail.com>,
- "R.T.Dickinson" <rtd2@xtra.co.nz>, Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-In-Reply-To: <20251015101304.3ec03e6b@bootlin.com>
-To: Herve Codina <herve.codina@bootlin.com>
-X-Mailer: iPhone Mail (23A355)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025101523-evil-dole-66a3@gregkh>
 
-Hello Herve,
+On Wed, Oct 15, 2025 at 11:58:25AM +0200, Greg KH wrote:
+> On Wed, Oct 15, 2025 at 03:22:28PM +0530, Aneesh Kumar K.V wrote:
+> > Jason Gunthorpe <jgg@ziepe.ca> writes:
+> > 
+> > > On Fri, Oct 10, 2025 at 07:10:58AM -0500, Jeremy Linton wrote:
+> > >> > Yes, use faux_device if you need/want a struct device to represent
+> > >> > something in the tree and it does NOT have any real platform resources
+> > >> > behind it.  That's explicitly what it was designed for.
+> > >> 
+> > >> Right, but this code is intended to trigger the kmod/userspace module
+> > >> loader.
+> > >
+> > > Faux devices are not intended to be bound, it says so right on the label:
+> > >
+> > >  * A "simple" faux bus that allows devices to be created and added
+> > >  * automatically to it.  This is to be used whenever you need to create a
+> > >  * device that is not associated with any "real" system resources, and do
+> > >  * not want to have to deal with a bus/driver binding logic.  It is
+> > >                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > >  * intended to be very simple, with only a create and a destroy function
+> > >  * available.
+> > >
+> > > auxiliary_device is quite similar to faux except it is intended to be
+> > > bound to drivers, supports module autoloading and so on.
+> > >
+> > > What you have here is the platform firmware provides the ARM SMC
+> > > (Secure Monitor Call Calling Convention) interface which is a generic
+> > > function call multiplexer between the OS and ARM firmware.
+> > >
+> > > Then we have things like the TSM subsystem that want to load a driver
+> > > to use calls over SMC if the underlying platform firmware supports the
+> > > RSI group of SMC APIs. You'd have a TSM subsystem driver that uses the
+> > > RSI call group over SMC that autobinds when the RSI call group is
+> > > detected when the SMC is first discovered.
+> > >
+> > > So you could use auxiliary_device, you'd consider SMC itself to be the
+> > > shared HW block and all the auxiliary drivers are per-subsystem
+> > > aspects of that shared SMC interface. It is not a terrible fit for
+> > > what it was intended for at least.
+> > >
+> > 
+> > IIUC, auxiliary_device needs a parent device, and the documentation
+> > explains that it’s intended for cases where a large driver is split into
+> > multiple dependent smaller ones.
 
-> On 15 October 2025 at 10:39 am, Herve Codina <herve.codina@bootlin.com> wr=
-ote:
->=20
-> =EF=BB=BFHi All,
->=20
-> I also observed issues with the commit f3ac2ff14834 ("PCI/ASPM: Enable all=
+Which is the case here, you have a SMC interface that you want to
+fracture into multiple subsystems.
 
-> ClockPM and ASPM states for devicetree platforms")
+> > If we want to use auxiliary_device for this case, what would serve as
+> > the parent device?
 
-Thanks for reporting.
+You probably need to make a platform device for the discovered PSCI
+interface from the firmware. Looks like DT will already have one, ACPI
+could invent one..
+ 
+> The real device that has the resources you wish to share access to.  Are
+> there physical resources here you are sharing?  If so, that device is
+> the parent.  If there is no such thing, then just make a bunch of faux
+> devices and be done with it :)
 
->=20
-> Also tried the quirk proposed in this discussion (quirk_disable_aspm_all)
-> an the quirk also fixes the timing issue.
+At the very bottom of the stack it looks like the PSCI interface is
+discovered first through DT/ACPI. The PSCI interface has RPCs that are
+then used to discover if SMC/etc/etc are present and along the way it
+makes platform devices to plug in subsystems to it based on what it
+can discover.
 
-Where have you added quirk_disable_aspm_all?
+It is just not sharing "resources" in the traditional sense, PSCI has
+no registers or interrupts, yet it is a service provided by the
+platform firmare.
 
-Thanks,
-Christian=
+Again faux devices don't serve the need here to load modules and do
+driver binding.
 
+Jason
 
