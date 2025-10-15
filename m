@@ -1,72 +1,66 @@
-Return-Path: <linux-pci+bounces-38213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43326BDE815
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 14:39:26 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDF56BDE858
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 14:44:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D5733E1E56
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 12:38:18 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DE9485007F8
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 12:44:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4551CAA6C;
-	Wed, 15 Oct 2025 12:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3879D1B4224;
+	Wed, 15 Oct 2025 12:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qhDqNYm6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXIRVnnX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5011E515;
-	Wed, 15 Oct 2025 12:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0860B39FCE;
+	Wed, 15 Oct 2025 12:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760531880; cv=none; b=Nt0wmGQq3HbGQyIRyx5tievyNMcBLqdkHfCDFsoDgXaT8kqBIV+k0gEt4vy+zdx6mW1HMTCXSCTNsRAXfeY0+DXPepNT9uJT41Xv6VTA6CVvIOx5CewdFjbOwCoRFfFaWXi6BXc6MrYr/L/lWfvbGlyHYTRG/vPy1SlGdB4hcT4=
+	t=1760532238; cv=none; b=r1Sv9pgwrowy9fCaEs1KPtOhut0dRC6QHpwvtA4W03DhMTt0MLo+VuvcrWmK9b9BMg34iRv86roj8CT520bxJHSriueNzp6zv9Llf0VgHeKFUWqhI7CX+gEeBy4CbV9pPI/LSeZiSu0Yoy2YHjApJzLsH2Q89Z66mxfy9EvKtrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760531880; c=relaxed/simple;
-	bh=AJMzGU5dUCefVcP8by7Txt/BfBamXFy7bJHjHleTpbA=;
+	s=arc-20240116; t=1760532238; c=relaxed/simple;
+	bh=Rv/WTcy0mNMm+uRot/GU/7Fbs+K4qxalPuCtaq1ElJ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/e/S6QUyviwThWu0VINXRCKKYr6WjfLDthn04P3Wc4cKKCGdaQWH2nF9I4MxtHq3xWd+3ikXKPtXufrFV3s9OkoBdySlXwmMY+DXZZY2Mxrn9+Qh54dqLK3L3DzEPzOlKyEpfrjAbCtIa7jVsHDvbFfMc24fWPAfB+i5xahSSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qhDqNYm6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BBE1C4CEF8;
-	Wed, 15 Oct 2025 12:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760531880;
-	bh=AJMzGU5dUCefVcP8by7Txt/BfBamXFy7bJHjHleTpbA=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6dIR5sTC6nhZwmFzxn+DIN/vkSf/tmDyWr81zvrzcfsD/S8QwsVTdmj2TSs63+r7yCSz1c0x9nSirKQN13zImeeEF+Is4sdoi5FcXLLdneKt6yIrQ/mIMMXNojGW/SBJ/JeXPGf4mproRV+awYl/v1rt37gGb72lwIDo3uk57M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXIRVnnX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5362DC4CEF8;
+	Wed, 15 Oct 2025 12:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760532237;
+	bh=Rv/WTcy0mNMm+uRot/GU/7Fbs+K4qxalPuCtaq1ElJ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qhDqNYm6BU33qGb8wQZWSlgRVIOoHnqX7fJsFV4P33Cj+Ns1giTma51Bl5/cV8+d0
-	 lSAZ1hQLTrUXPCGHfIILslUpm38ACyjNjp4+TZcCfyeR26TTko8nHGmkidEZRfJArV
-	 d/mmmXDQFtHuuaZN12zcGLnjsM0Q4ybx7WgqFaX4=
-Date: Wed, 15 Oct 2025 14:37:57 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm platform
- device
-Message-ID: <2025101516-handbook-hyphen-62ec@gregkh>
-References: <20250730113827.000032b8@huawei.com>
- <20250730132333.00006fbf@huawei.com>
- <2025073035-bulginess-rematch-b92e@gregkh>
- <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
- <20251010135922.GC3833649@ziepe.ca>
- <yq5a347kmqzn.fsf@kernel.org>
- <2025101523-evil-dole-66a3@gregkh>
- <20251015115044.GE3938986@ziepe.ca>
- <2025101534-frosty-shank-00b1@gregkh>
- <20251015121533.GF3938986@ziepe.ca>
+	b=aXIRVnnX1DKzvIv1B6Y3BFLJbfCl+l7UBPd4iL2xwtSnN+cZL6OtcgShLadRkxhuK
+	 CPemmyAY+8iEQiMjSq0J64kBB2mJTgtuKkDF1MbRZAfmyJGpAT2CcyMUnaPBFlVnG8
+	 +RnWbNmsHeX3KAnSbxy2xUWIXly6N5NuddQAkm7w0qWHxdDfiOOqkuppPuS70weaIT
+	 UTk5zxeRhYiMKl8gKtgC7R4myMQBofR2hCp8CDo9ldjljHX66+Poifj02PoPPjaYVe
+	 nkZbTG74SRlPUeyhg3r70EAAp3vzy60TvuIyp+KkqMo3VAhWjdyNX52JuIQhC9tmWE
+	 I0oQiebGdts3Q==
+Date: Wed, 15 Oct 2025 07:43:55 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: Update the email address for
+ Manivannan Sadhasivam
+Message-ID: <176053223303.3202616.6553332621383327286.robh@kernel.org>
+References: <20251010-pci-binding-v1-0-947c004b5699@oss.qualcomm.com>
+ <20251010-pci-binding-v1-1-947c004b5699@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,32 +69,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251015121533.GF3938986@ziepe.ca>
+In-Reply-To: <20251010-pci-binding-v1-1-947c004b5699@oss.qualcomm.com>
 
-On Wed, Oct 15, 2025 at 09:15:33AM -0300, Jason Gunthorpe wrote:
-> On Wed, Oct 15, 2025 at 01:57:38PM +0200, Greg KH wrote:
+
+On Fri, 10 Oct 2025 11:25:47 -0700, Manivannan Sadhasivam wrote:
+> My linaro email id is no longer active. So switch to kernel.org one.
 > 
-> > If this really is a firmware thing, and you have a firmware device, then
-> > I am confused why this was even brought up at all?  Use a real platform
-> > device, with the resources that are needed to talk to this platform
-> > device and you should be fine.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-ep.yaml             | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml       | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.yaml  | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml  | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml  | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sc8280xp.yaml | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sm8350.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml   | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 2 +-
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml          | 2 +-
+>  15 files changed, 15 insertions(+), 15 deletions(-)
 > 
-> I think the issue today is the PSCI does not always get a
-> platform_device, fixing that seems straightforward then all the
-> downstream things can switch from using more platform devices to using
-> an aux device with the PSCI as the parent..
 
-Great, fix that up and it should get much easier.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-> > BUT, if you are making child devices that are NOT actually talking to
-> > the firmware,
-> 
-> This thread is about how to bind various subsystems to this shared
-> firmware interface.
-
-Great, use the platform device that the firmware created for you!
-
-thanks,
-
-greg k-h
 
