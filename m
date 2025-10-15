@@ -1,92 +1,80 @@
-Return-Path: <linux-pci+bounces-38225-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38230-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 909D3BDEE1A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 16:00:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A67BDEEF0
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 16:09:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 910594FD05F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 14:00:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3370A3B312E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 14:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 844A124A06D;
-	Wed, 15 Oct 2025 14:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAFC3254B18;
+	Wed, 15 Oct 2025 14:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxRVPNxT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADkYFgIV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5627715B0EC;
-	Wed, 15 Oct 2025 14:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF7B25487B;
+	Wed, 15 Oct 2025 14:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760536816; cv=none; b=VaruXYebljN8W1ksrerUYzJpu7r6Mab6vnobNSi8f6m27nswHR1nYoGh5iugirkW7DCJBg5YuRwnUZ9cYA7f+PWvZSJPqltSUzNdlvkM2nQqk6qJIRTzcyiRmaywDG+3V4LVSIlYYvFH0KGqqx5TYGvtzh5LoiD4DgvcjWga+wA=
+	t=1760537129; cv=none; b=NKe/xhm0KF4NQDLw6WX9V5TKejwbn2YQGXymH960t9EN7PkZGAAfTahVRWSPsegi6DdqK9B2z48ItiPR71CuQCbp4/jp1RYX+I9+F20J+2qA68g2zbskXEHDg0/yLof1o7q+/OUPwAcPKWgDLDWX/MwcKZfC+kiCsl/kXRtbxfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760536816; c=relaxed/simple;
-	bh=CFCf1jlvWWOR/a6zkgwqZYSPmfb3AShgDFzbIXQWQOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puKfAU0K801NdgXBpxKke1Oy0kyZ6FAd3MqYymWvhpuvfoYgKqpkQQaQtkxk+BTJ8/mBsP2r/2Gm2WYl/81mHINEl9aIKwwKRnKgZHL8IO8DwbHoXtyiA/BRzVLSk0kFo1dUK002Vh9FZ+23iXuC6yiGQS2o+pQZN5Tr+PKVjTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxRVPNxT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8C2C4CEF8;
-	Wed, 15 Oct 2025 14:00:15 +0000 (UTC)
+	s=arc-20240116; t=1760537129; c=relaxed/simple;
+	bh=vmlYb0g+8Bco2x8DuZ7wv9Yxt/D7mnkuiu2npAVRBXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QrCp78GK1Td7+RWcuU1qUN0rth4EmV8nBZ11Q1+LlZZdejok7EglH6ryLuszkts5ZqU9pewdjgOyo55+QuxZer/CuYhXEbYhk0OYyRnEjl6SKcDhuuk4n8eovRdyh+BixiTm7XIK4cMv0YvvYPGE+t59kTwrfQYeUS6H0wWPTLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADkYFgIV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8642BC4CEFB;
+	Wed, 15 Oct 2025 14:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760536815;
-	bh=CFCf1jlvWWOR/a6zkgwqZYSPmfb3AShgDFzbIXQWQOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NxRVPNxTJEZrwlxkuY1eKTFhrZhKXnwRscbJ7VUzY9GgzJ+PQebmlbNSTi15ZBt9U
-	 xoDvIxMLiw6q1SUpss4Ae4UReY0SCbP3RUaDRJe4XhBemugb8m2gcy1+XWOpZW9zay
-	 Ii2jX7rVmR1IV/0HIM+QPn3kmfdUdtAWHrr2a3jOwoTmp5rGalA8ADoLmYFd3I1INe
-	 oTOS/zZBinBbqRbrOY3yrUE5Zj8KthPA7pGenTEKmJkRlmijzicanovCH69HkImXSh
-	 0feFCF2t43Of1zEgQ3lFk8H2Q+Zh0KGLSH5v3m08GXkHyMKQQZzpODL6enQq/4jsGw
-	 ST8ahiKMsFP3A==
-Date: Wed, 15 Oct 2025 09:00:13 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-mediatek@lists.infradead.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, upstream@airoha.com,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 3/5] dt-bindings: PCI: mediatek: Add support for
- Airoha AN7583
-Message-ID: <176053681339.3300147.17032986972081820170.robh@kernel.org>
-References: <20251012205900.5948-1-ansuelsmth@gmail.com>
- <20251012205900.5948-4-ansuelsmth@gmail.com>
+	s=k20201202; t=1760537129;
+	bh=vmlYb0g+8Bco2x8DuZ7wv9Yxt/D7mnkuiu2npAVRBXI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ADkYFgIVWWX1zfKViU2vKx02y/WaRMhIz4kdl937KEp/Nv8dKiU4re62ORCqcJ3lu
+	 YxRDRmIffUaPlBnCjc2KkusZAthJF4pNY3IHyXcovlLqjELAztczGD0byHcPFtG1Ap
+	 MjSeNrBcZ+ufgK1+6I/zEcIaDLxP5qmcLxc5tJa8fbbdybSNoxMvjyOCgIH7R9HegU
+	 AQ9VijTzCJLVW1QEjV2p0QN9ammE/QIjkaMWVy6gv1g2k1fqRc6TKjOeJe5tKsI7n8
+	 69bwNQ+v2NauFdCls+QwA9bnYkL5LnGYVwCMvOJno8bTMVB5HTaLcsf/VlhAxFyJVr
+	 fParbeerFKZDA==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Takashi Iwai <tiwai@suse.de>, LKML <linux-kernel@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Frank Li <Frank.Li@nxp.com>,
+ Dhruva Gole <d-gole@ti.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Linux ACPI <linux-acpi@vger.kernel.org>
+Subject:
+ [PATCH v1 0/3] PM: runtimePCI/ACPI: TAD: Auto-cleanup macros for runtime PM
+Date: Wed, 15 Oct 2025 15:59:48 +0200
+Message-ID: <3925484.kQq0lBPeGt@rafael.j.wysocki>
+Organization: Linux Kernel Development
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251012205900.5948-4-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+
+Hi All,
+
+This series introduces a helper macro on top of the recently added runtime PM
+usage counter guard definitions, uses it in the PCI sysfs code (patch [1/3])
+and modifies the runtime PM usage counter handling in the ACPI TAD driver
+with the help of it (patch [3/3]).  Patch [3/2] is a preparation for the
+latter.
+
+Thanks!
 
 
-On Sun, 12 Oct 2025 22:56:57 +0200, Christian Marangi wrote:
-> Introduce Airoha AN7583 SoC compatible in mediatek PCIe controller
-> binding.
-> 
-> Similar to GEN3, the Airoha AN7583 GEN2 PCIe controller require the
-> PBUS csr property to permit the correct functionality of the PCIe
-> controller.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../bindings/pci/mediatek-pcie.yaml           | 120 ++++++++++++++++++
->  1 file changed, 120 insertions(+)
-> 
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
