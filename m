@@ -1,133 +1,144 @@
-Return-Path: <linux-pci+bounces-38176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1D12BDD4D3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 10:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 052A2BDD47C
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 10:02:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 628273AEE32
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 08:03:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FFC24074B5
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 08:02:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14F22C237E;
-	Wed, 15 Oct 2025 08:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6E02C3252;
+	Wed, 15 Oct 2025 08:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSNhFi6L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dH5tCCvS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A514013957E;
-	Wed, 15 Oct 2025 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77262BEFF0;
+	Wed, 15 Oct 2025 08:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760515431; cv=none; b=Fab5FC+fgv9rJd9fmxkLrcyP+havAWoFMMzf7Wnu4HSYponuZP3FyNU+OnkUWmvHpnIWkFdhzBcT8NT9IWy7FTfopEo7vpYXGvux+PWtQoqDNqwBqI7qgTOX7MifTzP1oNWlDIqCDhuJq+NtxV+i9BNHvliVIdAwS7Lh9AxVIhA=
+	t=1760515348; cv=none; b=KFHKIz6B88mExnJz9uH80BUP/DW09+tHSpQ6XvCJGAuo1Ej2FE8ez8L1jW77Q5ImhLxVarYNERSEElsf+qv3+TbxxeRbPLj10H/PgntRLh7p2TAIuckGzaqvVjsps69H4QjnZHsOdTSo2rj31/XN9oxwEDPBjWnAO99aqLyvFlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760515431; c=relaxed/simple;
-	bh=5unoLNZna7TbN6XnAcrbvPxZlZXyH1EX+4YdDxPuHhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhFuuou0w/V9fm2aalj6OQzofQjASShYojjbCUuj9vzwOAkohTT3V8qxlIPMJ+qa5YmgPNbjZJbITBZwEOTsn7q0EO9He2cI5Nx1i/8w/14kmMjuXeZYe7yRhnDEr5FEj1eluFZhoGX0pA/S9t7ZsrTwhdnabd+YlbBzjRnwDnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSNhFi6L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9135CC4CEF8;
-	Wed, 15 Oct 2025 08:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760515431;
-	bh=5unoLNZna7TbN6XnAcrbvPxZlZXyH1EX+4YdDxPuHhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XSNhFi6LSwYMGRwm8/DjIzD70+SJl6l4LlN+k5qLeOMIEtbTZO2LQs9c8auQB/xDA
-	 K7JY5T9kobA8hMf16Hn2Hf7NwRCDtbTnXMHW+pn6XrtllrMxH39uRqhnYCFrxKAPG8
-	 ciDRfUJ8clQlL7702X9qNivz2a76qmwTnRe0J/K4W710FBp0MY404iWKMPyjSbGYr0
-	 7Rjptvc0+/m+BV1c+OT/QNJb2NH6LZjgi3FYZaPilIB/mj9WiW8g9H689PO0C1kLrF
-	 ztXTF07l+hufkiLkTAHi0wsnXGencQw7E30Ywg1vcfYrbCEoGpps4RfqlkSBpn6rSl
-	 7VGDwrPt2mv/g==
-Date: Wed, 15 Oct 2025 10:03:44 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 2/4] of/irq: Fix OF node refcount in
- of_msi_get_domain()
-Message-ID: <aO9VYGkCq7MDCcNn@lpieralisi>
-References: <20251014095845.1310624-1-lpieralisi@kernel.org>
- <20251014095845.1310624-3-lpieralisi@kernel.org>
- <aO7Mx11tWFbDX8u1@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1760515348; c=relaxed/simple;
+	bh=oMfFYXvGiE25w2JX2q/A2uGGYX6++XuGoMMS7Ksqkag=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ye0cDZ7Pn8UcwGrG14SY6D35UYRMQHP7Jedl3xPJtraFI+sWYBT3KlnbLbUrJYCimAEDITRpkT0nAV6d7FyC+5fJk34nI+o6Pby2AKGu1BC0f0xnwR+A2p+wo+8qYQY2o0BYeEt4IBN+3P52wlYZzsSuCisjKcCAOWJbYXewuS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dH5tCCvS; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760515347; x=1792051347;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oMfFYXvGiE25w2JX2q/A2uGGYX6++XuGoMMS7Ksqkag=;
+  b=dH5tCCvSxb59e/GTTeBvdRHsOhON7NdeCt3Wxqo5IvDt8kkAXfQH74eQ
+   Ta0yNBXdWvg2S1ZHr1pqiCNJYSFFXcyHucVO8mLOs7EudP1+Iys0LiuLX
+   +D+vhujmQZjzMc13RuI//TuEAxJDnkICOBp0mWEhWyYGS7qly7qmY2pDe
+   aQGQ6AMYEKTvtFDfMb2djPE8KZB78DrZ60OZxcoAeRX4ZegAseuxhfrvA
+   AdAKN5sA2vrjw+Z0xLo5MWWkh9Cw9XzuuT/EpyD1EbSf1I46tyo3SfjXB
+   8zLRRG2KE/YwBNyOS9wUwR2Zd8FCRfbtrBIJQFZ9CV50DiPVfd27vlPK+
+   Q==;
+X-CSE-ConnectionGUID: 0i5Hgre5TaiBJ8p3+bAGEw==
+X-CSE-MsgGUID: 3gjOwuVaRFi9g/vk3Vogww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="61891427"
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="61891427"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:25 -0700
+X-CSE-ConnectionGUID: xYZcdeLmSUCKMRXlV+YtwQ==
+X-CSE-MsgGUID: AOazhnw0QW64pO9/LqTH7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="205805322"
+Received: from bnilawar-desk2.iind.intel.com ([10.190.239.41])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:21 -0700
+From: Badal Nilawar <badal.nilawar@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: anshuman.gupta@intel.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	lucas.demarchi@intel.com,
+	rodrigo.vivi@intel.com,
+	varun.gupta@intel.com,
+	ville.syrjala@linux.intel.com,
+	uma.shankar@intel.com,
+	karthik.poosa@intel.com
+Subject: [PATCH v5 00/12] VRAM Self Refresh 
+Date: Wed, 15 Oct 2025 13:36:58 +0530
+Message-Id: <20251015080710.1468409-1-badal.nilawar@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aO7Mx11tWFbDX8u1@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 14, 2025 at 06:20:55PM -0400, Frank Li wrote:
-> On Tue, Oct 14, 2025 at 11:58:43AM +0200, Lorenzo Pieralisi wrote:
-> > In of_msi_get_domain() if the iterator loop stops early because an
-> > irq_domain match is detected, an of_node_put() on the iterator node is
-> > needed to keep the OF node refcount in sync.
-> >
-> > Add it.
-> >
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > ---
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> 
-> After go though of_for_each_phandle, I understand why need of_node_put()
-> at break branch.
-> 
-> It will be nice if add of_for_each_phandle_scoped() help macro.
+Changes in v5:
+  - Added Co-developed by, whereever necessary
+  - Addressed review comments 
+  - Added new patch to handle vrsr in s2idle
+    drm/xe/pm/s2idle: Don't evict user BOs for D3hot and D3cold-VRSR state  
 
-Yes because this fix is not the end of it AFAICS.
+Changes in v4:
+  - Resolved build warnings
 
-Please review and test patch (4) as well since I slightly change
-the existing logic there, I don't want to break the EP mapping code you
-added in f1680d9081e1 (by the way, I don't get that commit logic, if the
-msi-parent loop would match it could just return and we could have
-removed the
+Changes in v3:
+ PCIe ACPI Patches:
+  - dropped the notifier block code and added patch to allow only one Aux
+    power limit request per root port (Rafael J. Wysocki)
+  - Addressed Review comments (Rafael J. Wysocki, Bjorn Helgaas)
 
-if (ret)
+ Xe Pacthes:
+  - Addressed Review comments (Bjorn Helgaas)
 
-guarding of_map_id(), correct ?).
+Anshuman Gupta (6):
+  PCI/ACPI: Add D3cold Aux Power Limit_DSM method
+  PCI/ACPI: Add PERST# Assertion Delay _DSM method
+  drm/xe/vrsr: Detect VRSR Capability
+  drm/xe/vrsr: Refactor d3cold.allowed to a enum
+  drm/xe/pm: D3cold target state
+  drm/xe/vrsr: Enable VRSR
 
-That's what I did in patch (4), please have a look.
+Badal Nilawar (6):
+  PCI/ACPI: Per Root/Switch Downstream Port allow one aux power limit
+    request
+  drm/xe/vrsr: Introduce flag has_vrsr
+  drm/xe/vrsr: Initialize VRSR feature
+  drm/xe/vrsr: Enable VRSR on default VGA boot device
+  drm/xe/pm/s2idle: Don't evict user BOs for D3hot and D3cold-VRSR state
+  drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
 
-Thanks,
-Lorenzo
+ drivers/acpi/scan.c                          |   3 +
+ drivers/gpu/drm/i915/display/intel_display.c |  22 ++
+ drivers/gpu/drm/i915/display/intel_display.h |   1 +
+ drivers/gpu/drm/xe/display/xe_display.c      |  11 +-
+ drivers/gpu/drm/xe/display/xe_display.h      |   2 +
+ drivers/gpu/drm/xe/regs/xe_regs.h            |   3 +
+ drivers/gpu/drm/xe/xe_debugfs.c              |   3 +
+ drivers/gpu/drm/xe/xe_device_types.h         |  12 +-
+ drivers/gpu/drm/xe/xe_pci.c                  |  12 +-
+ drivers/gpu/drm/xe/xe_pci_types.h            |   1 +
+ drivers/gpu/drm/xe/xe_pcode_api.h            |   7 +
+ drivers/gpu/drm/xe/xe_pm.c                   | 231 +++++++++++++++++--
+ drivers/gpu/drm/xe/xe_pm.h                   |  10 +-
+ drivers/pci/pci-acpi.c                       | 189 +++++++++++++++
+ include/acpi/acpi_bus.h                      |   3 +
+ include/linux/pci-acpi.h                     |  18 +-
+ 16 files changed, 494 insertions(+), 34 deletions(-)
 
-> 
-> 
-> >  drivers/of/irq.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index e67b2041e73b..9f6cd5abba76 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -773,8 +773,10 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
-> >
-> >  	of_for_each_phandle(&it, err, np, "msi-parent", "#msi-cells", 0) {
-> >  		d = irq_find_matching_host(it.node, token);
-> > -		if (d)
-> > +		if (d) {
-> > +			of_node_put(it.node);
-> >  			return d;
-> > +		}
-> >  	}
-> >
-> >  	return NULL;
-> > --
-> > 2.50.1
-> >
+-- 
+2.34.1
+
 
