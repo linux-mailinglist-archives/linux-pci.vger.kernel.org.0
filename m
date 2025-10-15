@@ -1,83 +1,83 @@
-Return-Path: <linux-pci+bounces-38264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75B9FBE0626
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 21:27:54 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD34BE0632
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 21:28:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B10001A2263B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 19:28:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A2AC24F1F8E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 19:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0515F3112A0;
-	Wed, 15 Oct 2025 19:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2322130FC1B;
+	Wed, 15 Oct 2025 19:25:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMrVogHc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAWmy3km"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEB5310625
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 19:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4509D3112AB
+	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 19:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760556320; cv=none; b=DaHQSSrQdfJC/t6pahTi+kK/I+59nbcGjkzSi+IcDQIG2dlj5AkBoI7XXIIei9GdlszmXRejYDqGnvUKL6GgLh5mWy/TJcBsuAVq5vSy6j3HXAcnlzwmived4Ed89vw8pTg2bu52QqwdcGQa1k4NAJDrtCbWEw6XTWeQckztI58=
+	t=1760556323; cv=none; b=hlDZTiwktYiP6V2QuWF54CHOGzVXgwlKIKRsw9Hcsy0k6+3f9TvpseV5FtjqeFTvluubqXUYjevDvV1OnoL0sIWosgDcf8SZp90PXumIvmh2sSdW9BCOHmEQOwdbgLBgyYcIfhU6nfUvDa4N5+UXHzExS6OsE9XOA/MoyLL2/io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760556320; c=relaxed/simple;
-	bh=Kd0EzPTdfyblnmo1RxE7jLLbIDYVUJvE5DzKX0nK5ME=;
+	s=arc-20240116; t=1760556323; c=relaxed/simple;
+	bh=5hkdJMBXvyM5ROn0CqVVfhpYPBMFyjtfSpETEaraIms=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=djxkt3OVW7MqXvnO8FanqtiO4Gl/n6paQscIycYJ8aCjO9bHggLXcZSb7ohNk9q/e674IcLLAhaQl2WFfgxvO5JgfcxRUP6fQgZJrsRXXWE9niQ7GncFhG8yOx/3w10QubnKWxFwWyFsUAVadajsjRzazshRJqziGQPvsyp7904=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMrVogHc; arc=none smtp.client-ip=209.85.222.175
+	 In-Reply-To:To:Cc; b=Ak18Zzly5hFzUKSs0yk9q6QcPbQVF8wQzhE1/gMllGJRsa8A1vPtbd1OamGBTR6MMOOaIYNnJnn7cmDZZzhSVXDB0dUukH1i3DEqQU9hyS1ye/iEbhLxBIUTyKn015XSXlOAm3/T/W3HV8lY5GKD9e7PD5hZ0yG6ZtcPdXetRyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAWmy3km; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-88e51cf965dso202742785a.2
-        for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 12:25:18 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-87a092251eeso23824816d6.0
+        for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 12:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760556318; x=1761161118; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760556320; x=1761161120; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pfKLoaIE6m6YAqIlpySfZ0ebyLDDrsoOWfky8dWsuu8=;
-        b=LMrVogHcGeDeNnUmoDhp1Krga++idOt61PfnQ8nq+3PdvwKyUiws7bhrvpk0b7CDP/
-         PHSIjY1iJksa2BhauBRnYMKCa/I280ce7stALHOIvdRk7qWx2SRUowDi73acVUB79S57
-         jXzRMkCYivEYnL4oIcVDkJQCHs6urxlAPDI6XW5+axPqan+BaSEWETFfUi6H3qhRt1yL
-         nFIUNQsOGG6H5jScPpkkE8gsB7aa9iMYt48RqBk61JvTtRMKlmjyAMjOADtOdURgh/Jb
-         MEdxYcMfUMLIsqE690ypLxJYdc0KzEHJO3mwynr6D55fwU/gMyPjgnwHZrslFLR05mIP
-         InnQ==
+        bh=Zfr+jg9qjRBK3esGQQzBD5L0g4VK44y370TXRFAq7lU=;
+        b=EAWmy3kml5F4+VbSFVMMwmSbTG1JPrXc25HIJ7wTREx+dvdcv925LAr+3H/MK2yo8J
+         3b9T0AX5Ziu4paKrSgcqxGTenO1PwPrhrzkoNEbyIxoWWF+Aq3cWbc+5V2kh4UQ7AA8E
+         VQsfzcDkX92HSyd5p5oao9KAr6R1RVTKp7/itf1AdXmq07NlGuakb3PvyX35cHUwmxC2
+         6fjYPFDV97+fr4if6sLN4cmCN0hWUKM1L9CBEYXRKwNeu9kOCNzsg2+6Ek2mJsUJ0RPP
+         OkPwUg+mIY2Pch+B8q08Kn7Z3MuD/FVy14virXSGtKUv+g0ES3E3mh0HVDExPtD2Wfh/
+         SO+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760556318; x=1761161118;
+        d=1e100.net; s=20230601; t=1760556320; x=1761161120;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pfKLoaIE6m6YAqIlpySfZ0ebyLDDrsoOWfky8dWsuu8=;
-        b=CSDIqtiV1Ott/RVZhccL1SBeASHRLu55+hwcNW4RONRJCmbbI847hqLSXh5SXZAWcF
-         GGBDE2qz0RCKLgsbqi00xS64z3w6YVaZtrXC28v3bfv+WAhtwQueuUPUSqnktJFuuagh
-         99Ymrw3tQK8oLbwU28hIUI5rPMrCJGTXrcpKq+Wuai9gDPcTiJZ9hWsYN0CrCCqi/pN4
-         z0aavcJrw09AkHgePZTv2zR7L989GdnXTwdNUGyc3SKk1dHEJ4teGiS0QHSQR/xyXe3i
-         pvLemQCk4SE1N6frEjf1mW8xj3t1SnOBx/lBZjO9A/ML83DZeZbQ2bJWitAqgDD3wCJE
-         yt5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXbJFnes99l/nwXFcEc6HvUTgKqvt/2zVPsI0ad+x05Nvm5koLPV/rgvk8RFAHYYY9r6/9b58HCJlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjuY14OSpkaVXC+rxspc2DSTlOYWsFuxTVOhawDY5xyxWICFyX
-	+BV5rqiSu72GBTD4BqdQ7i/ZpxRyPWqe+/6ccPBp2p/pSr1lzSZo5bPw
-X-Gm-Gg: ASbGncuYCHaxGKKwEVdsA/IJ4Vw1bMFXiESqjbl3yIHa0qOXYVwCCkMMdRE1F5QR8I4
-	j+GHr7+ZVR3FuAChPQJSJ62DjJghcNuyuCV64f3+QpEn46+MyJzcng4hxpcEK0oFEdhKYzLShbK
-	k0oI5/Xiljs7RIo25vVzHSZfH6Q+nnBRNeBFSNOdW6AbOC/UF1eYy+u/R5yC/TSJg63KspPt0uO
-	nuyDemgycGUt5vuV/Ok46OtwGlR8S9EGzQzmGVkg1NW4mOPGEg0sqdqJCiyGDPwM3/wgaNXeSPt
-	MrZEKcjlVaY5UoerJYD6h/jIxN/JtwmbwUXiTiX+vvJOoz6id2P5gfGI0csMGerZ681NTdFEQd7
-	oVPB5Q74GXl7efiRAl5qTwdR6lM1dP/Sw6Un/WNN0yMCcYe9pulsPPhkaoldhrC1G5wwvq48oBW
-	mZP+bI9FNwLeOBqMzUenGelZymJRaabicXRxCrUTYH+b8mFzPowQ83lUrB+LjA5PUAWVGHt4IF1
-	R/zbBAX2QJJfQXDBPD+xpNU2m3u/Vs+oa2zoTxR05kfYCftn1vy
-X-Google-Smtp-Source: AGHT+IEyJ4wXPRNVHomX6M4YCh9mUoGoZWRpoOJh8NtSqhKRuXmvyAnybqGcRN9E15RRAuo/qFdyWw==
-X-Received: by 2002:a05:622a:5809:b0:4dd:8dcc:17f5 with SMTP id d75a77b69052e-4e6ead15d7dmr389497071cf.28.1760556317628;
-        Wed, 15 Oct 2025 12:25:17 -0700 (PDT)
+        bh=Zfr+jg9qjRBK3esGQQzBD5L0g4VK44y370TXRFAq7lU=;
+        b=n5UKKwZdsw7VqIpsR4v2Nos2nEdFNtNUa7wsKO79MMCkgaPTjRhfTueGkv03DHPu8Q
+         6GxuPxtOstKIVSYXI0EaO35zlcn7OxMjh8OoBxLzXvwuntywaua/AkbRgz05qnDv7/oV
+         MbbgMFumpmjIxaigriZLi3CvlHbgdVVvIWz8gziB0Omcmh+mxo5U2qbZg8rxkBpwV5kR
+         6c7LlqBfi+49Z0ti7Y9ZAJ4McbBx4uI7W7oXeOPHJ3E5l7MijmLcqw5lvoDD+wWTXvSC
+         VlHVSGG6TB4egb4FgKDr7uyemzcceWG2LlPCZj6bLo13zaGlTYP3qixVaHjrP8csYNMo
+         DvVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0CS0liiNxZdmNlKfEnfqAdf0PSOMUBWq3fTk4uG5+vWJxbWA+yaEGZILc8vHrfmWo4M5Op1gAOm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvckd2dy1KvqaBIKPXgHlEhZqcb1IWST7qKlS+Uzf87g2kh7ZQ
+	kaKNbSEzQn40BIuaR5RcSw0UpIk8u0bgScbu09oxszU2FW3Er9SmJx2S
+X-Gm-Gg: ASbGncvEN24C0MsLEG946x1V97jJ+fuuiZ+OebytHZ8pvzD0fRg07RIyeR07+3giz9+
+	+g2q6fwZ65OP3b0a+j66S6RFHFq/OfHKfb98sqYyNRTByvu0oguLR44ShjzNBKAIdEN54+OI24D
+	BOBeEt6AlCuCS4SKv6rrHTg9uQ7GFXLPqb2ini/vOaUlZSm9tZL3UBNYtFVpUAovPyMhpiksMag
+	XNVz5DaFwKIk+SWRCikPPOCvw9pHiiWK30XuZZNp+YHT86FR28XdVXtIMV0jSH1ZrQvc67vynIe
+	mIUihnY6CgtbKAutJtzkVGbOl3xyWlVGWJGCW4RN/PeTc8yc8ExW+d1cVXkUPcFJurTnB+U01nt
+	G2DBmnniFhmgMVqQsr2Es9cfcXIKVNuJqo9hHDT2e44pARJzzImf+tVCVAaNcs0OM8a/qhf6Ar4
+	0iGMuWwkHFqf1kmYRAtrgsORjKkiiswjXxn+MefOD0fQi/O624lXQ8kTI65USm4+7sDaw5Hsrtx
+	/hAHjKZvTML52fJ0ku2r020KIIh4h+azS3vV/aj4GTRs0rGkRL52rbAQC4f6lg=
+X-Google-Smtp-Source: AGHT+IEDOgFM0nazGEEfzHtKDS647mvDkfCfJSWTYyfnR0K2d3p2LPiGQli6GsrPQ32Cigz0HxquCQ==
+X-Received: by 2002:ad4:5fc5:0:b0:787:f736:bc66 with SMTP id 6a1803df08f44-87c0c5cb92fmr20009666d6.1.1760556320049;
+        Wed, 15 Oct 2025 12:25:20 -0700 (PDT)
 Received: from 136.1.168.192.in-addr.arpa ([2600:4808:6353:5c00:8573:f4c5:e7a9:9cd9])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87c012b165asm24076996d6.59.2025.10.15.12.25.15
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87c012b165asm24076996d6.59.2025.10.15.12.25.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Oct 2025 12:25:17 -0700 (PDT)
+        Wed, 15 Oct 2025 12:25:19 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 15 Oct 2025 15:24:38 -0400
-Subject: [PATCH v17 08/11] rust: pci: use `kernel::fmt`
+Date: Wed, 15 Oct 2025 15:24:39 -0400
+Subject: [PATCH v17 09/11] rust: remove spurious `use core::fmt::Debug`
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,7 +86,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251015-cstr-core-v17-8-dc5e7aec870d@gmail.com>
+Message-Id: <20251015-cstr-core-v17-9-dc5e7aec870d@gmail.com>
 References: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com>
 In-Reply-To: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -119,41 +119,38 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-block@vger.kernel.org, linux-pci@vger.kernel.org, 
  Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1760556296; l=872;
+X-Developer-Signature: v=1; a=openssh-sha256; t=1760556296; l=620;
  i=tamird@gmail.com; h=from:subject:message-id;
- bh=Kd0EzPTdfyblnmo1RxE7jLLbIDYVUJvE5DzKX0nK5ME=;
+ bh=5hkdJMBXvyM5ROn0CqVVfhpYPBMFyjtfSpETEaraIms=;
  b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
  MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QEhfQevpl/RzFxxXnpbY5oPfpzKL1+vKftdtwGLN29QKlCkDGEX76xd9UdrJV0rHFhQ062F1yi6
- DHt74TqCP1g4=
+ QA49f7ifUr2XwLcazgyI6X2saN5gtmXaaA6IvRCW2zqJXH2aWsvrcTeWwyt5IimaZuePXX9+Xm5
+ hOtGKK/bcVgE=
 X-Developer-Key: i=tamird@gmail.com; a=openssh;
  fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
 
-Reduce coupling to implementation details of the formatting machinery by
-avoiding direct use for `core`'s formatting traits and macros.
+We want folks to use `kernel::fmt` but this is only used for `derive` so
+can be removed entirely.
 
-This backslid in commit ed78a01887e2 ("rust: pci: provide access to PCI
-Class and Class-related items").
+This backslid in commit ea60cea07d8c ("rust: add `Alignment` type").
 
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- rust/kernel/pci/id.rs | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ rust/kernel/ptr.rs | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-index 7f2a7f57507f..5f5d59ff49fc 100644
---- a/rust/kernel/pci/id.rs
-+++ b/rust/kernel/pci/id.rs
-@@ -4,8 +4,7 @@
- //!
- //! This module contains PCI class codes, Vendor IDs, and supporting types.
+diff --git a/rust/kernel/ptr.rs b/rust/kernel/ptr.rs
+index 2e5e2a090480..e3893ed04049 100644
+--- a/rust/kernel/ptr.rs
++++ b/rust/kernel/ptr.rs
+@@ -2,7 +2,6 @@
  
--use crate::{bindings, error::code::EINVAL, error::Error, prelude::*};
--use core::fmt;
-+use crate::{bindings, error::code::EINVAL, error::Error, fmt, prelude::*};
+ //! Types and functions to work with pointers and addresses.
  
- /// PCI device class codes.
- ///
+-use core::fmt::Debug;
+ use core::mem::align_of;
+ use core::num::NonZero;
+ 
 
 -- 
 2.51.0
