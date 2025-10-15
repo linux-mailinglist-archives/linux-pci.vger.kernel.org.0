@@ -1,127 +1,124 @@
-Return-Path: <linux-pci+bounces-38121-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38122-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FD63BDC5AA
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 05:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E6ACBDC8C8
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 06:50:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC1183AE4AC
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 03:35:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 953553B5C8B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 04:50:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288AC258CF2;
-	Wed, 15 Oct 2025 03:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2EF32FF675;
+	Wed, 15 Oct 2025 04:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DWE0tTWW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iGTOqGbf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8158F186E40;
-	Wed, 15 Oct 2025 03:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E922FF644;
+	Wed, 15 Oct 2025 04:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760499342; cv=none; b=eMj1Hdm5teBcI98ct6o3PiNmGbxxLs77qNhLNcU+NKtYFLgWDH/3ygT0MrQfiC4dqkjhc8bbBfxtwTLHbDMZB9lIXhyUPugbVJnaEVkTVdQo4zW3aB7MPrrdPdLTTSqXHJXoe9XpV+SpY4fyBHFgkKDGS4oYzWBBpALgjtJ1I2o=
+	t=1760503827; cv=none; b=ARDXPixxj9zwVwsLJnc/85qRepQHfsBzVTxxxhFHGxxS0bcfaUwe/j/NWfj33YCSq1I62cmRmpyth05nSKLM83zXRgJBw6fU2Vg90ISKk6ARGeHpCB2a4RQmSlEpi2KIrdpB/u+o7Tz8DTsmU6HlM8DeZu/ofGG67DIyLuSqEbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760499342; c=relaxed/simple;
-	bh=jGco9AT5kCGcY76eM7VJ/hYgdU5/apACNaSLPEy/Y+8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gzxy5Qcq3dxXiCzfdIOSzhB7TiVrfvbFLafr3G1MfdGekLsq4Tj6LkXEakSmXfuoFBlK/S5zrdcCfnvQDv63y8k96LtpwTILjjwVJn9JOM0aFxv1zKHS/sT9BBAC7El+gbwWnNnwF1Aa9+4gxcvXXOYUqorwpDdV/c9h3WGPmCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DWE0tTWW; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59F1uL2M006345;
-	Wed, 15 Oct 2025 03:35:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=Nsz/n3MJDgumfFy+sGm4rKM6nmsNC
-	bqUDUHCE0nojDs=; b=DWE0tTWWYLDJ+ZFhLHT9H8LXKUMHFv57v6wR13NXm1Tvg
-	lIGElKBZRDaI7fRv7an72i0LoktZoCrxCTP9CezExG+GOoGjfIW0O09n6XPSLG2z
-	UdJn0tZG4v2WjBy8FRCZvWbZ/PNf8tfkZnpy4BrVBL1oA2zqM+jsBqnqcIVsjNZx
-	xcwHv4y+ggNmWCLULHJ6uwyUwhy+/v2lEQadsteWlGMhIqsOHQJlSF8YtTPHADwx
-	LFPntHgZJjdVWIyBwO4aSa7ckRR8PJx7iGlEew2Vl9ykOC+Diz6a45P+I1lLMQJ0
-	yTrffHb9Sh4pOVTwHaqh8SVHYp9UKlNyoOFh33A2A==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 49qdtynnw9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Oct 2025 03:35:35 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 59F2f7cc037444;
-	Wed, 15 Oct 2025 03:35:34 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 49qdp9sndu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Oct 2025 03:35:34 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 59F3ZYQC021912;
-	Wed, 15 Oct 2025 03:35:34 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 49qdp9sndn-1;
-	Wed, 15 Oct 2025 03:35:34 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: bhelgaas@google.com, alex@shazbot.org, linux-pci@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, alok.a.tiwarilinux@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Correct MPC register write to use dword access
-Date: Tue, 14 Oct 2025 20:35:28 -0700
-Message-ID: <20251015033532.1545707-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1760503827; c=relaxed/simple;
+	bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZ9yIzdHHu4wv5M0WsLdfF9DzVuAjeAfclrQDrgIR1w0poKByAszVhkplde9oBv2Cnor9QtD853Wm9iKoJwZMFZ4WpRJebzSzfr9xMVjO3Xkcfk5v2PDhljjGPhCK8awIhoIdYRxhwGRopk0JNJPmJPYJAy2mlKER5OSGbhlw9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iGTOqGbf; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760503826; x=1792039826;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1c3Jqm3wVNb92Z5FJcsFkBXhJiXPQVjq/7phEiXgND8=;
+  b=iGTOqGbfxBzeb6KNkXvx1W8hfK+V+Kb50jM/2qZdw+SVpKNm8hvadJys
+   kvjmHm2WqDjEZP5q1lRD1RPPn/32J7/17vtJLCbgBcJBBXnwsQiWplTK8
+   YSiEJ13S/JN7vpdnZnjFCgwH4iwJ2fYeatFTZZBUOWWrYle94k6lOOxpZ
+   Kx+/5BaytbaGq10eCMyubBZrL7fyA+ZF2/ioA3hlD2wtTk4yLmVY7XlJc
+   BGOYIricWwIKXND8VDiaJp6wV4JggRnYZr0jn/8GzOv+sftLwJwrSqrqj
+   KY/xNEXxMQcTyk+bQ+uRB1crnTLxAStwemZb66CehndSnR7g0WmjY+TmP
+   w==;
+X-CSE-ConnectionGUID: dvfOls04RN+gLwMyihhF0Q==
+X-CSE-MsgGUID: 1fFmc6DuQm2bW0cojv7HzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62378065"
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="62378065"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 21:50:25 -0700
+X-CSE-ConnectionGUID: vTqsBFKDSgWS/FFl8+cgaA==
+X-CSE-MsgGUID: 1H+yDRUmRGWpZov5tgERsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="181625697"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 14 Oct 2025 21:50:20 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v8tSr-0003SB-1X;
+	Wed, 15 Oct 2025 04:50:17 +0000
+Date: Wed, 15 Oct 2025 12:49:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	lukas@wunner.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+	ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+	Jonathan.Cameron@huawei.com
+Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, xueshuai@linux.alibaba.com, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, mark.rutland@arm.com, peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+Message-ID: <202510151212.ifOhr1Ak-lkp@intel.com>
+References: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-15_01,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510020000
- definitions=main-2510150024
-X-Proofpoint-GUID: UcpxVHbrYPlLS9bVgAg07v1h1ZYGs8to
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAwNyBTYWx0ZWRfX5QAqYYIN4Lmx
- SMkrHTTcOXUCbhvsLog5YVQtje5s9ExY7LAofv6/bvq8j/oehWoaoIeVvX4iDSS56L7qlWGJhZr
- 5yJwb53OfNegJHxmOQW/QBYszpCJ6Qzlm9th4Gdsam52IK7gZzIO212qoE1JXfEGge7OsK+VQXU
- LCUkQpFv2vZt7QuvcZhJXheD+7Y2XLx1LFDdERys12mg5BrKJNhPRnN/1EaUjY2+F/eOrdCH/qm
- lc4XBlUR6trE6igI5vVd5eTstA77t7uOB+OkFaVKzscjm3LPr9fCr58ufwC6IN6l7SOClU6UHoN
- vg7dtSh60QNN3z0CnTtURf2fyqk5V3dlz722X4YA7yS0llYOM7n7l9RmY5V4VZUXbtjVDX6ODKC
- CRpf9L4m42Hs2agcwPiB7N5mRB/8+A==
-X-Authority-Analysis: v=2.4 cv=OolCCi/t c=1 sm=1 tr=0 ts=68ef1687 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=ggRezBupM3_mbdqZsHsA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: UcpxVHbrYPlLS9bVgAg07v1h1ZYGs8to
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014123159.57764-3-xueshuai@linux.alibaba.com>
 
-The function pci_quirk_enable_intel_rp_mpc_acs() reads a 32-bit value
-from INTEL_MPC_REG using pci_read_config_dword(), but writes it back
-using pci_write_config_word().
+Hi Shuai,
 
-Fix the incorrect use of pci_write_config_word() for the 32-bit
-MPC register.
+kernel test robot noticed the following build errors:
 
-Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/pci/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.18-rc1 next-20251014]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..1bd6e70058b5 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5312,7 +5312,7 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
- 	if (!(mpc & INTEL_MPC_REG_IRBNCE)) {
- 		pci_info(dev, "Enabling MPC IRBNCE\n");
- 		mpc |= INTEL_MPC_REG_IRBNCE;
--		pci_write_config_word(dev, INTEL_MPC_REG, mpc);
-+		pci_write_config_dword(dev, INTEL_MPC_REG, mpc);
- 	}
- }
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/PCI-trace-Add-a-generic-RAS-tracepoint-for-hotplug-event/20251014-203432
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20251014123159.57764-3-xueshuai%40linux.alibaba.com
+patch subject: [PATCH v12 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+config: sparc-randconfig-001-20251015 (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251015/202510151212.ifOhr1Ak-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510151212.ifOhr1Ak-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   sparc64-linux-ld: drivers/pci/trace.o: in function `trace_raw_output_pcie_link_event':
+   trace.c:(.text+0x1dc): undefined reference to `pci_speed_string'
+>> sparc64-linux-ld: trace.c:(.text+0x1ec): undefined reference to `pci_speed_string'
+
 -- 
-2.50.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
