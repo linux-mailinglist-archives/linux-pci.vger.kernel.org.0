@@ -1,123 +1,129 @@
-Return-Path: <linux-pci+bounces-38188-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38189-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D0F0BDDD9E
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:48:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1161BBDDDFB
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E51DB19A792C
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:49:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9459C3C539F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:52:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FFA831AF01;
-	Wed, 15 Oct 2025 09:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F13B31B11C;
+	Wed, 15 Oct 2025 09:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APQcqUfy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B37F2836B5;
-	Wed, 15 Oct 2025 09:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6A308F2E;
+	Wed, 15 Oct 2025 09:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760521716; cv=none; b=N3kcOPGsgGQgcrGkCwEuzNZxE7HXXs7A2EPhVdORPWI+bJjtdh4wL3/uS+g1pMqYgSPFjy2hkTKGUmXidzNUmdcGxcw5y3wle5UbAOweZI/7GiVTaDlh6VA16rlQqQ10TUs1stx5UqcMryaENsTkqfIdG63ABFqUn4QwHT2U7XY=
+	t=1760521958; cv=none; b=Upw080ZXsggUCnZ8/cEthqtuc00T/cjUTX5Sdwff0luu+Jkk33LA3m4YMKjDidyJSYMCOQoaa3xHog9Tx/nlkCx0WSQ5spfsZRAHnV/4HSdC4enQlK4E2sceQhwbWS747gwDbCTk6C3NU/UeiUNEyyFmH1J80N17aiR+Oj4ucVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760521716; c=relaxed/simple;
-	bh=ci2GAK96GpSlDOtokEvI17IcFg1bYDVpieRXum3v43o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUcXMcXgvPMpoelyg7UOsruivrPpKxJT7VK+je1Y2xCxoAlPhJ2LOW1ehAYmDa7fjVH0h2Ea25pEOF5alIcCTgXWFSe2RaWjw/bhbr+QQ8Ip8HodJ1uzgvDJD0ZLyPUuFXsVvsiqz2gLV4l6EiVjCSVxH7uJJqBz56l71FxeHtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B69C4CEF8;
-	Wed, 15 Oct 2025 09:48:24 +0000 (UTC)
-Date: Wed, 15 Oct 2025 10:48:21 +0100
-From: Mark Brown <broonie@debian.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	netdev@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 19/19] rust: regulator: replace `kernel::c_str!` with
- C-Strings
-Message-ID: <a6d606c0-716f-49b5-81cf-362b325b7872@sirena.org.uk>
-References: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
- <20250925-core-cstr-cstrings-v2-19-78e0aaace1cd@gmail.com>
+	s=arc-20240116; t=1760521958; c=relaxed/simple;
+	bh=y0AyUun396Qe57qvtbsaVfGWNx4pdz69sER2tQtFKgI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DIP77ERVf/2o7z1AqpKWVwsg6/QQfdu54sJzx3HSPNSSQuHGEM7SQHFImtSKHiJFISEnf7sptwEVhdEEoRWpHN+QT0AUklBkbgadvMCpIpqWshXaWWWJq1RyaotBTBFGNFx308ZrS4Y0fNFEIZmYcWutrVCrTDdRXyLecknbeIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APQcqUfy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F88C4CEF8;
+	Wed, 15 Oct 2025 09:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760521957;
+	bh=y0AyUun396Qe57qvtbsaVfGWNx4pdz69sER2tQtFKgI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=APQcqUfy687JtTczvl7s40SFNg3UbuXiAUWd0XtCvfMecwAYmK91CnkRvLTJ2NKP/
+	 /meQxJsltrtVemIgB51odBZY/1vSgqyAsKqXBjP8Kpy89MJ6XSnVWUhtvkXJkOo0hi
+	 jJ4aSqlxhf6q2epeg1Otv0MrvY2RAOILyRPRhBb62mE1kvivl21NpCS0kID2/ZycmP
+	 u1imzaVTYJqfeWC181BsHM8KTWPEuW8AqGOnZaOa9Nlyp5NeTqkrhOn3HU7aXpXUbX
+	 /LrqqsRT4i1xVpVWYoGPiZuTzeTKhc0TvAX/xv7KbeXLr3GGV5OoH54qDOxLB6d/ds
+	 OV4etI5OCtEZg==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Jeremy Linton <jeremy.linton@arm.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm
+ platform device
+In-Reply-To: <20251010135922.GC3833649@ziepe.ca>
+References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
+ <20250728135216.48084-12-aneesh.kumar@kernel.org>
+ <20250729181045.0000100b@huawei.com> <20250729231948.GJ26511@ziepe.ca>
+ <yq5aqzxy9ij1.fsf@kernel.org> <20250730113827.000032b8@huawei.com>
+ <20250730132333.00006fbf@huawei.com>
+ <2025073035-bulginess-rematch-b92e@gregkh>
+ <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
+ <20251010135922.GC3833649@ziepe.ca>
+Date: Wed, 15 Oct 2025 15:22:28 +0530
+Message-ID: <yq5a347kmqzn.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qu2IBVFvaIEaH/yu"
-Content-Disposition: inline
-In-Reply-To: <20250925-core-cstr-cstrings-v2-19-78e0aaace1cd@gmail.com>
-X-Cookie: Sentient plasmoids are a gas.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Jason Gunthorpe <jgg@ziepe.ca> writes:
 
---qu2IBVFvaIEaH/yu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Fri, Oct 10, 2025 at 07:10:58AM -0500, Jeremy Linton wrote:
+>> > Yes, use faux_device if you need/want a struct device to represent
+>> > something in the tree and it does NOT have any real platform resources
+>> > behind it.  That's explicitly what it was designed for.
+>>=20
+>> Right, but this code is intended to trigger the kmod/userspace module
+>> loader.
+>
+> Faux devices are not intended to be bound, it says so right on the label:
+>
+>  * A "simple" faux bus that allows devices to be created and added
+>  * automatically to it.  This is to be used whenever you need to create a
+>  * device that is not associated with any "real" system resources, and do
+>  * not want to have to deal with a bus/driver binding logic.  It is
+>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  * intended to be very simple, with only a create and a destroy function
+>  * available.
+>
+> auxiliary_device is quite similar to faux except it is intended to be
+> bound to drivers, supports module autoloading and so on.
+>
+> What you have here is the platform firmware provides the ARM SMC
+> (Secure Monitor Call Calling Convention) interface which is a generic
+> function call multiplexer between the OS and ARM firmware.
+>
+> Then we have things like the TSM subsystem that want to load a driver
+> to use calls over SMC if the underlying platform firmware supports the
+> RSI group of SMC APIs. You'd have a TSM subsystem driver that uses the
+> RSI call group over SMC that autobinds when the RSI call group is
+> detected when the SMC is first discovered.
+>
+> So you could use auxiliary_device, you'd consider SMC itself to be the
+> shared HW block and all the auxiliary drivers are per-subsystem
+> aspects of that shared SMC interface. It is not a terrible fit for
+> what it was intended for at least.
+>
 
-On Thu, Sep 25, 2025 at 09:54:07AM -0400, Tamir Duberstein wrote:
-> C-String literals were added in Rust 1.77. Replace instances of
-> `kernel::c_str!` with C-String literals where possible.
+IIUC, auxiliary_device needs a parent device, and the documentation
+explains that it=E2=80=99s intended for cases where a large driver is split=
+ into
+multiple dependent smaller ones.
 
-This doesn't apply against current code, please check and resend.
+If we want to use auxiliary_device for this case, what would serve as
+the parent device?
 
---qu2IBVFvaIEaH/yu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjvbeQACgkQJNaLcl1U
-h9Dt8Af/TLwPaPEPyJKhHTg8cZeHf70d+vVL0moyk8tdCcvNggPRPd8mXg0NT9mO
-qmJvoWmet4bQC3McxDEI2hDArwrV6orbVM8LsRyd78hdChnLNP1058/WMu4IMsm9
-2BDs6OT5Nma+7YMa+KS6S7fkuUmt9AG/CkBR9NAGDX0K6kGd/GQ1E9I11cf8Cdqs
-YFLT67SrYyxGv3ZGtK5IkUOmqn8vSKPTtrQiuzfeSkwR6iBWmy5jq1VR/Qh2Kycq
-c/7pMyRZK1HaRL+RnAGvZaPuru3c9bRia03t2TS0BaJJYl8QMaNG2TqmOxxHBHNP
-0Dagzm72apYtzPFYbdE9flnTkc2o/Q==
-=ofuh
------END PGP SIGNATURE-----
-
---qu2IBVFvaIEaH/yu--
+-aneesh
 
