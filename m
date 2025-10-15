@@ -1,117 +1,118 @@
-Return-Path: <linux-pci+bounces-38221-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38222-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9689BDEC74
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 15:35:15 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42698BDEC9B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 15:42:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9320E4E1B58
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 13:35:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3085E4E4F6E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 13:42:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E315618BC3D;
-	Wed, 15 Oct 2025 13:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C973F22B8C5;
+	Wed, 15 Oct 2025 13:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pjB9mSa4"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PpEwZzlg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9EB16F265
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 13:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB0C229B2E;
+	Wed, 15 Oct 2025 13:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760535312; cv=none; b=D4QlwJ8mGFjLFCIchBzK0i+APOxqpNcauObhmSVaiwXHGB5IbM4Jnfs5HXKdkFeNtSKmhiYnb5TJvNGT2PdEgKN98IYTWG8qUO5QejCAfquefYjyrgyjnSmUXCq3azlS4uSmwYgrIsQwBbWHBgObUqZ0DP/yQASWs1ES7UgZH68=
+	t=1760535715; cv=none; b=OW0EA2g1gJFT6suLIpVb/4BZSD1lUuPEv70X9gYXzZZJfmu11nn3lS3btnNiapy2B8Dm4rpGS41LwQO+dae1WioF/m9j8x7Yqld+rEBxab72V7OH17ZcBGn6n5MwPfKOraS2fsxp01fWAc40YOwX+oEKgZu3EjRq96GyhfAoS88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760535312; c=relaxed/simple;
-	bh=SeTF6xVjGeVxwXBro1Jd4xMzM9ZGziYW1KwQTQeZekM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bJhSIm2Tox6mKK6BxZWkYKq1WGvg0xqx7d/nz6QF9APURvuagrX75ytSky1a2BtGkl4Wbm8YGyLLUeYGzlxWjr7C560AInWCblQyROd6HPYOvPpGBu38rb6rvtMQLMOEyoDDVOUsHTfJ8MhY3ehBg1yIdv4dQLMJvCHR8B/Uny8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pjB9mSa4; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 54AE84E410D6;
-	Wed, 15 Oct 2025 13:35:04 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 19FEF606F9;
-	Wed, 15 Oct 2025 13:35:04 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5EE7E102F22CF;
-	Wed, 15 Oct 2025 15:34:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760535303; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=oMU9G4Af1cq7AyrrzQ2eG1h+ieGKieI2qQ6GlGAzq4U=;
-	b=pjB9mSa45RgZGf+JyVeqvP7qIc/TzHk5GVvUMqgPHqsIv5/DzktXddn8iq8xeExInGbFO5
-	wixpOYF6+jQHYhxwcjPd/Igt3ht5HkH8OdmdkXXb45VuNafZbpBkM+FxliSS52eqgNx0NW
-	QryRhmGe3Ad5IhLd6KOgwVxa67bPbIHDTs1yPx1ofVCmiqrr6P2qd0m7PD/CIE2OJ3csVn
-	fdDTCJxl+E0DiyNu1UXZ8rvLdpopGBBsnUko9D5DOTdh1z3yKofLV0l+qg2Ks/eCQJyooO
-	a85e+wE4UeENHtsyoJHJbXIXaYY/Vs1ddszHzzrJqAY1idCLfedZDZawJ2V1BA==
-Date: Wed, 15 Oct 2025 15:34:42 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@oss.qualcomm.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, linux-pci@vger.kernel.org, mad skateman
- <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>, Christian
- Zigotzky <info@xenosoft.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- hypexed@yahoo.com.au, Darren Stevens <darren@stevens-zone.net>,
- debian-powerpc@lists.debian.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <20251015153442.423e2278@bootlin.com>
-In-Reply-To: <76026544-3472-4953-910A-376DD42BC6D0@xenosoft.de>
-References: <20251015145901.3ca9d8a0@bootlin.com>
-	<76026544-3472-4953-910A-376DD42BC6D0@xenosoft.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1760535715; c=relaxed/simple;
+	bh=0+udvwqXk3pMUuV5a3E5/kGYHpUynWhFjTBJiTghSno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5cDAx/lZpoMmApceU9d17RR+Y3oxksDaKKOrXkf61GtXBEGG9FQV8zrTJ225Ph/V6LsvXQ1vBFt93kkQMv6ArvVW91qWHkIyVQswAtiBW/MoDpjvORpbL4FShdQ3MpmQ2NF5aBQbmF3ogDRzwQ4vT//Z/yhZWUKQyqoHbGQalA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PpEwZzlg; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 1448F22F40;
+	Wed, 15 Oct 2025 15:41:51 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id E3_5OJxubVeS; Wed, 15 Oct 2025 15:41:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1760535710; bh=0+udvwqXk3pMUuV5a3E5/kGYHpUynWhFjTBJiTghSno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PpEwZzlg/BI/Hcu/apLLJ3kweCff9EOMZxnrgY5bOpuzbDqccQExq6wYKeuQofRO+
+	 mY7lXrUNGF6VJohT/qGVoBSByDuCt7XqQZoS/G95emBvViDaROxbUstGqse9DFF0wx
+	 gkDAzng9Hkg0NeGGKv4hlxSefXYKUELcj3TRDXKy5CWM0HUX4e7wqHK0UFYwOAWhld
+	 mdSap61d8i/zp692PPtqoXeoNro/rpY5iH2fUGGdNIM8qSkknwFNqsu6EYaw3px6bH
+	 IhuY9wrfZPwiyy8e9fSJ0I4oTMBvOHMRRyBOoPfrgSX/0u8ZPsUsshUKEU6lXAZ+bk
+	 ki+5cpE/qh6gA==
+Date: Wed, 15 Oct 2025 13:41:31 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Frank <Frank.Sae@motor-comm.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] net: phy: motorcomm: Support YT8531S PHY in
+ YT6801 Ethernet controller
+Message-ID: <aO-kH5-CVt5Gbd3C@pie>
+References: <20251014164746.50696-2-ziyao@disroot.org>
+ <20251014164746.50696-4-ziyao@disroot.org>
+ <aO6Dk0rK0nobGClc@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aO6Dk0rK0nobGClc@shell.armlinux.org.uk>
 
-Hi Christian,
-
-On Wed, 15 Oct 2025 15:14:28 +0200
-Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
-
-> > Am 15 October 2025 at 02:59 pm, Herve Codina <herve.codina@bootlin.com> wrote:
-> > 
-> > Also when it boots, it is not easy to know about the problem root cause.
-> > 
-> > In my case, it was not obvious to make the relationship on my side between
-> > my ping timings behavior and ASPM.
-> > 
-> > Of course 'git bisect' helped a lot but can we rely on that for the average
-> > user?
-> > 
-> > Best regards,
-> > Hervé  
+On Tue, Oct 14, 2025 at 06:08:35PM +0100, Russell King (Oracle) wrote:
+> On Tue, Oct 14, 2025 at 04:47:45PM +0000, Yao Zi wrote:
+> > YT6801's internal PHY is confirmed as a GMII-capable variant of YT8531S
+> > by a previous series[1] and reading PHY ID. Add support for
+> > PHY_INTERFACE_MODE_INTERNAL for YT8531S to allow the Ethernet driver to
+> > reuse the PHY code for its internal PHY.
 > 
-> I think I will revert these modifications for the RC2.
+> If it's known to be connected via a GMII interface, even if it's on the
+> SoC, please use PHY_INTERFACE_MODE_GMII in preference to
+> PHY_INTERFACE_MODE_INTERNAL. PHY_INTERFACE_MODE_INTERNAL is really for
+> "we don't know what the internal interface is".
 
-I don't know what is the future of those modifications but maybe instead
-of fully reverting them, maybe you could perform calls to
- - pcie_clkpm_override_default_link_state() and
- - pcie_aspm_override_default_link_state()
-only if a new Kconfig symbol is enabled.
+I use PHY_INTERFACE_MODE_INTERNAL for the driver based on Andrew's
+feedback[1] on the series submitted by Motorcomm people,
 
-Of course this symbols will be disabled by default but if you want some
-people to test behavior, it could be interesting to have the code
-available in the kernel.
+> Is it really GMII? If so, add GMII to the yt8531 driver.
+>
+> Often this is described as PHY_INTERFACE_MODE_INTERNAL, meaning it
+> does not matter what is being used between the MAC and the PHY, it is
+> internal to the SoC. You might want to add that to the PHY driver.
 
-I don't know, this was just an idea.
+Does PHY_INTERFACE_MODE_INTERNAL mean "unknown interface" or "interface
+that doesn't matter"? I think this could lead to different choices for
+the mode in YT6801's case.
 
-Of course, reverting the patch is simpler than adding this new Kconfig
-symbol.
+Thanks for your answer,
 
 Best regards,
-Hervé
+Yao Zi
+
+> Thanks.
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+[1]: https://lore.kernel.org/all/fde04f06-df39-41a8-8f74-036e315e9a8b@lunn.ch/
 
