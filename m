@@ -1,280 +1,148 @@
-Return-Path: <linux-pci+bounces-38161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88C57BDD2F5
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:46:11 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A231BDD32D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:50:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D77341891533
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 07:46:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DA8EA4ECF59
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 07:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E32E304BC8;
-	Wed, 15 Oct 2025 07:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D083148A2;
+	Wed, 15 Oct 2025 07:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZb4uENY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFq4PluN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303A72C0296;
-	Wed, 15 Oct 2025 07:46:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E9F313E2E;
+	Wed, 15 Oct 2025 07:50:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760514367; cv=none; b=RPXZmlOWZmDXg0jtoS3ih+0cd4JhhZFd1smAFeXOX0dxn749UvzfrTX184Z4TaqPmj1Uy7a+EZZgeTjb8N1jvNZkPHdzgAcE2v6evXwurNXfMmsZHHzgg6eN2USVNISkKnr1STC70Nf+AZgFiHlbwzlHE5gDXc7FDeMvl9dpOc8=
+	t=1760514634; cv=none; b=n8OcsIVp2e4fXs/QFoeQbpilD3n2+Hb0KNz3p/q61cw/2P3C45O/qjKH42MZdkNoHAuXQn62JE+P+RFett5VZ8OCz9p4mbqdEItV4LDbkCsg6la+W9zDMdmKpi9OagTpwSJTtJDxJcnXbF+MJrpIxtFviD5XhWsXdQJMrEn0AeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760514367; c=relaxed/simple;
-	bh=FXxCGMHSbseazrQCYcPIDrNhWuFK4U8Cv/qXKnF+kwY=;
+	s=arc-20240116; t=1760514634; c=relaxed/simple;
+	bh=N+KdJSmTL8JhpieQRxlnbC6Rxa5LC8KfPeDrItfVC1A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rSUlWbILvLsAbN9R813xI1Z3IhinaB/3BbXOAQPjbjAEqsjymEnVqnA41ujwRylItvYi1v6XVtyZogeRgI2mcPrteM1bC69DjpxtungnHrcCp7SMvUw2j7aTt0dv52hbWMXW6F4/xWFmZxgvbb7NcXzesBaqKV5sk8TFi/H6r9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZb4uENY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA96C4CEF8;
-	Wed, 15 Oct 2025 07:46:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQw6ioCUXX2wQeQAUPRF+waqm75zuH+/Q6zmnj+rlMilQShA6bMsjn4j8GQoj01a+0CQUZjBBW6BfWVCTkCco+PGUNFL/bn9F0KVAq/eJOXhuq/PpFgQpwU4vnoIsJHl+5NTMQbE0CFhHuzLozcZ7ZMZ1JD9AZp5yt35ia+vcss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFq4PluN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3CDC4CEF8;
+	Wed, 15 Oct 2025 07:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760514366;
-	bh=FXxCGMHSbseazrQCYcPIDrNhWuFK4U8Cv/qXKnF+kwY=;
+	s=k20201202; t=1760514633;
+	bh=N+KdJSmTL8JhpieQRxlnbC6Rxa5LC8KfPeDrItfVC1A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rZb4uENYfMPKz6ON8rBY5Mda5+j+JTjC63EEdgH4BjNQI0935J1WgvTHUtezuqSWl
-	 b2clk0q7u48bcqZ7XWfIoJ2tTVpbzuZThWfeOJ9IExTlsNuQVhBHjiYUPjGFxK3zXg
-	 cMbbXtM8aZFQCoMmEtTZfAZVTvSU9gp3oX/6TO7+pejkW0wvLdhhOmrWw6HZWqxn54
-	 IlTwJMcxk6GOg5zS60bEneYLmBHUtQgw8DWxDR+GIFeDwSa8H9cUP6Ba3KzXZnbLLy
-	 3yudmXwirei0ZQX9UnEpP6U7c6BAL0pBijnk4oRYlbuwCttvJf8fdbJ8N+N5GXtXAf
-	 rV0vmhJQwZPAw==
-Date: Wed, 15 Oct 2025 09:46:00 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Scott Branden <sbranden@broadcom.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v2 4/4] irqchip/gic-its: Rework platform MSI deviceID
- detection
-Message-ID: <aO9ROPBGC6zF1B+i@lpieralisi>
-References: <20251014095845.1310624-1-lpieralisi@kernel.org>
- <20251014095845.1310624-5-lpieralisi@kernel.org>
- <87ecr5xv9w.wl-maz@kernel.org>
+	b=SFq4PluNMb3ZTq1LSh3igXo6xNp00Fu9larjvGLpNnmxT0zX80tUE7p0BQc2oonmg
+	 u+7REggKqKVjKJDAecTZYIMF7Xjq8SkHUwHmSUnyTDMHI3FREcrYMtESr9l3kiJnQi
+	 y3FXKtVzboRvHpvEqKOfHN337IO+djyYCmcQ34qP67FK5J6VlEYMIXHL/kDe2jUuf0
+	 Nu5GCbaARvK3xRfsIMmweCuilsHJ/6nQ4TNeDtYFZWP9ypiFOxEpQ8brXEV9NBvlIB
+	 KJVqsWzD1PHI7QvPve9VKFGKcL/kSy2IGc3GNA0xXeXyFlb6vby6bpQ0wYpnvqk5DP
+	 2lZDyc5Em93Zw==
+Date: Wed, 15 Oct 2025 13:20:17 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: FUKAUMI Naoki <naoki@radxa.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Chia-Lin Kao <acelan.kao@canonical.com>, 
+	Dragan Simic <dsimic@manjaro.org>, linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
+References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
+ <20251014184905.GA896847@bhelgaas>
+ <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
+ <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87ecr5xv9w.wl-maz@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
 
-On Tue, Oct 14, 2025 at 06:12:11PM +0100, Marc Zyngier wrote:
-> On Tue, 14 Oct 2025 10:58:45 +0100,
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Wed, Oct 15, 2025 at 04:13:41PM +0900, FUKAUMI Naoki wrote:
+> Hi,
+> 
+> On 10/15/25 15:26, Manivannan Sadhasivam wrote:
+> > On Tue, Oct 14, 2025 at 01:49:05PM -0500, Bjorn Helgaas wrote:
+> > > [+cc regressions]
+> > > 
+> > > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> > > > Hi Manivannan Sadhasivam,
+> > > > 
+> > > > I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> > > > Rockchip RK3588(S) SoC.
+> > > > 
+> > > > When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> > > > freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> > > > different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> > > > MT7921E, and Intel AX210.
+> > > > 
+> > > > I've found that reverting the following commit (i.e., the patch I'm replying
+> > > > to) resolves the problem:
+> > > > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+> > > 
+> > > Thanks for the report, and sorry for the regression.
+> > > 
+> > > Since this affects several devices from different manufacturers and (I
+> > > assume) different drivers, it seems likely that there's some issue
+> > > with the Rockchip end, since ASPM probably works on these devices in
+> > > other systems.  So we should figure out if there's something wrong
+> > > with the way we configure ASPM, which we could potentially fix, or if
+> > > there's a hardware issue and we need some king of quirk to prevent
+> > > usage of ASPM on the affected platforms.
+> > > 
 > > 
-> > Current code retrieving platform devices MSI devID in the GIC ITS MSI
-> > parent helpers suffers from some minor issues:
+> > I believe it is the latter. The Root Port is having trouble with ASPM.
 > > 
-> > - It leaks a struct device_node reference
-> > - It triggers an excessive WARN_ON on wrong of_phandle_args count detection
+> > FUKAUMI Naoki, could you please share the 'sudo lspci -vv' output so that we
+> > know what kind of Root Port we are dealing with? You can revert the offending
+> > patch and share the output.
 > 
-> Well, if your DT is that rotten, maybe you actually deserve some
-> console spamming, don't you think?
-
-Yes from that standpoint it would make sense to leave the WARN_ON there,
-I can add it back.
-
-> > - It is duplicated between GICv3 and GICv5 for no good reason
-> > - It does not use the OF phandle iterator code that simplifies
-> >   the msi-parent property parsing
-> > 
-> > Implement a helper function that addresses the full set of issues in one go
-> > by consolidating GIC v3 and v5 code and converting the msi-parent parsing
-> > loop to the more modern OF phandle iterator API, fixing the
-> > struct device_node reference leak in the process.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Sascha Bischoff <sascha.bischoff@arm.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Frank Li <Frank.Li@nxp.com>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/irqchip/irq-gic-its-msi-parent.c | 98 ++++++++----------------
-> >  1 file changed, 33 insertions(+), 65 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
-> > index eb1473f1448a..a65f762b7dd4 100644
-> > --- a/drivers/irqchip/irq-gic-its-msi-parent.c
-> > +++ b/drivers/irqchip/irq-gic-its-msi-parent.c
-> > @@ -142,83 +142,51 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
-> >  #define its_v5_pci_msi_prepare	NULL
-> >  #endif /* !CONFIG_PCI_MSI */
-> >  
-> > -static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-> > -				  u32 *dev_id)
-> > +static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-> > +				phys_addr_t *pa, bool is_v5)
-> >  {
-> > -	int ret, index = 0;
-> > +	struct of_phandle_iterator it;
-> > +	uint32_t args;
+> Here is dmesg/lspci output on ROCK 5A(RK3588S):
+>  https://gist.github.com/RadxaNaoki/1355a0b4278b6e51a61d89df7a535a5d
 > 
-> Use u32, this is not userspace-visible (the OF code will cope). And
-> move it to where it matters instead of having such a wide scope.
 
-Ok.
+Thanks! Could you please try the below diff with f3ac2ff14834 applied?
 
-> > +	int ret;
-> >  
-> >  	/* Suck the DeviceID out of the msi-parent property */
-> > -	do {
-> > -		struct of_phandle_args args;
-> > +	of_for_each_phandle(&it, ret, dev->of_node, "msi-parent", "#msi-cells", -1) {
-> > +		/* GICv5 ITS domain matches the MSI controller node parent */
-> > +		struct device_node *np __free(device_node) = is_v5 ? of_get_parent(it.node)
-> > +							     : of_node_get(it.node);
-> >  
-> > -		ret = of_parse_phandle_with_args(dev->of_node,
-> > -						 "msi-parent", "#msi-cells",
-> > -						 index, &args);
-> > -		if (args.np == irq_domain_get_of_node(domain)) {
-> > -			if (WARN_ON(args.args_count != 1))
-> > -				return -EINVAL;
-> > -			*dev_id = args.args[0];
-> > -			break;
-> > +		if (np == irq_domain_get_of_node(domain)) {
-> > +			if (of_phandle_iterator_args(&it, &args, 1) != 1) {
-> > +				dev_warn(dev, "Bogus msi-parent property\n");
-> > +				ret = -EINVAL;
-> > +			}
-> > +
-> > +			if (!ret && is_v5)
-> > +				ret = its_translate_frame_address(it.node, pa);
-> 
-> Why do you need this is_v5 hack, since the only case were you pass a
-> pointer to get the translate register address is for v5?
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 214ed060ca1b..0069d06c282d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+  */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
 
-Yep, I thought about this what you are suggesting makes sense - is_v5 is
-useless (and terrible).
++
++static void quirk_disable_aspm_all(struct pci_dev *dev)
++{
++       pci_info(dev, "Disabling ASPM\n");
++       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
++}
++
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ROCKCHIP, 0x3588, quirk_disable_aspm_all);
++
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+  * Link bit cleared after starting the link retrain process to allow this
 
-> > +
-> > +			if (!ret)
-> > +				*dev_id = args;
-> > +
-> > +			of_node_put(it.node);
-> > +			return ret;
-> >  		}
-> > -		index++;
-> > -	} while (!ret);
-> > -
-> > -	if (ret) {
-> > -		struct device_node *np = NULL;
-> > -
-> > -		ret = of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, dev_id);
-> > -		if (np)
-> > -			of_node_put(np);
-> >  	}
-> >  
-> > -	return ret;
-> > +	struct device_node *msi_ctrl __free(device_node) = NULL;
-> > +
-> > +	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
-> > +}
-> > +
-> > +static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-> > +			      u32 *dev_id)
-> > +{
-> > +	return __of_pmsi_get_dev_id(domain, dev, dev_id, NULL, false);
-> >  }
-> 
-> At this stage, we really don't need these on-liners, as they only
-> obfuscate the logic. Just use the main helper directly. Something like
-> the hack below.
 
-That makes sense.
+From your previous comment, I believe the Root Port is having the issues with
+ASPM as you seem to have tried connecting different devices to the slot. So I
+disabled ASPM for the Root Port with the above diff.
 
-Thanks !
-Lorenzo
+- Mani
 
-> 
-> 	M.
-> 
-> diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
-> index a65f762b7dd4d..7c82fd152655e 100644
-> --- a/drivers/irqchip/irq-gic-its-msi-parent.c
-> +++ b/drivers/irqchip/irq-gic-its-msi-parent.c
-> @@ -142,26 +142,27 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
->  #define its_v5_pci_msi_prepare	NULL
->  #endif /* !CONFIG_PCI_MSI */
->  
-> -static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-> -				phys_addr_t *pa, bool is_v5)
-> +static int of_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev, u32 *dev_id,
-> +				phys_addr_t *pa)
->  {
->  	struct of_phandle_iterator it;
-> -	uint32_t args;
->  	int ret;
->  
->  	/* Suck the DeviceID out of the msi-parent property */
->  	of_for_each_phandle(&it, ret, dev->of_node, "msi-parent", "#msi-cells", -1) {
->  		/* GICv5 ITS domain matches the MSI controller node parent */
-> -		struct device_node *np __free(device_node) = is_v5 ? of_get_parent(it.node)
-> +		struct device_node *np __free(device_node) = pa ? of_get_parent(it.node)
->  							     : of_node_get(it.node);
->  
->  		if (np == irq_domain_get_of_node(domain)) {
-> +			u32 args;
-> +
->  			if (of_phandle_iterator_args(&it, &args, 1) != 1) {
->  				dev_warn(dev, "Bogus msi-parent property\n");
->  				ret = -EINVAL;
->  			}
->  
-> -			if (!ret && is_v5)
-> +			if (!ret && pa)
->  				ret = its_translate_frame_address(it.node, pa);
->  
->  			if (!ret)
-> @@ -177,18 +178,6 @@ static int __of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev, u
->  	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
->  }
->  
-> -static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
-> -			      u32 *dev_id)
-> -{
-> -	return __of_pmsi_get_dev_id(domain, dev, dev_id, NULL, false);
-> -}
-> -
-> -static int of_v5_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev,
-> -				   u32 *dev_id, phys_addr_t *pa)
-> -{
-> -	return __of_pmsi_get_dev_id(domain, dev, dev_id, pa, true);
-> -}
-> -
->  int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
->  {
->  	return -1;
-> @@ -202,7 +191,7 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
->  	int ret;
->  
->  	if (dev->of_node)
-> -		ret = of_pmsi_get_dev_id(domain->parent, dev, &dev_id);
-> +		ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, NULL);
->  	else
->  		ret = iort_pmsi_get_dev_id(dev, &dev_id);
->  	if (ret)
-> @@ -230,7 +219,7 @@ static int its_v5_pmsi_prepare(struct irq_domain *domain, struct device *dev,
->  	if (!dev->of_node)
->  		return -ENODEV;
->  
-> -	ret = of_v5_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
-> +	ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
->  	if (ret)
->  		return ret;
->  
-> 
-> -- 
-> Jazz isn't dead. It just smells funny.
+-- 
+மணிவண்ணன் சதாசிவம்
 
