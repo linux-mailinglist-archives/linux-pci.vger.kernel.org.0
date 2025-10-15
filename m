@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-38143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0C4ABDCFA1
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:26:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B1FDBDD034
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A459218894FB
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 07:24:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE3813B4978
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 07:24:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14EAF31D371;
-	Wed, 15 Oct 2025 07:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6467031D394;
+	Wed, 15 Oct 2025 07:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g77XikqK"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fhajyw10"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA903164C7;
-	Wed, 15 Oct 2025 07:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8F9318136;
+	Wed, 15 Oct 2025 07:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760512751; cv=none; b=VHgkq2Lt3GoOO0np4cfkAIr/tEYKQPP5yMQybeC6qCld2B4L5ameTg5X/3O5yNJnlTNWfESZ2oD8XjykkHWXxIs65au39NUBduMOC/VRHIOR5BbtuJiZDbow0jsM/Uv94yz4+/uKHmeO1IrtPGKsbBvdA4kDYKImQ4W8OrE+tCE=
+	t=1760512762; cv=none; b=PqmUGOs1Ct2UqvoakX1DWmdFQ8ZajzDvW+1br5V+bH5VZXpAWXtHucSfj4g5EBwEJ23c9E8lOKiWOBmuN47vip/dxLFsmKxHpSJN+5YZ8zyJ31rC1Al/Bt6uNH1afX3CXwqkeJLfOXZlQlA7cZmAlMxeoHpaV3t0vnRhG+bTN9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760512751; c=relaxed/simple;
-	bh=HRUGqe3/wYEwjDvu6WRYuB71ahKPNG4tl/S2vqCFInc=;
+	s=arc-20240116; t=1760512762; c=relaxed/simple;
+	bh=h27YkAkFmaaO9z5SDi8KAHY7HfIzJmKXF0EeRIM9YYw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RCgPDWLS4osqz1WqS+s9PFXrL08M03mGLkFk+gMS1O3X1F49VvZ3zkhls8ipj3CtEqeT9PvUkt1SxeHe4OV9UpNoCx2LQoeuVkM2n0XhfZBzdVkUceV6yhB08B+pNDOgPcW29A4zlx/OiVG9IULW1rofkHGeR14GoCRYbNgcdCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g77XikqK; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=kSH0G8wv0w3xUWeHP2OsW6aL+ipnVFVX/6Lua7JZvP4FExmH73N5CFyCRkh08diU/GkmS2EW8u83qbem27iIsBEc6iHyjRkQ5DeLac1TLVGDyKnHbqeUgqPPyM4XiMPSetpyAjntnucg8FmY1IUrYQIHgCBvskRBjsZiof5/3Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fhajyw10; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 6B35F1A13AB;
-	Wed, 15 Oct 2025 07:19:07 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id DF8C61A13AA;
+	Wed, 15 Oct 2025 07:19:18 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 330C3606F9;
-	Wed, 15 Oct 2025 07:19:07 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B6134102F22BB;
-	Wed, 15 Oct 2025 09:18:53 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B5A8D606FA;
+	Wed, 15 Oct 2025 07:19:18 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3DAAB102F22BF;
+	Wed, 15 Oct 2025 09:19:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760512744; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1760512755; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=8oye/BS/7lokyQFTkCdWhwFQUaZg7jsALi3CORixdq4=;
-	b=g77XikqKP8iV5lmw0lJf8rqlipgj5dYEJ9LrZW43YJM9j6sfrnY4mDcYgBqLokrRMOr8mI
-	yrmXa2rBcbDYq8UzJXJEBHxq5if5TnLmY40I5SmFoupxVl48kKq2PclNO/kXiHmOz2Y7mo
-	z/RWCx99AoYoEPov8cHyF/IU5/JnJZeGGnVR5rVAB/3qu8H5H+DATOinJ+Evhi/PsW0LDh
-	qFHiU7vC8GD7rgWYW7+wMpD35q9+CsFF81bwZjJKrU+0LKWzgIeTIXX+rDJ44Qd7m6J1WE
-	4YgLwTpHA2c7jHIAV5Ue5uCwevZNAPvEY2nNWBzlUQiNuoOf2BaSku5oCO1yLw==
+	bh=y9DaiWzLiow70LlXauI/CfyUS2lb/2K9p90X1QtJ9vA=;
+	b=fhajyw10Tsn61Sv7TL5x22+7CQ33mJejCurUlOypsJCcHV14kSkX6bwPVi+KHeM0AhaViw
+	z7uIldRHoYTWOHIbeyENHb1hCfNfs3usairLMI4CAABsPAm63e8c2k8uw+agmxHJQjcVMq
+	nqzySsots2KDTbTz5Pd3r+hj2Xdp2gmmPZvnuR5oM3eeQJELZ/jDZBUOGavzxsCTX7XJJV
+	IuPH0cDB8T1t5jeiuLbXW2VQOPOu3G45c4B9GImEOXNkvdktlom4YxcJIPBX/R9SGjQEpS
+	f2wrqYayb37zNeiVPpt0AjBbwcE33FgR+NUwbbvhNkVWtCs3WmdHwX6vdYUFpg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -108,9 +108,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v4 14/29] PCI: of: Set fwnode device of newly created PCI device nodes
-Date: Wed, 15 Oct 2025 09:14:01 +0200
-Message-ID: <20251015071420.1173068-15-herve.codina@bootlin.com>
+Subject: [PATCH v4 15/29] PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge node
+Date: Wed, 15 Oct 2025 09:14:02 +0200
+Message-ID: <20251015071420.1173068-16-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251015071420.1173068-1-herve.codina@bootlin.com>
 References: <20251015071420.1173068-1-herve.codina@bootlin.com>
@@ -123,45 +123,53 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
-node are created and filled based on PCI core information but the
-fwnode device field is not set.
+During the instantiation of devices described by a device-tree overlay
+applied on a PCI device, devlink displays the following kind of debug
+messages instead of creating the expected links:
+   'Not linking xxxx - might never become dev'
 
-When later an overlay is applied, this confuses fw_devlink. Indeed,
-without any device attached to the node, fw_devlink considers that this
-node will never become a device. When this node is pointed as a
-supplier, devlink looks at its ancestors in order to find a node with a
-device that could be used as the supplier.
+Without those expected links, the device removal order cannot be
+correct.
 
-In the PCI use case, this leads to links that wrongly use the PCI root
-bridge device as the supplier instead of the expected PCI device.
+Those debug traces are printed by fw_devlink_create_devlink(). In our
+use case, they are all printed because the supplier of the link has at
+least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+set.
 
-Setting the fwnode device to the device of the PCI device allows devlink
-to use this device as a supplier and so, correct links are created.
+The culprit ancestor is the PCI root bridge.
+
+The fwnode related to the PCI root bridge is created dynamically by the
+of_pci_make_host_bridge_node() function. During this creation
+fwnode_dev_initialized() is called which set the FWNODE_FLAG_INITIALIZED
+flag.
+
+Calling fwnode_dev_initialized() tells devlink that the device related
+to this node is handled out of the driver core. This is not correct in
+our case. Indeed the device related to this firmware node is handled
+using driver core mechanisms and is fully compliant devlink
+expectations.
+
+Simply remove the fwnode_dev_initialized() call. With that done, the
+devlink debug messages are no more displayed and links that were missing
+are correctly created.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/pci/of.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/of.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 95baa29d4c2d..bbbab115d47f 100644
+index bbbab115d47f..6b45eca63904 100644
 --- a/drivers/pci/of.c
 +++ b/drivers/pci/of.c
-@@ -709,6 +709,13 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- 	if (ret)
- 		goto out_free_node;
+@@ -811,7 +811,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+ 	 */
+ 	of_node_set_flag(np, OF_POPULATED);
+ 	fw_devlink_set_device(&np->fwnode, &bridge->dev);
+-	fwnode_dev_initialized(&np->fwnode, true);
  
-+	/*
-+	 * Set the fwnode device in order to have fw_devlink creating links
-+	 * pointing to this PCI device instead of walking up to the PCI host
-+	 * bridge.
-+	 */
-+	fw_devlink_set_device(&np->fwnode, &pdev->dev);
-+
  	ret = of_changeset_apply(cset);
  	if (ret)
- 		goto out_free_node;
 -- 
 2.51.0
 
