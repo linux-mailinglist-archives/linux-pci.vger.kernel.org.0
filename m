@@ -1,180 +1,295 @@
-Return-Path: <linux-pci+bounces-38100-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38101-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 925E3BDC0DD
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 03:52:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A819EBDC28E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 04:35:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDE97423185
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 01:51:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FEE43AB51A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 02:35:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3106303CBB;
-	Wed, 15 Oct 2025 01:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00EA02E1F03;
+	Wed, 15 Oct 2025 02:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i2E5z5A1"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="N9xVC8VK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D6E2FB985
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 01:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F5C2C859;
+	Wed, 15 Oct 2025 02:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760493043; cv=none; b=Q5PN43AVqb73CVDGuhHBeac8H7l8g43mxviNai4cEYQLATX9d+Zm7DxRTqtjEARL3LrwgRgc+qxdmdYoP5GgbRhANqz5xj83RDSsJkRPO0yviWEjcuJUy7/KrjPu5Yauwnsk+XCWMxNHrSpHODkGNntkS3Q89eSJYWzmjF4+ztI=
+	t=1760495745; cv=none; b=WREnkXNWetBnbLYb6Tw/MsL+DGjOO+M2DxxB7vojy2qfh0WaCrkaT+WPZfVIj8vp2pX5g8TIAjPfOOvvWbHizN7xbyjEyzY0/DPTmCgjdtkaU7nWznDnniLM4JK0v4y/Ts3vTZxrYp3vK/3fplg+1MXr46zzpFbMYqNKKdO+8is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760493043; c=relaxed/simple;
-	bh=gNxKy/NFi3oZdFH8CChq1eOS0b44Am5j10TI+FhWK5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuamEQupyf8aUhyGBQr2yz+T0voD5IOH3f0Lfx1rQad6gAq67NHH+eQbe1FyUG2id16CF1Cvwk613D6BzQ7iBZVpbHXpUqFS0VxHtPiY9JmGTcUYLb6+sPifTzis8zD1Q9fVEv1YPRSd00Y80JLZFKNVEmDpx/xsEHR9TgtVgqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i2E5z5A1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59EKRX0C001996
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 01:50:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=UMEzdqx389JwWZAC4l4+WiOd
-	cOP/xrB76GzYftznSis=; b=i2E5z5A1AJr+3WMXNSpHS5OQmEQ5TI8D3PaJb/aP
-	VEJ3AWrvK6LmI7BmQzaTUQsU0TxenSwIb0iJN9Dfme8KZ2rfl+eKHG5JcF5abg9g
-	5BN45OESyyfyeSaXKdeq7+aZcYfRjE31nh9lIuFWoAIbfvDF/09IfwAMJ75c/qON
-	0fPJ80iUNH2ESJeEEo1UMEZkz9VX//KwjqGK8HxArEFmGWqxH7v0oeLsigrFWA7n
-	TQyTlZWLcvjf/l9+ZIcgh7V4NacRhYN8NkxsLlJVFUTCKI6J0Nj5QAUB1W0NDhQa
-	xhEAZVfwgkPVJxFceitZGFAR5DQiKeoXCn1cgP6lcQDJVg==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49qff0tn3m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 15 Oct 2025 01:50:41 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-339ee7532b9so26895647a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 14 Oct 2025 18:50:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760493040; x=1761097840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UMEzdqx389JwWZAC4l4+WiOdcOP/xrB76GzYftznSis=;
-        b=uQ6LxTA6dBm6zoOyX+VBKDgY/CBxRQRGCFyFWJh4KUu5x1A+U5PPZZvLLgXYTV0od0
-         lgIMAlfUbP0tTpBjAB096Uvfrbsey9KvN/zFJvdrGESuztVzH8NK5fbOMO70wVoBpeV9
-         AA6dSYmmM/cK/RVw04QetrBc2O8aEE0zaO9qkpiG9cMKBcz6Csw4O5ZQxwxEZVmlmcfp
-         hvWfRVeDAGACUfeKaX1TvbLptJEk1M2RBuM+JuRcQTWKxy736fJ6+EGh9oPSu81roOx9
-         4BnmVjhY0eGD/Ka4ZYK+g+TAfHTs6DxsrUR0VQPJcZLD9f2gKfvhqUTtH9VcMBm+kLCC
-         Xviw==
-X-Forwarded-Encrypted: i=1; AJvYcCVf/l1plKkH933SoAmIvpBRoVd/G4XmxhH9h2Q2Ti4mJ0wtfTBSCaYbJhY5nuty7zLcTYq4aJbjAtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXt3M752672TEQgxzR9BXflXsuQuITbk/d9dJQeiVIiDdqknAg
-	MWhyHv6TpVuXCwYlpEbhjMrZrFIwqpz7e6Tb++S8d/byDa8CxcmldYh/IXFnUeT4p7GYJx+dLl+
-	yuiVo1amG09AJ+f99QUdgQbcMed8Gg9/Ocrlt0jWv/98RrUos4uZbqJ+2BuDLrWk=
-X-Gm-Gg: ASbGnctJuuSMYy75JuBK6QfdfyXsUkIIj6scemNSm5CwOsA91sfGx9k/mHwkdHeLGUN
-	Od8iII8DnlLJfkreiJFXzzfKJsV5O0RVeMKP6c9AB8SfPHs9ndm6xv1ozOwgBkrdItV9JXvyEeN
-	GsRdpltqUUDFoZAZrnXm/djSsybB3q/Jlg8+MKYK9ZTuqjfozTcqSVRM41qT4Yi9Jla/Wn0FJnv
-	BI44Ko3cQmcpFJtrR66C1D9UTf/VrJrWHjMOrUJ+lPLQnTtsNUlBtJ7u6fzIwRFisjhK6Uu63LA
-	LEbO6Y83/2aM6fZ3JekozWjCuqNMlyroTIMy1dsFW+kJzZpkVxPZsVqepVzo16CtTjRM4irg+Rs
-	ge/ex1HBNkUE=
-X-Received: by 2002:a17:90b:3911:b0:32e:7512:b680 with SMTP id 98e67ed59e1d1-33b51106b22mr34953988a91.1.1760493040361;
-        Tue, 14 Oct 2025 18:50:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnWtUi1/KGA/NsDwkjYP6WaNDZmXwB3TkYReHzrYgQhIYsKu3zKwyltFcVs6Z4M1leDOIagg==
-X-Received: by 2002:a17:90b:3911:b0:32e:7512:b680 with SMTP id 98e67ed59e1d1-33b51106b22mr34953966a91.1.1760493039927;
-        Tue, 14 Oct 2025 18:50:39 -0700 (PDT)
-Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b9787a0d1sm317573a91.19.2025.10.14.18.50.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Oct 2025 18:50:39 -0700 (PDT)
-Date: Tue, 14 Oct 2025 18:50:37 -0700
-From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Wenbin Yao <wenbin.yao@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        konrad.dybcio@oss.qualcomm.com,
-        Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: PCI: qcom: Document the Glymur PCIe
- Controller
-Message-ID: <aO797ZyWIrm0jx2y@hu-qianyu-lv.qualcomm.com>
-References: <20250903-glymur_pcie5-v4-0-c187c2d9d3bd@oss.qualcomm.com>
- <20250903-glymur_pcie5-v4-2-c187c2d9d3bd@oss.qualcomm.com>
- <w2r4yh2mgdjytteawyyh6h3kyxy36bnbfbfw4wir7jju7grldx@rypy6qjjy3a3>
- <7dadc4bb-43a1-4d53-bd6a-68ff76f06555@kernel.org>
+	s=arc-20240116; t=1760495745; c=relaxed/simple;
+	bh=+hhfMkLoMzMaCFC05rGhJGah8vukF2mAJqtg4s3GI4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vya8+TqsXkosCveSCc9OWjx9TmvkoqdJM8Kr2NpyFZtsZbQQK/Pf2H3+OTFfSEvH/BgDa/jgRyyjVxlcA0Jv+j/tHJH1NP7ro5aQcU83UO/+qKZKGmDT2STLGpJJk5D4V8Vjux5u7G4F2jhFVe/IwOBd9Ohi91aGBEJV32FSD6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=N9xVC8VK; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760495739; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=tFB5nfDGfzav+SVFX4uGXGTnZIQxoYbB9Vh1ZlCmm9U=;
+	b=N9xVC8VKDNUZKS17MCkswoU60YccOK6dV8mWEuz2JzliAZDVb6jECKdTF4hCDc4jVSR50yk3AtbBI7oF3Wd/nkXwwRahVili1BYJXEVNGTMzGRXIOLj2JJmwRRwsE0Z6DHYg0+MQE7C8CWckITsUY7JXxD2ITNZEQR3Ys/O3Zx0=
+Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqEPCuw_1760495736 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Oct 2025 10:35:38 +0800
+Message-ID: <a7dcde2d-c0e8-4a6e-ab31-1a263f855037@linux.alibaba.com>
+Date: Wed, 15 Oct 2025 10:35:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7dadc4bb-43a1-4d53-bd6a-68ff76f06555@kernel.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxOCBTYWx0ZWRfX0n3ujnXaoE1K
- f+xrdgz4qr3XhAjN/M16Sas7MGjY2cEoaZgxZkvWJzoRIau40MlYIr3DjDmtayixEyrWKlRkML3
- GsIZGRHUYoqpxn+tB6T3bvQ+kJn19ehOPFTzbBJB5DuoAgpLCHSE7h4aJLB2NamDh48qoZpcrte
- 8vdYSSeLHATN9iv9iN2rJ49Y0EsrqbUg2R9RuLzeR+/hgjVgq/Dri0eEwywE7k2cqJmQhyXp6xB
- ogyP+9JT18Rw2Iaf1VL0t3ml0wTov/RLC52X+Qn8rOJtJw2TF3ef1pXX9HxZn40ZMCwvTZVleCT
- 9jmZB3Im74VWtwF8Ts5WlED2BaVlE3dEsCIBcDR/Q==
-X-Proofpoint-GUID: Zlxhcgj1pH_QTxyxOGBurSkPFV18b9-s
-X-Authority-Analysis: v=2.4 cv=PriergM3 c=1 sm=1 tr=0 ts=68eefdf1 cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=kj9zAlcOel0A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=gEfo2CItAAAA:8 a=DgPuKSVeHQMGQ7iqIbYA:9
- a=CjuIK1q_8ugA:10 a=uKXjsCUrEbL0IQVhDsJ9:22 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-ORIG-GUID: Zlxhcgj1pH_QTxyxOGBurSkPFV18b9-s
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-15_01,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510020000
- definitions=main-2510110018
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 1/3] PCI: trace: Add a generic RAS tracepoint for
+ hotplug event
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com, bhelgaas@google.com, tony.luck@intel.com,
+ bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, mark.rutland@arm.com, peterz@infradead.org,
+ tianruidong@linux.alibaba.com
+References: <20251014123159.57764-1-xueshuai@linux.alibaba.com>
+ <20251014123159.57764-2-xueshuai@linux.alibaba.com>
+ <20251014114029.4c59bb1a@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20251014114029.4c59bb1a@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Oct 12, 2025 at 05:01:45AM +0200, Krzysztof Kozlowski wrote:
-> On 11/10/2025 14:15, Abel Vesa wrote:
-> >>  
-> >>  properties:
-> >>    compatible:
-> >> -    const: qcom,pcie-x1e80100
-> >> +    oneOf:
-> >> +      - const: qcom,pcie-x1e80100
-> >> +      - items:
-> >> +          - enum:
-> >> +              - qcom,glymur-pcie
-> >> +          - const: qcom,pcie-x1e80100
-> >>  
-> > 
-> > The cnoc_sf_axi clock is not found on Glymur, at least according to this:
-> > 
-> > https://lore.kernel.org/all/20250925-v3_glymur_introduction-v1-19-24b601bbecc0@oss.qualcomm.com/
-> > 
-> > And dtbs_check reports the following:
-> > 
-> > arch/arm64/boot/dts/qcom/glymur-crd.dtb: pci@1b40000 (qcom,glymur-pcie): clock-names: ['aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'noc_aggr'] is too short
-> >         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-> > 
-> > One more thing:
-> > 
-> > arch/arm64/boot/dts/qcom/glymur-crd.dtb: pci@1b40000 (qcom,glymur-pcie): max-link-speed: 5 is not one of [1, 2, 3, 4]
-> >         from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml#
-> > 
+
+
+在 2025/10/14 23:40, Steven Rostedt 写道:
+> On Tue, 14 Oct 2025 20:31:57 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 > 
-> So that's another Glymur patch which wasn't ever tested?
-
-I tested all of these patch and also did dtb checks. That's how I found
-cnoc_sf_axi clock is not required. There was a discussion about whether we
-need to limit max speed to 16 GT and I limited it. I may forget to do dtb
-checks again after changing it to 32 GT. Let me push another patch to fix
-this.
-
-- Qiang Yu
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> and surprise link downs can significantly impact system performance and
+>> reliability.
+>>
+>> Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
+>> for hotplug event to help health checks. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The following output is generated when a device is hotplugged:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>     irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_PRESENT
+>>
+>>     irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_UP
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>   drivers/pci/Makefile              |  3 ++
+>>   drivers/pci/hotplug/pciehp_ctrl.c | 31 ++++++++++++---
+>>   drivers/pci/trace.c               | 11 ++++++
+>>   include/trace/events/pci.h        | 63 +++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci.h          |  7 ++++
+>>   5 files changed, 109 insertions(+), 6 deletions(-)
+>>   create mode 100644 drivers/pci/trace.c
+>>   create mode 100644 include/trace/events/pci.h
+>>
+>> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+>> index 67647f1880fb..58a4e4ea76b0 100644
+>> --- a/drivers/pci/Makefile
+>> +++ b/drivers/pci/Makefile
+>> @@ -45,3 +45,6 @@ obj-y				+= controller/
+>>   obj-y				+= switch/
+>>   
+>>   subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+>> +
+>> +CFLAGS_trace.o := -I$(src)
+>> +obj-$(CONFIG_TRACING)		+= trace.o
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index bcc938d4420f..7805f697a02c 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/types.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pci.h>
+>> +#include <trace/events/pci.h>
+>>   
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>> @@ -244,12 +245,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case ON_STATE:
+>>   		ctrl->state = POWEROFF_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+>> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>>   				  slot_name(ctrl));
+>> -		if (events & PCI_EXP_SLTSTA_PDC)
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_DOWN);
 > 
-> Best regards,
-> Krzysztof
+> I know this is v12 and I don't remember if I suggested this before and you
+> gave me a reason already, 
+
+
+Aha, in our previous email discussions regarding the tracepoint
+implementation, you provided many constructive suggestions, so I added
+the Suggested-by tag. Perhaps I misunderstood the meaning of
+Suggested-by - I will drop it.
+
+
+> but why not simply pass in "ctrl" and have the
+> TRACE_EVENT() denote the names?
+
+Sure, I will send a version.
+
+>> +		}
+>> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>> +		}
+>>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>>   		break;
+>>   	default:
+>> @@ -269,6 +278,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   					      INDICATOR_NOOP);
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>>   		}
+>>   		mutex_unlock(&ctrl->state_lock);
+>>   		return;
+>> @@ -281,12 +293,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case OFF_STATE:
+>>   		ctrl->state = POWERON_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (present)
+>> +		if (present) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>>   				  slot_name(ctrl));
+>> -		if (link_active)
+>> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>> -				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_PRESENT);
+>> +		}
+>> +		if (link_active) {
+>> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_UP);
+>> +		}
+>>   		ctrl->request_result = pciehp_enable_slot(ctrl);
+>>   		break;
+>>   	default:
+>> diff --git a/drivers/pci/trace.c b/drivers/pci/trace.c
+>> new file mode 100644
+>> index 000000000000..cf11abca8602
+>> --- /dev/null
+>> +++ b/drivers/pci/trace.c
+>> @@ -0,0 +1,11 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Tracepoints for PCI system
+>> + *
+>> + * Copyright (C) 2025 Alibaba Corporation
+>> + */
+>> +
+>> +#include <linux/pci.h>
+>> +
+>> +#define CREATE_TRACE_POINTS
+>> +#include <trace/events/pci.h>
+>> diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
+>> new file mode 100644
+>> index 000000000000..208609492c06
+>> --- /dev/null
+>> +++ b/include/trace/events/pci.h
+>> @@ -0,0 +1,63 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM pci
+>> +
+>> +#if !defined(_TRACE_HW_EVENT_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_HW_EVENT_PCI_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +#define PCI_HOTPLUG_EVENT						\
+>> +	EM(PCI_HOTPLUG_LINK_UP,			"LINK_UP")		\
+>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"LINK_DOWN")		\
+>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"CARD_PRESENT")		\
+>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"CARD_NOT_PRESENT")
+>> +
+>> +/* Enums require being exported to userspace, for user tool parsing */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+>> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+>> +
+>> +PCI_HOTPLUG_EVENT
+>> +
+>> +/*
+>> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+>> + * that will be printed in the output.
+>> + */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	{a, b},
+>> +#define EMe(a, b)	{a, b}
+>> +
+>> +TRACE_EVENT(pci_hp_event,
+>> +
+>> +	TP_PROTO(const char *port_name,
+>> +		 const char *slot,
+>> +		 const int event),
+>> +
+>> +	TP_ARGS(port_name, slot, event),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(	port_name,	port_name	)
+>> +		__string(	slot,		slot		)
+>> +		__field(	int,		event	)
+>> +	),
+> 
+> 	TP_PROTO(struct controller *ctrl, int event),
+> 
+> 	TP_ARGS(ctrl, event),
+> 
+> 	TP_STRUCT__entry(
+> 		__string(	port_name,	pci_name(ctrl->pcie->port)	)
+> 		__string(	slot,		slot_name(ctrl)			)
+> 		__field(	int,		event				)
+> 	),
+> 
+> It would move the work out of the calling path.
+> 
+
+I see.
+
+> -- Steve
+
+
+Thanks.
+
+Best Regards,
+Shuai
 
