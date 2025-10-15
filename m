@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-38163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 052A2BDD47C
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 10:02:40 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74D06BDD470
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 10:02:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FFC24074B5
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 08:02:30 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 20E90353CF1
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 08:02:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6E02C3252;
-	Wed, 15 Oct 2025 08:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1634A2C21F6;
+	Wed, 15 Oct 2025 08:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dH5tCCvS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TAFAN/mN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77262BEFF0;
-	Wed, 15 Oct 2025 08:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550522BEFF0;
+	Wed, 15 Oct 2025 08:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760515348; cv=none; b=KFHKIz6B88mExnJz9uH80BUP/DW09+tHSpQ6XvCJGAuo1Ej2FE8ez8L1jW77Q5ImhLxVarYNERSEElsf+qv3+TbxxeRbPLj10H/PgntRLh7p2TAIuckGzaqvVjsps69H4QjnZHsOdTSo2rj31/XN9oxwEDPBjWnAO99aqLyvFlY=
+	t=1760515351; cv=none; b=oAgXOF5Q21Kw6XxwppH+wIopyVnO/X0KwCXUxqO2i2xaSJlwdrMw9ru3oBtz18G5NyDSD4HQTYOAa6D0n97Z/SAkAmR/Kug1EC1Klwwof3NffnjikDWgdNHfsbRgvaFliTUjEhZI0dkMFJRPEloy6GM3nND47e9WyFKJ09jsMi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760515348; c=relaxed/simple;
-	bh=oMfFYXvGiE25w2JX2q/A2uGGYX6++XuGoMMS7Ksqkag=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ye0cDZ7Pn8UcwGrG14SY6D35UYRMQHP7Jedl3xPJtraFI+sWYBT3KlnbLbUrJYCimAEDITRpkT0nAV6d7FyC+5fJk34nI+o6Pby2AKGu1BC0f0xnwR+A2p+wo+8qYQY2o0BYeEt4IBN+3P52wlYZzsSuCisjKcCAOWJbYXewuS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dH5tCCvS; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1760515351; c=relaxed/simple;
+	bh=5ugmTtA9TV2ng/2i8o/Bv7Qs7iLX0E4gKXufe21cP10=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ebhwerreS50ZAVumeZ0w9DrxyeDMo5j8AB0TDc/gWG3bB6PLSGu4L1rBbLcHwkRPtHxbDAzP8KvwvndsDeCClUtwClF7UEp8l7fk/WTvkPOKP7YKwcZ5Kq/as2bLjYjwtKALnjqGTP0LcwKuC7ZbfdLi14PDM4pHYcMLd3mNNac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TAFAN/mN; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760515347; x=1792051347;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oMfFYXvGiE25w2JX2q/A2uGGYX6++XuGoMMS7Ksqkag=;
-  b=dH5tCCvSxb59e/GTTeBvdRHsOhON7NdeCt3Wxqo5IvDt8kkAXfQH74eQ
-   Ta0yNBXdWvg2S1ZHr1pqiCNJYSFFXcyHucVO8mLOs7EudP1+Iys0LiuLX
-   +D+vhujmQZjzMc13RuI//TuEAxJDnkICOBp0mWEhWyYGS7qly7qmY2pDe
-   aQGQ6AMYEKTvtFDfMb2djPE8KZB78DrZ60OZxcoAeRX4ZegAseuxhfrvA
-   AdAKN5sA2vrjw+Z0xLo5MWWkh9Cw9XzuuT/EpyD1EbSf1I46tyo3SfjXB
-   8zLRRG2KE/YwBNyOS9wUwR2Zd8FCRfbtrBIJQFZ9CV50DiPVfd27vlPK+
-   Q==;
-X-CSE-ConnectionGUID: 0i5Hgre5TaiBJ8p3+bAGEw==
-X-CSE-MsgGUID: 3gjOwuVaRFi9g/vk3Vogww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="61891427"
+  t=1760515350; x=1792051350;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5ugmTtA9TV2ng/2i8o/Bv7Qs7iLX0E4gKXufe21cP10=;
+  b=TAFAN/mNzR/uBx+ejSEtufiTNjFBoZfiipCmslzEcfmjN1Zp685SCVUW
+   gUAgc3mpvWO+v1/xFrLHtQeS3eDZ+QFE87QrYWNVcxLS+Pa/7NQ12LGhx
+   GpZjmx/hJoXnyQ73+BNpqUsASE4Vbq92zDNECcOTavOhiupMoRcY+Ztil
+   pmS8mE62p+LKT0WzxjlhxPdmKWLX8K0d65KM/zMaHzSC9RMXh6C8/ZWMv
+   r5+cqJx4rtrwBZtlWrsrEx7YqKDGNmPnoAZjgm6fk2LAh8bNhnXguukl/
+   nLDCt+b4HphrCGKuIDn8ytcb6KVZMGr8EeeScbP1QlPBedIU2BJNL4miX
+   w==;
+X-CSE-ConnectionGUID: XpXT70pZS7OUmfE14rYG8w==
+X-CSE-MsgGUID: gVRB5lamSN29K/tr8KpgSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="61891438"
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="61891427"
+   d="scan'208";a="61891438"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:25 -0700
-X-CSE-ConnectionGUID: xYZcdeLmSUCKMRXlV+YtwQ==
-X-CSE-MsgGUID: AOazhnw0QW64pO9/LqTH7g==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:29 -0700
+X-CSE-ConnectionGUID: lM6xYwq/Q6eAPR/HN3/nSQ==
+X-CSE-MsgGUID: KYyik1rPREy11JXzNox0GQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="205805322"
+   d="scan'208";a="205805347"
 Received: from bnilawar-desk2.iind.intel.com ([10.190.239.41])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:21 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:02:25 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org,
@@ -72,72 +73,210 @@ Cc: anshuman.gupta@intel.com,
 	ville.syrjala@linux.intel.com,
 	uma.shankar@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v5 00/12] VRAM Self Refresh 
-Date: Wed, 15 Oct 2025 13:36:58 +0530
-Message-Id: <20251015080710.1468409-1-badal.nilawar@intel.com>
+Subject: [PATCH v5 01/12] PCI/ACPI: Add D3cold Aux Power Limit_DSM method
+Date: Wed, 15 Oct 2025 13:36:59 +0530
+Message-Id: <20251015080710.1468409-2-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251015080710.1468409-1-badal.nilawar@intel.com>
+References: <20251015080710.1468409-1-badal.nilawar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Changes in v5:
-  - Added Co-developed by, whereever necessary
-  - Addressed review comments 
-  - Added new patch to handle vrsr in s2idle
-    drm/xe/pm/s2idle: Don't evict user BOs for D3hot and D3cold-VRSR state  
+From: Anshuman Gupta <anshuman.gupta@intel.com>
 
-Changes in v4:
-  - Resolved build warnings
+Implement _DSM method 0Ah, as per PCI Firmware r3.3, sec 4.6.10,
+to request auxiliary power required by the device when in D3cold state.
 
-Changes in v3:
- PCIe ACPI Patches:
-  - dropped the notifier block code and added patch to allow only one Aux
-    power limit request per root port (Rafael J. Wysocki)
-  - Addressed Review comments (Rafael J. Wysocki, Bjorn Helgaas)
+Note that this implementation assumes only a single device below the
+Downstream Port will request for Aux Power Limit under a given
+Root Port/Downstream Port because it does not track and aggregate
+requests from all child devices below the Downstream Port as required
+by PCI Firmware r3.3, sec 4.6.10.
 
- Xe Pacthes:
-  - Addressed Review comments (Bjorn Helgaas)
+Co-developed-by: Badal Nilawar <badal.nilawar@intel.com>
+Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+---
+V2(Bjorn/Rafael):
+  - Call acpi_dsm_check() to find method 0Ah supported
+  - Return retry interval to caller
+V3(Kuppuswamy)
+  - Add NULL check for retry interval
+V4
+  - Define enums for aux power request status (Rafael)
+  - Add Co-developed-by and clean up Signed-off-by (Kappuswamy)
+ (Bjorn)
+  - Instead of root pci device pass the pci device of driver, traverse
+    up the tree and discover _DSM
+  - Allow only function 0 of device to request aux power
+  - Allow retry_interval to be NULL
+  - Refine commit message and function description
+---
+ drivers/pci/pci-acpi.c   | 114 +++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-acpi.h |   9 ++++
+ 2 files changed, 123 insertions(+)
 
-Anshuman Gupta (6):
-  PCI/ACPI: Add D3cold Aux Power Limit_DSM method
-  PCI/ACPI: Add PERST# Assertion Delay _DSM method
-  drm/xe/vrsr: Detect VRSR Capability
-  drm/xe/vrsr: Refactor d3cold.allowed to a enum
-  drm/xe/pm: D3cold target state
-  drm/xe/vrsr: Enable VRSR
-
-Badal Nilawar (6):
-  PCI/ACPI: Per Root/Switch Downstream Port allow one aux power limit
-    request
-  drm/xe/vrsr: Introduce flag has_vrsr
-  drm/xe/vrsr: Initialize VRSR feature
-  drm/xe/vrsr: Enable VRSR on default VGA boot device
-  drm/xe/pm/s2idle: Don't evict user BOs for D3hot and D3cold-VRSR state
-  drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
-
- drivers/acpi/scan.c                          |   3 +
- drivers/gpu/drm/i915/display/intel_display.c |  22 ++
- drivers/gpu/drm/i915/display/intel_display.h |   1 +
- drivers/gpu/drm/xe/display/xe_display.c      |  11 +-
- drivers/gpu/drm/xe/display/xe_display.h      |   2 +
- drivers/gpu/drm/xe/regs/xe_regs.h            |   3 +
- drivers/gpu/drm/xe/xe_debugfs.c              |   3 +
- drivers/gpu/drm/xe/xe_device_types.h         |  12 +-
- drivers/gpu/drm/xe/xe_pci.c                  |  12 +-
- drivers/gpu/drm/xe/xe_pci_types.h            |   1 +
- drivers/gpu/drm/xe/xe_pcode_api.h            |   7 +
- drivers/gpu/drm/xe/xe_pm.c                   | 231 +++++++++++++++++--
- drivers/gpu/drm/xe/xe_pm.h                   |  10 +-
- drivers/pci/pci-acpi.c                       | 189 +++++++++++++++
- include/acpi/acpi_bus.h                      |   3 +
- include/linux/pci-acpi.h                     |  18 +-
- 16 files changed, 494 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 9369377725fa..c7eab1e75dd5 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -1418,6 +1418,120 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+ 	ACPI_FREE(obj);
+ }
+ 
++static struct pci_dev *pci_acpi_check_dsm(struct pci_dev *dev, u64 rev, u64 funcs)
++{
++	struct pci_dev *bdev;
++	acpi_handle handle;
++
++	if (!dev)
++		return ERR_PTR(-EINVAL);
++
++	bdev =  dev;
++	while (bdev) {
++		handle = ACPI_HANDLE(&bdev->dev);
++		if (handle && acpi_check_dsm(handle, &pci_acpi_dsm_guid, rev, 1 << funcs))
++			return bdev;
++
++		bdev = pci_upstream_bridge(bdev);
++	}
++
++	return ERR_PTR(-ENODEV);
++}
++
++enum aux_pwr_req_status {
++	AUX_PWR_REQ_DENIED               = 0x0,
++	AUX_PWR_REQ_GRANTED              = 0x1,
++	AUX_PWR_REQ_NO_MAIN_PWR_REMOVAL  = 0x2,
++	AUX_PWR_REQ_RETRY_INTERVAL_MIN   = 0x11,
++	AUX_PWR_REQ_RETRY_INTERVAL_MAX   = 0x1F
++};
++
++/**
++ * pci_acpi_request_d3cold_aux_power - Request aux power while device is in D3cold
++ * @dev: PCI device instance
++ * @requested_mw: Requested auxiliary power in milliwatts
++ * @retry_interval: Retry interval returned by platform to retry auxiliary
++ *                  power request
++ *
++ * Request auxilary power to platform firmware, via Root Port/Switch Downstream
++ * Port ACPI _DSM Function 0Ah, needed for the PCI device when it is in D3cold.
++ * Evaluate the _DSM and handle the response accordingly.
++ *
++ * For Multi-Function Devices, driver for Function 0 is required to report an
++ * aggregate power requirement covering all functions contained within the
++ * device.
++ *
++ * Note: Aggregation across multiple child devices beneath the Root/Switch Downstream
++ * Port is not supported.
++ *
++ * Return: Returns 0 on success and errno on failure.
++ */
++int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_mw,
++				      u32 *retry_interval)
++{
++	union acpi_object in_obj = {
++		.integer.type = ACPI_TYPE_INTEGER,
++		.integer.value = requested_mw,
++	};
++
++	union acpi_object *out_obj;
++	int result, ret = -EINVAL;
++	struct pci_dev *bdev;
++
++	if (!dev || PCI_FUNC(dev->devfn) != 0)
++		return -EINVAL;
++
++	bdev = pci_acpi_check_dsm(dev, 4, 1 << DSM_PCI_D3COLD_AUX_POWER_LIMIT);
++
++	if (IS_ERR(bdev))
++		return PTR_ERR(bdev);
++
++	out_obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&bdev->dev),
++					  &pci_acpi_dsm_guid, 4,
++					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
++					  &in_obj, ACPI_TYPE_INTEGER);
++	if (!out_obj)
++		return -EINVAL;
++
++	result = out_obj->integer.value;
++	if (retry_interval)
++		*retry_interval = 0;
++
++	switch (result) {
++	case AUX_PWR_REQ_DENIED:
++		pci_dbg(bdev, "D3cold Aux Power %u mW request denied\n",
++			requested_mw);
++		break;
++	case AUX_PWR_REQ_GRANTED:
++		pci_info(bdev, "D3cold Aux Power request granted: %u mW\n",
++			 requested_mw);
++		ret = 0;
++		break;
++	case AUX_PWR_REQ_NO_MAIN_PWR_REMOVAL:
++		pci_info(bdev, "D3cold Aux Power: Main power won't be removed\n");
++		ret = -EBUSY;
++		break;
++	default:
++		if (result >= AUX_PWR_REQ_RETRY_INTERVAL_MIN &&
++		    result <= AUX_PWR_REQ_RETRY_INTERVAL_MAX) {
++			pci_info(bdev, "D3cold Aux Power request needs retry interval: %u seconds\n",
++				 result & 0xF);
++			if (retry_interval) {
++				*retry_interval = result & 0xF;
++				ret = -EAGAIN;
++			}
++		} else {
++			pci_err(bdev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
++				result);
++		}
++		break;
++	}
++
++	ACPI_FREE(out_obj);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
++
+ static void pci_acpi_set_external_facing(struct pci_dev *dev)
+ {
+ 	u8 val;
+diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+index 078225b514d4..ba48e7ddb360 100644
+--- a/include/linux/pci-acpi.h
++++ b/include/linux/pci-acpi.h
+@@ -121,6 +121,7 @@ extern const guid_t pci_acpi_dsm_guid;
+ #define DSM_PCI_DEVICE_NAME			0x07
+ #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
+ #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
++#define DSM_PCI_D3COLD_AUX_POWER_LIMIT		0x0A
+ 
+ #ifdef CONFIG_PCIE_EDR
+ void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
+@@ -132,10 +133,18 @@ static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
+ 
+ int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
+ void pci_acpi_clear_companion_lookup_hook(void);
++int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_mw,
++				      u32 *retry_interval);
+ 
+ #else	/* CONFIG_ACPI */
+ static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
+ static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
++static inline int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev,
++						    u32 requested_mw,
++						    u32 *retry_interval)
++{
++	return -EOPNOTSUPP;
++}
+ #endif	/* CONFIG_ACPI */
+ 
+ #endif	/* _PCI_ACPI_H_ */
 -- 
 2.34.1
 
