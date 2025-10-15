@@ -1,129 +1,120 @@
-Return-Path: <linux-pci+bounces-38189-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38190-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1161BBDDDFB
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:52:44 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93A12BDDE3D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 11:57:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9459C3C539F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:52:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4DB534EDFF5
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Oct 2025 09:57:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F13B31B11C;
-	Wed, 15 Oct 2025 09:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F9F31B12D;
+	Wed, 15 Oct 2025 09:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APQcqUfy"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VeYXNLrz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6A308F2E;
-	Wed, 15 Oct 2025 09:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9402270553;
+	Wed, 15 Oct 2025 09:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760521958; cv=none; b=Upw080ZXsggUCnZ8/cEthqtuc00T/cjUTX5Sdwff0luu+Jkk33LA3m4YMKjDidyJSYMCOQoaa3xHog9Tx/nlkCx0WSQ5spfsZRAHnV/4HSdC4enQlK4E2sceQhwbWS747gwDbCTk6C3NU/UeiUNEyyFmH1J80N17aiR+Oj4ucVY=
+	t=1760522270; cv=none; b=RyIeoUhpkwbaHYxnNyQeilPf95STZLXdm7hiGRgr8d4i60YgO5VUKHV0w85TwAqS307Eh20pPPx5XWIRhWlvA7dleF551oh6uqpVpoPDOYlYcoOdZPP5/FSCfQa61nD4uJJHTij/4m7EzZ5cbRyNPhz7L4lxVTnTZFhFt0lFoeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760521958; c=relaxed/simple;
-	bh=y0AyUun396Qe57qvtbsaVfGWNx4pdz69sER2tQtFKgI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DIP77ERVf/2o7z1AqpKWVwsg6/QQfdu54sJzx3HSPNSSQuHGEM7SQHFImtSKHiJFISEnf7sptwEVhdEEoRWpHN+QT0AUklBkbgadvMCpIpqWshXaWWWJq1RyaotBTBFGNFx308ZrS4Y0fNFEIZmYcWutrVCrTDdRXyLecknbeIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APQcqUfy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F88C4CEF8;
-	Wed, 15 Oct 2025 09:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760521957;
-	bh=y0AyUun396Qe57qvtbsaVfGWNx4pdz69sER2tQtFKgI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=APQcqUfy687JtTczvl7s40SFNg3UbuXiAUWd0XtCvfMecwAYmK91CnkRvLTJ2NKP/
-	 /meQxJsltrtVemIgB51odBZY/1vSgqyAsKqXBjP8Kpy89MJ6XSnVWUhtvkXJkOo0hi
-	 jJ4aSqlxhf6q2epeg1Otv0MrvY2RAOILyRPRhBb62mE1kvivl21NpCS0kID2/ZycmP
-	 u1imzaVTYJqfeWC181BsHM8KTWPEuW8AqGOnZaOa9Nlyp5NeTqkrhOn3HU7aXpXUbX
-	 /LrqqsRT4i1xVpVWYoGPiZuTzeTKhc0TvAX/xv7KbeXLr3GGV5OoH54qDOxLB6d/ds
-	 OV4etI5OCtEZg==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>, Jeremy Linton <jeremy.linton@arm.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	kvmarm@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [RFC PATCH v1 11/38] KVM: arm64: CCA: register host tsm
- platform device
-In-Reply-To: <20251010135922.GC3833649@ziepe.ca>
-References: <20250728135216.48084-1-aneesh.kumar@kernel.org>
- <20250728135216.48084-12-aneesh.kumar@kernel.org>
- <20250729181045.0000100b@huawei.com> <20250729231948.GJ26511@ziepe.ca>
- <yq5aqzxy9ij1.fsf@kernel.org> <20250730113827.000032b8@huawei.com>
- <20250730132333.00006fbf@huawei.com>
- <2025073035-bulginess-rematch-b92e@gregkh>
- <b3ec55da-822a-4098-b030-4d76825f358e@arm.com>
- <20251010135922.GC3833649@ziepe.ca>
-Date: Wed, 15 Oct 2025 15:22:28 +0530
-Message-ID: <yq5a347kmqzn.fsf@kernel.org>
+	s=arc-20240116; t=1760522270; c=relaxed/simple;
+	bh=cc7YOA0rngoBP/s8PsVA1VBPYCZzWTZjInfpWgZyoe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKpWNg4K/HxfDS15lXsVmIbHYkgy/UlnSckDFuX52uScxwbhP+IlbOth52pqwJ86KbMDTDVbF/GFjfgU/R89p0i7NzUM1Fih8wSpXOSPG3WSWivY2EVkaZ9KtSy70kUvgwLKDpWuggFsIPCA8iwCHuElixIN2jW1nSkcXwvho9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VeYXNLrz; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id CA9ED20EF2;
+	Wed, 15 Oct 2025 11:57:39 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id QZ8LopMWWIaX; Wed, 15 Oct 2025 11:57:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1760522259; bh=cc7YOA0rngoBP/s8PsVA1VBPYCZzWTZjInfpWgZyoe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VeYXNLrzNwy0w6vJ6neP6rFJA1f+Ka3YD3a3/ted7BVWlQbN1rW6VlfNNdoIyTfeC
+	 4elNeREb0Q7hDpwwton1MwOOnoiAEcPS0bBoLg1C4jPWhot3OBBwGxyKfadjFoe7bv
+	 5udbZsyBsY5tE3pxdkKxc4WYFDdyttzCtQR0iK5h6Nq2bxMHNtJzbA/gnrxM48xz33
+	 c4sm+0FdZYhOs28dO4Tc2dfADYfQuzQuGX8SM2AXtc+k7qoX0dY8xxuuvuEPrF7Kpp
+	 0sJEdbB1N99QUwuMz1C/RBOYxe8O1YqOdzsjQrEs5bdv8GX5OjkZYihc0otsHxn0c6
+	 ywiF1EQa128Sw==
+Date: Wed, 15 Oct 2025 09:57:20 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Frank <Frank.Sae@motor-comm.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] PCI: Add vendor ID for Motorcomm Electronic
+ Technology
+Message-ID: <aO9wAGs_t0XK0brx@pie>
+References: <20251014164746.50696-3-ziyao@disroot.org>
+ <20251014204306.GA906144@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014204306.GA906144@bhelgaas>
 
-Jason Gunthorpe <jgg@ziepe.ca> writes:
+On Tue, Oct 14, 2025 at 03:43:06PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 14, 2025 at 04:47:44PM +0000, Yao Zi wrote:
+> > This company produces Ethernet controllers and PHYs. Add their vendor
+> > ID, 0x1f0a[1], which is recorded by PCI-SIG and has been seen on their
+> > PCI Ethernet cards.
+> > 
+> > Link: https://pcisig.com/membership/member-companies?combine=1f0a # [1]
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  include/linux/pci_ids.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 92ffc4373f6d..0824a1a7663d 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2631,6 +2631,8 @@
+> >  
+> >  #define PCI_VENDOR_ID_CXL		0x1e98
+> >  
+> > +#define PCI_VENDOR_ID_MOTORCOMM		0x1f0a
+> 
+> If/when this is used by several drivers add it here.  Until then just
+> define PCI_VENDOR_ID_MOTORCOMM in the driver that uses it (see the
+> note at top of the file).
 
-> On Fri, Oct 10, 2025 at 07:10:58AM -0500, Jeremy Linton wrote:
->> > Yes, use faux_device if you need/want a struct device to represent
->> > something in the tree and it does NOT have any real platform resources
->> > behind it.  That's explicitly what it was designed for.
->>=20
->> Right, but this code is intended to trigger the kmod/userspace module
->> loader.
->
-> Faux devices are not intended to be bound, it says so right on the label:
->
->  * A "simple" faux bus that allows devices to be created and added
->  * automatically to it.  This is to be used whenever you need to create a
->  * device that is not associated with any "real" system resources, and do
->  * not want to have to deal with a bus/driver binding logic.  It is
->                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
->  * intended to be very simple, with only a create and a destroy function
->  * available.
->
-> auxiliary_device is quite similar to faux except it is intended to be
-> bound to drivers, supports module autoloading and so on.
->
-> What you have here is the platform firmware provides the ARM SMC
-> (Secure Monitor Call Calling Convention) interface which is a generic
-> function call multiplexer between the OS and ARM firmware.
->
-> Then we have things like the TSM subsystem that want to load a driver
-> to use calls over SMC if the underlying platform firmware supports the
-> RSI group of SMC APIs. You'd have a TSM subsystem driver that uses the
-> RSI call group over SMC that autobinds when the RSI call group is
-> detected when the SMC is first discovered.
->
-> So you could use auxiliary_device, you'd consider SMC itself to be the
-> shared HW block and all the auxiliary drivers are per-subsystem
-> aspects of that shared SMC interface. It is not a terrible fit for
-> what it was intended for at least.
->
+Oops, thanks for the hint. I didn't notice the note before, and will
+switch to define the ID in driver.
 
-IIUC, auxiliary_device needs a parent device, and the documentation
-explains that it=E2=80=99s intended for cases where a large driver is split=
- into
-multiple dependent smaller ones.
+Best regards,
+Yao Zi
 
-If we want to use auxiliary_device for this case, what would serve as
-the parent device?
-
--aneesh
+> >  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+> >  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+> >  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
+> > -- 
+> > 2.50.1
+> > 
 
