@@ -1,83 +1,83 @@
-Return-Path: <linux-pci+bounces-38400-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38402-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23A2EBE581C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 23:04:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7159BE5826
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 23:04:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EBB144F0A1C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 21:04:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05DC01A67B07
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 21:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2FF2E4241;
-	Thu, 16 Oct 2025 21:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718A42E7BA5;
+	Thu, 16 Oct 2025 21:03:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j509d84R"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PCbruv1m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010060.outbound.protection.outlook.com [52.101.201.60])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011025.outbound.protection.outlook.com [52.101.52.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955CE2E2822;
-	Thu, 16 Oct 2025 21:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686A22E2DD8;
+	Thu, 16 Oct 2025 21:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760648613; cv=fail; b=bZgNegW775HMnziGfrdApaF67hCSwJEzrJ+ugLB5145sht0MnlTVdcArgZbYx/odqRlCBT1JXCJ2pTsZGlwYhhyHq+LV9NJOfLw28GzqANfxQk2J+OdnYnJL4YFJlovFtAEXmTlijR2rpSKm0aLLx6iO5hMuET3r2NbgwVcxAAs=
+	t=1760648619; cv=fail; b=b1bym0Bs9ZZ8NECI5hS4eET1xtpbR8wlk08qyAfZM8ewx4CC3Jm2gVViDQ23gR+d4Gy0XXsRW+xOBRAE04eqApI8plZscb7TQwWlNvtyVZkycpwaLT8v+AoUdEgxhkX9CbzogOEFsqfZf4qd5zV+fV8EvL1dgm0yeIY8bZwchc0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760648613; c=relaxed/simple;
-	bh=pkCIOZRts0TjBy/OzyY6x2+QqCfSwZJHVvFiGA9Q2Qs=;
+	s=arc-20240116; t=1760648619; c=relaxed/simple;
+	bh=J0Tr6dvkV1QfuQlkqC93GFzpPVO7FJoFltnSZ9doRlI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZpRXgsmLiE3CIlNYXwurtz0+Bd2FuCIYh0yeDEfRkK/G66jlE2+PUO0kOpWkAKghd9Kt0TTvGmeUUhvhb9JtOouX865x0oK57LXrJqV0qJZZTKfh86zJJfNJl3HuvlC7DAaKRV4GPyaSvSLU/erAen/n+mM2O4SABNOGOz+8Uw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j509d84R; arc=fail smtp.client-ip=52.101.201.60
+	 MIME-Version:Content-Type; b=uEGvGweUrbIPeUA0pKBtvB5mUF/ewj4l2LE8A63yFI6Dee229XN7Cn9vTf9r47ak3bpc27UDHfqO8n6KugCUJNNLsrVBUFIh6/W320H9Lj44Rp5+Vu6zHGc5nD6Nnqyp5SjJHDLbL72nOyFn0R6hiS5nPGEio2ezg4YM7pvyeSY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PCbruv1m; arc=fail smtp.client-ip=52.101.52.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NSwj8DkN8aC97tG2ZwLJc5ZKOFe9vY7qB54z+RvwP1Sc7ceLwb5ubhVLxPMD5MKoxIzD9NIbGFmvCf2EZcD3MiEZrUhqIwcgQ2M5S7XLKTTKGoazqkhlumWVkL4ZdHKhtpaxTVjoSDyGu2fkf/V0OTbL3IL9RQoqks07MCwVUGYm2WiZHJ5NV6UMe+ldejalxCgUYNVUHk2t9rtjKYyTuBj9buBhLBdN8pRj1Rtj+Mw8vGkli5nHEXsDS/JNaggeYF9yMTwH0mtqcouf7L75M0x02BxL2Fi2FQWBO6KS6K0cbmRRYaZGQF8yEibrdqVlSdzYTrTeh3On995Vi/CSGQ==
+ b=kFHqyNpI6/MSuL63tOViji3J+kL2tNiStrq7/2v3scToGDjNhbsphS7y+HiuyXRvNl1VecDV6iCqi0+tsfgxIQ0GQFE+qJep4karPUIL22yqrRUPgxK1alQVz/1ysHlC43iNok58yqW8XV8OuFmViyTG/Wn36TtzwJK9X8RjmxaB9vZg/9zx5K4HD/WMH9P7aENPFBs0x1QbRpRcAIGqKHQJ5qEmiu2Ju0zy2YOzmAtSBgirAgt1qpvF7uKkzqvXan7HtZlayd5DOgo9uH2HYuMe9/bHqLKyyCuN2YgwnQwlVqfp7kHdmN8GufxYc1lAQmJpjePsa8GHZPL1rc/RFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z8ck5jQHm8HYg/OrbJLHVks5MpInYDVn6SOuaR3fPvM=;
- b=oonlh171sCL9ybR3Rkb8kQ/dtpX5IGD+kqJQ9TDs62Zwo4/YMhlOslftMhdPR6NX3Lk6KYKamgZom78UMlAMNvuwpItZwzvnQlrAdHGL0AMiegCJSg1X4nMR0vOJ6CRG+Uktrfa37AYVBJpFOsgcz8Y1PcaTErj617JcJV7ihs7ytDf5hhevES5llPHum6kyIvR5/kPRQNeLa4BWdSWBxqaDUwd2AcCc4tyE19rbedPnHVkoyoawbqMmwxZ62kvNJAMFlkObTi3QezL6oE+tkSeJn/3tA/OBfqWIN+Xcj4gkhZ+TqV7nprT4r2GLLCZSOaL1D28lV6r9usqJe271CA==
+ bh=T5gUPtD3a9XLuOgIC1FLs9AMdHzyJgPl6G87uAG6c48=;
+ b=btKOmO/hYd+UuU1NfOe2MT34EpyTUtGOebTIw6T/jcpzG17hx7GahaV9baUbY0ARj7eYA8kjZDnUBPH3uZx47dIq8PtS42rDd/KSuS00uCjbws8izf8avXpIajYbdAmXJv3yVkXf3y4pBRPiSxpckPyEsQv0L3yR1dbBeCYlqCahu94zwQ7qwVX89/a9TJXJMlDgd6/CZc92pX1WgXBN+U1NiL1e20bFpRf+fNWRC8EKJsBTsnU4nu28MK2EmhExH3JJioJzAoT9tp85EUvV7sRYiU6QD069JiIniTjhtv4P1m2kNDhYYfKbvrqa1EOT+LK9NRcnbJa+7dpArkKmbw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z8ck5jQHm8HYg/OrbJLHVks5MpInYDVn6SOuaR3fPvM=;
- b=j509d84ReseCE1mOVTXrLXjAERKaNy0SJCo85uOr3/3L+CyuDZmCnicQ6Bvo3byQ4R7wMx0zrvsx9BGqIESjO7WI8eAH9IxYbrYLzrzIy2ILqZpJXFXr0k7gJjZRl8YRmXEWNHvZcknk7yi5D7w8WKJUz6Y9cWYB480SUnRevon+gOHnYSN/jk77WZQXR3b3/vrRROkqQoEoTBaCRNl2ZYUFerDfocWl6nkBWHm9IOZYLhSfVGFbWUtDtAq6v5tkgG+W0b/Xupd9CgAIjScZ/r293Hk8lx+xC9dWX/7qfIX4GYwV+Vi3PymyKZIsHIXtiXkMp2dBHbhZbW2lQZ+rbQ==
-Received: from BN0PR02CA0041.namprd02.prod.outlook.com (2603:10b6:408:e5::16)
- by DS7PR12MB6166.namprd12.prod.outlook.com (2603:10b6:8:99::13) with
+ bh=T5gUPtD3a9XLuOgIC1FLs9AMdHzyJgPl6G87uAG6c48=;
+ b=PCbruv1m2ek+aJIVcbUWIBA6XS68i7PM28hKiHqG37NLB/3A6pYAIHhAdoLgNErICHnfHDJnMFjg/j4LTIkhxHBrSf3+xnUq3N0fiINpnXGFHbyCH6cvgnQ7lvs7jhHMBHvHxNcjDTnUa8T2MWM1DRZuEevPe13v/EE9sss8fG0ZSxIz+aNqAr2c89vMoZkCxDcJjkkcQKEpB1mOVwuPX60KINQTFaqZG4AqdOa0W1ljtuUfs59QQwyHeLtr3Bt1BUkLDjpBGc2gCBMdAqb+LiflZ4wgyJaqhiu+6mDqSO3s3b83vuGZ8SBprMKioM3GpZsd939KlN97P2zVZUCMdg==
+Received: from SJ0PR05CA0139.namprd05.prod.outlook.com (2603:10b6:a03:33d::24)
+ by SJ2PR12MB9190.namprd12.prod.outlook.com (2603:10b6:a03:554::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.13; Thu, 16 Oct
- 2025 21:03:13 +0000
-Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
- (2603:10b6:408:e5:cafe::39) by BN0PR02CA0041.outlook.office365.com
- (2603:10b6:408:e5::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.11 via Frontend Transport; Thu,
- 16 Oct 2025 21:03:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Thu, 16 Oct
+ 2025 21:03:34 +0000
+Received: from CO1PEPF000042AD.namprd03.prod.outlook.com
+ (2603:10b6:a03:33d:cafe::d7) by SJ0PR05CA0139.outlook.office365.com
+ (2603:10b6:a03:33d::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.10 via Frontend Transport; Thu,
+ 16 Oct 2025 21:03:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CO1PEPF000042AD.mail.protection.outlook.com (10.167.243.42) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.0 via Frontend Transport; Thu, 16 Oct 2025 21:03:13 +0000
+ 15.20.9228.7 via Frontend Transport; Thu, 16 Oct 2025 21:03:33 +0000
 Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 16 Oct
  2025 14:02:58 -0700
 Received: from drhqmail201.nvidia.com (10.126.190.180) by
  drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Thu, 16 Oct 2025 14:02:57 -0700
+ 15.2.2562.20; Thu, 16 Oct 2025 14:02:58 -0700
 Received: from ipp2-2168.ipp2a1.colossus.nvidia.com (10.127.8.14) by
  mail.nvidia.com (10.126.190.180) with Microsoft SMTP Server id 15.2.2562.20
- via Frontend Transport; Thu, 16 Oct 2025 14:02:57 -0700
+ via Frontend Transport; Thu, 16 Oct 2025 14:02:58 -0700
 From: Zhi Wang <zhiw@nvidia.com>
 To: <rust-for-linux@vger.kernel.org>
 CC: <dakr@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
@@ -89,9 +89,9 @@ CC: <dakr@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
 	<aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
 	<zhiw@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
 	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
-Subject: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait and specialize Mmio<SIZE>
-Date: Thu, 16 Oct 2025 21:02:46 +0000
-Message-ID: <20251016210250.15932-2-zhiw@nvidia.com>
+Subject: [PATCH v2 2/5] rust: io: factor out MMIO read/write macros
+Date: Thu, 16 Oct 2025 21:02:47 +0000
+Message-ID: <20251016210250.15932-3-zhiw@nvidia.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251016210250.15932-1-zhiw@nvidia.com>
 References: <20251016210250.15932-1-zhiw@nvidia.com>
@@ -106,516 +106,233 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|DS7PR12MB6166:EE_
-X-MS-Office365-Filtering-Correlation-Id: d1a03b75-4157-4bc4-797a-08de0cf76bb5
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AD:EE_|SJ2PR12MB9190:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc0bf8f6-8961-4a24-ed91-08de0cf777ba
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
+	BCL:0;ARA:13230040|7416014|1800799024|376014|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VNFkYJSB1hOOnOJTsEGOQQl9alizgTepdeI8vYXcSI9xbBUwLf5xaETbgBeD?=
- =?us-ascii?Q?emOgmTECZkQPUuHOO3PbqHhVvwsG9Wmo66cg51ruK+d5DLoG5U8cQ3cOBDk7?=
- =?us-ascii?Q?Zc5uUGjQjRZlLVydYas9j6XUvR/vvXNFc6ACu+3APn2kYqGfgyp/6dp1xcRH?=
- =?us-ascii?Q?yVl5Npr616sOLm0yB6iMUR/HqemJodfdpHXtIAakyelhH5SxVcp/CIdNt3W1?=
- =?us-ascii?Q?TOrLdXuYCmt7pUGsl423/e8XycDTTyVUvozVzteHIYfgrC8RMtIwTekmsRED?=
- =?us-ascii?Q?Bze9JnNjdB5WU8hkJLkmKQsWesoLi/nXkM7lLOkPD6Sku9NS+nBJajiRZM2D?=
- =?us-ascii?Q?o8/Oj2HOau76/Fbz6qJyCYo8B441xSZJlHbp2J48e+dYPhsHuW8LCidsGMxF?=
- =?us-ascii?Q?+tLGQHIX70B2Hn2BH0ID/486i6UHYIDvg8rMGjO5dFMrUYb+9TGcKskHcVhS?=
- =?us-ascii?Q?E4Sk/nSuHpQLH5vaPx4ziKBwPe84rbG7DeDoLomVO5iT5ma7qkCxCf32BQ49?=
- =?us-ascii?Q?j6mjDgQzx/D86wAOwZn5byP9tax4QvgVNz0122ios/xEqTncNq0TUjFVhzUH?=
- =?us-ascii?Q?wZzverRJ62TQQf69dr9Gtt8CJENdHFyPqErVgUWL+jgukeQvub9Pk3WHSx1j?=
- =?us-ascii?Q?awyFYXRLnOLqOF35eANytJXQw9Ut1tlvRS6aBJomgJHz9f9RDpJsIlov0sS4?=
- =?us-ascii?Q?ootXZFoiEOLIyTItbb3dL33/MiwELKwe1PNia3m1Av8iApZ2b/sWF5IO5OIg?=
- =?us-ascii?Q?yNeNrW5e9gKYEcEuybzEXma08FUCBgy35cf6ZDSdabd/slcnQfYHBVdEbn3D?=
- =?us-ascii?Q?o07/iXffNff1mDQMu7HQg04PzL1vmE1UHmOf/T3hBpuoKtBnBZS98v+HACL3?=
- =?us-ascii?Q?9b3uOYRUkTe4GM2V48W91cyNsZ9IWi/CYU2aF5WD4jrWljN1fQDY8i7mYX1l?=
- =?us-ascii?Q?qgXoBfa8JTYIdyOCP0tu9KMuyO47BHInn5+mbm3H9Ujp0iEqNYDLRz+afSOp?=
- =?us-ascii?Q?zbxdVYA8oA7MYFa6GOoNrx0OY2bkNwakePHzfHzRgOselCUceEeLTefdFBvx?=
- =?us-ascii?Q?49QnDCYY3QWXaZDnn/qq5X58JtOuMIhi69n0t2U26dusRzRKaPnwaDVd1BAc?=
- =?us-ascii?Q?r6PgGuIyskNy6L/JvQ/+8nNl6FRP870UmXDNqiWBYzpaOvkjPrbF/FD7nxc7?=
- =?us-ascii?Q?IbM7P6r/xpwzglxnPPOgsbHYsXV/nZRNdz8SDxF95RLdAex8fLenLwC0QsXu?=
- =?us-ascii?Q?bx21w1uqarz0LeqqEGD8rsNWhm+v5WjwozR1OaaVe6HAqJLMAgXVWKjeore1?=
- =?us-ascii?Q?NaTrpC2AmBuuPUZPW8CHcZ53ZjIF2G9bkilq9Z56YqkyyyTcnZ7r300WnbiJ?=
- =?us-ascii?Q?dU5MoLuePKg5Er7ggbHpk4m1ZMyT5pV5hcSu1auu8id+K7utd7I7RrMCbAyq?=
- =?us-ascii?Q?msQTW+Pe2uoPUxXaXYC/HHIfpF0JS0KObhcEuxVTgxeFJ/EaD6o38PnaMnrs?=
- =?us-ascii?Q?B/xARpeP2PaTkRCLeuj0qRbOFuVVeijmw9egAAkJwzxjEodx9/DxykQ3AseO?=
- =?us-ascii?Q?7KeIMhkpv+hgUhr/280=3D?=
+	=?us-ascii?Q?gRP+HVvNxnjTiQ1Hic2QnAa6487fdcr021up6wF5A1Faku0DVkpoahrpl7AP?=
+ =?us-ascii?Q?/ydrewKoijqIyYgR+FeBX0m0pASE5bA7T7McfbGF0NPRAqF14QnGJgVWXAne?=
+ =?us-ascii?Q?dG7RVcz66Jr5TqlvcqZKNsbzpbNGpt1KfZ94/c8nKpL3Tfhf+w79DkDez5Aq?=
+ =?us-ascii?Q?QGM13dY3jvGhSLsHOUPQ74JcXHnKK7rUsRrPCpyDONKNKP8JcfyeZJDVrPr7?=
+ =?us-ascii?Q?EDjjXnV8/bGgxWdfoSHBzS0yCQtzG0BJtwEGGy5EpGz8m/JainOIUkqHAUR0?=
+ =?us-ascii?Q?OQLr3ius2uzj1Tu1U4h5+0poXCNCfV/ieEwEsfo7savXEL0DOmBkxtjEN5an?=
+ =?us-ascii?Q?HI/ULy/Y/HfMhMDttFiF3J7xCqeAu4Vo64x2y4mjKS7qi4iIyT23Z7FRACOD?=
+ =?us-ascii?Q?/htqBxJWpnpnu8YWMRPC5My3xVj4CGvOwy9zw05BzlAOuQTy/ruzDxmzc49+?=
+ =?us-ascii?Q?FLqaNtHgb5GRnuPLU0f0/n6yujihT7I725a3CPPc/TlLZCug3k6yxprIsduw?=
+ =?us-ascii?Q?flwMU9zFe/8wq3Kd+SRLnWbEcP0gqyZ/ibc4jI64MwsNoj8xlKkixkOimmMD?=
+ =?us-ascii?Q?pTMzY2/CHBd0i7vQYn0iJCQxf3ao+a3pwz/m9zUe75cGg74EmokBGZUe16a+?=
+ =?us-ascii?Q?46SBIWQ55MwVEMGVqGQc8RMGi+EGojhk6JaMpB7R8V+ssmwqi5a8ZCq+kDVo?=
+ =?us-ascii?Q?KVMWAeoHh/393xE1EtGT8Ot28++bnZhFJwQr2t0Ctznogd0O06slDIdPZLWg?=
+ =?us-ascii?Q?F2Ohx4JleOSifsLcQfqqzXc/nSXl3r1WDyzUfeD5DGD1T6DHsJao0fdQHKTi?=
+ =?us-ascii?Q?gAHb0x6o30K5m3JnoAOUD/Bq7wCAzlAlKxrlvvcWmt8k7dcenmKLsSwYVfAo?=
+ =?us-ascii?Q?+MaYSDm/a6fpfA7UWTePPU7JZNdSC/1TjrvFbxGxWTnsEqZ/Iasm6WZXaQi/?=
+ =?us-ascii?Q?7jnZPbIzTvkKC6/FvV7nMkOCoy3cQSNUFmegdlL6WbCqf5JJlq9TwLDg4Zou?=
+ =?us-ascii?Q?0W5L90EyNHI295bFbq9UuADUgQnL0L9fQW5rNx0q2UZiRgSlVFLPi0w2HkLu?=
+ =?us-ascii?Q?UEMnFvsFatQCTJ+4DMeiLEmcIOw1iArhHAW/t4bHAzayoB50ECblwbYm+Vou?=
+ =?us-ascii?Q?C3OoXXh374qGlQ/8moy6wDMWQhvwcSdqwlQ2091yjGbXNuLMiKXiCKYGv2Y7?=
+ =?us-ascii?Q?RKCgTynyFAbIkH8YgyAzNvHj5VVKGwgnMJ0/WjoFd7MAARiC5iJge0WEEgzQ?=
+ =?us-ascii?Q?uGiQ0liikZvmF/CpD8mFhtP2ffPDoI+SKIcWDLJdY3FJ47tCKJ3I9MoESuPB?=
+ =?us-ascii?Q?TQ7YtwupaWJAfa+kdA4m9o6QPrBv5G9xhlF9PTYYEa1YfuASK/+shf3aEJo/?=
+ =?us-ascii?Q?vn6cURijri5mjwq1rtUjzomUUjt3PU+/JNuX6YcB/ffBESu8ci2xkqrmtuEO?=
+ =?us-ascii?Q?inKEIyYOov+Ydpv7gnSbHtrOuIvZ0UYbbJJLx2IiZhD20rnE2mh8uBAouupt?=
+ =?us-ascii?Q?meOR2e3seBNYRqrpILa5Dl94iBYNDFrIOBGso57bxWZdKkcE1bLx4QftrPQM?=
+ =?us-ascii?Q?FX6zyfrt7asS4JPYTVU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2025 21:03:13.4921
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2025 21:03:33.7456
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1a03b75-4157-4bc4-797a-08de0cf76bb5
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc0bf8f6-8961-4a24-ed91-08de0cf777ba
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36D.namprd21.prod.outlook.com
+	CO1PEPF000042AD.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6166
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9190
 
-The previous Io<SIZE> type combined both the generic I/O access helpers
-and MMIO implementation details in a single struct.
+Refactor the existing MMIO accessors to use common call macros
+instead of inlining the bindings calls in each `define_{read,write}!`
+expansion.
 
-To establish a cleaner layering between the I/O interface and its concrete
-backends, paving the way for supporting additional I/O mechanisms in the
-future, Io<SIZE> need to be factored.
-
-Factor the common helpers into a new Io trait, and moves the MMIO-specific
-logic into a dedicated Mmio<SIZE> type implementing that trait. Rename the
-IoRaw to MmioRaw and pdate the bus MMIO implementations to use MmioRaw.
+This factoring separates the common offset/bounds checks from the
+low-level call pattern, making it easier to add additional I/O accessor
+families.
 
 No functional change intended.
 
-Cc: Danilo Krummrich <dakr@kernel.org>
 Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 ---
- drivers/gpu/nova-core/regs/macros.rs | 36 +++++------
- rust/kernel/io.rs                    | 89 +++++++++++++++++-----------
- rust/kernel/io/mem.rs                | 16 ++---
- rust/kernel/pci.rs                   | 10 ++--
- 4 files changed, 87 insertions(+), 64 deletions(-)
+ rust/kernel/io.rs | 72 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core/regs/macros.rs
-index 8058e1696df9..c2a6547d58cd 100644
---- a/drivers/gpu/nova-core/regs/macros.rs
-+++ b/drivers/gpu/nova-core/regs/macros.rs
-@@ -609,7 +609,7 @@ impl $name {
-             /// Read the register from its address in `io`.
-             #[inline(always)]
-             pub(crate) fn read<const SIZE: usize, T>(io: &T) -> Self where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 Self(io.read32($offset))
-             }
-@@ -617,7 +617,7 @@ pub(crate) fn read<const SIZE: usize, T>(io: &T) -> Self where
-             /// Write the value contained in `self` to the register address in `io`.
-             #[inline(always)]
-             pub(crate) fn write<const SIZE: usize, T>(self, io: &T) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 io.write32(self.0, $offset)
-             }
-@@ -629,7 +629,7 @@ pub(crate) fn alter<const SIZE: usize, T, F>(
-                 io: &T,
-                 f: F,
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
-                 let reg = f(Self::read(io));
-@@ -652,7 +652,7 @@ pub(crate) fn read<const SIZE: usize, T, B>(
-                 #[allow(unused_variables)]
-                 base: &B,
-             ) -> Self where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 const OFFSET: usize = $name::OFFSET;
-@@ -673,7 +673,7 @@ pub(crate) fn write<const SIZE: usize, T, B>(
-                 #[allow(unused_variables)]
-                 base: &B,
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 const OFFSET: usize = $name::OFFSET;
-@@ -693,7 +693,7 @@ pub(crate) fn alter<const SIZE: usize, T, B, F>(
-                 base: &B,
-                 f: F,
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
-@@ -717,7 +717,7 @@ pub(crate) fn read<const SIZE: usize, T>(
-                 io: &T,
-                 idx: usize,
-             ) -> Self where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 build_assert!(idx < Self::SIZE);
- 
-@@ -734,7 +734,7 @@ pub(crate) fn write<const SIZE: usize, T>(
-                 io: &T,
-                 idx: usize
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 build_assert!(idx < Self::SIZE);
- 
-@@ -751,7 +751,7 @@ pub(crate) fn alter<const SIZE: usize, T, F>(
-                 idx: usize,
-                 f: F,
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
-                 let reg = f(Self::read(io, idx));
-@@ -767,7 +767,7 @@ pub(crate) fn try_read<const SIZE: usize, T>(
-                 io: &T,
-                 idx: usize,
-             ) -> ::kernel::error::Result<Self> where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 if idx < Self::SIZE {
-                     Ok(Self::read(io, idx))
-@@ -786,7 +786,7 @@ pub(crate) fn try_write<const SIZE: usize, T>(
-                 io: &T,
-                 idx: usize,
-             ) -> ::kernel::error::Result where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-             {
-                 if idx < Self::SIZE {
-                     Ok(self.write(io, idx))
-@@ -806,7 +806,7 @@ pub(crate) fn try_alter<const SIZE: usize, T, F>(
-                 idx: usize,
-                 f: F,
-             ) -> ::kernel::error::Result where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
-                 if idx < Self::SIZE {
-@@ -838,7 +838,7 @@ pub(crate) fn read<const SIZE: usize, T, B>(
-                 base: &B,
-                 idx: usize,
-             ) -> Self where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 build_assert!(idx < Self::SIZE);
-@@ -860,7 +860,7 @@ pub(crate) fn write<const SIZE: usize, T, B>(
-                 base: &B,
-                 idx: usize
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 build_assert!(idx < Self::SIZE);
-@@ -881,7 +881,7 @@ pub(crate) fn alter<const SIZE: usize, T, B, F>(
-                 idx: usize,
-                 f: F,
-             ) where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
-@@ -900,7 +900,7 @@ pub(crate) fn try_read<const SIZE: usize, T, B>(
-                 base: &B,
-                 idx: usize,
-             ) -> ::kernel::error::Result<Self> where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 if idx < Self::SIZE {
-@@ -922,7 +922,7 @@ pub(crate) fn try_write<const SIZE: usize, T, B>(
-                 base: &B,
-                 idx: usize,
-             ) -> ::kernel::error::Result where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-             {
-                 if idx < Self::SIZE {
-@@ -945,7 +945,7 @@ pub(crate) fn try_alter<const SIZE: usize, T, B, F>(
-                 idx: usize,
-                 f: F,
-             ) -> ::kernel::error::Result where
--                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                T: ::core::ops::Deref<Target = ::kernel::io::Mmio<SIZE>>,
-                 B: crate::regs::macros::RegisterBase<$base>,
-                 F: ::core::ops::FnOnce(Self) -> Self,
-             {
 diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index ee182b0b5452..78413dc7ffcc 100644
+index 78413dc7ffcc..78f7bbc945ad 100644
 --- a/rust/kernel/io.rs
 +++ b/rust/kernel/io.rs
-@@ -18,16 +18,16 @@
- /// By itself, the existence of an instance of this structure does not provide any guarantees that
- /// the represented MMIO region does exist or is properly mapped.
- ///
--/// Instead, the bus specific MMIO implementation must convert this raw representation into an `Io`
--/// instance providing the actual memory accessors. Only by the conversion into an `Io` structure
--/// any guarantees are given.
--pub struct IoRaw<const SIZE: usize = 0> {
-+/// Instead, the bus specific MMIO implementation must convert this raw representation into an
-+/// `Mmio` instance providing the actual memory accessors. Only by the conversion into an `Mmio`
-+/// structure any guarantees are given.
-+pub struct MmioRaw<const SIZE: usize = 0> {
-     addr: usize,
-     maxsize: usize,
- }
+@@ -4,6 +4,8 @@
+ //!
+ //! C header: [`include/asm-generic/io.h`](srctree/include/asm-generic/io.h)
  
--impl<const SIZE: usize> IoRaw<SIZE> {
--    /// Returns a new `IoRaw` instance on success, an error otherwise.
-+impl<const SIZE: usize> MmioRaw<SIZE> {
-+    /// Returns a new `MmioRaw` instance on success, an error otherwise.
-     pub fn new(addr: usize, maxsize: usize) -> Result<Self> {
-         if maxsize < SIZE {
-             return Err(EINVAL);
-@@ -62,11 +62,11 @@ pub fn maxsize(&self) -> usize {
- /// # Examples
- ///
- /// ```no_run
--/// # use kernel::{bindings, ffi::c_void, io::{Io, IoRaw}};
-+/// # use kernel::{bindings, ffi::c_void, io::{Mmio, MmioRaw}};
- /// # use core::ops::Deref;
- ///
- /// // See also [`pci::Bar`] for a real example.
--/// struct IoMem<const SIZE: usize>(IoRaw<SIZE>);
-+/// struct IoMem<const SIZE: usize>(MmioRaw<SIZE>);
- ///
- /// impl<const SIZE: usize> IoMem<SIZE> {
- ///     /// # Safety
-@@ -81,7 +81,7 @@ pub fn maxsize(&self) -> usize {
- ///             return Err(ENOMEM);
- ///         }
- ///
--///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
-+///         Ok(IoMem(MmioRaw::new(addr as usize, SIZE)?))
- ///     }
- /// }
- ///
-@@ -93,11 +93,11 @@ pub fn maxsize(&self) -> usize {
- /// }
- ///
- /// impl<const SIZE: usize> Deref for IoMem<SIZE> {
--///    type Target = Io<SIZE>;
-+///    type Target = Mmio<SIZE>;
- ///
- ///    fn deref(&self) -> &Self::Target {
- ///         // SAFETY: The memory range stored in `self` has been properly mapped in `Self::new`.
--///         unsafe { Io::from_raw(&self.0) }
-+///         unsafe { Mmio::from_raw(&self.0) }
- ///    }
- /// }
- ///
-@@ -111,7 +111,7 @@ pub fn maxsize(&self) -> usize {
- /// # }
- /// ```
++use kernel::error::Error;
++
+ use crate::error::{code::EINVAL, Result};
+ use crate::{bindings, build_assert, ffi::c_void};
+ 
+@@ -113,8 +115,23 @@ pub fn maxsize(&self) -> usize {
  #[repr(transparent)]
--pub struct Io<const SIZE: usize = 0>(IoRaw<SIZE>);
-+pub struct Mmio<const SIZE: usize = 0>(MmioRaw<SIZE>);
+ pub struct Mmio<const SIZE: usize = 0>(MmioRaw<SIZE>);
  
++macro_rules! call_mmio_read {
++    ($c_fn:ident, $self:ident, $offset:expr, $type:ty, $addr:expr) => {
++        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++        Ok::<$type, Error>(unsafe { bindings::$c_fn($addr as *const c_void) as $type })
++    };
++}
++
++macro_rules! call_mmio_write {
++    ($c_fn:ident, $self:ident, $offset:expr, $ty:ty, $addr:expr, $value:expr) => {
++        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
++        Ok::<(), Error>(unsafe { bindings::$c_fn($value, $addr as *mut c_void) })
++    };
++}
++
  macro_rules! define_read {
-     ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident -> $type_name:ty) => {
-@@ -172,32 +172,24 @@ pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
+-    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident -> $type_name:ty) => {
++    ($(#[$attr:meta])* $name:ident, $try_name:ident, $call_macro:ident, $c_fn:ident ->
++     $type_name:ty) => {
+         /// Read IO data from a given offset known at compile time.
+         ///
+         /// Bound checks are performed on compile time, hence if the offset is not known at compile
+@@ -122,10 +139,9 @@ macro_rules! define_read {
+         $(#[$attr])*
+         #[inline]
+         pub fn $name(&self, offset: usize) -> $type_name {
+-            let addr = self.io_addr_assert::<$type_name>(offset);
++            let _addr = self.io_addr_assert::<$type_name>(offset);
+ 
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(addr as *const c_void) }
++            $call_macro!($c_fn, self, offset, $type_name, _addr).unwrap_or(!0)
+         }
+ 
+         /// Read IO data from a given offset.
+@@ -134,16 +150,18 @@ pub fn $name(&self, offset: usize) -> $type_name {
+         /// out of bounds.
+         $(#[$attr])*
+         pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
+-            let addr = self.io_addr::<$type_name>(offset)?;
++            let _addr = self.io_addr::<$type_name>(offset)?;
+ 
+             // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            Ok(unsafe { bindings::$c_fn(addr as *const c_void) })
++            $call_macro!($c_fn, self, offset, $type_name, _addr)
+         }
      };
  }
++pub(crate) use define_read;
  
--impl<const SIZE: usize> Io<SIZE> {
--    /// Converts an `IoRaw` into an `Io` instance, providing the accessors to the MMIO mapping.
--    ///
--    /// # Safety
--    ///
--    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
--    /// `maxsize`.
--    pub unsafe fn from_raw(raw: &IoRaw<SIZE>) -> &Self {
--        // SAFETY: `Io` is a transparent wrapper around `IoRaw`.
--        unsafe { &*core::ptr::from_ref(raw).cast() }
--    }
--
-+/// Represents a region of I/O space of a fixed size.
-+///
-+/// Provides common helpers for offset validation and address
-+/// calculation on top of a base address and maximum size.
-+///
-+/// Types implementing this trait (e.g. MMIO BARs or PCI config
-+/// regions) can share the same accessors.
-+pub trait Io<const SIZE: usize> {
-     /// Returns the base address of this mapping.
--    #[inline]
--    pub fn addr(&self) -> usize {
--        self.0.addr()
--    }
-+    fn addr(&self) -> usize;
+ macro_rules! define_write {
+-    ($(#[$attr:meta])* $name:ident, $try_name:ident, $c_fn:ident <- $type_name:ty) => {
++    ($(#[$attr:meta])* $name:ident, $try_name:ident, $call_macro:ident, $c_fn:ident <-
++     $type_name:ty) => {
+         /// Write IO data from a given offset known at compile time.
+         ///
+         /// Bound checks are performed on compile time, hence if the offset is not known at compile
+@@ -151,10 +169,9 @@ macro_rules! define_write {
+         $(#[$attr])*
+         #[inline]
+         pub fn $name(&self, value: $type_name, offset: usize) {
+-            let addr = self.io_addr_assert::<$type_name>(offset);
++            let _addr = self.io_addr_assert::<$type_name>(offset);
  
-     /// Returns the maximum size of this mapping.
--    #[inline]
--    pub fn maxsize(&self) -> usize {
--        self.0.maxsize()
--    }
-+    fn maxsize(&self) -> usize;
- 
-+    /// Checks whether an access of type `U` at the given `offset`
-+    /// is valid within this region.
-     #[inline]
--    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
-+    fn offset_valid<U>(offset: usize, size: usize) -> bool {
-         let type_size = core::mem::size_of::<U>();
-         if let Some(end) = offset.checked_add(type_size) {
-             end <= size && offset % type_size == 0
-@@ -206,6 +198,8 @@ const fn offset_valid<U>(offset: usize, size: usize) -> bool {
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(value, addr as *mut c_void) }
++            let _ = $call_macro!($c_fn, self, offset, $type_name, _addr, value);
          }
-     }
  
-+    /// Returns the absolute I/O address for a given `offset`.
-+    /// Performs runtime bounds checks using [`offset_valid`]
-     #[inline]
-     fn io_addr<U>(&self, offset: usize) -> Result<usize> {
-         if !Self::offset_valid::<U>(offset, self.maxsize()) {
-@@ -217,12 +211,41 @@ fn io_addr<U>(&self, offset: usize) -> Result<usize> {
-         self.addr().checked_add(offset).ok_or(EINVAL)
-     }
+         /// Write IO data from a given offset.
+@@ -163,14 +180,13 @@ pub fn $name(&self, value: $type_name, offset: usize) {
+         /// out of bounds.
+         $(#[$attr])*
+         pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
+-            let addr = self.io_addr::<$type_name>(offset)?;
++            let _addr = self.io_addr::<$type_name>(offset)?;
  
-+    /// Returns the absolute I/O address for a given `offset`,
-+    /// performing compile-time bound checks.
-     #[inline]
-     fn io_addr_assert<U>(&self, offset: usize) -> usize {
-         build_assert!(Self::offset_valid::<U>(offset, SIZE));
- 
-         self.addr() + offset
-     }
-+}
-+
-+impl<const SIZE: usize> Io<SIZE> for Mmio<SIZE> {
-+    /// Returns the base address of this mapping.
-+    #[inline]
-+    fn addr(&self) -> usize {
-+        self.0.addr()
-+    }
-+
-+    /// Returns the maximum size of this mapping.
-+    #[inline]
-+    fn maxsize(&self) -> usize {
-+        self.0.maxsize()
-+    }
-+}
-+
-+impl<const SIZE: usize> Mmio<SIZE> {
-+    /// Converts an `MmioRaw` into an `Mmio` instance, providing the accessors to the MMIO mapping.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
-+    /// `maxsize`.
-+    pub unsafe fn from_raw(raw: &MmioRaw<SIZE>) -> &Self {
-+        // SAFETY: `Mmio` is a transparent wrapper around `MmioRaw`.
-+        unsafe { &*core::ptr::from_ref(raw).cast() }
-+    }
- 
-     define_read!(read8, try_read8, readb -> u8);
-     define_read!(read16, try_read16, readw -> u16);
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-index 6f99510bfc3a..93cad8539b18 100644
---- a/rust/kernel/io/mem.rs
-+++ b/rust/kernel/io/mem.rs
-@@ -11,8 +11,8 @@
- use crate::io;
- use crate::io::resource::Region;
- use crate::io::resource::Resource;
--use crate::io::Io;
--use crate::io::IoRaw;
-+use crate::io::Mmio;
-+use crate::io::MmioRaw;
- use crate::prelude::*;
- 
- /// An IO request for a specific device and resource.
-@@ -195,7 +195,7 @@ pub fn new<'a>(io_request: IoRequest<'a>) -> impl PinInit<Devres<Self>, Error> +
+-            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
+-            unsafe { bindings::$c_fn(value, addr as *mut c_void) }
+-            Ok(())
++            $call_macro!($c_fn, self, offset, $type_name, _addr, value)
+         }
+     };
  }
++pub(crate) use define_write;
  
- impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
--    type Target = Io<SIZE>;
-+    type Target = Mmio<SIZE>;
- 
-     fn deref(&self) -> &Self::Target {
-         &self.iomem
-@@ -209,10 +209,10 @@ fn deref(&self) -> &Self::Target {
+ /// Represents a region of I/O space of a fixed size.
  ///
- /// # Invariants
- ///
--/// [`IoMem`] always holds an [`IoRaw`] instance that holds a valid pointer to the
-+/// [`IoMem`] always holds an [`MmioRaw`] instance that holds a valid pointer to the
- /// start of the I/O memory mapped region.
- pub struct IoMem<const SIZE: usize = 0> {
--    io: IoRaw<SIZE>,
-+    io: MmioRaw<SIZE>,
- }
- 
- impl<const SIZE: usize> IoMem<SIZE> {
-@@ -247,7 +247,7 @@ fn ioremap(resource: &Resource) -> Result<Self> {
-             return Err(ENOMEM);
-         }
- 
--        let io = IoRaw::new(addr as usize, size)?;
-+        let io = MmioRaw::new(addr as usize, size)?;
-         let io = IoMem { io };
- 
-         Ok(io)
-@@ -270,10 +270,10 @@ fn drop(&mut self) {
- }
- 
- impl<const SIZE: usize> Deref for IoMem<SIZE> {
--    type Target = Io<SIZE>;
-+    type Target = Mmio<SIZE>;
- 
-     fn deref(&self) -> &Self::Target {
-         // SAFETY: Safe as by the invariant of `IoMem`.
--        unsafe { Io::from_raw(&self.io) }
-+        unsafe { Mmio::from_raw(&self.io) }
+@@ -247,43 +263,47 @@ pub unsafe fn from_raw(raw: &MmioRaw<SIZE>) -> &Self {
+         unsafe { &*core::ptr::from_ref(raw).cast() }
      }
+ 
+-    define_read!(read8, try_read8, readb -> u8);
+-    define_read!(read16, try_read16, readw -> u16);
+-    define_read!(read32, try_read32, readl -> u32);
++    define_read!(read8, try_read8, call_mmio_read, readb -> u8);
++    define_read!(read16, try_read16, call_mmio_read, readw -> u16);
++    define_read!(read32, try_read32, call_mmio_read, readl -> u32);
+     define_read!(
+         #[cfg(CONFIG_64BIT)]
+         read64,
+         try_read64,
++        call_mmio_read,
+         readq -> u64
+     );
+ 
+-    define_read!(read8_relaxed, try_read8_relaxed, readb_relaxed -> u8);
+-    define_read!(read16_relaxed, try_read16_relaxed, readw_relaxed -> u16);
+-    define_read!(read32_relaxed, try_read32_relaxed, readl_relaxed -> u32);
++    define_read!(read8_relaxed, try_read8_relaxed, call_mmio_read, readb_relaxed -> u8);
++    define_read!(read16_relaxed, try_read16_relaxed, call_mmio_read, readw_relaxed -> u16);
++    define_read!(read32_relaxed, try_read32_relaxed, call_mmio_read, readl_relaxed -> u32);
+     define_read!(
+         #[cfg(CONFIG_64BIT)]
+         read64_relaxed,
+         try_read64_relaxed,
++        call_mmio_read,
+         readq_relaxed -> u64
+     );
+ 
+-    define_write!(write8, try_write8, writeb <- u8);
+-    define_write!(write16, try_write16, writew <- u16);
+-    define_write!(write32, try_write32, writel <- u32);
++    define_write!(write8, try_write8, call_mmio_write, writeb <- u8);
++    define_write!(write16, try_write16, call_mmio_write, writew <- u16);
++    define_write!(write32, try_write32, call_mmio_write, writel <- u32);
+     define_write!(
+         #[cfg(CONFIG_64BIT)]
+         write64,
+         try_write64,
++        call_mmio_write,
+         writeq <- u64
+     );
+ 
+-    define_write!(write8_relaxed, try_write8_relaxed, writeb_relaxed <- u8);
+-    define_write!(write16_relaxed, try_write16_relaxed, writew_relaxed <- u16);
+-    define_write!(write32_relaxed, try_write32_relaxed, writel_relaxed <- u32);
++    define_write!(write8_relaxed, try_write8_relaxed, call_mmio_write, writeb_relaxed <- u8);
++    define_write!(write16_relaxed, try_write16_relaxed, call_mmio_write, writew_relaxed <- u16);
++    define_write!(write32_relaxed, try_write32_relaxed, call_mmio_write, writel_relaxed <- u32);
+     define_write!(
+         #[cfg(CONFIG_64BIT)]
+         write64_relaxed,
+         try_write64_relaxed,
++        call_mmio_write,
+         writeq_relaxed <- u64
+     );
  }
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 7fcc5f6022c1..77a8eb39ad32 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -10,7 +10,7 @@
-     devres::Devres,
-     driver,
-     error::{from_result, to_result, Result},
--    io::{Io, IoRaw},
-+    io::{Mmio, MmioRaw},
-     irq::{self, IrqRequest},
-     str::CStr,
-     sync::aref::ARef,
-@@ -313,7 +313,7 @@ pub struct Device<Ctx: device::DeviceContext = device::Normal>(
- /// memory mapped PCI bar and its size.
- pub struct Bar<const SIZE: usize = 0> {
-     pdev: ARef<Device>,
--    io: IoRaw<SIZE>,
-+    io: MmioRaw<SIZE>,
-     num: i32,
- }
- 
-@@ -349,7 +349,7 @@ fn new(pdev: &Device, num: u32, name: &CStr) -> Result<Self> {
-             return Err(ENOMEM);
-         }
- 
--        let io = match IoRaw::new(ioptr, len as usize) {
-+        let io = match MmioRaw::new(ioptr, len as usize) {
-             Ok(io) => io,
-             Err(err) => {
-                 // SAFETY:
-@@ -403,11 +403,11 @@ fn drop(&mut self) {
- }
- 
- impl<const SIZE: usize> Deref for Bar<SIZE> {
--    type Target = Io<SIZE>;
-+    type Target = Mmio<SIZE>;
- 
-     fn deref(&self) -> &Self::Target {
-         // SAFETY: By the type invariant of `Self`, the MMIO range in `self.io` is properly mapped.
--        unsafe { Io::from_raw(&self.io) }
-+        unsafe { Mmio::from_raw(&self.io) }
-     }
- }
- 
 -- 
 2.47.3
 
