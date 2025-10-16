@@ -1,159 +1,151 @@
-Return-Path: <linux-pci+bounces-38394-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38395-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23177BE5545
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 22:11:35 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E484BE569C
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 22:38:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D438C4E73C1
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 20:11:33 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1CFF735655B
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 20:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571ED2DC793;
-	Thu, 16 Oct 2025 20:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F383A2DF6E3;
+	Thu, 16 Oct 2025 20:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Kg5T7JMw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMO/9uoz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE962D46B2;
-	Thu, 16 Oct 2025 20:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC62DCC08
+	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 20:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760645489; cv=none; b=tDc7p+z0wZECHVJqocy/titrsjsVca3HknIWGDszuvILnmRiItpaoPhV67unfVZNyAXheYi0u2qMq7IF9xBhfzd0guydPhygdL5bZcZYWiI8SVvR0X7HQVnsjyV7XWdWDb/ImHnC8PQSTpsTNLbB7pKFR2qCzww+B9977tHf130=
+	t=1760647128; cv=none; b=q8f3k/Ri1qpF07xAttXptVXjf1n9vAvS9ZAh6erhacua/5/Mc+ob7Oo7Y1yBL9KkPW3eQduvzoumNIrqU0+xwssxv6L3/l9hT1yEx82li54CkID1N6WAMl9vX33FO5DZflbihj9Yz3sM08ehbAiwf34ntqpjfhSTxsxdTvlvwCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760645489; c=relaxed/simple;
-	bh=08kr2l/UWyG32Kp/2Umrbh3yZs0+clQ80REy2fHQfC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2E7aO3Et8x2r7kg7X6Av2JBBXyE1n1J1f3xksV8n77XJpmvD1vCLS2G3IcRmJ8vsHvYqBACX9K/Fw/dkUck1XIWyvL/x6HbBwp2LM+2SXWfcFt8Bzc5Bon+HtHu+tdgK69M2uGAT9Jv17Su/1qmYzn6Ag6P/osYqPBD6E+qya0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Kg5T7JMw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=fH3uOL5pAcLj4w5mtMBuA/UvzktBnN4zub1YlfQY7TY=; b=Kg5T7JMwo1EPZEU182K+GycJh0
-	VA6ynNMfzDNQL0AS5Sz2UpaWtCZl6K6mYSteM9uPB+2qbzu3BLVF1sIIsOt31EXEYRZqKCMFbILEV
-	tZ6X3Lp6uMi4YP4abHshLoAi7WOOnW3df4uoJkQzk5mZoXV3nE1O671BY9wEr1UjTSIM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1v9UJS-00BCbc-Pl; Thu, 16 Oct 2025 22:11:02 +0200
-Date: Thu, 16 Oct 2025 22:11:02 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Frank <Frank.Sae@motor-comm.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
-	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH net-next 3/4] net: stmmac: Add glue driver for Motorcomm
- YT6801 ethernet controller
-Message-ID: <f1de6600-4de9-4914-95e6-8cdb3481e364@lunn.ch>
-References: <20251014164746.50696-2-ziyao@disroot.org>
- <20251014164746.50696-5-ziyao@disroot.org>
+	s=arc-20240116; t=1760647128; c=relaxed/simple;
+	bh=XTIlb00y7jKvl1Otn5ZrCsdMlwiiEfx7RWVXZYlBVac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zn5cKjbYkI9oN5StfX267vbhSScpqjl2HV8LLOIOfYN62eu5vyYsBz7IUo5UUoGnTSTuJ9YM/UPgnVsvT1xUS6RpAJ5boSPo4oqpz7FCHq9XlMGpCq7o5SfGYdRXc3hqrVYB3LUmnELxIPwe1RZh0hkygiNPSUVnJ1l0y7vV2jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMO/9uoz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F83C4CEFE
+	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 20:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760647128;
+	bh=XTIlb00y7jKvl1Otn5ZrCsdMlwiiEfx7RWVXZYlBVac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IMO/9uoz9402Rq/72H+fzGiweWdOTANK8n3P07wAJEwSUsdk1cojA6DdXdoUReOuM
+	 9yRQuePM2+cOtswdJoYIhd/7qJV8nzqzQSJr2+dDcU5u4y1GrU+vcOIl/iZf87rDak
+	 1COlMuvVJcUWEIg+dtRJ6YLOZPkcURXFwMbqrTAPjjlOi95k0KYUPg3eegkG/zv7BR
+	 +nYcP+d7q9IMmogzk+uLypcyOnxtrMpX2A9mvGunrLvmyGD3Y02hiRRZ7aP6U22+13
+	 OJxP5Q7aWOdRqJ+giiFiywbX8RpK9G0JyZn8Azgu8ZdjUv+A+sNGckCq0Jg7xWwDMu
+	 RzhQzyAeNNRXA==
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-43fb60c5f75so288161b6e.1
+        for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 13:38:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXHX9CCIzbf6qfGyvKuoNgbBq8x2RvyKvK54LKkeEHh04qZE+tPBxAomHZ+5tpJa4s/7IWKBYUaM8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo6Z/8/+Yzy9H/fqCYrU+oP7Fixvo6kFUXH9KTHhZbJ3sO3vqo
+	zNMf5NpfAZ1eGjDZlI1rsf3IYNanyzYSsbMRLgeQkzfCq06g7UbF7WOT8nW+YFkrcwZvBPmW9vb
+	YR6cn2a5FBy+wTnrly23oJqlCJEVhn0w=
+X-Google-Smtp-Source: AGHT+IHeni4wRtDvxXTKZAACGsTAPxwB1YyN0NYvoLAG+cyBLP79pAf7CDk+uKKMzHt4n9NJ/Pkc8WVtYd2NS5a16ZU=
+X-Received: by 2002:a05:6808:6f8e:b0:43f:7dee:468b with SMTP id
+ 5614622812f47-443a2dcb6d3mr672131b6e.4.1760647127720; Thu, 16 Oct 2025
+ 13:38:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251014164746.50696-5-ziyao@disroot.org>
+References: <3925484.kQq0lBPeGt@rafael.j.wysocki> <cc21a74c-905f-4223-95a8-d747ef763081@baylibre.com>
+ <875xce7m11.wl-tiwai@suse.de> <12765144.O9o76ZdvQC@rafael.j.wysocki> <68f14b5b6a92_2a2b10018@dwillia2-mobl4.notmuch>
+In-Reply-To: <68f14b5b6a92_2a2b10018@dwillia2-mobl4.notmuch>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 16 Oct 2025 22:38:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iZJFQeBhA7tM-sWuJDtisvrHGjPPdQHrC-eXXF1xJpbA@mail.gmail.com>
+X-Gm-Features: AS18NWCN60rGQYTojeNqhxmPLJuY9IXf_MfoZ5rdwA1XGpcY1kgT-SGMUWeS1hQ
+Message-ID: <CAJZ5v0iZJFQeBhA7tM-sWuJDtisvrHGjPPdQHrC-eXXF1xJpbA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] PM: runtime: Introduce PM_RUNTIME_ACQUIRE_OR_FAIL()
+ macro
+To: dan.j.williams@intel.com
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Takashi Iwai <tiwai@suse.de>, 
+	David Lechner <dlechner@baylibre.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Alex Williamson <alex.williamson@redhat.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Frank Li <Frank.Li@nxp.com>, Dhruva Gole <d-gole@ti.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +static int motorcomm_efuse_read_byte(struct dwmac_motorcomm_priv *priv,
-> +				     u8 offset, u8 *byte)
-> +{
-> +	u32 reg;
-> +	int ret;
-> +
-> +	writel(FIELD_PREP(EFUSE_OP_MODE, EFUSE_OP_ROW_READ)	|
-> +	       FIELD_PREP(EFUSE_OP_ADDR, offset)		|
-> +	       EFUSE_OP_START, priv->base + EFUSE_OP_CTRL_0);
-> +
-> +	ret = readl_poll_timeout(priv->base + EFUSE_OP_CTRL_1,
-> +				 reg, reg & EFUSE_OP_DONE, 2000,
-> +				 EFUSE_READ_TIMEOUT_US);
-> +
-> +	reg = readl(priv->base + EFUSE_OP_CTRL_1);
+On Thu, Oct 16, 2025 at 9:45=E2=80=AFPM <dan.j.williams@intel.com> wrote:
+>
+> Rafael J. Wysocki wrote:
+> [..]
+> > > > [1]: https://lore.kernel.org/all/CAHk-=3Dwhn07tnDosPfn+UcAtWHBcLg=
+=3DKqA16SHVv0GV4t8P1fHw@mail.gmail.com/
+> > >
+> > > Yeah, I myself also find it suboptimal, hence it wasn't really
+> > > proposed...  It's a limit of macro, unfortunately.
+> >
+> > The macro from the $subject patch can be split along the lines of the a=
+ppended
+> > patch to avoid the "disgusting syntax" issue, although it then becomes =
+less
+> > attractive as far as I'm concerned.  It still allows the details unrela=
+ted to
+> > the rest of the code to be hidden though.
+> >
+> > ---
+> >  drivers/acpi/acpi_tad.c |   10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >
+> > --- a/drivers/acpi/acpi_tad.c
+> > +++ b/drivers/acpi/acpi_tad.c
+> > @@ -31,6 +31,12 @@ MODULE_DESCRIPTION("ACPI Time and Alarm
+> >  MODULE_LICENSE("GPL v2");
+> >  MODULE_AUTHOR("Rafael J. Wysocki");
+> >
+> > +#define PM_RUNTIME_ACQUIRE_ACTIVE(dev)       \
+> > +     ACQUIRE(pm_runtime_active_try, pm_runtime_active_guard_var)(dev)
+> > +
+> > +#define PM_RUNTIME_ACQUIRE_ACTIVE_ERR        \
+> > +     ACQUIRE_ERR(pm_runtime_active_try, &pm_runtime_active_guard_var)
+> > +
+> >  /* ACPI TAD capability flags (ACPI 6.2, Section 9.18.2) */
+> >  #define ACPI_TAD_AC_WAKE     BIT(0)
+> >  #define ACPI_TAD_DC_WAKE     BIT(1)
+> > @@ -264,8 +270,8 @@ static int acpi_tad_wake_set(struct devi
+> >       args[0].integer.value =3D timer_id;
+> >       args[1].integer.value =3D value;
+> >
+> > -     ACQUIRE(pm_runtime_active_try, pm)(dev);
+> > -     if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> > +     PM_RUNTIME_ACQUIRE_ACTIVE(dev);
+> > +     if (PM_RUNTIME_ACQUIRE_ACTIVE_ERR)
+> >               return -ENXIO;
+>
+> This defeats one of the other motivations for ACQUIRE() vs
+> scoped_cond_guard() in that it drops the error code from
+> pm_runtime_active_try.
 
-Do you actually need this read? The documentation says:
+No, it doesn't.  PM_RUNTIME_ACQUIRE_ACTIVE_ERR is that error code.  Or
+did I misunderstand what you said?
 
- * Returns: 0 on success and -ETIMEDOUT upon a timeout. In either
- * case, the last read value at @addr is stored in @val.
+> Maybe it is the case that failure is always
+> -ENXIO, but from a future code evolution standpoint do you want to
+> commit to always translating _try errors to a local error code?
 
-> +	*byte = FIELD_GET(EFUSE_OP_RD_DATA, reg);
-> +
-> +	return ret;
-> +}
+No, I don't.
 
-> +static void motorcomm_reset_phy(struct dwmac_motorcomm_priv *priv)
-> +{
-> +	u32 reg = readl(priv->base + EPHY_CTRL);
-> +
-> +	reg &= ~EPHY_RESET;
-> +	writel(reg, priv->base + EPHY_CTRL);
-> +
-> +	reg |= EPHY_RESET;
-> +	writel(reg, priv->base + EPHY_CTRL);
-> +}
+> Btw, was acpi_tad_wake_set() buggy previously for ignoring
+> pm_runtime_get_sync() errors, or is it a regression risk now for
+> honoring errors?
 
-How does this differ to the PHY doing its own reset via BMCR?
+You may call it buggy strictly speaking, but it just assumed that if
+the runtime resume failed, the subsequent operation would just fail
+either, so -EIO would be returned to the caller.
 
-We need to be careful of lifetimes here. It would be better if the PHY
-controlled its own reset. We don't want phylib to configure the PHY
-and then the MAC driver reset it etc.
-
-> +static int motorcomm_resume(struct device *dev, void *bsp_priv)
-> +{
-> +	struct dwmac_motorcomm_priv *priv = bsp_priv;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	int ret;
-> +
-> +	pci_restore_state(pdev);
-> +	pci_set_power_state(pdev, PCI_D0);
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pci_set_master(pdev);
-> +
-> +	motorcomm_reset_phy(priv);
-
-Does the PHY support WoL? You probably should not be touching it if it
-can wake the system.
-
-> +		return NULL;
-> +
-> +	plat->mdio_bus_data = devm_kzalloc(dev, sizeof(*plat->mdio_bus_data),
-> +					   GFP_KERNEL);
-> +	if (!plat->mdio_bus_data)
-> +		return NULL;
-
-Is this required? If you look at other glue drivers which allocate
-such a structure, they set members in it:
-
-dwmac-intel.c:	plat->mdio_bus_data->needs_reset = true;
-dwmac-loongson.c:		plat->mdio_bus_data->needs_reset = true;
-dwmac-tegra.c:	plat->mdio_bus_data->needs_reset = true;
-stmmac_pci.c:	plat->mdio_bus_data->needs_reset = true;
-stmmac_platform.c:		plat->mdio_bus_data->needs_reset = true;
-
-You don't set anything.
-
-	Andrew
+This change allows distinguishing resume errors from I/O errors.
 
