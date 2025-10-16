@@ -1,156 +1,154 @@
-Return-Path: <linux-pci+bounces-38312-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBEAEBE2A72
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 12:08:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28878BE2C51
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 12:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 684B234C2A7
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 10:08:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0396586500
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 10:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AAC22571BE;
-	Thu, 16 Oct 2025 10:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5572DF6FF;
+	Thu, 16 Oct 2025 10:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Dkg1ccWx"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="h6+kTrqJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m49241.qiye.163.com (mail-m49241.qiye.163.com [45.254.49.241])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489BA32D450;
-	Thu, 16 Oct 2025 10:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.241
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DDF32861E;
+	Thu, 16 Oct 2025 10:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760608843; cv=none; b=LDXvePj0NYYM8dZYfNMiK2Jah6kmfgbXMb3gsmGZ682+WOPyNQoKGMD6RFp0Am26FsLfrzOYT+2fUTaHV6UzgGT4UHa26OtAelmZWYXJLjw1ElAf+46aBbYBWlWw061ZWlJ6yhvZUC9azrd1JEEATdiG8B2nHP/Yfpk/DMfm7ig=
+	t=1760609338; cv=none; b=n1buq1ZbVteXJjzsIERPY2i5Vv00KOgjUo+S7lW15uULU/CU5sWGcWZu7umWMPs+2yDFWFgmgFjdZHfzjxJit5/nfYPGs5KhERhsYS2msNMf2t4WqmAb5SWWU9k0M1inDp17fTdzbsFxFd0jlFJmQ+7T/1Irvxznd1saoWn3uS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760608843; c=relaxed/simple;
-	bh=L6laFqRaWSI17Vo5SosZbjACISiZSTJZPRWTW2IBLRk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FAJCR/vfRvaf7QMdT4kiqyi6zk3DyFS7SLvSlS8JKihE2FIGAfLOQOCNz92OL+ByXXBbC4k3hCg6qz9zuWAUCpOMqsBsuly68qx2gprxaOm3Dbr3JEDKS578hp1ycSh0p2/Eqk+Q6KNKlryPbkvPeK8CThrQHw0yOGYg1Fh1/BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Dkg1ccWx; arc=none smtp.client-ip=45.254.49.241
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 262323a9f;
-	Thu, 16 Oct 2025 18:00:28 +0800 (GMT+08:00)
-Message-ID: <3470351f-88ab-48bb-97af-dde4e6eba938@rock-chips.com>
-Date: Thu, 16 Oct 2025 18:00:24 +0800
+	s=arc-20240116; t=1760609338; c=relaxed/simple;
+	bh=Dcshxnk+HHcxt2JmE3zv3oNCpRgnSrlJo9TAu9xvBkk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mMzZpDGJxOdf5TZaFqhgN1tKKyYvoMk5f9AczJmErROToXHTVwqnKvnzgVMaToxBKeld9zrDfQaYGgGGFPq+2Dh3ASBIrP88QfnzzMkE/6UysQJbf74nMqLCYR9xEauOac+qa3SxMKawv7vVumYTODrcJkemZt2ZVfeLZQGewcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=h6+kTrqJ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1760609334;
+	bh=Dcshxnk+HHcxt2JmE3zv3oNCpRgnSrlJo9TAu9xvBkk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=h6+kTrqJJ10AjrmI1ibLweGmZL6wrs4HbdElHedN+s5t4nz42RHrJWLTc2GcPrtA4
+	 OsVvaKEcvqtPAB7HfF7XMtGsfZeuS1TR7Qe8jW3k33ToKQkPsp7PkCu2kAGLBOqL7C
+	 FIUQJPIv+f8rlXhod9BenfBX6QQkG2mEZBxGNCaGg6UKRSGkoqRk6YuHsXafKbrPnj
+	 nTzmYveT72H81UPHOYeIuviupl3EExjY5ZGFzL12AIFpUpAKyi42TUkyXX+um7pzC4
+	 bLp9EDZzdLYW/+R61jOmZPzAjSo89Si/7ujs3DHx2URr6/jpvpgJJkEtnAdsIIKcA6
+	 5Y6KGcq77Ys7Q==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sjoerd)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id DE3A417E1271;
+	Thu, 16 Oct 2025 12:08:53 +0200 (CEST)
+Received: by beast.luon.net (Postfix, from userid 1000)
+	id 8322F10C9C780; Thu, 16 Oct 2025 12:08:53 +0200 (CEST)
+From: Sjoerd Simons <sjoerd@collabora.com>
+Subject: [PATCH 00/15] arm64: dts: mediatek: Add Openwrt One AP
+ functionality
+Date: Thu, 16 Oct 2025 12:08:36 +0200
+Message-Id: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Damien Le Moal <dlemoal@kernel.org>,
- Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
- Diederik de Haas <diederik@cknow-tech.com>, stable@vger.kernel.org,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Disable L1 substates
-To: Niklas Cassel <cassel@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>
-References: <20251016090422.451982-2-cassel@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20251016090422.451982-2-cassel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a99ec76ba4d09cckunmc3027d237c39a4
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkNKTlZJT0hPSE4ZHx9IQ0xWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=Dkg1ccWxhcEzQTOcTY7bf6wuAXYywd+hMTvRqDxRE1vMLe89yV6Etd0r4HtjD7Lib8ucQ/xO9ILeS0kR9IRcb4AfFbQ7Zq1l5oLWraylks88KcjFaIB10gPecPxyug1hiVMXiTxry8XoDnCwbI/lCmmSFioxp53oLomGc7999KY=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=kN3t/e7sa1Sb2IowRbuDgju83rFZL2AXB/0qfNEujok=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACXE8GgC/x3MMQqAMAxA0atIZgNtUUGvIg5aowYhlVSsIN7d4
+ viG/x+IpEwRuuIBpYsjB8mwZQF+G2Ul5DkbnHG1NbbBcJAkPTEIodCZgu5Ymcm3o7eTqz3k8lB
+ a+P6v/fC+HxWOhSBlAAAA
+X-Change-ID: 20251016-openwrt-one-network-40bc9ac1b25c
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org, 
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>, 
+ Sjoerd Simons <sjoerd@collabora.com>
+X-Mailer: b4 0.14.3
 
-在 2025/10/16 星期四 17:04, Niklas Cassel 写道:
-> The L1 substates support requires additional steps to work, see e.g.
-> section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0.
-> 
-> These steps are currently missing from the driver.
+This series add various peripherals to the Openwrt One, to make it
+actually useful an access point:
 
-Yes, we could add them later if concerns about supports-clkreq is fully
-discussed.
+* Pcie express (tested with nvme storage)
+* Wired network interfaces
+* Wireless network interfaces (2.4g, 5ghz wifi)
+* Status leds
+* SPI NOR for factory data
 
-> 
-> While this has always been a problem when using e.g.
-> CONFIG_PCIEASPM_POWER_SUPERSAVE=y, the problem became more apparent after
-> commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
-> devicetree platforms"), which enabled ASPM also for
-> CONFIG_PCIEASPM_DEFAULT=y.
-> 
-> Disable L1 substates until proper support is added.
-> 
+Unsurprisingly the series is a mix of dt binding updates, extensions of
+the mt7981b and the openwrt one dtb. All driver support required is
+already available.
 
-Thanks for the patch.
+Sadly during testing i've found various quirks requiring kernel
+arguments. Documenting those here both as note to self and making it
+easier for others to test :)
 
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+* fw_devlink=permissive: the nvmem fixed-layout doesn't create a layout
+  device, so doesn't trigger fw_devlink
+* clk_ignore_unused: Needed when building CONFIG_NET_MEDIATEK_SOC as a
+  module. If the ethernet related clocks (gp1/gp2) get disabled the
+  mac ends up in a weird state causing it not to function correctly.
+* pcie_aspm: ASPM is forced to enabled in 6.18-rc1, unfortunately
+  enabling ASPM L1.1 ends up triggering unrecoverable AERs.
 
-> Cc: stable@vger.kernel.org
-> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
-> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
-> Changes since v1:
-> -Remove superfluous dw_pcie_readl_dbi()
-> 
->   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 +++++++++++++++++++
->   1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 3e2752c7dd09..84f882abbca5 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -200,6 +200,25 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
->   	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
->   }
->   
-> +/*
-> + * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
-> + * needed to support L1 substates. Currently, not a single rockchip platform
-> + * performs these steps, so disable L1 substates until there is proper support.
-> + */
-> +static void rockchip_pcie_disable_l1sub(struct dw_pcie *pci)
-> +{
-> +	u32 cap, l1subcap;
-> +
-> +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-> +	if (cap) {
-> +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
-> +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
-> +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
-> +			      PCI_L1SS_CAP_PCIPM_L1_2);
-> +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
-> +	}
-> +}
-> +
->   static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
->   {
->   	u32 cap, lnkcap;
-> @@ -264,6 +283,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->   	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
->   					 rockchip);
->   
-> +	rockchip_pcie_disable_l1sub(pci);
->   	rockchip_pcie_enable_l0s(pci);
->   
->   	return 0;
-> @@ -301,6 +321,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
->   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->   	enum pci_barno bar;
->   
-> +	rockchip_pcie_disable_l1sub(pci);
->   	rockchip_pcie_enable_l0s(pci);
->   	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
->   
+Patches are against the mediatek trees for-next branch
+
+Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+---
+Sjoerd Simons (15):
+      arm64: dts: mediatek: mt7981b: Add labels to commonly referenced nodes
+      arm64: dts: mediatek: mt7981b-openwrt-one: Configure UART0 pinmux
+      arm64: dts: mediatek: mt7981b: Add reserved memory for TF-A
+      dt-bindings: mfd: syscon: Add mt7981-topmisc
+      dt-bindings: pci: mediatek-pcie-gen3: Add MT7981 PCIe compatible
+      dt-bindings: phy: mediatek,tphy: Add support for MT7981
+      arm64: dts: mediatek: mt7981b: Add PCIe and USB support
+      arm64: dts: mediatek: mt7981b-openwrt-one: Enable PCIe and USB
+      dt-bindings: net: mediatek,net: Correct bindings for MT7981
+      arm64: dts: mediatek: mt7981b: Add Ethernet and WiFi offload support
+      arm64: dts: mediatek: mt7981b-openwrt-one: Enable SPI NOR
+      arm64: dts: mediatek: mt7981b-openwrt-one: Enable Ethernet
+      arm64: dts: mediatek: mt7981b: Add wifi memory region
+      arm64: dts: mediatek: mt7981b-openwrt-one: Enable wifi
+      arm64: dts: mediatek: mt7981b-openwrt-one: Enable leds
+
+ Documentation/devicetree/bindings/mfd/syscon.yaml  |   1 +
+ .../devicetree/bindings/net/mediatek,net.yaml      |  16 +-
+ .../bindings/pci/mediatek-pcie-gen3.yaml           |   1 +
+ .../devicetree/bindings/phy/mediatek,tphy.yaml     |   1 +
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 276 +++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi          | 258 ++++++++++++++++++-
+ 6 files changed, 538 insertions(+), 15 deletions(-)
+---
+base-commit: de8df7a4c881bd0df691458680ab1e22d63d60f4
+change-id: 20251016-openwrt-one-network-40bc9ac1b25c
+
+Best regards,
+-- 
+Sjoerd Simons <sjoerd@collabora.com>
 
 
