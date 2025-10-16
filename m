@@ -1,414 +1,149 @@
-Return-Path: <linux-pci+bounces-38372-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38373-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C071BE49B7
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08451BE4A0A
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:38:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36CB9421FBD
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 16:35:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88D245E2BAE
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 16:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1B521578D;
-	Thu, 16 Oct 2025 16:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKx3+fjx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F16341650;
+	Thu, 16 Oct 2025 16:38:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657E51FC110
-	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 16:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F8932AAC3;
+	Thu, 16 Oct 2025 16:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760632509; cv=none; b=kNpDtW0PFyK1aHZYXAe3l4njsNJwPdnrlFoZgdkW4/r6Nw7/Ukr1dTxjXXbj1gsiuJQVaB9gGgjE1fzjviXJM1M4hwZQr7MCPH0p07hAp2+pTmbL6wLSxrqvSpgsr/2X/mbaIs39RCqOoYhe2c0CWIAbw+mWqLYA3UyQA58psQ4=
+	t=1760632688; cv=none; b=e0Eh+IC71BjI38YfUZsD9syNnHzuiYLfhYufnbTLkG6Aqn6zlxB/liG/3K1K5vP483IuavW/q3lbssH6wTcbMMOWtgLKakAdKXaqY2Ig3gKs+4COiBd/3BRsU0V0NB1VdG1ncJkmaNtg+g7mMKtKou3NZqOU1O3PLzdd3NpQ/HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760632509; c=relaxed/simple;
-	bh=tvv87+/h8xIMKx3DynscC3A7EoxxH7f/hGkr+h60hdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fL2vjn31wUTVBIWu+AN4cY3ymWr5N4GOwmwGmIqu7kjwMno0GWdQ5Mk136nnpes6NjT2jW4fD1S0B5BkYANIP5BP0UZWWgoY6kO669ojpyB1BbiuUzGjkv6DOn0VTe5vX0qNP2wzSda4kQnbqvhbfLibXOKekUZbNeoC6QGFAjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKx3+fjx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A16CEC4CEF1;
-	Thu, 16 Oct 2025 16:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760632509;
-	bh=tvv87+/h8xIMKx3DynscC3A7EoxxH7f/hGkr+h60hdA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GKx3+fjxUX26J3/KLorxcwsFCvWkgA/tnMVFQXTwWOKFT6rdGVHW+qxuY/ifmaBlw
-	 86YRFmi3i2LAgtOmrZD3qLRg2vc4h9HhEEw/99XKCyRVRbPF8kDzwOF8uz1QzhJyjl
-	 pVy8qSg77Qeerw7iMjUqhCvv45SZf8L9+0tgxKc32q8y3xkd0g3IVeeiEvmJs3lY+u
-	 QgyfmABLGPXWQg7xx7SqnjMfmYuKhv6VraMrHilDoBU4dFYQdNRYraTCyCsJR5aB3F
-	 jk0wiOvn9jDdoojHp2mARVTEf/Yx7IZjCVKtosUorgozzXIkit9zIK8u8CRtsS1JKO
-	 Z7Djir8xewnpQ==
-Message-ID: <bdee889f-b154-4532-ba8d-ae5910ce1613@kernel.org>
-Date: Thu, 16 Oct 2025 11:35:07 -0500
+	s=arc-20240116; t=1760632688; c=relaxed/simple;
+	bh=YxBKu+zIUX8CGJj4jbQUYQMuxHt2FoP59bIPuC+yGWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2VVpwWnhfAKEujn45Ap5KTrjohUbkjzQlLn/OcIESwXATi0CS22cjECqQJnrSwsuK9qcH8RM6i2Tk8JlXTGwbN8SxTrf7Fo0hGUXvJmNRDmj3apkutmHAotrBLFACpj1U8xoU5dWErPGK5fEWxHtbUYURWMu1JoOXdptOr5jCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1v9Qz1-000000002mr-31Oo;
+	Thu, 16 Oct 2025 16:37:43 +0000
+Date: Thu, 16 Oct 2025 17:37:36 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Sjoerd Simons <sjoerd@collabora.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+	Bryan Hinton <bryan@bryanhinton.com>
+Subject: Re: [PATCH 02/15] arm64: dts: mediatek: mt7981b-openwrt-one:
+ Configure UART0 pinmux
+Message-ID: <aPEfUBl6fMe6QYdY@makrotopia.org>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+ <20251016-openwrt-one-network-v1-2-de259719b6f2@collabora.com>
+ <aPDnT4tuSzNDzyAE@makrotopia.org>
+ <5f430ff9-d701-426a-bf93-5290e6912eb4@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [pci:for-linus] BUILD REGRESSION
- f0bfeb2c51e44bee7876f2a0eda3518bd2c30a01
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20251016162854.GA988737@bhelgaas>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20251016162854.GA988737@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f430ff9-d701-426a-bf93-5290e6912eb4@collabora.com>
 
-On 10/16/25 11:28 AM, Bjorn Helgaas wrote:
-> On Thu, Oct 16, 2025 at 11:18:38AM -0500, Mario Limonciello wrote:
->> On 10/16/25 11:15 AM, Bjorn Helgaas wrote:
->>> On Thu, Oct 16, 2025 at 07:26:50AM +0800, kernel test robot wrote:
->>>> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
->>>> branch HEAD: f0bfeb2c51e44bee7876f2a0eda3518bd2c30a01  PCI/VGA: Select SCREEN_INFO on X86
->>>
->>> Just making sure you've seen this, Mario.
->>
->> I didn't see this, thanks for including me.
->>
->>> I *think* f0bfeb2c51e4 is
->>> the most recent version, and it was on pci/for-linus, so I'll drop it
->>> for now.
->>
->> Are you sure the failure is caused by "PCI/VGA: Select SCREEN_INFO on X86"?
+On Thu, Oct 16, 2025 at 04:29:14PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 16/10/25 14:38, Daniel Golle ha scritto:
+> > On Thu, Oct 16, 2025 at 12:08:38PM +0200, Sjoerd Simons wrote:
+> > > Add explicit pinctrl configuration for UART0 on the OpenWrt One board,
+> > > 
+> > > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> > > ---
+> > >   arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts | 11 +++++++++++
+> > >   1 file changed, 11 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > index 968b91f55bb27..f836059d7f475 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > @@ -22,6 +22,17 @@ memory@40000000 {
+> > >   	};
+> > >   };
+> > > +&pio {
+> > > +	uart0_pins: uart0-pins {
+> > > +		mux {
+> > > +			function = "uart";
+> > > +			groups = "uart0";
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > >   &uart0 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&uart0_pins>;
+> > >   	status = "okay";
+> > >   };
+> > 
+> > As there is only a single possible pinctrl configuration for uart0,
+> > both the pinmux definition as well as the pinctrl properties should go
+> > into mt7981b.dtsi rather than in the board's dts.
 > 
-> I'm not sure.  I looked briefly for a more detailed report but didn't
-> find it.  Maybe didn't look hard enough.  This email seems like a
-> summary that could possibly have included a link to details.
-
-I looked at https://lore.kernel.org/oe-kbuild-all/ and don't see one 
-there either.
-
-I think you should keep the patch in.  As it pertains to arch specific 
-stuff it behaves identically to pre-337bf13aa9dda.
-
-If I'm wrong and there is actually still a problem we'll get more build 
-robot reports as they come.
-
+> If there's really one single possible pin configuration for the UART0 pins,
+> as in, those pins *do not* have a GPIO mode, then yes I agree.
 > 
->> I wouldn't expect the below error to be:
->>
->>>
->>>> Error/Warning ids grouped by kconfigs:
->>>>
->>>> recent_errors
->>>> `-- mips-allyesconfig
->>>>       |-- (.head.text):relocation-truncated-to-fit:R_MIPS_26-against-kernel_entry
->>>>       `-- (.ref.text):relocation-truncated-to-fit:R_MIPS_26-against-start_secondary
->>>>
->>>> elapsed time: 1447m
->>>>
->>>> configs tested: 297
->>>> configs skipped: 5
->>>>
->>>> tested configs:
->>>> alpha                             allnoconfig    clang-22
->>>> alpha                             allnoconfig    gcc-15.1.0
->>>> alpha                            allyesconfig    clang-19
->>>> alpha                            allyesconfig    gcc-15.1.0
->>>> alpha                               defconfig    clang-19
->>>> arc                              allmodconfig    clang-19
->>>> arc                              allmodconfig    gcc-15.1.0
->>>> arc                               allnoconfig    clang-22
->>>> arc                               allnoconfig    gcc-15.1.0
->>>> arc                              allyesconfig    clang-19
->>>> arc                              allyesconfig    gcc-15.1.0
->>>> arc                                 defconfig    clang-19
->>>> arc                   randconfig-001-20251015    gcc-8.5.0
->>>> arc                   randconfig-001-20251016    clang-22
->>>> arc                   randconfig-002-20251015    gcc-8.5.0
->>>> arc                   randconfig-002-20251016    clang-22
->>>> arm                              allmodconfig    clang-19
->>>> arm                              allmodconfig    gcc-15.1.0
->>>> arm                               allnoconfig    clang-22
->>>> arm                              allyesconfig    clang-19
->>>> arm                              allyesconfig    gcc-15.1.0
->>>> arm                       aspeed_g5_defconfig    clang-22
->>>> arm                        clps711x_defconfig    gcc-15.1.0
->>>> arm                                 defconfig    clang-19
->>>> arm                          ep93xx_defconfig    clang-22
->>>> arm                             mxs_defconfig    clang-22
->>>> arm                          pxa168_defconfig    gcc-15.1.0
->>>> arm                   randconfig-001-20251015    clang-22
->>>> arm                   randconfig-001-20251015    gcc-8.5.0
->>>> arm                   randconfig-001-20251016    clang-22
->>>> arm                   randconfig-002-20251015    clang-22
->>>> arm                   randconfig-002-20251015    gcc-8.5.0
->>>> arm                   randconfig-002-20251016    clang-22
->>>> arm                   randconfig-003-20251015    gcc-8.5.0
->>>> arm                   randconfig-003-20251016    clang-22
->>>> arm                   randconfig-004-20251015    clang-22
->>>> arm                   randconfig-004-20251015    gcc-8.5.0
->>>> arm                   randconfig-004-20251016    clang-22
->>>> arm64                            allmodconfig    clang-19
->>>> arm64                             allnoconfig    clang-22
->>>> arm64                             allnoconfig    gcc-15.1.0
->>>> arm64                               defconfig    clang-19
->>>> arm64                 randconfig-001-20251015    clang-22
->>>> arm64                 randconfig-001-20251015    gcc-8.5.0
->>>> arm64                 randconfig-001-20251016    clang-22
->>>> arm64                 randconfig-002-20251015    gcc-13.4.0
->>>> arm64                 randconfig-002-20251015    gcc-8.5.0
->>>> arm64                 randconfig-002-20251016    clang-22
->>>> arm64                 randconfig-003-20251015    clang-22
->>>> arm64                 randconfig-003-20251015    gcc-8.5.0
->>>> arm64                 randconfig-003-20251016    clang-22
->>>> arm64                 randconfig-004-20251015    clang-22
->>>> arm64                 randconfig-004-20251015    gcc-8.5.0
->>>> arm64                 randconfig-004-20251016    clang-22
->>>> csky                              allnoconfig    clang-22
->>>> csky                              allnoconfig    gcc-15.1.0
->>>> csky                                defconfig    clang-19
->>>> csky                  randconfig-001-20251015    clang-22
->>>> csky                  randconfig-001-20251015    gcc-15.1.0
->>>> csky                  randconfig-002-20251015    clang-22
->>>> csky                  randconfig-002-20251015    gcc-9.5.0
->>>> hexagon                          allmodconfig    clang-17
->>>> hexagon                          allmodconfig    clang-19
->>>> hexagon                           allnoconfig    clang-22
->>>> hexagon                          allyesconfig    clang-19
->>>> hexagon                          allyesconfig    clang-22
->>>> hexagon                             defconfig    clang-19
->>>> hexagon               randconfig-001-20251015    clang-22
->>>> hexagon               randconfig-002-20251015    clang-19
->>>> hexagon               randconfig-002-20251015    clang-22
->>>> i386                             allmodconfig    clang-20
->>>> i386                             allmodconfig    gcc-14
->>>> i386                              allnoconfig    clang-20
->>>> i386                              allnoconfig    gcc-14
->>>> i386                             allyesconfig    clang-20
->>>> i386                             allyesconfig    gcc-14
->>>> i386        buildonly-randconfig-001-20251015    clang-20
->>>> i386        buildonly-randconfig-001-20251015    gcc-13
->>>> i386        buildonly-randconfig-001-20251016    clang-20
->>>> i386        buildonly-randconfig-002-20251015    clang-20
->>>> i386        buildonly-randconfig-002-20251015    gcc-14
->>>> i386        buildonly-randconfig-002-20251016    clang-20
->>>> i386        buildonly-randconfig-003-20251015    clang-20
->>>> i386        buildonly-randconfig-003-20251016    clang-20
->>>> i386        buildonly-randconfig-004-20251015    clang-20
->>>> i386        buildonly-randconfig-004-20251016    clang-20
->>>> i386        buildonly-randconfig-005-20251015    clang-20
->>>> i386        buildonly-randconfig-005-20251016    clang-20
->>>> i386        buildonly-randconfig-006-20251015    clang-20
->>>> i386        buildonly-randconfig-006-20251016    clang-20
->>>> i386                                defconfig    clang-20
->>>> i386                  randconfig-001-20251015    clang-20
->>>> i386                  randconfig-001-20251016    clang-20
->>>> i386                  randconfig-002-20251015    clang-20
->>>> i386                  randconfig-002-20251016    clang-20
->>>> i386                  randconfig-003-20251015    clang-20
->>>> i386                  randconfig-003-20251016    clang-20
->>>> i386                  randconfig-004-20251015    clang-20
->>>> i386                  randconfig-004-20251016    clang-20
->>>> i386                  randconfig-005-20251015    clang-20
->>>> i386                  randconfig-005-20251016    clang-20
->>>> i386                  randconfig-006-20251015    clang-20
->>>> i386                  randconfig-006-20251016    clang-20
->>>> i386                  randconfig-007-20251015    clang-20
->>>> i386                  randconfig-007-20251016    clang-20
->>>> i386                  randconfig-011-20251015    clang-20
->>>> i386                  randconfig-011-20251016    gcc-14
->>>> i386                  randconfig-012-20251015    clang-20
->>>> i386                  randconfig-012-20251016    gcc-14
->>>> i386                  randconfig-013-20251015    clang-20
->>>> i386                  randconfig-013-20251016    gcc-14
->>>> i386                  randconfig-014-20251015    clang-20
->>>> i386                  randconfig-014-20251016    gcc-14
->>>> i386                  randconfig-015-20251015    clang-20
->>>> i386                  randconfig-015-20251016    gcc-14
->>>> i386                  randconfig-016-20251015    clang-20
->>>> i386                  randconfig-016-20251016    gcc-14
->>>> i386                  randconfig-017-20251015    clang-20
->>>> i386                  randconfig-017-20251016    gcc-14
->>>> loongarch                        allmodconfig    clang-19
->>>> loongarch                         allnoconfig    clang-22
->>>> loongarch                           defconfig    clang-19
->>>> loongarch             randconfig-001-20251015    clang-22
->>>> loongarch             randconfig-001-20251015    gcc-15.1.0
->>>> loongarch             randconfig-002-20251015    clang-22
->>>> loongarch             randconfig-002-20251015    gcc-15.1.0
->>>> m68k                             allmodconfig    clang-19
->>>> m68k                             allmodconfig    gcc-15.1.0
->>>> m68k                              allnoconfig    gcc-15.1.0
->>>> m68k                             allyesconfig    clang-19
->>>> m68k                             allyesconfig    gcc-15.1.0
->>>> m68k                                defconfig    clang-19
->>>> microblaze                       allmodconfig    clang-19
->>>> microblaze                       allmodconfig    gcc-15.1.0
->>>> microblaze                        allnoconfig    gcc-15.1.0
->>>> microblaze                       allyesconfig    clang-19
->>>> microblaze                       allyesconfig    gcc-15.1.0
->>>> microblaze                          defconfig    gcc-15.1.0
->>>> mips                              allnoconfig    gcc-15.1.0
->>>> nios2                             allnoconfig    gcc-11.5.0
->>>> nios2                             allnoconfig    gcc-15.1.0
->>>> nios2                               defconfig    gcc-11.5.0
->>>> nios2                               defconfig    gcc-15.1.0
->>>> nios2                 randconfig-001-20251015    clang-22
->>>> nios2                 randconfig-001-20251015    gcc-8.5.0
->>>> nios2                 randconfig-002-20251015    clang-22
->>>> nios2                 randconfig-002-20251015    gcc-8.5.0
->>>> openrisc                          allnoconfig    clang-22
->>>> openrisc                          allnoconfig    gcc-15.1.0
->>>> openrisc                         allyesconfig    gcc-15.1.0
->>>> openrisc                            defconfig    gcc-14
->>>> parisc                           allmodconfig    gcc-15.1.0
->>>> parisc                            allnoconfig    clang-22
->>>> parisc                            allnoconfig    gcc-15.1.0
->>>> parisc                           allyesconfig    gcc-15.1.0
->>>> parisc                              defconfig    gcc-15.1.0
->>>> parisc                randconfig-001-20251015    clang-22
->>>> parisc                randconfig-001-20251015    gcc-9.5.0
->>>> parisc                randconfig-002-20251015    clang-22
->>>> parisc                randconfig-002-20251015    gcc-8.5.0
->>>> parisc64                            defconfig    gcc-15.1.0
->>>> powerpc                    adder875_defconfig    gcc-15.1.0
->>>> powerpc                          allmodconfig    gcc-15.1.0
->>>> powerpc                           allnoconfig    clang-22
->>>> powerpc                           allnoconfig    gcc-15.1.0
->>>> powerpc                          allyesconfig    clang-22
->>>> powerpc                          allyesconfig    gcc-15.1.0
->>>> powerpc                   currituck_defconfig    clang-22
->>>> powerpc                     mpc83xx_defconfig    clang-22
->>>> powerpc               randconfig-001-20251015    clang-22
->>>> powerpc               randconfig-001-20251015    gcc-15.1.0
->>>> powerpc               randconfig-002-20251015    clang-22
->>>> powerpc               randconfig-002-20251015    gcc-12.5.0
->>>> powerpc               randconfig-003-20251015    clang-22
->>>> powerpc                 xes_mpc85xx_defconfig    clang-22
->>>> powerpc64                        alldefconfig    gcc-15.1.0
->>>> powerpc64             randconfig-001-20251015    clang-22
->>>> powerpc64             randconfig-002-20251015    clang-22
->>>> powerpc64             randconfig-003-20251015    clang-22
->>>> powerpc64             randconfig-003-20251015    gcc-13.4.0
->>>> riscv                            allmodconfig    clang-22
->>>> riscv                            allmodconfig    gcc-15.1.0
->>>> riscv                             allnoconfig    clang-22
->>>> riscv                             allnoconfig    gcc-15.1.0
->>>> riscv                            allyesconfig    clang-16
->>>> riscv                            allyesconfig    gcc-15.1.0
->>>> riscv                               defconfig    gcc-14
->>>> riscv             nommu_k210_sdcard_defconfig    clang-22
->>>> riscv                 randconfig-001-20251015    clang-22
->>>> riscv                 randconfig-001-20251015    gcc-10.5.0
->>>> riscv                 randconfig-001-20251016    gcc-10.5.0
->>>> riscv                 randconfig-002-20251015    clang-22
->>>> riscv                 randconfig-002-20251016    gcc-10.5.0
->>>> s390                             allmodconfig    clang-18
->>>> s390                             allmodconfig    gcc-15.1.0
->>>> s390                              allnoconfig    clang-22
->>>> s390                             allyesconfig    gcc-15.1.0
->>>> s390                                defconfig    gcc-14
->>>> s390                  randconfig-001-20251015    clang-22
->>>> s390                  randconfig-001-20251015    gcc-12.5.0
->>>> s390                  randconfig-001-20251016    gcc-10.5.0
->>>> s390                  randconfig-002-20251015    clang-22
->>>> s390                  randconfig-002-20251016    gcc-10.5.0
->>>> sh                               allmodconfig    gcc-15.1.0
->>>> sh                                allnoconfig    gcc-15.1.0
->>>> sh                               allyesconfig    gcc-15.1.0
->>>> sh                                  defconfig    gcc-14
->>>> sh                          landisk_defconfig    gcc-15.1.0
->>>> sh                    randconfig-001-20251015    clang-22
->>>> sh                    randconfig-001-20251015    gcc-11.5.0
->>>> sh                    randconfig-001-20251016    gcc-10.5.0
->>>> sh                    randconfig-002-20251015    clang-22
->>>> sh                    randconfig-002-20251015    gcc-11.5.0
->>>> sh                    randconfig-002-20251016    gcc-10.5.0
->>>> sh                          rsk7269_defconfig    gcc-15.1.0
->>>> sh                           sh2007_defconfig    clang-22
->>>> sparc                            allmodconfig    gcc-15.1.0
->>>> sparc                             allnoconfig    gcc-15.1.0
->>>> sparc                               defconfig    gcc-15.1.0
->>>> sparc                 randconfig-001-20251015    clang-22
->>>> sparc                 randconfig-001-20251015    gcc-8.5.0
->>>> sparc                 randconfig-001-20251016    gcc-10.5.0
->>>> sparc                 randconfig-002-20251015    clang-22
->>>> sparc                 randconfig-002-20251015    gcc-13.4.0
->>>> sparc                 randconfig-002-20251016    gcc-10.5.0
->>>> sparc64                             defconfig    gcc-14
->>>> sparc64               randconfig-001-20251015    clang-22
->>>> sparc64               randconfig-001-20251016    gcc-10.5.0
->>>> sparc64               randconfig-002-20251015    clang-22
->>>> sparc64               randconfig-002-20251015    gcc-11.5.0
->>>> sparc64               randconfig-002-20251016    gcc-10.5.0
->>>> um                               allmodconfig    clang-19
->>>> um                                allnoconfig    clang-22
->>>> um                               allyesconfig    clang-19
->>>> um                               allyesconfig    gcc-14
->>>> um                                  defconfig    gcc-14
->>>> um                             i386_defconfig    gcc-14
->>>> um                    randconfig-001-20251015    clang-22
->>>> um                    randconfig-001-20251016    gcc-10.5.0
->>>> um                    randconfig-002-20251015    clang-22
->>>> um                    randconfig-002-20251016    gcc-10.5.0
->>>> um                           x86_64_defconfig    gcc-14
->>>> x86_64                            allnoconfig    clang-20
->>>> x86_64                           allyesconfig    clang-20
->>>> x86_64      buildonly-randconfig-001-20251015    clang-20
->>>> x86_64      buildonly-randconfig-001-20251015    gcc-13
->>>> x86_64      buildonly-randconfig-002-20251015    gcc-13
->>>> x86_64      buildonly-randconfig-002-20251015    gcc-14
->>>> x86_64      buildonly-randconfig-003-20251015    clang-20
->>>> x86_64      buildonly-randconfig-003-20251015    gcc-13
->>>> x86_64      buildonly-randconfig-004-20251015    clang-20
->>>> x86_64      buildonly-randconfig-004-20251015    gcc-13
->>>> x86_64      buildonly-randconfig-005-20251015    gcc-13
->>>> x86_64      buildonly-randconfig-005-20251015    gcc-14
->>>> x86_64      buildonly-randconfig-006-20251015    gcc-13
->>>> x86_64                              defconfig    clang-20
->>>> x86_64                              defconfig    gcc-14
->>>> x86_64                                  kexec    clang-20
->>>> x86_64                randconfig-001-20251015    clang-20
->>>> x86_64                randconfig-001-20251016    clang-20
->>>> x86_64                randconfig-002-20251015    clang-20
->>>> x86_64                randconfig-002-20251016    clang-20
->>>> x86_64                randconfig-003-20251015    clang-20
->>>> x86_64                randconfig-003-20251016    clang-20
->>>> x86_64                randconfig-004-20251015    clang-20
->>>> x86_64                randconfig-004-20251016    clang-20
->>>> x86_64                randconfig-005-20251015    clang-20
->>>> x86_64                randconfig-005-20251016    clang-20
->>>> x86_64                randconfig-006-20251015    clang-20
->>>> x86_64                randconfig-006-20251016    clang-20
->>>> x86_64                randconfig-007-20251015    clang-20
->>>> x86_64                randconfig-007-20251016    clang-20
->>>> x86_64                randconfig-008-20251015    clang-20
->>>> x86_64                randconfig-008-20251016    clang-20
->>>> x86_64                randconfig-071-20251015    gcc-14
->>>> x86_64                randconfig-072-20251015    gcc-14
->>>> x86_64                randconfig-073-20251015    gcc-14
->>>> x86_64                randconfig-074-20251015    gcc-14
->>>> x86_64                randconfig-075-20251015    gcc-14
->>>> x86_64                randconfig-076-20251015    gcc-14
->>>> x86_64                randconfig-077-20251015    gcc-14
->>>> x86_64                randconfig-078-20251015    gcc-14
->>>> x86_64                               rhel-9.4    clang-20
->>>> x86_64                           rhel-9.4-bpf    gcc-14
->>>> x86_64                          rhel-9.4-func    clang-20
->>>> x86_64                    rhel-9.4-kselftests    clang-20
->>>> x86_64                         rhel-9.4-kunit    gcc-14
->>>> x86_64                           rhel-9.4-ltp    gcc-14
->>>> x86_64                          rhel-9.4-rust    clang-20
->>>> xtensa                            allnoconfig    gcc-15.1.0
->>>> xtensa                randconfig-001-20251015    clang-22
->>>> xtensa                randconfig-001-20251015    gcc-9.5.0
->>>> xtensa                randconfig-001-20251016    gcc-10.5.0
->>>> xtensa                randconfig-002-20251015    clang-22
->>>> xtensa                randconfig-002-20251015    gcc-15.1.0
->>>> xtensa                randconfig-002-20251016    gcc-10.5.0
->>>> xtensa                    xip_kc705_defconfig    gcc-15.1.0
->>>>
->>>> --
->>>> 0-DAY CI Kernel Test Service
->>>> https://github.com/intel/lkp-tests/wiki
->>
+> If those pins can be as well configured as GPIOs, this goes to board DTS.
 
+I respectfully disagree and will explain below.
+
+All pinmux pins on the MediaTek platform also allow being configured as
+GPIOs. However, if you configure those as GPIOs the consequence is that
+you cannot use UART0 any more at all. So using UART0 at all always
+implies using exactly those pins, there is no alternative to that.
+
+Hence every board with every possible uses of pins 32 and 33 (there is
+only RX and TX for UART0, RTS/CTS flow-control is not possible) can be
+represented without needing to configure the pinctrl for uart0 on the
+board level. There isn't going to be any variation on the board-level
+when it comes to uart0. Either it is enabled (status = "okay";), and
+that will always imply using the 'uart0' group in mode 'uart', or, in
+case any of the two pins of uart0 is used for something else that means
+uart0 cannot be enabled. Simple as that.
+
+Hence there is no need to duplicate that pinctrl settings on each and
+every board, as controlling the 'status' property on the board-level
+already gives 100% freedom.
+
+(Sidenote: As even the BootROM already uses those two pins as UART for
+debug output, it is very unlikely that anyone would actually use them
+for anything else in production. Apart from being used as GPIOs you can
+also use pins 32 and 33 as an I2C target for external debug access to the
+registers of either the sgmii0_phy, sgmii1_phy or u3_phy. However, that
+doesn't matter in terms of the debate above, as the crucial point there
+is that using uart0 always implies using group 'uart0' in 'uart' mode.)
 
