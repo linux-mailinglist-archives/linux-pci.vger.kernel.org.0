@@ -1,214 +1,279 @@
-Return-Path: <linux-pci+bounces-38375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F1FFBE4A89
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:47:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDB6EBE4AA1
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:47:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E4E524E1609
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 16:47:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CBC35848AB
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 16:47:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 973201DE8B5;
-	Thu, 16 Oct 2025 16:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0A7Gg9lh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A9A1DE8B5;
+	Thu, 16 Oct 2025 16:47:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E16A3BB48
-	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 16:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5D123EA94;
+	Thu, 16 Oct 2025 16:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760633220; cv=none; b=SAeTQdTDfNX5LYmL50Xj7yYceRCPsTp3MvTMlSKS0D+BnLv0EvRtiCSwRa/ttVD1lxK+Br3CIUZPpRYiYE09FIRoFDNX3s9VnSe1DLn0VYCgagm1PWh0vv8ouFzM9I3BQFifJEmnuykpJ29FDpyFjqZ/EPVLSvZhoxdaZI81zsQ=
+	t=1760633241; cv=none; b=BJFwuFyLgDVVOW6Gu4KtjP/T5d7xcwbgxhqsjoTF4+CcYerxnnJ04g1FOYOKYtZGMFJ0eQMPVi9B07fQnaQkUVcbq1E8DwK8HUkD7iglgWJjWi6PSmmN316ZP47e8W22QMjzQCdn1T3xryduK6LUe44fRuElLbkSw7VhnOuj630=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760633220; c=relaxed/simple;
-	bh=/8ULp8GNitp6ed8PeDWxV3ir/nSGEG1rxOOWV9OZqWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hxit/tiLVhaGf07AeafoMHcRPOni0E6vA46wbJ2UlzX62OzxVQENz7BrWYQqy4HL0Pj9bh1nPj9BbaQITOVJ/A3gruOhj1BRn5RPDboRfTG81DKtBy5APKM9hF6KrBbOn2l8qsiawoop4TSSBn0+YlAK34ofLlKCl2OUCYZid78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0A7Gg9lh; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-64e84414cfbso430792eaf.1
-        for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 09:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1760633217; x=1761238017; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WC9Kf4Woi10vxrnm+xt87b6ePjx84cYka09NWwjNNWA=;
-        b=0A7Gg9lhFCuW9sMBiGBuBCWby4BhJtTI6e1ru5t1h/Sjf9+vApIhL3Uj2S9Eh5s5zO
-         shfFQOyr/EWGKdWFlroW42BOfu6ljhknOhZSj3rYeN30I+OggdfYtx2eaxm37unbcz/a
-         0vH4WvRmfN11HlLhCgbCttNuN/oA1Cq0gTF4LErAHa3MfhR6kvtM/c8GL4NuoYK7DTcD
-         D/hL5MUHML1iesOwzBDvAdHZVszuFaAmYr2sJKxxSMazufnB24W2JFKHyDKb6mFhPSP+
-         rrIIjw3UkowvQiQMnjyd2l+xN8J7Erf3DYtcu3+RI3b3KSLtNPYFiS2dvqodtRSVzmlH
-         YxOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760633217; x=1761238017;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WC9Kf4Woi10vxrnm+xt87b6ePjx84cYka09NWwjNNWA=;
-        b=n0AHUDu7jmR3hR/944QXoEzvyPW3BkhWlK8DalpxaNPHVzrY8wPTc8s5U9JwjeKBvZ
-         SZTYMx0qBvkn7F0zyUwQdTyEG7FGqStyZ4Q5ty503OiVSAK6DyCx91R41lB+gtGIQ32J
-         mhwWKW75fzvuuKFirmR2MfFiNNdbRUzOVo4t+bI93Y51R5LfVRMNLFc2q1kbLYJfwRQJ
-         j7CHaGlA/BlnJ1tzZwN8Zb4dMF/ZSMC1O7sY8RpXLuZZL+vbdOyrFrCPbHI89UkPzeoH
-         v9cSx8ONcYQkaNoVHnE23tpzZls+uvhyhmSe1xUpgR+0Xi9z7ClsvCX4ouWUk9vbczlk
-         hXSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgRXYwOmJCPOu9PWxz32Jl1nYkxS33eCXZqoAxTQ+PIKz5l1khSdPkvduHGDY9e8YzVfvnx6f2FTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfLvAwHbzn4vUI+tJZmNfDbAjWk7iOQVzHgcOqtcHyi8UMqnKk
-	p/tq9rfNi3H438paJzUHoCbXhIJ8xeZ9bX8LJsaQ1Zy3guJmuYsyoGj3JV6TPkmtU4I=
-X-Gm-Gg: ASbGncveuRtCKq8F2bqHUFhbsJ6Qx+xSf7YopukEM750eDwEOPjMK7p8mUkPDnXckd/
-	ZfEbEmpJoGGEQkWLIr+rTP1dNoYv+BLe0by8LYzn/uEVBG9psTs7HSYUPjtljAdiSbAe91bxdoo
-	rEPWcikQIChEwweJJdbA3QtewfTve+EHvy8BzOOjHXhCFn49WK/5syxK2kidHk8urZt+M2MaNvA
-	PD1HC5glRMZPYOMFuP6GkL6DBVCs7Y+BrDthSnVCgLjMZAeIlZe+kKOEArBTGixi+qiJ/FBTyS9
-	ocndNQhTtg6OrppHvPlezVc2JkGY0tPyUCtKdhc3DuIkXNXDQbASgvul9HqBSQ1MDxIOejsDJws
-	JrjEwHxh8M3NqjZ4FRv5n9RPJ8UJ4CKZsXj0h2gzepY50UYAZxhIadQdD7iPQVcFMfaJzSX7uKo
-	4OTsUR5kFEqfW+5w4w8nJ3qBqsjwiiYRQFePkVHuIAKCSduKg=
-X-Google-Smtp-Source: AGHT+IGuEWd+8F+VovYJZ3CHXCt5CGxSvLqiDDTdefEfbr49E3wJzWtW8JNbm3BgbVjhnWchRkMr+Q==
-X-Received: by 2002:a05:6808:3a0b:b0:441:d465:7474 with SMTP id 5614622812f47-443a30e1b7emr249948b6e.33.1760633217480;
-        Thu, 16 Oct 2025 09:46:57 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:86b5:623:b364:9913? ([2600:8803:e7e4:500:86b5:623:b364:9913])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-441d5f7ebdbsm3144632b6e.18.2025.10.16.09.46.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Oct 2025 09:46:57 -0700 (PDT)
-Message-ID: <cc21a74c-905f-4223-95a8-d747ef763081@baylibre.com>
-Date: Thu, 16 Oct 2025 11:46:56 -0500
+	s=arc-20240116; t=1760633241; c=relaxed/simple;
+	bh=DlAyQQmVrHCjqtbaYRqt228DCsKpBQ6VDXNZ3FPON2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESWE65KR83STA6Yg8kSLZTb2s3DDXGg2vYE8nitlFwIexjD9531artjr9cdz9X2LOvvw4AZrdSYj7AAafxkbQzT0bhPZcJ18ZIWsyGrgky2gBieeuXMQ+1Wj6ELsx8gQRvX8e256qwt71IJeZYuRGs3D8jf1RZ+bbRmgUFwSsPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1v9R89-000000002py-116l;
+	Thu, 16 Oct 2025 16:47:09 +0000
+Date: Thu, 16 Oct 2025 17:47:05 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Sjoerd Simons <sjoerd@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+	Bryan Hinton <bryan@bryanhinton.com>
+Subject: Re: [PATCH 10/15] arm64: dts: mediatek: mt7981b: Add Ethernet and
+ WiFi offload support
+Message-ID: <aPEhiVdgkVLvF9Et@makrotopia.org>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+ <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] PM: runtime: Introduce
- PM_RUNTIME_ACQUIRE_OR_FAIL() macro
-To: Takashi Iwai <tiwai@suse.de>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Bjorn Helgaas <helgaas@kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Frank Li <Frank.Li@nxp.com>,
- Dhruva Gole <d-gole@ti.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-References: <3925484.kQq0lBPeGt@rafael.j.wysocki>
- <3324926.5fSG56mABF@rafael.j.wysocki> <20251016133854.00003669@huawei.com>
- <CAJZ5v0iOgbkJbdRzgrBUaaYL+S_8BZD7XuXdK5vs2gMG3ug1KA@mail.gmail.com>
- <87ikge7v01.wl-tiwai@suse.de>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <87ikge7v01.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
 
-On 10/16/25 9:59 AM, Takashi Iwai wrote:
-> On Thu, 16 Oct 2025 15:46:08 +0200,
-> Rafael J. Wysocki wrote:
->>
->> On Thu, Oct 16, 2025 at 2:39 PM Jonathan Cameron
->> <jonathan.cameron@huawei.com> wrote:
->>>
->>> On Wed, 15 Oct 2025 16:02:02 +0200
->>> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->>>
->>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>
->>>> There appears to be an emerging pattern in which guard
->>>> pm_runtime_active_try is used for resuming the given device and
->>>> incrementing its runtime PM usage counter if the resume has been
->>>> successful, that is followed by an ACQUIRE_ERR() check on the guard
->>>> variable and if that triggers, a specific error code is returned, for
->>>> example:
->>>>
->>>>       ACQUIRE(pm_runtime_active_try, pm)(dev);
->>>>       if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
->>>>               return -ENXIO
->>>>
->>>> Introduce a macro called PM_RUNTIME_ACQUIRE_OR_FAIL() representing the
->>>> above sequence of statements that can be used to avoid code duplication
->>>> wherever that sequence would be used.
->>>>
->>>> Use this macro right away in the PCI sysfs code where the above pattern
->>>> is already present.
->>>>
->>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>> ---
->>>>
->>>> Admittedly, the new macro is slightly on the edge, but it really helps
->>>> reduce code duplication, so here it goes.
->>>
->>> Fully agree with the 'on the edge'.
->>>
->>> This looks somewhat like the some of the earlier attempts to come up with
->>> a general solution before ACQUIRE().  Linus was fairly clear on his opinion of
->>> a proposal that looked a bit similar to this
->>> cond_guard(mutex_intr, return -EINTR, &mutex);
->>>
->>> https://lore.kernel.org/all/CAHk-=win7bwWhPJ=iuW4h-sDTqbX6v9_LJnMaO3KxVfPSs81bQ@mail.gmail.com/
->>>
->>> +CC a few people who might have better memories of where things went than I do.
->>>
->>> The solution you have here has the benefit of clarity that all it can do is
->>> return the error code.
->>
->> Well, I could call the macro PM_RUNTIME_ACQUIRE_OR_RETURN_ERROR(), but
->> FAIL is just shorter. :-)
->>
->> Seriously though, the odd syntax bothers me, but it has come from
->> looking at the multiple pieces of code that otherwise would have
->> repeated exactly the same code pattern including the guard name in two
->> places and the pm variable that has no role beyond guarding.
+On Thu, Oct 16, 2025 at 12:08:46PM +0200, Sjoerd Simons wrote:
+> Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
+> including:
+> - Ethernet MAC controller with dual GMAC support
+> - Wireless Ethernet Dispatch (WED)
+> - SGMII PHY controllers for high-speed Ethernet interfaces
+> - Reserved memory regions for WiFi offload processor
 > 
-> While I see the benefit of simplification, IMO, embedding a code
-> flow control inside the macro argument makes it really harder to
-> follow.
+> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 ++++++++++++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
 > 
-> Is the problem about the messy ACQUIRE_ERR() invocation?  If so, it
-> could be replaced with something shorter (and without extra type),
-> e.g. replace 
-> 	ret = ACQUIRE_ERR(pm_runtime_active_try, &pm);
-> with
-> 	ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
-> 
-> Since all runtime PM guard usage is to the same object, we can have a
-> common macro.
-> 
-> Also, in the past, I thought of a macro like below that stores the
-> error code in the given variable ret:
-> 
-> #define __guard_cond_ret(_name, _var, _ret, _args)	\
-> 	CLASS(_name, _var)(_args);			\
-> 	(_ret) = __guard_err(_name)(&_var)
-> #define guard_cond_ret(_name, _ret, _args) \
-> 	__guard_cond_ret(_name, __UNIQUE_ID(guard), _ret, _args)
-> 
-> ... so that it'd work for runtime PM like:
-> 
-> 	int ret;
-> 
-> 	guard_cond_ret(pm_runtime_active, ret)(dev);
-> 	if (ret)
-> 		return ret;
-> 	
-> Of course, a clear drawback is that the assignment of ret isn't
-> obvious, but the code flow isn't skewed much in this way.
-> 
-> 
-> thanks,
-> 
-> Takashi
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> index 13950fe6e8766..c85fa0ddf2da8 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> @@ -2,6 +2,7 @@
+>  
+>  #include <dt-bindings/clock/mediatek,mt7981-clk.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/leds/common.h>
+>  #include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/reset/mt7986-resets.h>
+>  
+> @@ -47,11 +48,36 @@ reserved-memory {
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> +		wo_boot: wo-boot@15194000 {
+> +			reg = <0 0x15194000 0 0x1000>;
+> +			no-map;
+> +		};
+> +
+> +		wo_ilm0: wo-ilm@151e0000 {
+> +			reg = <0 0x151e0000 0 0x8000>;
+> +			no-map;
+> +		};
+> +
+> +		wo_dlm0: wo-dlm@151e8000 {
+> +			reg = <0 0x151e8000 0 0x2000>;
+> +			no-map;
+> +		};
+> +
+>  		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+>  		secmon_reserved: secmon@43000000 {
+>  			reg = <0 0x43000000 0 0x30000>;
+>  			no-map;
+>  		};
+> +
+> +		wo_emi0: wo-emi@47d80000 {
+> +			reg = <0 0x47d80000 0 0x40000>;
+> +			no-map;
+> +		};
+> +
+> +		wo_data: wo-data@47dc0000 {
+> +			reg = <0 0x47dc0000 0 0x240000>;
+> +			no-map;
+> +		};
+>  	};
+>  
+>  	soc {
+> @@ -107,6 +133,18 @@ pwm: pwm@10048000 {
+>  			#pwm-cells = <2>;
+>  		};
+>  
+> +		sgmiisys0: syscon@10060000 {
+> +			compatible = "mediatek,mt7981-sgmiisys_0", "syscon";
+> +			reg = <0 0x10060000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		sgmiisys1: syscon@10070000 {
+> +			compatible = "mediatek,mt7981-sgmiisys_1", "syscon";
+> +			reg = <0 0x10070000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+>  		uart0: serial@11002000 {
+>  			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
+>  			reg = <0 0x11002000 0 0x100>;
+> @@ -338,6 +376,10 @@ soc-uuid@140 {
+>  			thermal_calibration: thermal-calib@274 {
+>  				reg = <0x274 0xc>;
+>  			};
+> +
+> +			phy_calibration: phy-calib@8dc {
+> +				reg = <0x8dc 0x10>;
+> +			};
+>  		};
+>  
+>  		ethsys: clock-controller@15000000 {
+> @@ -347,6 +389,97 @@ ethsys: clock-controller@15000000 {
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		wed: wed@15010000 {
+> +			compatible = "mediatek,mt7981-wed",
+> +				     "syscon";
+> +			reg = <0 0x15010000 0 0x1000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
+> +			memory-region = <&wo_emi0>, <&wo_ilm0>, <&wo_dlm0>,
+> +					<&wo_data>, <&wo_boot>;
+> +			memory-region-names = "wo-emi", "wo-ilm", "wo-dlm",
+> +					      "wo-data", "wo-boot";
+> +			mediatek,wo-ccif = <&wo_ccif0>;
+> +		};
+> +
+> +		eth: ethernet@15100000 {
+> +			compatible = "mediatek,mt7981-eth";
+> +			reg = <0 0x15100000 0 0x40000>;
+> +			assigned-clocks = <&topckgen CLK_TOP_NETSYS_2X_SEL>,
+> +					  <&topckgen CLK_TOP_SGM_325M_SEL>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_800M>,
+> +						 <&topckgen CLK_TOP_CB_SGM_325M>;
+> +			clocks = <&ethsys CLK_ETH_FE_EN>,
+> +				 <&ethsys CLK_ETH_GP2_EN>,
+> +				 <&ethsys CLK_ETH_GP1_EN>,
+> +				 <&ethsys CLK_ETH_WOCPU0_EN>,
+> +				 <&topckgen CLK_TOP_SGM_REG>,
+> +				 <&sgmiisys0 CLK_SGM0_TX_EN>,
+> +				 <&sgmiisys0 CLK_SGM0_RX_EN>,
+> +				 <&sgmiisys0 CLK_SGM0_CK0_EN>,
+> +				 <&sgmiisys0 CLK_SGM0_CDR_CK0_EN>,
+> +				 <&sgmiisys1 CLK_SGM1_TX_EN>,
+> +				 <&sgmiisys1 CLK_SGM1_RX_EN>,
+> +				 <&sgmiisys1 CLK_SGM1_CK1_EN>,
+> +				 <&sgmiisys1 CLK_SGM1_CDR_CK1_EN>,
+> +				 <&topckgen CLK_TOP_NETSYS_SEL>,
+> +				 <&topckgen CLK_TOP_NETSYS_500M_SEL>;
+> +			clock-names = "fe", "gp2", "gp1", "wocpu0",
+> +				      "sgmii_ck",
+> +				      "sgmii_tx250m", "sgmii_rx250m",
+> +				      "sgmii_cdr_ref", "sgmii_cdr_fb",
+> +				      "sgmii2_tx250m", "sgmii2_rx250m",
+> +				      "sgmii2_cdr_ref", "sgmii2_cdr_fb",
+> +				      "netsys0", "netsys1";
+> +			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "fe0", "fe1", "fe2", "fe3", "pdma0",
+> +					  "pdma1", "pdma2", "pdma3";
+> +			sram = <&eth_sram>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			mediatek,ethsys = <&ethsys>;
+> +			mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
+> +			mediatek,infracfg = <&topmisc>;
+> +			mediatek,wed = <&wed>;
+> +			status = "disabled";
+> +
+> +			mdio_bus: mdio-bus {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				int_gbe_phy: ethernet-phy@0 {
+> +					compatible = "ethernet-phy-ieee802.3-c22";
+> +					reg = <0>;
+> +					phy-mode = "gmii";
+> +					phy-is-integrated;
+> +					nvmem-cells = <&phy_calibration>;
+> +					nvmem-cell-names = "phy-cal-data";
 
-FWIW, a while back, I suggested something like this where ret was
-a parameter rather than a return value [1]. Linus did not seem to
-be a fan (said it was "disgusting syntax").
+Please also define the two LEDs here with their corresponding (only)
+pinctrl options for each of them, with 'status = "disabled";'. This
+makes it easier for boards to make use of the Ethernet PHY leds by just
+referencing the LED and setting the status to 'okay'.
 
-[1]: https://lore.kernel.org/all/CAHk-=whn07tnDosPfn+UcAtWHBcLg=KqA16SHVv0GV4t8P1fHw@mail.gmail.com/
-
-
+> +				};
+> +			};
+> +		};
+> +
+> +		eth_sram: sram@15140000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0 0x15140000 0 0x40000>;
+> +			ranges = <0 0x15140000 0 0x40000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +		};
+> +
+> +		wo_ccif0: syscon@151a5000 {
+> +			compatible = "mediatek,mt7986-wo-ccif", "syscon";
+> +			reg = <0 0x151a5000 0 0x1000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+>  		wifi: wifi@18000000 {
+>  			compatible = "mediatek,mt7981-wmac";
+>  			reg = <0 0x18000000 0 0x1000000>,
+> 
+> -- 
+> 2.51.0
+> 
 
