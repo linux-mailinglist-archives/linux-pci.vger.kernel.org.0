@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-38325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02079BE2C21
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 12:25:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1E40BE2B8E
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 12:21:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D5DE586BE0
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 10:13:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 532DC54782F
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 10:12:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2450D32F74E;
-	Thu, 16 Oct 2025 10:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BF932BF55;
+	Thu, 16 Oct 2025 10:09:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dMVWYPcr"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oSGfSCm7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B5D320CB5;
-	Thu, 16 Oct 2025 10:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD8531E107;
+	Thu, 16 Oct 2025 10:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760609343; cv=none; b=eGOU4G14HZEo9tBwCH6VXBNfARL/5cmHnRXS64LA/skXOssoFEqWPBfttSSo6CHQOCflAj0yZXPJy+tBYwLm3CK46aMMtuZVnqVAick7uxZi7YVBpf6tRiqh7EjFcL30zFbIv+8A8b34vD0e9B0cBL/higLPIfZjqKjdUGJcm4I=
+	t=1760609342; cv=none; b=bgUinYR0TuPZb2/qZcw/Qp9CKeED+cKvn6IqujdIY+nr7nY7k9thB/Kj5MzrdBWjIoB6guGkEzTYXGKl3Bm3zXBx6tBZmxb4tRPqcwiuVw6/Ncgd0Hbyj3GkieNPMda6YbqlGJh8yxwY1HhI/IAtlLGwMZxSgZ1/vDpM9XgTcLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760609343; c=relaxed/simple;
-	bh=pdbwHWIQwtrGkmCtFIObJnrZIT84eVm6CBli2NG8zvo=;
+	s=arc-20240116; t=1760609342; c=relaxed/simple;
+	bh=afFY8d06YR6Xe0mRxobtGmvJrl4DTV7aEVRQ2QIq/r0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DmlquKZQQDFhMcYjaAkInAtq06dCAD27dHOesiL5Ahk10YxXJVJRNDcIq2Y6M6HYLplx0blI21BVfLbEsA3Eb03G5bEs7yCYTKSHP8/0HBsa/+21bVaF8otHostxhrSuUvnsjuR8LH40Jfwqu/zU6dazvkkugTnTqJXZjXGkUtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dMVWYPcr; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=Qy5GZc9guTUpe4c1Vsbv+X/dtVoKbJqjfPgn0SEZp5suOdxjVzyUd8Q1khXR1bV2DsyK9BEvEY6va8bs7STlx8l7Df6bMdjPCmwrl5Vu1MdW+yNj245r0t40qedbFUhp/f86YPzKH4RrndZ8DIYQY3Ik7kHqj/V8K3UC+8a4tlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oSGfSCm7; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1760609335;
-	bh=pdbwHWIQwtrGkmCtFIObJnrZIT84eVm6CBli2NG8zvo=;
+	s=mail; t=1760609334;
+	bh=afFY8d06YR6Xe0mRxobtGmvJrl4DTV7aEVRQ2QIq/r0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dMVWYPcrMG4noy3jxMq2ohm1NyJMI2Bh6/fOTVt7tqpnMKrHH69ebGkA8fEOV+Ts9
-	 NebQazi9nU7MngWfE10UjftSFO/B098G3b+/fEMsEFwyETWrnBUJ/otZ3FMlLnBaEr
-	 FvzMEtM6DXwHGmyHrqKhQUkvQCRfU+oRj59R+fv60Gcz9SSiJJB8h+yLP1OMmGdS5g
-	 QX/fbbmUD9xOp6IQKYPLE8GHgdEaMb+Ud0XqF2U5ROqbhn1XM0qUa9Ch1xBPmZhEeq
-	 Z3id5KEhMtYG4eK8S+zn0wnVukn3frRlK6actndGhC3EimAUhDkkB5viJIbEEd/kh+
-	 Qcd0bxM7PiFBA==
-Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
+	b=oSGfSCm7mQgqcQGeuEt+uG+gb/EysmochzTYczJ3QIPFUONJmMI5FOikniJx6xgzw
+	 STcVwsER77GIwib1IMca9+yNoWn56micy/WqUP/4kTfpz9R7JRGOvi0SOeIphvJvdO
+	 TKkvODvOKj4wpDqJD0pTiK1fRD7pOjVe8MJZ6kwN8+3nZy9HlYALXefetLijoKsbqd
+	 hf4Auh4Eh8GrYKRF7fClm1FIlqIoCVSObAnVNM9JBuxJCfKjGw4q/aT/HRQNhf0p4P
+	 p+w89q4zVfW+sk/a4yri5BwR4aZUzs651OLvdTAM/4Kxk2//0UTxZi2TQzKjU7vYkc
+	 G2enIYaziYT7w==
+Received: from beast.luon.net (simons.connected.by.freedominter.net [45.83.240.172])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3A31D17E153A;
-	Thu, 16 Oct 2025 12:08:55 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CC97117E1412;
+	Thu, 16 Oct 2025 12:08:54 +0200 (CEST)
 Received: by beast.luon.net (Postfix, from userid 1000)
-	id BB74610C9C794; Thu, 16 Oct 2025 12:08:53 +0200 (CEST)
+	id BEC0B10C9C796; Thu, 16 Oct 2025 12:08:53 +0200 (CEST)
 From: Sjoerd Simons <sjoerd@collabora.com>
-Date: Thu, 16 Oct 2025 12:08:46 +0200
-Subject: [PATCH 10/15] arm64: dts: mediatek: mt7981b: Add Ethernet and WiFi
- offload support
+Date: Thu, 16 Oct 2025 12:08:47 +0200
+Subject: [PATCH 11/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ SPI NOR
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
+Message-Id: <20251016-openwrt-one-network-v1-11-de259719b6f2@collabora.com>
 References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
 In-Reply-To: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -89,195 +89,127 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  Sjoerd Simons <sjoerd@collabora.com>
 X-Mailer: b4 0.14.3
 
-Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
-including:
-- Ethernet MAC controller with dual GMAC support
-- Wireless Ethernet Dispatch (WED)
-- SGMII PHY controllers for high-speed Ethernet interfaces
-- Reserved memory regions for WiFi offload processor
+The openwrt one has a SPI NOR flash which from factory is used for:
+* Recovery system
+* WiFi eeprom data
+* ethernet Mac addresses
+
+Describe this following the same partitions as the openwrt configuration
+uses.
 
 Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 ++++++++++++++++++++++++++++++
- 1 file changed, 133 insertions(+)
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-index 13950fe6e8766..c85fa0ddf2da8 100644
---- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-@@ -2,6 +2,7 @@
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index b6ca628ee72fd..9878009385cc6 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -3,6 +3,7 @@
+ /dts-v1/;
  
- #include <dt-bindings/clock/mediatek,mt7981-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/leds/common.h>
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/reset/mt7986-resets.h>
+ #include "mt7981b.dtsi"
++#include "dt-bindings/pinctrl/mt65xx.h"
  
-@@ -47,11 +48,36 @@ reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
- 
-+		wo_boot: wo-boot@15194000 {
-+			reg = <0 0x15194000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		wo_ilm0: wo-ilm@151e0000 {
-+			reg = <0 0x151e0000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		wo_dlm0: wo-dlm@151e8000 {
-+			reg = <0 0x151e8000 0 0x2000>;
-+			no-map;
-+		};
-+
- 		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
- 		secmon_reserved: secmon@43000000 {
- 			reg = <0 0x43000000 0 0x30000>;
- 			no-map;
+ / {
+ 	compatible = "openwrt,one", "mediatek,mt7981b";
+@@ -54,6 +55,25 @@ mux {
  		};
-+
-+		wo_emi0: wo-emi@47d80000 {
-+			reg = <0 0x47d80000 0 0x40000>;
-+			no-map;
-+		};
-+
-+		wo_data: wo-data@47dc0000 {
-+			reg = <0 0x47dc0000 0 0x240000>;
-+			no-map;
-+		};
  	};
  
- 	soc {
-@@ -107,6 +133,18 @@ pwm: pwm@10048000 {
- 			#pwm-cells = <2>;
- 		};
++	spi2_flash_pins: spi2-pins {
++		mux {
++			function = "spi";
++			groups = "spi2";
++		};
++
++		conf-pu {
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "SPI2_CS", "SPI2_WP";
++		};
++
++		conf-pd {
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++		};
++	};
++
+ 	uart0_pins: uart0-pins {
+ 		mux {
+ 			function = "uart";
+@@ -62,6 +82,69 @@ mux {
+ 	};
+ };
  
-+		sgmiisys0: syscon@10060000 {
-+			compatible = "mediatek,mt7981-sgmiisys_0", "syscon";
-+			reg = <0 0x10060000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
++&spi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_flash_pins>;
++	status = "okay";
 +
-+		sgmiisys1: syscon@10070000 {
-+			compatible = "mediatek,mt7981-sgmiisys_1", "syscon";
-+			reg = <0 0x10070000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt7981-uart", "mediatek,mt6577-uart";
- 			reg = <0 0x11002000 0 0x100>;
-@@ -338,6 +376,10 @@ soc-uuid@140 {
- 			thermal_calibration: thermal-calib@274 {
- 				reg = <0x274 0xc>;
- 			};
-+
-+			phy_calibration: phy-calib@8dc {
-+				reg = <0x8dc 0x10>;
-+			};
- 		};
- 
- 		ethsys: clock-controller@15000000 {
-@@ -347,6 +389,97 @@ ethsys: clock-controller@15000000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		wed: wed@15010000 {
-+			compatible = "mediatek,mt7981-wed",
-+				     "syscon";
-+			reg = <0 0x15010000 0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
-+			memory-region = <&wo_emi0>, <&wo_ilm0>, <&wo_dlm0>,
-+					<&wo_data>, <&wo_boot>;
-+			memory-region-names = "wo-emi", "wo-ilm", "wo-dlm",
-+					      "wo-data", "wo-boot";
-+			mediatek,wo-ccif = <&wo_ccif0>;
-+		};
-+
-+		eth: ethernet@15100000 {
-+			compatible = "mediatek,mt7981-eth";
-+			reg = <0 0x15100000 0 0x40000>;
-+			assigned-clocks = <&topckgen CLK_TOP_NETSYS_2X_SEL>,
-+					  <&topckgen CLK_TOP_SGM_325M_SEL>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_CB_NET2_800M>,
-+						 <&topckgen CLK_TOP_CB_SGM_325M>;
-+			clocks = <&ethsys CLK_ETH_FE_EN>,
-+				 <&ethsys CLK_ETH_GP2_EN>,
-+				 <&ethsys CLK_ETH_GP1_EN>,
-+				 <&ethsys CLK_ETH_WOCPU0_EN>,
-+				 <&topckgen CLK_TOP_SGM_REG>,
-+				 <&sgmiisys0 CLK_SGM0_TX_EN>,
-+				 <&sgmiisys0 CLK_SGM0_RX_EN>,
-+				 <&sgmiisys0 CLK_SGM0_CK0_EN>,
-+				 <&sgmiisys0 CLK_SGM0_CDR_CK0_EN>,
-+				 <&sgmiisys1 CLK_SGM1_TX_EN>,
-+				 <&sgmiisys1 CLK_SGM1_RX_EN>,
-+				 <&sgmiisys1 CLK_SGM1_CK1_EN>,
-+				 <&sgmiisys1 CLK_SGM1_CDR_CK1_EN>,
-+				 <&topckgen CLK_TOP_NETSYS_SEL>,
-+				 <&topckgen CLK_TOP_NETSYS_500M_SEL>;
-+			clock-names = "fe", "gp2", "gp1", "wocpu0",
-+				      "sgmii_ck",
-+				      "sgmii_tx250m", "sgmii_rx250m",
-+				      "sgmii_cdr_ref", "sgmii_cdr_fb",
-+				      "sgmii2_tx250m", "sgmii2_rx250m",
-+				      "sgmii2_cdr_ref", "sgmii2_cdr_fb",
-+				      "netsys0", "netsys1";
-+			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "fe0", "fe1", "fe2", "fe3", "pdma0",
-+					  "pdma1", "pdma2", "pdma3";
-+			sram = <&eth_sram>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			mediatek,ethsys = <&ethsys>;
-+			mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
-+			mediatek,infracfg = <&topmisc>;
-+			mediatek,wed = <&wed>;
-+			status = "disabled";
-+
-+			mdio_bus: mdio-bus {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				int_gbe_phy: ethernet-phy@0 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <0>;
-+					phy-mode = "gmii";
-+					phy-is-integrated;
-+					nvmem-cells = <&phy_calibration>;
-+					nvmem-cell-names = "phy-cal-data";
-+				};
-+			};
-+		};
-+
-+		eth_sram: sram@15140000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0x15140000 0 0x40000>;
-+			ranges = <0 0x15140000 0 0x40000>;
++		partitions {
++			compatible = "fixed-partitions";
 +			#address-cells = <1>;
 +			#size-cells = <1>;
-+		};
 +
-+		wo_ccif0: syscon@151a5000 {
-+			compatible = "mediatek,mt7986-wo-ccif", "syscon";
-+			reg = <0 0x151a5000 0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
-+		};
++			partition@0 {
++				reg = <0x00000 0x40000>;
++				label = "bl2-nor";
++			};
 +
- 		wifi: wifi@18000000 {
- 			compatible = "mediatek,mt7981-wmac";
- 			reg = <0 0x18000000 0 0x1000000>,
++			partition@40000 {
++				reg = <0x40000 0xc0000>;
++				label = "factory";
++				read-only;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					eeprom_factory_0: eeprom@0 {
++						reg = <0x0 0x1000>;
++					};
++
++					macaddr_factory_4: macaddr@4 {
++						reg = <0x4 0x6>;
++						compatible = "mac-base";
++						#nvmem-cell-cells = <1>;
++					};
++
++					macaddr_factory_24: macaddr@24 {
++						reg = <0x24 0x6>;
++						compatible = "mac-base";
++						#nvmem-cell-cells = <1>;
++					};
++				};
++			};
++
++			partition@100000 {
++				reg = <0x100000 0x80000>;
++				label = "fip-nor";
++			};
++
++			partition@180000 {
++				reg = <0x180000 0xc80000>;
++				label = "recovery";
++			};
++		};
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins>;
 
 -- 
 2.51.0
