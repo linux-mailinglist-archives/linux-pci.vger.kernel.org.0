@@ -1,264 +1,112 @@
-Return-Path: <linux-pci+bounces-38386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0BF5BE502D
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 20:13:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FC2ABE51F6
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 20:54:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50AE51A67F0C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:13:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C8635E070F
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 18:54:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44B6225760;
-	Thu, 16 Oct 2025 18:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE3C23A98E;
+	Thu, 16 Oct 2025 18:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PSaeOqi9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="v9WTW5Q0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mgOc4fWp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LqSD4NVW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/AcmAyY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFCC223DD1
-	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 18:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA6E14F125
+	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 18:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760638399; cv=none; b=MRt3k9ddfOD0+LRJeIURdN5bzi3Cnbpxs3WFw1jCsTx4VShX3t/PE/D82SsISDas0+Nb4NyPrspQgXdOZ3VVWqMJbjKJ2w3oXItMMSbZ/uUbne9CD46D0XBh8NxWATXBB34tGqhrmsOSDou3PqrJsj3L4D+NUfW6bOXVC9EbyGg=
+	t=1760640864; cv=none; b=Hv1rAO9+BtXBZfl7rFQo8A3bHo4fdhICNBRQQMF6qr9HYHx8jLcEpjYcvpuqVjvYyc4KcgckvB2UfxunsFMGIy1NmRpbIXFt/3d+H2MsuZv1pgwvqTHdcjRL7kJ1LmUYVN5RfckjtAjw2+DqFkG9Flj5i9R63Ins/wQDwNNgTa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760638399; c=relaxed/simple;
-	bh=5vo4Zfhwr+S7XtbJbcIq277w8DiqH8TsgSNcOlGyI4c=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X85hLgB+bApKhPrSSf07kIFKYarUvBbjNq4ZxG5oWGU9+z3MaloCad8A9uUga5hZfmnJdQQRk5Ys/R6gUIydY1gl+9zz7ur9LtHzcqN61rM4Qb7DGyiK7tbtIx3kQnCyg320ohf4PtLBCktj56k556yx6Okh6tJC2aIP/8wE+ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PSaeOqi9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=v9WTW5Q0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mgOc4fWp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LqSD4NVW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0051821DB7;
-	Thu, 16 Oct 2025 18:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760638396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXt0HYhwDbekzTJKQtnkmPdsKEmx8+QLoAWrJr+AuHw=;
-	b=PSaeOqi97XxN25N8+xX5ofD3mqXKKqyLYdL4FfCv8SgXpDPP96vCtB7wMCLkufqtBe4kGh
-	/qwAg4skhRvFajo0JdMWIftzj42pQ8ko9xC71E1O54wbr3BIK/6HfY3j7cjEHPrFhxa3CU
-	Mqa0yH9iQxPujYbEGKbDB36DhPCG7LE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760638396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXt0HYhwDbekzTJKQtnkmPdsKEmx8+QLoAWrJr+AuHw=;
-	b=v9WTW5Q0+Ab+4BU0T0sorM6CZ59obHujUD7l3r21bLS5mfhHRiu8uMOoClyAZSeHn6jqDc
-	wAf62b/+k28rp0Dw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760638395; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXt0HYhwDbekzTJKQtnkmPdsKEmx8+QLoAWrJr+AuHw=;
-	b=mgOc4fWpD3otk8/UDDfvjUWrmrPV4EAfCLbWNeiGLCLLTY4EnURnH+T3Mam4q3bLMzD4rB
-	iNL9nzbLeFB+5vwCYhe0lMnGJRDlugZJsrn9Cm5GxiXMivfmQAFp/WW18qW1xlXedOlkY5
-	mKVyNSeOKVXOJ3tmVog4wCO664Pds6c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760638395;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXt0HYhwDbekzTJKQtnkmPdsKEmx8+QLoAWrJr+AuHw=;
-	b=LqSD4NVWcSWEIoiLiJqe+AvCxCPXW9tNEFWkjtSl2gmsnbLbT4uYsFfUC5E9kahkG296XR
-	QxjuBljFFXM7hSBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 827051340C;
-	Thu, 16 Oct 2025 18:13:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0XYVHro18Wg9WwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 16 Oct 2025 18:13:14 +0000
-Date: Thu, 16 Oct 2025 20:13:14 +0200
-Message-ID: <875xce7m11.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Zhang Qilong <zhangqilong3@huawei.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v1 1/3] PM: runtime: Introduce PM_RUNTIME_ACQUIRE_OR_FAIL() macro
-In-Reply-To: <cc21a74c-905f-4223-95a8-d747ef763081@baylibre.com>
-References: <3925484.kQq0lBPeGt@rafael.j.wysocki>
-	<3324926.5fSG56mABF@rafael.j.wysocki>
-	<20251016133854.00003669@huawei.com>
-	<CAJZ5v0iOgbkJbdRzgrBUaaYL+S_8BZD7XuXdK5vs2gMG3ug1KA@mail.gmail.com>
-	<87ikge7v01.wl-tiwai@suse.de>
-	<cc21a74c-905f-4223-95a8-d747ef763081@baylibre.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1760640864; c=relaxed/simple;
+	bh=+utBgb+Y0Uu1IYHRlU1599odQNpYd89QM72RzQIjkKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rw1AV5n4HXAt02zYUFGrK8Prx+AmEjTK1P0jnyqU/UlWnN+hfn6XK0FVsSEnjSJNCVWi1NTCMwtlUH2SnfcOn3UcdFTepkH7Z4j3Exmruaye/p8RkaNrSzv4zeMsqWLnwzSgFcFH2hojKmmyiDx8b9/HG2f0E+52UGi4/2jJDMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/AcmAyY; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7811d363caaso94985b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 11:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760640861; x=1761245661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tfjITJrDrBsj6NyrvMWKq7r/mdAyxrTj8oS5nFcA3D8=;
+        b=X/AcmAyYGA+t1YhKP94+NATzTMfT2RmapnyBp+pK1RW/ivJvtADIGOt+BEjkaIO2W4
+         JuWbh8C3mYOhYGN2o91ecCQlwtsuBhgDKT72gqJafnWDhEYRX41Ez4nzUutob1/mdjeZ
+         UaRCnyao7d+Vp1yXDPWLgiGUnSBZV5/RGDaoEISbEskGsxuq00JA8tpsPBJwHD67CTlq
+         7BZvFic4duWbZHwLEK8ogizOFZit4VKsTH9818QTG6BcnDvg3KOXbFA9W99EMFnldMRw
+         G7FnRNX7ZRSb8K4uCBMuT8s3V49EKBl1hklAiUk4mzOAy4PwHwbU0ObjJ3EnVST0Ejaf
+         DVJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760640861; x=1761245661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tfjITJrDrBsj6NyrvMWKq7r/mdAyxrTj8oS5nFcA3D8=;
+        b=ji4D0/ZeS/Xd6F+bTju9jX3phuwtIjARfm6idVbulug2GvDTj+AdWVvEXwMhRHzKPZ
+         GteYj/es8XRJcvjEEutn/B5FXsesPHk/7e9Wx46DOutfAhetyTomaWX/hPJVzBXPfvxw
+         3AG1XPTxb5+ldIud6GbZ26mmKeZ5l6+iUL9z/PwKqRinzLFzS8wjp/4sbDyywGUeF6XP
+         HeEJTd2B+2fqo9+6XgHq5XhA/bDGymIrAXGCJCsdTD0gjfD6w5wbFnBaWrsP1Ly9oF7h
+         9NRo6QgtZmKLmEV+TCOEpS+bVsqOjIrs1+/m5sowXnsGmQC7pGEKqZnDI+iE36z6CZDM
+         VsAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKPBk8YW8N8JoNCJvkAg5Uk4DSXP+fynX11lqjJtmsBeSUAjtuW7ZuaxDOkdmXlatiTOggSW62xkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPNRo4C++gohNiNsybV+4QouWWTGRXx+zEXmRWcR5XyuzZ2sKH
+	1e+RwTX6Zvp0yvJKJ7KeEh8Fz41JCLWxoq/uHgoCvNEEucjp6+R2P6x8v2nRmcFb+kAYax6E0hK
+	B0OZl1UFR80YUK+yAn8W9knZ+r79yKwE=
+X-Gm-Gg: ASbGncuzJUSJ43DELyszOtYtU0QO+WK3gvBvN8TbUqfuJEMyFcOkFqYDP9W9YTe3Ki3
+	KWN6DfJNdJ2s6yZA6KIfQUGCsO24r3LRYiMoiyCpQzUbk/oiUzlh9pH4WFx4zoJyVctq8gm0yOX
+	CxhJNYSsr+vJjiVJ2oyIRTNDZqOaIpp+Yf6IvC4Cd8KII1dRMH+kC5CyZsD9QHzcOUIVuORNfos
+	iDkOpu3IIvQBJv0Rsp0FYIG+RwXRTAChHNNHWk6kjU0LlvKDcjaPghjG2Nzmo7N1l0Att1yTstc
+	vhCpIUOBofb/Ibp8yQd/0JvA1m/Yo0RfmPWDho+7AldplmtJYXf0q29HJeHRm+FL7KGit8xoakc
+	kAWJqEon79E4XAg==
+X-Google-Smtp-Source: AGHT+IEbKwbqFQ/fneIGbpfTlhDpPKZtHqphNXdfbEVmTezUHkwYnzXeQIHBTRMspHOBh02pv2qlfv7V0DyvDzmt1nM=
+X-Received: by 2002:a17:903:40ca:b0:290:55ba:d70a with SMTP id
+ d9443c01a7336-290c9cf3306mr5986045ad.2.1760640861448; Thu, 16 Oct 2025
+ 11:54:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
+MIME-Version: 1.0
+References: <20251015182118.106604-3-dakr@kernel.org> <20251015225827.GA960157@bhelgaas>
+ <DDJR102F5NFB.1X5IVJQ6FK3CD@kernel.org>
+In-Reply-To: <DDJR102F5NFB.1X5IVJQ6FK3CD@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 16 Oct 2025 20:54:08 +0200
+X-Gm-Features: AS18NWANSYIYYVl5goGbtu4qiEWHeLwDVADFRWSVLvLKuJro8t-8yxzSNbn9BXI
+Message-ID: <CANiq72mB_M3GeU8DLg5Wnn66wgUimF1Eg8Vpy50AEZoD23O7Fg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] rust: pci: move I/O infrastructure to separate file
+To: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 16 Oct 2025 18:46:56 +0200,
-David Lechner wrote:
-> 
-> On 10/16/25 9:59 AM, Takashi Iwai wrote:
-> > On Thu, 16 Oct 2025 15:46:08 +0200,
-> > Rafael J. Wysocki wrote:
-> >>
-> >> On Thu, Oct 16, 2025 at 2:39 PM Jonathan Cameron
-> >> <jonathan.cameron@huawei.com> wrote:
-> >>>
-> >>> On Wed, 15 Oct 2025 16:02:02 +0200
-> >>> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> >>>
-> >>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>
-> >>>> There appears to be an emerging pattern in which guard
-> >>>> pm_runtime_active_try is used for resuming the given device and
-> >>>> incrementing its runtime PM usage counter if the resume has been
-> >>>> successful, that is followed by an ACQUIRE_ERR() check on the guard
-> >>>> variable and if that triggers, a specific error code is returned, for
-> >>>> example:
-> >>>>
-> >>>>       ACQUIRE(pm_runtime_active_try, pm)(dev);
-> >>>>       if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-> >>>>               return -ENXIO
-> >>>>
-> >>>> Introduce a macro called PM_RUNTIME_ACQUIRE_OR_FAIL() representing the
-> >>>> above sequence of statements that can be used to avoid code duplication
-> >>>> wherever that sequence would be used.
-> >>>>
-> >>>> Use this macro right away in the PCI sysfs code where the above pattern
-> >>>> is already present.
-> >>>>
-> >>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>> ---
-> >>>>
-> >>>> Admittedly, the new macro is slightly on the edge, but it really helps
-> >>>> reduce code duplication, so here it goes.
-> >>>
-> >>> Fully agree with the 'on the edge'.
-> >>>
-> >>> This looks somewhat like the some of the earlier attempts to come up with
-> >>> a general solution before ACQUIRE().  Linus was fairly clear on his opinion of
-> >>> a proposal that looked a bit similar to this
-> >>> cond_guard(mutex_intr, return -EINTR, &mutex);
-> >>>
-> >>> https://lore.kernel.org/all/CAHk-=win7bwWhPJ=iuW4h-sDTqbX6v9_LJnMaO3KxVfPSs81bQ@mail.gmail.com/
-> >>>
-> >>> +CC a few people who might have better memories of where things went than I do.
-> >>>
-> >>> The solution you have here has the benefit of clarity that all it can do is
-> >>> return the error code.
-> >>
-> >> Well, I could call the macro PM_RUNTIME_ACQUIRE_OR_RETURN_ERROR(), but
-> >> FAIL is just shorter. :-)
-> >>
-> >> Seriously though, the odd syntax bothers me, but it has come from
-> >> looking at the multiple pieces of code that otherwise would have
-> >> repeated exactly the same code pattern including the guard name in two
-> >> places and the pm variable that has no role beyond guarding.
-> > 
-> > While I see the benefit of simplification, IMO, embedding a code
-> > flow control inside the macro argument makes it really harder to
-> > follow.
-> > 
-> > Is the problem about the messy ACQUIRE_ERR() invocation?  If so, it
-> > could be replaced with something shorter (and without extra type),
-> > e.g. replace 
-> > 	ret = ACQUIRE_ERR(pm_runtime_active_try, &pm);
-> > with
-> > 	ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
-> > 
-> > Since all runtime PM guard usage is to the same object, we can have a
-> > common macro.
-> > 
-> > Also, in the past, I thought of a macro like below that stores the
-> > error code in the given variable ret:
-> > 
-> > #define __guard_cond_ret(_name, _var, _ret, _args)	\
-> > 	CLASS(_name, _var)(_args);			\
-> > 	(_ret) = __guard_err(_name)(&_var)
-> > #define guard_cond_ret(_name, _ret, _args) \
-> > 	__guard_cond_ret(_name, __UNIQUE_ID(guard), _ret, _args)
-> > 
-> > ... so that it'd work for runtime PM like:
-> > 
-> > 	int ret;
-> > 
-> > 	guard_cond_ret(pm_runtime_active, ret)(dev);
-> > 	if (ret)
-> > 		return ret;
-> > 	
-> > Of course, a clear drawback is that the assignment of ret isn't
-> > obvious, but the code flow isn't skewed much in this way.
-> > 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> 
-> FWIW, a while back, I suggested something like this where ret was
-> a parameter rather than a return value [1]. Linus did not seem to
-> be a fan (said it was "disgusting syntax").
-> 
-> [1]: https://lore.kernel.org/all/CAHk-=whn07tnDosPfn+UcAtWHBcLg=KqA16SHVv0GV4t8P1fHw@mail.gmail.com/
+On Thu, Oct 16, 2025 at 2:35=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> Those could also be a candidate for the list of "good first issues" of th=
+e Rust
+> for Linux project [1].
 
-Yeah, I myself also find it suboptimal, hence it wasn't really
-proposed...  It's a limit of macro, unfortunately.
+Indeed -- done as an example:
 
+    https://github.com/Rust-for-Linux/linux/issues/1196
 
-thanks,
+Bjorn and others: of course please feel free to create more.
 
-Takashi
+Cheers,
+Miguel
 
