@@ -1,149 +1,161 @@
-Return-Path: <linux-pci+bounces-38381-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38382-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDD5EBE4CD3
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 19:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F1D8BE4D67
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 19:25:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 86D104E0808
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 17:14:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 56A824EE3C6
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 17:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E9533469C;
-	Thu, 16 Oct 2025 17:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25745262A6;
+	Thu, 16 Oct 2025 17:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiWKwPe+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRVlh2pB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5A3334695
-	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 17:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14DD334693;
+	Thu, 16 Oct 2025 17:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760634864; cv=none; b=J1myFqjogOaGiMCE+oS4HlQs708tydBXAX0LUq9ff4vXYi2HXJXlLms2JdRV/k1qH4OM6ioMSO+8S+i23V1wIGcogSOdg1RvY+K6y6n1w49SmxCboM43pIuvR+FswYSuBIiQkGh8KDABIbxmc6iLnK/XNBQJzsCLTSnBeb7UkNE=
+	t=1760635507; cv=none; b=ahuKmtUX32E2f78x2C1KnJ5Lvbh3XhY7JHquNnZSPqhn8sL3oRZE9ze3ax1pVKRj73M7fB3PNz4tXv3CLjDLZbVia37Db76OuLjBSqZtlLUM29xaXgFh2yREwFPn8qpBtLP1HXgwngmGMpUhbXB2tbJnH1hbs6cf6kSK/4QUaNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760634864; c=relaxed/simple;
-	bh=pUGKwEHzhhG/p5cMRzKMdz4zj00wg0okQfFLUG8q+mY=;
+	s=arc-20240116; t=1760635507; c=relaxed/simple;
+	bh=G6gflAdnfqtYv6X1AmICnxsRIfUHX7Y5Khj5yu5Kdxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=To+fgad3SQ5Dt5hewCgBElrQnCamQHYi2odjWik2vb9BNLrHVs9WuwY14AV6bOkTsbVNbuOuwvERWjGNUELJrGI1M9AxsCgGHk3TBE2A8jOs0yPRTsD8+a4XfiODwn7RK67E9nt0xYGj3btQHFDnT/hW3GnFmfOOXKhmf+81JT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiWKwPe+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DE6C4CEF1;
-	Thu, 16 Oct 2025 17:14:23 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qr9/fNj1CbRoztbpNKvfhNL3SrwfU6qG7d1GAB/GroFTpG2BBabgOzTeiP4I3Y5oaeFjemGUbGt6swwfbpS0iAGnBtuGKdb9GDYQ67fTn6hwaskCL4/lBRFPLxB5Dq6krsBvaRYZCvb2wASY+SQDKmsSM60vBw6QVrCBVJfCJmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRVlh2pB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476A6C4CEF1;
+	Thu, 16 Oct 2025 17:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760634863;
-	bh=pUGKwEHzhhG/p5cMRzKMdz4zj00wg0okQfFLUG8q+mY=;
+	s=k20201202; t=1760635505;
+	bh=G6gflAdnfqtYv6X1AmICnxsRIfUHX7Y5Khj5yu5Kdxw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tiWKwPe+UlYqcRmqxDwx+H+9p24YjpioHUanKWabAfmeTCQR3Oafj1xmUSOeDp6dJ
-	 wRththzaF3QchIO0NOOhuFAGYvmW4vUdKnF1WDWPw7JtFvAQCBjIAE676HVKkhwwyD
-	 XUCGMci2HnBn2H00Z86m8r2GdeO8bqFm782bOQO0ODpcBBCiAYsZeM3DOa4vUwgZcf
-	 gmUP+K+tM26y5nkyVip3AtGuaN18fWOsHWyF5oWFuFk7p9CIX86ywetQ3HbJJAu53A
-	 mp5lrX3SVkXhH8Px9E/6utHkn2rmfKpqLK3FfgnPaY317zZNxo3Uoj3T9p1Nx264R0
-	 5XC9ir+DbhpFA==
-Date: Thu, 16 Oct 2025 12:14:22 -0500
+	b=sRVlh2pBX6NDS7gsIFGctuMKVFo1D8iL3lbXMjQsOI+YOy3NDjQ336qjLZU2lnots
+	 5ChxGMnP2fCioMwCnckgGwJON0FpEb3zyydV8p/12tby1gpPCyoTDF300s+1Kt0zkD
+	 i6YrNagHIkaOGiocng95zHqHCjbifWOm5y2Oqw2dwNZN4HHg4pZixWzbnNKLy/Xmvu
+	 rgdgD73wtKtC44yS139PRpjjZDiqPxaXcsWkyDMvqpn6JJQN15horDXhVE9RxOSLVm
+	 NjAem8fcbx4eKcDKQgddivvB2Q4v9Z9yGt+iKq7Jb8XnA2WJB1cr+qGgKFzWwTKYhU
+	 pNrZDAAI8/+wg==
+Date: Thu, 16 Oct 2025 12:25:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: linux-pci@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [pci:for-linus] BUILD REGRESSION
- f0bfeb2c51e44bee7876f2a0eda3518bd2c30a01
-Message-ID: <20251016171422.GA991021@bhelgaas>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+	Diederik de Haas <diederik@cknow-tech.com>, stable@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Disable L1 substates
+Message-ID: <20251016172504.GA991252@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bdee889f-b154-4532-ba8d-ae5910ce1613@kernel.org>
+In-Reply-To: <20251016090422.451982-2-cassel@kernel.org>
 
-On Thu, Oct 16, 2025 at 11:35:07AM -0500, Mario Limonciello wrote:
-> On 10/16/25 11:28 AM, Bjorn Helgaas wrote:
-> > On Thu, Oct 16, 2025 at 11:18:38AM -0500, Mario Limonciello wrote:
-> > > On 10/16/25 11:15 AM, Bjorn Helgaas wrote:
-> > > > On Thu, Oct 16, 2025 at 07:26:50AM +0800, kernel test robot wrote:
-> > > > > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-> > > > > branch HEAD: f0bfeb2c51e44bee7876f2a0eda3518bd2c30a01  PCI/VGA: Select SCREEN_INFO on X86
-> > > > 
-> > > > Just making sure you've seen this, Mario.
-> > > 
-> > > I didn't see this, thanks for including me.
-> > > 
-> > > > I *think* f0bfeb2c51e4 is the most recent version, and it was
-> > > > on pci/for-linus, so I'll drop it for now.
-> > > 
-> > > Are you sure the failure is caused by "PCI/VGA: Select
-> > > SCREEN_INFO on X86"?
-> > 
-> > I'm not sure.  I looked briefly for a more detailed report but
-> > didn't find it.  Maybe didn't look hard enough.  This email seems
-> > like a summary that could possibly have included a link to
-> > details.
+On Thu, Oct 16, 2025 at 11:04:22AM +0200, Niklas Cassel wrote:
+> The L1 substates support requires additional steps to work, see e.g.
+> section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0.
 > 
-> I looked at https://lore.kernel.org/oe-kbuild-all/ and don't see one
-> there either.
+> These steps are currently missing from the driver.
+
+Can we outline here specifically what is missing?
+
+> While this has always been a problem when using e.g.
+> CONFIG_PCIEASPM_POWER_SUPERSAVE=y, the problem became more apparent after
+> commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
+> devicetree platforms"), which enabled ASPM also for
+> CONFIG_PCIEASPM_DEFAULT=y.
+
+Should also be able to trigger this problem regardless of
+CONFIG_PCIEASPM_* by using /sys/bus/pci/devices/.../link/l1_2_aspm.
+
+> Disable L1 substates until proper support is added.
+
+I would word this more like "prevent advertising L1 Substates support"
+since we're not actually *disabling* anything here.
+
+If the RK3588 TRM is publicly available, a URL here would be helpful.
+
+> Cc: stable@vger.kernel.org
+> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
+> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+> Changes since v1:
+> -Remove superfluous dw_pcie_readl_dbi()
 > 
-> I think you should keep the patch in.  As it pertains to arch
-> specific stuff it behaves identically to pre-337bf13aa9dda.
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 3e2752c7dd09..84f882abbca5 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -200,6 +200,25 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
+>  	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
+>  }
+>  
+> +/*
+> + * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
+> + * needed to support L1 substates. Currently, not a single rockchip platform
+> + * performs these steps, so disable L1 substates until there is proper support.
+> + */
+> +static void rockchip_pcie_disable_l1sub(struct dw_pcie *pci)
+> +{
+> +	u32 cap, l1subcap;
+> +
+> +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+> +	if (cap) {
+> +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
+> +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
+> +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
+> +			      PCI_L1SS_CAP_PCIPM_L1_2);
 
-Yep, added back as 54a880a5af73 ("PCI/VGA: Select SCREEN_INFO on X86"):
+I suspect this problem is specifically related to L1.2 and CLKREQ#,
+and L1.1 might work fine.  If so, can we update this so we still
+advertise L1.1 support?
 
-commit 54a880a5af73 ("PCI/VGA: Select SCREEN_INFO on X86")
-Author: Mario Limonciello (AMD) <superm1@kernel.org>
-Date:   Mon Oct 13 17:08:26 2025 -0500
-
-    PCI/VGA: Select SCREEN_INFO on X86
-    
-    commit 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a
-    screen info check") introduced an implicit dependency upon SCREEN_INFO by
-    removing the open coded implementation.
-    
-    If a user didn't have CONFIG_SCREEN_INFO set, vga_is_firmware_default()
-    would now return false.  SCREEN_INFO is only used on X86 so add a
-    conditional select for SCREEN_INFO to ensure that the VGA arbiter works as
-    intended.
-    
-    Fixes: 337bf13aa9dda ("PCI/VGA: Replace vga_is_firmware_default() with a screen info check")
-    Reported-by: Eric Biggers <ebiggers@kernel.org>
-    Closes: https://lore.kernel.org/linux-pci/20251012182302.GA3412@sol/
-    Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-    Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-    Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-    Tested-by: Eric Biggers <ebiggers@kernel.org>
-    Link: https://patch.msgid.link/20251013220829.1536292-1-superm1@kernel.org
-
-
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 7065a8e5f9b1..f94f5d384362 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -306,6 +306,7 @@ config VGA_ARB
- 	bool "VGA Arbitration" if EXPERT
- 	default y
- 	depends on (PCI && !S390)
-+	select SCREEN_INFO if X86
- 	help
- 	  Some "legacy" VGA devices implemented on PCI typically have the same
- 	  hard-decoded addresses as they did on ISA. When multiple PCI devices
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index b58f94ee4891..436fa7f4c387 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -556,10 +556,8 @@ EXPORT_SYMBOL(vga_put);
- 
- static bool vga_is_firmware_default(struct pci_dev *pdev)
- {
--#ifdef CONFIG_SCREEN_INFO
--	struct screen_info *si = &screen_info;
--
--	return pdev == screen_info_pci_dev(si);
-+#if defined CONFIG_X86
-+	return pdev == screen_info_pci_dev(&screen_info);
- #else
- 	return false;
- #endif
+> +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
+> +	}
+> +}
+> +
+>  static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+>  {
+>  	u32 cap, lnkcap;
+> @@ -264,6 +283,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>  	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
+>  					 rockchip);
+>  
+> +	rockchip_pcie_disable_l1sub(pci);
+>  	rockchip_pcie_enable_l0s(pci);
+>  
+>  	return 0;
+> @@ -301,6 +321,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	enum pci_barno bar;
+>  
+> +	rockchip_pcie_disable_l1sub(pci);
+>  	rockchip_pcie_enable_l0s(pci);
+>  	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
+>  
+> -- 
+> 2.51.0
+> 
 
