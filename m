@@ -1,275 +1,169 @@
-Return-Path: <linux-pci+bounces-38405-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E7E2BE5AB4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 00:24:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA462BE5CA6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 01:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A92B934C534
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 22:24:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B9EC19A74BB
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Oct 2025 23:28:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C86F2D94AF;
-	Thu, 16 Oct 2025 22:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D7DC2E6CA7;
+	Thu, 16 Oct 2025 23:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ezyyjeSM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nlcTtEqO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012066.outbound.protection.outlook.com [40.107.209.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC1633469D;
-	Thu, 16 Oct 2025 22:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760653467; cv=fail; b=IXKoTlQz1/JZsQkvp9+i+1hSqDUpeuOAHoST5WMSHm9wERp9gAwj/1paHFUjuIoTP/OO8gXNNOcVo0ywkSK0uLRf78jBfOntc2H8IiLCIqzfIMST1QBY9ncHlecuo0adcpUOa+dom3sPM6UM3/iYuqugN/8RiXNitSYdjyrou7c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760653467; c=relaxed/simple;
-	bh=FAbeJjREKRgdTHZ2C8ZznScRcEuT8I4xQHodlYrzG5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PilRDTkMTzfNgacAzC3bvI3GgtCay7pLo1Mmu5HjyAGYEm7avL4JxEyTluKksQT87ox2cT2YvNlq52+9QfdhR6pEp5VATpKEC6n1iMwnUGIl2SY4nbQ2z117eauk0cYUsw525evhzslgz9wnlSIA633L8mVbXUyJ6WcBt1O5hw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ezyyjeSM; arc=fail smtp.client-ip=40.107.209.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BqGbDf8JJwlqPUva+j9Z4qai0ZF4mxmUx4JZiqA9wmldrIQvGXIe7JcZdupXC2IcEp9K6wF4pE2IbD68Fs+y0wNHZlerN6PeFd/AMQVK+o067EP4nfWFAW/175yensfXbQGh0XY34xldq58b4gQnoFrLhGc7uWNjEfbIYJXfOQeP0SCcq5QIg3R8ZPddUwvdK1eJoAAimQtJXVKZJsSYwZL6yJlx+a4JAVCzjAnm7tGetvAGG/4Hcldq16V1I3KiU5y1nN1pMPBwc8AR1khZLWFXSAe/+oqisM1HRZ/o8OBgEZm9Gqj+CS9AhrjscdXkCv+VzfxfPTr6xfWX3XTuXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LguBcRSjlJ/JBOPweqA+x03XTH+ZAPXREJDa4N3qiYg=;
- b=knKsB4eDbj2iiAGrTB0KSZXDDiIY86+5d/8Z2f/qa8mJd+KcDyA6l9RA9hrM2dhaaLw/ZasrV0F3rfYnMGT67IpjjKJ5B82l5unk2KaXJg7oNSJvca9Q9w1dJwJNrUYY/pRVfgHK7MEHC8+ZraszvqckEUNXNbh0zSwsYZCfryF1yNkfV/SD3mRskhzmOfFwY2n68eX/VG/qQMbi0UoTMRnmTwKZwlObOhWyt5BFW1Q4tmLkgar0qEPVmMn4vxh5hpe6VvPqa97VOfNQFF+7SUtgIVLW4BOMwCqZzkTCIj+wZ9qL9DeBSJDgrheKckX39I+CuXzoluTuo8HGVlJb6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LguBcRSjlJ/JBOPweqA+x03XTH+ZAPXREJDa4N3qiYg=;
- b=ezyyjeSMkJRPcgeuaWkuhyNQEIuKc0yEr5vuJpPQ7iRbDKn4Q4jfhRtuEFPfd41P6cU3BxnNyY28oLbR3TQUOUtb0YZfe51fG1ZQonrXTle7uK3mdtsb5qDa40QUgjdxLYWptHCIEqRBPa4QLExn+9Fjljq/YtN/1MVNeBS+2ZIsdxaAtvOlFYiuPofnpkY76TYeBK4CA//GSGXkJX5go87nxyaRh5HcHkrrIz88uYAMNOszwGiQwHFDPAoKOVEaJb8d75G03q0rNenqsjjy4ERrVDvaXndB03s3E+hJ6raNtGWQZCNMR32yynn/iZ/9knuhB2J8MNE/8GrL/YHxWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by PH7PR12MB7890.namprd12.prod.outlook.com (2603:10b6:510:268::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.13; Thu, 16 Oct
- 2025 22:24:22 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9228.010; Thu, 16 Oct 2025
- 22:24:22 +0000
-Date: Thu, 16 Oct 2025 18:24:20 -0400
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu,
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rust: pci: implement TryInto<IrqRequest<'a>> for
- IrqVector<'a>
-Message-ID: <20251016222420.GA1480061@joelbox2>
-References: <20251015182118.106604-1-dakr@kernel.org>
- <20251015182118.106604-2-dakr@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251015182118.106604-2-dakr@kernel.org>
-X-ClientProxiedBy: BN9PR03CA0763.namprd03.prod.outlook.com
- (2603:10b6:408:13a::18) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32D2E6137
+	for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 23:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760657296; cv=none; b=sRpuHBSojgGm0qFmDYCqzjZXNDnTJ7wMMQR8HkZls7XvekC9zXKu9fv6Lmn7eG/miDlMgLRwsdtVvERCI4nDyvxEZPI+J49niQnMOP75JZpY/orFUyhiIQ0E5pzu+wZp0y4yjGAHsxSpV1QvUjOzCUoYSZdJCGqAnZqNd0kmlfI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760657296; c=relaxed/simple;
+	bh=XJoRXhF6cct+u5hqeBr/GjrKmq9CEKau2+FBHdOwe7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u9w2K+/5lD1aOkmJizBmIWNpJVM1Lj2cTs1yaUEgUD/qlByu8nhVN85WKoXpG657qQ3oIhTRSyfQEjthnVrwrUYfISOUICnVoSzGZ6yDPf1Q5tEHXeEv30HzMGr8ixXKJ1E+/c5Q7N5vEe7q6Otu3wHMsviMHd1bceeSnpKThqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nlcTtEqO; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-781206cce18so1360703b3a.0
+        for <linux-pci@vger.kernel.org>; Thu, 16 Oct 2025 16:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1760657294; x=1761262094; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDHKL7YrbYj0WMr/qaC61DmFE96g6L5ksIAhfdoxQrQ=;
+        b=nlcTtEqOnd54qW/ICO8glTxNOt8FmeJe9owrl9qhvsPQpg/B2Mp2KNJrvMtdul+Qc0
+         5ZrKRVGXHR9+Sciv6jft3dF9eSOcsgAtHbQadNAfu0F+YCXY0RCAJj29LAAA/rB3arHR
+         zik0LCswwZQ/Ug93I4EKLk4SwByaxOXB4G2HA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760657294; x=1761262094;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VDHKL7YrbYj0WMr/qaC61DmFE96g6L5ksIAhfdoxQrQ=;
+        b=iSXn3nwY++84Z0lk6QRF+SR7vpGueYSZLXwQf/9caobN6xplszo3pvubPE88YLGJvJ
+         UF9X04EHTkCgbkSDnFP6RRgNiqRDuH0jfVKG89DdnFBi2NJDnnahvRJf+ujxO0/oG6PO
+         cvMJiKqLV6gEQ3algt9Ai2TaowWM+NMPcKIPv2kxbEI3EkbN9NZjHWJvTisN6dX34yA5
+         aG/P8B+GaX42nFzH6kEZi0DPcIA2dvgYl+/zErbctrLkRYa6+Eh2I4OMPcFcAuYKGDvr
+         c5E9sR2xssbcgbyhIXNg86elBbYTQ+S9/yplpHaPMnWdOa7dd3QaC3Y1dyz4ZWbe56Tn
+         ovag==
+X-Forwarded-Encrypted: i=1; AJvYcCX9Fwjijk9DvzV0ZMXYW4Vys5BfuQ2FLVeMbXe09JlBWrRpkwklx/EojSyW3o7iQFAqexvX/yuQfQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKhYwakpkG3haimd6+vvoHPHWTqdGuM9TIaMc5USrahjQT1tRH
+	nL6n/CN6J6Vl7hveOhjnICgx9asXtkc8PyRurnWgSdgqoOP+GTQ8/EUhfb2uA4ceUlmUxsRgL+6
+	ngIk=
+X-Gm-Gg: ASbGnct7fhYN6EexQewQN8tmDmzTA/gMYaRtbhg7xdTB1EZoXDnkQGfhsfjxTpT0p4M
+	J9T1wcSyxK5wLSq4eK/Mn94RCFYHKJpCfe2k2T0hXROR0neacRlRMh1Lx2rKTuNVOm+5qz4/Hrt
+	EvRF8WnpzdgH87vima+F7jwyA52jdupYnUgIG3gheHepYoQ8W4U4qz2S+7l+2f1jBM1ZNpoCMu4
+	rNSAzi9n77Dx3ycOuPY2hVa2ccPFpSnIkL5MKXVv0o47+Zwg0icsP9D8IbK/7GqHlyVS+djoqPR
+	/v3VlHLumAZAY1i9Y06vwLPqtsSIeepRkEv1URRGvWM2d21kq1v89Ed5IL7Tgr6bfgQGhWmndiP
+	pwYPaQBfY5gblqyeLhOl5LkZtF1Y2a2gZ1EsbDnRXGa0jxtfvhJgCIY6MoHgRtTgc+GdDa1ZKIu
+	O5prSOFlIQeI5Xvq/U4NInVZg8Tcvw6foNqgHUZQ==
+X-Google-Smtp-Source: AGHT+IHptz2Viou3aQb7JTKgXj8lqBa3xVm9ubMw1J3oe5c1h0nSfI0VxDkbrkw3mL1kDx6q4igwAQ==
+X-Received: by 2002:a05:6a20:6a28:b0:32d:b925:22ab with SMTP id adf61e73a8af0-334a78fbd98mr2663524637.17.1760657294603;
+        Thu, 16 Oct 2025 16:28:14 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e7c:8:98f9:84ca:9891:3fd2])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7992b060b59sm24127004b3a.2.2025.10.16.16.28.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Oct 2025 16:28:13 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI/PM: Prevent runtime suspend before devices are fully initialized
+Date: Thu, 16 Oct 2025 15:53:35 -0700
+Message-ID: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+X-Mailer: git-send-email 2.51.0.858.gf9c4a03a3a-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|PH7PR12MB7890:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bdffe5d-fe69-4b95-e94c-08de0d02c17f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?f18JToqoUO0D3cThJ4+e471KkBbnXDoIyYXLkZjwFXkrJoCSt/vzJlrREcGy?=
- =?us-ascii?Q?s19q8YKFxnBBdFiM6eYY5ir4SkN2sajI4e/0w/ZlxfrHCm1m0n5Y5nMw0P6G?=
- =?us-ascii?Q?vnMZrMxLClF03vhmcWVhj35g+JyKHeWVK7S3CVOxhm3zGrvmOepkXqbPU4SM?=
- =?us-ascii?Q?XDRWb1OB48+S4jOzIXKipouFaJ+t/huoNa9yl4Blqhn2NT6inDlpMm3/hJuT?=
- =?us-ascii?Q?9aNswS3i5sqjErth6gS9zpWEJi5VFCM2OYZ8p8TAkjMD4wBmrlzGMTB2r5xK?=
- =?us-ascii?Q?Ew0MU1by8bRleeBJnXGDtgpQXtKp3IckQcJVU/jyH+XadrAWFubbRGmvDjhf?=
- =?us-ascii?Q?DUNPArF6lhR1jGTJdoez8FHvlVLtFMD9s2EnjulWP64U+w90LpGOHGyOLv4S?=
- =?us-ascii?Q?OJhrAV8jvlv1BodXX2xkH520Nhp4L+Wud+CpdKXXZEwIItfX5DFwac4wTJHR?=
- =?us-ascii?Q?fFMDhLMVv9/It/DsFrUjIiRR1U3K2p7NbQ0hFgl32tiDZ7JVIjhUK8ceCSL0?=
- =?us-ascii?Q?YJDfpEeQivybuevY3bK45QBOSlv2BD8Uvw7b4rAfuPwksfeakgb9ELdQeXq+?=
- =?us-ascii?Q?+YPYnRzc7NEsj8UoA3VSGdDGEnieq95ybfpr2irIqs2o6r2BUMDhm8ANPtGO?=
- =?us-ascii?Q?w3WbOdO8ictQgJfd6AHwbjYL+CVK03wyRe5BZ1HI5MZpqMbHKeCz0V/Sk7Hd?=
- =?us-ascii?Q?nKZeLB8JqrFVcd0UAPrzUbn21D7V9aQ3az9pYgtaMLlyzK6wLEZS5Mt3uSfq?=
- =?us-ascii?Q?p/SiMGJU1SJjnwwfk5Y/xzsQXHGoxNhuC6kbSkGjBjtSe0Tg7B/vKykDRAT5?=
- =?us-ascii?Q?vAFyi4cJkADS7R20CiJuCT31Pxko4K0Rm3aFkF1rW5y5QZha4IIV/LNbs/TT?=
- =?us-ascii?Q?wJaLoMYxBKfCZAS3KRhQAnKeqkcw3LhK3P5uJu9DUteECokxzJhiwv9iH/Sk?=
- =?us-ascii?Q?qZ3Ol2xInW7AT5C87t+RjSpkUVy7spN+eRMgWWajBLHA5rBhLIofGLMgoAVA?=
- =?us-ascii?Q?CfWpvpBVh7E7kYp4HbJckYH05XQYKcQ30K0ptF64DdqMOYcqHgGP3NiT3w1U?=
- =?us-ascii?Q?hDRobvdZW+HH7u5agcXGURqBrrOYEf60SzEtc9DlK8TQxY7d+TIV088lx0Nf?=
- =?us-ascii?Q?vXs7/HeyTkycj1QvGFg6fxebs4svMkZPR/14tTS5n8ZxiBXbyjughoTkMF/f?=
- =?us-ascii?Q?GXuZAKy+psJxzkGzqk6uD+OAaZVh3Ir5WFFU3UySn5DPP6qvrUPE0rp2J4nj?=
- =?us-ascii?Q?0pXxhb5wthjZtFViubxGfRBa8Kv2nk2ht9NVUNa+RKJ30iX9N+uGlJp+nCLq?=
- =?us-ascii?Q?yocupu8YLDZPw31YujTFkfwMof76smtGvVXiDhohvd3xJ9QbHzsEdiMZVjPo?=
- =?us-ascii?Q?w1UnomE4uz/uF3ZycBQujPOXFRMVtoZVvQA+WQsWlB5Y2ubypRZ/Juz7ksYo?=
- =?us-ascii?Q?op6AZU61fB+FXMyTx8Yu6H5m0Uu7VVqg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ddHn9fqym6yjaDpnLl6P1wQCrXAQn9fENKiFXU3xejhqulLYgjEiyjC8YOPO?=
- =?us-ascii?Q?NWJOxERqFQMlTOlRqLwQ/6gwtCHrlhrbK869XAQMLY4c7edZ1VM59+OO54gl?=
- =?us-ascii?Q?tvX0+0lf8SXlR66s730xKoJMfRZfTMukmAfGWdMAgc1CKd8Pv7SL0V8xw0W0?=
- =?us-ascii?Q?eduW6FNNjm2MIJOSETe6XK7/d/Bf8JX3aLZE5dWZxSiTciBxVRudgbNkXN0c?=
- =?us-ascii?Q?Du0VnWzQbmwFk12zuMDPmm7nIYHBRlKaLV5VtJ2fLXrxmGba5DzK9PlKViep?=
- =?us-ascii?Q?dWUdjWPTNDxZDwOv7yEaW5yvJqdveP8NUJx2+wk+mojp9aibl7Litz6+7JAB?=
- =?us-ascii?Q?NDMgxos5K+Qq82/mEo0jDDoweJPnArFVB31dqBHFdF/S5KCUS4wjk/6ORM1a?=
- =?us-ascii?Q?ZXSR6tr88CnLxNOeISy7QWOh+WOREb37ukcMm0jvzVfODtp4c8N1xDOIieHP?=
- =?us-ascii?Q?7SWg+5ckbv5sXx9aB0bcHoYkEfGHYPDU1/0VsocMsmEiWFKaDs2YVZh54ftK?=
- =?us-ascii?Q?6T7dWf1APdhIo6FVdc4aVBHN0UmI8OSbHdLa8cvzAuUrrbO2FLBNIQ1qxxrb?=
- =?us-ascii?Q?pqmVHdUHeyUOzucU8k0k6wGyYyoZ5/XYbY6gksAg+YRTTwTLSrfwCEl9gO1w?=
- =?us-ascii?Q?vVOK4AnQfWNvUB25RthcyZT3NUXJiuXAHbva30O/u89Jfow+TVWdIwvPT1Fn?=
- =?us-ascii?Q?YoMnFC3VE1f/vUVAx52kEo5MhYWZwBwCXK/tmlP9kTbzizM0eBEP0SjOt39N?=
- =?us-ascii?Q?8jd8PwviVEh9Pv8Tvp+wKpt7kMT2/dMizy7+MILCK8Mr4QGl6PAA8gWTHY0J?=
- =?us-ascii?Q?RQ6hdx65WTDirq4Dr6WvuCtLYmnOGbLCXb3nW+K/x+jRm+Q4Oomtxadj3OBR?=
- =?us-ascii?Q?rasWT8O9HMJj8buezIiKZ+iNPSXLGMFnkRb4hGDid8ExTX1cE8VdOVGvX6ab?=
- =?us-ascii?Q?/idm3sJ5vjA93AGCF5Lh/NAGlzPt5UCDLoGO5/ktAuA3IORChEbk2AB+UN3M?=
- =?us-ascii?Q?D3ca20OkqbMTP1YEPxvdaCxQR2yqmfy/11smY1iitBit+L18fGmaev0c41Ll?=
- =?us-ascii?Q?BY2BI7mdRyPN5l1hfp983zYAB/8FMOZVRH8lF3TCrWv0BAt5fDiWHg+b2ARe?=
- =?us-ascii?Q?jre7UJ7Pwa14dDiEryx8Xt8pUjHHYHrcdc6yMi/7wkAaE+DCvE3kOcWq+EFx?=
- =?us-ascii?Q?ZzImlTIsbagqp8e0SgcFn8uaIloej/kjzq922akgDCrgmEQIKpc1oNz3DW7C?=
- =?us-ascii?Q?UYpnGSivKoIDFC1ID0cUI7gjrdqH/MYbFWTUcIb7k5vnhwzde2qc/DtdzUrl?=
- =?us-ascii?Q?YDz/Z3Ua/j1LclDB+nV/eXQW5naQ4wtyg5biRBDQop1lVSLshwugaQ6KVkcV?=
- =?us-ascii?Q?shWUxcNbmoB8ZtfRcr7mAylwKeUInz2B5oJ2T9OO7VRbsKebAyvWb9OzbCld?=
- =?us-ascii?Q?OVAcguVgq5VB7zNDjXYlDoFJ35KXXHY2uBADwGDmWjtexweAFQM/Q9xMqRcb?=
- =?us-ascii?Q?YwJsF9fDmuGD3VFnFmGeoXxuzh4LtSws08rvKlBd7BWv23shAVkSRpirQO2D?=
- =?us-ascii?Q?nRw7d2vaHK+nYBEOayrBaKnEXa8NGJbnzfykMPn8?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bdffe5d-fe69-4b95-e94c-08de0d02c17f
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2025 22:24:22.2333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jvQSdQAtE1Rg/YNxCe67/4ToIGh6+eIMcdpx9wrREmz49sg32q274/382iXm0IdZrNq3rPtDi1ErXx8YaSAdYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7890
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 15, 2025 at 08:14:29PM +0200, Danilo Krummrich wrote:
-> Implement TryInto<IrqRequest<'a>> for IrqVector<'a> to directly convert
-> a pci::IrqVector into a generic IrqRequest, instead of taking the
-> indirection via an unrelated pci::Device method.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/pci.rs | 38 ++++++++++++++++++--------------------
->  1 file changed, 18 insertions(+), 20 deletions(-)
-> 
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index d91ec9f008ae..c6b750047b2e 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -596,6 +596,20 @@ fn index(&self) -> u32 {
->      }
->  }
->  
-> +impl<'a> TryInto<IrqRequest<'a>> for IrqVector<'a> {
-> +    type Error = Error;
-> +
-> +    fn try_into(self) -> Result<IrqRequest<'a>> {
-> +        // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-> +        let irq = unsafe { bindings::pci_irq_vector(self.dev.as_raw(), self.index()) };
-> +        if irq < 0 {
-> +            return Err(crate::error::Error::from_errno(irq));
-> +        }
-> +        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-> +        Ok(unsafe { IrqRequest::new(self.dev.as_ref(), irq as u32) })
-> +    }
-> +}A
+PCI devices are created via pci_scan_slot() and similar, and are
+promptly configured for runtime PM (pci_pm_init()). They are initially
+prevented from suspending by way of pm_runtime_forbid(); however, it's
+expected that user space may override this via sysfs [1].
 
+Now, sometime after initial scan, a PCI device receives its BAR
+configuration (pci_assign_unassigned_bus_resources(), etc.).
 
-Nice change, looks good to me but I do feel it is odd to 'convert' an
-IrqVector directly into a IrqRequest using TryInto (one is a device-relative
-vector index and the other holds the notion of an IRQ request).
+If a PCI device is allowed to suspend between pci_scan_slot() and
+pci_assign_unassigned_bus_resources(), then pci-driver.c will
+save/restore incorrect BAR configuration for the device, and the device
+may cease to function.
 
-Instead, we should convert IrqVector into something like LinuxIrqNumber
-(using TryInto) because we're converting one number to another, and then pass
-that to a separate function to create the IrqRequest. Or we can do both in a
-vector.make_request() function (which is basically this patch but not using
-TryInto).
+This behavior races with user space, since user space may enable runtime
+PM [1] as soon as it sees the device, which may be before BAR
+configuration.
 
-Actually even my original code had this oddity:
-The function irq_vector should have been called irq_request or something but
-instead was:
-pub fn irq_vector(&self, vector: IrqVector<'_>) -> Result<IrqRequest<'_>>
+Prevent suspending in this intermediate state by holding a runtime PM
+reference until the device is fully initialized and ready for probe().
 
-I think we can incrementally improve this though, so LGTM.
+[1] echo auto > /sys/bus/pci/devices/.../power/control
 
-Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
 
-thanks,
+ drivers/pci/bus.c | 7 +++++++
+ drivers/pci/pci.c | 6 ++++++
+ 2 files changed, 13 insertions(+)
 
- - Joel
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index f26aec6ff588..227a8898acac 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -14,6 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/proc_fs.h>
+ #include <linux/slab.h>
+ 
+@@ -375,6 +376,12 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 		put_device(&pdev->dev);
+ 	}
+ 
++	/*
++	 * Now that resources are assigned, drop the reference we grabbed in
++	 * pci_pm_init().
++	 */
++	pm_runtime_put_noidle(&dev->dev);
++
+ 	if (!dn || of_device_is_available(dn))
+ 		pci_dev_allow_binding(dev);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b14dd064006c..06a901214f2c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3226,6 +3226,12 @@ void pci_pm_init(struct pci_dev *dev)
+ 	pci_pm_power_up_and_verify_state(dev);
+ 	pm_runtime_forbid(&dev->dev);
+ 	pm_runtime_set_active(&dev->dev);
++	/*
++	 * We cannot allow a device to suspend before its resources are
++	 * configured. Otherwise, we may allow saving/restoring unexpected BAR
++	 * configuration.
++	 */
++	pm_runtime_get_noresume(&dev->dev);
+ 	pm_runtime_enable(&dev->dev);
+ }
+ 
+-- 
+2.51.0.858.gf9c4a03a3a-goog
 
-
-> +
->  /// Represents an IRQ vector allocation for a PCI device.
->  ///
->  /// This type ensures that IRQ vectors are properly allocated and freed by
-> @@ -675,31 +689,15 @@ pub fn iomap_region<'a>(
->          self.iomap_region_sized::<0>(bar, name)
->      }
->  
-> -    /// Returns an [`IrqRequest`] for the given IRQ vector.
-> -    pub fn irq_vector(&self, vector: IrqVector<'_>) -> Result<IrqRequest<'_>> {
-> -        // Verify that the vector belongs to this device.
-> -        if !core::ptr::eq(vector.dev.as_raw(), self.as_raw()) {
-> -            return Err(EINVAL);
-> -        }
-> -
-> -        // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-> -        let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), vector.index()) };
-> -        if irq < 0 {
-> -            return Err(crate::error::Error::from_errno(irq));
-> -        }
-> -        // SAFETY: `irq` is guaranteed to be a valid IRQ number for `&self`.
-> -        Ok(unsafe { IrqRequest::new(self.as_ref(), irq as u32) })
-> -    }
-> -
->      /// Returns a [`kernel::irq::Registration`] for the given IRQ vector.
->      pub fn request_irq<'a, T: crate::irq::Handler + 'static>(
->          &'a self,
-> -        vector: IrqVector<'_>,
-> +        vector: IrqVector<'a>,
->          flags: irq::Flags,
->          name: &'static CStr,
->          handler: impl PinInit<T, Error> + 'a,
->      ) -> Result<impl PinInit<irq::Registration<T>, Error> + 'a> {
-> -        let request = self.irq_vector(vector)?;
-> +        let request = vector.try_into()?;
->  
->          Ok(irq::Registration::<T>::new(request, flags, name, handler))
->      }
-> @@ -707,12 +705,12 @@ pub fn request_irq<'a, T: crate::irq::Handler + 'static>(
->      /// Returns a [`kernel::irq::ThreadedRegistration`] for the given IRQ vector.
->      pub fn request_threaded_irq<'a, T: crate::irq::ThreadedHandler + 'static>(
->          &'a self,
-> -        vector: IrqVector<'_>,
-> +        vector: IrqVector<'a>,
->          flags: irq::Flags,
->          name: &'static CStr,
->          handler: impl PinInit<T, Error> + 'a,
->      ) -> Result<impl PinInit<irq::ThreadedRegistration<T>, Error> + 'a> {
-> -        let request = self.irq_vector(vector)?;
-> +        let request = vector.try_into()?;
->  
->          Ok(irq::ThreadedRegistration::<T>::new(
->              request, flags, name, handler,
-> -- 
-> 2.51.0
-> 
 
