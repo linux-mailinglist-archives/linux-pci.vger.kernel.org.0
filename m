@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-38419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38420-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B826BBE654D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 06:46:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D24F6BE655C
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 06:47:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 30ADE4EA88A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 04:46:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89CCD5850AC
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 04:47:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93ED31F418D;
-	Fri, 17 Oct 2025 04:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7F6223278D;
+	Fri, 17 Oct 2025 04:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVRSV0PN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jH54JWc9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647E37081E;
-	Fri, 17 Oct 2025 04:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A947B4204E;
+	Fri, 17 Oct 2025 04:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760676370; cv=none; b=VFKarb9zFUNzPrQy3z7ri9hPD3MC216qyzgbJ21wHypKv1veC/JOPqALz96zA1U+v0xe00WVbGFzTh59pudx8kXl7SJDoOZT9jUxOeEUhIxwNCXYEjgGUNLscxQXny1gvGzsRYVq8FTftu0PHfI5xx+n8NiE8O13k1BAsz+fCwU=
+	t=1760676472; cv=none; b=WAw2IdHWCJun9RbkHqaurW9NnjIL/WdvBZNNIofkdJPH2PNcGB/T8sRQbjxNt+pyouWDyJan+jnCTyFemtTbf0LjbhlEom/9zZJsZhc2xPBi8YPsXLlQVsJWNK16BopQNr0GTSi0R5HUeAE7XOaC245PjUOCC6iW59ePKQEIpCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760676370; c=relaxed/simple;
-	bh=MIF8uQjD6xOBCpoIO6NDT758UQrT+Sn42yH6L3Es73A=;
+	s=arc-20240116; t=1760676472; c=relaxed/simple;
+	bh=fFBUVrLXLmK+7dkfnlQFimDw5NCqhbq3Uzb47zqYK7I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F95YG6lcFDeWkG1fVV59095GLNQTO2ad5Q6VAUBK9wPielY7pmlqFI7ETCanqWGWYXn9SgDqmkw0d9R2iMH/SQDDfzIttY6AnoVM+SF3oNTFfYdkeuoPXaITf6KbeHPbq7FDpM4uMoFW7k1ejstbHH5XMNk4G67Cu2IIJ8Pa4fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVRSV0PN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB03C4CEE7;
-	Fri, 17 Oct 2025 04:46:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NSJzBLv3k2IghDp8MfLfc+0uPkWNhBJsr82HLz5BZ7uu97S92Kx9mAFOI70x5x4etuiHWdsPsrKLQpO9KXU+SdCWnHLojPRv567qmhP1F5RrYP0UGgJqNjkzDkqbErDlGXouDpdBff7Eiy+Fl2CXF2rAl30VKlpqsYYZxipaK/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jH54JWc9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D642C4CEE7;
+	Fri, 17 Oct 2025 04:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760676368;
-	bh=MIF8uQjD6xOBCpoIO6NDT758UQrT+Sn42yH6L3Es73A=;
+	s=k20201202; t=1760676472;
+	bh=fFBUVrLXLmK+7dkfnlQFimDw5NCqhbq3Uzb47zqYK7I=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BVRSV0PNJIAOQAo7vWbfR1iPpHUOAaQjluWHCv/3+VSvuafzMs12kiUf/MqYd6uCq
-	 95vPhhztXtYmXVaf0YJXwKqoQyrYtCkYw8IxObAV7bYritZr/DnM56xFizivJptBzd
-	 4IPSJNM6purJ3GqhGNXdQo//9xR9OvaTVututDXNmWmD3jt0xWvJOUfeVBv0ZfjA3B
-	 /2KNnmqJrcvxt95Z6gy+fjXedwJ7drWEq54ynNNZc5sbHLEkN1T68MISKqF+HjOM0+
-	 FAHEWFvPP1DZFdcm+BSkRIHU08vvdTbNOLtg2IXZA0bWTBrBmyaWLLguT0BTEERdB9
-	 UMnSHy9M10NAQ==
-Message-ID: <56c23e19-90c6-4e2f-afe9-ae7a83d15390@kernel.org>
-Date: Fri, 17 Oct 2025 06:46:02 +0200
+	b=jH54JWc9ydk4nEXraailgIY0KL9F+Q+8HbHnHEhDyo9PLPLwlFMVF5hkYUXoSG31z
+	 eTtIEsVrikb+QU1GvbaTpkTzFE2HzaWgKk0t/m0YB8jCgWgVFwXcuuWTrbkV2qMrxl
+	 /AVKw+gqRmvnN+FULA4Zahbsby3jrJEzV+VmFAlYCvvGvUT+JL6NPNbahxil8HGEUo
+	 +Oo4eKSphGpak77CX57SkZGhzw9qJGCQwRK1t0FiLmxsuSbucmtWLxvLlurMyDPv/1
+	 TXW8/T3+54FjtPHbcA/Kryt9x8gF0wZW5as8UBTockSFkwco5l3YVPNa3jejT00+Zm
+	 HG9Yq0gutXJIQ==
+Message-ID: <32a14a2e-f61e-422a-ae77-f60ea44581eb@kernel.org>
+Date: Fri, 17 Oct 2025 06:47:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] dt-bindings: PCI: qcom,pcie-sm8550: Add Kaanapali
- compatible
+Subject: Re: [PATCH v2 2/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Add
+ Kaanapali compatible
 To: Qiang Yu <qiang.yu@oss.qualcomm.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
@@ -64,7 +64,7 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-phy@lists.infradead.org, Jingyi Wang <jingyi.wang@oss.qualcomm.com>
 References: <20251015-kaanapali-pcie-upstream-v2-0-84fa7ea638a1@oss.qualcomm.com>
- <20251015-kaanapali-pcie-upstream-v2-1-84fa7ea638a1@oss.qualcomm.com>
+ <20251015-kaanapali-pcie-upstream-v2-2-84fa7ea638a1@oss.qualcomm.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,17 +110,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251015-kaanapali-pcie-upstream-v2-1-84fa7ea638a1@oss.qualcomm.com>
+In-Reply-To: <20251015-kaanapali-pcie-upstream-v2-2-84fa7ea638a1@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/10/2025 12:27, Qiang Yu wrote:
-> On the Qualcomm Kaanapali platform the PCIe host is compatible with the
-> DWC controller present on the SM8550 platform.
+> Document compatible for the QMP PCIe PHY on Kaanapali platform.
 > 
 > Signed-off-by: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
 > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> ---
+
+
+Don't mix independent patches from different subsystems into one
+patchset. You only make it difficult for the maintainers.
+
+Really, really pay attention how your work should present itself to the
+maintainers.
+
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
