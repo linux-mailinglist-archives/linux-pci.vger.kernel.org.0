@@ -1,120 +1,147 @@
-Return-Path: <linux-pci+bounces-38485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0B8DBE9912
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 17:13:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B58DBE9ED9
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 17:34:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DDB5744254
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 15:06:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A55CA743B2A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 15:13:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57313336EC5;
-	Fri, 17 Oct 2025 15:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66AB433291C;
+	Fri, 17 Oct 2025 15:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="E8IaqNfI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqmvhnCx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3031A332917;
-	Fri, 17 Oct 2025 15:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3697B2F12B0;
+	Fri, 17 Oct 2025 15:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760713471; cv=none; b=sy3JG0+v0m0abRMgeUzfZqc191cwz34YzGlGaD1tRPT8Q90ob/zlEeEEYV2ufmrks8vnhptKK+urgcA/IXiqlfqCz+MyM2W5nN3P+jD1rgPs1Xr584Z4U7xcI0tupJM27oPrM19ymegKQ+lZJSO87UyKEFfM5ali18Huam3bfJQ=
+	t=1760713958; cv=none; b=cebjW5IhSLFjSqmpa0Zgms8HTp0ZzJ5zds3Woh3kT0+rgQwN8e6HYxRpwmtFoZ1kLRBk05YzbrNR6uR1cycN2dKkFccTalf5Q+OcPUsJXtFvDwVDRA8MUQcqzpcd1zNvoi+LCy+XJLXP/dVtATLsVGmCXgMdM2cyMDAilVAso7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760713471; c=relaxed/simple;
-	bh=h+cFtCNZjm5oVOld1YdQrQM9D2eUkV7N5lgtdPUuNcg=;
+	s=arc-20240116; t=1760713958; c=relaxed/simple;
+	bh=1IuDydb9LVnh3/OC5wI1BZmlPhEFBAW9Ll+jAbKHxOM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jApvZo/WK0Tt+HLnrvLo+TBtE+Vk0kWAJ9E5/DfkJlXM2w5dAwl5vebU8oZ7K+wUjpOma5VShjnEWDSXJ7miOkerWp3vBTifOfAyxcHAQpoaY02tmY72+qX3L87ae8ScI3iDMgs023etQYkIaFBCHlv5fifTfgPV37cOk3m8KYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=E8IaqNfI; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/w51uT33nvziBRi/h4QPWG8nuY0Qq+uvl5/Q7nsmkwY=; b=E8IaqNfIzoEoDLp3v5yNSsTVAY
-	lfEkHP8X+CO8QjHl/FV+ttq2CTNvfuoIh6giq0CAhKk+mEJ4whYlSViXc6W35wb7kl4x5emmuISWV
-	82XSzMhnLhSm+LiINFhXwDTZeztF3HCn9R0QdTaU7loz8NDfIL30tKM7bIRcvhR1R56SiKOnbep7k
-	B12rALuM1IBZ96pmidIrqabdjHA42qLDK9nCKQ1957f6Et15vlU/PbSEoUGbRhsX2zgidUKQ9W3zV
-	44NqPPcc09mwPbaC/50ur8ljPobEUmjKNeRbXlLmSVRiwU8fyAOuotx3fsdR0/GhhDPfuBszVB1xE
-	XRNHqp+w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38494)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1v9m04-0000000082h-33VO;
-	Fri, 17 Oct 2025 16:04:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1v9lzu-000000004O7-1HP8;
-	Fri, 17 Oct 2025 16:04:02 +0100
-Date: Fri, 17 Oct 2025 16:04:02 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Yao Zi <ziyao@disroot.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Frank <Frank.Sae@motor-comm.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
-	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH net-next 3/4] net: stmmac: Add glue driver for Motorcomm
- YT6801 ethernet controller
-Message-ID: <aPJa4u2OWhVGs58k@shell.armlinux.org.uk>
-References: <20251014164746.50696-2-ziyao@disroot.org>
- <20251014164746.50696-5-ziyao@disroot.org>
- <f1de6600-4de9-4914-95e6-8cdb3481e364@lunn.ch>
- <aPJMsNKwBYyrr-W-@pie>
- <81124574-48ab-4297-9a74-bba7df68b973@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogAYsYGvimzHhOemM9kDvkfVQKsCbd0YYWoFBAQl8CXcgOUHdIePUX/yeEEPEbHBpUj5Q3js1Q4EqGxDaxo4ZXWZNFtmuyaT3eOe7xF72ch+/rOcaHkSIH7w6s0HX7GxobpZ8+RyKlAxeaUd7N/vFUbS9WDgqSnYIRDAVrAUf/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqmvhnCx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F68C4CEF9;
+	Fri, 17 Oct 2025 15:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760713958;
+	bh=1IuDydb9LVnh3/OC5wI1BZmlPhEFBAW9Ll+jAbKHxOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TqmvhnCx3DrRFih0Hvwau0ZVDoNCUJBx/O3sVu/j1ssqtkREF1YfTzvFlfcOU8RUF
+	 BvcqKmld1ZylivNmpGNRG+umisrT0IU0Hmhookb0+BazONDjWGtolHdNWRmyytUZoW
+	 GPo8oO/pz2i5AsSkGGDG57DxH6z572pZUF45xM7uT+RFmQ5YgDLC3/6jmzhGVOofP1
+	 V6RcGG4IADuHO9+fa3Ww81AX6nfzzaZw0saKuI5pfVW/e9vZNAefSIkgRcukNsv7cE
+	 nsOrylVfJ/ms0A/d1ED1auwPhg5lujqGB2UNjVyDThzlzJg7CK0GP7zbIOl9m06xet
+	 f9YIKqKW9isxg==
+Date: Fri, 17 Oct 2025 20:42:24 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Chester Lin <chester62515@gmail.com>, 
+	Matthias Brugger <mbrugger@suse.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+	NXP S32 Linux Team <s32@nxp.com>, bhelgaas@google.com, jingoohan1@gmail.com, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, krzk+dt@kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Ionut.Vicovan@nxp.com, Larisa Grigore <larisa.grigore@nxp.com>, 
+	Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>, ciprianmarian.costea@nxp.com, 
+	Bogdan Hamciuc <bogdan.hamciuc@nxp.com>, Frank Li <Frank.li@nxp.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH 1/3 v2] dt-bindings: PCI: s32g: Add NXP PCIe controller
+Message-ID: <nzznoiri4n7krpid4lp4pax2dge6vwdj3eqyxqob4bzf6gmlzy@a6moyj74ehzp>
+References: <20250919155821.95334-2-vincent.guittot@linaro.org>
+ <iom65w7amxqf7miopujxeulyiglhkyjszjc3nd4ivknj5npcz2@bvxej6ymkecd>
+ <aOU0w5Brp6uxjZDr@lpieralisi>
+ <4rghtk5qv4u7vx4nogctquu3skvxis4npxfukgtqeilbofyclr@nhkrkojv3syh>
+ <eba7d968-209d-4acb-ba41-4bebf03e96ba@app.fastmail.com>
+ <4143977f-1e70-4a63-b23b-78f87d9fdcde@app.fastmail.com>
+ <2erycpxudpckmme3k2cpn6wgti4ueyvupo2tzrvmu7aqp7tm6d@itfj7pfrpzzg>
+ <3d480f73-15b4-4fb8-8d2b-f9961c1736ca@app.fastmail.com>
+ <4kvo2qg2til22hlssv7lt2ugo63emr5c4hfjur5m3vnxvpdekx@jcbhaxb2d2j2>
+ <839e3878-ae62-4c8b-a74b-ac4f6f060d98@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <81124574-48ab-4297-9a74-bba7df68b973@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <839e3878-ae62-4c8b-a74b-ac4f6f060d98@app.fastmail.com>
 
-On Fri, Oct 17, 2025 at 04:56:23PM +0200, Andrew Lunn wrote:
-> > Though it's still unclear the exact effect of the bit on the PHY since
-> > there's no public documentation, it's essential to deassert it in MAC
-> > code before registering and scanning the MDIO bus, or we could even not
-> > probe the PHY correctly.
-> > 
-> > For the motorcomm_reset_phy() performed in probe function, it happens
-> > before the registration of MDIO bus, and the PHY isn't probed yet, thus
-> > I think it should be okay.
+On Thu, Oct 09, 2025 at 11:16:02PM +0200, Arnd Bergmann wrote:
+> On Thu, Oct 9, 2025, at 20:47, Manivannan Sadhasivam wrote:
+> > On Wed, Oct 08, 2025 at 07:56:44PM +0200, Arnd Bergmann wrote:
+> >> On Wed, Oct 8, 2025, at 17:19, Manivannan Sadhasivam wrote:
+> >>
+> >> That is not my impression from reading the code: At least for
+> >> the case where both devices are on the same bridge and they
+> >> use map_type=PCI_P2PDMA_MAP_BUS_ADDR, I would expect the DMA
+> >> to use the plain PCI bus address, not going through the
+> >> dma-ranges+ranges translation that would apply when they are
+> >> on different host bridges.
+> >> 
+> >
+> > Right, but I don't get the overlap issue still. If the P2P client triggers a
+> > write to a P2P PCI address (let's assume 0x8000_0000), and if that address
+> > belongs to a an endpoint in a different domain, the host bridge should still
+> > forward it to the endpoint without triggering write to the RAM.
 > 
-> Since it resets more than the PHY, it probably should have a different
-> name, and maybe a comment describing what is actually resets.
+> If 0x8000_0000 is an endpoint in a different domain, I would expect the
+> DMA transfer to go to the RAM at that address since the DMA has to leave
+> the PCI host bridge upstream by following its inbound windows.
+> 
+> This is not the problem I'm talking about though, since cross-domain
+> P2P is not particularly well-defined.
+> 
+> > Atleast, I don't see any concern from the outbound memory translation point of
+> > view.
+> >
+> > Please let me know if there is any gap in my understanding.
+> 
+> To clarify: I don't think that programming the output translation this
+> way is the problem here, but assigning memory resources to ambiguous
+> addresses is. The host bridge probe uses the 'ranges' both for
+> setting up the outbound window and the bus resources. 
+> 
+> If the PCI bus scan assigns address 0x8000_0000 to the memory BAR
+> of a device, and that device or any other one in the /same/
+> domain tries to DMA to DRAM at address 0x8000_0000, it would likely
+> reach the memory BAR instead of DRAM. If for some reason it does reach
+> DRAM after all, it would be unable to do a P2P DMA into the BAR when
+> it tries.
+> 
 
-I want to back Andrew's comment here up very strongly.
+I tried to verify how the Root Port is supposed to behave in this scenario, but
+I couldn't conclude on anything. So it looks like this overlapping *might*
+create issues with P2PDMA and DRAM access. Thanks for spotting and also for
+persisting with my lack of understanding :)
 
-You will not be the only one looking at this code. There are other
-people (e.g. me) who are looking at e.g. the core stmmac code, making
-changes to it, which impact the platform glue as well.
+> If the PCI scan already checks for overlap between the DT "ranges"
+> and other resources (DRAM or MMIO) before assigning a BAR, this may
+> be a non-issue, but I haven't found the code that does this.
+> Looking at pci_bus_allocate_dev_resources() it seems that it would
+> attempt to assign an overlapping address to a BAR but then fail
+> to claim it because of the resource conflict. If that is the
+> case, it would not actually have an ambiguous DMA routing
+> but instead the device would fail to be probed because of the
+> conflict.
+> 
 
-The platform glue needs to be understandable to those of us who don't
-have knowledge of your platform, so that we can make sense of it and
-know what it's actually doing, and thus be able to adapt it when we
-push out changes to the core that affect platform glue.
+AFAICS, the existing resource checks only finds out the overlap between the
+resources assigned to the devices, not between the DRAM or MMIO. This is
+something we should do in devm_of_pci_get_host_bridge_resources() IMO.
 
-Sadly, it seems 99.9% of platform glue is "dump it into the kernel
-and run away".
+- Mani
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+மணிவண்ணன் சதாசிவம்
 
