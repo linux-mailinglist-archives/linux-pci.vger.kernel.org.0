@@ -1,154 +1,137 @@
-Return-Path: <linux-pci+bounces-38442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59723BE7F05
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:05:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3123ABE7F55
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:09:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D50AA1A6187B
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:05:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 436715E7841
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB2530C62A;
-	Fri, 17 Oct 2025 10:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01AD030F818;
+	Fri, 17 Oct 2025 10:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pn/pxqk9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3n95l9O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5449130B525;
-	Fri, 17 Oct 2025 10:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104EB31AF2E
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 10:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760695508; cv=none; b=be2Qf6zXGWY9D33ei4LfBFWojGVKm+sdglNREuoSIrgaa0kZ93xkmV5FEgdLf73oQ+WkAu85GqWlcR6diBXrpZYj4fRAgx+1/NjSBSnDrZnOEXtMeO37GlfYKMjD/Ve3Hajuwk1ubpwA1WqVBLydvcAsA3dZpK+h6wv2VOqwxtY=
+	t=1760695644; cv=none; b=KaFaVICt9eozhuszHih114OgZgLgUM/83SsN048s6gxora5561mOPZYNg9cEBgSl4PpuFWaQOGsMphHbu5aWr6j6fhHeHF9qV9NZM/Y/8DaCH2eg8KgpymO8mOaD874B6ZQ87oQPyE5626ep7amKG/JqvOso5tByTVFjRIR/gEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760695508; c=relaxed/simple;
-	bh=d27FnODMUOTQgewcjbJxNy4ZOjzPLw8pcBAW8xniqKc=;
+	s=arc-20240116; t=1760695644; c=relaxed/simple;
+	bh=kojQMXknS4fWVlJmzyerdgKYf2aOP/WaOJN/eiI6YoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eir44Q1brq21tKZT+7T2Q4sipfxebNGWK1qHcMI62Sx6IBC9puRBsNOdfQheIywggw3jom+5swpqDWdXjQ0V9ou6d7J/ydv78+wMOBZvQ6fMMdgD7wOEtuv2Z3ftUvWupMebWi6otEALZiVL7U8Taw9NeH2eUj+S8nSrpHk0TMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pn/pxqk9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8282C4CEE7;
-	Fri, 17 Oct 2025 10:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760695507;
-	bh=d27FnODMUOTQgewcjbJxNy4ZOjzPLw8pcBAW8xniqKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pn/pxqk9AqSC3QFrOOd7LLwBp4ePoZ1T9yh86VDVXBsW5Gq3/wIsU5yXbDIGM7GVq
-	 PvQIRqzMmxMVWIIS3ZO+YbNMqsw9rISbkqG46JqUszkWEKOdS4DIDs66v6UqK12K+7
-	 KlxyuhRHYpmifcmbMVwfH6iEHPSt84mkXY7LpM0vaYK21qfN3iMTt1ESP3D/iI9Qua
-	 WpEZLRAotG6oXakdDm7fvqYsWsIW5khfRfpSsxd+rZEZNeqpfyiK+WRawf0ye65MZw
-	 Snf9HP2LbS18RSzM4svYqEw3jqH8qu/Q24iOhCCZOp+YYA7MHF3F7aC/TBnaXiHIs4
-	 6xSMhDBRFkATw==
-Date: Fri, 17 Oct 2025 15:34:51 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	"David E. Box" <david.e.box@linux.intel.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>, 
-	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev, FUKAUMI Naoki <naoki@radxa.com>
-Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
- set by BIOS for devicetree platforms
-Message-ID: <22owgu6qb34bh47cevupnwnvwwfhtn4lwfav6fuxfydaiujw6y@oeh3q2u4wo2h>
-References: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
- <20251015233054.GA961172@bhelgaas>
- <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
- <0dd51970-a7ac-4500-b96f-d1e328e7a3b2@rock-chips.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=S4EeMNOMdhZCZ/lV2vxc4AeNWjBwJZa9zpMwECvMaO5kKx2pJd+n3JA5NEwyCNrigkZB2EaTIrvAwdAIjXA2OT+9XZ5J37SO9rzG1s/tKhqSiCj9oCOC95N5bwhvB+3abnmvSo5qbXQwKSUwm1wEvj46umfbWTL2+RADFT5n0Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q3n95l9O; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760695643; x=1792231643;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kojQMXknS4fWVlJmzyerdgKYf2aOP/WaOJN/eiI6YoA=;
+  b=Q3n95l9OI422657rmeyxIPLVr+Mt8Jn787TSNqHw0uZs/UJ/21+IL4Y5
+   HPawF32X4DR2iiCpEZEJGXQIpwtZfrbR5BNL1wWfvD5Vz9Ufhm7bPCM3V
+   0WJzdhOSv8Hyxw2YBY55sXuthOjguEnwJBlbPKSoAn/lX8u2fgmYs2zur
+   DR5kszV1TS5K7pTk9xyHn80kXcYLLuk6XJLc2i9G3SuKRC278E2JRt3Fb
+   wu8pvk8hqyh9P/fQsVBlfb09oA0GLmZw+8121fAT2cMYD6HrG5ZhunUvd
+   z3sTMbYUc02i30w7mQRPWqiyzwV3q5Opv3yk4VU+SiU7dIhGMbJZMhs+R
+   A==;
+X-CSE-ConnectionGUID: zY/UgWZ3QiibFQCPoUcoUw==
+X-CSE-MsgGUID: LZILZBWUQFuMsxB3SsMZKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="61934766"
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="61934766"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 03:07:22 -0700
+X-CSE-ConnectionGUID: SBGf7iXUTO6Rnb2b/Ug6Jg==
+X-CSE-MsgGUID: VqgQEwF9SlS28aAYKiDhBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="186727728"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 17 Oct 2025 03:07:20 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v9hMk-0005pb-0o;
+	Fri, 17 Oct 2025 10:07:18 +0000
+Date: Fri, 17 Oct 2025 18:06:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	lukas@wunner.de, helgaas@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH RESEND 1/1] PCI: pciehp: fix concurrent sub-tree removal
+ deadlock
+Message-ID: <202510171720.AKF8sDMd-lkp@intel.com>
+References: <20251016193049.881212-2-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0dd51970-a7ac-4500-b96f-d1e328e7a3b2@rock-chips.com>
+In-Reply-To: <20251016193049.881212-2-kbusch@meta.com>
 
-On Fri, Oct 17, 2025 at 05:47:44PM +0800, Shawn Lin wrote:
-> Hi Mani and Bjorn
-> 
-> 在 2025/10/17 星期五 11:36, Manivannan Sadhasivam 写道:
-> > On Wed, Oct 15, 2025 at 06:30:54PM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
-> > > > ...
-> > > 
-> > > > For now, this is a acceptable option if default ASPM policy enable
-> > > > L1ss w/o checking if the HW could supports it... But how about
-> > > > adding supports-clkreq stuff to upstream host driver directly? That
-> > > > would help folks enable L1ss if the HW is ready and they just need
-> > > > adding property to the DT.
-> > > > ...
-> > > 
-> > > > The L1ss support is quite strict and need several steps to check, so we
-> > > > didn't add supports-clkreq for them unless the HW is ready to go...
-> > > > 
-> > > > For adding supports of L1ss,
-> > > > [1] the HW should support CLKREQ#, expecially for PCIe3.0 case on Rockchip
-> > > > SoCs , since both  CLKREQ# of RC and EP should connect to the
-> > > > 100MHz crystal generator's enable pin, as L1.2 need to disable refclk as
-> > > > well. If the enable pin is high active, the HW even need a invertor....
-> > > > 
-> > > > [2] define proper clkreq iomux to pinctrl of pcie node
-> > > > [3] make sure the devices work fine with L1ss.(It's hard to check the slot
-> > > > case with random devices in the wild )
-> > > > [4] add supports-clkreq to the DT and enable
-> > > > CONFIG_PCIEASPM_POWER_SUPERSAVE
-> > > 
-> > > I don't understand the details of the supports-clkreq issue.
-> > > 
-> > > If we need to add supports-clkreq to devicetree, I want to understand
-> > > why we need it there when we don't seem to need it for ACPI systems.
-> > > 
-> > > Generally the OS relies on what the hardware advertises, e.g., in Link
-> > > Capabilities and the L1 PM Substates Capability, and what is available
-> > > from firmware, e.g., the ACPI _DSM for Latency Tolerance Reporting.
-> > > 
-> > > On the ACPI side, I don't think we get any specific information about
-> > > CLKREQ#.  Can somebody explain why we do need it on the devicetree
-> > > side?
-> > > 
-> > 
-> > I think there is a disconnect between enabling L1ss CAP and CLKREQ#
-> > availability.. When L1ss CAP is enabled for the Root Port in the hardware, there
-> > is no guarantee that CLKREQ# is also available. If CLKREQ# is not available,
-> > then if L1ss is enabled by the OS, it is not possible to exit the L1ss states
-> > (assuming that L1ss is entered due to CLKREQ# in deassert (default) state).
-> > 
-> > Yes, there seems to be no standard way to know CLKREQ# presence in ACPI, but
-> > in devicetree, we have this 'supports-clkreq' property to tell the OS that
-> > CLKREQ# is available in the platform. But unfortunately, this property is not
-> > widely used by the devicetrees out there. So we cannot use it in generic
-> > pci/aspm.c driver.
-> > 
-> > We can certainly rely on the BIOS to enable L1ss as the fw developers would
-> > have the knowledge of the CLKREQ# availability. But BIOS is not a thing on
-> > mobile and embedded platforms where L1ss would come handy.
-> > 
-> > What I would suggest is, the host controller drivers (mostly for devicetree
-> > platforms) should enable L1ss CAP for the Root Port only if they know that
-> > CLKREQ# is available. They can either rely on the 'supports-clkreq' property or
-> > some platform specific knowledge (for instance, on all Qcom platforms, we
-> > certainly know that CLKREQ# is available, but we don't set the DT property).
-> 
-> While we're on the topic of ASPM, may I ask a silly question?
-> I saw the ASPM would only be configured once the function driver calling
-> pci_enable_device. So if the modular driver hasn't been insmoded, the
-> link will be in L0 even though there is no transcation on-going. What is
-> the intention behind it?
-> 
+Hi Keith,
 
-I don't see where ASPM is configured during pci_enable_device(). It is currently
-configured for all devices during pci_scan_slot().
+kernel test robot noticed the following build errors:
 
-- Mani
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.18-rc1 next-20251016]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Keith-Busch/PCI-pciehp-fix-concurrent-sub-tree-removal-deadlock/20251017-033133
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20251016193049.881212-2-kbusch%40meta.com
+patch subject: [PATCH RESEND 1/1] PCI: pciehp: fix concurrent sub-tree removal deadlock
+config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20251017/202510171720.AKF8sDMd-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 754ebc6ebb9fb9fbee7aef33478c74ea74949853)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251017/202510171720.AKF8sDMd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510171720.AKF8sDMd-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pci/of.c:18:
+>> drivers/pci/pci.h:653:2: error: call to undeclared function 'pci_notify_disconnected'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     653 |         pci_notify_disconnected();
+         |         ^
+   drivers/pci/pci.h:653:2: note: did you mean 'pci_doe_disconnected'?
+   drivers/pci/pci.h:597:20: note: 'pci_doe_disconnected' declared here
+     597 | static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+         |                    ^
+   1 error generated.
+
+
+vim +/pci_notify_disconnected +653 drivers/pci/pci.h
+
+   648	
+   649	static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+   650	{
+   651		pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+   652		pci_doe_disconnected(dev);
+ > 653		pci_notify_disconnected();
+   654	
+   655		return 0;
+   656	}
+   657	
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
