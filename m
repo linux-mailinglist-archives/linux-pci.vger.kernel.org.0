@@ -1,141 +1,144 @@
-Return-Path: <linux-pci+bounces-38422-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38423-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34E7FBE65A0
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 07:00:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA968BE670F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 07:36:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D6698352F85
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 05:00:43 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 51E21354A92
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 05:36:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505CA199FAB;
-	Fri, 17 Oct 2025 05:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2144519DF66;
+	Fri, 17 Oct 2025 05:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+Tv1qZ1"
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="p4asQUKS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144C14C9D;
-	Fri, 17 Oct 2025 05:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760677239; cv=none; b=qMxqZrIRKDeH0+22kUZe+nqpremWbhr1MnhC/TUHm4SFrbQ+tvgaHuPPL0el4nnbk2Oby4sUp0AQM/8PunD6zKk7l+Z6xojNucA0maUp5J+0Fr2jAZjIT1BAQgJMMK2pvq6TxFdRIdsNKoTEUNvVA+rEhN3Keazwme0QiXJM5YE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760677239; c=relaxed/simple;
-	bh=/SLdViOTmBjws+Yr6FI7j9U4nH4Nd3Nk24GaKI3MOF8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YmsvbeCHVhoBVhCvEqRSzuWJud9eY3ULExLyuomTw36iUym4Y7ui+wIWYS7Oc622v3e8872/8P48j1IC3D5d1ZprPDC0e/iTSLox6PQMs5HxAqx8NAzFmCrh25ERmcMybVORVD0+MYR5OLCAlz6zVbGO8XX+VXksTBNhkz36k1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+Tv1qZ1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AF5C4CEE7;
-	Fri, 17 Oct 2025 05:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760677238;
-	bh=/SLdViOTmBjws+Yr6FI7j9U4nH4Nd3Nk24GaKI3MOF8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=s+Tv1qZ15Etpb4Z9j/5qLiSfwp44AeU4dvLuUciy78XhTBzAIq1fHlPPOigScJAFn
-	 /ayR/5L/N5/6XqpHXsnnJ14//3KZQQI+Gy3kYpSSz0iSoYobw/ck9x7zZ2Vscn4f1r
-	 03JBcD0V+CoXLHqnLVamkKFNBugAtoz86wKCa/m7gzWLSldT8OjYSYckaGjYB2hiyC
-	 bsFSQG1hDLc98shG83DOuNNg08Kiku0JxhqSL66FMf2g20hdssDAEVvu4zgvNr2YS4
-	 3YC6Zmj74Zr/0zjSx27bjt0aQlxW9DdXbuF5AnZpIYwcy8hoI6QDH8Cqbh7EItt00v
-	 D1IcrTGkOeyxA==
-Message-ID: <61b7d2d6-6c53-4934-a2eb-8d92b50e0405@kernel.org>
-Date: Fri, 17 Oct 2025 07:00:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A44334686
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 05:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760679386; cv=pass; b=MDnrZcURIkCEfknDD7EC+uT+BvlxTXUWhfN0CBT/3ZYAzPiM+soZoAznjfi+tA85sos6gyl2i5VT9evDNlSLUbg56dW50DMXxS/OG1aTTsJeDr2pMDxwULWQ2KELQE1nhoHEirGtV9a+NEUzJHry+yRxRYGgVxuFGjniYg5PHkc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760679386; c=relaxed/simple;
+	bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=S9DeI8cdIHIOXV/2H3EfiVSpd0v68/b/0TmUQzV25yTN5h4wqqEUhzJcHeMmCFkMOLIN2ZBEcS2jXz/nTVRpY8ZR0C9Yo7LIwyW4Nc2mtaWNZ84jihtxBLLpR9iRFdz2EyT6wpPeHwXgBcKg3W3WZsVFkpZANLwdTipPRj1D+8E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=p4asQUKS; arc=pass smtp.client-ip=85.215.255.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+ARC-Seal: i=1; a=rsa-sha256; t=1760679367; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=nhaG7J1bL5R3UVYFEqUMyRAXLvDeOGEBH0GwwStIKRzZmitjWzfSLves0X4yemOq87
+    YZqJk1mkqE5kxr6z0514MIlwXBikvZ54t/iv81jO0s8ucf8V834VDayX9IUBmk442x0Q
+    uxD6eo5d490H9ZOq2t4moBXoxmIc+HIeUBYSoS0JnkgXUY8/FcEINvlZ8WnGVm2JiblH
+    ReMZB/Og5GDX47qHHJ1XiAwOIP5rywE5jpkuV0ZVmnV0xOXS2POt2Ogr9q372HHrZh7J
+    nk2OzxYBin7HalI6pRKtJjwuOplT0CrMnk/1eZfwGUcJl8rnvpS4sra9yNf9jBpAE+0I
+    jivQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760679367;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
+    From:Subject:Sender;
+    bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
+    b=VD8MpKzJG0ZPaoQ+QS/m+C3DkxPsf+s3VSREIUyke9kOnWmzHbkczysz7kWH2BpdYz
+    gQK5Y0/1QMfWE0/4UgomRUREobDn9yBNpKOk7YSfRb+sIfXW6yTykxfew0oKu80zZkxL
+    LzbjeHtwIYYcJ0Q9PRvsIKBdi2uYyD+vsOgiScPiEgKSeGzbfMJ9MTXDDKqjrYF92xJW
+    bCCJ4R/S/RJs3bO3Gc/qf1XDqqVDtuEJ2qo5AdoIRKRdrEWizM0OBTRqgFo213gFZNLv
+    +LhlSdbnYC+7yx02yshw02AHZqe+RsLNYUNNk/t0TJy5C3l2CmiqWjCcZcE7yBKMCLRm
+    YOsA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760679367;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
+    From:Subject:Sender;
+    bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
+    b=p4asQUKSpu5XH3qU789oDLxeuFzQF1kBnJlCSH87DZ2QghYoZVc3C8LR/rwDSn/QqS
+    pCppXdOL699TmmGd2Eo49mJHjMPzYJA/xvRb7ur81NfidkYYNagDA/A1OMyqDZ/eIho+
+    5mALXmcOKCC3vj0jnhP8PbqASVJa6ns27Oo5HOGf0lA45SetKR3Gzfv6dS2y0nqzZunq
+    UD90Yn6Vhi2S1aVvSei29r1Bu60wQH56NVOCmUgQ2/JbrKWv1VS3H52cF6ub2Hr4DeOy
+    xAMzhczzZKflh3T23PYK6udZN7mnUQiFvECvx9BMMgHfRbN0HDIDFVdnDvrzTPSeLXff
+    0oIQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7X5mysy6RDnaymUgyFB+wT2Hhua3CmtV3D8PNDg=="
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 53.4.2 AUTH)
+    with ESMTPSA id e2886619H5a6eqB
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 17 Oct 2025 07:36:06 +0200 (CEST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Add
- Kaanapali compatible
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Qiang Yu <qiang.yu@oss.qualcomm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Jingyi Wang <jingyi.wang@oss.qualcomm.com>
-References: <20251015-kaanapali-pcie-upstream-v2-0-84fa7ea638a1@oss.qualcomm.com>
- <20251015-kaanapali-pcie-upstream-v2-2-84fa7ea638a1@oss.qualcomm.com>
- <32a14a2e-f61e-422a-ae77-f60ea44581eb@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <32a14a2e-f61e-422a-ae77-f60ea44581eb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 17/10/2025 06:47, Krzysztof Kozlowski wrote:
-> On 15/10/2025 12:27, Qiang Yu wrote:
->> Document compatible for the QMP PCIe PHY on Kaanapali platform.
->>
->> Signed-off-by: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
->> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> 
-> 
-> Don't mix independent patches from different subsystems into one
-> patchset. You only make it difficult for the maintainers.
-> 
-> Really, really pay attention how your work should present itself to the
-> maintainers.
-> 
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Date: Fri, 17 Oct 2025 07:35:55 +0200
+Message-Id: <7110C357-F7D5-405D-895D-20DB5CBD3849@xenosoft.de>
+References: <6E949EB0-CC46-4B08-80BA-706FBD23D256@xenosoft.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ Lukas Wunner <lukas@wunner.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Herve Codina <herve.codina@bootlin.com>
+In-Reply-To: <6E949EB0-CC46-4B08-80BA-706FBD23D256@xenosoft.de>
+To: Manivannan Sadhasivam <mani@kernel.org>
+X-Mailer: iPhone Mail (23A355)
 
 
-And please adjust and rebase on top of patch below:
-20251017045919.34599-2-krzysztof.kozlowski@linaro.org
 
-Best regards,
-Krzysztof
+> On 16 October 2025 at 12:45 am, Christian Zigotzky <chzigotzky@xenosoft.de=
+> wrote :
+>=20
+> =EF=BB=BF
+>>> On 16 October 2025 at 09:53 am, Manivannan Sadhasivam <mani@kernel.org> w=
+rote:
+>>>=20
+>>> =EF=BB=BFOn Thu, Oct 16, 2025 at 09:36:29AM +0200, Christian Zigotzky wr=
+ote:
+>>> Is it possible to create an option in the kernel config that enables or d=
+isables the power management for PCI and PCI Express?
+>>> If yes, then I don=E2=80=99t need to revert the changes due to boot issu=
+es and less performance.
+>>>=20
+>>=20
+>> Wouldn't the existing CONFIG_PCIEASPM_* Kconfig options not work for you?=
+ They
+>> can still override this patch.
+>>=20
+>> - Mani
+>>=20
+>> --
+>> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=
+=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=AF=
+=8D
+>=20
+> Hi Mani,
+>=20
+> I will try it.
+>=20
+> Thanks,
+> Christian
+
+Mani,
+
+It works!
+
+Thanks,
+Christian=
+
 
