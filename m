@@ -1,115 +1,111 @@
-Return-Path: <linux-pci+bounces-38431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17538BE7279
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:26:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DD9BE7322
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:35:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09866188D25E
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 08:27:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69F926278DB
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 08:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44CD28469B;
-	Fri, 17 Oct 2025 08:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/FOHOK/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8D526F2B2;
+	Fri, 17 Oct 2025 08:32:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A9E283FE5;
-	Fri, 17 Oct 2025 08:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D291E29A31D;
+	Fri, 17 Oct 2025 08:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760689610; cv=none; b=Uno9t+5N4HqqbxiO/5LaZJP+H8RXgnZwR4xrmoZifWPt+hy/tbkQWitbfkQrXgLP0UQXE9pjWhOSqcwPW+vm8BQPw0ge+9X59vEoyO5vS9m0jN8RHdwhjBa5OLrjcLp9aZjcOXzTkfgywI9rFTsEYRsgfwhJNTcZCRG8hRMr0Mo=
+	t=1760689940; cv=none; b=XM321112OHnG9MJ8nvhQUnSb3zLB4jYmlXejRkn9OKkrzke79jvQLqk84qPRGnvjupGhfe1XQIROrauqIg9w5AJ94AY1zotnneTHeiSFYQVvmDU6y2S8msdpEYgrOK4ijfqej0VU35snOC5db80nBrXbTc6sOafFLAYBWRuJr+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760689610; c=relaxed/simple;
-	bh=kbYlbb2vWzoBZ20nmxTT1jLO3BgY9QweNZ2+SNF6NR8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tduqd5ezMs13kKlO4Jl4CIi/NBGIlHL09bLPcftyvBJPejpSXmj+R/n5OHCSzosnvHXFBFhgU57CIR3WjSgir4npJ8BFNqw96bdgJNIDq9+bYBStjz3o/23IvYKKJZ0zeOOtHvUte58IHao1POatRQVauekmyTu/MbVTSWkxkj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/FOHOK/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8C7C4CEF9;
-	Fri, 17 Oct 2025 08:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760689610;
-	bh=kbYlbb2vWzoBZ20nmxTT1jLO3BgY9QweNZ2+SNF6NR8=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=r/FOHOK/KV30W9AU1CLlFZr7Uo1nt7j3bZpfAoNf7pLarQJDffIexQ+Caee9cxKAE
-	 yWLtItXISda1kqRcnbW7Fq525yc0tSmY6FmHR+2l/kehCTieOvZViXTwGMODOBh0kO
-	 yhT4xZ7huZ4JJloh1JFwmwKqgu9MPcGketcuNCnak+Zuq7y4tSU7leFiIcH0xjMCeN
-	 66ezK0K71KhY90ckpGXCToE8maTmVN4O3KA9iqr+4nssdX6YAc1vZNVBSqjqAma1CB
-	 87r5pmy5mTtOmoEEQgZBEjNpZW2lTJ6WsSTyqMxPIOr2KJ7CtfbJAHJJ+KUmUHkLaH
-	 jcc1Oo3Qej4nw==
+	s=arc-20240116; t=1760689940; c=relaxed/simple;
+	bh=lKOf9JuIDX4uy3fcGx8kK8IIwOIACYdHYSQFsVoys3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gr7KoVzA9sfK0zNhS/VQmTGxvmwu0fSzzPPujIDHxA3PbTLvdkNqt9kbSFAILNTidnhvB3h4o5LCQP2dYR6xo/mBfXxJb3TqMaBWzCyuQncX7+yJvyrxXf/d1hwxQTho5HCDhWyFgnVHS4H+zsgiPaHnji83FhmLdWz+SEDqCoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id AE0C42C051C7;
+	Fri, 17 Oct 2025 10:32:07 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8541A4A12; Fri, 17 Oct 2025 10:32:07 +0200 (CEST)
+Date: Fri, 17 Oct 2025 10:32:07 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH] PCI/PM: Prevent runtime suspend before devices are fully
+ initialized
+Message-ID: <aPH_B7SiJ8KnIAwJ@wunner.de>
+References: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Oct 2025 10:26:43 +0200
-Message-Id: <DDKGDHEH4QOJ.2QCE60PQ5OJRM@kernel.org>
-Cc: <viresh.kumar@linaro.org>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <daniel.almeida@collabora.com>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
- <robin.murphy@arm.com>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rust: driver: let probe() return impl PinInit<Self,
- Error>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
- <dakr@kernel.org>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20251016125544.15559-1-dakr@kernel.org>
- <DDK8EYINVIKJ.2ZK04J2C06GGR@nvidia.com>
-In-Reply-To: <DDK8EYINVIKJ.2ZK04J2C06GGR@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
 
-On Fri Oct 17, 2025 at 4:12 AM CEST, Alexandre Courbot wrote:
-> On Thu Oct 16, 2025 at 9:55 PM JST, Danilo Krummrich wrote:
->> The driver model defines the lifetime of the private data stored in (and
->> owned by) a bus device to be valid from when the driver is bound to a
+[cc += Ilpo]
 
->> device (i.e. from successful probe()) until the driver is unbound from
->> the device.
->>
->> This is already taken care of by the Rust implementation of the driver
->> model. However, we still ask drivers to return a Result<Pin<KBox<Self>>>
->> from probe().
->>
->> Unlike in C, where we do not have the concept of initializers, but
->> rather deal with uninitialized memory, drivers can just return an
->> impl PinInit<Self, Error> instead.
->>
->> This contributed to more clarity to the fact that a driver returns it's
->
-> nit: s/it's/its
->
->> device private data in probe() and the Rust driver model owns the data,
->> manages the lifetime and - considering the lifetime - provides (safe)
->> accessors for the driver.
->>
->> Hence, let probe() functions return an impl PinInit<Self, Error> instead
->> of Result<Pin<KBox<Self>>>.
->>
->> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->
-> Short anecdote: I was curious about measuring the footprint impact of
-> pin initializers, so I did a `size vmlinux` before and after this patch
-> to compare the size of the `text` section. This patch removes exactly 60
-> bytes of binary code, which I guess corresponds to the duplicated `KBox`
-> allocations that are now gone. It's great to confirm once again how Rust
-> abstractions are indeed zero-overhead! :)
+On Thu, Oct 16, 2025 at 03:53:35PM -0700, Brian Norris wrote:
+> PCI devices are created via pci_scan_slot() and similar, and are
+> promptly configured for runtime PM (pci_pm_init()). They are initially
+> prevented from suspending by way of pm_runtime_forbid(); however, it's
+> expected that user space may override this via sysfs [1].
+> 
+> Now, sometime after initial scan, a PCI device receives its BAR
+> configuration (pci_assign_unassigned_bus_resources(), etc.).
+> 
+> If a PCI device is allowed to suspend between pci_scan_slot() and
+> pci_assign_unassigned_bus_resources(), then pci-driver.c will
+> save/restore incorrect BAR configuration for the device, and the device
+> may cease to function.
+> 
+> This behavior races with user space, since user space may enable runtime
+> PM [1] as soon as it sees the device, which may be before BAR
+> configuration.
+> 
+> Prevent suspending in this intermediate state by holding a runtime PM
+> reference until the device is fully initialized and ready for probe().
 
-Thanks for the test! If you find that at any point they aren't, let me
-know, then we can fix that :)
+Not sure if that is comprehensible by everybody.  The point is that
+unbound devices are left in D0 but are nevertheless allowed to
+(logically) runtime suspend.  And pci_pm_runtime_suspend() may call
+pci_save_state() while config space isn't fully initialized yet,
+or pci_pm_runtime_resume() may call pci_restore_state() (via
+pci_pm_default_resume_early()) and overwrite initialized config space
+with uninitialized data.
 
----
-Cheers,
-Benno
+Have you actually seen this happen in practice?  Normally enumeration
+happens during subsys_initcall time, when user space isn't running yet.
+Hotplug may be an exception though.
+
+Patch LGTM in principle, but adding Ilpo to cc who is refactoring PCI
+resource allocation and may judge whether this can actually happen.
+
+I think the code comments you're adding are a little verbose and a simple
+/* acquired in pci_pm_init() */ in pci_bus_add_device() may be sufficient.
+
+Also, I think it is neither necessary nor useful to actually cc the e-mail
+to stable@vger.kernel.org if you include a stable designation in the
+patch.  I believe stable maintainers only pick up backports from that list,
+not patches intended for upstream.
+
+Thanks,
+
+Lukas
 
