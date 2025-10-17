@@ -1,280 +1,165 @@
-Return-Path: <linux-pci+bounces-38455-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38456-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6FAEBE854A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:31:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE496BE86EE
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:41:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6B41835C718
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:31:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5533C1882A61
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:41:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F3722DF99;
-	Fri, 17 Oct 2025 11:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE19332EBA;
+	Fri, 17 Oct 2025 11:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YV12dWiv"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O9+czvjN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013052.outbound.protection.outlook.com [40.93.201.52])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018517B50F
-	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 11:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760700694; cv=fail; b=R/u1OJ+97ifTA9OtPDcFGZG9AJnj79Qw8Oj1t5fzctWYci7CDM+UoARKaEeEZ4SVyNLq3M8fZV1HJOTA+iydIWkO1ybGVZwBspHbAvLfBmc7ENte1sRGW4u+50HLI6a8LWM7SrBSKtU1QCIBIV9uaTJz7Pu3aUaGsp+HlO2oRGo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760700694; c=relaxed/simple;
-	bh=eSXJmfAZeX2UcKv0r7X7ZJvnmNqj4gk2QBgXAtNUG90=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OsPBDYOlSBbDXD7F0TBw0P2aXGgHw1j8E0K3GOCYaKvHFCc7UkSFscL/f9jq62672qB7hpROZl/Ifam9Y63p70jbSivvSfgb9jd1ryZrrZeq/+UaPOk2tUH52TN/hOS6KFHJZc/cg+aCyZahCfD/Kv0J4o4M0YvjD4r+5FlV0tQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YV12dWiv; arc=fail smtp.client-ip=40.93.201.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nVL7DUgN4pOS9UxN5oWicz0tCncjyC73w5+Yi0oWErMhMN8d3wEn4a18CLvaPicPYaofpsDB9gDBxaeDWKqGFzNGPvjlaXxn9QcMYxw0Q9lV8KkNfA9DFOlRgYb/eb80ESxquLdUT6zAUb5myUiYt+uflfBxyT8i6TbKMnanZ8XS/R9QEX6OAmq+/UveMdFjxDn1+6TpbzGt+DvjPxx9WUOjTy1L20sP1eXssjR1YqWHBq1YVkxqunrfvS/mMVVHiZ3luxhS/eQssi2hPMXaMQVhOEKNplXp6/oSGyHT75TtwJvLxWyFzdafrdhPs0FN4UEPPTGPYLjUIRrHQpKjrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Uo+uvSffdo68vVMRFT3LhFhHIV17nzh0dLz+arQquk=;
- b=I60tJcQmF3Baogb3M87DLeRH9R6S46p/EP4WasaY+45yJwIKKIN8dK59hkgV8sVnMhrVYZbnAq9VzocOAExoWI6npsIFMOkQmiDqK5WZFSllQeYna571dR/r88yAL1Pr86BuPvn76e9csKc7eBlpQ1lxje7P8XHYBvOyD+mv1frOKZU8yQUBByxeBUl02/P89M0DgoyzBNSrcDk3mGrNoBQQA5XRRzWngpEsk8dPFfCgWsyD99jwdDck/IdeHc2cUMoQHUzXoncpAOf5mGjpH6oXy3aPk2eFHkRv1+/C21G2IUpB5p+5WGWz5irzxH3wIKsYULTK87WAhLq7j2C98g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Uo+uvSffdo68vVMRFT3LhFhHIV17nzh0dLz+arQquk=;
- b=YV12dWiv80YQM7WYyf3rnh+UmDpRfCO5WUsdHyR2PEkHCbvnLRaj9+k8osaATONdnoebxtR+zjJs8IXal4H8hxEcZsM5L2zodmCft++CXm0GZWa85A64fVICHIzOMOUIzQuw1cTT0kRXRKGtpFfLxPrSju6eJWDTrWI78XqkX1M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by CH1PR12MB9669.namprd12.prod.outlook.com (2603:10b6:610:2af::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.13; Fri, 17 Oct
- 2025 11:31:30 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%7]) with mapi id 15.20.9228.011; Fri, 17 Oct 2025
- 11:31:30 +0000
-Message-ID: <43070157-cfc3-4ef2-8b2a-e677515e8bce@amd.com>
-Date: Fri, 17 Oct 2025 22:31:12 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v5 07/10] PCI/IDE: Add IDE establishment helpers
-To: dan.j.williams@intel.com, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: yilun.xu@linux.intel.com, aneesh.kumar@kernel.org,
- gregkh@linuxfoundation.org, Bjorn Helgaas <bhelgaas@google.com>,
- Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>
-References: <20250827035126.1356683-1-dan.j.williams@intel.com>
- <20250827035126.1356683-8-dan.j.williams@intel.com>
- <eeca3820-01dd-4abc-a437-cf46dc718ab6@amd.com>
- <68ba3c9f508ed_75e3100ef@dwillia2-mobl4.notmuch>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <68ba3c9f508ed_75e3100ef@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY8P300CA0004.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:10:29d::25) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C224332EA8
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 11:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760701264; cv=none; b=GICPlMu1uQi3a1yLL1KYHhNSC9FWoRltIk9uFCFPq8l46S703fcnId3oFuo59O2shTSTeD2eXzFtAWUdEIQhSaAeuLWy+LA6ZevOmzCTR1a4XWcexmYlYywbpWHLntsYUSfj7U9koUPEFjHMHCjMkgDlH/Dw/IgUXFKj+/mUP/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760701264; c=relaxed/simple;
+	bh=M6oHNRR5dlFPX5JEy37yFZ5TtRSAw19n5ny/DK3/HhE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cyF7y0PnKnqYRsknNghIjuuQthmOYXDqOC5g8rMu32kfMV3avV7WN7/vfiEUIXMrz3akrWcFY18DanR6rGlX/POv0dyj2apJ4xgAOqCa+CHhx6aMhvlQxPLJWUJiq2MfbFsSa6/FJwS2MlWxccbS7eLEjYSWF5fww8TUzFPq4gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O9+czvjN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59H8AZpB006091
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 11:41:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=1Dvs+F9iRc/LZxLL9MWhmX
+	ciP9znGuKAC6w03W6C6Q4=; b=O9+czvjNiHlvcrEgno6XKkTdpRnRxVKL5XhIPk
+	7UQdmGv99WqBP2pKyuWtExxV4d6DX8vAXFTPmYBVmJu4dlF/WF1OSAO+wPms8mki
+	FaVlfM9MI9W3YF/jrJ60ZQk7bexgq9co/tkurwpyFzMallKPj5faKlUOkiY8y3GR
+	OzDMz1Cmn7/0cAmfZfbCjX5mTCaiU0o2A37/JR8k1lHKaZGLNpUG5fPkCU+vEE4b
+	Ov3dd+ZWT4zb2xRMqh5XAOdQLTweffa8HGzTEY53nXEySrt6Fas8WdA786G8Nu40
+	zHGTWWUkwunbGCkw/OP+KOpT3o5/P40pv9bI5iNLYGWc3clw==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49s6mwxcw2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 11:41:02 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-28a5b8b12bbso40014345ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 04:41:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760701261; x=1761306061;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Dvs+F9iRc/LZxLL9MWhmXciP9znGuKAC6w03W6C6Q4=;
+        b=vozfNjpQFGGksA/0RAF1G4EcTp/CYdehCt1J2FrAjyJTmeDo0gZ3FDqbJYo3VVpVCR
+         +OKALlHmOWe/EYojO57/eyegSrsShm24X941Q0CEmFA+Mp01NK53XJApUC+XxT83m7P2
+         22bsZbs8vJ70k4SzkqMDLVlg11i5CL3upQHo9N3DFn0KeAEPnQRKBxS1bNkBWnu2/QxR
+         P05RQlcpWVxo/n7xveMUBC9Xizj1PcNQN3G7ta05TnywSyJhFHMaXCJR4zLjdt3bto6N
+         wX/QOdF1z3Bne6Z046quSCFs7M1eQcosn8oBIViVDqdR3AhNB4+LdcK17CUrwy4cimK3
+         XDBg==
+X-Gm-Message-State: AOJu0YwdzQQkLeLfDpcAhC/bgp+Bxqt+QxtX1jMMuEHMeZXb+UHe/9oS
+	sqs5ObGUUwGR0Vvz8LtkWWHfGwE9BbYzrzMfIuxr+yY7rEdQ2xwhEUXECbS1KbMg8MTjZTbqsoY
+	fU/it26VIN/DXoRkfeaRVwyEF5zAw3n7e7KD2SSwdutbQ/fORYLNsN8vDuBXN3BE=
+X-Gm-Gg: ASbGncuDfUYojoq+L43w6jmTXOBwFLRrL5MMrosigqpDi53tkFXRddbxWVt2gXtsGUU
+	hwURdIeU1zLnhmj0Kfu6DG0ZgFGVysjAQaJlTTG6i2VGj1YDd8O1Xmp/lhzBS/a+SiVqorfmYeH
+	8FHXLxRd9wV3k8JuYU9/sEMtmMA2bbpz2mreeEoN+vV2/Jo7WROIe6K7MjOHMOYK+3MstsVYQ+B
+	kMRu0OJrgzPZvmQHbu3v6Of2jer/iFSf5ljx4ZUbhCT0pKg2cqZlx+J1V3IJbZUVudPayfsuztM
+	HNsYbSaBtosZwgZelE6vBC/4yIuBZvdetZHSrVxzonV04gV7GtMBqH/xHcUSbPv2np241fqMB4r
+	6zryFcunUOqXWK8d0SAj6WfXWQ+VojUWCMg==
+X-Received: by 2002:a17:903:19c3:b0:267:44e6:11d3 with SMTP id d9443c01a7336-290c9d36c03mr39709475ad.21.1760701261420;
+        Fri, 17 Oct 2025 04:41:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4oDHAXVAXNMRAmy5dRggblbTIjjpbkAOgElQ9q/OQj2LXAR7K1mSO62iOIN0oWbcWoxYnPQ==
+X-Received: by 2002:a17:903:19c3:b0:267:44e6:11d3 with SMTP id d9443c01a7336-290c9d36c03mr39709205ad.21.1760701261008;
+        Fri, 17 Oct 2025 04:41:01 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29099a7de45sm61489675ad.54.2025.10.17.04.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Oct 2025 04:41:00 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH 0/2] PCI: dwc: Fix ECAM enablement when used with vendor
+ drivers
+Date: Fri, 17 Oct 2025 17:10:52 +0530
+Message-Id: <20251017-ecam_fix-v1-0-f6faa3d0edf3@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CH1PR12MB9669:EE_
-X-MS-Office365-Filtering-Correlation-Id: b96ff560-69a2-4b71-26a7-08de0d70b772
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NlBRZEt2bDdKNG9IRm10bWtKdmVoN3dET2laUU1sMnBOcHdPZm9oWkV5Y0dj?=
- =?utf-8?B?aDhpaGxQY2xWU3pwS0ZjZGk0eVNIWG8zYkVMcS92Y21WbkJjWHBGci9lbzBM?=
- =?utf-8?B?YklMOGpHRjlaVGx5NWdOSklpa2tKQ1Q0bnF3TEhoSVhqb1JZNnNGYUlpVjNL?=
- =?utf-8?B?dkszYWRyMkVyQTV1T2hiUUtOYStxVDIreGQ3ZTc3b1NDa3JxN2s1amlwNjkr?=
- =?utf-8?B?RVdQS2tDZUJQbVdmc1A0dHRyblNUVGhPN1hJWDVyR01mbHpObjhEQ0RnMHF6?=
- =?utf-8?B?dzJ6c2phYVVYUlJXUXJjSGxPRTYvRzQyN1J2WVRVOXo5RU9KclRWOEM0Q0w3?=
- =?utf-8?B?QzVUeHlvODU1TWN5cy80Wk5adW5acitXR0ZUWkJhM2pJeFFjYTNnMDFTaGtt?=
- =?utf-8?B?OCtZc01raDhKRThQcmhUMjBPYVBXbGw4WU9JSnBXSkpFaFJ0MUtTaVcrMldz?=
- =?utf-8?B?dmpHZjhlRTA5dFJQQUJaWWk0ODZUWENpRmVKc0lNdjlmeG5WbGduMlBXb0ZR?=
- =?utf-8?B?SGk4emlxb2U2cnB2a2srSTR6b25HUC9hbnY5dU81dWlJYXJ6VHZjYnpsRmhm?=
- =?utf-8?B?NFdXV2NreUk2dGYzVU53eVNBVFM1UWNrV2xpc0J1cEdOeHpaS1h5VEtSNlUv?=
- =?utf-8?B?OEUraENacXVsQ082SjJOazJTQ0VtcFY1M3ZCSVRyQ0hpcXVkY3Q1cVNxY2dS?=
- =?utf-8?B?U3kyK2tacnV1RmlvRlpBcVlzQzFKeTB1R25vZEZOMTlLaVVXMXd2YlplbW40?=
- =?utf-8?B?VnBEc2pjeHFxbnMzWFNtRkFFMkE5Vm9VS29lMWVNeTJiSnBreEsrZzVFMCsv?=
- =?utf-8?B?ODJrZDdnUUpoTzhrZ1h1emhybEdvYU8xZldFZXJuUmdoUTV4amJrNGtpR1V2?=
- =?utf-8?B?a0M2ZjNmb25LS1pRNFFlVUhDSFNYYkorQU85ZXA4UllRMCtWZzFjNUFZUnVY?=
- =?utf-8?B?Szl5NU90Mi84YjZNVHhIWk9UcG0xOXpDSGFpL0owNXpiRkp0dGF1TkZaWGxh?=
- =?utf-8?B?eUMvWC9lT1Fhdms0Nlh3Ky82ZVVGL0hvQUE2TWQwaE8reWxPNU9BUWdBNmlw?=
- =?utf-8?B?aVFvdGVJdTdzQjVTeGZXZE5VQ2xkQVNxNXA3OGxTbVltbXRld2tHM0lMeHNK?=
- =?utf-8?B?NGZzTHhaTG5BQzA5VlF4MnFMQVp2YUVlWUpncldGbm5nVWJtT1Njai8vQ3ZN?=
- =?utf-8?B?VTY0MENwK2FrQ1laYkgzSW56NERmUC9tUTQ1NFYvazd6KzJhWmZxYU5ZNEJo?=
- =?utf-8?B?dWZXbWJmZDhHbkdrcjE5aG91MFhkQ2lwUzlRWlJPRFR2RTFqZS91NEswem4y?=
- =?utf-8?B?ZzIvbEJRWmNNWlJVUHBrMUVNckIvVmlNMTB2ODFyRkc4elk1dmpTcThPY3V4?=
- =?utf-8?B?V2pIVFNidTNMTGFDaHFZMGJiSUFnT0dHY2Zqc3BWN3VvQWttYTZQOW9jRGdp?=
- =?utf-8?B?RC85RHcxb2pnVVAreVVFUlVRelowdWtCdzUyREdFVklMR0hLeUxZS0w0L045?=
- =?utf-8?B?NXhqK3VLR2JvV1lBeHcyS1ZDMG5hcVVMZnFVdXNSWFMrSW9ia2szSTU4VjZH?=
- =?utf-8?B?anBvSW03UDBka1RvNlJ3N3VUa0U3Tlg3bmJEcDBJTzFLRVBqbm5WMW9sOXRY?=
- =?utf-8?B?aWFtanoybzdISW0vUWwybVNKN29LTTRwd0IwUnFOSWViQXBoY3FFejVyWFJ3?=
- =?utf-8?B?SFQvY09Ua1hXdTAzazczRzN1cTBORHJvL0ROc3UwM0RTOG1hZEx5Rmx1d3gx?=
- =?utf-8?B?R3hybXM4dTRDOEJGUjNpYzRXd2k0dHA0RkJKQXg2Z2F3bXFKdmpSTUhNKzdR?=
- =?utf-8?B?QzY4dlM3Rlo3Y1VWWFVkaTRHTVBPeDdDSzlCeWhoU2FPb3F6NDRyd2ZRUjIw?=
- =?utf-8?B?d0dGcUZxYThHc1JJZ1ZRQ2FyWXlOOHNPcXB2ejBMZlJ4SjdlT3ZFOTJXNVBh?=
- =?utf-8?B?RDhUdjJIYW80aEoySHZPTng2akFhazNpOUlhdU5IK1did1RXajMxWEVYNVNR?=
- =?utf-8?B?WThRd0d1bG1RPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bzR0ajNoa2xraUNncitqM1YrNkRTaVNkT3VIOFVQQ1QzS1FjMWxlUDRZSWY2?=
- =?utf-8?B?OHhjK0Z4c3VhQmVsOVE3dVEzdGpRUytyaXprL3hWenNJUHFXa0tYb2w2V3R4?=
- =?utf-8?B?NC9IRGtkMFBtb1FDOHhzUC85QjF4ZTBRU2g4MlJmVlBHWXhLWDZURjg4S1dB?=
- =?utf-8?B?ZGRzTVVJVTVtZy9EZVZkVzJqcWlwYVBrbUVKVVkwV0tjOTRmeXAwUVRvdklm?=
- =?utf-8?B?T3BSVlNic2s4NlBVVXk5eFJySGdsNjlUN2h1cWZsaitSYWpLYnhtZ1U0ZUpZ?=
- =?utf-8?B?NlcydExFRCtEdkJkVGRlVFZZTjVVK0RCSXh5ckNXdUNOdFVNRTdLbzV5YjJW?=
- =?utf-8?B?d2llb1NGT013NkpjaU01WnNvaDZhbzRndUdxK3llM3JTVjdxd1ExUkg0S004?=
- =?utf-8?B?WXYxQS80K3VYVzBkUEhxKzdJa2tzRmwzNDAyQ0tJWVFSdTJtSW8vRkpCY2tt?=
- =?utf-8?B?TkZhZ1BQWUVPRFpKemYwMXJPTHlhczQyd1l2cmNpeFJ4ZWkxbDRYUWxJaEE0?=
- =?utf-8?B?K2RPbzQ2S1d2dXdoUU5mcUo1QWg3K0Q2MXVRSEdqcGlETnRLN0tUelRmN2x1?=
- =?utf-8?B?Y1o3cFpLVHJtVEpyVDBLQ3BjdXBNeC84YkljT1EycEg5dWFsQnBpSjl3KzU4?=
- =?utf-8?B?VTRUTUJpY1pRZkQ1TDNJTzFOWW5ncTcxRnlZVmhjbjY5aVhqajBNbGtBK1Fo?=
- =?utf-8?B?M2pGSDVjZlZOdVpYZCtCa3pGL1V5WjJFUjFYMlA3aTBJbEhPWTNzemkyKzFV?=
- =?utf-8?B?R0pHMVBIVDh0RFZxMVBWUDNvV3Z0YXN4MTQ3di9GT0tiK2FtNkJSSU8wSklz?=
- =?utf-8?B?RWl5blpxV01QRWdHNDBsaGdUTzY3dmYxT2RyTjlhNUFQK1VTcmF0Vkp6dTh3?=
- =?utf-8?B?UHR1bVkyTjFnendqbWlyMk1UR2REYmNrUDlkTTNwZlo1eEZXbXBKRzlVbUww?=
- =?utf-8?B?VkVaUmlNSGdFdmJNN1BmSE1Gd2ZwSGFESWYveEYvZXRNOVU0RUFaUEFPWGlB?=
- =?utf-8?B?R2Ntb0lSd1pxNFlvbFRUYjNmSGJYK1lNb1diL1BxYnRuZ0xtZW81ZE0vN1lF?=
- =?utf-8?B?UlkrWkFUajVrY0pCaDA2UVFIY2owM3U2OGp4aDFWa2lMQW9yMG0zMitWUzUz?=
- =?utf-8?B?RldDam83MUQ2YXp4L3pDeUt6aTRpZGtWMnpVUGtkbjUrZEVFS2x1UUNlc2dt?=
- =?utf-8?B?b3R6Uktwa3E0UUdaQWhOaXQxeHFhTVBCMUFDZ2UrSmhtRmhMT1MxWHdBRTdR?=
- =?utf-8?B?V3RIWUFmeTc2UTlMdjZzZ094bytIRW9UbzlnNll0ZHdlVnZjcHF3eDNWTEhR?=
- =?utf-8?B?QU5yMy81aGt0N0wvVlpETGR1bmJyNXJlOHpFaGV6UVVjZWlkVzdJNkl2UHpt?=
- =?utf-8?B?Q2xjTEVOM1gyeklwWHZpQmFJSW9ZVFg3cnhiTlJYbzc1R1pqK0VGQmVUYkRr?=
- =?utf-8?B?WjBKbmdidXowdFl3Y0YreTYzaG5nZ2U4YVU4RXpQczdobjd2SlFxQk00WmZu?=
- =?utf-8?B?eEVvcllRZm41Q1VQMVR2K2I2UU9qcDlGdU56ajFlZWt5dGdEUk45V1FaaWxp?=
- =?utf-8?B?c3dJcG9UckUxYWhLbi9VUHQvU0M3TzFwUlk1bW1lWWJ6S2tzYlVONDFweWJq?=
- =?utf-8?B?NElZVXA0U1Evd3hzdFJjMWhuUEhTdDFRT0NleTlNVHA3MGxPckIxMnV6T20z?=
- =?utf-8?B?b2J1SGNnMm8wVnM3Myt0K1lqRndmRWhra3QxNVlzb0kvY3R5cWp6dXgrYWZO?=
- =?utf-8?B?RVprMXJPY29xbEF2bi9wcEJsVUFFb3dVa3p0M0ZvNmJBenJBbnl1RFBSWVp1?=
- =?utf-8?B?QmVLdWdsNm9vdzRwc09ZNWRqRWtkR3l4NTZMUS9rc1JsWXVwS1R0YlVOd2VT?=
- =?utf-8?B?WWxKUnNkeGxocVZ4V3pONFphbUlNcklORlVrU3lTejJHNFlKbnZNOUtjSitz?=
- =?utf-8?B?TzF6TFV2Y1ErUCttTEE5bk9YN2MzZEV2QThHNnNhYkhMQ0ROMWpHbkd5L2kr?=
- =?utf-8?B?SEtHbUNyL0JySStOdERyY1duM2Z2VlpZaTJRVTh3aUFmYnFEZXNuYTFPaDh1?=
- =?utf-8?B?QUtYaEY1aDB2QVJadjkrWkY3UzlURHFFcXE3OUl5TEtpY2pOOS9kR1NxcERW?=
- =?utf-8?Q?YHwNPy0GpdeVM+53TSxhVjMpx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b96ff560-69a2-4b71-26a7-08de0d70b772
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 11:31:30.1327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: efbza7pq+HneHapTgms2G3abw2MJTcsaph2ioFglsdzYd3rkPp2EO7IMmx2kuH/F/alQig2CTFCotFTNW3umCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9669
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEUr8mgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDA0NT3dTkxNz4tMwKXTMTwxTDFNPUFHPDFCWg8oKiVKAw2Kjo2NpaAPj
+ iweZaAAAA
+X-Change-ID: 20251015-ecam_fix-641d1d5ed71d
+To: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Ron Economos <re@w6rz.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760701257; l=1150;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=M6oHNRR5dlFPX5JEy37yFZ5TtRSAw19n5ny/DK3/HhE=;
+ b=zejePTE4BD0Qu4XAYU3th9wsZhWU9YwDBrfTsCJDr69zR4jht8IGoD0vpvmz/5lBALq8YWqID
+ GBYvCIYqzMJDkaeQyjzZvWOFMxy/HpcMPyb1Ufuy1WkNOw6M6561Ps7
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDEzMDA4MyBTYWx0ZWRfXwXA0OvzfnzEC
+ 3yj0kRGFAQh/oq5TZPTwuRra37vuSpBP7QGfRdTBxyFUGBIW1e/bUENTWrY8tVA+4TnDtU4aJUv
+ mocovEjhsY4j5ZxdLPplT8/w+YbWkmCa9x/Fd76RepWTSN8mAgbQUyTuDslrgkNwxcwczUWGVvp
+ kDCQovuALwlkrxI72mf+lQos6K8mmdlScdNKZlxoNvo9kbZJoGvs0J1MiTCVJKNOEHBFyceb6GV
+ /hh+8aAOcfWSKI+49GX8Y0UmQj00c4vxIsxqxTZPMjnE8loYrK/YLw+aTEWanxUN5dWRvjWlpOf
+ 9LnSVoupZokLOMCNsPBhmRpGkRkyr44Bk8OKCN+CNKFfy6wZvQs0WxcyYupCVJ4KVIDirD7WUX5
+ iNI46bfZjuSbPSDhmH91sQHbb+bN8A==
+X-Authority-Analysis: v=2.4 cv=Fr4IPmrq c=1 sm=1 tr=0 ts=68f22b4e cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=KRKipztoQesxEaMeAmMA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: -R6v34wxwWDb-Tm_rcobzGskxShnUlNO
+X-Proofpoint-ORIG-GUID: -R6v34wxwWDb-Tm_rcobzGskxShnUlNO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-17_04,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510130083
 
+This series addresses issues with ECAM enablement in the DesignWare PCIe
+host controller when used with vendor drivers that rely on the DBI base
+for internal accesses.
 
+The first patch fixes the ECAM logic by introducing a custom PCI ops
+implementation that avoids overwriting the DBI base, ensuring compatibility
+with vendor drivers that expect a stable DBI address.
 
-On 5/9/25 11:27, dan.j.williams@intel.com wrote:
-> Alexey Kardashevskiy wrote:
-> [..]
->>> +static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide, int pos,
->>> +			    bool enable)
->>> +{
->>> +	u32 val = FIELD_PREP(PCI_IDE_SEL_CTL_ID, ide->stream_id) |
->>> +		  FIELD_PREP(PCI_IDE_SEL_CTL_CFG_EN, pdev->ide_cfg) |
->>
->> There was:
->> FIELD_PREP(PCI_IDE_SEL_CTL_DEFAULT, 1) |
->>
->> and now it is gone, why? And it is not in any change log, took me a while to find out what broke.
-> 
-> Oh, sorry, it results from this feedback.
-> 
-> http://lore.kernel.org/9683c850-3152-4da5-97f1-3e86ba39e8d3@nvidia.com
-> 
-> ...but since the address association registers are not programmed then
-> nothing routes TLPs to the IDE stream. My mistake.
-> 
-> We may eventually need the ability for the stream allocation path to also
-> allocate a traffic class in the root-port, but for now this assumes single
-> device TC==0.
-> 
-> For now I am adding this:
-> 
-> -- 8< --
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> index 4f5aa42e05ef..610603865d9e 100644
-> --- a/drivers/pci/ide.c
-> +++ b/drivers/pci/ide.c
-> @@ -379,10 +379,12 @@ struct pci_ide_partner *pci_ide_to_settings(struct pci_dev *pdev, struct pci_ide
->   }
->   EXPORT_SYMBOL_GPL(pci_ide_to_settings);
->   
-> -static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide, int pos,
-> +static void set_ide_sel_ctl(struct pci_dev *pdev, struct pci_ide *ide,
-> +			    struct pci_ide_partner *settings, int pos,
->   			    bool enable)
->   {
->   	u32 val = FIELD_PREP(PCI_IDE_SEL_CTL_ID, ide->stream_id) |
-> +		  FIELD_PREP(PCI_IDE_SEL_CTL_DEFAULT, settings->default_stream) |
->   		  FIELD_PREP(PCI_IDE_SEL_CTL_CFG_EN, pdev->ide_cfg) |
->   		  FIELD_PREP(PCI_IDE_SEL_CTL_TEE_LIMITED, pdev->ide_tee_limit) |
->   		  FIELD_PREP(PCI_IDE_SEL_CTL_EN, enable);
-> @@ -424,7 +426,7 @@ void pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
->   	 * Setup control register early for devices that expect
->   	 * stream_id is set during key programming.
->   	 */
-> -	set_ide_sel_ctl(pdev, ide, pos, false);
-> +	set_ide_sel_ctl(pdev, ide, settings, pos, false);
->   	settings->setup = 1;
->   }
->   EXPORT_SYMBOL_GPL(pci_ide_stream_setup);
-> @@ -481,12 +483,12 @@ int pci_ide_stream_enable(struct pci_dev *pdev, struct pci_ide *ide)
->   
->   	pos = sel_ide_offset(pdev, settings);
->   
-> -	set_ide_sel_ctl(pdev, ide, pos, true);
-> +	set_ide_sel_ctl(pdev, ide, settings, pos, true);
->   
->   	pci_read_config_dword(pdev, pos + PCI_IDE_SEL_STS, &val);
->   	if (FIELD_GET(PCI_IDE_SEL_STS_STATE, val) !=
->   	    PCI_IDE_SEL_STS_STATE_SECURE) {
-> -		set_ide_sel_ctl(pdev, ide, pos, false);
-> +		set_ide_sel_ctl(pdev, ide, settings, pos, false);
->   		return -ENXIO;
->   	}
->   
-> diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-> index cf1f7a10e8e0..a2d3fb4a289b 100644
-> --- a/include/linux/pci-ide.h
-> +++ b/include/linux/pci-ide.h
-> @@ -24,6 +24,8 @@ enum pci_ide_partner_select {
->    * @rid_start: Partner Port Requester ID range start
->    * @rid_start: Partner Port Requester ID range end
->    * @stream_index: Selective IDE Stream Register Block selection
-> + * @default_stream: Endpoint uses this stream for all upstream TLPs regardless of
-> + * 		    address and RID association registers
->    * @setup: flag to track whether to run pci_ide_stream_teardown() for this
->    *	   partner slot
->    * @enable: flag whether to run pci_ide_stream_disable() for this partner slot
-> @@ -32,6 +34,7 @@ struct pci_ide_partner {
->   	u16 rid_start;
->   	u16 rid_end;
->   	u8 stream_index;
-> +	unsigned int default_stream:1;
+The second patch reverts Qualcomm-specific ECAM preparation logic that
+is no longer needed due to the updated design.
 
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Krishna Chaitanya Chundru (2):
+      PCI: dwc: Fix ECAM enablement when used with vendor drivers
+      PCI: dwc: qcom: Revert "PCI: qcom: Prepare for the DWC ECAM enablement"
 
-This sets "Default" on both ends and the rootport does not need it in my setup (it does not seem to affect anything though) - the  rootport always knows the stream ID from the RMP entry of a MMIO being accessed. May be move it to pci_ide_partner? Thanks,
+ drivers/pci/controller/dwc/pcie-designware-host.c | 28 ++++++++--
+ drivers/pci/controller/dwc/pcie-qcom.c            | 68 -----------------------
+ 2 files changed, 24 insertions(+), 72 deletions(-)
+---
+base-commit: 9b332cece987ee1790b2ed4c989e28162fa47860
+change-id: 20251015-ecam_fix-641d1d5ed71d
 
->   	unsigned int setup:1;
->   	unsigned int enable:1;
->   };
-
+Best regards,
 -- 
-Alexey
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
 
