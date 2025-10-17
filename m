@@ -1,78 +1,118 @@
-Return-Path: <linux-pci+bounces-38446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86DDCBE8248
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:52:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D37BE831E
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:59:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BE796E3989
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:50:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 35533581871
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:56:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B61E31A54C;
-	Fri, 17 Oct 2025 10:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368C931E11C;
+	Fri, 17 Oct 2025 10:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTPJ8dU6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA93319617;
-	Fri, 17 Oct 2025 10:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E4B31AF18;
+	Fri, 17 Oct 2025 10:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760698208; cv=none; b=fopfvwRcT/yyUjlLsIKcRkBz8RV7qZgDTuyyzcJOmGpCMaTNWRdvmiUQKOyVEGred3Q5v4V/JkvvWGzThzys2hPzKQIJF1T5gyee4tvxzzr/SEfKoW6pIuGDvXn9HQYnpPmfZzSIcK3Ntd4qkzPCyHtJsJJJXuKek/VMHHpFf3o=
+	t=1760698601; cv=none; b=RsmR4QgxPXCVcxNZnild+Ah8i0gIj/IcIVxCT5qUJlItlQF3yb1BEIVAZWQpkvAeQ+tWG3SK0p3fIJEZ0l4td6L8dXAapI+7GYYOcAa5u/d13CMpYjkkguw9dxdtjq+WsXy55Mvyc2djWJmteGRJ0p9VDq27m6wMfi+Rs559qN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760698208; c=relaxed/simple;
-	bh=alNB6l5r2W+IhKSQqI1zuMysVjA6WKulqPXlUUPcAo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/7hU0C93Dhr51uqBJWbqzE1n8seh07ZzVdsC8CAlwQRLx7R2UFkQv5HwSTScI3wRQq2FGcVb1aPFeNg/zqIV+A85L5CE9GVj9D/Hy2f/g5/xuzVTfOoiYBiUrhKSxpVy+HC3gpzaJ8LtCLJZzFZMj2UgAJYSBnaOoluCyGPopQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1v9i1y-00045a-00; Fri, 17 Oct 2025 12:49:54 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 6B525C0256; Fri, 17 Oct 2025 12:49:46 +0200 (CEST)
-Date: Fri, 17 Oct 2025 12:49:46 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
-Message-ID: <aPIfSvhqhc9wxzGi@alpha.franken.de>
-References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
- <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com>
- <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net>
- <aO1sWdliSd03a2WC@alpha.franken.de>
- <alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk>
- <74ed2ce0-744a-264f-6042-df4bbec0f58e@linux.intel.com>
- <alpine.DEB.2.21.2510141232400.39634@angie.orcam.me.uk>
- <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com>
+	s=arc-20240116; t=1760698601; c=relaxed/simple;
+	bh=tyA/LHJlFit5K6PqK6XOjstXqHYpybUs0kAPdQMiMhA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=iCvZhqzv2EgtDKsBSVExnSDQ27yF4z8Q2wUP38QFDcGtftNt2qg+IC+liCrwHQwg5qt6n4mGdIiMBknbhqyrZy5giuJwZbwxE7ztyY38f6FuiMFR6uiTdj7S1XB+dohGxga9VbZXyQyCC/TrGI8iWSOCiN7X/5e8xQfvRB8Bo30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTPJ8dU6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041D3C4CEE7;
+	Fri, 17 Oct 2025 10:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760698600;
+	bh=tyA/LHJlFit5K6PqK6XOjstXqHYpybUs0kAPdQMiMhA=;
+	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
+	b=VTPJ8dU6WcbYUPcgmJO4eOEz9CbPEBuxfrH3aIvi9nacKFwUZPFn8/nvXF2yDNdSC
+	 Vl7KULH8FxwarRMsXDzCnOamNPN+D70vPR9ttRAwha2OFr4SGEIiDpYpg+85o+fT/l
+	 gXfUNo1lcdXq3zEqHMTmN4uATBQWI+Eo00ePLUBtuTtHoObxaEhqj8/4qsdA/AYazp
+	 ZzHDpdNLsYPQa7KSDhC7fYvU1WA0E/+AWNazWf3zCPJjNGIn24qu85AJy1M5ZARGzf
+	 D3v0sPgfD6OBqEn6R2y88qMgTcw2bxFCAFS9lUyviKm43m5MCX7VZF4aaDGqQe9bqK
+	 Gjf/wdlj9ECLg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 17 Oct 2025 12:56:34 +0200
+Message-Id: <DDKJK7SXG83N.2YZYITMDGTHP@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+ <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+ <targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
+ <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
+To: "Zhi Wang" <zhiw@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait
+ and specialize Mmio<SIZE>
+References: <20251016210250.15932-1-zhiw@nvidia.com>
+ <20251016210250.15932-2-zhiw@nvidia.com>
+In-Reply-To: <20251016210250.15932-2-zhiw@nvidia.com>
 
-On Tue, Oct 14, 2025 at 03:41:42PM +0300, Ilpo Järvinen wrote:
-> [...]
-> It was "good enough" only because the arch specific 
-> pcibios_enable_resources() was lacking the check for whether the resource 
-> truly got assigned or not. The PIIX4 driver must worked just fine without 
-> those IO resources which is what most drivers do despite using 
-> pci(m)_enable_device() and not pci_enable_device_mem() (the latter 
-> doesn't even seem to come with m variant).
+On Thu Oct 16, 2025 at 11:02 PM CEST, Zhi Wang wrote:
+> diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core=
+/regs/macros.rs
+> index 8058e1696df9..c2a6547d58cd 100644
+> --- a/drivers/gpu/nova-core/regs/macros.rs
+> +++ b/drivers/gpu/nova-core/regs/macros.rs
+> @@ -609,7 +609,7 @@ impl $name {
+>              /// Read the register from its address in `io`.
+>              #[inline(always)]
+>              pub(crate) fn read<const SIZE: usize, T>(io: &T) -> Self whe=
+re
+> -                T: ::core::ops::Deref<Target =3D ::kernel::io::Io<SIZE>>=
+,
+> +                T: ::core::ops::Deref<Target =3D ::kernel::io::Mmio<SIZE=
+>>,
 
-will you send a v2 of the patch ?
+This should be
 
-Thomas.
+	T: ::core::ops::Deref<Target =3D I>,
+	I: ::kernel::io::Io<SIZE>,
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+instead, otherwise register!() only works for MMIO, but it should work for =
+any
+I/O backend.
+
+> +impl<const SIZE: usize> Io<SIZE> for Mmio<SIZE> {
+> +    /// Returns the base address of this mapping.
+> +    #[inline]
+> +    fn addr(&self) -> usize {
+> +        self.0.addr()
+> +    }
+> +
+> +    /// Returns the maximum size of this mapping.
+> +    #[inline]
+> +    fn maxsize(&self) -> usize {
+> +        self.0.maxsize()
+> +    }
+> +}
+
+The I/O trait should contain the corresponding read/write accessors, otherw=
+ise
+we can't easily wire up the register!() macro with arbitrary I/O backends.
+
+I think more specific things, such as relaxed operations can remain MMIO
+specific, but all the {try_}{read,write}{8,16,32,64} accessors should be pa=
+rt of
+the I/O trait.
 
