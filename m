@@ -1,121 +1,122 @@
-Return-Path: <linux-pci+bounces-38507-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38508-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB7B9BEB397
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 20:29:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85BE0BEB481
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 20:53:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5FB071A637AD
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 18:29:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3742C6E5FE6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 18:52:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DCC13126A0;
-	Fri, 17 Oct 2025 18:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F151A3203A9;
+	Fri, 17 Oct 2025 18:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3naJv87"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9kjYzWk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAB52F260C;
-	Fri, 17 Oct 2025 18:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2983081AD;
+	Fri, 17 Oct 2025 18:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760725770; cv=none; b=spnxI91XDePZ3ybiXuwPgrwfewoOlzJSMlAqJuxIDsOBsKw9QFpCC2PvU8lpsJL5vebWrN7s5iVt49NKdPhZPGzk9PWPROINfuB/ZRg57c/h87OOwhHQf9ZXQEKQW+QE5EVChcvwKohd+yuki/8/cSKgEKUcHLlFjGq514XLiL0=
+	t=1760727168; cv=none; b=bjtfrTlv0cz5wjAxApqS9UT9T79218YVomFfdfq99z20lVLyz/no/AUl8Y7cDDUyU247mEA77/S3sSPTwz8OVjIV7E0y5Ac3pWxJoVic+HqMKFx3Rsca5qwRO93Eou45VlnBhJ3ADRxawrdEqem250LIn4i4KbArDbFW0huZczA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760725770; c=relaxed/simple;
-	bh=R22cE40QGrXnmRARyFiuKiJD1jh8qI6eDnspPf8uC4Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=f7JOQ7eatrtvZ7Pl7LMtAoHNaT2QVd/uxcfNWD42U0DWGYFYvlBNjbihbcvJLpOa18Mf5jdtU+mdG8bnLuGym8gg4GKv7p56btGX88Jg5L+kQrnNyo//WmnaEk1L0mnyk1Jb2+fQ0UBqfzM/hpKfH2Xyhf3lVoBmY6N3xTGw8Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3naJv87; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F28C4CEE7;
-	Fri, 17 Oct 2025 18:29:24 +0000 (UTC)
+	s=arc-20240116; t=1760727168; c=relaxed/simple;
+	bh=zaQR5SGMpqDsyH147zVmilmIxBOcceMdtiFddd0hMEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=s56L1FmpfncGMG3NQ5bAxCG8cn413Jzr09tyA6JFIMxFTpy17Fwx7yWaqiR8BP14bzx2nILzUIMpISrAdHizvQrL1v3GlJwgFrDJgEHdt486Ybcm0g57LLpg/Z5PdyonZK933lXzKE97EKNvdwmMyAc8QOEqwDKviGUq8P9LIhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9kjYzWk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB1DC4CEE7;
+	Fri, 17 Oct 2025 18:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760725769;
-	bh=R22cE40QGrXnmRARyFiuKiJD1jh8qI6eDnspPf8uC4Y=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=i3naJv87wXwVGZofd8TWaof7oD3yKRQsy66d1XT5kstuVgGKKYFTODlLYkSvctGHo
-	 nRmthlPkaGokYECROcAWd4JbvkytA3dBDKjAZPPHG1W7ke8BeCC2axEzqTnEX/lIT7
-	 9SggPHsKbVtIe+nWSYM5NGJuhrI4jAHT6/pV2vpmvAJ++dfSWBNWY+SzQRH5RbeIz9
-	 C5JBwrlK1bKzldw+DGqadJUqpCAlv1B4004ki/I/+7PbOSkBPMM0qCos1RxUS0Yd3x
-	 lp7uKorUZtc6W3bCEL/Za+M2y3afxxCF0/V7mO92eLSz6W4952nFcLmjv+Cz3kYuC2
-	 tbAfQ1i7WLqaA==
+	s=k20201202; t=1760727168;
+	bh=zaQR5SGMpqDsyH147zVmilmIxBOcceMdtiFddd0hMEs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=C9kjYzWk4g2jXhmKqdvJnDt3sjR3zjl819WBuVw4VUdTogqYT6mblLUKZS7xi+2Eu
+	 pbRUyarG+EZo9fd5QAHepLdjSkv9KbE7snW92jl0x5iccOoGV4iJu/kETDok3TOY8e
+	 yWRUEaxmOLoPliNH2iG66dMzFcAr2WEaImiAHtGBJRbNqI98n7n7qcH3UiTxeJOIHv
+	 bI1cWj8nZ6zo3Rl+NOL/tzXMnt01MFYw3auBbXfLJEJtiHsysNtHjw8koJHUwwlSnq
+	 eYZkUo5JzkZ8Rm10AHKsBRD1qblPMTQFS8IsZF+EyLuiLOSSOKaBjgBvp/i4V5Pgnw
+	 Aor91GF8osVTA==
+Date: Fri, 17 Oct 2025 13:52:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
+Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com, kw@linux.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lucas.demarchi@intel.com, rafael.j.wysocki@intel.com,
+	Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: Setup bridge resources earlier
+Message-ID: <20251017185246.GA1040948@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Oct 2025 20:29:22 +0200
-Message-Id: <DDKT6WXI1S4I.30CBHFLJ9Q6CY@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH] rust: driver: let probe() return impl PinInit<Self,
- Error>
-Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
- <viresh.kumar@linaro.org>, <acourbot@nvidia.com>, <ira.weiny@intel.com>,
- <leon@kernel.org>, <daniel.almeida@collabora.com>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
- <robin.murphy@arm.com>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20251016125544.15559-1-dakr@kernel.org>
- <aPI-9GoI7ZsNCpQr@google.com>
-In-Reply-To: <aPI-9GoI7ZsNCpQr@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b144ae1b-8573-4a71-9eaa-d38f38e83f4a@gmail.com>
 
-On Fri Oct 17, 2025 at 3:04 PM CEST, Alice Ryhl wrote:
-> On Thu, Oct 16, 2025 at 02:55:28PM +0200, Danilo Krummrich wrote:
->> The driver model defines the lifetime of the private data stored in (and
->> owned by) a bus device to be valid from when the driver is bound to a
->> device (i.e. from successful probe()) until the driver is unbound from
->> the device.
->>=20
->> This is already taken care of by the Rust implementation of the driver
->> model. However, we still ask drivers to return a Result<Pin<KBox<Self>>>
->> from probe().
->>=20
->> Unlike in C, where we do not have the concept of initializers, but
->> rather deal with uninitialized memory, drivers can just return an
->> impl PinInit<Self, Error> instead.
->>=20
->> This contributed to more clarity to the fact that a driver returns it's
->> device private data in probe() and the Rust driver model owns the data,
->> manages the lifetime and - considering the lifetime - provides (safe)
->> accessors for the driver.
->>=20
->> Hence, let probe() functions return an impl PinInit<Self, Error> instead
->> of Result<Pin<KBox<Self>>>.
->>=20
->> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->> ---
->> Depends on a minor pin-init patch [1] (Benno will send it to the list
->> soon). A branch with this patch and the pin-init dependency is available
->> in [2].
->>=20
->> [1] https://github.com/Rust-for-Linux/pin-init/pull/86/commits
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?=
-h=3Dprobe_return
->
-> Overall LGTM.
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+On Fri, Oct 17, 2025 at 11:52:58PM +0530, Bhanu Seshu Kumar Valluri wrote:
+> Hi,
+> 
+> I want to report that this PATCH also break PCI RC port on TI-AM64-EVM.
+> 
+> I did git bisect and it pointed to the a43ac325c7cb ("PCI: Set up bridge resources earlier")
+> 
+> Happy to help if any testing or logs are required.
 
-Thanks!
+Thanks for the report!  Can you test this patch?
 
->>  impl Device<CoreInternal> {
->>      /// Store a pointer to the bound driver's private data.
->> -    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
->> +    pub fn set_drvdata<T: 'static>(&self, data: impl PinInit<T, Error>)=
- -> Result {
->> +        let data =3D KBox::pin_init(data, GFP_KERNEL)?;
->
-> Perhaps the gfp flags should be an argument set_drvdata?
+  https://patch.msgid.link/20251014163602.17138-1-ilpo.jarvinen@linux.intel.com
 
-There shouldn't be a need, so I'd rather do that should we find a valid cas=
-e.
+That patch is queued up as
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=469276c06aff
+and should appear in v6.18-rc2 on Sunday if all goes well.
+
+If that doesn't work, let us know and we'll debug this further.
+
+> echo 1 > /sys/bus/pci/rescan
+> [   37.170389] pci 0000:01:00.0: [104c:b010] type 00 class 0xff0000 PCIe Endpoint
+> [   37.177781] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x0000ffff]
+> [   37.183808] pci 0000:01:00.0: BAR 1 [mem 0x00000000-0x000001ff]
+> [   37.189843] pci 0000:01:00.0: BAR 2 [mem 0x00000000-0x000003ff]
+> [   37.195802] pci 0000:01:00.0: BAR 3 [mem 0x00000000-0x00003fff]
+> [   37.201768] pci 0000:01:00.0: BAR 4 [mem 0x00000000-0x0001ffff]
+> [   37.207715] pci 0000:01:00.0: BAR 5 [mem 0x00000000-0x000fffff]
+> [   37.214040] pci 0000:01:00.0: supports D1
+> [   37.218083] pci 0000:01:00.0: PME# supported from D0 D1 D3hot
+> [   37.231890] pci 0000:01:00.0: BAR 5 [mem 0x68100000-0x681fffff]: assigned
+> [   37.242890] pci 0000:01:00.0: BAR 4 [mem size 0x00020000]: can't assign; no space
+> [   37.251216] pci 0000:01:00.0: BAR 4 [mem size 0x00020000]: failed to assign
+> [   37.258309] pci 0000:01:00.0: BAR 0 [mem size 0x00010000]: can't assign; no space
+> [   37.265851] pci 0000:01:00.0: BAR 0 [mem size 0x00010000]: failed to assign
+> [   37.272896] pci 0000:01:00.0: BAR 3 [mem size 0x00004000]: can't assign; no space
+> [   37.280439] pci 0000:01:00.0: BAR 3 [mem size 0x00004000]: failed to assign
+> [   37.287459] pci 0000:01:00.0: BAR 2 [mem size 0x00000400]: can't assign; no space
+> [   37.294986] pci 0000:01:00.0: BAR 2 [mem size 0x00000400]: failed to assign
+> [   37.302011] pci 0000:01:00.0: BAR 1 [mem size 0x00000200]: can't assign; no space
+> [   37.309536] pci 0000:01:00.0: BAR 1 [mem size 0x00000200]: failed to assign
+> [   37.316595] pci 0000:01:00.0: BAR 5 [mem 0x68100000-0x681fffff]: releasing
+> [   37.323541] pci 0000:01:00.0: BAR 5 [mem 0x68100000-0x681fffff]: assigned
+> [   37.330400] pci 0000:01:00.0: BAR 4 [mem size 0x00020000]: can't assign; no space
+> [   37.337956] pci 0000:01:00.0: BAR 4 [mem size 0x00020000]: failed to assign
+> [   37.344960] pci 0000:01:00.0: BAR 0 [mem size 0x00010000]: can't assign; no space
+> [   37.352550] pci 0000:01:00.0: BAR 0 [mem size 0x00010000]: failed to assign
+> [   37.359578] pci 0000:01:00.0: BAR 3 [mem size 0x00004000]: can't assign; no space
+> [   37.367152] pci 0000:01:00.0: BAR 3 [mem size 0x00004000]: failed to assign
+> [   37.374192] pci 0000:01:00.0: BAR 2 [mem size 0x00000400]: can't assign; no space
+> [   37.381709] pci 0000:01:00.0: BAR 2 [mem size 0x00000400]: failed to assign
+> [   37.388720] pci 0000:01:00.0: BAR 1 [mem size 0x00000200]: can't assign; no space
+> [   37.396246] pci 0000:01:00.0: BAR 1 [mem size 0x00000200]: failed to assign
+> [   37.403795] pcieport 0000:00:00.0: of_irq_parse_pci: failed with rc=-22
+> [   37.410513] pci-endpoint-test 0000:01:00.0: enabling device (0000 -> 0002)
+> [   37.417796] pci-endpoint-test 0000:01:00.0: Cannot perform PCI test without BAR0
+> 
+> 
+> Regards,
+> Bhanu Seshu Kumar Valluri
 
