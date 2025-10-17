@@ -1,109 +1,156 @@
-Return-Path: <linux-pci+bounces-38448-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38449-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D2AFBE83D5
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:06:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7A4EBE838A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:03:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF2F574004A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:58:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8F64556703D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53164324B1F;
-	Fri, 17 Oct 2025 10:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65BB732D7D6;
+	Fri, 17 Oct 2025 11:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TTSL3Ywp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLcSxxPj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3463A329C7C;
-	Fri, 17 Oct 2025 10:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3C632E6AC;
+	Fri, 17 Oct 2025 11:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760698703; cv=none; b=Quwr2LRHjL4ZBm1hHLOAUPnAzKSA2UHwowD+cCK/ubKVdgHXVZK3JMSJZeKIpcDOtTXz9Lg5ctmE2JM6qSJz++GQi0bQ4jMExtQ7PxDZ7wTCCHfVcHjT7RTWXzRJtEGHEzmXWKaB1NqhlSSP/knELbVpKby4Gt4/J42rH/pugfA=
+	t=1760698855; cv=none; b=B0MLu6SX1Lo11kRZsUtXpeDBLQ9g+yhC2fEYTw3GXXtgVvDRFeIUiITw80OZ/CUpxSLWiEkKYEWnuPrrSMPMl75HW5Fd2Dbae/EwgIksKu0CSc7rUqKcYFhxnLJYciiQjXSH1AQloIklbFK7brgS32ceI9AK2SB1jG0ih6MFwXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760698703; c=relaxed/simple;
-	bh=ZVZghmxi9QE/MfK2mqwWcibyEGOnNbsyScZcEJvlyDo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iBLBo3TKdgC+aQVlVjk44yOCNtq4qgS9c+rrVihqWwb4EY3ek4CdZReknPNt8441A23FS9I82Ztqu4+OwKjj5XaaLVtU3l2HhET0jGQixfNddh48AaKwZJo5hNr/iZmUBSAqxwFfj4Vr7+WLsM+d0VjHuqz1ZNSYSxx89yxglM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TTSL3Ywp; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760698855; c=relaxed/simple;
+	bh=o6/3wj+zPydQjXEvGvRZU1T6KtATqJ9fzcvwSaMZLOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gzkq/UegNkzWcniJGq9LVLnTb0fDcG7JgT3HXvZzhCtePJyI2vPvypLBjrqJC0lL66ywnjgdU5zxnrBHQs78R4Fk15q+4TxTKmLDEaGp/vlwmh/jGMcmQQ4+qp94sF6GP4+JROjRAT0+UmGAdBM+Wfk3cc8gW49dIL2ETJ6KjF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JLcSxxPj; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760698702; x=1792234702;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZVZghmxi9QE/MfK2mqwWcibyEGOnNbsyScZcEJvlyDo=;
-  b=TTSL3YwpROcFUGTplcXfMl1ZEdnnZ3wrgPt1ajVko9AXDkwdgfJe33sK
-   knBeoIychhIQEmMmCSh62zcGR33QVawzOEVXOu4rcHJsDnnLsoc+bdYuU
-   FibERPPSDpnBisOPaZugHsa4UGrZgPtOFSFw30n8BV3eWft3VuTZoPMGc
-   bL2VtzhFadw51OxwzO6WClzngZJOkAiQDVHKE0hMRAfZqRH05ZJhVRqzE
-   NFymf28gRW8Ho62h2um2a8K7yorY6XsqwkRzP2Wc+X/wSVf8WexUnZS6K
-   Bi12+GHdy8I2qeJTU30f02/pvrvl5Q1+dN/De+nw0P4vfxlT00QmVhQDU
-   Q==;
-X-CSE-ConnectionGUID: y5bhJcDNS/u7U+eORze6bg==
-X-CSE-MsgGUID: JOymB36fSqmtmlEeWjGesg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="65521328"
+  t=1760698854; x=1792234854;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=o6/3wj+zPydQjXEvGvRZU1T6KtATqJ9fzcvwSaMZLOw=;
+  b=JLcSxxPjmSh+RVi2S3bzm5kN+jx4qYmv4hzdEugPRh/syTWsKLQ9rH/7
+   cn5nUjog5DVfADiBRWi9f38wKutCh4Nl6MPi6z/DjiZiRLp3siHXAjmW5
+   SzHfinQocGlPwOyjcMi94DfuD6dNowfTCg9+aJGLINgbIGfmfaXgf31VD
+   0Ft7VGz+bL1LamFGja1Wt0wf0vxgjEwTVqOtev/zCeRMeAkcNtd7gDqgT
+   iaJyvDPsJvxc1RHPmpUWAVOvTVAF9Q1Ot2OQwhvV5COwgkxzcKgpkIrSC
+   +QFpbVbMARcclT6o2OKT2RUXw4L5CFTatG7RxvTRA8mfbTv3tlkARKSsq
+   g==;
+X-CSE-ConnectionGUID: HgCP3J1kTPiKc578iFtFfg==
+X-CSE-MsgGUID: bzeuodYsTuKMt5XWo+gdRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="73191293"
 X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="65521328"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 03:58:21 -0700
-X-CSE-ConnectionGUID: J9lZwTOsQOiDlwVC1TVtrA==
-X-CSE-MsgGUID: S/pj3kJZQFS1SIpJz1EHCg==
+   d="scan'208";a="73191293"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 04:00:54 -0700
+X-CSE-ConnectionGUID: A+byNJajSvK/938Yum5i9w==
+X-CSE-MsgGUID: 33MccBZcRs247sE+kAxAfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="182651716"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.123])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 03:58:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 17 Oct 2025 13:58:13 +0300 (EEST)
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-    Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
-In-Reply-To: <aPIfSvhqhc9wxzGi@alpha.franken.de>
-Message-ID: <21079c94-cd49-bcd7-6f5d-7d5cd9d61432@linux.intel.com>
-References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com> <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com> <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net> <aO1sWdliSd03a2WC@alpha.franken.de> <alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk>
- <74ed2ce0-744a-264f-6042-df4bbec0f58e@linux.intel.com> <alpine.DEB.2.21.2510141232400.39634@angie.orcam.me.uk> <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com> <aPIfSvhqhc9wxzGi@alpha.franken.de>
+   d="scan'208";a="182701405"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.245.244.103]) ([10.245.244.103])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 04:00:50 -0700
+Message-ID: <749a5f42-f1eb-488b-826a-ca9b6981b048@intel.com>
+Date: Fri, 17 Oct 2025 12:00:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1515501763-1760698693=:1052"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/12] drm/xe/pm/s2idle: Don't evict user BOs for D3hot
+ and D3cold-VRSR state
+To: Badal Nilawar <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org,
+ linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: anshuman.gupta@intel.com, rafael@kernel.org, lenb@kernel.org,
+ bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
+ lucas.demarchi@intel.com, rodrigo.vivi@intel.com, varun.gupta@intel.com,
+ ville.syrjala@linux.intel.com, uma.shankar@intel.com, karthik.poosa@intel.com
+References: <20251015080710.1468409-1-badal.nilawar@intel.com>
+ <20251015080710.1468409-12-badal.nilawar@intel.com>
+Content-Language: en-GB
+From: Matthew Auld <matthew.auld@intel.com>
+In-Reply-To: <20251015080710.1468409-12-badal.nilawar@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 15/10/2025 09:07, Badal Nilawar wrote:
+> In D3hot and D3cold-VRSR, VRAM remains active, so it is not necessary
+> to evict user BOs.
+> 
+> Cc: Matthew Auld <matthew.auld@intel.com>
+> Co-developed-by: Sk Anirban <sk.anirban@intel.com>
+> Signed-off-by: Sk Anirban <sk.anirban@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_pm.c | 15 ++++++++++-----
+>   1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+> index 84cd9e84f548..51ff9b90fbfd 100644
+> --- a/drivers/gpu/drm/xe/xe_pm.c
+> +++ b/drivers/gpu/drm/xe/xe_pm.c
+> @@ -169,7 +169,7 @@ static void xe_rpm_lockmap_release(const struct xe_device *xe)
+>   
+>   static void xe_pm_suspend_prepare(struct xe_device *xe)
+>   {
+> -	if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE)
+> +	if (pm_suspend_default_s2idle())
+>   		xe_pm_d3cold_target_state_toggle(xe);
+>   	else
+>   		xe->d3cold.target_state = XE_D3COLD_OFF;
+> @@ -191,8 +191,6 @@ int xe_pm_suspend(struct xe_device *xe)
+>   	xe_pm_block_begin_signalling();
+>   	trace_xe_pm_suspend(xe, __builtin_return_address(0));
+>   
+> -	xe_pm_suspend_prepare(xe);
+> -
+>   	err = xe_pxp_pm_suspend(xe->pxp);
+>   	if (err)
+>   		goto err;
+> @@ -543,8 +541,12 @@ static int xe_pm_notifier_callback(struct notifier_block *nb,
+>   	int err = 0;
+>   
+>   	switch (action) {
+> -	case PM_HIBERNATION_PREPARE:
+>   	case PM_SUSPEND_PREPARE:
+> +		xe_pm_suspend_prepare(xe);
+> +		if (xe->d3cold.target_state != XE_D3COLD_OFF)
+> +			break;
 
---8323328-1515501763-1760698693=:1052
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I think this will break hibernation on igpu platforms with flat-CSS? We 
+need evict_all() to move CCS from stolen memory back to normal RAM such 
+that it is saved and then restored correctly on resume from hibernation. 
+What is the value of target_state for a hibernation event? Does the 
+evict_all() still get called later? AFAICT it is not called any more.
 
-On Fri, 17 Oct 2025, Thomas Bogendoerfer wrote:
 
-> On Tue, Oct 14, 2025 at 03:41:42PM +0300, Ilpo J=E4rvinen wrote:
-> > [...]
-> > It was "good enough" only because the arch specific=20
-> > pcibios_enable_resources() was lacking the check for whether the resour=
-ce=20
-> > truly got assigned or not. The PIIX4 driver must worked just fine witho=
-ut=20
-> > those IO resources which is what most drivers do despite using=20
-> > pci(m)_enable_device() and not pci_enable_device_mem() (the latter=20
-> > doesn't even seem to come with m variant).
->=20
-> will you send a v2 of the patch ?
+> +		fallthrough;
+> +	case PM_HIBERNATION_PREPARE:
+>   	{
+>   		struct xe_validation_ctx ctx;
+>   
+> @@ -569,8 +571,11 @@ static int xe_pm_notifier_callback(struct notifier_block *nb,
+>   		xe_pm_block_end_signalling();
+>   		break;
+>   	}
+> -	case PM_POST_HIBERNATION:
+>   	case PM_POST_SUSPEND:
+> +		if (xe->d3cold.target_state != XE_D3COLD_OFF)
+> +			break;
+> +		fallthrough;
+> +	case PM_POST_HIBERNATION:
+>   		complete_all(&xe->pm_block);
+>   		xe_pm_wake_rebind_workers(xe);
+>   		xe_bo_notifier_unprepare_all_pinned(xe);
 
-Without the the if ()? I can do that, I was unsure how people wanted to=20
-progress with this.
-
---=20
- i.
-
---8323328-1515501763-1760698693=:1052--
 
