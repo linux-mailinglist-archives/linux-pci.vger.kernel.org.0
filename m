@@ -1,109 +1,101 @@
-Return-Path: <linux-pci+bounces-38466-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E87EBE89E4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 14:42:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C79B7BE8BA6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 15:05:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADD8C58060D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:42:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 317841AA4DDA
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:06:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED8B2DC328;
-	Fri, 17 Oct 2025 12:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160F3331A56;
+	Fri, 17 Oct 2025 13:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=debtmanager.org header.i=@debtmanager.org header.b="Q7njh6Bm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from manage.vyzra.com (unknown [104.128.60.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583231E32D6;
-	Fri, 17 Oct 2025 12:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0388D342C90
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 13:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.128.60.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760704931; cv=none; b=N06T8pRJKxVrbR2XwgbmTZxqSYLERWvbkHxTWtFzulA11OyVw9AW71/GoPfNLwBa6ea54dwCZP4Ve6vYLTfUHlkQClHZVwsqMNUjjCcMMFuZ4/waewIEE0RC11gpIH7BCmIiIfkL8dUooffViz+S8brBJsJmhFwyZGIVvc1quFk=
+	t=1760706311; cv=none; b=IzxFEygCq736+wXLBZjUCM5M3C8ChkpQTTww8VnnNXkor87rfzJ+QAXyoLN2iBaq3gu76dK1jCJ7utcdBmH+twakeoD9aFji5OG20P9pFM66aPQFVQGCYtK3414KrD3KxdbwF4S93+zQZpLJA5VMycUu3UaofLiBzMOUZBc7OSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760704931; c=relaxed/simple;
-	bh=hNzhvWcwjxoEix9ZmhPB86fymOVEazDzXZ1GHL1XQ4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdnyCVVfxmRrGgJALw7OrqxeQYu0L6TamTx1OQhXvukCiRlw3z/JXeW/YZl9wIHjZgmc9rVBWDLQRy94lO35c0l2Zw0a/YP36Raz4y3R9uOPoSVD0nvfFkrvC09lZHmllpojVQWMXl8Xsf0CjwWCBMX/bsCjhCsTDYr8xeFtVAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id BCA3F2C0A2CB;
-	Fri, 17 Oct 2025 14:41:59 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A76674A12; Fri, 17 Oct 2025 14:41:59 +0200 (CEST)
-Date: Fri, 17 Oct 2025 14:41:59 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Tomita Moeko <tomitamoeko@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/pci: Check signature before assigning shadow ROM
-Message-ID: <aPI5l0whaAIJGaSw@wunner.de>
-References: <20251016081900.7129-1-tomitamoeko@gmail.com>
+	s=arc-20240116; t=1760706311; c=relaxed/simple;
+	bh=biLnUx9jTTyVdIbdiavoTAgEZeIqqOihfb373MH/e18=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bvbzsIpXdoJw2Wb7lsvZClzhO+mnDLYxA4xytQjMXf/ipJhfDQdjqNltdl3GCRB+L6ImaB7xUNThknkp5CUIz9Ia4KBns57VJzMTfxjFPyotBXnd20IZ5k5o8In56uS+NhUT7CRZnm8WUCpHA2JULDNBjetoDwvDGpQ2Sh9shE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debtmanager.org; spf=none smtp.mailfrom=manage.vyzra.com; dkim=fail (0-bit key) header.d=debtmanager.org header.i=@debtmanager.org header.b=Q7njh6Bm reason="key not found in DNS"; arc=none smtp.client-ip=104.128.60.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debtmanager.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=manage.vyzra.com
+Received: from debtmanager.org (unknown [103.237.86.103])
+	by manage.vyzra.com (Postfix) with ESMTPA id 4B22753386F1
+	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 07:45:34 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=debtmanager.org;
+	s=DKIM2021; t=1760705134; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=Aj8bDacQlJB5qNMC5+yWWged1+K/M8YReXQkzUminbQ=;
+	b=Q7njh6Bmgpq7OfANpIELaC8biUkPpYDK+LriMZ676vgnv2r4A+7wAna3j1P7Ifoo2S21q7
+	fs5EATtZkXmQBGGmbAcfldilR4aU53JaCbe7I79OVGxHE1Y9xLMz/0gP9WG0zMg0PhsrO0
+	wJOqjTLg/eEECxkjlutDQCsN9VI7uHvkT1//INIV/v9eqO9S6EW/D5b812nyC+5Nb8av84
+	21dmYCDwJ2iq163iCK4lj2gfIzH8csF6ZfGB7083rGAvULte2GMpoGYQfrLnKa2tG892IM
+	Ql+03oh+fPedqVYAm2tvpqfUCB1Y0rx+QGy5Y//6/D48o+HH317xIAzophlwWA==
+Reply-To: vlad.dinu@rdslink.ro
+From: "Vlad Dinu" <info@debtmanager.org>
+To: linux-pci@vger.kernel.org
+Subject: *** Urgent Change ***
+Date: 17 Oct 2025 05:45:33 -0700
+Message-ID: <20251017054533.E99F2C8C9652A628@debtmanager.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251016081900.7129-1-tomitamoeko@gmail.com>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: -0.10
 
-On Thu, Oct 16, 2025 at 04:19:00PM +0800, Tomita Moeko wrote:
-> Recent IGD platforms without VBIOS or UEFI CSM support do not contain
-> VGA ROM at 0xC0000. Check whether the VGA ROM region is a valid PCI
-> option ROM with 0xAA55 signature before assigning the shadow ROM to
-> the default PCI VGA controller.
-[...]
-> +++ b/arch/x86/pci/fixup.c
-> @@ -357,6 +357,18 @@ static void pci_fixup_video(struct pci_dev *pdev)
->  	struct pci_bus *bus;
->  	u16 config;
->  	struct resource *res;
-> +	void *rom;
-> +	u16 sig;
-> +
-> +	/* Does VBIOS region contain a valid PCI ROM? */
-> +	rom = memremap(0xC0000, sizeof(sig), MEMREMAP_WB);
-> +	if (!rom)
-> +		return;
-> +
-> +	memcpy(&sig, rom, sizeof(sig));
-> +	memunmap(rom);
-> +	if (sig != 0xAA55)
-> +		return;
->  
->  	/* Is VGA routed to us? */
->  	bus = pdev->bus;
+Hello,
 
-I have to ask again, in arch/x86/kernel/probe_roms.c:probe_roms(),
-the signature is already verified.  If it doesn't match, the
-video_rom_resource isn't added to iomem_resource.
+I am Vlad Dinu, the newly appointed Director of IMF Legal=20
+Affairs, Security and Investigation. I have been given the=20
+responsibility to look into all the payments that are still=20
+pending and owed to fund beneficiaries / scam victims worldwide.
 
-Which makes me wonder, wouldn't it be sufficient to just do
-something like:
+This action was taken because there have been issues with some=20
+banks not being able to send or release money to the correct=20
+beneficiary accounts. We have found out that some directors in=20
+different organizations are moving pending funds to their own=20
+chosen accounts instead of where they should go.
 
-	if (!lookup_resource(&iomem_resource, 0xC0000))
-		return;
+During my investigation, I discovered that an account was=20
+reported to redirect your funds to a bank in Sweden.
+The details of that account are provided below. I would like you=20
+to confirm if you are aware of this new information, as we are=20
+now planning to send the payment to the account mentioned.
 
-Another thought I have, I'd move the code you're inserting further
-down, perhaps after the while-loop.  Actually the existing code
-isn't very pretty, there should be a return after failure of the
-vga_default_device checks and after the Command register check
-so that the actual resource adjustment doesn't need to be indented.
+NAME OF BENEFICIARY: ERIK KASPERSSON
+BANK NAME: SWEDBANK AB
+ADDRESS: REPSLAGAREGATAN 23A, 582 22 LINK=C3=96PING, SWEDEN
+SWIFT CODE: SWEDSESS
+ACCOUNT NUMBER: 84806-31282205
 
-Thanks,
 
-Lukas
+A payment instruction has been issued by the Department of=20
+Treasury for an immediate release of your payment to the bank=20
+account above without further prejudice. We cannot approve or=20
+schedule payment to the 
+
+given bank account without your confirmation. May we proceed with=20
+the transfer to the Beneficiary: Erik Kaspersson, bank account in=20
+Sweden?
+
+I await your urgent response.
+
+Mr. Vlad Dinu.
 
