@@ -1,156 +1,159 @@
-Return-Path: <linux-pci+bounces-38440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48EBFBE7DE7
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:45:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FCC5BE7E56
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:53:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E970335C7A6
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 09:45:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09ADB587512
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 09:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8EA2D8776;
-	Fri, 17 Oct 2025 09:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6582DAFD7;
+	Fri, 17 Oct 2025 09:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6jaivmL"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Gbakgtf5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m3276.qiye.163.com (mail-m3276.qiye.163.com [220.197.32.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1002D9EFE
-	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 09:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DDC20C48A;
+	Fri, 17 Oct 2025 09:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760694328; cv=none; b=DT1G1OwjOm7eKUGOM3QcMKNBYENg68QYqX3U0gTcbaZetTPqctn6jU1ixXlisWSU6fTG0Q2CBlJsqds7UDd73hIrgZdXbieKHGnGBja5jdHPYaFz2Nv3kMzcH2fiBofjaYoOO9kg1Z3AgumELrhJCYyrCr9LixNT/X5gb0YlsVs=
+	t=1760694787; cv=none; b=MksWgp5n1ATMKS9VJYjU8HFenX5KT/i2BHg1aqjfHv3aQATTEytv6NTT7xw5ryV6BVf9VVg2lXo5PyXFyPEplI83gSvZILxj4+Bx3yM7uoyqJSfnW8sIeiZD8nT6a8C0FM9rcAgkh8yR9a7klg+HBojtayBRq4SdTr/SLyyjT0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760694328; c=relaxed/simple;
-	bh=XtO9sRQeiqTEF3Mgx59O+0CfGSoNUdMMWG3uX2sJANc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pv/Xjecr28/STvIJSbsyPaFIrK/aKue9hg7i9FIZrBa7oZ5HBiX8J7zH2pfqVnqGkZiysRHICcftJCkuZWIDcqEC2R3+7eDZGoORPm0CTjvHfgsgXPGfk7Cae1NGYEueYGFpAKh1TbxmsVT4RG34ernPsj0r4MB1cg1wVcl3ueE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6jaivmL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD11C113D0
-	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 09:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760694327;
-	bh=XtO9sRQeiqTEF3Mgx59O+0CfGSoNUdMMWG3uX2sJANc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S6jaivmL21W3j9X94Ug/vZPu9YmbLoyjEWgbaxTo4XE3WKXOrTeDKG9vdkTCgYWYg
-	 shWpjWn0BvJn0wMWGjEyrwPTD6mgziEtD6Vu0fQ7BSQUyHRBCn4z64q4iaGDdl5JjV
-	 qX6v0jC5yfFkeobv8NlBtsBLIY/cF2YO+yAtgiZLj4j3IJgMjkNuAIX5ONUZdHTm+M
-	 k368bR6By5fuuf1IVbEXp3ZbfMak4TdHOpL9YTKzWt1eyPsCcH4Yet+7u6fk8WhWCo
-	 /9aKX7oKI9Shy7eB72Zh0w03pAVA9CVlmurErvgqjX9yNvyWcMZQRD4dYRwD8MmubZ
-	 vRPt4q+c6lBNg==
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-43f554ed252so950800b6e.0
-        for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 02:45:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhJrY3rVNs6Jd2Zb2QfJwdwUgha4MYPjEgyu/30lgUEVL40ElnxFr56s+7HwoFWdFNeIBR8/f+Vqw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwahTuySEG5RXG1kVewja2p5mS18e+2z0K5J7UZ/rGs6nHQt1XQ
-	nyQvlBEo6t5jydA24KviAvfm9Iwi+Y/3YpMvEWDaed0D3bOLCZK5BHa0u+nprO2cSHgJV8zQXwa
-	bbgPTM9X0fFnmoVMjzKCF3XcLaD3V0Yw=
-X-Google-Smtp-Source: AGHT+IH4eFtUZLBxcwh2xQ/mf6nJ2K1x5Ot8Mr4XTPJHIaP3cRmxN8m7Qjq/x+6o55VptzdO3OZu5M8S/8tYsiUSlRE=
-X-Received: by 2002:a05:6808:6d82:b0:441:c8af:291d with SMTP id
- 5614622812f47-443a30953d3mr1270420b6e.42.1760694326867; Fri, 17 Oct 2025
- 02:45:26 -0700 (PDT)
+	s=arc-20240116; t=1760694787; c=relaxed/simple;
+	bh=rrVkaR3LTUAqJg6J+NCfj8sfv1ALYesJTJ177QAbv5Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Gpb1XZXOsozPUirN7iqUu3HjyqrahSgq7jVYQpYKPZ2dzS/8f8RTd3mS57q6jf05Rmt1IhUBsdkP85l2zQUkbp3JF4gytloVQ0e1Aq4hvy4Rv83XHqU6OYhc8ldaMJ7V0kyS/zT0vDgcuqpdsjslR83WmkK+mwCiNowPIwmaBDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Gbakgtf5; arc=none smtp.client-ip=220.197.32.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 264578e33;
+	Fri, 17 Oct 2025 17:47:46 +0800 (GMT+08:00)
+Message-ID: <0dd51970-a7ac-4500-b96f-d1e328e7a3b2@rock-chips.com>
+Date: Fri, 17 Oct 2025 17:47:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
-In-Reply-To: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 17 Oct 2025 11:45:14 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iFa3_UFkA920Ogn0YAYLq4CjnAD_VjLsmxQxrfm5HEBw@mail.gmail.com>
-X-Gm-Features: AS18NWAfxBP4Jux50tLr0QwuvERSlU0IAnFqGNafXGnfCBKno1UvlTv43pvyLKQ
-Message-ID: <CAJZ5v0iFa3_UFkA920Ogn0YAYLq4CjnAD_VjLsmxQxrfm5HEBw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/PM: Prevent runtime suspend before devices are fully initialized
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Niklas Cassel <cassel@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>,
+ linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
+ FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
+ <20251015233054.GA961172@bhelgaas>
+ <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a99f191762b09cckunm3ad1505815a4fb
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx0aQlZITEwfS01OTRgYQ09WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=Gbakgtf5juyxXLyjvNEBOoU2BvuKHnl3lmL3wESBLpY49996dwrkHEjjo9SGWwLvIF56Wsck8nli3slIooVAyKq9L+enHuUhC/q3KE9B1PuNWLmcdhnOjynCr1jz20j3T257xIWhvF/s1gJcoQBZZPpzm7az96HLHO564hDbcnw=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=35XhCoKrmzdZQlHWnzUSGhfNFUZ/Pw4yplQ4NAHi5Ic=;
+	h=date:mime-version:subject:message-id:from;
 
-On Fri, Oct 17, 2025 at 1:28=E2=80=AFAM Brian Norris <briannorris@chromium.=
-org> wrote:
->
-> PCI devices are created via pci_scan_slot() and similar, and are
-> promptly configured for runtime PM (pci_pm_init()). They are initially
-> prevented from suspending by way of pm_runtime_forbid(); however, it's
-> expected that user space may override this via sysfs [1].
->
-> Now, sometime after initial scan, a PCI device receives its BAR
-> configuration (pci_assign_unassigned_bus_resources(), etc.).
->
-> If a PCI device is allowed to suspend between pci_scan_slot() and
-> pci_assign_unassigned_bus_resources(), then pci-driver.c will
-> save/restore incorrect BAR configuration for the device, and the device
-> may cease to function.
->
-> This behavior races with user space, since user space may enable runtime
-> PM [1] as soon as it sees the device, which may be before BAR
-> configuration.
->
-> Prevent suspending in this intermediate state by holding a runtime PM
-> reference until the device is fully initialized and ready for probe().
->
-> [1] echo auto > /sys/bus/pci/devices/.../power/control
->
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->
->  drivers/pci/bus.c | 7 +++++++
->  drivers/pci/pci.c | 6 ++++++
->  2 files changed, 13 insertions(+)
->
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index f26aec6ff588..227a8898acac 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -14,6 +14,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
->
-> @@ -375,6 +376,12 @@ void pci_bus_add_device(struct pci_dev *dev)
->                 put_device(&pdev->dev);
->         }
->
-> +       /*
-> +        * Now that resources are assigned, drop the reference we grabbed=
- in
-> +        * pci_pm_init().
-> +        */
-> +       pm_runtime_put_noidle(&dev->dev);
-> +
->         if (!dn || of_device_is_available(dn))
->                 pci_dev_allow_binding(dev);
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..06a901214f2c 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3226,6 +3226,12 @@ void pci_pm_init(struct pci_dev *dev)
->         pci_pm_power_up_and_verify_state(dev);
->         pm_runtime_forbid(&dev->dev);
->         pm_runtime_set_active(&dev->dev);
-> +       /*
-> +        * We cannot allow a device to suspend before its resources are
-> +        * configured. Otherwise, we may allow saving/restoring unexpecte=
-d BAR
-> +        * configuration.
-> +        */
-> +       pm_runtime_get_noresume(&dev->dev);
->         pm_runtime_enable(&dev->dev);
+Hi Mani and Bjorn
 
-So runtime PM should not be enabled here, should it?
+在 2025/10/17 星期五 11:36, Manivannan Sadhasivam 写道:
+> On Wed, Oct 15, 2025 at 06:30:54PM -0500, Bjorn Helgaas wrote:
+>> On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
+>>> ...
+>>
+>>> For now, this is a acceptable option if default ASPM policy enable
+>>> L1ss w/o checking if the HW could supports it... But how about
+>>> adding supports-clkreq stuff to upstream host driver directly? That
+>>> would help folks enable L1ss if the HW is ready and they just need
+>>> adding property to the DT.
+>>> ...
+>>
+>>> The L1ss support is quite strict and need several steps to check, so we
+>>> didn't add supports-clkreq for them unless the HW is ready to go...
+>>>
+>>> For adding supports of L1ss,
+>>> [1] the HW should support CLKREQ#, expecially for PCIe3.0 case on Rockchip
+>>> SoCs , since both  CLKREQ# of RC and EP should connect to the
+>>> 100MHz crystal generator's enable pin, as L1.2 need to disable refclk as
+>>> well. If the enable pin is high active, the HW even need a invertor....
+>>>
+>>> [2] define proper clkreq iomux to pinctrl of pcie node
+>>> [3] make sure the devices work fine with L1ss.(It's hard to check the slot
+>>> case with random devices in the wild )
+>>> [4] add supports-clkreq to the DT and enable
+>>> CONFIG_PCIEASPM_POWER_SUPERSAVE
+>>
+>> I don't understand the details of the supports-clkreq issue.
+>>
+>> If we need to add supports-clkreq to devicetree, I want to understand
+>> why we need it there when we don't seem to need it for ACPI systems.
+>>
+>> Generally the OS relies on what the hardware advertises, e.g., in Link
+>> Capabilities and the L1 PM Substates Capability, and what is available
+>> from firmware, e.g., the ACPI _DSM for Latency Tolerance Reporting.
+>>
+>> On the ACPI side, I don't think we get any specific information about
+>> CLKREQ#.  Can somebody explain why we do need it on the devicetree
+>> side?
+>>
+> 
+> I think there is a disconnect between enabling L1ss CAP and CLKREQ#
+> availability.. When L1ss CAP is enabled for the Root Port in the hardware, there
+> is no guarantee that CLKREQ# is also available. If CLKREQ# is not available,
+> then if L1ss is enabled by the OS, it is not possible to exit the L1ss states
+> (assuming that L1ss is entered due to CLKREQ# in deassert (default) state).
+> 
+> Yes, there seems to be no standard way to know CLKREQ# presence in ACPI, but
+> in devicetree, we have this 'supports-clkreq' property to tell the OS that
+> CLKREQ# is available in the platform. But unfortunately, this property is not
+> widely used by the devicetrees out there. So we cannot use it in generic
+> pci/aspm.c driver.
+> 
+> We can certainly rely on the BIOS to enable L1ss as the fw developers would
+> have the knowledge of the CLKREQ# availability. But BIOS is not a thing on
+> mobile and embedded platforms where L1ss would come handy.
+> 
+> What I would suggest is, the host controller drivers (mostly for devicetree
+> platforms) should enable L1ss CAP for the Root Port only if they know that
+> CLKREQ# is available. They can either rely on the 'supports-clkreq' property or
+> some platform specific knowledge (for instance, on all Qcom platforms, we
+> certainly know that CLKREQ# is available, but we don't set the DT property).
 
->  }
->
-> --
+While we're on the topic of ASPM, may I ask a silly question?
+I saw the ASPM would only be configured once the function driver calling
+pci_enable_device. So if the modular driver hasn't been insmoded, the
+link will be in L0 even though there is no transcation on-going. What is
+the intention behind it?
+
+> 
+> Then in the generic pci/aspm.c driver, we can just enable L1ss for all devices
+> if the CAP is set, which we do currently.
+> 
+> - Mani
+> 
+
 
