@@ -1,98 +1,115 @@
-Return-Path: <linux-pci+bounces-38430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38431-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2757BE7113
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:13:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17538BE7279
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:26:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3E6AF35B8CA
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 08:13:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09866188D25E
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 08:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC6926B764;
-	Fri, 17 Oct 2025 08:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44CD28469B;
+	Fri, 17 Oct 2025 08:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=dxcv.net header.i=@dxcv.net header.b="DvQRhkir"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/FOHOK/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from srv3.dxcv.net (srv3.dxcv.net [51.159.5.192])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98485334693;
-	Fri, 17 Oct 2025 08:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.5.192
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A9E283FE5;
+	Fri, 17 Oct 2025 08:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760688828; cv=none; b=hBgw49STttt408d/6nFBaMMEiwx/ew27g/oxiQEMECzRgTTUbkgOGtOzOWPMi6z2b9TYUoHiosK0MC0JQtKd7QW5TbJdKp5A4ZhWAjxVDzeEoYfiyIAKNnI/TB+ELkEMUYVxMo+KlpNBfBWAS2V7/563/Ppebz1Gx8cb6u/goNE=
+	t=1760689610; cv=none; b=Uno9t+5N4HqqbxiO/5LaZJP+H8RXgnZwR4xrmoZifWPt+hy/tbkQWitbfkQrXgLP0UQXE9pjWhOSqcwPW+vm8BQPw0ge+9X59vEoyO5vS9m0jN8RHdwhjBa5OLrjcLp9aZjcOXzTkfgywI9rFTsEYRsgfwhJNTcZCRG8hRMr0Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760688828; c=relaxed/simple;
-	bh=IT/1H8bZG3gi4aXPPnDMBUEudCh+RZyhtqpbz3ot7ok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kR1ktJ9KP3F+a6hUOOD/x7HTregLKwAwUP0L6MEEAaGxTdF6ypXGdkla1W40MRTteQjfkBKFC69jE8uQuK/7gTv5g1miGE0FIZRTSk013tjUJcrbGrpyncN1+/InxnwpR2VAOHpMveN2lN2ef+anLSr2NT06Lyxj2tb9sS1vD+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dxcv.net; spf=pass smtp.mailfrom=dxcv.net; dkim=pass (4096-bit key) header.d=dxcv.net header.i=@dxcv.net header.b=DvQRhkir; arc=none smtp.client-ip=51.159.5.192
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dxcv.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxcv.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dxcv.net;
-	s=email; h=Message-ID:Date:Subject:Cc:To:From:sender:reply-to;
-	bh=IT/1H8bZG3gi4aXPPnDMBUEudCh+RZyhtqpbz3ot7ok=; t=1760688826; x=1761552826; 
-	b=DvQRhkirYZ3pHJo8IRRjIXkswRlN8aINXHvzHsDhil3sateQA0Sla2ljKoZ8sbsPqG76kJzEbdN
-	BJ0WbpKSFVokpcf/rwZKCCw48vDo5ezM9kJfRZqfQlvd68Qu2yiO4FVicdUa8LSswQ7KsWTaN8rCT
-	Z8qF4sqhadglt21FFHOZ928vznONw+gjpf6dcajD0Bpl0G4ZGtdwFn/T69nmi8k8JjW7PXCZuiD9R
-	8orlToBCWU0R+JV1D9KSPXEy5Nn7qWFEaPeFvAvc5d0qU60DnLACyvf3XJSQrHwqigVOsZMEt2sde
-	pa63pksnOTBUMe5BKG19AgPxQf0EsANxgAmzhYVLoix0izo9mE9TYfmuBA0VorqE7rZak26Wde2KM
-	ZYGOUzEotQXU7lrjWtWoQDKkuRjKcrPD0jb59DJ1DlFnnLCiOba0wUrVZl+mTmAZdhsZEq58HTjq7
-	y1dNpJ/ajUlILwjglWjPd1xJlKvg14UBZBRiX/WA19a+2k/hCq/kMIdbFyG4gfXt998TBfkFEI7NV
-	tED2IZpn5KiXqA23j6+HtsVcbCPkqhJeN1gnzJP3+b3dCzgXIrNBrV/RsvTIcom+kWMQB6FLQEKWy
-	xNpykidj2cMkKffiHXIJEcU4XtIcqHrYgqw7HBuDGPGRgV+Cin/aTsqjXFzaXyBiCiEmk=;
-Received: from static-css-csq-219011.business.bouyguestelecom.com ([176.175.219.11] helo=fareins.teamgreen.fr)
-	by srv3.dxcv.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <herve@dxcv.net>)
-	id 1v9euS-002YEz-1p;
-	Fri, 17 Oct 2025 09:29:56 +0200
-From: =?UTF-8?q?Herv=C3=A9=20D=2E?= <herve@dxcv.net>
-To: helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	dlan@gentoo.org,
-	inochiama@gmail.com,
-	jonathan.derrick@linux.dev,
-	kenny@panix.com,
-	kwilczynski@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lists@sapience.com,
-	looong.bin@gmail.com,
-	lpieralisi@kernel.org,
-	mani@kernel.org,
-	nirmal.patel@linux.intel.com,
-	robh@kernel.org,
-	socketcan@hartkopp.net,
-	tglx@linutronix.de,
-	todd.e.brandt@intel.com,
-	unicorn_wang@outlook.com,
-	=?UTF-8?q?Herv=C3=A9?= <herve@dxcv.net>
-Subject: Re: [PATCH] PCI: vmd: override irq_startup()/irq_shutdown() in vmd_init_dev_msi_info()
-Date: Fri, 17 Oct 2025 09:29:52 +0200
-Message-ID: <20251017072954.6978-1-herve@dxcv.net>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251016165541.GA989894@bhelgaas>
-References: <20251016165541.GA989894@bhelgaas>
+	s=arc-20240116; t=1760689610; c=relaxed/simple;
+	bh=kbYlbb2vWzoBZ20nmxTT1jLO3BgY9QweNZ2+SNF6NR8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=tduqd5ezMs13kKlO4Jl4CIi/NBGIlHL09bLPcftyvBJPejpSXmj+R/n5OHCSzosnvHXFBFhgU57CIR3WjSgir4npJ8BFNqw96bdgJNIDq9+bYBStjz3o/23IvYKKJZ0zeOOtHvUte58IHao1POatRQVauekmyTu/MbVTSWkxkj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/FOHOK/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8C7C4CEF9;
+	Fri, 17 Oct 2025 08:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760689610;
+	bh=kbYlbb2vWzoBZ20nmxTT1jLO3BgY9QweNZ2+SNF6NR8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=r/FOHOK/KV30W9AU1CLlFZr7Uo1nt7j3bZpfAoNf7pLarQJDffIexQ+Caee9cxKAE
+	 yWLtItXISda1kqRcnbW7Fq525yc0tSmY6FmHR+2l/kehCTieOvZViXTwGMODOBh0kO
+	 yhT4xZ7huZ4JJloh1JFwmwKqgu9MPcGketcuNCnak+Zuq7y4tSU7leFiIcH0xjMCeN
+	 66ezK0K71KhY90ckpGXCToE8maTmVN4O3KA9iqr+4nssdX6YAc1vZNVBSqjqAma1CB
+	 87r5pmy5mTtOmoEEQgZBEjNpZW2lTJ6WsSTyqMxPIOr2KJ7CtfbJAHJJ+KUmUHkLaH
+	 jcc1Oo3Qej4nw==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Fri, 17 Oct 2025 10:26:43 +0200
+Message-Id: <DDKGDHEH4QOJ.2QCE60PQ5OJRM@kernel.org>
+Cc: <viresh.kumar@linaro.org>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <daniel.almeida@collabora.com>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
+ <robin.murphy@arm.com>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust: driver: let probe() return impl PinInit<Self,
+ Error>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20251016125544.15559-1-dakr@kernel.org>
+ <DDK8EYINVIKJ.2ZK04J2C06GGR@nvidia.com>
+In-Reply-To: <DDK8EYINVIKJ.2ZK04J2C06GGR@nvidia.com>
 
-Hello,
+On Fri Oct 17, 2025 at 4:12 AM CEST, Alexandre Courbot wrote:
+> On Thu Oct 16, 2025 at 9:55 PM JST, Danilo Krummrich wrote:
+>> The driver model defines the lifetime of the private data stored in (and
+>> owned by) a bus device to be valid from when the driver is bound to a
 
-I've tested the patch on a clean 6.17.3 tree, seems booting and running properly on my debian13 system.
+>> device (i.e. from successful probe()) until the driver is unbound from
+>> the device.
+>>
+>> This is already taken care of by the Rust implementation of the driver
+>> model. However, we still ask drivers to return a Result<Pin<KBox<Self>>>
+>> from probe().
+>>
+>> Unlike in C, where we do not have the concept of initializers, but
+>> rather deal with uninitialized memory, drivers can just return an
+>> impl PinInit<Self, Error> instead.
+>>
+>> This contributed to more clarity to the fact that a driver returns it's
+>
+> nit: s/it's/its
+>
+>> device private data in probe() and the Rust driver model owns the data,
+>> manages the lifetime and - considering the lifetime - provides (safe)
+>> accessors for the driver.
+>>
+>> Hence, let probe() functions return an impl PinInit<Self, Error> instead
+>> of Result<Pin<KBox<Self>>>.
+>>
+>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>
+> Short anecdote: I was curious about measuring the footprint impact of
+> pin initializers, so I did a `size vmlinux` before and after this patch
+> to compare the size of the `text` section. This patch removes exactly 60
+> bytes of binary code, which I guess corresponds to the duplicated `KBox`
+> allocations that are now gone. It's great to confirm once again how Rust
+> abstractions are indeed zero-overhead! :)
 
-you can include theses on the patch
-Reported-by: Hervé <herve@dxcv.net>
-Tested-by: Hervé <herve@dxcv.net>
+Thanks for the test! If you find that at any point they aren't, let me
+know, then we can fix that :)
 
-Regards,
-Hervé
+---
+Cheers,
+Benno
 
