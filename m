@@ -1,171 +1,247 @@
-Return-Path: <linux-pci+bounces-38460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6329EBE8736
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89981BE878A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 518F34F84FC
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:49:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B8B084FB9AA
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 11:53:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E5127B34D;
-	Fri, 17 Oct 2025 11:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A90BF2DA76C;
+	Fri, 17 Oct 2025 11:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L1l6ixhd"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A4iKTKK7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011039.outbound.protection.outlook.com [40.93.194.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85D9255E34;
-	Fri, 17 Oct 2025 11:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760701785; cv=none; b=LFXHIAzdMhomenOLrYLJedVbF/8NaOo1CqGd6OwUXKGJLcLMzigolnjlgTuVAYN504J9OYVA1ktLJ5a9KSv9p8+VXbUkvU1JFO54P1uM5CHFyWUXbC839mF7DA0pVo2NFAyVqIdsAt5M7UzLgO8kf1gkq6oMHnK0VfPWemCKwfk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760701785; c=relaxed/simple;
-	bh=7X+TwXU2ynW1Z24EycOtDV2oDOgsg5UZIpUiNMNGeus=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RWS02axUQox4HmPII/3fIHUfYgXIqVUXMhlNKF/lzd+s9BjUS7+odcqyCTTKBMYv3Tl8OwzP+FL6mK/ogVclBl8M9R9PgH7dQrpJKjhSZDyGaoCm/Q6FdhxrjXvXggpN05ylYaz8psnX86Wng/xhbuD5RBOp16KtEBV5neKTeCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L1l6ixhd; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760701783; x=1792237783;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7X+TwXU2ynW1Z24EycOtDV2oDOgsg5UZIpUiNMNGeus=;
-  b=L1l6ixhdGpkTx8Alrc6suugDrgXWUfzKXBkLwpA3/5vIPmbvVtGPa5dN
-   I5auL7kZwWazMIfkaa50H2+1+Bhj8Ls5tpFV3rg0hH2L1KSZAaykIz+Of
-   mgwraG3zIn8q2IlxWgBMwXC7/XyeRLDba4XfHY5YmWltDSoKeg2KqIysD
-   Qs+JpgK0L9IgWVo8C8P8cWnBmiwBdjpnWLvtUWy89McVX3gjih65xUMix
-   Qgci5IKesdzvPPaW7LaGayHbRuMT5PZnjEZsWN/71MKWiyvDzpEwUOpX7
-   3I+nOxK4l+25znyv6tkOIWcgmdRtgvEfuM49P6kq9GCSsb4ytQAHYzcZW
-   g==;
-X-CSE-ConnectionGUID: tqVsXhboTEy2TxSVnbcEuw==
-X-CSE-MsgGUID: qJSwP3X9RZeMATcMJhfjCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="62949401"
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="62949401"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 04:49:42 -0700
-X-CSE-ConnectionGUID: ORisMe/SQre3CJp+jUcM/Q==
-X-CSE-MsgGUID: Xe8nPa+eRraf/cY8Jvslyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="182719104"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.123])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 04:49:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 17 Oct 2025 14:49:35 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Brian Norris <briannorris@chromium.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Prevent runtime suspend before devices are fully
- initialized
-In-Reply-To: <aPH_B7SiJ8KnIAwJ@wunner.de>
-Message-ID: <67381f3b-4aee-a314-b5dd-2b7d987a7794@linux.intel.com>
-References: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid> <aPH_B7SiJ8KnIAwJ@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3202798FA;
+	Fri, 17 Oct 2025 11:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760702008; cv=fail; b=HBw0pMC1Pzl9U6my8swHhmPYVvLDRbFMkSq8JpkSRUghBkiA5JnW6U0cfxzCvcEl/NB2iXepwBJADE974wlWQjk70cDJ7eFHBnjIOBPcPG0eJn3B34kCFjNyCBoHAEA1DMTs1SeY2wgp/Y/g68ewZRi7znaPZI4DPIbcWKWGpw0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760702008; c=relaxed/simple;
+	bh=yAqiTbhD9/ex9UbylXt0ODSybTYieMPnRljUGdtnGm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=O4zmOIpPWoZG8WoREFjZ+OVZH6q8Zf1R1vfu4M/Em5X4doJJdPfBwUdTXRpLNs0W1RkdQImtoKd8U3DO4Yya06IDwyLI2IcpZ+7ocjHA2xKDYxCAmIdoWaRtnrNkJfymjZTX2L8u/Or1vBRNB9hQzNf/5iAaMsdBtIIOnWZqMEQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A4iKTKK7; arc=fail smtp.client-ip=40.93.194.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QxPmKpTdhYqVK912jz2EV+layQ+ymM+7Laai/RBcvzPyUBU6hFaN5yp0i/Tinmxibnvb7cN4x67j5XtSiN0pvi2WwNMzvqQMOhk8svGmHKUmBTrxsv0FeRFm8MhIjFdX7jwpM2PIZ+qrJ+mZibTJmvNd68yROTc1NMPZiP4kEUXjRtqEZN+XxNPgZ8hHrZ/Hqzh0XzyU5cGZfxFXE+aqCcoU3tp7UFBCbqargOdlrmoaFNX7CdIOPUiONMQJAgKO06XdJl70cJJhWnV7W9vdI3LPqqqe91ulg64sXW/fm55JNrNltDJD87Tf/N7Dj5muRdjLLA6qqE/tMapoOxRWJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=27Gv78aElBuonLA+v504SMPOqjIriIvAdUy4o9f81Gc=;
+ b=u0xWnujkxdtYV5TWtusKVI3qt620N5+UOJmx/7Br0NJQuQXWvhiH+OnVI63svwdtwjzZB6auj4hsPGuYO9SYfZOfUXO8IJUukH8kwg8hsUNigCV8kaBgguYQ7IY8H385ml1LsQ6Z3RBoB45IA7iEYuimFnrA5HgyDWxGMx9lRcn1+xGCvvbQBAXVvcCcV43NbA3UCOaokA57Fl1zy0h/o8Z+ea0xMbcTHaumrRz1/MzTCMFN3uUUjRm9iq68cC8d/QWfFdQaHSse9afRwnIu5YiVGf5W+hAijH7w3mlliZmvL7R6cpSeZ3Hi5z2SsKb5hgFNlOhKzqwu/h1g1ZTvYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=27Gv78aElBuonLA+v504SMPOqjIriIvAdUy4o9f81Gc=;
+ b=A4iKTKK7tXAngqVwnTTOu8yQQWoUGHbNAjfPQLSihno/ximb9W/ZMEnDkDL/eAOnPCXsupwoj1YasLr+kjh3oTbEhOwWWqunJCk04YxGCz2rqggMqGnbR9OB/H46xSY8CLQuRsKjA4myhR3lHzkc/3FkPb1EQlnSMI4/9mQEhucw9pt6thzx/EqRjoH2FVsZQTZq8jftP/nE3EdPjpMqGFZATt2p+LR7sh0caWMBCL1ISpQbokyD3yLKK0TnRgaiQVVlbY9Mv098DjMJVShbOm/890F11mKpLRreC3UQUF88gwmnTWqTut5BVJ6fUlzULdCE1rkGSpNMjjcyY+Asyw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
+ by PH8PR12MB6938.namprd12.prod.outlook.com (2603:10b6:510:1bd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.11; Fri, 17 Oct
+ 2025 11:53:23 +0000
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9228.010; Fri, 17 Oct 2025
+ 11:53:23 +0000
+Date: Fri, 17 Oct 2025 08:53:20 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/9] PCI/P2PDMA: Separate the mmap() support from the
+ core logic
+Message-ID: <20251017115320.GF3901471@nvidia.com>
+References: <cover.1760368250.git.leon@kernel.org>
+ <1044f7aa09836d63de964d4eb6e646b3071c1fdb.1760368250.git.leon@kernel.org>
+ <aPHibioUFZV8Wnd1@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aPHibioUFZV8Wnd1@infradead.org>
+X-ClientProxiedBy: SA0PR11CA0108.namprd11.prod.outlook.com
+ (2603:10b6:806:d1::23) To MN2PR12MB3613.namprd12.prod.outlook.com
+ (2603:10b6:208:c1::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|PH8PR12MB6938:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1273d5a0-8c89-47a1-46d6-08de0d73c5c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DrD+CfmFVXOn0+YsJ79duhiCv4MyocnFvbdU9CV/QtEcNt4dBlCyqdS/RPpv?=
+ =?us-ascii?Q?vc+56mf3RRwie2JAXqLZBgT34zQHNkeIwqgKortSpd0MfrAd7g6a4RiSRuCH?=
+ =?us-ascii?Q?4SwF1PiQRS5CU1LEJb3suc0KydakxkMDLnjAvIOQf0Ucm31BkKHId1W/iMFI?=
+ =?us-ascii?Q?1bl/vSMWXEgi0VWsMocHMBB3yHeYzO7LkeRE8r3cRKrIbyK68vlYzfvIvbU2?=
+ =?us-ascii?Q?9fdaMsHtDwHGrA5h0BzkYqTlV3IiP/OkMwW4+lmm2R1QlFIgqowVhYwwe1fu?=
+ =?us-ascii?Q?rtY8nNflrCc/bbAEcEkfEXVXb7VMDvfvW/8jWb3dOmkZyTrkInsKjEGlX68i?=
+ =?us-ascii?Q?m1vI70rq4ml1plweisGkGeC1N8ZFM37vBt4N/sNG0+Kusddf/7mk4JY02CB2?=
+ =?us-ascii?Q?mkBfS7bwqu+YANMnZ070RI074ezr5pP3cTvdP195XqxGcajaki+TXBc7Trpf?=
+ =?us-ascii?Q?hRNbA9yxGt7kwzOuJcsACNJRFjOqRk9tpkuDF3+03xPEPEEQBItPFspjCdxJ?=
+ =?us-ascii?Q?nv5ud/oG3EZvUw6t26d9+nO59dff/+XZcO2eGIsUb2cacuj5CXrb4BxggP2j?=
+ =?us-ascii?Q?EyvoS9DfknW32Tph2Y0Q/P5nG6uYEnDQ3tfRypfYaeLjvObg0FYAc5yPZ/x/?=
+ =?us-ascii?Q?OBqW/sed1DleH4bNQ0a+ysb17YtdrlR4RGaZKEM3T+MiDUcTda3/dv8ijSVn?=
+ =?us-ascii?Q?++OmIcmKHqXVcsS4nd8K6xAU0YPBWeS/uVfST3pYb5YUTRMErgJr4V2W44XS?=
+ =?us-ascii?Q?yjHtDAy+lCpzuCbNLVk5e6RqeUTn6FviTMzZU5g/e3UgSP0B6UJnycwpyibB?=
+ =?us-ascii?Q?c9luokHDFJoWHiArMZT3GVnH9Wc5m08QQO5R4azgGTWDcsJfjZeqjRiKsdUd?=
+ =?us-ascii?Q?s4miRjw+uqLOhtqSpEo5tEF0HyxY8Jn8ZHrdBTEm+kfEBYLtajPm1HA7GYCi?=
+ =?us-ascii?Q?Mox2WCyS58qqCrXJwTpdIoHGwN4j/U1ie8jpR2tRH3LaCv10yI1D6nOGxMo4?=
+ =?us-ascii?Q?YLacXtTyR2z4GwVW1cQZCNuSKQBWn07HbDkdaEZfkv39FfuN/T0EOcxd2f01?=
+ =?us-ascii?Q?FdtUorDIy8BcW1eWCUtxHRWOBY++Tq12l4isZoEScZxPBiCtbYZFfH0qpAPl?=
+ =?us-ascii?Q?gHEwyUKgj03yDjumBupLkW01BjAeFUIr5yv8c2zU7/nZf7Mhw3iCszd3bq/H?=
+ =?us-ascii?Q?LJqW/7SIPqC2/QrzOQPLJ2Eox+W7a9k7zCZtuz3v/BUTBRzALiBiZ5rHwQxf?=
+ =?us-ascii?Q?HzlE68WQXXsKyDvUQaSlVLSaRPdG0Y9RzIao3fiY7tLtvJ8k94NCcUR6F0iq?=
+ =?us-ascii?Q?Vu3D075glgB733gU30pbhwHZCLXZj1Xjrf7VNb42GaMwILxP8KLcrU9+FV01?=
+ =?us-ascii?Q?2H+GBbPKAc93w1RZhRXjiS0IN7xNZDzwMNrOrOlVc2t8FgqHRK+Jjy9Qh9WW?=
+ =?us-ascii?Q?YC7m5zbuDyAw1Foi4Vicrpn/DOBM99BaTJlHOYSm9FEUXJXSdGOPbg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pwDyegh6YKnvSYenNn4AsR59Wj495AfmCLlFfHXvi7+HzISHrl/EMAfhwjcD?=
+ =?us-ascii?Q?VOSYFnplqBtXYM9ZJq4/65zfMvDfKBI10IbpWjwSNaZng3ioAaNZV9DxV70m?=
+ =?us-ascii?Q?et6yzsYCRhXkNgJklpPAr/MyU2aCyx3WJ2GXUTBT5gM84HCJL3/VMeL/9t3S?=
+ =?us-ascii?Q?IU/djpwYnholsmTtWMOpgx66OIu+pHj8nKiQDLPjFDY2QLxIGd0I//jWyvpf?=
+ =?us-ascii?Q?liMvDBumDrqtseaAG/fchczImzC3ddKrxTQYbkWULV88AHAxYcGj2fK4dGUo?=
+ =?us-ascii?Q?YL+i4c8b48Tubip1e+JFFYlPM0bKkBT5vVh+YhO0JFrf9MtSI/1VcZxJ7NBv?=
+ =?us-ascii?Q?+oOxAaYVOxXFZL8mYcR2DdrbC9q7qfb1wwDOKu/ou9fISL1slLQP7mFESqSD?=
+ =?us-ascii?Q?LeAwO7DZ/1yujhrXVeA991Euok1fEhp9CWGu9uiMt68thhelrG346lmFriRl?=
+ =?us-ascii?Q?E5rdYCk1XmnNzMnE6JFKD36lGWyD1atAXmQvoXmAcRIFB67FwNc7EiAnq8XD?=
+ =?us-ascii?Q?f+Nb7h4kzYxmVRLAj+UydW4G5O0E1dmOJ3kp7FA49RpZOSeVRbWzFdd9KuCb?=
+ =?us-ascii?Q?OKBcBJeVfkPCR8wQos/IyckLYQwNKNiyXvYa9Ss+azcPY9aAO3QBF3E8MJbW?=
+ =?us-ascii?Q?tkFpwkI53QGNOBs85rDVKAjQBuasUyXUnKTM5pCK6ti9CBMnRCedkMYruEQP?=
+ =?us-ascii?Q?cqQ51mOB/HgWlxjciopPMDeto3/kf6k11Z+nm8z+ZeMobb0gTLOlyYPEFamZ?=
+ =?us-ascii?Q?DaMpjaH8dL6Pkx1FL9o721nGdvDYJ/KQ+eLzLUlyZToc1dNaDRvKA1iUh+KG?=
+ =?us-ascii?Q?N2EXaU/VZ6bFu1RGXgMqPCIyql0kvIHON1iy1Pb0dJL8zxetzJzJNJ6IW2Ip?=
+ =?us-ascii?Q?mXEKgzM0dp7tGo98EUOdvuOC5Z6FotEjI3ghsJ0vxPYK/F/3LjYYYqhskycd?=
+ =?us-ascii?Q?1P/ffYCaFdGu5I1MDOThLH0CIXBhbRxX43FwlhmZkYytaf6H0gbp7n4ASED8?=
+ =?us-ascii?Q?rzDMBfvmJs68R1u4WU29KCN20fvOxG65Yl1rnTJ71g9Qt9TUdSz3TzHT6Ksq?=
+ =?us-ascii?Q?tKw2CkbMLmSSF0McCk4++f7pcYxiDm16KYu6Y0459q5DLwfu0NhKZKZfjYv6?=
+ =?us-ascii?Q?L0GSguxqI8h+h0kcU+bYQ6Iw8uFWPQ+FU8VH3sXJDI//JUSfE05mgtN2c/ZM?=
+ =?us-ascii?Q?o/ESIgCzeNTJm67tgH13udpor1vkpHpx4nNLlLIIAxUU9ixe8vagzb/l67VP?=
+ =?us-ascii?Q?Z+NUTC6KiNT6+Us6oo7Fc99qtmUzI2/aqsXgXUsA1SvJSmRhLraPZy+GUtM7?=
+ =?us-ascii?Q?HgFaR1XOOGEPS+Hko7RqxP5rVQzgtZ4XAaNseXJ3yUir1jaNaCpBcWgV4oxf?=
+ =?us-ascii?Q?+KJiWQLachiNp6OloDMs0Xcgir9LCns1mZYR6pYvbHTvdBhFm+4BlTNB0zUq?=
+ =?us-ascii?Q?Ll/X5kEyymuphogG+x8Ypli+YS602UtGwvpErLvby8GJjmK9uRxC0vjBRe24?=
+ =?us-ascii?Q?2facAf2eGFUEf0bFtmmgK4UntwepQI4h9vwhmS0Q7LJcH8LOtEZyUvgOGWRe?=
+ =?us-ascii?Q?ACavMyKdmaAmkBjzvqUl252r9z6xH1BVgjutKuTz?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1273d5a0-8c89-47a1-46d6-08de0d73c5c5
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 11:53:23.5695
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hhytHHPZ8320KQI8Fyy2p7tWDgsyyn9FG+N8swcrjr5Q+aWvKcn96SHnH0XWgK2y
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6938
 
-On Fri, 17 Oct 2025, Lukas Wunner wrote:
-
-> [cc += Ilpo]
+On Thu, Oct 16, 2025 at 11:30:06PM -0700, Christoph Hellwig wrote:
+> On Mon, Oct 13, 2025 at 06:26:03PM +0300, Leon Romanovsky wrote:
+> > The DMA API now has a new flow, and has gained phys_addr_t support, so
+> > it no longer needs struct pages to perform P2P mapping.
 > 
-> On Thu, Oct 16, 2025 at 03:53:35PM -0700, Brian Norris wrote:
-> > PCI devices are created via pci_scan_slot() and similar, and are
-> > promptly configured for runtime PM (pci_pm_init()). They are initially
-> > prevented from suspending by way of pm_runtime_forbid(); however, it's
-> > expected that user space may override this via sysfs [1].
+> That's news to me.  All the pci_p2pdma_map_state machinery is still
+> based on pgmaps and thus pages.
 
-Is this true as pm_runtime_forbid() also increases PM usage count?
+We had this discussion already three months ago:
 
-"void pm_runtime_forbid(struct device *dev);
+https://lore.kernel.org/all/20250729131502.GJ36037@nvidia.com/
 
-unset the power.runtime_auto flag for the device and increase its 
-usage counter (used by the /sys/devices/.../power/control interface to 
-effectively prevent the device from being power managed at run time)"
+These couple patches make the core pci_p2pdma_map_state machinery work
+on struct p2pdma_provider, and pgmap is just one way to get a
+p2pdma_provider *
 
-> > Now, sometime after initial scan, a PCI device receives its BAR
-> > configuration (pci_assign_unassigned_bus_resources(), etc.).
-> > 
-> > If a PCI device is allowed to suspend between pci_scan_slot() and
-> > pci_assign_unassigned_bus_resources(), then pci-driver.c will
-> > save/restore incorrect BAR configuration for the device, and the device
-> > may cease to function.
-> > 
-> > This behavior races with user space, since user space may enable runtime
-> > PM [1] as soon as it sees the device, which may be before BAR
-> > configuration.
-> > 
-> > Prevent suspending in this intermediate state by holding a runtime PM
-> > reference until the device is fully initialized and ready for probe().
->
-> Not sure if that is comprehensible by everybody.  The point is that
-> unbound devices are left in D0 but are nevertheless allowed to
-> (logically) runtime suspend.  And pci_pm_runtime_suspend() may call
-> pci_save_state() while config space isn't fully initialized yet,
-> or pci_pm_runtime_resume() may call pci_restore_state() (via
-> pci_pm_default_resume_early()) and overwrite initialized config space
-> with uninitialized data.
+The struct page paths through pgmap go page->pgmap->mem to get
+p2pdma_provider.
+
+The non-struct page paths just have a p2pdma_provider * without a
+pgmap. In this series VFIO uses
+
++	*provider = pcim_p2pdma_provider(pdev, bar);
+
+To get the provider for a specific BAR.
+
+> > Lifecycle management can be delegated to the user, DMABUF for instance
+> > has a suitable invalidation protocol that does not require struct page.
 > 
-> Have you actually seen this happen in practice?  Normally enumeration
-> happens during subsys_initcall time, when user space isn't running yet.
-> Hotplug may be an exception though.
+> How?
 
-Adding that pm_runtime_get_noresume() doesn't look useful given 
-pm_runtime_forbid() already increases PM usage count. If this problem is 
-actually seen in practice, there could a bug elsewhere where something 
-decrements usage count too early so this change "helps" by double 
-incrementing the usage count.
+I think I've answered this three times now - for DMABUF the DMABUF
+invalidation scheme is used to control the lifetime and no DMA mapping
+outlives the provider, and the provider doesn't outlive the driver.
 
-To find more information what's going on, one could try to trace events 
-for the PM usage count (though last time I looked not all paths that 
-change PM usage count were covered by the event and adding the 
-trace_event() calls into the header turned out too much magic for me to 
-figure out so I couldn't solve the problem).
+Hotplug works fine. VFIO gets the driver removal callback, it
+invalidates all the DMABUFs, refuses to re-validate them, destroys the
+P2P provider, and ends its driver. There is no lifetime issue.
 
-> Patch LGTM in principle, but adding Ilpo to cc who is refactoring PCI
-> resource allocation and may judge whether this can actually happen.
+Obviously you cannot use the new p2provider mechanism without some
+kind of protection against use after hot unplug, but it doesn't have
+to be struct page based.
 
-I can see there could be other failure modes besides just saving wrong 
-config if devices get suspended underneath the resource assignment 
-algorithm.
+For VFIO the invalidation scheme is linked to dma_buf_move_notify(),
+for instance the hotunplug case goes:
 
-Besides hotplug, also BAR resize does changes the resources and BARs.
-This case is not helped by this patch.
+static const struct vfio_device_ops vfio_pci_ops = {
+   .close_device	= vfio_pci_core_close_device,
 
-I also recently learned some DT platforms do the "actual" scan for the bus 
-later on Link Up event through irq which could perhaps occur late enough, 
-I dunno for sure.
+	vfio_pci_dma_buf_cleanup(vdev);
 
-> I think the code comments you're adding are a little verbose and a simple
-> /* acquired in pci_pm_init() */ in pci_bus_add_device() may be sufficient.
+		dma_buf_move_notify(priv->dmabuf);
 
-I'm also not entirely convinced these always pair or if the pci_dev may 
-get removed before pci_bus_add_device(), see e.g., enable_slot() in 
-hotplug/acpiphp_glue.c that does acpiphp_sanitize_bus() before 
-pci_bus_add_devices() (which could have other bugs too as is).
+And then if we follow that into an importer like RDMA:
 
-> Also, I think it is neither necessary nor useful to actually cc the e-mail
-> to stable@vger.kernel.org if you include a stable designation in the
-> patch.  I believe stable maintainers only pick up backports from that list,
-> not patches intended for upstream.
+static struct dma_buf_attach_ops mlx5_ib_dmabuf_attach_ops = {
+   .move_notify = mlx5_ib_dmabuf_invalidate_cb,
 
-Probably some tool will auto-insert the Cc: tags as receipients so it 
-might be non-trivial to get rid of it.
+	mlx5r_umr_update_mr_pas(mr, MLX5_IB_UPD_XLT_ZAP);
+	ib_umem_dmabuf_unmap_pages(umem_dmabuf);
+	
+	    dma_buf_unmap_attachment(umem_dmabuf->attach, umem_dmabuf->sgt,
+				 DMA_BIDIRECTIONAL);
+               vfio_pci_dma_buf_unmap()
 
--- 
- i.
+XLT_ZAP tells the HW to stop doing DMA and the unmap_pages -> 
+unmap_attachment -> vfio_pci_dma_buf_unmap()
+flow will tear down the DMA API mapping and remove it from the
+IOMMU. All of this happens before device_driver remove completes.
 
+There is no lifecycle issue here and we don't need pgmap to solve a
+livecycle problem or to help find the p2pdma_provider.
+
+Jason
 
