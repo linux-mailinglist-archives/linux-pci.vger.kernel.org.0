@@ -1,199 +1,180 @@
-Return-Path: <linux-pci+bounces-38483-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38484-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40132BE92E8
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 16:28:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68A7EBE95F9
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 16:58:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 819956E1ABC
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 14:24:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C88AB4258E3
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 14:56:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EAC73396F2;
-	Fri, 17 Oct 2025 14:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A09433711A;
+	Fri, 17 Oct 2025 14:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Svnw1jhg"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NN54Td8G"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C82633971C
-	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 14:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869AB337117;
+	Fri, 17 Oct 2025 14:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760711072; cv=none; b=Z3Uy2bfmipkT5sN41mmsazFxLQDD6+tkEPdAf8VTDgtBDk4NUj/MB7e2TF34zZ/u9yh4/tmWyxevfOV9fm+4to07IVfyNxklY+/lGrNF3zCQ7VXbsVoGIkzFYixfsFS7idCFFhyG36YqnSaoLfAF/9SCLZpyU3k6HOR6qsj6Ge0=
+	t=1760713007; cv=none; b=fGcgdOdn27gwnEay6ua6vPsCkauRYqKWBLc98GLnn/AqlPSaXJ/Ql0ne+JmQ2YATmKAaFipWIwZNkQdgaIZARtJeUwWkK2DayTAXhUb31qqBiSsOR8zpDR7rtKTnWkZ5WrK91g0N9/ViQp9eVUSEi2VzQTmNYIJh44nyouTWFzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760711072; c=relaxed/simple;
-	bh=706xBnB4fYLv2jjlmSiFVHGjWvbAX3OJViQ92vBMWWs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DsRNq9Cl80sGzd4u1kKkVOUZrE3dX5nFWGyrfKx8/JhpNbBMsaYLJogEdte3YzkfX3GcpAZMRAu6tOAK+6kzkGakl15E0XDbgpFDRGveGk3Ancfaw396v850L7TVymFm25lq/Nztt1NBaf/Ep0uVF1F4BsGSk6csWwYaVeL/2V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Svnw1jhg; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Received: from eig-obgw-5002b.ext.cloudfilter.net ([10.0.29.226])
-	by cmsmtp with ESMTPS
-	id 9k3wv6tjVeNqi9lNXv0vw7; Fri, 17 Oct 2025 14:24:24 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 9lNUv2Pb4HyqZ9lNUvyIew; Fri, 17 Oct 2025 14:24:20 +0000
-X-Authority-Analysis: v=2.4 cv=G4EcE8k5 c=1 sm=1 tr=0 ts=68f25197
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=EUspDBNiAAAA:8 a=3N43v1ldxO06oT20SBYA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Whjp/o8gAymLru/lmY44LsapSkUqY4dx4+MOKj6v9O4=; b=Svnw1jhgLJAK9WG4DToR+cIyEA
-	7HkdsRua88axA2oaNpeNKx9BEaY+qoekWcfNr8xNnGtRijTGlpgNQCQlL9EyMVm8la2IRME9BEtNe
-	vBQiyv4A9c4D36aLWtKkutdkzzWWHnMd9oJ+gSi8R7JaqaSHAvZ87Uzpi1vfSfnSVB8/puikTvUO1
-	u2/M1LxXRVXGMFbgGOo4CieNfPRE5rX+J3r2YW0EpR4PtS/xGJinYiV224n9iXN6nSPAGR22AXbnZ
-	AsQdgVhlDWw/gn1CS53IKkmshlIxL5JT27EDrQJnWbkSVynuSw7PMPSxKNTUP8EJFOgkt4w87245o
-	l0g5OTXg==;
-Received: from c-73-92-56-26.hsd1.ca.comcast.net ([73.92.56.26]:52300 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <re@w6rz.net>)
-	id 1v9lNU-00000002ibW-0AQJ;
-	Fri, 17 Oct 2025 08:24:20 -0600
-Message-ID: <ce932cec-e9e2-4322-a68c-cef5c01b3b16@w6rz.net>
-Date: Fri, 17 Oct 2025 07:24:18 -0700
+	s=arc-20240116; t=1760713007; c=relaxed/simple;
+	bh=mK9ZbonMbWsp633o910gNhAdgygON/96T9uAKGz/UkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZ5P374PxPtrSZWOqCDs2zd2tm3AgquNX3yA6gBljydT6Y/LGTY1A7jDWpD3cqzQ9movlgyIke2YDBa4RqHwxpIKSJKMoS1q9m5VjknLtNCmfsMj6cZShGH1/I+DdDsxkrB8/aOi+la42lIggrO2GNqed5K2/L8lFsBMMbVu8nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NN54Td8G; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=0iQ5uE1LF/9zrVlIEvBCEHh+yAwilCOCDNUE/+lsYd4=; b=NN54Td8GpX/6qu3eC9n9KLc0e7
+	UdzjNrtf2+m6LjnRy+XewIM6D+E+zI3KKlbsuLEsR9mRmnAP9ZF/9eIMYcar2BfC/SRUWV7KzS51C
+	IwvjJOfSkKdAgDjK9UBCnRwkQEc9n/7e1UqLyu8FcIXtYkiDx3JzN2mTU98vMqn8dDl0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1v9lsV-00BID6-6i; Fri, 17 Oct 2025 16:56:23 +0200
+Date: Fri, 17 Oct 2025 16:56:23 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Frank <Frank.Sae@motor-comm.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Chen-Yu Tsai <wens@csie.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Furong Xu <0x1207@gmail.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next 3/4] net: stmmac: Add glue driver for Motorcomm
+ YT6801 ethernet controller
+Message-ID: <81124574-48ab-4297-9a74-bba7df68b973@lunn.ch>
+References: <20251014164746.50696-2-ziyao@disroot.org>
+ <20251014164746.50696-5-ziyao@disroot.org>
+ <f1de6600-4de9-4914-95e6-8cdb3481e364@lunn.ch>
+ <aPJMsNKwBYyrr-W-@pie>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] PCI: dwc: Fix ECAM enablement when used with vendor
- drivers
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20251017-ecam_fix-v1-0-f6faa3d0edf3@oss.qualcomm.com>
- <20251017-ecam_fix-v1-1-f6faa3d0edf3@oss.qualcomm.com>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20251017-ecam_fix-v1-1-f6faa3d0edf3@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.92.56.26
-X-Source-L: No
-X-Exim-ID: 1v9lNU-00000002ibW-0AQJ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-92-56-26.hsd1.ca.comcast.net ([10.0.1.116]) [73.92.56.26]:52300
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 15
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFVC4WlkvoZrV8IUYRTT0Y2KMiOTYNALD5OdZX78/w1VDV3j+O1BSfa16qcCNMAMlmVPVm5ivr5B/8eJ9JAxOT+UVR9hqmyeV5vz8zXQVwO5ehBRWyjj
- j3OB5BrtsNxDTaOwsgz2QjQVlDo7hSjw3usK5N1N0pKaoAavT3gUoE/C/eTA5w+/IvoLRsjcGQ/kRwhIzOmJIlWpqMjYdGEyv1Y=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aPJMsNKwBYyrr-W-@pie>
 
-On 10/17/25 04:40, Krishna Chaitanya Chundru wrote:
-> When the vendor configuration space is 256MB aligned, the DesignWare
-> PCIe host driver enables ECAM access and sets the DBI base to the start
-> of the config space. This causes vendor drivers to incorrectly program
-> iATU regions, as they rely on the DBI address for internal accesses.
->
-> To fix this, avoid overwriting the DBI base when ECAM is enabled.
-> Instead, introduce a custom ECAM PCI ops implementation that accesses
-> the DBI region directly for bus 0 and uses ECAM for other buses.
->
-> Fixes: f6fd357f7afb ("PCI: dwc: Prepare the driver for enabling ECAM mechanism using iATU 'CFG Shift Feature'")
-> Reported-by: Ron Economos <re@w6rz.net>
-> Closes: https://lore.kernel.org/all/eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net/
-> Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->   drivers/pci/controller/dwc/pcie-designware-host.c | 28 +++++++++++++++++++----
->   1 file changed, 24 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 20c9333bcb1c4812e2fd96047a49944574df1e6f..e92513c5bda51bde3a7157033ddbd73afa370d78 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -23,6 +23,7 @@
->   #include "pcie-designware.h"
->   
->   static struct pci_ops dw_pcie_ops;
-> +static struct pci_ops dw_pcie_ecam_ops;
->   static struct pci_ops dw_child_pcie_ops;
->   
->   #define DW_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS		| \
-> @@ -471,9 +472,6 @@ static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *re
->   	if (IS_ERR(pp->cfg))
->   		return PTR_ERR(pp->cfg);
->   
-> -	pci->dbi_base = pp->cfg->win;
-> -	pci->dbi_phys_addr = res->start;
-> -
->   	return 0;
->   }
->   
-> @@ -529,7 +527,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
->   		if (ret)
->   			return ret;
->   
-> -		pp->bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
-> +		pp->bridge->ops = &dw_pcie_ecam_ops;
->   		pp->bridge->sysdata = pp->cfg;
->   		pp->cfg->priv = pp;
->   	} else {
-> @@ -842,12 +840,34 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
->   }
->   EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
->   
-> +static void __iomem *dw_pcie_ecam_conf_map_bus(struct pci_bus *bus, unsigned int devfn, int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct dw_pcie_rp *pp = cfg->priv;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	unsigned int busn = bus->number;
-> +
-> +	if (busn > 0)
-> +		return pci_ecam_map_bus(bus, devfn, where);
-> +
-> +	if (PCI_SLOT(devfn) > 0)
-> +		return NULL;
-> +
-> +	return pci->dbi_base + where;
-> +}
-> +
->   static struct pci_ops dw_pcie_ops = {
->   	.map_bus = dw_pcie_own_conf_map_bus,
->   	.read = pci_generic_config_read,
->   	.write = pci_generic_config_write,
->   };
->   
-> +static struct pci_ops dw_pcie_ecam_ops = {
-> +	.map_bus = dw_pcie_ecam_conf_map_bus,
-> +	.read = pci_generic_config_read,
-> +	.write = pci_generic_config_write,
-> +};
-> +
->   static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->   {
->   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->
-Works good on the SiFive FU740 controller.
+> > > +static void motorcomm_reset_phy(struct dwmac_motorcomm_priv *priv)
+> > > +{
+> > > +	u32 reg = readl(priv->base + EPHY_CTRL);
+> > > +
+> > > +	reg &= ~EPHY_RESET;
+> > > +	writel(reg, priv->base + EPHY_CTRL);
+> > > +
+> > > +	reg |= EPHY_RESET;
+> > > +	writel(reg, priv->base + EPHY_CTRL);
+> > > +}
+> > 
+> > How does this differ to the PHY doing its own reset via BMCR?
+> 
+> It's named as EPHY_RESET according to the vendor driver, but with my
+> testing, it seems to reset at least the internal MDIO bus as well: with
+> this reset asserted (which is the default state after power on or
+> resumption from D3hot), mdiobus_scan() considers each possible MDIO
+> address corresponds to a PHY, while no one could be connected
+> successfully.
+> 
+> > We need to be careful of lifetimes here. It would be better if the PHY
+> > controlled its own reset. We don't want phylib to configure the PHY
+> > and then the MAC driver reset it etc.
+> 
+> Though it's still unclear the exact effect of the bit on the PHY since
+> there's no public documentation, it's essential to deassert it in MAC
+> code before registering and scanning the MDIO bus, or we could even not
+> probe the PHY correctly.
+> 
+> For the motorcomm_reset_phy() performed in probe function, it happens
+> before the registration of MDIO bus, and the PHY isn't probed yet, thus
+> I think it should be okay.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Since it resets more than the PHY, it probably should have a different
+name, and maybe a comment describing what is actually resets.
 
+And maybe rather than asserting and then deasserting reset, maybe just
+deassert the reset? That makes it less dangerous in terms of
+lifetimes.
+
+> > > +static int motorcomm_resume(struct device *dev, void *bsp_priv)
+> > > +{
+> > > +	struct dwmac_motorcomm_priv *priv = bsp_priv;
+> > > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > > +	int ret;
+> > > +
+> > > +	pci_restore_state(pdev);
+> > > +	pci_set_power_state(pdev, PCI_D0);
+> > > +
+> > > +	ret = pcim_enable_device(pdev);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	pci_set_master(pdev);
+> > > +
+> > > +	motorcomm_reset_phy(priv);
+> > 
+> > Does the PHY support WoL? You probably should not be touching it if it
+> > can wake the system.
+> 
+> Yes, it supports WoL, though the functionality isn't implemented in this
+> series.
+>
+> As I mentioned before, it's necesasry to at least deassert EPHY_RESET
+> after resuming from D3hot state, or phy_check_link_status() will always
+> fail with -EBUSY for the PHY and it cannot be correctly resumed.
+
+When WoL is implemented, what state will the MAC and the PHY be in? Is
+it possible to put the MAC into a deeper suspend state than the PHY,
+since the MAC is probably not needed? The PHY obviously needs to keep
+working, so it cannot be put into a reset state. So resume should not
+need to take it out of reset. Also, i _think_ the phylib core will
+assume a PHY used for WoL is kept alive and configured, so it will not
+reconfigure it on resume.
+
+So it seems like this code will need some changes when WoL is
+implemented. So leave it as is for the moment.
+
+> > Is this required? If you look at other glue drivers which allocate
+> > such a structure, they set members in it:
+> > 
+> > dwmac-intel.c:	plat->mdio_bus_data->needs_reset = true;
+> > dwmac-loongson.c:		plat->mdio_bus_data->needs_reset = true;
+> > dwmac-tegra.c:	plat->mdio_bus_data->needs_reset = true;
+> > stmmac_pci.c:	plat->mdio_bus_data->needs_reset = true;
+> > stmmac_platform.c:		plat->mdio_bus_data->needs_reset = true;
+> > 
+> > You don't set anything.
+> 
+> Yes, it's required, since stmmac_mdio.c won't register a MDIO bus if
+> plat_stmmacenet_data.mdio_bus_data is NULL.
+
+Why? Maybe zoom out, look at the big picture for this driver, and
+figure out if that is the correct behaviour for stmmac_mdio to
+implement. Is it possible to synthesizer this IP without MDIO?
+
+I was also wondering about all the other parameters you set. Why have
+i not seen any other glue driver with similar code? What makes this
+glue driver different?
+
+	   Andrew
 
