@@ -1,118 +1,109 @@
-Return-Path: <linux-pci+bounces-38447-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38448-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23D37BE831E
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 12:59:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D2AFBE83D5
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 13:06:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 35533581871
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:56:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF2F574004A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 10:58:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368C931E11C;
-	Fri, 17 Oct 2025 10:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53164324B1F;
+	Fri, 17 Oct 2025 10:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTPJ8dU6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TTSL3Ywp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E4B31AF18;
-	Fri, 17 Oct 2025 10:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3463A329C7C;
+	Fri, 17 Oct 2025 10:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760698601; cv=none; b=RsmR4QgxPXCVcxNZnild+Ah8i0gIj/IcIVxCT5qUJlItlQF3yb1BEIVAZWQpkvAeQ+tWG3SK0p3fIJEZ0l4td6L8dXAapI+7GYYOcAa5u/d13CMpYjkkguw9dxdtjq+WsXy55Mvyc2djWJmteGRJ0p9VDq27m6wMfi+Rs559qN0=
+	t=1760698703; cv=none; b=Quwr2LRHjL4ZBm1hHLOAUPnAzKSA2UHwowD+cCK/ubKVdgHXVZK3JMSJZeKIpcDOtTXz9Lg5ctmE2JM6qSJz++GQi0bQ4jMExtQ7PxDZ7wTCCHfVcHjT7RTWXzRJtEGHEzmXWKaB1NqhlSSP/knELbVpKby4Gt4/J42rH/pugfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760698601; c=relaxed/simple;
-	bh=tyA/LHJlFit5K6PqK6XOjstXqHYpybUs0kAPdQMiMhA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=iCvZhqzv2EgtDKsBSVExnSDQ27yF4z8Q2wUP38QFDcGtftNt2qg+IC+liCrwHQwg5qt6n4mGdIiMBknbhqyrZy5giuJwZbwxE7ztyY38f6FuiMFR6uiTdj7S1XB+dohGxga9VbZXyQyCC/TrGI8iWSOCiN7X/5e8xQfvRB8Bo30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTPJ8dU6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041D3C4CEE7;
-	Fri, 17 Oct 2025 10:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760698600;
-	bh=tyA/LHJlFit5K6PqK6XOjstXqHYpybUs0kAPdQMiMhA=;
-	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
-	b=VTPJ8dU6WcbYUPcgmJO4eOEz9CbPEBuxfrH3aIvi9nacKFwUZPFn8/nvXF2yDNdSC
-	 Vl7KULH8FxwarRMsXDzCnOamNPN+D70vPR9ttRAwha2OFr4SGEIiDpYpg+85o+fT/l
-	 gXfUNo1lcdXq3zEqHMTmN4uATBQWI+Eo00ePLUBtuTtHoObxaEhqj8/4qsdA/AYazp
-	 ZzHDpdNLsYPQa7KSDhC7fYvU1WA0E/+AWNazWf3zCPJjNGIn24qu85AJy1M5ZARGzf
-	 D3v0sPgfD6OBqEn6R2y88qMgTcw2bxFCAFS9lUyviKm43m5MCX7VZF4aaDGqQe9bqK
-	 Gjf/wdlj9ECLg==
+	s=arc-20240116; t=1760698703; c=relaxed/simple;
+	bh=ZVZghmxi9QE/MfK2mqwWcibyEGOnNbsyScZcEJvlyDo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iBLBo3TKdgC+aQVlVjk44yOCNtq4qgS9c+rrVihqWwb4EY3ek4CdZReknPNt8441A23FS9I82Ztqu4+OwKjj5XaaLVtU3l2HhET0jGQixfNddh48AaKwZJo5hNr/iZmUBSAqxwFfj4Vr7+WLsM+d0VjHuqz1ZNSYSxx89yxglM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TTSL3Ywp; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760698702; x=1792234702;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZVZghmxi9QE/MfK2mqwWcibyEGOnNbsyScZcEJvlyDo=;
+  b=TTSL3YwpROcFUGTplcXfMl1ZEdnnZ3wrgPt1ajVko9AXDkwdgfJe33sK
+   knBeoIychhIQEmMmCSh62zcGR33QVawzOEVXOu4rcHJsDnnLsoc+bdYuU
+   FibERPPSDpnBisOPaZugHsa4UGrZgPtOFSFw30n8BV3eWft3VuTZoPMGc
+   bL2VtzhFadw51OxwzO6WClzngZJOkAiQDVHKE0hMRAfZqRH05ZJhVRqzE
+   NFymf28gRW8Ho62h2um2a8K7yorY6XsqwkRzP2Wc+X/wSVf8WexUnZS6K
+   Bi12+GHdy8I2qeJTU30f02/pvrvl5Q1+dN/De+nw0P4vfxlT00QmVhQDU
+   Q==;
+X-CSE-ConnectionGUID: y5bhJcDNS/u7U+eORze6bg==
+X-CSE-MsgGUID: JOymB36fSqmtmlEeWjGesg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="65521328"
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="65521328"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 03:58:21 -0700
+X-CSE-ConnectionGUID: J9lZwTOsQOiDlwVC1TVtrA==
+X-CSE-MsgGUID: S/pj3kJZQFS1SIpJz1EHCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="182651716"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.123])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 03:58:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 17 Oct 2025 13:58:13 +0300 (EEST)
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/24] MIPS: PCI: Use pci_enable_resources()
+In-Reply-To: <aPIfSvhqhc9wxzGi@alpha.franken.de>
+Message-ID: <21079c94-cd49-bcd7-6f5d-7d5cd9d61432@linux.intel.com>
+References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com> <20250829131113.36754-4-ilpo.jarvinen@linux.intel.com> <9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net> <aO1sWdliSd03a2WC@alpha.franken.de> <alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk>
+ <74ed2ce0-744a-264f-6042-df4bbec0f58e@linux.intel.com> <alpine.DEB.2.21.2510141232400.39634@angie.orcam.me.uk> <9f80ba5e-726b-ad68-b71f-ab23470bfa36@linux.intel.com> <aPIfSvhqhc9wxzGi@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Oct 2025 12:56:34 +0200
-Message-Id: <DDKJK7SXG83N.2YZYITMDGTHP@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
- <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
- <targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
- <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
-To: "Zhi Wang" <zhiw@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait
- and specialize Mmio<SIZE>
-References: <20251016210250.15932-1-zhiw@nvidia.com>
- <20251016210250.15932-2-zhiw@nvidia.com>
-In-Reply-To: <20251016210250.15932-2-zhiw@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1515501763-1760698693=:1052"
 
-On Thu Oct 16, 2025 at 11:02 PM CEST, Zhi Wang wrote:
-> diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core=
-/regs/macros.rs
-> index 8058e1696df9..c2a6547d58cd 100644
-> --- a/drivers/gpu/nova-core/regs/macros.rs
-> +++ b/drivers/gpu/nova-core/regs/macros.rs
-> @@ -609,7 +609,7 @@ impl $name {
->              /// Read the register from its address in `io`.
->              #[inline(always)]
->              pub(crate) fn read<const SIZE: usize, T>(io: &T) -> Self whe=
-re
-> -                T: ::core::ops::Deref<Target =3D ::kernel::io::Io<SIZE>>=
-,
-> +                T: ::core::ops::Deref<Target =3D ::kernel::io::Mmio<SIZE=
->>,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-This should be
+--8323328-1515501763-1760698693=:1052
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-	T: ::core::ops::Deref<Target =3D I>,
-	I: ::kernel::io::Io<SIZE>,
+On Fri, 17 Oct 2025, Thomas Bogendoerfer wrote:
 
-instead, otherwise register!() only works for MMIO, but it should work for =
-any
-I/O backend.
+> On Tue, Oct 14, 2025 at 03:41:42PM +0300, Ilpo J=E4rvinen wrote:
+> > [...]
+> > It was "good enough" only because the arch specific=20
+> > pcibios_enable_resources() was lacking the check for whether the resour=
+ce=20
+> > truly got assigned or not. The PIIX4 driver must worked just fine witho=
+ut=20
+> > those IO resources which is what most drivers do despite using=20
+> > pci(m)_enable_device() and not pci_enable_device_mem() (the latter=20
+> > doesn't even seem to come with m variant).
+>=20
+> will you send a v2 of the patch ?
 
-> +impl<const SIZE: usize> Io<SIZE> for Mmio<SIZE> {
-> +    /// Returns the base address of this mapping.
-> +    #[inline]
-> +    fn addr(&self) -> usize {
-> +        self.0.addr()
-> +    }
-> +
-> +    /// Returns the maximum size of this mapping.
-> +    #[inline]
-> +    fn maxsize(&self) -> usize {
-> +        self.0.maxsize()
-> +    }
-> +}
+Without the the if ()? I can do that, I was unsure how people wanted to=20
+progress with this.
 
-The I/O trait should contain the corresponding read/write accessors, otherw=
-ise
-we can't easily wire up the register!() macro with arbitrary I/O backends.
+--=20
+ i.
 
-I think more specific things, such as relaxed operations can remain MMIO
-specific, but all the {try_}{read,write}{8,16,32,64} accessors should be pa=
-rt of
-the I/O trait.
+--8323328-1515501763-1760698693=:1052--
 
