@@ -1,144 +1,182 @@
-Return-Path: <linux-pci+bounces-38423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA968BE670F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 07:36:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D0B7BE6724
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 07:40:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 51E21354A92
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 05:36:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00345622E2E
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Oct 2025 05:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2144519DF66;
-	Fri, 17 Oct 2025 05:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E37223DFF;
+	Fri, 17 Oct 2025 05:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="p4asQUKS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpP2Mu5B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A44334686
-	for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 05:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760679386; cv=pass; b=MDnrZcURIkCEfknDD7EC+uT+BvlxTXUWhfN0CBT/3ZYAzPiM+soZoAznjfi+tA85sos6gyl2i5VT9evDNlSLUbg56dW50DMXxS/OG1aTTsJeDr2pMDxwULWQ2KELQE1nhoHEirGtV9a+NEUzJHry+yRxRYGgVxuFGjniYg5PHkc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760679386; c=relaxed/simple;
-	bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=S9DeI8cdIHIOXV/2H3EfiVSpd0v68/b/0TmUQzV25yTN5h4wqqEUhzJcHeMmCFkMOLIN2ZBEcS2jXz/nTVRpY8ZR0C9Yo7LIwyW4Nc2mtaWNZ84jihtxBLLpR9iRFdz2EyT6wpPeHwXgBcKg3W3WZsVFkpZANLwdTipPRj1D+8E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=p4asQUKS; arc=pass smtp.client-ip=85.215.255.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1760679367; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=nhaG7J1bL5R3UVYFEqUMyRAXLvDeOGEBH0GwwStIKRzZmitjWzfSLves0X4yemOq87
-    YZqJk1mkqE5kxr6z0514MIlwXBikvZ54t/iv81jO0s8ucf8V834VDayX9IUBmk442x0Q
-    uxD6eo5d490H9ZOq2t4moBXoxmIc+HIeUBYSoS0JnkgXUY8/FcEINvlZ8WnGVm2JiblH
-    ReMZB/Og5GDX47qHHJ1XiAwOIP5rywE5jpkuV0ZVmnV0xOXS2POt2Ogr9q372HHrZh7J
-    nk2OzxYBin7HalI6pRKtJjwuOplT0CrMnk/1eZfwGUcJl8rnvpS4sra9yNf9jBpAE+0I
-    jivQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1760679367;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
-    b=VD8MpKzJG0ZPaoQ+QS/m+C3DkxPsf+s3VSREIUyke9kOnWmzHbkczysz7kWH2BpdYz
-    gQK5Y0/1QMfWE0/4UgomRUREobDn9yBNpKOk7YSfRb+sIfXW6yTykxfew0oKu80zZkxL
-    LzbjeHtwIYYcJ0Q9PRvsIKBdi2uYyD+vsOgiScPiEgKSeGzbfMJ9MTXDDKqjrYF92xJW
-    bCCJ4R/S/RJs3bO3Gc/qf1XDqqVDtuEJ2qo5AdoIRKRdrEWizM0OBTRqgFo213gFZNLv
-    +LhlSdbnYC+7yx02yshw02AHZqe+RsLNYUNNk/t0TJy5C3l2CmiqWjCcZcE7yBKMCLRm
-    YOsA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1760679367;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=V1ftbw/xifrEz+CnZmZ9tWc6u8KjSUSp7/wj1ZCuhEc=;
-    b=p4asQUKSpu5XH3qU789oDLxeuFzQF1kBnJlCSH87DZ2QghYoZVc3C8LR/rwDSn/QqS
-    pCppXdOL699TmmGd2Eo49mJHjMPzYJA/xvRb7ur81NfidkYYNagDA/A1OMyqDZ/eIho+
-    5mALXmcOKCC3vj0jnhP8PbqASVJa6ns27Oo5HOGf0lA45SetKR3Gzfv6dS2y0nqzZunq
-    UD90Yn6Vhi2S1aVvSei29r1Bu60wQH56NVOCmUgQ2/JbrKWv1VS3H52cF6ub2Hr4DeOy
-    xAMzhczzZKflh3T23PYK6udZN7mnUQiFvECvx9BMMgHfRbN0HDIDFVdnDvrzTPSeLXff
-    0oIQ==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7X5mysy6RDnaymUgyFB+wT2Hhua3CmtV3D8PNDg=="
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 53.4.2 AUTH)
-    with ESMTPSA id e2886619H5a6eqB
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Fri, 17 Oct 2025 07:36:06 +0200 (CEST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42FD334686;
+	Fri, 17 Oct 2025 05:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760679611; cv=none; b=TSFib6nVuopUos3fObkGv+so6wxj9Ro+jRM6gHu/efW2nvH5arAt9ybkskQvRk1yrqmwtKMM86JYBl2F5eD40z8nCgWq0z0fDWOlqclbKwjP3ZIf2C357Jq+BVhsyuDIr/nPhZcuEsBtPQJjdW3QNkUJnRMlNJ5d27s9zMXWbzU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760679611; c=relaxed/simple;
+	bh=QatSK3vs5GP8c8e8mP/n3Zh7cEbbQ3Zbp2cyGT+36CI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZ6tBGhiFWtdM1tZBil9+syboxUnuId4I7rr+jrOawfIyc+FProdN09n3QUImXu+kNjKCq7nIAEN+zYhjt6Dy6kvwc+96FaTMCFHGMSlZzkGlfR+wW4fol6Fe5Gg64e4KxXmZsqv34qBJiDn0YIFCih/JCh7ezAwF5cB0iuwsGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpP2Mu5B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD16DC4CEE7;
+	Fri, 17 Oct 2025 05:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760679611;
+	bh=QatSK3vs5GP8c8e8mP/n3Zh7cEbbQ3Zbp2cyGT+36CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JpP2Mu5B3aLEq2tithF2l4ekoWI7PQCF+VFS8MQGgHf4eBvOc+yXOj+6j3SF1JJGp
+	 pEWPTs1ub7jCDFoztpJusE1SvuXOPIOS3EDzNJKolsvP7ynn443SDWb6+4ru7KM3Ik
+	 4j+XYNWMaoFpTvU03u3ve6ByEq+Ss1Fm2ijL//zmgS/KjrczzYtQkY9DonD8sLZBjR
+	 wAsx5V7EeXmlXZROMgB5Yk8A5L2w8KdUAli094vKeMAxXL3wpcyYeEh7KW2U9dbVP1
+	 B/DzVQ/2C+MLErckpLFiu2Jq3uo28qrca2pT6QzZpBpkxmTwNhHCgEXgkTF1WRW82g
+	 apdepzvlnSlOA==
+Date: Fri, 17 Oct 2025 08:40:07 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20251017054007.GB6199@unreal>
+References: <cover.1760368250.git.leon@kernel.org>
+ <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
+ <20251016235332.GA265079@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Date: Fri, 17 Oct 2025 07:35:55 +0200
-Message-Id: <7110C357-F7D5-405D-895D-20DB5CBD3849@xenosoft.de>
-References: <6E949EB0-CC46-4B08-80BA-706FBD23D256@xenosoft.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- Lukas Wunner <lukas@wunner.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Herve Codina <herve.codina@bootlin.com>
-In-Reply-To: <6E949EB0-CC46-4B08-80BA-706FBD23D256@xenosoft.de>
-To: Manivannan Sadhasivam <mani@kernel.org>
-X-Mailer: iPhone Mail (23A355)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251016235332.GA265079@nvidia.com>
 
+On Thu, Oct 16, 2025 at 08:53:32PM -0300, Jason Gunthorpe wrote:
+> On Mon, Oct 13, 2025 at 06:26:11PM +0300, Leon Romanovsky wrote:
+> > +
+> > +static int vfio_pci_dma_buf_attach(struct dma_buf *dmabuf,
+> > +				   struct dma_buf_attachment *attachment)
+> > +{
+> > +	struct vfio_pci_dma_buf *priv = dmabuf->priv;
+> > +
+> > +	if (!attachment->peer2peer)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	if (priv->revoked)
+> > +		return -ENODEV;
+> > +
+> > +	switch (pci_p2pdma_map_type(priv->provider, attachment->dev)) {
+> > +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+> > +		break;
+> > +	case PCI_P2PDMA_MAP_BUS_ADDR:
+> > +		/*
+> > +		 * There is no need in IOVA at all for this flow.
+> > +		 * We rely on attachment->priv == NULL as a marker
+> > +		 * for this mode.
+> > +		 */
+> > +		return 0;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	attachment->priv = kzalloc(sizeof(struct dma_iova_state), GFP_KERNEL);
+> > +	if (!attachment->priv)
+> > +		return -ENOMEM;
+> > +
+> > +	dma_iova_try_alloc(attachment->dev, attachment->priv, 0, priv->size);
+> 
+> The lifetime of this isn't good..
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static void vfio_pci_dma_buf_detach(struct dma_buf *dmabuf,
+> > +				    struct dma_buf_attachment *attachment)
+> > +{
+> > +	kfree(attachment->priv);
+> > +}
+> 
+> If the caller fails to call map then it leaks the iova.
 
+I'm relying on dmabuf code and documentation:
 
-> On 16 October 2025 at 12:45 am, Christian Zigotzky <chzigotzky@xenosoft.de=
-> wrote :
->=20
-> =EF=BB=BF
->>> On 16 October 2025 at 09:53 am, Manivannan Sadhasivam <mani@kernel.org> w=
-rote:
->>>=20
->>> =EF=BB=BFOn Thu, Oct 16, 2025 at 09:36:29AM +0200, Christian Zigotzky wr=
-ote:
->>> Is it possible to create an option in the kernel config that enables or d=
-isables the power management for PCI and PCI Express?
->>> If yes, then I don=E2=80=99t need to revert the changes due to boot issu=
-es and less performance.
->>>=20
->>=20
->> Wouldn't the existing CONFIG_PCIEASPM_* Kconfig options not work for you?=
- They
->> can still override this patch.
->>=20
->> - Mani
->>=20
->> --
->> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=E0=
-=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=E0=AF=
-=8D
->=20
-> Hi Mani,
->=20
-> I will try it.
->=20
-> Thanks,
-> Christian
+   926 /**
+   927  * dma_buf_dynamic_attach - Add the device to dma_buf's attachments list
+...   
+   932  *
+   933  * Returns struct dma_buf_attachment pointer for this attachment. Attachments
+   934  * must be cleaned up by calling dma_buf_detach().
 
-Mani,
+Successful call to vfio_pci_dma_buf_attach() MUST be accompanied by call
+to vfio_pci_dma_buf_detach(), so as far as dmabuf implementation follows
+it, there is no leak.
 
-It works!
+> 
+> > +static struct sg_table *
+> > +vfio_pci_dma_buf_map(struct dma_buf_attachment *attachment,
+> > +		     enum dma_data_direction dir)
+> > +{
+> [..]
+> 
+> 
+> > +err_unmap_dma:
+> > +	if (!i || !state)
+> > +		; /* Do nothing */
+> > +	else if (dma_use_iova(state))
+> > +		dma_iova_destroy(attachment->dev, state, mapped_len, dir,
+> > +				 attrs);
+> 
+> If we hit this error path then it is freed..
+> 
+> > +static void vfio_pci_dma_buf_unmap(struct dma_buf_attachment *attachment,
+> > +				   struct sg_table *sgt,
+> > +				   enum dma_data_direction dir)
+> > +{
+> > +	struct vfio_pci_dma_buf *priv = attachment->dmabuf->priv;
+> > +	struct dma_iova_state *state = attachment->priv;
+> > +	unsigned long attrs = DMA_ATTR_MMIO;
+> > +	struct scatterlist *sgl;
+> > +	int i;
+> > +
+> > +	if (!state)
+> > +		; /* Do nothing */
+> > +	else if (dma_use_iova(state))
+> > +		dma_iova_destroy(attachment->dev, state, priv->size, dir,
+> > +				 attrs);
+> 
+> It is freed here too, but we can call map multiple times. Every time a
+> move_notify happens can trigger another call to map.
+> 
+> I think just call unlink in those two and put dma_iova_free in detach
 
-Thanks,
-Christian=
+Yes, it can work.
 
+Thanks
+
+> 
+> Jason
 
