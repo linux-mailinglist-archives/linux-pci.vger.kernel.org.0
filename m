@@ -1,177 +1,133 @@
-Return-Path: <linux-pci+bounces-38581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37E32BECEBA
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 13:41:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E94DBECFA3
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 14:35:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC8435E831F
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 11:41:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC9BE40325E
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 12:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536CC24DD00;
-	Sat, 18 Oct 2025 11:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 392D92868A6;
+	Sat, 18 Oct 2025 12:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="RD0oRDFL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp7t0Tsc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DBD1ADC7E;
-	Sat, 18 Oct 2025 11:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761631898F8
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 12:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760787668; cv=none; b=XsdlfnkuCIOheBB7gCiINglKN3epZtd070sV4c/jT17/tYpyo65/G7T7VFjqlgjxBXDwuhD7ZQyo6XYAFF88glHLzVQagLXkn+U0KbcAnm8QtkVjkBBb9u/JjWyzhhSpgCTRpIW+ulbgK7ReOeoFDENW6J0M62G8wxI3uB9D4nw=
+	t=1760790911; cv=none; b=n60TSVZ2fVBFJDW9twuQNUmo4sp5uY/M/jIf/0dU3GPEqRX5Qs681/6M5wZua3OEwt89Jyf3guObC9dGAbXL6h7CkqoSbtWqrRgPPbkVacwpR3Y+0lcJkLNTPivI1af47UtOuSqUW1dF/o/vy2mHsduAy8A22d01HBBuU4Cpsy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760787668; c=relaxed/simple;
-	bh=LiDlH8BrVQvz8trw9QM3KlEdCPM3TO/pVTGoFjDAUuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oaCAHnucwwkaUBgt47grWtKGAOiSBlHoDwzGwPyKQXsVBeQHX64OD5A5jCPRwvVfzBzPdi3QuRSbdKlZq9VaixcmpIQvXqX54t9TIET2rHnzoTRIyXIXau0Rd7o3dr6kRrvgVvir2V4H+TlN6hhI+0h3hfXY3Bl1Z8pBJdbYtYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=RD0oRDFL; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1760787647; x=1761392447; i=markus.elfring@web.de;
-	bh=rFRibB9Qt7JGgXkVO4Hx93pWdntl56FRy/NNmI1KJYY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=RD0oRDFLAVyJeAgEg2Z5lc/gyefM4fY0NPlf0v3UEyDMR0zJn1hktmDx+BuezQPh
-	 Ubuz3Y1rcdlGYrpGUVOTlt8KEbS2fmuH/A4Fk4DSJ/DYU5oPXegLpBFyoEoKtSwsY
-	 fQsBcyiQD9NQ/rXi4fTJK71hD+EKg8QiiRNhp+srUlZmWcImsiARpUmC7sqXVFi+Z
-	 vRCOqEpVevdMoOwMdGtp1p41FrP+edSgAmJbvFyX3T8J637bt7n17nBulMWwVhtoY
-	 CqK8MPkIGh+G/yilR1S5FOeD+7Ru33v1O07IvYQwFyytM0bZfREtqMRqTw6KEWbH6
-	 m2fKhOpUHdfcq//a1A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.233]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MT7aP-1um33g2kNr-00Kkq5; Sat, 18
- Oct 2025 13:40:47 +0200
-Message-ID: <b39e1a7d-1505-4f26-aa6c-c18a151be8ab@web.de>
-Date: Sat, 18 Oct 2025 13:40:45 +0200
+	s=arc-20240116; t=1760790911; c=relaxed/simple;
+	bh=zubtkUp2yt3JEr+8+Hl4KpwF7FbZB+OQgzpUVKT1W0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uNstSZMy3fc2o4TD2E0I0+7o0UmYkV3CGAKZ2/DX22hZgrzWvSdH83eeb0rNA2YsgF0ZVF3zRrPrZcgt0TlnJbFb7lGoOOKVOuuSUtGCWouaVT1dEQtAm/pxI+AcumoX0lXX+mHlBdWzVOuu7i3OxgTH3Bzr/H7fJmquFeq1oM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp7t0Tsc; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-29226bc4bafso12881105ad.0
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 05:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760790907; x=1761395707; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LWHTNJbyaS31DH5v4N3tc7dWchDlomjozkszGkRyjQQ=;
+        b=Wp7t0TscZzG3OeM19q2Mi4JyrsoEt5fbq7vdBt1XpmYo10h2bhXLVhBiBwgJpE2Eva
+         EweYphIWtZYXXUECcmOORgKnsbYcOr7H8VPj/vRQFs69brxNFRAr5fumf1SH2c9rbeNl
+         aJdWHDKkEire33uG2pAwfZf5ER1L44iR/3co1Pb3QOXn8/99VnvDNGMrVFsWXjY4gQvM
+         WjsXPscT2ZBhMsIKpMxMPE1Q26w0BJnDv3pPU8oJFw9oACdrMUx7ookFbRiE9rfBidiu
+         25RyrtRSjTnon13bG7aH9P2jQqZN2AaTRn0/ev+YZiWTvsYN5AH/+6n4ndMmtlm276Z+
+         tvvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760790907; x=1761395707;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LWHTNJbyaS31DH5v4N3tc7dWchDlomjozkszGkRyjQQ=;
+        b=ir/RyTG+5MIjvSruPeQNKI6cYdGhhdqOKiDY7ryVhV7jh7pU8CQ+OFB5GY+SZZM4bD
+         5NIpznbSmvm+hv0HnSV9O5tEAAkQY+6XoURxCKBqvjjkJ1eqLl2EQ0j7+GuMbOP4Q+n6
+         ISzjfluiCEXjrEkKEtSBJIKOyTfB2b2Qz8ydOIE7+myAr2ywwiEXZIMs2hHU4i+OsIYA
+         n1dASqHwZ+pd6HR5rUZXsasSbam8qOIDR+uM6TWOzeXFG9IEHz1nP7lsiJXzdF3nwlhH
+         X47crMZUalj7VHmmI5TpMSr7nVfn4xh0wRMobu6DwSpeoTkS+rWHJE80GE3iAPO4VP8Y
+         Ondg==
+X-Gm-Message-State: AOJu0YwZax1vVj3A/GlTfB1nMmcUi7cqw2r2/kgoaPSuiy0wKFr80TbS
+	eqHwJFMrGbREOj+YOwXQidEjWxhZv+ilvbH+/R0iQ82TxIy45Yu7M2+o
+X-Gm-Gg: ASbGncundiJ/vLw8az9rXCHu/WI9NaTcc/tIEG0xbWw7f9rIhBErUiWGiiv97ZeTr5n
+	iU6uhvXMpIC2zWrmzkFV1brcRs48TjnfgVKSAopECsa6OXeawJfS9JiETEwPJx43W0+G4bzyR8y
+	wA3472iK26LKvqguAsmXbbCAtZMKltNjYFZDDBB69jvQE609MVoRYORN3j8G/5N+UIsZpiG1HCP
+	9EaDAp6Ro3eFyORrEymPyqnDCKcftJ8pmju+ZYIRGqzo1KeV2SCKEfwdMD2cj7vR0u+RzVBGUUV
+	wvLLf8h7c2gzaO8xK2NG1eLGye1kzOilWKkK4K0bmXn3sBWLCa/jqDd/1q3ckp1Fg62Um9/qEaD
+	0lz8d11WaLhYFMzrRtJ5g61xuDohdwmw2FqNknd9FYdBuIsNjJvY/b4+gleFh5o6PbGqZmNhRlm
+	Kjv54XodxaYgfO
+X-Google-Smtp-Source: AGHT+IH0Isbj1cOmj9B6RLl67WZWl/f5gDxBFTYoh/GDd4p0sblT1uv6SbNNW/CZV0z6mtaOmb0YQA==
+X-Received: by 2002:a17:903:3d0d:b0:268:1034:ac8b with SMTP id d9443c01a7336-290d14e83cemr79158005ad.26.1760790906505;
+        Sat, 18 Oct 2025 05:35:06 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471d7e41sm25467105ad.57.2025.10.18.05.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Oct 2025 05:35:06 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 18 Oct 2025 05:35:04 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, "Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] MIPS: Malta: Use pcibios_align_resource() to
+ block io range
+Message-ID: <8cdedbc4-4073-44a5-8ebf-2c8aa9da702c@roeck-us.net>
+References: <20251017110903.1973-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [1/3] PCI: j721e: Propagate dev_err_probe return value
-To: Anand Moon <linux.amoon@gmail.com>, cocci@inria.fr,
- linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, LKML <linux-kernel@vger.kernel.org>,
- kernel-janitors@vger.kernel.org
-References: <20251014113234.44418-2-linux.amoon@gmail.com>
- <a2cefc72-de44-4a23-92d2-44b58c8c13fe@web.de>
- <CANAwSgTtaAtCxtF+DGS-Ay4O3_9JMwk-fJ27yoijhWWbF2URrg@mail.gmail.com>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <CANAwSgTtaAtCxtF+DGS-Ay4O3_9JMwk-fJ27yoijhWWbF2URrg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:brUrWs3f1wRlvb50xsoJvVd5EaCNX6rLdO+gQJ+rCOePPXiZu9s
- mQzVRW3tHeyUJ8GLTZOHmIVAiBP3LT1soBbrApPJbXg9C9aO26IjY0RdGZLuALcXxfvapQo
- iXhix1wfpm+VcEAHfiYBsG9TmZbmKQ7onDPKdgA3BY4PrF/w1QXQeEYujiTYQGPdYu2bqzJ
- zcqXxxhljGxr3oHGgCZ3A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BcQRwCXMQJQ=;3e10CcDiOryBiF/b1jz+Xz04tYX
- 6tMWnqurP8xXWjcpNcnR52/Bk3BOz5LZzaJw1drgMYRpiditN4eshGtilqLvQpw68Nc8/FPzZ
- rsTUkUpsXkKJr0RxBEejvmX6lUhyc3o8mfSPcBbp7U2jEHBJ2kHwRc34KEEqkt1/af4teVpI+
- I69YVuAbSO+i+kEgR2p2aNTJkQODqspgo1flHUiDxmXQzjDGniYnQokzrJ4/+zvchOWrKzs7c
- 48YDKAZnLj0K3qC3HcnEawKPQgQnKD9TjwCOP/S9bDWVhZvEXpw/Rhwktx2mZpcEhakMKcQYM
- gIYPJeR6QoE8+C3rPGOgU3l6Ar77WltSf2uTDc39pCe99cQO/J/rHV0iicAt++NlVHjj0q5m2
- T/sxg3qCJwIySOTzLGDYifJuqLd6qk2vr6/zh1IrBbBZIuko2bgDefluV4fwq1d+I7ki8xHBo
- 6OWBuVOD3vOI/YlRugJIXjeTwJFFUheX+MlKFW6TV3dDWwUYogHSppYR5+LEGnDbw39yGkpo0
- mPM86U5vPW9/cuSaj6gM0uWFpRBf8cj6IHfmv4OzRLuzjtvzy7YqbEshJTVf53jdvM/Ne98Ix
- LWSivOwCb2R7WA3IYztnuF4XH572tr9rpJzlkhEvekiHlZtm+uy9zKR1dIL4BoRM2IR7vSraL
- zzx5jpJ4OYjiM61Ova6cCxlmVk9xNy7Cu2yxiNvXIef5UdnaD0vFYbmZJ4+7wvSISwWdZEZFd
- OyrI36mtJT8KhOMZeMzTYn1sHlTdvK5lQ3tyE/WQ+qKr1gKT7gPJQ2nwvpqzGDkgz+jIcu+om
- GGtgqQxlKsZz96wzEKKFRw/7r1EmcDIEicMbNYUbortWIXxmJ571bfhAH1epQXgmgCtlrNymj
- PQTW05aiUQMCzKDdslGXZcK9lpo1rDRP9eNFrn9aL7QzK/mhjsqaWTT+zVdNdbPxu2mmTox8M
- cCnIza3lIVThGcaZoaX+XtPCByRWT5SzH64tJ3eB8qNzjeyeeL7PL3lE/RsZIcZ2bT4bXtIKM
- CEBXjjsCVJtQ9+KJQPPS1BFE0BbXD+JcHoFi6siN9fMeFL08qOyjL1scD84VKUzrBbeMZE42I
- whwJdecWWUvW+WN2UDsT92gkdoJhWa5ypBb5pCKN7WzuTUo3oqHfx1n7+d9aQjEIneR8DbCvk
- YLbgX6XQQmBn7hJtcvFP2jv3ju4FqtRqLRpnno6WEeTm04IApR8PuhPm9JM4Q7dth3vpRYSe9
- SlVt3fV71pwcPNmcc3WMWId9Ir8DKdT4K1pMDkWLBhm+5xHg6ZvZ2X4xzT8r21EoVfscDpflR
- ozqGN0/EdyxEr2btUAImnsiCd1v070+gOtuo/GWlRbOgNeuM7o6WfCQsURWTqga/aaJyYR/zv
- i4y7o6IUMD+EPHe7I0vCa2MMu9CalwA/5PJavZnT4LyDCKPa5/2bxY6ZlW2zWmOI4vDaQf12f
- klRDl1mqmirQgRxnglF3uXyLJYsdjyQY6H6RtmmddH4WT5wpH6E4OVzaIT+ZojssB91tqinNV
- KMIDdPQPdUqxFNf4XIYl7IkebzbaTqMDtLrTF2jxzqRm3rjQEiY5HpSS/v/d69yEg9dZSuWQZ
- PhhDoCMNT+LqNCH5HIzeTH1V7ci9zjBZ4QVCBgi/+6+BvHvUMfyb3KrSLTqIsDHwi829iGtMi
- n2LicQIKq6JqW1PmU/qno4QaxiVNC363NF6AQuAC06UHd2qNark+X7bCvCAO0JFO/5q8i4ajN
- mfwlxQad3ZtXL5ZYYfsCq3/5QnfPQuXmZYBDvqZHeVn3+L5ItvgN/r0rsXrUhlWE7ML2kjZkG
- MgE9RhPqL503VQtOOg+GcBqEcQ+Ho8lF9strWYE9qUtWbbSMoJoTTG80cLoiu0STKacjhmTGt
- uGWk/iTffaBGS46BLo6538ChzYre90sWNgHztq0v7PU57DgdQ8JHasikR1VZVj1V9by7/O1j4
- yiLNoiSLii3x6WcY1Kcz0262vqrkvODHEvdC/LcivX+QrKnK45jCEiMoCmcNmnmayeTzmciYW
- W8u2mORdbEa2PCgqvWDF8l2MBGRQTApyLq9kbF1WuSgo2V/NOkyIc7On//si9ia0K+S79nUvH
- sjbDbwqOjj0X5zvM7Qz4f+bVcFM19CVbDO7k14FKvnENqNzAzOXJi8pOBQa9SQLBcgoGMSVrn
- FnI+X10D/KOFk20gTYcqGigz8NXv3efI4d4wgJ4/yloCIdvxdxzNCAQvvFvo8mtd+eHBQQNIn
- F6JNUNPIdU65PQYryq4KCEPqVcOxicGDXS0AH9Xiqt2F86xpg/uFOwC6lhMSgiz4SpSldLSGi
- bsjdM8Di/tXtnw7YOHRl5LR2cYR4c67Z/AqRqnq6h+DElWFZYm+i5Pu2I3CvZwvSyrl6mkMAG
- MqxMoi+bQL6TRLEQZ4SkUBgsK4SbWGCLFnNWNZAGrozNc3Oip0u9/R6cFemROagjCLBpXxj/Z
- V5wO2FM7NP94myoDS61rqy/AYyf9tJUgKWMJA+rbcshnOY1H31+KUZLicbcm4CzWw9aIItFXN
- jwbTTY+n1anDLhK6j7MK3DsCitZfkI8y/SZ0fYzpVqQB8UB8XI86dWPdVRO8cySrlKKa2Pjac
- swK/j6iKrt+58gj/bRBUryjJ/W2iLuv4yD8tD6I6MyuYt/ndATDlvsgl5gvqR4n2Auu7GToHV
- 3MUcLbxq+b/Yr+fRFGAvqW/NMFo1rMRmBS3y6X+lLz6vBJfBnSHRAnFHYWJas9K9IcAZsfNnz
- Jdd9WMuuP2NlfmTPfihYOgRxE3fJ3s8mwe0fVJzVRF1TKJUXvTyNvS7fcTAdfrYTOQng3T6nt
- KtkMBitRaMi7u7TTXNyCnYYj9Brux3drUlmJs/pcgxOpHlJ8U96hdq3qUSmvEZOIS2ZYkQMI2
- wLOXzv17DwJeFeM5Bfz3YeG7BB9Azv0HuFcLQiKXOQad0k8KKrWju1nxDi2RSqie6zHfD/66z
- mqckhtvTXJYSNysDEXi2mtBqnR+M7N/PuuqEt9LiDnnW2KYO5lHQfxgPAf5iH9sDKeYJEgJtw
- XFF5o7CpICWKIm3hHvqMnN2TV9IG1sdHF3QqfPfcw29FLI7stuMgkdmer6nzONhejiWTbxwAu
- ccs/4c6QS1sWVqHLFG3DozhVAy0vmw+DK7ROZ1ot87qqKWmi0nfEWhlwrw1dPpgLRuGpiLT0a
- 0jS3BMQPPblgL5dwn//IlU+OylskSGUIVQaeQYN2ozzbde3Jb010xR56fzVHnfRGRojXX3dpa
- veRGArOm0RJDxKl2KUqpUqCUxg3LG79c5SL1czm13IRaUiyrDYKq+ctiMPxPIFDRRbJmpQtuk
- IUzKV/BF3sEwmmtfI3iy91AePUgB2C/ylFdog1Ya4gvmaXVKIlAVwUqUHV9NJmpCpDz9JR7nv
- YbK0KyV7x9XwZ6YKsebff7iZCtOwQrz9tFnEKerQ5ErBZqnwnP18KjD+jB1rBGCc/QRKdSk9T
- 92Z/CTW5iO8T/fDoGuV38bvz0ks3USjNOE+O/EaE0qnG6KlpUdtmOGywLtPQlU6XgLz4WjAxe
- mNbzG7yNQTRabIZoVED9WYyZH7h6KoJAAicfYFU8jEmyNmo4AgSYu3qJBur2xeSQIqWGYc/PL
- 4qkdzfetCLM0Ykag88NkqsrmI9ZLOtkwipdHM91tBC58uLg9CWNIGJuupaxzsqBXeD3bsKx1Y
- 5BWom2nxPLIBCc8tz9FDKDagQhRK27kBliQR+ew6Hk1L6qdHqlMQbuDo7b4xombhovvr50dBL
- CASzWfXwT1kqMxz13jcSkcwyZLkOib9e4OZqmUy5sRsYfHTkxa2sg8w9dqEZZGcUf32qiYeej
- 6Gki/iB+7RuRbs2NeQ/9TLv//B+hK2JlV2ZkWFH0B/56grOfHUKe7WhPfmpzXD2AcxdGMXOjP
- VShxoNLlByyqX/vYOLCIB0104TdWxBrRiD/Y7S9ehqrnlJvqaZJrLOKNu//UdInNSFuwII7L5
- qTrR4E+g1VDC0y21maZj1Rp75JrffWbRX0QHDUbv1XRpXSdzyGyUBaKExP5NFPQv7oW82l9j6
- RzngBlV+z4YY5fyWDq+HlqvhtFhm56ndoqPS2mAmZXFq2gh7EikzMV58+WcezZF9pAU5SrZlo
- lur66ugJGvvkP+31jvHeZYC4huE5co9OvGje65fw07hxTdoEZC+jvMvaTwbbwlnWyv7O74swV
- mkgkiaj/dIcBTiVZCWsc0bG7s+kY4iAqmB09+rSdcAF6NT1ZUJZdaj/bPbUxVbKObnD3lhRvL
- nqMkHK+jIHprvRqK39kOZgb+r5uz1XB20WacoTt1RwRcsZkavlPTiwJr7EdkK3LdvsTNX7TV+
- /sQ2MwKoA6dTglvY3MgGOjxwF3UpSVyyiFEH3G/NuQrr2ixBujGRnT5QWR+K2NkRj0Du/UyeY
- H14S4dLBZ53W0ss/jBHiU8j3iv0coM29p7r9V6caBKEYqKP+RNRUUonCTkhW6SAV0ErnCoebQ
- 6bwovByPX7XuV7t35Atsn7xhJks2GQpU9DojBygXiV6Gb4ZFnLpSQwn/jCqspUOU30JMngrXx
- hHhkQIG5zw5v5i8K2WZpUpQEYHfSKzyV5iwXHVZ1VU62tPJLbjpyJq+QtX+BkFg7jZ5hivN17
- 1ITOIlNLNHshWWreg0z82NkOS7/IaziG3iFUO4qS6DMUW+6g1ixkDxUcD8peRxsRedws8QVJU
- wTmhlpcIUth04hSqwQGuZiKE76APH9vFngzz31y+D0Xz5ORQ1jLXwgMrZLwbbHujo5BoPFtv7
- 5JTAXsrrePdxVPdOBm0sIKKTwAsqa4En/ely5Z7Tk4GrHpHi6UkGS0xaq0dNSXO9/mZgCFov8
- Qd3FDQIviliSmHSkmZDaNtboTpUHxr/fsFXPPVexCaae+gQ8ycjgOmnzXfFrUUWhVEJpThtEb
- O9qe+opQvFn5+se6Ra5rug+vdpDl/RoLcAunDazo7xv4+4hmOCMPYdAW5phhEEtCn3xQB+QAC
- 8X2DXg6pFFj0GJklbujzG5O5X+6OEOyVKBQ=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251017110903.1973-1-ilpo.jarvinen@linux.intel.com>
 
->> How do you think about to achieve such a source code variant also with the help of
->> the semantic patch language (Coccinelle software)?
-> I do not have any idea about this.
+On Fri, Oct 17, 2025 at 02:09:03PM +0300, Ilpo Järvinen wrote:
+> According to Maciej W. Rozycki <macro@orcam.me.uk>, the
+> mips_pcibios_init() for malta adjusts root bus IO resource start
+> address to prevent interfering with PIIX4 I/O cycle decoding. Adjusting
+> lower bound leaves PIIX4 IO resources outside of the root bus resource
+> and assign_fixed_resource_on_bus() does not link the resources into the
+> resource tree.
+> 
+> Prior to commit ae81aad5c2e1 ("MIPS: PCI: Use pci_enable_resources()")
+> the arch specific pcibios_enable_resources() did not check if the
+> resources were assigned which diverges from what PCI core checks,
+> effectively hiding the PIIX4 IO resources were not properly within the
+> resource tree. After starting to use pcibios_enable_resources() from
+> PCI core, enabling PIIX4 fails:
+> 
+> ata_piix 0000:00:0a.1: BAR 0 [io  0x01f0-0x01f7]: not claimed; can't enable device
+> ata_piix 0000:00:0a.1: probe with driver ata_piix failed with error -22
+> 
+> MIPS PCI code already has support for enforcing lower bounds using
+> PCIBIOS_MIN_IO in pcibios_align_resource() without altering the IO
+> window start address itself. Make malta PCI code too to use
+> PCIBIOS_MIN_IO.
+> 
+> Fixes: ae81aad5c2e1 ("MIPS: PCI: Use pci_enable_resources()")
+> Fixes: aa0980b80908 ("Fixes for system controllers for Atlas/Malta core cards.")
+> Link: https://lore.kernel.org/linux-pci/9085ab12-1559-4462-9b18-f03dcb9a4088@roeck-us.net/
+> Link: https://lore.kernel.org/linux-pci/alpine.DEB.2.21.2510132229120.39634@angie.orcam.me.uk/
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Suggested-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Can another source code search pattern (like the following) trigger further
-development considerations?
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-@display@
-expression dev, e, x;
-@@
- if (e)
- {
- ... when != e = x
-*   dev_err_probe(dev, e, ...);
- ...
- }
-
-
-Regards,
-Markus
+Guenter
 
