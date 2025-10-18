@@ -1,93 +1,121 @@
-Return-Path: <linux-pci+bounces-38560-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38561-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9681BEC945
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 09:25:40 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E42BBEC969
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 09:33:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 022E63AD99F
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 07:25:38 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BDCA4350016
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 07:33:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55335285C98;
-	Sat, 18 Oct 2025 07:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC84B25A33A;
+	Sat, 18 Oct 2025 07:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="qY7iUt1y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-79.smtpout.orange.fr [80.12.242.79])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ABD21638D;
-	Sat, 18 Oct 2025 07:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F4B223DE7;
+	Sat, 18 Oct 2025 07:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760772334; cv=none; b=Uhsl3ud44Wva4tyO+2VksR/sCndUQgpk+qiYwnl5eFsifpwMS9QVqV8ouOzvQePHZE47QWk4OjOdfFEtD5D0wYzyuHQTBqN86Nw0wGya5u+w+qNtGeUWD2p4svNQMMjHA87GN6KrdLCNdey9thM0s0Ga89O/WDORWYq3ofQGAqg=
+	t=1760772792; cv=none; b=tWCfqPDx1WeycIfu/YOrZoQHyYUI2rLJXVPuQ7XBoRcWity+0MpLHbH+5j6iukceAu0nLY4RAhJixgrCBx4HOtSWiuWGqN/5iCiuAhtlzqHs8kEyczJpPVNH2hokNRKI3FDW5M1MFH0YQcxJX4WIHiHMWPaXBE2bEKpSAnrX0FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760772334; c=relaxed/simple;
-	bh=XDiBP8Fuj3d5Tfbxqxx+Fleg1DmKibLl/hZGEiRDXCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ro1/JYI7kAfyrEc2856bamtvMRzfBN4GzskgLy7AI2U4WrAF8z1FxSSMlJOk/Z0u3cMOh1W9dZ2Es35E2h4C6d49aWOmih+1D8RvFmxq0xJETioohrr4X4mHMj4hK8pEdsZJ8lB0tKBmhoht7PBGwwBruK8IJtTxHKFOgOtfkcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id BCB6F200C2CC;
-	Sat, 18 Oct 2025 09:25:30 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A6D4B4A12; Sat, 18 Oct 2025 09:25:30 +0200 (CEST)
-Date: Sat, 18 Oct 2025 09:25:30 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Vipin Sharma <vipinsh@google.com>
-Cc: bhelgaas@google.com, alex.williamson@redhat.com,
-	pasha.tatashin@soleen.com, dmatlack@google.com, jgg@ziepe.ca,
-	graf@amazon.com, pratyush@kernel.org, gregkh@linuxfoundation.org,
-	chrisl@kernel.org, rppt@kernel.org, skhawaja@google.com,
-	parav@nvidia.com, saeedm@nvidia.com, kevin.tian@intel.com,
-	jrhilke@google.com, david@redhat.com, jgowans@amazon.com,
-	dwmw2@infradead.org, epetron@amazon.de, junaids@google.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 16/21] vfio/pci: Save and restore the PCI state of
- the VFIO device
-Message-ID: <aPNA6q-i2GWTl0-A@wunner.de>
-References: <20251018000713.677779-1-vipinsh@google.com>
- <20251018000713.677779-17-vipinsh@google.com>
+	s=arc-20240116; t=1760772792; c=relaxed/simple;
+	bh=gKRNo/lGcP3rxqn+Y75RwQzJwMAzEr8utTHHHv66UYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HYkeFyRebLIKDu6oB+7hUSp4Hl/3gY34JO3GhloOyN/2GI0CdHsEuhLwlQWLtJa2GYgP6C55WcmqudlanBa0OB71PP1Gy2Wx5VjkmHaTCpZWrJ4FvV658M01owRIACptF9G7W2aVRPLPqMUsvWasjAQ8GJYUL/40gvdixy1YGUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=qY7iUt1y; arc=none smtp.client-ip=80.12.242.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id A1PxvuM9HzfhZA1PyvV5ig; Sat, 18 Oct 2025 09:31:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1760772718;
+	bh=UxcBbJ6YMzfQMi2FRgFj82GAPoH1xTAModlkPdJlf40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=qY7iUt1y2CTvTLb3/2fqCoqn5G5uKAmuNYUAlc6kswFephljGgpFqAhTzm7QInsGH
+	 cVNWGk/45kwoeB38Ydnh8vU2KjBVaR5zJIiyCuSPFylTwv/mNaYiLlYvYQQvoOzY/h
+	 RVsTPCpX+LRntK3PbT2Xdjlccg5LUykxiUGHWXxnsDw+fPdFjwDg6dsaqDQOCJHAAE
+	 +JAzH4q7WLjGPFKhQk5t8Mzvnu2IO/bsRpyXwwm4JCjs2WtWK8wthVwcZQlNWip3o2
+	 VuUi7ramC1n7RbCRlGPjl3NUE6lbm4NXkIiCxwLEaBa9FbBSUrXO/OxATN1noC8J+d
+	 pGC4dludAo25g==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 18 Oct 2025 09:31:58 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <7b153f5f-fbec-4434-8d07-155b0f1161b3@wanadoo.fr>
+Date: Sat, 18 Oct 2025 09:31:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251018000713.677779-17-vipinsh@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] PCI/pwrctrl: Propagate dev_err_probe return value
+To: Anand Moon <linux.amoon@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "open list:PCI POWER CONTROL" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20251018070221.7872-1-linux.amoon@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Language: en-US, fr-FR
+In-Reply-To: <20251018070221.7872-1-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 17, 2025 at 05:07:08PM -0700, Vipin Sharma wrote:
-> Save and restore the PCI state of the VFIO device which in the normal
-> flow is recorded by VFIO when the device FD is opened for the first time
-> and then reapplied to PCI device when the last opened device FD is
-> closed.
+Le 18/10/2025 à 09:02, Anand Moon a écrit :
+> Ensure that the return value from dev_err_probe() is consistently assigned
+> back to return in all error paths within pci_pwrctrl_slot_probe()
+> function. This ensures the original error code are propagation for
+> debugging.
 > 
-> Introduce "_ser" version of the struct pci_saved_state{} and struct
-> pci_cap_saved_data{} to serialized saved PCI state for liveupdate. Store
-> PCI state in VFIO in a separate folio as the size is indeterministic at
-> build time to reserve space in struct vfio_pci_core_device_ser{}.
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>   drivers/pci/pwrctrl/slot.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+> index 3320494b62d89..36a6282fd222d 100644
+> --- a/drivers/pci/pwrctrl/slot.c
+> +++ b/drivers/pci/pwrctrl/slot.c
+> @@ -41,14 +41,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+>   	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
+>   					&slot->supplies);
+>   	if (ret < 0) {
+> -		dev_err_probe(dev, ret, "Failed to get slot regulators\n");
+> -		return ret;
+> +		return dev_err_probe(dev, ret, "Failed to get slot regulators\n");
+>   	}
 
-Unfortunately this commit message is of the type "summarize the code
-changes without explaining the reason for these changes".
+Extra {} are now unneeded.
 
-Comparing the pci_saved_state_ser and pci_cap_saved_data_ser structs
-which you're introducing here with the existing pci_saved_state and
-pci_cap_saved_data structs, the only difference seems to be that
-you're adding __packed to your new structs.  Is that all?  Is that
-the only reason why these structs need to be duplicated?  Maybe
-it would make more sense to add __packed to the existing structs,
-though the gain seems minimal.
+>   
+>   	slot->num_supplies = ret;
+>   	ret = regulator_bulk_enable(slot->num_supplies, slot->supplies);
+>   	if (ret < 0) {
+> -		dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
+> +		ret = dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
+>   		regulator_bulk_free(slot->num_supplies, slot->supplies);
+>   		return ret;
 
-Thanks,
+Doing:
+    		regulator_bulk_free(slot->num_supplies, slot->supplies);
+    		return dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
 
-Lukas
+Would be more consistent.
+
+CJ
+
+
+>   	}
+> 
+> base-commit: f406055cb18c6e299c4a783fc1effeb16be41803
+
 
