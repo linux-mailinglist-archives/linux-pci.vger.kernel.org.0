@@ -1,93 +1,86 @@
-Return-Path: <linux-pci+bounces-38555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 105E5BEC88A
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 08:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12A47BEC8ED
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 09:02:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 943AE18955CD
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 06:12:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 225E419A4304
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 07:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 891D427B50F;
-	Sat, 18 Oct 2025 06:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0099C277023;
+	Sat, 18 Oct 2025 07:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClfqFV8z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1gSFXXM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C91F27B330
-	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 06:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669111F5437
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 07:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760767897; cv=none; b=U4ltx6262YUBKSnGssXje8nCYF89/PxfmC/NUc+0QtQkYwWoZyAXk9q0wSrDfqIc5KqXSr9frTafLDwqOyGx1RWvwTNgoBOhKm1nH8VcpW/L0F7v2tRozO9Bu4XPrusixytfN17g/n4pb0n2oxG7Xj1w9Fd91ZWB+4RphO0WMyU=
+	t=1760770948; cv=none; b=AhMsi5s4SjHE3/OmcV68iqRkxJZfFB2WJt3vTW0/ZHZdYvOHimc226/D+D8NNv/OyohTRJY4fMMlDKDDHfPpvRmMrvq3sXLCPv6VvvrYBByHnINZK/I+AVNzYsDS9Rod7AVM57ZyEgHQFP2Tsv6ZzpMige2iXWgczUf+3AmlF6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760767897; c=relaxed/simple;
-	bh=lJRPbah2na4b9ckBfNOnXhL8Sw4U5wpVRHboCG375go=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C926vRmarq/A42MYrv6ymBvYoQUeai33yW557iTx1squMyX+KtnlGd+r5M4G3leOgwDKspy5tsReAgejcOq9ey1OlBvqp9M02Y7np0ukawJX/fuyqvvXwFZfdeF8DdC7U/tnbgbfrku/30rZMw2qfnV2oWrrvrb3iuXvXspLT+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ClfqFV8z; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1760770948; c=relaxed/simple;
+	bh=adsfjwfge00OgO5pYEgu3ctiyYWEhEAosl3dDNxgFxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dxeyXu5nYQnWVnNfIY6W1XCJfpUuxxVTe5163aMLyJkijOyIdt0aktL4OQcJ/ywS5qugOzNlV3/DFNY1wK3oXXmzWPJZpMYLLh52rwiWDeasiKl3JdbIQQVB9JT7pDVhr+wLNEGthkmhzG09y3hi+AMdm+g6PTnfann9dy/gC68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m1gSFXXM; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-26d0fbe238bso19880855ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 23:11:35 -0700 (PDT)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-339d53f4960so2730523a91.3
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 00:02:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760767895; x=1761372695; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760770947; x=1761375747; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HuK08AhMaCFjkCNPsmZTrH6+PYVk14sYYN9oj8qJbgU=;
-        b=ClfqFV8z8eoJu3beX2O/icmK/d4kJcsoaA25hvE3q4gl6KoYldKKDvwM+18xnLAj92
-         PpoEIcMx2Fv8lSjVRNHZ4MpeczFKHdaPLBodt35k8ubgxrtgcQTUsGL/QdcnmezzH1C8
-         JxGZYrRreKq29Qph6h8zjiWM/DjpUnQ3L0OEbYocmA4Ykp4Otu9DWxWW0isAdJPkOEnk
-         MrhL9Y9xdXyiNEhcXtNzAiSao/c0khCxueiPNQLxNlcvRGjkg2o5rDgwhFL134vUccwi
-         udPQ+SC62cbo6r7pyQIVSGGeb/3teiB8FGCMCZOWbyeGNZ/YMCqgK1Bafs783G6N3th0
-         3X3w==
+        bh=/LZqO2zxUNbyHA1CZzbuw1ZMVz75gsE69oTnbFGskfI=;
+        b=m1gSFXXMa2ZO+qmbPYGSN+XNKoWO7WR8S6b16NbWrMrXy8hjb+Aw9uI02Z/y5EhZfd
+         HU14q4ElySq/N2YkpZgvKBQPO1tAcXHNgocv84BJO6nN5Nlh22fIoHielhiHmOXQCCOY
+         y5RwX/L9C7kMp8+kJY+etxvbcEQ9re4zKs4Hgyx7l1HtT6gvxewy1TsZluwzE0Nl+8SJ
+         vBsRNzYDkQ+ZsmdP8d6k7v0G0ctA4Gt4NxrpHvjIz8xuMI70XWceQHjy1Kk+vcUrn3cS
+         zQOEcrk8k+pA+zEhi8zgXKO9DraBgrrwVAmZv0HRIFHDnRf08/4BtNbtFhI2cWWc36wo
+         oFBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760767895; x=1761372695;
+        d=1e100.net; s=20230601; t=1760770947; x=1761375747;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HuK08AhMaCFjkCNPsmZTrH6+PYVk14sYYN9oj8qJbgU=;
-        b=GSfI7ad3MJRP5/6Raie4lttGAZKXdNLBxaRL/ZKbbwRWfXPo5hu6Qs3mDN32MapqMr
-         JVekWeVihk9YPhv9MNBYU+LAYg3TTNlZGoKkF7mYLZcC2xxMGpllTUiwO9D1PEMMh0BC
-         Q4OU4a9RcLFiy7X5Y7nZVIf2kwtWCwpY2eFEQ4+SkvlFgKWNPOA8rPnWwvsrxvEwD0qr
-         nDTarKyqjkrBl1G12+qhcWvOx9am8HtOhGUG0H3aNG8WsPTs1DdJCFGixyG8elDiaFfu
-         5AiKTlN1nxKwNwdnASDVTPFWCnXZ80dZbNxwGgDDVwEWm5hR5+Ckj+RxJFziTQKV6Lhj
-         d5Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsLR5tc00Z80Un1+DgV2zot6cl8nZozqvgkZ/T7BnUDJ1qzDVJMniiBwEOX2ftDzAtNq0U8fpplvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAbHOSfGQDM8FY6ny7Y8ON2kZSi+fm8KC3X4l8Wwe9EJ25fKZV
-	vbplvKn7pH6KQbEqMTOmt5owRas3lluALW+ncqynQOZ0/Z+L4D6sZLeZ5u/8zQ==
-X-Gm-Gg: ASbGncth83aHAIbMDnrF+BBOYHeeTUTieM/bfjvg1/DjJrSRz+zAAHD4cvQk1/keVmO
-	eoBbQzlQGXxGe4bRArNe0ZUeo4CMR1i/z9jiwkz/siJAgdSlNd+3rxhikDpJsA/wbUO/oJ7heVd
-	WXl9Ve9Ok+BH5WkweUwMWD8gTyzv5Z/pTC3jVsKaxjWG1JOX6A+hhgKJBwq/ktR9E7h8BP2bc1h
-	NxXGjz6mPuf/nnfvROLsEhgAmEgdtbZSaZ400VoimudrdDrDvk9FVlGM7X6kJJpUsBaWt6K245F
-	9li1ay7PHg2uWqZVIAedKBC+UmgF5shK+IXvvVPA2X8LW2nFvwStDbY3sPwPb3b8eZSV4/6ra74
-	hHr/q0fRQjr7M3F7wLv63Q0hxLRoSn1SX3Unitiyga7X0LwmbIsl8KlBujTong1lS51dl4VJmEn
-	mSEI3PhKxo
-X-Google-Smtp-Source: AGHT+IFD5KKQflxUKAzZp0jVPKQQRA0FESiph3hb/TkKSVtjx3w5Itu754OOQKM0Jsx0lX1D6seJ6w==
-X-Received: by 2002:a17:903:1a4c:b0:24e:81d2:cfda with SMTP id d9443c01a7336-290c99a969emr82602655ad.0.1760767895200;
-        Fri, 17 Oct 2025 23:11:35 -0700 (PDT)
+        bh=/LZqO2zxUNbyHA1CZzbuw1ZMVz75gsE69oTnbFGskfI=;
+        b=gF9hsVz3sA9MVAUvdanukF7tSLt5bDmnUZqKzI0QcPMFICDNIgMrxHyUaLCTfOrMEu
+         sNCINhNLtd0b+AdZk5Lp4fgTgqxq6ps7JCgZaJbfUNkywaBTAcAQINEkfebz+6ir6Wgt
+         qzWZ+5L+XdMyTTU0YrvewppWAtRpTPcyCQs+bKO/jXXnd+kOKZVnsdRbNob6uFFratTc
+         uVHwMzcT/7jbd2YnYaeXQE+VWmHGxAymlOIgpJntFPaqVvs9T1D6MfxDPy2rLM7QCEbv
+         QbxDS/UZZegkVyEvkHalAe/actywfucSAFuKVbaTranN+7hgjpqg9Sp2sR5QcgrSsWqZ
+         e27A==
+X-Forwarded-Encrypted: i=1; AJvYcCVSnwSL8p5b3TZiLWTpK7UFnHNxsy51PKYC2D1cIZQhYFdRSBlYXO010EVlqWw2Jy9hm09Ktyq+lFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrmSyhxVZJC+AVvwUFtMMH+MYdItmsCEugFLXo8rPgUhlpBy3s
+	G6sNJsS+oXO4r7OhINGrddJIoV2tdxDZkgciaXwVsm6/BGNf/twQFp8h
+X-Gm-Gg: ASbGnctdBP9HeUuB54oCcwf61jDUNTlETeFOB5STmmYIZwuUva90e4gflBFc0ScuYs0
+	x3rWK0qFZ5+XIjP79Y644ghslFueVC0Qt0M2L4ZzS+YEp+UQWzH5T3KKnlWoaEGvERnr2mDxMDD
+	+aMe2sgx6lilnccAXLCk7JipS9+r7GsFugxZKa6Bo7nit55cz1BJ93di5/lY3yzmIKvN5yt9XJY
+	EGFSPXCPxfNXUCE5Nk4OeNVOaWNBBo+r9SXsf2j5NmV694ch8Tq8SyoFnrfJff98Zk8yEc2FUcC
+	ohccn3aNy0BsgQIktXBSffoB6gVi9G4WBzDIbg/JMPXkXVET+lFXbM4qKJVaauRTJHCx9YuBfUO
+	0ze5PH+wcDhmpWQ0ACHPytlX6fnLWKRvLj5OE4E8LuAJy+FeRRsfbc2y3owldY0OcVk/gZ073iQ
+	==
+X-Google-Smtp-Source: AGHT+IFwixJTBiwvERMXNptxWD/m5Ky/B2d3/2ezqQWItjp9Qrm8XCx+MEnhwBI6yvzKsYHMdLBI3Q==
+X-Received: by 2002:a17:90b:1d09:b0:32d:fcd8:1a9 with SMTP id 98e67ed59e1d1-33bcf9184fbmr7248569a91.32.1760770946587;
+        Sat, 18 Oct 2025 00:02:26 -0700 (PDT)
 Received: from rockpi-5b ([45.112.0.108])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2924721936fsm14982735ad.114.2025.10.17.23.11.31
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33bcfc12f82sm2186633a91.12.2025.10.18.00.02.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Oct 2025 23:11:34 -0700 (PDT)
+        Sat, 18 Oct 2025 00:02:25 -0700 (PDT)
 From: Anand Moon <linux.amoon@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-pci@vger.kernel.org (open list:PCIE DRIVER FOR ROCKCHIP),
-	linux-rockchip@lists.infradead.org (open list:PCIE DRIVER FOR ROCKCHIP),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
+	linux-pci@vger.kernel.org (open list:PCI POWER CONTROL),
 	linux-kernel@vger.kernel.org (open list)
 Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1] PCI: rockchip: Propagate dev_err_probe return value
-Date: Sat, 18 Oct 2025 11:41:26 +0530
-Message-ID: <20251018061127.7352-1-linux.amoon@gmail.com>
+Subject: [PATCH v1] PCI/pwrctrl: Propagate dev_err_probe return value
+Date: Sat, 18 Oct 2025 12:32:18 +0530
+Message-ID: <20251018070221.7872-1-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -98,28 +91,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Ensure that the return value from dev_err_probe() is consistently assigned
-back to return in all error paths within rockchip_pcie_init_port()
+back to return in all error paths within pci_pwrctrl_slot_probe()
 function. This ensures the original error code are propagation for
 debugging.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/pci/controller/pcie-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pwrctrl/slot.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 0f88da3788054..124ab7b9f3404 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -134,7 +134,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	err = reset_control_bulk_assert(ROCKCHIP_NUM_CORE_RSTS,
- 					rockchip->core_rsts);
- 	if (err) {
--		dev_err_probe(dev, err, "Couldn't assert Core resets\n");
-+		err = dev_err_probe(dev, err, "Couldn't assert Core resets\n");
- 		goto err_exit_phy;
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 3320494b62d89..36a6282fd222d 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -41,14 +41,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
+ 					&slot->supplies);
+ 	if (ret < 0) {
+-		dev_err_probe(dev, ret, "Failed to get slot regulators\n");
+-		return ret;
++		return dev_err_probe(dev, ret, "Failed to get slot regulators\n");
  	}
  
+ 	slot->num_supplies = ret;
+ 	ret = regulator_bulk_enable(slot->num_supplies, slot->supplies);
+ 	if (ret < 0) {
+-		dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
++		ret = dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
+ 		regulator_bulk_free(slot->num_supplies, slot->supplies);
+ 		return ret;
+ 	}
 
 base-commit: f406055cb18c6e299c4a783fc1effeb16be41803
 -- 
