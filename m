@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-38589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFC13BED450
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 19:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF264BED471
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 19:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5EBC580169
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 17:02:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 927963B9C04
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 17:09:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AABDC25485F;
-	Sat, 18 Oct 2025 17:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45098258CE7;
+	Sat, 18 Oct 2025 17:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGtkPBlN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s2W1IKbe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A5723C506
-	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 17:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943624886E
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 17:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760806964; cv=none; b=f69Jy/s6DaTuty9vBZKrTZoqXky56z2FYzLZd2tMlG+rz1+TrxwdhdzZSiwnkBkOMpeLclVCm/uAvo4MsCcYkbfejHupvKNAT/+0/Xt+1/3YQqRuaTnhpNTK96C7kspzA1GKNfbM0a0A7mK6g7n2byqo0DmapMJc3aRdKkbvFZI=
+	t=1760807392; cv=none; b=C94LjfPUKl+lzdO5wSP71utR2Z3fPO5v2U9oL+JOLnjtQ6EvtEmseo8AgX9/0urvFuj1wmqs0VQ3kshWnqQfM++GNLRVahi/hx6SZDeNBlwvk/Fr806Pv+CsH744NyM4/2bNiA/0Z9rCOViiMbygsdj7C5s/F8SndpiwHzT1Kr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760806964; c=relaxed/simple;
-	bh=K56Is2wx7UmVl17dRBrxY8Gx8J2Mj6XdngEuoaXN7is=;
+	s=arc-20240116; t=1760807392; c=relaxed/simple;
+	bh=odtCe9zBLcd2KigvnEagfj6Hjlz+S098qgy/zAjyk5g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D3UWJ9MOq5KtfZl/OlUShuVUW9I779RZOSY3+PvRMZ5YpblWxQFXDK8HZ8M85HPynkczuLqPK8FC5ehjhiD67hy+7mY0me7//egJpFV4BzuyVTmhiOluUBTxpz2w+ZIsU0E1N25HSujFagMpNteO2gyPOKtTsNEmxCqBfae4sKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rGtkPBlN; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=s4ErysFyxbiXpoGhrKq2D35vOObI5hhsWyC03ly7PWygNJBU9+tKMmudZidAHTc1JZ7PTOeo7xGt4bUGTR+HrR/RJOo06AQejGtwSVd4kC4bZVPbk1QFBjCqF5SE2ticAPt4O4KTQgEjPEwvT9XQWn9C2QPHwy9L/8fTHNAR79g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s2W1IKbe; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-470fd49f185so23618345e9.2
-        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 10:02:41 -0700 (PDT)
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-46fa88b5760so11248885e9.3
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 10:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760806960; x=1761411760; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1760807387; x=1761412187; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QcEJMCPQNzNn4Sg/+enW3pY+1OtQDQh0FQ7gWamWR/8=;
-        b=rGtkPBlN65O/kO3nzZtauLZkBypZOGJZIqDcUrEkhvS8CQRrxy/5q3tnCqekG19lHT
-         WqTNFbv0ABQXBB6nylY850gDZN6gpr39hgg1dSb2xaEzWABV7fk4WOr6uKcS9LZMHtEF
-         R9+nbcXyrG24VEY02vb4opXaHorFhxu0+pOYKO8aT5nXjEWzeDmN8S+8PiZDazX4CK6Z
-         +eroFQ2h/4AHTYMJoAWfIrTpL3Uo/wc/DngP8G9iBSU1uRaCB+nQC9n3bXho0W8wOSqs
-         dU/JIJY/7e6qDGroeSwe8MwYRcv2FXCQX7fQkb/MfAlE/bpSjGa0lKOeNrTmYoG/A7k9
-         4aoA==
+        bh=8gbgmXbo5t+1RIxOlN8V1tPuxrDnGp84UG4kpKP+4AI=;
+        b=s2W1IKbeLEuX2kkxo9AybDWEDEm5rqNnkDaV/DCZDcr0M6r+aOVdhus7bB83epvYuf
+         CfQos9YRn9xfGKMVJ3dtLfPW/AyRT3U/NAkz+FEHIwuEgELPVWAAqLoHTxd6i0Ay+Frg
+         64BU/nqpOZAiTu4YijG6Wt3rsAnk5/+v55pEJ+icNmkTX6g2MHda3cZmgfXYt+0wQt5s
+         JMMWH7elqV35qJZZmILPEgos39P2n/nEHhzD+SDeEwR7m0dE/0522ChttpOlSoXdgslt
+         45Uj42+Eto2H85xG5oSev9Es3P4neIyc/0LilICNFNdkpU3y+ZFQ0moED2mm8mqZn4v2
+         Tnxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760806960; x=1761411760;
+        d=1e100.net; s=20230601; t=1760807387; x=1761412187;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QcEJMCPQNzNn4Sg/+enW3pY+1OtQDQh0FQ7gWamWR/8=;
-        b=GQg3m2zgj2S0sPv/b6o34Efh132vpbBPj60tJWvhmlooXqve2wO++ioBKZRHbAJVt4
-         6M1X3H7U7EZPBRAPqjMJpnLV7G2PJ/j2NbayDGZefBHh98z/sRNZv8qdo7eAPZIk9afh
-         dKuO+TC1ur6XMFehtnddRqKD7k90rIdQexFNWMXaiQKnnmylAJRbyMq6PGk8Ob3BRNZA
-         hgwRxVlEl6hB5lbEpXWcDrxeT52pyc3SyDATHG2ZFEtJUKeVvrTekb0wTzOLu9GT5fpi
-         ErV/fd9a6UAys8fQ0BxJF8RbJoSSKoof7I8l/WMJkONa2+zlWRfZGu7J3GI6MEp0pBRT
-         JyaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmCnJ1/7t5MFEpO8xPv+urspkqKeHvrHNNFwUtdQLRetiqrwExpgFvRFMWSRbxnEWQAqHYJCyoh/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW6VCIpeSVl1fhSfmclgpEm9lLqMGABzRWGOeUF6wqi17/yySW
-	JxW3ZYm8EMZi8p9jhUXjaP7W+QxkS2R2yR/gW6CvnN3nTrlwIi3GAB4NmEMVCE83XA+G0XtkfRa
-	YYmpr0lTXXgCQ3AvVcg==
-X-Google-Smtp-Source: AGHT+IG+XONBGTsyrZA2w5nXoym2WOeMmXEjzuALKqECWR/nae42PSy1vCNDSBfzkw7eA04iBiPKoZnTCFnDy3g=
-X-Received: from wmwo28.prod.google.com ([2002:a05:600d:439c:b0:46e:6605:3ac2])
+        bh=8gbgmXbo5t+1RIxOlN8V1tPuxrDnGp84UG4kpKP+4AI=;
+        b=rYRS8+W+TfyZ3pTzxBvur9z+AhAmnGd2Bkva1UhqLvV867rljMRW+aTnvePVZ7Vtbg
+         7BZ8UwUZEZr6zkWq1pkMNvb8xOQ2ieutwgsL20T7MchyQNJzuIXzUhKTQ/3nu2Yhp60e
+         iTeYSUP0u9RPVP/MCRmmEMocp5/Ey5iXezg//0jb8vwQWJO8/YNwR2dbwJJb3mdvTRHO
+         LTcHlQzYTU+ift7+W59GFtcTR6BjsA7Xthi5h1ZCGLN9IZ3zVKOZE6OzkFjEybfKDhy5
+         tzqdEmQhb7XZ8YlzuRjX+rHjJPkf82QTEmsX2HbAMWaYArG5cyutCtHdvBI0XqadcJmM
+         /15w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBcEhV3fINpYIiub+/KKGfMWlBqBcwFZOhaTA/hQowglJm2NQEFfk9NZ3PCxHGl5cM63+01ByuCQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/04HBYr95su2MPkpP7HuhUSRSFy+EM6/yL6cihZfOQlmlGnKL
+	wnPGVpieALchBWNj6Swgw7j5w+jcsWlrxtx08Zifk8o0e/IqN8aXFIapu2dnhQC+XdbFaNsWlDS
+	em0SFMA2zqYawI8Maeg==
+X-Google-Smtp-Source: AGHT+IE2qIYxI4Vw1+ECgA1gn5ogbwuagPgH2cctNTftSEDiGSn1/+RvZtZON2v3lqv5N/Nfcs1I9R9CXWA7rAA=
+X-Received: from wmwg2.prod.google.com ([2002:a05:600d:8242:b0:45d:e2f3:c626])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600d:6357:b0:46e:1a07:7bd5 with SMTP id 5b1f17b1804b1-47160987501mr15825585e9.29.1760806960228;
- Sat, 18 Oct 2025 10:02:40 -0700 (PDT)
-Date: Sat, 18 Oct 2025 17:02:39 +0000
-In-Reply-To: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com>
+ 2002:a05:600c:3512:b0:471:12c2:201f with SMTP id 5b1f17b1804b1-471179134f0mr67710035e9.32.1760807387121;
+ Sat, 18 Oct 2025 10:09:47 -0700 (PDT)
+Date: Sat, 18 Oct 2025 17:09:46 +0000
+In-Reply-To: <aPPIL6dl8aYHZr8B@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com>
-Message-ID: <aPPIL6dl8aYHZr8B@google.com>
+References: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com> <aPPIL6dl8aYHZr8B@google.com>
+Message-ID: <aPPJ2qDhxXNh8360@google.com>
 Subject: Re: [PATCH v17 00/11] rust: replace kernel::str::CStr w/ core::ffi::CStr
 From: Alice Ryhl <aliceryhl@google.com>
 To: Tamir Duberstein <tamird@gmail.com>
@@ -100,108 +100,40 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
 
-On Wed, Oct 15, 2025 at 03:24:30PM -0400, Tamir Duberstein wrote:
-> This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
-> have omitted Co-authored tags, as the end result is quite different.
+On Sat, Oct 18, 2025 at 05:02:39PM +0000, Alice Ryhl wrote:
+> On Wed, Oct 15, 2025 at 03:24:30PM -0400, Tamir Duberstein wrote:
+> > This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+> > have omitted Co-authored tags, as the end result is quite different.
+> > 
+> > This series is intended to be taken through rust-next. The final patch
+> > in the series requires some other subsystems' `Acked-by`s:
+> > - drivers/android/binder/stats.rs: rust_binder. Alice, could you take a
+> >   look?
+> > - rust/kernel/device.rs: driver-core. Already acked by gregkh.
+> > - rust/kernel/firmware.rs: driver-core. Danilo, could you take a look?
+> > - rust/kernel/seq_file.rs: vfs. Christian, could you take a look?
+> > - rust/kernel/sync/*: locking-core. Boqun, could you take a look?
+> > 
+> > Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+> > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> > 
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > 
-> This series is intended to be taken through rust-next. The final patch
-> in the series requires some other subsystems' `Acked-by`s:
-> - drivers/android/binder/stats.rs: rust_binder. Alice, could you take a
->   look?
-> - rust/kernel/device.rs: driver-core. Already acked by gregkh.
-> - rust/kernel/firmware.rs: driver-core. Danilo, could you take a look?
-> - rust/kernel/seq_file.rs: vfs. Christian, could you take a look?
-> - rust/kernel/sync/*: locking-core. Boqun, could you take a look?
-> 
-> Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> You need a few more changes:
 
-You need a few more changes:
+One more:
 
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 1e6c8c42fb3a..c1cfaeaa36a2 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -136,7 +136,7 @@ impl Clk {
-         ///
-         /// [`clk_get`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_get
-         pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
--            let con_id = name.map_or(ptr::null(), |n| n.as_ptr());
-+            let con_id = name.map_or(ptr::null(), |n| n.as_char_ptr());
- 
-             // SAFETY: It is safe to call [`clk_get`] for a valid device pointer.
-             //
-@@ -304,7 +304,7 @@ impl OptionalClk {
-         /// [`clk_get_optional`]:
-         /// https://docs.kernel.org/core-api/kernel-api.html#c.clk_get_optional
-         pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
--            let con_id = name.map_or(ptr::null(), |n| n.as_ptr());
-+            let con_id = name.map_or(ptr::null(), |n| n.as_char_ptr());
- 
-             // SAFETY: It is safe to call [`clk_get_optional`] for a valid device pointer.
-             //
-diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
-index 10f1547ca9f1..466fb7f40762 100644
---- a/rust/kernel/configfs.rs
-+++ b/rust/kernel/configfs.rs
-@@ -157,7 +157,7 @@ pub fn new(
-                     unsafe {
-                         bindings::config_group_init_type_name(
-                             &mut (*place.get()).su_group,
--                            name.as_ptr(),
-+                            name.as_char_ptr(),
-                             item_type.as_ptr(),
-                         )
-                     };
-diff --git a/rust/kernel/debugfs/entry.rs b/rust/kernel/debugfs/entry.rs
-index f99402cd3ba0..5de0ebc27198 100644
---- a/rust/kernel/debugfs/entry.rs
-+++ b/rust/kernel/debugfs/entry.rs
-@@ -2,8 +2,7 @@
- // Copyright (C) 2025 Google LLC.
- 
- use crate::debugfs::file_ops::FileOps;
--use crate::ffi::c_void;
--use crate::str::CStr;
-+use crate::prelude::*;
- use crate::sync::Arc;
- use core::marker::PhantomData;
- 
-diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
-index b55a201e5029..65a4eb096cae 100644
---- a/rust/kernel/regulator.rs
-+++ b/rust/kernel/regulator.rs
-@@ -84,7 +84,7 @@ pub struct Error<State: RegulatorState> {
- pub fn devm_enable(dev: &Device<Bound>, name: &CStr) -> Result {
-     // SAFETY: `dev` is a valid and bound device, while `name` is a valid C
-     // string.
--    to_result(unsafe { bindings::devm_regulator_get_enable(dev.as_raw(), name.as_ptr()) })
-+    to_result(unsafe { bindings::devm_regulator_get_enable(dev.as_raw(), name.as_char_ptr()) })
- }
- 
- /// Same as [`devm_enable`], but calls `devm_regulator_get_enable_optional`
-@@ -102,7 +102,9 @@ pub fn devm_enable(dev: &Device<Bound>, name: &CStr) -> Result {
- pub fn devm_enable_optional(dev: &Device<Bound>, name: &CStr) -> Result {
-     // SAFETY: `dev` is a valid and bound device, while `name` is a valid C
-     // string.
--    to_result(unsafe { bindings::devm_regulator_get_enable_optional(dev.as_raw(), name.as_ptr()) })
-+    to_result(unsafe {
-+        bindings::devm_regulator_get_enable_optional(dev.as_raw(), name.as_char_ptr())
-+    })
- }
- 
- /// A `struct regulator` abstraction.
-@@ -268,7 +270,8 @@ pub fn get_voltage(&self) -> Result<Voltage> {
-     fn get_internal(dev: &Device, name: &CStr) -> Result<Regulator<T>> {
-         // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-         // received from the C code.
--        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-+        let inner =
-+            from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_char_ptr()) })?;
- 
-         // SAFETY: We can safely trust `inner` to be a pointer to a valid
-         // regulator if `ERR_PTR` was not returned.
--- 
+diff --git a/rust/kernel/drm/ioctl.rs b/rust/kernel/drm/ioctl.rs
+index 69efbdb4c85a..5489961a62ca 100644
+--- a/rust/kernel/drm/ioctl.rs
++++ b/rust/kernel/drm/ioctl.rs
+@@ -156,7 +156,7 @@ macro_rules! declare_drm_ioctls {
+                         Some($cmd)
+                     },
+                     flags: $flags,
+-                    name: $crate::c_str!(::core::stringify!($cmd)).as_char_ptr(),
++                    name: $crate::str::as_char_ptr_in_const_context($crate::c_str!(::core::stringify!($cmd))),
+                 }
+             ),*];
+             ioctls
 
