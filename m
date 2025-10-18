@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-38536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49BD3BEC205
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 02:11:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D9C7BEC214
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 02:12:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EA719356052
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 00:11:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7461188F23E
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 00:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB1A22F177;
-	Sat, 18 Oct 2025 00:07:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99F8A23C506;
+	Sat, 18 Oct 2025 00:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HEcscv1V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U5/RTL53"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB4F3595C
-	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 00:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D87423BD06
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 00:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760746075; cv=none; b=VaAnLIuHbg7QzWklSIFChSYrK9bq5frD2N15HOe/mZ4b4ci5gJUeZNuDvW6RAACoCs8l1Rm1oaFDNpbYfPImOMHBTCn07uSYlVJITFQXyE4gTAtJOBf2Sc5M7D2QWp9/FgVUc7DSsj85tci8UJQSXI5Y4rTdOZrqLYfuMG2mDxA=
+	t=1760746077; cv=none; b=nmjwzZ0Jyn4vIELvHX5dJs1bIKkp6y6nJXdxV72y2c4aLm9nHIb+ftoaXalo5631WRAQQpE8zrjTOjW492n95DoXjD1LnKBzWaj/KVJiWsk5Ir/k+fc1nIhIuJM2+tsBKoUBWlk4A9VS/6hN/6zsx6k9rq6rYmeclxewi0lQWms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760746075; c=relaxed/simple;
-	bh=rJ9Cp8jLPZnMO/vyHJOv9CStAj+XeO61+5EG/UnxQ6I=;
+	s=arc-20240116; t=1760746077; c=relaxed/simple;
+	bh=vicAzr5G8Nj5bOl8kj0FUCuW44ReHeVMHkvxO4eBHz4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z964qGPOxflUnSf02eGkoX/lnc+YASMwci5TcWYezpStL9SEP560x6/FqIxN5WFkRvz9iTECtC7R14zVl+P7XgSxeeJsU/j0go8O5QCcdxUmcIBf6KmkMLjN93vmV8SDHPgu3fdQrSj0CB0Z1a5NtBmngQ0xqjWfTNW515xS27s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vipinsh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HEcscv1V; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=F5y2NLQfjvMDigAAHiZTneJegGJAquclBi1ttx/htxmvTGi9RPkGVPps/TBjL9mtOwyV8kqw6gXo4TnjfHa6vvviNXp9jyD/wMmYJKoGMqiX3P1q4uHGROfWNbcD0IDWFeJrsb7pzQYAsFcyshqrix3QMcBd6qytklghQftsN1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vipinsh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U5/RTL53; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vipinsh.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3307af9b55eso2165348a91.2
-        for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 17:07:53 -0700 (PDT)
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-32eb18b5659so2114422a91.2
+        for <linux-pci@vger.kernel.org>; Fri, 17 Oct 2025 17:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760746073; x=1761350873; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1760746075; x=1761350875; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HFNocetE2VbIEufyY6J89R9nWXx5czYypprM6ljkXqw=;
-        b=HEcscv1Vg1+LRceN8YgebXldMH2/AFKMrI6eoN/gcTkQuTWVNq1/xZySMxDg10e1+i
-         qx1QZZe51Dk9YVjcMoWtJKxpiwwx8gArfuOnc0EEp9UtBi3tV/SVhpYNX8x3T1KH3Lwf
-         wefV/qAgxXxeBcPy/fk40s3vJZKF8oS74kzq02fKl/mQI6j+DfUwrFW9mSmOKszrcbC/
-         kWz9zKGdCrakboBOQDWg5sBaTQ2nt/7pV6V2y+ORY6Wu9HH9ENX+6tsjQU2H6JVS/00q
-         GAnMx0ia6w6Eq59/PhCLg1MoGhhwR1wyZdeuRiCVZloBWyVC5H4mWmUkYlsmMICuhwHk
-         cRlg==
+        bh=xzsZ79Fc/eYrSb6uSl+QE8GB+MXNffylOcBysTYipsc=;
+        b=U5/RTL538N872HxOtaXPLwywRcEmzr7k54UR9c5A92Q4Ta2gMkv4b/nP5GVidOQY38
+         Amdd1wcy/jGp7t7+ByNp+KCEPjwzTv0hlABEZafnlifUsbJgUEozGuy64L64qsHU2Lfe
+         XhmdnCAQr+/oxj98zFengad+R7jUgg7LQSqPcoCoV4ia+9e1uGI/0GkSLRWHfE692Jsr
+         B+L10BhIalXvtHkhKFCusMJ5JbEkcaPoTjmUd8lvINi6GEJN6rJ9CslUOMls00eeSJUg
+         5OlJQ2B+tWULlzgbdg6RvvJ0RWXFq8caAl4XLjTuruAHcs0WvFL2JGmFO/ZyznSMiSvT
+         k3Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760746073; x=1761350873;
+        d=1e100.net; s=20230601; t=1760746075; x=1761350875;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HFNocetE2VbIEufyY6J89R9nWXx5czYypprM6ljkXqw=;
-        b=EnrflcsFvZOZvySfTyW4SJDSz+j55QrA2nyG0+7OMgtrqO9UT/D/ESAe8RZmt1FDbt
-         HTnoXwd9fwlX3Jn2UkFuT4/nMTooieULCqcTPF2b4w3kxycbXDSckIS4DtH40ecGBDoQ
-         /ySBAHyI6CyR+crSWic27UwPTDAaAUdvaMRQf+CFN+Yki8px9U1tbJXZfCK3IyGhB4fW
-         DF1SMFwZZSrBkeNicCyg/efTWFY1XPEhfhRsopMAr4xEBXqCvuAKcmKcq+cB65GDh+Yz
-         p1zW9Hoi7Oac09OVGMfCezmVGv3bNpEsFEsUOrcViYvf9Uyz9aFxfh82UUT719BZNyKl
-         TAJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzg2BAUMYTilg/eq5LMDAdHiyXi9xYN1ATGLmcpyGYyYeSE6ffH64367iBCPz+WMURNrvj1nJZTu8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBMgssAU/enQ70uYrG17AUPsz5MQjlWm33lBOtR05aOwh7ZbRB
-	UtwNKbFAFWZXWsp/tW47zOw9w4ixKXnwo+T8Oxwd+OaxjiInB3GelmO/vNmvvM8nXZC6yzj7hqf
-	cMeCQzcy6JQ==
-X-Google-Smtp-Source: AGHT+IFd2MPckrXbHJ+w3m/Sn9+Vb5obFxexWw8NG67z05PyUq/AF1LputymSag3PeWe72e5aqm74u1/N/Zh
-X-Received: from pjis18.prod.google.com ([2002:a17:90a:5d12:b0:33b:cf89:6fe6])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2411:b0:33b:cfac:d5c6
- with SMTP id 98e67ed59e1d1-33bcfacd677mr4259016a91.29.1760746072971; Fri, 17
- Oct 2025 17:07:52 -0700 (PDT)
-Date: Fri, 17 Oct 2025 17:07:09 -0700
+        bh=xzsZ79Fc/eYrSb6uSl+QE8GB+MXNffylOcBysTYipsc=;
+        b=FSx/DHtxLJ9ovp8YrvmVuN0MTtXdKWD1/BIzA5G+f2nO+V9eDp0gXXQMWBo4hoopD7
+         44JrjTQ0qIBkcqoSWrOEAt3CVkUSWskYTnAuR6vkpKWciu66CKx3QerkMEQssBSx9brF
+         IPb9nsufOfHw4/243P0PtpD3YFYQhYXE+GIv/CYJwLoFPpbl2rPUzgdWMa1D5AWuijoB
+         Z1Plc+P2ME97ynv2IhupHSlKpCk55KIzxosyiwNcH9XF4cjHHxkWFjr1p5l4n20kPPDw
+         4/YpvIlxV9Z9XvJ//Vo3GosTW2StQlYcwuaC3jAMJMS4Uf12qjLGf3L3jb/5Th0V+YJE
+         Dn1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXt34JfcBcCHuOUaysE9WW2tZ8TlTptEigH2n/KomuTEbUsbEUGgWzFYujtAlZoU82Vd4lrKFqoDA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1nWNGJiyd6o/YFJoKv4XyJuwATFc7ffavIb4Pu4mS8uSwUVeI
+	ChXZyFQW79RRQDPTKQhANQ4koUJolN5+DBZhAnvpW1BWPywKalfaUbgmMxI1Dq+txZJRVm4/HT8
+	e4eTptDSNJQ==
+X-Google-Smtp-Source: AGHT+IH5Agotaie8Yfpd4OzcADNWVRMuZUwHnAmsdAx38ewjmLDznR7pF55YyI5GG3nzDG73A6J4oF7pzhXs
+X-Received: from pjbgq8.prod.google.com ([2002:a17:90b:1048:b0:33b:da89:9788])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5386:b0:32d:ea1c:a4e5
+ with SMTP id 98e67ed59e1d1-33bcf85128emr6136432a91.1.1760746074698; Fri, 17
+ Oct 2025 17:07:54 -0700 (PDT)
+Date: Fri, 17 Oct 2025 17:07:10 -0700
 In-Reply-To: <20251018000713.677779-1-vipinsh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,9 +74,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251018000713.677779-1-vipinsh@google.com>
 X-Mailer: git-send-email 2.51.0.858.gf9c4a03a3a-goog
-Message-ID: <20251018000713.677779-18-vipinsh@google.com>
-Subject: [RFC PATCH 17/21] vfio/pci: Disable interrupts before going live
- update kexec
+Message-ID: <20251018000713.677779-19-vipinsh@google.com>
+Subject: [RFC PATCH 18/21] vfio: selftests: Build liveupdate library in VFIO selftests
 From: Vipin Sharma <vipinsh@google.com>
 To: bhelgaas@google.com, alex.williamson@redhat.com, pasha.tatashin@soleen.com, 
 	dmatlack@google.com, jgg@ziepe.ca, graf@amazon.com
@@ -89,51 +88,47 @@ Cc: pratyush@kernel.org, gregkh@linuxfoundation.org, chrisl@kernel.org,
 	Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Disable VFIO interrupts configured on device during live update
-freeze callback. As there is no way for those interrupts to be handled
-during kexec, better stop the interrupts and let userspace reconfigure
-them after kexec.
+Import and build liveupdate selftest library in VFIO selftests.
+
+It allows to use liveupdate ioctls in VFIO selftests
 
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
 ---
- drivers/vfio/pci/vfio_pci_liveupdate.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ tools/testing/selftests/vfio/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-index caef023d007a..5d786ace6bde 100644
---- a/drivers/vfio/pci/vfio_pci_liveupdate.c
-+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-@@ -248,6 +248,22 @@ static int vfio_pci_liveupdate_prepare(struct liveupdate_file_handler *handler,
- 	return err;
- }
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 324ba0175a33..c7f271884cb4 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -6,16 +6,24 @@ TEST_GEN_PROGS += vfio_pci_driver_test
+ TEST_PROGS_EXTENDED := run.sh
+ include ../lib.mk
+ include lib/libvfio.mk
++include ../liveupdate/lib/libliveupdate.mk
  
-+static int vfio_pci_liveupdate_freeze(struct liveupdate_file_handler *handler,
-+				      struct file *file, u64 *data)
-+{
-+	struct vfio_pci_core_device *vdev;
-+	struct vfio_device *device;
-+
-+	device = vfio_device_from_file(file);
-+	vdev = container_of(device, struct vfio_pci_core_device, vdev);
-+
-+	guard(mutex)(&vdev->igate);
-+	if (vdev->irq_type == VFIO_PCI_NUM_IRQS)
-+		return 0;
-+	return vfio_pci_set_irqs_ioctl(vdev, VFIO_IRQ_SET_DATA_NONE | VFIO_IRQ_SET_ACTION_TRIGGER,
-+				       vdev->irq_type, 0, 0, NULL);
-+}
-+
- static void vfio_pci_liveupdate_cancel(struct liveupdate_file_handler *handler,
- 				       struct file *file, u64 data)
- {
-@@ -403,6 +419,7 @@ static bool vfio_pci_liveupdate_can_preserve(struct liveupdate_file_handler *han
+ CFLAGS += -I$(top_srcdir)/tools/include
+ CFLAGS += -MD
+ CFLAGS += $(EXTRA_CFLAGS)
  
- static const struct liveupdate_file_ops vfio_pci_luo_fops = {
- 	.prepare = vfio_pci_liveupdate_prepare,
-+	.freeze = vfio_pci_liveupdate_freeze,
- 	.cancel = vfio_pci_liveupdate_cancel,
- 	.finish = vfio_pci_liveupdate_finish,
- 	.retrieve = vfio_pci_liveupdate_retrieve,
+-$(TEST_GEN_PROGS): %: %.o $(LIBVFIO_O)
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $< $(LIBVFIO_O) $(LDLIBS) -o $@
++LIBS_O := $(LIBVFIO_O)
++LIBS_O += $(LIBLIVEUPDATE_O)
++
++TEST_GEN_ALL_PROGS := $(TEST_GEN_PROGS)
++TEST_GEN_ALL_PROGS += $(TEST_GEN_PROGS_EXTENDED)
++
++$(TEST_GEN_ALL_PROGS): %: %.o $(LIBS_O)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBS_O) $(LDLIBS) -o $@
+ 
+ TEST_GEN_PROGS_O = $(patsubst %, %.o, $(TEST_GEN_PROGS))
+-TEST_DEP_FILES = $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O) $(LIBVFIO_O))
++TEST_GEN_PROGS_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
++TEST_DEP_FILES = $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O) $(LIBS_O))
+ -include $(TEST_DEP_FILES)
+ 
+ EXTRA_CLEAN += $(TEST_GEN_PROGS_O) $(TEST_DEP_FILES)
 -- 
 2.51.0.858.gf9c4a03a3a-goog
 
