@@ -1,162 +1,134 @@
-Return-Path: <linux-pci+bounces-38573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA47BECCAD
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 11:33:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B99CCBECCBF
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 11:48:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 181DD62491E
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 09:33:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A95F582FF2
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 09:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6788B28727B;
-	Sat, 18 Oct 2025 09:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5910E28369D;
+	Sat, 18 Oct 2025 09:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sH6cxA06"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XdJXgugo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C751E1448E3;
-	Sat, 18 Oct 2025 09:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60535279DA6
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 09:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760780023; cv=none; b=CEzuAyTk3qnsSbo1NjnkeJd21cS2me8ktC7LnY7CzslZmDNbfSAJ5TqZz5roeO7D6evdU1JcA/EGKzVATZzUz0CKY2nU4pFcD3f2Nf00I2iExkH1QgIVHv7wyQfg92rJ9Juy+NUyp7UXdmr6qbwYPbwbVt6YA8ykYOU+FIlP1Hg=
+	t=1760780899; cv=none; b=XCl9OpEstljV6FTnvxmfaSj5CXMoh2wksd1yK32tA+qPJmpRuXIeA6TJ4cR5JVowVT8A7bzFEXixJVdv4JE67VAcLRcl9ir/tEEFQcZLf+X2XnCOXwYkvneSTnrbZQYTX1RANAsy/rf71CjmfjY0x0KPf9IMQMlE6jAoXxm7Gvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760780023; c=relaxed/simple;
-	bh=vyrEA9Xn7+fTNF+uNpgdCwGsRJedwepAfqXbZwl9tKw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=TT3wpqamCZln1BNIHTrNLndrl1dNX2pQbnio7t/ngQKzDUYd/5foFeV0hdGZqwMh3zGgwD7UqlQQB8yV6WCI1dPdSmxUZLT0A6uXGZxzBcdJwVS19lxkVXSM5p7djYI/arBbwe/Z2W9o1KQDwWJ0sCoH52luWwuAgIAjnUQ9I6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sH6cxA06; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1760780015; x=1761384815; i=markus.elfring@web.de;
-	bh=vyrEA9Xn7+fTNF+uNpgdCwGsRJedwepAfqXbZwl9tKw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=sH6cxA06/4h0nBgx7PIiuqPYQ2YLlEBmQ4vp7jpuM7gkweLy7QK1V0LVWPs3JImt
-	 KoTv/uvemRE4Z+UlFG1v/KHNUhfyAbc4mbVyGJa45b/X1vMNMrDSFJr6w7HR2aGhb
-	 B/+f08JXsnuGrvxg3db9zI6Sj1g3tCPOOVzZnd7b3b/Sz1Or7jOcEXzsFxpDfJfJT
-	 prav6btJtCzr1GVKlod3kGsEBTi0cbTbZnKqz49KJ00XBc3XAGERwfo3wY7iUckQ7
-	 sXU+iz9OwYubrb3+VVC8b4Pl0v/7eAyVoyTVS6xaOonvGhReNwMDQ+30Och3ju5MT
-	 8lwpgRS3ro9ZBxPw9A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.233]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N7xaT-1u5Jdc1NuF-00yR2p; Sat, 18
- Oct 2025 11:33:35 +0200
-Message-ID: <0b35a3d9-1d56-48e2-87b4-0672739228cb@web.de>
-Date: Sat, 18 Oct 2025 11:33:33 +0200
+	s=arc-20240116; t=1760780899; c=relaxed/simple;
+	bh=A7f0rcwMMhuOxtJjZ+3BE68ZThRKtbmxH6yOW94VjA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAR0W7snnFC2jFqkSVlw/3iIhyur2vRfyVs6TNkBas0W1658OFBs29SFuI1Wd5XymV+cVT1YyWU4xQaG14FClgVvTjVPZ3IT8bI5m7emVsTd5a8vBI0MEIErZXeqGdnIRcJMcIdEW4BVf9AQ2YDrd5ZUriX4B6qrUMzTVMYN9fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XdJXgugo; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47118259fd8so11943295e9.3
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 02:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760780896; x=1761385696; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nhWVuNwxLp4oDhy9Y7Je0Sd3r/8yjdmEN4SRPPZ/YRc=;
+        b=XdJXgugoJiC3tqkUxYfdqivCVFYy6DumHxlnfX8Ks8xVTD+WY3bGL7AO9PFHGiaIcT
+         ugesKfl6+T5DM3XVJQzm9zLE2nqRSe8yMuywko7g0KYido+KrONE+eUzlrh7xHtb62J3
+         oA/vR5vMF+2feTtisKB/ohVL1XY79P7a4B5OimvGYOvOxznq2rQ9lJs46JXQWpsyau5/
+         Ke82gl/+quuB9qW89g87ibHB+ZUtx1KdE3TLF/E+aP7m5Z561+rYalrOCg1yddPuMw45
+         OuTrOnBclkjsC7SiUmWtGWKWeqfSEpfHnjUqRmICW/LgtJQtA1lvTM9r5dc7RPzOQABY
+         fcTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760780896; x=1761385696;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nhWVuNwxLp4oDhy9Y7Je0Sd3r/8yjdmEN4SRPPZ/YRc=;
+        b=Ll7ijNQWEJ+LT0QO1s5McDH8teVBbC/ioUhWKO/J5Bf7lMkChiYmxThUniOOh1S0b5
+         ktvH43R2okLjmKd4iJGnVWdf7pPW5Ju+aQnzc7GnVmr1T+eefialwHYe229OSWVQIoP+
+         amhbQ+M1QFdm2OhSfRY+vJpcEoXZQY11fQed1gRtoSE9Ihheq8YJA+ntU7lwSabZrivD
+         U6pITol7/x9rsWm2HZzuy9bTj4IE/QHrynGCR23mUUnaIlZJ0oLT3tPivOujCAM118E+
+         G7EaU//yg3Ge8y3v+i6H0T+VNvDChLeXoMikVnEgkCRXRJY0fmILjj5IwP7ReLZ+CvMQ
+         2wiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUd9LUEEdzrKBFCT7O2lcYZJQNGFo3P/VLKz9C5cQswV/f2+MVMS5tYFHPte100qjYsDognvJ0EQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiswcOeX2HRZZPvT2QISWmfJJ41jeF6rsaviUXPw+tFPzi3fw3
+	BaFLv2xg7dRNIsAfAc7mutcDtEpfE8rZwPd0gW4j5NIENjNKga91Z2RqyigrIWBOCiI=
+X-Gm-Gg: ASbGncsIgO7/EH/Qx6Q41IF9ntQ9n9V2wm4gdXBY4m2jzEm8yHGdvEdpnNQFr6+DPGm
+	AZ51oRvbS4qI0XYxH7s0f2toLTO75ptIlaJ2WChyYjep02TNA34juun36YMFbU+lV2bPW14wp3R
+	gTMVBg+K3fWVuLLGSKDEeMOfjjb2Lf1AfbS0ZYzELKtE13achPedP+UTzpLB8/iWCgINdXU62MU
+	HVHymhTrXJ/0Y9DhpKpd0hor5h2C8x8yBG07cou7b9FjDjyf9OiJ+6919EkrGd/hIFdBqkyGABL
+	EA79t6Q3WToTardNFQ4GhDUUTErU4RJuQ3hD/ovFI2LXFkPqkPxhG3g2npwkPauVCSK8Wu6VdKr
+	Bm9+PdYuKbchOs9gGGl+POt0E8Dc1ieBrVCiple+tzXMAi4YYp4eEX9AS6Jpqh44/ncveAms7rO
+	XP875WyEB0SVAEi1GD
+X-Google-Smtp-Source: AGHT+IG+kX1i7eggIHxYAK08ThcqnvRyiNfTqtAevzOHW/nGlWwTN/Eu/9VszT8osDHnwWAvHzqdHA==
+X-Received: by 2002:a05:600c:3e8f:b0:46f:a95d:e9e7 with SMTP id 5b1f17b1804b1-471177ab11dmr52244015e9.0.1760780895638;
+        Sat, 18 Oct 2025 02:48:15 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4715257d916sm37111235e9.4.2025.10.18.02.48.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Oct 2025 02:48:15 -0700 (PDT)
+Date: Sat, 18 Oct 2025 12:48:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-omap@vger.kernel.org>,
+	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-pci@vger.kernel.org>,
+	"moderated list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/3] PCI: j721e: Propagate dev_err_probe return value
+Message-ID: <aPNiW8QzsLv4R0E6@stanley.mountain>
+References: <20251014113234.44418-1-linux.amoon@gmail.com>
+ <20251014113234.44418-2-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20251014113234.44418-3-linux.amoon@gmail.com>
-Subject: Re: [PATCH 2/3] PCI: j721e: Use devm_clk_get_optional_enabled() to
- get the clock
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20251014113234.44418-3-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:frkmSHrrCRc2PlwZbdSNiHlxfazUtn29V6HusRn4PyAKpa6yiuf
- geDvTXIHj+kpYFFv2/FykwKqqCsuGXekp0aipJBWQUD+kARyw8zBBjuSG/tfsN5N3OD4tjO
- BplH9rHFr0lYYlVVK6r6Z/TVAqsd4g6TfBJWWGkbttN0yR1WY6JYSu482izILzoY+PpotVP
- scvDT5bI0ZWwlumq19q+Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RkC044W13ck=;rEVaV1CwHnFD93z53WkOl41LXtf
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251014113234.44418-2-linux.amoon@gmail.com>
 
-> Use devm_clk_get_optional_enabled() helper instead of calling
-> devm_clk_get_optional() and then clk_prepare_enable(). It simplifies
-> the error handling and makes the code more compact. =E2=80=A6
+On Tue, Oct 14, 2025 at 05:02:27PM +0530, Anand Moon wrote:
+> Ensure that the return value from dev_err_probe() is consistently assigned
+> back to ret in all error paths within j721e_pcie_probe(). This ensures
+> the original error code are propagation for debugging.
+> 
+> Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> v1: new patch in this series
+> ---
+>  drivers/pci/controller/cadence/pci-j721e.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 5bc5ab20aa6d..9c7bfa77a66e 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -569,20 +569,20 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  	pm_runtime_enable(dev);
+>  	ret = pm_runtime_get_sync(dev);
+>  	if (ret < 0) {
+> -		dev_err_probe(dev, ret, "pm_runtime_get_sync failed\n");
+> +		ret = dev_err_probe(dev, ret, "pm_runtime_get_sync failed\n");
+>  		goto err_get_sync;
 
-Can this information be sufficient so that the subsequent two sentences
-may be omitted from such a change description?
+Wait, no, this doesn't make sense.  It's just assigning ret to itself.
+That's just confusing and pointless.
 
-Regards,
-Markus
+regards,
+dan carpenter
+
 
