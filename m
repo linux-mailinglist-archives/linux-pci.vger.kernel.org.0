@@ -1,98 +1,101 @@
-Return-Path: <linux-pci+bounces-38642-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38643-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C12FBEDCC6
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 01:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD4FEBEDCD5
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 01:11:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AD5D3A3D8B
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 23:06:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32FAB427AAA
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Oct 2025 23:11:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66318354AF2;
-	Sat, 18 Oct 2025 23:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3D1262FCD;
+	Sat, 18 Oct 2025 23:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FLwH/k9Y"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BZ6S2Xs4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA31F473A
-	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 23:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1895C25C6F1
+	for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 23:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760828806; cv=none; b=sR3HLmWTfWYiPtV6r0+TdYXFuMOwuOA/cKEVGQfAOQSfbMTd21PrY+2VKeDQ16pSA6CFPzW0P+nrKlFc9vB0WRv/J/k5kj83PAKUtsU+5MAU/7jLmKPlks0vHVtLyGRIkfF9wXm/suob4XIk02ZnPCzDNHRo2EslhnSE7PaIMCQ=
+	t=1760829090; cv=none; b=TWbDCYq5cODya8w18a0QbhBXQAkTxJLgAoSFDr3xPFPdhRLXll5f2dtISsW5PngoGGCC4DM8PpVsHD62hehueeJhQyoSTdMDThTnVMmgaWyuaisVQwg7KQh1I03bdyR8OA0MllXhhA+10R8Iuq1rFJW071VKPuDYgiTS9F7I5gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760828806; c=relaxed/simple;
-	bh=MRKqkuGtWZ0bwCJMZ7uFCHFFiA4GJwYDaNgMbBAuVxU=;
+	s=arc-20240116; t=1760829090; c=relaxed/simple;
+	bh=nlTGgh1j4rnsma37VDwy3XvjnEutOrYN/Saoiw9k0/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jX7EBxbBI+llH9nr2EeAwmNZhok8fTLVibQjBwH0loGxN/Lwiw3jeG/QOJ8mxWW74uwVYllJPASNHWkQXRLVGMfj/AMGQJZ9g1yDwPzmLhd7/mf7VROOl0Bpu8z2IJmIoFRFA/5WVUQeiG9msVdtXajBrGGhQw1btCkeRKJBy/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=FLwH/k9Y; arc=none smtp.client-ip=209.85.210.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGTUrXMo0T/0XWv2AAyZGP1aQnb7wb/HCcYpzxuAoYntKR8olYKCm0QoR7+tUqxomBWWP424lVoCOQkPgNVHA4EjhAPPitbWjcw3D/nDQB9Jc5P/FAZplYDjBfRJDXU0PmtQa92AZXM9d2HDeN6rPc3bx2EOt0ut9N3IXEGle9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BZ6S2Xs4; arc=none smtp.client-ip=209.85.167.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7c27e5ca2beso721252a34.3
-        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 16:06:44 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4433456f043so1581479b6e.3
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 16:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1760828804; x=1761433604; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1760829088; x=1761433888; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dxNFK3ZGCsrxcWO/xofHDy4T8uFM9VvZEHwMPfXMD2M=;
-        b=FLwH/k9Y4dPxHcErOowvbSJz7DZ8oWGLxmVKnbjANwD6ByAXalrtD/zapRCIosEolG
-         mprOajFB+25GOTQzNF4bhqLua5UDQRaSRFIgkmRyU3ifKcSbxlNSX2PtZTs3eJyJqUeu
-         nut7px7QoVR2+XEkboxPgZuQHKzAYI0OEpACJF9W3xXhIjvYvIh4+wsGn7Juax3uKo5y
-         vzoWBq9joI7GnnkBdLEghkzCT9x673yWzZ/dCCBobW+DgxLHQWhzl09hzJ6Zcmo5X3p9
-         YmMyK8EApcBZ4hdZS0g+Na69IDFw750V2d3dYxEujZ8DUtzGdgyuTbXrnqM3oQlP3G3C
-         mJTA==
+        bh=nlTGgh1j4rnsma37VDwy3XvjnEutOrYN/Saoiw9k0/M=;
+        b=BZ6S2Xs40U9WQeq7NwydR9GbhQbdvOjDSv4Qbr9KKeCYizlk6xi5vEFooSbU8ymvLl
+         WSBq5lAT1yCWnNc6H16VrjD0JeAdPqqNvYBxmG52hVSP/t1bdV0YhO0yBVZQ+S0wsrpY
+         /QPFLN0zDpppP7ApdEaqJsD1GF7o5OP+bYGjdmMJOGm/Kt6tuFeThxoQFTLzXKtqoWHh
+         CteSEOebSSDXqi99VukwnkUrG/AMT9Obl/oLUprKxkOT9lYdjoQ17DHql8pZX8V6Y37P
+         TrqnH3iTSdnsI1yr9Uoy+JIq0ccrtZoBfQcv+rDIlNoL4H0lhLQyB623WY2d67VJJy9j
+         0TwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760828804; x=1761433604;
+        d=1e100.net; s=20230601; t=1760829088; x=1761433888;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dxNFK3ZGCsrxcWO/xofHDy4T8uFM9VvZEHwMPfXMD2M=;
-        b=AnpzDGaUyr4FUFuCX6p3nqvA8igX+RsZfISq/yrdje0IQkiARIHAxfSaCSybhhn5GR
-         9RUW8stUF9qunOly9eCah4wVKnIRyRc2M0ca1HrZCXbme0SvsRrcITVCdyz8cep69HaI
-         oQsHXhRtwSXoron/Uxj0Dop6g4FdKTZrJpk8gVIGsYV1Xto40d/05jYuyKM30D4nQpwB
-         rcwuUmRvIvGzHIIY0zXKBjn7pCXlNcZKGQ9kPV5TzjJkOv3ca7CHF6n8pjeJuPxe91Aq
-         XwUOczzlroJkU1WY/ZDxUYz1TBHUoY+TnGju5w8ywXptBj+npnj0UgpVKf5qa3Rp1utD
-         wNMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4xAhc4w+QwTbDQjWBs5hKEO67opVa11pATc3GIbL8u4MGslBwgWPwVMdp6uOVjob4xqr7cZiCUWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws7X0qcVsDKee8fZd8vHS3Pq/vJP+pOg7xXQSfz7ZklrlmK5Nm
-	+IR6gNwP1hFvksxDgFHpmmrn0oSAqqL8qSibOw97DlyYOAt5skPLo5CRr2N2nnxTYWk=
-X-Gm-Gg: ASbGncuY42GK618+hN3BMfhE/at973PFcS52+J7HOUwpo/uDAV9SwIEJrZLQCV8/GGP
-	YLra3VAeKBNNjfzmFeGfvfNvIwqUnDOiPuP7X8kLqxGnNSJ+kxxDGAt0yJhKR7xLtbFbDme1eo0
-	yfw1AJ9d/TFE+pppRRluIzpQcEhBtRF6n070jMvsMioQEtcnshqN3RNvR/ps25sT/QKPFSKFzI0
-	l2dV+lwb3ElZyo4YIUDAf7+KvvIr4H6FfSZcH1xPziivdwYGDetqqjFiR6kNxCBYEWXRjnEqGhN
-	yc5pb0826tbfUZvYTrXWCodDxEQA+zGoWR7RrziZVFQWNSLVucmbAxrSvYDFpGX6qaRqTIjexQ+
-	aD9x8LrbcDn3twBKwPitkMDC7sJSsA0ZS7BQguYiA9GU0EUJlLA==
-X-Google-Smtp-Source: AGHT+IEts/2bQfz049IAs+xRI494sCkbsaGqrWMJcYh93QsC8Ouq9KxA1mU9DAni5be+yG+bXoEwKQ==
-X-Received: by 2002:a05:6830:3703:b0:7bd:cfb7:1853 with SMTP id 46e09a7af769-7c27ccc5c25mr4810038a34.35.1760828803804;
-        Sat, 18 Oct 2025 16:06:43 -0700 (PDT)
+        bh=nlTGgh1j4rnsma37VDwy3XvjnEutOrYN/Saoiw9k0/M=;
+        b=DjCc/pTsuuPUScFp6R1pz90IAo3+APCVST9G/52Rp8SkbMDv2xs/MY6U6L4aTWpj5R
+         GOxj+ZOPg59Z3KF/+TiBazLF3PL/HnjdlNtWSU7pZBfDoYcx592lAPYRZonZ1UMFjSQd
+         7S5HWLzw+PFUqPcL+8L/Wo7ou9blNAaV0e3AHaoqxyTASVs7gJ7GyNvjCGXig2p8haAp
+         LBnD4iprUVK8pnKUZmJi6OeYAlTnc+6puDHra5HYMzmyzcxIOJbY9NTWZLnSx1djKJEG
+         ynVHIEL1/p8Pq4l4CyJNGuky8tmhy0Ig1F9mr5/54Q7u8TRNBgElxrKvzyNquzvPNFeV
+         Ha1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXXkwySC3JTDWDX58hDv1MLHNk3z3f/3IUQjBQI5lrh+pKLwAh0FLOhTQ+yMMmCY9qL7incs7TH8fI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEXm+QwegnLARAPKwDTTYwZkVT29P5dc8JVBeoPY3VO6r9wx0n
+	/l4/oINtswVLsvxsTjS20mAjxFYHhdEL9KSleXy6RUAdXKAtsvRheAuD2aT+K7FXp00=
+X-Gm-Gg: ASbGncvUPfJlXSf4Ia1b8MyXfeYVC5W0NzyBrfTozZNdyofqCDGLATA+NuWC6wAbbmm
+	IWAbZ+6QIydkCLpJfBfiwWwQCD+0b8Ps9/hCcQYgW/T74k6tSUzAHY8JpeZ6IJMU3f/E/tQLs/r
+	JjBspUz3pYplRS8EcniSYZtYu9eRi3t5dk+FaOKcmJsNGqc4vutk6RNvdfm43JMfq2jdIyrzFcg
+	KmFu37XOdPvOXFapgqeGboWIg6qZhb+Fjf4D7Zlhl2QhwV2KETon1nmBrTSLFfA34fvxF8C43C0
+	v2xBVrVjiYzaoPKYM8I4qVAhOSnmiydAi8ws9LHnfiUlPWvdCmo1n5IwMI6ZJ7dZR1SZikJQjYd
+	hxKDRxJKpyL5S1OPrDosQ5nGvuNTbak6/9TuiMpu+9IVOUhGcBDaTNkF3OLN9
+X-Google-Smtp-Source: AGHT+IGjutQW9FOpunwPbl54R4lmphJmatLWLrvDMN3YzWlbvrTlVJ+kuMrXHSfrl8ye5jNWMdw9aw==
+X-Received: by 2002:a05:6808:2388:b0:43f:5fc5:e04a with SMTP id 5614622812f47-443a30af9cfmr3465468b6e.31.1760829088069;
+        Sat, 18 Oct 2025 16:11:28 -0700 (PDT)
 Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c28879e8d5sm1168286a34.5.2025.10.18.16.06.42
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-651d3f8d640sm899440eaf.20.2025.10.18.16.11.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 16:06:43 -0700 (PDT)
+        Sat, 18 Oct 2025 16:11:27 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1vAG0X-00000001ddh-3262;
-	Sat, 18 Oct 2025 20:06:41 -0300
-Date: Sat, 18 Oct 2025 20:06:41 -0300
+	id 1vAG58-00000001dfK-14RB;
+	Sat, 18 Oct 2025 20:11:26 -0300
+Date: Sat, 18 Oct 2025 20:11:26 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Vipin Sharma <vipinsh@google.com>
-Cc: bhelgaas@google.com, alex.williamson@redhat.com,
-	pasha.tatashin@soleen.com, dmatlack@google.com, graf@amazon.com,
-	pratyush@kernel.org, gregkh@linuxfoundation.org, chrisl@kernel.org,
-	rppt@kernel.org, skhawaja@google.com, parav@nvidia.com,
-	saeedm@nvidia.com, kevin.tian@intel.com, jrhilke@google.com,
-	david@redhat.com, jgowans@amazon.com, dwmw2@infradead.org,
-	epetron@amazon.de, junaids@google.com, linux-kernel@vger.kernel.org,
+Cc: Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com,
+	alex.williamson@redhat.com, pasha.tatashin@soleen.com,
+	dmatlack@google.com, graf@amazon.com, pratyush@kernel.org,
+	gregkh@linuxfoundation.org, chrisl@kernel.org, rppt@kernel.org,
+	skhawaja@google.com, parav@nvidia.com, saeedm@nvidia.com,
+	kevin.tian@intel.com, jrhilke@google.com, david@redhat.com,
+	jgowans@amazon.com, dwmw2@infradead.org, epetron@amazon.de,
+	junaids@google.com, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 00/21] VFIO live update support
-Message-ID: <20251018230641.GR3938986@ziepe.ca>
+Subject: Re: [RFC PATCH 15/21] PCI: Make PCI saved state and capability
+ structs public
+Message-ID: <20251018231126.GS3938986@ziepe.ca>
 References: <20251018000713.677779-1-vipinsh@google.com>
- <20251018172130.GQ3938986@ziepe.ca>
- <20251018225309.GF1034710.vipinsh@google.com>
+ <20251018000713.677779-16-vipinsh@google.com>
+ <aPM_DUyyH1KaOerU@wunner.de>
+ <20251018223620.GD1034710.vipinsh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,42 +104,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251018225309.GF1034710.vipinsh@google.com>
+In-Reply-To: <20251018223620.GD1034710.vipinsh@google.com>
 
-On Sat, Oct 18, 2025 at 03:53:09PM -0700, Vipin Sharma wrote:
-> On 2025-10-18 14:21:30, Jason Gunthorpe wrote:
-> > On Fri, Oct 17, 2025 at 05:06:52PM -0700, Vipin Sharma wrote:
-> > > 2. Integration with IOMMUFD and PCI series for complete workflow where a
-> > >    device continues a DMA while undergoing through live update.
-> > 
-> > It is a bit confusing, this series has PCI components so how does it
-> > relate the PCI series? Is this self contained for at least limited PCI
-> > topologies?
-> 
-> This series has very minimal PCI support. For example, it is skipping
-> DMA disable on the VFIO PCI device during kexec reboot and saving initial PCI
-> state during first open (bind) of the device.
-> 
-> We do need proper PCI support, few examples:
-> 
-> - Not disabling DMA bit on bridges upstream of the leaf VFIO PCI device node.
+On Sat, Oct 18, 2025 at 03:36:20PM -0700, Vipin Sharma wrote:
 
-So limited to topology without bridges
+> Having __packed in my version of struct, I can build validation like
+> hardcoded offset of members. I can add version number (not added in this
+> series) for checking compatbility in the struct for serialization and
+> deserialization. Overall, it is providing some freedom to how to pass
+> data to next kernel without changing or modifying the PCI state
+> structs.
 
-> - Not writing to PCI config during device enumeration.
+I keep saying this, and this series really strongly shows why, we need
+to have a dedicated header directroy for LUO "ABI" structs. Putting
+this random struct in some random header and then declaring it is part
+of the luo ABI is really bad.
 
-I think this should be included here
+All the information in the abi headers needs to have detailed comments
+explaining what it is and so on so people can evaluate if it is
+suitable or not.
 
-> - Not autobinding devices to their default driver. My testing works on
->   devices which don't have driver bulit in the kernel so there is no
->   probing by other drivers.
+But, it is also not clear why pci serialization structs should leak
+out of the PCI layer.
 
-Good enough for now, easy to not build in such drivers.
-
-> - PCI enable and disable calls support.
-
-?? Shouldn't vfio restore skip calling pci enable? Seems like there
-should be some solution here.
+The design of luo was to allow each layer to contribute its own
+tags/etc to the serialization so there is no reason to have vfio
+piggback on pci structs or something.
 
 Jason
 
