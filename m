@@ -1,90 +1,101 @@
-Return-Path: <linux-pci+bounces-38660-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38661-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0F1CBEDF73
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 09:09:42 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44EB9BEDF7F
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 09:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830933B7D35
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 07:09:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 05DD54E362F
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 07:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C565226CF0;
-	Sun, 19 Oct 2025 07:09:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A19CA220F2C;
+	Sun, 19 Oct 2025 07:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ie6YBXys"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIaAxIju"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20412264A3;
-	Sun, 19 Oct 2025 07:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F87136358;
+	Sun, 19 Oct 2025 07:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760857773; cv=none; b=kdhq9QOa/PuheV26GrKkeBrFNQpjS2ddilz0ifBQoXxFFeDEWbVJUVyZEjL+Xv6cuSroBDvKBR6H8WEVldfRQR9PMJ+Ns1r1oLjyLmKTGg2d2WuGH2PadeVpxcR8o51z/fkKHzNIOCq95ZduHguNh8XzVxw+ZCJE2lT7RG/AZAY=
+	t=1760857840; cv=none; b=rCVkwnSSGb2nlktFlI4qogwSYOC1DDDPx1CL+h1duuzCtmqlICRkLSUK0Bx3ucQ4LjfokGUXZ5I4uPGpOzBEwNjiKIGGP6okqDiU8lPUw9JCJDDD9u6w1QFSvRlmWk9sa+KOOue2IknZbpQHFCRQ8xvDuQnfA+F34zyGcj3M644=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760857773; c=relaxed/simple;
-	bh=1cvbg145GTR8EwyOshytryB72YZoENuA0QaLFuEP+eA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SpLIy0zJlDkvs0smsq9GOJ/EjkiNY1yo2d3NLCrkbNZyxhyWVmJrDTMz9/3VPyuV+HG1j/nsZYa2UAqX6Vw3BBdKEqnkgO82BzIBH+ZVb4Q6OfXHDaZZCAMzwETWIK7H/xu5Bv3FZ5VF/sa/Acp99nAzybzv5Bk5lmF9R6ayXmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ie6YBXys; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D02C4CEE7;
-	Sun, 19 Oct 2025 07:09:25 +0000 (UTC)
+	s=arc-20240116; t=1760857840; c=relaxed/simple;
+	bh=WDqVVyRyQr+FH8+6XQnjBusK3qxbfBk4dcq13t/IdEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=grsZh4PF3R5qmVHa1BoLTDcVKl6f91Z8JC0TKa2QwCJ7Tpb+lK2775odUp3oCQyRfOjKDOMNtnj15W7MAy2LAik4prBT8h0A3ZMsx/QR4l2ACKLsaH6BFXs2s5vCecGUxnGuFSCkR/KozLUsfJJsRnW3uywzGQ6d3MJV3tp/z5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIaAxIju; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C71C4CEE7;
+	Sun, 19 Oct 2025 07:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760857772;
-	bh=1cvbg145GTR8EwyOshytryB72YZoENuA0QaLFuEP+eA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Ie6YBXys5ek/3dVw1jratTcMf/Im58/bJdqbGvhcsxZ127WhezF6AerTaa7gZoMXl
-	 qwHXxUQo87FogLaDJJdMYRX+X7hz2fKU7tIth5w50ckX5VS3TwSCnaxtT5o1iF5tVx
-	 F5Fymtml4MRudNadzb2ppUFpnFIfRrwCJ+A/v0+lbjc6f6+ZzZtP4uZ3o3kHtR9EyV
-	 D/yRcWdDqQvXU1nJ0oLuO1TM5BeQY2j3I+8AXlry3OORoZ1CLDSNwHSuvMvpoAxWy0
-	 xu1zkc/IKSln+1TGocbyqmga4YlboOdNMY2lKqk3AriXE/FWusZQmQQPHL1VVsoukD
-	 x72s57jK5qH5A==
+	s=k20201202; t=1760857840;
+	bh=WDqVVyRyQr+FH8+6XQnjBusK3qxbfBk4dcq13t/IdEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QIaAxIju/58TL3RFmbl6lKGP1EV96wzk5L9mzMVqHif0ZFQDHs9ZzIHR0WmmZX7tF
+	 G7YHjWDl4SlPkWHhGaJy+iEALoY6Iuthmx8mFg3ladxAl//K92pb+3hWJK+z3MDoF2
+	 QPMwrH2TZg0Rru7ZnPm5qx0oO5lhZafyPfIN1a5kUtH59oEN/aiKBRkBh4rEECIXlG
+	 3wT1ejF5kgaBgyFIzEHOHOBMPxbAoBUA14APBB7XrBmcmXA7L8MPmvrO3lZQg86vkZ
+	 Yg8fz8wJU5lTyu5MxuLbzglkW1975mO0JEZ2ENw0qbnfbnrJRfjdlGs6kZmtcX6Yjw
+	 Z9qSabLbbuZEw==
+Date: Sun, 19 Oct 2025 12:40:24 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: thippeswamy.havalige@amd.com, Ravi Kumar Bandi <ravib@amazon.com>
+To: Ravi Kumar Bandi <ravib@amazon.com>, thippeswamy.havalige@amd.com
 Cc: lpieralisi@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
- kwilczynski@kernel.org, robh@kernel.org, michal.simek@amd.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250920225232.18757-1-ravib@amazon.com>
+	kwilczynski@kernel.org, robh@kernel.org, michal.simek@amd.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+Message-ID: <akia22ulvkho753escdkhmunx3wdkgzk4hoosbrdpg3flfucxd@clwwh2hkt6wl>
 References: <C47CF283-C0C4-4ACF-BE07-3E87153D6EC6@amazon.com>
  <20250920225232.18757-1-ravib@amazon.com>
-Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
-Message-Id: <176085776570.12994.10687348823390647832.b4-ty@kernel.org>
-Date: Sun, 19 Oct 2025 12:39:25 +0530
+ <ffnsnm67kc546xrx673yvuepolafapueyfboykmcfododbpb2o@cjcmlqcvu76v>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ffnsnm67kc546xrx673yvuepolafapueyfboykmcfododbpb2o@cjcmlqcvu76v>
 
-
-On Sat, 20 Sep 2025 22:52:32 +0000, Ravi Kumar Bandi wrote:
-> The pcie-xilinx-dma-pl driver does not enable INTx interrupts
-> after initializing the port, preventing INTx interrupts from
-> PCIe endpoints from flowing through the Xilinx XDMA root port
-> bridge. This issue affects kernel 6.6.0 and later versions.
+On Mon, Sep 29, 2025 at 07:38:01PM +0530, Manivannan Sadhasivam wrote:
+> On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi wrote:
+> > The pcie-xilinx-dma-pl driver does not enable INTx interrupts
+> > after initializing the port, preventing INTx interrupts from
+> > PCIe endpoints from flowing through the Xilinx XDMA root port
+> > bridge. This issue affects kernel 6.6.0 and later versions.
+> > 
+> > This patch allows INTx interrupts generated by PCIe endpoints
+> > to flow through the root port. Tested the fix on a board with
+> > two endpoints generating INTx interrupts. Interrupts are
+> > properly detected and serviced. The /proc/interrupts output
+> > shows:
+> > 
+> > [...]
+> > 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
+> > 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
+> > [...]
+> > 
+> > Changes since v1::
+> > - Fixed commit message per reviewer's comments
+> > 
+> > Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
 > 
-> This patch allows INTx interrupts generated by PCIe endpoints
-> to flow through the root port. Tested the fix on a board with
-> two endpoints generating INTx interrupts. Interrupts are
-> properly detected and serviced. The /proc/interrupts output
-> shows:
+> Thippeswamy, are you fine with this change?
 > 
-> [...]
 
-Applied, thanks!
+Since there was no reply for a while and the change looked good to me, I've
+merged this patch.
 
-[1/1] PCI: xilinx-xdma: Enable INTx interrupts
-      commit: c098c13f4365e6750009be4d90dba36fa4a19b4e
+- Mani
 
-Best regards,
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
