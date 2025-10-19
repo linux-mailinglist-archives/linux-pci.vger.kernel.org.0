@@ -1,62 +1,64 @@
-Return-Path: <linux-pci+bounces-38655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99680BEDF1C
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 08:38:22 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F5A9BEDF25
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 08:46:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 484F23E71D9
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 06:38:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A891A34AE3D
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 06:46:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6AE221A95D;
-	Sun, 19 Oct 2025 06:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 822E72036FE;
+	Sun, 19 Oct 2025 06:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/iVFhoQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMqNhywC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A741178372;
-	Sun, 19 Oct 2025 06:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53190178372;
+	Sun, 19 Oct 2025 06:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760855897; cv=none; b=ABly9+pW7x25tur8Gdtpp6r6XDMeSdo2ic5FtL61kkxOEvySTKTOHyb/KK42Hz/xVhiEUyVZRzNAxjSqKMv4Mnt8LskDvwjM5Cd8tdJEtgBfPX1UTd424QKXFmBKAm3YCnph6gKpUzv8BgfzmDkZ0W0DL1FqqiVjmq/r0j7mF5o=
+	t=1760856408; cv=none; b=sXCVBd//OUisGTh2CbsIuO+D34H0+PI1BHT5bu6vipK/XIpG815dENEhYys9X+wrJ2KcAlTD7b/4Obive4Dgqe5EiyhDRxgRwzKAlOyW7TKTtyvzcp+osFnmBXPsV59XuR405sPcjLNci2bGYQoj5AHUXmIAo7gyfaLLbEtrlcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760855897; c=relaxed/simple;
-	bh=zutQ6iQf0byeRZ/GXJXZW1hAG258FPpWvXBWCy3HRR4=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=C2x7JmkItcbtV+LsvzUZY/77nZApe2JmYhuixwU2BxXPNTksX0M4BK1TZ1LC2MqUMoRid07gMtaWlJBq1N7LxcacVmd0GzRzWnWICIzq5KRrsY5ZjvxTNQdF8AHJjs97yPvzrSfbdrtJH1OV7IyXce4+LFN3NWfdG0/UrDf18YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/iVFhoQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1D4C4CEE7;
-	Sun, 19 Oct 2025 06:38:07 +0000 (UTC)
+	s=arc-20240116; t=1760856408; c=relaxed/simple;
+	bh=+a+2hCN0GD5orS5JrZMFWqnSdCPfMOObGECdOlF/YN8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jvUhqdbuW1TCW9LbsV8aleKPg5czFHVro4w3WxxiqmvZJixS1MqWGO+ZjCgaEQBv+aiqsXQ02/2iBLQtTIcu2sDwT8o9mIdcNvalOjjgiuaYkaQcWCkZ9iq14wHp9Vwuuo1m9zH49p++P8iiv6qKL9zpWVOeEZ5o7AcWmpiS+aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMqNhywC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AEBC4CEE7;
+	Sun, 19 Oct 2025 06:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760855897;
-	bh=zutQ6iQf0byeRZ/GXJXZW1hAG258FPpWvXBWCy3HRR4=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=h/iVFhoQAyK3Y8+SGOK5H/0il/s5MM/gUzmZhceLEECMiG6csCzKWW6/6MfkxuALD
-	 2F5Sybk1He1fZhw4/5ggAQ2h5Qusv8wEUX8TDCOuoKPXMEf1Au1D1/lfp/HJ1vZ5Kf
-	 EmVEvHguGrJYej3vSromF2Qa6CHvJqXNVCivdGrxyKq3FdfPntQZ2BM/3TQjXY+8nL
-	 QuYgj9yrnjQ2Vti2EO5MD3Q2jDrl79vUKWvAQE9jtn5gqMt+/juvtXKX2MORZQYlzH
-	 Id6h7XSCZUOX9dUF3mbDNW0/nI79xu0k06MiqqBpjeRYHkBzjeg9Wrv0c1xhPLugge
-	 ODuLGy0m8u5OQ==
+	s=k20201202; t=1760856408;
+	bh=+a+2hCN0GD5orS5JrZMFWqnSdCPfMOObGECdOlF/YN8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=TMqNhywCW0j0gr+EVC6Q8qsF30M2Gyvdxr11ywRpofXBeFofDxgeupde2Zp2j0hag
+	 PU3jp4JzMkkaDx07u16quNHT0hyGYr2GVQsGJloGcoyOON29mN1E3tQVeRlcVYP8wI
+	 1LHai7ybNXEMzZ9+F0/A3IEa5+Br/LLChYULjhDGs6ySp5JLF5gs+FuK97gV7m5cZg
+	 4H5JHZbJ1Gidk9EB/BxiuDcyPza9Lh4O1Fr4IxVmk+12xte/wWWJgXQh0Sy/mAdvN2
+	 pkp6MXFgt+U3uEoTmgS1nctWpJJnfasbbFsfUvFzj+XY8AcB8SYd3XjTnFyCCZ5eR0
+	 9+6y5b/x0xR6g==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Shawn Lin <shawn.lin@rock-chips.com>, Hans Zhang <18255117159@163.com>, 
- Wilfred Mallawa <wilfred.mallawa@wdc.com>, linux-pci@vger.kernel.org, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
+ Yao Zi <ziyao@disroot.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>
-In-Reply-To: <20250905112736.6401-1-linux.amoon@gmail.com>
-References: <20250905112736.6401-1-linux.amoon@gmail.com>
-Subject: Re: [PATCH v1] PCI: dw-rockchip: Simplify regulator setup with
- devm_regulator_get_enable_optional()
-Message-Id: <176085588758.11569.7678087221969106036.b4-ty@kernel.org>
-Date: Sun, 19 Oct 2025 12:08:07 +0530
+ linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>, 
+ Chukun Pan <amadeus@jmu.edu.cn>
+In-Reply-To: <20250918153057.56023-1-ziyao@disroot.org>
+References: <20250918153057.56023-1-ziyao@disroot.org>
+Subject: Re: (subset) [PATCH v2 0/3] Add PCIe Gen2x1 controller support for
+ RK3528
+Message-Id: <176085639822.11982.1205401883779675228.b4-ty@kernel.org>
+Date: Sun, 19 Oct 2025 12:16:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,20 +70,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 05 Sep 2025 16:57:25 +0530, Anand Moon wrote:
-> Replace manual get/enable logic with devm_regulator_get_enable_optional()
-> to reduce boilerplate and improve error handling. This devm helper ensures
-> the regulator is enabled during probe and automatically disabled on driver
-> removal. Dropping the vpcie3v3 struct member eliminates redundant state
-> tracking, resulting in cleaner and more maintainable code.
+On Thu, 18 Sep 2025 15:30:54 +0000, Yao Zi wrote:
+> Rockchip RK3528 ships one PCIe Gen2x1 controller that operates in RC
+> mode only. The SoC doesn't provide a separate MSI controller, thus the
+> one integrated in designware PCIe IP must be used. This series documents
+> the PCIe controller in dt-binding and describes it in the SoC devicetree.
 > 
+> Radxa E20C board is used for testing, whose LAN GbE port is provided
+> through an RTL8111H chip connected to PCIe controller. Its devicetree
+> is adjusted to enable the controller, and IPERF3 shows the interface
+> runs at full-speed. A typical result looks like
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] PCI: dw-rockchip: Simplify regulator setup with devm_regulator_get_enable_optional()
-      commit: c930b10f17c03858cfe19b9873ba5240128b4d1b
+[1/3] dt-bindings: PCI: dwc: rockchip: Add RK3528 variant
+      commit: dfbf19c47a01eda5df4d476d64a273e1188ea5a1
 
 Best regards,
 -- 
