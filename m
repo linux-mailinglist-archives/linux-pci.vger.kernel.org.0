@@ -1,203 +1,125 @@
-Return-Path: <linux-pci+bounces-38676-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38677-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63008BEE710
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 16:28:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BA0BBEE71C
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 16:34:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 58D444E21B8
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 14:28:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2C66420C75
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 14:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B84A258EE9;
-	Sun, 19 Oct 2025 14:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MP03uqEj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFE452882C9;
+	Sun, 19 Oct 2025 14:34:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162CF2459EA;
-	Sun, 19 Oct 2025 14:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A25C1C8606;
+	Sun, 19 Oct 2025 14:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760884128; cv=none; b=uuje19fGo6gsunfKZX4qwT2ZefmT1Gm1QG4pq/JBY5Vb0j1uV2UrFAscFe+76adm4d3gXEbY5aL4Z8fzjTH90sIzKY2oLTORdNAohwciWEGbATr+OciaD6NGllazg0PSNypZ9/N1loTh4+1TdUYq3r3IRSNjD1vPneXmf2YPZig=
+	t=1760884463; cv=none; b=HJEsjeqZKnWU6l79K1bkLO+5u4UCpbawJDCpw9c2GF7qM7LZ0xAAXtZWgqeL+EiropKUSNilUMrXnjq/qlVI2RWf9SDxNFcjzmGx2RIvcqidvM9s2zXaM2MVVzsZCee4n1oB4QUw9TcGZxznoBJjfxP/iabV43xI3K2vgLvUpwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760884128; c=relaxed/simple;
-	bh=2Lk3VteT5ZUYtGV3L7w6wKgSGuoqrZ/lGhL+exIXDm8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=Cc8IFpNXVqlSEP9dMgyjZwMJehP0YGanSKe0P+61FC3S4dpZqPLzi+CsytLqjvp0UZ9dwbzEjxc+CtZ4rBPECe2y0bmT4m/RjJrVLiUP95ctmTM+jnJKAMmVY9p2jpEeC5o1w2Ks2cvTDzafhx/H34NuoGb3GdqQM2N3tlIFxI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MP03uqEj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4830C4CEE7;
-	Sun, 19 Oct 2025 14:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760884127;
-	bh=2Lk3VteT5ZUYtGV3L7w6wKgSGuoqrZ/lGhL+exIXDm8=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=MP03uqEjX3dT3tNfORhl0l847PRKqtZ5CKZZ6jtJVg/gObj2g3axOfyuXJAOL/CCd
-	 6et/er0QZsqeHeYSpFjj4gs7GCC/aN27fEpcA19izrrOOWBG6ctcuB4LNj6bo/64A+
-	 sLqp8CaLTIL7U1AU7IiuLT2oy/5MyqMyseRFgC1e54qOl27t6crh33k2F03oekgIWB
-	 SqylejnRdM1buwwgRTLQxtvicZHCu+9a2mLXT0EUTFLlyOuOYnn2gMZJsSK0+q8HLQ
-	 +bHhisezI8jZ+1eNnQnFqoNFtxSfVA2NgUUI9onNLltSFLTzrn+lhexkX0rX3mrp8x
-	 bDxQ2guleBZ2g==
+	s=arc-20240116; t=1760884463; c=relaxed/simple;
+	bh=t18vQoHoWWi+2K+Sy4tvcn/q0aoEmipmVLsee3uj1eY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s75qDz8SjqGS1A7rbx2TTHxIuVQoe1bqxbHJqh22p/peOhSJrxmc0vpVim61IGf1IiqY1YRGwPAg3lIQsxg4jIRwv7hWyDmfQ/RTFIKmxgPtMFWf7IGStQcNkEuVsZ2SfC/c5K8pP/FfL2PB+taeBE9okBPuy8tkm4pvpExiFSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6CFF22C051E9;
+	Sun, 19 Oct 2025 16:34:17 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 35A0B4A12; Sun, 19 Oct 2025 16:34:17 +0200 (CEST)
+Date: Sun, 19 Oct 2025 16:34:17 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>,
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
+	mjrosato@linux.ibm.com
+Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
+Message-ID: <aPT26UZ41DsN5C01@wunner.de>
+References: <aOE1JMryY_Oa663e@wunner.de>
+ <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
+ <aOQX6ZTMvekd6gWy@wunner.de>
+ <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
+ <aOZoWDQV0TNh-NiM@wunner.de>
+ <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
+ <aOaqEhLOzWzswx8O@wunner.de>
+ <d69f239040b830718b124c5bcef01b5075768226.camel@linux.ibm.com>
+ <aOtL_Y6HH5-qh2jD@wunner.de>
+ <bb59edee909ceb09527cedec10896d45126f0027.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 19 Oct 2025 16:28:40 +0200
-Message-Id: <DDMDBPDZHN6G.KI90E7ZWWX39@kernel.org>
-To: "Markus Probst" <markus.probst@posteo.de>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v5 1/2] rust: Add trait to convert a device reference to
- a bus device reference
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Igor Korotin"
- <igor.korotin.linux@gmail.com>, "Lee Jones" <lee@kernel.org>, "Pavel
- Machek" <pavel@kernel.org>, "Dave Ertman" <david.m.ertman@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, "Leon Romanovsky" <leon@kernel.org>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-leds@vger.kernel.org>
-References: <20251018205912.1528811-1-markus.probst@posteo.de>
- <20251018205912.1528811-2-markus.probst@posteo.de>
-In-Reply-To: <20251018205912.1528811-2-markus.probst@posteo.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb59edee909ceb09527cedec10896d45126f0027.camel@linux.ibm.com>
 
-On Sat Oct 18, 2025 at 10:59 PM CEST, Markus Probst wrote:
-> Implement the `IntoBusDevice` trait for converting a `Device` reference t=
-o a
-> bus device reference for all bus devices. `Device` implements this trait =
-as a
-> fallback.
->
-> The `IntoBusDevice` trait allows abstractions to provide the bus device i=
-n
-> class device callbacks.
->
-> Signed-off-by: Markus Probst <markus.probst@posteo.de>
-> ---
->  rust/kernel/auxiliary.rs |  7 +++++++
->  rust/kernel/device.rs    | 41 ++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/i2c.rs       |  7 +++++++
+On Tue, Oct 14, 2025 at 02:07:57PM +0200, Niklas Schnelle wrote:
+> On Sun, 2025-10-12 at 08:34 +0200, Lukas Wunner wrote:
+> > If you do want to stick with your alternative approach,
+> > maybe doing the error handling in the ->mmio_enabled() phase
+> > instead of ->error_detected() would make more sense.
+> > In that phase you're allowed to access the device,
+> > you can also attempt a local reset and return
+> > PCI_ERS_RESULT_RECOVERED on success.
+> > 
+> > You'd have to return PCI_ERS_RESULT_CAN_RECOVER though
+> > from the ->error_detected() callback in order to progress
+> > to the ->mmio_enabled() step.
+> 
+> The problem with using ->mmio_enabled() is two fold. For one we
+> sometimes have to do a reset instead of clearing the error state, for
+> example if the device was not only put in the error state but also
+> disabled, or if the guest driver wants it,
 
-i2c is not upstream yet, hence it should not be part of this patch. Instead=
- you
-should include the platform bus though.
+Well in that case you could reset the device in the ->mmio_enabled() step
+from the guest using the vfio reset ioctl.
 
->  rust/kernel/pci.rs       |  7 +++++++
->  rust/kernel/usb.rs       |  6 ++++++
->  5 files changed, 68 insertions(+)
->
-> diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-> index e11848bbf206..dea24265f549 100644
-> --- a/rust/kernel/auxiliary.rs
-> +++ b/rust/kernel/auxiliary.rs
-> @@ -15,6 +15,7 @@
->  };
->  use core::{
->      marker::PhantomData,
-> +    mem::offset_of,
->      ptr::{addr_of_mut, NonNull},
->  };
-> =20
-> @@ -239,6 +240,12 @@ extern "C" fn release(dev: *mut bindings::device) {
->      }
->  }
-> =20
-> +// SAFETY: `auxilary::Device` is a transparent wrapper of `struct auxili=
-ary_device`.
-> +// The offset is guaranteed to point to a valid device field inside `aux=
-ilary::Device`.
-> +unsafe impl<Ctx: device::DeviceContext> device::IntoBusDevice<Ctx> for D=
-evice<Ctx> {
-> +    const OFFSET: usize =3D offset_of!(bindings::auxiliary_device, dev);
-> +}
-> +
->  // SAFETY: `Device` is a transparent wrapper of a type that doesn't depe=
-nd on `Device`'s generic
->  // argument.
->  kernel::impl_device_context_deref!(unsafe { Device });
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 1321e6f0b53c..5527854a195f 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -511,6 +511,47 @@ impl DeviceContext for Core {}
->  impl DeviceContext for CoreInternal {}
->  impl DeviceContext for Normal {}
-> =20
-> +/// Bus devices can implement this trait to allow abstractions to provid=
-e the bus device in
-> +/// class device callbacks.
-> +///
-> +/// # Safety
-> +///
-> +/// `IntoBusDevice::OFFSET` must be a offset to a device field in the im=
-plemented struct.
+> Second and more
+> importantly this would break the guests assumption that the device will
+> be in the error state with MMIO and DMA blocked when it gets an error
+> event. On the other hand, that's exactly the state it is in if we
+> report the error in the ->error_detected() callback
 
-I think we should also require that this must only be implemented by bus de=
-vice
-types.
+At the risk of continuously talking past each other:
 
-> +pub(crate) unsafe trait IntoBusDevice<Ctx: DeviceContext>:
-> +    AsRef<Device<Ctx>>
+How about this, the host notifies the guest of the error in the
+->error_detected() callback.  The guest notifies the driver and
+collects the result (whether a reset is requested or not), then
+returns PCI_ERS_RESULT_CAN_RECOVER to the host.
 
-We should probably name this AsBusDevice.
+The host re-enables I/O to the device, invokes the ->mmio_detected()
+callback.  The guest then resets the device based on the result it
+collected earlier or invokes the driver's ->mmio_enabled() callback.
 
-> +{
-> +    /// The relative offset to the device field.
-> +    ///
-> +    /// Use `offset_of!(bindings, field)` macro to avoid breakage.
-> +    const OFFSET: usize;
-> +
-> +    /// Convert a reference to [`Device`] into `Self`.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `dev` must be contained in `Self`.
-> +    unsafe fn from_device(dev: &Device<Ctx>) -> &Self
+If the driver returns PCI_ERS_RESULT_NEED_RESET from the
+->mmio_enabled() callback, you can likewise reset the device from
+the guest using the ioctl method.
 
-As mentioned in the other thread, my concern remains that this could be abu=
-sed
-by drivers.
+My concern is that by insisting that you handle device recovery
+completely in the ->error_detected() phase, you're not complying
+with the protocol specified in Documentation/PCI/pci-error-recovery.rst
+and as a result, you have to amend the reset code in the PCI core
+because it assumes that all arches adheres to the protocol.
+In my view, that suggests that the approach needs to be reworked
+to comply with the protocol.  Then the workarounds for performing
+a reset while I/O is blocked become unnecessary.
 
-For now the trait is pub(crate), but with the new build system coming soon,
-we're able to split things out of the kernel crate, and hence bus abstracti=
-ons
-and driver-core code may end up in different crates requiring this to becom=
-e
-public.
+Thanks,
 
-We should at least document that this must not be used by drivers and is
-intended for bus and class device abstractions only.
-
-> +    where
-> +        Self: Sized,
-> +    {
-> +        let raw =3D dev.as_raw();
-> +        // SAFETY: `raw - Self::OFFSET` is guaranteed by the safety requ=
-irements
-> +        // to be a valid pointer to `Self`.
-> +        unsafe { &*raw.byte_sub(Self::OFFSET).cast::<Self>() }
-> +    }
-> +}
-> +
-> +// SAFETY: `Device` is a transparent wrapper of `device`.
-> +unsafe impl<Ctx: DeviceContext> IntoBusDevice<Ctx> for Device<Ctx> {
-> +    const OFFSET: usize =3D 0;
-> +}
-
-A generic device is not guaranteed to be a bus device. Also, I don't see a
-reason why class device abstractions would want to work with a generic devi=
-ce
-rather than the actual bus device parent. Hence, let's drop this impl.
+Lukas
 
