@@ -1,85 +1,85 @@
-Return-Path: <linux-pci+bounces-38647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39EA7BEDE35
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 07:00:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73249BEDE3B
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 07:00:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1EBB14E1C5A
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 05:00:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 909F93E847E
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 05:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37A32557A;
-	Sun, 19 Oct 2025 05:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5661921B9C0;
+	Sun, 19 Oct 2025 05:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i0v079He"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXR1Tjdu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A3721257F
-	for <linux-pci@vger.kernel.org>; Sun, 19 Oct 2025 05:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800642153EA
+	for <linux-pci@vger.kernel.org>; Sun, 19 Oct 2025 05:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760850010; cv=none; b=meqgsd6vr+H20iBctCMJQBTC2mSG9s/g3/uplsT4Vpm9K5oV2yYoKPQVqXYQZ1fEJzJCKSk9xlmESvnU0Rfb+rxDtPdGXA0HXj1p72kL+ojBOl0YH7jNrUmPLlquncQqiUnKNsMgdKBXBgml2P3vZ/zxa9+XvkIRT8Q+Vm5BV2A=
+	t=1760850013; cv=none; b=UEZhFXlHiUisq6xjFj86BLRT7jWFU1b7KEQfiTDRaA0lWy3W22O2RA87/0e9KVZAnj9OM3FlYdSRfw6qmxRCbTP1ariwNmw3U8WLV9nXhQx7BWk/zW6Ak8ufZlRhMSz7THY+Dc+JepFGXhSomr+MTVrxJE5BT5zA9EObdFSsOS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760850010; c=relaxed/simple;
-	bh=o1PUC2wc1mAokO+mTBqq622zLzBZ0C7jG04WPD4ze+8=;
+	s=arc-20240116; t=1760850013; c=relaxed/simple;
+	bh=YUyYgzYm9tbG09HLL/WAwoU4M99Mv0yjyKmgERRoNjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fmzj2K8I0xozHlGZyoJ4IcyJfOeb+50X4SL5WnC4k0swVEPIlXyPUaQu0zh/Cibczjg4GzyKpZWxyUZMB5xyDVT6irdU+/UjlcqYBuCgdOuTfms3VX7EJKTCZbnR8OT+0kuNKwIiSJnWHmtvN5YqlmLV95xA4aNuFYmxl4Prmqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i0v079He; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=j+h1eM+0pmZs3j72hI6mfgFJiX2eoaxrlMmQXcNLhGwJO+i2IFdbkcQK+vpD1E6mvi/OF93GDxMTdjZda+bP1vm0KnSCtgajmVgW/U7q7bYM3KtcAdP5t+D9tIV+1XF90LJz/EP6T3QeqAoVn7AXEi2Wsg1PsSGd3A2nA3zZhYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RXR1Tjdu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760850008;
+	s=mimecast20190719; t=1760850010;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z6j42bXIK7vhHm/hVQ0KPPWv9prcOGiEtMxLoqJlyhY=;
-	b=i0v079Hed/WgwvyK0cBqNP/HL3UEigF5cOzoESIJdnQS9gZFwXyuaHxCQXQFalSKOsMeIm
-	d8X6bjf16t2cWrVnKYzRYP/5PGOx0BYgMx4XrI4G2vyPQJLtXBUdl1aIJYigv4142t3xT0
-	yIo6YZ8VhynuBzcQPe6J0k1gD+cPxzU=
+	bh=hQXW79VD1VDqu9OOdSqXUG39KL0/s9L9/QkyIlNgoV0=;
+	b=RXR1TjduRixxK24JNV3Cjo1L5yaJf1FkSvOYPAaWbn4tk0ZnnYAI6/8MPs99rmJHFCejoD
+	g91mXSJuwlm7vGFWjwcpBq42sfkOdWxMuch/WFNX3uzjtg/7J5HRAzArnhrsPzIbmYen7H
+	3SBW32U1RklAHQ2awg9JONOoXdbTaH4=
 Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
  [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-Vgtwr8vXO0ex_3KWttRRMg-1; Sun, 19 Oct 2025 01:00:06 -0400
-X-MC-Unique: Vgtwr8vXO0ex_3KWttRRMg-1
-X-Mimecast-MFC-AGG-ID: Vgtwr8vXO0ex_3KWttRRMg_1760850006
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-87c171369aaso142212456d6.0
-        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 22:00:06 -0700 (PDT)
+ us-mta-606-ixyuE-YXNJS2a3y_fQNe1Q-1; Sun, 19 Oct 2025 01:00:09 -0400
+X-MC-Unique: ixyuE-YXNJS2a3y_fQNe1Q-1
+X-Mimecast-MFC-AGG-ID: ixyuE-YXNJS2a3y_fQNe1Q_1760850008
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-797ab35807eso148541946d6.1
+        for <linux-pci@vger.kernel.org>; Sat, 18 Oct 2025 22:00:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760850005; x=1761454805;
+        d=1e100.net; s=20230601; t=1760850008; x=1761454808;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z6j42bXIK7vhHm/hVQ0KPPWv9prcOGiEtMxLoqJlyhY=;
-        b=VBBR0zVCh7Ci1ygYIlgfA77RgOnQWJr9Ph8/tgfjutdalSs6CbrbGJ+mASPWLLWUQ3
-         KJgbUXLazpaBKht74liWkpXejNVbtNMxOT5FsoTnN92xr87hsmdRJL+hps47/CdAMjDM
-         01RknbvOQ7P9OTEzZB7Bp1+I/vfMvdLekIJiSSQTRigcJY+6xVzYyGiGEH+Tb53UCxAb
-         yE/4PmnuN2LDBHhQPG81FbPxmFke/0+eJq7TwmdjN4o9z+J5KUh0EQAlZmXsuEraATOR
-         T4kkN5RtmG2Pg+63TjvPIaF0fpHHB4pZkz0YGngSDU0SADUe/ecC+lPY3/45e1exBzQE
-         0ysw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLb7nvBkE5D8UwRgfdwLTn9lrFpAemQsVrnOSUUZyKbNnpje1kKWBEJchyFEXjmo68nEuI8TSoXIQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwUEsoFvLapmLoh8W4vhgU6WWZRcfdGQNwNuHffr5+K7uvx1Au
-	rGwzwDNlVSYss+aqF6EzvvR/NQGZXid2/rEWuMukqVMi8mBVqV1n/FqQkxzILjpfg2Qb8qo/S1N
-	qHJChgFeJ6+OqiL9PLloEtFWWo4HoGBQ2h2DIGsNBIYJXbbvqeTcgA3evg6wTwA==
-X-Gm-Gg: ASbGnctulYKm30VDhQAQoyOj0tjbmnfLwzfqcHghwWNLRy3bPoSDUJLUcU65ZVIIdJB
-	a+NbkHI8+zHiXcbVfUE8jyEpOIYze2N5kkc75WlnCDm9/RNe6LNKCzRsUsNmdC+vGf3EOD4KnxP
-	J5r4jqsnAGzvIRvA/6Lfms7UHr5Bo0BFo89TBTN7liADD14MdeZ3xhX00P2YQva+PLBRlfAoxdM
-	NogZqFChRTYL3MrKB+rO/3lHmdmPgGA3diz5uy9ROlcK3OnT14AYKX0PyAGda7QOauHOxeA1TmG
-	39TfwKun8V1W+ri04JF3IqULFENAZdizL8yQbUY5314RATMYG6AHksNVcHygGxZqmLRf8n8KIGq
-	Y8nONozMRkN+z
-X-Received: by 2002:a05:6214:1c4e:b0:70f:b03d:2e85 with SMTP id 6a1803df08f44-87c202ca12cmr129730566d6.24.1760850005635;
-        Sat, 18 Oct 2025 22:00:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5wLeuxoiCHUZOMNbVk/R58So9DiHQPQPxCkQ0dtuezAPPgfbIhF/Hy0u9hiLd/d1yjKIlOQ==
-X-Received: by 2002:a05:6214:1c4e:b0:70f:b03d:2e85 with SMTP id 6a1803df08f44-87c202ca12cmr129730306d6.24.1760850005241;
-        Sat, 18 Oct 2025 22:00:05 -0700 (PDT)
+        bh=hQXW79VD1VDqu9OOdSqXUG39KL0/s9L9/QkyIlNgoV0=;
+        b=E3X1/aenZ1/hYbR5XI0HyBC3OJmgcBFXUSqHQ6Tk7EBl8VgXwwvn6ZJJ1D3PXIuxGI
+         Dg8R//w+PMkC+aMwrX8HOkzsOSe1nXZwipKnylnZIsB9OsyFw8eJMd9zHTllYp05R+TK
+         4+3aNoMZysSb22Rl5MkAOjGE2HuwC6l2s54jEge3oXR5YPcWHZQwnZt7J9ir3U6hnpGr
+         yJYsBP/rmF2lfOTAHBdpEODlDvg4DmJgIRI8EpOijTm4ydZzBuVDSWfkbgFmlH9I04ml
+         Cv50xve8vE6vtrwqnaUQ47DjZJQ5XnH1EcdLscf4pFysLj9o8OPiqOC9tmfW2srtumzq
+         t6kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFQBgqB1BMmWfBSqm03O1032Df/Pt7XW2p9E1Lzv11+ZeSkZa9Q5ElTLN5knz7Na727AwHDZ3gNIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAFt4UrhIKO8UUDBQTEevDgnpcPeFvQslF02IzXc5N4aUnXw9O
+	d0RX//N2GdtuQbAGzbdGLnldHmO+o+OLjvCIxw1GNwXsITKjf0Q2Frmn4dbpYHwHYudVT/6gCyO
+	3aBH1+3mC9zuLqM8KhsJDOOxj03A6aNg3G9dZo6lyL+EiD6VnsF6hml6KXGkhAA==
+X-Gm-Gg: ASbGncu7InidI+hHJjM/VVHUIzC7l7jpaUAcQPoq97iA+pJJNfDBWqi4iArBp/7u8bk
+	Q8AMGPyw4EDbnIfKYobPntIFdA0I5qWtAEMVbcxeFZqwmnkSZJmHxLvZfN3Edw4qZYSs19NBFXp
+	WMq625rc4Lll6JPBE6jRCrWGi6USyBFBEGYeG53Ry+ijxDwiDwE2UpU1UADC8TPc9iuGdtjg7LM
+	YT4eIU6iFOrf2nhnWd+Vq3n0l7MMb6vkzW/eRkSLTZvQKqETpM0iRwvfd8NW/RPomLLBqdDgsq8
+	W+lbXOb1JMRuv58Sc/LknIVPrbJY4hLsALlD8t/1aq07VrgM9c78uqkJrfLrlmscoPeEL+kVA02
+	E/NYeiMUOrN6e
+X-Received: by 2002:ac8:5ad0:0:b0:4e8:aee7:c559 with SMTP id d75a77b69052e-4e8aee7c85cmr47240361cf.31.1760850008592;
+        Sat, 18 Oct 2025 22:00:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG2GCOUQgg388o06Q5JSqBle/dvEc3Un/4442RGMFaboTta85NJv6+LnGnnuvBC07NDv3meCA==
+X-Received: by 2002:ac8:5ad0:0:b0:4e8:aee7:c559 with SMTP id d75a77b69052e-4e8aee7c85cmr47240031cf.31.1760850008184;
+        Sat, 18 Oct 2025 22:00:08 -0700 (PDT)
 Received: from mira.orion.internal ([2607:f2c0:b0fc:be00:3640:bdf5:7a8:2136])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87d028ad781sm27154396d6.49.2025.10.18.22.00.04
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87d028ad781sm27154396d6.49.2025.10.18.22.00.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 22:00:04 -0700 (PDT)
+        Sat, 18 Oct 2025 22:00:07 -0700 (PDT)
 From: Peter Colberg <pcolberg@redhat.com>
 To: Danilo Krummrich <dakr@kernel.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -98,9 +98,9 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org,
 	Peter Colberg <pcolberg@redhat.com>,
 	Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH 1/2] rust: pci: refer to legacy as INTx interrupts
-Date: Sun, 19 Oct 2025 04:56:19 +0000
-Message-ID: <20251019045620.2080-2-pcolberg@redhat.com>
+Subject: [PATCH 2/2] rust: pci: normalise spelling of PCI BAR
+Date: Sun, 19 Oct 2025 04:56:20 +0000
+Message-ID: <20251019045620.2080-3-pcolberg@redhat.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251019045620.2080-1-pcolberg@redhat.com>
 References: <20251019045620.2080-1-pcolberg@redhat.com>
@@ -112,60 +112,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Consistently use INTx, as in the description of IrqType::Intx, to refer
-to the four legacy PCI interrupts, INTA#, INTB#, INTC#, and INTD#.
+Consistently refer to PCI base address register as PCI BAR.
+Fix spelling mistake "Mapps" -> "Maps".
 
-Link: https://lore.kernel.org/rust-for-linux/20251015230209.GA960343@bhelgaas/
+Link: https://lore.kernel.org/rust-for-linux/20251015225827.GA960157@bhelgaas/
 Link: https://github.com/Rust-for-Linux/linux/issues/1196
 Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 Signed-off-by: Peter Colberg <pcolberg@redhat.com>
 ---
- rust/kernel/pci.rs | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ rust/kernel/pci.rs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index d91ec9f008ae..18f9b92a745e 100644
+index 18f9b92a745e..747a0487d1e5 100644
 --- a/rust/kernel/pci.rs
 +++ b/rust/kernel/pci.rs
-@@ -56,7 +56,7 @@ const fn as_raw(self) -> u32 {
- pub struct IrqTypes(u32);
+@@ -363,7 +363,7 @@ pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+ /// # Invariants
+ ///
+ /// `Bar` always holds an `IoRaw` inststance that holds a valid pointer to the start of the I/O
+-/// memory mapped PCI bar and its size.
++/// memory mapped PCI BAR and its size.
+ pub struct Bar<const SIZE: usize = 0> {
+     pdev: ARef<Device>,
+     io: IoRaw<SIZE>,
+@@ -423,7 +423,7 @@ fn new(pdev: &Device, num: u32, name: &CStr) -> Result<Self> {
  
- impl IrqTypes {
--    /// Create a set containing all IRQ types (MSI-X, MSI, and Legacy).
-+    /// Create a set containing all IRQ types (MSI-X, MSI, and INTx).
-     pub const fn all() -> Self {
-         Self(bindings::PCI_IRQ_ALL_TYPES)
+     /// # Safety
+     ///
+-    /// `ioptr` must be a valid pointer to the memory mapped PCI bar number `num`.
++    /// `ioptr` must be a valid pointer to the memory mapped PCI BAR number `num`.
+     unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
+         // SAFETY:
+         // `pdev` is valid by the invariants of `Device`.
+@@ -537,7 +537,7 @@ pub fn subsystem_device_id(&self) -> u16 {
+         unsafe { (*self.as_raw()).subsystem_device }
      }
-@@ -66,7 +66,7 @@ pub const fn all() -> Self {
-     /// # Examples
-     ///
-     /// ```ignore
--    /// // Create a set with only MSI and MSI-X (no legacy interrupts).
-+    /// // Create a set with only MSI and MSI-X (no INTx interrupts).
-     /// let msi_only = IrqTypes::default()
-     ///     .with(IrqType::Msi)
-     ///     .with(IrqType::MsiX);
-@@ -722,9 +722,9 @@ pub fn request_threaded_irq<'a, T: crate::irq::ThreadedHandler + 'static>(
-     /// Allocate IRQ vectors for this PCI device with automatic cleanup.
-     ///
-     /// Allocates between `min_vecs` and `max_vecs` interrupt vectors for the device.
--    /// The allocation will use MSI-X, MSI, or legacy interrupts based on the `irq_types`
-+    /// The allocation will use MSI-X, MSI, or INTx interrupts based on the `irq_types`
-     /// parameter and hardware capabilities. When multiple types are specified, the kernel
--    /// will try them in order of preference: MSI-X first, then MSI, then legacy interrupts.
-+    /// will try them in order of preference: MSI-X first, then MSI, then INTx interrupts.
-     ///
-     /// The allocated vectors are automatically freed when the device is unbound, using the
-     /// devres (device resource management) system.
-@@ -748,7 +748,7 @@ pub fn request_threaded_irq<'a, T: crate::irq::ThreadedHandler + 'static>(
-     /// // Allocate using any available interrupt type in the order mentioned above.
-     /// let vectors = dev.alloc_irq_vectors(1, 32, pci::IrqTypes::all())?;
-     ///
--    /// // Allocate MSI or MSI-X only (no legacy interrupts).
-+    /// // Allocate MSI or MSI-X only (no INTx interrupts).
-     /// let msi_only = pci::IrqTypes::default()
-     ///     .with(pci::IrqType::Msi)
-     ///     .with(pci::IrqType::MsiX);
+ 
+-    /// Returns the start of the given PCI bar resource.
++    /// Returns the start of the given PCI BAR resource.
+     pub fn resource_start(&self, bar: u32) -> Result<bindings::resource_size_t> {
+         if !Bar::index_is_valid(bar) {
+             return Err(EINVAL);
+@@ -549,7 +549,7 @@ pub fn resource_start(&self, bar: u32) -> Result<bindings::resource_size_t> {
+         Ok(unsafe { bindings::pci_resource_start(self.as_raw(), bar.try_into()?) })
+     }
+ 
+-    /// Returns the size of the given PCI bar resource.
++    /// Returns the size of the given PCI BAR resource.
+     pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+         if !Bar::index_is_valid(bar) {
+             return Err(EINVAL);
+@@ -656,7 +656,7 @@ fn drop(&mut self) {
+ }
+ 
+ impl Device<device::Bound> {
+-    /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
++    /// Maps an entire PCI BAR after performing a region-request on it. I/O operation bound checks
+     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
+     pub fn iomap_region_sized<'a, const SIZE: usize>(
+         &'a self,
+@@ -666,7 +666,7 @@ pub fn iomap_region_sized<'a, const SIZE: usize>(
+         Devres::new(self.as_ref(), Bar::<SIZE>::new(self, bar, name))
+     }
+ 
+-    /// Mapps an entire PCI-BAR after performing a region-request on it.
++    /// Maps an entire PCI BAR after performing a region-request on it.
+     pub fn iomap_region<'a>(
+         &'a self,
+         bar: u32,
 -- 
 2.51.0
 
