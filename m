@@ -1,125 +1,149 @@
-Return-Path: <linux-pci+bounces-38677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BA0BBEE71C
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 16:34:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67BB8BEE7DF
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 16:55:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2C66420C75
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 14:34:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECC3B189AB32
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Oct 2025 14:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFE452882C9;
-	Sun, 19 Oct 2025 14:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F562EB84C;
+	Sun, 19 Oct 2025 14:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UhuGRoKI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-69.smtpout.orange.fr [80.12.242.69])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A25C1C8606;
-	Sun, 19 Oct 2025 14:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6DC2EB5C8;
+	Sun, 19 Oct 2025 14:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760884463; cv=none; b=HJEsjeqZKnWU6l79K1bkLO+5u4UCpbawJDCpw9c2GF7qM7LZ0xAAXtZWgqeL+EiropKUSNilUMrXnjq/qlVI2RWf9SDxNFcjzmGx2RIvcqidvM9s2zXaM2MVVzsZCee4n1oB4QUw9TcGZxznoBJjfxP/iabV43xI3K2vgLvUpwo=
+	t=1760885644; cv=none; b=qBzJGRGLHI32bI5jaGPBnXVxc7CmOK0qAebO4BKnvjnBIUc3PEduKQ/sdH2GPa97BjHS2p5X6kO5OqtKTnUSEJX73/9BbGpdgAIqCXWw8OZeVkI8aj8n2KRYhgXD12/u3xG6hrWVjxByFRShuXvn/f7QpAdMBy4X3NgKTGD4qGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760884463; c=relaxed/simple;
-	bh=t18vQoHoWWi+2K+Sy4tvcn/q0aoEmipmVLsee3uj1eY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s75qDz8SjqGS1A7rbx2TTHxIuVQoe1bqxbHJqh22p/peOhSJrxmc0vpVim61IGf1IiqY1YRGwPAg3lIQsxg4jIRwv7hWyDmfQ/RTFIKmxgPtMFWf7IGStQcNkEuVsZ2SfC/c5K8pP/FfL2PB+taeBE9okBPuy8tkm4pvpExiFSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6CFF22C051E9;
-	Sun, 19 Oct 2025 16:34:17 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 35A0B4A12; Sun, 19 Oct 2025 16:34:17 +0200 (CEST)
-Date: Sun, 19 Oct 2025 16:34:17 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>,
-	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
-	mjrosato@linux.ibm.com
-Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
-Message-ID: <aPT26UZ41DsN5C01@wunner.de>
-References: <aOE1JMryY_Oa663e@wunner.de>
- <c0818c13-8075-4db0-b76f-3c9b10516e7a@linux.ibm.com>
- <aOQX6ZTMvekd6gWy@wunner.de>
- <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
- <aOZoWDQV0TNh-NiM@wunner.de>
- <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
- <aOaqEhLOzWzswx8O@wunner.de>
- <d69f239040b830718b124c5bcef01b5075768226.camel@linux.ibm.com>
- <aOtL_Y6HH5-qh2jD@wunner.de>
- <bb59edee909ceb09527cedec10896d45126f0027.camel@linux.ibm.com>
+	s=arc-20240116; t=1760885644; c=relaxed/simple;
+	bh=Fcy3UiOvMV1v627YIH3VVJY+mYw0xwJqHjOMyS0Hb/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cIVDL7LDot3fCojWP8XIUOVLNrqRzG+gR8uPbJxF/OP75yShXQO59pC1VdsyoTh/8HBe86JaYsz8pRqHoEv7QFgdENG1gJiMGWKeN5NZeg9hqaKX9zcc3xJtMN9T2DKhJY8Q6wYu3YqqUbIRK/LghyXrKX+oOrNYlbQgZAlbTKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UhuGRoKI; arc=none smtp.client-ip=80.12.242.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id AUebvZVGoUjXQAUebvcVLF; Sun, 19 Oct 2025 16:45:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1760885103;
+	bh=GdesLHGEaV1JBZuqmJbDS/jaBfHZjxT8ElBdzLC3Tqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=UhuGRoKIJrtlw0wUNoGko+gmYwvyO2Ue7rnSET3mQKJWF7PgHrnsQBQIm5ntnnAks
+	 Uubj6NYKVxBD8HHQvM8NEchfP4xsXSjehpzipA2S0JRY4AfXTZO6L2zTjTrQn/P6oC
+	 hWQpEJaDjzdnQ4pPZ90dzpXL79Ttiv+FA1vYtKdxnLD+whQBjsmhZ/Y2wjWc8uFphj
+	 zV/ce3i10/gDpU327tMMz9w/1m6FtQxiXTP0sdSSlqqR5RWvRCMoyNZUmVk4aeUVp/
+	 2ovcvr1cciV0tL0U4xhoqAx6+mfy6RzRH0MXo9tBYcequ07bul60gPvjXDca6K+/vI
+	 F7rB+ZwD8sIzA==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 19 Oct 2025 16:45:03 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <26975dab-9631-4661-aaf4-afa213104a13@wanadoo.fr>
+Date: Sun, 19 Oct 2025 16:45:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb59edee909ceb09527cedec10896d45126f0027.camel@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] PCI: j721e: Propagate dev_err_probe return value
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, LKML <linux-kernel@vger.kernel.org>,
+ kernel-janitors@vger.kernel.org
+References: <20251014113234.44418-2-linux.amoon@gmail.com>
+ <a2cefc72-de44-4a23-92d2-44b58c8c13fe@web.de>
+ <CANAwSgTtaAtCxtF+DGS-Ay4O3_9JMwk-fJ27yoijhWWbF2URrg@mail.gmail.com>
+ <cf656a57-bb2f-447e-ac6c-0ab118606dc9@web.de>
+ <CANAwSgT0jSQ3pFR3MQo-ENziqrm=yn-rFBTdHegmknMeFd44OQ@mail.gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Language: en-US, fr-FR
+In-Reply-To: <CANAwSgT0jSQ3pFR3MQo-ENziqrm=yn-rFBTdHegmknMeFd44OQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 14, 2025 at 02:07:57PM +0200, Niklas Schnelle wrote:
-> On Sun, 2025-10-12 at 08:34 +0200, Lukas Wunner wrote:
-> > If you do want to stick with your alternative approach,
-> > maybe doing the error handling in the ->mmio_enabled() phase
-> > instead of ->error_detected() would make more sense.
-> > In that phase you're allowed to access the device,
-> > you can also attempt a local reset and return
-> > PCI_ERS_RESULT_RECOVERED on success.
-> > 
-> > You'd have to return PCI_ERS_RESULT_CAN_RECOVER though
-> > from the ->error_detected() callback in order to progress
-> > to the ->mmio_enabled() step.
+Le 19/10/2025 à 12:15, Anand Moon a écrit :
+> Hi Markus, Vignesh,
 > 
-> The problem with using ->mmio_enabled() is two fold. For one we
-> sometimes have to do a reset instead of clearing the error state, for
-> example if the device was not only put in the error state but also
-> disabled, or if the guest driver wants it,
+> On Sat, 18 Oct 2025 at 16:12, Markus Elfring <Markus.Elfring@web.de> wrote:
+>>
+>>>> I propose to take another source code transformation approach better into account.
+>>>> https://elixir.bootlin.com/linux/v6.17.1/source/drivers/base/core.c#L5031-L5075
+>>>>
+>>>> Example:
+>>>> https://elixir.bootlin.com/linux/v6.17.1/source/drivers/pci/controller/cadence/pci-j721e.c#L444-L636
+>>>>
+>>>>          ret = dev_err_probe(dev, cdns_pcie_init_phy(dev, cdns_pcie), "Failed to init phy\n");
+>>>>          if (ret)
+>>>>                  goto err_get_sync;
+>>>>
+>>> No, the correct code ensures that dev_err_probe() is only called when
+>>> an actual error
+>>> has occurred, providing a clear and accurate log entry. …
+>>
+>> Where do you see undesirable technical differences?
+> 
+> The primary issue I wanted to confirm was the function execution order.
+> since cdns_pcie_init_phy within dev_err_probe function
+> 
+> If other developers agree with the approach, I will modify this in a
+> separate patch
 
-Well in that case you could reset the device in the ->mmio_enabled() step
-from the guest using the vfio reset ioctl.
+This other approach is just broken.
 
-> Second and more
-> importantly this would break the guests assumption that the device will
-> be in the error state with MMIO and DMA blocked when it gets an error
-> event. On the other hand, that's exactly the state it is in if we
-> report the error in the ->error_detected() callback
+Using:
+	ret = dev_err_probe(dev, cdns_pcie_init_phy(dev, cdns_pcie), "Failed to 
+init phy\n");
 
-At the risk of continuously talking past each other:
+1) is hard to read and understand.
 
-How about this, the host notifies the guest of the error in the
-->error_detected() callback.  The guest notifies the driver and
-collects the result (whether a reset is requested or not), then
-returns PCI_ERS_RESULT_CAN_RECOVER to the host.
+2) would log an error message even if 0 is returned. This is just wrong.
 
-The host re-enables I/O to the device, invokes the ->mmio_detected()
-callback.  The guest then resets the device based on the result it
-collected earlier or invokes the driver's ->mmio_enabled() callback.
+2 good reasons not to do such things.
 
-If the driver returns PCI_ERS_RESULT_NEED_RESET from the
-->mmio_enabled() callback, you can likewise reset the device from
-the guest using the ioctl method.
 
-My concern is that by insisting that you handle device recovery
-completely in the ->error_detected() phase, you're not complying
-with the protocol specified in Documentation/PCI/pci-error-recovery.rst
-and as a result, you have to amend the reset code in the PCI core
-because it assumes that all arches adheres to the protocol.
-In my view, that suggests that the approach needs to be reworked
-to comply with the protocol.  Then the workarounds for performing
-a reset while I/O is blocked become unnecessary.
+You should ignore people that are already ignored by most people on 
+these lists.
 
-Thanks,
+CJ
 
-Lukas
+> 
+> As Dan Carpenter pointed out - " Wait, no, this doesn't make sense.
+> It's just assigning ret to itself."
+
+Yes, Dan is right.
+
+> 
+> This patch seems irrelevant to me as the return value gets propagated
+> to the error path.
+> Sorry for the noise. Let's drop these changes.
+> 
+> Since I don't have this hardware for testing, I will verify it on
+> another available device.
+>>
+>> Regards,
+>> Markus
+> 
+> Thanks
+> -Anand
+> 
+> 
+
 
