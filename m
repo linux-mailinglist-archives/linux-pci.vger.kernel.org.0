@@ -1,151 +1,155 @@
-Return-Path: <linux-pci+bounces-38766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52576BF210B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 17:21:48 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 807A4BF219E
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 17:29:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DF7884F5B77
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 15:21:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 153604FA71B
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 15:26:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CEA91E1DE5;
-	Mon, 20 Oct 2025 15:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AB4626A088;
+	Mon, 20 Oct 2025 15:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dSf/WOh1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FUhV9gRm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EA51A0B15;
-	Mon, 20 Oct 2025 15:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA9026A0C7
+	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 15:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760973677; cv=none; b=NkCs9lJw9zdMR0/TE30cKRDQEGQh4bus/sqAUqxYg7vuIvpi43sbilojVjOZy3sKbI/me+SEN99cFzxmmdPrh58hZL3nqkGLEewVztjnglisU9L4ZL/JAt1uo3ce8i1hjSdrbDZLWZ8Giwm8Qv4Ivsg9NZHkHAirY39yPEzYuNc=
+	t=1760973932; cv=none; b=CgHbDpgWGAq3C6qFSW/3wW8Ng6Sqgx6019Mfu6kUG3W4TDloaXYQeknEM8YybuKoDtIRQ4gjrRgDP+59JV4XO2Bk++reCQZ6rYBLqXmHlaneMSH0ooCDKPz8b4byCpGwA39pYZmpy32DOQhXxYgI0wgnyhkPQMdTfmeKgWcULR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760973677; c=relaxed/simple;
-	bh=sySpu83x3D2k+B0Y3xJGro9AoTYQQDg2MjIJhobhCIA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MtXUmbJCB5YxFs4G3cRFlxtKlWG3nEGQYGA5FCDlCKse5IyK34XP1OXNGcRAVGWquXfV0IieVYeCdlREIb4fIlPjeEg1TpDxZUOIUxlC+sepTG75ALfAD36ISBkqBJpV3rBmuMntGy7XSYptACs8A1gWhd+ZvjBZbqu4FPz3CB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dSf/WOh1; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1760973664; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=Vou/dzf4KP++tes6RLuekqGJp6PWAI7RQxEaTe2LEz4=;
-	b=dSf/WOh15QX4onLkMBaXmVSYu0N6hCGfPAX+X9CSaLLjb3SAlaM89BuCB/QiBIdpmSmQwPpXFJuetHYs2jhInJBwqD+N3eS+R6qSgCSU10JMRwc/SPLkULK01UjEKLp/xIq2MEZQc7oSQIMEk1vPVuwa+efUAHSAz+KYupzfk1E=
-Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqdMvSw_1760973662 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 20 Oct 2025 23:21:03 +0800
-Message-ID: <30fe11dd-3f21-4a61-adb0-74e39087c84c@linux.alibaba.com>
-Date: Mon, 20 Oct 2025 23:20:58 +0800
+	s=arc-20240116; t=1760973932; c=relaxed/simple;
+	bh=18mpGiI+om3OE7kjPWuVpgEvn4Rq4kDIfZpfksoHEhw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VxpbERtOVvg1zmwMBuuwzUdKS584Kq/goBX03M8VJcluMVIoIcIh6j+ygwt9g/dgF56xJH819mOuvDvxdu69VF/5pssmBtL3L0eSY2UnJIAcs9/WleaD160iJaRlve6e3AayAv9JseVU4Mll5cbNmbF/8D1T1YgXIn45OfiDf2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FUhV9gRm; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760973930; x=1792509930;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=18mpGiI+om3OE7kjPWuVpgEvn4Rq4kDIfZpfksoHEhw=;
+  b=FUhV9gRmmjuYgv5wRA+9q1pW0MzRdf6DH/fdrTvn1BDbeH06/niKPZ9u
+   sKDRq56edgYhSZplrcsjkIt44Mwq3AwXjf1jYvG1BfbjyTK1J8Rp7FLDx
+   IQS9Hmzzlll1eECgPVZW+hAMIE1njaAjUXu3kSo9rPZ0HYhA5UBcWW7jK
+   a3wpkXCmWgKxsZbLCgbEfKe5EKB5I3Jh640YtbAtn2sBBnUrw8QdS1nUl
+   SluKPMjq1rF2O1XNLha+uNr4KqT3ohBRRiRgnsp/YDIkfW2WCe1HMIz9t
+   YVQKuJ9dNnFS4RAxOMqOt9rOaMq4TTTQhpZQBnvsBZYAyAhcEHqDRKvNj
+   A==;
+X-CSE-ConnectionGUID: Uahz95wbTsyRgU1ApRVAWA==
+X-CSE-MsgGUID: Y7d+FqMiRFKsogOXehKqxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63130683"
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="63130683"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 08:25:29 -0700
+X-CSE-ConnectionGUID: EGK3hb6ZQGqcqM64h5YkTQ==
+X-CSE-MsgGUID: mGuTEZPQRsamIxHHMsy/Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="220504385"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.76])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 08:25:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 20 Oct 2025 18:25:23 +0300 (EEST)
+To: weipengliang <weipengliang@xiaomi.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Avoid restore error L1ss cap.data to parent
+ downstream PCIe port
+In-Reply-To: <20251020023658.2294-1-weipengliang@xiaomi.com>
+Message-ID: <aecefbfa-6500-8390-1d5f-e9454b57219e@linux.intel.com>
+References: <20251020023658.2294-1-weipengliang@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v6 3/5] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org,
- sathyanarayanan.kuppuswamy@linux.intel.com, mahesh@linux.ibm.com,
- oohall@gmail.com, Jonathan.Cameron@huawei.com, terry.bowman@amd.com,
- tianruidong@linux.alibaba.com
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-4-xueshuai@linux.alibaba.com>
- <aPYKe1UKKkR7qrt1@wunner.de>
- <6d7143a3-196f-49f8-8e71-a5abc81ae84b@linux.alibaba.com>
- <aPY--DJnNam9ejpT@wunner.de>
- <43390d36-147f-482c-b31a-d02c2624061f@linux.alibaba.com>
- <aPZGNP79kJO74W4J@wunner.de>
-In-Reply-To: <aPZGNP79kJO74W4J@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Mon, 20 Oct 2025, weipengliang wrote:
 
+> The function pci_restore_aspm_l1ss_state will restore L1ss cap.data
 
-在 2025/10/20 22:24, Lukas Wunner 写道:
-> On Mon, Oct 20, 2025 at 10:17:10PM +0800, Shuai Xue wrote:
->> void aer_report_frozen_error(struct pci_dev *dev)
->> {
->>      struct aer_err_info info;
->>
->>      if (dev->pci_type != PCI_EXP_TYPE_ENDPOINT &&
->>          dev->pci_type != PCI_EXP_TYPE_RC_END)
->>          return;
->>
->>      aer_info_init(&info);
->>      aer_add_error_device(&info, dev);
->>      info.severity = AER_FATAL;
->>      if (aer_get_device_error_info(&info, 0, true))
->>          aer_print_error(&info, 0);
->>
->>      /* pci_dev_put() pairs with pci_dev_get() in aer_add_error_device() */
->>      pci_dev_put(dev);
->> }
+Please add () after any function name. You can ten remove "The function" 
+as it's obvious (or at least place "function" word after its name if you 
+want to still write "The xx() function").
 
-Hi Lukas,
+> in the upstream resume flow, to both downstream & upstream port.
+> When the upstream port is suspended and the suspend flow is interrupted,
+> the downstream port has not been suspended yet, so the L1ss cap.data is
+> not correct.
+
+What interrupts it, where? Both upstream and downstream port L1SS config 
+are saved in the upstream port's pci_save_aspm_l1ss_state() so if upstream 
+port is already suspended, why wasn't the downstream port's L1SS saved?
+
+> Expectially the first Suspend/Reusme flow, the downstrem
+
+Resume
+
+downstream
+
+> L1ss cap.data will be initialize to zero.
+> When the Suspend/Resume flow is interrupted the time between
+
+Please don't use "Suspend/Resume flow" like this. Both are not 
+interrupted.
+
+> upstream port has suspended but the downstream port hasn't,
+> it will restore zero to the downstream port in the
+> upstream port Resume flow.
+
+This seems to repeat what was said in the earlier sentence, what is the 
+difference or should the duplicate be removed?
+
+The structure too here needs improvements. Please first state the issue, 
+then explain the solution.
+
+> Signed-off-by: weipengliang <weipengliang@xiaomi.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Much better.  Again, I think you don't need to rename add_error_device()
-> and then the code comment even fits on the same line:
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 7cc8281e7011..173e0eb10b0d 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -97,6 +97,9 @@ void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
+>  	if (!pdev->l1ss || !parent->l1ss)
+>  		return;
+>  
+> +	if (!parent->state_saved)
 
-Good point. I'll keep the original function name and use the one-line
-comment format.
+There disconnection from the changelog's text to this check.
 
+This is pci_save_aspm_l1ss_state(), not restore.
+
+I'm also not convinced parent->state_saved is a robust indicator of what 
+has been saved as ASPM config is saved at a different time than when rest 
+of ->state_saved is set. We were bitten by this difference in timing 
+earlier.
+
+Not directly related to this patch, perhaps dev->state_saved = true; in 
+pci_save_state() should be moved as the last line before return to avoid 
+claiming state is saved before it truly is 100% saved.
+
+> +		return;
+> +
+>  	/*
+>  	 * Save L1 substate configuration. The ASPM L0s/L1 configuration
+>  	 * in PCI_EXP_LNKCTL_ASPMC is saved by pci_save_pcie_state().
 > 
-> 	pci_dev_put(dev);  /* pairs with pci_dev_get() in add_error_device() */
-> 
->>>>     .slot_reset()
->>>>       => pci_restore_state()
->>>>         => pci_aer_clear_status()
->>>
->>> This was added in 2015 by b07461a8e45b.  The commit claims that
->>> the errors are stale and can be ignored.  It turns out they cannot.
->>>
->>> So maybe pci_restore_state() should print information about the
->>> errors before clearing them?
->>
->> While that could work, we would lose the error severity information at
-> 
-> Wait, we've got that saved in pci_cap_saved_state, so we could restore
-> the severity register, report leftover errors, then clear those errors?
 
-You're right that the severity register is also sticky, so we could
-retrieve error severity directly from AER registers.
+-- 
+ i.
 
-However, I have concerns about implementing this approach:
-
-1. Scope creep: The current implementation is explicit - we know we're
-in an AER error recovery path and intentionally report the missed fatal
-errors. Your suggestion would make error reporting implicit during any
-device state restoration.
-
-2. Wider impact: pci_save_state() and pci_restore_state() are used
-extensively beyond AER error handling - in power management, reset
-operations, and various driver flows. Adding error reporting to
-pci_restore_state() could generate unexpected error messages in
-non-error scenarios.
-
-3. Architectural consistency: As you noted earlier, "pci_restore_state()
-is only supposed to restore state, as the name implies, and not clear
-errors." Adding error reporting to this function would further violate
-this principle - we'd be making it do even more than just restore state.
-
-Would you prefer I implement this broader change, or shall we proceed
-with the targeted helper function approach for now? The helper function
-solves the immediate problem while keeping the changes focused on the
-AER recovery path.
-
-> Thanks,
-> 
-> Lukas
-
-Thanks.
-Shuai
 
