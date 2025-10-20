@@ -1,92 +1,247 @@
-Return-Path: <linux-pci+bounces-38758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C79D6BF1AF6
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 15:59:54 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF5FBF1B2D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:03:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7838F3A5D79
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 13:58:32 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C59BB34CE20
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83262318136;
-	Mon, 20 Oct 2025 13:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26DD32FB619;
+	Mon, 20 Oct 2025 14:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VDIf1diV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C66C241665;
-	Mon, 20 Oct 2025 13:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755E1607A4;
+	Mon, 20 Oct 2025 14:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760968709; cv=none; b=bi5/xXROliU1uwqlQayl4jZjZ6bAZrEnHY738bnYPCIuMNGS0USakkhhuoyWN6PU/aQzkpSOzC8QmGFZSRBz/kEE4X+Uq08EI7q4csDZUtqHT/VLRRiKgmtuH5rDalVYNsVehy5wqwR2m+qB4/vbljbFY5t4Mf4ukt/1Euf1Yxs=
+	t=1760968985; cv=none; b=er6/HhnW2FtAVOdaSTg8QfA5VhAzBPauoBgnaTg8ADX6ehiSR1rMefNa03wYRkFFVZzRTEbdHOOHFqUdQCLuaYJKO9WBvSOKrvq3OYhCm82Vpk+RhQZfp6SVtavCZTKs0ddMpsyK1oIqEK2acvKW5hFqsR7fBR9I4o8OZOolaiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760968709; c=relaxed/simple;
-	bh=EDGJWaQ3mSpBPu9LAkM/86F9DE+VAX88S07CBhf9Dxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JtbrnGUjDn433i7y7ull86xADHtt+VpYXhV0fQUDxaWn209EL/IlLVWWQTYA/xWzH3ipy2kQRPSX6/sHnCOPz66QN6jJZCixzGUmK11Ssxub8c92NxLfykNOxPAKrVzVxCMMp14OuY/g/Twaf7mLCAWGvPjg86KCNtJbN1Fd2Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id F199C2C02B96;
-	Mon, 20 Oct 2025 15:58:24 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id D719F4A12; Mon, 20 Oct 2025 15:58:24 +0200 (CEST)
-Date: Mon, 20 Oct 2025 15:58:24 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-	kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-	mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
-	terry.bowman@amd.com, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6 4/5] PCI/ERR: Use pcie_aer_is_native() to check for
- native AER control
-Message-ID: <aPZAAPEGBNk_ec36@wunner.de>
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-5-xueshuai@linux.alibaba.com>
- <aPYMO2Eu5UyeEvNu@wunner.de>
- <0fe95dbe-a7ba-4882-bfff-0197828ee6ba@linux.alibaba.com>
+	s=arc-20240116; t=1760968985; c=relaxed/simple;
+	bh=wa/LFx+3nxvEsI8+aKge1iAS1QhaGGNlrbnB3buk7SI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HftYHxLPBzUlqB084iKcrqOIuVmj5d7lNMD2bMxYCZjoDRhMnflXYr2YdZ6XAXPeGU2c4+tUPVuqh4CTM9wl7tci9vBkLUz+Lcq4zfP4WxNirXrVuMAs1V5MuyGdixgQx29K/vXedFxxVJIBJ3sqYVqgj4wpbdpfRuqlmzAgafA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VDIf1diV; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1760968980;
+	bh=wa/LFx+3nxvEsI8+aKge1iAS1QhaGGNlrbnB3buk7SI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VDIf1diVrnftwL38ZREdQLDRwHdtKgievZhFbibJhQFutwAztvjM5o0Ofy8B+MuJ1
+	 gbB2fB5zCNc+lFbJoxBbEDZzf1uheBzC+Nlx9sun+NUI/d/KYBq3Ff28STT0H965tq
+	 nnrbsAdRosSrONRkoiNeZgNC8PuvSRPgPpkICA0Q54jAzdpR5hhw1tu2Y1cS27zwJX
+	 FRg9vM1KZf5TCg1umqLDbOg3lDUSE36e1IEZJfrh77+iTevPfFGOU0jL5YfxqKJ1H/
+	 gzueE+BKPyTjIQVERY1kpaRD5P4l5aKwVvJQygCbM/bzM0GDjLk7n4Ja3+QPhI/Axl
+	 9w4l4cXjKqsWA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0AF5A17E0456;
+	Mon, 20 Oct 2025 16:02:59 +0200 (CEST)
+Message-ID: <8453efd3-630e-4f2c-950d-88a73927cc54@collabora.com>
+Date: Mon, 20 Oct 2025 16:02:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fe95dbe-a7ba-4882-bfff-0197828ee6ba@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/15] arm64: dts: mediatek: mt7981b-openwrt-one:
+ Configure UART0 pinmux
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Sjoerd Simons <sjoerd@collabora.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+ Bryan Hinton <bryan@bryanhinton.com>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+ <20251016-openwrt-one-network-v1-2-de259719b6f2@collabora.com>
+ <aPDnT4tuSzNDzyAE@makrotopia.org>
+ <5f430ff9-d701-426a-bf93-5290e6912eb4@collabora.com>
+ <aPEfUBl6fMe6QYdY@makrotopia.org>
+ <82594ce7-f093-4753-b808-cd234845aed8@collabora.com>
+ <aPYq4cnaAHu5ags5@makrotopia.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <aPYq4cnaAHu5ags5@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 20, 2025 at 09:09:41PM +0800, Shuai Xue wrote:
-> ??? 2025/10/20 18:17, Lukas Wunner ??????:
-> > On Wed, Oct 15, 2025 at 10:41:58AM +0800, Shuai Xue wrote:
-> > > Replace the manual checks for native AER control with the
-> > > pcie_aer_is_native() helper, which provides a more robust way
-> > > to determine if we have native control of AER.
-> > 
-> > Why is it more robust?
+Il 20/10/25 14:28, Daniel Golle ha scritto:
+> On Mon, Oct 20, 2025 at 12:23:14PM +0200, AngeloGioacchino Del Regno wrote:
+>> Il 16/10/25 18:37, Daniel Golle ha scritto:
+>>> On Thu, Oct 16, 2025 at 04:29:14PM +0200, AngeloGioacchino Del Regno wrote:
+>>>> Il 16/10/25 14:38, Daniel Golle ha scritto:
+>>>>> On Thu, Oct 16, 2025 at 12:08:38PM +0200, Sjoerd Simons wrote:
+>>>>>> Add explicit pinctrl configuration for UART0 on the OpenWrt One board,
+>>>>>>
+>>>>>> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+>>>>>> ---
+>>>>>>     arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts | 11 +++++++++++
+>>>>>>     1 file changed, 11 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+>>>>>> index 968b91f55bb27..f836059d7f475 100644
+>>>>>> --- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+>>>>>> +++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+>>>>>> @@ -22,6 +22,17 @@ memory@40000000 {
+>>>>>>     	};
+>>>>>>     };
+>>>>>> +&pio {
+>>>>>> +	uart0_pins: uart0-pins {
+>>>>>> +		mux {
+>>>>>> +			function = "uart";
+>>>>>> +			groups = "uart0";
+>>>>>> +		};
+>>>>>> +	};
+>>>>>> +};
+>>>>>> +
+>>>>>>     &uart0 {
+>>>>>> +	pinctrl-names = "default";
+>>>>>> +	pinctrl-0 = <&uart0_pins>;
+>>>>>>     	status = "okay";
+>>>>>>     };
+>>>>>
+>>>>> As there is only a single possible pinctrl configuration for uart0,
+>>>>> both the pinmux definition as well as the pinctrl properties should go
+>>>>> into mt7981b.dtsi rather than in the board's dts.
+>>>>
+>>>> If there's really one single possible pin configuration for the UART0 pins,
+>>>> as in, those pins *do not* have a GPIO mode, then yes I agree.
+>>>>
+>>>> If those pins can be as well configured as GPIOs, this goes to board DTS.
+>>>
+>>> I respectfully disagree and will explain below.
+>>>
+>>
+>> Thanks a lot for taking the time to write all this - explains everything,
+>> and even too much :) :)
+>>
+>> Though, there's something funny here! The following snippet of "main" text
+>> does explain stuff that is interesting, but that I (not other people, so
+>> thanks again for saying all this) know already, but.....
+>>
+>>> All pinmux pins on the MediaTek platform also allow being configured as
+>>> GPIOs. However, if you configure those as GPIOs the consequence is that
+>>> you cannot use UART0 any more at all. So using UART0 at all always
+>>> implies using exactly those pins, there is no alternative to that.
+>>>
+>>> Hence every board with every possible uses of pins 32 and 33 (there is
+>>> only RX and TX for UART0, RTS/CTS flow-control is not possible) can be
+>>> represented without needing to configure the pinctrl for uart0 on the
+>>> board level. There isn't going to be any variation on the board-level
+>>> when it comes to uart0. Either it is enabled (status = "okay";), and
+>>> that will always imply using the 'uart0' group in mode 'uart', or, in
+>>> case any of the two pins of uart0 is used for something else that means
+>>> uart0 cannot be enabled. Simple as that.
+>>>
+>>> Hence there is no need to duplicate that pinctrl settings on each and
+>>> every board, as controlling the 'status' property on the board-level
+>>> already gives 100% freedom.
+>>>
+>>
+>> ...all of this is not justifying your point.
 > 
-> IMHO, the pcie_aer_is_native() helper is more robust because it includes
-> additional safety checks that the manual approach lacks:
-[...]
-> Specifically, it performs a sanity check for dev->aer_cap before
-> evaluating native AER control.
+> So what is the rule then? I understand the logic of describing the
+> pins eg. for uart1 only on board-level as there are actual alternatives
+> regarding the pins to be used, and if also including RTS/CTS pins.
+> Hence, for uart1, there are several possible pingroups which can be
+> used. What would be the argument to keep a pinctrl description for
+> which the SoC doesn't offer any alternatives to be on the board-level?
+> There is nothing to be decided by the board, literally 0 freedom.
+> 
 
-I'm under the impression that aer_cap must be set, otherwise the
-error wouldn't have been reported and we wouldn't be in this code path?
+As you described - the BootROM is using those two pins as UART0.
 
-If we can end up in this code path without aer_cap set, your patch
-would regress devices which are not AER-capable because it would
-now skip clearing of errors in the Device Status register via
-pcie_clear_device_status().
+Should you want those pins to be used as GPIOs, you'd at least get HW glitches in
+early boot phases, or you'd render emergency download mode unusable - which is not
+a good idea, not practical, and also, well, almost a stupid thing to do from the
+hardware perspective.
 
-Thanks,
+This means that it is very, very, very unlikely (to the point that it's practically
+impossible) that those pins can ever be used for anything else that is not *the*
+one of the two functions that are supported for them (which is UART0 in this case).
 
-Lukas
+In this case, adding the pins at the board level would only create unnecessary
+duplication and nothing else, because, well, noone could possibly ever use those
+for anything else, again.
+
+That's the criteria.
+
+If the BootROM didn't use those pins, and those could support both GPIO mode and
+HW function mode (any: uart0, 1, 2...n, spi, i2c, whatever else), even though it
+is likely for boards to use them for one specific function, there is nothing that
+stops a HW engineer to decide to route those elsewhere and use them as a GPIO
+instead, so that's not a SoC configuration, but rather a HW implementation decision
+at the PCB level.
+
+See it like this (although this is an oversimplified view):
+  - SoC DT describes the SoC (the chip) - in this case the MT7981B chip
+  - Board DT describes decisions that were taken by the HW engineer that developed
+    the PCB on which the MT7981B was placed.
+
+Clearly, if there's a board design (usually, a "base project") that has derivatives
+(for example, a device with eMMC, one with UFS, one with both, one with two SFP,
+one with one SFP and one soldered ethernet chip on a non-exposed SFP interface,
+etc) it is ok to have a "board-common" dtsi and specific board variants on top,
+like it is done with some bananapi and some genio boards.
+
+Lots of text here - yet oversimplified. There is much more to say, but I think
+(and hope) that this is enough to make you understand the main point (of course
+feel free to throw more questions if what I wrote doesn't fully satisfy you).
+
+>>
+>>> (Sidenote: As even the BootROM already uses those two pins as UART for
+>>> debug output,
+>>
+>> Funny thing is, your side note is what *fully* justifies your disagreement
+>> and it's also what triggers me to say that you're right, lol :)
+>>
+>> Okay then, I am fine with this commit now and I can renew my
+>>
+>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> Note that the patch you have just added your Reviewed-by:-tag to does
+> *not* add the uart0 pinctrl on SoC-level but board-level, so different
+> from what I argued for above.
+
+Ewwww I'm doing too may things at once. Pretty crazy days around here :)))
+
+ >> Did you mean to add Reviewed-by: for that
+> (which contraticts what you just wrote) or rather to the to-be-submitted
+> v2 of this series which includes the change to move the uart0 pinctrl
+> to mt7981b.dtsi?
+
+Yeah. Sorry.
+
+I repeat then, so that this is clear: you are right, the pinctrl for UART0 on the
+MT7981B SoC must go to mt7981b.dtsi and *not* to mt7981b-openwrt-one.
+
+Cheers,
+Angelo
 
