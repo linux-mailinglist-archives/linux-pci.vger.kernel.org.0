@@ -1,110 +1,131 @@
-Return-Path: <linux-pci+bounces-38762-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38763-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C8CBF1D3B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:25:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49697BF1E76
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:45:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 239EC188695C
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:25:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19E373B4BF3
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:45:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BCF2EC0A0;
-	Mon, 20 Oct 2025 14:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93794148832;
+	Mon, 20 Oct 2025 14:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BNcjBVgI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746811DDC28;
-	Mon, 20 Oct 2025 14:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA03435972;
+	Mon, 20 Oct 2025 14:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760970297; cv=none; b=aEfbx8GDukx9jD/3cEgN9jUt4hfV0Ii7l5qagnBrcikWyHkzNSybdzyUeRcK42buFwWQf9hZFU+3uAIwZN2yuKy8KbDvjV3GR587w4cKj7Lnd0lCyaJEe1H5+q0ed8Xnimy2pi+GVoy7uvRUebCEB9P/XTfKHtjTCKoFVvFxiNc=
+	t=1760971545; cv=none; b=B8JrrNERvNIh27ryze1TSMVwJDWVJeLCyJnDYQD5Wiin06YgV5Npj/J3UQ9Kt983xlDFjObuwv9xM6DahJDeWKTTmfbNVMmIJeWwudq+85kK827+Q96NO4vF4SXVddRhDrHeXVMGWcuvwPfnAsa7wj9HiDshEjAceE15XJ6hnNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760970297; c=relaxed/simple;
-	bh=Y5pWNFXphYmf+c/smwTg27tadPgyii7jSwEHNg0ZXO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsGWRvGID424Ux9hVtUZxhJb4lBv4TlSYygvZOcXQZK+X3HUHyUNR2T/Ydj3+9D58EBd3ggemLLtW2VIl0Rvk04daVs56g1C4w2xkJwGRxw7zqbEdB9f2uYNJVFY3lj/S4kES4OUoVig5IaMHROvxSj6SRLHwZ5mHFfl1ukBMEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 783182C0664D;
-	Mon, 20 Oct 2025 16:24:52 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 6146D4A12; Mon, 20 Oct 2025 16:24:52 +0200 (CEST)
-Date: Mon, 20 Oct 2025 16:24:52 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-	kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-	mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
-	terry.bowman@amd.com, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6 3/5] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-Message-ID: <aPZGNP79kJO74W4J@wunner.de>
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-4-xueshuai@linux.alibaba.com>
- <aPYKe1UKKkR7qrt1@wunner.de>
- <6d7143a3-196f-49f8-8e71-a5abc81ae84b@linux.alibaba.com>
- <aPY--DJnNam9ejpT@wunner.de>
- <43390d36-147f-482c-b31a-d02c2624061f@linux.alibaba.com>
+	s=arc-20240116; t=1760971545; c=relaxed/simple;
+	bh=thykIJJg2EpAUfe4ozCQkG52TcMWFQEs45g6JDhqjDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JwSymq5mHnHlCV3X+kckTYmtKUz3dZ4BcEwXTrmOAaJ3A3hWkqYKq932UDKNThPThjrHSBhA9DaOqgTziPqsyjH9g4ZSaRa85BxwWI3hLdMvEC08pnc75o3fAq+ckMXrYB/+HUutTQt1rzK1kJa5y9iS4yUxFA76TwDDWzHN5ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BNcjBVgI; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760971537; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=hCe3ut/WXfuVO1xIbv9Xf6/wnz4HbVZxWnU0T5Zbwk4=;
+	b=BNcjBVgI13hXxZ9jhQobrABlVAKGkM4ap1ctFSAuIRvYL3zHxCzLDYLSAVysTRYCA+FgJfbAYzyGIXZRl1v2j4JjdZY1bm+gU7BcnO9p2kv//nV/s6D96y7L44bBd1WB//ujBC6AU9Lz89j+hwKLwRFno5w7WIfCwGsTFxvnfcA=
+Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqdeIFD_1760971535 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 20 Oct 2025 22:45:36 +0800
+Message-ID: <645adbb6-096f-4af3-9609-ddc5a6f5239a@linux.alibaba.com>
+Date: Mon, 20 Oct 2025 22:45:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <43390d36-147f-482c-b31a-d02c2624061f@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/5] PCI/ERR: Use pcie_aer_is_native() to check for
+ native AER control
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com, mahesh@linux.ibm.com,
+ oohall@gmail.com, Jonathan.Cameron@huawei.com, terry.bowman@amd.com,
+ tianruidong@linux.alibaba.com
+References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
+ <20251015024159.56414-5-xueshuai@linux.alibaba.com>
+ <aPYMO2Eu5UyeEvNu@wunner.de>
+ <0fe95dbe-a7ba-4882-bfff-0197828ee6ba@linux.alibaba.com>
+ <aPZAAPEGBNk_ec36@wunner.de>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <aPZAAPEGBNk_ec36@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 20, 2025 at 10:17:10PM +0800, Shuai Xue wrote:
-> void aer_report_frozen_error(struct pci_dev *dev)
-> {
->     struct aer_err_info info;
+
+
+在 2025/10/20 21:58, Lukas Wunner 写道:
+> On Mon, Oct 20, 2025 at 09:09:41PM +0800, Shuai Xue wrote:
+>> ??? 2025/10/20 18:17, Lukas Wunner ??????:
+>>> On Wed, Oct 15, 2025 at 10:41:58AM +0800, Shuai Xue wrote:
+>>>> Replace the manual checks for native AER control with the
+>>>> pcie_aer_is_native() helper, which provides a more robust way
+>>>> to determine if we have native control of AER.
+>>>
+>>> Why is it more robust?
+>>
+>> IMHO, the pcie_aer_is_native() helper is more robust because it includes
+>> additional safety checks that the manual approach lacks:
+> [...]
+>> Specifically, it performs a sanity check for dev->aer_cap before
+>> evaluating native AER control.
 > 
->     if (dev->pci_type != PCI_EXP_TYPE_ENDPOINT &&
->         dev->pci_type != PCI_EXP_TYPE_RC_END)
->         return;
+> I'm under the impression that aer_cap must be set, otherwise the
+> error wouldn't have been reported and we wouldn't be in this code path?
 > 
->     aer_info_init(&info);
->     aer_add_error_device(&info, dev);
->     info.severity = AER_FATAL;
->     if (aer_get_device_error_info(&info, 0, true))
->         aer_print_error(&info, 0);
+> If we can end up in this code path without aer_cap set, your patch
+> would regress devices which are not AER-capable because it would
+> now skip clearing of errors in the Device Status register via
+> pcie_clear_device_status().
+
+Hi Lukas,
+
+You raise an excellent point about the potential regression.
+
+The origin code is:
+
+	if (host->native_aer || pcie_ports_native) {
+		pcie_clear_device_status(bridge);
+		pci_aer_clear_nonfatal_status(bridge);
+	}
+
+This code clears both the PCIe Device Status register and AER status
+registers when in native AER mode.
+
+pcie_clear_device_status() is renamed from
+pci_aer_clear_device_status(). Does it intends to clear only AER error
+status?
+
+- BIT 0: Correctable Error Detected
+- BIT 1: Non-Fatal Error Detected
+- BIT 2: Fatal Error Detected
+- BIT 3: Unsupported Request Detected
+
+ From PCIe spec, BIT 0-2 are logged for functions supporting Advanced
+Error Handling.
+
+I am not sure if we should clear BIT 3, and also BIT 6 (Emergency Power
+Reduction Detected) and in case a AER error.
+
 > 
->     /* pci_dev_put() pairs with pci_dev_get() in aer_add_error_device() */
->     pci_dev_put(dev);
-> }
-
-Much better.  Again, I think you don't need to rename add_error_device()
-and then the code comment even fits on the same line:
-
-	pci_dev_put(dev);  /* pairs with pci_dev_get() in add_error_device() */
-
-> > >    .slot_reset()
-> > >      => pci_restore_state()
-> > >        => pci_aer_clear_status()
-> > 
-> > This was added in 2015 by b07461a8e45b.  The commit claims that
-> > the errors are stale and can be ignored.  It turns out they cannot.
-> > 
-> > So maybe pci_restore_state() should print information about the
-> > errors before clearing them?
+> Thanks,
 > 
-> While that could work, we would lose the error severity information at
+> Lukas
 
-Wait, we've got that saved in pci_cap_saved_state, so we could restore
-the severity register, report leftover errors, then clear those errors?
-
-Thanks,
-
-Lukas
+Thanks.
+Shuai
 
