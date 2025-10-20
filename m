@@ -1,163 +1,172 @@
-Return-Path: <linux-pci+bounces-38739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A21E0BF0FB3
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:02:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822D9BF1224
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:22:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A34F3B50A7
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:01:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 117EF422DB8
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:19:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DC930EF72;
-	Mon, 20 Oct 2025 12:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88E35314B8B;
+	Mon, 20 Oct 2025 12:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8fTq294"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoxSXjDN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBAD302CC9
-	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 12:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051C43112BB
+	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 12:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760961692; cv=none; b=IiYdy67PuJzEI0XvUM/IJI1zZqDzUGliSpuzvqdEhZOzss7WMUfIM/xrvLTk+mo0UdrksV0kBD1xn+Kdv3Jo8DwArjA4qITMcQLnHkPUbamQL50nYcaHiKrxvXXkkrKuTmZopj/7sJM0AxQda1Vz/++PYWrAGWwxVF8cWbmx/TI=
+	t=1760962657; cv=none; b=d3arKNbFTZMQy0d9nNSgUP6kx/Utlzf3N0giKf/A9h+iK30qK3qKOnR3fswu2ABIEhsuzHsC81ndv+fEbOZ2l7lPlN3Pg9y/Yh6A4MYtM9wXuxTrUGp4S1YIN7JFj3bFp+XMCGpJb5h5Nffy0nB4X9c+AeIV+0/5LpPkhcD6E5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760961692; c=relaxed/simple;
-	bh=nswVLSlbYyIVmMcPMj0v3iW0yfGwDL9+Y9cKMGs77Q4=;
+	s=arc-20240116; t=1760962657; c=relaxed/simple;
+	bh=PlNBbF5ZJFNnuNXtuTdTU8RU08l+CRkDyuEQBZNScuw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vlzr7wMXt1/qdNg1B70Wz93mGryH2Xy5f30lIqgKd+l1C9YbdW1omLczsqGw2NqMFhu0cJomyKsvnQfNsVE/sAaucT6o5qadu+F610EnS1scvGQExXOxFUeto0zcDhlvLNRCtSpb6RaSZE/q6fY8kNpsAyikafdIszgvEyT43Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8fTq294; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=i63fBOTfVK1at++fE401YQybtLW+TrK3ZtAr4jCdgtJydBXzr2/gLwyKZT7uAdb5bYrqrebvczLaviFgiq/yT1BtiGp3GAfBgrxKaFwPzv71XZFo31fC5/pT5QhMDMfqP63IdpcUkABpGruhXoHvwlVbCIUcNEITWy8Vf8wxKPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoxSXjDN; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37775ed97daso53355841fa.0
-        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 05:01:30 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-63c1a0d6315so7550639a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 05:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760961688; x=1761566488; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760962652; x=1761567452; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vDBqBQPK3W845ufeKNd3TWXFM3Y5p/GSoX4pSkk8Wtg=;
-        b=D8fTq294Dh24k4ynoJkyXE2IwNSfRPp5jH050rOR4/Lo9tgzRzr6MB9skBn3bowW2u
-         +OCVJlVlqGJRVMvnSjDXeFRaLi5elmN+itRIdvdBP3VuIYQ+bcOwukMRd5OiM969Lvmk
-         q31RYPpQL72wGMlGHn/kdBH8dKjQ8CrF4clNwVLlVXR7wLbTsOPIIJk1vJH16q+xMdhB
-         btYIB8UHTYYCYTtkJ8MP92rzBT6jbXNIf+HtHFhqNt9Xy33ES7nGzmmVliUJYTAB/i2b
-         QeiJl++hSCDft3MQ4/C6i4DATH2xp8IMhSyyKaGWHj6NTMvUyCnus4mAdPgEYuO3ZfJv
-         HyRQ==
+        bh=dj7LQnvneAR4ryP3ymo/U7mnKP1adFX16i1dLrQ/meo=;
+        b=RoxSXjDND+siuHGl9xH0W9ohpY01+0qReyn/NibdT7u48ryd/s4htiSxEFVG5O+Tk4
+         XrOPB+yWNHWKVgU4qF46Vk5ldBxCBA8s7BKBBpejs9Kcjk7Nz5bgSiRB1whcSbKFSBk5
+         RI8XG9Ev9P8fnMIzstMIb92B2Cta2i5i718HoVBxmhE1qtUZ1uHDWxpeOGADcJmM5nAE
+         uLS5fsi2v3FVBPZ+veWLLT/ZM7dF+PQyy7NgFtJr4uWOTpk2QGXtSJiyYsZ4k+ghXGyv
+         AEi6CBevYz3lDV+vn4/QHzwDxShk5P36IKeVyJo5fxbWaLxxxeuFbUC1se3so8efUPd+
+         QHGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760961688; x=1761566488;
+        d=1e100.net; s=20230601; t=1760962652; x=1761567452;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vDBqBQPK3W845ufeKNd3TWXFM3Y5p/GSoX4pSkk8Wtg=;
-        b=Sg5alvjGgu771cfISciATaWsdGOwSJjrmfsHYnE8uEYIJMbaTvHDT32WJ4MWJqAfjl
-         cT3E5xLXhYGl/Y8bKUzEzoC2oQr8yfmGUtKbeYQZsWorNPBM34/orfk09B4nsS/lMN2L
-         jRMFzH+WRNdIBXymW8wo3162rA639UQxbQt4JijJMd4OWGfggWHc9VZZP2jkQiNKscgu
-         o3rMjA3k8x/9z13qXEp4XUfeu7fbBSTZ9XgKYoN7q2w/PBkKKKBH+ftiXzduF1sVEUwO
-         Kg688uSDp4h6jwrFe5IOV7nbpoZ4owM5sIWuDHLldud5zoeUV5d3R+EZkd6j3KdAdNGa
-         tHyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRqfZpmXrghV4RhxLgbiEVWddy1ovVcCois61sQi0KxRxpk2UEl1Qd56OrJ8BjDXzilPWeLy1iBEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtIlhKiMyqLGoIHIC3D/RN+NsgRN7WDkx/dj/MIxYsftylsz2a
-	fHxmLet7BsubhqPlIP1CHW38vYhR6f1ymoKe2Tjht8v9GnPjIuJiOLXMl8qoEOaPVXf7z5Q1RdF
-	VhKBy77V8/IZ8OL7BJi9aT0YKpkHWrf0=
-X-Gm-Gg: ASbGncstb4ylVuPG9ymOXS6SCaDn2FAScGH1Qcf+ie08kE4zadXe12vlmDrYgadO8qL
-	GYCEhbLeOgPhfD5f9GSURfs9UArwui7xz2VkhajAHcrxsL5mPuz8fOC7Bj6mPXKGApVnc21Rr6r
-	ERwTQSt8VUCeE5SE8rotZSq5M2/kcN+oTJK/TiqfGQDGTqkK+WmXsvxa5e0bLxX3KqZYwhZlrDW
-	aVpCFg6ca0jEU1uhQcSnhsMsr0YdyJSMI01svDLdN0/RujiT7dnEb6/ekNNQbGD9pmKhLMlANB4
-	KKEcB37OpGWCg7qxiPLLNDKF6Plo9ByBNjjh6JcL08x1JF6sAPkN8sn/gECj/SCOjteiq6JgJcy
-	snuOc46VqtFIHV6TJLuZJG4oiKWTq2X8=
-X-Google-Smtp-Source: AGHT+IEhCuohkwKfudrL4ecEpqT4Pm0eEKlOvtKN3vUBgHr7QNfd5MrUBwC1sgCPBzz/Uy3S9ZB2EUGsXRcV/xV/m8c=
-X-Received: by 2002:a2e:9a14:0:b0:36c:b120:37b6 with SMTP id
- 38308e7fff4ca-377979418femr48975661fa.19.1760961688121; Mon, 20 Oct 2025
- 05:01:28 -0700 (PDT)
+        bh=dj7LQnvneAR4ryP3ymo/U7mnKP1adFX16i1dLrQ/meo=;
+        b=PuRYCYrW2ncDX3sytnzYUI9sGqs7pSVcKkEwV65phta9G6PXTwQF2E9HKsGk+kU5Xa
+         rZIuaZDcbq6WEES/TGOJJ8MyiYqsrINEOiZ/2iz1ZmoJwAPb58EbEtsURlV+At6Pc0B7
+         Zu8qjcCeelVdf2qiIooJUSSnUun6VqLz6KJFFDga6RUQ88R1jwC81WNO3m+eu9T7QJ5N
+         jLbImxg00IgiNWiDH2LGgE2nERj6o5aIWRrGm93AxgQQKbdrleFY/m+MmOCUZgIPQxdx
+         +EXcUMpijp/sLB03QoIwqy8uETzNFU4draTtg+rfRs9EpueEveKWVgRT43e3gBTeaaob
+         aMRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVm83u8rZ+7IKa+aQKRNAwnOVTUMozBD9TBwfXOZ4kP9jCjiDqhcG24spxAkzYT6hjpOAFvjAxu2n4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9Jri793Rk41vT3M9lkmmuZdc7ryP9qpOT7IPEM3RBgAYkU9Jl
+	IS6nUVCAuT1AXR/k66pH4DPfxCGw33j2TyUgU120xo9O+lHJxjMGAXc4nXMTeHd/G7z6o5xCqvO
+	Py50fXmTmN8ixL28EgncQaiKhLXD0wUw=
+X-Gm-Gg: ASbGncvykheq1f1hH4eVxCvzSGgsohZxevMB+d5NWVSlNTeyfmbqts9toSmrO+44gpW
+	e2OyRiwWzpbuTUeAUDsu/WchS2R/0PVNjf0HnNAxM4u4pzKfGb0uEwyYzh4ddX8zzk3UZstn8t9
+	EYoYYkV498/NSNS9+7uni+RSHkEAU+nhUR+k80r7nDQ+/M08DPdub26Be6JKzZi7VnPMoxGZRjR
+	E59sjdDbowxcgvUegxkFALesXJfXmXTBhGHZKIgMg6bDpbbJD3Gnq3Xx34=
+X-Google-Smtp-Source: AGHT+IGuNXPYa8nOqQIFN5HiYiI13azg//upEX7PQX3o2Wgvacevspa/TtHt85O5Z2zq4yPkoXGnodkOLNNfPhUi9CU=
+X-Received: by 2002:a05:6402:2113:b0:63b:f91e:60a2 with SMTP id
+ 4fb4d7f45d1cf-63c1f6c1fc8mr12209727a12.25.1760962652107; Mon, 20 Oct 2025
+ 05:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015-cstr-core-v17-0-dc5e7aec870d@gmail.com>
- <aPPIL6dl8aYHZr8B@google.com> <aPPJ2qDhxXNh8360@google.com>
-In-Reply-To: <aPPJ2qDhxXNh8360@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 20 Oct 2025 08:00:00 -0400
-X-Gm-Features: AS18NWAW7Di7K5boBLr0jIlvVCdIJykxaOqzRMhRONzgEFu_niaDAXaU_M-718U
-Message-ID: <CAJ-ks9=VJCwKxZRyDHOb7Lun-BJ3tPrvbscpo0XkykmnF_zfCg@mail.gmail.com>
-Subject: Re: [PATCH v17 00/11] rust: replace kernel::str::CStr w/ core::ffi::CStr
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250926072905.126737-1-linux.amoon@gmail.com>
+ <20250926072905.126737-4-linux.amoon@gmail.com> <ose3ww7me26byqwsyk33tipylkx3kolnc3mjwrlmjwsmza2zf3@os7lkt4svaqi>
+In-Reply-To: <ose3ww7me26byqwsyk33tipylkx3kolnc3mjwrlmjwsmza2zf3@os7lkt4svaqi>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Mon, 20 Oct 2025 17:47:15 +0530
+X-Gm-Features: AS18NWBjlpXvFk4mMS_-03BU5B3Gd9QeHI1AqyR0YTTEtYP4gYQmGYX3Grt5mQ0
+Message-ID: <CANAwSgT0VRFFpKv3saJTAA99oGoAHhP+bx6Xe-QGf5b4Dgik=A@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] PCI: tegra: Use readl_poll_timeout() for link
+ status polling
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 18, 2025 at 1:09=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Sat, Oct 18, 2025 at 05:02:39PM +0000, Alice Ryhl wrote:
-> > On Wed, Oct 15, 2025 at 03:24:30PM -0400, Tamir Duberstein wrote:
-> > > This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
-> > > have omitted Co-authored tags, as the end result is quite different.
-> > >
-> > > This series is intended to be taken through rust-next. The final patc=
-h
-> > > in the series requires some other subsystems' `Acked-by`s:
-> > > - drivers/android/binder/stats.rs: rust_binder. Alice, could you take=
- a
-> > >   look?
-> > > - rust/kernel/device.rs: driver-core. Already acked by gregkh.
-> > > - rust/kernel/firmware.rs: driver-core. Danilo, could you take a look=
-?
-> > > - rust/kernel/seq_file.rs: vfs. Christian, could you take a look?
-> > > - rust/kernel/sync/*: locking-core. Boqun, could you take a look?
-> > >
-> > > Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-v=
-adorovsky@protonmail.com/t/#u [0]
-> > > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
-> > >
-> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> >
-> > You need a few more changes:
->
-> One more:
->
-> diff --git a/rust/kernel/drm/ioctl.rs b/rust/kernel/drm/ioctl.rs
-> index 69efbdb4c85a..5489961a62ca 100644
-> --- a/rust/kernel/drm/ioctl.rs
-> +++ b/rust/kernel/drm/ioctl.rs
-> @@ -156,7 +156,7 @@ macro_rules! declare_drm_ioctls {
->                          Some($cmd)
->                      },
->                      flags: $flags,
-> -                    name: $crate::c_str!(::core::stringify!($cmd)).as_ch=
-ar_ptr(),
-> +                    name: $crate::str::as_char_ptr_in_const_context($cra=
-te::c_str!(::core::stringify!($cmd))),
->                  }
->              ),*];
->              ioctls
+Hi Manivannan,
 
-Thanks! Sent v18 on Saturday. Those `as_ptr()` -> `as_char_ptr()` were tric=
-ky
-because they relied on deref to `&[u8]`.
+Thanks for your review comment.
+
+On Sun, 19 Oct 2025 at 13:20, Manivannan Sadhasivam <mani@kernel.org> wrote=
+:
+>
+> On Fri, Sep 26, 2025 at 12:57:44PM +0530, Anand Moon wrote:
+> > Replace the manual `do-while` polling loops with the readl_poll_timeout=
+()
+> > helper when checking the link DL_UP and DL_LINK_ACTIVE status bits
+> > during link bring-up. This simplifies the code by removing the open-cod=
+ed
+> > timeout logic in favor of the standard, more robust iopoll framework.
+> > The change improves readability and reduces code duplication.
+> >
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Mikko Perttunen <mperttunen@nvidia.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > v1: dropped the include  <linux/iopoll.h> header file.
+> > ---
+> >  drivers/pci/controller/pci-tegra.c | 37 +++++++++++-------------------
+> >  1 file changed, 14 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controlle=
+r/pci-tegra.c
+> > index 07a61d902eae..b0056818a203 100644
+> > --- a/drivers/pci/controller/pci-tegra.c
+> > +++ b/drivers/pci/controller/pci-tegra.c
+> > @@ -2169,37 +2169,28 @@ static bool tegra_pcie_port_check_link(struct t=
+egra_pcie_port *port)
+> >       value |=3D RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT;
+> >       writel(value, port->base + RP_PRIV_MISC);
+> >
+> > -     do {
+> > -             unsigned int timeout =3D TEGRA_PCIE_LINKUP_TIMEOUT;
+> > +     while (retries--) {
+> > +             int err;
+> >
+> > -             do {
+> > -                     value =3D readl(port->base + RP_VEND_XP);
+> > -
+> > -                     if (value & RP_VEND_XP_DL_UP)
+> > -                             break;
+> > -
+> > -                     usleep_range(1000, 2000);
+> > -             } while (--timeout);
+> > -
+> > -             if (!timeout) {
+> > +             err =3D readl_poll_timeout(port->base + RP_VEND_XP, value=
+,
+> > +                                      value & RP_VEND_XP_DL_UP,
+> > +                                      1000,
+>
+> The delay between the iterations had range of (1000, 2000), now it will b=
+ecome
+> (250, 1000). How can you ensure that this delay is sufficient?
+>
+I asked if the timeout should be increased for the loops, but Mikko
+Perttunen said that 200ms delay is fine.
+
+[1] https://lore.kernel.org/linux-tegra/CANAwSgT615R32WTBzi2-8FYntmaxbmVRLm=
+A3yi+=3D4ryH43aaWQ@mail.gmail.com/#t
+
+> - Mani
+>
+Thanks
+-Anand
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
