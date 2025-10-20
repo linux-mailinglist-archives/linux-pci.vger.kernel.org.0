@@ -1,162 +1,136 @@
-Return-Path: <linux-pci+bounces-38811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88612BF3DBD
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:13:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C417BF3E86
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:33:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D861D4F6411
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:12:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9FBCC4E0F57
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:33:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C4B42EF677;
-	Mon, 20 Oct 2025 22:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLuBXQuV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E2E72D979F;
+	Mon, 20 Oct 2025 22:33:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0453EA8D;
-	Mon, 20 Oct 2025 22:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC2423EA85
+	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 22:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760998347; cv=none; b=J1kFOwv3giABhd5+8QcWQ9GMjfqM+1S8kuImqhPVivvXweoOOMGQVst7cwJG7cFDblU4lBFrASxPsJ8+Nlk0hOFWXMpKipq0UQFJCWDsLz26Zt6k5b1PWu0AbmkP6Uk7ii041HxMvd95FYcVNPn0g3/A3lJmJOaeedORhgCfg1M=
+	t=1760999612; cv=none; b=YayRazNIkSYz/UJVDRXblXrMAU1iCJtpoIaxwPZFE8TS0l6BUuIOHhcz3qOVZb6Wd6D/eltqkF9u9RKbYM91i4ufp//mCPpt/vbCfCT9XPIjj9FUXmdjF4kS/7ud3HZggBOTTh6GbwgkUeA5UT6sXzlX9fm+4RbZf6fqxqPhSCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760998347; c=relaxed/simple;
-	bh=IsXcIouzgz4wUiJybXRjXsiqCJLbVl38YFCNfwbmYSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ATvfFaHVyas2HPHMN7fmZj9T972t2m0cQgRLq85GMa1DNmEYW+uoJE5KioafknUO2HpAD84XG2fZjaLBdpfAV3UoC0aqcdd3Oy4GMH4BBewuSZQMYe39wnnm9z9O3kv+o5c6Qy2l7iLhWAzmRDFIFHlRHnj00POM6JhTMVAcLBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLuBXQuV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20B2C4CEFB;
-	Mon, 20 Oct 2025 22:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760998346;
-	bh=IsXcIouzgz4wUiJybXRjXsiqCJLbVl38YFCNfwbmYSM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OLuBXQuVqv4Q0CXR+aktQPwREcoe2KINO0W8J0kcZNxkVCZJcmxzyldbLpRxSu2lP
-	 d7OOp5Ip0LhslgUowkD75NEoCs2wNdw0D9BILt1gBcAf521rfa0c9THM1HQdGRMWwL
-	 sPnIxL7tEkG0Oe+c+YXxRpXukATfmUiuhgXwGTEH/JwCz1FSPmduHbAKAyLlQ7Iei4
-	 JMF8kvw+UqV59guyzNh1c5Wnk7Ye0Dvg2SlMhu8FDFlVhqrtJ5jywhp3KENAMd1b/P
-	 nLv7EuDpDsukTjCN5nZ4d/EDd5L2MSRq7PyyWN9kpKR+szTx5olR66ALO0PwvuHg/L
-	 LulWGiaKz6eqA==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	linux-rockchip@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
-Date: Mon, 20 Oct 2025 17:12:07 -0500
-Message-ID: <20251020221217.1164153-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1760999612; c=relaxed/simple;
+	bh=bIrTZvMRG1iWWic9WK5zbL7tmweu+85KbbrWy1ujtlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVBgXZYRZZ+VG3kTSsnSlnLI3RSJRrPDZXdeUcKJ38SSO1dJAbKiG9Xwx4VwXsee0ZSNBliC8Nde2auvu9+/622etIYzXh2fu3bTTXb6+GwZZ+U+eMaNB54IuaSgX+QdMgaxoBqN1Z3jVbx5YfhE0n0xMDWXM6GSGLd5q0QMQTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=avm99963.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=avm99963.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-426f7da0b64so430651f8f.2
+        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 15:33:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760999609; x=1761604409;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sI46IxLQenYe3Bvaj7MAwN4y+wiSHGhgl4BxzQDCKn4=;
+        b=ccGR62B/kYL4qGONXKFMdKJYJgqm2Lhl6TRN4ETfI+Lz9h9j5e58CTm3Y8PZEIHoFr
+         ae8pIL2prgUfse5n9TIcECWZYMT1ynCHhC+h4ld1Vx+YUdzcyevEkZiJIOSystlAwF0O
+         ktyl/2kYAT50Ob2bgG3GvFknU59YqN6BgKlCODr0Bcq03pPTtRqsVp/AVpMZmZzq+El7
+         1Lxc0WCQcGZtLg/JgbeNyecje1cpJ1c7YXaigbSjUm28b5/B3YmrjWBchV/GX5rsqfjP
+         y2WNafiryscPmCER7juJO1SnF02Z2zS+qtRWpQUzRUFlQSvdwMqVdGCbIvBktkaREZDH
+         UecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQT4gKmu1rFytqFlSpyd9Ydt06hsIoXPX86JnyVjf+/CR4aGVgbl8NjF6e+gQjijQe35LSCphfSIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ4YdWoX2q8QKoOhD/SzkURg9tXzbcNEFP7ShbGn9X0FNS18PN
+	9Ff/zSwGLFr2IN30VziNEMpcLPSaFZZDpRP/U6qokDU4lqRYdmKhOVhU
+X-Gm-Gg: ASbGnctVkGdOZbMboBylb5aRNfbLhuFLjLgof+k57Fic1KNY5XJ29zm1bTsQvPge+xP
+	XHwuPTl4xZCaCJbdT3rHonM5h0oqb4m4hMuwgtkp2dzt+CK6QUXVuKN+bvOGf2JipY13Smyvsps
+	6t8OUhNIMWFUQyrH2tMMJ//k1oAlF23fzDp6bD6Ro5iRlZwQrPffNaDE+MGoXPOxeHgi4e4r27D
+	CACT6sLrEwyB1fDhmaoLt093/y46vPnCpHO9i1G9u4yL1NOeOgoldAquiWoB2KKuzXX7VlYQaCk
+	gXm7J76Sjibu+nFnuRChAdsenhP+YH7eE14hyaqERP5a5Oc6t89NwejckquSHOELiKm/thKo2RK
+	ZrYmQMSaouVfPkdUPq21ipO5T99tJxD7ojib+guOKy1D0V4RwsoqJZmMfxcwkLJEqYZMymABFAL
+	8U2/d1uP5f7aQvK4jNnDcgEZDr4CZuL1CKPQ==
+X-Google-Smtp-Source: AGHT+IETC3F/wmABgyq8kdA8EKubbpd94Rne05MH09yrcJYq/6GsCg9RKL7l5prbblzw8dt6ayscbA==
+X-Received: by 2002:a05:600c:3b9d:b0:46e:5cb5:8ca2 with SMTP id 5b1f17b1804b1-474942bf7b2mr6296375e9.2.1760999608823;
+        Mon, 20 Oct 2025 15:33:28 -0700 (PDT)
+Received: from pixelbook (181.red-83-42-91.dynamicip.rima-tde.net. [83.42.91.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47496c43f68sm2876555e9.5.2025.10.20.15.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Oct 2025 15:33:28 -0700 (PDT)
+Date: Tue, 21 Oct 2025 00:33:25 +0200
+From: =?utf-8?Q?Adri=C3=A0_Vilanova_Mart=C3=ADnez?= <me@avm99963.com>
+To: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org
+Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
+ suspending to RAM and resuming
+Message-ID: <qbnpypp5uiowzuq5v7tqr67ptx2iv56pvmcnr3jmf4yxvhrvzf@auo7cmgtgbmd>
+References: <owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv>
+ <d0b6105f-744f-40d9-b4b7-1fa645038d0b@kernel.org>
+ <h6wkxjrkxh3ea5aqexqrx4d6xb2t2xbirvznupnbgro64qytfs@mn2jg2c6owrj>
+ <rvep55wtk2q4j46eqcxkfgb2bwijunefyltygfyb44trbzblx2@3ou3jcybjt3p>
+ <6b3d282c-b3cd-4979-b26b-ae9b28b9d634@kernel.org>
+ <kaieqe37mjmizjv4regyw67z7hwa3ac3k2mwcjsgq2mj7redpm@xsfb4mtyjblf>
+ <a08c71e2-18ca-491b-8982-47214a35445b@kernel.org>
+ <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
+ <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
+ <60380893-c323-4d4c-a9a1-d43fcb4da1b3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <60380893-c323-4d4c-a9a1-d43fcb4da1b3@kernel.org>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Oct 20, 2025 at 12:38:05PM -0500, Mario Limonciello (AMD) (kernel.org) wrote:
+> 
+> 
+> On 10/20/2025 11:37 AM, Mario Limonciello (AMD) (kernel.org) wrote:
+> > 
+> > 
+> > My interpretation is that the BIOS by default starts with PCI PM
+> > enabled.  When you test without 4d4c10f763 and 907a7a2e5b it will stay
+> > enabled.  But when those commits are present it gets disabled when going
+> > to D0 and that causes device to drop off the bus.
+> > 
+> > How about with pcie_port_pm=off instead of pcie_aspm=off?  Do things work?
 
-f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
-platforms") enabled Clock Power Management and L1 Substates, but that
-caused regressions because these features depend on CLKREQ#, and not all
-devices and form factors support it.
+Nope, pcie_port_pm=off with a "bad" kernel results in the same issue,
+and lspci still reports this:
 
-Enable only ASPM L0s and L1, and only when both ends of the link advertise
-support for them.
+        Capabilities: [200 v1] L1 PM Substates
+                L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+                          PortCommonModeRestoreTime=40us PortTPowerOnTime=44us
+                L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+                           T_CommonMode=40us LTR1.2_Threshold=106496ns
+                L1SubCtl2: T_PwrOn=60us
 
-Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
-Reported-by: FUKAUMI Naoki <naoki@radxa.com>
-Link: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
----
+> > 
+> > My current thought is that the change (setting to D0 explicitly at boot-
+> > up) exposed a bug in the platform.  But the fact that it works without
+> > ASPM is confusing to me.
 
-Mani, not sure what you think we should do here.  Here's a stab at it as a
-strawman and in case anybody can test it.
+Is there anything we could do to confirm this?
 
-Not sure about the message log message.  Maybe OK for testing, but might be
-overly verbose ultimately.
+> > 
+> > Bjorn - any thoughts here?
+> 
+> By happenstance I came across this earlier.
+> 
+> https://lore.kernel.org/linux-pm/aPJ4pZFENCTx9yhy@google.com/T/#m55aceae9153a1aa195635fe48aadb0888c795e49
+> 
+> Does that help by chance?
 
----
- drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 25 deletions(-)
+I tested this patch and its v2,[1] and none of them help.
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 7cc8281e7011..dbc74cc85bcb 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -243,8 +243,7 @@ struct pcie_link_state {
- 	/* Clock PM state */
- 	u32 clkpm_capable:1;		/* Clock PM capable? */
- 	u32 clkpm_enabled:1;		/* Current Clock PM state */
--	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
--					   override */
-+	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
- 	u32 clkpm_disable:1;		/* Clock PM disabled */
- };
- 
-@@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- 	pcie_set_clkpm_nocheck(link, enable);
- }
- 
--static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
--						   int enabled)
--{
--	struct pci_dev *pdev = link->downstream;
--
--	/* For devicetree platforms, enable ClockPM by default */
--	if (of_have_populated_dt() && !enabled) {
--		link->clkpm_default = 1;
--		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
--	}
--}
--
- static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- {
- 	int capable = 1, enabled = 1;
-@@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- 	}
- 	link->clkpm_enabled = enabled;
- 	link->clkpm_default = enabled;
--	pcie_clkpm_override_default_link_state(link, enabled);
- 	link->clkpm_capable = capable;
- 	link->clkpm_disable = blacklist ? 1 : 0;
- }
-@@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
- 	struct pci_dev *pdev = link->downstream;
- 	u32 override;
- 
--	/* For devicetree platforms, enable all ASPM states by default */
-+	/* For devicetree platforms, enable L0s and L1 by default */
- 	if (of_have_populated_dt()) {
--		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
-+		if (link->aspm_support & PCIE_LINK_STATE_L0S)
-+			link->aspm_default |= PCIE_LINK_STATE_L0S;
-+		if (link->aspm_support & PCIE_LINK_STATE_L1)
-+			link->aspm_default |= PCIE_LINK_STATE_L1;
- 		override = link->aspm_default & ~link->aspm_enabled;
- 		if (override)
--			pci_info(pdev, "ASPM: DT platform, enabling%s%s%s%s%s%s%s\n",
--				 FLAG(override, L0S_UP, " L0s-up"),
--				 FLAG(override, L0S_DW, " L0s-dw"),
--				 FLAG(override, L1, " L1"),
--				 FLAG(override, L1_1, " ASPM-L1.1"),
--				 FLAG(override, L1_2, " ASPM-L1.2"),
--				 FLAG(override, L1_1_PCIPM, " PCI-PM-L1.1"),
--				 FLAG(override, L1_2_PCIPM, " PCI-PM-L1.2"));
-+			pci_info(pdev, "ASPM: DT platform, enabling%s%s\n",
-+				 FLAG(override, L0S, " L0s"),
-+				 FLAG(override, L1, " L1"));
- 	}
- }
- 
--- 
-2.43.0
+Again, thank you so much!
 
+[1]: https://lore.kernel.org/linux-pm/CAJZ5v0ie0Jz6AJdZJx2jNSRcqRQOqMCF+gYdgemTs=rKwXD1_g@mail.gmail.com
 
