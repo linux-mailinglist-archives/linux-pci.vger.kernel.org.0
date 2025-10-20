@@ -1,96 +1,84 @@
-Return-Path: <linux-pci+bounces-38825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0735BF4066
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:30:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DC12BF4096
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:38:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6C7724E32B2
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:30:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE76818A7FF9
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2810D23D7CA;
-	Mon, 20 Oct 2025 23:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C2892F90DE;
+	Mon, 20 Oct 2025 23:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zo6r6J4A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O2r6yRWZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62D01339A4
-	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 23:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206CB2F362C;
+	Mon, 20 Oct 2025 23:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761003032; cv=none; b=pz88dkRzE2FZRqvw3Oh4HV7Ars6t/CTLMBSOBfkpeMpQGPppEG/+BDLXWQMSTurJJ7WJtbs5zC6Wvx8cndwnbIMTtxrGJCy1rnSrN/ouzcLc7atU0xWfR90QqxoSynzJwy2IV4nqmvgwzf6Y2w6pXFHhkQHHX1vw54S+fL1fLJE=
+	t=1761003511; cv=none; b=p0OZU20EwdfiUZSQewm/zlSSQf19RAvUER48P1yQItkDM5uPQSNdnBxSaY/L9zOGXH+z8FyWY7+8tssN053Xrk7O3HgFQn4mTjUEPe3Zhbz9E++rF3RrdnlojNhF4ROelPmwR89sD+jx2MFodO85v608Rrt6NyrovqoJ1QYSomk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761003032; c=relaxed/simple;
-	bh=wBx5HU0NHsSDK23iXznXH3Oj8GG15Qr8iFROxkEtWPI=;
+	s=arc-20240116; t=1761003511; c=relaxed/simple;
+	bh=SIJw5mfjVLuMIAkneKIDqYjtAB3HUgg7gTwbYwgB8XU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6UiYPly6gJd/HNcMY+tbBM1322x6kExrcF7PV9GdTLfsA9OsBeo7ej7Y+QXNdFFZVeeoaraH+1/QQzqiBjz2ohLDZElLuai449YRXkf7yJS/OYINQYau5OzTTj1VGhWxdvJ34ueugqo6UOApZVN1d5Q0RuMV6PfpVdp5NAeGx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zo6r6J4A; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-290d48e9f1fso56795ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 16:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761003030; x=1761607830; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2EojOJFcibgh1WcpC+qylb2gWt1s0H89duNTff3IMYc=;
-        b=zo6r6J4AL4GIdCPnG7fdJSElKnv5fVxae3llaa3Z/Giwm6PznOJ28DnbcuUhb6bOPp
-         3b5ZvLHz+R1mQtg2h0d6K+AF+nBje6kres9caqiHV15kuTJKkN6pfswEJ+TOUb6F+n3y
-         Sm2zlj/uKfjxrCfyAmKQLlQPhvXEEWYZ7D+79YsPalj49vX9ERJ9gjo7s424ZlI/CAXN
-         0HBzS0ynwrAgfb/9ZG2IwC5QYa2HHHZufcyh47u51lxmIizodz4pObTFsXQux5A3/2Wn
-         ux8gKBvm3zZiZ6JW3yTmuR9xjqlVtF2tiMhyABvdgz4LIGymD3704/c42/D57M4+eEKo
-         K3OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761003030; x=1761607830;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2EojOJFcibgh1WcpC+qylb2gWt1s0H89duNTff3IMYc=;
-        b=mlp8ddznaLe2egtJk6gcTJrcRO/q81xVDFSnhC4MjWus4YYXElu4CIdq1chQKAnu7X
-         wuD65Q0q0Nv+3bAESMf57dxlvJaVXATDIZv8LnHmELAJntY8oLGAZh6ejnRWS9zTc+7e
-         PKJRLgadMa2+UJOxn4bzKjMNxGWJJsnzl9dFfm+gu/EEZrgmprcK8ThVngjs3aXYJNQd
-         ApLVFfftg1WIgri9lpIkAL1afgrUwlelIL0JLRfErs+0CUo/FdkCcvRwJRfP+dTPtWoQ
-         orbOuuQkDixhdsEMyKOs2aXslfAaaiJayjJ2HiaWn1WuyM238zQVnZNl0H7W03rirKZM
-         HgFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFGHmGPABtNj5uE87vco1jMdlRCFWOTs+f80fM5mGx3K67cPgN+Gjvj75UblOuSnISlHkVOMrKs4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGS9nQXolQTDZbcv8OerNZbbCLnj9K5DbvH+lY282pcqYdxgTh
-	ST/qLaN/HXMSdsobiDOo4fSHZRa3GFGSeNVQkGLylKsqicCHnjBodPQGmpEZ9p2OoQ==
-X-Gm-Gg: ASbGncsZJi3+QcIyLNigyQ+XLiEg6GOlKLdfq4y+80g9WLiE0n6wxMRSC96dwM0XpXv
-	IrALEKbOtyC3L9hY6n54Ci5g1OP7lh2j6uCfC0RGiF6PkZMZfKIPaMQm0z7INehuuJAUpgOKefr
-	seJnyU/Nw2o/RzdbGlGGbXN/huRxaDpAaE9VCLiiCVUDhRqJ1GY8Sezt+7teIrgHLXdZXlKVzsC
-	8dXXKTi9W6dFSJcPn9ba9OKkIGl973MzcI8W0tw68menYNwyCedT8K6ekAyE4C3iL3yBOLmVV90
-	H/7xlMP23648dnR189ESEyWmxe37FeYgGN6wzaKietVoBUaJa42EUmdjUQcW0tFoSBJOP2DqE6T
-	aJZGyOw1w+6c0kIcUGbxXBgzTPqZ65A2bY3xwC32lyV0b9LM7FUCg+RKtEMl/oeOG6irsSAV9Ku
-	gxuIwDvgDEKE1C7/Tdg5kwXbXHKcKXdrcPXw==
-X-Google-Smtp-Source: AGHT+IGp67st8Wnp6/nSJ8EGcvRTlOdg+o3GxZOASU21XsdtW7vuEAf7PH3lMWQNe6ILam9RRnzuAA==
-X-Received: by 2002:a17:903:9ce:b0:274:506d:7fea with SMTP id d9443c01a7336-292dc92664bmr869085ad.5.1761003029542;
-        Mon, 20 Oct 2025 16:30:29 -0700 (PDT)
-Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a2301108f8sm9508302b3a.66.2025.10.20.16.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 16:30:28 -0700 (PDT)
-Date: Mon, 20 Oct 2025 16:30:24 -0700
-From: Vipin Sharma <vipinsh@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: bhelgaas@google.com, alex.williamson@redhat.com,
-	pasha.tatashin@soleen.com, dmatlack@google.com, graf@amazon.com,
-	pratyush@kernel.org, gregkh@linuxfoundation.org, chrisl@kernel.org,
-	rppt@kernel.org, skhawaja@google.com, parav@nvidia.com,
-	saeedm@nvidia.com, kevin.tian@intel.com, jrhilke@google.com,
-	david@redhat.com, jgowans@amazon.com, dwmw2@infradead.org,
-	epetron@amazon.de, junaids@google.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 00/21] VFIO live update support
-Message-ID: <20251020233024.GA648579.vipinsh@google.com>
-References: <20251018000713.677779-1-vipinsh@google.com>
- <20251018172130.GQ3938986@ziepe.ca>
- <20251018225309.GF1034710.vipinsh@google.com>
- <20251018230641.GR3938986@ziepe.ca>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRMm1YnB/5wtKb7qAst8bmOVWdSrrwISUPiQdXj7zZe++2fQPTD1QdrILdC4CevNl8dU7pKJslhXDpxVGCHoXVqKXsuuSXgT+F3l5r2itq1u/nq7RnXRELSNQkEYAitc+WpV46GX9Ru2lrOnJfV4HrffBLxMUx4swGbg6Eo2zIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O2r6yRWZ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761003510; x=1792539510;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SIJw5mfjVLuMIAkneKIDqYjtAB3HUgg7gTwbYwgB8XU=;
+  b=O2r6yRWZM/PHFvv9UwLdGN6lU+3l8Nf+PyK38bJR+Q2tVztEgYSFTQ+B
+   eG9x3ZN807GMHetc3wk7GEmg7Xrd93QWp4uX4R/lMjUJsLztwQ7ADq397
+   3HCFBPqxI9ttNfuNDRlIII1GS3OV/6WmJ0pYr1bK2LL9X9v8prviw/xFX
+   Og0XHu+dKVXVw7R8Qcv7tcCPTak2ZOCNJ2GsgS+k3iplHgs5AGMpD2YnL
+   FF/KEst9AWJz7cTT13mpI2dSw3cpDiqpuzlBhB5IwOIG0dIve8FU+4PyD
+   YlNH+EppgmcN7MfKFiX9VYwQehFLyajsH8oqI70EindA88U8/CBlvRbMR
+   A==;
+X-CSE-ConnectionGUID: 6GpeLUB9Rjepn7V9HEyrxQ==
+X-CSE-MsgGUID: xzgBo33tTymDHzQmKZ2MnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74246012"
+X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
+   d="scan'208";a="74246012"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 16:38:30 -0700
+X-CSE-ConnectionGUID: umtj87M0Ty+vyL8Lk1WSVg==
+X-CSE-MsgGUID: +bkf+DWfRrWIgkPT+R+5ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
+   d="scan'208";a="187715091"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 20 Oct 2025 16:38:22 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vAzS8-000AFl-1H;
+	Mon, 20 Oct 2025 23:38:16 +0000
+Date: Tue, 21 Oct 2025 07:36:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zhi Wang <zhiw@nvidia.com>, rust-for-linux@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dakr@kernel.org,
+	bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cjia@nvidia.com, smitra@nvidia.com,
+	ankita@nvidia.com, aniketa@nvidia.com, kwankhede@nvidia.com,
+	targupta@nvidia.com, zhiw@nvidia.com, zhiwang@kernel.org,
+	acourbot@nvidia.com, joelagnelf@nvidia.com, jhubbard@nvidia.com,
+	markus.probst@posteo.de
+Subject: Re: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait
+ and specialize Mmio<SIZE>
+Message-ID: <202510210730.qW10Mhd0-lkp@intel.com>
+References: <20251016210250.15932-2-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,53 +87,76 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251018230641.GR3938986@ziepe.ca>
+In-Reply-To: <20251016210250.15932-2-zhiw@nvidia.com>
 
-On 2025-10-18 20:06:41, Jason Gunthorpe wrote:
-> On Sat, Oct 18, 2025 at 03:53:09PM -0700, Vipin Sharma wrote:
-> > 
-> > This series has very minimal PCI support. For example, it is skipping
-> > DMA disable on the VFIO PCI device during kexec reboot and saving initial PCI
-> > state during first open (bind) of the device.
-> > 
-> > We do need proper PCI support, few examples:
-> > 
-> > - Not disabling DMA bit on bridges upstream of the leaf VFIO PCI device node.
-> 
-> So limited to topology without bridges
-> 
-> > - Not writing to PCI config during device enumeration.
-> 
-> I think this should be included here
-> 
-> > - Not autobinding devices to their default driver. My testing works on
-> >   devices which don't have driver bulit in the kernel so there is no
-> >   probing by other drivers.
-> 
-> Good enough for now, easy to not build in such drivers.
-> 
-> > - PCI enable and disable calls support.
-> 
-> ?? Shouldn't vfio restore skip calling pci enable? Seems like there
-> should be some solution here.
+Hi Zhi,
 
-I think PCI subsystem when restores/enumerates a preserved device after
-kexec, should enable the device and VFIO can skip calling this. By
-default enable mostly does:
+kernel test robot noticed the following build errors:
 
-1. Increments enable_cnt.
-2. Enables to bus master of upstream bridges.
-3. Reset INTx Disable bit in command register.
-4. Enables IO and Memory space bit in command register.
-5. Apply fixups.
-6. Sets power state to D0.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.18-rc2 next-20251020]
+[cannot apply to driver-core/driver-core-testing]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-On a preserved and restored device, I think only item 1 needs to happen,
-2-6 should remain same if device config space is not written during
-enumeration and state is recreated by reading values in config space.
+url:    https://github.com/intel-lab-lkp/linux/commits/Zhi-Wang/rust-io-factor-common-I-O-helpers-into-Io-trait-and-specialize-Mmio-SIZE/20251017-050553
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20251016210250.15932-2-zhiw%40nvidia.com
+patch subject: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait and specialize Mmio<SIZE>
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20251021/202510210730.qW10Mhd0-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510210730.qW10Mhd0-lkp@intel.com/reproduce)
 
-I believe this should be part of PCI preservation and restoration
-series. VFIO can assume that device is enabled and skip the call or check if it is not enabled
-then fail the restoration.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510210730.qW10Mhd0-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+>> error[E0432]: unresolved import `kernel::io::IoRaw`
+   --> rust/doctests_kernel_generated.rs:5047:74
+   |
+   5047 | use kernel::{bindings, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
+   |                                                                          ^^^^^ no `IoRaw` in `io`
+--
+>> error[E0782]: expected a type, found a trait
+   --> rust/doctests_kernel_generated.rs:7075:46
+   |
+   7075 | fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result<()> {
+   |                                              ^^^^^^^^
+   |
+   = note: `Io<SIZE>` is dyn-incompatible, otherwise a trait object could be used
+   help: use a new generic type parameter, constrained by `Io<SIZE>`
+   |
+   7075 - fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result<()> {
+   7075 + fn wait_for_hardware<const SIZE: usize, T: Io<SIZE>>(io: &T) -> Result<()> {
+   |
+   help: you can also use an opaque type, but users won't be able to specify the type parameter when calling the `fn`, having to rely exclusively on type inference
+   |
+   7075 | fn wait_for_hardware<const SIZE: usize>(io: &impl Io<SIZE>) -> Result<()> {
+   |                                              ++++
+--
+>> error[E0782]: expected a type, found a trait
+   --> rust/doctests_kernel_generated.rs:5078:18
+   |
+   5078 |    type Target = Io<SIZE>;
+   |                  ^^^^^^^^
+--
+>> error[E0782]: expected a type, found a trait
+   --> rust/doctests_kernel_generated.rs:5082:18
+   |
+   5082 |         unsafe { Io::from_raw(&self.0) }
+   |                  ^^
+   |
+   help: you can add the `dyn` keyword if you want a trait object
+   |
+   5082 |         unsafe { <dyn Io>::from_raw(&self.0) }
+   |                  ++++   +
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
