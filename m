@@ -1,1874 +1,294 @@
-Return-Path: <linux-pci+bounces-38749-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38750-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F6ABF15EB
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:56:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CA17BF165D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 15:01:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B03A334D21F
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:56:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 513AC18A6A01
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 13:00:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F273128DC;
-	Mon, 20 Oct 2025 12:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F2831A576;
+	Mon, 20 Oct 2025 12:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kIsml1s2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012040.outbound.protection.outlook.com [40.93.195.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1362F83DE
-	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 12:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760964980; cv=none; b=qYxHS9qKtf6adGnK3ggJmGQ5B19gZKvcPWVHnJYJKQK4enLmZlZbq+mJMgtoHf5vPs4ffnW9TRfAi5sHo4UTMWjrrruQOr/QE6f+B3tbJyFpCTp1v8xccc21NZvSuxEI/Jx2RjGwO55tH0Vc5qSyQYBwqRzp8HLNSoG7bR/+3iM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760964980; c=relaxed/simple;
-	bh=/cHiwmvrYaCE8WGF5i1mi3cHezaEtrIoEX2m4DuEtK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ULhHdxaWjQHn39Jbxm/Ulmsz/nS8oGsdVhcV4xHp9gOiEU9Yzgnrp4jBsOmT9TTn9JGGeKKTT42KPZ41O8suJy2Al6Pynj7TEHhtFKdoD1eBmelMzOoraCnAODbtRm8qYji5yM1O1o9TdwpMw2Hlh7HU3XbGPrs5/cFOs/TUerU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=avm99963.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=avm99963.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4711a2fc6fbso632035e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 05:56:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760964973; x=1761569773;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SXoZ86NMc4mOsBxnrGrLmkCb/7Ycl+i11wKzihd2YMA=;
-        b=jf1EWn9a7wd+1UhlkmY6Ib9BOBw4rLrkYY1pJMwi5wz//nCZDwFnHMPdpg6Q2L33Mp
-         1khd+L2nnq5VdyavswTsRuuzjgD6VMwDubKC+5ElcDQmmhPQLTqLO8R+/z6JzXBMA3I7
-         Fwxm3+Y0DPTKbNvgXKFqSSONAPUlLWcSEDO7QhqRGy6gZSMFDuyhzMc73VsXAurL5/DX
-         XGcpKH+ebmbCwKpsblUO5+kCj0k7CmhF9SvExq5lSY/WZqYH3xJM8vY4f1xKPpTUqKGG
-         dVO9QfwdPhm/MuHWPw8feUpKfHC/UDcDpn9xQ/YT30tlQgtDqy/BvIaSB+PUl7vVVl3N
-         nLfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgdu3pzh6XxvaE3DR2PUbTa15kqcAyg1Pd6oD3E41hQzj2U4LmVv5Rem79gu+wzyadSERLReCDnQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkQDqHBsIbngL6x5w9vje2zgM5EY7lzaml399FvCSTgpTId5fk
-	ZMdvKHe9YRBmkfnDyf9fpfi7Djg92wxB2RClJ/Zu32nfsnCtnymnpI4T
-X-Gm-Gg: ASbGnctDW1rEx728/iNK78Qz3DkVQa5rB/XECyhvDoOAPi7isewDJNZhg/esfdIj61b
-	YYofb4Sx80W41xWePcZPZM06u8LJGglqo5f5CFstmGwEe8ytFdq5s/uWo0vNirzRYmpgOqAsbU4
-	nzvZy2XdpPRGHsR5R9I4csemJ24eHUF3gaJIalGdx+/OWCzAG4UC2KEeXM7MUTkmEn1o4CXWusZ
-	EXtEAkWxRrH2PYx7yqIZQ4Lszt38ovVsNw63KN9oX7jm9yl0WweHQgLaEphmV5YHWS0NmzfAT4z
-	pjoVnP4JPeDPf+ZPTwxBcxUlrkHAw8LuH6XEEtm7LOPs8SfjR7mejrz+LoAV9qnXdMDuFChgUXt
-	M4/gMNxrrtq/bo/tIupdJ75gXHV6uGz3KjfJBqIzgoh/2u8PTslnFIwGDJ532BhV/rXG4d/8a6x
-	yMQxaSz5aVWuF051iaNo3Zh9bcuSWaf2Ark7nfGJune1/2
-X-Google-Smtp-Source: AGHT+IHuyHIyY1j+iMx/AZvJkKZFIXF6Nwcb6ENutFefl1GU2l91pu9lUnJEmGgj+ImoyITS71Z1MQ==
-X-Received: by 2002:a05:600d:61ef:b0:471:1d8e:3c7c with SMTP id 5b1f17b1804b1-4711d8e41a8mr42405045e9.4.1760964973293;
-        Mon, 20 Oct 2025 05:56:13 -0700 (PDT)
-Received: from pixelbook (181.red-83-42-91.dynamicip.rima-tde.net. [83.42.91.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144c82c9sm229592905e9.14.2025.10.20.05.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 05:56:12 -0700 (PDT)
-Date: Mon, 20 Oct 2025 14:56:10 +0200
-From: =?utf-8?Q?Adri=C3=A0_Vilanova_Mart=C3=ADnez?= <me@avm99963.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: bhelgaas@google.com, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
- suspending to RAM and resuming
-Message-ID: <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
-References: <owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv>
- <d0b6105f-744f-40d9-b4b7-1fa645038d0b@kernel.org>
- <h6wkxjrkxh3ea5aqexqrx4d6xb2t2xbirvznupnbgro64qytfs@mn2jg2c6owrj>
- <rvep55wtk2q4j46eqcxkfgb2bwijunefyltygfyb44trbzblx2@3ou3jcybjt3p>
- <6b3d282c-b3cd-4979-b26b-ae9b28b9d634@kernel.org>
- <kaieqe37mjmizjv4regyw67z7hwa3ac3k2mwcjsgq2mj7redpm@xsfb4mtyjblf>
- <a08c71e2-18ca-491b-8982-47214a35445b@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB94E248F66;
+	Mon, 20 Oct 2025 12:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760965143; cv=fail; b=V5YCabME9n2uqoQJdLFHjBWvqAs+tOcgDvEPYVAH1O6WKsaoHdefqPdlD37iQcs/8u7CFxpQG2nqH60oLx/V9x7mfz/xB+YXRdzVYozpVtQkQ8sljY1bjcMoXxHLfzBtlA+f2xRlA5ZSD9zXzvwEj2c3Eevpr71Xo8/Yi0+MkNE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760965143; c=relaxed/simple;
+	bh=NhphCVGQmi5fuk37azxMobIsNLwG6KpFbwJr0xayz88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DHSR242EtZ9atXCZmSdmoU7iyUGsD8mWGZN1VhNyG+8Q2m58CaJ2KJAObeW11efRHv3ycQt2XoCiURYAhUzn4Uthe3/XY/CkqQzcAzlvPtTFxK5awiW2DrZXv9bHNr6UmCBNdFMjB+4SdWekeCLFHpuqh+NL5MvyN+GUVqkOokw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kIsml1s2; arc=fail smtp.client-ip=40.93.195.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ao2fiHnH4UIpu4SLrieABxvUirU+9fSeQMuF9vW8dwaTNgnMatwqid3fFDp9IH4CVbW5xQYjjDIMvBNFbv/lp63voVyP59emByyLPYyctc371tHtSwCwobkFMY2NYL7DEZIqEClJ5TceQlppdsV3c8Vi2aNsvTA4M7M7o2/g7pGLcXttWwX6GZtOthNZuRPAYoSLhnEhSpy1gA85u/CAzVobcr7HIuux+sVWkgSRGg7QUvYMPxYzP4uV7L+hCZ7yYgA/4RxTMSBTxJKiANtf/rV2LjIeRNrHo9VfILclDhug5tWPDDFExK4OWHPfTJBlHwjd35F7YanHg75dBtf2vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rf0UBcLbZFSmoF8U8kOnAf6CfMA+jmgLMu6dYhb8bTo=;
+ b=m9zGx9loLYjptsa/2bI1FqefEX8lqhgwna8el9QinR+SYQAyxhrqtmCTpvNpG6cctR6aWfcghDsOVqGFYutWWybOHtKkd09oduZ16nM8ygWu2dSRfDhdvRBIuGeXBq6aB5QQs9IZ5LnpNBCZBngEcdqAa3SVcKECnNoPrr1lCX5ZzxG7wJK+7j7zNFTkarR7zAB+baBzUJwLTs34LJFFRSJQpHMXIDbBStfw5vJV5WTkS3gvhtcK6lxYwSeR7YWcMu7rh61bF/qZ98nvdWmZbprb/W7H2pQ9CoaskpGBXJs7bHKyWn1VXPGJFuN2OA9KRM0R7sqZHphUgpGMluB1HQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rf0UBcLbZFSmoF8U8kOnAf6CfMA+jmgLMu6dYhb8bTo=;
+ b=kIsml1s2tnxG5wNrKa8SjYI0m1ahsKcjxZLrUKyyX8HoFNGZoty9TekR/OsNCkY0Ek6X3xP2AR0XoMoY8bi1fHRZnrbtkLGkad+IEmRQWRF47v6RbcIhxVRygkj9V/y3OVAG4e/Cwd7bzPYjn2MTakXfINszCsnj0MglGDvolCfb8aJvsrCfH1I0iv4Te79KH+cUk172avQmaiCDUTcrcdxdB9BBD/2Ml3KJ7Ymiik31FRZhwySvlW05TIpr7PBXw7MIo0KjltpRcLdcxdiCj3p9ei/EwPd68E5IfHXv8WRWU4b6PIwkS6hSDu1zu11Q5PgH8ovrLQ7lHMi+pRL3aA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
+ by PH7PR12MB7140.namprd12.prod.outlook.com (2603:10b6:510:200::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.13; Mon, 20 Oct
+ 2025 12:58:57 +0000
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9228.015; Mon, 20 Oct 2025
+ 12:58:57 +0000
+Date: Mon, 20 Oct 2025 09:58:54 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/9] PCI/P2PDMA: Separate the mmap() support from the
+ core logic
+Message-ID: <20251020125854.GL316284@nvidia.com>
+References: <cover.1760368250.git.leon@kernel.org>
+ <1044f7aa09836d63de964d4eb6e646b3071c1fdb.1760368250.git.leon@kernel.org>
+ <aPHibioUFZV8Wnd1@infradead.org>
+ <20251017115320.GF3901471@nvidia.com>
+ <aPYqliGwJTcZznSX@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aPYqliGwJTcZznSX@infradead.org>
+X-ClientProxiedBy: SJ0PR03CA0242.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::7) To MN2PR12MB3613.namprd12.prod.outlook.com
+ (2603:10b6:208:c1::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="x5b7evi746yntaci"
-Content-Disposition: inline
-In-Reply-To: <a08c71e2-18ca-491b-8982-47214a35445b@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|PH7PR12MB7140:EE_
+X-MS-Office365-Filtering-Correlation-Id: e45e0766-45b0-4e88-f356-08de0fd86e30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?B5wkBlO7PP6mnXabWyoiam5nRETb0OiwpQ/PuFye6UsEqL+/PwfIJEG82sga?=
+ =?us-ascii?Q?WBTWOZHHnWXfjRqTJTy87zHwgO83QHW0pkz23TlKzwKX/4Wq1eX4TjPUVGn3?=
+ =?us-ascii?Q?J2zQIch3eWVrGuEu6z0UaZT9Jv45sE2WiaysuxHs+29JnvRe6C1mzPeeeHep?=
+ =?us-ascii?Q?bxtmCzh8VJxW41yGyotzWoJXUNEVSQh9oIjHEjufOtuUCh0sKNwaX6vyivVq?=
+ =?us-ascii?Q?HxdlqbV1Loka9QAIJiF0FyNRjDAwA+V7UdDzFSjqaMVfqkddb6XatQmkpYe7?=
+ =?us-ascii?Q?+Rp+qAna/B6yJ36qXOpqKJIMMx6ws/ijVIU7K35wKDyMDOmDraz5r9XrCfjF?=
+ =?us-ascii?Q?ir71rTIX7Ss0eyXuZ8Tx8G42YQDhaydk3I2oX92lb4PPVKXGz8tAh7oFbbI9?=
+ =?us-ascii?Q?ZilRin+xkeLk2khOUgA+1ajSh987HTgr2cbHYbtD51YFzrSdJmFkbqDxTq4n?=
+ =?us-ascii?Q?gB0M/aaJuxnykLsSipQhHVGZ+/YUYu5w3DdXy6KjF1MA3jZ0e8hfGf/YnO7l?=
+ =?us-ascii?Q?b2hqKrxS8fvhA27i86d5Mm2a9QhOY0JVgghXH4Mp8JK0P9kp6eoLC7pQloKT?=
+ =?us-ascii?Q?1b9H7kjLkPXpkgmQWk0uAGpDDOMwhSRmEHsfP1R0mUP+gllcyA+z/6N8eOQD?=
+ =?us-ascii?Q?1I0QZxhKu0ARA4QVMLNtBcFQRT2N/aqmta2pKWZrnfkaBScJcGCUV6qmkIh4?=
+ =?us-ascii?Q?DJpD4lhzRGpPaHdXx3FzO/keDiO3E3MmswQVttBN9RiNSFPOP7Z4xxGuEd0q?=
+ =?us-ascii?Q?in7QLlN9/6O3zZj97s8pbuHJaIdhYyl1xsoC3YQFPZOEhQiniAlYIwHKHKBZ?=
+ =?us-ascii?Q?3uLHKUi9QHfU+JjhF/iyPkxsa5z/u0TAfU3/rPKv+TL5LDgytB9CmapUe+Bv?=
+ =?us-ascii?Q?Om+M6X3oSDHV9D2ktj6ZSCGnCQR2iWLyhYerR/qy9DaH5tc+JCBWyl2FL67F?=
+ =?us-ascii?Q?sEFaunrn7vsw8NaKPFwJsU5j1g6YE6qRTOYCXMlzMiFMGx3C1prhxvxq04eg?=
+ =?us-ascii?Q?AnoFbAst2B+L34la0IqFuvreqOYRz/jJx1fTp811DuJ9Bv1hFgbkKS3qo3u/?=
+ =?us-ascii?Q?dG2qX2z298fIBmAjSLrV8fXakX2WOEIzmxehA0TjS8txSuUZjJdaR4iCa3tI?=
+ =?us-ascii?Q?Lyf8A+72i09DNZnQWsGtpQsROSalMDWWImYeg+Ag6ucRukQ+YxgSM+rZRv+s?=
+ =?us-ascii?Q?19MFv+qXAnz20sbEn/y7E6sdr1l9HnWl5X4aW0ydkdrY9ZC9usJFoPu7gr8U?=
+ =?us-ascii?Q?v/G+EhW3flqSDqdPRtODGfsm+mRZeEafeRg0NERbGTzhU/EKu3/g5/PQvnIR?=
+ =?us-ascii?Q?44wtFm5D7sBSWCfHuMaGpB2kJOXGD2XtCtC4yCtUQ9mGoRBXrirKaO2SzlB8?=
+ =?us-ascii?Q?lsI0F/v+d4ukYl7bhaf5qUbRgp0tl1H39g6bHyFVZa3Vy3QyFiWHVa4qDhB5?=
+ =?us-ascii?Q?tBchmWcXVDnPYbWKf0zuh5HHwPzhYOmvLscfcaKj7tnaiG2ksGWhAQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oFzvBE+Thzn7tqre6tph9VAenXbQCsV2nQ3MJqZ+8t/QQBKipvMzEs5ILnhH?=
+ =?us-ascii?Q?x0fgJDB5QZYBe3es4HNs1Iptu1X6bi6rfaBoeDIjGfi/Tbs7n+SWsDUisjMn?=
+ =?us-ascii?Q?ZfcCNQwHEJN/raUbFMNQbyDEST5G7s7yUi+Muy/Lvzi/D5TpqULTLNiw7gz3?=
+ =?us-ascii?Q?SWpOv6dbn/xsFtO3rwtFqocA4kdAjxcpS5GNyggmg3D2R0jclK0cjey8MA3s?=
+ =?us-ascii?Q?C2jXRLfxnaREly2Pu+n4Dxpu6rmvRW/7QrVS1LEZgxJu+l0iJGsuZpgp5JZE?=
+ =?us-ascii?Q?DM08ZclX6miqgRgPArM0YGRbfFrU3SA2Tj18dM306/PXJOkh789x4RQ189dQ?=
+ =?us-ascii?Q?/LC2weYBYSlbjATK4vbUxyO2e9tZRqngwxVU8d8oy93qzOyd3l1AQcqroWSb?=
+ =?us-ascii?Q?YX3+x5iC/a/4W5w9Af4g6McDRPPRAN6WtKsVX/IVyg+8fhKJ9x1/BsRQmhTo?=
+ =?us-ascii?Q?kY1tc2HtcAjyTKNvmSfW29jmiEq0nB9wmO2r2iisTfG9M+n76JEMXctdX2mg?=
+ =?us-ascii?Q?TaNNwxaOcTfzZhxnSR5i0NMwNuP/9Jx+kbWyGC+n83WVKMZfR5ag8GN94G3n?=
+ =?us-ascii?Q?I18F2LxN2dk8DWhoiGy5+1Rc3mipgo0E2yL/EDibEUB5KEWrqIb302PHfkBk?=
+ =?us-ascii?Q?QK/i7npSr27sWvW4BxVhz888ihg94bBUS7qvvk185oBh2S4JSdwcPSwRnF9x?=
+ =?us-ascii?Q?sSIYJlRbWkjlO++2GIXSkmC936oykEbMD98hNdAIhK1rPuCqj/TcpJ/oPux0?=
+ =?us-ascii?Q?7SihnxpQGbb0HkqGwaVCSemhYpmGGnsN0fPYKj0CZGJZpBegLSejFFg/MP2/?=
+ =?us-ascii?Q?rAqQ91aQAgt8J+TBVLXhvjlu0TAFEnddq/tyrZz9JffeLxACArHOijHps/i+?=
+ =?us-ascii?Q?cvsRzZx3eq5uiM6ybbs6nlKKk+s0QlsFOCNauaLztP6GLy8E/pidffFJ6jFp?=
+ =?us-ascii?Q?1LNJ/sEB3NeZFc/xw4CiL6qvWH/BjDzDnuvPzLhjtobxVm14TvWjfyTDapZ4?=
+ =?us-ascii?Q?/hstubZ/dY9l8mS8nA7yLENSxS1jsRF/X0uBQ8CXjkVm7hAF2yqqaFr8S5vi?=
+ =?us-ascii?Q?igy0kydpfF7XrBETmjSWsJepKW6ytqX8FvQXJOY8S8rafW2i4SWyBwOix6hN?=
+ =?us-ascii?Q?fHOZ7jT5YVel/z4mL4BrODEhS+Rl7iwbN6+EnqHTnI3RkJMDOjJWG69N/DZJ?=
+ =?us-ascii?Q?Pr2KT2jFQMMhfZS3n4HORGB+8ia9u+yusIkAo8ppl/EnSGITf5UzoQ+btLbx?=
+ =?us-ascii?Q?lmPyy6Kz8gVidA5KjsinXRPufxcd2ZIuKdA3L67hbAZGIyHzFx5cDFo5js3R?=
+ =?us-ascii?Q?oS0zzVAmwgWJ74pYX333pgfd0esQnqeCd5Tj8ifXWW7esDlEcxDwrhg2MkeQ?=
+ =?us-ascii?Q?0S2oYQmtRBMfu9WtEkCNQfyr4g4z0HMnHdNJfEwyR0ZdMRepb/5/OLEBQfSz?=
+ =?us-ascii?Q?YqZoJxfSFkxp5itn37VQGIMwnCKeJdvutE1Ugm+zxtcgmma426eR8VVCVoe3?=
+ =?us-ascii?Q?pqFhBzjrGKkNT4E7/frrv5i5Ch4AyQIQGI2nOeVA7wQFJlEsSfJsiybR7bJL?=
+ =?us-ascii?Q?Cg9+wH0Al0hyp9RSYPTX9mzsTHCpn5HgHBEWnh5E?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e45e0766-45b0-4e88-f356-08de0fd86e30
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2025 12:58:57.5566
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z6IvifmM36NWUvw3j2l0HU8F/2j6c6tOsNhOyk3ml+UB0qvEngjpM9b/gAeDrRr1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7140
 
-
---x5b7evi746yntaci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Oct 19, 2025 at 07:25:08PM -0500, Mario Limonciello wrote:
-> Thanks, knowing that pcie_aspm=off helps I think we should compare output
-> for:
+On Mon, Oct 20, 2025 at 05:27:02AM -0700, Christoph Hellwig wrote:
+> On Fri, Oct 17, 2025 at 08:53:20AM -0300, Jason Gunthorpe wrote:
+> > On Thu, Oct 16, 2025 at 11:30:06PM -0700, Christoph Hellwig wrote:
+> > > On Mon, Oct 13, 2025 at 06:26:03PM +0300, Leon Romanovsky wrote:
+> > > > The DMA API now has a new flow, and has gained phys_addr_t support, so
+> > > > it no longer needs struct pages to perform P2P mapping.
+> > > 
+> > > That's news to me.  All the pci_p2pdma_map_state machinery is still
+> > > based on pgmaps and thus pages.
+> > 
+> > We had this discussion already three months ago:
+> > 
+> > https://lore.kernel.org/all/20250729131502.GJ36037@nvidia.com/
+> > 
+> > These couple patches make the core pci_p2pdma_map_state machinery work
+> > on struct p2pdma_provider, and pgmap is just one way to get a
+> > p2pdma_provider *
+> > 
+> > The struct page paths through pgmap go page->pgmap->mem to get
+> > p2pdma_provider.
+> > 
+> > The non-struct page paths just have a p2pdma_provider * without a
+> > pgmap. In this series VFIO uses
+> > 
+> > +	*provider = pcim_p2pdma_provider(pdev, bar);
+> > 
+> > To get the provider for a specific BAR.
 > 
-> # sudo lspci -vvnn
+> And what protects that life time?  I've not seen anyone actually
+> building the proper lifetime management.  And if someone did the patches
+> need to clearly point to that.
 
-Sure, I'm attaching the outputs of this command for all the scenarios.
-There are some differences, so it seems promising.
+It is this series!
 
-I'm building the Kernel on the following commits:
+The above API gives a lifetime that is driver bound. The calling
+driver must ensure it stops using provider and stops doing DMA with it
+before remove() completes.
 
-- "Kernel without 4d4c10f763 and 907a7a2e5b": 1c64efcb08, applying on
-top reverts for these 2 commits. [locally compiled version
-6.18.0-rc1-local-reverted-pci-issues-00351-gbbaff7ff47dd]
-- "Kernel with 4d4c10f763 and 907a7a2e5b": 1c64efcb08 (last commit I
-pulled from mainline last week). [locally compiled version ???]
+This VFIO series does that through the move_notify callchain I showed
+in the previous email. This callchain is always triggered before
+remove() of the VFIO PCI driver is completed.
 
-> In the following cases (all without pcie_aspm=off):
+> > I think I've answered this three times now - for DMABUF the DMABUF
+> > invalidation scheme is used to control the lifetime and no DMA mapping
+> > outlives the provider, and the provider doesn't outlive the driver.
 > 
-> 1) At bootup; a kernel without 4d4c10f763 and 907a7a2e5b
+> How?
 
-See 01_lspci_bootup_without_4d4c10f763_907a7a2e5b.txt
+I explained it in detail in the message you are repling to. If
+something is not clear can you please be more specific??
 
-> 2) At bootup; a kernel with 4d4c10f763 and 907a7a2e5b
+Is it the mmap in VFIO perhaps that is causing these questions?
 
-See 02_lspci_bootup_with_4d4c10f763_907a7a2e5b.txt
+VFIO uses a PFNMAP VMA, so you can't pin_user_page() it. It uses
+unmap_mapping_range() during its remove() path to get rid of the VMA
+PTEs.
 
-> 3) After suspend/resume; a kernel without 4d4c10f763 and 907a7a2e5b4
+The DMA activity doesn't use the mmap *at all*. It isn't like NVMe
+which relies on the ZONE_DEVICE pages and VMAs to link drivers
+togther.
 
-See 03_lspci_after_suspend_resume_without_4d4c10f763_907a7a2e5b.txt
+Instead the DMABUF FD is used to pass the MMIO pages between VFIO and
+another driver. DMABUF has a built in invalidation mechanism that VFIO
+triggers before remove(). The invalidation removes access from the
+other driver.
 
-> 4) After suspend/resume; a kernel with 4d4c10f763 and 907a7a2e5b
+This is different than NVMe which has no invalidation. NVMe does
+unmap_mapping_range() on the VMA and waits for all the short lived
+pgmap references to clear. We don't need anything like that because
+DMABUF invalidation is synchronous.
 
-See 04_lspci_after_suspend_resume_with_4d4c10f763_907a7a2e5b.txt
+The full picture for VFIO is something like:
 
-Again, thank you so much! I really appreciate your help in
-troubleshooting this.
+[startup]
+  MMIO is acquired from the pci_resource
+  p2p_providers are setup
 
-PS: I'm trimming the email quotes as per
-https://subspace.kernel.org/etiquette.html#trim-your-quotes-when-replying.
-I've never done this before and it feels wrong, but it is indeed easier
-to follow the conversation if I do this.
+[runtime]
+  MMIO is mapped into PFNMAP VMAs
+  MMIO is linked to a DMABUF FD
+  DMABUF FD gets DMA mapped using the p2p_provider
 
---x5b7evi746yntaci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="01_lspci_bootup_without_4d4c10f763_907a7a2e5b.txt"
+[unplug]
+  unmap_mapping_range() is called so all VMAs are emptied out and the
+  fault handler prevents new PTEs 
+    ** No access to the MMIO through VMAs is possible**
 
-00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-		CapC: PegG4Dis- DDR4MaxFreq=Unlimited LPDDREn- LPDDR4MaxFreq=0MHz LPDDR4En+
-		      QClkGvDis- SgxDis- BClkOC=Disabled IddDis- Pipe3Dis- Gear1MaxFreq=Unlimited
-	Kernel driver in use: skl_uncore
+  vfio_pci_dma_buf_cleanup() is called which prevents new DMABUF
+  mappings from starting, and does dma_buf_move_notify() on all the
+  open DMABUF FDs to invalidate other drivers. Other drivers stop
+  doing DMA and we need to free the IOVA from the IOMMU/etc.
+    ** No DMA access from other drivers is possible now**
 
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 615 [8086:591e] (rev 02) (prog-if 00 [VGA controller])
-	DeviceName: VGA compatible controller
-	Subsystem: Intel Corporation Device [8086:2212]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 126
-	Region 0: Memory at cf000000 (64-bit, non-prefetchable) [size=16M]
-	Region 2: Memory at d0000000 (64-bit, prefetchable) [size=256M]
-	Region 4: I/O ports at ffc0 [size=64]
-	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-	Capabilities: [40] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Capabilities: [70] Express (v2) Root Complex Integrated Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ FLReset+ TEE-IO-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-	Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00018  Data: 0000
-	Capabilities: [d0] Power Management version 2
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Process Address Space ID (PASID)
-		PASIDCap: Exec- Priv-, Max PASID Width: 14
-		PASIDCtl: Enable- Exec- Priv-
-	Capabilities: [200 v1] Address Translation Service (ATS)
-		ATSCap:	Invalidate Queue Depth: 00
-		ATSCtl:	Enable-, Smallest Translation Unit: 00
-	Capabilities: [300 v1] Page Request Interface (PRI)
-		PRICtl: Enable- Reset-
-		PRISta: RF- UPRGI- Stopped+ PASID+
-		Page Request Capacity: 00008000, Page Request Allocation: 00000000
-	Kernel driver in use: i915
-	Kernel modules: i915
+  Any still open DMABUF FD will fail inside VFIO immediately due to
+  the priv->revoked checks.
+    **No code touches the p2p_provider anymore**
 
-00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceed8000 (64-bit, non-prefetchable) [size=32K]
-	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [d0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Kernel driver in use: proc_thermal
-	Kernel modules: processor_thermal_device_pci_legacy
+  The p2p_provider is destroyed by devm.
 
-00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21) (prog-if 30 [XHCI])
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 121
-	Region 0: Memory at ceef0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [70] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable+ Count=8/8 Maskable- 64bit+
-		Address: 00000000fee00318  Data: 0000
-	Kernel driver in use: xhci_hcd
-	Kernel modules: xhci_pci
+> > Obviously you cannot use the new p2provider mechanism without some
+> > kind of protection against use after hot unplug, but it doesn't have
+> > to be struct page based.
+> 
+> And how does this interact with everyone else expecting pgmap based
+> lifetime management.
 
-00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecf000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Kernel driver in use: intel_pch_thermal
-	Kernel modules: intel_pch_thermal
+They continue to use pgmap and nothing changes for them.
 
-00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-	Subsystem: Intel Corporation 100 Series PCH/Sunrise Point PCH I2C0 [Skylake/Kaby Lake LPSS I2C] [8086:9d60]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceece000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
+The pgmap path always waited until nothing was using the pgmap and
+thus provider before allowing device driver remove() to complete.
 
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 17
-	Region 0: Memory at ceecd000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
+The refactoring doesn't change the lifecycle model, it just provides
+entry points to access the driver bound lifetime model directly
+instead of being forced to use pgmap.
 
-00:15.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecc000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
+Leon, can you add some remarks to the comments about what the rules
+are to call pcim_p2pdma_provider() ?
 
-00:19.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 32
-	Region 0: Memory at fe030000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceeca000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 34
-	Region 0: Memory at ceec9000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10] (rev f1) (prog-if 00 [Normal decode])
-	Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 120
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-	I/O behind bridge: 2000-2fff [size=4K] [16-bit]
-	Memory behind bridge: cef00000-ceffffff [size=1M] [32-bit]
-	Prefetchable memory behind bridge: 27f000000-27f1fffff [size=2M] [32-bit]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+ FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 10W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
-			Changed: MRL- PresDet+ LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
-		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00218  Data: 0000
-	Capabilities: [90] Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Capabilities: [a0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO+ CmpltAbrt- UnxCmplt+ RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsgNum 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [140 v1] Access Control Services
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [200 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=40us PortTPowerOnTime=44us
-		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=40us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Capabilities: [220 v1] Secondary PCI Express
-		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-		LaneErrStat: 0
-	Kernel driver in use: pcieport
-	Kernel modules: shpchp
-
-00:1e.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 20
-	Region 0: Memory at ceec8000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceec7000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 22
-	Region 0: Memory at ceec6000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.4 SD Host controller [0805]: Intel Corporation Device [8086:9d2b] (rev 21) (prog-if 01)
-	Subsystem: Intel Corporation Device [8086:9d2b]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 21
-	Region 0: Memory at ceec5000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: sdhci-pci
-	Kernel modules: sdhci_pci
-
-00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:9d4b] (rev 21)
-	Subsystem: Intel Corporation Device [8086:9d4b]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-
-00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC [8086:9d21] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP PMC [8086:9d21]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at ceed4000 (32-bit, non-prefetchable) [size=16K]
-
-00:1f.3 Multimedia audio controller [0401]: Intel Corporation Sunrise Point-LP HD Audio [8086:9d71] (rev 21)
-	DeviceName: Multimedia audio controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 64, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 129
-	Region 0: Memory at ceed0000 (64-bit, non-prefetchable) [size=16K]
-	Region 4: Memory at ceee0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee00458  Data: 0000
-	Kernel driver in use: snd_soc_avs
-	Kernel modules: snd_soc_avs, snd_hda_intel
-
-00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
-	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceec3000 (64-bit, non-prefetchable) [size=256]
-	Region 4: I/O ports at efa0 [size=32]
-	Kernel driver in use: i801_smbus
-	Kernel modules: i2c_i801
-
-00:1f.5 Non-VGA unclassified device [0000]: Intel Corporation Device [8086:9d24] (rev 21)
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at fe010000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: intel-spi
-	Kernel modules: spi_intel_pci
-
-01:00.0 Network controller [0280]: Intel Corporation Wireless 7265 [8086:095a] (rev b9)
-	Subsystem: Intel Corporation Device [8086:9e10]
-	Physical Slot: 0
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 127
-	Region 0: Memory at cef00000 (64-bit, non-prefetchable) [size=8K]
-	Capabilities: [c8] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee002d8  Data: 0000
-	Capabilities: [40] Express (v2) Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 unlimited
-			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0W TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr+ NoSnoop+ FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L1, Exit Latency L1 <32us
-			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt- FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-		DevCap2: Completion Timeout: Range B, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- TPHComp- ExtTPHComp-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr+ BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [140 v1] Device Serial Number 28-c6-3f-ff-ff-30-93-5f
-	Capabilities: [14c v1] Latency Tolerance Reporting
-		Max snoop latency: 3145728ns
-		Max no snoop latency: 3145728ns
-	Capabilities: [154 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=30us PortTPowerOnTime=60us
-		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-			   T_CommonMode=0us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Kernel driver in use: iwlwifi
-	Kernel modules: iwlwifi
-
-
---x5b7evi746yntaci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="02_lspci_bootup_with_4d4c10f763_907a7a2e5b.txt"
-
-00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-		CapC: PegG4Dis- DDR4MaxFreq=Unlimited LPDDREn- LPDDR4MaxFreq=0MHz LPDDR4En+
-		      QClkGvDis- SgxDis- BClkOC=Disabled IddDis- Pipe3Dis- Gear1MaxFreq=Unlimited
-	Kernel driver in use: skl_uncore
-
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 615 [8086:591e] (rev 02) (prog-if 00 [VGA controller])
-	DeviceName: VGA compatible controller
-	Subsystem: Intel Corporation Device [8086:2212]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 126
-	Region 0: Memory at cf000000 (64-bit, non-prefetchable) [size=16M]
-	Region 2: Memory at d0000000 (64-bit, prefetchable) [size=256M]
-	Region 4: I/O ports at ffc0 [size=64]
-	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-	Capabilities: [40] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Capabilities: [70] Express (v2) Root Complex Integrated Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ FLReset+ TEE-IO-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-	Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00018  Data: 0000
-	Capabilities: [d0] Power Management version 2
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Process Address Space ID (PASID)
-		PASIDCap: Exec- Priv-, Max PASID Width: 14
-		PASIDCtl: Enable- Exec- Priv-
-	Capabilities: [200 v1] Address Translation Service (ATS)
-		ATSCap:	Invalidate Queue Depth: 00
-		ATSCtl:	Enable-, Smallest Translation Unit: 00
-	Capabilities: [300 v1] Page Request Interface (PRI)
-		PRICtl: Enable- Reset-
-		PRISta: RF- UPRGI- Stopped+ PASID+
-		Page Request Capacity: 00008000, Page Request Allocation: 00000000
-	Kernel driver in use: i915
-	Kernel modules: i915
-
-00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceed8000 (64-bit, non-prefetchable) [size=32K]
-	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [d0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Kernel driver in use: proc_thermal
-	Kernel modules: processor_thermal_device_pci_legacy
-
-00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21) (prog-if 30 [XHCI])
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 121
-	Region 0: Memory at ceef0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [70] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable+ Count=8/8 Maskable- 64bit+
-		Address: 00000000fee00318  Data: 0000
-	Kernel driver in use: xhci_hcd
-	Kernel modules: xhci_pci
-
-00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecf000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Kernel driver in use: intel_pch_thermal
-	Kernel modules: intel_pch_thermal
-
-00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-	Subsystem: Intel Corporation 100 Series PCH/Sunrise Point PCH I2C0 [Skylake/Kaby Lake LPSS I2C] [8086:9d60]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceece000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 17
-	Region 0: Memory at ceecd000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecc000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 32
-	Region 0: Memory at fe030000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceeca000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 34
-	Region 0: Memory at ceec9000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10] (rev f1) (prog-if 00 [Normal decode])
-	Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 120
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-	I/O behind bridge: 2000-2fff [size=4K] [16-bit]
-	Memory behind bridge: cef00000-ceffffff [size=1M] [32-bit]
-	Prefetchable memory behind bridge: 27f000000-27f1fffff [size=2M] [32-bit]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+ FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 10W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
-			Changed: MRL- PresDet- LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-			 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
-		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00218  Data: 0000
-	Capabilities: [90] Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Capabilities: [a0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO+ CmpltAbrt- UnxCmplt+ RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsgNum 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [140 v1] Access Control Services
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [200 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=40us PortTPowerOnTime=44us
-		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=40us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Capabilities: [220 v1] Secondary PCI Express
-		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-		LaneErrStat: 0
-	Kernel driver in use: pcieport
-	Kernel modules: shpchp
-
-00:1e.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 20
-	Region 0: Memory at ceec8000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceec7000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 22
-	Region 0: Memory at ceec6000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.4 SD Host controller [0805]: Intel Corporation Device [8086:9d2b] (rev 21) (prog-if 01)
-	Subsystem: Intel Corporation Device [8086:9d2b]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 21
-	Region 0: Memory at ceec5000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: sdhci-pci
-	Kernel modules: sdhci_pci
-
-00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:9d4b] (rev 21)
-	Subsystem: Intel Corporation Device [8086:9d4b]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-
-00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC [8086:9d21] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP PMC [8086:9d21]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at ceed4000 (32-bit, non-prefetchable) [size=16K]
-
-00:1f.3 Multimedia audio controller [0401]: Intel Corporation Sunrise Point-LP HD Audio [8086:9d71] (rev 21)
-	DeviceName: Multimedia audio controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 64, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 127
-	Region 0: Memory at ceed0000 (64-bit, non-prefetchable) [size=16K]
-	Region 4: Memory at ceee0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee002f8  Data: 0000
-	Kernel driver in use: snd_soc_avs
-	Kernel modules: snd_soc_avs, snd_hda_intel
-
-00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
-	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceec3000 (64-bit, non-prefetchable) [size=256]
-	Region 4: I/O ports at efa0 [size=32]
-	Kernel driver in use: i801_smbus
-	Kernel modules: i2c_i801
-
-00:1f.5 Non-VGA unclassified device [0000]: Intel Corporation Device [8086:9d24] (rev 21)
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at fe010000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: intel-spi
-	Kernel modules: spi_intel_pci
-
-
---x5b7evi746yntaci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="03_lspci_after_suspend_resume_without_4d4c10f763_907a7a2e5b.txt"
-
-00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-		CapC: PegG4Dis- DDR4MaxFreq=Unlimited LPDDREn- LPDDR4MaxFreq=0MHz LPDDR4En+
-		      QClkGvDis- SgxDis- BClkOC=Disabled IddDis- Pipe3Dis- Gear1MaxFreq=Unlimited
-	Kernel driver in use: skl_uncore
-
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 615 [8086:591e] (rev 02) (prog-if 00 [VGA controller])
-	DeviceName: VGA compatible controller
-	Subsystem: Intel Corporation Device [8086:2212]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 126
-	Region 0: Memory at cf000000 (64-bit, non-prefetchable) [size=16M]
-	Region 2: Memory at d0000000 (64-bit, prefetchable) [size=256M]
-	Region 4: I/O ports at ffc0 [size=64]
-	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-	Capabilities: [40] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Capabilities: [70] Express (v2) Root Complex Integrated Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ FLReset+ TEE-IO-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-	Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00018  Data: 0000
-	Capabilities: [d0] Power Management version 2
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Process Address Space ID (PASID)
-		PASIDCap: Exec- Priv-, Max PASID Width: 14
-		PASIDCtl: Enable- Exec- Priv-
-	Capabilities: [200 v1] Address Translation Service (ATS)
-		ATSCap:	Invalidate Queue Depth: 00
-		ATSCtl:	Enable-, Smallest Translation Unit: 00
-	Capabilities: [300 v1] Page Request Interface (PRI)
-		PRICtl: Enable- Reset-
-		PRISta: RF- UPRGI- Stopped+ PASID+
-		Page Request Capacity: 00008000, Page Request Allocation: 00000000
-	Kernel driver in use: i915
-	Kernel modules: i915
-
-00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceed8000 (64-bit, non-prefetchable) [size=32K]
-	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [d0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Kernel driver in use: proc_thermal
-	Kernel modules: processor_thermal_device_pci_legacy
-
-00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21) (prog-if 30 [XHCI])
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 121
-	Region 0: Memory at ceef0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [70] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable+ Count=8/8 Maskable- 64bit+
-		Address: 00000000fee00318  Data: 0000
-	Kernel driver in use: xhci_hcd
-	Kernel modules: xhci_pci
-
-00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecf000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Kernel driver in use: intel_pch_thermal
-	Kernel modules: intel_pch_thermal
-
-00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-	Subsystem: Intel Corporation 100 Series PCH/Sunrise Point PCH I2C0 [Skylake/Kaby Lake LPSS I2C] [8086:9d60]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceece000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 17
-	Region 0: Memory at ceecd000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecc000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 32
-	Region 0: Memory at fe030000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceeca000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 34
-	Region 0: Memory at ceec9000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10] (rev f1) (prog-if 00 [Normal decode])
-	Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 120
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-	I/O behind bridge: 2000-2fff [size=4K] [16-bit]
-	Memory behind bridge: cef00000-ceffffff [size=1M] [32-bit]
-	Prefetchable memory behind bridge: 27f000000-27f1fffff [size=2M] [32-bit]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+ FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 10W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
-			Changed: MRL- PresDet- LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
-		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00218  Data: 0000
-	Capabilities: [90] Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Capabilities: [a0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO+ CmpltAbrt- UnxCmplt+ RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsgNum 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [140 v1] Access Control Services
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [200 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=40us PortTPowerOnTime=44us
-		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=40us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Capabilities: [220 v1] Secondary PCI Express
-		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-		LaneErrStat: 0
-	Kernel driver in use: pcieport
-	Kernel modules: shpchp
-
-00:1e.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 20
-	Region 0: Memory at ceec8000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceec7000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 22
-	Region 0: Memory at ceec6000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.4 SD Host controller [0805]: Intel Corporation Device [8086:9d2b] (rev 21) (prog-if 01)
-	Subsystem: Intel Corporation Device [8086:9d2b]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 21
-	Region 0: Memory at ceec5000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: sdhci-pci
-	Kernel modules: sdhci_pci
-
-00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:9d4b] (rev 21)
-	Subsystem: Intel Corporation Device [8086:9d4b]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-
-00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC [8086:9d21] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP PMC [8086:9d21]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at ceed4000 (32-bit, non-prefetchable) [size=16K]
-
-00:1f.3 Multimedia audio controller [0401]: Intel Corporation Sunrise Point-LP HD Audio [8086:9d71] (rev 21)
-	DeviceName: Multimedia audio controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 64, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 129
-	Region 0: Memory at ceed0000 (64-bit, non-prefetchable) [size=16K]
-	Region 4: Memory at ceee0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee00458  Data: 0000
-	Kernel driver in use: snd_soc_avs
-	Kernel modules: snd_soc_avs, snd_hda_intel
-
-00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
-	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceec3000 (64-bit, non-prefetchable) [size=256]
-	Region 4: I/O ports at efa0 [size=32]
-	Kernel driver in use: i801_smbus
-	Kernel modules: i2c_i801
-
-00:1f.5 Non-VGA unclassified device [0000]: Intel Corporation Device [8086:9d24] (rev 21)
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Region 0: Memory at fe010000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: intel-spi
-	Kernel modules: spi_intel_pci
-
-01:00.0 Network controller [0280]: Intel Corporation Wireless 7265 [8086:095a] (rev b9)
-	Subsystem: Intel Corporation Device [8086:9e10]
-	Physical Slot: 0
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 127
-	Region 0: Memory at cef00000 (64-bit, non-prefetchable) [size=8K]
-	Capabilities: [c8] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee002d8  Data: 0000
-	Capabilities: [40] Express (v2) Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 unlimited
-			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0W TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr+ NoSnoop+ FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L1, Exit Latency L1 <32us
-			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt- FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-		DevCap2: Completion Timeout: Range B, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- TPHComp- ExtTPHComp-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr+ BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [140 v1] Device Serial Number 28-c6-3f-ff-ff-30-93-5f
-	Capabilities: [14c v1] Latency Tolerance Reporting
-		Max snoop latency: 3145728ns
-		Max no snoop latency: 3145728ns
-	Capabilities: [154 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=30us PortTPowerOnTime=60us
-		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-			   T_CommonMode=0us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Kernel driver in use: iwlwifi
-	Kernel modules: iwlwifi
-
-
---x5b7evi746yntaci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="04_lspci_after_suspend_resume_with_4d4c10f763_907a7a2e5b.txt"
-
-00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:590c]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-		CapC: PegG4Dis- DDR4MaxFreq=Unlimited LPDDREn- LPDDR4MaxFreq=0MHz LPDDR4En+
-		      QClkGvDis- SgxDis- BClkOC=Disabled IddDis- Pipe3Dis- Gear1MaxFreq=Unlimited
-	Kernel driver in use: skl_uncore
-
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 615 [8086:591e] (rev 02) (prog-if 00 [VGA controller])
-	DeviceName: VGA compatible controller
-	Subsystem: Intel Corporation Device [8086:2212]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 126
-	Region 0: Memory at cf000000 (64-bit, non-prefetchable) [size=16M]
-	Region 2: Memory at d0000000 (64-bit, prefetchable) [size=256M]
-	Region 4: I/O ports at ffc0 [size=64]
-	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-	Capabilities: [40] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Capabilities: [70] Express (v2) Root Complex Integrated Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ FLReset+ TEE-IO-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-	Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00018  Data: 0000
-	Capabilities: [d0] Power Management version 2
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Process Address Space ID (PASID)
-		PASIDCap: Exec- Priv-, Max PASID Width: 14
-		PASIDCtl: Enable- Exec- Priv-
-	Capabilities: [200 v1] Address Translation Service (ATS)
-		ATSCap:	Invalidate Queue Depth: 00
-		ATSCtl:	Enable-, Smallest Translation Unit: 00
-	Capabilities: [300 v1] Page Request Interface (PRI)
-		PRICtl: Enable- Reset-
-		PRISta: RF- UPRGI- Stopped+ PASID+
-		Page Request Capacity: 00008000, Page Request Allocation: 00000000
-	Kernel driver in use: i915
-	Kernel modules: i915
-
-00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
-	Subsystem: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceed8000 (64-bit, non-prefetchable) [size=32K]
-	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [d0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [e0] Vendor Specific Information: Intel Capabilities v1
-		CapA: Peg60Dis- Peg12Dis+ Peg11Dis+ Peg10Dis+ PeLWUDis+ DmiWidth=x4
-		      EccDis+ ForceEccEn- VTdDis- DmiG2Dis+ PegG2Dis+ DDRMaxSize=Unlimited
-		      1NDis- CDDis- DDPCDis+ X2APICEn+ PDCDis- IGDis- CDID=0 CRID=2
-		      DDROCCAP- OCEn- DDRWrtVrefEn- DDR3LEn+
-		CapB: ImguDis- OCbySSKUCap- OCbySSKUEn- SMTCap+ CacheSzCap 0x3
-		      SoftBinCap- DDR3MaxFreqWithRef100=Disabled PegG3Dis+
-		      PkgTyp- AddGfxEn+ AddGfxCap- PegX16Dis+ DmiG3Dis+ GmmDis-
-		      DDR3MaxFreq=2666MHz LPDDR3En+
-	Kernel driver in use: proc_thermal
-	Kernel modules: processor_thermal_device_pci_legacy
-
-00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21) (prog-if 30 [XHCI])
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 121
-	Region 0: Memory at ceef0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [70] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable+ Count=8/8 Maskable- 64bit+
-		Address: 00000000fee00318  Data: 0000
-	Kernel driver in use: xhci_hcd
-	Kernel modules: xhci_pci
-
-00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecf000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Kernel driver in use: intel_pch_thermal
-	Kernel modules: intel_pch_thermal
-
-00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-	Subsystem: Intel Corporation 100 Series PCH/Sunrise Point PCH I2C0 [Skylake/Kaby Lake LPSS I2C] [8086:9d60]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceece000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 17
-	Region 0: Memory at ceecd000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:15.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #2 [8086:9d62]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at ceecc000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #2 [8086:9d66]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 32
-	Region 0: Memory at fe030000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceeca000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:19.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #4 [8086:9d64]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 34
-	Region 0: Memory at ceec9000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10] (rev f1) (prog-if 00 [Normal decode])
-	Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 120
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-	I/O behind bridge: 2000-2fff [size=4K] [16-bit]
-	Memory behind bridge: cef00000-ceffffff [size=1M] [32-bit]
-	Prefetchable memory behind bridge: 27f000000-27f1fffff [size=2M] [32-bit]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+ TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <1us, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+ FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 10W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq+ LinkChg+
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
-			Changed: MRL- PresDet+ LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
-		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee00218  Data: 0000
-	Capabilities: [90] Subsystem: Intel Corporation Sunrise Point-LP PCI Express Root Port #1 [8086:9d10]
-	Capabilities: [a0] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO+ CmpltAbrt- UnxCmplt+ RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsgNum 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [140 v1] Access Control Services
-		ACSCap:	SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [200 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=40us PortTPowerOnTime=44us
-		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=40us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Capabilities: [220 v1] Secondary PCI Express
-		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-		LaneErrStat: 0
-	Kernel driver in use: pcieport
-	Kernel modules: shpchp
-
-00:1e.0 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO UART Controller #0 [8086:9d27]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 20
-	Region 0: Memory at ceec8000 (64-bit, non-prefetchable) [size=4K]
-	Region 2: Memory at ceec7000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.2 Signal processing controller [1180]: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP Serial IO SPI Controller #0 [8086:9d29]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin C routed to IRQ 22
-	Region 0: Memory at ceec6000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: intel-lpss
-	Kernel modules: intel_lpss_pci
-
-00:1e.4 SD Host controller [0805]: Intel Corporation Device [8086:9d2b] (rev 21) (prog-if 01)
-	Subsystem: Intel Corporation Device [8086:9d2b]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 21
-	Region 0: Memory at ceec5000 (64-bit, non-prefetchable) [size=4K]
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [90] Vendor Specific Information: Intel <unknown>
-	Kernel driver in use: sdhci-pci
-	Kernel modules: sdhci_pci
-
-00:1f.0 ISA bridge [0601]: Intel Corporation Device [8086:9d4b] (rev 21)
-	Subsystem: Intel Corporation Device [8086:9d4b]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-
-00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC [8086:9d21] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP PMC [8086:9d21]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Region 0: Memory at ceed4000 (32-bit, non-prefetchable) [size=16K]
-
-00:1f.3 Multimedia audio controller [0401]: Intel Corporation Sunrise Point-LP HD Audio [8086:9d71] (rev 21)
-	DeviceName: Multimedia audio controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 64, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 127
-	Region 0: Memory at ceed0000 (64-bit, non-prefetchable) [size=16K]
-	Region 4: Memory at ceee0000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee002f8  Data: 0000
-	Kernel driver in use: snd_soc_avs
-	Kernel modules: snd_soc_avs, snd_hda_intel
-
-00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23] (rev 21)
-	Subsystem: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
-	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at ceec3000 (64-bit, non-prefetchable) [size=256]
-	Region 4: I/O ports at efa0 [size=32]
-	Kernel driver in use: i801_smbus
-	Kernel modules: i2c_i801
-
-00:1f.5 Non-VGA unclassified device [0000]: Intel Corporation Device [8086:9d24] (rev 21)
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Region 0: Memory at fe010000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: intel-spi
-	Kernel modules: spi_intel_pci
-
-01:00.0 Network controller [0280]: Intel Corporation Wireless 7265 [8086:095a] (rev b9)
-	Subsystem: Intel Corporation Device [8086:9e10]
-	Physical Slot: 0
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 129
-	Region 0: Memory at cef00000 (64-bit, non-prefetchable) [size=8K]
-	Capabilities: [c8] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee004b8  Data: 0000
-	Capabilities: [40] Express (v2) Endpoint, IntMsgNum 0
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 unlimited
-			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0W TEE-IO-
-		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr+ NoSnoop+ FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L1, Exit Latency L1 <32us
-			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
-		LnkCtl:	ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
-			ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt- FltModeDis-
-		LnkSta:	Speed 2.5GT/s, Width x1
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-		DevCap2: Completion Timeout: Range B, TimeoutDis+ NROPrPrP- LTR+
-			 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- TPHComp- ExtTPHComp-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis-
-			 AtomicOpsCtl: ReqEn-
-			 IDOReq- IDOCompl- LTR+ EmergencyPowerReductionReq-
-			 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
-			ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+
-			ECRC- UnsupReq- ACSViol- UncorrIntErr+ BlockedTLP- AtomicOpBlocked- TLPBlockedErr-
-			PoisonTLPBlocked- DMWrReqBlocked- IDECheck- MisIDETLP- PCRC_CHECK- TLPXlatBlocked-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr- CorrIntErr- HeaderOF-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+ CorrIntErr- HeaderOF-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [140 v1] Device Serial Number 28-c6-3f-ff-ff-30-93-5f
-	Capabilities: [14c v1] Latency Tolerance Reporting
-		Max snoop latency: 3145728ns
-		Max no snoop latency: 3145728ns
-	Capabilities: [154 v1] L1 PM Substates
-		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-			  PortCommonModeRestoreTime=30us PortTPowerOnTime=60us
-		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-			   T_CommonMode=0us LTR1.2_Threshold=106496ns
-		L1SubCtl2: T_PwrOn=60us
-	Kernel driver in use: iwlwifi
-	Kernel modules: iwlwifi
-
-
---x5b7evi746yntaci--
+Jason
 
