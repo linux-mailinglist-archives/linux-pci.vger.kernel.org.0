@@ -1,133 +1,247 @@
-Return-Path: <linux-pci+bounces-38795-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38796-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7220BF2FCD
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 20:46:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CC86BF301B
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 20:49:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29DE63BDD78
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:46:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4BD13ADDE7
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:48:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEEB2D3732;
-	Mon, 20 Oct 2025 18:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348AB242D76;
+	Mon, 20 Oct 2025 18:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GUAtOGPW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="losduLJA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A6A13C3CD;
-	Mon, 20 Oct 2025 18:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C48E7E792;
+	Mon, 20 Oct 2025 18:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760985986; cv=none; b=sjLlNLGCK39VqZTxASjdLwMQ0n08NmBFc969D9jRPBtlwEdF0K2CZvv+uZHM61ZDY8+k4HBHJxY8Pc6+LQtwXM8YINB/sm3zWk7cyRPD3uq54ne893D66zcWFWFbeqdL+vabgnBkrNoXiPeVBHEHV6qP5FWONENUmh6FNZ2GJak=
+	t=1760986114; cv=none; b=W8/lAyGl07NqtrtcuIS5MyPNLv3JBjTzfmtXcCHbDLgVn7BtYXyFJCdhqic7R0XmSgLCPNVZ/eTqg6bZoz+8WY7s9zPbmXcXfV8hc69pZbNW6f7NbrslKzGGGMaihtCC6jHSL5AVaCr5x8bZM7oDxVgETWbYT4JTmN8z6l2JLO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760985986; c=relaxed/simple;
-	bh=vNPmbqR8QfW6+ZVYfTbhb4OdfBX+SCZXk52NZ5Rt700=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VCrpzUgrNxFSmlGUdgWWL8aCA9GxXhvIt0ck8J1GdolSim3tRm/sd1VaIM4Nul1jkVUTWsEoL9t3c+25wpq0O1koUVtPyZkwayN//qqSDZVJblZMMhQMGhSOZ6xu5S7tSP60DKbzfBB1GYtXPmhpRawPL11XocRWypuuFfwWs/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GUAtOGPW; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760985984; x=1792521984;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=vNPmbqR8QfW6+ZVYfTbhb4OdfBX+SCZXk52NZ5Rt700=;
-  b=GUAtOGPWioS470Vza3GDlk2jRmfvlcXQt3TVHBD8dZ5wVJgaA7lShwbU
-   feUCh583I8Ak6IHU0Ntp72HG8vwAMXoqf/sYLfFoDyYeJodgU/5uEE1Fh
-   8YqQl9S+pTWQ0o8Xiws1TFr8HUXtzhLURqHIkRsiT4WcVw9HfjybSzK3m
-   9uC5vpzAvLFGwFKpSm1cfHmfS+q9plhjTyMFertL6uA47Ss5KyyMmD2sw
-   7B2Y3ce721UvYEXUj6Q1zw14t/01T27u7Tau27iCx2YPV7b+m8KamtorC
-   hmthm7YSK9dblTpHP7qK0fGURzVY2Zl0IeddEHpuJlnPYtD/NWzSltQUn
-   A==;
-X-CSE-ConnectionGUID: 5oKk0W3XQ5qDHPVtmfQgfg==
-X-CSE-MsgGUID: 3jtPQVG7SMWh0Tq3Ak4nFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62315673"
-X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="62315673"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 11:46:21 -0700
-X-CSE-ConnectionGUID: W0IQ73/NROu/CVrixSL3yQ==
-X-CSE-MsgGUID: yJqGjlDWT4CQop1SdZTlhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="207077269"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.76])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 11:46:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 20 Oct 2025 21:46:13 +0300 (EEST)
-To: Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, kw@linux.com, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, 
-    lucas.demarchi@intel.com, rafael.j.wysocki@intel.com, 
-    Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH 1/2] PCI: Setup bridge resources earlier
-In-Reply-To: <702c4ad7-508b-42de-9dc3-40e4a0fe7bd7@gmail.com>
-Message-ID: <b3a49920-1cff-4ea2-519a-318030ba8797@linux.intel.com>
-References: <20251017185246.GA1040948@bhelgaas> <702c4ad7-508b-42de-9dc3-40e4a0fe7bd7@gmail.com>
+	s=arc-20240116; t=1760986114; c=relaxed/simple;
+	bh=o/Sy2P8YFH5ANKdlTpZx1IEAMq0gSZpaNcIbyeS/PII=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jLEXurBrDiPJIPInhG2s6KXbPGXsZe7QzaxJ5JxQPeG5rp34/zV/br/INNNkjbQ9QyF8pQTUIXnrESBH2qH3D6MHrub7+ClgeQdlkMSz7uToM8MnhcucGjrvGlU6n6U/JUBYmIMdk6wq/3UoC/SGFx0IaKHg/9C0XaFlHknCXiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=losduLJA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87273C113D0;
+	Mon, 20 Oct 2025 18:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760986113;
+	bh=o/Sy2P8YFH5ANKdlTpZx1IEAMq0gSZpaNcIbyeS/PII=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=losduLJAc7dAsf3wyrLi+rC/AOAjmanuRRkZpjuzOAryHiqMxNGC4fkX45HwQt0mK
+	 2wOLx1BssZsLCEhHY4SFi9C0mCiiKireXPeWwxbYxjdIlJIMoMq2wP6uwypeHSczJw
+	 tPZnn9CifhdvSS6DWWbExHByyNcpqq8B7zjufkjuvBrjVzuebDbufka1MxKebaGMv/
+	 Y67hYZULhqD/dSuxJbBzQr/KS8WO/b/sSaQ4cK6KEO06zEQizp6UmKjA/3K+iWiGph
+	 LvpsGEMo7zCx8STtys5VHLCFt+gLP7PI1QXcsmpohMczQhCoiaWewBcMoil7bMk9i2
+	 f8ZIoIcYP+/8g==
+Date: Mon, 20 Oct 2025 13:48:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] PCI: brcmstb: Add panic/die handler to driver
+Message-ID: <20251020184832.GA1144646@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251003195607.2009785-3-james.quinlan@broadcom.com>
 
-On Sat, 18 Oct 2025, Bhanu Seshu Kumar Valluri wrote:
-
-> On 18/10/25 00:22, Bjorn Helgaas wrote:
-> > On Fri, Oct 17, 2025 at 11:52:58PM +0530, Bhanu Seshu Kumar Valluri wrote:
-> >>
-> >> I want to report that this PATCH also break PCI RC port on TI-AM64-EVM.
-> >>
-> >> I did git bisect and it pointed to the a43ac325c7cb ("PCI: Set up bridge resources earlier")
-> >>
-> >> Happy to help if any testing or logs are required.
-> > 
-> > Thanks for the report!  Can you test this patch?
-> > 
-> >   https://patch.msgid.link/20251014163602.17138-1-ilpo.jarvinen@linux.intel.com
-> > 
-> > That patch is queued up as
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=469276c06aff
-> > and should appear in v6.18-rc2 on Sunday if all goes well.
-> > 
-> > If that doesn't work, let us know and we'll debug this further.
+On Fri, Oct 03, 2025 at 03:56:07PM -0400, Jim Quinlan wrote:
+> Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
+> by default Broadcom's STB PCIe controller effects an abort.  Some SoCs --
+> 7216 and its descendants -- have new HW that identifies error details.
 > 
-> I applied above patch on top of commit f406055cb18c ("Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux")
+> This simple handler determines if the PCIe controller was the cause of the
+> abort and if so, prints out diagnostic info.  Unfortunately, an abort still
+> occurs.
 > 
-> Did pci rescan and run kselftest (pci_endpoint_test). It is working.
+> Care is taken to read the error registers only when the PCIe bridge is
+> active and the PCIe registers are acceptable.  Otherwise, a "die" event
+> caused by something other than the PCIe could cause an abort if the PCIe
+> "die" handler tried to access registers when the bridge is off.
 > 
-> Thanks for the patch.
+> Example error output:
+>   brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
+>   brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
 
-Thanks for testing the revert.
+> +/* Error report registers */
+> +#define PCIE_OUTB_ERR_TREAT				0x6000
+> +#define  PCIE_OUTB_ERR_TREAT_CONFIG_MASK		0x1
+> +#define  PCIE_OUTB_ERR_TREAT_MEM_MASK			0x2
+> +#define PCIE_OUTB_ERR_VALID				0x6004
+> +#define PCIE_OUTB_ERR_CLEAR				0x6008
+> +#define PCIE_OUTB_ERR_ACC_INFO				0x600c
+> +#define  PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK		0x01
+> +#define  PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK		0x02
+> +#define  PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK		0x04
+> +#define  PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK		0x10
+> +#define  PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK		0xff00
+> +#define PCIE_OUTB_ERR_ACC_ADDR				0x6010
+> +#define PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK			0xff00000
+> +#define PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK			0xf8000
+> +#define PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK		0x7000
+> +#define PCIE_OUTB_ERR_ACC_ADDR_REG_MASK			0xfff
+> +#define PCIE_OUTB_ERR_CFG_CAUSE				0x6014
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK		0x40
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK		0x20
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK	0x10
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK	0x4
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK	0x2
+> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK	0x1
+> +#define PCIE_OUTB_ERR_MEM_ADDR_LO			0x6018
+> +#define PCIE_OUTB_ERR_MEM_ADDR_HI			0x601c
+> +#define PCIE_OUTB_ERR_MEM_CAUSE				0x6020
+> +#define  PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK		0x40
+> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK		0x20
+> +#define  PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK	0x10
+> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK	0x2
+> +#define  PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK		0x1
 
-> Happy to help if any testing or logs are required.
+IMO "_MASK" is not adding anything useful to these names.  But I see
+there's a lot of precedent in this driver.
 
-I'd be interested to understand what goes wrong with the change I was 
-trying to make as I want to attempt the same change later, but with all 
-known issues solved by supporting changes, obviously :-).
+>  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
+>  #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
+>  
+> @@ -306,6 +342,8 @@ struct brcm_pcie {
+>  	bool			ep_wakeup_capable;
+>  	const struct pcie_cfg_data	*cfg;
+>  	bool			bridge_in_reset;
+> +	struct notifier_block	die_notifier;
+> +	struct notifier_block	panic_notifier;
+>  	spinlock_t		bridge_lock;
+>  };
+>  
+> @@ -1731,6 +1769,115 @@ static int brcm_pcie_resume_noirq(struct device *dev)
+>  	return ret;
+>  }
+>  
+> +/* Dump out PCIe errors on die or panic */
+> +static int _brcm_pcie_dump_err(struct brcm_pcie *pcie,
 
-The log snippets you provided are unfortunately too short to contain all 
-the necessary information (missing e.g. root bus resources and possibly 
-other helpful details).
+What is the leading underscore telling me?  There's no
+brcm_pcie_dump_err() that we need to distinguish from.
 
-So if you could provide dmesg and /proc/iomem contents from broken and
-working (with the revert) cases to let me easily compare them, that would 
-help. Please take the dmesg with dyndbg="file drivers/pci/*.c +p" on 
-kernel's cmdline.
+> +			       const char *type)
+> +{
+> +	void __iomem *base = pcie->base;
+> +	int i, is_cfg_err, is_mem_err, lanes;
+> +	char *width_str, *direction_str, lanes_str[9];
+> +	u32 info, cfg_addr, cfg_cause, mem_cause, lo, hi;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&pcie->bridge_lock, flags);
+> +	/* Don't access registers when the bridge is off */
+> +	if (pcie->bridge_in_reset || readl(base + PCIE_OUTB_ERR_VALID) == 0) {
+> +		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	/* Read all necessary registers so we can release the spinlock ASAP */
+> +	info = readl(base + PCIE_OUTB_ERR_ACC_INFO);
+> +	is_cfg_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK);
+> +	is_mem_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK);
+> +	if (is_cfg_err) {
+> +		cfg_addr = readl(base + PCIE_OUTB_ERR_ACC_ADDR);
+> +		cfg_cause = readl(base + PCIE_OUTB_ERR_CFG_CAUSE);
+> +	}
+> +	if (is_mem_err) {
+> +		mem_cause = readl(base + PCIE_OUTB_ERR_MEM_CAUSE);
+> +		lo = readl(base + PCIE_OUTB_ERR_MEM_ADDR_LO);
+> +		hi = readl(base + PCIE_OUTB_ERR_MEM_ADDR_HI);
+> +	}
+> +	/* We've got all of the info, clear the error */
+> +	writel(1, base + PCIE_OUTB_ERR_CLEAR);
+> +	spin_unlock_irqrestore(&pcie->bridge_lock, flags);
+> +
+> +	dev_err(pcie->dev, "reporting data on PCIe %s error\n", type);
 
-No further actions needed beyond that until later if I need to test some 
-of those supporting changes before retrying all this in the mainline. It 
-may take some time, even more than one kernel cycle as there have been 
-quite many regressions.
+Looks like this isn't included in the example error output.  Not a big
+deal in itself, but logging this:
 
+  brcm-pcie 8b20000.pcie: reporting data on PCIe Panic error
 
--- 
- i.
+suggests that we know this panic was directly *caused* by PCIe, and
+I'm not sure the fact that somebody called panic() and
+PCIE_OUTB_ERR_VALID was non-zero is convincing evidence of that.
 
+I think this relies on the assumptions that (a) the controller
+triggers an abort and (b) the abort handler calls panic().  So I think
+this logs useful information that *might* be related to the panic.
+
+I'd rather phrase this with a little less certainty, to convey the
+idea that "here's some PCIe error information that might be related to
+the panic/die".
+
+> +	width_str = (info & PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK) ? "64bit" : "32bit";
+> +	direction_str = (info & PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK) ? "Write" : "Read";
+> +	lanes = FIELD_GET(PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK, info);
+> +	for (i = 0, lanes_str[8] = 0; i < 8; i++)
+> +		lanes_str[i] = (lanes & (1 << i)) ? '1' : '0';
+> +
+> +	if (is_cfg_err) {
+> +		int bus = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK, cfg_addr);
+> +		int dev = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK, cfg_addr);
+> +		int func = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK, cfg_addr);
+> +		int reg = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_REG_MASK, cfg_addr);
+> +
+> +		dev_err(pcie->dev, "Error: CFG Acc, %s, %s, Bus=%d, Dev=%d, Fun=%d, Reg=0x%x, lanes=%s\n",
+
+Why are we printing bus and dev with %d?  Can we use the usual format
+("%04x:%02x:%02x.%d") so it matches other logging?
+
+> +			width_str, direction_str, bus, dev, func, reg, lanes_str);
+> +		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccTO=%d AccDsbld=%d Acc64bit=%d\n",
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK),
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK),
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK),
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK),
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK),
+> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK));
+> +	}
+> +
+> +	if (is_mem_err) {
+> +		u64 addr = ((u64)hi << 32) | (u64)lo;
+> +
+> +		dev_err(pcie->dev, "Error: Mem Acc, %s, %s, @0x%llx, lanes=%s\n",
+> +			width_str, direction_str, addr, lanes_str);
+> +		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccDsble=%d BadAddr=%d\n",
+> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK),
+> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK),
+> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK),
+> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK),
+> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK));
+> +	}
+> +
+> +	return NOTIFY_OK;
+
+What is the difference between NOTIFY_DONE and NOTIFY_OK?  Can the
+caller do anything useful based on the difference?
+
+This seems like opportunistic error information that isn't definitely
+definitely connected to anything, so I'm not sure returning different
+values is really reliable.
 
