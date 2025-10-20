@@ -1,65 +1,48 @@
-Return-Path: <linux-pci+bounces-38776-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38777-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58FFDBF2785
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:37:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFAEEBF27AF
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:39:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 363D04E89E9
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:37:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8743218A3F70
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B09772853EF;
-	Mon, 20 Oct 2025 16:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB21296BC2;
+	Mon, 20 Oct 2025 16:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="as/MNCVJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUYMDsZP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D338B22172E;
-	Mon, 20 Oct 2025 16:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A9296BB2;
+	Mon, 20 Oct 2025 16:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760978250; cv=none; b=V9ArlMP+nGHZgAfGJT5AoCG0DOCplbZ4a/bbnahQ3AS0xmlQ6P6CInoNtwYRyQYM/bs9igQvLSwbAfWxteJ5e5Wm9PUXF4XqO/GwKBSnOu522/fpTodLssEhxzuAXEeUlKBW0BWLQMGJ9arJdIhL3xWddH8/eEDv4UY0JWGe3HE=
+	t=1760978265; cv=none; b=qumzpJrLuRBhnHnvVp7vnUn0p0UTz62U6AcbQss7vqjMAaOmB7WTkV+vSkB/2JJ+JmrN28IuI8ahkfVHgQKTeBU+IVHmXoxmHl83QYY7Q35n9TG1WuqIUfhzyy/FGBb3h1HaMUZot/vJLkTN+QCKlBhRyfsvdQp4ESIirBLtPVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760978250; c=relaxed/simple;
-	bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
+	s=arc-20240116; t=1760978265; c=relaxed/simple;
+	bh=3Wg+AymCy/fsBe4Too+VbMYHfF6QlP4BEeEz3nj7Ijw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vur5FNfifWmpQRJldMSCd4mVByB8/aX8XiPr6Vzj8+wkRyzm+WR4iLAP56NuKUF05zsK+UZXsgO8Bmy/i9bPduIo4glSiBrxf9ygM95GuDlm7Yztk6hWNbjrQPPWdymwMhxVYaulyyj79mvaXTrspF373q/6HTySmm+K2qixi30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=as/MNCVJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760978249; x=1792514249;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+qZlyl7YWbY2lLgbuJo2hAw91ag2rew7u58FOPhtmUc=;
-  b=as/MNCVJcrzmNh+0bn6hh1WJNoRzwygBr6cr8DU3pvqEtXW6zHouvebC
-   WpODTllRf00Rg6p3B1Sx9TKjnP3cZdhfW1BJN7IjKyODEhUw1DO7coUzw
-   SX7AeEfBSNwxsDYHw4dEZ9XcQ0ZwWTgEOBEVERMxGnX8I7yFU7/4VZPWB
-   LZxH8WtBjGgEW8D1y7JcCPN+AO3vWXtbwpJ5cJwX2Xc6JCu+Dc8rkxEc/
-   hxxVIjqmbp4Utz/dLKh1EJD/iwQLLs40BFC7uA7gv/NQD0GIdpAxjfDWW
-   KRH4IfDBkJ7KIYvy9n21OEnHPNkUwsV2SnXmcBYtZ5WTMIZWy8qffMhRs
-   Q==;
-X-CSE-ConnectionGUID: McZZEvecSS2YqWEVpaigCQ==
-X-CSE-MsgGUID: CMrSmZBjRpOfNm+xecXq1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62128784"
-X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="62128784"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:28 -0700
-X-CSE-ConnectionGUID: +UyQQ5tfSKWNT1m4Aaq+lw==
-X-CSE-MsgGUID: MUZlesziQx6BDxCrg5eraA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="183385703"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.103]) ([10.125.108.103])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:37:25 -0700
-Message-ID: <ca6e8c5f-4420-4efa-93fc-0c79774e8a96@intel.com>
-Date: Mon, 20 Oct 2025 09:37:24 -0700
+	 In-Reply-To:Content-Type; b=rC+bV2lMIcp7amL+4lcs1bK+pjrQvLHQH8GGtr9tlJOUpT0nvERAEha/NddHFrjppLf3COwcWXp4XyyKhqxIVMDOmELGeU96k3GCNVs1L3ulxGl2DryZbbJvfc3dBgKvCHXhs8oj+4ZzHYebDAad7Bn3kggL30DAW96GJOIXczw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUYMDsZP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472ADC116B1;
+	Mon, 20 Oct 2025 16:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760978264;
+	bh=3Wg+AymCy/fsBe4Too+VbMYHfF6QlP4BEeEz3nj7Ijw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KUYMDsZPFeDG2p0Fm1Q1WnnCP9ITchDnV9JG695UCNmSmPFAz4Desf2E8KXB5Z/EU
+	 DTYGZ44kDHrE+Xe0l67SxznCk9oqVOpOU9iKoET4kYtnAV7NLldrza8Xou9X7o65Dz
+	 GZJ/QLNjDkuGJ3Laui+7oNrEMoZr4veZ6e3PbyKju/+dLCw+HYmBpN64W9TSNHQqE/
+	 hsHvOROdFPc9ViVvYR3i7bHTFn1JEdubBE3c7FRrGri1qkLcM6ofpyFeqy2cbd93hk
+	 ZelbQ12+ybAM96gTIqf26gtqjmDvwep33MWbRAHNH2ddaIofPjUT9aMp+CHsgKZQxZ
+	 S93G4XQrjoWWg==
+Message-ID: <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
+Date: Mon, 20 Oct 2025 11:37:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,165 +50,125 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6 v5] acpi/ghes: Add helper to copy CXL protocol error
- info to work struct
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Sunil V L <sunilvl@ventanamicro.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
- Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Guo Weikang <guoweikang.kernel@gmail.com>,
- Xin Li <xin@zytor.com>, Will Deacon <will@kernel.org>,
- Huang Yiwei <quic_hyiwei@quicinc.com>, Gavin Shan <gshan@redhat.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Li Ming <ming.li@zohomail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Jon Pan-Doh <pandoh@google.com>, Lukas Wunner <lukas@wunner.de>,
- Shiju Jose <shiju.jose@huawei.com>, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org
-References: <20251017133357.1150982-1-fabio.m.de.francesco@linux.intel.com>
- <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
+ suspending to RAM and resuming
+To: =?UTF-8?Q?Adri=C3=A0_Vilanova_Mart=C3=ADnez?= <me@avm99963.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: regressions@lists.linux.dev, linux-pci@vger.kernel.org
+References: <owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv>
+ <d0b6105f-744f-40d9-b4b7-1fa645038d0b@kernel.org>
+ <h6wkxjrkxh3ea5aqexqrx4d6xb2t2xbirvznupnbgro64qytfs@mn2jg2c6owrj>
+ <rvep55wtk2q4j46eqcxkfgb2bwijunefyltygfyb44trbzblx2@3ou3jcybjt3p>
+ <6b3d282c-b3cd-4979-b26b-ae9b28b9d634@kernel.org>
+ <kaieqe37mjmizjv4regyw67z7hwa3ac3k2mwcjsgq2mj7redpm@xsfb4mtyjblf>
+ <a08c71e2-18ca-491b-8982-47214a35445b@kernel.org>
+ <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
 Content-Language: en-US
-In-Reply-To: <20251017133357.1150982-6-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 10/17/25 6:30 AM, Fabio M. De Francesco wrote:
-> Make a helper out of cxl_cper_post_prot_err() that checks the CXL agent
-> type and copy the CPER CXL protocol errors information to a work data
-> structure.
+On 10/20/2025 7:56 AM, Adrià Vilanova Martínez wrote:
+> On Sun, Oct 19, 2025 at 07:25:08PM -0500, Mario Limonciello wrote:
+>> Thanks, knowing that pcie_aspm=off helps I think we should compare output
+>> for:
+>>
+>> # sudo lspci -vvnn
 > 
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/acpi/apei/ghes.c | 42 ++++++++++++++++++++++++++--------------
->  include/cxl/event.h      | 10 ++++++++++
->  2 files changed, 37 insertions(+), 15 deletions(-)
+> Sure, I'm attaching the outputs of this command for all the scenarios.
+> There are some differences, so it seems promising.
 > 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index e69ae864f43d3..e0f8b8ed2b7c4 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -734,20 +734,12 @@ int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->  }
->  EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_valid);
->  
-> -static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> -				   int severity)
-> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
 
-Function name a bit awkward. Maybe cxl_cper_setup_error_work_data()?
+Surprisingly there is nothing different about ASPM though.  It's all 
+PCI-PM differences.
 
-> +				     struct cxl_cper_sec_prot_err *prot_err,
-> +				     int severity)
->  {
-> -	struct cxl_cper_prot_err_work_data wd;
->  	u8 *dvsec_start, *cap_start;
->  
-> -	if (cxl_cper_sec_prot_err_valid(prot_err))
-> -		return;
-> -
-> -	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> -
-> -	if (!cxl_cper_prot_err_work)
-> -		return;
-> -
->  	switch (prot_err->agent_type) {
->  	case RCD:
->  	case DEVICE:
-> @@ -756,20 +748,40 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  	case RP:
->  	case DSP:
->  	case USP:
-> -		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +		memcpy(wd->prot_err, prot_err, sizeof(wd->prot_err));
->  
->  		dvsec_start = (u8 *)(prot_err + 1);
->  		cap_start = dvsec_start + prot_err->dvsec_len;
->  
-> -		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> -		wd.severity = cper_severity_to_aer(severity);
-> +		memcpy(wd->ras_cap, cap_start, sizeof(wd->ras_cap));
-> +		wd->severity = cper_severity_to_aer(severity);
->  		break;
->  	default:
->  		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
->  				   prot_err->agent_type);
-> -		return;
-> +		return -EINVAL;
->  	}
->  
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_cper_sec_prot_err_copy_to_wd);
-> +
-> +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				   int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
-> +	if (cxl_cper_sec_prot_err_copy_to_wd(&wd, prot_err, severity))
-> +		return;
-> +
->  	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
->  		pr_err_ratelimited("CXL CPER kfifo overflow\n");
->  		return;
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index e1deb66c2197e..5f06cea5d6005 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -322,12 +322,22 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
->  
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
->  int cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err);
-> +int cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
-> +				     struct cxl_cper_sec_prot_err *prot_err,
-> +				     int severity);
->  #else
->  static inline int
->  cxl_cper_sec_prot_err_valid(struct cxl_cper_sec_prot_err *prot_err)
->  {
->  	return -EINVAL;
->  }
-> +static inline int
-> +cxl_cper_sec_prot_err_copy_to_wd(struct cxl_cper_prot_err_work_data *wd,
-> +				 struct cxl_cper_sec_prot_err *prot_err,
-> +				 int severity)
-> +{
-> +	return -EINVAL;
+Looking at your log again I noticed this from the bridge:
 
--EOPNOTSUPP
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card not present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Link Up
+...
+pcieport 0000:00:1c.0: pciehp: Slot(0): No device found
+...
+(suspend)
+...
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Link Up
 
-> +}
->  #endif
->  
->  #endif /* _LINUX_CXL_EVENT_H */
+
+> I'm building the Kernel on the following commits:
+> 
+> - "Kernel without 4d4c10f763 and 907a7a2e5b": 1c64efcb08, applying on
+> top reverts for these 2 commits. [locally compiled version
+> 6.18.0-rc1-local-reverted-pci-issues-00351-gbbaff7ff47dd]
+> - "Kernel with 4d4c10f763 and 907a7a2e5b": 1c64efcb08 (last commit I
+> pulled from mainline last week). [locally compiled version ???]
+> 
+>> In the following cases (all without pcie_aspm=off):
+>>
+>> 1) At bootup; a kernel without 4d4c10f763 and 907a7a2e5b
+> 
+> See 01_lspci_bootup_without_4d4c10f763_907a7a2e5b.txt
+> 
+
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
+
+01:00.0 is present
+
+>> 2) At bootup; a kernel with 4d4c10f763 and 907a7a2e5b
+> 
+> See 02_lspci_bootup_with_4d4c10f763_907a7a2e5b.txt
+> 
+
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+
+01:00.0 is NOT present
+
+>> 3) After suspend/resume; a kernel without 4d4c10f763 and 907a7a2e5b4
+> 
+> See 03_lspci_after_suspend_resume_without_4d4c10f763_907a7a2e5b.txt
+> 
+
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
+
+01:00.0 is present
+
+>> 4) After suspend/resume; a kernel with 4d4c10f763 and 907a7a2e5b
+> 
+> See 04_lspci_after_suspend_resume_with_4d4c10f763_907a7a2e5b.txt
+> 
+
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+
+01:00.0 is present
+
+> Again, thank you so much! I really appreciate your help in
+> troubleshooting this.
+
+My interpretation is that the BIOS by default starts with PCI PM 
+enabled.  When you test without 4d4c10f763 and 907a7a2e5b it will stay 
+enabled.  But when those commits are present it gets disabled when going 
+to D0 and that causes device to drop off the bus.
+
+How about with pcie_port_pm=off instead of pcie_aspm=off?  Do things work?
+
+My current thought is that the change (setting to D0 explicitly at 
+boot-up) exposed a bug in the platform.  But the fact that it works 
+without ASPM is confusing to me.
+
+Bjorn - any thoughts here?
+
+> 
+> PS: I'm trimming the email quotes as per
+> https://subspace.kernel.org/etiquette.html#trim-your-quotes-when-replying.
+> I've never done this before and it feels wrong, but it is indeed easier
+> to follow the conversation if I do this.
 
 
