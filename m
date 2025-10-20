@@ -1,103 +1,133 @@
-Return-Path: <linux-pci+bounces-38743-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38744-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A051BF133E
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7DDBBF1356
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:33:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A4B63A9171
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:28:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B35FA3E5F52
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF4A32FB615;
-	Mon, 20 Oct 2025 12:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bBc3P6XH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2E930F529;
+	Mon, 20 Oct 2025 12:28:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBAF2E1C6B;
-	Mon, 20 Oct 2025 12:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137242EC55D;
+	Mon, 20 Oct 2025 12:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760963287; cv=none; b=ZLRKX99Mvt2rBGt/uFkd6zIOcXiPUix/2xuo4G4aI7rq8NON2vojAgLHm2hmm3buVwGUQuQyTt1wB/razErAIjbxUkbA1YXE6eCfTBDJd4Jc7c0h5GRsq7MbECoCzdC7jFFRTK42WrES5HrbCf5xZcGAJPAYUkqDSNUE52aRG9g=
+	t=1760963301; cv=none; b=f4+Bw9EuDcpGYS5QxHunMaZTdpu9ysF6POAKv3L78ECLWMKmjvHCvg8Euo/81wOY2HHSMM2CNWQLmL1g92A9Dbk2nA0KlF8gT8sc7YDnWQBicWFgj+IOcgeECKivG2JsJ4XuCAiNv8LwGrT/N7bv5g4PNN9deh/7LKIS6u600Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760963287; c=relaxed/simple;
-	bh=1lO772fc4p3qDgbZy7pAy3hVsBDNuQC1cZ8gI4aaH8k=;
+	s=arc-20240116; t=1760963301; c=relaxed/simple;
+	bh=a2Bw7tcfrdZdUhoJuqfjgYw3asav4XDAi4BcHpQfOnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YwZP1GoW+eXhM5Hv26HqulbGSgI+03ew61Mxf1yvpDX0olTIda6MZmRPtvS54ol5/Xr249hGhLBQU1f5ElH53VlXYpdKd5WJfpzaP3g5DuwVYJWf1zixwG/6ItIfQtTOZPDwbxck4mgGPzcWuKWTn3qKDfXrNZY41f1SYs+Xlg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bBc3P6XH; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7ETt/cIS7y36wzPdSWatPH0bjRaT9Kgy267Fn9GummA=; b=bBc3P6XH7OO6YaM6cL+h/RmHiB
-	pDsB9AwmEla0WgHxgeNIiwwubVzoGXiigjeTvvej2RHeBXuzYAo99jNSU/Y44MSsDSW2oaom1jTJS
-	yiWdm/IfNyvT3pB0m5irfyIriyKYefci4PDagpdEftDl1FFqk7mB/Y92Cb+ziu1dqwrNVNnTYbHE9
-	BemCDU97SZrbmKGLwQHL7UIMD1F7tJWpFBNqWqCpc+wmV4bhsvaJiPHQ5CvZ1lcFlJVQfSSyFfMLS
-	AkcS83i+dBFyjGqtFgcCKRA/A/MjU/IhUJR4CHIoZ2HclrlrsHruKWu6PFSUYnL8P2+TyEfe+KXQU
-	DQeNiswQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vAoza-0000000DPeN-2I74;
-	Mon, 20 Oct 2025 12:28:02 +0000
-Date: Mon, 20 Oct 2025 05:28:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZEMBtnPYFoxNfIwTZez6p+DcmWSbnqA62y4gTJAmTDDzXk7JbUw0RAWt77G6vBSSPOx2aAkuZ3IuqoF/g12gjFGy2YdMQ2nXe7UYcyl895tozOvT/XL6nBFHrDTgGQIfJN9gJL+N2k195YS/nMsW6EmuOIB/oUE2MkxPE3tH8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048CAC4CEF9;
+	Mon, 20 Oct 2025 12:28:09 +0000 (UTC)
+Date: Mon, 20 Oct 2025 13:28:07 +0100
+From: Mark Brown <broonie@debian.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Tamir Duberstein <tamird@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 8/9] vfio/pci: Enable peer-to-peer DMA transactions by
- default
-Message-ID: <aPYq0jQZOrn-lUJW@infradead.org>
-References: <cover.1760368250.git.leon@kernel.org>
- <a04c44aa4625a6edfadaf9c9e2c2afb460ad1857.1760368250.git.leon@kernel.org>
- <aPHjG2PS5DVgcG93@infradead.org>
- <20251017115524.GG3901471@nvidia.com>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+	llvm@lists.linux.dev, Tamir Duberstein <tamird@gmail.com>
+Subject: Re: [RESEND PATCH v18 13/16] rust: regulator: use `CStr::as_char_ptr`
+Message-ID: <3c31c76c-0df5-4630-b18e-c6eab419a8a6@sirena.org.uk>
+References: <20251018-cstr-core-v18-0-9378a54385f8@gmail.com>
+ <20251018-cstr-core-v18-13-9378a54385f8@gmail.com>
+ <CANiq72mpmO2fyfHmkipYZmirRg-x90Hi3Ly+2mriuGX96bOuew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0uN06CPCQnMKQjYF"
 Content-Disposition: inline
-In-Reply-To: <20251017115524.GG3901471@nvidia.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CANiq72mpmO2fyfHmkipYZmirRg-x90Hi3Ly+2mriuGX96bOuew@mail.gmail.com>
+X-Cookie: I doubt, therefore I might be.
 
-On Fri, Oct 17, 2025 at 08:55:24AM -0300, Jason Gunthorpe wrote:
-> On Thu, Oct 16, 2025 at 11:32:59PM -0700, Christoph Hellwig wrote:
-> > On Mon, Oct 13, 2025 at 06:26:10PM +0300, Leon Romanovsky wrote:
-> > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > 
-> > > Make sure that all VFIO PCI devices have peer-to-peer capabilities
-> > > enables, so we would be able to export their MMIO memory through DMABUF,
-> > 
-> > How do you know that they are safe to use with P2P?
-> 
-> All PCI devices are "safe" for P2P by spec. I've never heard of a
-> non-complaint device causing problems in this area.
 
-Real PCIe device, yes.  But we have a lot of stuff mascquerading as
-such with is just emulated or special integrated.  I.e. a lot of
-integrated Intel GPUs claim had issue there.
+--0uN06CPCQnMKQjYF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Oct 19, 2025 at 11:25:16PM +0200, Miguel Ojeda wrote:
+> On Sat, Oct 18, 2025 at 9:17=E2=80=AFPM Tamir Duberstein <tamird@kernel.o=
+rg> wrote:
+> > From: Tamir Duberstein <tamird@gmail.com>
+
+> > Replace the use of `as_ptr` which works through `<CStr as
+> > Deref<Target=3D&[u8]>::deref()` in preparation for replacing
+> > `kernel::str::CStr` with `core::ffi::CStr` as the latter does not
+> > implement `Deref<Target=3D&[u8]>`.
+
+> Liam, Mark: I will apply this since it would be nice to try to get the
+> flag day patch in this series finally done -- please shout if you have
+> a problem with this.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--0uN06CPCQnMKQjYF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj2KtYACgkQJNaLcl1U
+h9D41Qf+Ltkk2+JN4tBSzvUarUp6eE2D4QOWAyqVy87q+zcocSKDaFrrEgX0C0yp
+52vEvZtJflTt7XIxB9TkWesjbQO7dzdeFWW+18b2BU6A1nXcDMEBn66QRWbEOXru
+XOwNAbeIQDR63w0Wec+AXgNFt5vg2wly5e1Ht7UGAufGvqdiKfxE06yCToKWzh3n
+475HYOCkvV3CIc1QgSFNsiX1DjCKwiB5bSH3kktTU9Z7xLUYTaizUeOU/b2aiaYJ
+HMcw8OJrCDaG/UqqK+PX3VACQEAWrwmpljXr+OpqgztP9tRIQ7zTNMMt6HSAdXRm
+GV0zx2kVMXs4pom/lsT8Nf+N2E6prA==
+=Yihi
+-----END PGP SIGNATURE-----
+
+--0uN06CPCQnMKQjYF--
 
