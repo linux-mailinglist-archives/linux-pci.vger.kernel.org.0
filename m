@@ -1,84 +1,99 @@
-Return-Path: <linux-pci+bounces-38826-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38827-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DC12BF4096
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:38:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7B6CBF40F9
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:49:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE76818A7FF9
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:39:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CB4B18C4F16
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:50:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C2892F90DE;
-	Mon, 20 Oct 2025 23:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3122673AA;
+	Mon, 20 Oct 2025 23:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O2r6yRWZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qTcy0VQ/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206CB2F362C;
-	Mon, 20 Oct 2025 23:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3822259B
+	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 23:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761003511; cv=none; b=p0OZU20EwdfiUZSQewm/zlSSQf19RAvUER48P1yQItkDM5uPQSNdnBxSaY/L9zOGXH+z8FyWY7+8tssN053Xrk7O3HgFQn4mTjUEPe3Zhbz9E++rF3RrdnlojNhF4ROelPmwR89sD+jx2MFodO85v608Rrt6NyrovqoJ1QYSomk=
+	t=1761004182; cv=none; b=WrHpKvnO+e+bVF0aQfp+NoaPpoISBtHbNOhqH3xvodGPCxHvI6SaBOD4XHcEoCacY6kKRbA4eZt7UDTbNYAPM7AWOfJBiNtgD7Y1MT2gETeDIn7rDAdXSHRBPDf3mrHB7YcEBCGI6CCJUgoE+iZP2uB2OwhrSC/zkCNobkvi8Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761003511; c=relaxed/simple;
-	bh=SIJw5mfjVLuMIAkneKIDqYjtAB3HUgg7gTwbYwgB8XU=;
+	s=arc-20240116; t=1761004182; c=relaxed/simple;
+	bh=zSYtD3HhQ97XH9Wrf3mufknJ6+YNLu4weydbXr6znmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRMm1YnB/5wtKb7qAst8bmOVWdSrrwISUPiQdXj7zZe++2fQPTD1QdrILdC4CevNl8dU7pKJslhXDpxVGCHoXVqKXsuuSXgT+F3l5r2itq1u/nq7RnXRELSNQkEYAitc+WpV46GX9Ru2lrOnJfV4HrffBLxMUx4swGbg6Eo2zIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O2r6yRWZ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761003510; x=1792539510;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SIJw5mfjVLuMIAkneKIDqYjtAB3HUgg7gTwbYwgB8XU=;
-  b=O2r6yRWZM/PHFvv9UwLdGN6lU+3l8Nf+PyK38bJR+Q2tVztEgYSFTQ+B
-   eG9x3ZN807GMHetc3wk7GEmg7Xrd93QWp4uX4R/lMjUJsLztwQ7ADq397
-   3HCFBPqxI9ttNfuNDRlIII1GS3OV/6WmJ0pYr1bK2LL9X9v8prviw/xFX
-   Og0XHu+dKVXVw7R8Qcv7tcCPTak2ZOCNJ2GsgS+k3iplHgs5AGMpD2YnL
-   FF/KEst9AWJz7cTT13mpI2dSw3cpDiqpuzlBhB5IwOIG0dIve8FU+4PyD
-   YlNH+EppgmcN7MfKFiX9VYwQehFLyajsH8oqI70EindA88U8/CBlvRbMR
-   A==;
-X-CSE-ConnectionGUID: 6GpeLUB9Rjepn7V9HEyrxQ==
-X-CSE-MsgGUID: xzgBo33tTymDHzQmKZ2MnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74246012"
-X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="74246012"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 16:38:30 -0700
-X-CSE-ConnectionGUID: umtj87M0Ty+vyL8Lk1WSVg==
-X-CSE-MsgGUID: +bkf+DWfRrWIgkPT+R+5ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="187715091"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 20 Oct 2025 16:38:22 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vAzS8-000AFl-1H;
-	Mon, 20 Oct 2025 23:38:16 +0000
-Date: Tue, 21 Oct 2025 07:36:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zhi Wang <zhiw@nvidia.com>, rust-for-linux@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, dakr@kernel.org,
-	bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cjia@nvidia.com, smitra@nvidia.com,
-	ankita@nvidia.com, aniketa@nvidia.com, kwankhede@nvidia.com,
-	targupta@nvidia.com, zhiw@nvidia.com, zhiwang@kernel.org,
-	acourbot@nvidia.com, joelagnelf@nvidia.com, jhubbard@nvidia.com,
-	markus.probst@posteo.de
-Subject: Re: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait
- and specialize Mmio<SIZE>
-Message-ID: <202510210730.qW10Mhd0-lkp@intel.com>
-References: <20251016210250.15932-2-zhiw@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ShKEwRBTUdEjjGFpsrkzjkEbivdXGPuTiql/GcmQMm7AvketdmSHS5YfMPa1dsE1eWtk493llfYefnHIZit7Aq5An2Na7Ken5xqWjP1HbRUENIp7+5j9DnCp+5/yQPq6hUG8j0QzszyKN2uADIoHsRNjGwW0agJUq1sgKB59v8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qTcy0VQ/; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-290d48e9f1fso59165ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 16:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761004180; x=1761608980; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=APIPLhdONSvh2oNS2Jy31QMeW+iB8sQZx3emBmCMWyc=;
+        b=qTcy0VQ/z0E7mEUSLKIdL+3CDTQ/KdAahs0xyc5r4uRdFEF7+bHMkJeToVMgOCNVf3
+         w1fRqM2WX0QWgUCfsIQ86dAxoy0TESqclnRJlQeAGNMG99OfDQ8B70EKJ4k7fZEY+5dI
+         LZHLfUMy0DqnA960XGkhGdiNPgDSB/wwoTbHOl3qRxrwzp+sUKaKuHcFL8f/uTWs2Odp
+         gRUrxicYx23g3Pn4pt+jSeGvydtwSorYtpMhwjxp5sh9xaQjS+N86ipmkEYaZmTfRumz
+         9hiwfCpDLO885/HtgaFnQgJUJVfGWyhP+kxVfFB9CJEN7MRgs1ykXnZIql9HaW47KxvB
+         x2HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761004180; x=1761608980;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=APIPLhdONSvh2oNS2Jy31QMeW+iB8sQZx3emBmCMWyc=;
+        b=kM0Dou7oTQVTxXgwWzedEwaH/wtA0BM5bjkAjhr7CI/FCtrg7yucXfjJ0jKmSxIf7y
+         TCJwmsd+okd8t0Nbpgfg/L6g6SZBZMlK93ChOU14zcAUwWhIxOwd+gNP9Tu0faqVv1j1
+         43tM5fiqlQsj+jP1RefWNL+yNY1ALauyOFficSkF8J1bgApcFOAYCDEc8UNrQF119XBA
+         2NfX2H0H36jftWF/XUYzaHwIxyiJGcTrNN8MScSiQvbiQJ+iWPxz0UzXmYSKR3suL0w5
+         kQmBr5Jmtz7xBJI6AoZNhbGFkC+E7acyzmyEeTALDarPaTpZ2z4k12ZoXdI/N7APqufo
+         0aYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/J7ZK7kB5pjcpP/uTE8wFNvcsfJrikqSPvxocWU5be3KMqyGinwh3pEKkxS9prtRHiWhAux9IaI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5hCjpNKb+0ASL/XWH0BN8e3qhz3vn9MSw3kHmeLWCYpFM0R8u
+	DkiF+zWcVsErhGC8syoJtVeJciNkknZsVNDzhODY35ZnxMrZYAr9C5NSc/vyR8wpKQ==
+X-Gm-Gg: ASbGncuxk6edgX00UBLWAvm9vN4tIxRpuvn/VDJ59GWykZzXHAhMYMOcfldKKsPAk8d
+	WgxROB3v2uTdZCx7IQXs6NVVaLrwnQ7zmBQaw335WPPeYiCruK+phwmPCK0mzppTMIjLPXDQJB9
+	xZQ0U8TenD2T2rQNJBRqaB3UIpA+gGbuADXEQPml2SgfJ7pozxvsz0Z2pUo6sjjdyuo4hY3OUAu
+	nG4RxQbSbe7lw4LLIgeYWAPXby6TT/W5Dl+usx/RjgvOu6tbRQns30Uc9vfCqWqKVoJYwTmcIvv
+	HpzcnufCs+CDbjWPp2/wfh2yk9FotAFijcR0X6BYixlAJP+l+/Fg1cNobuV7QVUwITOj/3pCakA
+	zB7MD7SRn5vL09qHOotML+jRLJrRoUzcBi6jkslrMiMG0UQFYG5uai2qQtetOWcbmg5ezpbAM1x
+	MVTWYdtxvSVTvC9e+klNNqzGWDn7U8MEszFg==
+X-Google-Smtp-Source: AGHT+IHpL+PTPx5cLpK4SolM4pA26Uh3D3RVyUZIGeMHX90GD8vWXwavzy2Wzm8Nw3ukyKcc1LWkjA==
+X-Received: by 2002:a17:902:ef08:b0:292:b6a0:80df with SMTP id d9443c01a7336-292d429a794mr2192795ad.10.1761004179616;
+        Mon, 20 Oct 2025 16:49:39 -0700 (PDT)
+Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29246ffef8esm91310515ad.51.2025.10.20.16.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Oct 2025 16:49:39 -0700 (PDT)
+Date: Mon, 20 Oct 2025 16:49:34 -0700
+From: Vipin Sharma <vipinsh@google.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com,
+	alex.williamson@redhat.com, pasha.tatashin@soleen.com,
+	dmatlack@google.com, graf@amazon.com, pratyush@kernel.org,
+	gregkh@linuxfoundation.org, chrisl@kernel.org, rppt@kernel.org,
+	skhawaja@google.com, parav@nvidia.com, saeedm@nvidia.com,
+	kevin.tian@intel.com, jrhilke@google.com, david@redhat.com,
+	jgowans@amazon.com, dwmw2@infradead.org, epetron@amazon.de,
+	junaids@google.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 15/21] PCI: Make PCI saved state and capability
+ structs public
+Message-ID: <20251020234934.GB648579.vipinsh@google.com>
+References: <20251018000713.677779-1-vipinsh@google.com>
+ <20251018000713.677779-16-vipinsh@google.com>
+ <aPM_DUyyH1KaOerU@wunner.de>
+ <20251018223620.GD1034710.vipinsh@google.com>
+ <20251018231126.GS3938986@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,76 +102,61 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251016210250.15932-2-zhiw@nvidia.com>
+In-Reply-To: <20251018231126.GS3938986@ziepe.ca>
 
-Hi Zhi,
+On 2025-10-18 20:11:26, Jason Gunthorpe wrote:
+> On Sat, Oct 18, 2025 at 03:36:20PM -0700, Vipin Sharma wrote:
+> 
+> > Having __packed in my version of struct, I can build validation like
+> > hardcoded offset of members. I can add version number (not added in this
+> > series) for checking compatbility in the struct for serialization and
+> > deserialization. Overall, it is providing some freedom to how to pass
+> > data to next kernel without changing or modifying the PCI state
+> > structs.
+> 
+> I keep saying this, and this series really strongly shows why, we need
+> to have a dedicated header directroy for LUO "ABI" structs. Putting
+> this random struct in some random header and then declaring it is part
+> of the luo ABI is really bad.
 
-kernel test robot noticed the following build errors:
+Now that we have PCI, IOMMU, and VFIO series out. What should be the
+strategy for LUO "ABI" structs? I would like some more clarity on how
+you are visioning this.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.18-rc2 next-20251020]
-[cannot apply to driver-core/driver-core-testing]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Are you suggesting that each subsystem create a separate header file for
+their serialization structs or we can have one common header file used
+by all subsystems as dumping ground for their structs?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zhi-Wang/rust-io-factor-common-I-O-helpers-into-Io-trait-and-specialize-Mmio-SIZE/20251017-050553
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20251016210250.15932-2-zhiw%40nvidia.com
-patch subject: [PATCH v2 1/5] rust/io: factor common I/O helpers into Io trait and specialize Mmio<SIZE>
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20251021/202510210730.qW10Mhd0-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510210730.qW10Mhd0-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510210730.qW10Mhd0-lkp@intel.com/
+> 
+> All the information in the abi headers needs to have detailed comments
+> explaining what it is and so on so people can evaluate if it is
+> suitable or not.
 
-All errors (new ones prefixed by >>):
+I agree. I should have at least written comments in my *_ser structs on
+why that particular field is there and what it is enabling. I will do
+that in next version.
 
->> error[E0432]: unresolved import `kernel::io::IoRaw`
-   --> rust/doctests_kernel_generated.rs:5047:74
-   |
-   5047 | use kernel::{bindings, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
-   |                                                                          ^^^^^ no `IoRaw` in `io`
---
->> error[E0782]: expected a type, found a trait
-   --> rust/doctests_kernel_generated.rs:7075:46
-   |
-   7075 | fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result<()> {
-   |                                              ^^^^^^^^
-   |
-   = note: `Io<SIZE>` is dyn-incompatible, otherwise a trait object could be used
-   help: use a new generic type parameter, constrained by `Io<SIZE>`
-   |
-   7075 - fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result<()> {
-   7075 + fn wait_for_hardware<const SIZE: usize, T: Io<SIZE>>(io: &T) -> Result<()> {
-   |
-   help: you can also use an opaque type, but users won't be able to specify the type parameter when calling the `fn`, having to rely exclusively on type inference
-   |
-   7075 | fn wait_for_hardware<const SIZE: usize>(io: &impl Io<SIZE>) -> Result<()> {
-   |                                              ++++
---
->> error[E0782]: expected a type, found a trait
-   --> rust/doctests_kernel_generated.rs:5078:18
-   |
-   5078 |    type Target = Io<SIZE>;
-   |                  ^^^^^^^^
---
->> error[E0782]: expected a type, found a trait
-   --> rust/doctests_kernel_generated.rs:5082:18
-   |
-   5082 |         unsafe { Io::from_raw(&self.0) }
-   |                  ^^
-   |
-   help: you can add the `dyn` keyword if you want a trait object
-   |
-   5082 |         unsafe { <dyn Io>::from_raw(&self.0) }
-   |                  ++++   +
+> 
+> But, it is also not clear why pci serialization structs should leak
+> out of the PCI layer.
+> 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When PCI device is opened for the first time, VFIO driver asks for this state
+from PCI and saves it in struct vfio_pci_core_device{.pci_saved_state}
+field. It loads this value back to pci device after last device FD is
+closed. 
+
+PCI layer will not have access to this value as it can be changed once
+VFIO has start using this device. Therefore, I thought this should be
+saved.
+
+May be serialization and deserialization logic can be put in PCI and
+that way it can stay in PCI?
+
+> The design of luo was to allow each layer to contribute its own
+> tags/etc to the serialization so there is no reason to have vfio
+> piggback on pci structs or something.
+> 
+> Jason
 
