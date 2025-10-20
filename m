@@ -1,59 +1,95 @@
-Return-Path: <linux-pci+bounces-38807-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38808-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54554BF39CD
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:02:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFB10BF3C1D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 23:32:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8CB0188945C
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 21:02:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86B0B405A86
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 21:29:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15861334C3E;
-	Mon, 20 Oct 2025 21:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5C9334693;
+	Mon, 20 Oct 2025 21:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXaAfJlA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pH1F9PaG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E2F2EB87F;
-	Mon, 20 Oct 2025 21:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4462630506E
+	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 21:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760994004; cv=none; b=TPyZfoTZLVD0bPIDGVIPbs80UvaeE9oL4QgQgAywpJ+RxrLISYMaQqzz7DKzU3uTZ7X8wAUHlourgqr7sXo1lLi9PCZD7fMPRMhzGfQDOnTPrz80Qt+wlGcvA9ogq8PwyiovHRyqO+JU3PX+y/w+DzxkATGONoaVYu1a+WgpRqY=
+	t=1760995794; cv=none; b=L1TKJmlZcZck5RKyRIMOdbdstN1SL2Ru/SShVdKN9wfpp0dQZknFKhTVeH//gZsvyX35SkgiwC3X6jeYOF+vwZW7xZtvZJlpcLiHnzOluYY4R6chwOQl3x68EPEWkIiNV+7rmQu5uSPNlF1xw0OIRYI5/In6MDRTZaqqJ5Ow8T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760994004; c=relaxed/simple;
-	bh=/LZcJJRPVP3eFE1ecANAOSgixAXIk4StHRr4bpii2GY=;
+	s=arc-20240116; t=1760995794; c=relaxed/simple;
+	bh=PqlFilZVmSbZKJLHpAkGDW0igOyGGkLNA6FRjPXGD80=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gX5KGp5CHDpQaR57eEwYFjiZ4QlhsOWLyQ19TFALg7q/FUxHulE3F9BjmWsn1OS4bSpX+I+80zsE8z20/wCFu1XkqkH6q8uFn7M97PKPZ4HRo8TEXe/KZL4+yXL06tXP/eaVlDj4pErbIglDhZbEz3oyDz+104ytGJVbndcPM3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXaAfJlA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 100C0C113D0;
-	Mon, 20 Oct 2025 21:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760994003;
-	bh=/LZcJJRPVP3eFE1ecANAOSgixAXIk4StHRr4bpii2GY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nXaAfJlAW5OJIVavpJS9PVvzhr/gsU/4BsqEO61ogsn+/mc83QgqVMI/PaqdNlsw7
-	 uHAtBWRkXlzkPR8c0GBH5jLr+FBRdZD4SO5wXAniJuV+fA8MHutaoRV5TxIcREvC+Q
-	 GeWd80jSwayMO9L6qWN/XMNz5mrK3uhJLo9IB0e6JcWqnqSrMnTsxFzzEfYbO6fXnj
-	 zkXPLBRdKqm4G5yhgLEFZ3X5eerk7KrxspQoH6BbalRvy6m6YELQgjMJc3cP97sP+A
-	 zS77KUb/mPR+8JlGv5E8O5pIl2e2WFBXksZv3bPqj5LGRT75JJ/UU2AcFHOO2PU2Qh
-	 euBeoY0R7wHXg==
-Date: Mon, 20 Oct 2025 16:00:01 -0500
-From: Rob Herring <robh@kernel.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	dlan@gentoo.org, guodong@riscstar.com, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] dt-bindings: pci: spacemit: introduce PCIe host
- controller
-Message-ID: <20251020210001.GA1764520-robh@kernel.org>
-References: <20251017190740.306780-1-elder@riscstar.com>
- <20251017190740.306780-4-elder@riscstar.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFTv9cw4hT3FbDgIM2rBuR7NVlUKEjf4UBJQ/G8TvoD9cciUpeeA4xJ79qdKHqnrAPnJmsfVigLSpBlCtMdC/1t4CVbnUTunIlzONQwy2hvpbOqoTGj8vBpnZnXRUV13cwIuh9Kcn2gq+smoYewepBOgLt6UMrZuSPVntItRA+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pH1F9PaG; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b57bffc0248so3381275a12.0
+        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 14:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760995792; x=1761600592; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=26ASe6SsfcfwXN+JG/2GTGw7BHHgM1XlqQIlC1K/NBc=;
+        b=pH1F9PaG83SuIUzI/Hf+agxVn8OYe5JWQWyaYHTdL8MYf9u7HGfxdfR4ULJ/pZqx2L
+         yni2K5bxNwDJx0fGyhLsrrMTHrT0lrtlnnD9fKkcqex+Oy2jVLXwxvvH1VveuEUrDmMB
+         +XN+vcHMOT2SMw7MqspKHuMUyxKMC9LE2mYTL/5pZiHX5rOrpoAbdV5km9iuzvkPvSl7
+         1+SdOvcY3sG6yW79L2YCvevHQvjxSTauhLTADGVK+lRuFnHTYUoCDwET19WsiUhXDVdh
+         itY55k9xItqdcTJhFUoRSIIPDiYxOf3mogT6SoqNj2jkqOzfjneg2p/x+oMQ8jFtJqrq
+         8JAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760995792; x=1761600592;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=26ASe6SsfcfwXN+JG/2GTGw7BHHgM1XlqQIlC1K/NBc=;
+        b=f6QQwX5AM+REYWsmq5PaDck3tlajKzgudCpuCSCl8YymOiyo5lw5EOIMgndwaBKdZg
+         4djPbxuGJPHX+2Xvtz4vKEfTlkUSJfYWGIow+YLUCHHBlBYC9gohRL+zkSUx/uoRObes
+         WKRBluXb1L2K4XgIuvuGA7Gmi6ltKdnGS9rOA4DwVn9QuvdiZ6eV+8nGfVHpDfQpPI9E
+         yv+fFc/8Lm8drUzDppt0HxBSlf62my+Re9rRDhPjgrDkUYoJZVHOM9FcrZuP4YWJDmx+
+         wCXpVZkIbJwhFAcZQ5UnxLWwgRbS944S1XiILafCfTpFUQ5akykGNv57x72hrX8PTkbr
+         XBVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1TihruQJmA2nutierN56FmLoJwxGq5NnBRT9jvIG0RWd49RVhZZi1MHhNgCn2a5AINdkDop8IpDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSVhkiVe0bHRQENwTwpUhJucJkFj932fvjSZc0ipsvb9tsS8/X
+	Yl/2t0tS5LOO2E6TGJ2l2nxbhYe+cZ94tC5MpCOOOSh/Pal/Yq/ju6UnqW+IxJWUBw==
+X-Gm-Gg: ASbGncvGQYBaXbd/p3571Y7PesBTpyonyQbj6JPvOk3EBf8FDndgu5dqiRQFPyx4BJ+
+	Tc5TslyFRWfCuYNPlsyeTOMxK+P8I+r4yie48dMjq4S1E0ePo1phwejb5McEp5WA0PqwVQhnLkp
+	0eOonbGC9viXg+kgG7hizQMqfl2ZeurrarmM9RysIIlckrXLCKj/FYNy0QaxK8Yxaafia8IZXkZ
+	Rpw4jHiPxhKZaNArsIDwE4gknVzMk+HfYAQRRUVVcwj6OMWfiIadx63fK5YrLec5kYhEey4VikK
+	ei4qtpkr7jXIy58v1kpibIeLOVHZKiXbF6HJ/Q0WQSrBMQTF3/k4IQWndFNT/CtOZOw/suMBtfA
+	LbGr2ECfderjLpeMxVx5o/I+AZgDS9aQkFiUR+2SBkojSlKeSkck8XAXULUjD4LEvklQThZEPrO
+	oXBkfEnkwgokB3iboMTL48/M41q/+b9D/r2hyujsh+0JdHYg==
+X-Google-Smtp-Source: AGHT+IGk4YTNxvDRPlGdzR4t9GlLZJuciLlt+LaOjUUn8d6Qy58ILE26bgum5kvXRpVHjALaky9Cew==
+X-Received: by 2002:a17:902:ecc6:b0:249:71f5:4e5a with SMTP id d9443c01a7336-290c76f8182mr169199055ad.26.1760995792362;
+        Mon, 20 Oct 2025 14:29:52 -0700 (PDT)
+Received: from google.com (96.75.168.34.bc.googleusercontent.com. [34.168.75.96])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292472193dfsm88852855ad.105.2025.10.20.14.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Oct 2025 14:29:51 -0700 (PDT)
+Date: Mon, 20 Oct 2025 21:29:47 +0000
+From: David Matlack <dmatlack@google.com>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: bhelgaas@google.com, alex.williamson@redhat.com,
+	pasha.tatashin@soleen.com, jgg@ziepe.ca, graf@amazon.com,
+	pratyush@kernel.org, gregkh@linuxfoundation.org, chrisl@kernel.org,
+	rppt@kernel.org, skhawaja@google.com, parav@nvidia.com,
+	saeedm@nvidia.com, kevin.tian@intel.com, jrhilke@google.com,
+	david@redhat.com, jgowans@amazon.com, dwmw2@infradead.org,
+	epetron@amazon.de, junaids@google.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 12/21] vfio/pci: Skip clearing bus master on live
+ update restored device
+Message-ID: <aPapy8nuqO3EETQB@google.com>
+References: <20251018000713.677779-1-vipinsh@google.com>
+ <20251018000713.677779-13-vipinsh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,150 +98,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251017190740.306780-4-elder@riscstar.com>
+In-Reply-To: <20251018000713.677779-13-vipinsh@google.com>
 
-On Fri, Oct 17, 2025 at 02:07:35PM -0500, Alex Elder wrote:
-> Add the Device Tree binding for the PCIe root complex found on the
-> SpacemiT K1 SoC.  This device is derived from the Synopsys Designware
-> PCIe IP.  It supports up to three PCIe ports operating at PCIe gen 2
-> link speeds (5 GT/sec).  One of the ports uses a combo PHY, which is
-> typically used to support a USB 3 port.
-> 
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
-> v3: - Remove the "num-viewport" property
->     - A "phy" reset is no longer required
-> 
->  .../bindings/pci/spacemit,k1-pcie-host.yaml   | 147 ++++++++++++++++++
->  1 file changed, 147 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
-> new file mode 100644
-> index 0000000000000..89f8b6b579c6e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
-> @@ -0,0 +1,147 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/spacemit,k1-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SpacemiT K1 PCI Express Host Controller
-> +
-> +maintainers:
-> +  - Alex Elder <elder@riscstar.com>
-> +
-> +description: >
-> +  The SpacemiT K1 SoC PCIe host controller is based on the Synopsys
-> +  DesignWare PCIe IP.  The controller uses the DesignWare built-in
-> +  MSI interrupt controller, and supports 256 MSIs.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: spacemit,k1-pcie
-> +
-> +  reg:
-> +    items:
-> +      - description: DesignWare PCIe registers
-> +      - description: ATU address space
-> +      - description: PCIe configuration space
-> +      - description: Link control registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: atu
-> +      - const: config
-> +      - const: link
-> +
-> +  spacemit,apmu:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      A phandle that refers to the APMU system controller, whose
-> +      regmap is used in managing resets and link state, along with
-> +      and offset of its reset control register.
-> +    items:
-> +      - items:
-> +          - description: phandle to APMU system controller
-> +          - description: register offset
-> +
-> +  clocks:
-> +    items:
-> +      - description: DWC PCIe Data Bus Interface (DBI) clock
-> +      - description: DWC PCIe application AXI-bus master interface clock
-> +      - description: DWC PCIe application AXI-bus slave interface clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: dbi
-> +      - const: mstr
-> +      - const: slv
-> +
-> +  resets:
-> +    items:
-> +      - description: DWC PCIe Data Bus Interface (DBI) reset
-> +      - description: DWC PCIe application AXI-bus master interface reset
-> +      - description: DWC PCIe application AXI-bus slave interface reset
-> +
-> +  reset-names:
-> +    items:
-> +      - const: dbi
-> +      - const: mstr
-> +      - const: slv
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Interrupt used for MSIs
-> +
-> +  interrupt-names:
-> +    const: msi
-> +
-> +  phys:
-> +    maxItems: 1
-> +
+On 2025-10-17 05:07 PM, Vipin Sharma wrote:
 
-> +  vpcie3v3-supply:
-> +    description:
-> +      A phandle for 3.3v regulator to use for PCIe
-> +
-> +  device_type:
-> +    const: pci
+> @@ -167,6 +173,9 @@ static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_handler *handler,
+>  	 */
+>  	filep->f_mapping = device->inode->i_mapping;
+>  	*file = filep;
+> +	vdev = container_of(device, struct vfio_pci_core_device, vdev);
+> +	guard(mutex)(&device->dev_set->lock);
+> +	vdev->liveupdate_restore = ser;
 
-Both of these are part of pci-bus-common.yaml and can be dropped from 
-here.
+FYI, this causes a build failure for me:
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - spacemit,apmu
+drivers/vfio/pci/vfio_pci_liveupdate.c:381:3: error: cannot jump from this goto statement to its label
+  381 |                 goto err_get_registration;
+      |                 ^
+drivers/vfio/pci/vfio_pci_liveupdate.c:394:2: note: jump bypasses initialization of variable with __attribute__((cleanup))
+  394 |         guard(mutex)(&device->dev_set->lock);
+      |         ^
 
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-
-Always required by pci-bus-common.yaml. Drop.
-
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - phys
-> +  - vpcie3v3-supply
-
-> +  - device_type
-
-Always required by pci-bus-common.yaml. Drop.
-
-With that,
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+It seems you cannot jump past a guard(). Replacing the guard with
+lock/unlock fixes it, and so does putting the guard into its own inner
+statement.
 
