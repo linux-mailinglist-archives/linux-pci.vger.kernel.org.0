@@ -1,140 +1,140 @@
-Return-Path: <linux-pci+bounces-38798-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38802-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA5B3BF30B7
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 20:54:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC4BDBF3187
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 21:02:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 265244802DD
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:53:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D342C1882596
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 19:02:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE68F2D593C;
-	Mon, 20 Oct 2025 18:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84EA52D6400;
+	Mon, 20 Oct 2025 19:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIzWjg9g"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P3lBLcZ5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA362D592F
-	for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 18:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941792D0283;
+	Mon, 20 Oct 2025 19:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760986430; cv=none; b=RFZd+kXv9ul7hSL49PG1HHPRGSL3o3CTgiGhCG32fqILsKPm+lA9a6Ci1oFAR0bFjey44HQlsXiy2+SIJ6HIWzAN1aZD+sMU4aQJjuJCv4/QmUgor+2X01qsyFYPWcO0U4BfGQ+JTJ7FilEKuidGViVXiYXjlFIkRbWhQhmfceo=
+	t=1760986934; cv=none; b=H8ZwfgTCpC4xmb5uCPJj2sAIcLvrEkZW+HQ/8QC2u2T36v8K4EGxgwTfp3K744CJqzQSWBAlzoTUo42hXECYVBdrKdpOqcZbiOErHz7mxq5L2weVpYUKzhYBWWoUQfFRklW1nmSUOs6RiY3tTrmevcqD14ivK9kpopXkUD8ivqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760986430; c=relaxed/simple;
-	bh=ep9oGRp0oF+oCFDHArxdHwQE5BacfqsLXNq7hLcEyno=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YB0z/rk4u/KaXe94ASvwPZvYbiWgGhcHFFFf+zYKoss+Ru/XpXutWJR32RU57uCfSBxvXPESLl6lt6JaW8lSlos+fXBjHe+j1dKHqCP51T4f+Jat2OD1Wt0gw2cG/1smFe+PpoYDrLIPO1Kfv131fmhXjebK74WXmZYjFV28T3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DIzWjg9g; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-591c9934e0cso5227448e87.0
-        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 11:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760986427; x=1761591227; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qvkRm+XTrLJJZVcVghGvmjpr/0j+IP7YtKfaztr+Qdc=;
-        b=DIzWjg9gnQnUG9TcemQgQYlJC55i8rgv3s+7i2MxRtYySa9ILCW7fpRp9+J2yWIUEl
-         viFqIMc25uHKqE43zhQ2Qr2hAW7gVMoVl98xyP7YerEPBKHs4claLxW18eJl+NreoJej
-         WffmX3v9GA7My0V+8IfhPBc8dGhJ7ua17YO5gpnpjBL3NuSe8BOAKoHqVqdfywjpmbaF
-         V+NwuuKz4KqToNNYnna2QJtySN0ULEyzfCdRYcwssMitclS8mmxPy5YJdXCiYEFsOeib
-         BiQIBJ1dDXo4RWYkETf2/Dv5QVUmC5rJp9xAu+ogGX4V0Yzng765/M9+UZU0QAu8v9hI
-         88vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760986427; x=1761591227;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qvkRm+XTrLJJZVcVghGvmjpr/0j+IP7YtKfaztr+Qdc=;
-        b=HtR7Q1MAUxvrQ4tJPoV9tNyblzaFT9f+4vyrSshuiu9HXucFi57eZNMXchvakcXooI
-         ML7N731LtQShRspWvMQAC8g2I7k/masQighZbo/Mnil5FhxeLzrizG0fU/xfRoYNfaMe
-         7lC3ziH7SN+ZdRcYDRtgAAy8K+Nm6HMdoKYFdZdt09EKlHjCrDs5Xtqik7deUOMcvcud
-         JM5clAekZGYMarux19AUo2Qh8wTqAbZpL+HZPCDcRvofcMGC57RkiqQknTrdCjqecOMU
-         zBSdvKf3zZDSYtu5OKaH3KKZS2rLnWYISDvKPcHK8gbPut+bmmH4CqC2zcJN5al0qRMB
-         MRFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXs9fbxNo2PBypG/r0TcQbv3vm/sSkXs3MVl8T2tNhwk08e47O+dvcAkv16Sq/bvu4y6m4Rb7E/08w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3wN9lepgPnCMOkr+Bdb0hKUT1pTJcUhT8rcJO44cWuhtm/lwL
-	mxsOYM+xsNyBfEwnvfesscrSl+DpZ1FPefuXfKaApGdLYBC4FOqTFEYlzn30rIPMEvvGaiZlyXt
-	eEVZZNlkE6EwTAh+43ekD5Uyr0+SLW6g=
-X-Gm-Gg: ASbGnctOj9QK/0CLnHg0TXfSL5hvZusixW3DOPlKNnUQL0kEVtfMC1jMrYgnVL1cXg8
-	atVQ3JiCpTFlwqNBSfmAODGF2VafCA57lao79+aQMYopwwwhE0lY/tFjVDS7rUbNNSnivgFmlB/
-	q6bbBWUGNDpWXOdzV1lZQCCgKTrHx+BpxdvKcoUxmIgJbMun49+4uSlXcBGUUpHNacZV1hFTCOj
-	/LySThT8PDP+Sb20rPsJRMXjLDBb9s5Hui585SpWFT4/3RroRZp3BjkbtF8
-X-Google-Smtp-Source: AGHT+IGriJ7UXZ9nd8XnOsNbi6d9VsXWG8HB0uHqueF027XCSb3Vwq82mSdbbfih1n1Eq8I/zX/Vvg6RGc3tBqBeAaA=
-X-Received: by 2002:a05:6512:308d:b0:577:318a:a1c6 with SMTP id
- 2adb3069b0e04-591d84f7185mr4042715e87.23.1760986426759; Mon, 20 Oct 2025
- 11:53:46 -0700 (PDT)
+	s=arc-20240116; t=1760986934; c=relaxed/simple;
+	bh=R51+k1f9n0udGWUacA5No4LOqnlElXDvkTC1tLyWQig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HYKm9tIaCDw9otBvRt+J8+kMABmBxFcXxt7BxJrcg603TeaU6LkIiJXU3y1zw7/z7Yt4YBjZuuvCVUAHo++HC9AHDVq23jt53vlrOyDqmj2djMy3QihaGuqGibjPhSCmUdkbpaRadb9MiaSksGlfbFdxI5JjSA9FbJE0mYpI1pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P3lBLcZ5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59KGdV3j031143;
+	Mon, 20 Oct 2025 19:02:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=ckYCcYUoR54i2hjdQUGpiX7BxN9zc96YciU/oD62Z
+	Fo=; b=P3lBLcZ5+xWV+vN+7PGJMlVQKvf/4v9ZNASmhORW2ft8on0NUng9K3hCZ
+	Z3Leb1vK3LHF/XQpJgKR/PY4yl5lnpyJt8W9YCyi3Y+LDA0eXjnUHvu6HO24Ax/6
+	uT6hhSygyXJLPh+a9AmMG9NyDk1Ci3ijCpIKPKbjvVBRIoRS+39LNQjlCHZoqHhW
+	6eYyJNnx2TkOHOwElYqlqbZzlWPGbSut9IAqhKX7r27rios73mqKZT4AY9QOEKr0
+	ErSJzKx7+ndp0wRsm1kNe/72liD/McAuglaLGB1phr77tVqLqJDhLI7fc/hF0+gX
+	zKTGlCaz+7ET+DSu7JE/v4bNcqgDQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30vj1h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Oct 2025 19:02:06 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59KHtDeM017052;
+	Mon, 20 Oct 2025 19:02:06 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vnkxq9ms-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Oct 2025 19:02:05 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59KJ24KB10552306
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Oct 2025 19:02:04 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 85ABA58056;
+	Mon, 20 Oct 2025 19:02:04 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D1ED358061;
+	Mon, 20 Oct 2025 19:02:03 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.240.93])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Oct 2025 19:02:03 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc: helgaas@kernel.org, stable@vger.kernel.org, alifm@linux.ibm.com,
+        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+Subject: [PATCH v1 0/3] PCI fixes for s390
+Date: Mon, 20 Oct 2025 12:01:57 -0700
+Message-ID: <20251020190200.1365-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250731-pci-tegra-module-v7-2-cad4b088b8fb@gmail.com> <20250926212519.GA2268653@bhelgaas>
-In-Reply-To: <20250926212519.GA2268653@bhelgaas>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 20 Oct 2025 13:53:35 -0500
-X-Gm-Features: AS18NWCmMUTtQXUaLifQrSGp8qDRYM75-V9Y9cQ9D8p5t478TikwLfPuNlOWrnU
-Message-ID: <CALHNRZ-1sLDz7rSO97tWFeRzgP4rGo=winc7ZsANtAtQkU+pFw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: q8d2aaeJzV3fLx6WgYQ_yM6T4NEgKGlu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX/PkTidP9cR3u
+ lpT0bCGOnXS4AqaWAzMY4ZPf+hNj3fUdMGYmOAemS/LntuwL7xDjtM56iJrLC/PUhB8FgVHz2RF
+ KFhcw30qcwebdOb6lECKbxv/M1YuW55bljRfbm93Dc7MY0LTY1FkayU3RHRys56vBRa3pXWpjZv
+ /BsP2EqoWSS9FNXg2dmVvwZeLx2Hjg8pH1xT9NZODiLIV9QaLHYmSNrVRgOKzMj1AfwtWfXpFvY
+ 4mt5tU7NpQTO6mAE7UD4NQ94yOIsdwaiSPTV2WPfA6AHcpi95bhWtAmTJDs08xKn1fUhn4BHmJz
+ ujcTG2h2kPNTfcaG11Pstxzrw//mr3O9t5ViSf0sJ9xFuW5QWXsOWbqpBm+1lOQHJs3LPJQ3TtT
+ IdA+pdJNRH7mWb9M8Ao4QG77P1IxZg==
+X-Authority-Analysis: v=2.4 cv=MIJtWcZl c=1 sm=1 tr=0 ts=68f6872e cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=0C_zUa3iG0cStZzqMdQA:9 a=HhbK4dLum7pmb74im6QT:22 a=cPQSjfK2_nFv0Q5t_7PE:22
+ a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+X-Proofpoint-ORIG-GUID: q8d2aaeJzV3fLx6WgYQ_yM6T4NEgKGlu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-20_05,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
-On Fri, Sep 26, 2025 at 4:25=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> [cc->to: Rafael, Daniel, any feedback or ack?  Would like to resolve
-> this (part of Aaron's series at
-> https://lore.kernel.org/r/20250731-pci-tegra-module-v7-0-cad4b088b8fb@gma=
-il.com)]
->
-> On Thu, Jul 31, 2025 at 04:59:25PM -0500, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
-> > pci-tegra can be loaded as a module.
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> >  drivers/cpuidle/cpuidle-tegra.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-=
-tegra.c
-> > index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1=
-900eacedd4b90bc0a 100644
-> > --- a/drivers/cpuidle/cpuidle-tegra.c
-> > +++ b/drivers/cpuidle/cpuidle-tegra.c
-> > @@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
-> >       pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
-> >       tegra_cpuidle_disable_state(TEGRA_CC6);
-> >  }
-> > +EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
->
-> tegra_cpuidle_pcie_irqs_in_use() looks like a workaround for a Tegra20
-> hardware defect, and having no knowledge of typical Tegra20 systems,
-> my questions would be "Why do we even bother with this?  Should
-> cpuidle-tegra.c just disable CC6 always, unconditionally?  The whole
-> thing, and all of include/soc/tegra/cpuidle.h, looks like it might be
-> more trouble than it's worth."
+Hi,
 
-It's been almost a month again with no responses. Does this have any
-path forward that doesn't include signoff from the cpuidle
-maintainers? It's been over four months since they were first asked to
-look at this, so I presume there will never be any response.
+I came across some issues in PCI code for s390 while working on VFIO error
+recovery for s390 PCI devices [1]. These patches can be indepedently applied and
+has no depedency on error recovery patch series. We would like to get these
+patches merged as they do fix some existing issues.
 
-Aaron
+[1] https://lore.kernel.org/all/20250924171628.826-1-alifm@linux.ibm.com/
+
+
+Thanks
+Farhan
+
+Farhan Ali (3):
+  PCI: Allow per function PCI slots
+  s390/pci: Add architecture specific resource/bus address translation
+  s390/pci: Restore IRQ unconditionally for the zPCI device
+
+ arch/s390/include/asm/pci.h        |  1 -
+ arch/s390/pci/pci.c                | 74 ++++++++++++++++++++++++++++++
+ arch/s390/pci/pci_irq.c            |  9 +---
+ drivers/pci/host-bridge.c          |  4 +-
+ drivers/pci/hotplug/s390_pci_hpc.c | 10 +++-
+ drivers/pci/pci.c                  |  5 +-
+ drivers/pci/slot.c                 | 14 ++++--
+ include/linux/pci.h                |  1 +
+ 8 files changed, 100 insertions(+), 18 deletions(-)
+
+-- 
+2.43.0
+
 
