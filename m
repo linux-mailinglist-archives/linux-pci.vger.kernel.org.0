@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-38818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67154BF3ED9
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:37:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2401DBF3EEF
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 11607351B33
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:37:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A11D018C5AAC
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:38:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD9D2F3C38;
-	Mon, 20 Oct 2025 22:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415DD2F617D;
+	Mon, 20 Oct 2025 22:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH4kT+yg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exq2ePS/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F342F2916;
-	Mon, 20 Oct 2025 22:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D6E2F361E;
+	Mon, 20 Oct 2025 22:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760999757; cv=none; b=VL9GjYXvS8V8ZbjviaKsOtNlCx2ZdTbR7DrO3cIdnz9smgVR83O9t0teumjkRilHZlfkYqa1wBeMCw8yB5TPgZ5lUN5ec1nNClS/ATgtEmOrpBI2g5nj0MYheTmPhmxxvoCqnsVEsOUjjV1i3JmcetE9EGyIBk/Aot+UAofzF9U=
+	t=1760999763; cv=none; b=ogv1tjkZi/vruh0G0lhUu99nPa4hAIqo5sf+IEWu64885hSL2dvv9sOLdaHSiSl3UvPIdltC+InhYlbu+0hV5cy/4BMbsst1dR/mpHShk0Otw3iPtcnehkP0Fy6AaKcloT4SP4uClPqQ4miSqXPIy4/4LbCi05+3PDFIaOtlxpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760999757; c=relaxed/simple;
-	bh=mpG5xoWCQZD3UulIuc3X/ziKsLxEWBQwq/RQZw4SiIE=;
+	s=arc-20240116; t=1760999763; c=relaxed/simple;
+	bh=sO3O0omt7VKS/7RVAA++jwgQ7zwKtYLTJkPtXBm8Lbs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aexMMYnybXlSfBiSkOY6FhhuZam1ZtlQ/Vpa6ybPcppeeQ30ywzF1lVItwep+8UO/E+7TflskIg5Fi8FwOOkgKviEuau9URnWu9Gu2Eff+TzkjZtNE8X/F5ziPNpWaEE4UPQ/Y1X5KWTn5PiPAODgjKvU+SAKAmSNMI8RoHOTMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH4kT+yg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE3F2C113D0;
-	Mon, 20 Oct 2025 22:35:52 +0000 (UTC)
+	 MIME-Version; b=ZxMxTOxfTe8m5dkGWx76+juub2Qkl6Oh2ULzgN0R8ZA3fQgGQglC5+yyooXYM/2t8+frnuBNeFeEZ0DR57lXaahtBsG/d5dsBftfRFS2YJYlOOAXEgRXH4C/hEdGT5hpCwVAfqqFaPGLR6B042nf2zCbaj0CL5vax3rnBHHHZD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exq2ePS/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F642C116C6;
+	Mon, 20 Oct 2025 22:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760999757;
-	bh=mpG5xoWCQZD3UulIuc3X/ziKsLxEWBQwq/RQZw4SiIE=;
+	s=k20201202; t=1760999761;
+	bh=sO3O0omt7VKS/7RVAA++jwgQ7zwKtYLTJkPtXBm8Lbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RH4kT+ygl25+07mFqPnKK3XVjzsVFZRyx+BdGJP4tUONSuPNLCK47lrRINNa5Cp/7
-	 cM83JwuT9FNn4uqrM8pEh8HB6tf58FDgBk7j/WtgSaF610YK8sBZI5EOQHmDHqTnPD
-	 FsbgMaEH8fwW3spCgNb8TIKWQ6f6Y3Qj3vG0QWBYgoXzEawN6fHRVlgt1MPipszhlI
-	 PoEQhV1Xe4r7Vl4bVu1kqE7I/3ScRLeIAWQosvojPIQzTwWxAeRu9mn7qlPcmVuvpv
-	 xYG3UPZL92ChOegkNPObPXdnBw2/HZfPn3IAEKU11TtDL2Up5xh40mvQGnxTF9lpnl
-	 zvUVDilPLLhjw==
+	b=exq2ePS/jWSVyd7oknEY4BI0hbbn37Chp2L+H97DLqoTCODI3ntzjAzEm/Rzna506
+	 xlsUlWQbvwc5QrWqiK49rAHUhCw40MhOCN1sskk6IfpKttLwFnkv0f1yJgZCGdkYuu
+	 INIFSsFUUi2BA22AubbIn+MesEGto2qQyem/l7UPCeQNOdIoH+PJ+vK8dQXY0uVb6j
+	 MBuOQN2VW47uhO0rOtKk7FWjR8Wz/FNb+nFp32rHgtDU125nOMeffz/6XfeNT/s46k
+	 kvcSvNXAgdcFKEf9nyqbBn6h+7xPVvfOPqR5Da2a0+a4356y1lZjReo4lhaj2ar7Jd
+	 YiP7K/hn1MHdw==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -64,9 +64,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 5/8] rust: auxiliary: move parent() to impl Device
-Date: Tue, 21 Oct 2025 00:34:27 +0200
-Message-ID: <20251020223516.241050-6-dakr@kernel.org>
+Subject: [PATCH 6/8] rust: auxiliary: implement parent() for Device<Bound>
+Date: Tue, 21 Oct 2025 00:34:28 +0200
+Message-ID: <20251020223516.241050-7-dakr@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251020223516.241050-1-dakr@kernel.org>
 References: <20251020223516.241050-1-dakr@kernel.org>
@@ -78,51 +78,36 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the parent method is implemented for any Device<Ctx>, i.e.
-any device context and returns a &device::Device<Normal>.
-
-However, a subsequent patch will introduce
-
-	impl Device<Bound> {
-	    pub fn parent() -> device::Device<Bound> { ... }
-	}
-
-which takes advantage of the fact that if the auxiliary device is bound
-the parent is guaranteed to be bound as well.
-
-I.e. the behavior we want is that all device contexts that dereference
-to Bound, will use the implementation above, whereas the old
-implementation should only be implemented for Device<Normal>.
-
-Hence, move the current implementation.
+Take advantage of the fact that if the auxiliary device is bound the
+parent is guaranteed to be bound as well and implement a separate
+parent() method for auxiliary::Device<Bound>.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/auxiliary.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rust/kernel/auxiliary.rs | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index 8c0a2472c26a..497601f7473b 100644
+index 497601f7473b..cc67fa5ddde3 100644
 --- a/rust/kernel/auxiliary.rs
 +++ b/rust/kernel/auxiliary.rs
-@@ -215,15 +215,15 @@ pub fn id(&self) -> u32 {
-         // `struct auxiliary_device`.
-         unsafe { (*self.as_raw()).id }
+@@ -217,6 +217,16 @@ pub fn id(&self) -> u32 {
      }
-+}
+ }
  
-+impl Device {
++impl Device<device::Bound> {
++    /// Returns a bound reference to the parent [`device::Device`].
++    pub fn parent(&self) -> &device::Device<device::Bound> {
++        let parent = (**self).parent();
++
++        // SAFETY: A bound auxiliary device always has a bound parent device.
++        unsafe { parent.as_bound() }
++    }
++}
++
+ impl Device {
      /// Returns a reference to the parent [`device::Device`].
      pub fn parent(&self) -> &device::Device {
-         // SAFETY: A `struct auxiliary_device` always has a parent.
-         unsafe { self.as_ref().parent().unwrap_unchecked() }
-     }
--}
- 
--impl Device {
-     extern "C" fn release(dev: *mut bindings::device) {
-         // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
-         // embedded in `struct auxiliary_device`.
 -- 
 2.51.0
 
