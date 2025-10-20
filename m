@@ -1,73 +1,77 @@
-Return-Path: <linux-pci+bounces-38741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10485BF122B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:23:32 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88100BF1281
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:27:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A101423843
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:19:25 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3455334BBB8
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:27:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492613164B1;
-	Mon, 20 Oct 2025 12:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12E0311587;
+	Mon, 20 Oct 2025 12:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KQhiungt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3009A3128AB;
-	Mon, 20 Oct 2025 12:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDF22F549E;
+	Mon, 20 Oct 2025 12:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760962703; cv=none; b=tzG4zTt14ppgQCessZK/uQYCH00hfDfILU2qUSXshyN7xTmL8al5wqDlAKVmxg3O7Y2oq8bPW0ETkqhMkgoYle/AGWubtT77UFIub/aw2N6qvlvoFsZjnxs50e6juPySSuKhRDj39pOMd+dRWYqc19hKvH7DZwkeGUrgm2jl9sw=
+	t=1760963237; cv=none; b=e2v19sLf0CvcZBlyp3WGLMvZluvk1hqpfhO29w6LNbsulC1kbsoXKSgkESo33uDY3z50PSnWCRmEShImgDMfIafV2pZYBMfYjE0nDY2RoHpuRCEKU6ZBnv9HLe0W7q68e38zAdVxctODL7eUcusRcluOsn3LEE/BLHy9iVyoi8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760962703; c=relaxed/simple;
-	bh=80FbDkBe1shvB1vnoWDwQhn8pRsa4OW0LHoxQpVfERE=;
+	s=arc-20240116; t=1760963237; c=relaxed/simple;
+	bh=FWqTuU31olvHn7Eaizpk8jtM+MU3rAxvnzWUJUzSqAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYBE2vrklGToIXhcTHGqreRkJ+kEpEhLNp8C4I9brv8/3oA1A5W/8JhFSu6nPChDlGxJhJsIVLuGRI/TfgGMWyUlhG5YSFbIYjws2MgEzf39uvz45m6fpkK8IkxFzj1yt+ZQ8u63POFkyUEotQyZRaCRxMbgzkTI4fxARbVroTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1vAopx-000000003X8-401e;
-	Mon, 20 Oct 2025 12:18:06 +0000
-Date: Mon, 20 Oct 2025 13:17:57 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Sjoerd Simons <sjoerd@collabora.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=FcbasST5a9TcTg4zWz0dqOhXY2NWoOqso+zeIA7wta9RCSy/8+gRntvQ/lEMjSI+2BQahxSt5vCUQ4XOU6JrpS0sRQ9ol2wS0sJWpPR2+DWmH/wgmXAM5PpE+37pyjr0mrtlUyJBFAKXpgvtbWk03HMMXzSjwcwEV7FLgfkzsP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KQhiungt; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jdaQM4uR5JLsKGA0oS0VASYRTZKdaGisbnRnH43EfLY=; b=KQhiungt0DOFTC/2vEdmUu5RdM
+	IjizyZW3KhQexecpWhn1JKycVRVYWQTJ9G7l/7owVKfDlpqNGVtDnwK8xwsjX6I64YK5ejanAY0FB
+	zzX4HHOKjNYa4wCLEeTShJPyzXTrVdkNr6T+/TruAVmGzKfuVYgSNuwpcWQwRtB1xfAiScls8jaTF
+	CtGh0RsnHpRzgHMaS7buG481FDfyI7wa7CD/qzHH4+SgPejuNG/LF4EmwQHr8caZKTi5KEcUFoY9W
+	z+5GpLZZYb6wF0dThq4Fmcc6GulKZn6HurCZW1AoO7vNphT4pMFJzXHY8iCTyrAiXmSBWSKpPvYGt
+	H76pYSOw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vAoyc-0000000DPQg-3mdN;
+	Mon, 20 Oct 2025 12:27:02 +0000
+Date: Mon, 20 Oct 2025 05:27:02 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
-	kernel@collabora.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
-	Bryan Hinton <bryan@bryanhinton.com>
-Subject: Re: [PATCH 10/15] arm64: dts: mediatek: mt7981b: Add Ethernet and
- WiFi offload support
-Message-ID: <aPYodR5N89vRUyQp@makrotopia.org>
-References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
- <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
- <aPEhiVdgkVLvF9Et@makrotopia.org>
- <8a637fc2-7768-4816-bb4f-3af2e32908e4@collabora.com>
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/9] PCI/P2PDMA: Separate the mmap() support from the
+ core logic
+Message-ID: <aPYqliGwJTcZznSX@infradead.org>
+References: <cover.1760368250.git.leon@kernel.org>
+ <1044f7aa09836d63de964d4eb6e646b3071c1fdb.1760368250.git.leon@kernel.org>
+ <aPHibioUFZV8Wnd1@infradead.org>
+ <20251017115320.GF3901471@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,60 +80,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8a637fc2-7768-4816-bb4f-3af2e32908e4@collabora.com>
+In-Reply-To: <20251017115320.GF3901471@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Oct 20, 2025 at 12:27:53PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 16/10/25 18:47, Daniel Golle ha scritto:
-> > On Thu, Oct 16, 2025 at 12:08:46PM +0200, Sjoerd Simons wrote:
-> > > Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
-> > > including:
-> > > - Ethernet MAC controller with dual GMAC support
-> > > - Wireless Ethernet Dispatch (WED)
-> > > - SGMII PHY controllers for high-speed Ethernet interfaces
-> > > - Reserved memory regions for WiFi offload processor
-> > > 
-> > > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
-> > > ---
-> > >   arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 ++++++++++++++++++++++++++++++
-> > >   1 file changed, 133 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> > > index 13950fe6e8766..c85fa0ddf2da8 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> 
-> ..snip..
-> 
-> > > +
-> > > +			mdio_bus: mdio-bus {
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <0>;
-> > > +
-> > > +				int_gbe_phy: ethernet-phy@0 {
-> > > +					compatible = "ethernet-phy-ieee802.3-c22";
-> > > +					reg = <0>;
-> > > +					phy-mode = "gmii";
-> > > +					phy-is-integrated;
-> > > +					nvmem-cells = <&phy_calibration>;
-> > > +					nvmem-cell-names = "phy-cal-data";
+On Fri, Oct 17, 2025 at 08:53:20AM -0300, Jason Gunthorpe wrote:
+> On Thu, Oct 16, 2025 at 11:30:06PM -0700, Christoph Hellwig wrote:
+> > On Mon, Oct 13, 2025 at 06:26:03PM +0300, Leon Romanovsky wrote:
+> > > The DMA API now has a new flow, and has gained phys_addr_t support, so
+> > > it no longer needs struct pages to perform P2P mapping.
 > > 
-> > Please also define the two LEDs here with their corresponding (only)
-> > pinctrl options for each of them, with 'status = "disabled";'. This
-> > makes it easier for boards to make use of the Ethernet PHY leds by just
-> > referencing the LED and setting the status to 'okay'.
-> > 
+> > That's news to me.  All the pci_p2pdma_map_state machinery is still
+> > based on pgmaps and thus pages.
 > 
-> Sorry Daniel, definitely no. The LEDs really are board specific.
+> We had this discussion already three months ago:
 > 
-> Try to convince me otherwise, but for this one I really doubt that you can.
+> https://lore.kernel.org/all/20250729131502.GJ36037@nvidia.com/
+> 
+> These couple patches make the core pci_p2pdma_map_state machinery work
+> on struct p2pdma_provider, and pgmap is just one way to get a
+> p2pdma_provider *
+> 
+> The struct page paths through pgmap go page->pgmap->mem to get
+> p2pdma_provider.
+> 
+> The non-struct page paths just have a p2pdma_provider * without a
+> pgmap. In this series VFIO uses
+> 
+> +	*provider = pcim_p2pdma_provider(pdev, bar);
+> 
+> To get the provider for a specific BAR.
 
-You are right, the LEDs themselves are board-specific and may not even
-be present.
+And what protects that life time?  I've not seen anyone actually
+building the proper lifetime management.  And if someone did the patches
+need to clearly point to that.
 
-However, the LED controller is always present because it is part of the
-PHY which is built-into the SoC. And the pinctrl property which I'd like
-to see described on SoC-level is a property of the LED controller rather
-than the LED itself. Sadly the device tree node doesn't make the
-distinction between LED and LED controller, so I understand you your
-argument as well.
+> I think I've answered this three times now - for DMABUF the DMABUF
+> invalidation scheme is used to control the lifetime and no DMA mapping
+> outlives the provider, and the provider doesn't outlive the driver.
+
+How?
+
+> Obviously you cannot use the new p2provider mechanism without some
+> kind of protection against use after hot unplug, but it doesn't have
+> to be struct page based.
+
+And how does this interact with everyone else expecting pgmap based
+lifetime management.
+
 
