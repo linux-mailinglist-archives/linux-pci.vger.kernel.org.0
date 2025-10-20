@@ -1,133 +1,182 @@
-Return-Path: <linux-pci+bounces-38744-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38745-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DDBBF1356
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:33:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E288BF135F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 14:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B35FA3E5F52
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:28:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6ECB13B063F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 12:28:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2E930F529;
-	Mon, 20 Oct 2025 12:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2073054FB;
+	Mon, 20 Oct 2025 12:28:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137242EC55D;
-	Mon, 20 Oct 2025 12:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3CB1917ED;
+	Mon, 20 Oct 2025 12:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760963301; cv=none; b=f4+Bw9EuDcpGYS5QxHunMaZTdpu9ysF6POAKv3L78ECLWMKmjvHCvg8Euo/81wOY2HHSMM2CNWQLmL1g92A9Dbk2nA0KlF8gT8sc7YDnWQBicWFgj+IOcgeECKivG2JsJ4XuCAiNv8LwGrT/N7bv5g4PNN9deh/7LKIS6u600Ug=
+	t=1760963321; cv=none; b=bjkKbNTIPuofl3hx/HKwWJavig7EzRbhB9Inye7ErrcbKDNlqmdhgIxfcQPde5loLPUASu4oUxUC3WrKfAdQqdbAlDQvzuNu55uBwuZdfN77Hii0Ap3Gv/BoKsJ5ktT2R/1Z7od/Fe8KKJHC20oDvuumsKUJzaX7cEUK17Lq7ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760963301; c=relaxed/simple;
-	bh=a2Bw7tcfrdZdUhoJuqfjgYw3asav4XDAi4BcHpQfOnM=;
+	s=arc-20240116; t=1760963321; c=relaxed/simple;
+	bh=DofzcR0NQwkRhmZTsBxnrzKL84BAOs+RTSxhxO2pjsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZEMBtnPYFoxNfIwTZez6p+DcmWSbnqA62y4gTJAmTDDzXk7JbUw0RAWt77G6vBSSPOx2aAkuZ3IuqoF/g12gjFGy2YdMQ2nXe7UYcyl895tozOvT/XL6nBFHrDTgGQIfJN9gJL+N2k195YS/nMsW6EmuOIB/oUE2MkxPE3tH8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048CAC4CEF9;
-	Mon, 20 Oct 2025 12:28:09 +0000 (UTC)
-Date: Mon, 20 Oct 2025 13:28:07 +0100
-From: Mark Brown <broonie@debian.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Tamir Duberstein <tamird@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=okzCtyWAnQgABsJ+DB0eiBxOGPcGmTq7MzvyR+CjHIxYqkb7bEaZdEptGoASMCk8RHtj8biyIKEi5RGgoMQzzvB9PaCTFDzInD1F5ZE64Zu727Sotd9Z998zXQZs1+6KfFXNzjbySUFc6Nmvo0m+X5wHJZDDRaqtCWfy8TL/3ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1vAozt-000000003am-1Wtt;
+	Mon, 20 Oct 2025 12:28:21 +0000
+Date: Mon, 20 Oct 2025 13:28:17 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Sjoerd Simons <sjoerd@collabora.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
-	llvm@lists.linux.dev, Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [RESEND PATCH v18 13/16] rust: regulator: use `CStr::as_char_ptr`
-Message-ID: <3c31c76c-0df5-4630-b18e-c6eab419a8a6@sirena.org.uk>
-References: <20251018-cstr-core-v18-0-9378a54385f8@gmail.com>
- <20251018-cstr-core-v18-13-9378a54385f8@gmail.com>
- <CANiq72mpmO2fyfHmkipYZmirRg-x90Hi3Ly+2mriuGX96bOuew@mail.gmail.com>
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+	Bryan Hinton <bryan@bryanhinton.com>
+Subject: Re: [PATCH 02/15] arm64: dts: mediatek: mt7981b-openwrt-one:
+ Configure UART0 pinmux
+Message-ID: <aPYq4cnaAHu5ags5@makrotopia.org>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+ <20251016-openwrt-one-network-v1-2-de259719b6f2@collabora.com>
+ <aPDnT4tuSzNDzyAE@makrotopia.org>
+ <5f430ff9-d701-426a-bf93-5290e6912eb4@collabora.com>
+ <aPEfUBl6fMe6QYdY@makrotopia.org>
+ <82594ce7-f093-4753-b808-cd234845aed8@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0uN06CPCQnMKQjYF"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANiq72mpmO2fyfHmkipYZmirRg-x90Hi3Ly+2mriuGX96bOuew@mail.gmail.com>
-X-Cookie: I doubt, therefore I might be.
+In-Reply-To: <82594ce7-f093-4753-b808-cd234845aed8@collabora.com>
 
+On Mon, Oct 20, 2025 at 12:23:14PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 16/10/25 18:37, Daniel Golle ha scritto:
+> > On Thu, Oct 16, 2025 at 04:29:14PM +0200, AngeloGioacchino Del Regno wrote:
+> > > Il 16/10/25 14:38, Daniel Golle ha scritto:
+> > > > On Thu, Oct 16, 2025 at 12:08:38PM +0200, Sjoerd Simons wrote:
+> > > > > Add explicit pinctrl configuration for UART0 on the OpenWrt One board,
+> > > > > 
+> > > > > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> > > > > ---
+> > > > >    arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts | 11 +++++++++++
+> > > > >    1 file changed, 11 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > > > index 968b91f55bb27..f836059d7f475 100644
+> > > > > --- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > > > +++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+> > > > > @@ -22,6 +22,17 @@ memory@40000000 {
+> > > > >    	};
+> > > > >    };
+> > > > > +&pio {
+> > > > > +	uart0_pins: uart0-pins {
+> > > > > +		mux {
+> > > > > +			function = "uart";
+> > > > > +			groups = "uart0";
+> > > > > +		};
+> > > > > +	};
+> > > > > +};
+> > > > > +
+> > > > >    &uart0 {
+> > > > > +	pinctrl-names = "default";
+> > > > > +	pinctrl-0 = <&uart0_pins>;
+> > > > >    	status = "okay";
+> > > > >    };
+> > > > 
+> > > > As there is only a single possible pinctrl configuration for uart0,
+> > > > both the pinmux definition as well as the pinctrl properties should go
+> > > > into mt7981b.dtsi rather than in the board's dts.
+> > > 
+> > > If there's really one single possible pin configuration for the UART0 pins,
+> > > as in, those pins *do not* have a GPIO mode, then yes I agree.
+> > > 
+> > > If those pins can be as well configured as GPIOs, this goes to board DTS.
+> > 
+> > I respectfully disagree and will explain below.
+> > 
+> 
+> Thanks a lot for taking the time to write all this - explains everything,
+> and even too much :) :)
+> 
+> Though, there's something funny here! The following snippet of "main" text
+> does explain stuff that is interesting, but that I (not other people, so
+> thanks again for saying all this) know already, but.....
+> 
+> > All pinmux pins on the MediaTek platform also allow being configured as
+> > GPIOs. However, if you configure those as GPIOs the consequence is that
+> > you cannot use UART0 any more at all. So using UART0 at all always
+> > implies using exactly those pins, there is no alternative to that.
+> > 
+> > Hence every board with every possible uses of pins 32 and 33 (there is
+> > only RX and TX for UART0, RTS/CTS flow-control is not possible) can be
+> > represented without needing to configure the pinctrl for uart0 on the
+> > board level. There isn't going to be any variation on the board-level
+> > when it comes to uart0. Either it is enabled (status = "okay";), and
+> > that will always imply using the 'uart0' group in mode 'uart', or, in
+> > case any of the two pins of uart0 is used for something else that means
+> > uart0 cannot be enabled. Simple as that.
+> > 
+> > Hence there is no need to duplicate that pinctrl settings on each and
+> > every board, as controlling the 'status' property on the board-level
+> > already gives 100% freedom.
+> > 
+> 
+> ...all of this is not justifying your point.
 
---0uN06CPCQnMKQjYF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So what is the rule then? I understand the logic of describing the
+pins eg. for uart1 only on board-level as there are actual alternatives
+regarding the pins to be used, and if also including RTS/CTS pins.
+Hence, for uart1, there are several possible pingroups which can be
+used. What would be the argument to keep a pinctrl description for
+which the SoC doesn't offer any alternatives to be on the board-level?
+There is nothing to be decided by the board, literally 0 freedom.
 
-On Sun, Oct 19, 2025 at 11:25:16PM +0200, Miguel Ojeda wrote:
-> On Sat, Oct 18, 2025 at 9:17=E2=80=AFPM Tamir Duberstein <tamird@kernel.o=
-rg> wrote:
-> > From: Tamir Duberstein <tamird@gmail.com>
+> 
+> > (Sidenote: As even the BootROM already uses those two pins as UART for
+> > debug output,
+> 
+> Funny thing is, your side note is what *fully* justifies your disagreement
+> and it's also what triggers me to say that you're right, lol :)
+> 
+> Okay then, I am fine with this commit now and I can renew my
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-> > Replace the use of `as_ptr` which works through `<CStr as
-> > Deref<Target=3D&[u8]>::deref()` in preparation for replacing
-> > `kernel::str::CStr` with `core::ffi::CStr` as the latter does not
-> > implement `Deref<Target=3D&[u8]>`.
-
-> Liam, Mark: I will apply this since it would be nice to try to get the
-> flag day patch in this series finally done -- please shout if you have
-> a problem with this.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---0uN06CPCQnMKQjYF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj2KtYACgkQJNaLcl1U
-h9D41Qf+Ltkk2+JN4tBSzvUarUp6eE2D4QOWAyqVy87q+zcocSKDaFrrEgX0C0yp
-52vEvZtJflTt7XIxB9TkWesjbQO7dzdeFWW+18b2BU6A1nXcDMEBn66QRWbEOXru
-XOwNAbeIQDR63w0Wec+AXgNFt5vg2wly5e1Ht7UGAufGvqdiKfxE06yCToKWzh3n
-475HYOCkvV3CIc1QgSFNsiX1DjCKwiB5bSH3kktTU9Z7xLUYTaizUeOU/b2aiaYJ
-HMcw8OJrCDaG/UqqK+PX3VACQEAWrwmpljXr+OpqgztP9tRIQ7zTNMMt6HSAdXRm
-GV0zx2kVMXs4pom/lsT8Nf+N2E6prA==
-=Yihi
------END PGP SIGNATURE-----
-
---0uN06CPCQnMKQjYF--
+Note that the patch you have just added your Reviewed-by:-tag to does
+*not* add the uart0 pinctrl on SoC-level but board-level, so different
+from what I argued for above. Did you mean to add Reviewed-by: for that
+(which contraticts what you just wrote) or rather to the to-be-submitted
+v2 of this series which includes the change to move the uart0 pinctrl
+to mt7981b.dtsi?
 
