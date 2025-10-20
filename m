@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-38820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 631F8BF3EEB
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:38:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F38DEBF3F00
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:38:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 152D3540590
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:37:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A4663B1E00
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39F92F3626;
-	Mon, 20 Oct 2025 22:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB78C333745;
+	Mon, 20 Oct 2025 22:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsVF+N2V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssaEuPZ4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9462E9EC9;
-	Mon, 20 Oct 2025 22:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8057A33343E;
+	Mon, 20 Oct 2025 22:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760999767; cv=none; b=M6KzEYHp+uLkDZs25Ybbtz0LeWTBOTsPlC3gK7Lxwqbfe4AJL4wx9WHBYi++VfBDFnwvxww7H750GQYMMMPI1zFXtCRMajUfKh7y3aNcPbfIEypwGp9nQLEjQ6HMfohfJY5YobXtHE7BbsnASV2X7sKm0XDX5c4mvM3/8k5QE8U=
+	t=1760999771; cv=none; b=YdglPUwMbYO7vEtOcBwOoRk6p57REzPkQKHFqzYEwsAewt9C31avsd1xwPyvavEcNisXcUa98i6kuddXn6N4rKL7NE9EjcOYhquJjG6bWvP6wCOKF4fdFozbuYhkU1Q0YN4UOBeiWP8uyekBJm/TfZF/7a0Rr3lJlyVJDNDesaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760999767; c=relaxed/simple;
-	bh=1IXPs04K4C82DSjxeOYDUizUYaX914ahcPYa0ZilGgQ=;
+	s=arc-20240116; t=1760999771; c=relaxed/simple;
+	bh=QxGK4UEFzt4WjxckGXtrR7+T4t6vEtOAH7gCnrjQeow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RWxV6pTPhtzArTqotkX1eYldks2JQhm+hfX+FzF4aRJiag7grS4bJXpAJx2aoecBOUSEJyedHIr1FIRSvDHd45OZp444hPNZtybWoJNexT6/xuPTPGTLu9GPVpsr04yt9FgcuZs2JeNydj27tv3+jW6Y3EUbBg5XMhvZjdUEhyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsVF+N2V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F08FC4CEFB;
-	Mon, 20 Oct 2025 22:36:01 +0000 (UTC)
+	 MIME-Version; b=jCV6iyXZGv7PbVtu2Lr8by2qOhs3M/h0v2BRuYw9Vx5LI1o08Ca/LeUqSxya1sSrvqx9mrM2PQ6wZVAhgL13GQ//fCtN62uZautxueO7NGRgPX3R0dxc46e1nndoAfSW+2djprLX1i8Y2vF+DdyjNCI4uhVLzl6q8l8qe2QMiBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssaEuPZ4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37F9C116C6;
+	Mon, 20 Oct 2025 22:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760999766;
-	bh=1IXPs04K4C82DSjxeOYDUizUYaX914ahcPYa0ZilGgQ=;
+	s=k20201202; t=1760999771;
+	bh=QxGK4UEFzt4WjxckGXtrR7+T4t6vEtOAH7gCnrjQeow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TsVF+N2Vm+qNT2bWdZ5cwFFxAJVXjDGQS61hLq2IFJrVInqCtTyK5Kxo4eZfzpM4J
-	 y8e99eqMymIDcT/pVVtrI9NL92+zNxYTl1R1R//0vdFyK7XOhIyvOIFTyhaAy+m1RC
-	 v2VfHa6a/hjjIo9o/8PO8eaw3X+bp5xBrS7CvubZ9/WHuZhLDLK/ROUaLvE6RAGvsH
-	 R1fry9vO+fr/b/tZqVsjRBQTvWJMbhr7lJm916+crRborQNgmFPtL+K9y8eyynSLW+
-	 1ZuGUFTyx6rmQFEoVg0a1iwFHtC7MM1OVkkhQ5YdLOOJCeNJeMOFeSfNj0UBbeu13c
-	 5GuuytC2Ud5Ag==
+	b=ssaEuPZ4oOxv9g2hn1GLCbgTX8Aqn2hwpeHezcOC9AUh2TBRpwazxGnNHdmh+YvmU
+	 9OoXJOGYA4mcfBscwNrNlusxEtEObzdVVBrcihS8axS1n6Dn9H1k13vYqGywxZOW0Z
+	 xEPkhY02w72g6LxbspznwJFnPKEzu2oLYTxHeLZImnPFvk6UnGWOMJjHGYqGdR9k5+
+	 wdRkKMWie6cA+EIxEo7Pw/A70Hcc+GygNAdhnritquR+6gef9GcVhsom7cY4YlQxip
+	 T1hM+Z0HFv/WS4I27zy2el1ibKMH55mpdlEgdnhZS/lvEeGrxvvf8AWM6Gxft0QT0g
+	 z9dbO5jewKVHA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -64,9 +64,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 7/8] samples: rust: auxiliary: misc cleanup of ParentDriver::connect()
-Date: Tue, 21 Oct 2025 00:34:29 +0200
-Message-ID: <20251020223516.241050-8-dakr@kernel.org>
+Subject: [PATCH 8/8] samples: rust: auxiliary: illustrate driver interaction
+Date: Tue, 21 Oct 2025 00:34:30 +0200
+Message-ID: <20251020223516.241050-9-dakr@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251020223516.241050-1-dakr@kernel.org>
 References: <20251020223516.241050-1-dakr@kernel.org>
@@ -78,41 +78,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In ParentDriver::connect() rename parent to dev, use it for the
-dev_info!() call, call pdev.vendor_() directly in the print statement
-and remove the unnecessary generic type of Result.
+Illustrate how a parent driver of an auxiliary driver can take advantage
+of the device context guarantees given by the auxiliary bus and
+subsequently safely derive its device private data.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- samples/rust/rust_driver_auxiliary.rs | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ samples/rust/rust_driver_auxiliary.rs | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index 95c552ee9489..a5d67d4d9e83 100644
+index a5d67d4d9e83..5761ea314f44 100644
 --- a/samples/rust/rust_driver_auxiliary.rs
 +++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -70,16 +70,15 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, E
+@@ -5,10 +5,17 @@
+ //! To make this driver probe, QEMU must be run with `-device pci-testdev`.
+ 
+ use kernel::{
+-    auxiliary, c_str, device::Core, devres::Devres, driver, error::Error, pci, prelude::*,
++    auxiliary, c_str,
++    device::{Bound, Core},
++    devres::Devres,
++    driver,
++    error::Error,
++    pci,
++    prelude::*,
+     InPlaceModule,
+ };
+ 
++use core::any::TypeId;
+ use pin_init::PinInit;
+ 
+ const MODULE_NAME: &CStr = <LocalModule as kernel::ModuleMetadata>::NAME;
+@@ -43,6 +50,7 @@ fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<S
+ 
+ #[pin_data]
+ struct ParentDriver {
++    private: TypeId,
+     #[pin]
+     _reg0: Devres<auxiliary::Registration>,
+     #[pin]
+@@ -63,6 +71,7 @@ impl pci::Driver for ParentDriver {
+ 
+     fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
+         try_pin_init!(Self {
++            private: TypeId::of::<Self>(),
+             _reg0 <- auxiliary::Registration::new(pdev.as_ref(), AUXILIARY_NAME, 0, MODULE_NAME),
+             _reg1 <- auxiliary::Registration::new(pdev.as_ref(), AUXILIARY_NAME, 1, MODULE_NAME),
+         })
+@@ -70,9 +79,10 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, E
  }
  
  impl ParentDriver {
--    fn connect(adev: &auxiliary::Device) -> Result<()> {
--        let parent = adev.parent();
--        let pdev: &pci::Device = parent.try_into()?;
-+    fn connect(adev: &auxiliary::Device) -> Result {
-+        let dev = adev.parent();
-+        let pdev: &pci::Device = dev.try_into()?;
+-    fn connect(adev: &auxiliary::Device) -> Result {
++    fn connect(adev: &auxiliary::Device<Bound>) -> Result {
+         let dev = adev.parent();
+-        let pdev: &pci::Device = dev.try_into()?;
++        let pdev: &pci::Device<Bound> = dev.try_into()?;
++        let drvdata = dev.drvdata::<Self>()?;
  
--        let vendor = pdev.vendor_id();
          dev_info!(
--            adev.as_ref(),
-+            dev,
-             "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
-             adev.id(),
--            vendor,
-+            pdev.vendor_id(),
+             dev,
+@@ -82,6 +92,12 @@ fn connect(adev: &auxiliary::Device) -> Result {
              pdev.device_id()
          );
  
++        dev_info!(
++            dev,
++            "We have access to the private data of {:?}.\n",
++            drvdata.private
++        );
++
+         Ok(())
+     }
+ }
 -- 
 2.51.0
 
