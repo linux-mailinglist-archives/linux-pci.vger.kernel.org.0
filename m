@@ -1,208 +1,162 @@
-Return-Path: <linux-pci+bounces-38810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AFEDBF3D27
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:07:42 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88612BF3DBD
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 00:13:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 167BA483C45
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:07:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D861D4F6411
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 22:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011742EBB8F;
-	Mon, 20 Oct 2025 22:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C4B42EF677;
+	Mon, 20 Oct 2025 22:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BfUtVR8y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLuBXQuV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3DF1C695;
-	Mon, 20 Oct 2025 22:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0453EA8D;
+	Mon, 20 Oct 2025 22:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760998056; cv=none; b=D7qhEVUO53332Mye0g1lGNr7s8OgjxPInVPqT/OJ2ydF7etikvTAXapNBUW0T6uQWCM5ObyLNrCZhTw4IZ4MoyqlVpBwXqKzJufSwatsaig6A988MEHChBMXpiFpyxhZ9DO0IFhz9XA5wGl6VrtsXitJkNDf4WP6i7A3xJwsFM8=
+	t=1760998347; cv=none; b=J1kFOwv3giABhd5+8QcWQ9GMjfqM+1S8kuImqhPVivvXweoOOMGQVst7cwJG7cFDblU4lBFrASxPsJ8+Nlk0hOFWXMpKipq0UQFJCWDsLz26Zt6k5b1PWu0AbmkP6Uk7ii041HxMvd95FYcVNPn0g3/A3lJmJOaeedORhgCfg1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760998056; c=relaxed/simple;
-	bh=H5Sx8VCAi4uDZTrCoyLCZeTCEAQROEY7HE/dz3M3F4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t4iwIbpGPW8hYgqIEnjdnCKIuc25MZvQLvFNGcBjkmMkexqg/DgFZTfhujg8AVitxAzkDRpZi9f6c0wPO/a57qoPxSyejKujn8V28O3x5HFEhMLG1r/J2Iv3ZPossg2MB97ai8rZEr0lIb0kepfIvIC5TiOVWCLet8BgSZduxf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BfUtVR8y; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59KFURnH026789;
-	Mon, 20 Oct 2025 22:07:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=r6sUFF
-	eWnIrjGTAl4MBZvysEDk1VUIyRSBaJopdfdgs=; b=BfUtVR8ycv5UpzMVxmIFKY
-	BQbYhmzulPF+80NwDj8AaBn3+GwL5zg9qclU8cux+dgEt0Fvf0BibbTSIyho9fAW
-	Fl1EKzJkdQrIrRg4CWn3XKchEK8PgfDsklxWb1BQ9+mt/fWVL3IWM+Yz6NuYg5Gm
-	7BGJWMPrkA5Mn5P9AU2YUqNZlCFmhbTAtDjL3fIrWaQBwaxjtsJYEbu5xehxEWP7
-	0oTzalfN5aLHlVGBmWnVpbYxmw5TosYgSVaywDfwD+xxaf9gS726itZgVlaraXRf
-	rB/O1XcPwdZBMG/MgfnKtfcWUPU8etFgKYG98vRkU9dmWyDG8iMV6PlNppGfpyNg
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v30vjnca-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Oct 2025 22:07:07 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59KLEsLT014779;
-	Mon, 20 Oct 2025 22:07:07 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 49vn7s01mx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Oct 2025 22:07:06 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59KM76CI31720118
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Oct 2025 22:07:06 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2391C58058;
-	Mon, 20 Oct 2025 22:07:06 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C617358059;
-	Mon, 20 Oct 2025 22:07:04 +0000 (GMT)
-Received: from [9.61.241.180] (unknown [9.61.241.180])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Oct 2025 22:07:04 +0000 (GMT)
-Message-ID: <25435d82-575d-495f-ae61-bd38570ff9ad@linux.ibm.com>
-Date: Mon, 20 Oct 2025 15:07:01 -0700
+	s=arc-20240116; t=1760998347; c=relaxed/simple;
+	bh=IsXcIouzgz4wUiJybXRjXsiqCJLbVl38YFCNfwbmYSM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ATvfFaHVyas2HPHMN7fmZj9T972t2m0cQgRLq85GMa1DNmEYW+uoJE5KioafknUO2HpAD84XG2fZjaLBdpfAV3UoC0aqcdd3Oy4GMH4BBewuSZQMYe39wnnm9z9O3kv+o5c6Qy2l7iLhWAzmRDFIFHlRHnj00POM6JhTMVAcLBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLuBXQuV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20B2C4CEFB;
+	Mon, 20 Oct 2025 22:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760998346;
+	bh=IsXcIouzgz4wUiJybXRjXsiqCJLbVl38YFCNfwbmYSM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OLuBXQuVqv4Q0CXR+aktQPwREcoe2KINO0W8J0kcZNxkVCZJcmxzyldbLpRxSu2lP
+	 d7OOp5Ip0LhslgUowkD75NEoCs2wNdw0D9BILt1gBcAf521rfa0c9THM1HQdGRMWwL
+	 sPnIxL7tEkG0Oe+c+YXxRpXukATfmUiuhgXwGTEH/JwCz1FSPmduHbAKAyLlQ7Iei4
+	 JMF8kvw+UqV59guyzNh1c5Wnk7Ye0Dvg2SlMhu8FDFlVhqrtJ5jywhp3KENAMd1b/P
+	 nLv7EuDpDsukTjCN5nZ4d/EDd5L2MSRq7PyyWN9kpKR+szTx5olR66ALO0PwvuHg/L
+	 LulWGiaKz6eqA==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	linux-rockchip@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
+Date: Mon, 20 Oct 2025 17:12:07 -0500
+Message-ID: <20251020221217.1164153-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] PCI/sysfs: Use runtime PM guard macro for
- auto-cleanup
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Zhang Qilong <zhangqilong3@huawei.com>,
-        Ulf Hansson
- <ulf.hansson@linaro.org>, Frank Li <Frank.Li@nxp.com>,
-        Dhruva Gole <d-gole@ti.com>, Niklas Schnelle <schnelle@linux.ibm.com>
-References: <6196611.lOV4Wx5bFT@rafael.j.wysocki>
- <2323750.iZASKD2KPV@rafael.j.wysocki>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <2323750.iZASKD2KPV@rafael.j.wysocki>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bhUE52pihM2-hnvxydHCN2Rc_tCGvwvn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX57jXW+8zLtMi
- 7PrDbm0hKnsV78siKRz9+/b07CC+/Xv6Fukkspad3M0w+zS9jBVqzyhEEKfw1JlL9VLwo5xxfRV
- PhNrDiJ83nlCgpx48MY68E+FEDFySquZ11A2HVF3wPvYSsYMP7x2T4p8nrfs01PDL9Oz5TcUQIf
- AIskfnB2Fc/rxHxgQnDWO5YjL8FJPY7vZgjn0GLzHUF6B3zrEZ907ED+d+seKyRbfl/i6I3R4fX
- cBzV2VW+0nsHowxYXd4j6yydd/hiXpx7tGw9r7rOF0z5vrUE7GRcCO0fWYRAKhImIcYhDD0dT/z
- 1yJ1WinElwCKtE68oabMU53yMAdQuiZi145sbiI9KOGx7TRxSiFG4dyobr3N2h+CFXLTn9vnZAh
- IVs5gu32bEn7PvAOz9uRSK1bA+mthA==
-X-Authority-Analysis: v=2.4 cv=MIJtWcZl c=1 sm=1 tr=0 ts=68f6b28b cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=bC-a23v3AAAA:8 a=QyXUC8HyAAAA:8 a=1XWaLZrsAAAA:8 a=hqneplKKMpFo2bd696AA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=FO4_E8m0qiDe52t0p3_H:22
- a=poXaRoVlC6wW9_mwW8W4:22 a=cPQSjfK2_nFv0Q5t_7PE:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22
- a=SsAZrZ5W_gNWK9tOzrEV:22
-X-Proofpoint-ORIG-GUID: bhUE52pihM2-hnvxydHCN2Rc_tCGvwvn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-20_06,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1011 impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-On 9/26/2025 9:24 AM, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Use the newly introduced pm_runtime_active_try guard to simplify
-> the code and add the proper error handling for PM runtime resume
-> errors.
->
-> Based on an earlier patch from Takashi Iwai <tiwai@suse.de> [1].
->
-> Link: https://patch.msgid.link/20250919163147.4743-3-tiwai@suse.de [1]
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->
-> v3 -> v4:
->     * Use ACQUIRE()/ACQUIRE_ERR() (Jonathan)
->     * Adjust subject and changelog
->     * Take patch ownership (it's all different now)
->     * Pick up Bjorn's ACK from v3 (Bjorn, please let me know if that's not OK)
->
-> v2 -> v3: No changes
->
-> v1 -> v2:
->     * Adjust the name of the class to handle the disabled runtime PM case
->       transparently (like the original code).
->
-> ---
->   drivers/pci/pci-sysfs.c |    5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1475,8 +1475,9 @@ static ssize_t reset_method_store(struct
->   		return count;
->   	}
->   
-> -	pm_runtime_get_sync(dev);
-> -	struct device *pmdev __free(pm_runtime_put) = dev;
-> +	ACQUIRE(pm_runtime_active_try, pm)(dev);
-> +	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-> +		return -ENXIO;
->   
->   	if (sysfs_streq(buf, "default")) {
->   		pci_init_reset_methods(pdev);
->
->
-Hi Rafael,
+f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
+platforms") enabled Clock Power Management and L1 Substates, but that
+caused regressions because these features depend on CLKREQ#, and not all
+devices and form factors support it.
 
-This patch breaks updating the 'reset_method' sysfs file on s390. If we 
-try to update the reset_method, we are hitting the ENXIO error. eg:
+Enable only ASPM L0s and L1, and only when both ends of the link advertise
+support for them.
 
-echo 'bus' > /sys/bus/pci/devices/0007\:00\:10.1/reset_method
--bash: echo: write error: No such device or address
+Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
+Reported-by: FUKAUMI Naoki <naoki@radxa.com>
+Link: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
+---
 
-I don't think s390 does anything different in this path, so this could 
-also impact other platforms? Changing this to something like this fixes it
+Mani, not sure what you think we should do here.  Here's a stab at it as a
+strawman and in case anybody can test it.
 
+Not sure about the message log message.  Maybe OK for testing, but might be
+overly verbose ultimately.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 9d6f74bd95f8..d7fc0dc81c30 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1517,8 +1517,8 @@ static ssize_t reset_method_store(struct device *dev,
-                 return count;
-         }
+---
+ drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
+ 1 file changed, 9 insertions(+), 25 deletions(-)
 
--       ACQUIRE(pm_runtime_active_try, pm)(dev);
--       if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+       ACQUIRE(pm_runtime_active, pm)(dev);
-+       if (ACQUIRE_ERR(pm_runtime_active, &pm))
-                 return -ENXIO;
-
-This changes the logic to what it was previously which used 
-pm_runtime_get_sync and pm_runtime_put. But I am not familiar with the 
-PM runtime code, so not sure what would be the right fix here.
-
-Thanks
-
-Farhan
-
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 7cc8281e7011..dbc74cc85bcb 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -243,8 +243,7 @@ struct pcie_link_state {
+ 	/* Clock PM state */
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+-	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+-					   override */
++	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+ 	u32 clkpm_disable:1;		/* Clock PM disabled */
+ };
+ 
+@@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ 	pcie_set_clkpm_nocheck(link, enable);
+ }
+ 
+-static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+-						   int enabled)
+-{
+-	struct pci_dev *pdev = link->downstream;
+-
+-	/* For devicetree platforms, enable ClockPM by default */
+-	if (of_have_populated_dt() && !enabled) {
+-		link->clkpm_default = 1;
+-		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
+-	}
+-}
+-
+ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+ 	int capable = 1, enabled = 1;
+@@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	pcie_clkpm_override_default_link_state(link, enabled);
+ 	link->clkpm_capable = capable;
+ 	link->clkpm_disable = blacklist ? 1 : 0;
+ }
+@@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+ 	struct pci_dev *pdev = link->downstream;
+ 	u32 override;
+ 
+-	/* For devicetree platforms, enable all ASPM states by default */
++	/* For devicetree platforms, enable L0s and L1 by default */
+ 	if (of_have_populated_dt()) {
+-		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
++		if (link->aspm_support & PCIE_LINK_STATE_L0S)
++			link->aspm_default |= PCIE_LINK_STATE_L0S;
++		if (link->aspm_support & PCIE_LINK_STATE_L1)
++			link->aspm_default |= PCIE_LINK_STATE_L1;
+ 		override = link->aspm_default & ~link->aspm_enabled;
+ 		if (override)
+-			pci_info(pdev, "ASPM: DT platform, enabling%s%s%s%s%s%s%s\n",
+-				 FLAG(override, L0S_UP, " L0s-up"),
+-				 FLAG(override, L0S_DW, " L0s-dw"),
+-				 FLAG(override, L1, " L1"),
+-				 FLAG(override, L1_1, " ASPM-L1.1"),
+-				 FLAG(override, L1_2, " ASPM-L1.2"),
+-				 FLAG(override, L1_1_PCIPM, " PCI-PM-L1.1"),
+-				 FLAG(override, L1_2_PCIPM, " PCI-PM-L1.2"));
++			pci_info(pdev, "ASPM: DT platform, enabling%s%s\n",
++				 FLAG(override, L0S, " L0s"),
++				 FLAG(override, L1, " L1"));
+ 	}
+ }
+ 
+-- 
+2.43.0
 
 
