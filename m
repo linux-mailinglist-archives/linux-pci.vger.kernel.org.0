@@ -1,216 +1,222 @@
-Return-Path: <linux-pci+bounces-38774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97D05BF25B4
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:17:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A91BBF25CF
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 18:20:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACE613BAF57
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:15:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 019A618A647E
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Oct 2025 16:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEACC28504F;
-	Mon, 20 Oct 2025 16:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D24283682;
+	Mon, 20 Oct 2025 16:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ejj7qNPH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DpW983TR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012015.outbound.protection.outlook.com [40.107.209.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6AC21B9DA;
-	Mon, 20 Oct 2025 16:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760976925; cv=fail; b=jeFKKNSrCxhxD30NMa/IVH9ufG578JSZexX9lOhAK3O/3zA57N/sJdHGsl9xaE1ZMvpN6MUfbWn+etHMnd1nJzWNbu5Huxcq5qMT32/CkbN+ui+OIwQSfJCgu7/Fa5GOq9HI7yc46l68WC2zsy7P3BK6enhFL91LOx8OwRT8w9w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760976925; c=relaxed/simple;
-	bh=QogIN3pZdo4/KV3St/aeT6llcpen/pJkpvrzfIMPqvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NusU2i/V7gIwVRorqqWlfUcvpj9Ef9wzXmnm/QPLo5JvbogE57BKVs0ESU5TwjdRky4FS6rEFu0P7wNtNHs5SxVER6j4sc7aSud5q8+oEV0RSs9GuduE6OUC6sYbK4PL8NXrsaEabqzsDziWUCvicbyV3uxlNcsmckxrOfgQ/20=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ejj7qNPH; arc=fail smtp.client-ip=40.107.209.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SAEHSMCczvkRZJV8nX+6Be9Y5k8NXHEiW+p7b/iVLnONxcqSix5S8Qw6M8oe2Z4nHTYhO6GG+p51dMyb2/gqlAeelkvwD9sfcEdTDChLmiT0MU1tTwrUV8XAVjvcFDcikJ73RkWVtlchp2840JYs0Yuzh9uLzThRM5DtsQku52c3OEX7Inc/zvbJDJz/3JNBcrFMFBUfsarbQTVC4A/5QQ/DOWSFifnW69TI/hGWMqXmTDC+Z4/eOR3HasQmMQHu1Vkm3oAS4nJ6qFIYSWIAGe1UjDmLRfTrJOwFmc+/qu/3/9El+j+tPM23VHdhLZTHKG0LMg6oMTFtlc45oeRVGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=41BckvWFoxtxO3VDpMnCNqa2ITtixMnH9ptSvTm8t7E=;
- b=jJe8rog/cAN6fvJYVr33+fJBf94ysvg2bKsK5rcylyWYvzv7X74sOwzYp9sKLHK6RoauR13iS7ihHm0o1mTJX1glvMfDf1NNW8liA2XwtA4lWe4P4JDtQ3umaDp0STmT59BA6n01ZRJJYomp2iQdt+FxeBup9DSsyLvzAPv0DwvbM/g8QCptFYZTVyVdmBwCDATdsiiuv7KAJRWVKKwBmf0Zpuz2WJITgN/lP7kpI204S7lQFDJ46o59iizt4DIhRBdph6/nfGz6T3ijyXX47lFCPs8gNnLIZUIFLrLIAam0zvPhCQFn6LznVNorcdla5XsRG4JAo/g0R3dI2nlFBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=41BckvWFoxtxO3VDpMnCNqa2ITtixMnH9ptSvTm8t7E=;
- b=ejj7qNPHzIFwhnmBmbnaXhMyHoLXBIvph4BHmiZgwARsZqDDDFTRUbaRSHHGNk+gUzop/xOziHPGhsnoc9beN6yGQgdvyt90QMG01/iBAVPmlYQjH6a7E/CAoXbhOUruUuRf7AjfEphtypLp2ljm81tOA5vVTnpbLtSQlKaPiWCFHqC8vSjI5NfCG5BlBpdOarytKsNWXoFGJ4i7MshOhJ+m4xszZP7N3a3riPGq801qK3+x5+m66KnDTBWLouMdUydeOdWtGPseQWb2Qwm8/01Zb9ZzqcH4+WIuLrJz+Z3xU1hpfMjTCtw4QV82OhW+kCXV0XIN7tKiH8b0kvLM9Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
- by IA1PR12MB6116.namprd12.prod.outlook.com (2603:10b6:208:3e8::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.15; Mon, 20 Oct
- 2025 16:15:18 +0000
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9228.015; Mon, 20 Oct 2025
- 16:15:18 +0000
-Date: Mon, 20 Oct 2025 13:15:16 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20251020161516.GU316284@nvidia.com>
-References: <cover.1760368250.git.leon@kernel.org>
- <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
- <20251017130249.GA309181@nvidia.com>
- <20251017161358.GC6199@unreal>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251017161358.GC6199@unreal>
-X-ClientProxiedBy: SN1PR12CA0102.namprd12.prod.outlook.com
- (2603:10b6:802:21::37) To MN2PR12MB3613.namprd12.prod.outlook.com
- (2603:10b6:208:c1::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C931A00CE;
+	Mon, 20 Oct 2025 16:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760977220; cv=none; b=LMwYP5YLBalU+8+V3MTpG3srHctgfjXxJ/lBkfhPOWsExSWUCo+pghZApkoWPDqis+DnHdQ4346qp6JPpvLQwyaQklaoBYguu27hrZkoTIuDEGwtjTJn64OI+gG5btR5Cp+094YE7mupcbbF9+iY9gaEOac69nEMEgocZv/D8dw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760977220; c=relaxed/simple;
+	bh=KyW2o+Tj9sebaDNyh1EThKqKgscZxyrq2W+eHFrQOgk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uBkaWHTwIbRuLSymQK/n4Er21mwIsRlYLP02Qv8LXJoDG1OL2Hgu5ry8638FwCyr28X5uJRBcVO5dS+iPDS5Gcfy4NPL9uVNo6Kkfs8vcQAomZm6WMnGHPrD3n+mPOgjjhuCGRtFMgkqjs/8UaJpHJrqUVri08StufQDAa3p1h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DpW983TR; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760977219; x=1792513219;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=KyW2o+Tj9sebaDNyh1EThKqKgscZxyrq2W+eHFrQOgk=;
+  b=DpW983TR6ueUVqwIFxSQqoCpPhLUDhmXCgn3XhgX5o3GlIp0IXD9egGH
+   VvTEG1Ya42L1ho4+d6KlxDvGHvE8h2q7fCQtwvbTA3omyy97CLaEaPBCR
+   zw4hWGmqnDzNleUgfl2JVtRRXRe4BUef5b69wepBTS5RtveDVFtEIwiuJ
+   bd+GsP1ULuNIEIpolnkkmdUEvndpD9w4Npr3beNWvd1Zj4Jssyyfwgsxy
+   4/gDe8L9aQ0gbHykXhBO1+7K0U14FKGKSpfeqwTJfKxwvRbLAMeEQGUlx
+   OVi/Ilfpfx2Wt6Dhz50izYnJjrJNJ/0sAhhzFa6+EHULgrBtQcC0O9jkN
+   Q==;
+X-CSE-ConnectionGUID: 778CSw9zQkmuuofMCmTajQ==
+X-CSE-MsgGUID: FAhrmyhmQ7eoUO2gWIpsbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63134988"
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="63134988"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:20:19 -0700
+X-CSE-ConnectionGUID: Jjc3xpeZQduSfzcVUyMMzA==
+X-CSE-MsgGUID: pJOdJr1JRNq9XsLDFww+Fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="213982188"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.76])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 09:20:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 20 Oct 2025 19:20:10 +0300 (EEST)
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    Kai-Heng Feng <kaihengf@nvidia.com>, Rob Herring <robh@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+    Linux-Renesas <linux-renesas-soc@vger.kernel.or>
+Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows
+ safer
+In-Reply-To: <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com>
+Message-ID: <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com>
+References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com> <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|IA1PR12MB6116:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22484875-c16f-4d04-0dc6-08de0ff3dc7e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WCibGPCoML6CUG4RAp6YCyNBe9v0/WqeKC+0MgzqAUyzcbL4aM0fw+IxiOUt?=
- =?us-ascii?Q?LytaloekNIqNtc7Pmxuyjb5uoliN9J8G8R2rWGyvaLDWOocyttOAt0xvN1NM?=
- =?us-ascii?Q?sRRb0Q5hNK1l9zUSjtEP9C0rf9t5VnThYDosQJ9Vxyfb2xwLeEcqkkA6MYuX?=
- =?us-ascii?Q?gLoiWwOUl0SIWj2AU0Z2DabiPkKp/7L0fxtCnBTGWvmd0O7rTSxqxeQyMhoD?=
- =?us-ascii?Q?1naVvUfqrZxI3KqN2TDtb0qSMVA8QXwt0pLRtmqbWJ+V1oUYrqaZREon3qLS?=
- =?us-ascii?Q?W5VSbYPeMlsMCMw9Rh6xa0f12Scjdk62z1WTb3SeqkZj7WPQFROHC4K8g3zE?=
- =?us-ascii?Q?L9A53sSuk8C1FxvTRq3kTG/oq+0heB4mF8zxy4E51BrjLZrVfL6f3hL5vViu?=
- =?us-ascii?Q?mozC0HOTiPoZdkHb3nwHYTENVq4b2zhIWIwTgID7KaI1cWoz7R4I66tvNdQx?=
- =?us-ascii?Q?hZpxarEDE/ETtxQpGVNTq4oiv9lB73O9IdVWsGkq8Ro3W/dIV0NLY4u2SL1h?=
- =?us-ascii?Q?mbD9ZZKnUj0PskcjT6i+ziSvMraM22TiObuRWah0bQt3iOvC1/MvcdIDG8j0?=
- =?us-ascii?Q?aKym556WhWEWBGZVyYtmb0aVDw3Abbej2Qzbzuj45kWp1v/TTyQIcEMfxp9j?=
- =?us-ascii?Q?Vv3RGEuzrRHKwqtRiT/AiG8OSn7aIZGECLlNKlvDIqDvP0jln2JGYHtGs0PO?=
- =?us-ascii?Q?5h1PF1GnhGs+da2GklE5YZTYQsuBNl44cEeIb8nbSIkJSDPRMKo9PyV5VQQd?=
- =?us-ascii?Q?rkwuk9RxV174nStoGOjp6hHAaBbLIDTM0N2/maj6d3aWo0ScSgIm+c7HN1Xc?=
- =?us-ascii?Q?SHuSx/XAkKqXL0tSCpfrlYK8eVmmW54bZYWjfA/LoFq4Ae83avfTK812HoFy?=
- =?us-ascii?Q?FzH6Ut5/WSXsyzznlA4LBsrgxxGos1unjlurARR+2+nZi+Tr0d/oZx3W6qoC?=
- =?us-ascii?Q?PGrPPMukgiH4S2mmuC8GBpYCsX7xta4snast8+Zx7TyoBSZS+HkUm6Uf+pUP?=
- =?us-ascii?Q?lzilcTaV8JOQkcnh09rKHP37Xx/R/3bXTkOEoeozLFoaGU9hwyLyjU4GrGaX?=
- =?us-ascii?Q?LmK8CiVp5si0GgR6qkLqhEJbJIe/KfCcyW+0ImfZFW6VLArIDbyh3QozJp/g?=
- =?us-ascii?Q?qE9j+UnA6RFvI5tC93qAjK2Kkd8YCMqYPAhO3e62eSs/u2iAnd6+IFFgDsXf?=
- =?us-ascii?Q?s6WkOA7JwuEgQ5jbUilfkd+JfvtXoSM3XSU87+LS0YW4aC6oUnJyMJwupsjR?=
- =?us-ascii?Q?suWUUccS4ryjSZuCsMTcopyR4o8a31tysGlIoZvvOl6FDV+uIbZA8O5yMuwa?=
- =?us-ascii?Q?VCAXCiuW7oR4JqWvGbPzmvgws3B2gTDTfuPsrf+VBFGaz/IlpIe5Ebba2PR1?=
- =?us-ascii?Q?BkwCjSggH9T03Fh2kmEvNZAa9fuBMnPo2WOu5V2jUtn49REmEiQdnB9UJYlp?=
- =?us-ascii?Q?cy3384ai+Zgh6d9yFYBPhkAMcNAIqF2v?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fnHtS5OGX+sJVKxIRNbBNm5l/e12Uv6f423Aq171zzthSjLrpDH33clq+k4r?=
- =?us-ascii?Q?DrVt4j7CO8+LCO5uW4pGV+zr+vRvStk/t0uwzkwYMRbXksEgiASXmxAIGJq8?=
- =?us-ascii?Q?kPvsVmNkCu5tCDuxkPxg/z+mLdfYUZIw+QUXpceAHvf9TQPSwBuwRe5NemV4?=
- =?us-ascii?Q?0V0xPLQ/qc2CPitoQJwVxpgtEGletx+g4SHr9R/X5wIulacul1UdbNjymPOt?=
- =?us-ascii?Q?663tinKt2XeIXCwSmiZnVnn73NZAiCZhVUUnlhRMdoP8ZoFauw+NcUsNP58d?=
- =?us-ascii?Q?F/jlOORuiOd5CXN/pOsdHVUyl+GcV3DbS1FC+8vNEaHNZHVXgHKHTALBRkSE?=
- =?us-ascii?Q?dtzIxfcqTQXQij83r9hhi5SY44mPLu2Nd6isuE2krXtH7eqfO266bbylPWPm?=
- =?us-ascii?Q?Vo9cn55bAf+ITx+V++Mpn1ZakO+1G3GZbEwfbNHeWb8NhRFv8xp/AWykNBM1?=
- =?us-ascii?Q?DMXvJ6EsDYjWKEq8inmU8gowNkdJKW3C2tNe9N2KYERhkiMGtjn7Fen6EAtR?=
- =?us-ascii?Q?rz1T/DJYcfVXXZkP1lygcvSY40V0HZA8+l1VuhbY69ei6/b7cHaej6dgGh1m?=
- =?us-ascii?Q?yH+PnJjcz2dpN9htLYL4alEN8hCz7uVuMkeiBHkNwa6hep36wPQogc0ZYx4t?=
- =?us-ascii?Q?73mru0a3tPDxTnJadKtVEfg5CbJXonJ46miARm4A7rMbfwt6XSb6QaXoOO8b?=
- =?us-ascii?Q?xLY02OPo2GI4D76QhdOqHlG4EToCzuKq/v2qzPJ/7N2zBbR3CyEzJU9U/Qok?=
- =?us-ascii?Q?BqPlkgr+9rmhucc9MkZZobXnusK3XI7vUgTGJcj+fZZ8KqAJ9KZvPxLKrLfu?=
- =?us-ascii?Q?okSDsbtrg5QVkqfJnuancVxLlyrUWfP2ORu91Q7M7rAzEOmqW5n2PKmu7FMg?=
- =?us-ascii?Q?usx15tIyl5vjdNB26f5Z0FkGN+eg+Mqz9mW3b48WkB4Y4xxOEJtDiFpny704?=
- =?us-ascii?Q?rStJhsFCZdOEaYVDKgWGouePPULikv1loFTWK/OkGflZUfrY22PNuVWBSMDt?=
- =?us-ascii?Q?m967dagyUfCLC2V1IuNbgf/GjF0ucYKvz4j+mcBExzjn1ltWdHhhACvIIMGa?=
- =?us-ascii?Q?8/57UBUeEYM3VqX7zNagkINKadUFop5KvYmxmoLpEW7cPipWohCy9SlMUpz5?=
- =?us-ascii?Q?2bgHhiHVj8GySMbI4FFlKPZeQf/l9GIuiwa/8ENO7/+w7KuGEjV33Hb9fhJm?=
- =?us-ascii?Q?njjfTPU6eNaynTS1Nb+yt9OWo0c1884T7GAKh70h2cZ5JryHZ94YF0Bebx4q?=
- =?us-ascii?Q?8SUByLglMhhwAG9wYYN+s54qBGvOWM50XZ593Wzgv8WpFC28ahMbvxHzjvAO?=
- =?us-ascii?Q?TBvxyxw0pg2+GaQwTF5+xWZQA6F40DBdtibWQrQ6GuNl1S0drNNJnwwSUi5t?=
- =?us-ascii?Q?FMDcKvUlpkso0+LG8u//Rpez+hYyNkugo6HGl7v2O6KZhNHe414rrNdCK1XR?=
- =?us-ascii?Q?thjacfPxnTm6HCPe4aB7UESL1d8mQMYT5FyDrfCZjQR+p8959v0b/Y1WjKat?=
- =?us-ascii?Q?Nwu1X4LrrVfL9njXEMBX2KjmElgQPyY6Ml5zT6CJepy1GX1HJ3/GoseSrlHG?=
- =?us-ascii?Q?32JSIfiUGA2VUQ0iVhahvRzzicul4SAE5C0dtjTF?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22484875-c16f-4d04-0dc6-08de0ff3dc7e
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2025 16:15:18.5389
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EiL/HSY102ZKuwLeHYbLe5MeOv9HdJPOOFtLl6XMpQkPlXzaeAj9hdnAzpCw6x+U
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6116
+Content-Type: multipart/mixed; boundary="8323328-499737811-1760977210=:976"
 
-On Fri, Oct 17, 2025 at 07:13:58PM +0300, Leon Romanovsky wrote:
-> > static int dma_ranges_to_p2p_phys(struct vfio_pci_dma_buf *priv,
-> > 				  struct vfio_device_feature_dma_buf *dma_buf,
-> > 				  struct vfio_region_dma_range *dma_ranges,
-> > 				  struct p2pdma_provider *provider)
-> > {
-> > 	struct pci_dev *pdev = priv->vdev->pdev;
-> > 	phys_addr_t len = pci_resource_len(pdev, dma_buf->region_index);
-> > 	phys_addr_t pci_start;
-> > 	phys_addr_t pci_last;
-> > 	u32 i;
-> > 
-> > 	if (!len)
-> > 		return -EINVAL;
-> > 	pci_start = pci_resource_start(pdev, dma_buf->region_index);
-> > 	pci_last = pci_start + len - 1;
-> > 	for (i = 0; i < dma_buf->nr_ranges; i++) {
-> > 		phys_addr_t last;
-> > 
-> > 		if (!dma_ranges[i].length)
-> > 			return -EINVAL;
-> > 
-> > 		if (check_add_overflow(pci_start, dma_ranges[i].offset,
-> > 				       &priv->phys_vec[i].paddr) ||
-> > 		    check_add_overflow(priv->phys_vec[i].paddr,
-> > 				       dma_ranges[i].length - 1, &last))
-> > 			return -EOVERFLOW;
-> > 		if (last > pci_last)
-> > 			return -EINVAL;
-> > 
-> > 		priv->phys_vec[i].len = dma_ranges[i].length;
-> > 		priv->size += priv->phys_vec[i].len;
-> > 	}
-> > 	priv->nr_ranges = dma_buf->nr_ranges;
-> > 	priv->provider = provider;
-> > 	return 0;
-> > }
-> 
-> I have these checks in validate_dmabuf_input(). 
-> Do you think that I need to add extra checks?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I think they work better in this function, so I'd move them here.
+--8323328-499737811-1760977210=:976
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Jason
+On Mon, 20 Oct 2025, Geert Uytterhoeven wrote:
+> On Fri, 10 Oct 2025 at 16:42, Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> > Here's a series for Geert to test if this fixes the improper coalescing
+> > of resources as was experienced with the pci_add_resource() change (I
+> > know the breaking change was pulled before 6.18 main PR but I'd want to
+> > retry it later once the known issues have been addressed). The expected
+> > result is there'll be two adjacent host bridge resources in the
+> > resource tree as the different name should disallow coalescing them
+> > together, and therefore BAR0 has a window into which it belongs to.
+> >
+> > Generic info for the series:
+> >
+> > PCI host bridge windows were coalesced in place into one of the structs
+> > on the resources list. The host bridge window coalescing code does not
+> > know who holds references and still needs the struct resource it's
+> > coalescing from/to so it is safer to perform coalescing into entirely
+> > a new struct resource instead and leave the old resource addresses as
+> > they were.
+> >
+> > The checks when coalescing is allowed are also made stricter so that
+> > only resources that have identical the metadata can be coalesced.
+> >
+> > As a bonus, there's also a bit of framework to easily create kunit
+> > tests for resource tree functions (beyond just resource_coalesce()).
+> >
+> > Ilpo J=C3=A4rvinen (3):
+> >   PCI: Refactor host bridge window coalescing loop to use prev
+> >   PCI: Do not coalesce host bridge resource structs in place
+> >   resource, kunit: add test case for resource_coalesce()
+>=20
+> Thanks for your series!
+>=20
+> I have applied this on top of commit 06b77d5647a4d6a7 ("PCI:
+> Mark resources IORESOURCE_UNSET when outside bridge windows"), and
+> gave it a a try on Koelsch (R-Car M2-W).
+
+So the pci_bus_add_resource() patch to rcar_pci_probe() was not included?
+No coalescing would be attempted without that change.
+
+With the pci_bus_add_resource() patch, the resource name is different, I=20
+think, so even then it should abort coalescing the ranges with this=20
+series.
+
+> Impact on dmesg (for the first PCI/USB) instance:
+>=20
+>      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
+>      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
+> -> 0x00ee080000
+>      pci-rcar-gen2 ee090000.pci: PCI: revision 11
+>      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
+>      pci_bus 0000:00: root bus resource [bus 00]
+>      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+>      pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional
+> PCI endpoint
+>     -pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]: no initial
+> claim (no window)
+>      pci 0000:00:00.0: BAR 0 [mem size 0x00000400]
+>     -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]: no
+> initial claim (no window)
+>      pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
+>      pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 conventional
+> PCI endpoint
+>     -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]: no initial
+> claim (no window)
+>      pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
+>      pci 0000:00:01.0: supports D1 D2
+>      pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
+>      pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 conventional
+> PCI endpoint
+>     -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]: no initial
+> claim (no window)
+>      pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
+>      pci 0000:00:02.0: supports D1 D2
+>      pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
+>      PCI: bus0: Fast back to back transfers disabled
+>      pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigned
+>      pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigned
+>      pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
+>      pci 0000:00:01.0: enabling device (0140 -> 0142)
+>      pci 0000:00:02.0: enabling device (0140 -> 0142)
+>=20
+> I.e. the "no initial claim (no window)" messages introduced by commit
+> 06b77d5647a4d6a7 are no longer seen.
+
+Is that perhaps again because of pci_dbg() vs pci_info()?
+
+> The BARs still show "mem size <n>" instead of the "mem <start>-<end>"
+> before commit 06b77d5647a4d6a7, though.
+
+To me this looks like UNSET was still set for these resources. Missing the=
+=20
+pci_bus_add_resource() patch would explain that and if the pci_dbg()=20
+wasn't printed, it would explain both symptoms.
+
+Once these questions are resolved, I'll ask Rob what is the preferred=20
+solution here, a) driver doing pci_bus_add_resource() or b) including it=20
+into the DT ranges (if we could fix the ranges).
+
+We likely need to go with a) to preserve backwards compatibility but I=20
+also want to understand how those ranges are supposed to be used if we=20
+wouldn't have historical baggage.
+
+
+(I appreciate following through even if the original series is now=20
+reverted!)
+
+> This series has not impact on /proc/iomem, or on the output of
+> "lspci -v" (commit 06b77d5647a4d6a7 also had no impact here).
+> I.e. the part of /proc/iomem related to the first PCI/USB instance
+> still looks like:
+>=20
+>     ee080000-ee08ffff : pci@ee090000
+>       ee080000-ee080fff : 0000:00:01.0
+>         ee080000-ee080fff : ohci_hcd
+>       ee081000-ee0810ff : 0000:00:02.0
+>         ee081000-ee0810ff : ehci_hcd
+>     ee090000-ee090bff : ee090000.pci pci@ee090000
+>
+> I hope this matches your expectation.s
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-499737811-1760977210=:976--
 
