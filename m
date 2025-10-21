@@ -1,142 +1,312 @@
-Return-Path: <linux-pci+bounces-38833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE32BF44A2
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 03:43:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30937BF44ED
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 03:48:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 692FD351F81
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:43:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2C92462582
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:48:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4028923D7DB;
-	Tue, 21 Oct 2025 01:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTlt2Lad"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F49264A86;
+	Tue, 21 Oct 2025 01:46:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0609515D1;
-	Tue, 21 Oct 2025 01:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA004CB5B;
+	Tue, 21 Oct 2025 01:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761011034; cv=none; b=OXEZPFY0lniTH26SFf7uUOTXD9zRO21jZrGRotBl8QJLCDoDTuAzZQhAcl087acOaCPPpKc0+6KkrDELe477sUU6UR2mnX8gIRqXn0057V5qm9bDtxWPw9dXMep0SvuzQP2DsxWGSxFREFISqmeCJHceyrfvvpwK92vDih+umNU=
+	t=1761011198; cv=none; b=upUjSQliZo5ElDR/pLgIWvqNCLwoEhcKb3EtvQR6UErOpc7k+tMQ46D4wCcKtvAjltGSwcyBkA47n5GP14SHk0hxF0j+jMs/IHs3umQvD1OZhb50hc3tauPCYpEehp+7HXdlXHYe4FrN2URO5W7VyOwMkfy/v6nH4eVXecI2Afg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761011034; c=relaxed/simple;
-	bh=1WKtCB5AhrFfORNLMEgBu5CyX6aGiLkLwQM4OsgYaIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laHnyfPU220iCfQOoRHEsBdQBReuLQjKd7rbKIpB9SB4UcEBnY169oMuE1X8q/jP3Zh4+BEigkP8xg2Q/wMBKgPerYm7YfVnT32nw1QjI7YFjMI/OTs8igdKS6dTTmjRr9lkFqXx4NvHl123LcefqndZPhH5O5Od90QtSIvJEcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTlt2Lad; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF57C4CEFB;
-	Tue, 21 Oct 2025 01:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761011032;
-	bh=1WKtCB5AhrFfORNLMEgBu5CyX6aGiLkLwQM4OsgYaIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FTlt2Lad2t1VZP8oQUT1/MYv3J4mNf6kz5yhAGlr1hg9W1ruLo/PbwKhzmt8vOS8W
-	 pjcMvdYuMAe3w6+AqCkrpT7wMrfTaKQjtpNfaduKniIm66uHtBFbdljUpOxaMOfxWG
-	 CbTdMkgfKnc2BMIf4eWIpT6aVgRxQTO03JDi1KlwQ/qHdG4gESii2TVSgfQp9d86N9
-	 0+XjTPRP5892Lwia9r5/wB9A7XevUxjpm/7gk/x+n0H16LpHugp3QcMbc+lDwBet2u
-	 bJvDoLSUzM+Vnj4FMciVd9dymGQQ/0Biy6NsnQO6PShOtVFw/IdFYlxzI6x1pYK3R6
-	 qt0REkGfU5Fhg==
-Date: Tue, 21 Oct 2025 07:13:41 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>
-Subject: Re: [PATCH v1 3/5] PCI: tegra: Use readl_poll_timeout() for link
- status polling
-Message-ID: <6eqqafz2dojo533fw2j7say3p37simug5bol2s5dvcpac77jzb@2x22ekyl4qdq>
-References: <20250926072905.126737-1-linux.amoon@gmail.com>
- <20250926072905.126737-4-linux.amoon@gmail.com>
- <ose3ww7me26byqwsyk33tipylkx3kolnc3mjwrlmjwsmza2zf3@os7lkt4svaqi>
- <CANAwSgT0VRFFpKv3saJTAA99oGoAHhP+bx6Xe-QGf5b4Dgik=A@mail.gmail.com>
+	s=arc-20240116; t=1761011198; c=relaxed/simple;
+	bh=DMSW77Ig5NSB9MdxHiF8S86xio/BEcY1eYc0Mg5gLmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZuTM0xmr7pLRynot++rXrdrH3PLpAyV0uaaUiqTzVwTk7mJXnvVbWlpH/MUBzkt2hixKasc/4bRPWn5ekEq1z76wfNC8InDberp2Eeg0Uw6UCw5fe0gG//1dcKCz4QeSyEcNpxXqNMp6NghRop4JMzxN7f2IUlJ/UQIy2dayX8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4crFVy2WFrzKHMRQ;
+	Tue, 21 Oct 2025 09:45:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 18F781A1585;
+	Tue, 21 Oct 2025 09:46:32 +0800 (CST)
+Received: from [10.67.111.176] (unknown [10.67.111.176])
+	by APP1 (Coremail) with SMTP id cCh0CgB36Uz25fZoPxk8BA--.39058S2;
+	Tue, 21 Oct 2025 09:46:31 +0800 (CST)
+Message-ID: <bb9a75dc-8c34-41da-b064-e31bf5fe6cb2@huaweicloud.com>
+Date: Tue, 21 Oct 2025 09:46:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgT0VRFFpKv3saJTAA99oGoAHhP+bx6Xe-QGf5b4Dgik=A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/33] sched/isolation: Convert housekeeping cpumasks to
+ rcu pointers
+To: Frederic Weisbecker <frederic@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
+ <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+ Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, netdev@vger.kernel.org
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-13-frederic@kernel.org>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <20251013203146.10162-13-frederic@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgB36Uz25fZoPxk8BA--.39058S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3WF43tF17Ww17Gr4xXF43Wrg_yoW3Jw4kpr
+	Z8W3y3GrWkXr1fG398ZwnrAry5Wwn7Arn2yas3Ww4rCFy7uw1kZry09FnxXryUu3s7Cry7
+	Zas8tw4F93Wjy37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	j6a0PUUUUU=
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On Mon, Oct 20, 2025 at 05:47:15PM +0530, Anand Moon wrote:
-> Hi Manivannan,
+
+
+On 2025/10/14 4:31, Frederic Weisbecker wrote:
+> HK_TYPE_DOMAIN's cpumask will soon be made modifyable by cpuset.
+> A synchronization mechanism is then needed to synchronize the updates
+> with the housekeeping cpumask readers.
 > 
-> Thanks for your review comment.
+> Turn the housekeeping cpumasks into RCU pointers. Once a housekeeping
+> cpumask will be modified, the update side will wait for an RCU grace
+> period and propagate the change to interested subsystem when deemed
+> necessary.
 > 
-> On Sun, 19 Oct 2025 at 13:20, Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Fri, Sep 26, 2025 at 12:57:44PM +0530, Anand Moon wrote:
-> > > Replace the manual `do-while` polling loops with the readl_poll_timeout()
-> > > helper when checking the link DL_UP and DL_LINK_ACTIVE status bits
-> > > during link bring-up. This simplifies the code by removing the open-coded
-> > > timeout logic in favor of the standard, more robust iopoll framework.
-> > > The change improves readability and reduces code duplication.
-> > >
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: Mikko Perttunen <mperttunen@nvidia.com>
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > ---
-> > > v1: dropped the include  <linux/iopoll.h> header file.
-> > > ---
-> > >  drivers/pci/controller/pci-tegra.c | 37 +++++++++++-------------------
-> > >  1 file changed, 14 insertions(+), 23 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > > index 07a61d902eae..b0056818a203 100644
-> > > --- a/drivers/pci/controller/pci-tegra.c
-> > > +++ b/drivers/pci/controller/pci-tegra.c
-> > > @@ -2169,37 +2169,28 @@ static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
-> > >       value |= RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT;
-> > >       writel(value, port->base + RP_PRIV_MISC);
-> > >
-> > > -     do {
-> > > -             unsigned int timeout = TEGRA_PCIE_LINKUP_TIMEOUT;
-> > > +     while (retries--) {
-> > > +             int err;
-> > >
-> > > -             do {
-> > > -                     value = readl(port->base + RP_VEND_XP);
-> > > -
-> > > -                     if (value & RP_VEND_XP_DL_UP)
-> > > -                             break;
-> > > -
-> > > -                     usleep_range(1000, 2000);
-> > > -             } while (--timeout);
-> > > -
-> > > -             if (!timeout) {
-> > > +             err = readl_poll_timeout(port->base + RP_VEND_XP, value,
-> > > +                                      value & RP_VEND_XP_DL_UP,
-> > > +                                      1000,
-> >
-> > The delay between the iterations had range of (1000, 2000), now it will become
-> > (250, 1000). How can you ensure that this delay is sufficient?
-> >
-> I asked if the timeout should be increased for the loops, but Mikko
-> Perttunen said that 200ms delay is fine.
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  kernel/sched/isolation.c | 58 +++++++++++++++++++++++++---------------
+>  kernel/sched/sched.h     |  1 +
+>  2 files changed, 37 insertions(+), 22 deletions(-)
 > 
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 8690fb705089..b46c20b5437f 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -21,7 +21,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+>  EXPORT_SYMBOL_GPL(housekeeping_overridden);
+>  
+>  struct housekeeping {
+> -	cpumask_var_t cpumasks[HK_TYPE_MAX];
+> +	struct cpumask __rcu *cpumasks[HK_TYPE_MAX];
+>  	unsigned long flags;
+>  };
+>  
+> @@ -33,17 +33,28 @@ bool housekeeping_enabled(enum hk_type type)
+>  }
+>  EXPORT_SYMBOL_GPL(housekeeping_enabled);
+>  
+> +const struct cpumask *housekeeping_cpumask(enum hk_type type)
+> +{
+> +	if (static_branch_unlikely(&housekeeping_overridden)) {
+> +		if (housekeeping.flags & BIT(type)) {
+> +			return rcu_dereference_check(housekeeping.cpumasks[type], 1);
+> +		}
+> +	}
+> +	return cpu_possible_mask;
+> +}
+> +EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+> +
+>  int housekeeping_any_cpu(enum hk_type type)
+>  {
+>  	int cpu;
+>  
+>  	if (static_branch_unlikely(&housekeeping_overridden)) {
+>  		if (housekeeping.flags & BIT(type)) {
+> -			cpu = sched_numa_find_closest(housekeeping.cpumasks[type], smp_processor_id());
+> +			cpu = sched_numa_find_closest(housekeeping_cpumask(type), smp_processor_id());
+>  			if (cpu < nr_cpu_ids)
+>  				return cpu;
+>  
+> -			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+> +			cpu = cpumask_any_and_distribute(housekeeping_cpumask(type), cpu_online_mask);
+>  			if (likely(cpu < nr_cpu_ids))
+>  				return cpu;
+>  			/*
+> @@ -59,28 +70,18 @@ int housekeeping_any_cpu(enum hk_type type)
+>  }
+>  EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
+>  
+> -const struct cpumask *housekeeping_cpumask(enum hk_type type)
+> -{
+> -	if (static_branch_unlikely(&housekeeping_overridden))
+> -		if (housekeeping.flags & BIT(type))
+> -			return housekeeping.cpumasks[type];
+> -	return cpu_possible_mask;
+> -}
+> -EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+> -
+>  void housekeeping_affine(struct task_struct *t, enum hk_type type)
+>  {
+>  	if (static_branch_unlikely(&housekeeping_overridden))
+>  		if (housekeeping.flags & BIT(type))
+> -			set_cpus_allowed_ptr(t, housekeeping.cpumasks[type]);
+> +			set_cpus_allowed_ptr(t, housekeeping_cpumask(type));
+>  }
+>  EXPORT_SYMBOL_GPL(housekeeping_affine);
+>  
+>  bool housekeeping_test_cpu(int cpu, enum hk_type type)
+>  {
+> -	if (static_branch_unlikely(&housekeeping_overridden))
+> -		if (housekeeping.flags & BIT(type))
+> -			return cpumask_test_cpu(cpu, housekeeping.cpumasks[type]);
+> +	if (housekeeping.flags & BIT(type))
+> +		return cpumask_test_cpu(cpu, housekeeping_cpumask(type));
+>  	return true;
+>  }
+>  EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
+> @@ -96,20 +97,33 @@ void __init housekeeping_init(void)
+>  
+>  	if (housekeeping.flags & HK_FLAG_KERNEL_NOISE)
+>  		sched_tick_offload_init();
+> -
+> +	/*
+> +	 * Realloc with a proper allocator so that any cpumask update
+> +	 * can indifferently free the old version with kfree().
+> +	 */
+>  	for_each_set_bit(type, &housekeeping.flags, HK_TYPE_MAX) {
+> +		struct cpumask *omask, *nmask = kmalloc(cpumask_size(), GFP_KERNEL);
+> +
+> +		if (WARN_ON_ONCE(!nmask))
+> +			return;
+> +
+> +		omask = rcu_dereference(housekeeping.cpumasks[type]);
+> +
+>  		/* We need at least one CPU to handle housekeeping work */
+> -		WARN_ON_ONCE(cpumask_empty(housekeeping.cpumasks[type]));
+> +		WARN_ON_ONCE(cpumask_empty(omask));
+> +		cpumask_copy(nmask, omask);
+> +		RCU_INIT_POINTER(housekeeping.cpumasks[type], nmask);
+> +		memblock_free(omask, cpumask_size());
+>  	}
+>  }
+>  
+>  static void __init housekeeping_setup_type(enum hk_type type,
+>  					   cpumask_var_t housekeeping_staging)
+>  {
+> +	struct cpumask *mask = memblock_alloc_or_panic(cpumask_size(), SMP_CACHE_BYTES);
+>  
+> -	alloc_bootmem_cpumask_var(&housekeeping.cpumasks[type]);
+> -	cpumask_copy(housekeeping.cpumasks[type],
+> -		     housekeeping_staging);
+> +	cpumask_copy(mask, housekeeping_staging);
+> +	RCU_INIT_POINTER(housekeeping.cpumasks[type], mask);
+>  }
+>  
+>  static int __init housekeeping_setup(char *str, unsigned long flags)
+> @@ -162,7 +176,7 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+>  
+>  		for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
+>  			if (!cpumask_equal(housekeeping_staging,
+> -					   housekeeping.cpumasks[type])) {
+> +					   housekeeping_cpumask(type))) {
+>  				pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
+>  				goto free_housekeeping_staging;
+>  			}
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 1f5d07067f60..0c0ef8999fd6 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -42,6 +42,7 @@
+>  #include <linux/ktime_api.h>
+>  #include <linux/lockdep_api.h>
+>  #include <linux/lockdep.h>
+> +#include <linux/memblock.h>
+>  #include <linux/minmax.h>
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
 
-readl_poll_timeout() internally uses usleep_range(), which transforms the 1000us
-delay into, usleep_range(251, 1000). So the delay *could* theoretically be 251us
-* 200 = ~50ms.
+A warning was detected:
 
-So I doubt it will be sifficient, as from the old code, it looks like the
-hardware could take around 200ms to complete link up.
+=============================
+WARNING: suspicious RCU usage
+6.17.0-next-20251009-00033-g4444da88969b #808 Not tainted
+-----------------------------
+kernel/sched/isolation.c:60 suspicious rcu_dereference_check() usage!
 
-- Mani
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by swapper/0/1:
+ #0: ffff888100600ce0 (&type->i_mutex_dir_key#3){++++}-{4:4}, at: walk_compone
+
+stack backtrace:
+CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-next-20251009-00033-g4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x68/0xa0
+ lockdep_rcu_suspicious+0x148/0x1b0
+ housekeeping_cpumask+0xaa/0xb0
+ housekeeping_test_cpu+0x25/0x40
+ find_get_block_common+0x41/0x3e0
+ bdev_getblk+0x28/0xa0
+ ext4_getblk+0xba/0x2d0
+ ext4_bread_batch+0x56/0x170
+ __ext4_find_entry+0x17c/0x410
+ ? lock_release+0xc6/0x290
+ ext4_lookup+0x7a/0x1d0
+ __lookup_slow+0xf9/0x1b0
+ walk_component+0xe0/0x150
+ link_path_walk+0x201/0x3e0
+ path_openat+0xb1/0xb30
+ ? stack_depot_save_flags+0x41e/0xa00
+ do_filp_open+0xbc/0x170
+ ? _raw_spin_unlock_irqrestore+0x2c/0x50
+ ? __create_object+0x59/0x80
+ ? trace_kmem_cache_alloc+0x1d/0xa0
+ ? vprintk_emit+0x2b2/0x360
+ do_open_execat+0x56/0x100
+ alloc_bprm+0x1a/0x200
+ ? __pfx_kernel_init+0x10/0x10
+ kernel_execve+0x4b/0x160
+ kernel_init+0xe5/0x1c0
+ ret_from_fork+0x185/0x1d0
+ ? __pfx_kernel_init+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+random: crng init done
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Ridong
+
 
