@@ -1,332 +1,122 @@
-Return-Path: <linux-pci+bounces-38926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38927-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8E23BF7A18
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 18:21:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7052BF7A61
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 18:27:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E8DA3AA89F
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:20:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C7C964FFD14
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2AC03446CF;
-	Tue, 21 Oct 2025 16:20:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035C6342C95;
+	Tue, 21 Oct 2025 16:26:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YhvPWiG5"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JMxyIVof"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A2F355057
-	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 16:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AFB2EA17D
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 16:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761063654; cv=none; b=ql6/kPoOewuW9hkhGELs7XqOniZTDgQQiazqAY75i7TXds0a8EHiDDxRVtP1yij2TQDuM8re1rezs5hEZWwyBU8f4K69fzjB8PGiCU+t/1m00gUpCjj0V47Z6wI8x5RgTbIIb3HPYXuKLXKFbuBReHfHgFOeDCUrxJ8wTRUCMmg=
+	t=1761063997; cv=none; b=GssREX9YqNVcigqMIMMdtJJa8SZnSAiKpk6i1lz1HFR/f9vGrnxbGlGCALleCsSRxoA9ILrdt+oPlaDhITuSVwROmrobE2bRiSgRuw3dn5tV83Grc8A07eyFAtZXk02gep3iPzFJKiV4xNxqEFojgl1sS8p+P1WqkiXkJTsOrP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761063654; c=relaxed/simple;
-	bh=UiYo337U/uvngXu64QBg7gPMlx6TfoMI6XWsfgsm50w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=vFnw0lqdXT0F/T+qIgSypsYk3xvkdAK3sPIIlcFTyMpmKXFCSPGMbCgqpVfC0BINN9FSR2onlZ9TNbiHxqaldPpqUl7KEeeYL+fg/EN6apOwwSrGymKQ9MBW1R/T7u2x8Flfk+YDewAjYbWjYwaSCgCgUimYkfpkoG9HJ7Q/oOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YhvPWiG5; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761063653; x=1792599653;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=UiYo337U/uvngXu64QBg7gPMlx6TfoMI6XWsfgsm50w=;
-  b=YhvPWiG5TtHWxtdUOqWAd7dIP/ciXcBp/iH5qDcvEK2IQI/iYnU/F4Lp
-   M4NEgUZizuz2DDAo7O7doIaE+NddB3ncegO8XCwlbqGXDM5CSmvIFBfuf
-   ID+pvTh6LxapE95ZiOXImwtKmbBOau9LzLQQC4U3EWX+9hOKu3EOX6D8p
-   N6XcXtrBi2lulY8zPu09fKi2vVyzrFYk8pd+NdztnQwKehQXVGhxIg5V8
-   NDAnXPz6uP5ftU9bVBIYcylf9ngYE0wNXQdReSEQFaoFLTHFtGfE109sJ
-   MpL9bXUXUKIa2GdNDzbwD+IaqjsQXI7j49UWi1bywfR6U70RMbB/jmsV4
-   w==;
-X-CSE-ConnectionGUID: 7VkhXX6WSI64NqE0MeoL3Q==
-X-CSE-MsgGUID: HbvE88JKQUuCbVSrNj/ZuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63105224"
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="63105224"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 09:20:52 -0700
-X-CSE-ConnectionGUID: T1o8CFj+T/OBd3RU55mKfw==
-X-CSE-MsgGUID: A81F09Z1TLG85mG5fYIOTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="183335077"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.189])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 09:20:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 Oct 2025 19:20:44 +0300 (EEST)
-To: Simon Richter <Simon.Richter@hogyros.de>
-cc: Lucas De Marchi <lucas.demarchi@intel.com>, linuxppc-dev@lists.ozlabs.org, 
-    linux-pci@vger.kernel.org
-Subject: Re: BAR resizing broken in 6.18 (PPC only?)
-In-Reply-To: <67840a16-99b4-4d8c-9b5c-4721ab0970a2@hogyros.de>
-Message-ID: <922b1f68-a6a2-269b-880c-d594f9ca6bde@linux.intel.com>
-References: <f9a8c975-f5d3-4dd2-988e-4371a1433a60@hogyros.de> <a5e7a118-ba70-000e-bab4-8d56b3404325@linux.intel.com> <67840a16-99b4-4d8c-9b5c-4721ab0970a2@hogyros.de>
+	s=arc-20240116; t=1761063997; c=relaxed/simple;
+	bh=Y9uArkbxQyzc0TIdD5BfoEeySwmE1AUt4gzJ6clkMxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYEgp6J9p3MDm8jlJayaiDLJqkjWEZPuCIuujF5rN4kOYmxpQ8dlSmYCwvTVcX3dJT7HjSRqiOV59OPof3YmUzfYtAP5OwwDAUGj8IGc1C0eynK3T2N84L4qT4JASE+rTGWKuskd77Z1kmRoDeSTHvsfNtP6l5mnLCIDCwrpV4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JMxyIVof; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <d8525e6e-7098-4bc3-abb1-4c0540b71c61@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761063993;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+MAEZH4E6BNbsRtXMjmFy7O3WOW7pDTf1V5DEPeMKGM=;
+	b=JMxyIVofzEWQ7ZDQYQRwdMpKqJJE88IVyHX6sRI79hemiOVvGIVyg+RQO/nDvHa4K9ubVX
+	uG2LfYfbrEsFnODad/gG+kCqZQrZ/66rvIdw5cANUL1c+hNb7kcvqksH6R5ngK8FjtRKZ/
+	1XmfohqFdFJXRmC6Jb6XfPGEfQfp42I=
+Date: Tue, 21 Oct 2025 12:26:30 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-262779146-1760981164=:976"
-Content-ID: <2f941369-6da1-fb98-c063-3e6389d9eb95@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: pcie-xilinx-dma-pl: Fix off-by-one INTx IRQ
+ handling
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Stefan Roese <stefan.roese@mailbox.org>
+Cc: linux-pci@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
+ Ravi Kumar Bandi <ravib@amazon.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20251021155347.GA1191808@bhelgaas>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20251021155347.GA1191808@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 10/21/25 11:53, Bjorn Helgaas wrote:
+> On Tue, Oct 21, 2025 at 05:43:22PM +0200, Stefan Roese wrote:
+>> While testing with NVMe drives connected to the Versal QDMA PL PCIe RP
+>> on our platform I noticed that with MSI disabled (e.g. via pci=nomsi)
+>> the NVMe interrupts are not delivered to the host CPU resulting in
+>> timeouts while probing.
+>> 
+>> Debugging has shown, that the hwirq numbers passed to this device driver
+>> (1...4, 1=INTA etc) need to get adjusted to match the numbers in the
+>> controller registers bits (0...3).
+>> 
+>> This patch now adds pci_irqd_intx_xlate to the INTx IRQ domain ops,
+>> handling this IRQ number translation correctly.
+> 
+> s/pcie-xilinx-dma-pl:/xilinx-xdma:/  # in subject
+> s/has shown, that/has shown that/
+> s/This patch now adds/Add/
+> s/pci_irqd_intx_xlate/pci_irqd_intx_xlate()/
+> 
+> We'll do this when applying, no need to repost for this.
+> 
+> I wonder how many other drivers have this issue.
+> pci_irqd_intx_xlate() is used only by:
+> 
+>   dwc/pci-dra7xx.c
+>   pcie-altera.c
+>   pcie-xilinx-nwl.c
+>   pcie-xilinx.c
+>   pcie-xilinx-dma-pl.c   # this patch
+> 
+> Is there something different about these drivers that means they need
+> it when all the others don't?
 
---8323328-262779146-1760981164=:976
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <ae7f8f78-eb6d-16ad-7790-4784d91d3308@linux.intel.com>
+I think many PCI controllers just don't differentiate between legacy
+interrupts. e.g. I looked at NXP's LS1046 which is based on DWC and it
+does
 
-On Sun, 19 Oct 2025, Simon Richter wrote:
-> On 10/17/25 00:45, Ilpo J=E4rvinen wrote:
->=20
-> > Is this stock 6.18-rc1?
->=20
-> This is drm-tip, plus a few extras that actually allow me to load the GPU
-> driver, but no PCIe changes.
+#interrupt-cells = <1>;
+interrupt-map-mask = <0 0 0 7>;
+interrupt-map = <0000 0 0 1 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+		<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+		<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+		<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
 
-Okay, it explains the BAR0 release then.
+which I believe maps all root port legacy interrupts to a single shared
+GIC interrupt. Which sort of defeats the purpose of swizzling, but most
+stuff uses MSI(-X) now so I guess they figured a status register wasn't
+worth the verification.
 
-> > Was this resize attempted automatically by the xe driver during boot, n=
-ot
-> > triggered manually through sysfs, right? (Inferring that's likely the c=
-ase
-> > given the proximity of the "enabling device" message.)
->=20
-> Yes, that's the xe driver doing that.
->=20
-> > I need to know PCI resource allocations of the parents too. Preferrably
-> > dmesg and /proc/iomem from both working and broken cases so it's easier
-> > to find the differences.
->=20
-> I've attached those.
->=20
->  - dmesg.good/iomem.good: taken with 6.17 (drm-tip from last week)
->  - dmesg.bad/iomem.bad: taken with 6.18rc1 (drm-tip after update)
->  - dmesg.meh/iomem.meh: with the rebar patch 1/2 from Lucas. 2/2 is alrea=
-dy
-> merged. The GPU works at least, but has a 256MB aperture
->  - dmesg.rev/iomem.rev: with 85796d20a690 and 3ab10f83e277 reverted
+And yes, I don't think legacy interrupts are tested very much these
+days.
 
-Could you please test if the patch below helps.
-
-> > I'd very much want to do this too but I've higher priority items on my
-> > list, one of which attempts to resolve these resizable BARs using other
-> > way, that is, size the bridge windows considering the maximum size of t=
-he
-> > BAR right from the start. That would remove the need to try to enlarge
-> > BARs afterwards as there won't be more room for them anyway.
->=20
-> The bridge windows are set up by firmware, but they should be large enoug=
-h on
-> POWER, given that each slot gets its own domain, and controllers are allo=
-cated
-> 256G each.
->
-> I also dimly remember these are be configured so that the first 2G of add=
-ress
-> space are on the PCIe bus, and the first 2G of memory are addressed at a
-> higher address and only accessible to 64 bit capable cards, so 32 bit car=
-ds
-> can still access 2 GB of PCIe memory for P2PDMA and 2 GB of RAM (so the r=
-oot
-> complex performs address translation).
->=20
-> The result of this seems to be that smaller BARs end up in the 2 GB windo=
-w, so
-> only the VRAM aperture is inside the larger 64-bit-only window, so the wi=
-ndow
-> containing the bridge's BAR0 does not need to be changed.
-
-There's indeed something messy and odd going on here with the resource and=
-=20
-window mappings, in the bad case there's also this line which doesn't make=
-=20
-much sense:
-
-+pci 0030:01:00.0: bridge window [mem 0x6200000000000-0x6203fbff0ffff 64bit=
- pref]: can't claim; address conflict with 0030:01:00.0 [mem 0x620002000000=
-0-0x62000207fffff 64bit pref]
-
-=2E..but that conflicting resource was not assigned in between releasing=20
-this bridge window and trying to claim it back so how did that=20
-conflicting resource get there is totally mysterious to me. It doesn't=20
-seem related directly to the the resize no longer working though.
-
-> > > Also, why do we change the BAR assignment while mem decoding is activ=
-e?
->=20
-> > pci_resize_resource() does check for
-> > pci_resize_is_memory_decoding_enabled(), do you think that is not enoug=
-h?
->=20
-> It's a bit weird that there is a log message that says "enabling device",=
- then
-> the BARs are reconfigured. I'd want the decoding logic to be inactive whi=
-le
-> addresses are assigned.
-
-So no real issue here and only logging is not the way you'd want it?
-
-
---
-From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.intel=
-=2Ecom>
-Date: Tue, 21 Oct 2025 19:13:31 +0300
-Subject: [PATCH 1/1] PCI: Remove old_size limit from bridge window sizing
-MIME-Version: 1.0
-Content-Type: text/plain; charset=3DUTF-8
-Content-Transfer-Encoding: 8bit
-
-calculate_memsize() applies lower bound to the resource size before
-aligning the resource size making it impossible to shrink bridge window
-resources. I've not found any justification for this lower bound and
-nothing indicated it was to work around some HW issue.
-
-Prior to the commit 3baeae36039a ("PCI: Use pci_release_resource()
-instead of release_resource()"), releasing a bridge window during BAR
-resize resulted in clearing start and end address of the resource.
-Clearing addresses destroys the resource size as a side-effect,
-therefore nullifying the effect of the old size lower bound.
-
-After the commit 3baeae36039a ("PCI: Use pci_release_resource() instead
-of release_resource()"), BAR resize uses the aligned old size, which
-results in exceeding what fits into the parent window in some cases:
-
-xe 0030:03:00.0: [drm] Attempting to resize bar from 256MiB -> 16384MiB
-xe 0030:03:00.0: BAR 0 [mem 0x620c000000000-0x620c000ffffff 64bit]: releasi=
-ng
-xe 0030:03:00.0: BAR 2 [mem 0x6200000000000-0x620000fffffff 64bit pref]: re=
-leasing
-pci 0030:02:01.0: bridge window [mem 0x6200000000000-0x620001fffffff 64bit =
-pref]: releasing
-pci 0030:01:00.0: bridge window [mem 0x6200000000000-0x6203fbff0ffff 64bit =
-pref]: releasing
-pci 0030:00:00.0: bridge window [mem 0x6200000000000-0x6203fbff0ffff 64bit =
-pref]: was not released (still contains assigned resources)
-pci 0030:00:00.0: Assigned bridge window [mem 0x6200000000000-0x6203fbff0ff=
-ff 64bit pref] to [bus 01-04] free space at [mem 0x6200400000000-0x62007fff=
-fffff 64bit pref]
-pci 0030:00:00.0: Assigned bridge window [mem 0x6200000000000-0x6203fbff0ff=
-ff 64bit pref] to [bus 01-04] cannot fit 0x4000000000 required for 0030:01:=
-00.0 bridging to [bus 02-04]
-
-The old size of 0x6200000000000-0x6203fbff0ffff resource was used as
-the lower bound which results in 0x4000000000 size request due to
-alignment. That exceed what can fit into the parent window.
-
-Since the lower bound never even was enforced fully because the
-resource addresses were cleared when the bridge window is released,
-remove the old_size lower bound entirely and trust the calculated
-bridge window size is enough.
-
-This same problem may occur on io window side but seems less likely to
-cause issues due to general difference in alignment. Removing the lower
-bound may have other unforeseen consequences in case of io window so
-it's better to do leave as -next material if no problem is reported
-related to io window sizing (BAR resize shouldn't touch io windows
-anyway).
-
-Reported-by: Simon Richter <Simon.Richter@hogyros.de>
-Fixes: 3baeae36039a ("PCI: Use pci_release_resource() instead of release_re=
-source()")
-Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/setup-bus.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 362ad108794d..e842feb85be0 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1066,16 +1066,13 @@ static resource_size_t calculate_memsize(resource_s=
-ize_t size,
- =09=09=09=09=09 resource_size_t min_size,
- =09=09=09=09=09 resource_size_t add_size,
- =09=09=09=09=09 resource_size_t children_add_size,
--=09=09=09=09=09 resource_size_t old_size,
- =09=09=09=09=09 resource_size_t align)
- {
- =09if (size < min_size)
- =09=09size =3D min_size;
--=09if (old_size =3D=3D 1)
--=09=09old_size =3D 0;
-=20
- =09size =3D max(size, add_size) + children_add_size;
--=09return ALIGN(max(size, old_size), align);
-+=09return ALIGN(size, align);
- }
-=20
- resource_size_t __weak pcibios_window_alignment(struct pci_bus *bus,
-@@ -1317,7 +1314,6 @@ static void pbus_size_mem(struct pci_bus *bus, unsign=
-ed long type,
- =09resource_size_t children_add_align =3D 0;
- =09resource_size_t add_align =3D 0;
- =09resource_size_t relaxed_align;
--=09resource_size_t old_size;
-=20
- =09if (!b_res)
- =09=09return;
-@@ -1388,11 +1384,10 @@ static void pbus_size_mem(struct pci_bus *bus, unsi=
-gned long type,
- =09=09}
- =09}
-=20
--=09old_size =3D resource_size(b_res);
- =09win_align =3D window_alignment(bus, b_res->flags);
- =09min_align =3D calculate_mem_align(aligns, max_order);
- =09min_align =3D max(min_align, win_align);
--=09size0 =3D calculate_memsize(size, min_size, 0, 0, old_size, min_align);
-+=09size0 =3D calculate_memsize(size, min_size, 0, 0, min_align);
-=20
- =09if (size0) {
- =09=09resource_set_range(b_res, min_align, size0);
-@@ -1404,7 +1399,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsign=
-ed long type,
- =09=09relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
- =09=09relaxed_align =3D max(relaxed_align, win_align);
- =09=09min_align =3D min(min_align, relaxed_align);
--=09=09size0 =3D calculate_memsize(size, min_size, 0, 0, old_size, win_alig=
-n);
-+=09=09size0 =3D calculate_memsize(size, min_size, 0, 0, win_align);
- =09=09resource_set_range(b_res, min_align, size0);
- =09=09pci_info(bus->self, "bridge window %pR to %pR requires relaxed align=
-ment rules\n",
- =09=09=09 b_res, &bus->busn_res);
-@@ -1413,7 +1408,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsign=
-ed long type,
- =09if (realloc_head && (add_size > 0 || children_add_size > 0)) {
- =09=09add_align =3D max(min_align, add_align);
- =09=09size1 =3D calculate_memsize(size, min_size, add_size, children_add_s=
-ize,
--=09=09=09=09=09  old_size, add_align);
-+=09=09=09=09=09  add_align);
-=20
- =09=09if (bus->self && size1 &&
- =09=09    !pbus_upstream_space_available(bus, b_res, size1, add_align)) {
-@@ -1421,7 +1416,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsign=
-ed long type,
- =09=09=09relaxed_align =3D max(relaxed_align, win_align);
- =09=09=09min_align =3D min(min_align, relaxed_align);
- =09=09=09size1 =3D calculate_memsize(size, min_size, add_size, children_ad=
-d_size,
--=09=09=09=09=09=09  old_size, win_align);
-+=09=09=09=09=09=09  win_align);
- =09=09=09pci_info(bus->self,
- =09=09=09=09 "bridge window %pR to %pR requires relaxed alignment rules\n"=
-,
- =09=09=09=09 b_res, &bus->busn_res);
-
-base-commit: 2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
---=20
-2.39.5
-
---8323328-262779146-1760981164=:976--
+--Sean
 
