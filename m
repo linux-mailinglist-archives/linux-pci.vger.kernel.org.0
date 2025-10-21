@@ -1,322 +1,114 @@
-Return-Path: <linux-pci+bounces-38839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C38CBF457E
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:04:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822DDBF45A5
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:07:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F54718C5C7B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 02:04:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 647944081F3
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 02:07:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28EE621FF45;
-	Tue, 21 Oct 2025 02:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF76127781E;
+	Tue, 21 Oct 2025 02:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKpNQpQv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8/9UGAm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538C91F91F6
-	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 02:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932B62773D8;
+	Tue, 21 Oct 2025 02:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761012244; cv=none; b=WztEcAlToXlUzVqUsfKVSoegrqD4osF8QH5VdsobCXkM9q2r1c7hKq0hPVkjugmmofBZOR+0FsLoUMaJaNqtF9mHJitOpDlBul0Bq+mRc3wpVFg1C8gUYZ4dkMSOYFDxn+PmLwhm5VSgCXrboAh/y6G0QOwHju9538A3MOxAn/U=
+	t=1761012426; cv=none; b=VMYAiXiRXzealMOri5oxnwprVrMXRTHuLSL5nckjhW59BNg8g4Lm8FGYlxCQyOlznVSSL/JF87q9FAqCzs08SoIg8/ZXVopg3JD8sjuGqFl3b4ldPrtyVCcxscCBhm50RRFoBcS/6LSMuTiDHQFwqEsl4Ebk7vHmpjKmJcUwVo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761012244; c=relaxed/simple;
-	bh=eNcccu+vEler5KVtBYch1RB+GYjLC2GuJ1NINrrxge4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RfYwfqgM+NUSnnhbQpZABzcoBUz2c0HDx4soXeThmtI4/+jVY+YqySizcF0tswVncxpu/ACsufg4Z6SH6sv97ZMKQMG0EDQr+YxePBg0MBXXDGaPR+DJjarX8IwI9ikJtpygvSFB7h3TFlyUTwxU5xb+A4Yh30OiytVH+lIYdak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OKpNQpQv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761012241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lRwLFO4AfNVfpht0Ivo8PlAeY+jBh+blR/+rewkE7wA=;
-	b=OKpNQpQvk0rjT8uGBAFha+nep33ZFdaegBC/IdqGmgqygC++2tVsKeVnwFB27K511NvlLs
-	/nYkI9jVi9e2Uc1sXZSWXql+7lZsh5tM/iFqCeEiSaPRZP4GTYOI4+KmHyKgqIEhTQWMj3
-	SLGSJ6GlTaXWmNFOInpgNHGbNsnDZA8=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-269-cG0oCSc0MDyQBP7OIrSSAQ-1; Mon,
- 20 Oct 2025 22:03:56 -0400
-X-MC-Unique: cG0oCSc0MDyQBP7OIrSSAQ-1
-X-Mimecast-MFC-AGG-ID: cG0oCSc0MDyQBP7OIrSSAQ_1761012234
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5D01195608A;
-	Tue, 21 Oct 2025 02:03:54 +0000 (UTC)
-Received: from cmirabil.redhat.com (unknown [10.22.64.45])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA9E9180035A;
-	Tue, 21 Oct 2025 02:03:52 +0000 (UTC)
-From: Charles Mirabile <cmirabil@redhat.com>
-To: samuel.holland@sifive.com
-Cc: bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	kwilczynski@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	Charles Mirabile <cmirabil@redhat.com>
-Subject: Re: [PATCH] PCI: dwc: Use multiple ATU regions for large bridge windows
-Date: Mon, 20 Oct 2025 22:03:40 -0400
-Message-ID: <20251021020345.151202-1-cmirabil@redhat.com>
-In-Reply-To: <20251015231707.3862179-1-samuel.holland@sifive.com>
-References: <20251015231707.3862179-1-samuel.holland@sifive.com>
+	s=arc-20240116; t=1761012426; c=relaxed/simple;
+	bh=lea45PnhCbZ2sLHs3xr7ltskoeSEMmGeuwyEfGGX1Go=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KMZjDQLzmcutDlkPZ44YNS6yn7TSNz9jzHL95FMS4aMv3wwcJKEBrDYL6w43K+9Ds+M2Z4Kc1YZebfIjJ1cs86oXWGMytAaucvGOdO0xeubd5LUNoLb3wugQefNWXvEmTbBVFlUtmc31FK+aH4Z1Ah5MjbNa0aXFCuVPMKoX2Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8/9UGAm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57556C4CEFB;
+	Tue, 21 Oct 2025 02:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761012426;
+	bh=lea45PnhCbZ2sLHs3xr7ltskoeSEMmGeuwyEfGGX1Go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r8/9UGAmepYo0j9vJ4bIkQchuenciclVLqqFLNwcxiSeAsEdrcZ/puGGlF1EieTyh
+	 MqVVDlTmIw4CZbu6TSZfeSRy7hhE6Kr7/oMmbELETlm2HZfzPlHAbGH4R9AZETTyDu
+	 77FaoE1BBY8O7lULyKNmDydHVPSg1N1Ch6bI1mMRklSilmeQ3g1IURNjZru2bJfsFx
+	 SqwxMWxlHB5i/MJqmNpNjIjj5YHTCNjuaRwFqZSqfTcezJ4m56xMF1TonyNHpcUWwZ
+	 /C9UaEMCIHl4yna0JpGX5pZAeL/4FC0L6vaxmRunMGx96+HzffBho6PPghAAQ5hrt2
+	 r2J41Ks44Rhhw==
+Date: Tue, 21 Oct 2025 07:36:55 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Vitor Soares <vitor.soares@toradex.com>, 
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] PCI: j721e: Add support for optional regulator
+ supplies
+Message-ID: <p3l2p2raecqqkpdjswiddkthpxzvhm3rl4cw56y2epgcxfiwbb@gsieef3yqvpk>
+References: <20251014112553.398845-1-ivitro@gmail.com>
+ <20251014112553.398845-3-ivitro@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20251014112553.398845-3-ivitro@gmail.com>
 
-Hi Samuel—
-
-On Wed, Oct 15, 2025 at 04:15:01PM -0700, Samuel Holland wrote:
-> Some SoCs may allocate more address space for a bridge window than can
-> be covered by a single ATU region. Allow using a larger bridge window
-> by allocating multiple adjacent ATU regions.
-
-I had a similar patch floating around that I wanted to upstream, but I
-figured I should take a look at lore before sending it in case someone
-else had the same idea. Looks like great mind think alike :^). I have
-attached my version the patch to this email and will leave some feedback
-inline. If you want to incorporate some of my changes, feel free to add
-
-Acked-by: Charles Mirabile <cmirabil@redhat.com>
-
-or even a Co-developed-by and my DCO.
-
+On Tue, Oct 14, 2025 at 12:25:49PM +0100, Vitor Soares wrote:
+> From: Vitor Soares <vitor.soares@toradex.com>
 > 
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> Some boards require external regulators to power PCIe endpoints.
+> Add support for optional 1.5V, 3.3V, and 12V supplies, which may be
+> defined in the device tree as vpcie1v5-supply, vpcie3v3-supply, and
+> vpcie12v-supply.
+> 
+> Use devm_regulator_get_enable_optional() to obtain and enable each
+> supply, so it will be automatically disabled when the driver is
+> removed.
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
 > ---
-> An example of where this is needed is the ESWIN EIC7700 SoC[1]. The SoC
-> decodes 128 GiB of address space to the PCIe controller. Without this
-> change, only 8 GiB is usable; after this change 48 GiB (6 ATU regions)
-> is usable, which allows using PCIe cards with >8 GiB BARs:
+>  drivers/pci/controller/cadence/pci-j721e.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> eic7700-pcie 54000000.pcie: host bridge /soc/pcie@54000000 ranges:
-> eic7700-pcie 54000000.pcie:       IO 0x0040800000..0x0040ffffff -> 0x0040800000
-> eic7700-pcie 54000000.pcie:      MEM 0x0041000000..0x004fffffff -> 0x0041000000
-> eic7700-pcie 54000000.pcie:      MEM 0x8000000000..0x89ffffffff -> 0x8000000000
-> eic7700-pcie 54000000.pcie: iATU: unroll T, 8 ob, 4 ib, align 4K, limit 8G
-> eic7700-pcie 54000000.pcie: PCIe Gen.2 x1 link up
-> eic7700-pcie 54000000.pcie: PCI host bridge to bus 0000:00
-> 
-> [1]: https://lore.kernel.org/linux-pci/20250923120946.1218-1-zhangsenchuan@eswincomputing.com/
-> 
->  .../pci/controller/dwc/pcie-designware-host.c | 34 ++++++++++++-------
->  1 file changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 20c9333bcb1c..148076331d7b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -873,30 +873,40 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 5bc5ab20aa6d..f29ce2aef04e 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
 >  
->  	i = 0;
->  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
-> +		u64 total_size;
-
-`resource_size_t` might be a better fit for this
-
-> +
->  		if (resource_type(entry->res) != IORESOURCE_MEM)
->  			continue;
+>  #include "../../pci.h"
+>  #include "pcie-cadence.h"
+> @@ -467,6 +468,10 @@ static const struct of_device_id of_j721e_pcie_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, of_j721e_pcie_match);
 >  
-> -		if (pci->num_ob_windows <= ++i)
-> -			break;
-> -
-> -		atu.index = i;
->  		atu.type = PCIE_ATU_TYPE_MEM;
->  		atu.parent_bus_addr = entry->res->start - pci->parent_bus_offset;
->  		atu.pci_addr = entry->res->start - entry->offset;
->  
->  		/* Adjust iATU size if MSG TLP region was allocated before */
->  		if (pp->msg_res && pp->msg_res->parent == entry->res)
-> -			atu.size = resource_size(entry->res) -
-> +			total_size = resource_size(entry->res) -
->  					resource_size(pp->msg_res);
->  		else
-> -			atu.size = resource_size(entry->res);
-> +			total_size = resource_size(entry->res);
->  
-> -		ret = dw_pcie_prog_outbound_atu(pci, &atu);
-> -		if (ret) {
-> -			dev_err(pci->dev, "Failed to set MEM range %pr\n",
-> -				entry->res);
-> -			return ret;
-> -		}
-> +		do {
-> +			if (pci->num_ob_windows <= ++i)
-> +				break;
+> +static const char * const j721e_pcie_supplies[] = {
+> +	"vpcie12v", "vpcie3v3", "vpcie1v5"
+> +};
 
-I think it might be bad if you were to only able to partially map a given
-resource. In my version, I keep the original check outside the loop with
-merely `break`, but return an error from probe in this check.
+Please don't hardcode the supplies in driver. The DT binding should make sure
+the relevant supplies are passed (including the optional ones). Just use
+of_regulator_bulk_get_all() to acquire all the passed supplies.
 
-> +
-> +			atu.index = i;
-> +			atu.size = min(total_size, pci->region_limit + 1);
+- Mani
 
-I had to look up the difference because I couldn't remember—I used `MIN`
-here instead of `min`. I think `MIN` is approriate, but I am not sure it
-really matters so you could keep `min`. 
-
-> +
-> +			ret = dw_pcie_prog_outbound_atu(pci, &atu);
-> +			if (ret) {
-> +				dev_err(pci->dev, "Failed to set MEM range %pr\n",
-> +					entry->res);
-> +				return ret;
-> +			}
-> +
-> +			atu.parent_bus_addr += atu.size;
-> +			atu.pci_addr += atu.size;
-> +			total_size -= atu.size;
-> +		} while (total_size);
->  	}
->  
->  	if (pp->io_size) {
-> -- 
-> 2.47.2
-> 
-> base-commit: 5a6f65d1502551f84c158789e5d89299c78907c7
-> branch: up/pci-bridge-window
-
-I also included an attempt at the inbound window version after seeing
-Nilkas's feedback.
-
-Best—Charlie
-
-Signed-off-by: Charles Mirabile <cmirabil@redhat.com>
----
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 20c9333bcb1c..f30961482799 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -873,29 +873,49 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 
- 	i = 0;
- 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
-+		resource_size_t res_size;
-+
- 		if (resource_type(entry->res) != IORESOURCE_MEM)
- 			continue;
- 
--		if (pci->num_ob_windows <= ++i)
-+		if (pci->num_ob_windows <= i + 1)
- 			break;
- 
--		atu.index = i;
- 		atu.type = PCIE_ATU_TYPE_MEM;
- 		atu.parent_bus_addr = entry->res->start - pci->parent_bus_offset;
- 		atu.pci_addr = entry->res->start - entry->offset;
- 
- 		/* Adjust iATU size if MSG TLP region was allocated before */
- 		if (pp->msg_res && pp->msg_res->parent == entry->res)
--			atu.size = resource_size(entry->res) -
-+			res_size = resource_size(entry->res) -
- 					resource_size(pp->msg_res);
- 		else
--			atu.size = resource_size(entry->res);
-+			res_size = resource_size(entry->res);
-+
-+		while (res_size > 0) {
-+			/*
-+			 * Make sure to fail probe if we run out of windows
-+			 * in the middle and we would end up only partially
-+			 * mapping a single resource
-+			 */
-+			if (pci->num_ob_windows <= ++i) {
-+				dev_err(pci->dev, "Exhausted outbound windows mapping %pr\n",
-+					entry->res);
-+				return -ENOMEM;
-+			}
-+			atu.index = i;
-+			atu.size = MIN(pci->region_limit + 1, res_size);
- 
--		ret = dw_pcie_prog_outbound_atu(pci, &atu);
--		if (ret) {
--			dev_err(pci->dev, "Failed to set MEM range %pr\n",
--				entry->res);
--			return ret;
-+			ret = dw_pcie_prog_outbound_atu(pci, &atu);
-+			if (ret) {
-+				dev_err(pci->dev, "Failed to set MEM range %pr\n",
-+					entry->res);
-+				return ret;
-+			}
-+
-+			atu.parent_bus_addr += atu.size;
-+			atu.pci_addr += atu.size;
-+			res_size -= atu.size;
- 		}
- 	}
- 
-@@ -926,20 +946,38 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 
- 	i = 0;
- 	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
-+		resource_size_t res_start, res_size, window_size;
-+
- 		if (resource_type(entry->res) != IORESOURCE_MEM)
- 			continue;
- 
- 		if (pci->num_ib_windows <= i)
- 			break;
- 
--		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
--					       entry->res->start,
--					       entry->res->start - entry->offset,
--					       resource_size(entry->res));
--		if (ret) {
--			dev_err(pci->dev, "Failed to set DMA range %pr\n",
--				entry->res);
--			return ret;
-+		res_size = resource_size(entry->res);
-+		res_start = entry->res->start;
-+		while (res_size >= 0) {
-+			/*
-+			 * Make sure to fail probe if we run out of windows
-+			 * in the middle and we would end up only partially
-+			 * mapping a single resource
-+			 */
-+			if (pci->num_ib_windows <= i) {
-+				dev_err(pci->dev, "Exhausted inbound windows mapping %pr\n",
-+					entry->res);
-+				return -ENOMEM;
-+			}
-+			window_size = MIN(pci->region_limit + 1, res_size);
-+			ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM, res_start,
-+						       res_start - entry->offset, window_size);
-+			if (ret) {
-+				dev_err(pci->dev, "Failed to set DMA range %pr\n",
-+					entry->res);
-+				return ret;
-+			}
-+
-+			res_start += window_size;
-+			res_size -= window_size;
- 		}
- 	}
- 
 -- 
-2.43.0
-
-base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
-
+மணிவண்ணன் சதாசிவம்
 
