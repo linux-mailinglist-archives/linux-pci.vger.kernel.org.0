@@ -1,145 +1,76 @@
-Return-Path: <linux-pci+bounces-38905-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4C76BF6F7B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:08:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DDA4BF722E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:43:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8421B4078CB
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:08:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3D7D400307
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:41:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9608338909;
-	Tue, 21 Oct 2025 14:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WU3j6eb+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF2E33B968;
+	Tue, 21 Oct 2025 14:41:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63AC30BB83;
-	Tue, 21 Oct 2025 14:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07A1333B957;
+	Tue, 21 Oct 2025 14:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761055720; cv=none; b=KXpTgs8ahU5KVP0t8iGRAL+R1QPS4OWtkpbWK2NMnZpUTdUKIP/z4lfVwbBNOjZ5RSNynjKyf6XUM/wOOY6N1FKJoz9holC+1RA9698fRqlXsq9ym8qtn2DQVtc4janVQ/oWa1Nf0sXNqpC/5uGA1xxusABZhvF9DE3IjKLyBYQ=
+	t=1761057667; cv=none; b=sctpzHUvODH/8xwDLuFOn4+/tOEFwTmAZSpLWXagrhRrqAaQL8JWajbHMKryuldANPHYxa+gGf/ktdKe7FbvnStAuY+7Ma+PSmfsmEtx6UpQx9YzAgCiBeAGJjJewMTuOgPEmfzyX7HhnSP08rnVo4RIhhYSM1g0TvWODbd+bYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761055720; c=relaxed/simple;
-	bh=q0UJhFh/ymFNMfB5lO1iqfViSAmwOaowEDmMPzVVZh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EB66kghhWcB/9p+nU3jdMbxPnQekp8icIsmR0sB3Rl6cZpiNGfYOpB7g4IbYTzChpyaYtlzRrVAS1XGG07loIOyRposX+0XfvYmynAj1k2oufhIh0mo5WkdBCgQNJCpVrySBBHuT4FW+OgosV6Q3v3X48rOkQyPN6K4zxTtm2CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WU3j6eb+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761055719; x=1792591719;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q0UJhFh/ymFNMfB5lO1iqfViSAmwOaowEDmMPzVVZh0=;
-  b=WU3j6eb+m6KsIQhDbJRuFft36e9aIu9q6LQB/8bj7iaN8SWrk+VsNrjz
-   9bcwu3kBwxb2ma1ijo6cuYqdagczSUFsNXQ4mWHboR0xfkKPu4XIGvUc7
-   oHsJrwE/wexEgOQ+kylLzubZwFc6MPtkN2W4QoHqwQ0CCYuJHxTOz5zy3
-   T4460lXT1/4EgLfAGEYMh30VR/dhiHtdZSvJliVhIGxTQcwKf/fkLqdOh
-   9vVFNTQqHl/e5pEyG627hbbmBYF2Prwo4rYvObkl+c2pIkiZHCtm096Rc
-   71LptO2UB/aH9mQlSs9ZMivcqxUeeSvMP2ZuT/ctQTkH55QjuTl4vVK7p
-   A==;
-X-CSE-ConnectionGUID: ZuSWgQGUTV2WH0cXQEQM5A==
-X-CSE-MsgGUID: CA/4KTfLQqaqnQ73cNKrAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67045289"
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="67045289"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:08:38 -0700
-X-CSE-ConnectionGUID: lTF4vOHAQc2nPuVSYtPeyw==
-X-CSE-MsgGUID: xsJaPeS3RZicD7PgMDVkZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="183539756"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:08:27 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBD2F-00000001Vzw-0kAj;
-	Tue, 21 Oct 2025 17:08:23 +0300
-Date: Tue, 21 Oct 2025 17:08:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 08/29] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <aPeT1hzXgO2J-M0K@smile.fi.intel.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-9-herve.codina@bootlin.com>
+	s=arc-20240116; t=1761057667; c=relaxed/simple;
+	bh=psNfBZyyNJC/BgyLpkpbbZ23QMFeN9l9ZAGSUVtrzLc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cnH43N49ZCIETITb1hNHJ+rUNeKfO+7+vtSX8lVS2Vfg6ahWSTJDBk7IB/SxDrYQn+WB6/f+GJN/t0mMUVIn5a5LdsIkJWOCTN44a0CyTx9BelCI7BTVfb5khys2rCxdrCh6tvJDBS3Pdukk4zWLwpdcZ4swEYWQIyIyK736kmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id E587992009C; Tue, 21 Oct 2025 16:41:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id DF88192009B;
+	Tue, 21 Oct 2025 15:41:01 +0100 (BST)
+Date: Tue, 21 Oct 2025 15:41:01 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Bjorn Helgaas <helgaas@kernel.org>, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-pci@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] MIPS: Malta: Use pcibios_align_resource() to
+ block io range
+In-Reply-To: <9ff182b0-076b-78fd-adec-99ae7ea5341f@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2510211536330.8377@angie.orcam.me.uk>
+References: <20251020223714.GA1165320@bhelgaas> <alpine.DEB.2.21.2510210145260.8377@angie.orcam.me.uk> <9ff182b0-076b-78fd-adec-99ae7ea5341f@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251015071420.1173068-9-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Wed, Oct 15, 2025 at 09:13:55AM +0200, Herve Codina wrote:
-> Setting fwnode->dev is specific to fw_devlink.
+On Tue, 21 Oct 2025, Ilpo Järvinen wrote:
+
+> > > If the missing resource reservations (dma1, tiger, dma page reg)
+> > > mentioned by Maciej are an issue or can be fixed up, let me know and
+> > > we can amend this.
+> > 
+> >  NB this comes from `plat_mem_setup' in arch/mips/mti-malta/malta-setup.c 
+> > iterating over `standard_io_resources'.  ISTR now this being my original 
+> > reason to come up with the approach taken with commit aa0980b80908 rather 
+> > than using PCIBIOS_MIN_IO.  Since the ranges are now owned by the PCI host 
+> > bridge, calls to `request_resource' referring `ioport_resource' fail.
 > 
-> In order to avoid having a direct 'fwnode->dev = dev;' in several
-> place in the kernel, introduce fw_devlink_set_device() helper to perform
-> this operation.
+> So this platform would actually need multiple root bus IO resources to 
+> cover PIIX4 range without capturing non-PCI ranges?
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ I've got it covered now; will send patches shortly.  It was easier than I 
+thought, phew!
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+  Maciej
 
