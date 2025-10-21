@@ -1,237 +1,202 @@
-Return-Path: <linux-pci+bounces-38903-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EC19BF6F96
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:09:43 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 288B4BF6FA5
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:10:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAC611888163
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:08:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 624124FA667
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:08:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53517338F35;
-	Tue, 21 Oct 2025 14:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8208433B943;
+	Tue, 21 Oct 2025 14:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pddQ44g4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="COd4ZwD/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011054.outbound.protection.outlook.com [40.93.194.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0B7337BBD;
-	Tue, 21 Oct 2025 14:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761055657; cv=fail; b=cxqXICMk//evQbtEUijlG81q0jKgMFMAEHXXyCG4qo02AzBY5DCKJUgf/KSIAOjPfdGCtkxL6vDPivxYxWXHLo29NqUvLRMsriMRq870w0MvjYFOM+J/smI9unVWHp+isvuRO+YF59WQOKCdX/PBFxw3vDwiU/f15SqNxkb8KXc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761055657; c=relaxed/simple;
-	bh=j0eFtWRtE+auAClu3MjS0/IrXottYVM3AwSfoWOx94Q=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=MAcGldkcRK6F0obrK8v6NQl5IulE+bSxWLaBr8kBjLz3dRUfy6Y2kn18xSBc8JGOKjaF82ZjRQd/5AnZGV0kINQAmFiFhcmepMdmWWwPpGiVOvQfx0SCtLfV6VZC3xw0v3lHC4PUuqogRwzoOeV7TJUquBXuT9OHmHf1GSshrxs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pddQ44g4; arc=fail smtp.client-ip=40.93.194.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SdFhyJEIyW6EP1b0b5ejMtewPFKWTJ0rLc5MgB9pZdRqYGj0hbAtkh/JrFPbfmBggaK3DAQUvaYmzYdsCPXLroKR8ZL3aVGOnf2AdyIv5ryiEX+WMg027Fxh1914/bYu0oejZhFmLhIg6GPTqGYpWNyV4dqGk8bbxvWSdzW7CujVenTyKPgJSsnqwrtp8Yb+mvlvBRw+V6v/3xsfiTlYT11g85QOcvla6+oIrxGIoMrIRq6odWRhspqTjS75sXc1qOG7Dhqu3OasVmbdhzO8Vtww2T4e1QeN6GFa6DVNCzBZoYNb/NiJc7iM5ltDxHwiZBBGVE3Eyyes2s+sbkf+8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=91fTjfPlEEUs/0C4n3AtQs1NwcsHglytmXddVv9IDnc=;
- b=I1Tn+3O60b4/TZnoGqBcU9td0548cvXdRfE96GnYGWzHap+wbGTXy1OY3RgZzn0E1DAsWt5uCN5OJGLGRH0klPS2TG7Tad7ONs13zcYOL6FxKdHNtgb6rkeYEYvX5z2P9ziWA94SjSsGkbuHOvxAz/HnE212XnP+oSoX6kRtbps21Mn3mwGn0WBZ5Qp9TtVOR4sUE9WI/0OK+BORzgtUzZRzufszNF1d/g7NqbyiCpCUkUVWiQYL9K/3E/qsr98KnWFATOV8EhmIWNj2FwxwIPY5TBhOeo1XKGwnKJ26v21QY7qe6PsRkvXSfdadQ0NaCKr27pDo6xEIO/EORKZ9LA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91fTjfPlEEUs/0C4n3AtQs1NwcsHglytmXddVv9IDnc=;
- b=pddQ44g4AfLssOUTcumNlvxzWfXoIJWikrfyGXuJaXvMCvZB+tDI0sh8+rEl097Yqk7I1j6CswgvboUxSrjkIIQxFS4aoZgkqNAYOtqzsIiaXyVUeNUgy/KJffjX1DDVxzssKz2Rqk+xBWHi6cUpt6U0qmJkNMqooFyysePKlAWBF/X3yW//0CvuYCaTrgAkeygXyGjeMse47AspxZx5fkRP0BQQtp8UtTPDl4st3MwARWX7WDRblzqSyIOToymRqQNvptAfeNvqAgRJMiZXLfDQc9wGnbNa+LzAi+/kzv3JHE8OX4OlctsUBz4vvA2TZz/3/j3dwK1Zm5ecIdNb5g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB3997.namprd12.prod.outlook.com (2603:10b6:208:161::11)
- by LV8PR12MB9642.namprd12.prod.outlook.com (2603:10b6:408:295::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.16; Tue, 21 Oct
- 2025 14:07:32 +0000
-Received: from MN2PR12MB3997.namprd12.prod.outlook.com
- ([fe80::d161:329:fdd3:e316]) by MN2PR12MB3997.namprd12.prod.outlook.com
- ([fe80::d161:329:fdd3:e316%4]) with mapi id 15.20.9228.016; Tue, 21 Oct 2025
- 14:07:32 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 Oct 2025 23:07:27 +0900
-Message-Id: <DDO24JQ1I3ER.1GOOI7RQISUS@nvidia.com>
-Cc: <dakr@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <cjia@nvidia.com>, <smitra@nvidia.com>, <ankita@nvidia.com>,
- <aniketa@nvidia.com>, <kwankhede@nvidia.com>, <targupta@nvidia.com>,
- <zhiwang@kernel.org>, <acourbot@nvidia.com>, <joelagnelf@nvidia.com>,
- <jhubbard@nvidia.com>, <markus.probst@posteo.de>
-Subject: Re: [PATCH v2 0/5] rust: pci: add config space read/write support,
- take 1
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Zhi Wang" <zhiw@nvidia.com>, <rust-for-linux@vger.kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20251016210250.15932-1-zhiw@nvidia.com>
-In-Reply-To: <20251016210250.15932-1-zhiw@nvidia.com>
-X-ClientProxiedBy: TY4P301CA0090.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:37a::12) To MN2PR12MB3997.namprd12.prod.outlook.com
- (2603:10b6:208:161::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C30339B4B;
+	Tue, 21 Oct 2025 14:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761055673; cv=none; b=ODBoVaHzjR4jugungenKZwQX6F1Tt2b/zV2AfV+x+6jO9oKKlFSpYMPt/oRyLv/ZWWxHlxpkt11ZccxHWZSro5XdWMtUCitF0VzGKKj+p91O0vsJbivfGU1PJ5QkgUlmnwJjvT+qs7Q5P1gDhhsSIcdf7J9tAIoNbT23hjw2EHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761055673; c=relaxed/simple;
+	bh=MLoAqGWmWG0tS39BHCw04giIQ56RcWiSSu/4KePK/yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sgmGlrKUdb4tksrHQsZ1HcjDvoKlG0Kh70mbQ0CCMcREOXY6c5yPSlsnUz3WslxCc7HQagKPneHaMhv7rcPcg8yhev8MuwPWxF6PfhwPEelNH4lkPTFC93dOGqIJpO72OgBcXakJxEuqunPYxXWscmxcAd8brb9ez0CQl8X+6BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=COd4ZwD/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761055671; x=1792591671;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MLoAqGWmWG0tS39BHCw04giIQ56RcWiSSu/4KePK/yY=;
+  b=COd4ZwD/UvEs7tmxenfEITc1kFvq/9VVf2748orKc9eEky4SF+Skqk8O
+   t4WVJ8jyg/v1Qur6lvugsLGVFcSEX6y9fbdPogNgOFSS4oUxeGiPV6B68
+   aWhWngrml6SKQdM/HtmaVCyuQXic+iRKOEctS/HJE7WswZEO0dgRHaEh8
+   /fcTHQzdAdC4J7Flf4Gk5E9TIZRuBTjFlhVdHvyih+DssVZUmGPX0PH5x
+   fR+Of66GBQoX/TZ5sAlmvKIg7H+dyvJLJVrpqpFMxjPPVxsKbj4Qaca5+
+   R6M/c9+CbshllIuABBawbgQYi42jNfOeCv2tbTGyFpTxLQ4FxLptEjYCi
+   Q==;
+X-CSE-ConnectionGUID: oJTT6URlQIi3BtwyR79hig==
+X-CSE-MsgGUID: YUZFebCiQHSJzRYuFTV9Hw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73788480"
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="73788480"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:07:50 -0700
+X-CSE-ConnectionGUID: OIuqUSuiRNiNI7aTyE6D3g==
+X-CSE-MsgGUID: pogwMQpnS7K/l603s2LfBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="184081155"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:07:39 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vBD1S-00000001VzY-2SRO;
+	Tue, 21 Oct 2025 17:07:34 +0300
+Date: Tue, 21 Oct 2025 17:07:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 06/29] bus: Introduce simple-platorm-bus
+Message-ID: <aPeTppUgRC1wWQU9@smile.fi.intel.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-7-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3997:EE_|LV8PR12MB9642:EE_
-X-MS-Office365-Filtering-Correlation-Id: b9b5b747-4b43-4d05-1ec3-08de10ab2d03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WXNjT2RBQUd1TXh1LzJCaUpGNDNWZGI3SWZQU1VHVWJGOEM1U1VjdCtzeXNE?=
- =?utf-8?B?VSt3NjRsWUptRzRrd1BMeHliRUJVTERTRW1Zc2hLRlcvNE1hQ3VXTWtmdC9G?=
- =?utf-8?B?aTdkS092RGdJNUdDemdjYzZITWFTSzlLZ1M0S28rSlhLWFQwS2lncW80V1hQ?=
- =?utf-8?B?elE4dWlCS3g5bXYxUy9pSUw4RW1IMVZFbENZVHlJSGRhZzN3TzUyb2NaVjZi?=
- =?utf-8?B?WVR0Mjl3T093cU1Kdzhhd0IyVS9DaHh0VTlYSzlYdE5obDhlc2duMzhMQUtO?=
- =?utf-8?B?UXpjUlU0WDMyOGxmOVVsM2Jsd2d0UTlUcWpZMUppNWcrb2tFRWNmcDJzMGQw?=
- =?utf-8?B?UXc2cHdwVnFkUG0zc0NIZXhnVkJVVlNZWFFsc1BCR0Q3b3BLTVlLazd1NThr?=
- =?utf-8?B?dS9yUloycDdpcnVSSGlxUXgySzMwdjRvUWFiVU5kL2tESGVNRDdoeVk5Z0Jq?=
- =?utf-8?B?NHVNQ1ZZK1RGYURWK3Znem5PRmYyeUIzbFV2VVk4MWh2Y0MyRWFwdCtzdEpa?=
- =?utf-8?B?RWlmeDc1bGRIdDNNalBDYzNMbk1JaHJSNXhueWJlLzcxNUQwTDdqb0ZueVU0?=
- =?utf-8?B?VmdDRkVlalVyOVQ2T2FuRnRDY0FsdytzL1pNN3pnYzFudHpsM0RNRjlhOWw1?=
- =?utf-8?B?MUdyZ2N3cHhDYnhJSk5YL0tQUitGSzRFcWdydyt2MDlKWmNLUzh5YTczQWV4?=
- =?utf-8?B?anNPTDYvTW5FWlFvZkUvTGlqZkV1cmVIZ0t1dWpNcUQrRUw2S3JzbWNwZENB?=
- =?utf-8?B?N2E5anlnbGIzSXU1NkdwMmo3OFdiaEQxRGN3NDNIZUlNQzQrczJMaFNtZW9x?=
- =?utf-8?B?bW1SVjdhdlVKQ2NYSVpyekxLVXpyYjF2REpHdGFsb3psTG0zQVA5RitDSDlQ?=
- =?utf-8?B?Mi9XUCt6dmQ4UXpYeDJ4UXYvTnB6cmw2djIxalplNmlIMmFXREdQVXk3WCtR?=
- =?utf-8?B?bFk4YVA5UEJFa1VUait0Mkp5dythZzErSmY0aUNDTHNUSDVrTk0vU3h6QUxy?=
- =?utf-8?B?NG1hLzVNMm1TdHJub0NYQk1ZTW9FTko5ZWV0TjBkNkhyTC9QMm9jYjJyb3lm?=
- =?utf-8?B?Q29pVWxHemJ3amFsK25QTC96cGExOWNFbGk0MHRrWXhSZDlrcXE3RDg3YytM?=
- =?utf-8?B?UCs4bTd2ZWQyb1B4SEtxR240QXZJcjVTSGphWVlFOXRmNzVLTlhONHE3ckJk?=
- =?utf-8?B?Z0lFa1lSOHF6dGNMbEZsR1NKcGx1RERKRXNoa29sZTczS1RnNkhDZjl5S3BP?=
- =?utf-8?B?ZXFOc29DNEdsNnZrWUVLaG00WUpiQURLN1VXTDUyOG41ZUltUkJEU2Vmbkoz?=
- =?utf-8?B?RFB5cmxJZTJXenZFK0ZoeTI4NE1ZaDM0clBlaVA3cmpiMzUwU1pjK3lIZi9N?=
- =?utf-8?B?anFVM0x0MlAySHJ5d3hYN1VZTzhNMGRmM2dQNTIzbjZQbUdscHpZWkZPRDBN?=
- =?utf-8?B?RS9QRENWWk1mUzRlZU0yVVVRT2RtaFBXL2loOW40M2crVy9KeEh0WkNzeUlR?=
- =?utf-8?B?WWdJYVA4NkpiaDUwRTd0cml4MktFVERGN1Y0L3VvcmF2aEZuMWtJbFVlaThJ?=
- =?utf-8?B?dzhFQmV4VHhHaGdlanVYY0lydDM2VE5yYjhUK3ltcDh6ZWVlYWNySGtzc0kx?=
- =?utf-8?B?RVJEa3J2MVgxQjByVHBrK1dVcDJIUFZDTk84UVM4ZU8yN2x4SjRLN3JYb1dY?=
- =?utf-8?B?STQybkQrNTZxMy9wZUY0Z0JSemI4Z1h0bVZ3S0psdU5oWTJvMHcxZlEwMDRG?=
- =?utf-8?B?aXZYK0ZYUm9QRFRzRloyYmd4NHRGUEdlbHNIR1pIdjF3SFNOQlU1YVFMOC9v?=
- =?utf-8?B?cmZ6QTlnbThBM0VMTDJud2RlS3RTOEFzRnVpMFZaemwzZmNUN0FROW5QVnZI?=
- =?utf-8?B?MHpUOTVkOXpkenk0VHdoR2Exd1NoVFZRMzVveG5BeGYzTlNBYnMwYnUwZXdX?=
- =?utf-8?Q?/bu0oRg5gguiGDpgCSxAEAxFtt1J53gb?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3997.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a0djUHliUjdZcGxySWxrdWNlSVdJSVc3U2UzRmdVNWt4MzdkblFtQi8yT0M4?=
- =?utf-8?B?YkhVLzB5b013MGhIc2ZZRWZodmxERnRTWm9maUlCNjIvMGYvOGFlYi9TOEZN?=
- =?utf-8?B?RzVVOTBBSGJHRXpxQ05TU2h5eEpuNVVxUDljQ2VFaStCekRpQllZRGNYUlh4?=
- =?utf-8?B?d25ROHZTU05pOWs5YmhtbUlCdUdkUGtLRVhsNjJPK0hwNkMrbSszMjFqbnY3?=
- =?utf-8?B?TVl1WUJlYU9NZmpES2E4bVpSQVNUcUJwTjZjYWhnYnRwbzBLYnNuczJBSThI?=
- =?utf-8?B?ZlNBZGtwRmorc2FQSXpoQXI0Z2NQb0h5cnoyQ3pzZjBRMmJ1bThONUFiZ3B2?=
- =?utf-8?B?RGIxZ05CY1ppOVJxODEvODhrL09LcDd2THNJcEk5WjNSSkdkWjVobWVGbmF3?=
- =?utf-8?B?TVg1djRzQ0gwNkFSTFp1N1pYZGQzeHI3S250bW9Mb0lRWEd1aG9oSWg0TTJv?=
- =?utf-8?B?eVdMcmhkTWtOMEs4R2pGdDE2MlVQWE05VjJSMG9IVXV3WHdXeUdaNVJrRmhW?=
- =?utf-8?B?QkZCVStlVWZPd0tjMm1yK1g2dkFuSFlYTUgxN0lad2htaG9FSzBNNEdJcndF?=
- =?utf-8?B?Ly9aNkZQekdSZTBxNkw0YjF1SnJoNERDeUM4OHJnMkZGbHkybnVqRU9NdkJO?=
- =?utf-8?B?blB2anMwQlg1Q3N6ZXl3Nmd3aVdXOXNuNW91bmEyKzlIQXFOQXB0aXpYMzVH?=
- =?utf-8?B?VDllTjdUYlpET1VhZ2tta2xpYkpBdlh4SWhiNjFKWDBvcXJ2Vkt6NnlRNzIy?=
- =?utf-8?B?NUhMdzJmTTFWZEF0bDJ3cW5VUXo0cGdZbi9nbnN6ZldkSXU1cHpmd3RCalJ6?=
- =?utf-8?B?S3Uwc3VuTFVCMTVvWW42cE42UDVUQzc3SzRabUEzbEJIVGJBd0p5ZXJtTGY5?=
- =?utf-8?B?WjVCNFI0VlZGeVVadURHVHFpZmVMMDVmNGlDdWRRNUJZQStETzM4cm1vbCtk?=
- =?utf-8?B?ZUNBL2FzRWgwYnp5c1l6WXJ4WjJNWEdJU1lrc005WWRUNktHS1hEaStia245?=
- =?utf-8?B?bnN5TXJaOFJYdUNwaWEwVE9QRzVtNWRUTVFqWTIxd3B1Nk5qcllrQWJwUm5t?=
- =?utf-8?B?bWVJeG16bDNRbEMzUzBhcW05ZDRhYnd6QXRkZlZPSE9JWnVmUnQ2MVpCR1d0?=
- =?utf-8?B?U1duVHBaS0g3VzZFTlNwYkNEaHN2UDNwOVQvRDEwMm42YzRLS1ZkdWpveWwr?=
- =?utf-8?B?RzU2YmhocnBpWDVXRmlXQWlpdTdhM0dnUE9VRVVpRUVNaVRqWEdPNm9acGhU?=
- =?utf-8?B?a29UVEZ3Vk0vRTlYUnNWK1BOSVhyR0t4Y3VsTENVNXQvcVlHb2RkU01MVlpy?=
- =?utf-8?B?Sk02SFhCTXRLTnZyKy80bVArYzdON0pwRUdLMDEyZmdGTG85eXYra1FleWR1?=
- =?utf-8?B?c0Qxa24xS2U0V1FmaHI3eGEwR1N6RXVnWHJnVzhRL210eEN4WmxrdHphaHN5?=
- =?utf-8?B?NXNTa2JKc2NQRjBJazE0UzZwSkhGcVJUeTNRZkhOb0UrdXpWVnR2OWhxTnN0?=
- =?utf-8?B?OHdmQ3BPYk04U1NZb09LYVoxdmlzbTZlNWlxbEZXc2RHWHVjdm5HSEJmUERF?=
- =?utf-8?B?ZUgvOEZZNXVIQ2NPQmJ5akx2NkEwNVlWYTNCeVBlVFg1VWdLeFBMbUlRRnZ3?=
- =?utf-8?B?dGxjY0NxYVpla015OHlueFZZaWdZc2MxdVV1RkxZVUhGamJwWHFhaGNQOW9O?=
- =?utf-8?B?RFpNMjRpZVB4eFY4WmlIYjZyMUx1K1VqcEUwMGthTnNFYVlhMHJIYXVCZHVv?=
- =?utf-8?B?Y0s3aWxMK09vRTVhYlZhV1h0Nk5ReGF5bG1jbU9ERWp0VW0raktwOWcrYTU2?=
- =?utf-8?B?anZLZGNaTGUzdVhGMllrZ0xSVUFvb0JDaTVaZ3NTYnV3ejJXNnIzZW03L3lT?=
- =?utf-8?B?eHF4MGxlUGlJTTFjWW82b1JDNk9rYkU5L3pJcDhlV2FxRFFmaGdaTTdLT0pt?=
- =?utf-8?B?V2Z1WXFjWEVtVGxSVEwxYmk3Wkg4a1dGTVhOeFZkOFlSVTVuYWtQcEpzNS8z?=
- =?utf-8?B?RnNydGZ2NlpCV0pPeHRXZjlpVTJoVUJNTUVzRkhlRnI0RDlvdzlYV2dqckR2?=
- =?utf-8?B?Q1owVTBkS09nQjBYWEdVZGxkRnZwbFcwdFg4TFRrMFFXMU1FN1IzVis3cG01?=
- =?utf-8?B?bkp4OHNSc2ZDTVplOFZQQWNrMm5xb1ZhdFV0bXM3Z1l2Yk5JSG1YcnEzM3Vo?=
- =?utf-8?Q?e4xaWPoMbWkW4LZKqyWqciIv5W95eeLATdbKSSwEx4p8?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9b5b747-4b43-4d05-1ec3-08de10ab2d03
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3997.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2025 14:07:32.0353
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QkVkAN74qdvH+r145RzM8uEzG3QfhaWj3fxze2VRHB6P1PFn+FPpHj/teNUNa+CvsCuF+IjuG/rKPaDyt4i6cQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9642
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015071420.1173068-7-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri Oct 17, 2025 at 6:02 AM JST, Zhi Wang wrote:
-> In the NVIDIA vGPU RFC [1], the PCI configuration space access is
-> required in nova-core for preparing gspVFInfo when vGPU support is
-> enabled. This series is the following up of the discussion with Danilo
-> for how to introduce support of PCI configuration space access in Rust
-> PCI abstrations. Bascially, we are thinking of introducing another
-> backend for PCI configuration space access similar with Kernel::Io.
->
-> This ideas of this series are:
->
-> - Factor out a common trait 'Io' for other accessors to share the
->   same compiling/runtime check like before.
->
-> - Factor the MMIO read/write macros from the define_read! and
->   define_write! macros. Thus, define_{read, write}! can be used in other
->   backend.
->
-> - Add a helper to query configuration space size. This is mostly for
->   runtime check.
->
-> - Implement the PCI configuration space access backend in PCI
->   abstractions.
->
-> v2:
->
-> - Factor out common trait as 'Io' and keep the rest routines in original
->   'Io' as 'Mmio'. (Danilo)
->
-> - Rename 'IoRaw' to 'MmioRaw'. Update the bus MMIO implemention to use
->   'MmioRaw'.
->
-> - Intorduce pci::Device<Bound>::config_space(). (Danilo)
->
-> - Implement both infallible and fallible read/write routines, the device
->   driver devicdes which version should be used.
->
-> Moving forward:
->
-> - Define and use register! macros.
-> - Introduce { cap, ecap } search and read.
->
-> RFC v1:
-> https://lore.kernel.org/all/20251010080330.183559-1-zhiw@nvidia.com/
+On Wed, Oct 15, 2025 at 09:13:53AM +0200, Herve Codina wrote:
+> The simple-pm-bus driver handles several simple busses. When it is used
+> with busses other than a compatible "simple-pm-bus", it doesn't populate
+> its child devices during its probe.
+> 
+> This confuses fw_devlink and results in wrong or missing devlinks.
+> 
+> Once a driver is bound to a device and the probe() has been called,
+> device_links_driver_bound() is called.
+> 
+> This function performs operation based on the following assumption:
+>     If a child firmware node of the bound device is not added as a
+>     device, it will never be added.
+> 
+> Among operations done on fw_devlinks of those "never be added" devices,
+> device_links_driver_bound() changes their supplier.
+> 
+> With devices attached to a simple-bus compatible device, this change
+> leads to wrong devlinks where supplier of devices points to the device
+> parent (i.e. simple-bus compatible device) instead of the device itself
+> (i.e. simple-bus child).
+> 
+> When the device attached to the simple-bus is removed, because devlinks
+> are not correct, its consumers are not removed first.
+> 
+> In order to have correct devlinks created, make the simple-bus driver
+> compliant with the devlink assumption and create its child devices
+> during its probe.
+> 
+> Doing that leads to other issues due to the fact that simple-bus is
+> closely related to of_platform_populate().
+> 
+> Indeed, of_platform_populate() can probe child devices if a simple-bus
+> compatible node is detected. This behavior is expected by some drivers
+> such as some MFD drivers. Those drivers perform some operations in their
+> probe() but rely on the core (simple-mfd, simple-bus compatible) to
+> populate child devices [1].
+> 
+> Avoiding recursive probing in of_platform_populate() and let the
+> simple-bus driver probe its child devices will break some system.
+> 
+> For this reason, keep the current behavior of the simple-bus driver and
+> of_platform_populate() as they are and introduce simple-platform-bus
+> driver.
+> 
+> This driver doesn't interfere with of_platform_populate() and populates
+> child devices during its probe() as expected by fw_devlink.
+> 
+> [1] https://lore.kernel.org/all/20250715095201.1bcb4ab7@bootlin.com/
 
-One small nit: the title of this series=20
+Link tag?
 
-    [PATCH v2 0/5] rust: pci: add config space read/write support, take 1
+...
 
-Is a tad confusing. How can this be take 1, if this is a v2? Also there
-is no v1, the previous revision was a RFC.
+The below is simply wrong. The luck that you got no errors is due to CONFIG_OF
+being bool and not tristate in Kconfig. I dunno if this driver ever gets the
+'m' capability, but currently it uses tons of dead code (such as MODULE_*()
+macros). Disregard of that, the proposed change should go to the separate
+compilation unit at bare minimum.
 
-Technically this should have been [PATCH 0/5] or [PATCH v1 0/5]. `b4` is
-great to avoid this kind of problems, and a huge time saver generally
-speaking. Can't recommend it enough.
+...
+
+>  module_platform_driver(simple_pm_bus_driver);
+
+> +module_platform_driver(simple_platform_bus_driver);
+
+^^^ WRONG!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
