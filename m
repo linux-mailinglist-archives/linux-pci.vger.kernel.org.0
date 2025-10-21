@@ -1,46 +1,45 @@
-Return-Path: <linux-pci+bounces-38836-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38837-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7627BF451A
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 03:52:04 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B7CEBF4550
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 03:57:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5E8EF34FC1E
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:52:04 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E13494E31B6
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 01:57:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6231F155757;
-	Tue, 21 Oct 2025 01:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lf9julfb"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C08B24DCF9;
+	Tue, 21 Oct 2025 01:57:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9D47E105;
-	Tue, 21 Oct 2025 01:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD311CBA;
+	Tue, 21 Oct 2025 01:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761011520; cv=none; b=HwDJ6z5yyhEmNcspRx6Um9Vx5OoAEz/MBF5ToPQDZuhRbZ2fyRgX1bRftT7LgOOVABSUxbZHaGaeaJsyof2QLikXAaYRnXGlDiDP2EyeeGN5XTFxq+B06k0x8uY4QZK4Q2+1+vRlMRfPBuA6ThmTh7YtCRYG+76j+7oDUPCgu4k=
+	t=1761011835; cv=none; b=Ta1jZ3exwJ9tm0F9LZ1OSOhwUj9RYl7YVdAl03UDsunCyp3S1/XFJGWdjk97KwFk1ug+an8qd8WwaWj/95bmYTz/f7PrbGhwraQOFPpIp/KLNYmYEgXpURJsrfmXrWZPzUPjwPIMM+WYf25o2dGMcAdCYf9ibUmoE2oRNjyDwXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761011520; c=relaxed/simple;
-	bh=5uANkYkkYL1MP7ZG/YfVb63ZFpJ23I2QYsF5rkraC2w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZC7xTeUeHU9WNZU2XnUAmF8kfgAXWHo2oGKmeltTQI2xgZAj26vu0E+pjIH0JHL/hLcNot9PvRI41+0LQ0mh2QeDhuYxjmkpd1DPhcuiUmdi95YJ6aDnE3JjNSgy/TjqTImsA7hGwzqnictbs6a9jCLf8yHHlnUXwwjRdgzpIC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lf9julfb; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761011515; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=ZJW99RF7cBI1IAEy+nwuopkFcQKf4lA/+8HVwZLAjWI=;
-	b=lf9julfbTZZN76lOR1+lX6PX4uidf7dK1Whlg4licy/a+EwKGUhjEftLvINqrcN7ReWdp+jtC1RsBYaQrGFTeRRil/e2xckTJrBne2kGux+rhepzB8gkkWcIUie50PNCmY/Q3TBJasHdszbeo8y2AHaHbRQxqLesxeOueaqzPrY=
-Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wqh6HBi_1761011513 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 21 Oct 2025 09:51:54 +0800
-Message-ID: <ef0fccce-1d42-4d79-8dbe-a971adf5c6d8@linux.alibaba.com>
-Date: Tue, 21 Oct 2025 09:51:49 +0800
+	s=arc-20240116; t=1761011835; c=relaxed/simple;
+	bh=NTIb3vnGtaOOxJDlMwJ5OQf6bJzpOlxh1ghrGLOrWBs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NnbESxAD5bAl5xCYbBzLF1LCaqqqnYRLAhP4rKeVldmiQ5PpumSQ3HG/3E3aklAS2cV2VvOQh4ND00Gjq+TP7DA3FqO1kVknZLWzpv3ZTJs0dLGzg2fmjBP3qtxoBbfa9t5aVQrnDjX0M8IAamMk7+mVgSashAQcsuKQ2iQVWCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4crFl34V3bzYQtnh;
+	Tue, 21 Oct 2025 09:56:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 806801A0E17;
+	Tue, 21 Oct 2025 09:57:07 +0800 (CST)
+Received: from [10.67.111.176] (unknown [10.67.111.176])
+	by APP1 (Coremail) with SMTP id cCh0CgBXfVBx6PZo2e08BA--.36902S2;
+	Tue, 21 Oct 2025 09:57:07 +0800 (CST)
+Message-ID: <8028d139-94c1-48d9-a2a5-fd469eb746c5@huaweicloud.com>
+Date: Tue, 21 Oct 2025 09:57:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,225 +47,274 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v6 3/5] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
- terry.bowman@amd.com, tianruidong@linux.alibaba.com, lukas@wunner.de
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-4-xueshuai@linux.alibaba.com>
- <fe1daf3b-162e-4132-8cdc-c89305391090@linux.intel.com>
-In-Reply-To: <fe1daf3b-162e-4132-8cdc-c89305391090@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 12/33] sched/isolation: Convert housekeeping cpumasks to
+ rcu pointers
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
+ <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+ Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, netdev@vger.kernel.org
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-13-frederic@kernel.org>
+ <bb9a75dc-8c34-41da-b064-e31bf5fe6cb2@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <bb9a75dc-8c34-41da-b064-e31bf5fe6cb2@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgBXfVBx6PZo2e08BA--.36902S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF1xtw47Xw1UCFWfGw15urg_yoW3AFy7pr
+	Z8WFW3GF4kXr1rG398ZwnrAry5Wwn7Arn2kas3Ga1rCFy7uw1kZry09FnxWryDu3srCry7
+	ZF98tw4S9w1UA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUsPfHUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
 
 
-在 2025/10/21 02:38, Kuppuswamy Sathyanarayanan 写道:
+On 2025/10/21 9:46, Chen Ridong wrote:
 > 
-> On 10/14/25 19:41, Shuai Xue wrote:
->> The AER driver has historically avoided reading the configuration space of
->> an endpoint or RCiEP that reported a fatal error, considering the link to
->> that device unreliable. Consequently, when a fatal error occurs, the AER
->> and DPC drivers do not report specific error types, resulting in logs like:
->>
->>    pcieport 0015:00:00.0: EDR: EDR event received
->>    pcieport 0015:00:00.0: EDR: Reported EDR dev: 0015:00:00.0
->>    pcieport 0015:00:00.0: DPC: containment event, status:0x200d, ERR_FATAL received from 0015:01:00.0
->>    pcieport 0015:00:00.0: AER: broadcast error_detected message
->>    pcieport 0015:00:00.0: AER: broadcast mmio_enabled message
->>    pcieport 0015:00:00.0: AER: broadcast resume message
->>    pcieport 0015:00:00.0: pciehp: Slot(21): Link Down/Up ignored
->>    pcieport 0015:00:00.0: AER: device recovery successful
->>    pcieport 0015:00:00.0: EDR: DPC port successfully recovered
->>    pcieport 0015:00:00.0: EDR: Status for 0015:00:00.0: 0x80
->>
->> AER status registers are sticky and Write-1-to-clear. If the link recovered
->> after hot reset, we can still safely access AER status and TLP header of the
->> error device. In such case, report fatal errors which helps to figure out the
->> error root case.
->>
->> After this patch, the logs like:
->>
->>    pcieport 0015:00:00.0: EDR: EDR event received
->>    pcieport 0015:00:00.0: EDR: Reported EDR dev: 0015:00:00.0
->>    pcieport 0015:00:00.0: DPC: containment event, status:0x200d, ERR_FATAL received from 0015:01:00.0
->>    pcieport 0015:00:00.0: AER: broadcast error_detected message
->>    vfio-pci 0015:01:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
->>    pcieport 0015:00:00.0: pciehp: Slot(21): Link Down/Up ignored
 > 
-> It would be more clear if you follow the same order of the log as before section
-> and highlight the new logs that are getting added.
-
-I see. I will reorder the pciehp log.
-
-> 
->>    vfio-pci 0015:01:00.0:   device [144d:a80a] error status/mask=00001000/00400000
->>    vfio-pci 0015:01:00.0:    [12] TLP                    (First)
->>    vfio-pci 0015:01:00.0: AER:   TLP Header: 0x4a004010 0x00000040 0x01000000 0xffffffff
->>    pcieport 0015:00:00.0: AER: broadcast mmio_enabled message
->>    pcieport 0015:00:00.0: AER: broadcast resume message
->>    pcieport 0015:00:00.0: AER: device recovery successful
->>    pcieport 0015:00:00.0: EDR: DPC port successfully recovered
->>    pcieport 0015:00:00.0: EDR: Status for 0015:00:00.0: 0x80
+> On 2025/10/14 4:31, Frederic Weisbecker wrote:
+>> HK_TYPE_DOMAIN's cpumask will soon be made modifyable by cpuset.
+>> A synchronization mechanism is then needed to synchronize the updates
+>> with the housekeeping cpumask readers.
 >>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Turn the housekeeping cpumasks into RCU pointers. Once a housekeeping
+>> cpumask will be modified, the update side will wait for an RCU grace
+>> period and propagate the change to interested subsystem when deemed
+>> necessary.
+>>
+>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 >> ---
->>   drivers/pci/pci.h      |  4 +++-
->>   drivers/pci/pcie/aer.c | 18 +++++++++++-------
->>   drivers/pci/pcie/dpc.c |  2 +-
->>   drivers/pci/pcie/err.c | 11 +++++++++++
->>   4 files changed, 26 insertions(+), 9 deletions(-)
+>>  kernel/sched/isolation.c | 58 +++++++++++++++++++++++++---------------
+>>  kernel/sched/sched.h     |  1 +
+>>  2 files changed, 37 insertions(+), 22 deletions(-)
 >>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 6b0c55bed15b..3eccef2d25a3 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -739,8 +739,10 @@ struct aer_err_info {
->>       struct pcie_tlp_log tlp;    /* TLP Header */
->>   };
->> -int aer_get_device_error_info(struct aer_err_info *info, int i);
->> +int aer_get_device_error_info(struct aer_err_info *info, int i,
->> +                  bool link_healthy);
->>   void aer_print_error(struct aer_err_info *info, int i);
->> +int aer_add_error_device(struct aer_err_info *e_info, struct pci_dev *dev);
->>   int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
->>                 unsigned int tlp_len, bool flit,
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 0b5ed4722ac3..aaea9902cbb7 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -978,7 +978,7 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->>    * @e_info: pointer to error info
->>    * @dev: pointer to pci_dev to be added
->>    */
->> -static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
->> +int aer_add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
-> 
-> I don't think you need this rename.
-
-Yep, will rename back.
-
-> 
->>   {
->>       int i = e_info->error_dev_num;
->> @@ -1068,7 +1068,7 @@ static int find_device_iter(struct pci_dev *dev, void *data)
->>       if (is_error_source(dev, e_info)) {
->>           /* List this device */
->> -        if (add_error_device(e_info, dev)) {
->> +        if (aer_add_error_device(e_info, dev)) {
->>               /* We cannot handle more... Stop iteration */
->>               pci_err(dev, "Exceeded max supported (%d) devices with errors logged\n",
->>                   AER_MAX_MULTI_ERR_DEVICES);
->> @@ -1382,12 +1382,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>    * aer_get_device_error_info - read error status from dev and store it to info
->>    * @info: pointer to structure to store the error record
->>    * @i: index into info->dev[]
->> + * @link_healthy: link is healthy or not
->>    *
->>    * Return: 1 on success, 0 on error.
->>    *
->>    * Note that @info is reused among all error devices. Clear fields properly.
->>    */
->> -int aer_get_device_error_info(struct aer_err_info *info, int i)
->> +int aer_get_device_error_info(struct aer_err_info *info, int i,
->> +                  bool link_healthy)
->>   {
->>       struct pci_dev *dev;
->>       int type, aer;
->> @@ -1415,10 +1417,12 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
->>               &info->mask);
->>           if (!(info->status & ~info->mask))
->>               return 0;
->> +        info->level = KERN_WARNING;
-> 
-> I recommend setting this when initializing the info->level at the caller end (to match
-> other callers)
-
-Good point, will drop this changes.
-
-> 
->>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>              type == PCI_EXP_TYPE_RC_EC ||
->>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->> -           info->severity == AER_NONFATAL) {
->> +           info->severity == AER_NONFATAL ||
->> +           (info->severity == AER_FATAL && link_healthy)) {
->>           /* Link is still healthy for IO reads */
->>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->> @@ -1427,7 +1431,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
->>               &info->mask);
->>           if (!(info->status & ~info->mask))
->>               return 0;
->> -
->> +        info->level = KERN_ERR;
->>           /* Get First Error Pointer */
->>           pci_read_config_dword(dev, aer + PCI_ERR_CAP, &aercc);
->>           info->first_error = PCI_ERR_CAP_FEP(aercc);
->> @@ -1451,11 +1455,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->>       /* Report all before handling them, to not lose records by reset etc. */
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info, i))
->> +        if (aer_get_device_error_info(e_info, i, false))
->>               aer_print_error(e_info, i);
->>       }
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info, i))
->> +        if (aer_get_device_error_info(e_info, i, false))
->>               handle_error_source(e_info->dev[i], e_info);
->>       }
->>   }
->> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->> index f6069f621683..21c4e8371279 100644
->> --- a/drivers/pci/pcie/dpc.c
->> +++ b/drivers/pci/pcie/dpc.c
->> @@ -284,7 +284,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->>           pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
->>                status);
->>           if (dpc_get_aer_uncorrect_severity(pdev, &info) &&
->> -            aer_get_device_error_info(&info, 0)) {
->> +            aer_get_device_error_info(&info, 0, false)) {
->>               aer_print_error(&info, 0);
->>               pci_aer_clear_nonfatal_status(pdev);
->>               pci_aer_clear_fatal_status(pdev);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index bebe4bc111d7..4e65eac809d1 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -215,6 +215,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       struct pci_dev *bridge;
->>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +    struct aer_err_info info;
->>       /*
->>        * If the error was detected by a Root Port, Downstream Port, RCEC,
->> @@ -253,6 +254,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>               pci_warn(bridge, "subordinate device reset failed\n");
->>               goto failed;
->>           }
+>> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+>> index 8690fb705089..b46c20b5437f 100644
+>> --- a/kernel/sched/isolation.c
+>> +++ b/kernel/sched/isolation.c
+>> @@ -21,7 +21,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+>>  EXPORT_SYMBOL_GPL(housekeeping_overridden);
+>>  
+>>  struct housekeeping {
+>> -	cpumask_var_t cpumasks[HK_TYPE_MAX];
+>> +	struct cpumask __rcu *cpumasks[HK_TYPE_MAX];
+>>  	unsigned long flags;
+>>  };
+>>  
+>> @@ -33,17 +33,28 @@ bool housekeeping_enabled(enum hk_type type)
+>>  }
+>>  EXPORT_SYMBOL_GPL(housekeeping_enabled);
+>>  
+>> +const struct cpumask *housekeeping_cpumask(enum hk_type type)
+>> +{
+>> +	if (static_branch_unlikely(&housekeeping_overridden)) {
+>> +		if (housekeeping.flags & BIT(type)) {
+>> +			return rcu_dereference_check(housekeeping.cpumasks[type], 1);
+>> +		}
+>> +	}
+>> +	return cpu_possible_mask;
+>> +}
+>> +EXPORT_SYMBOL_GPL(housekeeping_cpumask);
 >> +
->> +        /* Link recovered, report fatal errors of RCiEP or EP */
->> +        if (state == pci_channel_io_frozen &&
->> +            (type == PCI_EXP_TYPE_ENDPOINT || type == PCI_EXP_TYPE_RC_END)) {
->> +            aer_add_error_device(&info, dev);
->> +            info.severity = AER_FATAL;
-> info.level = KERN_ERR ?
-
-Yep, will set level in caller site.
-
->> +            if (aer_get_device_error_info(&info, 0, true))
->> +                aer_print_error(&info, 0);
->> +            pci_dev_put(dev);
+>>  int housekeeping_any_cpu(enum hk_type type)
+>>  {
+>>  	int cpu;
+>>  
+>>  	if (static_branch_unlikely(&housekeeping_overridden)) {
+>>  		if (housekeeping.flags & BIT(type)) {
+>> -			cpu = sched_numa_find_closest(housekeeping.cpumasks[type], smp_processor_id());
+>> +			cpu = sched_numa_find_closest(housekeeping_cpumask(type), smp_processor_id());
+>>  			if (cpu < nr_cpu_ids)
+>>  				return cpu;
+>>  
+>> -			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+>> +			cpu = cpumask_any_and_distribute(housekeeping_cpumask(type), cpu_online_mask);
+>>  			if (likely(cpu < nr_cpu_ids))
+>>  				return cpu;
+>>  			/*
+>> @@ -59,28 +70,18 @@ int housekeeping_any_cpu(enum hk_type type)
+>>  }
+>>  EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
+>>  
+>> -const struct cpumask *housekeeping_cpumask(enum hk_type type)
+>> -{
+>> -	if (static_branch_unlikely(&housekeeping_overridden))
+>> -		if (housekeeping.flags & BIT(type))
+>> -			return housekeeping.cpumasks[type];
+>> -	return cpu_possible_mask;
+>> -}
+>> -EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+>> -
+>>  void housekeeping_affine(struct task_struct *t, enum hk_type type)
+>>  {
+>>  	if (static_branch_unlikely(&housekeeping_overridden))
+>>  		if (housekeeping.flags & BIT(type))
+>> -			set_cpus_allowed_ptr(t, housekeeping.cpumasks[type]);
+>> +			set_cpus_allowed_ptr(t, housekeeping_cpumask(type));
+>>  }
+>>  EXPORT_SYMBOL_GPL(housekeeping_affine);
+>>  
+>>  bool housekeeping_test_cpu(int cpu, enum hk_type type)
+>>  {
+>> -	if (static_branch_unlikely(&housekeeping_overridden))
+>> -		if (housekeeping.flags & BIT(type))
+>> -			return cpumask_test_cpu(cpu, housekeeping.cpumasks[type]);
+>> +	if (housekeeping.flags & BIT(type))
+>> +		return cpumask_test_cpu(cpu, housekeeping_cpumask(type));
+>>  	return true;
+>>  }
+>>  EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
+>> @@ -96,20 +97,33 @@ void __init housekeeping_init(void)
+>>  
+>>  	if (housekeeping.flags & HK_FLAG_KERNEL_NOISE)
+>>  		sched_tick_offload_init();
+>> -
+>> +	/*
+>> +	 * Realloc with a proper allocator so that any cpumask update
+>> +	 * can indifferently free the old version with kfree().
+>> +	 */
+>>  	for_each_set_bit(type, &housekeeping.flags, HK_TYPE_MAX) {
+>> +		struct cpumask *omask, *nmask = kmalloc(cpumask_size(), GFP_KERNEL);
+>> +
+>> +		if (WARN_ON_ONCE(!nmask))
+>> +			return;
+>> +
+>> +		omask = rcu_dereference(housekeeping.cpumasks[type]);
+>> +
+>>  		/* We need at least one CPU to handle housekeeping work */
+>> -		WARN_ON_ONCE(cpumask_empty(housekeeping.cpumasks[type]));
+>> +		WARN_ON_ONCE(cpumask_empty(omask));
+>> +		cpumask_copy(nmask, omask);
+>> +		RCU_INIT_POINTER(housekeeping.cpumasks[type], nmask);
+>> +		memblock_free(omask, cpumask_size());
+>>  	}
+>>  }
+>>  
+>>  static void __init housekeeping_setup_type(enum hk_type type,
+>>  					   cpumask_var_t housekeeping_staging)
+>>  {
+>> +	struct cpumask *mask = memblock_alloc_or_panic(cpumask_size(), SMP_CACHE_BYTES);
+>>  
+>> -	alloc_bootmem_cpumask_var(&housekeeping.cpumasks[type]);
+>> -	cpumask_copy(housekeeping.cpumasks[type],
+>> -		     housekeeping_staging);
+>> +	cpumask_copy(mask, housekeeping_staging);
+>> +	RCU_INIT_POINTER(housekeeping.cpumasks[type], mask);
+>>  }
+>>  
+>>  static int __init housekeeping_setup(char *str, unsigned long flags)
+>> @@ -162,7 +176,7 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+>>  
+>>  		for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
+>>  			if (!cpumask_equal(housekeeping_staging,
+>> -					   housekeeping.cpumasks[type])) {
+>> +					   housekeeping_cpumask(type))) {
+>>  				pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
+>>  				goto free_housekeeping_staging;
+>>  			}
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index 1f5d07067f60..0c0ef8999fd6 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -42,6 +42,7 @@
+>>  #include <linux/ktime_api.h>
+>>  #include <linux/lockdep_api.h>
+>>  #include <linux/lockdep.h>
+>> +#include <linux/memblock.h>
+>>  #include <linux/minmax.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/module.h>
 > 
-> Like Lukas mentioned, it needs a comment about why you need this.
+> A warning was detected:
+> 
+> =============================
+> WARNING: suspicious RCU usage
+> 6.17.0-next-20251009-00033-g4444da88969b #808 Not tainted
+> -----------------------------
+> kernel/sched/isolation.c:60 suspicious rcu_dereference_check() usage!
+> 
+> other info that might help us debug this:
+> 
+> 
+> rcu_scheduler_active = 2, debug_locks = 1
+> 1 lock held by swapper/0/1:
+>  #0: ffff888100600ce0 (&type->i_mutex_dir_key#3){++++}-{4:4}, at: walk_compone
+> 
+> stack backtrace:
+> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-next-20251009-00033-g4
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x68/0xa0
+>  lockdep_rcu_suspicious+0x148/0x1b0
+>  housekeeping_cpumask+0xaa/0xb0
+>  housekeeping_test_cpu+0x25/0x40
+>  find_get_block_common+0x41/0x3e0
+>  bdev_getblk+0x28/0xa0
+>  ext4_getblk+0xba/0x2d0
+>  ext4_bread_batch+0x56/0x170
+>  __ext4_find_entry+0x17c/0x410
+>  ? lock_release+0xc6/0x290
+>  ext4_lookup+0x7a/0x1d0
+>  __lookup_slow+0xf9/0x1b0
+>  walk_component+0xe0/0x150
+>  link_path_walk+0x201/0x3e0
+>  path_openat+0xb1/0xb30
+>  ? stack_depot_save_flags+0x41e/0xa00
+>  do_filp_open+0xbc/0x170
+>  ? _raw_spin_unlock_irqrestore+0x2c/0x50
+>  ? __create_object+0x59/0x80
+>  ? trace_kmem_cache_alloc+0x1d/0xa0
+>  ? vprintk_emit+0x2b2/0x360
+>  do_open_execat+0x56/0x100
+>  alloc_bprm+0x1a/0x200
+>  ? __pfx_kernel_init+0x10/0x10
+>  kernel_execve+0x4b/0x160
+>  kernel_init+0xe5/0x1c0
+>  ret_from_fork+0x185/0x1d0
+>  ? __pfx_kernel_init+0x10/0x10
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+> random: crng init done
 > 
 
-Sure, will add it.
+This warning was likely introduced by patch 13, which added the housekeeping_dereference_check
+condition, and is not caused by the current patch.
 
-Thanks.
-Shuai
+-- 
+Best regards,
+Ridong
 
 
