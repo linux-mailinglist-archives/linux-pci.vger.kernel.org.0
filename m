@@ -1,110 +1,96 @@
-Return-Path: <linux-pci+bounces-38931-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38932-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D849EBF7E7C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 19:30:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13522BF7F0F
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 19:44:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 945401885A61
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 17:30:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C85063AA9AD
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 17:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6944134B66B;
-	Tue, 21 Oct 2025 17:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC1D34C80A;
+	Tue, 21 Oct 2025 17:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WPk/ggQi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnHRPa43"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2787A229B38
-	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 17:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59234C806;
+	Tue, 21 Oct 2025 17:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761067817; cv=none; b=tnyDQpRtwtsjTQjsp6o9WfoG4ovTQlQZ6PyJt3k0bfBA0GElz/pq6TM5W4rVbV4cFT0tOxfg1aaIkQtwbe2oXjngOTEiP/ajse1dBuxfby+b8IN9dMSUKzyXoIe/ewgOcfl2JOk6DV1ENFUZLEdJ75FHLceZ5lcdedUAVpNrWZo=
+	t=1761068646; cv=none; b=JAc9XlNfRun2cVYTxsTBdvJy5Ph0QB9gkjHlnyM4fWC1I0gtTNL9l/8VevYuRDl3LVZeS6dzXT1viu4mZjPQ21rgwkEOIiJbDegTThByPkVGR1qS0ep+rxpKmQ9Q0cDiF6gcNtEs9yE75PKQN72yX8P8pSkCIW82iqPsiAeGs/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761067817; c=relaxed/simple;
-	bh=Cx3wXl8Sbh3saUIZvSNdo2sAZJhVpMyZYIBZ+E7bFeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=STQ+NiRyhPdLMMqz2SQD8LCr1KYracBn6gwi79Iwyga3geMJRM2EZiNtB30suMkkyw0JvrAblbNpF1ECSQ3oTeOMIsIhZGeT3ysS6doFp3/6HVSXvvz6HEjW78LdPyMPD3DUZeQf1jLKTP6wzmX4UEymqI7tDC1npc+CM3MOl4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WPk/ggQi; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <3191d3b5-2319-4cd4-b5b0-8fb6413e2c73@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761067811;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=daSNURvAZs6Hw2eLkKXlbvLSCGcIPcuoh7yB+EjKrCU=;
-	b=WPk/ggQiTnx0y6wt66fusC9AGhgfxsAYeQe9JpccAvJh5FpzTgaCa5f0imbUq5PeNR8m6h
-	orM7O+5n2VRjSFdqusz5XKm86vZ4R/WrtZJvmx9UiHp0o+eEkFl0g+mMCHSiV7mg90HvTf
-	yxA2KEY15w1Gv1tzJ+FyU/e6lBw+7KM=
-Date: Tue, 21 Oct 2025 13:30:07 -0400
+	s=arc-20240116; t=1761068646; c=relaxed/simple;
+	bh=bHNcj1wjfOdU2U4vdwQgraEX91IYvZD0sUGfn4zYsro=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=jU4dy80W2oFn+V0jE7uZuizi4F+TitwBHMEzEVdxvYCsV7YVVMFgxQ+qn04dhs1w8896ZaFxfOEDWiQCdzGGmOqef1+snB61h8ngE6+DcKCCH8ks1GE/6LLkrSy4JHnvUt2yTIpXPa4sC2IXqOoAHXKLGRhJg9hSs0JAsGQlmVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnHRPa43; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E238C4CEF1;
+	Tue, 21 Oct 2025 17:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761068645;
+	bh=bHNcj1wjfOdU2U4vdwQgraEX91IYvZD0sUGfn4zYsro=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=YnHRPa438hTYGZhg9fL0jrPt31M9vKs49W/DgdnAdE7iFZ+j5VZsieEpvyXqZ+z0F
+	 EZ5b4QWH2XJdtdTh/5fEyB0KAPwNEfgYZ7FBGGmllt0pq7FkmUCO+qW/hh/ywNNvEW
+	 YsBmZTKCQ8ner/3MPqz+TvFo2LK47Ei17tAZtrPNmD88ujHxAwDWd7IJ4eOjnAcdj7
+	 ufRY3JWW9DDZkHUaT2CsMWCCaXOtWv34OQ0FwcIw7LDg/9dDIoILU3JUyGzEFo+iIY
+	 5T4qk+Ztqz5sTs7RpqQBi5P0qj0R8J6YwzPChhiQWi00pg5pcvg3FeABlZcYZq5aVu
+	 JWOwPsaFDIUiQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2] PCI: pcie-xilinx-dma-pl: Fix off-by-one INTx IRQ
- handling
-To: Stefan Roese <stefan.roese@mailbox.org>, linux-pci@vger.kernel.org
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Ravi Kumar Bandi <ravib@amazon.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20251021154322.973640-1-stefan.roese@mailbox.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20251021154322.973640-1-stefan.roese@mailbox.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Date: Tue, 21 Oct 2025 19:43:58 +0200
+Message-Id: <DDO6QBSWU8MN.3UA0DT8WDUPZT@kernel.org>
+Subject: Re: [PATCH] rust: driver: let probe() return impl PinInit<Self,
+ Error>
+Cc: <viresh.kumar@linaro.org>, <acourbot@nvidia.com>, <ira.weiny@intel.com>,
+ <leon@kernel.org>, <daniel.almeida@collabora.com>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
+ <robin.murphy@arm.com>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <rust-for-linux@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+ <linux-kernel@vger.kernel.org>
+To: <gregkh@linuxfoundation.org>, <rafael@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251016125544.15559-1-dakr@kernel.org>
+In-Reply-To: <20251016125544.15559-1-dakr@kernel.org>
 
-On 10/21/25 11:43, Stefan Roese wrote:
-> While testing with NVMe drives connected to the Versal QDMA PL PCIe RP
-> on our platform I noticed that with MSI disabled (e.g. via pci=nomsi)
-> the NVMe interrupts are not delivered to the host CPU resulting in
-> timeouts while probing.
-> 
-> Debugging has shown, that the hwirq numbers passed to this device driver
-> (1...4, 1=INTA etc) need to get adjusted to match the numbers in the
-> controller registers bits (0...3).
-> 
-> This patch now adds pci_irqd_intx_xlate to the INTx IRQ domain ops,
-> handling this IRQ number translation correctly.
-> 
-> Signed-off-by: Stefan Roese <stefan.roese@mailbox.org>
-> Cc: Sean Anderson <sean.anderson@linux.dev>
-> Cc: Manivannan Sadhasivam <mani@kernel.org>
-> Cc: Ravi Kumar Bandi <ravib@amazon.com>
-> Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> Cc: Michal Simek <michal.simek@amd.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> ---
-> v2:
-> - Use pci_irqd_intx_xlate to handle this IRQ number translation as suggested
->   by Sean (thanks again)
-> 
->  drivers/pci/controller/pcie-xilinx-dma-pl.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> index 84888eda990b2..80095457ec531 100644
-> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-> @@ -370,6 +370,7 @@ static int xilinx_pl_dma_pcie_intx_map(struct irq_domain *domain,
->  /* INTx IRQ Domain operations */
->  static const struct irq_domain_ops intx_domain_ops = {
->  	.map = xilinx_pl_dma_pcie_intx_map,
-> +	.xlate = pci_irqd_intx_xlate,
->  };
->  
->  static irqreturn_t xilinx_pl_dma_pcie_msi_handler_high(int irq, void *args)
+On Thu Oct 16, 2025 at 2:55 PM CEST, Danilo Krummrich wrote:
+> The driver model defines the lifetime of the private data stored in (and
+> owned by) a bus device to be valid from when the driver is bound to a
+> device (i.e. from successful probe()) until the driver is unbound from
+> the device.
+>
+> This is already taken care of by the Rust implementation of the driver
+> model. However, we still ask drivers to return a Result<Pin<KBox<Self>>>
+> from probe().
+>
+> Unlike in C, where we do not have the concept of initializers, but
+> rather deal with uninitialized memory, drivers can just return an
+> impl PinInit<Self, Error> instead.
+>
+> This contributed to more clarity to the fact that a driver returns it's
+> device private data in probe() and the Rust driver model owns the data,
+> manages the lifetime and - considering the lifetime - provides (safe)
+> accessors for the driver.
+>
+> Hence, let probe() functions return an impl PinInit<Self, Error> instead
+> of Result<Pin<KBox<Self>>>.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
+Applied to driver-core-testing, thanks!
 
