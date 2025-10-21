@@ -1,160 +1,161 @@
-Return-Path: <linux-pci+bounces-38922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC57BBF7913
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 18:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74E64BF7988
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 18:10:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF7C818956F6
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:03:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C70F718A214F
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:09:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2EB3446DC;
-	Tue, 21 Oct 2025 16:02:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EE7F3446BB;
+	Tue, 21 Oct 2025 16:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="BjyOKm5O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QXMXkh7N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49032A1B2
-	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 16:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFE215A86D;
+	Tue, 21 Oct 2025 16:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761062573; cv=none; b=YOULP3cbbNs/70GheBCBqqrLss1JeblOO3HC4rVa5VPXsiU4WiTml9o7YStI/Z2rfD+h9Ui5SiORRX3qRshSgXfjrvaWTcFrnv9rjpfTy7+vwgiD6rEqtIUjUenkC/RFA6ah9ZYOXSsNNMYKid+3PhjFvCcW4rFdB2JgeUhruMo=
+	t=1761062951; cv=none; b=efBpVz7VfS6Fcg14iV921JhWPfGvgbvrrA1F3b60yPXDVzA53D+PS4HrwPqsFr0yhf6HST0JKCjHSJcwGx2vajQDFa3E8DfuRj1iLX8yYihr5WrX4O8PmZa5Yf05PURl+IPR/mb1N6H7Zo41x3SQNzcVrNoIM/LfKxs/hQeCrjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761062573; c=relaxed/simple;
-	bh=nOo/aZA4bi60IV5o+eWOioEduTx5lhGGFzyAznPPE7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fEole7/5H/Y24KzhBJfkb9k2k5Zq/A87W2JRFbzF6e50BWeGp4oS6YzmBnUzKgd5DOau4tyoAdWpvexEXTp4YGiBka7qooLExgu0wups/rdXWNxBdJ7jB6UETFrdtPyFu2dLSBPT8StlghMU+H+UyFLqnHB0t5TbWfl+LcDwUg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=BjyOKm5O; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4crcWk3t0Tz9tT9;
-	Tue, 21 Oct 2025 18:02:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1761062562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nRe7E2t/P9GQjAhVh5qQWP7KC1yaS/9j/2/8stw93NU=;
-	b=BjyOKm5Owgi93DPSIVWbHueYgSV8DmYSPPsqqhJa5ehkWpoaNW5zBCb+N4psTl/8WHqjog
-	bEHwZb8A9m1Dm7rtmB0L1OfWMH9eW4E49hU6sqignjLRshAyljCYcu9QyMtJ4rJmMIQguh
-	dJZN2BMrWH5j4TfwfNNoA/v9XT9BtwbEagHrowrwcn6iNAr7hMvYUGWQdrwHklbQe1x9o2
-	8u1nrTb5IoKQyTEeEjdunNA7+Jt1mJJevdCWgnnpHaI/8N1vyxzn3vMY95iJyFOPwhLu9I
-	Mqu+xhdmdeoVs1+LvNbaOmBkddIrY5rKxybv5kPxqu8blXwDjX4/fipFvvrlLg==
-Message-ID: <14a93b96-c641-41cb-9ab4-ae6cc7c4af1f@mailbox.org>
-Date: Tue, 21 Oct 2025 18:02:40 +0200
+	s=arc-20240116; t=1761062951; c=relaxed/simple;
+	bh=lVqQrwLR73VLxhzhfYZr/XwLwv9Q8Qc3d8tpW+zVY50=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PMsxPHoNztvn1mbok7g8sWHqBOZBQ7QobRPQ+pq9aF5lPvUmvOGtGeDPY7FIoGC9Gu3Fd2uNS+GhNSij2e4PoQgLTuJP42zlxw3Vz5Kel0kNMGdm0sDSgeEDfILvgs7t3WpSj28K/Kobo7aaJPoVP2bamedW7rCcmdSh+JQSkMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QXMXkh7N; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761062949; x=1792598949;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lVqQrwLR73VLxhzhfYZr/XwLwv9Q8Qc3d8tpW+zVY50=;
+  b=QXMXkh7N3nl85fUIlGOuRnJ2Y9zENIfuFsOjYG/ud1yFyx3KQluO2Bim
+   Fgcu+y+hmD9Y3IFTVZdzzrzXF2ieFRcnP3BMMBw2YOSH6d6e8oWrRC9fH
+   9rxLKQrNJHo4zHcgnVwFrI2JMFGY6EGUBvTjF8Zus96c5LGqjwtUPljeV
+   60+IW17EieR37pgqF7bDmS9lwUzesltyKpta4puzkF5TY4WZV9Iy/fMCW
+   sVP7j1B+pfGlAh062IkXtuhq3ubRZ4WbzTzV3FFfVamfAmWqpvbAqfBCe
+   pN1Vsle1aN/Vklr/h8zg0IsaT6pHQR8NvJ03H8IFv7D7DIzYbwNBhFmja
+   Q==;
+X-CSE-ConnectionGUID: lnGQVeddQXq5sjvMlfGbEA==
+X-CSE-MsgGUID: aGoLW4QFQMqm4k8XVBsowQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="80632879"
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="80632879"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 09:09:08 -0700
+X-CSE-ConnectionGUID: pZ1Di52HTfKXEn/kKrcMtQ==
+X-CSE-MsgGUID: 7xPC94pVSTu43fM4cKQEOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="187665402"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.189])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 09:09:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Oct 2025 19:09:00 +0300 (EEST)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-pci@vger.kernel.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows
+ safer
+In-Reply-To: <aPerdPErjXANiBOl@smile.fi.intel.com>
+Message-ID: <6abf371f-b5b0-bdb7-56cf-c012e20ffc73@linux.intel.com>
+References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com> <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com> <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com> <CAMuHMdUbseFEY8AGOxm2T8W-64qT9OSvfmvu+hyTJUT+WE2cVw@mail.gmail.com>
+ <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com> <aPerdPErjXANiBOl@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] PCI: pcie-xilinx-dma-pl: Fix off-by-one INTx IRQ
- handling
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Sean Anderson <sean.anderson@linux.dev>,
- Manivannan Sadhasivam <mani@kernel.org>, Ravi Kumar Bandi
- <ravib@amazon.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20251021155347.GA1191808@bhelgaas>
-Content-Language: en-US
-From: Stefan Roese <stefan.roese@mailbox.org>
-In-Reply-To: <20251021155347.GA1191808@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 059b992879bd8c08881
-X-MBO-RS-META: 98kfz6i54bqxg841j8cpqazs9ok538ci
+Content-Type: multipart/mixed; boundary="8323328-497485051-1761062940=:1018"
 
-Hi Bjorn,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 10/21/25 17:53, Bjorn Helgaas wrote:
-> On Tue, Oct 21, 2025 at 05:43:22PM +0200, Stefan Roese wrote:
->> While testing with NVMe drives connected to the Versal QDMA PL PCIe RP
->> on our platform I noticed that with MSI disabled (e.g. via pci=nomsi)
->> the NVMe interrupts are not delivered to the host CPU resulting in
->> timeouts while probing.
->>
->> Debugging has shown, that the hwirq numbers passed to this device driver
->> (1...4, 1=INTA etc) need to get adjusted to match the numbers in the
->> controller registers bits (0...3).
->>
->> This patch now adds pci_irqd_intx_xlate to the INTx IRQ domain ops,
->> handling this IRQ number translation correctly.
-> 
-> s/pcie-xilinx-dma-pl:/xilinx-xdma:/  # in subject
-> s/has shown, that/has shown that/
-> s/This patch now adds/Add/
-> s/pci_irqd_intx_xlate/pci_irqd_intx_xlate()/
-> 
-> We'll do this when applying, no need to repost for this.
+--8323328-497485051-1761062940=:1018
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Okay, thanks.
-> I wonder how many other drivers have this issue.
-> pci_irqd_intx_xlate() is used only by:
-> 
->    dwc/pci-dra7xx.c
->    pcie-altera.c
->    pcie-xilinx-nwl.c
->    pcie-xilinx.c
->    pcie-xilinx-dma-pl.c   # this patch
-> 
-> Is there something different about these drivers that means they need
-> it when all the others don't?
+On Tue, 21 Oct 2025, Andy Shevchenko wrote:
 
-I can't really tell. I'm pretty sure that this driver also needs
-pci_irqd_intx_xlate():
+> On Tue, Oct 21, 2025 at 02:54:03PM +0300, Ilpo J=E4rvinen wrote:
+> > On Tue, 21 Oct 2025, Geert Uytterhoeven wrote:
+>=20
+> ...
+>=20
+> > I'm sorry, it's indeed a bit confusing as some of these patches never=
+=20
+> > have been in Linus' tree.
+> >=20
+> > So I'm interested on what's the result with these changes/series togeth=
+er:
+> >=20
+> > [PATCH 1/2] PCI: Setup bridge resources earlier=20
+> > [PATCH 2/2] PCI: Resources outside their window must set IORESOURCE_UNS=
+ET=20
+> > [PATCH 1/1] PCI: rcar-gen2: Add BAR0 into host bridge resources
+> > [PATCH 1/3] PCI: Refactor host bridge window coalescing loop to use pre=
+v=20
+> > [PATCH 2/3] PCI: Do not coalesce host bridge resource structs in place
+> > [PATCH 3/3] resource, kunit: add test case for resource_coalesce()
+> >=20
+> > You might also want to change that pci_dbg() in the IORESOURCE_UNSET pa=
+tch=20
+> > to pci_info() (as otherwise dyndbg is necessary to make it visible).
+> >=20
+> > Lore links to these series/patches:
+> >=20
+> > https://lore.kernel.org/linux-pci/20250924134228.1663-1-ilpo.jarvinen@l=
+inux.intel.com/
+> > https://lore.kernel.org/linux-pci/7640a03e-dfea-db9c-80f5-d80fa2c505b7@=
+linux.intel.com/
+> > https://lore.kernel.org/linux-pci/20251010144231.15773-1-ilpo.jarvinen@=
+linux.intel.com/
+> >=20
+> > The expected result is that those usb resources are properly parented a=
+nd=20
+> > the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together =
+(as=20
+> > that would destroy information). So something along the lines of:
+> >=20
+> >     ee080000-ee08ffff : pci@ee090000
+>=20
+> For my pedantic eye, the naming is a bit confusing here. Is this a mistak=
+e in
+> the code or in the example?
+>=20
+> >       ee080000-ee080fff : 0000:00:01.0
+> >         ee080000-ee080fff : ohci_hcd
+> >       ee081000-ee0810ff : 0000:00:02.0
+> >         ee081000-ee0810ff : ehci_hcd
+> >     ee090000-ee090bff : ee090000.pci pci@ee090000
 
-pcie-xilinx-cpm.c
+I tried to copy them from here:
 
-I can't test it right now though. Perhaps in a few weeks though.
+https://lore.kernel.org/linux-pci/CAMuHMdUbaQDXsowZETimLJ-=3DgLCofeP+LnJp_t=
+xetuBQ0hmcPQ@mail.gmail.com/
 
-My best guess is, that legacy PCI IRQs are very rarely (not at all?)
-used and therefor tested these days. On our ZynqMP / Versal platforms 
-this is currently sometimes used, as the RP does not support MSI-X
-(only MSI which is very unfortunate - and legacy of course). So it
-might be that some other drivers are missing this intx_xlate as well.
-Should be easy to test by booting with pci=nomsi.
+So my answer is, from code.
 
-Thanks,
-Stefan
->> Signed-off-by: Stefan Roese <stefan.roese@mailbox.org>
->> Cc: Sean Anderson <sean.anderson@linux.dev>
->> Cc: Manivannan Sadhasivam <mani@kernel.org>
->> Cc: Ravi Kumar Bandi <ravib@amazon.com>
->> Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
->> Cc: Michal Simek <michal.simek@amd.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> ---
->> v2:
->> - Use pci_irqd_intx_xlate to handle this IRQ number translation as suggested
->>    by Sean (thanks again)
->>
->>   drivers/pci/controller/pcie-xilinx-dma-pl.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
->> index 84888eda990b2..80095457ec531 100644
->> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
->> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
->> @@ -370,6 +370,7 @@ static int xilinx_pl_dma_pcie_intx_map(struct irq_domain *domain,
->>   /* INTx IRQ Domain operations */
->>   static const struct irq_domain_ops intx_domain_ops = {
->>   	.map = xilinx_pl_dma_pcie_intx_map,
->> +	.xlate = pci_irqd_intx_xlate,
->>   };
->>   
->>   static irqreturn_t xilinx_pl_dma_pcie_msi_handler_high(int irq, void *args)
->> -- 
->> 2.51.1
->>
+I'm not trying to change the names here, they are what they are.
 
+Why things work that way in DT platform (ee08 vs @ee09), don't ask me as I=
+=20
+unfortunately don't know the answers.
 
+--=20
+ i.
+
+--8323328-497485051-1761062940=:1018--
 
