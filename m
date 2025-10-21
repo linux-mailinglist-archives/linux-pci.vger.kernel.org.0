@@ -1,112 +1,175 @@
-Return-Path: <linux-pci+bounces-38947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3846FBF8D9A
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 22:59:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 877C0BF8EF1
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 23:28:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2F3774E473B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 20:59:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CD664615AC
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 21:28:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC73283151;
-	Tue, 21 Oct 2025 20:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FAF627FB37;
+	Tue, 21 Oct 2025 21:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5DNhDs8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYILZj0z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C269328031D;
-	Tue, 21 Oct 2025 20:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A141F1932;
+	Tue, 21 Oct 2025 21:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761080354; cv=none; b=PAqkvkQuVjejF/CWqHjO/Ij2jPOcpe/wtaOP6O2ejrXjjLESQ9fm+vf8XRL86O6Q31HNrW7xi3rHBN3dRys81e2EulHgrRzFYTIIJzQQODikVe8iJ6UL4nuGi9UFER0E68vjPfO1+zsN8awrCVTxwOOZy6L/fzhrxY+Ibrc5zW4=
+	t=1761082085; cv=none; b=Ruj5CVNc0B25J/ap3lr21vKV4aBM/4lL3IcdvAfRssNxUz/9DyA/dfgt8M6Pp0XQFez0N3gYAQblmHgwRa+myhV14vS+ahYtmg2AtzAxis39Aupt5ZzUsLVLLc+BjiVbil9r24In2c2kYu6QRuy1oCINxQ0oMAYnyZ6hk/pOihw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761080354; c=relaxed/simple;
-	bh=37w12AMXAmUXQs2Vivzb46c6O8IH2Ji7lfrgc0inC1Q=;
+	s=arc-20240116; t=1761082085; c=relaxed/simple;
+	bh=7DJTlR2G0EM6flcfPIzx+BstQxm35mBy6ZxDp8G+Ikw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VMmokpLMT+SMmMUzJXnU/m70MBN3b9/bNgdIKez/QaG1wTZy/wp6/IoTd+sQChwOv68Fabwg6xulpUeywIHC0vYOeyA3qewqDFlCJRWwKKAZxqtAtkVDrmUITW/45XLOonIaY+dLryePW0gaLUkQcc7wQO+JJd91JiT2vYT4jRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5DNhDs8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F6DC4CEF1;
-	Tue, 21 Oct 2025 20:59:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=aF65CXtw8jmPPXfICvBqL9jveBEWVSpYQMLDAaSWk6x62K6i79PKMyuIy/3jO6kxhW8fgtryN9iRisWxZgst8MVtiIEfJsvySd1DRi/lnfAx9IX4r2axCqTTB3/y6NzezBv5i4E96GtHguD7Mh/Uxnyxsn6d9Q4AFs9EVa47fis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYILZj0z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FFFC4CEF1;
+	Tue, 21 Oct 2025 21:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761080354;
-	bh=37w12AMXAmUXQs2Vivzb46c6O8IH2Ji7lfrgc0inC1Q=;
+	s=k20201202; t=1761082082;
+	bh=7DJTlR2G0EM6flcfPIzx+BstQxm35mBy6ZxDp8G+Ikw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=E5DNhDs8cJBLFrgwJF5CfqBjXXmdLLlDe7NkacOS8UqY5j4e5IWELDSocM3yW8K6K
-	 d2tsYlNFkw1JwIUyp6+QQQcV9lcQEbcjPnG+/+qwz+8Ct3Rv8ZZQE0LquKTF1BaZ1C
-	 v+25PGQnDU4rxyl7EevhVCRhzAFZkoYsKr2XBn2jyB+lJw6gLtqxEWv/JpK7bmCQN7
-	 ESs3Xc97LwJjEcCHI0ypq+l3VHsA4lEJX4gSBlEN/tdBsE/4G/UjoH2h37e4Nix+rP
-	 f4oAxKyYu5vAJRfiWk+IB9q1DooGLO9KNl8VTlqUKXz1Im6rK6EO2zO0Rt4r4BA3kD
-	 nf12DS37yCEaA==
-Date: Tue, 21 Oct 2025 15:59:12 -0500
+	b=rYILZj0zajYYKNolxEYq945LMlng3mB6nL71U4ToThg2FGUKoR/mjJwlZOLQXeFBV
+	 dAD1ksrur2INevocfXapVPZ+taCoP9FJqSKNNtQq4cg74wPTjTJ1q+PJEVSkmwgZBu
+	 bt98hvQr3fvkgAIocQl4fkv1P7hsuRRgUJw9otfglMOq3zG3XbTVVamxREIn3QzDtY
+	 JmN7OsIYBhI843iNNmUx+bZog6s4+LTknYMXUCtpobN05nu5jUoTCR2se5UaabtnU1
+	 02ddpK9/LNi5FsZG+Job33luBQkvd1uSQDuKSWFAVVKx2jyrHGEQVwcIBa7OiHzDe7
+	 qC9/yZ+QtLzzQ==
+Date: Tue, 21 Oct 2025 16:28:01 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] MIPS: Malta: Fix PCI southbridge legacy resource
- clashes
-Message-ID: <20251021205912.GA1223028@bhelgaas>
+To: "Bandi, Ravi Kumar" <ravib@amazon.com>
+Cc: "mani@kernel.org" <mani@kernel.org>,
+	"thippeswamy.havalige@amd.com" <thippeswamy.havalige@amd.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"michal.simek@amd.com" <michal.simek@amd.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Stefan Roese <stefan.roese@mailbox.org>,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+Message-ID: <20251021212801.GA1224310@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2510211901530.8377@angie.orcam.me.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <467D7D30-DC05-4612-87BA-7E980A9C0A4A@amazon.com>
 
-[+cc linux-pci]
+On Tue, Oct 21, 2025 at 08:55:41PM +0000, Bandi, Ravi Kumar wrote:
+> > On Tue, Oct 21, 2025 at 05:46:17PM +0000, Bandi, Ravi Kumar wrote:
+> >>> On Oct 21, 2025, at 10:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi wrote:
+> >>>> The pcie-xilinx-dma-pl driver does not enable INTx interrupts
+> >>>> after initializing the port, preventing INTx interrupts from
+> >>>> PCIe endpoints from flowing through the Xilinx XDMA root port
+> >>>> bridge. This issue affects kernel 6.6.0 and later versions.
+> >>>> 
+> >>>> This patch allows INTx interrupts generated by PCIe endpoints
+> >>>> to flow through the root port. Tested the fix on a board with
+> >>>> two endpoints generating INTx interrupts. Interrupts are
+> >>>> properly detected and serviced. The /proc/interrupts output
+> >>>> shows:
+> >>>> 
+> >>>> [...]
+> >>>> 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
+> >>>> 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
+> >>>> [...]
+> >>>> 
+> >>>> Changes since v1::
+> >>>> - Fixed commit message per reviewer's comments
+> >>>> 
+> >>>> Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
+> >>>> Cc: stable@vger.kernel.org
+> >>>> Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
+> >>> 
+> >>> Hi Ravi, obviously you tested this, but I don't know how to reconcile
+> >>> this with Stefan's INTx fix at
+> >>> https://lore.kernel.org/r/20251021154322.973640-1-stefan.roese@mailbox.org
+> >>> 
+> >>> Does Stefan's fix need to be squashed into this patch?
+> >> 
+> >> Sure, we can squash Stefan’s fix into this.
+> > 
+> > I know we *can* squash them.
+> > 
+> > I want to know why things worked for you and Stefan when they
+> > *weren't* squashed:
+> > 
+> >  - Why did INTx work for you even without Stefan's patch.  Did you
+> >    get INTx interrupts but not the right ones, e.g., did the device
+> >    signal INTA but it was received as INTB?
+> 
+> I saw that interrupts were being generated by the endpoint device,
+> but I didn’t specifically check if they were correctly translated in
+> the controller. I noticed that the new driver wasn't explicitly
+> enabling the interrupts, so my first approach was to enable them,
+> which helped the interrupts flow through.
 
-On Tue, Oct 21, 2025 at 08:38:15PM +0100, Maciej W. Rozycki wrote:
-> Hi,
-> 
->  This mini patch series sorts out issues with southbridge legacy resource 
-> management on the MIPS Malta platform.  Two changes turned out required, 
-> because merely removing the clash would regress the PS/2 interfaces, fixed 
-> by accident with the PCIBIOS_MIN_IO fix.
-> 
->  This does prove nobody has used these interfaces since forever, or most 
-> likely since the move to the new serio driver.  Things most likely worked 
-> fine with 2.4 and I still have such old Malta kernel builds lying around 
-> (though sadly no hardware to try with), although I do know I've never used 
-> the PS/2 stuff with this platform, e.g. quoting an arbitrarily picked 
-> 2.4.19-rc1 bootstrap log:
-> 
-> CPU revision is: 00018101
-> Primary instruction cache 16kb, linesize 32 bytes(4 ways)
-> Primary data cache 16kb, linesize 32 bytes (4 ways)
-> Linux version 2.4.19-rc1 (macro@macro.ds2.pg.gda.pl) (gcc version 2.95.4 20010319 (prerelease)) #1 Fri Aug 23 02:55:02 CEST 2002
-> [...]
-> parport0: PC-style at 0x378 [PCSPP,EPP]
-> initialize_kbd: Keyboard reset failed, no ACK
-> Detected PS/2 Mouse Port.
-> pty: 256 Unix98 ptys configured
-> keyboard: Timeout - AT keyboard not present?(ed)
-> keyboard: Timeout - AT keyboard not present?(f4)
-> Serial driver version 5.05c (2001-07-08) with MANY_PORTS SHARE_IRQ DETECT_IRQ SERIAL_PCI enabled
-> [...]
-> 
-> However to prevent the PS/2 interfaces from getting fixed and then broken 
-> again with backports in a random fashion I have marked both changes for 
-> backporting as appropriate.
-> 
->  Bjorn, may I request that these changes be placed, with Thomas's ack of 
-> course (hopefully a formality), ahead of Ilpo's commit 16fbaba2b78f 
-> ("MIPS: Malta: Use pcibios_align_resource() to block io range") (or 
-> whatever the latest version is, as said commit seems to be missing tags 
-> updates you mentioned), and then merged via your tree?  That will prevent 
-> things from breaking just to be fixed again shortly, and overall getting 
-> out of sync.
-> 
->  See individual commit descriptions for details.
-> 
->   Maciej
+OK, I'll assume the interrupts happened but the driver might not have
+been able to handle them correctly, e.g., it was prepared for INTA but
+got INTB or similar.
 
-Applied with Thomas's acks to pci/for-linus for v6.18, thanks!
+> >  - Why did Stefan's patch work for him even without your patch.  How
+> >    could Stefan's INTx work without the CSR writes to enable
+> >    interrupts?
+> 
+> I'm not entirely sure if there are any other dependencies in the
+> FPGA bitstream. I'll investigate further and get back to you.
+
+Stefan clarified in a private message that he had applied your patch
+first, so this mystery is solved.
+
+> >  - Why you mentioned "kernel 6.6.0 and later versions."
+> >  8d786149d78c appeared in v6.7, so why would v6.6.0 would be
+> >  affected?
+> 
+> Apologies for not clearly mentioning the version earlier. This is
+> from the linux-xlnx tree on the xlnx_rebase_v6.6 branch, which
+> includes the new Xilinx root port driver with QDMA support:
+> https://github.com/Xilinx/linux-xlnx/blob/xlnx_rebase_v6.6_LTS/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> 
+> In earlier versions, the driver was:
+> https://github.com/Xilinx/linux-xlnx/blob/xlnx_rebase_v6.1_LTS_2023.1_update/drivers/pci/controller/pcie-xdma-pl.c
+> This older driver had no issues with interrupts.
+> 
+> The new driver introduced in v6.7 and later is a rewrite of the old
+> one, now with QDMA support, which has issues with INTx interrupts.
+
+OK, this sounds like out-of-tree history that is not relevant in the
+mainline kernel, so Mani did the right thing in omitting it.
+
+I think the best thing to do is to squash Stefan's patch into this one
+so we end up with a single patch that makes INTx work correctly.
+
+Ravi and Stefan, does that seem OK to you?
+
+> >>>> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+> >>>> @@ -659,6 +659,12 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
+> >>>>             return err;
+> >>>>     }
+> >>>> 
+> >>>> +     /* Enable interrupts */
+> >>>> +     pcie_write(port, XILINX_PCIE_DMA_IMR_ALL_MASK,
+> >>>> +                XILINX_PCIE_DMA_REG_IMR);
+> >>>> +     pcie_write(port, XILINX_PCIE_DMA_IDRN_MASK,
+> >>>> +                XILINX_PCIE_DMA_REG_IDRN_MASK);
+> >>>> +
+> >>>>     return 0;
+> >>>> }
+> 
 
