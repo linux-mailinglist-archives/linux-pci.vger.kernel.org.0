@@ -1,139 +1,190 @@
-Return-Path: <linux-pci+bounces-38894-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38895-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D7FBBF68C2
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:51:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92E85BF68CE
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:52:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7731E18859D4
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:51:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52F6C18A74F8
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:52:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1F1332EA2;
-	Tue, 21 Oct 2025 12:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D166B32B9B4;
+	Tue, 21 Oct 2025 12:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJYd11Az"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRjJ+BvE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091DF18DB01;
-	Tue, 21 Oct 2025 12:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABA5322C99;
+	Tue, 21 Oct 2025 12:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761051079; cv=none; b=MgPRzIGEmX3VV4apGgNUyf0F/ZnjHCsyK++08KFrq9dmnfmuCWHh5iDGKOo69Nr7xr+u12IarM74fnF4LFxN6lLxlB0wXF+79eob+ejxkF+/pcfAfEkUMH30xejlt+bPHmI4Wl/F+NjLLFhVynJMMSxbbQ7uhL/2weazoy/KJ3A=
+	t=1761051123; cv=none; b=YRnxlYjEPqXwkRLZfAPQwam/7XMADkdrNFyFqbRfnF+G27xTmcJSz1jwnGdAJOLNKkKkK7aVvjHcFCoFRXVe8o1qnmaH2fVXl97xTSC+AUHV6NJKvcwAd0MvZzD1daCcVSbdtHce8pIuC2qAcc3vqd+I/eVHZywrarRhqsK3Ipg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761051079; c=relaxed/simple;
-	bh=iBaEpS9tsmM3BLuEMwdZUtVD02xo8Z1H1drCBAehBPw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Hy4f5yQ21hK9uLp/5XR19JzTnw1i+F0M7gB/fVVF8KM3k7C2HaJEH6PDn1S2BQouJRM7TD3lgxYoT7BZUvKuHfhWhuc/Em/gAOKInJK1Joves0A+rFItk1/+qQ0bY5F3ya3GAHWagZRVXW9sWtxZiHtqsLrT/tlyygQQcwki64s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJYd11Az; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761051077; x=1792587077;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iBaEpS9tsmM3BLuEMwdZUtVD02xo8Z1H1drCBAehBPw=;
-  b=MJYd11AzGUwMc8Ca/lkpJq2Ucf2wB36EuEcdlm76A9wR86z4oUduLIF2
-   1DD7QYTbwzVz12UMvwjwAi/+IMpAThdPdQerlOKmq/ru/wS3rpmrKd9NA
-   N99jwRLFyyePjkwnEszZPUVWopdTeai72Q3OqfDLgHxoDD7FWYqyMbksn
-   gCIYH0Ob8JOGd3OEXoWsSrg5PJKqIDrmx0fG+suOUB3LokaLIfcOPLFW2
-   +qGUV1kiEHbDitxf7PVByZuY48zOSELE1Nwmmaez/TRxeXRlH+XEqQMQL
-   S3tS6GEtYJVHWNFdGfs4yqu4jVJYC9PQBemljDcjTgOvIel0iG4/7SeoF
-   g==;
-X-CSE-ConnectionGUID: wbEj31CHRM+YYk8954vsJA==
-X-CSE-MsgGUID: s2BNCi8LTC+lseCTYlcDVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74294543"
-X-IronPort-AV: E=Sophos;i="6.19,244,1754982000"; 
-   d="scan'208";a="74294543"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 05:51:17 -0700
-X-CSE-ConnectionGUID: fUQcL98RSPyebu7ZpRILAg==
-X-CSE-MsgGUID: LkEiCw6NR1ib1mB6xCDC2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,244,1754982000"; 
-   d="scan'208";a="183613203"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.189])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 05:51:13 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 Oct 2025 15:51:09 +0300 (EEST)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <helgaas@kernel.org>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-pci@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] MIPS: Malta: Use pcibios_align_resource() to
- block io range
-In-Reply-To: <alpine.DEB.2.21.2510210145260.8377@angie.orcam.me.uk>
-Message-ID: <9ff182b0-076b-78fd-adec-99ae7ea5341f@linux.intel.com>
-References: <20251020223714.GA1165320@bhelgaas> <alpine.DEB.2.21.2510210145260.8377@angie.orcam.me.uk>
+	s=arc-20240116; t=1761051123; c=relaxed/simple;
+	bh=xl5f2KWZjnQ0VT+pwG5gNrmtrc3seJnlxSjRbDKcWN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLSMwmxktW4CPuMCtL46n+7cYpjL4ofSesrk87F3iMU3469icif5OXuO2VuziyHUNjB1be2XSQcnYxU2MvQIv3O5ZLfe6XmhB8daqISnDvzPMrL2FhHhV10ensnHeM4NORrlp/kfgPq0NEa4Wtnx0VxRU/DcAyY9G/EEw47O9qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRjJ+BvE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80339C4CEF1;
+	Tue, 21 Oct 2025 12:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761051123;
+	bh=xl5f2KWZjnQ0VT+pwG5gNrmtrc3seJnlxSjRbDKcWN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eRjJ+BvEoDGSHu34gpVnNaa44gGA0cHKta96VRDLRlAf5tNR7ZIjaJ1DSPYzgxhza
+	 pwhIu22SSHWCUbrb5Ywk0kena7WF6W8i3r5QZicFutmPrxn/kUAJt/822j7fMvCR8P
+	 mmdltnpqYakNtNQhpJQPXt/rjU39SRIGc0AjX+RatiX5Y+MERgucXaLx4xKGPkMKT1
+	 Yw1rRfN2/z9rjlcTe9GI9DEY19tHfLDpAVQqsL6oRNfXHwzPBiqVHHUXPwGwFbH26n
+	 99Ux+gYEzaPkqjIvyFH/Tj3GGIELr4L5wZ6HdcBElUIn+ovpoxSOM2fI7Py/K6392r
+	 jPLlXwa/DwmCw==
+Date: Tue, 21 Oct 2025 14:51:55 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Scott Branden <sbranden@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v3 1/5] of/irq: Add msi-parent check to of_msi_xlate()
+Message-ID: <aPeB6wQKC27gKyQv@lpieralisi>
+References: <20251017084752.1590264-1-lpieralisi@kernel.org>
+ <20251017084752.1590264-2-lpieralisi@kernel.org>
+ <20251021115517.GA3713879-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251021115517.GA3713879-robh@kernel.org>
 
-On Tue, 21 Oct 2025, Maciej W. Rozycki wrote:
-
-> On Mon, 20 Oct 2025, Bjorn Helgaas wrote:
-> 
-> > > Since ae81aad5c2e1 ("MIPS: PCI: Use pci_enable_resources()") came
-> > > through the PCI tree, I'd be happy to merge this as well, given your
-> > > ack, Thomas.  It would be ideal to have a tested-by from Guenter.
-> > > 
-> > > I provisionally put it on pci/for-linus to facilitate testing.  If it
-> > > doesn't solve the problem or you'd rather take it, Thomas, I'll be
-> > > glad to drop it.
+On Tue, Oct 21, 2025 at 06:55:17AM -0500, Rob Herring wrote:
+> On Fri, Oct 17, 2025 at 10:47:48AM +0200, Lorenzo Pieralisi wrote:
+> > In some legacy platforms the MSI controller for a PCI host bridge is
+> > identified by an msi-parent property whose phandle points at an MSI
+> > controller node with no #msi-cells property, that implicitly
+> > means #msi-cells == 0.
 > > 
-> > Added:
+> > For such platforms, mapping a device ID and retrieving the MSI controller
+> > node becomes simply a matter of checking whether in the device hierarchy
+> > there is an msi-parent property pointing at an MSI controller node with
+> > such characteristics.
 > > 
-> >   Tested-by: Guenter Roeck <linux@roeck-us.net>
-> >   Tested-by: Maciej W. Rozycki <macro@orcam.me.uk>
-> >   Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Add a helper function to of_msi_xlate() to check the msi-parent property in
+> > addition to msi-map and retrieve the MSI controller node (with a 1:1 ID
+> > deviceID-IN<->deviceID-OUT  mapping) to provide support for deviceID
+> > mapping and MSI controller node retrieval for such platforms.
 > > 
-> > and dropped the Fixes: aa0980b80908 ("Fixes for system controllers for
-> > Atlas/Malta core cards.")
+> > Fixes: 57d72196dfc8 ("irqchip/gic-v5: Add GICv5 ITS support")
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Sascha Bischoff <sascha.bischoff@arm.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/of/irq.c | 38 +++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 35 insertions(+), 3 deletions(-)
+> 
+> It all looks good to me other than 1 nit below. How do you propose 
+> merging the series? I can take the first 3 for 6.18 and then patches 4 
+> and 5 can go via their respective trees for 6.19?
+
+Yep, though patch (3) isn't really a fix so not sure it is v6.18 material
+but that's up to you.
+
+I'd leave patch (1) brewing in -next if possible a little bit - it should
+not cause any issues but it might.
+
 > > 
-> > If the missing resource reservations (dma1, tiger, dma page reg)
-> > mentioned by Maciej are an issue or can be fixed up, let me know and
-> > we can amend this.
+> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > index 65c3c23255b7..e67b2041e73b 100644
+> > --- a/drivers/of/irq.c
+> > +++ b/drivers/of/irq.c
+> > @@ -671,6 +671,35 @@ void __init of_irq_init(const struct of_device_id *matches)
+> >  	}
+> >  }
+> >  
+> > +static int of_check_msi_parent(struct device_node *dev_node, struct device_node **msi_node)
+> > +{
+> > +	struct of_phandle_args msi_spec;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * An msi-parent phandle with a missing or == 0 #msi-cells
+> > +	 * property identifies a 1:1 ID translation mapping.
+> > +	 *
+> > +	 * Set the msi controller node if the firmware matches this
+> > +	 * condition.
+> > +	 */
+> > +	ret = of_parse_phandle_with_optional_args(dev_node, "msi-parent", "#msi-cells",
+> > +						  0, &msi_spec);
+> > +	if (!ret) {
 > 
->  NB this comes from `plat_mem_setup' in arch/mips/mti-malta/malta-setup.c 
-> iterating over `standard_io_resources'.  ISTR now this being my original 
-> reason to come up with the approach taken with commit aa0980b80908 rather 
-> than using PCIBIOS_MIN_IO.  Since the ranges are now owned by the PCI host 
-> bridge, calls to `request_resource' referring `ioport_resource' fail.
+> if (ret)
+> 	return ret;
+> 
+> And then save a level of indentation.
 
-So this platform would actually need multiple root bus IO resources to 
-cover PIIX4 range without capturing non-PCI ranges?
+Fixed - sent v4.
 
->  I'm not sure offhand how to get a hold on the right handle under the new 
-> arrangement in this platform code, but clearly it must be doable as x86 
-> gets it right (and conversely Alpha gets it totally wrong).
-> 
->  Also I think we should reserve the PCI port I/O window in the MMIO space 
-> as well; something that I pondered back those 20 years ago already.  For 
-> the system I've used here that'd show up as:
-> 
-> 10000000-1affffff : MSC PCI MEM
->   10000000-100fffff : 0000:00:0b.0
->   [...]
->   10142080-1014209f : 0000:00:0b.0
-> 1b000000-1bffffff : MSC PCI I/O
-> 1e000000-1e3fffff : 1e000000.flash flash@1e000000
-> 
-> Most non-x86 PCI host bridges have one, but I haven't come across a Linux
-> platform that would report it.
-> 
->   Maciej
-> 
+Thanks !
+Lorenzo
 
--- 
- i.
-
+> > +		if ((*msi_node && *msi_node != msi_spec.np) || msi_spec.args_count != 0)
+> > +			ret = -EINVAL;
+> > +
+> > +		if (!ret) {
+> > +			/* Return with a node reference held */
+> > +			*msi_node = msi_spec.np;
+> > +			return 0;
+> > +		}
+> > +		of_node_put(msi_spec.np);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  /**
+> >   * of_msi_xlate - map a MSI ID and find relevant MSI controller node
+> >   * @dev: device for which the mapping is to be done.
+> > @@ -678,7 +707,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+> >   * @id_in: Device ID.
+> >   *
+> >   * Walk up the device hierarchy looking for devices with a "msi-map"
+> > - * property. If found, apply the mapping to @id_in.
+> > + * or "msi-parent" property. If found, apply the mapping to @id_in.
+> >   * If @msi_np points to a non-NULL device node pointer, only entries targeting
+> >   * that node will be matched; if it points to a NULL value, it will receive the
+> >   * device node of the first matching target phandle, with a reference held.
+> > @@ -692,12 +721,15 @@ u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
+> >  
+> >  	/*
+> >  	 * Walk up the device parent links looking for one with a
+> > -	 * "msi-map" property.
+> > +	 * "msi-map" or an "msi-parent" property.
+> >  	 */
+> > -	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
+> > +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
+> >  		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
+> >  				"msi-map-mask", msi_np, &id_out))
+> >  			break;
+> > +		if (!of_check_msi_parent(parent_dev->of_node, msi_np))
+> > +			break;
+> > +	}
+> >  	return id_out;
+> >  }
+> >  
+> > -- 
+> > 2.50.1
+> > 
 
