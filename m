@@ -1,190 +1,183 @@
-Return-Path: <linux-pci+bounces-38895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38896-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92E85BF68CE
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:52:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0EB2BF68EF
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:53:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52F6C18A74F8
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:52:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D5993AFF34
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D166B32B9B4;
-	Tue, 21 Oct 2025 12:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D33F333441;
+	Tue, 21 Oct 2025 12:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRjJ+BvE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8Cs6anh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABA5322C99;
-	Tue, 21 Oct 2025 12:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB7833343C
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 12:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761051123; cv=none; b=YRnxlYjEPqXwkRLZfAPQwam/7XMADkdrNFyFqbRfnF+G27xTmcJSz1jwnGdAJOLNKkKkK7aVvjHcFCoFRXVe8o1qnmaH2fVXl97xTSC+AUHV6NJKvcwAd0MvZzD1daCcVSbdtHce8pIuC2qAcc3vqd+I/eVHZywrarRhqsK3Ipg=
+	t=1761051207; cv=none; b=dKFYuicuJEVdFzLTL+Ny+wWdGYZMZHYd4d70m8t1530dS2TZlzi0q40ycuxoBHY/pGVz2hVZJO7egq0hzkODDZm76hAfUOJ99GymXWM32eiaREmkNLJBrpC6CYTHXsp93HZaQvO2paKNnDd0e9Jk7XUJ8tg2rkSH1FYrr8xtbrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761051123; c=relaxed/simple;
-	bh=xl5f2KWZjnQ0VT+pwG5gNrmtrc3seJnlxSjRbDKcWN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLSMwmxktW4CPuMCtL46n+7cYpjL4ofSesrk87F3iMU3469icif5OXuO2VuziyHUNjB1be2XSQcnYxU2MvQIv3O5ZLfe6XmhB8daqISnDvzPMrL2FhHhV10ensnHeM4NORrlp/kfgPq0NEa4Wtnx0VxRU/DcAyY9G/EEw47O9qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRjJ+BvE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80339C4CEF1;
-	Tue, 21 Oct 2025 12:51:58 +0000 (UTC)
+	s=arc-20240116; t=1761051207; c=relaxed/simple;
+	bh=JRMgqzMCkRarxTqmjB25RB2qN3M2EvcJMAfE3kwGsSw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NOLcB33D5K5996qvNaTBEnjqwNV+BaesvR0nbdgqAdDADDRIGH44ypQbXg2S9eVeL1Nd9YAAWUrzTSTvMk4kuf3GxRDk56KAN0EokO7tge+V+gDoU9tz0XxCe+cxPC5sCpMuMT69fBah12HPoZG3eAiRa1IRj1EIoBa/OLaETLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8Cs6anh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BE49C116B1
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 12:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761051123;
-	bh=xl5f2KWZjnQ0VT+pwG5gNrmtrc3seJnlxSjRbDKcWN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRjJ+BvEoDGSHu34gpVnNaa44gGA0cHKta96VRDLRlAf5tNR7ZIjaJ1DSPYzgxhza
-	 pwhIu22SSHWCUbrb5Ywk0kena7WF6W8i3r5QZicFutmPrxn/kUAJt/822j7fMvCR8P
-	 mmdltnpqYakNtNQhpJQPXt/rjU39SRIGc0AjX+RatiX5Y+MERgucXaLx4xKGPkMKT1
-	 Yw1rRfN2/z9rjlcTe9GI9DEY19tHfLDpAVQqsL6oRNfXHwzPBiqVHHUXPwGwFbH26n
-	 99Ux+gYEzaPkqjIvyFH/Tj3GGIELr4L5wZ6HdcBElUIn+ovpoxSOM2fI7Py/K6392r
-	 jPLlXwa/DwmCw==
-Date: Tue, 21 Oct 2025 14:51:55 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Scott Branden <sbranden@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v3 1/5] of/irq: Add msi-parent check to of_msi_xlate()
-Message-ID: <aPeB6wQKC27gKyQv@lpieralisi>
-References: <20251017084752.1590264-1-lpieralisi@kernel.org>
- <20251017084752.1590264-2-lpieralisi@kernel.org>
- <20251021115517.GA3713879-robh@kernel.org>
+	s=k20201202; t=1761051207;
+	bh=JRMgqzMCkRarxTqmjB25RB2qN3M2EvcJMAfE3kwGsSw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p8Cs6anh7MxhwqhAo26mJSRzuftK40TA4a6UF4EhaaR3j7eaP0M3gFUqpYosDs697
+	 ySlEGZGWbDR3UmWIvMBLGUXBlovIrkZwdS+8dZnjjF+v9vgiw0GnZGyBq2qx2AbyIY
+	 rF02Y2wRMNB3yqrU026qp1+N2Ob+iqa3SDUm4+vLgQwBPOeRmdyCSUP787/6YAgxSa
+	 w/sVW1QDCtEOzhT7EekrP2z3ektze5KSU1QIgdHOawXzn9FvCEXBti4FRZqG9v5IQ+
+	 2EyRMs1TgCGNM6V+Rqv7C0g7ZMMZp7Quc7wP4aWhAGLbkSyq+bmUHXoNECDvw3Bjv/
+	 93WrkNZwm/2xw==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-43f715b18caso2706450b6e.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 05:53:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW3RzF85DVtjjmLPabSOAYKsV2BOtZmJ+lneEBMA9Stdr75IU0JGkEqdhspUI8vS9gbJADVV8OPenY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3sLsxPItRkVjT2g1i4f11MGkMEq4+7faR4pplon/tYqU3vsSM
+	x4uv/9KL8iH7Tu6DJmNKRZx7uILIL8ZOjCA6rHn+MCRx2EkKKkpsEzGCClldYlT+bkTkFUS255V
+	qyfWsmiLp3K4THS+728K5pexxcbCVKx4=
+X-Google-Smtp-Source: AGHT+IELKAJn+CpJ5d/x/lg53OE74Osp3H7VB9TLdb1TgTTX0AqIbjmO0KqDlLu2W8HZjjlDl3/ySjO9XTu3OKhlfNQ=
+X-Received: by 2002:a05:6808:18a7:b0:43f:7a87:b39 with SMTP id
+ 5614622812f47-443a2f6a7c2mr6912539b6e.28.1761051206442; Tue, 21 Oct 2025
+ 05:53:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251021115517.GA3713879-robh@kernel.org>
+References: <20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+ <aPH_B7SiJ8KnIAwJ@wunner.de> <67381f3b-4aee-a314-b5dd-2b7d987a7794@linux.intel.com>
+ <aPKANja_k1gogTAU@google.com> <08976178-298f-79d9-1d63-cff5a4e56cc3@linux.intel.com>
+ <aPaFACsVupPOe67G@google.com> <06cd0121-819d-652d-afa7-eece15bf82a2@linux.intel.com>
+In-Reply-To: <06cd0121-819d-652d-afa7-eece15bf82a2@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 21 Oct 2025 14:53:13 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0giOw54L6M8rj-Q8ZELpFHx9LPKS2fAnsHHjHfhW_LZWw@mail.gmail.com>
+X-Gm-Features: AS18NWCQj4vpYEf3m-BM318rLr21HBYlYKoNpN244opR4NeobUnk_Cp4bjPsdg0
+Message-ID: <CAJZ5v0giOw54L6M8rj-Q8ZELpFHx9LPKS2fAnsHHjHfhW_LZWw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/PM: Prevent runtime suspend before devices are fully initialized
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Brian Norris <briannorris@chromium.org>, Lukas Wunner <lukas@wunner.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 06:55:17AM -0500, Rob Herring wrote:
-> On Fri, Oct 17, 2025 at 10:47:48AM +0200, Lorenzo Pieralisi wrote:
-> > In some legacy platforms the MSI controller for a PCI host bridge is
-> > identified by an msi-parent property whose phandle points at an MSI
-> > controller node with no #msi-cells property, that implicitly
-> > means #msi-cells == 0.
-> > 
-> > For such platforms, mapping a device ID and retrieving the MSI controller
-> > node becomes simply a matter of checking whether in the device hierarchy
-> > there is an msi-parent property pointing at an MSI controller node with
-> > such characteristics.
-> > 
-> > Add a helper function to of_msi_xlate() to check the msi-parent property in
-> > addition to msi-map and retrieve the MSI controller node (with a 1:1 ID
-> > deviceID-IN<->deviceID-OUT  mapping) to provide support for deviceID
-> > mapping and MSI controller node retrieval for such platforms.
-> > 
-> > Fixes: 57d72196dfc8 ("irqchip/gic-v5: Add GICv5 ITS support")
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Sascha Bischoff <sascha.bischoff@arm.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/of/irq.c | 38 +++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 35 insertions(+), 3 deletions(-)
-> 
-> It all looks good to me other than 1 nit below. How do you propose 
-> merging the series? I can take the first 3 for 6.18 and then patches 4 
-> and 5 can go via their respective trees for 6.19?
+On Tue, Oct 21, 2025 at 1:27=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 20 Oct 2025, Brian Norris wrote:
+>
+> > Hi Ilpo,
+> >
+> > On Mon, Oct 20, 2025 at 06:56:41PM +0300, Ilpo J=C3=A4rvinen wrote:
+> > > On Fri, 17 Oct 2025, Brian Norris wrote:
+> > >
+> > > > On Fri, Oct 17, 2025 at 02:49:35PM +0300, Ilpo J=C3=A4rvinen wrote:
+> > > > > On Fri, 17 Oct 2025, Lukas Wunner wrote:
+> > > > >
+> > > > > > [cc +=3D Ilpo]
+> > > > > >
+> > > > > > On Thu, Oct 16, 2025 at 03:53:35PM -0700, Brian Norris wrote:
+> > > > > > > PCI devices are created via pci_scan_slot() and similar, and =
+are
+> > > > > > > promptly configured for runtime PM (pci_pm_init()). They are =
+initially
+> > > > > > > prevented from suspending by way of pm_runtime_forbid(); howe=
+ver, it's
+> > > > > > > expected that user space may override this via sysfs [1].
+> > > > >
+> > > > > Is this true as pm_runtime_forbid() also increases PM usage count=
+?
+> > > >
+> > > > Yes it's true. See below.
+> > > >
+> > > > > "void pm_runtime_forbid(struct device *dev);
+> > > > >
+> > > > > unset the power.runtime_auto flag for the device and increase its
+> > > > > usage counter (used by the /sys/devices/.../power/control interfa=
+ce to
+> > > > > effectively prevent the device from being power managed at run ti=
+me)"
+> >
+> > I see this doc line confused you, and I can sympathize.
+> >
+> > IIUC, the parenthetical means that sysfs *uses* pm_runtime_forbid() to
+> > "effectively prevent runtime power management"; pm_runtime_forbid() doe=
+s
+> > not block user space from doing anything.
+> >
+> > > > Right, but sysfs `echo auto > .../power/control` performs the inver=
+se --
+> > > > pm_runtime_allow() -- which decrements that count.
+> > >
+> > > Fair enough, I didn't check what it does.
+> > >
+> > > IMO, the details about how the usage count behaves should be part of =
+the
+> > > changelog as that documentation I quoted sounded like user control is
+> > > prevented when forbidden.
+> >
+> > I tried to elaborate on the API doc confusion above. But frankly, I'm
+> > not sure how best to explain runtime PM.
+> >
+> > > I see you've put this part of the explanation
+> > > into the v2 as well so I suggest you explain the usage count in the c=
+hange
+> > > so it is recorded in the commit if somebody has to look at this commi=
+t
+> > > years from now.
+> >
+> > Both v1 and v2 mention that the sysfs 'power/control' file can override
+> > the kernel calling pm_runtime_forbid(). They don't mention the usage
+> > count, since that's an implementation detail IMO. (To me, the mental
+> > model works best if "usage count" (usually get()/put()) is considered
+> > mostly orthogonal to forbid()/allow()/sysfs, because "forbid()" can be
+> > overridden at any time.)
+> >
+> > This is also covered here:
+> >
+> > https://docs.kernel.org/power/runtime_pm.html#runtime-pm-initialization=
+-device-probing-and-removal
+> >
+> > "In principle, this mechanism may also be used by the driver to
+> > effectively turn off the runtime power management of the device until
+> > the user space turns it on."
+>
+> The problem is already rooted into the function name, when a function is
+> called "forbid", anyone unfamiliar will think it really forbids
+> something.
 
-Yep, though patch (3) isn't really a fix so not sure it is v6.18 material
-but that's up to you.
+And it does, until the "allow" counterpart of it is called.
 
-I'd leave patch (1) brewing in -next if possible a little bit - it should
-not cause any issues but it might.
+The confusing part here is that the "allow" counterpart is called from
+a sysfs attribute.
 
-> > 
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index 65c3c23255b7..e67b2041e73b 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -671,6 +671,35 @@ void __init of_irq_init(const struct of_device_id *matches)
-> >  	}
-> >  }
-> >  
-> > +static int of_check_msi_parent(struct device_node *dev_node, struct device_node **msi_node)
-> > +{
-> > +	struct of_phandle_args msi_spec;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * An msi-parent phandle with a missing or == 0 #msi-cells
-> > +	 * property identifies a 1:1 ID translation mapping.
-> > +	 *
-> > +	 * Set the msi controller node if the firmware matches this
-> > +	 * condition.
-> > +	 */
-> > +	ret = of_parse_phandle_with_optional_args(dev_node, "msi-parent", "#msi-cells",
-> > +						  0, &msi_spec);
-> > +	if (!ret) {
-> 
-> if (ret)
-> 	return ret;
-> 
-> And then save a level of indentation.
+> The docs just further reinforced the idea and the fact that it
+> also increments usage count.
+>
+> It is quite unexpected and feels quite illogical (for non-PM person like
+> me) that user interface then goes to reverse that usage count increase,
+> what would be the logical reason why there now are less users for it when
+> user wants to turn on PM? (I understand things are done that way, no need
+> to explain that further, but there are quite a few misleading things in
+> this entire scenario, not just that parenthesis part of the docs.)
 
-Fixed - sent v4.
+So the purpose of this "forbid" call in pci_pm_init() is to "block"
+runtime PM for PCI devices by default, but allow user space to
+"unblock" it later.
 
-Thanks !
-Lorenzo
-
-> > +		if ((*msi_node && *msi_node != msi_spec.np) || msi_spec.args_count != 0)
-> > +			ret = -EINVAL;
-> > +
-> > +		if (!ret) {
-> > +			/* Return with a node reference held */
-> > +			*msi_node = msi_spec.np;
-> > +			return 0;
-> > +		}
-> > +		of_node_put(msi_spec.np);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /**
-> >   * of_msi_xlate - map a MSI ID and find relevant MSI controller node
-> >   * @dev: device for which the mapping is to be done.
-> > @@ -678,7 +707,7 @@ void __init of_irq_init(const struct of_device_id *matches)
-> >   * @id_in: Device ID.
-> >   *
-> >   * Walk up the device hierarchy looking for devices with a "msi-map"
-> > - * property. If found, apply the mapping to @id_in.
-> > + * or "msi-parent" property. If found, apply the mapping to @id_in.
-> >   * If @msi_np points to a non-NULL device node pointer, only entries targeting
-> >   * that node will be matched; if it points to a NULL value, it will receive the
-> >   * device node of the first matching target phandle, with a reference held.
-> > @@ -692,12 +721,15 @@ u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
-> >  
-> >  	/*
-> >  	 * Walk up the device parent links looking for one with a
-> > -	 * "msi-map" property.
-> > +	 * "msi-map" or an "msi-parent" property.
-> >  	 */
-> > -	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
-> > +	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent) {
-> >  		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
-> >  				"msi-map-mask", msi_np, &id_out))
-> >  			break;
-> > +		if (!of_check_msi_parent(parent_dev->of_node, msi_np))
-> > +			break;
-> > +	}
-> >  	return id_out;
-> >  }
-> >  
-> > -- 
-> > 2.50.1
-> > 
+Would adding a comment to that effect next to that call be useful?
 
