@@ -1,184 +1,78 @@
-Return-Path: <linux-pci+bounces-38882-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38883-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B116EBF679C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:35:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E69CBF67A2
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 14:37:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B6BF46084C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:35:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75A3D4652FC
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:35:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6691F3D56;
-	Tue, 21 Oct 2025 12:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5Xs1FJ6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F0AA32E743;
+	Tue, 21 Oct 2025 12:35:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3AD1F956;
-	Tue, 21 Oct 2025 12:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1532D0C2
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 12:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761050123; cv=none; b=gRVFgbmPQsD3uFeAXuA5PPSlnPmHuI8pgXh6qhRNqaJ61ZNKfFXup9ZbTi33xxPz5f4C+O4DJSzscQzzgv8Akgo4MB551myOnoRIui5X3WBVH/x+DiDLqz8XG43ZE3Nz2my3GZf/inAqpzRBygP6u4etpl3NNhJ7i8pCdq60sSE=
+	t=1761050146; cv=none; b=Z3Jr6vvDHsCDCCF5wC4/OBoVGj2NHgQPFPhtQ+gmXLoyEbsV3IC97cFncnKA0m2KPC+GknXZNjxQ4AFs8x28hA3eu97GStCHOU20Ymsk0pmff0ULNgqyGUcibOZxAP2ALtt8nY338/hNJ2IrqusrZtKctDOjFKIiXGu/ygUfyz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761050123; c=relaxed/simple;
-	bh=vFnVtSPbyPTEjkoeyLNfM/J8eCQptnRUb2kkNBw5Jqg=;
+	s=arc-20240116; t=1761050146; c=relaxed/simple;
+	bh=15aaBSnzhNfV6E7escSwJU7f9UjDMWInw9j6iZkiQXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ryC/CUPyDJFgtqq97kgd0YM6nEQC79OjbYNG5EsThQ6qzn5zbk4kLDOYR+nqgC1M8jqqk0EMnVPeNXv7pDYQeiqHXo7JxexdOlY54pkJeRs9AtcmGIyL7tFeZtEntY37215yzK1eDXvCpldRNpKwRhzM82SLVKKRyVqsO7O1KV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5Xs1FJ6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AC5C4CEF1;
-	Tue, 21 Oct 2025 12:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761050123;
-	bh=vFnVtSPbyPTEjkoeyLNfM/J8eCQptnRUb2kkNBw5Jqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c5Xs1FJ6oLvLfbf3Z6LEFGNGr4+moq83sE9b9oR70Zt76s8I94g66zVPpdgxywQk2
-	 r+3KJeYjhU43AaRnoHn84XBlAv/+Zq/ukl3H21cq00HkfG7xxkW8cmFYF0ktaFfrel
-	 zLYeo46wCIvyI1IzmBYXuxMcAUNdeM8rd0QWRZb/3AHeRlP/cXx13O+FdFU/XBfk8k
-	 KjJo6V/Yd69P7qzkC6czt19QhZWP6xgEW5kiL8gNF9tUuXymLAJN3ALdYY7voRuL4C
-	 bdPUjwfQUZTUf3i/PqU6L8unYDMqFOPp4x+t7TAf1HZUgBhVZ6K3iZvGfEbKD43y0p
-	 B2S1FB6Uw69DQ==
-Date: Tue, 21 Oct 2025 18:05:07 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Christian Zigotzky <chzigotzky@xenosoft.de>, FUKAUMI Naoki <naoki@radxa.com>, linux-rockchip@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
-Message-ID: <2wv7662f23seqtifn4zkud6xlecfhpeso4rn72syn6q2ts6sm5@cllw6gyv2xwx>
-References: <20251020221217.1164153-1-helgaas@kernel.org>
- <lmkrtyq6uzhzlz5ttvajnmojegrbfgaz3e3kkwej5qar2lkeof@r5gdlvesm6xl>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUhd1MLvnDlbjH3B09l1MHHkmQapAzfBMsOE7Ui4fQueN8RJWp8DmWmm5YFVlJai2kUjfChtKJSICANR6RwwdGyeOSpHd7pt6a8b1WnqkC7TFZqMbWK5Dam6FVH6WkhgAWPaDuFTgoGfhMj/ed78Yy0F0P3aWO5deEOIK2GjCLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 2DD5D2C02B84;
+	Tue, 21 Oct 2025 14:35:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E0FCF4A12; Tue, 21 Oct 2025 14:35:35 +0200 (CEST)
+Date: Tue, 21 Oct 2025 14:35:35 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/PTM: Do not enable PTM solely based on the
+ capability existense
+Message-ID: <aPd-Fx_mq4Jyso0w@wunner.de>
+References: <20251021104833.3729120-1-mika.westerberg@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <lmkrtyq6uzhzlz5ttvajnmojegrbfgaz3e3kkwej5qar2lkeof@r5gdlvesm6xl>
+In-Reply-To: <20251021104833.3729120-1-mika.westerberg@linux.intel.com>
 
-On Tue, Oct 21, 2025 at 09:31:32AM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Oct 20, 2025 at 05:12:07PM -0500, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
-> > platforms") enabled Clock Power Management and L1 Substates, but that
-> > caused regressions because these features depend on CLKREQ#, and not all
-> > devices and form factors support it.
-> 
-> I believe we haven't concluded that CLKREQ# is the cluprit here. It is probably
-> the best bet, but there could be the device specific issues as well.
-> 
-> > 
-> > Enable only ASPM L0s and L1, and only when both ends of the link advertise
-> > support for them.
-> > 
-> > Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-> > Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> > Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
-> 
-> Closes?
-> 
-> > Reported-by: FUKAUMI Naoki <naoki@radxa.com>
-> > Link: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
-> 
-> Same here.
-> 
-> > ---
-> > 
-> > Mani, not sure what you think we should do here.  Here's a stab at it as a
-> > strawman and in case anybody can test it.
-> > 
-> 
-> Thanks Bjorn! I had a similar change slated to be sent post Diwali, but you beat
-> me to it.
-> 
-> > Not sure about the message log message.  Maybe OK for testing, but might be
-> > overly verbose ultimately.
-> > 
-> 
-> Let's have it for sometime, so we have some clue when someone reports issue with
-> ASPM.
-> 
-> > ---
-> >  drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
-> >  1 file changed, 9 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 7cc8281e7011..dbc74cc85bcb 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -243,8 +243,7 @@ struct pcie_link_state {
-> >  	/* Clock PM state */
-> >  	u32 clkpm_capable:1;		/* Clock PM capable? */
-> >  	u32 clkpm_enabled:1;		/* Current Clock PM state */
-> > -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
-> > -					   override */
-> > +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
-> >  	u32 clkpm_disable:1;		/* Clock PM disabled */
-> >  };
-> >  
-> > @@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
-> >  	pcie_set_clkpm_nocheck(link, enable);
-> >  }
-> >  
-> > -static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
-> > -						   int enabled)
-> > -{
-> > -	struct pci_dev *pdev = link->downstream;
-> > -
-> > -	/* For devicetree platforms, enable ClockPM by default */
-> > -	if (of_have_populated_dt() && !enabled) {
-> > -		link->clkpm_default = 1;
-> > -		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
-> > -	}
-> > -}
-> > -
-> >  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> >  {
-> >  	int capable = 1, enabled = 1;
-> > @@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
-> >  	}
-> >  	link->clkpm_enabled = enabled;
-> >  	link->clkpm_default = enabled;
-> > -	pcie_clkpm_override_default_link_state(link, enabled);
-> >  	link->clkpm_capable = capable;
-> >  	link->clkpm_disable = blacklist ? 1 : 0;
-> >  }
-> > @@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
-> >  	struct pci_dev *pdev = link->downstream;
-> >  	u32 override;
-> >  
-> > -	/* For devicetree platforms, enable all ASPM states by default */
-> > +	/* For devicetree platforms, enable L0s and L1 by default */
-> >  	if (of_have_populated_dt()) {
-> > -		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
-> > +		if (link->aspm_support & PCIE_LINK_STATE_L0S)
-> > +			link->aspm_default |= PCIE_LINK_STATE_L0S;
-> > +		if (link->aspm_support & PCIE_LINK_STATE_L1)
-> > +			link->aspm_default |= PCIE_LINK_STATE_L1;
-> 
-> Not sure if it is worth setting these states conditionally. Link state
-> enablement code should make use of the cached ASPM cap in 'link->aspm_capable'.
-> 
+On Tue, Oct 21, 2025 at 12:48:33PM +0200, Mika Westerberg wrote:
+> It is not advisable to enable PTM solely based on the fact that the
+> capability exists. Instead there are separate bits in the capability
+> register that need to be set for the feature to be enabled for a given
+> component (this is suggestion from Intel PCIe folks):
+[...]
+>   - PCIe Switch Upstream Port that has PTM capability must declare
+>     both requester and responder capable
 
-I see the point now. Without the check, we falsely claim that the ASPM states
-are getting enabled. But we cannot be sure until the register write to LNKCTL
-happens, which will depend on many factors (own device capability,
-upstream/downstream port capability,...)
+PCIe r7.0 Figure 6-21 (on page 909, the lowest of the three images)
+shows an example where the Switch Upstream Port is Responder only.
 
-To avoid ambiguity, can we reword the log to something like,
+So enforcing that it must be a Requester as well seems too strict.
 
-	"ASPM: Overridding default states %s%s\n"
+Patch otherwise LGTM.
 
-- Mani
+Thanks,
 
--- 
-மணிவண்ணன் சதாசிவம்
+Lukas
 
