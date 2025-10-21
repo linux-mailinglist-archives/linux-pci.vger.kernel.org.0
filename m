@@ -1,141 +1,180 @@
-Return-Path: <linux-pci+bounces-38869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB4FDBF5D2C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:38:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD5FBF5DFB
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 12:48:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ED91188E629
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 10:39:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B293424E1E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 10:48:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F56E32E731;
-	Tue, 21 Oct 2025 10:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A10B12F0C67;
+	Tue, 21 Oct 2025 10:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fI4IDXhU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H4hn0HpM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1898B32E738;
-	Tue, 21 Oct 2025 10:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCF232ABFE
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 10:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761043047; cv=none; b=QzcFhGsASQc9nzvRx9cXcam9kfQjkOGYcy8mGMjNjZsiFvRgWzprgS6R+awvVgtTQWu1kCJjk57L0WBJq9t9QYSraG2O0ee9eDh+BUTE71r0KLl+Fi5+uwZF7TtiZCZV5qRRH8+uEMLFHuKBIBJ8w8qmWwT18gKPWl6O/b3fEP8=
+	t=1761043718; cv=none; b=TfRqMyh5OlzFFsca8H4WrN0HA6+2+H6k84pyiHMKDaQrIMLoejNy7K/+FB4wfKZ+CeSso/o+xdGUxA0zbxpG+iOpwZ4YKGRJJp7l9a9bf9jOEZacNEtR2cfPVQyp7oTNNIw/r7AFtCSItI00hHvWXS+BYh8vG2DOIQHGVfcfw00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761043047; c=relaxed/simple;
-	bh=Wv4YlboMbpQNw6u3IhV6GaaoBps8Bfhjrkcb7CsF0xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwN9+4WRr8nEq4io0ByWR4qsfw6CKco9Xn8xcdaKBkrrtCQDfDQQNObfHHhTr28snuPXuVmEPms/TOOxJ4ThF8pebBvF5gu/8zeEfkcelWbBjku/oDf5fZtCSJ/S3kEtA7XZAnz2/uFJqUo6T5Ehf2raz8qoAHJG9Xd4JEY9CTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fI4IDXhU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27116C19421;
-	Tue, 21 Oct 2025 10:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761043046;
-	bh=Wv4YlboMbpQNw6u3IhV6GaaoBps8Bfhjrkcb7CsF0xc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fI4IDXhUCP7sgAbKQnnlEnGS+mH6+q/DVxfBVgsj499VkGJQLro2SipZv+UsgT+zu
-	 8B9BQ/N8PLADF+mv0npm2WR18SHOSCTkY6IIWB+/4KWxdz0HaqNaCd+VpwNF+jRHei
-	 3ov8wsowSbIjE7ehwZJQCM5XDSZ8yb88yR9ym4/iD1GrsxZuohsf4L75d3zn6Oo8ZL
-	 n/EM6KAHijRdlgGUc7o7fjyhsti167l3ftZbDgbosTZ+9qyXpVrt8OKaPBS6REela5
-	 1PzcamUK2QhpQhPmKuhJ64ytVkT/HOGaF6eImS7MwUdj0xA7m9KQpsd53N7fkQp+0Z
-	 1s/kfAndNZ8Fg==
-Date: Tue, 21 Oct 2025 11:37:15 +0100
-From: Lee Jones <lee@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: Fix inconsistent quoting
-Message-ID: <20251021103715.GA475031@google.com>
-References: <20251015232015.846282-1-robh@kernel.org>
+	s=arc-20240116; t=1761043718; c=relaxed/simple;
+	bh=olJmFGlKFNLp0pg07TkKmR6050oXI4IGIcOyPRNd8Og=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fmSvVjpo0vFSqKoKf7UbQ9DkEOdbt6PxRswVUZ4iEJj/+Ugq+pz6uyzx/uc7zt9M4+3pO03mwe8jnStQ6WOTpSca4IECNjHJKw8sIgFtY5UwVo5N2cBqr8Bs2NNMejgOeyx3cdYeQNMdy/JHPyGNynFoEo4XqUI4321uY2sSUpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H4hn0HpM; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761043717; x=1792579717;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=olJmFGlKFNLp0pg07TkKmR6050oXI4IGIcOyPRNd8Og=;
+  b=H4hn0HpMdGou+aWyZhtnfbZsT04RcQ8rp2wtoE7Nwr8AnPiztGLE3zDu
+   l3mp+miLaJZgT3jSd0rQIgVHxVArYX942CI+UdGAu6Ls0WYMfw9b4KQBn
+   IpJYCcSFWeFeEAWQjtaBEQ+0kikAkkBlhEsxOW87Qt5maGpLX0GgVCe29
+   tjniKQvCyieceQ+1bWUpmGiB3ZQ9qVm/JmjVRr5b/lk5CZwXAc6gNTq2/
+   G71c/3+Ae6kqzWH7fuzd5d3ebN+D5jW86GQvYeOUrJdbcovvoH0Lpsl+7
+   Pb5SHQ2Mk0B/qA8KRe4j091ZULsp4YvCtsGb3Xi1zhBsspv4lrcENQSzm
+   A==;
+X-CSE-ConnectionGUID: f7OtXeJEQA6ko8cQGAZmsw==
+X-CSE-MsgGUID: OLNMxHDRTFq+k3WSi+FrBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="63087652"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="63087652"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 03:48:36 -0700
+X-CSE-ConnectionGUID: 97xsNhDdSYiNeWC6oH0QQg==
+X-CSE-MsgGUID: F4QFdYCkTbmPlnqrjggoPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,244,1754982000"; 
+   d="scan'208";a="214192976"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa002.jf.intel.com with ESMTP; 21 Oct 2025 03:48:34 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 92F8195; Tue, 21 Oct 2025 12:48:33 +0200 (CEST)
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: linux-pci@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH] PCI/PTM: Do not enable PTM solely based on the capability existense
+Date: Tue, 21 Oct 2025 12:48:33 +0200
+Message-ID: <20251021104833.3729120-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251015232015.846282-1-robh@kernel.org>
 
-On Wed, 15 Oct 2025, Rob Herring (Arm) wrote:
+It is not advisable to enable PTM solely based on the fact that the
+capability exists. Instead there are separate bits in the capability
+register that need to be set for the feature to be enabled for a given
+component (this is suggestion from Intel PCIe folks):
 
-> yamllint has gained a new check which checks for inconsistent quoting
-> (mixed " and ' quotes within a file). Fix all the cases yamllint found
-> so we can enable the check (once the check is in a release). Use
-> whichever quoting is dominate in the file.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../arm/altera/socfpga-clk-manager.yaml       |  4 ++--
->  .../bindings/clock/nvidia,tegra124-car.yaml   |  8 ++++----
->  .../bindings/clock/nvidia,tegra20-car.yaml    |  6 +++---
->  .../devicetree/bindings/gpio/gpio-mxs.yaml    |  9 +++++----
->  .../bindings/gpio/snps,dw-apb-gpio.yaml       |  4 ++--
->  .../bindings/iio/temperature/adi,ltc2983.yaml | 20 +++++++++----------
->  .../mailbox/qcom,apcs-kpss-global.yaml        | 16 +++++++--------
->  .../mailbox/xlnx,zynqmp-ipi-mailbox.yaml      |  2 +-
->  .../bindings/media/fsl,imx6q-vdoa.yaml        |  2 +-
+  - PCIe Endpoint that has PTM capability must to declare requester
+    capable
+  - PCIe Switch Upstream Port that has PTM capability must declare
+    both requester and responder capable
+  - PCIe Root Port must declare root port capable.
 
->  .../devicetree/bindings/mfd/aspeed-lpc.yaml   |  4 ++--
->  .../devicetree/bindings/mfd/ti,twl.yaml       |  4 ++--
+Currently we see following:
 
-Acked-by: Lee Jones <lee@kernel.org>
+  pci 0000:01:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
+  pci 0000:01:00.0: PCI bridge to [bus 00]
+  pci 0000:01:00.0:   bridge window [io  0x0000-0x0fff]
+  pci 0000:01:00.0:   bridge window [mem 0x00000000-0x000fffff]
+  pci 0000:01:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+  ...
+  pci 0000:01:00.0: PTM enabled, 4ns granularity
+  ...
+  pcieport 0000:00:07.0: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.0
+  pcieport 0000:00:07.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
+  pcieport 0000:00:07.0:   device [8086:e44e] error status/mask=00200000/00000000
+  pcieport 0000:00:07.0:    [21] ACSViol                (First)
 
->  .../bindings/net/ethernet-switch.yaml         |  2 +-
->  .../pci/plda,xpressrich3-axi-common.yaml      |  2 +-
->  .../bindings/phy/motorola,cpcap-usb-phy.yaml  |  4 ++--
->  .../pinctrl/microchip,sparx5-sgpio.yaml       | 12 +++++------
->  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 10 +++++-----
->  .../bindings/pinctrl/qcom,pmic-mpp.yaml       |  6 +++---
->  .../bindings/pinctrl/renesas,pfc.yaml         |  4 ++--
->  .../bindings/pinctrl/renesas,rza1-ports.yaml  |  2 +-
->  .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  2 +-
->  .../pinctrl/renesas,rzv2m-pinctrl.yaml        |  2 +-
->  .../bindings/power/renesas,sysc-rmobile.yaml  |  4 ++--
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   |  8 ++++----
->  .../soc/tegra/nvidia,tegra20-pmc.yaml         | 12 +++++------
->  24 files changed, 75 insertions(+), 74 deletions(-)
+The 01:00.0 PCIe Upstream Port has this:
 
-[...]
+  Capabilities: [220 v1] Precision Time Measurement
+		PTMCap: Requester- Responder- Root-
 
+This happens because Linux sees the PTM capability and blindly enables
+PTM which then causes the AER error to trigger.
+
+Fix this by enabling PTM only if the above described criteria is met.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/pcie/ptm.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 65e4b008be00..8dcc3469dc09 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -81,9 +81,26 @@ void pci_ptm_init(struct pci_dev *dev)
+ 		dev->ptm_granularity = 0;
+ 	}
+ 
+-	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+-	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+-		pci_enable_ptm(dev, NULL);
++	switch (pci_pcie_type(dev)) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++		/*
++		 * Root Port must declare Root Capable if we want to
++		 * enable PTM for it.
++		 */
++		if (dev->ptm_root)
++			pci_enable_ptm(dev, NULL);
++		break;
++	case PCI_EXP_TYPE_UPSTREAM:
++		/*
++		 * Switch Upstream Ports must declare both Requester
++		 * Capable and Responder Capable if we want to enable
++		 * PTM for it.
++		 */
++		if ((cap & (PCI_PTM_CAP_REQ | PCI_PTM_CAP_RES)) ==
++		    (PCI_PTM_CAP_REQ | PCI_PTM_CAP_RES))
++			pci_enable_ptm(dev, NULL);
++		break;
++	}
+ }
+ 
+ void pci_save_ptm_state(struct pci_dev *dev)
+@@ -125,7 +142,7 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ {
+ 	u16 ptm = dev->ptm_cap;
+ 	struct pci_dev *ups;
+-	u32 ctrl;
++	u32 cap, ctrl;
+ 
+ 	if (!ptm)
+ 		return -EINVAL;
+@@ -144,6 +161,14 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ 			return -EINVAL;
+ 	}
+ 
++	/*
++	 * PCIe Endpoint must declare Requester Capable before we can
++	 * enable PTM for it.
++	 */
++	pci_read_config_dword(dev, ptm + PCI_PTM_CAP, &cap);
++	if (!(cap & PCI_PTM_CAP_REQ))
++		return -EINVAL;
++
+ 	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
+ 
+ 	ctrl |= PCI_PTM_CTRL_ENABLE;
 -- 
-Lee Jones [李琼斯]
+2.50.1
+
 
