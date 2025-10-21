@@ -1,107 +1,94 @@
-Return-Path: <linux-pci+bounces-38843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C774BF4630
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:32:18 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BD0BF4642
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DD81C35152B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 02:32:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C3E9A4E2EEC
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 02:35:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 061371D5CC9;
-	Tue, 21 Oct 2025 02:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7081D5CC9;
+	Tue, 21 Oct 2025 02:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHcnkSfV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toPnH5Bh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12621BFE00;
-	Tue, 21 Oct 2025 02:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65E71B3930;
+	Tue, 21 Oct 2025 02:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761013933; cv=none; b=VDw4Dn24zZqIuXuFKCN+3soBqR//AW5Y5JC564WCCSMLFb3uOMsLJIvsOwL3P6oMQjM/b4kFAv6fZ7jZO2c3O/w4p1pgomTSAzGqIqLjj7CaOPfhryJGyjudZnmwaIxuK3iA0FLIrDsF1yWDVlKIJfypj09+rdejMSn+4pu8F6Q=
+	t=1761014122; cv=none; b=tjVeQHj6bC9sR207T+r1ubVIFlx/SgR+++C9xvuisLhP8RkZGp7gcbmjCYnl5CrrAnhkyIyzKOeBfPtr2khwNabPegdt+xqOf6KMPBfAvc3s4+7y7ki8Y3gMe4HXhyT1RaH8T8ah93g44ldohS3xrlgT/n48KIAzjfvgE58Tq5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761013933; c=relaxed/simple;
-	bh=8UAGN1YhXZIbc93snwY/CRtubSt6sDkHXFrJ7cAY2Ms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqUFWr+vsqMfXGYehhaT4bdWOJE8gmUNoLK9wIhzfmGInHXK6ezAgyD3IUoCu31pMtXBp3tN5TaQuvdzt2eHBETlpRExN8rMPLjOIcqSgiqr2/BW2O9k7QwJUoyF+aFQ8wlNlB1GFPLKWCkiR0a5plBMvX/Sd0qhiV2vnrqseVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHcnkSfV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68ABC116C6;
-	Tue, 21 Oct 2025 02:32:07 +0000 (UTC)
+	s=arc-20240116; t=1761014122; c=relaxed/simple;
+	bh=fcgYpZ04ddq603NytX9c8WGJNEs2JUuEfL+syo1Wfkw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gWAydn2lqcyK2IvEkX5tJrq3JZgRy3BmvGKbBoXNeP3mgQSviH8A5wjT6cJrGXF4Z9fb2x6PZ5DDGkC5kyh6c5lPVaYNj76JZmc/ArXhRUTJ78Ek+3mjeKsmxxV1x800rZa8W3GM+DYPXwWw834qj3orQeSVTLKqVqzjJDgLep8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toPnH5Bh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 691F2C4CEFB;
+	Tue, 21 Oct 2025 02:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761013933;
-	bh=8UAGN1YhXZIbc93snwY/CRtubSt6sDkHXFrJ7cAY2Ms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BHcnkSfVYUiNs1+laZL/oTzN3Hwxulz3SDXzmd39w+CmT5bYFjNvL3B2LlK9tR2EZ
-	 MsV+kFf0G0g34cY2gCGrybn3d+8LVj5mPlzQx65l6HFVpSX90tezuAsndIbl8dwdM/
-	 IIKkMsR6N2dMg011uJPL28VumrpkuIW5fMBZPytwtZrLDtraufFed0Xf55NANa26OJ
-	 OLhoySAkQjU6VOn+Ojr32RTbf4nUiTFyJ+SUYaQechFw9ycmSg9Iyn1bkx8nlbpYjx
-	 7l0l0rKtIRP7EIY2QMIhZwgN9s49EkHms8o4WL/BnTnrMl27ydTB3EENp18Fo/09Ro
-	 tIPFNNyq18iiw==
-Date: Tue, 21 Oct 2025 08:02:01 +0530
+	s=k20201202; t=1761014122;
+	bh=fcgYpZ04ddq603NytX9c8WGJNEs2JUuEfL+syo1Wfkw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=toPnH5Bh/mJooxw8Zd4IHJQTKNx85c+y4kWxyErwQ8ab3hBK524Q3Zpm7pHeGA2Ay
+	 sg6r+9K0OI2Uqp8pl8wXtB95OmdCY2kg4jRvjeOYEo0ZUdBhPFhuzT9RA/fa6fbZg8
+	 6snyZsBUyJbmIHnvP2JECE5OwjKrukliYoEV/AlbZDmSudzsY8YrpNyA95Y6Xsi2Pm
+	 HMd8w9AbKRHC2gcJ420CRjPRfgH7D2PR6UDUceC0wJYRwXsNMala0cnUsheMLDLGJO
+	 ifxY5RWfqWaOS7L1mTkkz1EBfpmtInGtT8kznuH/eTxzeimTeT7y2ZtGs/6P/LWHrs
+	 OR1xI9Jp5UD9w==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
-	FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>, 
-	stable@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, 
+ Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
+ Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+ FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>, 
+ stable@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org
+In-Reply-To: <20251017163252.598812-2-cassel@kernel.org>
+References: <20251017163252.598812-2-cassel@kernel.org>
 Subject: Re: [PATCH v3] PCI: dw-rockchip: Prevent advertising L1 Substates
  support
-Message-ID: <aaug44bngs5amid7un4plotcjpbc6ym44cztnhet7z44ybywgc@apzhg6enhxgy>
-References: <20251017164558.GA1034609@bhelgaas>
- <54FD6159-AE45-432B-8F0E-4654721D16A6@kernel.org>
+Message-Id: <176101411705.9573.17573145190800888773.b4-ty@kernel.org>
+Date: Tue, 21 Oct 2025 08:05:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <54FD6159-AE45-432B-8F0E-4654721D16A6@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Sat, Oct 18, 2025 at 07:07:35AM +0200, Niklas Cassel wrote:
-> On 17 October 2025 18:45:58 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> (snip)
-> 
-> >> 
-> >> Thus, prevent advertising L1 Substates support until proper driver support
-> >> is added.
-> >
-> >I think Mani is planning a change so we don't try to enable L1
-> >Substates by default, which should avoid the regression even without a
-> >patch like this.
-> 
-> Sounds good, I suggested the same:
-> https://lore.kernel.org/linux-pci/aO9tWjgHnkATroNa@ryzen/
-> 
-> 
-> >
-> >That will still leave the existing CONFIG_PCIEASPM_POWER_SUPERSAVE=y
-> >and sysfs l1_1_aspm problems.
-> 
-> Indeed, which is why I think that this patch is v6.18 material.
-> 
 
-Not strictly a 6.18 material as the Kconfig/sysfs/cmdline issues existed even
-before we enabled the ASPM states by default in v6.18-rc1.
+On Fri, 17 Oct 2025 18:32:53 +0200, Niklas Cassel wrote:
+> The L1 substates support requires additional steps to work, namely:
+> -Proper handling of the CLKREQ# sideband signal. (It is mostly handled by
+>  hardware, but software still needs to set the clkreq fields in the
+>  PCIE_CLIENT_POWER_CON register to match the hardware implementation.)
+> -Program the frequency of the aux clock into the
+>  DSP_PCIE_PL_AUX_CLK_FREQ_OFF register. (During L1 substates the core_clk
+>  is turned off and the aux_clk is used instead.)
+> 
+> [...]
 
-The default ASPM issue will be fixed by a separate patch which will be generic
-for all platforms. I'll apply this patch for v6.19.
+Applied, thanks!
 
-- Mani
+[1/1] PCI: dw-rockchip: Prevent advertising L1 Substates support
+      commit: 40331c63e7901a2cc75ce6b5d24d50601efb833d
 
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Manivannan Sadhasivam <mani@kernel.org>
+
 
