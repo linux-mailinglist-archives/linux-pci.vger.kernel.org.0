@@ -1,96 +1,160 @@
-Return-Path: <linux-pci+bounces-38921-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38922-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9131CBF786D
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 17:57:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC57BBF7913
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 18:03:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3788D4FDC86
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 15:57:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF7C818956F6
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 16:03:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074A5355057;
-	Tue, 21 Oct 2025 15:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2EB3446DC;
+	Tue, 21 Oct 2025 16:02:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neAq776I"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="BjyOKm5O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91D23431FF;
-	Tue, 21 Oct 2025 15:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49032A1B2
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 16:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761062224; cv=none; b=NS56bFHC9CA3Yf3GoAkkP0Y37xDR1K654hpj+woFyex7ScL0jlYfiU5dB273tuEytBrKzbNgSWzGS0FF6HS6yrIKgirmyQShknv6sK72vZrvPKCg9PoAyGHw5+ulDa0pfrun9dLVVYZG7uxLoLeWPK39CKgJsqZGcjHTbYjnh20=
+	t=1761062573; cv=none; b=YOULP3cbbNs/70GheBCBqqrLss1JeblOO3HC4rVa5VPXsiU4WiTml9o7YStI/Z2rfD+h9Ui5SiORRX3qRshSgXfjrvaWTcFrnv9rjpfTy7+vwgiD6rEqtIUjUenkC/RFA6ah9ZYOXSsNNMYKid+3PhjFvCcW4rFdB2JgeUhruMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761062224; c=relaxed/simple;
-	bh=3Tpx8/zEzc/sy6ATcQr2dHJqhvmbjFFSErsGZF0iSBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=nK8ozNWZud61bjPD+nLudl52Lbmf86kTwy8sUGY+UKwLoFjFjpJod5HlLmqK6FpCwrg8XKEx87fT1orxRS95bXYD8iIqzv9enuSeRnZRzS+dGzcR0uMZ1XW5BdVmeZ0BfJ+s56hLPwP5RLAhptp9Rr643BEpyLzZBXgbxDlEgdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neAq776I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D9C4CEF1;
-	Tue, 21 Oct 2025 15:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761062224;
-	bh=3Tpx8/zEzc/sy6ATcQr2dHJqhvmbjFFSErsGZF0iSBw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=neAq776IgYAAsIkIK3t7gtlBbOzeG3elrHG44YOAT2lel31tnaRy6sFVYqKtNouZc
-	 2qJAL1kLOLPx4SgySEjke88Mn6KLr/m9ia2IHVVMCm9iSbHaxied1n1FTKrq2hSnWj
-	 d5YPCIOB1RElZBWAicuRJtypSBBN5vIF1JjhdRi8ux1dDS5eelYO6LLOHdc4jM2AXW
-	 5x3Y8VQ+ihJZCIYAv9MgrtDDfqUYFMBmVvPESdvjXGJU1Z7rUMmV2ljY/NfRmqIKU7
-	 /mzvezg4WrEQXdoBwHQZS7JWDsin71plP5iOiJq0267SdjqRqKW+M/DHeNxj8wHfk0
-	 58zaG0qYPhN+Q==
-Date: Tue, 21 Oct 2025 10:57:02 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, Ron Economos <re@w6rz.net>
-Subject: Re: [PATCH 1/2] PCI: dwc: Fix ECAM enablement when used with vendor
- drivers
-Message-ID: <20251021155702.GA1193049@bhelgaas>
+	s=arc-20240116; t=1761062573; c=relaxed/simple;
+	bh=nOo/aZA4bi60IV5o+eWOioEduTx5lhGGFzyAznPPE7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fEole7/5H/Y24KzhBJfkb9k2k5Zq/A87W2JRFbzF6e50BWeGp4oS6YzmBnUzKgd5DOau4tyoAdWpvexEXTp4YGiBka7qooLExgu0wups/rdXWNxBdJ7jB6UETFrdtPyFu2dLSBPT8StlghMU+H+UyFLqnHB0t5TbWfl+LcDwUg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=BjyOKm5O; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4crcWk3t0Tz9tT9;
+	Tue, 21 Oct 2025 18:02:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1761062562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nRe7E2t/P9GQjAhVh5qQWP7KC1yaS/9j/2/8stw93NU=;
+	b=BjyOKm5Owgi93DPSIVWbHueYgSV8DmYSPPsqqhJa5ehkWpoaNW5zBCb+N4psTl/8WHqjog
+	bEHwZb8A9m1Dm7rtmB0L1OfWMH9eW4E49hU6sqignjLRshAyljCYcu9QyMtJ4rJmMIQguh
+	dJZN2BMrWH5j4TfwfNNoA/v9XT9BtwbEagHrowrwcn6iNAr7hMvYUGWQdrwHklbQe1x9o2
+	8u1nrTb5IoKQyTEeEjdunNA7+Jt1mJJevdCWgnnpHaI/8N1vyxzn3vMY95iJyFOPwhLu9I
+	Mqu+xhdmdeoVs1+LvNbaOmBkddIrY5rKxybv5kPxqu8blXwDjX4/fipFvvrlLg==
+Message-ID: <14a93b96-c641-41cb-9ab4-ae6cc7c4af1f@mailbox.org>
+Date: Tue, 21 Oct 2025 18:02:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f80e1d58-cae1-4f3b-8b66-fc920ad4c5ba@oss.qualcomm.com>
+Subject: Re: [PATCH v2] PCI: pcie-xilinx-dma-pl: Fix off-by-one INTx IRQ
+ handling
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Sean Anderson <sean.anderson@linux.dev>,
+ Manivannan Sadhasivam <mani@kernel.org>, Ravi Kumar Bandi
+ <ravib@amazon.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20251021155347.GA1191808@bhelgaas>
+Content-Language: en-US
+From: Stefan Roese <stefan.roese@mailbox.org>
+In-Reply-To: <20251021155347.GA1191808@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: 059b992879bd8c08881
+X-MBO-RS-META: 98kfz6i54bqxg841j8cpqazs9ok538ci
 
-On Tue, Oct 21, 2025 at 05:42:39PM +0530, Krishna Chaitanya Chundru wrote:
-> On 10/18/2025 12:40 AM, Bjorn Helgaas wrote:
-> > On Fri, Oct 17, 2025 at 05:10:53PM +0530, Krishna Chaitanya Chundru wrote:
+Hi Bjorn,
 
-> > > +static void __iomem *dw_pcie_ecam_conf_map_bus(struct pci_bus *bus, unsigned int devfn, int where)
-> > > +{
-> > > +	struct pci_config_window *cfg = bus->sysdata;
-> > > +	struct dw_pcie_rp *pp = cfg->priv;
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > +	unsigned int busn = bus->number;
-> > > +
-> > > +	if (busn > 0)
-> > > +		return pci_ecam_map_bus(bus, devfn, where);
-> > 
-> > Is there a way to avoid the "root bus is bus 00" assumption here?  It
-> > looks like something like this might work (it inverts the condition
-> > to take care of the root bus special case first):
-> > 
-> >    if (bus == pp->bridge->bus) {
-> >      if (PCI_SLOT(devfn) > 0)
-> >        return NULL;
-> > 
-> >      return pci->dbi_base + where;
-> >    }
-> > 
-> >    return pci_ecam_map_bus(bus, devfn, where);
-> > This is working fine Bjorn, shall I send v2 with this change.
+On 10/21/25 17:53, Bjorn Helgaas wrote:
+> On Tue, Oct 21, 2025 at 05:43:22PM +0200, Stefan Roese wrote:
+>> While testing with NVMe drives connected to the Versal QDMA PL PCIe RP
+>> on our platform I noticed that with MSI disabled (e.g. via pci=nomsi)
+>> the NVMe interrupts are not delivered to the host CPU resulting in
+>> timeouts while probing.
+>>
+>> Debugging has shown, that the hwirq numbers passed to this device driver
+>> (1...4, 1=INTA etc) need to get adjusted to match the numbers in the
+>> controller registers bits (0...3).
+>>
+>> This patch now adds pci_irqd_intx_xlate to the INTx IRQ domain ops,
+>> handling this IRQ number translation correctly.
+> 
+> s/pcie-xilinx-dma-pl:/xilinx-xdma:/  # in subject
+> s/has shown, that/has shown that/
+> s/This patch now adds/Add/
+> s/pci_irqd_intx_xlate/pci_irqd_intx_xlate()/
+> 
+> We'll do this when applying, no need to repost for this.
 
-Yes, please :)
+Okay, thanks.
+> I wonder how many other drivers have this issue.
+> pci_irqd_intx_xlate() is used only by:
+> 
+>    dwc/pci-dra7xx.c
+>    pcie-altera.c
+>    pcie-xilinx-nwl.c
+>    pcie-xilinx.c
+>    pcie-xilinx-dma-pl.c   # this patch
+> 
+> Is there something different about these drivers that means they need
+> it when all the others don't?
+
+I can't really tell. I'm pretty sure that this driver also needs
+pci_irqd_intx_xlate():
+
+pcie-xilinx-cpm.c
+
+I can't test it right now though. Perhaps in a few weeks though.
+
+My best guess is, that legacy PCI IRQs are very rarely (not at all?)
+used and therefor tested these days. On our ZynqMP / Versal platforms 
+this is currently sometimes used, as the RP does not support MSI-X
+(only MSI which is very unfortunate - and legacy of course). So it
+might be that some other drivers are missing this intx_xlate as well.
+Should be easy to test by booting with pci=nomsi.
+
+Thanks,
+Stefan
+>> Signed-off-by: Stefan Roese <stefan.roese@mailbox.org>
+>> Cc: Sean Anderson <sean.anderson@linux.dev>
+>> Cc: Manivannan Sadhasivam <mani@kernel.org>
+>> Cc: Ravi Kumar Bandi <ravib@amazon.com>
+>> Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+>> Cc: Michal Simek <michal.simek@amd.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> ---
+>> v2:
+>> - Use pci_irqd_intx_xlate to handle this IRQ number translation as suggested
+>>    by Sean (thanks again)
+>>
+>>   drivers/pci/controller/pcie-xilinx-dma-pl.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+>> index 84888eda990b2..80095457ec531 100644
+>> --- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
+>> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+>> @@ -370,6 +370,7 @@ static int xilinx_pl_dma_pcie_intx_map(struct irq_domain *domain,
+>>   /* INTx IRQ Domain operations */
+>>   static const struct irq_domain_ops intx_domain_ops = {
+>>   	.map = xilinx_pl_dma_pcie_intx_map,
+>> +	.xlate = pci_irqd_intx_xlate,
+>>   };
+>>   
+>>   static irqreturn_t xilinx_pl_dma_pcie_msi_handler_high(int irq, void *args)
+>> -- 
+>> 2.51.1
+>>
+
+
 
