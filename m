@@ -1,190 +1,340 @@
-Return-Path: <linux-pci+bounces-38846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19C05BF48EE
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 06:01:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE65CBF4909
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 06:03:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 760A54E294B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:01:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93EE04E067D
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 04:03:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 900332045B7;
-	Tue, 21 Oct 2025 04:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76B48615A;
+	Tue, 21 Oct 2025 04:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDKslZKj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dMMZ7uHD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570DF8615A;
-	Tue, 21 Oct 2025 04:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257C1EB193
+	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 04:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761019292; cv=none; b=RIWjcJE9EUZTA2pBdxZYzv99pw7+osbekeA3aGqoChF1cSgwdbUIcxKPli3UvUWNbuoi+7sSsLXNdYIVSw/c5wipy3r+r4byZLgaq8TTraLhAWJxiRTieRbYeS9x6g32xDa7dgqME67YUY3MzLMtMnxsaYbkgAZammSj/W8I7I0=
+	t=1761019397; cv=none; b=TRYa9wuDzHR9Fd6FSl3pPDTkHY+XLf6h+ICgWqlov5EY4crmQoIndPd2M7/skSJx+FdTvmqtIpmpKQq3c4W88R3+MMtLJQOm1lDYWndQlvwJJ0NOsLPQlpOqBsHaBeQZJj6MdVvsWe1wzERvTZZnYppD/Fp+T7xPJGa5Nx8AAm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761019292; c=relaxed/simple;
-	bh=eCjhpCkDpBoDgtZEpxtO52wzVLa4g0Hym+CP1lR4QRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQjOxd9PV32T79Q6+l3Gv+uKRAOoGZV0tc6UMgsm7k7MhfBciS08DdfAnPpHadBqSRZqrrDb3GkGPuA8N/7+h3gii4iSHoEyF7IEEYZESOOq9CX5judHHFjsFe7DwRr0kT52T5Ae735C8fVZkIKJgigyxzXe0Au6mUifzCBkSCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDKslZKj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FD7C4CEF1;
-	Tue, 21 Oct 2025 04:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761019291;
-	bh=eCjhpCkDpBoDgtZEpxtO52wzVLa4g0Hym+CP1lR4QRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jDKslZKj3wXmWKyTC1AchGeWsDwJ2oc9gFLucFMAnIgJdL5tHFqcEQdW8yTGPGMS+
-	 0JhYF0+VbjyOd02uj0XE6jZv7BG6mtdpylWjM494zMTkrqSnIf06qVrJyWW2NVvpns
-	 zLZvnLT+MwfjGE/7nb1gwPz+wCSgOvV8CVqkHPKxWgHq1XjSo4zpxyrzMfUNXFnhCe
-	 7ZdM8H4Ibbdd1EybAAj8mFsP3GSfxGcRZ1mhlSz2Z88e6WxTT93IWmY+CXSRRLdPFB
-	 yGVIUtbKS2BQ9zITP6pkVIo4/JtEafY0TQsZW54s8j8MS1pecSdtUs3AzkmZ5LTp5j
-	 CR/l9OCzsVSkg==
-Date: Tue, 21 Oct 2025 09:31:22 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Christian Zigotzky <chzigotzky@xenosoft.de>, FUKAUMI Naoki <naoki@radxa.com>, linux-rockchip@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
-Message-ID: <lmkrtyq6uzhzlz5ttvajnmojegrbfgaz3e3kkwej5qar2lkeof@r5gdlvesm6xl>
-References: <20251020221217.1164153-1-helgaas@kernel.org>
+	s=arc-20240116; t=1761019397; c=relaxed/simple;
+	bh=YLsWcUl/1MmhWdChdiTvb0MKT/YV6jwpBU0EMyPvK58=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=LwsuVlg3od7SNlw1aS4mVv1gHhc4gluLL9Zq0FOVSWdCGqWHahcY1VZyOk/k2jCedw9dJSXtVPXGbS1zslkkYfmEuMMIOaetrE8OmA8S9izG9zmfb5vQsnOGNDFgbQ/8oioKFTE2Uz2S9H7YctctaMd4B1rfqtyVa3mCcHfip18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dMMZ7uHD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761019395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ypGPB2dMjd5AmXxY6vdW8x1rXEojijwfr4yyazjH+Dk=;
+	b=dMMZ7uHDHXRPNU0DsFqlsRdzCkuNvQ9bLXeHQQZ/BtW2UQ54/YJiSHmXmK3DMY8/wV2hvq
+	4H+mA/uzGM5jMUXv8JP1lPaKTl4s85LledVU7+NLtk4ubrZ85QIwUVeGtP3iQXNOEKLHa1
+	MEEfyqdWT6jNYEQhXdgzTituLCue7VM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-156-A2VEbml4M32Nvkza5AhJTA-1; Tue, 21 Oct 2025 00:03:13 -0400
+X-MC-Unique: A2VEbml4M32Nvkza5AhJTA-1
+X-Mimecast-MFC-AGG-ID: A2VEbml4M32Nvkza5AhJTA_1761019393
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-88f81cf8244so3107881085a.0
+        for <linux-pci@vger.kernel.org>; Mon, 20 Oct 2025 21:03:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761019393; x=1761624193;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ypGPB2dMjd5AmXxY6vdW8x1rXEojijwfr4yyazjH+Dk=;
+        b=c6lcZIC0JU8zvnwSZ437+LPXyhy9lD8jw/DVlkWTTuhKFHVeadLHrjjGe3NwJuYljA
+         P+5Ape1pMW5d/hpHY3dIxWn7LLsOgAVUEiEqcncNzH/d5uvCniAfX2ePJVQCWFEH4HJd
+         x3b3gfzaK1asHYZFm0Yp3TP7EIrpAbR0mhuiKKwfwo69jLwpPjjFvKuysKEyolyY27OY
+         xiXyFknGNPRM9s1mjO4FUCc3M7W19SQJLnjUmBX79mp21vQlhf8gpC5WULOFF/Onq6yP
+         NSZ8isMhF48j9ujQwxqUtS478JAiQ/7TLk7wIS8WpbdLILDc7X8clcptu3q60jOurb5k
+         8QTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXKlMChMs6wpCZbtvTjJElZiQ7AvrDmDtoT9KFMNTaqwtascIyErrqonEXnVl6rJEyQSAdWzxdVY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSYfZjEgXJiCMaB8Lovup8NTEYGYsjR+7LjEv4XiiIkkCH09z4
+	0DJQOLj72msV4WbdDEDQ7EgvBr7CoFHEeQLIl26i2X39Em5u/Z6vd/tm5Rgj+aI1vJq0PlHeWZ9
+	iSI0+DQ4fnoXPbxjPAqNKsmPh2UvrNLWW1qW6wuNKSye44MNybHAlLOb+v7HrZg==
+X-Gm-Gg: ASbGncuzHTypmRLlnM4wtg/AiAN96X2A+F8LjAJcV6FC8cAKtKuG9EN1+KxkN4qKCMd
+	pyLDsRHIT3Lac5vRNW7c7vQ6++b5OMISFChN9VP470U/ak3k/9imXm4XQZpciK1I3rRVto9cWOU
+	n9oqmmsDXO/bA5TmhyfJ/WgTD0G5Sw7yDM77ZNgfOHrFzvBKzV45dxedRgzALgiQEbEvF8l61wG
+	rykYT75oIlYpPSyQEHuVzpVOCiYXbydrBaGWBVJW+ClCddr4WQu9DuVqBbJfb+pjDj8AzRtS6pq
+	BP31JlW43xkqsO65gi0nVazLIdk1HYxMvPJh2D9BWIQvZ/hGcqb2u0z/Kw19g9FVolQIXqD/wwO
+	OHoqo1r2eaTMzn0Yioo6mvUdqpXRR9mulmiXOK1kusnH+6w==
+X-Received: by 2002:a05:620a:199c:b0:7e8:3fbd:4190 with SMTP id af79cd13be357-8906e0da740mr1877060485a.2.1761019392967;
+        Mon, 20 Oct 2025 21:03:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3urjAuZAgtdR076zL6t7beitaw+yMAlWxDfIl37cvi1zbenzxv5j5J3/VNyalxK0zDSKr8w==
+X-Received: by 2002:a05:620a:199c:b0:7e8:3fbd:4190 with SMTP id af79cd13be357-8906e0da740mr1877055485a.2.1761019392392;
+        Mon, 20 Oct 2025 21:03:12 -0700 (PDT)
+Received: from ?IPV6:2601:600:947f:f020:85dc:d2b2:c5ee:e3c4? ([2601:600:947f:f020:85dc:d2b2:c5ee:e3c4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-891cf58e67esm686026885a.47.2025.10.20.21.03.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Oct 2025 21:03:11 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <510b0185-51d6-44e6-8c39-dfc4c1721e03@redhat.com>
+Date: Tue, 21 Oct 2025 00:03:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251020221217.1164153-1-helgaas@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/33] sched/isolation: Convert housekeeping cpumasks to
+ rcu pointers
+To: Chen Ridong <chenridong@huaweicloud.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
+ <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-13-frederic@kernel.org>
+ <bb9a75dc-8c34-41da-b064-e31bf5fe6cb2@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <bb9a75dc-8c34-41da-b064-e31bf5fe6cb2@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 20, 2025 at 05:12:07PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
-> platforms") enabled Clock Power Management and L1 Substates, but that
-> caused regressions because these features depend on CLKREQ#, and not all
-> devices and form factors support it.
+On 10/20/25 9:46 PM, Chen Ridong wrote:
+>
+> On 2025/10/14 4:31, Frederic Weisbecker wrote:
+>> HK_TYPE_DOMAIN's cpumask will soon be made modifyable by cpuset.
+>> A synchronization mechanism is then needed to synchronize the updates
+>> with the housekeeping cpumask readers.
+>>
+>> Turn the housekeeping cpumasks into RCU pointers. Once a housekeeping
+>> cpumask will be modified, the update side will wait for an RCU grace
+>> period and propagate the change to interested subsystem when deemed
+>> necessary.
+>>
+>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+>> ---
+>>   kernel/sched/isolation.c | 58 +++++++++++++++++++++++++---------------
+>>   kernel/sched/sched.h     |  1 +
+>>   2 files changed, 37 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+>> index 8690fb705089..b46c20b5437f 100644
+>> --- a/kernel/sched/isolation.c
+>> +++ b/kernel/sched/isolation.c
+>> @@ -21,7 +21,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+>>   EXPORT_SYMBOL_GPL(housekeeping_overridden);
+>>   
+>>   struct housekeeping {
+>> -	cpumask_var_t cpumasks[HK_TYPE_MAX];
+>> +	struct cpumask __rcu *cpumasks[HK_TYPE_MAX];
+>>   	unsigned long flags;
+>>   };
+>>   
+>> @@ -33,17 +33,28 @@ bool housekeeping_enabled(enum hk_type type)
+>>   }
+>>   EXPORT_SYMBOL_GPL(housekeeping_enabled);
+>>   
+>> +const struct cpumask *housekeeping_cpumask(enum hk_type type)
+>> +{
+>> +	if (static_branch_unlikely(&housekeeping_overridden)) {
+>> +		if (housekeeping.flags & BIT(type)) {
+>> +			return rcu_dereference_check(housekeeping.cpumasks[type], 1);
+>> +		}
+>> +	}
+>> +	return cpu_possible_mask;
+>> +}
+>> +EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+>> +
+>>   int housekeeping_any_cpu(enum hk_type type)
+>>   {
+>>   	int cpu;
+>>   
+>>   	if (static_branch_unlikely(&housekeeping_overridden)) {
+>>   		if (housekeeping.flags & BIT(type)) {
+>> -			cpu = sched_numa_find_closest(housekeeping.cpumasks[type], smp_processor_id());
+>> +			cpu = sched_numa_find_closest(housekeeping_cpumask(type), smp_processor_id());
+>>   			if (cpu < nr_cpu_ids)
+>>   				return cpu;
+>>   
+>> -			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+>> +			cpu = cpumask_any_and_distribute(housekeeping_cpumask(type), cpu_online_mask);
+>>   			if (likely(cpu < nr_cpu_ids))
+>>   				return cpu;
+>>   			/*
+>> @@ -59,28 +70,18 @@ int housekeeping_any_cpu(enum hk_type type)
+>>   }
+>>   EXPORT_SYMBOL_GPL(housekeeping_any_cpu);
+>>   
+>> -const struct cpumask *housekeeping_cpumask(enum hk_type type)
+>> -{
+>> -	if (static_branch_unlikely(&housekeeping_overridden))
+>> -		if (housekeeping.flags & BIT(type))
+>> -			return housekeeping.cpumasks[type];
+>> -	return cpu_possible_mask;
+>> -}
+>> -EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+>> -
+>>   void housekeeping_affine(struct task_struct *t, enum hk_type type)
+>>   {
+>>   	if (static_branch_unlikely(&housekeeping_overridden))
+>>   		if (housekeeping.flags & BIT(type))
+>> -			set_cpus_allowed_ptr(t, housekeeping.cpumasks[type]);
+>> +			set_cpus_allowed_ptr(t, housekeeping_cpumask(type));
+>>   }
+>>   EXPORT_SYMBOL_GPL(housekeeping_affine);
+>>   
+>>   bool housekeeping_test_cpu(int cpu, enum hk_type type)
+>>   {
+>> -	if (static_branch_unlikely(&housekeeping_overridden))
+>> -		if (housekeeping.flags & BIT(type))
+>> -			return cpumask_test_cpu(cpu, housekeeping.cpumasks[type]);
+>> +	if (housekeeping.flags & BIT(type))
+>> +		return cpumask_test_cpu(cpu, housekeeping_cpumask(type));
+>>   	return true;
+>>   }
+>>   EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
+>> @@ -96,20 +97,33 @@ void __init housekeeping_init(void)
+>>   
+>>   	if (housekeeping.flags & HK_FLAG_KERNEL_NOISE)
+>>   		sched_tick_offload_init();
+>> -
+>> +	/*
+>> +	 * Realloc with a proper allocator so that any cpumask update
+>> +	 * can indifferently free the old version with kfree().
+>> +	 */
+>>   	for_each_set_bit(type, &housekeeping.flags, HK_TYPE_MAX) {
+>> +		struct cpumask *omask, *nmask = kmalloc(cpumask_size(), GFP_KERNEL);
+>> +
+>> +		if (WARN_ON_ONCE(!nmask))
+>> +			return;
+>> +
+>> +		omask = rcu_dereference(housekeeping.cpumasks[type]);
+>> +
+>>   		/* We need at least one CPU to handle housekeeping work */
+>> -		WARN_ON_ONCE(cpumask_empty(housekeeping.cpumasks[type]));
+>> +		WARN_ON_ONCE(cpumask_empty(omask));
+>> +		cpumask_copy(nmask, omask);
+>> +		RCU_INIT_POINTER(housekeeping.cpumasks[type], nmask);
+>> +		memblock_free(omask, cpumask_size());
+>>   	}
+>>   }
+>>   
+>>   static void __init housekeeping_setup_type(enum hk_type type,
+>>   					   cpumask_var_t housekeeping_staging)
+>>   {
+>> +	struct cpumask *mask = memblock_alloc_or_panic(cpumask_size(), SMP_CACHE_BYTES);
+>>   
+>> -	alloc_bootmem_cpumask_var(&housekeeping.cpumasks[type]);
+>> -	cpumask_copy(housekeeping.cpumasks[type],
+>> -		     housekeeping_staging);
+>> +	cpumask_copy(mask, housekeeping_staging);
+>> +	RCU_INIT_POINTER(housekeeping.cpumasks[type], mask);
+>>   }
+>>   
+>>   static int __init housekeeping_setup(char *str, unsigned long flags)
+>> @@ -162,7 +176,7 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
+>>   
+>>   		for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
+>>   			if (!cpumask_equal(housekeeping_staging,
+>> -					   housekeeping.cpumasks[type])) {
+>> +					   housekeeping_cpumask(type))) {
+>>   				pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
+>>   				goto free_housekeeping_staging;
+>>   			}
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index 1f5d07067f60..0c0ef8999fd6 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -42,6 +42,7 @@
+>>   #include <linux/ktime_api.h>
+>>   #include <linux/lockdep_api.h>
+>>   #include <linux/lockdep.h>
+>> +#include <linux/memblock.h>
+>>   #include <linux/minmax.h>
+>>   #include <linux/mm.h>
+>>   #include <linux/module.h>
+> A warning was detected:
+>
+> =============================
+> WARNING: suspicious RCU usage
+> 6.17.0-next-20251009-00033-g4444da88969b #808 Not tainted
+> -----------------------------
+> kernel/sched/isolation.c:60 suspicious rcu_dereference_check() usage!
+>
+> other info that might help us debug this:
+>
+>
+> rcu_scheduler_active = 2, debug_locks = 1
+> 1 lock held by swapper/0/1:
+>   #0: ffff888100600ce0 (&type->i_mutex_dir_key#3){++++}-{4:4}, at: walk_compone
+>
+> stack backtrace:
+> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-next-20251009-00033-g4
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239
+> Call Trace:
+>   <TASK>
+>   dump_stack_lvl+0x68/0xa0
+>   lockdep_rcu_suspicious+0x148/0x1b0
+>   housekeeping_cpumask+0xaa/0xb0
+>   housekeeping_test_cpu+0x25/0x40
+>   find_get_block_common+0x41/0x3e0
+>   bdev_getblk+0x28/0xa0
+>   ext4_getblk+0xba/0x2d0
+>   ext4_bread_batch+0x56/0x170
+>   __ext4_find_entry+0x17c/0x410
+>   ? lock_release+0xc6/0x290
+>   ext4_lookup+0x7a/0x1d0
+>   __lookup_slow+0xf9/0x1b0
+>   walk_component+0xe0/0x150
+>   link_path_walk+0x201/0x3e0
+>   path_openat+0xb1/0xb30
+>   ? stack_depot_save_flags+0x41e/0xa00
+>   do_filp_open+0xbc/0x170
+>   ? _raw_spin_unlock_irqrestore+0x2c/0x50
+>   ? __create_object+0x59/0x80
+>   ? trace_kmem_cache_alloc+0x1d/0xa0
+>   ? vprintk_emit+0x2b2/0x360
+>   do_open_execat+0x56/0x100
+>   alloc_bprm+0x1a/0x200
+>   ? __pfx_kernel_init+0x10/0x10
+>   kernel_execve+0x4b/0x160
+>   kernel_init+0xe5/0x1c0
+>   ret_from_fork+0x185/0x1d0
+>   ? __pfx_kernel_init+0x10/0x10
+>   ret_from_fork_asm+0x1a/0x30
+>   </TASK>
+> random: crng init done
+>
+It is because bh_lru_install() of fs/buffer.c calls cpu_is_isolated() 
+without holding a rcu_read_lock. Will need to add a rcu_read_lock() there.
 
-I believe we haven't concluded that CLKREQ# is the cluprit here. It is probably
-the best bet, but there could be the device specific issues as well.
+Cheers,
+Longman
 
-> 
-> Enable only ASPM L0s and L1, and only when both ends of the link advertise
-> support for them.
-> 
-> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
-
-Closes?
-
-> Reported-by: FUKAUMI Naoki <naoki@radxa.com>
-> Link: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
-
-Same here.
-
-> ---
-> 
-> Mani, not sure what you think we should do here.  Here's a stab at it as a
-> strawman and in case anybody can test it.
-> 
-
-Thanks Bjorn! I had a similar change slated to be sent post Diwali, but you beat
-me to it.
-
-> Not sure about the message log message.  Maybe OK for testing, but might be
-> overly verbose ultimately.
-> 
-
-Let's have it for sometime, so we have some clue when someone reports issue with
-ASPM.
-
-> ---
->  drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
->  1 file changed, 9 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 7cc8281e7011..dbc74cc85bcb 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -243,8 +243,7 @@ struct pcie_link_state {
->  	/* Clock PM state */
->  	u32 clkpm_capable:1;		/* Clock PM capable? */
->  	u32 clkpm_enabled:1;		/* Current Clock PM state */
-> -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
-> -					   override */
-> +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
->  	u32 clkpm_disable:1;		/* Clock PM disabled */
->  };
->  
-> @@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
->  	pcie_set_clkpm_nocheck(link, enable);
->  }
->  
-> -static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
-> -						   int enabled)
-> -{
-> -	struct pci_dev *pdev = link->downstream;
-> -
-> -	/* For devicetree platforms, enable ClockPM by default */
-> -	if (of_have_populated_dt() && !enabled) {
-> -		link->clkpm_default = 1;
-> -		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
-> -	}
-> -}
-> -
->  static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  {
->  	int capable = 1, enabled = 1;
-> @@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
->  	}
->  	link->clkpm_enabled = enabled;
->  	link->clkpm_default = enabled;
-> -	pcie_clkpm_override_default_link_state(link, enabled);
->  	link->clkpm_capable = capable;
->  	link->clkpm_disable = blacklist ? 1 : 0;
->  }
-> @@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
->  	struct pci_dev *pdev = link->downstream;
->  	u32 override;
->  
-> -	/* For devicetree platforms, enable all ASPM states by default */
-> +	/* For devicetree platforms, enable L0s and L1 by default */
->  	if (of_have_populated_dt()) {
-> -		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
-> +		if (link->aspm_support & PCIE_LINK_STATE_L0S)
-> +			link->aspm_default |= PCIE_LINK_STATE_L0S;
-> +		if (link->aspm_support & PCIE_LINK_STATE_L1)
-> +			link->aspm_default |= PCIE_LINK_STATE_L1;
-
-Not sure if it is worth setting these states conditionally. Link state
-enablement code should make use of the cached ASPM cap in 'link->aspm_capable'.
-
->  		override = link->aspm_default & ~link->aspm_enabled;
->  		if (override)
-> -			pci_info(pdev, "ASPM: DT platform, enabling%s%s%s%s%s%s%s\n",
-> -				 FLAG(override, L0S_UP, " L0s-up"),
-> -				 FLAG(override, L0S_DW, " L0s-dw"),
-> -				 FLAG(override, L1, " L1"),
-> -				 FLAG(override, L1_1, " ASPM-L1.1"),
-> -				 FLAG(override, L1_2, " ASPM-L1.2"),
-> -				 FLAG(override, L1_1_PCIPM, " PCI-PM-L1.1"),
-> -				 FLAG(override, L1_2_PCIPM, " PCI-PM-L1.2"));
-> +			pci_info(pdev, "ASPM: DT platform, enabling%s%s\n",
-
-I think you added the 'DT platform,' prefix while applying my patch earlier.
-This is somewhat redundant since the print implies that the platform is based on
-devicetree.
-
-Rest LGTM!
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
