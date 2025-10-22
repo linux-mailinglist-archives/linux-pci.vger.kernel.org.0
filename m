@@ -1,137 +1,231 @@
-Return-Path: <linux-pci+bounces-38958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38959-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D6AEBFA5E9
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 08:57:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 512AFBFA65F
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 08:59:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF5FC3AAB26
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 06:57:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 017801A02C1B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365832F2916;
-	Wed, 22 Oct 2025 06:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C783C2F39B9;
+	Wed, 22 Oct 2025 06:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b="ab3jiVYY"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JNWpi4dr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C1A2F12A0;
-	Wed, 22 Oct 2025 06:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761116222; cv=pass; b=AUc+9ri95eONHz05h5D+q96PXy8JusNNn+Yvfv68MvKdpAYVrb38ILY0Jp9OP3vcqP0zk9pDX+RiXJuQR1WAP6zaHyzRl1btZ7m4fdAihwbW6U8naz8/pvUfAdwMTSX0gqtLMmISFNn7d5AvGO5+jEpFDhtKlHWlazev+mMekwQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761116222; c=relaxed/simple;
-	bh=k0AFrLQpMvYTZ6e0/r3ZxrQZZgzaAE/lf0wJqFdFDCE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DZohoqMiI9mbKneh1cyg9qcFJ4g8sgiiCi2FRuzkKZwoCijz5wMMzx0dRObvrsdCGtKVTfBpPno10ew0ToblfFTxDl7h/xFGJW6OU1F5/0GKkUvjV/lBt3k2xqoZEeHDOVZXMDhY/DOeH1c1OfLHQ00oAe569M845XwolOYEXiY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b=ab3jiVYY; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761116176; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YSmM6fHht8tI+Hs+g3L2P7wAvCYMuoBQzlDwjFWZUc/615269p6rktPjsz9WB8gsEUaznRxJERQb24bpRaDKzrdYcYK/BCP1fRoIYIkHbZNCFroSJYoM4xkKGX8PfngiOOsW0lddLPUDC1+owWVcPmBpreXcSajaAPpWDQig0LU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761116176; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=VrTdEMBjb9J8SLRrC3vLxTtsIJrVCIippWcA6vJQ+Sc=; 
-	b=YfK9QluAXmmxX9kSbNdrBDhfxEV3S7KtbwKeNmyucgOl6EReqAb680Mf1fsYYidgwmbXUaJa/snr9j3FJNMtpJ6W7cHRjv0HL6imBTobge1AE1HrufuX0SxByyu2DIYaZ8AbqYWpBNeNuuGnJ/OhK2oHeTPzGZcLBH8xvMlJ22A=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sjoerd@collabora.com;
-	dmarc=pass header.from=<sjoerd@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761116176;
-	s=zohomail; d=collabora.com; i=sjoerd@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=VrTdEMBjb9J8SLRrC3vLxTtsIJrVCIippWcA6vJQ+Sc=;
-	b=ab3jiVYYnku8HtA+3wdNILGqr/Nsdqmzhy2eGZ8glKkkzc7JF7u3I+5iDVjER+Bb
-	1DdPzxEQm91Xm/GFKyO5TQc1PulKRvfSCTQEK6kd9ql9kv13uKykLZYEgcU187WjO36
-	MjOUNnri8IEPm+Eg119HPZMSnnqIwv1mH6NjzZ8A=
-Received: by mx.zohomail.com with SMTPS id 17611161732831018.5532421915162;
-	Tue, 21 Oct 2025 23:56:13 -0700 (PDT)
-Message-ID: <9280864d0eba182d06d1e191fdc0aad1fb4ce5b3.camel@collabora.com>
-Subject: Re: [PATCH 12/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
- Ethernet
-From: Sjoerd Simons <sjoerd@collabora.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Eric Woudstra <ericwouds@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger	 <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>,
- Ryder Lee <ryder.lee@mediatek.com>,  Jianjun Wang
- <jianjun.wang@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo
- Pieralisi	 <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	
- <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Chunfeng
- Yun	 <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Kishon
- Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>, Andrew
- Lunn <andrew+netdev@lunn.ch>,  "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Felix
- Fietkau <nbd@nbd.name>, 	kernel@collabora.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, 	linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, netdev@vger.kernel.org,  Daniel Golle
- <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>
-Date: Wed, 22 Oct 2025 08:56:06 +0200
-In-Reply-To: <fd52be11-ccff-4f34-b86b-9c2f9f485756@lunn.ch>
-References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
-	 <20251016-openwrt-one-network-v1-12-de259719b6f2@collabora.com>
-	 <4f82aa17-1bf8-4d72-bc1f-b32f364e1cf6@lunn.ch>
-	 <8f5335a703905dea9d8d0c1840862a3478da1ca7.camel@collabora.com>
-	 <fd52be11-ccff-4f34-b86b-9c2f9f485756@lunn.ch>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-5 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEED2EDD6F;
+	Wed, 22 Oct 2025 06:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761116369; cv=none; b=rvqv4hjfA521IzkHtGLOBsqmvfIgz1HeFAFh1AS5DQ4NAYcwwOsGe/R1m++6a3rhDV5uNqP/z4y9GFz2hr0jyKGn9eL9nWCsWjgEEnhTyWop7w8FdOXSv1tfHLOYl920C3KmygWOF9dm8MxT/v+gxAE6hY5nAI5j2cLbpNAO/1g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761116369; c=relaxed/simple;
+	bh=1PhaDSP5B4rAtr4f49e8gnfLLbvLxyEIL3t9mFfVw+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f9DLAbD/j1Gwv4hQlKFhynHws22zabUeGkV6syYWkMaKuwYC35JVtnmX462XVQxi/A0c2oHM/FQQDjij7IbNCjdCMXOgCDpZwt/YRM16n3OApXu5k6lMpY1dKlh+TbUCCPYFaEZZXoO1K7lTugsKMlv6OYHlLjaTy/ckZSvt9nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=JNWpi4dr; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cs0QL4pgbz9t8W;
+	Wed, 22 Oct 2025 08:59:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1761116362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j1fnAapxocpS1PzNNod6wJpD/egeyzDYB/Jrd9dgM4U=;
+	b=JNWpi4drdUs+btd7VToiRgbE6iRRVDP3jzDGp4IdtZxspVPgXzrkVyw6XfZ6VoltxsDAme
+	2cht2i0/8JrZc9EQ0dSFhPa2tbjjnQ8bG+3qZYq9K+j+DgLoSa0jFlhn5wEEsINMOYgadA
+	sWs6weTLZ2y5Br7G+yMjqd7lc9Dj7wFW43WKaehGIb0uF9weDQ4aqUMzGVd23ZJX7dM78D
+	6cbkMfzb6nIZozbWJ6FgZD96p/5LwJZg76fWkSFTnYsyFob3539fRhtxakP3+goUS0/BK8
+	Tv52QQPI/RSlQl6HSAde3lxR5xApuQkjeJ6zgMcbwp3emdxPI+Dp6eg8agHksg==
+Message-ID: <ab1f7c51-bc41-4774-a0dc-850e53c412eb@mailbox.org>
+Date: Wed, 22 Oct 2025 08:59:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+To: Bjorn Helgaas <helgaas@kernel.org>, "Bandi, Ravi Kumar" <ravib@amazon.com>
+Cc: "mani@kernel.org" <mani@kernel.org>,
+ "thippeswamy.havalige@amd.com" <thippeswamy.havalige@amd.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "michal.simek@amd.com" <michal.simek@amd.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sean Anderson <sean.anderson@linux.dev>
+References: <20251021212801.GA1224310@bhelgaas>
+Content-Language: en-US
+From: Stefan Roese <stefan.roese@mailbox.org>
+In-Reply-To: <20251021212801.GA1224310@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: dacca2ed9550b966657
+X-MBO-RS-META: 33d8grajrud4g8etgcmen193gr4s35jn
 
-On Tue, 2025-10-21 at 22:40 +0200, Andrew Lunn wrote:
-> On Tue, Oct 21, 2025 at 10:21:31PM +0200, Sjoerd Simons wrote:
-> > On Fri, 2025-10-17 at 19:31 +0200, Andrew Lunn wrote:
-> > > > +&mdio_bus {
-> > > > +	phy15: ethernet-phy@f {
-> > > > +		compatible =3D "ethernet-phy-id03a2.a411";
-> > > > +		reg =3D <0xf>;
-> > > > +		interrupt-parent =3D <&pio>;
-> > > > +		interrupts =3D <38 IRQ_TYPE_EDGE_FALLING>;
-> > >=20
-> > > This is probably wrong. PHY interrupts are generally level, not edge.
-> >=20
-> > Sadly i can't find a datasheet for the PHY, so can't really validate th=
-at
-> > easily.
->=20
-> What PHY is it? Look at the .handle_interrupt function in the
-> driver. If the hardware supports a single interrupt bit, it could in
-> theory support edge. However, as soon as you have multiple bits, you
-> need level, to avoid races where an interrupt happens while you are
-> clearing other interrupts.
+Hi Bjorn,
+Hi Ravi,
 
-ethernet-phy-id03a2.a411 is Airoha EN8811H (air_en8811h driver). Handle
-interrupt there seems to just be a general interrupt clear followed by a
-`phy_trigger_machine`. It doesn't seem to read specific interrupt status.=
-=20
+On 10/21/25 23:28, Bjorn Helgaas wrote:
+> On Tue, Oct 21, 2025 at 08:55:41PM +0000, Bandi, Ravi Kumar wrote:
+>>> On Tue, Oct 21, 2025 at 05:46:17PM +0000, Bandi, Ravi Kumar wrote:
+>>>>> On Oct 21, 2025, at 10:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>> On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi wrote:
+>>>>>> The pcie-xilinx-dma-pl driver does not enable INTx interrupts
+>>>>>> after initializing the port, preventing INTx interrupts from
+>>>>>> PCIe endpoints from flowing through the Xilinx XDMA root port
+>>>>>> bridge. This issue affects kernel 6.6.0 and later versions.
+>>>>>>
+>>>>>> This patch allows INTx interrupts generated by PCIe endpoints
+>>>>>> to flow through the root port. Tested the fix on a board with
+>>>>>> two endpoints generating INTx interrupts. Interrupts are
+>>>>>> properly detected and serviced. The /proc/interrupts output
+>>>>>> shows:
+>>>>>>
+>>>>>> [...]
+>>>>>> 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
+>>>>>> 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
+>>>>>> [...]
 
-Testing with IRQ_TYPE_LEVEL_LOW does seem to work as expected and results i=
-n
-detecting 4 interrupts rather then just 1 with edges when enabling the
-interface. However I'm not sure what can be concluded from that if anything=
- :)..
-=C2=A0
-I can stick a scope on the line in the coming days to see how the interrupt=
- line
-behaves if interrupts aren't cleared, which may clarify things.
-=20
+First a comment on this IRQ logging:
 
---=20
-Sjoerd Simons
-Collabora
+These lines do NOT refer to the INTx IRQ(s) but the controller internal
+"events" (errors etc). Please see this log for INTx on my Versal
+platform with pci_irqd_intx_xlate added:
+
+  24:          0          0  pl_dma:RC-Event   0 Level     LINK_DOWN
+  25:          0          0  pl_dma:RC-Event   3 Level     HOT_RESET
+  26:          0          0  pl_dma:RC-Event   8 Level     CFG_TIMEOUT
+  27:          0          0  pl_dma:RC-Event   9 Level     CORRECTABLE
+  28:          0          0  pl_dma:RC-Event  10 Level     NONFATAL
+  29:          0          0  pl_dma:RC-Event  11 Level     FATAL
+  30:          0          0  pl_dma:RC-Event  20 Level     SLV_UNSUPP
+  31:          0          0  pl_dma:RC-Event  21 Level     SLV_UNEXP
+  32:          0          0  pl_dma:RC-Event  22 Level     SLV_COMPL
+  33:          0          0  pl_dma:RC-Event  23 Level     SLV_ERRP
+  34:          0          0  pl_dma:RC-Event  24 Level     SLV_CMPABT
+  35:          0          0  pl_dma:RC-Event  25 Level     SLV_ILLBUR
+  36:          0          0  pl_dma:RC-Event  26 Level     MST_DECERR
+  37:          0          0  pl_dma:RC-Event  27 Level     MST_SLVERR
+  38:         94          0  pl_dma:RC-Event  16 Level     84000000.axi-pcie
+  39:         94          0  pl_dma:INTx   0 Level     nvme0q0, nvme0q1
+
+The last line shows the INTx IRQs here ('pl_dma:INTx' vs 'pl_dma:RC-
+Event').
+
+More below...
+
+>>>>>>
+>>>>>> Changes since v1::
+>>>>>> - Fixed commit message per reviewer's comments
+>>>>>>
+>>>>>> Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
+>>>>>
+>>>>> Hi Ravi, obviously you tested this, but I don't know how to reconcile
+>>>>> this with Stefan's INTx fix at
+>>>>> https://lore.kernel.org/r/20251021154322.973640-1-stefan.roese@mailbox.org
+>>>>>
+>>>>> Does Stefan's fix need to be squashed into this patch?
+>>>>
+>>>> Sure, we can squash Stefan’s fix into this.
+>>>
+>>> I know we *can* squash them.
+>>>
+>>> I want to know why things worked for you and Stefan when they
+>>> *weren't* squashed:
+>>>
+>>>   - Why did INTx work for you even without Stefan's patch.  Did you
+>>>     get INTx interrupts but not the right ones, e.g., did the device
+>>>     signal INTA but it was received as INTB?
+>>
+>> I saw that interrupts were being generated by the endpoint device,
+>> but I didn’t specifically check if they were correctly translated in
+>> the controller. I noticed that the new driver wasn't explicitly
+>> enabling the interrupts, so my first approach was to enable them,
+>> which helped the interrupts flow through.
+> 
+> OK, I'll assume the interrupts happened but the driver might not have
+> been able to handle them correctly, e.g., it was prepared for INTA but
+> got INTB or similar.
+> 
+>>>   - Why did Stefan's patch work for him even without your patch.  How
+>>>     could Stefan's INTx work without the CSR writes to enable
+>>>     interrupts?
+>>
+>> I'm not entirely sure if there are any other dependencies in the
+>> FPGA bitstream. I'll investigate further and get back to you.
+> 
+> Stefan clarified in a private message that he had applied your patch
+> first, so this mystery is solved.
+
+Yes. I applied Ravi's patch first and still got no INTx delivered
+to the nvme driver. That's what me triggered to dig deeper here and
+resulted in this v2 patch with pci_irqd_intx_xlate added.
+
+BTW:
+I re-tested just now w/o Ravi's patch and the INTx worked. Still I think
+Ravi's patch is valid and should be applied...
+>>>   - Why you mentioned "kernel 6.6.0 and later versions."
+>>>   8d786149d78c appeared in v6.7, so why would v6.6.0 would be
+>>>   affected?
+>>
+>> Apologies for not clearly mentioning the version earlier. This is
+>> from the linux-xlnx tree on the xlnx_rebase_v6.6 branch, which
+>> includes the new Xilinx root port driver with QDMA support:
+>> https://github.com/Xilinx/linux-xlnx/blob/xlnx_rebase_v6.6_LTS/drivers/pci/controller/pcie-xilinx-dma-pl.c
+>>
+>> In earlier versions, the driver was:
+>> https://github.com/Xilinx/linux-xlnx/blob/xlnx_rebase_v6.1_LTS_2023.1_update/drivers/pci/controller/pcie-xdma-pl.c
+>> This older driver had no issues with interrupts.
+>>
+>> The new driver introduced in v6.7 and later is a rewrite of the old
+>> one, now with QDMA support, which has issues with INTx interrupts.
+> 
+> OK, this sounds like out-of-tree history that is not relevant in the
+> mainline kernel, so Mani did the right thing in omitting it.
+> 
+> I think the best thing to do is to squash Stefan's patch into this one
+> so we end up with a single patch that makes INTx work correctly.
+> 
+> Ravi and Stefan, does that seem OK to you?
+
+Yes, please either apply both separately or squash them. Whatever you
+prefer.
+
+Many thanks,
+Stefan
+>>>>>> +++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+>>>>>> @@ -659,6 +659,12 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
+>>>>>>              return err;
+>>>>>>      }
+>>>>>>
+>>>>>> +     /* Enable interrupts */
+>>>>>> +     pcie_write(port, XILINX_PCIE_DMA_IMR_ALL_MASK,
+>>>>>> +                XILINX_PCIE_DMA_REG_IMR);
+>>>>>> +     pcie_write(port, XILINX_PCIE_DMA_IDRN_MASK,
+>>>>>> +                XILINX_PCIE_DMA_REG_IDRN_MASK);
+>>>>>> +
+>>>>>>      return 0;
+>>>>>> }
+>>
 
