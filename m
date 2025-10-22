@@ -1,266 +1,205 @@
-Return-Path: <linux-pci+bounces-39003-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 339E5BFBBB5
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:52:35 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0F5BFBBC8
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:54:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD79119C441E
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:52:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EF06E4EFA7E
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:54:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF58A2F8BF7;
-	Wed, 22 Oct 2025 11:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FC033EB18;
+	Wed, 22 Oct 2025 11:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a6C+vCy4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023095.outbound.protection.outlook.com [40.107.44.95])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010069.outbound.protection.outlook.com [52.101.56.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE62302770
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 11:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8695E2F8BF7;
+	Wed, 22 Oct 2025 11:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761133951; cv=fail; b=J+exqppltdJqTGxqfKSxjtNNkEcWNXVYnnUMGCCJ7Q9c4Yn5tttETbhdp8+Mr2uRUMGRzIVW3owQffko0SLxqUyXegYbxaIVhNmR/6ZQzbHS6k3K7O7akBGRAT8y5kiR43wYB7WDO3nFpk83YfxyeUM60Z9RPOG2RjrwCe4vN1k=
+	t=1761134072; cv=fail; b=ItWu9UP586wo2UM0mAV7tZoQp4I74YV8qcH+NEUuuYlSc37am9ftgr2ksB49KocWZvjuW0DPKfYDf+aUeEcM7H5ds9he+WM+4BX1EDw8u1B4eZLpMLPJHnqDOCix7f1Udb38/n4s//JMGBiFez7rx7Kcxtq3puctGAApNgdPaNA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761133951; c=relaxed/simple;
-	bh=NssPpcjAjxsgPoRtmgjIQWHs37e70SClerFmY90SdGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2rDyfIjx+sDKVCCIiqumjHm+Z1qzRVsFDboT1fPPnq7O0Nm3YEFjAXtuIxUUo27uQM7qLwY9rW3RwvgEDuqVpZezy8POyWTalJsYmdCmKTOFVIB1hEqdsmrXC0Vwb6S3UAys3xApfn8UVBEEusCZMG6iHa5TSKTYJ0CRHeBxtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+	s=arc-20240116; t=1761134072; c=relaxed/simple;
+	bh=xlcOgRF4dO9XEfu7xS63fczEr7xO28fpGLO74665CKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=brNrvh7aZHiaedBn8rRTJmEvLQsbxeIP92ql3iSB9Oc+7jFRJSkOvPsANybAeA5/aYHripeFO9Zf8ppt8SKW5VEGWUkyM0xiW3Tr5iPnOAO0KkfmQu+KWbXGvjO4iyEmrFbZa8+CIoklMmeyHrITouCw+ZQlJsaxaA/xFs4UHsM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a6C+vCy4; arc=fail smtp.client-ip=52.101.56.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rLYwad4EE/3wabYS670rJm3+j//OJpc1xTsBa3k/zSOCswnLiDE9jRy6CS7vd7osYn5f55MgSyVkghYr4DE7DrlxekwuWaNENbsZr2PLq9lA6YWgoW2RjxeW56l+uXDphSqIeSymeQS5KX4vYiCViDSJwlEbn3HsReqqWSs9kuJD7Yp/jRJ+bpcNlmU/WdlD6v87RpCBcJdhWlDJfo/W+npP4cWyIdh1/Aykza3KmMLgPf6osZnKwBNymop0elRM3IombFhnHeLbsGC2hz9iwsUElXOrJeASG1h6HMzNmwau4ybT/P6PprD62QPhAV00D/OBV3RPk1o44flQnKkGGg==
+ b=Te9hyPazRwZIZT7aUC3HKjOzBT2Y64eV/dQs09J2LXu2fXOtIvVAD0OAze9mnA4TuWxZglJxQoXd6n/WlfxaSd51XTIgirxK6kIi88zPkx0eYWXx6QLvBR8HDVrqzyAxaMopAzGn6oAPfqgmF3LJF2GG+wRFk2rVbC/+jMSMBdeoy0lecbn7VkoKQpogJvs4zdAO7qvtniNoWqjIlB83x+yWZhHIYXCk/SbVLq9I/5OqutFIgKw4j4WjyC3vnlnf6eLyaTVQSr1baXLcK0sl/jPUdI/OsPU0/31PVm4ByO9X5DxH38P+nmuY3j/yDnH4QMsknGG8A5RQKJUeXyJ9LA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YcarUopedmKtskUzgp+o/OtOQFnLiwTq3sG4EYqU5ys=;
- b=e7a8PPN9rO8U0mww6ZIO+e4yUH9xKhb3MS00pvR7tAIdLyf3Bg6+k7YqhRf5PbpC5n4NjlYP5WCisG5jXg9W01pqFEAlCNJqjEdM7TwdSvXWfCAu3XezIV94yyyzHFs1VKZkPwrjIAl8eIbyFuDMrMPyYmd2REUQYe97alaM/h6Y4YbG4L2xgUBRGjQBA3EX37antGYh/HzVvoOChaQLalwcGKaUZdlGUkvqhZel/gOsTKx0v97HVTUHEeSTkcvWDU+nAh1eRl3YwcStpl/0kn8gFPSlpHCAJHPJYVAgYrI42IJov8pJRvc9W84VwkOwTNnQl/DlVrRkWSY7UpsMXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=google.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2P153CA0016.APCP153.PROD.OUTLOOK.COM (2603:1096::26) by
- PS1PPFEF7C8A25D.apcprd06.prod.outlook.com (2603:1096:308::26c) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.15; Wed, 22 Oct 2025 11:52:25 +0000
-Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
- (2603:1096::cafe:0:0:f4) by SG2P153CA0016.outlook.office365.com
- (2603:1096::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.4 via Frontend Transport; Wed,
- 22 Oct 2025 11:52:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.7 via Frontend Transport; Wed, 22 Oct 2025 11:52:24 +0000
-Received: from [172.16.96.116] (unknown [172.16.96.116])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id DBF9C41604E0;
-	Wed, 22 Oct 2025 19:52:23 +0800 (CST)
-Message-ID: <8b569a35-3913-4dfe-a586-7ec9669edbc1@cixtech.com>
-Date: Wed, 22 Oct 2025 19:52:23 +0800
+ bh=ib5aqvGaEHdiMdjBTN03WwGhVDjVBo6+8WzwawgQ5JM=;
+ b=x3tw/nqjatwbuMmnHs9QQOGWVeaKeIXnFjyFP2N0XrdhPvfivwQno1gbHFi7htSVamYlIm5qfJ4MpGgDkLp9m8CsEvpJcgo7uUd6daDjrmm1BPNIEkbSfIfvxNTmhyXTDl8DQLshqRbY+VoqN1j7AkjMQV0UadMe4jw8V5vBWOJ7WoS1mHb2dIHp6kVYQ4eZFcVFk/w0pgLlSQZFZUrMIqD0LFK9ovI3dMGty1wvUZkP7bGNCgEx5icDxX9gSQMiiZwZE74SmN1BGBNaYguwijjXt8n/gBCNQ3HccoWQUUoOGYdudT4LKV976Ph1JkhgeQRpWQthV6FG+YKITXAibA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ib5aqvGaEHdiMdjBTN03WwGhVDjVBo6+8WzwawgQ5JM=;
+ b=a6C+vCy4QukRcWXHoUH21hG4kDs5Lywr8v0+gS86pNNOv110BrZH18QZHSXR2Lp0s7rCflcZK5tRKTXSqe8axL8pJbTyVduxqGEOWDxOuCMcrBuWEeCKVPeznttIrIfR1j6wHuk6boRFxVl33LV6rSFFIznGkxR1M0SGXBDZ0xYkFoEZCdgr1rlZmE+QyHNitT493L66Gqx+WQs060vVQsUHA/B/5LSWMAY++saammg4/98ZKXD9rL1ZpC5wVBMcHCFVJTspeKXSWNLGOYIhNIIaYFxRymuA4yYVVpDSZvGjmQwdKSWn/r9ukvjPA/OzLkp1/cfX0hlh5dbWdehcOQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
+ by PH7PR12MB5950.namprd12.prod.outlook.com (2603:10b6:510:1d9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Wed, 22 Oct
+ 2025 11:54:25 +0000
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9253.011; Wed, 22 Oct 2025
+ 11:54:25 +0000
+Date: Wed, 22 Oct 2025 08:54:24 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 8/9] vfio/pci: Enable peer-to-peer DMA transactions by
+ default
+Message-ID: <20251022115424.GA244727@nvidia.com>
+References: <cover.1760368250.git.leon@kernel.org>
+ <a04c44aa4625a6edfadaf9c9e2c2afb460ad1857.1760368250.git.leon@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a04c44aa4625a6edfadaf9c9e2c2afb460ad1857.1760368250.git.leon@kernel.org>
+X-ClientProxiedBy: MN2PR14CA0021.namprd14.prod.outlook.com
+ (2603:10b6:208:23e::26) To MN2PR12MB3613.namprd12.prod.outlook.com
+ (2603:10b6:208:c1::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: dw-rockchip: Add L1sub support
-To: Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
- Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org, Niklas Cassel <cassel@kernel.org>,
- linux-pci@vger.kernel.org
-References: <1761132954-177344-1-git-send-email-shawn.lin@rock-chips.com>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <1761132954-177344-1-git-send-email-shawn.lin@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|PS1PPFEF7C8A25D:EE_
-X-MS-Office365-Filtering-Correlation-Id: e99fed55-709a-44f0-440f-08de1161776f
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|PH7PR12MB5950:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fcb0803-dcd6-4924-6efc-08de1161bf55
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGYrRy9CazV1NlE2MXRma0QxcXF0MHVYUCsrZFBlcVE0Wkc1ZDFhS1dKUGNP?=
- =?utf-8?B?UnovYUdkTmdjSFRnL1MxY2V2YlBCZjNqTCsvVHJjM25QSFFEcFQ5RTR2dzVr?=
- =?utf-8?B?eDFPMDRwTGNwVm9NOTVNcmdmamVBblF2WVZKaUV4cmVIM3dWMm9KUDZMSVFT?=
- =?utf-8?B?VUZneFlHM0haZGZib2pUaDhOMVhSM2hrb3Jic0hrUFY0Q3NzUGE4b1ZpUmtu?=
- =?utf-8?B?NDU5L0dEVTJ0NlNTUFN2akVuc0hmNTlyR0dkdDNST2tMZHh2akpDYWVVbEIr?=
- =?utf-8?B?MnB5elhBTGgxTFRIbkc4ZUxibnA5bmo1RTlKUHh3am9ET25VcUtMQ1ArcnBL?=
- =?utf-8?B?MXU2S3NyL3RkUHE0ZFlXZUVXbHRSc0Z3S2pSQWlWeWZTckZxdEJVelZ0NWxZ?=
- =?utf-8?B?eENCS1JVYjZ3djNadE45WjlOa25TTUlQN1VSblhnbDlwZVZLRll0TmM3Z2xo?=
- =?utf-8?B?aFVPN3JxRDJVUFdaSTdOSzdCNmZHdi9KVjR4MU1WdjVvazdjZXNDU0w2YVBC?=
- =?utf-8?B?ZmMzbjhjZk1kOUFiTXFYV0pibkorTTNNWEZtbm84SzFvNDRuUU5HU0dGaTJy?=
- =?utf-8?B?T1poOTRUTE1md3ZwYnoxYkxnZit2TjAwZU96TUpmNEJJbWJ2Z3JFZ2FORGZw?=
- =?utf-8?B?KzE1WjNSV0JjcThUcWxaaGlnZE9yTTB3TUFTd3lHWXdTYmM0aWw5WVhHMTdC?=
- =?utf-8?B?MVl5NVVnM3JWdUEwTGdTQVhvMXp2a1FmNFVHMTU1N0I3WVlSNEYwL2xiNHRJ?=
- =?utf-8?B?UmN6dFhSbkJqWmZKRUtwWXFBTnVDY1pLNUJnUDAweFhBQ0I0RDF1cHlSeE5m?=
- =?utf-8?B?Z2NiNk9nUGFTVE13S1R6aW1wcktHcVZEMCsxdlY5Zi85ZHQ1a3FEU3dDMC9v?=
- =?utf-8?B?MUpIUkRTY1NGSzNUVXJaU0JIcFdYUzgrM3NQUWJqL0xoUlBYQWxEbE1OTTFj?=
- =?utf-8?B?WmpYRWhXclF1Um1MbE5JaG5YdkpVdUp5cDdSSkFxd0lhTExhU3RRNWhDT2cv?=
- =?utf-8?B?ZGRpSTRtOVBCeWpNYUlyR29wZVRlRWU4UEc5b0ptdFlkdWhTWXh2WmJCS0NB?=
- =?utf-8?B?cy9WVmZSaGw3aTR5cXlmRWdHVTZ5MVF5YXFhVjIyRzBQMHE1clhkbmVjeWd4?=
- =?utf-8?B?WTc0TlFiVWV6a09QclJSZlloWVhmQUd5NmsyQjdvNkNlQy9MYlFZVzdjb1Nn?=
- =?utf-8?B?RERUZ2RQSHF0OUlUUm9uRnNsYUw3SXpublRSMkhvUFZMQzFXVVBEbUxMazdw?=
- =?utf-8?B?RVBTalBaOGtQT3NYWVRWTks5RXYxSlF2Y2tkeXQwZjdOdmdRdUh5cGVZWitm?=
- =?utf-8?B?RW92Umw1eDNURnQ1RlltRDRsdkpxeWpPYlY1eERWZjkvcGdRb01sb05UZDBV?=
- =?utf-8?B?N0kvcFdzUE1QQmpGSE1wUW1jU0ZQbWVrQVM4cTN6eERsRmNZcVpWOHIwN2pH?=
- =?utf-8?B?ZnV5YWJUWTBySlpEcmJ0SVVQcjE4cExkSDBqYVlrUlNhV0w5TnBZWFptekdW?=
- =?utf-8?B?SFkvZ0RObEZGUmlrblRkYXcxUUhCWE82NUZha3VLMnIzV3dnbjNDMlFHOVgx?=
- =?utf-8?B?MzF1N3NORDlvOUNEZUpydXM4cHFDS0dpNktURXZjeHNHZ3JMQnM0aGtMbDJS?=
- =?utf-8?B?OW8rdWlBUVdrcmNTNkFKMTc4MlkyNFhrR3dxNzdQTHNzQ3RBSnUxcCtCYmw5?=
- =?utf-8?B?QWpHUTMxQk5XOUdYQVhrWnE0WWIwcTMrTzFqOEFxcVEwNHdIQTVyK2R6aGFE?=
- =?utf-8?B?Rkp5VkhoNHhWanlJQndmbnJsZnNWOFNoTVBsaE9hajY5MS96WHpCelcrcXRy?=
- =?utf-8?B?emtzOEEydkgxSnJUR2tCS2E3MmdVK3dNbGVkNTNLUTg2bDQycmptbHdmTjBs?=
- =?utf-8?B?STNvMmwrRllENUlxTlA2ZkE3YWVhZEFBQndEZ3JZaFdLZ1dJZjBmUEZqS1Rt?=
- =?utf-8?B?elY1QjNOeHZHNDl5WnVhVlY4V2VaTFRJNjB0bE95Sm9TVnBWVlg5TVlGT1Yz?=
- =?utf-8?B?cm5OTHRQeGJ1dzlNQmo3RENmMGx4cTJjblB5MTBwWVJ6OHo1U09VTkFqNjdG?=
- =?utf-8?B?Y2Z3aHNtVjVtbFNTSXBjYXF4K0ZkbW5rZmlUZFlQcU9Ea2dVUWxHbEMxQzBj?=
- =?utf-8?Q?Vd4Q=3D?=
+	=?us-ascii?Q?VC5kDduGhcmTc//afFoGb7AjHgFkNwGYEU4Z0a9WLwmHv6ulJQ6jXa/Lh7av?=
+ =?us-ascii?Q?PNoDa9U85bf3wTdqxZ70gU04Xz5i0YSuUE2Y7/wgjhcBYxfz5RRs6BU5V+NZ?=
+ =?us-ascii?Q?2pSBAd/dVaRwwqnxwAugGpjOjAeD/ydBSSy7sZwF+JexDzQcqdQhffqRaTMK?=
+ =?us-ascii?Q?pG9T6eKZzVEClT6gSy6R2Ka1PB+fiVpKa1Eb9JOO7gQZlwZFfsFn2voNJR5+?=
+ =?us-ascii?Q?DD19bJgniUOL0dqOUoCW23eqLJIBr1TPWxzdHkPw/4vxEobN3EdQ9MT68ta2?=
+ =?us-ascii?Q?eXc3A4pSq5rLNn7S7nDYQM09k1FEUoSV24P8K5hoCSkYj9KhTdJLT0qUI60z?=
+ =?us-ascii?Q?gUN1wuU3g8a0nN+lyGTjT+A5vYyjSM8GXSVKnFE6h4SEDX67JwrnfrkO48Br?=
+ =?us-ascii?Q?qeuPLWSvR/AN6v2z+H5rQymnFcym6Qzhd+JPPHmRYA5faQxUN4OMnNDfPqMO?=
+ =?us-ascii?Q?vkzgAPqLV+WCt525QQ2HmyTE0Eb7DfvbMitAU4ay5b5aGT9M49I+GuDEP48S?=
+ =?us-ascii?Q?7/Vd44yZqjnBVWGPxSJ8sd6djAC/gs0znjq3l5Dw96cJQNIT8BC58wuneErx?=
+ =?us-ascii?Q?7+leKMXfCthOCSrtNUbVnvvrEUSVbtjPZxrJQXUT+sYt87EEt/9OjO/X7CUf?=
+ =?us-ascii?Q?iQ6AmbJLkYiVsKVlLmqkMhCFtBxU7g6LXFXfZFJtx+3A9BoItoYRoDuepVG/?=
+ =?us-ascii?Q?XzvotERHcn60LamuPj5sGgWrXVs+1x6bJ3Kh6aN4gA2jq2jr69ur7IrohAi2?=
+ =?us-ascii?Q?baWW/8OB/P/ujobt5U0tGDK0hbIswJCn3TxUrMXXwPpRY0Ss6fn13wMTPbVf?=
+ =?us-ascii?Q?FGhA6n/q1pp4OJJJxLMdn2nPiL0anAeZTe0n637jsYekW87OMpAMZnjyjbcf?=
+ =?us-ascii?Q?teez8f3fzg1QTOuBch9EDlYwWK1+bX0fuZYz+P5HjEr3GV+Q7fmxpArIAvWl?=
+ =?us-ascii?Q?RDeWYyZoDxWFHPtNtjHxIqGV5V0C69rBtiG7huFAmhSlahOQfEu/xQunCAiv?=
+ =?us-ascii?Q?2mocknrKGEhyXcOE4lW8rJngfLkc6C9Hk8QSMIJ9Qnrtu93+4Iy78rbZpFw9?=
+ =?us-ascii?Q?UFPPWWifYPJMy11kwi6DBP2eic+Crca0xxKdEoC5X6YJnNmeCJOlurINnPfy?=
+ =?us-ascii?Q?C6YMWRJpkjc9QuNOY0rtSFa4Iv388nZ5x2hMcH7XsLIDAguhiFWGvDwpqkbw?=
+ =?us-ascii?Q?WaIGdiXS0CZKEdH4ps/+vxDTNlyVbZ3o2z8SyuFw56eOKJUKPRfWcYvGoDCk?=
+ =?us-ascii?Q?Zz1wd9eEMDAoDmWXARaGhB+QtdSJy8hcn6hPIsQZnudZR4KsNeJmWN2Y9zTn?=
+ =?us-ascii?Q?j4IA+/D9ssdvxIPHAIo5pS+pDGT+PGaWmozVZKUDRaanWaV9K3PMywWh0/Cx?=
+ =?us-ascii?Q?VCqkMboY3D+4qRIUpkPs/HstTv0EW6bvKVw4pGZI+9T2RuX+44o/9aPuu1qi?=
+ =?us-ascii?Q?82Fepe2zbkBkhLTCVFweWGGpYK1TiDhX?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2025 11:52:24.4826
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dU8JH+Hf0F3h1kCikd6jc/nrTxHAjUavPYzc13NIFNnRE6e3RpGuGATMUIFM?=
+ =?us-ascii?Q?/OZfhgyyjf3JNqe80n4RTAxCkQXRz9XWla0TQg4rvpJN1RQMnghMLMmvxQEp?=
+ =?us-ascii?Q?DPV0YHMbo8gybO53jQy4Ro48e7EMdnnDy9KrxBOCDfgRNlbcPw7URlJmSwXF?=
+ =?us-ascii?Q?Ntj/wbky7q4p4P0+3IG8oua3G6+Seu4APbQzhQZ2XXcC+wRlbBzZ8ax+8O6f?=
+ =?us-ascii?Q?gDqrkrDh5vusGw/kNKwgIyuQl72tzAD8FoBw3PvJCSoKFh1mwIDtyIP2vHmy?=
+ =?us-ascii?Q?ulFf4+rBhL92Ztk+PlRTOxt5IrZgTRo0Eu82heA94cXf7Yxx/E+SRkqIMAws?=
+ =?us-ascii?Q?Jfhpe203EunOk8tx0Y0FrBOgnfcMvf81KThTfxyFuZAi7u1hPhWHjbyEgONa?=
+ =?us-ascii?Q?4seFkX87hmXSNzhUkod1jI6M4oiuu9WZMEYA7LoTWEghP4/T/4XLUN+RnUmg?=
+ =?us-ascii?Q?c5N/Ki+rp0CJgVmvgedu10RTjbGLrOXw23lkP23y7+BQw2qJsa8dz7le0YUp?=
+ =?us-ascii?Q?911ZT5wC1qXnc0L3ggcfxjwDpdW5L4Yh4IgRRTOvqwAnmG4XtfwsEQk50bGv?=
+ =?us-ascii?Q?pEA0xss77Yx//prW048kLytQsi4waHkmmC6OH4qmcMnL2dUzHDFI95nG/DAQ?=
+ =?us-ascii?Q?2tgIKDXIHJxZfaBJJnbO17R/nt6YZ83nMboAA/h29czCv2PRLlSKCP8ey4UV?=
+ =?us-ascii?Q?65uSedzBrlePWOePJGtz1xUK+SLcubgbUmtlXz4w9VWa0yWhOgE9RmnPrfjA?=
+ =?us-ascii?Q?J9JcttgLC2EP4syASICDiqbz3sl+OZXK1dH3DTsdzbLMQh890HABZvJzPJo3?=
+ =?us-ascii?Q?wb7693Hv7PC5xTJEVWpJBilfzoRtoc48+CO+Pu2+NeVUcE865fkb7hSBr3F/?=
+ =?us-ascii?Q?D9eq39O8nciIxpicGdroT7/p+J01XGtq9cHSQ4gB27UrUx+JzGe5utl648JN?=
+ =?us-ascii?Q?hhrwf5hACG54y80j7Znliwl7wuTKvMa4mtRYoVT3+dcd3GOQtkbKdR49iHNu?=
+ =?us-ascii?Q?uebE0KjX1Ah6JYKOBEOqXIscAk6DyYi/UAnJHRiCWv2a8VCToOOtHtSd3NwV?=
+ =?us-ascii?Q?CtjfMkVIMNOPfoqB6d7wX/w2/VCBJ070rbqNCL/d88NR51vL9eBXnL2JbIPU?=
+ =?us-ascii?Q?V7nbTVdvee1Z0hvHVwjcefr9JJFTSAPdy+yAFO6b42HUjMDs6fml+yi2+EiO?=
+ =?us-ascii?Q?vhFD4ojI/LlUOhU1E4klbCBnz4T+azBSL9XYdWwO/lD17uhxBGcu3a6vVAto?=
+ =?us-ascii?Q?tNIMpFoOswUosenCgUZ/EuRuDegn+oHN9oIfQNpdEdMocPFZChOXBCg4/AxB?=
+ =?us-ascii?Q?WopZ4sGz9RveKsWaRT1IA9PJcEqa2qiagEtoNGixqICDv9/s4/W7y3LTnFG8?=
+ =?us-ascii?Q?S8aUsf2fJ07QGvep0uREOCCcYgxo80NAW+Brc+4sCexACZI+MtQFoa/uXqdJ?=
+ =?us-ascii?Q?D90t6xWWQ2n0sK4glDvYtN/qS9n7YoeGvLZ53vaosuLFFf663GMSTptS6yJt?=
+ =?us-ascii?Q?jumTIwSr51nE/yYLurIPM8bZEDZfD7A9LN7Vjtkcf1aaipvBrwIl8dPcAYpY?=
+ =?us-ascii?Q?5RV/BJUsW5vCh5j5fqo=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fcb0803-dcd6-4924-6efc-08de1161bf55
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2025 11:54:25.5792
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e99fed55-709a-44f0-440f-08de1161776f
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CB.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PS1PPFEF7C8A25D
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sGXhoq8V+jCsM9rgSAy7exVCDkN6w2vP2GtEKiwH2hXilixRYO3iVL5NPVru+HnJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5950
 
+On Mon, Oct 13, 2025 at 06:26:10PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Make sure that all VFIO PCI devices have peer-to-peer capabilities
+> enables, so we would be able to export their MMIO memory through DMABUF,
 
+Let's enhance this:
 
-On 10/22/2025 7:35 PM, Shawn Lin wrote:
-> EXTERNAL EMAIL
-> 
-> The driver should set app_clk_req_n(clkreq ready) of PCIE_CLIENT_POWER reg
-> to support L1sub. Otherwise, unset app_clk_req_n and pull down CLKREQ#.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - drop of_pci_clkreq_presnt API
-> - drop dependency of Niklas's patch
-> 
->   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 36 +++++++++++++++++++++++++++
->   1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 3e2752c..18cd626 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -62,6 +62,12 @@
->   /* Interrupt Mask Register Related to Miscellaneous Operation */
->   #define PCIE_CLIENT_INTR_MASK_MISC     0x24
-> 
-> +/* Power Management Control Register */
-> +#define PCIE_CLIENT_POWER              0x2c
-> +#define  PCIE_CLKREQ_READY             0x10001
-> +#define  PCIE_CLKREQ_NOT_READY         0x10000
-> +#define  PCIE_CLKREQ_PULL_DOWN         0x30001000
-> +
->   /* Hot Reset Control Register */
->   #define PCIE_CLIENT_HOT_RESET_CTRL     0x180
->   #define  PCIE_LTSSM_APP_DLY2_EN                BIT(1)
-> @@ -85,6 +91,7 @@ struct rockchip_pcie {
->          struct regulator *vpcie3v3;
->          struct irq_domain *irq_domain;
->          const struct rockchip_pcie_of_data *data;
-> +       bool supports_clkreq;
->   };
-> 
->   struct rockchip_pcie_of_data {
-> @@ -200,6 +207,31 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
->          return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
->   }
-> 
-> +static void rockchip_pcie_enable_l1sub(struct dw_pcie *pci)
-> +{
-> +       struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-> +       u32 cap, l1subcap;
-> +
-> +       /* Enable L1 substates if CLKREQ# is properly connected */
-> +       if (rockchip->supports_clkreq) {
-> +               /* Ready to have reference clock removed */
-> +               rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, PCIE_CLIENT_POWER);
-> +               return;
-> +       }
-> +
-> +       /* Otherwise, pull down CLKREQ# and disable L1 substates */
-> +       rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
-> +                                PCIE_CLIENT_POWER);
-> +       cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-> +       if (cap) {
-> +               l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
-> +               l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
-> +                             PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
-> +                             PCI_L1SS_CAP_PCIPM_L1_2);
-> +               dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
-> +       }
-> +}
-> +
->   static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
->   {
->          u32 cap, lnkcap;
-> @@ -264,6 +296,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->          irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
->                                           rockchip);
-> 
-> +       rockchip_pcie_enable_l1sub(pci);
->          rockchip_pcie_enable_l0s(pci);
-> 
->          return 0;
-> @@ -301,6 +334,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
->          struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->          enum pci_barno bar;
-> 
-> +       rockchip_pcie_enable_l1sub(pci);
->          rockchip_pcie_enable_l0s(pci);
->          rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
-> 
-> @@ -412,6 +446,8 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
->                  return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
->                                       "failed to get reset lines\n");
-> 
-> +       rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node, "supports-clkreq");
+VFIO has always supported P2P mappings with itself. VFIO type 1
+insecurely reads PFNs directly out of a VMA's PTEs and programs them
+into the IOMMU allowing any two VFIO devices to perform P2P to each
+other.
 
-Hi Shawn,
+All existing VMMs use this capability to export P2P into a VM where
+the VM could setup any kind of DMA it likes. Projects like DPDK/SPDK
+are also known to make use of this, though less frequently.
 
-This line exceeds 80 characters. Can it be like this?
+As a first step to more properly integrating VFIO with the P2P
+subsystem unconditionally enable P2P support for VFIO PCI devices. The
+struct p2pdma_provider will act has a handle to the P2P subsystem to
+do things like DMA mapping.
 
-rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node,
-						  "supports-clkreq");
+While real PCI devices have to support P2P (they can't even tell if an
+IOVA is P2P or not) there may be fake PCI devices that may trigger
+some kind of catastrophic system failure. To date VFIO has never
+tripped up on such a case, but if one is discovered the plan is to add
+a PCI quirk and have pcim_p2pdma_init() fail. This will fully block
+the broken device throughout any users of the P2P subsystem in the
+kernel.
 
-I have no doubts about the rest.
+Thus P2P through DMABUF will follow the historical VFIO model and be
+unconditionally enabled by vfio-pci.
 
-Reviewed-by: Hans Zhang <hans.zhang@cixtech.com>
-
-
-Best regards,
-Hans
-
-> +
->          return 0;
->   }
-> 
-> --
-> 2.7.4
-> 
-> 
-
+Jason
 
