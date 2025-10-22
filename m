@@ -1,88 +1,89 @@
-Return-Path: <linux-pci+bounces-38965-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38966-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80336BFAB0B
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:52:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3592BFAB14
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:52:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F029A481FC1
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:52:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11860483DD3
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:52:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A4C02FD67F;
-	Wed, 22 Oct 2025 07:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3872FD69A;
+	Wed, 22 Oct 2025 07:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KZMVnFny"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WVg9qXjo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EAD2FD668
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F24B2FD684
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761119535; cv=none; b=J+1UH8BnHLudyBQauRdUQYBUG6WoXTdYZ75DK9s1+dXpZ8uQTsFnmsfJK87UULl+AyqQyVox3JDmWF1xzdMbdPcvyUFtTpEuDp5KX1a53TaA5jRFosC5hjPYKmT34wLdL8XZ5nBZpzCkhrLQRahNM90FFkk+OFC83lMzmLsEJGE=
+	t=1761119538; cv=none; b=IxTrK3C4dpu8P/Yxz3yV9n8QNcM2JkwKN7/XuBTP/Oa594nnjixwY/zEAZYDdWmRt5SY1cvA5mjkglXG7TfhEFUALB2rN5AtlYtFWfZvhuIWBwRS5PDzAvE5J7cgiJDEH/5fffPrcuf+mPIB448QL1yVs4wT8QA6hLBkt7mTeBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761119535; c=relaxed/simple;
-	bh=J/90TQbFdCgoh5WWkO3h6Le1FNJsf9C3aI6j07Us/Zw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=f9st0/krXTCKPKoXZicBkqBCu4/Aj0x2CG4k+epMrGkLLZLyWg9nxPeKKcyKdoIOAwL1gBT7WwBgn8cppTgS/W664zfJdlDjsKXMBPmskBYX0f4YXQn69mRVQsBIyJ4DK3SF5zx+rxSIJS7ELMoXk0yAmWtgBUod6/Zb9KEDSmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KZMVnFny; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1761119538; c=relaxed/simple;
+	bh=FPPlpLkszDfLj/huk9G6D1NresYhSMQaWaal3M8cqFs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HnrT89xGlqCV5qjGE4+gS3pqQC84A7bQre+/dPkm7JnWsb5/zZnjMReq8Kf+qr9XwzK2aaGRH6780FWMr0jOXxmc05B0E1cU22ckZFScRRiYvkz5Ti9iPbnHxID8Fdx8f6h3rQjfVWyaF4YT/7xZQAbLPNjj94o8TvizaaZvtvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WVg9qXjo; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59M3EraY025477
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:12 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59M2nK48032407
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=DPmvEIE8FlpuHaMWc6yWJW
-	SlobjKsCAmEGxrwVOFSo0=; b=KZMVnFnyFxXDany6UgqO8LmgciO10tFG//aHNw
-	9AOw68AQgmsfgYjOeObdzI/u6NO96Zr8f2fehgHN0wrlHzRmlbPRjYANaNSu5Hqz
-	EWrEn6//gbVeb47fUuB3/+iY7O26Q1noU8tGO5+CTXLYcciDZhpXxkovMhEYaQZA
-	VUkzK6zl35gviEsKCrs3iRG+NgsB2gp7inJskrr3WXO3bx2BTYfbE67X2y5Yc/oG
-	ZaMwN8A+IyrYDlSR+v7cSty+BVgOy8BOmzLGQHNf/7NtfwHF52LHFhamDad6efft
-	2O6QnSV/y6mcqspqvmGS5VEDJ67u3yu9nOkT/OXqOjd1DYGg==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49v1w83tpg-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1XhTQViaV/X39Anyp8PIXrWuoocdYUl600DmjKTyrwo=; b=WVg9qXjovDTGU7zR
+	N/3nbr54qtCPkA0QVCqhggOOIU1SlVHrVhcVFQUrD7J1VQbqT0HwJJCXSpwit5i/
+	FSr5E+nGEAGyfpzQ1kUE/Y9vk2NJZBWytzXlL9Rn0My4E+SVsLn0D/zV04fcVKqn
+	iCo3XUWf17t4Jm68knN6ZHrcRIKwH36o9U1Wcale4v2KJVwET/lDRDlkTYVp/e5J
+	DoOVXWMbSN6nBki2vYOQhJX77Ayff5K9V+hzNzDinAxMYiXN3wwz+XtKvzAhTckk
+	RvH0LoO0F+TW+DI2uqnK5fotvboLOOIsl/mPyNZqr11SCR7Cm3OSxa8eltw2tngC
+	tVt9fw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49v42kbkcv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:12 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-32eb864fe90so1932332a91.3
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:52:12 -0700 (PDT)
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:15 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2930e6e2c03so2828145ad.3
+        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:52:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761119531; x=1761724331;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DPmvEIE8FlpuHaMWc6yWJWSlobjKsCAmEGxrwVOFSo0=;
-        b=AB/aOzbYYeIgNGiX5vatcqc7qAo8YaG0IsU52SEeDegaAGe0sDR8PaMWJu+enADmnR
-         I9LRebkkDTgOQOCFGF7vQNjwUTw3E1R8dKYxkzDMnVeigbfAurNKm6ZM4E1xTuDyP2Tc
-         LbXZttOllo745rne1IQTMtOlSzMcG3MtqpSNkE1dsq6suEAoCIrlulwC/qSyo00LMOCy
-         WdrVdGZux6mLhXAnoH3H+d8+MBvoqn0qkGrafEADBbXnIdeNAKqZYO584j07y8IIz9fC
-         DoTl7cxnVp5XkP8eBate3fhLM5tVE4pmOXCkO60x+clzt/NSaEn0agimE52L3lqVfrxv
-         OGRA==
-X-Gm-Message-State: AOJu0YzPYraAsXcQHtwsOmfUGjnvA8sRnegJiYlAT/fQaWU5EBv8npE+
-	nxzPeMbP2ILP6DAU6YXDH69WGGIaMtKx44uucLSsU00mEsr/WN1f12rGhues6CxFBqBYNzsifBm
-	dOcz9n1I5EUODjf9LsI4wiQ51hVffVAQqlWCyZnntML0/WI7YypuBEcb064A8er0=
-X-Gm-Gg: ASbGnctPOLq2AebeMpc3DadFFAUOrvJck1kKnAV8jBWkAAOlYX9/kFXitwYPHjV6+VK
-	TX/+ihK25p1WIhoZpKUa5m6zGncpCJGqLwEObazGnmYCda432XeFu3geuC6Z12GIQf28HpNt/bU
-	Ew0l4gEuWfLyGbL6KbPZD/BX2ODpIznfX5ODUyCgB82x3lVOZeawDlLAxtk9yjp3AUulT2b8wcT
-	nuBQUAjBEH8uCXbgouY8tJxMWrfF3nqYrYd3gLSzSxFEE/Wyw1xkzOkHtgnHuDFq1WLNdG3TJ1x
-	ho5VdVPMGzunDwrYt00Z1gRC0xQFqDYWShg7NAXZf3RkzRRRMeuF6wx7PpARgwFQqL0H/Y9yHnf
-	ewSQoOx7Qeq6DC3Em2HAwH9f1bwPXcv9kEQ==
-X-Received: by 2002:a17:902:ec87:b0:24b:24dc:91a7 with SMTP id d9443c01a7336-290cb65c5a6mr230159875ad.45.1761119531222;
-        Wed, 22 Oct 2025 00:52:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF4K8gARg09FJVPfkVnVqfI6o1el0oPDHVpa0x9imn1Oorz714MewTKuS4CSpiq726izRzsJg==
-X-Received: by 2002:a17:902:ec87:b0:24b:24dc:91a7 with SMTP id d9443c01a7336-290cb65c5a6mr230159685ad.45.1761119530739;
-        Wed, 22 Oct 2025 00:52:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761119535; x=1761724335;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1XhTQViaV/X39Anyp8PIXrWuoocdYUl600DmjKTyrwo=;
+        b=jJP+QskSu1CzaEKwWsB2udWCkRjfHBhWZvkMe/VZ3WHLNzMmBqSjQU7PKP7DWNBasA
+         aqaTNLEIhGieswwylNLbtu3tuzPY+CUimhX6l5s9U4JxyCnhnS7pftt71KPc6dkr5pbD
+         WyN1/Vboe+Kic85x2GV4RdsWY2KVmE3d4fE0Zg5KFh8aQWwvvcMJfmGlKkq9yk0NX8hZ
+         KLzUJJN6eDWPHoMgsSBMKbNjcKnIo/croUVxlw7/D/0ejeD+2ceEFvAad6hGtCpyUugi
+         nFgEXU3q0903O9WKmsu0+5lxi/rfWHbTvXbcFxPdTEqwX9rWOVhTzH19kqYhTnBRk4OS
+         eHvw==
+X-Gm-Message-State: AOJu0YwMrjsI9oC568IXyVobuKGarzs5LJnKGrDDgyl50j+vw+dcEm33
+	sVJAO8npLXc6Br5OtSagSpcUmPHd1G+lLQL27cH40pECvWj1uoFmupTh+JqyX5rTHKjgkSh2iHS
+	S/Fh3KfXXIhysE/QllGzf/fMBHKQnLy7MnLcr0vmZJom1xX13kWHzdG0AZcz7Q6g=
+X-Gm-Gg: ASbGncvip1ykrdI2RGU4bpAdA9ZagzcRejCTEUx/ZXTmtTrpjfG+JZecAI8X5m7PG6k
+	eKaDVetn4G/F07pB50Endz+b4jswoDhXzAmY7O0eaMzUBvn4gC74BanVUJbmV9T4lJSDmMKiNF9
+	+ubey6R3oWB0+WEVwEKfgTF7aSPbSdL0Mw+jT2/wMOWDITT5fbPwEIRUMe4ChYXaKTG9dSzUnmv
+	IjethH25V8e2Q3qKzYjdPgAGKYy4hzjOhEM9F8nJe5mlSzSdwi5l4X1uoHEy9H4I9A4cbrdq+30
+	XNsgG17AH15g7s4aMJE+/x5h5AjOge7HBfrXNI5n/nA0nIzZvvqLaaHBQezhS2z6h7qlPxzNM8S
+	cTCx5xbAtn/X8mwq27IkdaHUMD60t9HBxlg==
+X-Received: by 2002:a17:902:c942:b0:290:c5c8:9419 with SMTP id d9443c01a7336-290cb65b8e4mr250331585ad.48.1761119534676;
+        Wed, 22 Oct 2025 00:52:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGqlXT6fObHhgr1D2s85s+Pv0yavAO6a7DXv5jdQ3toDjpK+j4sVXiG3YIRDD8cQ3vqXRO0Q==
+X-Received: by 2002:a17:902:c942:b0:290:c5c8:9419 with SMTP id d9443c01a7336-290cb65b8e4mr250331255ad.48.1761119534226;
+        Wed, 22 Oct 2025 00:52:14 -0700 (PDT)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471fe2c2sm130962275ad.79.2025.10.22.00.52.07
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471fe2c2sm130962275ad.79.2025.10.22.00.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 00:52:10 -0700 (PDT)
+        Wed, 22 Oct 2025 00:52:13 -0700 (PDT)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH v2 0/2] PCI: dwc: Fix ECAM enablement when used with vendor
+Date: Wed, 22 Oct 2025 13:22:00 +0530
+Subject: [PATCH v2 1/2] PCI: dwc: Fix ECAM enablement when used with vendor
  drivers
-Date: Wed, 22 Oct 2025 13:21:59 +0530
-Message-Id: <20251022-ecam_fix-v2-0-e293b9d07262@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,10 +92,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAB+N+GgC/0WMQQrCMBBFr1JmbUomNS248h5SJGQmNmAbTTQoJ
- Xc3FsTNh/f4vBUSR88JDs0KkbNPPiwV1K4BO5nlwsJTZVBSaZSoBVszn51/iX6PhKSZBiSo91v
- kqrfUaaw8+fQI8b2VM37tLzL8IxmFFK53xnQkmVx3DCm196e52jDPbR0YSykfVCVdpacAAAA=
-X-Change-ID: 20251015-ecam_fix-641d1d5ed71d
+Message-Id: <20251022-ecam_fix-v2-1-e293b9d07262@oss.qualcomm.com>
+References: <20251022-ecam_fix-v2-0-e293b9d07262@oss.qualcomm.com>
+In-Reply-To: <20251022-ecam_fix-v2-0-e293b9d07262@oss.qualcomm.com>
 To: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
@@ -104,67 +104,123 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
         Ron Economos <re@w6rz.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1761119527; l=1313;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1761119527; l=3184;
  i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=J/90TQbFdCgoh5WWkO3h6Le1FNJsf9C3aI6j07Us/Zw=;
- b=vo34Dz7sxlIswBIIP74F0bWqldDvPxdaL8dMP3smt5FIhASG9kExka7DTZX35BoMortsAmyQJ
- qf+N0V9qlR+AJOx1rVcvDZOnLGc/MX6KevnRq9tFQu+O8eFHCbfKJzF
+ bh=FPPlpLkszDfLj/huk9G6D1NresYhSMQaWaal3M8cqFs=;
+ b=uN/3l2SCGQPO7zxgVFtEl7qZ1QV32AyKSorVhSrZUlAabqbmVIrMdvtG1a4tyU6XQywyr8J0s
+ eeOrhLz6yziBsLjSRO5ndXRi+0t507j5jlJg4dYjjJs+YoPjNj4I8I7
 X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAxNSBTYWx0ZWRfX/1mCrKB+Lzce
- S+zvkSeGb0PW56gDeiPrdz6hXy2xR1GXbqBpT2EDuWGVBWysQ5Ww2k/7IzFMTcZyG/JKIth0MiZ
- N8xNpfBal3TMrq+ErSVDcmx0vSfahY4Aom0pq1sBpLnH8I+r66zilOcsO7H79muaR5+lEZ6loM+
- vHf8o81TU3PyaT/6xr7MDAiLzwz64n/hUo3Fs0G6DUYHR34QVCupIicUrA7unQzMlpZnM5SqKXF
- 0k/rTShIQNt3WwkI1Vz6jl30OrB39Z/exOVIXREU4yIxcMgsAbPzfAwaHb5Prw51RfdZZXhk7bF
- ympVsRGPDC/iNTvIsxPnDz2jqgPnvg+Vz1+TDGHGidKdvxkpw1PJkF6Oc1HYPa0WMMzgIRexsXg
- qY+0Lx1H8jJzUqNkV5PVM9nTtoz64A==
-X-Authority-Analysis: v=2.4 cv=bNUb4f+Z c=1 sm=1 tr=0 ts=68f88d2c cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+X-Proofpoint-GUID: lgWBCgrMJanrYCx4M3A7UXAqPAC9UMjP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAzMSBTYWx0ZWRfXzkQfJbRHwbEW
+ ueT/pIMLvLlRjUPuQ+Vau9jAiAX49Q5jQrJLevPc2IyrZZCPsqy4dt1+jNhay4QdypXy/6oB6qf
+ 4TbUC8J/qCugfA/osUpV8xPCrCD2j3Xv7dNXZGtiUeUubvHzwO7bH5HAirkmk1kprCkOdABqfWU
+ R5mZhPINuK1s/ilU4Y+WOJiuLN2O2bdkrrvzlRwNCw6epZ3w6JlydRLJz79bdC2QpFQ2mUvfOhg
+ Aachi5Mo16Ulj35Mwh4dhDO3tUHpTy325zXtVWJBNJjk713AUGR7oA7JaZ9RViuQU+gbWX7pEB7
+ 8GcTf9nPKV0/aTzRj21rwJhtitCkX7mSU7Uq4EhYUwa3Dqd6QjTsBmUHsLbKBv9reyhfILuuvAR
+ YJNXrb/mbVdShADMYxac7slwmhqsUQ==
+X-Authority-Analysis: v=2.4 cv=QYNrf8bv c=1 sm=1 tr=0 ts=68f88d2f cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
  a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=qIbWdXD6M1inJYch3NYA:9 a=QEXdDO2ut3YA:10
- a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: tD8YhPRdz75DkAYz7yn_c7AeaSvIDP8H
-X-Proofpoint-ORIG-GUID: tD8YhPRdz75DkAYz7yn_c7AeaSvIDP8H
+ a=VwQbUJbxAAAA:8 a=HaFmDPmJAAAA:8 a=EUspDBNiAAAA:8 a=h4B-02p0z56_JbXvspoA:9
+ a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22 a=nmWuMzfKamIsx3l42hEX:22
+X-Proofpoint-ORIG-GUID: lgWBCgrMJanrYCx4M3A7UXAqPAC9UMjP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-22_02,2025-10-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 adultscore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180015
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180031
 
-This series addresses issues with ECAM enablement in the DesignWare PCIe
-host controller when used with vendor drivers that rely on the DBI base
-for internal accesses.
+When the vendor configuration space is 256MB aligned, the DesignWare
+PCIe host driver enables ECAM access and sets the DBI base to the start
+of the config space. This causes vendor drivers to incorrectly program
+iATU regions, as they rely on the DBI address for internal accesses.
 
-The first patch fixes the ECAM logic by introducing a custom PCI ops
-implementation that avoids overwriting the DBI base, ensuring compatibility
-with vendor drivers that expect a stable DBI address.
+To fix this, avoid overwriting the DBI base when ECAM is enabled.
+Instead, introduce a custom ECAM PCI ops implementation that accesses
+the DBI region directly for root bus and uses ECAM for other buses.
 
-The second patch reverts Qualcomm-specific ECAM preparation logic that
-is no longer needed due to the updated design.
-
+Fixes: f6fd357f7afb ("PCI: dwc: Prepare the driver for enabling ECAM mechanism using iATU 'CFG Shift Feature'")
+Reported-by: Ron Economos <re@w6rz.net>
+Closes: https://lore.kernel.org/all/eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net/
+Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+Tested-by: Ron Economos <re@w6rz.net>
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
-Changes in v2:
-- remove bus0 is for root port always(Bjorn)
-- Link to v1: https://lore.kernel.org/r/20251017-ecam_fix-v1-0-f6faa3d0edf3@oss.qualcomm.com
+ drivers/pci/controller/dwc/pcie-designware-host.c | 28 +++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
----
-Krishna Chaitanya Chundru (2):
-      PCI: dwc: Fix ECAM enablement when used with vendor drivers
-      PCI: dwc: qcom: Revert "PCI: qcom: Prepare for the DWC ECAM enablement"
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 20c9333bcb1c4812e2fd96047a49944574df1e6f..7d95d8ec9f8190dbde80283db78ca74925532d2e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -23,6 +23,7 @@
+ #include "pcie-designware.h"
+ 
+ static struct pci_ops dw_pcie_ops;
++static struct pci_ops dw_pcie_ecam_ops;
+ static struct pci_ops dw_child_pcie_ops;
+ 
+ #define DW_PCIE_MSI_FLAGS_REQUIRED (MSI_FLAG_USE_DEF_DOM_OPS		| \
+@@ -471,9 +472,6 @@ static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *re
+ 	if (IS_ERR(pp->cfg))
+ 		return PTR_ERR(pp->cfg);
+ 
+-	pci->dbi_base = pp->cfg->win;
+-	pci->dbi_phys_addr = res->start;
+-
+ 	return 0;
+ }
+ 
+@@ -529,7 +527,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+ 		if (ret)
+ 			return ret;
+ 
+-		pp->bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
++		pp->bridge->ops = &dw_pcie_ecam_ops;
+ 		pp->bridge->sysdata = pp->cfg;
+ 		pp->cfg->priv = pp;
+ 	} else {
+@@ -842,12 +840,34 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+ 
++static void __iomem *dw_pcie_ecam_conf_map_bus(struct pci_bus *bus, unsigned int devfn, int where)
++{
++	struct pci_config_window *cfg = bus->sysdata;
++	struct dw_pcie_rp *pp = cfg->priv;
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	if (bus == pp->bridge->bus) {
++		if (PCI_SLOT(devfn) > 0)
++			return NULL;
++
++		return pci->dbi_base + where;
++	}
++
++	return pci->dbi_base + where;
++}
++
+ static struct pci_ops dw_pcie_ops = {
+ 	.map_bus = dw_pcie_own_conf_map_bus,
+ 	.read = pci_generic_config_read,
+ 	.write = pci_generic_config_write,
+ };
+ 
++static struct pci_ops dw_pcie_ecam_ops = {
++	.map_bus = dw_pcie_ecam_conf_map_bus,
++	.read = pci_generic_config_read,
++	.write = pci_generic_config_write,
++};
++
+ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 28 ++++++++--
- drivers/pci/controller/dwc/pcie-qcom.c            | 68 -----------------------
- 2 files changed, 24 insertions(+), 72 deletions(-)
----
-base-commit: 552c50713f273b494ac6c77052032a49bc9255e2
-change-id: 20251015-ecam_fix-641d1d5ed71d
-
-Best regards,
 -- 
-Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+2.34.1
 
 
