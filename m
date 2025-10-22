@@ -1,778 +1,248 @@
-Return-Path: <linux-pci+bounces-39046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09D31BFD8EB
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 19:24:47 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 541ACBFD993
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 19:33:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 309073AA0AA
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 17:08:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A0A094F0638
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 17:33:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8009B27A123;
-	Wed, 22 Oct 2025 17:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BB32C234B;
+	Wed, 22 Oct 2025 17:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p317/LGt"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kOqs+hxH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B920278154
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 17:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D292C21D3;
+	Wed, 22 Oct 2025 17:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761152920; cv=none; b=oajAgUQx3DQe9SSbB0VRkcLsKt/PkXqGpgkrFIXXQxLKqbfbhmcY/mnyTlshX5zL88saWKCInuiXyxf4wgIxt2BGJbAi/LfEPManA7ej8EYhNTC0Wi7xEumiZlckjBeZ+fXXixN1uc0AAZZPoX0HUpDugxtqYZzzrcarmETjX1s=
+	t=1761154420; cv=none; b=ZBcY2YSm22Wq9lS2GfJdNgwZkelgvQdeZ1qWGM7FzKcW+BKLztEg6LfGY3EIQiC+T5ynNxwePnh5BcMNk0YHcp9TUTaKKhJ5beX2amvGwqTvkfxzCFrr+OvUVx+ZIHRBWPpO1jX0P4RLl4WF8I7ec0qNfDa7r2+6z9Hy71Ix5qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761152920; c=relaxed/simple;
-	bh=X3+AFOXbzBPUUu7um5GELia/4H5tUtJ5RzZGoknQZps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LBLWeT89VL0dLXuUnz9a7Qol/dagfqi/StwU2dnOb5CwSUti8faKhpW4UXX/ffvWmSwPnE+D7OPFjGZugjzLBHBW+SDVBXtM56hGUv3PsNxuiJUT81VAT1LdSTTmm3ZJ4OQIQ6PbGoQJ9sCvjgTZWGuyGHHrAv4dfmahpYUNY2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p317/LGt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE28C4CEFD
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 17:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761152919;
-	bh=X3+AFOXbzBPUUu7um5GELia/4H5tUtJ5RzZGoknQZps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p317/LGteuQE0w3vD6Ajn9d1z7mDBFQlE6+108n27qHnMgNedEtdjk5G/36KRgGBQ
-	 Xj7DGARQeYfntBJTN7NK7o9rstwohWy7kjszxHsvLxqxR4ACzr5V1mpQrN6UV0HEg6
-	 NMzI90JTUjZUYXXfbsZQFVHliy/ZgPK68mXE75OqU7Zy9jGETdMUXwS/5nYgiMAu5D
-	 U98dF5YVJtrtATvs2NnVek2Mu6gXUbTdtshMbAYeshsqJwLepCn4FfGKI9U86GzwEo
-	 oGBG0qYkNG99tkElB/ERWtTtHh3u7h+pBjCTSUiHYco5yJcTlpal0VqLq0mw/hAkRP
-	 DoUADWsNoo2YA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-57e8e67aa3eso1629739e87.1
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 10:08:39 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yy9hPi/XhK9H0QtUrR9PPsks0Yk5b5wUzc56hZ6dRiSXAnsbOLH
-	RhA8BvIlnh7F4vekSj87SovA075aELT2RyEy5Oj6M/ELMdWP/6ofzrfDkinFI2xs2+aGB9gbmDW
-	lIpkznCKUl6qyWh50ypY77ELoRSTxKPo=
-X-Google-Smtp-Source: AGHT+IHdN50uKXAXCySJWh+COZPkYP8+eX6Pdp4MK5ede/W2FWU9smiwWM9PUWQqNgNTl005PuZUOyxRPv/dnRNqrEs=
-X-Received: by 2002:a05:6512:63d4:10b0:570:a8d4:a79c with SMTP id
- 2adb3069b0e04-592d55a5af1mr1125929e87.0.1761152917786; Wed, 22 Oct 2025
- 10:08:37 -0700 (PDT)
+	s=arc-20240116; t=1761154420; c=relaxed/simple;
+	bh=/Yk9WiXQBjIwG6nS0SNWlq/vPVccKp+iCtnR+gPxq0U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bqJIqWLnKDGva+AeRzWAGXJygmdOn2UEd3v9Qe+p6VzSpqn6e4oXTvw/VJFXplW+m2adHI6Psr/ywyHnM1IwObxQRWbRg1xxrE78pJnt2cPhDpSjQb6671+SGxiS6nfswLGbIO5Ar59dJfHg8A3wYiAgWfy+bFmT6q7ORUhSSeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kOqs+hxH; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59MAOXBn003946;
+	Wed, 22 Oct 2025 17:33:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/Yk9Wi
+	XQBjIwG6nS0SNWlq/vPVccKp+iCtnR+gPxq0U=; b=kOqs+hxH1CqLHrj8YxBgu/
+	2vj5zA4+6c0sArBC7uMpIBqeSKb+4qkoRZddCyLvS/UKiWDWfKi94E98X/PEMT8h
+	7Axa1vAUGH6lylie0sZa/Q1ms8ghFgTnaD0nWM6Dh2CM9+23GL3qsD73yeNjaoGC
+	f1XjOOgLR5x91/5x8/u8M3i8kW2MBl99SaAn91Z7qWK2LlxfDrdbJLfA3noJp5q9
+	IngNEzz9GmghW3dgwjdhfVB+pzPRvOa+P+S/THyRk8Odz/mivbb9S3EWEsxIFTSv
+	l6GKQabLgj8QWiM9PCkS9Px0fO02lXycjjZH7xCRSD0sGuHKcPKvre0gGM0gZrhA
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v32hmn4x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Oct 2025 17:33:25 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59MH1oWU017052;
+	Wed, 22 Oct 2025 17:33:24 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vnky1r8r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Oct 2025 17:33:24 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59MHXNMr24707762
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Oct 2025 17:33:23 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E851A58058;
+	Wed, 22 Oct 2025 17:33:22 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2044158059;
+	Wed, 22 Oct 2025 17:33:21 +0000 (GMT)
+Received: from [9.111.88.198] (unknown [9.111.88.198])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Oct 2025 17:33:20 +0000 (GMT)
+Message-ID: <7e15ec9e157521489fb5e98a0c52f90aa3ccf09a.camel@linux.ibm.com>
+Subject: Re: Potential issue with hypervisor_isolated_pci_functions()
+ handling
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>, jailhouse-dev@googlegroups.com,
+        linux-s390	 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
+        Farhan
+ Ali	 <alifm@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Tianrui Zhao	 <zhaotianrui@loongson.cn>,
+        Gerd Bayer <gbayer@linux.ibm.com>
+Date: Wed, 22 Oct 2025 19:33:20 +0200
+In-Reply-To: <CAAhV-H4Q932R0fAbL6JyygZcgALdO_HJZ1Cqo88EhNMm04yjtQ@mail.gmail.com>
+References: <d3f11e8562f589ddb2c1c83e74161bd8948084c3.camel@linux.ibm.com>
+	 <CAAhV-H4Q932R0fAbL6JyygZcgALdO_HJZ1Cqo88EhNMm04yjtQ@mail.gmail.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <874irqop6b.fsf@draig.linaro.org>
-In-Reply-To: <874irqop6b.fsf@draig.linaro.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 22 Oct 2025 19:08:24 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHO50CBHLpUChuGpO4REEAifxDqcr_j362OzJSoz4yLTA@mail.gmail.com>
-X-Gm-Features: AS18NWBdd3RSK5gFks6MsFWa786KVNS0NBiGjHaVNehBnhmzsq2cja7AR0-4GPk
-Message-ID: <CAMj1kXHO50CBHLpUChuGpO4REEAifxDqcr_j362OzJSoz4yLTA@mail.gmail.com>
-Subject: Re: 2499f53 (PCI: Rework optional resource handling) regression with
- AMDGPU on Arm AVA platform
-To: =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
-Cc: linux-pci@vger.kernel.org, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	amd-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	D Scott Phillips <scott@os.amperecomputing.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX9zhnbiIttv74
+ 3JnksB+ByvKr2ZSUzqpj/+IKkTkfCSRemz+6fXK2/bMUlmqROPkX9kmYIBKrOY9cl4RBuH15pSF
+ 3X7eLzxO7hDEFZ+CTWXNayMsBLfutMZMZ9N71Ru6s7aZsxRctnQ8AuVC0pYMpEuoEOfzkR7/7PV
+ Tfe776M/JMqTjDOo/9PB6gyOcVXzaxKkHJA48eojJ+8Sdam7/OaOFIAEgfr3biggfcwnpn/OU60
+ MFkaghPEUiQ42//c5lFD0XLn/0yf5exC+bdYrHpmCfiNHzFZbCmY5BPOMEeL/OplfbIKbs+32p3
+ FJ0pmtJijcYGT6eO0cOFP5OSufSzPeBD4SQjE5ZKeBLkjLuJE3dqvEi7jB5/u24B2VxZkH+Y/jL
+ ALvrMmS6pMQMyhEh7Oz/o/0SoTyTXw==
+X-Authority-Analysis: v=2.4 cv=OrVCCi/t c=1 sm=1 tr=0 ts=68f91565 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=9vf2bs2iEuHWSEF46McA:9 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: E16fo7ub-l2JXCn_GDTbDSOdQnAVEKJS
+X-Proofpoint-ORIG-GUID: E16fo7ub-l2JXCn_GDTbDSOdQnAVEKJS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-22_07,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
-On Wed, 22 Oct 2025 at 18:51, Alex Benn=C3=A9e <alex.bennee@linaro.org> wro=
-te:
->
->
-> Hi,
->
-> I've been tracking a regression on my Arm64 (Altra) AVA platform between
-> 6.14 and 6.15. It looks like the rework commit broke the ability of the
-> amdgpu driver to resize it's bar, resulting in an SError and failure to
-> boot:
->
-...
+On Wed, 2025-10-22 at 22:49 +0800, Huacai Chen wrote:
+> Hi, Niklas,
+>=20
+> On Wed, Oct 22, 2025 at 7:40=E2=80=AFPM Niklas Schnelle <schnelle@linux.i=
+bm.com> wrote:
+> >=20
+> > Hi Huacai, Hi Jan, Hi Bjorn,
+> >=20
+> > I noticed that with commit a02fd05661d7 ("PCI: Extend isolated function
+> > probing to LoongArch") LoongArch now also makes use of the isolated
+> > function probing. First, nice to see this sees more users and that the
+> > interface is useful to you.
+> >=20
+> > Seeing this, I was reminded of an issue I ran into when using this
+> > mechanism with SR-IOV capable devices. In that case VFs with devfn > 7
+> > and PCI_SLOT(devfn) !=3D 0 wouldn't get probed.
+> > This is because if a device is found next_fn() will check whether dev-
+> > > multifunction is set. So if for example devfn =3D=3D 8 is found (fn =
+=3D=3D 0)
+> > dev->multifunction won't be set in pci_scan_slot() and for VFs it's
+> > also not set via PCI_HEADER_TYPE_MFD. So we won't check for devfn =3D=
+=3D 9
+> > even though that could very well be there.
+> >=20
+> > Now for s390 this currently doesn't cause issues because for all
+> > multifunction devices we have, we either get a VF alone and then since
+> > commit 25f39d3dcb48 ("s390/pci: Ignore RID for isolated VFs") use devfn
+> > =3D=3D 0, or we have the parent PF passed-through and then VFs always g=
+et
+> > hot plugged after SR-IOV enable, which then uses
+> > pci_scan_single_device(). And for non VFs we always have devfn =3D=3D 0
+> > and/or devfn =3D=3D 1 and multifunction via the header. So in a sense t=
+he
+> > above commit works around the issue, though that wasn't its primary
+> > intention.
+> >=20
+> > Did either of you also run into this issue or can reproduce it?
+> >=20
+> > Somewhat related, if ARI is enabled this would also break the isolated
+> > function case including on s390 where ARI is used by the platform
+> > firmware, but detected as off by Linux because there is no struct
+> > pci_dev associated with the PCI bus. If I patch Linux to correctly
+> > detect ARI, it no longer finds an isolated PF with devfn =3D=3D 1.
+> LoongArch do have some problems after commit a02fd05661d7 ("PCI:
+> Extend isolated function probing to LoongArch"). Please see:
+> https://lore.kernel.org/linux-pci/20251014074100.2149737-1-chenhuacai@loo=
+ngson.cn/
+>=20
+> Now we don't know what happens exactly, so I haven't answered Bjorn's
+> question...
+>=20
+> Huacai
+>=20
 
-> From discussions with Ard it seems if the firmware had resized the BAR fi=
-rst,
-> and then assigned the resources, there would be no issue. However there
-> is no latter firmware for the platform.
->
-> While the PCI change has provoked this regression I suspect the amdgpu co=
-de
-> could handle the failure to resize the BAR better and if it can't get
-> what it wants just not initialise the driver.
+Interesting. I'm working on a patch that simplifies and hopefully fixes
+the isolated function probing by basically going back to basics and
+just trying every devfn 0-255. It would be interesting if that fixes
+your issue too. In the linked patch you said that the hole left by
+function 0 is not supposed to be probed, but with disabled isolated
+function probing you'd still try to scan function 0 so I can't see how
+that would explain your issues. On the other hand it doesn't sound like
+an exact match of what I saw. I'm still working on the cover letter and
+more testing including testing on x86, but if you're curious the
+current state is on my git.kernel.org account[0] in the
+b4/ari_no_bus_dev branch.
 
-Actually, looking again at the below, which follows the error about
-overlapping resource windows, it seems the PCI code is failing to roll
-back the changes, and it is not the driver at fault here.
+Thanks,
+Niklas
 
->   [   15.611321] pcieport 000d:00:01.0: PCI bridge to [bus 01-03]
->   [   15.616971] pcieport 000d:00:01.0:   bridge window [io  size 0x1000]
->   [   15.623315] pcieport 000d:00:01.0:   bridge window [mem 0x50000000-0=
-x502fffff]
->   [   15.630527] pcieport 000d:00:01.0:   bridge window [mem size 0x18000=
-000 64bit pref]
->   [   15.638174] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: can't claim; no compatible bridge window
->   [   15.650508] pcieport 000d:01:00.0: PCI bridge to [bus 02-03]
->   [   15.656164] pcieport 000d:01:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.663381] pcieport 000d:01:00.0:   bridge window [mem size 0x18000=
-000 64bit pref]
->   [   15.671036] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: can't claim; no compatible bridge window
->   [   15.683370] pcieport 000d:02:00.0: PCI bridge to [bus 03]
->   [   15.688764] pcieport 000d:02:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.695982] pcieport 000d:02:00.0:   bridge window [mem size 0x18000=
-000 64bit pref]
-
-On Wed, 22 Oct 2025 at 18:51, Alex Benn=C3=A9e <alex.bennee@linaro.org> wro=
-te:
->
->
-> Hi,
->
-> I've been tracking a regression on my Arm64 (Altra) AVA platform between
-> 6.14 and 6.15. It looks like the rework commit broke the ability of the
-> amdgpu driver to resize it's bar, resulting in an SError and failure to
-> boot:
->
->   [   15.348097] amdgpu 000d:03:00.0: amdgpu: detected ip block number 8 =
-<vcn_v4_0>
->   [   15.355901] amdgpu 000d:03:00.0: amdgpu: detected ip block number 9 =
-<jpeg_v4_0>
->   [   15.363202] amdgpu 000d:03:00.0: amdgpu: detected ip block number 10=
- <mes_v11_0>
->   [   15.384163] amdgpu 000d:03:00.0: amdgpu: Fetched VBIOS from ROM BAR
->   [   15.390434] amdgpu: ATOM BIOS: 113-4481LHS-UC1
->   [   15.400079] amdgpu 000d:03:00.0: amdgpu: CP RS64 enable
->   [   15.411830] amdgpu 000d:03:00.0: amdgpu: Trusted Memory Zone (TMZ) f=
-eature not supported
->   [   15.419932] amdgpu 000d:03:00.0: amdgpu: PCIE atomic ops is not supp=
-orted
->   [   15.426719] [drm] GPU posting now...
->   [   15.430329] [drm] vm size is 262144 GB, 4 levels, block size is 9-bi=
-t, fragment size is 9-bit
->   [   15.438871] amdgpu 000d:03:00.0: BAR 2 [mem 0x340010000000-0x3400101=
-fffff 64bit pref]: releasing
->   [   15.447648] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x34000ff=
-fffff 64bit pref]: releasing
->   [   15.456452] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.466095] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.475738] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.485386] pcieport 000d:00:01.0: bridge window [io  0x1000-0x0fff]=
- to [bus 01-03] add_size 1000
->   [   15.494252] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.503809] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-can't assign; no space
->   [   15.512063] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-failed to assign
->   [   15.519796] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-can't assign; no space
->   [   15.528049] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-failed to assign
->   [   15.535787] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.545349] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.554911] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x3401fff=
-fffff 64bit pref]: assigned
->   [   15.563612] amdgpu 000d:03:00.0: BAR 2 [mem 0x340200000000-0x3402001=
-fffff 64bit pref]: assigned
->   [   15.572313] pcieport 000d:00:01.0: PCI bridge to [bus 01-03]
->   [   15.577962] pcieport 000d:00:01.0:   bridge window [mem 0x50000000-0=
-x502fffff]
->   [   15.585175] pcieport 000d:00:01.0:   bridge window [mem 0x3400000000=
-00-0x3402ffffffff 64bit pref]
->   [   15.594038] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: can't claim; address conflict with PCI Bus 000=
-d:01 [mem 0x340000000000-0x3
->   40017ffffff 64bit pref]
->
-> Failure to claim space for the bridge window...
->
->   [   15.611321] pcieport 000d:00:01.0: PCI bridge to [bus 01-03]
->   [   15.616971] pcieport 000d:00:01.0:   bridge window [io  size 0x1000]
->   [   15.623315] pcieport 000d:00:01.0:   bridge window [mem 0x50000000-0=
-x502fffff]
->   [   15.630527] pcieport 000d:00:01.0:   bridge window [mem size 0x18000=
-000 64bit pref]
->   [   15.638174] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: can't claim; no compatible bridge window
->   [   15.650508] pcieport 000d:01:00.0: PCI bridge to [bus 02-03]
->   [   15.656164] pcieport 000d:01:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.663381] pcieport 000d:01:00.0:   bridge window [mem size 0x18000=
-000 64bit pref]
->   [   15.671036] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: can't claim; no compatible bridge window
->   [   15.683370] pcieport 000d:02:00.0: PCI bridge to [bus 03]
->   [   15.688764] pcieport 000d:02:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.695982] pcieport 000d:02:00.0:   bridge window [mem size 0x18000=
-000 64bit pref]
->   [   15.703643] [drm] Not enough PCI address space for a large BAR.
->
-> Realisation not enough space for the BAR
->
->   [   15.703648] amdgpu 000d:03:00.0: amdgpu: VRAM: 8176M 0x0000008000000=
-000 - 0x00000081FEFFFFFF (8176M used)
->   [   15.719119] amdgpu 000d:03:00.0: amdgpu: GART: 512M 0x00007FFF000000=
-00 - 0x00007FFF1FFFFFFF
->   [   15.727470] [drm] Detected VRAM RAM=3D8176M, BAR=3D256M
->   [   15.732339] [drm] RAM width 128bits GDDR6
->   [   15.736552] [drm] amdgpu: 8176M of VRAM memory ready
->   [   15.741516] [drm] amdgpu: 15888M of GTT memory ready.
->   [   15.746592] [drm] GART: num cpu pages 131072, num gpu pages 131072
->   [   15.752862] [drm] PCIE GART of 512M enabled (table at 0x000000800000=
-0000).
->   [   15.850408] [drm] Loading DMUB firmware via PSP: version=3D0x07002D0=
-0
->   [   16.128604] [drm] Found VCN firmware Version ENC: 1.23 DEC: 9 VEP: 0=
- Revision: 16
->   [   16.446347] SError Interrupt on CPU3, code 0x00000000be000411 -- SEr=
-ror
->   [   16.446354] CPU: 3 UID: 0 PID: 11 Comm: kworker/u128:0 Tainted: G   =
-  U             6.14.0-rc1-ajb-debian-bisect-00027-g2499f5348431-dirty #68
->   [   16.446359] Tainted: [U]=3DUSER
->   [   16.446360] Hardware name: ADLINK AVA Developer Platform/AVA Develop=
-er Platform, BIOS TianoCore 2.04.100.07 (SYS: 2.06.20220308) 09/08/2022
->   [   16.446362] Workqueue: efi_rts_wq efi_call_rts
->   [   16.446371] pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BT=
-YPE=3D--)
->   [   16.446374] pc : __wake_up_common_lock+0x40/0xc0
->   [   16.446379] lr : __wake_up+0x20/0x40
->   [   16.446382] sp : ffff800080aa3790
->   [   16.446383] x29: ffff800080aa3790 x28: ffff3e8780bcb780 x27: 0000000=
-0fa481000
->   [   16.446387] x26: ffff3e87a7e14b98 x25: ffffb6df6e1e2978 x24: ffffb6d=
-f6e351ed8
->   [   16.446390] x23: ffff3e87a7e10000 x22: 00000000000000c0 x21: 0000000=
-000000003
->   [   16.446392] x20: 0000000000000000 x19: ffff3e87a7e14b98 x18: 0000000=
-000000000
->   [   16.446395] x17: ffff3e878245d180 x16: ffffb6dfa26e0c28 x15: ffff3e8=
-7810bcbc0
->   [   16.446398] x14: 00000000fa481758 x13: 0000000000000000 x12: ffff800=
-080aa3dd7
->   [   16.446401] x11: 0000000000000040 x10: ffff3e87801ba830 x9 : ffffb6d=
-fa26e0c48
->   [   16.446403] x8 : ffff3e8786eb5268 x7 : 0000000000000000 x6 : 0000000=
-000000000
->   [   16.446406] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000=
-000000000
->   [   16.446408] x2 : 0000000000000000 x1 : 0000000000000003 x0 : 0000000=
-000000001
->   [   16.446412] Kernel panic - not syncing: Asynchronous SError Interrup=
-t
->
-> Boom - unrecoverable bus error triggered by the PCI access.
->
->   [   16.446414] CPU: 3 UID: 0 PID: 11 Comm: kworker/u128:0 Tainted: G   =
-  U             6.14.0-rc1-ajb-debian-bisect-00027-g2499f5348431-dirty #68
->   [   16.446417] Tainted: [U]=3DUSER
->   [   16.446418] Hardware name: ADLINK AVA Developer Platform/AVA Develop=
-er Platform, BIOS TianoCore 2.04.100.07 (SYS: 2.06.20220308) 09/08/2022
->   [   16.446419] Workqueue: efi_rts_wq efi_call_rts
->   [   16.446424] Call trace:
->   [   16.446425]  show_stack+0x34/0x98 (C)
->   [   16.446431]  dump_stack_lvl+0x60/0x80
->   [   16.446436]  dump_stack+0x18/0x24
->   [   16.446440]  panic+0x164/0x378
->   [   16.446443]  nmi_panic+0x90/0x98
->   [   16.446448]  arm64_serror_panic+0x6c/0x80
->   [   16.446452]  do_serror+0x30/0x78
->   [   16.446456]  el1h_64_error_handler+0x30/0x50
->   [   16.446462]  el1h_64_error+0x6c/0x70
->   [   16.446464]  __wake_up_common_lock+0x40/0xc0 (P)
->   [   16.446468]  __wake_up+0x20/0x40
->   [   16.446471]  amdgpu_ih_process+0x100/0x160 [amdgpu]
->   [   16.447083]  amdgpu_irq_handler+0x34/0xa0 [amdgpu]
->   [   16.447637]  __handle_irq_event_percpu+0x60/0x1d8
->   [   16.447642]  handle_irq_event+0x4c/0x110
->   [   16.447646]  handle_fasteoi_irq+0xb4/0x220
->   [   16.447649]  handle_irq_desc+0x3c/0x68
->   [   16.447652]  generic_handle_domain_irq+0x24/0x40
->   [   16.447656]  gic_handle_irq+0x54/0x124
->   [   16.447658]  do_interrupt_handler+0x58/0xa0
->   [   16.447661]  el1_interrupt+0x34/0x58
->   [   16.447665]  el1h_64_irq_handler+0x18/0x28
->   [   16.447669]  el1h_64_irq+0x6c/0x70
->   [   16.447672]  0xfad10918 (P)
->   [   16.447674]  0xfabe01c8
->   [   16.447676]  0xfabe02d4
->   [   16.447677]  0xfa3e209c
->   [   16.447679]  0xfa43ae7c
->   [   16.447680]  0xfa43b6bc
->   [   16.447681]  0xfa436e44
->   [   16.447683]  0xfa43c3f8
->   [   16.447684]  __efi_rt_asm_wrapper+0x50/0x78
->   [   16.447687]  efi_call_rts+0x1c8/0x280
->   [   16.447691]  process_one_work+0x178/0x3e0
->   [   16.447695]  worker_thread+0x204/0x3f0
->   [   16.447698]  kthread+0x10c/0x1f0
->   [   16.447703]  ret_from_fork+0x10/0x20
->   [   16.447705] SMP: stopping secondary CPUs
->   [   16.447796] Kernel Offset: 0x36df225a0000 from 0xffff800080000000
->   [   16.447798] PHYS_OFFSET: 0xffffc97880000000
->   [   16.447799] CPU features: 0x200,00002170,00901250,8241720b
->   [   16.447802] Memory Limit: none
->   [   16.471034] pstore: backend (efi_pstore) writing error (-16)
->   [   16.801136] ---[ end Kernel panic - not syncing: Asynchronous SError=
- Interrupt ]---
->
-> The bisection was slightly complicated by the fact I'm carrying some
-> additional patches to work around other PCIe issues which however work
-> find before the failing commit. For convenience I've pushed a branch with=
- the work
-> around applied here:
->
->   https://gitlab.com/stsquad/linux/-/commits/testing/pci-amdgpu-regressio=
-n-reference
->
-> Additional information
->
-> lspci -vv info for card
->
->   000d:03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [A=
-MD/ATI] Navi 33 [Radeon RX 7600/7600 XT/7600M XT/7600S/7700S / PRO W7600] (=
-rev cf) (prog-if 00 [VGA controller])
->           Subsystem: Sapphire Technology Limited Device e448
->           Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- Par=
-Err- Stepping- SERR- FastB2B- DisINTx+
->           Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort=
-- <TAbort- <MAbort- >SERR- <PERR- INTx-
->           Latency: 0
->           Interrupt: pin A routed to IRQ 151
->           NUMA node: 0
->           IOMMU group: 21
->           Region 0: Memory at 340000000000 (64-bit, prefetchable) [size=
-=3D8G]
->           Region 2: Memory at 340200000000 (64-bit, prefetchable) [size=
-=3D2M]
->           Region 5: Memory at 50000000 (32-bit, non-prefetchable) [size=
-=3D1M]
->           Expansion ROM at 50100000 [disabled] [size=3D128K]
->           Capabilities: [48] Vendor Specific Information: Len=3D08 <?>
->           Capabilities: [50] Power Management version 3
->                   Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0-,D1=
-+,D2+,D3hot+,D3cold+)
->                   Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 P=
-ME-
->           Capabilities: [64] Express (v2) Legacy Endpoint, IntMsgNum 0
->                   DevCap:       MaxPayload 256 bytes, PhantFunc 0, Latenc=
-y L0s <4us, L1 unlimited
->                           ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset-=
- TEE-IO-
->                   DevCtl:       CorrErr- NonFatalErr- FatalErr- UnsupReq-
->                           RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
->                           MaxPayload 128 bytes, MaxReadReq 512 bytes
->                   DevSta:       CorrErr+ NonFatalErr- FatalErr- UnsupReq+=
- AuxPwr- TransPend-
->                   LnkCap:       Port #0, Speed 16GT/s, Width x8, ASPM L1,=
- Exit Latency L1 <1us
->                           ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp=
-+
->                   LnkCtl:       ASPM Disabled; RCB 64 bytes, LnkDisable- =
-CommClk-
->                           ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                   LnkSta:       Speed 16GT/s, Width x8
->                           TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgm=
-t-
->                   DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NR=
-OPrPrP- LTR+
->                            10BitTagComp+ 10BitTagReq+ OBFF Not Supported,=
- ExtFmt+ EETLPPrefix+, MaxEETLPPrefixes 1
->                            EmergencyPowerReduction Form Factor Dev Specif=
-ic, EmergencyPowerReductionInit-
->                            FRS-
->                            AtomicOpsCap: 32bit+ 64bit+ 128bitCAS-
->                   DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
->                            AtomicOpsCtl: ReqEn-
->                            IDOReq- IDOCompl- LTR- EmergencyPowerReduction=
-Req-
->                            10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
->                   LnkCap2: Supported Link Speeds: 2.5-16GT/s, Crosslink- =
-Retimer+ 2Retimers+ DRS-
->                   LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- Sp=
-eedDis-
->                            Transmit Margin: Normal Operating Range, Enter=
-ModifiedCompliance- ComplianceSOS-
->                            Compliance Preset/De-emphasis: -6dB de-emphasi=
-s, 0dB preshoot
->                   LnkSta2: Current De-emphasis Level: -3.5dB, Equalizatio=
-nComplete+ EqualizationPhase1+
->                            EqualizationPhase2+ EqualizationPhase3+ LinkEq=
-ualizationRequest-
->                            Retimer- 2Retimers- CrosslinkRes: unsupported
->           Capabilities: [a0] MSI: Enable+ Count=3D1/1 Maskable- 64bit+
->                   Address: 00000000ffb77040  Data: 0000
->           Capabilities: [100 v1] Vendor Specific Information: ID=3D0001 R=
-ev=3D1 Len=3D010 <?>
->           Capabilities: [150 v2] Advanced Error Reporting
->                   UESta:        DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- =
-UnxCmplt- RxOF- MalfTLP-
->                           ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedT=
-LP- AtomicOpBlocked- TLPBlockedErr-
->                           PoisonTLPBlocked- DMWrReqBlocked- IDECheck- Mis=
-IDETLP- PCRC_CHECK- TLPXlatBlocked-
->                   UEMsk:        DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- =
-UnxCmplt- RxOF- MalfTLP-
->                           ECRC- UnsupReq- ACSViol- UncorrIntErr- BlockedT=
-LP- AtomicOpBlocked- TLPBlockedErr-
->                           PoisonTLPBlocked- DMWrReqBlocked- IDECheck- Mis=
-IDETLP- PCRC_CHECK- TLPXlatBlocked-
->                   UESvrt:       DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- =
-UnxCmplt- RxOF+ MalfTLP+
->                           ECRC- UnsupReq- ACSViol- UncorrIntErr+ BlockedT=
-LP- AtomicOpBlocked- TLPBlockedErr-
->                           PoisonTLPBlocked- DMWrReqBlocked- IDECheck- Mis=
-IDETLP- PCRC_CHECK- TLPXlatBlocked-
->                   CESta:        RxErr- BadTLP- BadDLLP- Rollover- Timeout=
-- AdvNonFatalErr+ CorrIntErr- HeaderOF-
->                   CEMsk:        RxErr- BadTLP- BadDLLP- Rollover- Timeout=
-- AdvNonFatalErr+ CorrIntErr- HeaderOF-
->                   AERCap:       First Error Pointer: 00, ECRCGenCap+ ECRC=
-GenEn- ECRCChkCap+ ECRCChkEn-
->                           MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLog=
-Cap-
->                   HeaderLog: 00000000 00000000 00000000 00000000
->           Capabilities: [200 v1] Physical Resizable BAR
->                   BAR 0: current size: 8GB, supported: 256MB 512MB 1GB 2G=
-B 4GB 8GB
->                   BAR 2: current size: 2MB, supported: 2MB 4MB 8MB 16MB 3=
-2MB 64MB 128MB 256MB
->           Capabilities: [240 v1] Power Budgeting <?>
->           Capabilities: [270 v1] Secondary PCI Express
->                   LnkCtl3: LnkEquIntrruptEn- PerformEqu-
->                   LaneErrStat: 0
->           Capabilities: [2a0 v1] Access Control Services
->                   ACSCap:       SrcValid- TransBlk- ReqRedir- CmpltRedir-=
- UpstreamFwd- EgressCtrl- DirectTrans-
->                   ACSCtl:       SrcValid- TransBlk- ReqRedir- CmpltRedir-=
- UpstreamFwd- EgressCtrl- DirectTrans-
->           Capabilities: [2d0 v1] Process Address Space ID (PASID)
->                   PASIDCap: Exec+ Priv+, Max PASID Width: 10
->                   PASIDCtl: Enable+ Exec+ Priv+
->           Capabilities: [320 v1] Latency Tolerance Reporting
->                   Max snoop latency: 0ns
->                   Max no snoop latency: 0ns
->           Capabilities: [410 v1] Physical Layer 16.0 GT/s <?>
->           Capabilities: [450 v1] Lane Margining at the Receiver
->                   PortCap: Uses Driver-
->                   PortSta: MargReady+ MargSoftReady-
->           Kernel driver in use: amdgpu
->           Kernel modules: amdgpu
->
-> iomem layout from a working bootup (e89df6d2beae):
->
->   08000000-0fffffff : PCI Bus 0002:00
->     08000000-081fffff : PCI Bus 0002:01
->     08200000-083fffff : PCI Bus 0002:02
->   20000000-2fffffff : PCI Bus 0004:00
->     20000000-217fffff : PCI Bus 0004:01
->       20000000-217fffff : PCI Bus 0004:02
->         20000000-20ffffff : 0004:02:00.0
->           20000000-202fffff : efifb
->         21000000-2101ffff : 0004:02:00.0
->     21800000-219fffff : PCI Bus 0004:03
->       21800000-21801fff : 0004:03:00.0
->         21800000-21801fff : xhci-hcd
->     21a00000-21bfffff : PCI Bus 0004:04
->       21a00000-21a7ffff : 0004:04:00.0
->         21a00000-21a7ffff : igb
->       21a80000-21a83fff : 0004:04:00.0
->         21a80000-21a83fff : igb
->     21c00000-21dfffff : PCI Bus 0004:05
->   30000000-3fffffff : PCI Bus 0005:00
->     30000000-301fffff : PCI Bus 0005:01
->     30200000-303fffff : PCI Bus 0005:02
->     30400000-305fffff : PCI Bus 0005:03
->       30400000-30403fff : 0005:03:00.0
->         30400000-30403fff : nvme
->     30600000-307fffff : PCI Bus 0005:04
->       30600000-30603fff : 0005:04:00.0
->         30600000-30603fff : nvme
->   40000000-4fffffff : PCI Bus 000c:00
->     40000000-401fffff : PCI Bus 000c:01
->   50000000-5fffffff : PCI Bus 000d:00
->     50000000-502fffff : PCI Bus 000d:01
->       50000000-501fffff : PCI Bus 000d:02
->         50000000-501fffff : PCI Bus 000d:03
->           50000000-500fffff : 000d:03:00.0
->           50100000-5011ffff : 000d:03:00.0
->           50120000-50123fff : 000d:03:00.1
->             50120000-50123fff : ICH HD audio
->       50200000-50203fff : 000d:01:00.0
->   70000000-7fffffff : PCI Bus 0000:00
->     70000000-701fffff : PCI Bus 0000:01
->   88300000-883fffff : reserved
->   88500000-885fffff : IFX0785:00
->     88500000-885fffff : IFX0785:00
->   88900000-8891ffff : AMPC0005:00
->   90000000-91ffffff : System RAM
->   92000000-927bffff : reserved
->   927c0000-f896ffff : System RAM
->     d54f0000-d6adffff : Kernel code
->     d6ae0000-d6daffff : reserved
->     d6db0000-d717ffff : Kernel data
->     ef650000-f3650fff : reserved
->     f3850000-f49a2fff : reserved
->     f88b0000-f88bffff : reserved
->   f8970000-f898ffff : reserved
->   f8990000-f899ffff : System RAM
->   f89a0000-f89fffff : reserved
->   f8a00000-f9196fff : System RAM
->     f8a00000-f8a00fff : reserved
->     f8a02000-f8a02fff : reserved
->   f9197000-f91ecfff : reserved
->   f91ed000-f94cffff : System RAM
->     f91fb000-f91fbfff : reserved
->   f94d0000-f950ffff : reserved
->   f9510000-f98bffff : System RAM
->   f98c0000-f98fffff : reserved
->   f9900000-f999ffff : System RAM
->   f99a0000-f99dffff : reserved
->   f99e0000-f9f4ffff : System RAM
->     f9ef0000-f9f1ffff : reserved
->   f9f50000-f9f6ffff : reserved
->   f9f70000-fa0affff : System RAM
->   fa0b0000-fa0effff : reserved
->   fa0f0000-fa1cffff : System RAM
->   fa1d0000-fa26ffff : reserved
->   fa270000-fa33ffff : System RAM
->   fa340000-fa4affff : reserved
->   fa4b0000-fa4bffff : System RAM
->   fa4c0000-fa57ffff : reserved
->   fa580000-fa72ffff : System RAM
->   fa730000-fa7cffff : reserved
->   fa7d0000-faa4ffff : System RAM
->   faa50000-faaeffff : reserved
->   faaf0000-fab7ffff : System RAM
->   fab80000-fac1ffff : reserved
->   fac20000-facaffff : System RAM
->   facb0000-fad4ffff : reserved
->   fad50000-fae1ffff : System RAM
->   fae20000-faebffff : reserved
->   faec0000-faf4ffff : System RAM
->   faf50000-fafeffff : reserved
->   faff0000-ffefffff : System RAM
->     fbe00000-ffdfffff : reserved
->   fff00000-fff4ffff : reserved
->   fff50000-fffaffff : System RAM
->   fffb0000-fffdffff : reserved
->     fffc0000-fffc0fff : reserved
->   fffe0000-ffffffff : System RAM
->     fffe0000-fffeffff : reserved
->   80000000000-8007fffffff : System RAM
->     800002bc000-800002bcfff : reserved
->     80000840000-8000084ffff : reserved
->     80000850000-8000085ffff : reserved
->     80000860000-8000086ffff : reserved
->     80000870000-8000087ffff : reserved
->     80000880000-8000088ffff : reserved
->     80000890000-8000089ffff : reserved
->     800008a0000-800008affff : reserved
->     800008b0000-800008bffff : reserved
->     800008c0000-800008cffff : reserved
->     800008d0000-800008dffff : reserved
->     800008e0000-800008effff : reserved
->     800008f0000-800008fffff : reserved
->     80000900000-8000090ffff : reserved
->     80000910000-8000091ffff : reserved
->     80000920000-8000092ffff : reserved
->     80000930000-8000093ffff : reserved
->     80000940000-8000094ffff : reserved
->     80000950000-8000095ffff : reserved
->     80000960000-8000096ffff : reserved
->     80000970000-8000097ffff : reserved
->     80000980000-8000098ffff : reserved
->     80000990000-8000099ffff : reserved
->     800009a0000-800009affff : reserved
->     800009b0000-800009bffff : reserved
->     800009c0000-800009cffff : reserved
->     800009d0000-800009dffff : reserved
->     800009e0000-800009effff : reserved
->     800009f0000-800009fffff : reserved
->     80000a00000-80000a0ffff : reserved
->     80000a10000-80000a1ffff : reserved
->     80000a20000-80000a2ffff : reserved
->     80000a30000-80000a3ffff : reserved
->     80000a40000-80000a4ffff : reserved
->   80100000000-807ffffffff : System RAM
->     807d8c10000-807fbffffff : reserved
->     807fc009000-807fc039fff : reserved
->     807fc03c000-807fc03ffff : reserved
->     807fc040000-807fc040fff : reserved
->     807fc041000-807fc044fff : reserved
->     807fc045000-807fc06afff : reserved
->     807fc06b000-807ffffffff : reserved
->   100002600000-100002600fff : ARMH0011:00
->     100002600000-100002600fff : ARMH0011:00 ARMH0011:00
->   100002620000-100002620fff : ARMH0011:01
->     100002620000-100002620fff : ARMH0011:01 ARMH0011:01
->   1000026c0000-1000026cffff : APMC0D0F:00
->     1000026c0000-1000026cffff : APMC0D0F:00 APMC0D0F:00
->   1000026d0000-1000026dffff : APMC0D07:02
->   1000026f0000-1000026fffff : APMC0D07:00
->   100002730000-100002730fff : arch_mem_timer
->   100002750000-10000275ffff : APMC0D0F:01
->     100002750000-10000275ffff : APMC0D0F:01 APMC0D0F:01
->   100002780000-10000278ffff : APMC0D0F:02
->     100002780000-10000278ffff : APMC0D0F:02 APMC0D0F:02
->   1000027b0000-1000027bffff : APMC0D07:01
->   1000027c0000-1000027c0fff : sbsa-gwdt.0
->     1000027c0000-1000027c0fff : sbsa-gwdt.0 sbsa-gwdt.0
->   1000027d0000-1000027d0fff : sbsa-gwdt.0
->     1000027d0000-1000027d0fff : sbsa-gwdt.0 sbsa-gwdt.0
->   100010000000-10001fffffff : ARMHC600:00
->     100012500000-1000164fffff : ARMHC600:00
->   10008c000a00-10008c000bff : ARMHD620:00
->   10008d000a00-10008d000bff : ARMHD620:04
->   100100000000-10010000ffff : GICD
->   100100140000-10010113ffff : GICR
->   200000000000-23ffdfffffff : PCI Bus 0002:00
->     200000000000-2000001fffff : PCI Bus 0002:01
->     200000200000-2000003fffff : PCI Bus 0002:02
->   23ffe0000000-23ffe001ffff : arm-smmu-v3.3.auto
->     23ffe0000000-23ffe0000dff : arm-smmu-v3.3.auto
->     23ffe0010000-23ffe0010dff : arm-smmu-v3.3.auto
->   23fff0000000-23ffffffffff : PCI ECAM
->   27fff0000000-27ffffffffff : pnp 00:00
->   280000000000-2bffdfffffff : PCI Bus 0004:00
->     280000000000-2800001fffff : PCI Bus 0004:01
->     280000200000-2800003fffff : PCI Bus 0004:03
->     280000400000-2800005fffff : PCI Bus 0004:04
->     280000600000-2800007fffff : PCI Bus 0004:05
->   2bffe0000000-2bffe001ffff : arm-smmu-v3.4.auto
->     2bffe0000000-2bffe0000dff : arm-smmu-v3.4.auto
->     2bffe0010000-2bffe0010dff : arm-smmu-v3.4.auto
->   2bfff0000000-2bffffffffff : PCI ECAM
->   2c0000000000-2fffdfffffff : PCI Bus 0005:00
->     2c0000000000-2c00001fffff : PCI Bus 0005:01
->     2c0000200000-2c00003fffff : PCI Bus 0005:02
->     2c0000400000-2c00005fffff : PCI Bus 0005:03
->     2c0000600000-2c00007fffff : PCI Bus 0005:04
->   2fffe0000000-2fffe001ffff : arm-smmu-v3.5.auto
->     2fffe0000000-2fffe0000dff : arm-smmu-v3.5.auto
->     2fffe0010000-2fffe0010dff : arm-smmu-v3.5.auto
->   2ffff0000000-2fffffffffff : PCI ECAM
->   300000000000-33ffdfffffff : PCI Bus 000c:00
->     300000000000-3000001fffff : PCI Bus 000c:01
->   33ffe0000000-33ffe001ffff : arm-smmu-v3.0.auto
->     33ffe0000000-33ffe0000dff : arm-smmu-v3.0.auto
->     33ffe0010000-33ffe0010dff : arm-smmu-v3.0.auto
->   33fff0000000-33ffffffffff : PCI ECAM
->   340000000000-37ffdfffffff : PCI Bus 000d:00
->     340000000000-3402ffffffff : PCI Bus 000d:01
->       340000000000-3402ffffffff : PCI Bus 000d:02
->         340000000000-3402ffffffff : PCI Bus 000d:03
->           340000000000-3401ffffffff : 000d:03:00.0
->           340200000000-3402001fffff : 000d:03:00.0
->   37ffe0000000-37ffe001ffff : arm-smmu-v3.1.auto
->     37ffe0000000-37ffe0000dff : arm-smmu-v3.1.auto
->     37ffe0010000-37ffe0010dff : arm-smmu-v3.1.auto
->   37fff0000000-37ffffffffff : PCI ECAM
->   3bfff0000000-3bffffffffff : pnp 00:00
->   3c0000000000-3fffdfffffff : PCI Bus 0000:00
->     3c0000000000-3c00001fffff : PCI Bus 0000:01
->   3fffe0000000-3fffe001ffff : arm-smmu-v3.2.auto
->     3fffe0000000-3fffe0000dff : arm-smmu-v3.2.auto
->     3fffe0010000-3fffe0010dff : arm-smmu-v3.2.auto
->   3ffff0000000-3fffffffffff : PCI ECAM
->   63fff0000000-63ffffffffff : pnp 00:00
->   67fff0000000-67ffffffffff : pnp 00:00
->   6bfff0000000-6bffffffffff : pnp 00:00
->   6ffff0000000-6fffffffffff : pnp 00:00
->   7bfff0000000-7bffffffffff : pnp 00:00
->   7ffff0000000-7fffffffffff : pnp 00:00
->
-> working dmesg from same:
->
->   [   15.500492] [drm] GPU posting now...
->   [   15.504110] [drm] vm size is 262144 GB, 4 levels, block size is 9-bi=
-t, fragment size is 9-bit
->   [   15.512654] amdgpu 000d:03:00.0: BAR 2 [mem 0x340010000000-0x3400101=
-fffff 64bit pref]: releasing
->   [   15.521431] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x34000ff=
-fffff 64bit pref]: releasing
->   [   15.530230] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.539881] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.549528] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
--0x340017ffffff 64bit pref]: releasing
->   [   15.549535] pcieport 000d:00:01.0: bridge window [io  0x1000-0x0fff]=
- to [bus 01-03] add_size 1000
->   [   15.549544] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.549546] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-can't assign; no space
->   [   15.549549] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-failed to assign
->   [   15.596468] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-can't assign; no space
->   [   15.607594] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-failed to assign
->   [   15.618090] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
-ignoring failure in optional allocation
->   [   15.618095] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.628249] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
--0x3402ffffffff 64bit pref]: assigned
->   [   15.637806] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x3401fff=
-fffff 64bit pref]: assigned
->   [   15.646506] amdgpu 000d:03:00.0: BAR 2 [mem 0x340200000000-0x3402001=
-fffff 64bit pref]: assigned
->   [   15.655205] pcieport 000d:00:01.0: PCI bridge to [bus 01-03]
->   [   15.660856] pcieport 000d:00:01.0:   bridge window [mem 0x50000000-0=
-x502fffff]
->   [   15.668069] pcieport 000d:00:01.0:   bridge window [mem 0x3400000000=
-00-0x3402ffffffff 64bit pref]
->   [   15.676931] pcieport 000d:01:00.0: PCI bridge to [bus 02-03]
->   [   15.682586] pcieport 000d:01:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.689804] pcieport 000d:01:00.0:   bridge window [mem 0x3400000000=
-00-0x3402ffffffff 64bit pref]
->   [   15.698672] pcieport 000d:02:00.0: PCI bridge to [bus 03]
->   [   15.704067] pcieport 000d:02:00.0:   bridge window [mem 0x50000000-0=
-x501fffff]
->   [   15.711285] pcieport 000d:02:00.0:   bridge window [mem 0x3400000000=
-00-0x3402ffffffff 64bit pref]
->   [   15.720157] amdgpu 000d:03:00.0: amdgpu: VRAM: 8176M 0x0000008000000=
-000 - 0x00000081FEFFFFFF (8176M used)
->   [   15.729714] amdgpu 000d:03:00.0: amdgpu: GART: 512M 0x00007FFF000000=
-00 - 0x00007FFF1FFFFFFF
->   [   15.738064] [drm] Detected VRAM RAM=3D8176M, BAR=3D8192M
->   [   15.743019] [drm] RAM width 128bits GDDR6
->   [   15.747258] [drm] amdgpu: 8176M of VRAM memory ready
->   [   15.752219] [drm] amdgpu: 15888M of GTT memory ready.
->   [   15.757297] [drm] GART: num cpu pages 131072, num gpu pages 131072
->   [   15.763558] [drm] PCIE GART of 512M enabled (table at 0x00000081FEB0=
-0000).
->   [   15.884845] [drm] Loading DMUB firmware via PSP: version=3D0x07002D0=
-0
->   [   16.129125] [drm] Found VCN firmware Version ENC: 1.23 DEC: 9 VEP: 0=
- Revision: 16
->
-> From discussions with Ard it seems if the firmware had resized the BAR fi=
-rst,
-> and then assigned the resources, there would be no issue. However there
-> is no latter firmware for the platform.
->
-> While the PCI change has provoked this regression I suspect the amdgpu co=
-de
-> could handle the failure to resize the BAR better and if it can't get
-> what it wants just not initialise the driver. I did hit some cases while
-> bisecting where the GPU just wasn't visible.
->
-> I'm available to test patches and generate additional debug info so do
-> let me know if there is anything I can do to help.
->
-> Thanks,
->
-> --
-> Alex Benn=C3=A9e
-> Virtualisation Tech Lead @ Linaro
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=3Db4/=
+ari_no_bus_dev
 
