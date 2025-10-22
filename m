@@ -1,138 +1,142 @@
-Return-Path: <linux-pci+bounces-38962-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38963-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F95BFA813
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:20:13 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE14BFA88E
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADB70188EDAB
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:20:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6A9E34E1BC2
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3392F5A27;
-	Wed, 22 Oct 2025 07:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3250E2F6581;
+	Wed, 22 Oct 2025 07:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b="WS0HFeV7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA082ED84A
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761117610; cv=none; b=Wed+0c9Z9bGVnwS9N+CrsDHjaYjoVXanMIq0hCX02Fg0gT691bENqGPWzM2MbmddOT/ZPSHnhj8otUrn0gfSCKEtTfWTnT1EjIWe3n6Yw2OBL2s7gy+F4OM7ZrX3VeN6Z8JiADmu5ncyXrcIhoNPKgym7Ug7vU//Uzi+Z5fqt8A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761117610; c=relaxed/simple;
-	bh=oj2g+iXtUrFUuNWS7IxNGMMhQzbaj0lpzDuF73afwdk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cLBQe/kycZg5FqYyaPTQHXZ0b7tEkSNlkIXZ3N3zZPEGOajTZcYCakKnom3cLKzYd5Gam16aChW4/gyOoFhhhIvBbC0npNuH3logHjqvR9gj/9+4lxIPb1F7Bmd7r5klIXV5UjNH4CF2bX+2B9hUsPG3mnxNKq6PHoYO/msctkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5d6266f1a33so2900933137.3
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:20:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761117607; x=1761722407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LB4UmnebrIV6VHjidh9rexno3FG0/9sLJFVzFv+0Cqk=;
-        b=w7hYy5UwoAtk1F86oAERzQ0ApdYL/46K1IUvPW4RIJDSsqiSl1Y+BwNMdpbprROkhy
-         qNvgj39evmW8hb0BkWAC3iydZ14U2YCr5e/U633/pK+PInTdt3QNc3zTwrlRO4PTO2DE
-         Ktw8VlU5kfWk1wZQxvriGncldl4sCo8mNYlHL+BOfPmRFe0L1dgRpAZR0BEK4J8iBi9b
-         61PkogwyRU5LhZE1+g1U6QJqL33NOX8wQ/Y23cTH33jg7BAhfCgIj6w8walyN77HqE0z
-         qDikXbPHFrfZSmttDYpf5AycUOF3kCFV9RPwKkH3bH5ekjlB6ZtJMGKJsVoDlfoFp9CN
-         jY9g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8yRTTWbrdV8ScV+pKrX+vITB8Y85F6eCQgjWqv+QATjRs5dTgwcD6OBcQtG39X8HYpIKgmpj00Y0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCv8GD/YsD8hmfys9BX3jynnDbjqOwnGmKzLabZ7jAQi4ze4BK
-	ktzh8fE1UtPsYb8mFz6j1uOpZiUiN8BGW7K+cPG3Yw331L26RRDB8R71QQBcVs28
-X-Gm-Gg: ASbGnctPsNQlktZ2BBc20s4KrZ9X9vmJCmC5FvchzsQ4TJqa10Pk6L5IR3/Lm34m5nh
-	/WSo6Fs/4j6uMTJT8oyZDaUS53DYRFSOVgUkSHMY/mbfrrc58400bGjmi/WFsuBdyXjFFsGT3ZQ
-	oXfHoEXAnT2WTUyyKYYpwxdmFRNIu57n3j6lRF8b+4FHvSfciAAm8fm8DPz+Fu2mWrvtrX9jCl9
-	I9BbELL4/wIvf5Y1PscgL1cewI6Jsg+PoTNea5i4fOSmPgszb1Qaw/spWzX+j4/ho6RgXwKUMqG
-	kWrYRipuzV8X03fl70Ak/wrOIKFHMp/pDWikq3NErkwUNWA0NSfVPsXKuBYYIlWxC33ZAumRwSy
-	SWnkf1DdFv2ray8+oIAjwAlQNBfydsLqLBBNwkYA1pVjFOQyo9KLyIXCzYjDD+UXQ402osLVPP9
-	m44aqwTQhT5m76hbiZLxyi4iT9sycsEu4yydj7EA==
-X-Google-Smtp-Source: AGHT+IEn4+bqQJRI/3kkaDWa6bfuTKYoHMTOL2sR7P8ZZB9GSP/A0w93qNgzcuONcrMgZJ2wbNG5Rw==
-X-Received: by 2002:a05:6102:291e:b0:5d6:6ce:9675 with SMTP id ada2fe7eead31-5d7dd6bb0d8mr5272548137.40.1761117606191;
-        Wed, 22 Oct 2025 00:20:06 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-932c3e4794fsm4223743241.14.2025.10.22.00.20.05
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 00:20:06 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-90f6d66e96dso1674475241.0
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:20:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvSXE0NxFCA3TDxX20sXnbpwTXEHSL6jpwuzQVBtBqck5PIz8ypHxmrBOP7J0UeSBgGuvYO3KPBbU=@vger.kernel.org
-X-Received: by 2002:a05:6102:419f:b0:5d5:ff0f:aea1 with SMTP id
- ada2fe7eead31-5d7dd634d15mr5387817137.22.1761117605738; Wed, 22 Oct 2025
- 00:20:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D5B2F5499;
+	Wed, 22 Oct 2025 07:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761118030; cv=pass; b=Ztr11Da0sB4r2mwx5E9OFiXytwRXcZDRHQNWdzBy70xT596I92TSJVFjB6rnpD0s/79ePk1UioDMyFZdCjf7TgOJuHx5701VIvCKW3zsJj5YaKi412x1AdPzpjI8c6n1B8RjNfMbwgRi89hBpn83VRRTpL1J745B7YxiBPcrr/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761118030; c=relaxed/simple;
+	bh=NDxYGC5XxpUY1aK/+Eotq3Iw1MRu+0HKGlYJLjiIChc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cWZMw29TxHgB2xyAlfrVrgt8ii7Y8rAR2nJOWFSDOC/BPifdHtvlHsIV/RW0BU1iq6kkiMCLsXp7Ezn2n8BbSu3FRTnA5i/OsgBNJ5Hquled9ugXszt2w2UeCTJHhcLlz9jz4bL+T8WaZZ7Q/bEqbYoKhRQ1/z9EfvE2NLviM8k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b=WS0HFeV7; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761117986; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GWdWVJIci83v/eS69HecZIVsU2dKjax3EaKZENbtz8G9fVU3kFO9nY0W8fbL857a5mW3ciUZqRmPGiAn2qFYSRfUsXikN42get9YJK0XRoxavO8HtvhmmTrh6sXVgQ091coljHNh/p5NRqUQXn8vNn0LieCpkgF8NE75OevzYL8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761117986; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Ne+Pmve/YJpQYWLxsEpgG2oak24NJMv5+UeWTnSp+5I=; 
+	b=ZFwP3ceil6N4YJkKFYDLfc3uNtz7sFBZZs9URI8eHspzPQ9RO5mfmYIwTuRp/Pt0BgCsLXgGGmuDL0oIbK3wlG8wJHJesye68F3WBpKfNl3nVdW2Waqixq2ZVPbPC8gOtczfnFApIzT0yRx1/5t9XZJUMQlDgLGmCtf2orhIpWw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sjoerd@collabora.com;
+	dmarc=pass header.from=<sjoerd@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761117986;
+	s=zohomail; d=collabora.com; i=sjoerd@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=Ne+Pmve/YJpQYWLxsEpgG2oak24NJMv5+UeWTnSp+5I=;
+	b=WS0HFeV7KBFtIbds/DTNEOfzlWHiuEhf7zgrHzyBNXymtekgif2dvr8//CXl1Eja
+	5o0inS7TmzZMLQ8iQ3Ei7kl5nEinVZYEVFx7L46Nzx0eWtQ5TQX0iSAx2IQCmJK8X72
+	FD3DTFDuVjIDxFN5LhSIHklpFieoF/gr9TrumGso=
+Received: by mx.zohomail.com with SMTPS id 1761117982200158.6072297880238;
+	Wed, 22 Oct 2025 00:26:22 -0700 (PDT)
+Message-ID: <79d4a7379bce245d22b56c677fd7b3a263836239.camel@collabora.com>
+Subject: Re: [PATCH 15/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ leds
+From: Sjoerd Simons <sjoerd@collabora.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno	
+ <angelogioacchino.delregno@collabora.com>, Ryder Lee
+ <ryder.lee@mediatek.com>,  Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi	 <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	 <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Chunfeng Yun	 <chunfeng.yun@mediatek.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,  "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lorenzo
+ Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, 
+	kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, 	linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,  Daniel Golle
+ <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>
+Date: Wed, 22 Oct 2025 09:26:11 +0200
+In-Reply-To: <d8077ee4-21c2-43c5-b130-7ff270b09791@lunn.ch>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+	 <20251016-openwrt-one-network-v1-15-de259719b6f2@collabora.com>
+	 <d8077ee4-21c2-43c5-b130-7ff270b09791@lunn.ch>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com>
- <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com>
- <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com> <CAMuHMdUbseFEY8AGOxm2T8W-64qT9OSvfmvu+hyTJUT+WE2cVw@mail.gmail.com>
- <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com> <aPerdPErjXANiBOl@smile.fi.intel.com>
-In-Reply-To: <aPerdPErjXANiBOl@smile.fi.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Oct 2025 09:19:54 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWjty_fzRp9r8bet7G_YTwAvGRdW73-uxn7Dp8WsFmEEQ@mail.gmail.com>
-X-Gm-Features: AS18NWBTgmWnrLRZQpcXx7nybYEdoprYZTPpfACzWUOBzMWL72E1MPEt5nuaQyU
-Message-ID: <CAMuHMdWjty_fzRp9r8bet7G_YTwAvGRdW73-uxn7Dp8WsFmEEQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows safer
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Kai-Heng Feng <kaihengf@nvidia.com>, Rob Herring <robh@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-Hi Andy,
+Hey,
 
-On Tue, 21 Oct 2025 at 17:49, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Tue, Oct 21, 2025 at 02:54:03PM +0300, Ilpo J=C3=A4rvinen wrote:
-> > The expected result is that those usb resources are properly parented a=
-nd
-> > the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together =
-(as
-> > that would destroy information). So something along the lines of:
-> >
-> >     ee080000-ee08ffff : pci@ee090000
->
-> For my pedantic eye, the naming is a bit confusing here. Is this a mistak=
-e in
-> the code or in the example?
->
-> >       ee080000-ee080fff : 0000:00:01.0
-> >         ee080000-ee080fff : ohci_hcd
-> >       ee081000-ee0810ff : 0000:00:02.0
-> >         ee081000-ee0810ff : ehci_hcd
-> >     ee090000-ee090bff : ee090000.pci pci@ee090000
+On Fri, 2025-10-17 at 19:35 +0200, Andrew Lunn wrote:
+> On Thu, Oct 16, 2025 at 12:08:51PM +0200, Sjoerd Simons wrote:
+> > The Openwrt One has 3 status leds at the front (red, white, green) as
+> > well as 2 software controlled leds for the LAN jack (amber, green).
+>=20
+> A previous patch in this series added 2 PHY LEDs. Are they connected
+> to a LAN jack? Are there multiple RJ45 connectors? Is it clear from
+> /sys/class/leds what LED is what?
 
-A platform device instantiated from DT is named after the node name
-and unit address of the corresponding DT node.  If the device has
-multiple register banks, all its register banks are still claimed by
-the same device, so all but the first (in DT) register bank show a
-non-matching address in the device name.
+Yeah there are two RJ45 jacks. One referred to as WAN in the openwrt one
+documentation (2.5G), which uses phy integrated leds. One referred to as LA=
+N,
+which for some reason is using software controlled leds rather then the phy=
+'s
+led controller, which this patch adds support for.
 
-Gr{oetje,eeting}s,
+When applying this set you'll get:
+```
+root@openwrt-debian:/sys/class/leds# ls -1                                 =
+   =20
+amber:lan                                                                  =
+   =20
+green:lan                                                                  =
+   =20
+green:status                                                               =
+   =20
+mdio-bus:0f:amber:wan                                                      =
+   =20
+mdio-bus:0f:green:wan                                                      =
+   =20
+mt76-phy0                                                                  =
+   =20
+mt76-phy1                                                                  =
+   =20
+red:status                                                                 =
+   =20
+white:status                      =20
+```
 
-                        Geert
+Which is hopefully clear enough
+
+
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Sjoerd Simons <sjoerd@collabora.com>
+Collabora
 
