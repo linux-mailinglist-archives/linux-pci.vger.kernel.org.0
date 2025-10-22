@@ -1,157 +1,204 @@
-Return-Path: <linux-pci+bounces-38951-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38952-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0BB5BF9310
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 01:16:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFFCABF99F3
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 03:37:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AC8924E98EA
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Oct 2025 23:16:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7C2919C7A15
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 01:37:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0A0D299AAB;
-	Tue, 21 Oct 2025 23:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft4MRMs1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F10C7212564;
+	Wed, 22 Oct 2025 01:37:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093EA274B5F
-	for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 23:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D2020A5DD;
+	Wed, 22 Oct 2025 01:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761088580; cv=none; b=l6vVZx0+O3VculvdcvmRj9H4lj9AuHTJxC51AyRBeW25M/FIHrHGg12Vwhz5n78RkmPCkFYf3II5QTBqfx0TsTVZ+YXn59lwzB1lkJhm62T5i7wCzMrun1RywnV7EzIQsUkT+myqCyU5KG1pg4AqdBhil4DQckv/bw94usEfd+I=
+	t=1761097031; cv=none; b=skiDZAeJMHBQnbGyoUB/5tJP3EnILTvkZEkkYgLoIK93yPzs41jcXo1w4vA/oL0kkKsgYejU0Yo3pKPWjfZu+s+5E65dKyZOBB40LibPb+U6K5eUIE8kEd+sMxXPVp7Sdblk8mFi88F/j8VhcLsDXNTQ1edg8FWgJsNVfrgw3OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761088580; c=relaxed/simple;
-	bh=MkrCXOKD8Uo8t+/oSxngnI6HGdowLk7sk5mgxdJXK2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=JIw/YLvPPm4i1bPuztYKHFtoxxPbFK3sJNDvDln2EMfFnj1bIWRXUGRYkvmUKBawQIBcDfF5T6jRxekYQxGrpojwGLHsVYXbtO0lWfTP4j4r0MJYn8F+JlgL0WRybBAfr8M1PtpP8eYySRBxvWhxVsiApdcXhJCWnyiRmuQP+8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft4MRMs1; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-36a6a39752bso62018781fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 21 Oct 2025 16:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761088577; x=1761693377; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
-        b=Ft4MRMs1CRt/VtZB7365S+5OjFQ3X19yt34APhWDzMNH0J+8X8dGyOJrZCXu15+h5y
-         wcaCWKC8CrSSC2MSDmLpn1GBZSskH6QUCsjNeuLA76d3jxSXj/nRYrD08XKERpeh69tt
-         2A+fheMaFzkS1BqQDBGpSXi2U8yRSzh0dioUm6N1mpPj6oMpC6U8ltBMMsFA1Jx2PUYU
-         qoo1B7vEs/T/13Whpkgxi04mDs0C75Mu+qczMN5zZyeospktm5lCGxjyBeI67mKS2hQo
-         3hKgGPv6pAX+bJht5qptzFz4DSqz3UnpP2WTsseirQEiSn/jVL7krnWWZ07XYtD5KmhS
-         cfOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761088577; x=1761693377;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
-        b=KYRbF4Kh/WdZFZ2YyCh+QSIbTMMTgACEn/bjXXrQ7QLcVHH67dgeULMeT0uNbgXKcH
-         JJjsyboK+VZWTi65YF8/aijHsbep9kL41KhBmNg6ziIJ/MUfrqJGvT60vNrU0qEJMTMe
-         A5dK5PjVWlhq6l7amCCxEfKCA4EstBuuD/c5AnJpFJlA5/wmdu90Fl7QqlF1CYRht3Bg
-         U5m+86qqVEE/mnGOZiTHrZ/24wNWHYeVzAI1tThFBWlpmrlMB0VAyyz5aaSZdsSdxAUH
-         L6Y6t6N0Psu97eA8vnIyg3nnQ/yENSy2czj0UlRKAhJNU0PXpuwb7e1pJnqZZZNUJsw+
-         UbWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEn+DFttedFLtfYgjMCBfgHF0+QySeO3mcoTjndohOKShKabQgfHtmPAwsCrYzUWHPFyejyH+0ygQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLz5xaEfa0JfVkW/wc+MCU+byAj1TP90lbnh7redz42wLAImmd
-	wzhYJtPuYeqrFwCqt/+mQACVck39ggf08eXLe09iaj8EtJn+WMCeq8F/
-X-Gm-Gg: ASbGncuhYktt+z0WxkNCrpAvxgbI1LGsnp4fyJfiX8aZ7ZGHQk4n9D386WGOLOVIvCX
-	fXPoOplHZSmMZXsBw5QpZUA2tYVyup/fTYqieE/l2boKZKjkf8KiCNN2sx+tVXd4whqBbuMZKS7
-	ds37n2MTiRVyojEk6kUvxiIH9M60V+eH2emNdk7+J7TyEOfOeAAUpWZU8OJWIzrlZB2hYsH/N8g
-	vxTLyO/6JH+HejZ7ZOsuWs6VLLms7vHMR6sECxatVUWRRQWfijRJ7KfI9JlWWdKwoPxJqIdwqaO
-	89xSbV9psQDhzmez7LWcNkXvOTkKGCAirZES5prpJjdk4rxdDMKa68vDM52DVCBM9YK2GH6orbK
-	TawQuTEncpGaGMxKRKD38KJojaOnUlETgX4Vb8uMXlSCWtXw3ZmxrGfZereg31QCRy5Onv2FCs5
-	tZUxhkxwc+c0PFMvTtOe/myXMWqoI=
-X-Google-Smtp-Source: AGHT+IFXQQCdVjndGUlAQt55SyUCqt01O1JPB+Zj0At2Wm92ggmQB/7qIpSekj8luvKqPDpYm3P0Fw==
-X-Received: by 2002:a2e:a813:0:b0:372:8f0d:b0bc with SMTP id 38308e7fff4ca-37797833eabmr54004851fa.9.1761088576811;
-        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
-Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-377a9664a97sm32800741fa.50.2025.10.21.16.16.14
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
-Date: Wed, 22 Oct 2025 01:16:10 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: yazen.ghannam@amd.com
-Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux@roeck-us.net, mario.limonciello@amd.com,
- naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
- suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-Message-ID: <20251022011610.60d0ba6e.michal.pecio@gmail.com>
-In-Reply-To: <20250107222847.3300430-7-yazen.ghannam@amd.com>
+	s=arc-20240116; t=1761097031; c=relaxed/simple;
+	bh=Q/PKMKOCggyE+SSA0vmyycgYe9N/4wQG7i6MvUpns2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s71tWOYGg3EupZdtKJ1G/tl3dUbRqrQ0y4VIYG7cfB/bJKycIeVa/wLUj43/EsPJsTDiRQqzeJ/JotCaImkTr1MqyxEBh1vkxK7uQe54HyRQxHgVNDF8lOFSLmbrkrB4eQo2QoWo4FJhEpnexaTVBIxzHy/pX1GNhVgIVeowNYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4crsFS415qzKHMKc;
+	Wed, 22 Oct 2025 09:36:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id BAC7B1A19D3;
+	Wed, 22 Oct 2025 09:36:59 +0800 (CST)
+Received: from [10.67.111.176] (unknown [10.67.111.176])
+	by APP1 (Coremail) with SMTP id cCh0CgDnWk45NfhooJirBA--.61559S2;
+	Wed, 22 Oct 2025 09:36:59 +0800 (CST)
+Message-ID: <6d046d0a-30d4-429e-8ae3-f00b6149c397@huaweicloud.com>
+Date: Wed, 22 Oct 2025 09:36:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/33] cpuset: Update HK_TYPE_DOMAIN cpumask from cpuset
+To: Waiman Long <llong@redhat.com>, Frederic Weisbecker
+ <frederic@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
+ <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-14-frederic@kernel.org>
+ <0e02915f-bde7-4b04-b760-89f34fb0a436@redhat.com>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <0e02915f-bde7-4b04-b760-89f34fb0a436@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDnWk45NfhooJirBA--.61559S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr1kGF15JryxWFy5KrWruFg_yoWrurW7pF
+	WkWFWxWFWUGwn3G3s8Jw1DZry5Wws7Cw1UGrn2ga15AF17WF1jq34j9rnIgr18Zw4xCr12
+	vFn0v39a93W7ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	j6a0PUUUUU=
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-> Currently, the total AMD node count is determined by searching and
-> counting CPU/node devices using PCI IDs.
+
+
+On 2025/10/21 12:10, Waiman Long wrote:
+> On 10/13/25 4:31 PM, Frederic Weisbecker wrote:
+>> Until now, HK_TYPE_DOMAIN used to only include boot defined isolated
+>> CPUs passed through isolcpus= boot option. Users interested in also
+>> knowing the runtime defined isolated CPUs through cpuset must use
+>> different APIs: cpuset_cpu_is_isolated(), cpu_is_isolated(), etc...
+>>
+>> There are many drawbacks to that approach:
+>>
+>> 1) Most interested subsystems want to know about all isolated CPUs, not
+>>    just those defined on boot time.
+>>
+>> 2) cpuset_cpu_is_isolated() / cpu_is_isolated() are not synchronized with
+>>    concurrent cpuset changes.
+>>
+>> 3) Further cpuset modifications are not propagated to subsystems
+>>
+>> Solve 1) and 2) and centralize all isolated CPUs within the
+>> HK_TYPE_DOMAIN housekeeping cpumask.
+>>
+>> Subsystems can rely on RCU to synchronize against concurrent changes.
+>>
+>> The propagation mentioned in 3) will be handled in further patches.
+>>
+>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+>> ---
+>>   include/linux/sched/isolation.h |  2 +
+>>   kernel/cgroup/cpuset.c          |  2 +
+>>   kernel/sched/isolation.c        | 75 ++++++++++++++++++++++++++++++---
+>>   kernel/sched/sched.h            |  1 +
+>>   4 files changed, 74 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+>> index da22b038942a..94d5c835121b 100644
+>> --- a/include/linux/sched/isolation.h
+>> +++ b/include/linux/sched/isolation.h
+>> @@ -32,6 +32,7 @@ extern const struct cpumask *housekeeping_cpumask(enum hk_type type);
+>>   extern bool housekeeping_enabled(enum hk_type type);
+>>   extern void housekeeping_affine(struct task_struct *t, enum hk_type type);
+>>   extern bool housekeeping_test_cpu(int cpu, enum hk_type type);
+>> +extern int housekeeping_update(struct cpumask *mask, enum hk_type type);
+>>   extern void __init housekeeping_init(void);
+>>     #else
+>> @@ -59,6 +60,7 @@ static inline bool housekeeping_test_cpu(int cpu, enum hk_type type)
+>>       return true;
+>>   }
+>>   +static inline int housekeeping_update(struct cpumask *mask, enum hk_type type) { return 0; }
+>>   static inline void housekeeping_init(void) { }
+>>   #endif /* CONFIG_CPU_ISOLATION */
+>>   diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>> index aa1ac7bcf2ea..b04a4242f2fa 100644
+>> --- a/kernel/cgroup/cpuset.c
+>> +++ b/kernel/cgroup/cpuset.c
+>> @@ -1403,6 +1403,8 @@ static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
+>>         ret = workqueue_unbound_exclude_cpumask(isolated_cpus);
+>>       WARN_ON_ONCE(ret < 0);
+>> +    ret = housekeeping_update(isolated_cpus, HK_TYPE_DOMAIN);
+>> +    WARN_ON_ONCE(ret < 0);
+>>   }
+>>     /**
+>> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+>> index b46c20b5437f..95d69c2102f6 100644
+>> --- a/kernel/sched/isolation.c
+>> +++ b/kernel/sched/isolation.c
+>> @@ -29,18 +29,48 @@ static struct housekeeping housekeeping;
+>>     bool housekeeping_enabled(enum hk_type type)
+>>   {
+>> -    return !!(housekeeping.flags & BIT(type));
+>> +    return !!(READ_ONCE(housekeeping.flags) & BIT(type));
+>>   }
+>>   EXPORT_SYMBOL_GPL(housekeeping_enabled);
+>>   +static bool housekeeping_dereference_check(enum hk_type type)
+>> +{
+>> +    if (IS_ENABLED(CONFIG_LOCKDEP) && type == HK_TYPE_DOMAIN) {
+>> +        /* Cpuset isn't even writable yet? */
+>> +        if (system_state <= SYSTEM_SCHEDULING)
+>> +            return true;
+>> +
+>> +        /* CPU hotplug write locked, so cpuset partition can't be overwritten */
+>> +        if (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_write_held())
+>> +            return true;
+>> +
+>> +        /* Cpuset lock held, partitions not writable */
+>> +        if (IS_ENABLED(CONFIG_CPUSETS) && lockdep_is_cpuset_held())
+>> +            return true;
 > 
-> However, AMD node information is already available through topology
-> CPUID/MSRs. The recent topology rework has made this info easier to
-> access.
+> I have some doubt about this condition as the cpuset_mutex may be held in the process of making
+> changes to an isolated partition that will impact HK_TYPE_DOMAIN cpumask.
 > 
-> Replace the node counting code with a simple product of topology info.
+> Cheers,
+> Longman
 > 
-> Every node/northbridge is expected to have a 'misc' device. Clear
-> everything out if a 'misc' device isn't found on a node.
 
-Hi,
++1
 
-I have a weird/buggy AM3 machine (Asus M4A88TD-M EVO, Phenom 965) where
-the kernel believes there are two packages and this assumption fails.
+ie. 'echo isolate > cpuset.cpus.partition'
 
-[    0.072051] CPU topo: Max. logical packages:   2
-[    0.072052] CPU topo: Max. logical dies:       2
-[    0.072052] CPU topo: Max. dies per package:   1
-[    0.072057] CPU topo: Max. threads per core:   1
-[    0.072058] CPU topo: Num. cores per package:     4
-[    0.072059] CPU topo: Num. threads per package:   4
+-- 
+Best regards,
+Ridong
 
-It's currently on v6.12 series and working OK, but I remember trying
-v6.15 at one point and finding that EDAC and GART IOMMU were broken
-because the NB driver failed to initialize. This fixed it:
-
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -496,8 +496,8 @@ void __init topology_init_possible_cpus(void)
-        total_cpus = allowed;
-        set_nr_cpu_ids(allowed);
- 
--       cnta = domain_weight(TOPO_PKG_DOMAIN);
--       cntb = domain_weight(TOPO_DIE_DOMAIN);
-+       cnta = 1;
-+       cntb = 1;
-        __max_logical_packages = cnta;
-        __max_dies_per_package = 1U << (get_count_order(cntb) - get_count_order(cnta));
-
-It was a few weeks ago and the machine is currently back on v6.12,
-but I'm almost sure I tracked it down to this exact code:
-
-> +	amd_northbridges.num = amd_num_nodes();
-> [...]
-> +		/*
-> +		 * Each Northbridge must have a 'misc' device.
-> +		 * If not, then uninitialize everything.
-> +		 */
-> +		if (!node_to_amd_nb(i)->misc) {
-> +			amd_northbridges.num = 0;
-> +			kfree(nb);
-> +			return -ENODEV;
-> +		}
-
-Thanks,
-Michal
 
