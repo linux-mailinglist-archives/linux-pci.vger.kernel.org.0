@@ -1,273 +1,163 @@
-Return-Path: <linux-pci+bounces-38996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3BB3BFB917
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:13:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C31EBFBA9B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:36:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B756419A5183
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:14:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B81E19C85E6
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:36:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D2C32E6A5;
-	Wed, 22 Oct 2025 11:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE4027A46A;
+	Wed, 22 Oct 2025 11:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gVrvU1Gd"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XZVpaBvn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail-m3294.qiye.163.com (mail-m3294.qiye.163.com [220.197.32.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5665832C955;
-	Wed, 22 Oct 2025 11:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E24299924
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 11:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761131605; cv=none; b=trXQQZJ7lI6i+Xnjaijey/D7aQEyGEvJ9sFVs/X5HlbO0ywGuFYdX3OGAYAVMqOg9cFFRWyjdTuJJ5nF/DHkmIB+t2zvC3+BkXvbLQ5Df2XPYTedKJX13iVacHv0Uwz5AdlidsnMiExDojj2Ku4Slgzm5uDp7L6kyVo00rXxvc4=
+	t=1761132974; cv=none; b=LRQ3qAofXrmHabhWEXw9EwzxceiAtYfMQZN23Wv9La7kZ3UERcTZ2ZtIKEVhmUOpmWxSGcWKzK4m4716sWgcITdAVmn1OFMPgw4kRrucaaVm7VE48XUSTO1N5LNFb7ConaGCkr+s/PlXKeotf79iUlwUpgQ0l7ePGWmHGCK2io4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761131605; c=relaxed/simple;
-	bh=X0lGHb2WGeOO5nr7dVDahmE7nisGyLBCTgkhr7nxGW8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Z4MZYnmVdhP/4vSfw9uSDoH4QfcwARit+5UHmBW0tZo84QDEuao8XIRZ+xFp02XBYsZ2EK6IOr8eyTBmgOUrS1ulHI3TreGIZ+dQonf8HtC91L1G80+gJF4HE29f6UvBCNRypcpTHgA0g8G1Hlt3LyaW0Lo2n8/dUUAuY4MSipo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gVrvU1Gd; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761131603; x=1792667603;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=X0lGHb2WGeOO5nr7dVDahmE7nisGyLBCTgkhr7nxGW8=;
-  b=gVrvU1GdwPAZU12JoJurVAhyZ7N3FLYVjY/5u34zsj93T+Myrt19pHNv
-   w+sAo3mwSfaLe5nOJvaUt60uZr/6ptJ3tJ+Y4ndEe6pG0hko5QTgAM7HO
-   xSXzC/RE111GH3rKeSBdqvXTAS31Vxns84NkScoN5MdNtYEAr4+pvlOhJ
-   xPfRkKq9+BGgQGrSnxI3qMuEXdaK/nNr/Pm5rR2WpO6pVJjdHcNqssa3J
-   CJsh1nWQ9PwYA2BYhK79awMKhP/2IIWQMAcn9467NA2vnBG1lNeYPbEjC
-   nyahqAHRxjYKPGbbrZM2ogUsC85/1F5dqKGhR+m8SIztsRg9HnduMvCr4
-   w==;
-X-CSE-ConnectionGUID: O54K0hdnRAGDx1MKFD3jUw==
-X-CSE-MsgGUID: QLDZXu7CQzmjTKaozSUDXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="80711870"
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="80711870"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:13:23 -0700
-X-CSE-ConnectionGUID: U8TkTXNOTRCjf0vJbP5PFA==
-X-CSE-MsgGUID: RFzDodyHTpKi2cdzBA0F0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="221038025"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:13:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 22 Oct 2025 14:13:15 +0300 (EEST)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    Kai-Heng Feng <kaihengf@nvidia.com>, Rob Herring <robh@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows
- safer
-In-Reply-To: <CAMuHMdWD_GJ0hpJODBNKeR77UhKMW2CuWWf-xJo2kuL514_Tpw@mail.gmail.com>
-Message-ID: <51f363d9-9a15-763a-bc1a-be9158253a07@linux.intel.com>
-References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com> <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com> <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com> <CAMuHMdUbseFEY8AGOxm2T8W-64qT9OSvfmvu+hyTJUT+WE2cVw@mail.gmail.com>
- <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com> <CAMuHMdWD_GJ0hpJODBNKeR77UhKMW2CuWWf-xJo2kuL514_Tpw@mail.gmail.com>
+	s=arc-20240116; t=1761132974; c=relaxed/simple;
+	bh=s12XtZ/2wOqyiNORT/W3WURk9X5YzQaVx0Yfqjk8080=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=o95euyatrJQx//kYVwn13LZrMZy2SNsIvatSYySC6F8I78Q/fnXYsg4nUJK0Os6vtSarWAXR2Alzx6Zcla5bopnyZb5Gz6Srm3DY59+jewnlGtXUfe5j4llFuXvv5/JLgbDJPvjQ8wzpgipWGNOBMUmaGU7Fp+4IOmKHhyE/s1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XZVpaBvn; arc=none smtp.client-ip=220.197.32.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 26cdf437c;
+	Wed, 22 Oct 2025 19:35:59 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v2 1/2] PCI: dw-rockchip: Add L1sub support
+Date: Wed, 22 Oct 2025 19:35:53 +0800
+Message-Id: <1761132954-177344-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Tid: 0a9a0bb454d609cckunm6eedc7d27fce0f
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh8eQlZMQkxKHUJCHkkeTkNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=XZVpaBvnMFnzpqCTy5MAwII3sz1NvowwQynwbPyxebo/hmLxVBfLu5A2MJY7r3Fa7jTffRGQqiseMDR6gsoUIs3zv0QyyvJQOofYFIpbyiJ3AYR3QGB636/wTwwFekV63jyIIJU2TJgCD/GdVap7Is2QfREB38k7bBw6JAOc6nM=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=qOLHM+TrrAXVjum0eLPImVRVPBFYjL22w5LKZkowYSg=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-694626260-1761131595=:1437"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The driver should set app_clk_req_n(clkreq ready) of PCIE_CLIENT_POWER reg
+to support L1sub. Otherwise, unset app_clk_req_n and pull down CLKREQ#.
 
---8323328-694626260-1761131595=:1437
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-On Wed, 22 Oct 2025, Geert Uytterhoeven wrote:
-> On Tue, 21 Oct 2025 at 13:54, Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> > On Tue, 21 Oct 2025, Geert Uytterhoeven wrote:
-> > > On Mon, 20 Oct 2025 at 18:20, Ilpo J=C3=A4rvinen
-> > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > On Mon, 20 Oct 2025, Geert Uytterhoeven wrote:
-> > > > > On Fri, 10 Oct 2025 at 16:42, Ilpo J=C3=A4rvinen
-> > > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > > Here's a series for Geert to test if this fixes the improper co=
-alescing
-> > > > > > of resources as was experienced with the pci_add_resource() cha=
-nge (I
-> > > > > > know the breaking change was pulled before 6.18 main PR but I'd=
- want to
-> > > > > > retry it later once the known issues have been addressed). The =
-expected
-> > > > > > result is there'll be two adjacent host bridge resources in the
-> > > > > > resource tree as the different name should disallow coalescing =
-them
-> > > > > > together, and therefore BAR0 has a window into which it belongs=
- to.
-> > > > > >
-> > > > > > Generic info for the series:
-> > > > > >
-> > > > > > PCI host bridge windows were coalesced in place into one of the=
- structs
-> > > > > > on the resources list. The host bridge window coalescing code d=
-oes not
-> > > > > > know who holds references and still needs the struct resource i=
-t's
-> > > > > > coalescing from/to so it is safer to perform coalescing into en=
-tirely
-> > > > > > a new struct resource instead and leave the old resource addres=
-ses as
-> > > > > > they were.
-> > > > > >
-> > > > > > The checks when coalescing is allowed are also made stricter so=
- that
-> > > > > > only resources that have identical the metadata can be coalesce=
-d.
-> > > > > >
-> > > > > > As a bonus, there's also a bit of framework to easily create ku=
-nit
-> > > > > > tests for resource tree functions (beyond just resource_coalesc=
-e()).
-> > > > > >
-> > > > > > Ilpo J=C3=A4rvinen (3):
-> > > > > >   PCI: Refactor host bridge window coalescing loop to use prev
-> > > > > >   PCI: Do not coalesce host bridge resource structs in place
-> > > > > >   resource, kunit: add test case for resource_coalesce()
-> > > > >
-> > > > > Thanks for your series!
-> > > > >
-> > > > > I have applied this on top of commit 06b77d5647a4d6a7 ("PCI:
-> > > > > Mark resources IORESOURCE_UNSET when outside bridge windows"), an=
-d
-> > > > > gave it a a try on Koelsch (R-Car M2-W).
-> > > >
-> > > > So the pci_bus_add_resource() patch to rcar_pci_probe() was not inc=
-luded?
-> > > > No coalescing would be attempted without that change.
-> > >
-> > > Sorry, I didn't realize you wanted that (and anything else) to be
-> > > included, too.  Please tell me the exact base I should use for testin=
-g,
-> > > and I will give it another run.
-> >
-> > I'm sorry, it's indeed a bit confusing as some of these patches never
-> > have been in Linus' tree.
-> >
-> > So I'm interested on what's the result with these changes/series togeth=
-er:
-> >
-> > [PATCH 1/2] PCI: Setup bridge resources earlier
-> > [PATCH 2/2] PCI: Resources outside their window must set IORESOURCE_UNS=
-ET
-> > [PATCH 1/1] PCI: rcar-gen2: Add BAR0 into host bridge resources
-> > [PATCH 1/3] PCI: Refactor host bridge window coalescing loop to use pre=
-v
-> > [PATCH 2/3] PCI: Do not coalesce host bridge resource structs in place
-> > [PATCH 3/3] resource, kunit: add test case for resource_coalesce()
-> >
-> > You might also want to change that pci_dbg() in the IORESOURCE_UNSET pa=
-tch
-> > to pci_info() (as otherwise dyndbg is necessary to make it visible).
->=20
-> Thanks, all done:
->=20
->     $ git cherry -v --abbrev=3D1 v6.18-rc2^
->     + 211ddde0 Linux 6.18-rc2
->     + 3fdaf2 PCI: Setup bridge resources earlier
->     + 5be02e5 PCI: Resources outside their window must set IORESOURCE_UNS=
-ET
->     + adf6f11 PCI: rcar-gen2: Add BAR0 into host bridge resources
->     + eecb500 PCI: Refactor host bridge window coalescing loop to use pre=
-v
->     + 60470b3 PCI: Do not coalesce host bridge resource structs in place
->     + afe3ec resource, kunit: add test case for resource_coalesce()
->     + 487c98 Use dev_info() in drivers/pci/probe.c:__pci_read_base()
-> IORESOURCE_UNSET path
->=20
-> Compared to v6.18-rc2, dmesg changed (for the first PCI/USB instance)
-> like:
->=20
->      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
->      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
-> -> 0x00ee080000
->      pci-rcar-gen2 ee090000.pci: PCI: revision 11
->      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
->      pci_bus 0000:00: root bus resource [bus 00]
->      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
->     +pci_bus 0000:00: root bus resource [mem 0xee090000-0xee090bff]
->      pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional
-> PCI endpoint
->      pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
->     -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
->     +pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]: no
-> initial claim (no window)
->     +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
->      pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 conventional
-> PCI endpoint
->     -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]
->     +pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]: no initial
-> claim (no window)
->     +pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
->      pci 0000:00:01.0: supports D1 D2
->      pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
->      pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 conventional
-> PCI endpoint
->     -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]
->     +pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]: no initial
-> claim (no window)
->     +pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
->      pci 0000:00:02.0: supports D1 D2
->      pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
->      PCI: bus0: Fast back to back transfers disabled
->      pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigned
->      pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigned
->      pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
->     +pci_bus 0000:00: resource 5 [mem 0xee090000-0xee090bff]
->      pci 0000:00:01.0: enabling device (0140 -> 0142)
->      pci 0000:00:02.0: enabling device (0140 -> 0142)
->=20
-> > The expected result is that those usb resources are properly parented a=
-nd
-> > the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together =
-(as
-> > that would destroy information). So something along the lines of:
-> >
-> >     ee080000-ee08ffff : pci@ee090000
-> >       ee080000-ee080fff : 0000:00:01.0
-> >         ee080000-ee080fff : ohci_hcd
-> >       ee081000-ee0810ff : 0000:00:02.0
-> >         ee081000-ee0810ff : ehci_hcd
-> >     ee090000-ee090bff : ee090000.pci pci@ee090000
->=20
-> Compared to v6.18-rc2, the output of "lspci -v" or "cat /proc/iomem"
-> did not change.  Hence for the two PCI/USB instances:
->=20
->     ee080000-ee08ffff : pci@ee090000
->       ee080000-ee080fff : 0000:00:01.0
->         ee080000-ee080fff : ohci_hcd
->       ee081000-ee0810ff : 0000:00:02.0
->         ee081000-ee0810ff : ehci_hcd
->     ee090000-ee090bff : ee090000.pci pci@ee090000
->     ee0c0000-ee0cffff : pci@ee0d0000
->       ee0c0000-ee0c0fff : 0001:01:01.0
->         ee0c0000-ee0c0fff : ohci_hcd
->       ee0c1000-ee0c10ff : 0001:01:02.0
->         ee0c1000-ee0c10ff : ehci_hcd
->     ee0d0000-ee0d0bff : ee0d0000.pci pci@ee0d0000
+---
 
-Looks it works now when it comes to what PCI: Resources outside their=20
-window must set IORESOURCE_UNSET tried to achieve.
+Changes in v2:
+- drop of_pci_clkreq_presnt API
+- drop dependency of Niklas's patch
 
-Thanks a lot for all the testing!
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 36 +++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---=20
- i.
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 3e2752c..18cd626 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -62,6 +62,12 @@
+ /* Interrupt Mask Register Related to Miscellaneous Operation */
+ #define PCIE_CLIENT_INTR_MASK_MISC	0x24
+ 
++/* Power Management Control Register */
++#define PCIE_CLIENT_POWER		0x2c
++#define  PCIE_CLKREQ_READY		0x10001
++#define  PCIE_CLKREQ_NOT_READY		0x10000
++#define  PCIE_CLKREQ_PULL_DOWN		0x30001000
++
+ /* Hot Reset Control Register */
+ #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+ #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
+@@ -85,6 +91,7 @@ struct rockchip_pcie {
+ 	struct regulator *vpcie3v3;
+ 	struct irq_domain *irq_domain;
+ 	const struct rockchip_pcie_of_data *data;
++	bool supports_clkreq;
+ };
+ 
+ struct rockchip_pcie_of_data {
+@@ -200,6 +207,31 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
+ 	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
+ }
+ 
++static void rockchip_pcie_enable_l1sub(struct dw_pcie *pci)
++{
++	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
++	u32 cap, l1subcap;
++
++	/* Enable L1 substates if CLKREQ# is properly connected */
++	if (rockchip->supports_clkreq) {
++		/* Ready to have reference clock removed */
++		rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, PCIE_CLIENT_POWER);
++		return;
++	}
++
++	/* Otherwise, pull down CLKREQ# and disable L1 substates */
++	rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
++				 PCIE_CLIENT_POWER);
++	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
++	if (cap) {
++		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
++		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
++			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
++			      PCI_L1SS_CAP_PCIPM_L1_2);
++		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
++	}
++}
++
+ static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+ {
+ 	u32 cap, lnkcap;
+@@ -264,6 +296,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+ 	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
+ 					 rockchip);
+ 
++	rockchip_pcie_enable_l1sub(pci);
+ 	rockchip_pcie_enable_l0s(pci);
+ 
+ 	return 0;
+@@ -301,6 +334,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar;
+ 
++	rockchip_pcie_enable_l1sub(pci);
+ 	rockchip_pcie_enable_l0s(pci);
+ 	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
+ 
+@@ -412,6 +446,8 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
+ 				     "failed to get reset lines\n");
+ 
++	rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node, "supports-clkreq");
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
---8323328-694626260-1761131595=:1437--
 
