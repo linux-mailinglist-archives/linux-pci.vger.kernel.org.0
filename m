@@ -1,204 +1,206 @@
-Return-Path: <linux-pci+bounces-39064-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39065-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21B1CBFE16A
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 21:49:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E780BFE444
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 23:15:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C07B83442AE
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 19:49:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E29B03A3588
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 21:15:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B282F0678;
-	Wed, 22 Oct 2025 19:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C4E2264AB;
+	Wed, 22 Oct 2025 21:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyKiCIjg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RtFQ1ls7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75425F7A5;
-	Wed, 22 Oct 2025 19:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5E386349
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 21:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761162582; cv=none; b=Ir1ehKKqXQueuzQ5qGetTX8ooMmnuH9Rnx1fpR6HLn4yXQupELjry2PhRqDN5rf3rHmW48vNHUBfsSsv4ONMz8YXCe4hzmXEqUGVzYtv9kQ7LXURDzT0HHeWe01b8hagX69NGGE1dcZYIt9ViEeuBuWlKfCHt8eV8yRruGgIpp4=
+	t=1761167728; cv=none; b=RGqJuC8QgXWiqAVlHERkjfFAWKzeMcFvWr5DA9aOwnUuZPD/d4hapYsvX0G2aPg26kuT8LePM1ai9p/oryDCGq1vUYJ/pWVocqx14cwlR4FFw1E58nyBYkKbu52U/u6dqnGoHk3zhMvzm8KNVwlPK5x15UODgE4ZIERjBr2hwbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761162582; c=relaxed/simple;
-	bh=AIoAYtzLfIP2cEKmbA5wBFYBFjPPpObwFVg5kxuV8ac=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=djGUt+I83JidnUgeNGjKnPBSyMiz1JgtdALkb0Fy1cMRCY1vdzejBLx9ClAQt4iS9tdnGhRcII9jSGSPFG6rSIUI+6psVOtB4aYUgx7Vz4+BQh9fgWsZgKRK/+ai+eFN6D26xqaWlyP+BY51j0wezZgwM5H7zLRMl3f5+eI2aVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyKiCIjg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BCEC4CEE7;
-	Wed, 22 Oct 2025 19:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761162581;
-	bh=AIoAYtzLfIP2cEKmbA5wBFYBFjPPpObwFVg5kxuV8ac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UyKiCIjgaK/V/4PpHQXmQDUztuRKPmzgURfcr0pbQ20/J6eDJBRWsxmPVdSF9498S
-	 zbv+jui8rHR/sNZJchjE9y61k2btTNo85H9iEwMi7h8pDKtgj6/DetLb8pIczXyvDe
-	 a571Xy6mUeXRv2QK6gLOpsWdv4jnl2xDbQqq3LWvIjN+CF3GcMnv1/KMkOEb9nZFrB
-	 k/QqWjnmeuLXG1NhJDoZ84XPSG88+cHPry9qJ7/56xLGL/ufgGsr7n98TtP3/xMkCC
-	 sFo1XxXUPgjY82DsvHFoZ5vHhWwY9rhPmliv87NpAY39XUbyfIo1ebWSscv6IN2Cqc
-	 e46wJHF+O7jGA==
-Date: Wed, 22 Oct 2025 14:49:39 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1761167728; c=relaxed/simple;
+	bh=xVjhQUIb6Uas/h2svp3jW3dFK1WGu1F1BwnNNksk2pg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DCAqX+F7ugj/8Gf3+U9JR/ymIe7cWPyhQLguXgw8fv1t4xMHqR8s6E7ktTOrSKQi7wtHvy5cUoZeCAJlfdahJ5GJ6edQaanH0o8jqe86VUYGjhkvT9ojb2tsunTN5Az66Fxw0KydXtTLtuWwWLygRtLOAzPTwNwNZnGb0VNv3oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RtFQ1ls7; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-77f67ba775aso109089b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 14:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1761167726; x=1761772526; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yaVmqZbGLvb9KAeXi14uqL9ETEZkPe32JZKowUgQxVQ=;
+        b=RtFQ1ls7J1bfr82pzzfRpgnDas14E7EF2dTwwVvaG+e4lJuzOmKBJrhGGhgEpTsrN3
+         vsG0cNkSlKUnTOEgVAS7GYLpCiYMARf9hujxjSViP7wOCZ+zRNYq2lFhBZ+EpZiUMsZG
+         LtUjjlajjhp2LyyCcAg1SXv/NEHY/ra11Kq6g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761167726; x=1761772526;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yaVmqZbGLvb9KAeXi14uqL9ETEZkPe32JZKowUgQxVQ=;
+        b=YmAFo41UAY/qKHG6Hsma8qYtvYg+ejAHytfHaCAM9RISUpM+1QRODQLBZrwVghd4VE
+         YVBNOUL1uCvSRtxn2JiGibdy2FdJSekgDCO6uFzElD3bZX7xFkBBpNNVZlCcbBYCljkt
+         jbtBzdyfN9pDevYSaKyoyEoP3+Q3cg260U+GuIZJKApEWQu0nRhovJzXWkbIMG/xGLdv
+         VQSYbno4JzujD+lcXovUVBcjODweM4h9vTuQDrA/WHIR+B5fqP270BNbMKss2hzxF8Zq
+         iXsRYpSYh9EW/tMROBwroU7XG9ygq9txxG+iWn4sl8FlFat0S/swzcEo1/4kMTlZWtkG
+         vchg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNoeNyF1QoO89u0ygzqC2lOxSUZ9gofwgITfrfqhiCH5ppGhSOjlULRIrfQv3VxRCeG61NIMnx4z0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL0EzbMENrWNl1ovtThjJLLOMHNq8ItyX8nJxYRfxpOznF5K/w
+	70O96axCJ6MCVqulv19Ln0LXh/qP35gq7IoPke3dW5Ch5uVtopbsM/JRhn7GGblXNg==
+X-Gm-Gg: ASbGncvBmRf4RoN2XtqNJJiIFJzdJjftEYgq+dyRZCe984O0kdg2s8zt3yyVOkl5+DG
+	z1cGHQb71CnhO2D7cgPidgQQ+lBQgeLIY0/ZezI9N5DpIRqVIKakzbcMO16H3wGXaNlJ7tvm7lP
+	OEpyc4/5ldBXilqmB3vJ9CxnSVWIqmJbOPnkW2G9tIF7DvYr/G7Msq2EJK61WCm0U2/S+SQyEQN
+	oLbIxBB0czUiSpzZhKWrLxsNnWLf+BX0tgIRPKVN/bqxiQ7YG+UP3AKwFrpOF7OSGYMcOkV3/y0
+	/R3YEmQ6sq1YmBUnEG3HBpYHqRPP2Ak4RxUhPZdMMTLynPlZtIuWkil5ASgTpkO0Ese846JeWVm
+	X0iQ7p/jlEaXoktoQznDAlqkaUsR81U82u0J9VHHsqZtwTzH0QALTur7WwG4/YgJ1NaMDIHTTkD
+	7sD4e0qr71Iko8NWymrdseK7Jz7nKfaQpyxc/Ruw==
+X-Google-Smtp-Source: AGHT+IEHPmnyfesaqqiIG3TvfRO0+OWa3MeuyGH4Nz3hdkpdY8TKVqBc+BP1r0X04EFXXutlW1RRxQ==
+X-Received: by 2002:a05:6a00:9291:b0:781:1f28:eae9 with SMTP id d2e1a72fcca58-7a220a57034mr21397951b3a.3.1761167725791;
+        Wed, 22 Oct 2025 14:15:25 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e7c:8:4874:d890:58d4:a06b])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7a274a9e580sm200866b3a.17.2025.10.22.14.15.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Oct 2025 14:15:24 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v5 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
- driver
-Message-ID: <20251022194939.GA1223383@bhelgaas>
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v3] PCI/PM: Prevent runtime suspend before devices are fully initialized
+Date: Wed, 22 Oct 2025 14:14:34 -0700
+Message-ID: <20251022141434.v3.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+X-Mailer: git-send-email 2.51.1.814.gb8fa24458f-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251007133657.390523-3-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 07, 2025 at 04:36:53PM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> only as a root complex, with a single-lane (x1) configuration. The
-> controller includes Type 1 configuration registers, as well as IP
-> specific registers (called AXI registers) required for various adjustments.
+Today, it's possible for a PCI device to be created and
+runtime-suspended before it is fully initialized. When that happens, the
+device will remain in D0, but the suspend process may save an
+intermediate version of that device's state -- for example, without
+appropriate BAR configuration. When the device later resumes, we'll
+restore invalid PCI state and the device may not function.
 
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -266,6 +266,14 @@ config PCI_RCAR_GEN2
->  	  There are 3 internal PCI controllers available with a single
->  	  built-in EHCI/OHCI host controller present on each one.
->  
-> +config PCIE_RENESAS_RZG3S_HOST
-> +	bool "Renesas RZ/G3S PCIe host controller"
-> +	depends on ARCH_RENESAS || COMPILE_TEST
-> +	select MFD_SYSCON
-> +	select IRQ_MSI_LIB
-> +	help
-> +	  Say Y here if you want PCIe host controller support on Renesas RZ/G3S SoC.
+Prevent runtime suspend for PCI devices by deferring pm_runtime_enable()
+until we've fully initialized the device.
 
-Wrap to fit in 80 columns like the rest of the file.
+More details on how exactly this may occur:
 
-> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+1. PCI device is created by pci_scan_slot() or similar
+2. As part of pci_scan_slot(), pci_pm_init() enables runtime PM; the
+   device starts "active" and we initially prevent (pm_runtime_forbid())
+   suspend -- but see [*] footnote
+3. Underlying 'struct device' is added to the system (device_add());
+   runtime PM can now be configured by user space
+4. PCI device receives BAR configuration
+   (pci_assign_unassigned_bus_resources(), etc.)
+5. PCI device is added to the system in pci_bus_add_device()
 
-> +#define RZG3S_PCI_MSIRCVWMSKL			0x108
-> +#define RZG3S_PCI_MSIRCVWMSKL_MASK		GENMASK(31, 2)
+The device may potentially suspend between #3 and #4.
 
-Unfortunate to have to add _MASK here when none of the other GENMASKs
-need it.  Can't think of a better name though.
+[*] By default, pm_runtime_forbid() prevents suspending a device; but by
+design [**], this can be overridden by user space policy via
 
-> +#define RZG3S_PCI_MSIRCVWMSKU			0x10c
+  echo auto > /sys/bus/pci/devices/.../power/control
 
-Unused.
+Thus, the above #3/#4 sequence is racy with user space (udev or
+similar).
 
-> +#define RZG3S_PCI_AMEIE				0x210
+Notably, many PCI devices are enumerated at subsys_initcall time and so
+will not race with user space. However, there are several scenarios
+where PCI devices are created later on, such as with hotplug or when
+drivers (pwrctrl or controller drivers) are built as modules.
 
-Unused.
+[**] The relationship between pm_runtime_forbid(), pm_runtime_allow(),
+/sys/.../power/control, and the runtime PM usage counter can be subtle.
+It appears that the intention of pm_runtime_forbid() /
+pm_runtime_allow() is twofold:
 
-> +#define RZG3S_PCI_ASEIE1			0x220
+1. Allow the user to disable runtime_pm (force device to always be
+   powered on) through sysfs.
+2. Allow the driver to start with runtime_pm disabled (device forced
+   on) and user space could later enable runtime_pm.
 
-Unused.
+This conclusion comes from reading `Documentation/power/runtime_pm.rst`,
+specifically the section starting "The user space can effectively
+disallow".
 
-> +#define RZG3S_PCI_PCSTAT2_STATE_RX_DETECT	GENMASK(15, 8)
+This means that while pm_runtime_forbid() does technically increase the
+runtime PM usage counter, this usage counter is not a guarantee of
+functional correctness, because sysfs can decrease that count again.
 
-Unused.
+Link: https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+---
 
-> +/* Timeouts experimentally determined. */
+Changes in v3:
+ * Add Link to initial discussion
+ * Add Rafael's Reviewed-by
+ * Add lengthier footnotes about forbid vs allow vs sysfs
 
-No need for period at end.
+Changes in v2:
+ * Update CC list
+ * Rework problem description
+ * Update solution: defer pm_runtime_enable(), instead of trying to
+   get()/put()
 
-> +static int rzg3s_pcie_child_read_conf(struct rzg3s_pcie_host *host,
-> +				      struct pci_bus *bus,
-> +				      unsigned int devfn, int where,
-> +				      u32 *data)
+ drivers/pci/bus.c | 3 +++
+ drivers/pci/pci.c | 1 -
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Would fit in three lines if you want.
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index f26aec6ff588..fc66b6cb3a54 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -14,6 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/proc_fs.h>
+ #include <linux/slab.h>
+ 
+@@ -375,6 +376,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 		put_device(&pdev->dev);
+ 	}
+ 
++	pm_runtime_enable(&dev->dev);
++
+ 	if (!dn || of_device_is_available(dn))
+ 		pci_dev_allow_binding(dev);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b14dd064006c..f792164fa297 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3226,7 +3226,6 @@ void pci_pm_init(struct pci_dev *dev)
+ 	pci_pm_power_up_and_verify_state(dev);
+ 	pm_runtime_forbid(&dev->dev);
+ 	pm_runtime_set_active(&dev->dev);
+-	pm_runtime_enable(&dev->dev);
+ }
+ 
+ static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
+-- 
+2.51.1.814.gb8fa24458f-goog
 
-> +static int rzg3s_pcie_child_write_conf(struct rzg3s_pcie_host *host,
-> +				       struct pci_bus *bus,
-> +				       unsigned int devfn, int where,
-> +				       u32 data)
-
-Ditto.
-
-> +static int rzg3s_pcie_msi_enable(struct rzg3s_pcie_host *host)
-> +{
-> +	struct platform_device *pdev = to_platform_device(host->dev);
-> +	struct rzg3s_pcie_msi *msi = &host->msi;
-> +	struct device *dev = host->dev;
-> +	const char *devname;
-> +	int irq, ret;
-> +
-> +	ret = devm_mutex_init(dev, &msi->map_lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	msi->irq = platform_get_irq_byname(pdev, "msi");
-> +	if (msi->irq < 0)
-> +		return dev_err_probe(dev, irq ? irq : -EINVAL,
-> +				     "Failed to get MSI IRQ!\n");
-> +
-> +	devname = devm_kasprintf(dev, GFP_KERNEL, "%s-msi", dev_name(dev));
-> +	if (!devname)
-> +		return -ENOMEM;
-> +
-> +	ret = rzg3s_pcie_msi_allocate_domains(msi);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = request_irq(msi->irq, rzg3s_pcie_msi_irq, 0, devname, host);
-
-Should this be devm_request_irq()?  Most drivers use it, although
-pci-tegra.c and pcie-apple.c do not.  Maybe there's some special rule
-about using request_irq() even though the driver uses devm in general?
-I dunno.
-
-> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host)
-> +{
-> +	struct device *dev = host->dev;
-> +
-> +	for (int i = 0; i < PCI_NUM_INTX; i++) {
-> +		struct platform_device *pdev = to_platform_device(dev);
-
-Looks like this should be outside the loop.
-
-> +		char irq_name[5] = {0};
-> +		int irq;
-> +
-> +		scnprintf(irq_name, ARRAY_SIZE(irq_name), "int%c", 'a' + i);
-> +
-> +		irq = platform_get_irq_byname(pdev, irq_name);
-> +		if (irq < 0)
-> +			return dev_err_probe(dev, -EINVAL,
-> +					     "Failed to parse and map INT%c IRQ\n",
-> +					     'A' + i);
-> +
-> +		host->intx_irqs[i] = irq;
-> +		irq_set_chained_handler_and_data(irq,
-> +						 rzg3s_pcie_intx_irq_handler,
-> +						 host);
-> +	}
-
-> +static int rzg3s_pcie_power_resets_deassert(struct rzg3s_pcie_host *host)
-> +{
-> +	const struct rzg3s_pcie_soc_data *data = host->data;
-> +
-> +	/*
-> +	 * According to the RZ/G3S HW manual (Rev.1.10, section
-> +	 * 34.5.1.2 De-asserting the Reset) the PCIe IP needs to wait 5ms from
-> +	 * power on to the de-assertion of reset.
-> +	 */
-> +	usleep_range(5000, 5100);
-
-Consider fsleep() so we don't have to make up the 100us interval.
 
