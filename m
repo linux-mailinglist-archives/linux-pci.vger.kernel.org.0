@@ -1,213 +1,131 @@
-Return-Path: <linux-pci+bounces-39007-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53E17BFBD44
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 14:22:59 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BB38BFBE0D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 14:36:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0FC2440171E
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 12:22:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E680C4F08F7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 12:36:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1372B285C8B;
-	Wed, 22 Oct 2025 12:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA867342C95;
+	Wed, 22 Oct 2025 12:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="LaObT5Qv"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QSk6D6ZI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973173.qiye.163.com (mail-m1973173.qiye.163.com [220.197.31.73])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF37A3081AD
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 12:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C8A19CC28;
+	Wed, 22 Oct 2025 12:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761135776; cv=none; b=jc82eHQs7UOiG/cxBzyHQalwJUMBeDJCnPANl4pABHHg5h4uFUqdt6rxNIt7eyf8ci4H21PmUdYlKNTeCifGOM0iUrr9vu5aWbZsr8mfQZsxYw4B7oI7iLAuMAY7Svt30PQrUp3Uv1qh10pve7zn0u5XD8Vd7sB1LqO7ncWzN/w=
+	t=1761136558; cv=none; b=BF0NVjX1LcWR4aueGWQhWFloToLW/H54QQsBnoHpldmMznk78U8KMT79S86APQ2M7AdJv+hWbsdLDtIGFuJfwrR6xyCfduIAWWNCtcbA85aChvQN6jbfDdouHIZy1qa/uNjZS4aK70Eir49jYNhw53/ZNSW+0EMq938t6IohEuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761135776; c=relaxed/simple;
-	bh=bireERmYAoQqB2e9neARibMCYj13LfA4C+nUd2jznMw=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=t4vhIiF8qr/TfG4olatf+xwLWZc9YifHaovEkwmEEFnisMMh5nJSziCXlGDa3qhjhfaW7nsvlmUD/CLz+xOZgdRJHct0hQXZ0zDs2nxBFJm52R+ZCVVlnno+n0DvvltMbA9oQ3W1BUpPg+DIhYjjVT+nepw47fBb7LI/qe5Mkqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=LaObT5Qv; arc=none smtp.client-ip=220.197.31.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 26ceeb4fb;
-	Wed, 22 Oct 2025 20:22:41 +0800 (GMT+08:00)
-Message-ID: <ffe10dbd-1297-45af-86d5-42023820f2c7@rock-chips.com>
-Date: Wed, 22 Oct 2025 20:22:39 +0800
+	s=arc-20240116; t=1761136558; c=relaxed/simple;
+	bh=6GygRBHvxfcqGXnEi/9P3tlsxMuta/koSy98GYmAOXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ta7dioEumgRbe1s+cbkhqVR37yu7sUa0P23kykPgHhVICe2hs1sBXJRuSIC7rlm69VrBwKdRM7CYAYBfqjY61UL871TBgUGrwEC9FSuRGa89YiETxRB7H7BLAZ77OwsGbGXUkrT6zmIYCVpgIsMXLGzHF2K6omQkAWTi0NMtSWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QSk6D6ZI; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=R95DGcQ4LYALHG8T4SNxi7BAAXg7er7ggzkRbLh42No=; b=QSk6D6ZIL39KWQjpQVXzyu/daU
+	CkHCg8qd7kd0YqSVIzxh2OYFZ1Gtf6Zy1PMvilS2ibzw5vrduZP1N74w4P6Tj1JfPOXck0ka2IkIN
+	G3R9KHuq/zrSWxPK36Hjw1+QvspeXZMa8vN0KtQZWpHSk2jPm3N1Cw59r3FE3Ov57v3Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1vBY3w-00Bkxo-MY; Wed, 22 Oct 2025 14:35:32 +0200
+Date: Wed, 22 Oct 2025 14:35:32 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sjoerd Simons <sjoerd@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+	Daniel Golle <daniel@makrotopia.org>,
+	Bryan Hinton <bryan@bryanhinton.com>
+Subject: Re: [PATCH 15/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ leds
+Message-ID: <9ecffb7f-839c-4e4d-bef1-f59747d020b2@lunn.ch>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+ <20251016-openwrt-one-network-v1-15-de259719b6f2@collabora.com>
+ <d8077ee4-21c2-43c5-b130-7ff270b09791@lunn.ch>
+ <79d4a7379bce245d22b56c677fd7b3a263836239.camel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org,
- Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI: dw-rockchip: Add L1sub support
-To: Hans Zhang <hans.zhang@cixtech.com>, Heiko Stuebner <heiko@sntech.de>,
- Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-References: <1761132954-177344-1-git-send-email-shawn.lin@rock-chips.com>
- <8b569a35-3913-4dfe-a586-7ec9669edbc1@cixtech.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <8b569a35-3913-4dfe-a586-7ec9669edbc1@cixtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a0bdf186f09cckunmd6a4b529805a7b
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUIYGlZDHh8fTE8YH0wfSBhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=LaObT5QvNYHbRnvsZQ33p9VT1XHFBoUSnvmsfiT6GhqIjsld1Pde7ve/ZegoBfgylNZRsY1C+xY2Izt7X0HkxEL7nlIaYLZ9xYJtgtHwS9NQoFMbkKoeM7B72YYNrJOrX9hFPUGV3e1UBQq6ZVLGC62VUF6fp9i5D1kgFkMOw40=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=W0dJsJnfhYqZmHn/6VAKPHTyM9nOiqGuzrIQ/d0D4gk=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79d4a7379bce245d22b56c677fd7b3a263836239.camel@collabora.com>
 
-在 2025/10/22 星期三 19:52, Hans Zhang 写道:
+On Wed, Oct 22, 2025 at 09:26:11AM +0200, Sjoerd Simons wrote:
+> Hey,
 > 
+> On Fri, 2025-10-17 at 19:35 +0200, Andrew Lunn wrote:
+> > On Thu, Oct 16, 2025 at 12:08:51PM +0200, Sjoerd Simons wrote:
+> > > The Openwrt One has 3 status leds at the front (red, white, green) as
+> > > well as 2 software controlled leds for the LAN jack (amber, green).
+> > 
+> > A previous patch in this series added 2 PHY LEDs. Are they connected
+> > to a LAN jack? Are there multiple RJ45 connectors? Is it clear from
+> > /sys/class/leds what LED is what?
 > 
-> On 10/22/2025 7:35 PM, Shawn Lin wrote:
->> EXTERNAL EMAIL
->>
->> The driver should set app_clk_req_n(clkreq ready) of PCIE_CLIENT_POWER 
->> reg
->> to support L1sub. Otherwise, unset app_clk_req_n and pull down CLKREQ#.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
->>
->> Changes in v2:
->> - drop of_pci_clkreq_presnt API
->> - drop dependency of Niklas's patch
->>
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 36 +++++++++++++++++ 
->> ++++++++++
->>   1 file changed, 36 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/ 
->> pci/controller/dwc/pcie-dw-rockchip.c
->> index 3e2752c..18cd626 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -62,6 +62,12 @@
->>   /* Interrupt Mask Register Related to Miscellaneous Operation */
->>   #define PCIE_CLIENT_INTR_MASK_MISC     0x24
->>
->> +/* Power Management Control Register */
->> +#define PCIE_CLIENT_POWER              0x2c
->> +#define  PCIE_CLKREQ_READY             0x10001
->> +#define  PCIE_CLKREQ_NOT_READY         0x10000
->> +#define  PCIE_CLKREQ_PULL_DOWN         0x30001000
->> +
->>   /* Hot Reset Control Register */
->>   #define PCIE_CLIENT_HOT_RESET_CTRL     0x180
->>   #define  PCIE_LTSSM_APP_DLY2_EN                BIT(1)
->> @@ -85,6 +91,7 @@ struct rockchip_pcie {
->>          struct regulator *vpcie3v3;
->>          struct irq_domain *irq_domain;
->>          const struct rockchip_pcie_of_data *data;
->> +       bool supports_clkreq;
->>   };
->>
->>   struct rockchip_pcie_of_data {
->> @@ -200,6 +207,31 @@ static bool rockchip_pcie_link_up(struct dw_pcie 
->> *pci)
->>          return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
->>   }
->>
->> +static void rockchip_pcie_enable_l1sub(struct dw_pcie *pci)
->> +{
->> +       struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
->> +       u32 cap, l1subcap;
->> +
->> +       /* Enable L1 substates if CLKREQ# is properly connected */
->> +       if (rockchip->supports_clkreq) {
->> +               /* Ready to have reference clock removed */
->> +               rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, 
->> PCIE_CLIENT_POWER);
->> +               return;
->> +       }
->> +
->> +       /* Otherwise, pull down CLKREQ# and disable L1 substates */
->> +       rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | 
->> PCIE_CLKREQ_NOT_READY,
->> +                                PCIE_CLIENT_POWER);
->> +       cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
->> +       if (cap) {
->> +               l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
->> +               l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | 
->> PCI_L1SS_CAP_ASPM_L1_1 |
->> +                             PCI_L1SS_CAP_ASPM_L1_2 | 
->> PCI_L1SS_CAP_PCIPM_L1_1 |
->> +                             PCI_L1SS_CAP_PCIPM_L1_2);
->> +               dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
->> +       }
->> +}
->> +
->>   static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
->>   {
->>          u32 cap, lnkcap;
->> @@ -264,6 +296,7 @@ static int rockchip_pcie_host_init(struct 
->> dw_pcie_rp *pp)
->>          irq_set_chained_handler_and_data(irq, 
->> rockchip_pcie_intx_handler,
->>                                           rockchip);
->>
->> +       rockchip_pcie_enable_l1sub(pci);
->>          rockchip_pcie_enable_l0s(pci);
->>
->>          return 0;
->> @@ -301,6 +334,7 @@ static void rockchip_pcie_ep_init(struct 
->> dw_pcie_ep *ep)
->>          struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>          enum pci_barno bar;
->>
->> +       rockchip_pcie_enable_l1sub(pci);
->>          rockchip_pcie_enable_l0s(pci);
->>          rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
->>
->> @@ -412,6 +446,8 @@ static int rockchip_pcie_resource_get(struct 
->> platform_device *pdev,
->>                  return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
->>                                       "failed to get reset lines\n");
->>
->> +       rockchip->supports_clkreq = of_property_read_bool(pdev- 
->> >dev.of_node, "supports-clkreq");
+> Yeah there are two RJ45 jacks. One referred to as WAN in the openwrt one
+> documentation (2.5G), which uses phy integrated leds. One referred to as LAN,
+> which for some reason is using software controlled leds rather then the phy's
+> led controller, which this patch adds support for.
 > 
-> Hi Shawn,
+> When applying this set you'll get:
+> ```
+> root@openwrt-debian:/sys/class/leds# ls -1                                     
+> amber:lan                                                                      
+> green:lan                                                                      
+> green:status                                                                   
+> mdio-bus:0f:amber:wan                                                          
+> mdio-bus:0f:green:wan                                                          
+> mt76-phy0                                                                      
+> mt76-phy1                                                                      
+> red:status                                                                     
+> white:status                       
+> ```
 > 
-> This line exceeds 80 characters. Can it be like this?
-> 
+> Which is hopefully clear enough
 
-Thanks for the reivew.
+You can also get to the LEDs associated to a MAC via
+/sys/class/net/eth42/leds, or a subdirectory.
 
-I think we've been drop this rule[1] for quite a long time :)
+Please could you expand the commit message with more details of the
+different RJ45 connectors, and how the different LEDs map to them.
 
-[1]https://www.phoronix.com/news/Linux-Kernel-Deprecates-80-Col
+Thanks
 
-> rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node,
->                            "supports-clkreq");
-> 
-> I have no doubts about the rest.
-> 
-> Reviewed-by: Hans Zhang <hans.zhang@cixtech.com>
-> 
-> 
-> Best regards,
-> Hans
-> 
->> +
->>          return 0;
->>   }
->>
->> -- 
->> 2.7.4
->>
->>
-> 
-> 
-
+	Andrew
 
