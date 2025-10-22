@@ -1,304 +1,266 @@
-Return-Path: <linux-pci+bounces-38992-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38993-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1546BBFB7A0
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 12:53:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E68EBFB7DF
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 12:58:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59E7D5646B9
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 10:53:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1926C18C5276
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 10:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71A5350A0F;
-	Wed, 22 Oct 2025 10:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8131A320CBC;
+	Wed, 22 Oct 2025 10:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPxZ+rUt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElU56uLl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AED4328625
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 10:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FB5287246;
+	Wed, 22 Oct 2025 10:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761130420; cv=none; b=VUcA3fak5JJTtQ6QWrwbDPKxKfi4UObnAEgvfPZvK++MbcK5c47ftqA92iEMDXtobttMoXAPb3r+Ubhap94gp/ZIoCUWE3TmbYMj6LqhJja1Ex+WulMd3kiLT5diAj8vBGXsefJ7CvRkRBerF696/7hHxGYQd2Mk1156mHlpM34=
+	t=1761130707; cv=none; b=qiLvtGxxI988qebEbH7LCAqV1vSsx/zkm5oQAZJLMuGdSLTNptjDpjD+oO9N2nL3aU/sppWuMRww4EtlaiDBGNG29tHZVUzekXSzMzsz4lPOAckUq9VEbr/PxweQ8eJuD2MOSubokg/RTS/ttuXGDC4/P0tLmQCQ8msMNzACCj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761130420; c=relaxed/simple;
-	bh=9tFgghSYzOHbh5LBOca4DCQs3iC7uCipXJTcIUzsBRY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=bB0OvmwHp3un6zQbQ4bO8iklVlPR0c+ljbZd1lRuRFzamFpAhaBO92h4hlgLqxsVo0FVFeAHBN3H00uZAIRaJp2gvEcXRhhW+/VoEagVXoprDMJr31ED+OVu79M0v0NRIBPn8e6WwSlbVBysicy3AgiYX9rY6sSTHt8Ga320qcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPxZ+rUt; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761130418; x=1792666418;
-  h=date:from:to:cc:subject:message-id;
-  bh=9tFgghSYzOHbh5LBOca4DCQs3iC7uCipXJTcIUzsBRY=;
-  b=cPxZ+rUtJHTAy72LsygJR+zGNQUjKx01gfs1McmY5A1LXx795IZNMnU7
-   bwCClsf6GTha5WlR7jZGEdcUg7iH7y6JvshfAUK3ZEvsznidk02xW7cLz
-   npE9zNOtsLZs0+MN0D8+Otn0Z5c9AhVRTa9NDaQLJ0aTrT10vyfKi+UsH
-   xifWKPdraFtAgXHox7imR8k+8OeAlfbEeCk+7A3JqsnKdvk58/9FGdoTo
-   pDTh4LvE+V831WDi/Lemqo3eIN5ZlD7m8yNTWKuaPt01R4HsGdtW+tbw5
-   byzqg7X0l5qaNUFq4ID/GPem31QG7FNZBJ47y/y23kr5gqsI655LNBZo+
-   w==;
-X-CSE-ConnectionGUID: JApGOmQVTSyGRz1xpcdhSw==
-X-CSE-MsgGUID: zMTvdz1FThaaClXF7WpKUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63310792"
-X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="63310792"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 03:53:38 -0700
-X-CSE-ConnectionGUID: NyiGDe8uQ3uzZn9rMmaaLg==
-X-CSE-MsgGUID: gdGGNqZ2RLyxQ+DSNaqDWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="214784216"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 22 Oct 2025 03:53:36 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vBWTF-000CGu-06;
-	Wed, 22 Oct 2025 10:53:33 +0000
-Date: Wed, 22 Oct 2025 18:53:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dw-rockchip] BUILD SUCCESS
- 7ad31f88429369ada44710176e176256a2812c3f
-Message-ID: <202510221810.YRAiUrFo-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1761130707; c=relaxed/simple;
+	bh=uP7wmgWPNro5aHZPJ9Sbf+zUHTY0T4bM7DTfOvPzk6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZyhhWS/vvEkqifwcfnYqPsnXBDjKiOpil70yDrhd8rcOJewCvvPRMcsVtURXt9q3Jka1mE5Av1hT7j9DLT546NIbafqGDdfV/G0Mn8G/aQtf2Zw9vnSuxQEO/Fi5ftvabVSYG78aqCmlfYkBGpO4xFXIChaFmF/IpDR188U5XWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElU56uLl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21BFC4CEE7;
+	Wed, 22 Oct 2025 10:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761130706;
+	bh=uP7wmgWPNro5aHZPJ9Sbf+zUHTY0T4bM7DTfOvPzk6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ElU56uLl53ecsF3fuxfxvkbzZD/3/bG7M9Z2Pi0n4KtvuGb11/0p/HaK2b+li95SZ
+	 mJrGkTUXILsjuOabDPcNJ/G9VD5Iqh+ExzVWiDpdQqtalVFL18cn3QCJ6Dqo5sfdFn
+	 /BuNRET3hcUjeyRVex2L44Le91VIE/MtFV03q6Dq4TMaxXzGLsBM72HtN2uj3+yy3D
+	 p7vEEjnS3r/285SA05pxpqce9DqiA2VFMwLqM3o+Kz7S3nSEmZ0RLecXVt+bRykRZH
+	 51bSXbACvsCR5BO3bdvgakU6FQKoBTd44N+BeWlezp8StzhQK0BOIuIAwBDVn2NfCR
+	 nlYRrQcx3B8DA==
+Date: Wed, 22 Oct 2025 16:28:08 +0530
+From: "mani@kernel.org" <mani@kernel.org>
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc: Stefan Roese <stefan.roese@mailbox.org>, 
+	Bjorn Helgaas <helgaas@kernel.org>, "Bandi, Ravi Kumar" <ravib@amazon.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "Simek, Michal" <michal.simek@amd.com>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, Sean Anderson <sean.anderson@linux.dev>, 
+	"Yeleswarapu, Nagaradhesh" <nagaradhesh.yeleswarapu@amd.com>, "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+Message-ID: <zuj6puxpqgjmaa3y3wwyixlru7e7locplnjev37i5fnh6zummw@72t5prkfsrpk>
+References: <20251021212801.GA1224310@bhelgaas>
+ <ab1f7c51-bc41-4774-a0dc-850e53c412eb@mailbox.org>
+ <3it5l556vmfpuu6kz5yvulwosi4ecmcgfbzcizrc5wi7ifddkh@mpzfxf2v6v3f>
+ <72267a6c-13c7-40bd-babb-f73a28625ca4@mailbox.org>
+ <SN7PR12MB7201CF621AF0A38AA905799D8BF3A@SN7PR12MB7201.namprd12.prod.outlook.com>
+ <brekq5jmgnotwpshcksxefpg2adm4vlsbuncazdg32sdpxqjwj@annnvyzshrys>
+ <SN7PR12MB7201C6B5B64F8847DD6D816D8BF3A@SN7PR12MB7201.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SN7PR12MB7201C6B5B64F8847DD6D816D8BF3A@SN7PR12MB7201.namprd12.prod.outlook.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dw-rockchip
-branch HEAD: 7ad31f88429369ada44710176e176256a2812c3f  PCI: dw-rockchip: Prevent advertising L1 Substates support
+On Wed, Oct 22, 2025 at 10:36:28AM +0000, Havalige, Thippeswamy wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+> Hi Mani,
+> 
+> > -----Original Message-----
+> > From: mani@kernel.org <mani@kernel.org>
+> > Sent: Wednesday, October 22, 2025 4:02 PM
+> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> > Cc: Stefan Roese <stefan.roese@mailbox.org>; Bjorn Helgaas
+> > <helgaas@kernel.org>; Bandi, Ravi Kumar <ravib@amazon.com>;
+> > lpieralisi@kernel.org; bhelgaas@google.com; linux-pci@vger.kernel.org;
+> > kwilczynski@kernel.org; robh@kernel.org; Simek, Michal
+> > <michal.simek@amd.com>; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; stable@vger.kernel.org; Sean Anderson
+> > <sean.anderson@linux.dev>
+> > Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+> >
+> > On Wed, Oct 22, 2025 at 10:08:44AM +0000, Havalige, Thippeswamy wrote:
+> > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > >
+> > > Hi Stefan,
+> > >
+> > > > -----Original Message-----
+> > > > From: Stefan Roese <stefan.roese@mailbox.org>
+> > > > Sent: Wednesday, October 22, 2025 3:29 PM
+> > > > To: mani@kernel.org
+> > > > Cc: Bjorn Helgaas <helgaas@kernel.org>; Bandi, Ravi Kumar
+> > > > <ravib@amazon.com>; Havalige, Thippeswamy
+> > > > <thippeswamy.havalige@amd.com>; lpieralisi@kernel.org;
+> > > > bhelgaas@google.com; linux-pci@vger.kernel.org;
+> > > > kwilczynski@kernel.org; robh@kernel.org; Simek, Michal
+> > > > <michal.simek@amd.com>; linux-arm- kernel@lists.infradead.org;
+> > > > linux-kernel@vger.kernel.org; stable@vger.kernel.org; Sean Anderson
+> > > > <sean.anderson@linux.dev>
+> > > > Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+> > > >
+> > > > On 10/22/25 11:55, mani@kernel.org wrote:
+> > > > > On Wed, Oct 22, 2025 at 08:59:19AM +0200, Stefan Roese wrote:
+> > > > >> Hi Bjorn,
+> > > > >> Hi Ravi,
+> > > > >>
+> > > > >> On 10/21/25 23:28, Bjorn Helgaas wrote:
+> > > > >>> On Tue, Oct 21, 2025 at 08:55:41PM +0000, Bandi, Ravi Kumar wrote:
+> > > > >>>>> On Tue, Oct 21, 2025 at 05:46:17PM +0000, Bandi, Ravi Kumar
+> > wrote:
+> > > > >>>>>>> On Oct 21, 2025, at 10:23 AM, Bjorn Helgaas
+> > > > >>>>>>> <helgaas@kernel.org>
+> > > > wrote:
+> > > > >>>>>>> On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi
+> > > > wrote:
+> > > > >>>>>>>> The pcie-xilinx-dma-pl driver does not enable INTx
+> > > > >>>>>>>> interrupts after initializing the port, preventing INTx
+> > > > >>>>>>>> interrupts from PCIe endpoints from flowing through the
+> > > > >>>>>>>> Xilinx XDMA root port bridge. This issue affects kernel 6.6.0 and
+> > later versions.
+> > > > >>>>>>>>
+> > > > >>>>>>>> This patch allows INTx interrupts generated by PCIe
+> > > > >>>>>>>> endpoints to flow through the root port. Tested the fix on
+> > > > >>>>>>>> a board with two endpoints generating INTx interrupts.
+> > > > >>>>>>>> Interrupts are properly detected and serviced. The
+> > > > >>>>>>>> /proc/interrupts output
+> > > > >>>>>>>> shows:
+> > > > >>>>>>>>
+> > > > >>>>>>>> [...]
+> > > > >>>>>>>> 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-
+> > pcie,
+> > > > azdrv
+> > > > >>>>>>>> 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-
+> > pcie,
+> > > > azdrv
+> > > > >>>>>>>> [...]
+> > > > >>
+> > > > >> First a comment on this IRQ logging:
+> > > > >>
+> > > > >> These lines do NOT refer to the INTx IRQ(s) but the controller
+> > > > >> internal "events" (errors etc). Please see this log for INTx on
+> > > > >> my Versal platform with pci_irqd_intx_xlate added:
+> > > > >>
+> > > > >>   24:          0          0  pl_dma:RC-Event   0 Level     LINK_DOWN
+> > > > >>   25:          0          0  pl_dma:RC-Event   3 Level     HOT_RESET
+> > > > >>   26:          0          0  pl_dma:RC-Event   8 Level     CFG_TIMEOUT
+> > > > >>   27:          0          0  pl_dma:RC-Event   9 Level     CORRECTABLE
+> > > > >>   28:          0          0  pl_dma:RC-Event  10 Level     NONFATAL
+> > > > >>   29:          0          0  pl_dma:RC-Event  11 Level     FATAL
+> > > > >>   30:          0          0  pl_dma:RC-Event  20 Level     SLV_UNSUPP
+> > > > >>   31:          0          0  pl_dma:RC-Event  21 Level     SLV_UNEXP
+> > > > >>   32:          0          0  pl_dma:RC-Event  22 Level     SLV_COMPL
+> > > > >>   33:          0          0  pl_dma:RC-Event  23 Level     SLV_ERRP
+> > > > >>   34:          0          0  pl_dma:RC-Event  24 Level     SLV_CMPABT
+> > > > >>   35:          0          0  pl_dma:RC-Event  25 Level     SLV_ILLBUR
+> > > > >>   36:          0          0  pl_dma:RC-Event  26 Level     MST_DECERR
+> > > > >>   37:          0          0  pl_dma:RC-Event  27 Level     MST_SLVERR
+> > > > >>   38:         94          0  pl_dma:RC-Event  16 Level     84000000.axi-pcie
+> > > > >>   39:         94          0  pl_dma:INTx   0 Level     nvme0q0, nvme0q1
+> > > > >>
+> > > > >> The last line shows the INTx IRQs here ('pl_dma:INTx' vs
+> > > > >> 'pl_dma:RC- Event').
+> > > > >>
+> > > > >> More below...
+> > > > >>
+> > > > >>>>>>>>
+> > > > >>>>>>>> Changes since v1::
+> > > > >>>>>>>> - Fixed commit message per reviewer's comments
+> > > > >>>>>>>>
+> > > > >>>>>>>> Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA
+> > > > >>>>>>>> Root Port driver")
+> > > > >>>>>>>> Cc: stable@vger.kernel.org
+> > > > >>>>>>>> Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
+> > > > >>>>>>>
+> > > > >>>>>>> Hi Ravi, obviously you tested this, but I don't know how to
+> > > > >>>>>>> reconcile this with Stefan's INTx fix at
+> > > > >>>>>>> https://lore.kernel.org/r/20251021154322.973640-1-
+> > > > stefan.roese@m
+> > > > >>>>>>> ailbox.org
+> > > > >>>>>>>
+> > > > >>>>>>> Does Stefan's fix need to be squashed into this patch?
+> > > > >>>>>>
+> > > > >>>>>> Sure, we can squash Stefan’s fix into this.
+> > > > >>>>>
+> > > > >>>>> I know we *can* squash them.
+> > > > >>>>>
+> > > > >>>>> I want to know why things worked for you and Stefan when they
+> > > > >>>>> *weren't* squashed:
+> > > > >>>>>
+> > > > >>>>>    - Why did INTx work for you even without Stefan's patch.  Did you
+> > > > >>>>>      get INTx interrupts but not the right ones, e.g., did the device
+> > > > >>>>>      signal INTA but it was received as INTB?
+> > > > >>>>
+> > > > >>>> I saw that interrupts were being generated by the endpoint
+> > > > >>>> device, but I didn’t specifically check if they were correctly
+> > > > >>>> translated in the controller. I noticed that the new driver
+> > > > >>>> wasn't explicitly enabling the interrupts, so my first approach
+> > > > >>>> was to enable them, which helped the interrupts flow through.
+> > > > >>>
+> > > > >>> OK, I'll assume the interrupts happened but the driver might not
+> > > > >>> have been able to handle them correctly, e.g., it was prepared
+> > > > >>> for INTA but got INTB or similar.
+> > > > >>>
+> > > > >>>>>    - Why did Stefan's patch work for him even without your patch.
+> > How
+> > > > >>>>>      could Stefan's INTx work without the CSR writes to enable
+> > > > >>>>>      interrupts?
+> > > > >>>>
+> > > > >>>> I'm not entirely sure if there are any other dependencies in
+> > > > >>>> the FPGA bitstream. I'll investigate further and get back to you.
+> > > > >>>
+> > > > >>> Stefan clarified in a private message that he had applied your
+> > > > >>> patch first, so this mystery is solved.
+> > > > >>
+> > > > >> Yes. I applied Ravi's patch first and still got no INTx delivered
+> > > > >> to the nvme driver. That's what me triggered to dig deeper here
+> > > > >> and resulted in this v2 patch with pci_irqd_intx_xlate added.
+> > > > >>
+> > > > >> BTW:
+> > > > >> I re-tested just now w/o Ravi's patch and the INTx worked. Still
+> > > > >> I think Ravi's patch is valid and should be applied...
+> > > > >
+> > > > > How come INTx is working without the patch from Ravi which enabled
+> > > > > INTx routing in the controller? Was it enabled by default in the hardware?
+> > > >
+> > > > Yes, this is my best guess right now. I could double-check here, but
+> > > > IMHO it makes sense to enable it "manually" as done with Ravi's
+> > > > patch to not rely on this default setup at all.
+> > > Hardware doesn't enable this bits by default, INTx didn't work since there is a
+> > miss match in the DT property which doesn't require pci_irqd_intx_xlate.
+> > >
+> > > interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
+> > > <0 0 0 2 &pcie_intc_0 1>,
+> > > <0 0 0 3 &pcie_intc_0 2>,
+> > > <0 0 0 4 &pcie_intc_0 3>;
+> > >
+> >
+> > Ok. This makes me believe that we do not need Stefan's patch [1] and need
+> > just this patch from Ravi.
+> >
+> > - Mani
+> >
+> > [1] https://lore.kernel.org/linux-pci/20251021154322.973640-1-
+> > stefan.roese@mailbox.org/
+> 
+> We even don’t need ravi patch, as we have tested this at our end it works fine by just updating interrupt-map
+> Property. We need to now understand the difference in design.
 
-elapsed time: 880m
+Ok, please let us know with your findings. In the meantime, I'll keep Ravi's
+patch in tree, as it seems to be required on his setup.
 
-configs tested: 211
-configs skipped: 4
+- Mani
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    clang-22
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    clang-19
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    clang-22
-arc                              allyesconfig    clang-19
-arc                                 defconfig    clang-19
-arc                   randconfig-001-20251022    clang-22
-arc                   randconfig-001-20251022    gcc-13.4.0
-arc                   randconfig-002-20251022    clang-22
-arc                   randconfig-002-20251022    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                                 defconfig    clang-19
-arm                   randconfig-001-20251022    clang-22
-arm                   randconfig-001-20251022    gcc-11.5.0
-arm                   randconfig-002-20251022    clang-22
-arm                   randconfig-002-20251022    gcc-10.5.0
-arm                   randconfig-003-20251022    clang-22
-arm                   randconfig-003-20251022    gcc-10.5.0
-arm                   randconfig-004-20251022    clang-22
-arm                        spear6xx_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    clang-22
-arm64                               defconfig    clang-19
-arm64                 randconfig-001-20251022    clang-22
-arm64                 randconfig-001-20251022    gcc-9.5.0
-arm64                 randconfig-002-20251022    clang-18
-arm64                 randconfig-002-20251022    clang-22
-arm64                 randconfig-003-20251022    clang-22
-arm64                 randconfig-003-20251022    gcc-10.5.0
-arm64                 randconfig-004-20251022    clang-22
-arm64                 randconfig-004-20251022    gcc-12.5.0
-csky                              allnoconfig    clang-22
-csky                                defconfig    clang-19
-csky                  randconfig-001-20251022    clang-22
-csky                  randconfig-001-20251022    gcc-15.1.0
-csky                  randconfig-002-20251022    clang-22
-csky                  randconfig-002-20251022    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-19
-hexagon               randconfig-001-20251022    clang-22
-hexagon               randconfig-002-20251022    clang-22
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20251022    clang-20
-i386        buildonly-randconfig-001-20251022    gcc-14
-i386        buildonly-randconfig-002-20251022    clang-20
-i386        buildonly-randconfig-002-20251022    gcc-14
-i386        buildonly-randconfig-003-20251022    gcc-14
-i386        buildonly-randconfig-004-20251022    clang-20
-i386        buildonly-randconfig-004-20251022    gcc-14
-i386        buildonly-randconfig-005-20251022    gcc-12
-i386        buildonly-randconfig-005-20251022    gcc-14
-i386        buildonly-randconfig-006-20251022    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251022    gcc-14
-i386                  randconfig-002-20251022    gcc-14
-i386                  randconfig-003-20251022    gcc-14
-i386                  randconfig-004-20251022    gcc-14
-i386                  randconfig-005-20251022    gcc-14
-i386                  randconfig-006-20251022    gcc-14
-i386                  randconfig-007-20251022    gcc-14
-i386                  randconfig-011-20251022    gcc-13
-i386                  randconfig-012-20251022    gcc-13
-i386                  randconfig-013-20251022    gcc-13
-i386                  randconfig-014-20251022    gcc-13
-i386                  randconfig-015-20251022    gcc-13
-i386                  randconfig-016-20251022    gcc-13
-i386                  randconfig-017-20251022    gcc-13
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251022    clang-22
-loongarch             randconfig-001-20251022    gcc-12.5.0
-loongarch             randconfig-002-20251022    clang-22
-loongarch             randconfig-002-20251022    gcc-15.1.0
-m68k                             allmodconfig    clang-19
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-19
-m68k                             allyesconfig    gcc-15.1.0
-m68k                          amiga_defconfig    gcc-15.1.0
-m68k                                defconfig    clang-19
-microblaze                       allmodconfig    clang-19
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    clang-19
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm47xx_defconfig    gcc-15.1.0
-mips                       bmips_be_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20251022    clang-22
-nios2                 randconfig-001-20251022    gcc-8.5.0
-nios2                 randconfig-002-20251022    clang-22
-nios2                 randconfig-002-20251022    gcc-10.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-14
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251022    clang-22
-parisc                randconfig-001-20251022    gcc-13.4.0
-parisc                randconfig-002-20251022    clang-22
-parisc                randconfig-002-20251022    gcc-10.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc               randconfig-001-20251022    clang-22
-powerpc               randconfig-001-20251022    gcc-8.5.0
-powerpc               randconfig-002-20251022    clang-22
-powerpc               randconfig-002-20251022    gcc-8.5.0
-powerpc               randconfig-003-20251022    clang-22
-powerpc               randconfig-003-20251022    gcc-8.5.0
-powerpc64             randconfig-001-20251022    clang-22
-powerpc64             randconfig-001-20251022    gcc-8.5.0
-powerpc64             randconfig-002-20251022    clang-22
-powerpc64             randconfig-002-20251022    gcc-8.5.0
-powerpc64             randconfig-003-20251022    clang-22
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-22
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-14
-riscv                 randconfig-001-20251022    gcc-14.3.0
-riscv                 randconfig-002-20251022    gcc-14.3.0
-s390                             alldefconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-14
-s390                  randconfig-001-20251022    gcc-14.3.0
-s390                  randconfig-002-20251022    gcc-14.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                            hp6xx_defconfig    gcc-15.1.0
-sh                          lboxre2_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251022    gcc-14.3.0
-sh                    randconfig-002-20251022    gcc-14.3.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251022    gcc-14.3.0
-sparc                 randconfig-002-20251022    gcc-14.3.0
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251022    gcc-14.3.0
-sparc64               randconfig-002-20251022    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-14
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251022    gcc-14.3.0
-um                    randconfig-002-20251022    gcc-14.3.0
-um                           x86_64_defconfig    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251022    clang-20
-x86_64      buildonly-randconfig-002-20251022    clang-20
-x86_64      buildonly-randconfig-002-20251022    gcc-14
-x86_64      buildonly-randconfig-003-20251022    clang-20
-x86_64      buildonly-randconfig-003-20251022    gcc-14
-x86_64      buildonly-randconfig-004-20251022    clang-20
-x86_64      buildonly-randconfig-005-20251022    clang-20
-x86_64      buildonly-randconfig-005-20251022    gcc-14
-x86_64      buildonly-randconfig-006-20251022    clang-20
-x86_64      buildonly-randconfig-006-20251022    gcc-14
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251022    clang-20
-x86_64                randconfig-002-20251022    clang-20
-x86_64                randconfig-003-20251022    clang-20
-x86_64                randconfig-004-20251022    clang-20
-x86_64                randconfig-005-20251022    clang-20
-x86_64                randconfig-006-20251022    clang-20
-x86_64                randconfig-007-20251022    clang-20
-x86_64                randconfig-008-20251022    clang-20
-x86_64                randconfig-071-20251022    clang-20
-x86_64                randconfig-072-20251022    clang-20
-x86_64                randconfig-073-20251022    clang-20
-x86_64                randconfig-074-20251022    clang-20
-x86_64                randconfig-075-20251022    clang-20
-x86_64                randconfig-076-20251022    clang-20
-x86_64                randconfig-077-20251022    clang-20
-x86_64                randconfig-078-20251022    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251022    gcc-14.3.0
-xtensa                randconfig-002-20251022    gcc-14.3.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+மணிவண்ணன் சதாசிவம்
 
