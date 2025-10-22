@@ -1,196 +1,130 @@
-Return-Path: <linux-pci+bounces-39025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F162BFC438
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 15:49:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D455ABFC34C
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 15:38:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C957F661022
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:37:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9F3919C44C1
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 13:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE3AD346E7C;
-	Wed, 22 Oct 2025 13:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440423491C5;
+	Wed, 22 Oct 2025 13:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXsQxwWa"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="K6158Wcy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB21347FCD;
-	Wed, 22 Oct 2025 13:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B600319870;
+	Wed, 22 Oct 2025 13:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761140172; cv=none; b=hmrfX0M8PYKUZRt1s7VEiEZjAn++gB6bHaL/ynzV/HL/p8oSnUGZq1Lns83WrGvltiE77mBkcKiDQ1IdDyv6pe4hz9ECsezJihuJshUDbR+4LX1ZNFVMLqlPp8qpl2LJylFqp+vjQ29EvbsVIjrc+7IZTq+uZlfeP1Pxd+E5ZEI=
+	t=1761140260; cv=none; b=N5houvVNnwTK/QoPt3ubRA1RGLb0mTHsuqNx0uddfBvYpVuljmxfsnWI5P90wj9uhYORLKin2k8CdmN6Oy2lZGejl6n0zd2n6ZSosKDH5xhjoMRdbe9GD/KatlQ9IX09y+MMvZnqBiUfY2oeXMVIoiV9WXHK16S4bGd0EmmLaQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761140172; c=relaxed/simple;
-	bh=vgdrsWGvy0swoIbcD1t6cJesDB5Ul+gmQHIizIpLf3U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CxmgwyFDDKpgEme+XuH+x9ElqzE2cqZnxb/VH37wLHTceuMSw0WZGBOM/5wddrteNWCRF2zCvbCahUjjcLKMj6WEPZJTO3jzThyp8CorT5gK7Q/PZmV8HCi7XJgaUDn0SR19OIAeVfQTqx1i4D8REBRNgT7xIaJQKvv9NFl9jVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXsQxwWa; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761140171; x=1792676171;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vgdrsWGvy0swoIbcD1t6cJesDB5Ul+gmQHIizIpLf3U=;
-  b=MXsQxwWa1UA3s8IygxddKIsnxuzUEUzoNX+rhwAAy9M08bl/ZcmMRJY4
-   +m0p4bZNGRLekfHCVnX02QUVYsL1JohosJmARWN0JwQlhh5yDzpB+oRX2
-   PgcFK7usDp9Jj7Eu/9jOxjHDTw4B9OFURqgpnvR/sVo58KdrKZYFIypqV
-   yPLPHviz+/5mgMqv06/+EuqWYY+MvGlMe3mjjq3uKk3HgBmBSRPpm0B/t
-   wRp/+YfxmHOijZsEiOi1WkHYOPvo60EAFNUIrZZH7aMOX3vl6lCN6QRq1
-   l/6QLogMpszY1vzEIoX9X8UgkoDznSSuIY7MC69e4pXA9K+xQjlWH37qJ
-   A==;
-X-CSE-ConnectionGUID: d4AD3028TfaTTM3nlKfJhw==
-X-CSE-MsgGUID: PMXtevUgQfqSGqqIaDB6eg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62317507"
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="62317507"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 06:36:10 -0700
-X-CSE-ConnectionGUID: 93A0HGFKS5SF/61i/IYhjw==
-X-CSE-MsgGUID: hqWZieMqT7S1LMIUGJ5wuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="189152907"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 06:36:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	"Michael J . Ruhl" <mjruhl@habana.ai>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 11/11] PCI: Convert BAR sizes bitmasks to u64
-Date: Wed, 22 Oct 2025 16:33:31 +0300
-Message-Id: <20251022133331.4357-12-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251022133331.4357-1-ilpo.jarvinen@linux.intel.com>
-References: <20251022133331.4357-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1761140260; c=relaxed/simple;
+	bh=bM78zcZcxf2ooIixxkmQEBOcOTvghqfII/4EoujWcjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E/J3DQLrendkwstRNreqSdTHk647w6ROgQKJ4L/b+WPw4nApK66O/qOiu6/Eg78Ue5I25b9K1GaK0bchX+YnVbICN5/pT42bbJQk91kxVRxeB2DicEScmKG+Ewz1+1QR89SRrYri/OLdKFxec2u9v2+tr3uGwkjckpwgLbqdVEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=K6158Wcy; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4cs9Fp5VDJz9tRP;
+	Wed, 22 Oct 2025 15:37:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1761140254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2gGJ2j4XuU1eR+kSbHyPUvCzb9zojsG4YTdQlWdLMjQ=;
+	b=K6158WcyF+BOJQFTdw7hpnl4LPtjCCwgBiCCZO314UzujaTkx27mAfeDY5kNdNKdVk0isG
+	8VPHMrNfvq0ZC1yqFQMz5ULuKEl3qIJpwgDU18sOlqnIo41/WcD7wlhEaCZMekDFokhQDI
+	2GEVpL7TtH0CxWs6P7aORkWFNddL+3VOAY8DtBbB+E5av5VXHzz7+L68UlqTmIjOdyeZxu
+	HOYZnBAKk8EfJplVInSYNX7G1tUYZHvISQx0Tc8+xC59LATJzNcO+DdghHs6ea1IQgU+mK
+	M0nVhp8ia3Bajfz0E/a56fJum/z5GuDpqcUS0w9CVvUe6GM4uJKlzWnIsoWlOQ==
+Message-ID: <29bc5e92-04c9-475a-ba3d-a5ea26f1c95a@mailbox.org>
+Date: Wed, 22 Oct 2025 15:37:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>,
+ "mani@kernel.org" <mani@kernel.org>,
+ "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "Bandi, Ravi Kumar"
+ <ravib@amazon.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sean Anderson <sean.anderson@linux.dev>,
+ "Yeleswarapu, Nagaradhesh" <nagaradhesh.yeleswarapu@amd.com>
+References: <20251021212801.GA1224310@bhelgaas>
+ <ab1f7c51-bc41-4774-a0dc-850e53c412eb@mailbox.org>
+ <3it5l556vmfpuu6kz5yvulwosi4ecmcgfbzcizrc5wi7ifddkh@mpzfxf2v6v3f>
+ <72267a6c-13c7-40bd-babb-f73a28625ca4@mailbox.org>
+ <SN7PR12MB7201CF621AF0A38AA905799D8BF3A@SN7PR12MB7201.namprd12.prod.outlook.com>
+ <brekq5jmgnotwpshcksxefpg2adm4vlsbuncazdg32sdpxqjwj@annnvyzshrys>
+ <SN7PR12MB7201C6B5B64F8847DD6D816D8BF3A@SN7PR12MB7201.namprd12.prod.outlook.com>
+ <zuj6puxpqgjmaa3y3wwyixlru7e7locplnjev37i5fnh6zummw@72t5prkfsrpk>
+ <DM4PR12MB6158ACBA7BCEDB99A55ACA03CDF3A@DM4PR12MB6158.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: Stefan Roese <stefan.roese@mailbox.org>
+In-Reply-To: <DM4PR12MB6158ACBA7BCEDB99A55ACA03CDF3A@DM4PR12MB6158.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: 4eec622a3ee0e92cfaf
+X-MBO-RS-META: bxfn33oh4qooy9od7kb88eg7bpucyym8
 
-PCIe r6.2 section 7.8.6 defines resizable BAR sizes beyond the
-currently supported maximum of 128TB which will require more than u32
-to store the entire bitmask.
+On 10/22/25 14:48, Musham, Sai Krishna wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
 
-Convert Resizable BAR related functions to use u64 bitmask for BAR
-sizes to make the typing more future-proof.
+<snip>
 
-The support for the larger BAR sizes themselves is not added at this
-point.
+>>> We even don’t need ravi patch, as we have tested this at our end it
+>>> works fine by just updating interrupt-map Property. We need to now understand the
+>> difference in design.
+>>
+>> Ok, please let us know with your findings. In the meantime, I'll keep Ravi's patch in
+>> tree, as it seems to be required on his setup.
+>>
+> 
+> We tested on Linux version 6.12.40 without applying either Stefan's or Ravi's patches.
+> Instead, we applied only the following interrupt-map property change (entries 0,1,2,3) and verified that
+> legacy interrupts are working correctly.
+> 
+> interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
+> <0 0 0 2 &pcie_intc_0 1>,
+> <0 0 0 3 &pcie_intc_0 2>,
+> <0 0 0 4 &pcie_intc_0 3>;
+> 
+> 38:       1143          0  pl_dma:RC-Event  16 Level     80000000.axi-pcie
+> 39:       1143          0  pl_dma:INTx   0 Level     nvme0q0, nvme0q1
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
----
- drivers/gpu/drm/xe/xe_vram.c | 2 +-
- drivers/pci/iov.c            | 2 +-
- drivers/pci/pci-sysfs.c      | 2 +-
- drivers/pci/rebar.c          | 4 ++--
- include/linux/pci.h          | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+Okay. Same here. I don't need Ravi's patch for the INTx bit enabling.
 
-diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
-index 55232dfe2cd8..f18232668810 100644
---- a/drivers/gpu/drm/xe/xe_vram.c
-+++ b/drivers/gpu/drm/xe/xe_vram.c
-@@ -72,7 +72,7 @@ static void resize_vram_bar(struct xe_device *xe)
- 
- 		if (!pci_rebar_size_supported(pdev, LMEM_BAR, rebar_size)) {
- 			drm_info(&xe->drm,
--				 "Requested size: %lluMiB is not supported by rebar sizes: 0x%x. Leaving default: %lluMiB\n",
-+				 "Requested size: %lluMiB is not supported by rebar sizes: 0x%llx. Leaving default: %lluMiB\n",
- 				 (u64)pci_rebar_size_to_bytes(rebar_size) >> 20,
- 				 pci_rebar_get_possible_sizes(pdev, LMEM_BAR),
- 				 (u64)current_size >> 20);
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 02f4e9cd3fbe..c09f7caa49a4 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -1375,7 +1375,7 @@ EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
- u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs)
- {
- 	u64 vf_len = pci_resource_len(dev, resno);
--	u32 sizes;
-+	u64 sizes;
- 
- 	if (!num_vfs)
- 		return 0;
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index af74cf02bb90..cb19983182b5 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1586,7 +1586,7 @@ static ssize_t __resource_resize_show(struct device *dev, int n, char *buf)
- 	pci_config_pm_runtime_get(pdev);
- 
- 	ret = sysfs_emit(buf, "%016llx\n",
--			 (u64)pci_rebar_get_possible_sizes(pdev, n));
-+			 pci_rebar_get_possible_sizes(pdev, n));
- 
- 	pci_config_pm_runtime_put(pdev);
- 
-diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
-index 1c30beb80f85..1488769071ed 100644
---- a/drivers/pci/rebar.c
-+++ b/drivers/pci/rebar.c
-@@ -105,7 +105,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
-  * Return: A bitmask of possible sizes (bit 0=1MB, bit 31=128TB), or %0 if
-  *	   BAR isn't resizable.
-  */
--u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
-+u64 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- {
- 	int pos;
- 	u32 cap;
-@@ -155,7 +155,7 @@ EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
-  */
- int pci_rebar_get_max_size(struct pci_dev *pdev, int bar)
- {
--	u32 sizes;
-+	u64 sizes;
- 
- 	sizes = pci_rebar_get_possible_sizes(pdev, bar);
- 	if (!sizes)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 61dcf5ff7df6..63d98b2a3e06 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1423,7 +1423,7 @@ int pci_release_resource(struct pci_dev *dev, int resno);
- /* Resizable BAR related routines */
- int pci_rebar_bytes_to_size(u64 bytes);
- resource_size_t pci_rebar_size_to_bytes(int size);
--u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar);
-+u64 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar);
- bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size);
- int pci_rebar_get_max_size(struct pci_dev *pdev, int bar);
- int __must_check pci_resize_resource(struct pci_dev *dev, int i, int size);
--- 
-2.39.5
+I understand that you want us to change the interrupt map in the auto-
+generated device-tree from Vivado. Which is IMHO a bit "suboptimal".
+
+I would prefer to have a solution which works out-of-the-box, w/o the
+need to manually change DT properties. Is it planned to change / fix
+this interrupt map in pl.dtsi generated with a newer version of Vivado?
+
+Thanks,
+Stefan
 
 
