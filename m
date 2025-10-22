@@ -1,113 +1,138 @@
-Return-Path: <linux-pci+bounces-38961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D865BFA78E
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:10:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F95BFA813
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:20:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4B0744E3865
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:10:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADB70188EDAB
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:20:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704522ECE9E;
-	Wed, 22 Oct 2025 07:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LA0EsnIv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3392F5A27;
+	Wed, 22 Oct 2025 07:20:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE09C223DF0;
-	Wed, 22 Oct 2025 07:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA082ED84A
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761117040; cv=none; b=llLFe7P+K9TDnuZyWV9OaYC5yPXIN9zKkVqGmiRFJhqvBGKxKdFsaF+IewXqaSV62tMRv+zbXvaqOp+ngfemHbH/wYnd4wR6yyWE7x9Yo+9gzDgpikvMgAYS2FeQRR0oD54xbUwOZeXRTIJFsNwY9qCuMTvj7qDb09UioCRnN6k=
+	t=1761117610; cv=none; b=Wed+0c9Z9bGVnwS9N+CrsDHjaYjoVXanMIq0hCX02Fg0gT691bENqGPWzM2MbmddOT/ZPSHnhj8otUrn0gfSCKEtTfWTnT1EjIWe3n6Yw2OBL2s7gy+F4OM7ZrX3VeN6Z8JiADmu5ncyXrcIhoNPKgym7Ug7vU//Uzi+Z5fqt8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761117040; c=relaxed/simple;
-	bh=dluSQgYEPQexXX9fFOmxg4O5613AanDzlWmOrb+I2OY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mBSb6z1ciS8C1VULXda8C15kgt6QnXApG2cT4X4XDg5GXInMsniO0R/l4vCQdcFwbHLJdu4J3BwKb66BOQuv2FGmRUzUS6J1dk+nWBWN8aJkWFsj2j1AFKN7ri6AYXZiOaBinmBZYhj6cI3xqN3F22ayFDcWk9VkUArvmfXxGbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LA0EsnIv; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=XKoyGCto+Kn0HeCK5i87kYlf6+Be8yWE+pzHWLeDEO0=; b=LA0EsnIvPmdhyAlKnWiGNmOL5l
-	dPh0nZUevEw5pwm6HBBuRxpL+2yfoJmbOBQlWDuYglG8QtuSjZzDWUqtSadQ1OFRPkGGDZwk02eQl
-	Bu+qOaq4hhb9Bd5VhP+RGw6wG8tKjt+oR0eO64ab5IIneyp3/JhLSsBpmjpjM5a/ycj97uOgmYi+/
-	Y1cRAulWoHfCg1kdfl5Alide/1gYw2Rn+VvkITIlqp8loD9nJTP6eJ8kMFPCR/UpvZDtjb6axkHGz
-	ZZPEPI9OgbKn0k/f8YRe21WllooKBtsnBOVhBULD9Jfr3RGKlOgLor3ceNm20eilmCX59TC4cQ8TU
-	Mj/Wx7eQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBSzT-00000001oYi-2Iys;
-	Wed, 22 Oct 2025 07:10:35 +0000
-Date: Wed, 22 Oct 2025 00:10:35 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 1/9] PCI/P2PDMA: Separate the mmap() support from the
- core logic
-Message-ID: <aPiDa-QruoHC3alk@infradead.org>
-References: <cover.1760368250.git.leon@kernel.org>
- <1044f7aa09836d63de964d4eb6e646b3071c1fdb.1760368250.git.leon@kernel.org>
- <aPHibioUFZV8Wnd1@infradead.org>
- <20251017115320.GF3901471@nvidia.com>
- <aPYqliGwJTcZznSX@infradead.org>
- <20251020125854.GL316284@nvidia.com>
+	s=arc-20240116; t=1761117610; c=relaxed/simple;
+	bh=oj2g+iXtUrFUuNWS7IxNGMMhQzbaj0lpzDuF73afwdk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cLBQe/kycZg5FqYyaPTQHXZ0b7tEkSNlkIXZ3N3zZPEGOajTZcYCakKnom3cLKzYd5Gam16aChW4/gyOoFhhhIvBbC0npNuH3logHjqvR9gj/9+4lxIPb1F7Bmd7r5klIXV5UjNH4CF2bX+2B9hUsPG3mnxNKq6PHoYO/msctkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5d6266f1a33so2900933137.3
+        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:20:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761117607; x=1761722407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LB4UmnebrIV6VHjidh9rexno3FG0/9sLJFVzFv+0Cqk=;
+        b=w7hYy5UwoAtk1F86oAERzQ0ApdYL/46K1IUvPW4RIJDSsqiSl1Y+BwNMdpbprROkhy
+         qNvgj39evmW8hb0BkWAC3iydZ14U2YCr5e/U633/pK+PInTdt3QNc3zTwrlRO4PTO2DE
+         Ktw8VlU5kfWk1wZQxvriGncldl4sCo8mNYlHL+BOfPmRFe0L1dgRpAZR0BEK4J8iBi9b
+         61PkogwyRU5LhZE1+g1U6QJqL33NOX8wQ/Y23cTH33jg7BAhfCgIj6w8walyN77HqE0z
+         qDikXbPHFrfZSmttDYpf5AycUOF3kCFV9RPwKkH3bH5ekjlB6ZtJMGKJsVoDlfoFp9CN
+         jY9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8yRTTWbrdV8ScV+pKrX+vITB8Y85F6eCQgjWqv+QATjRs5dTgwcD6OBcQtG39X8HYpIKgmpj00Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCv8GD/YsD8hmfys9BX3jynnDbjqOwnGmKzLabZ7jAQi4ze4BK
+	ktzh8fE1UtPsYb8mFz6j1uOpZiUiN8BGW7K+cPG3Yw331L26RRDB8R71QQBcVs28
+X-Gm-Gg: ASbGnctPsNQlktZ2BBc20s4KrZ9X9vmJCmC5FvchzsQ4TJqa10Pk6L5IR3/Lm34m5nh
+	/WSo6Fs/4j6uMTJT8oyZDaUS53DYRFSOVgUkSHMY/mbfrrc58400bGjmi/WFsuBdyXjFFsGT3ZQ
+	oXfHoEXAnT2WTUyyKYYpwxdmFRNIu57n3j6lRF8b+4FHvSfciAAm8fm8DPz+Fu2mWrvtrX9jCl9
+	I9BbELL4/wIvf5Y1PscgL1cewI6Jsg+PoTNea5i4fOSmPgszb1Qaw/spWzX+j4/ho6RgXwKUMqG
+	kWrYRipuzV8X03fl70Ak/wrOIKFHMp/pDWikq3NErkwUNWA0NSfVPsXKuBYYIlWxC33ZAumRwSy
+	SWnkf1DdFv2ray8+oIAjwAlQNBfydsLqLBBNwkYA1pVjFOQyo9KLyIXCzYjDD+UXQ402osLVPP9
+	m44aqwTQhT5m76hbiZLxyi4iT9sycsEu4yydj7EA==
+X-Google-Smtp-Source: AGHT+IEn4+bqQJRI/3kkaDWa6bfuTKYoHMTOL2sR7P8ZZB9GSP/A0w93qNgzcuONcrMgZJ2wbNG5Rw==
+X-Received: by 2002:a05:6102:291e:b0:5d6:6ce:9675 with SMTP id ada2fe7eead31-5d7dd6bb0d8mr5272548137.40.1761117606191;
+        Wed, 22 Oct 2025 00:20:06 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-932c3e4794fsm4223743241.14.2025.10.22.00.20.05
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Oct 2025 00:20:06 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-90f6d66e96dso1674475241.0
+        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:20:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvSXE0NxFCA3TDxX20sXnbpwTXEHSL6jpwuzQVBtBqck5PIz8ypHxmrBOP7J0UeSBgGuvYO3KPBbU=@vger.kernel.org
+X-Received: by 2002:a05:6102:419f:b0:5d5:ff0f:aea1 with SMTP id
+ ada2fe7eead31-5d7dd634d15mr5387817137.22.1761117605738; Wed, 22 Oct 2025
+ 00:20:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251020125854.GL316284@nvidia.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com>
+ <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com>
+ <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com> <CAMuHMdUbseFEY8AGOxm2T8W-64qT9OSvfmvu+hyTJUT+WE2cVw@mail.gmail.com>
+ <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com> <aPerdPErjXANiBOl@smile.fi.intel.com>
+In-Reply-To: <aPerdPErjXANiBOl@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 22 Oct 2025 09:19:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWjty_fzRp9r8bet7G_YTwAvGRdW73-uxn7Dp8WsFmEEQ@mail.gmail.com>
+X-Gm-Features: AS18NWBTgmWnrLRZQpcXx7nybYEdoprYZTPpfACzWUOBzMWL72E1MPEt5nuaQyU
+Message-ID: <CAMuHMdWjty_fzRp9r8bet7G_YTwAvGRdW73-uxn7Dp8WsFmEEQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows safer
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Kai-Heng Feng <kaihengf@nvidia.com>, Rob Herring <robh@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 20, 2025 at 09:58:54AM -0300, Jason Gunthorpe wrote:
-> I explained it in detail in the message you are repling to. If
-> something is not clear can you please be more specific??
-> 
-> Is it the mmap in VFIO perhaps that is causing these questions?
-> 
-> VFIO uses a PFNMAP VMA, so you can't pin_user_page() it. It uses
-> unmap_mapping_range() during its remove() path to get rid of the VMA
-> PTEs.
+Hi Andy,
 
-This all needs to g• into the explanation.
+On Tue, 21 Oct 2025 at 17:49, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Tue, Oct 21, 2025 at 02:54:03PM +0300, Ilpo J=C3=A4rvinen wrote:
+> > The expected result is that those usb resources are properly parented a=
+nd
+> > the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together =
+(as
+> > that would destroy information). So something along the lines of:
+> >
+> >     ee080000-ee08ffff : pci@ee090000
+>
+> For my pedantic eye, the naming is a bit confusing here. Is this a mistak=
+e in
+> the code or in the example?
+>
+> >       ee080000-ee080fff : 0000:00:01.0
+> >         ee080000-ee080fff : ohci_hcd
+> >       ee081000-ee0810ff : 0000:00:02.0
+> >         ee081000-ee0810ff : ehci_hcd
+> >     ee090000-ee090bff : ee090000.pci pci@ee090000
 
-> Instead the DMABUF FD is used to pass the MMIO pages between VFIO and
-> another driver. DMABUF has a built in invalidation mechanism that VFIO
-> triggers before remove(). The invalidation removes access from the
-> other driver.
-> 
-> This is different than NVMe which has no invalidation. NVMe does
-> unmap_mapping_range() on the VMA and waits for all the short lived
-> pgmap references to clear. We don't need anything like that because
-> DMABUF invalidation is synchronous.
+A platform device instantiated from DT is named after the node name
+and unit address of the corresponding DT node.  If the device has
+multiple register banks, all its register banks are still claimed by
+the same device, so all but the first (in DT) register bank show a
+non-matching address in the device name.
 
-Please add documentation for this model to the source tree.
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
