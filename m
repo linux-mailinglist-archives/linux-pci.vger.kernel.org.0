@@ -1,182 +1,137 @@
-Return-Path: <linux-pci+bounces-38972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C10ABFB3D8
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:55:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 328C6BFB41F
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 11:58:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B71EF3566EE
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:55:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C904450416B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:58:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E0F316193;
-	Wed, 22 Oct 2025 09:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5715E31DD98;
+	Wed, 22 Oct 2025 09:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaxRNrmv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kJd3rLOl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B91D314B8E;
-	Wed, 22 Oct 2025 09:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3F831B13C;
+	Wed, 22 Oct 2025 09:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761126932; cv=none; b=iyb509a7xdcxnimt6draRafQLUmhaQ4I66vnNxpWxuKDN6Q5VYzpsWn/Yx65Kuz3ISJ6XxeghaSkk8JOzT/fzHNyUzZtmhQf3VIZHMJzbY/LRHIHAHZd34qZ54juLVwdrEKhvGhS9D8B9mmP0OKusu5lBIsXOm64UdWe/cIrx9s=
+	t=1761127070; cv=none; b=n0IsnvEkUdY8blfZi+FSf7gJh2ocT4p6wD7PcNbQKGCkBUHkASrGnGpcz5wassFtIJWvFfQZGJjUjYwo0eA4zyuzx32sACY+UiZF1GMV0wQReSaszWPs1K4/FSaYsJjqv1u+v/ztEXj9M1kKV8l/nwKLFtRAS2xxWXG63v1i8YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761126932; c=relaxed/simple;
-	bh=7i9Ez8UvNOZbo+rgVehka2n3g0H3oeOM4jQuNJXZ9tw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGfgDSzsAK0bUkUhK2zXY8reSEgbi2uW7YorfZT3uQzZBTa4g3Rg0k9TcOfppQeqsAsRvF8KYZZoatoRMmVuMauhuGYQy9lQpgdP4MWFXeJg7q+tfxMYgb/TvYGnSbKOQayxzGqyDj/ajjSqxscJl5ynO413bYn63pUo8YJt8h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaxRNrmv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024E8C4CEF5;
-	Wed, 22 Oct 2025 09:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761126931;
-	bh=7i9Ez8UvNOZbo+rgVehka2n3g0H3oeOM4jQuNJXZ9tw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MaxRNrmvX8kuENhtIKpWYOiD8IYJc50VTb693B6lZsQQhq1R7zHk8kCq4zG9gutD1
-	 /FSAt9+/5BT+ThL+vsgBgL1GxfggbFjrQdUFVu8apPMoBTI+k3qnD9FCkk4CLdLDak
-	 miDXzFG9NyzP5PsDE8/pI3cq3S4S6bBa51N57kpkmYuT3/oixoLWOsIG+ElSgjtQt/
-	 Jif4GLloCeTU3oN/sKG6Puonep0VMUgwDV6DjPH3LVmcnu9vI4Ydc90re3LCMLv0UN
-	 +/GespTrv7m4ePZ0YcK4l9wRKFn4kbIu49Z+k/GFyWkRRG1nRDYxLtLLLWjmLvHYaA
-	 fwohulvdDBSbA==
-Date: Wed, 22 Oct 2025 15:25:13 +0530
-From: "mani@kernel.org" <mani@kernel.org>
-To: Stefan Roese <stefan.roese@mailbox.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	"Bandi, Ravi Kumar" <ravib@amazon.com>, "thippeswamy.havalige@amd.com" <thippeswamy.havalige@amd.com>, 
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "michal.simek@amd.com" <michal.simek@amd.com>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Sean Anderson <sean.anderson@linux.dev>
-Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
-Message-ID: <3it5l556vmfpuu6kz5yvulwosi4ecmcgfbzcizrc5wi7ifddkh@mpzfxf2v6v3f>
-References: <20251021212801.GA1224310@bhelgaas>
- <ab1f7c51-bc41-4774-a0dc-850e53c412eb@mailbox.org>
+	s=arc-20240116; t=1761127070; c=relaxed/simple;
+	bh=4Y+D80iSt9jpECU5J61hwIKVS1QvaZTv8PlOVYO3NPo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YG3Kq1Ov/V4CH4Q9kAlSjNRKuEvwSA/mZFO7WIJgBNqYh8slrnN0a5J0LaawfPeNKF4+nx8rC4WCZjxb7H/tKkWPAejXs0Wiq+WJC7UmY8PHInmgjefrTA/mDPcCBoviluuDSsiZykCxgdBrYlSUdDq36EFuo8b3EvQKbqLKFKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kJd3rLOl; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 59M9vMZ81387139;
+	Wed, 22 Oct 2025 04:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1761127042;
+	bh=p5zzKjVDjdZgk+qCBL/BN7PWbaszOVdrduoIeN0+Bas=;
+	h=From:To:CC:Subject:Date;
+	b=kJd3rLOlaBNbaS2ejmkek5WmleeL2c812cu0a+FGJYL8WOHf/C0vlz/umDhXisRmL
+	 81hCCUv8XtrSJqV5Gg3n3jXJHhcw26VOqqTgJt5HxchXggwetf4+eX00a58HWptDnI
+	 0mp+82YRvA/dWddubfsBttGT/6HPhIyJOl7bejv4=
+Received: from DFLE204.ent.ti.com (dfle204.ent.ti.com [10.64.6.62])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 59M9vMYX2266279
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 22 Oct 2025 04:57:22 -0500
+Received: from DFLE209.ent.ti.com (10.64.6.67) by DFLE204.ent.ti.com
+ (10.64.6.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 22 Oct
+ 2025 04:57:22 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE209.ent.ti.com
+ (10.64.6.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Wed, 22 Oct 2025 04:57:22 -0500
+Received: from toolbox.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.73.74])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59M9vFcV1029418;
+	Wed, 22 Oct 2025 04:57:16 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+        <quic_wenbyao@quicinc.com>, <inochiama@gmail.com>,
+        <mayank.rana@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <cassel@kernel.org>, <kishon@kernel.org>,
+        <sergio.paracuellos@gmail.com>, <18255117159@163.com>,
+        <rongqianfeng@vivo.com>, <jirislaby@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v4 0/4] PCI: Keystone: Enable loadable module support
+Date: Wed, 22 Oct 2025 15:27:08 +0530
+Message-ID: <20251022095724.997218-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab1f7c51-bc41-4774-a0dc-850e53c412eb@mailbox.org>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Oct 22, 2025 at 08:59:19AM +0200, Stefan Roese wrote:
-> Hi Bjorn,
-> Hi Ravi,
-> 
-> On 10/21/25 23:28, Bjorn Helgaas wrote:
-> > On Tue, Oct 21, 2025 at 08:55:41PM +0000, Bandi, Ravi Kumar wrote:
-> > > > On Tue, Oct 21, 2025 at 05:46:17PM +0000, Bandi, Ravi Kumar wrote:
-> > > > > > On Oct 21, 2025, at 10:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Sat, Sep 20, 2025 at 10:52:32PM +0000, Ravi Kumar Bandi wrote:
-> > > > > > > The pcie-xilinx-dma-pl driver does not enable INTx interrupts
-> > > > > > > after initializing the port, preventing INTx interrupts from
-> > > > > > > PCIe endpoints from flowing through the Xilinx XDMA root port
-> > > > > > > bridge. This issue affects kernel 6.6.0 and later versions.
-> > > > > > > 
-> > > > > > > This patch allows INTx interrupts generated by PCIe endpoints
-> > > > > > > to flow through the root port. Tested the fix on a board with
-> > > > > > > two endpoints generating INTx interrupts. Interrupts are
-> > > > > > > properly detected and serviced. The /proc/interrupts output
-> > > > > > > shows:
-> > > > > > > 
-> > > > > > > [...]
-> > > > > > > 32:        320          0  pl_dma:RC-Event  16 Level     400000000.axi-pcie, azdrv
-> > > > > > > 52:        470          0  pl_dma:RC-Event  16 Level     500000000.axi-pcie, azdrv
-> > > > > > > [...]
-> 
-> First a comment on this IRQ logging:
-> 
-> These lines do NOT refer to the INTx IRQ(s) but the controller internal
-> "events" (errors etc). Please see this log for INTx on my Versal
-> platform with pci_irqd_intx_xlate added:
-> 
->  24:          0          0  pl_dma:RC-Event   0 Level     LINK_DOWN
->  25:          0          0  pl_dma:RC-Event   3 Level     HOT_RESET
->  26:          0          0  pl_dma:RC-Event   8 Level     CFG_TIMEOUT
->  27:          0          0  pl_dma:RC-Event   9 Level     CORRECTABLE
->  28:          0          0  pl_dma:RC-Event  10 Level     NONFATAL
->  29:          0          0  pl_dma:RC-Event  11 Level     FATAL
->  30:          0          0  pl_dma:RC-Event  20 Level     SLV_UNSUPP
->  31:          0          0  pl_dma:RC-Event  21 Level     SLV_UNEXP
->  32:          0          0  pl_dma:RC-Event  22 Level     SLV_COMPL
->  33:          0          0  pl_dma:RC-Event  23 Level     SLV_ERRP
->  34:          0          0  pl_dma:RC-Event  24 Level     SLV_CMPABT
->  35:          0          0  pl_dma:RC-Event  25 Level     SLV_ILLBUR
->  36:          0          0  pl_dma:RC-Event  26 Level     MST_DECERR
->  37:          0          0  pl_dma:RC-Event  27 Level     MST_SLVERR
->  38:         94          0  pl_dma:RC-Event  16 Level     84000000.axi-pcie
->  39:         94          0  pl_dma:INTx   0 Level     nvme0q0, nvme0q1
-> 
-> The last line shows the INTx IRQs here ('pl_dma:INTx' vs 'pl_dma:RC-
-> Event').
-> 
-> More below...
-> 
-> > > > > > > 
-> > > > > > > Changes since v1::
-> > > > > > > - Fixed commit message per reviewer's comments
-> > > > > > > 
-> > > > > > > Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
-> > > > > > > Cc: stable@vger.kernel.org
-> > > > > > > Signed-off-by: Ravi Kumar Bandi <ravib@amazon.com>
-> > > > > > 
-> > > > > > Hi Ravi, obviously you tested this, but I don't know how to reconcile
-> > > > > > this with Stefan's INTx fix at
-> > > > > > https://lore.kernel.org/r/20251021154322.973640-1-stefan.roese@mailbox.org
-> > > > > > 
-> > > > > > Does Stefan's fix need to be squashed into this patch?
-> > > > > 
-> > > > > Sure, we can squash Stefan’s fix into this.
-> > > > 
-> > > > I know we *can* squash them.
-> > > > 
-> > > > I want to know why things worked for you and Stefan when they
-> > > > *weren't* squashed:
-> > > > 
-> > > >   - Why did INTx work for you even without Stefan's patch.  Did you
-> > > >     get INTx interrupts but not the right ones, e.g., did the device
-> > > >     signal INTA but it was received as INTB?
-> > > 
-> > > I saw that interrupts were being generated by the endpoint device,
-> > > but I didn’t specifically check if they were correctly translated in
-> > > the controller. I noticed that the new driver wasn't explicitly
-> > > enabling the interrupts, so my first approach was to enable them,
-> > > which helped the interrupts flow through.
-> > 
-> > OK, I'll assume the interrupts happened but the driver might not have
-> > been able to handle them correctly, e.g., it was prepared for INTA but
-> > got INTB or similar.
-> > 
-> > > >   - Why did Stefan's patch work for him even without your patch.  How
-> > > >     could Stefan's INTx work without the CSR writes to enable
-> > > >     interrupts?
-> > > 
-> > > I'm not entirely sure if there are any other dependencies in the
-> > > FPGA bitstream. I'll investigate further and get back to you.
-> > 
-> > Stefan clarified in a private message that he had applied your patch
-> > first, so this mystery is solved.
-> 
-> Yes. I applied Ravi's patch first and still got no INTx delivered
-> to the nvme driver. That's what me triggered to dig deeper here and
-> resulted in this v2 patch with pci_irqd_intx_xlate added.
-> 
-> BTW:
-> I re-tested just now w/o Ravi's patch and the INTx worked. Still I think
-> Ravi's patch is valid and should be applied...
+Hello,
 
-How come INTx is working without the patch from Ravi which enabled INTx routing
-in the controller? Was it enabled by default in the hardware?
+This series enables support for the 'pci-keystone.c' driver to be built
+as a loadable module. The motivation for the series is that PCIe is not
+a necessity for booting Linux due to which the 'pci-keystone.c' driver
+does not need to be built-in.
 
-- Mani
+Series is based on 6.18-rc1 tag of Mainline Linux.
+
+DEPENDENCY
+----------
+This series has __NO__ dependencies since the dependencies stated in the
+cover-letter of the v3 series at:
+https://lore.kernel.org/r/20250922071222.2814937-1-s-vadapalli@ti.com/
+have been satisfied.
+
+v3:
+https://lore.kernel.org/r/20250922071222.2814937-1-s-vadapalli@ti.com/
+Changes since v3:
+- Rebased series on 6.18-rc1 tag of Mainline Linux.
+- Patch 4 has been updated to remove the '__init' keyword from functions
+  to avoid triggering an exception due to '__init' memory being freed
+  before functions are invoked. This is the equivalent of:
+  https://lore.kernel.org/r/20250912100802.3136121-3-s-vadapalli@ti.com/
+  while addressing Bjorn's feedback at:
+  https://lore.kernel.org/r/20251002143627.GA267439@bhelgaas/
+  by introducing a new 'init' function specifically for registering the
+  fault handler while the rest of the driver remains the same.
+
+Series has been tested on AM654-EVM with an NVMe SSD connected to the
+PCIe Connector of the EVM. Test Logs:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/332e8d65c66ed93e95c2d89ec1ee3f68
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (4):
+  PCI: Export pci_get_host_bridge_device() for use by pci-keystone
+  PCI: dwc: Export dw_pcie_allocate_domains() and
+    dw_pcie_ep_raise_msix_irq()
+  PCI: keystone: Exit ks_pcie_probe() for invalid mode
+  PCI: keystone: Add support to build as a loadable module
+
+ drivers/pci/controller/dwc/Kconfig            |  6 +--
+ drivers/pci/controller/dwc/pci-keystone.c     | 38 +++++++++++++------
+ .../pci/controller/dwc/pcie-designware-ep.c   |  1 +
+ .../pci/controller/dwc/pcie-designware-host.c |  1 +
+ drivers/pci/host-bridge.c                     |  1 +
+ include/linux/pci.h                           |  1 +
+ 6 files changed, 33 insertions(+), 15 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.51.0
+
 
