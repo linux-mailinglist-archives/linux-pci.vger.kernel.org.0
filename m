@@ -1,206 +1,143 @@
-Return-Path: <linux-pci+bounces-39065-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39066-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E780BFE444
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 23:15:32 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE4FBBFE4C7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 23:24:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E29B03A3588
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 21:15:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 946654EA3B7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 21:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C4E2264AB;
-	Wed, 22 Oct 2025 21:15:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E6EC30215E;
+	Wed, 22 Oct 2025 21:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RtFQ1ls7"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ba2F055n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5E386349
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 21:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D342798FA;
+	Wed, 22 Oct 2025 21:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761167728; cv=none; b=RGqJuC8QgXWiqAVlHERkjfFAWKzeMcFvWr5DA9aOwnUuZPD/d4hapYsvX0G2aPg26kuT8LePM1ai9p/oryDCGq1vUYJ/pWVocqx14cwlR4FFw1E58nyBYkKbu52U/u6dqnGoHk3zhMvzm8KNVwlPK5x15UODgE4ZIERjBr2hwbM=
+	t=1761168261; cv=none; b=hJ9wi2ss+Opg8xoTUoYeSzHghYwCwJkbAvwEvTCUTOPmlyif/tolJuzK0hycVeqZvrd5xi/w9pP/GBF0M48w0Hg51gB8ieJ6MPWUDD/O5LM+bR6F14XuPe8B/N1iACkb92PrNrSdHSo4d274vqGIj0KlcqwnT3cmoH+9sqJvG8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761167728; c=relaxed/simple;
-	bh=xVjhQUIb6Uas/h2svp3jW3dFK1WGu1F1BwnNNksk2pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DCAqX+F7ugj/8Gf3+U9JR/ymIe7cWPyhQLguXgw8fv1t4xMHqR8s6E7ktTOrSKQi7wtHvy5cUoZeCAJlfdahJ5GJ6edQaanH0o8jqe86VUYGjhkvT9ojb2tsunTN5Az66Fxw0KydXtTLtuWwWLygRtLOAzPTwNwNZnGb0VNv3oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RtFQ1ls7; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-77f67ba775aso109089b3a.3
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 14:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1761167726; x=1761772526; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yaVmqZbGLvb9KAeXi14uqL9ETEZkPe32JZKowUgQxVQ=;
-        b=RtFQ1ls7J1bfr82pzzfRpgnDas14E7EF2dTwwVvaG+e4lJuzOmKBJrhGGhgEpTsrN3
-         vsG0cNkSlKUnTOEgVAS7GYLpCiYMARf9hujxjSViP7wOCZ+zRNYq2lFhBZ+EpZiUMsZG
-         LtUjjlajjhp2LyyCcAg1SXv/NEHY/ra11Kq6g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761167726; x=1761772526;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yaVmqZbGLvb9KAeXi14uqL9ETEZkPe32JZKowUgQxVQ=;
-        b=YmAFo41UAY/qKHG6Hsma8qYtvYg+ejAHytfHaCAM9RISUpM+1QRODQLBZrwVghd4VE
-         YVBNOUL1uCvSRtxn2JiGibdy2FdJSekgDCO6uFzElD3bZX7xFkBBpNNVZlCcbBYCljkt
-         jbtBzdyfN9pDevYSaKyoyEoP3+Q3cg260U+GuIZJKApEWQu0nRhovJzXWkbIMG/xGLdv
-         VQSYbno4JzujD+lcXovUVBcjODweM4h9vTuQDrA/WHIR+B5fqP270BNbMKss2hzxF8Zq
-         iXsRYpSYh9EW/tMROBwroU7XG9ygq9txxG+iWn4sl8FlFat0S/swzcEo1/4kMTlZWtkG
-         vchg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNoeNyF1QoO89u0ygzqC2lOxSUZ9gofwgITfrfqhiCH5ppGhSOjlULRIrfQv3VxRCeG61NIMnx4z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL0EzbMENrWNl1ovtThjJLLOMHNq8ItyX8nJxYRfxpOznF5K/w
-	70O96axCJ6MCVqulv19Ln0LXh/qP35gq7IoPke3dW5Ch5uVtopbsM/JRhn7GGblXNg==
-X-Gm-Gg: ASbGncvBmRf4RoN2XtqNJJiIFJzdJjftEYgq+dyRZCe984O0kdg2s8zt3yyVOkl5+DG
-	z1cGHQb71CnhO2D7cgPidgQQ+lBQgeLIY0/ZezI9N5DpIRqVIKakzbcMO16H3wGXaNlJ7tvm7lP
-	OEpyc4/5ldBXilqmB3vJ9CxnSVWIqmJbOPnkW2G9tIF7DvYr/G7Msq2EJK61WCm0U2/S+SQyEQN
-	oLbIxBB0czUiSpzZhKWrLxsNnWLf+BX0tgIRPKVN/bqxiQ7YG+UP3AKwFrpOF7OSGYMcOkV3/y0
-	/R3YEmQ6sq1YmBUnEG3HBpYHqRPP2Ak4RxUhPZdMMTLynPlZtIuWkil5ASgTpkO0Ese846JeWVm
-	X0iQ7p/jlEaXoktoQznDAlqkaUsR81U82u0J9VHHsqZtwTzH0QALTur7WwG4/YgJ1NaMDIHTTkD
-	7sD4e0qr71Iko8NWymrdseK7Jz7nKfaQpyxc/Ruw==
-X-Google-Smtp-Source: AGHT+IEHPmnyfesaqqiIG3TvfRO0+OWa3MeuyGH4Nz3hdkpdY8TKVqBc+BP1r0X04EFXXutlW1RRxQ==
-X-Received: by 2002:a05:6a00:9291:b0:781:1f28:eae9 with SMTP id d2e1a72fcca58-7a220a57034mr21397951b3a.3.1761167725791;
-        Wed, 22 Oct 2025 14:15:25 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e7c:8:4874:d890:58d4:a06b])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7a274a9e580sm200866b3a.17.2025.10.22.14.15.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 14:15:24 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v3] PCI/PM: Prevent runtime suspend before devices are fully initialized
-Date: Wed, 22 Oct 2025 14:14:34 -0700
-Message-ID: <20251022141434.v3.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
-X-Mailer: git-send-email 2.51.1.814.gb8fa24458f-goog
+	s=arc-20240116; t=1761168261; c=relaxed/simple;
+	bh=qyPf09fhZWcJlfCtfYI2qgcjO6bXA6/CTHKtOtxzEhM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uxMe8p0tM31nBeVJnm+o/coohBIK7jB2rNeJ7Q5uDEDAUZWUgS3apWUc3nikTPlqGsC7lbsAJ5dTmY7ys75+BohQ03oA/WoFF9sqIHGFnOW+odP8RbThzExtjoOKgD09o7HFPAVDGoa20ShmWsvSo1x6et1BgEYEqEW112YtSZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ba2F055n; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59MJ6Ptq008824;
+	Wed, 22 Oct 2025 21:24:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=i/FVZ9iKYRMDvqB8LQtagIr0Cd15WqnkFBbWgHJJd
+	Jo=; b=Ba2F055nrQRX7yZ+6JAqBEupSaZZKIuvhsXQ3zY/Sb4osKbPXbxgTVTd6
+	ObqppeQwYDDto8RXmVOyYSZiczR3VO5VgIlaCSq8GpQhpJsKprfBe+bUp8mslpBK
+	w0M4kC1exoVIvXm4t3OBXduJEFcuIbLMnJ5yEAbDxwU6uBAJutPKJMR8CWPZi4ro
+	yFRZFPfkZ2tNCBlGyG+t0kysKjSW4GKRQned2Nu1pgMwHLD/jMyvwN64UJ4EKPos
+	9eM/FyOt7Cby2Wt84kT6NHPSLDDYf+97J3gYMiMig/aWYKJRjMZC/BKhFrYBZOt/
+	g464Q/BDZ8Jw0yasDnTaZRWSApgMg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31cdq69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Oct 2025 21:24:16 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59MK9Umo014676;
+	Wed, 22 Oct 2025 21:24:15 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 49vn7satee-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Oct 2025 21:24:15 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59MLOEqO29426354
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Oct 2025 21:24:14 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC9715805C;
+	Wed, 22 Oct 2025 21:24:13 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BAE335805A;
+	Wed, 22 Oct 2025 21:24:12 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.253.79])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Oct 2025 21:24:12 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: helgaas@kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com, bblock@linux.ibm.com, agordeev@linux.ibm.com,
+        gor@linux.ibm.com, hca@linux.ibm.com
+Subject: [PATCH v2 0/2] PCI fixes for s390
+Date: Wed, 22 Oct 2025 14:24:09 -0700
+Message-ID: <20251022212411.1989-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9eTrJa3sJLmOBSfpzXdfWtwMpQHqYva_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfXyokGn8KHlvPm
+ NPSSb14SaSnneP3yIjhbz8+wUhEZzB50l0MTGBoWdOjn6WXQHyl78+GJ7dHqTqZWlvbfwoGkgc+
+ 3O5PwJIy9+oS8SaLS/Rf/ChQl17WE1dG9v9k2WV7HNir3pwwUcQX6G8Olxh85JzDNaWJ2SnH9Pa
+ XmDTB6OMcBx2AQN053rNu3vwesGiCZ04pHD7gW/zWaUKONnSw0cJe2A+Cbdj+GUsbYJeGCQ4VZf
+ HuMOBPvtM9mnyHvTYn/7FMR1t74J6ShfBMRTb0mmjCnEkSmUCBVZMmN+sIAPCgRbtPKDvjGiNUP
+ LmS7YfxPBLaubuskbcg3zETxtlCRh0IQq0pDrczg24wLw1ZBLMyvFE26gaOIXwtLsUAeCP4C0Kg
+ bTTEGMB4FLfjgg9hoGPxC0shmnQu6Q==
+X-Proofpoint-GUID: 9eTrJa3sJLmOBSfpzXdfWtwMpQHqYva_
+X-Authority-Analysis: v=2.4 cv=SKNPlevH c=1 sm=1 tr=0 ts=68f94b80 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=XBVAZEMcYQg2izrzrm0A:9 a=HhbK4dLum7pmb74im6QT:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-22_08,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
 
-Today, it's possible for a PCI device to be created and
-runtime-suspended before it is fully initialized. When that happens, the
-device will remain in D0, but the suspend process may save an
-intermediate version of that device's state -- for example, without
-appropriate BAR configuration. When the device later resumes, we'll
-restore invalid PCI state and the device may not function.
+Hi,
 
-Prevent runtime suspend for PCI devices by deferring pm_runtime_enable()
-until we've fully initialized the device.
+I came across some issues in PCI code for s390 while working on VFIO error
+recovery for s390 PCI devices [1]. These patches can be indepedently applied and
+has no depedency on error recovery patch series. We would like to get these
+patches merged as they do fix some existing issues.
 
-More details on how exactly this may occur:
+[1] https://lore.kernel.org/all/20250924171628.826-1-alifm@linux.ibm.com/
 
-1. PCI device is created by pci_scan_slot() or similar
-2. As part of pci_scan_slot(), pci_pm_init() enables runtime PM; the
-   device starts "active" and we initially prevent (pm_runtime_forbid())
-   suspend -- but see [*] footnote
-3. Underlying 'struct device' is added to the system (device_add());
-   runtime PM can now be configured by user space
-4. PCI device receives BAR configuration
-   (pci_assign_unassigned_bus_resources(), etc.)
-5. PCI device is added to the system in pci_bus_add_device()
+ChangeLog
+---------
+v1 -> v2
+   - Re-work patch 1 on setting per_func_slot flag. The flag is set if platform
+   enables per function pci slots (currently only enabled for s390).
+   - Drop R-b tags for patch 1.
 
-The device may potentially suspend between #3 and #4.
+Thanks
+Farhan
 
-[*] By default, pm_runtime_forbid() prevents suspending a device; but by
-design [**], this can be overridden by user space policy via
 
-  echo auto > /sys/bus/pci/devices/.../power/control
+Farhan Ali (2):
+  PCI: Allow per function PCI slots
+  s390/pci: Add architecture specific resource/bus address translation
 
-Thus, the above #3/#4 sequence is racy with user space (udev or
-similar).
+ arch/s390/pci/pci.c       | 74 +++++++++++++++++++++++++++++++++++++++
+ drivers/pci/host-bridge.c |  4 +--
+ drivers/pci/pci.c         |  5 +--
+ drivers/pci/slot.c        | 25 +++++++++++--
+ include/linux/pci.h       |  1 +
+ 5 files changed, 102 insertions(+), 7 deletions(-)
 
-Notably, many PCI devices are enumerated at subsys_initcall time and so
-will not race with user space. However, there are several scenarios
-where PCI devices are created later on, such as with hotplug or when
-drivers (pwrctrl or controller drivers) are built as modules.
-
-[**] The relationship between pm_runtime_forbid(), pm_runtime_allow(),
-/sys/.../power/control, and the runtime PM usage counter can be subtle.
-It appears that the intention of pm_runtime_forbid() /
-pm_runtime_allow() is twofold:
-
-1. Allow the user to disable runtime_pm (force device to always be
-   powered on) through sysfs.
-2. Allow the driver to start with runtime_pm disabled (device forced
-   on) and user space could later enable runtime_pm.
-
-This conclusion comes from reading `Documentation/power/runtime_pm.rst`,
-specifically the section starting "The user space can effectively
-disallow".
-
-This means that while pm_runtime_forbid() does technically increase the
-runtime PM usage counter, this usage counter is not a guarantee of
-functional correctness, because sysfs can decrease that count again.
-
-Link: https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
----
-
-Changes in v3:
- * Add Link to initial discussion
- * Add Rafael's Reviewed-by
- * Add lengthier footnotes about forbid vs allow vs sysfs
-
-Changes in v2:
- * Update CC list
- * Rework problem description
- * Update solution: defer pm_runtime_enable(), instead of trying to
-   get()/put()
-
- drivers/pci/bus.c | 3 +++
- drivers/pci/pci.c | 1 -
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index f26aec6ff588..fc66b6cb3a54 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -14,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/proc_fs.h>
- #include <linux/slab.h>
- 
-@@ -375,6 +376,8 @@ void pci_bus_add_device(struct pci_dev *dev)
- 		put_device(&pdev->dev);
- 	}
- 
-+	pm_runtime_enable(&dev->dev);
-+
- 	if (!dn || of_device_is_available(dn))
- 		pci_dev_allow_binding(dev);
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b14dd064006c..f792164fa297 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3226,7 +3226,6 @@ void pci_pm_init(struct pci_dev *dev)
- 	pci_pm_power_up_and_verify_state(dev);
- 	pm_runtime_forbid(&dev->dev);
- 	pm_runtime_set_active(&dev->dev);
--	pm_runtime_enable(&dev->dev);
- }
- 
- static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
 -- 
-2.51.1.814.gb8fa24458f-goog
+2.43.0
 
 
