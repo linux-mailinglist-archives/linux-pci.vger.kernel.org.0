@@ -1,273 +1,170 @@
-Return-Path: <linux-pci+bounces-38964-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-38965-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ED32BFAA7E
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:45:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80336BFAB0B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 09:52:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0711189A37B
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:46:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F029A481FC1
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 07:52:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E89422F8BF7;
-	Wed, 22 Oct 2025 07:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A4C02FD67F;
+	Wed, 22 Oct 2025 07:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KZMVnFny"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D03C2F068A
-	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EAD2FD668
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761119141; cv=none; b=sNqfaeUJqxf5sRxrio3EvftOZ44RWbhJQnIoRoV4ZdgzN6q7P3RfrG+8c8kJ6kr8/1yRnC2iiNJwjrkOivrixbbeD3NTZlr2uMh34H0WsSuvsTF64jCT4GxQQi0b7WBJK4ZPNDsKe2i999Pd+Q50PGXEipVvA+ReHeYPnC0dUvA=
+	t=1761119535; cv=none; b=J+1UH8BnHLudyBQauRdUQYBUG6WoXTdYZ75DK9s1+dXpZ8uQTsFnmsfJK87UULl+AyqQyVox3JDmWF1xzdMbdPcvyUFtTpEuDp5KX1a53TaA5jRFosC5hjPYKmT34wLdL8XZ5nBZpzCkhrLQRahNM90FFkk+OFC83lMzmLsEJGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761119141; c=relaxed/simple;
-	bh=a/T04ZkBonHaSj9LogmYs7O4+MD77IySVFh8zs9QLDM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oPH6TCVOMYVeWy1oUcXdNnuMAbM11IbQ/tjBLCaYcK6XWuhcZJvxmZS4c1t9NytAlofW1Z9G6s3h/nDcVAAJau6sqRuws4lMuiKQvhyw4ZIjy+4BsEdPWYB5MZ2kjrTgf7qWV5Ek4HQm7L3ULxjJ9kIBD0QuuVNMhmlCwESi41o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-54aa4b86b09so2839270e0c.0
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:45:39 -0700 (PDT)
+	s=arc-20240116; t=1761119535; c=relaxed/simple;
+	bh=J/90TQbFdCgoh5WWkO3h6Le1FNJsf9C3aI6j07Us/Zw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=f9st0/krXTCKPKoXZicBkqBCu4/Aj0x2CG4k+epMrGkLLZLyWg9nxPeKKcyKdoIOAwL1gBT7WwBgn8cppTgS/W664zfJdlDjsKXMBPmskBYX0f4YXQn69mRVQsBIyJ4DK3SF5zx+rxSIJS7ELMoXk0yAmWtgBUod6/Zb9KEDSmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KZMVnFny; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59M3EraY025477
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=DPmvEIE8FlpuHaMWc6yWJW
+	SlobjKsCAmEGxrwVOFSo0=; b=KZMVnFnyFxXDany6UgqO8LmgciO10tFG//aHNw
+	9AOw68AQgmsfgYjOeObdzI/u6NO96Zr8f2fehgHN0wrlHzRmlbPRjYANaNSu5Hqz
+	EWrEn6//gbVeb47fUuB3/+iY7O26Q1noU8tGO5+CTXLYcciDZhpXxkovMhEYaQZA
+	VUkzK6zl35gviEsKCrs3iRG+NgsB2gp7inJskrr3WXO3bx2BTYfbE67X2y5Yc/oG
+	ZaMwN8A+IyrYDlSR+v7cSty+BVgOy8BOmzLGQHNf/7NtfwHF52LHFhamDad6efft
+	2O6QnSV/y6mcqspqvmGS5VEDJ67u3yu9nOkT/OXqOjd1DYGg==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49v1w83tpg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 07:52:12 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-32eb864fe90so1932332a91.3
+        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:52:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761119138; x=1761723938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gAdjmTMFvX9GF5gAa+D8JhWfn0fgYJ2cKUltMzt7uhw=;
-        b=jBq0qtgxqLnLZTpvE3Z9xwyPgpMq7+tJnwSq6LPAm14nlE6J4w1iI5Aj+aj1r2+g1n
-         YeH9odZdqN8piZp4HSFpA3lS6a9VbZgmdMNJTpJPvCRfIwELMvHprliIy6uKHtKDZirP
-         oQ3CGFJ5kPhPuaJYXcAnmE+jF59sqh/jADdrQ702hzaFLujZMJ0dJXAu5z1/vnArOoNj
-         GgXfFVaL/CrkxnyEEmmtRmZD9ctUx5yYtuv/znNDmYceXISnYMB0I7Qh6XA/HWdDgmFU
-         Kex5m6192rLUwLUTKlF6/95dVkQiGYeBMaYO3AIaeDU9uy2O8PDJhcvaQXBIMYp5R+Cx
-         zW8A==
-X-Gm-Message-State: AOJu0YwRU3BtBoRXNUcacEPQsf1UcmIQIzRz2HnXZqSA3574Rsm+emq7
-	EsDfwytUYAxR8QhXWOfSifT4L40nvX1n/zR802sdYr8nkBBVArI77kfQqH3UD82m
-X-Gm-Gg: ASbGncsHTOVLeTP1gdQWc/KG91r2G9fE/4guye+ZCYY89hfdeF1kYPEN2I02PE847SV
-	x8LzVYyTAEHKVC1vNZtSmw+k+yMafV33MLkd6hiTtdqyNg+M5wLqJnu0VGIr2H4qOdfmQxBjQem
-	DgTML8/Iy641eq9afRFY9GAesUcss0iVAweAENqH50cCr/dG2Zcpth5mzF5Moo84e7RmbQOFG4v
-	4hH3w59MuPF6Lkk4bxT9wzZGehVi+veSAxjuZ4LGMuu2O31l2S8Xq+gMsGRGHLCuaUGaL+1qaKX
-	qHEklAX8jBlL7b5hxpSYcc3GNtpzJldNIkD8SeuzHbhV3936RPtdQ9ffdJINCtixqCtNnIerbt8
-	iYzAt3BojPKa7ELWd7C20OYnN/M9bDu+u8srkHaVXCMDw4U72sTakZgiW1Vvm5+ZxNG7f+KySJL
-	Oueov3WuqB1j+9zQoDM0QYsCOxhRF0EjfFBmJeuQ==
-X-Google-Smtp-Source: AGHT+IFY1ItyQxYQ/6VIvFxaEv4nUcuyeKbTtnHhjbeZgLfom854mGx/pC8X73hQQ9zevHv+ORNUBA==
-X-Received: by 2002:a05:6122:3d09:b0:54a:a251:ad57 with SMTP id 71dfb90a1353d-5564eeefa92mr5624227e0c.16.1761119137953;
-        Wed, 22 Oct 2025 00:45:37 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55662117c75sm4249725e0c.23.2025.10.22.00.45.37
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 00:45:37 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-9310a7b2668so1737647241.3
-        for <linux-pci@vger.kernel.org>; Wed, 22 Oct 2025 00:45:37 -0700 (PDT)
-X-Received: by 2002:a05:6102:f09:b0:5d5:f6ae:38d1 with SMTP id
- ada2fe7eead31-5db093f61bfmr2258135137.38.1761119137320; Wed, 22 Oct 2025
- 00:45:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761119531; x=1761724331;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DPmvEIE8FlpuHaMWc6yWJWSlobjKsCAmEGxrwVOFSo0=;
+        b=AB/aOzbYYeIgNGiX5vatcqc7qAo8YaG0IsU52SEeDegaAGe0sDR8PaMWJu+enADmnR
+         I9LRebkkDTgOQOCFGF7vQNjwUTw3E1R8dKYxkzDMnVeigbfAurNKm6ZM4E1xTuDyP2Tc
+         LbXZttOllo745rne1IQTMtOlSzMcG3MtqpSNkE1dsq6suEAoCIrlulwC/qSyo00LMOCy
+         WdrVdGZux6mLhXAnoH3H+d8+MBvoqn0qkGrafEADBbXnIdeNAKqZYO584j07y8IIz9fC
+         DoTl7cxnVp5XkP8eBate3fhLM5tVE4pmOXCkO60x+clzt/NSaEn0agimE52L3lqVfrxv
+         OGRA==
+X-Gm-Message-State: AOJu0YzPYraAsXcQHtwsOmfUGjnvA8sRnegJiYlAT/fQaWU5EBv8npE+
+	nxzPeMbP2ILP6DAU6YXDH69WGGIaMtKx44uucLSsU00mEsr/WN1f12rGhues6CxFBqBYNzsifBm
+	dOcz9n1I5EUODjf9LsI4wiQ51hVffVAQqlWCyZnntML0/WI7YypuBEcb064A8er0=
+X-Gm-Gg: ASbGnctPOLq2AebeMpc3DadFFAUOrvJck1kKnAV8jBWkAAOlYX9/kFXitwYPHjV6+VK
+	TX/+ihK25p1WIhoZpKUa5m6zGncpCJGqLwEObazGnmYCda432XeFu3geuC6Z12GIQf28HpNt/bU
+	Ew0l4gEuWfLyGbL6KbPZD/BX2ODpIznfX5ODUyCgB82x3lVOZeawDlLAxtk9yjp3AUulT2b8wcT
+	nuBQUAjBEH8uCXbgouY8tJxMWrfF3nqYrYd3gLSzSxFEE/Wyw1xkzOkHtgnHuDFq1WLNdG3TJ1x
+	ho5VdVPMGzunDwrYt00Z1gRC0xQFqDYWShg7NAXZf3RkzRRRMeuF6wx7PpARgwFQqL0H/Y9yHnf
+	ewSQoOx7Qeq6DC3Em2HAwH9f1bwPXcv9kEQ==
+X-Received: by 2002:a17:902:ec87:b0:24b:24dc:91a7 with SMTP id d9443c01a7336-290cb65c5a6mr230159875ad.45.1761119531222;
+        Wed, 22 Oct 2025 00:52:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4K8gARg09FJVPfkVnVqfI6o1el0oPDHVpa0x9imn1Oorz714MewTKuS4CSpiq726izRzsJg==
+X-Received: by 2002:a17:902:ec87:b0:24b:24dc:91a7 with SMTP id d9443c01a7336-290cb65c5a6mr230159685ad.45.1761119530739;
+        Wed, 22 Oct 2025 00:52:10 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471fe2c2sm130962275ad.79.2025.10.22.00.52.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 00:52:10 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v2 0/2] PCI: dwc: Fix ECAM enablement when used with vendor
+ drivers
+Date: Wed, 22 Oct 2025 13:21:59 +0530
+Message-Id: <20251022-ecam_fix-v2-0-e293b9d07262@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251010144231.15773-1-ilpo.jarvinen@linux.intel.com>
- <CAMuHMdVwAkC0XOU_SZ0HeH0+oT-j5SvKyRcFcJbbes624Yu9uQ@mail.gmail.com>
- <89a20c14-dd0f-22ae-d998-da511a94664a@linux.intel.com> <CAMuHMdUbseFEY8AGOxm2T8W-64qT9OSvfmvu+hyTJUT+WE2cVw@mail.gmail.com>
- <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com>
-In-Reply-To: <20844374-d3df-cc39-a265-44a3008a3bcb@linux.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Oct 2025 09:45:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWD_GJ0hpJODBNKeR77UhKMW2CuWWf-xJo2kuL514_Tpw@mail.gmail.com>
-X-Gm-Features: AS18NWAyk-xCGiK52nBlQ2ymPt7U7TZu5lcTJpfjk9UqwXEt8Q8nt7D9Ftjb-ak
-Message-ID: <CAMuHMdWD_GJ0hpJODBNKeR77UhKMW2CuWWf-xJo2kuL514_Tpw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows safer
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Kai-Heng Feng <kaihengf@nvidia.com>, Rob Herring <robh@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB+N+GgC/0WMQQrCMBBFr1JmbUomNS248h5SJGQmNmAbTTQoJ
+ Xc3FsTNh/f4vBUSR88JDs0KkbNPPiwV1K4BO5nlwsJTZVBSaZSoBVszn51/iX6PhKSZBiSo91v
+ kqrfUaaw8+fQI8b2VM37tLzL8IxmFFK53xnQkmVx3DCm196e52jDPbR0YSykfVCVdpacAAAA=
+X-Change-ID: 20251015-ecam_fix-641d1d5ed71d
+To: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Ron Economos <re@w6rz.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1761119527; l=1313;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=J/90TQbFdCgoh5WWkO3h6Le1FNJsf9C3aI6j07Us/Zw=;
+ b=vo34Dz7sxlIswBIIP74F0bWqldDvPxdaL8dMP3smt5FIhASG9kExka7DTZX35BoMortsAmyQJ
+ qf+N0V9qlR+AJOx1rVcvDZOnLGc/MX6KevnRq9tFQu+O8eFHCbfKJzF
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAxNSBTYWx0ZWRfX/1mCrKB+Lzce
+ S+zvkSeGb0PW56gDeiPrdz6hXy2xR1GXbqBpT2EDuWGVBWysQ5Ww2k/7IzFMTcZyG/JKIth0MiZ
+ N8xNpfBal3TMrq+ErSVDcmx0vSfahY4Aom0pq1sBpLnH8I+r66zilOcsO7H79muaR5+lEZ6loM+
+ vHf8o81TU3PyaT/6xr7MDAiLzwz64n/hUo3Fs0G6DUYHR34QVCupIicUrA7unQzMlpZnM5SqKXF
+ 0k/rTShIQNt3WwkI1Vz6jl30OrB39Z/exOVIXREU4yIxcMgsAbPzfAwaHb5Prw51RfdZZXhk7bF
+ ympVsRGPDC/iNTvIsxPnDz2jqgPnvg+Vz1+TDGHGidKdvxkpw1PJkF6Oc1HYPa0WMMzgIRexsXg
+ qY+0Lx1H8jJzUqNkV5PVM9nTtoz64A==
+X-Authority-Analysis: v=2.4 cv=bNUb4f+Z c=1 sm=1 tr=0 ts=68f88d2c cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=qIbWdXD6M1inJYch3NYA:9 a=QEXdDO2ut3YA:10
+ a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-GUID: tD8YhPRdz75DkAYz7yn_c7AeaSvIDP8H
+X-Proofpoint-ORIG-GUID: tD8YhPRdz75DkAYz7yn_c7AeaSvIDP8H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-22_02,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 adultscore=0 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180015
 
-Hi Ilpo,
+This series addresses issues with ECAM enablement in the DesignWare PCIe
+host controller when used with vendor drivers that rely on the DBI base
+for internal accesses.
 
-On Tue, 21 Oct 2025 at 13:54, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
-> On Tue, 21 Oct 2025, Geert Uytterhoeven wrote:
-> > On Mon, 20 Oct 2025 at 18:20, Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > On Mon, 20 Oct 2025, Geert Uytterhoeven wrote:
-> > > > On Fri, 10 Oct 2025 at 16:42, Ilpo J=C3=A4rvinen
-> > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > Here's a series for Geert to test if this fixes the improper coal=
-escing
-> > > > > of resources as was experienced with the pci_add_resource() chang=
-e (I
-> > > > > know the breaking change was pulled before 6.18 main PR but I'd w=
-ant to
-> > > > > retry it later once the known issues have been addressed). The ex=
-pected
-> > > > > result is there'll be two adjacent host bridge resources in the
-> > > > > resource tree as the different name should disallow coalescing th=
-em
-> > > > > together, and therefore BAR0 has a window into which it belongs t=
-o.
-> > > > >
-> > > > > Generic info for the series:
-> > > > >
-> > > > > PCI host bridge windows were coalesced in place into one of the s=
-tructs
-> > > > > on the resources list. The host bridge window coalescing code doe=
-s not
-> > > > > know who holds references and still needs the struct resource it'=
-s
-> > > > > coalescing from/to so it is safer to perform coalescing into enti=
-rely
-> > > > > a new struct resource instead and leave the old resource addresse=
-s as
-> > > > > they were.
-> > > > >
-> > > > > The checks when coalescing is allowed are also made stricter so t=
-hat
-> > > > > only resources that have identical the metadata can be coalesced.
-> > > > >
-> > > > > As a bonus, there's also a bit of framework to easily create kuni=
-t
-> > > > > tests for resource tree functions (beyond just resource_coalesce(=
-)).
-> > > > >
-> > > > > Ilpo J=C3=A4rvinen (3):
-> > > > >   PCI: Refactor host bridge window coalescing loop to use prev
-> > > > >   PCI: Do not coalesce host bridge resource structs in place
-> > > > >   resource, kunit: add test case for resource_coalesce()
-> > > >
-> > > > Thanks for your series!
-> > > >
-> > > > I have applied this on top of commit 06b77d5647a4d6a7 ("PCI:
-> > > > Mark resources IORESOURCE_UNSET when outside bridge windows"), and
-> > > > gave it a a try on Koelsch (R-Car M2-W).
-> > >
-> > > So the pci_bus_add_resource() patch to rcar_pci_probe() was not inclu=
-ded?
-> > > No coalescing would be attempted without that change.
-> >
-> > Sorry, I didn't realize you wanted that (and anything else) to be
-> > included, too.  Please tell me the exact base I should use for testing,
-> > and I will give it another run.
->
-> I'm sorry, it's indeed a bit confusing as some of these patches never
-> have been in Linus' tree.
->
-> So I'm interested on what's the result with these changes/series together=
-:
->
-> [PATCH 1/2] PCI: Setup bridge resources earlier
-> [PATCH 2/2] PCI: Resources outside their window must set IORESOURCE_UNSET
-> [PATCH 1/1] PCI: rcar-gen2: Add BAR0 into host bridge resources
-> [PATCH 1/3] PCI: Refactor host bridge window coalescing loop to use prev
-> [PATCH 2/3] PCI: Do not coalesce host bridge resource structs in place
-> [PATCH 3/3] resource, kunit: add test case for resource_coalesce()
->
-> You might also want to change that pci_dbg() in the IORESOURCE_UNSET patc=
-h
-> to pci_info() (as otherwise dyndbg is necessary to make it visible).
+The first patch fixes the ECAM logic by introducing a custom PCI ops
+implementation that avoids overwriting the DBI base, ensuring compatibility
+with vendor drivers that expect a stable DBI address.
 
-Thanks, all done:
+The second patch reverts Qualcomm-specific ECAM preparation logic that
+is no longer needed due to the updated design.
 
-    $ git cherry -v --abbrev=3D1 v6.18-rc2^
-    + 211ddde0 Linux 6.18-rc2
-    + 3fdaf2 PCI: Setup bridge resources earlier
-    + 5be02e5 PCI: Resources outside their window must set IORESOURCE_UNSET
-    + adf6f11 PCI: rcar-gen2: Add BAR0 into host bridge resources
-    + eecb500 PCI: Refactor host bridge window coalescing loop to use prev
-    + 60470b3 PCI: Do not coalesce host bridge resource structs in place
-    + afe3ec resource, kunit: add test case for resource_coalesce()
-    + 487c98 Use dev_info() in drivers/pci/probe.c:__pci_read_base()
-IORESOURCE_UNSET path
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v2:
+- remove bus0 is for root port always(Bjorn)
+- Link to v1: https://lore.kernel.org/r/20251017-ecam_fix-v1-0-f6faa3d0edf3@oss.qualcomm.com
 
-Compared to v6.18-rc2, dmesg changed (for the first PCI/USB instance)
-like:
+---
+Krishna Chaitanya Chundru (2):
+      PCI: dwc: Fix ECAM enablement when used with vendor drivers
+      PCI: dwc: qcom: Revert "PCI: qcom: Prepare for the DWC ECAM enablement"
 
-     pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
-     pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
--> 0x00ee080000
-     pci-rcar-gen2 ee090000.pci: PCI: revision 11
-     pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
-     pci_bus 0000:00: root bus resource [bus 00]
-     pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
-    +pci_bus 0000:00: root bus resource [mem 0xee090000-0xee090bff]
-     pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional
-PCI endpoint
-     pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
-    -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
-    +pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]: no
-initial claim (no window)
-    +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
-     pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 conventional
-PCI endpoint
-    -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]
-    +pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]: no initial
-claim (no window)
-    +pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
-     pci 0000:00:01.0: supports D1 D2
-     pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
-     pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 conventional
-PCI endpoint
-    -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]
-    +pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]: no initial
-claim (no window)
-    +pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
-     pci 0000:00:02.0: supports D1 D2
-     pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
-     PCI: bus0: Fast back to back transfers disabled
-     pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigned
-     pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigned
-     pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
-    +pci_bus 0000:00: resource 5 [mem 0xee090000-0xee090bff]
-     pci 0000:00:01.0: enabling device (0140 -> 0142)
-     pci 0000:00:02.0: enabling device (0140 -> 0142)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 28 ++++++++--
+ drivers/pci/controller/dwc/pcie-qcom.c            | 68 -----------------------
+ 2 files changed, 24 insertions(+), 72 deletions(-)
+---
+base-commit: 552c50713f273b494ac6c77052032a49bc9255e2
+change-id: 20251015-ecam_fix-641d1d5ed71d
 
-> The expected result is that those usb resources are properly parented and
-> the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together (a=
-s
-> that would destroy information). So something along the lines of:
->
->     ee080000-ee08ffff : pci@ee090000
->       ee080000-ee080fff : 0000:00:01.0
->         ee080000-ee080fff : ohci_hcd
->       ee081000-ee0810ff : 0000:00:02.0
->         ee081000-ee0810ff : ehci_hcd
->     ee090000-ee090bff : ee090000.pci pci@ee090000
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-Compared to v6.18-rc2, the output of "lspci -v" or "cat /proc/iomem"
-did not change.  Hence for the two PCI/USB instances:
-
-    ee080000-ee08ffff : pci@ee090000
-      ee080000-ee080fff : 0000:00:01.0
-        ee080000-ee080fff : ohci_hcd
-      ee081000-ee0810ff : 0000:00:02.0
-        ee081000-ee0810ff : ehci_hcd
-    ee090000-ee090bff : ee090000.pci pci@ee090000
-    ee0c0000-ee0cffff : pci@ee0d0000
-      ee0c0000-ee0c0fff : 0001:01:01.0
-        ee0c0000-ee0c0fff : ohci_hcd
-      ee0c1000-ee0c10ff : 0001:01:02.0
-        ee0c1000-ee0c10ff : ehci_hcd
-    ee0d0000-ee0d0bff : ee0d0000.pci pci@ee0d0000
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
