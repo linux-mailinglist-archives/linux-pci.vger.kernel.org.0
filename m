@@ -1,243 +1,139 @@
-Return-Path: <linux-pci+bounces-39068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E058BFE4E2
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 23:24:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2155BBFE72A
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 00:45:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9F1EF4FA9FA
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 21:24:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C16221A0571A
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 22:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC5E304BCB;
-	Wed, 22 Oct 2025 21:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ABF7261B70;
+	Wed, 22 Oct 2025 22:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nm46NTXq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yqfl5Czt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8683E302CB7;
-	Wed, 22 Oct 2025 21:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB8D211472;
+	Wed, 22 Oct 2025 22:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761168264; cv=none; b=XFeVDsm5/eE923sUYvAjKtnmkZPhLucoMv23gzqbf3o21eQYdSZ/bSlKNIImTBMnMG9adDEkk/gD5M3oDFFuRK07ADTUFhXyducKQJj5sd27moE+Bl+avyd6PPmkYV4Fb3mig4w6yMdyfCIFvRQSFpWSGH5jAbRAMU9tLvvET60=
+	t=1761173155; cv=none; b=eLQ23Mx3KTKpq7Pb/1KFyXAcbhRJ36SFvjTeB7k4B1skOs/13lE5pJbKxu2X+zWKqFqLkUFszdRUUb/39CA/5orTvbFu+1ZtN80nPAbGwCtre/jeZpxkVqLhgYBNpZOTIUbilWIBqUolrab9fUDkg2aUS3KtByvVqmgqE0R0iW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761168264; c=relaxed/simple;
-	bh=oRw8EkTcatCYrxahxAz4FniclD9q02pgqQGG9nDtEGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BVz4M3A5F5VRRjLLN/cRoyrcIs8JD2oArqkOs+W/0TevkTVxdhpX3HV5bKKyHbjk7SEYPGrPSI5AIyBoqmWOHNHFskMmNW1PdttaaT/ItEALTPrrdNwSTVXyxD7F7TD/1cbM5aBUJnEjstCRVyk/fxICXDlNoi26KQhYrCRYgf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nm46NTXq; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59ML8dwI001343;
-	Wed, 22 Oct 2025 21:24:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=hbVNytTL4DYySQBQM
-	3O9d0pQopaTTyISrgICBddsMZ0=; b=nm46NTXqjXLBucZgt8jA3T0EFZNTa4ci7
-	byvDl9hynrWn+J6JIOMhr5U7Wjb7k7S1k2SUkGxOFvqm9Ythpf2tGatInMmO7/+G
-	N6KmKtfUFEa7DEh2Ec8zxKtUQATqSGOWLFRRgZ2cFygaa3eXnrRqUGuNbU2PFZ/b
-	DliOZH5w0skL5lryx+BpIMibvvvO3A1sGjJgI48nE3VmSiGyGE9gXmNKD7ZZqoLk
-	xz+/OmOJY+Hstrm7l4bMbojgxKn+QjAlkXmWp06pIXgJwbsAzxg0r+dghNfuD+7Y
-	AJO+JcSs1/bW/au79wdlGkqZvm8fB+8Anywu0Dy3RcbePmNenYRiQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v32hnjfq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 21:24:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59MLKYCH024953;
-	Wed, 22 Oct 2025 21:24:18 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vpqk2hdr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Oct 2025 21:24:18 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59MLOG3D31064598
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Oct 2025 21:24:17 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CDE995805C;
-	Wed, 22 Oct 2025 21:24:16 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA08958054;
-	Wed, 22 Oct 2025 21:24:15 +0000 (GMT)
-Received: from IBM-D32RQW3.ibm.com (unknown [9.61.253.79])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Oct 2025 21:24:15 +0000 (GMT)
-From: Farhan Ali <alifm@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: helgaas@kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com, bblock@linux.ibm.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, hca@linux.ibm.com
-Subject: [PATCH v2 2/2] s390/pci: Add architecture specific resource/bus address translation
-Date: Wed, 22 Oct 2025 14:24:11 -0700
-Message-ID: <20251022212411.1989-3-alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251022212411.1989-1-alifm@linux.ibm.com>
-References: <20251022212411.1989-1-alifm@linux.ibm.com>
+	s=arc-20240116; t=1761173155; c=relaxed/simple;
+	bh=ynTdZ7Aj4V2OqHNG4FGr5zyTF0msUaMb3nD6PXj6uP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=DBsjJDm0pSAehQNb6ehLNpUw7xegKxZjvXTJT9CA3aDEP8SfPsE5v19V5ZYVTcfBUUdUQOI4aWcPklbQDUBygEvM3BZifERCwkhvrZwgmy9x0Pp3KXLBy+fqdSzroqV8hy4oYhgVvJP0sHX47X3ax8KHSOBu4lKR7AyixQs9nRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yqfl5Czt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37F4C4CEE7;
+	Wed, 22 Oct 2025 22:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761173154;
+	bh=ynTdZ7Aj4V2OqHNG4FGr5zyTF0msUaMb3nD6PXj6uP4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Yqfl5CztoX8gCmT3Y7k2CeoIq0NY/ShnRnfOTwgXoxdN4Gg4WCZq0BIQjXAKZcRzd
+	 PQN7Ef5z6lLm4/cg5Lfg+Iwd5DaUIVZ0Aoku6AOPEufutqhcxIAlNqRe+YwdBYvTuI
+	 bMuq8lhq+7Mhk3lVC8AJq3CulFwn3cF33WZuekumOG72GFWSYFPN6ri26xAlO8tbop
+	 HEWr7fFSlK0MEC6HjNM0LhiSMEwCogXSnAYryJNlcr3YFRdjeAF7YKgotYputtDLD9
+	 n38rSDmiikUaOYBtmrBkR0v1cPSN77PWeB6wB0PcvR9iOK+V6LWf1cJkOWR1WFCf8e
+	 y0c+UevrynxFQ==
+Date: Wed, 22 Oct 2025 17:45:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: brcmstb: Fix use of incorrect constant
+Message-ID: <20251022224553.GA1271981@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfXyjTBVmnOKPtP
- OMccFzHlad75ehkUrPcgohTCv3zAddRBlB9spdZ9l4eTqJE6B17itpN7MNlE49hf/gDq9kh3g5Z
- RST/YHbIuQuhezTqE/WKHmbwHbEq/a6Epl0lButJnd/4b1OBASQlhY2I0oQzhH4oYX9lxahIKEw
- btb/6oBURfJYIe0qqbhoJYjXpj9x9+ClQ6rOewv9pxxUxvePllVDJyO54cc82bWmu1gk8sCtq8j
- r7CYRKSCEHD2CMH/v+HtGStpc7eluMVe5/Z7mCkiOmqKC3dDcXmMsK/sGQfJxlRRDfQ/o7ke3if
- zL383f4YsECqudKnw3P+PZHGD61vNGS7PCCUo70XLGKO9+S4ymajzzRMk7W0fu2OxbF0MmhzlKU
- U9AmXN5Z1HB4HROsKovGMoNsLXJozg==
-X-Authority-Analysis: v=2.4 cv=OrVCCi/t c=1 sm=1 tr=0 ts=68f94b83 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=WI2LcE4NPZyv2LzpnzYA:9
-X-Proofpoint-GUID: qRAPh3kp6gxfA8v-1YsQRzveXtTAJbKr
-X-Proofpoint-ORIG-GUID: qRAPh3kp6gxfA8v-1YsQRzveXtTAJbKr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-22_08,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251003170436.1446030-1-james.quinlan@broadcom.com>
 
-On s390 today we overwrite the PCI BAR resource address to either an
-artificial cookie address or MIO address. However this address is different
-from the bus address of the BARs programmed by firmware. The artificial
-cookie address was created to index into an array of function handles
-(zpci_iomap_start). The MIO (mapped I/O) addresses are provided by firmware
-but maybe different from the bus addresses. This creates an issue when trying
-to convert the BAR resource address to bus address using the generic
-pcibios_resource_to_bus().
+On Fri, Oct 03, 2025 at 01:04:36PM -0400, Jim Quinlan wrote:
+> The driver was using the PCIE_LINK_STATE_L1 constant as a field mask for
+> setting the private PCI_EXP_LNKCAP register, but this constant is
+> Linux-created and has nothing to do with the PCIe spec.  Serendipitously,
+> the value of this constant was correct for its usage until after 6.1, when
+> its value changed from BIT(1) to BIT(2);
+> ...
 
-Implement an architecture specific pcibios_resource_to_bus() function to
-correctly translate PCI BAR resource addresses to bus addresses for s390.
-Similarly add architecture specific pcibios_bus_to_resource function to do
-the reverse translation.
+>  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+>  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
+> -#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
 
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- arch/s390/pci/pci.c       | 74 +++++++++++++++++++++++++++++++++++++++
- drivers/pci/host-bridge.c |  4 +--
- 2 files changed, 76 insertions(+), 2 deletions(-)
+This all tangential questions for possible future changes, not
+anything for *this* patch.
 
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index c82c577db2bc..cacad02b2b7f 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -264,6 +264,80 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- 	return 0;
- }
- 
-+void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
-+			     struct resource *res)
-+{
-+	struct zpci_bus *zbus = bus->sysdata;
-+	struct zpci_bar_struct *zbar;
-+	struct zpci_dev *zdev;
-+
-+	region->start = res->start;
-+	region->end = res->end;
-+
-+	for (int i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-+		int j = 0;
-+
-+		zbar = NULL;
-+		zdev = zbus->function[i];
-+		if (!zdev)
-+			continue;
-+
-+		for (j = 0; j < PCI_STD_NUM_BARS; j++) {
-+			if (zdev->bars[j].res->start == res->start &&
-+			    zdev->bars[j].res->end == res->end &&
-+			    res->flags & IORESOURCE_MEM) {
-+				zbar = &zdev->bars[j];
-+				break;
-+			}
-+		}
-+
-+		if (zbar) {
-+			/* only MMIO is supported */
-+			region->start = zbar->val & PCI_BASE_ADDRESS_MEM_MASK;
-+			if (zbar->val & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+				region->start |= (u64)zdev->bars[j + 1].val << 32;
-+
-+			region->end = region->start + (1UL << zbar->size) - 1;
-+			return;
-+		}
-+	}
-+}
-+
-+void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
-+			     struct pci_bus_region *region)
-+{
-+	struct zpci_bus *zbus = bus->sysdata;
-+	struct zpci_dev *zdev;
-+	resource_size_t start, end;
-+
-+	res->start = region->start;
-+	res->end = region->end;
-+
-+	for (int i = 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-+		zdev = zbus->function[i];
-+		if (!zdev || !zdev->has_resources)
-+			continue;
-+
-+		for (int j = 0; j < PCI_STD_NUM_BARS; j++) {
-+			if (!zdev->bars[j].size)
-+				continue;
-+
-+			/* only MMIO is supported */
-+			start = zdev->bars[j].val & PCI_BASE_ADDRESS_MEM_MASK;
-+			if (zdev->bars[j].val & PCI_BASE_ADDRESS_MEM_TYPE_64)
-+				start |= (u64)zdev->bars[j + 1].val << 32;
-+
-+			end = start + (1UL << zdev->bars[j].size) - 1;
-+
-+			if (start == region->start && end == region->end) {
-+				res->start = zdev->bars[j].res->start;
-+				res->end = zdev->bars[j].res->end;
-+				return;
-+			}
-+		}
-+	}
-+}
-+
- void __iomem *ioremap_prot(phys_addr_t phys_addr, size_t size,
- 			   pgprot_t prot)
- {
-diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-index afa50b446567..56d62afb3afe 100644
---- a/drivers/pci/host-bridge.c
-+++ b/drivers/pci/host-bridge.c
-@@ -48,7 +48,7 @@ void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
- }
- EXPORT_SYMBOL_GPL(pci_set_host_bridge_release);
- 
--void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
-+void __weak pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
- 			     struct resource *res)
- {
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-@@ -73,7 +73,7 @@ static bool region_contains(struct pci_bus_region *region1,
- 	return region1->start <= region2->start && region1->end >= region2->end;
- }
- 
--void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
-+void __weak pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
- 			     struct pci_bus_region *region)
- {
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
--- 
-2.43.0
+We have these in include/uapi/linux/pci_regs.h:
 
+  #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
+  #define  PCI_EXP_LNKCAP_MLW     0x000003f0 /* Maximum Link Width */
+  #define  PCI_EXP_LNKCAP_ASPMS   0x00000c00 /* ASPM Support */
+  #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
+
+Since you're using PCI_EXP_LNKCAP_ASPM_L0S below for writes to
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY, I assume
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY is another name for PCI_EXP_LNKCAP?
+
+If so, it looks like we should also use PCI_EXP_LNKCAP_MLW instead of
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK (although the
+value is different for some reason; maybe 0x1f0 just reflects the
+limits of brcmstb).
+
+It would be nice to have a #define for the base of the PCIe
+Capability so we could use that plus PCI_EXP_LNKCAP instead of
+PCIE_RC_CFG_PRIV1_LINK_CAPABILITY.
+
+But you did something like that already for PCI_EXP_LNKCTL2 using
+BRCM_PCIE_CAP_REGS (0x00ac), which means LNKCTL2 and LNKCAP must be
+at:
+
+  LNKCTL2: 0x00dc (0x00ac + 0x30)
+  LNKCAP:  0x04dc (0x04d0 + 0x0c)
+
+which doesn't look at all like they would both be in the actual PCIe
+Capability format.
+
+>  #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
+>  #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
+
+From its usage to "un-advertise L1 substates",
+PCIE_RC_CFG_PRIV1_ROOT_CAP looks like it might be related to 
+PCI_L1SS_CAP, but 0xf8 doesn't really match up to
+PCI_L1SS_CAP_L1_PM_SS (0x10)
+
+If this is really related to PCI_L1SS_CAP, can we use the names from
+pci_regs.h somehow?
+
+>  	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+> -	aspm_support = PCIE_LINK_STATE_L1;
+> -	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+> -		aspm_support |= PCIE_LINK_STATE_L0S;
+>  	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> -	u32p_replace_bits(&tmp, aspm_support,
+> -		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> +	if (of_property_read_bool(pcie->np, "aspm-no-l0s"))
+> +		tmp &= ~PCI_EXP_LNKCAP_ASPM_L0S;
+>  	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+>  
+>  	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
 
