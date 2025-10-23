@@ -1,213 +1,204 @@
-Return-Path: <linux-pci+bounces-39178-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39179-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 232DBC02ADF
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 19:13:17 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 833AAC02B79
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 19:24:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 33DB534F5A6
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 17:13:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 94A024E0679
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 17:24:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8450A3446D4;
-	Thu, 23 Oct 2025 17:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5180E29B793;
+	Thu, 23 Oct 2025 17:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Jk9KPLfg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjLXJx47"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012021.outbound.protection.outlook.com [52.101.48.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66BF2609FD;
-	Thu, 23 Oct 2025 17:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761239583; cv=fail; b=um4N/nqNZ6p/7Har6tbv+muvH5j9P5RK+5f+50jZx96Z3JAvhQmu3cTf3uxV5thIBGeB0DAhMvbWq1CkEDLAOu9AJ9ElFek1zJVT7h15fzl7/BPkOQm6vflvVW9mmj22zOWBMIvj3h4IfwYDEw7DgYL/AP2ZDM5rmmhFW5M9WJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761239583; c=relaxed/simple;
-	bh=ItucSfjkigv6/FHfQkB0h7DBYuz7v4YIi6u5kmP+nuk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nUyuxnQv7EDD81Mx+ASyzYalys0ir5i68ye00P/bh/2inJG/NV3f7Jf0PNEcKr4WUhzBEJtdOyj8TMUJLuvB5BxbD9Ke+CcsGBtf8R0tRXepQb0Cy5PldOEXHHqTUIfvrNW+lrC2hHCiP13pr0S8M2YcvxVPPHU4g7TL97XAaBA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Jk9KPLfg; arc=fail smtp.client-ip=52.101.48.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NJbo1rki2jl0+cko84F4hbMbXCjffnkk+sg0m44Mb6SQCbj+O7OBcAoR485LxwAZI51yS1lW7GLmUrwx8uL91sA5IAODTEDLe8cSfEQIjvtV3/d3cwtI4R0Pzclbi152kX+IP1saiodgoF0fX5X9WopbmnBpKEk6ngnZi6OPWbVUs3CIsGp9RfYjeh49LkJpODmwIEA680PFk9LN9FR+2+M+Gja5Zd/Tx4V/ZBCkBKeWt0tdZEB9CM/e9nhmpegK3p5acP6txB62nQOnIi3A+9kiDTRPrX8i+uWUOby4QDCPV5NLF+yMf3U7yYwNMz/7BnHbSf4OgN64csR3qsk6Xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LeiQKywRitV/hzhc2DKCwca1Km7t7/YSlGxV2yUwmUc=;
- b=XMPpJuPdJaXiEjiFSmwTNTu+oQpDOi/E50OtbOZpd0MdfHeh4YKhDUvqct74XDAzrzD99BUMUq1Lg/7y8g8PDokJ+3NjD7UkaYoZ5upUWS3qpldWsEzD2osbEyk+BhNDJAjTVN/4l5Aezhg9uopoY8yHvIkaqkWgC3tvZ2Xv8gyPJkFAciBodU+Ygfc1F3Dn7E+HrwNAfxXySRB0CokF0RBJcgrSW8ctKZFnrECe8oMuam+qxWfu7TOgqVhXLKRm7exc5VKunAKMYtnBCBgnS1yk9RvHTkKxIoElcHnbppq3OXQGfGFLkQAl3Li6MRvexe/1RdYqoYuYLpFcyIpvNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LeiQKywRitV/hzhc2DKCwca1Km7t7/YSlGxV2yUwmUc=;
- b=Jk9KPLfgBvwGZvIKy79W6d/IQba6R1A+9nvsiwmwtBBLV8jdqDX0QoIz9YyChgYG4OPopbQ/A2IZnMRBKl8pxvOgjXekBfItJkF/LJxpD85OD0aOS1b5Rf3Hha28NbEbO02sh2DGjAkqdeuGgNXpbHpwiIKmTgLKL8FPhPthSuY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CY5PR12MB6600.namprd12.prod.outlook.com (2603:10b6:930:40::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Thu, 23 Oct
- 2025 17:12:58 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9253.011; Thu, 23 Oct 2025
- 17:12:58 +0000
-Message-ID: <945b3be6-3392-4104-aac1-35d460e40cbb@amd.com>
-Date: Thu, 23 Oct 2025 12:12:50 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Shyam-sundar.S-k@amd.com,
- bhelgaas@google.com, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- jdelvare@suse.com, linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux@roeck-us.net,
- naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
- suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
-References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
- <20251022011610.60d0ba6e.michal.pecio@gmail.com>
- <20251022133901.GB7243@yaz-khff2.amd.com>
- <20251022173831.671843f4.michal.pecio@gmail.com>
- <20251022160904.GA174761@yaz-khff2.amd.com>
- <20251022181856.0e3cfc92.michal.pecio@gmail.com>
- <20251023135935.GA619807@yaz-khff2.amd.com>
- <20251023170107.0cc70bad.michal.pecio@gmail.com>
- <20251023160906.GA730672@yaz-khff2.amd.com>
- <5764e711-4c3f-4476-9ecb-1f7643e3b60d@amd.com>
- <20251023190644.114bf9f8.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20251023190644.114bf9f8.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR2101CA0001.namprd21.prod.outlook.com
- (2603:10b6:805:106::11) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E9126F28F
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 17:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761240253; cv=none; b=B4E5vBo4rwzWJpAlzd0c7xE4QBKlO8lTkm+w0qSgCU5BRwkaEAo5NTz4vbBvJ8Szoh1VTh4LTTAwlVEF7N//Y7F8NmVUiPtoAE7vGlmUdb5Fll3NlL99GB2x4fsB5hRwcqlRnRvmpdVIW4q4GIBJCY4Xtkd6ruEFTNGNE5k4x2s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761240253; c=relaxed/simple;
+	bh=EONubYqN9mgVYQKzmqacdfnpXC1cir+Pfzg+6xUIhTg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KhKnOFXi3orYGf5C4M1Hl023St/gdsBdMWazItSp1OobUkUDuzEiC0fJqDFDI9DH3Iy/ooK+KGkPGq/tCA7m1Q/NzrnSJU/Vtbd0sKYDezVhNpDPhXnxB77fgBgmwr9yPMmdvEnB87s0eo4Aua1IBamEORn+jNHZ8ESc4I9Ce30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjLXJx47; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761240251; x=1792776251;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=EONubYqN9mgVYQKzmqacdfnpXC1cir+Pfzg+6xUIhTg=;
+  b=QjLXJx47reIqxCPKhIxZpiC4nvL6rVwjOUsmn5cAgk6O4RXcynHTn3ty
+   D5miH3D7bXyyA2mVHJpmjlKmAaNAI87YTlbrBJC6ptHQok6I4Fp736RBy
+   RdqkPnZIeS8ekh2z7K5tQtkhEm0vIT+0waw/Lx45m+iTUYZN0kDTTeOZ7
+   UZjnHWH9qpCQph5zv+ZQxbX9+sGs5YvIxQ2Msi0dTGtoSp5eydhSTcegF
+   9YUQc7VKY9NT0YiFw2g5aIdGYTVquyq6+Ktm4RsFjLkMZD92T4uQozl5M
+   OnkjeznywvOO/h/YTC1mHeJrgLyF0CpMIvBxKOJSc19xua6eaJebNVs7r
+   A==;
+X-CSE-ConnectionGUID: 6+3kh572T4yWdDpmzFgurQ==
+X-CSE-MsgGUID: PWj9EleeR1aQX0ttBYtJsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="81044848"
+X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
+   d="scan'208";a="81044848"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:24:10 -0700
+X-CSE-ConnectionGUID: hlYtlqUZT3qdu7U/4VxPrw==
+X-CSE-MsgGUID: XTKqdRjDQSCE6ukcL1N9Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
+   d="scan'208";a="184285220"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:24:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 23 Oct 2025 20:24:02 +0300 (EEST)
+To: =?ISO-8859-15?Q?Alex_Benn=E9e?= <alex.bennee@linaro.org>
+cc: linux-pci@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+    Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>, 
+    Alex Deucher <alexander.deucher@amd.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    amd-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    D Scott Phillips <scott@os.amperecomputing.com>
+Subject: Re: 2499f53 (PCI: Rework optional resource handling) regression with
+ AMDGPU on Arm AVA platform
+In-Reply-To: <874irqop6b.fsf@draig.linaro.org>
+Message-ID: <6a8559ea-1528-f09c-21c1-822e8d7569d2@linux.intel.com>
+References: <874irqop6b.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CY5PR12MB6600:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35cd7500-1bb0-4833-622e-08de125769c8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SGQyVGREQ2k5Smh0YnZwMW9YdHNXUzM3VE5WaU1wZ2hkWUZCVGdHUytiakFW?=
- =?utf-8?B?L1MyTDVJZGZ5WlRlckNZSW44TnVaSGwxWGFoaFRsM294VDdna1hKZVhmR1FD?=
- =?utf-8?B?NkVXTW5UM3pzb3dqZ2VDelE3QTY2RHlNU2VGRjNObUdONXJjSkgxdmpTamtp?=
- =?utf-8?B?aEhZUUo1d1JReE5NK1lrc1hmazJ3K2pSV3dhb1YvYitVTkFhUHd2TEpteGlG?=
- =?utf-8?B?OE40cm1CQTRUcDZnTVRsK0dab2t5c1lvYlZCZnFrUytMQmJiVENZU1pkVTVW?=
- =?utf-8?B?SFJhV3d3bndqSFBoNFVZaElraVJkVTdHN2RML1VIUFpPZmdhcWhSbFR6cVha?=
- =?utf-8?B?bnByaFAzTzBDYTh6SlBhdGRxekVxRVVvWTNsSDNoc1FrUFRKTXNMOWNMVlhY?=
- =?utf-8?B?dHNQenBHVXprVjUzb0Z5YXRQdG1oUkxvMHBHVEhVa3V2VlZKcW9uckgyRzkr?=
- =?utf-8?B?aENYOXpORXI0NnJNSTgvUXBqSkFVSkEzMk9WdXVaM01SZGhFZzNRQlpKMjAr?=
- =?utf-8?B?alk0dmNvMDRHKzBueWZycHNVZ2wyWnprdFkzbjJtZFhsVDNuRWlHVlcxUTNC?=
- =?utf-8?B?ZlprQk9ubksvUEM4OWxLR0F6SGJjNndsRzNFTUpPY1o1MTh4QTMxRjdBTDh3?=
- =?utf-8?B?bWJDL2M2U2pwQkhMajIxcHNsOXVvVkZvcjhTL0lZNzJJeVBiTWY3VmFOWTZB?=
- =?utf-8?B?dEJHM2RZbFp2eGtocll1YThvc1BWTGJnMWJhbjhabitkWjlhN2ZIUXRTVEpN?=
- =?utf-8?B?UHVySUp2NTZMWjBtL2ZhbUppMGtFSjZSVk9lSXZrT3JlUWNzSXkrMXZNbTVu?=
- =?utf-8?B?dUNoV09yVEw3VzQ4RlRIOGViRzJROXA0MUUrazByRks1T1VQSm85azhxSVFn?=
- =?utf-8?B?SEt5ZzZlTkswNUswWGh6NVhuMlMxWDIxNXpTRU96cFUrWEFjL3AyeDVRQThl?=
- =?utf-8?B?bURlSU9iN3lPbFE1elFXL2pxZVM1QThaNkNGbDVqbGljdUJiMHpCazVIanVS?=
- =?utf-8?B?cVVGYVpwVnJxZlRjL3FPckp6NFpZeGhHeFdDR09HVXIxTkVHUkplYXRUSFF1?=
- =?utf-8?B?d205azVEcFl4S2NlZVhNQllWOC82bXFPM3ZBR1BlS1k2VWdIZm4rMmtkRGxJ?=
- =?utf-8?B?VmFiSGZWakMybHhKck5TTm40L1o2OHNDMXZxNWxaTEx4YUF3NW42a0VTaWZm?=
- =?utf-8?B?TThGYzY4b0x6UFR4UnRDVG10Z3ZNSHZlY09vT1FjbHlyTmltN3FxK2VZZ00x?=
- =?utf-8?B?N2hQcXpMampoNFd6eExWR09FbllkQXJrMEJKanZvZEpFYTd3aSt5L0hoRVB1?=
- =?utf-8?B?RHFPK3U3czZ3b3RHYTdXaURwbzFQODRpZDlpL09PSXFuRG1UVFBYaGlHMVBr?=
- =?utf-8?B?N2t5L3Y2UjY0R25kWWYrKzB0OHNwZnNXQytkLzBIMWd1N3MrS3ZKMmFwTG8r?=
- =?utf-8?B?MVljWVpHMWhQbml2ODlkb2hnRHdoNXFMVTRYaytUNWNla3BKK3dYQXUza3gy?=
- =?utf-8?B?RFBud0NvMmRzRTl2N0NmclA1dXFmVjNhOTJRcm43WHNFVDVRenlkMkkwbmIv?=
- =?utf-8?B?SnJ1RVBnYXk0OGxmaGZxT0Z2MmhhK1NDNzNTZFZ1Si9VdmhpVUVuSlNDR1JE?=
- =?utf-8?B?cGY5ZlUvdkxVQXc1Y0xDWS9mcDgzQTdqYjBDSkFQYlpSbERaVHhtMmJmeUs2?=
- =?utf-8?B?NzRNeW5qbGtpQU93cDZJYlkxd1NQalcrcnJRLzJiWFpJTHVDK1Z0VUxvUHRK?=
- =?utf-8?B?OHZZMU83ZC93ZktHT3p6bytPdC9jeUJ4ME1yOU1EbkN5anZtU2V3RkYwTUVH?=
- =?utf-8?B?NkMrR0FSL2dEUGdXYzdLcjVrVWFhWGxCZE5FZ0VjZEk3VVYzdnllOHJRMFhD?=
- =?utf-8?B?TVIvam9oUzNRdnlidC9RMXhVbk96VnhDMXRMek1nZ2lDWkFoY2dyTEo1M1NN?=
- =?utf-8?Q?++riGI5Qll9xFWtDP8GfL7xO0YPdygJ/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHpWY3FiS2tLRDRnMmlHdDZ6NkRMZGF1aUt6T3pZemZpeDg1NEQxelFRcnpD?=
- =?utf-8?B?UysrVUQyYkVxUHNLUDhRbzJ0Zk5najd3RWg1bUdQRHF1cVJOVWo5VG5OMElE?=
- =?utf-8?B?N0piUVZRSCs0MG1ZVktNZTNXWGc4ZWxhakgzZjMySmIyYXFJOHVvWXBNemxL?=
- =?utf-8?B?d2NwSmtJSmxFWFRIQ3diQmlyVVc5dWNYeGtrZzlkZkxuQ2JIeTRZRTdqQzM3?=
- =?utf-8?B?c3RERURDakpmemhkSTd2cUFXemRTYlFDcHQ4TFA1T1lsYTB4WmtNa1krd1hJ?=
- =?utf-8?B?SitqN21nSmhBcERRZ3l1dEdPRXlEYmphVy9ESmVDK1IzZVZGeit3bEhLVVVT?=
- =?utf-8?B?aVpndnQvN3Y1a0h3VExEMXVua1gzSEE3QUNQa1dnY2loN2JLUnpzSGhyTWdF?=
- =?utf-8?B?ZzQxcmxqS0JGWVRNWWdOWEhadFgzNGF3V21TeS9DTjIxWmZkLzVHOGRBL1lB?=
- =?utf-8?B?dUwxcXh1dEx4WXJJTjk3dERvVS85S29Yb3pyYnBIK3ZBejBaanQ5OEVOVVVy?=
- =?utf-8?B?U3BwSHd0clFUeTRnMmpod1NJQ1YvL1JwS0wyZ2J2cVIzeG1YT1FvNDVpa3RO?=
- =?utf-8?B?QXlVOXpEVGN6RzJPUnZJcnRRazcraER1Y29qTWJ4L1kyVlpIbXBJVWE3UG84?=
- =?utf-8?B?VDJ1THFTMHUxWWlsd0VTZHlpRDBZTytNN3ZGV2FVdWpXTDh2QjZJcStOZGxH?=
- =?utf-8?B?TDBBbjU3Q3oxdVgrS2dGUkp4L1BUdFY5Yjh0NjNlN2MySWtidUwwc3RadXhY?=
- =?utf-8?B?ZDFzTTBoUUpVcWtMOXg0SlRsVG9PSmJHQmxzYXZuSlF4c1ZKVkNNNm8vOHBm?=
- =?utf-8?B?NGhtVU1rTllDYXZoUHNzV0UrRjMyMkdkbXp2WVlFbXhEWjBuc0pxL0RwNWJP?=
- =?utf-8?B?bzJ4UVpuN0FqRjhFWUdndUp2SVFUdEpLS0RGNEZSMU40ckZ4dzJkcEJ1WkRy?=
- =?utf-8?B?NXhxNXFNTGtMcm5aT2lyMWhZa2ZSOWhlUE5EZ2g4MTRhRzl2RGlVZG94NlNq?=
- =?utf-8?B?VTNFaG8yOGFISlExMWY3NERpZHBXR3RlakZ0ME1nOVk0NVNBc3Z0QzRDdks0?=
- =?utf-8?B?R3hYY0FRaTQ5Y3FqOWVIU1daMnpFWmgrYXlNQ1d3enB0SjZVOWg3WE9FeEd3?=
- =?utf-8?B?TkVXVmhoaXY5MXpjQ0lSM0F2SDh0bEp3YjdHMzNDUGQvQk1XcUJQN3d6S0Q4?=
- =?utf-8?B?WHY0K25lbEw5T1hNbFZtOGJYRytOdEZGT1A1K1FOT0cwRlBYcGdicHUyVjlQ?=
- =?utf-8?B?Qnh0c0pCQkJ6L2VsaDN0d013K1JSbXFzOFoxaEVYQ1NGb3EybVlwbzBGQnlm?=
- =?utf-8?B?d2xVcE9OaWdxeVc3THZTL1YxY3gvajZQaVdTaGpDaHNVNGYxV2lVeHNCZVlt?=
- =?utf-8?B?cldzSGVxdnVqcE1IRWNkMGUzT0NFbzlMbFVZT042YThCaUN1TUlnRUpxS1F5?=
- =?utf-8?B?RVdpZ2ZocnI1SUtDR1dZUkswMXNVUmMwWHdIQ2VsTEVheWYvQzB0M2xlelJi?=
- =?utf-8?B?MWh6bXNCL0VvTmhBem9uY0RBZnBMeENuYVhCSzdkWGJQRTI5eFBaaXZMcitP?=
- =?utf-8?B?Z2Exc044b05uQ3AxTXBOTVJrcEFsK3hjMHk0UFdsUmZVYWdJeCswYktyU0FT?=
- =?utf-8?B?azN1dzhMMUd6RUtLMGRjcHFqV3dHcStad0ZDQTV4SEhLMXkxNC92QTNSYko3?=
- =?utf-8?B?T2ZEQnBsZXRzR0ViQTZaQkUyNW1PRFBHaVd6U1V5WEhPTnkrTlhSaHZhUUpv?=
- =?utf-8?B?QXljM3liS01JNjdxZUpyMkRCaGRPM0xzSkRFVW5pTHVRemNDVFFXWFd4amZo?=
- =?utf-8?B?bkVjR0pFRURka1B2RGh6cHpiT0V4R3JnTFF2VUVFNlYyQU9wY09VWXV3aHc4?=
- =?utf-8?B?ZEZHQk8xMUFEM2oxVFBRblgzM2hxVFlxMTF1UG1ld2FvaGZaUTRrTDNkbmFR?=
- =?utf-8?B?SEh6MlhOZ0ZkR3dXSGZLWlN1VmhrbkZoTjVTcDczYW42Z0JLdThhclV1NjBz?=
- =?utf-8?B?c0ZqOUdWekovNXhLVExQN1AxMGsrbTE3OXRjK3ljWVRJOTQzVEJGbzJsR3U1?=
- =?utf-8?B?UXNUUC9rWkdGMFJnWldnTkZCd1JLSWNkMnZIWU43TjJoMVVkdy81V0YzSlA5?=
- =?utf-8?Q?4fzmx+4Ihqd6zJNNf4Nlfu08J?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35cd7500-1bb0-4833-622e-08de125769c8
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 17:12:58.1469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ISWRhTbJBndVphF52tz45rpni3g9pLokR1uC5B7/2MgA/Q0e5c4czM/S3DS+Yki8oyLMa58iAIn+Mpsh2vehqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6600
+Content-Type: multipart/mixed; BOUNDARY="8323328-887458716-1761237511=:1016"
+Content-ID: <37b6cf55-ac82-9b0a-ec20-63d7358bc7d1@linux.intel.com>
 
-On 10/23/25 12:06 PM, Michal Pecio wrote:
-> On Thu, 23 Oct 2025 11:22:29 -0500, Mario Limonciello wrote:
->> As this is an ancient BIOS this reminds me of some related commits:
->>
->> aa06e20f1be6 ("x86/ACPI: Don't add CPUs that are not online capable")
->> a74fabfbd1b70 ("x86/ACPI/boot: Use FADT version to check support for
->> online capable")
->>
->> Does reverting that second one help?
-> 
-> Not sure if it's worth trying? My BIOS predates the ACPI 6.3 spec by
-> several years and (if I understand correctly) MADT revision is 1.
-> 
-> It seems Yazen guessed right: they list 6 APICs and mark absent ones
-> as not enabled. But I don't think we can assume any ACPI 6.3 flags to
-> be valid here.
-> 
-> I wonder if some quick check could recognize those consumer CPUs and
-> simply ignore hotplug there? AFAIK it was never a thing on AM3.
-> 
-> Michal
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Oh if the MADT revision is that old, then yeah reverting won't do 
-anything here.
+--8323328-887458716-1761237511=:1016
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <ac8953db-16c8-44e9-1cb8-85cac05d18f8@linux.intel.com>
 
+On Wed, 22 Oct 2025, Alex Benn=E9e wrote:
+
+> I've been tracking a regression on my Arm64 (Altra) AVA platform between
+> 6.14 and 6.15. It looks like the rework commit broke the ability of the
+> amdgpu driver to resize it's bar, resulting in an SError and failure to
+> boot:
+>=20
+>   [   15.348097] amdgpu 000d:03:00.0: amdgpu: detected ip block number 8 =
+<vcn_v4_0>
+>   [   15.355901] amdgpu 000d:03:00.0: amdgpu: detected ip block number 9 =
+<jpeg_v4_0>
+>   [   15.363202] amdgpu 000d:03:00.0: amdgpu: detected ip block number 10=
+ <mes_v11_0>
+>   [   15.384163] amdgpu 000d:03:00.0: amdgpu: Fetched VBIOS from ROM BAR
+>   [   15.390434] amdgpu: ATOM BIOS: 113-4481LHS-UC1
+>   [   15.400079] amdgpu 000d:03:00.0: amdgpu: CP RS64 enable
+>   [   15.411830] amdgpu 000d:03:00.0: amdgpu: Trusted Memory Zone (TMZ) f=
+eature not supported
+>   [   15.419932] amdgpu 000d:03:00.0: amdgpu: PCIE atomic ops is not supp=
+orted
+>   [   15.426719] [drm] GPU posting now...
+>   [   15.430329] [drm] vm size is 262144 GB, 4 levels, block size is 9-bi=
+t, fragment size is 9-bit
+>   [   15.438871] amdgpu 000d:03:00.0: BAR 2 [mem 0x340010000000-0x3400101=
+fffff 64bit pref]: releasing
+>   [   15.447648] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x34000ff=
+fffff 64bit pref]: releasing
+>   [   15.456452] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
+-0x340017ffffff 64bit pref]: releasing
+>   [   15.466095] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
+-0x340017ffffff 64bit pref]: releasing
+>   [   15.475738] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
+-0x340017ffffff 64bit pref]: releasing
+>   [   15.485386] pcieport 000d:00:01.0: bridge window [io  0x1000-0x0fff]=
+ to [bus 01-03] add_size 1000
+>   [   15.494252] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
+-0x3402ffffffff 64bit pref]: assigned
+>   [   15.503809] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
+can't assign; no space
+>   [   15.512063] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
+failed to assign
+>   [   15.519796] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
+can't assign; no space
+>   [   15.528049] pcieport 000d:00:01.0: bridge window [io  size 0x1000]: =
+failed to assign
+>   [   15.535787] pcieport 000d:01:00.0: bridge window [mem 0x340000000000=
+-0x3402ffffffff 64bit pref]: assigned
+>   [   15.545349] pcieport 000d:02:00.0: bridge window [mem 0x340000000000=
+-0x3402ffffffff 64bit pref]: assigned
+>   [   15.554911] amdgpu 000d:03:00.0: BAR 0 [mem 0x340000000000-0x3401fff=
+fffff 64bit pref]: assigned
+>   [   15.563612] amdgpu 000d:03:00.0: BAR 2 [mem 0x340200000000-0x3402001=
+fffff 64bit pref]: assigned
+>   [   15.572313] pcieport 000d:00:01.0: PCI bridge to [bus 01-03]
+>   [   15.577962] pcieport 000d:00:01.0:   bridge window [mem 0x50000000-0=
+x502fffff]
+>   [   15.585175] pcieport 000d:00:01.0:   bridge window [mem 0x3400000000=
+00-0x3402ffffffff 64bit pref]
+>   [   15.594038] pcieport 000d:00:01.0: bridge window [mem 0x340000000000=
+-0x340017ffffff 64bit pref]: can't claim; address conflict with PCI Bus 000=
+d:01 [mem 0x340000000000-0x340017ffffff 64bit pref]
+>=20
+> Failure to claim space for the bridge window...
+
+Thanks for the report.
+
+I was just looking at a similar oddity from another reporter and thanks=20
+this getting second case with an "impossible" claim conflict, I was=20
+finally able to zero in on a bug in the resize code which has been there=20
+since the introduction of the BAR resizing.
+
+It will take a few days for me to come up fixes that do address also the
+problems you'd likely hit next after this claim conflict bug is fixed.
+
+> >From discussions with Ard it seems if the firmware had resized the BAR f=
+irst,
+> and then assigned the resources, there would be no issue. However there
+> is no latter firmware for the platform.
+
+We want to make kernel capable of considering BARs with their maximum=20
+sizes eventually so it wouldn't matter what FW does. I've been working=20
+towards that direction for a while now but I keep getting distracted by=20
+fixing all these other bugs in the existing code. :-)
+
+> While the PCI change has provoked this regression I suspect the amdgpu co=
+de
+> could handle the failure to resize the BAR better and if it can't get
+> what it wants just not initialise the driver. I did hit some cases while
+> bisecting where the GPU just wasn't visible.
+
+Indeed, things could be better on multiple levels.
+
+Also the entire pci_resize_resource() API is flawed in that it isn't=20
+currently able to restore all device's resources as they were in case of a=
+=20
+failure. It seems I might have to fix it now as there seem no other way to=
+=20
+fix this claim conflict problem.
+
+=2E..And fix will be a bit invasive as I need to merge=20
+pbus_reassign_bridge_resources() and pci_resize_resource() into a new
+pci_release_and_resize_resource() API that handles rollback properly
+in case of an error.
+
+> I'm available to test patches and generate additional debug info so do
+> let me know if there is anything I can do to help.
+
+Thanks, I'll send the fix series for testing once it is ready.
+
+--
+ i.
+--8323328-887458716-1761237511=:1016--
 
