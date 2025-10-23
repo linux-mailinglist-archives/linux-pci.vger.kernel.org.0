@@ -1,139 +1,210 @@
-Return-Path: <linux-pci+bounces-39069-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39070-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2155BBFE72A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 00:45:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 411E8BFEC12
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 02:39:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C16221A0571A
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Oct 2025 22:46:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED92B3A844D
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 00:39:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ABF7261B70;
-	Wed, 22 Oct 2025 22:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E01501885A5;
+	Thu, 23 Oct 2025 00:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yqfl5Czt"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="R4rUwn0/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m8240.xmail.ntesmail.com (mail-m8240.xmail.ntesmail.com [156.224.82.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB8D211472;
-	Wed, 22 Oct 2025 22:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAD6132117
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 00:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.224.82.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761173155; cv=none; b=eLQ23Mx3KTKpq7Pb/1KFyXAcbhRJ36SFvjTeB7k4B1skOs/13lE5pJbKxu2X+zWKqFqLkUFszdRUUb/39CA/5orTvbFu+1ZtN80nPAbGwCtre/jeZpxkVqLhgYBNpZOTIUbilWIBqUolrab9fUDkg2aUS3KtByvVqmgqE0R0iW4=
+	t=1761179957; cv=none; b=Skia4rzrEhqV0ON8+rhG7R6L9+GSt4SR8y36O2u2cwgC5hwXQSBg9Sj60RfB4dsjPykuIRGZqV7H3XK1BiwInOBQ+WV6pIkn6exncbKNjXbsoH3hNEpeHtnepT7mLFgMgb8c+liiCIOsQ/Gw6xyROF69PDE/I/ZV0ocb24BMm9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761173155; c=relaxed/simple;
-	bh=ynTdZ7Aj4V2OqHNG4FGr5zyTF0msUaMb3nD6PXj6uP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DBsjJDm0pSAehQNb6ehLNpUw7xegKxZjvXTJT9CA3aDEP8SfPsE5v19V5ZYVTcfBUUdUQOI4aWcPklbQDUBygEvM3BZifERCwkhvrZwgmy9x0Pp3KXLBy+fqdSzroqV8hy4oYhgVvJP0sHX47X3ax8KHSOBu4lKR7AyixQs9nRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yqfl5Czt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37F4C4CEE7;
-	Wed, 22 Oct 2025 22:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761173154;
-	bh=ynTdZ7Aj4V2OqHNG4FGr5zyTF0msUaMb3nD6PXj6uP4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Yqfl5CztoX8gCmT3Y7k2CeoIq0NY/ShnRnfOTwgXoxdN4Gg4WCZq0BIQjXAKZcRzd
-	 PQN7Ef5z6lLm4/cg5Lfg+Iwd5DaUIVZ0Aoku6AOPEufutqhcxIAlNqRe+YwdBYvTuI
-	 bMuq8lhq+7Mhk3lVC8AJq3CulFwn3cF33WZuekumOG72GFWSYFPN6ri26xAlO8tbop
-	 HEWr7fFSlK0MEC6HjNM0LhiSMEwCogXSnAYryJNlcr3YFRdjeAF7YKgotYputtDLD9
-	 n38rSDmiikUaOYBtmrBkR0v1cPSN77PWeB6wB0PcvR9iOK+V6LWf1cJkOWR1WFCf8e
-	 y0c+UevrynxFQ==
-Date: Wed, 22 Oct 2025 17:45:53 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: brcmstb: Fix use of incorrect constant
-Message-ID: <20251022224553.GA1271981@bhelgaas>
+	s=arc-20240116; t=1761179957; c=relaxed/simple;
+	bh=cr/mWljUW1SeD1c4Puk1rrt29YLjnX+YjGmN/fn7Erw=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bnctbSeDSWrhHj7KUJSbpNEjLmV2Y2Mgq+PhteEslyuUVPlwxBF2METDPJ1FgzVw3Ji5IkJsxtPJidnadEa/D6ji7j8hXj08xusQoge11quSfjpSfIUmA3tYRo7t4TesbUoS678hIQ16Gb9U0tUwy8HR17KJKqdvCLdZPdYC7Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=R4rUwn0/; arc=none smtp.client-ip=156.224.82.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 26da9794c;
+	Thu, 23 Oct 2025 08:39:03 +0800 (GMT+08:00)
+Message-ID: <09baf633-9394-4ac4-b407-8167bca8f3b3@rock-chips.com>
+Date: Thu, 23 Oct 2025 08:39:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251003170436.1446030-1-james.quinlan@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: dw-rockchip: Add L1sub support
+To: Manivannan Sadhasivam <mani@kernel.org>
+References: <1761132954-177344-1-git-send-email-shawn.lin@rock-chips.com>
+ <lvixfsccgsodm4hfwxejofjnms5l7xhcskn7fgfdxryfs3ez7z@fh6uajlce6x6>
+ <988940fe-7cc3-4b24-b02d-f6e1d28145b7@rock-chips.com>
+ <6aazm6t2j5qhdg5njlvzivnmtdomfewy54ap37efv7tbgn3rkq@kjiwmtrciyvq>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <6aazm6t2j5qhdg5njlvzivnmtdomfewy54ap37efv7tbgn3rkq@kjiwmtrciyvq>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a0e81409a09cckunma3adcfc287cc3c
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0lDH1YaGE5IGB4aSk4YSx1WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=R4rUwn0/3V65m6Ko5LhkNSji9tnepvv8rpUHp5B7y2HBePv7X4VmQmFWleJSaGzLTxVMit+86yC6xRZJzH4+CQwsHIZQhNfaqbCtifTIJMYZfs2kDDi5+86SUvj9TpxNqtwDB5nznZJoAXLL84by0jbcHOHzoo1MM0nSjNReBlE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=JQUi4S8YachmS+OQNrvhCPFxZuSOuCg6N6tX2OkhHXE=;
+	h=date:mime-version:subject:message-id:from;
 
-On Fri, Oct 03, 2025 at 01:04:36PM -0400, Jim Quinlan wrote:
-> The driver was using the PCIE_LINK_STATE_L1 constant as a field mask for
-> setting the private PCI_EXP_LNKCAP register, but this constant is
-> Linux-created and has nothing to do with the PCIe spec.  Serendipitously,
-> the value of this constant was correct for its usage until after 6.1, when
-> its value changed from BIT(1) to BIT(2);
-> ...
+Hi Mani
 
->  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
->  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK	0x1f0
-> -#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
+在 2025/10/23 星期四 0:03, Manivannan Sadhasivam 写道:
+> On Wed, Oct 22, 2025 at 10:27:39PM +0800, Shawn Lin wrote:
+>>
+>> 在 2025/10/22 星期三 21:04, Manivannan Sadhasivam 写道:
+>>> On Wed, Oct 22, 2025 at 07:35:53PM +0800, Shawn Lin wrote:
+>>>> The driver should set app_clk_req_n(clkreq ready) of PCIE_CLIENT_POWER reg
+>>>> to support L1sub. Otherwise, unset app_clk_req_n and pull down CLKREQ#.
+>>>>
+>>>
+>>> You can definitely improve the commit message on explaining why L1 PM Substates
+>>> need to be disabled when the DT property is not present etc... Please refer the
+>>> patch from Niklas.
+>>
+>> Will do.
+>>
+>>>
+>>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> - drop of_pci_clkreq_presnt API
+>>>> - drop dependency of Niklas's patch
+>>>>
+>>>>    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 36 +++++++++++++++++++++++++++
+>>>>    1 file changed, 36 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> index 3e2752c..18cd626 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> @@ -62,6 +62,12 @@
+>>>>    /* Interrupt Mask Register Related to Miscellaneous Operation */
+>>>>    #define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>>>> +/* Power Management Control Register */
+>>>> +#define PCIE_CLIENT_POWER		0x2c
+>>>> +#define  PCIE_CLKREQ_READY		0x10001
+>>>> +#define  PCIE_CLKREQ_NOT_READY		0x10000
+>>>> +#define  PCIE_CLKREQ_PULL_DOWN		0x30001000
+>>>
+>>> Can you use bitfields instead of magic values?
+>>
+>> Of course, will fix.
+>>
+>>>
+>>>> +
+>>>>    /* Hot Reset Control Register */
+>>>>    #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>>>>    #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
+>>>> @@ -85,6 +91,7 @@ struct rockchip_pcie {
+>>>>    	struct regulator *vpcie3v3;
+>>>>    	struct irq_domain *irq_domain;
+>>>>    	const struct rockchip_pcie_of_data *data;
+>>>> +	bool supports_clkreq;
+>>>>    };
+>>>>    struct rockchip_pcie_of_data {
+>>>> @@ -200,6 +207,31 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
+>>>>    	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
+>>>>    }
+>>>> +static void rockchip_pcie_enable_l1sub(struct dw_pcie *pci)
+>>>
+>>> rockchip_pcie_configure_l1sub()? since this function is not just enabling L1ss.
+>>>
+>>>> +{
+>>>> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+>>>> +	u32 cap, l1subcap;
+>>>> +
+>>>> +	/* Enable L1 substates if CLKREQ# is properly connected */
+>>>> +	if (rockchip->supports_clkreq) {
+>>>> +		/* Ready to have reference clock removed */
+>>>
+>>> This comment is misleading (maybe wrong). The presence of this property implies
+>>> that the link could enter L1 PM Substates. REFCLK removal only happens when the
+>>> link is in L1ss.
+>>>
+>>> So drop the comment.
+>>
+>> Will drop.
+>>
+>>>
+>>>> +		rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, PCIE_CLIENT_POWER);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	/* Otherwise, pull down CLKREQ# and disable L1 substates */
+>>>
+>>> "L1 PM Substates"
+>>>
+>>>> +	rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
+>>>> +				 PCIE_CLIENT_POWER);
+>>>> +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+>>>> +	if (cap) {
+>>>> +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
+>>>> +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
+>>>> +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
+>>>> +			      PCI_L1SS_CAP_PCIPM_L1_2);
+>>>> +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>    static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+>>>>    {
+>>>>    	u32 cap, lnkcap;
+>>>> @@ -264,6 +296,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>>>>    	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
+>>>>    					 rockchip);
+>>>> +	rockchip_pcie_enable_l1sub(pci);
+>>>>    	rockchip_pcie_enable_l0s(pci);
+>>>>    	return 0;
+>>>> @@ -301,6 +334,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
+>>>>    	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>>>    	enum pci_barno bar;
+>>>> +	rockchip_pcie_enable_l1sub(pci);
+>>>
+>>> I don't think you can decide the CLKREQ# routing on the EP side. The
+>>> 'supports-clkreq' property is meant only for the RC afaik.
+>>
+>> You are right, we cannot decide the CLKREQ# routing on the EP side. But
+>> what I have in mind is we at least need to set pinmux to CLKREQ function
+>> because on Rockchip platforms, the CLKREQ# of EP mode could also be used
+>> as GPIO or other funcions if guys never need L1ss to be supported.
+>>
+> 
+> You don't need to configure pinmux in the driver manually. If the platform
+> desginer knows that CLKREQ# is not used in the endpoint, then the corresponding
+> pinmux state can be set to non-CLKREQ# function in DT.
+> 
+> I was assuming that CLKREQ# assert/deassert is handled by the endpoint
+> controller hw without endpoint software intervention.
 
-This all tangential questions for possible future changes, not
-anything for *this* patch.
+Ok, I got your point now. For the EP part, I'll drop L1ss support after
+more internal disscussion as it also need more things to do, e.g,
+trigger revelent L1.x irq to do something to actually save power...etc.
 
-We have these in include/uapi/linux/pci_regs.h:
+> 
+> - Mani
+> 
 
-  #define PCI_EXP_LNKCAP          0x0c    /* Link Capabilities */
-  #define  PCI_EXP_LNKCAP_MLW     0x000003f0 /* Maximum Link Width */
-  #define  PCI_EXP_LNKCAP_ASPMS   0x00000c00 /* ASPM Support */
-  #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
-
-Since you're using PCI_EXP_LNKCAP_ASPM_L0S below for writes to
-PCIE_RC_CFG_PRIV1_LINK_CAPABILITY, I assume
-PCIE_RC_CFG_PRIV1_LINK_CAPABILITY is another name for PCI_EXP_LNKCAP?
-
-If so, it looks like we should also use PCI_EXP_LNKCAP_MLW instead of
-PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_WIDTH_MASK (although the
-value is different for some reason; maybe 0x1f0 just reflects the
-limits of brcmstb).
-
-It would be nice to have a #define for the base of the PCIe
-Capability so we could use that plus PCI_EXP_LNKCAP instead of
-PCIE_RC_CFG_PRIV1_LINK_CAPABILITY.
-
-But you did something like that already for PCI_EXP_LNKCTL2 using
-BRCM_PCIE_CAP_REGS (0x00ac), which means LNKCTL2 and LNKCAP must be
-at:
-
-  LNKCTL2: 0x00dc (0x00ac + 0x30)
-  LNKCAP:  0x04dc (0x04d0 + 0x0c)
-
-which doesn't look at all like they would both be in the actual PCIe
-Capability format.
-
->  #define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
->  #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
-
-From its usage to "un-advertise L1 substates",
-PCIE_RC_CFG_PRIV1_ROOT_CAP looks like it might be related to 
-PCI_L1SS_CAP, but 0xf8 doesn't really match up to
-PCI_L1SS_CAP_L1_PM_SS (0x10)
-
-If this is really related to PCI_L1SS_CAP, can we use the names from
-pci_regs.h somehow?
-
->  	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-> -	aspm_support = PCIE_LINK_STATE_L1;
-> -	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> -		aspm_support |= PCIE_LINK_STATE_L0S;
->  	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> -	u32p_replace_bits(&tmp, aspm_support,
-> -		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> +	if (of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> +		tmp &= ~PCI_EXP_LNKCAP_ASPM_L0S;
->  	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
->  
->  	/* 'tmp' still holds the contents of PRIV1_LINK_CAPABILITY */
 
