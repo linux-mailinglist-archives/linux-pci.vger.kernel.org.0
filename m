@@ -1,205 +1,175 @@
-Return-Path: <linux-pci+bounces-39185-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39186-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCE73C02D54
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 20:02:36 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1CB5C02DAB
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 20:07:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 297633AB521
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:02:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D50FF4EDE50
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0036348447;
-	Thu, 23 Oct 2025 18:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E19D34C134;
+	Thu, 23 Oct 2025 18:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cPOD1Keg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5Z6NbT6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0FF261581
-	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 18:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441D534B1AE;
+	Thu, 23 Oct 2025 18:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761242500; cv=none; b=b2h/ypHPO2xJzSmQ6bUfDOMK5F9WUk1iKKLD213o9TfEh8TDA4jJgbHdnf5Lek+WJlQVfJYtbhTvov/+JezhBmAiyllsaEQEp9po27exi6pQhFtsTNarD0CqP0ztxIOrH796vyu8nOOrkWspubcrOqoZb8e8esQCRjRDpA7Dafs=
+	t=1761242821; cv=none; b=GGNKHZpx7ZUzxxus8cd9h9G9sRPX3NEObjYN5oDSOteq14Nfk9Wm4zBQ5NtIGLHYW88EUaHcTexzc1cTomWg3czpu4QL5gdJlMlMGa57MSuP8cpK2FKLknQ2OgS7tTKoENrcNRkpamCNXFJHC+SBneTuR6/8SyjBDoo7uEIcduY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761242500; c=relaxed/simple;
-	bh=+11krxrYSQBIL8PS8v62mSeTP8oZ51XSj0cM3YuN+vU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Obk6LJBGp2qcwhvGPxALOrl/w/rcQlr/qIa0fdAKmccFnxsXRbWi6WtRcLj2isVbvIxDAbKzh32Taxo2V9yGcEHgWk7nIQs19ZINJ1H5UcplzRyxreoseLEYHD1ck7qCkbdCcw+ADo1/PAF7TCBaAp1dipY2aDjQyRNiYVdbqCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cPOD1Keg; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-33ba5d8f3bfso981114a91.3
-        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 11:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1761242498; x=1761847298; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fVJOJqOl/DPUXtsK6eZUYyA/D6xvUpAsP3hFipiCWw=;
-        b=cPOD1KegM61aTrEPJxaRI9ZtHfLplA8R4BbE7ei2hOB1ghzLSxecOR2ToC6QybmS00
-         jhai4f6HXSEgAXDL/RKFnn1BuAJ5CYtepJFfA8Haw+z31+yKJmDB4kdFxbX4cVNAIlSc
-         HB1zQo4eQaf4mb41PEQTLRldGNzOFUcCkjne0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761242498; x=1761847298;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2fVJOJqOl/DPUXtsK6eZUYyA/D6xvUpAsP3hFipiCWw=;
-        b=E51PWyoU+9M5Gu3vmCk7ab6GV/8K6tLnvPFFrQaBCgWaRDEOwZhzRQSkGpVL/dzugQ
-         wSPUndiHJejtbet+3Ra/Wu0KYYnon66RKNPAoENxol1ReXecLuO21KVPDnc9zNPeZdtL
-         Vibk+0eOkuUroU5eysuVyItwV9gzLoFokvxJO567z/0aFcC8lPR+GR5EYj0465zIi7t/
-         ackqrLAixnMv8ki78y/9AcEhb+w3Wanp8cy78t44oTmQ6HS5yAfNcnXYHFxd/6KI2fq+
-         /VHeGM3Fsg7U1YH6XmyDl7YMj6koj/jBztCKjfix4yo75CEnyzU4L+jqVrPdF7Qa6q+S
-         Vudw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdC96R38gYq4xRg3Z07OfrB02aeL5w5//DUx0jbQr+MJK0riPiDIA17EMCSGbUCR5mdbvuJdcGVzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjZxqQObilYX+0J54F4GtGDuddIbSTN1eVSaC9Q6wsTnyOZi1b
-	0NLN/qwTulBJ2WDUyzkg43T6EHPYfWxW8xBV2kwTLD15hpbfamU+ev1gAiMm2moK3w==
-X-Gm-Gg: ASbGncvIq1HzmaCHEjRIPlwv0REfcRCAGvLCJNLYy1pcsTT7aW+nVjugap2NyCf+O6G
-	UpsrVT2sXQFTLufiiIRJs39SwBmr7ano1Oy0PQTESgSi2lUIAgLrxC7j10DwyTqdCnlZfiWH1uM
-	/gfjdB+duorfLFp4a1V67fV7oBre0d6+9XhqV0Y2AyXZ8t07A+rSmz7Vki4YSAdWy/X/jsKyHyQ
-	AS6ynRVyMtL8MW71sJyJN29bsVG3Zq86BKHl7zj07NAfd3ZkDQuqx51xmaoS5oI4A//KE7ZFHMM
-	hSRXvHZGuHtYJzlKA5j0tA8wfQPiTLORwGI9rGuNCBwqwam1Cn9oMwWpC5FmBjHPezcP/5Pl5Rq
-	3HDdhYhzwBYbW3UewzWHkC7iQWVKT4aS7OGskH51R+FN7bFOtjlD8wDQ89790Xwn0Mi6YvBYG52
-	VNhEgdwsjKsiPon9SP903e7e/Cxe545VQ9N8LxenalIHwkE7bZ
-X-Google-Smtp-Source: AGHT+IHMEl1/yOcEnK1WSum08iBEotApLa8nOZXGnnHDG0khuXHK2NNe5VrwxePf061sm8+ZE7PtOQ==
-X-Received: by 2002:a17:90b:1b4a:b0:32e:1b1c:f8b8 with SMTP id 98e67ed59e1d1-33bcf8f7cd5mr35772646a91.26.1761242498180;
-        Thu, 23 Oct 2025 11:01:38 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e7c:8:839c:d3ee:bea4:1b90])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-33faff37afesm3047298a91.1.2025.10.23.11.01.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Oct 2025 11:01:37 -0700 (PDT)
-Date: Thu, 23 Oct 2025 11:01:35 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] PCI/PM: Ensure power-up succeeded before restoring MMIO
- state
-Message-ID: <aPptf2gLpoWL3Ics@google.com>
-References: <20250821075812.1.I2dbf483156c328bc4a89085816b453e436c06eb5@changeid>
- <20251023172547.GA1301778@bhelgaas>
+	s=arc-20240116; t=1761242821; c=relaxed/simple;
+	bh=b5POU65SI9uBItwU3VrQQapA5Fe5zoNWbwcZVbOTXlo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBP4w9F5FgQ/zsjcJwrl2GSA4/WSC9VQUtvYaS5J9wVgPFwT//K5tE9q3p9nwno9apQyg0g++965dlYbH4+4l7rifeY7Dg7tbRbgKDK3Jpp9JqfUf1nb8iWHH4OHnBC/UEeATRDoFuiX29TrTQ6R16oeGjn8VXdV4NxEC63XNkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5Z6NbT6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A93C4CEE7;
+	Thu, 23 Oct 2025 18:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761242820;
+	bh=b5POU65SI9uBItwU3VrQQapA5Fe5zoNWbwcZVbOTXlo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V5Z6NbT6+ZsvBawxRtQxU7LhzI9ILCHAXbufohmEyU04NEMevBNBjSTSRUOGz0Q6M
+	 p/J8OXFmnNBJwV8Z7CvorFLum3GOtQkbxP5iqmU671wwUKwqgVNcwVxXHQ/0ddSG4/
+	 WnyzlBLS4VlcV8QXxN57mSobGCvmXQUwTGjRneEg77O9umCvyPvHMWxlpsskxpr05i
+	 A7EwOXDh3hCDu9JbL1yuX8Zlf41V1lduTmNA4AFpT5PMbdfqRgb0/x7IebHpC7K8Vc
+	 xzrTrxOAdhXbQg4kmhjO0yEukjIjPBOAvhN0Q9GtFiCHbacF6o9UEmjW0D+0iLFXg7
+	 W7Yne6d0AMhiA==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Christian Zigotzky <chzigotzky@xenosoft.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Diederik de Haas <diederik@cknow-tech.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
+Date: Thu, 23 Oct 2025 13:06:26 -0500
+Message-ID: <20251023180645.1304701-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023172547.GA1301778@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-On Thu, Oct 23, 2025 at 12:25:47PM -0500, Bjorn Helgaas wrote:
-> [+cc Mario, Rafael]
-> 
-> On Thu, Aug 21, 2025 at 07:58:12AM -0700, Brian Norris wrote:
-> > From: Brian Norris <briannorris@google.com>
-> > 
-> > As the comments in pci_pm_thaw_noirq() suggest, pci_restore_state() may
-> > need to restore MSI-X state in MMIO space. This is only possible if we
-> > reach D0; if we failed to power up, this might produce a fatal error
-> > when touching memory space.
-> > 
-> > Check for errors (as the "verify" in "pci_pm_power_up_and_verify_state"
-> > implies), and skip restoring if it fails.
-> > 
-> > This mitigates errors seen during resume_noirq, for example, when the
-> > platform did not resume the link properly.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Brian Norris <briannorris@google.com>
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > ---
-> > 
-> >  drivers/pci/pci-driver.c | 12 +++++++++---
-> >  drivers/pci/pci.c        | 13 +++++++++++--
-> >  drivers/pci/pci.h        |  2 +-
-> >  3 files changed, 21 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 302d61783f6c..d66d95bd0ca2 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -557,7 +557,13 @@ static void pci_pm_default_resume(struct pci_dev *pci_dev)
-> >  
-> >  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
-> >  {
-> > -	pci_pm_power_up_and_verify_state(pci_dev);
-> > +	/*
-> > +	 * If we failed to reach D0, we'd better not touch MSI-X state in MMIO
-> > +	 * space.
-> > +	 */
-> > +	if (pci_pm_power_up_and_verify_state(pci_dev))
-> > +		return;
-> 
-> The MSI-X comment here seems oddly specific.
+f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
+platforms") enabled Clock Power Management and L1 PM Substates, but those
+features depend on CLKREQ# and possibly other device-specific
+configuration.  We don't know whether CLKREQ# is supported, so we shouldn't
+blindly enable Clock PM and L1 PM Substates.
 
-It's just as "oddly specific" as the existing comment in
-pci_pm_thaw_noirq(), as mentioned in the commit message :)
+Enable only ASPM L0s and L1, and only when both ends of the link advertise
+support for them.
 
-The key point for MSI-X is that unlike the rest of pci_restore_state(),
-it requires touching memory space. While config registers are OK to
-touch in D3, memory space is not.
+Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
+Reported-by: FUKAUMI Naoki <naoki@radxa.com>
+Closes: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
+Reported-by: Herve Codina <herve.codina@bootlin.com>
+Link: https://lore.kernel.org/r/20251015101304.3ec03e6b@bootlin.com/
+Reported-by: Diederik de Haas <diederik@cknow-tech.com>
+Link: https://lore.kernel.org/r/DDJXHRIRGTW9.GYC2ULZ5WQAL@cknow-tech.com/
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: FUKAUMI Naoki <naoki@radxa.com>
+---
+I intend this for v6.18-rc3.
 
-> On most platforms, config/mem/io accesses to a device not in D0 result
-> in an error being logged, writes being dropped, and reads returning ~0
-> data.
+I think it will fix the issues reported by Diederik and FUKAUMI Naoki (both
+on Rockchip).  I hope it will fix Christian's report on powerpc, but don't
+have confirmation.  I think the performance regression Herve reported is
+related, but this patch doesn't seem to fix it.
 
-On my arm64 / pcie-designware-based platforms, that is mostly similar,
-but there are some cases that are different. See below:
+FUKAUMI Naoki's successful testing report:
+https://lore.kernel.org/r/4B275FBD7B747BE6+a3e5b367-9710-4b67-9d66-3ea34fc30866@radxa.com/
+---
+ drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
+ 1 file changed, 9 insertions(+), 25 deletions(-)
 
-> I don't know the details, but I assume the fatal error is a problem
-> specific to arm64.
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 7cc8281e7011..79b965158473 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -243,8 +243,7 @@ struct pcie_link_state {
+ 	/* Clock PM state */
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+-	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+-					   override */
++	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+ 	u32 clkpm_disable:1;		/* Clock PM disabled */
+ };
+ 
+@@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ 	pcie_set_clkpm_nocheck(link, enable);
+ }
+ 
+-static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+-						   int enabled)
+-{
+-	struct pci_dev *pdev = link->downstream;
+-
+-	/* For devicetree platforms, enable ClockPM by default */
+-	if (of_have_populated_dt() && !enabled) {
+-		link->clkpm_default = 1;
+-		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
+-	}
+-}
+-
+ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+ 	int capable = 1, enabled = 1;
+@@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	pcie_clkpm_override_default_link_state(link, enabled);
+ 	link->clkpm_capable = capable;
+ 	link->clkpm_disable = blacklist ? 1 : 0;
+ }
+@@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+ 	struct pci_dev *pdev = link->downstream;
+ 	u32 override;
+ 
+-	/* For devicetree platforms, enable all ASPM states by default */
++	/* For devicetree platforms, enable L0s and L1 by default */
+ 	if (of_have_populated_dt()) {
+-		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
++		if (link->aspm_support & PCIE_LINK_STATE_L0S)
++			link->aspm_default |= PCIE_LINK_STATE_L0S;
++		if (link->aspm_support & PCIE_LINK_STATE_L1)
++			link->aspm_default |= PCIE_LINK_STATE_L1;
+ 		override = link->aspm_default & ~link->aspm_enabled;
+ 		if (override)
+-			pci_info(pdev, "ASPM: DT platform, enabling%s%s%s%s%s%s%s\n",
+-				 FLAG(override, L0S_UP, " L0s-up"),
+-				 FLAG(override, L0S_DW, " L0s-dw"),
+-				 FLAG(override, L1, " L1"),
+-				 FLAG(override, L1_1, " ASPM-L1.1"),
+-				 FLAG(override, L1_2, " ASPM-L1.2"),
+-				 FLAG(override, L1_1_PCIPM, " PCI-PM-L1.1"),
+-				 FLAG(override, L1_2_PCIPM, " PCI-PM-L1.2"));
++			pci_info(pdev, "ASPM: default states%s%s\n",
++				 FLAG(override, L0S, " L0s"),
++				 FLAG(override, L1, " L1"));
+ 	}
+ }
+ 
+-- 
+2.43.0
 
-Maybe. See my response here also:
-
-  Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
-  https://lore.kernel.org/all/aNMoMY17CTR2_jQz@google.com/
-
-In particular, when resuming the system in a case where the link was in
-L2 and failed to resume properly, the PCIe controller may not be alive
-enough even to emit completion timeouts. So it might hit case (a):
-
-  "PCIe HW is not powered [...] and this tends to be SError, and a
-  crash."
-
-Memory space is unique, because while config accesses can be
-intercepted/avoided by driver software, memory accesses cannot.
-
-> If the device is not in D0, we can avoid the problem here, but it
-> seems like we're just leaving a landmine for somebody else to hit
-> later.  The driver will surely access the device after resume, won't
-> it?
-
-It's a possible landmine, yes. Although in my case, the link can go
-through error recovery and restore itself later in the resume process.
-
-> Is it better to wait for a fatal error there?
-> 
-> Even if we avoid errors here, aren't we effectively claiming to have
-> restored the device state, which is now a lie?
-
-I'm not sure we claim that. The device will stay in PCI_D3cold, and
-pdev->state_saved will remain true.
-
-But yes, it's a tricky situation to decide what to do next. My basic
-assertion is that it's not OK to continue to restore state though.
-
-Alternatives: pci_dev_set_disconnected()? pcie_do_recovery() /
-pci_channel_io_frozen?
-
-> Even on other platforms, if the writes that are supposed to restore
-> the state are dropped because the device isn't in D0, the result is
-> also not what we expect, and something is probably broken.
-
-Sure. IMO, that's even more reason not to run pci_restore_state(),
-because that will erroneously drop the state, and we'll have zero chance
-of restoring it later.
-
-Brian
 
