@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-39072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9FC0BFF1A0
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 06:19:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FC16BFF1C2
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 06:26:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A22E3A979E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 04:18:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AE583A618A
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 04:26:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32A71547F2;
-	Thu, 23 Oct 2025 04:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED48F42056;
+	Thu, 23 Oct 2025 04:26:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC7AD515;
-	Thu, 23 Oct 2025 04:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B4C86340;
+	Thu, 23 Oct 2025 04:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761193135; cv=none; b=I85FNrlh+JMZ6XRBeoy0F9/5NT5fc96glTGSVxiWPB1dJ3pHkQdK55HQ6xMCmC+GxMhffauj/isI3E9y0hTcdBhOFxtgC0SurNr3poX65FuhfN2A3j+133JOi7AI+fY49ZaiPbJhQq0837jAUxK2db00Acjdq7n6bCF4uoxJQ30=
+	t=1761193581; cv=none; b=eYmb2TxfKTiunP+S8H93qxOaZ6c/VAZHlF/9pfqdEjkoYHwZROkrvdAVpQKQT9j6+wjDZJAFl9zY1yLWAfH63nQGdGKUNEjBIwi9tGiMcUIYF+ngfmPxk7h8npgynTvwROJb+PuPCWzAvFrXZVeGBe+9neO3DMKvzdhE9bjS4vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761193135; c=relaxed/simple;
-	bh=5PlYfvWue8wrQ0HBq8FrPBtbXXrcTWm+68baTyfeAwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PopULCRL/b+kxwvtSfdtQKBX33RRRjUGIEKLSXcEuGUoKSTwP5qzIAiCVULKh6r+790O0U+PsYPSTYJFqmY7IwWvsVNRJeJ8fji694zGuddyyLqFZ/ULR7Rr+iFn2acB68z44L/YnsHJ5UxAD7aIWYUPqFs5mQVES8DbjLcGlGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=52.59.177.22
+	s=arc-20240116; t=1761193581; c=relaxed/simple;
+	bh=YOwc2PCw6wKdHYwC7a5zx8wB+WJuO72oi66YUEa6bZs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lJmhoDi45rlKxYP44v6FqOtn2Emt0jz3mss9VlLSTdQVttgGWrV7cYrAnpfrQN9nrYWUbNlBhyD6B9bwaApUNUCNfSpGK0t0En8yV9sl4Ta0WCiokvhGBNywlGIWLuVK6lLcyrbYPSjkSA0kCtO5EV1XQbnKeRbPWl013qJFvYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=18.132.163.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpip3t1761193099t60baf72f
-X-QQ-Originating-IP: GCzqp74BjwXRcZSUfMy4Sx/Rx0qnce6x/ev10AZZ/UA=
+X-QQ-mid: zesmtpip3t1761193522tef428f52
+X-QQ-Originating-IP: JPrRRTlHCfYPmJA50Mc6e8C2H74+nUxiiGHXdILT6fM=
 Received: from [IPV6:240f:10b:7440:1:e4c5:315f ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 23 Oct 2025 12:18:14 +0800 (CST)
+	id ; Thu, 23 Oct 2025 12:25:18 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4133063992032992874
-Message-ID: <FB49B2F64A16962F+d1dca436-509a-4edc-a93b-ffd297ef8a80@radxa.com>
-Date: Thu, 23 Oct 2025 13:18:13 +0900
+X-BIZMAIL-ID: 993648041000243258
+Message-ID: <340D76D438E6105B+58e7f834-75f7-40c5-a46a-677cb279a02d@radxa.com>
+Date: Thu, 23 Oct 2025 13:25:17 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -46,37 +46,42 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
+From: FUKAUMI Naoki <naoki@radxa.com>
+Subject: [RESEND] Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree
+ platforms
 To: Bjorn Helgaas <helgaas@kernel.org>,
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
- linux-rockchip@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Christian Zigotzky <chzigotzky@xenosoft.de>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-rockchip@lists.infradead.org
 References: <20251022191313.GA1265088@bhelgaas>
 Content-Language: en-US
-From: FUKAUMI Naoki <naoki@radxa.com>
 In-Reply-To: <20251022191313.GA1265088@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MjqaYNLY8QZG1tZzDhvx287W+4c6EfdSGBwmOxr9FxwYeNCVD3oqhX1f
-	l9h3kN3pIMG+ZQndCsdj0GzkRc1PC9I96k9R4X7B6zMawJ33ngcP602d25FnSKPiGbC6XNF
-	Na5Up5X7hAkM2A+orhEapSIl2omvOP1Ieh2aErTarEMurIw7Glv4rskzBWQEyjR7ycSXyl5
-	S25Z/NhanApG0EgP7ysGlcegv6rf60phplpfBnyIt4tU7ldM7IV3+fZ/+i1YzStho2+tIc/
-	XL0l4R1fcn52YNJ/ebqbw+Fmp1LsTHj28KlW/eH5wI1cMxRA90JsVXPoaX4uiRYUNwyQmhQ
-	ovl5o0htzmkqzrKdiyt6WelXvTT3ZuHz5Fi5RENxiZ9BQ4cLOPtEgeituccNVer4o6KCb4J
-	J3wlv4jQwXG/V0qU8uQftl6S2rmwvS0WNXyVWf108KY855kfjV5ri6/fjw6g7glaW3Q95tl
-	Sqe6zdSxSch40IsvFo5jMBOj8fIX5bDmvxK8iLPVy5/+S5IV/Q8vvk+PgriEYkz3nFzLD8o
-	m3vME8TSaGHeJn/JKFu7AFf2LHLzFkqLaMKHj4BaujlQoA8r8y4L9vWbMj88sGn+hcH7H+m
-	6nuEUpkPwXmVEKIg4RBJvWlOCSUM903jbWR8D+RvSBOj2NZhBHPBY6JsI+H1Os8hM37dAn3
-	r+xCC4yvfV6wR3iqg8pcxwS/GMFwLna8pkPk2sZ8uCyAkIj/HGDCmGwF6LdO+79jcGqaohm
-	B5pY4ttu1LoO3upo+BPT2sgn43mEFhetgorOXNwq+UUOu/8nQot6XWvBXbtQ2DckRjrBwRV
-	7mIeDm482awGT+fGrz5vhVQ191duYUxm5cu0c9WfW+fURIqvtJSZkcrqA10TAAAW1P9ABVB
-	jOkl0GaqMTeQ8yMeBEYv8ThjV5UQQQebfLoS+JPz1bIF3Wj/soMFpPri3NDBgaiTvJe+7Fv
-	VHkmkZNgYcWxOj6MFSwkQkUE9xk4XK8ZdaO64XYOobQe5GNyuea6lCKlB
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-XMAILINFO: NjShqG0OhPJBxRrvSuwcy0uYO8Kz7VbxbJRPk3bnzqPq7l9zo3dydnMn
+	t2XVAP79x/FtNsTFMHlw/c05WNOo1wIGshSWnadGd03jVj+DkrAC9rbwV+KWmwFOdrlh5UR
+	fzuJOlVE68DkXM+UJyxAtFVX03z2UBAy4w8sl4H5rSK/PGJ4GYVmMjC48Kv2FUKbSGHnKPo
+	Wj4QePlUfPAYIgDwxEGsa571b/Yq0dAZh2SPndm/8mXhfYPprmxwxjkYtNiaFbMk/fx04QW
+	N60iOtXUom2H96PsEa85SsaUmTRk+y3OuyVztbdOFx6s77PhpNVDNaOBDbjruXWzlJwZhxg
+	EhD9SKy/lYg9dHS3S+S0bbZxb3zxhOZT5u2cWGkUdtctEYB+IOkmFYSAPj3IRnr3ELofgEU
+	w0uIqx412zhAZgCYA0l8i36BsFZCa5X1VXpCf+OdObS61aRd5M4HLRDINB/J9NxCZiLz0+9
+	dzRiFP0f0Mvn9iPrgerOhvY4g/iNJGgNFZWr7Nf/XqYFQg2Ep/lyu7bHnntR2/T1Aip2OF5
+	jdUBecMTCO1W6rFrQKjIhr7IcFXdUrH1XbkHbn5oOvAOEsTasT+b3qU8xm6udbNl5NgDmkS
+	vpDcM9aP2RGRm6Z7HRlVbbK3gt3HuWhvB1jyi8c9VC8GU8EidJpIvq3XKKcrm9c+3kdSsiA
+	+EpeBjY/toIvr8l+IyYeRsMQUWRjmSRAr8kDTMYUTEOPIz8BaXkaKR7KIWsODvyPUMxdvi0
+	1JOP82avUD6dRl/iC+t4UTaFhU4dTAwKCAaRAkNSdGCM6cotLKMSmU/NwQGz35FR6cnh3lF
+	h47yjeObTpF/7DmIJ2UesWqdHSP/mqCc4fCik/REi8Ug2ShGhoR291PqAoHsVTn4SAst74Y
+	fUCzucAl7izi29g6xVN3XlbJZsdly6LwrdAkNlJO7zA4Q/jQl1eobnxsk1eBkkRR7tRpyjj
+	aD9IFljHOzmWPW8w8cvBa8J8mqRMLJ06eNWfOUDcdvvQIrAle8ZFkZFqjlUe+nPhBiMciTG
+	mTFYByB9n81umQrRMPbNq55xDfYRsLJb6n8kQuhg==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 X-QQ-RECHKSPAM: 0
+
+# Fixes the ML address for linux-rockchip
+# Please resend the original patch to linux-rockchip@lists.infradead.org
 
 Hi Bjorn,
 
