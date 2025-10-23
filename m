@@ -1,184 +1,203 @@
-Return-Path: <linux-pci+bounces-39080-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76F61BFF51F
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 08:21:03 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84BADBFF4EE
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 08:13:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 319153A40FD
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 06:21:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C55023446D7
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 06:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F032848AA;
-	Thu, 23 Oct 2025 06:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="bR+sGQMU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9A6D27E;
+	Thu, 23 Oct 2025 06:12:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m15566.qiye.163.com (mail-m15566.qiye.163.com [101.71.155.66])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C2F1B7F4
-	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 06:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CC927AC4D;
+	Thu, 23 Oct 2025 06:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761200460; cv=none; b=IwbSZr++LA43prNOnlvtgfUd4l2zNcgxCqcqIg+xhHBdURifp41ZxQ5JxfKRKFdx0ttVTjCEUZnPqgfu0iGnb4TP//+RbfOpkT4nz3EJ99/JvX/Zp/14XgnTq2Qu0jb/5FCR6+EBwMZP2muR3he4lDhIGWrcOgvTHez41heY4u0=
+	t=1761199977; cv=none; b=R3+T8q0IeU5Nr9JgiDIHyqhZlBvAPR2ehdPGWMteYBHFuC1RYWvCbDRVNPYUt+YK4Sa2UBzspLizFxrY3PsBF1869W7ln+esGV51yVGNFFrQRPp3PS0v6mC6D1FjV3po/3zH6UOfuxPU/Ob1CjEz2a5RRU0ju50LqfkAR9QcT4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761200460; c=relaxed/simple;
-	bh=k1WcKfsgtNlA4bHgMRBzptrs5VqZfYKHFhjdrrg3v90=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=M3cW3M5GntsWAbFQ0SSBRsCCGtcqH9ezujAxZG9Liz/s9F0VKcAqrLN4rS/Vyhzl381bq7JfnIJk5OpGE84P++4txfr5YiC86dvzULI8IHXmuNcL1MqcnbweFYKkFJlVbkDRzjd1TIWwUsPSmLLCGocYXiRCldRwNFza5gZ8rbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=bR+sGQMU; arc=none smtp.client-ip=101.71.155.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 26dfa2407;
-	Thu, 23 Oct 2025 10:51:34 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v3 1/2] PCI: dw-rockchip: Configure L1sub support
-Date: Thu, 23 Oct 2025 10:51:22 +0800
-Message-Id: <1761187883-150120-1-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Tid: 0a9a0efa948d09cckunme7ff00708b369e
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhpLH1YeSkNDSxpLGExOSEhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=bR+sGQMULNy6K3nSK4E03UjeIEFp+2+4j0tu+j6hndapxBlNL+u3NLi2/vg+u70CftSp9PCHQOgT6dPupbkKJvY0QbfsyTrB5nOLUbo6wWQlcHlBMgtjOksUGZ2ZohCknjev/l93LvRo/mhF0GCLeeSD1Fx3pLJ3TAdfNzjVDtQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=LgbicayheB4Lhxo7f1O6GKeK04JXjIbvENp8KRU8J24=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1761199977; c=relaxed/simple;
+	bh=GvqU9uGGx+KJM1yhuHMieGDlGEi9DwW5CHDBghxQKy0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i3aqVvicK0tZcOJEY53QRUZuaNhYLKjAla9xzatC327FWO7xNZCNnSoQBvHE9AYclH7VoL1PuBGjyrvAHhg3S2rFECqS/nOi5kxdVbFbKCYwqriWps3kr4lPP1XSyVw20fV8+l8glwikGtXOV8+UWnhF0DGQcIoSOzEaZEmODno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip4t1761199936tb3585278
+X-QQ-Originating-IP: SKDmvKPX8O6anW4D6mauzpeuJa6t2OsditiZvwm93CA=
+Received: from [IPV6:240f:10b:7440:1:e4c5:315f ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 23 Oct 2025 14:12:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3584863861311309371
+Message-ID: <4B275FBD7B747BE6+a3e5b367-9710-4b67-9d66-3ea34fc30866@radxa.com>
+Date: Thu, 23 Oct 2025 15:12:11 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Christian Zigotzky <chzigotzky@xenosoft.de>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20251020221217.1164153-1-helgaas@kernel.org>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <20251020221217.1164153-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: N3gATt1+RV61wWrmTsis+KI3BuzDlPCoZbfQnE2543/08BoenZcpNGXS
+	IAB6Oe1BddqoAcfNvMWjllDWK9O6n0BavNzB3cGKh9bKxCfKY84dyu8+UnIvnl6gabzZSZ9
+	030czqHPzo/wG1AyS7oEoLM9fFOQ5XElHLiSY9NGyQHXh6Uxgtt2JZQ2v50qWhvaoH+CwVv
+	Xcio8X6JggPKKX/P/Nd8qn7RSxD1p5jGO1bwb42iBJXmhzt6dbBJJoCs2KZww/pXXvTl7UK
+	DMrBLiFie+/GhoEwbJCJ+DTGkqx1AhKeGvelRuULYg/WP00i2HKJlIFFcsX+MVuMb0kiunI
+	OfpkBVwaJFbknO756nBqzmZ1H39vxj0wovsXE7T/KO6B0PGSOhuXv87HsrPDXEamJTjuXge
+	014yUd9iYnSnv5pOerQwIJYowY18pixZMIYD3wMCwRcdsWggJBUOjZrU/wMJaEbNuTuY9rk
+	9nJXxIW7Unf7ZVrh6BVb2FgBlXcWvnk46L+UVO7y3zsWCjkfa2tvYIzUFNKApyJIixleOA8
+	gVk9PI+mdu6Vo9GOUb66SKWM2I9pgFfBGOyuqeLtvDEYlUzk6FTUxOQab8pa+ymDOKpaTjj
+	grg7rC4A8+8LIf03h+6C+Zonk1W4ss1BurBaL+esGFtEsqP1WTm9AGmHXHKR7sshWNaL6aa
+	nCk9ejxbIYtIxmpOZJDAYEPkSCI3WzT38tK3ugC5m1zcou06c8GalZ7E0VTqOZOYqAOExyG
+	daUB8nyNFcFj6YCXJpmoCzO0gCzPWvsgnMQGWOEZMjkH1BfELA678jUS367hFCHPLYTxV//
+	naYcIsDceeyP/MxcWgHj6OUlWnsBbbmeMfF7l/CGsTseYZfYceCCNbOCIIveIff2TnjmC3r
+	MHtz1XtTlaLAB4YvGYhWkAFha9VCBz/8hxJj1wiH7pR42FkdkA/srNouE0RHce3hOk8ew6V
+	SMXSoj5hXBOBqEmwLWgDqJuapVYe6X+Pqm8E2/Fa66gpJU0zCJ5IYDlsdOBmynxrhlNQ=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-L1 PM Substates for RC mode require support in the dw-rockchip driver
-including proper handling of the CLKREQ# sideband signal. It is mostly
-handled by hardware, but software still needs to set the clkreq fields
-in the PCIE_CLIENT_POWER_CON register to match the hardware implementation.
+Hi Bjorn,
 
-For more details, see section '18.6.6.4 L1 Substate' in the RK3658 TRM 1.1
-Part 2, or section '11.6.6.4 L1 Substate' in the RK3588 TRM 1.0 Part2.
+On 10/21/25 07:12, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
+> platforms") enabled Clock Power Management and L1 Substates, but that
+> caused regressions because these features depend on CLKREQ#, and not all
+> devices and form factors support it.
+> 
+> Enable only ASPM L0s and L1, and only when both ends of the link advertise
+> support for them.
+> 
+> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
+> Reported-by: FUKAUMI Naoki <naoki@radxa.com>
+> Link: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
 
-Meanwhile, for the EP mode, we haven't prepared enough to actually support
-L1 PM Substates yet. So disable it now until proper support is added later.
+I've confirmed that this patch resolves the PCIe (M.2) Wi-Fi freezes or 
+probe failures, as well as the NVMe SSD I/O errors occurring since 
+v6.18-rc1.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Specifically, I verified this with the following configuration:
 
----
+  ROCK 5A & M.2 RTL8852BE
+  ROCK 5B & M.2 MT7921E, NVMe SSD
+  ROCK 5T & on-board AX210, NVMe SSD x2
+  ROCK 5 ITX+ & M.2 MT7922E, NVMe SSD x2
 
-Changes in v3:
-- rephrease the changelog
-- use FIELD_PREP_WM16
-- rename to rockchip_pcie_configure_l1sub
-- disable L1ss for EP mode
+Therefore,
 
-Changes in v2:
-- drop of_pci_clkreq_presnt API
-- drop dependency of Niklas's patch
+  Tested-by: FUKAUMI Naoki <naoki@radxa.com>
 
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 43 +++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+Best regards,
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 3e2752c..25d2474 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -62,6 +62,12 @@
- /* Interrupt Mask Register Related to Miscellaneous Operation */
- #define PCIE_CLIENT_INTR_MASK_MISC	0x24
- 
-+/* Power Management Control Register */
-+#define PCIE_CLIENT_POWER_CON		0x2c
-+#define  PCIE_CLKREQ_READY		FIELD_PREP_WM16(BIT(0), 1)
-+#define  PCIE_CLKREQ_NOT_READY		FIELD_PREP_WM16(BIT(0), 0)
-+#define  PCIE_CLKREQ_PULL_DOWN		FIELD_PREP_WM16(GENMASK(13, 12), 1)
-+
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
- #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-@@ -85,6 +91,7 @@ struct rockchip_pcie {
- 	struct regulator *vpcie3v3;
- 	struct irq_domain *irq_domain;
- 	const struct rockchip_pcie_of_data *data;
-+	bool supports_clkreq;
- };
- 
- struct rockchip_pcie_of_data {
-@@ -200,6 +207,37 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
- 	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
- }
- 
-+/*
-+ * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
-+ * needed to support L1 substates. Currently, just enable L1 substates for RC
-+ * mode if CLKREQ# is properly connected and supports-clkreq is present in DT.
-+ * For EP mode, there are more things should be done to actually save power in
-+ * L1 substates, so disable L1 substates until there is proper support.
-+ */
-+static void rockchip_pcie_configure_l1sub(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	u32 cap, l1subcap;
-+
-+	/* Enable L1 substates if CLKREQ# is properly connected */
-+	if (rockchip->supports_clkreq && rockchip->data->mode == DW_PCIE_RC_TYPE ) {
-+		rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, PCIE_CLIENT_POWER_CON);
-+		return;
-+	}
-+
-+	/* Otherwise, pull down CLKREQ# and disable L1 PM substates */
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
-+				 PCIE_CLIENT_POWER_CON);
-+	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-+	if (cap) {
-+		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
-+		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
-+			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
-+			      PCI_L1SS_CAP_PCIPM_L1_2);
-+		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
-+	}
-+}
-+
- static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
- {
- 	u32 cap, lnkcap;
-@@ -264,6 +302,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- 	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
- 					 rockchip);
- 
-+	rockchip_pcie_configure_l1sub(pci);
- 	rockchip_pcie_enable_l0s(pci);
- 
- 	return 0;
-@@ -301,6 +340,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	enum pci_barno bar;
- 
-+	rockchip_pcie_configure_l1sub(pci);
- 	rockchip_pcie_enable_l0s(pci);
- 	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
- 
-@@ -412,6 +452,9 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
- 		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
- 				     "failed to get reset lines\n");
- 
-+	rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node,
-+							  "supports-clkreq");
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+> ---
+> 
+> Mani, not sure what you think we should do here.  Here's a stab at it as a
+> strawman and in case anybody can test it.
+> 
+> Not sure about the message log message.  Maybe OK for testing, but might be
+> overly verbose ultimately.
+> 
+> ---
+>   drivers/pci/pcie/aspm.c | 34 +++++++++-------------------------
+>   1 file changed, 9 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 7cc8281e7011..dbc74cc85bcb 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -243,8 +243,7 @@ struct pcie_link_state {
+>   	/* Clock PM state */
+>   	u32 clkpm_capable:1;		/* Clock PM capable? */
+>   	u32 clkpm_enabled:1;		/* Current Clock PM state */
+> -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+> -					   override */
+> +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+>   	u32 clkpm_disable:1;		/* Clock PM disabled */
+>   };
+>   
+> @@ -376,18 +375,6 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+>   	pcie_set_clkpm_nocheck(link, enable);
+>   }
+>   
+> -static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+> -						   int enabled)
+> -{
+> -	struct pci_dev *pdev = link->downstream;
+> -
+> -	/* For devicetree platforms, enable ClockPM by default */
+> -	if (of_have_populated_dt() && !enabled) {
+> -		link->clkpm_default = 1;
+> -		pci_info(pdev, "ASPM: DT platform, enabling ClockPM\n");
+> -	}
+> -}
+> -
+>   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>   {
+>   	int capable = 1, enabled = 1;
+> @@ -410,7 +397,6 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>   	}
+>   	link->clkpm_enabled = enabled;
+>   	link->clkpm_default = enabled;
+> -	pcie_clkpm_override_default_link_state(link, enabled);
+>   	link->clkpm_capable = capable;
+>   	link->clkpm_disable = blacklist ? 1 : 0;
+>   }
+> @@ -811,19 +797,17 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+>   	struct pci_dev *pdev = link->downstream;
+>   	u32 override;
+>   
+> -	/* For devicetree platforms, enable all ASPM states by default */
+> +	/* For devicetree platforms, enable L0s and L1 by default */
+>   	if (of_have_populated_dt()) {
+> -		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
+> +		if (link->aspm_support & PCIE_LINK_STATE_L0S)
+> +			link->aspm_default |= PCIE_LINK_STATE_L0S;
+> +		if (link->aspm_support & PCIE_LINK_STATE_L1)
+> +			link->aspm_default |= PCIE_LINK_STATE_L1;
+>   		override = link->aspm_default & ~link->aspm_enabled;
+>   		if (override)
+> -			pci_info(pdev, "ASPM: DT platform, enabling%s%s%s%s%s%s%s\n",
+> -				 FLAG(override, L0S_UP, " L0s-up"),
+> -				 FLAG(override, L0S_DW, " L0s-dw"),
+> -				 FLAG(override, L1, " L1"),
+> -				 FLAG(override, L1_1, " ASPM-L1.1"),
+> -				 FLAG(override, L1_2, " ASPM-L1.2"),
+> -				 FLAG(override, L1_1_PCIPM, " PCI-PM-L1.1"),
+> -				 FLAG(override, L1_2_PCIPM, " PCI-PM-L1.2"));
+> +			pci_info(pdev, "ASPM: DT platform, enabling%s%s\n",
+> +				 FLAG(override, L0S, " L0s"),
+> +				 FLAG(override, L1, " L1"));
+>   	}
+>   }
+>   
+
 
 
