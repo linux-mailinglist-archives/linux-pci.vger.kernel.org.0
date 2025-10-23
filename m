@@ -1,207 +1,115 @@
-Return-Path: <linux-pci+bounces-39200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C943AC0365F
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 22:36:10 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8BA2C03665
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 22:37:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CFE11AA2FCE
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 20:36:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E5EEE4EC52F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 20:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7405B218AD4;
-	Thu, 23 Oct 2025 20:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A74218AD4;
+	Thu, 23 Oct 2025 20:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fwf6vDmh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3ytV2vZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADE217332C;
-	Thu, 23 Oct 2025 20:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A302917C21C;
+	Thu, 23 Oct 2025 20:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761251765; cv=none; b=Vpkbh1MHRzbXY37/ypS3FEPbyZyW+00/U10Ip5k2VoBV9KtADQ725Ly1Qir+tlCE+omU1Q+WTaddXOIfR02Z3LVSxviHFN5nwoNc6LF2mbqBf7DJyOu2G6qtPa+LgWG66VXKjQ/9bc/f72lfMets3hGxzQrXt4ZsB6vkvDGrNUI=
+	t=1761251865; cv=none; b=Jc6wPfKv/vqMWao3efsBX7+NYLHz6j8EPOCpPadacFUv5aBgRf/w3EH6XbFUrcdB3s/yIV1FsT7VMYC9QqwE1e06HTaMVUuZFKW+omwFtDY+OcYWBYLyVT2uo1Jz9IyBJhrY62QJDSz1rvQu/qvTfZFX9gIyhh2oMKxHOyxQlTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761251765; c=relaxed/simple;
-	bh=XwBegz7tJEXFtipnq5Ve4Laqk1DLcrjbKOAQT8d1YWw=;
+	s=arc-20240116; t=1761251865; c=relaxed/simple;
+	bh=2YM0+zsZqGChetS9GwXiepmm69IizY2zwtiVz39WIsI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HrHS4brBU/9HYTaN0kdhE0MPdrfKAtJ1JLILvjM7I14HQwEa6hl15npPrghgOMRAL6QXUUDekGZuLg5Z3BCrGq+NHWzNaXfCLuorSjPd711RNmOguJPNRprPi05hkTX1FUAqyxxPHVO9dqzJlNgroXmJxU6yo0wy75Zb8iv7SQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fwf6vDmh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B063BC4CEE7;
-	Thu, 23 Oct 2025 20:36:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GsK5HiPWpzgOJm9aRy15MzMDwzeX6vcwfbuyD++dkZcU51QIa8Hj3GxdpFKH4pfelFpGaa2ohGpEZ27i76v/AFffmoqKKPZ0n44tjGpMN6XhscWxuIQTFkWNWWOH/PgeDX2ygBIy8Ek3DEyqD6gfXnvaAtxAD1HoGS5wL5GA9Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3ytV2vZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB97C4CEE7;
+	Thu, 23 Oct 2025 20:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761251764;
-	bh=XwBegz7tJEXFtipnq5Ve4Laqk1DLcrjbKOAQT8d1YWw=;
+	s=k20201202; t=1761251865;
+	bh=2YM0+zsZqGChetS9GwXiepmm69IizY2zwtiVz39WIsI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Fwf6vDmhHygtIw266Mza2L/w4Y4OEMdWFL9Srl47Ljq9RM/ghx3LLqTVxkVcK2Wmx
-	 tEX36tQ/N8vPUPrLcnBQmjmo8COXFOzsnGQp6UG/x5ntmlK8yVOfW5haczGNE9M0Cc
-	 p96vQbViTQmj/W+YrOJatUrsUkUgm6FN8dlooPScA8SyFsSzihmmVGtfB/CS5DK6iy
-	 Qbz/fA/g54Sk2Amn2HsA7XW0iwSLvnrZkV1cscr8qsmSwGnSExkwf+WfGb8eu4hvif
-	 M5mtlqxVBBqu04n+yUpYDUNOZX59sG3bw+yj+5FDrlEuA0lzcE6bg5xh+HBkSX4alq
-	 CJTgPOtmL0L0A==
-Date: Thu, 23 Oct 2025 15:36:03 -0500
+	b=h3ytV2vZuMNv8NoTWdIl5ICqjQTyzWf22mdhyoQLj6r6nQTkeuImhgjjVp+9kAsea
+	 u/KtDwgCJX7Rv5r5N8EmyG/qFIzkjgRzfL79dc5OSALqP4VnXy+rk7HVW73zoDfRm3
+	 MLD5BEPsiDjqUXqb627Wsfl+m8sUplWrlcPyHz9YkdbTXB7LKnj49VlwA99i5KbSNj
+	 g36nO+KzdgUVocdlOSqwj7dZfHLbJgV7FuGC1O12G3dJaX/okmmegIjm0SA9ByE0YL
+	 WcNv4RrCiz868Z38yxnQ0rQXAFQcBAaVHfsK6Se/ACNsHmKKVCspkE0nuLYKvLtkBV
+	 bWYzcXP4eN/ew==
+Date: Thu, 23 Oct 2025 15:37:44 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Devegowda, Chandrashekar" <chandrashekar.devegowda@intel.com>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"Srivatsa, Ravishankar" <ravishankar.srivatsa@intel.com>,
-	"Tumkur Narayan, Chethan" <chethan.tumkur.narayan@intel.com>,
-	"K, Kiran" <kiran.k@intel.com>,
-	"Ben Ami, Golan" <golan.ben.ami@intel.com>,
-	"Berg, Johannes" <johannes.berg@intel.com>
-Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Support function level reset
-Message-ID: <20251023203603.GA1312405@bhelgaas>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Christian Zigotzky <chzigotzky@xenosoft.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Diederik de Haas <diederik@cknow-tech.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
+Message-ID: <20251023203744.GA1314513@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <IA3PR11MB9016B8132E2E11806B58A0F7FCF0A@IA3PR11MB9016.namprd11.prod.outlook.com>
+In-Reply-To: <da79f38f-fdb9-0101-67cc-144ef8d6e1d1@manjaro.org>
 
-On Thu, Oct 23, 2025 at 09:42:16AM +0000, Devegowda, Chandrashekar wrote:
-> > On Tue, Mar 18, 2025 at 10:55:06AM -0400, Luiz Augusto von Dentz wrote:
-> > > On Fri, Mar 14, 2025 at 3:40 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Fri, Mar 14, 2025 at 12:16:13PM +0200, Chandrashekar Devegowda
-> > wrote:
-> > > > > Support function level reset (flr) on hardware exception to
-> > > > > recover controller. Driver also implements the back-off time
-> > > > > of 5 seconds and the maximum number of retries are limited
-> > > > > to 5 before giving up.
-> > > >
-> > > > Sort of weird that the commit log mentions FLR, but it's not
-> > > > mentioned in the patch itself except for
-> > > > BTINTEL_PCIE_FLR_RESET_MAX_RETRY.  Apparently the assumption
-> > > > is that DSM_SET_RESET_METHOD_PCIE performs an FLR.
-> > > >
-> > > > Since this is an ACPI _DSM, presumably this mechanism only
-> > > > works for devices built into the platform, not for any
-> > > > potential plug-in devices that would not be described via
-> > > > ACPI.  I guess this driver probably already only works for
-> > > > built-in devices because it also uses DSM_SET_WDISABLE2_DELAY
-> > > > and DSM_SET_RESET_METHOD.
-> > > >
-> > > > There is a generic PCI core way to do FLR (pcie_reset_flr()),
-> > > > so I assume the _DSM exists because the device needs some
-> > > > additional device-specific work around the FLR.
-> > > >
-> > > > > +static void btintel_pcie_removal_work(struct work_struct *wk) {
-> > > > > +     struct btintel_pcie_removal *removal =
-> > > > > +             container_of(wk, struct btintel_pcie_removal, work);
-> > > > > +     struct pci_dev *pdev = removal->pdev;
-> > > > > +     struct pci_bus *bus;
-> > > > > +     struct btintel_pcie_data *data;
-> > > > > +
-> > > > > +     data = pci_get_drvdata(pdev);
-> > > > > +
-> > > > > +     pci_lock_rescan_remove();
-> > > > > +
-> > > > > +     bus = pdev->bus;
-> > > > > +     if (!bus)
-> > > > > +             goto out;
-> > > > > +
-> > > > > +     btintel_acpi_reset_method(data->hdev);
-> > > > > +     pci_stop_and_remove_bus_device(pdev);
-> > > > > +     pci_dev_put(pdev);
-> > > > > +
-> > > > > +     if (bus->parent)
-> > > > > +             bus = bus->parent;
-> > > > > +     pci_rescan_bus(bus);
-> > > >
-> > > > This remove and rescan by a driver that's bound to the device
-> > > > subverts the driver model.  pci_stop_and_remove_bus_device()
-> > > > detaches the driver from the device.  After the driver is
-> > > > detached, we should not be running any driver code.
-> > >
-> > > Yeah, this self removal was sort of bugging me as well, although
-> > > I'm not familiar enough with the pci subsystem, having the
-> > > driver remove and continue running code like pci_rescan_bus
-> > > seems wrong as we may end up with multiple instances of the same
-> > > driver.
-> > >
-> > > > There are a couple other drivers that remove their own device
-> > > > (ath9k, iwlwifi, asus_wmi, eeepc-laptop), but I think those
-> > > > are broken and it's a mistake to add this pattern to more
-> > > > drivers.
-> > > >
-> > > > What's the reason for doing the remove and rescan?  The PCI
-> > > > core doesn't reset the device when you do this, so it's not a
-> > > > "bigger hammer reset".
-> > >
-> > > I guess it was more of the expectation of Chandru to have a sort
-> > > of hard reset, driver remove+probe, instead of a soft reset
-> > > where the driver will just need to reinit itself after
-> > > performing pcie_reset_flr.
+On Thu, Oct 23, 2025 at 08:27:25PM +0200, Dragan Simic wrote:
+> On Thursday, October 23, 2025 20:06 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > If the object is just to reinitialize the driver, I think this
-> > hack of removing and rescanning is a bad way to do it.  If you
-> > reset the device, you now know the state of the device and you can
-> > make the driver state match it.  If necessary you can always reuse
-> > part or all of the .remove() and .probe() methods yourself,
-> > without this dance of calling pci_stop_and_remove_bus_device() and
-> > pci_rescan_bus().
+> > f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
+> > platforms") enabled Clock Power Management and L1 PM Substates, but those
+> > features depend on CLKREQ# and possibly other device-specific
+> > configuration.  We don't know whether CLKREQ# is supported, so we shouldn't
+> > blindly enable Clock PM and L1 PM Substates.
+> > 
+> > Enable only ASPM L0s and L1, and only when both ends of the link advertise
+> > support for them.
+> > 
+> > Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+> > Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> > Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de/
+> > Reported-by: FUKAUMI Naoki <naoki@radxa.com>
+> > Closes: https://lore.kernel.org/r/22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com/
+> > Reported-by: Herve Codina <herve.codina@bootlin.com>
+> > Link: https://lore.kernel.org/r/20251015101304.3ec03e6b@bootlin.com/
+> > Reported-by: Diederik de Haas <diederik@cknow-tech.com>
+> > Link: https://lore.kernel.org/r/DDJXHRIRGTW9.GYC2ULZ5WQAL@cknow-tech.com/
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: FUKAUMI Naoki <naoki@radxa.com>
+> > ---
+> > I intend this for v6.18-rc3.
+> > 
+> > I think it will fix the issues reported by Diederik and FUKAUMI Naoki (both
+> > on Rockchip).  I hope it will fix Christian's report on powerpc, but don't
+> > have confirmation.  I think the performance regression Herve reported is
+> > related, but this patch doesn't seem to fix it.
+> > 
+> > FUKAUMI Naoki's successful testing report:
+> > https://lore.kernel.org/r/4B275FBD7B747BE6+a3e5b367-9710-4b67-9d66-3ea34fc30866@radxa.com/
 > 
-> I’m sharing insights from our recent work on the PLDR for the BT
-> driver. The above method supports FLR effectively, but for PLDR it
-> is required to unload Wifi driver before doing PLDR via ACPI method.
-
-IIUC "PLDR" is an ACPI method that does a reset, and you want to reset
-a BT device.
-
-> Currently, calling pci_rescan_bus() successfully rebinds both the
-> WiFi and BT drivers. This approach follows the method used for the
-> WiFi driver, as seen here:
+> I'm more than happy with the way ASPM patches for DT platforms and
+> Rockchip SoCs in particular are unfolding!  Admittedly, we've had
+> a rough start with the blanket enabling of ASPM, which followed the
+> theory, but the theory often differs from practice, so the combined
+> state of this and associated patches from Shawn should be fine.
 > 
-> https://elixir.bootlin.com/linux/v6.18-rc1/source/drivers/net/wireless/intel/iwlwifi/pcie/gen1_2/trans.c#L2182
+> Thank you very much for all the effort that included quite a lot
+> of back and forth, and please feel free to include
+> 
+> Acked-by: Dragan Simic <dsimic@manjaro.org>
 
-It looks like this is a multi-function device, iwlwifi is bound to
-function 0, and btintel is bound to function 1.
-
-Then it looks like iwl_trans_pcie_removal_wk() starts with the wifi
-device, finds the corresponding BT device, removes the BT device, runs
-PLDR on the wifi device, removes the wifi device, and rescans to find
-both devices again:
-
-  iwl_trans_pcie_removal_wk
-    wifi = removal->pdev			# WiFi device
-    bt = pci_get_slot(...)			# BT device
-    pci_stop_and_remove_bus_device(bt)
-    iwl_trans_pcie_set_product_reset(wifi)	# do PLDR on WiFi
-    pci_stop_and_remove_bus_device(wifi)
-    pci_rescan_bus
-
-It seems problematic to me for the WiFi driver to remove the BT
-driver.  What if BT was active at the time?  Why is it ok to yank the
-rug out from under it?
-
-Why does the BT driver have to be unloaded before resetting the WiFi
-device?  Why does the WiFi driver have to be unloaded before resetting
-the BT device?
-
-Theoretically, the functions of a PCI multi-function device are
-independent and really don't have any influence on each other.
-
-If you had a single driver that claimed both devices, that driver
-could coordinate this since it would know about both and could
-synchronize their activity when needed.
-
-Maybe you could have a wrapper driver that claims both and delegates
-each function to either iwlwifi or btintel as needed?  Since the
-wrapper, iwlwifi, and btintel would be linked into a single module,
-you could arrange callbacks between them to synchronize and handle
-these resets.
-
-If you reset the device, you know the state of the device afterward,
-and the driver should be able to initialize its own data structures
-accordingly.  This should not require any PCI device removal or
-rescan.
-
-Bjorn
+Added your ack; thanks for all your help!
 
