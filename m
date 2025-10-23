@@ -1,122 +1,168 @@
-Return-Path: <linux-pci+bounces-39133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 421A0C00921
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 12:48:56 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBF76C009DF
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 13:03:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D67164E3379
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 10:48:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2EEE835898E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 11:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49913304BB3;
-	Thu, 23 Oct 2025 10:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9070D30AD03;
+	Thu, 23 Oct 2025 11:03:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEAD305976;
-	Thu, 23 Oct 2025 10:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE60E309F1D
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 11:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761216531; cv=none; b=f4zisOxSEnfGntuC9QByn6qatQLNkgFq1ehV3vD5TeDoIxDAELULpIkLqPA8Wp5U51jyj/yalYLjmedZlFW8m/efL/A4xcLRLIZLE1qq5GVpaefokZNjDaql089W9YjS3sJVgHWKEMwvMmyfkkH8lXlFLumY5NTTUmySv75Selk=
+	t=1761217390; cv=none; b=OJk6acYXm6o8+mUOiEMtG1po6s0XgD5lshoLGXnr+n6mW6g+DnyDDG7l8OgETNhEnFuYlYxDZM7DMR0YceOHP+REyHDM+LeGpC9DJ3eAOWFqMkDSFO9P2JKFiDzfhglcXVWSvgzZhsY+SZ0i04jRwUnt9iGoN6w6Wt26ZAlDQYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761216531; c=relaxed/simple;
-	bh=VAJLIHvhq9TGk4g9+TgP+hMqcTQmsvrkNo/JZVVF4xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MzRlwHEusnTJGjhknFOtfRhWplMeThLC1JtRfDOE0iEbx/phOLREfUZHVW6IGltcpzrroJkyyF0i67FR2cu+13zsFYsa8/O0a+23E6chWfqcNZN9BNlO2q0dWF/YKDDRoPoBv1csFH9/3wiNnfixRBDAk9zo32YPiDHYb1y14sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id D164A200C2C2;
-	Thu, 23 Oct 2025 12:48:45 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C07944A12; Thu, 23 Oct 2025 12:48:45 +0200 (CEST)
-Date: Thu, 23 Oct 2025 12:48:45 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-	kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-	mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
-	terry.bowman@amd.com, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6 3/5] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-Message-ID: <aPoIDW_Yt90VgHL8@wunner.de>
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-4-xueshuai@linux.alibaba.com>
- <aPYKe1UKKkR7qrt1@wunner.de>
- <6d7143a3-196f-49f8-8e71-a5abc81ae84b@linux.alibaba.com>
- <aPY--DJnNam9ejpT@wunner.de>
- <43390d36-147f-482c-b31a-d02c2624061f@linux.alibaba.com>
- <aPZGNP79kJO74W4J@wunner.de>
- <30fe11dd-3f21-4a61-adb0-74e39087c84c@linux.alibaba.com>
+	s=arc-20240116; t=1761217390; c=relaxed/simple;
+	bh=tg+8iAuL9v348WQn+/MKpxNJ48PFBRZL9CF/o4UEAoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mQPbdaBeqc5IboEdtlmkQ7QBIIvPg3d8D8Vz88Pxvw+kFJsahL2uruThEDyb81i5MnLNJBFdp3g5a3gcI3E8nKmwosq9B/dH6cA/ZHAsIyIofG4JZ99x/ciPkHiOIu7qzCUctPaWtASA+qZTB36QEDDRNNuVIlgTAIFmqLYdcg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-54bbc2a8586so224157e0c.2
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 04:03:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761217386; x=1761822186;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WjWvH/pQF78pnjKmIZIOC/klk9iC3EtNoJr9L6Gp1mo=;
+        b=m11CbXFm+fOEfN3I5rs3dkn5PcKqbUf8QY86028qFJTxuGeXERP4r1hKFh9DnnlgFx
+         auedKhNYDOPdzE3QaR9D8M4Uen2BbaZ+Q4Br6+5Ebc6YdgpFwk1p1fPEJSW5RGLqS3VS
+         nnY1o0W8COh9Gxb2eAMZLiWJRB/825bj2LmilCKV783lUWFfOMMh75EI6IypM/HaRFmE
+         rxdtAN/g+uqwXmMfacd+HfjZfLmdKC+qMG7tYOQRzlx1T1Nyb4QGLouO+PaAtMnFhNJw
+         vb5LDk4ffpPzyeouEzALD/FmNHtDEbUe0gEepYcBncUJm/B/Bvm/w1EOsVbV4wizJiqW
+         H+vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqpHUfltzBNFM6aaOWlkpo5PLaKWHhWOgYW2x1qyg5EvTDV76efHkhhU7c4xtIIgHNcdaIT6U9Htg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOr+AfAqrM1bH0FUWhi8j+bYkdcd3sjYirDAtDV7J6oci0YwE9
+	Z6yzk8uKQr2FQygBecUdC5uS2sSim3TAb7FpcYpbIktlEwaKMER9BPzEWZwAvW6y
+X-Gm-Gg: ASbGnctXi0mR2M7qqiLZfSMFmVGFYSWTKJgd+U3dNsCB5oqgnelFCj5z5G4Wgz9YHQJ
+	QUX+Uya1aBAx6+Ssdymlj9ZCFWXipdgjv67NyySlZPcLoNHKQrL/JtehIxSg+I1rEBJJv6oZhoF
+	7LREn8X5gtXKvFIu80mw6udrJfFeYaJkbRhSZ5VLqNxQaPxMG0ZWLr+tuWN0cGXdvsehy1vM9v3
+	95o0MX/+Vn/HBHGCXeAl9I/H0MEX72OWEw8YO0bGh8z1Zxv+6DwxU32zarn3IlF4fVTgiBlR5Yo
+	ZKdyOqSARl9WuyMkpSpXi5yZCwbp9BxvMLgNMpxh64vrRzTINqjpVyW5Cr/ed+cunW4N8OTR5EC
+	+O2JPR/Rw3tkoNuHSer9cnoFZQiMgG9bSAQMbmdSUKRdGFiUKxuHo9b7RQB4cCV0QUA+DJJ4wFZ
+	dk/qWP5XRGVpl5P9bWYv2CRpK3oZqw87jLu5hcfctZlE/EkkAz
+X-Google-Smtp-Source: AGHT+IFnmwOTftPubuQJr9hgwLRBXUwcKi19Bu6UAW+72wtEjpYMf7nVq0sqzZ6Bjb844UJPzXkKNA==
+X-Received: by 2002:a05:6122:da1:b0:557:c841:14dd with SMTP id 71dfb90a1353d-557c8411534mr26783e0c.16.1761217385792;
+        Thu, 23 Oct 2025 04:03:05 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-557bdbb82e5sm610281e0c.14.2025.10.23.04.03.05
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Oct 2025 04:03:05 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-5c72dce3201so199071137.3
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 04:03:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdP1/ASAQ8ul7fxwxezR1ZFo4/4+cbjCJ1/0En+vlXaay7GwAswrhzAvi+aDhBsZ/8wOoHyvf7E6A=@vger.kernel.org
+X-Received: by 2002:a05:6102:2acc:b0:520:a44f:3ddf with SMTP id
+ ada2fe7eead31-5d7dd5a3793mr5929967137.10.1761217385274; Thu, 23 Oct 2025
+ 04:03:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30fe11dd-3f21-4a61-adb0-74e39087c84c@linux.alibaba.com>
+References: <20251007133657.390523-1-claudiu.beznea.uj@bp.renesas.com>
+ <20251007133657.390523-3-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdXF14x68Wk5YdOBS2D2N6LtnQjfGzrsMdSJegX-gc3faQ@mail.gmail.com> <6c69d2a2-5dfe-450f-8a39-2ef6e7a6dbea@tuxon.dev>
+In-Reply-To: <6c69d2a2-5dfe-450f-8a39-2ef6e7a6dbea@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 23 Oct 2025 13:02:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXLiN0kUVJtdEYVnsmnCEbN4hSs5KEhMXJhf7p29xv=0Q@mail.gmail.com>
+X-Gm-Features: AWmQ_bm3rJeUf0KSNhlRfvLpl1M_xWwhhcqbJogOZCts4Aa1eBeKq-NYF1bmLWY
+Message-ID: <CAMuHMdXLiN0kUVJtdEYVnsmnCEbN4hSs5KEhMXJhf7p29xv=0Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host driver
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Oct 20, 2025 at 11:20:58PM +0800, Shuai Xue wrote:
-> 2025/10/20 22:24, Lukas Wunner:
-> > On Mon, Oct 20, 2025 at 10:17:10PM +0800, Shuai Xue wrote:
-> > > > >     .slot_reset()
-> > > > >       => pci_restore_state()
-> > > > >         => pci_aer_clear_status()
-> > > > 
-> > > > This was added in 2015 by b07461a8e45b.  The commit claims that
-> > > > the errors are stale and can be ignored.  It turns out they cannot.
-> > > > 
-> > > > So maybe pci_restore_state() should print information about the
-> > > > errors before clearing them?
-> > > 
-> > > While that could work, we would lose the error severity information at
-> > 
-> > Wait, we've got that saved in pci_cap_saved_state, so we could restore
-> > the severity register, report leftover errors, then clear those errors?
-> 
-> You're right that the severity register is also sticky, so we could
-> retrieve error severity directly from AER registers.
-> 
-> However, I have concerns about implementing this approach:
-[...]
-> 3. Architectural consistency: As you noted earlier, "pci_restore_state()
-> is only supposed to restore state, as the name implies, and not clear
-> errors." Adding error reporting to this function would further violate
-> this principle - we'd be making it do even more than just restore state.
-> 
-> Would you prefer I implement this broader change, or shall we proceed
-> with the targeted helper function approach for now? The helper function
-> solves the immediate problem while keeping the changes focused on the
-> AER recovery path.
+Hi Claudiu,
 
-My opinion is that b07461a8e45b was wrong and that reported errors
-should not be silently ignored.  What I'd prefer is that if
-pci_restore_state() discovers unreported errors, it asks the AER driver
-to report them.
+On Thu, 23 Oct 2025 at 12:54, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 10/23/25 11:00, Geert Uytterhoeven wrote:
+> > On Tue, 7 Oct 2025 at 15:37, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> >> only as a root complex, with a single-lane (x1) configuration. The
+> >> controller includes Type 1 configuration registers, as well as IP
+> >> specific registers (called AXI registers) required for various adjustments.
+> >>
+> >> Hardware manual can be downloaded from the address in the "Link" section.
+> >> The following steps should be followed to access the manual:
+> >> 1/ Click the "User Manual" button
+> >> 2/ Click "Confirm"; this will start downloading an archive
+> >> 3/ Open the downloaded archive
+> >> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> >> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> >>
+> >> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> >> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- /dev/null
+> >> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+> >
+> >> +static void rzg3s_pcie_irq_compose_msi_msg(struct irq_data *data,
+> >> +                                          struct msi_msg *msg)
+> >> +{
+> >> +       struct rzg3s_pcie_msi *msi = irq_data_get_irq_chip_data(data);
+> >> +       struct rzg3s_pcie_host *host = rzg3s_msi_to_host(msi);
+> >> +       u32 drop_mask = RZG3S_PCI_MSIRCVWADRL_ENA |
+> >> +                       RZG3S_PCI_MSIRCVWADRL_MSG_DATA_ENA;
+> >
+> > This should include bit 2 (which is hardwired to zero (for now)),
+> > so I think you better add
+> >
+> >     #define RZG3S_PCI_MSIRCVWADRL_ADDR  GENMASK(31, 3)
+> >
+> >> +       u32 lo, hi;
+> >> +
+> >> +       /*
+> >> +        * Enable and msg data enable bits are part of the address lo. Drop
+> >> +        * them.
+> >> +        */
+> >> +       lo = readl_relaxed(host->axi + RZG3S_PCI_MSIRCVWADRL) & ~drop_mask;
+> >
+> > ... and use FIELD_GET() with the new definition here.
+>
+> Bits 31..3 of RZG3S_PCI_MSIRCVWADRL contains only bits 31..3 of the MSI
+> receive window address low, AFAIU. Using FIELD_GET() for bits 31..3 on the
+> value read from RZG3S_PCI_MSIRCVWADRL and passing this value to
+> msg->address_lo will lead to an NVMe device not working.
 
-We've already got a helper to do that:  aer_recover_queue()
-It queues up an entry in AER's kfifo and asks AER to report it.
+Oops, yes you are right, I went a bit too far with the FIELD_GET()
+suggestion. But replacing drop_mask by RZG3S_PCI_MSIRCVWADRL_ADDR
+would still be worthwhile, IMHO.
 
-So far the function is only used by GHES.  GHES allocates the
-aer_regs argument from ghes_estatus_pool using gen_pool_alloc().
-Consequently aer_recover_work_func() uses ghes_estatus_pool_region_free()
-to free the allocation.  That prevents using aer_recover_queue()
-for anything else than GHES.  It would first be necessary to
-refactor aer_recover_queue() + aer_recover_work_func() such that
-it can cope with arbitrary allocations (e.g. kmalloc()).
+Gr{oetje,eeting}s,
 
-Thanks,
+                        Geert
 
-Lukas
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
