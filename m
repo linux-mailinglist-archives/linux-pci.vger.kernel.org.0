@@ -1,205 +1,205 @@
-Return-Path: <linux-pci+bounces-39184-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39185-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFC1BC02C69
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 19:43:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCE73C02D54
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 20:02:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57A6C1AA561B
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 17:43:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 297633AB521
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5941F34A770;
-	Thu, 23 Oct 2025 17:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0036348447;
+	Thu, 23 Oct 2025 18:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJ4QZwDF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cPOD1Keg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD7334A3DA
-	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 17:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0FF261581
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 18:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761241395; cv=none; b=LNyllrr99XJaG1kQ/CI2+OBEKqHTb61hw+pSnTLzml8kUqeMxp5rtqRm1jLc8qaiIulZuaCUpI+AYfnjvxFEkiAeC+I4r/oZ3XLoKL9dETh2PlYK4CBvFwg26FTq99rn28eN0Ag0V/lT8cWuucnMEoL5DhkjcomI2xEaZPHV+Pg=
+	t=1761242500; cv=none; b=b2h/ypHPO2xJzSmQ6bUfDOMK5F9WUk1iKKLD213o9TfEh8TDA4jJgbHdnf5Lek+WJlQVfJYtbhTvov/+JezhBmAiyllsaEQEp9po27exi6pQhFtsTNarD0CqP0ztxIOrH796vyu8nOOrkWspubcrOqoZb8e8esQCRjRDpA7Dafs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761241395; c=relaxed/simple;
-	bh=lBogzcavFia1tq1/hy2llZwqk3cknuFx94ohvomXMBA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gul78mtSnfnIRNgh/S/wIjQWwWXntgYQ3lJ1Jfs0+Oe7woPeDjxH7rols5Qjd7cNZoj1Zuw+DoWy2aEX4X4djZKYdRAt3tJQ0GBqggvwkEm/5rfeEAz9bchdQ7S1vX4xNHvK41yzNw0BBPQ2YDCzd3o1QK7FVTN2hXoGBLM3zY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJ4QZwDF; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761241393; x=1792777393;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=lBogzcavFia1tq1/hy2llZwqk3cknuFx94ohvomXMBA=;
-  b=IJ4QZwDFGetACI0MXLH1J7DUSzmGMCd+n2t3ubsIFfBYVLxCvIHp/e9K
-   opbVmrk3cFLZ6mLksYedfwQ3WgsESeqTkbB/YE+JWclm2bHv3lXtgXGoE
-   87q/c2wXJZ8MI0aPTxMdUcw0rsGIFRSna8LXGOaXEklEQDwnoOZdYspsC
-   jALl3r8T9gIuhmbddIlbN4J2MvT3vG96Go9MnZZiiu1ziy02S0/NXTkun
-   Ondjw28Bn/7rkWBa4HFv9+mVTmJdALLxKPbbrT/KzeDMbFHjh06j1uE8g
-   YAiqKsIERqaWYd1kK8TTm8zU6IfIyed2+8p8wJf8eTAOj5rCT5Pi4wBS8
-   w==;
-X-CSE-ConnectionGUID: 9bUnEVOeTkeZJD90ax96Zg==
-X-CSE-MsgGUID: BEyQD5TKTrqgrynphMRR3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63125358"
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="63125358"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:43:05 -0700
-X-CSE-ConnectionGUID: KyhLV5dhTR+V6DJO+HlNKA==
-X-CSE-MsgGUID: nkm4X9Q6SCOpy1ru1Fvulg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="188280889"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.225])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:43:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 23 Oct 2025 20:42:56 +0300 (EEST)
-To: Simon Richter <Simon.Richter@hogyros.de>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>
-cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Subject: Re: BAR resizing broken in 6.18 (PPC only?)
-In-Reply-To: <af2ed697-4856-4477-8da8-2838ceaf3179@hogyros.de>
-Message-ID: <4fbe3ae1-0752-33f3-35c2-d81e21031f8a@linux.intel.com>
-References: <f9a8c975-f5d3-4dd2-988e-4371a1433a60@hogyros.de> <a5e7a118-ba70-000e-bab4-8d56b3404325@linux.intel.com> <67840a16-99b4-4d8c-9b5c-4721ab0970a2@hogyros.de> <922b1f68-a6a2-269b-880c-d594f9ca6bde@linux.intel.com>
- <af2ed697-4856-4477-8da8-2838ceaf3179@hogyros.de>
+	s=arc-20240116; t=1761242500; c=relaxed/simple;
+	bh=+11krxrYSQBIL8PS8v62mSeTP8oZ51XSj0cM3YuN+vU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Obk6LJBGp2qcwhvGPxALOrl/w/rcQlr/qIa0fdAKmccFnxsXRbWi6WtRcLj2isVbvIxDAbKzh32Taxo2V9yGcEHgWk7nIQs19ZINJ1H5UcplzRyxreoseLEYHD1ck7qCkbdCcw+ADo1/PAF7TCBaAp1dipY2aDjQyRNiYVdbqCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cPOD1Keg; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-33ba5d8f3bfso981114a91.3
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 11:01:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1761242498; x=1761847298; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2fVJOJqOl/DPUXtsK6eZUYyA/D6xvUpAsP3hFipiCWw=;
+        b=cPOD1KegM61aTrEPJxaRI9ZtHfLplA8R4BbE7ei2hOB1ghzLSxecOR2ToC6QybmS00
+         jhai4f6HXSEgAXDL/RKFnn1BuAJ5CYtepJFfA8Haw+z31+yKJmDB4kdFxbX4cVNAIlSc
+         HB1zQo4eQaf4mb41PEQTLRldGNzOFUcCkjne0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761242498; x=1761847298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2fVJOJqOl/DPUXtsK6eZUYyA/D6xvUpAsP3hFipiCWw=;
+        b=E51PWyoU+9M5Gu3vmCk7ab6GV/8K6tLnvPFFrQaBCgWaRDEOwZhzRQSkGpVL/dzugQ
+         wSPUndiHJejtbet+3Ra/Wu0KYYnon66RKNPAoENxol1ReXecLuO21KVPDnc9zNPeZdtL
+         Vibk+0eOkuUroU5eysuVyItwV9gzLoFokvxJO567z/0aFcC8lPR+GR5EYj0465zIi7t/
+         ackqrLAixnMv8ki78y/9AcEhb+w3Wanp8cy78t44oTmQ6HS5yAfNcnXYHFxd/6KI2fq+
+         /VHeGM3Fsg7U1YH6XmyDl7YMj6koj/jBztCKjfix4yo75CEnyzU4L+jqVrPdF7Qa6q+S
+         Vudw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdC96R38gYq4xRg3Z07OfrB02aeL5w5//DUx0jbQr+MJK0riPiDIA17EMCSGbUCR5mdbvuJdcGVzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjZxqQObilYX+0J54F4GtGDuddIbSTN1eVSaC9Q6wsTnyOZi1b
+	0NLN/qwTulBJ2WDUyzkg43T6EHPYfWxW8xBV2kwTLD15hpbfamU+ev1gAiMm2moK3w==
+X-Gm-Gg: ASbGncvIq1HzmaCHEjRIPlwv0REfcRCAGvLCJNLYy1pcsTT7aW+nVjugap2NyCf+O6G
+	UpsrVT2sXQFTLufiiIRJs39SwBmr7ano1Oy0PQTESgSi2lUIAgLrxC7j10DwyTqdCnlZfiWH1uM
+	/gfjdB+duorfLFp4a1V67fV7oBre0d6+9XhqV0Y2AyXZ8t07A+rSmz7Vki4YSAdWy/X/jsKyHyQ
+	AS6ynRVyMtL8MW71sJyJN29bsVG3Zq86BKHl7zj07NAfd3ZkDQuqx51xmaoS5oI4A//KE7ZFHMM
+	hSRXvHZGuHtYJzlKA5j0tA8wfQPiTLORwGI9rGuNCBwqwam1Cn9oMwWpC5FmBjHPezcP/5Pl5Rq
+	3HDdhYhzwBYbW3UewzWHkC7iQWVKT4aS7OGskH51R+FN7bFOtjlD8wDQ89790Xwn0Mi6YvBYG52
+	VNhEgdwsjKsiPon9SP903e7e/Cxe545VQ9N8LxenalIHwkE7bZ
+X-Google-Smtp-Source: AGHT+IHMEl1/yOcEnK1WSum08iBEotApLa8nOZXGnnHDG0khuXHK2NNe5VrwxePf061sm8+ZE7PtOQ==
+X-Received: by 2002:a17:90b:1b4a:b0:32e:1b1c:f8b8 with SMTP id 98e67ed59e1d1-33bcf8f7cd5mr35772646a91.26.1761242498180;
+        Thu, 23 Oct 2025 11:01:38 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e7c:8:839c:d3ee:bea4:1b90])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-33faff37afesm3047298a91.1.2025.10.23.11.01.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Oct 2025 11:01:37 -0700 (PDT)
+Date: Thu, 23 Oct 2025 11:01:35 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] PCI/PM: Ensure power-up succeeded before restoring MMIO
+ state
+Message-ID: <aPptf2gLpoWL3Ics@google.com>
+References: <20250821075812.1.I2dbf483156c328bc4a89085816b453e436c06eb5@changeid>
+ <20251023172547.GA1301778@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-303087025-1761221295=:1016"
-Content-ID: <256de186-4697-84cb-cf91-ad575ccac02f@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251023172547.GA1301778@bhelgaas>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Bjorn,
 
---8323328-303087025-1761221295=:1016
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <395cf5de-bb93-a13b-3583-453330015155@linux.intel.com>
+On Thu, Oct 23, 2025 at 12:25:47PM -0500, Bjorn Helgaas wrote:
+> [+cc Mario, Rafael]
+> 
+> On Thu, Aug 21, 2025 at 07:58:12AM -0700, Brian Norris wrote:
+> > From: Brian Norris <briannorris@google.com>
+> > 
+> > As the comments in pci_pm_thaw_noirq() suggest, pci_restore_state() may
+> > need to restore MSI-X state in MMIO space. This is only possible if we
+> > reach D0; if we failed to power up, this might produce a fatal error
+> > when touching memory space.
+> > 
+> > Check for errors (as the "verify" in "pci_pm_power_up_and_verify_state"
+> > implies), and skip restoring if it fails.
+> > 
+> > This mitigates errors seen during resume_noirq, for example, when the
+> > platform did not resume the link properly.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Brian Norris <briannorris@google.com>
+> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > ---
+> > 
+> >  drivers/pci/pci-driver.c | 12 +++++++++---
+> >  drivers/pci/pci.c        | 13 +++++++++++--
+> >  drivers/pci/pci.h        |  2 +-
+> >  3 files changed, 21 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 302d61783f6c..d66d95bd0ca2 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -557,7 +557,13 @@ static void pci_pm_default_resume(struct pci_dev *pci_dev)
+> >  
+> >  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+> >  {
+> > -	pci_pm_power_up_and_verify_state(pci_dev);
+> > +	/*
+> > +	 * If we failed to reach D0, we'd better not touch MSI-X state in MMIO
+> > +	 * space.
+> > +	 */
+> > +	if (pci_pm_power_up_and_verify_state(pci_dev))
+> > +		return;
+> 
+> The MSI-X comment here seems oddly specific.
 
-On Wed, 22 Oct 2025, Simon Richter wrote:
-> On 10/22/25 1:20 AM, Ilpo J=E4rvinen wrote:
->=20
-> > Could you please test if the patch below helps.
->=20
-> Yes, this looks better.
->=20
->  - "good" is the 6.17 reference
->  - "shrink" is with this patch and the BAR0 release from Lucas
->  - "bar0" is with this patch, with the bridge BAR0 still mapped (i.e. wit=
-hout
-> the patch from Lucas)
->=20
-> If you compare "good" vs "bar0", the differences are now fairly minimal. =
-The
-> non-prefetchable window has shrunk, but assignments are otherwise the sam=
-e.
+It's just as "oddly specific" as the existing comment in
+pci_pm_thaw_noirq(), as mentioned in the commit message :)
 
-If a window has extra size prior to any resource fitting operation, the=20
-kernel will recalculate the size based on what it knows about the=20
-downstream resource sizes, no more so extra size is removed.
+The key point for MSI-X is that unlike the rest of pci_restore_state(),
+it requires touching memory space. While config registers are OK to
+touch in D3, memory space is not.
 
-I thought that old_size was to prevent such shrinkage, but it is=20
-problematic as we've seen here (and also in a some other cases).
+> On most platforms, config/mem/io accesses to a device not in D0 result
+> in an error being logged, writes being dropped, and reads returning ~0
+> data.
 
-It would be possible to move the max for old_size outside of align so=20
-something like this instead of the patch you tested:
+On my arm64 / pcie-designware-based platforms, that is mostly similar,
+but there are some cases that are different. See below:
 
--       return ALIGN(max(size, old_size), align);
-+       return max(ALIGN(size, align), old_size);
+> I don't know the details, but I assume the fatal error is a problem
+> specific to arm64.
 
-That would not try to make the bridge window larger due to alignment than=
-=20
-what the old_size was, so it should still fit to its old range keeping=20
-its old size.
+Maybe. See my response here also:
 
-> I've added "lspci -v" output as well, which shows the bridge configuratio=
-n.
-> I'm still not sure that the address mappings between PCI and system bus a=
-re
-> 1:1.
->=20
-> So the BAR0 release patch from Lucas seems to be no longer required with =
-this,
-> although it does align the prefetchable area better, so in theory it woul=
-d
-> allow a 512G BAR to be mapped. In practice, there are no Intel dGPUs with=
- 512G
-> VRAM.
->
-> > There's indeed something messy and odd going on here with the resource =
-and
-> > window mappings, in the bad case there's also this line which doesn't m=
-ake
-> > much sense:
-> > +pci 0030:01:00.0: bridge window [mem 0x6200000000000-0x6203fbff0ffff 6=
-4bit
-> > pref]: can't claim; address conflict with 0030:01:00.0 [mem
-> > 0x6200020000000-0x62000207fffff 64bit pref]
->=20
-> > ...but that conflicting resource was not assigned in between releasing
-> > this bridge window and trying to claim it back so how did that
-> > conflicting resource get there is totally mysterious to me. It doesn't
-> > seem related directly to the the resize no longer working though.
->=20
-> That is the upstream bridge's BAR0 mapping, which is not a bridge window,=
- so
-> presumably the window allocation algorithm is unaware of it.
+  Re: [PATCH] PCI/sysfs: Ensure devices are powered for config reads
+  https://lore.kernel.org/all/aNMoMY17CTR2_jQz@google.com/
 
-Resource tree is independent of PCI's resource allocation algorithm. Now=20
-that I look the numbers and logs again, this doesn't look valid resource=20
-tree state (from iomem.good!):
+In particular, when resuming the system in a case where the link was in
+L2 and failed to resume properly, the PCIe controller may not be alive
+enough even to emit completion timeouts. So it might hit case (a):
 
-6200000000000-6203fbfffffff : pciex@620c3c0000000
-  6200000000000-6203fbff0ffff : PCI Bus 0030:01
-    6200020000000-62000207fffff : 0030:01:00.0
-    6200000000000-6203fbff0ffff : PCI Bus 0030:02
-      6200400000000-62007ffffffff : PCI Bus 0030:03
-        6200400000000-62007ffffffff : 0030:03:00.0
+  "PCIe HW is not powered [...] and this tends to be SError, and a
+  crash."
 
-6200020000000-62000207fffff and 6200000000000-6203fbff0ffff appear as=20
-siblings and those addresses conflict. It seems this "good" kernel is=20
-"cheating" by double counting addresses... ;-D
+Memory space is unique, because while config accesses can be
+intercepted/avoided by driver software, memory accesses cannot.
 
-I've now found the cause in part thanks to another reporter with=20
-similar impossible resource conflicts (an old bug in the resizing=20
-algorithm which is there since BAR resizing was introduced).
+> If the device is not in D0, we can avoid the problem here, but it
+> seems like we're just leaving a landmine for somebody else to hit
+> later.  The driver will surely access the device after resume, won't
+> it?
 
-It will take me a few days to fix all this as fixing the claim issue=20
-will make other domino bricks to fall so I'll have to refactor this=20
-pci_resize_resource() interface now, unfortunately.
+It's a possible landmine, yes. Although in my case, the link can go
+through error recovery and restore itself later in the resume process.
 
-> > > It's a bit weird that there is a log message that says "enabling devi=
-ce",
-> > > then
-> > > the BARs are reconfigured. I'd want the decoding logic to be inactive
-> > > while
-> > > addresses are assigned.
->=20
-> > So no real issue here and only logging is not the way you'd want it?
->=20
-> It works for the GPU, but I'm unsure about my FPGA designs now, for the m=
-ost
-> part, I would have expected that the "enable memory decoding" bit had to =
-be 0
-> while BAR registers are being written, and I would have expected the driv=
-er to
-> resize the BAR first, then enable the device.
+> Is it better to wait for a fatal error there?
+> 
+> Even if we avoid errors here, aren't we effectively claiming to have
+> restored the device state, which is now a lie?
 
-Lucas did move resizing earlier but I guess it still occurs after enabling=
-=20
-the device. I don't know enough about xe driver to say how early BARs=20
-could be resized.
+I'm not sure we claim that. The device will stay in PCI_D3cold, and
+pdev->state_saved will remain true.
 
---=20
- i.
---8323328-303087025-1761221295=:1016--
+But yes, it's a tricky situation to decide what to do next. My basic
+assertion is that it's not OK to continue to restore state though.
+
+Alternatives: pci_dev_set_disconnected()? pcie_do_recovery() /
+pci_channel_io_frozen?
+
+> Even on other platforms, if the writes that are supposed to restore
+> the state are dropped because the device isn't in D0, the result is
+> also not what we expect, and something is probably broken.
+
+Sure. IMO, that's even more reason not to run pci_restore_state(),
+because that will erroneously drop the state, and we'll have zero chance
+of restoring it later.
+
+Brian
 
