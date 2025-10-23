@@ -1,137 +1,130 @@
-Return-Path: <linux-pci+bounces-39167-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39168-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C973EC0257F
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:13:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB811C0258D
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:13:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 222264FB1F2
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:12:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB3F83ABA97
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:13:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1540F2D3ED2;
-	Thu, 23 Oct 2025 16:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 496DE2DAFA5;
+	Thu, 23 Oct 2025 16:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXtsxzp9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ssc1LJJh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D952F28504F;
-	Thu, 23 Oct 2025 16:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91634295DBD;
+	Thu, 23 Oct 2025 16:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761235862; cv=none; b=KylrdpjTvHk9Oqsx/YrMmDNM7KDpWopPKvNE1hSG3fF5egToLGVbX8wwYP4EFQNQS/pxm0gbDB3l80hZZfoGZrA7QK72PDvGwg+uWhe9n143vjCVTGjIC6Z1NA5yDZdttFkB5wj9hyqYD0/t9A/5pvYknAS/CJc4MDs2PDo+c6c=
+	t=1761235882; cv=none; b=A6yJICXOucUOpkQqxWnXD0HWLBdrPjr1lEhOMCTcinAoyHSEXjlmY3zVIEYCFvwzRUIW77kVclIpyxYpoTIOeqra72bXN8cOvIWcxrOtF3uVEpeQtBPXPXnwa8Rauv61uWeuLmgfeW5SqrgG3AhVacuE3fBpdY5XjQmenNNHlKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761235862; c=relaxed/simple;
-	bh=QoQ0G1vzfRKHWUkpNlMaZxVkeeSKpfz8eW4ukxGyOFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=CRKbZkrPUZONlhYPJ7OFbBPydaJtkGbanRihucswIX03R/I3SnQcyyRJFp2dARsToVvBT1SlurCtS4ETEdXaXr+BRlrUCoAhClIfkWb/tsxKTyl1BFjwvGG4+jOE3CDv4ZiDs5atumQqZ/r8jPL1WYK4CNdFRh9waMd1kMBGjVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXtsxzp9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37110C4CEE7;
-	Thu, 23 Oct 2025 16:11:01 +0000 (UTC)
+	s=arc-20240116; t=1761235882; c=relaxed/simple;
+	bh=vtdnEujN+5EGnXsa9gZxRMk9lx4CqDUgeqYrAsdXB3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lptMi+9SlO48E//HQ2YSecjJrO8AxwsMeno9deiuBFrRakP24H0QgF8ox5+ggof11QAWVJtl+Zh7T5VSF0AV/ps5r0CH3Z16PTXlwNTfhkjcjYUnBYPktmD04lQbfmqY9qa8t/u++tj65rPM1ImnzyP9sgqnIbopV5Z2yrSSpsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ssc1LJJh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDB9C4CEE7;
+	Thu, 23 Oct 2025 16:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761235861;
-	bh=QoQ0G1vzfRKHWUkpNlMaZxVkeeSKpfz8eW4ukxGyOFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YXtsxzp9O3qmvAboQgiGhtU2a4kOVmoOZAF18a40K9jWaODby5Dr5KkClDRCmRecB
-	 5Kwhfe9OVtuVJwx7qlFIa1qenNEhOQdQBQeGgPvf3lk0m6+mNz10ONzXFOpFn1jjIr
-	 KnAfYrzBAregsG25fnWb4MgB0VgFPDZdM6xqlySUvRHmA1c3X80Sx1UtHUntoeJfu+
-	 AbKhx8Y8ctx3lE2ly7QbBlNrFLoOe/j/gTTqV+cP5JNhmdetJjk0b7qZhQ1wtwzhGN
-	 KpS+Yc1Tj4SG7JVI4fFMWtkkhO2QkT0pkvm1HJLRz6uJzE0GfUQPYIuHjzYITZin/R
-	 kW8LtX2vAFT+g==
-Date: Thu, 23 Oct 2025 11:11:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stefan Roese <stefan.roese@mailbox.org>
-Cc: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
-	"Bandi, Ravi Kumar" <ravib@amazon.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	"Yeleswarapu, Nagaradhesh" <nagaradhesh.yeleswarapu@amd.com>
-Subject: Re: [PATCH v2] PCI: xilinx-xdma: Enable INTx interrupts
-Message-ID: <20251023161100.GA1297651@bhelgaas>
+	s=k20201202; t=1761235880;
+	bh=vtdnEujN+5EGnXsa9gZxRMk9lx4CqDUgeqYrAsdXB3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ssc1LJJhPTSzQlQIdEbHNwBQs+Nj+JtVa+41YYR8nUtpbe7NP2c2/L0ZHnFagoAkY
+	 fkxKK51zWvnrYitxyZVma56B8wnQoRiMS8r3H/D13rPv7bbQGWSYsTxtfb9fWmQ81/
+	 zE5SzCYZ8OK5hRrZwDBQ4GnPClgOPkpBk9XmWfT5z7BsCZ6m/ogNHVM/0YLaf0jI+R
+	 WXam7+ZXifG2u8TkCxJCPaOkHTD4Fldqj7Q43VP4wl4A7bWM58mHLWf90SFFIwzKCL
+	 tssxsFSqXD0sHvJu3hoxlyz0PAm1L1/nts8x3xb0z1psl5G9X2mHuEymyUDMfzh9op
+	 3O4Rjd3dIwa4w==
+Date: Thu, 23 Oct 2025 18:11:18 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Guenter Roeck <linux@roeck-us.net>, 
+	Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Georgi Djakov <djakov@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-media@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+Message-ID: <4iitvr64hrxoj6pwl32bvd7erc3uwfp5pcfiunpumhskzpnmph@g3xhro7zb5qa>
+References: <20251023143957.2899600-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vogfejml6xdyeipj"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c7e43c3-24e9-4b08-a6ce-2035b50226f4@mailbox.org>
+In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
 
-On Thu, Oct 23, 2025 at 09:03:07AM +0200, Stefan Roese wrote:
-> On 10/23/25 08:35, Musham, Sai Krishna wrote:
-> > > -----Original Message-----
-> > > From: Stefan Roese <stefan.roese@mailbox.org>
-> > > On 10/22/25 14:48, Musham, Sai Krishna wrote:
-> ...
 
-> > > > > > We even don’t need ravi patch, as we have tested this at
-> > > > > > our end it works fine by just updating interrupt-map
-> > > > > > Property. We need to now understand the difference in
-> > > > > > design.
-> > > > > 
-> > > > > Ok, please let us know with your findings. In the meantime,
-> > > > > I'll keep Ravi's patch in tree, as it seems to be required
-> > > > > on his setup.
-> > > > 
-> > > > We tested on Linux version 6.12.40 without applying either
-> > > > Stefan's or Ravi's patches.  Instead, we applied only the
-> > > > following interrupt-map property change (entries 0,1,2,3) and
-> > > > verified that legacy interrupts are working correctly.
-> > > > 
-> > > > interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
-> > > > <0 0 0 2 &pcie_intc_0 1>,
-> > > > <0 0 0 3 &pcie_intc_0 2>,
-> > > > <0 0 0 4 &pcie_intc_0 3>;
-> > > > 
-> > > > 38:       1143          0  pl_dma:RC-Event  16 Level     80000000.axi-pcie
-> > > > 39:       1143          0  pl_dma:INTx   0 Level     nvme0q0, nvme0q1
-> > > 
-> > > Okay. Same here. I don't need Ravi's patch for the INTx bit
-> > > enabling.
-> > > 
-> > > I understand that you want us to change the interrupt map in the
-> > > auto- generated device-tree from Vivado. Which is IMHO a bit
-> > > "suboptimal".
-> > > 
-> > > I would prefer to have a solution which works out-of-the-box,
-> > > w/o the need to manually change DT properties. Is it planned to
-> > > change / fix this interrupt map in pl.dtsi generated with a
-> > > newer version of Vivado?
-> > 
-> > Yes Stefan, this will be fixed in the newer versions and the
-> > auto-generated device tree will include the correct interrupt-map
-> > property entries.
-> 
-> Understood. And thanks the update on this.
-> 
-> @Bjorn & Mani, this patch can be dropped then.
+--vogfejml6xdyeipj
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+MIME-Version: 1.0
 
-Just to confirm, we can drop both of these patches:
+Hello Rob,
 
-  https://patch.msgid.link/20250920225232.18757-1-ravib@amazon.com
-  https://patch.msgid.link/20251021154322.973640-1-stefan.roese@mailbox.org
+On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
+>  .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml     | 1 -
 
-AND there are no DTs in the field that will need to be updated for
-things to work?
+I have nothing pending for this file, and even if, any conflict is
+likely trivial. So feel free to take this change via your tree.
 
-It's OK if you need to update internal DTs that haven't been shipped
-to users, but we do not want to force users to update DTs that have
-previously been working.
+Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org> # for allwinner,sun4i-a1=
+0-pwm.yaml
 
-Bjorn
+Best regards
+Uwe
+
+--vogfejml6xdyeipj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmj6U6MACgkQj4D7WH0S
+/k4RaAf/fCWD+WfbVDOAhcR/7epkQB2tQn+JLBXBxasNnAoyAylmxOooXhE4hfhj
+SU4fMYQlp3veFvx5y8tNYc3sFcgDQf67pKLQT0G8IVx8zxkZemL6SxFJi1IwFKSA
+Q/8MhcPqloQ11C2d/hakVfGh6b/qfDRIdDpJYesPgIQF3Qt9HUGchUGWkxhugoca
+iKITZ2Yf10aMr9chCSazkIHNX2Hpv2qXMJM2tCZXcgHCMhN2AYn+qtsfpBxVz3H7
+cSqvL+mtqXvx0TwEX2G/SfX1f8Jeh3qKN82uS6IJt+tR/Dgs5uIlxJz5h+dIZ3cW
+Mtoip3h3HRFtcP+gNdXc333IYQ0g3A==
+=azcw
+-----END PGP SIGNATURE-----
+
+--vogfejml6xdyeipj--
 
