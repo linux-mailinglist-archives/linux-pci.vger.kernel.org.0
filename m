@@ -1,35 +1,36 @@
-Return-Path: <linux-pci+bounces-39143-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39142-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAC2CC0105C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 14:13:44 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 313DBC010D6
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 14:16:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0455F349CDB
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 12:13:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8D9B05089A2
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 12:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8F293126A8;
-	Thu, 23 Oct 2025 12:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3F03112DC;
+	Thu, 23 Oct 2025 12:13:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDDE30AD04;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79616310636;
 	Thu, 23 Oct 2025 12:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761221612; cv=none; b=lAf9uO2V5bNshtaRYF+Ep/HwicU+V9baaZT0vJjjFCOitQucRAYrgJtb7snyP+KVgkH8/7rIIGxVTeKeci5KlcSztH9p044YIa4aexpcPDwklJB7o6aEq62bkx3IltrKupuNf6NKMuT65VAcsDf6e+OA/I7WuFmnAK8MMk7U/So=
+	t=1761221607; cv=none; b=RItQJZhxRietNg2cn5wyQE18PAz0FPzJYP7ENUSSflYf54Zqja3Bf71l7t53ievj5wfdXdDu6WXXFFN8kyX2x26fMhucvPCG2NVDYAs+Z4eV8x3MdX/4OTnwwiJ2t74tgvtidDRlr8h4ndABoXxsfhkBQ4Az9LTU7mRpZMiLVoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761221612; c=relaxed/simple;
-	bh=E+i4TInBClPj84mlYx0Hg88NApGQgSSh/7BOT4A7hTU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kOFCHRbEHyqGGG+ayYJgXxiOiMywY3q0yTGMqy3K5B1foegXs80db3hpAY+v+CIYuFdIv8GYCACzMv4zE05HKhIrr5ZclezPWPOieRzuUlyx5CKuj6SVJchezWN4gfXYK6ChDVO5NAifc+jlt7l3E15f0TP8qXUIiGe7wNjLg4o=
+	s=arc-20240116; t=1761221607; c=relaxed/simple;
+	bh=K1YfCLu2miAV1FG3bUy3P0u/fw6TB46podeEwDQPbX4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V29zdkP8o+Pp01JJhsiG3OYrF5FUKBSpVrXYKjTulZQlxyJsbZnAdi6WFxziH+R34NaY4e5eMTOhDA817DDTKYYSPib/AH+F8FHKgLNsjeejFFOZquMHLfKv56C6wvgtyCx+JsBuaRvUhusfRX0ToEYm2lMWE5p9y/VVG9LqMGw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 59NC9fwl039374
+	by Atcsqr.andestech.com with ESMTPS id 59NC9f6n039375
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 23 Oct 2025 20:09:41 +0800 (+08)
 	(envelope-from randolph@andestech.com)
@@ -48,10 +49,12 @@ CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
         <shradha.t@samsung.com>, <pjw@kernel.org>, <randolph.sklin@gmail.com>,
         <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
-Subject: [PATCH v9 0/4] Add support for Andes Qilai SoC PCIe controller
-Date: Thu, 23 Oct 2025 20:09:29 +0800
-Message-ID: <20251023120933.2427946-1-randolph@andestech.com>
+Subject: [PATCH v9 1/4] dt-bindings: PCI: Add Andes QiLai PCIe support
+Date: Thu, 23 Oct 2025 20:09:30 +0800
+Message-ID: <20251023120933.2427946-2-randolph@andestech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251023120933.2427946-1-randolph@andestech.com>
+References: <20251023120933.2427946-1-randolph@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,71 +66,109 @@ Content-Type: text/plain
 X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 59NC9fwl039374
+X-MAIL:Atcsqr.andestech.com 59NC9f6n039375
 
-Add support for Andes Qilai SoC PCIe controller
-
-These patches introduce driver support for the PCIe controller on the
-Andes Qilai SoC.
+Add the Andes QiLai PCIe node, which includes 3 Root Complexes.
+Only one example is required in the DTS bindings YAML file.
 
 Signed-off-by: Randolph Lin <randolph@andestech.com>
-
 ---
-Changes in v9:
-- Drop the patch that adjusts the number of OB/IB windows.
-- Made minor adjustments based on the reviewer's suggestions.
-
-Changes in v8:
-- Fix the compile error reported by the kernel test robot.
-
-Changes in v7:
-- Remove unnecessary nodes and property in DTS bindings
-
-Changes in v6:
-- Fix typo in the logic for adjusting the number of OB/IB windows
-
-Changes in v5:
-- Add support to adjust the number of OB/IB windows in the glue driver.
-- Fix the number of OB windows in the Qilai PCIe driver.
-- Remove meaningless properties from the device tree.
-- Made minor adjustments based on the reviewer's suggestions.
-
-Changes in v4:
-- Add .post_init callback for enabling IOCP cache.  
-- Sort by vender name in Kconfig 
-- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
-- Made minor adjustments based on the reviewer's suggestions.
-
-Changes in v3:
-- Remove outbound ATU address range validation callback and logic.
-- Add logic to skip failed outbound iATU configuration and continue.
-- Using PROBE_PREFER_ASYNCHRONOUS as default probe type.
-- Made minor adjustments based on the reviewer's suggestions.
-
-Changes in v2:
-- Remove the patch that adds the dma-ranges property to the SoC node.
-- Add dma-ranges to the PCIe parent node bus node.
-- Refactor and rename outbound ATU address range validation callback and logic.
-- Use parent_bus_offset instead of cpu_addr_fixup().
-- Using PROBE_DEFAULT_STRATEGY as default probe type.
-- Made minor adjustments based on the reviewer's suggestions.
-
-Randolph Lin (4):
-  dt-bindings: PCI: Add Andes QiLai PCIe support
-  riscv: dts: andes: Add PCIe node into the QiLai SoC
-  PCI: andes: Add Andes QiLai SoC PCIe host driver support
-  MAINTAINERS: Add maintainers for Andes QiLai PCIe driver
-
- .../bindings/pci/andestech,qilai-pcie.yaml    |  86 ++++++++
- MAINTAINERS                                   |   7 +
- arch/riscv/boot/dts/andes/qilai.dtsi          | 106 ++++++++++
- drivers/pci/controller/dwc/Kconfig            |  13 ++
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-andes-qilai.c | 198 ++++++++++++++++++
- 6 files changed, 411 insertions(+)
+ .../bindings/pci/andestech,qilai-pcie.yaml    | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-andes-qilai.c
 
+diff --git a/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml b/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+new file mode 100644
+index 000000000000..7eca3be2c8f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/andestech,qilai-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Andes QiLai PCIe host controller
++
++description:
++  Andes QiLai PCIe host controller is based on the Synopsys DesignWare
++  PCI core.
++
++maintainers:
++  - Randolph Lin <randolph@andestech.com>
++
++allOf:
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    const: andestech,qilai-pcie
++
++  reg:
++    items:
++      - description: Data Bus Interface (DBI) registers.
++      - description: APB registers.
++      - description: PCIe configuration space region.
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: apb
++      - const: config
++
++  ranges:
++    maxItems: 2
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-names:
++    items:
++      - const: msi
++
++required:
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pcie@80000000 {
++        compatible = "andestech,qilai-pcie";
++        device_type = "pci";
++        reg = <0x0 0x80000000 0x0 0x20000000>,
++              <0x0 0x04000000 0x0 0x00001000>,
++              <0x0 0x00000000 0x0 0x00010000>;
++        reg-names = "dbi", "apb", "config";
++
++        linux,pci-domain = <0>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        ranges = <0x02000000 0x00 0x10000000 0x00 0x10000000 0x0 0xf0000000>,
++                 <0x43000000 0x01 0x00000000 0x01 0x0000000 0x1f 0x00000000>;
++
++        #interrupt-cells = <1>;
++        interrupts = <0xf>;
++        interrupt-names = "msi";
++        interrupt-parent = <&plic0>;
++        interrupt-map-mask = <0 0 0 7>;
++        interrupt-map = <0 0 0 1 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                        <0 0 0 2 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                        <0 0 0 3 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>,
++                        <0 0 0 4 &plic0 0xf IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
++...
 -- 
 2.34.1
 
