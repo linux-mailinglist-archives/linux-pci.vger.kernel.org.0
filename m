@@ -1,187 +1,198 @@
-Return-Path: <linux-pci+bounces-39127-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39128-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16252C0045A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 11:35:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FB3AC0055C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 11:45:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B6381359174
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 09:35:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6C253B06C9
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 09:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DB43090FF;
-	Thu, 23 Oct 2025 09:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970D0309EE5;
+	Thu, 23 Oct 2025 09:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LAGjg/LN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dP9LsCas"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBF5308F3B
-	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7001C3090C9
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 09:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761212108; cv=none; b=jLLY434wYtx62wEELQSAFkmofdLgtbD+KfpKko6Hc0jDiK8zZ71sReuQhpePOs4iicS2hpkQpjApNhncog4/inQy7IPny9t13OWkLaV1kFNfrBa05opAI/Jwt81j5HX1o3bMIs8tceGe7+Jx25q1twvj7tS+Fxk4/MtPv5HiWs8=
+	t=1761212512; cv=none; b=hfsVDwW9CNeRjfQuqcEij4Zht6exhskTpgDRdG50cW5HDv6BNUAftEo/xDykPt8lb+ghnNnt6oLOgahtGuKZ2Ke1KzrixRtAMtVE0ioa5moqIhVSqvhg/6Lqkv0wY/cACfjHZKVVBxg0XW4oD3TJzSHRE7j2xK+xZ3AaGlZMZJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761212108; c=relaxed/simple;
-	bh=gr0dkUJNASEf8ceLwJeoMt7S2QkV0+GSeA/fQen8xEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R8+pTPbkM8ruV5jRF8biqqJ65cjas2hVuc+XwRr0VaD2cRDr3/T4/BE1Aj5Yrn1LgdvOWqjMY72JWtXKgZj94VrX4gj0rt2DpqIc4QIsekIRqOLXS9qNzYMjgzz/Wa3YjyzckyaLCQFismK+goQGiISA7X2k5wAp7noiF4bbUGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LAGjg/LN; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-63b9da57cecso921503a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 02:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1761212102; x=1761816902; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qmowm21Hpqw+4/AYI01vQqCJ4eLpZHCFp6rzVE34vCo=;
-        b=LAGjg/LNsoWublYuwHxkxpNFpknkztEzAr0LhtkVk32FiWJV9qFe9T4hwgdeDzKtYi
-         jyJTMSakaeDWslKxd1155GbWPJz+SvC5eOiUj9oGArG2xZtz7IY5fugwY/e9fSy/0fqY
-         6ZgKlU0NI5iXmek23gEk/997gf72XHcMRloSnaCiO+UaKe/GUrk0JFzD2nFAssIqWrC8
-         UodTRZbcUnUF6UQDzyTWV4mz+GXS/bL5PQIcS1EIb8zsdryjVcdlvn9sy5j2bl4Ayjty
-         peWYlZ2YO/rJ/8f+/GrEhMITQp3xxAYoVQKph4j/wVAzOGisIoXBA7EtevR/VFGK8Kon
-         1gEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761212102; x=1761816902;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmowm21Hpqw+4/AYI01vQqCJ4eLpZHCFp6rzVE34vCo=;
-        b=XkpN8FwAkYUhswtLo/DUnGk+dPFyCIPm0C2BAZC2rrfAbcqwhOHdBObaIXeXn509tm
-         y/gYlG4S+HoeF41AIVIY7RDloaGFkLUu8kjZaOjU1A3bq+Io3s6DYAFBBEuXP1RarmW8
-         Kgab/6kO1XpCdL+WSwH95qN9SXu/bKIgjDIOwFgupqGpAvpPt7c/vIXvz6xX8/0fwT3X
-         Ytg+rLAGUgAPAEulVSPTVShx04T2meWPsrsRVhgSdmvj5VonBSTjfXbpbZ7ik6vuA/x5
-         Fx/nikatr3VcZA15RQp3nXQfboPDLQLohbuZI8Fdv7Aw2L1IlxDX/VLhXFGfC3YJeBCJ
-         KoxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyrbo4gSn/ekX1xU6vIK1y8WfpZigGK3wWzglg+TGPdd7pIJ/knWw3T+JG1GXy1o3rnB1dxA89dAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFH+aQnfPeAWQU6uM+vU2hq+xRtCXnrg7rEgKuTDDv1xQp9M/i
-	IqH0Lv7CWeWSCaO4pwNYC9+8Um9G94vFSntJRqsOpp16pRvxKpYqlbYb7yblqGFm+bA=
-X-Gm-Gg: ASbGncubLc1ISzpEY4ShCaxR8tTdMrPlW1HJD5Br6pbqnrZdi/eL2EwkyNF+Z3Gzgaf
-	gv6fWfSM3kQ1CFfqtAoviy7c2Qyc5XIK+U3hKtANq6sEElxGmDZDlkQlel0p90qWcqP8HzfgseE
-	71P6qy5tAHXVevs7vZhCKqpll1hNroLB9AHVp1GTFajuVJ0gJGw7wd6NY6YNBdQ3rFyiUDi37GW
-	gw8t3e8mmwTO+vmmfttmRh737nkIAFNUDIBLTbqyhZLPgcp/K8vW1mqzj6EKQHoB8yBCrLm93PL
-	A3KuBj4PtqgNXp9DQOTJCAkDjU0n75NVIp1ox/UWx5PjKPc30gaAqqWt9vdsNrTpCarTnTYzgjk
-	gCpL1d275Bxo1aMvPyTKlZBNF1j33t5QV/zYHTQPP54t9pIwoNo3HO1J5j1JtUU02XS75TsklNg
-	ORWpXe1dypUXqmfYU3AGqGYtKKNLjSXQ==
-X-Google-Smtp-Source: AGHT+IFGTq4/7TP6ZCRMZYcsJ7erefXsS1HrT5neWmXnbi7qAKyTavrz98f5qajkgOWdme7WJ3OhAA==
-X-Received: by 2002:a05:6402:510b:b0:639:dd3f:f25d with SMTP id 4fb4d7f45d1cf-63c1f631b53mr22474619a12.7.1761212101707;
-        Thu, 23 Oct 2025 02:35:01 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.151])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63e3f32366csm1257905a12.30.2025.10.23.02.34.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Oct 2025 02:35:01 -0700 (PDT)
-Message-ID: <6c69d2a2-5dfe-450f-8a39-2ef6e7a6dbea@tuxon.dev>
-Date: Thu, 23 Oct 2025 12:34:59 +0300
+	s=arc-20240116; t=1761212512; c=relaxed/simple;
+	bh=x39im17yCpKlBZK/OHzKxjKDvrvbrR9VUmbw5G3Mn5Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nlez+ZeDZEMlynLPcfI88eIRt4edcY3+hL0Zk/ce1GqykcZW57lQgdmadD1pJmtmohRdwF0LiIUYGWoUOSbhebl65CkQGNYT/HK2LAtOIFDihXr8LJqNUU5GYrGcE/nooNc89hQmSfeCKQYsbOkGIzYTso/fd51xVE+VTXitnds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dP9LsCas; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E3BC4CEFD
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 09:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761212512;
+	bh=x39im17yCpKlBZK/OHzKxjKDvrvbrR9VUmbw5G3Mn5Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dP9LsCas8r39cetxoBMH1TYsC96yxmMVIvM/r3khzXhORq95c4D/IDRstcDghULeV
+	 l9c/3ytfXNKbI17fEA+6f0I2OmT3ixJnG0XnZmoJwIQKo2lu6XPL4mY9X4ue2CZbIM
+	 Ju28DsF64+CgWglBJpsNsYalbHMnij/yExBbeghbEeohWPFdfRGTpqEZEnvDIU0Xn9
+	 e4eW7pxBbZOdCTsBWOjt4Kdz0Xbmlr1nxS3COtzwpfUF9/oOKWYxjziTVe1pf8/fij
+	 8bCvbwqEw+5gGEJjlbJspMwB8pdkdHhY0gVy9CZL/kUVCx24dYRxxEHpW0MRtFcdcw
+	 HraksUPBlOs7g==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-443ac891210so283727b6e.1
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 02:41:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVhn0WXJ2tUWn3cyTi/yeTZ5Dsq7MyO3kSC7yYJQPtqgKMGFBqLGFOHYoJ+XrK/ERqJCMQ3SfjLjpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWFO4bTA0eREwPpF7nqC0bDj9JcCccBiQ1D39KuRHo1sVPh0HX
+	eDeKVKa5cBf5PRwmryJgm9O2hQ38zPc89Y0qTSMXf6sXiWfTMBKfbu5CSgL6jtOAIm4n1iMq6+T
+	IfLaeSsPjXUkwlUYCZ4TXwWA2NJIEXfY=
+X-Google-Smtp-Source: AGHT+IHx6vGcGv+vrMCHVYpCy9BVAaGKKr2CW9FBcS0RiH5DcbhljvnheCDcmlpQzXIY6wqKg6m4mu4Ybp34n+1tPz8=
+X-Received: by 2002:a05:6808:190d:b0:442:9a9f:daa9 with SMTP id
+ 5614622812f47-443a314f730mr11086008b6e.45.1761212511413; Thu, 23 Oct 2025
+ 02:41:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
- driver
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20251007133657.390523-1-claudiu.beznea.uj@bp.renesas.com>
- <20251007133657.390523-3-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdXF14x68Wk5YdOBS2D2N6LtnQjfGzrsMdSJegX-gc3faQ@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAMuHMdXF14x68Wk5YdOBS2D2N6LtnQjfGzrsMdSJegX-gc3faQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251022141434.v3.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+In-Reply-To: <20251022141434.v3.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 23 Oct 2025 11:41:38 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ieBdfuu_OF5YQsgsgy_L3H-UkVvn+kk45UFDfJSBtj0g@mail.gmail.com>
+X-Gm-Features: AS18NWDdb53hqfTM27k2OD16kpBKtv8BqC3y9LRdXe9K1AoiTPRwUbDpxSMcJ78
+Message-ID: <CAJZ5v0ieBdfuu_OF5YQsgsgy_L3H-UkVvn+kk45UFDfJSBtj0g@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/PM: Prevent runtime suspend before devices are
+ fully initialized
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Geert,
+On Wed, Oct 22, 2025 at 11:15=E2=80=AFPM Brian Norris <briannorris@chromium=
+.org> wrote:
+>
+> Today, it's possible for a PCI device to be created and
+> runtime-suspended before it is fully initialized. When that happens, the
+> device will remain in D0, but the suspend process may save an
+> intermediate version of that device's state -- for example, without
+> appropriate BAR configuration. When the device later resumes, we'll
+> restore invalid PCI state and the device may not function.
+>
+> Prevent runtime suspend for PCI devices by deferring pm_runtime_enable()
+> until we've fully initialized the device.
+>
+> More details on how exactly this may occur:
+>
+> 1. PCI device is created by pci_scan_slot() or similar
+> 2. As part of pci_scan_slot(), pci_pm_init() enables runtime PM; the
+>    device starts "active" and we initially prevent (pm_runtime_forbid())
+>    suspend -- but see [*] footnote
+> 3. Underlying 'struct device' is added to the system (device_add());
+>    runtime PM can now be configured by user space
+> 4. PCI device receives BAR configuration
+>    (pci_assign_unassigned_bus_resources(), etc.)
+> 5. PCI device is added to the system in pci_bus_add_device()
+>
+> The device may potentially suspend between #3 and #4.
+>
+> [*] By default, pm_runtime_forbid() prevents suspending a device; but by
+> design [**], this can be overridden by user space policy via
+>
+>   echo auto > /sys/bus/pci/devices/.../power/control
+>
+> Thus, the above #3/#4 sequence is racy with user space (udev or
+> similar).
+>
+> Notably, many PCI devices are enumerated at subsys_initcall time and so
+> will not race with user space. However, there are several scenarios
+> where PCI devices are created later on, such as with hotplug or when
+> drivers (pwrctrl or controller drivers) are built as modules.
+>
+> [**] The relationship between pm_runtime_forbid(), pm_runtime_allow(),
+> /sys/.../power/control, and the runtime PM usage counter can be subtle.
+> It appears that the intention of pm_runtime_forbid() /
+> pm_runtime_allow() is twofold:
+>
+> 1. Allow the user to disable runtime_pm (force device to always be
+>    powered on) through sysfs.
+> 2. Allow the driver to start with runtime_pm disabled (device forced
+>    on) and user space could later enable runtime_pm.
+>
+> This conclusion comes from reading `Documentation/power/runtime_pm.rst`,
+> specifically the section starting "The user space can effectively
+> disallow".
+>
+> This means that while pm_runtime_forbid() does technically increase the
+> runtime PM usage counter, this usage counter is not a guarantee of
+> functional correctness, because sysfs can decrease that count again.
+>
+> Link: https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883b=
+d2b4ef475155c7aa72b@changeid/
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Cc: <stable@vger.kernel.org>
+> Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> ---
+>
+> Changes in v3:
+>  * Add Link to initial discussion
+>  * Add Rafael's Reviewed-by
+>  * Add lengthier footnotes about forbid vs allow vs sysfs
+>
+> Changes in v2:
+>  * Update CC list
+>  * Rework problem description
+>  * Update solution: defer pm_runtime_enable(), instead of trying to
+>    get()/put()
+>
+>  drivers/pci/bus.c | 3 +++
+>  drivers/pci/pci.c | 1 -
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index f26aec6ff588..fc66b6cb3a54 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/slab.h>
+>
+> @@ -375,6 +376,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+>                 put_device(&pdev->dev);
+>         }
+>
+> +       pm_runtime_enable(&dev->dev);
+> +
+>         if (!dn || of_device_is_available(dn))
+>                 pci_dev_allow_binding(dev);
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b14dd064006c..f792164fa297 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3226,7 +3226,6 @@ void pci_pm_init(struct pci_dev *dev)
+>         pci_pm_power_up_and_verify_state(dev);
+>         pm_runtime_forbid(&dev->dev);
+>         pm_runtime_set_active(&dev->dev);
 
-On 10/23/25 11:00, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Tue, 7 Oct 2025 at 15:37, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
->>
->> Hardware manual can be downloaded from the address in the "Link" section.
->> The following steps should be followed to access the manual:
->> 1/ Click the "User Manual" button
->> 2/ Click "Confirm"; this will start downloading an archive
->> 3/ Open the downloaded archive
->> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
->> 5/ Open the file r01uh1014ej*-rzg3s.pdf
->>
->> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
->> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Thanks for your patch!
-> 
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
-> 
->> +static void rzg3s_pcie_irq_compose_msi_msg(struct irq_data *data,
->> +                                          struct msi_msg *msg)
->> +{
->> +       struct rzg3s_pcie_msi *msi = irq_data_get_irq_chip_data(data);
->> +       struct rzg3s_pcie_host *host = rzg3s_msi_to_host(msi);
->> +       u32 drop_mask = RZG3S_PCI_MSIRCVWADRL_ENA |
->> +                       RZG3S_PCI_MSIRCVWADRL_MSG_DATA_ENA;
-> 
-> This should include bit 2 (which is hardwired to zero (for now)),
-> so I think you better add
-> 
->     #define RZG3S_PCI_MSIRCVWADRL_ADDR  GENMASK(31, 3)
-> 
->> +       u32 lo, hi;
->> +
->> +       /*
->> +        * Enable and msg data enable bits are part of the address lo. Drop
->> +        * them.
->> +        */
->> +       lo = readl_relaxed(host->axi + RZG3S_PCI_MSIRCVWADRL) & ~drop_mask;
-> 
-> ... and use FIELD_GET() with the new definition here.
+Actually, I think that the two statements above can be moved too.
 
-Bits 31..3 of RZG3S_PCI_MSIRCVWADRL contains only bits 31..3 of the MSI
-receive window address low, AFAIU. Using FIELD_GET() for bits 31..3 on the
-value read from RZG3S_PCI_MSIRCVWADRL and passing this value to
-msg->address_lo will lead to an NVMe device not working.
+The pm_runtime_forbid() call doesn't matter until runtime PM is
+enabled and it is better to do pm_runtime_set_active() right before
+enabling runtime PM.
 
-The documentation of RZG3S_PCI_MSIRCVWADRL on bits 31..3 specifies: "Set
-the MSI receiving window's Start Address [31:3]. However, they must be aligned
- to the size set by the MSI Receive Window Mask"
-
-The RZG3S_PCI_MSIRCVWMSKL have the last 2 bits set to 0x3, always, as of
-the current documentation.
-
-The value written to RZG3S_PCI_MSIRCVWADRL in rzg3s_pcie_msi_hw_setup() is
-aligned to 128 (RZG3S_PCI_MSI_INT_NR * sizeof(u32)) and thus bits 2..0 will
-be zero, and so, these bits are used by HW to allow us, e.g., to enable the
-MSI window.
-
-RZ/G3E have 64 MSI interrupts and this will be aligned to 256, thus, the
-last 3 LSB bits of the address written to RZG3S_PCI_MSIRCVWADRL will always
-be zero (at least with the current known setups) and we can use the
-register RZG3S_PCI_MSIRCVWADRL as proposed in this patch.
-
-Due to these I haven't added more alignment constraints on the value set in
-RZG3S_PCI_MSIRCVWADRL.
-
-Thank you for your review,
-Claudiu
+> -       pm_runtime_enable(&dev->dev);
+>  }
+>
+>  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
+> --
 
