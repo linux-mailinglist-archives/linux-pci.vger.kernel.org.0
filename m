@@ -1,189 +1,186 @@
-Return-Path: <linux-pci+bounces-39151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9756FC01A2E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:07:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4572BC01CD1
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:34:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 78DAA4E532A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 14:00:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46A673A0F9F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 14:29:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0632FD69D;
-	Thu, 23 Oct 2025 13:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V6qssH8P"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5E0F3148B9;
+	Thu, 23 Oct 2025 14:29:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012068.outbound.protection.outlook.com [40.93.195.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC7828E00;
-	Thu, 23 Oct 2025 13:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761227985; cv=fail; b=iaFBv8NToLHs1UmyWsXIUlZ+PGIrG49SedPsMY9cBbMrGh6cFg71rOpgjhBxClyAVas0Oqh+QpwRKol68g47YnUWcw6oG+02xjwpKg1xl0a/65ojkyXhQACRzmX6x5Q8eG2tIVN3WLXUPPGxk3ZwvRVeSdx9m9SmU2ZuIdyjx3Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761227985; c=relaxed/simple;
-	bh=vdeI2j2aL4sOlZYMXD8cWIo4esfdj+jEP2LIwDcPU7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NFeOY0szvhXvFP7k51QZwfO0oKQOkTkCjUezFz5CbGZoViZi92hdSUUrQecvkiGnnMQLkpTF2VRUpRGLSb1n4hiOrKe3uSqWSWUNF2/q7hNIVGWOkFQ3j3TD4f8CCcVccpJW/D8NML4ZDNOi4fJwF/5zcIHquCPLtHptZXz/Y6s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=V6qssH8P; arc=fail smtp.client-ip=40.93.195.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SakdzM5Jg5ELLemdK3zqJTi6rvQsdNaaAQeVNevU67dc58zG7HHz9CVw8pu5HOy4uIXKggzYHFJH75V0wT98q5iyI1QQ87NjcpcqzzwGS8bYgvnIGqM9Q5/0wE33zJSa8dY3aLWpu3z3+t4eRVAWUxKO/kAz4gBxosFDpSQ63m5rG5MeAaUwuNCcfLVzSprW3/h3EBwmhCHi2g/Kg5Mvk2TrXVhmwDJsFB1/N3apUtcTbQGX7FlvPbAes0/fM9b6BPADBEeE30BO8GWRX3TsJ6B5xm3jZy0gSoaEHbKXQKYgoQDWu2mbqNGD3a7YumfvsSLWRBT50h8Bs6IUzyYVMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S/E1k9lUTnvsMxCa/kjJ3lCG15IbZz2ZmYbE7HE1yyg=;
- b=JlfjtHhjQFsbGhI+hXqBByyDQUWK8/FU/eMHVcogIn1cJYaGts/2i248R4t7gE9xjS89GGjxR6t2j6PA4SBPbgjCpPGZXEGo7+p4CT5HEj2Y5gxLQk/CsSB74NTQthQyLu70YrolTcj8eAmlKZWNvAqTt17gw/uGAYDdzFtoVceiPcPvjo9GEBt5pPiFdmGpwcLB4OTA9T53ULxdt3vIduVo5czJ1Jm7KjoFvdc1CqJSV7kP0FnSO4OG0WSY5/JORxYwZ3NCyQx54hq4pLwUXFlBV+amdy07Av4P+iswu3BWW6O0A0dswHJBfQOwlYcVsO50sFGLbtto9L+KZWMxGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S/E1k9lUTnvsMxCa/kjJ3lCG15IbZz2ZmYbE7HE1yyg=;
- b=V6qssH8Pxubg1ViQrLGLSVNq1Fg4nyIcDBJpRnMNZDUMoU7Bzty24t1kDWt6NtVk3ZV32KSX0IICgzizy+yfiR8o/okz3tdNHQyr32fzLX+YKhKqWZGWzNxScNuHJbt9YBWMMW3OxZRonHoxHrcQOQjV1KDdyKpxlh9FTrd+gHY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- MW3PR12MB4457.namprd12.prod.outlook.com (2603:10b6:303:2e::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.10; Thu, 23 Oct 2025 13:59:41 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.9253.011; Thu, 23 Oct 2025
- 13:59:40 +0000
-Date: Thu, 23 Oct 2025 09:59:35 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
-	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux@roeck-us.net, mario.limonciello@amd.com,
-	naveenkrishna.chatradhi@amd.com,
-	platform-driver-x86@vger.kernel.org, suma.hegde@amd.com,
-	tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-Message-ID: <20251023135935.GA619807@yaz-khff2.amd.com>
-References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
- <20251022011610.60d0ba6e.michal.pecio@gmail.com>
- <20251022133901.GB7243@yaz-khff2.amd.com>
- <20251022173831.671843f4.michal.pecio@gmail.com>
- <20251022160904.GA174761@yaz-khff2.amd.com>
- <20251022181856.0e3cfc92.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022181856.0e3cfc92.michal.pecio@gmail.com>
-X-ClientProxiedBy: BL1PR13CA0307.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::12) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF1314D14
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 14:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761229771; cv=none; b=ribP4SoaYpTzBtWKN7p4hFk9dtNklSaZG6x3kZmUe1dmxBhIOVcw9VCALauwLWwg6EH43aUeIHfIoP39woTat7tAR9u6BZ2LMz678Vl19bcQrho0Aon8kc0ReawFu/2S+A16yP99PhsV0JO0NN9QHh4oa0LOi6eslbJjXib2NNs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761229771; c=relaxed/simple;
+	bh=TR7zlOg9lSlA9ANoIApwm25S9VrQTmkZ7BlIZp3yWzs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HMjPhPioia4s1HJ2znetl7XnjnQJBkdQ/eA1wheXZgHa5nya+pUvZWfErDm0TRIDYrJwQgJpI2nmGYpFi9psflVUT4ftSDH/oKmZszJYBWci+C2Iec8f+tkNSxzpubs2xwNCy8Le9pmDmHPglh3SoGnZ/Otz4hldK9JXDh6aBh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7b4f7a855baso676247a34.3
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 07:29:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761229768; x=1761834568;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pUiJSOGezbV9/gcxRXe7vCcpv1VybDaME+fAsfjpYbw=;
+        b=dcDl9k+MiX9Y+YawFo8gBT5dFdHhI93TS+SQkWfS5TgoUikMi9bjjBfWmtxKvSvfEx
+         84RSskhkypedjtVBcd9Wq0GKQksCyrk6pbIJFaI32/yGt29qowbfxjh1hgSixTaHZW3f
+         S675IS1MEEezB1XXdqhTP/+dbCQeFxvnirusj8pZyXVgqf6qRPlWgQBlfJIuPcDzm5qs
+         VZsU+xt52xDWep1GVgDHuyoAwWzUR6ROlapZ1qsrGUJpgjLoDdBW8sLk2jI7XYqcqpaF
+         +dQlEyKZFz7aY/fmbyL0ho4Oept/tDw9I9xgME/Yx/APjPks9omZ2Yv3wjiz8BThGIig
+         JkJw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9PL12oFzXYUPsb/ksvUL6qUf1n6xEkDjlYmBf787H3Lt0b8rkZC6+BhMFiVV+ajqnmGWB1tyYeXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy1zMIyeRl1HP7emBAqA9MGNq43my3ZOFhFOqTS6FxYcxhhEwk
+	HBcikyqFIbV/UbBgUGa0MTUFuO3Wx57TvN6EwDGztft+bZbv2Fky0vsQpc91kvjQ
+X-Gm-Gg: ASbGncubQmYpJciIT2093si8j3bv0XdYkfsjO20NYJm1eEOz/xILzR+N3po4SUDCF4U
+	p8pXvyY1xgQzixQBgtaieme3SRHc+rvcljPL3P/5pphMQXa/ApM5PKj0IexS4cb3BMp4tRCrdGP
+	ugRRJeIOzUcCofLpwYUH5t1qB0LvgVo/2T2jWyLwwRLg/t2ApuNaL5DyZCnog7V2vMljFpiX18J
+	ry31gCntjRaqi6K6NZCftjtcUaPv8RnNQ/sEB5ydG8D6FKoVBYquIggDWy27SoufEHTyAHtoADu
+	8ihYuApuWR5T5scvq/s/XEomkwjMwz/WvVAcB97pXAGY3hoWTfwGB//KXDqNrXwQFQbO6sJ4PqH
+	LWeAYOmJcgMNx3niysSwOECsREu+3/v+OPM9KltbshB2eEvM/xF6oVf9S/HugkQvyNw4+GARJOV
+	oKqbrX8EEioPtqKDeo2xcYWY/Mftpa+ayIDH4pnwKjGxM3NwA2
+X-Google-Smtp-Source: AGHT+IEwmXPyCa19sKP/3yOY6LN16AjqAmEGpWGQd+ZYK85Qz7ee6QeGraWNjuASeKhjVilMkR00+g==
+X-Received: by 2002:a05:6830:719e:b0:7bc:6cc3:a624 with SMTP id 46e09a7af769-7c27cbdfd9bmr12992710a34.32.1761229768150;
+        Thu, 23 Oct 2025 07:29:28 -0700 (PDT)
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com. [209.85.160.51])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c51b048f6csm652695a34.28.2025.10.23.07.29.27
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Oct 2025 07:29:27 -0700 (PDT)
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-36f13d00674so624527fac.1
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 07:29:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVIHItv5a2Ippk5dkP9Okd7GTtoo8mXmms1xx5wywsbnId69kaZsFPqyAA1mRuboh5L4hwNroCilX8=@vger.kernel.org
+X-Received: by 2002:a05:6102:5106:b0:5a8:4256:1f14 with SMTP id
+ ada2fe7eead31-5d7dd5eb057mr7937173137.35.1761229283909; Thu, 23 Oct 2025
+ 07:21:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|MW3PR12MB4457:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66b6e7cc-d1f2-4fc6-a980-08de123c6923
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UwvuSV6bNnmPPNBTi6IYukygjR2gC+fg9j7upNsyoX5AhPpn33e9hkGzmD8w?=
- =?us-ascii?Q?3ep7cjDWmbX3IqbeRxlrORgWeVS9S/XHGAPjFGHmb2mt3Hd4U5riMiPNyNQQ?=
- =?us-ascii?Q?CIi11jHMNl9rY7/ySsc9OLZrSJz0ZZQ+6xcMlZyHe7jxgYGNCPHvqLLjZfV4?=
- =?us-ascii?Q?YDZU4QIxn0kdF5B7r2Lrw0gxWw1FwH4b+aW0pmfAUd2nomtDupkLiXQd+Ohj?=
- =?us-ascii?Q?WJHgiDNpA1TJZmABosKFoisOKzDrOjpVf1NydRaYXPsuJBSkgAn/QJFJ+ex3?=
- =?us-ascii?Q?6fG5E7HdtPwNuoKDHOCGr0ku8arJFeHE7hudjkif/NMf8gL3l7j634+1pZFZ?=
- =?us-ascii?Q?00QtUrjlOBG+QnUd/KaQL8BpHP85sxIXe2T/9W3ig1bvKLePIshVQIQlX7VH?=
- =?us-ascii?Q?MXADAn6gn6Ly7Kq3ejwTV3NZJEtsM7W6L/Fr3U0qTTG276Kr88flWIyVbBtL?=
- =?us-ascii?Q?ITys5YS84175dhfmCgmOTCcFx6rxGQsXTfOgX/4Os/cfuhfy3gPAs/6JAinu?=
- =?us-ascii?Q?RGq+8HUCLndr93goFacsGPX/mCrzfdSzvNHoHFNTFn4P+YQhvCaM23cIULCv?=
- =?us-ascii?Q?Tjc2sApQRiinpRNG/jVsL4TxGpC62kEQ5qmvxOAVK/JcTLNGfljq5LrUEMKy?=
- =?us-ascii?Q?YViWCs426Z4x0WDDe+uvj0AFKrLD3CWc7RyX06xQ6y/dHdoqn6E7gyMQYt6G?=
- =?us-ascii?Q?zINs1ktKX6s5UcFxBn+0mjTcFYQC7g3IaIhf6Gr0wC8tZwBX/pTdOMvA/S6k?=
- =?us-ascii?Q?ApGSpUHkNOwcgc3ujVC8dVTMPOtdylNrah5ltyrMp4/hA3PjMHVubNqHcgrg?=
- =?us-ascii?Q?ZCehFvLdJd2DWo8UFXJrOUPkzFpyWDI4a8Rcjv+EXt9d47DAwse443Yt+PE0?=
- =?us-ascii?Q?MFtXxXoSNBGryn4vfPlnvX6blBILiP+mFl45LdG1nTXTxbXDhy34llASf75h?=
- =?us-ascii?Q?8sOuIu/Kx1tfA+PgzDohDz/6lRe5M6szT+YRVIWQTjZJf3UIURsGtoH3D6/q?=
- =?us-ascii?Q?m9BjeHvckytxshnfmE+beXxFeEwg9tiGrZY3Rym/t0hb7yHhO0eDfztrGpwa?=
- =?us-ascii?Q?YWi8wxQPTRmjBcPLhV5+UL5pxtOJmr7gOdt+L7IMwEKLcyow2y5vlvBY2TdE?=
- =?us-ascii?Q?izUfs2+Y/WMfEu/qa/edDRQoXFvqrqewts+JmxmAe3IbJ8xEEUzie1P6PNiS?=
- =?us-ascii?Q?vOKsKQdy2wBpxAACpWfIP16ORi2BIdKhYHSVTd8XBCxtPjLqHcgtWaJ98Yw6?=
- =?us-ascii?Q?KAAwCvlyO15CwBlkxJFV343GF6cSwC1h7dLlRP8L1Zpa+DjVhqgnjLG8wW4/?=
- =?us-ascii?Q?1ohKgCOKMTDIS9+v1JqQZv1nKtkXSAMU2FkCHwEGYJAy+hGBTmPd+HvyXaU3?=
- =?us-ascii?Q?GuOUmQXTuYwRRiJZ1nbPLI6XNq0UMM8GPr5UJuD+ay/EkQBSR9foRNmaSLQa?=
- =?us-ascii?Q?nTW/IDnSXqmkfXx1U/3sDb/AKc7ZsBnf?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zCCwHBDOlXYvkYch2B1h88/VrqXH6g7akclSEBpYsjPvxrILY01oRFmRqKU0?=
- =?us-ascii?Q?uNqknRUU08ZfBSgz6/n+ywkq05r4H8I/Hl8xzz/ZOG9U0AY5qH6+OmpY4m5Z?=
- =?us-ascii?Q?naOHVvqt8LDhtXdD1Ib228S/Zv2jzoh188eApmdtCzCHOblmxESOfsnvwj0c?=
- =?us-ascii?Q?2GBTsLKePdyC+5IanqSP54N+awqdOyi8kSVTT5oSGDc4LgmEZv+76uieFt4F?=
- =?us-ascii?Q?TcmcEJYOxudXz98n/Dw3qXiiq69o+Guq3R/THl4MG7ARS8okkFcZuNdHsLnp?=
- =?us-ascii?Q?1wuaDiXDPpB2YNk4bBIFRFQO0b7OA27CGufJ/PFiRgLe3B3G3wiiqOf7aGKV?=
- =?us-ascii?Q?hC+a4hQ09JOpnfVeXMUOe5TgyQSuxxZEBXP3IR0+Far6Uc+z9Y0xW1jCf5Zf?=
- =?us-ascii?Q?mud262xWnUuP1yRvA4Rfc603by5nN3bMni6eXseq2oIKkMRm4BQd1Wzbl33W?=
- =?us-ascii?Q?q3Vy0Rv6S6YiN4Exvuffa7Pr8eYlQ6mjccDhdSsQF3MQBNencMfdXuOqgYSH?=
- =?us-ascii?Q?un1SucGLRYh4xxmKzGDppT9iYbuvJtL/H5ImfEzUCEMszg5L6B1zrqb2Ci/u?=
- =?us-ascii?Q?rfqxCJHL5+rRkJeVtcxciw/k5J215Xk/tlmdaxGrkpktRVNHDyyVQ8Umw/2G?=
- =?us-ascii?Q?TN4GLXgZEhkmYIK7BrfLg2aPxnLHmOjkStF6JQFmJKyYbHMQQjeJdDgSkGq6?=
- =?us-ascii?Q?TdRXo+DMBE1NYJLkg4JLvu2/k/ILzSaJBHx8BHpReIt5V18YxmXBiM8uffCe?=
- =?us-ascii?Q?n4syZIz3yLaRSULM2TGY6s3urOCKThC7NDtX6421pbO747l8mi1HKsSt0SP2?=
- =?us-ascii?Q?JlNdxucGZCY9XZdZxdSS6dlBAcsTnuGsxMIg/FtVtCNXVWqEAYEPC8kvnHkO?=
- =?us-ascii?Q?vX3YVPsv+ngxP8ZCrDLoHzQZ0gkEgsxq8htuaWO+RiP60T3/GZZMpre2zhid?=
- =?us-ascii?Q?eXE5mQOrxWeRioHt4YengEafqAxdWVktJ7vl3bpm3CGfj3cR+TRZ8a58h6WC?=
- =?us-ascii?Q?UELcRnkzsR1PRl8XZId4QrcTko0p+hIEHnVWLP13aDxzIRs1EE0LJXcb8iGC?=
- =?us-ascii?Q?FfhvdMpDQtGqWYccxf0AEz4nGR/h1JLxF5SoA5ZlcS0dgARJugNjtoXcwlsW?=
- =?us-ascii?Q?Vr8Jm2XFGZJkTmEDi3BdSzkjNUZuVzLmuhw2LrxYamES+EQgZt/fhg5WfZkP?=
- =?us-ascii?Q?tc+AXte3KBzl6QKfG4isG7mR/ifHkBDdlGJexWTcAMNwNg++lt6AgRoO0in3?=
- =?us-ascii?Q?Fh7MCZhN6G+taw1GYD0J9d9omFpVho3qzIoTvFaU9MXyJutk+QHbZcoCtpky?=
- =?us-ascii?Q?UtNsLVFhBaiTgZL1k3fliqwvzoyPrFKMKqI3l7wMQghv6oTW2zHXuTIOSc2t?=
- =?us-ascii?Q?uRFYac9y1Y38YXvjOABmIABLn7wI4+eaw7g+CLdKnTDeX/Ip24R/XoSlzx9v?=
- =?us-ascii?Q?XpPZaPIk7c8EvjGcPtyUvpGKykLNCW7DvVVrG32aCYPHtaKx/ll8WHR6Raxb?=
- =?us-ascii?Q?iRgGKdTSTIIgtAQfYhv9Cjw61d1YTToyJx50cyuMZOSXLNpqsM0z8uFmJZXf?=
- =?us-ascii?Q?MMiR7KHIi6qU0S+ZKirfZ7SeaNvSA251B8m+a2yA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66b6e7cc-d1f2-4fc6-a980-08de123c6923
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 13:59:40.6676
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JyI3po089zPNx9thK2QgaJWggkabgcKSacNaoOhGJNbS7RBUllfpFdQJmctem7c/MLQJdLoCthr8FI7eF010Xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4457
+References: <20251007133657.390523-1-claudiu.beznea.uj@bp.renesas.com>
+ <20251007133657.390523-3-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdXF14x68Wk5YdOBS2D2N6LtnQjfGzrsMdSJegX-gc3faQ@mail.gmail.com>
+ <6c69d2a2-5dfe-450f-8a39-2ef6e7a6dbea@tuxon.dev> <CAMuHMdXLiN0kUVJtdEYVnsmnCEbN4hSs5KEhMXJhf7p29xv=0Q@mail.gmail.com>
+ <f09bf940-3d45-49b1-8d7f-9c1a96acb187@tuxon.dev>
+In-Reply-To: <f09bf940-3d45-49b1-8d7f-9c1a96acb187@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 23 Oct 2025 16:21:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXx=5YQSmSsw1+3otw9S_Hf+Tv+N1Y1iHiU0OOTyz4bjw@mail.gmail.com>
+X-Gm-Features: AWmQ_bntosPEVOR4ph6dmWLKdA_CbWSKXTDRFcmNnJAAp9ekneiOOs4jYqpQulM
+Message-ID: <CAMuHMdXx=5YQSmSsw1+3otw9S_Hf+Tv+N1Y1iHiU0OOTyz4bjw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host driver
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 22, 2025 at 06:18:56PM +0200, Michal Pecio wrote:
-> On Wed, 22 Oct 2025 12:09:04 -0400, Yazen Ghannam wrote:
-> > On Wed, Oct 22, 2025 at 05:38:31PM +0200, Michal Pecio wrote:
-> > > On Wed, 22 Oct 2025 09:39:01 -0400, Yazen Ghannam wrote:  
-> > > > Can you please share the full output from dmesg and lspci?
-> > > > 
-> > > > Also, can you please share the raw CPUID output (cpuid -r)?  
-> > > 
-> > > Not sure which "cpuid" software you mean?  
-> > 
-> > Many distros package a "cpuid" user space app that will print and decode
-> > the x86 CPUID feature bits.
-> 
-> OK, here's some "cpuid_tool" from libcpuid.
-> 
+Hi Claudiu,
 
-Thanks Michal.
+On Thu, 23 Oct 2025 at 16:13, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 10/23/25 14:02, Geert Uytterhoeven wrote:
+> > On Thu, 23 Oct 2025 at 12:54, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> >> On 10/23/25 11:00, Geert Uytterhoeven wrote:
+> >>> On Tue, 7 Oct 2025 at 15:37, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>>>
+> >>>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> >>>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> >>>> only as a root complex, with a single-lane (x1) configuration. The
+> >>>> controller includes Type 1 configuration registers, as well as IP
+> >>>> specific registers (called AXI registers) required for various adjustments.
+> >>>>
+> >>>> Hardware manual can be downloaded from the address in the "Link" section.
+> >>>> The following steps should be followed to access the manual:
+> >>>> 1/ Click the "User Manual" button
+> >>>> 2/ Click "Confirm"; this will start downloading an archive
+> >>>> 3/ Open the downloaded archive
+> >>>> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> >>>> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> >>>>
+> >>>> Link: https://www.renesas.com/en/products/rz-g3s?queryID=695cc067c2d89e3f271d43656ede4d12
+> >>>> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>>
+> >>> Thanks for your patch!
+> >>>
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+> >>>
+> >>>> +static void rzg3s_pcie_irq_compose_msi_msg(struct irq_data *data,
+> >>>> +                                          struct msi_msg *msg)
+> >>>> +{
+> >>>> +       struct rzg3s_pcie_msi *msi = irq_data_get_irq_chip_data(data);
+> >>>> +       struct rzg3s_pcie_host *host = rzg3s_msi_to_host(msi);
+> >>>> +       u32 drop_mask = RZG3S_PCI_MSIRCVWADRL_ENA |
+> >>>> +                       RZG3S_PCI_MSIRCVWADRL_MSG_DATA_ENA;
+> >>>
+> >>> This should include bit 2 (which is hardwired to zero (for now)),
+> >>> so I think you better add
+> >>>
+> >>>     #define RZG3S_PCI_MSIRCVWADRL_ADDR  GENMASK(31, 3)
+> >>>
+> >>>> +       u32 lo, hi;
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Enable and msg data enable bits are part of the address lo. Drop
+> >>>> +        * them.
+> >>>> +        */
+> >>>> +       lo = readl_relaxed(host->axi + RZG3S_PCI_MSIRCVWADRL) & ~drop_mask;
+> >>>
+> >>> ... and use FIELD_GET() with the new definition here.
+> >>
+> >> Bits 31..3 of RZG3S_PCI_MSIRCVWADRL contains only bits 31..3 of the MSI
+> >> receive window address low, AFAIU. Using FIELD_GET() for bits 31..3 on the
+> >> value read from RZG3S_PCI_MSIRCVWADRL and passing this value to
+> >> msg->address_lo will lead to an NVMe device not working.
+> >
+> > Oops, yes you are right, I went a bit too far with the FIELD_GET()
+> > suggestion. But replacing drop_mask by RZG3S_PCI_MSIRCVWADRL_ADDR
+> > would still be worthwhile, IMHO.
+>
+> OK, you mean updating it like:
+>
+> +#define RZG3S_PCI_MSIRCVWADRL_ADDR  GENMASK(31, 3)
+>
+> // ...
+>
+>
+> -    lo = readl_relaxed(host->axi + RZG3S_PCI_MSIRCVWADRL) & ~drop_mask;
+> +    lo = readl_relaxed(host->axi + RZG3S_PCI_MSIRCVWADRL) &
+>           RZG3S_PCI_MSIRCVWADRL_ADDR;
 
-I don't see anything obviously wrong.
+Exactly.
+Thanks!
 
-Can you please share your kernel config file for the v6.12.31 build?
+Gr{oetje,eeting}s,
 
-Thanks,
-Yazen
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
