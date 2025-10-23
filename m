@@ -1,205 +1,133 @@
-Return-Path: <linux-pci+bounces-39171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3950AC026B3
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:22:45 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDE8BC02758
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 18:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF2BE19A7930
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:23:08 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2019E35A21E
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 16:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E2A2D24B7;
-	Thu, 23 Oct 2025 16:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5BE26ED3A;
+	Thu, 23 Oct 2025 16:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xz8GxiVg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPOj2ISn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012071.outbound.protection.outlook.com [40.107.209.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1376126F2A6;
-	Thu, 23 Oct 2025 16:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761236561; cv=fail; b=rXL5swHgZ7xMxu0227gO5k2H8CQ2FivblyVwOGLf7VDuWuRzWKZRCmK0tMu9S1RKyHsbk/EuMePwpe6S2XmhL5hWw+neT1szAzmgMja4khlxS2h5YfXcg/pHaMr2uRBV0A5fat2UL+yMSpA6SvGTUPyM6Homlu0FsM61Eg4VuaM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761236561; c=relaxed/simple;
-	bh=fxZlxvWhYwtMHH6M1XCeKNY5RmeNotokPoTUxux+aeU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Rj1RFRd5yzic7Eqt5t0gHt6fHnaz3npfCZCcGrJyXPjnv/VeKc9r5BqYEaBkAMzE2kBx0C4kFV1dK+zvleRI9HseUNGTM+xZhDJzMo3deeCOMg4o/InETjV/KKuqZZ+ypnHGvH6ZdXL2Qg92NJEz/y8wzXvkgZ4Ni4WmHNBhhxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xz8GxiVg; arc=fail smtp.client-ip=40.107.209.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HWduZHQoFM+j9q364by/JCtSQb+WsC2UYzLlzFcjEU3wpscRAwNkArvbzvyUrHL82UXc79tR+Hs2YMO65ANKxNceP8pGJkdGEN6PTcXX+dxAhzbUHubSNYIcWhBJbruaFosLOvcJQSoLK8522n6Y/iDT5XYR1yKZT30nFMQ8/Pm+jdm70GCNG/dboapnzmshCHb6LqtRwlgYr8kx2iY0mB8JUWJC5oC5l9befSXmszJiaqxEuwF6Gyg9UpCo72Qh2fYkaGKrXhtMSmKCneeBpu07WpJbsN4F/ISvt/czeu3fTSPl98RhVEB3Uu0T5X6vLD8lpkI9ftf9UYda/exhaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pP9XQYbDDrhVk/avyMuOt9n3Mj9YT5Dzm62BQGnLshU=;
- b=UQ405w3mCQ6dlKmmYaCD+6OA2J4D6nwSu+2ANpf029FcHD2a5J/suKALVjGteaQ3lUGLMR9XXmg1NSQhIF1NBjtX97Efldb/meDlOniiUUr47TNAk5GyKLtp6YprPkbpCqjgWn0h9IPKW3I3yjZfgl/L3bZa405XQT4sHijH7fIrJvlafxFfWK3z3wOk/wmKnEKBBk9gf0QeOb8t14wWyPVGW9uzjrMz3jyzq7NF4gvrb0gzkdVS8fGjxXeDyzohQ+72rwKy7cfw2jOVryQjUK45sQWMHOc5cV+ifTYI67rq40E5TRX/usNsOIAtA2JCtHA1VLZ17PSuXTL2gyhB/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pP9XQYbDDrhVk/avyMuOt9n3Mj9YT5Dzm62BQGnLshU=;
- b=Xz8GxiVgTRT59mpYkY3iV8inh52bubbN8osBXDE4pihgcomQD8xcnx6IMRetWBxqSCOEjIm9Qt1G4AD5O87vvK7cS//AclbL9SL10XlnY9X5lRcNK+/C0/a+KhhCCGYXXMGfRcMss3PCTWpfZOp1PHTCmIwIJqaEdhwM1ur8I/0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS0PR12MB7779.namprd12.prod.outlook.com (2603:10b6:8:150::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Thu, 23 Oct
- 2025 16:22:36 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9253.011; Thu, 23 Oct 2025
- 16:22:36 +0000
-Message-ID: <5764e711-4c3f-4476-9ecb-1f7643e3b60d@amd.com>
-Date: Thu, 23 Oct 2025 11:22:29 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-To: Yazen Ghannam <yazen.ghannam@amd.com>,
- Michal Pecio <michal.pecio@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB9626E143
+	for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 16:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761237126; cv=none; b=lZKHqMYGk+nNiUpoL4V3tsHUD7wo7G/kakYbD+8a0lYJ6NJ7ZUoWFCFB5ItWZ+N8x9kZxi/BilneGFhcfpQOtoomdAXZBLwYxwKektotZ8mAjr8h+IF2raagrqzgR/CGiFs4CrRjQ6IjvcqOOEEhlkuCegGKnKiKECp+aysLaCM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761237126; c=relaxed/simple;
+	bh=78weOO8Ux2KH5nxBXBMycmrZ0njLHapCj22wQXG6s3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bc8WmOvBI1u5dCsqRr/VvdzF1T86wgO92zR9TgjNaLoQecmb7WLmzAfMswKbLEvW5yXIs5vykK6IxeJEYAzbsjYeX+w2TP1ykiQZ8t/HvqkwjEEtUwnZAwngSDZISxC1sb0n92LOibcAZfeteB7hovIVAF8M3zFCr43GcXtH4eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPOj2ISn; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-592f1988a2dso1846350e87.0
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 09:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761237123; x=1761841923; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYfGw1tMl9yOFknFdOBqe6dPAFpDn53Uc6QGIFFot64=;
+        b=CPOj2ISnBOnl4iCLFjfOJucUjxSETQ6CbG9YSwqBFSEtUTBKLWXy1+l5lRnxaCN+vH
+         5uAUmszSCO+dvRy/VltRs7a5vL4NA9TH53ib6KPH/mIZRTptY/FlisIt9/uLWoaZpoqz
+         361PvGn55/JcW0isPzu7mKYsQkRjhJLoiO9MWai5bCUA29N3QOxNidyWB+WL2SvM1q0L
+         joWZijH0p0d6BdXVHP6/tp/LUxDExuctyAjCAzQ3Yoqeb8rBtix6+bYdI3KpjsQIE6r3
+         ek/c48hGWOxpMbmGsZUKtVPm/xdT9PE+bto7m926fVmtZjrpul23esgn5BJ5rHgRqIkL
+         0gYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761237123; x=1761841923;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYfGw1tMl9yOFknFdOBqe6dPAFpDn53Uc6QGIFFot64=;
+        b=fXG0KaDpybCDVB4IABW/peX+kVShk2H5BLjxs9xReQaPi5xEeiVZBBEKrmI1FwZ1N8
+         jGc8a6lV21QG0NdIjSvvgXWl+oFzG39UELXf8ghnA9X0crmk1a5Xvn2NyeIjwG1Zn/ii
+         sgRUUw7URzIJBOuYjKHGW5EwayT+LTNWztbvDusFeTfHvPpS6LV9xU7Wp5ZyWSn6xFAY
+         QwJbysQypACKFUklu2h6a7ZJd+5begeKj8W9/uzr4sImQnhvLzXAnCu1zTpy6c00iWRZ
+         ufGT0uCw3Ka6A9pNDnHL1d4rAVzZNHbIXWY0v8O9sZbwjcO+Mb3tvw+y14+u0rQnma5U
+         4iLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Ixbediakuf5b9pDHD864szHtR5jrexOsO9wXHrI76yt30neX077jKD6DDOAeEBdQgThWrNLZUT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGeLlzxSdxSqoVbl7yFZoAdqBkW8KZDMSgqCeFYLboJyXcQ9J0
+	jPpePJmNJLEa2YKU3IRflgG6gbjAD40/qaQg2sqa/WFiSIx3WJIlq1zL
+X-Gm-Gg: ASbGncubEenSWJS4t0fxMqe63Rqm2+XPWLPl878YxIl7gSgLfEaCsix7tqT8ewMrp3H
+	gjAmj7kuFX0z+EcTlPQOz+oJUHZeB7QSLJJSmCIu46LIZOD/NxH2sCmZC2/51h8kAGDgZMeBTvl
+	wJdFk4vS9NJ+FAx/KoI158ervJ+GaWx6Zu1YfCab7I/gjtyK27Rhnyzl37XjIeXwS6uwd0TnWsO
+	/cvQ4SjOgTDgU+Em4n7N9SHoJYHDzu/jwwgoqPlesXP9DISQ22zi34sqJDaVEEsLAjrdrMdBMB8
+	ruWf/WR9ybvFYB8QAGPEfE4MxCYKb1vccHFMXAvCVtLT7qCdpQpuIrvVwbzxvsrU2BiL9qPW5Fe
+	hiMaBiO04no7v5iFE1gDKdFofZX3hnsqymDkgHkJCIojIqhJWhzUwtz2blOzuG7UvmUz8abTvOP
+	aql1txdQgW5pTsU3VB
+X-Google-Smtp-Source: AGHT+IFKo/4nyXPNKUqA7IAS5KBLXbS3dKQTgE6kBFLo6yQ7yPWiD+r65VS0c92Ld+0Cdijp698faQ==
+X-Received: by 2002:a05:6512:12c4:b0:57a:8eb7:1ea2 with SMTP id 2adb3069b0e04-592dc07e150mr2493948e87.27.1761237122517;
+        Thu, 23 Oct 2025 09:32:02 -0700 (PDT)
+Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-592f4d2d367sm828133e87.103.2025.10.23.09.32.00
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Thu, 23 Oct 2025 09:32:01 -0700 (PDT)
+Date: Thu, 23 Oct 2025 18:31:54 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
 Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
  linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux@roeck-us.net,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux@roeck-us.net, mario.limonciello@amd.com,
  naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
  suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
-References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
- <20251022011610.60d0ba6e.michal.pecio@gmail.com>
- <20251022133901.GB7243@yaz-khff2.amd.com>
- <20251022173831.671843f4.michal.pecio@gmail.com>
- <20251022160904.GA174761@yaz-khff2.amd.com>
- <20251022181856.0e3cfc92.michal.pecio@gmail.com>
- <20251023135935.GA619807@yaz-khff2.amd.com>
- <20251023170107.0cc70bad.michal.pecio@gmail.com>
- <20251023160906.GA730672@yaz-khff2.amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
+ count
+Message-ID: <20251023183154.1e807af6.michal.pecio@gmail.com>
 In-Reply-To: <20251023160906.GA730672@yaz-khff2.amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR05CA0007.namprd05.prod.outlook.com
- (2603:10b6:805:de::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
+	<20251022011610.60d0ba6e.michal.pecio@gmail.com>
+	<20251022133901.GB7243@yaz-khff2.amd.com>
+	<20251022173831.671843f4.michal.pecio@gmail.com>
+	<20251022160904.GA174761@yaz-khff2.amd.com>
+	<20251022181856.0e3cfc92.michal.pecio@gmail.com>
+	<20251023135935.GA619807@yaz-khff2.amd.com>
+	<20251023170107.0cc70bad.michal.pecio@gmail.com>
+	<20251023160906.GA730672@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB7779:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81f17daa-c3eb-4827-2232-08de12506081
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGJ0SExTNVgxa29Vb1NiSWlwN0tXdWU5cXU0SWFOd2FhVjhjUkZscVNRazUw?=
- =?utf-8?B?OGdSSE1ybURIcEdqUzNyNE5DcVVqVDFtVkorUnFIUTdwYkFPZEg2Yk1paDQx?=
- =?utf-8?B?VXJxYkUyTXlTYndZZXVjUk1oK1huelR0a1pFU1NJMmdXYW5SVGRaNUY2MjBw?=
- =?utf-8?B?SzVzU2pGZlh2SnBlNW9hMCszR0ZsWkVzZVVIakVPMXRYOGUwbUFETWZLUkJR?=
- =?utf-8?B?Zi8wYy9BZHdjQWRNdTJ5YTJRQ1NwblpRM0ZudFpIRGxiZkhMU2NjVWpwTTgy?=
- =?utf-8?B?LzlCWXpMaHFFVXRyeXVwcmZoQ1FSWnRMUnN1Ui90R3JIK1BST2JxWVFISXNG?=
- =?utf-8?B?NlFuN1VRSnJLVExHM2ErV3pwOUtUZzBUYi94dG9UbHh3OXZsT3RlbU9OVFR6?=
- =?utf-8?B?NUp3dHpwaE9mUDBFTVc0ZTlVUFdFT1JyZFpjZDVMSzg3M29kZFVxR05kNTdG?=
- =?utf-8?B?bkpFYVp0NVh6RDFtVS9ZNVZvc1pYNDhqT0h0SEVtRUh3QVhHZjNyMkpZUVhy?=
- =?utf-8?B?eER4TmR4bWV5MmlQLzlNVURpcDNVemUwZVlqc05GWEEwZS9mMzVFd3g1a1lo?=
- =?utf-8?B?UERUQzhiM3hadWZTYmI1SWRxZ3RRcG8yb3I0WUQ3U2EwUlk4MmlBR0J1SHdU?=
- =?utf-8?B?aGpXNEtITEZndHB2a2FKKzZVSnVoVlF4REtCVnNoV1NWczgvYWxqSmc3ODFL?=
- =?utf-8?B?TnJzUGlYS1hQd1d4SXpqVVBDcVlmVlp5ZU1tV0w3ZURvV3JSRU1wRVNWdzFq?=
- =?utf-8?B?RS8yWDhaa0FsUC8rOGNCK0JXd3dVdmZXeEVYY09DbzRRdE1oY21vQWtDMzVO?=
- =?utf-8?B?MjlJczFidU9Td0o0K0gyRGlueEZoR3hsZExGbmdOaUthbE1NbkFPWHUxeWQ1?=
- =?utf-8?B?TENSVXZDVERVVjBIbDRUeUpSMk5oQkxqVnNQcDNPVVlsV1FCVWtwOU5kck1h?=
- =?utf-8?B?cnM1SjZHd0hTa3RBM005elFURmRIMVBJVjJLNy8zSEh1cFJjKzFtbUJ5TjRZ?=
- =?utf-8?B?UHVubjczaXpibER3UkVSemNNTHArK0R6RjNPV1ZFem5sWGlRcmtSMUE1RmZ1?=
- =?utf-8?B?VVZmb2NuRnhiek53NkNhMlhBcTVveHdDM1dYck1iU2VaK25jN051cUcrcE02?=
- =?utf-8?B?NnFXSnVHeFFJUUpZK0p6aEZ2Wjlib0wxVkhDU1B2bVUzTTdKOHFwOEc3aWwz?=
- =?utf-8?B?bEltZHRueHVUQXN0RUJ5c2xWdEZ4cDllaTRsNmxseTMvVlUyYVJkYkFKQm5S?=
- =?utf-8?B?d1dqQjRIazZJUEFvSWVsRFc2SEJQSG5sR2xRbnlOUytjWUcvRlR4L0RpN3Vq?=
- =?utf-8?B?aUszQU11WnRpc3lpWnRIdUxDRW9QaVVzYmNhWkhkTCtUT3A1SFhYYTQ2aDBS?=
- =?utf-8?B?bGpCWVhoa1VmeDV1dS9GREJhMDJSMjh2UjJ4MDFrSUZxcFIwdU14S0ZpZDFB?=
- =?utf-8?B?aGVmNVdHV0g5NWpHQW8xZVI0TjdIZC9xY0NwbkgrRm82UXF0VXA5RVc5NUNu?=
- =?utf-8?B?SnlGd205bmpEeS9SaHJ5eFUwUWFEanNvVnBvSEFYSUtGSVU0UHlLdDBwZE5R?=
- =?utf-8?B?YngvRTI3aUJtRGRuZFhCTGpldjRMdkxiRFRzOGlMaFBRdlh6TXo0d2VyTk10?=
- =?utf-8?B?NVMyRXVTcVNwRkhneDEvNnZqbitKNXZwYnZrR2VaOUhmMGU4dmF2NzBEQ0hs?=
- =?utf-8?B?OUtMUjREdGFHTE50Qm1TNGJVMlhBSXFiNlNGTGVsSFMyYmk0em5naEFkcGpM?=
- =?utf-8?B?dGF1N0xMZnFiSkx1cEczbytsNGNzUE9CN3VxcEtGOVFNYS9zN3BOQTJqRDVF?=
- =?utf-8?B?Q0loMEl0UVViUU9xYlJ5NHBsVFZNTHRyOWRBTWdjTmlVZHFyTnhtaTBCUlVo?=
- =?utf-8?B?dWVYMzJ2Sk9ZSFB1U1kxNWV0WTJWcjQvWTVqb1pFa0I3b3B3TUp2NjluQU9k?=
- =?utf-8?Q?qOTVzXLKJhOL3eJ/353evLZApRyqHCE0?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bjJndlN4ZjVhanczdHZXcFZWT0NsRldFYXpBOGMvQTk1UWo5SjJDMm9sQmR6?=
- =?utf-8?B?YWxCb0pRTHo3bFgzSGZHajJybjVXNFZSbC85dFdlQk51ajdubjllaDdRUndu?=
- =?utf-8?B?NHNsUHpiWFE3M0VlWVU0TDI1WXJNUEdnR3ZOcURWTFdaTWlyeDRodHVqaVZz?=
- =?utf-8?B?YUN6MnJpSXZTTkxSMTdTMm1vM3RtMmlLNHg0V1NEcGxCaDRyMU9RKzlJR2da?=
- =?utf-8?B?M1BtemZlejY5R1IzbE9uZE54OVpkanUwK2pEcURqYnpMWUtQdGlXMkYvOWVY?=
- =?utf-8?B?K0RYVnJTQWJaOHc5SjQwaUxvVC9sbVFndSt4TU5UcW5Id1VFSWxSbzVkcURY?=
- =?utf-8?B?cFVuQW5tTkY5R0JINFNneGEzZnQ4QUphd08rVGtyeW1tYllrLzk1QjIyVFMx?=
- =?utf-8?B?WGNOR0ZxandoQ3RxUUpxR0hRVEk3dlYrV1J5S1lLOVR0TTRGdnR5cHZHUTZR?=
- =?utf-8?B?WjBhQU9jRnNQMEs4aGRzZXkrSlcweEFkTG96dVJQSmtQZ1ZmdkdRQ2RoQlBG?=
- =?utf-8?B?c1lrWno0MytXd0JBWjZua3prQ2IyMGtiTUdBWStnazQvMGV0bkgwVGRJWWNR?=
- =?utf-8?B?TDJHMEJHQ0p1c1BKQURlOEV1MHVUZEQvcktUQUVCeEhBRFFUaGRNTldWaHBU?=
- =?utf-8?B?eFcxTE5OaVJLbmVvbHRhZ3haTFVhbmx4c2ZERVZPSHgyZXV6NmFoK3lTajFB?=
- =?utf-8?B?cllKelRrbm5xTDRDSHY1RytBNEZ4WXBNRC93U0R6bWlFVDVMbTlHdGFObVJp?=
- =?utf-8?B?MzlzdE1INDd1TTFCaGpjSkpTaTNRQ085RGwwZTNQd1R2eldqVGtyQVJNNWxt?=
- =?utf-8?B?QUJzWGp2c0FqNG1XdVRFTWp6ZzFUOUErYmVtbnJJcDBQYmwyVkthWVdaRW1T?=
- =?utf-8?B?alVVaDVXQTZTN2RVR25HNTVaU2xIekM1MSsxQWhFci8vUUNNOCt1cms2cFVD?=
- =?utf-8?B?N0JtbmFxbHg2OTh5VUFmWnh0YlB4Tks5ZUJaMEx3cVFNaE9KKyt0NXBHRlBP?=
- =?utf-8?B?L1BtWFVKUVVwTFhuMlk0QkJ1MkRYU0w2WTlUWi82dnBwSVNHMWlhQjlza3dw?=
- =?utf-8?B?SnFiZUNJcE1iVmZrM1V1TXM5bzduMFVZVjZOWHp1ekNKdjFPVTZaOHBOY1B2?=
- =?utf-8?B?WWFrdUx2KzgwK3V1a2hqU2tJSy9IWFBKQVBZZmpBZ2NaZXhjbW43S0FKSXNN?=
- =?utf-8?B?TEZxbUlxSVdmR1BaZW9IRmpGVTFlVmRvWDhGZWtIWDd0U2FISjl0K0JlZXA1?=
- =?utf-8?B?Z09vTHE5WXdWSjRYUmkrUXN5dlhIRmwzaFpjRkZxZ2hWcHVHekdwOFE2UE52?=
- =?utf-8?B?UTNGK3Q1SmhRUTZ0SHJsRVhhdVN5NjgvdXFCN2dGUk5CM3FxMktJN2VPUkxi?=
- =?utf-8?B?UGVDK1lTd0RXRURsSVFvVm0wczJ2WXExUXZGT0ZqWG5jZlZ5djdCZTJ1eURG?=
- =?utf-8?B?OTVUY0JDZ25LemV5TVMra25IQ0ptc3orc0hwdmhISlFUK1EwWC9vUDU0YlpZ?=
- =?utf-8?B?bUlCRXduYjZQUjh5NXUwa2NMN0R4Z2NBdUZ2bkdaSDFNM1NpNEFJNHoyek5I?=
- =?utf-8?B?SC81Uy9UWHVCMkYyZGFxNVZKNmtXYU1zakpqUGhpbjFOMGNsU0JxM2JxdHN4?=
- =?utf-8?B?SHRIeHRhM05HZUR5NmdWbHJMc295aFVzOG4yRWliQ1VQTVBoVE9pbEd3TVE1?=
- =?utf-8?B?WXlyc0NQZERiejEzYjV4MVRwQjZEYUppdFFGQ1ZtQzVRUUlsbjZqOU82Y0NV?=
- =?utf-8?B?bEpQcVlBU0QyaWhxOHQybEIzWDR2NStDMURUZml0c1M5T1NvZ0t2QjNVU2V0?=
- =?utf-8?B?Mld6b1JvYVNXeVpuMWN4NVc4L01IeGpSZVp4VmZzQ0pJemRZbUVKUGU3Zi9B?=
- =?utf-8?B?Ny82UEZndGkwVWpINUtQRGROZzk0cE0zSllQeWlyODZIUFZqUnZQQ1NBMlF6?=
- =?utf-8?B?SjZtdzdvelRTVzQwcjNzdUxmSlM5eGgwMHdWVFpaR0RueG5TaWx1TjFjVmZm?=
- =?utf-8?B?VktyNlZCM21Bcy9VWXpPaXFhN0tEOHpEemtUNkQwQzRHYUJkWkNsQ1FxZWI1?=
- =?utf-8?B?dTVEckZGVnFuVmorbnNhQ0xMYWVZbXB0dFFSUHpWbHdPUGk3UHI1R1MxVnVQ?=
- =?utf-8?Q?qzqZWsEXhSSFwo//xqRw8NArh?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81f17daa-c3eb-4827-2232-08de12506081
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 16:22:36.0637
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QQMw/mmdwQrdUzCki2osyKUY/iKKv2SROhdlnK11W74sjDIdLWQw9YAmQXv+bu29KjtgrHPqmr7gJsISncErLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7779
+Content-Type: multipart/mixed; boundary="MP_/L/dcs+e8mHMeXY=3blTIATs"
 
-On 10/23/25 11:09 AM, Yazen Ghannam wrote:
+--MP_/L/dcs+e8mHMeXY=3blTIATs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+On Thu, 23 Oct 2025 12:09:06 -0400, Yazen Ghannam wrote:
 > On Thu, Oct 23, 2025 at 05:01:07PM +0200, Michal Pecio wrote:
->> On Thu, 23 Oct 2025 09:59:35 -0400, Yazen Ghannam wrote:
->>> Thanks Michal.
->>>
->>> I don't see anything obviously wrong.
->>
->> Which code is responsible for setting up those bitmaps which
->> are counted by topology_init_possible_cpus()?
->>
->> I guess I could add some printks there and reboot.
->>
+> > On Thu, 23 Oct 2025 09:59:35 -0400, Yazen Ghannam wrote:  
+> > > Thanks Michal.
+> > > 
+> > > I don't see anything obviously wrong.  
+> > 
+> > Which code is responsible for setting up those bitmaps which
+> > are counted by topology_init_possible_cpus()?
+> > 
+> > I guess I could add some printks there and reboot.
+> >   
 > 
 > The kernel seems to think there are 6 CPUs on your system:
 > 
 > [    0.072059] CPU topo: Allowing 4 present CPUs plus 2 hotplug CPUs
+
+I thought this is because I have NR_CPUS set to 6, as this config
+originally came from the X6 machine, but I am not sure.
+
 > 
 > We don't seem them enabled, but they may still get APIC IDs. If so, then
 > the IDs would be beyond the core shift of 2.
@@ -213,38 +141,138 @@ On 10/23/25 11:09 AM, Yazen Ghannam wrote:
 > 
 > 
 > Please try booting with "possible_cpus=4".
-> 
+
+OK, will try it next time I'm rebooting.
+
 > The "number of possible CPUs" comes from the ACPI Multiple APIC
 > Description Table (MADT). This has the signature "APIC".
 > 
 > Can you please provide the disassembly of this table?
-> 
-> You can use the following commands:
-> 1) Dump the ACPI tables to binaries:	"sudo acpidump -b"
-> 2) Disassemble the APIC table:		"iasl -d apic.dat"
-> 
-> Both commands are part of the "acpica-tools" package.
-> 
-> [...]
->>
->> BTW, I forgot to mention that I have a second seemingly identical
->> board with same BIOS running Phenom X6 1090T. It is not affected.
->> Not sure if this is helpful. I haven't tried swapping CPUs.
-> 
+
+Interesting, it looks like there are indeed 6 LAPICs there.
+BIOS bug? Attaching apic.dsl.
+
 > Can you please share the dmesg output from that system? And the ACPI
 > table too?
-> 
-> If the BIOS is the same, then I wonder if they hardcoded 6 CPUs in the
-> MADT then mark the extras as "not enabled" on parts with lower cores.
-> 
-> Thanks,
-> Yazen
 
-As this is an ancient BIOS this reminds me of some related commits:
+Will try later but I don't recall any anomalies there.
+I remember checking the topology output and it made sense:
+1 package, 1 die, 6 cores, 6 threads.
 
-aa06e20f1be6 ("x86/ACPI: Don't add CPUs that are not online capable")
-a74fabfbd1b70 ("x86/ACPI/boot: Use FADT version to check support for 
-online capable")
+--MP_/L/dcs+e8mHMeXY=3blTIATs
+Content-Type: text/x-dsl
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=apic.dsl
 
-Does reverting that second one help?
+/*
+ * Intel ACPI Component Architecture
+ * AML/ASL+ Disassembler version 20211217 (64-bit version)
+ * Copyright (c) 2000 - 2021 Intel Corporation
+ * 
+ * Disassembly of apic.dat, Thu Oct 23 18:19:16 2025
+ *
+ * ACPI Data Table [APIC]
+ *
+ * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue (in hex)
+ */
+
+[000h 0000   4]                    Signature : "APIC"    [Multiple APIC Description Table (MADT)]
+[004h 0004   4]                 Table Length : 0000007C
+[008h 0008   1]                     Revision : 01
+[009h 0009   1]                     Checksum : F5
+[00Ah 0010   6]                       Oem ID : "080912"
+[010h 0016   8]                 Oem Table ID : "APIC1703"
+[018h 0024   4]                 Oem Revision : 20120809
+[01Ch 0028   4]              Asl Compiler ID : "MSFT"
+[020h 0032   4]        Asl Compiler Revision : 00000097
+
+[024h 0036   4]           Local Apic Address : FEE00000
+[028h 0040   4]        Flags (decoded below) : 00000001
+                         PC-AT Compatibility : 1
+
+[02Ch 0044   1]                Subtable Type : 00 [Processor Local APIC]
+[02Dh 0045   1]                       Length : 08
+[02Eh 0046   1]                 Processor ID : 01
+[02Fh 0047   1]                Local Apic ID : 00
+[030h 0048   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[034h 0052   1]                Subtable Type : 00 [Processor Local APIC]
+[035h 0053   1]                       Length : 08
+[036h 0054   1]                 Processor ID : 02
+[037h 0055   1]                Local Apic ID : 01
+[038h 0056   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[03Ch 0060   1]                Subtable Type : 00 [Processor Local APIC]
+[03Dh 0061   1]                       Length : 08
+[03Eh 0062   1]                 Processor ID : 03
+[03Fh 0063   1]                Local Apic ID : 02
+[040h 0064   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[044h 0068   1]                Subtable Type : 00 [Processor Local APIC]
+[045h 0069   1]                       Length : 08
+[046h 0070   1]                 Processor ID : 04
+[047h 0071   1]                Local Apic ID : 03
+[048h 0072   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[04Ch 0076   1]                Subtable Type : 00 [Processor Local APIC]
+[04Dh 0077   1]                       Length : 08
+[04Eh 0078   1]                 Processor ID : 05
+[04Fh 0079   1]                Local Apic ID : 84
+[050h 0080   4]        Flags (decoded below) : 00000000
+                           Processor Enabled : 0
+                      Runtime Online Capable : 0
+
+[054h 0084   1]                Subtable Type : 00 [Processor Local APIC]
+[055h 0085   1]                       Length : 08
+[056h 0086   1]                 Processor ID : 06
+[057h 0087   1]                Local Apic ID : 85
+[058h 0088   4]        Flags (decoded below) : 00000000
+                           Processor Enabled : 0
+                      Runtime Online Capable : 0
+
+[05Ch 0092   1]                Subtable Type : 01 [I/O APIC]
+[05Dh 0093   1]                       Length : 0C
+[05Eh 0094   1]                  I/O Apic ID : 04
+[05Fh 0095   1]                     Reserved : 00
+[060h 0096   4]                      Address : FEC00000
+[064h 0100   4]                    Interrupt : 00000000
+
+[068h 0104   1]                Subtable Type : 02 [Interrupt Source Override]
+[069h 0105   1]                       Length : 0A
+[06Ah 0106   1]                          Bus : 00
+[06Bh 0107   1]                       Source : 00
+[06Ch 0108   4]                    Interrupt : 00000002
+[070h 0112   2]        Flags (decoded below) : 0000
+                                    Polarity : 0
+                                Trigger Mode : 0
+
+[072h 0114   1]                Subtable Type : 02 [Interrupt Source Override]
+[073h 0115   1]                       Length : 0A
+[074h 0116   1]                          Bus : 00
+[075h 0117   1]                       Source : 09
+[076h 0118   4]                    Interrupt : 00000009
+[07Ah 0122   2]        Flags (decoded below) : 000F
+                                    Polarity : 3
+                                Trigger Mode : 3
+
+Raw Table Data: Length 124 (0x7C)
+
+    0000: 41 50 49 43 7C 00 00 00 01 F5 30 38 30 39 31 32  // APIC|.....080912
+    0010: 41 50 49 43 31 37 30 33 09 08 12 20 4D 53 46 54  // APIC1703... MSFT
+    0020: 97 00 00 00 00 00 E0 FE 01 00 00 00 00 08 01 00  // ................
+    0030: 01 00 00 00 00 08 02 01 01 00 00 00 00 08 03 02  // ................
+    0040: 01 00 00 00 00 08 04 03 01 00 00 00 00 08 05 84  // ................
+    0050: 00 00 00 00 00 08 06 85 00 00 00 00 01 0C 04 00  // ................
+    0060: 00 00 C0 FE 00 00 00 00 02 0A 00 00 02 00 00 00  // ................
+    0070: 00 00 02 0A 00 09 09 00 00 00 0F 00              // ............
+
+--MP_/L/dcs+e8mHMeXY=3blTIATs--
 
