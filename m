@@ -1,250 +1,137 @@
-Return-Path: <linux-pci+bounces-39248-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24C8BC0498D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 08:59:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33998C04EC0
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 10:02:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 07A334E8302
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 06:59:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBBAD3B364E
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 07:57:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0816A27978C;
-	Fri, 24 Oct 2025 06:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56F42FB0AE;
+	Fri, 24 Oct 2025 07:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnkHuVoi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="v3iF3RAP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E68274652
-	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 06:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29BA2F9DAF
+	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 07:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761289151; cv=none; b=HBG35txBYaMzq2JzFlBb3xDzmDqe/t/sv5maO8MvHhrQT9qv9Dc7wXCVZMdR1M93p/4r+TtX/wf6uU+nlSoI9vRjCaGK7EagPJ3UOz3ES2jXFSUAT8TWTttE2cst/b/tfGeAGn38j/BpsB7DliIXd4CX11g17XEZQfelXWvTR3E=
+	t=1761292584; cv=none; b=s0TZo1/ybXzif2ZPeQnYQiLiCZO2GIngl/fDa7R564kYzBWNluO3oePRxPE265Id6BlBxoho4hxXOaOMlAVW7jKfSGqB3Q830/IAi/NMskd/fSOjt3IEZA/xSzV1DzbwwrQP2Xi8licHjYQ/F1qTNlLntoikLp6fU1af2NTca+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761289151; c=relaxed/simple;
-	bh=VGMnhyjAZP03c1OP/Kj3eN4sUi7Fp0RT19Yo6no/M6o=;
+	s=arc-20240116; t=1761292584; c=relaxed/simple;
+	bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4ptJV6lNVTPMgeSi4lllD3vaL0aSgyYbDCKk8G0aPu6DLRPRVz0Qi2h2pRaNMljEPlqbWRiqZ6CqSZkF59gvtx1ZcPIP3AlAoE1gFd9M60qwkN8xbrmm9CV2qED85UJKtPEtfykYyopIj+F9bjRYbOWD4shV57VcO4aLQWEbhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cnkHuVoi; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-63bf76fc9faso3172757a12.2
-        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 23:59:09 -0700 (PDT)
+	 To:Cc:Content-Type; b=BwO27n5ZyxEji8ugZUy2t8CcIcSexEN52SPne8Z4mNGP14PKuvjauXrCfT87wQidZX26fNpglGwAb8dHdLqQT/IHcwEkUkoghopJOpjeJStvkN1JAHdM/MWB81h4NghXdpo46cqQ8UNJ6u57n3Vq9BltNV88UZYOuzsRFPDnAAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=v3iF3RAP; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57bd482dfd2so1887518e87.2
+        for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 00:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761289148; x=1761893948; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ugqv1s44lLqcX4JmETo9JSdUQjRGtApJwylkT2MhNI=;
-        b=cnkHuVoi6trn7BgTCnZ2072RWjmYvJLg+HjNPcVD45bzQU1ITXZQAWHz258fKLbA5X
-         1UGIAm9gKdNXSDc7EgzjCRJHB3BmfUlOjPfvt/w/AMbeex8cTNVj4HF2S+CZB/2ayeBl
-         JlUCu5I1Sgun1nfLIxAwZDnhTKNqQxPp8TnPgZD8r+yFy3HxOH6I9viz9XaH8PHvvKVW
-         OCuUXJ1Z/oEdxdqJjySw6dx9DyLTZXRG1g+eQ5B49vLcM3601PZcBR1GKe9sMR+SK1j6
-         9AvwNf/eSObyC96YxMnnMG2XHiEM7U7aVI0oC52CENqs5wmKKA7gYDZODvCu889DpT1/
-         EwSQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761292579; x=1761897379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
+        b=v3iF3RAPDCb1elFqO0VtoWQu+fW6ymU7UCcKEvvmYKNYTD2ooJnLd6jMbuJoUoN+Dn
+         48jC0TXcnzK7hHI8l7XLLufqE40irxcJ4vQUvDf4zdOy47noMAAYnUg6+rKFE7kuW8KB
+         USll7/Aewk1bIvHRDatF6iZ+ivUhLjYhiJEJEaA/t1MN12k63JvJ8Z2BqetAPfCPpfzc
+         bXyJLqDmaG/v2uSkzQNDFkhtLwjQdE/QsFWa4lokn+PvuaNQ6Zeenb8G29xaiiFXP0S7
+         FDqWxQyTvlalR9tZ8BC9oRxHctw1PO5qfa50RYj0lq81NdRESC/gWmdIjcg72jvCS2fV
+         wJ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761289148; x=1761893948;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Ugqv1s44lLqcX4JmETo9JSdUQjRGtApJwylkT2MhNI=;
-        b=qLeu3eSZEStrjvdTGRkJmAMBSIF6wAv/pM0EM1SPu+vgpnIZxEfBQOy0f5Pd+SgVYm
-         q7U8TyjVcEEn1DDoeDhK3W83XEsb5LWV9skZQj/tJ9/ydRM1a1HTHaYFAe+eOYYB61cb
-         +bFKLPncAcq/EhmrwID0MqkqMb6C9VoWJiIZJHlM1I4yhEm3jCJ3JzE3OGrorBRE+0Lz
-         ZSv3OHZ8tb0LKaK76HoungLwK526KbAAXPUs0MPoOKjYkrq7/G5CG+qEdBDDLw4XUXOd
-         NjVOI4BoBSBTgBZVL4kqVfXsa8yOvGc6daWxJMUWq+SmREmMsCHsp3lTZk+hD0/qdWTz
-         DbgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrXwU7KIA7i/HqEeo3b3EywCNtPSOhZYvv6vQHyGS8izeSdAL9dlTiDyrLdvDtiP0iS9sQQVJ9SlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDTHWR7zgJg7jwquzSGp9KTRyC80BzrTTE2QPaasP/FDA1GzcX
-	sK2uHAt5IX9z1f8ALjK9FSjDb5n+2TKNkOAbJMCs+nm5JAkEpLWIiMBj7Kp4FK6JdHYhr/tus/o
-	YTJOWNI8CeDSe96X9TOxOwBZUBXxWg/NZ/ACDDaqsyQ==
-X-Gm-Gg: ASbGncuTyLF8HZlkxJt4ap8o2Jgva/zvqIBdCe8BoAp2mEnAzEtPQ/zTXb93Ra+/8t+
-	1q1DM6Upx9dxEPB1OLNhpWeaU32xTA1eYEhWs0uaa4JSNIiQ++T+zdwq6KJn7OSfeYvFP4tCHbW
-	YjCEP+6phWJVmgtSrXdbGcVpEP/44vqu9ABld/FMwR7EalK0zqYX7Vd12dNQmOoHLqgj7LBWXmD
-	zwpxK4HpY/mZou7i5ceRgnZIGRs5wkEaZcfucFQZm5rg8HAwQlenoT4cDTLWqO0abJFnG9+dzmb
-	WjLd3KzAAVX9pJKQQrNA7Fk0
-X-Google-Smtp-Source: AGHT+IFAhTtwkuQJ8tJVRO47CmkrlfK4n6utip+dcl9Wbc27L/1MyGaOtTTrwRtxBRNLnwzLIx8auf00o2MEwmZjM6I=
-X-Received: by 2002:a05:6402:304a:20b0:638:3f72:1266 with SMTP id
- 4fb4d7f45d1cf-63c1f640163mr23343462a12.16.1761289148308; Thu, 23 Oct 2025
- 23:59:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761292579; x=1761897379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
+        b=np4S+bSkZvckwZGMAwmoU1Au92JFfDYyQ788RkTAVtak3oEOm5o9MUZdebG2ew0tNP
+         LaQ8dkJjfzGLA7+RrC2bLqRg8KN5l5u/3Y1i/dHFQPfsDudeMeT786GturHWzW/6jV34
+         tv6VpJe1c720Abwue+W3NeLtDOsTE+VprLI1JpJPAb2Sv9Uep7zyQLLTgTUQVKzUWJnU
+         ZHj4ebpFcnA+Uv9su4JttoQFo47t9BSj5NWSpVxDGysQIZXBPOtMLBcdx2nhlUhwzNuW
+         vyWjQxbznkdmAruP6F5Ch4r+oPxajDoPsBK5eZzdP6/6vpH66uU9BODiKBd+DRoYG/1y
+         FwFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIvqwKPdtbqV6baaQMzbublkjLwZQfd0fbQ1jtg++5dK7rzx9uzTQ/E0sj7dWPd3MRnUFfDb9LVdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxddGtwgZNJHG1vlYxDwK0Fa/+hatGjxQ8Om0gl5ydquBzTaJgF
+	WeAPvdc4IN5q89H48FgYjSAwIhxYHL2lJI5n5Mib3en3TmZI8z1K87i3AEgrW/IO02Jx4rAAJIa
+	UJEPUIRybXnZT5+CBYARU1MQLgh3t4SWs/XPC2CwE3Q==
+X-Gm-Gg: ASbGncvh1r3oGmUgw+/HBEXEKBuKyZzR4swEt0U1xTQdWYenVh4+0yQGqVS/HwjRt1e
+	V8NZANfbUWL8tjrJ7Y9K1pNr+R4bSzkOkgUPb0ELv9A2pAIeXaxJvvJaAbbOuJFW3L8pm4Nq6xd
+	fOLNqIFV5yq/umyibLtwgu/ySlahy9EzK2/41dzD6+xybaq4WQoy7EiPmPRA+vRAPQmPmzcRDB+
+	Msh9D9hnDFdMIxLr0WLt9oECNQSgKAv5LybM2qs7cAI5RidnzWyvS3LIVh7fM1DkMah+T/omt/Z
+	BRmt5y9j5HPKsSQ=
+X-Google-Smtp-Source: AGHT+IHSnXZ/gyOux7cXwXN4jLtleYFyXBIE1/V6t/jovl+yJ4b+HMb04wimJ5i7xVzENgmv7b2GUJ2i/5ONH7mEpKM=
+X-Received: by 2002:a05:6512:130c:b0:586:83e2:2295 with SMTP id
+ 2adb3069b0e04-591d85525f5mr9376212e87.45.1761292578695; Fri, 24 Oct 2025
+ 00:56:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022174309.1180931-1-vincent.guittot@linaro.org>
- <20251022174309.1180931-2-vincent.guittot@linaro.org> <aPkt5sigtL/EN0A3@lizhi-Precision-Tower-5810>
-In-Reply-To: <aPkt5sigtL/EN0A3@lizhi-Precision-Tower-5810>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 24 Oct 2025 08:58:57 +0200
-X-Gm-Features: AWmQ_bk6VPRIEAG_QafjLl74cCVYdfxYgbB6ZD71K263u0GS0jqTcUigkEeIqKs
-Message-ID: <CAKfTPtAz_joc4KFnxypFXJQTPeRF5y5UKhRyoW6kcMrwQgu+7g@mail.gmail.com>
-Subject: Re: [PATCH 1/4 v3] dt-bindings: PCI: s32g: Add NXP PCIe controller
-To: Frank Li <Frank.li@nxp.com>
-Cc: chester62515@gmail.com, mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, 
-	s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
-	Ghennadi.Procopciuc@nxp.com, ciprianmarian.costea@nxp.com, 
-	bogdan.hamciuc@nxp.com, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, cassel@kernel.org
+References: <20251023143957.2899600-1-robh@kernel.org>
+In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 24 Oct 2025 09:56:07 +0200
+X-Gm-Features: AS18NWBwXS6t25LKJEi_UKqvj6YhljrcGI4AFOhItyKPndeRwhvu3EmnTJe9vDc
+Message-ID: <CAMRc=MdE=1cPDPQwPQA6mdBkbXF2pG=oQ_oR_YuasGzaPDsKtg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Andi Shyti <andi.shyti@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Georgi Djakov <djakov@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Olivia Mackall <olivia@selenic.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-usb@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 22 Oct 2025 at 21:18, Frank Li <Frank.li@nxp.com> wrote:
+On Thu, Oct 23, 2025 at 4:40=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
 >
-> On Wed, Oct 22, 2025 at 07:43:06PM +0200, Vincent Guittot wrote:
-> > Describe the PCIe host controller available on the S32G platforms.
-> >
-> > Co-developed-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
-> > Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
-> > Co-developed-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
-> > Signed-off-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
-> > Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
-> > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> > Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
-> > Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
-> > Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
-> > Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
-> > Co-developed-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
-> > Signed-off-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  .../bindings/pci/nxp,s32g-pcie.yaml           | 102 ++++++++++++++++++
-> >  1 file changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..2d8f7ad67651
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
-> > @@ -0,0 +1,102 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/nxp,s32g-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP S32G2xxx/S32G3xxx PCIe Root Complex controller
-> > +
-> > +maintainers:
-> > +  - Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
-> > +  - Ionut Vicovan <ionut.vicovan@nxp.com>
-> > +
-> > +description:
-> > +  This PCIe controller is based on the Synopsys DesignWare PCIe IP.
-> > +  The S32G SoC family has two PCIe controllers, which can be configured as
-> > +  either Root Complex or Endpoint.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - enum:
-> > +          - nxp,s32g2-pcie
-> > +      - items:
-> > +          - const: nxp,s32g3-pcie
-> > +          - const: nxp,s32g2-pcie
-> > +
-> > +  reg:
-> > +    maxItems: 6
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: dbi
-> > +      - const: dbi2
-> > +      - const: atu
-> > +      - const: dma
-> > +      - const: ctrl
-> > +      - const: config
-> > +
-> > +  interrupts:
-> > +    maxItems: 2
-> > +
-> > +  interrupt-names:
-> > +    items:
-> > +      - const: dma
-> > +      - const: msi
+> Generally at most 1 blank line is the standard style for DT schema
+> files. Remove the few cases with more than 1 so that the yamllint check
+> for this can be enabled.
 >
-> Most likely dma irq is optional irq, seldom use built-in edma in RC mode.
-> so put msi to the first.
->
-> interrupt-names:
->   items:
->     - const: msi
->     - const: dma
->   minItems: 1
->
-> missed phys
->
-> phys:
->   maxItems: 1
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
-okay
+For GPIO:
 
->
-> Frank
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - interrupts
-> > +  - interrupt-names
-> > +  - ranges
-> > +  - phys
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/phy/phy.h>
-> > +
-> > +    bus {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +
-> > +        pcie@40400000 {
-> > +            compatible = "nxp,s32g3-pcie",
-> > +                         "nxp,s32g2-pcie";
-> > +            reg = <0x00 0x40400000 0x0 0x00001000>,   /* dbi registers */
-> > +                  <0x00 0x40420000 0x0 0x00001000>,   /* dbi2 registers */
-> > +                  <0x00 0x40460000 0x0 0x00001000>,   /* atu registers */
-> > +                  <0x00 0x40470000 0x0 0x00001000>,   /* dma registers */
-> > +                  <0x00 0x40481000 0x0 0x000000f8>,   /* ctrl registers */
-> > +                  <0x5f 0xffffe000 0x0 0x00002000>;  /* config space */
-> > +            reg-names = "dbi", "dbi2", "atu", "dma", "ctrl", "config";
-> > +            dma-coherent;
-> > +            #address-cells = <3>;
-> > +            #size-cells = <2>;
-> > +            device_type = "pci";
-> > +            ranges =
-> > +                     <0x81000000 0x0 0x00000000 0x5f 0xfffe0000 0x0 0x00010000>,
-> > +                     <0x82000000 0x0 0x00000000 0x58 0x00000000 0x0 0x80000000>,
-> > +                     <0x82000000 0x1 0x00000000 0x59 0x00000000 0x6 0xfffe0000>;
-> > +
-> > +            bus-range = <0x0 0xff>;
-> > +            interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-> > +            interrupt-names = "dma", "msi";
-> > +            #interrupt-cells = <1>;
-> > +            interrupt-map-mask = <0 0 0 0x7>;
-> > +            interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-> > +                            <0 0 0 2 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-> > +                            <0 0 0 3 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-> > +                            <0 0 0 4 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +            phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
-> > +        };
-> > +    };
-> > --
-> > 2.43.0
-> >
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
