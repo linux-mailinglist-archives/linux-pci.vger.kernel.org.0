@@ -1,332 +1,250 @@
-Return-Path: <linux-pci+bounces-39209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10E5CC03BCA
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 01:03:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE75EC03EF4
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 02:07:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7BD894E3BC7
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Oct 2025 23:02:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9769E4E1956
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 00:07:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826AB253B66;
-	Thu, 23 Oct 2025 23:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 196534A32;
+	Fri, 24 Oct 2025 00:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0zzLP0b"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YpwzmUv3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013051.outbound.protection.outlook.com [40.107.159.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5503A9463;
-	Thu, 23 Oct 2025 23:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761260577; cv=none; b=ZGrGd6FvHyyYySb6Ngb1x8U27RDPjnBDp97ToQ0jGDIWekIh7l1jDpQvD6sA2rL0Pj7tv6bC2jJkvoJoxeFMEToFBV77Ec+b30KvV/SDe4faBGzp0rGiBORHGJuSD0cRr4cn5VItBOgFT0twqQ6aTFs7GRmDdwcg3/bRSGx1yX8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761260577; c=relaxed/simple;
-	bh=chuXh3IVeTR9ySfAc4RS2JacaagDlwZk3qD1gLJTsho=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uRT6Bkzl6Qg+HP3utXfLWu1cC7l0zPibRardCOdX7PPdKm862fg00nOV//EbAKfYT9+cfFK+P2EC8jB86AAFjpjyGK6BUB9RWRUE4d1KfuyIHi6uN3RzqervM4aFM0jUpQkHR9iZmdJhyY6p+BBZ6FqbstI6F0++BT3qob8slzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0zzLP0b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC251C4CEE7;
-	Thu, 23 Oct 2025 23:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761260576;
-	bh=chuXh3IVeTR9ySfAc4RS2JacaagDlwZk3qD1gLJTsho=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=c0zzLP0bILi1ucsO8Puw3GFip0hPg4j/NjkJEK41iZCHHMGVh0v85qeziSfVpb00J
-	 KQgA+1ynBkUsg2KIkrOslGMrCOQhBzAqtyY11oyrd6jEzYIknvyVO2iEG1z37b+UsJ
-	 6hrQOiVdmCp8CNj1cZqReLag9tQsM1OuwbvZGBplnlcMpxWsEo063/Y6p9T3cz+VSA
-	 aH2jRD5RKeUJdRDRFsuMEQLNvAymzDhzUydoA90C7MMYIZBTDNHZButbEfIATt80JU
-	 l1tpAVy51ZW7Ctgcrc/+or8dVNYV1JBzPkWZPb72lNQWvSiJ2uIK9TvU/4Mxpon2en
-	 qcDpUVI+i0gqg==
-Date: Thu, 23 Oct 2025 18:02:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 0/3] PCI & resource: Make coalescing host bridge windows
- safer
-Message-ID: <20251023230255.GA1323283@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DA210E0;
+	Fri, 24 Oct 2025 00:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761264419; cv=fail; b=sc/Axad/3MTF7PFCbnAZsPTn5khFUg8AhZJFA4V1hHYtWJ1krK7qoX+dmfWEULVy3TCWgtWaXDgiH4NUyo5GIsxfA1Ung5Op5x0l0psAqBrpTAt2dAfghG3TvcNS90D+2V1IA0uN0TZAXPjmNrPY0FnYtWZWrIxwOUTuNErFT1k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761264419; c=relaxed/simple;
+	bh=XzobeZJSsiX/hO4Rt2kfJFnMxcK0gTuMXzmPvbIVpL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=c7RpjuYoqKq+DD/66sPialdnWzmj/zWql1ABe13ltPUrCRfEvv1o63xhwCp6/MEMpYjqO1/M+KkDLS5LvQK+kf5jDzq1X/+T4UYGCbLMn4nLI5m0Y/DhIk2nKKiKua8mc24WMk3f+t329h7vnqe/mSvZ+tW+INye/y8x80WGmU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YpwzmUv3; arc=fail smtp.client-ip=40.107.159.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zU6Eh7x8cn37c9HOXZkO552XXA3S08d/pLuvCPvs+isdu4rI8FKJdVOGIx9KjEkb0CJYOAvVKBiyZWthG+UxKupfakB3dVssyk9U2oL1zmDnBHCV49rs/SD1eVwPep/nie4ElfDJPYvv/0xdv9QWNFtgcEOOVpsRaxpY7WSwFK4evQGMN4Ak/PxJQ/IQq+sctycPQ/IDSfNOAkdC7A5DJyXgMnBaMGe2ZRSg3qRI/B4gLaJwDNouWHY3MkOMxgai1iZp+EBTZ63wg7YFIhVMgO0Dk4kxa19UXoPbBSWY7Xyk25PTNMxtCOOTeTUJ4CdCGR5Y9Ypf/wUi9e7H8DfwAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2WBooeqds4HmgDLsfYMAmi4XevwhgIrL8mLtm400p9g=;
+ b=U1CQIROtoToMNGqWXzDIVc7j+xGYABLPFWhsoF1BLlRP2bRtptOpq586hRk1PLSS0Sf8GogEcvDTo7QKXVrQFyKIHxzfPsHW923dOkc8vD3coE4t3ZmKlph0Gk2QDkhief69C0l15gFwq8dl86VR0UgxwQClDvcTyYatCGT9r1Gw7GX1up6Xe4gjhgwERQP4oCBI1hnA0NKuXkuxK5rQLltDWewDCrKlJQbDvqlr5LrsFFb6q6PiZx+SsPcnKyH0ABshJU6gFsCKPK0UnhuhV6PURfo5PAc95XJV+zCj9+xarBBpbi1ZsASWMHsDlI8jakOB3y6Hss7T+0ZCz/tmZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2WBooeqds4HmgDLsfYMAmi4XevwhgIrL8mLtm400p9g=;
+ b=YpwzmUv3ajhu4Fj/+ReuxN2CVNojjFKOFvsgmOAdTuIlcxD42AANWuegHlMfHv+mcDVJuUzofRuQ6Vif3a+/otJ3lNCDkI+aDKK9EqoE5cUMFHDI0pxJV0OxCjyQTeTuNd/5GrbyMI01O/g+nYVgxT/MTokVcYlem91w2KMWoTlVgIKsY7OMDqshV1V38F9eEYiK2G79j3Hc64Lx1NqdDFAfWG0jwncTWBgyWV66ODn7dxL21+N/zlJgbLOsrMtSc6Z9TsHUlbmGZtI0x0RMFisaJbruIUsAJn26tQ8ylqmwNTuB65KjDGF/0XhrAHF/n8T0rSUYQVd+3mZ0wGFSGQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXSPRMB0053.eurprd04.prod.outlook.com (2603:10a6:102:23f::21)
+ by GVXPR04MB10474.eurprd04.prod.outlook.com (2603:10a6:150:1da::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Fri, 24 Oct
+ 2025 00:06:50 +0000
+Received: from PAXSPRMB0053.eurprd04.prod.outlook.com
+ ([fe80::504f:2a06:4579:5f15]) by PAXSPRMB0053.eurprd04.prod.outlook.com
+ ([fe80::504f:2a06:4579:5f15%6]) with mapi id 15.20.9253.011; Fri, 24 Oct 2025
+ 00:06:50 +0000
+Date: Thu, 23 Oct 2025 20:06:40 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org,
+	jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
+	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+	kurt.schwemmer@microsemi.com, logang@deltatee.com,
+	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
+	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de,
+	pstanner@redhat.com, elfring@users.sourceforge.net
+Subject: Re: [RFC PATCH 01/25] PCI: endpoint: pci-epf-vntb: Use
+ array_index_nospec() on mws_size[] access
+Message-ID: <aPrDEE80hSLbL57a@lizhi-Precision-Tower-5810>
+References: <20251023071916.901355-1-den@valinux.co.jp>
+ <20251023071916.901355-2-den@valinux.co.jp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251023071916.901355-2-den@valinux.co.jp>
+X-ClientProxiedBy: PH7P220CA0176.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::29) To PAXSPRMB0053.eurprd04.prod.outlook.com
+ (2603:10a6:102:23f::21)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <efebb809-cbd4-4644-750f-4b42d85102f2@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXSPRMB0053:EE_|GVXPR04MB10474:EE_
+X-MS-Office365-Filtering-Correlation-Id: 352bd1e9-645a-425b-a0f2-08de12913af5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|19092799006|1800799024|52116014|7416014|376014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0Mxki5zC9hf/cDqrRfsa6DkkHV55veQObO27K8yr5gHqJ13J7fl0ZEEv1UhQ?=
+ =?us-ascii?Q?S0cnTIyI0933HDeyxMwP3VfcWsrRpwECyZi9i3YGzCZ4oV7ztoHLAym+boon?=
+ =?us-ascii?Q?gflN3YtlZFdZOvgi/FloyazLyfG+DzkRGwDmBMuUYZq6r1teY4s6aF50D5JA?=
+ =?us-ascii?Q?NmqjxONDfK6h6wydhkQeVA15/tmyzcFHEEHuaoWD1VYM4Oa0D55boemlqPmh?=
+ =?us-ascii?Q?7TyEHW4zFMewLfh658nknsGUX6g2jnEeHalLybHRjRhSxZLLEb0HA7Q0t6Q6?=
+ =?us-ascii?Q?/uHFVe5VTt8bje795ucnbWMnrNZ3JU5WyFZuftuRPWZmMdtuOo9vCfuFlbzw?=
+ =?us-ascii?Q?FE+0myxAQXyTIYfFoyr+AFvVw9FiTnprakgF45jmKxWQXCX54vXd9e6OJ9V+?=
+ =?us-ascii?Q?Ocl9F+Pbr+74uWSndWIEs20pTWd3wEW2Juf2bntLPR4nqA8Zrq/RcnVd2OLo?=
+ =?us-ascii?Q?B8CL1Y//aR+IACQYYttp/03KL1yM/M2At126rPYOfuCYUGZSM2PnqYljk4d5?=
+ =?us-ascii?Q?ke1ILshia0WXHOrzA/cZdum3JTe52RtRWgcDWYe2VZdwqW+A0k2VzoN94LlD?=
+ =?us-ascii?Q?9KpjerzTRPLbvhRnOn+VSeW08B+JjnKOauvTNaAmnnjqgSVdfK2vNbYDV+2K?=
+ =?us-ascii?Q?kOIVe8ThUg0jVLmqQIKznjlYELoGQ5rK8grWdagyQ5TRKdXxp1ldVMceY8m/?=
+ =?us-ascii?Q?iHikqMFOfND3m+eQE47ajLLAGrJD/JpPfVIdfAhbi/W9RhFy7jDsw9OncKMe?=
+ =?us-ascii?Q?XVm3u4d7Eu3k/PlKCNEHC4ZlBcUFk9kwVC/KiVsRN1QOmS+45C0laVsNmShG?=
+ =?us-ascii?Q?FQ496KGg4WDKSlpqY7RbJfEDKsOWhgku9Ql8njbNOmRwO1re0JAsySpOPYY4?=
+ =?us-ascii?Q?s10SaFA3PIr5KZ1ZiqnGwOcoGiE9qLw2qQp02b/mYgsMCyAMjDnsRL6mFg89?=
+ =?us-ascii?Q?MBNanssD12mwCuj00Y7o/b58Vq9+lfkpXRMC4RTxZ/32sxzrkJ4tDqe2nlTG?=
+ =?us-ascii?Q?s5tSnRUVulbUQs48SUFqNoLekFJ7YVrOgVyhXm9WswYw23uEo/IvuriN3G29?=
+ =?us-ascii?Q?u80XJTRfcDX41k3IjuuaxIg9v1+zfP6EtXDzU6yfLDs95MG8pmkitzqbG3NZ?=
+ =?us-ascii?Q?S5WFxftbBVunlAvqgsNEC/LSkYxqzUD7RkA89dt5nawEuiouDDjUS8ZGpur1?=
+ =?us-ascii?Q?+jo8SAN5RT8gMF8odxDeGIGdamw5nBvtlHbNfk4dGX/hocTls+er4k7IcXzi?=
+ =?us-ascii?Q?rHhq5NizQljs6woxKjHRZH+4rgj+5GuQjYiUa+9lW63tPb9vPg0e9+CyBl80?=
+ =?us-ascii?Q?rpcRTv7JHCZ8RBVSGWFb1pH1YKjoKSKKtweMnpwgBozlRnuWp8Zztp+n1S/x?=
+ =?us-ascii?Q?HJfU5KdzNBTdaw776kHoIpHZxbcCV5lBwm4qCtGeKms7dxiWAkDC3ncLjLa+?=
+ =?us-ascii?Q?9gz1rW3T0LC3HqcMR56MLQlrsywAFhdU7NuK49Fn0gYccT+88Tu/+BkeWn8J?=
+ =?us-ascii?Q?JSLJ1dzXh30jDVupCAqeJuHgHD3qda0jTqnM?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXSPRMB0053.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(52116014)(7416014)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mGfKjGRrwyhKVlDBMqYBhxGv2P42BQE6GiJh562deOWp1Ly3XT/k+pJGjnbM?=
+ =?us-ascii?Q?yGOBl0r4C1q4fpLyratAKDoLsz/RfciexR2lVNRfI1RqNS+6QvUXQznY0boz?=
+ =?us-ascii?Q?P4BU1W3Pe8f1H+l/bHtMg+WGZldErWcoGtYEyj+NTJc7UJvqeBC4Ldx0EnDZ?=
+ =?us-ascii?Q?QYhctE7ENLvYoAuMwodhhzuxuaIlGw/IoNXY6XoOz2rkspApCTcts00l9XUH?=
+ =?us-ascii?Q?rtefhmGqGdMaHVIfjJwRWrwWuMIhtroLypMh6JyAkeUvyV9AI8b0PnE7gC8i?=
+ =?us-ascii?Q?+/oh6FUxmZfoD4q17UimoaMojUCIVmVE+FF8EMw1WPeL4auqmN7+fmpcPDoi?=
+ =?us-ascii?Q?7qIyrFe8DHtyXC7VfLO94oK8nO43pxxQ9wAszQ/yOP9SB81LYUqKxog9rJeV?=
+ =?us-ascii?Q?QXrRtG8oE33/Y3Lmh/jQ6EDqh5NlehE4MSO+h8+bs0Wt1St2lmazpcuK01CG?=
+ =?us-ascii?Q?dwyk+N9GLJOTnM95eSF0c7LDl7RjkhARbGqdmw/QJd0PhHhhGORpQ+S730IL?=
+ =?us-ascii?Q?V4NQh0xREJMa/vzX49zSbcowWc3y1GdzQKloNO8L94pGfZ6Po1cLPwYBIcnz?=
+ =?us-ascii?Q?8d9CUXdbDODujDsqPGhtXCxf7yir7wXQA+HBYr99QEjy402FJehRje1K+QKy?=
+ =?us-ascii?Q?6V5/IeAqjQebaYbiwlBXv4pzasTaKa9hMFnMVye+dv+2XuOeMppecR+uI11w?=
+ =?us-ascii?Q?chCDnmRZ8o1gVk3L7Kl6eRyZ/8sNue+txJqXGtcIDW7uO3oxNfZ3JnB4Okxw?=
+ =?us-ascii?Q?rzvLpq6ZrTXenKQyNP6w/1nO/oUyRB+6jISOjxnVZMccZQInRgAvj44bYGou?=
+ =?us-ascii?Q?/Wt1zRDhi9ewmVC7TE0BxNT8VNuzQkF2WnUY+HMJtlObpkBp88PfYOK2wru2?=
+ =?us-ascii?Q?5lnNSt2+Nn/W5q6Jb4Hir48usTbmAw5dPZTgBgZfOwJTmN8qb+OiR5eeQ7/V?=
+ =?us-ascii?Q?LlJllAECPihrccoiz03aWD5aQJCfSkivkct732ecepgqHFRKaCbWr2Fe99ps?=
+ =?us-ascii?Q?gns5BJQ7JZ1vzRzSW8UpA053qbiN3CaRsXSrLWpbhJrQwFQ9kdOSpf2ElhRa?=
+ =?us-ascii?Q?N6f53M4UmSs8mrM/lsCNWydlmI1c+DFsq4YMtZXRPqQAWwRjSr+gptB8KOPH?=
+ =?us-ascii?Q?O5/gtIyrCt3go1R+buouI3nR0k+iCpm/xITI0HIi72b96sosP00MVWMlfLUB?=
+ =?us-ascii?Q?dk9zxTvbU/4CW2Jgb2zUTQXjo8ZgBkv2x7Gvg6eSwjvr2eMViPGb5w1+Tcvx?=
+ =?us-ascii?Q?8YkVwRKTaRmh+KFPTRVSqhEbcTc2an49RQ7Eqnk1gVp6XuxS17ex44lcm4ip?=
+ =?us-ascii?Q?mrwK93Y32hsR0W70Z1BEnePU25FmZgoaddsn5yBX/9FwhMjUdJaYYoV3kq30?=
+ =?us-ascii?Q?EzPEbumHgpF0oQvF2TVcHoZS4nG1HnPENElAsjb+Rx642ct7a7Q2OJpoQU8p?=
+ =?us-ascii?Q?XtBw2qpqrHD3y11uia/bBJhMNHVMNnviE6MXVv0VxfeVp7OZqUbnTjCj0UBk?=
+ =?us-ascii?Q?mV2kBmdeA4QP8v9O/z7XsGX07AnAix6QpQ3F9AHa1AM1R9d3k01yj/rymh8m?=
+ =?us-ascii?Q?8QUoLXD4nnCqckoU7Zw=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 352bd1e9-645a-425b-a0f2-08de12913af5
+X-MS-Exchange-CrossTenant-AuthSource: PAXSPRMB0053.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2025 00:06:50.3014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eevke9gtzItTMqJUV2/vPpyp8LpaXc99SLdGMVWOZDIvJCVa1EQDoSub7don7NbggyxVjdw4tkFZy1JzK3Z8Tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10474
 
-[+cc Marek, Yoshihiro for rcar-gen2]
+On Thu, Oct 23, 2025 at 04:18:52PM +0900, Koichiro Den wrote:
+> Follow common kernel idioms for indices derived from configfs attributes
+> and suppress Smatch warnings:
+>
+>   epf_ntb_mw1_show() warn: potential spectre issue 'ntb->mws_size' [r]
+>   epf_ntb_mw1_store() warn: potential spectre issue 'ntb->mws_size' [w]
+>
+> No functional changes.
+>
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 23 +++++++++++--------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index 83e9ab10f9c4..55307cd613c9 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -876,17 +876,19 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+>  	struct config_group *group = to_config_group(item);		\
+>  	struct epf_ntb *ntb = to_epf_ntb(group);			\
+>  	struct device *dev = &ntb->epf->dev;				\
+> -	int win_no;							\
+> +	int win_no, idx;						\
+>  									\
+>  	if (sscanf(#_name, "mw%d", &win_no) != 1)			\
+>  		return -EINVAL;						\
+>  									\
+> -	if (win_no <= 0 || win_no > ntb->num_mws) {			\
+> -		dev_err(dev, "Invalid num_nws: %d value\n", ntb->num_mws); \
+> +	idx = win_no - 1;						\
+> +	if (idx < 0 || idx >= ntb->num_mws) {				\
+> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
+> +			win_no, ntb->num_mws);				\
+>  		return -EINVAL;						\
+>  	}								\
+> -									\
+> -	return sprintf(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
+> +	idx = array_index_nospec(idx, ntb->num_mws);			\
+> +	return sprintf(page, "%lld\n", ntb->mws_size[idx]);		\
 
-On Wed, Oct 22, 2025 at 03:14:12PM +0300, Ilpo Järvinen wrote:
-> On Wed, 22 Oct 2025, Geert Uytterhoeven wrote:
-> > On Tue, 21 Oct 2025 at 13:54, Ilpo Järvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > On Tue, 21 Oct 2025, Geert Uytterhoeven wrote:
-> > > > On Mon, 20 Oct 2025 at 18:20, Ilpo Järvinen
-> > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > On Mon, 20 Oct 2025, Geert Uytterhoeven wrote:
-> > > > > > On Fri, 10 Oct 2025 at 16:42, Ilpo Järvinen
-> > > > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > > > Here's a series for Geert to test if this fixes the improper coalescing
-> > > > > > > of resources as was experienced with the pci_add_resource() change (I
-> > > > > > > know the breaking change was pulled before 6.18 main PR but I'd want to
-> > > > > > > retry it later once the known issues have been addressed). The expected
-> > > > > > > result is there'll be two adjacent host bridge resources in the
-> > > > > > > resource tree as the different name should disallow coalescing them
-> > > > > > > together, and therefore BAR0 has a window into which it belongs to.
-> > > > > > >
-> > > > > > > Generic info for the series:
-> > > > > > >
-> > > > > > > PCI host bridge windows were coalesced in place into one of the structs
-> > > > > > > on the resources list. The host bridge window coalescing code does not
-> > > > > > > know who holds references and still needs the struct resource it's
-> > > > > > > coalescing from/to so it is safer to perform coalescing into entirely
-> > > > > > > a new struct resource instead and leave the old resource addresses as
-> > > > > > > they were.
-> > > > > > >
-> > > > > > > The checks when coalescing is allowed are also made stricter so that
-> > > > > > > only resources that have identical the metadata can be coalesced.
-> > > > > > >
-> > > > > > > As a bonus, there's also a bit of framework to easily create kunit
-> > > > > > > tests for resource tree functions (beyond just resource_coalesce()).
-> > > > > > >
-> > > > > > > Ilpo Järvinen (3):
-> > > > > > >   PCI: Refactor host bridge window coalescing loop to use prev
-> > > > > > >   PCI: Do not coalesce host bridge resource structs in place
-> > > > > > >   resource, kunit: add test case for resource_coalesce()
-> > > > > >
-> > > > > > Thanks for your series!
-> > > > > >
-> > > > > > I have applied this on top of commit 06b77d5647a4d6a7 ("PCI:
-> > > > > > Mark resources IORESOURCE_UNSET when outside bridge windows"), and
-> > > > > > gave it a a try on Koelsch (R-Car M2-W).
-> > > > >
-> > > > > So the pci_bus_add_resource() patch to rcar_pci_probe() was not included?
-> > > > > No coalescing would be attempted without that change.
-> > > >
-> > > > Sorry, I didn't realize you wanted that (and anything else) to be
-> > > > included, too.  Please tell me the exact base I should use for testing,
-> > > > and I will give it another run.
-> > >
-> > > I'm sorry, it's indeed a bit confusing as some of these patches never
-> > > have been in Linus' tree.
-> > >
-> > > So I'm interested on what's the result with these changes/series together:
-> > >
-> > > [PATCH 1/2] PCI: Setup bridge resources earlier
-> > > [PATCH 2/2] PCI: Resources outside their window must set IORESOURCE_UNSET
-> > > [PATCH 1/1] PCI: rcar-gen2: Add BAR0 into host bridge resources
-> > > [PATCH 1/3] PCI: Refactor host bridge window coalescing loop to use prev
-> > > [PATCH 2/3] PCI: Do not coalesce host bridge resource structs in place
-> > > [PATCH 3/3] resource, kunit: add test case for resource_coalesce()
-> > >
-> > > You might also want to change that pci_dbg() in the IORESOURCE_UNSET patch
-> > > to pci_info() (as otherwise dyndbg is necessary to make it visible).
-> > 
-> > Thanks, all done:
-> > 
-> >     $ git cherry -v --abbrev=1 v6.18-rc2^
-> >     + 211ddde0 Linux 6.18-rc2
-> >     + 3fdaf2 PCI: Setup bridge resources earlier
-> >     + 5be02e5 PCI: Resources outside their window must set IORESOURCE_UNSET
-> >     + adf6f11 PCI: rcar-gen2: Add BAR0 into host bridge resources
-> >     + eecb500 PCI: Refactor host bridge window coalescing loop to use prev
-> >     + 60470b3 PCI: Do not coalesce host bridge resource structs in place
-> >     + afe3ec resource, kunit: add test case for resource_coalesce()
-> >     + 487c98 Use dev_info() in drivers/pci/probe.c:__pci_read_base()
-> > IORESOURCE_UNSET path
-> > 
-> > Compared to v6.18-rc2, dmesg changed (for the first PCI/USB instance)
-> > like:
-> > 
-> >      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
-> >      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff
-> > -> 0x00ee080000
-> >      pci-rcar-gen2 ee090000.pci: PCI: revision 11
-> >      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
-> >      pci_bus 0000:00: root bus resource [bus 00]
-> >      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
-> >     +pci_bus 0000:00: root bus resource [mem 0xee090000-0xee090bff]
-> >      pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional
-> > PCI endpoint
-> >      pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
-> >     -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
-> >     +pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]: no
-> > initial claim (no window)
-> >     +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
-> >      pci 0000:00:01.0: [1033:0035] type 00 class 0x0c0310 conventional
-> > PCI endpoint
-> >     -pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]
-> >     +pci 0000:00:01.0: BAR 0 [mem 0x00000000-0x00000fff]: no initial
-> > claim (no window)
-> >     +pci 0000:00:01.0: BAR 0 [mem size 0x00001000]
-> >      pci 0000:00:01.0: supports D1 D2
-> >      pci 0000:00:01.0: PME# supported from D0 D1 D2 D3hot
-> >      pci 0000:00:02.0: [1033:00e0] type 00 class 0x0c0320 conventional
-> > PCI endpoint
-> >     -pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]
-> >     +pci 0000:00:02.0: BAR 0 [mem 0x00000000-0x000000ff]: no initial
-> > claim (no window)
-> >     +pci 0000:00:02.0: BAR 0 [mem size 0x00000100]
-> >      pci 0000:00:02.0: supports D1 D2
-> >      pci 0000:00:02.0: PME# supported from D0 D1 D2 D3hot
-> >      PCI: bus0: Fast back to back transfers disabled
-> >      pci 0000:00:01.0: BAR 0 [mem 0xee080000-0xee080fff]: assigned
-> >      pci 0000:00:02.0: BAR 0 [mem 0xee081000-0xee0810ff]: assigned
-> >      pci_bus 0000:00: resource 4 [mem 0xee080000-0xee08ffff]
-> >     +pci_bus 0000:00: resource 5 [mem 0xee090000-0xee090bff]
-> >      pci 0000:00:01.0: enabling device (0140 -> 0142)
-> >      pci 0000:00:02.0: enabling device (0140 -> 0142)
-> > 
-> > > The expected result is that those usb resources are properly parented and
-> > > the ee080000-ee08ffff and ee090000-ee090bff are not coalesced together (as
-> > > that would destroy information). So something along the lines of:
-> > >
-> > >     ee080000-ee08ffff : pci@ee090000
-> > >       ee080000-ee080fff : 0000:00:01.0
-> > >         ee080000-ee080fff : ohci_hcd
-> > >       ee081000-ee0810ff : 0000:00:02.0
-> > >         ee081000-ee0810ff : ehci_hcd
-> > >     ee090000-ee090bff : ee090000.pci pci@ee090000
-> > 
-> > Compared to v6.18-rc2, the output of "lspci -v" or "cat /proc/iomem"
-> > did not change.  Hence for the two PCI/USB instances:
-> > 
-> >     ee080000-ee08ffff : pci@ee090000
-> >       ee080000-ee080fff : 0000:00:01.0
-> >         ee080000-ee080fff : ohci_hcd
-> >       ee081000-ee0810ff : 0000:00:02.0
-> >         ee081000-ee0810ff : ehci_hcd
-> >     ee090000-ee090bff : ee090000.pci pci@ee090000
-> >     ee0c0000-ee0cffff : pci@ee0d0000
-> >       ee0c0000-ee0c0fff : 0001:01:01.0
-> >         ee0c0000-ee0c0fff : ohci_hcd
-> >       ee0c1000-ee0c10ff : 0001:01:02.0
-> >         ee0c1000-ee0c10ff : ehci_hcd
-> >     ee0d0000-ee0d0bff : ee0d0000.pci pci@ee0d0000
-> 
-> Hi Rob,
-> 
-> I'd want to hear your opinion on the solutions me and Geert tried and
-> discussed in the subthread starting from this:
-> 
-> https://lore.kernel.org/linux-pci/CAMuHMdVtVzcL3AX0uetNhKr-gLij37Ww+fcWXxnYpO3xRAOthA@mail.gmail.com/
->    
-> A short history/summary of the problem and solution space:
-> 
-> I made "PCI: Resources outside their window must set IORESOURCE_UNSET"
-> change that checks at the init time whether BARs belong to an upstream
-> window or not. If not, the resource is marked wit IORESOURCE_UNSET to 
-> indicate FW/platform didn't provide working addressing for those BARs.
-> 
-> On Geert's R-Car M2-W, it caused some BARs to be detected as not having a
-> an upstream window where they belong to:
-> 
->      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
->      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff -> 0x00ee080000
->      pci-rcar-gen2 ee090000.pci: PCI: revision 11
->      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
->      pci_bus 0000:00: root bus resource [bus 00]
->      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
->      pci 0000:00:00.0: [1033:0000] type 00 class 0x060000 conventional PCI endpoint
->     -pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]
->     -pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]
->     +pci 0000:00:00.0: BAR 0 [mem 0xee090800-0xee090bff]: no initial claim (no window)
->     +pci 0000:00:00.0: BAR 0 [mem size 0x00000400]
->     +pci 0000:00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref]: no initial claim (no window)
->     +pci 0000:00:00.0: BAR 1 [mem size 0x40000000 pref]
-> 
-> ...In the log above, there's no root bus resource that covers
-> BAR0's 0xee090800-0xee090bff address range (which itself comes from DT 
-> "reg"), and thus it got marked IORESOURCE_UNSET with as it does not 
-> have window where it belongs to.
+keep original check if (win_no <= 0 || win_no > ntb->num_mws)
 
-I guess this came from arch/arm/boot/dts/renesas/r8a7791.dtsi:
+just
+	idx = array_index_nospec(win_no - 1, ntb->num_mws);
+	return sprintf(page, "%lld\n", ntb->mws_size[idx]);
 
-                pci0: pci@ee090000 {
-                        compatible = "renesas,pci-r8a7791",
-                                     "renesas,pci-rcar-gen2";
-                        reg = <0 0xee090000 0 0xc00>,
-                              <0 0xee080000 0 0x1100>;
-                        ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
-                        bus-range = <0 0>;
+It should be more simple.
 
-                pciec: pcie@fe000000 {
-                        compatible = "renesas,pcie-r8a7791",
-                                     "renesas,pcie-rcar-gen2";
-                        dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>,
-                        bus-range = <0x00 0xff>;
-
-"reg" describes address space on a device's parent side, e.g.,
-memory-mapped registers consumed by the device itself.  Since this is
-a host bridge, it also has "ranges" to describe address space on its
-child side, including any address translation from the parent side.
-
-PCI devices are on the child side and should consume space from the
-"ranges" child side, [mem 0xee080000-0xee08ffff] in this case.
-
-00:00.0: BAR 0 [mem 0xee090800-0xee090bff] isn't in that child address
-space so I think it's invalid per spec.  Does 00:00.0 actually respond
-at whatever address is in BAR 0?  Do we care?  I don't see any driver
-that claims [1033:0000].
-
-00:00.0: BAR 1 [mem 0x40000000-0x7fffffff pref] looks like it came
-from the pcie@fe000000 "dma-ranges", which describes valid child
-address space for DMA.  We need to know the DMA address space, of
-course, but we get it from "dma-ranges", not from a BAR.
-
-I think it would be nicest if pci-rcar-gen2.c could hide both BAR 0
-and 1 somehow so they wouldn't confuse us.
-
-(BTW, I don't understand how both pci@ee090000 and pcie@fe000000 say
-they are bridges to bus 0.)
-
-> It's unclear to me whether DT ranges should have included BAR0 so that 
-> the root bus resources would cover that range?
-> 
-> I was then told the updating ranges now will not be enough due to DT 
-> backwards compatibility requirements so it looks we have to resort to a 
-> change like this:
-> 
-> https://lore.kernel.org/linux-pci/7640a03e-dfea-db9c-80f5-d80fa2c505b7@linux.intel.com/
-> 
-> (+ a few supporting changes as that change exposed brokenness in PCI core.)
-> 
-> Does that look correct solution? That is, should these be added on 
-> case-by-case basis as additional root bus resources or should there be 
-> something more generic in the OF PCI code to do it?
-> 
-> There's also that BAR1 which seems to be related to dma_ranges and I don't 
-> know what to make of it. This resource comes with the added complication 
-> that this same address appears more than once (in the full log there's 
-> more than one PCI/USB instance). Again, this BAR1 is not covered by any 
-> root bus resource and thus gets flagged with IORESOURCE_UNSET. 
-> 
-> So I'm interested what is the "correct" solution for these resources that 
-> appear as BARs but do not have a backing root bus resource, is it having 
-> DT "ranges" cover them (I'm ignoring backwards compatibility aspect here) 
-> or something else?
-> 
-> 
-> In addition, is there something special/non-ordinary with these BARs and 
-> PCI core should treat them somehow differently? If that's the case, how 
-> can I identify such BARs from "normal" ones to avoid messing with them?
-> 
-> 
-> -- 
->  i.
-
+Frank
+>  }
+>
+>  #define EPF_NTB_MW_W(_name)						\
+> @@ -896,7 +898,7 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
+>  	struct config_group *group = to_config_group(item);		\
+>  	struct epf_ntb *ntb = to_epf_ntb(group);			\
+>  	struct device *dev = &ntb->epf->dev;				\
+> -	int win_no;							\
+> +	int win_no, idx;						\
+>  	u64 val;							\
+>  	int ret;							\
+>  									\
+> @@ -907,12 +909,15 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
+>  	if (sscanf(#_name, "mw%d", &win_no) != 1)			\
+>  		return -EINVAL;						\
+>  									\
+> -	if (win_no <= 0 || win_no > ntb->num_mws) {			\
+> -		dev_err(dev, "Invalid num_nws: %d value\n", ntb->num_mws); \
+> +	idx = win_no - 1;						\
+> +	if (idx < 0 || idx >= ntb->num_mws) {				\
+> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
+> +			win_no, ntb->num_mws);				\
+>  		return -EINVAL;						\
+>  	}								\
+>  									\
+> -	ntb->mws_size[win_no - 1] = val;				\
+> +	idx = array_index_nospec(idx, ntb->num_mws);			\
+> +	ntb->mws_size[idx] = val;					\
+>  									\
+>  	return len;							\
+>  }
+> --
+> 2.48.1
+>
 
