@@ -1,317 +1,153 @@
-Return-Path: <linux-pci+bounces-39303-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39304-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84345C0844D
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 01:00:41 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2667CC084BA
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 01:24:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 31D1D4E1BE0
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 23:00:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 206BB4EA72F
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 23:24:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49BFF125A9;
-	Fri, 24 Oct 2025 23:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D83B30DD2F;
+	Fri, 24 Oct 2025 23:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="elLbTskC"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="jUTlBQ2h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0019135B14E;
-	Fri, 24 Oct 2025 23:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E92F5A22;
+	Fri, 24 Oct 2025 23:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761346838; cv=fail; b=LYKpwETcBV9aiRQCCJO7/wqHUoSmx+43nu8Y33pe095eXhUqvHV4DMGEniSQQuD25L5jrBPydMp9Yu27/voziWl+/em9udj6GTRoZE4PFz+kz65bPyRFeytSe5ezDSGzX1k6mhcCH+7Z8uL1KrAXQt6yvxNE/RgI7xTwR1JSCkI=
+	t=1761348269; cv=pass; b=tESIZXI3rYe74n1MlkmYxetEG3LosKmeN3UR1hdQDjz99Tbz9srsmGVoDx8Wt4YvF1W87bGfcvNavQPxn7Nj7P9kXzzJ6n6TRvefIAhbizE8PqujlDCJzBPDyifyWVTwv1CLlkT+FvgpXTXTWHecJR+SB7Zsfo10l0t51+fECNY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761346838; c=relaxed/simple;
-	bh=Kzfm2DkT3xvsTxfu7jmJesklPi+yUv2Tpwl5izxDhFw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OlvDbdiH3wGRuSBYeEhaed9BDM6/+iK04wyjR6KIW45hZf0q2SbnZ3cumXG3O1vfFQFL2qVi6Z2+tcTKi59jtRjFntluHP7TmfH11vtgjtHc4Vb5lrQvOzsI2gR9A1yqsnE6Mp6jqLNmUdunIjG6kBGCBAmlRlRiHmarup/RVdI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=elLbTskC; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761346836; x=1792882836;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=Kzfm2DkT3xvsTxfu7jmJesklPi+yUv2Tpwl5izxDhFw=;
-  b=elLbTskCasRF6gZjU1UJfT9BxgXaDNFDeRBp7z3wFOECi/vMLqeC+xaC
-   189e6r3ef4e3BAkF0UgyZBwjl0JGHtlljHQqJA3IA3ecCM6F9wgJQspZJ
-   X8GzvVKWoSX1JJ8OLLo9mQKqwLiqVN6kbLi/uv3ukEqAI5knOZ6zZ4fnB
-   0taGfFZYfF9KLxyZVP1kOs+A+Hjqa4CJLAI6atOIyVoUHLjDzHyvs8CD/
-   iH/MP342AaKGlkDnF+cs961RCI/uSc6L9xO4S5pjT36WJhI0IoTGZa48H
-   QtmDlGP1rMwuOdtSvfcFkmxZPnbQMZ52CheRQ9GoSkzHNeR2xFxJPncIu
-   w==;
-X-CSE-ConnectionGUID: kTm1zoMaTCiXs0wq/pT5kg==
-X-CSE-MsgGUID: rwwttMl+RTyGbfHegvnC5Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62559860"
-X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
-   d="scan'208";a="62559860"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 16:00:35 -0700
-X-CSE-ConnectionGUID: dTmYWFlGRHWOBjOqgdgLpQ==
-X-CSE-MsgGUID: UvM46KKNT66TM/04jGDcFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
-   d="scan'208";a="184610400"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 16:00:35 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Fri, 24 Oct 2025 16:00:34 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Fri, 24 Oct 2025 16:00:34 -0700
-Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.47) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Fri, 24 Oct 2025 16:00:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kiCPlptCWtfBzfnwcsrTEvbA7RyPF0fX3uOWsqhYEq2g8CjnqHHcBUjHLp3CShAkhB8s3h2rE3AXP9XCRzvOrrCzxkuml5CPG9puWF4gDe8MMCwWKjcwDAOu+tOlDn/1ytpIzbSpD29Vrnn76liS4XDbM7nTKPFi/54e4VhEm+FqezLQDucjUKBDkA+AWT0eLsDgZiPeLcBzG22fLm9P+ak1OK9F54avbL4vz/m4Zb3cT9uUozglHNQ3YiGhSzTDjFDbWp9ElDiSQ7Abc1a17SMJkYNiz66W7EmPOwnB6fuJSqrBc6x5lUnmwAFyTw9r3HhNyK/H8tw3tlLaCHZp/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k33zUOuTfK1o/b7AioTxbaa+nRnIVH+wYDL5HbbEstw=;
- b=O4gKvphleOK4OSorM+V6OxATcF1xPTGc9LlIop8ysImA5a7zVbWu3FNFdhbIDGwIwO0sv0PYM183HZgfeRiT7mSe0y/RwupCMiqzN/6AhT3xYF5H/cc1NY8W5udaMohgajz1O5SzJefuozGzUaafdrzkhTu652mDQIBX2V+Lxf76CiO7dBHiVxLox7VaJdegxQ6nF4aQJlH5nABhV+lzyNr0b+ZAEfdSDupP+0NOnoqJZHs7WPMFdGHe3KX0TYovvh9x9XIrbEYO6FzcWpZrke1wxQC8lTLkUfybYQMhX+jP2BZGNa29UgljGuHRwa1bI4sCaflNiUwMAIxHWiCxAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by IA1PR11MB8176.namprd11.prod.outlook.com (2603:10b6:208:452::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Fri, 24 Oct
- 2025 23:00:32 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9253.011; Fri, 24 Oct 2025
- 23:00:32 +0000
-Date: Fri, 24 Oct 2025 18:00:28 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <intel-xe@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?=
-	<ilpo.jarvinen@linux.intel.com>, Icenowy Zheng <uwu@icenowy.me>, Vivian Wang
-	<wangruikang@iscas.ac.cn>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
-	<thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Simon Richter
-	<Simon.Richter@hogyros.de>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow
- GPU BAR resize
-Message-ID: <o5rhgujo2ftmmnqdwpmbr44nlm6ygrouamoxziomlhnsbkww34@cp2zgmc4luhz>
-References: <20250918-xe-pci-rebar-2-v1-1-6c094702a074@intel.com>
- <20251024224401.GA1371085@bhelgaas>
-Content-Type: text/plain; charset="iso-8859-1"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251024224401.GA1371085@bhelgaas>
-X-ClientProxiedBy: BYAPR01CA0037.prod.exchangelabs.com (2603:10b6:a03:94::14)
- To CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+	s=arc-20240116; t=1761348269; c=relaxed/simple;
+	bh=NQ0CrT99S0HB3iA81tiE1fKOXNruYRsIn5L3vGBZdtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8JSdoh30zTpkv6DtPR9UqjoEILC8+z0s+1Ndj9y9flFG9S6SiV2d8jrt6hAqlx98mamkkU772V9SXHMqb6FLq9Q8oF2I6f1yTOpM0T8cJsnr2EL37uclg12YjC5zQnpg1dIRbZ+1QTDUVK5x58ziodwvrPG+7DKkUIVgQ0ROQc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=jUTlBQ2h; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761348264; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=E7jo3eFGtMbYc4umajgAJrDaAAeoH78FvXSvtwIPzMd+KALm6TW6J/PZo3Gl8IAj7J4S4JOqDkVaqCJ4DpyxUkL/D7r/nDZxCDXQIylw9m80ZHFV7ZnmYl6fN+yD1hWHfO07oqL+vl1wjfMlpqfazjWlj918MvnuxIHK7Hk60jc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761348264; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=; 
+	b=ERHFHpBMKqE6LtNxoI7EvA9o2mCsVLRI6J1+/qPThd+k1qt+nO9OwZhbx5E81USsXE7RyOCW1GyB5isp3iLRSkJC/p6ufY9tyScGPtH6liK71Qdq4msBQsSye0JsA4aNBjxrfKHSyGI+LcIwBsP7dWSDg8vI9r+LX3h+vlO9w2c=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761348264;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=;
+	b=jUTlBQ2h6Tuak+aNMb2CNTnEQ4BDpyDVgaRRROiBpKRCvZOPLn1o5LGy8JyX0l9X
+	sOXFCDgYktIsDNXusx7tmsAjPkY6Gy0P2EcQplSNWKOk61O5CR3GNBKVdk6o+/41U8c
+	rO3cD7tc7lCrL45EbJ0fyWmdAPtKKmAhIvpw6Ir4=
+Received: by mx.zohomail.com with SMTPS id 1761348261746725.1283250784594;
+	Fri, 24 Oct 2025 16:24:21 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 476FE181935; Sat, 25 Oct 2025 01:24:06 +0200 (CEST)
+Date: Sat, 25 Oct 2025 01:24:06 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Guenter Roeck <linux@roeck-us.net>, 
+	Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Georgi Djakov <djakov@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-media@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+Message-ID: <god73pukywwznfyym7tym6m5k6fn3u7hwzj5gwhrxytt7oinfv@pokb4aos7pp6>
+References: <20251023143957.2899600-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|IA1PR11MB8176:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec81b2d7-faea-4975-66f0-08de13512232
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?XybcBtO2GD4EMZSfJvKVT9EUovNpiRBRWZsVWv1286uxSoW/IkjZZ+IsOB?=
- =?iso-8859-1?Q?77JW042UkiOlgq7U/eosRUkQKEMtbqUHIeWJHvy8+R/PJASMoRy/+jgZK8?=
- =?iso-8859-1?Q?6fQHdB0WAXw1rqDDZsyG3UW71FHoEkW/JN+sxVNHivqmngtPWyCEyxFv6z?=
- =?iso-8859-1?Q?nWN9RucF/yYi1pSvneTi8z+YxlQWkbYbew40se9Mgx0VIGPN64Hcm9S92M?=
- =?iso-8859-1?Q?BG5xYaktS6Jo9qRlwKiGpY/MQKVx2W+LHNqm+oD94+E5R82clgTCgiNjhm?=
- =?iso-8859-1?Q?6ZoxXLCPaDAWQD88Jyq/VpcXEbX5EzGuxCjBzY+LyEbiLa+QKY+Y2e9jFS?=
- =?iso-8859-1?Q?EixLMnPnIgbD+XiGep3gn++tW8zYxznn16vVTO2Rgbq1zIT9kKucd2WGJt?=
- =?iso-8859-1?Q?RRlVM8K1Mcrpjrri8ClhnmCr7UJHYWfMGWenuI6tBQet7+Q6G/3X7FC4Ov?=
- =?iso-8859-1?Q?VMqSC9KA6q3G2fEvoS+dG7LoQLuVdNPlhMy/NUa4m1/cWM5/7LVhF7pMdo?=
- =?iso-8859-1?Q?ovTmrIQeKqU7atfyUw24+jG/mM9koZ8VKvLII/fJa+kPOG5uzvFXd7D5j+?=
- =?iso-8859-1?Q?VHpNmEcZQ/EYrqwW98w8Mgvyv3qF9+oXYUeKm43JWML3IZmlYRj7Us1+P1?=
- =?iso-8859-1?Q?IN2bsdL/fj0edJKX35GdTK4iQ+jezIGi3EgO6iq5s3p+5KyuIerym86FrA?=
- =?iso-8859-1?Q?w7eGQDT9Fe6VbEqG7aWWqQdSTsJM9maDJgXVW+QRW6B/sjDqlHx4NRMa9X?=
- =?iso-8859-1?Q?WvsZwimH6H9hGr1GR5sx3qIbMEq29Yf7gdi7dcgHd4T8gLpq98NbxFPP2L?=
- =?iso-8859-1?Q?CyC11BgNQeUz7X2bd6eDdnTK6m+SwTo+fPI+QH7mrA8FsKdJ2ZshyTGW1U?=
- =?iso-8859-1?Q?Umm/kolTYbPxXAZ4GJjBu09RSqms+nVR9JNDNO3cFb8yFnteV2NBZR7iEG?=
- =?iso-8859-1?Q?04Js6lLuWoVn5rq5aMDFuK8lTkmcuB9a3bCUs9MdXKodypFxd046D4q4qn?=
- =?iso-8859-1?Q?1dJ0sgyYjaTYVw3zJSfO/kBhi/mDM8IQCfHcCAEX+Vevk2iHWopUAsREEd?=
- =?iso-8859-1?Q?PMtzoXZEA8Kiy6EprdjMsmNGbOhabYytgEvT/TgfLZXKX4UYxGY4uEF0cM?=
- =?iso-8859-1?Q?F2gclScpy5ljXDJlopWZjj56HZmJgD2rT4YKT+WZNvcIqrC1oLixVEQC79?=
- =?iso-8859-1?Q?ahAJpu+MXleZbOeMr6H31GHtb0M/o9RuSsl57tr0qfKMJgFgsqXmFq+8hT?=
- =?iso-8859-1?Q?WMYD3Fy6qWgaTiSeCdBeIRJborLhy1izSUNjZz3knd2N8tDz/fqid3CBjR?=
- =?iso-8859-1?Q?jAs4/hH7Djk/ME4LOJ44l+5qc3OalvO3SRPGlqtArCmVvxtzygV5OvJ/yX?=
- =?iso-8859-1?Q?apKsQe/Qcs7UzXo1k5xNGorD5yB8YDXtRWUD5aP3RyMlRgc8QqI2oWwHsa?=
- =?iso-8859-1?Q?hOofLuJeIKqDy2gxah7OxA9hBJ2gijFa0Z1SM8sSArbbFZnDUw5PdXfYpA?=
- =?iso-8859-1?Q?1xw3ruxTGf3fiJc9sDYQz0XUmOPqpunJSNiqtCPCWYzA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?AuHcabPaoizkjnMjmXDa2tCg+wznSeJ/EXMN4Om1tWwAbkcqQ3+CoWNRQX?=
- =?iso-8859-1?Q?UzT1a4qCIwL9VFDxCKZ7TPigbSrnE42IS61oWM7Ew7BWCideds6IS78Ut4?=
- =?iso-8859-1?Q?EpujMnUbaqAxVSL7uph0laO3K81vp1/bIcRxHjuoLpx9Jujk4DA+f4I5Tc?=
- =?iso-8859-1?Q?MJtJmpCpGaeq96clvTESSIJ8hXgADnOrMj4Ll9U/DdyUPdxQX1dRc/g/Pf?=
- =?iso-8859-1?Q?NIgy7+BXC5ZSenrH52Dx3cITVQNdh/c2jXoK3Kr/oGrCnVQ98K4Pgu22/5?=
- =?iso-8859-1?Q?sYwTYIIt6+iAdTiZDgiTuo6GF7hZg+xYZdmkN1NmwqNfJudRb10sNE8MTh?=
- =?iso-8859-1?Q?ncEk+5uS2YFKkQTqhoSeC3yReGSljoC+O5M9faBbT0ul3es8BY9mqMLNyG?=
- =?iso-8859-1?Q?8nztvMJxL/zrd2rhesiGxNZqFEIbDecjqlDg/EruSjuH/E/r5U8yp7+mzX?=
- =?iso-8859-1?Q?xvwIj+4/nW5HPYOjI66GwKmFeAB5200aGCuACMNn6cMOKBuD4NTkL8tPg0?=
- =?iso-8859-1?Q?AEuRyPnwENfKCMM4laPBkBbG7UaOFxWLqUUStQoQZYWSoWaXSYp4Z+rzE7?=
- =?iso-8859-1?Q?wJgbJKVprv0H+Mg51f2DWgioFBhVtrhN6eh5Im0DOyWSG+sF1tfO4qrTW9?=
- =?iso-8859-1?Q?bDt6enL1U3XLf+nCu2NICLP0I9BXKEpQwbvJBAmlukkLvt/cjS87lV6EYG?=
- =?iso-8859-1?Q?Vt+21OA1Sm3zzMJ2u0lojxX9GHA3NXBVa8S9BV+/xJP72sxR4lOQLEizy+?=
- =?iso-8859-1?Q?SC9kXN0KhAXyiOhcNgNaIDbWUs6H8ut0Wb+GdXr7gnFw3AgpMuxq0HIpOG?=
- =?iso-8859-1?Q?9sWnyGT6HtCy7ZgdytYK3zxel9kJsUHrxXb1u7BXEPM01nPeifChUQANuf?=
- =?iso-8859-1?Q?iT09UnSPP3s9rIjV82ICncM3PGL4tt80hNdJspQBvFtfBNN1nLG0ZikRIn?=
- =?iso-8859-1?Q?9DtG00cKpOeXeeQuLIGWubkBhiQFeyGc/MqFOlpDgo1TjqkmdSA4GNUBDX?=
- =?iso-8859-1?Q?vGNQsvcbYIqvjLSsFgg0B19TjS9oxx3hU4Jb32/R+SMaq+VVoRMObj1ZlA?=
- =?iso-8859-1?Q?0Ttz+jqF3YEeIMzCg5MjhRl+TVZyyo4gqRfv/l8TRmM4mcgjMonrPuFjQr?=
- =?iso-8859-1?Q?68aViR3gBC+HyIql3Mlh+0orRLAtIuXi4BckU8PNio2h04kKppt65nGxcJ?=
- =?iso-8859-1?Q?DIGvapPzdCJp4Yc2gzkAqj+VYG5SaBqLIvdt4TN0FVM6BJPKlhf5bW7Jxk?=
- =?iso-8859-1?Q?u2+hMrexPaZ0ltzxl3yiICxmZabyZKLN0LiEbCswgtnJiGmB8IhlSXtIwQ?=
- =?iso-8859-1?Q?f739qIg4ENaSIRFv05H/5llVHDPdjfe1DZ+FMDTMdplNhylrrPB75lOGJI?=
- =?iso-8859-1?Q?RQOyx5Z21Ux2vihiXEFe8L1+mnOD6U07itH/SlGsrZxz3pRDhtqbPklsvx?=
- =?iso-8859-1?Q?jwIk+9wosR9YIAb6VeCMk/6Vl8HxeXp7YlRKyrfXjsS15yPS80FYPBv68f?=
- =?iso-8859-1?Q?uJcSY++sD+hJwgDx/i8nvbUYcZOk7tMjHPQTONBH6AxkLIhua0TOFi1ftp?=
- =?iso-8859-1?Q?NacZUFOf+XxL0SAIJ6eaLoKbjEguU2wN8v6mpsIAIjcYd+2OI00S4n9+gt?=
- =?iso-8859-1?Q?RUxpwS/Dsq3jWCZYze7idGGpWGFsp6+8lzvqQC5tQWYv5BoneAbEx8vw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec81b2d7-faea-4975-66f0-08de13512232
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2025 23:00:32.1869
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kv7nqZDe9+egUUsmWwDle0jxvBDUpEgEi/HxK/30YZwLvt9W99cbno8PGoS5T0BDls/Pb2Mdk6Iy6w47Y8r/o9GOFwCMrmWB78OS/qq4td4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8176
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4uianbie6i5kbvu2"
+Content-Disposition: inline
+In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/261.330.82
+X-ZohoMailClient: External
 
-On Fri, Oct 24, 2025 at 05:44:01PM -0500, Bjorn Helgaas wrote:
->On Thu, Sep 18, 2025 at 01:58:56PM -0700, Lucas De Marchi wrote:
->> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->>
->> Resizing BAR to a larger size has to release upstream bridge windows in
->> order make the bridge windows larger as well (and to potential relocate
->> them into a larger free block within iomem space). Some GPUs have an
->> integrated PCI switch that has BAR0. The resource allocation assigns
->> space for that BAR0 as it does for any resource.
->>
->> An extra resource on a bridge will pin its upstream bridge window in
->> place which prevents BAR resize for anything beneath that bridge.
->>
->> Nothing in the pcieport driver provided by PCI core, which typically is
->> the driver bound to these bridges, requires that BAR0. Because of that,
->> releasing the extra BAR does not seem to have notable downsides but
->> comes with a clear upside.
->>
->> Therefore, release BAR0 of such switches using a quirk and clear its
->> flags to prevent any new invocation of the resource assignment
->> algorithm from assigning the resource again.
->>
->> Due to other siblings within the PCI hierarchy of all the devices
->> integrated into the GPU, some other devices may still have to be
->> manually removed before the resize is free of any bridge window pins.
->> Such siblings can be released through sysfs to unpin windows while
->> leaving access to GPU's sysfs entries required for initiating the
->> resize operation, whereas removing the topmost bridge this quirk
->> targets would result in removing the GPU device as well so no manual
->> workaround for this problem exists.
->>
->> Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
->> Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3lwcp3h7esmvnyg26n44y@owo2ojiu2mov/
->> Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icenowy.me/
->> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Cc: <stable@vger.kernel.org> # v6.12+
->> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->> ---
->>
->> Remarks from Ilpo: this feels quite hacky to me and I'm working towards a
->> better solution which is to consider Resizable BAR maximum size the
->> resource fitting algorithm. But then, I don't expect the better solution
->> to be something we want to push into stable due to extremely invasive
->> dependencies. So maybe consider this an interim/legacy solution to the
->> resizing problem and remove it once the algorithmic approach works (or
->> more precisely retain it only in the old kernel versions).
->> ---
->>  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index d97335a401930..9b1c08de3aa89 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
->>  #endif
->> +
->> +/*
->> + * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
->> + * resizing the BARs of the GPU device due to that bridge BAR0 pinning the
->> + * bridge window it's under in place. Nothing in pcieport requires that
->> + * BAR0.
->> + *
->> + * Release and disable BAR0 permanently by clearing its flags to prevent
->> + * anything from assigning it again.
->
->Does "disabling BAR0" actually work?  This quirk keeps the PCI core
->from assigning resources to the BAR, but I don't think we have a way
->to actually disable an individual BAR, do we?
->
->I think the only control is PCI_COMMAND_MEMORY, and the bridge must
->have PCI_COMMAND_MEMORY enabled so memory accesses to downstream
->devices work.
->
->No matter what we do to the struct resource, the hardware BAR still
->contains some address, and the bridge will decode any accesses that
->match the address in the BAR.
 
-there's no real use for that BAR, so I don't think it matters if the hw
-will still decode accesses to it - in this case I don't think it's
-really important to really disable it. As long as pci can manage the
-resources and not block the move of endpoint's BARs, it should work.
+--4uianbie6i5kbvu2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+MIME-Version: 1.0
 
-These 2 patches definitely fixed the rebar for me in a system with
-Battle Mage GPU. I don't have access to it right now, but I can dig more
-info about it if it's needed.
+Hi,
 
->
->Maybe we could effectively disable the BAR by setting it to some
->impossible address, i.e., something outside both the upstream and
->downstream bridge windows so memory accesses could never be routed to
->it?
+On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
+> Generally at most 1 blank line is the standard style for DT schema
+> files. Remove the few cases with more than 1 so that the yamllint check
+> for this can be enabled.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/power/supply/mt6360_charger.yaml     | 1 -
+>  .../bindings/power/supply/stericsson,ab8500-charger.yaml     | 1 -
 
-yeah, I guess that would be possible, but given the above, do you see
-any advantage on that?
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-thanks
-Lucas De Marchi
+-- Sebastian
 
->
->> + */
->> +static void pci_release_bar0(struct pci_dev *pdev)
->> +{
->> +	struct resource *res = pci_resource_n(pdev, 0);
->> +
->> +	if (!res->parent)
->> +		return;
->> +
->> +	pci_release_resource(pdev, 0);
->> +	res->flags = 0;
->> +}
->> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0);
->> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0);
->> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0);
->>
->> --
->> 2.50.1
->>
+--4uianbie6i5kbvu2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmj8CpEACgkQ2O7X88g7
++pqEIQ//WxlORWTU9xe37JxSV9323KQXYJPU3wtmtK4U8OlNGoVKu9XeR3w5pitG
+uy2cIzo80EdVMKsq5GKcONqwht31w9+RJaWZmytnll9Wbe3eiW3Lu6Ymx2zopgcW
+OoRuaiPPQUqGdgt7+VKgNt+4kH1sX/ur8z/Zd1rUrK9Xkks09pdqcZ/wpjm6KlQw
+e7x03OaDQ5h17Cg56SgH7NwoYjoUXDuSEKoZDx4wv5DQWh171Ez0/tWvYwYxM7+a
+Pxqt+zTDC1hdh6j1CaiOuwNb7pbdfcOWS7WZC8BPHNYW3eqFk5OQg+tZwEgoK9zV
+GLO0FrPPimJLgL2mfnq5FP0SzYU7FNgJD6gD/qKPzjsQlFLnwn69QCH/nTA9J/ZT
+ajcxgv6FLs3R3CGRptDBEUPOXez3dJeMeaN7hNeoswZNAe9uw1irXmedEzxLDO7S
+8WDVz6MvUAXOdXEcI+pUvuYfGWPwuJHspOgPuOwzO2sqg212V3sScOGcATq2BTDD
+mpc8LtRdKoZ3vUS9cVLRxtqLo8YB5roCBg0HEOexrwJayA074TSteqXhF2LH7LOW
+IcSZ37y+8QgWjTO2aXsiLJjoK2PsOLnvKzBRD5aeLhMd4H1Lw1xCxi75ut/fJPUY
+MLaS7WMtq7TVMRxBrjz8kaiR4opj84mVIXbVgoiISYooEKbbdic=
+=pPcb
+-----END PGP SIGNATURE-----
+
+--4uianbie6i5kbvu2--
 
