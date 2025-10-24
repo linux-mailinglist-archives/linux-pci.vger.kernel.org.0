@@ -1,202 +1,173 @@
-Return-Path: <linux-pci+bounces-39298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EAD6C0839E
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 00:10:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C971C0840B
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 00:44:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 22FA54E1C6B
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 22:10:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 58D0E4E528D
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 22:44:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D833F309EF4;
-	Fri, 24 Oct 2025 22:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6275530ACE5;
+	Fri, 24 Oct 2025 22:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8XAuCtr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NR+ba8cC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDAB1C7009
-	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 22:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3355937160;
+	Fri, 24 Oct 2025 22:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761343840; cv=none; b=cWSJ/xheeIroxu+C+uIu7fo8HgXO6cJpRlmKQDRvuymP6gapfcvq5G/Y9khLXKfagm5V+Kh32D3eRKuAg1ugrhSyZbdCf/r8metuFIlgN+utlKH38BX9QCBLjiG+KCBPI1Riqhcm25KJ2FbmA61tv5xAOiMjjEGm4ZojnpwzIGw=
+	t=1761345843; cv=none; b=rc63mRoHCD76O10V7oNWC7U6NmsHCv6PvKLQL8MMMV5GBuzVi36cqUs2hgCkLXK4Z5dxV1fJ0w5xmEICglmMuQD5BqRUQ64FdkLd66Rf5Dpg0PTMQjX9QFZ7TeqrqjLy3vSadA1bm9ivb0GXkrbtub06Ts9P+uRqxQXl1P+sKLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761343840; c=relaxed/simple;
-	bh=ufYyfd17otY9M9QoSNbK1jbGZpFaejaEZ72msnF+ftI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=KQDq+qHEL4cJfSRQeHudM3S8HMJyOAoAL6n/kPb0aXOzgoCaNvLbxkXMVxt9WZzrGGxjEBPL86ZfqN2x5/W2tkZ9cjwOzQmDNCdpUcLMICZ89LzzBwWMKyvFMSFI4VCUQtE1dqJoSbHJFTeF0JFGkXDBolxZJD2MaGTnlEq1hKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8XAuCtr; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761343839; x=1792879839;
-  h=date:from:to:cc:subject:message-id;
-  bh=ufYyfd17otY9M9QoSNbK1jbGZpFaejaEZ72msnF+ftI=;
-  b=a8XAuCtrqdzp9SrBZ0G/+oRXut5CfcSaHGVI1mHfcqVNXfx0cEe7lRzW
-   qRQTrY7SBDnuWNIL+Y2Gh9NKiCn2RbqQEPJN+7TckXBaufIgtrUDVwtif
-   I7NUn5jh4+2VjvEGhv/18Pd45me9Be0eproX0MV7YoA+Itgs46z9eJoNP
-   no7WAAqRZcXtaO1x/siZav0shPPHJqyE1ZKnUkD7qp5P9mfts6QQgmoSe
-   45XALm+n0YM4D3aGYIcozKUO+zWws2Bo8xowi4EvgGV1xrpCGSviI5WPg
-   ln9fDu4JHDa9rEfzdWsHBEK+M9Nf0rrRjHP/Zrvmf7Ls9wlms4mEuwPJw
-   w==;
-X-CSE-ConnectionGUID: 8H/poDH/SOS+QyLZvm9JtQ==
-X-CSE-MsgGUID: rciW/SAbTNaDPqLmHWvWqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="51104974"
-X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
-   d="scan'208";a="51104974"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 15:10:37 -0700
-X-CSE-ConnectionGUID: GNiGLJBDQTyFYjy/IGTnUQ==
-X-CSE-MsgGUID: jxQKFJMcQIah3ti+Uj7hKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
-   d="scan'208";a="184437484"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 24 Oct 2025 15:10:37 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vCPzL-000EvR-0o;
-	Fri, 24 Oct 2025 22:10:29 +0000
-Date: Sat, 25 Oct 2025 06:09:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:rebar] BUILD SUCCESS
- b2d3a54b28ea933681a8cf135cd8b1cf94a49613
-Message-ID: <202510250624.RRgFueD2-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1761345843; c=relaxed/simple;
+	bh=tuvy+AqXN0ZLcAf47nDc5FvtJB/fct1wN56RWkZh0R4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uwkfF5UqG1ZQ16kxERWASrALw9cminBuspZv0BzNKIEujGXwqb0zbN5Riz0tQDDhOwa3l8caygbFbXTI0LSn32VnpvxgYQN0QxUw4S3APjBGDG/0vE65DJ5MfHQ1kEAeOSQwrMjLKoxRWeSod4FVYMwouHsuy6mTI7PO7rpoqf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NR+ba8cC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95334C4CEF1;
+	Fri, 24 Oct 2025 22:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761345842;
+	bh=tuvy+AqXN0ZLcAf47nDc5FvtJB/fct1wN56RWkZh0R4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=NR+ba8cC460oHiAtsdqg9ooDKlAjej23TdViOJivk9QUD0l2xkzVGuL2KFYYESyCG
+	 4phUWuErNaIFRfLE2/SZGhkGfvCBmvS8d8GCrsxiOAR4yOJJUL+6S0xMwpJUEV3b06
+	 C0MMmvU0w33dll58fsAMKaV2Jux2frnCSUFEbfEjjkIZnjzNYivojP9ECqLnyCijsf
+	 wkZPELw/UOLsaQ2a1PcLVE5uYpJX1GOhe5W+wg1CHE9hFWdj+qp8qZ6sH6+D2+7nuI
+	 fM8Z418uB3xMKtrFjs8ge3ms3lhOtj4VJnQlMLwr3sHcxH9GQdReJ5CWphMF7fMWZj
+	 EPi8SZXznJcDw==
+Date: Fri, 24 Oct 2025 17:44:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: intel-xe@lists.freedesktop.org, linux-pci@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Vivian Wang <wangruikang@iscas.ac.cn>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Simon Richter <Simon.Richter@hogyros.de>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow
+ GPU BAR resize
+Message-ID: <20251024224401.GA1371085@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250918-xe-pci-rebar-2-v1-1-6c094702a074@intel.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git rebar
-branch HEAD: b2d3a54b28ea933681a8cf135cd8b1cf94a49613  PCI: Convert BAR sizes bitmasks to u64
+On Thu, Sep 18, 2025 at 01:58:56PM -0700, Lucas De Marchi wrote:
+> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> 
+> Resizing BAR to a larger size has to release upstream bridge windows in
+> order make the bridge windows larger as well (and to potential relocate
+> them into a larger free block within iomem space). Some GPUs have an
+> integrated PCI switch that has BAR0. The resource allocation assigns
+> space for that BAR0 as it does for any resource.
+> 
+> An extra resource on a bridge will pin its upstream bridge window in
+> place which prevents BAR resize for anything beneath that bridge.
+> 
+> Nothing in the pcieport driver provided by PCI core, which typically is
+> the driver bound to these bridges, requires that BAR0. Because of that,
+> releasing the extra BAR does not seem to have notable downsides but
+> comes with a clear upside.
+> 
+> Therefore, release BAR0 of such switches using a quirk and clear its
+> flags to prevent any new invocation of the resource assignment
+> algorithm from assigning the resource again.
+> 
+> Due to other siblings within the PCI hierarchy of all the devices
+> integrated into the GPU, some other devices may still have to be
+> manually removed before the resize is free of any bridge window pins.
+> Such siblings can be released through sysfs to unpin windows while
+> leaving access to GPU's sysfs entries required for initiating the
+> resize operation, whereas removing the topmost bridge this quirk
+> targets would result in removing the GPU device as well so no manual
+> workaround for this problem exists.
+> 
+> Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3lwcp3h7esmvnyg26n44y@owo2ojiu2mov/
+> Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icenowy.me/
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: <stable@vger.kernel.org> # v6.12+
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> ---
+> 
+> Remarks from Ilpo: this feels quite hacky to me and I'm working towards a
+> better solution which is to consider Resizable BAR maximum size the
+> resource fitting algorithm. But then, I don't expect the better solution
+> to be something we want to push into stable due to extremely invasive
+> dependencies. So maybe consider this an interim/legacy solution to the
+> resizing problem and remove it once the algorithmic approach works (or
+> more precisely retain it only in the old kernel versions).
+> ---
+>  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d97335a401930..9b1c08de3aa89 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
+>  #endif
+> +
+> +/*
+> + * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
+> + * resizing the BARs of the GPU device due to that bridge BAR0 pinning the
+> + * bridge window it's under in place. Nothing in pcieport requires that
+> + * BAR0.
+> + *
+> + * Release and disable BAR0 permanently by clearing its flags to prevent
+> + * anything from assigning it again.
 
-elapsed time: 1453m
+Does "disabling BAR0" actually work?  This quirk keeps the PCI core
+from assigning resources to the BAR, but I don't think we have a way
+to actually disable an individual BAR, do we?
 
-configs tested: 109
-configs skipped: 3
+I think the only control is PCI_COMMAND_MEMORY, and the bridge must
+have PCI_COMMAND_MEMORY enabled so memory accesses to downstream
+devices work.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No matter what we do to the struct resource, the hardware BAR still
+contains some address, and the bridge will decode any accesses that
+match the address in the BAR.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20251024    gcc-8.5.0
-arc                   randconfig-002-20251024    gcc-14.3.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                   randconfig-001-20251024    clang-20
-arm                   randconfig-002-20251024    gcc-15.1.0
-arm                   randconfig-003-20251024    clang-22
-arm                   randconfig-004-20251024    clang-22
-arm                           stm32_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251024    gcc-8.5.0
-arm64                 randconfig-002-20251024    clang-16
-arm64                 randconfig-003-20251024    gcc-13.4.0
-arm64                 randconfig-004-20251024    clang-17
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251024    gcc-14.3.0
-csky                  randconfig-002-20251024    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20251024    clang-22
-hexagon               randconfig-002-20251024    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251024    clang-20
-i386        buildonly-randconfig-002-20251024    gcc-14
-i386        buildonly-randconfig-003-20251024    clang-20
-i386        buildonly-randconfig-004-20251024    gcc-14
-i386        buildonly-randconfig-005-20251024    gcc-14
-i386        buildonly-randconfig-006-20251024    gcc-14
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20251024    gcc-15.1.0
-loongarch             randconfig-002-20251024    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                            mac_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm63xx_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251024    gcc-11.5.0
-nios2                 randconfig-002-20251024    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251024    gcc-9.5.0
-parisc                randconfig-002-20251024    gcc-13.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251024    gcc-8.5.0
-powerpc               randconfig-002-20251024    clang-17
-powerpc               randconfig-003-20251024    clang-16
-powerpc64             randconfig-001-20251024    gcc-12.5.0
-powerpc64             randconfig-002-20251024    gcc-14.3.0
-powerpc64             randconfig-003-20251024    gcc-8.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20251024    clang-22
-riscv                 randconfig-002-20251024    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20251024    gcc-13.4.0
-s390                  randconfig-002-20251024    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251024    gcc-12.5.0
-sh                    randconfig-002-20251024    gcc-14.3.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251024    gcc-12.5.0
-sparc                 randconfig-002-20251024    gcc-8.5.0
-sparc64               randconfig-001-20251024    clang-20
-sparc64               randconfig-002-20251024    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                    randconfig-001-20251024    gcc-14
-um                    randconfig-002-20251024    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251024    clang-20
-x86_64      buildonly-randconfig-002-20251024    clang-20
-x86_64      buildonly-randconfig-003-20251024    clang-20
-x86_64      buildonly-randconfig-004-20251024    gcc-14
-x86_64      buildonly-randconfig-005-20251024    gcc-14
-x86_64      buildonly-randconfig-006-20251024    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251024    gcc-11.5.0
-xtensa                randconfig-002-20251024    gcc-13.4.0
+Maybe we could effectively disable the BAR by setting it to some
+impossible address, i.e., something outside both the upstream and
+downstream bridge windows so memory accesses could never be routed to
+it?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> + */
+> +static void pci_release_bar0(struct pci_dev *pdev)
+> +{
+> +	struct resource *res = pci_resource_n(pdev, 0);
+> +
+> +	if (!res->parent)
+> +		return;
+> +
+> +	pci_release_resource(pdev, 0);
+> +	res->flags = 0;
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0);
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0);
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0);
+> 
+> -- 
+> 2.50.1
+> 
 
