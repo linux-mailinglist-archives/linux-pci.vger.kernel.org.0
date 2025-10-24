@@ -1,110 +1,194 @@
-Return-Path: <linux-pci+bounces-39242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88CFCC04681
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 07:37:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D34B4C04786
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 08:17:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFC403AFA31
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 05:37:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E88C1AA3949
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 06:17:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 973B1224891;
-	Fri, 24 Oct 2025 05:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C218C2638BA;
+	Fri, 24 Oct 2025 06:17:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EGuaOB0i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M33umFR/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AF12144C9;
-	Fri, 24 Oct 2025 05:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FDE25784F
+	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 06:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761284265; cv=none; b=byORtMD/aecMTCgt35dmbFiz1QzzZ95W3/5Bl7G8YYXbXQQgb2f+irIxl1YOnSWlrrpvgP0AlbvrAJoOS5W+49+iC9ESWqIJ3GK3JdTfDL1zm8p+xO6uYeInJj9wOy2CI2I8Z3pqIS2MY4zKYopvo4FXPb0LCTGFIhCHEXKlC7g=
+	t=1761286640; cv=none; b=Bjg1a9PL+A2OQruz0lbk5FXgTFZnnCfic7e60tg+UsVSr90Q00X4E5KP0CuO36b3eRTjbQxiaQ2Tqm4YU2mmbdNSxc3bXJkFoj7IP2emE5LeH+zDl5G+UvnL1aCFzpHD8WwvK1PtV9V5dBDQwTzK9EosqNFM93j8RSieU0nAib4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761284265; c=relaxed/simple;
-	bh=89Xh5dqUkfTeBBpojD+0rLJhmiP52jECIfc1pDkyhYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sSfOnS2pp+8fhfDzHd5OXfaVpOWdAEK2dT0GuiSYma5fbaBnk9vDv+2YW/QyCPZyNFBbEZ7p0yj46NvKkM5WFQLbP40rMBumm/VPyAeoXN87Yget4LxOwQ+qLjRhMl1V2zsbLaBTZUHCYfva0hgm9zFTgIiEsejGOlg/fDs9jIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EGuaOB0i; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761284259; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Sp+hJRz+WWV/IDIJ1UXPhHVGxPXYYI9AFpPwtJzLdQA=;
-	b=EGuaOB0iw2NTv8IOZ6vVxkCUSU438+blxF98ILkNaM+WvP8K2Xp+eht/2YmbWONbiisKAbIeNqi93AEGSC+3wxYEio1JhgdjbshWBnU0maKsbgUpL86RkwU3g3jpPKJb6NSKK+37l7iBz/sbBlY4n5ZnpTU3y/Gc9PIW6H3G9Gc=
-Received: from 30.246.161.241(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wqt6g34_1761284257 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 24 Oct 2025 13:37:38 +0800
-Message-ID: <2cc91a94-a444-4d15-b714-fe8502da1586@linux.alibaba.com>
-Date: Fri, 24 Oct 2025 13:37:37 +0800
+	s=arc-20240116; t=1761286640; c=relaxed/simple;
+	bh=56hNuT/xUKtLWXLBHxCtWU4pY9tz9h+vffMnxjNaQR0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NU94PKzzIhvEYD86G85Tc8ZK3l8kJKqpF7pVObLCzjEBTw4StX/g23dlgY7tX6/tiShi2tmEC0LRJDy5dZF8X7Fu9o8cec0kGF5zbfpokJY9P3w1egU4bb7qCfM6t4st6dpzsKS/HZLRApeEtkEnFXJVgmAQBxczeKUX8B8MNhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M33umFR/; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b6d6c11f39aso80782366b.2
+        for <linux-pci@vger.kernel.org>; Thu, 23 Oct 2025 23:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761286637; x=1761891437; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CvQDWtdQ2sodUGWH+64s7RFvD8lI9WBRcaVgkVNkp50=;
+        b=M33umFR/y6xIzhgcuH8h+3PJFMMjy8ZqC6BFCKznEezK/A4UXcd3ylhbTEc/fszt4O
+         BNq2kYrUWMqWDFmnuYW4ZlbgtrH0Vv1q+IU28pAo2Be3VeTxziZYDLEqocG+IDeY4xsJ
+         BQDk0QIEeb5yuw4NmvHK7rCr8Dw6Qc5BNBkNuzazeztERqXJ5C5IS7XhBxxB5H8bq+HI
+         ya5yWfESOYqUI/oBQs0mzIkrJTsDv+A7XW3b+eZ62qPfhTnIUi5ZIXXT0sOJu7WfbfI2
+         FCRTuCgdfvEu6wGIzTq2zcb5e9rpp9VYAS5TIelib8Ie3HJ7ESspKHe1b9qvsVybqUIL
+         3H2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761286637; x=1761891437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CvQDWtdQ2sodUGWH+64s7RFvD8lI9WBRcaVgkVNkp50=;
+        b=r2KzOq0RcXbNpkc4ctcQNYGomSGP0nEx94fNhPFyUd6bE4Z5u2E7yrHa4mu1IbA5EZ
+         1ZgfF3xjbFRVpalZBWZryWOU1dGnLRJmcinOrgrrh6YdzNsBhjhtO4HWTPzVMsjhirf9
+         8JxMAXEolw/l5pK9au7jctmDKjgqvL31TVyN/rGhQqR3SjsyQeoWUDQqCG52oVISMZwB
+         M1BFMS+XvvANY2vwdIxOWK7yq26BNN2Fy30nrhbO69P+LLYnC+JyQhlz4/gxjOEKWf+G
+         XdQXr3wHQMrYeNtsp898XTGATg0dPXT+Q9DGv1reATEPZuuqoE15huP+Kmkic4p+OpPc
+         PXqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVi9u2+LDMiZZ3uNiSh5LYL1YUem8vXsDXIz6l6VW33bmd5/II1lsauLxFQdLihDdrM5yzoMbaVB4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6+9LVgWnBq85ptl6krj68kZzJ5ywvIVMpvwOsi0jKJjoAWYiJ
+	vQZEqrhZiizwWlJOjgzciy0PfM/h00Zjb+T7UTDQiLkUmQqK9e1TJXCbdCWpdRbt5l/jKEJt5IU
+	cR+YYIyyfMke8TF0pbAE2wd120OFhwXU=
+X-Gm-Gg: ASbGnctCMh3HvagH/EtOPkEJnjXLg8gSVonJXT5VuiLmMe9i+w3MnrjAgtF3EeG8ADa
+	p0RZGp9qgmCgbGVkEjsjgf8scemXpWncx7L1Ss10Nl2SfJ7Sop8wxDs6W1rS+pIS6K5AxB/6AGo
+	8YS+IOgIw9PLYF/4bq7gqsSu7cnEpWDjqQaNI5Ji14LNF+K9G3wLd+3/D8NfvLf6P26mGNbvmkW
+	WQmKuodtYFlJYWXbu8c0Y/A6aVMUfZdheNxpYEH1ir40pUYn9FpCTsrT72g2ehcK9hA7Q==
+X-Google-Smtp-Source: AGHT+IEYzJae7VoT/c7FHoFZ2w1f+vGPYbQGnE984l0qzu5gM1i4HI97k5jQZaiikEMv2TwzZxE5MWhZESWWNIE+YQ8=
+X-Received: by 2002:a17:907:1c1e:b0:b2b:59b5:ae38 with SMTP id
+ a640c23a62f3a-b6d51bfb0e1mr629125966b.40.1761286636888; Thu, 23 Oct 2025
+ 23:17:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/5] PCI/ERR: Use pcie_aer_is_native() to check for
- native AER control
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
- mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
- terry.bowman@amd.com, tianruidong@linux.alibaba.com
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-5-xueshuai@linux.alibaba.com>
- <aPYMO2Eu5UyeEvNu@wunner.de>
- <0fe95dbe-a7ba-4882-bfff-0197828ee6ba@linux.alibaba.com>
- <aPZAAPEGBNk_ec36@wunner.de>
- <645adbb6-096f-4af3-9609-ddc5a6f5239a@linux.alibaba.com>
- <aPoDbKebJD30NjKG@wunner.de>
- <1eaf1f94-e26b-4313-b6b7-51ad966fe28e@linux.alibaba.com>
- <aPrvEZ3X4_tiD2Fh@wunner.de>
- <91cf33b4-7f67-4f3a-b095-e8f04d8c18e9@linux.alibaba.com>
- <aPr6dBDUUohRUzYg@wunner.de>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <aPr6dBDUUohRUzYg@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250926072905.126737-1-linux.amoon@gmail.com>
+ <20250926072905.126737-4-linux.amoon@gmail.com> <ose3ww7me26byqwsyk33tipylkx3kolnc3mjwrlmjwsmza2zf3@os7lkt4svaqi>
+ <CANAwSgT0VRFFpKv3saJTAA99oGoAHhP+bx6Xe-QGf5b4Dgik=A@mail.gmail.com> <6eqqafz2dojo533fw2j7say3p37simug5bol2s5dvcpac77jzb@2x22ekyl4qdq>
+In-Reply-To: <6eqqafz2dojo533fw2j7say3p37simug5bol2s5dvcpac77jzb@2x22ekyl4qdq>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Fri, 24 Oct 2025 11:47:02 +0530
+X-Gm-Features: AS18NWB79LzUXZfNM_Vk4QnYlquHYcZbCYFtcNRut2QcVzty8nJpzlwr2rljOfc
+Message-ID: <CANAwSgSeOrVjkuFbPKAPXDnCrsApcgePEs3D6MWwtsu9nYNesw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] PCI: tegra: Use readl_poll_timeout() for link
+ status polling
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Manivannan,
 
+On Tue, 21 Oct 2025 at 07:13, Manivannan Sadhasivam <mani@kernel.org> wrote=
+:
+>
+> On Mon, Oct 20, 2025 at 05:47:15PM +0530, Anand Moon wrote:
+> > Hi Manivannan,
+> >
+> > Thanks for your review comment.
+> >
+> > On Sun, 19 Oct 2025 at 13:20, Manivannan Sadhasivam <mani@kernel.org> w=
+rote:
+> > >
+> > > On Fri, Sep 26, 2025 at 12:57:44PM +0530, Anand Moon wrote:
+> > > > Replace the manual `do-while` polling loops with the readl_poll_tim=
+eout()
+> > > > helper when checking the link DL_UP and DL_LINK_ACTIVE status bits
+> > > > during link bring-up. This simplifies the code by removing the open=
+-coded
+> > > > timeout logic in favor of the standard, more robust iopoll framewor=
+k.
+> > > > The change improves readability and reduces code duplication.
+> > > >
+> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > > Cc: Mikko Perttunen <mperttunen@nvidia.com>
+> > > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > > ---
+> > > > v1: dropped the include  <linux/iopoll.h> header file.
+> > > > ---
+> > > >  drivers/pci/controller/pci-tegra.c | 37 +++++++++++---------------=
+----
+> > > >  1 file changed, 14 insertions(+), 23 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/contr=
+oller/pci-tegra.c
+> > > > index 07a61d902eae..b0056818a203 100644
+> > > > --- a/drivers/pci/controller/pci-tegra.c
+> > > > +++ b/drivers/pci/controller/pci-tegra.c
+> > > > @@ -2169,37 +2169,28 @@ static bool tegra_pcie_port_check_link(stru=
+ct tegra_pcie_port *port)
+> > > >       value |=3D RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT;
+> > > >       writel(value, port->base + RP_PRIV_MISC);
+> > > >
+> > > > -     do {
+> > > > -             unsigned int timeout =3D TEGRA_PCIE_LINKUP_TIMEOUT;
+> > > > +     while (retries--) {
+> > > > +             int err;
+> > > >
+> > > > -             do {
+> > > > -                     value =3D readl(port->base + RP_VEND_XP);
+> > > > -
+> > > > -                     if (value & RP_VEND_XP_DL_UP)
+> > > > -                             break;
+> > > > -
+> > > > -                     usleep_range(1000, 2000);
+> > > > -             } while (--timeout);
+> > > > -
+> > > > -             if (!timeout) {
+> > > > +             err =3D readl_poll_timeout(port->base + RP_VEND_XP, v=
+alue,
+> > > > +                                      value & RP_VEND_XP_DL_UP,
+> > > > +                                      1000,
+> > >
+> > > The delay between the iterations had range of (1000, 2000), now it wi=
+ll become
+> > > (250, 1000). How can you ensure that this delay is sufficient?
+> > >
+> > I asked if the timeout should be increased for the loops, but Mikko
+> > Perttunen said that 200ms delay is fine.
+> >
+>
+> readl_poll_timeout() internally uses usleep_range(), which transforms the=
+ 1000us
+> delay into, usleep_range(251, 1000). So the delay *could* theoretically b=
+e 251us
+> * 200 =3D ~50ms.
+>
+> So I doubt it will be sifficient, as from the old code, it looks like the
+> hardware could take around 200ms to complete link up.
+>
+Instead of implementing a busy-waiting while loop with udelay, a more
+efficient and responsive approach is to use the readl_poll_timeout()
+function. This function periodically polls a memory-mapped address, waiting
+for a condition to be met or for a specified timeout to occur.
 
-在 2025/10/24 12:03, Lukas Wunner 写道:
-> On Fri, Oct 24, 2025 at 11:38:10AM +0800, Shuai Xue wrote:
->> The remaining question is whether it would make more sense to rename
->> pcie_clear_device_status() to pci_clear_device_error_status() and refine
->> its behavior by adding a mask specifically for bits 0 to 3. Here's an
->> example of the proposed change:
-> 
-> I don't see much value in renaming the function.
-> 
-> However clearing only bits 0-3 makes sense.  PCIe r5.0 defined bit 6
-> as Emergency Power Reduction Detected with type RW1C in 2019.  The
-> last time we touched pcie_clear_device_status() was in 2018 with
-> ec752f5d54d7 and we've been clearing all bits since forever,
-> not foreseeing that new ones with type RW1C might be added later.
-
-Thank you for the detailed explanation and pointing out the history
-behind bit 6 and the evolution since PCIe r5.0.
-
-> 
-> I suggest defining a new macro in include/uapi/linux/pci_regs.h
-> instead of using 0xf, say PCI_EXP_DEVSTA_ERR.  Then you don't
-> need the code comment because the code is self-explanatory.
-> 
-
-I’ll prepare a patch to implement this fix and submit it shortly.
-Thanks again for the guidance!
-
-Thanks.
-Shuai
-
-
-
-
+If there are any issues with HW, we could extend the timeout to compensate.
+> - Mani
+Thanks
+-Anand
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
