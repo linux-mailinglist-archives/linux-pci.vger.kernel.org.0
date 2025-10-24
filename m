@@ -1,100 +1,238 @@
-Return-Path: <linux-pci+bounces-39233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32315C043A3
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 05:14:43 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07138C043B9
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 05:20:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F106B18C1A6B
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 03:15:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 138D44E01B3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 03:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9195424BD04;
-	Fri, 24 Oct 2025 03:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AFE51DF755;
+	Fri, 24 Oct 2025 03:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="PPc8oujA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mail-m1973197.qiye.163.com (mail-m1973197.qiye.163.com [220.197.31.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604B824BBEC;
-	Fri, 24 Oct 2025 03:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2278035B130
+	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 03:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761275677; cv=none; b=P026jGVeR0zF2eB/DW/LGcDPBCX4ohs8dax3mHkxHqkey/Yfi9nl0Ffw/NdK+eby9KiyKd+E/pK1qYL5myD/vwPQWNmwzWWerj5mz23tF/QvHnOeoVQOo/oj0pfFyIVFulvxmQ8ecfZMML8qGbbVtvvFbGvoMk9lHw+yUelxEn8=
+	t=1761276001; cv=none; b=gPX0P/D9mOygUe99dhWPW+4I8qyFhl7dGrRK0sZBlJxixviYd9RmXkSjaOSBzURRMdPxghE3QNyBCk1H0iO0bI3Btx7lRkMOj0SzqjI89dg7oGKe0LIV3J+QHbgzpQfGbd4bv0nr0WzufBDJ4qS/OaZdB7bJ67KzDEz2z9FejD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761275677; c=relaxed/simple;
-	bh=vXkI+iWiw+ha+Okk4SRY7GShtgAm9kpMzjgcFMBV340=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dwMfAvjMAuHPklgD7ww4t71LJdOTqubK4j4Yerf4JyDH2Btq325LMRorqJgxoHNyE6c2Y/s+PnVhedyzjqvyDgjdKJOfVs+yN7T2fcXcAuHJHQQE8B6NYrHB9L7YC84LSSbHfBqMvnHmWPNmUgdhVnTwVYID+rIL0wCpOIBBg4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id D04B92C07AA5;
-	Fri, 24 Oct 2025 05:14:25 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BFD344A12; Fri, 24 Oct 2025 05:14:25 +0200 (CEST)
-Date: Fri, 24 Oct 2025 05:14:25 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-	mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
-	terry.bowman@amd.com, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6 4/5] PCI/ERR: Use pcie_aer_is_native() to check for
- native AER control
-Message-ID: <aPrvEZ3X4_tiD2Fh@wunner.de>
-References: <20251015024159.56414-1-xueshuai@linux.alibaba.com>
- <20251015024159.56414-5-xueshuai@linux.alibaba.com>
- <aPYMO2Eu5UyeEvNu@wunner.de>
- <0fe95dbe-a7ba-4882-bfff-0197828ee6ba@linux.alibaba.com>
- <aPZAAPEGBNk_ec36@wunner.de>
- <645adbb6-096f-4af3-9609-ddc5a6f5239a@linux.alibaba.com>
- <aPoDbKebJD30NjKG@wunner.de>
- <1eaf1f94-e26b-4313-b6b7-51ad966fe28e@linux.alibaba.com>
+	s=arc-20240116; t=1761276001; c=relaxed/simple;
+	bh=1su9VvdnhZNZUd5VrrTrL/vbhl+YZ8znGgS11r0ZZk8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D32r/u9rnSGsq7X2z64Lfxkmaj7Ewic1j9dB5O+tEx6CcadD4Kwp4NSNPCEuO1R69Rvxcas/5qZ4PNaInTMpGifZCQe0VkouATCQjDtmuPeBQ9o+Ci1NMmrsG5aj57kenkohZtfG0pVRDpbyGj8kVapm9ulCnPSrb2Z8PX5+hdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=PPc8oujA; arc=none smtp.client-ip=220.197.31.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 27047eccc;
+	Fri, 24 Oct 2025 11:19:48 +0800 (GMT+08:00)
+Message-ID: <eeb1ee07-7bd5-4082-a376-81e4bd0152ea@rock-chips.com>
+Date: Fri, 24 Oct 2025 11:19:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1eaf1f94-e26b-4313-b6b7-51ad966fe28e@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>,
+ Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] PCI: dw-rockchip: Configure L1sub support
+To: Frank Li <Frank.li@nxp.com>
+References: <1761187883-150120-1-git-send-email-shawn.lin@rock-chips.com>
+ <aPpN2NX7IkAEU9Rh@lizhi-Precision-Tower-5810>
+ <de9371a6-654c-4360-a34d-7f8a20848a6a@rock-chips.com>
+ <aPrt/H4lF+DrF4Ej@lizhi-Precision-Tower-5810>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <aPrt/H4lF+DrF4Ej@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a143acad009cckunme6e8b8b9a407f9
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhkdHlYfThlLHkNLQx9CSU1WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	xVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=PPc8oujA8M125ZSfo6H2wzhmT3CslUHfcPDDzv/TYGxP42JbqLl2kZYblf8iTALQNuUR8W781paxyX5KEX44DY4x2u7AeCyCYzxkDmd8fsZMeabhKc19HxZJmViH+xnLTMSH8tRBQ48e+CT/4LVkrr2kuSMGj9qkbWiVz77H+pc=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=xcJbpwYnSyres1NRPrUOlCjS3GNGFftDM0G2F7GNv28=;
+	h=date:mime-version:subject:message-id:from;
 
-On Fri, Oct 24, 2025 at 11:09:25AM +0800, Shuai Xue wrote:
-> 2025/10/23 18:29, Lukas Wunner:
-> > On Mon, Oct 20, 2025 at 10:45:31PM +0800, Shuai Xue wrote:
-> > > From PCIe spec, BIT 0-2 are logged for functions supporting Advanced
-> > > Error Handling.
-> > > 
-> > > I am not sure if we should clear BIT 3, and also BIT 6 (Emergency Power
-> > > Reduction Detected) and in case a AER error.
-> > 
-> > AFAIUI, bits 0 to 3 are what the PCIe r7.0 sec 6.2.1 calls
-> > "baseline capability" error reporting.  They're supported
-> > even if AER is not supported.
-> > 
-> > Bit 6 has nothing to do with this AFAICS.
+在 2025/10/24 星期五 11:09, Frank Li 写道:
+> On Fri, Oct 24, 2025 at 08:43:28AM +0800, Shawn Lin wrote:
+>> 在 2025/10/23 星期四 23:46, Frank Li 写道:
+>>> On Thu, Oct 23, 2025 at 10:51:22AM +0800, Shawn Lin wrote:
+>>>> L1 PM Substates for RC mode require support in the dw-rockchip driver
+>>>> including proper handling of the CLKREQ# sideband signal. It is mostly
+>>>> handled by hardware, but software still needs to set the clkreq fields
+>>>> in the PCIE_CLIENT_POWER_CON register to match the hardware implementation.
+>>>>
+>>>> For more details, see section '18.6.6.4 L1 Substate' in the RK3658 TRM 1.1
+>>>> Part 2, or section '11.6.6.4 L1 Substate' in the RK3588 TRM 1.0 Part2.
+>>>>
+>>>> Meanwhile, for the EP mode, we haven't prepared enough to actually support
+>>>> L1 PM Substates yet. So disable it now until proper support is added later.
+>>>>
+>>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes in v3:
+>>>> - rephrease the changelog
+>>>> - use FIELD_PREP_WM16
+>>>> - rename to rockchip_pcie_configure_l1sub
+>>>> - disable L1ss for EP mode
+>>>>
+>>>> Changes in v2:
+>>>> - drop of_pci_clkreq_presnt API
+>>>> - drop dependency of Niklas's patch
+>>>>
+>>>>    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 43 +++++++++++++++++++++++++++
+>>>>    1 file changed, 43 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> index 3e2752c..25d2474 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>>> @@ -62,6 +62,12 @@
+>>>>    /* Interrupt Mask Register Related to Miscellaneous Operation */
+>>>>    #define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>>>>
+>>>> +/* Power Management Control Register */
+>>>> +#define PCIE_CLIENT_POWER_CON		0x2c
+>>>> +#define  PCIE_CLKREQ_READY		FIELD_PREP_WM16(BIT(0), 1)
+>>>> +#define  PCIE_CLKREQ_NOT_READY		FIELD_PREP_WM16(BIT(0), 0)
+>>>> +#define  PCIE_CLKREQ_PULL_DOWN		FIELD_PREP_WM16(GENMASK(13, 12), 1)
+>>>> +
+>>>>    /* Hot Reset Control Register */
+>>>>    #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>>>>    #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
+>>>> @@ -85,6 +91,7 @@ struct rockchip_pcie {
+>>>>    	struct regulator *vpcie3v3;
+>>>>    	struct irq_domain *irq_domain;
+>>>>    	const struct rockchip_pcie_of_data *data;
+>>>> +	bool supports_clkreq;
+>>>>    };
+>>>>
+>>>>    struct rockchip_pcie_of_data {
+>>>> @@ -200,6 +207,37 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
+>>>>    	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
+>>>>    }
+>>>>
+>>>> +/*
+>>>> + * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
+>>>> + * needed to support L1 substates. Currently, just enable L1 substates for RC
+>>>> + * mode if CLKREQ# is properly connected and supports-clkreq is present in DT.
+>>>> + * For EP mode, there are more things should be done to actually save power in
+>>>> + * L1 substates, so disable L1 substates until there is proper support.
+>>>> + */
+>>>> +static void rockchip_pcie_configure_l1sub(struct dw_pcie *pci)
+>>>> +{
+>>>> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+>>>> +	u32 cap, l1subcap;
+>>>> +
+>>>> +	/* Enable L1 substates if CLKREQ# is properly connected */
+>>>> +	if (rockchip->supports_clkreq && rockchip->data->mode == DW_PCIE_RC_TYPE ) {
+>>>> +		rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY, PCIE_CLIENT_POWER_CON);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>> +	/* Otherwise, pull down CLKREQ# and disable L1 PM substates */
+>>>> +	rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
+>>>> +				 PCIE_CLIENT_POWER_CON);
+>>>
+>>> Looks like you force pull down clkreq should be enough, needn't disable
+>>> L1SS. when RC force clkreq is low, Ref CLK always on even if L1SS enabled.
+>>>
+>>> Of course it depend on hardware implementation, But I think FULL_DOWN have
+>>> high priority to force clkreq to low then PCI_L1SS control.
+>>>
+>>
+>> Hi Frank,
+>>
+>> Thanks for your review. TBH, the basic idea here I think is not to
+>> advertise a capability if the HW as whole hasn't been well prepared to
+>> support it yet. So I'd prefer to keep it as-is.
+>>
 > 
-> Per PCIe r7.0 section 7.5.3.5:
+> If that, I prefer do it at dwc common driver or provide helper function to
+> avoid other vendor to copy same logic.
+
+Right, definitely we could improve it once another driver need it. :)
+
 > 
->   **For Functions supporting Advanced Error Handling**, errors are logged
->   in this register regardless of the settings of the Uncorrectable Error
->   Mask register. Default value of this bit is 0b.
+> Frank
 > 
-> From this, it's clear that bits 0 to 2 are not logged unless AER is supported.
+>>> Frank
+>>>
+>>>> +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+>>>> +	if (cap) {
+>>>> +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
+>>>> +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
+>>>> +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
+>>>> +			      PCI_L1SS_CAP_PCIPM_L1_2);
+>>>> +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>    static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+>>>>    {
+>>>>    	u32 cap, lnkcap;
+>>>> @@ -264,6 +302,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>>>>    	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
+>>>>    					 rockchip);
+>>>>
+>>>> +	rockchip_pcie_configure_l1sub(pci);
+>>>>    	rockchip_pcie_enable_l0s(pci);
+>>>>
+>>>>    	return 0;
+>>>> @@ -301,6 +340,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
+>>>>    	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>>>>    	enum pci_barno bar;
+>>>>
+>>>> +	rockchip_pcie_configure_l1sub(pci);
+>>>>    	rockchip_pcie_enable_l0s(pci);
+>>>>    	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
+>>>>
+>>>> @@ -412,6 +452,9 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
+>>>>    		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
+>>>>    				     "failed to get reset lines\n");
+>>>>
+>>>> +	rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node,
+>>>> +							  "supports-clkreq");
+>>>> +
+>>>>    	return 0;
+>>>>    }
+>>>>
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-rockchip mailing list
+>>>> Linux-rockchip@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>>
+>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-No.  It just means that if AER is supported, the Uncorrectable Error Mask
-register has no bearing on whether the bits in the Device Status register
-are set.  It does not mean that the bits are only set if AER is supported.
-
-Thanks,
-
-Lukas
 
