@@ -1,173 +1,127 @@
-Return-Path: <linux-pci+bounces-39299-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39300-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C971C0840B
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 00:44:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 892FFC08417
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 00:46:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 58D0E4E528D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 22:44:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 358983BF39A
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 22:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6275530ACE5;
-	Fri, 24 Oct 2025 22:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C4424BBFD;
+	Fri, 24 Oct 2025 22:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NR+ba8cC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUzS9495"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3355937160;
-	Fri, 24 Oct 2025 22:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C4C35B130
+	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 22:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761345843; cv=none; b=rc63mRoHCD76O10V7oNWC7U6NmsHCv6PvKLQL8MMMV5GBuzVi36cqUs2hgCkLXK4Z5dxV1fJ0w5xmEICglmMuQD5BqRUQ64FdkLd66Rf5Dpg0PTMQjX9QFZ7TeqrqjLy3vSadA1bm9ivb0GXkrbtub06Ts9P+uRqxQXl1P+sKLU=
+	t=1761345982; cv=none; b=uqWAZSyJ3x2MTi2gzYmNYdu6dyEgyFhfNK+1GV7ROKDFkxGl9ep/1BoT9KDoryq4GMkvb2t5m0jRsgQipuYX8SLWJOebfvYdVm2Comk66HTVoYNhl4jasOUWBZppktFgactUJG1GiB8zwbzSxOK3N/dVFF0fqmU9F81Wnxvfmmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761345843; c=relaxed/simple;
-	bh=tuvy+AqXN0ZLcAf47nDc5FvtJB/fct1wN56RWkZh0R4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uwkfF5UqG1ZQ16kxERWASrALw9cminBuspZv0BzNKIEujGXwqb0zbN5Riz0tQDDhOwa3l8caygbFbXTI0LSn32VnpvxgYQN0QxUw4S3APjBGDG/0vE65DJ5MfHQ1kEAeOSQwrMjLKoxRWeSod4FVYMwouHsuy6mTI7PO7rpoqf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NR+ba8cC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95334C4CEF1;
-	Fri, 24 Oct 2025 22:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761345842;
-	bh=tuvy+AqXN0ZLcAf47nDc5FvtJB/fct1wN56RWkZh0R4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NR+ba8cC460oHiAtsdqg9ooDKlAjej23TdViOJivk9QUD0l2xkzVGuL2KFYYESyCG
-	 4phUWuErNaIFRfLE2/SZGhkGfvCBmvS8d8GCrsxiOAR4yOJJUL+6S0xMwpJUEV3b06
-	 C0MMmvU0w33dll58fsAMKaV2Jux2frnCSUFEbfEjjkIZnjzNYivojP9ECqLnyCijsf
-	 wkZPELw/UOLsaQ2a1PcLVE5uYpJX1GOhe5W+wg1CHE9hFWdj+qp8qZ6sH6+D2+7nuI
-	 fM8Z418uB3xMKtrFjs8ge3ms3lhOtj4VJnQlMLwr3sHcxH9GQdReJ5CWphMF7fMWZj
-	 EPi8SZXznJcDw==
-Date: Fri, 24 Oct 2025 17:44:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-pci@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Vivian Wang <wangruikang@iscas.ac.cn>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Simon Richter <Simon.Richter@hogyros.de>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow
- GPU BAR resize
-Message-ID: <20251024224401.GA1371085@bhelgaas>
+	s=arc-20240116; t=1761345982; c=relaxed/simple;
+	bh=IhS4AOEI3/wzkSRbBumLxHWRksYyuUBKQRR2lHNyZns=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z2mJPly4qzvHWbWsKUWuOIsvqkL7WgvFTu8SycnLGaPqzl56sm1MyAHTHnVrsGyb0hxMQ+sSp2XLB3rihiQzvm4q7PTe8fS87bDMdtEb1xsx2hWtnp/ubAXoY8Ks7Crst0mggAIOcxoWpiniOM0n864fA8eK3CFePEvhfUr8mDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUzS9495; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761345980; x=1792881980;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IhS4AOEI3/wzkSRbBumLxHWRksYyuUBKQRR2lHNyZns=;
+  b=OUzS9495PGMwV+IqIw7ra6vuarEx0hrvIvhgMYWWlq0TZxQDfObFxcCU
+   cOzyJw1GJ1mVaXQCtVnAPI1t7d+zo358L8X3kN3WGbzj+K6dyoYbxswD3
+   XCuUp4oEN0XEVyJ/oawbWt9jLoqTC8oq072ZIkCiDHfn5fG4eKITYWlK+
+   I9KyqCSPjGYqJsUD3AQl1QvLpQZyqP3vBN33N6aviuetGJfNmC+NLTXWo
+   qvi4tRcaMOpKJl63Dz33HUbD2kiuGYO31PyNlY/P3pgyGzIAgb6Htpd9P
+   lPcDOSGnay2Y6H/oT1W/zdltFUhi4GccEXmFc50d0l3fstfWd/A3b3Ivp
+   w==;
+X-CSE-ConnectionGUID: E9jElcVNR86TUHCYs/S77Q==
+X-CSE-MsgGUID: 37/yWt18SRuOM9y3CDvKmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="89001931"
+X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
+   d="scan'208";a="89001931"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 15:46:19 -0700
+X-CSE-ConnectionGUID: nUQl/GoJTB+MkjWthg029w==
+X-CSE-MsgGUID: uXqsvJ1wRbm5dxKq6v7Dpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
+   d="scan'208";a="184608437"
+Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
+  by orviesa008.jf.intel.com with ESMTP; 24 Oct 2025 15:46:19 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	jonathan.derrick@linux.dev,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org,
+	Dexuan Cui <decui@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Szymon Durawa <szymon.durawa@linux.intel.com>,
+	Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH v2 0/2] PCI: Unify domain emulation
+Date: Fri, 24 Oct 2025 15:46:20 -0700
+Message-ID: <20251024224622.1470555-1-dan.j.williams@intel.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250918-xe-pci-rebar-2-v1-1-6c094702a074@intel.com>
 
-On Thu, Sep 18, 2025 at 01:58:56PM -0700, Lucas De Marchi wrote:
-> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> Resizing BAR to a larger size has to release upstream bridge windows in
-> order make the bridge windows larger as well (and to potential relocate
-> them into a larger free block within iomem space). Some GPUs have an
-> integrated PCI switch that has BAR0. The resource allocation assigns
-> space for that BAR0 as it does for any resource.
-> 
-> An extra resource on a bridge will pin its upstream bridge window in
-> place which prevents BAR resize for anything beneath that bridge.
-> 
-> Nothing in the pcieport driver provided by PCI core, which typically is
-> the driver bound to these bridges, requires that BAR0. Because of that,
-> releasing the extra BAR does not seem to have notable downsides but
-> comes with a clear upside.
-> 
-> Therefore, release BAR0 of such switches using a quirk and clear its
-> flags to prevent any new invocation of the resource assignment
-> algorithm from assigning the resource again.
-> 
-> Due to other siblings within the PCI hierarchy of all the devices
-> integrated into the GPU, some other devices may still have to be
-> manually removed before the resize is free of any bridge window pins.
-> Such siblings can be released through sysfs to unpin windows while
-> leaving access to GPU's sysfs entries required for initiating the
-> resize operation, whereas removing the topmost bridge this quirk
-> targets would result in removing the GPU device as well so no manual
-> workaround for this problem exists.
-> 
-> Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3lwcp3h7esmvnyg26n44y@owo2ojiu2mov/
-> Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icenowy.me/
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: <stable@vger.kernel.org> # v6.12+
-> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> ---
-> 
-> Remarks from Ilpo: this feels quite hacky to me and I'm working towards a
-> better solution which is to consider Resizable BAR maximum size the
-> resource fitting algorithm. But then, I don't expect the better solution
-> to be something we want to push into stable due to extremely invasive
-> dependencies. So maybe consider this an interim/legacy solution to the
-> resizing problem and remove it once the algorithmic approach works (or
-> more precisely retain it only in the old kernel versions).
-> ---
->  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index d97335a401930..9b1c08de3aa89 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
->  #endif
-> +
-> +/*
-> + * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
-> + * resizing the BARs of the GPU device due to that bridge BAR0 pinning the
-> + * bridge window it's under in place. Nothing in pcieport requires that
-> + * BAR0.
-> + *
-> + * Release and disable BAR0 permanently by clearing its flags to prevent
-> + * anything from assigning it again.
+Changes since v1 [1]:
+- Rebase on v6.18-rc2
+- Support callers supplying both a hint and a range for the Hyper-V hint
+  + fallback case (Michael)
+- Add comment explaining domain number 0 vs Gen1 VMs, and domain values
+  greater than U16_MAX concerns (Michael)
+- Leave the VMD status quo comment about requesting domain numbers >
+  U16_MAX
 
-Does "disabling BAR0" actually work?  This quirk keeps the PCI core
-from assigning resources to the BAR, but I don't think we have a way
-to actually disable an individual BAR, do we?
+[1]: http://lore.kernel.org/20250716160835.680486-1-dan.j.williams@intel.com
 
-I think the only control is PCI_COMMAND_MEMORY, and the bridge must
-have PCI_COMMAND_MEMORY enabled so memory accesses to downstream
-devices work.
+The PCI/TSM effort created a sample driver to test ABI flows
+(samples/devsec/ [2]). Suzuki observed that it only worked on x86 due to
+its dependency on CONFIG_PCI_DOMAINS_GENERIC=n. I.e. an unfortunate
+restriction for what should be an architecture agnostic test framework.
 
-No matter what we do to the struct resource, the hardware BAR still
-contains some address, and the bridge will decode any accesses that
-match the address in the BAR.
+Introduce a new pci_bus_find_emul_domain_nr() helper that all "soft"
+host-bridge drivers can share and hide the CONFIG_PCI_DOMAINS_GENERIC
+details behind that helper.
 
-Maybe we could effectively disable the BAR by setting it to some
-impossible address, i.e., something outside both the upstream and
-downstream bridge windows so memory accesses could never be routed to
-it?
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/commit/?id=0e16ce0b9c64
 
-> + */
-> +static void pci_release_bar0(struct pci_dev *pdev)
-> +{
-> +	struct resource *res = pci_resource_n(pdev, 0);
-> +
-> +	if (!res->parent)
-> +		return;
-> +
-> +	pci_release_resource(pdev, 0);
-> +	res->flags = 0;
-> +}
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0);
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0);
-> +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0);
-> 
-> -- 
-> 2.50.1
-> 
+Dan Williams (2):
+  PCI: Enable host bridge emulation for PCI_DOMAINS_GENERIC platforms
+  PCI: vmd: Switch to pci_bus_find_emul_domain_nr()
+
+ include/linux/pci.h                 |  7 ++++
+ drivers/pci/controller/pci-hyperv.c | 62 +++++------------------------
+ drivers/pci/controller/vmd.c        | 40 ++++++++-----------
+ drivers/pci/pci.c                   | 24 ++++++++++-
+ drivers/pci/probe.c                 |  8 +++-
+ 5 files changed, 63 insertions(+), 78 deletions(-)
+
+
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+-- 
+2.51.0
+
 
