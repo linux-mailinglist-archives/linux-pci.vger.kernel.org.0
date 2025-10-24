@@ -1,61 +1,76 @@
-Return-Path: <linux-pci+bounces-39212-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0725AC03FFB
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 03:11:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BD46C04129
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 04:04:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEB0A1AA1C3B
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 01:12:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F2E23B2FDF
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 02:04:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6D517F4F6;
-	Fri, 24 Oct 2025 01:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D99219E7D1;
+	Fri, 24 Oct 2025 02:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDOL5Of3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D9H//qMl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130AC8405C;
-	Fri, 24 Oct 2025 01:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFED22425B
+	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 02:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761268297; cv=none; b=ScBgC/KdE8s+lvHzZn1EpP84CYbg7Mke8kWMuOpeILQlgxYQ2iB4N8Up2KFJzQbzgzkaFkH31AUQPZHRJrmDwUpmqBk8Xvz3XbmwcHwjh9p5cEHTOmDby5Q3HI4mAKJdhy/XX1wzRurBkCr+bW27qGGq7J/e6kxDfiB20jdICnQ=
+	t=1761271459; cv=none; b=VdBIKrXZJcNTosO32iEY+MWa2BuuIf6mrAUo3BxA6UV6+jWw1B4BEEjor3dQPQxB+UzojuA4pg+VXN5FwO7C0U7fvBpftX04dWjp/5p7FDtAgfS77yPYxE9nrL41LO/KR8kiOolJg5clqXuVZgFUPHMiD1zqOVIHIf/SxNLYJHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761268297; c=relaxed/simple;
-	bh=sYVXJNowzbBXxfqAUDkJRSvbLsY6hEvJ0xreENX8QjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GrKVCivLiLx7YM6LYtfMumucNgK++VUutIFv+pPlJgle8Z9tUYn0Ey1F/s5KTKM4HddleSUf2xbPH8pKcQRjN7CZbYG6mpcmy6TTSEt4SbHzP1kwwQzcO7wtRu/exiXfiaHtrfRugcI0vgUYVtKzHz1iXilNIQMlEzQlj8pO/3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDOL5Of3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C692C4CEE7;
-	Fri, 24 Oct 2025 01:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761268296;
-	bh=sYVXJNowzbBXxfqAUDkJRSvbLsY6hEvJ0xreENX8QjA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aDOL5Of3SFEs05ZeCCWzGdwaQgK1mGDYDzetpmy0klLs8uy6LjtI/xQRTvtNN7/78
-	 H0QKxn5mSWURrg8GWUbWR38DaYZAGco/RdqbSJ06v1fEVaHIOkZi1b6Rou3wVphYcg
-	 YdzV3mebZe1L3yF7x2RCHE5X5AGlbj0gvZK3/d/MU20dN5jnAYvMokKrq516zOaCx0
-	 qQqCZCUeT9fR0l2hElbXxiXjs6EDkkAhcPzEHXYkIPMleyP3KWPH2faorCi/BCRFYF
-	 PzU2dUjfrFI7VjV+rD4xgCTb4RFw5qGIOOfRcyaJKF7CJgLhS8X3EA5Q6T9Z40I6QM
-	 43FMNhnV/A21A==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: amlogic,axg-pcie: Fix select schema
-Date: Thu, 23 Oct 2025 20:11:21 -0500
-Message-ID: <20251024011122.26001-1-robh@kernel.org>
+	s=arc-20240116; t=1761271459; c=relaxed/simple;
+	bh=0N4MlCO0pi55bTwR/93GBixhc5q8D9YIvJrWh2YfXuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ehO0aGD0EPySewHGNHe45CgGEZHYwq3j+qtZRXlEBa2+wTzYV7Kde3jd8AAz+zO+eFewKTpV+Q6W7vBVPPqSG/xXSJpnP3jmScSSP2Sb4/XEeydrdxrmqQwnl2VoogKnqlaRoUmKlmK8p2J0GSUsUZIZQW6i707PNfrXUyM1oYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D9H//qMl; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761271457; x=1792807457;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0N4MlCO0pi55bTwR/93GBixhc5q8D9YIvJrWh2YfXuE=;
+  b=D9H//qMlzVFxbRuI2pL1bG5AAo2ZflOAhHVGqZXq1QFOBxqlN/6jDkI2
+   Peaq/Pr7jW6P+9o3skq8rVX+6CbdEoTgwYjGESSW3r3/F3ZG8lWLlGGFg
+   ao4/Py07cyX8NhuafWC/O2XPDQP3rfTjn5XcN9+Wx7KzjDuIgLeB4G1ja
+   036zBo8NO2jvQ64HkVqQgdJAgdQm15PzzGBVQchkKwx9noQwGNQzZne81
+   YG/UyJnK3BGg5ZK/fh+fJlVxw0SlbyF1zvOu5fdtN0eSfSGRGpkbVRmsE
+   RrgJ+pJSF/nw3QUlTTZPXb5va8837pWH4F97iRHWLeHq+kUvVEgiKGZlD
+   g==;
+X-CSE-ConnectionGUID: l0eJgnmPR+KdyPnxfrFZEg==
+X-CSE-MsgGUID: mcod2GHCQPuqrcabwiSuEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67319366"
+X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
+   d="scan'208";a="67319366"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 19:04:17 -0700
+X-CSE-ConnectionGUID: p9ElDsxQTUaSRcJMf3Q2tA==
+X-CSE-MsgGUID: gPLLWQ32QVq3ZgVdrZJy7w==
+X-ExtLoop1: 1
+Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
+  by fmviesa003.fm.intel.com with ESMTP; 23 Oct 2025 19:04:16 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Cc: aik@amd.com,
+	yilun.xu@linux.intel.com,
+	aneesh.kumar@kernel.org,
+	bhelgaas@google.com,
+	gregkh@linuxfoundation.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>
+Subject: [PATCH v7 0/9] PCI/TSM: Core infrastructure for PCI device security (TDISP)
+Date: Thu, 23 Oct 2025 19:04:09 -0700
+Message-ID: <20251024020418.1366664-1-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -63,104 +78,158 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The amlogic,axg-pcie binding was never enabled as the 'select' schema
-expects a single compatible value, but the binding has a fallback
-compatible. Fix the 'select' by adding a 'contains'. With this, several
-errors in the clock and reset properties are exposed. Some of the names
-aren't defined in the common DWC schema and the order of clocks entries
-doesn't match .dts files.
+Changes since v6 [1]:
+- Rebase on v6.18-rc2
+- Drop @owner from 'struct pci_tsm' and lookup @ops through @tsm_dev
+  (Alexey)
+- Drop CONFIG_PCI_IDE_STREAM_MAX, only require pci_ide_set_nr_streams()
+  for host bridge implementations that limit streams to something less
+  than topology max (Aneesh)
+- Convert Stream index allocators from bitmaps to ida (preparation for
+  solving Stream ID uniqueness problem reported by Alexey)
+- Misc whitespace cleanups (Jonathan)
+- Misc kdoc fixups
+- Fix nr_ide_streams data type, a u8 is too small
+- Rename PCI_DOE_PROTO_ => PCI_DOE_FEATURE_ (Alexey)
+- Rename @base to @base_tsm in 'struct pci_tsm_pf0' (Aneesh)
+- Fix up PCIe r6.1 reference for PCIe r7.0 (Bjorn)
+- Fix to_pci_tsm_pf0() failing to walk to the DSM device (Yilun)
+- Add pci_tsm_fn_exit() for sub-function cleanups post DSM disconnect
+  (Aneesh)
+- Move the samples/devsec/ implementation to a follow-on patch set
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/pci/amlogic,axg-pcie.yaml          | 17 +++++++++--------
- .../bindings/pci/snps,dw-pcie-common.yaml       |  6 +++---
- 2 files changed, 12 insertions(+), 11 deletions(-)
+[1]: http://lore.kernel.org/20250911235647.3248419-1-dan.j.williams@intel.com
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-index 79a21ba0f9fd..bee694ff45f3 100644
---- a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-@@ -20,9 +20,10 @@ allOf:
- select:
-   properties:
-     compatible:
--      enum:
--        - amlogic,axg-pcie
--        - amlogic,g12a-pcie
-+      contains:
-+        enum:
-+          - amlogic,axg-pcie
-+          - amlogic,g12a-pcie
-   required:
-     - compatible
- 
-@@ -51,15 +52,15 @@ properties:
- 
-   clocks:
-     items:
-+      - description: PCIe PHY clock
-       - description: PCIe GEN 100M PLL clock
-       - description: PCIe RC clock gate
--      - description: PCIe PHY clock
- 
-   clock-names:
-     items:
-+      - const: general
-       - const: pclk
-       - const: port
--      - const: general
- 
-   phys:
-     maxItems: 1
-@@ -88,7 +89,7 @@ required:
-   - reg
-   - reg-names
-   - interrupts
--  - clock
-+  - clocks
-   - clock-names
-   - "#address-cells"
-   - "#size-cells"
-@@ -115,8 +116,8 @@ examples:
-         reg = <0xf9800000 0x400000>, <0xff646000 0x2000>, <0xf9f00000 0x100000>;
-         reg-names = "elbi", "cfg", "config";
-         interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
--        clocks = <&pclk>, <&clk_port>, <&clk_phy>;
--        clock-names = "pclk", "port", "general";
-+        clocks = <&clk_phy>, <&pclk>, <&clk_port>;
-+        clock-names = "general", "pclk", "port";
-         resets = <&reset_pcie_port>, <&reset_pcie_apb>;
-         reset-names = "port", "apb";
-         phys = <&pcie_phy>;
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-index 34594972d8db..6339a76499b2 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-@@ -115,11 +115,11 @@ properties:
-             above for new bindings.
-           oneOf:
-             - description: See native 'dbi' clock for details
--              enum: [ pcie, pcie_apb_sys, aclk_dbi, reg ]
-+              enum: [ pcie, pcie_apb_sys, aclk_dbi, reg, port ]
-             - description: See native 'mstr/slv' clock for details
-               enum: [ pcie_bus, pcie_inbound_axi, pcie_aclk, aclk_mst, aclk_slv ]
-             - description: See native 'pipe' clock for details
--              enum: [ pcie_phy, pcie_phy_ref, link ]
-+              enum: [ pcie_phy, pcie_phy_ref, link, general ]
-             - description: See native 'aux' clock for details
-               enum: [ pcie_aux ]
-             - description: See native 'ref' clock for details.
-@@ -176,7 +176,7 @@ properties:
-             - description: See native 'phy' reset for details
-               enum: [ pciephy, link ]
-             - description: See native 'pwr' reset for details
--              enum: [ turnoff ]
-+              enum: [ turnoff, port ]
- 
-   phys:
-     description:
+This set is available at
+https://git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/log/?h=staging
+(rebasing branch) or devsec-20251023 (immutable tag). That branch
+additionally contains address association support, Stream ID uniqueness
+compability quirk, updated samples/devsec/ (now with multifunction
+device and simple bind support), and an updated preview of v2 of "[PATCH
+0/7] PCI/TSM: TEE I/O infrastructure" (fixes x86 encrypted ioremap and
+other changes) [2].
+
+[2]: http://lore.kernel.org/20250827035259.1356758-1-dan.j.williams@intel.com
+
+It passes an updated regression testing using samples/devsec/. See this
+commit on the staging branch for that test:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/commit/?id=44932bffdcc1
+
+Status: ->connect() flow is settled
+-----------------------------------
+At the risk of tempting fate, the goal is this v7 goes to linux-next via
+a stable tsm.git#next branch. Enable one or more TSM driver
+implementations to queue on top for v6.19-rc1 via arch-specific trees
+for TDX, TIO, CCA, or COVE-IO. I.e. target v6.19 to support baseline
+link encryption (IDE) / secure-session establishment without
+confidential device-assignment.
+
+That tsm.git#next goal still needs follow-on patches like the following
+to settle:
+
+Alexey Kardashevskiy (1):
+      PCI/IDE: Initialize an ID for all IDE streams
+
+Xu Yilun (1):
+      PCI/IDE: Add Address Association Register setup for downstream MMIO
+
+...but otherwise the core infrastructure is ready to support IDE
+establishment via a platform TSM.
+
+Next steps:
+-----------
+- Stage at least one vendor ->connect() implementation on top of a
+  tsm.git#staging snapshot, for integration testing.
+
+- Additionally get at least one vendor ->connect() implementation queued
+  in an arch tree for linux-next in time for v6.19, otherwise
+  tsm.git#next may need to wait for v6.20.
+
+Updated Cover letter:
+---------------------
+
+Trusted execution environment (TEE) Device Interface Security Protocol
+(TDISP) is a chapter name in the PCI Express Base Specification (r7.0).
+It describes an alphabet soup of mechanisms, SPDM, CMA, IDE, TSM/DSM,
+that system software uses to establish trust in a device and assign it
+to a confidential virtual machine (CVM). It is a protocol for
+dynamically extending the Trusted Computing Boundary (TCB) of a CVM with
+a PCI device interface enabled to issue DMA to CVM private memory.
+
+The acronym soup problem is extended by each platform architecture
+having distinct TEE Security Manager (TSM) API implementations /
+capabilities, and each endpoint Device Security Manager (DSM) having its
+own idiosyncratic behaviors and requirements around TDISP state
+transitions.
+
+Despite all that opportunity for differentiation, there is a significant
+portion of the implementation that is cross-vendor common. The PCI/TSM
+extension of the PCI core subsystem is a library for TSM drivers to
+establish link encryption and enable device access to confidential
+memory.
+
+This foundational phase is focused on host-side link encryption, the
+next phase focuses on guest-side locking and accepting devices, the
+phase after that focuses on all the host-side setup for private DMA and
+private MMIO. There are more phases beyond that, like device
+attestation, but the goal is upstream manageable incremental steps that
+provide tangible value to Linux at each step.
+
+Dan Williams (9):
+  coco/tsm: Introduce a core device for TEE Security Managers
+  PCI/IDE: Enumerate Selective Stream IDE capabilities
+  PCI: Introduce pci_walk_bus_reverse(), for_each_pci_dev_reverse()
+  PCI/TSM: Establish Secure Sessions and Link Encryption
+  PCI: Add PCIe Device 3 Extended Capability enumeration
+  PCI: Establish document for PCI host bridge sysfs attributes
+  PCI/IDE: Add IDE establishment helpers
+  PCI/IDE: Report available IDE streams
+  PCI/TSM: Report active IDE streams
+
+ drivers/pci/Kconfig                           |  18 +
+ drivers/virt/coco/Kconfig                     |   3 +
+ drivers/pci/Makefile                          |   2 +
+ drivers/virt/coco/Makefile                    |   1 +
+ Documentation/ABI/testing/sysfs-bus-pci       |  51 ++
+ Documentation/ABI/testing/sysfs-class-tsm     |  19 +
+ .../ABI/testing/sysfs-devices-pci-host-bridge |  45 ++
+ Documentation/driver-api/pci/index.rst        |   1 +
+ Documentation/driver-api/pci/tsm.rst          |  21 +
+ drivers/pci/pci.h                             |  21 +
+ include/linux/device/bus.h                    |   3 +
+ include/linux/pci-doe.h                       |   4 +
+ include/linux/pci-ide.h                       |  81 +++
+ include/linux/pci-tsm.h                       | 159 +++++
+ include/linux/pci.h                           |  28 +
+ include/linux/tsm.h                           |  14 +
+ include/uapi/linux/pci_regs.h                 |  89 +++
+ drivers/base/bus.c                            |  38 ++
+ drivers/pci/bus.c                             |  38 ++
+ drivers/pci/doe.c                             |   2 -
+ drivers/pci/ide.c                             | 592 ++++++++++++++++
+ drivers/pci/pci-sysfs.c                       |   4 +
+ drivers/pci/probe.c                           |  29 +-
+ drivers/pci/remove.c                          |   6 +
+ drivers/pci/search.c                          |  62 +-
+ drivers/pci/tsm.c                             | 643 ++++++++++++++++++
+ drivers/virt/coco/tsm-core.c                  | 165 +++++
+ MAINTAINERS                                   |   7 +-
+ 28 files changed, 2133 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-pci-host-bridge
+ create mode 100644 Documentation/driver-api/pci/tsm.rst
+ create mode 100644 include/linux/pci-ide.h
+ create mode 100644 include/linux/pci-tsm.h
+ create mode 100644 drivers/pci/ide.c
+ create mode 100644 drivers/pci/tsm.c
+ create mode 100644 drivers/virt/coco/tsm-core.c
+
+
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
 -- 
 2.51.0
 
