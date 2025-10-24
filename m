@@ -1,104 +1,89 @@
-Return-Path: <linux-pci+bounces-39264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A06BC064C9
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 14:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE12AC06712
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 15:17:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A54451C06123
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 12:44:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9F4C1C0162C
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Oct 2025 13:17:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29F73195FE;
-	Fri, 24 Oct 2025 12:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2FD315D4F;
+	Fri, 24 Oct 2025 13:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfCVHAVo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U5fLunLq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a0mNV1hJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAFB3195E7
-	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 12:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE738313539;
+	Fri, 24 Oct 2025 13:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761309830; cv=none; b=rmH+VzvX9CrfaCCgFtN45o+Iwuoy5VD8R6FBTIK9XG/QvE6UOqrNQoSWtOiOV5/Tajw8z1WN9kMs24wJ/Hab10wNwfajbAF1gwfzLzx9AEUv3GWLS0I1/z22/8Nc4Bt3q4rFafOfmh1khGoEgpHsm7AAe0fcD55jRRanxj1rZ4c=
+	t=1761311851; cv=none; b=PAiRAQKYMJTALBFeEUDae72L+k7g00xxoJVToN/+LUiPYwqTZZVsLqy+8o+jAPITbRYWq4zL8oGaMCpzMeFxe/Qb1bq6ycFEejxCYEiweLtSmqYf/tz8hMEbx2i61U27ujbu32ABzqItGtVX4IXy1GDgyqfHfBc81ZflYEEi20c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761309830; c=relaxed/simple;
-	bh=OQJRTxbLkUJSG6Hfj2aAMLp/CQvFmEMNU2nFsDW8/O8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CxQoZh2lwOxyXvR3PxblxKU+c5jnHrhJMmfPkYJSrEAHJeO9unH+3+66Q9O5/0IuAfbgxdvrZ11D4xFIvQTwvCQBQpARyQAwO4rQVFwij4iqo8rV77u+MzrnnSZ67uY/pW7doMOylEyVNbkBoUSqZJ8j7goOJh3DmTHRShnRkdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfCVHAVo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B787C4CEF1
-	for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 12:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761309830;
-	bh=OQJRTxbLkUJSG6Hfj2aAMLp/CQvFmEMNU2nFsDW8/O8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mfCVHAVopZMSe5zGbZ7DqcXCJxa26UWCs9cnJYJIS8/ZfVKoEmbITymqnbZp13Rmb
-	 SKXsOkiuvT2pufWs0wyCCT10nrtYmnr8bn0WAbXaibCgDVgaWxpTYsrOOlXyIutW/Y
-	 BDFd0r9LXGWVDCYMPoQl4B8oBfqOP+Tpbv9bGDjZEbjcfZTpvlS3RpvhBtyKAkWPrL
-	 vtdTPyXUqe+wpqbRyE2JiEXzYUmsjfa2Fyjlu4YA1XURxLE2vSCBaukH2D3211hZyS
-	 pQ3EREfiU0k2d+Uxh5Ae8DrczsY6IUqrC3KlTS8BNgwZIKifHR/klhFJAlhFwqbdyH
-	 9EcaMn7voKNdA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b3b3a6f4dd4so409701166b.0
-        for <linux-pci@vger.kernel.org>; Fri, 24 Oct 2025 05:43:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVzWAKs423LQ/TSvOAaGPVjSJlp5SuDbsAa3fpaI0VSEPZszwUg02kHzHq48iXRG/WNFgVwYFL9/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbQ0fUs3uuSyw1b2Nj5ICba3LyPU+7KNqwX3pfrW24HsIV7EOy
-	HVYqSGoUi5R4vtPf36eA5eZAKHqCdbaRQDXHPxm2RSDoa1QV6+rVizL/2kPbmGNJJfGUf6aExau
-	RODuxbk9wVUafR9Oeky4COsv82DjCrg==
-X-Google-Smtp-Source: AGHT+IGaCIdcHozNq55y6tCOTnaSA8JKLNglQntYyplKKBr4Kfb/fniPDz4m4msgsNYHeZxxULr+Js+tkAFFxxxkJ0s=
-X-Received: by 2002:a17:907:9701:b0:b3c:a161:6843 with SMTP id
- a640c23a62f3a-b6d6fe01905mr270557266b.4.1761309828886; Fri, 24 Oct 2025
- 05:43:48 -0700 (PDT)
+	s=arc-20240116; t=1761311851; c=relaxed/simple;
+	bh=9950Es8hMVNHLG4ReQrAJEeUoGaZLxEyiZEHHF/Uqb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EbFGzLoWi9UgvneWlrd8wxKZurYO0aeR8BqmCdt8EeBQba/BBBNykGHxT32UJ8beAq/pBLn5iKwhnEuktKd+btPtmLEkKPm/04ZiBUIssxHN46iK6OjbRz9odeKrExjMvh89YGyBLeTDzqD5oPcjlasl7ndrZ/LXtZq48RSXV9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U5fLunLq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a0mNV1hJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Fri, 24 Oct 2025 15:17:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1761311841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9950Es8hMVNHLG4ReQrAJEeUoGaZLxEyiZEHHF/Uqb8=;
+	b=U5fLunLq4QH93yIJjYVQ+Akbhxky7nktgYfQAinsFZQJ0VYQqjjaiRn0h/dFFrsZoSn2jv
+	sK+MmUO5jaAGw2cIK+s1agUgi4QlkSnp5wcDMmImTvI9maxL4pm5dSIavAtsfBwNs/DBM2
+	PtXSHzHeWGQCDfKMOCwcHz0h0mUSoZNhBDH5adJVvXq+hS2BMFE4pSe4RZ8oEe5Zy4v07k
+	A6OdIa+EmNrgjhkcSPbZDM8lngizYWzrBGQh/zwkhpFZnT8zXmSUKyRXVeX0Zn+OKApWtd
+	j09RXK+r5nWOsDtqssikKm2xgbA0jeTEPHZE6NuM8XpInJ0JNdLdIVwf1pClHQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1761311841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9950Es8hMVNHLG4ReQrAJEeUoGaZLxEyiZEHHF/Uqb8=;
+	b=a0mNV1hJeObjNVbMWJ8g2rKJ1qgpUD0BIZFk0wMxSwZ5Ce2NvxOvCE3Nvs/zp82VXm2QtW
+	Yt2kt8ZiPEu2jkCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+Cc: Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Waiman Long <longman@redhat.com>, linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci/aer_inject: switching inject_lock to
+ raw_spinlock_t
+Message-ID: <20251024131719.tJRyYGcD@linutronix.de>
+References: <20251009150651.93618-1-jckeep.cuiguangbo@gmail.com>
+ <20251010071555.u4ubYPid@linutronix.de>
+ <CAH6oFv+SUo7B6nPPw=OgQ1AhqVfQYC1HvX=kjcHJX8W13kTwZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251021124103.198419-1-lpieralisi@kernel.org>
- <20251022140545.GB3390144-robh@kernel.org> <87v7k4ws58.ffs@tglx>
-In-Reply-To: <87v7k4ws58.ffs@tglx>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 24 Oct 2025 07:43:37 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL5f4_qQ=YmQcYpaxsUx8vZDkuquK=G3YTw9qC1QibVrg@mail.gmail.com>
-X-Gm-Features: AWmQ_bms1S4lGlWI8WRswebTFx9muu0IxPjIPVEgFBEKLoJV1JkaFYbmMfNU7gQ
-Message-ID: <CAL_JsqL5f4_qQ=YmQcYpaxsUx8vZDkuquK=G3YTw9qC1QibVrg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] of/irq: Misc msi-parent handling fixes/clean-ups
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Sascha Bischoff <sascha.bischoff@arm.com>, 
-	Scott Branden <sbranden@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>, 
-	Frank Li <Frank.Li@nxp.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAH6oFv+SUo7B6nPPw=OgQ1AhqVfQYC1HvX=kjcHJX8W13kTwZQ@mail.gmail.com>
 
-On Fri, Oct 24, 2025 at 4:44=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> Rob!
->
-> On Wed, Oct 22 2025 at 09:05, Rob Herring wrote:
-> > On Tue, Oct 21, 2025 at 02:40:58PM +0200, Lorenzo Pieralisi wrote:
-> >> Lorenzo Pieralisi (5):
-> >>   of/irq: Add msi-parent check to of_msi_xlate()
-> >>   of/irq: Fix OF node refcount in of_msi_get_domain()
-> >
-> > I've applied these 2 for 6.18.
->
-> The rest of this depends on those two.
->
-> >>   of/irq: Export of_msi_xlate() for module usage
->
-> Can you pick the three of/irq ones up and put them into a seperate
-> branch based on rc1 so that I can pull that and apply the rest:
+On 2025-10-11 01:18:05 [+0800], Guangbo Cui wrote:
+> I will drop the lock in aer_inject_exit, and update commit msg.
 
-Yes. This series is the only thing I have queued for 6.18 fixes so
-far, so I'll add the 3rd patch and Cc you on my PR to Linus.
+Was here a follow-up?
 
-Rob
+Sebastian
 
