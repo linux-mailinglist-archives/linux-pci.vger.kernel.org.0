@@ -1,57 +1,61 @@
-Return-Path: <linux-pci+bounces-39317-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39318-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF410C093DB
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:15:27 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3241DC09420
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:17:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 006B24EF0C4
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:11:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 664224F197B
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:12:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44794303CAE;
-	Sat, 25 Oct 2025 16:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72751304BDE;
+	Sat, 25 Oct 2025 16:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtrolAhz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQQQGkRi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D82302756;
-	Sat, 25 Oct 2025 16:11:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471372F5B;
+	Sat, 25 Oct 2025 16:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761408673; cv=none; b=O8tmOgeck+kzpJAc9D3dm08xvpweTR4lidqIWVNKybHWwZuGlKaqFICNki7XWsS9yIuJXSwF9YAIcf8kg7/8DL2hAUFpO54aJQUBPZz//lGc2edjLBM9Y0GL6ChOl7Oty1t8l4TqT8OsWcRUtUSxc75B8LgpN+DkxngGpR3bbaE=
+	t=1761408703; cv=none; b=ofz4vd0c8vob7bMrIfGk6uHlYR3tlo3+bUUv6srDu13R7bguGcjrsuKqyL2090Ah+BSHa9dxQjOJpTDpRo11O0UT77AViOgPH2Trif8y0uU0GC2j52dBsSQvgVUc344TdEJrPAKytJg6+OGIww8CeIfi7TgxZIt7UM2B1KjCWrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761408673; c=relaxed/simple;
-	bh=hMlWPjIszmAb/MPeUXQqD3XjgKIF7LxpDjvm1UzIS9w=;
+	s=arc-20240116; t=1761408703; c=relaxed/simple;
+	bh=DEkVSc8NRFn6ItZeWrbNxU3sOFl/C8fQJwK+oMewsvs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TYY68EpD4nV4LeC6gOZs9lrWPcDvpmJDQLKoxx6Q/nVL6YKLOry0N/Kl+6lT1P2DoBG6XzWCTd5EfIxr5xyCK7J+huknJC3av119VMDCrBic7iYqsli/MM3FnntMokPfhYSjhql08Ej/n7Q1hrdXwDw19lKjBgo4B+AW+oI67Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtrolAhz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29611C4CEFF;
-	Sat, 25 Oct 2025 16:11:12 +0000 (UTC)
+	 MIME-Version:Content-Type; b=bHv+HmyTfRFpN2fBOjh6fiLlzdy1xSPVEUKS9fMT9v0Ip4KcjXS147ouVEzVWd/5PdYZibtYb+eQHaHFz4l92sMhA9JX4U9YU0vQ0ExP2NzS1acEleG0txyJEmWcLFBQEiuDhhsjJ+RK9skgsdnsTs+iNhZx6MdnphLFXMmR97U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQQQGkRi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06E1C4CEFF;
+	Sat, 25 Oct 2025 16:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761408673;
-	bh=hMlWPjIszmAb/MPeUXQqD3XjgKIF7LxpDjvm1UzIS9w=;
+	s=k20201202; t=1761408703;
+	bh=DEkVSc8NRFn6ItZeWrbNxU3sOFl/C8fQJwK+oMewsvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MtrolAhzUcSE2+mIUmq9uZp3c7JhOgmNxOAyD1pQg/5rbNQacFjhDtEK5GDC7KNH8
-	 xVQD253ghsPVh1uWxobyynMioMkTl1zblqet0P4Qh18wvShPcuPkVtWMmrrliKVo7p
-	 RaFvtfMFFxP7psoR062IYflf1C0+gW95u1H6xjdXOUD5MWaYQvlhLCSbS7LICIKcTZ
-	 Q7N6KqvldSgJ3Bfx/PqendryDHSTvs5fjKgGt6RE7CJ7yly+hePyHPn+/Ry3UFti3D
-	 uIbEvoBAdeG0c1l4lxTCVRFxgE4ylEsfePVLYEA6SEbnKDeKw6rgQh2dFwrRYV6BjN
-	 mRP1SykYpofJg==
+	b=uQQQGkRiCMLTJ1HsAmxO1O9mo9qyagiCGlvwb2/mSM+zSnGt/+ZACUViznRh/OIbf
+	 MgOoknXreViuIjigkuZ/rawYU/E56f2ilyU8Pms3hXcoDi/zslNW8c87lVxZez5uxF
+	 5JCUlN3NGQcpyEBfi3Ng2mCOyLN+YTUwHLIAuwHGWDlrWtdy8xwEvWEbs6Ww7EPBUV
+	 MKQsuA0KAPnL6vLKZE0K05LoThB57VXw2ybZA9+1b8Q0U+CJYOgkZKkHqbAMxNiAN6
+	 orPc8RxgfL1VhSRWEszVIM6+xXTscBIjH+f/c3+ALzUPYjjnHTnnb5lUKlrQirKw90
+	 Shrq2bXCoNUAg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Christian Bruel <christian.bruel@foss.st.com>,
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	Manivannan Sadhasivam <mani@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
 	Sasha Levin <sashal@kernel.org>,
-	kwilczynski@kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17] selftests: pci_endpoint: Skip IRQ test if IRQ is out of range.
-Date: Sat, 25 Oct 2025 11:54:29 -0400
-Message-ID: <20251025160905.3857885-38-sashal@kernel.org>
+	l.stach@pengutronix.de,
+	shawnguo@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.17-6.12] PCI: imx6: Enable the Vaux supply if available
+Date: Sat, 25 Oct 2025 11:54:38 -0400
+Message-ID: <20251025160905.3857885-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -67,19 +71,20 @@ X-stable-base: Linux 6.17.5
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Christian Bruel <christian.bruel@foss.st.com>
+From: Richard Zhu <hongxing.zhu@nxp.com>
 
-[ Upstream commit 106fc08b30a2ece49a251b053165a83d41d50fd0 ]
+[ Upstream commit c221cbf8dc547eb8489152ac62ef103fede99545 ]
 
-The pci_endpoint_test tests the entire MSI/MSI-X range, which generates
-false errors on platforms that do not support the whole range.
+When the 3.3Vaux supply is present, fetch it at the probe time and keep it
+enabled for the entire PCIe controller lifecycle so that the link can enter
+L2 state and the devices can signal wakeup using either Beacon or WAKE#
+mechanisms.
 
-Skip the test in such cases and report accordingly.
-
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-[mani: reworded description]
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+[mani: reworded the subject, description and error message]
 Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-Link: https://patch.msgid.link/20250804170916.3212221-4-christian.bruel@foss.st.com
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Link: https://patch.msgid.link/20250820022328.2143374-1-hongxing.zhu@nxp.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
@@ -87,84 +92,91 @@ LLM Generated explanations, may be completely bogus:
 
 YES
 
-**Why This Fix Matters**
-- Prevents false test failures: The tests iterate full MSI/MSI-X ranges
-  regardless of what was actually allocated on the device. When a vector
-  index is out of range, the kernel returns -EINVAL, which the old test
-  treated as a failure.
-- Skips unsupported cases correctly: The new checks treat out-of-range
-  vectors as “not applicable” and mark the test as skipped, which
-  accurately reflects platform capability instead of reporting an error.
+- The change enables an optional 3.3V auxiliary PCIe supply early in
+  probe and keeps it on for the controller’s lifetime via devm, which
+  directly addresses link low‑power (L2) entry and wake signaling
+  reliability. The new call
+  `devm_regulator_get_enable_optional(&pdev->dev, "vpcie3v3aux")` is
+  added in `drivers/pci/controller/dwc/pci-imx6.c:1744`. Errors other
+  than “not present” are surfaced using `dev_err_probe()`
+  (`drivers/pci/controller/dwc/pci-imx6.c:1745`), ensuring a clear,
+  fail‑fast behavior if hardware provides the supply but it cannot be
+  enabled.
 
-**What Changed (Selftests Only)**
-- In `tools/testing/selftests/pci_endpoint/pci_endpoint_test.c:122` and
-  `:140`, after triggering an IRQ:
-  - MSI loop: `pci_ep_ioctl(PCITEST_MSI, i);` then `if (ret == -EINVAL)
-    SKIP(return, "MSI%d is disabled", i);` (`tools/testing/selftests/pci
-    _endpoint/pci_endpoint_test.c:123`–`:126`)
-  - MSI-X loop: `pci_ep_ioctl(PCITEST_MSIX, i);` then `if (ret ==
-    -EINVAL) SKIP(return, "MSI-X%d is disabled", i);` (`tools/testing/se
-    lftests/pci_endpoint/pci_endpoint_test.c:141`–`:144`)
-- Uses existing kselftest skip mechanism (`SKIP(...)`) which is well-
-  established in the harness
-  (`tools/testing/selftests/kselftest_harness.h:110`–`:134`).
+- The helper used is a standard devres API that both acquires and
+  enables the regulator for the device lifetime, and automatically
+  disables it on device teardown. See the declaration in
+  `include/linux/regulator/consumer.h:166` and implementation in
+  `drivers/regulator/devres.c:110`. This matches the commit’s intent to
+  “keep it enabled for the entire PCIe controller lifecycle.”
 
-**Why -EINVAL Means “Out of Range” Here**
-- The endpoint test driver queries the Linux IRQ number for a given
-  vector via `pci_irq_vector(pdev, msi_num - 1)`, and immediately
-  returns that error when negative
-  (`drivers/misc/pci_endpoint_test.c:441`–`:443`).
-- `pci_irq_vector()` returns -EINVAL precisely when the vector index is
-  out of range/not allocated for the device
-  (`drivers/pci/msi/api.c:311`–`:324`), which happens when the device
-  supports fewer MSI/MSI-X vectors than the upper bound tested (MSI up
-  to 32, MSI-X up to 2048).
+- This is a contained, minimal change within the i.MX DesignWare PCIe
+  host driver probe path. It does not alter broader PCIe core behavior,
+  call flows, or add architectural changes. It only:
+  - Enables `vpcie3v3aux` if present (`drivers/pci/controller/dwc/pci-
+    imx6.c:1744`).
+  - Leaves existing supply handling intact for `vpcie` and `vph`
+    (`drivers/pci/controller/dwc/pci-imx6.c:1748` and
+    `drivers/pci/controller/dwc/pci-imx6.c:1755`).
+  - Keeps `vpcie` enable/disable at host init/exit unchanged
+    (`drivers/pci/controller/dwc/pci-imx6.c:1205`,
+    `drivers/pci/controller/dwc/pci-imx6.c:1280`,
+    `drivers/pci/controller/dwc/pci-imx6.c:1297`).
 
-**Scope and Risk**
-- Small, contained change; affects only kselftests (no runtime kernel
-  code).
-- No API or architectural changes; just improves test correctness by
-  skipping unsupported cases.
-- Mirrors existing skip behavior already used in the same test suite
-  (e.g., BAR test skips when disabled,
-  `tools/testing/selftests/pci_endpoint/pci_endpoint_test.c:67`–`:70`).
-- No security impact.
+- The functional impact is to enable proper L2 and wake signaling
+  (Beacon or WAKE#) on boards that wire up 3.3Vaux. The driver already
+  carries context that AUX power matters; for example, i.MX95 has an
+  erratum requiring AUX power detect handling to exit L23 Ready
+  (`drivers/pci/controller/dwc/pci-imx6.c:245` comment explains AUX
+  power implications). Turning on AUX power when available is therefore
+  a correctness fix, not a feature.
 
-**Stable Backport Criteria**
-- Fixes a real issue that affects users of stable kernels running
-  selftests (false negatives on platforms with limited MSI/MSI-X
-  vectors).
-- Minimal risk and fully confined to `tools/testing/selftests`.
-- Does not introduce new features; aligns with stable policy for test
-  fixes.
+- Risk/regression assessment:
+  - If the supply is not defined, nothing changes (uses “optional” API
+    and ignores `-ENODEV`).
+  - If the supply is defined but cannot be enabled, probe now fails
+    loudly; this surfaces real hardware/regulator issues instead of
+    running with broken low‑power/wake behavior.
+  - The pattern matches existing PCIe controller drivers that enable
+    optional PCIe supplies at probe with the same helper (e.g.,
+    `drivers/pci/controller/pcie-rcar-host.c:954`), indicating
+    established practice across subsystems.
+  - Binding-wise, the i.MX PCIe common binding allows additional
+    properties (`additionalProperties: true` in
+    `Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-
+    common.yaml:246`), so using `vpcie3v3aux-supply` is non‑disruptive
+    for DT validation. DT updates are optional and can follow
+    separately.
 
-Given the above, this is a good candidate for stable backport.
+- Stable criteria fit:
+  - Fixes a real user-visible issue (L2 entry and wake signaling fail
+    without AUX).
+  - Small and self-contained change in a single driver.
+  - No architectural refactor or feature addition beyond enabling an
+    optional, already-described hardware supply.
+  - Uses existing, widely deployed APIs with minimal regression risk.
 
- tools/testing/selftests/pci_endpoint/pci_endpoint_test.c | 4 ++++
+Given the clear bugfix nature, minimal scope, and alignment with
+established patterns, this is a good candidate for stable backport.
+
+ drivers/pci/controller/dwc/pci-imx6.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index da0db0e7c9693..cd9075444c32a 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -121,6 +121,8 @@ TEST_F(pci_ep_basic, MSI_TEST)
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 80e48746bbaf6..db51e382a7cf3 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1745,6 +1745,10 @@ static int imx_pcie_probe(struct platform_device *pdev)
+ 	pci->max_link_speed = 1;
+ 	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
  
- 	for (i = 1; i <= 32; i++) {
- 		pci_ep_ioctl(PCITEST_MSI, i);
-+		if (ret == -EINVAL)
-+			SKIP(return, "MSI%d is disabled", i);
- 		EXPECT_FALSE(ret) TH_LOG("Test failed for MSI%d", i);
- 	}
- }
-@@ -137,6 +139,8 @@ TEST_F(pci_ep_basic, MSIX_TEST)
- 
- 	for (i = 1; i <= 2048; i++) {
- 		pci_ep_ioctl(PCITEST_MSIX, i);
-+		if (ret == -EINVAL)
-+			SKIP(return, "MSI-X%d is disabled", i);
- 		EXPECT_FALSE(ret) TH_LOG("Test failed for MSI-X%d", i);
- 	}
- }
++	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie3v3aux");
++	if (ret < 0 && ret != -ENODEV)
++		return dev_err_probe(dev, ret, "failed to enable Vaux supply\n");
++
+ 	imx_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+ 	if (IS_ERR(imx_pcie->vpcie)) {
+ 		if (PTR_ERR(imx_pcie->vpcie) != -ENODEV)
 -- 
 2.51.0
 
