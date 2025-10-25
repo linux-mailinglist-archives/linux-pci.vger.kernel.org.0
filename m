@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-39315-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39313-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81481C08FA1
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 13:43:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5990EC08F8F
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 13:43:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 710BC1B23342
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 11:44:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B44F3B2D8F
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 11:42:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26A8A2FB0B5;
-	Sat, 25 Oct 2025 11:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD1EE2F9DAA;
+	Sat, 25 Oct 2025 11:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Au+GUjnI"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eqFCeupG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12221D516C;
-	Sat, 25 Oct 2025 11:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33472F83B8;
+	Sat, 25 Oct 2025 11:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761392544; cv=none; b=e0JDq5i9qE5HUpLAYqsBk2TktptsQ+8ic8pJSAp3RfzIuQ4ISkMNFTYOYxfW2P+LCr3yqf73K7x1yP/Ul1tFSm/AIRQwmrIyQPNfGh77l1nwGlgE1XpJ8yhxCbT+oIATw/DWvbT+oRqZAES7twQHP5rkuJWmgZHKJ0RhVA3ceI4=
+	t=1761392540; cv=none; b=dIHFZ+w/O6PpNPciHHiyJWMg493o67b728WZaVCYyEp+6onz1C59nKvbQ8iY2No42F748lrzye5Ds9pyJK3+A7HxAXY+sFhFUlguPL/ZgSV1mmimFXe4JiwwPXkDhVAMXTljy1jmJzafMmeet7GCwlHg2ZPjWPIBz/uO5hR/KkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761392544; c=relaxed/simple;
-	bh=4GpavlZCK7jfW+tbgBCh97zrQasfjN1Irb4roaVDKN4=;
+	s=arc-20240116; t=1761392540; c=relaxed/simple;
+	bh=OUh/XG151vsZreFH20lIvtumt84ynAEZS96GcNa0wxs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O23h6/pIeGzqdinrqqZCpwGrJUtpmJALh4KXvloXolBDUekhLPN7mtaF5yDFSvKkVjbCeP8J1zHLy4wqLsahx/zyJ0fs5ivgIJ3zfnSstQ9QG1IoJv1rwChQZD25IWvG9u8ZtoKLoN6/Qrn1Lj422sOoDRcnIa1v27n2HmVmnkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Au+GUjnI; arc=none smtp.client-ip=115.124.30.101
+	 MIME-Version:Content-Type; b=CRNRH/rOV+2vrSxeIMiuMkUb/7CNVJ9pCWYm+XOu5OH3fcjEdL9fr/EYGuufEYnFJX9c2wnIKZ3yY+ZpHTI/6x/zrgf0nAeC73DiXu4aqJra3NbuJU4IdzqhTFfQkLn7uWSqWmgG9TLj4n/eQyF/AUZn58G/358tQ80bJkNiAgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eqFCeupG; arc=none smtp.client-ip=115.124.30.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1761392528; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=daBDsIEoo7d0DXzD96pe4JGjDFJicmWft6qR8RVDeNU=;
-	b=Au+GUjnIhRk4Nbrko7T2QCps8MCyvFwrtpNeyQYnmUNbq5q8muwGRDzgKEdnJBnj1y9piOUkA38B3Z1V5t5Cl3KeWN80m5Y6oIFZFsxMePQU2i2nNdrrBbIFzCY7VU2q6KrsbcTdruNq7if9jxibHAm2pVz+YUEuV3Yp0VvDWG0=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqwoUgY_1761392525 cluster:ay36)
+	t=1761392529; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=ZXis57oCSpBFB4a8y0ISQ5Oi5GcKyDv+DrwQmN1TBwo=;
+	b=eqFCeupG0uCBMxxx6AMXnMvuYBnYBVbP7suO5hcLJCf5SD8fSN8mf56rJV1Zt988PJ++HhIq8hzYX4ghy45ZTJVuy7a0nfrYol8k0eiDkvlbMbDhS9O/tFWQrzN7OSPsXgT6fDbC0ufYSaidWFUqB5cEc0vbB7cT6oJv3X3/OVM=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqwoUh2_1761392526 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 25 Oct 2025 19:42:06 +0800
+          Sat, 25 Oct 2025 19:42:07 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: rostedt@goodmis.org,
 	lukas@wunner.de,
@@ -63,9 +63,9 @@ Cc: bhelgaas@google.com,
 	mark.rutland@arm.com,
 	peterz@infradead.org,
 	tianruidong@linux.alibaba.com
-Subject: [PATCH v13 1/3] PCI: trace: Add a generic RAS tracepoint for hotplug event
-Date: Sat, 25 Oct 2025 19:41:56 +0800
-Message-Id: <20251025114158.71714-2-xueshuai@linux.alibaba.com>
+Subject: [PATCH v13 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+Date: Sat, 25 Oct 2025 19:41:57 +0800
+Message-Id: <20251025114158.71714-3-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
 References: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
@@ -78,230 +78,240 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hotplug events are critical indicators for analyzing hardware health,
-and surprise link downs can significantly impact system performance and
-reliability.
+PCIe link speed degradation directly impacts system performance and
+often indicates hardware issues such as faulty devices, physical layer
+problems, or configuration errors.
 
-Define a new TRACING_SYSTEM named "pci", add a generic RAS tracepoint
-for hotplug event to help health checks. Add enum pci_hotplug_event in
-include/uapi/linux/pci.h so applications like rasdaemon can register
-tracepoint event handlers for it.
+To this end, add a RAS tracepoint to monitor link speed changes,
+enabling proactive health checks and diagnostic analysis.
 
 The following output is generated when a device is hotplugged:
 
-$ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+$ echo 1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
 $ cat /sys/kernel/debug/tracing/trace_pipe
-   irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_PRESENT
+   irq/51-pciehp-88      [001] .....   381.545386: pcie_link_event: 0000:00:02.0 type:4, reason:4, cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, status:DLLLA
 
-   irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_UP
-
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Suggested-by: Matthew W Carlis <mattc@purestorage.com>
 Suggested-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: "Steven Rostedt (Google)" <rostedt@goodmis.org> # for trace event
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/Makefile              |  3 ++
- drivers/pci/hotplug/pciehp_ctrl.c | 31 ++++++++++---
- drivers/pci/trace.c               | 11 +++++
- include/trace/events/pci.h        | 72 +++++++++++++++++++++++++++++++
- include/uapi/linux/pci.h          |  7 +++
- 5 files changed, 118 insertions(+), 6 deletions(-)
- create mode 100644 drivers/pci/trace.c
- create mode 100644 include/trace/events/pci.h
+ drivers/pci/hotplug/pciehp_hpc.c |  3 +-
+ drivers/pci/pci.c                |  2 +-
+ drivers/pci/pci.h                | 21 ++++++++++--
+ drivers/pci/pcie/bwctrl.c        |  4 +--
+ drivers/pci/probe.c              |  9 +++--
+ include/trace/events/pci.h       | 57 ++++++++++++++++++++++++++++++++
+ 6 files changed, 87 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 67647f1880fb..58a4e4ea76b0 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -45,3 +45,6 @@ obj-y				+= controller/
- obj-y				+= switch/
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index bcc51b26d03d..ad5f28f6a8b1 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -320,7 +320,8 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 	}
  
- subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
-+
-+CFLAGS_trace.o := -I$(src)
-+obj-$(CONFIG_TRACING)		+= trace.o
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index bcc938d4420f..7805f697a02c 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -19,6 +19,7 @@
- #include <linux/types.h>
- #include <linux/pm_runtime.h>
+ 	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &linksta2);
+-	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status, linksta2);
++	__pcie_update_link_speed(ctrl->pcie->port->subordinate, PCIE_HOTPLUG,
++				 lnk_status, linksta2);
+ 
+ 	if (!found) {
+ 		ctrl_info(ctrl, "Slot(%s): No device found\n",
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b14dd064006c..6a979a234fe6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4698,7 +4698,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+ 	 * Link Speed.
+ 	 */
+ 	if (pdev->subordinate)
+-		pcie_update_link_speed(pdev->subordinate);
++		pcie_update_link_speed(pdev->subordinate, PCIE_LINK_RETRAIN);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 4492b809094b..bc4de8fb4cba 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -5,6 +5,7 @@
+ #include <linux/align.h>
+ #include <linux/bitfield.h>
  #include <linux/pci.h>
 +#include <trace/events/pci.h>
  
- #include "../pci.h"
- #include "pciehp.h"
-@@ -244,12 +245,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (events & PCI_EXP_SLTSTA_DLLSC)
-+		if (events & PCI_EXP_SLTSTA_DLLSC) {
- 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
- 				  slot_name(ctrl));
--		if (events & PCI_EXP_SLTSTA_PDC)
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_DOWN);
-+		}
-+		if (events & PCI_EXP_SLTSTA_PDC) {
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
-+		}
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -269,6 +278,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 					      INDICATOR_NOOP);
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
- 		}
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
-@@ -281,12 +293,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (present)
-+		if (present) {
- 			ctrl_info(ctrl, "Slot(%s): Card present\n",
- 				  slot_name(ctrl));
--		if (link_active)
--			ctrl_info(ctrl, "Slot(%s): Link Up\n",
--				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_PRESENT);
-+		}
-+		if (link_active) {
-+			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_UP);
-+		}
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
-diff --git a/drivers/pci/trace.c b/drivers/pci/trace.c
-new file mode 100644
-index 000000000000..cf11abca8602
---- /dev/null
-+++ b/drivers/pci/trace.c
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Tracepoints for PCI system
-+ *
-+ * Copyright (C) 2025 Alibaba Corporation
-+ */
+ struct pcie_tlp_log;
+ 
+@@ -553,12 +554,28 @@ const char *pci_speed_string(enum pci_bus_speed speed);
+ void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
+ void pcie_report_downtraining(struct pci_dev *dev);
+ 
+-static inline void __pcie_update_link_speed(struct pci_bus *bus, u16 linksta, u16 linksta2)
++enum pcie_link_change_reason {
++	PCIE_LINK_RETRAIN,
++	PCIE_ADD_BUS,
++	PCIE_BWCTRL_ENABLE,
++	PCIE_BWCTRL_IRQ,
++	PCIE_HOTPLUG,
++};
 +
-+#include <linux/pci.h>
++static inline void __pcie_update_link_speed(struct pci_bus *bus,
++					    enum pcie_link_change_reason reason,
++					    u16 linksta, u16 linksta2)
+ {
+ 	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
+ 	bus->flit_mode = (linksta2 & PCI_EXP_LNKSTA2_FLIT) ? 1 : 0;
 +
-+#define CREATE_TRACE_POINTS
++	trace_pcie_link_event(bus,
++			     reason,
++			     FIELD_GET(PCI_EXP_LNKSTA_NLW, linksta),
++			     linksta & PCI_EXP_LNKSTA_LINK_STATUS_MASK);
+ }
+-void pcie_update_link_speed(struct pci_bus *bus);
++
++void pcie_update_link_speed(struct pci_bus *bus, enum pcie_link_change_reason reason);
+ 
+ /* Single Root I/O Virtualization */
+ struct pci_sriov {
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index 36f939f23d34..32f1b30ecb84 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -199,7 +199,7 @@ static void pcie_bwnotif_enable(struct pcie_device *srv)
+ 	 * Update after enabling notifications & clearing status bits ensures
+ 	 * link speed is up to date.
+ 	 */
+-	pcie_update_link_speed(port->subordinate);
++	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_ENABLE);
+ }
+ 
+ static void pcie_bwnotif_disable(struct pci_dev *port)
+@@ -234,7 +234,7 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
+ 	 * speed (inside pcie_update_link_speed()) after LBMS has been
+ 	 * cleared to avoid missing link speed changes.
+ 	 */
+-	pcie_update_link_speed(port->subordinate);
++	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_IRQ);
+ 
+ 	return IRQ_HANDLED;
+ }
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c83e75a0ec12..d52f997ea476 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -22,6 +22,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bitfield.h>
 +#include <trace/events/pci.h>
+ #include "pci.h"
+ 
+ #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+@@ -813,14 +814,16 @@ const char *pci_speed_string(enum pci_bus_speed speed)
+ }
+ EXPORT_SYMBOL_GPL(pci_speed_string);
+ 
+-void pcie_update_link_speed(struct pci_bus *bus)
++void pcie_update_link_speed(struct pci_bus *bus,
++			    enum pcie_link_change_reason reason)
+ {
+ 	struct pci_dev *bridge = bus->self;
+ 	u16 linksta, linksta2;
+ 
+ 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+ 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
+-	__pcie_update_link_speed(bus, linksta, linksta2);
++
++	__pcie_update_link_speed(bus, reason, linksta, linksta2);
+ }
+ EXPORT_SYMBOL_GPL(pcie_update_link_speed);
+ 
+@@ -907,7 +910,7 @@ static void pci_set_bus_speed(struct pci_bus *bus)
+ 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
+ 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
+ 
+-		pcie_update_link_speed(bus);
++		pcie_update_link_speed(bus, PCIE_ADD_BUS);
+ 	}
+ }
+ 
 diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
-new file mode 100644
-index 000000000000..39e512a167ee
---- /dev/null
+index 39e512a167ee..9a9122f62fd3 100644
+--- a/include/trace/events/pci.h
 +++ b/include/trace/events/pci.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pci
+@@ -5,6 +5,7 @@
+ #if !defined(_TRACE_HW_EVENT_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_HW_EVENT_PCI_H
+ 
++#include <uapi/linux/pci_regs.h>
+ #include <linux/tracepoint.h>
+ 
+ #define PCI_HOTPLUG_EVENT						\
+@@ -66,6 +67,62 @@ TRACE_EVENT(pci_hp_event,
+ 	)
+ );
+ 
++#define PCI_EXP_LNKSTA_LINK_STATUS_MASK (PCI_EXP_LNKSTA_LBMS | \
++					 PCI_EXP_LNKSTA_LABS | \
++					 PCI_EXP_LNKSTA_LT | \
++					 PCI_EXP_LNKSTA_DLLLA)
 +
-+#if !defined(_TRACE_HW_EVENT_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HW_EVENT_PCI_H
++#define LNKSTA_FLAGS					\
++	{ PCI_EXP_LNKSTA_LT,	"LT"},			\
++	{ PCI_EXP_LNKSTA_DLLLA,	"DLLLA"},		\
++	{ PCI_EXP_LNKSTA_LBMS,	"LBMS"},		\
++	{ PCI_EXP_LNKSTA_LABS,	"LABS"}
 +
-+#include <linux/tracepoint.h>
++TRACE_EVENT(pcie_link_event,
 +
-+#define PCI_HOTPLUG_EVENT						\
-+	EM(PCI_HOTPLUG_LINK_UP,			"LINK_UP")		\
-+	EM(PCI_HOTPLUG_LINK_DOWN,		"LINK_DOWN")		\
-+	EM(PCI_HOTPLUG_CARD_PRESENT,		"CARD_PRESENT")		\
-+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"CARD_NOT_PRESENT")
++	TP_PROTO(struct pci_bus *bus,
++		  unsigned int reason,
++		  unsigned int width,
++		  unsigned int status
++		),
 +
-+/* Enums require being exported to userspace, for user tool parsing */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+PCI_HOTPLUG_EVENT
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings
-+ * that will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	{a, b},
-+#define EMe(a, b)	{a, b}
-+
-+/*
-+ * Note: For generic PCI hotplug events, we pass already-resolved strings
-+ * (port_name, slot) instead of driver-specific structures like 'struct
-+ * controller'.  This is because different PCI hotplug drivers (pciehp, cpqphp,
-+ * ibmphp, shpchp) define their own versions of 'struct controller' with
-+ * different fields and helper functions. Using driver-specific structures would
-+ * make the tracepoint interface non-generic and cause compatibility issues
-+ * across different drivers.
-+ */
-+TRACE_EVENT(pci_hp_event,
-+
-+	TP_PROTO(const char *port_name,
-+		 const char *slot,
-+		 const int event),
-+
-+	TP_ARGS(port_name, slot, event),
++	TP_ARGS(bus, reason, width, status),
 +
 +	TP_STRUCT__entry(
-+		__string(	port_name,	port_name	)
-+		__string(	slot,		slot		)
-+		__field(	int,		event	)
++		__string(	port_name,	pci_name(bus->self))
++		__field(	unsigned int,	type		)
++		__field(	unsigned int,	reason		)
++		__field(	unsigned int,	cur_bus_speed	)
++		__field(	unsigned int,	max_bus_speed	)
++		__field(	unsigned int,	width		)
++		__field(	unsigned int,	flit_mode	)
++		__field(	unsigned int,	link_status	)
 +	),
 +
 +	TP_fast_assign(
 +		__assign_str(port_name);
-+		__assign_str(slot);
-+		__entry->event = event;
++		__entry->type			= pci_pcie_type(bus->self);
++		__entry->reason			= reason;
++		__entry->cur_bus_speed		= bus->cur_bus_speed;
++		__entry->max_bus_speed		= bus->max_bus_speed;
++		__entry->width			= width;
++		__entry->flit_mode		= bus->flit_mode;
++		__entry->link_status		= status;
 +	),
 +
-+	TP_printk("%s slot:%s, event:%s\n",
++	TP_printk("%s type:%d, reason:%d, cur_bus_speed:%d, max_bus_speed:%d, width:%u, flit_mode:%u, status:%s\n",
 +		__get_str(port_name),
-+		__get_str(slot),
-+		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
++		__entry->type,
++		__entry->reason,
++		__entry->cur_bus_speed,
++		__entry->max_bus_speed,
++		__entry->width,
++		__entry->flit_mode,
++		__print_flags((unsigned long)__entry->link_status, "|",
++				LNKSTA_FLAGS)
 +	)
 +);
 +
-+#endif /* _TRACE_HW_EVENT_PCI_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-index a769eefc5139..4f150028965d 100644
---- a/include/uapi/linux/pci.h
-+++ b/include/uapi/linux/pci.h
-@@ -39,4 +39,11 @@
- #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
- #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+ #endif /* _TRACE_HW_EVENT_PCI_H */
  
-+enum pci_hotplug_event {
-+	PCI_HOTPLUG_LINK_UP,
-+	PCI_HOTPLUG_LINK_DOWN,
-+	PCI_HOTPLUG_CARD_PRESENT,
-+	PCI_HOTPLUG_CARD_NOT_PRESENT,
-+};
-+
- #endif /* _UAPILINUX_PCI_H */
+ /* This part must be outside protection */
 -- 
 2.39.3
 
