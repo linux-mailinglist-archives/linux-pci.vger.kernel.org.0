@@ -1,175 +1,168 @@
-Return-Path: <linux-pci+bounces-39314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39316-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06DC7C08F98
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 13:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D431AC0907E
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 14:44:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 080381B23BC5
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 11:43:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BA2C1A614AC
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 12:44:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4D882FAC05;
-	Sat, 25 Oct 2025 11:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD8C2D8766;
+	Sat, 25 Oct 2025 12:44:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wlLHMa77"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqQyoq6a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212052F9C2D;
-	Sat, 25 Oct 2025 11:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D512FC87F
+	for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 12:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761392542; cv=none; b=tJ3pGpml2FXVMJplwUyHnf19DclShxjBwvEjUUTslNQxnvu2CvaqiuhapIjYkGOY9/ladxwRhMwA2kV2vDbm9IYsntD7+nVftTiB6LZxBinPu2+HfpAL3MgElJLOoWGa94EGldRrFofOMtyv+ZNe9HsLubj8dIFrJBDUOuj7BtE=
+	t=1761396252; cv=none; b=AA4p03GjDtGyffwLy/0faJO7z9DrYEl+If8u0ERg6oNJZyKnsw5FrewpYWigG/FcpakJLzoywcUUdwL38J6tFtjiOYniztABER/AFpVBOtO512J8vGZEWQ6UaiHHfSPRBi+URQhmqVkMKD8ng5D7qwSq9vk+2SGzx4u3QnqmXoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761392542; c=relaxed/simple;
-	bh=KHerWb5RMxrYFLnVEIeEB9Jm9AN1JA22+2yYXef849k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UT99hT7aFHaUlCEwHuJRRvS91TtXzrZ5M3Ys1sW3drf0pSO7LWfcE9IJZfY8EU/Q6nAqh2J6471B2IENg7J0+lYSQg+bw9uB7rIpcRAwRJ0DJAzCEgJHBtj+ZDJSVnMhjNn/7puby1VZ8eOoCj6Z7IrBQp9hy5sMq4uIzGqgduM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wlLHMa77; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761392531; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=Mm2jJp1wLmcApPWwrk8ccMhyktrvri8iqqiwX1cdxII=;
-	b=wlLHMa77i4X2ke81ANFJRnX4HH1shd4ltMQfuVXQKEkXyHXgRTRl9LHMSB+kR0CJTL4VYwkV40Vp2kd879M5MgKsulU/KVV0ruiXBcbc4yATjAq8ZYdqZCIgTtbBAJJGdaxT1PRKAPv4+s3Alb4BrZcHfioLrUwQFGKMqJ7XMrg=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WqwoUhW_1761392528 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 25 Oct 2025 19:42:09 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mattc@purestorage.com,
-	Jonathan.Cameron@huawei.com
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: [PATCH v13 3/3] Documentation: tracing: Add documentation about PCI tracepoints
-Date: Sat, 25 Oct 2025 19:41:58 +0800
-Message-Id: <20251025114158.71714-4-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
-References: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
+	s=arc-20240116; t=1761396252; c=relaxed/simple;
+	bh=uHwEWGWussA5vwUdmTXYqVWHoUC1FpOBR1zr7bgFbpA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=h940ZubXY5bryDpJujq1R1ago4pohvl8zxkJr0uj48CH0IJ2emhqgZxLrNN0hI7kzcL9PVQIdhMBH4eECvRQ+ibyzNWAdemyymRV6fuycyiNLahyRvHTffbORw7803RAhiGp+te75qNMgSHKO5gJqBt+9zTih2x/LWuWcgxgqj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqQyoq6a; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-475d9de970eso7458375e9.1
+        for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 05:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761396249; x=1762001049; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HoSJRtaYL1tSrAroXfLuV9j/PINsSdOeSgQvYolSDJo=;
+        b=AqQyoq6a6+EhnpsS6ka4cquaYWGOvgeJ8hShMxPVkIYS643eN+2L9+jzTJO+utn3Hn
+         7MK602Nvpii+epVPP59ZOR/kyW6GDiKy6Q03W0OFj+5oc9zg9k/zjc+KBM9l5D5rNPtI
+         Zvt0m4IgeJinggHGGoCdHNGbgVFGteOmaOm1iz8B1trpoUMsgTqpCGNHdqUXwWITQ6tX
+         QM8cF46GWKxWKlwxlv0aqHVVQAkzRLLTVfnXMPS/eNpuWOVsCa4TyxdEaZZvsrMAckrI
+         s3Z3U8zgwr7LSqEypFvqFys7DkS6OI3eXEljnIVsVS2BtMS+u9jmCwDPGhMO6280vA7c
+         INEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761396249; x=1762001049;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HoSJRtaYL1tSrAroXfLuV9j/PINsSdOeSgQvYolSDJo=;
+        b=V8Ry8UvZC3rnp1pMfO3nbYO2tHjEVpMT1xKBxbFBqPDvYXZbSjXwZVvnpUfduTGlfg
+         9bp5Ttz++CRIK6RhTlBx8TwWelG1mkOUdyJADC8FeAu+zyeCCOm7s7G7op6d7gaCYv/T
+         zFqSkHHbxxSv7h69LXgdvjfrXjTwpEJ1x+Z6pjkdXR6EWAwJAXjhkdFxV834qrI01OY7
+         KYkWE5dl/gw1+BtB/bt+EqLIwx22eFRusk46hjjTSC1LzBo7qENgAPt/+WzDfEWroumN
+         1J+UU7Pg5OMUUCQGPp2DCLMOn1MEoGOfkcx9OxWBkE5QiYBdLOBtwqdjgcqCl9WY00Ir
+         rq4A==
+X-Forwarded-Encrypted: i=1; AJvYcCX+aoEXJb1oYiJyQlCyTxlPP3qY9AQ8iH+QCZV1lZd/qgZa0G70+n+c6yIxVMKMPh7C6oFovpmuXZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl6hzzQDc3pBqrlaCrs+NzhgGCbOGDzIm/BcS1PzzyHlQSpSYz
+	wuU85zNos6pz76MkzzgpKiItzjsDjc+9NgWE9GSyDagEvPF0fR/852rn
+X-Gm-Gg: ASbGncsJPoOSiOHCEXq18aividpkVBHbg+6T6UtuoZ2xT99T5CETFr94bkdEDLiAhHC
+	SJ8popl1OMRQ5d+LUDmzKB7xCZF7aIH94/MA4FG8ZJAZMXaDRuc2yVUh0pN8hjs9CqOu5FaDKPU
+	PYb+o5RZpYet6RFQYz9XMVFF52xVmVCU0T+K0ArVZw/YL8qAaJX6Htb0fVg4sm0tJuymHZUjzL9
+	kdXU3huV1cuceKR6apC9S5b1H5x54SY5JGBauK+E5w3Ih2YPvEPOkejgVpDeiIBuoN2/q43M/Rh
+	WS/mlbloCu27Rr9KC3dkbXhUHjCenBvD/mWK/c/CaTBrwrHIChNCnx3TL50QvD1qGKCXuWTwJJY
+	QPx1qK9mR/ge4+OAEVJWciFCF/YcZTeGGR2ZisepCUse7NgsYg8l1GYVx9CIRcTeuryuOwpMz/n
+	pcv3eZ/pOMKYHV75bP87lHpFILFE0iElIdxmpb+ggC6wjFb7w=
+X-Google-Smtp-Source: AGHT+IGE/ePaRlpeqp31jgCbwX547WUuKY96Od/s+DN2HDRytz5H58spbiUrGnbS+FBuiBiLsfE3sQ==
+X-Received: by 2002:a05:600c:811b:b0:471:14b1:da13 with SMTP id 5b1f17b1804b1-4711787dcfbmr221625375e9.14.1761396249181;
+        Sat, 25 Oct 2025 05:44:09 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:c4ec:4cfd:1e64:7a3f? ([2a02:168:6806:0:c4ec:4cfd:1e64:7a3f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475dd478202sm33465995e9.14.2025.10.25.05.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 05:44:08 -0700 (PDT)
+Message-ID: <af6f0f2e1dec9053c6984139b8582fc6ceab6813.camel@gmail.com>
+Subject: Re: WARNING at drivers/pci/setup-bus.c:2373, bisected to "PCI: Use
+ pbus_select_window_for_type() during mem window sizing"
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Date: Sat, 25 Oct 2025 14:44:08 +0200
+In-Reply-To: <990fe39da66ad23df4c85ef247b274a0fc6c2336.camel@gmail.com>
+References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
+			 <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
+		 <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
+	 <990fe39da66ad23df4c85ef247b274a0fc6c2336.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-The PCI tracing system provides tracepoints to monitor critical hardware
-events that can impact system performance and reliability. Add
-documentation about it.
+On Sat, 2025-10-25 at 12:11 +0200, Klaus Kudielka wrote:
+>=20
+> > [=C2=A0=C2=A0=C2=A0 0.027107] pci 0000:00:03.0: bridge window [mem 0x00=
+200000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+> > [=C2=A0=C2=A0=C2=A0 0.027115] pci 0000:00:03.0: bridge window [mem 0x00=
+200000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+>=20
+> So, this part of=C2=A0 pbus_size_mem() now seems to be called *TWICE* for=
+ the same bridge window:
+>=20
+> 		add_to_list(realloc_head, bus->self, b_res, size1-size0, add_align);
+> 		pci_info(bus->self, "bridge window %pR to %pR add_size %llx add_align %=
+llx\n",
+> 			=C2=A0=C2=A0 b_res, &bus->busn_res,
+> 			=C2=A0=C2=A0 (unsigned long long) (size1 - size0),
+> 			=C2=A0=C2=A0 (unsigned long long) add_align);
+>=20
+>=20
+>=20
+> WITHOUT the offending commit, I see only one line, and no WARNING.
+> > [=C2=A0=C2=A0=C2=A0 0.027405] pci 0000:00:03.0: bridge window [mem 0x00=
+200000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+>=20
+>=20
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- Documentation/trace/events-pci.rst | 74 ++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/trace/events-pci.rst
 
-diff --git a/Documentation/trace/events-pci.rst b/Documentation/trace/events-pci.rst
-new file mode 100644
-index 000000000000..88bd38fcc184
---- /dev/null
-+++ b/Documentation/trace/events-pci.rst
-@@ -0,0 +1,74 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+Subsystem Trace Points: PCI
-+===========================
-+
-+Overview
-+========
-+The PCI tracing system provides tracepoints to monitor critical hardware events
-+that can impact system performance and reliability. These events normally show
-+up here:
-+
-+	/sys/kernel/tracing/events/pci
-+
-+Cf. include/trace/events/pci.h for the events definitions.
-+
-+Available Tracepoints
-+=====================
-+
-+pci_hp_event
-+------------
-+
-+Monitors PCI hotplug events including card insertion/removal and link
-+state changes.
-+::
-+
-+    pci_hp_event  "%s slot:%s, event:%s\n"
-+
-+**Event Types**:
-+
-+* ``LINK_UP`` - PCIe link established
-+* ``LINK_DOWN`` - PCIe link lost
-+* ``CARD_PRESENT`` - Card detected in slot
-+* ``CARD_NOT_PRESENT`` - Card removed from slot
-+
-+**Example Usage**:
-+
-+    # Enable the tracepoint
-+    echo 1> /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-+
-+    # Monitor events (the following output is generated when a device is hotplugged)
-+    cat /sys/kernel/debug/tracing/trace_pipe
-+       irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_PRESENT
-+
-+       irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_UP
-+
-+pcie_link_event
-+---------------
-+
-+Monitors PCIe link speed changes and provides detailed link status information.
-+::
-+
-+    pcie_link_event  "%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n"
-+
-+**Parameters**:
-+
-+* ``type`` - PCIe device type (4=Root Port, etc.)
-+* ``reason`` - Reason for link change:
-+
-+  - ``0`` - Link retrain
-+  - ``1`` - Bus enumeration
-+  - ``2`` - Bandwidth notification enable
-+  - ``3`` - Bandwidth notification IRQ
-+  - ``4`` - Hotplug event
-+
-+
-+**Example Usage**:
-+
-+    # Enable the tracepoint
-+    echo1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
-+
-+    # Monitor events (the following output is generated when a device is hotplugged)
-+    cat /sys/kernel/debug/tracing/trace_pipe
-+       irq/51-pciehp-88      [001] .....   381.545386: pcie_link_event: 0000:00:02.0 type:4, reason:4, cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, status:DLLLA
--- 
-2.39.3
+After some more testing, I think I know what is going on.
 
+- My device seems to have only non-prefetchable IO resources.
+- In pci_bus_size_bridges(), pbus_size_mem() is called twice, once with IOR=
+ESOURCE_PREFETCH, once without.
+- This seems to be the intended behaviour (with or without the offending co=
+mmit).
+
+- What DOES make the difference, is the use of pbus_select_window_for_type(=
+) inside pbus_size_mem().
+- On my device, that function returns the ***non-prefetchable*** resource, =
+even if being asked for a prefetchable one.
+- End result: b_res is valid (and identical) in both calls to pbus_size_mem=
+().
+- Honestly, that does not look right to me.
+
+
+Indeed, my device goes back to the original behaviour (without WARNING), if=
+ I go back to the original use of
+find_bus_resource_of_type():
+
+
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1312,7 +1312,9 @@ static void pbus_size_mem(struct pci_bus *bus, unsign=
+ed long type,
+        resource_size_t min_align, win_align, align, size, size0, size1 =3D=
+ 0;
+        resource_size_t aligns[28]; /* Alignments from 1MB to 128TB */
+        int order, max_order;
+-       struct resource *b_res =3D pbus_select_window_for_type(bus, type);
++       struct resource *b_res =3D find_bus_resource_of_type(bus,
++                       IORESOURCE_MEM | IORESOURCE_PREFETCH | IORESOURCE_M=
+EM_64,
++                       type);
+        resource_size_t children_add_size =3D 0;
+        resource_size_t children_add_align =3D 0;
+        resource_size_t add_align =3D 0;
+
+
+
+Comments?
 
