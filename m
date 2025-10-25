@@ -1,56 +1,59 @@
-Return-Path: <linux-pci+bounces-39321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6407DC09761
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:28:02 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C846C094C3
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 37D3F4F509D
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:18:30 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BCEF5342A1F
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A86304BD6;
-	Sat, 25 Oct 2025 16:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E593093AA;
+	Sat, 25 Oct 2025 16:15:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8IbOn+a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="junmb6Ab"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF883043D4;
-	Sat, 25 Oct 2025 16:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E0A3090F7;
+	Sat, 25 Oct 2025 16:15:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761408955; cv=none; b=Zy9ZNpj3cz9BUUVbLiepE199idgKx9b2QR9BN5eyIkUJa/NmUgNahKIlwWEDpAql5hcf9Ak2pcKs2r38/YfB2Lw0UaV/OebdFuEMMGc/VUHQCulQKtxJMuYxlo8+FuPxJwmXMw+kMGO29/a8MhQAZxtQixVpcJG9gSNZPg9zHMM=
+	t=1761408958; cv=none; b=AWMEgGWo722+KldlXwuiqKXlFnGZnb92hvYPjZXG3RlwY7AHaRF5OVoYJvWrdsHCb6UOUwtQ8l+LeSWzwPy4pjeePJskZ3l6s3LbeD+B/4gvRbeInJk9sVSTJY+PoL/59QgdsLdGvZ3z+imcxp+LpxIlZUuhZS40SOmlBgJpoyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761408955; c=relaxed/simple;
-	bh=i3A51i6kEV+oroiLNKRB/JhjhBRzQv0vm4A/QpygqoM=;
+	s=arc-20240116; t=1761408958; c=relaxed/simple;
+	bh=MmWCn+a9rvnlVuGi+Ff6hilOGPA6cq70LX1d0Blxq8A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lwMgvagbnOLzrb8+ec0R336RAYTQ65MsQFPiFomQGVDMVYiOc5e4f/6wJtH683qi/s6Ab4fdlH5euExATG2aeCqqSmuiO+hd0lQpdUCLOEmhc6MMGbmn7CrtSwBo2rBNy27T61zgve8gLhmGN/YS5YKKrDM+JbholY3lBFNptNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8IbOn+a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5A1C116B1;
-	Sat, 25 Oct 2025 16:15:54 +0000 (UTC)
+	 MIME-Version:Content-Type; b=FJNDpG/QeEDpv8DTR8O1AeymKwGoKPaYxXxbtY/Un8WeQQwEq/BPKftnKOwS7TgP4yNL0aKvn8ZsnK7PK7U16vUNZOhOKEGAw5NE5rqfuksnJAadGegaDDawOQFFcdWIezEEvjVm8UQtNUtekyaTMK0npMWVHAwP0dccJ5Yjmjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=junmb6Ab; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C6BC4CEFB;
+	Sat, 25 Oct 2025 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761408954;
-	bh=i3A51i6kEV+oroiLNKRB/JhjhBRzQv0vm4A/QpygqoM=;
+	s=k20201202; t=1761408957;
+	bh=MmWCn+a9rvnlVuGi+Ff6hilOGPA6cq70LX1d0Blxq8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L8IbOn+aH6aLHtOVBl/Yerqzvg6gxnStEErBC/REawh+62QH6Sy05OCsFKnGTSkSL
-	 zUkC5bHF2Kxp6AoPX2HFgenWRQ3G0ntP7SW1vqfPapp9O62tADH3FrSKzZMzYV1lW7
-	 Cz+RuafGLX0xKXDAy15bVBRNyWFmMKS0d3iiFtMAIZVxr1F4TKNkKq86FJYFjcaUol
-	 yJ0xRlNL3BX1PaWE6AkpDMwICGke5QMVsR2W55DFCK/WhLmfuT9MmeTigbmA72oLd3
-	 Way1M0zafTT7NZNVo8Ry/Xf24MeIqHqUxQc6J4kS8wtIxBbNJIBKtNu5klR/KGU7Kb
-	 72BDkaBylSZ+A==
+	b=junmb6AbxhpbuQ6c+Ud6Im+Ez3/61c6UDXJhpNS9jltZ86god4r4AlNEFsV/TnJuB
+	 SG3kx6T/ZOzsSC7CLqpKL+n3/JSYbFn9iFEPmK5iNqT4kHS1dfb/FBUue4tX4fRzd4
+	 t3oFKNicPZgpngio2KkNrDe8cOYkCy7eWyNScmVhc+hemU0nA2rzNgcovuPA1ZbKNt
+	 NU21GNChQScl5hKyk+pFEi0UfqiuRyr6wRAr3bcDkFcBfQDFdrezazbqvcfDLo77Uq
+	 bdR+8hmCracrJSLUWkYRdB1bf8wUsc6W3OysvYyrX+QiWNgPCam9RBLuWVUt/kCPbu
+	 zb9yz/wAs5+qg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Marcos Del Sol Vives <marcos@orca.pet>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Lukas Wunner <lukas@wunner.de>,
 	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.4] PCI: Disable MSI on RDC PCI to PCIe bridges
-Date: Sat, 25 Oct 2025 11:56:20 -0400
-Message-ID: <20251025160905.3857885-149-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.17-6.1] PCI/PM: Skip resuming to D0 if device is disconnected
+Date: Sat, 25 Oct 2025 11:56:22 -0400
+Message-ID: <20251025160905.3857885-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -60,110 +63,93 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Marcos Del Sol Vives <marcos@orca.pet>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit ebc7086b39e5e4f3d3ca82caaea20538c9b62d42 ]
+[ Upstream commit 299fad4133677b845ce962f78c9cf75bded63f61 ]
 
-RDC PCI to PCIe bridges, present on Vortex86DX3 and Vortex86EX2 SoCs, do
-not support MSIs. If enabled, interrupts generated by PCIe devices never
-reach the processor.
+When a device is surprise-removed (e.g., due to a dock unplug), the PCI
+core unconfigures all downstream devices and sets their error state to
+pci_channel_io_perm_failure. This marks them as disconnected via
+pci_dev_is_disconnected().
 
-I have contacted the manufacturer (DM&P) and they confirmed that PCI MSIs
-need to be disabled for them.
+During device removal, the runtime PM framework may attempt to resume the
+device to D0 via pm_runtime_get_sync(), which calls into pci_power_up().
+Since the device is already disconnected, this resume attempt is
+unnecessary and results in a predictable errors like this, typically when
+undocking from a TBT3 or USB4 dock with PCIe tunneling:
 
-Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
+  pci 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+
+Avoid powering up disconnected devices by checking their status early in
+pci_power_up() and returning -EIO.
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+[bhelgaas: add typical message]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://patch.msgid.link/20250705233209.721507-1-marcos@orca.pet
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Link: https://patch.msgid.link/20250909031916.4143121-1-superm1@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
 YES
+- The new guard in `drivers/pci/pci.c:1321-1324` checks
+  `pci_dev_is_disconnected()` before touching PCI PM registers, so
+  surprise-removed devices short-circuit with `-EIO` while keeping
+  `current_state = PCI_D3cold`. This prevents the guaranteed `"Unable to
+  change power state..."` error emitted when `pci_read_config_word()`
+  hits a vanished device (see `drivers/pci/pci.c:1326-1331`), which
+  currently spams logs whenever users undock TBT3/USB4 systems.
+- Callers already expect a negative return in this scenario—the pre-
+  change path hit the same `-EIO` branch after the failing config
+  read—so observable behaviour stays the same aside from eliminating the
+  noisy and misleading error message. `pci_set_full_power_state()` and
+  runtime PM resume paths therefore retain their semantics but avoid
+  futile config accesses.
+- The fix is narrowly scoped to PCI PM, introduces no architectural
+  churn, and relies only on long-standing helpers present in supported
+  stables (confirmed `pci_dev_is_disconnected()` in tags like `p-6.6`).
+  It neither alters power-state transitions for healthy devices nor
+  affects platforms lacking PM caps because the new check comes after
+  the existing `!dev->pm_cap` fallback.
+- Avoiding config transactions on removed hardware reduces the chance of
+  host controller complaints and matches other PCI core code that tests
+  `pci_dev_is_disconnected()` before issuing requests, making this a
+  low-risk, high-signal bug fix well suited for stable backporting.
 
-Reasons this is a good stable backport candidate
+Natural next step: 1) Queue the patch for the targeted stable series
+after double-checking those trees already expose
+`pci_dev_is_disconnected()` in `include/linux/pci.h`.
 
-- Fixes a real hardware bug: The commit message states RDC PCI→PCIe
-  bridges “do not support MSIs” and that when enabled, “interrupts
-  generated by PCIe devices never reach the processor.” That is a
-  functional breakage for devices behind these bridges, not a feature
-  change.
+ drivers/pci/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- Minimal, targeted change: The patch adds a single quirk line to
-  disable MSI only behind the affected bridge:
-  - Adds: DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RDC, 0x1031,
-    quirk_disable_msi);
-    in drivers/pci/quirks.c next to other vendor-specific MSI-disable
-    quirks such as AMD/VIA/ATI (drivers/pci/quirks.c:2717-2719).
-  - The quirk uses existing helper quirk_disable_msi()
-    (drivers/pci/quirks.c:2710), which only sets a flag on the
-    subordinate bus if the device is a bridge:
-    - Sets bus flag: dev->subordinate->bus_flags |=
-      PCI_BUS_FLAGS_NO_MSI;
-    - The function is compiled under CONFIG_PCI_MSI
-      (drivers/pci/quirks.c:2686), so it is inert if MSI is not enabled.
-
-- Correct mechanism and stage:
-  - Bus-level gating is the standard way to suppress MSI/MSI-X behind a
-    broken bridge. The MSI core checks this flag up the bus hierarchy
-    and refuses to enable MSI/MSI-X when set (drivers/pci/msi/msi.c:62).
-  - The flag used is the canonical one (include/linux/pci.h:259), and
-    the vendor macro is already present (include/linux/pci_ids.h:2412).
-  - Uses DECLARE_PCI_FIXUP_FINAL(), consistent with other similar quirks
-    (drivers/pci/quirks.c:2717-2719), so it runs late enough to have a
-    subordinate bus to mark and before drivers enable MSI.
-
-- Scope-limited and precedent:
-  - Only affects devices with vendor RDC and device ID 0x1031, and only
-    if they are bridges (quirk_disable_msi() early-exits otherwise;
-    drivers/pci/quirks.c:2712).
-  - Mirrors long-standing patterns for known-broken bridges (e.g., AMD
-    8131, VIA, ATI entries at drivers/pci/quirks.c:2717-2719).
-
-- Risk assessment:
-  - Primary effect is that devices behind the affected bridge will use
-    INTx instead of MSI/MSI-X. That may reduce performance but restores
-    correctness (avoids lost interrupts). If a device strictly requires
-    MSI/MSI-X, it could not have worked reliably on this hardware
-    anyway, so the quirk does not introduce a new regression in
-    practice.
-  - No architectural changes, no API changes, no cross-subsystem impact;
-    single-file quirk addition under an existing guard.
-
-- Stable policy fit:
-  - Hardware workarounds that fix real user-visible bugs are routinely
-    backported.
-  - The change is small, well-scoped, and follows existing patterns.
-  - While there is no explicit “Cc: stable” in the provided message,
-    this class of PCI quirks is commonly accepted for stable.
-
-Conclusion
-
-- Backport Status: YES. This one-line quirk reliably prevents MSI/MSI-X
-  enablement behind RDC bridges known to drop MSI interrupts, restoring
-  device functionality with minimal risk.
-
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d97335a401930..6eb3d20386e95 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2717,6 +2717,7 @@ static void quirk_disable_msi(struct pci_dev *dev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_disable_msi);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA, 0xa238, quirk_disable_msi);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x5a3f, quirk_disable_msi);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RDC, 0x1031, quirk_disable_msi);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b0f4d98036cdd..036511f5b2625 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1374,6 +1374,11 @@ int pci_power_up(struct pci_dev *dev)
+ 		return -EIO;
+ 	}
  
- /*
-  * The APC bridge device in AMD 780 family northbridges has some random
++	if (pci_dev_is_disconnected(dev)) {
++		dev->current_state = PCI_D3cold;
++		return -EIO;
++	}
++
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+ 		pci_err(dev, "Unable to change power state from %s to D0, device inaccessible\n",
 -- 
 2.51.0
 
