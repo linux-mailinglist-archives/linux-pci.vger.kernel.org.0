@@ -1,61 +1,63 @@
-Return-Path: <linux-pci+bounces-39325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id F31E1C09B9C
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:49:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C2F4C09BF0
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 18:51:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 51DD94ECFE7
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:29:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1A8204FAA02
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 16:31:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 047EB3126BC;
-	Sat, 25 Oct 2025 16:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD80730E859;
+	Sat, 25 Oct 2025 16:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ed/LLqH1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOcKMjis"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B1C30C60F;
-	Sat, 25 Oct 2025 16:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851C23043D9;
+	Sat, 25 Oct 2025 16:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761409366; cv=none; b=RI5yCVZwsa8KI0uMjua14rd7EEDDDT6QbfZk+6loMN6GJiAVJAmuXdhM3mohBS4HgTQ6On0zv1OQSX3OizQkeXje4nPRkdXLkBdRIJi03qDylh3j1BNdNfcQEfX5cxfRc0IMbYN1MzuNaBTy8ehPHgkeaF2Hd28aiVzefFEx2So=
+	t=1761409457; cv=none; b=ttDRgzLFHwVx4VJilcAojyFNdsBbELeoLv1c9kPe3T/IlfBkeVyO0MttbscCBn162f5aHJHSWc7jRl0jp9v/jrRRetv4ZBVrZ1Iay4bABNcbs/J/7j6AwrSRjWRFwwMJ0xDChRqr5o0jCMmhllayAVDjSPJfdkh6b6Xgg1V4eUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761409366; c=relaxed/simple;
-	bh=MglaqMgclKgb3tY/AIWiioH0+xEeNgjXGS9apwIC3H0=;
+	s=arc-20240116; t=1761409457; c=relaxed/simple;
+	bh=f2mXaMdRp5tDwnL9/a/EtwaLIu81gOvYcVwx5gGo0Mo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P1J06r5ESpL26ammt3t+Qhq6pEqtybwlfvebWw4BRRzYBVpSNeZGs5AJWc1mRCLfOZ25SItAcvH3pnhY/2ordg7VFqngt7DnWMa0r9eVIXf7cp3kUF0VRSt0zhYJilWtbA0XvcyUjXiAZpoByHxcl9iWuZ5YQt5RvNfI5QgaPNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ed/LLqH1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834BAC116C6;
-	Sat, 25 Oct 2025 16:22:45 +0000 (UTC)
+	 MIME-Version:Content-Type; b=IOByyjNvPE51MHaxYfybMbf7L0F/Cq+TUCS148RVNwJu1khaWnZwfoG0PuTj0oobgFdM8GilTMzTkRsrH6BOyrhsGCy7ZzbkENRmHsJx31PiE0iz5YnDAp31UEAm5EJ0G0t/3n2Fs9cYjbl9r/wdhXs3CMg7z8A/Kw/vDsP8V0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOcKMjis; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08BB2C4CEFB;
+	Sat, 25 Oct 2025 16:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761409366;
-	bh=MglaqMgclKgb3tY/AIWiioH0+xEeNgjXGS9apwIC3H0=;
+	s=k20201202; t=1761409457;
+	bh=f2mXaMdRp5tDwnL9/a/EtwaLIu81gOvYcVwx5gGo0Mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ed/LLqH1lU1EjGZaLC5aCvYCIVrR8S+5BhGRza2blLTmYGRpBtESH3uZsz4YHFo/Y
-	 eLMDJ3OTK3qJA4XSj5FAKVK5imGz6TQDETJjH1J5b+6SMNAp/ukOIgat6+gQr5V1dh
-	 GWiqGYBTuXzNvciNjinIvAtU9mUI8m+05r8ReqtY4344zO4pmk1Jp2D322rqxa3n/f
-	 6UIbkioQVUpj4VUHdl6N2WLmIBP+YFKG90KfEc96bhRSb8A+ZgrPuP8Cg507I5PYBX
-	 PI6K6KZPNucy3blFZF9lsO7/3pdJyUgAFjLTyxFa+b33AbQ3KyXJmQ8NCOi74qhCMu
-	 X72FEsBF58zNw==
+	b=AOcKMjisDr8RTnjytlIPfw7mDluky3udoGpenqUk8Anmwni24QNA1Keiy4sMHClhE
+	 dWG7irViRQBVX0H7gHVfCODhjLllbcgu2xgGMcnVhGIELC0fopRfVPvALHLB4wO2/u
+	 vDmie2J6nSqoSiqmTMJN1BaimgbcMgyxAYX5QZxxThOZUSnqrmHnmWeVFtbXR/9oPj
+	 7sTfXnInLkHugtih2CgHEzGGbKCN3sZ66Pp8L3+eSdNgzVWyiEXTD3UU04VqWT9F5R
+	 8I4l6gQhZYXLMBArFDKaFpcWmNQ5F93mpeld9XhlTcw9/KDt0xxPvKb+aTaf3kskbL
+	 vVd6z9tE7HfXA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc: Chen Wang <unicorn_wang@outlook.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andreas.noever@gmail.com,
-	westeri@kernel.org,
-	YehezkelShB@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.15] thunderbolt: Use is_pciehp instead of is_hotplug_bridge
-Date: Sat, 25 Oct 2025 11:58:43 -0400
-Message-ID: <20251025160905.3857885-292-sashal@kernel.org>
+	s-vadapalli@ti.com,
+	bhelgaas@google.com,
+	alexander.deucher@amd.com,
+	kishon@kernel.org,
+	18255117159@163.com,
+	alexandre.f.demers@gmail.com,
+	bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-5.10] PCI: cadence: Check for the existence of cdns_pcie::ops before using it
+Date: Sat, 25 Oct 2025 11:59:23 -0400
+Message-ID: <20251025160905.3857885-332-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -71,148 +73,126 @@ X-stable-base: Linux 6.17.5
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Chen Wang <unicorn_wang@outlook.com>
 
-[ Upstream commit 5d03847175e81e86d4865456c15638faaf7c0634 ]
+[ Upstream commit 49a6c160ad4812476f8ae1a8f4ed6d15adfa6c09 ]
 
-The thunderbolt driver sets up device link dependencies from hotplug ports
-to the Host Router (aka Native Host Interface, NHI).  When resuming from
-system sleep, this allows the Host Router to re-establish tunnels to
-attached Thunderbolt devices before the hotplug ports resume.
+cdns_pcie::ops might not be populated by all the Cadence glue drivers. This
+is going to be true for the upcoming Sophgo platform which doesn't set the
+ops.
 
-To identify the hotplug ports, the driver utilizes the is_hotplug_bridge
-flag which also encompasses ACPI slots handled by the ACPI hotplug driver.
+Hence, add a check to prevent NULL pointer dereference.
 
-Thunderbolt hotplug ports are always Hot-Plug Capable PCIe ports, so it is
-more apt to identify them with the is_pciehp flag.
-
-Similarly, hotplug ports on older Thunderbolt controllers have broken MSI
-support and are quirked to use legacy INTx interrupts instead.  The quirk
-identifies them with is_hotplug_bridge, even though all affected ports are
-also matched by is_pciehp.  So use is_pciehp here as well.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+[mani: reworded subject and description]
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Link: https://patch.msgid.link/35182ee1d972dfcd093a964e11205efcebbdc044.1757643388.git.unicorn_wang@outlook.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
 YES
+**Why Backport**
+- The shared Cadence core dereferences `pcie->ops` unconditionally in
+  several hot paths (`drivers/pci/controller/cadence/pcie-cadence-
+  host.c:534`, `pcie-cadence.c:109` and `:140`, `pcie-cadence.h:497`,
+  `505`, `511`). If a glue driver legitimately leaves `ops` unset, the
+  host setup oopses during probe.
+- The new in-tree Sophgo driver (`drivers/pci/controller/cadence/pcie-
+  sg2042.c:35-69`) deliberately does not populate `pcie->ops`; without
+  this fix `cdns_pcie_host_setup()` trips the NULL dereference in
+  `cdns_pcie_host_init_address_translation()` immediately, so the
+  controller cannot even enumerate.
+- The patch simply wraps each dereference with `pcie->ops &&
+  pcie->ops->...`, meaning existing platforms that register callbacks
+  keep identical behaviour, while platforms that do not provide optional
+  hooks now fall back to the previously implied defaults — avoiding the
+  fatal crash.
 
-- What it changes
-  - Switches hotplug-port detection from the broad
-    `pdev->is_hotplug_bridge` flag to the precise `pdev->is_pciehp`
-    (PCIe Hot-Plug Capable) in two places:
-    - Quirk for TB controllers’ hotplug MSI: drivers/pci/quirks.c:3834
-    - Device-link creation for resume ordering:
-      drivers/thunderbolt/tb.c:3256
+**Risk**
+- Change is entirely in guard logic, no register programming altered
+  when `ops` is present. For platforms that rely on
+  `cpu_addr_fixup`/link callbacks, the functions still run because the
+  pointer remains non-NULL.
+- For platforms without callbacks, the driver already relied on the
+  default behaviour implied by the inline helpers; the patch just
+  matches that expectation. Regression risk is therefore minimal.
 
-- Why this is correct
-  - Semantics: `is_hotplug_bridge` is a superset flag that also covers
-    ACPI-driven slots and conventional PCI hotplug, not just PCIe HPC.
-    Documentation explicitly distinguishes them (include/linux/pci.h:330
-    and include/linux/pci.h:334).
-  - TB downstream hotplug ports are always PCIe Hot-Plug Capable, so
-    `is_pciehp` matches the intended set without inadvertently pulling
-    in ACPI-only slots.
-  - ACPI code can set `is_hotplug_bridge` on bridges that are not PCIe
-    HPC (drivers/pci/hotplug/acpiphp_glue.c:411 and
-    drivers/pci/hotplug/acpiphp_glue.c:424), which is precisely what
-    this change avoids.
+**Next Steps**
+- 1) Smoke/boot-test on at least one Cadence RC platform (e.g. TI J721E)
+  plus the Sophgo SG2042 host once both patches are staged, to confirm
+  link bring-up stays healthy.
 
-- Code specifics and impact
-  - Quirk: drivers/pci/quirks.c:3834
-    - Old: `if (pdev->is_hotplug_bridge && …) pdev->no_msi = 1;`
-    - New: `if (pdev->is_pciehp && …) pdev->no_msi = 1;`
-    - Effect: Still covers all affected TB hotplug ports (Light
-      Ridge/Eagle Ridge/Light Peak/early Cactus Ridge/Port Ridge),
-      because those ports have PCIe HPC. Behavior is unchanged for
-      intended devices, but avoids misfiring if some non-PCIe-HP bridge
-      was flagged via the generic hotplug flag.
-  - Resume ordering via device links: drivers/thunderbolt/tb.c:3256
-    - Old: Filter downstream ports with `… || !pdev->is_hotplug_bridge)
-      continue;`
-    - New: `… || !pdev->is_pciehp) continue;`
-    - Effect: Device links are created only for PCIe HPC downstream
-      ports beneath the TB controller’s upstream port, which are the
-      ports that participate in TB PCIe tunneling. This avoids creating
-      links for ACPI-only hotplug bridges that do not belong in the TB
-      tunnel re-establishment ordering.
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 2 +-
+ drivers/pci/controller/cadence/pcie-cadence.c      | 4 ++--
+ drivers/pci/controller/cadence/pcie-cadence.h      | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-- Correctness and consistency with PCI core
-  - The PCI core caches the HPC bit early and sets both flags together
-    for PCIe HPC ports (drivers/pci/probe.c:1628 and
-    drivers/pci/probe.c:1630), so `is_pciehp` is reliable and avoids
-    late config reads.
-  - Other subsystems have already moved to `is_pciehp` for the same
-    reason (e.g., PCIe portdrv created services only when `is_pciehp`),
-    demonstrating the broader effort to disambiguate these flags.
-
-- Risk assessment
-  - Small, localized change; no architectural shifts.
-  - Maintainers’ acks: Thunderbolt and PCI maintainers are on board
-    (Acked-by Bjorn Helgaas, Signed-off-by Mika Westerberg), indicating
-    consensus on intent and safety.
-  - For TB quirk, the condition remains true for all intended TB ports;
-    for TB device-links, the selection is narrowed to the correct
-    subset, reducing potential for incorrect PM dependency ordering. No
-    functional expansion; only reduced false positives.
-
-- User-facing effect
-  - More reliable resume sequencing for tunneled TB devices (device
-    links now scoped to true PCIe HP ports).
-  - Avoids unnecessary links for ACPI-only slots that are unrelated to
-    TB tunnels.
-  - No change in MSI disabling behavior for affected TB generations;
-    still prevents broken MSI usage there.
-
-- Backport considerations
-  - Dependency: Target stable trees must already have `struct
-    pci_dev::is_pciehp` and the core logic that sets it
-    (drivers/pci/probe.c:1628 and drivers/pci/probe.c:1630). If a stable
-    branch lacks this field, it would require backporting that PCI core
-    addition first.
-  - Scope: Touches only `drivers/pci/quirks.c` and
-    `drivers/thunderbolt/tb.c`; isolated and low-risk with no API
-    changes.
-
-Given the minimal change, precise semantics, alignment with ongoing PCI
-core cleanups, and low regression risk confined to TB/PCI hotplug paths,
-this is a good candidate for stable backport (where `is_pciehp` is
-present).
-
- drivers/pci/quirks.c     | 2 +-
- drivers/thunderbolt/tb.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 6eb3d20386e95..214ed060ca1b3 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3830,7 +3830,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MELLANOX, 0xcf80, quirk_no_pm_reset);
-  */
- static void quirk_thunderbolt_hotplug_msi(struct pci_dev *pdev)
- {
--	if (pdev->is_hotplug_bridge &&
-+	if (pdev->is_pciehp &&
- 	    (pdev->device != PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C ||
- 	     pdev->revision <= 1))
- 		pdev->no_msi = 1;
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index c14ab1fbeeafd..83a33fc1486ab 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -3336,7 +3336,7 @@ static bool tb_apple_add_links(struct tb_nhi *nhi)
- 		if (!pci_is_pcie(pdev))
- 			continue;
- 		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM ||
--		    !pdev->is_hotplug_bridge)
-+		    !pdev->is_pciehp)
- 			continue;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 59a4631de79fe..fffd63d6665e8 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -531,7 +531,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
  
- 		link = device_link_add(&pdev->dev, &nhi->pdev->dev,
+-	if (pcie->ops->cpu_addr_fixup)
++	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+ 		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+ 
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 70a19573440ee..61806bbd8aa32 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -92,7 +92,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
+ 
+ 	/* Set the CPU address */
+-	if (pcie->ops->cpu_addr_fixup)
++	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+ 		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+ 
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
+@@ -123,7 +123,7 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
+ 	}
+ 
+ 	/* Set the CPU address */
+-	if (pcie->ops->cpu_addr_fixup)
++	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+ 		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+ 
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 1d81c4bf6c6db..2f07ba661bda7 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -468,7 +468,7 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+ 
+ static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
+ {
+-	if (pcie->ops->start_link)
++	if (pcie->ops && pcie->ops->start_link)
+ 		return pcie->ops->start_link(pcie);
+ 
+ 	return 0;
+@@ -476,13 +476,13 @@ static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
+ 
+ static inline void cdns_pcie_stop_link(struct cdns_pcie *pcie)
+ {
+-	if (pcie->ops->stop_link)
++	if (pcie->ops && pcie->ops->stop_link)
+ 		pcie->ops->stop_link(pcie);
+ }
+ 
+ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+ {
+-	if (pcie->ops->link_up)
++	if (pcie->ops && pcie->ops->link_up)
+ 		return pcie->ops->link_up(pcie);
+ 
+ 	return true;
 -- 
 2.51.0
 
