@@ -1,153 +1,148 @@
-Return-Path: <linux-pci+bounces-39310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F45BC08DEC
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 10:38:26 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57E60C08EC9
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 12:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 108BE1C805A8
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 08:38:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B9BD74E2D31
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Oct 2025 10:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AFB6280035;
-	Sat, 25 Oct 2025 08:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E8E2EA726;
+	Sat, 25 Oct 2025 10:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpChKIl3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgHHvBZB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5725B271476
-	for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 08:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960AF27E7F0
+	for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 10:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761381484; cv=none; b=A7jZhkl0cny4ECRZg+9+/SSYHH+H+k+hMoBs2NHuMzgD3KeR0xNjNnFCcR6zKkB9nAqv/sOmGSrtSRzqwN7d0cGboDTq3cAtbP84bXZhtQ2z8OypB9P4nzTWod2m2hjdhNHjl1jij6akxq2FMuTmxoo5QTzSm06dx4q6LtPvJh8=
+	t=1761387083; cv=none; b=Fc9+REAvxF48GZbHKP47gv06r1xl3ja5kshA7SVsaHd0+FHSHnfp4Ld+C2M8/g8LAt9SUVP2YOp4hDZkQ479ZTUMnGJq9tUC2Wg5PMElIb0ASbHRtZDfjS1r4XUQG051YvOUikjrHFK7UGdI7nAl5eCo0LAL8NYkkMMvl3BC0og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761381484; c=relaxed/simple;
-	bh=811uHJZ37wZfACPU1YGuEeWKbSyaapCx8BFKBu79UWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VaIWGbEdGZvf3WRNs/JJjFGJMhNvrkYWgSqoCrMNYrILVhqZbUBWXcv9H7Izt4Usi7g8oL3xBiNVVdGOeJNvlCGhYywEidZ7rF+gjiLW/WTuSdUVvjG1H/a6/D0ZQGSTIkwt2VTQRLrrGo/yG4xQBAwGv63yLV1bqKVoEng5N/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpChKIl3; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1761387083; c=relaxed/simple;
+	bh=0nttiORIlAvHv5WtRRqjrF4cMesKYVIkYZR+vwF8Z9Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TP26syTie7Rp+YY8BH+QYPcvSDzZiFPrYTQQfKO4ejW2AYiglP2sST+ZO+GAFQBVRZQVKU7Rd75eFTh0jeyFWJsvRNqon/jdMRxhhGT5DEWc/emooCn/ajY1rKaC6bZp7K8LYoJlnEWyfWmthAhkf7vtWSuAbsMqknkNqgTr84I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgHHvBZB; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b6d3340dc2aso618913966b.0
-        for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 01:38:00 -0700 (PDT)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3ee64bc6b90so2232448f8f.0
+        for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 03:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761381479; x=1761986279; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rt1zvt28at9xm8W3hs03xIo0raGpVE0ymzecLcbUr+c=;
-        b=fpChKIl32RIl6MSzup/XREwSeOThdjqxXmB3RkXUywMmLUK62PsiwOtivjYW+WsgYD
-         sSjRHrPRhPyabrJaEnPx81NaSTEzXFlie4QjoOadn+BMY0kyb4qYXw/Hn8sa7ctLmWxa
-         X64MUREv15cikIdMGo9QAoatwKllxvIARzI0IbnEyeaPxihTbcDzZVQXSs1ZCgUkyve8
-         cqwGOK8FsutPJqWpCNeM/mHd9nKTM/4oA60yKA0b0OXOv7HWdwf6YVqHze0FFjeQjQdt
-         kQ466yaP1NgbBrE3e7tlr/UnC6wJWH/lh6eRXyHtYIMNRJfLQK1oqcTzSjpR8M6T25GS
-         cq7g==
+        d=gmail.com; s=20230601; t=1761387080; x=1761991880; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=egj/7WjRwjT6riGuR0koHtTyjN24c/LRgAczk/OnsWw=;
+        b=HgHHvBZBmXFecfLdAJXTNhYeCvjdhSbtWXwrwtx+X5ZNNyDLP+RSAuqKEmG9bLtV3t
+         9wHEvI01s+tYTPBp1Lx/9B72t1DmN5W1BYhcPfVUY+UgTsr4YBK0mBtKr4ks/0LEOFST
+         QRcFOQ5UuN/ZERtpvcrTJB5FtG+xSQkywimig5R0n71+Sv9fsYwGbxo11A5d35gj8sN/
+         zOW80PraL51kr+eudNgCruntRDDyfRRR7uJIQxPax7+JuL6xU0g6Mn89HM2r0RSWmqK2
+         QDMPb2gJk3llajzDXoaBxXyG+AUxwm8eNyH6xFEVOaZObnd8wvYl7pikU/o8MMxEUvkP
+         mf6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761381479; x=1761986279;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rt1zvt28at9xm8W3hs03xIo0raGpVE0ymzecLcbUr+c=;
-        b=MqP+ICWhInu2/yC1oSteaT5MZ6wyNgYTFApO3wel8vmqxLXuViQsZ3nyE/6+53ARsO
-         oSKQL/vlslGr7cXNEbWY9/BjPTlmwm/7nss5PE09BuT90NLOMc2+IUDt7FG+cwX0nRoE
-         8Hnxhjpq5TGW7PJLvBarbYM+p/ns0ipxZBFZYLpd/cAD9PIFe89+0v5Eodu86vsIL+/p
-         x4VXpcPAhz/GJDblsNe2Cxxdv1wuQT+a6vBvR/7ZCl5u0RyFMqQOBapFCh1YeLEdI6va
-         JSSmUPeABlPLszaWPQ87xSPaSzcxL1c+r5JvQg48yvVV1RSlfPRpxtijAmYNPLxY9RWG
-         sCww==
-X-Forwarded-Encrypted: i=1; AJvYcCX439sz4KeijAjMzMz1RbQXHznYzsRnNv8ZELVrBekjgdZyc1/cYCs+IBKf30slnMZm5BB4EQm2rhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHhKs6SYOg85D+z8p7Vbu6nzuMzCyppo8/UWETd5Nm+vHdYcj0
-	jiLKodKLtqO50tjfVTyiTGKebgN07sSWD4S3nJVkOUuyxMsdKqAPkfBfIOophqldqxGvK4zAeLb
-	hWEiBLyZrNy2azjs5ZviHTKtyRmaHrRE=
-X-Gm-Gg: ASbGncv2/3npD0nCZBK2npHzflb2Mp7X9pbSNoQuoRRs+kNJeHLEu64B2bLp16/aU+Q
-	XR6TDxI/pUhWpBVdPVunnG82AV7w5tDIahK51xiLlcI5xms2yHNNt0J3ue+4fatYHjMnT0rOiGd
-	wnN0ZG/8BDQVleySbnn8842kQeWS78LxYswaWXHUw2FthaezQnq8Nhax24M9iNtYTXys9WYfTIS
-	SWQhJ9/a6TPehhI0BUOQwNdc9L0jDatasHgZ/YcCmj2hcZeTfVNg/ELusHWNh+wI16fag==
-X-Google-Smtp-Source: AGHT+IFuGX6oiN+VZCvXlLc+k6tnFhyAvGLZQt/w/4MWDH5uLaa7YRkpj3wZ7I30zF9rslJZeftdwUUg96dShS04FjM=
-X-Received: by 2002:a17:906:c10a:b0:b57:2c75:cc8d with SMTP id
- a640c23a62f3a-b6d6bb109d8mr624666366b.14.1761381478518; Sat, 25 Oct 2025
- 01:37:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761387080; x=1761991880;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=egj/7WjRwjT6riGuR0koHtTyjN24c/LRgAczk/OnsWw=;
+        b=Nq8IjUUvGL4ByLbqDSACeFu690ZURT+i0FKahfNGbY1nnga6jCPJNjn2BxjaFlNw7c
+         kxg0JfXULH11E1TyQrIzUkUYVcoBEKmod/DoH2kJyz6WtXSYY1DZcfhV4x/h8i0Q3N+g
+         tXI0hzGkqBycP0FT9WdEQ4jRtrUofiqNVPrY1cZ2b+v576EvgIN5kfOrLtkfKreMPLq1
+         YFPJyEK5IFCI8nJIesIJwczUEaC/6ZNkBkEPDCCW7/+grSTzVMWKTZoqgvjLGiAG/f7k
+         wPlH+QLqd2RA1YWqiu5QYGVa+80XcglKfxtrkpQfhHWF0PiBCFD3J99OJN8qkClVtJAN
+         +slA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0EYuVyi8a4wxk0ZLddLhPCGUkA00DPti8W4Y/JZ6wceGf2wzSERSydWk9KEjcgMIOH6nV8u7s9OM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUwST1CjZluXctGUMAz9WHdJNHPoty34jdkeDH8NgHJaLP2Byi
+	USaliFvdww83scq4Qa8ZYkd5WReb4C+Q0Et/8Tj3Pe96vQ/zACFY5ShB
+X-Gm-Gg: ASbGnctzfnYfoG/t90ScAOFKiQfaySI7lG2uOX/jL1x2ctwD8MhrYOqXd+VNQ5dtqrr
+	Bg35uShjMDbzz16Y9H+bs2jHt6LJb3uH1aI/6HTh9YKYXDpM1mSU3FgFC0WAdlCCz5QU4eDbrPy
+	OSbM2RTpqls16vBpBJvbIifdGSnqQBEdvXghAHgTT/YLJTW/CbVINSb3id41kFrJyF4IiGK1BbN
+	jbBVgD233ATrdoiYqGpNhzmCfA1gJUYfilE5Q0FqVHrphDP8OoqQdYw8P7iyVvSigPMSJS8tj76
+	fz+8WZVySDxAsyOlk7/+41I4y50xqAwq7ti7j6lAUYzYEL7m/xYLqefGkipIvzzuboz9zGVtCiV
+	CLtrsq9U3E/sTMie+w4H7VauJVOTI94Gkev09wodk4CD2DqAPsuQzbURygtxe2oSxpw5XhPsisu
+	KxbflcbXtU4Xu99tNUaLF1krG8TiVAuz8sva6uH8O/3aQkxq9IytSENe1CyQ==
+X-Google-Smtp-Source: AGHT+IG7ABSr4FtdNNEAo2tbvL9ho+vuY3QRO6VXg6V+Dbe1PORYyrFkPG6pems45nomzqTI2u5v4Q==
+X-Received: by 2002:a05:6000:2911:b0:426:d734:1378 with SMTP id ffacd0b85a97d-4299071090fmr4006603f8f.4.1761387079673;
+        Sat, 25 Oct 2025 03:11:19 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:c4ec:4cfd:1e64:7a3f? ([2a02:168:6806:0:c4ec:4cfd:1e64:7a3f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952b7b22sm2915027f8f.9.2025.10.25.03.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 03:11:18 -0700 (PDT)
+Message-ID: <990fe39da66ad23df4c85ef247b274a0fc6c2336.camel@gmail.com>
+Subject: Re: WARNING at drivers/pci/setup-bus.c:2373, bisected to "PCI: Use
+ pbus_select_window_for_type() during mem window sizing"
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Date: Sat, 25 Oct 2025 12:11:18 +0200
+In-Reply-To: <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
+References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
+		 <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
+	 <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251025074336.26743-1-linux.amoon@gmail.com> <20251025074336.26743-2-linux.amoon@gmail.com>
- <e6f4f3c93cfc2f18c36da10d3f86c1a50ab2bbf5.camel@ti.com>
-In-Reply-To: <e6f4f3c93cfc2f18c36da10d3f86c1a50ab2bbf5.camel@ti.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Sat, 25 Oct 2025 14:07:42 +0530
-X-Gm-Features: AWmQ_bmQGviTXIcOd0mClyWfGzAI1T_FFNMyLfzBY5L8A_7DMNQFG7wRa3DtwXw
-Message-ID: <CANAwSgQ2PH1TJLEBVPFJ-RdaNFxn=eTzRYfEmbjx=EYq_YOeQw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI: j721e: Use devm_clk_get_optional_enabled() to
- get the clock
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-omap@vger.kernel.org>, 
-	"open list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-pci@vger.kernel.org>, 
-	"moderated list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, Markus Elfring <Markus.Elfring@web.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Siddharth,
+On Sat, 2025-10-18 at 10:14 +0200, Klaus Kudielka wrote:
 
-Thanks for your review comments,
+[...]
 
-On Sat, 25 Oct 2025 at 13:20, Siddharth Vadapalli <s-vadapalli@ti.com> wrote:
->
-> On Sat, 2025-10-25 at 13:13 +0530, Anand Moon wrote:
-> > Use devm_clk_get_optional_enabled() helper instead of calling
-> > devm_clk_get_optional() and then clk_prepare_enable(). It simplifies
-> > the clk_prepare_enable() and clk_disable_unprepare() with proper error
-> > handling and makes the code more compact.
-> > The result of devm_clk_get_optional_enabled() is now assigned directly
-> > to pcie->refclk. This removes a superfluous local clk variable,
-> > improving code readability and compactness. The functionality
-> > remains unchanged, but the code is now more streamlined.
-> >
-> > Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > v2: Rephase the commit message and use proper error pointer
-> >     PTR_ERR(pcie->refclk) to return error.
-> > v1: Drop explicit clk_disable_unprepare as it handled by
-> >     devm_clk_get_optional_enabled, Since devm_clk_get_optional_enabled
-> >     internally manages clk_prepare_enable and clk_disable_unprepare
-> >     as part of its lifecycle, the explicit call to clk_disable_unprepare
-> >     is redundant and can be safely removed.
-> > ---
-> >  drivers/pci/controller/cadence/pci-j721e.c | 21 +++++----------------
-> >  1 file changed, 5 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> > index 5bc5ab20aa6d..b678f7d48206 100644
-> > --- a/drivers/pci/controller/cadence/pci-j721e.c
-> > +++ b/drivers/pci/controller/cadence/pci-j721e.c
->
-> [TRIMMED]
->
-> > @@ -692,7 +682,6 @@ static int j721e_pcie_suspend_noirq(struct device *dev)
-> >
-> >       if (pcie->mode == PCI_MODE_RC) {
-> >               gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> > -             clk_disable_unprepare(pcie->refclk);
->
-> j721e_pcie_resume_noirq() contains clk_enable_prepare().
-Ok I will drop the clk_prepare_enable and clk_disable_unprepare in
-this function?
->
-> >       }
-> >
-> >       cdns_pcie_disable_phy(pcie->cdns_pcie);
->
-> Regards,
-> Siddharth.
 
-Thanks
--Anand
+> Device tree: arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts
+> PCI driver: pci-mvebu
+> Hardware status: The joint mPCIe / mSATA slot carries an mSATA drive, the=
+ other
+> two mPCIe slots carry WiFi cards.
+>=20
+> As far as I can tell, hardware is operating nominally, so the warning loo=
+ks like
+> a false positive.
+
+
+In the meantime, I stared a bit at the logs, and at the code.
+
+
+WITH the offending commit, I see TWO identical lines before the WARNING:
+
+> [=C2=A0=C2=A0=C2=A0 0.027107] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+> [=C2=A0=C2=A0=C2=A0 0.027115] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+
+So, this part of  pbus_size_mem() now seems to be called *TWICE* for the sa=
+me bridge window:
+
+		add_to_list(realloc_head, bus->self, b_res, size1-size0, add_align);
+		pci_info(bus->self, "bridge window %pR to %pR add_size %llx add_align %ll=
+x\n",
+			   b_res, &bus->busn_res,
+			   (unsigned long long) (size1 - size0),
+			   (unsigned long long) add_align);
+
+
+
+WITHOUT the offending commit, I see only one line, and no WARNING.
+> [=C2=A0=C2=A0=C2=A0 0.027405] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+
+
+This behavior change really looks suspicious to me (maybe resulting in two =
+identical entries in the realloc_list).
+Does that ring any bell?
+
+
+Thanks, Klaus
 
