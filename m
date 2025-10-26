@@ -1,63 +1,64 @@
-Return-Path: <linux-pci+bounces-39339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64D69C0ACF7
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 16:54:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CF37C0AD06
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 16:57:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 685C1189CECB
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 15:54:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BE51189DBB3
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 15:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E931FCF41;
-	Sun, 26 Oct 2025 15:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C9D200BAE;
+	Sun, 26 Oct 2025 15:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3QR99tz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUPb8KxQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486B61C862D;
-	Sun, 26 Oct 2025 15:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BB71F4169;
+	Sun, 26 Oct 2025 15:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761494040; cv=none; b=t9JPLwUyeUaCqOtpc1aTw8zvBUwihettrucYOw/SLvD0TWWrV/5u1jQi8iG7QbJDmJMXL6EjCn6+2GfVcwZ2SSQ8qGFqcuMwlhEs5NGj11mtQjffNmLLthqrSfOcoJDnwIb9Gz6Oh7H3Dt03QiH6zDKpsX4hdpWjthl1F/Hw7tU=
+	t=1761494240; cv=none; b=PHCvMbn+dUmC4+THW7Rqgbm+Cyi8NI6JN/+uT5ZmXKhOPuyWqFg9KAY5PuYFVN3JRLCQEH1i8Uf85OkokIG3LvcrZgsL/jI1YtuXm2AsCMryQ/DHFsm954979iJ6VefKJASeACPP078Esyfq9gVTmMZirpLoCG5E5DpzqfGAxZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761494040; c=relaxed/simple;
-	bh=yuj6B/4jdw5JEcTrXhjojLU0Yio81Or2fV2JsultxwA=;
+	s=arc-20240116; t=1761494240; c=relaxed/simple;
+	bh=7Ou0fEZ/jwKerVmUa4t96b/hLUjjbHEGSc/S4mOnZyk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=J1LmSSoo9NtfB4d736d9DWR5qEDYJWECKMqH6pR3nIAw2FPQ4G2lrTLcr9EcaarbaxT3+NtkV5W7/VNlWznjUiFDiq1CSykeCI2e6xzbwVs7uvG1RI7AzBA5Sn6iZ8FsDCYKNBocCq/WsW1AUFk2f+Cwbe187KPhcEalowkCXJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3QR99tz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B038EC4CEE7;
-	Sun, 26 Oct 2025 15:53:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=h8TBxAyhxNtZxEGB2/IyO31dXMoSM1viz7vjsWeZtZgDfFTvbsQtCf4g8cbP2b0PJwRHWFMPh+g7zC4nSJahFuPnpCnfYDJewEEsPdxj2PB9Ybr4HSjNAwonOPHa8WTLbdyKWwi7WFKU5YfMYXJsB30bZNgD3EVbV6Da2JC0xwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUPb8KxQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F6FC4CEE7;
+	Sun, 26 Oct 2025 15:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761494039;
-	bh=yuj6B/4jdw5JEcTrXhjojLU0Yio81Or2fV2JsultxwA=;
+	s=k20201202; t=1761494240;
+	bh=7Ou0fEZ/jwKerVmUa4t96b/hLUjjbHEGSc/S4mOnZyk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=h3QR99tzfIu+K7ksVCwtEPWxwQ9sECLZsLctJSK9pvZ0dfZ0Le1G6+7Y1BhN2jW8Q
-	 62tBIMX3gVFIdxnH8YSbdrwYVfqOg+MowM2OvHIsjPByKIVRWXFKF9JKWW1F9heQpk
-	 qp0ZI4q7oPp9UhM4RvxeIGbgC+lNn6iQIa8Jlp5UfeADK6SSz5GOJJv1hEjofBriZU
-	 UN7OYmhdjrQZcQyHufPPRAbgdcCLcs28WujPXet7IijwO6fTcpNzZedW3lSYs6LZ18
-	 Bq9eemWv0Bm/7NiUo/QQrUPMoJuuGWtofXbOV48Jn2UPK1JrCfLdI1oqE94I0Y4ri4
-	 GEdYmegIzdpLg==
+	b=jUPb8KxQm2jI/qhICb70KWnhukiMfL3HCZ9JVXUq/H2f6i1aWGv3awPaDfmZ0/FLZ
+	 e8R1wXwYd+i8bvq+JA1X0GIUaaCtwsghv9qElkORQrhy0dZ4ijVWDSzIxTPRcMYs8m
+	 2qyOIYpQ4/ypz0KNAb+NFFAl+h3O2ZSqw/77QFN0ZDJIcGcpPfX0X0x26W5xwjkb3W
+	 ++MxEwLww8sV0ZS+hxamrRYJS1u5aF5j23yR/N7WO7KChbCRwgcPcuUQCDuDFmW1Z3
+	 5f49Qecq5v6fxefs0FGmKHus61hCAj2usE6bUSId1GNGc2uFBegfEIEOtYJCQofCH2
+	 8wKtbXRMecWvw==
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Niklas Cassel <cassel@kernel.org>, 
- Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>, 
- Mohamed Khalfella <khalfella@gmail.com>, 
- Christian Bruel <christian.bruel@foss.st.com>, 
- Bhanu Seshu Kumar Valluri <bhanuseshukumar@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- khalid@kernel.org, linux-kernel-mentees@lists.linuxfoundation.org, 
- skhan@linuxfoundation.org, david.hunter.linux@gmail.com
-In-Reply-To: <20251014024109.42287-1-bhanuseshukumar@gmail.com>
-References: <20251014024109.42287-1-bhanuseshukumar@gmail.com>
-Subject: Re: [PATCH v3] PCI: endpoint: pci-epf-test: Fix sleeping function
- being called from atomic context
-Message-Id: <176149403315.9388.15839787422598934486.b4-ty@kernel.org>
-Date: Sun, 26 Oct 2025 21:23:53 +0530
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251010-pci-binding-v1-0-947c004b5699@oss.qualcomm.com>
+References: <20251010-pci-binding-v1-0-947c004b5699@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH 0/3] PCI: qcom: Binding fix
+Message-Id: <176149423539.9818.11398999036385649843.b4-ty@kernel.org>
+Date: Sun, 26 Oct 2025 21:27:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,26 +70,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Tue, 14 Oct 2025 08:11:09 +0530, Bhanu Seshu Kumar Valluri wrote:
-> When Root Complex (RC) triggers a Doorbell MSI interrupt to Endpoint (EP)
-> it triggers a warning in the EP. pci_endpoint kselftest target is
-> compiled and used to run the Doorbell test in RC.
+On Fri, 10 Oct 2025 11:25:46 -0700, Manivannan Sadhasivam wrote:
+> This series fixes the binding issue around the PERST# and PHY properties.
+> The binding issue was reported in [1], while discussing a DTS fix [2].
 > 
-> BUG: sleeping function called from invalid context at kernel/locking/mutex.c:271
-> Call trace:
->  __might_resched+0x130/0x158
->  __might_sleep+0x70/0x88
->  mutex_lock+0x2c/0x80
->  pci_epc_get_msi+0x78/0xd8
->  pci_epf_test_raise_irq.isra.0+0x74/0x138
->  pci_epf_test_doorbell_handler+0x34/0x50
+> The binding fix provided in this series is not sufficient enough to spot all the
+> shenanigans, especially keeping one property in Controller node and another in
+> Root Port node. But this series does catch the DTS issue fixed by [2]:
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] PCI: endpoint: pci-epf-test: Fix sleeping function being called from atomic context
-      commit: 25423cda145f9ed6ee4a72d9f2603ac2a4685e74
+[1/3] dt-bindings: PCI: Update the email address for Manivannan Sadhasivam
+      commit: e3d7fda088c3c75d210b849c3823008f32cd00ce
 
 Best regards,
 -- 
