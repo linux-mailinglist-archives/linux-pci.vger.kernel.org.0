@@ -1,123 +1,124 @@
-Return-Path: <linux-pci+bounces-39331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44CD9C0A227
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 04:19:50 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B67FC0A294
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 05:44:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90BF03B30E3
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 03:19:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DF1D54E211F
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 04:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C36C1DE8BF;
-	Sun, 26 Oct 2025 03:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A3781990A7;
+	Sun, 26 Oct 2025 04:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AhlX70SR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+GChMDq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E451547EE
-	for <linux-pci@vger.kernel.org>; Sun, 26 Oct 2025 03:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9723D7FD
+	for <linux-pci@vger.kernel.org>; Sun, 26 Oct 2025 04:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761448785; cv=none; b=dlQeRH6Lz7kSq3uVubwAg0J75mrHUgurQcFR6Azg2YEytcUKOqT5600BpEjrrpLOce7VlXLFwV23RTP83/ImUZ0CnUjUE7CUGSYqtOXyUKqURq8rITaRMQaeHB8LMdB6zTzwqvnAQZuPbyh6Hydi/7KKLmTks6VH6U5sWz7HGmc=
+	t=1761453840; cv=none; b=kTiG7ZZFvSrrVXgIWayj8AbnPUO0YfhOJB4BgKhLMCZxulUmSGu2OFhTmcL3/FMNpq+iQ2QcTzc8Dfs7dMiapf3Oon8yAsujbhY1d1afG9LbBviqHfACN1sueeM3ciUxbXRv22OoAorL5u8o264VsCZYxYRfCZBCAxP+790kZTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761448785; c=relaxed/simple;
-	bh=jhvetm3H87iUHHYE09iE2tTkdfLH4FBYut7SC7D/hOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2Phu+fW7UxiADrzLDuSeTTQ4BCY/oi1jG1E9TbG8eVL9aeOxr/8s/BQEqg8hqfqiCsEEiFLb4xnOBEHvwogPtPOEhgz37a7x0byC68bV6XUeXqKgZD8e9qZ2LQf5ID8ysihNeKc92ZR1qKant8ozUwy3uSfuFGQ9k3wtuo+NqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AhlX70SR; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761448784; x=1792984784;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jhvetm3H87iUHHYE09iE2tTkdfLH4FBYut7SC7D/hOE=;
-  b=AhlX70SRHkLhBf+JLkFKU5pZ7evyXw6cbrwgat8fObxse7Iu0BnwLVxl
-   YQrB7eNMuRgoehQT5QRS2UwbY5IZm9qf3aqV4ChCBj7QS3XztTFzvPF7a
-   1eppVHSzsZdINqUbIcQ5zd1RhfeMT02hui0sQmUiWpS8C3RMxgpMxcShd
-   VEVnWEMyH1JCMI2PKLjbxVqSpY2kU4jJQwaRa/hey1FdNsNKCNAnuJ9CJ
-   LGNDkXmI/5QzP+wdhyHBOX7OqLED5pXWEAYZV9C8SvdPKExt5gmW5sp/l
-   S+PrLVUrO2asLPzk3ZMizUBBVal21Fdrk+8HB08lY8MWqooaU9Stcbiw4
-   Q==;
-X-CSE-ConnectionGUID: iH8U1mxCRceXH7k+rILu8Q==
-X-CSE-MsgGUID: 2Mc1mf8PSeuDc7LxruQ68g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63721831"
-X-IronPort-AV: E=Sophos;i="6.19,255,1754982000"; 
-   d="scan'208";a="63721831"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2025 20:19:43 -0700
-X-CSE-ConnectionGUID: WMg552D4S/69sqbZS06q2g==
-X-CSE-MsgGUID: Ehc/Y636SfmRDkXjhYQwpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,255,1754982000"; 
-   d="scan'208";a="183960472"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 25 Oct 2025 20:19:40 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vCrIA-000Fqv-0e;
-	Sun, 26 Oct 2025 03:19:38 +0000
-Date: Sun, 26 Oct 2025 11:18:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, aik@amd.com,
-	yilun.xu@linux.intel.com, aneesh.kumar@kernel.org,
-	bhelgaas@google.com, gregkh@linuxfoundation.org,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>
-Subject: Re: [PATCH v7 4/9] PCI/TSM: Establish Secure Sessions and Link
- Encryption
-Message-ID: <202510261309.SZsIB3mq-lkp@intel.com>
-References: <20251024020418.1366664-5-dan.j.williams@intel.com>
+	s=arc-20240116; t=1761453840; c=relaxed/simple;
+	bh=Aq74QMuE52R7WYicPBIBj8uAOiBzvycV/ZXDy6HTnQU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=p5Y4b8TWqJ8K36Ov0xmug2FPcDgydlx9uywnWKXzfzHN4ucxQXfJifURoZK3ZbEc/VwjcvhFq4tpQNrK0irHP+nnk1jbShCAegCDYzcrgZuKoJc8ZCsAfmlCreeHVQOHNtXzwMojXY+QwPntYds0LlL40g23t6L9CJ1XOYWK9bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+GChMDq; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b62e7221351so3092865a12.1
+        for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 21:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761453838; x=1762058638; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F3QG/GQcuHlnsVtxELaSyj+sqLVJE39GY4SNmTDM2G0=;
+        b=g+GChMDqMHoHGXrhpy/zqFMfrzgizfu8qAUXveFc202Grj+t8c0aI/eSy2b07bvgRj
+         AmnrIoW6gOWbvdiTc2ddjQ4mN6q0b+UhN2OvzYbSf9G8HVwokZsfrb+ZNhUkqcSXjql4
+         aOC/gsIxHHjco8hsFHDZXUJQ2uDtnZBQnXVJXOJVYr4p6/QiZqIIkpQnzYvkYYZre0LV
+         Pc8a2PG+c1SEZV5g2Ffu5s9w0/IHAOUs6+5nEmpUPrDYdtyF8pXJ+RFOyLOb0o9yhrUZ
+         hegVbffghgGMIRQAGzH9aC+Z8Xn0pw7K4CsKi+BlUyeZeRCeYHQgpl0D2cP4moxFoDhh
+         gK/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761453838; x=1762058638;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F3QG/GQcuHlnsVtxELaSyj+sqLVJE39GY4SNmTDM2G0=;
+        b=FNP5hK08w9o+rGbWW2hY+JFd1Bmzd/PLjdQOM1PGWC0TSU7tIe7oziGk5fROU6oDMt
+         eGxPGDKZ8YNwzi1SFf55RPK2cpaj/3JDy8YELhisdQd6DCCBQMPWfzPJiAYbki4xmbHY
+         NAP1nO6go61gU4tr+bJxRPVUQdGp6RLzGDyx4LnQhYX3r8f//CcHIKIwBnUUdb3DzKM8
+         xep7mM3802wGKyRLCFDE2vsWVh3m9ONcTj38iRow/r+KzBZW5zBx7J9Ly8liEUcArlED
+         pXRt4lLEHk+ttGHMJ+Xi93Yx8EpFoFCJVX2gBXxg9AFjCvy7GJmlXJTk+nxekK2AGaew
+         N9Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNkX6GizmDgrwx+AnorLj8Q6BVN30ic32C9hOghtxdKRAY7ryImKM4N8i8d2qjCWycCg+6lfZ5AW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa3jYQWTsc44Hba+BtxeQXcKWGIbrZXkLyqPTst6ICTai+s9sI
+	ndyuaydTHn98fcJkG5ql7cNLgVkPLnNf/vuiUT74Gev0UuEyp7KVqyZn
+X-Gm-Gg: ASbGncula358WzWZ5DLFtbcqBrJ9FBBTvZdzF8O6wj581QOVL9g350cXsiFNxO4PqJ9
+	CRXPZqW66aD6bbm8cS8oJhafxwEOWIP+MxnImJKFqVQjOvRwPaBlTcr2/wfLA3pNiraD2oB6nV+
+	v0GJkeqc7BPs+vqdK+GXL7ESc9L3umSJFJRi40gsMnb8DqWEy5fytVKwlH958VImFlYszt1kr++
+	iRrfyOpblGu9oWQO+pmr0FtW8hqy8hS1+IdnRZFRY1S+JtBN5KfOxO0s0T+PoYRVueKRl+Bbitz
+	sAwCnibMMH6RYce14YpTSS/FDqADNCPfKaOY9AN4MGFNMTX6w47fF840hdpRHndfbIHC+FveAI0
+	sl4tLcFmrsk4VSPN4crCE+d4Esco5leQaL7UG2LWE3Ue02W/gn0KOcvi3y3lUWjWleYxTq/QCU7
+	4B0jjXAlGdlWUXiFL5Q+crgZyoS9ZHnvl6kLLxHzAgAZUL/Sy4EA==
+X-Google-Smtp-Source: AGHT+IFB/FjN2j0+IOAja2+xRrNG+5H+gTFghf6JJ7KBtwsp4jcAYxVgOF8JlaL+XVkBPHYqSsE4lg==
+X-Received: by 2002:a17:903:8c8:b0:269:87a3:43b8 with SMTP id d9443c01a7336-290c9c93aa1mr330667075ad.4.1761453837832;
+        Sat, 25 Oct 2025 21:43:57 -0700 (PDT)
+Received: from localhost.localdomain ([119.127.199.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29498d2317csm39315755ad.48.2025.10.25.21.43.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 21:43:57 -0700 (PDT)
+From: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Waiman Long <longman@redhat.com>,
+	linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+Subject: [PATCH v3 0/2] PCI/aer_inject: Adjust locking for PREEMPT_RT
+Date: Sun, 26 Oct 2025 04:43:33 +0000
+Message-ID: <20251026044335.19049-2-jckeep.cuiguangbo@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251024020418.1366664-5-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+This patch series addresses locking issues in the AER injection
+path under PREEMPT_RT.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+---
+Changes in v3:
+- Remove unnecessary lock in aer_inject_exit.
+- Link to v2: https://lore.kernel.org/all/20251009150651.93618-1-jckeep.cuiguangbo@gmail.com/
 
-[auto build test ERROR on 211ddde0823f1442e4ad052a2f30f050145ccada]
+---
+Guangbo Cui (2):
+  PCI/aer_inject: Convert inject_lock to raw_spinlock_t
+  PCI/aer_inject: Remove unnecessary lock in aer_inject_exit
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/coco-tsm-Introduce-a-core-device-for-TEE-Security-Managers/20251024-100622
-base:   211ddde0823f1442e4ad052a2f30f050145ccada
-patch link:    https://lore.kernel.org/r/20251024020418.1366664-5-dan.j.williams%40intel.com
-patch subject: [PATCH v7 4/9] PCI/TSM: Establish Secure Sessions and Link Encryption
-config: i386-randconfig-005-20251025 (https://download.01.org/0day-ci/archive/20251026/202510261309.SZsIB3mq-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251026/202510261309.SZsIB3mq-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510261309.SZsIB3mq-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: find_tsm_dev
-   >>> referenced by tsm.c:257 (drivers/pci/tsm.c:257)
-   >>>               drivers/pci/tsm.o:(connect_store) in archive vmlinux.a
-   >>> did you mean: find_dsm_dev
-   >>> defined in: vmlinux.a(drivers/pci/tsm.o)
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for TSM
-   Depends on [n]: VIRT_DRIVERS [=n]
-   Selected by [y]:
-   - PCI_TSM [=y] && PCI [=y]
+ drivers/pci/pcie/aer_inject.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
