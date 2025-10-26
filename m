@@ -1,144 +1,126 @@
-Return-Path: <linux-pci+bounces-39334-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39335-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0985C0A2A3
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 05:44:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4B18C0A445
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 08:55:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B10563B3189
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 04:44:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CBCA3ACDB8
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Oct 2025 07:55:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D8F258EEA;
-	Sun, 26 Oct 2025 04:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B90226CE36;
+	Sun, 26 Oct 2025 07:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvTBLq4d"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="w1EvaNvl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E16262FC7
-	for <linux-pci@vger.kernel.org>; Sun, 26 Oct 2025 04:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050E722F386;
+	Sun, 26 Oct 2025 07:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761453855; cv=none; b=TYm9ABnMc/b2NYwCp5HfBjdtHc1hCgW1EnQs5gyBJXJHRb1bfl9aeEHy7cv8aYmL6y7bXHXeZJCGTkRDPTIhM4ajeB4EiYNkGW6WDBjrVgRBCevSYthAKpxNprBPMFFT53Y+CgqMv/JtYnpZuSul/hdYBUn7RB8fSmuDBOivu24=
+	t=1761465320; cv=none; b=en3Ugy9s//nS8mX1w5xmoojCYFWWMUG4a+ZK7f3S3eUT8BFXMYH6FnNtY+UdFablghvTyYmalhZaXPnWmVWJnCy271oAo3aKEBjM7N7dULbXOEYZUoEZQiYqnH8SDjGpYGYtYpGSri8+QXGeYg2UMoft8+ofutcK5JsBRdq5TB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761453855; c=relaxed/simple;
-	bh=w4Q+yHhJBasAdeSXBOcO67FD8hR5fmC9dO9uLZoDllg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oxwgS+eNeJ0SxYR0SRP5/iEh3Nx5p8FYTG/3VF3gWCeZQlkPL1eEloVgB18EgRR95V2YbYYXX7dOaII/bYyE/9+eRTqXidgw268q38HeRUciWvf/viGNlMjxpgIv6NORUz8NK5KFhfSzX1BXos4aQaKpABASoEX+GE1olK0kO6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IvTBLq4d; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-78118e163e5so3961042b3a.0
-        for <linux-pci@vger.kernel.org>; Sat, 25 Oct 2025 21:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761453852; x=1762058652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MX0ni6H4pbjiWrv/AnHeK1axe/PVUJRTQ2U0GTGwYuk=;
-        b=IvTBLq4djabjUfXBykrwlBeQWgEupiQzR/GgeVIx0y8nBaXI525RrJwN9f0/V4jIte
-         jHHK56ACso13tnNQK17eQAM55c1KgIQdoQI2HrCx62j6AM3Yw0bn0QoNQCN/mtJpMOT0
-         zUcHog+/5bJH/HM4XpvzUAqVFblMn6RpyevZ4sXKU1fYyOh5TM2D+WFwjGNVcGtoI7Tc
-         +FW3uRxIZMPn/5ELL8GfUZzcQt3V3DH/X1uii1/PcXay4LmoOmjGtLFqhSPU5gDgs0KT
-         mbn836jNDeT6vq4J3WbKimnAGxQGOPDNmDQvzrIYKKm+R5cEdfBYaKISNKT57NC4J1fF
-         LDEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761453852; x=1762058652;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MX0ni6H4pbjiWrv/AnHeK1axe/PVUJRTQ2U0GTGwYuk=;
-        b=NE8bJ7EOEIwE/B9v4FcFDYZlPoe07+CNVlTRgten7DGvJKMEZ1FeMWkGWmwODQhh6v
-         Ni5ri2ddZR1BYVFXUcixk4wUZglDh7NSCotKDRzgkaonY2jxupHLt3IuM2ba4DWaYGQs
-         U5A4HEgLj6Z3ixCBE+Fc5qxeAsm8yFCj7tXi+dHUrm7OCnE+cxWFBe2LNCm5vrMIX5k2
-         TR3DJMRWG4IpNGAT1ygkoemPSlZhVJYcvqfD7ExKxJ82Y4s/+T/b1AwoDDdiz3dqN5X1
-         uHI87xZRUfPAC+5cjFbxUXvOEdFcCBeZBcVQGwNSf0dGAjIN0VdNPg95LGyrhjtXzGtn
-         ibNg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/ZbUmdob8vB/vZeIU3fkrWTIa4V9/80BrUJgBNi4mDwFvVRUsl1CMKUgb4ZGnGgb1ueJWP7iCtDw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyna8x5+vvrAhabzNvcKBWDmyKK5vDRfYXTIFU89g7rysfpSU2Q
-	tqLXjQdIToE6rhSoQykILXF3+vImKaJCfDJwa7+JYZifWj+4eKHcc7Sm
-X-Gm-Gg: ASbGnctOiHB3R/+zFjZUH2aEo1xTQdvACaBNsTa+llgCdM3CZW2NxIQbNydVuVNfi12
-	I0WR2OAMhOYgL09yCjJl8SWwW5+ss3mpn2f4B0aXGwHrG8rMK/N7miaTxHMVmWqFGh/s45G+Msp
-	9fb2nBr9TP7LSkZVF4ouMs8+SdciK19vDxEhX1oc1bjNt9F2Kw/XeL7pPSBUytyL3i4MHmScWcs
-	JhWQa4Ek/Upd/ncHPXmBOVlUK0NYOrmJXJPiaeP+uAaDcd8id5RgFNPYNUvaLf+UefT6x4kdNLa
-	HzJN0fbzUuw/gSK97aMSR/RwMzDQq+5nQHQmnIfbuEy4rl4fnZ/V558+LdMFdvSEWvyJm3d2dnO
-	gow3wfcq342/iag7zVXM5OJ3K+sWBZISBcbCmi5Or3f3NP0KGNw2Z013SdoHRSdzYnVm2YVuTgD
-	1bKShV/13M/Q2DuMaGxTMQftaGaG7HBg0G3L3smrgpEdOEkk62tg==
-X-Google-Smtp-Source: AGHT+IFUy9nDaJV51/d03ANfLAhw0sYIOgZYfK93VgsR+kv1D2t1kjboFjQQXoUpP81vgHZLi1rddQ==
-X-Received: by 2002:a17:903:187:b0:27d:6cb6:f7c2 with SMTP id d9443c01a7336-29489e050e4mr101688115ad.17.1761453852259;
-        Sat, 25 Oct 2025 21:44:12 -0700 (PDT)
-Received: from localhost.localdomain ([119.127.199.177])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29498d2317csm39315755ad.48.2025.10.25.21.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Oct 2025 21:44:12 -0700 (PDT)
-From: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	linux-rt-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Guangbo Cui <jckeep.cuiguangbo@gmail.com>
-Subject: [PATCH v3 2/2] PCI/aer_inject: Remove unnecessary lock in aer_inject_exit
-Date: Sun, 26 Oct 2025 04:43:35 +0000
-Message-ID: <20251026044335.19049-4-jckeep.cuiguangbo@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251026044335.19049-2-jckeep.cuiguangbo@gmail.com>
-References: <20251026044335.19049-2-jckeep.cuiguangbo@gmail.com>
+	s=arc-20240116; t=1761465320; c=relaxed/simple;
+	bh=6gQ0b96ksH6i06Ro3IgrAKOKydTsy37oius49iYhX08=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=heeYJLX3O+Dt0L/nrsVZaxWIGr4aGqurxxxFpD53kpuFHu7l26CW5iFMW8sQSb41lvrt2tVSRB5tf40kQz58QfJFAoJtm1hZiiTsNAXgHHXMTUwvNBlScb2aSrO3kesdmKfDdTt/+rymfXhK988G4NG6Payi7sR8KApfQ3D0yZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=w1EvaNvl; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1761465308; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=gbW6lsAeQnITBSvhA7va7FPK1N1OCTuc7ZM09ubMnwE=;
+	b=w1EvaNvl6VFnpLbbIhM9EH3J+k5X0NviL/4AMSLRUIkIBb+piVyJkusnscjydLGVvKu8spPiicc04LDecNvsFhKSVDF04tSt5ysDuE6zx/nxRA6UgIWJq00z4h8gD83xtiiQbxddnm0/V0kAPbJPASglw5DenO0U0CUmqenwv14=
+Received: from 30.246.176.102(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Wqyle5w_1761465304 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 26 Oct 2025 15:55:06 +0800
+Message-ID: <3db524e7-b6ce-4652-8420-fdb4639ac73a@linux.alibaba.com>
+Date: Sun, 26 Oct 2025 15:55:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
+ regions
+To: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leon@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+ Leon Romanovsky <leonro@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
+ Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+ kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ Logan Gunthorpe <logang@deltatee.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+References: <cover.1760368250.git.leon@kernel.org>
+ <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
+ <20251022125012.GB244727@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20251022125012.GB244727@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-After misc_deregister and restoring PCI bus ops, there can be no further
-users accessing the einjected list. The list items are therefore safely
-freed without taking the lock.
 
-Signed-off-by: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
----
- drivers/pci/pcie/aer_inject.c | 3 ---
- 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index c8d65bfb10ff..a064fa2acb94 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -523,7 +523,6 @@ static int __init aer_inject_init(void)
- static void __exit aer_inject_exit(void)
- {
- 	struct aer_error *err, *err_next;
--	unsigned long flags;
- 	struct pci_bus_ops *bus_ops;
- 
- 	misc_deregister(&aer_inject_device);
-@@ -533,12 +532,10 @@ static void __exit aer_inject_exit(void)
- 		kfree(bus_ops);
- 	}
- 
--	spin_lock_irqsave(&inject_lock, flags);
- 	list_for_each_entry_safe(err, err_next, &einjected, list) {
- 		list_del(&err->list);
- 		kfree(err);
- 	}
--	spin_unlock_irqrestore(&inject_lock, flags);
- }
- 
- module_init(aer_inject_init);
--- 
-2.43.0
+在 2025/10/22 20:50, Jason Gunthorpe 写道:
+> On Mon, Oct 13, 2025 at 06:26:11PM +0300, Leon Romanovsky wrote:
+>> From: Leon Romanovsky <leonro@nvidia.com>
+>>
+>> Add support for exporting PCI device MMIO regions through dma-buf,
+>> enabling safe sharing of non-struct page memory with controlled
+>> lifetime management. This allows RDMA and other subsystems to import
+>> dma-buf FDs and build them into memory regions for PCI P2P operations.
+>>
+>> The implementation provides a revocable attachment mechanism using
+>> dma-buf move operations. MMIO regions are normally pinned as BARs
+>> don't change physical addresses, but access is revoked when the VFIO
+>> device is closed or a PCI reset is issued. This ensures kernel
+>> self-defense against potentially hostile userspace.
+> 
+> Let's enhance this:
+> 
+> Currently VFIO can take MMIO regions from the device's BAR and map
+> them into a PFNMAP VMA with special PTEs. This mapping type ensures
+> the memory cannot be used with things like pin_user_pages(), hmm, and
+> so on. In practice only the user process CPU and KVM can safely make
+> use of these VMA. When VFIO shuts down these VMAs are cleaned by
+> unmap_mapping_range() to prevent any UAF of the MMIO beyond driver
+> unbind.
+> 
+> However, VFIO type 1 has an insecure behavior where it uses
+> follow_pfnmap_*() to fish a MMIO PFN out of a VMA and program it back
+> into the IOMMU. This has a long history of enabling P2P DMA inside
+> VMs, but has serious lifetime problems by allowing a UAF of the MMIO
+> after the VFIO driver has been unbound.
 
+Hi, Jason,
+
+Can you elaborate on this more?
+
+ From my understanding of the VFIO type 1 implementation:
+
+- When a device is opened through VFIO type 1, it increments the
+   device->refcount
+- During unbind, the driver waits for this refcount to drop to zero via
+   wait_for_completion(&device->comp)
+- This should prevent the unbind() from completing while the device is
+   still in use
+
+Given this refcount mechanism, I do not figure out how the UAF can
+occur.
+
+Thanks.
 
