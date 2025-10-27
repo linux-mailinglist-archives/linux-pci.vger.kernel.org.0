@@ -1,294 +1,221 @@
-Return-Path: <linux-pci+bounces-39423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18EFDC0DA86
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:47:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16B60C0DB23
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:54:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6D3BA34DB68
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 12:47:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0E021893D5E
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 12:53:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 308E422D785;
-	Mon, 27 Oct 2025 12:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bjpk+ApT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8515D23D7E0;
+	Mon, 27 Oct 2025 12:53:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E902264AD;
-	Mon, 27 Oct 2025 12:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B60A18DB26
+	for <linux-pci@vger.kernel.org>; Mon, 27 Oct 2025 12:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569231; cv=none; b=IL6MW/zLqTIrVDwSZSk1UDOsSdAYvfV57KgefWLBR5s9ts3qacbeMya2Y+NE5zo5R3O3poFbyfYZXrl41XjUzqNf4PFqZutbJFCfp07mk9ImU2EqYQ1LMhkxAcXtqxGZhHklfHgedIsNROeUfT62rDzKb89esDBp/g9/shmn7HI=
+	t=1761569603; cv=none; b=oeLr89az3lBAubrpQSaavofRhrlQpB0ejiexVbsAD3wKOi03vGcOG1gGIS6LrLN8FjUKoikxj/Z716eX1gLgbuYSyHuj9+wpDZJAfnWgyy3ejMBN97P6YSElbATE9sIEhaZQmC8kTQlVWB+HCQ18ZcYdF4KTwmuFtX4qdGynEIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569231; c=relaxed/simple;
-	bh=49jdBAX78hnKEgcNrSPzlw9AgaPRGLdbgtmHRvfTsDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lq4R8/Sc63wPoS3wA/rkRMn6WkRPMtkIoJpDwZbOZEQxWah2ViyzYNoO1GfOlgRsxScfu/ABVjs0TAsGZNPVLP/gK3GTagAQa2YojtIQYibuCHDSUtsqXxQ5wfWX6hWM0Vbh8Y8E1lswJsTy9cb6Gd1At+WSPSfRIHzExNwWCfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bjpk+ApT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55653C4CEF1;
-	Mon, 27 Oct 2025 12:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761569230;
-	bh=49jdBAX78hnKEgcNrSPzlw9AgaPRGLdbgtmHRvfTsDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bjpk+ApT7kRYYhkyyJGMRJ7UqVqfsesSte8DsViSJ1VXC0SPK4mjQJm5lJlkmJsyo
-	 j5mWa3gd6Y4ejTbKDyxqQCRD0/QUMTns0ExSyugFGaF7mEhxVlWA6UFoLUa5D+O2HR
-	 f48qPdSF493fu/oujbw5NPAyHK1J7VrSAdPwUl16vWepx7pvoh5PIWb06JtNzUwh8f
-	 yFTPDIZHvgiEhJnhLmdWKlmqQ6LiZHkl8yM7zJukCrx4stXrFKLFlmcqIJ8ZrPQIDU
-	 PcVivVYZ14OB+gAiedVPQ2wFycmQC0CQkI45L0jxDofbf+0QQ6YY9piRDnuwEDQbjn
-	 G6bIfNwNquWsw==
-Date: Mon, 27 Oct 2025 18:17:01 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH RESEND v4 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
- Support
-Message-ID: <xnfxu5xvfypxih3qvcxwge75vok3hu7wjlvu4twqfwigjpubmu@kblc3w5vritg>
-References: <20251014121635.47914-1-devendra.verma@amd.com>
- <20251014121635.47914-2-devendra.verma@amd.com>
+	s=arc-20240116; t=1761569603; c=relaxed/simple;
+	bh=WyAT0cZ419zJS6+qhbXvxzs+CR/2BDzu0Df1ltpBvxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MKsigZ06h/cQFgjo+BML4BqW/WyjlXPNnowisFTxdZmmYLq2j2g/5TeB+A5vpz8Xip4qF71U1NG5RYU872b4j9YhwHre6QFy8yzaqTCqPZURJwBI18LktiyhP0Tc9amNFvsBlXNjx4tebJuuinQLBYXL1NQx3+JmBNTkz9rTQEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip2t1761569517tb53347eb
+X-QQ-Originating-IP: nmsWUsXJgs/BC/zm7wCdDP8DQicwbQiZNInWOC/bbaA=
+Received: from [IPV6:240f:10b:7440:1:8944:4301 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 27 Oct 2025 20:51:52 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 80477086532345862
+Message-ID: <665677F9F810B6C1+af6c83fd-f262-4721-b544-4336aaa83bfe@radxa.com>
+Date: Mon, 27 Oct 2025 21:51:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
+To: Linnaea Lavia <linnaea-von-lavia@live.com>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+References: <20251023164205.GA1299816@bhelgaas>
+ <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251014121635.47914-2-devendra.verma@amd.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: N1sMhKjDsQuaqa0m7xhvUK7v3oLjS2bPiDUXypa/wpV4ag9cXplh6GcG
+	RoayluD7PfKAUg0W9ABZJbsyYolfuwY2IWR0dyfeF5/Bxt3RfvX5uVCepeTg3dHJqQ8rL+n
+	dTWA04C11/GJjB0WfhoWkUOBJHByDn5R8Wou5mL+8ymzD3LlLdasGpei+r+LnZ9yzM2xcvn
+	PmSZM0xNu1sOkIp9QzFg1SIw7dOqVMZzSJGeTGl0m8F9xthvusrb2RK2uPQN5gRCU/8lhmn
+	+diIc+1kl3ltpiMaZbXMiSzVYIT+orhZNcEFm2ltL1P3Qwgs7HQt5bFibRFV8NbH05GQqxp
+	iJ53Rv5Gsk+kgzDTsG7c6vwA1kFYtjWvEKE7k46PTyCOYKQ74jKwJWJuw6GDKg0yibbK8Cs
+	9I1A5APBr4vBJ0X5pTGYV000b9QqDWjSAbi1N8ebowf3Y+UN67Z60xhpao7/MjdLYhcfBBq
+	swomhUjqfX8kzubG7O8rcQIOEk4/3bYe9IETi+vFeV/QeJsbK/L4K52SyH8CRCrxDAl8gLE
+	tp8N5jgmz70iyabTlZwMQDqthFwCUruErAOsXJqzgK39/m/j5z8HtS5HZh7po2S5j/bW4m0
+	MCuGT5AIQnpyirMAgMEX/P3xJgLhDvCur7uISulhlypn+2chfq/0zeeVoaQRr3S0JVbMcvW
+	qdub8XQDAr5jOr6jFe0o6ADMYHuZsr5jiFmHDepJRfIQNRgSk1Sq3oM95bgb8IzzGuJg964
+	UupDr9AvK+Di5jAN3DBsS+lT+XMDGMnmyNGkN7t6mZa7yX6nqnidpYcw9YadPZG0LLC4keq
+	JHyDaItP6ilcCBBOqVVyxm5ehUtGFysCe8oD6WrDgCGA8DcrpNt/vl+VGt2FuIMNbFrrufN
+	LgzCkC2CJiIRl2DvURBjCY2IVELIAOZYRb5CN1naz7CWK8hF6ZRHbCWuemZrH3KfGdUBlZN
+	9FjiyNj1zAWTc0nsWGOaoiXgfR9kSCYsf2ImnIGOUGqgBWvSTjRjTYSEq
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Oct 14, 2025 at 05:46:33PM +0530, Devendra K Verma wrote:
-> AMD MDB PCIe endpoint support. For AMD specific support
-> added the following
->   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
->   - AMD MDB specific driver data
->   - AMD MDB specific VSEC capability to retrieve the device DDR
->     base address.
+Hi Linnaea,
+
+On 10/24/25 12:27, Linnaea Lavia wrote:
+(snip)> With the patch on 6.18-rc2 it fails later with ASPM.
 > 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
-> ---
-> Changes in v4:
-> Configured 8 read and 8 write channels for Xilinx vendor
-> Added checks to validate vendor ID for vendor
-> specific vsec id.
-> Added Xilinx specific vendor id for vsec specific to Xilinx
-> Added the LL and data region offsets, size as input params to
-> function dw_edma_set_chan_region_offset().
-> Moved the LL and data region offsets assignment to function
-> for Xilinx specific case.
-> Corrected comments.
+> [    5.362080] [     T50] dw-pcie fc000000.pcie: error -ENXIO: IRQ index 
+> 1 not found
+> [    5.400163] [     T50] meson-pcie fc000000.pcie: host bridge /soc/ 
+> pcie@fc000000 ranges:
+> [    5.421350] [     T50] meson-pcie fc000000.pcie:       IO 
+> 0x00fc600000..0x00fc6fffff -> 0x0000000000
+> [    5.428902] [     T50] meson-pcie fc000000.pcie:      MEM 
+> 0x00fc700000..0x00fdffffff -> 0x00fc700000
+> [    5.436367] [     T50] meson-pcie fc000000.pcie: iATU: unroll T, 4 
+> ob, 4 ib, align 64K, limit 4G
+> [    5.485658] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.491449] [     T50] meson-pcie fc000000.pcie: PCIe Gen.2 x1 link up
+> [    5.512122] [     T50] meson-pcie fc000000.pcie: PCI host bridge to 
+> bus 0000:00
+> [    5.515375] [     T50] pci_bus 0000:00: root bus resource [bus 00-ff]
+> [    5.521523] [     T50] pci_bus 0000:00: root bus resource [io  
+> 0x0000-0xfffff]
+> [    5.528847] [     T50] pci_bus 0000:00: root bus resource [mem 
+> 0xfc700000-0xfdffffff]
+> [    5.536237] [     T50] pci 0000:00:00.0: [16c3:abcd] type 01 class 
+> 0x060400 PCIe Root Port
+> [    5.543415] [     T50] pci 0000:00:00.0: ROM [mem 
+> 0x00000000-0x0000ffff pref]
+> [    5.543432] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    5.543441] [     T50] pci 0000:00:00.0:   bridge window [io  
+> 0x0000-0x0fff]
+> [    5.543448] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0x00000000-0x000fffff]
+> [    5.569461] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0x00000000-0x000fffff pref]
+> [    5.587641] [     T50] pci 0000:00:00.0: supports D1
+> [    5.591578] [     T50] pci 0000:00:00.0: PME# supported from D0 D1 
+> D3hot D3cold
+> [    5.603775] [     T50] pci 0000:01:00.0: [8086:2725] type 00 class 
+> 0x028000 PCIe Endpoint
+> [    5.614373] [     T50] pci 0000:01:00.0: BAR 0 [mem 
+> 0x00000000-0x00003fff 64bit]
+> [    5.621353] [     T50] pci 0000:01:00.0: Upstream bridge's Max 
+> Payload Size set to 128 (was 256, max 256)
+> [    5.621374] [     T50] pci 0000:01:00.0: Max Payload Size set to 128 
+> (was 128, max 128)
+> [    5.623252] [     T50] pci 0000:01:00.0: PME# supported from D0 D3hot 
+> D3cold
+> [    5.651205] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
+> L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
+> [    5.664912] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
+> ClockPM
+> [    5.706596] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.748181] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.796864] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.798178] [     T50] pci 0000:00:00.0: bridge window [mem 
+> 0xfc700000-0xfc7fffff]: assigned
+> [    5.806100] [     T50] pci 0000:00:00.0: ROM [mem 
+> 0xfc800000-0xfc80ffff pref]: assigned
+> [    5.806382] [     T50] pci 0000:01:00.0: BAR 0 [mem 
+> 0xfc700000-0xfc703fff 64bit]: assigned
+> [    5.863079] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.904553] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.946013] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.987492] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.987517] [     T50] pci 0000:01:00.0: BAR 0: error updating 
+> (0xfc700004 != 0xffffffff)
+> [    6.028979] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.080320] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.081421] [     T50] pci 0000:01:00.0: BAR 0: error updating (high 
+> 0x00000000 != 0xffffffff)
+> [    6.131210] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.132324] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    6.138215] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0xfc700000-0xfc7fffff]
+> [    6.145683] [     T50] pci_bus 0000:00: resource 4 [io  0x0000-0xfffff]
+> [    6.151953] [     T50] pci_bus 0000:00: resource 5 [mem 
+> 0xfc700000-0xfdffffff]
+> [    6.165037] [     T50] pci_bus 0000:01: resource 1 [mem 
+> 0xfc700000-0xfc7fffff]
+> [    6.165782] [     T50] pcieport 0000:00:00.0: PME: Signaling with IRQ 25
+> [    6.181556] [     T50] pcieport 0000:00:00.0: AER: enabled with IRQ 25
+> [   11.500464] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.543334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.544875] [    T491] iwlwifi 0000:01:00.0: of_irq_parse_pci: failed 
+> with rc=134
+> [   11.593524] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.636355] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.680033] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.721230] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.722728] [    T491] iwlwifi 0000:01:00.0: Unable to change power 
+> state from D3cold to D0, device inaccessible
+> [   11.773976] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.816771] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.859334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.901868] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.944393] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.945931] [    T491] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI 
+> issues?
+> [   11.952685] [    T491] iwlwifi 0000:01:00.0: probe with driver 
+> iwlwifi failed with error -5
 > 
-> Changes in v3:
-> Corrected a typo when assigning AMD (Xilinx) vsec id macro
-> and condition check.
-> 
-> Changes in v2:
-> Reverted the devmem_phys_off type to u64.
-> Renamed the function appropriately to suit the
-> functionality for setting the LL & data region offsets.
-> 
-> Changes in v1:
-> Removed the pci device id from pci_ids.h file.
-> Added the vendor id macro as per the suggested method.
-> Changed the type of the newly added devmem_phys_off variable.
-> Added to logic to assign offsets for LL and data region blocks
-> in case more number of channels are enabled than given in
-> amd_mdb_data struct.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 130 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 128 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3371e0a7..b26a55e 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -17,12 +17,23 @@
->  
->  #include "dw-edma-core.h"
->  
-> +/* Synopsys */
->  #define DW_PCIE_VSEC_DMA_ID			0x6
->  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
->  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
->  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
->  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
->  
-> +/* AMD MDB (Xilinx) specific defines */
-> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
-> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
-> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
-> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
-> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
-> +#define DW_PCIE_XILINX_LL_SIZE			0x800
-> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
-> +#define DW_PCIE_XILINX_DT_SIZE			0x800
-> +
->  #define DW_BLOCK(a, b, c) \
->  	{ \
->  		.bar = a, \
-> @@ -50,6 +61,7 @@ struct dw_edma_pcie_data {
->  	u8				irqs;
->  	u16				wr_ch_cnt;
->  	u16				rd_ch_cnt;
-> +	u64				devmem_phys_off;
->  };
->  
->  static const struct dw_edma_pcie_data snps_edda_data = {
-> @@ -90,6 +102,64 @@ struct dw_edma_pcie_data {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> +static const struct dw_edma_pcie_data amd_mdb_data = {
-> +	/* MDB registers location */
-> +	.rg.bar				= BAR_0,
-> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
-> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
-> +
-> +	/* Other */
-> +	.mf				= EDMA_MF_HDMA_NATIVE,
-> +	.irqs				= 1,
-> +	.wr_ch_cnt			= 8,
-> +	.rd_ch_cnt			= 8,
-> +};
-> +
-> +static void dw_edma_set_chan_region_offset(struct dw_edma_pcie_data *pdata,
-> +					   enum pci_barno bar, off_t start_off,
-> +					   off_t ll_off_gap, size_t ll_size,
-> +					   off_t dt_off_gap, size_t dt_size)
-> +{
-> +	u16 i;
-> +	off_t off;
-> +	u16 wr_ch = pdata->wr_ch_cnt;
-> +	u16 rd_ch = pdata->rd_ch_cnt;
+> Booting with the patch and pcie_aspm=off made the PCIe card work again.(snip)
 
-Reverse Xmas order please.
+Regarding the ASPM issue, could you try v6.18-rc3 (in addition to your 
+changes)?
 
-> +
-> +	off = start_off;
-> +
-> +	/* Write channel LL region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->ll_wr[i].bar = bar;
-> +		pdata->ll_wr[i].off = off;
-> +		pdata->ll_wr[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Read channel LL region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->ll_rd[i].bar = bar;
-> +		pdata->ll_rd[i].off = off;
-> +		pdata->ll_rd[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Write channel data region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->dt_wr[i].bar = bar;
-> +		pdata->dt_wr[i].off = off;
-> +		pdata->dt_wr[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +
-> +	/* Read channel data region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->dt_rd[i].bar = bar;
-> +		pdata->dt_rd[i].off = off;
-> +		pdata->dt_rd[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +}
-> +
->  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  {
->  	return pci_irq_vector(to_pci_dev(dev), nr);
-> @@ -120,9 +190,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	u32 val, map;
->  	u16 vsec;
->  	u64 off;
-> +	int cap;
->  
-> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> -					DW_PCIE_VSEC_DMA_ID);
-> +	/*
-> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
-> +	 * of map, channel counts, etc.
-> +	 */
-> +	switch (pdev->vendor) {
-> +	case PCI_VENDOR_ID_SYNOPSYS:
-> +		cap = DW_PCIE_VSEC_DMA_ID;
-> +		break;
-> +	case PCI_VENDOR_ID_XILINX:
-> +		cap = DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor, cap);
->  	if (!vsec)
->  		return;
->  
-> @@ -155,6 +240,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	off <<= 32;
->  	off |= val;
->  	pdata->rg.off = off;
-> +
-> +	/* Xilinx specific VSEC capability */
-> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-> +					DW_PCIE_XILINX_MDB_VSEC_ID);
-> +	if (!vsec)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +	if (PCI_VNDR_HEADER_ID(val) != 0x20 ||
-> +	    PCI_VNDR_HEADER_REV(val) != 0x1)
+https://patchwork.kernel.org/project/linux-pci/patch/20251023180645.1304701-1-helgaas@kernel.org/
 
-Can you have definitions for these header and rev IDs?
+Best regards,
 
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + 0xc, &val);
-> +	off = val;
-> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
-
-Same of these offsets as well.
-
-> +	off <<= 32;
-> +	off |= val;
-> +	pdata->devmem_phys_off = off;
->  }
->  
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> @@ -179,6 +282,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	}
->  
->  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-> @@ -186,6 +290,26 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	 */
->  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
-> +		/*
-> +		 * There is no valid address found for the LL memory
-> +		 * space on the device side.
-> +		 */
-> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> +			return -EINVAL;
-
--ENOMEM
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
 
