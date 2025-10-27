@@ -1,237 +1,136 @@
-Return-Path: <linux-pci+bounces-39441-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39442-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD6AC0ED7B
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 16:13:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59B4CC0EDC0
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 16:14:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 719F6463E4C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:04:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F97819C7AB5
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:08:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CC3623D7DF;
-	Mon, 27 Oct 2025 15:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803DB2D2499;
+	Mon, 27 Oct 2025 15:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXuiiI+Y"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="VS0Cw936"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559FE4A3E;
-	Mon, 27 Oct 2025 15:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761577464; cv=none; b=RWsfDDzA9s7HOZbEopxbeCaA5XetFOYGDM2nFXiH/4MvvByIW3wycy9WV3x5+Qlfvqc/b68CsOG9pPGLmit9gOYck0bZ73yIBdlRlQehXPT6luqvgnmqKorpRlU4DQpmTYsE6y3KJl0BQ1IQZjgo8HeQUs9dceeh1apzZdtLJgk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761577464; c=relaxed/simple;
-	bh=Oyvud8Xrb31jPdkUgL/nSFBCVRBEWFiP8+m62AJySW8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lJspPMURD+iW4aOHRpDEHeoTuVZI1l08xZbxgF1nSlp3ZxD1CG9xeag5jWJRwVj4RTMIi+A6HPQ5TpGvSjhXb3u4ocAQGvPtSKbo6W65btRg/f6TmdrIFI9ajNFKgt++mKLdzDgzIS8ZE9o9ehJ517lmzplokF0Yhhf/nA68f30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UXuiiI+Y; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761577462; x=1793113462;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Oyvud8Xrb31jPdkUgL/nSFBCVRBEWFiP8+m62AJySW8=;
-  b=UXuiiI+YHMUuxEHRISGkXmHuvoC3/N44Fowoq95Dhblb0cNJqjNXZNnI
-   9pt/5mt6jFqIgfmoj5rxOT3N7VPztm542kIODwfD1o0Ipe2qUHveEt+hH
-   EqCXm4w+p9fi8X2K1ZxZS4O5aWHk2mQk7asKSln8gBSytM+xCuhyzle8D
-   fr8MEnNZuhAcoaro3IXNvQrWoJ7x5Jii2MqFwVYhv8GTWKinppa6bcG5L
-   1VjA8o6Pg6z33RL6mNmjxJVW1bhqEz8NwlkP9l24RBVcTZXKK58oWdeP1
-   i4ZqQ0sASVTYgYq8ccQjGb/8N+oFjJAvW9hkdRQ92YL/GREp1dCLmeJOZ
-   Q==;
-X-CSE-ConnectionGUID: 31wauQOsSq2fPfoVMMUA1A==
-X-CSE-MsgGUID: +01nb+TsR4W4u84KGp4mbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63696132"
-X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
-   d="scan'208";a="63696132"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:04:22 -0700
-X-CSE-ConnectionGUID: 8+IRZ5reQvGEkYVV6ZajvA==
-X-CSE-MsgGUID: Of8F0flcS4i+xSIy6S8wgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
-   d="scan'208";a="184960852"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:04:15 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 Oct 2025 17:04:11 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Lucas De Marchi <lucas.demarchi@intel.com>, intel-xe@lists.freedesktop.org, 
-    linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-    Icenowy Zheng <uwu@icenowy.me>, Vivian Wang <wangruikang@iscas.ac.cn>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Simon Richter <Simon.Richter@hogyros.de>, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow
- GPU BAR resize
-In-Reply-To: <20251024224401.GA1371085@bhelgaas>
-Message-ID: <5fa35d10-e3c6-9661-9287-47ebdcaca0d1@linux.intel.com>
-References: <20251024224401.GA1371085@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57B8261581;
+	Mon, 27 Oct 2025 15:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761577636; cv=pass; b=PAtrGY6UAhoUf16v+alYllYjomdfqiUY1BALIOf7Y4opGPyEfAust8OGSWautGQv5gR0SRP3BS7/dCnYv2+P/26v3Kf9L4AlYQFuH/JzXnnQxiiP6dLWApRA/n9isT8kZBVcDg3liNlxBnkx9DsappKd70gH+9lg1BiH49hjaW8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761577636; c=relaxed/simple;
+	bh=XJQiGH4ToenKrm6wRhZu15WDH87CJjC+Z9TP4TSm0hI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d2wey0CmcI8Bc0DKUhRm5x06q/sbnlWkjHihE6AIDOs0kn/v6YipxIfyFTTYvC76BGWpQW6w5ZRkoeLz30LXwOkPjliZAaDzbVHK6e3JjcXQ5MsUXkwZYgk+XDEeHlkHw1mZlPBa9od4+wvveJj0TLPHHjz1MsUoVqODFtWPslg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=VS0Cw936; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761577612; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=l+JZGGDR2m3VU/Cwyz5ZkLBgm7Q9KyF4781HOkVfwMtyTSuo0wj47T3aajxSe7Tq5XSaiSgsYd6lbGr8XohfdQJZZA7KqpcrpPpGCut7LauQspY6C2l8/7bqIFfVIittUFKZOKfvSiajZEFIgwubqJVMLsiyhLS8cIb0PCaB9ws=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761577612; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vlE4F3UR10G7Zn5lJKVF/CJoO7DYHlDbIy6oRd+W4UI=; 
+	b=KypNEj+R1Ih647Xxqsg6sNnXb/y4n7zXm1Ynf0Ak9hF8yr0Ku2qcbjr38mqr2AA5enC5fg6BJdEdu+xNsaWniRJzAFACYZafFqLS+uFAPQqpg0G8JZEx9NWcb0AeOZ1OGiwULwRknN8+7rkjd1DIzHL+tp4deKqFkioGUIbj0c0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761577612;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=vlE4F3UR10G7Zn5lJKVF/CJoO7DYHlDbIy6oRd+W4UI=;
+	b=VS0Cw9369DkAqJrTLgI8YvVbEftCYZ/9nc/E6JOEV5UglTkCFawOrhAhT3IA1pii
+	zsKoOZ2HTDtRiSSMhT/PdG9OwhvecDsOUxgYsuAHVbgPRyPmufFvmCCFksOaWQZfyjY
+	wHasNddMVLFpTaOzMhMKhqFiGsmw9GU28HFdfsbg=
+Received: by mx.zohomail.com with SMTPS id 1761577609895742.3072902066041;
+	Mon, 27 Oct 2025 08:06:49 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+ Hans Zhang <18255117159@163.com>,
+ "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>,
+ "moderated list:ARM/Rockchip SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>, Anand Moon <linux.amoon@gmail.com>
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v1 0/2] Add runtime PM support to Rockchip DW PCIe driver
+Date: Mon, 27 Oct 2025 16:06:44 +0100
+Message-ID: <5264377.31r3eYUQgx@workhorse>
+In-Reply-To: <20251027145602.199154-1-linux.amoon@gmail.com>
+References: <20251027145602.199154-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1098205246-1761576381=:970"
-Content-ID: <9d0e426b-9aa1-0ef7-b2f1-bd48534fcf9a@linux.intel.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Monday, 27 October 2025 15:55:28 Central European Standard Time Anand Moon wrote:
+> Introduce runtime power management support in the Rockchip DesignWare PCIe
+> controller driver.  These changes allow the PCIe controller to suspend and
+> resume dynamically, improving power efficiency on supported platforms.
+> 
+> Can Patch 1 can be backpoted to stable? It helps clean shutdown of PCIe.
 
---8323328-1098205246-1761576381=:970
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <3bac46db-7de1-f5bc-b075-6d9ffad99397@linux.intel.com>
+You can do this by adding a Fixes tag to your patch. In your case, it
+might be fixing whatever introduced the clk_bulk_prepare_enable, i.e.:
 
-On Fri, 24 Oct 2025, Bjorn Helgaas wrote:
-> On Thu, Sep 18, 2025 at 01:58:56PM -0700, Lucas De Marchi wrote:
-> > From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> >=20
-> > Resizing BAR to a larger size has to release upstream bridge windows in
-> > order make the bridge windows larger as well (and to potential relocate
-> > them into a larger free block within iomem space). Some GPUs have an
-> > integrated PCI switch that has BAR0. The resource allocation assigns
-> > space for that BAR0 as it does for any resource.
-> >=20
-> > An extra resource on a bridge will pin its upstream bridge window in
-> > place which prevents BAR resize for anything beneath that bridge.
-> >=20
-> > Nothing in the pcieport driver provided by PCI core, which typically is
-> > the driver bound to these bridges, requires that BAR0. Because of that,
-> > releasing the extra BAR does not seem to have notable downsides but
-> > comes with a clear upside.
-> >=20
-> > Therefore, release BAR0 of such switches using a quirk and clear its
-> > flags to prevent any new invocation of the resource assignment
-> > algorithm from assigning the resource again.
-> >=20
-> > Due to other siblings within the PCI hierarchy of all the devices
-> > integrated into the GPU, some other devices may still have to be
-> > manually removed before the resize is free of any bridge window pins.
-> > Such siblings can be released through sysfs to unpin windows while
-> > leaving access to GPU's sysfs entries required for initiating the
-> > resize operation, whereas removing the topmost bridge this quirk
-> > targets would result in removing the GPU device as well so no manual
-> > workaround for this problem exists.
-> >=20
-> > Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3l=
-wcp3h7esmvnyg26n44y@owo2ojiu2mov/
-> > Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icen=
-owy.me/
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Cc: <stable@vger.kernel.org> # v6.12+
-> > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > ---
-> >=20
-> > Remarks from Ilpo: this feels quite hacky to me and I'm working towards=
- a
-> > better solution which is to consider Resizable BAR maximum size the
-> > resource fitting algorithm. But then, I don't expect the better solutio=
-n
-> > to be something we want to push into stable due to extremely invasive
-> > dependencies. So maybe consider this an interim/legacy solution to the
-> > resizing problem and remove it once the algorithmic approach works (or
-> > more precisely retain it only in the old kernel versions).
-> > ---
-> >  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >=20
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index d97335a401930..9b1c08de3aa89 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct=
- pci_dev *pdev)
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_tim=
-er_timeout);
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_tim=
-er_timeout);
-> >  #endif
-> > +
-> > +/*
-> > + * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
-> > + * resizing the BARs of the GPU device due to that bridge BAR0 pinning=
- the
-> > + * bridge window it's under in place. Nothing in pcieport requires tha=
-t
-> > + * BAR0.
-> > + *
-> > + * Release and disable BAR0 permanently by clearing its flags to preve=
-nt
-> > + * anything from assigning it again.
->=20
-> Does "disabling BAR0" actually work?  This quirk keeps the PCI core
-> from assigning resources to the BAR, but I don't think we have a way
-> to actually disable an individual BAR, do we?
+Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
 
-No, we don't and that was just sloppy wording from me. The same problem
-applies to any other non-assigned BAR resource, they too are there with
-a dangling address that could conflict.
+This would be put above your Signed-off-by in the first patch, after
+the empty line.
 
-> I think the only control is PCI_COMMAND_MEMORY, and the bridge must
-> have PCI_COMMAND_MEMORY enabled so memory accesses to downstream
-> devices work.
->=20
-> No matter what we do to the struct resource, the hardware BAR still
-> contains some address, and the bridge will decode any accesses that
-> match the address in the BAR.
->=20
-> Maybe we could effectively disable the BAR by setting it to some
-> impossible address, i.e., something outside both the upstream and
-> downstream bridge windows so memory accesses could never be routed to
-> it?
+To generate fixes tags like this, I use the following pretty format
+in my .git/config:
 
-I'm not entire sure how one should acquire address outside of the valid=20
-address ranges? Is the resource-to-bus mapping even valid outside a=20
-window?
+    [pretty]
+        fixes = Fixes: %h (\"%s\")
 
-Perhaps find either min(start address) or max(end address) over all
-windows as those boundary addresses should be still mappable and place=20
-the BAR right below or above either of those by subtracting the resource=20
-size or adding +1). How does that approach sound?
+I can then do `git log --pretty=fixes` to show commits formatted
+the right way. To find which commit to pick, `git blame` and
+some sleuthing are helpful.
 
-(There could be cases where a simple approach like that fails when both=20
-ends of the range are in use but then I wouldn't want to over-engineer the=
-=20
-approach at this point unless we know there are such problematic cases
-in practice.)
+With this tag, stable bots can pick the commit into any release
+that the commit it fixes is in.
 
-It would be nice to do it eventually for any non-assigned BAR but it=20
-requires preserving those res->flags (for non-window resources too) in=20
-order to know which of them are even even usable as BARs.
+Kind regards,
+Nicolas Frattaroli
 
---=20
- i.
+> 
+> Clarification: the series is based on
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> branch : controller/dw-rockchip
+> 
+> Thanks
+> -Anand
+> 
+> Anand Moon (2):
+>   PCI: dw-rockchip: Add remove callback for resource cleanup
+>   PCI: dw-rockchip: Add runtime PM support to Rockchip PCIe driver
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> 
+> base-commit: 7ad31f88429369ada44710176e176256a2812c3f
+> 
 
-> > + */
-> > +static void pci_release_bar0(struct pci_dev *pdev)
-> > +{
-> > +=09struct resource *res =3D pci_resource_n(pdev, 0);
-> > +
-> > +=09if (!res->parent)
-> > +=09=09return;
-> > +
-> > +=09pci_release_resource(pdev, 0);
-> > +=09res->flags =3D 0;
-> > +}
-> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0=
-);
-> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0=
-);
-> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0=
-);
-> >=20
-> > --=20
-> > 2.50.1
-> >=20
->=20
---8323328-1098205246-1761576381=:970--
+
+
+
 
