@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-39375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3EF6C0CC27
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 10:51:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1861FC0CC15
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 10:51:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2BD1D4F29CB
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 09:50:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40ED43B6EF0
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 09:51:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 050DC2E92D6;
-	Mon, 27 Oct 2025 09:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8535C2F6925;
+	Mon, 27 Oct 2025 09:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbRGcYkY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNW8wU5z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AEB2F39CE;
-	Mon, 27 Oct 2025 09:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F0B2F5A37;
+	Mon, 27 Oct 2025 09:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761558629; cv=none; b=MYJBWdardB6ev2nh7bGAiX55bf1HswfBqaz57En9QosjUuXwJ8XIT9iNEDTpIs9v80ChdCc62XxE8AbM5wjVbTLa6X72QdHrOPAoMU6TN6IOUBUeNcE2aqr6R0LRmEWGxuPj6XWe3gHWJ8W0RplVCx/9YoeeqBLvwdcBoE0feJg=
+	t=1761558635; cv=none; b=ANoaHKnIOs/o0zbr9bGm6YH1XcHch/JlEMz8+/l5vYIJZXgkhwJxotVg3Addg9H6wQz3ep3F7dUBaJF+0FTNhmzbYOeYbZvCbXYwHsWMVX4dC8miMrslkz6GoxdSFU5RAhmPuXAmcbKGmz7ZjBrS40+bxZ2eoZ73YiVOgfEGuYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761558629; c=relaxed/simple;
-	bh=QyVzkmCjMu/50vNSNAkzNRdjuRbF3e26UinRbPg+dDA=;
+	s=arc-20240116; t=1761558635; c=relaxed/simple;
+	bh=8xMFN/TY7tHDrYwOABVfX/JHpdB9RJVhkUzDkm+xiUo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BjtWWMLEIPNflHPlffFM/ycLZc35Y3zMLSguh7BT8UGb0sSsgW52qd7vEh+P6IFyzetME10ttjAogZVBPE/HygfED3bu47+fCD4I85St31050QiHyem+Y3/AW+A/ipjr8QgsLVPOtWNjtq2ppBlDLsDOaL0smmX//rtzA55+zzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbRGcYkY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31732C4CEFF;
-	Mon, 27 Oct 2025 09:50:23 +0000 (UTC)
+	 MIME-Version; b=MkzC02S7dk9V0Y2wWp7voPdcIVBl5icVaWgZ27jrhzwqbjTnqYGhcHzxRD4ww+jJlTIAgJdnO6P0NV/LMnjlXYbadLnV2zv/X64xaXFPbsqt/gvkJy2K8JIOgOFXBzHojhDxRmU+ScJ+PYaOhynPlLY5wjPZS6vCYlYdmOPxMdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNW8wU5z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFD55C4CEF1;
+	Mon, 27 Oct 2025 09:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761558629;
-	bh=QyVzkmCjMu/50vNSNAkzNRdjuRbF3e26UinRbPg+dDA=;
+	s=k20201202; t=1761558634;
+	bh=8xMFN/TY7tHDrYwOABVfX/JHpdB9RJVhkUzDkm+xiUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cbRGcYkYXsbtETAT0N3CNNjpepQ1wxqodrlfSWM42MslMkN1YXSzWo6Tw3TvaPPfA
-	 qbidjYnH8LFcgkTvWnzOdTsyC2MO3hSTfPXjf4PI3NhGKtSABWzEV9B7Wza2jDadK5
-	 zgG6gkIxbOJR5CEPJomA2sYA9ZHz0QF8PXW8V6OWAfaeP/BxNvRzypOXc4wJipuVNh
-	 Sw8lAfI2J1V8tXkclzqFHSKoIPxuo5ob/eT6NkWy/HZzDDDr/6M6UNoDXGa7RbhSB1
-	 s1Aov30UTT4h15/Dpr1SQpaPWQWdLumNY0L8e7JN0wm3+u1tzfg4zs8bX4IB6PIsoW
-	 6el9ifMdHfsbg==
+	b=DNW8wU5z2aBAHASzuc1jkzhCjw8ZbbwZkThTwIFaHHqRzl/Yt6Y30M+RSnppIOLS4
+	 sOe+d05EyUYFmMsxoNgVo0N8DXS9r7watc+pymeX6OCodgaLlPrgba2YZ2qHm5kUZV
+	 9ZdU93Mga7DpQP9/4bl9aLgJq0Udq7TDXzodyexOtjMAoTspgU+oB4Qe6CUS9to1B/
+	 bveBi8QR422spm/2vOBzPfqBADscO2yZoQgzxVygylq4s1CvICPfBDqCtebyuHdp2k
+	 Bw4SkcxjsV/MqeGXEwYunDiVuHnZTZOm5DgWbjNftFAxVXf0OWn0pobJYAugL9xiVv
+	 T6vpkZclmqBLQ==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -61,9 +61,9 @@ Cc: linux-pci@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Subject: [PATCH 05/12] coco: host: arm64: Build and register RMM pdev descriptors
-Date: Mon, 27 Oct 2025 15:18:56 +0530
-Message-ID: <20251027094916.1153143-5-aneesh.kumar@kernel.org>
+Subject: [PATCH 06/12] coco: host: arm64: Add RMM device communication helpers
+Date: Mon, 27 Oct 2025 15:18:57 +0530
+Message-ID: <20251027094916.1153143-6-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251027094916.1153143-1-aneesh.kumar@kernel.org>
 References: <20251027094916.1153143-1-aneesh.kumar@kernel.org>
@@ -75,362 +75,591 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the SMCCC plumbing for RMI_PDEV_AUX_COUNT, RMI_PDEV_CREATE, and
-RMI_PDEV_GET_STATE, describe the pdev state enum/flags in rmi_smc.h,
-and extend the PF0 descriptor so we can hold the RMM-side pdev handle
-plus its auxiliary granules.
-
-Implement pdev_create() to delegate backing pages, populate the pdev
-parameters from the device's RID, ECAM window, IDE stream, and
-non-coherent address ranges, and invoke RMI_PDEV_CREATE. The helper
-keeps track of the allocated/assigned granules and unwinds them on
-failure, so the host driver can reliably establish the pdev channel
-before kicking off further IDE/TSM setup.
+- add SMCCC IDs/wrappers for RMI_PDEV_COMMUNICATE/RMI_PDEV_ABORT
+- describe the RMM device-communication ABI (struct rmi_dev_comm_*,
+  cache flags, protocol/object IDs, busy error code)
+- track per-PF0 communication state (buffers, workqueue, cache metadata) and
+  serialize access behind object_lock
+- plumb a DOE/SPDM worker (pdev_communicate_work) plus shared helpers that
+  submit the SMCCC call, cache multi-part responses, and handle retries/abort
+- hook the new helpers into the physical function connect path so IDE
+  setup can drive the device to the expected state
 
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- arch/arm64/include/asm/rmi_cmds.h       |  31 ++++++
- arch/arm64/include/asm/rmi_smc.h        |  94 +++++++++++++++-
- drivers/virt/coco/arm-cca-host/Makefile |   2 +-
- drivers/virt/coco/arm-cca-host/rmi-da.c | 141 ++++++++++++++++++++++++
- drivers/virt/coco/arm-cca-host/rmi-da.h |   5 +
- 5 files changed, 271 insertions(+), 2 deletions(-)
- create mode 100644 drivers/virt/coco/arm-cca-host/rmi-da.c
+ arch/arm64/include/asm/rmi_cmds.h        |  20 ++
+ arch/arm64/include/asm/rmi_smc.h         |  63 ++++++
+ drivers/virt/coco/arm-cca-host/arm-cca.c |  50 +++++
+ drivers/virt/coco/arm-cca-host/rmi-da.c  | 273 +++++++++++++++++++++++
+ drivers/virt/coco/arm-cca-host/rmi-da.h  |  63 ++++++
+ 5 files changed, 469 insertions(+)
 
 diff --git a/arch/arm64/include/asm/rmi_cmds.h b/arch/arm64/include/asm/rmi_cmds.h
-index ef53147c1984..4547ce0901a6 100644
+index 4547ce0901a6..b86bf15afcda 100644
 --- a/arch/arm64/include/asm/rmi_cmds.h
 +++ b/arch/arm64/include/asm/rmi_cmds.h
-@@ -505,4 +505,35 @@ static inline int rmi_rtt_unmap_unprotected(unsigned long rd,
+@@ -536,4 +536,24 @@ static inline unsigned long rmi_pdev_get_state(unsigned long pdev_phys, enum rmi
  	return res.a0;
  }
  
-+static inline unsigned long rmi_pdev_aux_count(unsigned long flags, u64 *aux_count)
++static inline unsigned long rmi_pdev_communicate(unsigned long pdev_phys,
++						 unsigned long pdev_comm_data_phys)
 +{
 +	struct arm_smccc_res res;
 +
-+	arm_smccc_1_1_invoke(SMC_RMI_PDEV_AUX_COUNT, flags, &res);
-+
-+	*aux_count = res.a1;
-+	return res.a0;
-+}
-+
-+static inline unsigned long rmi_pdev_create(unsigned long pdev_phys,
-+					    unsigned long pdev_params_phys)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_1_1_invoke(SMC_RMI_PDEV_CREATE,
-+			     pdev_phys, pdev_params_phys, &res);
++	arm_smccc_1_1_invoke(SMC_RMI_PDEV_COMMUNICATE,
++			     pdev_phys, pdev_comm_data_phys, &res);
 +
 +	return res.a0;
 +}
 +
-+static inline unsigned long rmi_pdev_get_state(unsigned long pdev_phys, enum rmi_pdev_state *state)
++static inline unsigned long rmi_pdev_abort(unsigned long pdev_phys)
 +{
 +	struct arm_smccc_res res;
 +
-+	arm_smccc_1_1_invoke(SMC_RMI_PDEV_GET_STATE, pdev_phys, &res);
++	arm_smccc_1_1_invoke(SMC_RMI_PDEV_ABORT, pdev_phys, &res);
 +
-+	*state = res.a1;
 +	return res.a0;
 +}
 +
  #endif /* __ASM_RMI_CMDS_H */
 diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
-index fe1c91ffc0ab..10f87a18f09a 100644
+index 10f87a18f09a..53e46e24c921 100644
 --- a/arch/arm64/include/asm/rmi_smc.h
 +++ b/arch/arm64/include/asm/rmi_smc.h
-@@ -26,7 +26,7 @@
- #define SMC_RMI_DATA_CREATE		SMC_RMI_CALL(0x0153)
- #define SMC_RMI_DATA_CREATE_UNKNOWN	SMC_RMI_CALL(0x0154)
- #define SMC_RMI_DATA_DESTROY		SMC_RMI_CALL(0x0155)
--
-+#define SMC_RMI_PDEV_AUX_COUNT		SMC_RMI_CALL(0x0156)
- #define SMC_RMI_REALM_ACTIVATE		SMC_RMI_CALL(0x0157)
- #define SMC_RMI_REALM_CREATE		SMC_RMI_CALL(0x0158)
- #define SMC_RMI_REALM_DESTROY		SMC_RMI_CALL(0x0159)
-@@ -47,6 +47,9 @@
+@@ -47,6 +47,8 @@
  #define SMC_RMI_RTT_INIT_RIPAS		SMC_RMI_CALL(0x0168)
  #define SMC_RMI_RTT_SET_RIPAS		SMC_RMI_CALL(0x0169)
  
-+#define SMC_RMI_PDEV_CREATE             SMC_RMI_CALL(0x0176)
-+#define SMC_RMI_PDEV_GET_STATE		SMC_RMI_CALL(0x0178)
-+
- #define RMI_ABI_MAJOR_VERSION	1
- #define RMI_ABI_MINOR_VERSION	0
++#define SMC_RMI_PDEV_ABORT		SMC_RMI_CALL(0x0174)
++#define SMC_RMI_PDEV_COMMUNICATE        SMC_RMI_CALL(0x0175)
+ #define SMC_RMI_PDEV_CREATE             SMC_RMI_CALL(0x0176)
+ #define SMC_RMI_PDEV_GET_STATE		SMC_RMI_CALL(0x0178)
  
-@@ -269,4 +272,93 @@ struct rec_run {
- 	struct rec_exit exit;
+@@ -69,6 +71,7 @@
+ #define RMI_ERROR_REALM		2
+ #define RMI_ERROR_REC		3
+ #define RMI_ERROR_RTT		4
++#define RMI_BUSY		10
+ 
+ enum rmi_ripas {
+ 	RMI_EMPTY = 0,
+@@ -361,4 +364,64 @@ struct rmi_pdev_params {
+ 	};
  };
  
-+enum rmi_pdev_state {
-+	RMI_PDEV_NEW,
-+	RMI_PDEV_NEEDS_KEY,
-+	RMI_PDEV_HAS_KEY,
-+	RMI_PDEV_READY,
-+	RMI_PDEV_IDE_RESETTING,
-+	RMI_PDEV_COMMUNICATING,
-+	RMI_PDEV_STOPPING,
-+	RMI_PDEV_STOPPED,
-+	RMI_PDEV_ERROR,
-+};
++#define RMI_DEV_COMM_EXIT_CACHE_REQ	BIT(0)
++#define RMI_DEV_COMM_EXIT_CACHE_RSP	BIT(1)
++#define RMI_DEV_COMM_EXIT_SEND		BIT(2)
++#define RMI_DEV_COMM_EXIT_WAIT		BIT(3)
++#define RMI_DEV_COMM_EXIT_RSP_RESET	BIT(4)
++#define RMI_DEV_COMM_EXIT_MULTI		BIT(5)
 +
-+#define MAX_PDEV_AUX_GRANULES	32
-+#define MAX_IOCOH_ADDR_RANGE	16
-+#define MAX_FCOH_ADDR_RANGE	4
++#define RMI_DEV_COMM_NONE	0
++#define RMI_DEV_COMM_RESPONSE	1
++#define RMI_DEV_COMM_ERROR	2
 +
-+#define RMI_PDEV_FLAGS_SPDM		BIT(0)
-+#define RMI_PDEV_FLAGS_NCOH_IDE		BIT(1)
-+#define RMI_PDEV_FLAGS_NCOH_ADDR	BIT(2)
-+#define RMI_PDEV_FLAGS_COH_IDE		BIT(3)
-+#define RMI_PDEV_FLAGS_COH_ADDR		BIT(4)
-+#define RMI_PDEV_FLAGS_P2P		BIT(5)
-+#define RMI_PDEV_FLAGS_COMP_TRUST	BIT(6)
-+#define RMI_PDEV_FLAGS_CATEGORY		GENMASK(8, 7)
++#define RMI_PROTOCOL_SPDM		0
++#define RMI_PROTOCOL_SECURE_SPDM	1
 +
-+#define RMI_PDEV_CMEM_CXL_CATEGORY	BIT(7)
++#define RMI_DEV_VCA			0
++#define RMI_DEV_CERTIFICATE		1
++#define RMI_DEV_MEASUREMENTS		2
++#define RMI_DEV_INTERFACE_REPORT	3
 +
-+#define RMI_HASH_SHA_256	0
-+#define RMI_HASH_SHA_512	1
-+
-+struct rmi_pdev_addr_range {
-+	u64 base;
-+	u64 top;
-+};
-+
-+struct rmi_pdev_params {
++struct rmi_dev_comm_enter {
 +	union {
-+		struct {
-+			u64 flags;
-+			u64 pdev_id;
-+			union {
-+				u8 segment_id;
-+				u64 padding0;
-+			};
-+			u64 ecam_addr;
-+			union {
-+				u16 root_id;
-+				u64 padding1;
-+			};
-+			u64 cert_id;
-+			union {
-+				u16 rid_base;
-+				u64 padding2;
-+			};
-+			union {
-+				u16 rid_top;
-+				u64 padding3;
-+			};
-+			union {
-+				u8 hash_algo;
-+				u64 padding4;
-+			};
-+			u64 num_aux;
-+			u64 ncoh_ide_sid;
-+			u64 ncoh_num_addr_range;
-+			u64 coh_num_addr_range;
-+		};
-+		u8 padding5[0x100];
++		u8 status;
++		u64 padding0;
++	};
++	u64 req_addr;
++	u64 resp_addr;
++	u64 resp_len;
++};
++
++struct rmi_dev_comm_exit {
++	u64 flags;
++	u64 req_cache_offset;
++	u64 req_cache_len;
++	u64 rsp_cache_offset;
++	u64 rsp_cache_len;
++	union {
++		u8 cache_obj_id;
++		u64 padding0;
 +	};
 +
-+	union { /* 0x100 */
-+		u64 aux_granule[MAX_PDEV_AUX_GRANULES];
-+		u8 padding6[0x100];
++	union {
++		u8 protocol;
++		u64 padding1;
 +	};
++	u64 req_delay;
++	u64 req_len;
++	u64 rsp_timeout;
++};
 +
-+	union { /* 0x200 */
-+		struct {
-+			struct rmi_pdev_addr_range ncoh_addr_range[MAX_IOCOH_ADDR_RANGE];
-+		};
-+		u8 padding7[0x100];
++struct rmi_dev_comm_data {
++	union { /* 0x0 */
++		struct rmi_dev_comm_enter enter;
++		u8 padding0[0x800];
 +	};
-+	union { /* 0x300 */
-+		struct {
-+			struct rmi_pdev_addr_range coh_addr_range[MAX_FCOH_ADDR_RANGE];
-+		};
-+		u8 padding8[0x100];
++	union { /* 0x800 */
++		struct rmi_dev_comm_exit exit;
++		u8 padding1[0x800];
 +	};
 +};
 +
  #endif /* __ASM_RMI_SMC_H */
-diff --git a/drivers/virt/coco/arm-cca-host/Makefile b/drivers/virt/coco/arm-cca-host/Makefile
-index ad353b07e95a..a5694a3a7983 100644
---- a/drivers/virt/coco/arm-cca-host/Makefile
-+++ b/drivers/virt/coco/arm-cca-host/Makefile
-@@ -2,4 +2,4 @@
- #
- obj-$(CONFIG_ARM_CCA_HOST) += arm-cca-host.o
+diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
+index 18e5bf6adea4..e79f05fee516 100644
+--- a/drivers/virt/coco/arm-cca-host/arm-cca.c
++++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
+@@ -48,6 +48,7 @@ static struct pci_tsm *cca_tsm_pci_probe(struct tsm_dev *tsm_dev, struct pci_dev
+ 	rc = pci_tsm_pf0_constructor(pdev, &pf0_dsc->pci, tsm_dev);
+ 	if (rc)
+ 		return NULL;
++	mutex_init(&pf0_dsc->object_lock);
  
--arm-cca-host-$(CONFIG_TSM) +=  arm-cca.o
-+arm-cca-host-$(CONFIG_TSM) +=  arm-cca.o rmi-da.o
+ 	pci_dbg(pdev, "tsm enabled\n");
+ 	return &no_free_ptr(pf0_dsc)->pci.base_tsm;
+@@ -70,6 +71,55 @@ static void cca_tsm_pci_remove(struct pci_tsm *tsm)
+ 	}
+ }
+ 
++static __maybe_unused int init_dev_communication_buffers(struct pci_dev *pdev,
++							 struct cca_host_comm_data *comm_data)
++{
++	int ret = -ENOMEM;
++
++	comm_data->io_params = (struct rmi_dev_comm_data *)get_zeroed_page(GFP_KERNEL);
++	if (!comm_data->io_params)
++		goto err_out;
++
++	comm_data->rsp_buff = (void *)__get_free_page(GFP_KERNEL);
++	if (!comm_data->rsp_buff)
++		goto err_res_buff;
++
++	comm_data->req_buff = (void *)__get_free_page(GFP_KERNEL);
++	if (!comm_data->req_buff)
++		goto err_req_buff;
++
++	comm_data->work_queue = alloc_ordered_workqueue("%s %s DEV_COMM", 0,
++						dev_bus_name(&pdev->dev),
++						pci_name(pdev));
++	if (!comm_data->work_queue)
++		goto err_work_queue;
++
++	comm_data->io_params->enter.status = RMI_DEV_COMM_NONE;
++	comm_data->io_params->enter.resp_addr = virt_to_phys(comm_data->rsp_buff);
++	comm_data->io_params->enter.req_addr  = virt_to_phys(comm_data->req_buff);
++	comm_data->io_params->enter.resp_len = 0;
++
++	return 0;
++
++err_work_queue:
++	free_page((unsigned long)comm_data->req_buff);
++err_req_buff:
++	free_page((unsigned long)comm_data->rsp_buff);
++err_res_buff:
++	free_page((unsigned long)comm_data->io_params);
++err_out:
++	return ret;
++}
++
++static inline void free_dev_communication_buffers(struct cca_host_comm_data *comm_data)
++{
++	destroy_workqueue(comm_data->work_queue);
++
++	free_page((unsigned long)comm_data->req_buff);
++	free_page((unsigned long)comm_data->rsp_buff);
++	free_page((unsigned long)comm_data->io_params);
++}
++
+ /* For now global for simplicity. Protected by pci_tsm_rwsem */
+ static DECLARE_BITMAP(cca_stream_ids, MAX_STREAM_ID);
+ 
 diff --git a/drivers/virt/coco/arm-cca-host/rmi-da.c b/drivers/virt/coco/arm-cca-host/rmi-da.c
-new file mode 100644
-index 000000000000..390b8f05c7cf
---- /dev/null
+index 390b8f05c7cf..592abe0dd252 100644
+--- a/drivers/virt/coco/arm-cca-host/rmi-da.c
 +++ b/drivers/virt/coco/arm-cca-host/rmi-da.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 ARM Ltd.
-+ */
+@@ -5,6 +5,8 @@
+ 
+ #include <linux/pci.h>
+ #include <linux/pci-ecam.h>
++#include <linux/pci-doe.h>
++#include <linux/delay.h>
+ #include <asm/rmi_cmds.h>
+ 
+ #include "rmi-da.h"
+@@ -139,3 +141,274 @@ int pdev_create(struct pci_dev *pci_dev)
+ 		free_page((unsigned long)rmm_pdev);
+ 	return ret;
+ }
 +
-+#include <linux/pci.h>
-+#include <linux/pci-ecam.h>
-+#include <asm/rmi_cmds.h>
-+
-+#include "rmi-da.h"
-+
-+static int pci_ide_aassoc_register_to_pdev_addr(struct rmi_pdev_addr_range *pdev_addr,
-+						unsigned int naddr, struct pci_ide_partner *partner)
++static int doe_send_req_resp(struct pci_tsm *tsm)
 +{
-+	pdev_addr[0].base = partner->mem_assoc.start;
-+	pdev_addr[0].top  = partner->mem_assoc.end + 1;
-+	naddr--;
++	int ret, data_obj_type;
++	struct cca_host_comm_data *comm_data = to_cca_comm_data(tsm->pdev);
++	struct rmi_dev_comm_exit *io_exit = &comm_data->io_params->exit;
++	u8 protocol = io_exit->protocol;
 +
-+	if (!naddr)
-+		return 1;
++	if (protocol == RMI_PROTOCOL_SPDM)
++		data_obj_type = PCI_DOE_FEATURE_CMA;
++	else if (protocol == RMI_PROTOCOL_SECURE_SPDM)
++		data_obj_type = PCI_DOE_FEATURE_SSESSION;
++	else
++		return -EINVAL;
 +
-+	pdev_addr[1].base = partner->pref_assoc.start;
-+	pdev_addr[1].top  = partner->pref_assoc.end + 1;
++	/* delay the send */
++	if (io_exit->req_delay)
++		fsleep(io_exit->req_delay);
 +
-+	return 2;
++	ret = pci_tsm_doe_transfer(tsm->dsm_dev, data_obj_type,
++				   comm_data->req_buff, io_exit->req_len,
++				   comm_data->rsp_buff, PAGE_SIZE);
++	return ret;
 +}
 +
-+static void free_aux_pages(int cnt, void *aux[])
++static inline bool pending_dev_communicate(struct rmi_dev_comm_exit *io_exit)
++{
++	bool pending = io_exit->flags & (RMI_DEV_COMM_EXIT_CACHE_REQ |
++					 RMI_DEV_COMM_EXIT_CACHE_RSP |
++					 RMI_DEV_COMM_EXIT_SEND |
++					 RMI_DEV_COMM_EXIT_WAIT |
++					 RMI_DEV_COMM_EXIT_MULTI);
++	return pending;
++}
++
++static int ___do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm)
++{
++	int ret, nbytes, cp_len;
++	struct cache_object **cache_objp, *cache_obj;
++	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
++	struct cca_host_comm_data *comm_data = to_cca_comm_data(tsm->pdev);
++	struct rmi_dev_comm_enter *io_enter = &comm_data->io_params->enter;
++	struct rmi_dev_comm_exit *io_exit = &comm_data->io_params->exit;
++
++redo_communicate:
++
++	if (type == PDEV_COMMUNICATE)
++		ret = rmi_pdev_communicate(virt_to_phys(pf0_dsc->rmm_pdev),
++					   virt_to_phys(comm_data->io_params));
++	else
++		ret = RMI_ERROR_INPUT;
++	if (ret != RMI_SUCCESS) {
++		if (ret == RMI_BUSY)
++			return -EBUSY;
++		return -ENXIO;
++	}
++
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_REQ ||
++	    io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_RSP) {
++
++		switch (io_exit->cache_obj_id) {
++		case RMI_DEV_VCA:
++			cache_objp = &pf0_dsc->vca;
++			break;
++		case RMI_DEV_CERTIFICATE:
++			cache_objp = &pf0_dsc->cert_chain.cache;
++			break;
++		default:
++			return -EINVAL;
++		}
++		cache_obj = *cache_objp;
++	}
++
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_REQ)
++		cp_len = io_exit->req_cache_len;
++	else
++		cp_len = io_exit->rsp_cache_len;
++
++	/* response and request len should be <= SZ_4k */
++	if (cp_len > CACHE_CHUNK_SIZE)
++		return -EINVAL;
++
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_REQ ||
++	    io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_RSP) {
++		int cache_remaining;
++		struct cache_object *new_obj;
++
++		/* new allocation */
++		if (!cache_obj) {
++			cache_obj = kvmalloc(struct_size(cache_obj, buf, CACHE_CHUNK_SIZE),
++					     GFP_KERNEL);
++			if (!cache_obj)
++				return -ENOMEM;
++
++			cache_obj->size = CACHE_CHUNK_SIZE;
++			cache_obj->offset = 0;
++			*cache_objp = cache_obj;
++		}
++
++		cache_remaining = cache_obj->size - cache_obj->offset;
++		if (cp_len > cache_remaining) {
++
++			if (cache_obj->size + CACHE_CHUNK_SIZE > MAX_CACHE_OBJ_SIZE)
++				return -EINVAL;
++
++			new_obj = kvmalloc(struct_size(cache_obj, buf,
++						       cache_obj->size + CACHE_CHUNK_SIZE),
++					   GFP_KERNEL);
++			if (!new_obj)
++				return -ENOMEM;
++			memcpy(new_obj, cache_obj, struct_size(cache_obj, buf, cache_obj->size));
++			new_obj->size = cache_obj->size + CACHE_CHUNK_SIZE;
++			*cache_objp = new_obj;
++			kvfree(cache_obj);
++		}
++
++		/* cache object can change above. */
++		cache_obj = *cache_objp;
++	}
++
++
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_REQ) {
++		memcpy(cache_obj->buf + cache_obj->offset,
++		       (comm_data->req_buff + io_exit->req_cache_offset), io_exit->req_cache_len);
++		cache_obj->offset += io_exit->req_cache_len;
++	}
++
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_CACHE_RSP) {
++		memcpy(cache_obj->buf + cache_obj->offset,
++		       (comm_data->rsp_buff + io_exit->rsp_cache_offset), io_exit->rsp_cache_len);
++		cache_obj->offset += io_exit->rsp_cache_len;
++	}
++
++	/*
++	 * wait for last packet request from RMM.
++	 * We should not find this because our device communication is synchronous
++	 */
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_WAIT)
++		return -ENXIO;
++
++	/* next packet to send */
++	if (io_exit->flags & RMI_DEV_COMM_EXIT_SEND) {
++		nbytes = doe_send_req_resp(tsm);
++		if (nbytes < 0) {
++			/* report error back to RMM */
++			io_enter->status = RMI_DEV_COMM_ERROR;
++		} else {
++			/* send response back to RMM */
++			io_enter->resp_len = nbytes;
++			io_enter->status = RMI_DEV_COMM_RESPONSE;
++		}
++	} else {
++		/* no data transmitted => no data received */
++		io_enter->resp_len = 0;
++		io_enter->status = RMI_DEV_COMM_NONE;
++	}
++
++	if (pending_dev_communicate(io_exit))
++		goto redo_communicate;
++
++	return 0;
++}
++
++static int __do_dev_communicate(enum dev_comm_type type,
++				struct pci_tsm *tsm, unsigned long error_state)
 +{
 +	int ret;
++	int state;
++	struct rmi_dev_comm_enter *io_enter;
++	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
 +
-+	while (cnt--) {
-+		ret = rmi_granule_undelegate(virt_to_phys(aux[cnt]));
-+		if (!ret)
-+			free_page((unsigned long)aux[cnt]);
++	io_enter = &pf0_dsc->comm_data.io_params->enter;
++	io_enter->resp_len = 0;
++	io_enter->status = RMI_DEV_COMM_NONE;
++
++	ret = ___do_dev_communicate(type, tsm);
++	if (ret) {
++		if (type == PDEV_COMMUNICATE)
++			rmi_pdev_abort(virt_to_phys(pf0_dsc->rmm_pdev));
++
++		state = error_state;
++	} else {
++		/*
++		 * Some device communication error will transition the
++		 * device to error state. Report that.
++		 */
++		if (type == PDEV_COMMUNICATE)
++			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
++						 (enum rmi_pdev_state *)&state);
++		if (ret)
++			state = error_state;
 +	}
++
++	if (state == error_state)
++		pci_err(tsm->pdev, "device communication error\n");
++
++	return state;
 +}
 +
-+static int init_pdev_params(struct pci_dev *pdev, struct rmi_pdev_params *params)
++static int do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm,
++			      unsigned long target_state,
++			      unsigned long error_state)
 +{
-+	int rid, ret, i;
-+	phys_addr_t aux_phys;
-+	struct pci_config_window *cfg = pdev->bus->sysdata;
++	int state;
++
++	do {
++		state = __do_dev_communicate(type, tsm, error_state);
++
++		if (state == target_state || state == error_state)
++			break;
++	} while (1);
++
++	return state;
++}
++
++static int do_pdev_communicate(struct pci_tsm *tsm, enum rmi_pdev_state target_state)
++{
++	return do_dev_communicate(PDEV_COMMUNICATE, tsm, target_state, RMI_PDEV_ERROR);
++}
++
++void pdev_communicate_work(struct work_struct *work)
++{
++	unsigned long state;
++	struct pci_tsm *tsm;
++	struct dev_comm_work *setup_work;
++	struct cca_host_pf0_dsc *pf0_dsc;
++
++	setup_work = container_of(work, struct dev_comm_work, work);
++	tsm = setup_work->tsm;
++	pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
++
++	guard(mutex)(&pf0_dsc->object_lock);
++	state = do_pdev_communicate(tsm, setup_work->target_state);
++	WARN_ON(state != setup_work->target_state);
++
++	complete(&setup_work->complete);
++}
++
++static int submit_pdev_comm_work(struct pci_dev *pdev, int target_state)
++{
++	int ret;
++	enum rmi_pdev_state state;
++	struct dev_comm_work comm_work;
 +	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(pdev);
-+	struct pci_ide *ide = pf0_dsc->sel_stream;
++	struct cca_host_comm_data *comm_data = to_cca_comm_data(pdev);
 +
-+	/* assign the ep device with RMM */
-+	rid = pci_dev_id(pdev);
-+	params->pdev_id = rid;
-+	/* slot number for certificate chain */
-+	params->cert_id = 0;
-+	/* io coherent spdm/ide and non p2p */
-+	params->flags = RMI_PDEV_FLAGS_SPDM | RMI_PDEV_FLAGS_NCOH_IDE |
-+			RMI_PDEV_FLAGS_NCOH_ADDR;
-+	params->ncoh_ide_sid = ide->stream_id;
-+	params->hash_algo = RMI_HASH_SHA_256;
-+	/* use the rid and MMIO resources of the end point pdev */
-+	params->rid_base = rid;
-+	params->rid_top = params->rid_base + 1;
-+	params->ecam_addr = cfg->res.start;
-+	params->root_id = pci_dev_id(pcie_find_root_port(pdev));
++	INIT_WORK_ONSTACK(&comm_work.work, pdev_communicate_work);
++	init_completion(&comm_work.complete);
++	comm_work.tsm = pdev->tsm;
++	comm_work.target_state = target_state;
 +
-+	params->ncoh_num_addr_range = pci_ide_aassoc_register_to_pdev_addr(params->ncoh_addr_range,
-+								ARRAY_SIZE(params->ncoh_addr_range),
-+								&ide->partner[PCI_IDE_RP]);
++	queue_work(comm_data->work_queue, &comm_work.work);
 +
-+	rmi_pdev_aux_count(params->flags, &params->num_aux);
-+	pf0_dsc->num_aux = params->num_aux;
-+	for (i = 0; i < params->num_aux; i++) {
-+		void *aux =  (void *)__get_free_page(GFP_KERNEL);
++	wait_for_completion(&comm_work.complete);
++	destroy_work_on_stack(&comm_work.work);
 +
-+		if (!aux) {
-+			ret = -ENOMEM;
-+			goto err_free_aux;
-+		}
++	/* check if we reached target state */
++	ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev), &state);
++	if (ret)
++		return ret;
 +
-+		aux_phys = virt_to_phys(aux);
-+		if (rmi_granule_delegate(aux_phys)) {
-+			ret = -ENXIO;
-+			free_page((unsigned long)aux);
-+			goto err_free_aux;
-+		}
-+		params->aux_granule[i] = aux_phys;
-+		pf0_dsc->aux[i] = aux;
-+	}
++	if (state != target_state)
++		/* no specific error for this */
++		return -1;
 +	return 0;
-+
-+err_free_aux:
-+	free_aux_pages(i, pf0_dsc->aux);
-+	return ret;
 +}
 +
-+int pdev_create(struct pci_dev *pci_dev)
++int pdev_ide_setup(struct pci_dev *pdev)
 +{
-+	int ret;
-+	void *rmm_pdev;
-+	bool should_free = true;
-+	phys_addr_t rmm_pdev_phys;
-+	struct rmi_pdev_params *params;
-+	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(pci_dev);
-+
-+	rmm_pdev = (void *)get_zeroed_page(GFP_KERNEL);
-+	if (!rmm_pdev)
-+		return -ENOMEM;
-+
-+	rmm_pdev_phys = virt_to_phys(rmm_pdev);
-+	if (rmi_granule_delegate(rmm_pdev_phys)) {
-+		ret = -ENXIO;
-+		goto err_granule_delegate;
-+	}
-+
-+	params = (struct rmi_pdev_params *)get_zeroed_page(GFP_KERNEL);
-+	if (!params) {
-+		ret = -ENOMEM;
-+		goto err_param_alloc;
-+	}
-+
-+	ret = init_pdev_params(pci_dev, params);
-+	if (ret)
-+		goto err_init_pdev_params;
-+
-+	ret = rmi_pdev_create(rmm_pdev_phys, virt_to_phys(params));
-+	if (ret)
-+		goto err_pdev_create;
-+
-+	pf0_dsc->rmm_pdev = rmm_pdev;
-+	free_page((unsigned long)params);
-+	return 0;
-+
-+err_pdev_create:
-+	free_aux_pages(pf0_dsc->num_aux, pf0_dsc->aux);
-+err_init_pdev_params:
-+	free_page((unsigned long)params);
-+err_param_alloc:
-+	if (rmi_granule_undelegate(rmm_pdev_phys))
-+		should_free = false;
-+err_granule_delegate:
-+	if (should_free)
-+		free_page((unsigned long)rmm_pdev);
-+	return ret;
++	return submit_pdev_comm_work(pdev, RMI_PDEV_NEEDS_KEY);
 +}
 diff --git a/drivers/virt/coco/arm-cca-host/rmi-da.h b/drivers/virt/coco/arm-cca-host/rmi-da.h
-index 01dfb42cd39e..6764bf8d98ce 100644
+index 6764bf8d98ce..1d513e0b74d9 100644
 --- a/drivers/virt/coco/arm-cca-host/rmi-da.h
 +++ b/drivers/virt/coco/arm-cca-host/rmi-da.h
-@@ -15,6 +15,10 @@
+@@ -9,22 +9,68 @@
+ #include <linux/pci.h>
+ #include <linux/pci-ide.h>
+ #include <linux/pci-tsm.h>
++#include <linux/sizes.h>
+ #include <asm/rmi_smc.h>
+ 
++#define MAX_CACHE_OBJ_SIZE	SZ_16M
++#define CACHE_CHUNK_SIZE	SZ_4K
++struct cache_object {
++	int size;
++	int offset;
++	u8 buf[] __counted_by(size);
++};
++
++struct dev_comm_work {
++	struct pci_tsm *tsm;
++	int target_state;
++	struct work_struct work;
++	struct completion complete;
++};
++
++struct cca_host_comm_data {
++	void *rsp_buff;
++	void *req_buff;
++	struct rmi_dev_comm_data *io_params;
++	/*
++	 * Only one device communication request can be active at
++	 * a time. This limitation comes from using the DOE mailbox
++	 * at the pdev level. Requests such as get_measurements may
++	 * span multiple mailbox messages, which must not be
++	 * interleaved with other SPDM requests.
++	 */
++	struct workqueue_struct *work_queue;
++};
++
+ /* dsc = device security context */
  struct cca_host_pf0_dsc {
++	struct cca_host_comm_data comm_data;
  	struct pci_tsm_pf0 pci;
  	struct pci_ide *sel_stream;
+ 
+ 	void *rmm_pdev;
+ 	int num_aux;
+ 	void *aux[MAX_PDEV_AUX_GRANULES];
 +
-+	void *rmm_pdev;
-+	int num_aux;
-+	void *aux[MAX_PDEV_AUX_GRANULES];
++	struct mutex object_lock;
++	struct {
++		struct cache_object *cache;
++
++		void *public_key;
++		size_t public_key_size;
++
++		bool valid;
++	} cert_chain;
++	struct cache_object *vca;
  };
  
  struct cca_host_fn_dsc {
-@@ -38,4 +42,5 @@ static inline struct cca_host_fn_dsc *to_cca_fn_dsc(struct pci_dev *pdev)
+ 	struct pci_tsm pci;
+ };
+ 
++enum dev_comm_type {
++	PDEV_COMMUNICATE = 0x1,
++};
++
+ static inline struct cca_host_pf0_dsc *to_cca_pf0_dsc(struct pci_dev *pdev)
+ {
+ 	struct pci_tsm *tsm = pdev->tsm;
+@@ -42,5 +88,22 @@ static inline struct cca_host_fn_dsc *to_cca_fn_dsc(struct pci_dev *pdev)
  	return container_of(tsm, struct cca_host_fn_dsc, pci);
  }
  
-+int pdev_create(struct pci_dev *pdev);
++static inline struct cca_host_comm_data *to_cca_comm_data(struct pci_dev *pdev)
++{
++	struct cca_host_pf0_dsc *pf0_dsc;
++
++	pf0_dsc = to_cca_pf0_dsc(pdev);
++	if (pf0_dsc)
++		return &pf0_dsc->comm_data;
++
++	pf0_dsc = to_cca_pf0_dsc(pdev->tsm->dsm_dev);
++	if (pf0_dsc)
++		return &pf0_dsc->comm_data;
++
++	return NULL;
++}
++
+ int pdev_create(struct pci_dev *pdev);
++void pdev_communicate_work(struct work_struct *work);
++int pdev_ide_setup(struct pci_dev *pdev);
  #endif
 -- 
 2.43.0
