@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-39395-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39396-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB1EC0CD53
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 11:01:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA3D6C0CCFE
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 10:59:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DFD764F75AD
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 09:58:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8A98188C493
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 09:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D212FB99E;
-	Mon, 27 Oct 2025 09:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFDFE2F744A;
+	Mon, 27 Oct 2025 09:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAYt0soL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0Os/H7j"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B892FB967;
-	Mon, 27 Oct 2025 09:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FE12F6935;
+	Mon, 27 Oct 2025 09:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761559028; cv=none; b=Pl8e5aKmrnc2zW8V0QNo1ebIw7Eicea6NfEy/at/9RovDxMkiZkTXqB7TC4oNgRncdGzwwtTMTQ2Aiwh67EGS12pm3R9/fGAi1bdQ4U6PP5gMGwQPkhDizgzFpACvfLidGJHNqnzQrJasrD0udgJzRYqmssBVy8AtQXbySONHeA=
+	t=1761559033; cv=none; b=Yfg5F4+/G0NPZmdQ3iqoTkGG9RF+HgKiPi8GcoQYzJI4i8V/+BjKGakhdcu3RrIb2VTs4NUSfJp6/BIZFS80CtHou85oBsUhcCbEvk3uKzOOLBmgmewS2w+TpWeFfAR3dlA201f70nmJRYkknszceGEqGDE91+uyLyKCEbGZDL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761559028; c=relaxed/simple;
-	bh=B7+ugvWyCLD3rludeB5A8gujO3Mf6Ml2lNniTy9+Wsw=;
+	s=arc-20240116; t=1761559033; c=relaxed/simple;
+	bh=+QJQxLvf5/Nw2WwKAhM43PutwuEiTS23ygXc8gN9Crc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j16MABK0qgeNUnBEw83GIcdeJRI2L5bO2vZyvawMhp6/b0xIBfHDIttQpt3XNLDmiVJ8vyex4d6Mx6L5PCbMdExVbkCk6vkFAU7nZA/8DqGun4bqKRP/dX7sxhRTDcpbdTAzjOmC51gnIlOTIZb0VYAfqysqDHUX+eWtfhgNbtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAYt0soL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BDE2C4CEF1;
-	Mon, 27 Oct 2025 09:57:02 +0000 (UTC)
+	 MIME-Version; b=rvhoB7y6PwfJRh9lhZOX7kpDWAOEhikiz+p020WulbmPS0r32Ta/MGWSKZxRRNrswXbW9kcYpFdNFXUmq81Uhb+BGqHvdlotW4C+ILED3AYOA8clPbfjPTeimcbjf4+SqI5T6BnT0RRu4O+6IZPUKDM2SRkcOgVtA80Su6xIyTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0Os/H7j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FB02C4CEFF;
+	Mon, 27 Oct 2025 09:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761559027;
-	bh=B7+ugvWyCLD3rludeB5A8gujO3Mf6Ml2lNniTy9+Wsw=;
+	s=k20201202; t=1761559033;
+	bh=+QJQxLvf5/Nw2WwKAhM43PutwuEiTS23ygXc8gN9Crc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LAYt0soLSpVtRM2lX3hz4geVUjRoS1cF4K/bdu9SaNR/p4/juwLCKgXq0Tr5LmdfZ
-	 XSww+3UfDf08kLx6JNiLdLTOwwpO7QRkKXsC1rTz6p1VVz3ijz5vskxYh6IRSbF5sL
-	 oBv8I1oA+InDwwe3TtUXEe2tvEXMFOjdSy9M6JGgQJ202k56Cgjo50+cvZ12vOuznm
-	 oSacrlGND1g7BYFKJ/xVjJ5O7b8Aus+XC817Wizb3oVP2PV06aXhiLGDkSHzmnfK12
-	 m4/f4u3wx5J+yl0zfhU/BMdlSG6+urtT650heoPMkCAeFdcvhfvVq9DtHm91uMzxpy
-	 XLFImIQc6QuVg==
+	b=A0Os/H7j8zaFaQWVYnDkr4ulrgBuxWXxJ6Cgfpd6XKuKi4FMcrMqWwYteaIV6w2Az
+	 KwBdKAHplsA/Jr6QUbgktRLb2SJYONtBFqUNzFkyVbOoK5+UL5VZg/6+nV1upo+yWm
+	 xBZ2VCwsv23tf90eJlDD14ibPq3FFHYKU4mtfvyfUQx6+OsmT9lfS+rQ7c8M+fsanR
+	 3GineL9o6r9n2VI6wie01IFNyZ1gh5gnwawl/aGyJKqvKBO6vdU3ZEMYgt6sNgM2qE
+	 z8snAyYKZzOQMfie3RKa7BzJ89n7PD7Vvmap6wCv7CB1FSgYLflrSYprcKmpz/vg5s
+	 zaGYEvYTEb/Aw==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: linux-coco@lists.linux.dev,
 	kvmarm@lists.linux.dev
@@ -61,9 +61,9 @@ Cc: linux-pci@vger.kernel.org,
 	Will Deacon <will@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Subject: [PATCH RESEND v2 07/12] coco: host: arm64: Add helper to stop and tear down an RMM pdev
-Date: Mon, 27 Oct 2025 15:25:57 +0530
-Message-ID: <20251027095602.1154418-8-aneesh.kumar@kernel.org>
+Subject: [PATCH RESEND v2 08/12] coco: host: arm64: Instantiate RMM pdev during device connect
+Date: Mon, 27 Oct 2025 15:25:58 +0530
+Message-ID: <20251027095602.1154418-9-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
 References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
@@ -75,111 +75,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-- describe the RMI_PDEV_STOP/RMI_PDEV_DESTROY SMC IDs and provide
-  wrappers in rmi_cmds.h
-- implement pdev_stop_and_destroy() so the host driver stops the pdev,
-  waits for it to reach RMI_PDEV_STOPPED, destroys it, frees auxiliary
-  granules, and drops the delegated page
+An RMM pdev object represents a communication channel between the RMM
+and a physical device, for example a PCIe device. With the required
+helpers now in place, update the connect callback to create an RMM pdev
+object.
 
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- arch/arm64/include/asm/rmi_cmds.h       | 18 +++++++++++++++
- arch/arm64/include/asm/rmi_smc.h        |  2 ++
- drivers/virt/coco/arm-cca-host/rmi-da.c | 30 +++++++++++++++++++++++++
- drivers/virt/coco/arm-cca-host/rmi-da.h |  1 +
- 4 files changed, 51 insertions(+)
+ drivers/virt/coco/arm-cca-host/arm-cca.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/rmi_cmds.h b/arch/arm64/include/asm/rmi_cmds.h
-index b86bf15afcda..f10a0dcaa308 100644
---- a/arch/arm64/include/asm/rmi_cmds.h
-+++ b/arch/arm64/include/asm/rmi_cmds.h
-@@ -556,4 +556,22 @@ static inline unsigned long rmi_pdev_abort(unsigned long pdev_phys)
- 	return res.a0;
+diff --git a/drivers/virt/coco/arm-cca-host/arm-cca.c b/drivers/virt/coco/arm-cca-host/arm-cca.c
+index e79f05fee516..8eaf8749e59d 100644
+--- a/drivers/virt/coco/arm-cca-host/arm-cca.c
++++ b/drivers/virt/coco/arm-cca-host/arm-cca.c
+@@ -71,8 +71,8 @@ static void cca_tsm_pci_remove(struct pci_tsm *tsm)
+ 	}
  }
  
-+static inline unsigned long rmi_pdev_stop(unsigned long pdev_phys)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_1_1_invoke(SMC_RMI_PDEV_STOP, pdev_phys, &res);
-+
-+	return res.a0;
-+}
-+
-+static inline unsigned long rmi_pdev_destroy(unsigned long pdev_phys)
-+{
-+	struct arm_smccc_res res;
-+
-+	arm_smccc_1_1_invoke(SMC_RMI_PDEV_DESTROY, pdev_phys, &res);
-+
-+	return res.a0;
-+}
-+
- #endif /* __ASM_RMI_CMDS_H */
-diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
-index 53e46e24c921..6eb6f7e4b77f 100644
---- a/arch/arm64/include/asm/rmi_smc.h
-+++ b/arch/arm64/include/asm/rmi_smc.h
-@@ -50,7 +50,9 @@
- #define SMC_RMI_PDEV_ABORT		SMC_RMI_CALL(0x0174)
- #define SMC_RMI_PDEV_COMMUNICATE        SMC_RMI_CALL(0x0175)
- #define SMC_RMI_PDEV_CREATE             SMC_RMI_CALL(0x0176)
-+#define SMC_RMI_PDEV_DESTROY		SMC_RMI_CALL(0x0177)
- #define SMC_RMI_PDEV_GET_STATE		SMC_RMI_CALL(0x0178)
-+#define SMC_RMI_PDEV_STOP		SMC_RMI_CALL(0x017c)
- 
- #define RMI_ABI_MAJOR_VERSION	1
- #define RMI_ABI_MINOR_VERSION	0
-diff --git a/drivers/virt/coco/arm-cca-host/rmi-da.c b/drivers/virt/coco/arm-cca-host/rmi-da.c
-index 592abe0dd252..644609618a7a 100644
---- a/drivers/virt/coco/arm-cca-host/rmi-da.c
-+++ b/drivers/virt/coco/arm-cca-host/rmi-da.c
-@@ -412,3 +412,33 @@ int pdev_ide_setup(struct pci_dev *pdev)
+-static __maybe_unused int init_dev_communication_buffers(struct pci_dev *pdev,
+-							 struct cca_host_comm_data *comm_data)
++static int init_dev_communication_buffers(struct pci_dev *pdev,
++					  struct cca_host_comm_data *comm_data)
  {
- 	return submit_pdev_comm_work(pdev, RMI_PDEV_NEEDS_KEY);
- }
-+
-+void pdev_stop_and_destroy(struct pci_dev *pdev)
-+{
-+	unsigned long ret;
-+	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(pdev);
-+	phys_addr_t rmm_pdev_phys = virt_to_phys(pf0_dsc->rmm_pdev);
-+
-+	ret = rmi_pdev_stop(rmm_pdev_phys);
-+	if (WARN_ON(ret != RMI_SUCCESS))
-+		return;
-+
-+	submit_pdev_comm_work(pdev, RMI_PDEV_STOPPED);
-+
-+	ret = rmi_pdev_destroy(rmm_pdev_phys);
-+	if (WARN_ON(ret != RMI_SUCCESS))
-+		return;
-+
-+	kfree(pf0_dsc->cert_chain.public_key);
-+	kvfree(pf0_dsc->cert_chain.cache);
-+	kvfree(pf0_dsc->vca);
-+	pf0_dsc->cert_chain.cache = NULL;
-+	pf0_dsc->vca = NULL;
-+
-+	/* Free the aux granules */
-+	free_aux_pages(pf0_dsc->num_aux, pf0_dsc->aux);
-+	pf0_dsc->num_aux = 0;
-+	if (!rmi_granule_undelegate(rmm_pdev_phys))
-+		free_page((unsigned long)pf0_dsc->rmm_pdev);
-+	pf0_dsc->rmm_pdev = NULL;
-+}
-diff --git a/drivers/virt/coco/arm-cca-host/rmi-da.h b/drivers/virt/coco/arm-cca-host/rmi-da.h
-index 1d513e0b74d9..e556ccecc1cb 100644
---- a/drivers/virt/coco/arm-cca-host/rmi-da.h
-+++ b/drivers/virt/coco/arm-cca-host/rmi-da.h
-@@ -104,6 +104,7 @@ static inline struct cca_host_comm_data *to_cca_comm_data(struct pci_dev *pdev)
- }
+ 	int ret = -ENOMEM;
  
- int pdev_create(struct pci_dev *pdev);
-+void pdev_stop_and_destroy(struct pci_dev *pdev);
- void pdev_communicate_work(struct work_struct *work);
- int pdev_ide_setup(struct pci_dev *pdev);
- #endif
+@@ -160,6 +160,16 @@ static int cca_tsm_connect(struct pci_dev *pdev)
+ 	if (rc)
+ 		goto err_tsm;
+ 
++	rc = init_dev_communication_buffers(pdev, &pf0_dsc->comm_data);
++	if (rc)
++		goto err_comm_buff;
++	rc = pdev_create(pdev);
++	if (rc)
++		goto err_pdev_create;
++
++	rc = pdev_ide_setup(pdev);
++	if (rc)
++		goto err_ide_setup;
+ 	/*
+ 	 * Once ide is setup, enable the stream at the endpoint
+ 	 * Root port will be done by RMM
+@@ -167,6 +177,12 @@ static int cca_tsm_connect(struct pci_dev *pdev)
+ 	pci_ide_stream_enable(pdev, ide);
+ 	return 0;
+ 
++err_ide_setup:
++	pdev_stop_and_destroy(pdev);
++err_pdev_create:
++	free_dev_communication_buffers(&pf0_dsc->comm_data);
++err_comm_buff:
++	tsm_ide_stream_unregister(ide);
+ err_tsm:
+ 	pci_ide_stream_teardown(rp, ide);
+ 	pci_ide_stream_teardown(pdev, ide);
+@@ -193,6 +209,9 @@ static void cca_tsm_disconnect(struct pci_dev *pdev)
+ 	stream_id = ide->stream_id;
+ 	pf0_dsc->sel_stream = NULL;
+ 
++	pdev_stop_and_destroy(pdev);
++	free_dev_communication_buffers(&pf0_dsc->comm_data);
++
+ 	pci_ide_stream_release(ide);
+ 	clear_bit(stream_id, cca_stream_ids);
+ }
 -- 
 2.43.0
 
