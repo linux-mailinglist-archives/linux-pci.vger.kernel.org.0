@@ -1,85 +1,120 @@
-Return-Path: <linux-pci+bounces-39433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37344C0E1A0
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 14:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BAE4FC0E1DC
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 14:41:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D451F34E249
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:39:38 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 665D734E362
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B363C3019C8;
-	Mon, 27 Oct 2025 13:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152BD301011;
+	Mon, 27 Oct 2025 13:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7rTHVOu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T/jNZQi3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABE522D4DC;
-	Mon, 27 Oct 2025 13:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F4C212562;
+	Mon, 27 Oct 2025 13:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761572288; cv=none; b=QABNZmDfKLrSf59wmOImbC/wiDNaMKFRnhITInSaer+5UDR2zcOEluN6VwJyfi4hOHt+y32KVcA3wYru7nTR9jnP4LBRcEZkhtG4blTYc+C6SYiQ7Tw7O6ffsWQpETOU7EXmpcz5HP8NcW0Gd4Ug28lHL/WGCV1EyoTWiYpcVik=
+	t=1761572386; cv=none; b=JtvOLvo8fr/xfhNhEAmQAXvEYZL2ABb3lbe32ya0wGFS8+Rln3KYrCNoCMEjOOZy6OeGeQ8lXZFpPGlzUFQEh9q4JdUOhVZLF4ShA36CI3U2LwI1r8TesVv9SMZ86AnezZos11US1fy8mPxi0+qihQOctMorPStAS/17UAFX8i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761572288; c=relaxed/simple;
-	bh=gqvuTK2airj61pCPi99n7PP0OTEYVHFTeCG5nZFFdzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgKraQE3nQAzntcW4Lw6I10YBpg/HiZpLqkQLLzQFYT7uce71ghoDCZ4sC2xGh8gPhoSAYbNGgjlCLDLWLcV0rSY4vWI7v8U0xE9qdEDCFOtdEn/lM2dHogsK0hoKtqn4j7a/fib3UkZ5SNyNivh9shKvr2YvhLOwxv4Ypb+kvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7rTHVOu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 099C1C4CEF1;
-	Mon, 27 Oct 2025 13:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761572287;
-	bh=gqvuTK2airj61pCPi99n7PP0OTEYVHFTeCG5nZFFdzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n7rTHVOu0MVumBdZo9ViIt/dHyGzHfHHi7pdbUP3eF9Ubg5CmW/X3t9S6LGI3OYtB
-	 UZoPhdl+Rj1NpD2KiIAbMnTJCiju0ZtQDG7RSZx2uPhTZ0M0+zfHYTOXTFE691Cufb
-	 mMcsmB21miV4uJmANZCj/Gm0GLo1wz3rTUBQw9HA+DSCA7zZ1N3dLiKKXYBL1f+iww
-	 Yuu3bcc7JGpNmd3+TyrXQuqGdmIgqlKTs/lovY3DiqLlQnY9sqJO+qZcB5bBNDh+ZN
-	 qFKX4DKjEHU4BZosKAnG/SMyoQV9AVb86ozyRx2HfeT3kX9GG6JYt1hq/hlogpm7p2
-	 Ye2JjJC7I1LZw==
-Date: Mon, 27 Oct 2025 08:38:04 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Randolph Lin <randolph@andestech.com>
-Cc: kwilczynski@kernel.org, aou@eecs.berkeley.edu,
-	thippeswamy.havalige@amd.com, jingoohan1@gmail.com,
-	palmer@dabbelt.com, linux-kernel@vger.kernel.org,
-	krzk+dt@kernel.org, randolph.sklin@gmail.com, namcao@linutronix.de,
-	tim609@andestech.com, linux-riscv@lists.infradead.org,
-	alex@ghiti.fr, bhelgaas@google.com, lpieralisi@kernel.org,
-	shradha.t@samsung.com, conor+dt@kernel.org, ben717@andestech.com,
-	devicetree@vger.kernel.org, inochiama@gmail.com,
-	linux-pci@vger.kernel.org, mani@kernel.org,
-	paul.walmsley@sifive.com, pjw@kernel.org
-Subject: Re: [PATCH v9 1/4] dt-bindings: PCI: Add Andes QiLai PCIe support
-Message-ID: <176157228191.240954.997388702686594192.robh@kernel.org>
-References: <20251023120933.2427946-1-randolph@andestech.com>
- <20251023120933.2427946-2-randolph@andestech.com>
+	s=arc-20240116; t=1761572386; c=relaxed/simple;
+	bh=F88Mqi1IYE4ZB8FjWzZRJOZCliQhSjDt6+Vbvnc0pWc=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=So7zP+2tukfRgjmmXMbi7M856uwFYoTj8eOkZnSWS2ghO5cWKahxXQ/9I2RPWfnNwcfcWXB6t4qy33zU0g3/SspzEC8aNBEInaypApnHl/WeGscTv34esbpWQUygC5SXkwUsRoLyA5HzrQWDaAipB8hYCFHUVgZya66G+OkCXE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=T/jNZQi3; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 59RDdGXM1290306;
+	Mon, 27 Oct 2025 08:39:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1761572356;
+	bh=F88Mqi1IYE4ZB8FjWzZRJOZCliQhSjDt6+Vbvnc0pWc=;
+	h=Subject:From:To:CC:Date:In-Reply-To:References;
+	b=T/jNZQi3mz7QMv2F/V60x7xSZb6IaRnpxcYW0MkCdJxOIAdTGJdl3aAcdHvAXm7XF
+	 QjeJAhFl+1LoJ7cz/bCmKb/diHLTLEL+XIDC3cD/u6YHfRkktNa8CnhSzP2dpwss/B
+	 3gN8CwXFE8P5s/7ULIsvUF/1ry5D7F5LY4QvauKk=
+Received: from DFLE200.ent.ti.com (dfle200.ent.ti.com [10.64.6.58])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 59RDdG3K1265503
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 27 Oct 2025 08:39:16 -0500
+Received: from DFLE202.ent.ti.com (10.64.6.60) by DFLE200.ent.ti.com
+ (10.64.6.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 27 Oct
+ 2025 08:39:16 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE202.ent.ti.com
+ (10.64.6.60) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Mon, 27 Oct 2025 08:39:16 -0500
+Received: from [10.24.73.74] (uda0492258.dhcp.ti.com [10.24.73.74])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59RDdC6R727568;
+	Mon, 27 Oct 2025 08:39:13 -0500
+Message-ID: <c2a22a2b7fa709349c509b685f7c050957d3b5d3.camel@ti.com>
+Subject: Re: [PATCH v3 1/2] PCI: j721e: Use devm_clk_get_optional_enabled()
+ to get the clock
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Anand Moon <linux.amoon@gmail.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+	<kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        "open
+ list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-omap@vger.kernel.org>,
+        "open
+ list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-pci@vger.kernel.org>,
+        "moderated
+ list:PCI DRIVER FOR TI DRA7XX/J721E" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Markus Elfring
+	<Markus.Elfring@web.de>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Siddharth
+ Vadapalli <s-vadapalli@ti.com>
+Date: Mon, 27 Oct 2025 19:09:23 +0530
+In-Reply-To: <20251027090310.38999-2-linux.amoon@gmail.com>
+References: <20251027090310.38999-1-linux.amoon@gmail.com>
+	 <20251027090310.38999-2-linux.amoon@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023120933.2427946-2-randolph@andestech.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-On Thu, 23 Oct 2025 20:09:30 +0800, Randolph Lin wrote:
-> Add the Andes QiLai PCIe node, which includes 3 Root Complexes.
-> Only one example is required in the DTS bindings YAML file.
-> 
-> Signed-off-by: Randolph Lin <randolph@andestech.com>
+On Mon, 2025-10-27 at 14:33 +0530, Anand Moon wrote:
+> Use devm_clk_get_optional_enabled() helper instead of calling
+> devm_clk_get_optional() and then clk_prepare_enable(). It simplifies
+> the clk_prepare_enable() and clk_disable_unprepare() with proper error
+> handling and makes the code more compact.
+> The result of devm_clk_get_optional_enabled() is now assigned directly
+> to pcie->refclk. This removes a superfluous local clk variable,
+> improving code readability and compactness. The functionality
+> remains unchanged, but the code is now more streamlined.
+>=20
+> Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->  .../bindings/pci/andestech,qilai-pcie.yaml    | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
-> 
+> v3: Clock needs to be disabled on Suspend and enabled on Resume.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Thank you for updating the patch.
 
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+Regards,
+Siddharth.
 
