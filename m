@@ -1,126 +1,157 @@
-Return-Path: <linux-pci+bounces-39454-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39455-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D66C9C0F9A8
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 18:20:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E07C0F9C6
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 18:22:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E8EF426E66
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 17:17:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B05A5463CFA
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 17:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E772C08B1;
-	Mon, 27 Oct 2025 17:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC69A31618B;
+	Mon, 27 Oct 2025 17:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMSByuf1"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="S6bRuYh5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA4F533D6;
-	Mon, 27 Oct 2025 17:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761585417; cv=none; b=AAr+qKBeiA9kBGFAlDhrVN9Fb5LVQETg/CQCVYiW5ecN1zzLA+7+wFXMGxNs2BjtAKGNrCteTn9n6SiF+koAq7788VTRPQm1NyjGnmX/hDtKLXVc0lx/kXxeIBfknAVC4kdt2Aqo4tMxe2gm02nfEaCdLim6M3YYLVLT8WvXdFE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761585417; c=relaxed/simple;
-	bh=K1bFME1YwxBWeHwosnw8XIUjA72KfTmc5TM047ROWSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggriOsGNjndY1XgfkbJGp2JkO+WU1Z32BR7HdQFgDivWryHlFta60xFf3P9HP8WrVgxiYuYAw7LJ+JM/NYFdh5qHGlZaBLXAM//7+9yVOIrRsDArK4OLh9R6+K5xOPNxnakIRUS7wQzi/qMZIxwNsmx5MEPJ6gj6oPmQe33cRwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMSByuf1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CD2C4CEF1;
-	Mon, 27 Oct 2025 17:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761585417;
-	bh=K1bFME1YwxBWeHwosnw8XIUjA72KfTmc5TM047ROWSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DMSByuf1XXLf6Au6aUnYfG8bCLuACMGK+V/EGr2eAht+Ze7wXl3t+5PQgFt5rNvOA
-	 QcSEdmGF48Bc8LvQIXi35kcAzQmWAlDaQKyTNIJerMIco/ojAxMHIyePWfLgYKDUyv
-	 16cylK7lbdQemQb5e+rbyfSCU1IGPhEIAW6jV3D5ke868yQ4gNVNT02wETLIxTh803
-	 gfixUVu/j5iMM+UCcwQHF/TEvHaEU6k1QSXr+JZ+poh9xObE43MTugOy9ueeFV4/DO
-	 HrD+cmM4GtL7wiW3EUdHOqPjDDrUj+fI1VsAvH3zBjVa47AlL+d6ylQbx0cuSphZ+p
-	 fmaZO7/UmR5eA==
-Date: Mon, 27 Oct 2025 22:46:47 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>, Shuan He <heshuan@bytedance.com>
-Subject: Re: [PATCH] PCI/sysfs: enforce single creation of sysfs entry for
- pdev
-Message-ID: <nst6vubi5f4izjlxahspirg2agar5szmfczfknhiyzb36srfo7@uyzu4k52eoyt>
-References: <20251013223720.8157-1-ansuelsmth@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B123315A;
+	Mon, 27 Oct 2025 17:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761585505; cv=pass; b=fZeoqPjygxIRsoSpwt4cGTxZa7ptyUapLGdq6aIP8Esa2xwwlEIp7iLwjyCfQNrAbRegFbp9jn/NbrHw+cYwky0MceNY2wHmUShGhiE9fRGGhMnXzGs0Qta+zeW/GTmBXUbyfdHnlU/4sXTEqk0wJqz20FlkHyfQd7uSGWnyaJw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761585505; c=relaxed/simple;
+	bh=0j+sx1U/dtxtACHyjk6jN8uOJ9uo/XDr3w3aGWyKD8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tDXFscDB0aggK9KMVk6VaEV0NzTmVcqhspJIHImticx3usWtciBu0sQtmgNfR3JqIdl3jXqiPsuFzRMCYlcbmg+7AlBuVGSu6Z0Rc5WrBre+JolTF89jto7YGuU1caSGwHE9RkxITSEmnpFd9xZrUxj97VVLV5EoJLDErd0yYv4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=S6bRuYh5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761585485; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X1gBeOXii1Wsijnw7Xu6bo8M4CrnCviOuvVZYWbFXBr1aczrloVhMYFB+MikS7pjy2qbb60tvRhENSnwzDgH6J6P1fQkI7A25H+TFVYDrRRki8ysfvS8nl3ZLS0GtRPZ9jD9w6BXOqEhTtTBD3uD0wqNMUIkZauQN5j8Mgb+5ww=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761585485; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZNW4fieYkSA2lBxgemD0NgMNnHAiHnhoG3/C5j4275U=; 
+	b=UNU5V48pqwdNROdHla4ojkPzWnjIVdCJco+lukvORCdLcK0YkTQni+DxtavsNlNxkqw/knoWPPsYVNV0yUgaXBqmz9RG4N5rLNHE1XXMIRHPtHN0LxKLw1g/fdgVmgqnvwhXK55DgkvrNxLle/5qcJT6AYDX3gpwh4c8dJI8wVY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761585485;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=ZNW4fieYkSA2lBxgemD0NgMNnHAiHnhoG3/C5j4275U=;
+	b=S6bRuYh5DomXJIJWsJQZRBcZ07/nhdm8EK2gY1MDPYCkTD3dEQEs7p1JJmolgssh
+	xNj/Mepmd8VCF1afEJF9O2i/lRT3gfGy3mv5lkuJcHQzsTqYMuIWcYD154ZxDihIhPH
+	6wWRJWvxeNxcAuvgvUvncXRL/Clwhw+dKenajAdQ=
+Received: by mx.zohomail.com with SMTPS id 1761585483468132.07412147907223;
+	Mon, 27 Oct 2025 10:18:03 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+ Hans Zhang <18255117159@163.com>,
+ "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>,
+ "moderated list:ARM/Rockchip SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+Subject:
+ Re: [PATCH v1 1/2] PCI: dw-rockchip: Add remove callback for resource cleanup
+Date: Mon, 27 Oct 2025 18:17:58 +0100
+Message-ID: <14087628.uLZWGnKmhe@workhorse>
+In-Reply-To:
+ <CANAwSgTmOvOZ35=3XjhrKu2iPCMOU8c8prK5XVAkf3cF1DHekQ@mail.gmail.com>
+References:
+ <20251027145602.199154-1-linux.amoon@gmail.com>
+ <5235617.GXAFRqVoOG@workhorse>
+ <CANAwSgTmOvOZ35=3XjhrKu2iPCMOU8c8prK5XVAkf3cF1DHekQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251013223720.8157-1-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Oct 14, 2025 at 12:37:16AM +0200, Christian Marangi wrote:
-
-+ Krzysztof Wilczyński, Shuan He (since they were involved in similar discussion
-before)
-
-> In some specific scenario it's possible that the
-> pci_create_resource_files() gets called multiple times and the created
-> entry actually gets wrongly deleted with extreme case of having a NULL
-> pointer dereference when the PCI is removed.
+On Monday, 27 October 2025 17:31:23 Central European Standard Time Anand Moon wrote:
+> Hi Nicolas,
 > 
-> This mainly happen due to bad timing where the PCI bus is adding PCI
-> devices and at the same time the sysfs code is adding the entry causing
-> double execution of the pci_create_resource_files function and kernel
-> WARNING.
+> Thanks for your review comments.
 > 
-> To be more precise there is a race between the late_initcall of
-> pci-sysfs with pci_sysfs_init and PCI bus.c pci_bus_add_device that also
-> call pci_create_sysfs_dev_files.
+> On Mon, 27 Oct 2025 at 20:42, Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > On Monday, 27 October 2025 15:55:29 Central European Standard Time Anand Moon wrote:
+> > > Introduce a .remove() callback to the Rockchip DesignWare PCIe
+> > > controller driver to ensure proper resource deinitialization during
+> > > device removal. This includes disabling clocks and deinitializing the
+> > > PCIe PHY.
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > index 87dd2dd188b4..b878ae8e2b3e 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > @@ -717,6 +717,16 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+> > >       return ret;
+> > >  }
+> > >
+> > > +static void rockchip_pcie_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct device *dev = &pdev->dev;
+> > > +     struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
+> > > +
+> > > +     /* Perform other cleanups as necessary */
+> > > +     clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+> > > +     rockchip_pcie_phy_deinit(rockchip);
+> >
+> > You may want to add a
+> >
+> >     if (rockchip->vpcie3v3)
+> >             regulator_disable(rockchip->vpcie3v3);
+> >
+> > here, since it's enabled in the probe function if it's found.
+> >
+> > Not doing so means the regulator core will produce a warning
+> > splat when devres removes it I'm fairly sure.
+> >
+> I've removed the dependency on vpcie3v3 in the following commit:
+>  c930b10f17c0 ("PCI: dw-rockchip: Simplify regulator setup with
+> devm_regulator_get_enable_optional()")
+> Please review this commit and confirm if everything looks good.
+
+I see. In that case, your code is indeed correct, thank you for
+pointing this out.
+
+Reviewed-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
+Kind regards,
+Nicolas Frattaroli
+
 > 
-> With correct amount of ""luck"" (or better say bad luck)
-> pci_create_sysfs_dev_files in bus.c might be called with pci_sysfs_init
-> is executing the loop.
-> 
-> This has been reported multiple times and on multiple system, like imx6
-> system, ipq806x systems...
-> 
-
-Yes. More recently on the RISC-V platform:
-https://lore.kernel.org/linux-pci/20250702155112.40124-1-heshuan@bytedance.com/
-
-> To address this, imlement multiple improvement to the implementation:
-> 1. Add a bool to pci_dev to flag when sysfs entry are created
->    (sysfs_init)
-> 2. Implement a simple completion to wait pci_sysfs_init execution.
-> 3. Permit additional call of pci_create_sysfs_dev_files only after
->    pci_sysfs_init has finished.
-> 
-> With such logic in place, we address al kind of timing problem with
-> minimal change to any driver.
+> > Kind regards,
+> > Nicolas Frattaroli
+> >
+> Thanks
+> -Anand
 > 
 
-We do have the same issue with pci_proc_attach_device() as well. I submitted a
-dumb series [1] that removed both pci_create_sysfs_dev_files() and
-pci_proc_attach_device() calls from their _init() calls, but I was pointed out
-that they are required for PCI_ROM_RESOURCE.
 
-Then it was suggested that making the sysfs resource files static would be
-the proper solution (not sure what's about proc). Krzysztof had some work on
-this topic earlier and had plans to revive it, but I guess he didn't get much
-time so far.
 
-Krzysztof, if you do not mind, could you please share your previous work so that
-someone else can try to extend it if you are busy?
 
-- Mani
-
-[1] https://lore.kernel.org/linux-pci/20250723111124.13694-1-manivannan.sadhasivam@oss.qualcomm.com
-
--- 
-மணிவண்ணன் சதாசிவம்
 
