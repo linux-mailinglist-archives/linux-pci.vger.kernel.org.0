@@ -1,130 +1,119 @@
-Return-Path: <linux-pci+bounces-39429-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39430-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED5B8C0DFF1
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 14:25:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BD0FC0E009
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 14:26:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64BEE188759C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:25:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED9B318880BA
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 13:26:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C1D2877F7;
-	Mon, 27 Oct 2025 13:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FDE28727B;
+	Mon, 27 Oct 2025 13:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRt4zW2J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihRsIql2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED33E28C014;
-	Mon, 27 Oct 2025 13:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEDE21C9EA;
+	Mon, 27 Oct 2025 13:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761571476; cv=none; b=Jc1BnW5OPgIIQfxNXTrmqVaCdjPs7IOTRaelVnE9V1bD5uHuuHugRBJxPpbBfWlSi2zEoTWbeeD1lQtRpIqgCgtbZ1AIc7JGJyMqw7L+9PBXvaUV/ixTEi6px3zUyM5KpscUcaWqj0t0Zk9kA3YPM3TZQAR2e1LEwFrU8HC66Jw=
+	t=1761571548; cv=none; b=BC8rF8WWq5+mvt2go/9Z5+huFywzjpmZNkMqlCgUmCBCTU63hw/l2TDy8Q+/ZbPKeaXf54Cd+mTHRckJ+O4+3jI+uiGNjMfiNTe9cC0dQPvJIsr1ZRBeMGBP0Q09A5j/Dzv65pcngi8DRCJcuQpqi6lk2wiI7xlkUt4asxY1itE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761571476; c=relaxed/simple;
-	bh=TKU+4j7gWYZtpLSZ5pjQ0NQoGKApNys6GUcTFacHHQM=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=thVQP+Jt23DhsrbZl3oF7gOU6xkLv7ErLdSRU9e2/hRWj5OfmUJErG8YYbzBhSFSDhx87CkZBx/RRtqsdz+d4lSxZ/MwNQR/poIMoQAsjYo+y46yhz/wch5ymWP12yuv5zaLiOYGgdZEPKPUxKfLNELMDN5mZgRiQLWrMFQUqRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRt4zW2J; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761571475; x=1793107475;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TKU+4j7gWYZtpLSZ5pjQ0NQoGKApNys6GUcTFacHHQM=;
-  b=GRt4zW2JdBe9bdyfCNpFmzdrGcufmy2hYRMR/VBno/DkZCUV2n63wqaz
-   QXcax0ACLWOa7mHr+idK82Glfe9q3bxsQRTiWbIItk+XDkkChfCwQ5OhR
-   gRF1E5TFzF05/vCWbbdfZ5CG5tm+SRISjmPSHYcK8//tM5J0+SnqEoJ55
-   j079dioSUCn4GJls42OCLpmijdAg6OjHq/a6n737Hyz8hOGUar9Sqo5v+
-   LVwa3hcl4W/Rcgux5HXeeGLNnVBX3+lFkgPFJpjkZS9T+LECZGzjeqWMW
-   yF9FySBhH3MQKqdXmFAQLy1KrBJtfvh7IrO/M8KRkxSkzFRNYZDAyTMZ9
-   g==;
-X-CSE-ConnectionGUID: yU4q3xSyRyG/KZAkPPg3LQ==
-X-CSE-MsgGUID: fHfu5MLaTyC3wdpsmQw/Xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67292435"
-X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
-   d="scan'208";a="67292435"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 06:24:34 -0700
-X-CSE-ConnectionGUID: ULjEZh7qQbWQHc4Ak8XAqg==
-X-CSE-MsgGUID: n8/bv+/cQ+2XTKosE6tGUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
-   d="scan'208";a="184936352"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 06:24:32 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] PCI: Do not size non-existing prefetchable window
-Date: Mon, 27 Oct 2025 15:24:23 +0200
-Message-Id: <20251027132423.8841-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1761571548; c=relaxed/simple;
+	bh=zNGpOEoYqx7xy5cROnhdp1a4nB6KZU1eGaURTKMN9ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHyn4w1cmIhhpu2CIDkdbiHqmJ3AZ9CIyH+ynNlV0wjMlT3NmPCi0a7adOJAro/2NOcpCHTI2Ku8iAD14zbYT1UEnAjp3aXaelZOEOfPsCHgxSgrDChptt2bGaK1kkJZcPRfADaRPUYl4K3LWy+a7feoj5dCJ9F9dbhYE5OeLfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihRsIql2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 735D4C4CEF1;
+	Mon, 27 Oct 2025 13:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761571547;
+	bh=zNGpOEoYqx7xy5cROnhdp1a4nB6KZU1eGaURTKMN9ME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ihRsIql2mINFsL666nVwdasscR0qhrmzn7orDsLo4NkORvVAozkZweHJ2dTrgAOrq
+	 OuVH8alQ4Aqs6rBDcnJ8SZwrHeIl05V5xyja45x3YdzIJssQ4usT/CtGFI6p2wx2/4
+	 3U3B+Rv86/nd/Hdnb1/gTsWKcgZk+elgPAM+KZezXaSmVxD8w1RBloWwYjp2dY5yxr
+	 SW2qBemry5Nv/TWLV5GNerxZVeg5VBNNaNnyTc2hutKctEEFoP+S2Ss7ePftZqhCmG
+	 Ub+J1osOQfVOZ/gOSKPSmHtF3hmNeb2gtuAo/m3m1yFEULeitbyduwncDwfqOc3VqJ
+	 8GbNj/GhG3Rjg==
+Received: from johan by xi.lan with local (Exim 4.98.2)
+	(envelope-from <johan@kernel.org>)
+	id 1vDNEM-0000000004y-3FQc;
+	Mon, 27 Oct 2025 14:25:50 +0100
+Date: Mon, 27 Oct 2025 14:25:50 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Frank Li <Frank.li@nxp.com>, Shawn Lin <shawn.lin@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	"David E . Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Han Jingoo <jingoohan1@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Revert "PCI: qcom: Remove custom ASPM enablement code"
+Message-ID: <aP9y3nK0FlgINa0o@hovoldconsulting.com>
+References: <20251024210514.1365996-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251024210514.1365996-1-helgaas@kernel.org>
 
-pbus_size_mem() should only be called for bridge windows that exist but
-__pci_bus_size_bridges() may point 'pref' to a resource that does not
-exist (has zero flags) in case of non-root buses.
+On Fri, Oct 24, 2025 at 04:04:57PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> This reverts commit a729c16646198872e345bf6c48dbe540ad8a9753.
+> 
+> Prior to a729c1664619 ("PCI: qcom: Remove custom ASPM enablement code"),
+> the qcom controller driver enabled ASPM, including L0s, L1, and L1 PM
+> Substates, for all devices powered on at the time the controller driver
+> enumerates them.
+> 
+> ASPM was *not* enabled for devices powered on later by pwrctrl (unless the
+> kernel was built with PCIEASPM_POWERSAVE or PCIEASPM_POWER_SUPERSAVE, or
+> the user enabled ASPM via module parameter or sysfs).
+> 
+> After f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
+> devicetree platforms"), the PCI core enabled all ASPM states for all
+> devices whether powered on initially or by pwrctrl, so a729c1664619 was
+> unnecessary and reverted.
+> 
+> But f3ac2ff14834 was too aggressive and broke platforms that didn't support
+> CLKREQ# or required device-specific configuration for L1 Substates, so
+> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms")
+> enabled only L0s and L1.
+> 
+> On Qualcomm platforms, this left L1 Substates disabled, which was a
+> regression.  Revert a729c1664619 so L1 Substates will be enabled on devices
+> that are initially powered on.  Devices powered on by pwrctrl will be
+> addressed later.
+> 
+> Fixes: df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-When prefetchable bridge window does not exist, the same
-non-prefetchable bridge window is sized more than once which may result
-in duplicating entries into the realloc_head list. Duplicated entries
-are shown in this log and trigger a WARN_ON() because realloc_head had
-residual entries after the resource assignment algorithm:
+This indeed re-enables L1SS for the X13s NVMe:
 
-pci 0000:00:03.0: [11ab:6820] type 01 class 0x060400 PCIe Root Port
-pci 0000:00:03.0: PCI bridge to [bus 00]
-pci 0000:00:03.0:   bridge window [io  0x0000-0x0fff]
-pci 0000:00:03.0:   bridge window [mem 0x00000000-0x000fffff]
-pci 0000:00:03.0: bridge window [mem 0x00200000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
-pci 0000:00:03.0: bridge window [mem 0x00200000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
-pci 0000:00:03.0: bridge window [mem 0xe0000000-0xe03fffff]: assigned
-pci 0000:00:03.0: PCI bridge to [bus 02]
-pci 0000:00:03.0:   bridge window [mem 0xe0000000-0xe03fffff]
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at drivers/pci/setup-bus.c:2373 pci_assign_unassigned_root_bus_resources+0x1bc/0x234
+Reported-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/lkml/aPuXZlaawFmmsLmX@hovoldconsulting.com/
+Tested-by: Johan Hovold <johan@kernel.org>
 
-Check resource flags of 'pref' and only size the prefetchable window if
-the resource has the IORESOURCE_PREFETCH flag.
-
-Fixes: ae88d0b9c57f ("PCI: Use pbus_select_window_for_type() during mem window sizing")
-Link: https://lore.kernel.org/linux-pci/51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com/
-Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/setup-bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 362ad108794d..7cb6071cff7a 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1604,7 +1604,7 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		pbus_size_io(bus, realloc_head ? 0 : additional_io_size,
- 			     additional_io_size, realloc_head);
- 
--		if (pref) {
-+		if (pref && (pref->flags & IORESOURCE_PREFETCH)) {
- 			pbus_size_mem(bus,
- 				      IORESOURCE_MEM | IORESOURCE_PREFETCH |
- 				      (pref->flags & IORESOURCE_MEM_64),
-
-base-commit: 2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
--- 
-2.39.5
-
+Johan
 
