@@ -1,143 +1,100 @@
-Return-Path: <linux-pci+bounces-39445-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39446-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA64FC0ED78
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 16:13:06 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40D11C0EF55
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 16:29:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 22ABE341EB2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:13:04 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EAA274EDFFE
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:21:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217EF2FF679;
-	Mon, 27 Oct 2025 15:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CFE30ACE3;
+	Mon, 27 Oct 2025 15:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="hS5m5Fu+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVOWppG5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDCE2D94BB;
-	Mon, 27 Oct 2025 15:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761577976; cv=pass; b=YzYEbNZebbJC7km5ahFlwUkL3vGhOut0vrwDsMCxqSDggnCkdCaBPHH6HA0mbxedty/v/1KfWJHthUyDdHVTqRWK/o8KizwdGJ4ehUvja2fPGqIkfB3Un7xz2B83Yzxww/YET2C8GCeGGSUs3muZehx6gm1daP3MrTWpeuXMlPs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761577976; c=relaxed/simple;
-	bh=UYF3ENKqXIB577KVE58eeSno4Lvyr4l0ez5z8HTbll0=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AC53002D3;
+	Mon, 27 Oct 2025 15:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761578461; cv=none; b=GyQE+ZK9w5YiJSVMzYba3Z94o+3NUFpcVZ3nDLonrl4+a9mZ7jV8UgOEFXlyTwV/c0+5gHY3ifHKyB+qM4Vy2fy2U38F4SLE+6ulPUh6T6t+fg1jgToiBHRjT3F9McK0LEfAt/D81EdLFgUzQQe8xWdxk7ZdXZ0pYvvVp3A1mZY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761578461; c=relaxed/simple;
+	bh=C2tW+uyuq7ln9FLT2ekF9vYvoP/opSF+yMWMBdr1DcQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oy40O3fZw+g+oI5cIG98eicqSfdgIEDZI+NsUnGnt1tasFHu7aoygB0KZf3/lIVC7k5TCL2Dk3PZVMrZhsjUe+Fw4JQ75vV6aIR5EUgsYe2QosCS/OtAjWWRVBwi8V0mfbk3GnzIY7ptPjS93PzVbtDXZBoZEukU3socfxiQI84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=hS5m5Fu+; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761577951; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QgkEdgY84nDWlJ/3RhFF846BGSqh3D7YQ6hxECQL/DQWvrN3pHPvR1l/0/05a6aHiBlcUyieSh1W/u1dQnC7ZSWvQgQHigfMQVCPD+Lbd8byITn/PVqYUrpEMAVQB6hXDobgINgf81tcobj82dyF/ojK8Pg7X0nAXvxB8jVmKx0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761577951; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hW97odhM9uO/XARUDOadwueA3k57Xsj3ULKP5Obq3Vs=; 
-	b=mzChHXJbbaJkZ1lQwuPmdJWcTNzjqGIH/g+QQy2Iz2xWVUAaYtToT7X4Nd7cD5ARIeFUlT8JDII1ptORL9aydQONJvs3v7p8t1ywMK590d1nJod/Pl8HBtbe5v9P3v/V6JAMG6RNf7QeN3o4u3jOoraqfp4zUubftHHJ4JjlnvM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761577951;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=hW97odhM9uO/XARUDOadwueA3k57Xsj3ULKP5Obq3Vs=;
-	b=hS5m5Fu+MbHy/oVUia09FXh9MSx2928G7K7rUAdUmS5oNrJeniJsasiZP09KkZcc
-	VA2npHN/ClJZTanUpVQjZG4prHxslpVmUp1hv9+KtZOBwKGcdNPsy7nwCqdyYf0HfOg
-	VsYV1QAXcpKUX7bsq4z8no+D/oYFengFbSYqY3zA=
-Received: by mx.zohomail.com with SMTPS id 17615779488931001.9507216437198;
-	Mon, 27 Oct 2025 08:12:28 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
- Hans Zhang <18255117159@163.com>,
- "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
- <linux-pci@vger.kernel.org>,
- "moderated list:ARM/Rockchip SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>, Anand Moon <linux.amoon@gmail.com>
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject:
- Re: [PATCH v1 1/2] PCI: dw-rockchip: Add remove callback for resource cleanup
-Date: Mon, 27 Oct 2025 16:12:19 +0100
-Message-ID: <5235617.GXAFRqVoOG@workhorse>
-In-Reply-To: <20251027145602.199154-2-linux.amoon@gmail.com>
-References:
- <20251027145602.199154-1-linux.amoon@gmail.com>
- <20251027145602.199154-2-linux.amoon@gmail.com>
+	 MIME-Version:Content-Type; b=oIQpp9lXH8AJSeGw/dOcZmVXRC7STQvJ1O5ZFGNbHqNliVoa2kbWEg73eLAPOEfMY1ag2lbegdHlZKrE2JgxFFaHQmtBakhFOJ1Nmahp+S+3lnK7b9JurmtmzODjDwg1eOrPOk5lMslEM+jVEHGJadWuZlVJBVAcMivcD1T2KsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVOWppG5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09E3C4CEF1;
+	Mon, 27 Oct 2025 15:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761578461;
+	bh=C2tW+uyuq7ln9FLT2ekF9vYvoP/opSF+yMWMBdr1DcQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BVOWppG5qhQ5rLMy1yDGfZoV1dONsaZdrOX2X8E1LmslIyxR/M+tpcozL362Mgdzr
+	 dcLm6Zvl9ScwLtkI8cWJAXHZb5YTUE0veojinu0fUpkqLtrPmVXXn4kDfDZR7eOW/O
+	 QgSAWrjVNAzR1p66dG2ae47cEYPTyMN+dE2nHTwjAGld78zIaq+w1jb7o+GdcVZH2w
+	 YrJ0cQauPL/lIq1tLwMSCpBbIp/fe4ok0LBkV872/KuPgRTtJZavfp1qcrMNbs6NUK
+	 0O/Sx6McPu8krr4IAPVj32ax8Q2IbqcEVwamX4L3SazchBit4YexCNKg0W7sdDo29N
+	 mo/b1sos20orA==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ntb@lists.linux.dev,
+	imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v6 0/4] pci: endpoint: vntb: add MSI doorbell support
+Date: Mon, 27 Oct 2025 20:50:48 +0530
+Message-ID: <176157831202.16688.18216264846233563153.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20251015-vntb_msi_doorbell-v6-0-9230298b1910@nxp.com>
+References: <20251015-vntb_msi_doorbell-v6-0-9230298b1910@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Monday, 27 October 2025 15:55:29 Central European Standard Time Anand Moon wrote:
-> Introduce a .remove() callback to the Rockchip DesignWare PCIe
-> controller driver to ensure proper resource deinitialization during
-> device removal. This includes disabling clocks and deinitializing the
-> PCIe PHY.
+
+On Wed, 15 Oct 2025 11:27:27 -0400, Frank Li wrote:
+> Since commit 1c3b002c6bf68 PCI: endpoint: Add RC-to-EP doorbell support
+> using platform MSI controller, PCI EP can get notification from Host.
 > 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> VNTB use this feature to reduce ping latency.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 87dd2dd188b4..b878ae8e2b3e 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -717,6 +717,16 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static void rockchip_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
-> +
-> +	/* Perform other cleanups as necessary */
-> +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-> +	rockchip_pcie_phy_deinit(rockchip);
-
-You may want to add a
-
-    if (rockchip->vpcie3v3)
-            regulator_disable(rockchip->vpcie3v3);
-
-here, since it's enabled in the probe function if it's found.
-
-Not doing so means the regulator core will produce a warning
-splat when devres removes it I'm fairly sure.
-
-Kind regards,
-Nicolas Frattaroli
-
-> +}
-> +
->  static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
->  	.mode = DW_PCIE_RC_TYPE,
->  };
-> @@ -754,5 +764,6 @@ static struct platform_driver rockchip_pcie_driver = {
->  		.suppress_bind_attrs = true,
->  	},
->  	.probe = rockchip_pcie_probe,
-> +	.remove = rockchip_pcie_remove,
->  };
->  builtin_platform_driver(rockchip_pcie_driver);
+> The first patch impove epf core API to allow set any MMIO address to specfic
+> bar.
 > 
+> [...]
 
+I've done some minor code cleanups and applied the series to pci/endpoint.
+Please check the commits to make sure I didn't mess up like last time. Thanks!
 
+[1/4] PCI: endpoint: Rename aligned_size to mem_size
+      commit: 483768846d66c04354898f00bcdaad58a3763be2
+[2/4] PCI: endpoint: Add helper function pci_epf_get_bar_required_size()
+      commit: f71e2b67b51dcb2fd8c6d566230f17a735770bee
+[3/4] PCI: endpoint: Add API pci_epf_assign_bar_space()
+      commit: 0bfc6758f213a701bd662982de86f0032b51f18c
+[4/4] PCI: endpoint: pci-epf-vntb: Add MSI doorbell support
+      commit: dc693d60664470ec47188c328055d80e8ce7ea44
 
-
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
 
