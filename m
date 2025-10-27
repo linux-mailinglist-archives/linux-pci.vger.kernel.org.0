@@ -1,114 +1,126 @@
-Return-Path: <linux-pci+bounces-39453-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39454-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E20BC0F908
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 18:13:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D66C9C0F9A8
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 18:20:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DACA34E3C4C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 17:13:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E8EF426E66
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 17:17:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B16B30EF9A;
-	Mon, 27 Oct 2025 17:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E772C08B1;
+	Mon, 27 Oct 2025 17:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="SL0hpBWp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMSByuf1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6EF30C62D;
-	Mon, 27 Oct 2025 17:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761585207; cv=pass; b=g94ngc3iw7kqr1EJEeu4IdiCfcXCzgR+wb/SWWprBhsp59b1KGYmdVMypRoWhpsZSVZd89FtCax1L5or3a7KmN/EFe4v1lrQecc+/d4+Ivhn0oJ/XEbJ5EbpjJSWGVsFePvDt/Hy3Td949kiNAub7fG4rVk/iI2qNu26+UKLe6w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761585207; c=relaxed/simple;
-	bh=04iCvrZIlceUJNdaDAwAdOObmTgIe0zCKRadwa5hDAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iZbdUiQAbxR16U9RCtMns+Rggr8zKYKcxyeSKAv/Sj5eatJgixSPSUu95sNAQYGh6V86jInQLs5upaWxyQ9Vwd7x2F4ICW5bd0DSPEWv+vnfNRpP2C7228D120LPbcidXINhdxhj2P06No61LNMGmpCm7AqxZdxX+I2g8kIRp6g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=SL0hpBWp; arc=pass smtp.client-ip=81.169.146.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1761585147; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=iSFk4OiuvL8e8Pzfi5fiJdD+jKLneJKnfcb8lL0E4JI+uUuy1Dc59tRlf7grT56CJT
-    hlPyr8x6uZ9wvbSOB80yDuVVNpWPf4RkOI4kEHnhoidJqSTf6lcfnpf2ukt+tGQxLoYD
-    jeZHGQAPVFmGHiRKMmDsblVWgAJyx7vw4VSzqeR/pQRqrn7uYmmbftwgSFZrdv8iWXVC
-    q9iagLSBh/HqG87tvPHzK1HxVjARZXcw2DcBJRUVGEqqsMv5neueDvzNNjkuNxU9uQDK
-    nLmu46nl0yqeqNQ2r84soFghuhnQVwfpksSAIrk3BdwpuS+oSO4KhL47VjNfkgFYLOcZ
-    W65A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1761585147;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=13Eh27o4UqsOQ34xi8S2wPYjOon2zusfqlo4MpiYA2k=;
-    b=cc/uHztL9qfmFGxvFRvXRx9jH9UoYtEnUjx4QioYc9Nt13EoyGJqXMHwJhZW/c/JBy
-    X7ZHV8VNKQOezLsU6FCNK3UwxfL2RYp78dhXRQM4/hYjbZ+JyEQoqN721lE0Y0ZAG8rn
-    93yzMW8gXVidoAQpQ03pbFb94doSwTvzsKT+lmBSa7jdOFJrAAMliXK58sJ4BlL7yLxS
-    B2jXtAnT37s5BV0a8Rq+F5K4CavuJubSleN7dQC/3g33mRoSfFLweLgrAiCC9mH/FZTj
-    Dz2CY4Xdpd4qVm8kDuOxT20SSQJjDWApdzGH5m/o+6JwVR3tx6C/x8A1PG6SQDeeHJej
-    hrOA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1761585147;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=13Eh27o4UqsOQ34xi8S2wPYjOon2zusfqlo4MpiYA2k=;
-    b=SL0hpBWp9K5XPn08SzhMWLoaM3HAMUicwwKckYD30tB43wSmf3e8dn4uXATn4kLlPh
-    RZFVde1tdkEbWD+9/aFM65RhN1Oqlqj05eOTEj9gSBl/M98fgVd+6XZsb0Zt1ThPhoCQ
-    GUh74HjFHdCj0MPQH9fmMCbFi4+qh+dWi/rzHqyXWIlf++BrJwg7nn0b+X6/cvMo865i
-    IrQAEjPI50xpcmTl6TnDQTjpmFXwN9hw0JZ7DwMombbaCRVOjr0+IL53zlOMl2dD7XRw
-    uFWbnY0UPYH0sfXJE1+4QJ6bxd7tlG2hHGjlQL9JBnyyEtbYDgBh9tMmJyoaqnKLVawI
-    Y7VQ==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIy+l7Rng"
-Received: from [192.168.178.48]
-    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
-    with ESMTPSA id e2886619RHCPBv7
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 27 Oct 2025 18:12:25 +0100 (CET)
-Message-ID: <3aa95b26-7801-476e-840f-5976b0ee11c1@xenosoft.de>
-Date: Mon, 27 Oct 2025 18:12:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA4F533D6;
+	Mon, 27 Oct 2025 17:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761585417; cv=none; b=AAr+qKBeiA9kBGFAlDhrVN9Fb5LVQETg/CQCVYiW5ecN1zzLA+7+wFXMGxNs2BjtAKGNrCteTn9n6SiF+koAq7788VTRPQm1NyjGnmX/hDtKLXVc0lx/kXxeIBfknAVC4kdt2Aqo4tMxe2gm02nfEaCdLim6M3YYLVLT8WvXdFE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761585417; c=relaxed/simple;
+	bh=K1bFME1YwxBWeHwosnw8XIUjA72KfTmc5TM047ROWSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ggriOsGNjndY1XgfkbJGp2JkO+WU1Z32BR7HdQFgDivWryHlFta60xFf3P9HP8WrVgxiYuYAw7LJ+JM/NYFdh5qHGlZaBLXAM//7+9yVOIrRsDArK4OLh9R6+K5xOPNxnakIRUS7wQzi/qMZIxwNsmx5MEPJ6gj6oPmQe33cRwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMSByuf1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CD2C4CEF1;
+	Mon, 27 Oct 2025 17:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761585417;
+	bh=K1bFME1YwxBWeHwosnw8XIUjA72KfTmc5TM047ROWSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DMSByuf1XXLf6Au6aUnYfG8bCLuACMGK+V/EGr2eAht+Ze7wXl3t+5PQgFt5rNvOA
+	 QcSEdmGF48Bc8LvQIXi35kcAzQmWAlDaQKyTNIJerMIco/ojAxMHIyePWfLgYKDUyv
+	 16cylK7lbdQemQb5e+rbyfSCU1IGPhEIAW6jV3D5ke868yQ4gNVNT02wETLIxTh803
+	 gfixUVu/j5iMM+UCcwQHF/TEvHaEU6k1QSXr+JZ+poh9xObE43MTugOy9ueeFV4/DO
+	 HrD+cmM4GtL7wiW3EUdHOqPjDDrUj+fI1VsAvH3zBjVa47AlL+d6ylQbx0cuSphZ+p
+	 fmaZO7/UmR5eA==
+Date: Mon, 27 Oct 2025 22:46:47 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>, Shuan He <heshuan@bytedance.com>
+Subject: Re: [PATCH] PCI/sysfs: enforce single creation of sysfs entry for
+ pdev
+Message-ID: <nst6vubi5f4izjlxahspirg2agar5szmfczfknhiyzb36srfo7@uyzu4k52eoyt>
+References: <20251013223720.8157-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
-To: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>
-Cc: linux-pci@vger.kernel.org,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- FUKAUMI Naoki <naoki@radxa.com>, Herve Codina <herve.codina@bootlin.com>,
- Diederik de Haas <diederik@cknow-tech.com>, Dragan Simic
- <dsimic@manjaro.org>, linuxppc-dev@lists.ozlabs.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Shawn Lin <shawn.lin@rock-chips.com>,
- Frank Li <Frank.li@nxp.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au
-References: <20251024203924.GA1361677@bhelgaas>
-Content-Language: de-DE
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-In-Reply-To: <20251024203924.GA1361677@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251013223720.8157-1-ansuelsmth@gmail.com>
 
-Hi All,
+On Tue, Oct 14, 2025 at 12:37:16AM +0200, Christian Marangi wrote:
 
-I activated CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT again for the 
-RC3 of kernel 6.18. Unfortunately my AMD Radeon HD6870 doesn't work with 
-the latest patches.
++ Krzysztof Wilczyński, Shuan He (since they were involved in similar discussion
+before)
 
-But that doesn't matter because we disable the above kernel options by 
-default. We don't need power management for PCI Express because of boot 
-issues and performance issues.
+> In some specific scenario it's possible that the
+> pci_create_resource_files() gets called multiple times and the created
+> entry actually gets wrongly deleted with extreme case of having a NULL
+> pointer dereference when the PCI is removed.
+> 
+> This mainly happen due to bad timing where the PCI bus is adding PCI
+> devices and at the same time the sysfs code is adding the entry causing
+> double execution of the pci_create_resource_files function and kernel
+> WARNING.
+> 
+> To be more precise there is a race between the late_initcall of
+> pci-sysfs with pci_sysfs_init and PCI bus.c pci_bus_add_device that also
+> call pci_create_sysfs_dev_files.
+> 
+> With correct amount of ""luck"" (or better say bad luck)
+> pci_create_sysfs_dev_files in bus.c might be called with pci_sysfs_init
+> is executing the loop.
+> 
+> This has been reported multiple times and on multiple system, like imx6
+> system, ipq806x systems...
+> 
 
-Cheers,
-Christian
+Yes. More recently on the RISC-V platform:
+https://lore.kernel.org/linux-pci/20250702155112.40124-1-heshuan@bytedance.com/
+
+> To address this, imlement multiple improvement to the implementation:
+> 1. Add a bool to pci_dev to flag when sysfs entry are created
+>    (sysfs_init)
+> 2. Implement a simple completion to wait pci_sysfs_init execution.
+> 3. Permit additional call of pci_create_sysfs_dev_files only after
+>    pci_sysfs_init has finished.
+> 
+> With such logic in place, we address al kind of timing problem with
+> minimal change to any driver.
+> 
+
+We do have the same issue with pci_proc_attach_device() as well. I submitted a
+dumb series [1] that removed both pci_create_sysfs_dev_files() and
+pci_proc_attach_device() calls from their _init() calls, but I was pointed out
+that they are required for PCI_ROM_RESOURCE.
+
+Then it was suggested that making the sysfs resource files static would be
+the proper solution (not sure what's about proc). Krzysztof had some work on
+this topic earlier and had plans to revive it, but I guess he didn't get much
+time so far.
+
+Krzysztof, if you do not mind, could you please share your previous work so that
+someone else can try to extend it if you are busy?
+
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/20250723111124.13694-1-manivannan.sadhasivam@oss.qualcomm.com
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
