@@ -1,174 +1,237 @@
-Return-Path: <linux-pci+bounces-39440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91148C0EB5C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:59:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD6AC0ED7B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 16:13:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A7B319C3138
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 14:58:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 719F6463E4C
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Oct 2025 15:04:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A446309F00;
-	Mon, 27 Oct 2025 14:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CC3623D7DF;
+	Mon, 27 Oct 2025 15:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmEOFQfM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXuiiI+Y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EBB30AAC7
-	for <linux-pci@vger.kernel.org>; Mon, 27 Oct 2025 14:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559FE4A3E;
+	Mon, 27 Oct 2025 15:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761576990; cv=none; b=tlR9poeQOeUiAqPdAv1Rg6lyUXI6lnbAfdFhzyCnT1oOlMLapSiYe5zatQyYJugIVpdv4tpZbMdP/BgIv6hDtHblV521NjqoKG+KwpBxRP013I2bmMU+omGM7rQtPQD7lK9Mx3u6YdRh20VdQePx8YV++rDwd8//QWftPh7OFMU=
+	t=1761577464; cv=none; b=RWsfDDzA9s7HOZbEopxbeCaA5XetFOYGDM2nFXiH/4MvvByIW3wycy9WV3x5+Qlfvqc/b68CsOG9pPGLmit9gOYck0bZ73yIBdlRlQehXPT6luqvgnmqKorpRlU4DQpmTYsE6y3KJl0BQ1IQZjgo8HeQUs9dceeh1apzZdtLJgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761576990; c=relaxed/simple;
-	bh=ZMvU9vgiZOue6RqoRRXtEPG2qKfvC9tNvt6emuXOSvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qg23lWEZO6uItP7DZ0o7wYsqV/CH4b1SGOMG7T73nd8FF24TVKXB3Db17Ew+hgcSkyedsLP+02gjVlvaqtPIQBIr3Ky/l0VlFzCk7o7ykMy5SMp+c47JCyHAI3bp/pWWtqd2daD0kq9I6M31LyQMKZUoBK13Gh2lwnue2h/gUk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmEOFQfM; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-781206cce18so4720353b3a.0
-        for <linux-pci@vger.kernel.org>; Mon, 27 Oct 2025 07:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761576988; x=1762181788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJHpdmr2NXtFEk3A9X9aIw2etVmtC3q73hrlmlo4/OE=;
-        b=NmEOFQfMVTuQ5SdLyCnWxz4r93dcYCWzXQ69xihuCmAcHq/tr2HcfKs8f1IhJ01rhA
-         +t0cVxiyBebVtD75t0odqyGcIbJS6Dy+ri1BJn3KBEkHP7V3BVP5AMQ7tAiZZ+b2KmrZ
-         d6o5Nkz2Ik9R5Ldc3VfyMMFu2RLeqctFOOOLjG35YSnXpprt63LDSCFUAhg9JrmRAHx/
-         1f0KTBZSoDo07aQkQIYsulmAIv1/ZlE7+fnh8bw2SXKpWIAJA+7avBz/4h6CfpGKJY3O
-         UlOqzSzz9IPL/PXP93edmU83xUgkmarcAcsc/IZsgBsZvfkTKCYCD9nczFtVb3vnam7U
-         1F7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761576988; x=1762181788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XJHpdmr2NXtFEk3A9X9aIw2etVmtC3q73hrlmlo4/OE=;
-        b=EDCk4w70l51NDU4OLcY4G9ZfEZ2lWiV3wo2aIJMcW4DXLfCSGZjVfiVHCAL9y6zJkw
-         WinYOJC7z3jGQvzDfoq25dS7wsLE6ZzJBAOb3w9v0NqHCZnQ4tpQpUxPqBIbIpqLSGkJ
-         K7chQd3jcr4il1moAYSXkaPU2L9zfJxJRhTJ+Gt2SEesPdulwqhemYCEnVQdeVJgiDeN
-         JNwSnYAMQ51ZrdoLTekEvkX7vC8z5ieq4tRiaitXuQZS/I14Uiw6YhurkjN682nYy8+b
-         8hGqpsx3vRrBNu9G898aS+HZc0K2J4bvk3k0tIH9+2ljgGli6x5AFIn0hIHFcIPjBuJ9
-         YsqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmGMdCEfXD1bevUfq6pHJrnD6wm0fvAjH1jGlszIxXeBNysCdAnJ/IMW4n9yvnwUxDchG8aspOCfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2BDHu9fdB5RFlzTmOjpGpLfzEltFJ5h442cw0cLaAe+qgoYTf
-	q1j6WDID/1Pu6QbkBr2O2qnjOexYDNEaY3luorzEb97c+CbwZcFyIx1n
-X-Gm-Gg: ASbGnctfi8QoojQo93w8Bfx9vKbFuxS+TgtYADS9mN3U2GOb4bbthNKedwwtaj2OuLh
-	Cn+z5VqkWs9WO17QbkNbXxPyw43Sf2GYWslfjfZaFFMKOnydhqdNJOq61LYFVbkruLOUEFfh1YT
-	vbTFNzYYCyiI36BXUFvA5qW+eH8SH0Oj1dyrpTvwqTW7PQPkQwlgoHncYHlqdZ2Riqxm/AkmUpg
-	9kfqgUXSnaAzFVM6nzxKcMwnsXVQpgWObfcwBX24Wrvy73S3O8i3ymvP5H8+OIciZ86zzrBC7zA
-	DkK7TZO2QFkAP7Ei85Zl5SE5cW9FxrmKuHdAFkaxp4TnakgYqrookfJo3C7s5rZrKqk7BwcAva3
-	ozpV+RBkrhHLTPJ56AQcHuPbshSRGnTi9SXtQvw3yyJaHKw+2Cu3tm90H95IdiXLUq4KlZAxBuA
-	==
-X-Google-Smtp-Source: AGHT+IFpo+vKMKtPf87tmaXVzNFkUX+AxdjSTgekyu9iCoaPZB3m/DdveKL6EgBsKmZAINobovUjew==
-X-Received: by 2002:a05:6a00:6d48:10b0:76b:ecf2:7ece with SMTP id d2e1a72fcca58-7a284df06aamr11245249b3a.12.1761576987961;
-        Mon, 27 Oct 2025 07:56:27 -0700 (PDT)
-Received: from rockpi-5b ([45.112.0.108])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a414012b19sm8373372b3a.12.2025.10.27.07.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 07:56:27 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Niklas Cassel <cassel@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Hans Zhang <18255117159@163.com>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
-	linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1 2/2] PCI: dw-rockchip: Add runtime PM support to Rockchip PCIe driver
-Date: Mon, 27 Oct 2025 20:25:30 +0530
-Message-ID: <20251027145602.199154-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251027145602.199154-1-linux.amoon@gmail.com>
-References: <20251027145602.199154-1-linux.amoon@gmail.com>
+	s=arc-20240116; t=1761577464; c=relaxed/simple;
+	bh=Oyvud8Xrb31jPdkUgL/nSFBCVRBEWFiP8+m62AJySW8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lJspPMURD+iW4aOHRpDEHeoTuVZI1l08xZbxgF1nSlp3ZxD1CG9xeag5jWJRwVj4RTMIi+A6HPQ5TpGvSjhXb3u4ocAQGvPtSKbo6W65btRg/f6TmdrIFI9ajNFKgt++mKLdzDgzIS8ZE9o9ehJ517lmzplokF0Yhhf/nA68f30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UXuiiI+Y; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761577462; x=1793113462;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=Oyvud8Xrb31jPdkUgL/nSFBCVRBEWFiP8+m62AJySW8=;
+  b=UXuiiI+YHMUuxEHRISGkXmHuvoC3/N44Fowoq95Dhblb0cNJqjNXZNnI
+   9pt/5mt6jFqIgfmoj5rxOT3N7VPztm542kIODwfD1o0Ipe2qUHveEt+hH
+   EqCXm4w+p9fi8X2K1ZxZS4O5aWHk2mQk7asKSln8gBSytM+xCuhyzle8D
+   fr8MEnNZuhAcoaro3IXNvQrWoJ7x5Jii2MqFwVYhv8GTWKinppa6bcG5L
+   1VjA8o6Pg6z33RL6mNmjxJVW1bhqEz8NwlkP9l24RBVcTZXKK58oWdeP1
+   i4ZqQ0sASVTYgYq8ccQjGb/8N+oFjJAvW9hkdRQ92YL/GREp1dCLmeJOZ
+   Q==;
+X-CSE-ConnectionGUID: 31wauQOsSq2fPfoVMMUA1A==
+X-CSE-MsgGUID: +01nb+TsR4W4u84KGp4mbQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63696132"
+X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
+   d="scan'208";a="63696132"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:04:22 -0700
+X-CSE-ConnectionGUID: 8+IRZ5reQvGEkYVV6ZajvA==
+X-CSE-MsgGUID: Of8F0flcS4i+xSIy6S8wgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,259,1754982000"; 
+   d="scan'208";a="184960852"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.41])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 08:04:15 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 27 Oct 2025 17:04:11 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Lucas De Marchi <lucas.demarchi@intel.com>, intel-xe@lists.freedesktop.org, 
+    linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+    Icenowy Zheng <uwu@icenowy.me>, Vivian Wang <wangruikang@iscas.ac.cn>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Simon Richter <Simon.Richter@hogyros.de>, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Release BAR0 of an integrated bridge to allow
+ GPU BAR resize
+In-Reply-To: <20251024224401.GA1371085@bhelgaas>
+Message-ID: <5fa35d10-e3c6-9661-9287-47ebdcaca0d1@linux.intel.com>
+References: <20251024224401.GA1371085@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1098205246-1761576381=:970"
+Content-ID: <9d0e426b-9aa1-0ef7-b2f1-bd48534fcf9a@linux.intel.com>
 
-Add runtime power management support to the Rockchip DesignWare PCIe
-controller driver by enabling devm_pm_runtime() in the probe function.
-These changes allow the PCIe controller to suspend and resume dynamically,
-improving power efficiency on supported platforms.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--8323328-1098205246-1761576381=:970
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <3bac46db-7de1-f5bc-b075-6d9ffad99397@linux.intel.com>
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index b878ae8e2b3e..5026598d09f8 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -20,6 +20,7 @@
- #include <linux/of_irq.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- 
-@@ -690,6 +691,20 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto deinit_phy;
- 
-+	ret = pm_runtime_set_suspended(dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret) {
-+		ret = dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
-+		goto deinit_clk;
-+	}
-+
-+	ret = pm_runtime_resume_and_get(dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
- 	switch (data->mode) {
- 	case DW_PCIE_RC_TYPE:
- 		ret = rockchip_pcie_configure_rc(pdev, rockchip);
-@@ -709,7 +724,10 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+disable_pm_runtime:
-+	pm_runtime_disable(dev);
- deinit_clk:
-+	pm_runtime_no_callbacks(dev);
- 	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
- deinit_phy:
- 	rockchip_pcie_phy_deinit(rockchip);
-@@ -725,6 +743,9 @@ static void rockchip_pcie_remove(struct platform_device *pdev)
- 	/* Perform other cleanups as necessary */
- 	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
- 	rockchip_pcie_phy_deinit(rockchip);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+	pm_runtime_no_callbacks(dev);
- }
- 
- static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
--- 
-2.50.1
+On Fri, 24 Oct 2025, Bjorn Helgaas wrote:
+> On Thu, Sep 18, 2025 at 01:58:56PM -0700, Lucas De Marchi wrote:
+> > From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> > Resizing BAR to a larger size has to release upstream bridge windows in
+> > order make the bridge windows larger as well (and to potential relocate
+> > them into a larger free block within iomem space). Some GPUs have an
+> > integrated PCI switch that has BAR0. The resource allocation assigns
+> > space for that BAR0 as it does for any resource.
+> >=20
+> > An extra resource on a bridge will pin its upstream bridge window in
+> > place which prevents BAR resize for anything beneath that bridge.
+> >=20
+> > Nothing in the pcieport driver provided by PCI core, which typically is
+> > the driver bound to these bridges, requires that BAR0. Because of that,
+> > releasing the extra BAR does not seem to have notable downsides but
+> > comes with a clear upside.
+> >=20
+> > Therefore, release BAR0 of such switches using a quirk and clear its
+> > flags to prevent any new invocation of the resource assignment
+> > algorithm from assigning the resource again.
+> >=20
+> > Due to other siblings within the PCI hierarchy of all the devices
+> > integrated into the GPU, some other devices may still have to be
+> > manually removed before the resize is free of any bridge window pins.
+> > Such siblings can be released through sysfs to unpin windows while
+> > leaving access to GPU's sysfs entries required for initiating the
+> > resize operation, whereas removing the topmost bridge this quirk
+> > targets would result in removing the GPU device as well so no manual
+> > workaround for this problem exists.
+> >=20
+> > Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> > Link: https://lore.kernel.org/linux-pci/fl6tx5ztvttg7txmz2ps7oyd745wg3l=
+wcp3h7esmvnyg26n44y@owo2ojiu2mov/
+> > Link: https://lore.kernel.org/intel-xe/20250721173057.867829-1-uwu@icen=
+owy.me/
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Cc: <stable@vger.kernel.org> # v6.12+
+> > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> > ---
+> >=20
+> > Remarks from Ilpo: this feels quite hacky to me and I'm working towards=
+ a
+> > better solution which is to consider Resizable BAR maximum size the
+> > resource fitting algorithm. But then, I don't expect the better solutio=
+n
+> > to be something we want to push into stable due to extremely invasive
+> > dependencies. So maybe consider this an interim/legacy solution to the
+> > resizing problem and remove it once the algorithmic approach works (or
+> > more precisely retain it only in the old kernel versions).
+> > ---
+> >  drivers/pci/quirks.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index d97335a401930..9b1c08de3aa89 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -6338,3 +6338,26 @@ static void pci_mask_replay_timer_timeout(struct=
+ pci_dev *pdev)
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_tim=
+er_timeout);
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_tim=
+er_timeout);
+> >  #endif
+> > +
+> > +/*
+> > + * PCI switches integrated into Intel Arc GPUs have BAR0 that prevents
+> > + * resizing the BARs of the GPU device due to that bridge BAR0 pinning=
+ the
+> > + * bridge window it's under in place. Nothing in pcieport requires tha=
+t
+> > + * BAR0.
+> > + *
+> > + * Release and disable BAR0 permanently by clearing its flags to preve=
+nt
+> > + * anything from assigning it again.
+>=20
+> Does "disabling BAR0" actually work?  This quirk keeps the PCI core
+> from assigning resources to the BAR, but I don't think we have a way
+> to actually disable an individual BAR, do we?
 
+No, we don't and that was just sloppy wording from me. The same problem
+applies to any other non-assigned BAR resource, they too are there with
+a dangling address that could conflict.
+
+> I think the only control is PCI_COMMAND_MEMORY, and the bridge must
+> have PCI_COMMAND_MEMORY enabled so memory accesses to downstream
+> devices work.
+>=20
+> No matter what we do to the struct resource, the hardware BAR still
+> contains some address, and the bridge will decode any accesses that
+> match the address in the BAR.
+>=20
+> Maybe we could effectively disable the BAR by setting it to some
+> impossible address, i.e., something outside both the upstream and
+> downstream bridge windows so memory accesses could never be routed to
+> it?
+
+I'm not entire sure how one should acquire address outside of the valid=20
+address ranges? Is the resource-to-bus mapping even valid outside a=20
+window?
+
+Perhaps find either min(start address) or max(end address) over all
+windows as those boundary addresses should be still mappable and place=20
+the BAR right below or above either of those by subtracting the resource=20
+size or adding +1). How does that approach sound?
+
+(There could be cases where a simple approach like that fails when both=20
+ends of the range are in use but then I wouldn't want to over-engineer the=
+=20
+approach at this point unless we know there are such problematic cases
+in practice.)
+
+It would be nice to do it eventually for any non-assigned BAR but it=20
+requires preserving those res->flags (for non-window resources too) in=20
+order to know which of them are even even usable as BARs.
+
+--=20
+ i.
+
+> > + */
+> > +static void pci_release_bar0(struct pci_dev *pdev)
+> > +{
+> > +=09struct resource *res =3D pci_resource_n(pdev, 0);
+> > +
+> > +=09if (!res->parent)
+> > +=09=09return;
+> > +
+> > +=09pci_release_resource(pdev, 0);
+> > +=09res->flags =3D 0;
+> > +}
+> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa0, pci_release_bar0=
+);
+> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0x4fa1, pci_release_bar0=
+);
+> > +DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, 0xe2ff, pci_release_bar0=
+);
+> >=20
+> > --=20
+> > 2.50.1
+> >=20
+>=20
+--8323328-1098205246-1761576381=:970--
 
