@@ -1,251 +1,219 @@
-Return-Path: <linux-pci+bounces-39582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A4F2C17012
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 22:31:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03A54C16FDF
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 22:29:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B229188F4EE
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 21:28:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C6D44210FD
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 21:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3BF351FA0;
-	Tue, 28 Oct 2025 21:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B40F3563EC;
+	Tue, 28 Oct 2025 21:25:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a35luTJM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AC3/Jd0+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A935581C;
-	Tue, 28 Oct 2025 21:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761686656; cv=fail; b=VJvHXaKXWjNe9Z59XuEVMQvqgUnUif1gJHzwpqqDLYf2AVH6VjVOu5VISF15a1GCztN8GYbNS1Jt+QWIMNlSk064e+neqaw3FE8wQn7zlLJnfa2MGsPZHUswsryYA4b1q9yBnfXMniXS3NrJa/Q3v+C1Cm3iHwszodohMOh/+4Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761686656; c=relaxed/simple;
-	bh=PuHZV/r2OVdjZVQP8AMH1aWEXs95hcRXrcjy2rX6L5s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ql7CZSoQZo+LDyCaF91bbIKh7GSeILYUVlast8eP6ESV8qKnVLHcc1UV3oXHNuBbq9FIZON293U6GkIpbhxYaSdUrPan91kpG/VKcEk3xaN4GfZcNf3iag3qCf8CfoX69TLikDOOA0RXe4JUI+8nyhbTNFKO4Y2jiPATawok+cM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a35luTJM; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761686654; x=1793222654;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=PuHZV/r2OVdjZVQP8AMH1aWEXs95hcRXrcjy2rX6L5s=;
-  b=a35luTJM/fFYhWKPANd8PXQR6F0LZq18cvsmLetR1d3lxVHKnNdHAXlo
-   iUTw1OO6BWjRD5DaYiJviTeuHZWIGlk+DOmPa0JORvQYboCcGv7XT3+ML
-   WObBbv1UmjrtTDVgZKDibc74HNAMPsO3j/+WV71TaEJNKf0FejFNHBT8M
-   j+yeewG0YEeUE/tGSVHdbx5a5OAh2cdld3M0g1quni3JqYFdgeeRnw+n1
-   ovzghKcjpbiylEHc1sDlzTtu1qh3rQTuByFj9lVjWByXYemsj7MlmwDTu
-   RbH+pVs3MYTu2TSdX0BmF1g8kuPuQ9A2E3XEbVVfNdA9CCuSYcVY8ziHQ
-   Q==;
-X-CSE-ConnectionGUID: 4erQBod4SBaV1c9i74kisw==
-X-CSE-MsgGUID: PEJFFa7BQse2Fd7rGnO7lA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="51373834"
-X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
-   d="scan'208";a="51373834"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 14:24:13 -0700
-X-CSE-ConnectionGUID: KH84vPd5QcC/Su2t6tRsEg==
-X-CSE-MsgGUID: 6Mq5rXEKQ3Cg4fHZVz/IPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
-   d="scan'208";a="185548027"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 14:24:14 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 28 Oct 2025 14:24:12 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Tue, 28 Oct 2025 14:24:12 -0700
-Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.24) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 28 Oct 2025 14:24:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hdW9q4fk2GQ7fd4EPRjn3L0H0R/BOR1pXPLdeO0yN9lQRjkLMVIfj7+R6wQpt3gunWK/88U7JGWfnol9Sq0rJmcBb6JQOHN34RZvHIYhiPmUQEE3ubl0hTjoRMSpKrZHNEWUnOHWBdYsDNEU68JubRNjRKVQbpfaUMNbVY79hYOheMqQqaYrPCD2hg4WTeBBtarylMwE3EiNujCv1sSJTlcUOoVL3H9yN/4u2kYOi8KUl136SPDulOBTrdiZnHlTHnLoC+xlxT7N+g2c9hHqMDlcZdAbbvV0T9BKZXB75M+rztr9wMFVVtleTjc30AKsARpizl36FNgFmy5OlAKeKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wgc3P1rQhtBzdXBQBU1041S2GpAVods4xEfqRJN1ylc=;
- b=JcM2vkwNzF4HZRpPvY7PHRuotOzmbyhf6Pp/rIf34gq2eWbkBWPNynduPSb0HplNzy8qWlB8RcVbP0+dkyPBNh7zl6mmf8KCYKa6rUzlfwHz5dUBQWhXp3MTecGWKiCX0loVnjcPAQutnkZkpAlL2cUusbGYYwQiu4xdTHGUge/mzW7w9P01c+V9J81qicC38dI6eLDznYdNem5EfYrm797TAD6NeOrZqlnXdKLjc4RPmjKcgvG7kye3P07nqFAP4Ob+2rBLPEGepv+hVJoeTtzw2Nnfsztbvc0c7DNtRrZxAWvOnmrCk0Ymm8i6jtVoFXApXpV+d3JDmCvRD45l+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by CH3PR11MB7940.namprd11.prod.outlook.com (2603:10b6:610:130::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.12; Tue, 28 Oct
- 2025 21:24:08 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9275.011; Tue, 28 Oct 2025
- 21:24:08 +0000
-Date: Tue, 28 Oct 2025 16:24:04 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Simon Richter
-	<Simon.Richter@hogyros.de>, Alex Deucher <alexander.deucher@amd.com>,
-	<amd-gfx@lists.freedesktop.org>, Bjorn Helgaas <bhelgaas@google.com>, "David
- Airlie" <airlied@gmail.com>, <dri-devel@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>, "Jani
- Nikula" <jani.nikula@linux.intel.com>, Joonas Lahtinen
-	<joonas.lahtinen@linux.intel.com>, <linux-pci@vger.kernel.org>, Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
-	<thomas.hellstrom@linux.intel.com>, =?utf-8?Q?Micha=C5=82?= Winiarski
-	<michal.winiarski@intel.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/9] drm/xe: Remove driver side BAR release before resize
-Message-ID: <3ts3e2fwom7inbu2kzrvljo5mm7wz5ruaf6daib6cf5tk3v4al@njzufk22tcsy>
-References: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com>
- <20251028173551.22578-7-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="iso-8859-1"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251028173551.22578-7-ilpo.jarvinen@linux.intel.com>
-X-ClientProxiedBy: SJ2PR07CA0001.namprd07.prod.outlook.com
- (2603:10b6:a03:505::11) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C2F351FC1;
+	Tue, 28 Oct 2025 21:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761686717; cv=none; b=dKnWj8ZArIZw2xF5QQhnLxr7VA4x3+XCla4I46J/5ZLhPfe2KW4hb/x3WDB3fsVm9LgHoY1KAbW7djl5uF93CLxCbIWuIczmbmejx9T/rjE+Y4ny0IcJXYAx6NNYR7uf0RIVV4I+s3D9yrYGKo4FtE0i+ZoPVv0hGXJsZ0jGHc0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761686717; c=relaxed/simple;
+	bh=9OLtvkhVhxl64Y1HwNo56j9KBqYKKTYYqibe59BP9Dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GI84ueiAlvXhtok+diWLxY+lcMW6tZLm/CKkmFlrr/Xh5YrIRTCB80lUCBjcc0yfQsm3jbdDfKKF0RZ9dvBfeLU3Xmw5tfi13o1f7dMp1u34mixFE7lz4CSmVcyR8JRkHu5qPEI9DQ+zm01sP1qoyh5C6ZaxlPssvP5yXZf+xKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AC3/Jd0+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64ECC4CEE7;
+	Tue, 28 Oct 2025 21:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761686716;
+	bh=9OLtvkhVhxl64Y1HwNo56j9KBqYKKTYYqibe59BP9Dc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AC3/Jd0+OXWSXwtfCJ8CynnjqmBnN2iqmXByBjcsGTA0fIXgLvfQZg1CJgzpjW90k
+	 Zj4pt5SP5+STNSoyBQ8m7f35iKn6IfhFfl456lb+cGp7pXhbo2P3d7otBDrM7Eu3DN
+	 p7x9LEogrhEKcvGkuoFWcl/SywWtxfeUbd7/+KM4mBNyjzVVt0zh8Y3Wkii68BC736
+	 nFesdcTb7RxVIbgoZ2lGiSLvyZ0cJCL+l/J4fhBVniBpRJxewd8gLCis7i75EwY3O7
+	 sDUJxSeq0WuaCEMnLrp+GTT26ljlXemdvNrqCrLs0uoN9Ej99eMwl+Rcc0odqjNOEK
+	 2dRSCaSvqCwkg==
+Message-ID: <c7b86f6a-b691-41e3-955b-df40f4aca511@kernel.org>
+Date: Tue, 28 Oct 2025 16:25:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|CH3PR11MB7940:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4b8d401-9a35-4a32-1406-08de1668543b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?9A5dRdB4ca1o4K+teWTW1XvpmYHv1yv1d/+3Q1nK7Aug37td2dy8duf9AY?=
- =?iso-8859-1?Q?IdNuhJOp5t+F/xXF4lloQKMd8sgXqpueCMUWqUIZGcdeOVRm6uLxYeHbwn?=
- =?iso-8859-1?Q?SCpQa6eNY/AD7NOMbBs+SExz3f8IUiH+bvbxe7JCUkNEkegDjfaHD2rudz?=
- =?iso-8859-1?Q?V18pfTOcouZSe+J1Xws+9YG+g3oxTwF4R6FSB8bEbSwrOFI55IdDdDeTS7?=
- =?iso-8859-1?Q?yY3wJpAufuHR24up8d2JodK6BNtcnUClla5R1CtfaN5XN9Ch7sHWuARRtC?=
- =?iso-8859-1?Q?nLVN4LjqRQk0p3FDOMGWH1CenvCXrR4BTfp3VdWV6MYirJFKXL+BRWBZ28?=
- =?iso-8859-1?Q?DlrDyGbYCvvxNz0wn1ANEfKC6jLmovkNCDjR+FcfypjufN3fcLAbtG9gkd?=
- =?iso-8859-1?Q?1BDYfgY1tAniFNtZBZMwr8ZdaMLpQHnWmtDoLt9R4/aARQvfGq89pAyi5v?=
- =?iso-8859-1?Q?t0C6iOL3TraMhKLlnvttqzbocHGUQBIAq1ICdCFdec9AujVdrUl1WrMXGb?=
- =?iso-8859-1?Q?vKmDGfgU2Zd9jUU1KCj7K4+OsWZ7AjW7/iqSRaOw64g6ATaxd+mN209fC1?=
- =?iso-8859-1?Q?7RMQK8I7px/ClsiVY1AEoLshWXbS72CR5YOmG5FkwZaM8wmneQ73TFrqg7?=
- =?iso-8859-1?Q?Tg6Dif/yVQ1boSU+R2f3xi9atdjQt8RPfDmY+bwNLwks4r/suUKcZSsnLk?=
- =?iso-8859-1?Q?2fUJ277HXiH7b2ClHGR7R4el6mz8/Wk5pzhPNVjfKWbdsIMG2f+e1bQ+Rz?=
- =?iso-8859-1?Q?0uis/l5l49MvJOAZGyzmMx3GvH4SYl0zyvdk7My4FzsjevlgVIZ1o8FeWp?=
- =?iso-8859-1?Q?lCT5cqO0SAWJvCQ/RceuBKuF5VUWIBOWN70heyKrSZh+TmBrD4jZDbfDZ9?=
- =?iso-8859-1?Q?wXkFLc+M1ctNFn4RSLS0kvNmOjWN2Hb9zdsmaIWLuhkk1llld7yYTWXrFZ?=
- =?iso-8859-1?Q?fuO3OQIkEYvhKgwKGS/JKdIrdGNrx0hJhinXK85QIo0eGNhKz3rFObnxL4?=
- =?iso-8859-1?Q?CSDe6PRYrJDBaF1OBrhngjKT6EUemk59h8IzQEUftmHpDDoukSyZ3bsZg0?=
- =?iso-8859-1?Q?W5oMuCng5ZjgxAU7hwxv75Oq89Vybs6dXrO2E5G5m6k9ICpB4f+tPchZcu?=
- =?iso-8859-1?Q?EH9lkscP84Nuem1USgIjLEjDQKr1hn0EngduhIb4m9lnbHjXu56mH/P6nE?=
- =?iso-8859-1?Q?wxQXsOFoa0Qmk1tTAj/zSPL8jSmy/4BszuKsapR47wBgfpXCJ77O2aqiIX?=
- =?iso-8859-1?Q?CMtTygi1WcdkD0zJg9KCvXWz4FXpWITg1kot1TK51e59Wa1PGZpfkVvWgc?=
- =?iso-8859-1?Q?UzLotrwWd9zucN70u4awG+Yn18ZtgZISS1BYgoC4YCX3RTDCiT+PnzOzyt?=
- =?iso-8859-1?Q?YGnf8tdyyLidTd958s/MhvZ0eJEWrAaJDLnorqRzabOuIEODdOBkk67o9m?=
- =?iso-8859-1?Q?+0Aqqe89dNTPo7qw4mSZuF+DFyFMXSmIfh7IrePDQw0aj2pKun8utYWu6R?=
- =?iso-8859-1?Q?de1GwGVq91+aOKIxQLqI53JPy0RmtTMyUhgcEPOKbuHQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?gpqiHiapxs4v+tPDcbxYNgVuSuRZ3WlKekbEZ3FKPX9AqkOAg7iWByBS9p?=
- =?iso-8859-1?Q?0uyAgPX6bMaBBZYPuuM+nRIKxlyjREVe6Kk0SDOwXimNH3AxeJm6/EtSsq?=
- =?iso-8859-1?Q?J7fI1BTkaMi8teHSStF8X6d1OjKWkPJTbukTLZDC0Ra+xlRQztDSM09IvU?=
- =?iso-8859-1?Q?B6fzJ4Ag86xo+s+GRxz6gsCJWjv2b+mWXtLibck3fjFk6hhCDxgs8o07iv?=
- =?iso-8859-1?Q?GIr70TbawD/Bq06SvQp+ag/5ZFDEg6f99VNv9mArpXUuYsfgLRYz6li5JP?=
- =?iso-8859-1?Q?GUHQF8wi2b58L05q+fUV2K/L0reiLlCD1CtpcjFpX+Zu7ppu2UQLLEOjI6?=
- =?iso-8859-1?Q?MixP12Kmq2pbfxql0kXYI7vjKN+kZAQP88NGzTOW2H0eeZoORZswskCh8I?=
- =?iso-8859-1?Q?at9p1HtAplIc3syvY4pdjBwB0FQzLha5S6ZtO9UTFUYHI8T36gWejmnFUT?=
- =?iso-8859-1?Q?29+zxSxyGAPwFpEIuGFQ2+l4tHMuNj4MPYRM0pTXPhb+CoZUYa8CDHDEEr?=
- =?iso-8859-1?Q?s379GjgANYk2TA02fzWnhFmDYySsW74hUo/wJQppITi/trOaD/WDAzfwji?=
- =?iso-8859-1?Q?H5N8+nU5o5b3Z2EcB12TLi+xoYz7Ob6SMPT1tWpXRCG2/6SiFbaW5hS8XX?=
- =?iso-8859-1?Q?QNy6o+aVQr8TUEOHpzQTFo6mqwqlzUzdd183UkMxdC2cSY3uH8KadOIszq?=
- =?iso-8859-1?Q?6038xbgPQmum8d3ZusctuFq1q/IG8hMuzrm/KiLvtoFToEtf+OmV9/3c1e?=
- =?iso-8859-1?Q?9e+ZWLCIq7N7r62iFNalHtRtVU7b7hcZR9bYAPdBb47AZFu2pfiLnTN9lD?=
- =?iso-8859-1?Q?gJfhivHErFJk6BJTUi9v2L2sj94lAB6N9XBedGRGTPQdxxOkoyzg/Pji0Q?=
- =?iso-8859-1?Q?5XcA25D922f6Shb64mLHV/eNUrDK6UpxbkKLWLAVBSUCyA8TIqsLMd2Iuy?=
- =?iso-8859-1?Q?6W5UqeOEgvswRmoSqZFz1iCpkwrQUIkSeW6enakGw/fNSwTUetVB3T9+tj?=
- =?iso-8859-1?Q?rx2jx/QONW5lH+lc2Dmo2+Hs0B8KNMRrJKtDBigyx8L8P1J9M7XqUYErRA?=
- =?iso-8859-1?Q?ubmbGDsJ0LVvwk3+Ottqdu+h+D9GUs/FoTqArsfsRfmgo4vihH2CI2+0mt?=
- =?iso-8859-1?Q?7veedWVcBHMwbU3RUWiMN0CfZd86IH4SuPN0Hkub9gG4gRy6c9wUeTfx1l?=
- =?iso-8859-1?Q?XzHamwe34/lw0mhu4Ta/6EeXcFZ7JTmjCwihUMPBBzdggewLPF4FmyF+e1?=
- =?iso-8859-1?Q?3X4syaJ2i2MRg89ske+XJzCFeGvYpJ19jGfZ4omZa2vH62ebhv8AiC0zng?=
- =?iso-8859-1?Q?rjloGzoJWNldAPbR8ivqpVmqxLqUfHgT8JpQfa8402OBm232bKkU64iifG?=
- =?iso-8859-1?Q?wmLpxFMwjUZquCJi8LPP+YaFvPQHnoJm7U1DAf5IJnWlVFhFaiqit65WUz?=
- =?iso-8859-1?Q?teJeLCquM+FDqkloz1x6QLYwqq0/38dpLW3xdaPtLHKwQLZi+MnkoQ0kGl?=
- =?iso-8859-1?Q?J9uSMeGHEHT7w7CpvdEJCWWuP77ShFAtTpzHsrKadWEzHHPxA74K+xm/E4?=
- =?iso-8859-1?Q?1N4iWdr/6dVgMHSsMBKqa3LNfR2B2e9SeDdlNKNMGdzda/0w7bM6JqmYpo?=
- =?iso-8859-1?Q?GsHsFiazj5I5OFO+l839ILXc/8WD5eatVV4O0j+UXq8XpkJDVCCTlTsQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4b8d401-9a35-4a32-1406-08de1668543b
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 21:24:08.0592
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7EgTkg+rwpM/rB9Lwq4uWM4M9Y+jBIm0tY4dKgG5Tpuy9TOWRIt3n8DaCBk2xEgGYBnm4gtqGrGXX0+CAVLvsE0Md641QjEkCTLVzVfADVQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7940
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/4] fbcon: Use screen info to find primary device
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Aaron Erhardt <aer@tuxedocomputers.com>, David Airlie <airlied@gmail.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>
+References: <20250811162606.587759-1-superm1@kernel.org>
+ <20250811162606.587759-4-superm1@kernel.org>
+ <e172ebf2-4b65-4781-b9e7-eb7bd4fa956a@tuxedocomputers.com>
+ <fb519d0e-9d7f-4835-964a-c21fd24b10e8@kernel.org>
+ <817215d6-0a37-41a3-89a0-b7d2f7c67f1f@suse.de>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <817215d6-0a37-41a3-89a0-b7d2f7c67f1f@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 28, 2025 at 07:35:48PM +0200, Ilpo J�rvinen wrote:
->PCI core handles releasing device's resources and their rollback in
->case of failure of a BAR resizing operation. Releasing resource prior
->to calling pci_resize_resource() prevents PCI core from restoring the
->BARs as they were.
->
->Remove driver-side release of BARs from the xe driver.
->
->Signed-off-by: Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com>
->Cc: Lucas De Marchi <lucas.demarchi@intel.com>
->---
-> drivers/gpu/drm/xe/xe_vram.c | 3 ---
-> 1 file changed, 3 deletions(-)
->
->diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
->index b44ebf50fedb..929412f0d131 100644
->--- a/drivers/gpu/drm/xe/xe_vram.c
->+++ b/drivers/gpu/drm/xe/xe_vram.c
->@@ -33,9 +33,6 @@ _resize_bar(struct xe_device *xe, int resno, resource_size_t size)
-> 	int bar_size = pci_rebar_bytes_to_size(size);
-> 	int ret;
->
->-	if (pci_resource_len(pdev, resno))
->-		pci_release_resource(pdev, resno);
->-
+On 10/28/25 11:50 AM, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 28.10.25 um 14:15 schrieb Mario Limonciello:
+>> On 10/28/25 5:16 AM, Aaron Erhardt wrote:
+>>>
+>>> On Mon, Aug 11, 2025 at 11:26:05AM -0500, Mario Limonciello (AMD) wrote:
+>>>> On systems with non VGA GPUs fbcon can't find the primary GPU because
+>>>> video_is_primary_device() only checks the VGA arbiter.
+>>>>
+>>>> Add a screen info check to video_is_primary_device() so that callers
+>>>> can get accurate data on such systems.
+>>>
+>>> I have a question regarding this change. To me, the function name
+>>> video_is_primary_device() implies that there is only one primary GPU.
+>>> I would also expect that the 'boot_display' attribute added later in
+>>> the patch series based on this function is only set for one GPU, but
+>>> that is not necessarily the case. Since I'm working on a user-space
+>>> program that reads the 'boot_display' attribute, I need to know what
+>>> behavior is intended in order to do a correct implementation.
+>>>
+>>>>
+>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>>>> ---
+>>>> v10:
+>>>>   * Rebase on 6.17-rc1
+>>>>   * Squash 'fbcon: Stop using screen_info_pci_dev()'
+>>>> ---
+>>>>   arch/x86/video/video-common.c | 25 ++++++++++++++++++++++++-
+>>>>   1 file changed, 24 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video- 
+>>>> common.c
+>>>> index 81fc97a2a837a..e0aeee99bc99e 100644
+>>>> --- a/arch/x86/video/video-common.c
+>>>> +++ b/arch/x86/video/video-common.c
+>>>> @@ -9,6 +9,7 @@
+>>>>     #include <linux/module.h>
+>>>>   #include <linux/pci.h>
+>>>> +#include <linux/screen_info.h>
+>>>>   #include <linux/vgaarb.h>
+>>>>     #include <asm/video.h>
+>>>> @@ -27,6 +28,11 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>>>>     bool video_is_primary_device(struct device *dev)
+>>>>   {
+>>>> +#ifdef CONFIG_SCREEN_INFO
+>>>> +    struct screen_info *si = &screen_info;
+>>>> +    struct resource res[SCREEN_INFO_MAX_RESOURCES];
+>>>> +    ssize_t i, numres;
+>>>> +#endif
+>>>>       struct pci_dev *pdev;
+>>>>         if (!dev_is_pci(dev))
+>>>> @@ -34,7 +40,24 @@ bool video_is_primary_device(struct device *dev)
+>>>>         pdev = to_pci_dev(dev);
+>>>>   -    return (pdev == vga_default_device());
+>>>> +    if (!pci_is_display(pdev))
+>>>> +        return false;
+>>>> +
+>>>> +    if (pdev == vga_default_device())
+>>>> +        return true;
+>>>
+>>> This can mark a VGA device as primary GPU.
+> 
+> Is the value returned from vga_default_device() eq to NULL?
+> 
+>>>
+>>>> +
+>>>> +#ifdef CONFIG_SCREEN_INFO
+>>>> +    numres = screen_info_resources(si, res, ARRAY_SIZE(res));
+>>>> +    for (i = 0; i < numres; ++i) {
+>>>> +        if (!(res[i].flags & IORESOURCE_MEM))
+>>>> +            continue;
+>>>> +
+>>>> +        if (pci_find_resource(pdev, &res[i]))
+>>>> +            return true;
+>>>> +    }
+>>>> +#endif
+>>>
+>>> And then the new code can also choose a primary GPU.
+> 
+> Maybe we should drop this block or move it to [1]? At [1] it would only 
+> run if the more sophisticated vgaarb has been disabled.
+> 
+> The vgaarb now selects CONFIG_SCREEN_INFO and already tests for 
+> overlapping resources. There's nothing here that vgaarb shouldn't 
+> already do. Yet, I don't understand how only one of the can be true at a 
+> time.
+> 
+> [1] https://elixir.bootlin.com/linux/v6.18-rc3/source/include/linux/ 
+> vgaarb.h#L55
 
-conflict with drm-xe-next:
+There is a hunk at the end of vga_is_boot_device() which I think is 
+causing this issue.  We have one VGA device which is NOT the boot 
+display but the code figures if it found nothing this must be right.
 
-++<<<<<<< ours
-  +      release_bars(pdev);
-  +
-++=======
-++>>>>>>> theirs
+	/*
+	 * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+	 * other VGA devices, it is the best candidate so far.
+	 */
+	if (!boot_vga)
+		return true;
 
-if we don't need to release the BARs anymore to call
-pci_resize_resource(), then the resolution is simply to drop the
-function release_bars() function.
+I feel the right solution is to drop this now.
 
-I'm sending that to our CI for coverage:
-https://lore.kernel.org/intel-xe/20251028211613.3228940-2-lucas.demarchi@intel.com/T/#u
+> 
+>>>
+>>>> +
+>>>> +    return false;
+>>>>   }
+>>>>   EXPORT_SYMBOL(video_is_primary_device);
+>>>
+>>> In particular, I have hardware that has this exact configuration where
+>>> two GPUs are marked as primary and have a 'boot_display' attribute: the
+>>> first one through vga_default_device(), the second one through the new
+>>> detection method.
+>>>
+>>> Is this intended?
+>>>
+>>> Kind regards
+>>> Aaron
+>>>
+>>
+>> I wouldn't have expected a case like this and I think it means there 
+>> is a logic error.
+>>
+>> Can you please file a kernel bugzilla with details about your system 
+>> and CC me?
+>>
+>> dmesg and lspci -vvnn please
+>>
+>> Also; please clarify which GPU shows something when booting up.
+> 
+> Agreed.
+> 
+> Best regards
+> Thomas
+> 
+> 
 
-thanks
-Lucas De Marchi
-
-> 	ret = pci_resize_resource(pdev, resno, bar_size);
-> 	if (ret) {
-> 		drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Consider enabling 'Resizable BAR' support in your BIOS\n",
->-- 
->2.39.5
->
 
