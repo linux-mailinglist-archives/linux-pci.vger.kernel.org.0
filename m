@@ -1,337 +1,251 @@
-Return-Path: <linux-pci+bounces-39581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20B49C16E9E
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 22:18:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A4F2C17012
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 22:31:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECFF33B19F0
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 21:17:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B229188F4EE
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 21:28:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA301350D45;
-	Tue, 28 Oct 2025 21:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3BF351FA0;
+	Tue, 28 Oct 2025 21:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LST+zhKD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a35luTJM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1415634CFC8
-	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 21:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761686271; cv=none; b=sNQzqynORq1IgPkUZ7xQSw/G1UPUaO6ytdlcGGW9C/b3KmDC/U3nBw5gsX6d+z3j+vyQNI/CRS6JziWa7H/7pEtjr0aTojiKjea3Nz5yVLomCc77Gnt4aUb/cp/J69wJGfCNW5l6WEP4beq15i8PvAxqVRNMqy/q304zRGTJu/Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761686271; c=relaxed/simple;
-	bh=lZwSDGROIVTqo2bm1AXzeX4XCaD3hXAjqJD/pP/lHz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n0neUVTTVFbLH20Jbv8zcRAhuKHF7tMoQsOldBwYFh7gkyF7D4a+UjEoSpa6qkuIrHeppJTlCOhJSCYDHmRgSsLT8TVSBiJYyKDedn4xs0kZwW2YK+8cUILtfrdMFn+WwTiQp3/CyGbTnFZ5BJ4hqgBucaxlaSQCCE6YRx3T74Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LST+zhKD; arc=none smtp.client-ip=209.85.219.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-79599d65f75so56885966d6.2
-        for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 14:17:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761686269; x=1762291069;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d1m/7bLUgobA+XAZb7xbS3K49RqLbTSFG/4DEm26jWM=;
-        b=SJ+8ugccM57mvBVjmQpvWxvqckp0mLOAgftpWgObckeIXjWoGIoy7fePfyKejvbutP
-         0mHophqevjFBFgD5JeLXjh/oRBGKVdX81kKrbryKYQherzaeBJWxc6pwfjai8N/u1Nzu
-         yECbWu1O1biaxCv5PaYKsonwTs7Q2FR4XaJeg2SqMi1xS5TZ7pnJRvVgY0RYerRc+vb9
-         dJOzzJ8ws43y+3WkxqEaMjVbBwK4HkjTmTuVGK15B0l45BMQb/g32SKX/ndbKw101PZP
-         TwbTkhqxlq4kUK/xEAXYSjDQeCHvB39fhjiloEJkH4lVtwBwM2RxJRDChTZ0xFoUiV0M
-         d6wQ==
-X-Gm-Message-State: AOJu0YwmJwT+dfejQKQSQM/c7V/eEyWWXSGHzj+JjJ1HZ8XQwdYlLTDg
-	ne/k5WmSDfaBrYgfW1R3eH7aplGz3Ys+TiLFz/YWhfmN/tIm/IMcFuR2lASezgu2wXXU6Vg6oia
-	crMKlTcOPYmGL72jpEG7NZQg+TaIjVVmI6Li2xlgaSrFi2vuGIpjzLvmfhKTXzMnMlzkigCmF1H
-	U7NI3UG30vewvZBdGsGb4DUangZIEFGQV8nLOr6ngVpyKkMi0Y2CiAbndnjdnh1vIMoLRlUhK2X
-	Sqsw0NQd9UNHHbj
-X-Gm-Gg: ASbGncu7uVBuHI7yVkSOYgNQvHCiUyE24PUtje1trKQDSUPgqQJS8bqufAXyDE5VFoN
-	uRpm3+NJMOSTaOalRyKA3pHcCBe1bH6OECM3IEOhKZSBSUJz2aaP+d+enFcEUJ5/dn7fMieaTu9
-	fI8ML0o2qoQK/xjrGHTQThkj0r/AgT8ZNx8lG8Rren+L0WEEb6xCPERWf/rFKlIwhkT6Zc8AZtH
-	kt8Ocp6jgNgMwan3ZJtSzJ0T0q3AxAsNeSJ5xieTQ4OrBe5CZXgd8eDsQ0zftMcCMJFo9TC1+95
-	RE2FGQyj5hfUR25aEcPyKy1p8pGq3xfVohZKE1dxXGFYol7aZs6r2GoUhLa1NdfNq9Efq4C/wWE
-	oNb784WTNskwJZlCPmeg43i++NpvHB1qGozEPX6FcCjoQPcRQnYWtjoJCaMpmVEy33oMuUAMzrH
-	wvPZaqiBdez2VTRiNzJ4xNEdx9snXteb1AkugPqQ==
-X-Google-Smtp-Source: AGHT+IGPCs4y56DQY1a23kfoUsRxvTdg8IK+oVgICQZ4x2vvfgJ5/LNoBK7JQcdoy0lOT88TDA5L8MjNeX+h
-X-Received: by 2002:a05:6214:2023:b0:87b:b67d:1a with SMTP id 6a1803df08f44-88009b37842mr8850136d6.29.1761686268789;
-        Tue, 28 Oct 2025 14:17:48 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-116.dlp.protect.broadcom.com. [144.49.247.116])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-87fc49c2772sm11436616d6.32.2025.10.28.14.17.48
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Oct 2025 14:17:48 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4e8a89c9750so189220111cf.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 14:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1761686268; x=1762291068; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1m/7bLUgobA+XAZb7xbS3K49RqLbTSFG/4DEm26jWM=;
-        b=LST+zhKDNnEkBwwd4BRgt3myRSB+9zueRoS06zR7W5X730Lhfdmiwbx3GKh3Dm6hdp
-         3AeCd+qEJPmwkABNz4gOfli6jUpv7F33f/5pJASseEtDIMa0frMz1OycZ1Zp3Z0QkY8l
-         TPL4LXNhRZX99eFpjwkg18DJ4by6PLPtKn3Vc=
-X-Received: by 2002:a05:622a:4248:b0:4ec:f017:9e2c with SMTP id d75a77b69052e-4ed15b91ae8mr9427971cf.35.1761686267982;
-        Tue, 28 Oct 2025 14:17:47 -0700 (PDT)
-X-Received: by 2002:a05:622a:4248:b0:4ec:f017:9e2c with SMTP id d75a77b69052e-4ed15b91ae8mr9427521cf.35.1761686267416;
-        Tue, 28 Oct 2025 14:17:47 -0700 (PDT)
-Received: from [10.28.17.173] ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-89f255a6ef6sm910978185a.34.2025.10.28.14.17.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 14:17:46 -0700 (PDT)
-Message-ID: <21ca2154-a8ff-4f75-96c1-ded798901cc0@broadcom.com>
-Date: Tue, 28 Oct 2025 17:17:45 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A935581C;
+	Tue, 28 Oct 2025 21:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761686656; cv=fail; b=VJvHXaKXWjNe9Z59XuEVMQvqgUnUif1gJHzwpqqDLYf2AVH6VjVOu5VISF15a1GCztN8GYbNS1Jt+QWIMNlSk064e+neqaw3FE8wQn7zlLJnfa2MGsPZHUswsryYA4b1q9yBnfXMniXS3NrJa/Q3v+C1Cm3iHwszodohMOh/+4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761686656; c=relaxed/simple;
+	bh=PuHZV/r2OVdjZVQP8AMH1aWEXs95hcRXrcjy2rX6L5s=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ql7CZSoQZo+LDyCaF91bbIKh7GSeILYUVlast8eP6ESV8qKnVLHcc1UV3oXHNuBbq9FIZON293U6GkIpbhxYaSdUrPan91kpG/VKcEk3xaN4GfZcNf3iag3qCf8CfoX69TLikDOOA0RXe4JUI+8nyhbTNFKO4Y2jiPATawok+cM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a35luTJM; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761686654; x=1793222654;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=PuHZV/r2OVdjZVQP8AMH1aWEXs95hcRXrcjy2rX6L5s=;
+  b=a35luTJM/fFYhWKPANd8PXQR6F0LZq18cvsmLetR1d3lxVHKnNdHAXlo
+   iUTw1OO6BWjRD5DaYiJviTeuHZWIGlk+DOmPa0JORvQYboCcGv7XT3+ML
+   WObBbv1UmjrtTDVgZKDibc74HNAMPsO3j/+WV71TaEJNKf0FejFNHBT8M
+   j+yeewG0YEeUE/tGSVHdbx5a5OAh2cdld3M0g1quni3JqYFdgeeRnw+n1
+   ovzghKcjpbiylEHc1sDlzTtu1qh3rQTuByFj9lVjWByXYemsj7MlmwDTu
+   RbH+pVs3MYTu2TSdX0BmF1g8kuPuQ9A2E3XEbVVfNdA9CCuSYcVY8ziHQ
+   Q==;
+X-CSE-ConnectionGUID: 4erQBod4SBaV1c9i74kisw==
+X-CSE-MsgGUID: PEJFFa7BQse2Fd7rGnO7lA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="51373834"
+X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
+   d="scan'208";a="51373834"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 14:24:13 -0700
+X-CSE-ConnectionGUID: KH84vPd5QcC/Su2t6tRsEg==
+X-CSE-MsgGUID: 6Mq5rXEKQ3Cg4fHZVz/IPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
+   d="scan'208";a="185548027"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 14:24:14 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Tue, 28 Oct 2025 14:24:12 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Tue, 28 Oct 2025 14:24:12 -0700
+Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.24) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Tue, 28 Oct 2025 14:24:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hdW9q4fk2GQ7fd4EPRjn3L0H0R/BOR1pXPLdeO0yN9lQRjkLMVIfj7+R6wQpt3gunWK/88U7JGWfnol9Sq0rJmcBb6JQOHN34RZvHIYhiPmUQEE3ubl0hTjoRMSpKrZHNEWUnOHWBdYsDNEU68JubRNjRKVQbpfaUMNbVY79hYOheMqQqaYrPCD2hg4WTeBBtarylMwE3EiNujCv1sSJTlcUOoVL3H9yN/4u2kYOi8KUl136SPDulOBTrdiZnHlTHnLoC+xlxT7N+g2c9hHqMDlcZdAbbvV0T9BKZXB75M+rztr9wMFVVtleTjc30AKsARpizl36FNgFmy5OlAKeKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wgc3P1rQhtBzdXBQBU1041S2GpAVods4xEfqRJN1ylc=;
+ b=JcM2vkwNzF4HZRpPvY7PHRuotOzmbyhf6Pp/rIf34gq2eWbkBWPNynduPSb0HplNzy8qWlB8RcVbP0+dkyPBNh7zl6mmf8KCYKa6rUzlfwHz5dUBQWhXp3MTecGWKiCX0loVnjcPAQutnkZkpAlL2cUusbGYYwQiu4xdTHGUge/mzW7w9P01c+V9J81qicC38dI6eLDznYdNem5EfYrm797TAD6NeOrZqlnXdKLjc4RPmjKcgvG7kye3P07nqFAP4Ob+2rBLPEGepv+hVJoeTtzw2Nnfsztbvc0c7DNtRrZxAWvOnmrCk0Ymm8i6jtVoFXApXpV+d3JDmCvRD45l+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by CH3PR11MB7940.namprd11.prod.outlook.com (2603:10b6:610:130::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.12; Tue, 28 Oct
+ 2025 21:24:08 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9275.011; Tue, 28 Oct 2025
+ 21:24:08 +0000
+Date: Tue, 28 Oct 2025 16:24:04 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Simon Richter
+	<Simon.Richter@hogyros.de>, Alex Deucher <alexander.deucher@amd.com>,
+	<amd-gfx@lists.freedesktop.org>, Bjorn Helgaas <bhelgaas@google.com>, "David
+ Airlie" <airlied@gmail.com>, <dri-devel@lists.freedesktop.org>,
+	<intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>, "Jani
+ Nikula" <jani.nikula@linux.intel.com>, Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>, <linux-pci@vger.kernel.org>, Rodrigo Vivi
+	<rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
+	<tursulin@ursulin.net>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+	<thomas.hellstrom@linux.intel.com>, =?utf-8?Q?Micha=C5=82?= Winiarski
+	<michal.winiarski@intel.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/9] drm/xe: Remove driver side BAR release before resize
+Message-ID: <3ts3e2fwom7inbu2kzrvljo5mm7wz5ruaf6daib6cf5tk3v4al@njzufk22tcsy>
+References: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com>
+ <20251028173551.22578-7-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="iso-8859-1"; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251028173551.22578-7-ilpo.jarvinen@linux.intel.com>
+X-ClientProxiedBy: SJ2PR07CA0001.namprd07.prod.outlook.com
+ (2603:10b6:a03:505::11) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] PCI: brcmstb: Add panic/die handler to driver
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com,
- jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20251020184832.GA1144646@bhelgaas>
-Content-Language: en-US
-From: James Quinlan <james.quinlan@broadcom.com>
-Autocrypt: addr=james.quinlan@broadcom.com; keydata=
- xsBNBFa+BXgBCADrHC4AsC/G3fOZKB754tCYPhOHR3G/vtDmc1O2ugnIIR3uRjzNNRFLUaC+
- BrnULBNhYfCKjH8f1TM1wCtNf6ag0bkd1Vj+IbI+f4ri9hMk/y2vDlHeC7dbOtTEa6on6Bxn
- r88ZH68lt66LSWEciIn+HMFRFKieXwYGqWyc4reakWanRvlAgB8R5K02uk9O9fZKL7uFyolD
- 7WR4/qeHTMUjyLJQBZJyaMj++VjHfyXj3DNQjFyW1cjIxiLZOk9JkMyeWOZ+axP/Aoe6UvWl
- Pg7UpxkAwCNHigmqMrZDft6e5ORXdRT163en07xDbzeMr/+DQyvTgpYst2CANb1y4lCFABEB
- AAHNKEppbSBRdWlubGFuIDxqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbT7CwO8EEAEIAJkF
- AmNo/6MgFAAAAAAAFgABa2V5LXVzYWdlLW1hc2tAcGdwLmNvbYwwFIAAAAAAIAAHcHJlZmVy
- cmVkLWVtYWlsLWVuY29kaW5nQHBncC5jb21wZ3BtaW1lCAsJCAcDAgEKAhkBBReAAAAAGRhs
- ZGFwOi8va2V5cy5icm9hZGNvbS5uZXQFGwMAAAADFgIBBR4BAAAABBUICQoACgkQ3G9aYyHP
- Y/47xgf/TV+WKO0Hv3z+FgSEtOihmwyPPMispJbgJ50QH8O2dymaURX+v0jiCjPyQ273E4yn
- w5Z9x8fUMJtmzIrBgsxdvnhcnBbXUXZ7SZLL81CkiOl/dzEoKJOp60A7H+lR1Ce0ysT+tzng
- qkezi06YBhzD094bRUZ7pYZIgdk6lG+sMsbTNztg1OJKs54WJHtcFFV5WAUUNUb6WoaKOowk
- dVtWK/Dyw0ivka9TE//PdB1lLDGsC7fzbCevvptGGlNM/cSAbC258qnPu7XAii56yXH/+WrQ
- gL6WzcRtPnAlaAOz0jSqqOfNStoVCchTRFSe0an8bBm5Q/OVyiTZtII0GXq11c7ATQRWvgV4
- AQgA7rnljIJvW5f5Zl6JN/zJn5qBAa9PPf27InGeQTRiL7SsNvi+yx1YZJL8leHw67IUyd4g
- 7XXIQ7Qog83TM05dzIjqV5JJ2vOnCGZDCu39UVcF45oCmyB0F5tRlWdQ3/JtSdVY55zhOdNe
- 6yr0qHVrgDI64J5M3n2xbQcyWS5/vhFCRgBNTDsohqn/4LzHOxRX8v9LUgSIEISKxphvKGP5
- 9aSst67cMTRuode3j1p+VTG4vPyN5xws2Wyv8pJMDmn4xy1M4Up48jCJRNCxswxnG9Yr2Wwz
- p77WvLx0yfMYo/ednfpBAAaNPqzQyTnUKUw0mUGHph9+tYjzKMx/UnJpzQARAQABwsGBBBgB
- AgErBQJWvgV5BRsMAAAAwF0gBBkBCAAGBQJWvgV4AAoJEOa8+mKcd3+LLC4IAKIxCqH1yUnf
- +ta4Wy+aZchAwVTWBPPSL1xJoVgFnIW1rt0TkITbqSPgGAayEjUvUv5eSjWrWwq4rbqDfSBN
- 2VfAomYgiCI99N/d6M97eBe3e4sAugZ1XDk1TatetRusWUFxLrmzPhkq2SMMoPZXqUFTBXf0
- uHtLHZ2L0yE40zLILOrApkuaS15RVvxKmruqzsJk60K/LJaPdy1e4fPGyO2bHekT9m1UQw9g
- sN9w4mhm6hTeLkKDeNp/Gok5FajlEr5NR8w+yGHPtPdM6kzKgVvv1wjrbPbTbdbF1qmTmWJX
- tl3C+9ah7aDYRbvFIcRFxm86G5E26ws4bYrNj7c9B34ACgkQ3G9aYyHPY/7g8QgAn9yOx90V
- zuD0cEyfU69NPGoGs8QNw/V+W0S/nvxaDKZEA/jCqDk3vbb9CRMmuyd1s8eSttHD4RrnUros
- OT7+L6/4EnYGuE0Dr6N9aOIIajbtKN7nqWI3vNg5+O4qO5eb/n+pa2Zg4260l34p6d1T1EWy
- PqNP1eFNUMF2Tozk4haiOvnOOSw/U6QY8zIklF1N/NomnlmD5z063WrOnmonCJ+j9YDaucWm
- XFBxUJewmGLGnXHlR+lvHUjHLIRxNzHgpJDocGrwwZ+FDaUJQTTayQ9ZgzRLd+/9+XRtFGF7
- HANaeMFDm07Hev5eqDLLgTADdb85prURmV59Rrgg8FgBWw==
-In-Reply-To: <20251020184832.GA1144646@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|CH3PR11MB7940:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4b8d401-9a35-4a32-1406-08de1668543b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?9A5dRdB4ca1o4K+teWTW1XvpmYHv1yv1d/+3Q1nK7Aug37td2dy8duf9AY?=
+ =?iso-8859-1?Q?IdNuhJOp5t+F/xXF4lloQKMd8sgXqpueCMUWqUIZGcdeOVRm6uLxYeHbwn?=
+ =?iso-8859-1?Q?SCpQa6eNY/AD7NOMbBs+SExz3f8IUiH+bvbxe7JCUkNEkegDjfaHD2rudz?=
+ =?iso-8859-1?Q?V18pfTOcouZSe+J1Xws+9YG+g3oxTwF4R6FSB8bEbSwrOFI55IdDdDeTS7?=
+ =?iso-8859-1?Q?yY3wJpAufuHR24up8d2JodK6BNtcnUClla5R1CtfaN5XN9Ch7sHWuARRtC?=
+ =?iso-8859-1?Q?nLVN4LjqRQk0p3FDOMGWH1CenvCXrR4BTfp3VdWV6MYirJFKXL+BRWBZ28?=
+ =?iso-8859-1?Q?DlrDyGbYCvvxNz0wn1ANEfKC6jLmovkNCDjR+FcfypjufN3fcLAbtG9gkd?=
+ =?iso-8859-1?Q?1BDYfgY1tAniFNtZBZMwr8ZdaMLpQHnWmtDoLt9R4/aARQvfGq89pAyi5v?=
+ =?iso-8859-1?Q?t0C6iOL3TraMhKLlnvttqzbocHGUQBIAq1ICdCFdec9AujVdrUl1WrMXGb?=
+ =?iso-8859-1?Q?vKmDGfgU2Zd9jUU1KCj7K4+OsWZ7AjW7/iqSRaOw64g6ATaxd+mN209fC1?=
+ =?iso-8859-1?Q?7RMQK8I7px/ClsiVY1AEoLshWXbS72CR5YOmG5FkwZaM8wmneQ73TFrqg7?=
+ =?iso-8859-1?Q?Tg6Dif/yVQ1boSU+R2f3xi9atdjQt8RPfDmY+bwNLwks4r/suUKcZSsnLk?=
+ =?iso-8859-1?Q?2fUJ277HXiH7b2ClHGR7R4el6mz8/Wk5pzhPNVjfKWbdsIMG2f+e1bQ+Rz?=
+ =?iso-8859-1?Q?0uis/l5l49MvJOAZGyzmMx3GvH4SYl0zyvdk7My4FzsjevlgVIZ1o8FeWp?=
+ =?iso-8859-1?Q?lCT5cqO0SAWJvCQ/RceuBKuF5VUWIBOWN70heyKrSZh+TmBrD4jZDbfDZ9?=
+ =?iso-8859-1?Q?wXkFLc+M1ctNFn4RSLS0kvNmOjWN2Hb9zdsmaIWLuhkk1llld7yYTWXrFZ?=
+ =?iso-8859-1?Q?fuO3OQIkEYvhKgwKGS/JKdIrdGNrx0hJhinXK85QIo0eGNhKz3rFObnxL4?=
+ =?iso-8859-1?Q?CSDe6PRYrJDBaF1OBrhngjKT6EUemk59h8IzQEUftmHpDDoukSyZ3bsZg0?=
+ =?iso-8859-1?Q?W5oMuCng5ZjgxAU7hwxv75Oq89Vybs6dXrO2E5G5m6k9ICpB4f+tPchZcu?=
+ =?iso-8859-1?Q?EH9lkscP84Nuem1USgIjLEjDQKr1hn0EngduhIb4m9lnbHjXu56mH/P6nE?=
+ =?iso-8859-1?Q?wxQXsOFoa0Qmk1tTAj/zSPL8jSmy/4BszuKsapR47wBgfpXCJ77O2aqiIX?=
+ =?iso-8859-1?Q?CMtTygi1WcdkD0zJg9KCvXWz4FXpWITg1kot1TK51e59Wa1PGZpfkVvWgc?=
+ =?iso-8859-1?Q?UzLotrwWd9zucN70u4awG+Yn18ZtgZISS1BYgoC4YCX3RTDCiT+PnzOzyt?=
+ =?iso-8859-1?Q?YGnf8tdyyLidTd958s/MhvZ0eJEWrAaJDLnorqRzabOuIEODdOBkk67o9m?=
+ =?iso-8859-1?Q?+0Aqqe89dNTPo7qw4mSZuF+DFyFMXSmIfh7IrePDQw0aj2pKun8utYWu6R?=
+ =?iso-8859-1?Q?de1GwGVq91+aOKIxQLqI53JPy0RmtTMyUhgcEPOKbuHQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?gpqiHiapxs4v+tPDcbxYNgVuSuRZ3WlKekbEZ3FKPX9AqkOAg7iWByBS9p?=
+ =?iso-8859-1?Q?0uyAgPX6bMaBBZYPuuM+nRIKxlyjREVe6Kk0SDOwXimNH3AxeJm6/EtSsq?=
+ =?iso-8859-1?Q?J7fI1BTkaMi8teHSStF8X6d1OjKWkPJTbukTLZDC0Ra+xlRQztDSM09IvU?=
+ =?iso-8859-1?Q?B6fzJ4Ag86xo+s+GRxz6gsCJWjv2b+mWXtLibck3fjFk6hhCDxgs8o07iv?=
+ =?iso-8859-1?Q?GIr70TbawD/Bq06SvQp+ag/5ZFDEg6f99VNv9mArpXUuYsfgLRYz6li5JP?=
+ =?iso-8859-1?Q?GUHQF8wi2b58L05q+fUV2K/L0reiLlCD1CtpcjFpX+Zu7ppu2UQLLEOjI6?=
+ =?iso-8859-1?Q?MixP12Kmq2pbfxql0kXYI7vjKN+kZAQP88NGzTOW2H0eeZoORZswskCh8I?=
+ =?iso-8859-1?Q?at9p1HtAplIc3syvY4pdjBwB0FQzLha5S6ZtO9UTFUYHI8T36gWejmnFUT?=
+ =?iso-8859-1?Q?29+zxSxyGAPwFpEIuGFQ2+l4tHMuNj4MPYRM0pTXPhb+CoZUYa8CDHDEEr?=
+ =?iso-8859-1?Q?s379GjgANYk2TA02fzWnhFmDYySsW74hUo/wJQppITi/trOaD/WDAzfwji?=
+ =?iso-8859-1?Q?H5N8+nU5o5b3Z2EcB12TLi+xoYz7Ob6SMPT1tWpXRCG2/6SiFbaW5hS8XX?=
+ =?iso-8859-1?Q?QNy6o+aVQr8TUEOHpzQTFo6mqwqlzUzdd183UkMxdC2cSY3uH8KadOIszq?=
+ =?iso-8859-1?Q?6038xbgPQmum8d3ZusctuFq1q/IG8hMuzrm/KiLvtoFToEtf+OmV9/3c1e?=
+ =?iso-8859-1?Q?9e+ZWLCIq7N7r62iFNalHtRtVU7b7hcZR9bYAPdBb47AZFu2pfiLnTN9lD?=
+ =?iso-8859-1?Q?gJfhivHErFJk6BJTUi9v2L2sj94lAB6N9XBedGRGTPQdxxOkoyzg/Pji0Q?=
+ =?iso-8859-1?Q?5XcA25D922f6Shb64mLHV/eNUrDK6UpxbkKLWLAVBSUCyA8TIqsLMd2Iuy?=
+ =?iso-8859-1?Q?6W5UqeOEgvswRmoSqZFz1iCpkwrQUIkSeW6enakGw/fNSwTUetVB3T9+tj?=
+ =?iso-8859-1?Q?rx2jx/QONW5lH+lc2Dmo2+Hs0B8KNMRrJKtDBigyx8L8P1J9M7XqUYErRA?=
+ =?iso-8859-1?Q?ubmbGDsJ0LVvwk3+Ottqdu+h+D9GUs/FoTqArsfsRfmgo4vihH2CI2+0mt?=
+ =?iso-8859-1?Q?7veedWVcBHMwbU3RUWiMN0CfZd86IH4SuPN0Hkub9gG4gRy6c9wUeTfx1l?=
+ =?iso-8859-1?Q?XzHamwe34/lw0mhu4Ta/6EeXcFZ7JTmjCwihUMPBBzdggewLPF4FmyF+e1?=
+ =?iso-8859-1?Q?3X4syaJ2i2MRg89ske+XJzCFeGvYpJ19jGfZ4omZa2vH62ebhv8AiC0zng?=
+ =?iso-8859-1?Q?rjloGzoJWNldAPbR8ivqpVmqxLqUfHgT8JpQfa8402OBm232bKkU64iifG?=
+ =?iso-8859-1?Q?wmLpxFMwjUZquCJi8LPP+YaFvPQHnoJm7U1DAf5IJnWlVFhFaiqit65WUz?=
+ =?iso-8859-1?Q?teJeLCquM+FDqkloz1x6QLYwqq0/38dpLW3xdaPtLHKwQLZi+MnkoQ0kGl?=
+ =?iso-8859-1?Q?J9uSMeGHEHT7w7CpvdEJCWWuP77ShFAtTpzHsrKadWEzHHPxA74K+xm/E4?=
+ =?iso-8859-1?Q?1N4iWdr/6dVgMHSsMBKqa3LNfR2B2e9SeDdlNKNMGdzda/0w7bM6JqmYpo?=
+ =?iso-8859-1?Q?GsHsFiazj5I5OFO+l839ILXc/8WD5eatVV4O0j+UXq8XpkJDVCCTlTsQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4b8d401-9a35-4a32-1406-08de1668543b
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 21:24:08.0592
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7EgTkg+rwpM/rB9Lwq4uWM4M9Y+jBIm0tY4dKgG5Tpuy9TOWRIt3n8DaCBk2xEgGYBnm4gtqGrGXX0+CAVLvsE0Md641QjEkCTLVzVfADVQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7940
+X-OriginatorOrg: intel.com
 
-On 10/20/25 14:48, Bjorn Helgaas wrote:
-> On Fri, Oct 03, 2025 at 03:56:07PM -0400, Jim Quinlan wrote:
->> Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
->> by default Broadcom's STB PCIe controller effects an abort.  Some SoCs --
->> 7216 and its descendants -- have new HW that identifies error details.
->>
->> This simple handler determines if the PCIe controller was the cause of the
->> abort and if so, prints out diagnostic info.  Unfortunately, an abort still
->> occurs.
->>
->> Care is taken to read the error registers only when the PCIe bridge is
->> active and the PCIe registers are acceptable.  Otherwise, a "die" event
->> caused by something other than the PCIe could cause an abort if the PCIe
->> "die" handler tried to access registers when the bridge is off.
->>
->> Example error output:
->>    brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
->>    brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
->> +/* Error report registers */
->> +#define PCIE_OUTB_ERR_TREAT				0x6000
->> +#define  PCIE_OUTB_ERR_TREAT_CONFIG_MASK		0x1
->> +#define  PCIE_OUTB_ERR_TREAT_MEM_MASK			0x2
->> +#define PCIE_OUTB_ERR_VALID				0x6004
->> +#define PCIE_OUTB_ERR_CLEAR				0x6008
->> +#define PCIE_OUTB_ERR_ACC_INFO				0x600c
->> +#define  PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK		0x01
->> +#define  PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK		0x02
->> +#define  PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK		0x04
->> +#define  PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK		0x10
->> +#define  PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK		0xff00
->> +#define PCIE_OUTB_ERR_ACC_ADDR				0x6010
->> +#define PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK			0xff00000
->> +#define PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK			0xf8000
->> +#define PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK		0x7000
->> +#define PCIE_OUTB_ERR_ACC_ADDR_REG_MASK			0xfff
->> +#define PCIE_OUTB_ERR_CFG_CAUSE				0x6014
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK		0x40
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK		0x20
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK	0x10
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK	0x4
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK	0x2
->> +#define  PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK	0x1
->> +#define PCIE_OUTB_ERR_MEM_ADDR_LO			0x6018
->> +#define PCIE_OUTB_ERR_MEM_ADDR_HI			0x601c
->> +#define PCIE_OUTB_ERR_MEM_CAUSE				0x6020
->> +#define  PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK		0x40
->> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK		0x20
->> +#define  PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK	0x10
->> +#define  PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK	0x2
->> +#define  PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK		0x1
-> IMO "_MASK" is not adding anything useful to these names.  But I see
-> there's a lot of precedent in this driver.
-Removed.
+On Tue, Oct 28, 2025 at 07:35:48PM +0200, Ilpo Järvinen wrote:
+>PCI core handles releasing device's resources and their rollback in
+>case of failure of a BAR resizing operation. Releasing resource prior
+>to calling pci_resize_resource() prevents PCI core from restoring the
+>BARs as they were.
 >
->>   #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
->>   #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
->>   
->> @@ -306,6 +342,8 @@ struct brcm_pcie {
->>   	bool			ep_wakeup_capable;
->>   	const struct pcie_cfg_data	*cfg;
->>   	bool			bridge_in_reset;
->> +	struct notifier_block	die_notifier;
->> +	struct notifier_block	panic_notifier;
->>   	spinlock_t		bridge_lock;
->>   };
->>   
->> @@ -1731,6 +1769,115 @@ static int brcm_pcie_resume_noirq(struct device *dev)
->>   	return ret;
->>   }
->>   
->> +/* Dump out PCIe errors on die or panic */
->> +static int _brcm_pcie_dump_err(struct brcm_pcie *pcie,
-> What is the leading underscore telling me?  There's no
-> brcm_pcie_dump_err() that we need to distinguish from.
-Will be removed.
+>Remove driver-side release of BARs from the xe driver.
 >
->> +			       const char *type)
->> +{
->> +	void __iomem *base = pcie->base;
->> +	int i, is_cfg_err, is_mem_err, lanes;
->> +	char *width_str, *direction_str, lanes_str[9];
->> +	u32 info, cfg_addr, cfg_cause, mem_cause, lo, hi;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&pcie->bridge_lock, flags);
->> +	/* Don't access registers when the bridge is off */
->> +	if (pcie->bridge_in_reset || readl(base + PCIE_OUTB_ERR_VALID) == 0) {
->> +		spin_unlock_irqrestore(&pcie->bridge_lock, flags);
->> +		return NOTIFY_DONE;
->> +	}
->> +
->> +	/* Read all necessary registers so we can release the spinlock ASAP */
->> +	info = readl(base + PCIE_OUTB_ERR_ACC_INFO);
->> +	is_cfg_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_CFG_ERR_MASK);
->> +	is_mem_err = !!(info & PCIE_OUTB_ERR_ACC_INFO_MEM_ERR_MASK);
->> +	if (is_cfg_err) {
->> +		cfg_addr = readl(base + PCIE_OUTB_ERR_ACC_ADDR);
->> +		cfg_cause = readl(base + PCIE_OUTB_ERR_CFG_CAUSE);
->> +	}
->> +	if (is_mem_err) {
->> +		mem_cause = readl(base + PCIE_OUTB_ERR_MEM_CAUSE);
->> +		lo = readl(base + PCIE_OUTB_ERR_MEM_ADDR_LO);
->> +		hi = readl(base + PCIE_OUTB_ERR_MEM_ADDR_HI);
->> +	}
->> +	/* We've got all of the info, clear the error */
->> +	writel(1, base + PCIE_OUTB_ERR_CLEAR);
->> +	spin_unlock_irqrestore(&pcie->bridge_lock, flags);
->> +
->> +	dev_err(pcie->dev, "reporting data on PCIe %s error\n", type);
-> Looks like this isn't included in the example error output.  Not a big
-> deal in itself, but logging this:
+>Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+>---
+> drivers/gpu/drm/xe/xe_vram.c | 3 ---
+> 1 file changed, 3 deletions(-)
 >
->    brcm-pcie 8b20000.pcie: reporting data on PCIe Panic error
+>diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
+>index b44ebf50fedb..929412f0d131 100644
+>--- a/drivers/gpu/drm/xe/xe_vram.c
+>+++ b/drivers/gpu/drm/xe/xe_vram.c
+>@@ -33,9 +33,6 @@ _resize_bar(struct xe_device *xe, int resno, resource_size_t size)
+> 	int bar_size = pci_rebar_bytes_to_size(size);
+> 	int ret;
 >
-> suggests that we know this panic was directly *caused* by PCIe, and
-> I'm not sure the fact that somebody called panic() and
-> PCIE_OUTB_ERR_VALID was non-zero is convincing evidence of that.
->
-> I think this relies on the assumptions that (a) the controller
-> triggers an abort and (b) the abort handler calls panic().  So I think
-> this logs useful information that *might* be related to the panic.
->
-> I'd rather phrase this with a little less certainty, to convey the
-> idea that "here's some PCIe error information that might be related to
-> the panic/die".
-Message changed.
->
->> +	width_str = (info & PCIE_OUTB_ERR_ACC_INFO_TYPE_64_MASK) ? "64bit" : "32bit";
->> +	direction_str = (info & PCIE_OUTB_ERR_ACC_INFO_DIR_WRITE_MASK) ? "Write" : "Read";
->> +	lanes = FIELD_GET(PCIE_OUTB_ERR_ACC_INFO_BYTE_LANES_MASK, info);
->> +	for (i = 0, lanes_str[8] = 0; i < 8; i++)
->> +		lanes_str[i] = (lanes & (1 << i)) ? '1' : '0';
->> +
->> +	if (is_cfg_err) {
->> +		int bus = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_BUS_MASK, cfg_addr);
->> +		int dev = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_DEV_MASK, cfg_addr);
->> +		int func = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_FUNC_MASK, cfg_addr);
->> +		int reg = FIELD_GET(PCIE_OUTB_ERR_ACC_ADDR_REG_MASK, cfg_addr);
->> +
->> +		dev_err(pcie->dev, "Error: CFG Acc, %s, %s, Bus=%d, Dev=%d, Fun=%d, Reg=0x%x, lanes=%s\n",
-> Why are we printing bus and dev with %d?  Can we use the usual format
-> ("%04x:%02x:%02x.%d") so it matches other logging?
-ack
->
->> +			width_str, direction_str, bus, dev, func, reg, lanes_str);
->> +		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccTO=%d AccDsbld=%d Acc64bit=%d\n",
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_TIMEOUT_MASK),
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ABORT_MASK),
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_UNSUPP_REQ_MASK),
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_TIMEOUT_MASK),
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_DISABLED_MASK),
->> +			!!(cfg_cause & PCIE_OUTB_ERR_CFG_CAUSE_ACC_64BIT__MASK));
->> +	}
->> +
->> +	if (is_mem_err) {
->> +		u64 addr = ((u64)hi << 32) | (u64)lo;
->> +
->> +		dev_err(pcie->dev, "Error: Mem Acc, %s, %s, @0x%llx, lanes=%s\n",
->> +			width_str, direction_str, addr, lanes_str);
->> +		dev_err(pcie->dev, " Type: TO=%d Abt=%d UnsupReq=%d AccDsble=%d BadAddr=%d\n",
->> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_TIMEOUT_MASK),
->> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ABORT_MASK),
->> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_UNSUPP_REQ_MASK),
->> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_ACC_DISABLED_MASK),
->> +			!!(mem_cause & PCIE_OUTB_ERR_MEM_CAUSE_BAD_ADDR_MASK));
->> +	}
->> +
->> +	return NOTIFY_OK;
-> What is the difference between NOTIFY_DONE and NOTIFY_OK?  Can the
-> caller do anything useful based on the difference?
->
-> This seems like opportunistic error information that isn't definitely
-> definitely connected to anything, so I'm not sure returning different
-> values is really reliable.
+>-	if (pci_resource_len(pdev, resno))
+>-		pci_release_resource(pdev, resno);
+>-
 
-Will change to NOTIFY_DONE.
+conflict with drm-xe-next:
 
-Regards,
+++<<<<<<< ours
+  +      release_bars(pdev);
+  +
+++=======
+++>>>>>>> theirs
 
-Jim Quinlan
+if we don't need to release the BARs anymore to call
+pci_resize_resource(), then the resolution is simply to drop the
+function release_bars() function.
 
-Broadcom STB/CM
+I'm sending that to our CI for coverage:
+https://lore.kernel.org/intel-xe/20251028211613.3228940-2-lucas.demarchi@intel.com/T/#u
 
+thanks
+Lucas De Marchi
 
+> 	ret = pci_resize_resource(pdev, resno, bar_size);
+> 	if (ret) {
+> 		drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Consider enabling 'Resizable BAR' support in your BIOS\n",
+>-- 
+>2.39.5
+>
 
