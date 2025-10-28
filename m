@@ -1,343 +1,129 @@
-Return-Path: <linux-pci+bounces-39530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64AE6C14D64
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 14:28:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D62AFC14DB9
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 14:32:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5479E1B264B5
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:28:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1ABFA5E5AF3
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9EF43314DD;
-	Tue, 28 Oct 2025 13:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128823321A7;
+	Tue, 28 Oct 2025 13:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CW7YI2tR"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="K95auNhv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3D132E153;
-	Tue, 28 Oct 2025 13:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688F8330D51
+	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 13:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761658099; cv=none; b=BBZe2CFEwcqj2BD/Z1S0g3t/Ln9NTHp39U6LeQpKZd9n6qj8jVuyVICcyfg0gysfp5kGPiwyZqeLFH7GvuzrjBahi3Uo/n1DNc8zhAO+wt++/h6gSbM9gXhLRfFFFDMnH7dmDEJ8kQdZ7WK3G/4P0ps6qIOFpZeXIWp3pxR8GJ4=
+	t=1761658140; cv=none; b=USsLEkWGz8L8lUUg1VO2VROKA/WhTjxdZSsOAnfGEKad835bQzTbEXN/sGn5JPwSY2EVvPmv6ijLf0hFoYRYEIjW5fnZjithlE85TfSYN7IA6cwYJiY2LogcfAfLBY6zPFZX/+6Io7bnCRQw3rFwgGu2VI61xXS69sBXvnW8zAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761658099; c=relaxed/simple;
-	bh=x1SYv1wjHbN5ttnrkdlvInuPIPhCGzpNxaij4z0sgOM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bOMewSQZzjsaOZDG0ZoKz0imq9rlR9/0OllDv//lzmmk9MAUG5Y4fqxw6jWNrb2uP1m5xPth50GYhoIV9YTx4V8EoPdihiEWdcvG94AzFQe3dIR4KWP4xErKBD6N0mp1H5TSobWot5TQVahhQv5YwtBIW55HbfdKrQqcEXQNTQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CW7YI2tR; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761658098; x=1793194098;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=x1SYv1wjHbN5ttnrkdlvInuPIPhCGzpNxaij4z0sgOM=;
-  b=CW7YI2tR6MCUinfXRBewSo6iSWfl0mnUQ6hOfeB7LN0+bGOZF1Fr0ywk
-   2JhOK4s8ow2ZnESei1B7crmn8Wv7bH7fNSS96iY/14yyqL3HQ1jPV/HCV
-   rhqq6SFSl7uUcdFQ2OKFQ/TRnOPJHlyoDKkJHJ2j+Chakl/4l9JY7usVm
-   zltoNtQ+3DB3YyOSCKqU7YWB98ix2eHYJcs15HkLW5NAdA1qyNNYQXXpT
-   XNDdScsWalhgujAQnYMs/y3/AtEGEB7qJX1qhkWzp1OqYdP2FUoYqt+sT
-   njbJL96P5ygvTuCqcM3aUQStAMCv4wcpRTg1dpgElK9w2AC5k1Hn+1MG5
-   g==;
-X-CSE-ConnectionGUID: 5Ipjy7U1Qou6pCngaX6tsw==
-X-CSE-MsgGUID: h9bd79oER9exnzUkEJ5G3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="89227072"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="89227072"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 06:28:16 -0700
-X-CSE-ConnectionGUID: CfZE7yrSRjWLXdRg76+iBA==
-X-CSE-MsgGUID: CFJmcYSbS66plAHaz5RT0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="185807337"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 06:28:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 Oct 2025 15:28:09 +0200 (EET)
-To: Devendra K Verma <devendra.verma@amd.com>
-cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org, 
-    dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, michal.simek@amd.com
-Subject: Re: [PATCH v5 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
- Support
-In-Reply-To: <20251028112858.9930-2-devendra.verma@amd.com>
-Message-ID: <a550db5b-a36d-982c-0783-134abdeb1f70@linux.intel.com>
-References: <20251028112858.9930-1-devendra.verma@amd.com> <20251028112858.9930-2-devendra.verma@amd.com>
+	s=arc-20240116; t=1761658140; c=relaxed/simple;
+	bh=dtsFeSDKqGyLml+fTdEtUCa8bBm3GwmPyBM2/lNmOXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1ehZdP+RKCK2a5RVcJO+Uv7p6Gw2D/7IuVnplJV+hfxuoXJCUUqxoINnh2PcF6pAyJVz8L5Bxgkdt0m5DkvEWO27h6NZyvS4a5JkO5wAZsDw8NrwvpXH8uVS3PNABFIttW3gyj8fPwYilbRj0/i2/VcYZukfbv6Aw/2I+XQcc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=K95auNhv; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-89e7a7e0256so470347785a.2
+        for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 06:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1761658137; x=1762262937; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dtsFeSDKqGyLml+fTdEtUCa8bBm3GwmPyBM2/lNmOXI=;
+        b=K95auNhvrSFR6PPDg2ibB+mdTp2motrPFwy4va//VFphBGbf/4LZapakAXGoOkez92
+         +AhFNhjlkgSbj2HMewM0Dat39X0k7WeXiUlhUIX+BSs49FIoqxxs1QjxEt2dQLPv6SCQ
+         bLvy0Rbo8HeAM+TxfWfHlBGlE8Xhouu3jsMCc6LWd8NVW8c00G/buUgePHr4ZjTt4WGE
+         B8vDDf7tawyGnwMDnI9CpypUocmYloFMI3NlNOA4sQnCmqD+G094F+7MFS9BHtgWdh0T
+         9FscgUMGPE9hiPXfDsLqc85DmN3rfWgzEcOekZ3IQne1k/cWy4aDNSWFfIGosHxZ2gOD
+         RAlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761658137; x=1762262937;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dtsFeSDKqGyLml+fTdEtUCa8bBm3GwmPyBM2/lNmOXI=;
+        b=wvKXEaZpVG/81H8iEIAwWI0B6233MEJ5isfc6YbdUQTwe9vk9YbT5TLxMOBVdp4T3V
+         FMdkRKzsyvhyURsVs8MCxAfBHv+gGO8jZX0myU2RymUsB6O7ZdLQ9jFjAkqQoNA+qF10
+         L1lvCdV73YLzPWjcWsN4wHWApuQaeDBZnC0TQ3pgLOwHPut2xPOtVWRdGB8PH1LGDD5j
+         DHEg/RV+IyrKU6Tv2S3xe1wuCDm+CWGcHoZeJLhNxi0Tont6EGDIEz1fr3ZP3jplS8Vf
+         HxVTduUJ/QkoxGqEm44FYMYLhE6OmVR8V31BX2+1lcBafgzzo8yFpXhecfDUOzqG2MqL
+         azXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRczbH8k99KHq/pVlDQ9wdAmJhXucv4y4OWulh5AKyvL0z4LzVsM7GnpDX357GRmM1TzkKF/nYyTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ+xl7ZcgSXfY8u/5yX1DOwrC+wGexx+yFKQuM0UDKSQ1COl6y
+	YZeR/Yb4l4ncI1vWZI8zQHYkjbKy4lFgoIkXTnjnYPkY7vj4bbETwPeIfee0EQoBYA8=
+X-Gm-Gg: ASbGncsOL4x/ZfLZ4fxyFezKLYamsjZuQiJl9hbHD0i66O7x70vJ8hDazPI/k5/gUHF
+	8Y9+MHmyhcVFEQbYLo/tSJKzh+HLhUn19Ui2MKNPxjC6H3u5byx7dM0FBpGyxzwh6Ltz36Y56l5
+	ELlS4Kwav8UJqNC0NyzfEime0KXbTB6N0vgCM7LmzcbrRh217DPwKQvsJLdVUCgpkrG4buSuEUJ
+	fZkOz762078XUEnEcTKJ5bJfbSQR0qf3yEFr3nTDrrFDSlE4MouQrwN/8NS2dbz73fogHxlSSwv
+	rPpMTETUmiGf5GALIUpNFJvgGL0ePz1hnm28uC+MgTRLGkRM8x7rJEPNcRB7G6eOSvZZQlY9wcI
+	tzhltPC9hW8B6fxBCyHipuIto8SgKI2cIyIL4POoEG10lYcIBgl/s5CfPMF45IdiXLX/WSUYGUO
+	uxymhDtKSkd4/tYxaZ+TwyNCFVpL+nahcXl0koyn1FtDsB4bWNQ7FTovF7
+X-Google-Smtp-Source: AGHT+IGShJMC1iBLkVMVTtmAgFjNgDYF2kS2KrAPaxSmW4rJSZvLRhN0tZlnppqE/frY25q7IEUPHg==
+X-Received: by 2002:a05:620a:462a:b0:8a5:6ca3:d56 with SMTP id af79cd13be357-8a6f63c48a7mr436299885a.39.1761658137149;
+        Tue, 28 Oct 2025 06:28:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-89f24cd5617sm829595185a.19.2025.10.28.06.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Oct 2025 06:28:55 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vDjkt-00000004PA5-0Sy6;
+	Tue, 28 Oct 2025 10:28:55 -0300
+Date: Tue, 28 Oct 2025 10:28:55 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Jacob Pan <jacob.pan@linux.microsoft.com>
+Cc: Vipin Sharma <vipinsh@google.com>, bhelgaas@google.com,
+	alex.williamson@redhat.com, pasha.tatashin@soleen.com,
+	dmatlack@google.com, graf@amazon.com, pratyush@kernel.org,
+	gregkh@linuxfoundation.org, chrisl@kernel.org, rppt@kernel.org,
+	skhawaja@google.com, parav@nvidia.com, saeedm@nvidia.com,
+	kevin.tian@intel.com, jrhilke@google.com, david@redhat.com,
+	jgowans@amazon.com, dwmw2@infradead.org, epetron@amazon.de,
+	junaids@google.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH 06/21] vfio/pci: Accept live update preservation
+ request for VFIO cdev
+Message-ID: <20251028132855.GJ760669@ziepe.ca>
+References: <20251018000713.677779-1-vipinsh@google.com>
+ <20251018000713.677779-7-vipinsh@google.com>
+ <20251027134430.00007e46@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251027134430.00007e46@linux.microsoft.com>
 
-On Tue, 28 Oct 2025, Devendra K Verma wrote:
+On Mon, Oct 27, 2025 at 01:44:30PM -0700, Jacob Pan wrote:
+> I have a separate question regarding noiommu devices. I’m currently
+> working on adding noiommu mode support for VFIO cdev under iommufd.
 
-> AMD MDB PCIe endpoint support. For AMD specific support
-> added the following
->   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
->   - AMD MDB specific driver data
->   - AMD MDB specific VSEC capability to retrieve the device DDR
->     base address.
-> 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
-> ---
-> Changes in v5:
-> Added the definitions for Xilinx specific VSEC header id,
-> revision, and register offsets.
-> Corrected the error type when no physical offset found for
-> device side memory.
-> Corrected the order of variables.
-> 
-> Changes in v4:
-> Configured 8 read and 8 write channels for Xilinx vendor
-> Added checks to validate vendor ID for vendor
-> specific vsec id.
-> Added Xilinx specific vendor id for vsec specific to Xilinx
-> Added the LL and data region offsets, size as input params to
-> function dw_edma_set_chan_region_offset().
-> Moved the LL and data region offsets assignment to function
-> for Xilinx specific case.
-> Corrected comments.
-> 
-> Changes in v3:
-> Corrected a typo when assigning AMD (Xilinx) vsec id macro
-> and condition check.
-> 
-> Changes in v2:
-> Reverted the devmem_phys_off type to u64.
-> Renamed the function appropriately to suit the
-> functionality for setting the LL & data region offsets.
-> 
-> Changes in v1:
-> Removed the pci device id from pci_ids.h file.
-> Added the vendor id macro as per the suggested method.
-> Changed the type of the newly added devmem_phys_off variable.
-> Added to logic to assign offsets for LL and data region blocks
-> in case more number of channels are enabled than given in
-> amd_mdb_data struct.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 138 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 136 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3371e0a7..7b991a0 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -17,12 +17,27 @@
->  
->  #include "dw-edma-core.h"
->  
-> +/* Synopsys */
->  #define DW_PCIE_VSEC_DMA_ID			0x6
->  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
->  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
->  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
->  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
->  
-> +/* AMD MDB (Xilinx) specific defines */
-> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
-> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
-> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
-> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
-> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
-> +#define DW_PCIE_XILINX_LL_SIZE			0x800
-> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
-> +#define DW_PCIE_XILINX_DT_SIZE			0x800
-> +#define DW_PCIE_XILINX_MDB_VSEC_HDR_ID		0x20
-> +#define DW_PCIE_XILINX_MDB_VSEC_REV		0x1
-> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH	0xc
-> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW	0x8
-> +
->  #define DW_BLOCK(a, b, c) \
->  	{ \
->  		.bar = a, \
-> @@ -50,6 +65,7 @@ struct dw_edma_pcie_data {
->  	u8				irqs;
->  	u16				wr_ch_cnt;
->  	u16				rd_ch_cnt;
-> +	u64				devmem_phys_off;
->  };
->  
->  static const struct dw_edma_pcie_data snps_edda_data = {
-> @@ -90,6 +106,64 @@ struct dw_edma_pcie_data {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> +static const struct dw_edma_pcie_data amd_mdb_data = {
-> +	/* MDB registers location */
-> +	.rg.bar				= BAR_0,
-> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
-> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
+Oh how is that going? I was just thinking about that again..
 
-Please use SZ_* + check that this file #includes correct header for them.
-You can then drop those comments.
+After writing the generic pt self test it occured to me we now have
+enough infrastructure for iommufd to internally create its own
+iommu_domain with a AMDv1 page table for the noiommu devices. It would
+then be so easy to feed that through the existing machinery and have
+all the pinning/etc work.
 
--- 
- i.
+Then only an ioctl to read back the physical addresses from this
+special domain would be needed
 
+It actually sort of feels pretty easy..
 
-> +
-> +	/* Other */
-> +	.mf				= EDMA_MF_HDMA_NATIVE,
-> +	.irqs				= 1,
-> +	.wr_ch_cnt			= 8,
-> +	.rd_ch_cnt			= 8,
-> +};
-> +
-> +static void dw_edma_set_chan_region_offset(struct dw_edma_pcie_data *pdata,
-> +					   enum pci_barno bar, off_t start_off,
-> +					   off_t ll_off_gap, size_t ll_size,
-> +					   off_t dt_off_gap, size_t dt_size)
-> +{
-> +	u16 wr_ch = pdata->wr_ch_cnt;
-> +	u16 rd_ch = pdata->rd_ch_cnt;
-> +	off_t off;
-> +	u16 i;
-> +
-> +	off = start_off;
-> +
-> +	/* Write channel LL region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->ll_wr[i].bar = bar;
-> +		pdata->ll_wr[i].off = off;
-> +		pdata->ll_wr[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Read channel LL region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->ll_rd[i].bar = bar;
-> +		pdata->ll_rd[i].off = off;
-> +		pdata->ll_rd[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Write channel data region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->dt_wr[i].bar = bar;
-> +		pdata->dt_wr[i].off = off;
-> +		pdata->dt_wr[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +
-> +	/* Read channel data region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->dt_rd[i].bar = bar;
-> +		pdata->dt_rd[i].off = off;
-> +		pdata->dt_rd[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +}
-> +
->  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  {
->  	return pci_irq_vector(to_pci_dev(dev), nr);
-> @@ -120,9 +194,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	u32 val, map;
->  	u16 vsec;
->  	u64 off;
-> +	int cap;
->  
-> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> -					DW_PCIE_VSEC_DMA_ID);
-> +	/*
-> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
-> +	 * of map, channel counts, etc.
-> +	 */
-> +	switch (pdev->vendor) {
-> +	case PCI_VENDOR_ID_SYNOPSYS:
-> +		cap = DW_PCIE_VSEC_DMA_ID;
-> +		break;
-> +	case PCI_VENDOR_ID_XILINX:
-> +		cap = DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor, cap);
->  	if (!vsec)
->  		return;
->  
-> @@ -155,6 +244,28 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	off <<= 32;
->  	off |= val;
->  	pdata->rg.off = off;
-> +
-> +	/* Xilinx specific VSEC capability */
-> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-> +					DW_PCIE_XILINX_MDB_VSEC_ID);
-> +	if (!vsec)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +	if (PCI_VNDR_HEADER_ID(val) != DW_PCIE_XILINX_MDB_VSEC_HDR_ID ||
-> +	    PCI_VNDR_HEADER_REV(val) != DW_PCIE_XILINX_MDB_VSEC_REV)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev,
-> +			      vsec + DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH,
-> +			      &val);
-> +	off = val;
-> +	pci_read_config_dword(pdev,
-> +			      vsec + DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW,
-> +			      &val);
-> +	off <<= 32;
-> +	off |= val;
-> +	pdata->devmem_phys_off = off;
->  }
->  
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> @@ -179,6 +290,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	}
->  
->  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-> @@ -186,6 +298,26 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	 */
->  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
-> +		/*
-> +		 * There is no valid address found for the LL memory
-> +		 * space on the device side.
-> +		 */
-> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> +			return -ENOMEM;
-> +
-> +		/*
-> +		 * Configure the channel LL and data blocks if number of
-> +		 * channels enabled in VSEC capability are more than the
-> +		 * channels configured in amd_mdb_data.
-> +		 */
-> +		dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
-> +					       DW_PCIE_XILINX_LL_OFF_GAP,
-> +					       DW_PCIE_XILINX_LL_SIZE,
-> +					       DW_PCIE_XILINX_DT_OFF_GAP,
-> +					       DW_PCIE_XILINX_DT_SIZE);
-> +	}
-> +
->  	/* Mapping PCI BAR regions */
->  	mask = BIT(vsec_data->rg.bar);
->  	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
-> @@ -367,6 +499,8 @@ static void dw_edma_pcie_remove(struct pci_dev *pdev)
->  
->  static const struct pci_device_id dw_edma_pcie_id_table[] = {
->  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
-> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
-> +	  (kernel_ulong_t)&amd_mdb_data },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table);
-> 
+Jason
 
