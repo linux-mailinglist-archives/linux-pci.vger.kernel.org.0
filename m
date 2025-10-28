@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-39569-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39570-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E73BEC16893
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 19:48:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF449C168F3
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 20:03:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CF6AE4E45D4
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 18:48:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8D27189A856
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 19:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DA8334E769;
-	Tue, 28 Oct 2025 18:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E92EC261581;
+	Tue, 28 Oct 2025 19:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b="pqT92oBb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spaiYdVM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out.bound.email (out.bound.email [141.193.244.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D87158857
-	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 18:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.193.244.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C153825A34F;
+	Tue, 28 Oct 2025 19:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761677317; cv=none; b=l4/f0dm7qDmKTVjmwOZuN3aAnyP5ANe0s3/wOpXdMGsA5biYz22w0j1Fkkia/jDiqXY2elhH5Xf+LPCngoC3Nyqd45VZK3eS4uxyObi/n3QYJb03cHWhjJP6kWkYEIsouSJTdQvm/DknWasdUENurgDkTLhBXU9PgtDaz0tNuXQ=
+	t=1761678140; cv=none; b=Z8cgPtpaGBNlbt27EXxRjpH3aONUpCqF/MTxIoHouv0Sl47QDejasaZYhr/F8+PPI5vT21b9uQxLSxhI/63GYUyD2Gy/B+iVqOP/E2dUVdotJtJIkU/Bfh9V7dEIfhoFJKTYxKULAlibusqx7A6m5SCyV6zsBdfvH1rP38e+9JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761677317; c=relaxed/simple;
-	bh=dfNimiinFQclKYj4feEPupDHw68CMdwrQXYVRrbk6Bo=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uW0ooa1JOI3w2WjmtOXnGXl9L13goG4bjEGvngj/gWiPy1hEeWBmcwMKPDh/I3KioDWKyXHXgUOofBLvMaCx92Nd4QhC/IEFd64Pj40Rowy9Ndg8mrCtcu6oONiRPLc/4ngpLOfWIgqGpSRx+gE14o197Io28hoZOfwzxAuAKhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=erdfelt.com; spf=pass smtp.mailfrom=erdfelt.com; dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b=pqT92oBb; arc=none smtp.client-ip=141.193.244.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=erdfelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=erdfelt.com
-Received: from mail.sventech.com (localhost [127.0.0.1])
-	by out.bound.email (Postfix) with ESMTP id 1A45D8A0A03;
-	Tue, 28 Oct 2025 11:42:51 -0700 (PDT)
-Received: by mail.sventech.com (Postfix, from userid 1000)
-	id 007C7160036F; Tue, 28 Oct 2025 11:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erdfelt.com;
-	s=default; t=1761676971;
-	bh=6rT9Bd+Td5JykeAZTnRyALXkxex5lLcHHU1OfQThIbg=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=pqT92oBbEj3UfuLDud7lIJ5J8fNzJgmn13zs0aX8HqKUlM8j/9yq46QKtJTFmFRha
-	 3LpAdhe7CrQ5pk3V5gVfPRE7d6EVhxiBdHYoP9rA0lIHDB+3/01zFqILlzrfzxJUDD
-	 9Bk+r6H+U6oBKc2Lc+gBRKVj557hkZ9VR2Cal6tc=
-Date: Tue, 28 Oct 2025 11:42:50 -0700
-From: Johannes Erdfelt <johannes@erdfelt.com>
-To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, vkoul@kernel.org,
-	kishon@kernel.org, dlan@gentoo.org, guodong@riscstar.com,
-	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, p.zabel@pengutronix.de, christian.bruel@foss.st.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	qiang.yu@oss.qualcomm.com, namcao@linutronix.de,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
-Message-ID: <20251028184250.GM15521@sventech.com>
-References: <20251013153526.2276556-1-elder@riscstar.com>
- <aPEhvFD8TzVtqE2n@aurel32.net>
- <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
- <aQEElhSCRNqaPf8m@aurel32.net>
+	s=arc-20240116; t=1761678140; c=relaxed/simple;
+	bh=FphJo2SDn8RkNNoEowQmoek17vzitC3fE1fUYqVA91k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=r59Eb4Uvu8TCZmL0XwDYZn1/Z9klEJSPqh2PugazwSNkPNttu75XmL8rSm+JqobV1mXk4BpN8lumEyHCWAP/p85ErAo+7rAiiPxPzcbHiagyY9LMS/sIHx/c/EJwhf4DBi1cm2RIEgxaVPeGVZdohTezWmecL/lXgdfZn1LSNIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spaiYdVM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB35C4CEE7;
+	Tue, 28 Oct 2025 19:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761678140;
+	bh=FphJo2SDn8RkNNoEowQmoek17vzitC3fE1fUYqVA91k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=spaiYdVM2oh+Rg2HGD4pv16liq4KvSXnsknDcLkGpJIzFAaTlNs5jDfxLZ/IepDvY
+	 62UimWM5lX8csDBaI77mWy6Ili7I1d6a85CvHCYgH2jbQVz307BqBPGfcvrLMw7SnG
+	 Zewk9g4GF1VWuwl0bjqY9H9jUfNSmgolqL+Gbxuzm08sMa6X6j2GTtnCZyMbn84fiM
+	 TCdgT72Uwz6FKvpot1gfnFfQPObge1LD0k1OkeAUt/H3fS4zYKMl+1XQzP6zYNXidO
+	 7LXPE3BF/xZsNZMK1K1EzUjZjEd5L7eo3RjgIMGZUecvDUQgvBe9TmINHFC5KGHn6t
+	 UMeALpMErElyQ==
+Date: Tue, 28 Oct 2025 14:02:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+	Diederik de Haas <diederik@cknow-tech.com>, stable@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: dw-rockchip: Prevent advertising L1 Substates
+ support
+Message-ID: <20251028190218.GA1525614@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,142 +71,87 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aQEElhSCRNqaPf8m@aurel32.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20251017163252.598812-2-cassel@kernel.org>
 
-On Tue, Oct 28, 2025, Aurelien Jarno <aurelien@aurel32.net> wrote:
-> Hi Alex,
-> 
-> On 2025-10-17 11:21, Alex Elder wrote:
-> > On 10/16/25 11:47 AM, Aurelien Jarno wrote:
-> > > Hi Alex,
-> > > 
-> > > On 2025-10-13 10:35, Alex Elder wrote:
-> > > > This series introduces a PHY driver and a PCIe driver to support PCIe
-> > > > on the SpacemiT K1 SoC.  The PCIe implementation is derived from a
-> > > > Synopsys DesignWare PCIe IP.  The PHY driver supports one combination
-> > > > PCIe/USB PHY as well as two PCIe-only PHYs.  The combo PHY port uses
-> > > > one PCIe lane, and the other two ports each have two lanes.  All PCIe
-> > > > ports operate at 5 GT/second.
-> > > > 
-> > > > The PCIe PHYs must be configured using a value that can only be
-> > > > determined using the combo PHY, operating in PCIe mode.  To allow
-> > > > that PHY to be used for USB, the calibration step is performed by
-> > > > the PHY driver automatically at probe time.  Once this step is done,
-> > > > the PHY can be used for either PCIe or USB.
-> > > > 
-> > > > Version 2 of this series incorporates suggestions made during the
-> > > > review of version 1.  Specific highlights are detailed below.
-> > > 
-> > > With the issues mentioned in patch 4 fixed, this patchset works fine for
-> > > me. That said I had to disable ASPM by passing pcie_aspm=off on the
-> > > command line, as it is now enabled by default since 6.18-rc1 [1]. At
-> > > this stage, I am not sure if it is an issue with my NVME drive or an
-> > > issue with the controller.
-> > 
-> > Can you describe what symptoms you had that required you to pass
-> > "pcie_aspm=off" on the kernel command line?
-> > 
-> > I see these lines in my boot log related to ASPM (and added by
-> > the commit you link to), for both pcie1 and pcie2:
-> > 
-> >   pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 AS
-> > PM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-> >   pci 0000:01:00.0: ASPM: DT platform, enabling ClockPM
-> > 
-> >   . . .
-> > 
-> >   nvme nvme0: pci function 0000:01:00.0
-> >   nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> >   nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
-> >   nvme nvme0: 8/0/0 default/read/poll queues
-> >    nvme0n1: p1
-> > 
-> > My NVMe drive on pcie1 works correctly.
-> >   https://www.crucial.com/ssd/p3/CT1000P3SSD8
-> > 
-> >   root@bananapif3:~# df /a
-> >   Filesystem     1K-blocks     Used Available Use% Mounted on
-> >   /dev/nvme0n1p1 960302804 32063304 879385040   4% /a
-> >   root@bananapif3:~#
-> 
-> Sorry for the delay, it took me time to test some more things and 
-> different SSDs. First of all I still see the issue with your v3 on top 
-> of v6.18-rc3, which includes some fixes for ASPM support [1].
-> 
-> I have tried 3 different SSDs, none of them are working, but the 
-> symptoms are different, although all related with ASPM (pcie_aspm=off 
-> workarounds the issue).
-> 
-> With a Fox Spirit PM18 SSD (Silicon Motion, Inc. SM2263EN/SM2263XT 
-> controller), I do not have more than this:
-> [    5.196723] nvme nvme0: pci function 0000:01:00.0
-> [    5.198843] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> 
-> With a WD Blue SN570 SSD, I get this:
-> [    5.199513] nvme nvme0: pci function 0000:01:00.0
-> [    5.201653] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> [    5.270334] nvme nvme0: allocated 32 MiB host memory buffer (8 segments).
-> [    5.277624] nvme nvme0: 8/0/0 default/read/poll queues
-> [   19.192350] nvme nvme0: using unchecked data buffer
-> [   48.108400] nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
-> [   48.113885] nvme nvme0: Does your device have a faulty power saving mode enabled?
-> [   48.121346] nvme nvme0: Try "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off pcie_port_pm=off" and report a bug
-> [   48.176878] nvme0n1: I/O Cmd(0x2) @ LBA 0, 8 blocks, I/O Error (sct 0x3 / sc 0x71) 
-> [   48.181926] I/O error, dev nvme0n1, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
-> [   48.243670] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> [   48.246914] nvme nvme0: Disabling device after reset failure: -19
-> [   48.280495] Buffer I/O error on dev nvme0n1, logical block 0, async page read
-> 
-> 
-> Finally with a PNY CS1030 SSD (Phison PS5015-E15 controller), I get this:
-> [    5.215631] nvme nvme0: pci function 0000:01:00.0
-> [    5.220435] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> [    5.329565] nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
-> [   66.540485] nvme nvme0: I/O tag 28 (401c) QID 0 timeout, disable controller
-> [   66.585245] nvme 0000:01:00.0: probe with driver nvme failed with error -4
-> 
-> Note that I also tested this latest SSD on a VisionFive 2 board with exactly
-> the same kernel (I just moved the SSD and booted), and it works fine with ASPM
-> enabled (confirmed with lspci).
+[+cc Daire, Karthikeyan, Hou]
 
-I have been testing this patchset recently as well, but on an Orange Pi
-RV2 board instead (and an extra RV2 specific patch to enable power to
-the M.2 slot).
-
-I ran into the same symptoms you had ("QID 0 timeout" after about 60
-seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
-seems to work fine with the "pcie_aspm=off" workaround as well.
-
-Of note, I don't have this problem with the vendor 6.6.63 kernel.
-
-> > I basically want to know if there's something I should do with this
-> > driver to address this.  (Mani, can you explain?)
+On Fri, Oct 17, 2025 at 06:32:53PM +0200, Niklas Cassel wrote:
+> The L1 substates support requires additional steps to work, namely:
+> -Proper handling of the CLKREQ# sideband signal. (It is mostly handled by
+>  hardware, but software still needs to set the clkreq fields in the
+>  PCIE_CLIENT_POWER_CON register to match the hardware implementation.)
+> -Program the frequency of the aux clock into the
+>  DSP_PCIE_PL_AUX_CLK_FREQ_OFF register. (During L1 substates the core_clk
+>  is turned off and the aux_clk is used instead.)
 > 
-> I am not sure on my side how to debug that. What I know is that it is 
-> linked to ASPM L1, L0 works fine. In other words the SSDs work fine with 
-> this patch:
+> These steps are currently missing from the driver.
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 79b9651584737..1a134ec68b591 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -801,8 +801,8 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
->  	if (of_have_populated_dt()) {
->  		if (link->aspm_support & PCIE_LINK_STATE_L0S)
->  			link->aspm_default |= PCIE_LINK_STATE_L0S;
-> -		if (link->aspm_support & PCIE_LINK_STATE_L1)
-> -			link->aspm_default |= PCIE_LINK_STATE_L1;
-> +//		if (link->aspm_support & PCIE_LINK_STATE_L1)
-> +//			link->aspm_default |= PCIE_LINK_STATE_L1;
->  		override = link->aspm_default & ~link->aspm_enabled;
->  		if (override)
->  			pci_info(pdev, "ASPM: default states%s%s\n",
+> For more details, see section '18.6.6.4 L1 Substate' in the RK3658 TRM 1.1
+> Part 2, or section '11.6.6.4 L1 Substate' in the RK3588 TRM 1.0 Part2.
 > 
-> I can test more things if needed, but I don't know where to start.
+> While this has always been a problem when using e.g.
+> CONFIG_PCIEASPM_POWER_SUPERSAVE=y, or when modifying
+> /sys/bus/pci/devices/.../link/l1_2_aspm, the lacking driver support for L1
+> substates became more apparent after commit f3ac2ff14834 ("PCI/ASPM:
+> Enable all ClockPM and ASPM states for devicetree platforms"), which
+> enabled ASPM also for CONFIG_PCIEASPM_DEFAULT=y.
+> 
+> When using e.g. an NVMe drive connected to the PCIe controller, the
+> problem will be seen as:
+> nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> nvme nvme0: Does your device have a faulty power saving mode enabled?
+> nvme nvme0: Try "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off pcie_port_pm=off" and report a bug
+> 
+> Thus, prevent advertising L1 Substates support until proper driver support
+> is added.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
+> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+> Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+> Changes since v2:
+> -Improve commit message (Bjorn)
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 3e2752c7dd09..84f882abbca5 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -200,6 +200,25 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
+>  	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
+>  }
+>  
+> +/*
+> + * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
+> + * needed to support L1 substates. Currently, not a single rockchip platform
+> + * performs these steps, so disable L1 substates until there is proper support.
+> + */
+> +static void rockchip_pcie_disable_l1sub(struct dw_pcie *pci)
+> +{
+> +	u32 cap, l1subcap;
+> +
+> +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+> +	if (cap) {
+> +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
+> +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
+> +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
+> +			      PCI_L1SS_CAP_PCIPM_L1_2);
+> +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
+> +	}
+> +}
 
-I'm not a PCIe expert, but I'm more than happy to test as well.
+I like this.  But why should we do it just for dw-rockchip?  Is there
+something special about dw-rockchip that makes this a problem?  Maybe
+we should consider doing this in the dwc, cadence, mobiveil, and plda
+cores instead of trying to do it for every driver individually?
 
-JE
+Advertising L1SS support via PCI_EXT_CAP_ID_L1SS means users can
+enable L1SS via CONFIG_PCIEASPM_POWER_SUPERSAVE=y or sysfs, and that
+seems likely to cause problems unless CLKREQ# is supported.
 
+Bjorn
 
