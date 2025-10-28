@@ -1,142 +1,167 @@
-Return-Path: <linux-pci+bounces-39493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5375EC12EF2
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 06:29:06 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8994CC12F9C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 06:36:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 681A51A22956
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 05:29:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 04F6A4FA41B
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 05:35:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EF029293D;
-	Tue, 28 Oct 2025 05:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53D412C17B6;
+	Tue, 28 Oct 2025 05:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqQnLWQ1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNXrOlJL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCAF1F4C8E;
-	Tue, 28 Oct 2025 05:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A552C17A8;
+	Tue, 28 Oct 2025 05:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761629340; cv=none; b=YfOBbnwgFonwoy6E+odCm/bclPIejre4Ry/OgzhIFQmzyeil3JyLb2mrIiBRIA0ns27LmaCPQ6scvAdcip8qZ64ndwiUtbOjrGdc3n59jKpvE/hiOG65Ftoaeetl4HxKLbf/OacqxseqMGNfZwcNPIL8mb8WGIYyOWrm5d5nCik=
+	t=1761629622; cv=none; b=sNTQZBVyaRUInC/70D+lRP/mJXIyGHAelG2n9TDL6rlsHdVA/oJgGFlw3VoEIIboQJr5rxJkWVZoByA/kOW632SEPbnnEY2Yz9Rm9ikhUC/jyRQk9nOdxcALtQx34JjQXCTKfNMndUtFYUx24OKyyRa2cn8yfkDa12ZFyHEhQ6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761629340; c=relaxed/simple;
-	bh=dlWh/zMhp+rDF+uBlV6D16SzoOVp4obnPz8fi8OhNyY=;
+	s=arc-20240116; t=1761629622; c=relaxed/simple;
+	bh=J1THBNPJwyRDVbWlqTQQL8lsHDatXz1imt9XImDpFxs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ghFYgsGRP3MEO+Phwn7Hsasi5DMESvCRBv9ZuhVK1FdzzZMwuRyYTixAZtgm4IgJSfjA6c9kAeqIPTp8QeWX+G6/gvZXHg9DCX4taTSYmCyNaAC5I4tHQ+f+yWcWLZubPm5ctNPSrmiLCqnhFdSIiwM11xP57P90+dqUsSkCP9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqQnLWQ1; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761629339; x=1793165339;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dlWh/zMhp+rDF+uBlV6D16SzoOVp4obnPz8fi8OhNyY=;
-  b=lqQnLWQ1iTL6N1A0U4pzxy8JYDcbS3WRxHDHb8qP81iPLsZaO+4tMpnA
-   cjKdn2CryJo++EVyk9L2rKP+dt6R6dThbuKvFL+7ByTQzZutphd4gJBky
-   e+W/H9gW1gMmsYFoxTjqArWKeB1os1AeAYcICMfwzmbrydLfe2+LzrSOq
-   oCVHvhNoMWQhHiSe1e5x7IbCJUeJzZMq7S3Xwmx1Nsnnlo8sxc6rO5q+X
-   jSaZU3vj1H7vMtEzb/eXI2bTIiEFSCIBXuwos/OmMbQMLz5hEvjgLX3K+
-   wKuLsOQB48fcoeOT9jvjT9XFjfkS3hjDFAZnzyqROaJ2dwIBsjnJfdVHP
-   A==;
-X-CSE-ConnectionGUID: pRa4gaf/T+OPrVCukxllYg==
-X-CSE-MsgGUID: SKEZLiK1Sy6al+iBFirQ4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="51294724"
-X-IronPort-AV: E=Sophos;i="6.19,260,1754982000"; 
-   d="scan'208";a="51294724"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 22:28:59 -0700
-X-CSE-ConnectionGUID: +AIdehCFTIykviljMNK7Tg==
-X-CSE-MsgGUID: i3gkCQTaT0CPXjmigZSDvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,260,1754982000"; 
-   d="scan'208";a="208847212"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Oct 2025 22:28:53 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vDcGG-000InF-0P;
-	Tue, 28 Oct 2025 05:28:48 +0000
-Date: Tue, 28 Oct 2025 13:27:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
-	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
-	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jacky_chou@aspeedtech.com
-Subject: Re: [PATCH v4 8/9] PCI: aspeed: Add ASPEED PCIe RC driver
-Message-ID: <202510281310.tCGvqcsO-lkp@intel.com>
-References: <20251027095825.181161-9-jacky_chou@aspeedtech.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QsVXYLBnea62KF/oYFrBModkfVlUoSvOZUkC23R6EqnLqZUb4RszcyV0JbtCinICobrz/ipL3CfT2G8flO7JLWHvP6+o84GBempnX9eroiRkF1OdoQ/w7+sbWiUA/nrZokWQtRDz6S3BKxyxKrngb0SdBZySV+eP9bA5VbgEw3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNXrOlJL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE09C4CEE7;
+	Tue, 28 Oct 2025 05:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761629621;
+	bh=J1THBNPJwyRDVbWlqTQQL8lsHDatXz1imt9XImDpFxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KNXrOlJL3ORZ4LyNPAbMj5RN6s46786LfV09Spav2lf6B1n+5TLy2v356wB2IdIQr
+	 IgCVhn/moawjgEPcRZOP3SpF7n1vFT0oTc7++GCiGpWOfQcalMpLjYncsJIvw2UwzM
+	 B+/fjSVn0thaIeZnN8PMCzLBj62/+70Zvue/eH2nBUCXVT0DeESb2qeQv4qHEf533r
+	 GaAsjq+nM1qqACJgsEfaedRn1OT/Kehn4hRsWVvCKwfQ1gEN2QL30vcr4OsaymLxrA
+	 QxDcnqo2hnZPpdP75xfgtnNEl9sSB4vQ5/mBBxfdGgAPIuu/wYy6V3VpCz2U5dLC0t
+	 O5GvSkZoyoQcQ==
+Date: Tue, 28 Oct 2025 11:03:28 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Frank Li <Frank.li@nxp.com>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh@kernel.org>, 
+	"David E . Box" <david.e.box@linux.intel.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Chia-Lin Kao <acelan.kao@canonical.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
+	Han Jingoo <jingoohan1@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Revert "PCI: qcom: Remove custom ASPM enablement code"
+Message-ID: <qfrffijnf37qkdgvbsbfpzm3dsud7q3fvzrm33lzj7hwttqw3g@coah4xzo7zbs>
+References: <5y3mxvvkwc2svsm5lt6okytkkw6u7yzfy4i5dgn3fs5v7s4i6i@qv2tvlxotom6>
+ <20251027230703.GA1485546@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251027095825.181161-9-jacky_chou@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251027230703.GA1485546@bhelgaas>
 
-Hi Jacky,
+On Mon, Oct 27, 2025 at 06:07:03PM -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 27, 2025 at 05:21:30PM +0530, Manivannan Sadhasivam wrote:
+> > On Sun, Oct 26, 2025 at 02:37:54PM -0500, Bjorn Helgaas wrote:
+> > > On Sun, Oct 26, 2025 at 08:58:29PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Fri, Oct 24, 2025 at 04:04:57PM -0500, Bjorn Helgaas wrote:
+> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > 
+> > > > > This reverts commit a729c16646198872e345bf6c48dbe540ad8a9753.
+> > > > > 
+> > > > > Prior to a729c1664619 ("PCI: qcom: Remove custom ASPM enablement code"),
+> > > > > the qcom controller driver enabled ASPM, including L0s, L1, and L1 PM
+> > > > > Substates, for all devices powered on at the time the controller driver
+> > > > > enumerates them.
+> > > > > 
+> > > > > ASPM was *not* enabled for devices powered on later by pwrctrl (unless the
+> > > > > kernel was built with PCIEASPM_POWERSAVE or PCIEASPM_POWER_SUPERSAVE, or
+> > > > > the user enabled ASPM via module parameter or sysfs).
+> > > > > 
+> > > > > After f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
+> > > > > devicetree platforms"), the PCI core enabled all ASPM states for all
+> > > > > devices whether powered on initially or by pwrctrl, so a729c1664619 was
+> > > > > unnecessary and reverted.
+> > > > > 
+> > > > > But f3ac2ff14834 was too aggressive and broke platforms that didn't support
+> > > > > CLKREQ# or required device-specific configuration for L1 Substates, so
+> > > > > df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms")
+> > > > > enabled only L0s and L1.
+> > > > > 
+> > > > > On Qualcomm platforms, this left L1 Substates disabled, which was a
+> > > > > regression.  Revert a729c1664619 so L1 Substates will be enabled on devices
+> > > > > that are initially powered on.  Devices powered on by pwrctrl will be
+> > > > > addressed later.
+> > ...
+> 
+> > > I have some heartburn about both the revert and the
+> > > pci_host_set_default_pcie_link_state() approach because they apply to
+> > > the entire hierarchy under a qcom or VMD root port, potentially
+> > > including add-in cards with switches.  CLKREQ# (and possibly more) is
+> > > required to enable L1SS, and I don't know if we can assume it's
+> > > supported on add-in links.
+> > 
+> > I don't think we can assume, but at the same time, I don't think we
+> > will ever be able to come up with a logical way to enable L1ss on
+> > all devices. But if we leave the decision to the host controller
+> > drivers, they can at least guarantee that the CLKREQ# and other
+> > requirements are satisfied from the host perspective for L1ss. Then,
+> > if any device exhibit erratic behavior, we will for sure know that
+> > the device is at fault and we can quirk them.
+> 
+> If we can figure out that an endpoint is defective, a quirk is great.
+> But the issue might be something in the path, e.g., some connector in
+> the path leading to the endpoint doesn't include CLKREQ#, and we can't
+> quirk the endpoint then.
+> 
 
-kernel test robot noticed the following build warnings:
+I got your concern, in this case, we can have board specific quirks for those
+with broken connectors and such. Let's say if the SoC supports CLKREQ#, but one
+of the downstream connectors of a switch connected to the Root Port doesn't,
+then we can have a quirk based on the board compatible and the switch combo.
+It is implied that the person who is designing the board is aware of this issue
+and they can add the quirk by themselves (without affecting users).
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.18-rc3 next-20251027]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> To me it sounds like the mainline kernel should be safe and only
+> enable L1SS when it has a clear signal that it is safe, either via
+> devicetree, ACPI, or L1SS configuration inherited from firmware.  I
+> don't want a future of telling users to boot with "pcie_aspm=off" if
+> a device doesn't work.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-phy-aspeed-Add-ASPEED-PCIe-PHY/20251027-180856
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20251027095825.181161-9-jacky_chou%40aspeedtech.com
-patch subject: [PATCH v4 8/9] PCI: aspeed: Add ASPEED PCIe RC driver
-config: loongarch-randconfig-r113-20251028 (https://download.01.org/0day-ci/archive/20251028/202510281310.tCGvqcsO-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251028/202510281310.tCGvqcsO-lkp@intel.com/reproduce)
+It is a trade-off. I completely agree that we do not want to break users, but at
+the same time, the kernel should provide optimum power savings by default also
+(if it has the knowledge).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510281310.tCGvqcsO-lkp@intel.com/
+The SoCs targetting embedded/laptop usecases want to make use of L1ss to prevent
+draining battery too fast. Currently, on Qcom platforms, we are asking our users
+to enable ASPM through Kconfig/cmdline to make sure their laptop battery last
+long. And we cannot ask distros to enable these for users as distros would only
+use a common kernel/config for all platforms they support. So the burden
+essentially lies on the user. All this could've been fixed if the BIOS enabled
+L1ss, but it doesn't unfortunately.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/pcie-aspeed.c:1084:38: sparse: sparse: symbol 'pcie_rc_ast2600' was not declared. Should it be static?
->> drivers/pci/controller/pcie-aspeed.c:1093:38: sparse: sparse: symbol 'pcie_rc_ast2700' was not declared. Should it be static?
+Also, it is not possible to rely on DT/ACPI or other platform description to
+tell the OS about CLKREQ# routing for all the devices in the topology. They can
+give the information about Root Ports and other devices attached to the board in
+the enclosure, but not about the devices that will get attached to the open slot
+dynamically.
 
-vim +/pcie_rc_ast2600 +1084 drivers/pci/controller/pcie-aspeed.c
+Also, for a discoverable bus like PCI, DT do not necessarily describe all
+devices unless they requires some special handling like power sequencing.
 
-  1083	
-> 1084	const struct aspeed_pcie_rc_platform pcie_rc_ast2600 = {
-  1085		.setup = aspeed_ast2600_setup,
-  1086		.reg_intx_en = 0xc4,
-  1087		.reg_intx_sts = 0xc8,
-  1088		.reg_msi_en = 0xe0,
-  1089		.reg_msi_sts = 0xe8,
-  1090		.msi_address = 0x1e77005c,
-  1091	};
-  1092	
-> 1093	const struct aspeed_pcie_rc_platform pcie_rc_ast2700 = {
-  1094		.setup = aspeed_ast2700_setup,
-  1095		.reg_intx_en = 0x40,
-  1096		.reg_intx_sts = 0x48,
-  1097		.reg_msi_en = 0x50,
-  1098		.reg_msi_sts = 0x58,
-  1099		.msi_address = 0x000000f0,
-  1100	};
-  1101	
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
