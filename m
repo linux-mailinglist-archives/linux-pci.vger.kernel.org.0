@@ -1,263 +1,195 @@
-Return-Path: <linux-pci+bounces-39522-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39523-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91EE0C14659
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 12:38:30 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F79EC1476C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 12:51:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 784E31891C30
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 11:38:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 279E64FA301
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 11:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A888A30170C;
-	Tue, 28 Oct 2025 11:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39ED530F520;
+	Tue, 28 Oct 2025 11:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2qVlt33l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoGiyTXp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012040.outbound.protection.outlook.com [52.101.53.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C18302CB9;
-	Tue, 28 Oct 2025 11:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761651505; cv=fail; b=dTDF/K9WyBT7Gp0ZsWpSKDtxmMpJWvxX3/XTzN3M+KYR8Nx02w/pQkFabEu5rO0M2PsgKqjOsWw/jjyZJ1PGPW8/do29amIArKRq+bAZ3KXiCWcpvraSzXrSDMDK1RhuZPOO6IbZK44JmhT1kweWFVtNjP4ETrRk3XvNU8o2rSE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761651505; c=relaxed/simple;
-	bh=HMr1xKWONxOvoIslc9JIFe8AygN338Ug3+q2gaYxOGg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z26/0Z+SmKz99c0RoL3oAoc6M0wmiyULJ5pfmt9GfTa3MuATsCOIpJ0hOXvtHKxYMLCdFsafXii4Rt63o2qUEUu0E47cE3Ibj7e3OQaMQUrqaJ5R72QtYLGNxbMFG6gifthQLn5NgP2kndqQETtAnn0x+ebo2IJ8c3uBfcJ2e5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2qVlt33l; arc=fail smtp.client-ip=52.101.53.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WjwEC7CHSxvH0CZFaSqtuS7msPJQoUElmbPcYmRRDAcEeQkHXp2G7hBasqsrB+8Qff/Y3+k+UF6qNXyd001qxiiRfXpyMSff9Lb0w+dnRP5JRC9U5YTTbuSue08TXXuryEyZ/QKn5dXwvo/tUsntSE9GH1IhqqE71dY3iu70cAmeGRlP2IcamsQyMwrhaANQSe3X6cg1crnNDpci+DpSVcRR/lDc8Fvfuw4H5wdXolNXGSsPm7VgVebixB1ydAnMudY2aPVfXgW/AlqIeF34/R4xzLbe+e5pXIq2bIHLWf2Ff3m9dN+5xL9VbSDiFTigzoJH2tJy92QuK8Bik3LQRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HMr1xKWONxOvoIslc9JIFe8AygN338Ug3+q2gaYxOGg=;
- b=BtgwubQ3LRdYNDzxggwMYRdig4qYu6bM7mktzgnAj8NTf6x2fdXnVkAbcPIJbzQ/jZdxq434Zor3hA3MYmj1qvYzQICjmHe/kyQ9D8DK/XNmXlM6GDkRAnOgs9Gu4oUTbMT5LU6Ph7XIwkpqIhUTAuJgaHmLmgZ3hNGzhTV+IG3ViEtJllonsZLCoNkJ6S8acESMVeH5FsqkoNlrC9DRNXUeBaMqGRoNyBnLwYQosBZ4deonC1BBxeD50TbZib0v+VAeazgsKz8oVXDSiE/z3GjRxCKLuQRZEaTVhNYRFYK+WSpgE4GFwHyHI4QhlE8lcpHE+lnwQBSqepIsXTOizg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HMr1xKWONxOvoIslc9JIFe8AygN338Ug3+q2gaYxOGg=;
- b=2qVlt33lInfTy/VfTkKRQVHg6YSv5XrYFvHqZThGxzDYG7VBo7MsjDq7LoModc0v/92Zzfq3EFmo+5SxILqXFW+ZrqP9j4mqyCrPvznh44+i8q765fJnLKm5unAFqg63GC5HGxJYRqbSs25jBDXR+RX0CKijzcCmUls+kEfIYxs=
-Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
- by CY1PR12MB9650.namprd12.prod.outlook.com (2603:10b6:930:105::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.17; Tue, 28 Oct
- 2025 11:38:20 +0000
-Received: from SA1PR12MB8120.namprd12.prod.outlook.com
- ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
- ([fe80::a160:b30e:1d9c:eaea%6]) with mapi id 15.20.9275.011; Tue, 28 Oct 2025
- 11:38:20 +0000
-From: "Verma, Devendra" <Devendra.Verma@amd.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "vkoul@kernel.org"
-	<vkoul@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
- Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
-Subject: RE: [PATCH RESEND v4 2/2] dmaengine: dw-edma: Add non-LL mode
-Thread-Topic: [PATCH RESEND v4 2/2] dmaengine: dw-edma: Add non-LL mode
-Thread-Index: AQHcPQRterhw0IbdvkCPThJp/fTXvLTWDUIAgAF2JkA=
-Date: Tue, 28 Oct 2025 11:38:20 +0000
-Message-ID:
- <SA1PR12MB8120D254DF2ED5444F5236CB95FDA@SA1PR12MB8120.namprd12.prod.outlook.com>
-References: <20251014121635.47914-1-devendra.verma@amd.com>
- <20251014121635.47914-3-devendra.verma@amd.com>
- <4rmlsvc4zffwlv6iye4sotpe3ezhblhlps6qglokrztno3wxte@tqiuci6fvcmn>
-In-Reply-To: <4rmlsvc4zffwlv6iye4sotpe3ezhblhlps6qglokrztno3wxte@tqiuci6fvcmn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-10-28T11:33:46.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|CY1PR12MB9650:EE_
-x-ms-office365-filtering-correlation-id: 256dab87-6f09-4d0e-7305-08de16167ef6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?ZVI3NHA2S2xyR0pXR1FKRDVvekdFREwvdDBZTVF2NnNTbVRGZ2hVRXNhUitG?=
- =?utf-8?B?d3pjYlY5NEFSbUluYTJWRVM3YXdaekN3bDBxTmY2eGlONXBtVkpqNUNoWG9L?=
- =?utf-8?B?ZXd4RWdYZTN0WEVKbDdodE9tT0lpQ2JhVHQ2Y01VdXRhdkZQUzZvUFUvdDVK?=
- =?utf-8?B?Znd4MmxNK0dSMjF2RW5adjJad016VTV1UDM5NXNWNzN4d3hPajBtQ3g0UUh6?=
- =?utf-8?B?OUZhRERic3ZydTdVS1Q0Y1Z4YlkzYThMMmxKaDhaN1F3ZVhSc3gydHlHYndG?=
- =?utf-8?B?a2xuZk5tK0RDdGJkenJ0eHZ3Kzl2b2FtOHEvWVY0UGdqNTZvK3NPNVFzNUp3?=
- =?utf-8?B?Y1hMTm9ySStPSkp4STM4U0JNQlV1V1lROFY0M0lJOHRMSGJyTzZJZWNqenUx?=
- =?utf-8?B?Qy96Z202WjIvWURUZjJpV2VjTE43Y2EzdzdnUzNGZVdJUFcyc3FzSGZPT0px?=
- =?utf-8?B?aG1aMHhWcEVnWTY0am0yOFNTeVJvSnVYL1F1S3RPV2J4NWNueGNid0ZDMDVS?=
- =?utf-8?B?QlJtbUsyRk8zNTRzQUxFOStpSmxXWHZpYVptYUVNWmZzUlRkeFZieXVNZkxH?=
- =?utf-8?B?VXJvNWl6akdieUg3aEU4dUdLd0hDZjlxSy9lblpzMlZXM2RVSHd3WVZacTJO?=
- =?utf-8?B?TElNcHJEVmVMSElQTWR2VlBXTmlKR2dGajh2WmxFektpR3lCWkVHOFV0dnFN?=
- =?utf-8?B?YUJuL1BTdkw2bk9LMy90M2RGNEtzWlg0RERPWGo2R3pNMGRaUmJocEVsMGFN?=
- =?utf-8?B?Qlg2UlBNbzN6Snp3K1VRbjFpandmQTZLdXljRS9rTW1OTGtnNllxTmdXV1dT?=
- =?utf-8?B?K1VYTzNkazJiNmFIM0ozN3habFFSdjY5QnhhUUZad2VXMnl6QXp3Rlg5MmV0?=
- =?utf-8?B?eTVXeE81ejNZdmJqVkVmNklMUXI3RlRhakp2QUZjS2ZkV1dja21kMVBPZHBs?=
- =?utf-8?B?SGpJQ3oxZTRzajY4V2RPcUJ5Q0ZDdENCY2Q0NVZJQW9xa0NGUUR2TkVKTk1n?=
- =?utf-8?B?SGVyeUJwRGZqU205SDhFZDdJY3lKWXBKTjRpSVlzKzJOVVU3TTVORGNIbmhJ?=
- =?utf-8?B?aXR0SmdHejhreDJKazBpZW9GSUxCUkwyempJRmRyMWIwWjhzU0FWN1hZdUov?=
- =?utf-8?B?dHlBcEVVMWdYdlhzaTR3TzU5K1JsYVROS0pFaTloZ1BuNThoUkpnS2NSalZm?=
- =?utf-8?B?UXZZMUx3b0xIL0NFMEF2T3RNUUlmeUZOVUVPUXl0NXcvVXVFRGtQS241ZzB2?=
- =?utf-8?B?b2VJck5vSk5HemxBTTRxYnVkeWgvRGlWUDNqSnVqNWRXZ1gvWXlXWDM4QitK?=
- =?utf-8?B?UHhmWUVnWDFtcHRpNmVkQkE0NDgzUGxqYUxUT3VCY2J5bm9Ecm1UUEc2bWlX?=
- =?utf-8?B?T3V2KzFMcDNGT2Raekp2d3EvdGlqU3RPZlROZStUcnovOXJrZ3pIRzRzVC9E?=
- =?utf-8?B?Y1YvMm1LTGVjQ0xJRmV0dVovWUw3a0RxNCtpaGRMK0lDNE41TUg5bGlvZGtW?=
- =?utf-8?B?UEd3V0h5R3BzZ1BYQnppOXZ2QjZyNW4zSmZYbHdESzhqT0ljVHovbjk2SFpY?=
- =?utf-8?B?Yy9qU0dWNytnNWVCVlFhamZjbHJ3eU9YUmRubmtMMzIzcHJtZzNYK0lydWgx?=
- =?utf-8?B?cm5VTmY2VHN6dSsvSDJUVTkvMUxkYUJmTHNLWk5BM1V5enk0VytLWGRWMXNZ?=
- =?utf-8?B?SG1mVXhyTVphSGtSV01kaHNNdWRMRm9TYVE4dWpyNVJVc2lINlMvdVZ6NmZQ?=
- =?utf-8?B?VFByOGZSeTZzcFlBQUh1a1h1MVkwWjliQVhtWlVaUExWa09MdFJqMVZRbHF0?=
- =?utf-8?B?anM3OWRGZ016KzlLTGJVQlh2ZnhaYWh6OHNYVnBWOVQ2ZW5hNmFzenR1YTZ6?=
- =?utf-8?B?ekdYeFVFUmx2MGNRM0V2T1VlVkJJWXVabUM0dGJzSjVhMEhiQjAvbnA5dnRJ?=
- =?utf-8?B?YXBQUTNBTCs2UDJyWk5aVkgzVmE3TUdMK3haL29IV3NOV0F3Y3hRcFI5OUkr?=
- =?utf-8?B?Q3hUcUxlSGFGalhiSmg2WHpFM2RHVWpSTTFaVldnVmc1WUo2QjQzQXZ1akdj?=
- =?utf-8?Q?FAIZab?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dk1wa2lsbXd2YnhLSGhYRjZZMlpxNmpTVnpsWHpmbVdGZVlEVjRvdEVPazFE?=
- =?utf-8?B?NzZjTmw3ZVFTQ0NnQ01HdlE4bG1salh1TW9RVVhXQmNjbFhlT1IxM01XVVpY?=
- =?utf-8?B?UWhscmhoN1hRLzM2aml4b2U0Z1dIclI0MmEra3BwZDYxaCtCaDlEL21kc01z?=
- =?utf-8?B?bURmUjdDbGc5c3U3SlVZbDZXSXhqZHJDU3dUeTcrUzZGeHFoaFZLN2lubmd5?=
- =?utf-8?B?K0FNNVNOZUxwQUFPRXlDeUZMeFdmclBybWtBWVNJU2FzTzhnU2wwWXlvOVJI?=
- =?utf-8?B?VHpiNW5VcUZsSCtPdDd4UUFSdlZ1cC9rdjEwRUtKOEFwMHAyZktvMzNEbElT?=
- =?utf-8?B?QUR0M1lIUGJwUmVjcUQwU3ZzVSsrUnNUZmNGaWJDRXRId2lGOUE5UDRtdVZY?=
- =?utf-8?B?QkY1Z3RRWG9FeHowWTVMa0VaS0lkcFpCb000TVp4c2s4aWx6dW1MUEJmYU84?=
- =?utf-8?B?THpWa3p2ZmloRnhCdFB2OUZvNTdOMS92K2U0SjNRazBqNG5wWUIzQUJFZ1Jp?=
- =?utf-8?B?N1hxS0RpYVlKUXNXUjMwNVAzQmtleWV4TEVnTm5CSS9uUEJiZGkzQ3BsSzZq?=
- =?utf-8?B?aFhibmxDY2tLSTdMNG1mS2hJY0NNaDFTVEJ3anVab2NWUjRvQkZyMmxOOURz?=
- =?utf-8?B?eW9NWVkzZU9JdzlGV1ZOSHJjZjh3SmVMZFNxdG5zeUQ1MjFJajRSYysyTHBM?=
- =?utf-8?B?eTFwSGlGeENBNEkwbmpWVmM4VmNpOGtNaVkzNndUYzU0VXhBaFBmVTZwRHR0?=
- =?utf-8?B?ZFBtUEYzTjFuRUQzRGo2NVhLL3c3REtZYlk0bi9nRm4xUk0rcXc4YXhnV1Jq?=
- =?utf-8?B?NTRjS2FSZmU0YnRRU1d6dWoyeTlpbmp3a2NhUkN5Z2c1c3psNThKVVNyQTN1?=
- =?utf-8?B?UDNHL1hSaURvS1FyYXpkazk2WUtYeWtCQUIvam5MTm83aGRxS0NVY3BxSGNI?=
- =?utf-8?B?amEyU25FdXlXdjZOaEhBeFlnUVc5Wmo0b1RXbUlpS1RWT2k4eWJzZE5oUWxO?=
- =?utf-8?B?bmJLbjNVMXNhNFhHSjg4a1BOM3BONTArRjM2em00Y1Q4WFduV2J5UXJGQ1pW?=
- =?utf-8?B?eXFjdm5RUjdyZ0Y5VldBdTJGb2oxSTlGNjFuSEw5SzFwUHJMM0dheks0RzdJ?=
- =?utf-8?B?ak42ZjFoYjloMnFLb3ZBeithM0Q2QWJvYjRocVRjeUZpb2x2SS9GYW1qQXNl?=
- =?utf-8?B?eTBiaXpoWkdrdkZQTDZRVU5pVFZhWk14VjZjbXQwc3BxT1YwRmQzKzZoOC9l?=
- =?utf-8?B?TWo4R0pWUXBndXFoWGtEQ0xjUFRBME1tbkFIcUxMd3RmOEZGUWNzbWRTcDlC?=
- =?utf-8?B?TXUybzdOdEJKbm5jT0o2ODN3MUtqa1E0eTlkV0g2UlBlWnpmYjNjTmdUZm9q?=
- =?utf-8?B?R0lBWTVGUVJMZkVSSngvZURyK1NHb3h5ZkJmWnZXd2tOYmhlcjVGT0VxTHNY?=
- =?utf-8?B?NGVGbXBLa3g4VDNyUGR3N1c0Z21NUS95blgwS1krTUxCNU9PNzFWNEtKRTFx?=
- =?utf-8?B?OVhJbWFVQmVkb2tvS2tHbllYWHNiSVJnQnJYUjZmWjNOUzdkdjdrZHlHRTJn?=
- =?utf-8?B?bVgxZ2FEeEVqZy9JRWYyV3B1YlAyMHVFUHBNVG9RQ0dFR2ozZzlWeVZ3dW5H?=
- =?utf-8?B?WnhUWDg3ODhuZGs0aDFrQUc1WVpRbnFScUN0ZklxSmZDV2hQTWtQVU16by8x?=
- =?utf-8?B?bjdDSWZVQkxGdTFSREV1WkdhUDlXUitxNDdFTHJPbDBLMEtjSCtFUDIyN3Iw?=
- =?utf-8?B?bEJyM2E2d1JFRjFDYUs5ZFlyYWJBcXhBWmtORDUyUlVmaGd5WjNRNE9RVEtW?=
- =?utf-8?B?cE53VHpJREFWcERYanE0SVZhQjlQK1JLdVVPa2pQUlQvNjNPRk9Wc3Fsd0Z5?=
- =?utf-8?B?S3lYZUdEdHZKaGJDcXJzSkQ1UkNIYXNqaWdmaU5UZ1lWWHhQb1VDUXRZOW96?=
- =?utf-8?B?TUxzWFU5QlFsUS9mMmtIT2drZ1ErQS8rNUZ1Z3l3amkvU1Zqd0g3TVowVWx6?=
- =?utf-8?B?Z1ZXbHB2cTJFZFlCakVoNzNHQWhkbUNtZXhlOVpLTm9PSEJBMDc1L0cxeU5i?=
- =?utf-8?B?aS9JNzJxZ1J0WHBIZDQ3MVNqMDlYbkhSb3h5SVVIQjVzaFRQamRFNjJuTmZC?=
- =?utf-8?Q?bHCM=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6C130C36F;
+	Tue, 28 Oct 2025 11:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761652069; cv=none; b=YciRZLsyV/SRnEpiTDVHrr+NcBBgbv27vrUnuwFzKzs5CXEqk0oO0P/DYrtk7TKWmI9rGU+oh5waaO3UXLk2XTFpbu3+1CkIi2wpZa6zPf5QvLwQPiPIgr1aWy47a3ZayFQRaveSJdLUa+c8x5aKJW0HU7Mq7hKVUmA7fereF2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761652069; c=relaxed/simple;
+	bh=o3Ygv9zJiM4QaoVWp21tdWP+/a1mP1M4inHPBsgO0Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=L7oAPZYeAVBDBVvmf5xhb60zR0WJIpBXLRr4asVZOrnf9dFtdSlwDznG8dVOIi6yO8gaBgdKHzkPoc7n66Vcq7zJunIo9YlgfdB9e0W3O8iqXz3nCn3vFYmtybq2nDFw2nV3P/2xEwxuJHeNCaGRkvdIt05+1IYK5DCYhY4hJ00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoGiyTXp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF46C4CEFD;
+	Tue, 28 Oct 2025 11:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761652067;
+	bh=o3Ygv9zJiM4QaoVWp21tdWP+/a1mP1M4inHPBsgO0Cg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FoGiyTXpyFdw86kawPliSOfWBZnCVOBF2RiTCyDIzqW5rSuS4IwbsQ4KZQaNQd8c7
+	 N6skGdZR2F397zvhJNw31ZhTyokWrP8I5HnpOqdqYU5JqpQhc35GqWzYcP6TDvzIgY
+	 3VgWuMK3CF7KML0MUpnrnwGLAqmqTb3twwv3HlzxuRMkyPGsaKoX1+wbvdRuBhcSVN
+	 e3BIfpj7y9SiWAaTiHPx9ZQ77QialZO0xSWj+9lq3iHyb5AzdcvKi7H63oA7S5A1rX
+	 h7473wjkesXMxV/8IyD2b5lkssWZ7LMRsUKKyjm8TfNoNNc0f+Dj9z5r3sAuNmrl0c
+	 T+9JDsevrOx8A==
+Date: Tue, 28 Oct 2025 06:47:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, unicorn_wang@outlook.com, kishon@kernel.org,
+	18255117159@163.com, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH] PCI: cadence: Enable support for applying lane
+ equalization presets
+Message-ID: <20251028114746.GA1505797@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 256dab87-6f09-4d0e-7305-08de16167ef6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2025 11:38:20.7788
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ItZ84rHI0TvnxtVNpu8iUnLbQGIGSuEEh9MrKUtbNnCwrg0Js4RTqZB0vNrtq3efcgzGHa3zgeZATzi6NzHmeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9650
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5c1aedfeadc9a8ccd386c85028ee3f43eddf07c.camel@ti.com>
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
-Cg0KVGhhbmsgeW91IE1hbml2YW5uYW4gZm9yIHJldmlld2luZyB0aGUgcGF0Y2hlcyENClBsZWFz
-ZSBjaGVjayBteSByZXNwb25zZSBpbmxpbmUuDQoNClJlZ2FyZHMsDQpEZXZlbmRyYQ0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
-bWFuaUBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMjcsIDIwMjUgNjo0NSBQ
-TQ0KPiBUbzogVmVybWEsIERldmVuZHJhIDxEZXZlbmRyYS5WZXJtYUBhbWQuY29tPg0KPiBDYzog
-YmhlbGdhYXNAZ29vZ2xlLmNvbTsgdmtvdWxAa2VybmVsLm9yZzsgZG1hZW5naW5lQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgU2ltZWssIE1pY2hhbA0KPiA8bWljaGFsLnNpbWVrQGFtZC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIHY0IDIvMl0gZG1hZW5naW5lOiBkdy1lZG1hOiBBZGQg
-bm9uLUxMIG1vZGUNCj4NCj4gQ2F1dGlvbjogVGhpcyBtZXNzYWdlIG9yaWdpbmF0ZWQgZnJvbSBh
-biBFeHRlcm5hbCBTb3VyY2UuIFVzZSBwcm9wZXINCj4gY2F1dGlvbiB3aGVuIG9wZW5pbmcgYXR0
-YWNobWVudHMsIGNsaWNraW5nIGxpbmtzLCBvciByZXNwb25kaW5nLg0KPg0KPg0KPiBPbiBUdWUs
-IE9jdCAxNCwgMjAyNSBhdCAwNTo0NjozNFBNICswNTMwLCBEZXZlbmRyYSBLIFZlcm1hIHdyb3Rl
-Og0KPiA+IEFNRCBNREIgSVAgc3VwcG9ydHMgTGlua2VkIExpc3QgKExMKSBtb2RlIGFzIHdlbGwg
-YXMgbm9uLUxMIG1vZGUuDQo+DQo+IElzbid0IHRoZSBwYXRjaCBhZGRpbmcgbm9uLUxMIG1vZGUg
-Zm9yIGFsbCBwbGF0Zm9ybXMsIG5vdCBqdXN0IGZvciBBTUQ/DQo+DQoNCkEgc3BlY2lmaWMgY2Fz
-ZSB3aGVyZSBMTCBtb2RlIGlzIGVuYWJsZWQsIHdoaWNoIGlzIHRoZSBkZWZhdWx0IG1vZGUsIGlu
-DQp0aGlzIGNhc2UgYWxsIHRoZSBJUHMgY2FuIHN1cHBvcnQgdGhlIG5vbi1MTCBtb2RlIHByb3Zp
-ZGVkIGl0IHNoYWxsIGJlDQpjb25maWd1cmVkIHZpYSB0aGUgY29uZmlnIHBhcmFtIHBlcmlwaGVy
-YWxfY29uZmlnIGJ5IHRoZSBjbGllbnQuDQpUaGUgZGVmYXVsdCBjYXNlIHdoZXJlIG5vbi1MTCBt
-b2RlIGlzIGVuYWJsZWQgZm9yIGFsbCB0aGUgSVBzIGlzIE5PVA0Kc3VwcG9ydGVkIGJ5IGFsbCB0
-aGUgSVBzLg0KDQo+ID4gVGhlIGN1cnJlbnQgY29kZSBkb2VzIG5vdCBoYXZlIHRoZSBtZWNoYW5p
-c21zIHRvIGVuYWJsZSB0aGUgRE1BDQo+ID4gdHJhbnNhY3Rpb25zIHVzaW5nIHRoZSBub24tTEwg
-bW9kZS4gVGhlIGZvbGxvd2luZyB0d28gY2FzZXMgYXJlIGFkZGVkDQo+ID4gd2l0aCB0aGlzIHBh
-dGNoOg0KPiA+IC0gV2hlbiBhIHZhbGlkIHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBpcyBub3QgY29u
-ZmlndXJlZCB2aWEgdGhlDQo+ID4gICBYaWxpbnggVlNFQyBjYXBhYmlsaXR5IHRoZW4gdGhlIElQ
-IGNhbiBzdGlsbCBiZSB1c2VkIGluIG5vbi1MTA0KPiA+ICAgbW9kZS4gVGhlIGRlZmF1bHQgbW9k
-ZSBmb3IgYWxsIHRoZSBETUEgdHJhbnNhY3Rpb25zIGFuZCBmb3IgYWxsDQo+ID4gICB0aGUgRE1B
-IGNoYW5uZWxzIHRoZW4gaXMgbm9uLUxMIG1vZGUuDQo+ID4gLSBXaGVuIGEgdmFsaWQgcGh5c2lj
-YWwgYmFzZSBhZGRyZXNzIGlzIGNvbmZpZ3VyZWQgYnV0IHRoZSBjbGllbnQNCj4gPiAgIHdhbnRz
-IHRvIHVzZSB0aGUgbm9uLUxMIG1vZGUgZm9yIERNQSB0cmFuc2FjdGlvbnMgdGhlbiBhbHNvIHRo
-ZQ0KPiA+ICAgZmxleGliaWxpdHkgaXMgcHJvdmlkZWQgdmlhIHRoZSBwZXJpcGhlcmFsX2NvbmZp
-ZyBzdHJ1Y3QgbWVtYmVyIG9mDQo+ID4gICBkbWFfc2xhdmVfY29uZmlnLiBJbiB0aGlzIGNhc2Ug
-dGhlIGNoYW5uZWxzIGNhbiBiZSBpbmRpdmlkdWFsbHkNCj4gPiAgIGNvbmZpZ3VyZWQgaW4gbm9u
-LUxMIG1vZGUuIFRoaXMgdXNlIGNhc2UgaXMgZGVzaXJhYmxlIGZvciBzaW5nbGUNCj4gPiAgIERN
-QSB0cmFuc2ZlciBvZiBhIGNodW5rLCB0aGlzIHNhdmVzIHRoZSBlZmZvcnQgb2YgcHJlcGFyaW5n
-IHRoZQ0KPiA+ICAgTGluayBMaXN0Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRGV2ZW5kcmEg
-SyBWZXJtYSA8ZGV2ZW5kcmEudmVybWFAYW1kLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGlu
-IHY0DQo+ID4gICBObyBjaGFuZ2UNCj4gPg0KPiA+IENoYW5nZXMgaW4gdjMNCj4gPiAgIE5vIGNo
-YW5nZQ0KPiA+DQo+ID4gQ2hhbmdlcyBpbiB2Mg0KPiA+ICAgUmV2ZXJ0ZWQgdGhlIGZ1bmN0aW9u
-IHJldHVybiB0eXBlIHRvIHU2NCBmb3INCj4gPiAgIGR3X2VkbWFfZ2V0X3BoeXNfYWRkcigpLg0K
-PiA+DQo+ID4gQ2hhbmdlcyBpbiB2MQ0KPiA+ICAgQ2hhbmdlZCB0aGUgZnVuY3Rpb24gcmV0dXJu
-IHR5cGUgZm9yIGR3X2VkbWFfZ2V0X3BoeXNfYWRkcigpLg0KPiA+ICAgQ29ycmVjdGVkIHRoZSB0
-eXBvIHJhaXNlZCBpbiByZXZpZXcuDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZG1hL2R3LWVkbWEv
-ZHctZWRtYS1jb3JlLmMgICAgfCAzOCArKysrKysrKysrKysrKysrKystLS0NCj4gPiAgZHJpdmVy
-cy9kbWEvZHctZWRtYS9kdy1lZG1hLWNvcmUuaCAgICB8ICAxICsNCj4gPiAgZHJpdmVycy9kbWEv
-ZHctZWRtYS9kdy1lZG1hLXBjaWUuYyAgICB8IDQ0ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0N
-Cj4gPiAgZHJpdmVycy9kbWEvZHctZWRtYS9kdy1oZG1hLXYwLWNvcmUuYyB8IDYyDQo+ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIGluY2x1ZGUvbGludXgvZG1hL2Vk
-bWEuaCAgICAgICAgICAgICAgfCAgMSArDQo+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMTI3IGluc2Vy
-dGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-ZG1hL2R3LWVkbWEvZHctZWRtYS1jb3JlLmMNCj4gPiBiL2RyaXZlcnMvZG1hL2R3LWVkbWEvZHct
-ZWRtYS1jb3JlLmMNCj4gPiBpbmRleCBiNDMyNTVmLi4zMjgzYWM1IDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1jb3JlLmMNCj4gPiArKysgYi9kcml2ZXJzL2Rt
-YS9kdy1lZG1hL2R3LWVkbWEtY29yZS5jDQo+ID4gQEAgLTIyMyw4ICsyMjMsMjggQEAgc3RhdGlj
-IGludCBkd19lZG1hX2RldmljZV9jb25maWcoc3RydWN0DQo+IGRtYV9jaGFuICpkY2hhbiwNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRtYV9zbGF2ZV9jb25maWcg
-KmNvbmZpZykgIHsNCj4gPiAgICAgICBzdHJ1Y3QgZHdfZWRtYV9jaGFuICpjaGFuID0gZGNoYW4y
-ZHdfZWRtYV9jaGFuKGRjaGFuKTsNCj4gPiArICAgICBpbnQgbm9sbHAgPSAwOw0KPg0KPiBzL25v
-bGxwL25vbl9sbA0KPg0KDQpTdWdnZXN0aW9uIGFjY2VwdGVkLiBUaGFua3MhDQoNCj4gPiArDQo+
-ID4gKyAgICAgaWYgKFdBUk5fT04oY29uZmlnLT5wZXJpcGhlcmFsX2NvbmZpZyAmJg0KPiA+ICsg
-ICAgICAgICAgICAgICAgIGNvbmZpZy0+cGVyaXBoZXJhbF9zaXplICE9IHNpemVvZihpbnQpKSkN
-Cj4NCj4gVXNlIHByb3BlciBkZXZfZXJyKCksIG5vdCBXQVJOX09OLg0KPg0KDQpTdWdnZXN0aW9u
-IGFjY2VwdGVkLCBkZXZfZXJyKCkgcmVwbGFjZXMgV0FSTl9PTigpIGluIGxhdGVzdCBkcm9wLg0K
-VGhhbmtzIQ0KDQo+ID4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPg0KPiA+ICAg
-ICAgIG1lbWNweSgmY2hhbi0+Y29uZmlnLCBjb25maWcsIHNpemVvZigqY29uZmlnKSk7DQo+ID4g
-Kw0KPiA+ICsgICAgIC8qDQo+ID4gKyAgICAgICogV2hlbiB0aGVyZSBpcyBubyB2YWxpZCBMTFAg
-YmFzZSBhZGRyZXNzIGF2YWlsYWJsZQ0KPiA+ICsgICAgICAqIHRoZW4gdGhlIGRlZmF1bHQgRE1B
-IG9wcyB3aWxsIHVzZSB0aGUgbm9uLUxMIG1vZGUuDQo+ID4gKyAgICAgICogQ2FzZXMgd2hlcmUg
-TEwgbW9kZSBpcyBlbmFibGVkIGFuZCBjbGllbnQgd2FudHMNCj4gPiArICAgICAgKiB0byB1c2Ug
-dGhlIG5vbi1MTCBtb2RlIHRoZW4gYWxzbyBjbGllbnQgY2FuIGRvDQo+ID4gKyAgICAgICogc28g
-dmlhIHByb3ZpZGluZyB0aGUgcGVyaXBoZXJhbF9jb25maWcgcGFyYW0uDQo+DQo+IE1ha2UgdXNl
-IG9mIDgwIGNvbHVtbnMgZm9yIGNvbW1lbnRzIHRocm91Z2hvdXQgdGhpcyBwYXRjaC4NCj4NCg0K
-Q29tbWVudHMgZm9sbG93IHRoZSA4MC1jb2x1bW4gZ3VpZGVsaW5lLiBUaGFua3MhDQoNCj4gUmVz
-dCBMR1RNIQ0KPg0KPiAtIE1hbmkNCj4NCj4gLS0NCj4g4K6u4K6j4K6/4K614K6j4K+N4K6j4K6p
-4K+NIOCumuCupOCuvuCumuCuv+CuteCuruCvjQ0K
+On Tue, Oct 28, 2025 at 10:56:33AM +0530, Siddharth Vadapalli wrote:
+> On Tue, 2025-10-28 at 13:16 +0800, kernel test robot wrote:
+> > Hi Siddharth,
+> > 
+> > kernel test robot noticed the following build warnings:
+> > 
+> > [auto build test WARNING on pci/next]
+> > [also build test WARNING on pci/for-linus linus/master v6.18-rc3 next-20251027]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Siddharth-Vadapalli/PCI-cadence-Enable-support-for-applying-lane-equalization-presets/20251027-213657
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+> > patch link:    https://lore.kernel.org/r/20251027133013.2589119-1-s-vadapalli%40ti.com
+> > patch subject: [PATCH] PCI: cadence: Enable support for applying lane equalization presets
+> > config: x86_64-buildonly-randconfig-002-20251028 (https://download.01.org/0day-ci/archive/20251028/202510281329.racaZPSI-lkp@intel.com/config)
+> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251028/202510281329.racaZPSI-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202510281329.racaZPSI-lkp@intel.com/
+> > 
+> > All warnings (new ones prefixed by >>):
+> > 
+> >    drivers/pci/controller/cadence/pcie-cadence-host.c: In function 'cdns_pcie_setup_lane_equalization_presets':
+> > > > drivers/pci/controller/cadence/pcie-cadence-host.c:205:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >      205 |                 if (presets_ngts[0] != PCI_EQ_RESV) {
+> >          |                    ^
+> >    drivers/pci/controller/cadence/pcie-cadence-host.c:225:9: note: here
+> >      225 |         case PCIE_SPEED_8_0GT:
+> >          |         ^~~~
+> 
+> Fallthrough is intentional. The lane equalization presets are programmed
+> starting from the Max Supported Link speed and we fallthrough until we get
+> to 8.0 GT/s.
+
+It's poorly documented, but use "fallthrough" here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/deprecated.rst?id=v6.17#n200
+
+> > vim +205 drivers/pci/controller/cadence/pcie-cadence-host.c
+> > 
+> >    170	
+> >    171	static void cdns_pcie_setup_lane_equalization_presets(struct cdns_pcie_rc *rc)
+> >    172	{
+> >    173		struct cdns_pcie *pcie = &rc->pcie;
+> >    174		struct device *dev = pcie->dev;
+> >    175		struct device_node *np = dev->of_node;
+> >    176		int max_link_speed, max_lanes, ret;
+> >    177		u32 lane_eq_ctrl_reg;
+> >    178		u16 cap;
+> >    179		u16 *presets_8gts;
+> >    180		u8 *presets_ngts;
+> >    181		u8 i, j;
+> >    182	
+> >    183		ret = of_property_read_u32(np, "num-lanes", &max_lanes);
+> >    184		if (ret)
+> >    185			return;
+> >    186	
+> >    187		/* Lane Equalization presets are optional, so error message is not necessary */
+> >    188		ret = of_pci_get_equalization_presets(dev, &rc->eq_presets, max_lanes);
+> >    189		if (ret)
+> >    190			return;
+> >    191	
+> >    192		max_link_speed = of_pci_get_max_link_speed(np);
+> >    193		if (max_link_speed < 0) {
+> >    194			dev_err(dev, "%s: link-speed unknown, skipping preset setup\n", __func__);
+> >    195			return;
+> >    196		}
+> >    197	
+> >    198		/*
+> >    199		 * Setup presets for data rates including and upward of 8.0 GT/s until the
+> >    200		 * maximum supported data rate.
+> >    201		 */
+> >    202		switch (pcie_link_speed[max_link_speed]) {
+> >    203		case PCIE_SPEED_16_0GT:
+> >    204			presets_ngts = (u8 *)rc->eq_presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
+> >  > 205			if (presets_ngts[0] != PCI_EQ_RESV) {
+> >    206				cap = cdns_pcie_find_ext_capability(pcie, PCI_EXT_CAP_ID_PL_16GT);
+> >    207				if (!cap)
+> >    208					break;
+> >    209				lane_eq_ctrl_reg = cap + PCI_PL_16GT_LE_CTRL;
+> >    210				/*
+> >    211				 * For Link Speeds including and upward of 16.0 GT/s, the Lane Equalization
+> >    212				 * Control register has the following layout per Lane:
+> >    213				 * Bits 0-3: Downstream Port Transmitter Preset
+> >    214				 * Bits 4-7: Upstream Port Transmitter Preset
+> >    215				 *
+> >    216				 * 'eq_presets_Ngts' is an array of u8 (byte).
+> >    217				 * Therefore, we need to write to the Lane Equalization Control
+> >    218				 * register in units of bytes per-Lane.
+> >    219				 */
+> >    220				for (i = 0; i < max_lanes; i++)
+> >    221					cdns_pcie_rp_writeb(pcie, lane_eq_ctrl_reg + i, presets_ngts[i]);
+> >    222	
+> >    223				dev_info(dev, "Link Equalization presets applied for 16.0 GT/s\n");
+> >    224			}
+> >    225		case PCIE_SPEED_8_0GT:
+> >    226			presets_8gts = (u16 *)rc->eq_presets.eq_presets_8gts;
+> >    227			if ((presets_8gts[0] & PCI_EQ_RESV) != PCI_EQ_RESV) {
+> >    228				cap = cdns_pcie_find_ext_capability(pcie, PCI_EXT_CAP_ID_SECPCI);
+> >    229				if (!cap)
+> >    230					break;
+> >    231				lane_eq_ctrl_reg = cap + PCI_SECPCI_LE_CTRL;
+> >    232				/*
+> >    233				 * For a Link Speed of 8.0 GT/s, the Lane Equalization Control register has
+> >    234				 * the following layout per Lane:
+> >    235				 * Bits   0-3:  Downstream Port Transmitter Preset
+> >    236				 * Bits   4-6:  Downstream Port Receiver Preset Hint
+> >    237				 * Bit      7:  Reserved
+> >    238				 * Bits  8-11:  Upstream Port Transmitter Preset
+> >    239				 * Bits 12-14:  Upstream Port Receiver Preset Hint
+> >    240				 * Bit     15:  Reserved
+> >    241				 *
+> >    242				 * 'eq_presets_8gts' is an array of u16 (word).
+> >    243				 * Therefore, we need to write to the Lane Equalization Control
+> >    244				 * register in units of words per-Lane.
+> >    245				 */
+> >    246				for (i = 0, j = 0; i < max_lanes; i++, j += 2)
+> >    247					cdns_pcie_rp_writew(pcie, lane_eq_ctrl_reg + j, presets_8gts[i]);
+> >    248	
+> >    249				dev_info(dev, "Link Equalization presets applied for 8.0 GT/s\n");
+> >    250			}
+> >    251		}
+> >    252	}
+> >    253	
 
