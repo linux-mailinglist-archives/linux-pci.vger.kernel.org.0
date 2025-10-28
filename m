@@ -1,266 +1,222 @@
-Return-Path: <linux-pci+bounces-39567-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39566-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F73BC165ED
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 19:02:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BAA1EC165DD
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 19:02:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60C421A627A2
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 18:01:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CCE2189DD8C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 18:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2603E26E6E5;
-	Tue, 28 Oct 2025 18:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63FB334CFDF;
+	Tue, 28 Oct 2025 18:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ww22jOaL"
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="R8Ovmd8N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from hall.aurel32.net (hall.aurel32.net [195.154.113.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464A132ABC3
-	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 18:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9202F25F1;
+	Tue, 28 Oct 2025 18:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.113.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761674453; cv=none; b=CZ1yy/8MQm2WFxVYwzZSIJpN1vmWYPSbJNLaJzpLNasu8HwCEy9Vx/SwprP/7ESdwPU4nENJJMj6XQ3obmSXoV1ndv0k/zmlHYpngTJjo40xKZZkMiryiT1BkNov0GljjeFtR7ogWkPdfDcg18tjk3DKCt1UP6PKCRdExhZttzE=
+	t=1761674419; cv=none; b=nsT/QklGPmnHXuUBH60g2lsTsYjPGNpGky37PdRYYk0V7mHDKoDbAqQLdbu1d8m8wwso/2jQxO6vM/jNdTkHzfxDJk5L2AWeqqrd0VNsepHmG1gwSOT9gEc/7kkg+XJTW5QPirRy49pTCBfUo3I/BugL2SRrrYL9jBwB1hdZw/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761674453; c=relaxed/simple;
-	bh=XSuWQmxmXf99kkGKhXMkJnOIOP3K30WbtR4kScNYZYM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=HzGOlpTECyU1V8ix6vg+2girn2fF03JuFufsMzHs6Yb2E75kjo5uxMXi1cSZJ1yq+wdv3a9NcKLKhqsju7h0N7e275/9XVtoCoVsvCwQNPKJKa1+gDdtfvKm3AG+U7fYBxoKfHRZfu5/sBqJISS7zB1M9ExqMy4rwAEx4eB4tBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ww22jOaL; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761674452; x=1793210452;
-  h=date:from:to:cc:subject:message-id;
-  bh=XSuWQmxmXf99kkGKhXMkJnOIOP3K30WbtR4kScNYZYM=;
-  b=Ww22jOaLsO7wox1sdrBiPLPZLPEC8KOGo+WFjDr4NraBzi9UsiH3PFoQ
-   lqu8UcrBTM+axUR1K7OOSeahkMlBdBJHPwKZw+w8T8WpaeAOqqhcgl2uT
-   sbrqdITg1Y7r7pnBmBKm9x4Gg7yofWrm3ciIwGEK0tniYMxiwqOSf42qb
-   8nEs+rcZxpxWUdcTziWX6GqGugRn3TyUR9ZOOWS0z5p7fDCJR0odZyH9H
-   xlLUM7wwFLl+ubuaF6KCI3QT3VjbdRLDkf5OX9JF8E6wbiCyucsLXX43S
-   QaHDVh1yjGq1nJLaSOquDwB5MuYX7ebFvKTwTNGrA1o2Li41zeMRkvXws
-   Q==;
-X-CSE-ConnectionGUID: cOrS+VOaTbSsbHcyu15Tnw==
-X-CSE-MsgGUID: 5nHB74dBTIWGxuVDySQLMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74903792"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="74903792"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 11:00:51 -0700
-X-CSE-ConnectionGUID: NG4eTKS4SYGhDW7wk27Gkg==
-X-CSE-MsgGUID: rCp9j0KpSBK+gWEyfjrUlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="185341595"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 28 Oct 2025 11:00:49 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vDnzf-000JZ9-1v;
-	Tue, 28 Oct 2025 18:00:32 +0000
-Date: Wed, 29 Oct 2025 01:57:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 4ac0bfc9fbd7c4fbeb3bdcb08dc99a053b1d310c
-Message-ID: <202510290101.83vJotSS-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1761674419; c=relaxed/simple;
+	bh=VhuXtct2llGlUKtkPUEWUGkg5rp+EFF2CwePBKwQWAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qm+nzxtt3drzMMPeEfRjHiODmW+PMk1dTAWGdNqrS5dOmwoKOj8vyJ3WVM/ITjyc2wu3sJdN+jfLW+947RFcN/Ulrs2wljsbtdltsAiccg7EYq9JiqHRExJswIFdV6/GZShUI8HtMwwvcB9U8O0GJ/m/hDz1zbPgW77FM/J8l+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=R8Ovmd8N; arc=none smtp.client-ip=195.154.113.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+	; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+	bh=Hg4yk8h2S9UFPnNuzCx8HQK8YMdf20o+Im/dr85/zXQ=; b=R8Ovmd8NBwXulNQtyTfLsMwMIN
+	QaO+L7OCqIGgkcse7iaihMcTfHlToyTu5bL/vSk1H1i70G9Dsd7TfFfH9+33HE1vEmN7rTZv5Ed8K
+	axV3kiRfH5LvXNPtmrDchc+LFcgS5UU2Pov1xpNZ43/a15QOHqa6omz2q+sPsFHtYxLUPI0gvdHR1
+	/ZRwZ+u66zpkOu9Fi8i1vzvyEfx8vrn1/JV+Iv1Enczfcz7L67mWJoN+pnsRK1QNciZyyLsgfCOnp
+	AckH7GcqIZNRoTHMsuMSzm/X7snvQftdDUwPafT1TdeSdKLxj22nogPSixHBQDL8NUZ3Ed20HEA3/
+	ILrcPEmA==;
+Received: from [2a01:e34:ec5d:a741:1ee1:92ff:feb4:5ec0] (helo=ohm.rr44.fr)
+	by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <aurelien@aurel32.net>)
+	id 1vDnz5-00000008hSt-1qV2;
+	Tue, 28 Oct 2025 18:59:51 +0100
+Date: Tue, 28 Oct 2025 18:59:50 +0100
+From: Aurelien Jarno <aurelien@aurel32.net>
+To: Alex Elder <elder@riscstar.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+	dlan@gentoo.org, guodong@riscstar.com, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	p.zabel@pengutronix.de, christian.bruel@foss.st.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	qiang.yu@oss.qualcomm.com, namcao@linutronix.de,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
+Message-ID: <aQEElhSCRNqaPf8m@aurel32.net>
+Mail-Followup-To: Alex Elder <elder@riscstar.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org,
+	guodong@riscstar.com, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
+	christian.bruel@foss.st.com, shradha.t@samsung.com,
+	krishna.chundru@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
+	namcao@linutronix.de, thippeswamy.havalige@amd.com,
+	inochiama@gmail.com, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+References: <20251013153526.2276556-1-elder@riscstar.com>
+ <aPEhvFD8TzVtqE2n@aurel32.net>
+ <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 4ac0bfc9fbd7c4fbeb3bdcb08dc99a053b1d310c  PCI: Do not size non-existing prefetchable window
+Hi Alex,
 
-elapsed time: 1067m
+On 2025-10-17 11:21, Alex Elder wrote:
+> On 10/16/25 11:47 AM, Aurelien Jarno wrote:
+> > Hi Alex,
+> > 
+> > On 2025-10-13 10:35, Alex Elder wrote:
+> > > This series introduces a PHY driver and a PCIe driver to support PCIe
+> > > on the SpacemiT K1 SoC.  The PCIe implementation is derived from a
+> > > Synopsys DesignWare PCIe IP.  The PHY driver supports one combination
+> > > PCIe/USB PHY as well as two PCIe-only PHYs.  The combo PHY port uses
+> > > one PCIe lane, and the other two ports each have two lanes.  All PCIe
+> > > ports operate at 5 GT/second.
+> > > 
+> > > The PCIe PHYs must be configured using a value that can only be
+> > > determined using the combo PHY, operating in PCIe mode.  To allow
+> > > that PHY to be used for USB, the calibration step is performed by
+> > > the PHY driver automatically at probe time.  Once this step is done,
+> > > the PHY can be used for either PCIe or USB.
+> > > 
+> > > Version 2 of this series incorporates suggestions made during the
+> > > review of version 1.  Specific highlights are detailed below.
+> > 
+> > With the issues mentioned in patch 4 fixed, this patchset works fine for
+> > me. That said I had to disable ASPM by passing pcie_aspm=off on the
+> > command line, as it is now enabled by default since 6.18-rc1 [1]. At
+> > this stage, I am not sure if it is an issue with my NVME drive or an
+> > issue with the controller.
+> 
+> Can you describe what symptoms you had that required you to pass
+> "pcie_aspm=off" on the kernel command line?
+> 
+> I see these lines in my boot log related to ASPM (and added by
+> the commit you link to), for both pcie1 and pcie2:
+> 
+>   pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 AS
+> PM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
+>   pci 0000:01:00.0: ASPM: DT platform, enabling ClockPM
+> 
+>   . . .
+> 
+>   nvme nvme0: pci function 0000:01:00.0
+>   nvme 0000:01:00.0: enabling device (0000 -> 0002)
+>   nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
+>   nvme nvme0: 8/0/0 default/read/poll queues
+>    nvme0n1: p1
+> 
+> My NVMe drive on pcie1 works correctly.
+>   https://www.crucial.com/ssd/p3/CT1000P3SSD8
+> 
+>   root@bananapif3:~# df /a
+>   Filesystem     1K-blocks     Used Available Use% Mounted on
+>   /dev/nvme0n1p1 960302804 32063304 879385040   4% /a
+>   root@bananapif3:~#
 
-configs tested: 173
-configs skipped: 13
+Sorry for the delay, it took me time to test some more things and 
+different SSDs. First of all I still see the issue with your v3 on top 
+of v6.18-rc3, which includes some fixes for ASPM support [1].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I have tried 3 different SSDs, none of them are working, but the 
+symptoms are different, although all related with ASPM (pcie_aspm=off 
+workarounds the issue).
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                        nsimosci_defconfig    clang-22
-arc                   randconfig-001-20251028    gcc-8.5.0
-arc                   randconfig-002-20251028    gcc-13.4.0
-arc                   randconfig-002-20251028    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-22
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                       aspeed_g5_defconfig    gcc-15.1.0
-arm                        multi_v5_defconfig    gcc-15.1.0
-arm                        multi_v7_defconfig    gcc-15.1.0
-arm                   randconfig-001-20251028    clang-22
-arm                   randconfig-001-20251028    gcc-8.5.0
-arm                   randconfig-002-20251028    clang-22
-arm                   randconfig-002-20251028    gcc-8.5.0
-arm                   randconfig-003-20251028    clang-22
-arm                   randconfig-003-20251028    gcc-8.5.0
-arm                   randconfig-004-20251028    gcc-8.5.0
-arm                           spitz_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    gcc-15.1.0
-arm64                 randconfig-001-20251028    clang-22
-arm64                 randconfig-002-20251028    clang-22
-arm64                 randconfig-003-20251028    gcc-11.5.0
-arm64                 randconfig-004-20251028    gcc-8.5.0
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                  randconfig-001-20251028    gcc-15.1.0
-csky                  randconfig-002-20251028    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-22
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.1.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20251028    gcc-14
-i386        buildonly-randconfig-002-20251028    gcc-14
-i386        buildonly-randconfig-003-20251028    gcc-14
-i386        buildonly-randconfig-004-20251028    gcc-14
-i386        buildonly-randconfig-005-20251028    gcc-14
-i386        buildonly-randconfig-006-20251028    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    gcc-15.1.0
-loongarch             randconfig-001-20251028    gcc-12.5.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                           sun3_defconfig    clang-22
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                      mmu_defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-mips                      maltaaprp_defconfig    clang-22
-mips                        maltaup_defconfig    clang-22
-nios2                            allmodconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    clang-22
-openrisc                         allmodconfig    clang-22
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                      arches_defconfig    gcc-15.1.0
-powerpc                   bluestone_defconfig    gcc-15.1.0
-powerpc                        icon_defconfig    gcc-15.1.0
-powerpc                  iss476-smp_defconfig    gcc-15.1.0
-powerpc                 mpc8313_rdb_defconfig    clang-22
-powerpc                    socrates_defconfig    clang-22
-powerpc                     tqm8541_defconfig    clang-22
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                                  defconfig    gcc-15.1.0
-sh                          r7785rp_defconfig    clang-22
-sparc                            alldefconfig    clang-22
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    clang-22
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251028    gcc-9.5.0
-sparc                 randconfig-002-20251028    gcc-9.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251028    gcc-9.5.0
-sparc64               randconfig-002-20251028    gcc-9.5.0
-um                               alldefconfig    gcc-15.1.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251028    gcc-9.5.0
-um                    randconfig-002-20251028    gcc-9.5.0
-um                           x86_64_defconfig    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251028    clang-20
-x86_64      buildonly-randconfig-001-20251028    gcc-14
-x86_64      buildonly-randconfig-002-20251028    clang-20
-x86_64      buildonly-randconfig-002-20251028    gcc-14
-x86_64      buildonly-randconfig-003-20251028    clang-20
-x86_64      buildonly-randconfig-004-20251028    clang-20
-x86_64      buildonly-randconfig-005-20251028    clang-20
-x86_64      buildonly-randconfig-006-20251028    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251028    clang-20
-x86_64                randconfig-002-20251028    clang-20
-x86_64                randconfig-003-20251028    clang-20
-x86_64                randconfig-004-20251028    clang-20
-x86_64                randconfig-005-20251028    clang-20
-x86_64                randconfig-006-20251028    clang-20
-x86_64                randconfig-011-20251028    clang-20
-x86_64                randconfig-012-20251028    clang-20
-x86_64                randconfig-013-20251028    clang-20
-x86_64                randconfig-014-20251028    clang-20
-x86_64                randconfig-015-20251028    clang-20
-x86_64                randconfig-016-20251028    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20251028    gcc-9.5.0
-xtensa                randconfig-002-20251028    gcc-9.5.0
+With a Fox Spirit PM18 SSD (Silicon Motion, Inc. SM2263EN/SM2263XT 
+controller), I do not have more than this:
+[    5.196723] nvme nvme0: pci function 0000:01:00.0
+[    5.198843] nvme 0000:01:00.0: enabling device (0000 -> 0002)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With a WD Blue SN570 SSD, I get this:
+[    5.199513] nvme nvme0: pci function 0000:01:00.0
+[    5.201653] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+[    5.270334] nvme nvme0: allocated 32 MiB host memory buffer (8 segments).
+[    5.277624] nvme nvme0: 8/0/0 default/read/poll queues
+[   19.192350] nvme nvme0: using unchecked data buffer
+[   48.108400] nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+[   48.113885] nvme nvme0: Does your device have a faulty power saving mode enabled?
+[   48.121346] nvme nvme0: Try "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off pcie_port_pm=off" and report a bug
+[   48.176878] nvme0n1: I/O Cmd(0x2) @ LBA 0, 8 blocks, I/O Error (sct 0x3 / sc 0x71) 
+[   48.181926] I/O error, dev nvme0n1, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
+[   48.243670] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+[   48.246914] nvme nvme0: Disabling device after reset failure: -19
+[   48.280495] Buffer I/O error on dev nvme0n1, logical block 0, async page read
+
+
+Finally with a PNY CS1030 SSD (Phison PS5015-E15 controller), I get this:
+[    5.215631] nvme nvme0: pci function 0000:01:00.0
+[    5.220435] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+[    5.329565] nvme nvme0: allocated 64 MiB host memory buffer (16 segments).
+[   66.540485] nvme nvme0: I/O tag 28 (401c) QID 0 timeout, disable controller
+[   66.585245] nvme 0000:01:00.0: probe with driver nvme failed with error -4
+
+Note that I also tested this latest SSD on a VisionFive 2 board with exactly
+the same kernel (I just moved the SSD and booted), and it works fine with ASPM
+enabled (confirmed with lspci).
+
+> I basically want to know if there's something I should do with this
+> driver to address this.  (Mani, can you explain?)
+
+I am not sure on my side how to debug that. What I know is that it is 
+linked to ASPM L1, L0 works fine. In other words the SSDs work fine with 
+this patch:
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 79b9651584737..1a134ec68b591 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -801,8 +801,8 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+ 	if (of_have_populated_dt()) {
+ 		if (link->aspm_support & PCIE_LINK_STATE_L0S)
+ 			link->aspm_default |= PCIE_LINK_STATE_L0S;
+-		if (link->aspm_support & PCIE_LINK_STATE_L1)
+-			link->aspm_default |= PCIE_LINK_STATE_L1;
++//		if (link->aspm_support & PCIE_LINK_STATE_L1)
++//			link->aspm_default |= PCIE_LINK_STATE_L1;
+ 		override = link->aspm_default & ~link->aspm_enabled;
+ 		if (override)
+ 			pci_info(pdev, "ASPM: default states%s%s\n",
+
+I can test more things if needed, but I don't know where to start.
+
+Regards
+Aurelien
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=df5192d9bb0e38bf831fb93e8026e346aa017ca8
+
+-- 
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                     http://aurel32.net
 
