@@ -1,175 +1,188 @@
-Return-Path: <linux-pci+bounces-39516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39508-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7173DC14198
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 11:27:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA062C140D2
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 11:19:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5A653A4A67
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 10:26:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA0AC189A690
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 10:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B3E29CB3C;
-	Tue, 28 Oct 2025 10:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E9E32DEA96;
+	Tue, 28 Oct 2025 10:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="QmTHE+1z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpCjauIF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B0A3019DE;
-	Tue, 28 Oct 2025 10:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCE71E49F;
+	Tue, 28 Oct 2025 10:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761647218; cv=none; b=mbgOuTEaAeYWIOTlV/IBr6qUOcNOtS0Dj7Bprx3kChqXcvLAsZxAaFO/15vyWTGiZYnU641vKbQXGJe1GgYX1FdWqE4ktDWa9/bS5iXAuGvhcVRyMPJ8PS3qG+sSNSYe3Bmxg8UrcDf89ELQ5/I/Y3eQpeRDvmczu8ye6SVaTow=
+	t=1761646751; cv=none; b=tg2ASk9wBOZlJLsKkpwKnAmTj08sL9Tb/imlUHPdjOF/Ui91F4vnfErYxw80IL7N/aPLTJlVvNduJbnVGpX/JvDyM0fJ2kuqxbRgpLvLgbqwnzWpYv3qbUxoQudwDblOH//P6MG+W+CHJrGVqI/wJYE9azarLg8hANfbK9bXSdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761647218; c=relaxed/simple;
-	bh=fGPfVLmHb+wl9h4eE562Vwd7sPPgvOxQ4yq0Gh3pNIk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dWj+iMmgxbPSVWOxlRCBeKw5D393To2+C2h7hFne559RFonIat/F+7dNJfHfr0xRN8A9f0xEXGL3i2T3jMnMmdebWlcqabhTebe7Kc1ul0bqolS7SQ140Dq7bgFHJb0HQbM2VFY8KO89qtlYCIfWNkrgQ9n6F1razh+dxEtsveg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=QmTHE+1z; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Received: from [10.10.11.27] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: a.erhardt@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 16A932FC004D;
-	Tue, 28 Oct 2025 11:16:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1761646613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AMx59YWeliqF/lFY/+ujXIhGSvd8cbjYB40wlB1RYFA=;
-	b=QmTHE+1zUU91L74zpwra1sUslqOLhjB8in8RHnroIZSWxQ6lBjrUjbIVH+zGHq++nET7u/
-	yusdq9wdM0bxM+vKOVtS6z6N71IW27l7SXCBsr4YeMBySbCjoAmDKI2WWgUKx8bZgmaGrn
-	YuJJXxhjlgqW5Vec8+nkonQBlBqJzLc=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
-Message-ID: <e172ebf2-4b65-4781-b9e7-eb7bd4fa956a@tuxedocomputers.com>
-Date: Tue, 28 Oct 2025 11:16:51 +0100
+	s=arc-20240116; t=1761646751; c=relaxed/simple;
+	bh=rTsiu6Lg9PZhrtKUJKqwPQO26S58LDXJ57pUZwdY5ng=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=f+urHKzzSs/IGcC97T/3A4sjqUJZAbf1PVOVPA6Bgyfsainsx/JYA3y0gc50aZB2EFVBfolGqtxJ/vGbuxuhv1H+7vIiHta5NDPOrOb8wDk0cKupyhLY5eFJUnMhfBIOARmr7LCUo6Q4F7B4Ru+xDwg8jFf9J7VSEXuyOFnG9w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpCjauIF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3228C4CEE7;
+	Tue, 28 Oct 2025 10:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761646750;
+	bh=rTsiu6Lg9PZhrtKUJKqwPQO26S58LDXJ57pUZwdY5ng=;
+	h=From:Subject:Date:To:Cc:From;
+	b=fpCjauIFUkgpfgT171hCNQY/l4yDNErSco51dU7/5qdghLbuP22zvvc5Tm6IZrCIC
+	 5anRaznpikHViYV1KfvO/wgw4T8WXN5odJead3jyN9MDiHyALSAhAoUPGGdM5DQfzv
+	 I3pHRxCMUqCN2ZrQh1zMYHV9LIcex/MWeThdRRkIr/wMRjSCkc+30oSKXBUbKq/Q/7
+	 Rdjpqhc8E+oYFlw1SN+KmoJhj+VMi2l+daVPvdFJi3uJ2RBf5eZmB03Q2EG3emAzvz
+	 2Os6VzM3Ic24NgRJSwhqiNj/igG9k7bsPoPmAJFgA8CR5hMgJDW2EOkeEuVYI/Hvql
+	 reD5AiDv50eMw==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH not for merging 0/7] irqchip/gic-v5: Code first ACPI boot
+ support
+Date: Tue, 28 Oct 2025 11:18:58 +0100
+Message-Id: <20251028-gicv5-host-acpi-v1-0-01a862feb5ca@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 3/4] fbcon: Use screen info to find primary device
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>,
- David Airlie <airlied@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>
-References: <20250811162606.587759-1-superm1@kernel.org>
- <20250811162606.587759-4-superm1@kernel.org>
-Content-Language: en-US
-From: Aaron Erhardt <aer@tuxedocomputers.com>
-In-Reply-To: <20250811162606.587759-4-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJKYAGkC/x3MQQqEMAxA0auUrA20HTqDXkVcSBNrFraSigji3
+ S2zfIv/b6iswhUGc4PyKVVKbnCdgbjOOTEKNYO3PjjrPSaJZ8C11APnuAtS6OkbHX3I/qBVu/I
+ i1/84Qi6HWYqajTVJTjA9zwvbbNIpcgAAAA==
+X-Change-ID: 20251022-gicv5-host-acpi-d59d6c1d3d07
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Jose Marinho <jose.marinho@arm.com>
+X-Mailer: b4 0.14.3
 
+The ACPI and ACPI IORT specifications are being updated to support bindings
+required to describe GICv5 based systems.
 
-On Mon, Aug 11, 2025 at 11:26:05AM -0500, Mario Limonciello (AMD) wrote:
-> On systems with non VGA GPUs fbcon can't find the primary GPU because
-> video_is_primary_device() only checks the VGA arbiter.
-> 
-> Add a screen info check to video_is_primary_device() so that callers
-> can get accurate data on such systems.
+The ACPI specification GICv5 bindings ECR [1] was published and now it is
+going through the approval process to get it ratified.
 
-I have a question regarding this change. To me, the function name 
-video_is_primary_device() implies that there is only one primary GPU.
-I would also expect that the 'boot_display' attribute added later in 
-the patch series based on this function is only set for one GPU, but 
-that is not necessarily the case. Since I'm working on a user-space
-program that reads the 'boot_display' attribute, I need to know what
-behavior is intended in order to do a correct implementation.
+The Arm IORT specification [2] has been updated to include GICv5 IWB
+specific bindings in revision E.g.
 
-> 
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
-> v10:
->  * Rebase on 6.17-rc1
->  * Squash 'fbcon: Stop using screen_info_pci_dev()'
-> ---
->  arch/x86/video/video-common.c | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
-> index 81fc97a2a837a..e0aeee99bc99e 100644
-> --- a/arch/x86/video/video-common.c
-> +++ b/arch/x86/video/video-common.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/screen_info.h>
->  #include <linux/vgaarb.h>
->  
->  #include <asm/video.h>
-> @@ -27,6 +28,11 @@ EXPORT_SYMBOL(pgprot_framebuffer);
->  
->  bool video_is_primary_device(struct device *dev)
->  {
-> +#ifdef CONFIG_SCREEN_INFO
-> +	struct screen_info *si = &screen_info;
-> +	struct resource res[SCREEN_INFO_MAX_RESOURCES];
-> +	ssize_t i, numres;
-> +#endif
->  	struct pci_dev *pdev;
->  
->  	if (!dev_is_pci(dev))
-> @@ -34,7 +40,24 @@ bool video_is_primary_device(struct device *dev)
->  
->  	pdev = to_pci_dev(dev);
->  
-> -	return (pdev == vga_default_device());
-> +	if (!pci_is_display(pdev))
-> +		return false;
-> +
-> +	if (pdev == vga_default_device())
-> +		return true;
+Implement kernel code that - based on the aforementioned bindings - adds
+support for GICv5 ACPI probing.
 
-This can mark a VGA device as primary GPU.
+ACPICA changes supporting the bindings are posted with the series
+to make it self-contained - they should not be considered for merging
+(and consequently the kernel code as well is not ready to be upstreamed,
+it is posted so that it can be reviewed ahead of spec ratification, we
+are not expecting any major spec changes).
 
-> +
-> +#ifdef CONFIG_SCREEN_INFO
-> +	numres = screen_info_resources(si, res, ARRAY_SIZE(res));
-> +	for (i = 0; i < numres; ++i) {
-> +		if (!(res[i].flags & IORESOURCE_MEM))
-> +			continue;
-> +
-> +		if (pci_find_resource(pdev, &res[i]))
-> +			return true;
-> +	}
-> +#endif
+The ACPI bindings were prototyped in edk2 - code available in these
+branches [3][4].
 
-And then the new code can also choose a primary GPU.
+===========================
+Kernel implementation notes
+===========================
 
-> +
-> +	return false;
->  }
->  EXPORT_SYMBOL(video_is_primary_device);
->  
+IRS and ITS probing is triggered using the standard irqchip ACPI probing
+mechanism - there is no significant difference compared to previous GIC
+versions other.
 
-In particular, I have hardware that has this exact configuration where
-two GPUs are marked as primary and have a 'boot_display' attribute: the
-first one through vga_default_device(), the second one through the new
-detection method.
+The only difference that is worth noting is that GICv3/4 systems include a
+single MADT component describing the interrupt controller (ie GIC distributor)
+whereas GICv5 systems include one or more IRSes. The probing code is
+implemented so that an MADT IRS detection triggers probing for all IRSes
+in one go.
 
-Is this intended?
+The IWB driver probes like any other ACPI device. IORT code is updated so
+that a deviceID for the IWB can be detected.
 
-Kind regards
-Aaron
+The only major change compared to GICv3/4 systems is the GSI namespace that
+is split between PPI/SPI IRQs and IWB backed IRQs.
+
+The main GSI handle - to map an IRQ - has to detect whether to look-up
+using the top level GSI domain or an IWB domain in that the two IRQ
+namespaces are decoupled.
+
+IORT code implements the logic to retrieve an IWB domain by looking up its
+IWB frame id, as described in [1].
+
+Most important implementation detail worth noting is that - at this stage -
+ACPI code is not capable of handling devices probe order IRQ dependency on
+the interrupt controller driver their IRQ is routed to.
+
+This is not an issue on GICv3/4 systems in that the full GIC hierarchy
+probes earlier than any other device, so by the time IRQs mappings have to
+be carried out (ie acpi_register_gsi()) the GIC drivers have already
+probed.
+
+On GICv5 systems, the IWB is modelled as a device and its device driver
+probes at device_initcall time. That's when the IWB IRQ domain is actually
+registered - which poses problems for devices whose IRQs are IWB routed and
+require to resolve the IRQ mapping before the IWB driver has a chance to
+probe.
+
+Work on resolving devices<->IWB probe order dependency has started in
+parallel with this series.
+
+For PPI/SPI/LPI backed IRQs the probe dependency is not a problem because
+in GICv5 systems the IRSes and ITSes probe early so their IRQ domain are
+set in place before devices require IRQ mappings.
+
+ACPICA patches are a Linuxised version of ACPICA GICv5 pull request [5] and
+should not be considered for merging (ACPICA changes won't be finalized
+until the ACPI specification is ratified), they are there so that the
+kernel can map/parse GICv5 ACPI firmware data structures 
+
+[1] https://github.com/tianocore/edk2/issues/11148
+[2] https://developer.arm.com/documentation/den0049/eg
+[3] https://github.com/LeviYeoReum/edk2/tree/levi/gicv5_patch
+[4] https://github.com/LeviYeoReum/edk2-platforms/tree/levi/gicv5_patch
+[5] https://github.com/acpica/acpica/pull/1043
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+Jose Marinho (2):
+      ACPICA: Add GICv5 MADT structures
+      ACPICA: Add Arm IORT IWB node definitions
+
+Lorenzo Pieralisi (5):
+      irqdomain: Add parent field to irqchip_fwid
+      PCI/MSI: Make the pci_msi_map_rid_ctlr_node() interface firmware agnostic
+      irqchip/gic-v5: Add ACPI IRS probing
+      irqchip/gic-v5: Add ACPI ITS probing
+      irqchip/gic-v5: Add ACPI IWB probing
+
+ drivers/acpi/arm64/iort.c                | 190 +++++++++++++++++++-----
+ drivers/acpi/bus.c                       |   3 +
+ drivers/irqchip/irq-gic-its-msi-parent.c |  45 +++---
+ drivers/irqchip/irq-gic-v5-irs.c         | 247 ++++++++++++++++++++++++-------
+ drivers/irqchip/irq-gic-v5-its.c         | 132 ++++++++++++++++-
+ drivers/irqchip/irq-gic-v5-iwb.c         |  42 ++++--
+ drivers/irqchip/irq-gic-v5.c             | 138 ++++++++++++++---
+ drivers/pci/msi/irqdomain.c              |  24 ++-
+ include/acpi/actbl2.h                    |  56 ++++++-
+ include/linux/acpi.h                     |   1 +
+ include/linux/acpi_iort.h                |  11 +-
+ include/linux/irqchip/arm-gic-v5.h       |   8 +
+ include/linux/irqdomain.h                |  30 +++-
+ include/linux/msi.h                      |   3 +-
+ kernel/irq/irqdomain.c                   |  14 +-
+ 15 files changed, 786 insertions(+), 158 deletions(-)
+---
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+change-id: 20251022-gicv5-host-acpi-d59d6c1d3d07
+
+Best regards,
+-- 
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
 
