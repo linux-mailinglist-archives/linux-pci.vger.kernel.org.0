@@ -1,140 +1,106 @@
-Return-Path: <linux-pci+bounces-39562-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39563-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C1CC163EB
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 18:42:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15FF1C163D6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 18:41:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7206B3B4104
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 17:39:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9355D4028D0
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 17:39:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D7234DB49;
-	Tue, 28 Oct 2025 17:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE75F34AB04;
+	Tue, 28 Oct 2025 17:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lKlO0SE+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NImirUq+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B2234DB67;
-	Tue, 28 Oct 2025 17:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B07B3491C7
+	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 17:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761673089; cv=none; b=SsU3NT6SviTJiWx8P4UpicNaqbAGTukp98c+ealmXi/3+B9BXYwjfViOcKAYOzp1qV7ZQDRMWlosedTC9qurZtPUJH20nkfBQ/3YFkphVj6Cjy4A5zqTeubrA/cu1XJ110q1fZzkDgEv3pn8dGmyFRYOZW5mlwGrde5c46dDKbA=
+	t=1761673167; cv=none; b=rzxZWUgH/nvRTlrmK/8n6cU7GZTOfswBCeCYT3xkLv/PldaZjHwn/Yc2b+wlKCDNZCinY01HZaa36q2Tq7nYcZzGJ1Uh0QblIgkhJxPP3T2gullDNB2Jpn2DIfehbfgDZDOKuug+dBNky3n11qlMtnzUv/RIl6kZKD4oXgthVyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761673089; c=relaxed/simple;
-	bh=rj0qgordGZNB+YdPjKDmtqTEG5yrczqeTMJCDVNmgm0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ei4vc9CWr7GgqRO/uudFvjLGS5AKllW9+4sG78GiLQh9NktFCvDe6ySqLqWtga5aJcmHFf5rBZXUNpGaDbaIiGZ22Zzxvi5dS1W5SWJFzDAcJNA76uPC0jHV31EcXgQzyh+OpaifDX6FpqRzLHgU0g10SSUlQvToBUkKoo3rI3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lKlO0SE+; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761673084; x=1793209084;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rj0qgordGZNB+YdPjKDmtqTEG5yrczqeTMJCDVNmgm0=;
-  b=lKlO0SE+ySQt2SnEVkSpwL2LALVyugAxRv2/9pwjSnMTVSJWjZkOjGHL
-   fRvYSBMeH/p1gMFr9xYxxqHcmefiuZLap+9EZGCSsa6WXYmoq/j6VZePF
-   /BpL7smY44giXGfWsGcZNcWLbfFpd4t92W0Gmb+hfg2p1cZe18CUbFpN5
-   B/HumSTNcSiZqoQTBKS7v2cq194/r7gYratyi/mIfw/1tTYrJhuk357rS
-   SG6dR0q+utO2IJt+2ce8IgBzZT0DANM2KeZ/hL0RTKKkw74CDmlT+h8Eq
-   UMXUF5JG0hNSJkQH9VELC8d4Mvb152vVifwibKfnbmaJ5SaNzmdAlSktT
-   A==;
-X-CSE-ConnectionGUID: h944opP6S4mbbmHZ658q5w==
-X-CSE-MsgGUID: QQSBrH6aTiGa0JCUHlWjvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="81413276"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="81413276"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 10:38:03 -0700
-X-CSE-ConnectionGUID: CNDiVW/JRC2hDk9azTLjtQ==
-X-CSE-MsgGUID: jG6aT9CEQn60hVk9anqSKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="185304310"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 10:37:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Simon Richter <Simon.Richter@hogyros.de>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 9/9] PCI: Prevent restoring assigned resources
-Date: Tue, 28 Oct 2025 19:35:51 +0200
-Message-Id: <20251028173551.22578-10-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com>
-References: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1761673167; c=relaxed/simple;
+	bh=43iMw79Akew6Y/DGXSUT2s4gddhbkot1XZcDv9EWZGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=W2ffQMjALsgU8tHg79ekqgCmjEFymf8tlMwLR2VvQoVoDxGjGTtzv9GNNSXHrtCqv5Tpk2Udnt3S7qSil/BmbxOQzmJ6mWjqkgBnqr/7rt4MTXbynG5v3GZwc/iYYLLd4tFX7luKzNeb4TAzMf7w5jyFjgTf4uT8tScxwmYIvvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NImirUq+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E700DC113D0;
+	Tue, 28 Oct 2025 17:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761673167;
+	bh=43iMw79Akew6Y/DGXSUT2s4gddhbkot1XZcDv9EWZGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=NImirUq+EfQL0KI+eJQnp2hAgXypXuPAn/qNtljMrgA7VP++JvQY2HVFu8pVeRRiK
+	 lEXGks5/FDcMd9uNWkUa7x3h7PMmfjwVyKtm+MbBxLgoyQgIZF3ShhvQm3V+IRN71G
+	 WlnYAmmj88vTGxMVBG6c8bIX6wl8YUUn7P3FhNXCEr8Z3pg7Qg8y3OVQlCo1Z3btse
+	 Kkch/nUp9STwgrJm/HZGFFKKsf8KfvDSV3PfqBLdScRZHdno/aRO93h+4ewAiGPMLp
+	 jXr8Sow0woH5/MskYDXQTv3xf7pnqGEZxqMIPZ879e6A5BL480JjHTWysq/jDPITI1
+	 CZ3M3AQu+UfDQ==
+Date: Tue, 28 Oct 2025 12:39:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	jonathan.derrick@linux.dev, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	Dexuan Cui <decui@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Szymon Durawa <szymon.durawa@linux.intel.com>,
+	Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v2 0/2] PCI: Unify domain emulation
+Message-ID: <20251028173925.GA1521899@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251024224622.1470555-1-dan.j.williams@intel.com>
 
-restore_dev_resource() copies saved addresses and flags from the struct
-pci_dev_resource back to the struct resource, typically, during
-rollback from a failure or in preparation for a retry attempt.
+On Fri, Oct 24, 2025 at 03:46:20PM -0700, Dan Williams wrote:
+> Changes since v1 [1]:
+> - Rebase on v6.18-rc2
+> - Support callers supplying both a hint and a range for the Hyper-V hint
+>   + fallback case (Michael)
+> - Add comment explaining domain number 0 vs Gen1 VMs, and domain values
+>   greater than U16_MAX concerns (Michael)
+> - Leave the VMD status quo comment about requesting domain numbers >
+>   U16_MAX
+> 
+> [1]: http://lore.kernel.org/20250716160835.680486-1-dan.j.williams@intel.com
+> 
+> The PCI/TSM effort created a sample driver to test ABI flows
+> (samples/devsec/ [2]). Suzuki observed that it only worked on x86 due to
+> its dependency on CONFIG_PCI_DOMAINS_GENERIC=n. I.e. an unfortunate
+> restriction for what should be an architecture agnostic test framework.
+> 
+> Introduce a new pci_bus_find_emul_domain_nr() helper that all "soft"
+> host-bridge drivers can share and hide the CONFIG_PCI_DOMAINS_GENERIC
+> details behind that helper.
+> 
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/commit/?id=0e16ce0b9c64
+> 
+> Dan Williams (2):
+>   PCI: Enable host bridge emulation for PCI_DOMAINS_GENERIC platforms
+>   PCI: vmd: Switch to pci_bus_find_emul_domain_nr()
+> 
+>  include/linux/pci.h                 |  7 ++++
+>  drivers/pci/controller/pci-hyperv.c | 62 +++++------------------------
+>  drivers/pci/controller/vmd.c        | 40 ++++++++-----------
+>  drivers/pci/pci.c                   | 24 ++++++++++-
+>  drivers/pci/probe.c                 |  8 +++-
+>  5 files changed, 63 insertions(+), 78 deletions(-)
 
-If the resource is within resource tree, the resource must not be
-modified as the resource tree could be corrupted. Thus, it's a bug to
-call restore_dev_resource() for assigned resources (which did happen
-due to logic flaws in the BAR resize rollback).
-
-Add WARN_ON_ONCE() into restore_dev_resource() to detect such bugs
-easily and return without altering the resource to prevent corruption.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/setup-bus.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 8da83b612c59..28d6ae822c0b 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -15,6 +15,7 @@
-  */
- 
- #include <linux/bitops.h>
-+#include <linux/bug.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -135,6 +136,9 @@ static void restore_dev_resource(struct pci_dev_resource *dev_res)
- {
- 	struct resource *res = dev_res->res;
- 
-+	if (WARN_ON_ONCE(res->parent))
-+		return;
-+
- 	res->start = dev_res->start;
- 	res->end = dev_res->end;
- 	res->flags = dev_res->flags;
--- 
-2.39.5
-
+Applied to pci/enumeration for v6.19, thanks, Dan!
 
