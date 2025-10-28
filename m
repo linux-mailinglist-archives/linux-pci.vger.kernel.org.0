@@ -1,156 +1,194 @@
-Return-Path: <linux-pci+bounces-39592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 799C4C175F9
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 00:33:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A0D5C1760B
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 00:36:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D76A54E3657
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 23:33:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 737671C20E06
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 23:36:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1FF2C11F8;
-	Tue, 28 Oct 2025 23:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A23836A5EB;
+	Tue, 28 Oct 2025 23:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZBDyun8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOQPpC/m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94248280033;
-	Tue, 28 Oct 2025 23:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC24306B00
+	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 23:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761694415; cv=none; b=DS21D1mMyrBHZe5arsD4/EQ7vkcsdBjyOzPsgHKVCvyO/ILwe13t8u8jb8n+R+tjM1iDNj/Q/GvN6isXSK7+QfPSmCrtHdPKQANpKQme1+v9r5SOLwTlI/EJGwEynQwvqUeKNn7lyZwcTizTzZdMIH0SWaWUqMT/foeHGZjMWJ4=
+	t=1761694555; cv=none; b=my7lEWuX/+cwmhgXulubJikaV1aNjZobZJxdzWNqezCgHqT4BOjR/M5zKN93xEui3hTXHj/LvRGz70KTk9Z83U9gh9FFVMYXNBu/st1DY5mMJ7pLjOgGhx2eOyZjfrfl2AQgwDVzEB4CQM68tD04ywu36R39rmoPOnYVx+j/MW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761694415; c=relaxed/simple;
-	bh=HUOsnm5Nk+6xTsUUMwpytKpcd3je4nJFnLJK5pa2yWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kvyKzSX+lE0Ceebu2o021p5zF2qalA62lspmKCjNEgnJcl6z7+A7PqvyBm+eOZ1894raqlMPmj/Ywk5PdZsOmuO+lccL39qiA1To3Z6Fj8aEZSa5xHU7E2G5kLHi9CBXxbnIHDconpEG3PgSyEe9SQK3evuE5PuOCEZI5wKC0MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZBDyun8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27E0C4CEE7;
-	Tue, 28 Oct 2025 23:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761694415;
-	bh=HUOsnm5Nk+6xTsUUMwpytKpcd3je4nJFnLJK5pa2yWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QZBDyun8yiZBdSUzQHF1+2JJRcD4znNaEFpCr/zDqada5768JIuN44wzkJC+6msSh
-	 q7w55UUYDhZ+XA3yCU3qfZ1uIjNtiyug2HCW6jX9hoNH7V3G3bY98nAuA2++vlN9K8
-	 wAlXc+k7Zl//pAJrqV/wInOao3V7lmsfOubcVuRSZ1ulRRN2bzla0nbDigJMqMkwg4
-	 lYp7mBo4dWuUMn4i9PLfa/KQYLpRadb64qLud7B1zWmJxbjHfkam1+Obj5JpVMPSSy
-	 E48LLXKHAIdrUksbZjOSUqTnDLUuB9CB5ZJYZIIyRly1x7k8JGZimV7QnAl2+LyQ1z
-	 D5dy17RW2HUsA==
-Date: Tue, 28 Oct 2025 18:33:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Johan Hovold <johan@kernel.org>, linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Diederik de Haas <diederik@cknow-tech.com>,
-	Dragan Simic <dsimic@manjaro.org>, linuxppc-dev@lists.ozlabs.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>, Frank Li <Frank.li@nxp.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au
-Subject: Re: [PATCH] PCI/ASPM: Enable only L0s and L1 for devicetree platforms
-Message-ID: <20251028233333.GA1467459@bhelgaas>
+	s=arc-20240116; t=1761694555; c=relaxed/simple;
+	bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D3ie3IVCzt+0/E2DyM1gqdi55mFjAUC/Y6dz+l36VXTjpjZKfO/CWs/B1/XpB+hNvlS6VzrgzlYvAJO/zY9tgdtElM9zev2OC5qfVECJ02vwbzxVKxuPYr5AFy7jRRqaK0JSL6mbfQacXZI3zoTphjLCOthf5BDtTSl2wPsb8x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOQPpC/m; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-475dab5a5acso24378465e9.0
+        for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 16:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761694552; x=1762299352; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
+        b=kOQPpC/mr/pSZI816b0Fn6HrfxFcQKig9QLpQq/T2i81OBCo/MpEQAmYLFXuicMtVW
+         89179mMigsvCEkIvqsiCgs9HLyfudd/Eao4peUhWhaUkCG+GEcbS3qOvaRK+6G4cEGpX
+         DovbewDH8zImjk6rpnaz+oA1WRu0TUq3otZlR6rw6rbLG1njtAJEcjWlHzFPblErCNkG
+         vQZ+wIZxY5MnLupPhSOBMfunuIccCHDuhD6QaPPyMfa7ykwnewec5Jw9gXPIBjp3piqR
+         6fgUgDgxqnuhFMnOtmcfRs8qVwkdEK16rW22EfU+fBRBbN5iQfgZF50LPPoLOx4X2h+M
+         QBig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761694552; x=1762299352;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
+        b=R6ni/GgrQhDCR+nVUW+XbmTVC6B3/BHNRn+MlZOBjOe875Z3Xdaph/QAyx62xbRDyy
+         yiGQd16nafMjiXuVvS6CQI6NQtCdlXkHM32Wg6It2E3JKd1+u9wOXr+a7JieSHxfXEq5
+         cgJAs3RgfiLlyauUk+SKMBHb5m+m5WcejFCzjl1XPeWCaOn/E6LajsXbceDgCcGQUGEI
+         OtxoE/+CKzYluvTe0h7KbyHBHpglW4OLjxQqDkgwQ16HNJmrNP5OUiYyDkJM4SxVgsXy
+         o3urmCfehNc36KMGhZ78LI2h9N5omVUI8GrijceqJJ+YofXWRPV9M1BfSlMVsYJiDlek
+         Ga0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWlGhO/uNnu3O6BIC1N6e3oDKqmQYG5xCCoLlv0hSUxl0aMemOaPWQN5nI4kktksbHNc2xxNfeNu+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZN/VLGigg6wmX6yDlCpTIDt96dHtRJu3vHDwreWOrSJJ7Dmid
+	j2fXTylFcY7nEjl6SrqQmf0PoeBb/6d2Q+QD5Nl5c2kd6YrTiFMeVJUM
+X-Gm-Gg: ASbGncsInLTjP9EkP5M0gP3Q6i6q/AX3oO+8/q0C0LLmQye37xpdLYQ88oeNiOHHFgm
+	hodmz5ULUiwMa1+J3dg8huKZ1CEEQQDVlUla35HmhKIUMvrv324a/kBqaPtRTs6n4EeNUZZ8qwx
+	AHzPssehdcY1gNiwGfJJQdIX4AYDmpU6Iy/ZcuShLbW3EK1ovl9WU2E5g0ooNAEvTLjj482gi1t
+	y6XZO2oY5ueSKMgbUj5ki6Gqb8dBF5kt73wuovfrJCdpZAKK5AyQOYUB9HlOPLhIP30itpllevg
+	fJD5N7EN9xF9RD9LjuFGcM9xyDAm6B1RIgEL7D54V5z8nQTEHCP/kaZcCnMiWo2EWju+wZBAL9t
+	xoyJi+Adfi+aIrdfTa7kWpIb1Q2GovyBNrW5qBmsHfBuRI3hY+s8lBILDvWKx8oSlgKzOxVBsVd
+	FLo2CnwshHR20Rv/+HaY625Ng=
+X-Google-Smtp-Source: AGHT+IE+7lavUcbRiUEoBcPcWWhtl2Ye0Lqq0olW9TOJGPDFy5Ml5rtmUhOJt0ianoi/OzmsyK7njA==
+X-Received: by 2002:a05:600c:3b1d:b0:475:e007:baf1 with SMTP id 5b1f17b1804b1-4771e3b8626mr10555025e9.34.1761694551467;
+        Tue, 28 Oct 2025 16:35:51 -0700 (PDT)
+Received: from vitor-nb.Home (bl19-170-125.dsl.telepac.pt. [2.80.170.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e196a9asm17054265e9.7.2025.10.28.16.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Oct 2025 16:35:49 -0700 (PDT)
+Message-ID: <f99c528a19fa793035cece3f83b332d7ecafa7da.camel@gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: PCI: ti,j721e-pci-host: Add
+ optional regulator supplies
+From: Vitor Soares <ivitro@gmail.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>,  Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Vitor
+ Soares <vitor.soares@toradex.com>, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 28 Oct 2025 23:35:48 +0000
+In-Reply-To: <wg2wpwex4vbwwxynk5salk6mbpneww76wfvznn442a2xyqrrck@a7qqqn3hjzcg>
+References: <20251014112553.398845-1-ivitro@gmail.com>
+	 <20251014112553.398845-2-ivitro@gmail.com>
+	 <20251020-kickass-fervent-capybara-9c48a0@kuoka>
+	 <2c3e4bdefb306dc89c15bebc549d854ea2b4cc32.camel@gmail.com>
+	 <wg2wpwex4vbwwxynk5salk6mbpneww76wfvznn442a2xyqrrck@a7qqqn3hjzcg>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3aa95b26-7801-476e-840f-5976b0ee11c1@xenosoft.de>
 
-On Mon, Oct 27, 2025 at 06:12:24PM +0100, Christian Zigotzky wrote:
-> Hi All,
-> 
-> I activated CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT again for the RC3 of
-> kernel 6.18. Unfortunately my AMD Radeon HD6870 doesn't work with the latest
-> patches.
-> 
-> But that doesn't matter because we disable the above kernel options by
-> default. We don't need power management for PCI Express because of boot
-> issues and performance issues.
+On Tue, 2025-10-28 at 11:11 +0530, Manivannan Sadhasivam wrote:
+> On Mon, Oct 27, 2025 at 11:22:26PM +0000, Vitor Soares wrote:
+> > Hi Krzysztof,
+> >=20
+> > Thank you for the feedback.
+> >=20
+> > On Mon, 2025-10-20 at 13:14 +0200, Krzysztof Kozlowski wrote:
+> > > On Tue, Oct 14, 2025 at 12:25:48PM +0100, Vitor Soares wrote:
+> > > > From: Vitor Soares <vitor.soares@toradex.com>
+> > > >=20
+> > > > Add optional regulator supply properties for PCIe endpoints on TI S=
+oCs.
+> > > > Some boards provide dedicated regulators for PCIe devices, such as
+> > > > 1.5V (miniPCIe), 3.3V (common for M.2 or miniPCIe), or 12V
+> > > > (for high-power devices). These supplies are now described as optio=
+nal
+> > > > properties to allow the driver to control endpoint power where
+> > > > supported.
+> > >=20
+> > > Last sentence is completely redundant. Please do not describe DT, we
+> > > all can read the patch. Driver is irrelevant here.
+> > >=20
+> > >=20
+> > Ack, I will remove last sentence.
+> >=20
+> > >=20
+> > > How you described here and in descriptions, suggests these are rather
+> > > port properties, not the controller.
+> >=20
+> > You are right - these supplies power the PCIe slot/connector, not the
+> > controller
+> > itself. However, as per my understanding, the current kernel practice i=
+s to
+> > place slot supplies in the root complex node rather than the endpoint n=
+ode.
+> > as
+> > seen in e.g.:
+> > - imx6q-pcie.yaml
+> > - rockchip-dw-pcie.yaml
+> > - rcar-pci-host.yaml
+> >=20
+> > This seems consistent with those existing bindings, but please let me k=
+now
+> > if
+> > I=E2=80=99m overlooking something specific to this case.
+> >=20
+>=20
+> We do not properly document it, but defining the slot supplies in host br=
+idge
+> (controller) node is deprecated. Some bindings still do it for legacy rea=
+sons,
+> but the new ones should define them in the Root Port nodes as they belong=
+ to.
+> We
+> do not have a separate DT node for PCI slots, but rather reuse the Root P=
+ort
+> node.
+>=20
+> There are also bindings that define supplies in the endpoint node. They d=
+o it
+> for devices directly connected to the PCI bus without a connector (like i=
+n
+> PCB).
+>=20
+> - Mani
+>=20
 
-It matters to me!  The kernel should work correctly with or without
-CONFIG_PCIEASPM and any of the CONFIG_PCIEASPM_* settings.  We can't
-expect users to know a magic combination of config settings to make
-things work.
+Thanks for the clarification and context. From what I understand, the
+recommendation is to define the supply regulators under the individual root=
+ port
+node rather than in the host bridge (controller) node, as the supplies
+conceptually belong to each port rather than the controller itself.
 
-I assume AMD Radeon HD6870 is used on a variety of platforms, and I
-don't see other reports of ASPM problems with it, so I suspect the
-problem is something else.
+On the j721e PCIe controller, the current driver implementation assumes a s=
+ingle
+root port and doesn=E2=80=99t parse child port nodes. To follow the new con=
+vention, I=E2=80=99d
+need to refactor the driver to support root port subnodes, and I wonder if =
+the
+PHY reference and reset should also be moved to the Root Port node in that =
+case.
 
-  - v6.17 CONFIG_PCIEASPM=y, works OK
+Could you please point me to an example of a PCIe controller binding or dri=
+ver
+that already follows this approach?
 
-  - v6.18-rc3 CONFIG_PCIEASPM unset, works OK, as expected since we
-    don't do anything with ASPM
-
-  - v6.18-rc3 CONFIG_PCIEASPM=y, boot fails (this report, no logs)
-
-I looked at Hypexed's logs from
-https://github.com/chzigotzky/kernels/issues/17#issuecomment-3400419966,
-all of which worked fine:
-
-  - 6.18.0-a8-dmesg.log, looks like CONFIG_PCIEASPM unset, so we would
-    expect this to be fine.
-
-  - 6.18.0-a7-dmesg.log, CONFIG_PCIEASPM=y, ASPM fully enabled,
-    reported to work fine.
-
-    Hardware name: pasemi,nemo PA6T 0x900102 A-EON Amigaone X1000
-    Found PA-PXP PCI host bridge.
-    pci 0000:00:10.0: [1959:a002] type 01 class 0x060400 PCIe Root Port
-
-    All the Root Ports are [1959:a002], and ASPM for 01:00.0 and
-    05:12.0 (apparently the only endpoints that advertise ASPM) seemed
-    to work fine.
-
-  - 6.18.0-a7-2-dmesg.log, looks like CONFIG_PCIEASPM unset, so we would
-    expect this to be fine.
-
-So the only data point I see is that [1959:a002] seems to work.
-
-Christian, can you collect the output of "sudo lspci -vv" from your
-machine where CONFIG_PCIEASPM=y doesn't work?  Doesn't matter what
-kernel you're running when you collect it.
-
-I assume your machine is this:
-
-  Hardware name: varisys,CYRUS5040 e5500 0x80240012 CoreNet Generic
-
-  Found FSL PCI host bridge at 0x0000000ffe200000. Firmware bus number: 0->1
-  Found FSL PCI host bridge at 0x0000000ffe201000. Firmware bus number: 0->8
-  fsl-pci ffe200000.pcie: PCI host bridge to bus 0000:00
-  pci 0000:00:00.0: [1957:0451] type 01 class 0x060400 PCIe Root Port
-  pci 0000:01:00.0: [1002:6738] type 00 class 0x030000 PCIe Legacy Endpoint
-  pci 0000:01:00.1: [1002:aa88] type 00 class 0x040300 PCIe Legacy Endpoint
-
-  [1957:0451] Freescale (some kind of Root Port)
-  [1002:6738] AMD Barts XT [Radeon HD 6870]
-  [1002:aa88] AMD Barts HDMI Audio [Radeon HD 6790/6850/6870 / 7720 OEM]
-
-I don't see any real info about that Freescale Root Port.
-
-If you have a chance, could you try the patch below on top of
-v6.18-rc3 with CONFIG_PCIEASPM=y?
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..2b6d4e0958aa 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-  * disable both L0s and L1 for now to be safe.
-  */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1);
- 
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+Best regards,
+Vitor Soares
 
