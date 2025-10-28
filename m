@@ -1,71 +1,78 @@
-Return-Path: <linux-pci+bounces-39524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BC54C1485D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:07:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA559C148A8
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:10:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2610A5876DB
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 12:02:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 777AD4824B7
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 12:07:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4384D32A3E1;
-	Tue, 28 Oct 2025 12:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D01D73168FA;
+	Tue, 28 Oct 2025 12:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwZX30kq"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qKQXrRO6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gocl/jMn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA80328617;
-	Tue, 28 Oct 2025 12:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164FA328616;
+	Tue, 28 Oct 2025 12:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761652934; cv=none; b=tFlJd6m5qCI/+fVZ5nVK+91PnCj9ALCDNHW6jbOiBqyJI143p3x1ry2QzizxiFPFpmqVIEudp4AqavLaA3WhTD4VkbthhPdklyZ5EnnZPIdBJjwQvQ6HSxs3XzQ7PJPafNLMWVT53npdfBS1QQxggj2xGZqhIzmpv9vzzMXbHNk=
+	t=1761653217; cv=none; b=RgLhDfI7Q0s+65o5tNLi2hzOnN+xoIMVjnJolgXGqa2SnOaF7yNDAHKsRKBv0CwzyBJZTtxaXz6AUMRrDLDdLfP4iaKTc5mtx5/cqrzbSgqHSM4X4I+0LJt3I9p/Z8GyWoZNRKn6f0Z7qv3r64ldSydSWNHQ4fVoijv8cjPO670=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761652934; c=relaxed/simple;
-	bh=mZf/YKmsAob1fECJczEmiCct9PI3ELB+8/2Zjo1x01o=;
+	s=arc-20240116; t=1761653217; c=relaxed/simple;
+	bh=ei+CA+ZBh3hHsRnekGA32bPDegEeVgJXMO6rrJReISs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyShAmpB1sV1LVad2AisW335Gq33qdq7SEzXH5pLBPojMUQhZ75sk6z8gq0FAOSpBj9U6QfP6tKFR4cdGXq2J5E6ZKu53sxtjCphaYERhSG7Se5vYx9JTxTIEb/9LCTMNzifmvEMCd/4juNeiKG3C4Iuym8si4bIHZrE//oWKKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwZX30kq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F27C4CEE7;
-	Tue, 28 Oct 2025 12:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761652933;
-	bh=mZf/YKmsAob1fECJczEmiCct9PI3ELB+8/2Zjo1x01o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SwZX30kqTRxKywW3JAgQpZq9YEFkCs4mbYnsls8E10OCO8sCik7skaC6kTTCKlfog
-	 IAGPeflZVG4EU9joGw/E4TiGl7RA8FEFNbJr5eZDvYRVR5AqDOAKiVBJ3RW9NglqMt
-	 YrKtMpdU8ZM7ej9CU2ASIMTiUtmkgbi/4YlElhPAm8ukENsd2Q5yb9qGC57bQdTv87
-	 kSyfTWb41F+rhshf2CL1q0957AOwBmoHWs/npuXlrXKWFgxS/IeSKCP1J/gK/MKvkJ
-	 lcPBPR7SnFgSuuCKpUntaxB+uWX3d7haPhR2st8URjXBigR+NbHjYiQJL0WRxmtmiQ
-	 /cOOFozsC/eiA==
-Date: Tue, 28 Oct 2025 14:02:07 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
- regions
-Message-ID: <20251028120207.GQ12554@unreal>
-References: <cover.1760368250.git.leon@kernel.org>
- <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
- <CALzav=cj_g8ndvbWdm=dukW+37cDh04k1n7ssFrDG+dN3D+cbw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pC95RjOqBd64nzlT5czh9AyjHwqEaAu2u6KXIC6dfgUyWihD5MvL9LZRTYMana08RentDQCVmx+uSBB0Va/xUQk6mV2QoEB2GrhlLY3sgln3fMyDevOHze33KVbGHqabcxTnO+eRmlFpzaxnbemdbkzSgboPf477JwIe3/yPBak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qKQXrRO6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gocl/jMn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Tue, 28 Oct 2025 13:06:52 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1761653214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=crnGWfJ7+UbK0li8dGHZvc/h9PGKn2eAY0mmwg0N528=;
+	b=qKQXrRO6OVuHEcDSuInE5tNxabxKnup1VtOzPffIvExXjuF4xJEmj38AHd0xhxDPKZp7kE
+	MtM4/DZfqTPTSvLn6unZ520+2ok48bF8Ek0tfUKLejEKelVGlrIiXA3SMxx0AVIMpASl46
+	x4nffQQ8rOedTcEBYrHQ3OXaW6CewuEHIw41zuIVFVJ5Sm9YqVfWWjo0qenTh7JF4zTcex
+	NO+hEkwFLKbcVirJ/M/yvm0plZxdM3aTOSx5FcOh3nAeHQXpxuIqstMTSDl+zfKJN2szwv
+	LvMykX7eBEdO+HCKpeRp98X8YHANIxFgq51nxx7QrZPlRDSF+8BJP+g3lCa3Pw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1761653214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=crnGWfJ7+UbK0li8dGHZvc/h9PGKn2eAY0mmwg0N528=;
+	b=gocl/jMnijFGp8u7+eYJkexAu4wF08rf5SfQNrcx5prs3WeJ9NFbyzWKcoQZjQi1SFSen7
+	hpKTIBmKXAqe5MDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Crystal Wood <crwood@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, Attila Fazekas <afazekas@redhat.com>,
+	linux-pci@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>
+Subject: Re: [PATCH v2] genirq/manage: Reduce priority of forced secondary
+ interrupt handler
+Message-ID: <20251028120652.AJUTgtwZ@linutronix.de>
+References: <f6dcdb41be2694886b8dbf4fe7b3ab89e9d5114c.1761569303.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,51 +81,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALzav=cj_g8ndvbWdm=dukW+37cDh04k1n7ssFrDG+dN3D+cbw@mail.gmail.com>
+In-Reply-To: <f6dcdb41be2694886b8dbf4fe7b3ab89e9d5114c.1761569303.git.lukas@wunner.de>
 
-On Mon, Oct 27, 2025 at 04:13:05PM -0700, David Matlack wrote:
-> On Mon, Oct 13, 2025 at 8:44 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > Add support for exporting PCI device MMIO regions through dma-buf,
-> > enabling safe sharing of non-struct page memory with controlled
-> > lifetime management. This allows RDMA and other subsystems to import
-> > dma-buf FDs and build them into memory regions for PCI P2P operations.
+On 2025-10-27 13:59:31 [+0100], Lukas Wunner wrote:
+> Crystal reports that the PCIe Advanced Error Reporting driver gets stuck
+> in an infinite loop on PREEMPT_RT:
 > 
-> > +/**
-> > + * Upon VFIO_DEVICE_FEATURE_GET create a dma_buf fd for the
-> > + * regions selected.
-> > + *
-> > + * open_flags are the typical flags passed to open(2), eg O_RDWR, O_CLOEXEC,
-> > + * etc. offset/length specify a slice of the region to create the dmabuf from.
-> > + * nr_ranges is the total number of (P2P DMA) ranges that comprise the dmabuf.
-> > + *
-> > + * Return: The fd number on success, -1 and errno is set on failure.
-> > + */
-> > +#define VFIO_DEVICE_FEATURE_DMA_BUF 11
-> > +
-> > +struct vfio_region_dma_range {
-> > +       __u64 offset;
-> > +       __u64 length;
-> > +};
-> > +
-> > +struct vfio_device_feature_dma_buf {
-> > +       __u32   region_index;
-> > +       __u32   open_flags;
-> > +       __u32   flags;
-> > +       __u32   nr_ranges;
-> > +       struct vfio_region_dma_range dma_ranges[];
-> > +};
+> Both the primary interrupt handler aer_irq() as well as the secondary
+> handler aer_isr() are forced into threads with identical priority.
+> Crystal writes that on the ARM system in question, the primary handler
+> has to clear an error in the Root Error Status register...
 > 
-> This uAPI would be a good candidate for a VFIO selftest. You can test
-> that it returns an error when it's supposed to, and a valid fd when
-> it's supposed to. And once the iommufd importer side is ready, we can
-> extend the test and verify that the fd can be mapped into iommufd.
+>    "before the next error happens, or else the hardware will set the
+>     Multiple ERR_COR Received bit.  If that bit is set, then aer_isr()
+>     can't rely on the Error Source Identification register, so it scans
+>     through all devices looking for errors -- and for some reason, on
+>     this system, accessing the AER registers (or any Config Space above
+>     0x400, even though there are capabilities located there) generates
+>     an Unsupported Request Error (but returns valid data).  Since this
+>     happens more than once, without aer_irq() preempting, it causes
+>     another multi error and we get stuck in a loop."
+> 
+> The issue does not show on non-PREEMPT_RT because the primary handler
+> runs in hardirq context and thus can preempt the threaded secondary
+> handler, clear the Root Error Status register and prevent the secondary
+> handler from getting stuck.
 
-No problem, I'll add such test, but let's focus on making sure that this
-series is accepted first.
+Not sure if I mentioned it before but this is due to forced threaded
+IRQs which can also be enabled on non-PREEMPT_RT systems via `threadirqs`.
 
-Thanks
+> Emulate the same behavior on PREEMPT_RT by assigning a lower default
+> priority to the secondary handler if the primary handler is forced into
+> a thread.
+> 
+> Reported-by: Crystal Wood <crwood@redhat.com>
+> Tested-by: Crystal Wood <crwood@redhat.com>
+> Closes: https://lore.kernel.org/r/20250902224441.368483-1-crwood@redhat.com/
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> --- a/kernel/sched/syscalls.c
+> +++ b/kernel/sched/syscalls.c
+> @@ -856,6 +856,19 @@ void sched_set_fifo_low(struct task_struct *p)
+>  }
+>  EXPORT_SYMBOL_GPL(sched_set_fifo_low);
+>  
+> +/*
+> + * For when the primary interrupt handler is forced into a thread, in addition
+> + * to the (always threaded) secondary handler.  The secondary handler gets a
+> + * slightly lower priority so that the primary handler can preempt it, thereby
+> + * emulating the behavior of a non-PREEMPT_RT system where the primary handler
+> + * runs in hardirq context.
+
+s/non-PREEMPT_RT/non-forced threaded/ ?
+
+Other than that,
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Sebastian
 
