@@ -1,147 +1,130 @@
-Return-Path: <linux-pci+bounces-39536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61537C14F48
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 14:47:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4407C1509B
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 15:05:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9DF14354650
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:47:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49CA9622E31
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 13:58:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ED30223DCF;
-	Tue, 28 Oct 2025 13:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D926F32BF43;
+	Tue, 28 Oct 2025 13:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="a4QvicBh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uOeqyrTx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZyyuACtX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E931F4606;
-	Tue, 28 Oct 2025 13:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15646233704;
+	Tue, 28 Oct 2025 13:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761659222; cv=none; b=kl0vNYLq2wrJ6qf0mlAUa9dBdh1ZNRDYTWjlXBj2HrhPaZInt+sijamOD8QkFxAxEAekrd7sWlegZCPyh/tCirPRFbm3uFLeoAdm9MDhlQ4Xj4PZ2Ko7Lv1/JhoSIz0ATNlabLPWA2sPyc27NUvcj9ugAFeULe/JsyiesuENP6o=
+	t=1761659882; cv=none; b=NUwchYoQyseurlASFc/WA5/htFB9tegTIIudTBC6v5rbTVxIxv8vK+fdM8hoHTzhgYAg0eaNfTgdmjvFdW9aKK8W7QO0+DyTwETt+/cuwwvXhAs80aARB6x75bflgdZkz8VoIxjlnVBownAa2a0efGj7xKHV2bkmfqNVdExy3lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761659222; c=relaxed/simple;
-	bh=3Wa50ZqGT8eSNTFPzwHcDHhGPw3XmeC01Xuy33bOsgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HSDTWOvKslA8vkCQIO0iunDV0jNxi9Jy/alTiHUVHDcZcEuaYdzSEGq0VoCsODdmlNHCuD8QzjR817synYkG+On4hbAyC8wpAFWZzf12j878koTLL98vW/qGmD7/II8eHBVdMWQdloeoOCenhQ9FqNMrL0l59MyyM/47T1F6PwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=a4QvicBh; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761659214; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=SdP4P384sbs4h39646JsReKLjr8gZ9zv4XENPQNf9Lk=;
-	b=a4QvicBhKu7BrMaOW0kT0Dwui2BH/axotYbjhhLYIK2f0FBvkiEDY2yEy8ETyM1e0v8cCfuLtZjtug6WX2uf2MiFe/zsUPCh7z65Ya3IwctJcsOVQ/Vzv2uZ+PNN+K5lO3xGanvNfN6P+SppfRgGYeYswq1hgVZOuu47NKZdoxM=
-Received: from 30.246.176.102(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WrCJu3H_1761659211 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 28 Oct 2025 21:46:52 +0800
-Message-ID: <0d95b8af-97e4-43b6-a35a-aa3ce153f0ee@linux.alibaba.com>
-Date: Tue, 28 Oct 2025 21:46:51 +0800
+	s=arc-20240116; t=1761659882; c=relaxed/simple;
+	bh=jwhkSKyIAKFcKFKcHbcE5yLIWsbhuzQegvHxTtFBzts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsNevQpHhVkWayBsMytRCOv3xoSij57c2PxqQ4EBFwkjXywl7mEGafOquHSSE17U2VuVfp2WmFDVwo5YDRLFYl/M9iXSsRbagXFAD2LfO4yDBQ5prFHBi4Igx7INtBCPVrYvG5xVIdiGpmm+3BBpHDzc2NlxrxGnOxuQ86rDWek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uOeqyrTx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZyyuACtX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Tue, 28 Oct 2025 14:57:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1761659878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q4sSQfkLnUOR6EYFSrWyzoEwtf3zqvnnuhYr4uBXt5w=;
+	b=uOeqyrTxLDYiEMrmWVSQnhrBNLXvhfmhLJnXro8s8e/5+TaBX3e5hHYQ6wrfnnpA/D+2Br
+	VepBCLLZ3mf2vpT0Gz3Vb2syn2mtMHOQBa2es2M8TlOQbwY7PIJcir1YnIN+/U8BCAMrWA
+	edD/Gv6/wrcYXy5koz4y8dRqXZtGvoc0VWUDzWnBYMQEBG2nmOYC5G6McQ9BmDx4OF87w1
+	vnxRNlqLwuHgl9jkDfCCuwOe99j4HoazKUy46yw4w5zbHDiLrTiRWzlxqmDAKBPNpBC3WT
+	XLBBTN4PVOzTnm4pvMmbTyTZOa3kY6kt5hU+6zicfLmRuiMJrLthYfYgMrumAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1761659878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q4sSQfkLnUOR6EYFSrWyzoEwtf3zqvnnuhYr4uBXt5w=;
+	b=ZyyuACtX6WpVEwXwNANDHp34V24b0xcRAwXy5gpP9ecmQBqdeOCJKHHu1j6YtOcJWLigfB
+	Jd3qSDCN9nglHQAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Crystal Wood <crwood@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, Attila Fazekas <afazekas@redhat.com>,
+	linux-pci@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>
+Subject: Re: [PATCH v2] genirq/manage: Reduce priority of forced secondary
+ interrupt handler
+Message-ID: <20251028135756.31PG0uHY@linutronix.de>
+References: <f6dcdb41be2694886b8dbf4fe7b3ab89e9d5114c.1761569303.git.lukas@wunner.de>
+ <20251028120652.AJUTgtwZ@linutronix.de>
+ <aQDIxvU18vzB-1G-@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
- regions
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Leon Romanovsky <leonro@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, iommu@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
- kvm@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
- Logan Gunthorpe <logang@deltatee.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
-References: <cover.1760368250.git.leon@kernel.org>
- <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
- <20251022125012.GB244727@nvidia.com>
- <3db524e7-b6ce-4652-8420-fdb4639ac73a@linux.alibaba.com>
- <20251027120904.GA896317@nvidia.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20251027120904.GA896317@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aQDIxvU18vzB-1G-@wunner.de>
 
-
-
-在 2025/10/27 20:09, Jason Gunthorpe 写道:
-> On Sun, Oct 26, 2025 at 03:55:04PM +0800, Shuai Xue wrote:
->>
->>
->> 在 2025/10/22 20:50, Jason Gunthorpe 写道:
->>> On Mon, Oct 13, 2025 at 06:26:11PM +0300, Leon Romanovsky wrote:
->>>> From: Leon Romanovsky <leonro@nvidia.com>
->>>>
->>>> Add support for exporting PCI device MMIO regions through dma-buf,
->>>> enabling safe sharing of non-struct page memory with controlled
->>>> lifetime management. This allows RDMA and other subsystems to import
->>>> dma-buf FDs and build them into memory regions for PCI P2P operations.
->>>>
->>>> The implementation provides a revocable attachment mechanism using
->>>> dma-buf move operations. MMIO regions are normally pinned as BARs
->>>> don't change physical addresses, but access is revoked when the VFIO
->>>> device is closed or a PCI reset is issued. This ensures kernel
->>>> self-defense against potentially hostile userspace.
->>>
->>> Let's enhance this:
->>>
->>> Currently VFIO can take MMIO regions from the device's BAR and map
->>> them into a PFNMAP VMA with special PTEs. This mapping type ensures
->>> the memory cannot be used with things like pin_user_pages(), hmm, and
->>> so on. In practice only the user process CPU and KVM can safely make
->>> use of these VMA. When VFIO shuts down these VMAs are cleaned by
->>> unmap_mapping_range() to prevent any UAF of the MMIO beyond driver
->>> unbind.
->>>
->>> However, VFIO type 1 has an insecure behavior where it uses
->>> follow_pfnmap_*() to fish a MMIO PFN out of a VMA and program it back
->>> into the IOMMU. This has a long history of enabling P2P DMA inside
->>> VMs, but has serious lifetime problems by allowing a UAF of the MMIO
->>> after the VFIO driver has been unbound.
->>
->> Hi, Jason,
->>
->> Can you elaborate on this more?
->>
->>  From my understanding of the VFIO type 1 implementation:
->>
->> - When a device is opened through VFIO type 1, it increments the
->>    device->refcount
->> - During unbind, the driver waits for this refcount to drop to zero via
->>    wait_for_completion(&device->comp)
->> - This should prevent the unbind() from completing while the device is
->>    still in use
->>
->> Given this refcount mechanism, I do not figure out how the UAF can
->> occur.
+On 2025-10-28 14:44:38 [+0100], Lukas Wunner wrote:
+> On Tue, Oct 28, 2025 at 01:06:52PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-10-27 13:59:31 [+0100], Lukas Wunner wrote:
+> > > The issue does not show on non-PREEMPT_RT because the primary handler
+> > > runs in hardirq context and thus can preempt the threaded secondary
+> > > handler, clear the Root Error Status register and prevent the secondary
+> > > handler from getting stuck.
+> > 
+> > Not sure if I mentioned it before but this is due to forced threaded
+> > IRQs which can also be enabled on non-PREEMPT_RT systems via `threadirqs`.
 > 
-> A second vfio device can be opened and then use follow_pfnmap_*() to
-> read the first vfio device's PTEs. There is no relationship betweent
-> the first and second VFIO devices, so once the first is unbound it
-> sails through the device->comp while the second device retains the PFN
-> in its type1 iommu_domain.
+> According to the commit which introduced the "threadirqs" command line
+> option, 8d32a307e4fa ("genirq: Provide forced interrupt threading"),
+> it is "mostly a debug option".  I guess the option allows testing
+> the waters on arches which do not yet "select ARCH_SUPPORTS_RT"
+> to see if force-threaded interrupts break anything.  I recall the
+> option being available in mainline for much longer than PREEMPT_RT
+> and it was definitely useful as a justification to upstream changes
+> which were otherwise only needed by the out-of-tree PREEMPT_RT patches.
+
+There are people using it without PREEMPT_RT due to $reasons. It is not
+documented in Documentation/admin-guide/kernel-parameters.txt as an
+option meant only for debugging.
+
+> Intuitively I would assume that debug options are not worth calling out
+> in commit messages or code comments as users and developers will
+> primarily be interested in the real deal (i.e. PREEMPT_RT) and not
+> an option which gets us only halfway there.  However if you
+> (or anyone else) feels strongly about it, I'll be happy to respin.
+
+I argued and sent patches to fix code which was wrong on PREEMPT_RT due
+to threadirqs and was also wrong without PREEMPT_RT enabled but solely
+with forced-threaded irqs.
+
+But please wait once tglx/irq or peterz/sched says something here before
+repining.
+
+> Thanks for taking a look!
 > 
-> Jason
+> Lukas
 
-I see.
-
-Thanks.
-
-Best Regard,
-Shuai
-
+Sebastian
 
