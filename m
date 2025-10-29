@@ -1,80 +1,80 @@
-Return-Path: <linux-pci+bounces-39640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FF26C1AD9A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 14:43:31 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4325C1A93C
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 14:16:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4B04625D52
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 13:07:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 42F35587A3D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 13:09:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6550325734;
-	Wed, 29 Oct 2025 12:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08BB021B9C0;
+	Wed, 29 Oct 2025 13:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bmrs+KJG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjGAoRmS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31C7286416
-	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 12:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1190423C513
+	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 13:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761742785; cv=none; b=O4WU+INe5JRoXUM09l3xfzzVI3NnHr1dhZtciYqXUTrbbMzIoPxD24c/ZUOkL90I19H1EDzrLQVLJ9cHB3m6K8DOPvnvCIybPGCtUGCd63gMgFYzX8tVsU/uy2hTpIntotskKVg73lV0zcpNKLN/hIJ424or8qSASIf65yGmkvs=
+	t=1761743003; cv=none; b=eSp5mPv6uOSEnsySeJS0N+p2oju7K6HLRKGhnUcKGkdvCGaMzUR1y3qkTN29PfpPGML/RkVjQFYsEofwKew7Gwqb9Uq/PnHKBCE31D+10X/FhARSMhFzgOuYNWgkY2HQifusC25CBTB7HeC4eE6dqeGOEMR9NipIJnPmuo2DTyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761742785; c=relaxed/simple;
-	bh=cZUqEi7ArJBgqnrq/LGfj3bUXfY69RvPu1cvwBiVCak=;
+	s=arc-20240116; t=1761743003; c=relaxed/simple;
+	bh=pi5yuhKxOE0klx8JCfsVD+GqZGX1kT6HdPKMNpthFto=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ww2DwFAFxxVdCEYK5HEprnPgOyFGpVQXdhLVkXSAFbpd89MJsYZStYbOoZshTk6DoX7PL/QzuU+pCRbX2D7OmjcCOtR47RbDcnFd86FrYbWYG5keQISDNVPRu98TOcJYqvRyOaEoBt3J0qEBXXBrdn8wzsz56kC1MEwJ8A9xDPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bmrs+KJG; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=b06Xntzc7Qpf2FIQY2AVWRYAbzKZR97nJTXVkl54pJ657bsECwx6VBhNX9yrxQzalVDBRjyqv9i9/x+fO9+usG8vWMjEAi9yLfgMRfBQ5GTFnSMnHxXb7MNsvtoFOybzoA29wPWaooz5fqJYb9V/X0XeJNlX3z9Y6wAYXtQJI1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sjGAoRmS; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-429893e2905so7046953f8f.3
-        for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 05:59:43 -0700 (PDT)
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3ecdb10a612so4450751f8f.2
+        for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 06:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761742782; x=1762347582; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761743000; x=1762347800; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvcZ242I0xNV0Bj8P2kxRpXu3YYgCUlfHC5XSdPNaN0=;
-        b=Bmrs+KJGpZa4aRNYwF4tRU2pbINS1yxabO0L36mrLHRQcM7y823X047mv+4lH2uhIP
-         KpUyJGNS5SxrvRzQAs6AwdP8OKq5JwBtMwKtMD+KsBkakcp/GrU9ssK+8w9On1IJVI97
-         3qYTF4s5fRVPXFe85bNPVBTRxggroBVIxausqXfZGYbu8YkNjrTyzC2csBL/gFVQSxUh
-         YnLQAO2XVcKFVnOrccVADIob3k3A9pLF6T626b11yIxGnNzoMrkY6x+pFou35KjqmM9n
-         Teo6y/tNdpcn3DPBbIi2jj1KIcVuUY/mpowzuGEDHl2QRgNQyh5i54yoUt7KZ0TESpo+
-         kF7A==
+        bh=Udy7SqhBXKYC8gHDKeSCQJFDpbdKzPFYXaEf65zBeu4=;
+        b=sjGAoRmSWjF5qBw7a+8Zh3RcSGPUExLIbTwok0B0F5NrgzWUmC7sCgbSC33Ua58Odz
+         4ACsw7BYKI2crv3xjOh61dhmf+BChAXoV3o3KBsT7Z6WEAI6AdFL4CfJB0zsyYZ2r4W/
+         Ent6fV/syZmAh2lzhhsRYdSb0PnwzXsNtD9IO1PfB6mFKk22Gi0LbjdfAMZPJEdj9oIG
+         kTKVDHnd4jpNXIQqAPQVDuxGd2VDhrWm82e8WuV0jQ2JSIXgF3xIgmRAjoVlDtm8OA3E
+         r7rF97e4QSCWKcNgwT92zBlmxBLKYjIy54IuE3VQnicL7iGSrOK3Cjqn8ZyDez1US/50
+         ugXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761742782; x=1762347582;
+        d=1e100.net; s=20230601; t=1761743000; x=1762347800;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvcZ242I0xNV0Bj8P2kxRpXu3YYgCUlfHC5XSdPNaN0=;
-        b=Yzsk5dmsYPexjivVqm3/D6GjnR91is7nN1whs5qwMJwNpk07tRgYCFaesNKuScprkH
-         oEv8uJauKrWDgJazdGd3qRowiozSDJgdvTAieJw0nr9l4UBF2rCsIc5uCmV5VsEPaiBS
-         56creXDYRepkBArYfzH4PaJf6J91nr66LD/AlFKxammJOHmuV+xa+FCSF1LXUvqGXFN9
-         bOeKF7I4DezECy48nuwzbHOTOf+VXoOn9vvC9xqxq7OXQChWqxUbh0URN2+ZjnFZiwN/
-         KxUB9zTnrsIz8fdh5YEEUR47vikdli36jFSEdMYm9Da0X/voddGBobz2MzuqonVJHkUP
-         Cspg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeeJVB+IbRSULCbu3utup/GkxAiRUa2IZrb3PhZcEzc5At3cAYtknP7qFAkT9wiIF4QyzGJ9tEKjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLRjHXffJVUen7eaKVB8PSmaW0K61R2QE0FXLlAJYEU8CGY7Qe
-	5NNecqmOH217skYo9ZogEVmQDiSq8iuiKM+6Li9kvBc9hW4SGzelZx3fG/dRE/RYtJq0PCo09tl
-	EnaMNuKsTs0cfqWL2FA==
-X-Google-Smtp-Source: AGHT+IFnbvPlsvZotzy1WsN3Ocy8uT6OxjkU13FGbFqNo33aQaiOVG8eFJ1A1TVPzk6tojTsAQa4tCIT+M/iM9c=
-X-Received: from wmvz2.prod.google.com ([2002:a05:600d:6282:b0:477:d21:4a92])
+        bh=Udy7SqhBXKYC8gHDKeSCQJFDpbdKzPFYXaEf65zBeu4=;
+        b=eqt3Wm6m2jKInNGztUJp4ENmm2Uj2RCM5RUM8T4cKDvSGju2vEISGx0+WZluV3F4IL
+         Wps1Vfvvg1nBCGyRq7izo0734AB2kVPgUqMn+M9xKtk3wbOAaFIcqOJOX9F60+ANzdXr
+         4TYdzVtWZ1sYDK2m3ijxha2+ohHDSq2cnnAE9eI1oGqpUdA/pNMeUKFLRy2TY2e4jCaH
+         NUH5XniYJv2muMXk7+7KnB17fJKtaBXGq4jpk1SYzT/S45JfaEtQC8vj6/i407JWipZh
+         VUE/LlTuDmOnTCQ0HcrcJSD/H908Z8HOB2PYpwmoyustdsa0ilmg+H33c+GeJbGUej/4
+         SBAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXytiiXhs1jIw6N3hExWBSXgkBgRd8JrJm+Y5tLINQmXaSNBkJxShVLebdEdmREqvJp2GA/Zs5zErw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVgPXzZTn7Huwfw4OY/N3+PS50BQ40PYB4Xyuq2FAYc1OtHJAn
+	eoIKeTLYvDpLiZiPXDJzL04oHMQCvcsorvrpW9L3GqIXrI3drxWLJwFXXaSm2Pr0QJXOrCUDuBk
+	hdhIS2hlPDoU0mIQt/Q==
+X-Google-Smtp-Source: AGHT+IENECAAoljYNXJnRu1Y9gGPhJkJ3Bue+J1Hc+807eNndTdTYUWDuu128dSwta2oivz2LOgodjnqaCtDDIo=
+X-Received: from wrhm10.prod.google.com ([2002:a05:6000:180a:b0:427:60a:e74c])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:26d2:b0:429:91ca:70f1 with SMTP id ffacd0b85a97d-429aefccf44mr2238605f8f.57.1761742782357;
- Wed, 29 Oct 2025 05:59:42 -0700 (PDT)
-Date: Wed, 29 Oct 2025 12:59:41 +0000
-In-Reply-To: <20251020223516.241050-3-dakr@kernel.org>
+ 2002:a05:6000:18a5:b0:429:8b44:57bc with SMTP id ffacd0b85a97d-429af002335mr2543993f8f.60.1761743000569;
+ Wed, 29 Oct 2025 06:03:20 -0700 (PDT)
+Date: Wed, 29 Oct 2025 13:03:19 +0000
+In-Reply-To: <20251020223516.241050-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251020223516.241050-1-dakr@kernel.org> <20251020223516.241050-3-dakr@kernel.org>
-Message-ID: <aQIPvaFJIXySV-Q5@google.com>
-Subject: Re: [PATCH 2/8] rust: device: introduce Device::drvdata()
+References: <20251020223516.241050-1-dakr@kernel.org>
+Message-ID: <aQIQl8lMhztucZhK@google.com>
+Subject: Re: [PATCH 0/8] Device::drvdata() and driver/driver interaction (auxiliary)
 From: Alice Ryhl <aliceryhl@google.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
@@ -86,7 +86,23 @@ Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
 
-On Tue, Oct 21, 2025 at 12:34:24AM +0200, Danilo Krummrich wrote:
+On Tue, Oct 21, 2025 at 12:34:22AM +0200, Danilo Krummrich wrote:
+> tl;dr:
+> 
+> Implement a safe Device<Bound>::drvdata() accessor (used for driver to
+> driver interactions) based on the auxiliary bus.
+> 
+> This provides a way to derive a driver's device private data when
+> serving as a parent in a driver hierarchy, such as a driver utilizing
+> the auxiliary bus.
+> 
+> Please have a look at patch 8 ("samples: rust: auxiliary: illustrate
+> driver interaction") to see how it turns out.
+> 
+> --
+> 
+> Full cover letter:
+> 
 > In C dev_get_drvdata() has specific requirements under which it is valid
 > to access the returned pointer. That is, drivers have to ensure that
 > 
@@ -112,12 +128,12 @@ On Tue, Oct 21, 2025 at 12:34:24AM +0200, Danilo Krummrich wrote:
 > 
 > This is achieved by letting a driver assert the expected type, which is
 > then compared to a type hash stored in struct device_private when
-> dev_set_drvdata() is called.
+> dev_set_drvdata() is called [2].
 > 
 > Example:
 > 
-> 	// `dev` is a `&Device<Bound>`.
-> 	let data = dev.drvdata::<SampleDriver>()?;
+>         // `dev` is a `&Device<Bound>`.
+>         let data = dev.drvdata::<SampleDriver>()?;
 > 
 > There are two aspects to note:
 > 
@@ -151,35 +167,63 @@ On Tue, Oct 21, 2025 at 12:34:24AM +0200, Danilo Krummrich wrote:
 > parent, the parent has to be capable to derive its private data from the
 > corresponding device (i.e. the parent of the auxiliary device).
 > 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> Therefore this patch series also contains the corresponding patches for
+> the auxiliary bus abstraction, i.e. guarantee that the auxiliary
+> device's parent is guaranteed to be bound when the auxiliary device
+> itself is guaranteed to be bound, plus the corresponding
+> Device<Bound>::parent() method.
+> 
+> Finally, illustrate how things turn out by updating the auxiliary sample
+> driver.
+> 
+> Similarly, the same thing can be done for PCI virtual function drivers
+> calling back into the corresponding physical function driver or MFD.
+> 
+> The former (PCI PF/VF interaction) will be addressed by a separate patch
+> series. Both, auxiliary and PCI PF/VF is required by the Nova project.
+> 
+> A branch containing the series can be found in [1].
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=drvdata
+> [2] Type hash (TypeId) stored in struct device_private:
+> 
+>         The Rust type stored in struct device_private could be replaced
+>         by a dedicated (and transparent) private pointer (e.g.
+>         struct device_private::rust).
+> 
+>         While I'm not overly concerned about the extra allocation (not a
+>         hot path at all), I still wanted to try to store it directly in
+>         struct device_private, see how it turns out and gather opinions.
+> 
+>         Additionally, I don't expect any additional Rust specific
+>         private data to be required. But even if, changing things up to
+>         use a separate transparent allocation in the future is trivial.
+> 
+> Danilo Krummrich (8):
+>   rust: device: narrow the generic of drvdata_obtain()
+>   rust: device: introduce Device::drvdata()
+>   rust: auxiliary: consider auxiliary devices always have a parent
+>   rust: auxiliary: unregister on parent device unbind
+>   rust: auxiliary: move parent() to impl Device
+>   rust: auxiliary: implement parent() for Device<Bound>
+>   samples: rust: auxiliary: misc cleanup of ParentDriver::connect()
+>   samples: rust: auxiliary: illustrate driver interaction
+> 
+>  drivers/base/base.h                   |  16 ++++
+>  drivers/gpu/drm/nova/file.rs          |   2 +-
+>  drivers/gpu/nova-core/driver.rs       |   8 +-
+>  rust/bindings/bindings_helper.h       |   6 ++
+>  rust/kernel/auxiliary.rs              | 108 ++++++++++++++++----------
+>  rust/kernel/device.rs                 |  83 ++++++++++++++++++--
+>  rust/kernel/pci.rs                    |   2 +-
+>  rust/kernel/platform.rs               |   2 +-
+>  rust/kernel/usb.rs                    |   4 +-
+>  samples/rust/rust_driver_auxiliary.rs |  44 +++++++----
+>  10 files changed, 207 insertions(+), 68 deletions(-)
 
-Are you going to open that docs PR to the Rust compiler about the size
-of TypeID that we talked about? :)
+It looks like there are some patches that add code that doesn't pass
+rustfmt, which are then fixed in follow-up commits. You might want to do
+a pass of rustfmt after each commit.
 
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-
-> +// Compile-time checks.
-> +const _: () = {
-> +    // Assert that we can `read()` / `write()` a `TypeId` instance from / into `struct driver_type`.
-> +    static_assert!(core::mem::size_of::<bindings::driver_type>() == core::mem::size_of::<TypeId>());
-> +};
-
-You don't need the "const _: ()" part. See the definition of
-static_assert! to see why.
-
-Also, I would not require equality. The Rust team did not think that it
-would ever increase in size, but it may decrease.
-
->  /// The core representation of a device in the kernel's driver model.
->  ///
->  /// This structure represents the Rust abstraction for a C `struct device`. A [`Device`] can either
-> @@ -198,12 +204,29 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
->  }
->  
->  impl Device<CoreInternal> {
-> +    fn type_id_store<T: 'static>(&self) {
-
-This name isn't great. How about "set_type_id()" instead?
-
-Alice 
 
