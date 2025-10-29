@@ -1,194 +1,194 @@
-Return-Path: <linux-pci+bounces-39593-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A0D5C1760B
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 00:36:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 046FDC18634
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 07:11:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 737671C20E06
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Oct 2025 23:36:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D0D924E1BAB
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 06:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A23836A5EB;
-	Tue, 28 Oct 2025 23:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 694ED28850E;
+	Wed, 29 Oct 2025 06:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOQPpC/m"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="EnhdmNK7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49205.qiye.163.com (mail-m49205.qiye.163.com [45.254.49.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC24306B00
-	for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 23:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A31A1F4606;
+	Wed, 29 Oct 2025 06:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761694555; cv=none; b=my7lEWuX/+cwmhgXulubJikaV1aNjZobZJxdzWNqezCgHqT4BOjR/M5zKN93xEui3hTXHj/LvRGz70KTk9Z83U9gh9FFVMYXNBu/st1DY5mMJ7pLjOgGhx2eOyZjfrfl2AQgwDVzEB4CQM68tD04ywu36R39rmoPOnYVx+j/MW8=
+	t=1761718270; cv=none; b=boI0q0Fl/Z5UVykcxw7X5jhlOtZgw3oOzREWtnA8fItTzglODBrCJur/eJA6ow1Yz9o8BF8cuIfQsqHagqa8mbQIZpp4c4Gm1Cj05b3YNTvrXNVtp1owOmighcoI2CvULlliFYOPkGoowZpR2jpZ4Wg9LtEd+8DWJK/Ro5B53b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761694555; c=relaxed/simple;
-	bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D3ie3IVCzt+0/E2DyM1gqdi55mFjAUC/Y6dz+l36VXTjpjZKfO/CWs/B1/XpB+hNvlS6VzrgzlYvAJO/zY9tgdtElM9zev2OC5qfVECJ02vwbzxVKxuPYr5AFy7jRRqaK0JSL6mbfQacXZI3zoTphjLCOthf5BDtTSl2wPsb8x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOQPpC/m; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-475dab5a5acso24378465e9.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Oct 2025 16:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761694552; x=1762299352; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
-        b=kOQPpC/mr/pSZI816b0Fn6HrfxFcQKig9QLpQq/T2i81OBCo/MpEQAmYLFXuicMtVW
-         89179mMigsvCEkIvqsiCgs9HLyfudd/Eao4peUhWhaUkCG+GEcbS3qOvaRK+6G4cEGpX
-         DovbewDH8zImjk6rpnaz+oA1WRu0TUq3otZlR6rw6rbLG1njtAJEcjWlHzFPblErCNkG
-         vQZ+wIZxY5MnLupPhSOBMfunuIccCHDuhD6QaPPyMfa7ykwnewec5Jw9gXPIBjp3piqR
-         6fgUgDgxqnuhFMnOtmcfRs8qVwkdEK16rW22EfU+fBRBbN5iQfgZF50LPPoLOx4X2h+M
-         QBig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761694552; x=1762299352;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pO3ezBcQxEG3Pj7tMfcTswPOd999jDNlRZTd+tb/its=;
-        b=R6ni/GgrQhDCR+nVUW+XbmTVC6B3/BHNRn+MlZOBjOe875Z3Xdaph/QAyx62xbRDyy
-         yiGQd16nafMjiXuVvS6CQI6NQtCdlXkHM32Wg6It2E3JKd1+u9wOXr+a7JieSHxfXEq5
-         cgJAs3RgfiLlyauUk+SKMBHb5m+m5WcejFCzjl1XPeWCaOn/E6LajsXbceDgCcGQUGEI
-         OtxoE/+CKzYluvTe0h7KbyHBHpglW4OLjxQqDkgwQ16HNJmrNP5OUiYyDkJM4SxVgsXy
-         o3urmCfehNc36KMGhZ78LI2h9N5omVUI8GrijceqJJ+YofXWRPV9M1BfSlMVsYJiDlek
-         Ga0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWlGhO/uNnu3O6BIC1N6e3oDKqmQYG5xCCoLlv0hSUxl0aMemOaPWQN5nI4kktksbHNc2xxNfeNu+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZN/VLGigg6wmX6yDlCpTIDt96dHtRJu3vHDwreWOrSJJ7Dmid
-	j2fXTylFcY7nEjl6SrqQmf0PoeBb/6d2Q+QD5Nl5c2kd6YrTiFMeVJUM
-X-Gm-Gg: ASbGncsInLTjP9EkP5M0gP3Q6i6q/AX3oO+8/q0C0LLmQye37xpdLYQ88oeNiOHHFgm
-	hodmz5ULUiwMa1+J3dg8huKZ1CEEQQDVlUla35HmhKIUMvrv324a/kBqaPtRTs6n4EeNUZZ8qwx
-	AHzPssehdcY1gNiwGfJJQdIX4AYDmpU6Iy/ZcuShLbW3EK1ovl9WU2E5g0ooNAEvTLjj482gi1t
-	y6XZO2oY5ueSKMgbUj5ki6Gqb8dBF5kt73wuovfrJCdpZAKK5AyQOYUB9HlOPLhIP30itpllevg
-	fJD5N7EN9xF9RD9LjuFGcM9xyDAm6B1RIgEL7D54V5z8nQTEHCP/kaZcCnMiWo2EWju+wZBAL9t
-	xoyJi+Adfi+aIrdfTa7kWpIb1Q2GovyBNrW5qBmsHfBuRI3hY+s8lBILDvWKx8oSlgKzOxVBsVd
-	FLo2CnwshHR20Rv/+HaY625Ng=
-X-Google-Smtp-Source: AGHT+IE+7lavUcbRiUEoBcPcWWhtl2Ye0Lqq0olW9TOJGPDFy5Ml5rtmUhOJt0ianoi/OzmsyK7njA==
-X-Received: by 2002:a05:600c:3b1d:b0:475:e007:baf1 with SMTP id 5b1f17b1804b1-4771e3b8626mr10555025e9.34.1761694551467;
-        Tue, 28 Oct 2025 16:35:51 -0700 (PDT)
-Received: from vitor-nb.Home (bl19-170-125.dsl.telepac.pt. [2.80.170.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e196a9asm17054265e9.7.2025.10.28.16.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Oct 2025 16:35:49 -0700 (PDT)
-Message-ID: <f99c528a19fa793035cece3f83b332d7ecafa7da.camel@gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: PCI: ti,j721e-pci-host: Add
- optional regulator supplies
-From: Vitor Soares <ivitro@gmail.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>,  Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Vitor
- Soares <vitor.soares@toradex.com>, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 28 Oct 2025 23:35:48 +0000
-In-Reply-To: <wg2wpwex4vbwwxynk5salk6mbpneww76wfvznn442a2xyqrrck@a7qqqn3hjzcg>
-References: <20251014112553.398845-1-ivitro@gmail.com>
-	 <20251014112553.398845-2-ivitro@gmail.com>
-	 <20251020-kickass-fervent-capybara-9c48a0@kuoka>
-	 <2c3e4bdefb306dc89c15bebc549d854ea2b4cc32.camel@gmail.com>
-	 <wg2wpwex4vbwwxynk5salk6mbpneww76wfvznn442a2xyqrrck@a7qqqn3hjzcg>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1761718270; c=relaxed/simple;
+	bh=AXxcj1V8QdcEZ6+NUQdvhEijUxhQu5p79+OdzWF+vJs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZZHZ+GXAo6f5BCjpY5QvPJ4CA4UAYurwEz7Y4UL56qmne0oLCMDifDaNGIAYJKMQZvYBegzDbC1Zs4deEJw0EBpBdut9HqABVMcEN5gvUmYh/WR4FFTWZ4RwxPo0xnxQSrNdhMgUJ3G6vYP3XB+KzFIGaAE02I061O1tKsQauK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=EnhdmNK7; arc=none smtp.client-ip=45.254.49.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 278abcfb1;
+	Wed, 29 Oct 2025 08:28:13 +0800 (GMT+08:00)
+Message-ID: <3fcd5562-a367-41e9-8bff-51e5990145e2@rock-chips.com>
+Date: Wed, 29 Oct 2025 08:28:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ Niklas Cassel <cassel@kernel.org>, Hans Zhang <18255117159@163.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>,
+ "moderated list:ARM/Rockchip SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] PCI: dw-rockchip: Add remove callback for resource
+ cleanup
+To: Anand Moon <linux.amoon@gmail.com>
+References: <20251027145602.199154-1-linux.amoon@gmail.com>
+ <20251027145602.199154-2-linux.amoon@gmail.com>
+ <4fe0ccf9-8866-443a-8083-4a2af7035ee6@rock-chips.com>
+ <CANAwSgRXcg4tO00SNu77EKdp6Ay6X7+_f-ZoHxgkv1himxdi0Q@mail.gmail.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <CANAwSgRXcg4tO00SNu77EKdp6Ay6X7+_f-ZoHxgkv1himxdi0Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a2d5d7fa609cckunm42001d6025423a
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUJKGlYdHRlOTRlIQ0MYQkxWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=EnhdmNK7UPDdSC1XgqbfxEnNOjTCjGjaaUnxh2iZtaj5IhIedJTIvIhcCv8kSzJCibxayqMndZwLbtjWAa0MSChiyaL9qn1PrpBiqijpLzyLMPj9MTV4tpwSc+SzHZbhlLbls67xsUtwKxdbSWyM9FPC6TLvQ0aYkJ2sb7BHuXI=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=VXeB1XRi1t4+hav00/PO85fUCGM4DHZek+mbIiPUEtA=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, 2025-10-28 at 11:11 +0530, Manivannan Sadhasivam wrote:
-> On Mon, Oct 27, 2025 at 11:22:26PM +0000, Vitor Soares wrote:
-> > Hi Krzysztof,
-> >=20
-> > Thank you for the feedback.
-> >=20
-> > On Mon, 2025-10-20 at 13:14 +0200, Krzysztof Kozlowski wrote:
-> > > On Tue, Oct 14, 2025 at 12:25:48PM +0100, Vitor Soares wrote:
-> > > > From: Vitor Soares <vitor.soares@toradex.com>
-> > > >=20
-> > > > Add optional regulator supply properties for PCIe endpoints on TI S=
-oCs.
-> > > > Some boards provide dedicated regulators for PCIe devices, such as
-> > > > 1.5V (miniPCIe), 3.3V (common for M.2 or miniPCIe), or 12V
-> > > > (for high-power devices). These supplies are now described as optio=
-nal
-> > > > properties to allow the driver to control endpoint power where
-> > > > supported.
-> > >=20
-> > > Last sentence is completely redundant. Please do not describe DT, we
-> > > all can read the patch. Driver is irrelevant here.
-> > >=20
-> > >=20
-> > Ack, I will remove last sentence.
-> >=20
-> > >=20
-> > > How you described here and in descriptions, suggests these are rather
-> > > port properties, not the controller.
-> >=20
-> > You are right - these supplies power the PCIe slot/connector, not the
-> > controller
-> > itself. However, as per my understanding, the current kernel practice i=
-s to
-> > place slot supplies in the root complex node rather than the endpoint n=
-ode.
-> > as
-> > seen in e.g.:
-> > - imx6q-pcie.yaml
-> > - rockchip-dw-pcie.yaml
-> > - rcar-pci-host.yaml
-> >=20
-> > This seems consistent with those existing bindings, but please let me k=
-now
-> > if
-> > I=E2=80=99m overlooking something specific to this case.
-> >=20
->=20
-> We do not properly document it, but defining the slot supplies in host br=
-idge
-> (controller) node is deprecated. Some bindings still do it for legacy rea=
-sons,
-> but the new ones should define them in the Root Port nodes as they belong=
- to.
-> We
-> do not have a separate DT node for PCI slots, but rather reuse the Root P=
-ort
-> node.
->=20
-> There are also bindings that define supplies in the endpoint node. They d=
-o it
-> for devices directly connected to the PCI bus without a connector (like i=
-n
-> PCB).
->=20
-> - Mani
->=20
 
-Thanks for the clarification and context. From what I understand, the
-recommendation is to define the supply regulators under the individual root=
- port
-node rather than in the host bridge (controller) node, as the supplies
-conceptually belong to each port rather than the controller itself.
+在 2025/10/28 星期二 17:34, Anand Moon 写道:
+> Hi Shawn,
+> 
+> Thanks for your review comments.
+> 
+> On Tue, 28 Oct 2025 at 05:56, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>>
+>> 在 2025/10/27 星期一 22:55, Anand Moon 写道:
+>>> Introduce a .remove() callback to the Rockchip DesignWare PCIe
+>>> controller driver to ensure proper resource deinitialization during
+>>> device removal. This includes disabling clocks and deinitializing the
+>>> PCIe PHY.
+>>>
+>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 11 +++++++++++
+>>>    1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>> index 87dd2dd188b4..b878ae8e2b3e 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>>> @@ -717,6 +717,16 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>>>        return ret;
+>>>    }
+>>>
+>>> +static void rockchip_pcie_remove(struct platform_device *pdev)
+>>> +{
+>>> +     struct device *dev = &pdev->dev;
+>>> +     struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
+>>> +
+>>> +     /* Perform other cleanups as necessary */
+>>> +     clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+>>> +     rockchip_pcie_phy_deinit(rockchip);
+>>> +}
+>>
+>> Thanks for the patch.
+>>
+>> Dou you need to call dw_pcie_host_deinit()?
+> I feel the rockchip_pcie_phy_deinit will power off the phy
+>> And I think you should also try to mask PCIE_CLIENT_INTR_MASK_MISC and
+>> remove the irq domain as well.
+>>
+>> if (rockchip->irq_domain) {
+>>          int virq, j;
+>>          for (j = 0; j < PCI_NUM_INTX; j++) {
+>>                  virq = irq_find_mapping(rockchip->irq_domain, j);
+>>                  if (virq > 0)
+>>                          irq_dispose_mapping(virq);
+>>           }
+>>          irq_set_chained_handler_and_data(rockchip->irq, NULL, NULL);
+>>          irq_domain_remove(rockchip->irq_domain);
+>> }
+>>
+> I have implemented resource cleanup in rockchip_pcie_remove,
+> which is invoked when the system is shutting down.
+> Your feedback on the updated code is welcome.
+> 
+> static void rockchip_pcie_remove(struct platform_device *pdev)
+> {
+>          struct device *dev = &pdev->dev;
+>          struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
+>          int irq;
+> 
+>          irq = of_irq_get_byname(dev->of_node, "legacy");
+>          if (irq < 0)
+>                  return;
+> 
+>          /* Perform other cleanups as necessary */
+>          /* clear up INTR staatus register */
+>          rockchip_pcie_writel_apb(rockchip, 0xffffffff,
+>                                   PCIE_CLIENT_INTR_STATUS_MISC);
+>          if (rockchip->irq_domain) {
+>                  int virq, j;
+>                  for (j = 0; j < PCI_NUM_INTX; j++) {
+>                          virq = irq_find_mapping(rockchip->irq_domain, j);
+>                          if (virq > 0)
+>                                  irq_dispose_mapping(virq);
+>                  }
+>                  irq_set_chained_handler_and_data(irq, NULL, NULL);
+>                  irq_domain_remove(rockchip->irq_domain);
+>          }
+> 
+>          clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+>          /* poweroff the phy */
+>          rockchip_pcie_phy_deinit(rockchip);
+>          /* release the reset */
 
-On the j721e PCIe controller, the current driver implementation assumes a s=
-ingle
-root port and doesn=E2=80=99t parse child port nodes. To follow the new con=
-vention, I=E2=80=99d
-need to refactor the driver to support root port subnodes, and I wonder if =
-the
-PHY reference and reset should also be moved to the Root Port node in that =
-case.
+release? Or "reset the controller"?
 
-Could you please point me to an example of a PCIe controller binding or dri=
-ver
-that already follows this approach?
+>          reset_control_assert(rockchip->rst);
+>          pm_runtime_put_sync(dev);
+>          pm_runtime_disable(dev);
+>          pm_runtime_no_callbacks(dev);
+> }
+> 
+>> Another thin I noticed is should we call pm_runtime_* here for hope that
+>> genpd could be powered donw once removed?
+>>
+> I could not find 'genpd' (power domain) used in the PCIe driver
+> If we have an example to use genpd I will update this.
+ > > I am also looking into adding NOIRQ_SYSTEM_SLEEP_PM_OPS
 
-Best regards,
-Vitor Soares
+That sounds good, you can pick up my patch[1] if you'd like to continue
+addressing the comments that I haven't had time to think more.
+
+[1] https://www.spinics.net/lists/linux-pci/msg171846.html
+
+> 
+> Thanks
+> -Anand
+> 
+
 
