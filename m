@@ -1,179 +1,160 @@
-Return-Path: <linux-pci+bounces-39698-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39703-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2628DC1CA75
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:03:33 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42A4AC1CA45
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EAAF623453
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:47:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5C9514E6176
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCF8328B64;
-	Wed, 29 Oct 2025 17:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883FC355037;
+	Wed, 29 Oct 2025 17:57:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K22XA1Hj"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JgqLGY3q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AE42F60AC;
-	Wed, 29 Oct 2025 17:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510A93358C6;
+	Wed, 29 Oct 2025 17:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761760016; cv=none; b=WpxLa0NE/VdgKIpTEzMfrS7caNQ0OpnYWvXhxC6k6fVioUa++bLLLc4hzij4jf65llZePZW48tq+ZaUR/9IreRIVIEPVvdyea4lV6BkdHe/okn+G93aK3reUtV9sjtK1k5COHj2sGjmQaNpzAiuURd/YoGHwu9d8v6PhhVDdOhc=
+	t=1761760627; cv=none; b=Um7Br4oAoNM3dvJbDbKQAUhNoZQ/ch6RWGV3y6nx1JpBYSgzY7045ltOIl2mRbrocTGpO6A+gAh+uTcJgzHB4WfUWYwBaneogRUsQ8UAvEgoqYZ/PAfwHCcJXF0IehJFwSuCOT80NhAk888Zli1yQABHeNBQrPllld/xZmHMocU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761760016; c=relaxed/simple;
-	bh=KsXdySkGiHmSzsuy7Pi+sVL7aoIePP+MEpnzF2GEcmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NqhaS9F9UI678ciFff1q1qBvGV5IS1IvZUUzYQYhpW/HrrDfr1L4zXEKV+dxL3quK5mqmxOGQdw+fcdT6aj+D6XRlygdFIlUbf9OLEwyMQHGneI/0yETh11OMk4+Cv1AiK5N4WdZstpHYapMFIz0Quch12Kxg5G0GMTYUqfPcSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K22XA1Hj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 202B1C4CEF7;
-	Wed, 29 Oct 2025 17:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761760016;
-	bh=KsXdySkGiHmSzsuy7Pi+sVL7aoIePP+MEpnzF2GEcmA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=K22XA1Hjw8uOX95mhKKhhconnRdms2qQD/Nbq0dqkODo/qoasd98i4iGIns2To5K7
-	 9LCQCwxZ++SdZB2vSAuCJYW4paAjVRKTA4iWkPcqn9ss6ygExiQXqHziIwzmyr+rkW
-	 +lIxJgcLxAivPEpWGXWHSqI8/7xdlQzr7QsViTjJuJzP8+wsaPDKG5m+0ZtIalIr/k
-	 OungqAalRYCEVyKSHVo57GafE546/x+UVS5pGNUIRUiKo7vIQBPHzK6tyDCTfyy+Hp
-	 yAXyomKjaPtaqAImWTBqtWHwQxnW7/jlC878FpiIrVJhNq87HlEksKBMqgKgcyoNJG
-	 qk2DTbEtU/sOQ==
-Date: Wed, 29 Oct 2025 12:46:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
- variable
-Message-ID: <20251029174654.GA1571737@bhelgaas>
+	s=arc-20240116; t=1761760627; c=relaxed/simple;
+	bh=ObU1xjT7JAA7PqNYLw1LzJzSMyQNrZXDdS3snuzBFwQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MYaz1/b22VLxRaYkAhlIXEeRNF/nVLT5PQa3V+ON3JL8A36s+bsnav4B0D5+dxW7hZYcYbz743nWCLlM3CbxWUBcX+W48kHq67giY+OpfKzJU/xxG9aQMIBflpPmRtr+eCL6azZvxaKGG6M4Zqky/RzR3YhWvR3vBvDFskKWdTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JgqLGY3q; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1761760622;
+	bh=ObU1xjT7JAA7PqNYLw1LzJzSMyQNrZXDdS3snuzBFwQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=JgqLGY3qRvEnHd64TPO99fpsj3yPGyAjhNp9Ls+lZhhz7DS/7rcJB5LPAYp+kIFbH
+	 5iOo2DqXSbEnXhgDf2ALUoxA1pxQ3VuDnJlNc4w8ReHJA1zpQE5y3mLm+m7J4gK+jq
+	 Tcrkb8p1LYWuoYmcE+leujLve4NLOEPVPFoOar60G8c4LF+2TVS1UR2ny18l/f6uCj
+	 iwt+9ot+XojTVSOHFtTuX1TD15huMtyGI1Fr7CgxaLAGrvWxpttjjIZtcqqQrSELYv
+	 Bfg55bQ17CeXPD5fkipshXnH4Gxlgy+LuV3ZvwOTuoxdrwjwA3DxyGXnb7Vo8vJdBm
+	 CK/bkrnKOdllA==
+Received: from jupiter.universe (dyndsl-091-248-085-053.ewe-ip-backbone.de [91.248.85.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6B39117E12BA;
+	Wed, 29 Oct 2025 18:57:02 +0100 (CET)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 1AA47480044; Wed, 29 Oct 2025 18:57:02 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH v4 0/9] PCI: dw-rockchip: add system suspend support
+Date: Wed, 29 Oct 2025 18:56:39 +0100
+Message-Id: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029163336.2785270-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFdVAmkC/x3MwQqDMAwA0F+RnA3UoFvnr8gOGuMMY7U0TjbEf
+ 7d4fJe3g0lSMWiLHZJsarqEjLosgOc+vAR1zAZy1FSOPKaF3zxrxMgqaH9b5YP2tShhRH/jyfn
+ +PhA9IBcxyaS/q++ex3ECbY/hhW4AAAA=
+X-Change-ID: 20251028-rockchip-pcie-system-suspend-86cf08a7b229
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Jingoo Han <jingoohan1@gmail.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3171;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=ObU1xjT7JAA7PqNYLw1LzJzSMyQNrZXDdS3snuzBFwQ=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGkCVW1ndM+n1Si+JdT6O2m9KNQnyob4o/Uf7
+ dq3Gk2JnLCq9IkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJpAlVtAAoJENju1/PI
+ O/qa0DgP/j9QvWe+g+UOtj0/VSLCp2Ms0qwURIWZxgrNWk5i+O7moNHbLrAkzWrzKcg9WNR+nXj
+ g1x9XPjj5wmomRfW78NoHVXkLSJ1nC/149FrBHQ96RO7fhPTDMGx7wZSfIfhVPpSjUQ7UmJdMw+
+ S9gNZX5p5A4HoM+WGAi59e2NT9Z6aO6+9EyYgf4Yu3nEspfoQ5De/nfhNW04KmbmuvlfpVGLyc5
+ IEOmsWrlBqwDg1U9R/nAFwVUOscE+IAMbhXrrpt2jZoa4QJp1oK2o0P+XuwCJddc3nSeseDalZ9
+ SQhelIkR5xw9J+cXRKmWhT+W6bOmgub4pT01kFuHKfi4y3pxxeCJwC8wsyIMcGMMFSkET5AMguv
+ +jtU7fcRyR2bBELeA2TMRhC1amS9zlbu9YAl+BK1Me5qo52dCtLcdFgpgfblllKOT6XXmHgf7Za
+ NRHoqfv4JWqxF56gDeUrGHm7GsHh9YnOkSOPWtl79EB/ZHY91yUTa8AYjuVR5BF82fwSHldIcb7
+ jo8a33ewiCyE+WY19ETR33pCrEpNrFJChfPcJLzB2YcEJxa1EoMujq25F3Yr89W1SraG21locgO
+ 4LJBs+AfmRJ69I8+Qg7Mkh8PREBX3dqjVIf3o1eFAoXor1BX21h1Od+nAp9fz++u7H6nAfpoXJB
+ ckEOWDtVwOSTLGvCt/s0uCA==
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-On Wed, Oct 29, 2025 at 05:33:31PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Pass the driver-specific data via the syscore struct and use it in the
-> syscore ops.
+I've recently been working on fixing up at least basic system suspend
+support on the Rockchip RK3576 platform. Currently the biggest open
+issue is missing support in the PCIe driver. This series is a follow-up
+for Shawn Lin's series with feedback from Niklas Cassel and Manivannan
+Sadhasivam being handled as well as some of my own changes fixing up
+things I noticed.
 
-Would be nice to include the "instead of global variable" part here so
-the commit log includes the benefit and can stand alone even without
-the subject.
+In opposite to Shawn Lin I did not test with different peripherals as my
+main goal is getting basic suspend to ram working in the first place. I
+did notice issues with the Broadcom WLAN card on the RK3576 EVB.
+Suspending that platform without a driver being probed works, but after
+probing brcmfmac suspend is aborted because brcmf_pcie_pm_enter_D3()
+does not work. As far as I can tell the problem is unrelated to the
+Rockchip PCIe driver.
 
-Awesome to get rid of another global variable!  More comments below.
+Changes since PATCHv3:
+ * https://lore.kernel.org/linux-pci/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+ * rename rockchip_pcie_get_ltssm to rockchip_pcie_get_ltssm_status_reg
+   in a separate patch (Niklas Cassel)
+ * rename rockchip_pcie_get_pure_ltssm to rockchip_pcie_get_ltssm_state
+   in a separate patch (Niklas Cassel)
+ * Move devm_phy_get out of phy_init to probe in a separate patch
+   (Manivannan Sadhasivam)
+ * Add helper function for enhanced LTSSM control mode in a separate patch
+   (Niklas Cassel)
+ * Add helper function for controller mode in a separate patch
+   (Niklas Cassel)
+ * Add helper function for DDL indicator in a separate patch
+   (Niklas Cassel)
+ * Move rockchip_pcie_pme_turn_off implementation in a separate patch
+ * Rebase to v6.18-rc3 using new FIELD_PREP_WM16()
+ * Improve readability of PME_TURN_OFF/PME_TO_ACK defines (Manivannan Sadhasivam)
+ * Fix usage of reverse Xmas (Manivannan Sadhasivam)
+ * Assert PERST# before turning off other resources (Manivannan Sadhasivam)
+ * Improve some error messages (Manivannan Sadhasivam)
+ * Rename goto labels as per their purpose (Manivannan Sadhasivam)
+ * Add extra patch for dw_pcie_resume_noirq, since I've seen errors
+   during resume on boards not having anything plugged into their PCIe
+   port
 
-> +++ b/arch/mips/pci/pci-alchemy.c
-> @@ -33,6 +33,7 @@
->  
->  struct alchemy_pci_context {
->  	struct pci_controller alchemy_pci_ctrl; /* leave as first member! */
-> +	struct syscore syscore;
->  	void __iomem *regs;			/* ctrl base */
->  	/* tools for wired entry for config space access */
->  	unsigned long last_elo0;
-> @@ -46,12 +47,6 @@ struct alchemy_pci_context {
->  	int (*board_pci_idsel)(unsigned int devsel, int assert);
->  };
->  
-> -/* for syscore_ops. There's only one PCI controller on Alchemy chips, so this
-> - * should suffice for now.
-> - */
-> -static struct alchemy_pci_context *__alchemy_pci_ctx;
-> -
-> -
->  /* IO/MEM resources for PCI. Keep the memres in sync with fixup_bigphys_addr
->   * in arch/mips/alchemy/common/setup.c
->   */
-> @@ -306,9 +301,7 @@ static int alchemy_pci_def_idsel(unsigned int devsel, int assert)
->  /* save PCI controller register contents. */
->  static int alchemy_pci_suspend(void *data)
->  {
-> -	struct alchemy_pci_context *ctx = __alchemy_pci_ctx;
-> -	if (!ctx)
-> -		return 0;
-> +	struct alchemy_pci_context *ctx = data;
->  
->  	ctx->pm[0]  = __raw_readl(ctx->regs + PCI_REG_CMEM);
->  	ctx->pm[1]  = __raw_readl(ctx->regs + PCI_REG_CONFIG) & 0x0009ffff;
-> @@ -328,9 +321,7 @@ static int alchemy_pci_suspend(void *data)
->  
->  static void alchemy_pci_resume(void *data)
->  {
-> -	struct alchemy_pci_context *ctx = __alchemy_pci_ctx;
-> -	if (!ctx)
-> -		return;
-> +	struct alchemy_pci_context *ctx = data;
->  
->  	__raw_writel(ctx->pm[0],  ctx->regs + PCI_REG_CMEM);
->  	__raw_writel(ctx->pm[2],  ctx->regs + PCI_REG_B2BMASK_CCH);
-> @@ -359,10 +350,6 @@ static const struct syscore_ops alchemy_pci_syscore_ops = {
->  	.resume = alchemy_pci_resume,
->  };
->  
-> -static struct syscore alchemy_pci_syscore = {
-> -	.ops = &alchemy_pci_syscore_ops,
-> -};
-> -
->  static int alchemy_pci_probe(struct platform_device *pdev)
->  {
->  	struct alchemy_pci_platdata *pd = pdev->dev.platform_data;
-> @@ -480,9 +467,10 @@ static int alchemy_pci_probe(struct platform_device *pdev)
->  	__raw_writel(val, ctx->regs + PCI_REG_CONFIG);
->  	wmb();
->  
-> -	__alchemy_pci_ctx = ctx;
->  	platform_set_drvdata(pdev, ctx);
-> -	register_syscore(&alchemy_pci_syscore);
-> +	ctx->syscore.ops = &alchemy_pci_syscore_ops;
-> +	ctx->syscore.data = ctx;
-> +	register_syscore(&ctx->syscore);
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+Sebastian Reichel (9):
+      PCI: dw-rockchip: Rename rockchip_pcie_get_ltssm function
+      PCI: dw-rockchip: Support get_ltssm operation
+      PCI: dw-rockchip: Move devm_phy_get out of phy_init
+      PCI: dw-rockchip: Add helper function for enhanced LTSSM control mode
+      PCI: dw-rockchip: Add helper function for controller mode
+      PCI: dw-rockchip: Add helper function for DDL indicator
+      PCI: dw-rockchip: Add pme_turn_off support
+      PCI: dw-rockchip: Add system PM support
+      PCI: dwc: support missing PCIe device on resume
 
-As far as I can tell, the only use of syscore in this driver is for
-suspend/resume.
+ drivers/pci/controller/dwc/pcie-designware-host.c |  13 +-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c     | 220 ++++++++++++++++++----
+ 2 files changed, 198 insertions(+), 35 deletions(-)
+---
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+change-id: 20251028-rockchip-pcie-system-suspend-86cf08a7b229
 
-This is a regular platform_device driver, so instead of syscore, I
-think it should use generic power management like other PCI host
-controller drivers do, something like this:
+Best regards,
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
-  static int alchemy_pci_suspend_noirq(struct device *dev)
-  ...
-
-  static int alchemy_pci_resume_noirq(struct device *dev)
-  ...
-
-  static DEFINE_NOIRQ_DEV_PM_OPS(alchemy_pci_pm_ops,
-                                 alchemy_pci_suspend_noirq,
-                                 alchemy_pci_resume_noirq);
-
-  static struct platform_driver alchemy_pcictl_driver = {
-          .probe          = alchemy_pci_probe,
-          .driver = {
-                  .name   = "alchemy-pci",
-                  .pm     = pm_sleep_ptr(&alchemy_pci_pm_ops),
-          },
-  };
-
-Here's a sample in another driver:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/cadence/pci-j721e.c?id=v6.17#n663
-
->  	register_pci_controller(&ctx->alchemy_pci_ctrl);
->  
->  	dev_info(&pdev->dev, "PCI controller at %ld MHz\n",
-> -- 
-> 2.51.0
-> 
 
