@@ -1,55 +1,73 @@
-Return-Path: <linux-pci+bounces-39684-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AF69C1C2FE
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:43:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3F2EC1C396
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:49:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2B071A25CA6
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 16:37:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8FFC3509576
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 16:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE14233F8BE;
-	Wed, 29 Oct 2025 16:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75AC7347FF9;
+	Wed, 29 Oct 2025 16:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="SXRlpokc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sinmsgout01.his.huawei.com (sinmsgout01.his.huawei.com [119.8.177.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54A933F8AD
-	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 16:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71163446B5;
+	Wed, 29 Oct 2025 16:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761755684; cv=none; b=TfbcxgJNi5a4/r63cB87Myog4FwzhDNnWMvWNyxH2JSSuUg9I59bSu9r5NobEdaz75K255VOB8W3U9wznGgE1AyGPYt/mBcdRTbrsij+0fGJbdFXmENqZiS65jEXrn8y1+C2CDmJ0jMY0/k2BGlg5yR2Xi3YV95mGJvh2IBZapg=
+	t=1761755966; cv=none; b=bDXXkQE4FtKUdfp5tALFX15uyV0eJMNu0fcv+OK/u6kNqZSO8WPRqd73QSL0lLJ4pIWsPhRS5TATGo1e7hwSjogGIqo3c5l1LtQnIvPYsXsyjP2tS/P4dR+X4smww6snmWkGDvGomwx6DnMxZqeOvx2OOoHQAZGdJt6dKKWeDts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761755684; c=relaxed/simple;
-	bh=LfGAviVUOEpXKmGXo+inIe1wSjvHmiakAtbRxVoDs4c=;
+	s=arc-20240116; t=1761755966; c=relaxed/simple;
+	bh=R/XBmN72AWlHH+5TUzfXRncpX7TfMzhwtGlEAzMthFM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dsyyo/0cOtoBcZq2rFeEsmSFniW2mVGbKw7+IicAujFx7AkSKYOvcuMeqIah4UpWrzOIdD58kAJ7qUMRvvliBRfH+k7G3qoMyXIBUWHel0sAxkEzyKDRV6bEhymhlqyX/0F4DeJTzlY9tAzlQy9rm1Fny3nBILKqM5/4/RrrVVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+	 MIME-Version:Content-Type; b=GTyHyhjxdLZBZJnDSBNTHkCDRkyOHTnuGMhmdnepqGrH1Zv+x+r5yM8tFLfSyLl8VA0nJOXhq/Z2JiZ76G+0vQPSU/xM8pLlzjfKws4IqqilSeOyjz8D53W4sPQuG3+3XJlQEsKVZRSWi1Pz2amjMGhAG7STAur8E9/xJB3ELj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=SXRlpokc; arc=none smtp.client-ip=119.8.177.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cxXmq5yB1z6GD69;
-	Thu, 30 Oct 2025 00:31:07 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=gDpScrLfjAz7w+zkzftTI0/uhsgvu01n2ST4dvnPHU8=;
+	b=SXRlpokc2MEHJiX0Rtds4jw/vMLytQ6GUp3bv0CSgY2ffj7vjFrxeD2BA6gMXiBHY+hqdikFO
+	U/dxGGlQrxQffWcY8kCK4IK6NWsYFhptAC9zTfmftGLvwFXSbM9OXD9ZJy3UaxeM6pKmwagH144
+	oG/gDSdIwlvCCCrP0HS53+g=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.36])
+	by sinmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4cxXy03dZXz1P6jy;
+	Thu, 30 Oct 2025 00:39:04 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cxXw24PPRz6L4sK;
+	Thu, 30 Oct 2025 00:37:22 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id E29E2140370;
-	Thu, 30 Oct 2025 00:34:40 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4FABB1401DC;
+	Thu, 30 Oct 2025 00:39:09 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 29 Oct
- 2025 16:34:40 +0000
-Date: Wed, 29 Oct 2025 16:34:38 +0000
+ 2025 16:39:08 +0000
+Date: Wed, 29 Oct 2025 16:39:06 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, <aik@amd.com>,
-	<yilun.xu@linux.intel.com>, <aneesh.kumar@kernel.org>, <bhelgaas@google.com>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 9/9] PCI/TSM: Report active IDE streams
-Message-ID: <20251029163438.00001391@huawei.com>
-In-Reply-To: <20251024020418.1366664-10-dan.j.williams@intel.com>
-References: <20251024020418.1366664-1-dan.j.williams@intel.com>
-	<20251024020418.1366664-10-dan.j.williams@intel.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <aik@amd.com>, <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Steven Price
+	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
+	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [PATCH RESEND v2 01/12] KVM: arm64: RMI: Export
+ kvm_has_da_feature
+Message-ID: <20251029163906.000041e2@huawei.com>
+In-Reply-To: <20251027095602.1154418-2-aneesh.kumar@kernel.org>
+References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
+	<20251027095602.1154418-2-aneesh.kumar@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -62,84 +80,77 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, 23 Oct 2025 19:04:18 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Mon, 27 Oct 2025 15:25:51 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-> Given that the platform TSM owns IDE Stream ID allocation, report the
-> active streams via the TSM class device. Establish a symlink from the
-> class device to the PCI endpoint device consuming the stream, named by
-> the Stream ID.
+Hi Aneesh,
+
+Great to see this support - this review might be a little superficial as
+I think it's first time I've looked at this and I'll be getting my head around
+it whilst reviewing.
+
+Small process thing:
+Always include a stand alone description in here.  Some git clients
+don't put the patch title near the commit text. Add something like
+
+Export kvm_has_da_feature() for use in later patches.
+
+> This will be used in later patches
+Patch title made me think this was exporting something that already existed.
+Probably better to say  Add kvm_has_da_feature() helper for use in later patches
+or something like that.
+
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Couple of trivial things noticed whilst refreshing my memory.
-
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 > ---
-
-> diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
-> index 4499803cf20d..c0dae531b64f 100644
-> --- a/drivers/virt/coco/tsm-core.c
-> +++ b/drivers/virt/coco/tsm-core.c
-> @@ -2,14 +2,17 @@
->  /* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+>  arch/arm64/include/asm/kvm_rmi.h | 1 +
+>  arch/arm64/include/asm/rmi_smc.h | 1 +
+>  arch/arm64/kvm/rmi.c             | 6 ++++++
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_rmi.h b/arch/arm64/include/asm/kvm_rmi.h
+> index 1b2cdaac6c50..a967061af6ed 100644
+> --- a/arch/arm64/include/asm/kvm_rmi.h
+> +++ b/arch/arm64/include/asm/kvm_rmi.h
+> @@ -90,6 +90,7 @@ u32 kvm_realm_ipa_limit(void);
+>  u32 kvm_realm_vgic_nr_lr(void);
+>  u8 kvm_realm_max_pmu_counters(void);
+>  unsigned int kvm_realm_sve_max_vl(void);
+> +bool kvm_has_da_feature(void);
 >  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +#define dev_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  u64 kvm_realm_reset_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val);
+>  
+> diff --git a/arch/arm64/include/asm/rmi_smc.h b/arch/arm64/include/asm/rmi_smc.h
+> index 1000368f1bca..2ea657a87402 100644
+> --- a/arch/arm64/include/asm/rmi_smc.h
+> +++ b/arch/arm64/include/asm/rmi_smc.h
+> @@ -87,6 +87,7 @@ enum rmi_ripas {
+>  #define RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS	GENMASK(37, 34)
+>  #define RMI_FEATURE_REGISTER_0_MAX_RECS_ORDER	GENMASK(41, 38)
+>  #define RMI_FEATURE_REGISTER_0_Reserved		GENMASK(63, 42)
+> +#define RMI_FEATURE_REGISTER_0_DA		BIT(42)
 
-Why is this dev_fmt() in this patch (which doesn't seem to introduce
-anything that would use it)?
+Guess you want to be updating Reserved as seems bit 42 isn't any more.
 
 >  
->  #include <linux/tsm.h>
->  #include <linux/idr.h>
-> +#include <linux/pci.h>
->  #include <linux/rwsem.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/cleanup.h>
->  #include <linux/pci-tsm.h>
-> +#include <linux/pci-ide.h>
->  
->  static struct class *tsm_class;
->  static DECLARE_RWSEM(tsm_rwsem);
-> @@ -106,6 +109,32 @@ void tsm_unregister(struct tsm_dev *tsm_dev)
+>  #define RMI_REALM_PARAM_FLAG_LPA2		BIT(0)
+>  #define RMI_REALM_PARAM_FLAG_SVE		BIT(1)
+> diff --git a/arch/arm64/kvm/rmi.c b/arch/arm64/kvm/rmi.c
+> index 478a73e0b35a..08f3d2362dfd 100644
+> --- a/arch/arm64/kvm/rmi.c
+> +++ b/arch/arm64/kvm/rmi.c
+> @@ -1738,6 +1738,12 @@ int kvm_init_realm_vm(struct kvm *kvm)
+>  	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(tsm_unregister);
 >  
-> +/* must be invoked between tsm_register / tsm_unregister */
-> +int tsm_ide_stream_register(struct pci_ide *ide)
+> +bool kvm_has_da_feature(void)
 > +{
-> +	struct pci_dev *pdev = ide->pdev;
-> +	struct pci_tsm *tsm = pdev->tsm;
-> +	struct tsm_dev *tsm_dev = tsm->tsm_dev;
-> +	int rc;
-> +
-> +	rc = sysfs_create_link(&tsm_dev->dev.kobj, &pdev->dev.kobj, ide->name);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ide->tsm_dev = tsm_dev;
-> +	return 0;
+> +	return rmi_has_feature(RMI_FEATURE_REGISTER_0_DA);
 > +}
-> +EXPORT_SYMBOL_GPL(tsm_ide_stream_register);
+> +EXPORT_SYMBOL_GPL(kvm_has_da_feature);
 > +
-> +void tsm_ide_stream_unregister(struct pci_ide *ide)
-> +{
-> +	struct tsm_dev *tsm_dev = ide->tsm_dev;
-> +
-> +	sysfs_remove_link(&tsm_dev->dev.kobj, ide->name);
-> +	ide->tsm_dev = NULL;
-
-Trivial preference for reverse order of register.  That means
-setting this NULL before removing the link.
-
-
-> +}
-> +EXPORT_SYMBOL_GPL(tsm_ide_stream_unregister);
-> +
->  static void tsm_release(struct device *dev)
+>  void kvm_init_rmi(void)
 >  {
->  	struct tsm_dev *tsm_dev = container_of(dev, typeof(*tsm_dev), dev);
+>  	/* Only 4k page size on the host is supported */
 
 
