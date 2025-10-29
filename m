@@ -1,195 +1,136 @@
-Return-Path: <linux-pci+bounces-39699-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48EBBC1CB93
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:15:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F65BC1CA5A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:01:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 318C0583AEE
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:56:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5215B4E86DC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:57:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8A1935470F;
-	Wed, 29 Oct 2025 17:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D52E63559EF;
+	Wed, 29 Oct 2025 17:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WefDjtFQ"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="A+G8aKZK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8765F354AE2;
-	Wed, 29 Oct 2025 17:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B8A355806;
+	Wed, 29 Oct 2025 17:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761760609; cv=none; b=iIpP5QTg4/47geivGUqYvUyBmDu40lmc77F+B0pSZzmMvJyf3/xKlUhbuqG7P0Y2QAI8i5XxcaOOw7N8pG+TdcWl5t6gxQlnNbhmLpwRB7CN/ar9vbhDYGhBwaWfcXWjA907aXgitqQvH97j63nRlOlXDJNHOHVl4W+TRtl1H0k=
+	t=1761760631; cv=none; b=j52E+OdY6LnqbZeKak4qSJrvg6h24LrAjU41PHcGG/JiOg2Pya543OELDRq7KZMIhyL/A9Tz8RCs5bkU03mt6uTGzVpJNN5p3z3xIrTqSfx8DaMVMqVvY5FD109cb+yDSFwibtZYpFAX6GWp21x9n9UbhLyiniIcZ90efUkXxeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761760609; c=relaxed/simple;
-	bh=VzK5oAorESm47QWMsddWXTePfWCCmkkIk79NLObV5bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DQOLV2l9Xo05FROP7Qwq5xZozdGExnglxWyZmyxF4T1Qp76c2vmyaQLd0thKtkOXMUqEI1CwOhB4iblAWQyVgs3ZEyl0Aezq8SzSbcOE9pikqivpmUsUueMPdx8xqfJKUT9IJSgDyASpT6mLhljbEvKxTU2xOl0KiVdUYs8U2xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WefDjtFQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA482C4CEF7;
-	Wed, 29 Oct 2025 17:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761760609;
-	bh=VzK5oAorESm47QWMsddWXTePfWCCmkkIk79NLObV5bc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WefDjtFQxaqNITeCzyBwduPSq6eq7KGJtsT2AF0tpE+HPH+tjK4IzpZavlRn/5XsQ
-	 bAqy+ezFjPZQf9TOZPQl6LXTvXW9IfgUJjbAoy5vs36s3bfKfYzKQg/z1bubPH73jh
-	 1ItJud1AeLXZlnq4bcVqu3rpaUAMlJkdHmPuONikaXEvzkph5eumYyBiA1nwLpgQr4
-	 QSEpHgWx8G4kOS7ej8Kp+v5EZVkYD3yl7v3+XLUa3lNShkcaOmr1AUVB0MzBpFpGOj
-	 pC344FC62eHwyUuXg2zk98jn071eznE2X1eDI8XnNdAIINuY4R7ZrZ6Wl5YCNKdj1p
-	 /8lus9PKvBXYA==
-Date: Wed, 29 Oct 2025 12:56:47 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] clk: ingenic: tcu: Use contextual data instead of
- global variable
-Message-ID: <20251029175647.GA1572736@bhelgaas>
+	s=arc-20240116; t=1761760631; c=relaxed/simple;
+	bh=k13cNh78f2SsMWLEgXiABWQ57IKXd/nXYc2niTuOENU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J5hql5ibmFQfy7pPnGggJ771o+kQOzRaEQULKyQg9yFcNUGZ0VkRFK3JKQ2agAdOzMGXW9SthEa8LIA1v9D/KwLLqCAGm8KdEwJhmUrZnEbH5rLOu8DLScQNbfx3/0c30ZWkqF5tKLorhXD7pHtR1wabWEW3Vlqc6rRtv0Ae778=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=A+G8aKZK; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1761760623;
+	bh=k13cNh78f2SsMWLEgXiABWQ57IKXd/nXYc2niTuOENU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=A+G8aKZKZoQJhZ2r63Er3ESTCLUAGWRbu7+BKxqLwWR0cSy96jDfCG5znd3fuZaWU
+	 NRBYQGFqEgC/on9T1UBI2dye05RJfIBTwEBQnaPP5bdX7s5ZoMjuHuk31IWe1zINUP
+	 uSwAtzqLcHK7nBDEn6LNxOCl5uno8VBYoRa95eKW//Vd8tbz2IQkSmnp419BQYml65
+	 LpfQ90LWjvzU8uYz7BZxkzzlD9znooaPA9fl4GzGC8ywJ3MefFCmx7pK48bHcXm2y+
+	 Fuv2P7tYn0p+NAyd+PwHlX1ahZvY8riZy9vSJcfxCNzHvKyVRl+a6v5og9fZ6I8TEu
+	 sAFp6GOhYyU7w==
+Received: from jupiter.universe (dyndsl-091-248-085-053.ewe-ip-backbone.de [91.248.85.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E9D8F17E141E;
+	Wed, 29 Oct 2025 18:57:02 +0100 (CET)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 2622C480067; Wed, 29 Oct 2025 18:57:02 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Wed, 29 Oct 2025 18:56:48 +0100
+Subject: [PATCH v4 9/9] PCI: dwc: support missing PCIe device on resume
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029163336.2785270-5-thierry.reding@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251029-rockchip-pcie-system-suspend-v4-9-ce2e1b0692d2@collabora.com>
+References: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
+In-Reply-To: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Jingoo Han <jingoohan1@gmail.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1357;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=k13cNh78f2SsMWLEgXiABWQ57IKXd/nXYc2niTuOENU=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGkCVW7puYacCmFgJdWTqKj+Qh5jDC97SrAtp
+ xZ17UhDM6EmyokCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJpAlVuAAoJENju1/PI
+ O/qaeDsQAIIP71M1+TU3X3W6kWf7SlBQNcLuJtFUeN1eHFEH+QCIrjX8BolGbKr6yU4V916Ex5z
+ zfdhyQXlMFVwpeODkmuT/6x143JVegZBHAborr80gBcFhxgve8zlHpGs54xc/b6fooU1j6m2eh0
+ t6N2nwuqu4iX47PL48Aol7Nb5vQ8L16XfyvbapDlLfb/7dZ93bYD+xeO2qlSHGWND2EmUkWpQd1
+ Wi73+1UjZSM0JGeXPcfZSLm2MbSjdQ6sFUyNKdOTDldDzJ/bJwbUCxBhwRU8wKz+quUDY/woo3m
+ kPz9+RHL0/kFp52rfcl4gQdlHw9AUJv35af3Ii45liecfNansATiiriipmh9Tf93CbiXUmZLy8k
+ kKYD+i4OBdYExn6cjEWnVkDCsRdlFpiefVUUic0fA/RhGML33KGoT5W/o/Ie8Bw++jgatGqHbzL
+ wZdZqilIX5FrBohby7gsBwfpI8MYCdec4ywdGeGRWFZJZCi37wwA5vrJ0vPWsqjAniBNZzDpTb9
+ IpncuzihfoqHsPmz2DJqNayvvurRNQZiy/7WjKWXnGtOPRiLVL3ROJsCaqQxLjUiCtNt2LqMBMI
+ II9Pp5I6X10hfdAERoaZqG2DgQq+LM2tsd0CyU2LQhapp1A/LQvycTDbo2LIkjvRgij8o5ofIiO
+ 7RowZ/MZ6hJFmXmdjiZwuPw==
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-On Wed, Oct 29, 2025 at 05:33:33PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Pass the driver-specific data via the syscore struct and use it in the
-> syscore ops.
+When dw_pcie_resume_noirq() is called for a PCIe root complex for a PCIe
+slot with no device plugged on Rockchip RK3576, dw_pcie_wait_for_link()
+will return -ETIMEDOUT. During probe time this does not happen, since
+the platform sets 'use_linkup_irq'.
 
-Some of these things in drivers/clk/ are also platform_device drivers
-(though not this one) and use generic power management, e.g.,
+This adds the same logic from dw_pcie_host_init() to the PM resume
+function to avoid the problem.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clk/qcom/q6sstop-qcs404.c?id=v6.17#n209
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-I have no idea if that's desirable or practical here, but using the
-platform_device model instead of syscore could have advantages in
-terms of modeling device dependencies and ordering.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index e92513c5bda5..f25f1c136900 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -1215,9 +1215,16 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = dw_pcie_wait_for_link(pci);
+-	if (ret)
+-		return ret;
++	/*
++	 * Note: Skip the link up delay only when a Link Up IRQ is present.
++	 * If there is no Link Up IRQ, we should not bypass the delay
++	 * because that would require users to manually rescan for devices.
++	 */
++	if (!pci->pp.use_linkup_irq) {
++		ret = dw_pcie_wait_for_link(pci);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return ret;
+ }
 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v3:
-> - adjust for API changes and update commit message
-> 
->  drivers/clk/ingenic/tcu.c | 63 +++++++++++++++++++--------------------
->  1 file changed, 30 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-> index bc6a51da2072..8c6337d8e831 100644
-> --- a/drivers/clk/ingenic/tcu.c
-> +++ b/drivers/clk/ingenic/tcu.c
-> @@ -53,9 +53,9 @@ struct ingenic_tcu {
->  	struct clk *clk;
->  
->  	struct clk_hw_onecell_data *clocks;
-> -};
->  
-> -static struct ingenic_tcu *ingenic_tcu;
-> +	struct syscore syscore;
-> +};
->  
->  static inline struct ingenic_tcu_clk *to_tcu_clk(struct clk_hw *hw)
->  {
-> @@ -332,6 +332,29 @@ static const struct of_device_id __maybe_unused ingenic_tcu_of_match[] __initcon
->  	{ /* sentinel */ }
->  };
->  
-> +static int __maybe_unused tcu_pm_suspend(void *data)
-> +{
-> +	struct ingenic_tcu *tcu = data;
-> +
-> +	if (tcu->clk)
-> +		clk_disable(tcu->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static void __maybe_unused tcu_pm_resume(void *data)
-> +{
-> +	struct ingenic_tcu *tcu = data;
-> +
-> +	if (tcu->clk)
-> +		clk_enable(tcu->clk);
-> +}
-> +
-> +static const struct syscore_ops tcu_pm_ops __maybe_unused = {
-> +	.suspend = tcu_pm_suspend,
-> +	.resume = tcu_pm_resume,
-> +};
-> +
->  static int __init ingenic_tcu_probe(struct device_node *np)
->  {
->  	const struct of_device_id *id = of_match_node(ingenic_tcu_of_match, np);
-> @@ -430,7 +453,11 @@ static int __init ingenic_tcu_probe(struct device_node *np)
->  		goto err_unregister_ost_clock;
->  	}
->  
-> -	ingenic_tcu = tcu;
-> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> +		tcu->syscore.ops = &tcu_pm_ops;
-> +		tcu->syscore.data = tcu;
-> +		register_syscore(&tcu->syscore);
-> +	}
->  
->  	return 0;
->  
-> @@ -455,42 +482,12 @@ static int __init ingenic_tcu_probe(struct device_node *np)
->  	return ret;
->  }
->  
-> -static int __maybe_unused tcu_pm_suspend(void *data)
-> -{
-> -	struct ingenic_tcu *tcu = ingenic_tcu;
-> -
-> -	if (tcu->clk)
-> -		clk_disable(tcu->clk);
-> -
-> -	return 0;
-> -}
-> -
-> -static void __maybe_unused tcu_pm_resume(void *data)
-> -{
-> -	struct ingenic_tcu *tcu = ingenic_tcu;
-> -
-> -	if (tcu->clk)
-> -		clk_enable(tcu->clk);
-> -}
-> -
-> -static const struct syscore_ops __maybe_unused tcu_pm_ops = {
-> -	.suspend = tcu_pm_suspend,
-> -	.resume = tcu_pm_resume,
-> -};
-> -
-> -static struct syscore __maybe_unused tcu_pm = {
-> -	.ops = &tcu_pm_ops,
-> -};
-> -
->  static void __init ingenic_tcu_init(struct device_node *np)
->  {
->  	int ret = ingenic_tcu_probe(np);
->  
->  	if (ret)
->  		pr_crit("Failed to initialize TCU clocks: %d\n", ret);
-> -
-> -	if (IS_ENABLED(CONFIG_PM_SLEEP))
-> -		register_syscore(&tcu_pm);
->  }
->  
->  CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
-> -- 
-> 2.51.0
-> 
+-- 
+2.51.0
+
 
