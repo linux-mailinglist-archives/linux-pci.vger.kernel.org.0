@@ -1,297 +1,185 @@
-Return-Path: <linux-pci+bounces-39639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 036C2C1A15F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 12:41:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FF26C1AD9A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 14:43:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD861AA2494
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 11:40:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4B04625D52
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 13:07:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992C72E6CDA;
-	Wed, 29 Oct 2025 11:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6550325734;
+	Wed, 29 Oct 2025 12:59:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VzXl8UYj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bmrs+KJG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793A22D9497
-	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 11:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31C7286416
+	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 12:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761737984; cv=none; b=PAG1pOyDESb3DA3brHoAknHjisTNt0MC6r6sUj2WzvZxIKpQw2XOvxuKMrVfhr5ZNKjA/E+2qdsd8xCo+sms6qEub98Sz+zF7AdSaHRILmtYKObKu2zdkBhcqSfWsg12QoSc0Fesm8o/H+iPHzVBodAv891SGHeQLLf/ekyCYhE=
+	t=1761742785; cv=none; b=O4WU+INe5JRoXUM09l3xfzzVI3NnHr1dhZtciYqXUTrbbMzIoPxD24c/ZUOkL90I19H1EDzrLQVLJ9cHB3m6K8DOPvnvCIybPGCtUGCd63gMgFYzX8tVsU/uy2hTpIntotskKVg73lV0zcpNKLN/hIJ424or8qSASIf65yGmkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761737984; c=relaxed/simple;
-	bh=uMfhhnQjNCJskPM3OuwSGvNgoK6a4Y9KNcSv1VJMo/M=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=c668urzrv+E8Twr8FlHwZqHVkMgBp+3LbUEqDpQBsJ3hu2Stk1gk04wn3x/PmoKI6R62lXJNzEN8D94YVYVwirQ2GGDRBDxqUA/LKUcU9GXeL4hQIF4VUCf2A1/YL4CzGtBbicEVOFR5Mrnr8aDLJibBazF2iClNHvvxutZ1KuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VzXl8UYj; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761737983; x=1793273983;
-  h=date:from:to:cc:subject:message-id;
-  bh=uMfhhnQjNCJskPM3OuwSGvNgoK6a4Y9KNcSv1VJMo/M=;
-  b=VzXl8UYjV42vsT5DsYVzmumaU9mxW2huCK2uiUy0wp3Lab4Jppdq3Ive
-   3C6UnTEeIMS5E4x/aWNRGQ4QqSHQQbW/OUENykgtgkfOZzUPhhMnMAgP3
-   iC45t7acmRs+M++FlXfmiLV8bY+iQMzOOSDaGwPQMpknpkTmuBh9svHq1
-   EvSAK63pu1MqwSlvTEMXfkEwlqH/deivSnL23uO+SkPhy4Svdb4kGbRg1
-   Upmfz2cfQz6DiRiG352KVYvSIe61Fqxj+6eDv9opP2nyGMrkbjRYxEZ38
-   5xBXXfC5j3n3U9rbJ+EnG6ydgBj/N65uz4Nr72HRob2rk3bc2pLUkQNiL
-   A==;
-X-CSE-ConnectionGUID: Z5aRZM7RQ5W6H/SCqi33Pg==
-X-CSE-MsgGUID: rZYIIZi0QiKBlHcHuN5FJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="81276189"
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="81276189"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 04:39:42 -0700
-X-CSE-ConnectionGUID: 27sOrGzdQ+qyz1KggVp6Pg==
-X-CSE-MsgGUID: AlF8YruxSmioBYdSwAl+hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185269068"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 29 Oct 2025 04:39:41 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vE4Wd-000KYl-0H;
-	Wed, 29 Oct 2025 11:39:36 +0000
-Date: Wed, 29 Oct 2025 19:39:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:enumeration] BUILD SUCCESS
- b37b6095a94e1ccecac80c9f1a8fca8d72919c65
-Message-ID: <202510291923.UBqAzbO4-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1761742785; c=relaxed/simple;
+	bh=cZUqEi7ArJBgqnrq/LGfj3bUXfY69RvPu1cvwBiVCak=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ww2DwFAFxxVdCEYK5HEprnPgOyFGpVQXdhLVkXSAFbpd89MJsYZStYbOoZshTk6DoX7PL/QzuU+pCRbX2D7OmjcCOtR47RbDcnFd86FrYbWYG5keQISDNVPRu98TOcJYqvRyOaEoBt3J0qEBXXBrdn8wzsz56kC1MEwJ8A9xDPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bmrs+KJG; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-429893e2905so7046953f8f.3
+        for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 05:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761742782; x=1762347582; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wvcZ242I0xNV0Bj8P2kxRpXu3YYgCUlfHC5XSdPNaN0=;
+        b=Bmrs+KJGpZa4aRNYwF4tRU2pbINS1yxabO0L36mrLHRQcM7y823X047mv+4lH2uhIP
+         KpUyJGNS5SxrvRzQAs6AwdP8OKq5JwBtMwKtMD+KsBkakcp/GrU9ssK+8w9On1IJVI97
+         3qYTF4s5fRVPXFe85bNPVBTRxggroBVIxausqXfZGYbu8YkNjrTyzC2csBL/gFVQSxUh
+         YnLQAO2XVcKFVnOrccVADIob3k3A9pLF6T626b11yIxGnNzoMrkY6x+pFou35KjqmM9n
+         Teo6y/tNdpcn3DPBbIi2jj1KIcVuUY/mpowzuGEDHl2QRgNQyh5i54yoUt7KZ0TESpo+
+         kF7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761742782; x=1762347582;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wvcZ242I0xNV0Bj8P2kxRpXu3YYgCUlfHC5XSdPNaN0=;
+        b=Yzsk5dmsYPexjivVqm3/D6GjnR91is7nN1whs5qwMJwNpk07tRgYCFaesNKuScprkH
+         oEv8uJauKrWDgJazdGd3qRowiozSDJgdvTAieJw0nr9l4UBF2rCsIc5uCmV5VsEPaiBS
+         56creXDYRepkBArYfzH4PaJf6J91nr66LD/AlFKxammJOHmuV+xa+FCSF1LXUvqGXFN9
+         bOeKF7I4DezECy48nuwzbHOTOf+VXoOn9vvC9xqxq7OXQChWqxUbh0URN2+ZjnFZiwN/
+         KxUB9zTnrsIz8fdh5YEEUR47vikdli36jFSEdMYm9Da0X/voddGBobz2MzuqonVJHkUP
+         Cspg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeeJVB+IbRSULCbu3utup/GkxAiRUa2IZrb3PhZcEzc5At3cAYtknP7qFAkT9wiIF4QyzGJ9tEKjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLRjHXffJVUen7eaKVB8PSmaW0K61R2QE0FXLlAJYEU8CGY7Qe
+	5NNecqmOH217skYo9ZogEVmQDiSq8iuiKM+6Li9kvBc9hW4SGzelZx3fG/dRE/RYtJq0PCo09tl
+	EnaMNuKsTs0cfqWL2FA==
+X-Google-Smtp-Source: AGHT+IFnbvPlsvZotzy1WsN3Ocy8uT6OxjkU13FGbFqNo33aQaiOVG8eFJ1A1TVPzk6tojTsAQa4tCIT+M/iM9c=
+X-Received: from wmvz2.prod.google.com ([2002:a05:600d:6282:b0:477:d21:4a92])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:26d2:b0:429:91ca:70f1 with SMTP id ffacd0b85a97d-429aefccf44mr2238605f8f.57.1761742782357;
+ Wed, 29 Oct 2025 05:59:42 -0700 (PDT)
+Date: Wed, 29 Oct 2025 12:59:41 +0000
+In-Reply-To: <20251020223516.241050-3-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20251020223516.241050-1-dakr@kernel.org> <20251020223516.241050-3-dakr@kernel.org>
+Message-ID: <aQIPvaFJIXySV-Q5@google.com>
+Subject: Re: [PATCH 2/8] rust: device: introduce Device::drvdata()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	pcolberg@redhat.com, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
-branch HEAD: b37b6095a94e1ccecac80c9f1a8fca8d72919c65  PCI: vmd: Switch to pci_bus_find_emul_domain_nr()
+On Tue, Oct 21, 2025 at 12:34:24AM +0200, Danilo Krummrich wrote:
+> In C dev_get_drvdata() has specific requirements under which it is valid
+> to access the returned pointer. That is, drivers have to ensure that
+> 
+>   (1) for the duration the returned pointer is accessed the driver is
+>       bound and remains to be bound to the corresponding device,
+> 
+>   (2) the returned void * is treated according to the driver's private
+>       data type, i.e. according to what has been passed to
+>       dev_set_drvdata().
+> 
+> In Rust, (1) can be ensured by simply requiring the Bound device
+> context, i.e. provide the drvdata() method for Device<Bound> only.
+> 
+> For (2) we would usually make the device type generic over the driver
+> type, e.g. Device<T: Driver>, where <T as Driver>::Data is the type of
+> the driver's private data.
+> 
+> However, a device does not have a driver type known at compile time and
+> may be bound to multiple drivers throughout its lifetime.
+> 
+> Hence, in order to be able to provide a safe accessor for the driver's
+> device private data, we have to do the type check on runtime.
+> 
+> This is achieved by letting a driver assert the expected type, which is
+> then compared to a type hash stored in struct device_private when
+> dev_set_drvdata() is called.
+> 
+> Example:
+> 
+> 	// `dev` is a `&Device<Bound>`.
+> 	let data = dev.drvdata::<SampleDriver>()?;
+> 
+> There are two aspects to note:
+> 
+>   (1) Technically, the same check could be achieved by comparing the
+>       struct device_driver pointer of struct device with the struct
+>       device_driver pointer of the driver struct (e.g. struct
+>       pci_driver).
+> 
+>       However, this would - in addition the pointer comparison - require
+>       to tie back the private driver data type to the struct
+>       device_driver pointer of the driver struct to prove correctness.
+> 
+>       Besides that, accessing the driver struct (stored in the module
+>       structure) isn't trivial and would result into horrible code and
+>       API ergonomics.
+> 
+>   (2) Having a direct accessor to the driver's private data is not
+>       commonly required (at least in Rust): Bus callback methods already
+>       provide access to the driver's device private data through a &self
+>       argument, while other driver entry points such as IRQs,
+>       workqueues, timers, IOCTLs, etc. have their own private data with
+>       separate ownership and lifetime.
+> 
+>       In other words, a driver's device private data is only relevant
+>       for driver model contexts (such a file private is only relevant
+>       for file contexts).
+> 
+> Having that said, the motivation for accessing the driver's device
+> private data with Device<Bound>::drvdata() are interactions between
+> drivers. For instance, when an auxiliary driver calls back into its
+> parent, the parent has to be capable to derive its private data from the
+> corresponding device (i.e. the parent of the auxiliary device).
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-elapsed time: 1050m
+Are you going to open that docs PR to the Rust compiler about the size
+of TypeID that we talked about? :)
 
-configs tested: 204
-configs skipped: 3
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +// Compile-time checks.
+> +const _: () = {
+> +    // Assert that we can `read()` / `write()` a `TypeId` instance from / into `struct driver_type`.
+> +    static_assert!(core::mem::size_of::<bindings::driver_type>() == core::mem::size_of::<TypeId>());
+> +};
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251029    clang-22
-arc                   randconfig-001-20251029    gcc-15.1.0
-arc                   randconfig-002-20251029    clang-22
-arc                   randconfig-002-20251029    gcc-15.1.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                     am200epdkit_defconfig    gcc-15.1.0
-arm                        clps711x_defconfig    gcc-15.1.0
-arm                                 defconfig    gcc-15.1.0
-arm                   randconfig-001-20251029    clang-22
-arm                   randconfig-001-20251029    gcc-8.5.0
-arm                   randconfig-002-20251029    clang-22
-arm                   randconfig-003-20251029    clang-22
-arm                   randconfig-004-20251029    clang-22
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251029    gcc-12.5.0
-arm64                 randconfig-002-20251029    clang-22
-arm64                 randconfig-003-20251029    gcc-13.4.0
-arm64                 randconfig-004-20251029    gcc-11.5.0
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251029    gcc-9.5.0
-csky                  randconfig-002-20251029    gcc-11.5.0
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-19
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20251029    clang-20
-hexagon               randconfig-001-20251029    clang-22
-hexagon               randconfig-002-20251029    clang-22
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20251029    gcc-14
-i386        buildonly-randconfig-002-20251029    gcc-14
-i386        buildonly-randconfig-003-20251029    clang-20
-i386        buildonly-randconfig-003-20251029    gcc-14
-i386        buildonly-randconfig-004-20251029    gcc-14
-i386        buildonly-randconfig-005-20251029    gcc-14
-i386        buildonly-randconfig-006-20251029    gcc-14
-i386                                defconfig    gcc-15.1.0
-i386                  randconfig-001-20251029    clang-20
-i386                  randconfig-002-20251029    clang-20
-i386                  randconfig-003-20251029    clang-20
-i386                  randconfig-004-20251029    clang-20
-i386                  randconfig-005-20251029    clang-20
-i386                  randconfig-006-20251029    clang-20
-i386                  randconfig-007-20251029    clang-20
-i386                  randconfig-011-20251029    gcc-14
-i386                  randconfig-012-20251029    gcc-14
-i386                  randconfig-013-20251029    gcc-14
-i386                  randconfig-014-20251029    gcc-14
-i386                  randconfig-015-20251029    gcc-14
-i386                  randconfig-016-20251029    gcc-14
-i386                  randconfig-017-20251029    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    gcc-15.1.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251029    clang-22
-loongarch             randconfig-002-20251029    clang-22
-m68k                             allmodconfig    clang-19
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-19
-m68k                                defconfig    clang-19
-m68k                          hp300_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    clang-19
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    clang-19
-microblaze                          defconfig    clang-19
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-nios2                            allmodconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    clang-22
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20251029    clang-22
-nios2                 randconfig-001-20251029    gcc-11.5.0
-nios2                 randconfig-002-20251029    clang-22
-nios2                 randconfig-002-20251029    gcc-9.5.0
-openrisc                         allmodconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251029    gcc-12.5.0
-parisc                randconfig-001-20251029    gcc-8.5.0
-parisc                randconfig-002-20251029    gcc-8.5.0
-parisc64                            defconfig    clang-19
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                      katmai_defconfig    gcc-15.1.0
-powerpc                     mpc83xx_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251029    clang-22
-powerpc               randconfig-001-20251029    gcc-8.5.0
-powerpc               randconfig-002-20251029    gcc-12.5.0
-powerpc               randconfig-002-20251029    gcc-8.5.0
-powerpc64             randconfig-001-20251029    clang-22
-powerpc64             randconfig-001-20251029    gcc-8.5.0
-powerpc64             randconfig-002-20251029    clang-22
-powerpc64             randconfig-002-20251029    gcc-8.5.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-15.1.0
-riscv                 randconfig-001-20251029    clang-20
-riscv                 randconfig-002-20251029    clang-20
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-15.1.0
-s390                  randconfig-001-20251029    clang-20
-s390                  randconfig-002-20251029    clang-20
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                          landisk_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251029    clang-20
-sh                    randconfig-002-20251029    clang-20
-sh                     sh7710voipgw_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    clang-22
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251029    clang-22
-sparc                 randconfig-001-20251029    gcc-8.5.0
-sparc                 randconfig-002-20251029    clang-22
-sparc                 randconfig-002-20251029    gcc-15.1.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    clang-22
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251029    clang-20
-sparc64               randconfig-001-20251029    clang-22
-sparc64               randconfig-002-20251029    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251029    clang-22
-um                    randconfig-002-20251029    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251029    clang-20
-x86_64      buildonly-randconfig-002-20251029    clang-20
-x86_64      buildonly-randconfig-003-20251029    clang-20
-x86_64      buildonly-randconfig-004-20251029    clang-20
-x86_64      buildonly-randconfig-005-20251029    clang-20
-x86_64      buildonly-randconfig-006-20251029    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251029    gcc-12
-x86_64                randconfig-002-20251029    gcc-12
-x86_64                randconfig-003-20251029    gcc-12
-x86_64                randconfig-004-20251029    gcc-12
-x86_64                randconfig-005-20251029    gcc-12
-x86_64                randconfig-006-20251029    gcc-12
-x86_64                randconfig-011-20251029    gcc-13
-x86_64                randconfig-012-20251029    gcc-13
-x86_64                randconfig-013-20251029    gcc-13
-x86_64                randconfig-014-20251029    gcc-13
-x86_64                randconfig-015-20251029    gcc-13
-x86_64                randconfig-016-20251029    gcc-13
-x86_64                randconfig-071-20251029    clang-20
-x86_64                randconfig-072-20251029    clang-20
-x86_64                randconfig-073-20251029    clang-20
-x86_64                randconfig-074-20251029    clang-20
-x86_64                randconfig-075-20251029    clang-20
-x86_64                randconfig-076-20251029    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20251029    clang-22
-xtensa                randconfig-001-20251029    gcc-8.5.0
-xtensa                randconfig-002-20251029    clang-22
-xtensa                randconfig-002-20251029    gcc-8.5.0
-xtensa                    smp_lx200_defconfig    gcc-15.1.0
+You don't need the "const _: ()" part. See the definition of
+static_assert! to see why.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Also, I would not require equality. The Rust team did not think that it
+would ever increase in size, but it may decrease.
+
+>  /// The core representation of a device in the kernel's driver model.
+>  ///
+>  /// This structure represents the Rust abstraction for a C `struct device`. A [`Device`] can either
+> @@ -198,12 +204,29 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
+>  }
+>  
+>  impl Device<CoreInternal> {
+> +    fn type_id_store<T: 'static>(&self) {
+
+This name isn't great. How about "set_type_id()" instead?
+
+Alice 
 
