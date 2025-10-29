@@ -1,84 +1,84 @@
-Return-Path: <linux-pci+bounces-39624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76B70C19799
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:49:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47914C1979F
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:50:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6CF934F4A33
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:43:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99A0A461265
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:43:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF79832ABF6;
-	Wed, 29 Oct 2025 09:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E06C330B18;
+	Wed, 29 Oct 2025 09:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tlp0e8JM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tsFNGwgP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358FA32B9A2;
-	Wed, 29 Oct 2025 09:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBF6330D27;
+	Wed, 29 Oct 2025 09:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761730932; cv=none; b=YAM4WdPxUx+XwH37bJQ+FhaHy1fNXKe+ink1sjz6Q5hJE6+iXB8lvpzpVuq12a6Nxqyvjt0m+WFmkjo4ilQcav7fhH98A32FBUGqPrevT94hb+PK4zXuSbtX7gtB+fnJ+XJYDoby5L/dLyIEJjNeFYCcgaTIrlKfJyA3phzXIs8=
+	t=1761730939; cv=none; b=b9JMyAk5EjgXP/Vhe/fh7cxIQByuCBzb98H64NwClR6JCecEBUxVOMRDtZ2FjCa2g/OclsKJvTMVtlwh4dvPm30tVgBkRJRFJVGh+NMmnW0jPPqaDexHEYQ853s7nXe67+YnKJ4oOTmei1ncTTzMb52gWBevfWE7GlkC4MyKaJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761730932; c=relaxed/simple;
-	bh=dTkcEBl5gg6N/8Ckh8bxG5upJbEHSRnm22KBHzHO/xk=;
+	s=arc-20240116; t=1761730939; c=relaxed/simple;
+	bh=ei4AVSTiMTWOo2764Fe34I0FDbcBcV7ctbcxvqyHbiM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bGtFa7aWW9gKuqa1L66g/6HciwFQi1bUfvCjLzH8/6ERvf5lFrjEqlELW+eovO+wK2cI8QDJ4bNWZgtwMYIKHnXYGKW+rDV9NAX/mJUlYnAC2kiBGYdrozrJVY4jkNMAhC9l2hwpgbRyDVsIp/l5I/LFSOYfp+gZtoBTsu2OFBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tlp0e8JM; arc=none smtp.client-ip=148.163.158.5
+	 In-Reply-To:To:Cc; b=Ue5g3R1v9Afukp+8ybuJyORK/F31J6amxngHHE26qb62XZtDhbMgmOHh7Jl8zVXam2VrIXRbkEpH54zcCfF8poDl6N9SgGAmLmGQitNaqLtdPgF0A4onA5RtxTAyfS+VLzJgifL+AZVqWQTli/YVlu5eZyo+3xMYaWqETPS+RJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tsFNGwgP; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmRgo019719;
-	Wed, 29 Oct 2025 09:41:53 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmKa3019586;
+	Wed, 29 Oct 2025 09:41:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FANXQu
-	vOz1jl3EKXfz9ZRGyHUL7R3ni0avL0mssoaLE=; b=Tlp0e8JM+Bq5E2rIZ1AFAG
-	kaJUFS12+kUa6rTJ0E0j48urPnD5Kl2wxv/8jUsivoY++JNRKB3jshc45kXmdIfu
-	8tT+ynf5f18j82D388AeHtN4q/dzN7BntWPdePMnIm+A0Mp5nBRqNJ957C8Ob+o6
-	/GRzsODH61gsfi1tbo6vj5ZuhTzmmXzbyBOQN5MLXF/Z+7Cx03APk5M4JwG+KrXL
-	R1UjC4TekNTvSddaxa7L7koLCLbTqL+qJyxxFELCRgqCEh8jPOQIgblzCKXfp+s+
-	LV10xOfDYz78JWI5pgsmR+wS69SUBACTDQaDr3Q7J4ryTtn31OfWk3kmtrJYDxzA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=51F1KP
+	X2GaNeDDDtEnKMSmu/zB48xYsKZ7OyK4P3FQY=; b=tsFNGwgPUaWkd957rNSR/u
+	+JYSd/XvQMv9FnZInqtDgREwmubpyFc5tRSXD+tnh0DH39Ny9/sBuEWxujf6H38L
+	F28E51ALCa0LMGSavm46nm4c2a4jFkQnGZ+1BG/OIgYCkHtrwWr0+wkIfcKm52vA
+	DKgh5c0GahAkYTOVr8DdiAvqewCJ9XW8WDwQJLfm0gufR7LDMvgpeesDEWhs0zkd
+	3ki6265KvHlP76gce5WkGeA5wEVe+vbja+drHpkd5qqHKjbzg1pa5cqT6L1urijl
+	wnqabhIxS+37071n66qQk0Tba0xAF4qtTRByZkL0Ol7LPS9KwOkRaTf+2LaFzw6g
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdy2-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdyd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:53 +0000 (GMT)
+	Wed, 29 Oct 2025 09:41:56 +0000 (GMT)
 Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9fr4g025914;
-	Wed, 29 Oct 2025 09:41:53 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdxy-1
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9W7YP002955;
+	Wed, 29 Oct 2025 09:41:55 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdy9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:52 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5O9XS018748;
-	Wed, 29 Oct 2025 09:41:52 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33xwakq5-1
+	Wed, 29 Oct 2025 09:41:55 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5E6iu027495;
+	Wed, 29 Oct 2025 09:41:54 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33w2jkqt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:52 +0000
+	Wed, 29 Oct 2025 09:41:54 +0000
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9fo6020382394
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9frV631916732
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Oct 2025 09:41:51 GMT
+	Wed, 29 Oct 2025 09:41:53 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E4A1C58052;
-	Wed, 29 Oct 2025 09:41:50 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8E0AE58052;
+	Wed, 29 Oct 2025 09:41:53 +0000 (GMT)
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 810675805D;
-	Wed, 29 Oct 2025 09:41:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 2A21658056;
+	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Oct 2025 09:41:48 +0000 (GMT)
+	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
 From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Wed, 29 Oct 2025 10:41:31 +0100
-Subject: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI and
- SR-IOV
+Date: Wed, 29 Oct 2025 10:41:32 +0100
+Subject: [PATCH v5 2/2] PCI: s390: Handle ARI on bus without associated
+ struct pci_dev
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,7 +87,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
+Message-Id: <20251029-ari_no_bus_dev-v5-2-d9a5eab67ed0@linux.ibm.com>
 References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
 In-Reply-To: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>
@@ -106,30 +106,30 @@ Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Niklas Schnelle <schnelle@linux.ibm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3621;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5163;
  i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=dTkcEBl5gg6N/8Ckh8bxG5upJbEHSRnm22KBHzHO/xk=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH0YYrMta8rLfMbLuU8n+soJNWznOra1sYA2yKN+fV
- vGpou1pRykLgxgXg6yYIsuiLme/dQVTTPcE9XfAzGFlAhnCwMUpABOpqGdk6H792zzHZNMrwdn6
- eXxd0wKqt6ad8nmw6dva6+kWJxO1XzMyPI8p14s/dqPK/O3S3hO1Z+aK21QJNLI6f7SXWVvPXmH
- CCwA=
+ bh=ei4AVSTiMTWOo2764Fe34I0FDbcBcV7ctbcxvqyHbiM=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH0aeO/jzV/sb4y2zrPVuFspx7P7ZtfZ6AMvBs2+EH
+ VLMOoR3dpSyMIhxMciKKbIs6nL2W1cwxXRPUH8HzBxWJpAhDFycAjCRqdYMf4XTX+i2bJT8UlG3
+ TnxNzLl4wcNBOUpnv584eDijqnLxkz+MDG1VXTrH115deajq5x2O/Tr34wO/9N950r/7VnGg3qt
+ FR9kB
 X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
  fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=K+gv3iWI c=1 sm=1 tr=0 ts=6901e161 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Authority-Analysis: v=2.4 cv=K+gv3iWI c=1 sm=1 tr=0 ts=6901e164 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=gNLU74_c1yUKsMQYS-8A:9 a=QEXdDO2ut3YA:10
+ a=VnNF1IyMAAAA:8 a=NZt1OnvTlnlKU9qwqt4A:9 a=QEXdDO2ut3YA:10
  a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: 5aVzxZd_8NDjXLIEyfuoJhKssqGH9r6K
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX4XdmgPEPUuv1
- 9qOt8fopHetzAqds2n2TJi4oFXjwSDe5AgwYs4JDDSkDh1QlV23wTinY/CMGsdh2pI7aCxXJeUF
- 7hHHI2SBlpFuFWdiW5icXyFXRnwMcQaMeuAByACItiyu/zH9rj4/o6FGpy6MifnLj5Gh3enXRVa
- 13Z7HRrJiaery6HZHkZVhqjr7PNTuLHSyyim1iHGewRuwMN3PkuNgSlLWRycXhD4g+yDCHZZZIN
- 8we7NakoqUsXTMMA1luhfGGUsNvfkRcUTFC+l8gigXE9tkr0NoMtmVH8IQj6Y2DtJYG8bf9M+Fk
- wTExRIyoQ8+jy54J3jOZ9buxSVenxeCFoKsnTWn8nPZRzg+NK6GH1Y3LqB2coNAvI30nKOMlkM7
- v/KMrGXTKInRNbW+VMh+YBz/3LQDHg==
-X-Proofpoint-GUID: 0RaOFpgZogZcd0rF0tuH0nOjX9HR2ST2
+X-Proofpoint-ORIG-GUID: F81w5a-q_A82GzZG431alqBGvXqZe0Wb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX7nX5f9EiYWlK
+ 7T3M6ZmYpaMXdGyr0oXSmdTJQ881Cgjci9HNY1WcC3l7moDqZgu1KZCN006tqEgl6h6eu5bJR3u
+ ANCSANjFZvRj7gxvvMNOs+QM3XWJXeZ+5g6yUUYdcHCU/1ZyslhpqJEH7xL+YWAd95UODeloX6T
+ QEOgip/ipSVbBP4YLPsM0AoKNtaoU8101QUdB6qfuDCzO5nEsg2yCKf0aAvdqsSUOoinSIhBRgu
+ uyX06su+wXgMwJTwW6lJiMz8nlGAH71SwGDSBGB3iL7lFfDudU5nS6QN4TYSNR2YxeK76znHePR
+ z2o5YBvXwukQj5fgyqeaP+KtR6uK09sa7SORarmlYDgI58XeDIHmwbyWeOuSG4eQqQvDQUA22Jz
+ 6zumN4tTDjHBoCumV51houpzWGHACg==
+X-Proofpoint-GUID: SydpWizy2eNmQYSkNRnQjAuU8oeOREV5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-29_04,2025-10-22_01,2025-03-28_01
@@ -140,96 +140,135 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
  definitions=main-2510280166
 
-When the isolated PCI function probing mechanism is used in conjunction
-with ARI or SR-IOV it may not find all available PCI functions. In the
-case of ARI the problem is that next_ari_fn() always returns -ENODEV if
-dev is NULL and thus if fn 0 is missing the scan stops.
+On s390 PCI busses are virtualized and the downstream ports are
+invisible to the OS and self in struct pci_bus is NULL. This associated
+struct pci_dev is however relied upon in pci_ari_enabled() to check
+whether ARI is enabled for the bus. ARI is therefor always detected as
+disabled. At the same time, firmware on s390 always enables and relies
+upon ARI thus causing a mismatch.
 
-For SR-IOV things are more complex. Here the problem is that the check
-for multifunction may fail. One example where this can occur is if the
-first passed-through function is a VF with devfn 8. Now in
-pci_scan_slot() this means it is fn 0 and thus multifunction doesn't get
-set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_MFD it
-remains unset and probing stops even if there is a devfn 9.
+Despite simply being a mismatch this causes problems as some PCI devices
+present a different SR-IOV topology depending on PCI_SRIOV_CTRL_ARI.
 
-Now at the moment both of these issues are hidden on s390. The first one
-because ARI is detected as disabled as struct pci_bus's self is NULL
-even though firmware does enable and use ARI. The second issue is hidden
-as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID for
-isolated VFs"). This is because VFs are either put on their own virtual
-bus if the parent PF is not passed-through to the same instance or VFs
-are hotplugged once SR-IOV is enabled on the parent PF and then
-pci_scan_single_device() is used.
+A similar mismatch may occur with SR-IOV when virtfn_add_bus() creates new
+busses with no associated struct pci_dev. Here too pci_ari_enabled()
+on these busses returns false even if ARI is actually used.
 
-Still especially the first issue prevents correct detection of ARI and
-the second might be a problem for other users of isolated function
-probing. Fix both issues by keeping things as simple as possible. If
-isolated function probing is enabled simply scan every possible devfn.
+Prevent both mismatches by moving the ari_enabled flag from struct
+pci_dev to struct pci_bus making it independent from self in struct
+pci_bus. Let the bus inherit the ari_enabled state from its parent bus
+when there is no bridge device such that busses added by virtfn_add_bus()
+match their parent. For s390 set ari_enabled when the device supports
+ARI in the awareness that all PCIe ports on s390 systems are ARI
+capable.
 
-Cc: stable@vger.kernel.org
-Fixes: 189c6c33ff42 ("PCI: Extend isolated function probing to s390")
-Link: https://lore.kernel.org/linux-pci/d3f11e8562f589ddb2c1c83e74161bd8948084c3.camel@linux.ibm.com/
 Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
- drivers/pci/probe.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/s390/pci/pci.c     |  7 +++++++
+ arch/s390/pci/pci_bus.c | 10 ++++++++++
+ drivers/pci/pci.c       |  4 ++--
+ drivers/pci/probe.c     |  1 +
+ include/linux/pci.h     |  4 ++--
+ 5 files changed, 22 insertions(+), 4 deletions(-)
 
+diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+index c82c577db2bcd2143476cb8189fd89b9a4dc9836..773c0cbfc313ea1a6419a44d6158397dd13f6e76 100644
+--- a/arch/s390/pci/pci.c
++++ b/arch/s390/pci/pci.c
+@@ -609,6 +609,13 @@ int pcibios_device_add(struct pci_dev *pdev)
+ 			continue;
+ 		pci_claim_resource(pdev, i);
+ 	}
++	/*
++	 * The below is the s390 equivalent of pci_configure_ari()
++	 * which we can't use directly because the bridge devices
++	 * are hidden in firmware.
++	 */
++	if (!pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ARI))
++		zdev->zbus->bus->ari_enabled = 0;
+ 
+ 	return 0;
+ }
+diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+index 45a1c36c5a54e3a841e61cc365d3f36e9a94ba50..c887e61eb384ca98ff27d4f8af69e58c715b5002 100644
+--- a/arch/s390/pci/pci_bus.c
++++ b/arch/s390/pci/pci_bus.c
+@@ -207,6 +207,16 @@ static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, s
+ 		return -EFAULT;
+ 	}
+ 
++	/*
++	 * On s390 PCI busses are virtualized and the bridge
++	 * devices are invisible to the OS. Furthermore busses
++	 * may exist without a devfn 0 function. Thus the normal
++	 * ARI detection does not work. At the same time fw/hw
++	 * has always enabled ARI when possible. Reflect the actual
++	 * state by setting ari_enabled whenever a device on the bus
++	 * supports it.
++	 */
++	bus->ari_enabled = 1;
+ 	zbus->bus = bus;
+ 
+ 	return 0;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b14dd064006cca80ec5275e45a35d6dc2b4d0bbc..8ef3c68280a629449e0a2176d938bf987c68dddf 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3532,11 +3532,11 @@ void pci_configure_ari(struct pci_dev *dev)
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
+ 		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+ 					 PCI_EXP_DEVCTL2_ARI);
+-		bridge->ari_enabled = 1;
++		dev->bus->ari_enabled = 1;
+ 	} else {
+ 		pcie_capability_clear_word(bridge, PCI_EXP_DEVCTL2,
+ 					   PCI_EXP_DEVCTL2_ARI);
+-		bridge->ari_enabled = 0;
++		dev->bus->ari_enabled = 0;
+ 	}
+ }
+ 
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0ce98e18b5a876afe72af35a9f4a44d598e8d500..41dd1a339a994956a6bc7e1fea0fe0d55452a963 100644
+index 41dd1a339a994956a6bc7e1fea0fe0d55452a963..6fc03328a62f54f33f47309f8300516e8f52b5eb 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -2808,16 +2808,19 @@ static int next_ari_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
- 	return next_fn;
+@@ -1216,6 +1216,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 
+ 	if (!bridge) {
+ 		child->dev.parent = parent->bridge;
++		child->ari_enabled = parent->ari_enabled;
+ 		goto add_dev;
+ 	}
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d1fdf81fbe1e427aecbc951fa3fdf65c20450b05..a9c3dbf17339e523362bd179ad3c7c8c91293cf0 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -445,7 +445,6 @@ struct pci_dev {
+ 	unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
+ 	unsigned int	msi_enabled:1;
+ 	unsigned int	msix_enabled:1;
+-	unsigned int	ari_enabled:1;		/* ARI forwarding */
+ 	unsigned int	ats_enabled:1;		/* Address Translation Svc */
+ 	unsigned int	pasid_enabled:1;	/* Process Address Space ID */
+ 	unsigned int	pri_enabled:1;		/* Page Request Interface */
+@@ -691,6 +690,7 @@ struct pci_bus {
+ 	unsigned int		is_added:1;
+ 	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
+ 	unsigned int		flit_mode:1;	/* Link in Flit mode */
++	unsigned int		ari_enabled:1;	/* ARI forwarding enabled */
+ };
+ 
+ #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+@@ -2740,7 +2740,7 @@ static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
+  */
+ static inline bool pci_ari_enabled(struct pci_bus *bus)
+ {
+-	return bus->self && bus->self->ari_enabled;
++	return bus->ari_enabled;
  }
  
--static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
-+static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn,
-+		   bool isolated_fns)
- {
--	if (pci_ari_enabled(bus))
--		return next_ari_fn(bus, dev, fn);
-+	if (!isolated_fns) {
-+		if (pci_ari_enabled(bus))
-+			return next_ari_fn(bus, dev, fn);
- 
-+		/* only multifunction devices may have more functions */
-+		if (dev && !dev->multifunction)
-+			return -ENODEV;
-+	}
- 	if (fn >= 7)
- 		return -ENODEV;
--	/* only multifunction devices may have more functions */
--	if (dev && !dev->multifunction)
--		return -ENODEV;
- 
- 	return fn + 1;
- }
-@@ -2859,10 +2862,12 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
- {
- 	struct pci_dev *dev;
- 	int fn = 0, nr = 0;
-+	bool isolated_fns;
- 
- 	if (only_one_child(bus) && (devfn > 0))
- 		return 0; /* Already scanned the entire slot */
- 
-+	isolated_fns = hypervisor_isolated_pci_functions();
- 	do {
- 		dev = pci_scan_single_device(bus, devfn + fn);
- 		if (dev) {
-@@ -2876,10 +2881,10 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
- 			 * a hypervisor that passes through individual PCI
- 			 * functions.
- 			 */
--			if (!hypervisor_isolated_pci_functions())
-+			if (!isolated_fns)
- 				break;
- 		}
--		fn = next_fn(bus, dev, fn);
-+		fn = next_fn(bus, dev, fn, isolated_fns);
- 	} while (fn >= 0);
- 
- 	/* Only one slot has PCIe device */
+ /**
 
 -- 
 2.48.1
