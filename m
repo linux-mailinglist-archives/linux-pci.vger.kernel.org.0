@@ -1,117 +1,206 @@
-Return-Path: <linux-pci+bounces-39694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39695-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F3F6C1C7EC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 18:38:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3401AC1CA30
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 18:59:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1564D62644A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:19:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92B44642B5C
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:21:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F0B34F246;
-	Wed, 29 Oct 2025 17:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E326734C9B5;
+	Wed, 29 Oct 2025 17:20:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="c8pjbcQj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2af2bBXx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7932C34CFAF
-	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 17:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879C831283D
+	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 17:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761758381; cv=none; b=BD/6e6ApXFjm2T2YM/YSzGvYKwrh7VPT8/ewEr1pcGprzp8oOT3Q+u+YvDFinvTOisdb7LyUCxO24MUtGo16XWMg8M1UPpDsdNa8Ak/aPrjy0mdL8JzxRUf93FOwLDoMIaYnK+FSdbE48E/ANeWd6ZX50dkzeBCviJCrhsevsKU=
+	t=1761758450; cv=none; b=gU1CR1woWHBmfPCNjgCi7n+7284ZajTl+lFom7pRZsE0OzAZuAuIijYit95WfPpA2WzThj1mnnhJ/YrE/UV9DM0SBGPZu4Q2pscl84UypuZYnaWgHO6XUYbyylULdvMxQBAmUwefPjOTFI+MjarSlqyN4yrQTEN7fX+ibk/2eUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761758381; c=relaxed/simple;
-	bh=bSNd3wWUQQy2YBLmw8YBigmBKjZAe88REZ3E0Gos148=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DJFkacIIxlICQOFowsX5Sx90wnddrCoep79pidWkhraewkvvTYMdxXw5lfqpS+YYlJIdeDlgEyYhqzYzGOmOAiKyLCuwZ7pdd+Js33ndF+J1Kiry0S4eWTaJWP2pkcF+bVfaJ2dS8xN6ba+XUxlZ6wKhbRyiRRTlelJzEgFs1es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=c8pjbcQj; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-89ed2ee36b0so4809285a.2
-        for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 10:19:39 -0700 (PDT)
+	s=arc-20240116; t=1761758450; c=relaxed/simple;
+	bh=U16m83/Gcf1XGqi+Rq2JmjjlOI++9MgmhO4/Qsx6nu8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tMdG6RMnUGVoxbMpYIAIrUZ7DQvaAQQWoZ2H8muxw6vbtn22d8A9MXBmVbUN5RR1b+ycXJWIyz870xGzERCLaXUTP1K0OwbZTtZNofPnnCpOS8VQ4JC7+zKL8wqOlKSOpwVYWBcf8udvxODCb84qp1QPu61Oxv1/CkijaEN2EVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2af2bBXx; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-6349af0e766so19655a12.3
+        for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 10:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1761758378; x=1762363178; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bSNd3wWUQQy2YBLmw8YBigmBKjZAe88REZ3E0Gos148=;
-        b=c8pjbcQjxYYDCLYOpUG3c+UetpD9UmMy/mJjP/03CJP8njtwrgRzXB/HgFJGl4wT/D
-         jjnTAwdncSiIYxVxS4NKNf+sRZICL1F7MbwO9oyo/kls3vL4lAflySgPYCDmDDVikQ7C
-         238vFOO19ldNgXjx63Z1OJyIfwcKIcR6FcKbfAw9VJWXC1VLhbtBWuzxZ45KnHuCyMB2
-         Y5HDUegpQuHOhxBr7jp8EuagqA/dgBhHQnkhVlBso6COfgKOzIPeMaa7LV34sV1yIPtO
-         t5MnVyO+aMaWUtG5jn4ztju/oLfFp2Jq5oFyC4LbeIX8Z7McFa70Eba5fPcikY0Lh359
-         kbgg==
+        d=google.com; s=20230601; t=1761758446; x=1762363246; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kM27j0DbRQduvVXbN4VD6lY5rFBEEc97ik8wcD70Nyk=;
+        b=2af2bBXxTesuMB97Icyu7D+QHDdl7BS8TGYNbJ11wmAAPbg2NwqLxuiihE8Loltl5S
+         OBOXipVR8rEnBmoaKxV6IvUIPSBhb/NUgCW4vcg9poq8/rKPtE3N76Ibkn9Bz1vjs8yc
+         Jgs4JJNPRHUyqJ+r8GyLExJjI6qPR1Cw7EPExjk7odKxrXp1QmQJbN9NkXV4zkN92Lrl
+         gW4Ir9AQ6jKFvMZKNOAO0Y+fsQ5nNF17BEi6MD81gfgnzIpJhb+El79LuuxcedqjpiX/
+         fMqVi5CVmxw6+MWZq4ROntHlefQgfUHnwmnc+k0I9kChN5+Y0okBHQ8KGPdOKiB06GUz
+         Uthg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761758378; x=1762363178;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bSNd3wWUQQy2YBLmw8YBigmBKjZAe88REZ3E0Gos148=;
-        b=SVQwBSWkIFlsonqeYlW3oZzpO6IsoXfo3QO8GpR6maZUwUEICHRMZf+DXMPVNlx+ts
-         LBZEb9SfZ73XDjwzHzqtCzwhfIi7ucykwAlttTyDHCrBMQWwvMzJHbJl6QnKDlJH3COE
-         Z4ySLqtJC4RfOsnqedhuvgLb7k3PW1Nn/hUGqplAxjG14M2FOM2s8vi6HckoQ5TrHFah
-         hC6WL5WJZHHoDKrLJKyzRZGegOo5e/TlNecqXS860Sm9MT19vleGU7pDF5+tSUQe0ZNX
-         bQK3porLz45OtnekRvwiXYOufXfwDVD12UrhCh13gRiUuHlkYHUMT9tyQ/88C2YCNknt
-         iBpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVqR+vhEGUGvMr+HdhrDVi3cyMj9j7Le5oOTiO2vctUvMhKJ69XxBjciLPYUzdCOFjcXSWwpwqbCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNoD0S77BbD0Kbw+YqvEWSmA5ekUWaqIDUrlDupTs2y0BI9jnH
-	eosfpNB/aGc6VI50vPrwwQ6zXKQUfGQO7UuB9l3NrLjKa/+jtZ1DVlK2o0jbyBfuugI=
-X-Gm-Gg: ASbGncuGWnUkrqBAIpKsLi1hI1qC5kVvhQUJcHrID5CLhvD2BQCxFTNA6+lJ2LBGoM5
-	+HtwGlVV4+MlNtPVD856+8tFtinWIIv7TuGUK86YGlHYpDJa3uYQgVGKXylgRavxepTcNg2EHiK
-	8ELzO529IbCGL+qanLTmdwoE7Ncnb0gV0GF5wDoYD1W7pZXj2s0+s3qIy3H+fs2o7Iq2OAMhenE
-	/DkTM8aeiUt6SsYwDMA5ePB8BcJvUJxl6tmt6S0xwUc9aXI8zxxPwJdhXBqhVwnRr+YYeF9kwsa
-	Mh2s9nKShg0ffS1tvOVpu5v6QgV2opYNUdqrI1N1QFefhumVmHWADJWFeUsFqLgs2jinXNCjUMA
-	TrDHoOVtRw7w64gG+/7ct+l922zLZDi6rCzSzDByilQgzEtX6QEdgi/THQAJN0nvtglCOUx4Yiy
-	D05uupJ7xTiceI0Qpm29BOdbJ+Siw0hIRnvgvI0qu2ZUOwmp2n7QyGomm5
-X-Google-Smtp-Source: AGHT+IEE6XGe0cEoiRKL4NLOLkjviUWVkKq1s/Sgdt6ffSSTAqyCXCbcME2UvP5qWSwdJ9Al+rYJjg==
-X-Received: by 2002:a05:620a:bcc:b0:8a4:6ac1:ae9 with SMTP id af79cd13be357-8a8e436110dmr482308385a.3.1761758378351;
-        Wed, 29 Oct 2025 10:19:38 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-89f247fe594sm1089845885a.16.2025.10.29.10.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Oct 2025 10:19:37 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vE9pg-000000050Jg-2H4f;
-	Wed, 29 Oct 2025 14:19:36 -0300
-Date: Wed, 29 Oct 2025 14:19:36 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dan.j.williams@intel.com, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH RESEND v2 12/12] coco: host: arm64: Register device
- public key with RMM
-Message-ID: <20251029171936.GR760669@ziepe.ca>
-References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
- <20251027095602.1154418-13-aneesh.kumar@kernel.org>
+        d=1e100.net; s=20230601; t=1761758446; x=1762363246;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kM27j0DbRQduvVXbN4VD6lY5rFBEEc97ik8wcD70Nyk=;
+        b=DcNSXFaPvOW/Nt3KjpGvWDqpC3Yjaiq/vxIKcNN15V9W1aVsc2jy1tsURtr7OZYeIv
+         zvMoT/eKZBUg5+QGvHZyAOfnwCqbORCvSPrFszaJu9YUWl4gA2fc4pdrZsSkKsL4525F
+         RltQmYb9d3OwCnPl8Uo0I7H+k6UAQkaSbBEBJh5YQfgyEkposSeOdFEjT66+Kt20FYWi
+         iAYEMlwvFSs3KO5y9/2E2b+y6aggjmHLRLxa++wyM6IR0SCj3zMbWMPltSJ5fS/l5Ymx
+         Upr/gCgpDf4by+WtaRdNGbOoQcsDMCwebbNcGvDrtemDnL/5HnoOTKkKn9OFPgi3fKJB
+         kRVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqvT5tm8TPMH04geybewF6OWPrX0tm0JULfsMpE8naniURwagvbyBgxLpbYIq3uTCYn+jW7HxnnQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgSZywoPtmCH8cNVnLb0OHw4xiacH8IUc5NK87bqndjMjpFeXC
+	VPD411XrpYnWJn0ZwgdffxYucHQ0LC4MvGCItyBsq7fTvQphGBAHpD3LEGJY1KcpB2wReSFOedP
+	wQ+1AOFVOffpadEtTnQ==
+X-Google-Smtp-Source: AGHT+IFeI/lWgOxI9EhJhsy7efb6ErsnV+B/7YSHBNsEFaFOX35xaF7//pCcavnrCDXi6DKof40usW+WW6BwBvo=
+X-Received: from edbes17.prod.google.com ([2002:a05:6402:3811:b0:640:3395:a2b5])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:34d1:b0:628:b619:49bd with SMTP id 4fb4d7f45d1cf-640443ae15fmr2816033a12.25.1761758446036;
+ Wed, 29 Oct 2025 10:20:46 -0700 (PDT)
+Date: Wed, 29 Oct 2025 17:20:45 +0000
+In-Reply-To: <DDUYV4ETTD50.3UCGLW45AK740@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251027095602.1154418-13-aneesh.kumar@kernel.org>
+Mime-Version: 1.0
+References: <20251020223516.241050-1-dakr@kernel.org> <20251020223516.241050-3-dakr@kernel.org>
+ <aQIPvaFJIXySV-Q5@google.com> <DDUWW90NZIDY.2TVA8S0RDSXZJ@kernel.org> <DDUYV4ETTD50.3UCGLW45AK740@kernel.org>
+Message-ID: <aQJM7XPZ-0wtDDCX@google.com>
+Subject: Re: [PATCH 2/8] rust: device: introduce Device::drvdata()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	pcolberg@redhat.com, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Oct 27, 2025 at 03:26:02PM +0530, Aneesh Kumar K.V (Arm) wrote:
+On Wed, Oct 29, 2025 at 06:02:45PM +0100, Danilo Krummrich wrote:
+> On Wed Oct 29, 2025 at 4:30 PM CET, Danilo Krummrich wrote:
+> > On Wed Oct 29, 2025 at 1:59 PM CET, Alice Ryhl wrote:
+> >> Are you going to open that docs PR to the Rust compiler about the size
+> >> of TypeID that we talked about? :)
+> >
+> > Yes, I will -- thanks for the reminder.
+> >
+> >> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> >>
+> >>> +// Compile-time checks.
+> >>> +const _: () = {
+> >>> +    // Assert that we can `read()` / `write()` a `TypeId` instance from / into `struct driver_type`.
+> >>> +    static_assert!(core::mem::size_of::<bindings::driver_type>() == core::mem::size_of::<TypeId>());
+> >>> +};
+> >>
+> >> You don't need the "const _: ()" part. See the definition of
+> >> static_assert! to see why.
+> >
+> > Indeed, good catch -- same for the suggestions below.
+> >
+> >> Also, I would not require equality. The Rust team did not think that it
+> >> would ever increase in size, but it may decrease.
+> >>
+> >>>  /// The core representation of a device in the kernel's driver model.
+> >>>  ///
+> >>>  /// This structure represents the Rust abstraction for a C `struct device`. A [`Device`] can either
+> >>> @@ -198,12 +204,29 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
+> >>>  }
+> >>>  
+> >>>  impl Device<CoreInternal> {
+> >>> +    fn type_id_store<T: 'static>(&self) {
+> >>
+> >> This name isn't great. How about "set_type_id()" instead?
+> 
+> Here's the diff, including a missing check in case someone tries to call
+> Device::drvdata() from probe().
+> 
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index 36c6eec0ceab..1a307be953c2 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -17,11 +17,8 @@
+> 
+>  pub mod property;
+> 
+> -// Compile-time checks.
+> -const _: () = {
+> -    // Assert that we can `read()` / `write()` a `TypeId` instance from / into `struct driver_type`.
+> -    static_assert!(core::mem::size_of::<bindings::driver_type>() == core::mem::size_of::<TypeId>());
+> -};
+> +// Assert that we can `read()` / `write()` a `TypeId` instance from / into `struct driver_type`.
+> +static_assert!(core::mem::size_of::<bindings::driver_type>() >= core::mem::size_of::<TypeId>());
+> 
+>  /// The core representation of a device in the kernel's driver model.
+>  ///
+> @@ -204,7 +201,7 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
+>  }
+> 
+>  impl Device<CoreInternal> {
+> -    fn type_id_store<T: 'static>(&self) {
+> +    fn set_type_id<T: 'static>(&self) {
+>          // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+>          let private = unsafe { (*self.as_raw()).p };
+> 
+> @@ -226,7 +223,7 @@ pub fn set_drvdata<T: 'static>(&self, data: impl PinInit<T, Error>) -> Result {
+> 
+>          // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+>          unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) };
+> -        self.type_id_store::<T>();
+> +        self.set_type_id::<T>();
+> 
+>          Ok(())
+>      }
+> @@ -242,6 +239,9 @@ pub unsafe fn drvdata_obtain<T: 'static>(&self) -> Pin<KBox<T>> {
+>          // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+>          let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> 
+> +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> +        unsafe { bindings::dev_set_drvdata(self.as_raw(), core::ptr::null_mut()) };
+> +
+>          // SAFETY:
+>          // - By the safety requirements of this function, `ptr` comes from a previous call to
+>          //   `into_foreign()`.
+> @@ -286,7 +286,7 @@ unsafe fn drvdata_unchecked<T: 'static>(&self) -> Pin<&T> {
+>          unsafe { Pin::<KBox<T>>::borrow(ptr.cast()) }
+>      }
+> 
+> -    fn type_id_match<T: 'static>(&self) -> Result {
+> +    fn match_type_id<T: 'static>(&self) -> Result {
+>          // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+>          let private = unsafe { (*self.as_raw()).p };
+> 
+> @@ -311,11 +311,16 @@ fn type_id_match<T: 'static>(&self) -> Result {
+>      /// Returns a pinned reference to the driver's private data or [`EINVAL`] if it doesn't match
+>      /// the asserted type `T`.
+>      pub fn drvdata<T: 'static>(&self) -> Result<Pin<&T>> {
+> -        self.type_id_match::<T>()?;
+> +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+> +        if unsafe { bindings::dev_get_drvdata(self.as_raw()) }.is_null() {
+> +            return Err(ENOENT);
+> +        }
+> +
+> +        self.match_type_id::<T>()?;
+> 
+>          // SAFETY:
+> -        // - The `Bound` device context guarantees that this is only ever call after a call
+> -        //   to `set_drvdata()` and before `drvdata_obtain()`.
+> +        // - The above check of `dev_get_drvdata()` guarantees that we are called after
+> +        //   `set_drvdata()` and before `drvdata_obtain()`.
+>          // - We've just checked that the type of the driver's private data is in fact `T`.
+>          Ok(unsafe { self.drvdata_unchecked() })
+>      }
+> 
 
-> +DEFINE_FREE(free_page, unsigned long, if (_T) free_page(_T))
-
-Please put these sorts of things in their proper headers
-
-Jason
+this looks ok to me.
 
