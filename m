@@ -1,83 +1,84 @@
-Return-Path: <linux-pci+bounces-39623-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39624-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA43CC197FA
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:54:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76B70C19799
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:49:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6CEE5647B4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:43:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6CF934F4A33
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A709A32A3E1;
-	Wed, 29 Oct 2025 09:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF79832ABF6;
+	Wed, 29 Oct 2025 09:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="THI4zuKe"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tlp0e8JM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1D329C5A;
-	Wed, 29 Oct 2025 09:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358FA32B9A2;
+	Wed, 29 Oct 2025 09:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761730927; cv=none; b=KsrHAzlpYNwIKWhKE1VugHjTj/4pUNq6RjF8/UNIAe5okyQPRTjO+IUaVDxZice4Y3ztEOXT7hpvoD0Muo4GknnzOCMe+jl0YhvYuCJgDcZfiKQWBfZO3ZMqIh5nyGc0Ff6d6Uw6EcAGG6oS7Bvajd9YnoL3QhfAP6TAInJHfRY=
+	t=1761730932; cv=none; b=YAM4WdPxUx+XwH37bJQ+FhaHy1fNXKe+ink1sjz6Q5hJE6+iXB8lvpzpVuq12a6Nxqyvjt0m+WFmkjo4ilQcav7fhH98A32FBUGqPrevT94hb+PK4zXuSbtX7gtB+fnJ+XJYDoby5L/dLyIEJjNeFYCcgaTIrlKfJyA3phzXIs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761730927; c=relaxed/simple;
-	bh=zebgDL1IcHI2ZG9RSDXvOGsOCN/mpPlOx9sHfMn/uaY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VO/bUNYu09pyu4B9rWVj5x9cJGhjAzm5LrW1njPDj9dlAlXVl30xFJSslHRWm4ZuwbwlgvaEcuWXxiTiKZ4tn7IeUhHeT8G9BQNfmAP9gRILtFDxgcmeNj0nLwhTC1TEWtPwNxgv75jTirc7rLBiVcqpL0bagE+VED9ORzd3a7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=THI4zuKe; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1761730932; c=relaxed/simple;
+	bh=dTkcEBl5gg6N/8Ckh8bxG5upJbEHSRnm22KBHzHO/xk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bGtFa7aWW9gKuqa1L66g/6HciwFQi1bUfvCjLzH8/6ERvf5lFrjEqlELW+eovO+wK2cI8QDJ4bNWZgtwMYIKHnXYGKW+rDV9NAX/mJUlYnAC2kiBGYdrozrJVY4jkNMAhC9l2hwpgbRyDVsIp/l5I/LFSOYfp+gZtoBTsu2OFBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tlp0e8JM; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmAlv025673;
-	Wed, 29 Oct 2025 09:41:51 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmRgo019719;
+	Wed, 29 Oct 2025 09:41:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=vFIxpZ2i6gYS+xu9QRifiMuBvZuK
-	+8hzNrZaMlIqadE=; b=THI4zuKet4OHuKxcOnnmfO2JTL9yJgb7Q7RILRGhITqs
-	YatXJcmlJGCBN0b4WQ0eiZaDbgqq2mNdIBUh9f2v0Oqe5He0Y6/0RuTmRHQLZqAP
-	feIHDaTPNkW/+XFOHbomOCUzY/bBSXkqjLMWYNuu13/9UPmvRvnnnd8cS1K6hjVF
-	ZlUczcF0f6u+g3t2rj4ZHh1y1ByoN4m57gHV+fOHzI+RAVl8UgsdtBYrGyj00Wi/
-	yap4voFW6jYZlpLEtBh9PTMdFNebGNxyx/63rjzmeiupzh1LNk0RtrtIMrr17Lqa
-	uW6MgTO5+TC48Y6h+s6eX7RoKVk5NISw6H4yDmY6qw==
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FANXQu
+	vOz1jl3EKXfz9ZRGyHUL7R3ni0avL0mssoaLE=; b=Tlp0e8JM+Bq5E2rIZ1AFAG
+	kaJUFS12+kUa6rTJ0E0j48urPnD5Kl2wxv/8jUsivoY++JNRKB3jshc45kXmdIfu
+	8tT+ynf5f18j82D388AeHtN4q/dzN7BntWPdePMnIm+A0Mp5nBRqNJ957C8Ob+o6
+	/GRzsODH61gsfi1tbo6vj5ZuhTzmmXzbyBOQN5MLXF/Z+7Cx03APk5M4JwG+KrXL
+	R1UjC4TekNTvSddaxa7L7koLCLbTqL+qJyxxFELCRgqCEh8jPOQIgblzCKXfp+s+
+	LV10xOfDYz78JWI5pgsmR+wS69SUBACTDQaDr3Q7J4ryTtn31OfWk3kmtrJYDxzA
+	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acjjfu-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdy2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9XvEI013505;
-	Wed, 29 Oct 2025 09:41:51 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acjjfp-1
+	Wed, 29 Oct 2025 09:41:53 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9fr4g025914;
+	Wed, 29 Oct 2025 09:41:53 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agjdxy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5LwF1023836;
-	Wed, 29 Oct 2025 09:41:49 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a33vx2mag-1
+	Wed, 29 Oct 2025 09:41:52 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5O9XS018748;
+	Wed, 29 Oct 2025 09:41:52 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33xwakq5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Oct 2025 09:41:49 +0000
+	Wed, 29 Oct 2025 09:41:52 +0000
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9fm4l51184096
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9fo6020382394
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Oct 2025 09:41:48 GMT
+	Wed, 29 Oct 2025 09:41:51 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 47E7458056;
+	by IMSVA (Postfix) with ESMTP id E4A1C58052;
+	Wed, 29 Oct 2025 09:41:50 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 810675805D;
 	Wed, 29 Oct 2025 09:41:48 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D706958052;
-	Wed, 29 Oct 2025 09:41:45 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Oct 2025 09:41:45 +0000 (GMT)
+	Wed, 29 Oct 2025 09:41:48 +0000 (GMT)
 From: Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH v5 0/2] PCI: Fix isolated function probing and enable ARI
- for s390
-Date: Wed, 29 Oct 2025 10:41:30 +0100
-Message-Id: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+Date: Wed, 29 Oct 2025 10:41:31 +0100
+Subject: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI and
+ SR-IOV
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,12 +87,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAErhAWkC/23P3WoDIRCG4VsJHtego7tqjnofJSy6js1As1u0k
- YSw914T+gPZHL4fzANzZQUzYWG7zZVlrFRonlp0Lxs2Hvz0jpxiawYCtDCguc80TPMQTmWIWHk
- HATyYpHTfs3b0mTHR+Q6+7VsfqHzN+XL3q7ytP5QSj1SVXHITUZre9MklfP2g6XTeUjhux/nIb
- lyFf8JJuyKgEVaNyTsnhYX0jFC/RCe0NCtCNSJ4bdtLznttnhH6j5AC1IrQXHCrLSBglCLER2J
- Zlm+AUd/jeQEAAA==
-X-Change-ID: 20240724-ari_no_bus_dev-52b2a27f3466
+Message-Id: <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+In-Reply-To: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
         Bibo Mao <maobibo@loongson.cn>,
@@ -108,110 +106,132 @@ Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Niklas Schnelle <schnelle@linux.ibm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2807;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3621;
  i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=zebgDL1IcHI2ZG9RSDXvOGsOCN/mpPlOx9sHfMn/uaY=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH4bb8NX1bEv59Pc98+ITz6tEI2/+LC1b4Lzv/K+Ft
- nyxG21COkpZGMS4GGTFFFkWdTn7rSuYYronqL8DZg4rE8gQBi5OAZjIymSG//5GlpP+Hq1p3bS0
- vEHtxOnFLUHT9xfFCC9bYWeX/nyy3T6GvyJ/6x6wKBXZvL/tbdQmV9o2M9BIYlK5Wq53qckPM+W
- VTAA=
+ bh=dTkcEBl5gg6N/8Ckh8bxG5upJbEHSRnm22KBHzHO/xk=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH0YYrMta8rLfMbLuU8n+soJNWznOra1sYA2yKN+fV
+ vGpou1pRykLgxgXg6yYIsuiLme/dQVTTPcE9XfAzGFlAhnCwMUpABOpqGdk6H792zzHZNMrwdn6
+ eXxd0wKqt6ad8nmw6dva6+kWJxO1XzMyPI8p14s/dqPK/O3S3hO1Z+aK21QJNLI6f7SXWVvPXmH
+ CCwA=
 X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
  fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=XbuEDY55 c=1 sm=1 tr=0 ts=6901e15f cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=K+gv3iWI c=1 sm=1 tr=0 ts=6901e161 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=hLx8FqHbWYRF7YI4eHsA:9 a=QEXdDO2ut3YA:10
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=gNLU74_c1yUKsMQYS-8A:9 a=QEXdDO2ut3YA:10
  a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: HoaeCE1EYQAsXwP-clUtGnvtFf97dVTr
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX6bZ6cnUNLXwN
- oz/iKWkrPvuOyhlslfB5RuakY31wGepm8wBSaBD7p5P7ONxWzAn1duKG75/FLKPPOEGWGXRnkfu
- yEq1xN8HYmi/1RxLXGP4gSa4dS6IVAoeWzY1dQ0raOcxb68q57zkPoIUivpzOrGIueWtmjuEWwo
- rLOJazQXo+i8+4+9BBmZ2Wr54AX2nBRRxNKRFX8u1YFf1MwmGYSdo5xfis7r2mQ+NJy/ugJf9Em
- QTy5RsWfG1rV/Gvt49ee3OdzgjISVRLEegPaA+Edcnf9yI+7iml+SR4ZloahsrYCcv0f7TGWH8n
- MTccRtLihu3peEUjYPwkCxOrJ8/M9Sza6MTqkSnJ63vyPBdyI6EK7k60bFHlxE0DU1ypwx7nfyQ
- Ucv7dzOGE/XI7Aw/pEc4ykwqs3mRwQ==
-X-Proofpoint-GUID: 1Xq8k7ywf5PUk7-A3R9oPQriASyrV26q
+X-Proofpoint-ORIG-GUID: 5aVzxZd_8NDjXLIEyfuoJhKssqGH9r6K
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX4XdmgPEPUuv1
+ 9qOt8fopHetzAqds2n2TJi4oFXjwSDe5AgwYs4JDDSkDh1QlV23wTinY/CMGsdh2pI7aCxXJeUF
+ 7hHHI2SBlpFuFWdiW5icXyFXRnwMcQaMeuAByACItiyu/zH9rj4/o6FGpy6MifnLj5Gh3enXRVa
+ 13Z7HRrJiaery6HZHkZVhqjr7PNTuLHSyyim1iHGewRuwMN3PkuNgSlLWRycXhD4g+yDCHZZZIN
+ 8we7NakoqUsXTMMA1luhfGGUsNvfkRcUTFC+l8gigXE9tkr0NoMtmVH8IQj6Y2DtJYG8bf9M+Fk
+ wTExRIyoQ8+jy54J3jOZ9buxSVenxeCFoKsnTWn8nPZRzg+NK6GH1Y3LqB2coNAvI30nKOMlkM7
+ v/KMrGXTKInRNbW+VMh+YBz/3LQDHg==
+X-Proofpoint-GUID: 0RaOFpgZogZcd0rF0tuH0nOjX9HR2ST2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-29_04,2025-10-22_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
- impostorscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 phishscore=0 spamscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
  definitions=main-2510280166
 
-Hi Bjorn,
+When the isolated PCI function probing mechanism is used in conjunction
+with ARI or SR-IOV it may not find all available PCI functions. In the
+case of ARI the problem is that next_ari_fn() always returns -ENODEV if
+dev is NULL and thus if fn 0 is missing the scan stops.
 
-This series originally aimed to correctly detect ARI as being used on
-s390. I had missed however that this, in a pretty obious manner, breaks
-the isolated function probing resulting devices not getting probed. For
-example if a partition/system only has a PF with devfn 1 passed-through.
-Additionally the fix may (TBD) help with an issue that LoongArch has
-encountered when using isolated function probing and tried to fix by
-limiting it to bus 0 ([0]). If it does fix this it may make sense to
-apply this separately from the second patch.
+For SR-IOV things are more complex. Here the problem is that the check
+for multifunction may fail. One example where this can occur is if the
+first passed-through function is a VF with devfn 8. Now in
+pci_scan_slot() this means it is fn 0 and thus multifunction doesn't get
+set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_MFD it
+remains unset and probing stops even if there is a devfn 9.
 
-Besides the effect on s390 the second patch should also ensure that VFs
-on a virtual bus created via virtfn_add_bus() correctly present ARI as
-enabled. Sadly I don't have access to any device to test this.
+Now at the moment both of these issues are hidden on s390. The first one
+because ARI is detected as disabled as struct pci_bus's self is NULL
+even though firmware does enable and use ARI. The second issue is hidden
+as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID for
+isolated VFs"). This is because VFs are either put on their own virtual
+bus if the parent PF is not passed-through to the same instance or VFs
+are hotplugged once SR-IOV is enabled on the parent PF and then
+pci_scan_single_device() is used.
 
-Speaking of testing. For the first patch I can reproduce the AER
-scenario described by only applying the second patch. The SR-IOV
-scenario I encountered in the past before commit 25f39d3dcb48 ("s390/pci:
-Ignore RID for isolated VFs") and tested the fix now with a partial
-revert hack of that commit.
+Still especially the first issue prevents correct detection of ARI and
+the second might be a problem for other users of isolated function
+probing. Fix both issues by keeping things as simple as possible. If
+isolated function probing is enabled simply scan every possible devfn.
 
-I also tested the series on x86_64 both on a Ryzen AI 340 based laptop
-and a Xeon Sapphire Rapids based system (including with SR-IOV on
-a ConnectX-6 DX).
-
-Thanks,
-Niklas
-
-[0] https://lore.kernel.org/linux-pci/20251014074100.2149737-1-chenhuacai@loongson.cn/
-
+Cc: stable@vger.kernel.org
+Fixes: 189c6c33ff42 ("PCI: Extend isolated function probing to s390")
+Link: https://lore.kernel.org/linux-pci/d3f11e8562f589ddb2c1c83e74161bd8948084c3.camel@linux.ibm.com/
 Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
-Changes in v5:
-- Rename variables to match "fn" abbreviation
-- Add Cc stable
-- Rebase on v6.18-rc3
-- Link to v4: https://lore.kernel.org/r/20251023-ari_no_bus_dev-v4-0-8482e2ed10bd@linux.ibm.com
+ drivers/pci/probe.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-Changes in v4:
-- Add fix of isolated function probing with ARI enabled and in certain
-  cases with SR-IOV devices.
-- Link to v3: https://lore.kernel.org/r/20250417-ari_no_bus_dev-v3-1-ba48f349aa47@linux.ibm.com
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0ce98e18b5a876afe72af35a9f4a44d598e8d500..41dd1a339a994956a6bc7e1fea0fe0d55452a963 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2808,16 +2808,19 @@ static int next_ari_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+ 	return next_fn;
+ }
+ 
+-static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
++static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn,
++		   bool isolated_fns)
+ {
+-	if (pci_ari_enabled(bus))
+-		return next_ari_fn(bus, dev, fn);
++	if (!isolated_fns) {
++		if (pci_ari_enabled(bus))
++			return next_ari_fn(bus, dev, fn);
+ 
++		/* only multifunction devices may have more functions */
++		if (dev && !dev->multifunction)
++			return -ENODEV;
++	}
+ 	if (fn >= 7)
+ 		return -ENODEV;
+-	/* only multifunction devices may have more functions */
+-	if (dev && !dev->multifunction)
+-		return -ENODEV;
+ 
+ 	return fn + 1;
+ }
+@@ -2859,10 +2862,12 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ {
+ 	struct pci_dev *dev;
+ 	int fn = 0, nr = 0;
++	bool isolated_fns;
+ 
+ 	if (only_one_child(bus) && (devfn > 0))
+ 		return 0; /* Already scanned the entire slot */
+ 
++	isolated_fns = hypervisor_isolated_pci_functions();
+ 	do {
+ 		dev = pci_scan_single_device(bus, devfn + fn);
+ 		if (dev) {
+@@ -2876,10 +2881,10 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ 			 * a hypervisor that passes through individual PCI
+ 			 * functions.
+ 			 */
+-			if (!hypervisor_isolated_pci_functions())
++			if (!isolated_fns)
+ 				break;
+ 		}
+-		fn = next_fn(bus, dev, fn);
++		fn = next_fn(bus, dev, fn, isolated_fns);
+ 	} while (fn >= 0);
+ 
+ 	/* Only one slot has PCIe device */
 
-Changes in v3:
-- Move setting of ari_enabled on s390 to bus creation and clear it in
-  pcibios_add_device() if the capability is not available.
-- Rebase on v6.15-rc2
-- Link to v2: https://lore.kernel.org/r/20240918-ari_no_bus_dev-v2-1-83cfa991082f@linux.ibm.com
-
-Changes in v2:
-- Rebased on v6.11
-- Link to v1: https://lore.kernel.org/r/20240730-ari_no_bus_dev-v1-1-7de17676f9fe@linux.ibm.com
-
----
-Niklas Schnelle (2):
-      PCI: Fix isolated PCI function probing with ARI and SR-IOV
-      PCI: s390: Handle ARI on bus without associated struct pci_dev
-
- arch/s390/pci/pci.c     |  7 +++++++
- arch/s390/pci/pci_bus.c | 10 ++++++++++
- drivers/pci/pci.c       |  4 ++--
- drivers/pci/probe.c     | 22 ++++++++++++++--------
- include/linux/pci.h     |  4 ++--
- 5 files changed, 35 insertions(+), 12 deletions(-)
----
-base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
-change-id: 20240724-ari_no_bus_dev-52b2a27f3466
-
-Best regards,
 -- 
-Niklas Schnelle
+2.48.1
 
 
