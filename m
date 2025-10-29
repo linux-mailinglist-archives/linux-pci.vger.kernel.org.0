@@ -1,149 +1,163 @@
-Return-Path: <linux-pci+bounces-39674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30973C1C12C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:29:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D242EC1C3D2
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:51:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CFD72340386
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 16:29:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 255964E86A1
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 16:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8692334C08;
-	Wed, 29 Oct 2025 16:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNQeEbed"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200142D027E;
+	Wed, 29 Oct 2025 16:31:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822141EB9E3;
-	Wed, 29 Oct 2025 16:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E1F2236F7
+	for <linux-pci@vger.kernel.org>; Wed, 29 Oct 2025 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761755196; cv=none; b=VOmr7exqd4PhNcqrqx5ynAS6p29NWmtfvOMYi0iOl2w2Oi8SXGpzJSM0LKkH13dM6WRjRjG+QAnpBzH+pWBqk5sPXHRjXcXFtOueVRICeDRnYkeA+msAvCXmjTcW0YnXKZbCQlqki8ZMO3p8XedxYdlpIiNoBp0oCtut7LLjEu4=
+	t=1761755475; cv=none; b=ry3AmxAyo6g3WThsHO5Pfrk2L2it3kMbeasBzT0cD3EyEZJrQd/flm5PZcQ+2RTcdN9tUaeyxCJrn51NM0lT4falm3t+zoZWRonk6HVt+qzsxbI7sIlbSouDEi4iNFGRT9m70beB7lsV9hY3GhIf2e2LQBs1YD03dzeMWVywemo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761755196; c=relaxed/simple;
-	bh=wELtySEeo9db8uxyOMgc0Q4pI1hleFdPzhwEcqjQAKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HWNUbsRIf6lPyx1nz+JeJRnM+iYgyF+zV6f54A7LoXVMFdeDHRzjiWVd7yE/gG9fMRqTRVXyX9sFKnvTGVpBrGn5btTVySirY/THiu1CNH9Tm0k9g2DewljpeMz+lzOM6Xcx7GSk1yKuzOlhMXJRSx8Iqrx/q3cJTDLABTST2XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNQeEbed; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E25C4CEF7;
-	Wed, 29 Oct 2025 16:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761755196;
-	bh=wELtySEeo9db8uxyOMgc0Q4pI1hleFdPzhwEcqjQAKg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nNQeEbedZ/rb0FOdu2gxMiMcN5/Wtl3se9dzfrlWWlr7PDAiLjb2iyDZBymDKGOQA
-	 /Bf6qayv2V/Sj96bvStIxqTGTPUVj2Kp7aCh6Qs1HTwpvzFoa528ELUCb/qt0cmcNN
-	 IpdEtVJ/T0FgNcRigZBQCIUCXxBTcsRY+uIX0g8k6QKhbUBhkb0NBeTTRkHkKwrayD
-	 CjRHu2pktrMdcxovl2bl3ggypdNDM6YbVie7pHYec2GzJNEUgJFuYT7PNt2xhPKJoB
-	 Q38K/NSAWrKl4y69k2tpUFPlImC4aZFIaX1o238spVuWeTYGTjAwrDTtn2y6+kEKsa
-	 dMwPWgg5bQObw==
-Date: Wed, 29 Oct 2025 11:26:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: "Devegowda, Chandrashekar" <chandrashekar.devegowda@intel.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"Srivatsa, Ravishankar" <ravishankar.srivatsa@intel.com>,
-	"Tumkur Narayan, Chethan" <chethan.tumkur.narayan@intel.com>,
-	"K, Kiran" <kiran.k@intel.com>,
-	"Ben Ami, Golan" <golan.ben.ami@intel.com>
-Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Support function level reset
-Message-ID: <20251029162634.GA1565820@bhelgaas>
+	s=arc-20240116; t=1761755475; c=relaxed/simple;
+	bh=GxlAG7pxgonSTqzQqs8W/DcFKII6LcS7gpmlXKgt/Zk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V1Kvpa/v/2btsf/0fJA659Bd7ntydHmIlsBgBN3TroZzCiE61Uk4hRBL2ZCppTibTzRqjWlTbjcqWNjt7g+cLcvuyws5Ix38nJ21BmYsE6aO5SeltnNCLOpUJ2dIa+HIS1/bvEZnt+kafKfWLpGxzf4Q3Y5Jt1UQlji8madGCqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4cxXmj1HGhzJ46BS;
+	Thu, 30 Oct 2025 00:31:01 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 39393140278;
+	Thu, 30 Oct 2025 00:31:11 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 29 Oct
+ 2025 16:31:10 +0000
+Date: Wed, 29 Oct 2025 16:31:09 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>, <aik@amd.com>,
+	<yilun.xu@linux.intel.com>, <aneesh.kumar@kernel.org>, <bhelgaas@google.com>,
+	<gregkh@linuxfoundation.org>, Lukas Wunner <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>
+Subject: Re: [PATCH v7 8/9] PCI/IDE: Report available IDE streams
+Message-ID: <20251029163109.000030ae@huawei.com>
+In-Reply-To: <20251024020418.1366664-9-dan.j.williams@intel.com>
+References: <20251024020418.1366664-1-dan.j.williams@intel.com>
+	<20251024020418.1366664-9-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44428a7c1e1d4565556335d6fb28919053da5d4d.camel@sipsolutions.net>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, Oct 29, 2025 at 11:38:31AM +0100, Johannes Berg wrote:
-> On Tue, 2025-10-28 at 16:06 -0500, Bjorn Helgaas wrote:
-> > > Obviously, we know the state of the device, but ... it _does_ require
-> > > PCI removal *and* rescan, because the device completely falls off the
-> > > bus and needs to be rediscovered. The drivers also fundamentally have to
-> > > be unbound from it, since all state of the device (including BAR setup)
-> > > is lost. I'm fairly certain that if you were to query even the device
-> > > IDs after the reset, you'd see 0xFFFFFFFF, but in truth I don't fully
-> > > understand how this works at the PCIe bus level.
-> > 
-> > It might be different for other buses, but the PCI core really doesn't
-> > do anything to the device during removal or rescan.  It does turn off
-> > power management interrupts from the device and the like, but I'm
-> > pretty sure it doesn't reset the device or do anything to make it
-> > start responding to PCI transactions again.
-> 
-> OK, fair. I have hit various weird issues with cached config space in
-> the past (such as [1], which we never resolved), so I guess I'm possibly
-> being ultra careful here in what I'm assuming or not.
-> 
-> [1] https://lore.kernel.org/linux-pci/20230605203519.bc4232207449.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid/
-> 
-> > Obviously remove and rescan reinitializes the *driver* because the PCI
-> > core calls the driver .remove() method, reads the Vendor and Device
-> > IDs, reads and if necessary programs the BARs, and calls the driver
-> > .probe() method.
-> 
-> Right. So I guess in effect you're saying that device_reprobe() ought to
-> be sufficient.
-> 
-> For WiFi, this code goes back to another issue we had (somewhat
-> intentionally) where under certain circumstances during initialisation
-> the firmware can do a product reset without the driver being aware, and
-> then the driver just has to detect it by PCIe transactions failing with
-> 0xFFFF'FFFF being read all the time. It's going to be hard to test this
-> case now, but we can still test the product reset.
+On Thu, 23 Oct 2025 19:04:17 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I think there are also some cases (maybe mostly embedded arm and
-arm64?) where PCIe failures cause synchronous aborts or SError 
-interrupts instead of just returning 0xFFFF'FFFF data.  Maybe nothing
-you can do about that other than adding delay after initialization or
-something.
-
-> For BT detecting the error and initiation product reset, it does seem
-> that doing (only) device_reprobe() for both functions is actually
-> sufficient. I believe the FLR code in BT is broken though, so we're
-> going to (re-)check all of this.
+> The limited number of link-encryption (IDE) streams that a given set of
+> host bridges supports is a platform specific detail. Provide
+> pci_ide_init_nr_streams() as a generic facility for either platform TSM
+> drivers, or PCI core native IDE, to report the number available streams.
+> After invoking pci_ide_init_nr_streams() an "available_secure_streams"
+> attribute appears in PCI host bridge sysfs to convey that count.
 > 
-> > I think it's really the PLDR that's making the difference here, not
-> > the remove and rescan.  I guess you could experimentally read some
-> > config registers after the PLDR and before the remove/rescan.
+> Introduce a device-type, @pci_host_bridge_type, now that both a release
+> method and sysfs attribute groups are being specified for all 'struct
+> pci_host_bridge' instances.
 > 
-> Yeah, just need to find real hardware with all the BIOS integration to
-> run it ;-) (Most of our testing uses VMs.)
-> 
-> > Since you know the other device is dead already, I don't have a
-> > problem with resetting the shared parts of the device, so you do need
-> > some way to poke the other driver to reinit.  But I think using the
-> > PCI core remove/rescan to do that makes it more complicated than
-> > necessary and distracts from what's really happening.
-> 
-> Fair. I think the easiest way to achieve this is still device_reprobe()
-> on the other device - eventually even if we tell the other driver then
-> it still will simply call device_reprobe() on itself, so there's no big
-> difference.
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Samuel Ortiz <sameo@rivosinc.com>
+> Cc: Alexey Kardashevskiy <aik@amd.com>
+> Cc: Xu Yilun <yilun.xu@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I hadn't heard of device_reprobe() until you pointed it out, but this
-usage doesn't really seem to fit the intended purpose since the
-probing critera haven't changed:
+New day, new comments.  Nothing huge, but I would avoid the defining
+an attr group to NULL as that feels like storing up bugs for the future.
 
- * This function detaches the attached driver (if any) for the given
- * device and restarts the driver probing process.  It is intended
- * to use if probing criteria changed during a devices lifetime and
- * driver attachment should change accordingly.
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index d3f16be40102..8b356dd09105 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -616,9 +616,12 @@ static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
+>  #ifdef CONFIG_PCI_IDE
+>  void pci_ide_init(struct pci_dev *dev);
+>  void pci_ide_init_host_bridge(struct pci_host_bridge *hb);
+> +extern const struct attribute_group pci_ide_attr_group;
+> +#define PCI_IDE_ATTR_GROUP (&pci_ide_attr_group)
+>  #else
+>  static inline void pci_ide_init(struct pci_dev *dev) { }
+>  static inline void pci_ide_init_host_bridge(struct pci_host_bridge *hb) { }
+> +#define PCI_IDE_ATTR_GROUP NULL
 
-But I definitely like it better than remove/rescan.  I suppose either
-way results in udev remove/add events that are really spurious.  And
-maybe PM artifacts like what you tripped over at [1] (although there
-may still be a harmful PCI core race there).
+This only works if we assume nothing else ever ends up in pci_host_bridge_groups.
+i.e. it's fragile - think of someone adding something after this.
+Whilst I don't like ifdefs inline, there isn't a better option for this case that
+I can think of.
 
-Bjorn
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_TSM
+> diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
+> index e638f9429bf9..85645b0a8620 100644
+> --- a/include/linux/pci-ide.h
+> +++ b/include/linux/pci-ide.h
+> @@ -63,6 +63,7 @@ struct pci_ide {
+>  	const char *name;
+>  };
+>  
+> +void pci_ide_set_nr_streams(struct pci_host_bridge *hb, u16 nr);
+>  struct pci_ide_partner *pci_ide_to_settings(struct pci_dev *pdev,
+>  					    struct pci_ide *ide);
+>  struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev);
+> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
+> index 302f7bae6c96..44f62da5e191 100644
+> --- a/drivers/pci/ide.c
+> +++ b/drivers/pci/ide.c
+
+> +/**
+> + * pci_ide_set_nr_streams() - sets size of the pool of IDE Stream resources
+> + * @hb: host bridge boundary for the stream pool
+> + * @nr: number of streams
+> + *
+> + * Platform PCI init and/or expert test module use only. Limit IDE
+> + * Stream establishment by setting the number of stream resources
+> + * available at the host bridge. Platform init code must set this before
+> + * the first pci_ide_stream_alloc() call if the platform has less than the
+> + * default of 256 streams per host-bridge.
+> + *
+> + * The "PCI_IDE" symbol namespace is required because this is typically
+> + * a detail that is settled in early PCI init. I.e. this export is not
+> + * for endpoint drivers.
+> + */
+> +void pci_ide_set_nr_streams(struct pci_host_bridge *hb, u16 nr)
+> +{
+> +	if (nr > 256)
+> +		nr = 256;
+
+
+hb->nr_ide_streams = min(nr, 256);
+maybe
+
+> +	hb->nr_ide_streams = nr;
+> +	WARN_ON_ONCE(!ida_is_empty(&hb->ide_stream_ida));
+> +	sysfs_update_group(&hb->dev.kobj, &pci_ide_attr_group);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(pci_ide_set_nr_streams, "PCI_IDE");
+
+
 
