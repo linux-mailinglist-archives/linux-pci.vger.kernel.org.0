@@ -1,226 +1,239 @@
-Return-Path: <linux-pci+bounces-39619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05763C191EA
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:42:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11D4FC192E3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:49:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B26721B230D3
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 08:37:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77E543BBA3C
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 08:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B79BE1B3923;
-	Wed, 29 Oct 2025 08:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F213254A7;
+	Wed, 29 Oct 2025 08:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AkF1K2GU"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wy5Qn+5q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazhn15011023.outbound.protection.outlook.com [52.102.137.23])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260D02FB990;
-	Wed, 29 Oct 2025 08:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.102.137.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761727008; cv=fail; b=UqfAZt9Pz1EuboAqlEx5DF1VUQ4sgmOTRKFw9Q/6D4lm2yV6tf22gmI0iZXhtAzS3eHV4WMrYaKnFYJoO66gCBHxewRh03muw+nP7QWGPItdRtEanFHIkQLIMRDmH+ZnnltnORFU5tgOImFt4VAyMrwkpbNHgslYzPaaq/Kb6GU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761727008; c=relaxed/simple;
-	bh=pwogg0fdLQ7NcaFbFQ03x1bG97cTftwukpWHlhNKWvY=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kpBZ2pPW4r9o7HPpa/cH8nc/fWe73etKhyP443zZ4t8jzodTuYkAEDT4w7G7qz8WBp2Tbb86gaIwYrIjGb3dOIafkdIi7rP1b4d/4lvG1EA6jEgtZDlkX2qzrwBe49Um7fRScMZjLG2GVsoBZKpcZOVCVUtFAbdPrRcKHwdbF+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AkF1K2GU; arc=fail smtp.client-ip=52.102.137.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qFaUE21tMNr4elRi53hke5fFMufxFBnpWYmtFUepdLX5HeTEfNwAWU9AOqIqSnp2RH0uZfX8l5i5H+Y2k5sdC1NMVFByU7qnPFm2WOpyw0TQfUELLHaXKZ4XriI6m5PJrXt+Lg97cftwMRUgQ13DkLT32fyvoRtpNK97PjLAsksa+XsWHfOgB7E7nF0e2CptxVEXmjF7QomA0Y9Y5lJfYVEJHUIlvz2bQmxnHtL/Ds/Cr52WFvjG49xV5WtBSeOK0NmK/0g9RtdmQkKRxAYA9CQAoxD9AuVSbi6pq5XG4CAJCffRg6wHQ1J5f0lwOGx7e5qkI+K++HpqIvXvutZrOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aCizaXr2hS8IKoBcmsgqzaZlNURiyqbvjq119FC4LzM=;
- b=fHMGHp86x3QmKY67EOdu9UslaPf4UtPDbzA2AGDwvWM3rIcGyaZn8z+nxE1oFnBXKjchZutmMlSlBBz6Ie0EWSRdRpfz6ZYZfwAZXcUxLwTG1YKHQEx2ASM2Sw4IyuBLTZzdPVxdvainQ0hI5mt9r6zuR5ahQFMLiJL/LXwNwT+85+c9OYij4bEuCB6UiPB/PY36zVdC58XN4/0tDmnsiQ4X5+1dW3EOAtiLAfh8jvEAI6JsL9pkGn/TfsaLv3+FlGrK+rRod19/SlzvOkznWdGkxMEKR6ZEnd8/a5fBJcukwAMz516ZE8CSY92+9B8JWUo6yRyogHtCW4VZq3on/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aCizaXr2hS8IKoBcmsgqzaZlNURiyqbvjq119FC4LzM=;
- b=AkF1K2GUBc+Nzz5pVYk9SmTN2B0F479c4e1j9cbn7J5X7dL2jTp3GNoONoTFP1ZCFYG6NX9FS1I8DzpUQFcPTDKsGYgKiXZmCYLvaK4gZ59RTFiXsa0ne/rBmMmFq/TX3uZi2qFuq2hE4BfuOdcQTyMD0GoKkB6OqnFSAeYzBRg=
-Received: from SJ0PR03CA0362.namprd03.prod.outlook.com (2603:10b6:a03:3a1::7)
- by LV3PR10MB8131.namprd10.prod.outlook.com (2603:10b6:408:27f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.18; Wed, 29 Oct
- 2025 08:36:42 +0000
-Received: from CO1PEPF000044F2.namprd05.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::7b) by SJ0PR03CA0362.outlook.office365.com
- (2603:10b6:a03:3a1::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.12 via Frontend Transport; Wed,
- 29 Oct 2025 08:36:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- CO1PEPF000044F2.mail.protection.outlook.com (10.167.241.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9275.10 via Frontend Transport; Wed, 29 Oct 2025 08:36:41 +0000
-Received: from DLEE206.ent.ti.com (157.170.170.90) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 29 Oct
- 2025 03:36:36 -0500
-Received: from DLEE200.ent.ti.com (157.170.170.75) by DLEE206.ent.ti.com
- (157.170.170.90) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 29 Oct
- 2025 03:36:36 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE200.ent.ti.com
- (157.170.170.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 29 Oct 2025 03:36:36 -0500
-Received: from [10.24.73.74] (uda0492258.dhcp.ti.com [10.24.73.74])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59T8aT7i3717378;
-	Wed, 29 Oct 2025 03:36:30 -0500
-Message-ID: <6acc369fa1c8b7d09d96d80143da6d265c30a1e0.camel@ti.com>
-Subject: Re: [PATCH v4 4/4] PCI: keystone: Add support to build as a
- loadable module
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: kernel test robot <lkp@intel.com>
-CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<quic_wenbyao@quicinc.com>, <inochiama@gmail.com>,
-	<mayank.rana@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
-	<shradha.t@samsung.com>, <cassel@kernel.org>, <kishon@kernel.org>,
-	<sergio.paracuellos@gmail.com>, <18255117159@163.com>,
-	<rongqianfeng@vivo.com>, <jirislaby@kernel.org>,
-	<oe-kbuild-all@lists.linux.dev>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<srk@ti.com>, <s-vadapalli@ti.com>
-Date: Wed, 29 Oct 2025 14:06:41 +0530
-In-Reply-To: <44b90ca1a10fe737cb20b76327846c5cda420924.camel@ti.com>
-References: <20251022095724.997218-5-s-vadapalli@ti.com>
-		 <202510281008.jw19XuyP-lkp@intel.com>
-	 <44b90ca1a10fe737cb20b76327846c5cda420924.camel@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41145322C60;
+	Wed, 29 Oct 2025 08:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761727043; cv=none; b=U0E9yH8dpQi7scko5M8FdIsTnQC/6vkOHuXhME0jsVIU8px/plsKLM5mmAbjnyQaTuhfbqY4h6gLH+SPij4hAu+ZAM7avBnfoPfSPQ87R77MpDRBLTU0DtOMbxxUQXiexih6ZaxHfP8w3ZGctV8WoMFn/dEDAEcZrHrndonHiC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761727043; c=relaxed/simple;
+	bh=oF6LKBB22AafYnCzTEBpOEfHh+noPK2wT2wVlzcUcA0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=njtid7Ia5yO315h7ddZWMnovRZM4zrLRqpJOnqXCMWv6DU4kRF+smNimhi3oLNoxP8PPw02uMJtoHC4DPmgYgocfnoFGjBMePRe2lVql9Q5wAg1zueHG2I2HBzrOqvkN4gLP4mQBb7XK5YKKOEm1DlO3m25zV2QsUWM4HIqldRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wy5Qn+5q; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmHUD008744;
+	Wed, 29 Oct 2025 08:37:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ecvfUZ
+	Bn2euew0euzB3a2mA2MwBou4gYy6KEjz6gV8U=; b=Wy5Qn+5qyzQBxp3FnQ4ohr
+	OL0vYOh6V3hGGcVCHieTGFemcdm3Wy4/wBQTwDFBtkpMz/0oftD9l0uVdOMgjom6
+	7x3tHVDvaUjicNlSkct209g5e8UBVmEaJg4KO5x+yPM/QfhcD6IPr9jn0iOc4Gig
+	p6Y+UNgHcJk1BdUeba+NSUycpH5PjqMF9nwwsu2AWjNqjwfq1yUcQdX422YIRs1B
+	L9OuVbkBF4O0wywebL3oP+WD9KJa1xYqeWgD3QrgHozfVTtsuoVr74KehuYt+gAm
+	1HvItniwoMR2ozRS1JJII8jsTUDjCJl+8uhIo7JLe2HisRKiAKGCQAEh7vK3yJ9g
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34afaa2j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 08:37:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5Gbbk027519;
+	Wed, 29 Oct 2025 08:37:14 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33w2jd5w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 08:37:14 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T8bC0f29360760
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Oct 2025 08:37:13 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACE2158063;
+	Wed, 29 Oct 2025 08:37:12 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B32558043;
+	Wed, 29 Oct 2025 08:37:10 +0000 (GMT)
+Received: from [9.111.56.216] (unknown [9.111.56.216])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Oct 2025 08:37:09 +0000 (GMT)
+Message-ID: <2d1ea24848d4c389525df63a76fe873723bad900.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/2] PCI: Allow per function PCI slots
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Bibo Mao <maobibo@loongson.cn>, Farhan Ali <alifm@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: helgaas@kernel.org, mjrosato@linux.ibm.com, bblock@linux.ibm.com,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
+        stable@vger.kernel.org, Tianrui Zhao <zhaotianrui@loongson.cn>,
+        Huacai Chen
+	 <chenhuacai@kernel.org>
+Date: Wed, 29 Oct 2025 09:37:09 +0100
+In-Reply-To: <aa0214e8-31be-2b21-c8af-b7831efd60a7@loongson.cn>
+References: <20251022212411.1989-1-alifm@linux.ibm.com>
+	 <20251022212411.1989-2-alifm@linux.ibm.com>
+	 <e5a5d582a75c030a63c364d553c13baf373663ac.camel@linux.ibm.com>
+	 <aa0214e8-31be-2b21-c8af-b7831efd60a7@loongson.cn>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=mQINBGHm3M8BEAC+MIQkfoPIAKdjjk84OSQ8erd2OICj98+GdhMQpIjHXn/RJdCZLa58k
+ /ay5x0xIHkWzx1JJOm4Lki7WEzRbYDexQEJP0xUia0U+4Yg7PJL4Dg/W4Ho28dRBROoJjgJSLSHwc
+ 3/1pjpNlSaX/qg3ZM8+/EiSGc7uEPklLYu3gRGxcWV/944HdUyLcnjrZwCn2+gg9ncVJjsimS0ro/
+ 2wU2RPE4ju6NMBn5Go26sAj1owdYQQv9t0d71CmZS9Bh+2+cLjC7HvyTHKFxVGOznUL+j1a45VrVS
+ XQ+nhTVjvgvXR84z10bOvLiwxJZ/00pwNi7uCdSYnZFLQ4S/JGMs4lhOiCGJhJ/9FR7JVw/1t1G9a
+ UlqVp23AXwzbcoV2fxyE/CsVpHcyOWGDahGLcH7QeitN6cjltf9ymw2spBzpRnfFn80nVxgSYVG1d
+ w75ksBAuQ/3e+oTQk4GAa2ShoNVsvR9GYn7rnsDN5pVILDhdPO3J2PGIXa5ipQnvwb3EHvPXyzakY
+ tK50fBUPKk3XnkRwRYEbbPEB7YT+ccF/HioCryqDPWUivXF8qf6Jw5T1mhwukUV1i+QyJzJxGPh19
+ /N2/GK7/yS5wrt0Lwxzevc5g+jX8RyjzywOZGHTVu9KIQiG8Pqx33UxZvykjaqTMjo7kaAdGEkrHZ
+ dVHqoPZwhCsgQARAQABtChOaWtsYXMgU2NobmVsbGUgPHNjaG5lbGxlQGxpbnV4LmlibS5jb20+iQ
+ JXBBMBCABBAhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAhkBFiEEnbAAstJ1IDCl9y3cr+Q/Fej
+ CYJAFAmesutgFCQenEYkACgkQr+Q/FejCYJDIzA//W5h3t+anRaztihE8ID1c6ifS7lNUtXr0wEKx
+ Qm6EpDQKqFNP+n3R4A5w4gFqKv2JpYQ6UJAAlaXIRTeT/9XdqxQlHlA20QWI7yrJmoYaF74ZI9s/C
+ 8aAxEzQZ64NjHrmrZ/N9q8JCTlyhk5ZEV1Py12I2UH7moLFgBFZsPlPWAjK2NO/ns5UJREAJ04pR9
+ XQFSBm55gsqkPp028cdoFUD+IajGtW7jMIsx/AZfYMZAd30LfmSIpaPAi9EzgxWz5habO1ZM2++9e
+ W6tSJ7KHO0ZkWkwLKicrqpPvA928eNPxYtjkLB2XipdVltw5ydH9SLq0Oftsc4+wDR8TqhmaUi8qD
+ Fa2I/0NGwIF8hjwSZXtgJQqOTdQA5/6voIPheQIi0NBfUr0MwboUIVZp7Nm3w0QF9SSyTISrYJH6X
+ qLp17NwnGQ9KJSlDYCMCBJ+JGVmlcMqzosnLli6JszAcRmZ1+sd/f/k47Fxy1i6o14z9Aexhq/UgI
+ 5InZ4NUYhf5pWflV41KNupkS281NhBEpChoukw25iZk0AsrukpJ74x69MJQQO+/7PpMXFkt0Pexds
+ XQrtsXYxLDQk8mgjlgsvWl0xlk7k7rddN1+O/alcv0yBOdvlruirtnxDhbjBqYNl8PCbfVwJZnyQ4
+ SAX2S9XiGeNtWfZ5s2qGReyAcd2nBna0KU5pa2xhcyBTY2huZWxsZSA8bmlrbGFzLnNjaG5lbGxlQ
+ GlibS5jb20+iQJUBBMBCAA+AhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEnbAAstJ1IDCl9y
+ 3cr+Q/FejCYJAFAmesuuEFCQenEYkACgkQr+Q/FejCYJCosA/9GCtbN8lLQkW71n/CHR58BAA5ct1
+ KRYiZNPnNNAiAzjvSb0ezuRVt9H0bk/tnj6pPj0zdyU2bUj9Ok3lgocWhsF2WieWbG4dox5/L1K28
+ qRf3p+vdPfu7fKkA1yLE5GXffYG3OJnqR7OZmxTnoutj81u/tXO95JBuCSJn5oc5xMQvUUFzLQSbh
+ prIWxcnzQa8AHJ+7nAbSiIft/+64EyEhFqncksmzI5jiJ5edABiriV7bcNkK2d8KviUPWKQzVlQ3p
+ LjRJcJJHUAFzsZlrsgsXyZLztAM7HpIA44yo+AVVmcOlmgPMUy+A9n+0GTAf9W3y36JYjTS+ZcfHU
+ KP+y1TRGRzPrFgDKWXtsl1N7sR4tRXrEuNhbsCJJMvcFgHsfni/f4pilabXO1c5Pf8fiXndCz04V8
+ ngKuz0aG4EdLQGwZ2MFnZdyf3QbG3vjvx7XDlrdzH0wUgExhd2fHQ2EegnNS4gNHjq82uLPU0hfcr
+ obuI1D74nV0BPDtr7PKd2ryb3JgjUHKRKwok6IvlF2ZHMMXDxYoEvWlDpM1Y7g81NcKoY0BQ3ClXi
+ a7vCaqAAuyD0zeFVGcWkfvxYKGqpj8qaI/mA8G5iRMTWUUUROy7rKJp/y2ioINrCul4NUJUujfx4k
+ 7wFU11/YNAzRhQG4MwoO5e+VY66XnAd+XPyBIlvy0K05pa2xhcyBTY2huZWxsZSA8bmlrbGFzLnNj
+ aG5lbGxlQGdtYWlsLmNvbT6JAlQEEwEIAD4CGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSds
+ ACy0nUgMKX3Ldyv5D8V6MJgkAUCZ6y64QUJB6cRiQAKCRCv5D8V6MJgkEr/D/9iaYSYYwlmTJELv+
+ +EjsIxXtneKYpjXEgNnPwpKEXNIpuU/9dcVDcJ10MfvWBPi3sFbIzO9ETIRyZSgrjQxCGSIhlbom4
+ D8jVzTA698tl9id0FJKAi6T0AnBF7CxyqofPUzAEMSj9ynEJI/Qu8pHWkVp97FdJcbsho6HNMthBl
+ +Qgj9l7/Gm1UW3ZPvGYgU75uB/mkaYtEv0vYrSZ+7fC2Sr/O5SM2SrNk+uInnkMBahVzCHcoAI+6O
+ Enbag+hHIeFbqVuUJquziiB/J4Z2yT/3Ps/xrWAvDvDgdAEr7Kn697LLMRWBhGbdsxdHZ4ReAhc8M
+ 8DOcSWX7UwjzUYq7pFFil1KPhIkHctpHj2Wvdnt+u1F9fN4e3C6lckUGfTVd7faZ2uDoCCkJAgpWR
+ 10V1Q1Cgl09VVaoi6LcGFPnLZfmPrGYiDhM4gyDDQJvTmkB+eMEH8u8V1X30nCFP2dVvOpevmV5Uk
+ onTsTwIuiAkoTNW4+lRCFfJskuTOQqz1F8xVae8KaLrUt2524anQ9x0fauJkl3XdsVcNt2wYTAQ/V
+ nKUNgSuQozzfXLf+cOEbV+FBso/1qtXNdmAuHe76ptwjEfBhfg8L+9gMUthoCR94V0y2+GEzR5nlD
+ 5kfu8ivV/gZvij+Xq3KijIxnOF6pd0QzliKadaFNgGw4FoUeZo0rQhTmlrbGFzIFNjaG5lbGxlIDx
+ uaWtzQGtlcm5lbC5vcmc+iQJUBBMBCAA+AhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEnbAA
+ stJ1IDCl9y3cr+Q/FejCYJAFAmesuuEFCQenEYkACgkQr+Q/FejCYJC6yxAAiQQ5NAbWYKpkxxjP/
+ AajXheMUW8EtK7EMJEKxyemj40laEs0wz9owu8ZDfQl4SPqjjtcRzUW6vE6JvfEiyCLd8gUFXIDMS
+ l2hzuNot3sEMlER9kyVIvemtV9r8Sw1NHvvCjxOMReBmrtg9ooeboFL6rUqbXHW+yb4GK+1z7dy+Q
+ 9DMlkOmwHFDzqvsP7eGJN0xD8MGJmf0L5LkR9LBc+jR78L+2ZpKA6P4jL53rL8zO2mtNQkoUO+4J6
+ 0YTknHtZrqX3SitKEmXE2Is0Efz8JaDRW41M43cE9b+VJnNXYCKFzjiqt/rnqrhLIYuoWCNzSJ49W
+ vt4hxfqh/v2OUcQCIzuzcvHvASmt049ZyGmLvEz/+7vF/Y2080nOuzE2lcxXF1Qr0gAuI+wGoN4gG
+ lSQz9pBrxISX9jQyt3ztXHmH7EHr1B5oPus3l/zkc2Ajf5bQ0SE7XMlo7Pl0Xa1mi6BX6I98CuvPK
+ SA1sQPmo+1dQYCWmdQ+OIovHP9Nx8NP1RB2eELP5MoEW9eBXoiVQTsS6g6OD3rH7xIRxRmuu42Z5e
+ 0EtzF51BjzRPWrKSq/mXIbl5nVW/wD+nJ7U7elW9BoJQVky03G0DhEF6fMJs08DGG3XoKw/CpGtMe
+ 2V1z/FRotP5Fkf5VD3IQGtkxSnO/awtxjlhytigylgrZ4wDpSE=
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F2:EE_|LV3PR10MB8131:EE_
-X-MS-Office365-Filtering-Correlation-Id: 529864eb-8b26-4da1-398d-08de16c6491e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|34020700016|36860700013|376014|1800799024|12100799066;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N1ZFemt0aWJ0dkd3MXNWdVNid2xicnhDNE5OeDNXTVBrdS9QVTlmdjV4ejZS?=
- =?utf-8?B?cTRHSHYyZ3FvRE4rcmR5Q05WRE1yZ0dNenIxOFFncmNoRVhpVWVnZGQyaXo2?=
- =?utf-8?B?SjFOb1VCa29Hc05iRXE4VS9kc3V1TFhoQ25xckFDWEZxemJtOWxhalBHMmxy?=
- =?utf-8?B?SElkLzZhWXB2WnpxRlVnOXpTM0NuemRURTV6dEJ0ZlF2Q3lnazFYMEJRKzV0?=
- =?utf-8?B?dHliU0U4enlHdGs4eUwxeEp4MDlrcEVvOGNPVUtVK1BpMUZRUDU1V1JzZW52?=
- =?utf-8?B?aUROUEQrU0pjeTdsQkx6cnpXT3l3MFJrQ0NUQmdFZnpxaGlqU2NyZkdKV2x2?=
- =?utf-8?B?UTczK0tUWUxHazJSa2liZm1hVEhOMWVjRm9oRm9JWFBXa09PMTNmcE1vQkNY?=
- =?utf-8?B?eUU5MGJMOFBQWERad1BBSVdWR1dxeHA5SXRFK0VVUXJkanpGcDdYdEYvYUtK?=
- =?utf-8?B?SU5OV3VrVGtwbnRMNE9EMXVxbzZ4OTJCK0VsSGJIdFVrTWFmRzJEalRoOGJI?=
- =?utf-8?B?K1Y4QlF1UzBSM1IvRC9ZanFMbjdNVmdNcE5sOE1KRVB4ZThDb1UrMW9sL3hW?=
- =?utf-8?B?TlQ1ZlAzdjZKQlNyK1h5bHF1RjNlU0h4bmtZTG5VdWxoZXEvQmpOemhiS3ds?=
- =?utf-8?B?WUV1dTcrS3dDWWlWMHFnYkJZWXBVRUR3bTVxbU5nMytTYmxZVnZmVEhueTgv?=
- =?utf-8?B?Y3gvbXNYYjUrZzN5UFhJVEJzSGYyMTJ0MG1LVmdQTW5YOFVlZ1BiTDc1K3F6?=
- =?utf-8?B?N3pEbFVHZEFhTk02TEZqQkh5QkxqdThnbDNnUmRubklQdWpWQXJqNUtlZ200?=
- =?utf-8?B?VTNraldwWFMyZ1pDbGNWSFhPMG5sTEJFYVVucXFSNExrbmgwTlRMWmpvWGN6?=
- =?utf-8?B?cXBQMldCRzUyNHNuYkpmSkF1TjF3UFJVYm10a0taOHhpcWlwcGhVZVlYdzBQ?=
- =?utf-8?B?NEdoWGdVUUQxYzhxLzJxaVFONGViT1VBK243M2p1YmFWQ3pmWG41UExYYytk?=
- =?utf-8?B?N29EdUdPUVEwQnRjVGIzZ1NTT1c0cWdQVlVXTDQvUWNCRGptWU1iL2xOOGN0?=
- =?utf-8?B?aU5hZWtUS1A1VXp4NU1oczUxOVZncGpMejY0RDNWVGFHSU9saTh6ZkhLSXNx?=
- =?utf-8?B?NVZSbXBuZ0xhYVZlLzNnOUVoSWE2THBueGxLZmFyOFNZa1hEbEhQc3hRMzIr?=
- =?utf-8?B?TGhNUTM2dnVDUGpJbHU1ODJVZjdHVEJZZ21ZeWdHWDhnM0FyY1FuTkpWWUVP?=
- =?utf-8?B?R093WHJRRFdBU2dORE0zTkVCQXRiT0NQL01Ld1FwNkhKVnpOUWRwUlBnSVJC?=
- =?utf-8?B?RzZsWnNqL0I1Rkl2bXYwb005MUtvMWdTYlZTMitML3dQUjVRZmxrMTVSOHdX?=
- =?utf-8?B?alJQZHdTc3V4R0RMbWFwUGtUQWgzQ2VSdjFZTFBGbW15TGxQV3B0ZmRseDFq?=
- =?utf-8?B?K2luV1ZHdWN0T1NBbmlyb2VwODgvL1V1RVNGVVRoRW1SRUhmZTUvbm1IVk4v?=
- =?utf-8?B?bFR3TmVQTE9aSkMyMXlwdnd1UWdpTnR5bDczcDFYWTlCU0syN3JhUmF0ZS9X?=
- =?utf-8?B?YnNsdFFzQVZIYkZZMFo5ckQ3UkhZWENjOWhzMW5NVUlOcDBkYWNVZEZLSmhQ?=
- =?utf-8?B?TjA5endGQWNScnB5eWQwb1d4S2ZidVNWKzE2eEtwS2RqNGRySit2OVFUcGVC?=
- =?utf-8?B?bXlJdlRDQ21WL095ejhQZVhTZ1RwcW9hRUc2VnlzRmR4MVBMSnZyMUZ5em1W?=
- =?utf-8?B?bFZCM3NnMm40OWRiQ3lRL25vRXVzT2ZhTGVRd1R4K2dLTTYyTm0yZTdxdUFt?=
- =?utf-8?B?aVJZSElkSWlsM1V1QmFUVVdLd3hQc2N2NEs1ZTBxSnBvRVhFZ1cwSExld1NI?=
- =?utf-8?B?VUkyR1B1enNlZy9HTGVZUHoxU3BXUHZwSXJYbGNnV29hK3huMXZET2phM2Ev?=
- =?utf-8?B?ZlhqYkRNeGpwQmFCcEZ1NXV1RXdHZU1zNFJJT1UvMS8zSjdQa05Jems5QmE2?=
- =?utf-8?Q?o3zgyuHN4a415iXTdpF6C14gDpwoSg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(34020700016)(36860700013)(376014)(1800799024)(12100799066);DIR:OUT;SFP:1501;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2025 08:36:41.8228
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 529864eb-8b26-4da1-398d-08de16c6491e
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8131
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7A0yER5TuzicOzdnIqMHgbCjTPW8nSiw
+X-Authority-Analysis: v=2.4 cv=WPhyn3sR c=1 sm=1 tr=0 ts=6901d23b cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=a3Gw60pZ56dmYUsj_9gA:9 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX96rUOvt/9qIL
+ Ic5TsUZZIsg2+IHvZLDQHjOcwHlgVmYUBWVpjgeqyFgMamGCHT0wMHhsB+T9mlDzg/wW38XrvTl
+ NWrULgTMgKI5iIzSh7lRzyNYm0u+M5FvPenkfmF65XpTsG/5ce0DJ3dtznDT+aHHJKO58ZXWICk
+ nhBVxy11hUsCCkp9WmtmRp0HrmGdbSk/Lwdd2q934aObgJVXe+x5ORLtD/ByZ8IJCDyvFnWHaIk
+ +BUPL2ULhSia32c1bRG2VXfSj0KvJC00CGyIUOsfCvXnFhctYHNkkMXyrORmK8r7i/lseCYXWrX
+ KU3HEehASX/agRnYlmZ8iUPq9iDCZLt2Nte0WBjJQg4aI71EPjR9AGRZUS3qS8KR0pdFA6csw4d
+ odjGLO71YrUjekf5d0vdlOW5KLabug==
+X-Proofpoint-ORIG-GUID: 7A0yER5TuzicOzdnIqMHgbCjTPW8nSiw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-29_03,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2510280166
 
-On Tue, 2025-10-28 at 10:24 +0530, Siddharth Vadapalli wrote:
-> On Tue, 2025-10-28 at 11:06 +0800, kernel test robot wrote:
-> > Hi Siddharth,
-> >=20
-> > kernel test robot noticed the following build errors:
-> >=20
-> > [auto build test ERROR on pci/next]
-> > [also build test ERROR on pci/for-linus linus/master v6.18-rc3 next-202=
-51027]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >=20
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Siddharth-Vadapa=
-lli/PCI-Export-pci_get_host_bridge_device-for-use-by-pci-keystone/20251022-=
-180213
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git nex=
-t
-> > patch link:    https://lore.kernel.org/r/20251022095724.997218-5-s-vada=
-palli%40ti.com
-> > patch subject: [PATCH v4 4/4] PCI: keystone: Add support to build as a =
-loadable module
-> > config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20251=
-028/202510281008.jw19XuyP-lkp@intel.com/config)
-> > compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
-hive/20251028/202510281008.jw19XuyP-lkp@intel.com/reproduce)
-> >=20
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202510281008.jw19XuyP-l=
-kp@intel.com/
-> >=20
-> > All errors (new ones prefixed by >>, old ones prefixed by <<):
-> >=20
-> > WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm/probes/kprob=
-es/test-kprobes.o
-> > > > ERROR: modpost: "hook_fault_code" [drivers/pci/controller/dwc/pci-k=
-eystone.ko] undefined!
-> > ERROR: modpost: "__ffsdi2" [drivers/spi/spi-amlogic-spifc-a4.ko] undefi=
-ned!
+On Tue, 2025-10-28 at 09:11 +0800, Bibo Mao wrote:
 >=20
-> I had built the driver for ARM64 platforms but missed building it for ARM=
-32
-> platforms. I will fix the build error for ARM32 platforms and will post t=
-he
-> v5 series.
+> On 2025/10/27 =E4=B8=8B=E5=8D=888:29, Niklas Schnelle wrote:
+> > On Wed, 2025-10-22 at 14:24 -0700, Farhan Ali wrote:
+> > > On s390 systems, which use a machine level hypervisor, PCI devices ar=
+e
+> > > always accessed through a form of PCI pass-through which fundamentall=
+y
+> > > operates on a per PCI function granularity. This is also reflected in=
+ the
+> > > s390 PCI hotplug driver which creates hotplug slots for individual PC=
+I
+> > > functions. Its reset_slot() function, which is a wrapper for
+> > > zpci_hot_reset_device(), thus also resets individual functions.
+> > >=20
+> > > Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot ob=
+ject
+> > > to multifunction devices. This approach worked fine on s390 systems t=
+hat
+> > > only exposed virtual functions as individual PCI domains to the opera=
+ting
+> > > system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunction=
+s")
+> > > s390 supports exposing the topology of multifunction PCI devices by
+> > > grouping them in a shared PCI domain. When attempting to reset a func=
+tion
+> > > through the hotplug driver, the shared slot assignment causes the wro=
+ng
+> > > function to be reset instead of the intended one. It also leaks memor=
+y as
+> > > we do create a pci_slot object for the function, but don't correctly =
+free
+> > > it in pci_slot_release().
+> > >=20
+> > > Add a flag for struct pci_slot to allow per function PCI slots for
+> > > functions managed through a hypervisor, which exposes individual PCI
+> > > functions while retaining the topology.
+> >=20
+> > I wonder if LoongArch which now also does per PCI function pass-through
+> > might need this too. Adding their KVM maintainers.
+>=20
+> Hi Niklas,
+>=20
+> Thanks for your reminder. Yes, LoongArch do per PCI function=20
+> pass-throught. In theory, function pci_slot_enabled_per_func() should=20
+> return true on LoongArch also. Only that now IOMMU driver is not merged,=
+=20
+> there is no way to test it, however we will write down this as a note=20
+> inside about this issue and verify it once IOMMU driver is merged.
+>=20
+>=20
+> Regards
+> Bibo Mao
+>=20
 
-I have posted the v5 series addressing the above at:
-https://lore.kernel.org/r/20251029080547.1253757-1-s-vadapalli@ti.com/
+Hi Bibo,
 
-Regards,
-Siddharth.
+Is your ability to test if it works for you also hindered for my other
+patch touching pci_scan_slot()? It sounded like Huacai was looking into
+testing that.
+
+Thanks,
+Niklas
 
