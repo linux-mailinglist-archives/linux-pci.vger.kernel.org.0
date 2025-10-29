@@ -1,240 +1,217 @@
-Return-Path: <linux-pci+bounces-39622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CFA0C194D5
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:09:34 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA43CC197FA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 10:54:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8050C5A08D1
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 08:39:47 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6CEE5647B4
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 09:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D0431CA54;
-	Wed, 29 Oct 2025 08:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A709A32A3E1;
+	Wed, 29 Oct 2025 09:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DeRdNmx6"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="THI4zuKe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010038.outbound.protection.outlook.com [52.101.201.38])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A47C3101A2;
-	Wed, 29 Oct 2025 08:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761727135; cv=fail; b=AItDaQ1QOCjtHgjb9Qy32HKXRea++vSDsfM9/kWK9iEaAJjOiTfvAK1xk4UhThCr2lA6AC9ff0cmEjDFJ+q4lJoGFI41yLZ777J6AqUNKULnCJl0exNv9HcoT7/lu/SZ5YDjxp2gVD1lJmKYxxMXUW4R7u9rKYcBb6yFgIuCpBk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761727135; c=relaxed/simple;
-	bh=GhVKN93JXa4TjOxPx+SL7syJSXu2Ujb5wX5x8TafGD8=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NUSR+fgY9NAajh9rmfZhkRzG5n1QMtm6ueddvqgci5sh5bQSj/A+GWGLIBA8wLtrqM6mDjtSVsGKw7YNQ/LOmfmrsppBUsGUNjTGirViJH1J815drJ/UAIRQVVXQ0h00nV1+E0iSdpOHJACzC8imxsXm8nLFh4WGcxsOeDg7C1U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DeRdNmx6; arc=fail smtp.client-ip=52.101.201.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t/dIhHnI7C+KU1SeR5TtxxKeslfNPgRD66jSy1YgVGu3IS+T0nHXdJCtkWQkb1OZGoqtY6rgjC2+DmM0vSsmQG/tc/L6BQulkfMkrZ9qqKr5ic1uQUK0Lg+I4CAd8IcwLbJgKZ2ZbjEfqZHWBn01h0Hi86uN7NLR8v9fs3KQFvqkskzx+6UJuqTwp8inmkr/fcAjsyDHs/IjzGnB+9MXBNU30PwClL6AvlXj3MdOXA9+ja/nfaGYWeKP413cXKk7YQrDRkdcGaJtpF1ny9BqeKwPGKyNQlVgr4Artj0Wr9tIJOy1DjUCIvUgBhqpUenN3PA4G3gqRE94PkTip/2lzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aHcDHxpwSSGFkiWXGDipKp5DsicJvlZpSrL4tKHFmKE=;
- b=awr9aOmlPpJIUQv+fT6A/36LlGzpQPBDTlQvKH4fIKFajIaQNHGmQwLQ1Od8xMZzk2NzYdwBDWuXyR/ovIcbohqB1gXc15epl9IBnD4U22oYu+AnWXvN9IW7V+jOrGFoy33fIUAxO+CDL6O9JAH3Q/bDG4fpZpkr24u4j3cOOwtfr7EdO2/XrrHsJDPzZHOes3pUIeUmT2N4RL0SFZMiV6J0Fs7yZjcL9ys409/6VbWLKyYmDgpP9hGZKuXjBrtlQDaKx9ppSsuo3d1j52KiHg9VYGdCTyelA3OfYx2hZtxVTfG0IS0Z5xJCx8WjkGUdBz8/Q0UxAgeM0o/FE2ipVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aHcDHxpwSSGFkiWXGDipKp5DsicJvlZpSrL4tKHFmKE=;
- b=DeRdNmx6CFNWAtUfHo4mydhrCYK7+KmO6UZ9iE5FYqL8HLtSQN9PR7XLgbyBosD6uI1j/pemNdvkX23U7rrB1+YcBMs8pJaLZ68Uu7xp0MjEqSTaGuH4B4uo6sEhA912IQ8VC7/mo7uHRATgUdZYtvmUy5OQhLRD2IXkFwoIU2A=
-Received: from DS7P220CA0071.NAMP220.PROD.OUTLOOK.COM (2603:10b6:8:224::18) by
- MW4PR10MB6419.namprd10.prod.outlook.com (2603:10b6:303:20f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.12; Wed, 29 Oct
- 2025 08:38:49 +0000
-Received: from DS3PEPF000099D9.namprd04.prod.outlook.com
- (2603:10b6:8:224:cafe::52) by DS7P220CA0071.outlook.office365.com
- (2603:10b6:8:224::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.12 via Frontend Transport; Wed,
- 29 Oct 2025 08:38:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
- DS3PEPF000099D9.mail.protection.outlook.com (10.167.17.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9275.10 via Frontend Transport; Wed, 29 Oct 2025 08:38:48 +0000
-Received: from DLEE203.ent.ti.com (157.170.170.78) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 29 Oct
- 2025 03:38:46 -0500
-Received: from DLEE204.ent.ti.com (157.170.170.84) by DLEE203.ent.ti.com
- (157.170.170.78) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 29 Oct
- 2025 03:38:45 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE204.ent.ti.com
- (157.170.170.84) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 29 Oct 2025 03:38:45 -0500
-Received: from [10.24.73.74] (uda0492258.dhcp.ti.com [10.24.73.74])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59T8cf2O3719548;
-	Wed, 29 Oct 2025 03:38:42 -0500
-Message-ID: <37f286dd4ca58fba146b8a76738085c523d4bd97.camel@ti.com>
-Subject: Re: [PATCH] PCI: cadence: Enable support for applying lane
- equalization presets
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: kernel test robot <lkp@intel.com>, <lpieralisi@kernel.org>,
-	<kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
-	<bhelgaas@google.com>, <unicorn_wang@outlook.com>, <kishon@kernel.org>,
-	<18255117159@163.com>, <oe-kbuild-all@lists.linux.dev>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <srk@ti.com>, <s-vadapalli@ti.com>
-Date: Wed, 29 Oct 2025 14:08:52 +0530
-In-Reply-To: <eed524b60b43bf22e88c40dd770a6b0bc38c44b9.camel@ti.com>
-References: <20251028114746.GA1505797@bhelgaas>
-	 <eed524b60b43bf22e88c40dd770a6b0bc38c44b9.camel@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1D329C5A;
+	Wed, 29 Oct 2025 09:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761730927; cv=none; b=KsrHAzlpYNwIKWhKE1VugHjTj/4pUNq6RjF8/UNIAe5okyQPRTjO+IUaVDxZice4Y3ztEOXT7hpvoD0Muo4GknnzOCMe+jl0YhvYuCJgDcZfiKQWBfZO3ZMqIh5nyGc0Ff6d6Uw6EcAGG6oS7Bvajd9YnoL3QhfAP6TAInJHfRY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761730927; c=relaxed/simple;
+	bh=zebgDL1IcHI2ZG9RSDXvOGsOCN/mpPlOx9sHfMn/uaY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VO/bUNYu09pyu4B9rWVj5x9cJGhjAzm5LrW1njPDj9dlAlXVl30xFJSslHRWm4ZuwbwlgvaEcuWXxiTiKZ4tn7IeUhHeT8G9BQNfmAP9gRILtFDxgcmeNj0nLwhTC1TEWtPwNxgv75jTirc7rLBiVcqpL0bagE+VED9ORzd3a7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=THI4zuKe; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJmAlv025673;
+	Wed, 29 Oct 2025 09:41:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=vFIxpZ2i6gYS+xu9QRifiMuBvZuK
+	+8hzNrZaMlIqadE=; b=THI4zuKet4OHuKxcOnnmfO2JTL9yJgb7Q7RILRGhITqs
+	YatXJcmlJGCBN0b4WQ0eiZaDbgqq2mNdIBUh9f2v0Oqe5He0Y6/0RuTmRHQLZqAP
+	feIHDaTPNkW/+XFOHbomOCUzY/bBSXkqjLMWYNuu13/9UPmvRvnnnd8cS1K6hjVF
+	ZlUczcF0f6u+g3t2rj4ZHh1y1ByoN4m57gHV+fOHzI+RAVl8UgsdtBYrGyj00Wi/
+	yap4voFW6jYZlpLEtBh9PTMdFNebGNxyx/63rjzmeiupzh1LNk0RtrtIMrr17Lqa
+	uW6MgTO5+TC48Y6h+s6eX7RoKVk5NISw6H4yDmY6qw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acjjfu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T9XvEI013505;
+	Wed, 29 Oct 2025 09:41:51 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acjjfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 09:41:51 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T5LwF1023836;
+	Wed, 29 Oct 2025 09:41:49 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a33vx2mag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 09:41:49 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T9fm4l51184096
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Oct 2025 09:41:48 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 47E7458056;
+	Wed, 29 Oct 2025 09:41:48 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D706958052;
+	Wed, 29 Oct 2025 09:41:45 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Oct 2025 09:41:45 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH v5 0/2] PCI: Fix isolated function probing and enable ARI
+ for s390
+Date: Wed, 29 Oct 2025 10:41:30 +0100
+Message-Id: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D9:EE_|MW4PR10MB6419:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5103924-ea65-4acd-25a8-08de16c69494
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|32650700017|34020700016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aC9WVk1QKy94UUhjUTdkMjN1UHF5bE82ZURNTmFyS21KWFhQY0kvemZraGZB?=
- =?utf-8?B?V1ZIWnpzYytlVVJwZEcyRDRTMXdVdWNMalI1dHNOSkxsaTRraVVlaVZpeTBQ?=
- =?utf-8?B?TFE2V2dGWkhFUE9DSlFuQVFOSzcxSjlmUmVMTlNuSHZGaXc1dGQxVmtFR3d1?=
- =?utf-8?B?cGs4ejYrb2t0QTIxRlRrdVRJdWpFMUt5UjdXOU5tckVDTTIyRkVBRXYwZmND?=
- =?utf-8?B?VTRMVWludzBGV28wM0xYS2RDeGJoOGs1WHE4WDV4L3p1Y1loYVRwR0UvL2VM?=
- =?utf-8?B?MCt6K3htNjEwaHArWFpTL09ab0VocWVra1JzZGtkNmlYS1d2RE1JTDM5MDNk?=
- =?utf-8?B?NG1mUlZiUXlZTHdlcnNJeWRObjcxeTZVdHZ6ZGZOWnRKb09sUjNaaWIwaC9P?=
- =?utf-8?B?NHVNL0RYMXVHK1RFbXFkUXhMb2pjZlZVK0VjYVppL1NpSlc5bWVvczc3ZVR6?=
- =?utf-8?B?NmVadEgyR1VJVWdLSnNxblhmSkxKSWVqWUdZTUxUWExtZ2dBeEs3ay9PUDdO?=
- =?utf-8?B?K2JFNGp1dHNaTzA2NUxkYUJhWjRYWlNUR0pCWGpQTzhUS0ZaL2pNeGhwaXNV?=
- =?utf-8?B?TUtQUy81ckVPaXh2dDJvbTNlckx6WEoramNtcmthejNDWlZrbksxN1JXVHo5?=
- =?utf-8?B?UGU0OXdqUXg2N2tXUkkyZUN1NmZPYXpOaU5maXRiTWZaeEUrNXNWN3pMTk0y?=
- =?utf-8?B?aThmSStoeWkwTHAxcGlnK0ZIVVhCUGhXWVpnNE5VRmVsYUJOR3p0WmtYTE82?=
- =?utf-8?B?YVQwbE5ONG44RkNZemsrTkJnZXpmc3VOaFBCTndtRmNEajQwMXZxUFdzQVNq?=
- =?utf-8?B?cTZFUGNSdGlrYU9wQXgzSExmOXA3cGM2cDZ5cE9xOWZtbE1RczVLbzhiT0Vy?=
- =?utf-8?B?SmJuaHpYZDRDaXVrVzArWmZGVWdxYTY4YlFFQVVHdEozZ3Jnd0NMczNrRDNv?=
- =?utf-8?B?bGpHSmo0aDk5S0k3Uzk4QVc4NE1vd0djY0EvVWlNZG5IMDdqMWp2ZU5EbWNP?=
- =?utf-8?B?c3dhNUlXcjV0ek5mVnp4WVN3bFNVamVaQWhqVzJLcE1OMDJqWmdwSEFNY2pN?=
- =?utf-8?B?ek5GenM5Yk14VUV4d0lwWGU0WUxjOHVpM051UEtZajBWUnVJd3dxUWFjZURK?=
- =?utf-8?B?RkFIcmw5RXRwbW5iK0ZDZzFzdGQ0TU1lc2ZJditCT011TU9TNFdiem84dGYx?=
- =?utf-8?B?b292WXhCQkgyUHVybVpGZWZvL2xvMkx1by8rNm9pWU0wNTlKZ003YXJLc3p3?=
- =?utf-8?B?a29jbHpTODdBSUtVRXJIOUJXU1d1WmZ6c2RoNVFicVYwWDJvaHVZU1QyUDN4?=
- =?utf-8?B?SlZCdWVSZm81Y1pJNUxlS1dVS2tJVUFrOCt6VEt5WWdES1JkRUc5S0NURTY4?=
- =?utf-8?B?T1BCM0ZEOC9pMUxwVmpGS1pQajVpck1iU1hLdTdSYSs2MEU0cHNPTjdmMGtI?=
- =?utf-8?B?VEpRc2ZhTXZuSjlHMW5MVEFNQmYvZ2xodTJzV01kU3lBUGw3S3dldkNqajVQ?=
- =?utf-8?B?OGgybnlaazY4TjZHWXg3Z0FWeTdjb1NWKzFxT0FpbEVyaUJCZTdpWDlIdUpD?=
- =?utf-8?B?ZCthSWNIcFpkZlMvT0JYQ3RadlM2bXRublRyNG92T1hPOXY0ME5mN0hCemRV?=
- =?utf-8?B?MkNTM1RoL1JUL21ieWpLUWxvNFM2SW9VSDZ1UkhuWHhJUnNtMnQ3MXNPZGVD?=
- =?utf-8?B?Y0Q5L3FBL1d6QWVvMG1FY2NuZ3oreGNTRDUxdlcreHc0WURMTjFnM0hqcmo3?=
- =?utf-8?B?ZW9VblhHUzBOdmoreWVwU1lWTWRuWWpVVEhUWkJmM2paazcxZnZnS21kQlJz?=
- =?utf-8?B?c0ZJK3Z1WkszbkR2MjhvN2ZrUE5WZDdvR0pTcEljdkdUSWZuN0wrbzVnejlR?=
- =?utf-8?B?UGNSdERoa09EeXR0QzJ6a2xlWWhpVXF0QTNWODBLeFJidU9RN2NFL0lVK2Q3?=
- =?utf-8?B?OCt4K1pNOGZ1ckRXdElQWGw3WXAxT1pnSUZueTZsbXhNMnlYT1k1bXVwODJB?=
- =?utf-8?Q?qhh+i9uWR4vXKONvs8xvuD9zNsHZXg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(32650700017)(34020700016);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2025 08:38:48.4346
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5103924-ea65-4acd-25a8-08de16c69494
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D9.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6419
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAErhAWkC/23P3WoDIRCG4VsJHtego7tqjnofJSy6js1As1u0k
+ YSw914T+gPZHL4fzANzZQUzYWG7zZVlrFRonlp0Lxs2Hvz0jpxiawYCtDCguc80TPMQTmWIWHk
+ HATyYpHTfs3b0mTHR+Q6+7VsfqHzN+XL3q7ytP5QSj1SVXHITUZre9MklfP2g6XTeUjhux/nIb
+ lyFf8JJuyKgEVaNyTsnhYX0jFC/RCe0NCtCNSJ4bdtLznttnhH6j5AC1IrQXHCrLSBglCLER2J
+ Zlm+AUd/jeQEAAA==
+X-Change-ID: 20240724-ari_no_bus_dev-52b2a27f3466
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, Huacai Chen <chenhuacai@kernel.org>,
+        Bibo Mao <maobibo@loongson.cn>,
+        linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Tianrui Zhao <zhaotianrui@loongson.cn>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2807;
+ i=schnelle@linux.ibm.com; h=from:subject:message-id;
+ bh=zebgDL1IcHI2ZG9RSDXvOGsOCN/mpPlOx9sHfMn/uaY=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDIZH4bb8NX1bEv59Pc98+ITz6tEI2/+LC1b4Lzv/K+Ft
+ nyxG21COkpZGMS4GGTFFFkWdTn7rSuYYronqL8DZg4rE8gQBi5OAZjIymSG//5GlpP+Hq1p3bS0
+ vEHtxOnFLUHT9xfFCC9bYWeX/nyy3T6GvyJ/6x6wKBXZvL/tbdQmV9o2M9BIYlK5Wq53qckPM+W
+ VTAA=
+X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
+ fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=XbuEDY55 c=1 sm=1 tr=0 ts=6901e15f cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=hLx8FqHbWYRF7YI4eHsA:9 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: HoaeCE1EYQAsXwP-clUtGnvtFf97dVTr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX6bZ6cnUNLXwN
+ oz/iKWkrPvuOyhlslfB5RuakY31wGepm8wBSaBD7p5P7ONxWzAn1duKG75/FLKPPOEGWGXRnkfu
+ yEq1xN8HYmi/1RxLXGP4gSa4dS6IVAoeWzY1dQ0raOcxb68q57zkPoIUivpzOrGIueWtmjuEWwo
+ rLOJazQXo+i8+4+9BBmZ2Wr54AX2nBRRxNKRFX8u1YFf1MwmGYSdo5xfis7r2mQ+NJy/ugJf9Em
+ QTy5RsWfG1rV/Gvt49ee3OdzgjISVRLEegPaA+Edcnf9yI+7iml+SR4ZloahsrYCcv0f7TGWH8n
+ MTccRtLihu3peEUjYPwkCxOrJ8/M9Sza6MTqkSnJ63vyPBdyI6EK7k60bFHlxE0DU1ypwx7nfyQ
+ Ucv7dzOGE/XI7Aw/pEc4ykwqs3mRwQ==
+X-Proofpoint-GUID: 1Xq8k7ywf5PUk7-A3R9oPQriASyrV26q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-29_04,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2510280166
 
-On Tue, 2025-10-28 at 18:13 +0530, Siddharth Vadapalli wrote:
-> On Tue, 2025-10-28 at 06:47 -0500, Bjorn Helgaas wrote:
->=20
-> Hello Bjorn,
->=20
-> > On Tue, Oct 28, 2025 at 10:56:33AM +0530, Siddharth Vadapalli wrote:
-> > > On Tue, 2025-10-28 at 13:16 +0800, kernel test robot wrote:
-> > > > Hi Siddharth,
-> > > >=20
-> > > > kernel test robot noticed the following build warnings:
-> > > >=20
-> > > > [auto build test WARNING on pci/next]
-> > > > [also build test WARNING on pci/for-linus linus/master v6.18-rc3 ne=
-xt-20251027]
-> > > > [If your patch is applied to the wrong git tree, kindly drop us a n=
-ote.
-> > > > And when submitting patch, we suggest to use '--base' as documented=
- in
-> > > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > > >=20
-> > > > url:    https://github.com/intel-lab-lkp/linux/commits/Siddharth-Va=
-dapalli/PCI-cadence-Enable-support-for-applying-lane-equalization-presets/2=
-0251027-213657
-> > > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git=
- next
-> > > > patch link:    https://lore.kernel.org/r/20251027133013.2589119-1-s=
--vadapalli%40ti.com
-> > > > patch subject: [PATCH] PCI: cadence: Enable support for applying la=
-ne equalization presets
-> > > > config: x86_64-buildonly-randconfig-002-20251028 (https://download.=
-01.org/0day-ci/archive/20251028/202510281329.racaZPSI-lkp@intel.com/config)
-> > > > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> > > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci=
-/archive/20251028/202510281329.racaZPSI-lkp@intel.com/reproduce)
-> > > >=20
-> > > > If you fix the issue in a separate patch/commit (i.e. not just a ne=
-w version of
-> > > > the same patch/commit), kindly add following tags
-> > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > > Closes: https://lore.kernel.org/oe-kbuild-all/202510281329.racaZP=
-SI-lkp@intel.com/
-> > > >=20
-> > > > All warnings (new ones prefixed by >>):
-> > > >=20
-> > > >    drivers/pci/controller/cadence/pcie-cadence-host.c: In function =
-'cdns_pcie_setup_lane_equalization_presets':
-> > > > > > drivers/pci/controller/cadence/pcie-cadence-host.c:205:20: warn=
-ing: this statement may fall through [-Wimplicit-fallthrough=3D]
-> > > >      205 |                 if (presets_ngts[0] !=3D PCI_EQ_RESV) {
-> > > >          |                    ^
-> > > >    drivers/pci/controller/cadence/pcie-cadence-host.c:225:9: note: =
-here
-> > > >      225 |         case PCIE_SPEED_8_0GT:
-> > > >          |         ^~~~
-> > >=20
-> > > Fallthrough is intentional. The lane equalization presets are program=
-med
-> > > starting from the Max Supported Link speed and we fallthrough until w=
-e get
-> > > to 8.0 GT/s.
-> >=20
-> > It's poorly documented, but use "fallthrough" here:
-> >=20
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/deprecated.rst?id=3Dv6.17#n200
->=20
-> Thank you for pointing me to the documentation. I will update the patch
-> accordingly and post the v2 patch.
+Hi Bjorn,
 
-I have posted the v2 patch at:
-https://lore.kernel.org/r/20251028134601.3688030-1-s-vadapalli@ti.com/
+This series originally aimed to correctly detect ARI as being used on
+s390. I had missed however that this, in a pretty obious manner, breaks
+the isolated function probing resulting devices not getting probed. For
+example if a partition/system only has a PF with devfn 1 passed-through.
+Additionally the fix may (TBD) help with an issue that LoongArch has
+encountered when using isolated function probing and tried to fix by
+limiting it to bus 0 ([0]). If it does fix this it may make sense to
+apply this separately from the second patch.
 
-Regards,
-Siddharth.
+Besides the effect on s390 the second patch should also ensure that VFs
+on a virtual bus created via virtfn_add_bus() correctly present ARI as
+enabled. Sadly I don't have access to any device to test this.
+
+Speaking of testing. For the first patch I can reproduce the AER
+scenario described by only applying the second patch. The SR-IOV
+scenario I encountered in the past before commit 25f39d3dcb48 ("s390/pci:
+Ignore RID for isolated VFs") and tested the fix now with a partial
+revert hack of that commit.
+
+I also tested the series on x86_64 both on a Ryzen AI 340 based laptop
+and a Xeon Sapphire Rapids based system (including with SR-IOV on
+a ConnectX-6 DX).
+
+Thanks,
+Niklas
+
+[0] https://lore.kernel.org/linux-pci/20251014074100.2149737-1-chenhuacai@loongson.cn/
+
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+Changes in v5:
+- Rename variables to match "fn" abbreviation
+- Add Cc stable
+- Rebase on v6.18-rc3
+- Link to v4: https://lore.kernel.org/r/20251023-ari_no_bus_dev-v4-0-8482e2ed10bd@linux.ibm.com
+
+Changes in v4:
+- Add fix of isolated function probing with ARI enabled and in certain
+  cases with SR-IOV devices.
+- Link to v3: https://lore.kernel.org/r/20250417-ari_no_bus_dev-v3-1-ba48f349aa47@linux.ibm.com
+
+Changes in v3:
+- Move setting of ari_enabled on s390 to bus creation and clear it in
+  pcibios_add_device() if the capability is not available.
+- Rebase on v6.15-rc2
+- Link to v2: https://lore.kernel.org/r/20240918-ari_no_bus_dev-v2-1-83cfa991082f@linux.ibm.com
+
+Changes in v2:
+- Rebased on v6.11
+- Link to v1: https://lore.kernel.org/r/20240730-ari_no_bus_dev-v1-1-7de17676f9fe@linux.ibm.com
+
+---
+Niklas Schnelle (2):
+      PCI: Fix isolated PCI function probing with ARI and SR-IOV
+      PCI: s390: Handle ARI on bus without associated struct pci_dev
+
+ arch/s390/pci/pci.c     |  7 +++++++
+ arch/s390/pci/pci_bus.c | 10 ++++++++++
+ drivers/pci/pci.c       |  4 ++--
+ drivers/pci/probe.c     | 22 ++++++++++++++--------
+ include/linux/pci.h     |  4 ++--
+ 5 files changed, 35 insertions(+), 12 deletions(-)
+---
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+change-id: 20240724-ari_no_bus_dev-52b2a27f3466
+
+Best regards,
+-- 
+Niklas Schnelle
+
 
