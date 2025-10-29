@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-39707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39709-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ABE3C1CA5D
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FF69C1CA60
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 19:02:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EBF184E8B2F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:57:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B39EA4E97AB
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Oct 2025 17:57:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61313559F4;
-	Wed, 29 Oct 2025 17:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76ECB345753;
+	Wed, 29 Oct 2025 17:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nLgG/oWa"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AAAiGt2T"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A89351FB5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AF8355804;
 	Wed, 29 Oct 2025 17:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761760631; cv=none; b=CQb1BoLhf8ii5Zu2AkFy5rSv2vPkUJMoexJ6ruqhwonKv/SnwMbk+Wxo6llGHWZ8JUSkDSbMS9WTSla4nSfKgEJW3tr7EN4zpApvJt/k17ww6aTmf8lAt3sdHJHubPzV1Dttzxqk1hgFUcsOrpATptIXMUrKlt3eqqRfMdA7ThM=
+	t=1761760632; cv=none; b=Ysoa+OOKZPb4tsGN+3knBCbBn8aZ78C2JaFie5/BiHTChqqNa/VPqJadXZVsRYfc1R8A51UduNnLjDM0cCIu3KvwFEjjAoRMb7CyMLm0rNb86qjCPlEbn/n/P4p1PLLnNwQprWy63AHSrA0hQ+N/x/meF8s2IKHDGgmj4F2z8+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761760631; c=relaxed/simple;
-	bh=P089A2E+Yx4OzfNu1PedtURbJw0D3+0WliIVTgNh9oM=;
+	s=arc-20240116; t=1761760632; c=relaxed/simple;
+	bh=jdsx/CJd6cB/dQ3LDiSdUyMOVx1R7DaDMSkGxWQlgT0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eReVkJflMI3vmna9YrD4NK3OjFyOx2ZpLk9cYmHNuZ7bD0gCEOTiBZANIlAdmjtNeD5+E5q0UmV9zMpd20vbPG+1GBE19oba0tgKpPIvTCya49osnGBYQVCaHa3+Ot8KCaJCqnjx+r3MX/EnDSD1ETPvuyhyupT0TmnorFPk8oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nLgG/oWa; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=VAnlKNqhkKzzgtJ34hQwXs2GidP7svFhu2Y9+IIQe+jYvE2NA7izA9DyaVh3+NxVIk8q+6TQEPm2CvR3MtOmdwJHB6CCeGcTYSNstX2eEIHCpN31EsEX1f6+ZAeEIY5vZYkLQMunMzi9h6a1hWGaufDdgR6WHwBD7axIdYqaxZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AAAiGt2T; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1761760622;
-	bh=P089A2E+Yx4OzfNu1PedtURbJw0D3+0WliIVTgNh9oM=;
+	s=mail; t=1761760623;
+	bh=jdsx/CJd6cB/dQ3LDiSdUyMOVx1R7DaDMSkGxWQlgT0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nLgG/oWa8uLS1lDc6moMj4xLneOSVBAen/YSCWNrNd3s0lSOyZd0RRnq9y/3CgHpI
-	 jt+9y4KUL3RZBAFAhk5bWFP2R9c8rqBuPM0ONmq24+6N8z6Z+v3tPoKf1VmCFlQEkB
-	 Nf1D1rbU+WjSHYBgYR5QCQxqXWXNy7X8wRxMZ56KQzYNRg+6Tfok6lEBKz/2oEiXll
-	 33RjIeisikpwDq7UO/GHHJ4VSzlmD3cQp99kySNJjUdTpLqm3oBgPcaRSHk8DrbqQe
-	 vUtk+tfffBl87053UkcF/k7v17JincHeHhC4kgrkUTsMLSw6ZLZiHBYVUT5mEKOytL
-	 p0KvpWnwOhhyA==
+	b=AAAiGt2TOZOsYoO2hCWH3sctzCNpiRqTFL/UWWsPyc2xVIF+cA+1nYautXz4jsMSY
+	 LGfKNeEqWzeII/byWTOE5mmrYvDHkJMaQfBp0p5SdI4jGbSm42EeF5Zg3r1iKiaAJ/
+	 pFUCh5McUr9GAvsP5dENNj6NIqjB90vbbV/JFnUy5BDKQkDlP79A4ZaSRcWTM7TTpG
+	 xUQouO/tEMPAVC5M3QNuVRmgFA+Fe56WgglqCRWeqtw6gwfw+rbanrM6fs2pn/EdeB
+	 Is3HI4FFbeT/LktX4VAqfcavmKxkPr21sbUGZZJFQQnbdz0fw90FycU33k7dKtJeEU
+	 Wrz8sBVAkqjQg==
 Received: from jupiter.universe (dyndsl-091-248-085-053.ewe-ip-backbone.de [91.248.85.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id DC20417E1406;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E33E217E1413;
 	Wed, 29 Oct 2025 18:57:02 +0100 (CET)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id 23994480065; Wed, 29 Oct 2025 18:57:02 +0100 (CET)
+	id 24D3C480066; Wed, 29 Oct 2025 18:57:02 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Wed, 29 Oct 2025 18:56:46 +0100
-Subject: [PATCH v4 7/9] PCI: dw-rockchip: Add pme_turn_off support
+Date: Wed, 29 Oct 2025 18:56:47 +0100
+Subject: [PATCH v4 8/9] PCI: dw-rockchip: Add system PM support
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251029-rockchip-pcie-system-suspend-v4-7-ce2e1b0692d2@collabora.com>
+Message-Id: <20251029-rockchip-pcie-system-suspend-v4-8-ce2e1b0692d2@collabora.com>
 References: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
 In-Reply-To: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -74,105 +74,166 @@ Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
  kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3128;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4458;
  i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=P089A2E+Yx4OzfNu1PedtURbJw0D3+0WliIVTgNh9oM=;
- b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGkCVW1Wt1a/xsLih4NUKwQilYZGT5JbSjfLy
- F+sq7zgeGgJV4kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJpAlVtAAoJENju1/PI
- O/qarBYQAKRbmJ3JJI3lbkEWqfHq5RikyR+GXm6YOa3t457RVmznsMBtGcpWpVEvy//BBlKOigh
- wxWhnqT98WHoDwJrvt3HoTWtJS+8f+xYPZIn4JQKtnXU1RQiTIFhK5Xjor1JhkTErPJJnO/69Pf
- /U9nP8+xPlXvmV5jh0WydvgE7UaZcjqoVSVi62O2FyrzJZhwcVyEHQkFf9mOzTOoVJoVVWE3x0P
- LCld4ZmDSUeumXiBDPRBXIUnLnB+6Oa+lTydcn0i/wSeQKnoU9DU7d79E4JN0v7mfAVkYG35TmW
- Uv+jtKhoKsSVQ8m5JXlw7eb+IvpBUlWZ0hcDLDQMaQJ7fD2zIJlNtMoC3nnfCCkQi9LCnC6cKoh
- J4EyQHfI9ekNe6qQlXEDyYomFs5pVoDhOcwiLON3Gsf53E7lDN1z77XX6nw+zeWdueLTBwig/UE
- 6Ig2MRx4nsmVFAPzBaCsi9ObqmPIx0ALxYkVKl1cuRvNFpTUaOPxfiZ0Pc5W9uTqnTdLCAi3F7y
- rH43eo68SneRceVeT4jRWBSCBnuZ6oPddoZ+uVQvRVklsyRSY7hWyGy7EGRlkteROrr/r1ErnRj
- nYlvWGNvw4AxGOmOjS/mm1JS1dJ6Nbdl+BgSG6fUvSi09b6NJmKaBRjZY50MT9JpdM4ozhDTUKz
- RIMgY3HmK+Sk0t3u/RUssxQ==
+ bh=jdsx/CJd6cB/dQ3LDiSdUyMOVx1R7DaDMSkGxWQlgT0=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGkCVW7wcyuiv0XPuiCdAAHbkyifQT2N6lRaQ
+ VIZhBhdz2AZJYkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJpAlVuAAoJENju1/PI
+ O/qaYl0P/2cPDDR+IJUW/2rNJNtHOdWnyG22sL8U4HwYZhEH77BniEAuVQ3J4oleP46F4u2RUjT
+ bPFGxWMD8/H3L8edsUbh5zgx/fFnrlH6rlflpZ2oe4WLVBcUb+6hJHvVhjdcrdTp0uYST9lGgc8
+ g7Z0uKy0YGLtS+js4wOUbTQlmBzSPyPOKQULL59+ArfK/fY216cBXpT0bp3smzHXniF4kbJtiKf
+ AU9Dg2kcH2NEglVsP61XaduwhDLLKbRmT0M+f/6Bdd/oGJaA8STKXJwDx8F0Xube0BI4xUeiULW
+ ZLTSr/xwNVjsoT6yPHXMKQdw2ZHc1rhXP6EuHlI5wAddrCy4VMF56qFsWJOOPSvrK3RAP9pdwG1
+ taYD1GoSUfFsQhC91v63Z2+L63lj5wzZ8TiQnXWxS4MRdVQyMVlY+6Otf5CZQttORXbK7Lyk1h9
+ MAe85fD7vKyfXaWc/zzwHTAvFruiblI+mvlrILvzWZAtw3qp2SwIePndT/OTiYUTJPujShJtM1S
+ +oEI6/fOSxKMii90bhCE2Jhcn4XthOKkoVAedtnhn3kqASsGmaH1VP8WKpoir8AQsah8pq1bKaZ
+ GOe5xDwhcsDhHS/at8FJJMQ5dzcEd0qEWMSgdZ/eYnkv5O9MwuhMmwxq1Iyt+I+x1RHjNWBpZZy
+ EBvgKpu61FCA/ynNvs0ArpQ==
 X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Prepare Rockchip PCIe controller for system suspend support by
-adding the PME turn off operation.
+Add system PM support for Rockchip PCIe Designware Controllers.
+
+I've tested this on the Rockchip RK3576 EVB1, the Radxa ROCK 4D
+and the ArmSom Sige5 boards.
+
+While I haven't experienced any issues, most of my tests have been done
+without any devices attached (i.e. default board without any extras), so
+there _might_ still be some problems. As system suspend does not work at
+all right now, I think it makes sense to get at least the basic
+configurations working as soon as possible as it will allow us to catch
+regressions by enabling system suspend in CI systems like KernelCI.
 
 Co-developed-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 44 +++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 93 +++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index ad4a907c991f..d887513a63d6 100644
+index d887513a63d6..cc917bb69c85 100644
 --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
 +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -42,6 +42,7 @@
- #define  PCIE_CLIENT_LD_RQ_RST_GRT	FIELD_PREP_WM16(BIT(3), 1)
- #define  PCIE_CLIENT_ENABLE_LTSSM	FIELD_PREP_WM16(BIT(2), 1)
- #define  PCIE_CLIENT_DISABLE_LTSSM	FIELD_PREP_WM16(BIT(2), 0)
-+#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
- 
- /* Interrupt Status Register Related to Legacy Interrupt */
- #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-@@ -61,6 +62,11 @@
- 
- /* Interrupt Mask Register Related to Miscellaneous Operation */
- #define PCIE_CLIENT_INTR_MASK_MISC	0x24
-+#define PCIE_CLIENT_POWER		0x2c
-+#define PCIE_CLIENT_MSG_GEN		0x34
-+#define PME_READY_ENTER_L23		BIT(3)
-+#define PME_TURN_OFF			FIELD_PREP_WM16(BIT(4), 1)
-+#define PME_TO_ACK			FIELD_PREP_WM16(BIT(9), 1)
- 
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-@@ -277,8 +283,46 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
-+static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	struct device *dev = rockchip->pci.dev;
-+	u32 status;
-+	int ret;
-+
-+	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
-+	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
-+				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret) {
-+		dev_warn(dev, "Failed to send PME_Turn_Off\n");
-+		return;
-+	}
-+
-+	/* 2. Wait for PME_TO_Ack, bit 9 will be set once received */
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_INTR_STATUS_MSG_RX,
-+				 status, status & BIT(9), PCIE_PME_TO_L2_TIMEOUT_US / 10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret) {
-+		dev_warn(dev, "Failed to receive PME_TO_Ack\n");
-+		return;
-+	}
-+
-+	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
-+	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
-+				 status, status & PME_READY_ENTER_L23,
-+				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret)
-+		dev_err(dev, "Failed to get ready to enter L23 message\n");
-+}
-+
- static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
- 	.init = rockchip_pcie_host_init,
-+	.pme_turn_off = rockchip_pcie_pme_turn_off,
+@@ -90,6 +90,7 @@ struct rockchip_pcie {
+ 	struct gpio_desc *rst_gpio;
+ 	struct regulator *vpcie3v3;
+ 	struct irq_domain *irq_domain;
++	u32 intx;
+ 	const struct rockchip_pcie_of_data *data;
  };
  
- /*
+@@ -770,6 +771,92 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int rockchip_pcie_suspend(struct device *dev)
++{
++	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
++	struct dw_pcie *pci = &rockchip->pci;
++	int ret;
++
++	if (rockchip->data->mode == DW_PCIE_EP_TYPE) {
++		dev_err(dev, "suspend is not supported in EP mode\n");
++		return -EOPNOTSUPP;
++	}
++
++	rockchip->intx = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_MASK_LEGACY);
++
++	ret = dw_pcie_suspend_noirq(pci);
++	if (ret)
++		return ret;
++
++	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
++	rockchip_pcie_phy_deinit(rockchip);
++	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
++	reset_control_assert(rockchip->rst);
++	if (rockchip->vpcie3v3)
++		regulator_disable(rockchip->vpcie3v3);
++
++	return 0;
++}
++
++static int rockchip_pcie_resume(struct device *dev)
++{
++	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
++	struct dw_pcie *pci = &rockchip->pci;
++	int ret;
++
++	if (rockchip->data->mode == DW_PCIE_EP_TYPE) {
++		dev_err(dev, "resume is not supported in EP mode\n");
++		return -EOPNOTSUPP;
++	}
++
++	ret = clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
++	if (ret) {
++		dev_err(dev, "clock init failed: %d\n", ret);
++		return ret;
++	}
++
++	if (rockchip->vpcie3v3) {
++		ret = regulator_enable(rockchip->vpcie3v3);
++		if (ret)
++			goto err_disable_clk;
++	}
++
++	ret = rockchip_pcie_phy_init(rockchip);
++	if (ret) {
++		dev_err(dev, "phy init failed: %d\n", ret);
++		goto err_disable_regulator;
++	}
++
++	reset_control_deassert(rockchip->rst);
++
++	rockchip_pcie_writel_apb(rockchip, FIELD_PREP_WM16(0xffff, rockchip->intx),
++				 PCIE_CLIENT_INTR_MASK_LEGACY);
++
++	rockchip_pcie_enable_enhanced_ltssm_control_mode(rockchip, 0);
++	rockchip_pcie_set_controller_mode(rockchip, PCIE_CLIENT_MODE_RC);
++	rockchip_pcie_unmask_dll_indicator(rockchip);
++
++	gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
++
++	ret = dw_pcie_resume_noirq(pci);
++	if (ret) {
++		dev_err(dev, "failed to resume: %d\n", ret);
++		goto err_deinit_phy;
++	}
++
++	return 0;
++
++err_deinit_phy:
++	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
++	rockchip_pcie_phy_deinit(rockchip);
++err_disable_regulator:
++	if (rockchip->vpcie3v3)
++		regulator_disable(rockchip->vpcie3v3);
++err_disable_clk:
++	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
++	return ret;
++}
++
+ static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
+ 	.mode = DW_PCIE_RC_TYPE,
+ };
+@@ -800,11 +887,17 @@ static const struct of_device_id rockchip_pcie_of_match[] = {
+ 	{},
+ };
+ 
++static const struct dev_pm_ops rockchip_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(rockchip_pcie_suspend,
++				  rockchip_pcie_resume)
++};
++
+ static struct platform_driver rockchip_pcie_driver = {
+ 	.driver = {
+ 		.name	= "rockchip-dw-pcie",
+ 		.of_match_table = rockchip_pcie_of_match,
+ 		.suppress_bind_attrs = true,
++		.pm = &rockchip_pcie_pm_ops,
+ 	},
+ 	.probe = rockchip_pcie_probe,
+ };
 
 -- 
 2.51.0
