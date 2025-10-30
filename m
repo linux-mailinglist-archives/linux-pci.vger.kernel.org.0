@@ -1,79 +1,82 @@
-Return-Path: <linux-pci+bounces-39746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D5EEC1E167
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 03:05:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0AC4C1E1DB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 03:20:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E45A3BE6BC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 02:05:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1A15188367F
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 02:20:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB952E8B9C;
-	Thu, 30 Oct 2025 02:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C5A32BEFF6;
+	Thu, 30 Oct 2025 02:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WbNjIK/o"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="lUX/fcWu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010052.outbound.protection.outlook.com [52.101.56.52])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011008.outbound.protection.outlook.com [52.101.125.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045512F851
-	for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 02:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FC72DEA90;
+	Thu, 30 Oct 2025 02:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761789949; cv=fail; b=IR02Yh021tSiL50WQTC12RioWU10+WMl9zTUzL7JQ5uM9ZA7rhcpgO4sFlsrwBT5K8GikvZzSlX9N7VJgLPFG/2qM2PkKhhcQoiBVUy4s60fxSF++gNcYGVUvN1VJITeGL8ulq8TG6tfgvu0FhyMsqeiIOgRHxDFS8TeTRnyZ1I=
+	t=1761790830; cv=fail; b=N9ORQtwVMEnGia6WunTYe7W3GnwHvxb9aTSPGpRCerHxDvDADyd10pw4S0ijwwwYUz6JRnXKQiS7mBzsRHvS5qv6WECQx/T6v4PGpo0mq/2welIrVAeK1aDN67hZG82/m8iVAWTGRVh05K7v+WGFMZ0OjkMZ8+nreogqMdkqNYM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761789949; c=relaxed/simple;
-	bh=gF/5PSQRTTxowE6Y1xTg8dt0jzhQDWxLsYsJx0Reqps=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y9Qt/FVQTP2AWm3EE3AW/ej+G0zE54OVxpAP/LtLEIUkwjktE9qxZc/pjWJnK21HWWmo4UM5iXmWMDIR2drxJBPH4uTPyC9SIrH0HS76m42VEXzSsi5DY+dbpxOqxFttwwvBJK6mDlLVpXEKGBUveB+Mnz3OhbQYh4f4My6CpdE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WbNjIK/o; arc=fail smtp.client-ip=52.101.56.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1761790830; c=relaxed/simple;
+	bh=wQUfEr+GzbPq2Bl12q6M0JUPsJD5CZfNjMNzCnxl12E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gyOPa9+YudVDhKckWP/FDxgBsCFEYKqmaeIprQEpTnfdV+RLtbaBz9Q0LUKemTeS/2rkusK9X0igSu0edQHSTZx+Cu/JniNr7ggT2qZQ6bQ6tBYo2JjwrLecMc2xElU+tmHANqY9L7vcLUG4LQ088V8o/Bx8HvIQPK7SowuANKE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=lUX/fcWu; arc=fail smtp.client-ip=52.101.125.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UPg+BNqbzkSFfWaODaij5ZQ4YCNYwlB8Igd9M9cArWiI38kzYQOolL57jQMC8aEzYC5ZncDDgqnzPKpQrRbYUrVd7wrrkKb5oGJ4lGbIez0qE8UDclQ/Bev/z0GDAdQSopbmOqk4xZPLjXoIOYTnyxcM8wH2mLYYdKyVfmfYCptTh+fIjiiElYQh+PqiUX3zs35E6G4rqQM1Z0HpfVargYaO/lpvrNU1R06WUB13NGnOARtoa3rK6XukZKFTztARFt42x6TI5wuom98+7iUzw6MwJroKXabcj1jEQZeBSqxTB2lpY6q0flRmkhhKz6FfB3t8qca77WvhpIJI3DqLMg==
+ b=Oa6/+W6fxJSimSVlidXNXhEEYpAg8dvmpmvidz/F+N8cczii9aBNe3fth+wjQSGvHQs6gL1n+kCwfZ+WuD7MkCm4skz6GBqntp/Sl6u/hoY7+9AhOvRTkIR9/fnMiJXrzFxO2isUsrMT0AE3HxI+GxOJ9w95zk1CDd9C+fjlubKVd1BewC9MIiGXHYrIMIDHqfYhgLqQfzRXuvY5gWvpeqipG8U+d/Mv+jWI1zvOkteoggwbMaLq9C6wJlzxPUizcmdHlo/OSEDwrnDsDF9F9mqKog3dxgikOZkHr3AzRLWg2Zwkt9agvpgjqBKLliDFc2i9vWsut5a+2cvq7TD/Uw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oxZ2nUwACztJ+mLEeOpyVkufg2rDQvVh9xgiyduMIY4=;
- b=EG0kxslLqlIaWm18Je+gIYPVNNearArjSKv/nhUGbSQ8Omsmn6uOKpyLFXmp4Uh8lurtjhi7PRhC9zaXtV6sEltseP8ok/YO6vExuF0HDmQFQlcJuBIoGZcnsq5pYesl8dZ0lQi1rnKz+AWnHs7cmwDnMf0Ljl6FKjmywyCBCaOWpxYf8Yqfky0+dey9JNiidzaeHZ1OJuEEaqzQTc0mI+V3U6zOgXnnvlXT8NyhwZta6LhIA16YhX6oXfDspxs5bKk8n27QCSiJV2P29X09ovEa8TcZgtwTb6a54tVVSi4s4jrKYi6wJxtBgeBieNjP9xoUtznyoEKslRcHdzD6Rg==
+ bh=6YrbpGOkpn8Wy94Q6GprNsWUqg9h3YPUqglgQhTdgzw=;
+ b=TIbN1qDv33klnXL5YjJs83Od99svqX0K9bxeBgacjjRkZxQwjT1IGWp0pPWkpMYB4LOsIwzhB4QcgH48JRmiHA6sGleWQlgz9PTcDCxAj/ihpuWQZ1tCWpYX3vYNAnP7x7lSp0xhLU+YFS/8i8VHdH2rk2dfZJhChOHZocJhHGPs3dlk3T6fRzz+Nz9VhDRCa2eIOftxMVCeWOQGgz0SqZhQLBafCaIHjmmGjI4h1fvjBQ4j+/zGErjQ+3yQks/l3ZyKgMPkaWnU9l2+K16CY9FjCwRfkO7k1kckTUjcNcSyyYb2jB143bPnAE7s0FylJWvBiqhjN5ervk5yAfsMDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oxZ2nUwACztJ+mLEeOpyVkufg2rDQvVh9xgiyduMIY4=;
- b=WbNjIK/o78NrlIdi5055XCY2QX7hQrB1MiOQSj7iNWgu97mrC5SGTG5XyKn33uA/7QznyKQy/01s3vYsJ62PX4ClCi4bnBsgz5ALouBAkmYK5BQaa4IzP4RzK7z6EuF9gyRA45/CPk1MeqtVdnFUaaAfX7UO5fGZ2k4XUGFGx4U=
+ bh=6YrbpGOkpn8Wy94Q6GprNsWUqg9h3YPUqglgQhTdgzw=;
+ b=lUX/fcWuaz4BupfkYmC9yALZPlyMMu0uHxHGVABIfgj0qmcbKb4Npr+IpR1xl1qZTdOSuBvqCDAsvVBy+ek239Tni4aOwyqHS3xAtoGSmerzvwHryEWrhIwLP8Rwmg7BZoP1WoNZo4W94zglDPk+RWCVd/7oPi/+sOKL+fXuNLc=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by MN6PR12MB8492.namprd12.prod.outlook.com (2603:10b6:208:472::22) with
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:10d::7)
+ by TYYP286MB2980.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:30c::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Thu, 30 Oct
- 2025 02:05:43 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%7]) with mapi id 15.20.9253.013; Thu, 30 Oct 2025
- 02:05:43 +0000
-Message-ID: <641a605e-75e4-48ae-94a7-3839c5369b07@amd.com>
-Date: Thu, 30 Oct 2025 13:05:35 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v7 9/9] PCI/TSM: Report active IDE streams
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: yilun.xu@linux.intel.com, aneesh.kumar@kernel.org, bhelgaas@google.com,
- gregkh@linuxfoundation.org, Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20251024020418.1366664-1-dan.j.williams@intel.com>
- <20251024020418.1366664-10-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20251024020418.1366664-10-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0009.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::10) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.14; Thu, 30 Oct
+ 2025 02:20:25 +0000
+Received: from OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::80f1:db56:4a11:3f7a]) by OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::80f1:db56:4a11:3f7a%5]) with mapi id 15.20.9275.013; Thu, 30 Oct 2025
+ 02:20:24 +0000
+Date: Thu, 30 Oct 2025 11:20:22 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Frank Li <Frank.li@nxp.com>
+Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com, 
+	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com, 
+	jbrunet@baylibre.com, lpieralisi@kernel.org, yebin10@huawei.com, 
+	geert+renesas@glider.be, arnd@arndb.de
+Subject: Re: [PATCH v2 6/6] PCI: endpoint: pci-epf-vntb: manage ntb_dev
+ lifetime and fix vpci bus teardown
+Message-ID: <5qafrtm7qzjcrl5p3j6lovahjaspkehzgjjyvyzchms6dbzksw@hb7hm5uopvh3>
+References: <20251029080321.807943-1-den@valinux.co.jp>
+ <20251029080321.807943-7-den@valinux.co.jp>
+ <aQJGlOIJBY+44Q0v@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQJGlOIJBY+44Q0v@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: TYCP286CA0118.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:29c::11) To OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:10d::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,251 +84,287 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|MN6PR12MB8492:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33e2160f-c4ed-46a0-8939-08de1758d4ab
+X-MS-TrafficTypeDiagnostic: OS3P286MB0979:EE_|TYYP286MB2980:EE_
+X-MS-Office365-Filtering-Correlation-Id: f101e4e0-667c-48c5-7312-08de175ae21c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|10070799003|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2dDK3NYMTBiUDhicm82TjRMdlBhQk9hMkRFWlJsWmRPQkJIa0NOS293UFc4?=
- =?utf-8?B?ZmdxTnJ0VWpqTGFKbWNQQWZFT1NqeXNRVCtzTDFJb2g5aHRrbUxZanUybHll?=
- =?utf-8?B?Ty9UaDVic0JlVVF2Y2t2NW9nUTVDWHhGem9EMitLRVI3VytmVjh0eWVlQ3Ju?=
- =?utf-8?B?SmRmd2JzMTMxbGdIczJGdklDbC82Vk9CeUttL1dBYTVBVmU5VkNuNkI0N3R6?=
- =?utf-8?B?ckdiWkFEdktOMCtSZ3Mzcm00Ui8vb3hGQkdNSko2aFRoUGVrbUtiZzRoVk9C?=
- =?utf-8?B?UGVpa1NHTE5DK1NRbGRBY296bndyTkJyRloxdndSdUdaN3U4VVZqUEtRbjNW?=
- =?utf-8?B?TkFNV1JHY1Z4SUFCMENQNkFsZmtjaHc1SXVsTkh4b01pMFYrLzRYY2NXbjFP?=
- =?utf-8?B?OGdaVzl0SmJGQWZhaURQVjloa0JYbGQ0dlpFU3N0YXdlaEx1Y0YxbVFmdysr?=
- =?utf-8?B?bnVBNlZFVXVBOUhaRXV4OW4yVGdwQXg3Q29Qd0ZYQ0RHRGxYTVlrOVdDZmMw?=
- =?utf-8?B?M1ZxbVg0V2FwK3JiWVNyTFk0czdQQlFUV3VDaE9LTUV4ZjBYTTdlUEVocC90?=
- =?utf-8?B?Z0J3Smt2QUg0OWJkaU11aTBsMWNPbkRXUmNxUkZyYWlWdUdLNWpkbHRPSnpp?=
- =?utf-8?B?dEhHcjk1Y1kzdUVQUG9DSjNPSWVVbEZhNXhwakh0OTBiamRLejJQSW5TYnVh?=
- =?utf-8?B?UWVZWTVFMkFvSDMzSThJenJBOU9PdDFoUHVZaWdkU3NheUpRWGJKcC9ESnBh?=
- =?utf-8?B?Ykg0bkYwVjdXYVJCdmNlYlF5eGw0ZzBSSVk3QzVoYmNieUdZVTFoZFo5b2kz?=
- =?utf-8?B?UDdlaFhhbVl6aWZEVUQ3UEZQSWtpY3VpaGtYZTZZcExJNzFqSzFjRWhqRjRO?=
- =?utf-8?B?THVWTzBNZ0llQ1VEWmNwY0tPcjQ1ZVdPOSsvQjFhcXBCOUx3UXhlQ3ppN2FR?=
- =?utf-8?B?VWdQcHRERVVaV3RVZkhSdlpONVMyZElpcjNJMzhFRTVwSU1OUEluYWV3Q2Fw?=
- =?utf-8?B?V0JFUm1nTVRnbHJhRXRXb0FmRXJsZGF5a0E0L2NGdnlUUGpZeXM2eGxJdm9K?=
- =?utf-8?B?eUNMZEVpa0FheGpzeEtibkU3d3VNd0I3WWpTaEFTYWlUak9pVVUrWUh6eXg1?=
- =?utf-8?B?cUZXbzlodHJNVU5FaUttc1hTMllycnJYazFpOXNDU2g4Rmt5Yk1GL1NFelcx?=
- =?utf-8?B?UkRDQ1d5SW5Ed2g1NmppcVgyWXVUamJFRnY3VU9XNGFiRmxndTd1cWJaL1lx?=
- =?utf-8?B?bVo0UnkxY1VGbDNPTVN0N3phZldxUEtRYlBNajZaWGJJWktjVTFDLzg5TUxl?=
- =?utf-8?B?S1l4SUsvdnhBbFF5a3ZGUzdVbHlmZnMydzdYTEhjbTZja1Q0c2M5Mld3bEhO?=
- =?utf-8?B?SnhXTWVDRFpJRWxzR0ZMU0U5Y1ZLckFuSUttZXRrWklrdG5JTzl3c1Z1Vy8y?=
- =?utf-8?B?aGlsVnFFWWZxNWJwNG9TZVFGUVJ3a2hMOEJoYzNNQTlOKzE0aVhzR0ZDZSsw?=
- =?utf-8?B?bmRObXpPS2dOUnUxbGxoNHV1RnpZOXpNRVkveEZNYWRnQkhJNHR0R1BnOWNo?=
- =?utf-8?B?TGtMSWVVdG1lcDYrays1OVM4aVd0ZVR3Q1pjUUFRazZ1UEozdGNLNVdPNTI0?=
- =?utf-8?B?bXBWQVlicmc5dXF1TE5URW02MjdjK2EzUlp6VGJocVN5SjdMT1JhdnRpWENT?=
- =?utf-8?B?U09VM20yajRBZGdYcmtUeWtrQ0Ivc0hEbXJhN2pTTHd6eUI4UDBCaU11bzdp?=
- =?utf-8?B?QnBVZDFndmxPMlc3TzVYWmJNTTNHYjlaV0RwQjl1dmhmRTZmWEFkM0d3WGFs?=
- =?utf-8?B?L2dtdUNTWlBNMXh6UDZub1NDWDdJaDR1eC9QZFBFNURQZUpvZDZHM1htaXRt?=
- =?utf-8?B?VWRoMGVtMVNENmdjdHVFZTZITGZyYmVwK2dFSU1hZzU3VFRFREVpZjRuVndO?=
- =?utf-8?Q?a5W8LMpQCk5NOIWVHmSMK/93/DSvDZFx?=
+	=?us-ascii?Q?YBUk3pAxrt9gVJN52Qm7nQeWHPl5FnpRAacaqn7iUOH/DE5UFjNrksl4KZBQ?=
+ =?us-ascii?Q?QXBipVrgkupYygoiY7ULYGBUcVo+yv3amTnASfvdB8VS4DJ0Tc7WOmSP1krz?=
+ =?us-ascii?Q?Dn5vn94vaBTrQ4RiOILQLfQGQqmWY0/mI2/3HeWempMqvAsVTcBJ1KMwcROH?=
+ =?us-ascii?Q?evNLOariiVtmzOE3arNCQLrVKpenSx2pe3yufzPtI7Of7x8xGMVfL9rGyjCZ?=
+ =?us-ascii?Q?RRA812ybprFkPyTnW5+L9AFJNykDvxu2DU2owRuO0kCoSfrjEwSGaXuwEm1b?=
+ =?us-ascii?Q?hlro9etITc/WFvN1H8W1Y3m68k9FEV+yethBRtOuq8ozI0UdvSQK/0jEWmQx?=
+ =?us-ascii?Q?qFYFdcjzXmNvsNprScQUrNCRtOxZEsAEXOc3hMSLTYOdAzBb3/pLiRVmO4C0?=
+ =?us-ascii?Q?oBb8wC6cxFt3YYuK45Wq+YV+IEpeWKrac68IXo6WUXlT+uXxRjyhqrFH8zm1?=
+ =?us-ascii?Q?HWj+BN19qisBn2WGggwGb4F9DddJEUE0I7Ww91wTCDVNPevFr7/4x5bF+syN?=
+ =?us-ascii?Q?pRIkahfJzgtAsAOwWnVZ7gmM4SQQzXL168QvsLyJ+PcsRt6KFbLm3KL22BGJ?=
+ =?us-ascii?Q?wxsNqNAP9sgoYotAwnWP55Bi1VdIw/9GO4CFwiNbwLYO1nm5P0hS2WMLiw74?=
+ =?us-ascii?Q?0whT4tARumdj3nD0BSaESOL3kUcqTs3TCEvzslnoJoiuZM0EUwErZlYBtOTQ?=
+ =?us-ascii?Q?QfOwFY1Te4qM45QTuJdWXvTi0WePP+oBSoCAcZrqcKVCM4HoxhwQDHEpG1L7?=
+ =?us-ascii?Q?BxAgwDhVF7vlaoVKlQSqwbh8n1mMB8JBC+vQXI7RY6gpH6VQ+vqwmXNUjm/K?=
+ =?us-ascii?Q?/RVJvOprovpaBXYOTClwE3nINFBGO7VmrkaXmhROZsuXCArez/pAfuUSPLrv?=
+ =?us-ascii?Q?v1hbRjB2PIY6rPpz4H7YAq5d+Hj7jYyixBF6wa7fsGn8XriIDvo9mRIbNvjl?=
+ =?us-ascii?Q?Zm6gw1BlXEbegm3vvLPDtEJMBPr2PwBU9R0wouR0FClJiVe14cv9l5+1BnC+?=
+ =?us-ascii?Q?JLDvF2JoMBipCan8HGyw951gYfjjDLDwJ1//25057LQN44UXyOZgEb1vbA2y?=
+ =?us-ascii?Q?UqR0QXt9DeUzY8m0/13R7YEohGlk8sud3Pvq/pZ8xuhrMluI0qxGsMP2My7D?=
+ =?us-ascii?Q?PqrFea1YmxvGC6AbslqUlGcc1qF0omRGmmNHlHryxrPkyFmHZI1n4eoFltxq?=
+ =?us-ascii?Q?JG8qSkHg7l7O/wesc1pzgw0xAsTswtbuLIlluSjdBQfzyW8/Z6rLC/ZE1zeh?=
+ =?us-ascii?Q?Dlz6UQXYDckDKFt0rL6QBbJmq2NN6VijY4ZpcT9Xfs+k9SzIMQl5c4A5a0ZP?=
+ =?us-ascii?Q?shvO8JAuY7MjcWh3cOnUhiSKv8X0VtrACHmtMOL+hxf5HM+7upx86KC+F/DW?=
+ =?us-ascii?Q?zNvrMTh3LrQxyLz1eBNW+N8oewm8LXXkys+7oQM7nBgq3ZmXAQvNqPHgNYpi?=
+ =?us-ascii?Q?blSrpsXOfJGe/vjj+Eosk17LrRkC4K3p?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d0lwNjYyS3BTZXRKVGtwMTJNQTJlNFBIVjlaY21GaWZET24xblMrWmxUR3Bn?=
- =?utf-8?B?WFdVbU9mamZKNlVUZ3NlaWN1OThGSTBZVmVTMkVybW9UMnVGak15MzgvaklN?=
- =?utf-8?B?NDFTWFJieDJ4KzlCcDMxOW8yOFo4MUpzOW9nWFNIOGIyd2J1emN5NWw0NG5T?=
- =?utf-8?B?SGIzVkp4QmpocHU1OWMxOGVxQ3ROWFNYeHIvY3ArNEdLYnVLK2NBQnBSc0Fa?=
- =?utf-8?B?UC9WV0U5dGVNOU03eXRxQ3F4bDBGajhXT2lUTS9QYVNTOERvYW01ckpZdi9K?=
- =?utf-8?B?WFpER0JtcVlmL3lPT2FTWjZhVnNZT0NKRG5QRkhWbjVWNVBOTUx3dm56L1Vn?=
- =?utf-8?B?U3FDM1lNMW5hUkpEL3A1MFhIeDg0M2tBOVY4c01NcnNIdVp6b05mbWpLVkZ5?=
- =?utf-8?B?VDFYbG1oY0ZNK0cwMzY5R1BjTFRRZTdNYUxwTE5uL3FHMHF6cVFMaVl6M21u?=
- =?utf-8?B?alZBQzUyOEFEZ1YxZHNPMVlOUkpFU2lLSUt4KzRUTElmMmh3WlBiYjFUSmQ3?=
- =?utf-8?B?UVBIdENsSDNWdkZ4K3MzT3FpMkRWSTJ6QTVRcnVDR2RIL0pTOFFGV1Voa2lj?=
- =?utf-8?B?NXkrcmdxanBQNGtxMEpLSk5nSTJOT2pDVVhrN1FtWU1odThRMFMxUE9FdGdL?=
- =?utf-8?B?OVE3U0Y2eVhDU2pJZEJlOEJwd2V1V0RWMHowc3JFS3pkaUlHTEZLZmZOa0xE?=
- =?utf-8?B?NmZOMWlzU3E3c20waGF5L1d1a2dtak1MYllTYTNMWmVrV2RnYWkrNmFrZW1o?=
- =?utf-8?B?VXkwa0Z5NHJ4VXZTUFl4SzNkWTZ2LzlnVmkwa05OTTMvaEZBS2N3N29hdFdE?=
- =?utf-8?B?NnJ6S0J2azA1bk1xM0lvY3U4U05zUnRXWHlndC9KcVJLa2tLd1QrVTF5aGZY?=
- =?utf-8?B?S3pseGF0dFJQTnNYN20vQy9rMDV1QkxqY0s1NkJURW9yV3lsc0NFRE5FRFEy?=
- =?utf-8?B?QXVTVkxhMUZlKzNKaG9wZ05SZkZOTUg5MGJxOVB4SU9xcndKM0tqMGpNSHlt?=
- =?utf-8?B?R0ZTNVMrc29wVHF5RkRINkl6ZXp0bFJmbU5XSUQ2ZVJZeHo3R0wzRzJZTTV3?=
- =?utf-8?B?SGN5NmpETnh1QW9iSWtXeWliRmVEQVBYUlhzUHVKME9UWXh6SVpRa2tQZlRx?=
- =?utf-8?B?d1V0YXJxVWZwc0k1cEc3RDA2OUJGMStFV2NhcnJsWnduVGxLbWYzU1VmRDJs?=
- =?utf-8?B?V3I1VUhDV2d0T3dvaFJ6NG1tVkFLSEVJcHR5a0pKTTIvSmdFNitmM2RxU0xY?=
- =?utf-8?B?cG9FNG1GUGMwaUYzU1dXRmtNa2NoZ2RWa1ArRXo0R21Ib1ZPNlNya2kxMHJy?=
- =?utf-8?B?YUVPN1RaczM2NndJZVN4Q0NsQ1BETGhPcGRPa2JvcnZrVVdEc0lJY0hnN2dW?=
- =?utf-8?B?T2l6RDd2QTcwOEphRzRwSjNPMTRveXpiV2g2ZjNJcXFiZ0lnMEV5VHlTZVZq?=
- =?utf-8?B?UWdjK3MzT21jU0VKRjdXSlZKMTkzNGtRT0lxY3U3Wk55L1doMFc5UmkvOHdq?=
- =?utf-8?B?VE1PcmdWV055ajFQdkZjYlVLVE5BbmhiTzRTcnVSa1FocldKWGplODdTN3Vi?=
- =?utf-8?B?OHV1SHBvbVNweXp2SWMvTFUrNTNkNk5GeWtPMkxaNGhXUExvZWE1WVF6YWZO?=
- =?utf-8?B?UGZ2WUl0MnNDaWpwT1FINnFFUlpJZmhkL2pHbnBlcTNsN0MzR0VkcW9XNXF2?=
- =?utf-8?B?TnR0Tkk0dDg5VGgvVW9aMm15M2lDUGxBbGdIQ0dTY09hVFBWaVNEdm5DUTN4?=
- =?utf-8?B?Q0hZQ2EvRGcyb3lRUWRxNisvd0dxL1JCOWJHd2I3Y0g4eXl0Y0YxVGM3cEhh?=
- =?utf-8?B?QUxYaDBuYlpXZFA3d0x5dFpGelUxUjZwZEloVDJmSGxLUi9KeWxVRkwvTkdC?=
- =?utf-8?B?dG1RWHpzM1B0QUcvR3AveXk0Y0pGdzlsVkFQQTFhVGVOOG9GNjIycFd3MnFH?=
- =?utf-8?B?ejg0b1c5YjB3aE5ZUzVhWmpnQktJRkcwcmVvaVJvMElGWkV4aFg1bld6R2Yv?=
- =?utf-8?B?Q3Rod1FkTnNBamNBUzZJWXZQVys0VWJjcXY3eHpWUlNkQnpSVUZaa25mdWxi?=
- =?utf-8?B?R1BmQ3p4MGczTTNoRHg4ZFcvUWRGVFl1MWhEazRKMGV5VEJ3b2NRMWhIUk9t?=
- =?utf-8?Q?3L8l0hB+OG9LR8LgoT6aPsHjq?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33e2160f-c4ed-46a0-8939-08de1758d4ab
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+	=?us-ascii?Q?gTj5Qa5GzCU5MI7fdGC0NUxRDySaoKroxX5Lt0gw1fDqYgOIflJ6C3fz+qTh?=
+ =?us-ascii?Q?Z7lX9QqalPrf3yYvOLP59o4fnYs9kvxrAtMx/AmSrZujw7tBkhC+lI7qZ/LV?=
+ =?us-ascii?Q?CPP9rbwHNnd83Bz2HN/DboTrngf+ql01fLGBBge5pEZmMz/XH95i9o9+i1Nd?=
+ =?us-ascii?Q?zwJfx4UozJeJ82hQpw5sNfhxK9ICIBUNLgPQJHTJMLVD/8h5u0CdTBNVh8PK?=
+ =?us-ascii?Q?Npolkt7oAib4JPzoxQ1feBTLqVTGcToiebUy+9jMwYyjXvUTs/73e4spYMlF?=
+ =?us-ascii?Q?Kf6DTfb4JS2Cn9ssSXwfllS+x+IaIuz7E+gRiwkdK4oqjfHgsY0CmZW2z3VR?=
+ =?us-ascii?Q?1lAEx2lGLkDe/sPDIAT5hBOfrHJ859YAXy9DCyoS6Nj1OB0KecqkN6gMu5sV?=
+ =?us-ascii?Q?qFZnT4EbRbSfbuCLPdga2tmtIY31sGUcKrbyNgt+LB/lwk5+YxM/VDHqTEaW?=
+ =?us-ascii?Q?LxjKkZ0GXkUjJEd3181fjRNbiO5ETB0mAE8YCkTnycBiIQS0CLZqEB6+bt9V?=
+ =?us-ascii?Q?Td/DXUf6kj0jWWn0YH+ZR48H/cWRvR8aGvgx/jC5uEYzswRjEs1xLgYEc9aT?=
+ =?us-ascii?Q?nx28HS8s9PaQIKMpWAiUL3z9IbJh9rGct4IaCTGaMcMWGU7pgt6+1JPO2UGg?=
+ =?us-ascii?Q?e7uagiCvKMZcqsYOiMj7HgIXX4adV862rPPUQmaBI6HrRwVqlzmXxigU0FBP?=
+ =?us-ascii?Q?bhR/Asun0qzi15ZwRxWpNhLWllo5ILlV3ipjuTXWvRQC3o9p+nU+CCl/5NGO?=
+ =?us-ascii?Q?zC6D2aumyubBwkplPgvzu9dZGIbYaHlg7fSEQhm2B3AynCp+wtAPYRUJAgwG?=
+ =?us-ascii?Q?0E9CQFHoIRxjdaxX2Rtqdd8DIUPMFpyqfJpoKmNA0wCxJ7XsAA6/Ygqbxcin?=
+ =?us-ascii?Q?CaCgVCjiOBLTPT+yPLUW21wKBsPXFPWXOXBfLWMaU5rrdZqrNQHtuhhP92L6?=
+ =?us-ascii?Q?U6Y6FYAKzNLH+pfQHbk7oJtsDXpHAkhejII1BL65yc1bYbJXMvSE3y2uYPzh?=
+ =?us-ascii?Q?bw4nkpddBkLlZhNVYHtt3jj2nyRMKLB04r0/5EKJLEsOke2gl59ZxQMX95Io?=
+ =?us-ascii?Q?nIhj9Gu0A2xgC3XpRr9jX13TSQnIQ3IJhIugTY3X6+aSaif+621I3jDX+LPH?=
+ =?us-ascii?Q?c7opY2MeiIQAOyZbP3xEO5/cotv32G0WJMDmvBEchh39/+bOYJIB9u2/v9/2?=
+ =?us-ascii?Q?KVHvYHi6nv2iXG5tW3apnandzCTm+IS/0FgsAQhQ8DEbk2nO1gYbD1ze5BXm?=
+ =?us-ascii?Q?J53y8gBxD/hrnmc38SJC6zjvFHSKWrfc+WdpVT6liWPov+UnRx8ENZ49cTTJ?=
+ =?us-ascii?Q?TJRsUJrp1Xe9fE/JYU2+up86y9iDzP/JSRQ/gKIglWIy4r30FuMm2PpjrIMo?=
+ =?us-ascii?Q?HFn2er90HL6iJRLphv13b2Etq0DqMa8MBW4l1jmWsgbspK6RhLw4lTffWSRE?=
+ =?us-ascii?Q?EQ+TGOMaygGEe7O7ZUXSVszqb44c3X3Qup7Am6caiAwDUOTvEoPjGWSjHcON?=
+ =?us-ascii?Q?G34ALtMNbWgSTccs/Qj0+l7htaZYY24XJiyxglFQq0AIIy0S5vyo8+QSTvX7?=
+ =?us-ascii?Q?TQukDeU2jZkYbEDATnzcxEdpV+fLUPPi+0gozkwKyGqNyKpegTHaVyUm5M3f?=
+ =?us-ascii?Q?q6so8Uey2/2kHET4RVEyynQ=3D?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: f101e4e0-667c-48c5-7312-08de175ae21c
+X-MS-Exchange-CrossTenant-AuthSource: OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 02:05:42.9518
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 02:20:24.8053
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aYUFutC3R4gYcTyTen9UKjDytqRdZG/Kmt5Z93xRQW6zefUi+6DzS59n5LzYRI4VCIk/+w0xJ/YgXW6U64HISw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8492
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8YTQrlpF/cW1DesEcGLN0KRlIAmy/8HJY0q5XQZzo95pr5B3680agFHBJsF7w8mjKEFkvFgxJKyR7Lk90BTL7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYP286MB2980
 
-
-
-On 24/10/25 13:04, Dan Williams wrote:
-> Given that the platform TSM owns IDE Stream ID allocation, report the
-> active streams via the TSM class device. Establish a symlink from the
-> class device to the PCI endpoint device consuming the stream, named by
-> the Stream ID.
+On Wed, Oct 29, 2025 at 12:53:40PM -0400, Frank Li wrote:
+> On Wed, Oct 29, 2025 at 05:03:21PM +0900, Koichiro Den wrote:
+> > Currently ntb_dev is embedded in epf_ntb, while configfs allows starting
+> > or stopping controller and linking or unlinking functions as you want.
+> > In fact, re-linking and re-starting is not possible with the embedded
+> > design and leads to oopses.
+> >
+> > Allocate ntb_dev with devm and add a .remove callback to the pci driver
+> > that calls ntb_unregister_device(). This allows a fresh device to be
+> > created on the next .bind call.
+> >
+> > With these changes, the controller can now be stopped, a function
+> > unlinked, configfs settings updated, and the controller re-linked and
+> > restarted without rebooting the endpoint, as long as the underlying
+> > pci_epc_ops .stop() operation is non-destructive, and .start() can
+> > restore normal operations.
+> >
+> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-vntb.c | 66 +++++++++++++++----
+> >  1 file changed, 52 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > index 750a246f79c9..3059ed85a955 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> > @@ -118,7 +118,7 @@ struct epf_ntb_ctrl {
+> >  } __packed;
+> >
+> >  struct epf_ntb {
+> > -	struct ntb_dev ntb;
+> > +	struct ntb_dev *ntb;
+> >  	struct pci_epf *epf;
+> >  	struct config_group group;
+> >
+> > @@ -144,10 +144,16 @@ struct epf_ntb {
+> >  	void __iomem *vpci_mw_addr[MAX_MW];
+> >
+> >  	struct delayed_work cmd_handler;
+> > +
+> > +	struct pci_bus *vpci_bus;
+> >  };
+> >
+> >  #define to_epf_ntb(epf_group) container_of((epf_group), struct epf_ntb, group)
+> > -#define ntb_ndev(__ntb) container_of(__ntb, struct epf_ntb, ntb)
+> > +
+> > +static inline struct epf_ntb *ntb_ndev(struct ntb_dev *ntb)
+> > +{
+> > +	return (struct epf_ntb *)ntb->pdev->sysdata;
+> > +}
+> >
+> >  static struct pci_epf_header epf_ntb_header = {
+> >  	.vendorid	= PCI_ANY_ID,
+> > @@ -173,7 +179,7 @@ static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
+> >  	else
+> >  		ntb->reg->link_status &= ~LINK_STATUS_UP;
+> >
+> > -	ntb_link_event(&ntb->ntb);
+> > +	ntb_link_event(ntb->ntb);
+> >  	return 0;
+> >  }
+> >
+> > @@ -261,7 +267,7 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
+> >  	for (i = 1; i < ntb->db_count; i++) {
+> >  		if (ntb->epf_db[i]) {
+> >  			ntb->db |= 1 << (i - 1);
+> > -			ntb_db_event(&ntb->ntb, i);
+> > +			ntb_db_event(ntb->ntb, i);
+> >  			ntb->epf_db[i] = 0;
+> >  		}
+> >  	}
+> > @@ -1097,12 +1103,24 @@ static int vpci_scan_bus(void *sysdata)
+> >  {
+> >  	struct pci_bus *vpci_bus;
+> >  	struct epf_ntb *ndev = sysdata;
+> > -
+> > -	vpci_bus = pci_scan_bus(ndev->vbus_number, &vpci_ops, sysdata);
+> > +	LIST_HEAD(resources);
+> > +	static struct resource busn_res = {
+> > +		.start = 0,
+> > +		.end = 255,
+> > +		.flags = IORESOURCE_BUS,
+> > +	};
+> > +
+> > +	pci_add_resource(&resources, &ioport_resource);
+> > +	pci_add_resource(&resources, &iomem_resource);
+> > +	pci_add_resource(&resources, &busn_res);
+> > +
+> > +	vpci_bus = pci_scan_root_bus(&ndev->epf->epc->dev, ndev->vbus_number,
+> > +				     &vpci_ops, sysdata, &resources);
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> look this part is not belong to this patch. just change API
+> pci_scan_bus() to pci_scan_root_bus()?
 
+To make things work symmetrically and avoid crashes (when unlinking),
+pci_scan_bus() needed to be switched to pci_scan_root_bus() to set the
+parent device, like no longer existing pci_scan_bus_parented(). Otherwise,
+pci_epf_unbind()->epf_ntb_unbind()->pci_remove_root_bus()->pci_bus_release_domain_nr()
+would crash.
 
+Perhaps I should've added an explanation for this in the git commit message?
 
-Reviewed-by: Alexey Kardashevskiy <aik@amd.com>
+Thanks for reviewing.
 
+-Koichiro
 
-> ---
->   Documentation/ABI/testing/sysfs-class-tsm | 10 ++++++++
->   include/linux/pci-ide.h                   |  2 ++
->   include/linux/tsm.h                       |  3 +++
->   drivers/pci/ide.c                         |  4 ++++
->   drivers/virt/coco/tsm-core.c              | 29 +++++++++++++++++++++++
->   5 files changed, 48 insertions(+)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-> index 2949468deaf7..6fc1a5ac6da1 100644
-> --- a/Documentation/ABI/testing/sysfs-class-tsm
-> +++ b/Documentation/ABI/testing/sysfs-class-tsm
-> @@ -7,3 +7,13 @@ Description:
->   		signals when the PCI layer is able to support establishment of
->   		link encryption and other device-security features coordinated
->   		through a platform tsm.
-> +
-> +What:		/sys/class/tsm/tsmN/streamH.R.E
-> +Contact:	linux-pci@vger.kernel.org
-> +Description:
-> +		(RO) When a host bridge has established a secure connection via
-> +		the platform TSM, symlink appears. The primary function of this
-> +		is have a system global review of TSM resource consumption
-> +		across host bridges. The link points to the endpoint PCI device
-> +		and matches the same link published by the host bridge. See
-> +		Documentation/ABI/testing/sysfs-devices-pci-host-bridge.
-> diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-> index 85645b0a8620..d0f10f3c89fc 100644
-> --- a/include/linux/pci-ide.h
-> +++ b/include/linux/pci-ide.h
-> @@ -50,6 +50,7 @@ struct pci_ide_partner {
->    * @host_bridge_stream: allocated from host bridge @ide_stream_ida pool
->    * @stream_id: unique Stream ID (within Partner Port pairing)
->    * @name: name of the established Selective IDE Stream in sysfs
-> + * @tsm_dev: For TSM established IDE, the TSM device context
->    *
->    * Negative @stream_id values indicate "uninitialized" on the
->    * expectation that with TSM established IDE the TSM owns the stream_id
-> @@ -61,6 +62,7 @@ struct pci_ide {
->   	u8 host_bridge_stream;
->   	int stream_id;
->   	const char *name;
-> +	struct tsm_dev *tsm_dev;
->   };
->   
->   void pci_ide_set_nr_streams(struct pci_host_bridge *hb, u16 nr);
-> diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-> index ee9a54ae3d3c..376139585797 100644
-> --- a/include/linux/tsm.h
-> +++ b/include/linux/tsm.h
-> @@ -120,4 +120,7 @@ int tsm_report_unregister(const struct tsm_report_ops *ops);
->   struct tsm_dev *tsm_register(struct device *parent, struct pci_tsm_ops *ops);
->   void tsm_unregister(struct tsm_dev *tsm_dev);
->   struct tsm_dev *find_tsm_dev(int id);
-> +struct pci_ide;
-> +int tsm_ide_stream_register(struct pci_ide *ide);
-> +void tsm_ide_stream_unregister(struct pci_ide *ide);
->   #endif /* __TSM_H */
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> index 44f62da5e191..5659f988e524 100644
-> --- a/drivers/pci/ide.c
-> +++ b/drivers/pci/ide.c
-> @@ -11,6 +11,7 @@
->   #include <linux/pci_regs.h>
->   #include <linux/slab.h>
->   #include <linux/sysfs.h>
-> +#include <linux/tsm.h>
->   
->   #include "pci.h"
->   
-> @@ -264,6 +265,9 @@ void pci_ide_stream_release(struct pci_ide *ide)
->   	if (ide->partner[PCI_IDE_EP].enable)
->   		pci_ide_stream_disable(pdev, ide);
->   
-> +	if (ide->tsm_dev)
-> +		tsm_ide_stream_unregister(ide);
-> +
->   	if (ide->partner[PCI_IDE_RP].setup)
->   		pci_ide_stream_teardown(rp, ide);
->   
-> diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
-> index 4499803cf20d..c0dae531b64f 100644
-> --- a/drivers/virt/coco/tsm-core.c
-> +++ b/drivers/virt/coco/tsm-core.c
-> @@ -2,14 +2,17 @@
->   /* Copyright(c) 2024 Intel Corporation. All rights reserved. */
->   
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +#define dev_fmt(fmt) KBUILD_MODNAME ": " fmt
->   
->   #include <linux/tsm.h>
->   #include <linux/idr.h>
-> +#include <linux/pci.h>
->   #include <linux/rwsem.h>
->   #include <linux/device.h>
->   #include <linux/module.h>
->   #include <linux/cleanup.h>
->   #include <linux/pci-tsm.h>
-> +#include <linux/pci-ide.h>
->   
->   static struct class *tsm_class;
->   static DECLARE_RWSEM(tsm_rwsem);
-> @@ -106,6 +109,32 @@ void tsm_unregister(struct tsm_dev *tsm_dev)
->   }
->   EXPORT_SYMBOL_GPL(tsm_unregister);
->   
-> +/* must be invoked between tsm_register / tsm_unregister */
-> +int tsm_ide_stream_register(struct pci_ide *ide)
-> +{
-> +	struct pci_dev *pdev = ide->pdev;
-> +	struct pci_tsm *tsm = pdev->tsm;
-> +	struct tsm_dev *tsm_dev = tsm->tsm_dev;
-> +	int rc;
-> +
-> +	rc = sysfs_create_link(&tsm_dev->dev.kobj, &pdev->dev.kobj, ide->name);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ide->tsm_dev = tsm_dev;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(tsm_ide_stream_register);
-> +
-> +void tsm_ide_stream_unregister(struct pci_ide *ide)
-> +{
-> +	struct tsm_dev *tsm_dev = ide->tsm_dev;
-> +
-> +	sysfs_remove_link(&tsm_dev->dev.kobj, ide->name);
-> +	ide->tsm_dev = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(tsm_ide_stream_unregister);
-> +
->   static void tsm_release(struct device *dev)
->   {
->   	struct tsm_dev *tsm_dev = container_of(dev, typeof(*tsm_dev), dev);
-
--- 
-Alexey
-
+> Frank
+> 
+> >  	if (!vpci_bus) {
+> >  		pr_err("create pci bus failed\n");
+> >  		return -EINVAL;
+> >  	}
+> > +	ndev->vpci_bus = vpci_bus;
+> >
+> >  	pci_bus_add_devices(vpci_bus);
+> >
+> > @@ -1147,7 +1165,7 @@ static int vntb_epf_mw_set_trans(struct ntb_dev *ndev, int pidx, int idx,
+> >  	int ret;
+> >  	struct device *dev;
+> >
+> > -	dev = &ntb->ntb.dev;
+> > +	dev = &ntb->ntb->dev;
+> >  	barno = ntb->epf_ntb_bar[BAR_MW1 + idx];
+> >  	epf_bar = &ntb->epf->bar[barno];
+> >  	epf_bar->phys_addr = addr;
+> > @@ -1247,7 +1265,7 @@ static int vntb_epf_peer_db_set(struct ntb_dev *ndev, u64 db_bits)
+> >  	ret = pci_epc_raise_irq(ntb->epf->epc, func_no, vfunc_no,
+> >  				PCI_IRQ_MSI, interrupt_num + 1);
+> >  	if (ret)
+> > -		dev_err(&ntb->ntb.dev, "Failed to raise IRQ\n");
+> > +		dev_err(&ntb->ntb->dev, "Failed to raise IRQ\n");
+> >
+> >  	return ret;
+> >  }
+> > @@ -1334,9 +1352,12 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	struct epf_ntb *ndev = (struct epf_ntb *)pdev->sysdata;
+> >  	struct device *dev = &pdev->dev;
+> >
+> > -	ndev->ntb.pdev = pdev;
+> > -	ndev->ntb.topo = NTB_TOPO_NONE;
+> > -	ndev->ntb.ops =  &vntb_epf_ops;
+> > +	ndev->ntb = devm_kzalloc(dev, sizeof(*ndev->ntb), GFP_KERNEL);
+> > +	if (!ndev->ntb)
+> > +		return -ENOMEM;
+> > +	ndev->ntb->pdev = pdev;
+> > +	ndev->ntb->topo = NTB_TOPO_NONE;
+> > +	ndev->ntb->ops = &vntb_epf_ops;
+> >
+> >  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> >  	if (ret) {
+> > @@ -1344,7 +1365,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  		return ret;
+> >  	}
+> >
+> > -	ret = ntb_register_device(&ndev->ntb);
+> > +	ret = ntb_register_device(ndev->ntb);
+> >  	if (ret) {
+> >  		dev_err(dev, "Failed to register NTB device\n");
+> >  		return ret;
+> > @@ -1354,6 +1375,17 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	return 0;
+> >  }
+> >
+> > +static void pci_vntb_remove(struct pci_dev *pdev)
+> > +{
+> > +	struct epf_ntb *ndev = (struct epf_ntb *)pdev->sysdata;
+> > +
+> > +	if (!ndev || !ndev->ntb)
+> > +		return;
+> > +
+> > +	ntb_unregister_device(ndev->ntb);
+> > +	ndev->ntb = NULL;
+> > +}
+> > +
+> >  static struct pci_device_id pci_vntb_table[] = {
+> >  	{
+> >  		PCI_DEVICE(0xffff, 0xffff),
+> > @@ -1365,6 +1397,7 @@ static struct pci_driver vntb_pci_driver = {
+> >  	.name           = "pci-vntb",
+> >  	.id_table       = pci_vntb_table,
+> >  	.probe          = pci_vntb_probe,
+> > +	.remove         = pci_vntb_remove,
+> >  };
+> >
+> >  /* ============ PCIe EPF Driver Bind ====================*/
+> > @@ -1447,10 +1480,15 @@ static void epf_ntb_unbind(struct pci_epf *epf)
+> >  {
+> >  	struct epf_ntb *ntb = epf_get_drvdata(epf);
+> >
+> > +	pci_unregister_driver(&vntb_pci_driver);
+> > +
+> > +	pci_lock_rescan_remove();
+> > +	pci_stop_root_bus(ntb->vpci_bus);
+> > +	pci_remove_root_bus(ntb->vpci_bus);
+> > +	pci_unlock_rescan_remove();
+> > +
+> >  	epf_ntb_epc_cleanup(ntb);
+> >  	epf_ntb_config_spad_bar_free(ntb);
+> > -
+> > -	pci_unregister_driver(&vntb_pci_driver);
+> >  }
+> >
+> >  // EPF driver probe
+> > --
+> > 2.48.1
+> >
 
