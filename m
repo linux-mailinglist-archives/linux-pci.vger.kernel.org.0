@@ -1,99 +1,203 @@
-Return-Path: <linux-pci+bounces-39796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD1ACC1FA6D
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 11:53:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E42C1FA94
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 11:55:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A96864E902F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:52:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21AD11890494
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA7433491FE;
-	Thu, 30 Oct 2025 10:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63C6E351FD5;
+	Thu, 30 Oct 2025 10:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVec60u9"
+	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="JeL9mdX4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx-relay50-hz3.antispameurope.com (mx-relay50-hz3.antispameurope.com [94.100.134.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9897733B95D;
-	Thu, 30 Oct 2025 10:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761821566; cv=none; b=X/hWr+PCN1e/14Vnki/3HEYAAxjIAHrHUunmOjBYE6I+WivOnfg4pZ6u+lf4KENFQ8EknIg6iR6MG7NLYu0psE+xNlrS04+zYOHz8LpEYT2EViD4DPms6vO380lZOKuCaPRK177FzaEE2ey1DbUJ57LIj4IYbwc9eoZJrLNolnQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761821566; c=relaxed/simple;
-	bh=szkwGplbJ5oUlGJfPgg0WAoGQrZxT9aT4v250fXRg0U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=KsZaAIS6LecMO9HwUrhfrY/0H/EqYETNtHU67AnKM+B+4DLUISEe1FrwvmMHdilp/IAc0lk4RXyLfNyIcCXAU+9XAywBgrorXmkDNgcCpxpuGGWJxVYih5Ul3X3Oc/8tLrlwu5RUMl24u7g3HmyEK1pmJjQtsHGnPSf741RIFkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVec60u9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00299C4CEF1;
-	Thu, 30 Oct 2025 10:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761821566;
-	bh=szkwGplbJ5oUlGJfPgg0WAoGQrZxT9aT4v250fXRg0U=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=IVec60u9rkZkxlQVIAe3UYNTGek4XsSWuHuhXNL5t3DkI0U/r/URTnVFOQLpOvMBv
-	 BBPkRZN/9dWMCkOw2Rue52ZqMcMOVnzt8t1X/qK8EXB0PJ24vlC6UpF4PmCn5Zut4S
-	 LUZRrXznUIQXL/ms94+7dgD9H+NB3wJZ1yTqc4YxGKrngShWiAPDztF6x76/hvNzb+
-	 NOvj4lpWLeRNRhNlYJLgcKuS8Elr/Df59j4r3MuVGmExKsdjykRUe5bGnU1mXFWXTG
-	 T53DeTkz1sMQhGXQPim0sp8ThZTTWaVhZ+25jivhIvMqmUF4KxHKxIDBv/6vSJl/0W
-	 9LV7ri1aelOeg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360CF3546F5
+	for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 10:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=94.100.134.239
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761821707; cv=pass; b=Mk7h1B8VTpcyUKMWRWDTkitBQifJtkA2YK1Oj4jvQNbcDGFd/TBxl07vmoYImFOGa0aT7jewQjAlxoXcd+psDbCITXNGRQHUk5ffagBNSPBdMqnAY4Ii3UWgMH7W4dSAaOjBZNN/vSvbNjcUzwmYWySN94MzFqIqN0t5vVa1Ufo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761821707; c=relaxed/simple;
+	bh=vDit2WSKvXsPyuyNqgDJsL23mSpwqoWbEjwmAU0lRtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nMbBzTg0EReY2DY6zB/jI4dXGd0ez/KW4MgcF3N0TxgF3Ue862lk1nQtJ/cti9yDahGm1DtfMZpcb5y0MTyPd1WX/+3cGSvgm4QiLyCzBjmfpeFCq/kjNObIF5idKomnkO3AHNBlJyg6aQYdKMziTWP0nOKiH0Bz7JsfH7pg0kk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=JeL9mdX4; arc=pass smtp.client-ip=94.100.134.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+ARC-Authentication-Results: i=1; mx-gate50-hz3.hornetsecurity.com 1; spf=pass
+ reason=mailfrom (ip=94.100.132.6, headerfrom=ew.tq-group.com)
+ smtp.mailfrom=ew.tq-group.com smtp.helo=smtp-out02-hz1.hornetsecurity.com;
+ dmarc=pass header.from=ew.tq-group.com orig.disposition=pass
+ARC-Message-Signature: a=rsa-sha256;
+ bh=Oz0ZhBQQWSFQZWJgTI1NfCDVGIjRIKKmdygZqOMsjqk=; c=relaxed/relaxed;
+ d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=1; s=hse1;
+ t=1761821673;
+ b=YgkRrbuX+FndiUEYzeTV8Vo1idPBnZKxMPKWrsTXIl9sFvLFAeYVnr2WpEqTG9n5heBSnIuO
+ ECdGqAheQ+Lma9qBD27s7knynQyHgJVJVLCd8DRmKuh6WX0g0eh1jTIHacatAqK8Daw6rPvFcHJ
+ y9FqfpWsL9p22nrLtiFtEoe2Rhs5UAIITOOTX9qlSBLupdg7sV9/g5RP1VfVngaQHyfw4e9vf0E
+ y68XZ9O54E6cM6EKrMxE/QDVeXd5gEkc/Ssx8eqmdLBmhcqBcqzX2OSBF/8n1SL5oCDIedlYJ8A
+ 9dyHNmQfr5GoxR40VvtioLAqyXlGym8VEJW5ScY/iMmdg==
+ARC-Seal: a=rsa-sha256; cv=none; d=hornetsecurity.com; i=1; s=hse1;
+ t=1761821673;
+ b=DWbNBFPwrhzroh4KTjFo1Rkg1pKKqrxbOTDeyn46eWrCmLDn8N4ACPum1kqydFYfBfhNgIrc
+ gorCTruUpL1gLRZ1/LQxHCy3e2mm6NZOnhideVVj8hbIOIEN0WNpS95E8JuvWyA/WGt6/VSlW8E
+ VSifXuQC12h1e/mQWK7cB5Rtk+02lOr88RWuWSE4TKqmRXyaZATKUCnrlKlcD4teX5mrw6CXGG9
+ Sl4HQ9/7glg0IbAf3mJd7XHl04p3kqjqkxtrCVFvvabZLsp5qrhJVaoKhLLtqVeLGN4ux11CeJw
+ 4BXKKF/Tu2cduUPxB2UHy4sHHD6Xh6PazFuPOR6oOFfoA==
+Received: from he-nlb01-hz1.hornetsecurity.com ([94.100.132.6]) by mx-relay50-hz3.antispameurope.com;
+ Thu, 30 Oct 2025 11:54:33 +0100
+Received: from steina-w.localnet (host-82-135-125-110.customer.m-online.net [82.135.125.110])
+	(Authenticated sender: alexander.stein@ew.tq-group.com)
+	by smtp-out02-hz1.hornetsecurity.com (Postfix) with ESMTPSA id 257195A0A3E;
+	Thu, 30 Oct 2025 11:54:12 +0100 (CET)
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-arm-kernel@lists.infradead.org
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+ Richard Zhu <hongxing.zhu@nxp.com>
+Subject:
+ Re: [PATCH v6 10/11] PCI: imx6: Add CLKREQ# override to enable REFCLK for
+ i.MX95 PCIe
+Date: Thu, 30 Oct 2025 11:54:11 +0100
+Message-ID: <3022129.e9J7NaK4W3@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20251015030428.2980427-11-hongxing.zhu@nxp.com>
+References:
+ <20251015030428.2980427-1-hongxing.zhu@nxp.com>
+ <20251015030428.2980427-11-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 30 Oct 2025 11:52:40 +0100
-Message-Id: <DDVLMBC40199.2BVFYHDGQP4Q4@kernel.org>
-Subject: Re: [PATCH v7 0/2] rust: leds: add led classdev abstractions
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Dave Ertman" <david.m.ertman@intel.com>,
- "Ira Weiny" <ira.weiny@intel.com>, "Leon Romanovsky" <leon@kernel.org>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-leds@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-To: "Markus Probst" <markus.probst@posteo.de>, "Lee Jones" <lee@kernel.org>,
- "Pavel Machek" <pavel@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20251027200547.1038967-1-markus.probst@posteo.de>
-In-Reply-To: <20251027200547.1038967-1-markus.probst@posteo.de>
+Content-Type: text/plain; charset="iso-8859-1"
+X-cloud-security-sender:alexander.stein@ew.tq-group.com
+X-cloud-security-recipient:linux-pci@vger.kernel.org
+X-cloud-security-crypt: load encryption module
+X-cloud-security-Mailarchiv: E-Mail archived for: alexander.stein@ew.tq-group.com
+X-cloud-security-Mailarchivtype:outbound
+X-cloud-security-Virusscan:CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay50-hz3.antispameurope.com with 4cy1Fd1F7pz2nGYZ
+X-cloud-security-connect: he-nlb01-hz1.hornetsecurity.com[94.100.132.6], TLS=1, IP=94.100.132.6
+X-cloud-security-Digest:868febba0787f9587ee8ceef14de3c14
+X-cloud-security:scantime:1.954
+DKIM-Signature: a=rsa-sha256;
+ bh=Oz0ZhBQQWSFQZWJgTI1NfCDVGIjRIKKmdygZqOMsjqk=; c=relaxed/relaxed;
+ d=ew.tq-group.com;
+ h=content-type:mime-version:subject:from:to:message-id:date; s=hse1;
+ t=1761821673; v=1;
+ b=JeL9mdX4zYCBKmvA49E6Rl/TVMyLe3WVUoGexyXgAkFggMi8Mn7lHrLNrblTKL7ApJ4vcfBp
+ O2nnDRdAqqlv+7zeP4JPM0oztxQbMRLCUhmZSI6J/bUPiHZuiVOwxLJJQxU1geO55G8kIHpFtPq
+ bp+XxcC+DSlXyJqKEAxI9SZtmPtjlYdVcOs0yTzh/amsXHsgc8i2JZjbPYZxUdzKwBeODS1GvSr
+ kqFrvdVHDOtuPEJKcpuIcL08Ic2hAp9T/q+h/4NWShPe8mA9iWih/fHZdTjajJanptUixNLlhnz
+ CxGFlyXbP6XSWPWnFd+UGaFIh5zzlMZyU23eqoUhgT3qQ==
 
-Hi Markus,
+Hi,
 
-On Mon Oct 27, 2025 at 9:06 PM CET, Markus Probst wrote:
-> Markus Probst (2):
->   rust: Add trait to convert a device reference to a bus device
->     reference
->   rust: leds: add basic led classdev abstractions
+Am Mittwoch, 15. Oktober 2025, 05:04:27 CET schrieb Richard Zhu:
+> The CLKREQ# is an open drain, active low signal that is driven low by
+> the card to request reference clock. It's an optional signal added in
+> PCIe CEM r4.0, sec 2. Thus, this signal wouldn't be driven low if it's
+> reserved.
+>=20
+> On i.MX95 EVK board, the PCIe slot connected to the second PCIe
+> controller is one standard PCIe slot. The default voltage of CLKREQ# is
+> not active low, and may not be driven to active low due to the potential
+> scenario listed above (e.x INTEL e1000e network card).
+>=20
+> Since the reference clock controlled by CLKREQ# is required by i.MX95
+> PCIe host too. To make sure this clock is ready even when the CLKREQ#
+> isn't driven low by the card(e.x the scenario described above), force
+> CLKREQ# override active low for i.MX95 PCIe host to enable reference
+> clock.
+>=20
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-I don't see an entry in the MAINTAINERS file for the added LED code.
+Thanks, this is actually required on TQMa95xxSA.
+Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Did you hear back from the LED maintainers already?
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controll=
+er/dwc/pci-imx6.c
+> index a60fe7c337e08..aa5a4900d0eb6 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -52,6 +52,8 @@
+>  #define IMX95_PCIE_REF_CLKEN			BIT(23)
+>  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
+>  #define IMX95_PCIE_SS_RW_REG_1			0xf4
+> +#define IMX95_PCIE_CLKREQ_OVERRIDE_EN		BIT(8)
+> +#define IMX95_PCIE_CLKREQ_OVERRIDE_VAL		BIT(9)
+>  #define IMX95_PCIE_SYS_AUX_PWR_DET		BIT(31)
+> =20
+>  #define IMX95_PE0_GEN_CTRL_1			0x1050
+> @@ -711,6 +713,22 @@ static int imx7d_pcie_enable_ref_clk(struct imx_pcie=
+ *imx_pcie, bool enable)
+>  	return 0;
+>  }
+> =20
+> +static void  imx95_pcie_clkreq_override(struct imx_pcie *imx_pcie, bool =
+enable)
+> +{
+> +	regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_1,
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_EN,
+> +			   enable ? IMX95_PCIE_CLKREQ_OVERRIDE_EN : 0);
+> +	regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_1,
+> +			   IMX95_PCIE_CLKREQ_OVERRIDE_VAL,
+> +			   enable ? IMX95_PCIE_CLKREQ_OVERRIDE_VAL : 0);
+> +}
+> +
+> +static int imx95_pcie_enable_ref_clk(struct imx_pcie *imx_pcie, bool ena=
+ble)
+> +{
+> +	imx95_pcie_clkreq_override(imx_pcie, enable);
+> +	return 0;
+> +}
+> +
+>  static int imx_pcie_clk_enable(struct imx_pcie *imx_pcie)
+>  {
+>  	struct dw_pcie *pci =3D imx_pcie->pci;
+> @@ -1918,6 +1936,7 @@ static const struct imx_pcie_drvdata drvdata[] =3D {
+>  		.core_reset =3D imx95_pcie_core_reset,
+>  		.init_phy =3D imx95_pcie_init_phy,
+>  		.wait_pll_lock =3D imx95_pcie_wait_for_phy_pll_lock,
+> +		.enable_ref_clk =3D imx95_pcie_enable_ref_clk,
+>  	},
+>  	[IMX8MQ_EP] =3D {
+>  		.variant =3D IMX8MQ_EP,
+> @@ -1974,6 +1993,7 @@ static const struct imx_pcie_drvdata drvdata[] =3D {
+>  		.core_reset =3D imx95_pcie_core_reset,
+>  		.wait_pll_lock =3D imx95_pcie_wait_for_phy_pll_lock,
+>  		.epc_features =3D &imx95_pcie_epc_features,
+> +		.enable_ref_clk =3D imx95_pcie_enable_ref_clk,
+>  		.mode =3D DW_PCIE_EP_TYPE,
+>  	},
+>  };
+>=20
 
-@Lee, Pavel: What's your take on this?
 
-Depending on whether it is likely for the LED work to land in this cycle, I=
-'d
-otherwise pick the first patch into the driver-core tree for now, since it =
-can
-already be used in the PCI and platform code.
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-(I'd assume you want to wait for the driver from [1] before picking the Rus=
-t LED
-code, which has to wait for the next cycle since it depends on the Rust I2C
-code.)
 
-[1] https://lore.kernel.org/rust-for-linux/20251008181027.662616-1-markus.p=
-robst@posteo.de/
 
