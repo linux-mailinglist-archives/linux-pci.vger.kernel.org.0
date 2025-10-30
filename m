@@ -1,77 +1,140 @@
-Return-Path: <linux-pci+bounces-39848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63FFCC223C0
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 21:25:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12F5BC2253D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 21:46:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D99D466A1B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 20:18:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E9461AA1DDF
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 20:40:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1566F329E56;
-	Thu, 30 Oct 2025 20:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D898133554F;
+	Thu, 30 Oct 2025 20:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b="eE9lQAyj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF239329E41;
-	Thu, 30 Oct 2025 20:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761855369; cv=none; b=kGEvDWq5mGtCWrYT96nc3E2uBio4q0cG2meAWwjtOHaT7ortIQv4wi/e7X4ESjqB2h1HF5811bw0TWR4e+R/b57OMHx2zYLYvMDK+7411O6DuvOkIB5dGkRlujmtrdOXMj7CRTOxNYH/AZOTQ8soyWJ0tfPibkSmHsXm1AK+1Yk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761855369; c=relaxed/simple;
-	bh=BCTybeK7kbZPZoR7hVsfW499Ax65jB45Y6OolRAkkYY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=P5LuysHR60sqmgz6edBX97eHxi6O0msVLYXJPVTcUVxzrGd4id3EROceNiSbsR4KcUwzpGlHm3C26dKNnzBTek8DzKV6VUpjtNn04zvm2hv/73mKUFvbiIAfGxRbE9wGyCmYBTh9Bj9mMqIh5UTmstM7EcuJynFZVSa3/oZhLE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 6C88692009D; Thu, 30 Oct 2025 21:10:17 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 60ED392009C;
-	Thu, 30 Oct 2025 20:10:17 +0000 (GMT)
-Date: Thu, 30 Oct 2025 20:10:17 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Thierry Reding <thierry.reding@gmail.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-    linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-    linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, 
-    linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] MIPS: PCI: Use contextual data instead of global
- variable
-In-Reply-To: <20251030153121.GA1624982@bhelgaas>
-Message-ID: <alpine.DEB.2.21.2510302003120.1185@angie.orcam.me.uk>
-References: <20251030153121.GA1624982@bhelgaas>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118C4329E76;
+	Thu, 30 Oct 2025 20:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761856532; cv=pass; b=G27TFIa/DIBtc5MpHr34Feapl65OM52nQezihjuFZjLxD21ap+o5FcpcuvdR8HeE+DHA+RRBvCUazbkimXaNteRPYrTGviAW0/XijmLhTk3yRAFCufck5a/WaYLwfb1fLsaxkNBw+7NuG4N2CY3WCEeP5wjJkMXrY9KCaTmdgtU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761856532; c=relaxed/simple;
+	bh=ORDHBq2wSgguhYiKPUgFjArpWqxxv043hPSpzGj95z8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oGNxEwDsnYIOtx5dI3dEea0jPVmX1qNZsg06NKbDqVn5g3MX4Dl4PPFLXtOeC/Xu/KKC6KnWXET/K9S/mqQH3hd2vGYmGIfH6YLYT5fAoxbwps3u1C7a/kgKdqp/7wD+W8wKTclKbAdoRdO9K4D/vjoEhXvMTtDTSmq0Iic8Bp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b=eE9lQAyj; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761856485; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=gkFbZ213okCftKgeKgIIwNoz8BwA4nDP6MzCr0YARnjslWbS8bf914DjEU26RKsesu0i7gZx4BTfyz1xxAgNbQMZ+hOgVrrgyBtWW8VMvkD1hskA7r5/OPkLeophqY65m9j/4O4l1Y9P6SwMdoSy8qMjWiwQU/R+tvzDuY+qM+k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761856485; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+Wkm4p/uQ+Vqh1gCohypGhEVZ1/dwpzLDQlD8Bjlil8=; 
+	b=Gnr8xIhUAPzV2qfRb1oLqyxVo5sYZWiNHe+DDVUg/CHGOPZtjMxE9wPQmju6dCohAzktipJKP2YWvL5u9mW/WZSFsCaUWNk3l1EeVNWUSTxJB/E4oPJwqb0FZwBiY+h8vUyCgRnA6upcsdDuS10nEcP/oYKeYkbfFBQxcXmxQAc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sjoerd@collabora.com;
+	dmarc=pass header.from=<sjoerd@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761856485;
+	s=zohomail; d=collabora.com; i=sjoerd@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=+Wkm4p/uQ+Vqh1gCohypGhEVZ1/dwpzLDQlD8Bjlil8=;
+	b=eE9lQAyjvcD+VsAFUGr3EGVzq1lb8anctgxPOFZUE+IyjqTE06JyDOHlv1dZWFZ+
+	GJu62lcDIBD5F/Za7yXXSFfmLJl7bfrpDY2VhzDNK66M909P75cdhk3qdwz/uSfrpMY
+	nlZLfK3BN7dj33lt0OVX5CDVbVQpWIkm0m886a44=
+Received: by mx.zohomail.com with SMTPS id 1761856481126419.9479106165559;
+	Thu, 30 Oct 2025 13:34:41 -0700 (PDT)
+Message-ID: <f2c3e18fe22284c4a5ab0ce085e2d17be844a0a8.camel@collabora.com>
+Subject: Re: [PATCH 10/15] arm64: dts: mediatek: mt7981b: Add Ethernet and
+ WiFi offload support
+From: Sjoerd Simons <sjoerd@collabora.com>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno	
+ <angelogioacchino.delregno@collabora.com>, Ryder Lee
+ <ryder.lee@mediatek.com>,  Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi	 <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	 <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Chunfeng Yun	 <chunfeng.yun@mediatek.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,  "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lorenzo
+ Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, 
+	kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, 	linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org,  Bryan Hinton
+ <bryan@bryanhinton.com>
+Date: Thu, 30 Oct 2025 21:34:28 +0100
+In-Reply-To: <aPEhiVdgkVLvF9Et@makrotopia.org>
+References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
+	 <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
+	 <aPEhiVdgkVLvF9Et@makrotopia.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ZohoMailClient: External
 
-On Thu, 30 Oct 2025, Bjorn Helgaas wrote:
+On Thu, 2025-10-16 at 17:47 +0100, Daniel Golle wrote:
+> On Thu, Oct 16, 2025 at 12:08:46PM +0200, Sjoerd Simons wrote:
+> > Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
+> > including:
+> > - Ethernet MAC controller with dual GMAC support
+> > - Wireless Ethernet Dispatch (WED)
+> > - SGMII PHY controllers for high-speed Ethernet interfaces
+> > - Reserved memory regions for WiFi offload processor
+> >=20
+> > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> > ---
+> > =C2=A0arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 +++++++++++++++++=
++++++++++++++
+> > =C2=A01 file changed, 133 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> > b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> > index 13950fe6e8766..c85fa0ddf2da8 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
 
-> It does complicate maintenance though.  I think all of mips ultimately
-> uses register_pci_controller() and pcibios_scanbus().  Neither really
-> contains anything mips-specific, so they duplicate a lot of the code
-> in pci_host_probe().  Oh well, I guess that's part of the burden of
-> supporting old platforms forever.
+[snip]
+> > 			mdio_bus: mdio-bus {
+> > +				#address-cells =3D <1>;
+> > +				#size-cells =3D <0>;
+> > +
+> > +				int_gbe_phy: ethernet-phy@0 {
+> > +					compatible =3D "ethernet-phy-ieee802.3-c22";
+> > +					reg =3D <0>;
+> > +					phy-mode =3D "gmii";
+> > +					phy-is-integrated;
+> > +					nvmem-cells =3D <&phy_calibration>;
+> > +					nvmem-cell-names =3D "phy-cal-data";
+>=20
+> Please also define the two LEDs here with their corresponding (only)
+> pinctrl options for each of them, with 'status =3D "disabled";'. This
+> makes it easier for boards to make use of the Ethernet PHY leds by just
+> referencing the LED and setting the status to 'okay'.
 
- FWIW new MIPS hardware continues being manufactured and if there is 
-anything needed to clean up in generic MIPS/PCI platform code, then that 
-can certainly be scheduled, subject to developers' resource availability.  
-Individual MIPS platforms may vary of course, and with the solely legacy 
-ones it will depend on the availability of hardware and engineers willing 
-to maintain it.
+I left those out on purpose as i can't easily validate them. They're probab=
+ly better to be added once
+someone adds a board using the hw led control.
 
-  Maciej
+>=20
+--=20
+Sjoerd Simons
+Collabora Ltd.
 
