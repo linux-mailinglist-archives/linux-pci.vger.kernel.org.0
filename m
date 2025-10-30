@@ -1,61 +1,68 @@
-Return-Path: <linux-pci+bounces-39832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C1D7C21256
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:24:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 799D4C213EE
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:41:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 504593BF9A5
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:22:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1F7263502D4
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:41:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6533655FA;
-	Thu, 30 Oct 2025 16:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318DE2DF71D;
+	Thu, 30 Oct 2025 16:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NakRxAgf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFfTgDYU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A9C279329;
-	Thu, 30 Oct 2025 16:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37F82DE1E0;
+	Thu, 30 Oct 2025 16:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761841324; cv=none; b=jz6YNwWu68IwLfqOtOl66/Wt9kNHGFdEf45QaySFpx/KizpouswDGy0419yPT8s8PZvXDaDfAO4zNt/ql8JpLsP2WDUfJKuRWdiVEE1MThTzBhmxlEqYGIOAGlQ/mq5V155WMI7P+DLLSM4khIYEBnNP9yaR6ylRQ7JFoOkRe0g=
+	t=1761842484; cv=none; b=sKJWyP1goZ8K419qGaWpujAqngRnjsfL9m1fabaa5xZd2ICEFsZKGPf0JXCDplvhUV5SCSJor8/l4vyA7ZmnfRotu3xp/OwEF3BWKMhx/8THoBcXXmp+DICSdso+JhHVINquBfs53aKG/MZICANSQ4wW6epc/qigWnQ3hGkZCv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761841324; c=relaxed/simple;
-	bh=F+ThUuZwTPoqOt/a8AaNAZXa9DD3eH4/OEJNQKNPueM=;
+	s=arc-20240116; t=1761842484; c=relaxed/simple;
+	bh=aIoUwknKACszK3iv7HnkpaK0g2nYzhodMj6uyK4R4cI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IPtFH8IxtUFUQEUmMWwGicKpjOXjHQToM0qe13NjsE28LKCn3YYU+Txg169sgYYeYOl+VFzRoCFnk9Cy/EjWHPAqXnhM14nKkCl/xzVjNge2PMvDi9DUFYmM19dxrfTxmAGR2OVT+KMVVgmcUtWHurjVZO1yCpS+f6QGRWkzjEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NakRxAgf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47798C4CEF1;
-	Thu, 30 Oct 2025 16:22:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=rVnbuwrPva/HQJQ0JlIpWyhASuXiLTfCFI9oTZWi5nLzR6o6XG9L4lTSgoFA3VqFBTx6p1H1K2mykEola3u3PPiOi41DCFLhymS0TiSy47NU0ULVl91KcT+57qIbPGsmisgcpMEIMbNQJal/14xJiq8djGxckcZnzDgX9eVpblo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFfTgDYU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17F5C4CEF1;
+	Thu, 30 Oct 2025 16:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761841323;
-	bh=F+ThUuZwTPoqOt/a8AaNAZXa9DD3eH4/OEJNQKNPueM=;
+	s=k20201202; t=1761842483;
+	bh=aIoUwknKACszK3iv7HnkpaK0g2nYzhodMj6uyK4R4cI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NakRxAgf5j+AWB35aj0q8wYpPF+yCxnIwpGI2id4YibssjyXZWke4BL9F6dtizBqQ
-	 qIniLzOK/Wd7ucdaHgZyZLTD77gLzl0O8eSGDEW2dbkhlNseTkDJ6iNZYqv8iTiYJ1
-	 8OSb/667+qkK60On9KiL+um9H7xAasMWdKBvisHlSFKtFCEd5wyez4vKvYodGqolHa
-	 ovMHAzka3vDfe3jXQldAjcnqFgr5ygOKGcX0Z2LUxDWTDKhP0YMpw4g56cKwU4xLi4
-	 9ZCwlj9jwO9tYT9LKEDdKVyAWWWpQvYYBXSdimAyOjYmndLfb29ADBaty3bcCDVJ3r
-	 gzsjIXXopBw8g==
-Date: Thu, 30 Oct 2025 11:25:11 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org, 
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: Add PCIe 3 regulators for
- HAMOA-IOT-EVK board
-Message-ID: <5rpmcr23gsoiefmgxaci3fcc5yf3iwo4pbgywz6wuzljcnuxxe@pjn3g7dizim4>
-References: <20251030084804.1682744-1-ziyue.zhang@oss.qualcomm.com>
- <20251030084804.1682744-5-ziyue.zhang@oss.qualcomm.com>
+	b=OFfTgDYUwwtk9a3MXmhN+C5QZeQcKowOvQ7JtdxMp86xa7GEim8ms4eA76JdlZfHS
+	 eFhBevKSCYCx6yMiJ4R3yNh1fEKAOckpxYlBhI00S+GuEHbN3tDMHcHFjIQ1269XM1
+	 0162sMPeIP15mj38QzG6640TZdgvl0DyZO+zAfpQ7ma2P8O29xh8ZpHLOZ/sL32xe0
+	 iqWWZ9MUG/8ewMu0jydmDJAMYeZyKtiWVz81dJNlG9Bj+piDGu94CB0PcteyGg6uJe
+	 yPXStu00GL1l1YREbznHaQFRp4m3fyjHtsoP+kDTeTeOt9XtrZbecyLXwkT6Ds1J5w
+	 cFFbUk6PUfVZg==
+Date: Thu, 30 Oct 2025 22:11:12 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Johannes Erdfelt <johannes@erdfelt.com>, 
+	Aurelien Jarno <aurelien@aurel32.net>
+Cc: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org, 
+	guodong@riscstar.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, christian.bruel@foss.st.com, 
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, qiang.yu@oss.qualcomm.com, 
+	namcao@linutronix.de, thippeswamy.havalige@amd.com, inochiama@gmail.com, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
+Message-ID: <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
+References: <20251013153526.2276556-1-elder@riscstar.com>
+ <aPEhvFD8TzVtqE2n@aurel32.net>
+ <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
+ <aQEElhSCRNqaPf8m@aurel32.net>
+ <20251028184250.GM15521@sventech.com>
+ <82848c80-15e0-4c0e-a3f6-821a7f4778a5@riscstar.com>
+ <20251028204832.GN15521@sventech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,153 +72,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251030084804.1682744-5-ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <20251028204832.GN15521@sventech.com>
 
-On Thu, Oct 30, 2025 at 04:48:04PM +0800, Ziyue Zhang wrote:
-> HAMOA-IOT-EVK board includes a PCIe3 controller and x8 slot that require
-> proper power rail and control signal configuration. This update adds
-> `vddpe-3v3-supply` and `regulator-pcie-12v` to provide 3.3V to the PHY
-> and 12V to the slot for external devices.
++ Aurelien
+
+On Tue, Oct 28, 2025 at 01:48:32PM -0700, Johannes Erdfelt wrote:
+> On Tue, Oct 28, 2025, Alex Elder <elder@riscstar.com> wrote:
+> > On 10/28/25 1:42 PM, Johannes Erdfelt wrote:
+> > > I have been testing this patchset recently as well, but on an Orange Pi
+> > > RV2 board instead (and an extra RV2 specific patch to enable power to
+> > > the M.2 slot).
+> > > 
+> > > I ran into the same symptoms you had ("QID 0 timeout" after about 60
+> > > seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
+> > > seems to work fine with the "pcie_aspm=off" workaround as well.
+> > 
+> > I don't see this problem, and haven't tried to reproduce it yet.
+> > 
+> > Mani told me I needed to add these lines to ensure the "runtime
+> > PM hierarchy of PCIe chain" won't be "broken":
+> > 
+> > 	pm_runtime_set_active()
+> > 	pm_runtime_no_callbacks()
+> > 	devm_pm_runtime_enable()
+> > 
+> > Just out of curiosity, could you try with those lines added
+> > just before these assignments in k1_pcie_probe()?
+> > 
+> > 	k1->pci.dev = dev;
+> > 	k1->pci.ops = &k1_pcie_ops;
+> > 	dw_pcie_cap_set(&k1->pci, REQ_RES);
+> > 
+> > I doubt it will fix what you're seeing, but at the moment I'm
+> > working on something else.
 > 
-> It also introduces PM GPIOs to manage power enable and reset signals,
-> ensuring stable power sequencing and reliable PCIe3 operation.
-
-I'm afraid I don't understand this paragraph. In the first paragraph you
-establish that you have PCIe3, there is a x8 slot, and there's 3.3V and
-12V supplies.
-
-But where in the patch do you establish "reset signals" and "ensure
-stable power sequencing"?
-
+> Unfortunately there is no difference with the runtime PM hierarchy
+> additions.
 > 
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts b/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
-> index 24c2dcef0ba8..0984a6eed226 100644
-> --- a/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
-> +++ b/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
-> @@ -414,6 +414,48 @@ vreg_wwan: regulator-wwan {
->  		regulator-boot-on;
->  	};
->  
-> +	vreg_pcie_12v: regulator-pcie-12v {
 
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-nodes
+These are not supposed to fix the issues you were facing. I discussed with Alex
+offline and figured out that L1 works fine on his BPI-F3 board with a NVMe SSD.
 
-2. Nodes without unit addresses shall be ordered alpha-numerically by
-   the node name. For a few node types, they can be ordered by the main
-   property, e.g. pin configuration states ordered by value of “pins”
-   property.
+And I believe, Aurelien is also using that same board, but with different
+SSDs. But what is puzzling me is, L1 is breaking Aurelien's setup with 3 SSDs
+from different vendors. It apparently works fine on Alex's setup. So it somehow
+confirms that Root Port supports and behaves correctly with L1. But at the same
+time, I cannot just say without evidence that L1 is broken on all these SSDs
+that you and Aurelien tested with.
 
-Regards,
-Bjorn
+So until that is figured out, I've asked Alex to disable L1 CAP in the
+controller driver. So in the next version of this series, your SSDs should work
+out of the box.
 
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "VREG_PCIE_12V";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +
-> +		gpio = <&pm8550ve_8_gpios 8 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-0 = <&pcie_x8_12v>;
-> +		pinctrl-names = "default";
-> +	};
-> +
-> +	vreg_pcie_3v3_aux: regulator-pcie-3v3-aux {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "VREG_PCIE_3P3_AUX";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&pmc8380_3_gpios 8 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-0 = <&pm_sde7_aux_3p3_en>;
-> +		pinctrl-names = "default";
-> +	};
-> +
-> +	vreg_pcie_3v3: regulator-pcie-3v3 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "VREG_PCIE_3P3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&pmc8380_3_gpios 6 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-0 = <&pm_sde7_main_3p3_en>;
-> +		pinctrl-names = "default";
-> +};
-> +
->  	sound {
->  		compatible = "qcom,x1e80100-sndcard";
->  		model = "X1E80100-EVK";
-> @@ -844,6 +886,12 @@ &mdss_dp3_phy {
->  	status = "okay";
->  };
->  
-> +&pcie3_port {
-> +	vpcie12v-supply = <&vreg_pcie_12v>;
-> +	vpcie3v3-supply = <&vreg_pcie_3v3>;
-> +	vpcie3v3aux-supply = <&vreg_pcie_3v3_aux>;
-> +};
-> +
->  &pcie5 {
->  	vddpe-3v3-supply = <&vreg_wwan>;
->  };
-> @@ -872,6 +920,17 @@ usb0_3p3_reg_en: usb0-3p3-reg-en-state {
->  	};
->  };
->  
-> +&pm8550ve_8_gpios {
-> +	pcie_x8_12v: pcie-12v-default-state {
-> +		pins = "gpio8";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +};
-> +
->  &pm8550ve_9_gpios {
->  	usb0_1p8_reg_en: usb0-1p8-reg-en-state {
->  		pins = "gpio8";
-> @@ -883,6 +942,26 @@ usb0_1p8_reg_en: usb0-1p8-reg-en-state {
->  	};
->  };
->  
-> +&pmc8380_3_gpios {
-> +	pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
-> +		pins = "gpio8";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +
-> +	pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
-> +		pins = "gpio6";
-> +		function = "normal";
-> +		output-enable;
-> +		output-high;
-> +		bias-pull-down;
-> +		power-source = <0>;
-> +	};
-> +};
-> +
->  &pmc8380_5_gpios {
->  	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
->  		pins = "gpio8";
-> -- 
-> 2.34.1
-> 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
