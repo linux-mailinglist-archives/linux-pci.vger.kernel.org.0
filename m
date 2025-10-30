@@ -1,140 +1,364 @@
-Return-Path: <linux-pci+bounces-39849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12F5BC2253D
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 21:46:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A691FC22576
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 21:51:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E9461AA1DDF
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 20:40:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49EFC5661DA
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 20:41:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D898133554F;
-	Thu, 30 Oct 2025 20:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E64C333459;
+	Thu, 30 Oct 2025 20:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b="eE9lQAyj"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="DsC38lET";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yWVHoBY1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118C4329E76;
-	Thu, 30 Oct 2025 20:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761856532; cv=pass; b=G27TFIa/DIBtc5MpHr34Feapl65OM52nQezihjuFZjLxD21ap+o5FcpcuvdR8HeE+DHA+RRBvCUazbkimXaNteRPYrTGviAW0/XijmLhTk3yRAFCufck5a/WaYLwfb1fLsaxkNBw+7NuG4N2CY3WCEeP5wjJkMXrY9KCaTmdgtU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761856532; c=relaxed/simple;
-	bh=ORDHBq2wSgguhYiKPUgFjArpWqxxv043hPSpzGj95z8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oGNxEwDsnYIOtx5dI3dEea0jPVmX1qNZsg06NKbDqVn5g3MX4Dl4PPFLXtOeC/Xu/KKC6KnWXET/K9S/mqQH3hd2vGYmGIfH6YLYT5fAoxbwps3u1C7a/kgKdqp/7wD+W8wKTclKbAdoRdO9K4D/vjoEhXvMTtDTSmq0Iic8Bp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b=eE9lQAyj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761856485; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gkFbZ213okCftKgeKgIIwNoz8BwA4nDP6MzCr0YARnjslWbS8bf914DjEU26RKsesu0i7gZx4BTfyz1xxAgNbQMZ+hOgVrrgyBtWW8VMvkD1hskA7r5/OPkLeophqY65m9j/4O4l1Y9P6SwMdoSy8qMjWiwQU/R+tvzDuY+qM+k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761856485; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+Wkm4p/uQ+Vqh1gCohypGhEVZ1/dwpzLDQlD8Bjlil8=; 
-	b=Gnr8xIhUAPzV2qfRb1oLqyxVo5sYZWiNHe+DDVUg/CHGOPZtjMxE9wPQmju6dCohAzktipJKP2YWvL5u9mW/WZSFsCaUWNk3l1EeVNWUSTxJB/E4oPJwqb0FZwBiY+h8vUyCgRnA6upcsdDuS10nEcP/oYKeYkbfFBQxcXmxQAc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sjoerd@collabora.com;
-	dmarc=pass header.from=<sjoerd@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761856485;
-	s=zohomail; d=collabora.com; i=sjoerd@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=+Wkm4p/uQ+Vqh1gCohypGhEVZ1/dwpzLDQlD8Bjlil8=;
-	b=eE9lQAyjvcD+VsAFUGr3EGVzq1lb8anctgxPOFZUE+IyjqTE06JyDOHlv1dZWFZ+
-	GJu62lcDIBD5F/Za7yXXSFfmLJl7bfrpDY2VhzDNK66M909P75cdhk3qdwz/uSfrpMY
-	nlZLfK3BN7dj33lt0OVX5CDVbVQpWIkm0m886a44=
-Received: by mx.zohomail.com with SMTPS id 1761856481126419.9479106165559;
-	Thu, 30 Oct 2025 13:34:41 -0700 (PDT)
-Message-ID: <f2c3e18fe22284c4a5ab0ce085e2d17be844a0a8.camel@collabora.com>
-Subject: Re: [PATCH 10/15] arm64: dts: mediatek: mt7981b: Add Ethernet and
- WiFi offload support
-From: Sjoerd Simons <sjoerd@collabora.com>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno	
- <angelogioacchino.delregno@collabora.com>, Ryder Lee
- <ryder.lee@mediatek.com>,  Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi	 <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	 <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Chunfeng Yun	 <chunfeng.yun@mediatek.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,  "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lorenzo
- Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, 
-	kernel@collabora.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, 	linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, netdev@vger.kernel.org,  Bryan Hinton
- <bryan@bryanhinton.com>
-Date: Thu, 30 Oct 2025 21:34:28 +0100
-In-Reply-To: <aPEhiVdgkVLvF9Et@makrotopia.org>
-References: <20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com>
-	 <20251016-openwrt-one-network-v1-10-de259719b6f2@collabora.com>
-	 <aPEhiVdgkVLvF9Et@makrotopia.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-5 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A1E3271F8;
+	Thu, 30 Oct 2025 20:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761856724; cv=none; b=Ov73VzzqTfXZqbqHftEvaZF+5Y97CisqJh1q4EERtOheK2NU5OT/dy7VBOwMp3QtqSWozHoC6CRWLzlwiSX6IOgWydbURRFmlVXVpnPIcoHdOxFyggLtJk4ilbOU7cJyMGwLsOwMwHB00F/mpH+R1AfliT+1Nm1nJtTpAFQh9s0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761856724; c=relaxed/simple;
+	bh=Otc/CbhHm7gxjIcqJPP+5I/QV+QqqLRp7pDOdr60Iuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wq3hD2Nl5aQaSYo7/b/R7x5wWVAA4vA0lCwTt6kV57ewuFDhzxb1F///LbMIyV5RE4boMBlSae/dmz5P3IMDq+YyCpJdx1x1Coa7GQIyjgmkVHc825THfxn4vWsXPESlsdj+xcUuQX1y+Jcjuxdzi/9QH2E5bayumX4Hf0QxyeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=DsC38lET; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yWVHoBY1; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8C9A014001DA;
+	Thu, 30 Oct 2025 16:38:41 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Thu, 30 Oct 2025 16:38:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1761856721;
+	 x=1761943121; bh=p/8nyxWirOj4W+hYeRtMTG+81adajTiGVYuh/z6LXOE=; b=
+	DsC38lETCmk/UCR0NCEwSG/uMsWXv3KF8nqtv5mXrxnOSNXAuNpeCuWFpcBvb+Rd
+	qJBjT5+eedr1G7iNzvqfrWIs8YRmqr2Wn21vsB0Emgw2ammXeAjJNTKT8X3CRF7f
+	sgThj4w6Go/EWjZJV5hnPtkmvfi6+pv64RwRGY8broPbxr/l47tuMqaHoojfoTlR
+	x8NDbZZySjAGPtlXTOwEeVtGqPiFwdzOMit5oo4Jlrg3Xiv12ZeKHlQsjJ2dfLoo
+	Dd4zchU1KSWfT+xErx3Qp84XfWS++Q21slSUIXTr2Vf+w51bpou71HnP2egRiZFl
+	JYynwj6jAFgGlfam/THdRQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761856721; x=
+	1761943121; bh=p/8nyxWirOj4W+hYeRtMTG+81adajTiGVYuh/z6LXOE=; b=y
+	WVHoBY1ck0fhOfaNyfXlK3MsltrJ16L4JMUjk4/8F1vhiZvK9+ByZAPE2Fr+lDEn
+	31wuiMAdQO9JUckxnFimEg9qgiR7Buz2VVu3gcL2K4BISNU112JvnuEfmtkVFPU/
+	WkKn9wiMCn/ibulsR45YnPo3Fgmy6RI+6Fk3aMG8co7oZG18ttXuQ58m649z8toG
+	uT5IEDW7hMQMIpoPYi22aGzWDJxfD1aqI4Iw7ZnDH3Ltcib06o+rASeKq7T4jlRO
+	a3slUeUe0CCl0KdMKPV16WqcZAYF7H/sqwJXPOUxsj0SzU4xV0yEV9o7Tp0CRH3k
+	UOAJNTt/tx/Lco0qxnstA==
+X-ME-Sender: <xms:z8wDaZLo5dD7ZxDV6II0FqH4O7jccYwOPy06udjLAl4RXkxI_trqqw>
+    <xme:z8wDaW3NyxbzGjLL5VL8Xo8PzYRVFCOzMbstflMQqva5Wle0FjF3VlMyKQrzHC5El
+    q3grRf5LAMq5wsIJswOZBD4TQxX7zoQ86zYjcR_77WmesqtyRs2M7A>
+X-ME-Received: <xmr:z8wDaVIW0bK32xwhEPjPTrLSw9kl2duIIdiJN2tr1QWnNDZ4iA2BxWRaG40>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduieejheelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
+    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopedvgedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopegrlhgvgidrfihilhhlihgrmhhsohhnsehrvgguhhgrthdrtghomhdprhgtphhtthho
+    pehlvghonhhrohesnhhvihguihgrrdgtohhmpdhrtghpthhtohepjhhgghesnhhvihguih
+    grrdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdr
+    ohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpth
+    htoheptghhrhhishhtihgrnhdrkhhovghnihhgsegrmhgurdgtohhmpdhrtghpthhtohep
+    ughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtph
+    htthhopehiohhmmhhusehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:z8wDaaMiGwbWX7czDe5iiad6EIpQFwJ1yQIteZ0s-dAUbUDysgOuAQ>
+    <xmx:z8wDaWyOXEdvkv2nByzkDyCMSCs83bIcsse_dM2y2-1KvLiBXmR81Q>
+    <xmx:z8wDaSIr0J6kFZz5NMvG-wATtPZO5nIJ7XYS0F5DucQqhu-KLzZWag>
+    <xmx:z8wDaVrwkjuhIMeJQEscr9oJy00Glt_Gj0UMB1ES18qD9i2fTKlcuQ>
+    <xmx:0cwDacSuknghBUpyXTe85wMhy52PcPg_FWLjbD2hGGkyV4h7HjHD1dZT>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 Oct 2025 16:38:37 -0400 (EDT)
+Date: Thu, 30 Oct 2025 14:38:36 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>, Leon Romanovsky
+ <leonro@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, Christian
+ =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, Jens Axboe
+ <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Logan Gunthorpe
+ <logang@deltatee.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin
+ Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 9/9] vfio/pci: Add dma-buf export support for MMIO
+ regions
+Message-ID: <20251030143836.66cdf116@shazbot.org>
+In-Reply-To: <72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
+References: <cover.1760368250.git.leon@kernel.org>
+	<72ecaa13864ca346797e342d23a7929562788148.1760368250.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-10-16 at 17:47 +0100, Daniel Golle wrote:
-> On Thu, Oct 16, 2025 at 12:08:46PM +0200, Sjoerd Simons wrote:
-> > Add device tree nodes for the Ethernet subsystem on MT7981B SoC,
-> > including:
-> > - Ethernet MAC controller with dual GMAC support
-> > - Wireless Ethernet Dispatch (WED)
-> > - SGMII PHY controllers for high-speed Ethernet interfaces
-> > - Reserved memory regions for WiFi offload processor
-> >=20
-> > Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
-> > ---
-> > =C2=A0arch/arm64/boot/dts/mediatek/mt7981b.dtsi | 133 +++++++++++++++++=
-+++++++++++++
-> > =C2=A01 file changed, 133 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> > b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> > index 13950fe6e8766..c85fa0ddf2da8 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+On Mon, 13 Oct 2025 18:26:11 +0300
+Leon Romanovsky <leon@kernel.org> wrote:
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index fe247d0e2831..56b1320238a9 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1511,6 +1520,19 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+>  		return vfio_pci_core_pm_exit(vdev, flags, arg, argsz);
+>  	case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
+>  		return vfio_pci_core_feature_token(vdev, flags, arg, argsz);
+> +	case VFIO_DEVICE_FEATURE_DMA_BUF:
+> +		if (device->ops->ioctl != vfio_pci_core_ioctl)
+> +			/*
+> +			 * Devices that overwrite general .ioctl() callback
+> +			 * usually do it to implement their own
+> +			 * VFIO_DEVICE_GET_REGION_INFO handlerm and they present
 
-[snip]
-> > 			mdio_bus: mdio-bus {
-> > +				#address-cells =3D <1>;
-> > +				#size-cells =3D <0>;
-> > +
-> > +				int_gbe_phy: ethernet-phy@0 {
-> > +					compatible =3D "ethernet-phy-ieee802.3-c22";
-> > +					reg =3D <0>;
-> > +					phy-mode =3D "gmii";
-> > +					phy-is-integrated;
-> > +					nvmem-cells =3D <&phy_calibration>;
-> > +					nvmem-cell-names =3D "phy-cal-data";
->=20
-> Please also define the two LEDs here with their corresponding (only)
-> pinctrl options for each of them, with 'status =3D "disabled";'. This
-> makes it easier for boards to make use of the Ethernet PHY leds by just
-> referencing the LED and setting the status to 'okay'.
+Typo, "handlerm"
 
-I left those out on purpose as i can't easily validate them. They're probab=
-ly better to be added once
-someone adds a board using the hw led control.
+> +			 * different BAR information from the real PCI.
+> +			 *
+> +			 * DMABUF relies on real PCI information.
+> +			 */
+> +			return -EOPNOTSUPP;
+> +
+> +		return vfio_pci_core_feature_dma_buf(vdev, flags, arg, argsz);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+...
+> @@ -2459,6 +2482,7 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  			break;
+>  		}
+>  
+> +		vfio_pci_dma_buf_move(vdev, true);
+>  		vfio_pci_zap_bars(vdev);
+>  	}
+>  
+> @@ -2482,6 +2506,10 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  
+>  	ret = pci_reset_bus(pdev);
+>  
+> +	list_for_each_entry(vdev, &dev_set->device_list, vdev.dev_set_list)
+> +		if (__vfio_pci_memory_enabled(vdev))
+> +			vfio_pci_dma_buf_move(vdev, false);
+> +
+>  	vdev = list_last_entry(&dev_set->device_list,
+>  			       struct vfio_pci_core_device, vdev.dev_set_list);
+>  
 
->=20
---=20
-Sjoerd Simons
-Collabora Ltd.
+This needs to be placed in the existing undo loop with the up_write(),
+otherwise it can be missed in the error case.
+
+> diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/vfio_pci_dmabuf.c
+> new file mode 100644
+> index 000000000000..eaba010777f3
+> --- /dev/null
+> +++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
+> +static unsigned int calc_sg_nents(struct vfio_pci_dma_buf *priv,
+> +				  struct dma_iova_state *state)
+> +{
+> +	struct phys_vec *phys_vec = priv->phys_vec;
+> +	unsigned int nents = 0;
+> +	u32 i;
+> +
+> +	if (!state || !dma_use_iova(state))
+> +		for (i = 0; i < priv->nr_ranges; i++)
+> +			nents += DIV_ROUND_UP(phys_vec[i].len, UINT_MAX);
+> +	else
+> +		/*
+> +		 * In IOVA case, there is only one SG entry which spans
+> +		 * for whole IOVA address space, but we need to make sure
+> +		 * that it fits sg->length, maybe we need more.
+> +		 */
+> +		nents = DIV_ROUND_UP(priv->size, UINT_MAX);
+
+I think we're arguably running afoul of the coding style standard here
+that this is not a single simple statement and should use braces.
+
+> +
+> +	return nents;
+> +}
+> +
+> +static struct sg_table *
+> +vfio_pci_dma_buf_map(struct dma_buf_attachment *attachment,
+> +		     enum dma_data_direction dir)
+> +{
+> +	struct vfio_pci_dma_buf *priv = attachment->dmabuf->priv;
+> +	struct dma_iova_state *state = attachment->priv;
+> +	struct phys_vec *phys_vec = priv->phys_vec;
+> +	unsigned long attrs = DMA_ATTR_MMIO;
+> +	unsigned int nents, mapped_len = 0;
+> +	struct scatterlist *sgl;
+> +	struct sg_table *sgt;
+> +	dma_addr_t addr;
+> +	int ret;
+> +	u32 i;
+> +
+> +	dma_resv_assert_held(priv->dmabuf->resv);
+> +
+> +	if (priv->revoked)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
+> +	if (!sgt)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	nents = calc_sg_nents(priv, state);
+> +	ret = sg_alloc_table(sgt, nents, GFP_KERNEL | __GFP_ZERO);
+> +	if (ret)
+> +		goto err_kfree_sgt;
+> +
+> +	sgl = sgt->sgl;
+> +
+> +	for (i = 0; i < priv->nr_ranges; i++) {
+> +		if (!state) {
+> +			addr = pci_p2pdma_bus_addr_map(priv->provider,
+> +						       phys_vec[i].paddr);
+> +		} else if (dma_use_iova(state)) {
+> +			ret = dma_iova_link(attachment->dev, state,
+> +					    phys_vec[i].paddr, 0,
+> +					    phys_vec[i].len, dir, attrs);
+> +			if (ret)
+> +				goto err_unmap_dma;
+> +
+> +			mapped_len += phys_vec[i].len;
+> +		} else {
+> +			addr = dma_map_phys(attachment->dev, phys_vec[i].paddr,
+> +					    phys_vec[i].len, dir, attrs);
+> +			ret = dma_mapping_error(attachment->dev, addr);
+> +			if (ret)
+> +				goto err_unmap_dma;
+> +		}
+> +
+> +		if (!state || !dma_use_iova(state))
+> +			sgl = fill_sg_entry(sgl, phys_vec[i].len, addr);
+> +	}
+> +
+> +	if (state && dma_use_iova(state)) {
+> +		WARN_ON_ONCE(mapped_len != priv->size);
+> +		ret = dma_iova_sync(attachment->dev, state, 0, mapped_len);
+> +		if (ret)
+> +			goto err_unmap_dma;
+> +		sgl = fill_sg_entry(sgl, mapped_len, state->addr);
+> +	}
+> +
+> +	/*
+> +	 * SGL must be NULL to indicate that SGL is the last one
+> +	 * and we allocated correct number of entries in sg_alloc_table()
+> +	 */
+> +	WARN_ON_ONCE(sgl);
+> +	return sgt;
+> +
+> +err_unmap_dma:
+> +	if (!i || !state)
+> +		; /* Do nothing */
+> +	else if (dma_use_iova(state))
+> +		dma_iova_destroy(attachment->dev, state, mapped_len, dir,
+> +				 attrs);
+> +	else
+> +		for_each_sgtable_dma_sg(sgt, sgl, i)
+> +			dma_unmap_phys(attachment->dev, sg_dma_address(sgl),
+> +					sg_dma_len(sgl), dir, attrs);
+
+Same, here for braces.
+
+> +	sg_free_table(sgt);
+> +err_kfree_sgt:
+> +	kfree(sgt);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void vfio_pci_dma_buf_unmap(struct dma_buf_attachment *attachment,
+> +				   struct sg_table *sgt,
+> +				   enum dma_data_direction dir)
+> +{
+> +	struct vfio_pci_dma_buf *priv = attachment->dmabuf->priv;
+> +	struct dma_iova_state *state = attachment->priv;
+> +	unsigned long attrs = DMA_ATTR_MMIO;
+> +	struct scatterlist *sgl;
+> +	int i;
+> +
+> +	if (!state)
+> +		; /* Do nothing */
+> +	else if (dma_use_iova(state))
+> +		dma_iova_destroy(attachment->dev, state, priv->size, dir,
+> +				 attrs);
+> +	else
+> +		for_each_sgtable_dma_sg(sgt, sgl, i)
+> +			dma_unmap_phys(attachment->dev, sg_dma_address(sgl),
+> +				       sg_dma_len(sgl), dir, attrs);
+> +
+
+Here too.
+
+> +	sg_free_table(sgt);
+> +	kfree(sgt);
+> +}
+...
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 75100bf009ba..63214467c875 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1478,6 +1478,31 @@ struct vfio_device_feature_bus_master {
+>  };
+>  #define VFIO_DEVICE_FEATURE_BUS_MASTER 10
+>  
+> +/**
+> + * Upon VFIO_DEVICE_FEATURE_GET create a dma_buf fd for the
+> + * regions selected.
+> + *
+> + * open_flags are the typical flags passed to open(2), eg O_RDWR, O_CLOEXEC,
+> + * etc. offset/length specify a slice of the region to create the dmabuf from.
+> + * nr_ranges is the total number of (P2P DMA) ranges that comprise the dmabuf.
+> + *
+
+Probably worth noting that .flags should be zero, I see we enforce
+that.  Thanks,
+
+Alex
+
+> + * Return: The fd number on success, -1 and errno is set on failure.
+> + */
+> +#define VFIO_DEVICE_FEATURE_DMA_BUF 11
+> +
+> +struct vfio_region_dma_range {
+> +	__u64 offset;
+> +	__u64 length;
+> +};
+> +
+> +struct vfio_device_feature_dma_buf {
+> +	__u32	region_index;
+> +	__u32	open_flags;
+> +	__u32   flags;
+> +	__u32   nr_ranges;
+> +	struct vfio_region_dma_range dma_ranges[];
+> +};
+> +
+>  /* -------- API for Type1 VFIO IOMMU -------- */
+>  
+>  /**
+
 
