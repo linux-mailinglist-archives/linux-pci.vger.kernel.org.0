@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-39818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4D36C20C60
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:57:29 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33407C20C74
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:57:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BE0318915DA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:52:24 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A1D1034FCBC
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:57:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A2D827EFFA;
-	Thu, 30 Oct 2025 14:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC04286405;
+	Thu, 30 Oct 2025 14:57:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQk1KEPL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZ/8uG9s"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333522773F9;
-	Thu, 30 Oct 2025 14:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79EB283FCE;
+	Thu, 30 Oct 2025 14:57:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761835913; cv=none; b=eAWSo8Xv0PV/xgGVFZzKrCZF3o6uGBDotSNMBscJ5aMQ0tAZVKhVbSN4vNhZ70pX7TUdd2MrxNGztVadJVQn1dXn09JBGPxumyJxIjPnrjWtdLC4xYQ0eEjSjED82r0il5epMHmsZuY/IzN+yUZzdcE08PbtPLiMQr1qNJMngck=
+	t=1761836269; cv=none; b=LfAKhJ15xOkOJKu3mQTedEhouLmFizZUDoRqIH51ttJ6tl4SZFN/sGH1De7J7u660PbN8JMYQIZKu0ivBa1MDbrwGGMMJkYVTQpPuOcD/swkG8p87MrLLWrnuv8BuSb2psaJL74xdLPMTnXlFUrnaDszJGwRLW6TAIeItfCSi/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761835913; c=relaxed/simple;
-	bh=WKwjBQEqXFPKO+WzYJAtU397ptDKk7qO+md5aDf4qeI=;
+	s=arc-20240116; t=1761836269; c=relaxed/simple;
+	bh=MPH444EZaU6hB0oe8fwJQJCQuWbHbzn+g5+EsUVpY/8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g+lImkSjRg8fBNcIP8qM82K+9mGVlSGppCxwkE4CF3mUanGenAw5nvcjRnk4wEcldle+q6ctZ3RBFQgM/sKEtSVJGVaf/d8PkM/MpIoGcMSTl/H+ZfrqwiHqRGLiMLMUaxeT+orle5NrxPtznXLI5Y8S4iEtyrS672Q+UByCSeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQk1KEPL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A797C4CEF1;
-	Thu, 30 Oct 2025 14:51:45 +0000 (UTC)
+	 MIME-Version:Content-Type; b=KihXs2Ax3cH2oVD0pN973jrvPe2rorCPQj8pvasGthU/0WVTXraqL/evd8Hah4wOiAqBxLX8HxZGyovBM38GV3Zi6BEPtPcbyr0cWO2gnhWUcdMIPXlj9BDMBmayDSWtOp/X0HibMBVJvhRdz08gvwL7k0slifE9WiEDoEUfsfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZ/8uG9s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D33C4CEF8;
+	Thu, 30 Oct 2025 14:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761835912;
-	bh=WKwjBQEqXFPKO+WzYJAtU397ptDKk7qO+md5aDf4qeI=;
+	s=k20201202; t=1761836268;
+	bh=MPH444EZaU6hB0oe8fwJQJCQuWbHbzn+g5+EsUVpY/8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=eQk1KEPLZSr8AEWd/EU8u+Rrrky9aVBOpC7OJb24MtNAy8lk0RV3tvhMD4m4ACHgr
-	 fMlATft9Er2BS36a8xMX9gPc8K4bBTSuSpOK5p3EBHonicaJ4mGIeI7f3kztqcEmTe
-	 SRD8UsdgXC55zByvBL2GPf9BGZR+5Z6bCWvWJ48Guof+RmgX8uZh/na2+7gRavwx5/
-	 5rqNlDqOvtDtHZ7DFY/4iS63rM4nUKvfa0DBlZL9xCA/LxOOXy0Wuh1dST1pH8CTe/
-	 Ds9vTfVN/js3WH8pZd2wSp+qSUJy5qicslENSC1jFjvj8vnfDDjb5Z40aSUNg9UkYL
-	 AfUfkjCtX7Bqg==
+	b=NZ/8uG9sgSxgb3j2CP8YltLWsQB47scQpxGKcbR+MrBAvSTgaYZddAH9NvQVGxgCw
+	 jMpUMahh2MOfXnnLoIWYFzo/z5SUQWH6OtWirV1MskoUFnhA0Lw3LEVhTLAJ4ge2sB
+	 EaW7Xt7Ts72Nt2tAEOjVuHrEoE4oiAUc53DYyXuydo3/t8rkO7kS4zaierKba829eG
+	 lTVRQZtleWTO1rimqLOyp5tt4yk56zMv3caXQ/wkevBe5n0RkWPmE2h5jGuWpQ60AL
+	 gx4egPU999DB+RUobTImD6plP3mbmCWsKA1FWaCseeITaGgey0cf7mVcCxCSzZaRaR
+	 zCQ0turLOoXvg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>,
  Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
@@ -66,12 +66,12 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, Oliver Mangold
  <oliver.mangold@pm.me>
-Subject: Re: [PATCH v12 0/4] New trait OwnableRefCounted for ARef<->Owned
- conversion.
-In-Reply-To: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me>
+Subject: Re: [PATCH v12 2/4] `AlwaysRefCounted` is renamed to `RefCounted`.
+In-Reply-To: <20251001-unique-ref-v12-2-fa5c31f0c0c4@pm.me>
 References: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me>
-Date: Thu, 30 Oct 2025 15:51:38 +0100
-Message-ID: <87v7jw8mth.fsf@t14s.mail-host-address-is-not-set>
+ <20251001-unique-ref-v12-2-fa5c31f0c0c4@pm.me>
+Date: Thu, 30 Oct 2025 15:57:35 +0100
+Message-ID: <87sef08mjk.fsf@t14s.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,23 +80,33 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Hi Oliver,
 Oliver Mangold <oliver.mangold@pm.me> writes:
 
-> This allows to convert between ARef<T> and Owned<T> by
-> implementing the new trait OwnedRefCounted.
->
-> This way we will have a shared/unique reference counting scheme
-> for types with built-in refcounts in analogy to Arc/UniqueArc.
+> `AlwaysRefCounted` will become a marker trait to indicate that it is
+> allowed to obtain an `ARef<T>` from a `&T`, which cannot be allowed for
+> types which are also Ownable.
 >
 > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
 
-I rebased your series on top of v6.18-rc3 and pushed it here [1]. I also
-added some commits with review feedback.
+Please update the title to
+
+ rust: rename `AlwaysRefCounted` to `RefCounted`
+
+No period in the summary line.
+
+With that, you can add my review tag.
+
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+
+Since this patch touches so many moving parts of the rust tree, it is
+going to be a cat and mouse game regarding rebasing this thing. It also
+touches a lot if peoples code. I am not sure how something like this
+would merge. Do we need ACK from everyone @Miguel?
 
 Best regards,
 Andreas Hindborg
 
-[1] https://github.com/metaspace/linux/tree/ownable-v12
+
 
 
