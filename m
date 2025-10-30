@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-39788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AD39C1F6AD
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 11:00:33 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E629EC1F6FC
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 11:03:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6F7619C8393
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:00:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 720A54EBC88
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0947434E765;
-	Thu, 30 Oct 2025 10:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FC3354AD8;
+	Thu, 30 Oct 2025 10:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="vvHYm9kH"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="D7faxU3P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
+Received: from sinmsgout01.his.huawei.com (sinmsgout01.his.huawei.com [119.8.177.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F70E1B424F;
-	Thu, 30 Oct 2025 10:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF20350D74;
+	Thu, 30 Oct 2025 10:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761818427; cv=none; b=JI3hZay2lk7F+DHrB9KXXrmZf8e+R7FOTDkEuj49XBAe7TFpmfmzpOAngyNT7c+0YAzO+1rJGhVrYlrCY8Wq5BBJEa5UZ/H6a5JZZryd7CCuDruyMPL3m9osvAeGfNq3H7M1FDnupZEzpcB6QXfmGG7JSl7m+kPjwIAgNW9/kr8=
+	t=1761818464; cv=none; b=d10pNxRh2TfMoNO9A20WXvX8Fdob+TXIPS4IPypeh/HfqgYRrFCK8s9XtpAOd84DF+hQj83UhTBzIXpPaoD36ikMZJus4Mmkf5+wHeHBiUm6kbOV+8dVtI74ifMZaxKBCnNFcvZ/L+/QPSw/32D9oo4hzPI6Vxbo0iidN8kMuVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761818427; c=relaxed/simple;
-	bh=+dOgH4jl1jXrMG8zo0qv/8UurKQ8NypvMmC9KsBYtXI=;
+	s=arc-20240116; t=1761818464; c=relaxed/simple;
+	bh=8z2DPsxRfU7/x/3wxyDVReRDq9qq0yZeP1k+PdqwnXg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vESpSh44H9D8Th3sXEGFFv/4X+wcGRjzkmgItjYXqF/u+JRvmsQSVdrVSgPJfntJjREBuq0mNCFuQpQBZuHQxOL3pCM7U4h734/puauTpI8YpTDP2SCegF77Dr/1IFo3xGz/XDiazoz2pVZr6+Res5h3oaKP9C+0fHOfpgBOoXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=vvHYm9kH; arc=none smtp.client-ip=119.8.177.37
+	 MIME-Version:Content-Type; b=URonLUTnUjYPKhYfWOq2r6648DYaILB7h+QbUdg55SAkzqbRLFxDCshVKW50mGNiB3869dQ2mxJcyZ0O/Dgil1imvOH/ByxM1ZTMNcHbobzGyIblr+B6ZlBJ+I/9wUkhOUE8ejmfaNG8j4fZVwSA51PI0VSEbTYguXJNL9FnqLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=D7faxU3P; arc=none smtp.client-ip=119.8.177.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=qSau6eJl3xmVw0sFsM0etsPCxVTY/gsYAE9WqoWMfmQ=;
-	b=vvHYm9kH+Tp1DeqjfsY0hrSvHgnTv0kBPAgZLNrMklHkAkY/Cil6c6Mr4H1SWXuKRkz+k2f/A
-	VaB3pg9t9ZfUMGmB1loUnLKZhITtP9NmWXnaxCCFQRX6usKcwCkXSyvtJYMYhNFMq3I6c34tBsb
-	zoawAQVAYu/PWqhmdIhhhuM=
+	bh=juOtsw+XKXPdwDGMXWQfaBt8GPcPrObp5r2IzcEKJAs=;
+	b=D7faxU3P5QktFdurjwp3E0G4X2lKyA6nan83uV2enABhH3xdLSRVWKnyiEsUmyjSpxDPi/gAu
+	5US+NpL5CPAQopObhEVmxCjSHAjeLBl0mq7xwHJQWGEClmUDZXVC9pDBe7TfgMllEvJ1ff1XJSt
+	pS2MUj+RAS3uwLidb0hpONk=
 Received: from frasgout.his.huawei.com (unknown [172.18.146.35])
-	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4cy02V2ZKGz1vnxf;
-	Thu, 30 Oct 2025 17:59:30 +0800 (CST)
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cxzyv2B5lz6M4Vd;
-	Thu, 30 Oct 2025 17:56:23 +0800 (CST)
+	by sinmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4cy0414f4cz1P6gW;
+	Thu, 30 Oct 2025 18:00:49 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cxzzf4KlBz6M4p0;
+	Thu, 30 Oct 2025 17:57:02 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5B3E61402F9;
-	Thu, 30 Oct 2025 18:00:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A6BEC14038F;
+	Thu, 30 Oct 2025 18:00:54 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 30 Oct
- 2025 10:00:14 +0000
-Date: Thu, 30 Oct 2025 10:00:13 +0000
+ 2025 10:00:53 +0000
+Date: Thu, 30 Oct 2025 10:00:52 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
 CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
@@ -62,14 +62,14 @@ CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
 	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
 	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
 	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH RESEND v2 05/12] coco: host: arm64: Build and register
- RMM pdev descriptors
-Message-ID: <20251030100013.00005225@huawei.com>
-In-Reply-To: <yq5a3470eq2s.fsf@kernel.org>
+Subject: Re: [PATCH RESEND v2 06/12] coco: host: arm64: Add RMM device
+ communication helpers
+Message-ID: <20251030100052.00005c65@huawei.com>
+In-Reply-To: <yq5ay0osd9yb.fsf@kernel.org>
 References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
-	<20251027095602.1154418-6-aneesh.kumar@kernel.org>
-	<20251029173743.00006d48@huawei.com>
-	<yq5a3470eq2s.fsf@kernel.org>
+	<20251027095602.1154418-7-aneesh.kumar@kernel.org>
+	<20251029183306.0000485c@huawei.com>
+	<yq5ay0osd9yb.fsf@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -82,26 +82,64 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, 30 Oct 2025 14:14:43 +0530
+On Thu, 30 Oct 2025 14:48:20 +0530
 Aneesh Kumar K.V <aneesh.kumar@kernel.org> wrote:
 
 > Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-> 
-> > On Mon, 27 Oct 2025 15:25:55 +0530
-> > "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:  
-> 
 > ...
 > 
-> >>  
-> >> +int pdev_create(struct pci_dev *pdev);  
-> > That is a very generic name to find in a header, even one buried deep in drivers.
-> > I'd prefix it with somethin more specific rmi_pdev_create() or something like that.  
+> >> +		/*
+> >> +		 * Some device communication error will transition the
+> >> +		 * device to error state. Report that.
+> >> +		 */
+> >> +		if (type == PDEV_COMMUNICATE)
+> >> +			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
+> >> +						 (enum rmi_pdev_state *)&state);
+> >> +		if (ret)
+> >> +			state = error_state;  
+> > Whilst not strictly needed I'd do this as:
+> >
+> > 		if (type == PDEV_COMMUNICATE) {
+> > 			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
+> > 						 (enum rmi_pdev_state *)&state);
+> > 			if (ret)
+> > 				state = error_state;
+> > 		}
+> >
+> > Just to make it clear that reg check is just on the output of the call above.
+> > If we didn't make that call it is definitely zero but nice not to have
+> > to reason about it.
+> >  
 > 
-> May be I can call this cca_pdev_create, because rmi_pdev_create()
-> already exist.
-Sure. Anything reasonable is fine for this.
+> Some of this is because follow up patch adds more details there. In this case.
+> 
+> 		/*
+> 		 * Some device communication error will transition the
+> 		 * device to error state. Report that.
+> 		 */
+> 		if (type == PDEV_COMMUNICATE)
+> 			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
+> 						 (enum rmi_pdev_state *)&state);
+> 		else
+> 			ret = rmi_vdev_get_state(virt_to_phys(host_tdi->rmm_vdev),
+> 						 (enum rmi_vdev_state *)&state);
+> 		if (ret)
+> 			state = error_state;
+> 
+Ah fair enough I missed that.
 
 J
+> 
+> 
+> >  
+> >> +	}
+> >> +
+> >> +	if (state == error_state)
+> >> +		pci_err(tsm->pdev, "device communication error\n");
+> >> +
+> >> +	return state;
+> >> +}
+> >> +  
 > 
 > -aneesh
 
