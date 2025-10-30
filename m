@@ -1,269 +1,218 @@
-Return-Path: <linux-pci+bounces-39784-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39785-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DC27C1F2E7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:06:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B868CC1F39D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:16:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9D9C1885EFA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 09:05:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1943F1895587
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 09:14:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4202BFC85;
-	Thu, 30 Oct 2025 09:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YopriDsc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="drmB1LGG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YopriDsc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="drmB1LGG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00DD933FE34;
+	Thu, 30 Oct 2025 09:14:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2E23375C2
-	for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 09:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7F72D879A;
+	Thu, 30 Oct 2025 09:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761815107; cv=none; b=T3y15d+r+cg0UTZnLkDf12kkacMJVLIXXKly6p5YlWvsXoeAYZ8C1Kj4RUoqFKbZKrCHpfayE+EHdYYS8DBWHwA/x9Zfb161Wki60KAzvEW27Z5aAGYwWbRIfkANMrcv81Idoi1bnkaIhaEDpIIfkYvciyjbfYuCrxjL3GaHbqk=
+	t=1761815643; cv=none; b=pEvL6TYFTvvH1Qog0f+W0aKlGnq7AKvNLSRlv2CSupgqUij+7wT5KRQmhXIktA0knIyiQY2z05r1xc88vhGB5ObWclADiqDRUeymdGM8pneWz59BYA76FHrNKVVTuubinglDAdxcfdjjJsJV4rD+7cMnRUmZG2xIwqWxnt2oRF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761815107; c=relaxed/simple;
-	bh=7y0f7DM/9Fu681tu7EA5itbeJa5mk7ik9CostNPDHl4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NPK9AWNuQ8/Ol8XOYiMTHwkEU5hPg2nlMpFV+xml1MubfWSD43hlsR7vgYMOvSVNeMtPEup/ULe5+XgL1Qur2JNK5xBrbxJYVSUlFHMJIQ6JtBxbirZx/626ZBDOUFNZaaioFtRGVM3k+aJsH4j5gyF3TZnJgu0XBJxowmAMkNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YopriDsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=drmB1LGG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YopriDsc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=drmB1LGG; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1761815643; c=relaxed/simple;
+	bh=Atj3Q2XG7hRztItgdZBMCVL6u6uzx6C1ksnXHpqfUPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwHTbOnuM02Co72nUHNlbKHocmhGZdzSDVwhX0F90qjf1nAHkfwTt5mZ6K/lKLP3JNXfx1rmuVPG/3cqnDmTYWl1HWQWBasjW0IWgp9IAiepBJPAkyG1afnF1l7tlqdo8i71hhFZywvXz0YXCQ54sNOC7NEBx+jXHEk2hl8yTjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 494E31F8B8;
-	Thu, 30 Oct 2025 09:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761815103; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzKO/XeWMBH3INZbM+ZTs291o3A5XJvv3T24IEcIOZQ=;
-	b=YopriDsc5qeQCfVYMnRLQQhrsLxUH/KR6tXmcMXSakvRYuBWztgEoXyXPmP6bzgwXokX2A
-	LNISEtkogbdLBYZEnxmsdibifkHmhWGWwe5p9ZgQbOWU6Kcq7/+yqsaBLyPanmcvMMyFW8
-	1vlbIeQpSvERQbRIv3xPl46R7v+bCh4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761815103;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzKO/XeWMBH3INZbM+ZTs291o3A5XJvv3T24IEcIOZQ=;
-	b=drmB1LGGmgBmQKIEWGXtVXtjQUycADaFpplEwMvR3TEcAMoBpkHWOP/1Sm9nB1sHv7HaBy
-	OqxSHwFCRJpnOCCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YopriDsc;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=drmB1LGG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761815103; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzKO/XeWMBH3INZbM+ZTs291o3A5XJvv3T24IEcIOZQ=;
-	b=YopriDsc5qeQCfVYMnRLQQhrsLxUH/KR6tXmcMXSakvRYuBWztgEoXyXPmP6bzgwXokX2A
-	LNISEtkogbdLBYZEnxmsdibifkHmhWGWwe5p9ZgQbOWU6Kcq7/+yqsaBLyPanmcvMMyFW8
-	1vlbIeQpSvERQbRIv3xPl46R7v+bCh4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761815103;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lzKO/XeWMBH3INZbM+ZTs291o3A5XJvv3T24IEcIOZQ=;
-	b=drmB1LGGmgBmQKIEWGXtVXtjQUycADaFpplEwMvR3TEcAMoBpkHWOP/1Sm9nB1sHv7HaBy
-	OqxSHwFCRJpnOCCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C005B13393;
-	Thu, 30 Oct 2025 09:05:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TdU1LD4qA2myWQAAD6G6ig
-	(envelope-from <clopez@suse.de>); Thu, 30 Oct 2025 09:05:02 +0000
-Message-ID: <74df9e1d-69f4-43e6-89fe-3290b94ab8dd@suse.de>
-Date: Thu, 30 Oct 2025 10:04:57 +0100
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id CE5B42C07AA1;
+	Thu, 30 Oct 2025 10:13:57 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id B882824B7; Thu, 30 Oct 2025 10:13:57 +0100 (CET)
+Date: Thu, 30 Oct 2025 10:13:57 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Tony Hutter <hutter2@llnl.gov>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, corey@minyard.net,
+	alok.a.tiwari@oracle.com, mariusz.tkaczyk@linux.intel.com,
+	minyard@acm.org, linux-pci@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6] Introduce Cray ClusterStor E1000 NVMe slot LED driver
+Message-ID: <aQMsVUCBDF7ZUSK-@wunner.de>
+References: <d485bd74-e49d-4c89-b986-1b45c93e7975@llnl.gov>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/9] coco/tsm: Introduce a core device for TEE Security
- Managers
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: aik@amd.com, yilun.xu@linux.intel.com, aneesh.kumar@kernel.org,
- bhelgaas@google.com, gregkh@linuxfoundation.org,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20251024020418.1366664-1-dan.j.williams@intel.com>
- <20251024020418.1366664-2-dan.j.williams@intel.com>
-From: =?UTF-8?Q?Carlos_L=C3=B3pez?= <clopez@suse.de>
-Content-Language: en-US
-In-Reply-To: <20251024020418.1366664-2-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 494E31F8B8
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d485bd74-e49d-4c89-b986-1b45c93e7975@llnl.gov>
 
-Hi,
-
-On 10/24/25 4:04 AM, Dan Williams wrote:
-> A "TSM" is a platform component that provides an API for securely
-> provisioning resources for a confidential guest (TVM) to consume. The
-> name originates from the PCI specification for platform agent that
-> carries out operations for PCIe TDISP (TEE Device Interface Security
-> Protocol).
-> 
-> Instances of this core device are parented by a device representing the
-> platform security function like CONFIG_CRYPTO_DEV_CCP or
-> CONFIG_INTEL_TDX_HOST.
-> 
-> This device interface is a frontend to the aspects of a TSM and TEE I/O
-> that are cross-architecture common. This includes mechanisms like
-> enumerating available platform TEE I/O capabilities and provisioning
-> connections between the platform TSM and device DSMs (Device Security
-> Manager (TDISP)).
-> 
-> For now this is just the scaffolding for registering a TSM device sysfs
-> interface.
-> 
-> Cc: Alexey Kardashevskiy <aik@amd.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Co-developed-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/virt/coco/Kconfig                 |   3 +
->  drivers/virt/coco/Makefile                |   1 +
->  Documentation/ABI/testing/sysfs-class-tsm |   9 ++
->  include/linux/tsm.h                       |   4 +
->  drivers/virt/coco/tsm-core.c              | 109 ++++++++++++++++++++++
->  MAINTAINERS                               |   2 +-
->  6 files changed, 127 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
->  create mode 100644 drivers/virt/coco/tsm-core.c
-> 
-> diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
-> index 819a97e8ba99..bb0c6d6ddcc8 100644
-> --- a/drivers/virt/coco/Kconfig
-> +++ b/drivers/virt/coco/Kconfig
-> @@ -14,3 +14,6 @@ source "drivers/virt/coco/tdx-guest/Kconfig"
->  source "drivers/virt/coco/arm-cca-guest/Kconfig"
+On Wed, Oct 08, 2025 at 04:48:22PM -0700, Tony Hutter wrote:
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -231,6 +231,27 @@ Description:
+>  		    - scXX contains the device subclass;
+>  		    - iXX contains the device class programming interface.
 >  
->  source "drivers/virt/coco/guest/Kconfig"
-> +
-> +config TSM
-> +	bool
-> diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
-> index f918bbb61737..cb52021912b3 100644
-> --- a/drivers/virt/coco/Makefile
-> +++ b/drivers/virt/coco/Makefile
-> @@ -7,4 +7,5 @@ obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
->  obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
->  obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
->  obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
-> +obj-$(CONFIG_TSM) 		+= tsm-core.o
->  obj-$(CONFIG_TSM_GUEST)		+= guest/
-> diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-> new file mode 100644
-> index 000000000000..2949468deaf7
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-tsm
-> @@ -0,0 +1,9 @@
-> +What:		/sys/class/tsm/tsmN
-> +Contact:	linux-coco@lists.linux.dev
+> +What:		/sys/bus/pci/slots/.../attention
+> +Date:		February 2025
+
+Please update the "Date" timestamp to the month of submission to the list.
+
+> +Contact:	linux-pci@vger.kernel.org
 > +Description:
-> +		"tsmN" is a device that represents the generic attributes of a
-> +		platform TEE Security Manager.  It is typically a child of a
-> +		platform enumerated TSM device. /sys/class/tsm/tsmN/uevent
-> +		signals when the PCI layer is able to support establishment of
-> +		link encryption and other device-security features coordinated
-> +		through a platform tsm.
-> diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-> index 431054810dca..aa906eb67360 100644
-> --- a/include/linux/tsm.h
-> +++ b/include/linux/tsm.h
-> @@ -5,6 +5,7 @@
->  #include <linux/sizes.h>
->  #include <linux/types.h>
->  #include <linux/uuid.h>
-> +#include <linux/device.h>
->  
->  #define TSM_REPORT_INBLOB_MAX 64
->  #define TSM_REPORT_OUTBLOB_MAX SZ_32K
-> @@ -109,4 +110,7 @@ struct tsm_report_ops {
->  
->  int tsm_report_register(const struct tsm_report_ops *ops, void *priv);
->  int tsm_report_unregister(const struct tsm_report_ops *ops);
-> +struct tsm_dev;
-> +struct tsm_dev *tsm_register(struct device *parent);
-> +void tsm_unregister(struct tsm_dev *tsm_dev);
->  #endif /* __TSM_H */
-> diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
-> new file mode 100644
-> index 000000000000..a64b776642cf
-> --- /dev/null
-> +++ b/drivers/virt/coco/tsm-core.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+> +		The attention attribute is used to read or write the attention
+> +		status for an enclosure slot.  This is often used to set the
+> +		slot LED value on a NVMe storage enclosure.
 > +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +		Common values:
+> +		0 = OFF
+> +		1 = ON
+> +		2 = blink (ampere, ibmphp, pciehp, rpaphp, shpchp)
 > +
-> +#include <linux/tsm.h>
-> +#include <linux/idr.h>
-> +#include <linux/rwsem.h>
-> +#include <linux/device.h>
+> +		Using the pciehp_craye1k extensions:
+> +		0 = fault LED OFF, locate LED OFF
+> +		1 = fault LED ON,  locate LED OFF
+> +		2 = fault LED OFF, locate LED ON
+> +		3 = fault LED ON,  locate LED ON
+
+An end user might not be able to understand all these driver names,
+so I'd omit "(ampere, ibmphp, pciehp, rpaphp, shpchp)",
+and replace "pciehp_craye1k" with "Cray ClusterStor E1000".
+
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -73,6 +73,13 @@ static int init_slot(struct controller *ctrl)
+>  		ops->get_attention_status = pciehp_get_raw_indicator_status;
+>  		ops->set_attention_status = pciehp_set_raw_indicator_status;
+>  	}
+> +#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
+> +	if (is_craye1k_slot(ctrl)) {
+> +		/* slots 1-24 on Cray E1000s are controlled differently */
+> +		ops->get_attention_status = craye1k_get_attention_status;
+> +		ops->set_attention_status = craye1k_set_attention_status;
+> +	}
+> +#endif
+
+Per section 21 of Documentation/process/coding-style.rst,
+please avoid the use of #ifdef and instead add an #else section
+to pciehp.h with an inline stub for is_craye1k_slot() which returns false
+and #define craye1k_{get,set}_attention_status to NULL.
+
+Do these hotplug slots on the Cray E1000 have the Attention Indicator
+Present bit set in the Slot Capabilities register?  If they do not,
+please use "if else" instead of "if".  Right now you're overwriting
+the default {get,set}_attention_status pointers, which only makes
+sense if ATTN_LED(ctrl) is true.
+
+When is craye1k_new_smi() called?  Is it guaranteed to be called
+before the first invocation of craye1k_{get,set}_attention_status()?
+
+I'm asking because craye1k_{get,set}_attention_status() do not
+contain any checks whether the craye1k_global struct has been
+populated.  You would need such checks if craye1k_new_smi() may
+run later than the "attention" attribute appearing in sysfs.
+
+Actually craye1k_new_smi() may fail, e.g. because of kzalloc()
+returning NULL, so I think you'll need additional checks in any case.
+However if craye1k_new_smi() is guaranteed to run before init_slot(),
+you could check for an uninitialized craye1k_global struct already in
+is_craye1k_slot().
+
+Note that just checking "craye1k_global == NULL" is insufficient as
+craye1k_new_smi() might run concurrently to
+craye1k_{get,set}_attention_status().
+
+I note that is_craye1k_slot() calls dmi_match(), so you should add
+"depends on DMI" to the Kconfig entry you're adding.
+
+> @@ -376,8 +383,16 @@ int __init pcie_hp_init(void)
+>  
+>  	retval = pcie_port_service_register(&hpdriver_portdrv);
+>  	pr_debug("pcie_port_service_register = %d\n", retval);
+> -	if (retval)
+> +	if (retval) {
+>  		pr_debug("Failure to register service\n");
+> +		return retval;
+> +	}
+> +
+> +#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
+> +	retval = craye1k_init();
+> +	if (retval)
+> +		pr_debug("Failure to register Cray E1000 extensions");
+> +#endif
+
+Another #ifdef that should be eliminated.
+
+You also need to annotate craye1k_init() with __init.
+
+> +++ b/drivers/pci/hotplug/pciehp_craye1k.c
+[...]
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/dmi.h>
+> +#include <linux/ipmi.h>
 > +#include <linux/module.h>
-> +#include <linux/cleanup.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_hotplug.h>
+> +#include <linux/random.h>
+> +#include "pciehp.h"
+
+dmi.h isn't inserted in alphabetical order.
+
+> +	/* debugfs stats */
+> +	u64 check_primary;
+> +	u64 check_primary_failed;
+> +	u64 was_already_primary;
+> +	u64 was_not_already_primary;
+> +	u64 set_primary;
+> +	u64 set_initial_primary_failed;
+> +	u64 set_primary_failed;
+> +	u64 set_led_locate_failed;
+> +	u64 set_led_fault_failed;
+> +	u64 set_led_readback_failed;
+> +	u64 set_led_failed;
+> +	u64 get_led_failed;
+> +	u64 completion_timeout;
+> +	u64 wrong_msgid;
+> +	u64 request_failed;
+
+I'm wondering if having all this debug code in mainline is useful?
+Is the IPMI interface this brittle?  Was this just necessary
+for initial development and may not be useful going forward?
+
+> +static void craye1k_msg_handler(struct ipmi_recv_msg *msg, void *user_msg_data)
+> +{
+> +	struct craye1k *craye1k = user_msg_data;
 > +
-> +static struct class *tsm_class;
-> +static DECLARE_RWSEM(tsm_rwsem);
-> +static DEFINE_IDR(tsm_idr);
+> +	if (msg->msgid != craye1k->tx_msg_id) {
+> +		craye1k->wrong_msgid++;
+> +		if (craye1k->print_errors) {
+> +			dev_warn_ratelimited(craye1k->dev, "rx msgid %d != %d",
+> +					     (int)msg->msgid,
+> +					     (int)craye1k->tx_msg_id);
 
-The IDR documentation states it is deprecated and one should use XArray
-in its place. Is there any particular reason to use IDR instead in this
-patch series?
+Why use casts instead of %ld in the format string?
 
-Best,
-Carlos
+> +static void craye1k_smi_gone(int iface)
+> +{
+> +	pr_warn("craye1k: Got unexpected smi_gone, iface=%d", iface);
+> +}
+
+Why not kfree() the craye1k struct here, tear down debugfs etc?
+
+Thanks,
+
+Lukas
 
