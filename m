@@ -1,112 +1,163 @@
-Return-Path: <linux-pci+bounces-39819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33407C20C74
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:57:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 24702C20E56
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:23:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A1D1034FCBC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:57:57 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9E8AC34F09D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:23:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC04286405;
-	Thu, 30 Oct 2025 14:57:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A645363377;
+	Thu, 30 Oct 2025 15:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZ/8uG9s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA88wTSO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79EB283FCE;
-	Thu, 30 Oct 2025 14:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56D13208;
+	Thu, 30 Oct 2025 15:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761836269; cv=none; b=LfAKhJ15xOkOJKu3mQTedEhouLmFizZUDoRqIH51ttJ6tl4SZFN/sGH1De7J7u660PbN8JMYQIZKu0ivBa1MDbrwGGMMJkYVTQpPuOcD/swkG8p87MrLLWrnuv8BuSb2psaJL74xdLPMTnXlFUrnaDszJGwRLW6TAIeItfCSi/w=
+	t=1761837809; cv=none; b=msH1U8Wiv43KG00Vlox/h8wdYLuoyBZ0g4jSEbVEKdf/oir0sVf6hHgXNd9M7c2kn1tG0sMx7oH8FoYZrw6ljF9R1WenDEtms1qXLIwMHg+zh9WTjyepD6Y2uNdPkvhJtkXfD2hCmA45lv00jnC4YONaaNxHLzrlMAbV0WS+kAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761836269; c=relaxed/simple;
-	bh=MPH444EZaU6hB0oe8fwJQJCQuWbHbzn+g5+EsUVpY/8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KihXs2Ax3cH2oVD0pN973jrvPe2rorCPQj8pvasGthU/0WVTXraqL/evd8Hah4wOiAqBxLX8HxZGyovBM38GV3Zi6BEPtPcbyr0cWO2gnhWUcdMIPXlj9BDMBmayDSWtOp/X0HibMBVJvhRdz08gvwL7k0slifE9WiEDoEUfsfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZ/8uG9s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D33C4CEF8;
-	Thu, 30 Oct 2025 14:57:41 +0000 (UTC)
+	s=arc-20240116; t=1761837809; c=relaxed/simple;
+	bh=DeegVoD/FpDij0JSaJoj94TY1CnINwyeRhD2sowD2hk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k58NVCGFyXDVYu5QuoBciH7Ee0wQ1kdG5tD6QZ+FFiEGiaR4SjHeNJ4EpRl03jWvgIzp2cwfoJxYWWCJ+AywEVzBXsnpLtoZbMS8asZyfstI6u9WDs3Hhcip6gQqXiCTmOhP9uAKVPHLTd2fmSCjvICvJ7cRitAcg29Bt7Z+vko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA88wTSO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6FDC4CEFF;
+	Thu, 30 Oct 2025 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761836268;
-	bh=MPH444EZaU6hB0oe8fwJQJCQuWbHbzn+g5+EsUVpY/8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NZ/8uG9sgSxgb3j2CP8YltLWsQB47scQpxGKcbR+MrBAvSTgaYZddAH9NvQVGxgCw
-	 jMpUMahh2MOfXnnLoIWYFzo/z5SUQWH6OtWirV1MskoUFnhA0Lw3LEVhTLAJ4ge2sB
-	 EaW7Xt7Ts72Nt2tAEOjVuHrEoE4oiAUc53DYyXuydo3/t8rkO7kS4zaierKba829eG
-	 lTVRQZtleWTO1rimqLOyp5tt4yk56zMv3caXQ/wkevBe5n0RkWPmE2h5jGuWpQ60AL
-	 gx4egPU999DB+RUobTImD6plP3mbmCWsKA1FWaCseeITaGgey0cf7mVcCxCSzZaRaR
-	 zCQ0turLOoXvg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Benno
- Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman
- <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, Leon
- Romanovsky <leon@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Viresh Kumar
- <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd
- <sboyd@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Asahi Lina
- <lina+kernel@asahilina.net>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, Oliver Mangold
- <oliver.mangold@pm.me>
-Subject: Re: [PATCH v12 2/4] `AlwaysRefCounted` is renamed to `RefCounted`.
-In-Reply-To: <20251001-unique-ref-v12-2-fa5c31f0c0c4@pm.me>
-References: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me>
- <20251001-unique-ref-v12-2-fa5c31f0c0c4@pm.me>
-Date: Thu, 30 Oct 2025 15:57:35 +0100
-Message-ID: <87sef08mjk.fsf@t14s.mail-host-address-is-not-set>
+	s=k20201202; t=1761837809;
+	bh=DeegVoD/FpDij0JSaJoj94TY1CnINwyeRhD2sowD2hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FA88wTSOrmHFd7V1HulHrQjr6P3mVPZ7KY4wbyBFaC5Dsk5ivyms3bifB3pOi9rIS
+	 gpKLD607l/e92oCqdYMmcKT8rQQKkIlwuB63YBXi9fLchTTT8GMo0h/rcSM/1DmRI+
+	 d2mLYU7KBwbnmnCxAsP5ZA0HjE1VXoMpIQ0/QtIDO6QZb0GP1hiOxiOGKoqnfgL1CW
+	 Ribgl8/BtOC04OBJ+7wBHSIwZFWxHZk2sMvoWne2PbU+3xoNfSmRuvaGcpeEeZGGGB
+	 7k4WQxwIVOTVVQb6tGuJfqRcCtJ7/15gA70oDA/D5eB+c4LlmyQ0feVtknRcYafCZJ
+	 GIS6Cw4DP8+ug==
+Date: Thu, 30 Oct 2025 16:23:24 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, 
+	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	David Rhodes <david.rhodes@cirrus.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund <steen.hegelund@microchip.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 18/29] i2c: mux: Create missing devlink between mux
+ and adapter physical device
+Message-ID: <6tgbavtf2dqc44ebfighrs5chzx4j4zdmjk77fmulwqbhrex2b@lou7ekbsjekr>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-19-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015071420.1173068-19-herve.codina@bootlin.com>
 
-Oliver Mangold <oliver.mangold@pm.me> writes:
+Hi Herve,
 
-> `AlwaysRefCounted` will become a marker trait to indicate that it is
-> allowed to obtain an `ARef<T>` from a `&T`, which cannot be allowed for
-> types which are also Ownable.
->
-> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+...
 
-Please update the title to
+> When an i2c mux is involved in an i2c path, the struct dev topology is
+> the following:
 
- rust: rename `AlwaysRefCounted` to `RefCounted`
+supernitpick: I'd leave blank line here.
 
-No period in the summary line.
+>     +----------------+                +-------------------+
+>     | i2c controller |                |      i2c mux      |
+>     |     device     |                |      device       |
+>     |       ^        |                |                   |
+>     |       |        |                |                   |
+>     |  dev's parent  |                |                   |
+>     |       |        |                |                   |
+>     |   i2c adapter  |                | i2c adapter chanX |
+>     |     device  <---- dev's parent ------  device       |
+>     |   (no driver)  |                |    (no driver)    |
+>     +----------------+                +-------------------+
+> 
 
-With that, you can add my review tag.
+...
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> No relationship exists between the i2c mux device itself and the i2c
+> controller device (physical device) in order to have the i2c mux device
+> calling i2c_del_adapter() to remove its downtream adapters and so,
 
-Since this patch touches so many moving parts of the rust tree, it is
-going to be a cat and mouse game regarding rebasing this thing. It also
-touches a lot if peoples code. I am not sure how something like this
-would merge. Do we need ACK from everyone @Miguel?
+/downtream/downstream/
 
-Best regards,
-Andreas Hindborg
+> release references taken to the upstream adapter.
 
+...
 
+> +	/*
+> +	 * There is no relationship set between the mux device and the physical
+> +	 * device handling the parent adapter. Create this missing relationship
+> +	 * in order to remove the i2c mux device (consumer) and so the dowstream
+> +	 * channel adapters before removing the physical device (supplier) which
+> +	 * handles the i2c mux upstream adapter.
+> +	 */
+> +	parent_physdev = i2c_get_adapter_physdev(parent);
+> +	if (!parent_physdev) {
+> +		dev_err(muxc->dev, "failed to get the parent physical device\n");
+> +		ret = -EINVAL;
 
+-ENODEV?
+
+> +		goto err_free_priv;
+> +	}
+> +	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);
+
+Not to call twice put_device, I would add it once here and then
+check for !dl.
+
+> +	if (!dl) {
+> +		dev_err(muxc->dev, "failed to create device link to %s\n",
+> +			dev_name(parent_physdev));
+> +		put_device(parent_physdev);
+> +		ret = -EINVAL;
+
+same here, should this be -ENODEV?
+
+Andi
+
+> +		goto err_free_priv;
+> +	}
+> +	put_device(parent_physdev);
+> +
+>  	if (force_nr) {
+>  		priv->adap.nr = force_nr;
+>  		ret = i2c_add_numbered_adapter(&priv->adap);
+> -- 
+> 2.51.0
+> 
 
