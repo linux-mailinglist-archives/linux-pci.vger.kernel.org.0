@@ -1,128 +1,140 @@
-Return-Path: <linux-pci+bounces-39814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD13CC20808
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:10:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DADEBC2087D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:15:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC1D4188DE6A
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:05:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CE523B5395
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:15:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42D51FDE39;
-	Thu, 30 Oct 2025 14:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8D3258EF5;
+	Thu, 30 Oct 2025 14:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsfZ0knt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZRg3Lcv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FFE1EEA49;
-	Thu, 30 Oct 2025 14:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD73023C513;
+	Thu, 30 Oct 2025 14:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761833100; cv=none; b=queg4CYBNHDFApsjjA1ukhWcc3W6o7soP0UGbcKLqtuaGOMCf+F4B0jduGJwnVmXHRKmoFpg6yN9mxPAr5J573ZJWBI4njAN+CVkID+0eqRK1QPWjnTdA/wI9ryHFZ+OurmCVe1G9bff1Pa0xoado21a4xDcBTnZBnNuI44O02k=
+	t=1761833701; cv=none; b=SKWjHsyDdAWWep/tmNZkHK1OVlWGngxy3JyVdyDoBl0idjiT9c2l/yJlydz6565Mbb72bmjrwSpOrJUnuzOVpqqpVI+hLio3mkCwFE8xy5oRJUeUn+aYteD9RCBt5jhPr7ZvXw9LXWy5Xso/9e4N7bwBgqmkX95O509ox2PoCOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761833100; c=relaxed/simple;
-	bh=LKSA5kjPUGMHZZpJTjFfuRmu0oSOpXV4X1NFS+NHl88=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lZ/IfhuG08XtwQTdQEYEmVw+yBcYzRg3kM4TUBI6CTdl1IHn7d1WUowtPRx8SXBL9catbsuvfvhAUsozEYwAhcAe+7kaRnl0/VcIuvmkanu0kPJkp3GuMUopXgugaoCW3I/DZlT2S39XwE60WUxSbeH4dB36wFvW+ylcvy+Nejs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsfZ0knt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 829C7C4CEF8;
-	Thu, 30 Oct 2025 14:04:55 +0000 (UTC)
+	s=arc-20240116; t=1761833701; c=relaxed/simple;
+	bh=ARkbEZwIcjtq3UHgVcwLTAhe5ywrSMfhcggmgV1iso8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNVNM00lVRKALcENWHxHbHY5k8r2rKMp+mk4MNMxn5U9M5jP8vhYuXxgpfaD2CkScw1vlasg/8gVwPeh7PeEIfqlJIwJsm9hAb2zKcJq7nw/YjjWhVCTTTXRJZ6ipLExsajTdpucrkEYT4atv2gTa63YcCC+BD6L4ZoiuzcrrwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZRg3Lcv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43177C4CEFF;
+	Thu, 30 Oct 2025 14:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761833100;
-	bh=LKSA5kjPUGMHZZpJTjFfuRmu0oSOpXV4X1NFS+NHl88=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NsfZ0kntiAAsYA/kbFbts7G/hkZ5mjULzmVn4OOb+bvMDEeI4UV85RG8tiH3Fy/1n
-	 ATqDUoQCP40EGyAa3WZG2f43NTwWO8F1BoslC2m3O9V+WzT+UD4ho9n/MHaQoQG6Cn
-	 QQvtBUKZlcpiHorOKaknMwCMzty+K/OkYxh6LXlrMvuE9GzXTNz13HKx6EEdkHUrz5
-	 DANQe7JhWNbNQBSvIs7LqhWC79cp2d75NzIrgFU9MLRoPoVHnzdn3hgAxP6HyGd/LP
-	 dvnsMZMCUga58NKKuAWhUab5ncePZz9/nAeS+gQCRLTm3QeiPMY1zXiFVQXqZz8iaT
-	 tpMYVKxttIE6Q==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dan.j.williams@intel.com, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH RESEND v2 06/12] coco: host: arm64: Add RMM device
- communication helpers
-In-Reply-To: <20251029183306.0000485c@huawei.com>
-References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
- <20251027095602.1154418-7-aneesh.kumar@kernel.org>
- <20251029183306.0000485c@huawei.com>
-Date: Thu, 30 Oct 2025 19:34:51 +0530
-Message-ID: <yq5asef0cwos.fsf@kernel.org>
+	s=k20201202; t=1761833699;
+	bh=ARkbEZwIcjtq3UHgVcwLTAhe5ywrSMfhcggmgV1iso8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TZRg3Lcvd8GObcu7mv5GNEOQTP82tLQK9Fl51npkDqQkq8vYqiXjd+sdbWRm+AaKS
+	 KM05NDknRHsO9S3x92lDMWSXtGzaU5EbeIrn74EMy0Vn9dsDaegeR4nvExsA3djLUP
+	 VIgK0Wjr8X+dTo/niyqSMRgbYKTqJXZY0RP0Co/azFwbieXvnh7lwPpyXWLgV7FNWX
+	 twXnIP0x8vUNwSyA96xXCYhrS/xVTBSa143Z2dBIN1G3kq1e9zqrIJRND6e/Nt9r7B
+	 CEPqGJIpLThMFYq2/zDzz6r1MwoPduvgQLuJg5UqqWx2aNvdP/Aj492SQNNbrfTU54
+	 3aj6I/1c7UcYQ==
+Date: Thu, 30 Oct 2025 09:14:48 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+Message-ID: <20251030141448.GA3853761-robh@kernel.org>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-6-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015071420.1173068-6-herve.codina@bootlin.com>
 
-Jonathan Cameron <jonathan.cameron@huawei.com> writes:
+On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
+> A Simple Platform Bus is a transparent bus that doesn't need a specific
+> driver to perform operations at bus level.
+> 
+> Similar to simple-bus, a Simple Platform Bus allows to automatically
+> instantiate devices connected to this bus.
+> 
+> Those devices are instantiated only by the Simple Platform Bus probe
+> function itself.
 
-> On Mon, 27 Oct 2025 15:25:56 +0530
-> "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
->
+Don't let Greg see this... :)
 
-...
+I can't say I'm a fan either. "Platform bus" is a kernel thing, and the 
+distinction here between the 2 compatibles is certainly a kernel thing.
 
->> +void pdev_communicate_work(struct work_struct *work)
->> +{
->> +	unsigned long state;
->> +	struct pci_tsm *tsm;
->> +	struct dev_comm_work *setup_work;
->> +	struct cca_host_pf0_dsc *pf0_dsc;
->> +
->> +	setup_work = container_of(work, struct dev_comm_work, work);
->> +	tsm = setup_work->tsm;
->> +	pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
-> Could combine these 3 with declarations for shorter code without much
-> change to readability.
->
+I think this needs to be solved within the kernel.
 
-Not sure about this.
+What I previously said is define a list of compatibles to not 
+instantiate the child devices. This would essentially be any case having 
+a specific compatible and having its own driver. So if someone has 
+'compatible = "vendor,not-so-simple-bus", "simple-bus"', when and if 
+they add a driver for "vendor,not-so-simple-bus", then they have to add 
+the compatible to the list in the simple-pm-bus driver. I wouldn't 
+expect this to be a large list. There's only a handful of cases where 
+"simple-bus" has a more specific compatible. And only a few of those 
+have a driver. A more general and complicated solution would be making 
+linux handle 2 (or more) drivers matching a node and picking the driver 
+with most specific match. That gets complicated with built-in vs. 
+modules. I'm not sure we really need to solve that problem.
 
- static void pdev_communicate_work(struct work_struct *work)
- {
- 	unsigned long state;
--	struct pci_tsm *tsm;
--	struct dev_comm_work *setup_work;
--	struct cca_host_pf0_dsc *pf0_dsc;
--
--	setup_work = container_of(work, struct dev_comm_work, work);
--	tsm = setup_work->tsm;
--	pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
-+	struct dev_comm_work *setup_work = container_of(work,
-+							struct dev_comm_work,
-+							work);
-+	struct pci_tsm *tsm = setup_work->tsm;
-+	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
- 
- 	guard(mutex)(&pf0_dsc->object_lock);
- 	state = do_pdev_communicate(tsm, setup_work->target_state);
+If we have to do something in the DT, then I think I prefer a property 
+to control the behavior. That way we have the option to ignore it.
 
->> +
->> +	guard(mutex)(&pf0_dsc->object_lock);
->> +	state = do_pdev_communicate(tsm, setup_work->target_state);
->> +	WARN_ON(state != setup_work->target_state);
->> +
->> +	complete(&setup_work->complete);
->> +}
->
-
--aneesh
+Rob
 
