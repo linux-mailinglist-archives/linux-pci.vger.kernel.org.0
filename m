@@ -1,261 +1,207 @@
-Return-Path: <linux-pci+bounces-39816-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39817-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2D92C20A94
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:41:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DCC0C20BCC
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:52:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11B36404746
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:38:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B56404F093D
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 14:47:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B2713BBF2;
-	Thu, 30 Oct 2025 14:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998582773F9;
+	Thu, 30 Oct 2025 14:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OQeiXRc7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCcQ0B+w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523127587D;
-	Thu, 30 Oct 2025 14:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761835047; cv=fail; b=GM5VF7UpGp+RQONbK6qWAa4EuiDjhiKM0a3Pxu20r/3cSKlfdNmj14YwhW9fcvuMu/V/7n91hCekQwWfiozaXzNJI5cC+i6qR7onkVi0IOlMa9+ZXdydcrrl5E1vC1qSb4Ldu2yW4AQvxC7y3MuQnygBO2gNDzm6jW9EDZGSsa8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761835047; c=relaxed/simple;
-	bh=p2zeLnO7Qx+z2YR7KIc4utmLaDQDPaBPHpEh8qiuv8s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K9WFvPdtK+h6Loes32e/oA93UoWKm7eh9TMvSzQ/iuNBYau3gRdZAeE/CKR9QiPhgeTSsNteCm7K0nAE96mGciQBRlcVJpBZ3W+S7YW+bhHSOatI7ITgOKCA4rfjNVpISgDfChRt593PYJk/NG0/ZuVrWelEzQCgJYqKXGkm3X4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OQeiXRc7; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761835045; x=1793371045;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=p2zeLnO7Qx+z2YR7KIc4utmLaDQDPaBPHpEh8qiuv8s=;
-  b=OQeiXRc7k7uxeGyVCe8/mGe1PfiOvPPhehJquNYvAV8jswJ37XfWVXgW
-   QyN5PhitLGmhE56UFl33UPAP44KNmMqkkvoJTHYdLzkcHB+o/ZXfteeZY
-   JRIbQYP5xYPJubXP6+61y2dHSv4Tb0xhpG1D4slY4U3zFLsOlPqHr4CYX
-   u+z+8D8/6J0vkyDgvfBAZJKUwf+abXfYs3xQEepYRpwFN/AIRGo6/Ih2+
-   vuBAG0tYcco1bQq4VGiqZW0xHSu9Ula5VUUZsUm7zEn95oZFR9nI3wOuk
-   rdd5Yp7NKcrc0/RmLEvALGu5dU6PSpPo97A2UxcFV0NqagLLRuWgaqvRi
-   Q==;
-X-CSE-ConnectionGUID: bFLIftw/TaurNL7Ng3lkEg==
-X-CSE-MsgGUID: jEdcpl9dRdW/BYXVmCC5lQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="74271071"
-X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
-   d="scan'208";a="74271071"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 07:37:25 -0700
-X-CSE-ConnectionGUID: nZ2XSm9XRhq4KWgnfmLrRQ==
-X-CSE-MsgGUID: Zj3DMXUqTe6uo8Reg95azg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
-   d="scan'208";a="185851015"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 07:37:24 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 30 Oct 2025 07:37:23 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 30 Oct 2025 07:37:23 -0700
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.40)
- by edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 30 Oct 2025 07:37:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p0cfyRHUKfjExurL8XYKLel/IRinFuB1tXrFfKyflS8z+FHw91qI3d06yi1ARfHOmyBhY0RwJMH1KXqMn3tlvbrcYlqp8xkPbI7D6N7a552N7AF51JzTTmz47mZGqIBfV3ufB0DvU7RZXbazK/6hJGR5Flsj1iAtnx7C7sOlgenw4+Osc1OKumKXfg/+H4IOeDB2CzDClmMFoy+F4p3Ue56gBxwSlE2FeI3B2DiwL4fmCyflNKXULYBv+8uekTpVL/KeHCdtQdY6ghwO1kOpgT2nvQWgcX2FEr2mzf1OPnc0IXVoHVU8Rn/tiUmmIlyjtTr/27hvlBnxc09w8Akf8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=swWHCOZt91jwhtraTmX8IwegYtjsOEG99XF2PI17Blo=;
- b=dWhMZwK6mQpk9X+6fujGGtgO1Gk0WxMIcVSDE8ob8sm92CL9gXWiHRzyI/g5/fTTl/scJ/TtoYoMBznLdc5SjvjCfJM1U5UnabOAdcuACeQ1x8rcJLB12rMhnMdbhJxYct7FPa6ooKmkHMpanlWvdLrEz1NUUbIbQnzYOb38D69IQ2iSpObniqkDWxQuhdxBoQZyFgeQTIIKf26oMRiucNKz8iBrf89srmeIWBQhmf31imBEYXqDL7OmCnPkXJAl1/u102hBADtXn/doG0YDMmlpzzqBy9WSWGUW/B7e1RneIiRizJRI4vFNCFuOE+hN/7u1OU4ldYPJzTXq9uJhCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by IA0PR11MB7209.namprd11.prod.outlook.com (2603:10b6:208:441::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.14; Thu, 30 Oct
- 2025 14:37:20 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%6]) with mapi id 15.20.9275.011; Thu, 30 Oct 2025
- 14:37:18 +0000
-Date: Thu, 30 Oct 2025 09:37:14 -0500
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Simon Richter
-	<Simon.Richter@hogyros.de>, Alex Deucher <alexander.deucher@amd.com>,
-	<amd-gfx@lists.freedesktop.org>, Bjorn Helgaas <bhelgaas@google.com>, "David
- Airlie" <airlied@gmail.com>, <dri-devel@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>, "Jani
- Nikula" <jani.nikula@linux.intel.com>, Joonas Lahtinen
-	<joonas.lahtinen@linux.intel.com>, <linux-pci@vger.kernel.org>, Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
-	<thomas.hellstrom@linux.intel.com>, =?utf-8?Q?Micha=C5=82?= Winiarski
-	<michal.winiarski@intel.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/9] drm/xe: Remove driver side BAR release before resize
-Message-ID: <rk3bknl7gw2iaslzjc6hejijvevxyj5rt5m6ovqjxgu637mj2a@b723dlcpmvkf>
-References: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com>
- <20251028173551.22578-7-ilpo.jarvinen@linux.intel.com>
- <3ts3e2fwom7inbu2kzrvljo5mm7wz5ruaf6daib6cf5tk3v4al@njzufk22tcsy>
-Content-Type: text/plain; charset="iso-8859-1"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3ts3e2fwom7inbu2kzrvljo5mm7wz5ruaf6daib6cf5tk3v4al@njzufk22tcsy>
-X-ClientProxiedBy: BY3PR10CA0002.namprd10.prod.outlook.com
- (2603:10b6:a03:255::7) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F88D14A91;
+	Thu, 30 Oct 2025 14:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761835617; cv=none; b=bUWjfzZ8JZsrvMjC54vPYJCY/PT230PRPV/ystkJPp3ZB/z7jMprpGk2LPXm0ja47MY7dtFW+f9LePxZqX5eckFqzMogrVJWm96X2CDe8d0gRAEbuQ4sCD0UEcrAQIMXYggpRGtPMdRym4nEc90DUajp3HmIL30+wBnaHNMGr0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761835617; c=relaxed/simple;
+	bh=ZbD7yOLwW/cgaU5VsklEXPxgoTiYiE4edNqVj6qNico=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e61Gp111G+88GCHPpvfyACPbeVEa3fw7ujsLioHbfn1WdfNd7WETM3webYkEcQGyQ6FVDOuZ7KhaLYWLd6Iw1jTYl4oa2MAYvRdJuOXqKs1HP2NhNxawgpVvihjzs5FN97DANRLXHYVLhFjb9BbjY83UKfG450dZuq3NFJNIf/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCcQ0B+w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840B5C4CEF8;
+	Thu, 30 Oct 2025 14:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761835616;
+	bh=ZbD7yOLwW/cgaU5VsklEXPxgoTiYiE4edNqVj6qNico=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FCcQ0B+w8LJ6ToMaS6Qm6GHAn0D54ovIPp2mSH+uiK/SKSLzgJBCV3Snalz6zFMcp
+	 UUjEDY+D73uxZGayO0srDEnQe6uWD3GHNw3n7bYLcbuxIiA8/sBQTFaoJB7/cI09E2
+	 XxQaY0TUrWYvhLs4KGQYVdvBusWUB9vRkaSu58MVvJheIaPF3suaEBTcmQ/puWLR8C
+	 x0qSrQuC3NGFxPrA7RSI5DXKUzK3z0kbqOVAbyA6CUn+thpA0Y3NC/0rem3AnoO9I/
+	 UblRftK8xQfF4/jViVZT1NPycEdWVdsd+pHU/H15mBM2H2zkXd3RmKIn0omPOZRxHc
+	 Sf80ZkUjpjz5g==
+Date: Thu, 30 Oct 2025 09:46:50 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 19/29] of: property: Allow fw_devlink device-tree on
+ x86
+Message-ID: <20251030144650.GA3911092-robh@kernel.org>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-20-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|IA0PR11MB7209:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7c0ad72-0205-44a4-1575-08de17c1d405
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?6VNdKEG9Q32hDUNzgqaKziUg/SaDe2dHpNw42rsdwPd9iB+dxU8NWL5phT?=
- =?iso-8859-1?Q?l/pkzJxkM7jEuoyS/dvLqty1lOJgbU7SBHTwnQGlD4Tbf4Zvek9nEbp5Rw?=
- =?iso-8859-1?Q?BV1Wv1LcJ02F2PY1NhPQAlyZlcwN/w3IKSz9me191fjD1gSxp724m37r6f?=
- =?iso-8859-1?Q?ANJA5Bf44Z80uWyawOAww8TYKR/zFa03toBCWaebjHE5dmPq6q31n2ZHPj?=
- =?iso-8859-1?Q?fd22gCMOJkL7OvrfjSkSFRUBfU7FTtJvGQZOrWSBo8gAPsdo5zPdR+ioEx?=
- =?iso-8859-1?Q?4gG6Tz8+ErdXGkneFXnr/pUjsi/lGuwIMpCthLUqMZuyCPIO0fwdaY1PDu?=
- =?iso-8859-1?Q?aXNtJNpjtZqaVYiCP4MzZe6vhwoVeMFmD86zUdkzkxo8xQH9oRRsDd1f3J?=
- =?iso-8859-1?Q?g3G/DOHr5utkz6josy/z8IQRTkTVHHU0XtbaqCtj7uHPrmyaDeTV9Zcj17?=
- =?iso-8859-1?Q?RmEaeF3vpFR7t2nhmx/Zsy1WSaZXhTfc/ydqk/wyf1Xhoo834At5R3mH17?=
- =?iso-8859-1?Q?Pygu+n/9fklJENvCLFw/L3aVAUmxjfPrj7hFcJbywGj7Rd2ToGhq0kSpri?=
- =?iso-8859-1?Q?wjbCVn411C+D1JcQcNcbukfNxKbIoM+bNQqonesqOgYyqS3/J6+8A8ajtN?=
- =?iso-8859-1?Q?y6UNL/LgxSgtJ+Dc9P8uuNBJcJopkHhYcCQocf28HP32skCaiSOb3s6rPx?=
- =?iso-8859-1?Q?Z/qdmnGhLDDCO33HT+TVIX2KuhPr8/fkPxoR7WnqIB3y8sDQXZK16gknLo?=
- =?iso-8859-1?Q?+yoAmKrN681PONneLxCnwpSqChUhL7DY0wpxMdZsbHfzXkLtYjqFb6v36g?=
- =?iso-8859-1?Q?SUaEYMOePbMMRjVhS6RZkof+WI9JHVVRgJasi8UUGGrwVu3oguPnh/xU74?=
- =?iso-8859-1?Q?FOWzoh71q7uQ6QrA7r2CzfMPpJjpFTk/16GkQdg4zMafJWUi0iCZrD8MZc?=
- =?iso-8859-1?Q?SDCvwX/Cz/R4TjjOdRCpV7aLaH3a7f1k6+aMZczhBbsNQxehxpbr0r4mR2?=
- =?iso-8859-1?Q?Kyc/FG+LgsX4tFHRDeJwHiPsIEdhdvIHzP+TTJRi5PuyaZHaRhIj9ADh+K?=
- =?iso-8859-1?Q?E3GJlJHryMcKFIWJkBduAc6LUrB0Dzcec2AhGFrak+FqXqs6y/+Y+yUVyp?=
- =?iso-8859-1?Q?Uz9v3l5TK0tuEeJR7X3jRLpQrD5p4moLcXUL4I0puvVvsqxL2/CLYpv667?=
- =?iso-8859-1?Q?FGeqaIuhiVpCvvHRiCw645LbdUyGY3bOaQARdOtu1Ya4rPMGHhi3O2aZ1s?=
- =?iso-8859-1?Q?7hRB+K2GhJJkpSuhdrSy/jEiC0honwS185IYN2UOsdiBY6ytUySH+mOpEp?=
- =?iso-8859-1?Q?uzS6dUiWFkKBKsoVItEuV3vCDLtO6w61KP7idLbjvqMaJoeQKsCV2lP8gF?=
- =?iso-8859-1?Q?Jzpa+EidY2uClGotujFDDXegVAjjSVW44Qtnez5rppqzl2WhDGpBIi1DyJ?=
- =?iso-8859-1?Q?tO0FL+mATdZX7Cw2DmBUS+/OzM8sc9LBD5XdCnlvx/+mVMZHCCbzcnwE4M?=
- =?iso-8859-1?Q?nGUDFDw1MHfblgncJPiZJiAEjaZ0qX1/BxuSVwqZQerQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?pEkzPwAEczI3sexOMLNRa/Uabr79Q238j5scIuqYODKceGyix4baTTWVm4?=
- =?iso-8859-1?Q?kCqPxMCrMVY9XG+ZEQQ0madJRQQwXCZjqVz9KhTyOXf0TsIdWBmHB2tnb2?=
- =?iso-8859-1?Q?ZweLcr5TnP8UMLyiU9ZabhAOx4/u15G4KMh5UzYNFZnfuml0G8nzeQqnTD?=
- =?iso-8859-1?Q?GB7FpRwSaOgEymopg5VWL0VEaLMc6QrKeBA3YSLGbnagLJZSKwytwUAfhz?=
- =?iso-8859-1?Q?DdTzTEDQwhAVK9tOYBQsKYZOIQpGo6b7PhWMWE1rzgeIJJsE+6BJI1eaha?=
- =?iso-8859-1?Q?J4eJG9yUDG2saV27XeZLW5xjmfRVvmcHsSco2HZLa1dJRbZjvN8wIoBGxC?=
- =?iso-8859-1?Q?2KhOst7PP/LOpKYpjlcFnB4LnTKDvBLtTTi7P/v5E7tfbWp81YNGx7xUzQ?=
- =?iso-8859-1?Q?PLqQkwPYsuKII4kq8MndqpMPAbO93eY4W9UmhSo9QStS47ofXqw3oh0Hy4?=
- =?iso-8859-1?Q?PK+QCdQtew6tOCaGG/PayUzwa61JZy0PZR5potAN09875RARvu66co/+mc?=
- =?iso-8859-1?Q?wecqCnqTRzkfQuh1rFVN1+g5ih7DYypnuGPoCAUfESdr5akFespCM0SRGQ?=
- =?iso-8859-1?Q?tPyuYkMUlnZ4z44S4IoZGNf6PwY4b6lGwFUV6sWHXKU43YjTxaXVtd/16O?=
- =?iso-8859-1?Q?aFghOcCgbH85Xef3zDOzTJ/CuFeHIo/kYqflj+SV3kkYtcVzcuYboloS8e?=
- =?iso-8859-1?Q?sImecTu8hA9/78szjj0OL2x3YFHyCjt0I5jGxtqY7mwQULE8qDrBklJSXJ?=
- =?iso-8859-1?Q?TC4NTJQi7rh0lsOFpW7fOshTYMjjn3IuzORI1W7Wa5InpcV/HSVyGzuwRe?=
- =?iso-8859-1?Q?u1Y5l2+yaRUDfTbTrliwvtsyxL2lOtSrj/SQltqfIic5B9vgV8KeaXKXtO?=
- =?iso-8859-1?Q?Srih6M2tCxlIoDusaeTrQFENZLuXZIXLfCEAurQFIZ0ZzT/9QT0APtGTyD?=
- =?iso-8859-1?Q?wSeAFjABglivMnZbUdxKZYQqXFkRWbUW5gZYRB8vMI7B155T7jldSbjyY3?=
- =?iso-8859-1?Q?nookyXcFSYcr3YcMwdWhL0K+q0Ek/VrG56saemUpQ+RvNtRa7ETjSBSMmX?=
- =?iso-8859-1?Q?6Y+dW8b+snPum0e+V9qudmXMIvjXtMCJcZHyto2jtGmKV1pLiQ/XFbhDHG?=
- =?iso-8859-1?Q?d0tdw5mrbvFt3U+0C4kdXvuyB+MPszfVlAdw2OaHc2KteHxjbsY6RFKHqa?=
- =?iso-8859-1?Q?70lc1IhL/4Pef2eW4oX7NOciEgOmM3x+v6aWjlGsDrSv8kr8gJCE4JaybI?=
- =?iso-8859-1?Q?Sa9dVqMhDQmxZSzINzdvGod5MY+3qPW8ktlPgsdi9VInyo+kg0HrlsVCqi?=
- =?iso-8859-1?Q?WCDThDEmtoooceBMsRsrusdGDCZpXeaSQo7F8mdy7KNG7rC4+l7cxVD2m7?=
- =?iso-8859-1?Q?FKkMiJ16WybadjZBCDY5XtPtLmjKdYBdIUFuqogWY7WMS4T6kNKuVXfBMs?=
- =?iso-8859-1?Q?Ynr9odO9WHbLJ7m9QzS7/FouvNOYtFS978B8F5mpwYxMpmSKKso5UnRCyb?=
- =?iso-8859-1?Q?wzZ0WWudfHz4M5cZhS0YtNcoStqxuAaRLJRD3tU0LJTWn6SAwJHqeioIQn?=
- =?iso-8859-1?Q?AAkTv+YON/0WD58yzrJVHy/VPUfeaRB5NwjOktK/vZU/ufwScZVz92Zl1i?=
- =?iso-8859-1?Q?ntDsbcdfgNY46TwvIKi3vMue3bVxFEVlgVoGIuS3cUbdtenJqKFLhEHw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7c0ad72-0205-44a4-1575-08de17c1d405
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2025 14:37:18.8385
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r5QWzF+cOvu+nvhpxkTqYmB0pBaKZWUFCv7Mwoool2M1l9LCY3bS1u6cBMCUO5icDfdOckfbM/PDzP4J+JN6zAA6ifPfHP1uWz7Wgm3Pwf0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7209
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251015071420.1173068-20-herve.codina@bootlin.com>
 
-On Tue, Oct 28, 2025 at 04:24:04PM -0500, Lucas De Marchi wrote:
->On Tue, Oct 28, 2025 at 07:35:48PM +0200, Ilpo Järvinen wrote:
->>PCI core handles releasing device's resources and their rollback in
->>case of failure of a BAR resizing operation. Releasing resource prior
->>to calling pci_resize_resource() prevents PCI core from restoring the
->>BARs as they were.
->>
->>Remove driver-side release of BARs from the xe driver.
->>
->>Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->>Cc: Lucas De Marchi <lucas.demarchi@intel.com>
->>---
->>drivers/gpu/drm/xe/xe_vram.c | 3 ---
->>1 file changed, 3 deletions(-)
->>
->>diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
->>index b44ebf50fedb..929412f0d131 100644
->>--- a/drivers/gpu/drm/xe/xe_vram.c
->>+++ b/drivers/gpu/drm/xe/xe_vram.c
->>@@ -33,9 +33,6 @@ _resize_bar(struct xe_device *xe, int resno, resource_size_t size)
->>	int bar_size = pci_rebar_bytes_to_size(size);
->>	int ret;
->>
->>-	if (pci_resource_len(pdev, resno))
->>-		pci_release_resource(pdev, resno);
->>-
->
->conflict with drm-xe-next:
->
->++<<<<<<< ours
-> +      release_bars(pdev);
+On Wed, Oct 15, 2025 at 09:14:06AM +0200, Herve Codina wrote:
+> PCI drivers can use a device-tree overlay to describe the hardware
+> available on the PCI board. This is the case, for instance, of the
+> LAN966x PCI device driver.
+> 
+> Adding some more nodes in the device-tree overlay adds some more
+> consumer/supplier relationship between devices instantiated from this
+> overlay.
+> 
+> Those fw_node consumer/supplier relationships are handled by fw_devlink
+> and are created based on the device-tree parsing done by the
+> of_fwnode_add_links() function.
+> 
+> Those consumer/supplier links are needed in order to ensure a correct PM
+> runtime management and a correct removal order between devices.
+> 
+> For instance, without those links a supplier can be removed before its
+> consumers is removed leading to all kind of issue if this consumer still
+> want the use the already removed supplier.
+> 
+> The support for the usage of an overlay from a PCI driver has been added
+> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
+> host bridge node").
+> 
+> In the past, support for fw_devlink on x86 had been tried but this
+> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
+> fw_devlink DT support for X86"). Indeed, this support was breaking some
+> x86 systems such as OLPC system and the regression was reported in [0].
+> 
+> Instead of disabling this support for all x86 system, use a finer grain
+> and disable this support only for the possible problematic subset of x86
+> systems (at least OLPC and CE4100).
+> 
+> Those systems use a device-tree to describe their hardware. Identify
+> those systems using key properties in the device-tree.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
+> ---
+>  drivers/of/property.c | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index c1feb631e383..09b568e3b826 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1600,12 +1600,41 @@ static int of_fwnode_irq_get(const struct fwnode_handle *fwnode,
+>  	return of_irq_get(to_of_node(fwnode), index);
+>  }
+>  
+> +static int match_property_by_path(const char *node_path, const char *prop_name,
+> +				  const char *value)
+> +{
+> +	struct device_node *np __free(device_node) = of_find_node_by_path(node_path);
 > +
->++=======
->++>>>>>>> theirs
->
->if we don't need to release the BARs anymore to call
->pci_resize_resource(), then the resolution is simply to drop the
->function release_bars() function.
->
->I'm sending that to our CI for coverage:
->https://lore.kernel.org/intel-xe/20251028211613.3228940-2-lucas.demarchi@intel.com/T/#u
+> +	return of_property_match_string(np, prop_name, value);
+> +}
+> +
+> +static bool of_is_fwnode_add_links_supported(void)
+> +{
+> +	static int is_supported = -1;
+> +
+> +	if (is_supported != -1)
+> +		return !!is_supported;
+> +
 
-CI came back clean. Looks good from xe side:
+All of this:
 
-Acked-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> +	if (match_property_by_path("/soc", "compatible", "intel,ce4100-cp") >= 0)
+> +		goto not_supported;
+> +
+> +	if (match_property_by_path("/", "architecture", "OLPC") >= 0)
+> +		goto not_supported;
+> +
+> +	is_supported = 1;
+> +	return !!is_supported;
+> +
+> +not_supported:
+> +	is_supported = 0;
 
-thanks
-Lucas De Marchi
+can be simplified to:
 
->
->thanks
->Lucas De Marchi
->
->>	ret = pci_resize_resource(pdev, resno, bar_size);
->>	if (ret) {
->>		drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Consider enabling 'Resizable BAR' support in your BIOS\n",
->>-- 
->>2.39.5
->>
+is_supported = !((match_property_by_path("/soc", "compatible", "intel,ce4100-cp") >= 0) || 
+                 (match_property_by_path("/", "architecture", "OLPC") >= 0));
+
+> +	return !!is_supported;
+> +}
+> +
+>  static int of_fwnode_add_links(struct fwnode_handle *fwnode)
+>  {
+>  	const struct property *p;
+>  	struct device_node *con_np = to_of_node(fwnode);
+>  
+> -	if (IS_ENABLED(CONFIG_X86))
+> +	if (IS_ENABLED(CONFIG_X86) && !of_is_fwnode_add_links_supported())
+
+I would move the IS_ENABLED() check to 
+of_is_fwnode_add_links_supported().
+
+Rob
 
