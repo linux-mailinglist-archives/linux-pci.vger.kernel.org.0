@@ -1,122 +1,92 @@
-Return-Path: <linux-pci+bounces-39839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9A7C218C7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 18:46:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F6EDC218E2
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 18:50:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66B5B18863EA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:46:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75A55189F1B9
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF9C536C231;
-	Thu, 30 Oct 2025 17:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F93533EAEF;
+	Thu, 30 Oct 2025 17:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a9aZc+oa"
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="se09qJUR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from hall.aurel32.net (hall.aurel32.net [195.154.113.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EA572639;
-	Thu, 30 Oct 2025 17:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C2A36CA6A;
+	Thu, 30 Oct 2025 17:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.113.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761846372; cv=none; b=n5f8Txq4n8t+OpdBRFNNU8U6nzFw1YPTAgyPFMoz2H/5AAS0vT73o9UZqkxKGlNU5bqJt8BizRziXzBdnNGjG+D2IR7xe24m69CeOPGwRYOlk3sYSkXCBBNpmdJPYxQOe8L7yisE6ELu4GeRKwqGEa7W51PI3ix27LLT+Ta+Wlc=
+	t=1761846614; cv=none; b=CNDZ8hBz9XkUUoEYJXAqW2jWCFiC0T9mDrvsCOZdMpW95xsruUjNBVitncZv025pjnn3BJPbREmqJerGRTRLySPw2P4IlM9SQpeT+0cDPSBWdPzDtx9Dpwwi/Vf2Dob5VlbaMXk217S0K3/KzJ3JMqY2wuBXCD6iKXfoe64udr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761846372; c=relaxed/simple;
-	bh=b2xexS6Qluhsr9ZmEqlGOXtDsR48B9OmLyAHTqqnzbk=;
+	s=arc-20240116; t=1761846614; c=relaxed/simple;
+	bh=iyoMxK1enzWryQx2WcAmoYKpgr0zkQbPo+SYtQtPqcg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjoLq0MKGeFrLfUrUIe51XbsZqc5fwnua1H39mqhbrIWWIPo7VrKdPaH3TeEFTgHvFB/FYbNyqZ9N1x/rhz3Q/NlLsCiX+znGeQgYfu1ZfxerfyNVXKjQxSCz4/Vf9VU4tuL+xaSqzqYJZ2n5USdHGQYoe4A/PXYHfWY9Fku9KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a9aZc+oa; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761846371; x=1793382371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b2xexS6Qluhsr9ZmEqlGOXtDsR48B9OmLyAHTqqnzbk=;
-  b=a9aZc+oalwpkkO3hWqBjbs+vMi2rgj2oCJWDp9pLe3pUWSPg17iqCDkk
-   qtoML0dPBqScbo9FxrwSY7YmQ7R/AZQMGRtMEp8FyyOxwlGnBwjCp0Vvd
-   L5zCnMqUbvo4RtH77w62IQLIkhCDtzYEjNT4TpN6wIfv+x4EAb205jkxB
-   97ro6/cHB+/K2qd2xpsYHiqeTsw97hnUSzPDmTo3cwvzxloXWSuyDIOCt
-   bDsIGdyu3BwN9yVxbg8OTj1KZ84jVX/0rH6qbmoBK+b/LarR1PP3eI258
-   KPdDmAphYmaudT3bb5j5vaY6vXMiTcU8IyniGCQX7e13RwYO0LDCgyrqd
-   A==;
-X-CSE-ConnectionGUID: O6WR9q+wTHSEKlMPPgKEkA==
-X-CSE-MsgGUID: khR0DuIRQTuTyy4OBIblWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="64039302"
-X-IronPort-AV: E=Sophos;i="6.19,267,1754982000"; 
-   d="scan'208";a="64039302"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 10:46:10 -0700
-X-CSE-ConnectionGUID: b/GmOWjcS2aKDC4H8SgNzQ==
-X-CSE-MsgGUID: HAspeAjwQ7KrOmmY4Vdu1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,267,1754982000"; 
-   d="scan'208";a="191158265"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.174])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 10:45:58 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vEWif-00000003zFy-3ih6;
-	Thu, 30 Oct 2025 19:45:53 +0200
-Date: Thu, 30 Oct 2025 19:45:53 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 18/29] i2c: mux: Create missing devlink between mux
- and adapter physical device
-Message-ID: <aQOkUa1IwuiOeSvT@smile.fi.intel.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-19-herve.codina@bootlin.com>
- <6tgbavtf2dqc44ebfighrs5chzx4j4zdmjk77fmulwqbhrex2b@lou7ekbsjekr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyy8viKUfBEncYCeSczzn7RRoayna2SFp80ZgxAvGCXKDUZVeZ8/mUHV8bllgVj1fFwoTTcqEmTd6Q3XUJB+2aTmO1Z6zThwfmEOm4RBzc2uBjRmwxsb4zY3G9mkILpoc/MATmrlF1JtjqOwrBl5/WFyGh4xQP32k1hnV1+SJHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=se09qJUR; arc=none smtp.client-ip=195.154.113.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+	; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+	bh=JSgLBP4N8SNl1gTOFG6TDDGGZeq/ZcICS9giX00KL1s=; b=se09qJUR+afv9LNen0zoku4b/N
+	sK1LMhglahuW/MrFGN+kga6O0ok8UDIwm1bX0WRn7t+GXuXg/TLvNS2gr1fKj6qsaGcaIQK/jdbA9
+	0QCH0cLX7eh7V1Hzx0M64sme0FCudCaCA+UE5/9Dqyfg/CXO99w4Nac3l70T0xzQTCIPHlWgDC2/n
+	rxGbQpS0ePc8qNiReX2L0XfHkEIvYKOQDYDd0dgCSmLHzTijJ8RxKrRIjzGw8GQB6CU4fcwwxkR6q
+	k5cgghZuOt3rvmV/Kl+TWKXkX7BzRHnQevSb+mII+Bi4FWnYTmmkIjHzXl1gdK6zAhq0HLUPOwgZw
+	EXG45G+A==;
+Received: from [2a01:e34:ec5d:a741:1ee1:92ff:feb4:5ec0] (helo=ohm.rr44.fr)
+	by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <aurelien@aurel32.net>)
+	id 1vEWmI-00000002ZzI-1jJy;
+	Thu, 30 Oct 2025 18:49:38 +0100
+Date: Thu, 30 Oct 2025 18:49:37 +0100
+From: Aurelien Jarno <aurelien@aurel32.net>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Johannes Erdfelt <johannes@erdfelt.com>,
+	Alex Elder <elder@riscstar.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, vkoul@kernel.org,
+	kishon@kernel.org, dlan@gentoo.org, guodong@riscstar.com,
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, p.zabel@pengutronix.de, christian.bruel@foss.st.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	qiang.yu@oss.qualcomm.com, namcao@linutronix.de,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
+Message-ID: <aQOlMcI9jTdd7QNb@aurel32.net>
+Mail-Followup-To: Manivannan Sadhasivam <mani@kernel.org>,
+	Johannes Erdfelt <johannes@erdfelt.com>,
+	Alex Elder <elder@riscstar.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, vkoul@kernel.org,
+	kishon@kernel.org, dlan@gentoo.org, guodong@riscstar.com,
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, p.zabel@pengutronix.de, christian.bruel@foss.st.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	qiang.yu@oss.qualcomm.com, namcao@linutronix.de,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20251013153526.2276556-1-elder@riscstar.com>
+ <aPEhvFD8TzVtqE2n@aurel32.net>
+ <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
+ <aQEElhSCRNqaPf8m@aurel32.net>
+ <20251028184250.GM15521@sventech.com>
+ <82848c80-15e0-4c0e-a3f6-821a7f4778a5@riscstar.com>
+ <20251028204832.GN15521@sventech.com>
+ <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -125,37 +95,77 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6tgbavtf2dqc44ebfighrs5chzx4j4zdmjk77fmulwqbhrex2b@lou7ekbsjekr>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-On Thu, Oct 30, 2025 at 04:23:24PM +0100, Andi Shyti wrote:
+Hi Mani,
 
-...
-
-> > +	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);
+On 2025-10-30 22:11, Manivannan Sadhasivam wrote:
+> + Aurelien
 > 
-> Not to call twice put_device, I would add it once here and then
-> check for !dl.
+> On Tue, Oct 28, 2025 at 01:48:32PM -0700, Johannes Erdfelt wrote:
+> > On Tue, Oct 28, 2025, Alex Elder <elder@riscstar.com> wrote:
+> > > On 10/28/25 1:42 PM, Johannes Erdfelt wrote:
+> > > > I have been testing this patchset recently as well, but on an Orange Pi
+> > > > RV2 board instead (and an extra RV2 specific patch to enable power to
+> > > > the M.2 slot).
+> > > > 
+> > > > I ran into the same symptoms you had ("QID 0 timeout" after about 60
+> > > > seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
+> > > > seems to work fine with the "pcie_aspm=off" workaround as well.
+> > > 
+> > > I don't see this problem, and haven't tried to reproduce it yet.
+> > > 
+> > > Mani told me I needed to add these lines to ensure the "runtime
+> > > PM hierarchy of PCIe chain" won't be "broken":
+> > > 
+> > > 	pm_runtime_set_active()
+> > > 	pm_runtime_no_callbacks()
+> > > 	devm_pm_runtime_enable()
+> > > 
+> > > Just out of curiosity, could you try with those lines added
+> > > just before these assignments in k1_pcie_probe()?
+> > > 
+> > > 	k1->pci.dev = dev;
+> > > 	k1->pci.ops = &k1_pcie_ops;
+> > > 	dw_pcie_cap_set(&k1->pci, REQ_RES);
+> > > 
+> > > I doubt it will fix what you're seeing, but at the moment I'm
+> > > working on something else.
+> > 
+> > Unfortunately there is no difference with the runtime PM hierarchy
+> > additions.
+> > 
+> 
+> These are not supposed to fix the issues you were facing. I discussed with Alex
+> offline and figured out that L1 works fine on his BPI-F3 board with a NVMe SSD.
+> 
+> And I believe, Aurelien is also using that same board, but with different
+> SSDs. But what is puzzling me is, L1 is breaking Aurelien's setup with 3 SSDs
+> from different vendors. It apparently works fine on Alex's setup. So it somehow
+> confirms that Root Port supports and behaves correctly with L1. But at the same
+> time, I cannot just say without evidence that L1 is broken on all these SSDs
+> that you and Aurelien tested with.
 
-I was almost commenting the same in one of the previous rounds, but...
+It could be that we have different revision of the BPI-F3 board, it's 
+not impossible that I got an early-ish version. That said I just 
+visually checked the PCB against the schematics, and the devices on the 
+CLKREQN line appear to be installed.
 
-> > +	if (!dl) {
-> > +		dev_err(muxc->dev, "failed to create device link to %s\n",
-> > +			dev_name(parent_physdev));
+If someone has contacts to check what changes have been done between the 
+different board revision, that could help. Or same if there are 
+different revisions of the SpacemiT K1 chip.
 
-...haven't you noticed this use? With your (and my old) suggestion this may
-lead to NULL / stale pointer dereference.
+> So until that is figured out, I've asked Alex to disable L1 CAP in the
+> controller driver. So in the next version of this series, your SSDs should work
+> out of the box.
 
-> > +		put_device(parent_physdev);
-> > +		ret = -EINVAL;
-> > +		goto err_free_priv;
-> > +	}
-> > +	put_device(parent_physdev);
+Thanks, that sounds good.
+
+Regards
+Aurelien
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                     http://aurel32.net
 
