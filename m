@@ -1,120 +1,114 @@
-Return-Path: <linux-pci+bounces-39822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCE69C20FDF
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:42:55 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95128C20FEB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:43:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8DCD18910AA
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:39:45 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 619DE4EDF7C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 15:42:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF633644BD;
-	Thu, 30 Oct 2025 15:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E84E3655F4;
+	Thu, 30 Oct 2025 15:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nleKMoCV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opFa9EB3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0141990A7;
-	Thu, 30 Oct 2025 15:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078BA3655E9;
+	Thu, 30 Oct 2025 15:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761838756; cv=none; b=KndHoHJbxsQQ7lo5yMqD2t+1oovhq3s0nh4L26j+0ZNJGOuFlH7GF57KLfikSQ2g4bHcUWCH8pHcZa+4kYt51Ufgce8z2ywajdpFoYHSBTNjPGgGPHwxpEoiT2Ls6j3Dedrg3UphHcYIy6InAXj+WLgHsZjxleJlKJCrr/BtPqk=
+	t=1761838923; cv=none; b=t/PpsyWqZJPUv//NrDxeBOLpLimX9cs9WqPRHi7ARX/Yfw4ttszIYaoUgUMMN9wl+1gAlpi37wM4i5PyT/dgIu5M2saRYfn5jvaFNbkCHgeTnwd2e3CjjRgesl5TpuwZzaXlcRQbM09L45eyWohLgGJu78bohqBZACAS3ELqogs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761838756; c=relaxed/simple;
-	bh=ek0IzzttXXx97qNT2h1xklMaf1xglphbe0kKLIhYhN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=em5Jri69zrBQVwEnuO7kXjkwVVZjMCq7o6WvfYbVrsWJxPQ1w9bslZyf8LVwo+ZoMQucmNZvYdSuxHezyoTVup55gV0XNer907lGuXzURIA3o3q5JgjOFlnTLZbjOX1NKIgfSbP/OeF7P66kwtIbcU2a6w3JgAexQAQIMorj4Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nleKMoCV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7E4C4CEF1;
-	Thu, 30 Oct 2025 15:39:16 +0000 (UTC)
+	s=arc-20240116; t=1761838923; c=relaxed/simple;
+	bh=eozvD8BiZTEUnA7DiffXKpGEYQxiDYuYcu96Z+MljZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iH2zDWuOYRyfX+PI7+xg9JhamaMTyHxRrgDXs/ThnWI4UODgbl51vZc48U2ShllQDHA+mrre4xT1L5j5K1+Edkj+pC5tPXQOm3trYg+otgDkhFFzWqdyp52ueR9ou0EtVc+RvbZY/WtkERdDIFbvyyPpXLUoqZD5nZ4nojdUlLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opFa9EB3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDADC4CEFF;
+	Thu, 30 Oct 2025 15:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761838756;
-	bh=ek0IzzttXXx97qNT2h1xklMaf1xglphbe0kKLIhYhN4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nleKMoCV/yk0BtnlIzx2I86cr3HqnGJCU2jCbp9S0N/Q/Sb8AY040g42QhifNtB8Z
-	 udiMRHAA0R8lBIhjvOVioR2YzQFLaGzXZ5dBAAhrCBor4d9fALEU1V4A4qV8rnRdEq
-	 hP0KMwy8FhR5ib1gdGtUvhOpN+eHx9fT0K9XJtrFhb+fVmFC8Elq8IuEFMvQzBKIew
-	 QKFOZ3tVdkiCBLZ6ZaLIOd7pOt6K+mygmbGAtJ7KwZ3oBH8c24H2QJBS45eYZMwFyC
-	 0zolbfs49T4uyRqBOcIkUj/9tq1+KJte6+ls+ftCku+3nWF1ALDRaetliGcVLmOyYm
-	 WYCCxgN+u+CRQ==
-Date: Thu, 30 Oct 2025 10:39:14 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, amitk@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	jorge.ramirez@oss.qualcomm.com,
-	linux-arm-kernel@lists.infradead.org,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 0/8] PCI: Enable Power and configure the TC9563 PCIe
- switch
-Message-ID: <20251030153914.GA1632785@bhelgaas>
+	s=k20201202; t=1761838922;
+	bh=eozvD8BiZTEUnA7DiffXKpGEYQxiDYuYcu96Z+MljZ4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=opFa9EB3kf2HPWuKsWqldnW6T3nRIaodWxyQMElc5H5C/9w0CUkQx5fuiN+zz+GDJ
+	 6oU6ojYp29KVqKQ4o9JOq7bm/wN1u8BZxnVIDxPxl05iQHAGd4LPaGxeNG6szm3zgz
+	 knzQfaNarq69pObXhbLlN0bNLGU4RiYlci4gRndRcaVWrJJIp3Ub09ZftRKnRxqy2S
+	 D/arenc3myE6nF65cBHYFGlOyukq9Muh69qOeXS/UhyE9C3/0Jbr87BAQSJQV1LcgU
+	 2upr3k26lQtCXLCncsqm68XhP56t4O/0eNmEeAcnf27HNCUHEYbVCs9ub6ax7se+IC
+	 KZ9Baf7ZU9OUg==
+Message-ID: <cc28d048-5e0f-4f0e-b0f2-1b9e240f639b@kernel.org>
+Date: Thu, 30 Oct 2025 16:41:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3dccca2d-272f-451a-9e38-901a6fa3a24c@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 1/4] rust: types: Add Ownable/Owned types
+To: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Leon Romanovsky <leon@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Asahi Lina <lina+kernel@asahilina.net>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me>
+ <20251001-unique-ref-v12-1-fa5c31f0c0c4@pm.me>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20251001-unique-ref-v12-1-fa5c31f0c0c4@pm.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 30, 2025 at 09:13:29AM +0530, Krishna Chaitanya Chundru wrote:
-> On 10/30/2025 4:53 AM, Bjorn Helgaas wrote:
-> > On Wed, Oct 29, 2025 at 04:59:53PM +0530, Krishna Chaitanya Chundru wrote:
-> > > TC9563 is the PCIe switch which has one upstream and three downstream
-> > > ports. To one of the downstream ports ethernet MAC is connected as endpoint
-> > > device. Other two downstream ports are supposed to connect to external
-> > > device. One Host can connect to TC956x by upstream port.
-> > > 
-> > > TC9563 switch power is controlled by the GPIO's. After powering on
-> > > the switch will immediately participate in the link training. if the
-> > > host is also ready by that time PCIe link will established.
-> > > 
-> > > The TC9563 needs to configured certain parameters like de-emphasis,
-> > > disable unused port etc before link is established.
-> > > 
-> > > As the controller starts link training before the probe of pwrctl driver,
-> > > the PCIe link may come up as soon as we power on the switch. Due to this
-> > > configuring the switch itself through i2c will not have any effect as
-> > > this configuration needs to done before link training. To avoid this
-> > > introduce two functions in pci_ops to start_link() & stop_link() which
-> > > will disable the link training if the PCIe link is not up yet.
-> > > 
-> > > This series depends on the https://lore.kernel.org/all/20250124101038.3871768-3-krishna.chundru@oss.qualcomm.com/
-> > What does this series apply to?  It doesn't apply cleanly to v6.18-rc1
-> > (the normal base for topic branches) or v6.18-rc3 or pci/next.
->
-> I sent this on top of rc3 as we have some dependencies with latest changes
-> i.e ecam changes in dwc driver.
+On 10/1/25 11:03 AM, Oliver Mangold wrote:
+> From: Asahi Lina <lina+kernel@asahilina.net>
+> 
+> By analogy to `AlwaysRefCounted` and `ARef`, an `Ownable` type is a
+> (typically C FFI) type that *may* be owned by Rust, but need not be. Unlike
+> `AlwaysRefCounted`, this mechanism expects the reference to be unique
+> within Rust, and does not allow cloning.
+> 
+> Conceptually, this is similar to a `KBox<T>`, except that it delegates
+> resource management to the `T` instead of using a generic allocator.
+> 
+> [ om:
+>   - Split code into separate file and `pub use` it from types.rs.
+>   - Make from_raw() and into_raw() public.
+>   - Remove OwnableMut, and make DerefMut dependent on Unpin instead.
+>   - Usage example/doctest for Ownable/Owned.
+>   - Fixes to documentation and commit message.
+> ]
+> 
+> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
+> Signed-off-by: Asahi Lina <lina+kernel@asahilina.net>
+> Co-developed-by: Oliver Mangold <oliver.mangold@pm.me>
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+I think this patch was originally sent by Abdiel and Boqun [1]; we should
+probably take this into account. :)
 
-Oops, sorry, my fault.  I must have been trying to apply the v6 series
-(not this v7) on -rc3.  This v7 *does* apply cleanly to -rc3.
-
-But all the other topic branches are based on -rc1, so I think the
-best thing is to make this one apply on -rc1 as well, and I will deal
-with the resulting conflicts when merging into pci/next and ultimately
-into Linus's tree.
-
-Bjorn
+[1]
+https://lore.kernel.org/rust-for-linux/20241022224832.1505432-2-abdiel.janulgue@gmail.com/
 
