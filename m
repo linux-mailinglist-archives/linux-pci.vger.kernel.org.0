@@ -1,131 +1,128 @@
-Return-Path: <linux-pci+bounces-39833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 799D4C213EE
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:41:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ED06C214D5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 17:51:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1F7263502D4
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:41:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DA191A6341A
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 16:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318DE2DF71D;
-	Thu, 30 Oct 2025 16:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B412532AACE;
+	Thu, 30 Oct 2025 16:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFfTgDYU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlMB7Dxw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37F82DE1E0;
-	Thu, 30 Oct 2025 16:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46273164BC
+	for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 16:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761842484; cv=none; b=sKJWyP1goZ8K419qGaWpujAqngRnjsfL9m1fabaa5xZd2ICEFsZKGPf0JXCDplvhUV5SCSJor8/l4vyA7ZmnfRotu3xp/OwEF3BWKMhx/8THoBcXXmp+DICSdso+JhHVINquBfs53aKG/MZICANSQ4wW6epc/qigWnQ3hGkZCv8=
+	t=1761843019; cv=none; b=YoD/sg2jyeG1mOHajkBZlTHfEWVcDjWpJlcZqS0DdvQPPeXJ4i8TngpiJRaXJfmmjyXJ5kgfc2ncWaQ0WkzerwUyY5LW7qEuYdSMs7o35HvBueNXVaKVfqwMmQwxzWcbbfjuobq5WH2BhAPaQzRNhoYXf41PaiDKYndH19e1AqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761842484; c=relaxed/simple;
-	bh=aIoUwknKACszK3iv7HnkpaK0g2nYzhodMj6uyK4R4cI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rVnbuwrPva/HQJQ0JlIpWyhASuXiLTfCFI9oTZWi5nLzR6o6XG9L4lTSgoFA3VqFBTx6p1H1K2mykEola3u3PPiOi41DCFLhymS0TiSy47NU0ULVl91KcT+57qIbPGsmisgcpMEIMbNQJal/14xJiq8djGxckcZnzDgX9eVpblo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFfTgDYU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17F5C4CEF1;
-	Thu, 30 Oct 2025 16:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761842483;
-	bh=aIoUwknKACszK3iv7HnkpaK0g2nYzhodMj6uyK4R4cI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OFfTgDYUwwtk9a3MXmhN+C5QZeQcKowOvQ7JtdxMp86xa7GEim8ms4eA76JdlZfHS
-	 eFhBevKSCYCx6yMiJ4R3yNh1fEKAOckpxYlBhI00S+GuEHbN3tDMHcHFjIQ1269XM1
-	 0162sMPeIP15mj38QzG6640TZdgvl0DyZO+zAfpQ7ma2P8O29xh8ZpHLOZ/sL32xe0
-	 iqWWZ9MUG/8ewMu0jydmDJAMYeZyKtiWVz81dJNlG9Bj+piDGu94CB0PcteyGg6uJe
-	 yPXStu00GL1l1YREbznHaQFRp4m3fyjHtsoP+kDTeTeOt9XtrZbecyLXwkT6Ds1J5w
-	 cFFbUk6PUfVZg==
-Date: Thu, 30 Oct 2025 22:11:12 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Johannes Erdfelt <johannes@erdfelt.com>, 
-	Aurelien Jarno <aurelien@aurel32.net>
-Cc: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, vkoul@kernel.org, kishon@kernel.org, dlan@gentoo.org, 
-	guodong@riscstar.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, p.zabel@pengutronix.de, christian.bruel@foss.st.com, 
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, qiang.yu@oss.qualcomm.com, 
-	namcao@linutronix.de, thippeswamy.havalige@amd.com, inochiama@gmail.com, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
-Message-ID: <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
-References: <20251013153526.2276556-1-elder@riscstar.com>
- <aPEhvFD8TzVtqE2n@aurel32.net>
- <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
- <aQEElhSCRNqaPf8m@aurel32.net>
- <20251028184250.GM15521@sventech.com>
- <82848c80-15e0-4c0e-a3f6-821a7f4778a5@riscstar.com>
- <20251028204832.GN15521@sventech.com>
+	s=arc-20240116; t=1761843019; c=relaxed/simple;
+	bh=VVy8tbUD3Ds1T7QsmSlLfYhJ41rXLA290c2MjqkFJVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OkK9bBZIfws9okvRrc5KulOB0rXMEA7EW3qBeh2uZEwpZSs/7ra/MDdDOHeFb/oFeWh/UjCHK4oihE29zDHLF05AsMUBlQpuGB4IwgnkTEpQ9miesFwRgsI+Gao23QkX0decip4gfNhWGthDWSbMYrz8dsGAw5Hb16w97eBvfk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlMB7Dxw; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-29498a10972so2368795ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 09:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761843017; x=1762447817; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VVy8tbUD3Ds1T7QsmSlLfYhJ41rXLA290c2MjqkFJVg=;
+        b=QlMB7Dxw+aVrAdbSUWU0bipn23Xfve7pppXiQG79QFpCrpXyoMO8KZBNoq7a1rtmbS
+         4gxFGT15a65Fa8TM8upk3VOQqJZ5+VbO7fjKGR8abQX3rkTCSXPaP1yOnflhCMKpEgcO
+         +3cy3G2+WLq6HNbhVZHDlbKmvgZoXkttFBiI1iBPqSF4RVCgoFK3Svji5aq7nLJBixog
+         Qg6bDb6tpIU7GTKMq+Y0EHmyfgfwhq3mzPbmmjNlXw23muzhxx7hGoalRFR2UQShT5oY
+         DTuB+/obSiIxwhudLi7GcUKBacHSmw/s5yKkiN+NVzuBoBzVyDMFb6ZQSdxvPFOE3n5C
+         AreA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761843017; x=1762447817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VVy8tbUD3Ds1T7QsmSlLfYhJ41rXLA290c2MjqkFJVg=;
+        b=RROX//ks5xKDkzOr4V9xjTqfq/V9xal4djRRnRVVuVanEsiJLR0NNBvlLZ60CZo+8/
+         yHKfUAc6uyjZr6Vo1O+l+ngYk0/GXLIOFjeBa/ueSnvcn0F7zzsGlVnvl90ILZwqNAJ+
+         VIMa3/5Tc6QTRUdm/4hxmNnL1u3WWLd+qN0LWJvwLlEdOR31I47XC1OpxFy+pMrGm35g
+         AQyu1JL1a311/doGV///vBwoF5YF1FAIZtRQSLvJ1DytuLND2rcxB1MrKLRxzT9fU8sX
+         Mw8dn1EDC34bYoYdiURYylmLbR9w2raBxFAZidj6Q/gtFHC2xI6emYT+pz0AFjHGUobR
+         Wrag==
+X-Forwarded-Encrypted: i=1; AJvYcCXCmnECGkzZXrkZcxFohb0rJ/Pa2WKmDrTT6ZSbbHti05yJdXqJF/462yxXvNmD//bC/KH79txhFnY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIC8I2Qu9uFHaXscTuZBi2v0sH/PUKKg5Btrsx/cJfsstbk9Wk
+	m1tJgve1a1WzthaPmFYLdmqUfXEb3sCBs1LUChqsDGxy9sS7JpB83sVqKJKDRH7sdg7VsLH3pov
+	Uoi/J86TDc5svbg6y50YEfVzxjJdyRGA=
+X-Gm-Gg: ASbGnctMMSkpP9UOzv4JKjeQTLcPRQbGaT7CFEfB8qi50g+njj/PA7unnUen0ZYgRXX
+	f77gHVFKIlN1v5Buf6SS2bkIl07yhVHLtVDIX35V37w/dQTXSAZuA3ebRxpA4H+lp7XLmQu5Pl4
+	/HvOIaLz/r19Wdune/j4Ri7/XAKsdrR78ZhOAdH3/+YDqtsy+ag/AZ6g0d96zU6Gxn2Ly8YkEjY
+	6nC2aXTQmoBSLaK996v05PwZP/liWzfivPHqzGFyutJ1uJ6LI36C+NY7gnwM5uYU8ufZHwhcQ4D
+	GDdaHmz03PLAfhDPpvbv7FPP6w4AzTXNy4TnplG40FCJ+2vCAaMnbf/t1AyvGvWSLSWVY6LjjDb
+	eBxY=
+X-Google-Smtp-Source: AGHT+IHIwOHRSXqelvV1Sdf63ytImuxsi6mN867ttFRk6bB9U4Bt6FvCqQWaRN3cWMuEbnRRwlVbLx8M4DZOhZxBczg=
+X-Received: by 2002:a17:903:234e:b0:294:b58e:6580 with SMTP id
+ d9443c01a7336-2951a545f7fmr2497775ad.10.1761843017022; Thu, 30 Oct 2025
+ 09:50:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251028204832.GN15521@sventech.com>
+References: <20251001-unique-ref-v12-0-fa5c31f0c0c4@pm.me> <20251001-unique-ref-v12-2-fa5c31f0c0c4@pm.me>
+ <87sef08mjk.fsf@t14s.mail-host-address-is-not-set>
+In-Reply-To: <87sef08mjk.fsf@t14s.mail-host-address-is-not-set>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 30 Oct 2025 17:50:04 +0100
+X-Gm-Features: AWmQ_bkaCQLlBdplFGaXs_s6rBEi5hnyY5mzRPNbjRg2sfBfQKwQOTLK3O0jQnQ
+Message-ID: <CANiq72kuRNvovHK5r24kh23mo5wp2bpx-EjGMOyNBOF1YzukvA@mail.gmail.com>
+Subject: Re: [PATCH v12 2/4] `AlwaysRefCounted` is renamed to `RefCounted`.
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Asahi Lina <lina+kernel@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+ Aurelien
+On Thu, Oct 30, 2025 at 3:57=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> Since this patch touches so many moving parts of the rust tree, it is
+> going to be a cat and mouse game regarding rebasing this thing. It also
+> touches a lot if peoples code. I am not sure how something like this
+> would merge. Do we need ACK from everyone @Miguel?
 
-On Tue, Oct 28, 2025 at 01:48:32PM -0700, Johannes Erdfelt wrote:
-> On Tue, Oct 28, 2025, Alex Elder <elder@riscstar.com> wrote:
-> > On 10/28/25 1:42 PM, Johannes Erdfelt wrote:
-> > > I have been testing this patchset recently as well, but on an Orange Pi
-> > > RV2 board instead (and an extra RV2 specific patch to enable power to
-> > > the M.2 slot).
-> > > 
-> > > I ran into the same symptoms you had ("QID 0 timeout" after about 60
-> > > seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
-> > > seems to work fine with the "pcie_aspm=off" workaround as well.
-> > 
-> > I don't see this problem, and haven't tried to reproduce it yet.
-> > 
-> > Mani told me I needed to add these lines to ensure the "runtime
-> > PM hierarchy of PCIe chain" won't be "broken":
-> > 
-> > 	pm_runtime_set_active()
-> > 	pm_runtime_no_callbacks()
-> > 	devm_pm_runtime_enable()
-> > 
-> > Just out of curiosity, could you try with those lines added
-> > just before these assignments in k1_pcie_probe()?
-> > 
-> > 	k1->pci.dev = dev;
-> > 	k1->pci.ops = &k1_pcie_ops;
-> > 	dw_pcie_cap_set(&k1->pci, REQ_RES);
-> > 
-> > I doubt it will fix what you're seeing, but at the moment I'm
-> > working on something else.
-> 
-> Unfortunately there is no difference with the runtime PM hierarchy
-> additions.
-> 
+Yeah, any rename (or generally namespace/path change) is always
+painful due to the flag day change, and thus ideally best avoided if
+there is a practical way to do so (e.g. keeping the old name for a
+while).
 
-These are not supposed to fix the issues you were facing. I discussed with Alex
-offline and figured out that L1 works fine on his BPI-F3 board with a NVMe SSD.
+And, yeah, treewide changes generally need Acked-by's from the
+relevant maintainers.
 
-And I believe, Aurelien is also using that same board, but with different
-SSDs. But what is puzzling me is, L1 is breaking Aurelien's setup with 3 SSDs
-from different vendors. It apparently works fine on Alex's setup. So it somehow
-confirms that Root Port supports and behaves correctly with L1. But at the same
-time, I cannot just say without evidence that L1 is broken on all these SSDs
-that you and Aurelien tested with.
-
-So until that is figured out, I've asked Alex to disable L1 CAP in the
-controller driver. So in the next version of this series, your SSDs should work
-out of the box.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+Miguel
 
