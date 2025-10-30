@@ -1,129 +1,102 @@
-Return-Path: <linux-pci+bounces-39786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94325C1F3BC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:18:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0735C1F505
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 10:32:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 82DC44E7EDC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 09:18:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E77A53B902E
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Oct 2025 09:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E9D34029E;
-	Thu, 30 Oct 2025 09:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9YhZlXH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C2530FC3D;
+	Thu, 30 Oct 2025 09:30:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E0331986E;
-	Thu, 30 Oct 2025 09:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5A22868AB;
+	Thu, 30 Oct 2025 09:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761815909; cv=none; b=FVRhsod5JdXylQXIS1KIejXZuIDDHDfw2pxWk4NcErBGKLHrrBYlZxD4VrjwdikkMVKDox7WS2GsKuINUaYoIkichftzKVIJSNhnj8ycB6TCnt/fLhkRvCb396WK9rvRQ5rmmXcTtlXGfZb1P+mDfg/c+8eL6A4yeeot2/zrqEw=
+	t=1761816624; cv=none; b=P8tKUZrLMQJ+0sboVnPDj1AmhGgNJY4tQRB7RzttwJ8ecaNBUMx4M64ZYFO+x1HQK4rxi1Mf3kzq6WJh1U0EeDn/HBVXL8Imhh9qPM8WW0KWzzkZ6UptROncW/pN68lPt0Uk2L7eoufA/jUlG/Ysqa1MuIcr3c8JzotsYhiqdfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761815909; c=relaxed/simple;
-	bh=BWDl6zwh+JeTjjhMFmNzjglL13HrWxeKiSTcarPYJbk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=B/othhh6JlhxUEJKa4WRn2fvziH+cJH56waLgbXWYzAzmCIqQzC1+Z4yVtfb344YQEk6I2R1WKjmpUnwKMcuXFRjvCQDnKZ+0WYZFGJT/hDtncTLEJN/XXQqMlcTYVItOgWR0356ABcGqXsIzxWsRrDPRkZD0wGjQcYidCQznbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9YhZlXH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5A2C4CEF1;
-	Thu, 30 Oct 2025 09:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761815908;
-	bh=BWDl6zwh+JeTjjhMFmNzjglL13HrWxeKiSTcarPYJbk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=p9YhZlXHAzUmuRgBC3pmUlvKv5niPfDuihXrKLhWfk7CS1xKlnvFY6wLGquwfS/i4
-	 l8CvZNR4zDONFmzmN7zTB/gM8GOltY9aO9qn5W9kp/+F5tau3eckXdu5G8SoIei+l8
-	 OpHvFtQsVeyv05AEDICks0NRC0Phw9zlCGRFbmR9fyu3ZOcJ/0B+9myOYuiiXinRa8
-	 EOCsDKZCIWkH+92fuwJ3OuuI4A08ocQ8VUtwLyeWSiigtbaXYFn25yNNR7z8kIVh97
-	 DO4yT3spzQAJxcGIgSCGxHNhHUEICIeVNLeoY2KWTIQeAhrWDg1H8EOYYdU4R3Ef6P
-	 C+9lvXd+yhx6w==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dan.j.williams@intel.com, aik@amd.com, lukas@wunner.de,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Steven Price <steven.price@arm.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH RESEND v2 06/12] coco: host: arm64: Add RMM device
- communication helpers
-In-Reply-To: <20251029183306.0000485c@huawei.com>
-References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
- <20251027095602.1154418-7-aneesh.kumar@kernel.org>
- <20251029183306.0000485c@huawei.com>
-Date: Thu, 30 Oct 2025 14:48:20 +0530
-Message-ID: <yq5ay0osd9yb.fsf@kernel.org>
+	s=arc-20240116; t=1761816624; c=relaxed/simple;
+	bh=IiDdolWvGoh3s/xhnwLz51nodMF9z6rglepVl9ABgTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S7b/F79z7wBgl2n0OdAQu0WfqeXP0x0zuwk9tjXUS6ZGQggjAiS+KiwlaNiAMLLaFkOtnLAmG8mqse07dV+wkFuznXApnsXUCwofLm0sm9e5qL6SbQAYJ4trmxk82tQQm29DTqsB3yKpcNZKgeO9fPsJvsh4z+wEqjFieXYYAIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 379E720083DE;
+	Thu, 30 Oct 2025 10:30:13 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 323DF593A; Thu, 30 Oct 2025 10:30:13 +0100 (CET)
+Date: Thu, 30 Oct 2025 10:30:13 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Tony Hutter <hutter2@llnl.gov>, mariusz.tkaczyk@linux.intel.com,
+	minyard@acm.org, linux-pci@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: Introduce Cray ClusterStor E1000 NVMe slot LED
+ driver
+Message-ID: <aQMwJZlHtP99brn-@wunner.de>
+References: <8f35eb96-3458-45d2-a31d-7813ae4e7260@llnl.gov>
+ <20240926210259.GA13456@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240926210259.GA13456@bhelgaas>
 
-Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-...
+On Thu, Sep 26, 2024 at 04:02:59PM -0500, Bjorn Helgaas wrote:
+> On Mon, Sep 23, 2024 at 05:06:05PM -0700, Tony Hutter wrote:
+> > +++ b/drivers/pci/hotplug/pciehp_core.c
+> > @@ -73,6 +73,13 @@ static int init_slot(struct controller *ctrl)
+> >  		ops->get_attention_status = pciehp_get_raw_indicator_status;
+> >  		ops->set_attention_status = pciehp_set_raw_indicator_status;
+> >  	}
+> > +#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
+> > +	if (is_craye1k_slot(ctrl)) {
+> > +		/* slots 1-24 on Cray E1000s are controlled differently */
+> > +		ops->get_attention_status = craye1k_get_attention_status;
+> > +		ops->set_attention_status = craye1k_set_attention_status;
+> > +	}
+> > +#endif
+> 
+> I'm not really thrilled about dropping device-specific code in here,
+> but I don't have a better suggestion yet.
 
->> +		/*
->> +		 * Some device communication error will transition the
->> +		 * device to error state. Report that.
->> +		 */
->> +		if (type == PDEV_COMMUNICATE)
->> +			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
->> +						 (enum rmi_pdev_state *)&state);
->> +		if (ret)
->> +			state = error_state;
-> Whilst not strictly needed I'd do this as:
->
-> 		if (type == PDEV_COMMUNICATE) {
-> 			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
-> 						 (enum rmi_pdev_state *)&state);
-> 			if (ret)
-> 				state = error_state;
-> 		}
->
-> Just to make it clear that reg check is just on the output of the call above.
-> If we didn't make that call it is definitely zero but nice not to have
-> to reason about it.
->
+For acpiphp, we have an elaborate mechanism to register attention LED
+drivers via acpiphp_register_attention() / acpiphp_unregister_attention().
 
-Some of this is because follow up patch adds more details there. In this case.
+So far it's only used by two drivers (acpiphp_ampere_altra.c and
+acpiphp_ibm.c).
 
-		/*
-		 * Some device communication error will transition the
-		 * device to error state. Report that.
-		 */
-		if (type == PDEV_COMMUNICATE)
-			ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
-						 (enum rmi_pdev_state *)&state);
-		else
-			ret = rmi_vdev_get_state(virt_to_phys(host_tdi->rmm_vdev),
-						 (enum rmi_vdev_state *)&state);
-		if (ret)
-			state = error_state;
+For pciehp we have one custom attention LED mechanism for VMD
+(enabled through pci_dev->hotplug_user_indicators) and now
+this Cray E1000 mechanism.
 
+Personally I'm fine with keeping this lightweight and not add
+a similar register/unregister mechanism as we did for acpiphp.
 
+However I think it might make sense to drop the hotplug_user_indicators
+flag and instead invoke the is_vmd() check directly from init_slot()
+to make it more explicit what this is about and to allow the code to be
+optimized away on non-x86.
 
->
->> +	}
->> +
->> +	if (state == error_state)
->> +		pci_err(tsm->pdev, "device communication error\n");
->> +
->> +	return state;
->> +}
->> +
+Thanks,
 
--aneesh
+Lukas
 
