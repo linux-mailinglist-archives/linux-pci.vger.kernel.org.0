@@ -1,156 +1,125 @@
-Return-Path: <linux-pci+bounces-39981-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39982-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C8C4C271D1
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 23:12:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA952C27202
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 23:29:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4A9B1350EDE
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:12:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 242621A26C02
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0195532AAC3;
-	Fri, 31 Oct 2025 22:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126AF32B989;
+	Fri, 31 Oct 2025 22:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoVKMCTz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kmqv0t4r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E55405F7;
-	Fri, 31 Oct 2025 22:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577453081C2
+	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 22:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761948762; cv=none; b=BxfWZGivOHSvQ6sT+/oSqLUlx+oXkej1z0atVTUn03LZ8rp57N6qY3jU/o6xN/4u0CrqsTfv4keX/f8DQk8kL41lbEJu8je8fAX4UNAGbARvZX5pBT2e4egkX5VU9epAjne3Q4MUlf08tL+mlrYoSxEvMeS3c97glWoDvdVexAM=
+	t=1761949738; cv=none; b=tLy811NprxwObEbtpm2G2MDs9BklUsQHtNWjxzKPjWJWU0SJ4Tm7jQy06ZqhLNNR0joUIz1tQmig145x7W+Ityc41YMzf+wTOb5skLGEa2lEVlxNsrmfRC5pxJb1ULQs6ZCeiUBMyxpUMy1gUB1uBkBA5tGCV60HkoqKy/Ex3QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761948762; c=relaxed/simple;
-	bh=LQIGj4+GI8FzdEo/LJXVwpMQIkuBueWRToPygJMyxcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sCT2Lfcrts4k5o/UtKBIaYPpqOHQsg/m7OoXXBbWMn7/527ZshSIfV7yJrXjUjcEw51jqJwGECszF5y+A3JKzC53UjushW4KHa58pWYdGie2obqy2lgs6JeA5hxo4VsRjFi3hta/Y0ulnJ6b4DeXthmUzz6AmtKYVuq0OvlPNVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoVKMCTz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1615AC4CEE7;
-	Fri, 31 Oct 2025 22:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761948760;
-	bh=LQIGj4+GI8FzdEo/LJXVwpMQIkuBueWRToPygJMyxcw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EoVKMCTzxv2nuacn/UU+52fz6MBv1WkGlKNOZWwCbIFO0gvMUUnKN9/BsthrX+jZV
-	 EXMFjRzBdyNy2KRko7eIC5TZhnnlCDZcPMzjR/eG0Cnq62UrySfCkIkEn5zJ4YAvp9
-	 eUED6VQbIIykcvqFx9fg5k8/PYPXWZZOlg/fGxrY+u9gU+sCV0sfPVjH/8j1nV0Kv/
-	 R4JLqQJIvc5TdCgdZtQ73BDMwTqrMH+XljQLBcVwP/soXPhJc9Kk+ApgkLp6O4kgGK
-	 esQSy9BMALXliwhqE6T3A7XNMxPeGoDkpBmesmvqI3fF9fWzrxwEwQj5qzYSCLpThe
-	 Pt2BA/t9Sd3NA==
-Date: Fri, 31 Oct 2025 17:12:38 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v8 1/7] dt-bindings: PCI: Add binding for Toshiba TC9563
- PCIe switch
-Message-ID: <20251031221238.GA1711866@bhelgaas>
+	s=arc-20240116; t=1761949738; c=relaxed/simple;
+	bh=VZXcKlS2NfJQUqJUaLkoMO31MbXfEPxVU5q67dhNYbY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aCdBPY3UrcAOWGWZ/Cdni0aAjQRdZdX7KfNMQ9tjeLZs3+vLPf/efeMiFTlH1D/ZDPZJWFHjHN9QGN5yaBmiRDrC35tf5YMlohlVMa4qkNMSKAMaCCohvAQZx9gSW03erx3X/NUJwJreB+Kii4rtP3IRZwJ/hGTNZDWpQjJA9aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kmqv0t4r; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-58b025fce96so2223980e87.1
+        for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 15:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761949734; x=1762554534; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A4VDPOkfEPN3V+mmkEOqmJfTYjVG4ZaMp9wTEce6ggY=;
+        b=kmqv0t4rwZ+OooujAZB89C6U1PE4NY/hxG/N3arnBNvt6gcdI5fjWrSGf9YrcyXxKN
+         yGg9J1HH/8TDQyiQiH1cwV2QnT74vWm7ZDyzcEYxuprajEkVaX4f/gJzwKnq1HfQ20ZI
+         X/H4W9dQ2Sgb7YJMKmtl9Y68AnxuYX3owuhcNhD5/lBrRXvnr8VB6MuiuH4tYrGBphz1
+         FtPytlwa3a6X1saOPHQg4ZaGJlMimZNSNYSsVunvrU6M11Y6f++bi+QoWO4mJJIvDi44
+         uv6MJFrni1aUExCr/m8s6EQTGCu1qWpjXecUUFYn+kyCivXg8JeMiTaqkLgHZZqwIxn1
+         jxhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761949734; x=1762554534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A4VDPOkfEPN3V+mmkEOqmJfTYjVG4ZaMp9wTEce6ggY=;
+        b=Urt5dfHl67ElaQauKb/Q0K7QyTOLc8VhkDDJ0WouOCeD2h1zKkGlmwScAswNmEtio2
+         +B+X79r/+KzRbsuFv3gmZMuUgAcEXL3FlkJK8UgMVEQZ9O3VYfJCwdMMaVurBl0/271J
+         oclRPxD8oI09e6ySsCU2wGvUnoWJshUnPuF7s13MjiVB21s4+c+kuAn2VHLJvGLLauGv
+         rmWQeKXe42r3UZlk+ahjUgfqhv2alh6Aq8rM9FuzPy5FTnGrGolm6xgdOGl+OpUyHzDu
+         5w5KBlI2mfAG7Rf/JgbJ7lexUCE1BgEp0DS1IyWsLieNJQOIB+B7JiMIObfLYyWMAdc2
+         AheQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwOrhrE3qMOLd6dONCE2cyw4+66cCNGhb/Vj7PqA5A4YEsdgmGe7wKKDdBkOxgr+0Az9OYQ6MRPR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEU7LjKJKc5sg5gFBNIkPIxmZO7PwZwI7+da57Drehsu58lKuj
+	b/Eln/+e+Xbah6psUDNrHgr9KTzzGZ0hSfh2lCdgaDWuvfeXJabj+5snHCZde3L77df2ApaV/D4
+	PnEiSW/kmgdwIcQaky2dL3hyzoP5zaaA+7wOL+Xeu
+X-Gm-Gg: ASbGncvSYm5YDHRuTVqkwjR9rPY90vSCzg89eSixYUYbU69cXOJ7oO5A3rC28svaKHV
+	FsASrPWfLm9x1SgJn0yVMwXBRR5ZDd5JEPDkk3gAUZPllMKjvk4DXH2YDyf29KgJ4hsb2iygNLL
+	NhpRGnI/6Xfl6TQKIq1Xa/SlpS5MkPigVQxuzIfC/lwD7DE8f4zh6anhvyfxHqaISLJ+k9mQ1Kt
+	RGaH9Dh2/ORFtYaDoQ18K4kQNyUfRQGw27WiKIRVrFCNjgoxX3SvWwbZyMbQWisrzBer8w=
+X-Google-Smtp-Source: AGHT+IFSwcMwTIDGFtEaqjdkz/AcJl72mmVl0IpQ+J78Aae+a4oANLR7hdtuxWyAxkV1yPdEbNFPfRUD01apBcVpx5M=
+X-Received: by 2002:a05:6512:15a1:b0:593:11bd:9af7 with SMTP id
+ 2adb3069b0e04-5941d5586cemr1780294e87.36.1761949734165; Fri, 31 Oct 2025
+ 15:28:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251031220012.GA1711108@bhelgaas>
+References: <20251018000713.677779-1-vipinsh@google.com> <20251018000713.677779-6-vipinsh@google.com>
+In-Reply-To: <20251018000713.677779-6-vipinsh@google.com>
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 31 Oct 2025 15:28:27 -0700
+X-Gm-Features: AWmQ_bkJhwWK8iLPcHy-hUK2RP4WggOSXosGGLXjIhn9TKPWrHQgEkrODFylvq4
+Message-ID: <CALzav=f9tjgyF7TBsfjCpmvRezkkgfQY-OXwj+TaebjeffK-0A@mail.gmail.com>
+Subject: Re: [RFC PATCH 05/21] vfio/pci: Register VFIO live update file
+ handler to Live Update Orchestrator
+To: Vipin Sharma <vipinsh@google.com>
+Cc: bhelgaas@google.com, pasha.tatashin@soleen.com, jgg@ziepe.ca, 
+	graf@amazon.com, pratyush@kernel.org, gregkh@linuxfoundation.org, 
+	chrisl@kernel.org, rppt@kernel.org, skhawaja@google.com, parav@nvidia.com, 
+	saeedm@nvidia.com, kevin.tian@intel.com, jrhilke@google.com, david@redhat.com, 
+	jgowans@amazon.com, dwmw2@infradead.org, epetron@amazon.de, 
+	junaids@google.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Alex Williamson <alex@shazbot.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2025 at 05:00:13PM -0500, Bjorn Helgaas wrote:
-> On Fri, Oct 31, 2025 at 04:41:58PM +0530, Krishna Chaitanya Chundru wrote:
-> > Add a device tree binding for the Toshiba TC9563 PCIe switch, which
-> > provides an Ethernet MAC integrated to the 3rd downstream port and
-> > two downstream PCIe ports.
+On Fri, Oct 17, 2025 at 5:07=E2=80=AFPM Vipin Sharma <vipinsh@google.com> w=
+rote:
+> +static const struct liveupdate_file_ops vfio_pci_luo_fops =3D {
+> +       .retrieve =3D vfio_pci_liveupdate_retrieve,
+> +       .can_preserve =3D vfio_pci_liveupdate_can_preserve,
+> +       .owner =3D THIS_MODULE,
+> +};
+> +
+> +static struct liveupdate_file_handler vfio_pci_luo_handler =3D {
+> +       .ops =3D &vfio_pci_luo_fops,
+> +       .compatible =3D "vfio-v1",
+> +};
+> +
+> +void __init vfio_pci_liveupdate_init(void)
+> +{
+> +       int err =3D liveupdate_register_file_handler(&vfio_pci_luo_handle=
+r);
+> +
+> +       if (err)
+> +               pr_err("VFIO PCI liveupdate file handler register failed,=
+ error %d.\n", err);
+> +}
 
-> > +                pcie@1,0 {
-> > +                    compatible = "pciclass,0604";
-> > +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
-> > +                    #address-cells = <3>;
-> > +                    #size-cells = <2>;
-> > +                    device_type = "pci";
-> > +                    ranges;
-> > +                    bus-range = <0x03 0xff>;
-> > +
-> > +                    toshiba,no-dfe-support;
-> 
-> IIUC, there are two downstream ports available for external devices,
-> and pcie@1,0 is one of them.
-> 
->   1) Putting "toshiba,no-dfe-support" in the pcie@1,0 stanza suggests
->   that it only applies to that port.
-> 
->   But from tc9563_pwrctrl_disable_dfe() in "[PATCH v8 6/7] PCI:
->   pwrctrl: Add power control driver for tc9563", it looks like it's
->   applied to the upstream port and both downstream ports.  So I guess
->   my question is putting "toshiba,no-dfe-support" in just one
->   downstream port is the right place for it.
-
-Oh, I see, never mind.  You keep track of ->disable_dfe on a per-port
-basis, so each port has the *possibility* of using it, and you skip
-programming it if the port doesn't have it.
-
-I would assume the two downstream ports for external devices would be
-identical, so I do still wonder why you would specify this for only
-one of them.
-
->   2) I see a lookup of "qcom,no-dfe-support" in [PATCH v8 6/7] PCI:
->   pwrctrl: Add power control driver for tc9563; is that supposed to
->   match this "toshiba,no-dfe-support"?
-> 
-> > +                };
-> > +
-> > +                pcie@2,0 {
-> > +                    compatible = "pciclass,0604";
-> > +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
-> > +                    #address-cells = <3>;
-> > +                    #size-cells = <2>;
-> > +                    device_type = "pci";
-> > +                    ranges;
-> > +                    bus-range = <0x04 0xff>;
-> > +                };
-> > +
-> > +                pcie@3,0 {
-> > +                    compatible = "pciclass,0604";
-> > +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
-> > +                    #address-cells = <3>;
-> > +                    #size-cells = <2>;
-> > +                    device_type = "pci";
-> > +                    ranges;
-> > +                    bus-range = <0x05 0xff>;
-> > +
-> > +                    toshiba,tx-amplitude-microvolt = <10>;
-
-Same question here about whether "toshiba,tx-amplitude-microvolt" is
-supposed to match the "qcom,tx-amplitude-microvolt" in the driver.
-
-> > +                    ethernet@0,0 {
-> > +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
-> > +                    };
-> > +
-> > +                    ethernet@0,1 {
-> > +                        reg = <0x50100 0x0 0x0 0x0 0x0>;
-> > +                    };
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > 
-> > -- 
-> > 2.34.1
-> > 
+Alex and Jason, should this go in the top-level VFIO directory? And
+then have all the preservation logic go through vfio_device_ops? That
+would make Live Update support for VFIO cdev files extensible to other
+drivers in the future.
 
