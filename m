@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-39970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CA09C270A3
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:30:14 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E1CBC27079
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:29:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9814B3AB782
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 21:29:10 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4995C34D8A8
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 21:29:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4823164AA;
-	Fri, 31 Oct 2025 21:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7345C32573D;
+	Fri, 31 Oct 2025 21:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kdwp0HlX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="POmpUroS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E31F313E2B
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 21:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACDE320CDF
+	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 21:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761946144; cv=none; b=pBC/FqMvRcP3MrQnm+UPwYdo1juwoxMMCOr7KPOIInq3pTdRD6EuJI38qBx3/odat0JulJni2kDI0+YFuoodr1/DOhsNMyTWAqg4L8Jup7kOUilOFybdixTx+Zp6ydQTo3+KQECQsXO+vP+pzYQ2LB6hiyWObrpxlAECpROYfDE=
+	t=1761946145; cv=none; b=JAeiocn72QOlcJVJEam6dG1vboc8w9oBDRk8C3vrzYqmjZ02zRD2fT/jVr43yQP0EB2uw5ZruZo+OeM5wR9tftCuEnjVEkVW5s7gBghysSHJzds85zx3LgipXm7eAyxynQ4a0iWVoSo0r0WqyqYaFFx4iWAmR5N+nT9Nf7/ypqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761946144; c=relaxed/simple;
-	bh=oaDwUC8FuUfT8zs9lDlEF5ED07pUwHMwYeSwJol9Kkk=;
+	s=arc-20240116; t=1761946145; c=relaxed/simple;
+	bh=EjsivcQ7mzvN3zvnIv2XuKqH3YqomSKkWhzsjDODlDo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g85NyxRVags6R3XcmTuEG2bAWLP5zrkFaRJ+SeG7jjHiEfyDF+YDffYhX+V3kYDvgFmeHgn0EY/QabLc/AKfaCiFxjyAJuPC1s9xWmYmcK7tbLGMYaBHOhTglf2RyQ2SQoSPLccUbNLi6IIYpUyQR0xWpa536MJC8nlsTe4wt8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kdwp0HlX; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=K38A5aIUajudz9qkJN8hXfphfC9qbONkhIi7CzbJVtYM355JyUy2uDDEGVJbQ5+VBbpO59HuDHxaJJDWKPpT0fBbmPb7FUIl+z+oSq036rhykX7Z8RMo+FhnkVi8mISAlfuy0hTiYrU5vXY8C0lJa5/MaZQyE4JtmTwMt4pav4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=POmpUroS; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761946143; x=1793482143;
+  t=1761946144; x=1793482144;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oaDwUC8FuUfT8zs9lDlEF5ED07pUwHMwYeSwJol9Kkk=;
-  b=Kdwp0HlXHUtODdL65sAi6yEKNp3G6TvpL0kdCgdWkvc5IpKKGHLzwOoY
-   4dPlEdDKfc+QrmMG1JrHnoPgXhCuBhoyXvf1eMFMaEjdgTx7rFy2avYo6
-   ikuJSm4GDQvNmKRe8PbXPuDuiAs7bRbfjWdRER6Z0gGLoX6D9VeHMPuXu
-   LjLz2CB2ENjOYUJKX9SwyGQ03shhHSIqvLotZAL5YmLR69iErBvWiRCBz
-   XazOGEmeiaBqDcbrALkhZWCsdWkqb0//V/slngnTpaCBT5M6NixGZQK91
-   V22o0nErHxirQzlC5Jv6XUaY3LsLTnmsAVHhVHN2pr+cds/ax0wClz+pH
+  bh=EjsivcQ7mzvN3zvnIv2XuKqH3YqomSKkWhzsjDODlDo=;
+  b=POmpUroS+QtNRQ4LlY4mKTkCV5JsyLgVqrCQn4Vn3JYEeoVzQwlj/ekQ
+   xBOADUodestckJyogzc/1uTJACAj3G80ILUmUJRPWbABhKbYY9fbzp1nj
+   XvOmf764jvhfyVQ/Y+r+3XhXdO/91FbLtQDafLHsYq7NkCo8A1ICI2S5J
+   f6jy3SwniXe9Po1r68+VhzMPeUqjzvbu4GDhaBNiAU723BvdekZPWydvJ
+   gDhpV/ZHexrqWQHvdiDT1IyDN7tAdXcvVoWLiEnqMftCzk9Vy/1V4JZ8j
+   Nq7PfP7i5TcgBoPbpqqN1+4Un4JDwTwS5P7wqlUsezLOx/Oa2wcPX2yOQ
    A==;
-X-CSE-ConnectionGUID: uSi7PD0UQ+q5WK3OrTw6uw==
-X-CSE-MsgGUID: nFMzoIhLQgeOyGbNh7vnuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64002413"
+X-CSE-ConnectionGUID: gMFfFbjgSNaZtNL2XAz2WA==
+X-CSE-MsgGUID: xb9SV9jdQX+jtW7XrO63xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64002414"
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="64002413"
+   d="scan'208";a="64002414"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 14:29:00 -0700
-X-CSE-ConnectionGUID: 5kRRHgSKQY69ed1n5oN3Ug==
-X-CSE-MsgGUID: Pyp/uUbbT/Wz9DiDhP64xA==
+X-CSE-ConnectionGUID: ZKHo/JohRWWM8vT4GvbdaA==
+X-CSE-MsgGUID: q2Pr+ZzwSuaZbBO/BjGA8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="216986658"
+   d="scan'208";a="216986661"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by orviesa002.jf.intel.com with ESMTP; 31 Oct 2025 14:28:59 -0700
 From: Dan Williams <dan.j.williams@intel.com>
@@ -65,10 +65,10 @@ Cc: linux-coco@lists.linux.dev,
 	aik@amd.com,
 	aneesh.kumar@kernel.org,
 	yilun.xu@linux.intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v8 2/9] PCI/IDE: Enumerate Selective Stream IDE capabilities
-Date: Fri, 31 Oct 2025 14:28:54 -0700
-Message-ID: <20251031212902.2256310-3-dan.j.williams@intel.com>
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: [PATCH v8 3/9] PCI: Introduce pci_walk_bus_reverse(), for_each_pci_dev_reverse()
+Date: Fri, 31 Oct 2025 14:28:55 -0700
+Message-ID: <20251031212902.2256310-4-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251031212902.2256310-1-dan.j.williams@intel.com>
 References: <20251031212902.2256310-1-dan.j.williams@intel.com>
@@ -80,310 +80,293 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Link encryption is a new PCIe feature enumerated by "PCIe r7.0 section
-7.9.26 IDE Extended Capability".
+PCI/TSM, the PCI core functionality for the PCIe TEE Device Interface
+Security Protocol (TDISP), has a need to walk all subordinate functions of
+a Device Security Manager (DSM) to setup a device security context. A DSM
+is physical function 0 of multi-function or SR-IOV device endpoint, or it
+is an upstream switch port.
 
-It is both a standalone port + endpoint capability, and a building block
-for the security protocol defined by "PCIe r7.0 section 11 TEE Device
-Interface Security Protocol (TDISP)". That protocol coordinates device
-security setup between a platform TSM (TEE Security Manager) and a
-device DSM (Device Security Manager). While the platform TSM can
-allocate resources like Stream ID and manage keys, it still requires
-system software to manage the IDE capability register block.
+In error scenarios or when a TEE Security Manager (TSM) device is removed
+it needs to unwind all established DSM contexts.
 
-Add register definitions and basic enumeration in preparation for
-Selective IDE Stream establishment. A follow on change selects the new
-CONFIG_PCI_IDE symbol. Note that while the IDE specification defines
-both a point-to-point "Link Stream" and a Root Port to endpoint
-"Selective Stream", only "Selective Stream" is considered for Linux as
-that is the predominant mode expected by Trusted Execution Environment
-Security Managers (TSMs), and it is the security model that limits the
-number of PCI components within the TCB in a PCIe topology with
-switches.
+Introduce reverse versions of PCI device iteration helpers to mirror the
+setup path and ensure that dependent children are handled before parents.
 
-Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Alexey Kardashevskiy <aik@amd.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/pci/Kconfig           |  3 ++
- drivers/pci/Makefile          |  1 +
- drivers/pci/pci.h             |  6 +++
- include/linux/pci.h           |  7 +++
- include/uapi/linux/pci_regs.h | 81 ++++++++++++++++++++++++++++++++
- drivers/pci/ide.c             | 88 +++++++++++++++++++++++++++++++++++
- drivers/pci/probe.c           |  1 +
- 7 files changed, 187 insertions(+)
- create mode 100644 drivers/pci/ide.c
+ include/linux/device/bus.h |  3 ++
+ include/linux/pci.h        | 11 +++++++
+ drivers/base/bus.c         | 38 +++++++++++++++++++++++
+ drivers/pci/bus.c          | 39 ++++++++++++++++++++++++
+ drivers/pci/search.c       | 62 +++++++++++++++++++++++++++++++++-----
+ 5 files changed, 145 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index f94f5d384362..b28423e2057f 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -122,6 +122,9 @@ config XEN_PCIDEV_FRONTEND
- config PCI_ATS
- 	bool
- 
-+config PCI_IDE
-+	bool
-+
- config PCI_DOE
- 	bool "Enable PCI Data Object Exchange (DOE) support"
- 	help
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 67647f1880fb..6612256fd37d 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
- obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
- obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
- obj-$(CONFIG_PCI_DOE)		+= doe.o
-+obj-$(CONFIG_PCI_IDE)		+= ide.o
- obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
- obj-$(CONFIG_PCI_NPEM)		+= npem.o
- obj-$(CONFIG_PCIE_TPH)		+= tph.o
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 4492b809094b..86ef13e7cece 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -613,6 +613,12 @@ static inline void pci_doe_sysfs_init(struct pci_dev *pdev) { }
- static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
- #endif
- 
-+#ifdef CONFIG_PCI_IDE
-+void pci_ide_init(struct pci_dev *dev);
-+#else
-+static inline void pci_ide_init(struct pci_dev *dev) { }
-+#endif
-+
+diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+index f5a56efd2bd6..99b1002b3e31 100644
+--- a/include/linux/device/bus.h
++++ b/include/linux/device/bus.h
+@@ -150,6 +150,9 @@ int bus_for_each_dev(const struct bus_type *bus, struct device *start,
+ 		     void *data, device_iter_t fn);
+ struct device *bus_find_device(const struct bus_type *bus, struct device *start,
+ 			       const void *data, device_match_t match);
++struct device *bus_find_device_reverse(const struct bus_type *bus,
++				       struct device *start, const void *data,
++				       device_match_t match);
  /**
-  * pci_dev_set_io_state - Set the new error state if possible.
-  *
+  * bus_find_device_by_name - device iterator for locating a particular device
+  * of a specific name.
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d1fdf81fbe1e..4402ca931124 100644
+index 4402ca931124..b6a12a82be12 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -539,6 +539,13 @@ struct pci_dev {
- #endif
- #ifdef CONFIG_PCI_NPEM
- 	struct npem	*npem;		/* Native PCIe Enclosure Management */
-+#endif
-+#ifdef CONFIG_PCI_IDE
-+	u16		ide_cap;	/* Link Integrity & Data Encryption */
-+	u8		nr_ide_mem;	/* Address association resources for streams */
-+	u8		nr_link_ide;	/* Link Stream count (Selective Stream offset) */
-+	unsigned int	ide_cfg:1;	/* Config cycles over IDE */
-+	unsigned int	ide_tee_limit:1; /* Disallow T=0 traffic over IDE */
- #endif
- 	u16		acs_cap;	/* ACS Capability offset */
- 	u8		supported_speeds; /* Supported Link Speeds Vector */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 07e06aafec50..05bd22d9e352 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -754,6 +754,7 @@
- #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
- #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
- #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-+#define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
- #define PCI_EXT_CAP_ID_PL_64GT	0x31	/* Physical Layer 64.0 GT/s */
- #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_64GT
+@@ -582,6 +582,8 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus);
  
-@@ -1249,4 +1250,84 @@
- #define PCI_DVSEC_CXL_PORT_CTL				0x0c
- #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+ #define	to_pci_dev(n) container_of(n, struct pci_dev, dev)
+ #define for_each_pci_dev(d) while ((d = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, d)) != NULL)
++#define for_each_pci_dev_reverse(d) \
++	while ((d = pci_get_device_reverse(PCI_ANY_ID, PCI_ANY_ID, d)) != NULL)
  
-+/* Integrity and Data Encryption Extended Capability */
-+#define PCI_IDE_CAP			0x04
-+#define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
-+#define  PCI_IDE_CAP_SELECTIVE		0x2  /* Selective IDE Streams Supported */
-+#define  PCI_IDE_CAP_FLOWTHROUGH	0x4  /* Flow-Through IDE Stream Supported */
-+#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC 0x8  /* Partial Header Encryption Supported */
-+#define  PCI_IDE_CAP_AGGREGATION	0x10 /* Aggregation Supported */
-+#define  PCI_IDE_CAP_PCRC		0x20 /* PCRC Supported */
-+#define  PCI_IDE_CAP_IDE_KM		0x40 /* IDE_KM Protocol Supported */
-+#define  PCI_IDE_CAP_SEL_CFG		0x80 /* Selective IDE for Config Request Support */
-+#define  PCI_IDE_CAP_ALG		__GENMASK(12, 8) /* Supported Algorithms */
-+#define   PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
-+#define  PCI_IDE_CAP_LINK_TC_NUM	__GENMASK(15, 13) /* Link IDE TCs */
-+#define  PCI_IDE_CAP_SEL_NUM		__GENMASK(23, 16) /* Supported Selective IDE Streams */
-+#define  PCI_IDE_CAP_TEE_LIMITED	0x1000000 /* TEE-Limited Stream Supported */
-+#define PCI_IDE_CTL			0x08
-+#define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4  /* Flow-Through IDE Stream Enabled */
+ static inline int pci_channel_offline(struct pci_dev *pdev)
+ {
+@@ -1242,6 +1244,8 @@ u64 pci_get_dsn(struct pci_dev *dev);
+ 
+ struct pci_dev *pci_get_device(unsigned int vendor, unsigned int device,
+ 			       struct pci_dev *from);
++struct pci_dev *pci_get_device_reverse(unsigned int vendor, unsigned int device,
++				       struct pci_dev *from);
+ struct pci_dev *pci_get_subsys(unsigned int vendor, unsigned int device,
+ 			       unsigned int ss_vendor, unsigned int ss_device,
+ 			       struct pci_dev *from);
+@@ -1661,6 +1665,8 @@ int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max,
+ 
+ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+ 		  void *userdata);
++void pci_walk_bus_reverse(struct pci_bus *top,
++			  int (*cb)(struct pci_dev *, void *), void *userdata);
+ int pci_cfg_space_size(struct pci_dev *dev);
+ unsigned char pci_bus_max_busnr(struct pci_bus *bus);
+ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+@@ -2049,6 +2055,11 @@ static inline struct pci_dev *pci_get_device(unsigned int vendor,
+ 					     struct pci_dev *from)
+ { return NULL; }
+ 
++static inline struct pci_dev *pci_get_device_reverse(unsigned int vendor,
++						     unsigned int device,
++						     struct pci_dev *from)
++{ return NULL; }
 +
-+#define PCI_IDE_LINK_STREAM_0		0xc  /* First Link Stream Register Block */
-+#define  PCI_IDE_LINK_BLOCK_SIZE	8
-+/* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
-+#define PCI_IDE_LINK_CTL_0		0x00		  /* First Link Control Register Offset in block */
-+#define  PCI_IDE_LINK_CTL_EN		0x1		  /* Link IDE Stream Enable */
-+#define  PCI_IDE_LINK_CTL_TX_AGGR_NPR	__GENMASK(3, 2)	  /* Tx Aggregation Mode NPR */
-+#define  PCI_IDE_LINK_CTL_TX_AGGR_PR	__GENMASK(5, 4)	  /* Tx Aggregation Mode PR */
-+#define  PCI_IDE_LINK_CTL_TX_AGGR_CPL	__GENMASK(7, 6)	  /* Tx Aggregation Mode CPL */
-+#define  PCI_IDE_LINK_CTL_PCRC_EN	0x100		  /* PCRC Enable */
-+#define  PCI_IDE_LINK_CTL_PART_ENC	__GENMASK(13, 10) /* Partial Header Encryption Mode */
-+#define  PCI_IDE_LINK_CTL_ALG		__GENMASK(18, 14) /* Selection from PCI_IDE_CAP_ALG */
-+#define  PCI_IDE_LINK_CTL_TC		__GENMASK(21, 19) /* Traffic Class */
-+#define  PCI_IDE_LINK_CTL_ID		__GENMASK(31, 24) /* Stream ID */
-+#define PCI_IDE_LINK_STS_0		0x4               /* First Link Status Register Offset in block */
-+#define  PCI_IDE_LINK_STS_STATE		__GENMASK(3, 0)   /* Link IDE Stream State */
-+#define  PCI_IDE_LINK_STS_IDE_FAIL	0x80000000	  /* IDE fail message received */
-+
-+/* Selective IDE Stream block, up to PCI_IDE_CAP_SELECTIVE_STREAMS_NUM */
-+/* Selective IDE Stream Capability Register */
-+#define  PCI_IDE_SEL_CAP		0x00
-+#define   PCI_IDE_SEL_CAP_ASSOC_NUM	__GENMASK(3, 0)
-+/* Selective IDE Stream Control Register */
-+#define  PCI_IDE_SEL_CTL		0x04
-+#define   PCI_IDE_SEL_CTL_EN		0x1		  /* Selective IDE Stream Enable */
-+#define   PCI_IDE_SEL_CTL_TX_AGGR_NPR	__GENMASK(3, 2)	  /* Tx Aggregation Mode NPR */
-+#define   PCI_IDE_SEL_CTL_TX_AGGR_PR	__GENMASK(5, 4)   /* Tx Aggregation Mode PR */
-+#define   PCI_IDE_SEL_CTL_TX_AGGR_CPL	__GENMASK(7, 6)	  /* Tx Aggregation Mode CPL */
-+#define   PCI_IDE_SEL_CTL_PCRC_EN	0x100		  /* PCRC Enable */
-+#define   PCI_IDE_SEL_CTL_CFG_EN	0x200		  /* Selective IDE for Configuration Requests */
-+#define   PCI_IDE_SEL_CTL_PART_ENC	__GENMASK(13, 10) /* Partial Header Encryption Mode */
-+#define   PCI_IDE_SEL_CTL_ALG		__GENMASK(18, 14) /* Selection from PCI_IDE_CAP_ALG */
-+#define   PCI_IDE_SEL_CTL_TC		__GENMASK(21, 19) /* Traffic Class */
-+#define   PCI_IDE_SEL_CTL_DEFAULT	0x400000	  /* Default Stream */
-+#define   PCI_IDE_SEL_CTL_TEE_LIMITED	0x800000	  /* TEE-Limited Stream */
-+#define   PCI_IDE_SEL_CTL_ID		__GENMASK(31, 24) /* Stream ID */
-+#define   PCI_IDE_SEL_CTL_ID_MAX	255
-+/* Selective IDE Stream Status Register */
-+#define  PCI_IDE_SEL_STS		 0x08
-+#define   PCI_IDE_SEL_STS_STATE		 __GENMASK(3, 0) /* Selective IDE Stream State */
-+#define   PCI_IDE_SEL_STS_STATE_INSECURE 0
-+#define   PCI_IDE_SEL_STS_STATE_SECURE	 2
-+#define   PCI_IDE_SEL_STS_IDE_FAIL	 0x80000000	 /* IDE fail message received */
-+/* IDE RID Association Register 1 */
-+#define  PCI_IDE_SEL_RID_1		 0x0c
-+#define   PCI_IDE_SEL_RID_1_LIMIT	 __GENMASK(23, 8)
-+/* IDE RID Association Register 2 */
-+#define  PCI_IDE_SEL_RID_2		0x10
-+#define   PCI_IDE_SEL_RID_2_VALID	0x1
-+#define   PCI_IDE_SEL_RID_2_BASE	__GENMASK(23, 8)
-+#define   PCI_IDE_SEL_RID_2_SEG		__GENMASK(31, 24)
-+/* Selective IDE Address Association Register Block, up to PCI_IDE_SEL_CAP_ASSOC_NUM */
-+#define PCI_IDE_SEL_ADDR_BLOCK_SIZE	12
-+#define  PCI_IDE_SEL_ADDR_1(x)		(20 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
-+#define   PCI_IDE_SEL_ADDR_1_VALID	0x1
-+#define   PCI_IDE_SEL_ADDR_1_BASE_LOW	__GENMASK(19, 8)
-+#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW	__GENMASK(31, 20)
-+/* IDE Address Association Register 2 is "Memory Limit Upper" */
-+#define  PCI_IDE_SEL_ADDR_2(x)		(24 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
-+/* IDE Address Association Register 3 is "Memory Base Upper" */
-+#define  PCI_IDE_SEL_ADDR_3(x)		(28 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
-+#define PCI_IDE_SEL_BLOCK_SIZE(nr_assoc)  (20 + PCI_IDE_SEL_ADDR_BLOCK_SIZE * (nr_assoc))
-+
- #endif /* LINUX_PCI_REGS_H */
-diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-new file mode 100644
-index 000000000000..26866edf91b4
---- /dev/null
-+++ b/drivers/pci/ide.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-+
-+/* PCIe r7.0 section 6.33 Integrity & Data Encryption (IDE) */
-+
-+#define dev_fmt(fmt) "PCI/IDE: " fmt
-+#include <linux/bitfield.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
-+
-+#include "pci.h"
-+
-+static int __sel_ide_offset(u16 ide_cap, u8 nr_link_ide, u8 stream_index,
-+			    u8 nr_ide_mem)
+ static inline struct pci_dev *pci_get_subsys(unsigned int vendor,
+ 					     unsigned int device,
+ 					     unsigned int ss_vendor,
+diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+index 5e75e1bce551..d19dae8f9d1b 100644
+--- a/drivers/base/bus.c
++++ b/drivers/base/bus.c
+@@ -334,6 +334,19 @@ static struct device *next_device(struct klist_iter *i)
+ 	return dev;
+ }
+ 
++static struct device *prev_device(struct klist_iter *i)
 +{
-+	u32 offset = ide_cap + PCI_IDE_LINK_STREAM_0 +
-+		     nr_link_ide * PCI_IDE_LINK_BLOCK_SIZE;
++	struct klist_node *n = klist_prev(i);
++	struct device *dev = NULL;
++	struct device_private *dev_prv;
 +
-+	/*
-+	 * Assume a constant number of address association resources per stream
-+	 * index
-+	 */
-+	return offset + stream_index * PCI_IDE_SEL_BLOCK_SIZE(nr_ide_mem);
++	if (n) {
++		dev_prv = to_device_private_bus(n);
++		dev = dev_prv->device;
++	}
++	return dev;
 +}
 +
-+void pci_ide_init(struct pci_dev *pdev)
+ /**
+  * bus_for_each_dev - device iterator.
+  * @bus: bus type.
+@@ -414,6 +427,31 @@ struct device *bus_find_device(const struct bus_type *bus,
+ }
+ EXPORT_SYMBOL_GPL(bus_find_device);
+ 
++struct device *bus_find_device_reverse(const struct bus_type *bus,
++				       struct device *start, const void *data,
++				       device_match_t match)
 +{
-+	u16 nr_link_ide, nr_ide_mem, nr_streams;
-+	u16 ide_cap;
-+	u32 val;
++	struct subsys_private *sp = bus_to_subsys(bus);
++	struct klist_iter i;
++	struct device *dev;
 +
-+	if (!pci_is_pcie(pdev))
-+		return;
++	if (!sp)
++		return NULL;
 +
-+	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
-+	if (!ide_cap)
-+		return;
-+
-+	pci_read_config_dword(pdev, ide_cap + PCI_IDE_CAP, &val);
-+	if ((val & PCI_IDE_CAP_SELECTIVE) == 0)
-+		return;
-+
-+	/*
-+	 * Require endpoint IDE capability to be paired with IDE Root Port IDE
-+	 * capability.
-+	 */
-+	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) {
-+		struct pci_dev *rp = pcie_find_root_port(pdev);
-+
-+		if (!rp->ide_cap)
-+			return;
-+	}
-+
-+	pdev->ide_cfg = FIELD_GET(PCI_IDE_CAP_SEL_CFG, val);
-+	pdev->ide_tee_limit = FIELD_GET(PCI_IDE_CAP_TEE_LIMITED, val);
-+
-+	if (val & PCI_IDE_CAP_LINK)
-+		nr_link_ide = 1 + FIELD_GET(PCI_IDE_CAP_LINK_TC_NUM, val);
-+	else
-+		nr_link_ide = 0;
-+
-+	nr_ide_mem = 0;
-+	nr_streams = 1 + FIELD_GET(PCI_IDE_CAP_SEL_NUM, val);
-+	for (u16 i = 0; i < nr_streams; i++) {
-+		int pos = __sel_ide_offset(ide_cap, nr_link_ide, i, nr_ide_mem);
-+		int nr_assoc;
-+		u32 val;
-+
-+		pci_read_config_dword(pdev, pos + PCI_IDE_SEL_CAP, &val);
-+
-+		/*
-+		 * Let's not entertain streams that do not have a constant
-+		 * number of address association blocks
-+		 */
-+		nr_assoc = FIELD_GET(PCI_IDE_SEL_CAP_ASSOC_NUM, val);
-+		if (i && (nr_assoc != nr_ide_mem)) {
-+			pci_info(pdev, "Unsupported Selective Stream %d capability, SKIP the rest\n", i);
-+			nr_streams = i;
++	klist_iter_init_node(&sp->klist_devices, &i,
++			     (start ? &start->p->knode_bus : NULL));
++	while ((dev = prev_device(&i))) {
++		if (match(dev, data)) {
++			get_device(dev);
 +			break;
 +		}
-+
-+		nr_ide_mem = nr_assoc;
 +	}
-+
-+	pdev->ide_cap = ide_cap;
-+	pdev->nr_link_ide = nr_link_ide;
-+	pdev->nr_ide_mem = nr_ide_mem;
++	klist_iter_exit(&i);
++	subsys_put(sp);
++	return dev;
 +}
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0ce98e18b5a8..4c55020f3ddf 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2667,6 +2667,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_doe_init(dev);		/* Data Object Exchange */
- 	pci_tph_init(dev);		/* TLP Processing Hints */
- 	pci_rebar_init(dev);		/* Resizable BAR */
-+	pci_ide_init(dev);		/* Link Integrity and Data Encryption */
++EXPORT_SYMBOL_GPL(bus_find_device_reverse);
++
+ static struct device_driver *next_driver(struct klist_iter *i)
+ {
+ 	struct klist_node *n = klist_next(i);
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index f26aec6ff588..b8b17f825bc0 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -8,6 +8,7 @@
+  */
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/cleanup.h>
+ #include <linux/pci.h>
+ #include <linux/errno.h>
+ #include <linux/ioport.h>
+@@ -432,6 +433,27 @@ static int __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void
+ 	return ret;
+ }
  
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
++static int __pci_walk_bus_reverse(struct pci_bus *top,
++				  int (*cb)(struct pci_dev *, void *),
++				  void *userdata)
++{
++	struct pci_dev *dev;
++	int ret = 0;
++
++	list_for_each_entry_reverse(dev, &top->devices, bus_list) {
++		if (dev->subordinate) {
++			ret = __pci_walk_bus_reverse(dev->subordinate, cb,
++						     userdata);
++			if (ret)
++				break;
++		}
++		ret = cb(dev, userdata);
++		if (ret)
++			break;
++	}
++	return ret;
++}
++
+ /**
+  *  pci_walk_bus - walk devices on/under bus, calling callback.
+  *  @top: bus whose devices should be walked
+@@ -453,6 +475,23 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *), void
+ }
+ EXPORT_SYMBOL_GPL(pci_walk_bus);
+ 
++/**
++ * pci_walk_bus_reverse - walk devices on/under bus, calling callback.
++ * @top: bus whose devices should be walked
++ * @cb: callback to be called for each device found
++ * @userdata: arbitrary pointer to be passed to callback
++ *
++ * Same semantics as pci_walk_bus(), but walks the bus in reverse order.
++ */
++void pci_walk_bus_reverse(struct pci_bus *top,
++			  int (*cb)(struct pci_dev *, void *), void *userdata)
++{
++	down_read(&pci_bus_sem);
++	__pci_walk_bus_reverse(top, cb, userdata);
++	up_read(&pci_bus_sem);
++}
++EXPORT_SYMBOL_GPL(pci_walk_bus_reverse);
++
+ void pci_walk_bus_locked(struct pci_bus *top, int (*cb)(struct pci_dev *, void *), void *userdata)
+ {
+ 	lockdep_assert_held(&pci_bus_sem);
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index 53840634fbfc..e6e84dc62e82 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -282,6 +282,45 @@ static struct pci_dev *pci_get_dev_by_id(const struct pci_device_id *id,
+ 	return pdev;
+ }
+ 
++static struct pci_dev *pci_get_dev_by_id_reverse(const struct pci_device_id *id,
++						 struct pci_dev *from)
++{
++	struct device *dev;
++	struct device *dev_start = NULL;
++	struct pci_dev *pdev = NULL;
++
++	if (from)
++		dev_start = &from->dev;
++	dev = bus_find_device_reverse(&pci_bus_type, dev_start, (void *)id,
++				      match_pci_dev_by_id);
++	if (dev)
++		pdev = to_pci_dev(dev);
++	pci_dev_put(from);
++	return pdev;
++}
++
++enum pci_search_direction {
++	PCI_SEARCH_FORWARD,
++	PCI_SEARCH_REVERSE,
++};
++
++static struct pci_dev *__pci_get_subsys(unsigned int vendor, unsigned int device,
++				 unsigned int ss_vendor, unsigned int ss_device,
++				 struct pci_dev *from, enum pci_search_direction dir)
++{
++	struct pci_device_id id = {
++		.vendor = vendor,
++		.device = device,
++		.subvendor = ss_vendor,
++		.subdevice = ss_device,
++	};
++
++	if (dir == PCI_SEARCH_FORWARD)
++		return pci_get_dev_by_id(&id, from);
++	else
++		return pci_get_dev_by_id_reverse(&id, from);
++}
++
+ /**
+  * pci_get_subsys - begin or continue searching for a PCI device by vendor/subvendor/device/subdevice id
+  * @vendor: PCI vendor id to match, or %PCI_ANY_ID to match all vendor ids
+@@ -302,14 +341,8 @@ struct pci_dev *pci_get_subsys(unsigned int vendor, unsigned int device,
+ 			       unsigned int ss_vendor, unsigned int ss_device,
+ 			       struct pci_dev *from)
+ {
+-	struct pci_device_id id = {
+-		.vendor = vendor,
+-		.device = device,
+-		.subvendor = ss_vendor,
+-		.subdevice = ss_device,
+-	};
+-
+-	return pci_get_dev_by_id(&id, from);
++	return __pci_get_subsys(vendor, device, ss_vendor, ss_device, from,
++				PCI_SEARCH_FORWARD);
+ }
+ EXPORT_SYMBOL(pci_get_subsys);
+ 
+@@ -334,6 +367,19 @@ struct pci_dev *pci_get_device(unsigned int vendor, unsigned int device,
+ }
+ EXPORT_SYMBOL(pci_get_device);
+ 
++/*
++ * Same semantics as pci_get_device(), except walks the PCI device list
++ * in reverse discovery order.
++ */
++struct pci_dev *pci_get_device_reverse(unsigned int vendor,
++				       unsigned int device,
++				       struct pci_dev *from)
++{
++	return __pci_get_subsys(vendor, device, PCI_ANY_ID, PCI_ANY_ID, from,
++				PCI_SEARCH_REVERSE);
++}
++EXPORT_SYMBOL(pci_get_device_reverse);
++
+ /**
+  * pci_get_class - begin or continue searching for a PCI device by class
+  * @class: search for a PCI device with this class designation
 -- 
 2.51.0
 
