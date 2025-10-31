@@ -1,146 +1,119 @@
-Return-Path: <linux-pci+bounces-39924-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39925-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28700C25008
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:30:06 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C0FFC25146
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:47:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D4073B316F
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:29:58 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2CAF534D8B4
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:47:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF62834845F;
-	Fri, 31 Oct 2025 12:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5007183088;
+	Fri, 31 Oct 2025 12:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gHKvRPN9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPRsw+hx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305E91922DD;
-	Fri, 31 Oct 2025 12:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761913796; cv=pass; b=MkZOK1880Pgh0SY0pXL2cHBxD8yRJXhBTYggME9wmMJN9Su1AZUdYDbTMnfFUWXlH/EdgVZePN5EJqx6vndelHvBjevpkGc8+CwnV8rBQkhBUqTraycWpsmjZxInMkIpnUldBrZFMTosUGKWYsCDIvGbXatViVJiX8bhCvhq6+k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761913796; c=relaxed/simple;
-	bh=gEr6wUDalR20obqcCqsJpn2+gnQyfPKeWURJKuUhkQU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bW9I/qHYi6mpjrtkRlSmEZgojMukJHDg2ewniRYGRTlN+1Pd+y5kfgxyXpV71ZyxfNRaTzu6B+nwakodHg3Wjngbg1SVFK5XGCvcZpPwwS2+O4jLzizQocOhgOf/XmwtvgO7au7zSOknWxZOUTaTXm/7Pv0tXxDBn3gMU/biLh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gHKvRPN9; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761913773; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Lbv+fXr9nldSZ6bg2HxAoLbBLIzWWdu/lCarcLknvjWruEAX72qbG2BejhKPOlAwN5ZzV3YQBkuP5enNXNxGYiE9/9WuEll7ddxT82q8CnApUPaV1j5s+LZpNKN4ZpF7nDuaVpmkpfwF7IEy3VTi9k3hcK0kCyaD/TyASu5t6/I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761913773; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=i4PdjAgGN9CXMADjTYH6Vrnejj2e5huADOUeceii3Ag=; 
-	b=VjjbDznmMFtS6Cmdz6hoJi+GITJJ23e5wz0WnnFjbyGQDdu/BiSFoCwWREhaTtzz6AnZ7vR44hHaJTGEUddxPtHHORjctN2ohZUjzZ/OyBz2hVkgCVvXXcoz1nxLFLhC1bAwz6KUkTVAaznLOo+vqScX8aEqOfqJKDQBfUD/FSo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761913773;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=i4PdjAgGN9CXMADjTYH6Vrnejj2e5huADOUeceii3Ag=;
-	b=gHKvRPN9Tr1hv3oHVcXGKSvjBpijr3x2hWyzkr57PZTRUoUfwmZeTlH66YqGOOcc
-	jFCdXsJEY9zQRdS/yl7j4HDOrK3i1UMRfiLAZml+Fsh1RltGxyHWeEb2FEjGCd6XTDV
-	EfLPRnMBl8EBvnX73mNzngposYFIGN4ax4WCWStA=
-Received: by mx.zohomail.com with SMTPS id 1761913772134279.7995112453409;
-	Fri, 31 Oct 2025 05:29:32 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Anand Moon <linux.amoon@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, Niklas Cassel <cassel@kernel.org>,
- Shawn Lin <shawn.lin@rock-chips.com>, Hans Zhang <18255117159@163.com>,
- "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
- <linux-pci@vger.kernel.org>,
- "moderated list:ARM/Rockchip SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-Subject:
- Re: [PATCH v1 1/2] PCI: dw-rockchip: Add remove callback for resource cleanup
-Date: Fri, 31 Oct 2025 13:29:25 +0100
-Message-ID: <15087240.uLZWGnKmhe@workhorse>
-In-Reply-To: <b2micr4atfax2sgolsublmjk4kwvbmdnqjlk2lb7cflzeycm5i@bi62lg75ilo6>
-References:
- <20251027145602.199154-1-linux.amoon@gmail.com>
- <20251027145602.199154-2-linux.amoon@gmail.com>
- <b2micr4atfax2sgolsublmjk4kwvbmdnqjlk2lb7cflzeycm5i@bi62lg75ilo6>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F7E3F9FB;
+	Fri, 31 Oct 2025 12:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761914796; cv=none; b=p+SKN3KQVwmyc4RVAef2x0O5G29Ua0sCpmit0sTTDbB6RcpRZ/unbeMbgNV4EZlzwP54wYfaBkW/optpKQxYVJh0tWYShR/0KkzylPACR3+aIv57elH3vZn+R7+6dtvcqC7ERugLbzBWDeWkWEErTN/QfApR4g0/dnkHBLLUhU8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761914796; c=relaxed/simple;
+	bh=VvHbEhqP4vrrRtNq8/jm4qCTNHw3PAK7ds5gnC1tL0k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=XxaLjfdl5eJEKZ5yd4EuTshdimkPWB98mnwLPUOZV+2EOevx9whRk+FORArOEDmCXbBkBEjNhK7plsKG5xfvLE+HDuLLj+o6JIP3EU9RGXZzDuQ1/HxdOZ337UrZSw3iFsqy8gm48ryVc/7OygDF8otpEbl4KnQfw9samciUFDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPRsw+hx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3362CC4CEE7;
+	Fri, 31 Oct 2025 12:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761914796;
+	bh=VvHbEhqP4vrrRtNq8/jm4qCTNHw3PAK7ds5gnC1tL0k=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=IPRsw+hxmv9zPYcK1RRTEsNyW4ERl/lvUKF3SM0t/rpZuqY3YzdxFwBu9tBlA38D3
+	 Nmf1+/hxjVCl7CNwNxqLztrbMQj0Yfo0Z+ePE6ADYI3x6FD+7xWhLwVRpLQ75dJFBw
+	 Qk6ma3wPPC/eGtialLau5OjzQcZoIkcPDlZH9Pr6ffCeOYOang5zd1gCq2nBJ0Tt1F
+	 YWVfFl87VxC+xTxpOR/Kcdg/Yhpc5qu0IP8EitOffQxdIrq7kri5jo0+NkXxgp8rOB
+	 x0GKZMsWIoasBIWz472JLYCCPvNktUfCTxF/HL2G14YmM8ldhW2YIMAuPDckAe6o5k
+	 0PcTRkozwLKeQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 31 Oct 2025 13:46:28 +0100
+Message-Id: <DDWINZJUGVQ8.POKS7A6ZSRFK@kernel.org>
+Subject: Re: [PATCH v3 3/5] rust: pci: add a helper to query configuration
+ space size
+Cc: "Bjorn Helgaas" <helgaas@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+ <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+ <targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
+ <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
+To: "Zhi Wang" <zhiw@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251030154842.450518-4-zhiw@nvidia.com>
+ <20251030165115.GA1636169@bhelgaas>
+ <20251031141611.669c5380.zhiw@nvidia.com>
+In-Reply-To: <20251031141611.669c5380.zhiw@nvidia.com>
 
-On Friday, 31 October 2025 09:36:05 Central European Standard Time Manivannan Sadhasivam wrote:
-> On Mon, Oct 27, 2025 at 08:25:29PM +0530, Anand Moon wrote:
-> > Introduce a .remove() callback to the Rockchip DesignWare PCIe
-> > controller driver to ensure proper resource deinitialization during
-> > device removal. This includes disabling clocks and deinitializing the
-> > PCIe PHY.
-> > 
-> 
-> How can you remove a driver that is only built-in? You are just sending some
-> pointless patches that were not tested and does not make sense at all.
+On Fri Oct 31, 2025 at 1:16 PM CET, Zhi Wang wrote:
+> On Thu, 30 Oct 2025 11:51:15 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> Apart from pci-sysfs and vfio, I don't really see any drivers that use
+>> pdev->cfg_size today.
+>
+> It is for the framework so far. If we believe that driver doesn't need
+> this in the near term, I can make it private in the next re-spin.
 
-The better question would be: why does Kconfig make PCIE_ROCKCHIP_DW
-a bool rather than a tristate? I see other PCIE_DW drivers using
-tristate, so this doesn't seem like a technical limitation with the
-IP.
+Device::cfg_size() should indeed be private, I don't see a reason for drive=
+rs to
+call this directly.
 
-> 
-> Please stop wasting others time.
-> 
-> - Mani
-> 
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > index 87dd2dd188b4..b878ae8e2b3e 100644
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -717,6 +717,16 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
-> >  	return ret;
-> >  }
-> >  
-> > +static void rockchip_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct rockchip_pcie *rockchip = dev_get_drvdata(dev);
-> > +
-> > +	/* Perform other cleanups as necessary */
-> > +	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-> > +	rockchip_pcie_phy_deinit(rockchip);
-> > +}
-> > +
-> >  static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
-> >  	.mode = DW_PCIE_RC_TYPE,
-> >  };
-> > @@ -754,5 +764,6 @@ static struct platform_driver rockchip_pcie_driver = {
-> >  		.suppress_bind_attrs = true,
-> >  	},
-> >  	.probe = rockchip_pcie_probe,
-> > +	.remove = rockchip_pcie_remove,
-> >  };
-> >  builtin_platform_driver(rockchip_pcie_driver);
-> 
-> 
+However, enum ConfigSpaceSize has to be public, such that we can implement =
+a
+method:
 
+	pub fn config_space<'a, const SIZE: usize>(&'a self) -> Result<ConfigSpace=
+<'a, SIZE>>
 
+so the driver can assert whether it requires the normal or extended
+configuration space size with e.g.:
 
+	// Fails if the configuration space does not have an extended size.
+	let cfg =3D pdev.config_space::<ConfigSpaceSize::Extended>()?;
 
+Subsequently, we can do infallible accesses within the corresponding guaran=
+teed
+range.
+
+Given that there are only two options, normal or extended, we can also drop=
+ the
+const generic and just provide two separate methods:
+
+	pub fn config_space<'a>(&'a self) -> Result<ConfigSpace<'a, ConfigSpaceSiz=
+e::Normal>>
+
+and
+
+	pub fn config_space_extended<'a>(&'a self) -> Result<ConfigSpace<'a, Confi=
+gSpaceSize::Extended>>
+
+Allowing drivers to request a ConfigSpace<'a, 0> with only runtime checks m=
+akes
+no sense, ConfigSpaceSize::Normal is always the minimum.
+
+- Danilo
 
