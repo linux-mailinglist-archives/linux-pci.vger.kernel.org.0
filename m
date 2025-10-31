@@ -1,161 +1,121 @@
-Return-Path: <linux-pci+bounces-39880-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39881-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21979C22D9B
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 02:16:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD83EC22DBA
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 02:20:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 855A04E3886
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 01:16:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 978A94E1C75
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 01:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12766225762;
-	Fri, 31 Oct 2025 01:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27151D5146;
+	Fri, 31 Oct 2025 01:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="iMipLv1m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnqcGCEf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB9813635C
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 01:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACCD225762;
+	Fri, 31 Oct 2025 01:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761873384; cv=none; b=Lwvaha5ny5Z7espvLyWF2lu77RXnCtRtsTJqVoRM6I/SVaez6bY5aJaDNGGvyUKCF5VIOcXx6RCqJa9MYS7mzHNSrdbsqeQfC/wuot5yOvyT5En8GJ4cb5YrrcxRUCunZw4BkZqofHHy+/oxnfoxBagSeafxFqbZIBXFpdBvYEQ=
+	t=1761873616; cv=none; b=jVEnT5xu6XPNGL6v9cbF+qjrbD78QAGDZQbuhxRAM/1LtmBZh7u4v4MDUb3kWk4v3H5wnBSGlxAEg/ZaVTh409xwjvMO+ZXGsTgNsJttwdzqZqttQ+9/neN0zcZJNoqTB7/JRZJ10+sfZvb8AmB4QHaJr2FoDbq7PAqeFdAdmNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761873384; c=relaxed/simple;
-	bh=4Q2e8S4JOkL/lipbI1pDbE41ejOeT3F2JXftXOKS9SY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aaP6pHDRmPCRh3C99jN4Fq7p6xFrWwNpjGF5utRCpV1zFWvAD1lwW1zWdglyyZuKNRBT7Cav/ZfwNcdZBR2LfJf3M64+FcRuS1wntlVxBqxlGdX2h8fDN2GAnHsNGM8008uyIF+ld9Eo2mcM2iLalctRQTotcLBAKLLEitDE8oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=iMipLv1m; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-945a5731dd3so67178139f.0
-        for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 18:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1761873381; x=1762478181; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BNmWvB1sse+ll8fu7wLpbE6Pu2iBxbQUEY600bj95+Y=;
-        b=iMipLv1mDx1Fjt+5AFoaW4WjxKtXSuyHyYXkC83im8Gj1CbZa7RQwQ42uDzZz8zRhS
-         DDbhxScj3qaRPRvOP0ylTegZtYsy+dEOUnGcyKSPZS4pS/X1VfCqjjIKtoAIYGUAl//0
-         wpAQalYv+W/bT3Ms0YrrCGF1ftueNbupOGSomXaOOjuNPDDJZG5rc/oE+TsRANIVvFZU
-         ZG32wP4gXin7xFEsWfDtdQ3mRxO3om7AJDqaLxN3IAch/UJoEKCM6zgoe5+CNaWyq6tT
-         1GyjcX+/lmgqDbbkt3fX1ZUVWpMNylQGmFxHmAsLUwIPNUd/2TwXjqeypIFI/G1anWs/
-         kNAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761873381; x=1762478181;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BNmWvB1sse+ll8fu7wLpbE6Pu2iBxbQUEY600bj95+Y=;
-        b=oRmMXURHEzOOpxj6KHcIBypC1kOAAib+e3XLsnciWfbQe3sJlhfMdThCvlqUFuj7AN
-         G7/v3z0EiqCyutZEykEPyejGn4o72vDUOeGxFttV1TWCSgLbw30crf9ibjQO7S8PugtC
-         V8i4Q/2Xa6xbgnuodSowDD9DvatVHIUjLNjg6B492VjkOmV3bj1AiWMi25nvBv+rDCn/
-         2eCbkNbIuL4+MQ0U3QEIvi1d+3ChtAxBhJrD0CMcTW+dez405/YmvrkUdshL3hobWXjS
-         D7ymjNu9qsNhpezpCT3v0HIYfDtbuvFb/XZAAnnTuXR2YZD+BDtidXdcQrgRzJKPHQX5
-         NJxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoOel/A9tEMWu4Ul9Nwvy82mN5vkb8d1vPb1HYymJcYyL7p2BBhlVAxCdf0N77hF2vYCACQvHBUc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo0In4ct6cNtoFodJ3tS3LKCG0Tb/6vW5mzpcy3zfFweE/6rfL
-	/qp2LDjcDKDnvXA+Rxx7c1FHqD2B3V4L3WTlFJZ5Iqx2lYr899DAaysctZiULRFWTgI=
-X-Gm-Gg: ASbGncu9lnKUGLcbB6Mx10jafeI3Y19K/fk7fxYEn/jn7MprZyWlJ9A9qcskHJKhvS1
-	1vkrzNukhPr4bQPjy2F3tSP2W/NOFy1JaCTKFMPWXX8T8M+R20TSzNYHOT7kV12VgZt/Oj54a1l
-	3envYv199nH5Z4JCQp1Usyw4qTeJyk0VssxU4UQU2oXmgZrC5xyyzNFnQZee4amkkmeSToozO5U
-	fiQVNR5yK3a5VFkt3rTsovXj7ZaTWkgaN2vhc5Ygynd6yHIoDEXRFDUlLogJBSOPnMGvYK3eJdT
-	ZA6xC3J+rmpIbGBTpw/pFUD9qEXbQk1s5pJ4wwDgqUlMo6QSPb8LHIIFYmykwbEBPBK3Qi2ESPr
-	Jpf46WxSwdfsIZBXnEk0KZZrk0xRORNYXOicDUk+HAWGImpGNgZB+NDKLz05Ku29Axl0gaL4vnS
-	rUYobt8uwXt1GHTim6SgGIOz8kPGSZ7c+onE6jRV+2
-X-Google-Smtp-Source: AGHT+IF4xxWwH/4LfxxdEtp/ZJLyhKDeHy5QKQAhJFjWBy4txu4y5k6mqZ7NiiibuaIjhND7W09bcg==
-X-Received: by 2002:a05:6602:2c01:b0:940:d7cb:139a with SMTP id ca18e2360f4ac-948228fff16mr371985839f.7.1761873380679;
-        Thu, 30 Oct 2025 18:16:20 -0700 (PDT)
-Received: from [172.22.22.234] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b6a5a981f5sm144822173.46.2025.10.30.18.16.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Oct 2025 18:16:20 -0700 (PDT)
-Message-ID: <f1bec6f4-bf44-4cbf-a676-fa81d81531d4@riscstar.com>
-Date: Thu, 30 Oct 2025 20:16:17 -0500
+	s=arc-20240116; t=1761873616; c=relaxed/simple;
+	bh=XBpqrNWYLXGxZhlBTre3kVLERg3/jVkEfRPIH9FEfyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=aEVzGYuD0Zj3RRrWIeff/aInzduI4rYrlFx4yTy1v9eDEAO28GOwXh35QZQvhsa3koxSVoqHjbWxEBvwSARQgZA18AZXowBK/gID+lWYdIHpRq1aHPc//Y+X2VGwUcgcHrtofeYesBA93bA4y9CWVCbn7wyKaMwY3zy+gzFFvJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnqcGCEf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4936C4CEF1;
+	Fri, 31 Oct 2025 01:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761873616;
+	bh=XBpqrNWYLXGxZhlBTre3kVLERg3/jVkEfRPIH9FEfyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TnqcGCEfCfAdD1JgaiTRfUGK4jIlpm2JsZr9Zct3Q204ryDpfUf9t/flGTCpfZsxx
+	 fLZZLCR0J5BTwne/5tmGTtSpj4Cmw2sOA/Ckg2CXKWEGaIRKvEfpbq+aPAhrTcp0k4
+	 0hzqol49WZ7+9sn8DACQBNWorXavoKwRtvRvWOmllxZxSqCWGeGzOrtr5djuMvGYQ1
+	 b/UlS41OiAIZAMWFCLtPgYM6YEaeWjI7vfo9V8stvwLnqQ5rvsbLXVLjwK3MAnideS
+	 6oyqGNTB45Rw23B5otFEp7Qw4KGlHqeSHM6DqDx6+7XlC6efa72PgrU1QliADuQYK1
+	 in7+oFREE586g==
+Date: Thu, 30 Oct 2025 20:20:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	linux-pci@vger.kernel.org, yilun.xu@linux.intel.com,
+	aneesh.kumar@kernel.org, bhelgaas@google.com,
+	gregkh@linuxfoundation.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v7 2/9] PCI/IDE: Enumerate Selective Stream IDE
+ capabilities
+Message-ID: <20251031012014.GA1663371@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] PCI: spacemit: introduce SpacemiT PCIe host driver
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, bhelgaas@google.com, dlan@gentoo.org, aurelien@aurel32.net,
- johannes@erdfelt.com, p.zabel@pengutronix.de, christian.bruel@foss.st.com,
- thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com,
- mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
- shradha.t@samsung.com, inochiama@gmail.com, guodong@riscstar.com,
- linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20251030230801.GA1660222@bhelgaas>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20251030230801.GA1660222@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96cba9e4-ad1d-4823-b30b-f693c05824d4@amd.com>
 
-On 10/30/25 6:08 PM, Bjorn Helgaas wrote:
-> In subject, capitalize "introduce" to match history.  Or you could
-> just use "Add ...", which has the advantage of being shorter.
-
-OK.  I'll capitalize all of them in this series.
-
-> On Thu, Oct 30, 2025 at 05:02:56PM -0500, Alex Elder wrote:
->> Introduce a driver for the PCIe host controller found in the SpacemiT
->> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
->> The driver supports three PCIe ports that operate at PCIe gen2 transfer
->> rates (5 GT/sec).  The first port uses a combo PHY, which may be
->> configured for use for USB 3 instead.
->> ...
+On Fri, Oct 31, 2025 at 10:56:27AM +1100, Alexey Kardashevskiy wrote:
+> On 31/10/25 08:37, Bjorn Helgaas wrote:
+> > On Thu, Oct 30, 2025 at 11:59:30AM +1100, Alexey Kardashevskiy wrote:
+> > > On 24/10/25 13:04, Dan Williams wrote:
+> > > > Link encryption is a new PCIe feature enumerated by "PCIe r7.0 section
+> > > > 7.9.26 IDE Extended Capability".
+> > > ...
+> > 
+> > > > +#define PCI_IDE_CAP			0x04
+> > > > +#define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
+> > > > +#define  PCI_IDE_CAP_SELECTIVE		0x2  /* Selective IDE Streams Supported */
+> > > > +#define  PCI_IDE_CAP_FLOWTHROUGH	0x4  /* Flow-Through IDE Stream Supported */
+> > > > +#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC 0x8  /* Partial Header Encryption Supported */
+> > > > +#define  PCI_IDE_CAP_AGGREGATION	0x10 /* Aggregation Supported */
+> > > > +#define  PCI_IDE_CAP_PCRC		0x20 /* PCRC Supported */
+> > > > +#define  PCI_IDE_CAP_IDE_KM		0x40 /* IDE_KM Protocol Supported */
+> > > > +#define  PCI_IDE_CAP_SEL_CFG		0x80 /* Selective IDE for Config Request Support */
+> > > > +#define  PCI_IDE_CAP_ALG		__GENMASK(12, 8) /* Supported Algorithms */
+> > > > +#define   PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
+> > > > +#define  PCI_IDE_CAP_LINK_TC_NUM	__GENMASK(15, 13) /* Link IDE TCs */
+> > > > +#define  PCI_IDE_CAP_SEL_NUM		__GENMASK(23, 16) /* Supported Selective IDE Streams */
+> > > > +#define  PCI_IDE_CAP_TEE_LIMITED	0x1000000 /* TEE-Limited Stream Supported */
+> > > 
+> > > Since you are referring to PCIe r7.0 (instead of my proposal to use
+> > > r6.1 ;) ), it has XT now here and in the stream control registers.
+> > 
+> > I haven't been following this, but is there an advantage to referring
+> > to r6.1 instead of r7.0?  I assume newer revisions of the spec only
+> > add useful things and don't remove anything.
 > 
-> I guess this doesn't support INTx interrupts at all?
-
-It can, but I removed that support first to simplify the task
-of converting the original code, and second because I had no way
-to test it.  I planned for it to be added at a future date.
-
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -509,6 +509,17 @@ config PCI_KEYSTONE_EP
->>   	  on DesignWare hardware and therefore the driver re-uses the
->>   	  DesignWare core functions to implement the driver.
->>   
->> +config PCIE_SPACEMIT_K1
->> +	tristate "SpacemiT K1 PCIe controller (host mode)"
+> We are adding here a bunch of macros for all the flags defined in
+> the spec but we are not using many of them yet (or ever). And we are
+> not adding the XT _support_ (which came in r7.0) right now, only the
+> flags.
 > 
-> Move this to keep the menu items alphabetized by vendor.
-
-OK.  I was going by Kconfig option name, but now I see
-what you mean.
-
-I'll put it between PCIE_SOPHGO_DW and PCIE_SPEAR13XX.
-
->> +	depends on ARCH_SPACEMIT || COMPILE_TEST
->> +	depends on PCI && OF && HAS_IOMEM
+> So what is the rule -
+> 1) we add only bare minimum of the flags which we have the user for right now?
+> 2) we add everything defined by the spec which the commit log refers to?
 > 
-> I don't think you need PCI or OF.
+> Right now it is neither but if the commit log said "r6.1" - then
+> this patch is a complete set of flags.
+>
+> I do not care all that much, just noticed some inconsistency when I
+> recently touched "lspci" so feel free to ignore the above :) Thanks,
 
-You're right.  PCI for sure, but it doesn't look like I make
-an direct OF calls either.  I'll drop them both.
+I don't see a need to add #defines for things we don't use.
 
->> +	select PCIE_DW_HOST
->> +	select PCI_PWRCTRL_SLOT
->> +	default ARCH_SPACEMIT
->> +	help
->> +	  Enables support for the PCIe controller in the K1 SoC operating
->> +	  in host mode.
-> 
-> Most help text includes both the vendor and the product line names.
-I guess I didn't include "SpacemiT".  I'll add that, and will try
-to come up with a few more words in the description.
+lspci is a little different because it should be able to decode
+everything defined by the spec, whether somebody uses it or not.
 
-Thanks for your quick response.
-
-					-Alex
-
+My rule of thumb is to cite the most recent revision of the spec or
+at least the most recent major version.  It's not as important as it
+once was because the PCI-SIG has been trying hard not to change
+section numbers in new revisions, but I don't really see the point of
+citing an old revision unless there's something useful in it that
+isn't in the current revision.
 
