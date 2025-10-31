@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-39926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B87A1C2516A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:49:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48E46C2518B
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:51:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12C863A6F87
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:48:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8D5A40023F
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4342E1E834F;
-	Fri, 31 Oct 2025 12:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9184D1F872D;
+	Fri, 31 Oct 2025 12:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBqFIu8W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbVfHkxE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147FB1A23B6;
-	Fri, 31 Oct 2025 12:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640611F2BAD;
+	Fri, 31 Oct 2025 12:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761914929; cv=none; b=LiMTvVjN6f3/iPi8l2i3XiWqaobNlq34cKSgpL9JpkIiCEMwcRwvwG5RaSfzJf2RvGCxS41AjqTkHnGHVIxwbaIeRvEPrTtyrNu52VlkxU847puv27It1D/uuLUTkMU1cVqQTpozfNu1Zi35RaNElJTUq4FziZUjfguEo5Xj0iQ=
+	t=1761915016; cv=none; b=jg7fPPlNXaDK1ef5NT0oPT+vVGud/b2R+YQ8XJB2mBvk5xsTtWNrH9GZtb2TgyhWPNVqx+1Jldr6eSpqUJfb7uX/CnNg5nL7Q1SsizhMZ99c1h9tjQNmDvWb79IGnVXbLttilTte2HkxhtbiGKOhy0ScHxCfapYmQ5jYPVbzul0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761914929; c=relaxed/simple;
-	bh=qJZZbyHsXGInSaxUw1uSFmkVRHGNpqvQTdMgquB7srU=;
+	s=arc-20240116; t=1761915016; c=relaxed/simple;
+	bh=OTjMDonvY6N5Z54OL6u4Od3iceOioJU+g1NjtVl5uFk=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=NnBOTOWg5Ld8NaVzaGUMDYCVF/ShMzHSH5V1HOLUtMy3+LQkAbpFZ9doxlKdtm2WxAr7ssmHOh8SaqHAcIaW7WYlSro0f0jmSD8A/z9WxKkenIqVXbcpAnjldVICbPK/XzIJBisQLvA8mjyqGxngykGkkBIoeYwQXUl1d91vlcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBqFIu8W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8341C4CEE7;
-	Fri, 31 Oct 2025 12:48:42 +0000 (UTC)
+	 References:In-Reply-To; b=PkyQDSddzFninmXQMlSb1pM7Zo0QMQqHasdQfxryUblg2cG+ww4xggwdgcinBL6F9FwReAGOjz5JjGaczqfucJveppJw5p/xARO0Czy54iLE1nBu70aWGal+7XMSHuTtpAw/5Q6CTnxItM2fS1tEaupFmFKQS42xPvmRucgw7Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbVfHkxE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCB5C4CEF8;
+	Fri, 31 Oct 2025 12:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761914927;
-	bh=qJZZbyHsXGInSaxUw1uSFmkVRHGNpqvQTdMgquB7srU=;
+	s=k20201202; t=1761915015;
+	bh=OTjMDonvY6N5Z54OL6u4Od3iceOioJU+g1NjtVl5uFk=;
 	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=mBqFIu8WiJWXPBpSurmGzYSyFhByUUCnEU76WOIUz5aj12MtcvbdsmiwnMRINjKHS
-	 sExKaZNFDEf6EmKVmjZMCi1/dfVvCH1kB0g+kAGMBnIqcHCKXAd3NdnKLyrxPqMXlX
-	 y4vWKKTyaGx3CFPU4uZkb84/zOFyjHX5LFGSzyfGau2pyuVEoUpHlw4/WL1MTS1sH5
-	 QUVy2qc3wfpYHqOETxU4Vn8qfLqR490UY2Bn93ipBUPBzbgZ1DeAoKTdswx6lAr2vI
-	 S1PvV47Id3rzo41d2IvmGTDJ+tqcgJZWwNUldr4nB9utjkDeYUgyqZ6eghVSc0NWoF
-	 q2vf7MBXDNQbg==
+	b=QbVfHkxEsw0CFRDYYeok+4QQje3dJ74Vlb8o0Fti5K+lzLBGo2vAXLWxR4WT7oSU/
+	 qOYFddIi1vM7RsQ8eeY6ID7fVTno7+rugujGswtMPmOjwj6OYp6H8olJZqmX8/AJmz
+	 pqquFGiN09WPuSQ2OrQpSwoHtSRSIO6PU7JAN6e+0UmPCLf8NuYmuVUVLGjwCEjOAE
+	 6FOYBGq2ViCmS3NgRqw5APXzRxIhrVdkdPEdTsZ09hrV95ns8GM1dybmVXqaeNN7gQ
+	 ag571KuNbgsnapvispXqXkbpZqdNpDkkWOkP/RRooez9YwZzEgE70GxYtNkClN40qQ
+	 LVyf2Qv4sDbSw==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,9 +49,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 31 Oct 2025 13:48:41 +0100
-Message-Id: <DDWIPOOIN5X6.3EJE6QNXV61PX@kernel.org>
-Subject: Re: [PATCH v3 4/5] rust: pci: add config space read/write support
+Date: Fri, 31 Oct 2025 13:50:09 +0100
+Message-Id: <DDWIQTE4F3XB.I1ZSB58P7O88@kernel.org>
+Subject: Re: [PATCH v3 5/5] sample: rust: pci: add tests for config space
+ routines
 Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
  <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
  <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
@@ -64,56 +65,37 @@ Cc: <rust-for-linux@vger.kernel.org>, <bhelgaas@google.com>,
 To: "Zhi Wang" <zhiw@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
 References: <20251030154842.450518-1-zhiw@nvidia.com>
- <20251030154842.450518-5-zhiw@nvidia.com>
-In-Reply-To: <20251030154842.450518-5-zhiw@nvidia.com>
+ <20251030154842.450518-6-zhiw@nvidia.com>
+In-Reply-To: <20251030154842.450518-6-zhiw@nvidia.com>
 
 On Thu Oct 30, 2025 at 4:48 PM CET, Zhi Wang wrote:
-> +impl<'a, const SIZE: usize> Io<SIZE> for ConfigSpace<'a, SIZE> {
-> +    /// Returns the base address of this mapping.
-> +    #[inline]
-> +    fn addr(&self) -> usize {
-> +        0
+> +    fn config_space(pdev: &pci::Device<Core>) -> Result {
+> +        let config =3D pdev.config_space()?;
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "pci-testdev config space try_read8 rev ID: {:x}\n",
+> +            config.try_read8(0x8)?
+> +        );
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "pci-testdev config space try_read16 vendor ID: {:x}\n",
+> +            config.try_read16(0)?
+> +        );
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "pci-testdev config space try_read32 BAR 0: {:x}\n",
+> +            config.try_read32(0x10)?
+> +        );
+> +
+> +        Ok(())
 > +    }
-> +
-> +    /// Returns the maximum size of this mapping.
-> +    #[inline]
-> +    fn maxsize(&self) -> usize {
-> +        self.pdev.cfg_size().map_or(0, |v| v as usize)
-> +    }
-> +
-> +    define_read!(fallible, try_read8, call_config_read, pci_read_config_=
-byte -> u8);
-> +    define_read!(fallible, try_read16, call_config_read, pci_read_config=
-_word -> u16);
-> +    define_read!(fallible, try_read32, call_config_read, pci_read_config=
-_dword -> u32);
-> +
-> +    define_write!(fallible, try_write8, call_config_write, pci_write_con=
-fig_byte <- u8);
-> +    define_write!(fallible, try_write16, call_config_write, pci_write_co=
-nfig_word <- u16);
-> +    define_write!(fallible, try_write32, call_config_write, pci_write_co=
-nfig_dword <- u32);
-> +}
+>  }
 
-Please also implement the infallible ones.
-
-> +
->  /// A PCI BAR to perform I/O-Operations on.
->  ///
->  /// # Invariants
-> @@ -615,6 +670,11 @@ pub fn set_master(&self) {
->          // SAFETY: `self.as_raw` is guaranteed to be a pointer to a vali=
-d `struct pci_dev`.
->          unsafe { bindings::pci_set_master(self.as_raw()) };
->      }
-> +
-> +    /// Return an initialized config space object.
-> +    pub fn config_space<'a>(&'a self) -> Result<ConfigSpace<'a>> {
-> +        Ok(ConfigSpace { pdev: self })
-> +    }
-
-Please see [1].
-
-[1] https://lore.kernel.org/lkml/DDWINZJUGVQ8.POKS7A6ZSRFK@kernel.org/
+Please use the infallible accessors and add a TODO to use the register!() m=
+acro
+for defining PCI configuration space registers once it has been move out of
+nova-core.
 
