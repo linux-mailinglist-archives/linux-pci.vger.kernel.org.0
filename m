@@ -1,38 +1,37 @@
-Return-Path: <linux-pci+bounces-39950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6092FC26788
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 18:48:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71A1DC267B2
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 18:50:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 372A14FB982
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 17:44:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EC45463F4B
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 17:44:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA9E30CDBC;
-	Fri, 31 Oct 2025 17:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94FE32FC880;
+	Fri, 31 Oct 2025 17:43:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC12D0C99;
-	Fri, 31 Oct 2025 17:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702B02777FC;
+	Fri, 31 Oct 2025 17:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761932613; cv=none; b=TGjgMDWnh2CfOtKu7b8EV9AnNGDm/EImFKbKxMjPKFSrhyy8BvB44cMjz0Lb5FfUB4M5MrzhaAVxbKEUjiQgc2326ShX4BYq6z0AcB4/C7+Rbs21+FDk7VYrBkaG0zivvlqXCY7ufit2JJQULTxj/PimqCsj6Dtcuul6BD2qZGw=
+	t=1761932620; cv=none; b=s+Vn8D0XOlTpBlX1pZQG9zr40svONZbYWgU0uzYtKkL4sVKGBoi92PlG/l9eGaARSVs2X7aqSndAjRV0MDiJF2Ixa8oE1Fam9EiC0vI3YpHPB2BNFpCQgf1Z2q1NS5uBk6YMHs6z8hDcDbIjn+0mf6fVpKN7q8Ez2cwNRkI7ALY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761932613; c=relaxed/simple;
-	bh=VrcDCZTTzA+LINiKOMWUnoZKZnxjToLdODEk4F9zscM=;
+	s=arc-20240116; t=1761932620; c=relaxed/simple;
+	bh=z6Ma1tu8vEZQke3NjkVPJHb01xM4bsdEHhx7cBiREVQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k1EQFeYqryW/0GvKNF5Nsqhrro8qjwYtTnN7P17ilk6boyi9m8QLCYYgorXCHS52WMghknY5DkAoBqOFeWT5c+4ZvDO361NS56qjm2HIHKqalErIeDT/2dnWHVrdx7NtCs7lAYcjlPyxyZrZELo9F0sb3HnCBLup/BEBjkVnMMY=
+	 In-Reply-To:To:Cc; b=o8+5yWyGdfWkKSIdfnt2Pwfn7Qu2VlItXuVrZhxJzJmi5HKLiDOncIG5IJP8W4Ykdfq0H/8zLzOzn8XsE2KDxOI9NCKHnZpr6oZ7Xzu05RUvjWg7z5zwEeTIMdqeVTWXWJzMbBvOCIkJ2U0Jumr+/fBMkniAGnEBm85ijJnHHww=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D29C4CEFD;
-	Fri, 31 Oct 2025 17:43:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720D2C4CEFD;
+	Fri, 31 Oct 2025 17:43:33 +0000 (UTC)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Date: Fri, 31 Oct 2025 23:13:00 +0530
-Subject: [PATCH 2/3] arm64: dts: amlogic: Fix the register name of the
- 'DBI' region
+Date: Fri, 31 Oct 2025 23:13:01 +0530
+Subject: [PATCH 3/3] PCI: meson: Fix parsing the DBI register region
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251031-pci-meson-fix-v1-2-ed29ee5b54f9@oss.qualcomm.com>
+Message-Id: <20251031-pci-meson-fix-v1-3-ed29ee5b54f9@oss.qualcomm.com>
 References: <20251031-pci-meson-fix-v1-0-ed29ee5b54f9@oss.qualcomm.com>
 In-Reply-To: <20251031-pci-meson-fix-v1-0-ed29ee5b54f9@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -61,71 +60,97 @@ Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-amlogic@lists.infradead.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- stable+noautosel@kernel.org
+ stable@vger.kernel.org, Linnaea Lavia <linnaea-von-lavia@live.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2433;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3414;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=VrcDCZTTzA+LINiKOMWUnoZKZnxjToLdODEk4F9zscM=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpBPUvcQMtni6PxVu1WzyHwh/xmL2GTRT+gLMvD
- 3qm9hdeZ82JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaQT1LwAKCRBVnxHm/pHO
- 9QHMCACn74/yrdyNkuDb9Q8ggaq3DyPe6Lw0cvTnujyKrgJVZFf4BQSXH9tHZIJSo6rkn1gvzeU
- y7G/UdAy/xQuL5rnUfvUUgyAlL3A5HNyAcNQaXuyDQzIDOMWLqFKmOuby6gPQLus//caL+9OSuU
- 78GgAa726V7GAD1fDBNWct89KM/YCb2s9lDGBybJHhZH4rzLIkHtIUWu1ZccEOLbI+16JP8O4Np
- i8sXcpyBgm9fxygyysYjlqLNaAdnoeZIyp8Uz8xD8jpZSbmvnWua9BexejLp7QZjSJMqqmOr2i5
- CHcpusmuKf0WpntZ0ePbBJixideGxYB3Ov5AAsFVLCbkuuc2
+ bh=z6Ma1tu8vEZQke3NjkVPJHb01xM4bsdEHhx7cBiREVQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpBPUvXsQtI6n1/ub7CgmXxGJ8JQaiffJFgXqJj
+ IzTr9DiOUmJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaQT1LwAKCRBVnxHm/pHO
+ 9RqECACAesI/tWx6iPgaFUHpHOdBsklA2dKYzIq50VMZE8TITLoLok0QC1u/5MZaotv9fBwvVtz
+ CFLVVss7W1lhqxX0tSMJ2PeeYX/vnjD/PKpNznfsAmv0T0vSgUuRArmunIH47Wdftrm8Kwgk/rY
+ +djMmr21xzwda6XqDunl4TxYwjWRCCDfuZHfJkDgxKJYYoa+J1aFl9NRsks1J4pxeE71lIOPJhW
+ 4V/43ur74Zo7cTo851njPWd/oXhe6dAsq7Ees/3POTB1/k4W5AmSe4spB/OKRUyBY4OgaIPXDq8
+ scPBWKL/psMaD/PHj11mY1V5tqnHYKE12zUU+PfChr+L8u00
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-DT incorrectly specifies the 'DBI' region as 'ELBI'. DBI is a must have
-region for DWC controllers as it has the Root Port and controller specific
-registers, while ELBI has optional registers.
+First of all, the driver was parsing the 'dbi' register region as 'elbi'.
+This was due to DT mistakenly passing 'dbi' as 'elbi'. Since the DT is
+now fixed to supply 'dbi' region, this driver can rely on the DWC core
+driver to parse and map it.
 
-Hence, fix the DT for both Meson platforms.
+However, to support the old DTs, if the 'elbi' region is found in DT, parse
+and map the region as both 'dw_pcie::elbi_base' as 'dw_pcie::dbi_base'.
+This will allow the driver to work with both broken and fixed DTs.
 
-Cc: stable+noautosel@kernel.org # Driver dependency
-Fixes: 5b3a9c20926e ("arm64: dts: meson-axg: add PCIe nodes")
-Fixes: 1f8607d59763 ("arm64: dts: meson-g12a: Add PCIe node")
+Also, skip parsing the 'elbi' region in DWC core if 'pci->elbi_base' was
+already populated.
+
+Cc: <stable@vger.kernel.org> # 6.2
+Reported-by: Linnaea Lavia <linnaea-von-lavia@live.com>
+Closes: https://lore.kernel.org/linux-pci/DM4PR05MB102707B8CDF84D776C39F22F2C7F0A@DM4PR05MB10270.namprd05.prod.outlook.com/
+Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Fixes: c96992a24bec ("PCI: dwc: Add support for ELBI resource mapping")
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pci-meson.c       | 18 +++++++++++++++---
+ drivers/pci/controller/dwc/pcie-designware.c | 12 +++++++-----
+ 2 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 04fb130ac7c6a498f7e8029aeaa7e511cbfe815d..e95c91894968b2c8b3b8e96a5f5e85cd60f3e085 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -208,7 +208,7 @@ pcieA: pcie@f9800000 {
- 			reg = <0x0 0xf9800000 0x0 0x400000>,
- 			      <0x0 0xff646000 0x0 0x2000>,
- 			      <0x0 0xf9f00000 0x0 0x100000>;
--			reg-names = "elbi", "cfg", "config";
-+			reg-names = "dbi", "cfg", "config";
- 			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0>;
-@@ -234,7 +234,7 @@ pcieB: pcie@fa000000 {
- 			reg = <0x0 0xfa000000 0x0 0x400000>,
- 			      <0x0 0xff648000 0x0 0x2000>,
- 			      <0x0 0xfa400000 0x0 0x100000>;
--			reg-names = "elbi", "cfg", "config";
-+			reg-names = "dbi", "cfg", "config";
- 			interrupts = <GIC_SPI 167 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index dcc927a9da80246da43391f9f90049c3570f10d2..ca455f634834b5a52db8ff4e6ebca35a87ea17b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -138,7 +138,7 @@ pcie: pcie@fc000000 {
- 			reg = <0x0 0xfc000000 0x0 0x400000>,
- 			      <0x0 0xff648000 0x0 0x2000>,
- 			      <0x0 0xfc400000 0x0 0x200000>;
--			reg-names = "elbi", "cfg", "config";
-+			reg-names = "dbi", "cfg", "config";
- 			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0>;
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 787469d1b396d4c7b3e28edfe276b7b997fb8aee..54b6a4196f1767a3c14c6c901bfee3505588134c 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -108,10 +108,22 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+ 			       struct meson_pcie *mp)
+ {
+ 	struct dw_pcie *pci = &mp->pci;
++	struct resource *res;
+ 
+-	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
+-	if (IS_ERR(pci->dbi_base))
+-		return PTR_ERR(pci->dbi_base);
++	/*
++	 * For the broken DTs that supply 'dbi' as 'elbi', parse the 'elbi'
++	 * region and assign it to both 'pci->elbi_base' and 'pci->dbi_space' so
++	 * that the DWC core can skip parsing both regions.
++	 */
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
++	if (res) {
++		pci->elbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
++		if (IS_ERR(pci->elbi_base))
++			return PTR_ERR(pci->elbi_base);
++
++		pci->dbi_base = pci->elbi_base;
++		pci->dbi_phys_addr = res->start;
++	}
+ 
+ 	mp->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+ 	if (IS_ERR(mp->cfg_base))
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c644216995f69cbf065e61a0392bf1e5e32cf56e..06eca858eb1b3c7a8a833df6616febcdbe854850 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -168,11 +168,13 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+ 	}
+ 
+ 	/* ELBI is an optional resource */
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+-	if (res) {
+-		pci->elbi_base = devm_ioremap_resource(pci->dev, res);
+-		if (IS_ERR(pci->elbi_base))
+-			return PTR_ERR(pci->elbi_base);
++	if (!pci->elbi_base) {
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
++		if (res) {
++			pci->elbi_base = devm_ioremap_resource(pci->dev, res);
++			if (IS_ERR(pci->elbi_base))
++				return PTR_ERR(pci->elbi_base);
++		}
+ 	}
+ 
+ 	/* LLDD is supposed to manually switch the clocks and resets state */
 
 -- 
 2.48.1
