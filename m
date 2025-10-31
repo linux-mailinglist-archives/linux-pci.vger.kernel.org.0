@@ -1,54 +1,55 @@
-Return-Path: <linux-pci+bounces-39910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F6C1C24269
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 10:28:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F5EEC241E0
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 10:23:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A036F3BD26E
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 09:20:19 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EEFDC34F9BB
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 09:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4FBC330B0A;
-	Fri, 31 Oct 2025 09:20:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF463314D7;
+	Fri, 31 Oct 2025 09:22:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022099.outbound.protection.outlook.com [40.107.75.99])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023130.outbound.protection.outlook.com [52.101.127.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1523B32571D;
-	Fri, 31 Oct 2025 09:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA7F31DDBB;
+	Fri, 31 Oct 2025 09:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.130
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761902416; cv=fail; b=jy440OQYJS/SEhXTwi9n2NyC/1yvom3RgYz9gCz6w+OfM27RQwWmBUSqcAr3ZVVkinZF3zqW0WZtUVGlNTLzSpBVwckYYOCKYOtP5szDrnLuj82t+T4ARMAa9aSSo962TR5qLLNaNlRmfw4822nkXv56WKKlAVcJ9g7ffkrEsIw=
+	t=1761902578; cv=fail; b=HNZufIQiOL6okM3jQyZS5AKtzFIY715/bJCtyGnhLl1/DNSxYiPI+bDlm8cCIy70adnN/ZzZXok2exoYPzfxIgkp0sf4t6QUj9aUfYFHpzJmQ9+6nCjBJVz4NwWVzI2bWj3aAwSF5ImNaxjMzqZ49RHjB8QSclnqbvA4WOhr90g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761902416; c=relaxed/simple;
-	bh=xW6h0hVB0BmOd9wydt8RmlsdpQPuJZbIK/CVus0Whlk=;
+	s=arc-20240116; t=1761902578; c=relaxed/simple;
+	bh=Xzkdx4QTafBXsStNTdJT0seGef3G48+xAq12u3A0oeQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=je+GrgNQSiRGjQjiB0ZmrE5p3Gg/sRqV/5PHX1kFOvK8Jz1JLSdXhfd7L3EUAHLuXekNlazF3P0OdpJmtA+7Xa3leyMTwG733idoRqyuxOSPYZ0R1rjdPhOvPgUC6DfVfri3igtftj1t2ZXzM/F61sCW8ZndPtLSuoeoTGVHyBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.99
+	 In-Reply-To:Content-Type; b=roRm7TsfF2vl9BVpgXQEct9jqI6NsNSJEgz5iksx90pgzkTA9x2L60eVuO+PkdVTSQg8a93hTU4iWEe2bbqSbwm46tByaNKpjKpHp1TSpji538n08bBuOJA12M5bgSBOvT2o3MJO7By7y+wPVQXH6ntyBrU3QSwg7kd2MOoFtek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HfUs1CfFP7+97/lHaehF1Pj9Zt1hK0OUgIbdoetr1eylYt4krVVnBb4/SuopU7rPWbOz2+LMfrRPVkkTLfd6HxNiIiDW5sRk39iEeuiuEPWpMn+gQQUk760ivA0cbVbRwA4c6zD/x6kX3c/vAjhLRZ+f0LSbGaxO5jQa3XM34dEa6v9VafObZAyP9bVpqAXEVNphTbvQipsEL00Y4Fsh7bsm6IcX7BIi9ZfU8/8Fs6dAST75uAVsOthefHyUsq+Hh7/XmtF+XjkZ54L4y6A6Azv1tk+u5QLwR1cuP2A/t5iNbjJOLl9kHGYNkFHCcByFeQg80WfpsQMhwpBmjMTmhw==
+ b=LcqTrZu7SLxXea5dpBHb4YpOIN6GdiRd+4Bvrhe4Tv9bx+GvYyrSH6H+N88trEcp8uh/ZPDXwrjlDkCYzDy8htm0WD23n0heqgH0Z0B4bAVbclXhQnWcH2hBW9/6p3Mqy9XEMzfkpl9UYQuHkV04g6x9CWjowDpZlaUSQr8RR0AidO93crG94HlaMKqIAfmnqRZhd5RfU2C41yDHNBbYN7+YhNNdYzabE5x3SAP2bnfYzkaPfREXYo5v9ZIUajomtbR3B/gseKPcZXuJE1IFpJ31b7/y9L0rkhjT1IUQCYUfz+27kmaksIiHJHkfDEjYoDMGRMFF1y8MoysbYFM4lA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CL1WaevMRRv6VlULj2zhnfT0+lj9e7IOSkkkKfMIhqk=;
- b=NJqe1QW107qgG6by2lbhgNnAptJvUTHvluWSYpwn6RA7cTRkE259F1OPlNIz51ErCTvOk6tXSulmEqoCPwlZ5tsD4nHizShig00KV/4F81d6h4LCK9Wgvgw1oyJm0WNSFOvg0WfiVamfEsk0vKX1QJU5W4aZYPGVMyu2DwfsmK/+N6W4DFLmJWiEtOI6Ol54Nlm/hbp9AXoJOn2sdTGJZYUEMj6dsJXW3qIThcMIjfadwDGokh3CPyCiMNWlmi1nceHxXzXn8vAEN2xZS/PAH1kewBQlbtCqaj20+IvFZR24nfiauWxX46Qe08mcM/O7eSVy6YYFCgKAoUTRYIG/dQ==
+ bh=h6eYtTL0DQhhbLLDjkdPhsGYhqMz2kAOuy2S58hQrCk=;
+ b=TIZc1VrPGLUMePCZH0rFeaMWZ6zKyiFt0lPxUFthS/LeB14htfMZ4AYM6+FXz5sANSVfwdPJxr/tJ1QjWFDwTznRbCu6w9HZOuGMf+67J2gVYC17qa4ZCftevdPL83/itVBaOAcsvpSFwqSgvNZK1gHcjf2Y8d1rWiddryOpgUU2qkfpLVO5g4/1AuMTv5+DJt8Xby5wWL9I/o5/EHyqn8bvwWdLAWZM2WcACqor1HS3kjCiLk62Hwvem60WYZCJRwxO2LlXOmtT+ksrPYxZNgwz0OwaTj4Ww93i5+5/ERujFpmIr7h9+dCJcBq9BR2aJp1E9T/lGCOxq7aPam4Xbg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from SG2PR04CA0160.apcprd04.prod.outlook.com (2603:1096:4::22) by
- PS1PPF77E02AF72.apcprd06.prod.outlook.com (2603:1096:308::256) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.16; Fri, 31 Oct 2025 09:20:10 +0000
-Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
- (2603:1096:4:0:cafe::d3) by SG2PR04CA0160.outlook.office365.com
- (2603:1096:4::22) with Microsoft SMTP Server (version=TLS1_3,
+Received: from PS2PR02CA0090.apcprd02.prod.outlook.com (2603:1096:300:5c::30)
+ by PUZPR06MB5652.apcprd06.prod.outlook.com (2603:1096:301:fb::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Fri, 31 Oct
+ 2025 09:22:52 +0000
+Received: from TY2PEPF0000AB89.apcprd03.prod.outlook.com
+ (2603:1096:300:5c:cafe::80) by PS2PR02CA0090.outlook.office365.com
+ (2603:1096:300:5c::30) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.15 via Frontend Transport; Fri,
- 31 Oct 2025 09:20:08 +0000
+ 31 Oct 2025 09:22:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -56,14 +57,14 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
+ TY2PEPF0000AB89.mail.protection.outlook.com (10.167.253.7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9275.10 via Frontend Transport; Fri, 31 Oct 2025 09:20:09 +0000
+ 15.20.9275.10 via Frontend Transport; Fri, 31 Oct 2025 09:22:51 +0000
 Received: from [172.16.96.116] (unknown [172.16.96.116])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 5849841C0145;
-	Fri, 31 Oct 2025 17:20:08 +0800 (CST)
-Message-ID: <b6f8d7cf-bbd0-42eb-8d73-5715a614ae98@cixtech.com>
-Date: Fri, 31 Oct 2025 17:20:08 +0800
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 5A30A41C0145;
+	Fri, 31 Oct 2025 17:22:50 +0800 (CST)
+Message-ID: <0f5a28f4-ecf3-4a47-aa09-ab5b0e08e1d5@cixtech.com>
+Date: Fri, 31 Oct 2025 17:22:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,8 +72,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 04/10] PCI: cadence: Add support for High Perf
- Architecture (HPA) controller
+Subject: Re: [PATCH v10 07/10] PCI: sky1: Add PCIe host support for CIX Sky1
 To: Manivannan Sadhasivam <mani@kernel.org>
 Cc: bhelgaas@google.com, helgaas@kernel.org, lpieralisi@kernel.org,
  kw@linux.com, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org,
@@ -81,113 +81,395 @@ Cc: bhelgaas@google.com, helgaas@kernel.org, lpieralisi@kernel.org,
  cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20251020042857.706786-1-hans.zhang@cixtech.com>
- <20251020042857.706786-5-hans.zhang@cixtech.com>
- <u7g4b4cgh4usmndpzatfg24x37sabd7psxik6pxmbpu2764d6s@zczbojakk4c4>
+ <20251020042857.706786-8-hans.zhang@cixtech.com>
+ <aoxdmg4mxa7j575vzjw66uo5i6ibvfkgkrqhy6bhwpie7v4rk7@yj5fmhplivxp>
 Content-Language: en-US
 From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <u7g4b4cgh4usmndpzatfg24x37sabd7psxik6pxmbpu2764d6s@zczbojakk4c4>
+In-Reply-To: <aoxdmg4mxa7j575vzjw66uo5i6ibvfkgkrqhy6bhwpie7v4rk7@yj5fmhplivxp>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|PS1PPF77E02AF72:EE_
-X-MS-Office365-Filtering-Correlation-Id: ffeaecda-4990-4fc5-d413-08de185eb001
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB89:EE_|PUZPR06MB5652:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1434953c-36f6-46d5-eb59-08de185f10db
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024;
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|36860700013|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NStLNzBEWitib1lhdUorQlh5UWFjWFRFNWNCeUZ4bURaSWEveGNYQ2NMQnc5?=
- =?utf-8?B?aFVmMUFSZXh2SndVR3N1ZU5pTnFKekdONzBjbTJnRENpdWdzT0xob2FZSERY?=
- =?utf-8?B?R1p6SnVJckdwY0NROGNKNThEajIzWmRsWGJWSk9pdWNlbjBSejFyUEJZQTBr?=
- =?utf-8?B?MTUwMWo1SEJ2cnVCYXRqbVA0NjJIbWdDS3FpQ2w5VEtiQmRiZ29lQ1huYThv?=
- =?utf-8?B?REVHbStpczlpR2ZsQ3BzbG5tVTc3dzdSNmhUeXJkUUM0cFpkc2tvL1E5YUN1?=
- =?utf-8?B?RmNUS2dNdyt1REFQaG1NMTZYUUp2Ujlpc0EwSzdkOHUzL3dRMjMrcWRTenIz?=
- =?utf-8?B?MDEyRHJFTmExNG5oT3oyekdPTlhLS20rOW5NdktrL09KVE53VTJsdG1tVTVu?=
- =?utf-8?B?RTRQaFB2WjRlQUJyV09qclBpY3hXekp5SEFXVkxvVDNadGNCd2RrUnR4Q3RI?=
- =?utf-8?B?SVg1ZHBOWkJQcERPQnFSVGViRVNoQlFuZDJ5WFhJb1Iyb1pnelVWT2ZkVzBB?=
- =?utf-8?B?WjZYOW4zK3BNMjRuangxdWpqVE4zWE5yM0k1NUQrSTBGbkFIbHZiUFlVdEdQ?=
- =?utf-8?B?ZEZTQnpsSGFSb1piQ1RVRnBGVU42Z0NRbC9jcEhjNzRWbEZ3WGNUUmozaDRp?=
- =?utf-8?B?S2RENFFHaTNKZWN5WW1haTVmay8xUmkrQzdrcWdFTytXYnJjaVlLQlo2cWNv?=
- =?utf-8?B?L0lsNzdmckwvdTYwd3E4aGZzM0VQNmJQcjFwWnNnQ285MXZmeFJZUUloYVVD?=
- =?utf-8?B?aXU3WXVKYVZYSWk3SUM5Ukp4dHlFSXBmRGFieFFZZ2pwNkd3NjA3TUxHRFov?=
- =?utf-8?B?NFNQa2laQVhPWk9JdnBYOUl2UkJjeEM4cnB2OHpOd2krUmtyTGp2OGx2NEdx?=
- =?utf-8?B?cUMwd25XNHA1cStYUG9PQnc2eGEySjNVVjVkRXc4MGhObGZDN2NZY3EwWCsx?=
- =?utf-8?B?VnMyV2xpVXpKTlpoUzFhYkgvUGNObmtYdkZCMFIxUy9uQldnbXZjVktlRzJz?=
- =?utf-8?B?cVJkbW9VRld3UlRXemkrQm9kSUZLeEI0RWc0WUhaK3FBcDBVS1Y4TWxKZWcx?=
- =?utf-8?B?eEdBdjZHcmdINVJZbkQ3SjlWY0ZIdHpnbHI0Z1FFR08wN1F4MEVyZmJsYUJV?=
- =?utf-8?B?MTErT29TS2h6NTlEaHIwaTMxL1B1cERDYithckxaNDRqQytPTVBqbjExMFJP?=
- =?utf-8?B?M3VlMjlpMlhiU0ZZVDZtaWhHN3RXS2hhaEFrbUtpUytkelMzaXlQTUl6ZTlL?=
- =?utf-8?B?YkdjMnBqeGErYnJnbXBHQWlabkgxL0ZlK3dVMHlYRE9YeEpBZXBkZUlLVjMr?=
- =?utf-8?B?MkdOTXdYSHZBaU9qSjBDbUc0M3B0YkE5ZmhGZmFmL0p6WGpyVTZjVFVZRnlK?=
- =?utf-8?B?cDRQM3RuRytHTXk4Nmo0cFdqZ1NxNVdzbldRUHVnYnExTS9GQy9jbjUxWW8y?=
- =?utf-8?B?OHFaMzdOMlkzVFpzNDhkekFmSEkwTTVuVExVNGU1cy9KRmlEVGJYNTBNQzM3?=
- =?utf-8?B?YmNPemprNVdtZUdKZXlNQVZzSy9PQ2lDWnFGdG1teTlaRkZVbXNpK0hFS0lT?=
- =?utf-8?B?c3VHY0JMVjBDTjU1bk9qNmZmTUd2VHUwbXd4U3VwcnZTT0JCbzczeGlvWVcz?=
- =?utf-8?B?Ujl6eU9odEFWZS9hRHRXb2VkdllXOG5hUS96clc2RWR2dlpmYmp2Rm52blFz?=
- =?utf-8?B?MDVQNUpoU09jeTk2ckNQTGJSM3kyODZmb3RjQ1NsTW15QWM1TEtHUVpPQ2M2?=
- =?utf-8?B?cmFweWg1Zk5WOEFud0FSTy84U21FeXROOFhFT2lrTUUzYU1CUWZ3ZWlZWjNx?=
- =?utf-8?B?QVZiVEpnUXBmZVE2QTE2ZWNORTdRRVpZbmNkRDkycTgrUHoyRU9NbTNIRi9P?=
- =?utf-8?B?SG1vTEs1cFl3VUcxMUt2T2xyS2ZVdmpGZEhOREhEaG05YTJPcjQ2bnUzeTNX?=
- =?utf-8?B?QmRycG1aWThTVkg1anJqdTBuL3hVT2JMWW1nNUdrbnpwblBDeit3RHBOTTBu?=
- =?utf-8?B?UU9oRVNlSkwvaFdFb3U2ZnVlTTJZRzFYYUI3R2xtcFJpbE56bEdmQU5XMElM?=
- =?utf-8?B?T1VPUkJnbmVhQmVGNEt0aVBRTTdQNnNGWE1PYU9BTlN2Y0k3Z0ZBRVkrUXBi?=
- =?utf-8?Q?GCHw=3D?=
+	=?utf-8?B?Q3VrS0o1U29YYmwxdVM2YWI3OHozSlJBS0txekZTL09QK1M2WlJSK3lCVHI3?=
+ =?utf-8?B?bGtJWEZQZGpQanlQeDA0MmRwcHNsNGlOQzJrOWkrOU1OY25vL25ta0hkcVlk?=
+ =?utf-8?B?S1MxVTU1Qm9OcFNudkV3a2dVRm54OVpJUFdIbW5GU1VsUzBZRkhPbUZDeTNi?=
+ =?utf-8?B?eG1nekpMeXFvOHZnWDRCWEw0RktMYVFTSWtOMmlPZWsxUDRUNXlGRjVhNU1Q?=
+ =?utf-8?B?ZVgzTFRRKzZweWdWTG9CaTl6S1l3UlM0d2I1cXhCQkZPbVk5Z2k0VDZNR3dJ?=
+ =?utf-8?B?TXA3RmcvMUJyMTNNaTRrZ3JVZTBiS0RIK1g2eU5ZMFZUd1ZzUFZ3MFhvNmF1?=
+ =?utf-8?B?TzRoeUNrRlNPZXV6bFZoQUdjaGJnZWwwTUJHTzdzYTVnK2hBU2FENEwxTjlm?=
+ =?utf-8?B?VTU4US9RZUFkbkNPRC81T0tCNXhtU2R6cXZKYy9yWW91dURuUkg3aG1MWlJI?=
+ =?utf-8?B?M3VLMGtKbHJYWnMrQ3BDUUk2YnVML05pOWVIcnRFemJ1SEsydFlKUHJoaHZ1?=
+ =?utf-8?B?b2VjS0RuL0QxblUwNG9FTUpyVk1FVFdSMWE4eFFVS2ZqeHQrVGFwbU1ZSW5o?=
+ =?utf-8?B?OGMvbmNqNERHWDd3Y0F3aXdnVlRoT2lGRlpXOG1Ma3FUVUozNW9xOGcvZnpL?=
+ =?utf-8?B?YkJCN0F1dmRwMUZUanRMVnU4MWFDQXU4d3BUaUZlYTIwd3cwTnFwOGpRYkJD?=
+ =?utf-8?B?Q3pqMlpwUTNidmg2d1BMak5qbDFGZDNReDFmWWJaRGxCQjRpcEVSMkV4K0dG?=
+ =?utf-8?B?UnJ2V1RRc3A3YnZzYWRKUklnMnlSWmk1Ym04UkJGUk1qZXh0SGNvK1RESVJp?=
+ =?utf-8?B?VVNBb01ScDVjaU1pa0UzdWZGSnpaU2FvaGtZd3ZDU3pra2syYmhCem5HMWJR?=
+ =?utf-8?B?U3UxL2VUZ0JWSU5DNmxlOTdjVHNnQnp3YVZ0NWdOdmg0YmorZW5hcmtzRzMy?=
+ =?utf-8?B?WlBvamNBWUx2TTZZZjBqR2JOQVFsMGN1WnRRZHR5Skh4dEEvRG1Lc2dwY01J?=
+ =?utf-8?B?TWVHSHlSdTd6V3AzNk9xVzBTb3luSUE4SWxNMXdHc21zZWRROThMYzJ1b25m?=
+ =?utf-8?B?dTRxb3dJNVdVNXdhUzhDcXdIc3hWZDVRajVETDVTeWlmdkxPYytSZ3E2ZFdl?=
+ =?utf-8?B?Y08xTFErZGFDU1ZIMWRjTW1NcnhQSzdkU2ZEK2xxVmZmVk9Rbmo4amZJKzcr?=
+ =?utf-8?B?VUhkMGtjSHpDcUhzTnhmdi84Wm9yM0VrMlhZTVJpQTU4UHpvTmNMZDlCZ3RE?=
+ =?utf-8?B?cnR0bE9DVUpWTjd1QWJsczRNVExTeG9XSDIwclBsOHhvdjRrdW5vbTdNT2w2?=
+ =?utf-8?B?c1h0ckExUFVVQnlXRkFNSEEyTWZNazMvSDBLK0hwbkJSSXZQNWtqNEp2RXpu?=
+ =?utf-8?B?alREMlc1SEtPREdPcDJFSEN6QldDejFqOGhJZCtENGwrNStVcU92S2VRZmh0?=
+ =?utf-8?B?Mi9NUTlYeWRkWDZOSEllNmllcGNjVGlnQUlhRlBxcGZpTlo1QXpyT3IzYkZh?=
+ =?utf-8?B?YWF1eEpiMWlBT3dYeFRvUVpGKzIyVkhrT29wNkxVY3JIWk4xc2U3YXR4eVBk?=
+ =?utf-8?B?U285U3ZWZk92NEJSZ0I0K2xScjRlejB5eklYUU5JNVRtMUx5T1JtN1BZdTdm?=
+ =?utf-8?B?N1A1OEJ5TUdGSU9SRFNMb1NoczNiNzgyUnd6UlNMVWpRN0ZZNVdVdmpNc2tF?=
+ =?utf-8?B?Y1B2QnpFREZLbzdSMVV3Y0FFZGRXaFRjb0xOMFpxUEhydE1Pc2dYbmJRdnRO?=
+ =?utf-8?B?SlByang5MGlJUnZ0NHk3UklWNWxmdi9pcVhycHFOV0VWYmFCRmIrMW5kVG0y?=
+ =?utf-8?B?aTNVa1YvSmw0a1RLOXRQRHdyUVNoL3U3Y2Z1UHVJd2syeWZ4MnhFTXYyYUZ5?=
+ =?utf-8?B?VGwvYmN5OVZxVDZmZjB3cWtOQkR3RElib1g1YUFPZE9vaHFWa2sxeGVPeDNy?=
+ =?utf-8?B?bHVhMTRTSzRyWmpIb0xQVlcvbmJ6aWhGbDErVGRMVGxIOXN0aUtUY3dXdWtr?=
+ =?utf-8?B?ZWtjUWtITVArNHdXUFBwYkl2VXowVWR4b0ovUnE3M1puRmc5NHluWFR5dFd6?=
+ =?utf-8?B?VTFPTG9BeDMwbE5vN09qQjF2Q2xCZ2J1UFU2N0NrbGZBVm5vM0tFZk5rYi9w?=
+ =?utf-8?Q?wqP0=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(36860700013)(376014);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2025 09:20:09.0401
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2025 09:22:51.4379
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffeaecda-4990-4fc5-d413-08de185eb001
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1434953c-36f6-46d5-eb59-08de185f10db
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CD.apcprd03.prod.outlook.com
+	TY2PEPF0000AB89.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PS1PPF77E02AF72
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5652
 
 
 
-On 10/31/2025 5:11 PM, Manivannan Sadhasivam wrote:
+On 10/31/2025 5:15 PM, Manivannan Sadhasivam wrote:
+> EXTERNAL EMAIL
+> 
+> On Mon, Oct 20, 2025 at 12:28:54PM +0800, hans.zhang@cixtech.com wrote:
+>> From: Hans Zhang <hans.zhang@cixtech.com>
+>>
+>> Add driver for the CIX Sky1 SoC PCIe Gen4 16 GT/s controller based
+>> on the Cadence PCIe core.
+>>
+>> Supports MSI/MSI-x via GICv3, Single Virtual Channel, Single Function.
+>>
+>> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+>> ---
+>>   drivers/pci/controller/cadence/Kconfig    |  15 ++
+>>   drivers/pci/controller/cadence/Makefile   |   1 +
+>>   drivers/pci/controller/cadence/pci-sky1.c | 233 ++++++++++++++++++++++
+>>   3 files changed, 249 insertions(+)
+>>   create mode 100644 drivers/pci/controller/cadence/pci-sky1.c
+>>
+>> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+>> index 0b96499ae354..ceff65934e5f 100644
+>> --- a/drivers/pci/controller/cadence/Kconfig
+>> +++ b/drivers/pci/controller/cadence/Kconfig
+>> @@ -51,6 +51,21 @@ config PCIE_SG2042_HOST
+>>          controller in host mode. Sophgo SG2042 PCIe controller uses Cadence
+>>          PCIe core.
+>>
+>> +config PCI_SKY1_HOST
+>> +     tristate "CIX SKY1 PCIe controller (host mode)"
+>> +     depends on OF
+>> +     select PCIE_CADENCE_HOST
+>> +     select PCI_ECAM
+>> +     help
+>> +       Say Y here if you want to support the CIX SKY1 PCIe platform
+>> +       controller in host mode. CIX SKY1 PCIe controller uses Cadence
+>> +       HPA (High Performance Architecture IP [Second generation of
+>> +       Cadence PCIe IP])
 >> +
->> +static int cdns_pcie_hpa_host_wait_for_link(struct cdns_pcie *pcie)
+>> +       This driver requires Cadence PCIe core infrastructure
+>> +       (PCIE_CADENCE_HOST) and hardware platform adaptation layer
+>> +       to function.
+>> +
+>>   config PCI_J721E
+>>        tristate
+>>        select PCIE_CADENCE_HOST if PCI_J721E_HOST != n
+>> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+>> index 30189045a166..b8ec1cecfaa8 100644
+>> --- a/drivers/pci/controller/cadence/Makefile
+>> +++ b/drivers/pci/controller/cadence/Makefile
+>> @@ -9,3 +9,4 @@ obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep-mod.o
+>>   obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+>>   obj-$(CONFIG_PCI_J721E) += pci-j721e.o
+>>   obj-$(CONFIG_PCIE_SG2042_HOST) += pcie-sg2042.o
+>> +obj-$(CONFIG_PCI_SKY1_HOST) += pci-sky1.o
+>> diff --git a/drivers/pci/controller/cadence/pci-sky1.c b/drivers/pci/controller/cadence/pci-sky1.c
+>> new file mode 100644
+>> index 000000000000..4b0388394db3
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/cadence/pci-sky1.c
+>> @@ -0,0 +1,233 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * PCIe controller driver for CIX's sky1 SoCs
+>> + *
+>> + * Copyright 2025 Cix Technology Group Co., Ltd.
+>> + * Author: Hans Zhang <hans.zhang@cixtech.com>
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/pci-ecam.h>
+>> +#include <linux/pci_ids.h>
+>> +
+>> +#include "pcie-cadence.h"
+>> +#include "pcie-cadence-host-common.h"
+>> +
+>> +#define STRAP_REG(n)                 ((n) * 0x04)
+>> +#define STATUS_REG(n)                        ((n) * 0x04)
+>> +#define LINK_TRAINING_ENABLE         BIT(0)
+>> +#define LINK_COMPLETE                        BIT(0)
+>> +
+>> +#define SKY1_IP_REG_BANK             0x1000
+>> +#define SKY1_IP_CFG_CTRL_REG_BANK    0x4c00
+>> +#define SKY1_IP_AXI_MASTER_COMMON    0xf000
+>> +#define SKY1_AXI_SLAVE                       0x9000
+>> +#define SKY1_AXI_MASTER                      0xb000
+>> +#define SKY1_AXI_HLS_REGISTERS               0xc000
+>> +#define SKY1_AXI_RAS_REGISTERS               0xe000
+>> +#define SKY1_DTI_REGISTERS           0xd000
+>> +
+>> +#define IP_REG_I_DBG_STS_0           0x420
+>> +
+>> +struct sky1_pcie {
+>> +     struct cdns_pcie *cdns_pcie;
+>> +     struct cdns_pcie_rc *cdns_pcie_rc;
+>> +
+>> +     struct resource *cfg_res;
+>> +     struct resource *msg_res;
+>> +     struct pci_config_window *cfg;
+>> +     void __iomem *strap_base;
+>> +     void __iomem *status_base;
+>> +     void __iomem *reg_base;
+>> +     void __iomem *cfg_base;
+>> +     void __iomem *msg_base;
+>> +};
+>> +
+>> +static int sky1_pcie_resource_get(struct platform_device *pdev,
+>> +                               struct sky1_pcie *pcie)
 >> +{
->> +     struct device *dev = pcie->dev;
->> +     struct cdns_pcie_rc *rc;
->> +     int retries, ret;
+>> +     struct device *dev = &pdev->dev;
+>> +     struct resource *res;
+>> +     void __iomem *base;
 >> +
->> +     rc = container_of(pcie, struct cdns_pcie_rc, pcie);
+>> +     base = devm_platform_ioremap_resource_byname(pdev, "reg");
+>> +     if (IS_ERR(base))
+>> +             return dev_err_probe(dev, PTR_ERR(base),
+>> +                                  "unable to find \"reg\" registers\n");
+>> +     pcie->reg_base = base;
 >> +
->> +     /* Check if the link is up or not */
->> +     for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
->> +             if (cdns_pcie_hpa_link_up(pcie)) {
->> +                     dev_info(dev, "Link up\n");
->> +                     return 0;
->> +             }
->> +             usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
->> +     }
->> +     if (rc->quirk_retrain_flag)
->> +             ret = cdns_pcie_retrain(pcie);
->> +     return ret;
-> If 'quirk_retrain_flag' was not set, you are 'ret' will be uninitialized.
+>> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+>> +     if (!res)
+>> +             return dev_err_probe(dev, ENXIO, "unable to get \"cfg\" resource\n");
+> 
+> s/ENXIO/ENODEV
 
 
 Hi Mani,
 
 Thank you very much for your reply.
 
-When the robot gave a warning, I replied as follows:
+Will change.
 
-https://lore.kernel.org/linux-pci/293858b1-db91-4525-b8b3-c98c7837ec73@cixtech.com/
+> 
+>> +     pcie->cfg_res = res;
+>> +
+>> +     base = devm_platform_ioremap_resource_byname(pdev, "rcsu_strap");
+>> +     if (IS_ERR(base))
+>> +             return dev_err_probe(dev, PTR_ERR(base),
+>> +                                  "unable to find \"rcsu_strap\" registers\n");
+>> +     pcie->strap_base = base;
+>> +
+>> +     base = devm_platform_ioremap_resource_byname(pdev, "rcsu_status");
+>> +     if (IS_ERR(base))
+>> +             return dev_err_probe(dev, PTR_ERR(base),
+>> +                                  "unable to find \"rcsu_status\" registers\n");
+>> +     pcie->status_base = base;
+>> +
+>> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
+>> +     if (!res)
+>> +             return dev_err_probe(dev, ENXIO, "unable to get \"msg\" resource\n");
+> 
+> s/ENXIO/ENODEV
 
 Will change.
 
+> 
+>> +     pcie->msg_res = res;
+>> +     pcie->msg_base = devm_ioremap_resource(dev, res);
+>> +     if (IS_ERR(pcie->msg_base)) {
+>> +             return dev_err_probe(dev, PTR_ERR(pcie->msg_base),
+>> +                                  "unable to ioremap msg resource\n");
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int sky1_pcie_start_link(struct cdns_pcie *cdns_pcie)
+>> +{
+>> +     struct sky1_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+>> +     u32 val;
+>> +
+>> +     val = readl(pcie->strap_base + STRAP_REG(1));
+>> +     val |= LINK_TRAINING_ENABLE;
+>> +     writel(val, pcie->strap_base + STRAP_REG(1));
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static void sky1_pcie_stop_link(struct cdns_pcie *cdns_pcie)
+>> +{
+>> +     struct sky1_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+>> +     u32 val;
+>> +
+>> +     val = readl(pcie->strap_base + STRAP_REG(1));
+>> +     val &= ~LINK_TRAINING_ENABLE;
+>> +     writel(val, pcie->strap_base + STRAP_REG(1));
+>> +}
+>> +
+>> +static bool sky1_pcie_link_up(struct cdns_pcie *cdns_pcie)
+>> +{
+>> +     u32 val;
+>> +
+>> +     val = cdns_pcie_hpa_readl(cdns_pcie, REG_BANK_IP_REG,
+>> +                               IP_REG_I_DBG_STS_0);
+>> +     return val & LINK_COMPLETE;
+>> +}
+>> +
+>> +static const struct cdns_pcie_ops sky1_pcie_ops = {
+>> +     .start_link = sky1_pcie_start_link,
+>> +     .stop_link = sky1_pcie_stop_link,
+>> +     .link_up = sky1_pcie_link_up,
+>> +};
+>> +
+>> +static int sky1_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +     struct cdns_plat_pcie_of_data *reg_off;
+>> +     struct device *dev = &pdev->dev;
+>> +     struct pci_host_bridge *bridge;
+>> +     struct cdns_pcie *cdns_pcie;
+>> +     struct resource_entry *bus;
+>> +     struct cdns_pcie_rc *rc;
+>> +     struct sky1_pcie *pcie;
+>> +     int ret;
+>> +
+>> +     pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>> +     if (!pcie)
+>> +             return -ENOMEM;
+>> +
+>> +     bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+>> +     if (!bridge)
+>> +             return -ENOMEM;
+>> +
+>> +     ret = sky1_pcie_resource_get(pdev, pcie);
+>> +     if (ret < 0)
+>> +             return ret;
+>> +
+>> +     bus = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
+>> +     if (!bus)
+>> +             return -ENODEV;
+>> +
+>> +     pcie->cfg = pci_ecam_create(dev, pcie->cfg_res, bus->res,
+>> +                                 &pci_generic_ecam_ops);
+>> +     if (IS_ERR(pcie->cfg))
+>> +             return PTR_ERR(pcie->cfg);
+>> +
+>> +     bridge->ops = (struct pci_ops *)&pci_generic_ecam_ops.pci_ops;
+>> +     rc = pci_host_bridge_priv(bridge);
+>> +     rc->ecam_supported = 1;
+>> +     rc->cfg_base = pcie->cfg->win;
+>> +     rc->cfg_res = &pcie->cfg->res;
+>> +
+>> +     cdns_pcie = &rc->pcie;
+>> +     cdns_pcie->dev = dev;
+>> +     cdns_pcie->ops = &sky1_pcie_ops;
+>> +     cdns_pcie->reg_base = pcie->reg_base;
+>> +     cdns_pcie->msg_res = pcie->msg_res;
+>> +     cdns_pcie->is_rc = 1;
+>> +
+>> +     reg_off = devm_kzalloc(dev, sizeof(*reg_off), GFP_KERNEL);
+>> +     if (!reg_off)
+>> +             return -ENOMEM;
+>> +
+>> +     reg_off->ip_reg_bank_offset = SKY1_IP_REG_BANK;
+>> +     reg_off->ip_cfg_ctrl_reg_offset = SKY1_IP_CFG_CTRL_REG_BANK;
+>> +     reg_off->axi_mstr_common_offset = SKY1_IP_AXI_MASTER_COMMON;
+>> +     reg_off->axi_slave_offset = SKY1_AXI_SLAVE;
+>> +     reg_off->axi_master_offset = SKY1_AXI_MASTER;
+>> +     reg_off->axi_hls_offset = SKY1_AXI_HLS_REGISTERS;
+>> +     reg_off->axi_ras_offset = SKY1_AXI_RAS_REGISTERS;
+>> +     reg_off->axi_dti_offset = SKY1_DTI_REGISTERS;
+>> +     cdns_pcie->cdns_pcie_reg_offsets = reg_off;
+>> +
+>> +     pcie->cdns_pcie = cdns_pcie;
+>> +     pcie->cdns_pcie_rc = rc;
+>> +     pcie->cfg_base = rc->cfg_base;
+>> +     bridge->sysdata = pcie->cfg;
+>> +
+>> +     rc->vendor_id = PCI_VENDOR_ID_CIX;
+>> +     rc->device_id = PCI_DEVICE_ID_CIX_SKY1;
+>> +     rc->no_inbound_map = 1;
+>> +
+>> +     dev_set_drvdata(dev, pcie);
+>> +
+>> +     ret = cdns_pcie_hpa_host_setup(rc);
+>> +     if (ret < 0) {
+>> +             pci_ecam_free(pcie->cfg);
+>> +             return ret;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct of_device_id of_sky1_pcie_match[] = {
+>> +     { .compatible = "cix,sky1-pcie-host", },
+>> +     {},
+>> +};
+> 
+> Missing MODULE_DEVICE_TABLE(). Your driver is not going to be auto loaded.
 
-Please ask Manikandan to explain any other questions to Mani.
+Will add.
 
+> 
+>> +
+>> +static void sky1_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +     struct sky1_pcie *pcie = platform_get_drvdata(pdev);
+>> +
+>> +     pci_ecam_free(pcie->cfg);
+>> +}
+>> +
+>> +static struct platform_driver sky1_pcie_driver = {
+>> +     .probe  = sky1_pcie_probe,
+>> +     .remove = sky1_pcie_remove,
+>> +     .driver = {
+>> +             .name = "sky1-pcie",
+>> +             .of_match_table = of_sky1_pcie_match,
+> 
+> Use .probe_type = PROBE_PREFER_ASYNCHRONOUS.
+
+Will change. Thank you for your reminder.
 
 Best regards,
 Hans
+
+> 
+> - Mani
+> 
+> --
+> மணிவண்ணன் சதாசிவம்
 
 
