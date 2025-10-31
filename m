@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-39969-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39970-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4087DC2709D
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:30:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CA09C270A3
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 22:30:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98AAC3AADFB
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 21:29:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9814B3AB782
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 21:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A68C3320CC2;
-	Fri, 31 Oct 2025 21:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4823164AA;
+	Fri, 31 Oct 2025 21:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBPUdFGs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kdwp0HlX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85BD3164AA
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 21:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E31F313E2B
+	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 21:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761946143; cv=none; b=MCIdctKF4fweBeX0pRd8N+BaL8q/cnbmUngdc1y9JdJLp2y6N5cJhBQkrcVJlsw2jIabgZL6ILZEUznOPe2RmmT52Oy1DPpSvjdHHDPMeRSP1GWdxbR09j9d6ffqwh5iq1V6QXr9+u7p+FtIPs0DGEq42WBlhHr+Zkc06yq7KDU=
+	t=1761946144; cv=none; b=pBC/FqMvRcP3MrQnm+UPwYdo1juwoxMMCOr7KPOIInq3pTdRD6EuJI38qBx3/odat0JulJni2kDI0+YFuoodr1/DOhsNMyTWAqg4L8Jup7kOUilOFybdixTx+Zp6ydQTo3+KQECQsXO+vP+pzYQ2LB6hiyWObrpxlAECpROYfDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761946143; c=relaxed/simple;
-	bh=1lossAJE14LmDIPvPRT4cFk8SVxyOGzy9M8FYkzKBUE=;
+	s=arc-20240116; t=1761946144; c=relaxed/simple;
+	bh=oaDwUC8FuUfT8zs9lDlEF5ED07pUwHMwYeSwJol9Kkk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EQN4G32vIy+Ga4VIHRFE7ymbcQ7fGO/PWGDUJS7y6Nv3fng8bUg7xgJGBjuorm8pcmUdy8hv5T+fuFeYyhLVK2h+cGtdBXEk/uf0JcKuclaRIn7GVtpkj8wyKWEje8OVUP0GJFVC9ERM9Wg6jAqhXI3Oi6ZnZ1iNLYxwvQuCkUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBPUdFGs; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=g85NyxRVags6R3XcmTuEG2bAWLP5zrkFaRJ+SeG7jjHiEfyDF+YDffYhX+V3kYDvgFmeHgn0EY/QabLc/AKfaCiFxjyAJuPC1s9xWmYmcK7tbLGMYaBHOhTglf2RyQ2SQoSPLccUbNLi6IIYpUyQR0xWpa536MJC8nlsTe4wt8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kdwp0HlX; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761946142; x=1793482142;
+  t=1761946143; x=1793482143;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1lossAJE14LmDIPvPRT4cFk8SVxyOGzy9M8FYkzKBUE=;
-  b=FBPUdFGs45RMZ3p4D/ZYoeK2Iw7lXuu0NcQss5F1bqTEF7HQ7IwWGMun
-   WzT657kpy9RuISnDYglNe16BblCHzDRmASiTAbyXALqjDvI37ObnQj5mD
-   miuVaGRG5H71iCSOUgLfRaD8iOj9fbawSBmkeCae9PFKOFFNkLxElB6dw
-   FI7VgjIKz3CUeC8PbmvqUv5l7DSTAG32upjn0UhIdAU5YsZ8hfevQ+j5I
-   2ovdWQZDY4at2Une+klukw+v41H4uSnMLlWRFah0mQGezImJjlIi/B+Kz
-   OyOjtp5C89xqKC9xeKUJjN04/rXzt2euv3evccCDJLTWUtdFCQOqkknU0
+  bh=oaDwUC8FuUfT8zs9lDlEF5ED07pUwHMwYeSwJol9Kkk=;
+  b=Kdwp0HlXHUtODdL65sAi6yEKNp3G6TvpL0kdCgdWkvc5IpKKGHLzwOoY
+   4dPlEdDKfc+QrmMG1JrHnoPgXhCuBhoyXvf1eMFMaEjdgTx7rFy2avYo6
+   ikuJSm4GDQvNmKRe8PbXPuDuiAs7bRbfjWdRER6Z0gGLoX6D9VeHMPuXu
+   LjLz2CB2ENjOYUJKX9SwyGQ03shhHSIqvLotZAL5YmLR69iErBvWiRCBz
+   XazOGEmeiaBqDcbrALkhZWCsdWkqb0//V/slngnTpaCBT5M6NixGZQK91
+   V22o0nErHxirQzlC5Jv6XUaY3LsLTnmsAVHhVHN2pr+cds/ax0wClz+pH
    A==;
-X-CSE-ConnectionGUID: gkHu9RAqQsqPwSqFPZsr6g==
-X-CSE-MsgGUID: 1Ps+Sj/ITgCjcekfk+qeWg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64002412"
+X-CSE-ConnectionGUID: uSi7PD0UQ+q5WK3OrTw6uw==
+X-CSE-MsgGUID: nFMzoIhLQgeOyGbNh7vnuw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="64002413"
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="64002412"
+   d="scan'208";a="64002413"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 14:28:59 -0700
-X-CSE-ConnectionGUID: rUeSNwubRl20xZYN8J2BQQ==
-X-CSE-MsgGUID: N/uKVFLuR8aqULc0neXpwQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 14:29:00 -0700
+X-CSE-ConnectionGUID: 5kRRHgSKQY69ed1n5oN3Ug==
+X-CSE-MsgGUID: Pyp/uUbbT/Wz9DiDhP64xA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,270,1754982000"; 
-   d="scan'208";a="216986655"
+   d="scan'208";a="216986658"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by orviesa002.jf.intel.com with ESMTP; 31 Oct 2025 14:28:59 -0700
 From: Dan Williams <dan.j.williams@intel.com>
@@ -65,11 +65,10 @@ Cc: linux-coco@lists.linux.dev,
 	aik@amd.com,
 	aneesh.kumar@kernel.org,
 	yilun.xu@linux.intel.com,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v8 1/9] coco/tsm: Introduce a core device for TEE Security Managers
-Date: Fri, 31 Oct 2025 14:28:53 -0700
-Message-ID: <20251031212902.2256310-2-dan.j.williams@intel.com>
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v8 2/9] PCI/IDE: Enumerate Selective Stream IDE capabilities
+Date: Fri, 31 Oct 2025 14:28:54 -0700
+Message-ID: <20251031212902.2256310-3-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251031212902.2256310-1-dan.j.williams@intel.com>
 References: <20251031212902.2256310-1-dan.j.williams@intel.com>
@@ -81,220 +80,310 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A "TSM" is a platform component that provides an API for securely
-provisioning resources for a confidential guest (TVM) to consume. The
-name originates from the PCI specification for platform agent that
-carries out operations for PCIe TDISP (TEE Device Interface Security
-Protocol).
+Link encryption is a new PCIe feature enumerated by "PCIe r7.0 section
+7.9.26 IDE Extended Capability".
 
-Instances of this core device are parented by a device representing the
-platform security function like CONFIG_CRYPTO_DEV_CCP or
-CONFIG_INTEL_TDX_HOST.
+It is both a standalone port + endpoint capability, and a building block
+for the security protocol defined by "PCIe r7.0 section 11 TEE Device
+Interface Security Protocol (TDISP)". That protocol coordinates device
+security setup between a platform TSM (TEE Security Manager) and a
+device DSM (Device Security Manager). While the platform TSM can
+allocate resources like Stream ID and manage keys, it still requires
+system software to manage the IDE capability register block.
 
-This device interface is a frontend to the aspects of a TSM and TEE I/O
-that are cross-architecture common. This includes mechanisms like
-enumerating available platform TEE I/O capabilities and provisioning
-connections between the platform TSM and device DSMs (Device Security
-Manager (TDISP)).
+Add register definitions and basic enumeration in preparation for
+Selective IDE Stream establishment. A follow on change selects the new
+CONFIG_PCI_IDE symbol. Note that while the IDE specification defines
+both a point-to-point "Link Stream" and a Root Port to endpoint
+"Selective Stream", only "Selective Stream" is considered for Linux as
+that is the predominant mode expected by Trusted Execution Environment
+Security Managers (TSMs), and it is the security model that limits the
+number of PCI components within the TCB in a PCIe topology with
+switches.
 
-For now this is just the scaffolding for registering a TSM device sysfs
-interface.
-
-Cc: Xu Yilun <yilun.xu@linux.intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Co-developed-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Alexey Kardashevskiy <aik@amd.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/virt/coco/Kconfig                 |  3 +
- drivers/virt/coco/Makefile                |  1 +
- Documentation/ABI/testing/sysfs-class-tsm |  9 +++
- include/linux/tsm.h                       | 11 +++
- drivers/virt/coco/tsm-core.c              | 93 +++++++++++++++++++++++
- MAINTAINERS                               |  2 +-
- 6 files changed, 118 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
- create mode 100644 drivers/virt/coco/tsm-core.c
+ drivers/pci/Kconfig           |  3 ++
+ drivers/pci/Makefile          |  1 +
+ drivers/pci/pci.h             |  6 +++
+ include/linux/pci.h           |  7 +++
+ include/uapi/linux/pci_regs.h | 81 ++++++++++++++++++++++++++++++++
+ drivers/pci/ide.c             | 88 +++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c           |  1 +
+ 7 files changed, 187 insertions(+)
+ create mode 100644 drivers/pci/ide.c
 
-diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
-index 819a97e8ba99..bb0c6d6ddcc8 100644
---- a/drivers/virt/coco/Kconfig
-+++ b/drivers/virt/coco/Kconfig
-@@ -14,3 +14,6 @@ source "drivers/virt/coco/tdx-guest/Kconfig"
- source "drivers/virt/coco/arm-cca-guest/Kconfig"
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index f94f5d384362..b28423e2057f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -122,6 +122,9 @@ config XEN_PCIDEV_FRONTEND
+ config PCI_ATS
+ 	bool
  
- source "drivers/virt/coco/guest/Kconfig"
-+
-+config TSM
++config PCI_IDE
 +	bool
-diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
-index f918bbb61737..cb52021912b3 100644
---- a/drivers/virt/coco/Makefile
-+++ b/drivers/virt/coco/Makefile
-@@ -7,4 +7,5 @@ obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
- obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
- obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
- obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
-+obj-$(CONFIG_TSM) 		+= tsm-core.o
- obj-$(CONFIG_TSM_GUEST)		+= guest/
-diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-new file mode 100644
-index 000000000000..2949468deaf7
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-tsm
-@@ -0,0 +1,9 @@
-+What:		/sys/class/tsm/tsmN
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		"tsmN" is a device that represents the generic attributes of a
-+		platform TEE Security Manager.  It is typically a child of a
-+		platform enumerated TSM device. /sys/class/tsm/tsmN/uevent
-+		signals when the PCI layer is able to support establishment of
-+		link encryption and other device-security features coordinated
-+		through a platform tsm.
-diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-index 431054810dca..cd97c63ffa32 100644
---- a/include/linux/tsm.h
-+++ b/include/linux/tsm.h
-@@ -5,6 +5,7 @@
- #include <linux/sizes.h>
- #include <linux/types.h>
- #include <linux/uuid.h>
-+#include <linux/device.h>
- 
- #define TSM_REPORT_INBLOB_MAX 64
- #define TSM_REPORT_OUTBLOB_MAX SZ_32K
-@@ -107,6 +108,16 @@ struct tsm_report_ops {
- 	bool (*report_bin_attr_visible)(int n);
- };
- 
-+struct tsm_dev {
-+	struct device dev;
-+	int id;
-+};
 +
-+DEFINE_FREE(put_tsm_dev, struct tsm_dev *,
-+	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
+ config PCI_DOE
+ 	bool "Enable PCI Data Object Exchange (DOE) support"
+ 	help
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index 67647f1880fb..6612256fd37d 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
+ obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
+ obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
+ obj-$(CONFIG_PCI_DOE)		+= doe.o
++obj-$(CONFIG_PCI_IDE)		+= ide.o
+ obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
+ obj-$(CONFIG_PCI_NPEM)		+= npem.o
+ obj-$(CONFIG_PCIE_TPH)		+= tph.o
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 4492b809094b..86ef13e7cece 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -613,6 +613,12 @@ static inline void pci_doe_sysfs_init(struct pci_dev *pdev) { }
+ static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
+ #endif
+ 
++#ifdef CONFIG_PCI_IDE
++void pci_ide_init(struct pci_dev *dev);
++#else
++static inline void pci_ide_init(struct pci_dev *dev) { }
++#endif
 +
- int tsm_report_register(const struct tsm_report_ops *ops, void *priv);
- int tsm_report_unregister(const struct tsm_report_ops *ops);
-+struct tsm_dev *tsm_register(struct device *parent);
-+void tsm_unregister(struct tsm_dev *tsm_dev);
- #endif /* __TSM_H */
-diff --git a/drivers/virt/coco/tsm-core.c b/drivers/virt/coco/tsm-core.c
+ /**
+  * pci_dev_set_io_state - Set the new error state if possible.
+  *
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d1fdf81fbe1e..4402ca931124 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -539,6 +539,13 @@ struct pci_dev {
+ #endif
+ #ifdef CONFIG_PCI_NPEM
+ 	struct npem	*npem;		/* Native PCIe Enclosure Management */
++#endif
++#ifdef CONFIG_PCI_IDE
++	u16		ide_cap;	/* Link Integrity & Data Encryption */
++	u8		nr_ide_mem;	/* Address association resources for streams */
++	u8		nr_link_ide;	/* Link Stream count (Selective Stream offset) */
++	unsigned int	ide_cfg:1;	/* Config cycles over IDE */
++	unsigned int	ide_tee_limit:1; /* Disallow T=0 traffic over IDE */
+ #endif
+ 	u16		acs_cap;	/* ACS Capability offset */
+ 	u8		supported_speeds; /* Supported Link Speeds Vector */
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 07e06aafec50..05bd22d9e352 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -754,6 +754,7 @@
+ #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
+ #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+ #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
++#define PCI_EXT_CAP_ID_IDE	0x30    /* Integrity and Data Encryption */
+ #define PCI_EXT_CAP_ID_PL_64GT	0x31	/* Physical Layer 64.0 GT/s */
+ #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_64GT
+ 
+@@ -1249,4 +1250,84 @@
+ #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+ #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+ 
++/* Integrity and Data Encryption Extended Capability */
++#define PCI_IDE_CAP			0x04
++#define  PCI_IDE_CAP_LINK		0x1  /* Link IDE Stream Supported */
++#define  PCI_IDE_CAP_SELECTIVE		0x2  /* Selective IDE Streams Supported */
++#define  PCI_IDE_CAP_FLOWTHROUGH	0x4  /* Flow-Through IDE Stream Supported */
++#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC 0x8  /* Partial Header Encryption Supported */
++#define  PCI_IDE_CAP_AGGREGATION	0x10 /* Aggregation Supported */
++#define  PCI_IDE_CAP_PCRC		0x20 /* PCRC Supported */
++#define  PCI_IDE_CAP_IDE_KM		0x40 /* IDE_KM Protocol Supported */
++#define  PCI_IDE_CAP_SEL_CFG		0x80 /* Selective IDE for Config Request Support */
++#define  PCI_IDE_CAP_ALG		__GENMASK(12, 8) /* Supported Algorithms */
++#define   PCI_IDE_CAP_ALG_AES_GCM_256	0    /* AES-GCM 256 key size, 96b MAC */
++#define  PCI_IDE_CAP_LINK_TC_NUM	__GENMASK(15, 13) /* Link IDE TCs */
++#define  PCI_IDE_CAP_SEL_NUM		__GENMASK(23, 16) /* Supported Selective IDE Streams */
++#define  PCI_IDE_CAP_TEE_LIMITED	0x1000000 /* TEE-Limited Stream Supported */
++#define PCI_IDE_CTL			0x08
++#define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4  /* Flow-Through IDE Stream Enabled */
++
++#define PCI_IDE_LINK_STREAM_0		0xc  /* First Link Stream Register Block */
++#define  PCI_IDE_LINK_BLOCK_SIZE	8
++/* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
++#define PCI_IDE_LINK_CTL_0		0x00		  /* First Link Control Register Offset in block */
++#define  PCI_IDE_LINK_CTL_EN		0x1		  /* Link IDE Stream Enable */
++#define  PCI_IDE_LINK_CTL_TX_AGGR_NPR	__GENMASK(3, 2)	  /* Tx Aggregation Mode NPR */
++#define  PCI_IDE_LINK_CTL_TX_AGGR_PR	__GENMASK(5, 4)	  /* Tx Aggregation Mode PR */
++#define  PCI_IDE_LINK_CTL_TX_AGGR_CPL	__GENMASK(7, 6)	  /* Tx Aggregation Mode CPL */
++#define  PCI_IDE_LINK_CTL_PCRC_EN	0x100		  /* PCRC Enable */
++#define  PCI_IDE_LINK_CTL_PART_ENC	__GENMASK(13, 10) /* Partial Header Encryption Mode */
++#define  PCI_IDE_LINK_CTL_ALG		__GENMASK(18, 14) /* Selection from PCI_IDE_CAP_ALG */
++#define  PCI_IDE_LINK_CTL_TC		__GENMASK(21, 19) /* Traffic Class */
++#define  PCI_IDE_LINK_CTL_ID		__GENMASK(31, 24) /* Stream ID */
++#define PCI_IDE_LINK_STS_0		0x4               /* First Link Status Register Offset in block */
++#define  PCI_IDE_LINK_STS_STATE		__GENMASK(3, 0)   /* Link IDE Stream State */
++#define  PCI_IDE_LINK_STS_IDE_FAIL	0x80000000	  /* IDE fail message received */
++
++/* Selective IDE Stream block, up to PCI_IDE_CAP_SELECTIVE_STREAMS_NUM */
++/* Selective IDE Stream Capability Register */
++#define  PCI_IDE_SEL_CAP		0x00
++#define   PCI_IDE_SEL_CAP_ASSOC_NUM	__GENMASK(3, 0)
++/* Selective IDE Stream Control Register */
++#define  PCI_IDE_SEL_CTL		0x04
++#define   PCI_IDE_SEL_CTL_EN		0x1		  /* Selective IDE Stream Enable */
++#define   PCI_IDE_SEL_CTL_TX_AGGR_NPR	__GENMASK(3, 2)	  /* Tx Aggregation Mode NPR */
++#define   PCI_IDE_SEL_CTL_TX_AGGR_PR	__GENMASK(5, 4)   /* Tx Aggregation Mode PR */
++#define   PCI_IDE_SEL_CTL_TX_AGGR_CPL	__GENMASK(7, 6)	  /* Tx Aggregation Mode CPL */
++#define   PCI_IDE_SEL_CTL_PCRC_EN	0x100		  /* PCRC Enable */
++#define   PCI_IDE_SEL_CTL_CFG_EN	0x200		  /* Selective IDE for Configuration Requests */
++#define   PCI_IDE_SEL_CTL_PART_ENC	__GENMASK(13, 10) /* Partial Header Encryption Mode */
++#define   PCI_IDE_SEL_CTL_ALG		__GENMASK(18, 14) /* Selection from PCI_IDE_CAP_ALG */
++#define   PCI_IDE_SEL_CTL_TC		__GENMASK(21, 19) /* Traffic Class */
++#define   PCI_IDE_SEL_CTL_DEFAULT	0x400000	  /* Default Stream */
++#define   PCI_IDE_SEL_CTL_TEE_LIMITED	0x800000	  /* TEE-Limited Stream */
++#define   PCI_IDE_SEL_CTL_ID		__GENMASK(31, 24) /* Stream ID */
++#define   PCI_IDE_SEL_CTL_ID_MAX	255
++/* Selective IDE Stream Status Register */
++#define  PCI_IDE_SEL_STS		 0x08
++#define   PCI_IDE_SEL_STS_STATE		 __GENMASK(3, 0) /* Selective IDE Stream State */
++#define   PCI_IDE_SEL_STS_STATE_INSECURE 0
++#define   PCI_IDE_SEL_STS_STATE_SECURE	 2
++#define   PCI_IDE_SEL_STS_IDE_FAIL	 0x80000000	 /* IDE fail message received */
++/* IDE RID Association Register 1 */
++#define  PCI_IDE_SEL_RID_1		 0x0c
++#define   PCI_IDE_SEL_RID_1_LIMIT	 __GENMASK(23, 8)
++/* IDE RID Association Register 2 */
++#define  PCI_IDE_SEL_RID_2		0x10
++#define   PCI_IDE_SEL_RID_2_VALID	0x1
++#define   PCI_IDE_SEL_RID_2_BASE	__GENMASK(23, 8)
++#define   PCI_IDE_SEL_RID_2_SEG		__GENMASK(31, 24)
++/* Selective IDE Address Association Register Block, up to PCI_IDE_SEL_CAP_ASSOC_NUM */
++#define PCI_IDE_SEL_ADDR_BLOCK_SIZE	12
++#define  PCI_IDE_SEL_ADDR_1(x)		(20 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
++#define   PCI_IDE_SEL_ADDR_1_VALID	0x1
++#define   PCI_IDE_SEL_ADDR_1_BASE_LOW	__GENMASK(19, 8)
++#define   PCI_IDE_SEL_ADDR_1_LIMIT_LOW	__GENMASK(31, 20)
++/* IDE Address Association Register 2 is "Memory Limit Upper" */
++#define  PCI_IDE_SEL_ADDR_2(x)		(24 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
++/* IDE Address Association Register 3 is "Memory Base Upper" */
++#define  PCI_IDE_SEL_ADDR_3(x)		(28 + (x) * PCI_IDE_SEL_ADDR_BLOCK_SIZE)
++#define PCI_IDE_SEL_BLOCK_SIZE(nr_assoc)  (20 + PCI_IDE_SEL_ADDR_BLOCK_SIZE * (nr_assoc))
++
+ #endif /* LINUX_PCI_REGS_H */
+diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
 new file mode 100644
-index 000000000000..347507cc5e3f
+index 000000000000..26866edf91b4
 --- /dev/null
-+++ b/drivers/virt/coco/tsm-core.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/pci/ide.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
 +/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++/* PCIe r7.0 section 6.33 Integrity & Data Encryption (IDE) */
 +
-+#include <linux/tsm.h>
-+#include <linux/rwsem.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/cleanup.h>
++#define dev_fmt(fmt) "PCI/IDE: " fmt
++#include <linux/bitfield.h>
++#include <linux/pci.h>
++#include <linux/pci_regs.h>
 +
-+static struct class *tsm_class;
-+static DECLARE_RWSEM(tsm_rwsem);
-+static DEFINE_IDA(tsm_ida);
++#include "pci.h"
 +
-+static struct tsm_dev *alloc_tsm_dev(struct device *parent)
++static int __sel_ide_offset(u16 ide_cap, u8 nr_link_ide, u8 stream_index,
++			    u8 nr_ide_mem)
 +{
-+	struct device *dev;
-+	int id;
++	u32 offset = ide_cap + PCI_IDE_LINK_STREAM_0 +
++		     nr_link_ide * PCI_IDE_LINK_BLOCK_SIZE;
 +
-+	struct tsm_dev *tsm_dev __free(kfree) =
-+		kzalloc(sizeof(*tsm_dev), GFP_KERNEL);
-+	if (!tsm_dev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	id = ida_alloc(&tsm_ida, GFP_KERNEL);
-+	if (id < 0)
-+		return ERR_PTR(id);
-+
-+	tsm_dev->id = id;
-+	dev = &tsm_dev->dev;
-+	dev->parent = parent;
-+	dev->class = tsm_class;
-+	device_initialize(dev);
-+
-+	return no_free_ptr(tsm_dev);
++	/*
++	 * Assume a constant number of address association resources per stream
++	 * index
++	 */
++	return offset + stream_index * PCI_IDE_SEL_BLOCK_SIZE(nr_ide_mem);
 +}
 +
-+struct tsm_dev *tsm_register(struct device *parent)
++void pci_ide_init(struct pci_dev *pdev)
 +{
-+	struct tsm_dev *tsm_dev __free(put_tsm_dev) = alloc_tsm_dev(parent);
-+	struct device *dev;
-+	int rc;
++	u16 nr_link_ide, nr_ide_mem, nr_streams;
++	u16 ide_cap;
++	u32 val;
 +
-+	if (IS_ERR(tsm_dev))
-+		return tsm_dev;
++	if (!pci_is_pcie(pdev))
++		return;
 +
-+	dev = &tsm_dev->dev;
-+	rc = dev_set_name(dev, "tsm%d", tsm_dev->id);
-+	if (rc)
-+		return ERR_PTR(rc);
++	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
++	if (!ide_cap)
++		return;
 +
-+	rc = device_add(dev);
-+	if (rc)
-+		return ERR_PTR(rc);
++	pci_read_config_dword(pdev, ide_cap + PCI_IDE_CAP, &val);
++	if ((val & PCI_IDE_CAP_SELECTIVE) == 0)
++		return;
 +
-+	return no_free_ptr(tsm_dev);
++	/*
++	 * Require endpoint IDE capability to be paired with IDE Root Port IDE
++	 * capability.
++	 */
++	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT) {
++		struct pci_dev *rp = pcie_find_root_port(pdev);
++
++		if (!rp->ide_cap)
++			return;
++	}
++
++	pdev->ide_cfg = FIELD_GET(PCI_IDE_CAP_SEL_CFG, val);
++	pdev->ide_tee_limit = FIELD_GET(PCI_IDE_CAP_TEE_LIMITED, val);
++
++	if (val & PCI_IDE_CAP_LINK)
++		nr_link_ide = 1 + FIELD_GET(PCI_IDE_CAP_LINK_TC_NUM, val);
++	else
++		nr_link_ide = 0;
++
++	nr_ide_mem = 0;
++	nr_streams = 1 + FIELD_GET(PCI_IDE_CAP_SEL_NUM, val);
++	for (u16 i = 0; i < nr_streams; i++) {
++		int pos = __sel_ide_offset(ide_cap, nr_link_ide, i, nr_ide_mem);
++		int nr_assoc;
++		u32 val;
++
++		pci_read_config_dword(pdev, pos + PCI_IDE_SEL_CAP, &val);
++
++		/*
++		 * Let's not entertain streams that do not have a constant
++		 * number of address association blocks
++		 */
++		nr_assoc = FIELD_GET(PCI_IDE_SEL_CAP_ASSOC_NUM, val);
++		if (i && (nr_assoc != nr_ide_mem)) {
++			pci_info(pdev, "Unsupported Selective Stream %d capability, SKIP the rest\n", i);
++			nr_streams = i;
++			break;
++		}
++
++		nr_ide_mem = nr_assoc;
++	}
++
++	pdev->ide_cap = ide_cap;
++	pdev->nr_link_ide = nr_link_ide;
++	pdev->nr_ide_mem = nr_ide_mem;
 +}
-+EXPORT_SYMBOL_GPL(tsm_register);
-+
-+void tsm_unregister(struct tsm_dev *tsm_dev)
-+{
-+	device_unregister(&tsm_dev->dev);
-+}
-+EXPORT_SYMBOL_GPL(tsm_unregister);
-+
-+static void tsm_release(struct device *dev)
-+{
-+	struct tsm_dev *tsm_dev = container_of(dev, typeof(*tsm_dev), dev);
-+
-+	ida_free(&tsm_ida, tsm_dev->id);
-+	kfree(tsm_dev);
-+}
-+
-+static int __init tsm_init(void)
-+{
-+	tsm_class = class_create("tsm");
-+	if (IS_ERR(tsm_class))
-+		return PTR_ERR(tsm_class);
-+
-+	tsm_class->dev_release = tsm_release;
-+	return 0;
-+}
-+module_init(tsm_init)
-+
-+static void __exit tsm_exit(void)
-+{
-+	class_destroy(tsm_class);
-+}
-+module_exit(tsm_exit)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("TEE Security Manager Class Device");
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 545a4776795e..06285f3a24df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26097,7 +26097,7 @@ M:	David Lechner <dlechner@baylibre.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/trigger-source/*
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0ce98e18b5a8..4c55020f3ddf 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2667,6 +2667,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_doe_init(dev);		/* Data Object Exchange */
+ 	pci_tph_init(dev);		/* TLP Processing Hints */
+ 	pci_rebar_init(dev);		/* Resizable BAR */
++	pci_ide_init(dev);		/* Link Integrity and Data Encryption */
  
--TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
-+TRUSTED EXECUTION ENVIRONMENT SECURITY MANAGER (TSM)
- M:	Dan Williams <dan.j.williams@intel.com>
- L:	linux-coco@lists.linux.dev
- S:	Maintained
+ 	pcie_report_downtraining(dev);
+ 	pci_init_reset_methods(dev);
 -- 
 2.51.0
 
