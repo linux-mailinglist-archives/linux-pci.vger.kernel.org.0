@@ -1,173 +1,202 @@
-Return-Path: <linux-pci+bounces-39938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32FBFC25944
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 15:31:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 771ACC25C25
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 16:08:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 19B674F507F
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 14:30:04 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 432094FB86D
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 15:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EDB434C13C;
-	Fri, 31 Oct 2025 14:29:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D702D6407;
+	Fri, 31 Oct 2025 14:53:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m/llmHWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hg3KPhvn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7926234BA5C;
-	Fri, 31 Oct 2025 14:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C632D5930;
+	Fri, 31 Oct 2025 14:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761920997; cv=none; b=n14dpXEq2e/hECGKfujc9AB0EbuOgQHfWcXnP/NJqZKGDnapYfPWuVOCx1N381TUxSNkiB4QlCpJ59KMypefT1fJDU0IoDFFuec2r95YV3zZ6KG1c7WJvNaa9vp+2ExKlqmKfQW6fTXQQjRkKPnmbifeoV9+AmnO1ghFwgfswOM=
+	t=1761922425; cv=none; b=jl3/zsnEfj+h1JODYA0Q+ACMAC7i5TG+XD9jXAeEd7H/IRUF+ezbN/UcqSmmOkENyIMi4r7BVjuEXrcjo8aaJ64n/wYWNYCfAzc7gA01lX+GtNWo7pYtYRszQguidT4a6T1FWzPC5PBkQgztFFT02MWsxfQMlr8/Gi5umCs39uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761920997; c=relaxed/simple;
-	bh=DpRmmnQNFBCQ/QafgwFnqLT9Yw/H1JWWO9tLoLVtAy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRiJNLWcnqkDFoYr5w1+yKPbVMU8T/15UZKg7VB9CPNoid0taKLhOew+ODO8O+T7+EqbXU7eNz8kY/rL+iBw/WOi8fgz5FbtncGBZtKnRRozKBHcVRcidP6SJnTLQnW0MvI9esOamXnUbuX8wR2UkPasvHHP/u/iFENq04OZRd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m/llmHWP; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id EF21C1A17AF;
-	Fri, 31 Oct 2025 14:29:51 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id BF96E60710;
-	Fri, 31 Oct 2025 14:29:51 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C4B4A11818003;
-	Fri, 31 Oct 2025 15:29:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1761920989; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=H1xEmCgdr5BM399Kc4ZsWwaTbhEQ52MJYYiQpqbSK6Q=;
-	b=m/llmHWPK2GTOxgP86qebD1Z2Edet7KZozbxg7xHP71zP8WGHqlNCsjTjzbgRJW6AoYEg9
-	PGGuEBK7TNuc+3zADlLbC1jrjiYc/TXhPfAwEtjv3025kcM3TvB0cUwMNtHDn+fuYXbapk
-	18lKsj6lpv1/ObuOPQiBVRZx/Tm+zaLVFOXH7eT76X6+OiJSchpc3v+iGXicmC9AbAQ7Fi
-	n3R42rQTkma0JCEYRFgzMb9znRzRns4yCbMUv4DSU7pRjgiVIxLEd6NnupsCZT4TGW2iAp
-	n6HmKRiLt0yJEP375+9QgT+CNjKgF6b7Kiq48SW1im8mtyVm7PYpr3cu982RMw==
-Date: Fri, 31 Oct 2025 15:29:30 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mark Brown <broonie@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-Message-ID: <20251031152930.3c51a313@bootlin.com>
-In-Reply-To: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<20251015071420.1173068-6-herve.codina@bootlin.com>
-	<CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1761922425; c=relaxed/simple;
+	bh=6vHW2fp30oSt1Z1dUetdmISj2k4xcp73KZzarQrJoJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WlelFhb9x1A6/fowXWWpj08HDZZBZjVHft3MOeGSluLo038I61EoDwsJ/4BzlV1Rza3uOb/HuexXIoo8P5kNE+h+Y7K3KlBOx/PpEP8sGS4+uAiZ6hD9GgPiJEOBspJi+HIStBjwpCKBzIZvdGTC+AqDyNvnEte/bz4MSijl52Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hg3KPhvn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D644AC4CEE7;
+	Fri, 31 Oct 2025 14:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761922425;
+	bh=6vHW2fp30oSt1Z1dUetdmISj2k4xcp73KZzarQrJoJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hg3KPhvnGuPVN9p618BTCV3Kb5hMDEZ/ev5rl0D2cJy40ogHWKJltb29YlTacv1Hi
+	 nuQtkj25k0SbWF25CFg/DdLkuzPz/RURsIOAU66uFwwv54A/ApMvz2Xin7BsGdZJYF
+	 j5yZ5pWm8lBpWJCqiZ1jkvWYhsR3NN5d+uurlsoXAbqh3iFti2RRduOfw9NOsGAbjG
+	 ppISPIizNTSaIzCoNKSmA1BdWs0SLU19Q5fqROuSRTvMR/SbviKtgq9Tg/ONMgapjg
+	 OVI9t4PhUWeYhizGXPmrLqFj5OA7wLfWopW9c8lkW1uLlNRcLU6wNHfYQUlKFZeWXd
+	 4921bdDmC5uyQ==
+Date: Fri, 31 Oct 2025 20:23:27 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Hans Zhang <18255117159@163.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] PCI: dw-rockchip: Add runtime PM support to
+ Rockchip PCIe driver
+Message-ID: <e7cttuu5525k7ryvmkh6ifspm5vloj4muazvmp3yxtkgsdtbjs@u4odsfurejxq>
+References: <20251027145602.199154-1-linux.amoon@gmail.com>
+ <20251027145602.199154-3-linux.amoon@gmail.com>
+ <ukgkfetbggzon4ppndl7gpitlsz7hjhzhyx3dgxqhdo52exguy@bqksd7d27lpy>
+ <CANAwSgTECOAoKeJS_=HxkkTP4OJvYu5xGQxY__Auh81v3QT=-w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <CANAwSgTECOAoKeJS_=HxkkTP4OJvYu5xGQxY__Auh81v3QT=-w@mail.gmail.com>
 
-On Fri, 31 Oct 2025 09:52:16 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-
-> Hi Hervé,
+On Fri, Oct 31, 2025 at 07:33:23PM +0530, Anand Moon wrote:
+> Hi Manivannan
 > 
-> On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote:
-> > A Simple Platform Bus is a transparent bus that doesn't need a specific
-> > driver to perform operations at bus level.
+> Thanks for your review comment.
+> 
+> On Fri, 31 Oct 2025 at 14:09, Manivannan Sadhasivam <mani@kernel.org> wrote:
 > >
-> > Similar to simple-bus, a Simple Platform Bus allows to automatically
-> > instantiate devices connected to this bus.
+> > On Mon, Oct 27, 2025 at 08:25:30PM +0530, Anand Moon wrote:
+> > > Add runtime power management support to the Rockchip DesignWare PCIe
+> > > controller driver by enabling devm_pm_runtime() in the probe function.
+> > > These changes allow the PCIe controller to suspend and resume dynamically,
+> > > improving power efficiency on supported platforms.
+> > >
 > >
-> > Those devices are instantiated only by the Simple Platform Bus probe
-> > function itself.
+> > Seriously? How can this patch improve the power efficiency if it is not doing
+> > any PM operation on its own?
 > >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> I could verify that runtime power management is active
 > 
-> Thanks for your patch!
+
+This is runtime status being active, which is a different thing as it only
+allows the runtime PM hierarchy to be maintained. But the way you described the
+commit message sounds like the patch is enabling runtime PM of the controller
+and that improves efficiency (as if the controller driver is actively doing
+runtime PM operations).
+
+> [root@rockpi-5b alarm]# cat
+> /sys/devices/platform/a41000000.pcie/power/runtime_status
+> active
+> [root@rockpi-5b alarm]#  find /sys -name runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/pci_bus/0004:41/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/net/enP4p65s0/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/net/enP4p65s0/enP4p65s0-3::lan/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/net/enP4p65s0/enP4p65s0-2::lan/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/net/enP4p65s0/enP4p65s0-1::lan/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/net/enP4p65s0/enP4p65s0-0::lan/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/mdio_bus/r8169-4-4100/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/power/runtime_status
+> /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/hwmon/hwmon11/power/runtime_status
 > 
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
-> > @@ -0,0 +1,50 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Simple Platform Bus
-> > +
-> > +maintainers:
-> > +  - Herve Codina <herve.codina@bootlin.com>
-> > +
-> > +description: |
-> > +  A Simple Platform Bus is a transparent bus that doesn't need a specific
-> > +  driver to perform operations at bus level.
-> > +
-> > +  Similar to simple-bus, a Simple Platform Bus allows to automatically
-> > +  instantiate devices connected to this bus. Those devices are instantiated
-> > +  only by the Simple Platform Bus probe function itself.  
+> Well, the powertop shows that the runtime power management is enabled
+> on Radxa Rock 5b,
 > 
-> So what are the differences with simple-bus? That its children are
-> instantiated "only by the Simple Platform Bus probe function itself"?
-> If that is the case, in which other places are simple-bus children
-> instantiated?
-
-In of_platform_populate(). It call of_platform_bus_create() which is
-recursive:
-  https://elixir.bootlin.com/linux/v6.14/source/drivers/of/platform.c#L374
-
-So children are instantiated out of the bus probe().
-
-
+> PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
+> stats   Device Freq stats   Tunables   WakeUp
+> >> Good          Wireless Power Saving for interface wlan0
+>    Good          VM writeback timeout
+>    Good          Bluetooth device interface status
+>    Good          NMI watchdog should be turned off
+>    Good          Autosuspend for unknown USB device 2-1.3 (8087:0a2b)
+>    Good          Autosuspend for USB device USB 2.0 Hub [2-1]
+>    Good          Autosuspend for USB device Generic Platform OHCI
+> controller [usb1]
+>    Good          Autosuspend for USB device xHCI Host Controller [usb8]
+>    Good          Autosuspend for USB device Generic Platform OHCI
+> controller [usb4]
+>    Good          Autosuspend for USB device EHCI Host Controller [usb2]
+>    Good          Autosuspend for USB device xHCI Host Controller [usb6]
+>    Good          Autosuspend for USB device EHCI Host Controller [usb3]
+>    Good          Autosuspend for USB device xHCI Host Controller [usb5]
+>    Good          Autosuspend for USB device xHCI Host Controller [usb7]
+>    Good          Runtime PM for PCI Device Intel Corporation Wireless
+> 8265 / 8275
+>    Good          Runtime PM for PCI Device Rockchip Electronics Co., Ltd RK3588
+>    Good          Runtime PM for PCI Device Rockchip Electronics Co., Ltd RK3588
+>    Good          Runtime PM for PCI Device Realtek Semiconductor Co.,
+> Ltd. RTL8125 2.5GbE Controller
+>    Good          Runtime PM for PCI Device Rockchip Electronics Co., Ltd RK3588
+>    Good          Runtime PM for PCI Device Samsung Electronics Co Ltd
+> NVMe SSD Controller SM981/PM981/PM983
 > 
-> Do we need properties related to power-management (clocks, power-domains),
-> or will we need a "simple-pm-platform-bus" later? ;-)
+> PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
+> stats   Device Freq stats   Tunables   WakeUp
+>               Usage     Device name
+>               1.1%        CPU use
+>             100.0%        Radio device: rfkill_gpio
+>             100.0%        runtime-rockchip-gate-link-clk.712
+>             100.0%        PCI Device: Realtek Semiconductor Co., Ltd.
+> RTL8125 2.5GbE Controller
+>             100.0%        runtime-rockchip-gate-link-clk.717
+>             100.0%        runtime-rockchip-gate-link-clk.714
+>             100.0%        runtime-rockchip-gate-link-clk.489
+>             100.0%        runtime-a40000000.pcie
+>             100.0%        runtime-a40800000.pcie
+>             100.0%        runtime-rockchip-gate-link-clk.718
+>             100.0%        runtime-rockchip-gate-link-clk.706
+>             100.0%        runtime-rockchip-gate-link-clk.708
+>             100.0%        PCI Device: Intel Corporation Wireless 8265 / 8275
+>             100.0%        Radio device: btusb
+>             100.0%        runtime-fcd00000.usb
+>             100.0%        PCI Device: Samsung Electronics Co Ltd NVMe
+> SSD Controller SM981/PM981/PM983
+>             100.0%        Radio device: rfkill_gpio
+>             100.0%        runtime-fc000000.usb
+>             100.0%        Radio device: iwlwifi
+>             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3588
+>             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3588
+>             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3588
+>             100.0%        runtime-rockchip-gate-link-clk.711
+>             100.0%        runtime-fc400000.usb
+>             100.0%        runtime-rockchip-gate-link-clk.704
+>             100.0%        runtime-rockchip-gate-link-clk.701
+>             100.0%        runtime-rockchip-gate-link-clk.716
+>             100.0%        runtime-rockchip-gate-link-clk.707
+>             100.0%        runtime-rockchip-gate-link-clk.709
+>             100.0%        runtime-rockchip-gate-link-clk.719
+>             100.0%        runtime-xhci-hcd.1.auto
+>             100.0%        runtime-feb50000.serial
+>             100.0%        runtime-rockchip-gate-link-clk.715
+>             100.0%        runtime-rockchip-gate-link-clk.710
 > 
-> FTR, I still think we wouldn't have needed the distinction between
-> "simple-bus" and "simple-pm-bus"...
+> > Again, a pointless patch.
 
-I would like that. Using simple-pm-bus solves my issue but I don't have any
-clocks or power-domains to set. The simple-pm-bus bus requires at least
-one of them. Even if the driver itself solved my issue, I cannot be
-compliant with its binding.
+This patch might make sense on its own, to enable runtime PM status of the
+controller so that the runtime PM could be applied to the entire PCIe hierarchy.
 
-Best regards,
-Hervé
+> I implemented a .remove patch to ensure proper resource cleanup,
+> which is a necessary step for successfully enabling and managing
+> runtime power for the device.
+
+How a dead code (remove callback for a always built-in driver) becomes necessary
+for runtime PM.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
