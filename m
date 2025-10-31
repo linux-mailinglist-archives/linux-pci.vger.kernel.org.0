@@ -1,169 +1,155 @@
-Return-Path: <linux-pci+bounces-39876-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39877-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508B7C22C3C
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 01:07:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82A76C22C61
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 01:19:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2EC624E36B0
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 00:07:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1C3374E1BA2
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 00:19:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D731A2E401;
-	Fri, 31 Oct 2025 00:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7402199939;
+	Fri, 31 Oct 2025 00:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cR1N+OpS"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="WR8lxUAx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E218F2AE77
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 00:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B25176FB1
+	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 00:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761869241; cv=none; b=OM0CRgJyVD60H1fq3qUxnzfn+jnK/2p3bisyTD10vSWWgElvM9Q1HCyZc2s6UbyKoc8h6yXiByWuI+ocHoi4fie84eyzGu8ygv0ZXAukO+FwpNpmgX/7+viPUBYfRkxACrWNFkEtAWWqZUPChOiwWX9xuMGsvQU1K52IuJSAjSw=
+	t=1761869974; cv=none; b=Q5D9a3ag40dIf0nW9qaniqK8SF8Yw4kR4aLNB9qk4zoCQGGkFIfjF5ZBzhJ0zpN7yFmeyxznSMAmFS0V5zxN5X912HTBkIVjtar0hj/KfEFvPf339KxR78GTDAHgm0Uvu1H6fLYmLyYxJly539Xk3j0fe0U6/cOk/1d0yafIK7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761869241; c=relaxed/simple;
-	bh=rGYe5yjMqWmwR+Rx3bwQkg6QzWBsMmU301TBlTItHbY=;
+	s=arc-20240116; t=1761869974; c=relaxed/simple;
+	bh=8rHUYkXKPL5IW43a+4rQNutLuyHqHIoW5Z0VxJSm0u4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m/ML+jvtGyIGgmg4LneBlFeJzQxy2v15eGm3Emi1MH/e/eCrx6F0MOn7R9htnAlBJPKIXlPKKTd9Xdt828iV3KF8afrvIddU8ObE7GsCL4FCyvLZRpJ9cUmRhYNV0uFQdgivC+A0eh2ByYXDWhu6h4s+6YwVKjWMRiaRtMXJCcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cR1N+OpS; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-586883eb9fbso2165573e87.1
-        for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 17:07:19 -0700 (PDT)
+	 To:Cc:Content-Type; b=KcA8ma4C09uknR4RUlXyCBJkJsHQensrltxJMQMwD/e623KHP8blm5VkZADgxvk8ZNhOLcS8mO0r5kjv3d7L/THtemAHwjjjDWaocnGd1FW4KBfovCe4Hpsl7Dzfz7P06NWVUb3uvFFcMo2jzaySuxDpag9uyOHUwpq4PlpKa4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b=WR8lxUAx; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63c3d7e2217so2843884a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 30 Oct 2025 17:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761869238; x=1762474038; darn=vger.kernel.org;
+        d=soleen.com; s=google; t=1761869971; x=1762474771; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nmcJ0gQt/4pCFYZHqsOZ/9fiYMntoegxT4AsogqqgxI=;
-        b=cR1N+OpSKhnaUqB0cxyIpRKFqhUcBNeYE1uNDyywppCyPdAiIDfVK+DN/WnZdsDjl6
-         tXIfmOqoT636yHm297Tarjqr7NePfDrTkeNDXNFwrg3SuPWKGQL4TTZPRXbVAoAghA/z
-         NAqz9GkHVK1c0fHfZzOaqD5E3CC/0Hm5eh3Gqtjql/r1fxZKYltUh9fVhcavgZua8Lpc
-         faTNtMW64S9s/Ep9SSWHyWloDyYJP2EWHYxNMrwAq3SuJFXE61H+7f3pNnW0tF3t5s33
-         VWlkaMP2LN+VdunYydJPivyGTq19Vv08CHOFejtu+wuJZ8jowGVLqlJMAEW8wWrgt6+P
-         L/bw==
+        bh=Cv3Ljvf1heM/ChX+5Kbnk959i79o/ym9ON91SVXdVic=;
+        b=WR8lxUAxQmD+DWLD1tgzmINQnPnyk6Vm976ZZpfc/IITPpAPs+kxbXZbaybX0nFwbv
+         NP62A1PqWLovWAkXh9DGcUrXuzEEQQpxKJ3JorgCVpURG+3TKFcJ9nQy3vy+SWPmR3NS
+         X8PTqprIfWt1r8qoyEIY8+qr8MTuKr8btlRjGZ2k1dZ7zM41eNj7VKyWMl1RNHRk6Zav
+         0IxobgQB8mmDp07zCyQVT5Jn4zr7J1GWVIvCUjPxfK9x782d6AEE0y2XdGOLZJ5OPbNx
+         xq4vRUKVwBDN8go1aAmpL3GcFErz41o/O7lOstO8c67Lob+4CzOstfEduiGJ6TAwzc5Q
+         O/DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761869238; x=1762474038;
+        d=1e100.net; s=20230601; t=1761869971; x=1762474771;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nmcJ0gQt/4pCFYZHqsOZ/9fiYMntoegxT4AsogqqgxI=;
-        b=O3z/fd+0P1L9p4eCZXldFnkrUt/guNXuK5/0TTKvJR1IT+y69hAWbPjsUHBAbYybmO
-         LHaAf9UlN5bL4aoJNgc4UblSwFgLOEVpbPsD3M5X1PVsJ+cp5mJEowARCbBNl7UU6Gy/
-         ANbKqutMk4w/82yvXDgH9uqLWuj+1zJinGCndrM7oTxOJhH+MlAqS27NU3ijjtHVTEkx
-         29ct/0QeDnZeuOVHUdcHZtX/mSq94kamqTZ4+mVrg3w+V4oDS4UxqB5xRRyPUIjnI7ra
-         jjlqDXVeeXtv5j66o6sIwAiq9iUHrki4jQH4SHyql/BJkRUj2bnVdqhqDk8dRuJG/8NZ
-         39Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfmBh0bTPit9aaFc6apHn1cU7xhSEAdMBOZF1M+5XiO9A3tWZr+etk93YKZa9PiWJJH8CPrBuE8zk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOQ5O0k34L9ZShCdmlf8Plm4ZGsQV8ly4/IOiYqj9MrBs5DjZ/
-	Bq1vC8q1oLQbujeuuyjfJ3clog9WkN/gixVtuKY3UInRUvLOQECygScB3XcpZBHFMvISTWtLl5Q
-	qT/VDw66+afjiIzSI0inYBHtw32ou4kNJGIJfzm8T
-X-Gm-Gg: ASbGncuYyTVWMiBd/lWUYUiH+2NPS9kV1mp5YqzG8Jyc92wD0fAePmUCbg2qliQqG1O
-	E3BSYXMVP4jD5ELglE7E6vEDPcQ17Vddxq7lPsW8W7TJ+j6xa/Mosn8Mk27/+uEYc1TYQ4rYs5H
-	CMgirSsbA0sdkpUZQaRat9R67xxS19M7X0sLkPvG0fb+106xihdx2c6hNDrtl8fbdb4D3hhh4k3
-	QziXUinFCY7hiu1WV0+wNDqukEha0VHPWzD1kFVZsEbD7dIGjdfx22a0pMp2sgS6CeOrCWxfebt
-	PBJGfg==
-X-Google-Smtp-Source: AGHT+IGpSBRowIBw9czJoVeMZr9H9pjBQVUhqQijMhY/2cscmjLpJGHSTZmm55OV1QXgaD7LcghLgUjQ0e4dM+E9He0=
-X-Received: by 2002:a05:6512:401e:b0:593:f29d:786e with SMTP id
- 2adb3069b0e04-5941d5335c0mr554266e87.33.1761869237738; Thu, 30 Oct 2025
- 17:07:17 -0700 (PDT)
+        bh=Cv3Ljvf1heM/ChX+5Kbnk959i79o/ym9ON91SVXdVic=;
+        b=pVgMcV8CZy/Ybq4ANLFYcKU6T4Q9RUcfIpPE6drraAfroUyT8OWhEp5QgUGzYNYNCH
+         Y4DSOC/PEjm+BJFBBpGghUMmF8QrNUMrjix5v7HFO3UCnrhWbW3/eL8RTrTZ4QrtyOrj
+         AFEeVj7UHJVHaOPvy3vYlDYRs+dhdGElA0cqmYwtf8bWgLVhMCkDov+S29hJZgsfTDQA
+         ROMDpKmzN0boAs5Bz1AnMQqkHtcAYee3X165H0sVkVNxwW7lIvGqh0+QsuvYsSKQxBFM
+         QMFkNhvZEBJbJzmRahVM3ewGZYQNqfzSoUxEJHFfykB9RjAYOF7o2boSNHGvlLICthlW
+         6rpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhKoZ2tls4+QZbyeK0IisAUW84kR/jzs4JQj06hSjHbxLMAltcmbA7xshpMLkudHCN9rEBqULD3mE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyI4i4INQ2bF+l9TewQAt0wG3Q4kwyX4HPZ5xl+dSmqaUxW45B
+	wNHnBg4TPbB88Mcu9NIJ6I8ICcod4TsJqzY2R8IZeWJ0gtK5vSQgk+e2eaKC+ccukZTcq0lfBX6
+	XHxoPiSYxjmoGIZLQ0iiI+5jWlwwe6f8yu5XXNNbQYQ==
+X-Gm-Gg: ASbGncsv+N2EdTEjqJX5MF0eAqmiA7XOMptXB/S3KneU1pHs26B1YamCWNgpBuBfT/n
+	awUSqc5jhlRAmun4UPMvodUQv67i8NHJFiIWsXZ8gXPDh3I14ivIw4D1WiiYaGDUgbe0/5DOK6Q
+	gxfGQnns0KmD/Lrf9jpDaYcY0+JAE6uhHfNyKSsKJ0modpZnT0HOP6/TfKYfPrORdJ+bcAiopAK
+	H7Il6BkXF5p8iZsLAEJK7KMSeDkNjZr3PA30BxT54XsDv4SrRtMNplxfEXqAeNvss4Q
+X-Google-Smtp-Source: AGHT+IHAmJ5aHdM6JoD2TOJsB7BThxEoT5eo1YrDOCS0gC6NmplAKbJLD+yZsTcgPKK2dj5Dhi5gMIE8RdzNHN72sus=
+X-Received: by 2002:a05:6402:13cb:b0:640:6a18:2931 with SMTP id
+ 4fb4d7f45d1cf-6407702dcd1mr1160377a12.29.1761869971150; Thu, 30 Oct 2025
+ 17:19:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251018000713.677779-1-vipinsh@google.com> <20251018000713.677779-16-vipinsh@google.com>
- <aPM_DUyyH1KaOerU@wunner.de> <20251018223620.GD1034710.vipinsh@google.com>
- <aPSeF_QiUWnhKIma@wunner.de> <aQP6-49_FeB2nNEm@google.com>
-In-Reply-To: <aQP6-49_FeB2nNEm@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 30 Oct 2025 17:06:49 -0700
-X-Gm-Features: AWmQ_bmRHrPwuytRU-oUtcv_mAPxEXlUmanD5v3yODN3rFDHRS7aA8xmVxSdYMk
-Message-ID: <CALzav=ci-CrUgH6Kjcm6eTRB0LCYgjds3Wnun7dsG6dWBe7i+w@mail.gmail.com>
-Subject: Re: [RFC PATCH 15/21] PCI: Make PCI saved state and capability
- structs public
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Vipin Sharma <vipinsh@google.com>, bhelgaas@google.com, alex.williamson@redhat.com, 
-	pasha.tatashin@soleen.com, jgg@ziepe.ca, graf@amazon.com, pratyush@kernel.org, 
-	gregkh@linuxfoundation.org, chrisl@kernel.org, rppt@kernel.org, 
-	skhawaja@google.com, parav@nvidia.com, saeedm@nvidia.com, 
-	kevin.tian@intel.com, jrhilke@google.com, david@redhat.com, 
+References: <20251018000713.677779-1-vipinsh@google.com> <20251018000713.677779-7-vipinsh@google.com>
+ <20251027134430.00007e46@linux.microsoft.com> <aQPwSltoH7rRsnV9@google.com>
+In-Reply-To: <aQPwSltoH7rRsnV9@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 30 Oct 2025 20:18:54 -0400
+X-Gm-Features: AWmQ_bmaQn5U2r87lGmHMokOwG7--caG9FTwwPKr2aHRFfrExiLwJYx42aUNdvg
+Message-ID: <CA+CK2bD-E0HKsuE0SPpZqEoJyEK4=KJCBw-h1WFP7O1KEoKuNQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 06/21] vfio/pci: Accept live update preservation
+ request for VFIO cdev
+To: David Matlack <dmatlack@google.com>
+Cc: Jacob Pan <jacob.pan@linux.microsoft.com>, Vipin Sharma <vipinsh@google.com>, 
+	bhelgaas@google.com, alex.williamson@redhat.com, jgg@ziepe.ca, 
+	graf@amazon.com, pratyush@kernel.org, gregkh@linuxfoundation.org, 
+	chrisl@kernel.org, rppt@kernel.org, skhawaja@google.com, parav@nvidia.com, 
+	saeedm@nvidia.com, kevin.tian@intel.com, jrhilke@google.com, david@redhat.com, 
 	jgowans@amazon.com, dwmw2@infradead.org, epetron@amazon.de, 
 	junaids@google.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
 	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 30, 2025 at 4:55=E2=80=AFPM David Matlack <dmatlack@google.com>=
+On Thu, Oct 30, 2025 at 7:10=E2=80=AFPM David Matlack <dmatlack@google.com>=
  wrote:
 >
-> On 2025-10-19 10:15 AM, Lukas Wunner wrote:
-> > On Sat, Oct 18, 2025 at 03:36:20PM -0700, Vipin Sharma wrote:
-> > > On 2025-10-18 09:17:33, Lukas Wunner wrote:
-> > > > On Fri, Oct 17, 2025 at 05:07:07PM -0700, Vipin Sharma wrote:
-> > > > > Move struct pci_saved_state{} and struct pci_cap_saved_data{} to
-> > > > > linux/pci.h so that they are available to code outside of the PCI=
- core.
-> > > > >
-> > > > > These structs will be used in subsequent commits to serialize and
-> > > > > deserialize PCI state across Live Update.
-> > > >
-> > > > That's not sufficient as a justification to make these public in my=
- view.
-> > > >
-> > > > There are already pci_store_saved_state() and pci_load_saved_state(=
-)
-> > > > helpers to serialize PCI state.  Why do you need anything more?
-> > > > (Honest question.)
-> > >
-> > > In LUO ecosystem, currently,  we do not have a solid solution to do
-> > > proper serialization/deserialization of structs along with versioning
-> > > between different kernel versions. This work is still being discussed=
-.
-> > >
-> > > Here, I created separate structs (exactly same as the original one) t=
-o
-> > > have little bit control on what gets saved in serialized state and
-> > > correctly gets deserialized after kexec.
-> > >
-> > > For example, if I am using existing structs and not creating my own
-> > > structs then I cannot just do a blind memcpy() between whole of the P=
-CI state
-> > > prior to kexec to PCI state after the kexec. In the new kernel
-> > > layout might have changed like addition or removal of a field.
+> On 2025-10-27 01:44 PM, Jacob Pan wrote:
+> > On Fri, 17 Oct 2025 17:06:58 -0700 Vipin Sharma <vipinsh@google.com> wr=
+ote:
+> > >  static int vfio_pci_liveupdate_retrieve(struct
+> > > liveupdate_file_handler *handler, u64 data, struct file **file)
+> > >  {
+> > > @@ -21,10 +28,17 @@ static int vfio_pci_liveupdate_retrieve(struct
+> > > liveupdate_file_handler *handler, static bool
+> > > vfio_pci_liveupdate_can_preserve(struct liveupdate_file_handler
+> > > *handler, struct file *file) {
+> > > -   return -EOPNOTSUPP;
+> > > +   struct vfio_device *device =3D vfio_device_from_file(file);
+> > > +
+> > > +   if (!device)
+> > > +           return false;
+> > > +
+> > > +   guard(mutex)(&device->dev_set->lock);
+> > > +   return vfio_device_cdev_opened(device);
 > >
-> > The last time we changed those structs was in 2013 by fd0f7f73ca96.
-> > So changes are extremely rare.
+> > IIUC, vfio_device_cdev_opened(device) will only return true after
+> > vfio_df_ioctl_bind_iommufd(). Where it does:
+> >       device->cdev_opened =3D true;
 > >
-> > What could change in theory is the layout of the individual
-> > capabilities (the data[] in struct pci_cap_saved_data).
-> > E.g. maybe we decide that we need to save an additional register.
-> > But that's also rare.  Normally we add all the mutable registers
-> > when a new capability is supported and have no need to amend that
-> > afterwards.
+> > Does this imply that devices not bound to an iommufd cannot be
+> > preserved?
 >
-> Yeah that has me worried. A totally innocuous commit that adds, removes,
-> or reorders a register stashed in data[] could lead a broken device when
-> VFIO does pci_restore_state() after a Live Update.
+> Event if being bound to an iommufd is required, it seems wrong to check
+> it in can_preserve(), as the device can just be unbound from the iommufd
+> before preserve().
 >
-> Turing pci_save_state into an actual ABI would require adding the
-> registers into the save state probably, rather than assuming their
-> order.
->
-> But... I wonder if we truly need to preserve the PCI save state
-> across Live Update.
->
-> Based on this comment in drivers/vfio/pci/vfio_pci_core.c, the PCI
-> save/restore stuff in VFIO is for cleaning up devices that do not
-> support resets:
+> I think can_preserve() just needs to check if this is a VFIO cdev file,
+> i.e. vfio_device_from_file() returns non-NULL.
 
-Err, no, I misread that comment. But I guess my question still stands
-whether we truly need to preserve the pci_save_state across Live
-Update. Maybe there is a simpler way for VFIO to clean up the device
-in vfio_pci_core_disable() if we make certain restrictions on which
-devices we support.
++1, can_preserve() must be fast, as it might be called on every single
+FD that is being preserved, to check if type is correct.
+So, simply check if "struct file" is cdev via ops check perhaps via
+and thats it. It should be a very simple operation
+
+>
+> >
+> > If so, I am confused about your cover letter step #15
+> > > 15. It makes usual bind iommufd and attach page table calls.
+> >
+> > Does it mean after restoration, we have to bind iommufd again?
+>
+> This is still being discussed. These are the two options currently:
+>
+>  - When userspace retrieves the iommufd from LUO after kexec, the kernel
+>    will internally restore all VFIO cdevs and bind them to the iommufd
+>    in a single step.
+>
+>  - Userspace will retrieve the iommufd and cdevs from LUO separately,
+>    and then bind each cdev to the iommufd like they were before kexec.
 
