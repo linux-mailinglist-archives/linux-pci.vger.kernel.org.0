@@ -1,75 +1,70 @@
-Return-Path: <linux-pci+bounces-39891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC29C23522
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 07:10:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3B64C23531
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 07:10:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21D3D4067F8
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 06:10:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E14440810A
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 06:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9094A223DDD;
-	Fri, 31 Oct 2025 06:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06C6D2EA732;
+	Fri, 31 Oct 2025 06:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KW7YycEh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDDA7osP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB7F2E6CB5
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 06:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ECC2E7F29;
+	Fri, 31 Oct 2025 06:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761891005; cv=none; b=WhUi33RZ7HaWLyzw/TR2jOpKfPNmDgo7qr+S3YHS+8aOPAXxIzSHy12PShwMaM+lplcnvDpc434KG6yNFFCR9kNif7G5PXNv1VzkOw9azcSPYU0xuzAVE9W8rLiIUnzpwUKvpdXUIpMj2FUkBnI4q19sr0N4em3AOhtPrgYe5S4=
+	t=1761891032; cv=none; b=SO+d4LCrJQonTyTcBMfFpObhiJ2n4hy6UcHDdxCG+SqTYZUzaOD/VB+c0wKEl4vVRPPlGxfr56UeraYUELJvszPwbG4IUx89V9jY19VK/rHQbA4v4vwbiWzsXhzfjiN+XQLvWH3Fe2LWxLBWKZ3qgNmaYOr+3MT1UuydDCoyXy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761891005; c=relaxed/simple;
-	bh=IO+VEIdaI5SHWJFXfCDiRjRPgQINLlvxUQi630aLSc8=;
+	s=arc-20240116; t=1761891032; c=relaxed/simple;
+	bh=mtI0bJgcONn/+JNea1wnkILdIZmOmfcP/gzxeMrjXJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCQ5C4a7upDKhGdn4QpiN+6wqszlIEEvcP5A3nsLo5DA0gv40ssJNby8vu2iUU7gZ4G9gQXUrrnN42ejn7ZaszpiF0Bj4D4xZur+hpCKur4Bu8EQVdzgsPhXnnujdNp66l8RWZ5QeCxw8TvuVTChb9popn1AH8FNl7IFR/VH7js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KW7YycEh; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761891003; x=1793427003;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IO+VEIdaI5SHWJFXfCDiRjRPgQINLlvxUQi630aLSc8=;
-  b=KW7YycEhpUYZ5lccG420MrYMZW3kBo13TXxSQoCJ/FCPYbjxfThZs+T7
-   upK7UkD2cOBlKHJ6jnOjBZodZpdeq7j2NQXO40dsZlH+PgIJMMVPLMREc
-   oPhLzzxlApWQDbLCgz394Lv9aNnsqL7OJkpMyc5HeOO9x+SY5NBTcc3hC
-   Ly30vTNPBtdNwuhCEEKW7Sbn4nZ7TpAPm2nW7XfaEGLdA9QTujfQifNJA
-   QbOjQrgx/rkPkwK0AeIzV54ym4fFKmuCa+T0fqqaMsGChdEJy2yVFddmV
-   bqlKNp1g0li8RPLzxrKc3mFhwRjnOTAw67e/2H+XNvbIcLxM9XcMv56+j
-   A==;
-X-CSE-ConnectionGUID: yjVwZAkCQSWGtj+ioy9nkA==
-X-CSE-MsgGUID: lSxpF59dRLCeVPtk6AX8kA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="63065476"
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="63065476"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 23:10:01 -0700
-X-CSE-ConnectionGUID: 0WFfirbXSVmMoj2TrHaNOQ==
-X-CSE-MsgGUID: UjxPHi2lQhq85/Kw2jKv1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="191297860"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa005.jf.intel.com with ESMTP; 30 Oct 2025 23:10:01 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 93A0195; Fri, 31 Oct 2025 07:09:59 +0100 (CET)
-Date: Fri, 31 Oct 2025 07:09:59 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v3] PCI/PTM: Do not enable PTM solely based on the
- capability existense
-Message-ID: <20251031060959.GY2912318@black.igk.intel.com>
-References: <20251030134606.3782352-1-mika.westerberg@linux.intel.com>
- <20251030205937.GA1648870@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=F53REGcIjse+lzScrGJaG41+qBZvJEGExd3Up0yrCxL//C0nyMlvlfqQFoRWJeElCSrmJR6oQm6SYHUrdSh2llISjDfKDnASfGeTovokMgd1xXYiA3TBovNe2OTlFzRp/1ZWraXfQW2aY1UBXuIRIm+BSGw07E6ZeruOrSfF4QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDDA7osP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6449CC4CEF1;
+	Fri, 31 Oct 2025 06:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761891032;
+	bh=mtI0bJgcONn/+JNea1wnkILdIZmOmfcP/gzxeMrjXJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rDDA7osPfNKJWxC6aUuvy+jowSUofyqimpL1QvPRJtDoh9joXUz9Z8pp/KYkh+boq
+	 TTVrkev+wIydtYDHxM68tfxTbDC0ODJHJPAxIdhsnYjMB8pTb3Ak0EjP+uD5U4DkiO
+	 jH19GobKrGOs6SyL56fIa0CDMZMsnivg+4JIRe+Pr6EudiD8BGkYp3q+ROhMzGr/KF
+	 sDNnYKqGRoVGXAbpSqe/jaBMfbuxrvMTDRE70DoBg9zVvGJKdqU1vG3PUJuRec39gb
+	 j/zSkPyOOih0ERHsQyiULHVo0xgh4JRnAzngtYMf5ZAVbqMx09OWcaCYBdkLjcQgpE
+	 iwi5wZpI9EtkA==
+Date: Fri, 31 Oct 2025 11:40:20 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Aurelien Jarno <aurelien@aurel32.net>
+Cc: Johannes Erdfelt <johannes@erdfelt.com>, 
+	Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, vkoul@kernel.org, 
+	kishon@kernel.org, dlan@gentoo.org, guodong@riscstar.com, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de, 
+	christian.bruel@foss.st.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, 
+	qiang.yu@oss.qualcomm.com, namcao@linutronix.de, thippeswamy.havalige@amd.com, 
+	inochiama@gmail.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-phy@lists.infradead.org, spacemit@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
+Message-ID: <ywr66wfkfay3xse77mb7ddbga5nced4yg7dapiybj3p2yp2an2@7zsaj5one5in>
+References: <20251013153526.2276556-1-elder@riscstar.com>
+ <aPEhvFD8TzVtqE2n@aurel32.net>
+ <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
+ <aQEElhSCRNqaPf8m@aurel32.net>
+ <20251028184250.GM15521@sventech.com>
+ <82848c80-15e0-4c0e-a3f6-821a7f4778a5@riscstar.com>
+ <20251028204832.GN15521@sventech.com>
+ <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
+ <aQOlMcI9jTdd7QNb@aurel32.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,155 +73,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251030205937.GA1648870@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aQOlMcI9jTdd7QNb@aurel32.net>
 
-On Thu, Oct 30, 2025 at 03:59:37PM -0500, Bjorn Helgaas wrote:
-> In subject, s/existense/existence/
+On Thu, Oct 30, 2025 at 06:49:37PM +0100, Aurelien Jarno wrote:
+> Hi Mani,
 > 
-> Actually, I'd try to include something more specific like "enable PTM
-> only if it advertises a role".
-
-Okay.
-
-> On Thu, Oct 30, 2025 at 02:46:05PM +0100, Mika Westerberg wrote:
-> > It is not advisable to enable PTM solely based on the fact that the
-> > capability exists. Instead there are separate bits in the capability
-> > register that need to be set for the feature to be enabled for a given
-> > component (this is suggestion from Intel PCIe folks, and also shown in
-> > PCIe r7.0 sec 6.21.1 figure 6-21):
-> 
-> Can we start with a minimal statement of what's wrong?  Is the problem
-> that 01:00.0 sent a PTM Request Message that 00:07.0 detected as an
-> ACS violation?
-
-The problem is that once the PCIe Switch is hotplugged we get tons of AER
-errors like below (here upstream port is 2b:00.0, in the previous example
-it was 01:00.0):
-
-[  156.337979] pci 0000:2b:00.0: PTM enabled, 4ns granularity
-[  156.350822] pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
-[  156.361417] pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver I
-D)
-[  156.372656] pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
-[  156.381041] pcieport 0000:00:07.1:    [21] ACSViol                (First)
-[  156.387842] pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
-[  156.396731] pcieport 0000:00:07.1: AER: broadcast error_detected message
-[  156.403498] pcieport 0000:00:07.1: AER: broadcast mmio_enabled message
-[  156.410060] pcieport 0000:00:07.1: AER: broadcast resume message
-[  156.416131] pcieport 0000:00:07.1: AER: device recovery successful
-[  156.422345] pcieport 0000:00:07.1: AER: Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
-
-Here 00:07.1 is the PCIe Root Port.
-
-> I guess we enabled PTM on 01:00.0 even though it doesn't advertise any
-> roles in the PTM Capability, and it sent a PTM Request Message anyway?
-
-Yes, I think so.
-
-> Weird to expose a PTM Capability and not advertise any roles, and also
-> weird to send PTM Messages when enabled in that case.
-> 
-> >   - PCIe Endpoint that has PTM capability must to declare requester
-> >     capable
-> >   - PCIe Switch Upstream Port that has PTM capability must declare
-> >     at least responder capable
-> >   - PCIe Root Port must declare root port capable.
+> On 2025-10-30 22:11, Manivannan Sadhasivam wrote:
+> > + Aurelien
 > > 
-> > Currently we see following:
+> > On Tue, Oct 28, 2025 at 01:48:32PM -0700, Johannes Erdfelt wrote:
+> > > On Tue, Oct 28, 2025, Alex Elder <elder@riscstar.com> wrote:
+> > > > On 10/28/25 1:42 PM, Johannes Erdfelt wrote:
+> > > > > I have been testing this patchset recently as well, but on an Orange Pi
+> > > > > RV2 board instead (and an extra RV2 specific patch to enable power to
+> > > > > the M.2 slot).
+> > > > > 
+> > > > > I ran into the same symptoms you had ("QID 0 timeout" after about 60
+> > > > > seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
+> > > > > seems to work fine with the "pcie_aspm=off" workaround as well.
+> > > > 
+> > > > I don't see this problem, and haven't tried to reproduce it yet.
+> > > > 
+> > > > Mani told me I needed to add these lines to ensure the "runtime
+> > > > PM hierarchy of PCIe chain" won't be "broken":
+> > > > 
+> > > > 	pm_runtime_set_active()
+> > > > 	pm_runtime_no_callbacks()
+> > > > 	devm_pm_runtime_enable()
+> > > > 
+> > > > Just out of curiosity, could you try with those lines added
+> > > > just before these assignments in k1_pcie_probe()?
+> > > > 
+> > > > 	k1->pci.dev = dev;
+> > > > 	k1->pci.ops = &k1_pcie_ops;
+> > > > 	dw_pcie_cap_set(&k1->pci, REQ_RES);
+> > > > 
+> > > > I doubt it will fix what you're seeing, but at the moment I'm
+> > > > working on something else.
+> > > 
+> > > Unfortunately there is no difference with the runtime PM hierarchy
+> > > additions.
+> > > 
 > > 
-> >   pci 0000:01:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
-> >   pci 0000:01:00.0: PCI bridge to [bus 00]
-> >   pci 0000:01:00.0:   bridge window [io  0x0000-0x0fff]
-> >   pci 0000:01:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> >   pci 0000:01:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> 
-> I don't think the windows are relevant.
-
-Okay.
-
-> >   pci 0000:01:00.0: PTM enabled, 4ns granularity
-> >   ...
-> >   pcieport 0000:00:07.0: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.0
-> >   pcieport 0000:00:07.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> >   pcieport 0000:00:07.0:   device [8086:e44e] error status/mask=00200000/00000000
-> >   pcieport 0000:00:07.0:    [21] ACSViol                (First)
-> 
-> Is there any Header Log info here?  I assume if there is, it would
-> show a PTM Message?
-
-I pasted it above. Does it tell anything useful to you?
-
-> > The 01:00.0 PCIe Upstream Port has this:
+> > These are not supposed to fix the issues you were facing. I discussed with Alex
+> > offline and figured out that L1 works fine on his BPI-F3 board with a NVMe SSD.
 > > 
-> >   Capabilities: [220 v1] Precision Time Measurement
-> > 		PTMCap: Requester- Responder- Root-
-> > 
-> > This happens because Linux sees the PTM capability and blindly enables
-> > PTM which then causes the AER error to trigger.
-> > 
-> > Fix this by enabling PTM only if the above described criteria is met.
-> > ...
+> > And I believe, Aurelien is also using that same board, but with different
+> > SSDs. But what is puzzling me is, L1 is breaking Aurelien's setup with 3 SSDs
+> > from different vendors. It apparently works fine on Alex's setup. So it somehow
+> > confirms that Root Port supports and behaves correctly with L1. But at the same
+> > time, I cannot just say without evidence that L1 is broken on all these SSDs
+> > that you and Aurelien tested with.
 > 
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -81,9 +81,24 @@ void pci_ptm_init(struct pci_dev *dev)
-> >  		dev->ptm_granularity = 0;
-> >  	}
-> >  
-> > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > -	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
-> > -		pci_enable_ptm(dev, NULL);
-> > +	switch (pci_pcie_type(dev)) {
-> > +	case PCI_EXP_TYPE_ROOT_PORT:
-> > +		/*
-> > +		 * Root Port must declare Root Capable if we want to
-> > +		 * enable PTM for it.
-> > +		 */
-> > +		if (dev->ptm_root)
-> > +			pci_enable_ptm(dev, NULL);
-> > +		break;
-> > +	case PCI_EXP_TYPE_UPSTREAM:
-> > +		/*
-> > +		 * Switch Upstream Ports must at least declare Responder
-> > +		 * Capable if we want to enable PTM for it.
-> > +		 */
-> > +		if (cap & PCI_PTM_CAP_RES)
-> > +			pci_enable_ptm(dev, NULL);
-> > +		break;
-> > +	}
-> >  }
-> >  
-> >  void pci_save_ptm_state(struct pci_dev *dev)
-> > @@ -144,6 +159,18 @@ static int __pci_enable_ptm(struct pci_dev *dev)
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT ||
-> > +	    pci_pcie_type(dev) == PCI_EXP_TYPE_LEG_END) {
-> > +		u32 cap;
-> > +		/*
-> > +		 * PCIe Endpoint must declare Requester Capable before we
-> > +		 * can enable PTM for it.
-> > +		 */
-> > +		pci_read_config_dword(dev, ptm + PCI_PTM_CAP, &cap);
-> > +		if (!(cap & PCI_PTM_CAP_REQ))
-> > +			return -EINVAL;
-> > +	}
+> It could be that we have different revision of the BPI-F3 board, it's 
+> not impossible that I got an early-ish version. That said I just 
+> visually checked the PCB against the schematics, and the devices on the 
+> CLKREQN line appear to be installed.
 > 
-> The asymmetry of testing PCI_PTM_CAP_ROOT back in pci_ptm_init() (via
-> dev->ptm_root) but testing PCI_PTM_CAP_REQ here feels a little
-> confusing to me.
-> 
-> Also, we already read PCI_PTM_CAP in pci_ptm_init(), and we did cache
-> ptm_root.  Maybe we should also cache ptm_responder and ptm_requester
-> and test all of them here in __pci_enable_ptm() and drop the tests in
-> pci_ptm_init()?
 
-Sure I can do it that way too.
+CLKREQ# is only needed for L1 PM Substates (L1.1 and L1.2). In other ASPM states
+(L0s and L1), REFCLK is supposed to be ON. So those don't need CLKREQ# assertion
+by the endpoint.
 
-> >  	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
-> >  
-> >  	ctrl |= PCI_PTM_CTRL_ENABLE;
-> > -- 
-> > 2.50.1
-> > 
+The L1 issue you are facing could be due to the board routing issue also. I'm
+just speculating here.
+
+> If someone has contacts to check what changes have been done between the 
+> different board revision, that could help. Or same if there are 
+> different revisions of the SpacemiT K1 chip.
+> 
+
+I hope Alex can get this information.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
