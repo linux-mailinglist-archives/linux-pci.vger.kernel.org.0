@@ -1,78 +1,103 @@
-Return-Path: <linux-pci+bounces-39921-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39922-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1449C24EDD
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:10:07 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80DD0C24F47
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 13:17:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17D6B1A67D82
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:09:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 08DDD4E2C48
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 12:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AE4C3491E7;
-	Fri, 31 Oct 2025 12:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B6D52C86D;
+	Fri, 31 Oct 2025 12:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="N6Zj/egf"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="beyXFhZ4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010044.outbound.protection.outlook.com [40.93.198.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39505348470;
-	Fri, 31 Oct 2025 12:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761912464; cv=none; b=rj2CpiMNfBzjBKamAZcArAn5RdKqFgAGO64j9afTtws7+JDXJI6cew/kA25cQWNuj9Zxt+rfCeZLZmqXo5Ev4JuRF/JufaRjyCQ31Mwbvwl+Qpqd89/RaF0mKlLdEdZ7yu+tbhj+PdjivQFgQWD9IgVwUUZeVPVC5S60Ogyq5SY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761912464; c=relaxed/simple;
-	bh=axhskxiBo2zPW17sTIBm+Goy9FupOra+dPrV5xh2Rh8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DA91096F;
+	Fri, 31 Oct 2025 12:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761912995; cv=fail; b=PzRviYzQYzeRctmtnNjd2/AsCX3UPoVvyEAm2tsqoDTTSMWV/bLqnU8BrB2MXiuhDWkRQ6oO13qkYOmmqQNiBY489UYP7Myl0zcVqD1NbgBrq68CSdPkjAYn6P5YuD4dVb9TKnDDzHiZFidmCcS2WQBmfj+xnt1/MJakT0cP1Hs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761912995; c=relaxed/simple;
+	bh=k4r8R02AXkRk5nkiEoOeZCFLcPIKR7MHjdQtQXor6H8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F+cthVGdoIR9xqKGxyag/lO6ibBneCSYW1NVgMaoOnkyIVUlQCi+BKm43IsryLGpARFmB7UZzYXbLnuFaJxRwotOiiwmMV0bQI2p/jG6ZdBjiIqlhCsmWli7NfoKLF3vwACwRxPyInn/qnbYdU1Y6BNeQNfccdLuXaFjJJoDWWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=N6Zj/egf; arc=none smtp.client-ip=119.8.177.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=9TolKU4YCUfsB69h9PmW4OYgivzsAp8onhB9iwqpHl4=;
-	b=N6Zj/egfxBgO1FKnSEx/io0wWg+UUnAHCKtrPJVhD/6OGp0sXP5jRPQkmReGL76/jRUaq/GZD
-	xDZdkYV817aO4vELHUBJKtikjIHGG6ThsXVno/85oMnEnMRk6Iwsl2G1KWTzYSTjO+zB+I/6Atb
-	EKwZ8rfTCG4sqVH96LpOU3I=
-Received: from frasgout.his.huawei.com (unknown [172.18.146.32])
-	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4cyfpt1qxFz1vnNV;
-	Fri, 31 Oct 2025 20:06:46 +0800 (CST)
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4cyfph13qYzHnGcf;
-	Fri, 31 Oct 2025 12:06:36 +0000 (UTC)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 875C01402E9;
-	Fri, 31 Oct 2025 20:07:32 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 31 Oct
- 2025 12:07:31 +0000
-Date: Fri, 31 Oct 2025 12:07:30 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <aik@amd.com>, <lukas@wunner.de>, Samuel Ortiz
-	<sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Steven Price
-	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
-	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH RESEND v2 06/12] coco: host: arm64: Add RMM device
- communication helpers
-Message-ID: <20251031120730.00003758@huawei.com>
-In-Reply-To: <yq5ams57cx9q.fsf@kernel.org>
-References: <20251027095602.1154418-1-aneesh.kumar@kernel.org>
-	<20251027095602.1154418-7-aneesh.kumar@kernel.org>
-	<20251029183306.0000485c@huawei.com>
-	<yq5apla4cqex.fsf@kernel.org>
-	<20251030181246.00006328@huawei.com>
-	<yq5ams57cx9q.fsf@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	 MIME-Version:Content-Type; b=P+URcQNz7IMRhgfr+7xWJaCJGVSQcoY8EjNu+o6FAC1TvTUFP9itsSYQd8yg6TADpopzPHxLG1P4z84LlvYiwXgnLyOe18ILHCc7emC+xRWa0ZSYD4Bb+AzxZ+zOIGLCFllMYY3UuYLr8CoP2FCd/UTKvRQQnF9Bqv97I5PRHiU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=beyXFhZ4; arc=fail smtp.client-ip=40.93.198.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vXI5nBx9R+3J7RsnAB4iOl4RDcO3LjHS1XEoJi/s5gv5ou+5faSWQPWvPZGVtN2RQBb2JLfREQkf34TL5bpgd9PNUlUzJopIu80bal45ByjRTaLg7PdXXuUb0mTPVpp64QDYzxXzNVQN7y7u4SIwFO28roQuTZAeRzi57bEAnK5wlxSymVblSShJ1dnFj2aWWS0vZiJpCu+NBOr29mDncyRgfHpkIptIt+23ZJMQpJQUhem65UDGG70+nW0oEuPF++n2fMlQRZfM6UrcjdglMYMX5gn4shOqQxmqOGQsvEvmTVTXHCQqKUm3yNoPyWqMjj+CpPlQGBzZRkKDq03n9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2OxdqA2nNMDE+ntnikEhadoNab19NbjstYHPT6Yq5u8=;
+ b=SXtEF2ikcWW/8g/BGCIhukeblK3/zdlWlsRPMJz8qWFBrqQYiogQigXCYAVjdTFr/tI0uKXyI6ZofCqFjrQuzLk9DcVevMmAa9qJ+D5m6b1Ksz/oeTK8TBYDXYpRSDUi3RjEieOfutDD8KDSpFpDQEe546LQTY/muyvLKpPCKpwvzq8NdjRh7XQEpR+4QCU5O+js3YAR11QNPGBK9xhLKJtABH8rAVckdXeVuOYruyhfsNiCCf8cCV9UlQgpqZrJUsozesRds07UooX6TuzwujpS2KtCqf6kaEt8MROEbBbVxthR2j4UDw7cvaIFIJ9zgla0/rcalOHwT0vvNTWlxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2OxdqA2nNMDE+ntnikEhadoNab19NbjstYHPT6Yq5u8=;
+ b=beyXFhZ4Csk7wB35G/j4a+PNNJU9x2CY7VAaPLsEsIX+cvTJSw6Ef+kD6NwFNydHkpeBFeCp7Qlu6XKdn0FXusY4ICryutPyArCCevRNmr6wkI8WGzw4Hh/L+nkncudKErLNXkMou6BX+/AiMZXFm60sPshuxAHZsXi+moROP/Q3AkW59iULL2zL/3suZ5s4BC8BMkquoLUVJ2EjfNDJR1oJnLph/QN+TUAR0QNovcGJng6XtjIPoTsXUAcQt2HQSQ6oIK4B6qmf0NwmUAN/bZn+QXAMDZTBC98Qydu6wWabEwyWOFTv5au9uaERgJvbmdWH0d8A9YikTmrWoZ3w1w==
+Received: from SJ0PR13CA0129.namprd13.prod.outlook.com (2603:10b6:a03:2c6::14)
+ by CY8PR12MB7362.namprd12.prod.outlook.com (2603:10b6:930:52::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.17; Fri, 31 Oct
+ 2025 12:16:31 +0000
+Received: from SJ5PEPF000001F5.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c6:cafe::e6) by SJ0PR13CA0129.outlook.office365.com
+ (2603:10b6:a03:2c6::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.6 via Frontend Transport; Fri,
+ 31 Oct 2025 12:16:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001F5.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9275.10 via Frontend Transport; Fri, 31 Oct 2025 12:16:30 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 31 Oct
+ 2025 05:16:21 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 31 Oct
+ 2025 05:16:21 -0700
+Received: from inno-thin-client (10.127.8.10) by mail.nvidia.com (10.129.68.8)
+ with Microsoft SMTP Server id 15.2.2562.20 via Frontend Transport; Fri, 31
+ Oct 2025 05:16:12 -0700
+Date: Fri, 31 Oct 2025 14:16:11 +0200
+From: Zhi Wang <zhiw@nvidia.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <rust-for-linux@vger.kernel.org>, <dakr@kernel.org>,
+	<bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
+	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+	<bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
+	<aliceryhl@google.com>, <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+	<ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+	<targupta@nvidia.com>, <zhiwang@kernel.org>, <acourbot@nvidia.com>,
+	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <markus.probst@posteo.de>
+Subject: Re: [PATCH v3 3/5] rust: pci: add a helper to query configuration
+ space size
+Message-ID: <20251031141611.669c5380.zhiw@nvidia.com>
+In-Reply-To: <20251030165115.GA1636169@bhelgaas>
+References: <20251030154842.450518-4-zhiw@nvidia.com>
+	<20251030165115.GA1636169@bhelgaas>
+Organization: NVIDIA
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,171 +106,89 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F5:EE_|CY8PR12MB7362:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd7fa809-bb84-4df3-c1ef-08de1877532f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?D+5CZUoYZP7vVhJnmWfTIwyRiexLtUEZigQGeM+n1mjdZmVrkeP6FmuHpcrq?=
+ =?us-ascii?Q?g5MDcxJR6JZMQERi/DeicRLYwouxm+15YzA1dzqATg47tPA1YSBQPlHeJ65E?=
+ =?us-ascii?Q?Zv1MneuWghNFSEgfeKAw01IGUg2rS86pweGnq35jHvcVDkYuQtFpPyiInxZe?=
+ =?us-ascii?Q?QgJh4Ecd7/Pmg0Aar0RTcWD4xcw0L/kZ9NmqSskYAmS/VHQlz+jb/VgR+KCI?=
+ =?us-ascii?Q?Cb/eJ0FquCPgeaOESPvFfaNWSPNw3EHiDjxNkRpg/OWjjWDjonqSUlL9Dvb+?=
+ =?us-ascii?Q?IDHbm6cHqCoEOQWXM+gUE5hXyJu6bJeKOtJ2i1MFsGWwUKSRfaAiMD0O2grz?=
+ =?us-ascii?Q?DDFt6GF2L8kSeCgP7NqvjTK6+K4I0G53qwUk2ERHDxgSomilahFc3VIS/P76?=
+ =?us-ascii?Q?iffUUSdMeWIdUekA7qIf+ZHGiqqDddiNeTKZZfRNMGySBTzTOPfSzm+Mvt0X?=
+ =?us-ascii?Q?AKOlcHux+j916ppDp+r6a5HzdZkzzTxpKiSeVK8ZvSLxIhOywqEm+869ldkI?=
+ =?us-ascii?Q?fB/bAU+ENdaIfKwk2e832t045AlpGG7VHTypcWjlmxzGPpP8mKbJLxJunWb7?=
+ =?us-ascii?Q?+xABkTFLg76i37xXzkEXaVnu9hnxn7/0w+MAZaT9i+9gpmWs4e7MiPqSZ0bt?=
+ =?us-ascii?Q?+AhxhN9ZwtVVTmapTvEBd7EYTkuYqOCsVr5zg/DHBk3UU5oWAm30IvyekIB/?=
+ =?us-ascii?Q?8DTz2X/5WdPOUzhtl6kkpbJ+LKxyZJpN4BmIOaIdu5SdPJ1yB8DWi1u4lsyE?=
+ =?us-ascii?Q?TBE5DDf5qSVNqQxK2rg1uyWVQaakXxsddZVK3WQpkp0c9LWtspZqeBfCiLNw?=
+ =?us-ascii?Q?MwwreXeAf4EMWb6n+j72BPzzph0frgip6XoJ9byonWiZskwmKEIFYFgQ60yW?=
+ =?us-ascii?Q?dcjJrgfD9hLZzqx38E37UtPASPW2V7+mZh2WRMO/aeO9v3Gq9yQ0EcKoDT+p?=
+ =?us-ascii?Q?wx7PS7N3wgFtBNykwx8s+CYkMA5Hnw/BAhu2Jg2udU7fJy4qhx7P0TRi7KEX?=
+ =?us-ascii?Q?y7J0mcGycPvPDIX282gULkUU3/sU9vU0t/bdD/TOkThtHaBwgAQqJow6b0fr?=
+ =?us-ascii?Q?mmZe6i2ox6P0/IBPJSJR4Ho9HjtiEKuUugeK8AD6IHh2Mk5/sEGxTX2DlqBe?=
+ =?us-ascii?Q?xgNStl0WpDHiEj2HSlQd/WG67yXXXcyJoZH1BOE7GK8YJDBeCTEZFd5Wm2U8?=
+ =?us-ascii?Q?e9LqZ9BocxkvkaoEJEXJjJzhKPNcs4melR2Kb5xLtTJSYKi+O2v5y0qkoaAQ?=
+ =?us-ascii?Q?xIBbfOo5aLEkCVhm7vTx3dFqAJY3jqCeKdSoGjIiq4ko9qMcXONXNM61XZtz?=
+ =?us-ascii?Q?2MIE1jXdj0M+W2VlB3dZVbwjJojfIg6p335HZGAcB5/71wQJCrFdtrAKEKsI?=
+ =?us-ascii?Q?zF8CoCdtHh6fItGWvBDSx4R9A+S56FgLZMd0+yAerwN07YKYsP+ord389DFf?=
+ =?us-ascii?Q?FJ7IkecbyVyg9FnX/+khM2Hhu5yafhdnlrq5X0cz6KTaLsfiLkguH76Xy2zA?=
+ =?us-ascii?Q?sZX7FU8q6yqfkBnz71VQlASbKOc5uVqu1zJZY1pRU3tZfCflJ+sKObFdSwd/?=
+ =?us-ascii?Q?KCwYoqC+OT+8gOIc8bc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2025 12:16:30.8733
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd7fa809-bb84-4df3-c1ef-08de1877532f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7362
 
-On Fri, 31 Oct 2025 13:34:33 +0530
-"Aneesh Kumar K.V" <aneesh.kumar@kernel.org> wrote:
+On Thu, 30 Oct 2025 11:51:15 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> Jonathan Cameron <jonathan.cameron@huawei.com> writes:
+> On Thu, Oct 30, 2025 at 03:48:40PM +0000, Zhi Wang wrote:
+> > Expose a safe Rust wrapper for the `cfg_size` field of `struct
+> > pci_dev`, allowing drivers to query the size of a device's
+> > configuration space.
+> > 
+> > This is useful for code that needs to know whether the device
+> > supports extended configuration space (e.g. 256 vs 4096 bytes) when
+> > accessing PCI configuration registers and apply runtime checks.
 > 
-> > On Thu, 30 Oct 2025 21:50:22 +0530
-> > "Aneesh Kumar K.V" <aneesh.kumar@kernel.org> wrote:
-> >  
-> >> Jonathan Cameron <jonathan.cameron@huawei.com> writes:
-> >>   
-> >> > On Mon, 27 Oct 2025 15:25:56 +0530
-> >> > "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
-> >> >    
-> >> 
-> >> ...
-> >>   
-> >> >> +static int __do_dev_communicate(enum dev_comm_type type,
-> >> >> +				struct pci_tsm *tsm, unsigned long error_state)
-> >> >> +{
-> >> >> +	int ret;
-> >> >> +	int state;
-> >> >> +	struct rmi_dev_comm_enter *io_enter;
-> >> >> +	struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
-> >> >> +
-> >> >> +	io_enter = &pf0_dsc->comm_data.io_params->enter;
-> >> >> +	io_enter->resp_len = 0;
-> >> >> +	io_enter->status = RMI_DEV_COMM_NONE;
-> >> >> +
-> >> >> +	ret = ___do_dev_communicate(type, tsm);    
-> >> >
-> >> > Think up a more meaningful name.  Counting _ doesn't make for readable code.
-> >> >    
-> >> 
-> >> I am not sure about this. What do you think?
-> >> 
-> >> modified   drivers/virt/coco/arm-cca-host/rmi-da.c
-> >> @@ -188,7 +188,7 @@ static inline gfp_t cache_obj_id_to_gfp_flags(u8 cache_obj_id)
-> >>  	return GFP_KERNEL_ACCOUNT;
-> >>  }
-> >>  
-> >> -static int ___do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm)
-> >> +static int __do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm)
-> >>  {
-> >>  	gfp_t cache_alloc_flags;
-> >>  	int ret, nbytes, cp_len;
-> >> @@ -319,7 +319,7 @@ static int ___do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> -static int __do_dev_communicate(enum dev_comm_type type,
-> >> +static int do_dev_communicate(enum dev_comm_type type,
-> >>  				struct pci_tsm *tsm, unsigned long error_state)
-> >>  {
-> >>  	int ret;
-> >> @@ -331,7 +331,7 @@ static int __do_dev_communicate(enum dev_comm_type type,
-> >>  	io_enter->resp_len = 0;
-> >>  	io_enter->status = RMI_DEV_COMM_NONE;
-> >>  
-> >> -	ret = ___do_dev_communicate(type, tsm);
-> >> +	ret = __do_dev_communicate(type, tsm);
-> >>  	if (ret) {
-> >>  		if (type == PDEV_COMMUNICATE)
-> >>  			rmi_pdev_abort(virt_to_phys(pf0_dsc->rmm_pdev));
-> >> @@ -355,14 +355,14 @@ static int __do_dev_communicate(enum dev_comm_type type,
-> >>  	return state;
-> >>  }
-> >>  
-> >> -static int do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm,
-> >> -			      unsigned long target_state,
-> >> -			      unsigned long error_state)
-> >> +static int move_dev_to_state(enum dev_comm_type type, struct pci_tsm *tsm,  
-> >
-> > Naming is always tricky.  Not sure why this name is appropriate given it's definitely
-> > still related to dev_communicate.
-> >
-> > Maybe just squash do_dev_communicate and __do_dev_coummnicate.
-> > Slightly long lines will be the result but not too bad.
-> > I haven't checked what it ends up as after the whole series though
-> > so maybe it doesn't work out.
-> >
-> > static int do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm,
-> > 			      unsigned long target_state,
-> > 			      unsigned long error_state)
-> > {
-> > 	
-> >
-> > 	do {
-> > 		int state, ret;
-> > 		struct rmi_dev_comm_enter *io_enter;
-> > 		struct cca_host_pf0_dsc *pf0_dsc = to_cca_pf0_dsc(tsm->dsm_dev);
-> >
-> > 		io_enter = &pf0_dsc->comm_data.io_params->enter;
-> > 		io_enter->resp_len = 0;
-> > 		io_enter->status = RMI_DEV_COMM_NONE;
-> >
-> > 		ret = ___do_dev_communicate(type, tsm);
-> > //renamed
-> >
-> > 		if (ret) {
-> > 			if (type == PDEV_COMMUNICATE)
-> > 				rmi_pdev_abort(virt_to_phys(pf0_dsc->rmm_pdev));
-> >
-> > 			state = error_state;
-> > 		} else {
-> > 			/*
-> > 			 * Some device communication error will transition the
-> > 			 * device to error state. Report that.
-> > 			 */
-> > 			if (type == PDEV_COMMUNICATE)
-> > 				ret = rmi_pdev_get_state(virt_to_phys(pf0_dsc->rmm_pdev),
-> > 							 (enum rmi_pdev_state *)&state);
-> > 			if (ret)
-> > 				state = error_state;
-> > 		}
-> > 	
-> > 		if (state == error_state) {
-> > 			pci_err(tsm->pdev, "device communication error\n");
-> > 			return state;
-> > 		}
-> > 		if (state == target_state)
-> > 			return state;
-> > 	} while (1);
-> > }
-> > Jonathan
-> >  
+> What is the value of knowing the config space size, as opposed to just
+> having config space accessors return PCIBIOS_BAD_REGISTER_NUMBER or
+> similar when trying to read past the implemented size?
 > 
-> I need the existing __do_dev_communicate for a followup patch where the
-> device communication won't loop till state transition.
 
-Ah. I'd missed that. Fair enough.
+Per my understading, the Io trait aims to provide a generic I/O
+validation that can be reused across different transports -
+MMIO, PCI, SPI, and others - with each backend implementing its own
+region boundaries while sharing the same pre-access validation logic.
 
+By design, the framework needs to know the valid address range
+before performing the actual access. Without exposing
+cfg_size(), we would have to add PCI configuration-specific
+handling inside the framework.
 
-> -static int __do_dev_communicate(enum dev_comm_type type,
-> +static int do_dev_communicate(enum dev_comm_type type,
->  				struct pci_tsm *tsm, unsigned long error_state)
->  {
->  	int ret;
-> @@ -331,7 +331,7 @@ static int __do_dev_communicate(enum dev_comm_type type,
->  	io_enter->resp_len = 0;
->  	io_enter->status = RMI_DEV_COMM_NONE;
->  
-> -	ret = ___do_dev_communicate(type, tsm);
-> +	ret = _do_dev_communicate(type, tsm);
->  	if (ret) {
->  		if (type == PDEV_COMMUNICATE)
->  			rmi_pdev_abort(virt_to_phys(pf0_dsc->rmm_pdev));
-> @@ -355,14 +355,14 @@ static int __do_dev_communicate(enum dev_comm_type type,
->  	return state;
->  }
->  
-> -static int do_dev_communicate(enum dev_comm_type type, struct pci_tsm *tsm,
-> +static int wait_for_dev_state(enum dev_comm_type type, struct pci_tsm *tsm,
-This name conveys what the wrapper adds to the inner call but neglects that inner bit.
+> Apart from pci-sysfs and vfio, I don't really see any drivers that use
+> pdev->cfg_size today.
 
-do_dev_communicate_and_wait_for_xxx or
-do_dev_communicate_synchronous()  // maybe - it's approximately a synchronous wrapper of async operation.
-Or something along those lines perhaps?
+It is for the framework so far. If we believe that driver doesn't need
+this in the near term, I can make it private in the next re-spin.
 
-
->  			      unsigned long target_state,
->  			      unsigned long error_state)
->  {
-
-
+Z.
 
