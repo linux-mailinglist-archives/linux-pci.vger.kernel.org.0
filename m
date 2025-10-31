@@ -1,182 +1,264 @@
-Return-Path: <linux-pci+bounces-39906-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39907-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 042CBC23FE0
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 10:05:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD10C24031
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 10:07:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9715C3ABF3A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 09:00:58 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C05FF34F0C6
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 09:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE5332E6AD;
-	Fri, 31 Oct 2025 09:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F90332E731;
+	Fri, 31 Oct 2025 09:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQiY8rpk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CAA32D7E6
-	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 09:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1032E6AE
+	for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 09:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761901244; cv=none; b=gUlQPxo9hAkSeQhoGKPP5pxmjhmrpErw9yW4Tk9RdQrUcYMlejs0fLoqg8QB1cafuS7uiGSt2iuucq6ctHEKjxOah+u55UIs3sY//bY4fB9QLggg43boNGKgNC1Yo+6ctzzU+1ymhIwLa+7NzI5A0gEvcjfypGKlNB3kNHHPH2w=
+	t=1761901628; cv=none; b=lYQ9KDcUkYSR7V5Sz/+iJ3VN/PdDh8UIIgitz+g2l9LM5ZFTMUEhLKMWlEug8TQCzCGu4i0yKaCbWK3CVxSSz0JQugY9CgmV1rXPeVEI1BqxnwOzZJuhxTntDShprr6Ev/D8FT+U5qC8lgkNwIYgB1LMmIro774aeUIRBmKOPek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761901244; c=relaxed/simple;
-	bh=NYbl8HJcgb3R5SVJ9GXGI/Jq2+mOIag8w0HzHBPHPoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M6o2UucWaKlgiJ5BI9u+HaIto6eBTY5z+YY5WSCYlmiOBSalkZiJsXXpTaVKy2/OgcqKriVnb/Rd9R2xjoxNnP3+qv2mnJTBzW78HV8RUeM3llhFbhIqgrq0dOZBgQi8KQriZLcPaVvkcarCA7goINutwiNT4ONoL23fHUAPhwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8801e4da400so18709246d6.3
-        for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 02:00:42 -0700 (PDT)
+	s=arc-20240116; t=1761901628; c=relaxed/simple;
+	bh=rQJ6m5izqAPGX/XkFvXmv2Y6nNiOodtTyPT9ISPslA4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=asE++d2v39H0fThlZ+jEPB3u7xmuFH+rFoAtN6mya9Z8E2YaTYbJHMLbhrBE+oW2qWCh512X1jaSyNz8k1ByFi3F+0uOaVB1FZ3Q52QOifUtumJZrKcu/jWrB0bXCNZ+YA6P/zM2kzJVD4zJiI9ntvLO1c03aagmfTXWsjYUyp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DQiY8rpk; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-b7043504650so332104066b.0
+        for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 02:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761901625; x=1762506425; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=29d2Teid1vY8nWEM/2hMCD7Hus+R2bdLREzpsdHxTuA=;
+        b=DQiY8rpkm4eZ9wBhwjojXGGYeoXR1WqMsoways3QfhHrzqoEVzOpE2FB7QGDWPY3Tp
+         ej/ct9i+6NMreNT3e1WnM2CQ8eMlRHfq6tXE0Fv7gPr950gu5I98clrkUsIlbmFqPxU1
+         Naibh7DukVK7aEmTM74JH28GgURJ+SGcv45ONNXr82qR0AEvG1sSIc8NNIrJmqpt5wcX
+         HKAvLjSvK4G74eCS88rC+3AesK5dvcLOsLyqwVCf1yWaz/YzmSvunbqDy8ZtMqvEkd8b
+         GwaKBiYq3BFrhl31pogaMjxm6FQkGLATtU/CKTsQcmb+SoqER+YK/kYzf7CNNG2XuJ0N
+         DL1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761901241; x=1762506041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lQVVX5c2GB+a2QgL3UYe6DKU+bmVaydohzEFkpxq/1c=;
-        b=LzsbSNTNhmm5Um4PPwpfFpGbN8fmrh+Zz3LZ8Pe01kxZnQp83aYdVY+4VlmqE4kXeN
-         fQ5iHepKP4ZOo2kxdOYtlOO/sdElXIhng/NO8iwvHRqyuy/BDfAmqvVLjCJ+vQ68BKan
-         A6xDh78M07nt8ZlrPzT24dK+MilRBBo1Hv8QzpbjJxFtfTfBDBBlNaJriWCnrHSvM4JT
-         hMDjUdJL+M1n0pzSxrRjau0q4Ik2WmAvnbeV9cD+v7sUlpiLPhuDIKtndp7bVzDy9bE9
-         FFw2G+fXmbbOjGQ2oJ9rLLwcHSNz4laut/nJVRzb2FmYrx2vOoFr4OBYOVXF5gGEx9gs
-         LqHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVW0sEDGtF6xllshyguX/dE1atYAduIQx0oAbWEQDog9RnLp5UDLEe/g1VQ4iD55jsmLFRInjp4wac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPrCADr5nXVUvWq2srcCdDZkQr29mrUUuRQOqcfRI1m22WiJJ4
-	lGISd/RvP+ZKNDmA8PbQBzCd8YXNUtvyzXwF54ldAfvHlomqWzTTjOdkfNVJylIO
-X-Gm-Gg: ASbGnctqK7BnP79B4pPJXXYl+rgy2fOVkVXe0aOtIWcB3AALBld49GwzjhbGHYGLTzL
-	gi+UEXA6UOIHwG5oAE9AD1SwP8l6fswLVfpPDk6ZuCnDQDjS6iuTppjjEBOScS5DEvmcOfMLBco
-	YXpoC9z2RynKd8S7Sg298gDg2pP8IpHJqaf4jjzv4PXb55TnuwUhZxmhDZ9dc1AORvOSx6iBbnU
-	BWEd7xPQ7z64qvSe5ewGjvX8/7uLpLAOW0/MLNrvKmxOUX++gSjBz0eORt/HXcqkJDYCW+cNrZh
-	1WC1Vz+Xl5Xgk+wAwMWiRh/RjhDuvGbL8dcd0i8RMxqyLWmMosG4yfi0TciJZ90+bCgBACs/vB8
-	iA81D77lMdu+JuT1IW7z8IqC1Cxy2mv+uqW2iWZlJWxw41LcAkb52nSAT+qRsfBJji24N8Y8FwA
-	Yy20Ush5sL6gQuH9WbH6HM0ma4XeHEj6FUI4ZM2g==
-X-Google-Smtp-Source: AGHT+IGmxg2joe/XoJEsFqk6v8MYcjGD+1xKcwbiFDMxnAvSsr7kMr34jrUMGa9e0utB19dSNMFr5A==
-X-Received: by 2002:a05:6214:4c43:b0:880:32f6:5f0 with SMTP id 6a1803df08f44-88032f607a6mr16951096d6.64.1761901241249;
-        Fri, 31 Oct 2025 02:00:41 -0700 (PDT)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com. [209.85.219.41])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880362d3c69sm8111326d6.29.2025.10.31.02.00.40
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 02:00:40 -0700 (PDT)
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-78f30dac856so23115216d6.2
-        for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 02:00:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVxrkTNES9197yg6SR8vdDaf7N9RUbTZp/Kd7ZCY4rc5st9GKeo86KYaMQBrP7Rx/bqUJP5whJxxgs=@vger.kernel.org
-X-Received: by 2002:a05:6102:c13:b0:5d5:f6ae:38c6 with SMTP id
- ada2fe7eead31-5dbb136ecc7mr717064137.37.1761900747573; Fri, 31 Oct 2025
- 01:52:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761901625; x=1762506425;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=29d2Teid1vY8nWEM/2hMCD7Hus+R2bdLREzpsdHxTuA=;
+        b=ayu3fwhTmZNF5QzYht/2n2WN4wLpI5ZjlvClW5IzC5K0pJyTtSW6gB+hnIcbzmofEl
+         V3/rHMyTLSr0fDDiPNep5KuXCZ5hMazWOkuvopQU/mec9+xLizI90McUg48ajv/MSVIO
+         pBrSP+dRG5/d2CNuWdA8ksmQAg9XWBUQDFf0TAlcLvff1JQG8UPVjwbsMcLAFDMRCSLD
+         A6nMnGifAB3qSIzXD32F0H/HpkFeej7R+9wbh+97Y1SQ0J4zZM9LCWZmgeL7JE0vwKaP
+         /S2x1+J9oZykCT+gtYuZA9ChvSKDGKbdOAEeqkvMGZKaQIgJMk7otF1daMoG6BOWYxVi
+         2WZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaC2aEu0IX/Va60srGFvaJsE3LYfcVi88hotzMU8TAzzHRwJViUfxGQAt2Y57vaBSfYshWVkghXSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNaAqLf/vQ+5xpJNoFG+gt0f8eeiWFx/CubZhmCUdUtvod848i
+	oRWXNke2lIuK/widLBUMZQJ0pqXKKeZZUIukeAZeh35Me1bbl1WbX9mwmwBXsnda8Yx9vQ4d/w+
+	HH+X2K3YO5OKxvzpqyA==
+X-Google-Smtp-Source: AGHT+IHQfde77LTsYs+H7ayeimd+wwm/8KMTrV3Sd6Adno8GuLpiuQxfMBuEYeebpFBJheF7ldHY2iKlk8Y3ghY=
+X-Received: from ejac23.prod.google.com ([2002:a17:906:3d7:b0:b6d:6aad:e8ff])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:a0c8:b0:b07:87f1:fc42 with SMTP id a640c23a62f3a-b706e54f35cmr331607566b.16.1761901624817;
+ Fri, 31 Oct 2025 02:07:04 -0700 (PDT)
+Date: Fri, 31 Oct 2025 09:07:04 +0000
+In-Reply-To: <20251030154842.450518-2-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-6-herve.codina@bootlin.com>
-In-Reply-To: <20251015071420.1173068-6-herve.codina@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Oct 2025 09:52:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bm5vGlc5XXZic8RvnXrZNNcCRnf0-7M9Km7uh4sqx0Aign1FjKoX2MZmow
-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20251030154842.450518-1-zhiw@nvidia.com> <20251030154842.450518-2-zhiw@nvidia.com>
+Message-ID: <aQR8OPVnU_fPJTCI@google.com>
+Subject: Re: [PATCH v3 1/5] rust: io: factor common I/O helpers into Io trait
+From: Alice Ryhl <aliceryhl@google.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, dakr@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, cjia@nvidia.com, 
+	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
+	kwankhede@nvidia.com, targupta@nvidia.com, zhiwang@kernel.org, 
+	acourbot@nvidia.com, joelagnelf@nvidia.com, jhubbard@nvidia.com, 
+	markus.probst@posteo.de, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-Hi Herv=C3=A9,
+On Thu, Oct 30, 2025 at 03:48:38PM +0000, Zhi Wang wrote:
+> The previous Io<SIZE> type combined both the generic I/O access helpers
+> and MMIO implementation details in a single struct.
+> 
+> To establish a cleaner layering between the I/O interface and its concrete
+> backends, paving the way for supporting additional I/O mechanisms in the
+> future, Io<SIZE> need to be factored.
+> 
+> Factor the common helpers into a new Io trait, and move the MMIO-specific
+> logic into a dedicated Mmio<SIZE> type implementing that trait. Rename the
+> IoRaw to MmioRaw and update the bus MMIO implementations to use MmioRaw.
+> 
+> No functional change intended.
+> 
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 
-On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote=
-:
-> A Simple Platform Bus is a transparent bus that doesn't need a specific
-> driver to perform operations at bus level.
->
-> Similar to simple-bus, a Simple Platform Bus allows to automatically
-> instantiate devices connected to this bus.
->
-> Those devices are instantiated only by the Simple Platform Bus probe
-> function itself.
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> +/// Represents a region of I/O space of a fixed size.
+> +///
+> +/// Provides common helpers for offset validation and address
+> +/// calculation on top of a base address and maximum size.
+> +///
+> +/// Types implementing this trait (e.g. MMIO BARs or PCI config
+> +/// regions) can share the same accessors.
+> +pub trait Io<const SIZE: usize> {
 
-Thanks for your patch!
+I would consider moving SIZE to an associated constant.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+	pub trait Io {
+	    const MIN_SIZE: usize;
+	
+	    ...
+	}
+
+If it's a generic parameter, then the same type can implement both Io<5>
+and Io<7> at the same time, but I don't think it makes sense for a
+single type to implement Io with different minimum sizes.
+
+>      /// Returns the base address of this mapping.
+> -    #[inline]
+> -    pub fn addr(&self) -> usize {
+> -        self.0.addr()
+> -    }
+> +    fn addr(&self) -> usize;
+>  
+>      /// Returns the maximum size of this mapping.
+> -    #[inline]
+> -    pub fn maxsize(&self) -> usize {
+> -        self.0.maxsize()
+> -    }
+> -
+> -    #[inline]
+> -    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
+> -        let type_size = core::mem::size_of::<U>();
+> -        if let Some(end) = offset.checked_add(type_size) {
+> -            end <= size && offset % type_size == 0
+> -        } else {
+> -            false
+> -        }
+> -    }
+> +    fn maxsize(&self) -> usize;
+>  
+> +    /// Returns the absolute I/O address for a given `offset`.
+> +    /// Performs runtime bounds checks using [`offset_valid`]
+>      #[inline]
+>      fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+> -        if !Self::offset_valid::<U>(offset, self.maxsize()) {
+> +        if !offset_valid::<U>(offset, self.maxsize()) {
+>              return Err(EINVAL);
+>          }
+>  
+> @@ -217,50 +215,197 @@ fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+>          self.addr().checked_add(offset).ok_or(EINVAL)
+>      }
+>  
+> +    /// Returns the absolute I/O address for a given `offset`,
+> +    /// performing compile-time bound checks.
+>      #[inline]
+>      fn io_addr_assert<U>(&self, offset: usize) -> usize {
+> -        build_assert!(Self::offset_valid::<U>(offset, SIZE));
+> +        build_assert!(offset_valid::<U>(offset, SIZE));
+>  
+>          self.addr() + offset
+>      }
+>  
+> -    define_read!(read8, try_read8, readb -> u8);
+> -    define_read!(read16, try_read16, readw -> u16);
+> -    define_read!(read32, try_read32, readl -> u32);
+> +    /// Infallible 8-bit read with compile-time bounds check.
+> +    fn read8(&self, _offset: usize) -> u8 {
+> +        !0
+> +    }
 > +
-> +title: Simple Platform Bus
+> +    /// Infallible 16-bit read with compile-time bounds check.
+> +    fn read16(&self, _offset: usize) -> u16 {
+> +        !0
+> +    }
 > +
-> +maintainers:
-> +  - Herve Codina <herve.codina@bootlin.com>
+> +    /// Infallible 32-bit read with compile-time bounds check.
+> +    fn read32(&self, _offset: usize) -> u32 {
+> +        !0
+> +    }
 > +
-> +description: |
-> +  A Simple Platform Bus is a transparent bus that doesn't need a specifi=
-c
-> +  driver to perform operations at bus level.
+> +    /// Infallible 64-bit read with compile-time bounds check (64-bit only).
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn read64(&self, _offset: usize) -> u64 {
+> +        !0
+> +    }
 > +
-> +  Similar to simple-bus, a Simple Platform Bus allows to automatically
-> +  instantiate devices connected to this bus. Those devices are instantia=
-ted
-> +  only by the Simple Platform Bus probe function itself.
+> +    /// Fallible 8-bit read with runtime bounds check.
+> +    fn try_read8(&self, _offset: usize) -> Result<u8> {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Fallible 16-bit read with runtime bounds check.
+> +    fn try_read16(&self, _offset: usize) -> Result<u16> {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Fallible 32-bit read with runtime bounds check.
+> +    fn try_read32(&self, _offset: usize) -> Result<u32> {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Fallible 64-bit read with runtime bounds check (64-bit only).
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn try_read64(&self, _offset: usize) -> Result<u64> {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Infallible 8-bit write with compile-time bounds check.
+> +    fn write8(&self, _value: u8, _offset: usize) {
+> +        ()
+> +    }
+> +
+> +    /// Infallible 16-bit write with compile-time bounds check.
+> +    fn write16(&self, _value: u16, _offset: usize) {
+> +        ()
+> +    }
+> +
+> +    /// Infallible 32-bit write with compile-time bounds check.
+> +    fn write32(&self, _value: u32, _offset: usize) {
+> +        ()
+> +    }
+> +
+> +    /// Infallible 64-bit write with compile-time bounds check (64-bit only).
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn write64(&self, _value: u64, _offset: usize) {
+> +        ()
+> +    }
+> +
+> +    /// Fallible 8-bit write with runtime bounds check.
+> +    fn try_write8(&self, value: u8, offset: usize) -> Result;
+> +
+> +    /// Fallible 16-bit write with runtime bounds check.
+> +    fn try_write16(&self, value: u16, offset: usize) -> Result;
+> +
+> +    /// Fallible 32-bit write with runtime bounds check.
+> +    fn try_write32(&self, value: u32, offset: usize) -> Result;
+> +
+> +    /// Fallible 64-bit write with runtime bounds check (64-bit only).
+> +    #[cfg(CONFIG_64BIT)]
+> +    fn try_write64(&self, _value: u64, _offset: usize) -> Result {
+> +        Err(ENOTSUPP)
+> +    }
 
-So what are the differences with simple-bus? That its children are
-instantiated "only by the Simple Platform Bus probe function itself"?
-If that is the case, in which other places are simple-bus children
-instantiated?
+Why are there default implementations for all of these trait methods? I
+would suggest not providing any default implementations at all.
 
-Do we need properties related to power-management (clocks, power-domains),
-or will we need a "simple-pm-platform-bus" later? ;-)
-
-FTR, I still think we wouldn't have needed the distinction between
-"simple-bus" and "simple-pm-bus"...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Alice
 
