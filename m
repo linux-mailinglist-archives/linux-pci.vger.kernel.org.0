@@ -1,97 +1,98 @@
-Return-Path: <linux-pci+bounces-39899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE329C23C81
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F922C23C7E
 	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 09:27:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EFBFC4F50D6
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 08:20:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6447E189555F
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Oct 2025 08:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAE42C029A;
-	Fri, 31 Oct 2025 08:20:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9437F2DF710;
+	Fri, 31 Oct 2025 08:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjAfxm6t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3zR/XC7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF95222AE45;
-	Fri, 31 Oct 2025 08:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5C52E6105;
+	Fri, 31 Oct 2025 08:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761898849; cv=none; b=ABOWwj9+sCxlvnNicYcv9CB9MHpIn3WcG8aW2Dj1qUG5il+02Ksu78oo7IWxYM+3pDfBITO8SIxWAmCJhQlyGFJXOTEyWaXhdJHsmRAkig8NBL52GiL7OPioLwpKoIAfDstDXz4ZWIqtTpBAli3z1NI7CyetWdrTkXDUw5pKDyY=
+	t=1761899217; cv=none; b=miOy5DNyK7aK/qyTQTUZYXIzLStT0judovkKusy0DTFbEe/IHBCR4SCJLF8Y8ecsv22wfcQGlyDF9xd7jvk2e+M1HXbYrJujPlrCWse1OnkbXE7sas/1aO8mVyXwULR0ziDOWjy6cx3CSum+JPPhb9y7V1Ocl8P2s7VZQPaRDRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761898849; c=relaxed/simple;
-	bh=JxffaojoaNLBd6ekBMI0wGMUU29k4ICcZxn3vQPCuKo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hLjmFDm2qFEXlwdFA+ut2aitY99VbwFB+x1knQlpikZz8XLapHtOjwC+pJ75RwaVqkBsqMLc0esn59u03CZVtf1JXbmCFfemlCcM+AcNhnfkI+pLF9D24/ESzd5x12REv0p/gBUwH8C8L5tK2Cl44r2r7MG1j0d3viVrf8ofl/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjAfxm6t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A21C4CEE7;
-	Fri, 31 Oct 2025 08:20:41 +0000 (UTC)
+	s=arc-20240116; t=1761899217; c=relaxed/simple;
+	bh=7FtxklPeT6kKf2wTFmqdmmGJFJ7GxQ6bHxoFQMYY/V4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ueVUtmJwlM11LvVgmhSMuAt4paGrlO7+lLtxew/jz8+dsgjza6+9B2xw4rzbGvuvIOKRT1OHpjuimxy/KzV+Jh2F4CgnWsnXdJORbrond/t3Iqati5g8TMCCORZUKJ2FBvyGswnuN8gGrffoYLXfr7+L4Mudu9gEq/N/z5kl0Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3zR/XC7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D0FC4CEE7;
+	Fri, 31 Oct 2025 08:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761898848;
-	bh=JxffaojoaNLBd6ekBMI0wGMUU29k4ICcZxn3vQPCuKo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=PjAfxm6teG9V4VjvlmxAHvsIsuw2dbgm9scYX0IerS8+rEKmlmAi1Qwt3b1LeI/DQ
-	 ol+GkuvfmSLLZVbKwqONXxDy2b39rDww0dCiCA6lGFzhJXKPepSdCrxy0bpnPCvU7r
-	 QVMwG9jT6jPdx+AGx9UlMaFEARI2gMEifjObDpi4Gcj5Blc4XD7aADbLU0aYXH8H6c
-	 8RzgfRKJ9mPWwLYOvQY/u696zjA6Rhv3croHEP/BN6J9/zp6TNOxjN4Motye6UVAzq
-	 IhLWlQ6Hc+UOv+N7P7OCm3FZZNuj6XejG9ELZ6QkS78eTc86Ar+iXAvKIIhhZYYt7U
-	 Jqu7aQKVAjrjA==
+	s=k20201202; t=1761899216;
+	bh=7FtxklPeT6kKf2wTFmqdmmGJFJ7GxQ6bHxoFQMYY/V4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f3zR/XC7p6Zomw1FOVOBxx9Hg3K/K3GJWlmPCCuxACNGowc+e/9Lnz3fDyl1oam56
+	 HN6xulnnJf4h19cSOG0ColJf3c/MoRjB91E03+KslAEijYiNWoO0jNmmBotvaMzzfE
+	 CaVyetElwwXlVUospfMZWUmXYPpk46l4h/Doc1CNXHm+ZXdt1rSKJ9loGBPwNfog3J
+	 UDQxJ8XqbftMrM5RT67moTYhKVxDL2tzKX15TfAIBlEdscNmNc9iyb+B3+/I/bU9tF
+	 aBXiJxaLh7pt4mt993I2WiNqJaud8c2vrGlJL5fXWZXbOgoGlJb8sM3c+T45jdoqeO
+	 FRQ8TsN2su5aw==
+Date: Fri, 31 Oct 2025 13:56:43 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Bjorn Andersson <andersson@kernel.org>, 
- Qiang Yu <qiang.yu@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, 
- Wenbin Yao <wenbin.yao@oss.qualcomm.com>, 
- Qiang Yu <quic_qianyu@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20251017-glymur_pcie-v5-0-82d0c4bd402b@oss.qualcomm.com>
-References: <20251017-glymur_pcie-v5-0-82d0c4bd402b@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v5 0/6] PCI: qcom: Add support for Glymur PCIe
- Gen5 x4 and Gen4 x2
-Message-Id: <176189884156.5303.14323602106505981794.b4-ty@kernel.org>
-Date: Fri, 31 Oct 2025 13:50:41 +0530
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, "open list:PCIE DRIVER FOR ROCKCHIP" <linux-pci@vger.kernel.org>, 
+	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-rockchip@lists.infradead.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: rockchip: Propagate dev_err_probe return value
+Message-ID: <kgnhru4vpkt6vgsmphrvxhpeuvl73tlt35vmi5ubgmnxyvdk5k@6tpvzojpaflz>
+References: <20251018061127.7352-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251018061127.7352-1-linux.amoon@gmail.com>
 
-
-On Fri, 17 Oct 2025 18:33:37 -0700, Qiang Yu wrote:
-> Glymur is the next generation compute SoC of Qualcomm. This patch series
-> aims to add support for the fourth, fifth and sixth PCIe instance on it.
-> The fifth PCIe instance on Glymur has a Gen5 4-lane PHY and fourth, fifth
-> and sixth PCIe instance have a Gen5 2-lane PHY.
+On Sat, Oct 18, 2025 at 11:41:26AM +0530, Anand Moon wrote:
+> Ensure that the return value from dev_err_probe() is consistently assigned
+> back to return in all error paths within rockchip_pcie_init_port()
+> function. This ensures the original error code are propagation for
+> debugging.
 > 
-> The device tree changes and whatever driver patches that are not part of
-> this patch series will be posted separately after official announcement of
-> the SOC.
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [...]
+> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> index 0f88da3788054..124ab7b9f3404 100644
+> --- a/drivers/pci/controller/pcie-rockchip.c
+> +++ b/drivers/pci/controller/pcie-rockchip.c
+> @@ -134,7 +134,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+>  	err = reset_control_bulk_assert(ROCKCHIP_NUM_CORE_RSTS,
+>  					rockchip->core_rsts);
+>  	if (err) {
+> -		dev_err_probe(dev, err, "Couldn't assert Core resets\n");
+> +		err = dev_err_probe(dev, err, "Couldn't assert Core resets\n");
 
-Applied, thanks!
+This change is pointless. Is the 'err' value going to change with the
+reassignment? NO. Then what this change is about?
 
-[3/6] dt-bindings: PCI: qcom: Document the Glymur PCIe Controller
-      commit: f0b5af98e1b5761095d5186d3a7af5a0991a5cd9
+Please do not send cleanup patches that does nothing useful.
 
-Best regards,
+- Mani
+
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
-
+மணிவண்ணன் சதாசிவம்
 
