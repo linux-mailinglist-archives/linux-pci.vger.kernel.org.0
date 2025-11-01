@@ -1,56 +1,47 @@
-Return-Path: <linux-pci+bounces-40035-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40037-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BD63C28245
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:16:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 094E6C28258
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 58E194EC9CC
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:14:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 417F7402A23
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:16:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A45E2C0F66;
-	Sat,  1 Nov 2025 16:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6073E1C860B;
+	Sat,  1 Nov 2025 16:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gbgYe8A8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ozt+HsMT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D738D24DCE6;
-	Sat,  1 Nov 2025 16:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E814634D396;
+	Sat,  1 Nov 2025 16:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762013680; cv=none; b=ff6zEGRIcaSEPKEnOGycs4IyBYjpJZX9cVfnDC3xYNTMsTVfaCubWrRA8trAEaZ58Fg+dCBT5342Qo13BufBT+n4Ajvq7b84rE9+ukrv83qWagblVEdDH7acVhoDEqS9TweGbBSI8d2Gw8zMb+ec2nuhJWxKMk/9rIOvXM84WTk=
+	t=1762013786; cv=none; b=bLM2L4nH69gM4yck4BXeRHQiVLMMQhwkqy6ASBXmtOiPCtubHrV0RLs1jXpvoVCnkKwf/+xahXHRqhcKxFPsme1wqQ2fryuydmRuF2tTDy+ez52TQIctkt7W+fqSSwTw/26iAuwAUfnsO4CcE5NcnE0BVtVc2BN5msHdw+b7jHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762013680; c=relaxed/simple;
-	bh=3Psem+Ishk9PvrrqsHVjpICl3mn/S2dLyq4I1Tu/qf4=;
+	s=arc-20240116; t=1762013786; c=relaxed/simple;
+	bh=K2JYXfQ0hVDX8OIELLq6/FdS5/KG83sW03rGHpTMU/o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=azQRx/dVSmDOmGXLnCoHcXR/s8DGmXEGF7DrA+SvgP9rgfG9BIK3ZuAhRp4+86yJ5f68+MmenfBmKsP1c8EHAqzuqD+IYTHAMHySqB5Ro6RJQSCwT6YHzD9i8psyrG/7eO7542UrTi7Dq/r+0wi/EcCKLziWWVKvfvdDtT+TCCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gbgYe8A8; arc=none smtp.client-ip=80.12.242.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id FEEGvCCejmO02FEEGvdAs1; Sat, 01 Nov 2025 17:13:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1762013606;
-	bh=YSrTYnslOhTn5JbALa4w7U69LIYmYpZEDX3oWdycpgw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=gbgYe8A8KuqOFQtTNTj6Tqf5xEWg1oKBfPbx8zE4SiNYQ4AQyOry8RRPxKz0YJmUz
-	 XT3+g/ANUZ/Hp4oh8sHl0yREZ9jNOh4yfZZH1Wjc1TB2XWv7V8iuDGu/vtSpBzsMNX
-	 ELdOHMhJQuM0nccN9NRQBVsbhAHMa2gMUotfNPd/6gSzCSo/EGRIJuoOtSU9vgppIc
-	 gm5bkolz2nbySa9GTKcJUHAXbhUrIhdVBwNTPTaAVc4Hl4ar1LfR5iENTJ9q8A/LDK
-	 n06Cc5gY2o2Y5IBnHYcn8QTiISG+x1DTxZPB1naMF1wbXwqUP/opLnV9oKtLkRzw2F
-	 qXtTSUfUTEBkg==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 01 Nov 2025 17:13:26 +0100
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <c1afb7fa-c45f-44e3-81e1-200da04c29ef@wanadoo.fr>
-Date: Sat, 1 Nov 2025 17:13:23 +0100
+	 In-Reply-To:Content-Type; b=V4OsG/3ZqiJXEM6l+gXiZ8SPgyuwouYODeLPLT7j8rE2WPUfhowStu8w22KDK00tW+cnqE0NjfTOLg0cSGfEKPlchhvpqa0JhtnOuE+vIumRbIdD/8iCuXlrhBCHzzTU/IIsS2lQ5IMooavZR8UwTWp6hBA2Pzy8Dd1xG27p3Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ozt+HsMT; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=dguzoqFh9vYupZqCUF84hwScckDIUOLpGnPK71FG71w=;
+	b=Ozt+HsMT43uGLkU4z9xdYV2n7kn1ibNZYJ+g4YfqcwyCCwQmZ32uPVgZ/gyl2b
+	nJYuOuk5FhL+mskcZv5S1stWs6qnMLBsPf0d/5DQ7Lw3n65BicsKdx2M3fR9FDSb
+	/daTnrnXT5OnRsgRBA2LrKnjnC+10/+1HThm76lhJzIcI=
+Received: from [IPV6:240e:b8f:927e:1000:3c54:eb11:a795:c9c9] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3VyZGMgZpRqjcAw--.51288S2;
+	Sun, 02 Nov 2025 00:16:07 +0800 (CST)
+Message-ID: <eb45e253-0aec-4fca-9bfe-31d23fe8bd1d@163.com>
+Date: Sun, 2 Nov 2025 00:16:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,66 +51,93 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 3/4] PCI: pciehp: Add macros for hotplug operation
  delays
-To: Hans Zhang <18255117159@163.com>, bhelgaas@google.com,
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, bhelgaas@google.com,
  helgaas@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20251101160538.10055-1-18255117159@163.com>
  <20251101160538.10055-4-18255117159@163.com>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Content-Language: en-US, fr-FR
-In-Reply-To: <20251101160538.10055-4-18255117159@163.com>
+ <c1afb7fa-c45f-44e3-81e1-200da04c29ef@wanadoo.fr>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <c1afb7fa-c45f-44e3-81e1-200da04c29ef@wanadoo.fr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3VyZGMgZpRqjcAw--.51288S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw48AF15AF1rGr47Aw4Utwb_yoW8AF1xp3
+	95AFWYyF1rJr45CayrZan8Jrn8A3ZxCrZFkrW8GryfCFyxA3s8A3WfKa4YqF1fAryUur1U
+	XFy5JFy5XFs8tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uk3k_UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhj4o2kGKs2TPQAAsf
 
-Le 01/11/2025 à 17:05, Hans Zhang a écrit :
-> Add WAIT_PDS_TIMEOUT_MS and POLL_CMD_TIMEOUT_MS macros for hotplug
-> operation delays to improve code readability.
+
+
+On 2025/11/2 00:13, Christophe JAILLET wrote:
+> Le 01/11/2025 à 17:05, Hans Zhang a écrit :
+>> Add WAIT_PDS_TIMEOUT_MS and POLL_CMD_TIMEOUT_MS macros for hotplug
+>> operation delays to improve code readability.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/hotplug/pciehp_hpc.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/ 
+>> pciehp_hpc.c
+>> index bcc51b26d03d..15b09c6a8d6b 100644
+>> --- a/drivers/pci/hotplug/pciehp_hpc.c
+>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>> @@ -28,6 +28,9 @@
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>> +#define WAIT_PDS_TIMEOUT_MS    10
+>> +#define POLL_CMD_TIMEOUT_MS    10
+>> +
+>>   static const struct dmi_system_id 
+>> inband_presence_disabled_dmi_table[] = {
+>>       /*
+>>        * Match all Dell systems, as some Dell systems have inband
+>> @@ -103,7 +106,7 @@ static int pcie_poll_cmd(struct controller *ctrl, 
+>> int timeout)
+>>               smp_mb();
+>>               return 1;
+>>           }
+>> -        msleep(10);
+>> +        msleep(POLL_CMD_TIMEOUT_MS);
+>>           timeout -= 10;
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->   drivers/pci/hotplug/pciehp_hpc.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+> Should we have: timeout -= POLL_CMD_TIMEOUT_MS;
 > 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index bcc51b26d03d..15b09c6a8d6b 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -28,6 +28,9 @@
->   #include "../pci.h"
->   #include "pciehp.h"
->   
-> +#define WAIT_PDS_TIMEOUT_MS	10
-> +#define POLL_CMD_TIMEOUT_MS	10
-> +
->   static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
->   	/*
->   	 * Match all Dell systems, as some Dell systems have inband
-> @@ -103,7 +106,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
->   			smp_mb();
->   			return 1;
->   		}
-> -		msleep(10);
-> +		msleep(POLL_CMD_TIMEOUT_MS);
->   		timeout -= 10;
+> ?
 
-Should we have: timeout -= POLL_CMD_TIMEOUT_MS;
+Hi Christophe,
 
-?
+Thank you very much for your reply and reminder.
 
->   	} while (timeout >= 0);
->   	return 0;	/* timeout */
-> @@ -283,7 +286,7 @@ static void pcie_wait_for_presence(struct pci_dev *pdev)
->   		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
->   		if (slot_status & PCI_EXP_SLTSTA_PDS)
->   			return;
-> -		msleep(10);
-> +		msleep(WAIT_PDS_TIMEOUT_MS);
+If Bjorn finds it meaningful, I will fix it in the next version.
 
-Same with WAIT_PDS_TIMEOUT_MS.
 
-CJ
+> 
+>>       } while (timeout >= 0);
+>>       return 0;    /* timeout */
+>> @@ -283,7 +286,7 @@ static void pcie_wait_for_presence(struct pci_dev 
+>> *pdev)
+>>           pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+>>           if (slot_status & PCI_EXP_SLTSTA_PDS)
+>>               return;
+>> -        msleep(10);
+>> +        msleep(WAIT_PDS_TIMEOUT_MS);
+> 
+> Same with WAIT_PDS_TIMEOUT_MS.
+> 
 
->   		timeout -= 10;
->   	} while (timeout > 0);
->   }
+Will change.
+
+Best regards,
+Hans
+
+> CJ
+> 
+>>           timeout -= 10;
+>>       } while (timeout > 0);
+>>   }
 
 
