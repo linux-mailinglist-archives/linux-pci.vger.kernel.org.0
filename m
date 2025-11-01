@@ -1,273 +1,310 @@
-Return-Path: <linux-pci+bounces-40007-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 049BAC27972
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 09:10:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E75BBC27A57
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 09:55:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CCD1B4E029A
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 08:10:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1EA1189B69F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 08:56:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED09213E9F;
-	Sat,  1 Nov 2025 08:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F852BE037;
+	Sat,  1 Nov 2025 08:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBxXoixk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsqU5KkN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE585258EEF
-	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 08:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08652BDC1B
+	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 08:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761984600; cv=none; b=NsUKH6tQ5N1iErqkT8lC9z/XgGiV8DFYjG/4Lvscb9o11uOMMosnBAqcLj2u/t1rVvFR3Da9vsRix3kYfLDA4lMCqhdUJmMEFR/EKFTWZZKL5hxbxCpjpFnq8D8v3/CUvnyTx5z2kRbTFVIzpA0WM60N8gqz8wHv+qGRlNcUye4=
+	t=1761987258; cv=none; b=ZxHD74Ha1c3+eXiuwTYaKFBIwxggu0yDXE5pp28hgxlMVB+g0wLjbfkLgTQ1CXq3RXmFTFkwGY2Yd3KYjVh0jI+VfJziZP0nj7uzs4tMXioG7VSx+v2kaKiSAmPQCTbvumZcbqsnH5oSfhLpGNaYiNGKp3FRVNX+tIRnX16eSto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761984600; c=relaxed/simple;
-	bh=bCsEm0pxWIq601ilo0zSNS/tbcHGgSqWB+cUQTCIWjs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HscVrJKS7pCRFbz7P5oRMMvC06gP4omsV0jTT9bycH/H+m0iaM3fpCOy0qE2r+3HZsfK+j45VAl4iZ7b9SouVxQOAxYBnz4Bs/XJmBiY0j8H+fVLR2kUV5tzhJ+jvY2kE+AqarEAv6Zf3dJ5KYpUEiptFxP0996fJrJg4UjrNWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBxXoixk; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-63c489f1e6cso5484715a12.1
-        for <linux-pci@vger.kernel.org>; Sat, 01 Nov 2025 01:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761984597; x=1762589397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e0mQAWV3XfpMeJi9ai8J8FQrA7XgmRdoJSKbFj4v+kE=;
-        b=OBxXoixkGnkpJZIfHE0jLbJmO0KFJyiq143+bRsBwGjgK+u3tOheNlgfTZqjm2C1MT
-         XAUZ9JI/F0ACLP6AZnmwCt+ocGQyBueneTJiMNJ0VFwXkSBtra0R13rYAAtFAVmlfc0Q
-         n0oBhByADRy2QHN6Y46TnGOek/G/f0o/qg1DUtZduJZVbLEdM1fXZMY8RvTXkVX63nMZ
-         CArmN1nNuMgNaq0wseLzxJRYh6s8cGSg8L5R8NJOnliJG3VaAu4HyhX0IzTfl6uVKLte
-         ls50xibceS94V3gbwIZrPX2h2q5/QNqRJWg8TJSBlB7NY2uylbBozdk8xgWpSrY10k5v
-         Ye+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761984597; x=1762589397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e0mQAWV3XfpMeJi9ai8J8FQrA7XgmRdoJSKbFj4v+kE=;
-        b=MSNNYOnGtviaTBoXAfhVRETiXUYSd4PvrVUjnvJSUbgEs+jARUHi8IT2MFglcsElsS
-         EZkF5r6De95ktu2BYI47CmyAieoGtFi+4AntXGpj9mr9bCFB3+zZt/bdnzGhHc7jay9g
-         eTs4SWPX8Hq4hDeg11ePqNhrleHlqCBGpiOUPGJog1mM6JsT2Os20ybVH/Zfebm7vxU9
-         I/ewYrgKb//tgeBIBGXS4nPA1z0LZCnEQd6e5nsFFAR1uk5UyWilNFkOvYRfmtr5FWX7
-         HQV2aFrvQ1P5RJdgq1PPpLa02XwWmV9ipK51BZ7+nkRgllB4IcmJkMjBudWsIYSWVICM
-         iACA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTCXrgjW1m+75sV3+xbvxIznGa65od3/FSCP8GTcxQPANVQBilZlGzU6/s1TC2pfHQrkJpPR6oLxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwREPhb8E8Q1S2PTcCxiXy7YrtLPu9BULqRq6n+8qSPwu8vNf/X
-	0dXwJAHHk7U0rqmHJU+7/4NxgNNdOt/H22Kxlth2k9YZIG/6T6i3RLf9dGjherNQaHMecKbi9rO
-	N/7UZdRj0UNK/kJubZqqwpem1gNSJWz8=
-X-Gm-Gg: ASbGnctmNqqh2PQx4sRj6UwZ7cJ9wAPG7ihlfaegi4JxAwxrJu7dgbMDe3aRdNTD4Zv
-	vS7t9L6WWy/uEKL5llLwnqWmFM3SoaHvMeNrFyR71I430hBUNHKzROP2epcSyRBEZ1HMLfhyE5o
-	ttkbNeCNivoZF4OPMmVb8lhPQ4hDPLzGOeGD6p8sVKxVTXSrKntGQvqy1pDEdl9Eae4ycadvHwm
-	wWPm8O0N7bDgkLNBKj56D7RWgwpyzGPqub8gwZqg9MuFNxNv4GSN0kF21c=
-X-Google-Smtp-Source: AGHT+IEStKAQTy8wZtpmhPqSnnW8TO7bXnzRVtqDvw1DcTKtsF9EE994q0FWQ6fL+UQYmZUp56Mhe4DohrV4ECJKEvI=
-X-Received: by 2002:a17:907:3e02:b0:b6d:ba72:7524 with SMTP id
- a640c23a62f3a-b706e270c58mr803014966b.11.1761984596818; Sat, 01 Nov 2025
- 01:09:56 -0700 (PDT)
+	s=arc-20240116; t=1761987258; c=relaxed/simple;
+	bh=lThArKjR/mDMFOMJ7UaDAQ9LF9kt8hFhSG8s81iwaT0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=SWFgYX8mPHLeZEcLD2lhIc8adM8eKUkWruwA5w1Cp4JlqrWWBQIw+NNeMmUsMgItAuljI6qKdqz4CAfDbjiDdAvBgiVqq3JDPUPhhqSyksh5Az3if35Dho+S0pIYmX10Blzk3iQgdDuoUEhHfmrYjqlWiFX4K3d4pdP/d8NhqPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsqU5KkN; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761987257; x=1793523257;
+  h=date:from:to:cc:subject:message-id;
+  bh=lThArKjR/mDMFOMJ7UaDAQ9LF9kt8hFhSG8s81iwaT0=;
+  b=dsqU5KkNpk+itsUQj/seErkOcg4OfRUAkLSEqKV1nAh59msy6ncPxZXk
+   fUZwA5eY0orjJqHpawSJP1w7crPwGkHBhCE/mIxOAefO5Di64VqSFkkEL
+   1oCCN3fH68hWRHE33WGRUW8I8oVZyC6o0UESbliLmxEjTpCwflVDx8TYF
+   81b9QRakNjKnIr8LH4GD4sm7dczY6o5I8laVcQA4x2dLGpuTa5ktrP4nh
+   sh/6ugUHlR0w0mgBWb9v+0xHD4NiiyNqIannzXvXts3nvBWeXylTBE7L9
+   oimKubtb0KW+UObrI77mpqOnp7To2dkN7uSUJjHkzpqSv0qS5km+8isho
+   w==;
+X-CSE-ConnectionGUID: IcN/wE1QRMG7j7+Z+7IjBg==
+X-CSE-MsgGUID: HfrpwgqXQhm2psl7nO90BA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="66754975"
+X-IronPort-AV: E=Sophos;i="6.19,271,1754982000"; 
+   d="scan'208";a="66754975"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2025 01:54:15 -0700
+X-CSE-ConnectionGUID: EyfZpf5ARfKIY0Qg9D5kFA==
+X-CSE-MsgGUID: Dansp6mzTDqq11AuzKqpbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,271,1754982000"; 
+   d="scan'208";a="186881305"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 01 Nov 2025 01:54:14 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vF7NE-000O3Y-0V;
+	Sat, 01 Nov 2025 08:54:12 +0000
+Date: Sat, 01 Nov 2025 16:54:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/ti] BUILD SUCCESS
+ 8895c0fc0671f38746ee1c02b728b126f7dbbf97
+Message-ID: <202511011656.uDrWtAIN-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251027145602.199154-1-linux.amoon@gmail.com>
- <20251027145602.199154-3-linux.amoon@gmail.com> <ukgkfetbggzon4ppndl7gpitlsz7hjhzhyx3dgxqhdo52exguy@bqksd7d27lpy>
- <CANAwSgTECOAoKeJS_=HxkkTP4OJvYu5xGQxY__Auh81v3QT=-w@mail.gmail.com> <e7cttuu5525k7ryvmkh6ifspm5vloj4muazvmp3yxtkgsdtbjs@u4odsfurejxq>
-In-Reply-To: <e7cttuu5525k7ryvmkh6ifspm5vloj4muazvmp3yxtkgsdtbjs@u4odsfurejxq>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Sat, 1 Nov 2025 13:39:41 +0530
-X-Gm-Features: AWmQ_bn4roPSmQJ8KCYtDIOw3rDpVxIdUMmrjbDOUs1b7sXIsyCe60QAiCMVpHM
-Message-ID: <CANAwSgTRFMiSN8Q-tndvVXk7NxuNJE7GmcBXq46RQ=Z6-qOLEw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] PCI: dw-rockchip: Add runtime PM support to
- Rockchip PCIe driver
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Hans Zhang <18255117159@163.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Manivannan
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/ti
+branch HEAD: 8895c0fc0671f38746ee1c02b728b126f7dbbf97  PCI: j721e: Use 'pcie->reset_gpio' directly and drop the local variable
 
-On Fri, 31 Oct 2025 at 20:23, Manivannan Sadhasivam <mani@kernel.org> wrote=
-:
->
-> On Fri, Oct 31, 2025 at 07:33:23PM +0530, Anand Moon wrote:
-> > Hi Manivannan
-> >
-> > Thanks for your review comment.
-> >
-> > On Fri, 31 Oct 2025 at 14:09, Manivannan Sadhasivam <mani@kernel.org> w=
-rote:
-> > >
-> > > On Mon, Oct 27, 2025 at 08:25:30PM +0530, Anand Moon wrote:
-> > > > Add runtime power management support to the Rockchip DesignWare PCI=
-e
-> > > > controller driver by enabling devm_pm_runtime() in the probe functi=
-on.
-> > > > These changes allow the PCIe controller to suspend and resume dynam=
-ically,
-> > > > improving power efficiency on supported platforms.
-> > > >
-> > >
-> > > Seriously? How can this patch improve the power efficiency if it is n=
-ot doing
-> > > any PM operation on its own?
-> > >
-> > I could verify that runtime power management is active
-> >
->
-> This is runtime status being active, which is a different thing as it onl=
-y
-> allows the runtime PM hierarchy to be maintained. But the way you describ=
-ed the
-> commit message sounds like the patch is enabling runtime PM of the contro=
-ller
-> and that improves efficiency (as if the controller driver is actively doi=
-ng
-> runtime PM operations).
->
-> > [root@rockpi-5b alarm]# cat
-> > /sys/devices/platform/a41000000.pcie/power/runtime_status
-> > active
-> > [root@rockpi-5b alarm]#  find /sys -name runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/power/runt=
-ime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/pci_bus/00=
-04:41/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/net/enP4p65s0/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/net/enP4p65s0/enP4p65s0-3::lan/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/net/enP4p65s0/enP4p65s0-2::lan/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/net/enP4p65s0/enP4p65s0-1::lan/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/net/enP4p65s0/enP4p65s0-0::lan/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/mdio_bus/r8169-4-4100/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/power/runtime_status
-> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
-.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/hwmon/hwmon11/power/runtime_status
-> >
-> > Well, the powertop shows that the runtime power management is enabled
-> > on Radxa Rock 5b,
-> >
-> > PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
-> > stats   Device Freq stats   Tunables   WakeUp
-> > >> Good          Wireless Power Saving for interface wlan0
-> >    Good          VM writeback timeout
-> >    Good          Bluetooth device interface status
-> >    Good          NMI watchdog should be turned off
-> >    Good          Autosuspend for unknown USB device 2-1.3 (8087:0a2b)
-> >    Good          Autosuspend for USB device USB 2.0 Hub [2-1]
-> >    Good          Autosuspend for USB device Generic Platform OHCI
-> > controller [usb1]
-> >    Good          Autosuspend for USB device xHCI Host Controller [usb8]
-> >    Good          Autosuspend for USB device Generic Platform OHCI
-> > controller [usb4]
-> >    Good          Autosuspend for USB device EHCI Host Controller [usb2]
-> >    Good          Autosuspend for USB device xHCI Host Controller [usb6]
-> >    Good          Autosuspend for USB device EHCI Host Controller [usb3]
-> >    Good          Autosuspend for USB device xHCI Host Controller [usb5]
-> >    Good          Autosuspend for USB device xHCI Host Controller [usb7]
-> >    Good          Runtime PM for PCI Device Intel Corporation Wireless
-> > 8265 / 8275
-> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
-d RK3588
-> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
-d RK3588
-> >    Good          Runtime PM for PCI Device Realtek Semiconductor Co.,
-> > Ltd. RTL8125 2.5GbE Controller
-> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
-d RK3588
-> >    Good          Runtime PM for PCI Device Samsung Electronics Co Ltd
-> > NVMe SSD Controller SM981/PM981/PM983
-> >
-> > PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
-> > stats   Device Freq stats   Tunables   WakeUp
-> >               Usage     Device name
-> >               1.1%        CPU use
-> >             100.0%        Radio device: rfkill_gpio
-> >             100.0%        runtime-rockchip-gate-link-clk.712
-> >             100.0%        PCI Device: Realtek Semiconductor Co., Ltd.
-> > RTL8125 2.5GbE Controller
-> >             100.0%        runtime-rockchip-gate-link-clk.717
-> >             100.0%        runtime-rockchip-gate-link-clk.714
-> >             100.0%        runtime-rockchip-gate-link-clk.489
-> >             100.0%        runtime-a40000000.pcie
-> >             100.0%        runtime-a40800000.pcie
-> >             100.0%        runtime-rockchip-gate-link-clk.718
-> >             100.0%        runtime-rockchip-gate-link-clk.706
-> >             100.0%        runtime-rockchip-gate-link-clk.708
-> >             100.0%        PCI Device: Intel Corporation Wireless 8265 /=
- 8275
-> >             100.0%        Radio device: btusb
-> >             100.0%        runtime-fcd00000.usb
-> >             100.0%        PCI Device: Samsung Electronics Co Ltd NVMe
-> > SSD Controller SM981/PM981/PM983
-> >             100.0%        Radio device: rfkill_gpio
-> >             100.0%        runtime-fc000000.usb
-> >             100.0%        Radio device: iwlwifi
-> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
-588
-> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
-588
-> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
-588
-> >             100.0%        runtime-rockchip-gate-link-clk.711
-> >             100.0%        runtime-fc400000.usb
-> >             100.0%        runtime-rockchip-gate-link-clk.704
-> >             100.0%        runtime-rockchip-gate-link-clk.701
-> >             100.0%        runtime-rockchip-gate-link-clk.716
-> >             100.0%        runtime-rockchip-gate-link-clk.707
-> >             100.0%        runtime-rockchip-gate-link-clk.709
-> >             100.0%        runtime-rockchip-gate-link-clk.719
-> >             100.0%        runtime-xhci-hcd.1.auto
-> >             100.0%        runtime-feb50000.serial
-> >             100.0%        runtime-rockchip-gate-link-clk.715
-> >             100.0%        runtime-rockchip-gate-link-clk.710
-> >
-> > > Again, a pointless patch.
->
-> This patch might make sense on its own, to enable runtime PM status of th=
-e
-> controller so that the runtime PM could be applied to the entire PCIe hie=
-rarchy.
->
-I will update this in the commit message.
-> > I implemented a .remove patch to ensure proper resource cleanup,
-> > which is a necessary step for successfully enabling and managing
-> > runtime power for the device.
->
-> How a dead code (remove callback for a always built-in driver) becomes ne=
-cessary
-> for runtime PM.
->
-Ok, understood we don't have platform_driver_unregister in
-builtin_platform_driver
-I will drop the first patch.
+elapsed time: 1396m
 
-> - Mani
->
-Thanks
--Annad
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+configs tested: 217
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20251031    gcc-8.5.0
+arc                   randconfig-001-20251101    gcc-8.5.0
+arc                   randconfig-002-20251031    gcc-8.5.0
+arc                   randconfig-002-20251101    gcc-8.5.0
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    gcc-15.1.0
+arm                         mv78xx0_defconfig    gcc-15.1.0
+arm                       netwinder_defconfig    gcc-15.1.0
+arm                   randconfig-001-20251031    gcc-14.3.0
+arm                   randconfig-001-20251101    gcc-8.5.0
+arm                   randconfig-002-20251031    clang-22
+arm                   randconfig-002-20251101    gcc-8.5.0
+arm                   randconfig-003-20251031    gcc-11.5.0
+arm                   randconfig-003-20251101    gcc-8.5.0
+arm                   randconfig-004-20251031    clang-22
+arm                   randconfig-004-20251101    gcc-8.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                            allyesconfig    clang-22
+arm64                            allyesconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20251101    gcc-14.3.0
+arm64                 randconfig-002-20251101    gcc-14.3.0
+arm64                 randconfig-003-20251101    gcc-14.3.0
+arm64                 randconfig-004-20251101    gcc-14.3.0
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                             allyesconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251101    gcc-14.3.0
+csky                  randconfig-002-20251101    gcc-14.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20251031    clang-22
+hexagon               randconfig-001-20251101    clang-19
+hexagon               randconfig-002-20251031    clang-22
+hexagon               randconfig-002-20251101    clang-19
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    gcc-14
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20251101    clang-20
+i386        buildonly-randconfig-002-20251101    clang-20
+i386        buildonly-randconfig-003-20251101    clang-20
+i386        buildonly-randconfig-004-20251101    clang-20
+i386        buildonly-randconfig-005-20251101    clang-20
+i386        buildonly-randconfig-006-20251101    clang-20
+i386                                defconfig    gcc-15.1.0
+i386                  randconfig-001-20251101    gcc-14
+i386                  randconfig-002-20251101    gcc-14
+i386                  randconfig-003-20251101    gcc-14
+i386                  randconfig-004-20251101    gcc-14
+i386                  randconfig-005-20251101    gcc-14
+i386                  randconfig-006-20251101    gcc-14
+i386                  randconfig-007-20251101    gcc-14
+i386                  randconfig-011-20251101    clang-20
+i386                  randconfig-012-20251101    clang-20
+i386                  randconfig-013-20251101    clang-20
+i386                  randconfig-014-20251101    clang-20
+i386                  randconfig-015-20251101    clang-20
+i386                  randconfig-016-20251101    clang-20
+i386                  randconfig-017-20251101    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                        allyesconfig    clang-22
+loongarch                        allyesconfig    gcc-15.1.0
+loongarch             randconfig-001-20251101    clang-19
+loongarch             randconfig-002-20251101    clang-19
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+mips                           ci20_defconfig    gcc-15.1.0
+nios2                            allmodconfig    clang-22
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                            allyesconfig    clang-22
+nios2                            allyesconfig    gcc-11.5.0
+nios2                 randconfig-001-20251101    clang-19
+nios2                 randconfig-002-20251101    clang-19
+openrisc                         allmodconfig    clang-22
+openrisc                         allmodconfig    gcc-15.1.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251101    clang-20
+parisc                randconfig-001-20251101    gcc-11.5.0
+parisc                randconfig-002-20251101    clang-20
+parisc                randconfig-002-20251101    gcc-8.5.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                      mgcoge_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20251101    clang-20
+powerpc               randconfig-001-20251101    gcc-11.5.0
+powerpc               randconfig-002-20251101    clang-20
+powerpc               randconfig-002-20251101    clang-22
+powerpc                     tqm8540_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20251101    clang-20
+powerpc64             randconfig-001-20251101    gcc-11.5.0
+powerpc64             randconfig-002-20251101    clang-20
+riscv                            allmodconfig    clang-22
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-15.1.0
+riscv                 randconfig-001-20251031    gcc-8.5.0
+riscv                 randconfig-001-20251101    clang-17
+riscv                 randconfig-002-20251031    clang-17
+riscv                 randconfig-002-20251101    clang-17
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-15.1.0
+s390                  randconfig-001-20251031    clang-16
+s390                  randconfig-001-20251101    clang-17
+s390                  randconfig-002-20251031    gcc-12.5.0
+s390                  randconfig-002-20251101    clang-17
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-14
+sh                         ecovec24_defconfig    gcc-15.1.0
+sh                    randconfig-001-20251031    gcc-14.3.0
+sh                    randconfig-001-20251101    clang-17
+sh                    randconfig-002-20251031    gcc-14.3.0
+sh                    randconfig-002-20251101    clang-17
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                            allyesconfig    clang-22
+sparc                            allyesconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251101    clang-16
+sparc                 randconfig-002-20251101    clang-16
+sparc64                          allmodconfig    clang-22
+sparc64                          allyesconfig    clang-22
+sparc64                          allyesconfig    gcc-15.1.0
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20251101    clang-16
+sparc64               randconfig-002-20251101    clang-16
+um                               alldefconfig    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251101    clang-16
+um                    randconfig-002-20251101    clang-16
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20251101    gcc-14
+x86_64      buildonly-randconfig-002-20251101    gcc-14
+x86_64      buildonly-randconfig-003-20251101    gcc-14
+x86_64      buildonly-randconfig-004-20251101    gcc-14
+x86_64      buildonly-randconfig-005-20251101    gcc-14
+x86_64      buildonly-randconfig-006-20251101    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20251101    clang-20
+x86_64                randconfig-002-20251101    clang-20
+x86_64                randconfig-003-20251101    clang-20
+x86_64                randconfig-004-20251101    clang-20
+x86_64                randconfig-005-20251101    clang-20
+x86_64                randconfig-006-20251101    clang-20
+x86_64                randconfig-011-20251101    gcc-14
+x86_64                randconfig-012-20251101    gcc-14
+x86_64                randconfig-013-20251101    gcc-14
+x86_64                randconfig-014-20251101    gcc-14
+x86_64                randconfig-015-20251101    gcc-14
+x86_64                randconfig-016-20251101    gcc-14
+x86_64                randconfig-071-20251101    clang-20
+x86_64                randconfig-072-20251101    clang-20
+x86_64                randconfig-073-20251101    clang-20
+x86_64                randconfig-074-20251101    clang-20
+x86_64                randconfig-075-20251101    clang-20
+x86_64                randconfig-076-20251101    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                           allyesconfig    clang-22
+xtensa                           allyesconfig    gcc-15.1.0
+xtensa                randconfig-001-20251101    clang-16
+xtensa                randconfig-002-20251101    clang-16
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
