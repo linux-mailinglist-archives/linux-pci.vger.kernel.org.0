@@ -1,44 +1,45 @@
-Return-Path: <linux-pci+bounces-40040-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8949C28288
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:26:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57636C28285
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:25:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E41CB3B5DD4
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:24:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 156113B38ED
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B8C2571DD;
-	Sat,  1 Nov 2025 16:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11392264DC;
+	Sat,  1 Nov 2025 16:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WlW5KisV"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TtEq1vpD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED4A223DEC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B23017A2F0;
 	Sat,  1 Nov 2025 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762014258; cv=none; b=YrdQpDqcN9bLQGxro+AvxDou/stmiEy3dlKENU2Nmvhwo8E2sV1oGfBHJp7QlIeD+dd1KAH+j11V28WPh/2kk4XN7oUDMOiJ1QcNxqJs75l5ZqxT4yGZmm6+NFdetTqP/AJSlu1ONEwG3Kxj+dIKfMqtlAXPB3QMrSaxToCIi2I=
+	t=1762014257; cv=none; b=faG2zyz9JrlknPBrmY+8YCUgwMVv7dzPSEpTWD8LCr4qzgQ+4bIJo0p6t6wRHyqs1/XltU4h1puP0lLCi12wBJpmqfbw6VVP/UrsAZ6DLYlGrwQhb1ANjybmEMWpq14jFlQlszYaSb9T9S4Zy3FsD6X1bC77N3qxekx4/gsN5Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762014258; c=relaxed/simple;
-	bh=5nWCJ5QCtsBmc7noyT68SATJhsdCzufXpdESYb3gVeE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AASs7yUpHBhGJi1euxp5vnpFEsISz7TXeowGQMxsMzjs5/6eA64Nm24/4XhIXnFD/1vnNwXMfdwBWSORHFDW+ke02lfnPE8XG/jid0/pVFMWglAn7lXHzMim+jO+++RuqPHUM2b+2kBvRdnxUXQGuYVJ1CDs6nd7tafHmnz/Pxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WlW5KisV; arc=none smtp.client-ip=220.197.31.3
+	s=arc-20240116; t=1762014257; c=relaxed/simple;
+	bh=9Ud/LeNIcKwL0efzQzPowgMKrjbEYWLDeh1PO30vwtM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q5MZjoRrpxuzkWE7Py6xMxKrKDn2aRc5MO7RXqql/9JIak6Aln79R0GRgqJxDO4oa9BO6Bg4XGk9kPwk4gJ4YB442YfKLQuQut99VE4bn428gHKcCM5VwpV/c97XUVI8L52J52yLPOC5b4G8l9nVb/vb+7QUZgh1XOsgUIrVkX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TtEq1vpD; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9t
-	P1LLYdRr/BqHbJev6RqyxqZPPW7NhIMvgXJosQ1o8=; b=WlW5KisVw+/w/PZOId
-	7TL1828mg4ukbv3DgW8Z+zOiugVKyLpRGtWvuPxBCeBL7QNR8S6TuntuNlPfLyH7
-	SHhxqrwwL39bcbFt4xGjIa2kqrk8SAqNSDA07MAOzZsjtCO8Gsjedgdbu/CXavXv
-	MJqbec2Gcpw7otVWbsp66TbdM=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3V
+	QIEWJRrZqUWBIlYJxpy6ioV+MlB2SKV2d469TV62M=; b=TtEq1vpDhxs+q/92BZ
+	xkUuxYPlpDFf25bJsffU+uROyvaSorqXGl9WnzgmfkTVimFjkYX6Y5Kya7oj3jVb
+	4lNS8IlxoijbYUzhUe0rYnMIXrbdUUIcUBHZIn6jYTjrRb6GLfZdM+UG7uFqWQ/e
+	X1tU0zJzAwgjeu/ilXAywoEyY=
 Received: from zhb.. (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHBDkQNAZpNmGwAw--.59274S2;
-	Sun, 02 Nov 2025 00:23:45 +0800 (CST)
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHBDkQNAZpNmGwAw--.59274S3;
+	Sun, 02 Nov 2025 00:23:47 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: mahesh@linux.ibm.com,
 	bhelgaas@google.com
@@ -49,10 +50,12 @@ Cc: oohall@gmail.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [RESEND PATCH v4 0/2] PCI: Introduce pci_clear/set_config_dword()
-Date: Sun,  2 Nov 2025 00:22:17 +0800
-Message-Id: <20251101162219.12016-1-18255117159@163.com>
+Subject: [RESEND PATCH v4 1/2] PCI: Introduce pci_clear/set_config_dword()
+Date: Sun,  2 Nov 2025 00:22:18 +0800
+Message-Id: <20251101162219.12016-2-18255117159@163.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251101162219.12016-1-18255117159@163.com>
+References: <20251101162219.12016-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,51 +63,45 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHBDkQNAZpNmGwAw--.59274S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJrW3Zr17tFykJFyUCw1fCrg_yoW8XrWUpr
-	WfZry3Xr47GFya9FW7WF12ka45Wan7AFWrGr13K34rZr43ZrW7XF9YqryrAF9rJrW8Jw4a
-	9rs7WF109w1qkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRX_-DUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDw74o2kGMDUqJQABs+
+X-CM-TRANSID:_____wCHBDkQNAZpNmGwAw--.59274S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWrKw4rWrWxKrWxAFykCry7Awb_yoW8Jr15pF
+	Z8CFyfGFyxGFnIk3WDXay8Aw18WrWkXFWIgrW3K3s8ZFW2ya4vvF909r17Jwn3GrWvvr45
+	A393KFZY9r4qya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pipBT5UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiFR-4o2kGMU41FgAAsi
 
-This series introduces auxiliary functions for the PCI configuration space
-and simplifies the read and write operations of the AER driver, reducing a
-lot of repetitive code.
+Add helper functions to clear or set bits in PCI config space.
+These helpers reduce code duplication and improve readability for config
+space modifications by encapsulating common read-modify-write patterns.
 
-Patch 1 adds pci_clear_config_dword() and pci_set_config_dword() helpers
-to reduce repetitive read-modify-write sequences when modifying PCI config
-space. These helpers improve code readability and maintainability.
-
-Patch 2 refactors the PCIe AER driver to use these new helpers,
-eliminating manual read-modify-write patterns and intermediate variable
-in several functions. This results in cleaner and more concise code.
-
+Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
-Changes for v4:
-- Introduce pci_clear/set_config_dword()
+ include/linux/pci.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Changes for v3:
-https://patchwork.kernel.org/project/linux-pci/patch/20250816161743.340684-1-18255117159@163.com/
-
-- Rebase to v6.17-rc1.
-- The patch commit message were modified.
-- Add Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-Changes for v2:
-- The patch commit message were modified.
-- New optimizations for the functions disable_ecrc_checking, aer_enable_irq, and aer_disable_irq have been added.
----
-
-Hans Zhang (2):
-  PCI: Introduce pci_clear/set_config_dword()
-  PCI/AER: Use pci_clear/set_config_dword to simplify code
-
- drivers/pci/pcie/aer.c | 29 ++++++++++-------------------
- include/linux/pci.h    | 12 ++++++++++++
- 2 files changed, 22 insertions(+), 19 deletions(-)
-
-
-base-commit: 8742b2d8935f476449ef37e263bc4da3295c7b58
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 59876de13860..bb0dba2b7aee 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1341,6 +1341,18 @@ static inline int pcie_capability_clear_dword(struct pci_dev *dev, int pos,
+ 	return pcie_capability_clear_and_set_dword(dev, pos, clear, 0);
+ }
+ 
++static inline void pci_clear_config_dword(const struct pci_dev *dev, int pos,
++					  u32 clear)
++{
++	pci_clear_and_set_config_dword(dev, pos, clear, 0);
++}
++
++static inline void pci_set_config_dword(const struct pci_dev *dev, int pos,
++					u32 set)
++{
++	pci_clear_and_set_config_dword(dev, pos, 0, set);
++}
++
+ /* User-space driven config access */
+ int pci_user_read_config_byte(struct pci_dev *dev, int where, u8 *val);
+ int pci_user_read_config_word(struct pci_dev *dev, int where, u16 *val);
 -- 
 2.25.1
 
