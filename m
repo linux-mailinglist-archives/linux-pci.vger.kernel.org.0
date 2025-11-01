@@ -1,61 +1,55 @@
-Return-Path: <linux-pci+bounces-40039-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40041-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5868C28276
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:24:25 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2275BC2831C
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:42:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A657D4E220D
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:24:23 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 83D01349D90
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2862566FC;
-	Sat,  1 Nov 2025 16:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90AD26A0E0;
+	Sat,  1 Nov 2025 16:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LXJ0jJPg"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hFU03DG9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F46E19049B;
-	Sat,  1 Nov 2025 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E1269AEE;
+	Sat,  1 Nov 2025 16:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762014258; cv=none; b=MpWyZyEQn9hyvCLh1/zM2nFDg/CgAXq4NZw7YUlilif2t+frfUC5Z33eg7ykj+5B1ORPyzoRP6GJXZ66D22/PgfUzF0TKKDUPXAsK1qeBRjTPaB5/dPj5NWYMItLh5i4ZAwANgq0kNWVuaSxOgW+GdDHIotKv5MMr5nBJXAMgGA=
+	t=1762015320; cv=none; b=Kp/8s4iE661tuDR53C8v/0myOL6XBIZuavpgRquF2w+1aJEDU9PNDA6NmsCb5Nm79/mV1rFYGfYGWSef8GcGW9nSZVwmok4sJDScG+wxjO1ILSTkDBdz9s+34J+YzG14Jlgxj5T0P8kCUuLnveKA0OqJynO1IVIvGwzPMQq8Eck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762014258; c=relaxed/simple;
-	bh=W1Ad/Hpmi05kW+LkYpX9iXeR3vzD1qS/oR7rcvv5ZMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UFF+OQiuUSMrWTohaFS7vhH4xOeiePAsx7XlNg5o9s/E6mx9yrJ3QRdm+CMj5Ms5HST1iZ142ET1xLpakpiQrZFV3vuXX73UAyCMJFb7yV/9VkJ0jzlrtGCVUc8UzqADtTA2PzKiJF/gS6U5fevoCzuNJwnIKm2xVX12BqSWQUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LXJ0jJPg; arc=none smtp.client-ip=220.197.31.4
+	s=arc-20240116; t=1762015320; c=relaxed/simple;
+	bh=/Lmtqv2YdFzMKD+tU35ni0Evtp/XjGnVQdRIqfQxcXc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3ihGKaqKGiYw6Nve6OVIXknMS3E4zlr84OrbWhei6yEOsg2EndVyNKkrCGETVK1ZvJdHIFvJhLAXVVAk5d+uD8pBFh/zuCniO0j5aZjZcV5W4Z8g/vCWWi35a/ZUOy24yB0+zUnoyF8emJIDW87oWTv0/m9dKare7Ghcbe8Dec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hFU03DG9; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=rT
-	eDMOibmlghpQVXp52MOWLYZFEzyWAti7xjOoZt1/I=; b=LXJ0jJPgsEbN8jsn3g
-	j7upqizSVegB/eDdNnZhbBIspuKLiGJThtOBLiXg7L6BWlV6VqKrjDLBc+PTLVAk
-	jVirPP6XtUUMTAi6phZ1nGhBIHfcseWp0vjw0Avu5deeySv8l1tDysOit+kQO+F0
-	OBlwNtc9NvBnoAojmi2mKMtrU=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9w
+	Up7u3My76G+R/WLPGyk/WkzbItLsUENPV0fn3j5Pw=; b=hFU03DG9YqxprWd8g9
+	o6LU3NwjxRNyuxl96ki11m69KzgEen+Ho6qMFhsEtJbt1aW5Kd0XIX3HAJf1EZf9
+	L1xIKitgFZbjT6SX4Xksx6sFp23Oa7sOB4tcVUBgwxsicI4TYEAKgHgHZU74+hVB
+	dOE8FEMBhtp6oa7wFN2E/sIKw=
 Received: from zhb.. (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHBDkQNAZpNmGwAw--.59274S4;
-	Sun, 02 Nov 2025 00:23:47 +0800 (CST)
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDnofBAOAZpIs11CQ--.54784S2;
+	Sun, 02 Nov 2025 00:41:37 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
-To: mahesh@linux.ibm.com,
-	bhelgaas@google.com
-Cc: oohall@gmail.com,
-	mani@kernel.org,
-	lukas@wunner.de,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
+To: bhelgaas@google.com,
+	helgaas@kernel.org
+Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [RESEND PATCH v4 2/2] PCI/AER: Use pci_clear/set_config_dword to simplify code
-Date: Sun,  2 Nov 2025 00:22:19 +0800
-Message-Id: <20251101162219.12016-3-18255117159@163.com>
+	Hans Zhang <18255117159@163.com>,
+	Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH v3 1/1] PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
+Date: Sun,  2 Nov 2025 00:41:32 +0800
+Message-Id: <20251101164132.14145-1-18255117159@163.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251101162219.12016-1-18255117159@163.com>
-References: <20251101162219.12016-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,91 +57,52 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHBDkQNAZpNmGwAw--.59274S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZFyDAFy7AF15tw1kJr4ruFg_yoW5Xw1UpF
-	W3AFWfAr4UJF15ZrWDWaykJwn5AF97t34fKr93Kwn5XF48uFZrJ3sav34UJ345KFZ5X34r
-	Jws5Ka1rZF4UJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE2YLgUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiFQj4o2kGMU41FwABs1
+X-CM-TRANSID:PigvCgDnofBAOAZpIs11CQ--.54784S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWUGFW8Jr15uw4fKF4fGrg_yoW8GFW8pa
+	y7AryrWry8WF43Zw4DX3WruFyjgasxXrWDtry5W3ZruF43GF4aqFySvF4fXFn29rWkZr17
+	XF13tr47Jw4jyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEVc_wUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiFR-4o2kGMU6GewAAs8
 
-Replace manual read-modify-write sequences in multiple functions with
-pci_clear/set_config_dword helper to reduce code duplication.
+The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
+but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
+
+While DT binding validation already checks this property, the code-level
+validation in `of_pci_get_max_link_speed` also needs to be updated to allow
+values up to 6, ensuring compatibility with newer PCIe generations.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+Changes for v3:
+- Modify the commit message.
+- Add Reviewed-by tag.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e286c197d716..468d4a726a20 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -176,14 +176,12 @@ static int enable_ecrc_checking(struct pci_dev *dev)
- static int disable_ecrc_checking(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
--	u32 reg32;
+Changes for v2:
+https://patchwork.kernel.org/project/linux-pci/cover/20250529021026.475861-1-18255117159@163.com/
+- The following files have been deleted:
+  Documentation/devicetree/bindings/pci/pci.txt
+
+  Update to this file again:
+  dtschema/schemas/pci/pci-bus-common.yaml
+---
+ drivers/pci/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 3579265f1198..53928e4b3780 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
+ 	u32 max_link_speed;
  
- 	if (!aer)
- 		return -ENODEV;
+ 	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+-	    max_link_speed == 0 || max_link_speed > 4)
++	    max_link_speed == 0 || max_link_speed > 6)
+ 		return -EINVAL;
  
--	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
--	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
--	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
-+	pci_clear_config_dword(dev, aer + PCI_ERR_CAP,
-+			       PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
- 
- 	return 0;
- }
-@@ -1102,15 +1100,12 @@ static bool find_source_device(struct pci_dev *parent,
- static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
--	u32 mask;
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
--	mask &= ~PCI_ERR_UNC_INTN;
--	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-+	pci_clear_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-+			       PCI_ERR_UNC_INTN);
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
--	mask &= ~PCI_ERR_COR_INTERNAL;
--	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-+	pci_clear_config_dword(dev, aer + PCI_ERR_COR_MASK,
-+			       PCI_ERR_COR_INTERNAL);
- }
- 
- static bool is_cxl_mem_dev(struct pci_dev *dev)
-@@ -1556,23 +1551,19 @@ static irqreturn_t aer_irq(int irq, void *context)
- static void aer_enable_irq(struct pci_dev *pdev)
- {
- 	int aer = pdev->aer_cap;
--	u32 reg32;
- 
- 	/* Enable Root Port's interrupt in response to error messages */
--	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
--	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
--	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-+	pci_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
-+			     ROOT_PORT_INTR_ON_MESG_MASK);
- }
- 
- static void aer_disable_irq(struct pci_dev *pdev)
- {
- 	int aer = pdev->aer_cap;
--	u32 reg32;
- 
- 	/* Disable Root Port's interrupt in response to error messages */
--	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
--	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
--	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-+	pci_clear_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
-+			       ROOT_PORT_INTR_ON_MESG_MASK);
- }
- 
- /**
+ 	return max_link_speed;
 -- 
-2.25.1
+2.34.1
 
 
