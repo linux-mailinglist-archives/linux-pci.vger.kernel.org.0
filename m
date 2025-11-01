@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-40000-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40001-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32801C27821
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 06:05:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79DBCC2782A
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 06:07:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 019A24E26ED
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 05:05:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94F61B21263
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 05:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EBAE22FDFF;
-	Sat,  1 Nov 2025 05:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DDD623E33D;
+	Sat,  1 Nov 2025 05:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgyhM0lz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Skg1ovcY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B8521B9C0;
-	Sat,  1 Nov 2025 05:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBFE128819;
+	Sat,  1 Nov 2025 05:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761973512; cv=none; b=boDsS39bRq5pznto/wembg6CjcrBd0JirQQPiIWhjhBCb2lvs5mp1w5qqWg3XM7F0wJabDi/LdJEB6+CW4TmKK5XujNT1EGBk+uWr1tFmb1SHobhdzX0pUDKHq4s6VvE6RqayiSK4ryFlmjpD2wgeb2WCQhpP2g3Dg0Z5XMbbH8=
+	t=1761973619; cv=none; b=bFI2XSaLCB4CncC3/YbYP/vq9A9C1USJXjVDFtcg6nbasYfoH7DE/wgFi3UTSm9e7A5S1D0JTjDbwgzYzhjn/950ICxvxaYYG9ct3Qp89FG49C9gnWoOyhFTZUkWvK3xogcj2ZMAa61gQpZSNVs3BELfK2E35aaz+w0SX2FDH9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761973512; c=relaxed/simple;
-	bh=LeiFkNCDRAuejMGKT/dWBbvRfSXK4gUKUaZjvynezAE=;
+	s=arc-20240116; t=1761973619; c=relaxed/simple;
+	bh=3hnXih81jmJOkxMCNZoUXFBZRFYe1mHmNE4jL+zmcVQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cM+s5Yhfe+LC7XIsKejpf68lcepvJ7pdRVa8e4iHp5ShRkVrZjzqVEaOIUA2+vcF3RVHjE1yOTbkV1bbR090Tpf4Yv0Ct9+XBa+Re+wIxI5w3GKt1kK01TyO6m5VeNLfk8dgjgd7sdVNo23amouPFZQZsnhoDFZj6+a/AVlnY6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cgyhM0lz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F3DC4CEF1;
-	Sat,  1 Nov 2025 05:05:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMSQABP+mKgmAr9xfQO9jprjtrwPFhrLwW4RKcQfniHMJ6DndPgKHR+5mgk17pd8k2sDsvX+5L7LE0rsYrBlOeVMqNmnP2p39YRjF3CXn9XOPkAe3sNLrbBgst+pZf4drDt9pkGdvZPAhWIe/52vrJz0Zs2gSxxrY4GaKMslt6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Skg1ovcY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9990C4CEF1;
+	Sat,  1 Nov 2025 05:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761973511;
-	bh=LeiFkNCDRAuejMGKT/dWBbvRfSXK4gUKUaZjvynezAE=;
+	s=k20201202; t=1761973618;
+	bh=3hnXih81jmJOkxMCNZoUXFBZRFYe1mHmNE4jL+zmcVQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cgyhM0lzKupdYYW7pR50+Ms59lrPZYwfGOjZftvoVOnEnGjcaQ2AuUMjAOeg4ZX84
-	 //40GEC//ZWQ+tPQXCih7Fr/0YiRPFoosBxz+z31mRzNosWjgaAolCrz3oTG9bY2Xs
-	 +Py8A4jd6dvEGBiBxKl2m70m2nlvROe60+51swpExO+Qsg3YolJmINEzapYlKkRjsE
-	 OTDUqHn26jSYtZmFjnSNJ+HbOhqOtwv5vQCh76P0mlumE+teDkLH1i/qazrO8xYQtG
-	 3X0E7LOR5D6PQIa3nJRd8iX7DF4mihqWmdAgRGNOmk2MKnrJJe3jeGnZxHhODSWd5h
-	 zbJQxRiWRQh2w==
-Date: Sat, 1 Nov 2025 10:34:58 +0530
+	b=Skg1ovcY4cmjoynuJMP75WqnhJI9BmGGjnfrmTQmG6iR5eXlVYmqdlHQ5hHMuiyDj
+	 jXhosXHcdlzZILGGn92qIPUu44GJQSTrCTACJmL6kynisZFg5PDQ7KhlaJXagKj5T9
+	 6HUZ4Q7AxgK4Viz3W7uDgZQ8z1JFTu5Oixj1oZFQrykGXInmgl3JfXAedJSEstQfQ4
+	 zhrdmuuOYfkizjusQNY6mhIwlvTGpEYJU+24RJhWd1zQiEHTVOITNpVwhRRSUq3wFp
+	 QWnGjFQ6aCm7o3IsFTcRsivp04iPVnQlUmEnqDgKhIBXm4BoTTyBnhmYpLKoSeUW6O
+	 G36wMIi16YOgw==
+Date: Sat, 1 Nov 2025 10:36:45 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -51,11 +51,10 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <andersson@kernel.org>, 
 	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, linux-pci@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v9 2/7] PCI: Add assert_perst() operation to control PCIe
- PERST#
-Message-ID: <prngl7yl7rveyp76ksmskzgv2oigayrhz4s5fnlz7iycae3kkp@v6fn54ybwrec>
+Subject: Re: [PATCH v9 4/7] PCI: dwc: Implement .assert_perst() hook
+Message-ID: <bkromhlltdhbmrmhc6w3knrwrs6pi3nhya7mg6odg6ihkzimza@e2huxtvqajxn>
 References: <20251101-tc9563-v9-0-de3429f7787a@oss.qualcomm.com>
- <20251101-tc9563-v9-2-de3429f7787a@oss.qualcomm.com>
+ <20251101-tc9563-v9-4-de3429f7787a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,48 +64,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251101-tc9563-v9-2-de3429f7787a@oss.qualcomm.com>
+In-Reply-To: <20251101-tc9563-v9-4-de3429f7787a@oss.qualcomm.com>
 
-On Sat, Nov 01, 2025 at 09:29:33AM +0530, Krishna Chaitanya Chundru wrote:
-> Controller driver probes firsts, enables link training and scans the
-> bus. When the PCI bridge is found, its child DT nodes will be scanned
-> and pwrctrl devices will be created if needed. By the time pwrctrl
-> driver probe gets called link training is already enabled by controller
-> driver.
-> 
-> Certain devices like TC9563 which uses PCI pwrctl framework needs to
-> configure the device before PCI link is up.
-> 
-> As the controller driver already enables link training as part of
-> its probe, the moment device is powered on, controller and device
-> participates in the link training and link can come up immediately
-> and may not have time to configure the device.
-> 
-> So we need to stop the link training by using assert_perst() by asserting
-> the PERST# and de-assert the PERST# after device is configured.
+On Sat, Nov 01, 2025 at 09:29:35AM +0530, Krishna Chaitanya Chundru wrote:
+> Implement assert_perst() function op for dwc drivers.
 > 
 > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
+This and the previous patch should be squashed. But no need to resend just for
+this change, as this could be handled while applying.
 
 Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
 - Mani
 
 > ---
->  include/linux/pci.h | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d1fdf81fbe1e427aecbc951fa3fdf65c20450b05..ed5dac663e96e3a6ad2edffffc9fa8b348d0a677 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -829,6 +829,7 @@ struct pci_ops {
->  	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
->  	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
->  	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-> +	int (*assert_perst)(struct pci_bus *bus, bool assert);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 20c9333bcb1c4812e2fd96047a49944574df1e6f..b56dd1d51fa4f03931942dc9da649bef8859f192 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -842,10 +842,19 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
+>  
+> +static int dw_pcie_op_assert_perst(struct pci_bus *bus, bool assert)
+> +{
+> +	struct dw_pcie_rp *pp = bus->sysdata;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +
+> +	return dw_pcie_assert_perst(pci, assert);
+> +}
+> +
+>  static struct pci_ops dw_pcie_ops = {
+>  	.map_bus = dw_pcie_own_conf_map_bus,
+>  	.read = pci_generic_config_read,
+>  	.write = pci_generic_config_write,
+> +	.assert_perst = dw_pcie_op_assert_perst,
 >  };
 >  
->  /*
+>  static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
 > 
 > -- 
 > 2.34.1
