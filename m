@@ -1,309 +1,243 @@
-Return-Path: <linux-pci+bounces-39986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-39987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CEA8C27601
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 03:27:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2085AC276D5
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 04:38:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D2ADE4E1A1F
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 02:26:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 122C31A25542
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 03:38:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05ACF253951;
-	Sat,  1 Nov 2025 02:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E9D25A64C;
+	Sat,  1 Nov 2025 03:38:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="uNW/ynlE"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="boKYvFta";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="C9J11lE0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19010042.outbound.protection.outlook.com [52.103.7.42])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1719B1519AC
-	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 02:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761963988; cv=fail; b=VePaEM7+4+P+y1NTnC0jD6IQGryWEspaTWWsrQ6AyYyUtlBeeLEjUGPUoEbAyMQoujhuGdcNP5ObgLF1qw+34cjulURXWKgHzaPV4MEwCcFwjc20hyZU7zS9gyzApYvk/V71KqEQup0oZofGAVfY4lJa7JvUkagJqJrguwHhURU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761963988; c=relaxed/simple;
-	bh=Tb/Z1lI+8eicxVzkxf8zdVWz0NBT2L4aWahKbA3+Fs8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XHkHjg/1eBk3orXxfJRTWRAgW3HCypf72PlmcNT+9Mo7DfM5/tQLAO3BdugvFMLgWCswk2thYiA3r72PFcAwhMpShusaqEGz+VWWbqCLxo3zCzQSmo+bNJUMhxzjXNxFtmu8Sv53iUSrup2ngpMYuDPnAnM7KFIkmxOvqvDvVdk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=uNW/ynlE; arc=fail smtp.client-ip=52.103.7.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gOoXXzbdn600BN99t2YuYsDV/cdoYbzirCjR30q4vxr8ix9KKY7sInt99xiLJk1woE5BhhyAJuovKz7TK9NCu/bELfw/r1EByZwSvSV309SQD74nANzEIQqQ7Wex/8TjgfsxpzSxmpf2znIF7Z9xglhXR4apatB5wCMS3JB64uD6ydIEwpA5T/s4UNLsqE4RE6KRZZXSdbclai4b17+10bc0u+Fz9PW7vxWmZSx2QJfmrIkbHiuF0O7dWgU5LS542ChnVxYGXv+ZQ6PBFkfN8rZVOhkynkEGR/TkrRpA4cPA7YneR8zG18bZdaz5aZgz2L/JM3tQX6OjebyO+cd7Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1ELHh/4CC4lU5ByrRHEryThhZdDg9bLlY0xVymjzJ0c=;
- b=R3v70Wa75nzPqvQ00otrGLEE417oOpM0EIuZTGmYBA4xxhhq2fAAa8qJdhIc+TH8Gd1E7Kzs17KNeOCRkvtsDqf0salQbQZCIFmgVJvR3f47dHfWLLDFDDNqP7QzZa3icdAm7qdyW0QQ2QJKWqTSHDRdEQzwBOD5uzlnVSnh+dnCRo1Lo/irMlfbxfkjW9QjzL0cpar1o+oR5Emt237XeFovvauxcbIWz1AwcSvbLJQuTHrY0xVHQHRFICXWYxlfyEhUh8YiRz6oPmGmOt3bPy8K/dolXtwVrlmz1ySo2x19Al3Dq3dL5ZDhTkJcOl8kpbvTCR9XbIVBTU5LipWlXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ELHh/4CC4lU5ByrRHEryThhZdDg9bLlY0xVymjzJ0c=;
- b=uNW/ynlEADWJk9hfBOX0nVXmhmD31T97/xZJ9b6hmlzZeANF3no5BXIAXFWiO8JqgoB7M0xDc+AjCKBP3MQpqeY4nEHQT0B8okkAN5QWyF6qaWPSIAqOmUm7UdBzuAwd9gOO2SA/UmUkEd56Tq917jzFCd5emsYo8EOiLx1kg4nHWvR93Gbi47cyFluoqrwYrkiDduXLA9hs9iyNb0ECGeezCTJ6762FrPibd80yAY2ZyHLw+jLVesqprL7svdaGX7sVSnYQuL2GQfuDBjTyA1o2InPKjfofh7jCkB8Ue9FYWoyPTvzU7O8A62CTY3PLzx35gPplymj4k2IBzaO4aQ==
-Received: from DM4PR05MB10270.namprd05.prod.outlook.com (2603:10b6:8:180::11)
- by DS2PR05MB998331.namprd05.prod.outlook.com (2603:10b6:8:32e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.14; Sat, 1 Nov
- 2025 02:26:25 +0000
-Received: from DM4PR05MB10270.namprd05.prod.outlook.com
- ([fe80::76f2:11b4:e433:a65c]) by DM4PR05MB10270.namprd05.prod.outlook.com
- ([fe80::76f2:11b4:e433:a65c%5]) with mapi id 15.20.9275.013; Sat, 1 Nov 2025
- 02:26:25 +0000
-Message-ID:
- <DM4PR05MB102703CA8E86DFA6C43B03582C7F9A@DM4PR05MB10270.namprd05.prod.outlook.com>
-Date: Sat, 1 Nov 2025 10:26:17 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- FUKAUMI Naoki <naoki@radxa.com>,
- "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
- Kevin Hilman <khilman@baylibre.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-References: <DM4PR05MB1027077E1F4CD8B1A7EDADF1DC7F8A@DM4PR05MB10270.namprd05.prod.outlook.com>
- <20251031161323.GA1688975@bhelgaas>
- <agqyqr7c6wwkr4fewt3szomd7c57eeujkal7modj46ssbngxf7@f7t56i723mvx>
-Content-Language: en-US
-From: Linnaea Lavia <linnaea-von-lavia@live.com>
-In-Reply-To: <agqyqr7c6wwkr4fewt3szomd7c57eeujkal7modj46ssbngxf7@f7t56i723mvx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR06CA0238.apcprd06.prod.outlook.com
- (2603:1096:4:ac::22) To DM4PR05MB10270.namprd05.prod.outlook.com
- (2603:10b6:8:180::11)
-X-Microsoft-Original-Message-ID:
- <58b9e249-ebb1-45b8-ab75-ec0164cc5729@live.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737AB25C6F9
+	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 03:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761968297; cv=none; b=EiNtBLgKohjMwSSBTJwF7wY5fh8Q5iSRNSc9PTsf4eCBsO8dngCIay3+mMxLmZF3t7Ue2MwuDodw45HMVYh85ElAIsWD0TTL288sewZlvdZoC10XPnOqi9JtDPunad3c6T12T325ceYpHcv4PtYUmIddj/WnoPQTVgbtyca8kVc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761968297; c=relaxed/simple;
+	bh=QOV4s441pUMcnd5W23H/g9SGPLto9keaiax99h+lJMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q2T3Xctkk0aaWSTsD45vRL7Uug+PRvQ8oa2zJzlHRvurfAEZTCq3GlMlJdwBormLaMOd80JxC3tXNIvJJDw+CUQ9dK3jyZMReKpwjzVNH/8mwYFuZgQk/mK/NGEFpD17oN19K+1239UwnyyjRkwBQOfGSi5IH/9l4flNdwG9xSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=boKYvFta; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=C9J11lE0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 59VHGkUG898461
+	for <linux-pci@vger.kernel.org>; Sat, 1 Nov 2025 03:38:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	j+MSSJNAnzhdO1DSldaGMP+f7736jkHHfxLd+CmKemI=; b=boKYvFta7QfNPlSX
+	a8XeodXvIm/ciqgQ6avwi0jcO6Y12EQAPWIG105GUhI6dXv5tlXeWeOopsmVYb36
+	aUcdL49VKGbMMCD3YuiYixcNws712f0CNJpB8fz44w2khLY0XzUakC5RbeU0FUQW
+	6jPI9PCRzZQ05q4JtOD7RMxUBJ2W2EaH8Y+APaEWUcpL1sxQFU+csg5rGjS4Bg86
+	rP3g/5d9X88J+v56NtOhWx0JyJA8Wyj48Avw2Yodxkjcz9AaT9FWqczj/NtO8tWX
+	LFqAf2UOl7Ad8AsYpLNy/A7FDJt0pOvg+L5lKNk7bu437bH1wig3PoJPH8DKkVSi
+	s69Wuw==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a4gb2408r-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Sat, 01 Nov 2025 03:38:14 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2952cb6f51bso28344515ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 31 Oct 2025 20:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1761968294; x=1762573094; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j+MSSJNAnzhdO1DSldaGMP+f7736jkHHfxLd+CmKemI=;
+        b=C9J11lE0jNeHoxoHsbyzm7xrJOqBJqIewKy9y/VpkeF6BR+9xpPLD/YfXeifnURADH
+         b7j9cICvXLH71w077xHn+wEMBBJ1XgzGdg6gWrIUlZs+ydAyL++Fm8DwJSZvzF/CZPJl
+         umcbOtvLKYefBqBQKOaKFhUwGGCbMg25zmbCPDEKTk2Qrr6ab9GFSF1GF19qsLXc1c1m
+         Do4+UrP3xMorA101P2GDWc0fMZ43BlKlnMdquohv21typ9GO+mVxnwnB0gm4qwsUvDLI
+         EW+g91xwroj8Zp7IUoK5gFZ9bCF2vD9uvC887ZwZ4kARoXd9oHbFM1GMyN0akYaS6MRi
+         BR7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761968294; x=1762573094;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j+MSSJNAnzhdO1DSldaGMP+f7736jkHHfxLd+CmKemI=;
+        b=WE158v/Cr4Ar9bjdxBilLUO6Mib+9ymHp9DCUhMGr8mHIF5n03B6RGAWphq+SdWyNY
+         4FkVj3Fw6jUgyjJEx6nyhTcidPUPNmgYvdoIjmzFtKQib4h2MF015LRkZE0+4vmmZndd
+         c4k+DF+7GxWKqpUB5Oc/tcd00KtuKHOtkm55nPyUTGYShWw3avded+J3pOIDebHIDFMn
+         V+lB3ZwPv/W4htJI2cOHLJafmgcRDDA8ZLG1zKL22ZTRNTLYGU3x0BmQfGS4/1pyGFNH
+         fD2tgV+LX15U9uWGvOBhcdzbKASrjT3QQFC85MLmYO6g/2YC1njwftqiMVe1oT1dghqw
+         RuBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ6KSKgmvy4s0/GnoyWQ7R80gSvCVQKMKGmrma0vsoeaqs5muFLs2FzV/Hah6UxONxzgvQdlkxJxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzukZTK4pIeh36XO9B7XpbtlDGMgHW7XkeP6kbrI6YxU6+UPLpZ
+	kv/grQhG+wXCVPvgmI8gul2LcaReIy7fjKsbkfvO0+C4wNLKYq93+635712AvcXVVfWnbJTiIga
+	vrBIsSp2qmi+z8oV3ixSZyvceiK9/L/nb26z+cvblsSZBx1dhCt6CsWRqwX8HunU=
+X-Gm-Gg: ASbGnct3pJYCloXPDV23/2VOKI+6f4o72V5uZ4rStppMg06uOSzYTr28aNi77BYW0zf
+	+Ir6FvQc234gvWVjHvRdYsmyJ6JlzYYpmqkimD//ft/jDuef45uRjS3QS3J37xUyp5W69H3r+zk
+	4K6N0TzkS81qwoTQk7QYKiwRYT2S2uB2G9AWe5XCRUUCPdd0YPXj7pWf/xSaymq1jqnq7/SqlrC
+	7oExyrR+XItll85yQnfoVXxvJycp8BFVxzqMZc0UCtTakQ2oZj0yUZGOfNTJkhovfAP60cVy6JV
+	OOSKnR86zqadkwUkm6UAc4Dk6SlRQE3E4rpE5973pPXG+x9AvmETjuH/8LpNt6o35ztKm1+5PqF
+	vBgAHaRkf2XpOPSmc9lZ8O4BzLBdY0IgFGQ==
+X-Received: by 2002:a17:902:e803:b0:295:5da6:600c with SMTP id d9443c01a7336-2955da66315mr875365ad.2.1761968293828;
+        Fri, 31 Oct 2025 20:38:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhZKxQBBnG78bpCeGKL4Lw7oZMFbVF3Qy60/ZWNH7pX/qvw+SoCu2WjYCu2EsGiLa3sETv3Q==
+X-Received: by 2002:a17:902:e803:b0:295:5da6:600c with SMTP id d9443c01a7336-2955da66315mr874975ad.2.1761968293290;
+        Fri, 31 Oct 2025 20:38:13 -0700 (PDT)
+Received: from [192.168.29.63] ([49.43.227.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2955615d720sm8247975ad.65.2025.10.31.20.38.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Oct 2025 20:38:12 -0700 (PDT)
+Message-ID: <bc7732aa-6958-4028-a3b3-a0c2ba3b0252@oss.qualcomm.com>
+Date: Sat, 1 Nov 2025 09:08:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR05MB10270:EE_|DS2PR05MB998331:EE_
-X-MS-Office365-Filtering-Correlation-Id: efb8b267-8adf-408e-6eb3-08de18ee0e17
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|8060799015|41001999006|12121999013|23021999003|15080799012|5072599009|19110799012|6090799003|1602099012|40105399003|440099028|4302099013|3412199025|10035399007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?clY2Mjd3UXZackZEWkVvems1WFdMYm4zS0t4UjY3ZXZNVUd5cEY2OElRbHdq?=
- =?utf-8?B?NWtnWml0SExaVG5hT1k5enJoM1NrMCtwMUo1M3RlaTFHbk45cGZNREJ2S3lZ?=
- =?utf-8?B?RngybEF6dm12cjlhSEthaDVwWlJ1a1pLazVmRGg4ZkJYU3NvS2d5M2luYjdC?=
- =?utf-8?B?SWx0Qmt4STBORy9lQTF2UXBpWnFNVG0zRVBpbGcwY29YQXhsZmEwS0dxZWNz?=
- =?utf-8?B?UXRkWkFwSzQvOTVYTmhzbE4xT1l6SkZmRXJoQ3BONGYyci93N0VKQ3FIanpG?=
- =?utf-8?B?bUV6QUx6S21rZnNlZ21uemF4VGVoZC9tNXludGM1QzBTa01sQWpFRUIwbks0?=
- =?utf-8?B?YTY2UmN5MDZoZ0FsY1RzTmZ3bFhtZnlNTitYOUluVjl3cWpmb1hYUEZlZTRL?=
- =?utf-8?B?SFpJNmxUdHZhNExIdi9IbVpTaXJwUWs0WkxNWk5DeXdKR1VCbU1rTUJVZHlx?=
- =?utf-8?B?OFNmVWpBb1ljL2NhUjU3ZTlFY2RNWCtWbGlpTnF4ck12dkVjeWlwUnFNTE1x?=
- =?utf-8?B?a3IxYS9oajlWMEtkbElDRGF3dUVGL2xVK0FHZzVuZFVBN0haaHhHYzUrdkVT?=
- =?utf-8?B?WnF1S0cyWXlKRUoreTFUR1M3aEdKdEthWlBBUEwwbEVZTGtIKytnR1p6bGo1?=
- =?utf-8?B?VlIxZ0t5bDdPZ1dLTHFXQUovQThGMlgyang3QlpvTStrNkVoNGM2RTFtV0ZT?=
- =?utf-8?B?cUpIZXdUTEorbVhpeEJyU1NJTVBvZkxibkZCaWJaSnFOb293RnUvOFlQcWFK?=
- =?utf-8?B?cjNNZUpVb3RXZzRXZXp4NWIwREZXaURVanliTXYzSjlBS2dodEE2OTR2b1Zm?=
- =?utf-8?B?Vzh1b3doS3MxbWxPUDB6Y2xUam9adUJlVWpickJUMWVJdTVodnRNUjdYalJm?=
- =?utf-8?B?Q2d5M3FyUHJYRTdxUTA4WnFuYmV6MXR0OGJNdTI0Q1dNNjQzU2Mwd1pkbXRS?=
- =?utf-8?B?cFZXNkRDeVhUWVlzWjU4S1pYbjR4WTZad2hYLzM3dzRkSTA4VktVTXpHNDNN?=
- =?utf-8?B?ckF3TlpvVnZTN25yclJacThOY2VuUzg1OVpwTW45TFpGOUtSalJPNUlYUm94?=
- =?utf-8?B?UzV1TWdmdEkzVHJEZ1JlL1dhMDVvbTdTS2ZsR0hGUzd0OTlWdTAyYWM0b1pq?=
- =?utf-8?B?cVpmRzFCczhtVDIrWnIyMXlHVzNEcjFTWmRJc0tTNllMa0tVaFpEcEtiU2c5?=
- =?utf-8?B?Sm5pNEh4SHRidVJ3RzN0WnFDMEdkditYUmJQeDZDRmVyb2U4RXVOdkZKU3dD?=
- =?utf-8?B?aGp3ckdqTWJVL1Vod3l2NEFCaUNWL1FxWlB5elZkOFlGd1YyK0xEMkZadzg2?=
- =?utf-8?B?UVFhdDc5emRVSlRQQlVTVER4Sks4cGxJNm9objdvRW9leWxScFZyb1pZMEVV?=
- =?utf-8?B?NlZzamkySkZXc0pNRG50QnFVSHJQeUdKZjB0YUdMaHdmRzNyTFZLNEN5b05S?=
- =?utf-8?B?QWxHSm5xeTFMekF4OVdYcC9GZHFrYmc3TUNYVDZjVzFtQTlRaVZkVGQ0ZVZu?=
- =?utf-8?B?aDVTdTAvTG5pZXlCNWR4UFVQZU5CZ3BabzRlR2xFeDQ5UlVkWGw4VTI1ZVJG?=
- =?utf-8?B?cmZtWmdERjhxK0lZNndOMGl4dmxvdmFzTXY4TFdnK2tCb01pbW4xd3FwZGlm?=
- =?utf-8?B?T0J5YndvS21lOVFlUCtvSnpPYmVXYm5qaGJTVmlSU2FzOUt5cTlTVlFxaWxz?=
- =?utf-8?B?TllvZi9pZmdCSk1ZMlVrMGZsRDNNaDJjWVgxOTNsYjIwaUQwc21qTkNyN0NT?=
- =?utf-8?B?bFM3SERBRERUK3drTXZIMGk2aU43WUxUWUdtTXJ2Si81NHZVVEFGbVhPcUkr?=
- =?utf-8?B?NG5JNFFyV0E5NEdHbHQ2ZEY1dTkxbDkwY1NoMFRpaTgyaUN5TzQwcEhmK3k4?=
- =?utf-8?Q?brvNof98f6LcO?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZW5ycG5kNlJMY2lKY1oxZFEwUTUzYVBHSjl3YkdnbW1JMGJOSTRibFkyaU9L?=
- =?utf-8?B?UFl1ZEhuQkZDaUJRZUtDTlFGUXBxd3lWeVpEUkNhVzBQVWw4V0Y5bTh0b0ts?=
- =?utf-8?B?Y1EzTHNvemw3S084ZGdVSGNJK1NvaDd2UCtwcjVTL2UzZWJQWmxqQmVab09U?=
- =?utf-8?B?SnNjRjN4UmVzNTZKWVpiZElYRXg5WHJIUU9kZHhBc2JqWHNUUzgxbEYxNFA5?=
- =?utf-8?B?akh3OUwzQUNLalR6NVByWCt0dWxpQmNkNkRSK3BpalliRTk1RXhhR1k1SHhn?=
- =?utf-8?B?R0ZkUERpQXE2cExvUlNQTHNDVW1VOWU3ZGUvTHdpMmc4M3U3WVZYRHNvR1Yz?=
- =?utf-8?B?b09GbzM2SWlqQlJwWEYyV0lIb1hUVWpkZzBVTmpibXo4cll4bDB5Wm9HZUJz?=
- =?utf-8?B?UDkwVHo4eVhCQUwrdmtTN2d1RFREZWVkUCtQR1F6c3I4UThmTEt0NUJsbDh3?=
- =?utf-8?B?Z292OHMxZHZnbEhLS1NiSm9XTDJPYXA5bTNvSk5jaDBadE54RklUVFBEMXJo?=
- =?utf-8?B?VXpHNUdoM2xmSXI5QTFQZjF5dXdmcHpteUswTFNBMFpCT1dqQkk5eWp4Um02?=
- =?utf-8?B?RzlkWE5yTGxmbE9VTHA1K2x5Y3lmbWJNVGIvUU96NXZpWjdUa1Y0Z3B2aVE0?=
- =?utf-8?B?SGh2TFF6ZCt4NStCdzl1MjNzaHFtVm9NRGV4VnExRUk4YTVoWVZtT3NUbUsx?=
- =?utf-8?B?TUdIMDhaUE1XTW9IbkUrWVcycis2aFBvQnpiTDZxd0c4bU1RdUVYZktrRzRB?=
- =?utf-8?B?cE5xNmpqbExuM2tZVGNMVlA0cUpteEswakpwdG42Nld5UjlaSVZZMHFNd3p4?=
- =?utf-8?B?NTZSd1ZvR1FZTWpZZE5YNzdzQjNmRm9nM2xpVUVMSjVVRkpPODRyVnZZYUx1?=
- =?utf-8?B?VUhkRGRaTW1WNnFmMStNZUpENE1STWtiblI4RnZidlJMVlcxcDF0Mm9Pa1Jl?=
- =?utf-8?B?UzNENmZ6QWZrc21MbEk2RExqM1FLakI5ZjExSFl0KzlPTndDa3FEZHlUQ1U3?=
- =?utf-8?B?N3NIK002cjZOMmpDQzI3b3JJQzBZNEhlS1cwc0cvUzVyRENDU3RaRTg4UHlX?=
- =?utf-8?B?NDVWS2lnT1RsbklPVm53TFNGc0Z4YTZkWDRkV3dOSVJYVmhwL2hkc1J0OHY3?=
- =?utf-8?B?U3VOelpHaXJqUWNaUW5GZ0VXcFlVOG0zTm50UC95UjU0VmlNYm4rbStic2NO?=
- =?utf-8?B?ZlZMT3RacHVPbVlzK2RnRERFM1VCSXFqRjkyZmNCVEZxejNUYy91K0R5Zzhm?=
- =?utf-8?B?b3VCUk4xTmYrN2s5SWN0THpmL1lES1V3ZlFHM20xeS9lTmNHNU9uQ09tcUpr?=
- =?utf-8?B?NWU5cTNtY0xpeVpVYm9uRnFZZnJyL0hZY2JaR2RZOGJ6RFhsdmcrT3NLWjBZ?=
- =?utf-8?B?M1pDSEMzM3FVUFNEYXE0dHI4U0VpRGxkZXVKNkNLSVMwem1NTllSMDRCMDBk?=
- =?utf-8?B?SExlWEFYU3pwYjNrYTkzZkFISmtUMlprZFJtc1kwMzJOWHRSQTgwSVpVbVh1?=
- =?utf-8?B?enRPOUd3NGhwWDlyd2RGRG9HUFcrYzE4anJKbDF1UzROdnFaUmNMWnhIb0lV?=
- =?utf-8?B?STU4L2FMbmNvMjhvOGFaaHk4bHAxQ2lSTWE4di9hamYzbVpDY1pyZGxRUWNs?=
- =?utf-8?B?RVdvVnlDWmZ2d3dCdmF2cmYrS28wckdSektXUERDT2ZXd3ltSlc2eXlYWEwx?=
- =?utf-8?Q?nRa6M4mCWgdQJqNOxzK/?=
-X-OriginatorOrg: sct-15-20-8534-9-msonline-outlook-d08a8.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: efb8b267-8adf-408e-6eb3-08de18ee0e17
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR05MB10270.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2025 02:26:25.3209
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR05MB998331
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/7] dt-bindings: PCI: Add binding for Toshiba TC9563
+ PCIe switch
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20251031221238.GA1711866@bhelgaas>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20251031221238.GA1711866@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=efswvrEH c=1 sm=1 tr=0 ts=690580a6 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ISmZZG41GQzdpg15mxjwIw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=BNVTMueYxggUNz7gLWUA:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAyNyBTYWx0ZWRfXxgP5HWAMLaJC
+ hwaCM8VCxep6iRZHraQxkmlT/pBB35//yA0nBiX/sOMA9S6XyZqqVSbBIqQl+wM0/tfIAD3M8z5
+ /qQosgqskcec+MqW4S1PRAx3DmelKPgKEUbzG9vcI0Lh8yMtEdyPoA5lNDgJnp3GOiIyh6GYfk0
+ Q8GmtolkJPiJgwOMeaZSBB7vwTsB7PD8MolctDA5LVZGVmH190YOS/ukBrSKJEGTwV5UE2TLkUy
+ VetjB/jkkIIPuN3oMWqsfGvLwbI8fPaiOhlCzPs5V6zL9UE7XsWyhwufG4cw4mnlXiY9pke5m+A
+ 63LWN2eFIO9KvVom8g3pgKTPxCVfprijk7+OsPQUCsxOEZpvhvLU67xktkfcu0zZfU+9yovImpC
+ 9vqaqO10jhq94RDxWaIuU+vGCP8KTA==
+X-Proofpoint-GUID: gczJQRdz9wPs3uxPmjwAVtveOOVc06lt
+X-Proofpoint-ORIG-GUID: gczJQRdz9wPs3uxPmjwAVtveOOVc06lt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-10-31_08,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 adultscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511010027
 
-On 11/1/2025 1:47 AM, Manivannan Sadhasivam wrote:
-> On Fri, Oct 31, 2025 at 11:13:23AM -0500, Bjorn Helgaas wrote:
->> On Fri, Oct 31, 2025 at 08:26:42PM +0800, Linnaea Lavia wrote:
->>> On 10/31/2025 4:50 PM, Neil Armstrong wrote:
->>>> On 10/31/25 06:34, Linnaea Lavia wrote:
->>>>> On 10/30/2025 1:15 AM, Bjorn Helgaas wrote:
->>>>>> On Wed, Oct 29, 2025 at 06:50:46PM +0800, Linnaea Lavia wrote:
->>>>>>> On 10/29/2025 6:16 AM, Bjorn Helgaas wrote:
->>>>>>
->>>>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>>>>>> index 214ed060ca1b..9cd12924b5cb 100644
->>>>>>>> --- a/drivers/pci/quirks.c
->>>>>>>> +++ b/drivers/pci/quirks.c
->>>>>>>> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>>>>>>>      * disable both L0s and L1 for now to be safe.
->>>>>>>>      */
->>>>>>>>     DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->>>>>>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
->>>>>>>>     /*
->>>>>>>>      * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->>>>>>>
->>>>>>> I have applied the patch on 6.18-rc3 but it's still trying to enable ASPM for some reasons.
->>>>>>
->>>>>> Sorry, my fault, I should have made that fixup run earlier, so the
->>>>>> patch should be this instead:
->>>>>>
->>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>>>> index 214ed060ca1b..4fc04015ca0c 100644
->>>>>> --- a/drivers/pci/quirks.c
->>>>>> +++ b/drivers/pci/quirks.c
->>>>>> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>>>>>     * disable both L0s and L1 for now to be safe.
->>>>>>     */
->>>>>>    DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->>>>>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
->>>>>
->>>>> L1 still got enabled
->>
->> Is that based on the output below?
->>
->>    [    5.445853] [     T48] pci 0000:00:00.0: Disabling ASPM L0s/L1
->>    [    5.560448] [     T48] pci 0000:01:00.0: ASPM: default states L1
->>
->> If so, this doesn't necessarily mean L1 was enabled.  It means the
->> quirk marked the 00:00.0 Root Port so we shouldn't ever enable L0s or
->> L1, and when we enumerated 01:00.0, we set its default ASPM state to
->> L1.
->>
->> But I don't *think* L1 should actually be enabled unless we can enable
->> it for both 00:00.0 and 01:00.0, and the quirk should mean that we
->> can't enable it for 00:00.0.
->>
->> This muddle of "capable" (per Link Capabilities) vs "disabled" (either
->> the Link Control shows disabled, or software said "don't ever use L1")
->> is part of what makes aspm.c so confusing.
->>
->>>>> The card works just fine. I'm thinking the ASPM issue is
->>>>> probably from the glue driver reporting the link to be down when
->>>>> it's really just in low power state.
->>>>
->>>> You're probably right, the meson_pcie_link_up() not only checks
->>>> the LTSSM but also the speed, which is probably wrong.
->>>>
->>>> Can you try removing the test for speed ?
->>>>
->>>> -                 if (smlh_up && rdlh_up && ltssm_up && speed_okay)
->>>> +                 if (smlh_up && rdlh_up && ltssm_up)
->>>>
->>>> The other drivers just checks the link, and some only the smlh_up
->>>> && rdlh_up. So you can also probably drop ltssm_up aswell.
->>>
->>> I can confirm that removing the check for ltssm_up and speed_okay
->>> made ASPM work.
->>
->> I don't think meson_pcie_link_up() should have the loop in it, so the
->> ltssm_up and speed_okay checks, the loop, the delay, and the timeout
->> message should probably all be removed.  That method is supposed to be
->> a simple true/false check, and any waiting required should be done in
->> dw_pcie_wait_for_link().
->>
->> The link was clearly up when we discovered 01:00.0, so the "wait
->> linkup timeout" messages from meson_pcie_link_up() after that must be
->> from dw_pcie_link_up() being called via the .map_bus() call in
->> pci_generic_config_read() or pci_generic_config_write().
->>
->> When meson_pcie_link_up() returns false in those config accessors,
->> the config accesses will fail (they won't even be attempted), so we'll
->> see things like this:
->>
->>    pci 0000:01:00.0: BAR 0: error updating (0xfc700004 != 0xffffffff)
->>
->> and "Unknown header type 7f" from lspci.
->>
->> Can you drop the ASPM quirk patch and instead try the
->> meson_pcie_link_up() patch below on top of v6.18-rc3?
->>
->>> We still need a solution to the original issue that's preventing the
->>> controller from being initialized.
->>>
->>> My kernel has the following patch applied, but I think it's not
->>> suitable for upstream as this changes device tree bindings for PCIe
->>> controller on meson.
->>
->> I assume the original issue is this:
->>
->>    meson-pcie fc000000.pcie: error -EBUSY: can't request region for resource [mem 0xfc000000-0xfc3fffff]
->>
->> and you confirmed that it wasn't fixed by a1978b692a39 ("PCI: dwc: Use
->> custom pci_ops for root bus DBI vs ECAM config access"), which
->> appeared in v6.18-rc3?
->>
->> If it's still broken in v6.18-rc3, and the dtsi and
->> meson_pcie_get_mems() patch below makes it work, we have more work to
->> do, and maybe Krishna has some ideas.
->>
-> 
-> We have two issues on this platform:
-> 
-> 1. DT represents 'dbi' region as 'elbi', which was wrong as both are different
-> address spaces. ELBI is an optional region, whereas DBI has Root Port and
-> controller configuration registers, which is mandatory.
-> 
-> 2. Driver parses/maps the 'elbi' region and stores it in 'pci->dbi_base'. So
-> this made sure that the code depending on the 'pci->dbi_base' work as expected.
-> 
-> Commit c96992a24bec, moved the ELBI parsing logic to the core code, and it also
-> removed the custom parsing from glue drivers. But since this driver was using
-> 'pci->dbi_base' instead of 'pci->elbi_base', it was not caught during the move.
-> 
-> I've submitted a series [1] that hopefully would fix this resource parsing
-> issue. Please test it out.
-> 
-> - Mani
-> 
-> [1] https://lore.kernel.org/linux-pci/20251031-pci-meson-fix-v1-0-ed29ee5b54f9@oss.qualcomm.com
-> 
 
-Applied on vanilla 6.18-rc3 with Bjorn's patch, PCIe now works out of the box on the board.
+On 11/1/2025 3:42 AM, Bjorn Helgaas wrote:
+> On Fri, Oct 31, 2025 at 05:00:13PM -0500, Bjorn Helgaas wrote:
+>> On Fri, Oct 31, 2025 at 04:41:58PM +0530, Krishna Chaitanya Chundru wrote:
+>>> Add a device tree binding for the Toshiba TC9563 PCIe switch, which
+>>> provides an Ethernet MAC integrated to the 3rd downstream port and
+>>> two downstream PCIe ports.
+>>> +                pcie@1,0 {
+>>> +                    compatible = "pciclass,0604";
+>>> +                    reg = <0x20800 0x0 0x0 0x0 0x0>;
+>>> +                    #address-cells = <3>;
+>>> +                    #size-cells = <2>;
+>>> +                    device_type = "pci";
+>>> +                    ranges;
+>>> +                    bus-range = <0x03 0xff>;
+>>> +
+>>> +                    toshiba,no-dfe-support;
+>> IIUC, there are two downstream ports available for external devices,
+>> and pcie@1,0 is one of them.
+>>
+>>    1) Putting "toshiba,no-dfe-support" in the pcie@1,0 stanza suggests
+>>    that it only applies to that port.
+>>
+>>    But from tc9563_pwrctrl_disable_dfe() in "[PATCH v8 6/7] PCI:
+>>    pwrctrl: Add power control driver for tc9563", it looks like it's
+>>    applied to the upstream port and both downstream ports.  So I guess
+>>    my question is putting "toshiba,no-dfe-support" in just one
+>>    downstream port is the right place for it.
+> Oh, I see, never mind.  You keep track of ->disable_dfe on a per-port
+> basis, so each port has the *possibility* of using it, and you skip
+> programming it if the port doesn't have it.
+>
+> I would assume the two downstream ports for external devices would be
+> identical, so I do still wonder why you would specify this for only
+> one of them.
+
+Hi Bjorn,
+
+As this is just an example, we just added here. In actually use case we 
+are free
+to add it for any port.
+
+For remaining comments, you are right I didn't notice I am still using 
+older one's
+I will fix in next series.
+
+- Krishna Chaitanya.
+
+>>    2) I see a lookup of "qcom,no-dfe-support" in [PATCH v8 6/7] PCI:
+>>    pwrctrl: Add power control driver for tc9563; is that supposed to
+>>    match this "toshiba,no-dfe-support"?
+>>
+>>> +                };
+>>> +
+>>> +                pcie@2,0 {
+>>> +                    compatible = "pciclass,0604";
+>>> +                    reg = <0x21000 0x0 0x0 0x0 0x0>;
+>>> +                    #address-cells = <3>;
+>>> +                    #size-cells = <2>;
+>>> +                    device_type = "pci";
+>>> +                    ranges;
+>>> +                    bus-range = <0x04 0xff>;
+>>> +                };
+>>> +
+>>> +                pcie@3,0 {
+>>> +                    compatible = "pciclass,0604";
+>>> +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
+>>> +                    #address-cells = <3>;
+>>> +                    #size-cells = <2>;
+>>> +                    device_type = "pci";
+>>> +                    ranges;
+>>> +                    bus-range = <0x05 0xff>;
+>>> +
+>>> +                    toshiba,tx-amplitude-microvolt = <10>;
+> Same question here about whether "toshiba,tx-amplitude-microvolt" is
+> supposed to match the "qcom,tx-amplitude-microvolt" in the driver.
+>
+>>> +                    ethernet@0,0 {
+>>> +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
+>>> +                    };
+>>> +
+>>> +                    ethernet@0,1 {
+>>> +                        reg = <0x50100 0x0 0x0 0x0 0x0>;
+>>> +                    };
+>>> +                };
+>>> +            };
+>>> +        };
+>>> +    };
+>>>
+>>> -- 
+>>> 2.34.1
+>>>
 
