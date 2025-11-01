@@ -1,108 +1,152 @@
-Return-Path: <linux-pci+bounces-40041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2275BC2831C
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 17:42:05 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76CE8C283B8
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 18:07:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 83D01349D90
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 16:42:04 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7577E3499A2
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 17:07:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90AD26A0E0;
-	Sat,  1 Nov 2025 16:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72B127AC57;
+	Sat,  1 Nov 2025 17:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hFU03DG9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnscWgdp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E1269AEE;
-	Sat,  1 Nov 2025 16:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9542135B9;
+	Sat,  1 Nov 2025 17:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762015320; cv=none; b=Kp/8s4iE661tuDR53C8v/0myOL6XBIZuavpgRquF2w+1aJEDU9PNDA6NmsCb5Nm79/mV1rFYGfYGWSef8GcGW9nSZVwmok4sJDScG+wxjO1ILSTkDBdz9s+34J+YzG14Jlgxj5T0P8kCUuLnveKA0OqJynO1IVIvGwzPMQq8Eck=
+	t=1762016822; cv=none; b=m5QmJKFawRAID/fo5FLKeUaYl/pa/rGx/UTAw0nNOqyfApoFp2nFByZFSWtYClqDHUBbDQMNmocLq3Eox0YWQtriZmkyKaFMOO/Rs8SQGxsbFQk1FTG9rTh5wEVh3M/fcgsaRPW/yqVU9Juh7WVegWafiFSzVH4se18nxQXvn+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762015320; c=relaxed/simple;
-	bh=/Lmtqv2YdFzMKD+tU35ni0Evtp/XjGnVQdRIqfQxcXc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3ihGKaqKGiYw6Nve6OVIXknMS3E4zlr84OrbWhei6yEOsg2EndVyNKkrCGETVK1ZvJdHIFvJhLAXVVAk5d+uD8pBFh/zuCniO0j5aZjZcV5W4Z8g/vCWWi35a/ZUOy24yB0+zUnoyF8emJIDW87oWTv0/m9dKare7Ghcbe8Dec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hFU03DG9; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9w
-	Up7u3My76G+R/WLPGyk/WkzbItLsUENPV0fn3j5Pw=; b=hFU03DG9YqxprWd8g9
-	o6LU3NwjxRNyuxl96ki11m69KzgEen+Ho6qMFhsEtJbt1aW5Kd0XIX3HAJf1EZf9
-	L1xIKitgFZbjT6SX4Xksx6sFp23Oa7sOB4tcVUBgwxsicI4TYEAKgHgHZU74+hVB
-	dOE8FEMBhtp6oa7wFN2E/sIKw=
-Received: from zhb.. (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDnofBAOAZpIs11CQ--.54784S2;
-	Sun, 02 Nov 2025 00:41:37 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	helgaas@kernel.org
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v3 1/1] PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
-Date: Sun,  2 Nov 2025 00:41:32 +0800
-Message-Id: <20251101164132.14145-1-18255117159@163.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1762016822; c=relaxed/simple;
+	bh=Cv0pDJgDXyEUXqhIfLl1vBzkj96NpdjHrGVf8PIaWTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NryV1qcC1WUAI3nqGUy38ualy9xLxat9fd/Yr50QbVJ3ixQoxLuggtyN9araR/+v4UFPkOjAvbs2rx7tbSCp8OHT7AbgFCz2liQ1dH4iX6JW1tler/rNad6mpdoZv3Zv9+DYELpcZ5Jf7LI/LqZnFtvuaEwJcbPjl7vIVdTzRmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnscWgdp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E46C4CEF1;
+	Sat,  1 Nov 2025 17:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762016821;
+	bh=Cv0pDJgDXyEUXqhIfLl1vBzkj96NpdjHrGVf8PIaWTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gnscWgdppKpnsIcg2bmV4SQBJ7rKAnseaFXV7RupPGd/rEY4jXOobWNUKtGpzpDIN
+	 x+PRjYP+QSFUFSYusKVvgjCPuReKEORsiIEHvrpVrmvqKiwPyhvPX3FReeEiiJ153t
+	 6zuw5NTHyJQrTXS9+pPYYdwt+7RnFc5Ig54eWqCz63BwV7b31SQtDjUT2IZK1na4Fe
+	 42JtAWjRKYTrbsfdSxZHzy0Jfvttgs83qEafcPymdp/qA7dqZMNY2J7dTKWdUogpg0
+	 wME2CJCD7lhk0htL7p+aTlrbiWfsyjnFG8/pJNbXuuxktO5spzuk10+NnJCO8bivh9
+	 ZkAr51BnEYwhA==
+Date: Sat, 1 Nov 2025 22:36:49 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, mad skateman <madskateman@gmail.com>, 
+	"R.T.Dickinson" <rtd2@xtra.co.nz>, Christian Zigotzky <info@xenosoft.de>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au, Darren Stevens <darren@stevens-zone.net>, 
+	debian-powerpc@lists.debian.org, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <emjne6l33e3hukef5ms7kubv6kkuvesqkw6ozojnzzdgvso7ma@rbpg2l5i3nno>
+References: <545ac5c9-580c-5cf7-dd22-10dd79e6aabf@xenosoft.de>
+ <AEBA92BD-B46D-4D1B-A4D1-645B276E34CF@xenosoft.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDnofBAOAZpIs11CQ--.54784S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWUGFW8Jr15uw4fKF4fGrg_yoW8GFW8pa
-	y7AryrWry8WF43Zw4DX3WruFyjgasxXrWDtry5W3ZruF43GF4aqFySvF4fXFn29rWkZr17
-	XF13tr47Jw4jyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEVc_wUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiFR-4o2kGMU6GewAAs8
+In-Reply-To: <AEBA92BD-B46D-4D1B-A4D1-645B276E34CF@xenosoft.de>
 
-The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
-but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
+On Sat, Nov 01, 2025 at 08:59:37AM +0100, Christian Zigotzky wrote:
+> 
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> Oops, I made that fixup run too late.  Instead of the patch above, can
+> you test the one below?
+> 
+> You'll likely see something like this, which is a little misleading
+> because even though we claim "default L1" for 01:00.0 (or whatever
+> your Radeon is), the fact that L0s and L1 are disabled at the other
+> end of the link (00:00.0) should prevent us from actually enabling it:
+> 
+> pci 0000:00:00.0: Disabling ASPM L0s/L1
+> pci 0000:01:00.0: ASPM: default states L1
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 214ed060ca1b..27777ded9a2c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> * disable both L0s and L1 for now to be safe.
+> */
+> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1);
+> 
+> /*
+> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+> 
+> —
+> 
+> Hi Bjorn,
+> 
+> Thanks for your patch. I patched the RC3 of kernel 6.18 with your new patch and compiled it again. Unfortunately the FSL Cyrus+ board doesn't boot with your new patch.
+> 
+> Sorry,
+> 
+> Christian
+> 
+> --
+> Sent with BrassMonkey 33.9.1 (https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
+> 
+> —-
+> 
+> What about with 
+> 
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, quirk_disable_aspm_l0s_l1);
+> 
 
-While DT binding validation already checks this property, the code-level
-validation in `of_pci_get_max_link_speed` also needs to be updated to allow
-values up to 6, ensuring compatibility with newer PCIe generations.
+The issue is most likely with your Root Port rather than with the Radeon device.
+So the quirk for Radeon won't fix the issue properly as it will affect other
+host systems as well.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
----
-Changes for v3:
-- Modify the commit message.
-- Add Reviewed-by tag.
+I guess Bjorn's change didn't help because the fixup ran before
+pcie_aspm_init_link_state(). So even though the fixup disabled the ASPM link
+state for Root Port, it got enabled by the default ASPM states enabled in
+pcie_aspm_init_link_state().
 
-Changes for v2:
-https://patchwork.kernel.org/project/linux-pci/cover/20250529021026.475861-1-18255117159@163.com/
-- The following files have been deleted:
-  Documentation/devicetree/bindings/pci/pci.txt
+Can you try doing fixup final as below?
 
-  Update to this file again:
-  dtschema/schemas/pci/pci-bus-common.yaml
----
- drivers/pci/of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 3579265f1198..53928e4b3780 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
- 	u32 max_link_speed;
+```
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d97335a40193..74d8596b3f62 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+  * disable both L0s and L1 for now to be safe.
+  */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1);
  
- 	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
--	    max_link_speed == 0 || max_link_speed > 4)
-+	    max_link_speed == 0 || max_link_speed > 6)
- 		return -EINVAL;
- 
- 	return max_link_speed;
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+```
+
+Sorry, I guess we are asking for too many experiments to be done which might be
+of trouble for you. But without direct access to the device, we had to do these
+:(
+
+Thanks for your help in debugging.
+
+- Mani
+
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
 
