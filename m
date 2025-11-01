@@ -1,157 +1,273 @@
-Return-Path: <linux-pci+bounces-40006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4647C2794E
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 09:00:13 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 049BAC27972
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 09:10:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DC323A3FE9
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 08:00:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CCD1B4E029A
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 08:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFE11A0BF3;
-	Sat,  1 Nov 2025 08:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED09213E9F;
+	Sat,  1 Nov 2025 08:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="rho8inx4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBxXoixk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1042264CC
-	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 08:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761984009; cv=pass; b=XkwgmpMakyDTqzpCXU3u0OUADL2uN2Ww5VYcMIVyEEECRY1UgjUZU9j8hMG6lvd3AyTdRnb2/Km2n8GmIceBxiWT0K+kj89Kx6Sr6Fx+2YB/q/K5sA2sFbeB9Nrten0GX6UEA14koLK6lE5U7oXFsjpZ+o8tB4mPHAZTJv9gJT0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761984009; c=relaxed/simple;
-	bh=XjP5x5Bgsvr5wyyEs5OOp+96vR7qcdY9kYxub87Mn84=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Cc:Date:
-	 Message-Id:References:To; b=bidchSsp89SG5gFuPeI4Vdx32lnhIA7Suw9oYKjdL5EM04AtSesvZuCU9mKamxz2Hc36smzeY5U08d4vRG9ysMFv2F8r4Mt62gMJJjPjPILPyoMKn9ln1OkS9nwIyqZW1LeSHYR0ECHAy4P02Ho8lC9gcp62wepa8O40r9+3oj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=rho8inx4; arc=pass smtp.client-ip=81.169.146.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
-ARC-Seal: i=1; a=rsa-sha256; t=1761983988; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=kufDPCqeXbYJsOOdu0bImnvOK2gNUmSBIp44LrgnNbw2Ry3Aeo8XJl2UwWQecMbTRH
-    7NwZqWkk7v0LmZd1WugxShkYzbGu3PDjR0AG9yz0BfXsZAz5A9/K9VqZdCyAEaaiglo2
-    8cFaDivdFcFkPpJhW0PkhFwTEeEMqzGv3Kw/30tTb5+be6IQS1ZFjhvunZkUzhVuv/Bx
-    cc1icUUYa+XvhorGdEUY4mqw71E2GHAGjOjJwC1rVhPxpOLjZlByZMxpyVKCUZPjvH0n
-    /7VSKyyFvFBhZiIjX4rkiPBkHnZ4OTFqAqIjhplOrlHXd/WCaPOqkxRSaGJS5U0M/oxs
-    ZN7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1761983988;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:References:Message-Id:Date:Cc:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=+3zUXjN3NTSdTgmydFFZq3v8qUJDNiC8H0mmxBV6SGs=;
-    b=JyRIx7E2YTEWOKv6FSLcd0vicxmYS2A4NYq08sUW05Tk+txajKh7OHXa+HbeDeTfYU
-    l7gbTVfK/3d91BknF2sxWaKl153iaJ2EP3ncshFoKCaOVjxKNyfEgLMdfZdjyZDMk2Jo
-    LlP5sDLOoakF9PE+/No0bj3cBDhDjUaQWsrk30GOOwxHmJIZa755Yv1ZceskwTsBgU2j
-    Vuow7W2wigY1K1rBeVOgUa7U3lvMIKTzUCM/+VHy2qu6nXDorK1co2vak+vtJ3P/zkSs
-    VOb1JPrnCriY3sRFLRyZaXh7oOxmp/v8IY8X7me8mbepCdWYFbphO13nMZ+Cs1TIwWj2
-    +7MA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1761983988;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=To:References:Message-Id:Date:Cc:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=+3zUXjN3NTSdTgmydFFZq3v8qUJDNiC8H0mmxBV6SGs=;
-    b=rho8inx4rPVjAto+1VxN8lJscQ1smSsIPBGY8zHDOSafiS4+Mh3EUgQWJcEBakhy5O
-    PIwItm069ecrfsxh6zZ2eVyRwqAVVpg3yE1nL4616em30YtTTJiEUUy+5uxSar0bIld2
-    /NU4vNbnA3kSWe6N39U3NmwmHY0ATiSdD9TEguUiXY5v5CJFCtMxUATdKg+/Qlgmahu7
-    JM2fI15BAL8cUc6uSR9TDzgA3mD2u9JprBdtxdw59lZdI3exTkKylYJAgr8YHQswVuhD
-    v4d41zmwFB0DzfFauRDFlkWMocXdop3LzujIFjiLXBk1f1G4rEa0N5LnM4BEL8kJkBVf
-    RQXg==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7V7VZi2s3yVXnhFqLkx1Gy5BXrtBsVfqVNFrP47WD4="
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 53.4.2 AUTH)
-    with ESMTPSA id e288661A17xmX2D
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sat, 1 Nov 2025 08:59:48 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE585258EEF
+	for <linux-pci@vger.kernel.org>; Sat,  1 Nov 2025 08:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761984600; cv=none; b=NsUKH6tQ5N1iErqkT8lC9z/XgGiV8DFYjG/4Lvscb9o11uOMMosnBAqcLj2u/t1rVvFR3Da9vsRix3kYfLDA4lMCqhdUJmMEFR/EKFTWZZKL5hxbxCpjpFnq8D8v3/CUvnyTx5z2kRbTFVIzpA0WM60N8gqz8wHv+qGRlNcUye4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761984600; c=relaxed/simple;
+	bh=bCsEm0pxWIq601ilo0zSNS/tbcHGgSqWB+cUQTCIWjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HscVrJKS7pCRFbz7P5oRMMvC06gP4omsV0jTT9bycH/H+m0iaM3fpCOy0qE2r+3HZsfK+j45VAl4iZ7b9SouVxQOAxYBnz4Bs/XJmBiY0j8H+fVLR2kUV5tzhJ+jvY2kE+AqarEAv6Zf3dJ5KYpUEiptFxP0996fJrJg4UjrNWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBxXoixk; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-63c489f1e6cso5484715a12.1
+        for <linux-pci@vger.kernel.org>; Sat, 01 Nov 2025 01:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761984597; x=1762589397; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e0mQAWV3XfpMeJi9ai8J8FQrA7XgmRdoJSKbFj4v+kE=;
+        b=OBxXoixkGnkpJZIfHE0jLbJmO0KFJyiq143+bRsBwGjgK+u3tOheNlgfTZqjm2C1MT
+         XAUZ9JI/F0ACLP6AZnmwCt+ocGQyBueneTJiMNJ0VFwXkSBtra0R13rYAAtFAVmlfc0Q
+         n0oBhByADRy2QHN6Y46TnGOek/G/f0o/qg1DUtZduJZVbLEdM1fXZMY8RvTXkVX63nMZ
+         CArmN1nNuMgNaq0wseLzxJRYh6s8cGSg8L5R8NJOnliJG3VaAu4HyhX0IzTfl6uVKLte
+         ls50xibceS94V3gbwIZrPX2h2q5/QNqRJWg8TJSBlB7NY2uylbBozdk8xgWpSrY10k5v
+         Ye+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761984597; x=1762589397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e0mQAWV3XfpMeJi9ai8J8FQrA7XgmRdoJSKbFj4v+kE=;
+        b=MSNNYOnGtviaTBoXAfhVRETiXUYSd4PvrVUjnvJSUbgEs+jARUHi8IT2MFglcsElsS
+         EZkF5r6De95ktu2BYI47CmyAieoGtFi+4AntXGpj9mr9bCFB3+zZt/bdnzGhHc7jay9g
+         eTs4SWPX8Hq4hDeg11ePqNhrleHlqCBGpiOUPGJog1mM6JsT2Os20ybVH/Zfebm7vxU9
+         I/ewYrgKb//tgeBIBGXS4nPA1z0LZCnEQd6e5nsFFAR1uk5UyWilNFkOvYRfmtr5FWX7
+         HQV2aFrvQ1P5RJdgq1PPpLa02XwWmV9ipK51BZ7+nkRgllB4IcmJkMjBudWsIYSWVICM
+         iACA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTCXrgjW1m+75sV3+xbvxIznGa65od3/FSCP8GTcxQPANVQBilZlGzU6/s1TC2pfHQrkJpPR6oLxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwREPhb8E8Q1S2PTcCxiXy7YrtLPu9BULqRq6n+8qSPwu8vNf/X
+	0dXwJAHHk7U0rqmHJU+7/4NxgNNdOt/H22Kxlth2k9YZIG/6T6i3RLf9dGjherNQaHMecKbi9rO
+	N/7UZdRj0UNK/kJubZqqwpem1gNSJWz8=
+X-Gm-Gg: ASbGnctmNqqh2PQx4sRj6UwZ7cJ9wAPG7ihlfaegi4JxAwxrJu7dgbMDe3aRdNTD4Zv
+	vS7t9L6WWy/uEKL5llLwnqWmFM3SoaHvMeNrFyR71I430hBUNHKzROP2epcSyRBEZ1HMLfhyE5o
+	ttkbNeCNivoZF4OPMmVb8lhPQ4hDPLzGOeGD6p8sVKxVTXSrKntGQvqy1pDEdl9Eae4ycadvHwm
+	wWPm8O0N7bDgkLNBKj56D7RWgwpyzGPqub8gwZqg9MuFNxNv4GSN0kF21c=
+X-Google-Smtp-Source: AGHT+IEStKAQTy8wZtpmhPqSnnW8TO7bXnzRVtqDvw1DcTKtsF9EE994q0FWQ6fL+UQYmZUp56Mhe4DohrV4ECJKEvI=
+X-Received: by 2002:a17:907:3e02:b0:b6d:ba72:7524 with SMTP id
+ a640c23a62f3a-b706e270c58mr803014966b.11.1761984596818; Sat, 01 Nov 2025
+ 01:09:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: [PPC] Boot problems after the pci-v6.18-changes
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-In-Reply-To: <545ac5c9-580c-5cf7-dd22-10dd79e6aabf@xenosoft.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lukas Wunner <lukas@wunner.de>, Manivannan Sadhasivam <mani@kernel.org>,
- regressions@lists.linux.dev
-Date: Sat, 1 Nov 2025 08:59:37 +0100
-Message-Id: <AEBA92BD-B46D-4D1B-A4D1-645B276E34CF@xenosoft.de>
-References: <545ac5c9-580c-5cf7-dd22-10dd79e6aabf@xenosoft.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: iPhone Mail (23A355)
+MIME-Version: 1.0
+References: <20251027145602.199154-1-linux.amoon@gmail.com>
+ <20251027145602.199154-3-linux.amoon@gmail.com> <ukgkfetbggzon4ppndl7gpitlsz7hjhzhyx3dgxqhdo52exguy@bqksd7d27lpy>
+ <CANAwSgTECOAoKeJS_=HxkkTP4OJvYu5xGQxY__Auh81v3QT=-w@mail.gmail.com> <e7cttuu5525k7ryvmkh6ifspm5vloj4muazvmp3yxtkgsdtbjs@u4odsfurejxq>
+In-Reply-To: <e7cttuu5525k7ryvmkh6ifspm5vloj4muazvmp3yxtkgsdtbjs@u4odsfurejxq>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Sat, 1 Nov 2025 13:39:41 +0530
+X-Gm-Features: AWmQ_bn4roPSmQJ8KCYtDIOw3rDpVxIdUMmrjbDOUs1b7sXIsyCe60QAiCMVpHM
+Message-ID: <CANAwSgTRFMiSN8Q-tndvVXk7NxuNJE7GmcBXq46RQ=Z6-qOLEw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] PCI: dw-rockchip: Add runtime PM support to
+ Rockchip PCIe driver
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Hans Zhang <18255117159@163.com>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Manivannan
 
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, 31 Oct 2025 at 20:23, Manivannan Sadhasivam <mani@kernel.org> wrote=
+:
+>
+> On Fri, Oct 31, 2025 at 07:33:23PM +0530, Anand Moon wrote:
+> > Hi Manivannan
+> >
+> > Thanks for your review comment.
+> >
+> > On Fri, 31 Oct 2025 at 14:09, Manivannan Sadhasivam <mani@kernel.org> w=
+rote:
+> > >
+> > > On Mon, Oct 27, 2025 at 08:25:30PM +0530, Anand Moon wrote:
+> > > > Add runtime power management support to the Rockchip DesignWare PCI=
+e
+> > > > controller driver by enabling devm_pm_runtime() in the probe functi=
+on.
+> > > > These changes allow the PCIe controller to suspend and resume dynam=
+ically,
+> > > > improving power efficiency on supported platforms.
+> > > >
+> > >
+> > > Seriously? How can this patch improve the power efficiency if it is n=
+ot doing
+> > > any PM operation on its own?
+> > >
+> > I could verify that runtime power management is active
+> >
+>
+> This is runtime status being active, which is a different thing as it onl=
+y
+> allows the runtime PM hierarchy to be maintained. But the way you describ=
+ed the
+> commit message sounds like the patch is enabling runtime PM of the contro=
+ller
+> and that improves efficiency (as if the controller driver is actively doi=
+ng
+> runtime PM operations).
+>
+> > [root@rockpi-5b alarm]# cat
+> > /sys/devices/platform/a41000000.pcie/power/runtime_status
+> > active
+> > [root@rockpi-5b alarm]#  find /sys -name runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/power/runt=
+ime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/pci_bus/00=
+04:41/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/net/enP4p65s0/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/net/enP4p65s0/enP4p65s0-3::lan/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/net/enP4p65s0/enP4p65s0-2::lan/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/net/enP4p65s0/enP4p65s0-1::lan/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/net/enP4p65s0/enP4p65s0-0::lan/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/mdio_bus/r8169-4-4100/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/power/runtime_status
+> > /sys/devices/platform/a41000000.pcie/pci0004:40/0004:40:00.0/0004:41:00=
+.0/mdio_bus/r8169-4-4100/r8169-4-4100:00/hwmon/hwmon11/power/runtime_status
+> >
+> > Well, the powertop shows that the runtime power management is enabled
+> > on Radxa Rock 5b,
+> >
+> > PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
+> > stats   Device Freq stats   Tunables   WakeUp
+> > >> Good          Wireless Power Saving for interface wlan0
+> >    Good          VM writeback timeout
+> >    Good          Bluetooth device interface status
+> >    Good          NMI watchdog should be turned off
+> >    Good          Autosuspend for unknown USB device 2-1.3 (8087:0a2b)
+> >    Good          Autosuspend for USB device USB 2.0 Hub [2-1]
+> >    Good          Autosuspend for USB device Generic Platform OHCI
+> > controller [usb1]
+> >    Good          Autosuspend for USB device xHCI Host Controller [usb8]
+> >    Good          Autosuspend for USB device Generic Platform OHCI
+> > controller [usb4]
+> >    Good          Autosuspend for USB device EHCI Host Controller [usb2]
+> >    Good          Autosuspend for USB device xHCI Host Controller [usb6]
+> >    Good          Autosuspend for USB device EHCI Host Controller [usb3]
+> >    Good          Autosuspend for USB device xHCI Host Controller [usb5]
+> >    Good          Autosuspend for USB device xHCI Host Controller [usb7]
+> >    Good          Runtime PM for PCI Device Intel Corporation Wireless
+> > 8265 / 8275
+> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
+d RK3588
+> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
+d RK3588
+> >    Good          Runtime PM for PCI Device Realtek Semiconductor Co.,
+> > Ltd. RTL8125 2.5GbE Controller
+> >    Good          Runtime PM for PCI Device Rockchip Electronics Co., Lt=
+d RK3588
+> >    Good          Runtime PM for PCI Device Samsung Electronics Co Ltd
+> > NVMe SSD Controller SM981/PM981/PM983
+> >
+> > PowerTOP 2.15     Overview   Idle stats   Frequency stats   Device
+> > stats   Device Freq stats   Tunables   WakeUp
+> >               Usage     Device name
+> >               1.1%        CPU use
+> >             100.0%        Radio device: rfkill_gpio
+> >             100.0%        runtime-rockchip-gate-link-clk.712
+> >             100.0%        PCI Device: Realtek Semiconductor Co., Ltd.
+> > RTL8125 2.5GbE Controller
+> >             100.0%        runtime-rockchip-gate-link-clk.717
+> >             100.0%        runtime-rockchip-gate-link-clk.714
+> >             100.0%        runtime-rockchip-gate-link-clk.489
+> >             100.0%        runtime-a40000000.pcie
+> >             100.0%        runtime-a40800000.pcie
+> >             100.0%        runtime-rockchip-gate-link-clk.718
+> >             100.0%        runtime-rockchip-gate-link-clk.706
+> >             100.0%        runtime-rockchip-gate-link-clk.708
+> >             100.0%        PCI Device: Intel Corporation Wireless 8265 /=
+ 8275
+> >             100.0%        Radio device: btusb
+> >             100.0%        runtime-fcd00000.usb
+> >             100.0%        PCI Device: Samsung Electronics Co Ltd NVMe
+> > SSD Controller SM981/PM981/PM983
+> >             100.0%        Radio device: rfkill_gpio
+> >             100.0%        runtime-fc000000.usb
+> >             100.0%        Radio device: iwlwifi
+> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
+588
+> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
+588
+> >             100.0%        PCI Device: Rockchip Electronics Co., Ltd RK3=
+588
+> >             100.0%        runtime-rockchip-gate-link-clk.711
+> >             100.0%        runtime-fc400000.usb
+> >             100.0%        runtime-rockchip-gate-link-clk.704
+> >             100.0%        runtime-rockchip-gate-link-clk.701
+> >             100.0%        runtime-rockchip-gate-link-clk.716
+> >             100.0%        runtime-rockchip-gate-link-clk.707
+> >             100.0%        runtime-rockchip-gate-link-clk.709
+> >             100.0%        runtime-rockchip-gate-link-clk.719
+> >             100.0%        runtime-xhci-hcd.1.auto
+> >             100.0%        runtime-feb50000.serial
+> >             100.0%        runtime-rockchip-gate-link-clk.715
+> >             100.0%        runtime-rockchip-gate-link-clk.710
+> >
+> > > Again, a pointless patch.
+>
+> This patch might make sense on its own, to enable runtime PM status of th=
+e
+> controller so that the runtime PM could be applied to the entire PCIe hie=
+rarchy.
+>
+I will update this in the commit message.
+> > I implemented a .remove patch to ensure proper resource cleanup,
+> > which is a necessary step for successfully enabling and managing
+> > runtime power for the device.
+>
+> How a dead code (remove callback for a always built-in driver) becomes ne=
+cessary
+> for runtime PM.
+>
+Ok, understood we don't have platform_driver_unregister in
+builtin_platform_driver
+I will drop the first patch.
 
-Oops, I made that fixup run too late.  Instead of the patch above, can
-you test the one below?
-
-You'll likely see something like this, which is a little misleading
-because even though we claim "default L1" for 01:00.0 (or whatever
-your Radeon is), the fact that L0s and L1 are disabled at the other
-end of the link (00:00.0) should prevent us from actually enabling it:
-
-pci 0000:00:00.0: Disabling ASPM L0s/L1
-pci 0000:01:00.0: ASPM: default states L1
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..27777ded9a2c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *=
-dev)
-* disable both L0s and L1 for now to be safe.
-*/
-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0=
-s_l1);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_asp=
-m_l0s_l1);
-
-/*
-* Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-
-=E2=80=94
-
-Hi Bjorn,
-
-Thanks for your patch. I patched the RC3 of kernel 6.18 with your new patch a=
-nd compiled it again. Unfortunately the FSL Cyrus+ board doesn't boot with y=
-our new patch.
-
-Sorry,
-
-Christian
-
---
-Sent with BrassMonkey 33.9.1 (https://github.com/chzigotzky/Web-Browsers-and=
--Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
-
-=E2=80=94-
-
-What about with=20
-
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, quirk_disable_aspm_l=
-0s_l1);
-
-?
-
-- Christian=
-
+> - Mani
+>
+Thanks
+-Annad
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
