@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-40020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03ACAC27FDE
-	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 14:36:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10DFCC28038
+	for <lists+linux-pci@lfdr.de>; Sat, 01 Nov 2025 14:39:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 36F024EA59D
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 13:34:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A28E94E8D1F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Nov 2025 13:36:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A1D2FD66E;
-	Sat,  1 Nov 2025 13:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6108030507E;
+	Sat,  1 Nov 2025 13:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="l0fhBZXx"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nh2aYfQi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A522C2FB610;
-	Sat,  1 Nov 2025 13:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04972FF161;
+	Sat,  1 Nov 2025 13:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762003986; cv=none; b=ULQQZblhWD8EcDQrzveLwbOdvvc+inNTbZGbpvmSh9Pc2jQN06gqL27PcBMRTEH1TvdzsqpV5gtcUan5rVegyk1clM8ksuwmd4dMqUC8fZJhOe9ZOz8eZ80CbKtFY7vph1+5yr1HvnRPwQ+YdBbD7VJIWOCmAs58LWJqVOL5rjw=
+	t=1762003990; cv=none; b=e9pPS5Uu12khZOgJQPOnSMnQCNpJyehyuZ3mppoO3hwsHOIY/ZS/d6dySOcuPd88KD34TShX/NA/Ro4BrJKW6aI/AUWjF5OnRcrlbYz8m4QKY+HaZA8DlonpuIU/UDpRFDjbm0bVuZ1bF3QnXLV20OO0GMz7X9sEGUl47Orv8x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762003986; c=relaxed/simple;
-	bh=YUkMxhc36lfDFQq88M5/ukQps2eWc5BNpPfONN/wkTU=;
+	s=arc-20240116; t=1762003990; c=relaxed/simple;
+	bh=ZDZDYWQ0pBb006s9WoF4BubE2PEuT8OM2W2BmbduJzY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kJK7wjoA8S3k6/p13LA72yPqr2KDtIn7mRJTjcQGmKz/voopbTzrWG1L5/qOMiit1lAO/1buev8LMXHWCyKjNmvmFECeJAU3xgjUcKkU4FBmnz4rkBrrqlF6xAuRXOejaaQ+mmKK/cjefIL0d8AGTjhRdtY7H1KI7uBZat24O0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=l0fhBZXx; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=MiFKxEdsTtysVKtfkzoD04sBm0AM0giPlyKDN1stHJVPKHGYe/zY4M72ApSq1Df8qB3z2mngXFYGXXJQl0j1arEB2pbHij1wdS54i1ILNFsFKm/U+zglskOqdcBbxH4yBRZMwzg4vpP6QlTSRpOsvFXcGrf9/rvD3Uah24SER+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nh2aYfQi; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1762003979;
-	bh=YUkMxhc36lfDFQq88M5/ukQps2eWc5BNpPfONN/wkTU=;
+	s=mail; t=1762003980;
+	bh=ZDZDYWQ0pBb006s9WoF4BubE2PEuT8OM2W2BmbduJzY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l0fhBZXxbT5HKIykr8Fk3qKkjo31VGI8L72JfSpzHqeBi4RmwcTYVZ9qT9eqT9vKP
-	 47Z9ZTZAc4WQmdlmrnm5SbrNzjB4I+sOuKf7K4Dj1YvnHre3lZ3ccBIXLsY7dR8/LP
-	 Xr1xI6M3e97yGGrfAsaM1s7CZPl26mWFOB986EZC0mOnw/KPeUpjnFZETvpcWZMjZv
-	 vTZWfzE68I0GYM+3S8thQFOikv5EDEJjoO99dXaaast1sl41rRdfW1lTo8ZjIdVtKh
-	 /cf59dS3alql+eEWEePZgCuSbm73WBffOmaWq/uSx/dKtYxOZQwQ1xXvHXgUtRVKq3
-	 icKuL/Tg8ynUQ==
+	b=nh2aYfQiFcRIetufBWS4vqK2KujifLFy12b1CPMyEOtcoYhLE/xrV5Z+8TBe2ka1Y
+	 tbkq5j9dPw+LmwO5l3yr0d8wgLaMh5I8BDq0dWngGXFhKtZQMp+hSKQJ2h5HIwJ8FL
+	 89c5YvH3G2+WvzansquvT24h55dufBJ440yPgy5QvlS2W/E2J8Gb4YfucZnT/zJNyG
+	 1KFlTc05ffnK2Yg0admBEDga9+t+9okKrtOpkkzwi7Iq8Ulyxgmnl1nC5XSm8GRNVi
+	 Z+J0ig2rqLRqsLHepcS1MLKLb/tmbTbIRkjWu1JCKlOcw8BuM0wZn4C3qAwBr72z9o
+	 r9SWVNNmJ+4lA==
 Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6C2DB17E1423;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E9FB817E35CB;
 	Sat,  1 Nov 2025 14:32:59 +0100 (CET)
 Received: by beast.luon.net (Postfix, from userid 1000)
-	id BBBAB10E9D03C; Sat, 01 Nov 2025 14:32:58 +0100 (CET)
+	id BF4D510E9D03E; Sat, 01 Nov 2025 14:32:58 +0100 (CET)
 From: Sjoerd Simons <sjoerd@collabora.com>
-Date: Sat, 01 Nov 2025 14:32:55 +0100
-Subject: [PATCH v2 10/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
- SPI NOR
+Date: Sat, 01 Nov 2025 14:32:56 +0100
+Subject: [PATCH v2 11/15] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ Ethernet
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251101-openwrt-one-network-v2-10-2a162b9eea91@collabora.com>
+Message-Id: <20251101-openwrt-one-network-v2-11-2a162b9eea91@collabora.com>
 References: <20251101-openwrt-one-network-v2-0-2a162b9eea91@collabora.com>
 In-Reply-To: <20251101-openwrt-one-network-v2-0-2a162b9eea91@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -89,133 +89,116 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  Sjoerd Simons <sjoerd@collabora.com>
 X-Mailer: b4 0.14.3
 
-The openwrt one has a SPI NOR flash which from factory is used for:
-* Recovery system
-* WiFi eeprom data
-* ethernet Mac addresses
+Enable the Ethernet subsystem on OpenWrt One board with dual-MAC
+configuration:
+- GMAC0: Connected to external Airoha EN8811H 2.5GbE PHY via SGMII
+  (2500base-x mode) for WAN connectivity with LED indicators
+- GMAC1: Connected to internal MT7981 1GbE PHY (GMII mode) for LAN
 
-Describe this following the same partitions as the openwrt configuration
-uses.
+Ethernet aliases are defined to provide consistent network interface
+naming (ethernet0 = LAN, ethernet1 = WAN).
 
 Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
 ---
 V1 -> V2:
-  - Use numeric drive-strength values rather then defines
-  - Make nvmem cell labers more meaningfull
-  - Only define nvmem cells used in later patches by devicetree
+  - Switch gmac0 phy irq to Level
+  - Update mac nvmem label name
 ---
- .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 77 ++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
- 2 files changed, 78 insertions(+), 1 deletion(-)
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-index 5834273839c17..183e48d985ed7 100644
+index 183e48d985ed7..90edb9f493c6d 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-@@ -3,6 +3,7 @@
+@@ -3,6 +3,8 @@
  /dts-v1/;
  
  #include "mt7981b.dtsi"
-+#include "dt-bindings/pinctrl/mt65xx.h"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
+ #include "dt-bindings/pinctrl/mt65xx.h"
  
  / {
- 	compatible = "openwrt,one", "mediatek,mt7981b";
-@@ -53,6 +54,82 @@ mux {
- 			groups = "pcie_pereset";
- 		};
+@@ -10,6 +12,8 @@ / {
+ 	model = "OpenWrt One";
+ 
+ 	aliases {
++		ethernet0 = &gmac1;
++		ethernet1 = &gmac0;
+ 		serial0 = &uart0;
  	};
+ 
+@@ -41,6 +45,58 @@ reg_5v: regulator-5v {
+ 	};
+ };
+ 
++&eth {
++	status = "okay";
 +
-+	spi2_flash_pins: spi2-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2";
-+		};
++	/* WAN interface */
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		nvmem-cells = <&wan_factory_mac 0>;
++		nvmem-cell-names = "mac-address";
++		phy-mode = "2500base-x";
++		phy-handle = <&phy15>;
++	};
 +
-+		conf-pu {
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
-+			drive-strength = <8>;
-+			pins = "SPI2_CS", "SPI2_WP";
-+		};
++	/* LAN interface */
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-mode = "gmii";
++		phy-handle = <&int_gbe_phy>;
++	};
++};
 +
-+		conf-pd {
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
-+			drive-strength = <8>;
-+			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++&mdio_bus {
++	phy15: ethernet-phy@f {
++		compatible = "ethernet-phy-id03a2.a411";
++		reg = <0xf>;
++		interrupt-parent = <&pio>;
++		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
++		reset-gpios = <&pio 39 GPIO_ACTIVE_LOW>;
++		reset-assert-us = <10000>;
++		reset-deassert-us = <20000>;
++		airoha,pnswap-rx;
++
++		leds {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			led@0 {
++				reg = <0>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_AMBER>;
++			};
++
++			led@1 {
++				reg = <1>;
++				function = LED_FUNCTION_WAN;
++				color = <LED_COLOR_ID_GREEN>;
++			};
 +		};
 +	};
 +};
 +
-+&spi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2_flash_pins>;
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				reg = <0x00000 0x40000>;
-+				label = "bl2-nor";
-+			};
-+
-+			partition@40000 {
-+				reg = <0x40000 0xc0000>;
-+				label = "factory";
-+				read-only;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					wifi_factory_calibration: eeprom@0 {
-+						reg = <0x0 0x1000>;
-+					};
-+
-+					wan_factory_mac: macaddr@24 {
-+						reg = <0x24 0x6>;
-+						compatible = "mac-base";
-+						#nvmem-cell-cells = <1>;
-+					};
-+				};
-+			};
-+
-+			partition@100000 {
-+				reg = <0x100000 0x80000>;
-+				label = "fip-nor";
-+			};
-+
-+			partition@180000 {
-+				reg = <0x180000 0xc80000>;
-+				label = "recovery";
-+			};
-+		};
-+	};
+ &pcie {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_pins>;
+@@ -132,6 +188,10 @@ partition@180000 {
+ 	};
  };
  
++&sgmiisys0 {
++	mediatek,pnswap;
++};
++
  &uart0 {
-diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-index 3510a26cb5112..2c9819f28fdc2 100644
---- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-@@ -195,7 +195,7 @@ i2c@11007000 {
- 			status = "disabled";
- 		};
- 
--		spi@11009000 {
-+		spi2: spi@11009000 {
- 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
- 			reg = <0 0x11009000 0 0x1000>;
- 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+ 	status = "okay";
+ };
 
 -- 
 2.51.0
