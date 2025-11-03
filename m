@@ -1,181 +1,127 @@
-Return-Path: <linux-pci+bounces-40078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A42C29DDA
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 03:32:32 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0340C2A2D7
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 07:26:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 482C4188E006
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 02:32:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 392A34E962B
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 06:26:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD1A283CB0;
-	Mon,  3 Nov 2025 02:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66B4C154BE2;
+	Mon,  3 Nov 2025 06:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEQ1VRQg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D73283686;
-	Mon,  3 Nov 2025 02:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1DE28D8D9
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 06:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762137132; cv=none; b=JjPCYp879mOJoeWeGQMEGycS9jjniL/EndR2IAXaLj6Eb6f1FdIC+JZQyLJLKvvWk4KxJs+MlqvPcT+BzyG/QJpfmI2sL2ImjkZ2xeKXhCfl9v2rQiNpmbGnk2/RPiIlgCkk3zMPaw4bJF7sUd4CTUBbqMfksms4DzbyJLFeKW4=
+	t=1762151211; cv=none; b=LswnP4SnDCFg/jdUIwTtip+ylHDi5aekfg3fvjPRIEixndA1ldEEP5VCRVFvIyNT5UiM4zoXZlRLkFVKP5ax5uxNDiNTaKk4BhayvShJZh6T6ZXv7gbMvcAO2z6P/BIPcRBpH71JNkQFQeMX6lhPC7TfkpWYuWM+osjJrj3DGvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762137132; c=relaxed/simple;
-	bh=VnBBYLunQzYKbo73WqVJBPX3RlrHr7fLVQ0+GI0Sv3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hPYHbmph26An2xqHiP0jPOaY20HCW4OuOIZKpCmSZYfWHGBf/qART2A29z3TVWC+gkrLcDLJ2KICZ67Ri5xLR04paNbTFWNyyLPwUttOSh6tyfr7pYYopeKFVhuZ645aUQM/S19SYnjplLY16/vhrCtoFgwmhqka4kGv5/Jcz1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d0FwL2HNCzKHMVY;
-	Mon,  3 Nov 2025 10:32:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 032E71A18D1;
-	Mon,  3 Nov 2025 10:32:06 +0800 (CST)
-Received: from [10.67.111.176] (unknown [10.67.111.176])
-	by APP1 (Coremail) with SMTP id cCh0CgDHN0slFAhpPKf4CQ--.38631S2;
-	Mon, 03 Nov 2025 10:32:05 +0800 (CST)
-Message-ID: <400165fe-18d5-4a78-b4bd-4e5b55de0c04@huaweicloud.com>
-Date: Mon, 3 Nov 2025 10:32:04 +0800
+	s=arc-20240116; t=1762151211; c=relaxed/simple;
+	bh=B7Dys0O6nBI1SpNWYBQ9IszCBqiZCkRXAY8GXR39t74=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lX4sQnlgwIW9KdYNbAlpkFxSGGWd2IMcEsfwzXJTbwSOLDdLZKs6zjgbK6yhz4gR7pZKEtZ7FhyaTL4+McdoHjK2a9Vcvd9JrrgFTvv5cRmbBezA1NduhTS3TpKW47Vi/9s5ljgar82WEF+sy7y/HC/dCtk55117LS+KTirgsBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEQ1VRQg; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-29555415c5fso21413965ad.1
+        for <linux-pci@vger.kernel.org>; Sun, 02 Nov 2025 22:26:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762151209; x=1762756009; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9n+VOC446iMLGSUtF1aVw7jOFyi8anlj6U7DHCW/jPs=;
+        b=JEQ1VRQgupn1NMpuLRdeBoTi+6q8d6VjoGKYTxh551g1dX+HOS+Nwq8iJC2yaRE2EY
+         DGKX7qZF+RfvJyA4EG2ib9iwQfoCJLVqZBlpHsJ6XT0ZzZwUN/gaCdtTtFoEonsF5Xtr
+         j//ayLA5yiZ9cJegS75rrtOc6NWsfkxSj/2jzHYXgEzXUoGsvXS5O/ION6q6+bppAt7W
+         VXrmNpV8dlXnsUMj8DMX1b9R8kmo3CndXEXnmebX2zXTvVtP+0Ro1U2hZXyFmMGylIx9
+         VT2C/RLI5VSyQBhrheNC0eXA4D1jphQUx59EjohNe+gVTznPRxl5O5i61ZnnMzuWFx3A
+         HQBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762151209; x=1762756009;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9n+VOC446iMLGSUtF1aVw7jOFyi8anlj6U7DHCW/jPs=;
+        b=SJ4bwuxrELbv/kvzEgj3FQkoTUItbWnXAs+bqk28IqP0wSgvqr/YuVaOKJVyMZs8XQ
+         xr7AbwX42DfBrKY1aT1AbwHrDciyt8zdsLlu3Zua84kvXMvDWerV53LKMVaHRkgs2WuV
+         L9WysY9BQ8xkgsgR1w07cvsaTNUMd5P8wc2zy5m/XjVnI6vnduUtnNW/tHZW16t0bWPO
+         k8WRHK9bXC3y5ZT1jfIPL1p7xQRN7zrDVQfqME8qmHxD9NCl5Ma82a40h5hsqGI3cwNq
+         w/UBHyWcZHS01Xwi0/vz6ozLAJ+rBCA0eXbpND4H5vz0qSpSiAfhj1XAPoMEct2YqpYV
+         fuJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWL30KqCE7Z+OaQaJqOfxaqb/8U1epneWXZdy7M1unyR4vBybPZe99+ZKntHLM39mK7V/tK9DrdkQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW+E3q41crAEyqluWYPfRUgmWZk/pOQqtXwy6CXSF5oPRccnxJ
+	V+HtVppnEiYxSSF13PDld0D/LsWKkZaMPSo0zOqdBtaS0MZHRQt0HqhS
+X-Gm-Gg: ASbGncvLSJYpCSRGDYVhXH9yaZ+2f79nY3QyjxkiLO8dNwx4z9YXUvRkqBzt9DZPzkh
+	3srwE99viPJo0EjkwcUYdCJNzCLfP2wRdVUNfZDdZEjSWYMj755nJbBGeeTNrS0LxIPZl+f4ZC1
+	qUuLuaG0jHvC788qTjitEttEEVUwnvW1LvqcYYEo/3wJHCI+6naKSlVDLeOag09RauOSwIitSDo
+	RzNMqsNdHT8OUC1c3h5jMiUOUDJH8xAQ594iFyQPjfn40/Gl6QqMP2I8WN9S9fzcu1AOdP4lD7l
+	Bi7O1opLcBmp76bcZ8W1OCcDgtmyBEdZmny1IRWo+LbIdHYGbJyur8OgbrurVNimjb9tKxmD9Bd
+	oJpZKe4LPioM2wUmCgwYhrd44jgkeY+Z40mku/XqDSituceiVLUs0gaHeflWIsEA4YNgseMaWJA
+	==
+X-Google-Smtp-Source: AGHT+IHE85ZAE05MQ29tDiEe73xuX9q1kSirWYaSnQbdQ95U62fo8gMJxYb1mTHJbA73o23JvHBMaw==
+X-Received: by 2002:a17:902:f705:b0:26c:2e56:ec27 with SMTP id d9443c01a7336-2951a3d5107mr152483975ad.19.1762151208773;
+        Sun, 02 Nov 2025 22:26:48 -0800 (PST)
+Received: from geday ([2804:7f2:800b:fff9::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2952699b603sm107777285ad.79.2025.11.02.22.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Nov 2025 22:26:48 -0800 (PST)
+Date: Mon, 3 Nov 2025 03:26:35 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Geraldo Nascimento <geraldogabriel@gmail.com>
+Subject: [RFC PATCH 0/2] PCI: rockchip-host: support quirky devices
+Message-ID: <cover.1762150971.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/33] cpuset: Provide lockdep check for cpuset lock held
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
- <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
- <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
- Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
- Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, netdev@vger.kernel.org
-References: <20251013203146.10162-1-frederic@kernel.org>
- <20251013203146.10162-12-frederic@kernel.org>
- <b94f6159-a280-4890-a02a-f19ff808de5b@huaweicloud.com>
- <aQTe6X5XXSp8_3z5@localhost.localdomain>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <aQTe6X5XXSp8_3z5@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHN0slFAhpPKf4CQ--.38631S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tryxCw1kAF1UJrWfKw4DJwb_yoW5Jr1rpF
-	yDKFyrCF4rZr4UuFy2qw17uF1vqw4kWF1UGFn5tr18XasFvFn2vF1v9r1Ygr1F9rs7Gw40
-	vF17Wa9I9FWqyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUsPfHUUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+With these two changes I'm able to work with a Samsung PM981a OEM SSD
+that is known to be not-working with Rockchip-IP PCIe.
 
+Previously I attempted a contrived solution that mostly worked for my
+simple purposes but was rather inelegant and impractical.
 
-On 2025/11/1 0:08, Frederic Weisbecker wrote:
-> Le Tue, Oct 14, 2025 at 09:29:25PM +0800, Chen Ridong a écrit :
->>
->>
->> On 2025/10/14 4:31, Frederic Weisbecker wrote:
->>> cpuset modifies partitions, including isolated, while holding the cpuset
->>> mutex.
->>>
->>> This means that holding the cpuset mutex is safe to synchronize against
->>> housekeeping cpumask changes.
->>>
->>> Provide a lockdep check to validate that.
->>>
->>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
->>> ---
->>>  include/linux/cpuset.h | 2 ++
->>>  kernel/cgroup/cpuset.c | 7 +++++++
->>>  2 files changed, 9 insertions(+)
->>>
->>> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
->>> index 2ddb256187b5..051d36fec578 100644
->>> --- a/include/linux/cpuset.h
->>> +++ b/include/linux/cpuset.h
->>> @@ -18,6 +18,8 @@
->>>  #include <linux/mmu_context.h>
->>>  #include <linux/jump_label.h>
->>>  
->>> +extern bool lockdep_is_cpuset_held(void);
->>> +
->>>  #ifdef CONFIG_CPUSETS
->>>  
->>>  /*
->>> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
->>> index 8595f1eadf23..aa1ac7bcf2ea 100644
->>> --- a/kernel/cgroup/cpuset.c
->>> +++ b/kernel/cgroup/cpuset.c
->>> @@ -279,6 +279,13 @@ void cpuset_full_unlock(void)
->>>  	cpus_read_unlock();
->>>  }
->>>  
->>> +#ifdef CONFIG_LOCKDEP
->>> +bool lockdep_is_cpuset_held(void)
->>> +{
->>> +	return lockdep_is_held(&cpuset_mutex);
->>> +}
->>> +#endif
->>> +
->>>  static DEFINE_SPINLOCK(callback_lock);
->>>  
->>>  void cpuset_callback_lock_irq(void)
->>
->> Is the lockdep_is_cpuset_held function actually being used?
->> If CONFIG_LOCKDEP is disabled, compilation would fail with an "undefined reference to
->> lockdep_is_cpuset_held" error.
-> 
-> Although counter-intuitive, this is how the lockdep_is_held() functions family
-> do work.
-> 
-> This allows this kind of trick:
-> 
-> if (IS_ENABLED(CONFIG_LOCKDEP))
->    WARN_ON_ONCE(!lockdep_is_held(&some_lock))
-> 
-> This works during the compilation because the prototype of lockdep_is_held()
-> is declared. And since the IS_ENABLED() is resolved during compilation as well,
-> the conditional code is wiped out and therefore not linked. As a result the
-> linker doesn't even look for the definition of lockdep_is_held() and we don't
-> need to define an off case that would return a wrong assumption.
-> 
-> Thanks.
-> 
+Now I have isolated the behavior to the three lines in the two commits.
+Omit those three lines and you get a working set with the kernel.
 
-Thank you for your explanation
+I have no idea how to actually implement this in a way that makes sense
+and doesn't break the PCIe spec but it is my sincere wish that
+interested RK3399 parties test the change and report any regressions
+with already-working devices and specifically, successes or failures of
+initial link-training with these changes.
+
+Geraldo Nascimento (2):
+  arm64: dts: rockchip: drop PCIe 3v3 always-on/boot-on
+  PCI: rockchip-host: drop wait on PERST# toggle
+
+ arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 2 --
+ drivers/pci/controller/pcie-rockchip-host.c           | 1 -
+ 2 files changed, 3 deletions(-)
 
 -- 
-Best regards,
-Ridong
+2.49.0
 
 
