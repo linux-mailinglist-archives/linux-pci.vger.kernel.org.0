@@ -1,116 +1,196 @@
-Return-Path: <linux-pci+bounces-40104-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40105-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8980EC2BD2D
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 13:50:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33B00C2C1CD
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 14:35:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6186E3BD2C0
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 12:45:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7630F188FC94
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 13:35:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C3B30F929;
-	Mon,  3 Nov 2025 12:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5154B30EF86;
+	Mon,  3 Nov 2025 13:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="StuMPw7i"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iSuStlNC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D486F306B2C;
-	Mon,  3 Nov 2025 12:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6903305046
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 13:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762173831; cv=none; b=bzu8/ZJ9tBXomOvfIinLy0xTQ4refdoBIoFYrq4ByegkjSS+XbtfwxRoJ4G2/YYj9YsBBhCnP6USxoq9tFeV+ZGPqIoL20NqzqvjVa8CEhjtif5nsYOrttRyTGJRAfTapUNVUlDuulTfLTYU+LFyhjSkoDl60vVL4Mbh+au3nLo=
+	t=1762176914; cv=none; b=pVZrzAhkFqrIhydmc5zGxgeAO2p6EzP9L3TyQN0rJPOzvsda/qyoThus+AhpduhKZQyOzPkNXQ6AGQhh2CbVanA/odELJHIRWqoh8IjYO0pvAWbKALGihmGd9hkPY9u1rzzTYX5kYSk+bfSwdG17Hzz4l8GCBgxHC48ur0eAPQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762173831; c=relaxed/simple;
-	bh=DK6Qoga15L0ESP5ijps+jZiHacx74F2Rwieqr8w+dz0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=An4h3C9PVqyrsTpH7mFVvBLgDvoMj6T6fuXYx8+oD7ZJKbWP3aCp+T6EccSowZvKSp5hJYlq9SQNhAmCChXaM+tRaHHgAcqfsA6c9i3ND15oDbItK35PXFxemGoLIwXO6uMVMqM3Pynsh+ZiFoQSJdGBy4M8Y3v85oL5DV6RVzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=StuMPw7i; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762173830; x=1793709830;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=DK6Qoga15L0ESP5ijps+jZiHacx74F2Rwieqr8w+dz0=;
-  b=StuMPw7iQ0hm5lINnUFGG4eeFCdrvxjMOBJRSgmis0LlWiz5Vj+Xe6V3
-   uXsP7c3EiWOgwaWJovsrhvNRCP8aUqkBD5QDqERILXe4xt+u8fbz+gJcb
-   CF8OvBkWhlL2jVFsWoDgPYtyCaLCgTwtHNc/5nRJnxPiHmnZKVBZ/gK4Z
-   tr84akZhTNry8tqbmj9hm9RQ1wTxZbRigO7nhjuN/XqiWkceoyI+KnlhF
-   QB8YjYw2a3wGDHc/2h+UORJ44IlAQlSWoem0cMOt2O8X38+H8JFDqRjsl
-   ewM80Kr7kebybZF8UgVVavReEPuOAAFur/FyjyZcUMQ/LlHPMd0/Gs0O2
-   g==;
-X-CSE-ConnectionGUID: fT49145ISQ2ULduLMx/JtQ==
-X-CSE-MsgGUID: NTdsjY88RTeMV4HVhDEr/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="68107620"
-X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
-   d="scan'208";a="68107620"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 04:43:47 -0800
-X-CSE-ConnectionGUID: +l7yY1SEQq6rNoC6pxFeog==
-X-CSE-MsgGUID: WKYQr0/WQjKHpXoqY4WgNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
-   d="scan'208";a="186539036"
-Received: from krybak-mobl1.ger.corp.intel.com (HELO [10.245.246.110]) ([10.245.246.110])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 04:43:44 -0800
-Message-ID: <9e34fe42-a031-4ab6-b986-c09a36040b66@linux.intel.com>
-Date: Mon, 3 Nov 2025 14:43:57 +0200
+	s=arc-20240116; t=1762176914; c=relaxed/simple;
+	bh=HUhCBMZvZipHgUmjcVZ0eOSnMcg+HbQiCeJ/7jxn+Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P6p/dLO60d+vtjssYhbMGrfTt+v/z6HcloMASoeQsnvO97hK4x3hSMMuGUEuDVKjpijL/da5jfWHB91CVgzDfuZ/IJD1mqn42ZCUxrl3dn7x4B+0HYI8+H1dN+Bwcy2EubRCnHKz2vys0hke6Kbdxm8WyQfcq+ja+rA21zxZXTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iSuStlNC; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 1307B4E414CF
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 13:35:10 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id C0BB160709;
+	Mon,  3 Nov 2025 13:35:09 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F194010B500FE;
+	Mon,  3 Nov 2025 14:34:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1762176907; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=koLz65BvAsRdOTOjAYYzE2T1rPDi7AByKsxkPawhxGI=;
+	b=iSuStlNC/qPWehMW5QtSxmK7/Ek+OmtM952H+Xk5cz64yvAI1dRLRJl2LFnH1Saj3uIcSn
+	Tfo0dDHHxzLe5rPhwCbyehjx3KhF+kWXpLRNtBcibrsD5eWlEhe06L8+GQDP7gihuHb7M4
+	aMb4hr5u64HA2jT9649n28R3LSuMyiMLHcAn1aj1T2djrGGH2TKUKnNVTaabRGpAWKTAUy
+	xDNG39m9CDfMAnKBAqtJttRhZlsDSxkcO7NokNzenCtkiwC6nxpHFV3TZc+Gz2qOhJ3anH
+	P5/UUwG3W53ojB0Z3tCqPkFB8BoZl0mckys6ra3FPqO4z9ocBaUZIcIEe7GxPQ==
+Date: Mon, 3 Nov 2025 14:34:52 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter
+ Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Saravana Kannan
+ <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 18/29] i2c: mux: Create missing devlink between mux
+ and adapter physical device
+Message-ID: <20251103143452.080c3503@bootlin.com>
+In-Reply-To: <6tgbavtf2dqc44ebfighrs5chzx4j4zdmjk77fmulwqbhrex2b@lou7ekbsjekr>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-19-herve.codina@bootlin.com>
+	<6tgbavtf2dqc44ebfighrs5chzx4j4zdmjk77fmulwqbhrex2b@lou7ekbsjekr>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] PCI: Add Intel Nova Lake S audio Device ID
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-To: lgirdwood@gmail.com, broonie@kernel.org
-Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
- pierre-louis.bossart@linux.dev, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kw@linux.com
-References: <20251002084252.7305-1-peter.ujfalusi@linux.intel.com>
- <20251002084252.7305-2-peter.ujfalusi@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <20251002084252.7305-2-peter.ujfalusi@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Krysztof, Bjorn,
+Hi Andi,
 
-On 02/10/2025 11:42, Peter Ujfalusi wrote:
-> Add Nova Lake S (NVL-S) audio Device ID
+On Thu, 30 Oct 2025 16:23:24 +0100
+Andi Shyti <andi.shyti@kernel.org> wrote:
 
-Can you check this patch so Takashi-san can pick the series up?
+> Hi Herve,
+> 
+> ...
+> 
+> > When an i2c mux is involved in an i2c path, the struct dev topology is
+> > the following:  
+> 
+> supernitpick: I'd leave blank line here.
 
-Thank you,
-Péter
+Will be added.
 
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
+> >     +----------------+                +-------------------+
+> >     | i2c controller |                |      i2c mux      |
+> >     |     device     |                |      device       |
+> >     |       ^        |                |                   |
+> >     |       |        |                |                   |
+> >     |  dev's parent  |                |                   |
+> >     |       |        |                |                   |
+> >     |   i2c adapter  |                | i2c adapter chanX |
+> >     |     device  <---- dev's parent ------  device       |
+> >     |   (no driver)  |                |    (no driver)    |
+> >     +----------------+                +-------------------+
+> >   
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 92ffc4373f6d..a9a089566b7c 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3075,6 +3075,7 @@
->  #define PCI_DEVICE_ID_INTEL_5100_22	0x65f6
->  #define PCI_DEVICE_ID_INTEL_IOAT_SCNB	0x65ff
->  #define PCI_DEVICE_ID_INTEL_HDA_FCL	0x67a8
-> +#define PCI_DEVICE_ID_INTEL_HDA_NVL_S	0x6e50
->  #define PCI_DEVICE_ID_INTEL_82371SB_0	0x7000
->  #define PCI_DEVICE_ID_INTEL_82371SB_1	0x7010
->  #define PCI_DEVICE_ID_INTEL_82371SB_2	0x7020
+> ...
+> 
+> > No relationship exists between the i2c mux device itself and the i2c
+> > controller device (physical device) in order to have the i2c mux device
+> > calling i2c_del_adapter() to remove its downtream adapters and so,  
+> 
+> /downtream/downstream/
 
+Will be fixed
 
+> 
+> > release references taken to the upstream adapter.  
+> 
+> ...
+> 
+> > +	/*
+> > +	 * There is no relationship set between the mux device and the physical
+> > +	 * device handling the parent adapter. Create this missing relationship
+> > +	 * in order to remove the i2c mux device (consumer) and so the dowstream
+> > +	 * channel adapters before removing the physical device (supplier) which
+> > +	 * handles the i2c mux upstream adapter.
+> > +	 */
+> > +	parent_physdev = i2c_get_adapter_physdev(parent);
+> > +	if (!parent_physdev) {
+> > +		dev_err(muxc->dev, "failed to get the parent physical device\n");
+> > +		ret = -EINVAL;  
+> 
+> -ENODEV?
+
+Yes, -ENODEV makes sense here. Will be changed in the next iteration.
+
+> 
+> > +		goto err_free_priv;
+> > +	}
+> > +	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);  
+> 
+> Not to call twice put_device, I would add it once here and then
+> check for !dl.
+
+As Andy already mentioned, we cannot do that. Indeed, dev_name(parent_physdev)
+is called in the error path and so the device reference has to be kept.
+
+> 
+> > +	if (!dl) {
+> > +		dev_err(muxc->dev, "failed to create device link to %s\n",
+> > +			dev_name(parent_physdev));
+> > +		put_device(parent_physdev);
+> > +		ret = -EINVAL;  
+> 
+> same here, should this be -ENODEV?
+
+For this one, I am not so sure.
+
+The failure is related to the device link creation and probably due to some
+devlink invalid internal flags or state instead of a missing device.
+
+That's said, if you really want the -ENODEV here, let me know.
+
+Best regards,
+Hervé
 
