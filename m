@@ -1,181 +1,116 @@
-Return-Path: <linux-pci+bounces-40103-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40104-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE9DC2B96B
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 13:16:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8980EC2BD2D
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 13:50:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5FC1234931C
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 12:16:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6186E3BD2C0
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 12:45:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F350B30ACE6;
-	Mon,  3 Nov 2025 12:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C3B30F929;
+	Mon,  3 Nov 2025 12:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tpZA6tcQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="StuMPw7i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ED2151991;
-	Mon,  3 Nov 2025 12:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D486F306B2C;
+	Mon,  3 Nov 2025 12:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762172210; cv=none; b=iWaX5mH+w7h5YclUpYZxcED9j/1tpFbzMgc+o0t8VXpADin+5KruBimK0wJRySFxDY1chXU7gqcG0WlWbZpmo04MLiQDy02ebzwHCBVfbIRn1HiKtc2d60c15urIwBXJ34QHmeVWsmb93Aik2s707MVSg5VstUEJ8Ey4G93Wt+g=
+	t=1762173831; cv=none; b=bzu8/ZJ9tBXomOvfIinLy0xTQ4refdoBIoFYrq4ByegkjSS+XbtfwxRoJ4G2/YYj9YsBBhCnP6USxoq9tFeV+ZGPqIoL20NqzqvjVa8CEhjtif5nsYOrttRyTGJRAfTapUNVUlDuulTfLTYU+LFyhjSkoDl60vVL4Mbh+au3nLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762172210; c=relaxed/simple;
-	bh=MWje19xK/BNi/w3R0P48lIor/CzXFrLeBuO4v2zoANU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Twl2UFMTjYmn4kCOCg8KwqQGvKQw1q+MQ7OFOLVb5Z4RV1uUuwHomCP5/RKDxc8Q72l2oa5yvIalX4/y1O42Qn3ON9mFDz/1jnQSyjQMXIqOeqlxg+rWkn7re820pejDCbha2lISkK3Mn/j8HF+2aqYcqZbwRyaa2yUH7taEhVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tpZA6tcQ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A2MujYG008806;
-	Mon, 3 Nov 2025 12:16:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=MWje19
-	xK/BNi/w3R0P48lIor/CzXFrLeBuO4v2zoANU=; b=tpZA6tcQ8ckT+UqlC1FZPh
-	FXS2cP0z3cUisL++wRs+C5AKreP1AqSJCeUqiBxCB3Ver+p12GLx37KcY28d9gvB
-	is2UR2d50ogR1elzUnCRfEdQoT9jc03NPB6JOoikQVExNcGNfZxxJLNOS4J1ENII
-	dUAc9WGYH1djWAS7lzIB2reZaUgEmPjQ1ylL4go3JGewtSzEGeALW3APs3v/9mAe
-	WcQ0zdZ9McvfA9gOZiVS9HNDTRD2zTm2p4ayrc9WRPDQKznSPwhoPUsFyaYuIuH6
-	N7kBNJxQ3aQDhNohJoeIa2y7cHNO3TbGXb5Eqa5yMCU1tkXdujvpIQvCWYLgK8HA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q8pfma-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 12:16:46 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5A3BpXab015501;
-	Mon, 3 Nov 2025 12:16:45 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a59q8pfm7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 12:16:45 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A3A3Tm2025582;
-	Mon, 3 Nov 2025 12:16:44 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a5vhsdqam-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Nov 2025 12:16:44 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A3CGfFf47448484
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Nov 2025 12:16:41 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0DE2520040;
-	Mon,  3 Nov 2025 12:16:41 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE0C92004B;
-	Mon,  3 Nov 2025 12:16:40 +0000 (GMT)
-Received: from [9.155.208.229] (unknown [9.155.208.229])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Nov 2025 12:16:40 +0000 (GMT)
-Message-ID: <9c7c4217171fb56c505dc90b8c73b2ce079207a9.camel@linux.ibm.com>
-Subject: Re: Q: Usage of pci_enable_atomic_ops_to_root()
-From: Gerd Bayer <gbayer@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jay Cornwall
- <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
-        Alexander Schmidt	
- <alexs@linux.ibm.com>,
-        netdev <netdev@vger.kernel.org>,
-        linux-rdma	
- <linux-rdma@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Gerd
- Bayer	 <gbayer@linux.ibm.com>
-Date: Mon, 03 Nov 2025 13:16:40 +0100
-In-Reply-To: <fbe34de16f5c0bf25a16f9819a57fdd81e5bb08c.camel@linux.ibm.com>
-References: <fbe34de16f5c0bf25a16f9819a57fdd81e5bb08c.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1762173831; c=relaxed/simple;
+	bh=DK6Qoga15L0ESP5ijps+jZiHacx74F2Rwieqr8w+dz0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=An4h3C9PVqyrsTpH7mFVvBLgDvoMj6T6fuXYx8+oD7ZJKbWP3aCp+T6EccSowZvKSp5hJYlq9SQNhAmCChXaM+tRaHHgAcqfsA6c9i3ND15oDbItK35PXFxemGoLIwXO6uMVMqM3Pynsh+ZiFoQSJdGBy4M8Y3v85oL5DV6RVzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=StuMPw7i; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762173830; x=1793709830;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=DK6Qoga15L0ESP5ijps+jZiHacx74F2Rwieqr8w+dz0=;
+  b=StuMPw7iQ0hm5lINnUFGG4eeFCdrvxjMOBJRSgmis0LlWiz5Vj+Xe6V3
+   uXsP7c3EiWOgwaWJovsrhvNRCP8aUqkBD5QDqERILXe4xt+u8fbz+gJcb
+   CF8OvBkWhlL2jVFsWoDgPYtyCaLCgTwtHNc/5nRJnxPiHmnZKVBZ/gK4Z
+   tr84akZhTNry8tqbmj9hm9RQ1wTxZbRigO7nhjuN/XqiWkceoyI+KnlhF
+   QB8YjYw2a3wGDHc/2h+UORJ44IlAQlSWoem0cMOt2O8X38+H8JFDqRjsl
+   ewM80Kr7kebybZF8UgVVavReEPuOAAFur/FyjyZcUMQ/LlHPMd0/Gs0O2
+   g==;
+X-CSE-ConnectionGUID: fT49145ISQ2ULduLMx/JtQ==
+X-CSE-MsgGUID: NTdsjY88RTeMV4HVhDEr/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="68107620"
+X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
+   d="scan'208";a="68107620"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 04:43:47 -0800
+X-CSE-ConnectionGUID: +l7yY1SEQq6rNoC6pxFeog==
+X-CSE-MsgGUID: WKYQr0/WQjKHpXoqY4WgNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
+   d="scan'208";a="186539036"
+Received: from krybak-mobl1.ger.corp.intel.com (HELO [10.245.246.110]) ([10.245.246.110])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 04:43:44 -0800
+Message-ID: <9e34fe42-a031-4ab6-b986-c09a36040b66@linux.intel.com>
+Date: Mon, 3 Nov 2025 14:43:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=StmdKfO0 c=1 sm=1 tr=0 ts=69089d2e cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=P-IC7800AAAA:8 a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=NhfhhuvIOumIP2zjjAQA:9
- a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: ZN17-7YZVGaLtNLVDUnB2OaiJz3xyAVx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAxOCBTYWx0ZWRfXy3E9mF+d+g66
- aEuwz09GHh5GnSbtWUsVsnLvDxGeqn2djLnEC2aTN5lQyKmCoR35KvH7DhiycCKqT1IcSjAko95
- DHQAoYMiEGEV8sVrg4Fbh6XZrSsxm4RnXc+LYJncLsrHom8ZIG6HyFlaLx2B9jxGlVLE1cH6dZ2
- KJ6eNKnH0ZvRZc03qI+DGpC8DCf0jpsmhjM4Rt/vF8tLKNyypGzZiGkFPqg0m871LpSvTec4No/
- iYnQcqqnp8rHUhbG/VWWoG6YYRMPv+0cfIOkWBd7XUQCCZdl1qT3XZQelk4EOlYbtCXtx96XxC5
- drskjcFxxRz93m371OxgfeN/YA8pla/hmPwgn04egz2zhVYI8MJkWpCu43o9hnsJJEsdSCvjLY6
- sVB0QSpDo0Xdn5AzHjKqcjehueZ3Tw==
-X-Proofpoint-GUID: 3hC3jq9j6BMtjqmiq1P1VOSq5wwiUkex
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-03_01,2025-11-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 clxscore=1015 adultscore=0 bulkscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010018
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] PCI: Add Intel Nova Lake S audio Device ID
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+To: lgirdwood@gmail.com, broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
+ pierre-louis.bossart@linux.dev, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kw@linux.com
+References: <20251002084252.7305-1-peter.ujfalusi@linux.intel.com>
+ <20251002084252.7305-2-peter.ujfalusi@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <20251002084252.7305-2-peter.ujfalusi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-10-24 at 19:18 +0200, Gerd Bayer wrote:
-> Hi all,
->=20
-> I stumbled over mlx5's usage of pci_enable_atomic_ops_to_root() at
->=20
-> https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/net/ethernet/me=
-llanox/mlx5/core/main.c#L937
->=20
-> and was wondering if its repeated calls with the 3 available sizes gave
-> it the intended result.
->=20
-> I assume the intent was to enable requesting AtomicOps only if all
-> three sizes 32/64/128-bit were supported at the root-complex. However,
-> pci_enable_atomic_ops_to_root() would enable the request at the PCIe
-> level, even if just 32-bit sized Ops was supported at the root-complex.
+Hi Krysztof, Bjorn,
 
-Looks like I might just send out an RFC patch for review by the
-Mellanox/NVidia folks? Not sure if I can find a test-setup for this,
-though...
+On 02/10/2025 11:42, Peter Ujfalusi wrote:
+> Add Nova Lake S (NVL-S) audio Device ID
 
-> So I checked other users in the kernel and found an inconclusive
-> picture:
-> The AMD GPU that this was originally introduced for [0] checks for a
-> combination of two sizes, while a few infiniband/ethernet and the vfio-
-> pci driver do variations of sequential checks (potentially enabling
-> requests that they don't want to)
->=20
-> Now the PCIe Spec Rev. 7.0 has also a mixed bag. Section 6.15.3.1
-> mandates for Root Ports:
->=20
-> > If a Root Port implements any AtomicOp Completer capability for host
-> > memory access, it must implement all 32-bit and 64-bit AtomicOp
-> > Completer capabilities. Implementing 128-bit CAS Completer capability
-> > is optional.
->=20
-> While this is specific, marking the CAS Op Completions in the 128-bit
-> variant optional, the Capability bits just specify 128-bit AtomicOps
-> (all AtomicOps: FetchAdd, Swap, CAS). Strictly interpreted, this would
-> require root port implementors to announce all-or-nothing of 32/64/128-
-> bit AtomicOps - which kind of makes the size-granularity of the
-> capability bits useless - and leave the endpoint device (and its
-> driver) attempting to use 128-bit CAS in the dark...
+Can you check this patch so Takashi-san can pick the series up?
 
-I guess I need to ask the folks at PCI SIG?
+Thank you,
+Péter
 
-> [0]: https://lore.kernel.org/linux-pci/1515113100-4718-1-git-send-email-F=
-elix.Kuehling@amd.com/
->=20
-> Can anybody shed some light on this?
-> Thank you,
-> Gerd
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> ---
+>  include/linux/pci_ids.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 92ffc4373f6d..a9a089566b7c 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -3075,6 +3075,7 @@
+>  #define PCI_DEVICE_ID_INTEL_5100_22	0x65f6
+>  #define PCI_DEVICE_ID_INTEL_IOAT_SCNB	0x65ff
+>  #define PCI_DEVICE_ID_INTEL_HDA_FCL	0x67a8
+> +#define PCI_DEVICE_ID_INTEL_HDA_NVL_S	0x6e50
+>  #define PCI_DEVICE_ID_INTEL_82371SB_0	0x7000
+>  #define PCI_DEVICE_ID_INTEL_82371SB_1	0x7010
+>  #define PCI_DEVICE_ID_INTEL_82371SB_2	0x7020
+
 
 
