@@ -1,129 +1,173 @@
-Return-Path: <linux-pci+bounces-40081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACBCEC2A2EC
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 07:28:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C405CC2A37F
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 07:44:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A50E43AA005
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 06:27:42 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 719EB344C0B
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 06:44:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE52296BAA;
-	Mon,  3 Nov 2025 06:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C83C27FB35;
+	Mon,  3 Nov 2025 06:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQQADloH"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NlUR5wDS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AF82949E0
-	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 06:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFB327146B;
+	Mon,  3 Nov 2025 06:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762151255; cv=none; b=hMusZD5YJIpYWagqGPOWfkp4VT95OcEMbs7Ofei9bMWwiyDyyszZADEEELUKEj3CQRiAJFr8gBTlJaxifg/Vi3cgiaBNJWRgZOuffSVMdcL2qjIaDIJz508HM9rdyOFymHAB6aJn4sFkyrHf5mmt0yr/NvIGSO8cTyxPvX7aSJI=
+	t=1762152258; cv=none; b=TBfdeW6XbUim5dFgoDKAZRaYa+CxY3HhrRh7cJlfz4R1cRehR83CtWiJVU68wzuVI3SiDPbvOIK1Fu0r0pJofHqTeRV+6qol/WdnKrLb1ZPjqAuci/JKnYfWYEo77mZ7OCFLadwkruf0kswdcjtZYJRzZAJrIMmiNsFb0txAhaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762151255; c=relaxed/simple;
-	bh=9CT03J84ZWljzRjqGZlThYttEkMrtc79ah/qp0eHENA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rHQo8JvqqYR2moRkCWRwIOt7NP8vbpPKPzRZ8IRCw9T6gmXe3hlrNelfwxfAXxStaw+/MGMTHMsq6be5d7dhufDP7nHxj6ji5hwCpVB4YIHFauonAw+eqVvzuLVKp2/VAHrepn8zuaKflKucSCWDtrg0WDSJQzbOUBUgI6d4Q4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQQADloH; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2953ad5517dso23560475ad.0
-        for <linux-pci@vger.kernel.org>; Sun, 02 Nov 2025 22:27:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762151252; x=1762756052; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGQSi9N7yhCq+36qhzFLEOuP4uo/epjBJB4vjqFx0/0=;
-        b=BQQADloH0VgR+Sp6h6d0IoHkZRYJnHtu8dM2LIn4h3AbGemeUEs+WK4B9+Q6dyxbst
-         AsiIeIF+KkxrfWD7qCUXxQQjn67ojLrmL5rY9sZkLWggIfXnjV6iYZVU9G4IsW+FADXS
-         Mo0tVXYW7uv+VW26GSc9o286dy55NS0E1WNk3SVcPYUn2VjoQrm3ygf7MYjlkXeHEp1D
-         DxLJMWLPX/JrV4og6/YQ7nla0slDzp5qxmViXskAyjshLvEJoWekQwLRBSy0as+7l3il
-         BK2iT8mPVKgpJ0N3j3yBAVsJcsNhuf6pu6fpJKX4cWPjRHSpEoNw/tjta8hrcD8Ec44N
-         X7Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762151252; x=1762756052;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fGQSi9N7yhCq+36qhzFLEOuP4uo/epjBJB4vjqFx0/0=;
-        b=MYI5sHOt+DYWTGH9FgsNDXsbN+Oervbx0zR+WoUZCCcHr8qlSFlqNXYMRITpUzzo/V
-         tBCFEQAf+jL70EyerscanTlGDOAm/gNBGQaBlTfw0A7dLqKhx7xbfOK+QeC9/n8j++kL
-         1Yilv6GSnU2hdIj0HkHI7PYbMkKKIH6j6uEYr7UDu9Z/8y956jXhGpMZYE+U2IKf0fmQ
-         GGUG+2uNjr+frWao49pEmTfvvkkVv+xYEBCVX4NGZHHd/gUrnUX2/2SBWedgHHQsXQy2
-         xXQRXyf4GC2s1EQCYFcC6OIZba2XmcgYtaLhsMKfHWFGm3EJn/Cnp7p4DtMQUx0F45do
-         7mUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkGzgpUcuN1b/r/Q3EM8DG7hG9NjYpAzXAzLpFZ5uRIoLDwqk6UA/A3fd35Zt0uyawkFOnEfmUuk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQvqMwGrWRsRGblr6SHyFZIx+Z7XrwUUjoDka1JeARTjnBm0Ns
-	yAl+NmdHvOuBgbRb1FpHOY2/xV5dkm7ZelF9IHAhgyFTThl2RoPh8sdr
-X-Gm-Gg: ASbGncvlh5e+Z+NZjSTN6/4x09YSHspDRE5OHvWQ/dHTCFmPWARZRU0k2RWtstQaYIz
-	LO89Wdwl2qHVTFXTy/ogS2Phk/wSuFv27pLz/umyplKsJu8MlpxIgGJFHBcKRtrFZ41d2PqgI6z
-	X7+r8Txv8YbCl48v58EOOUbCrrcNU0PaZ342BgExp5twkTkVpns3fwAXijv64u28CyTkLSMaj0F
-	O67sI2TBkNY5ifgfQQccYoFf0SyqQGLnx+BPWw2YtFCxlIAD7ZjUXBJgCPLZkkNqZLtbSyqpwLk
-	YbRagyP0IbkiOlxBy6OpmMn5A1zHkbf/qNDvRV6dQ1gGfxsr2Ssuuae2ZteTcYz8HaiW3LuWWJd
-	WwwEWPyXZMlKdy+y4jxgYhRZN5TwwJDA6aws0w71zbIB/cYoV/VzEIVRk+BHe/uFfqy9VVcWvQc
-	1k6tLAenTs
-X-Google-Smtp-Source: AGHT+IHygtYx3odpw3ozCs9WNVhh+vHH36qWHi9VL4Po+sTq1elwFX207ryIat6ht5qVwQ7NnSvjZw==
-X-Received: by 2002:a17:902:f709:b0:290:29ba:340f with SMTP id d9443c01a7336-2951a47798amr138513945ad.42.1762151251610;
-        Sun, 02 Nov 2025 22:27:31 -0800 (PST)
-Received: from geday ([2804:7f2:800b:fff9::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29564fb5214sm63355205ad.11.2025.11.02.22.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Nov 2025 22:27:31 -0800 (PST)
-Date: Mon, 3 Nov 2025 03:27:25 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Geraldo Nascimento <geraldogabriel@gmail.com>
-Subject: [RFC PATCH 2/2] PCI: rockchip-host: drop wait on PERST# toggle
-Message-ID: <d3d0c3a387ff461e62bbd66a0bde654a9a17761e.1762150971.git.geraldogabriel@gmail.com>
-References: <cover.1762150971.git.geraldogabriel@gmail.com>
+	s=arc-20240116; t=1762152258; c=relaxed/simple;
+	bh=s6TBw8Z7arpd85zMJYTbJ335nuLfyRFS4btaVMHiPOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vz1j5uA8s1Eb38izQ2SfvXIH/m3kxpigZR+CQP4wCc3eljtVQKrELCtUUlyg6VtAI2rVp5S/NaV5eY60LvRe0xdCJ9fiMS5RKjc3BoVeFWEu4APIU9jQz6OEkFzqAhCEOmdoW153xLcl2axf9A4FBn8lLXQJd+AlkGNZQ3mqyyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NlUR5wDS; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=3VP4bf0C1euyy0fUZuVCkJWtwbHxu2zWGGoC2mJKs+w=; t=1762152256;
+	x=1762584256; b=NlUR5wDSkR1aIQ8QQ63y8Bzw0zQvh1bwSiKj1NoO5CetPrWq/9KwwfthLTWYM
+	k/lYcR5txXYSAyeQvXJ8/GC9JMQWCxg1MoS/7RldoU+yzkpITIUn8IfYQ+hQgqn2dfKKCwh293ZBt
+	LzSeD7EOO/ztz/A06cO5dfWhTvJ6ZWA17BwRTN5K9bI4DLFmh/clrEzT0MMy3UHTkGgzGo8A4+Jd2
+	01DheLLntZ/N26Fdw9hTFJvGPrJNrbyyYCbyAdpzaS/orY/Pu3BWb2i8JPcEF60gvwF0y1YHC2+vG
+	DETKTypVIM/DTW5uDGQX5j4mnr9wQ5jEJFgpDCjT6W6G2NzC/A==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vFoIH-00CiK4-0h;
+	Mon, 03 Nov 2025 07:43:57 +0100
+Message-ID: <1c8afbc0-e888-4702-9e4e-fa8aef0f97ae@leemhuis.info>
+Date: Mon, 3 Nov 2025 07:43:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1762150971.git.geraldogabriel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Build error on -next in rust/kernel/usb.rs:92:34 (was: Re: [PATCH
+ 1/8] rust: device: narrow the generic of drvdata_obtain())
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
+ rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
+ david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+ acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu, pcolberg@redhat.com,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251020223516.241050-1-dakr@kernel.org>
+ <20251020223516.241050-2-dakr@kernel.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <20251020223516.241050-2-dakr@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1762152256;7b1e0a23;
+X-HE-SMSGID: 1vFoIH-00CiK4-0h
 
-With this change PCIe will complete link-training with a known quirky
-device - Samsung OEM PM981a SSD. This is completely against the PCIe
-spec and yet it works as long as the power regulator for 3v3 PCIe
-power is not defined as always-on or boot-on.
+On 10/21/25 00:34, Danilo Krummrich wrote:
+> Let T be the actual private driver data type without the surrounding
+> box, as it leaves less room for potential bugs.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
----
- drivers/pci/controller/pcie-rockchip-host.c | 1 -
- 1 file changed, 1 deletion(-)
+This patch showed up in linux-next today and I wonder if that caused my
+build to break on arm64 and x86:64. The error message looked like this
+during "make bzimage":
 
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index ee1822ca01db..6add0faf6dc9 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -314,7 +314,6 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
- 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
- 			    PCIE_CLIENT_CONFIG);
- 
--	msleep(PCIE_T_PVPERL_MS);
- 	gpiod_set_value_cansleep(rockchip->perst_gpio, 1);
- 
- 	msleep(PCIE_RESET_CONFIG_WAIT_MS);
--- 
-2.49.0
+"""
+error[E0599]: no method named `data` found for struct `core::pin::Pin<kbox::Box<T, Kmalloc>>` in the current scope
+  --> rust/kernel/usb.rs:92:34
+   |
+92 |         T::disconnect(intf, data.data());
+   |                                  ^^^^ method not found in `core::pin::Pin<kbox::Box<T, Kmalloc>>`
 
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+make[2]: *** [rust/Makefile:553: rust/kernel.o] Error 1
+make[1]: *** [/builddir/build/BUILD/kernel-6.18.0-build/kernel-next-20251103/linux-6.18.0-0.0.next.20251103.436.vanilla.fc44.x86_64/Makefile:1316: prepare] Error 2
+make: *** [Makefile:256: __sub-make] Error 2
+"""
+
+Full log:
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-aarch64/09759703-next-next-all/builder-live.log.gz
+
+A quick search for "T::disconnect(intf, data.data());" on lore
+lead me here:
+
+> diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
+> index 9238b96c2185..05eed3f4f73e 100644
+> --- a/rust/kernel/usb.rs
+> +++ b/rust/kernel/usb.rs
+> @@ -87,9 +87,9 @@ extern "C" fn disconnect_callback(intf: *mut bindings::usb_interface) {
+>          // SAFETY: `disconnect_callback` is only ever called after a successful call to
+>          // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+>          // and stored a `Pin<KBox<T>>`.
+> -        let data = unsafe { dev.drvdata_obtain::<Pin<KBox<T>>>() };
+> +        let data = unsafe { dev.drvdata_obtain::<T>() };
+>  
+> -        T::disconnect(intf, data.as_ref());
+> +        T::disconnect(intf, data.data());
+>      }
+>  }
+
+
+Ciao, Thorsten
 
