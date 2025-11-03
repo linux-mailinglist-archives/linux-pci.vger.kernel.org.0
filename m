@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-40127-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40128-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A2CCC2D427
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29761C2D424
 	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 17:52:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24049421D66
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 16:42:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEACA189AAA6
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 16:51:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B733191D6;
-	Mon,  3 Nov 2025 16:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FA8731A562;
+	Mon,  3 Nov 2025 16:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="LUMGZJcv"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="iqSloNE4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com [209.85.166.196])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6239C3191A9
-	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 16:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E82D3164A6
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 16:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762188150; cv=none; b=Lkrh1Rs9MowE5E4BT2XXYwK1iB8MBl86rV8DQPO4ntR+3r3bGByEzysKjmLcPsb8RElfJdnuR8t4No8QDfvJhrW7F34lzktvjJnOJ3ncqtwMi7fLZ4uvz7JUGvfs6beHcyHlWIzrOUzMwGF6KMv4MG/fvNY8Wq1+EQ8B7USGzOs=
+	t=1762188676; cv=none; b=WrG8n9FB7zwe2ZLjU2PbZXoKqS6qVLVeP9HtrL80Ug503WdLh9B5jY21+u7Cqhg54RW3I9a5Dsk9/u9MR9pqZsuP9szMCbdm3IDc2s/EeHKpzL+ZTayxgVKFjm0CLyfnmPgdU9bCKoyrNEgDlrEKHj6oabLi2EiU4FZ/rlg1QaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762188150; c=relaxed/simple;
-	bh=OcaI3qwgeTCF0BR+/oUJ3XCKZ1BAXfflSEB1AM9BxUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jk12eztRmBuVVWN9kkMn45W7y5gLIiC38HVeroui+lo/3t0ZuLPYBR1zfdCUnTdgyh0BqpbshVbiQlYmwqnhSHSGhTYbUwSTHfN4AS7BeMll+IOlG5S5Xhvn7ZpaVS6EApaN+tq1cU24T9uAOx1PbRim9PToFJgL6leLA5BgND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=LUMGZJcv; arc=none smtp.client-ip=209.85.166.196
+	s=arc-20240116; t=1762188676; c=relaxed/simple;
+	bh=9X5qYxyuX7GnNfRV7eA4zSQai4y1CCQShsSie8Vm55M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=kmjHZM35XKBDyYOoFwAvKp8CK++QgII4VDYJHqOwVcjheS2kRRBaZmYksLnsIlE4T5C5brv+Fharm3yQ5jIDHJG+aH1gKc1ZeO7U0l8AYAYWDyMGQjUfiHHhyobbsRED01238CFOBa1SDjkTdgzPRFxI5dJn85SXTVgYzVq3V/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=iqSloNE4; arc=none smtp.client-ip=209.85.166.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f196.google.com with SMTP id e9e14a558f8ab-4331e9cb748so6805985ab.1
-        for <linux-pci@vger.kernel.org>; Mon, 03 Nov 2025 08:42:28 -0800 (PST)
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-4330ef18d8aso29980075ab.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Nov 2025 08:51:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1762188147; x=1762792947; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1762188673; x=1762793473; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GHeoDcWtrtw4Kqs9i7E9yy2tKQ26ZOwu5ohkUo50ijM=;
-        b=LUMGZJcvYHB/ArPfDS6VkpidsCPOQkpUlqp5pfcS1zS31//7Gi1OVZt+udAvPCi36P
-         be1c8XkF1FWzaRXVWdXDV0XgI7jf7On9pRLrd49SyqHENeMe5lugWD6VGE4Cjgh8moTV
-         PAq2+RNms5vqY6bj881XTXl7ado/tgfjZn7QyP1FaTyKw8tO3CCsNC9oIr+axWIr4zmo
-         W71je95IVLzv8OeyTQ568tdHll/jDHiFuuWxuDvTf4cvU7RCTxilm69UDC8MQ1eVJsxI
-         Iy+XfYzuZXT9Q/aVLAJUhAG8g8FPkfc80lMdoXHtqeVtwhdwbbm2EjhFu7M+q3wIKGNn
-         Jvfw==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1ZYP6s7A0e6t6qMHErZJUr+ea4gjElbTNwHT5ZSG9V0=;
+        b=iqSloNE47jdELzksVc0fnuz9fogLeKwgmZivkrfyPb7yGkOcOG6P0FJ/Rn5QgSgC1v
+         49D7ExByxsmTH/H5jv/jfaeADVKncryNbXx+ntFypxjqLNMx8iCxkdn0D5KrdWVkiUjX
+         Phpqqi9HU5CzjsH85qeDJNSkuirer2Qu8tcA4Dsc+6dRfNbWIljvwgbDyTEbdgKgI4e1
+         pcbwx2nXRMoOch2a4fYUX/Z7qdedILVVBzTALJ+AMI3VfB4C7olxHjDa74u1bAvfyBPK
+         u8xJLKmKRMr0OGMHDRKqb3W5s4sYL1lodGRx9fohAMSRuxKXLVHY3pRSuNBMABmIFBYn
+         3vLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762188147; x=1762792947;
+        d=1e100.net; s=20230601; t=1762188673; x=1762793473;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHeoDcWtrtw4Kqs9i7E9yy2tKQ26ZOwu5ohkUo50ijM=;
-        b=I69X8y6K61ofKbzjWfUNKZ3QJuhTkwUSGCRE15GMZPs3ueMjFaH0Lu6TPpcU3sVBzV
-         sFegDJiwLSn97JdjPe0FqvCy3977CSSsyX5VjqtnHKR/f8OCEqIyIaSbq5JSf9/30MQa
-         r83v4uxxZCelBVZvJQhmh0M6w6bGeAJY4yM0SK88AIAWgK53bx4JPtroS6GRFKieVwVC
-         EmoSB4RoDzK9BPQd9ldsCIpxxNoGxkAWrCs8M4CxDQX+LdvqlGBUvK0eO0ZEZI5GKjzU
-         mQrquDAtTd2LU2AXOGiAVpZHw/GHkt4WZeOkdQ5TPBkCQe3e6a7kv9eUkHXUnnJQ2LSt
-         AxXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWT9ijqU7RJ5D11YeOc1GtIKjASkP8Ktvol8Jrx/tZEJHw72NGjCKtZas2AugmUJcKOo5FGNkxdcuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCO5mO+tDxoqGt2CWA4ajM64IVqjrEnarRzD2boxIr9MieY1Bm
-	Yx5RlnpNxbYFYEV2Zl/pzT5ORGgVkw/xIKZlITtN+nhQXO7Afedy8fMEVM4/9Egy8Gs=
-X-Gm-Gg: ASbGncs5ehuUdwvSW0cuKk43Ts+RGw3ym8qKBuIVpGoYAuPKnAjHWOCmjHt8GcBb0mr
-	DMC+7w2F2Aa0dlkd9U9p0QTs6p9lS2QvhFKo7s18VRMXrjQ7WwWF5U+6p403UDOSr1DTJhS3w5P
-	xnNDs5uoO8cfESULFJqMTAx2W53cRDxCw7+wbGn6fQvw4YnnAmP8lhNOLQpRT1+eewLAmpyHVpv
-	lIoki85ZNw3nKpYZcUgeywetEZEXhvlW7txYlXfdWGoEBzWhPUDEWTEYvIUvgk/acjNqajWWXC2
-	oB1EzLR2/0aUEfnDbNOnwOhxpBUoq57NmczRj1NRuXV3aWV4BsUcQeAXhh6sPjoYWxfmtvIJy/n
-	oqj4Xx+oXu3dnTdA7bFxRGCVmLwonU5SIBBsxT9LAn/xuHxgFlTW+WTWaCfA04EMWHnBxTJuSPD
-	TXmDtPsEZEnf4jS5gmBQfc8XLFGSNlmGwiwWRLgoz+
-X-Google-Smtp-Source: AGHT+IHkHY4VTZ7p5OKjtOgXuNnn4x75Ilvl4YEJ6q5B/6x6J8/6eBwuDTFeeDgt2AKvux4z5rFo4g==
-X-Received: by 2002:a05:6e02:4603:b0:433:229c:351c with SMTP id e9e14a558f8ab-433377fbe1emr622165ab.1.1762188147419;
-        Mon, 03 Nov 2025 08:42:27 -0800 (PST)
+        bh=1ZYP6s7A0e6t6qMHErZJUr+ea4gjElbTNwHT5ZSG9V0=;
+        b=nX751CWNIIJ67ESVIaXy06TrAAaf+2/VBvXXvJKhVPqlxf5hEaYoaIYPJOj1TXkl3s
+         ozUepQ321ryeF0Nld5HILYyVcH98y5zIbFHuNdb6Rw7Bf6UrBS7iA8gioIlBi5gbRrZK
+         dErxU4Qekc2itiLxy80++7VZP6wmrQhHKalEDbjMMNpP4ZTujlzZ19TY1PnzaRBISshf
+         DZbeYXbVONuYXMk5ZLm2tAjrXG/DZcN0psFAGyDfIeGHLxohr3RftjSVWtO1HHavBwhG
+         DtzOuqPlWnPSrUqVKjE4+nQkWzAUCv3hRrxw7sOnYZGc7Ppuq0ATbVmY9lK4Cv5lSkGu
+         K9Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFkoOsAAUcX9pbZlC5MVf8wzeA3x4q6gucVLz/qN7PxmNSyj/mON2c00Qicx2o5xX+r3x70Q3cbpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWWJGwitIGs79DCFrTYD5J2xHWo/dk/3utSFlJDvaZzZwOE1bP
+	QMigjN+QTiKd3sqUOuK4vZ4o539bCiIJO6dqrSpvwDUjDjix534/U9c9nQD+GP0K0L0=
+X-Gm-Gg: ASbGncsdKKYXXbgoaDfk7tK6D8W17iPiEr9/bkixk9f+pjqmz5qNmG9DVMKYQYuLqBb
+	bydJfWeBD2DQ6Z9DsEtrltoPXuOYa9DIFISHD5w25ZuxG8lDP3wOShBS62ny3xaLKbQZ/RHKjFN
+	1QCbv9iuA+3aS56soBG3WuZzdmzFr9JZYWSWmGLO0OoZ4OBqtRJ7+tc+Z7OnPO/yY1BxDwcjgR/
+	aOkWh3a92dTE8e/m6wFw4nX3VfU83Jrbxp6nMlhxcSrR2MaUJbMxhvDJ2wq1Merh0Px4U6t7+Ov
+	X76A/XEBoqUs0vrMZUB6wylTNBLGa7FmvHEF5ovbcHHS6ZA7nAYp8l5FMNd8FKpSPwhESYtFuS5
+	qt4BwML2bisoAAqoI6wSK0brbOrDSRNvMD3AWwincnGw+PzdUzygECIdQbYZtHalXD3LeXZTrgP
+	qzu+YTpLA3/uAmjh1XovOUdtqssFpb7a4qC/1qCM5b/TAaqotSKNQ=
+X-Google-Smtp-Source: AGHT+IG3IvG/mEvLf0CP6EjG0xRAhCkqKP6lfBEvoWKsucXyQJGlFuxO7exsoiSwRmrN+GNPUYV9uA==
+X-Received: by 2002:a05:6e02:174b:b0:433:2d6a:ec2b with SMTP id e9e14a558f8ab-4332d6b190fmr50614775ab.24.1762188673045;
+        Mon, 03 Nov 2025 08:51:13 -0800 (PST)
 Received: from [172.22.22.234] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7226f55edsm334467173.59.2025.11.03.08.42.24
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b7226ba48dsm324005173.49.2025.11.03.08.51.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Nov 2025 08:42:26 -0800 (PST)
-Message-ID: <35da84ab-5104-4fee-a7ea-4f3d42f7344a@riscstar.com>
-Date: Mon, 3 Nov 2025 10:42:23 -0600
+        Mon, 03 Nov 2025 08:51:12 -0800 (PST)
+Message-ID: <6872beb1-f27f-48b9-a756-5b7faa380cec@riscstar.com>
+Date: Mon, 3 Nov 2025 10:51:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,121 +83,97 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] Introduce SpacemiT K1 PCIe phy and host controller
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Aurelien Jarno <aurelien@aurel32.net>
-Cc: Johannes Erdfelt <johannes@erdfelt.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, bhelgaas@google.com,
- lpieralisi@kernel.org, kwilczynski@kernel.org, vkoul@kernel.org,
- kishon@kernel.org, dlan@gentoo.org, guodong@riscstar.com, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- p.zabel@pengutronix.de, christian.bruel@foss.st.com, shradha.t@samsung.com,
- krishna.chundru@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
- namcao@linutronix.de, thippeswamy.havalige@amd.com, inochiama@gmail.com,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
+Subject: Re: [PATCH v4 5/7] PCI: spacemit: introduce SpacemiT PCIe host driver
+To: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, bhelgaas@google.com, dlan@gentoo.org, johannes@erdfelt.com,
+ p.zabel@pengutronix.de, christian.bruel@foss.st.com,
+ thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com,
+ mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
+ shradha.t@samsung.com, inochiama@gmail.com, guodong@riscstar.com,
+ linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20251013153526.2276556-1-elder@riscstar.com>
- <aPEhvFD8TzVtqE2n@aurel32.net>
- <92ee253f-bf6a-481a-acc2-daf26d268395@riscstar.com>
- <aQEElhSCRNqaPf8m@aurel32.net> <20251028184250.GM15521@sventech.com>
- <82848c80-15e0-4c0e-a3f6-821a7f4778a5@riscstar.com>
- <20251028204832.GN15521@sventech.com>
- <5kwbaj2eqr4imcaoh6otqo7huuraqhodxh4dbwc33vqpi5j5yq@ueufnqetrg2m>
- <aQOlMcI9jTdd7QNb@aurel32.net>
- <ywr66wfkfay3xse77mb7ddbga5nced4yg7dapiybj3p2yp2an2@7zsaj5one5in>
+References: <20251030220259.1063792-1-elder@riscstar.com>
+ <20251030220259.1063792-6-elder@riscstar.com> <aQU4rGzrB1-Vu7C6@aurel32.net>
 Content-Language: en-US
 From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <ywr66wfkfay3xse77mb7ddbga5nced4yg7dapiybj3p2yp2an2@7zsaj5one5in>
+In-Reply-To: <aQU4rGzrB1-Vu7C6@aurel32.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 10/31/25 1:10 AM, Manivannan Sadhasivam wrote:
-> On Thu, Oct 30, 2025 at 06:49:37PM +0100, Aurelien Jarno wrote:
->> Hi Mani,
->>
->> On 2025-10-30 22:11, Manivannan Sadhasivam wrote:
->>> + Aurelien
->>>
->>> On Tue, Oct 28, 2025 at 01:48:32PM -0700, Johannes Erdfelt wrote:
->>>> On Tue, Oct 28, 2025, Alex Elder <elder@riscstar.com> wrote:
->>>>> On 10/28/25 1:42 PM, Johannes Erdfelt wrote:
->>>>>> I have been testing this patchset recently as well, but on an Orange Pi
->>>>>> RV2 board instead (and an extra RV2 specific patch to enable power to
->>>>>> the M.2 slot).
->>>>>>
->>>>>> I ran into the same symptoms you had ("QID 0 timeout" after about 60
->>>>>> seconds). However, I'm using an Intel 600p. I can confirm my NVME drive
->>>>>> seems to work fine with the "pcie_aspm=off" workaround as well.
->>>>>
->>>>> I don't see this problem, and haven't tried to reproduce it yet.
->>>>>
->>>>> Mani told me I needed to add these lines to ensure the "runtime
->>>>> PM hierarchy of PCIe chain" won't be "broken":
->>>>>
->>>>> 	pm_runtime_set_active()
->>>>> 	pm_runtime_no_callbacks()
->>>>> 	devm_pm_runtime_enable()
->>>>>
->>>>> Just out of curiosity, could you try with those lines added
->>>>> just before these assignments in k1_pcie_probe()?
->>>>>
->>>>> 	k1->pci.dev = dev;
->>>>> 	k1->pci.ops = &k1_pcie_ops;
->>>>> 	dw_pcie_cap_set(&k1->pci, REQ_RES);
->>>>>
->>>>> I doubt it will fix what you're seeing, but at the moment I'm
->>>>> working on something else.
->>>>
->>>> Unfortunately there is no difference with the runtime PM hierarchy
->>>> additions.
->>>>
->>>
->>> These are not supposed to fix the issues you were facing. I discussed with Alex
->>> offline and figured out that L1 works fine on his BPI-F3 board with a NVMe SSD.
->>>
->>> And I believe, Aurelien is also using that same board, but with different
->>> SSDs. But what is puzzling me is, L1 is breaking Aurelien's setup with 3 SSDs
->>> from different vendors. It apparently works fine on Alex's setup. So it somehow
->>> confirms that Root Port supports and behaves correctly with L1. But at the same
->>> time, I cannot just say without evidence that L1 is broken on all these SSDs
->>> that you and Aurelien tested with.
-
-Aurelien, can you please confirm that your reports are with the BPI-F3
-board?  I believe you identified the three SSDs that were failing.  I
-am considering buying one of those models to see if I can reproduce
-the problem and troubleshoot it.
-
->> It could be that we have different revision of the BPI-F3 board, it's
->> not impossible that I got an early-ish version. That said I just
->> visually checked the PCB against the schematics, and the devices on the
->> CLKREQN line appear to be installed.
->>
+On 10/31/25 5:31 PM, Aurelien Jarno wrote:
+> Hi Alex,
 > 
-> CLKREQ# is only needed for L1 PM Substates (L1.1 and L1.2). In other ASPM states
-> (L0s and L1), REFCLK is supposed to be ON. So those don't need CLKREQ# assertion
-> by the endpoint.
+> On 2025-10-30 17:02, Alex Elder wrote:
+>> +/* Disable ASPM L1 for now, until reported errors can be reproduced */
 > 
-> The L1 issue you are facing could be due to the board routing issue also. I'm
-> just speculating here.
+> Thanks for adding this function.
 > 
->> If someone has contacts to check what changes have been done between the
->> different board revision, that could help. Or same if there are
->> different revisions of the SpacemiT K1 chip.
->>
+>> +static void k1_pcie_post_init(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	u8 offset;
+>> +	u32 val;
+>> +
+>> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> +
+>> +	dw_pcie_dbi_ro_wr_en(pci);
+>> +
+>> +	/* Turn off ASPM L1 for the link */
+>> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
 > 
-> I hope Alex can get this information.
+> Why not using dw_pcie_readl_dbi() instead?
+> 
+>> +	val &= ~PCI_EXP_LNKCAP_ASPM_L1;
+>> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> 
+> And here dw_pcie_writel_dbi()?
+> 
+>> +
+>> +	dw_pcie_dbi_ro_wr_dis(pci);
+>> +}
+>> +
+>> +static void k1_pcie_deinit(struct dw_pcie_rp *pp)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>> +	struct k1_pcie *k1 = to_k1_pcie(pci);
+>> +
+>> +	/* Assert fundamental reset (drive PERST# low) */
+>> +	regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+>> +			PCIE_RC_PERST);
+>> +
+>> +	phy_exit(k1->phy);
+>> +
+>> +	k1_pcie_disable_resources(k1);
+>> +}
+>> +
+>> +static const struct dw_pcie_host_ops k1_pcie_host_ops = {
+>> +	.init		= k1_pcie_init,
+>> +	.post_init	= k1_pcie_post_init,
+> 
+> Unfortunately, while I can see the effect of the change with for
+> instance lspci -vvv, this happens way too late in the device scan
+> process, i.e. after pcie_aspm_override_default_link_state() and causes
+> L1 to still be enabled.
 
-I have sent a message to SpacemiT to explain that these issues are
-being reported, and asking for any useful information about the
-BPI-F3 (including whether there are different versions, or different
-versions of firmware, and how someone can identify what they have).
-
-Thanks.
+OK thanks for this information.  I am going to contact you
+privately to get more information on your errors (and those
+Johannes is reporting) so that I can try to resolve them
+before I post the next version of this patch series.
 
 					-Alex
 
-> - Mani
+> 
+> I have tried to move it earlier, in k1_pcie_init() after writing the
+> vendor and device IDs. This works as long as "nvme scan" is run in
+> U-Boot. But if I don't run this command, it seems that the change is
+> ignored or lost (i.e. I can still see L1 enabled with lspci -vvv).
+> 
+> Moving it at the end of k1_pcie_init() works fine, like moving it at the
+> beginning of k1_pcie_start_link(). But my knowledge is too limited to
+> know where is the correct place.
+> 
+> Regards
+> Aurelien
 > 
 
 
