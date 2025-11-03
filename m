@@ -1,186 +1,280 @@
-Return-Path: <linux-pci+bounces-40094-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40095-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FF8DC2AD99
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 10:50:34 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5277AC2AD9C
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 10:50:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3A7F1893DB2
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 09:50:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 67E894EB557
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 09:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 078452F9995;
-	Mon,  3 Nov 2025 09:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4584C2F9980;
+	Mon,  3 Nov 2025 09:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTc9cz+8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0d/tbvL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C852EF66E
-	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 09:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200992FB087
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 09:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762163424; cv=none; b=pVOuwK8Qf26YR2oj91U4jIiIgCKmlR8hkotUXnyjBsDM6u5F+nWiLIJAekj/W7H+CnwX2umtFUaapdz0ia6VuV0z62g/ReyWy1XOarUTkRNBot8XO7GZ3rt3xqs8CW665R7EpoZRFz+UHWk9xyYwp4YnGYjrAhABsu6JVjFP99I=
+	t=1762163428; cv=none; b=XxsPA7v9OtbAHQVrDB1FE648aFJciFruA/0jo2p+8MaHZOIi1qOGL/iJzqa/GT9434QebOeywTcOi9KcMZcN0J9l30d1IRvgGJZMy/VwTJZZvXA9DppSidjkfnLkfc4xUviQ6pSqN/Qw5eiKyaKDdALcA+myTx6k4VtHkaGF5wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762163424; c=relaxed/simple;
-	bh=lLdro4UCejX2T0cIjEIAFpHkeF9T6b7n0Tt52fX1K9M=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FMuqcH1S6Y3ge4ll0ZIgNnT+CYvdT8963pbitjcPATPNI8kNFFkbAAmx/x7lvq6h/lQdzZYBiGqGWoYPyI8K36quSe5XScQUVex4vuLAiiJww/WAyO9FK8qo8JZU8Xf/gJBRcsiryD3c8HhzyFC7WWsvbjGr0+n+fpftQuyAjdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QTc9cz+8; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-475dc6029b6so37340745e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 03 Nov 2025 01:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762163420; x=1762768220; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xkxRjtj8Zko1T2xij3oDoi3JjwhxKLKuoC0vibst6Dw=;
-        b=QTc9cz+88GfFLIx1Z5AlfQmnkOnNLCc3W67DvqHHiXx/W3Z/ZRecLLkrIBoa1jhlu2
-         COc1xKp8U+tXjSpxYFtD7nEs/uNlyfR3LEZdVTH22J2+JBYrSl5aIYs7z2Z2Xo2IpB+s
-         M5AEKii5wjnoUkzIE9BGf2ugjsi+f3eVRysvAcgFqW01MkMEkajens6/VfjUCOWePocO
-         buQ8DnfPGt14dFj3dF0uVDAm+s7aQwsI3T+c3Xa0jYnwJ9M5EEemqFNhPjPtlp5C8SGm
-         bowvtE6phABrwULn2mYM3vOw1JHFjIkNhr9MyWe5xrJKIKXxQ8fzbqDSVpYA/HvjyqKG
-         wkSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762163420; x=1762768220;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xkxRjtj8Zko1T2xij3oDoi3JjwhxKLKuoC0vibst6Dw=;
-        b=SQH6fPNXIgiBPZwbZYu7dImK0h9nG5nYYW+xw2x1fy87t4ExcgmfZG/DSXFisAHjD/
-         N6O2IPZA0OIJ7tLAannn7NfjjU17B3L4vQ/RRc8xZYNyoaa4bgWz/TH5i0C/1alkioRF
-         vZljGVsnTFZijFAiQSqk1JZ5dtxGBvL9jgFaWIB/4h5VVfCb/zjBdRBWTiu6UaUKywAg
-         PxisIU7sFZ2nA1MkWHUdVZ/I4MGlqhocgvCGm0L3VqB1tyhaTVDWEoO7qC9Of6PHIpsG
-         6Guo29AJTAngcacP+eg1T83QYxwTm4R95oRFxt5R1PmWHXAVdwuD/dpBGNXKZ/ruVIOg
-         tjhQ==
-X-Gm-Message-State: AOJu0YzbBdmDAIklx8GGcrswVpHzJIAo5w9iyb+5QWMzJcRxuRXJioDe
-	Jj6BFFK0jOYDdlvobVgDbK4AfqqFOLvYV9om9aXE6x70lD+Jo70uWCcNsFb8mMtbAhw=
-X-Gm-Gg: ASbGncseAsxpzm8EYwKQ6ZyKlOqq6aii36OCmlHzyiOz1jXE1RIa/eTYQwUJWQAiejl
-	mf7rBCBG2idukL4YNfv3AEhtPO4DuZJhjUv5whIROPtUuaxXZVFJbnko6Sj7CkQiaZhKH978lri
-	61jcIMxHw//eEe56xYNlkq0EiiVX3gF8znsGcNac68MVAoL0Rweso+Uv4Bi/Em2xvZziJddaMAf
-	6K4XT49CCwvp1It6bkuin5vfKjsY2h86BHFtbXr5fxGaKavTup2qDMAhzqRf4kOx9XTYi6oKuwy
-	cP1dEbajEhfkyKNxwA/wTVCAys4Dm/wE7pGJ5DGCWUlGZVYutHGDogjDyBDEygaxklogi8zuQhp
-	tsvSNHTBdFoP5BzoLxQcaBkPmMxyWSctYZnGhMpkBS3yTcOV/HMvpa3Wb6c4CIxyFCm6xhUOmYU
-	v39z76qquvKv09xZa2llJdVPz1sLGe2CzzO6iWvSOfVwmg
-X-Google-Smtp-Source: AGHT+IHrNu7b4MLVFNafM5XudQwLx9/rw/9sFxikTt/B5JVYOos8PxRbnxL+oXtoVWVlGPVam6SEPg==
-X-Received: by 2002:a05:600c:5249:b0:471:145b:dd0d with SMTP id 5b1f17b1804b1-4773087230cmr102374215e9.24.1762163420204;
-        Mon, 03 Nov 2025 01:50:20 -0800 (PST)
-Received: from [192.168.27.65] (home.rastines.starnux.net. [82.64.67.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4772fcd45a9sm84684815e9.3.2025.11.03.01.50.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Nov 2025 01:50:19 -0800 (PST)
-Message-ID: <83d07b54-d584-4297-9aae-2a170c0059d4@linaro.org>
-Date: Mon, 3 Nov 2025 10:50:20 +0100
+	s=arc-20240116; t=1762163428; c=relaxed/simple;
+	bh=tYIRJCNDS83FSlihnAvsUz65Uw1RaaI3aab9pQPHdcI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lBuO6q4cxQ6ojIxehQXvrwtXLUUEjRH/em5sP6LJRGEv0R84xIOEZl+lq8d1+fE4IahxRuYCt+lI7FDOa+sHAAqRbHzY46FuUQzX/AvV1jKVBszAbHB6XoXEy0rzSwytvcPSarp5g5aWhvRR0Zpr6Z2hVlZwtd5W/6TVrLU7Eag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0d/tbvL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B589DC4CEE7
+	for <linux-pci@vger.kernel.org>; Mon,  3 Nov 2025 09:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762163427;
+	bh=tYIRJCNDS83FSlihnAvsUz65Uw1RaaI3aab9pQPHdcI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=o0d/tbvLY21MJS8egZkd0Ri1kw6SIk6ujVTmZp3+FHJgDC446N+4YaN0P8z5/Ak+m
+	 eVDkw3ons91vLRaElSJNtusAMLzGrqqj3SklVGWcEoapPntfieh25BEBz7wNCA/g/u
+	 7Ar4rwgSEFzKYKhdgxFZcjXabRLt5FukstCzexiPBZersOjx5WgGCpV9WFVNrpwSZ4
+	 55fG+jYpwXNWUwRIxJCeJPh7n2QSWjrOQ7RK5wn3ZBO97Cgqne5mQJ9jo8lG3kQKgE
+	 Zq9v0lJ97Qkh3/jeDPJODxyXTWeDes8J+gXtTtm3VXFNJAQHTqmoaoDSW7s/oJCUC2
+	 cbFmULb7qNwvA==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64074f01a6eso6669710a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 03 Nov 2025 01:50:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXxtlPbsvSi0aKup5c5soOw5woUEAgTPA17FQfaINuy+oEmOTgmgGNo2+Ll8BfpIoOYCEL0Kkb7B28=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlknJwAjXNIVF3qmbwxsD0JPqU27TbtFkp2ZVDHgUOtdFGrVzg
+	rtLYrnjeJ0aGqK5JAYY5nydTw8nNLCyab8uqgeE499mAbQFNqxy69xiXBjRmoilAiBZ5d8CbLgV
+	O4jKsbJSx3cOUxuKI9+5WtGHjMGoqn0U=
+X-Google-Smtp-Source: AGHT+IH8qJzoI36AiJwr/7p2nTBJuZh3M5fSlb8Ojf11RW0d2BQ5ZRzirGxdOyLDc1rkkCxm0+GO4GSCTkJK54VerPk=
+X-Received: by 2002:a17:907:60c9:b0:b70:b077:b949 with SMTP id
+ a640c23a62f3a-b70b077bc32mr381684366b.37.1762163425945; Mon, 03 Nov 2025
+ 01:50:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH RESEND 0/3] PCI: meson: Fix the parsing of DBI region
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>,
- Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Andrew Murray <amurray@thegoodpenguin.co.uk>,
- Jingoo Han <jingoohan1@gmail.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, stable+noautosel@kernel.org,
- stable@vger.kernel.org, Linnaea Lavia <linnaea-von-lavia@live.com>
-References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com> <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
+In-Reply-To: <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 3 Nov 2025 17:50:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkF9DD4U4chJ9TajuEmQvXaXS5rbGCcvKkn6W1c1fvxW9F5_O2LhkhUoKE
+Message-ID: <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
+ and SR-IOV
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Bibo Mao <maobibo@loongson.cn>, linux-s390 <linux-s390@vger.kernel.org>, 
+	loongarch@lists.linux.dev, Farhan Ali <alifm@linux.ibm.com>, 
+	Matthew Rosato <mjrosato@linux.ibm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/1/25 05:29, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> This compile tested only series aims to fix the DBI parsing issue repored in
-> [1]. The issue stems from the fact that the DT and binding described 'dbi'
-> region as 'elbi' from the start.
-> 
-> Now, both binding and DTs are fixed and the driver is reworked to work with both
-> old and new DTs.
-> 
-> Note: The driver patch is OK to be backported till 6.2 where the common resource
-> parsing code was introduced. But the DTS patch should not be backported. And I'm
-> not sure about the backporting of the binding.
-> 
-> Please test this series on the Meson board with old and new DTs.
+Hi, Niklas,
 
-Let me try this serie, I'm on a business trip this week so don't expect a full test
-report until next monday.
+On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
+.com> wrote:
+>
+> When the isolated PCI function probing mechanism is used in conjunction
+> with ARI or SR-IOV it may not find all available PCI functions. In the
+> case of ARI the problem is that next_ari_fn() always returns -ENODEV if
+> dev is NULL and thus if fn 0 is missing the scan stops.
+>
+> For SR-IOV things are more complex. Here the problem is that the check
+> for multifunction may fail. One example where this can occur is if the
+> first passed-through function is a VF with devfn 8. Now in
+> pci_scan_slot() this means it is fn 0 and thus multifunction doesn't get
+> set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_MFD it
+> remains unset and probing stops even if there is a devfn 9.
+>
+> Now at the moment both of these issues are hidden on s390. The first one
+> because ARI is detected as disabled as struct pci_bus's self is NULL
+> even though firmware does enable and use ARI. The second issue is hidden
+> as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID for
+> isolated VFs"). This is because VFs are either put on their own virtual
+> bus if the parent PF is not passed-through to the same instance or VFs
+> are hotplugged once SR-IOV is enabled on the parent PF and then
+> pci_scan_single_device() is used.
+>
+> Still especially the first issue prevents correct detection of ARI and
+> the second might be a problem for other users of isolated function
+> probing. Fix both issues by keeping things as simple as possible. If
+> isolated function probing is enabled simply scan every possible devfn.
+I'm very sorry, but applying this patch on top of commit a02fd05661d7
+("PCI: Extend isolated function probing to LoongArch") we fail to
+boot.
 
-Neil
+Boot log:
+[   10.365340] megaraid cmm: 2.20.2.7 (Release Date: Sun Jul 16
+00:01:03 EST 2006)
+[   10.372628] megaraid: 2.20.5.1 (Release Date: Thu Nov 16 15:32:35 EST 20=
+06)
+[   10.379564] megasas: 07.734.00.00-rc1
+[   10.383222] mpt3sas version 54.100.00.00 loaded
+[   10.388304] nvme nvme0: pci function 0000:08:00.0
+[   10.395088] Freeing initrd memory: 45632K
+[   10.469822] ------------[ cut here ]------------
+[   10.474409] WARNING: CPU: 0 PID: 247 at drivers/ata/libahci.c:233
+ahci_enable_ahci+0x64/0xb8
+[   10.482804] Modules linked in:
+[   10.485838] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
+6.18.0-rc3 #1 PREEMPT(full)
+[   10.494397] Hardware name: To be filled by O.E.M.To be fill To be
+filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
+Loongson-UDK2018-V4.0.
+[   10.508139] Workqueue: events work_for_cpu_fn
+[   10.512468] pc 900000000103be2c ra 900000000103be28 tp
+900000010ae44000 sp 900000010ae47be0
+[   10.520769] a0 0000000000000000 a1 00000000000000b0 a2
+0000000000000001 a3 9000000001810e0c
+[   10.529069] a4 9000000002343e20 a5 0000000000000001 a6
+0000000000000010 a7 0000000000000000
+[   10.537373] t0 d10951fa66920f31 t1 d10951fa66920f31 t2
+0000000000001280 t3 000000000674c000
+[   10.545673] t4 0000000000000000 t5 0000000000000000 t6
+9000000008002480 t7 00000000000000b4
+[   10.553972] t8 90000001055eab90 u0 900000010ae47b68 s9
+9000000002221a50 s0 0000000000000000
+[   10.562272] s1 ffff800032435800 s2 0000000000000000 s3
+ffffffff80000000 s4 9000000002221570
+[   10.570571] s5 0000000000000005 s6 9000000101ccf0b8 s7
+90000000023dd000 s8 900000010ae47d08
+[   10.578869]    ra: 900000000103be28 ahci_enable_ahci+0x60/0xb8
+[   10.584665]   ERA: 900000000103be2c ahci_enable_ahci+0x64/0xb8
+[   10.590461]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
+[   10.596609]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+[   10.600937]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+[   10.605698]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
+[   10.610458] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
+[   10.615994]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
+[   10.621875] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tainted
+6.18.0-rc3 #1 PREEMPT(full)
+[   10.621877] Hardware name: To be filled by O.E.M.To be fill To be
+filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
+Loongson-UDK2018-V4.0.
+[   10.621878] Workqueue: events work_for_cpu_fn
+[   10.621881] Stack : 900000010ae47848 0000000000000000
+90000000002436bc 900000010ae44000
+[   10.621884]         900000010ae47820 900000010ae47828
+0000000000000000 900000010ae47968
+[   10.621887]         900000010ae47960 900000010ae47960
+900000010ae47630 0000000000000001
+[   10.621890]         0000000000000001 900000010ae47828
+d10951fa66920f31 9000000100414300
+[   10.621893]         80000000ffffe34d fffffffffffffffe
+000000000000034f 000000000000002f
+[   10.621896]         0000000000000063 0000000000000001
+000000000674c000 9000000002221a50
+[   10.621899]         0000000000000000 0000000000000000
+90000000020b6500 90000000023dd000
+[   10.621902]         00000000000000e9 0000000000000009
+0000000000000002 90000000023dd000
+[   10.621905]         900000010ae47d08 0000000000000000
+90000000002436d4 0000000000000000
+[   10.621908]         00000000000000b0 0000000000000004
+0000000000000000 0000000000071c1d
+[   10.621910]         ...
+[   10.621912] Call Trace:
+[   10.621913] [<90000000002436d4>] show_stack+0x5c/0x180
+[   10.621918] [<900000000023f328>] dump_stack_lvl+0x6c/0x9c
+[   10.621923] [<9000000000266eb8>] __warn+0x80/0x108
+[   10.621927] [<90000000017d1910>] report_bug+0x158/0x2a8
+[   10.621932] [<900000000180b610>] do_bp+0x2d0/0x340
+[   10.621938] [<9000000000241da0>] handle_bp+0x120/0x1c0
+[   10.621940] [<900000000103be2c>] ahci_enable_ahci+0x64/0xb8
+[   10.621943] [<900000000103beb8>] ahci_save_initial_config+0x38/0x4d8
+[   10.621946] [<90000000010391b4>] ahci_init_one+0x354/0x1088
+[   10.621950] [<9000000000d16cdc>] local_pci_probe+0x44/0xb8
+[   10.621953] [<9000000000286f78>] work_for_cpu_fn+0x18/0x30
+[   10.621956] [<900000000028a840>] process_one_work+0x160/0x330
+[   10.621961] [<900000000028b208>] worker_thread+0x330/0x460
+[   10.621964] [<9000000000295fdc>] kthread+0x11c/0x138
+[   10.621968] [<900000000180b740>] ret_from_kernel_thread+0x28/0xa8
+[   10.621971] [<9000000000241484>] ret_from_kernel_thread_asm+0xc/0x88
+[   10.621973]
 
-> 
-> - Mani
-> 
-> [1] https://lore.kernel.org/linux-pci/DM4PR05MB102707B8CDF84D776C39F22F2C7F0A@DM4PR05MB10270.namprd05.prod.outlook.com/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Huacai
+
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 189c6c33ff42 ("PCI: Extend isolated function probing to s390")
+> Link: https://lore.kernel.org/linux-pci/d3f11e8562f589ddb2c1c83e74161bd89=
+48084c3.camel@linux.ibm.com/
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
-> Resending as the git sendemail config got messed up
-> 
-> ---
-> Manivannan Sadhasivam (3):
->        dt-bindings: PCI: amlogic: Fix the register name of the DBI region
->        arm64: dts: amlogic: Fix the register name of the 'DBI' region
->        PCI: meson: Fix parsing the DBI register region
-> 
->   .../devicetree/bindings/pci/amlogic,axg-pcie.yaml      |  6 +++---
->   arch/arm64/boot/dts/amlogic/meson-axg.dtsi             |  4 ++--
->   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi      |  2 +-
->   drivers/pci/controller/dwc/pci-meson.c                 | 18 +++++++++++++++---
->   drivers/pci/controller/dwc/pcie-designware.c           | 12 +++++++-----
->   5 files changed, 28 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-> change-id: 20251031-pci-meson-fix-c8b651bc6662
-> 
-> Best regards,
-
+>  drivers/pci/probe.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0ce98e18b5a876afe72af35a9f4a44d598e8d500..41dd1a339a994956a6bc7e1fe=
+a0fe0d55452a963 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2808,16 +2808,19 @@ static int next_ari_fn(struct pci_bus *bus, struc=
+t pci_dev *dev, int fn)
+>         return next_fn;
+>  }
+>
+> -static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+> +static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn,
+> +                  bool isolated_fns)
+>  {
+> -       if (pci_ari_enabled(bus))
+> -               return next_ari_fn(bus, dev, fn);
+> +       if (!isolated_fns) {
+> +               if (pci_ari_enabled(bus))
+> +                       return next_ari_fn(bus, dev, fn);
+>
+> +               /* only multifunction devices may have more functions */
+> +               if (dev && !dev->multifunction)
+> +                       return -ENODEV;
+> +       }
+>         if (fn >=3D 7)
+>                 return -ENODEV;
+> -       /* only multifunction devices may have more functions */
+> -       if (dev && !dev->multifunction)
+> -               return -ENODEV;
+>
+>         return fn + 1;
+>  }
+> @@ -2859,10 +2862,12 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+>  {
+>         struct pci_dev *dev;
+>         int fn =3D 0, nr =3D 0;
+> +       bool isolated_fns;
+>
+>         if (only_one_child(bus) && (devfn > 0))
+>                 return 0; /* Already scanned the entire slot */
+>
+> +       isolated_fns =3D hypervisor_isolated_pci_functions();
+>         do {
+>                 dev =3D pci_scan_single_device(bus, devfn + fn);
+>                 if (dev) {
+> @@ -2876,10 +2881,10 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+>                          * a hypervisor that passes through individual PC=
+I
+>                          * functions.
+>                          */
+> -                       if (!hypervisor_isolated_pci_functions())
+> +                       if (!isolated_fns)
+>                                 break;
+>                 }
+> -               fn =3D next_fn(bus, dev, fn);
+> +               fn =3D next_fn(bus, dev, fn, isolated_fns);
+>         } while (fn >=3D 0);
+>
+>         /* Only one slot has PCIe device */
+>
+> --
+> 2.48.1
+>
 
