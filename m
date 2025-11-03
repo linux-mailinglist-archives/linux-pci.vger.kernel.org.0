@@ -1,322 +1,100 @@
-Return-Path: <linux-pci+bounces-40142-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40143-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863EFC2DFE2
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 21:08:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB07C2E05C
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 21:29:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FC731892848
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 20:08:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEF5E3BE12B
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 20:29:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEC8029AAF8;
-	Mon,  3 Nov 2025 20:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8590F2BDC05;
+	Mon,  3 Nov 2025 20:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="Y5TYvio2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TkJoFSi/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2358C245005;
-	Mon,  3 Nov 2025 20:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C3029D27A;
+	Mon,  3 Nov 2025 20:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762200488; cv=none; b=b4AgGXutBmeomyZ9jcgHDoxIV2iHnjKYFhs/p7uyVQymG+N9b6foZZLSQcfSVXVZYkAZd9FCuGnPnozncOglYPsdkUZbimxeTBwcpJuxfA4UM/MTIlJwv3FYkBnBowSnUpPkyvgpFgtDL8zwlJHD84d0UuE3LdoS2cMM8xH74J8=
+	t=1762201759; cv=none; b=JP85KJDj4IdBMbT7sd4CLSDyficB+TKVIeTkiCeUoJAqHosEP+Wo7OLcKIcGZmgSrr1S/h9ucNs7L/1sNYC03VKfj+lS0lvp9yDf3ZkppiMgwbeA0ouABwlMB+DeF4JFlL5wjOo551rSXQpZYJzVvJTEswiVZWlKc0200g1ezok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762200488; c=relaxed/simple;
-	bh=bOZFIe2RQWsHY3f7hDWHXpv++tj6j9WWgZ4tTtaKlRA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5pFkc59spoeIdRnn37DrwArmI1at8FtCNXp4s58ISK1PSC5ZJCL1D1dzY8aq223C9FIoMBaM42qZw1YWd6i6z4buGcyUUZJSVbFkMIYTJG8yy0a+wmiWiWPtYNTQU+Js+2WH8PjstPHCpNNUs7G5aygnc8HBO4SAUnWQsVLneA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=Y5TYvio2; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A3HSUl13368916;
-	Mon, 3 Nov 2025 12:07:21 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=s2048-2025-q2; bh=n9Hp+W96E82ffeM9TGY/
-	T64q12eMoTlbRaWkBHrOVhQ=; b=Y5TYvio2wy42a6OuNV1jizo/aQU5rL6HohWI
-	OdRswHnuwgKDGg4PRZorsSwOwSWNepxL3lv6e92F0ZZiEQOO8ZMDqwElBWya7VYx
-	yHZJ1Bg/rdGSvGKN1xCect7aLk4BJP3dFq0W4bRU4thNy47l/7qf6QCLDdrJWuYT
-	ttchffm5fJ8azlwk2GD5NtPH33FSvCNhfhPKLPVh0Qs6M/RaBFY1LsIhyFIHXKOv
-	PPwMbL4I1eFF62/08bb33eCUiaTLoRka7NFBHCCzuXtuZDc3HhRZW8A7Jd4FsCBj
-	aU36aw88WsqWA0jpB+Nf9LOBQRQOfcCvornGVmHGoYNGSzpsQw==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4a6yfe2849-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 03 Nov 2025 12:07:21 -0800 (PST)
-Received: from devgpu015.cco6.facebook.com (2620:10d:c085:208::7cb7) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.20; Mon, 3 Nov 2025 20:07:19 +0000
-Date: Mon, 3 Nov 2025 12:07:12 -0800
-From: Alex Mastro <amastro@fb.com>
-To: Leon Romanovsky <leon@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe
-	<logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-        Robin Murphy
-	<robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon
-	<will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jason
- Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian
- =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Alex Williamson
-	<alex.williamson@redhat.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Ankit Agrawal <ankita@nvidia.com>, Yishai
- Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <skolothumtho@nvidia.com>,
-        Kevin
- Tian <kevin.tian@intel.com>,
-        Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs
-	<mochs@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <iommu@lists.linux.dev>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <kvm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        Vivek Kasireddy
-	<vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v6 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com>
-References: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
+	s=arc-20240116; t=1762201759; c=relaxed/simple;
+	bh=sMaK0mE3kZRSfEftp0IEwdJqLz2udRSH91vLy5dBj20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hhBJNlmuMyiv0JvXCBAPAFwFEMnh8KE6jrfIDHtLBEXCo0ZSuRVEPgGO3ytYTthlM2QNpaDSxC16KX4TeK0Jl3aO/pgZRbme+uDwTwLWvRN7mneBIttaIkJiE1i11fmgaJgki7eVligW0t1seMTZT4NcTI5UE/d/dT/YPkxSEUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TkJoFSi/; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=AqWFvC9W9TbmCx8bnACnxtgLnR3mPIaEwzeZKsBjjRQ=; b=TkJoFSi/p5Xjs+SLSo0bdvlRMk
+	f5cQfgjJtjh/lROVK39H/60Yj33VCtXCHWpp4CcvcDdlPcrE804nxhoWW7UvmXL9HsSNyR8Gn0NRs
+	Ws5gqVqA0IVqdjZs5haC+DQfe0QO5mCvxFS5yNax6mzrPQRW5v0FlogKDQGnyoSvmpk0KsLzLMb8e
+	Y0FMaW3h1lUB9OYcpXk99ak1Q3nZdPvMElWyhKjUvHtNCtH6ROzGnLcGNzMkXdioiMlM97uW6nOlw
+	v81/i0dbEjoPw8+9jF2hIrgg8NB4xomxCsDEnVfq5ENb3a5qN0oZc0gSV8wJAwjr316QHD1fYyk9y
+	dme0lWUg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vG1Au-0000000HWlA-1Cfj;
+	Mon, 03 Nov 2025 20:29:13 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0FBBB30029E; Mon, 03 Nov 2025 21:29:13 +0100 (CET)
+Date: Mon, 3 Nov 2025 21:29:13 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Guangbo Cui <jckeep.cuiguangbo@gmail.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Waiman Long <longman@redhat.com>, linux-rt-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] PCI/aer_inject: Convert inject_lock to
+ raw_spinlock_t
+Message-ID: <20251103202913.GG3245006@noisy.programming.kicks-ass.net>
+References: <20251102105706.7259-1-jckeep.cuiguangbo@gmail.com>
+ <20251102105706.7259-3-jckeep.cuiguangbo@gmail.com>
+ <20251103192120.GJ3419281@noisy.programming.kicks-ass.net>
+ <20251103200253.SlYC8MU7@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
-X-Authority-Analysis: v=2.4 cv=G9QR0tk5 c=1 sm=1 tr=0 ts=69090b79 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=FOH2dFAWAAAA:8 a=b_Saz7MSmFOFN_6dvx4A:9 a=CjuIK1q_8ugA:10
- a=DXsff8QfwkrTrK3sU8N1:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=bWyr8ysk75zN3GCy5bjg:22
-X-Proofpoint-ORIG-GUID: F1nk6hmysPbKhKVQa_mqqIFKqOIt2lHM
-X-Proofpoint-GUID: F1nk6hmysPbKhKVQa_mqqIFKqOIt2lHM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAzMDE3OSBTYWx0ZWRfX6SW28Xvycs0O
- YOKukhqpHcTfkYNeGRk02UVQnYAieNl0FPP5nyOoQsMjQfkPKcUonaa3EWc/tqdoAAQyhyOyp0d
- /JHwcN3QLYQ/+EZJhZ2InHvQ5+q0ThEzTdyBEGsfGK6Opxy38U0CpsznUzKLwU/5Eqh1l493VDE
- PyTsfwJm0au//MmeaXH4NXKBaJs6mnL334sMoj6rtJQYWDX5DKMNRtgxvcMAQid95nsgniy4DYE
- +umaq/vNBvV3b0K6HXe0s/cT+YOR8m2DkpctVf5zXXorytYnhbn1vV3nGRWxaQ24cLeCzQnNSqB
- UmVF2ZqiQwbE9Yb71RMC4EJcfgbsbmodipz9oljstvRLhQ7lzspcSOdC0w5Z4QcLNUWGre4urgV
- ZaziQQl4T7tsVkAKgmifB2A8A6gzCQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-03_04,2025-11-03_03,2025-10-01_01
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251103200253.SlYC8MU7@linutronix.de>
 
-On Sun, Nov 02, 2025 at 10:00:48AM +0200, Leon Romanovsky wrote:
-> Changelog:
-> v6:
->  * Fixed wrong error check from pcim_p2pdma_init().
->  * Documented pcim_p2pdma_provider() function.
->  * Improved commit messages.
->  * Added VFIO DMA-BUF selftest.
->  * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
->  * Fixed error unwind when dma_buf_fd() fails.
->  * Document latest changes to p2pmem.
->  * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
->  * Moved DMA mapping logic to DMA-BUF.
->  * Removed types patch to avoid dependencies between subsystems.
->  * Moved vfio_pci_dma_buf_move() in err_undo block.
->  * Added nvgrace patch.
+On Mon, Nov 03, 2025 at 09:02:53PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-11-03 20:21:20 [+0100], Peter Zijlstra wrote:
+> > On Sun, Nov 02, 2025 at 10:57:06AM +0000, Guangbo Cui wrote:
+> > > The AER injection path may run in interrupt-disabled context while
+> > > holding inject_lock. On PREEMPT_RT kernels, spinlock_t becomes a
+> > > sleeping lock, so it must not be taken while a raw_spinlock_t is held.
+> > > Doing so violates lock ordering rules and trigger lockdep reports
+> > > such as “Invalid wait context”.
+> > > 
+> > > Convert inject_lock to raw_spinlock_t to ensure non-sleeping locking
+> > > semantics. The protected list is bounded and used only for debugging,
+> > > so raw locking will not cause latency issues.
+> > 
+> > Bounded how?
+> 
+> I think I used the term "not bounded" and said "it does not matter
+> because it is debugging only". Best would be to leave that part and use
+> only "only for debugging".
 
-Thanks Leon. Attaching a toy program which sanity tests the dma-buf export UAPI
-by feeding the allocated dma-buf into an dma-buf importer (libibverbs + CX-7).
- 
-Tested-by: Alex Mastro <amastro@fb.com>
-
-$ cc -Og -Wall -Wextra $(pkg-config --cflags --libs libibverbs) test_dmabuf.c -o test_dmabuf
-$ ./test_dmabuf 0000:05:00.0 3 4 0 0x1000
-opening 0000:05:00.0 via /dev/vfio/56
-allocating dma_buf bar_idx=4, bar_offset=0x0, size=0x1000
-allocated dma_buf fd=6
-discovered 4 ibv devices: mlx5_0 mlx5_1 mlx5_2 mlx5_3
-opened ibv device 3: mlx5_3
-registered dma_buf
-unregistered dma_buf
-closed dma_buf fd
-
----
-#include <fcntl.h>
-#include <infiniband/verbs.h>
-#include <libgen.h>
-#include <linux/limits.h>
-#include <linux/types.h>
-#include <linux/vfio.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#define ensure(cond)                                                             \
-	do {                                                                     \
-		if (!(cond)) {                                                   \
-			fprintf(stderr,                                          \
-				"%s:%d Condition failed: '%s' (errno=%d: %s)\n", \
-				__FILE__, __LINE__, #cond, errno,                \
-				strerror(errno));                                \
-			exit(EXIT_FAILURE);                                      \
-		}                                                                \
-	} while (0)
-
-#ifndef VFIO_DEVICE_FEATURE_DMA_BUF
-#define VFIO_DEVICE_FEATURE_DMA_BUF 11
-
-struct vfio_region_dma_range {
-	__u64 offset;
-	__u64 length;
-};
-
-struct vfio_device_feature_dma_buf {
-	__u32 region_index;
-	__u32 open_flags;
-	__u32 flags;
-	__u32 nr_ranges;
-	struct vfio_region_dma_range dma_ranges[];
-};
-#endif
-
-static uint32_t group_for_bdf(const char *bdf)
-{
-	char path[PATH_MAX];
-	char link[PATH_MAX];
-	int ret;
-
-	snprintf(path, sizeof(path), "/sys/bus/pci/devices/%s/iommu_group",
-		 bdf);
-	ret = readlink(path, link, sizeof(link));
-	ensure(ret > 0);
-
-	const char *filename = basename(link);
-	ensure(filename);
-
-	return strtoul(filename, NULL, 0);
-}
-
-int main(int argc, char **argv)
-{
-	int ret;
-
-	if (argc != 6) {
-		printf("usage: %s <vfio_bdf> <ibv_device_idx> <bar_idx> <bar_offset> <size>\n",
-		       argv[0]);
-		printf("example: %s 0000:05:00.0 3 2 0x20000 0x1000\n",
-		       argv[0]);
-		return 1;
-	}
-
-	const char *bdf = argv[1];
-	uint32_t ibv_idx = strtoul(argv[2], NULL, 0);
-	uint32_t bar_idx = strtoul(argv[3], NULL, 0);
-	uint64_t bar_offs = strtoull(argv[4], NULL, 0);
-	uint64_t dmabuf_len = strtoull(argv[5], NULL, 0);
-
-	uint32_t group_num = group_for_bdf(bdf);
-	char group_path[PATH_MAX];
-	snprintf(group_path, sizeof(group_path), "/dev/vfio/%u", group_num);
-
-	int container_fd = open("/dev/vfio/vfio", O_RDWR);
-	ensure(container_fd >= 0);
-
-	printf("opening %s via %s\n", bdf, group_path);
-	int group_fd = open(group_path, O_RDWR);
-	ensure(group_fd >= 0);
-
-	ret = ioctl(group_fd, VFIO_GROUP_SET_CONTAINER, &container_fd);
-	ensure(!ret);
-
-	ret = ioctl(container_fd, VFIO_SET_IOMMU, VFIO_TYPE1v2_IOMMU);
-	ensure(!ret);
-
-	int device_fd = ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, bdf);
-	ensure(device_fd >= 0);
-
-	uint8_t buf[sizeof(struct vfio_device_feature) +
-		    sizeof(struct vfio_device_feature_dma_buf) +
-		    sizeof(struct vfio_region_dma_range)]
-		__attribute__((aligned(32)));
-
-	struct vfio_device_feature *ft = (struct vfio_device_feature *)buf;
-	*ft = (struct vfio_device_feature){
-		.argsz = sizeof(buf),
-		.flags = VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_DMA_BUF,
-	};
-
-	struct vfio_device_feature_dma_buf *ft_dma_buf =
-		(struct vfio_device_feature_dma_buf *)ft->data;
-	*ft_dma_buf = (struct vfio_device_feature_dma_buf){
-		.region_index = bar_idx,
-		.open_flags = O_RDWR,
-		.nr_ranges = 1,
-	};
-
-	ft_dma_buf->dma_ranges[0] = (struct vfio_region_dma_range){
-		.length = dmabuf_len,
-		.offset = bar_offs,
-	};
-
-	printf("allocating dma_buf bar_idx=%u, bar_offset=0x%lx, size=0x%lx\n",
-	       bar_idx, bar_offs, dmabuf_len);
-	int dmabuf_fd = ioctl(device_fd, VFIO_DEVICE_FEATURE, buf);
-	ensure(dmabuf_fd >= 0);
-	printf("allocated dma_buf fd=%d\n", dmabuf_fd);
-
-	int num;
-	struct ibv_device **devs = ibv_get_device_list(&num);
-	ensure(devs && num > 0);
-	printf("discovered %d ibv devices:", num);
-	for (int i = 0; i < num; i++) {
-		printf(" %s", ibv_get_device_name(devs[i]));
-	}
-	printf("\n");
-	ensure(ibv_idx < (uint32_t)num);
-
-	struct ibv_context *ctx = ibv_open_device(devs[ibv_idx]);
-	ensure(ctx);
-	printf("opened ibv device %d: %s\n", ibv_idx,
-	       ibv_get_device_name(devs[ibv_idx]));
-
-	struct ibv_pd *pd = ibv_alloc_pd(ctx);
-	ensure(pd);
-
-	uint64_t offset = 0;
-	uint64_t iova = 0;
-	int access = IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ |
-		     IBV_ACCESS_REMOTE_WRITE;
-
-	struct ibv_mr *mr = ibv_reg_dmabuf_mr(pd, offset, dmabuf_len, iova,
-					      dmabuf_fd, access);
-	ensure(mr);
-	printf("registered dma_buf\n");
-
-	ret = ibv_dereg_mr(mr);
-	ensure(!ret);
-	printf("unregistered dma_buf\n");
-
-	ret = close(dmabuf_fd);
-	ensure(!ret);
-	printf("closed dma_buf fd\n");
-
-	return 0;
-}
----
+Yes, that is clearer. Thanks!
 
