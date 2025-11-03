@@ -1,64 +1,82 @@
-Return-Path: <linux-pci+bounces-40148-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40149-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 101B0C2E3E3
-	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 23:19:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61B6AC2E4F7
+	for <lists+linux-pci@lfdr.de>; Mon, 03 Nov 2025 23:47:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 019A618932F3
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 22:20:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9BE71897029
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Nov 2025 22:47:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5643090DD;
-	Mon,  3 Nov 2025 22:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB50627FB10;
+	Mon,  3 Nov 2025 22:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9oF19FO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J97+TEyO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D2E306482;
-	Mon,  3 Nov 2025 22:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEFD2517AA;
+	Mon,  3 Nov 2025 22:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762208378; cv=none; b=GKErDRY8KJsKrLY2Io6roGp88pE+GBPnEvmEBUGOQCvrB2ld34nmfQkVwrofZmI7uq3amV3Xdj2AIMUFyRycOnQubYNEsVcYEtmqI4mDa8LzFs7rKf9pzlr/UFGttjHQgBvKS8zT0scNI3aGwD2jZJ/K2sVKYL9MiWzsStfDtuA=
+	t=1762210007; cv=none; b=TpDw5WathYI+JxrVP3gT3kNnzyTdQdteXiKLHVZ4pUPUYYKa4pfbjqiYIVS9iouku32Z21x7w2XFCD0lHEm4lRNdx54Z0bt2i6UV5N40z7uuetLRBCwEy9DXk1zpgU4V+vGc8iPBfLlGhMM140NOSCH3r6tb3QbC32ONCxtjWNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762208378; c=relaxed/simple;
-	bh=wpiPMuuFGzd1HX1RUyEGmhibbSv0Aqq202GkXTrqzrI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LiYDuSUvEUiDgjQQw1VUcSpKwt4WGsXIYJlZyDM0KcNgMcKkyz+p1/AZcK25r3f0pDUkcNE0f3oJx44mbj1wzy4dp+e5u0Ha87NzxEOssLwslHf/oQO+Jj8sbDYYua3DQXIc2IVgRR1Nw1t/IogJ0WyCwHhmdkGyhmV8yS569HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9oF19FO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C5E7C113D0;
-	Mon,  3 Nov 2025 22:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762208377;
-	bh=wpiPMuuFGzd1HX1RUyEGmhibbSv0Aqq202GkXTrqzrI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=h9oF19FO4D0QWNnPur/W3em/sBAkXLMI+juCha0XOT2C+A1v4GMxlRWcEWnDBILBH
-	 6Y3PfhVCuNvoW9T3dUia9/szzPKk1EcmN53F57slLladGVza87YmUtb9Q6ZOduLQ8J
-	 5rSTKMTqvup/lNRsorxZcukzShamibR8QAzBvmTz/KSgpbOVUcK409aDfWa3kRFnHn
-	 x/ilWilqTxmjNkj5UyVWDuPmoGvJPTMgzu/+Wv8OCVKHTodrmwsX6p5hb8YRo9eXBv
-	 m2IJQzL9eH0qkLvzJWFHx/+fdKuj4gHXCIToL+4R0YtrWSyBhXtGbjy7qMCNljNmSv
-	 GjmT+2tNENExw==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yue Wang <yue.wang@Amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Linnaea Lavia <linnaea-von-lavia@live.com>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1762210007; c=relaxed/simple;
+	bh=JLjtv9YZug8pp1yUnLYZQqhdepsYSEGWLJwVOeuywOE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ORZ76V1Rr797iaO1vZ2wNvts9ekRUYfXRwuGhGvrYLSRTw1GjOVs8zvwNPyrUQStirMldEMIwTDM03PDUEVPjU4+pCQWhqEA3R8LPdCTvVh2W3OMrvRFoo4aFZSy7D7vUUVsOhfRDTrpV34VovDC4f02RUJZQjrwfoppQeypoIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J97+TEyO; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762210005; x=1793746005;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JLjtv9YZug8pp1yUnLYZQqhdepsYSEGWLJwVOeuywOE=;
+  b=J97+TEyO9z2drgsMyq+EzFh6OdtZhnyCcoJjtWBD6X/aE2G1gc+H1dZT
+   9sZkaU8cPn2FqeDsWknYRQZDK4wyeskD6vAU4OjXD9vpVDLu+jFPh0782
+   OxWFS/dIun52XtgBSCXd8hQLb9tSKjoBaHfeXEJ+jDsAWCO2shDd9QdzC
+   I38w+G+jx3+caHrrh+j9pAWDl2A+t9LbHFtHzi53QdTobWMhnbUMyfqAI
+   kMWeosHZg+AnZnl9dC7Ji0cZgkhnm5Ljlp5xalKaxxeKi06Ip/u79whl4
+   mvZeDILIReNwq91doPj9btMHrOnxWy854vj8l+VFFF2iVALebotDv6Swl
+   w==;
+X-CSE-ConnectionGUID: +KC/+cqsTUeelRPpBu/a0g==
+X-CSE-MsgGUID: pl893NqTSlWfiTsQQTyWDQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="74900059"
+X-IronPort-AV: E=Sophos;i="6.19,277,1754982000"; 
+   d="scan'208";a="74900059"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 14:46:45 -0800
+X-CSE-ConnectionGUID: BaPMsI+kRbuBCJAZZ8g3sA==
+X-CSE-MsgGUID: 1J8AqLpYSdmnA3qhghhccw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,277,1754982000"; 
+   d="scan'208";a="187304426"
+Received: from anguy11-upstream.jf.intel.com ([10.166.9.133])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Nov 2025 14:46:44 -0800
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
+To: davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	andrew+netdev@lunn.ch,
+	netdev@vger.kernel.org
+Cc: Madhu Chittim <madhu.chittim@intel.com>,
+	anthony.l.nguyen@intel.com,
+	aleksander.lobakin@intel.com,
+	horms@kernel.org,
+	bhelgaas@google.com,
 	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] PCI: meson: Remove meson_pcie_link_up() timeout, message, speed check
-Date: Mon,  3 Nov 2025 16:19:26 -0600
-Message-ID: <20251103221930.1831376-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Marek Landowski <marek.landowski@intel.com>
+Subject: [PATCH net-next] idpf: add support for IDPF PCI programming interface
+Date: Mon,  3 Nov 2025 14:46:30 -0800
+Message-ID: <20251103224631.595527-1-anthony.l.nguyen@intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,84 +85,198 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
 
-Previously meson_pcie_link_up() only returned true if the link was in the
-L0 state.  This was incorrect because hardware autonomously manages
-transitions between L0, L0s, and L1 while both components on the link stay
-in D0.  Those states should all be treated as "link is active".
+At present IDPF supports only 0x1452 and 0x145C as PF and VF device IDs
+on our current generation hardware. Future hardware exposes a new set of
+device IDs for each generation. To avoid adding a new device ID for each
+generation and to make the driver forward and backward compatible,
+make use of the IDPF PCI programming interface to load the driver.
 
-Returning false when the device was in L0s or L1 broke config accesses
-because dw_pcie_other_conf_map_bus() fails if the link is down, which
-caused errors like this:
+Write and read the VF_ARQBAL mailbox register to find if the current
+device is a PF or a VF.
 
-  meson-pcie fc000000.pcie: error: wait linkup timeout
-  pci 0000:01:00.0: BAR 0: error updating (0xfc700004 != 0xffffffff)
+PCI SIG allocated a new programming interface for the IDPF compliant
+ethernet network controller devices. It can be found at:
+https://members.pcisig.com/wg/PCI-SIG/document/20113
+with the document titled as 'PCI Code and ID Assignment Revision 1.16'
+or any latest revisions.
 
-Remove the LTSSM state check, timeout, speed check, and error message from
-meson_pcie_link_up(), the dw_pcie_ops.link_up() method, so it is a simple
-boolean check of whether the link is active.  Timeouts and and error
-messages are handled at a higher level, e.g., dw_pcie_wait_for_link().
+Tested this patch by doing a simple driver load/unload on Intel IPU E2000
+hardware which supports 0x1452 and 0x145C device IDs and new hardware
+which supports the IDPF PCI programming interface.
 
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-Reported-by: Linnaea Lavia <linnaea-von-lavia@live.com>
-Closes: https://lore.kernel.org/r/DM4PR05MB102707B8CDF84D776C39F22F2C7F0A@DM4PR05MB10270.namprd05.prod.outlook.com
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Linnaea Lavia <linnaea-von-lavia@live.com>
-Cc: stable@vger.kernel.org
+Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+Signed-off-by: Madhu Chittim <madhu.chittim@intel.com>
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Tested-by: Marek Landowski <marek.landowski@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 36 +++-----------------------
- 1 file changed, 3 insertions(+), 33 deletions(-)
+IWL: https://lore.kernel.org/intel-wired-lan/20250926184533.1872683-1-madhu.chittim@intel.com/
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 787469d1b396..13685d89227a 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -338,40 +338,10 @@ static struct pci_ops meson_pci_ops = {
- static bool meson_pcie_link_up(struct dw_pcie *pci)
- {
- 	struct meson_pcie *mp = to_meson_pcie(pci);
--	struct device *dev = pci->dev;
--	u32 speed_okay = 0;
--	u32 cnt = 0;
--	u32 state12, state17, smlh_up, ltssm_up, rdlh_up;
-+	u32 state12;
+ drivers/net/ethernet/intel/idpf/idpf_main.c | 105 ++++++++++++++++----
+ 1 file changed, 88 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_main.c b/drivers/net/ethernet/intel/idpf/idpf_main.c
+index 8c46481d2e1f..7a06eaf46a08 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_main.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_main.c
+@@ -3,15 +3,93 @@
  
--	do {
--		state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
--		state17 = meson_cfg_readl(mp, PCIE_CFG_STATUS17);
--		smlh_up = IS_SMLH_LINK_UP(state12);
--		rdlh_up = IS_RDLH_LINK_UP(state12);
--		ltssm_up = IS_LTSSM_UP(state12);
--
--		if (PM_CURRENT_STATE(state17) < PCIE_GEN3)
--			speed_okay = 1;
--
--		if (smlh_up)
--			dev_dbg(dev, "smlh_link_up is on\n");
--		if (rdlh_up)
--			dev_dbg(dev, "rdlh_link_up is on\n");
--		if (ltssm_up)
--			dev_dbg(dev, "ltssm_up is on\n");
--		if (speed_okay)
--			dev_dbg(dev, "speed_okay\n");
--
--		if (smlh_up && rdlh_up && ltssm_up && speed_okay)
--			return true;
--
--		cnt++;
--
--		udelay(10);
--	} while (cnt < WAIT_LINKUP_TIMEOUT);
--
--	dev_err(dev, "error: wait linkup timeout\n");
--	return false;
-+	state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
-+	return IS_SMLH_LINK_UP(state12) && IS_RDLH_LINK_UP(state12);
- }
+ #include "idpf.h"
+ #include "idpf_devids.h"
++#include "idpf_lan_vf_regs.h"
+ #include "idpf_virtchnl.h"
  
- static int meson_pcie_host_init(struct dw_pcie_rp *pp)
+ #define DRV_SUMMARY	"Intel(R) Infrastructure Data Path Function Linux Driver"
+ 
++#define IDPF_NETWORK_ETHERNET_PROGIF				0x01
++#define IDPF_CLASS_NETWORK_ETHERNET_PROGIF			\
++	(PCI_CLASS_NETWORK_ETHERNET << 8 | IDPF_NETWORK_ETHERNET_PROGIF)
++#define IDPF_VF_TEST_VAL		0xfeed0000u
++
+ MODULE_DESCRIPTION(DRV_SUMMARY);
+ MODULE_IMPORT_NS("LIBETH");
+ MODULE_IMPORT_NS("LIBETH_XDP");
+ MODULE_LICENSE("GPL");
+ 
++/**
++ * idpf_get_device_type - Helper to find if it is a VF or PF device
++ * @pdev: PCI device information struct
++ *
++ * Return: PF/VF device ID or -%errno on failure.
++ */
++static int idpf_get_device_type(struct pci_dev *pdev)
++{
++	void __iomem *addr;
++	int ret;
++
++	addr = ioremap(pci_resource_start(pdev, 0) + VF_ARQBAL, 4);
++	if (!addr) {
++		pci_err(pdev, "Failed to allocate BAR0 mbx region\n");
++		return -EIO;
++	}
++
++	writel(IDPF_VF_TEST_VAL, addr);
++	if (readl(addr) == IDPF_VF_TEST_VAL)
++		ret = IDPF_DEV_ID_VF;
++	else
++		ret = IDPF_DEV_ID_PF;
++
++	iounmap(addr);
++
++	return ret;
++}
++
++/**
++ * idpf_dev_init - Initialize device specific parameters
++ * @adapter: adapter to initialize
++ * @ent: entry in idpf_pci_tbl
++ *
++ * Return: %0 on success, -%errno on failure.
++ */
++static int idpf_dev_init(struct idpf_adapter *adapter,
++			 const struct pci_device_id *ent)
++{
++	int ret;
++
++	if (ent->class == IDPF_CLASS_NETWORK_ETHERNET_PROGIF) {
++		ret = idpf_get_device_type(adapter->pdev);
++		switch (ret) {
++		case IDPF_DEV_ID_VF:
++			idpf_vf_dev_ops_init(adapter);
++			adapter->crc_enable = true;
++			break;
++		case IDPF_DEV_ID_PF:
++			idpf_dev_ops_init(adapter);
++			break;
++		default:
++			return ret;
++		}
++
++		return 0;
++	}
++
++	switch (ent->device) {
++	case IDPF_DEV_ID_PF:
++		idpf_dev_ops_init(adapter);
++		break;
++	case IDPF_DEV_ID_VF:
++		idpf_vf_dev_ops_init(adapter);
++		adapter->crc_enable = true;
++		break;
++	default:
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
+ /**
+  * idpf_remove - Device removal routine
+  * @pdev: PCI device information struct
+@@ -165,21 +243,6 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	adapter->req_tx_splitq = true;
+ 	adapter->req_rx_splitq = true;
+ 
+-	switch (ent->device) {
+-	case IDPF_DEV_ID_PF:
+-		idpf_dev_ops_init(adapter);
+-		break;
+-	case IDPF_DEV_ID_VF:
+-		idpf_vf_dev_ops_init(adapter);
+-		adapter->crc_enable = true;
+-		break;
+-	default:
+-		err = -ENODEV;
+-		dev_err(&pdev->dev, "Unexpected dev ID 0x%x in idpf probe\n",
+-			ent->device);
+-		goto err_free;
+-	}
+-
+ 	adapter->pdev = pdev;
+ 	err = pcim_enable_device(pdev);
+ 	if (err)
+@@ -259,11 +322,18 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* setup msglvl */
+ 	adapter->msg_enable = netif_msg_init(-1, IDPF_AVAIL_NETIF_M);
+ 
++	err = idpf_dev_init(adapter, ent);
++	if (err) {
++		dev_err(&pdev->dev, "Unexpected dev ID 0x%x in idpf probe\n",
++			ent->device);
++		goto destroy_vc_event_wq;
++	}
++
+ 	err = idpf_cfg_hw(adapter);
+ 	if (err) {
+ 		dev_err(dev, "Failed to configure HW structure for adapter: %d\n",
+ 			err);
+-		goto err_cfg_hw;
++		goto destroy_vc_event_wq;
+ 	}
+ 
+ 	mutex_init(&adapter->vport_ctrl_lock);
+@@ -284,7 +354,7 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	return 0;
+ 
+-err_cfg_hw:
++destroy_vc_event_wq:
+ 	destroy_workqueue(adapter->vc_event_wq);
+ err_vc_event_wq_alloc:
+ 	destroy_workqueue(adapter->stats_wq);
+@@ -304,6 +374,7 @@ static int idpf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ static const struct pci_device_id idpf_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, IDPF_DEV_ID_PF)},
+ 	{ PCI_VDEVICE(INTEL, IDPF_DEV_ID_VF)},
++	{ PCI_DEVICE_CLASS(IDPF_CLASS_NETWORK_ETHERNET_PROGIF, ~0)},
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(pci, idpf_pci_tbl);
 -- 
-2.43.0
+2.47.1
 
 
