@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-40284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35205C32BA0
-	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 20:03:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71ABDC32BA9
+	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 20:04:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B331C189B27D
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 19:04:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6E5554EC93C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 19:04:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 261693321B9;
-	Tue,  4 Nov 2025 19:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83D3533F8BE;
+	Tue,  4 Nov 2025 19:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZQ5WhPe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLucJqX4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3352EC097;
-	Tue,  4 Nov 2025 19:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A5F2EC097;
+	Tue,  4 Nov 2025 19:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762283031; cv=none; b=nKcsjLg//noyWn9YYEfoVxfy1XqIT/H5F1viOBaImrx/KWUFWc/XotNfSk0RfFctQmv68BB3oecEuwRZMJQ1PPyBPPrlyKTQnrhReq3zJEA8gXTzOpBqan06wE8nVdQV07fMABYz6nP95yiwR30pDlPDSVSiEoAfwJ2pgPXAivg=
+	t=1762283035; cv=none; b=WvtEt1UYMOIzuR/2/7PbFZVzijsTjZemKV7+KYvcG01o8BcbGMrm75kEvJs06TfygM+dqQwvYM5jtorn8klrY3z0v4K0l/kS0pk26RBQQWvGNgeS2Fc2znPSS5iQ6lblSD40jLS3hBfBHAjIif1HDcoHxEJRfWnwJpynXEDOwOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762283031; c=relaxed/simple;
-	bh=FtgggpqbNGjSWPdIdf3hIlTuRws7DAmDVOCHpryft4Y=;
+	s=arc-20240116; t=1762283035; c=relaxed/simple;
+	bh=nTkZFV7DU8/opvW9dEZgcXnoBAujetOGxNge261BBqY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b/MzLYj7GKxYESBy4/cFxohPXJcrjX5prQ1FNpxfcFMJ/lu75ZZY+ddge9nbbqo/mbSyFaV4yy7a1/dcVZ4TUH64rdTBxDguCHSh/OzbBX6NIbcoILQCoy/6RyhBcqaiCCXEwRbcP2nMsuNxYNfpobKzK6iFdbcK/OJWnmU/ehY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZQ5WhPe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D34DC4CEF7;
-	Tue,  4 Nov 2025 19:03:49 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=aUZHtgZxyURI1jz1XCh+16dbwcYS87K96E6d9IYcCjloFQWLmOp+fISsLYdISIc5NUziBGHZk5hXAT8db5J7dODcW73qi4Z7RLJ2wIT8GCxhw92jrjxBGtFRWwTV+czlIdt4/YF/L00nwbL/BgarX/h5xONuIINkHsbWBOGfUJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLucJqX4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B236CC4CEF7;
+	Tue,  4 Nov 2025 19:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762283029;
-	bh=FtgggpqbNGjSWPdIdf3hIlTuRws7DAmDVOCHpryft4Y=;
+	s=k20201202; t=1762283034;
+	bh=nTkZFV7DU8/opvW9dEZgcXnoBAujetOGxNge261BBqY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NZQ5WhPepNKuN3+vz/qpL5DIvgOD7Q3mvRS7jLazvqBUAtYFCxNWAnuMqqOrO4MHH
-	 VMYd+H2VjMD6luWFGI9PhZaJHT5eO0cBCznd5uLDmrFXlT1P1nRrSLtIYtZMrNOPR1
-	 D9BabXCvSNVklXKI0ongOL4VO0wCjJRfltg5zlfj+i55O6mD3PESOEcEmLLQ7rgw1z
-	 /ov+QQHaYk6xQVgRQNpotzkG1/K50htYLIA8Lj8DFbYIHaPsgjVdJJ7/Aca+kgj0eK
-	 OxNj6q6yR7HcLohGVNg4q48YGuhFhKem6hWW+roBQZjVZ6S3vp81OO0/oA4lKdGyPz
-	 5X7T+3Lu52B1w==
-Date: Tue, 4 Nov 2025 13:03:48 -0600
+	b=aLucJqX4HfHKuCrs9eSnLB/tUxRXf46oDWdDLBn8DuQDON46rpUzEa82tkHRweBwh
+	 zDOldKMVoEbo7lL4JjnANhV/iceUQFYZM+LPwRXE46NZvbKymC04t51hUNJmWXfPA9
+	 yPn/mgABNLqbuP2YlHj9KQKGrNbZ+cYXrnMLzmQ7a4pTyI2Gli8RYbrgIhoYiSq7Uk
+	 UiKBn7hvFpmuVItZhlXbo8uopk5srUGYzSGmwkkHeKOjSMhL4/ENnzxwQ1H677JvMp
+	 9aVU+Th2uZkgGi8bu0sAD1EhWgWOfWQbFpvJGJg9MP6wobLCdYcXYX5lZeZg6L0G5/
+	 PZUw37ciCi0lQ==
+Date: Tue, 4 Nov 2025 13:03:53 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
@@ -53,9 +53,8 @@ Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 22/25] CXL/PCI: Export and rename merge_result() to
- pci_ers_merge_result()
-Message-ID: <20251104190348.GA1865266@bhelgaas>
+Subject: Re: [RESEND v13 15/25] CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
+Message-ID: <20251104190353.GA1865360@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,131 +63,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251104170305.4163840-23-terry.bowman@amd.com>
+In-Reply-To: <20251104170305.4163840-16-terry.bowman@amd.com>
 
-On Tue, Nov 04, 2025 at 11:03:02AM -0600, Terry Bowman wrote:
-> CXL uncorrectable errors (UCE) will soon be handled separately from the PCI
-> AER handling. The merge_result() function can be made common to use in both
-> handling paths.
+On Tue, Nov 04, 2025 at 11:02:55AM -0600, Terry Bowman wrote:
+> The CXL driver's error handling for uncorrectable errors (UCE) will be
+> updated in the future. A required change is for the error handlers to
+> to force a system panic when a UCE is detected.
 > 
-> Rename the PCI subsystem's merge_result() to be pci_ers_merge_result().
-> Export pci_ers_merge_result() to make available for the CXL and other
-> drivers to use.
+> Introduce PCI_ERS_RESULT_PANIC as a 'enum pci_ers_result' type. This will
+> be used by CXL UCE fatal and non-fatal recovery in future patches. Update
+> PCIe recovery documentation with details of PCI_ERS_RESULT_PANIC.
 > 
-> Update pci_ers_merge_result() to support recently introduced PCI_ERS_RESULT_PANIC
-> result.
-
-Seems like this merge_result() change maybe should be in the same
-patch that added PCI_ERS_RESULT_PANIC?  That would also solve the
-problem that the subject line doesn't mention this important
-functional change.
-
-I haven't seen the user(s) of pci_ers_merge_result() yet, but this
-seems like it might be a little too low level to be exported to
-modules and in include/linux/pci.h.  Maybe there's no other way.
-
-Wrap commit log to fit in 75 columns.
-
-Suggest possible subject prefix of "PCI/ERR" since the only CXL
-connection is that you want to *use* this from CXL.
-
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> 
-> ---
-> 
-> Changes in v12->v13:
-> - Renamed pci_ers_merge_result() to pcie_ers_merge_result().
->   pci_ers_merge_result() is already used in eeh driver. (Bot)
-> 
-> Changes in v11->v12:
-> - Remove static inline pci_ers_merge_result() definition for !CONFIG_PCIEAER.
->   Is not needed. (Lukas)
-> 
-> Changes in v10->v11:
-> - New patch
-> - pci_ers_merge_result() - Change export to non-namespace and rename
->   to be pci_ers_merge_result()
-> - Move pci_ers_merge_result() definition to pci.h. Needs pci_ers_result
-> ---
->  drivers/pci/pcie/err.c | 14 +++++++++-----
->  include/linux/pci.h    |  7 +++++++
->  2 files changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index bebe4bc111d7..9394bbdcf0fb 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -21,9 +21,12 @@
->  #include "portdrv.h"
->  #include "../pci.h"
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+
+This patch doesn't actually *do* anything.  There's no possibility of a
+bisect landing on it.  I think it would be better to combine this with
+something that *uses* PCI_ERS_RESULT_PANIC, maybe the merge_result()
+update?
+
+Suggest possible subject prefix of "PCI/ERR" since this really isn't
+CXL-specific; it just so happens that you don't know of uses outside
+CXL.
+
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -102,6 +102,8 @@ Possible return values are::
+>  		PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
+>  		PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
+>  		PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
+> +		PCI_ERS_RESULT_NO_AER_DRIVER, /* No AER capabilities registered for the driver */
+
+"AER capabilities" is confusingly similar to the PCIe AER Capability.
+
+I think this really means "there's no
+pci_error_handlers.error_detected() callback".
+
+> +		PCI_ERS_RESULT_PANIC,       /* System is unstable, panic. Is CXL specific */
+>  	};
 >  
-> -static pci_ers_result_t merge_result(enum pci_ers_result orig,
-> -				  enum pci_ers_result new)
-> +pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result orig,
-> +				       enum pci_ers_result new)
->  {
-> +	if (new == PCI_ERS_RESULT_PANIC)
-> +		return PCI_ERS_RESULT_PANIC;
-> +
->  	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
->  		return PCI_ERS_RESULT_NO_AER_DRIVER;
+>  A driver does not have to implement all of these callbacks; however,
+> @@ -116,6 +118,10 @@ The actual steps taken by a platform to recover from a PCI error
+>  event will be platform-dependent, but will follow the general
+>  sequence described below.
 >  
-> @@ -45,6 +48,7 @@ static pci_ers_result_t merge_result(enum pci_ers_result orig,
->  
->  	return orig;
->  }
-> +EXPORT_SYMBOL(pcie_ers_merge_result);
->  
->  static int report_error_detected(struct pci_dev *dev,
->  				 pci_channel_state_t state,
-> @@ -81,7 +85,7 @@ static int report_error_detected(struct pci_dev *dev,
->  		vote = err_handler->error_detected(dev, state);
->  	}
->  	pci_uevent_ers(dev, vote);
-> -	*result = merge_result(*result, vote);
-> +	*result = pcie_ers_merge_result(*result, vote);
->  	device_unlock(&dev->dev);
->  	return 0;
->  }
-> @@ -139,7 +143,7 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
->  
->  	err_handler = pdrv->err_handler;
->  	vote = err_handler->mmio_enabled(dev);
-> -	*result = merge_result(*result, vote);
-> +	*result = pcie_ers_merge_result(*result, vote);
->  out:
->  	device_unlock(&dev->dev);
->  	return 0;
-> @@ -159,7 +163,7 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
->  
->  	err_handler = pdrv->err_handler;
->  	vote = err_handler->slot_reset(dev);
-> -	*result = merge_result(*result, vote);
-> +	*result = pcie_ers_merge_result(*result, vote);
->  out:
->  	device_unlock(&dev->dev);
->  	return 0;
+> +PCI_ERS_RESULT_PANIC is currently unique to CXL and handled in CXL
+> +cxl_do_recovery(). The PCI pcie_do_recovery() routine does not report or
+> +handle PCI_ERS_RESULT_PANIC.
+
+I'm not sure all these mentions of being CXL specific are really
+helpful.  I don't think they are actionable to driver writers.
+
+>  STEP 0: Error Event
+>  -------------------
+>  A PCI bus error is detected by the PCI hardware.  On powerpc, the slot
 > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 33d16b212e0d..d3e3300f79ec 100644
+> index 5c4759078d2f..cffa5535f28d 100644
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -1887,9 +1887,16 @@ static inline void pci_hp_unignore_link_change(struct pci_dev *pdev) { }
->  #ifdef CONFIG_PCIEAER
->  bool pci_aer_available(void);
->  void pcie_clear_device_status(struct pci_dev *dev);
-> +pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result orig,
-> +				       enum pci_ers_result new);
->  #else
->  static inline bool pci_aer_available(void) { return false; }
->  static inline void pcie_clear_device_status(struct pci_dev *dev) { }
-> +static inline pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result orig,
-> +						     enum pci_ers_result new)
-> +{
-> +	return PCI_ERS_RESULT_NONE;
-> +}
->  #endif
+> @@ -890,6 +890,9 @@ enum pci_ers_result {
 >  
->  bool pci_ats_disabled(void);
+>  	/* No AER capabilities registered for the driver */
+>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic. Is CXL specific */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+>  };
+>  
+>  /* PCI bus error event callbacks */
 > -- 
 > 2.34.1
 > 
