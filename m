@@ -1,158 +1,136 @@
-Return-Path: <linux-pci+bounces-40289-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40290-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71949C32C59
-	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 20:26:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A881FC32D82
+	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 20:54:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22AA9427346
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 19:26:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31FC71899442
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 19:54:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E032D8DB8;
-	Tue,  4 Nov 2025 19:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B811267B94;
+	Tue,  4 Nov 2025 19:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Br/CW/Tf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NTxj0SL/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E742D8DA8
-	for <linux-pci@vger.kernel.org>; Tue,  4 Nov 2025 19:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A6270809;
+	Tue,  4 Nov 2025 19:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762284380; cv=none; b=MM3cBPD0/A4meuWnCt21qiYF6AVB+S0SFgUfhvQ+bwnHOm1/RTZW9eygimbHFZRrnAGmYrphxjbUkeMY+1Zz6AKKKLNeBvp6gElB/KDVwAmkiulsi0lq2IhyoejicTqbWRVK/42/2DsLWa3i4EWowxBmbgBV14tv1QPT8deMux8=
+	t=1762286040; cv=none; b=fURtuR1524p47wvrIe2ALCW2FNAyOQV3OfLFc77REZIN2uJXTDL7lC3hwSjCIfeZjrk9fnhHJBuA9AL/9Pg+ECMNFw2r0Jg9/1CvBFMmDh0iaF/32nGesBqp2BvrhjQTDxrjhgP6DAQxNIejB073IZDqAhdD2BqLjoMN+aHU+YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762284380; c=relaxed/simple;
-	bh=cCkLeU8n/VC4gjMMSvE8Q9FQGCPzymEWRBS/d9chZc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8kfdqmPPvnf7D9R/sMamSohw6ydxj2dEJeLdn8nR4XJRorGGZ1U+3AKlStLgkbXP8lKFZmna6IC/rpED6evnyvSvSMDfA5/8X/pT1DdYeS/PZ4D3kamrOwVyl6AJfFn3HZwmUWCCmhSgbFTOWT1+kuECsijcS2cyybbDc2SiXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Br/CW/Tf; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8a2eb837c91so530337285a.2
-        for <linux-pci@vger.kernel.org>; Tue, 04 Nov 2025 11:26:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1762284378; x=1762889178; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b3vZ52GkNsJGLOkvon3L18RWVKcEn1c510aPuA199YI=;
-        b=Br/CW/TflUHqW09MD8LVZEVmTCEpByqeZHXbQmDqLNS3W7/P5QMsLqXUYUPvpa00O/
-         NDbeKxURSRAOEgZlt4pyN7AoCusEuXP7xgt69+GEqYsa5zkF1QDghaXdoYgbz0DWHmSq
-         U9OeOmRjTDCIT0/cBPF/t3LUA1zcAtJYiTLN0gEIejp0Ov18P4I2koBnQy6dI54enVuc
-         QyQX43ev4/pqNhdtIzyRUoDdKf6k1sRujr/hJGrkQZGhZ3OH+U3yhJimlpvTSAlkgBve
-         sPmwUqWOuz/s/qZcYM4qKj2PZVpK1eQqqu4mmee1GT71ewrvnKTZdaqwowoBMd35XkLE
-         eoEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762284378; x=1762889178;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b3vZ52GkNsJGLOkvon3L18RWVKcEn1c510aPuA199YI=;
-        b=czGpuFHWAglaF2hfasIUVD2il4iTx2PIkaDAFTQUJnwhFJCaHrXZGFimAk0wpP3Ajw
-         84vxKU2h6HJxd3nbfIf0nXr/sAc4Gw/FpCRd6+2Z2AYEMCmPx6kDLVbZ2D2LY8LwY261
-         GwO7zSW7Uq8ZNJJNXmuFHJppGoOXem2wJZYsgScCAjTJQ599XIZ1dpFj2Toz+UK6Ok30
-         Ihq8n5X4N9IpejuDUHVQcxwShKTUd5pHa1dyxtdbfKDoSNeYKaui3BVQ1ojzkVgRNCap
-         kndypJlzwcnc7YtJwSLVnkJl6YgEogdVYJmB6i1AFWWxUvGpaBa1q/BMJ7bcUnHOm8Kc
-         Qglw==
-X-Forwarded-Encrypted: i=1; AJvYcCVl/gKcO0dYRqEJ3mqS/q4BFJ/VZfNE1uTk2xCEcAFU35Fh822ZXIxzO0UOoWqJjnCbatqrTULEM3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNvNKJQnN1ZnOk5U5Z6bKVkBG3SjYIYF5qvRfFkudxoQEVNJ2N
-	MsFNQu4lGFgwSiazptQYOgg7Iy71Q9atXh7NwvgZI1TthRjXL91Md3r/146NzEWodoE=
-X-Gm-Gg: ASbGnctDn7GZRwMzLkQ5g+nmm7no3cJJ/OEejHzVUdFu4FyBQniBgDsg474rA/UTSZF
-	8J0SgU2DMEHKAuaavqBrOUgnJvKOWRCM1Z4yU5a0liEVV8gy/oGEblEyUmN27RZtUzncWdEb9ut
-	Ezpf8wu9q+eTKOrjCmfS/o37+wnmQDLK2OdkwR/g2K04eo/M5nickM0jvkxMIMP/u25pf7UlQjR
-	3WMexmt8vyUCW2TYO/BgXJsS0jXNvEmJ9AbPtgx/TLbLYaztQCkeg4VwQI7Bz8yh3zjsQu+ffv9
-	5LQpvWYxj9vz/M7/UqgKXczxoIxe+xiVDiVGwAos+67J+4MX+jxKrW+uHU0JfmMznWJCmJUShj7
-	/fv9wM5SitPlq1UIuBst+7nvEmng8Zs7Zulv/NDeP5sdpW0/aFkxKnNiXZ2j34e1hT0dsHTKvWR
-	8GU+KLBvHPpdxnlOxXs4fvV6/yaVS1lAqavdXB05sjRVisOw==
-X-Google-Smtp-Source: AGHT+IFUVGYM+r9VlnujjXwSiyntNScv3JSZn85Gft/uvY+ZvhCxVbalAnSefdp5Rhr2H4+z2gOTFg==
-X-Received: by 2002:a05:620a:2a06:b0:86f:aee8:fcbc with SMTP id af79cd13be357-8b220b9ef27mr103417385a.79.1762284377655;
-        Tue, 04 Nov 2025 11:26:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b0f7bb3e33sm250495385a.39.2025.11.04.11.26.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 11:26:16 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vGMfY-000000073Bk-1Ldv;
-	Tue, 04 Nov 2025 15:26:16 -0400
-Date: Tue, 4 Nov 2025 15:26:16 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v6 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251104192616.GJ1204670@ziepe.ca>
-References: <20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com>
- <aQpRz74RurfhZK15@Asurada-Nvidia>
+	s=arc-20240116; t=1762286040; c=relaxed/simple;
+	bh=Na6wOFDxkSHIlRuw/ec8tWC8EkqwA7jq4ATjtLjtE18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sNqdsB/CfJ1sCF+b9ecVbrFBpIhSOFENKZfKCLvAmugG41bzFifbe5Gu2c+o1Q7WrbVzGFhUjO9HhvRX6F0K/nr1g7Bba2VJXJWkgmJljkWtEPGJcGx7j7+WQB9CVeyVu4d6pu0wWXxSZRcmY45zmm2L0jHYU78VtHITAmAliEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NTxj0SL/; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762286038; x=1793822038;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Na6wOFDxkSHIlRuw/ec8tWC8EkqwA7jq4ATjtLjtE18=;
+  b=NTxj0SL/pi73dmylmtTmakQvbY0Le9iHzMcyxKa7qNlue0nJojqlc1qo
+   FbRcmw82cL0zMLMpkRLH02u7LuaGjpE7JhAzTUihx8m/YD+3kvY8sqb/W
+   FsU7KMeZG5ht2sttGMHz38wck5M30pPzSNtjB4ThHV1O1pS8v7xkWMxhn
+   OWWwnsUKZBlO7vby03VdAOzqkuN37WXdSJJtK+7hVoLu+JlSStK74Xvcw
+   hB74dNpp1XmYJDGIGbFMjKZ+rBPDKGT9cim+WJyO+sGjRFdkmBJgYn5dv
+   vwcZFDrYM8QPkxuzwDilNX5SABru1U49oNRVJVP9XFZe+hhw6NsJJG9Ok
+   A==;
+X-CSE-ConnectionGUID: Lao2wvp5SVyPG07tBf1YjQ==
+X-CSE-MsgGUID: TuuJh6oWRJeO8q3FcAvh+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="68252219"
+X-IronPort-AV: E=Sophos;i="6.19,279,1754982000"; 
+   d="scan'208";a="68252219"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 11:53:57 -0800
+X-CSE-ConnectionGUID: mhFQtr/yQfahHP6Jcd71Cg==
+X-CSE-MsgGUID: Th50s3DWQrKQXhIHAEEHKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,279,1754982000"; 
+   d="scan'208";a="187194920"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2025 11:53:56 -0800
+Message-ID: <97762104-b660-4b72-ad7b-37b88f5c8f64@intel.com>
+Date: Tue, 4 Nov 2025 12:53:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQpRz74RurfhZK15@Asurada-Nvidia>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v13 07/25] CXL/AER: Replace device_lock() in
+ cxl_rch_handle_error_iter() with guard() lock
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-8-terry.bowman@amd.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251104170305.4163840-8-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 04, 2025 at 11:19:43AM -0800, Nicolin Chen wrote:
-> On Sun, Nov 02, 2025 at 10:00:48AM +0200, Leon Romanovsky wrote:
-> > Changelog:
-> > v6:
-> >  * Fixed wrong error check from pcim_p2pdma_init().
-> >  * Documented pcim_p2pdma_provider() function.
-> >  * Improved commit messages.
-> >  * Added VFIO DMA-BUF selftest.
-> >  * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
-> >  * Fixed error unwind when dma_buf_fd() fails.
-> >  * Document latest changes to p2pmem.
-> >  * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
-> >  * Moved DMA mapping logic to DMA-BUF.
-> >  * Removed types patch to avoid dependencies between subsystems.
-> >  * Moved vfio_pci_dma_buf_move() in err_undo block.
-> >  * Added nvgrace patch.
+
+
+On 11/4/25 10:02 AM, Terry Bowman wrote:
+> cxl_rch_handle_error_iter() includes a call to device_lock() using a goto
+> for multiple return paths. Improve readability and maintainability by
+> using the guard() lock variant.
 > 
-> I have verified this v6 using Jason's iommufd dmabuf branch:
-> https://github.com/jgunthorpe/linux/commits/iommufd_dmabuf/
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>> 
+> ---
 > 
-> by drafting a QEMU patch on top of Shameer's vSMMU v5 series:
-> https://github.com/nicolinc/qemu/commits/wip/iommufd_dmabuf/
+> Changes in v12->v13:
+> - New patch
+> ---
+>  drivers/pci/pcie/aer.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> with that, I see GPU BAR memory be correctly fetched in the QEMU:
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 0", offset: 0x0, size: 0x1000000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 2", offset: 0x0, size: 0x44f00000
-> vfio_region_dmabuf Device 0009:01:00.0, region "0009:01:00.0 BAR 4", offset: 0x0, size: 0x17a0000000
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 0b5ed4722ac3..cbaed65577d9 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1187,12 +1187,11 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+>  		return 0;
+>  
+> -	/* Protect dev->driver */
+> -	device_lock(&dev->dev);
+> +	guard(device)(&dev->dev);
+>  
+>  	err_handler = dev->driver ? dev->driver->err_handler : NULL;
+>  	if (!err_handler)
+> -		goto out;
+> +		return 0;
+>  
+>  	if (info->severity == AER_CORRECTABLE) {
+>  		if (err_handler->cor_error_detected)
+> @@ -1203,8 +1202,6 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  		else if (info->severity == AER_FATAL)
+>  			err_handler->error_detected(dev, pci_channel_io_frozen);
+>  	}
+> -out:
+> -	device_unlock(&dev->dev);
+>  	return 0;
+>  }
+>  
 
-Great thanks! This means we finally have a solution to that follow_pfn
-lifetime problem in type 1! What a long journey :)
-
-For those following along this same flow will be used with KVM to
-allow it to map VFIO as well. Confidential Compute will require this
-because some arches can't put confidential MMIO (or RAM) into a VMA.
-
-Jason
 
