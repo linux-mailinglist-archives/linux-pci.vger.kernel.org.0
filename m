@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-40232-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40233-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92CAEC3236C
-	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 18:05:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78827C323B8
+	for <lists+linux-pci@lfdr.de>; Tue, 04 Nov 2025 18:07:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3E6254F63B7
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 17:03:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C8FB461A34
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Nov 2025 17:04:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEFA33375F;
-	Tue,  4 Nov 2025 17:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77414339B38;
+	Tue,  4 Nov 2025 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dLQEVHpY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Kbv8rPX9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010045.outbound.protection.outlook.com [52.101.201.45])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010035.outbound.protection.outlook.com [52.101.85.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27460299A94;
-	Tue,  4 Nov 2025 17:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5931A3314D9;
+	Tue,  4 Nov 2025 17:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762275800; cv=fail; b=msUuT4RuS2KzVjr12HR45Dy3fTZPfJqvX0RKaDq9JhbeWRi2Rzw4SRIrIKkFSk7B2Auy+0IuFsqKol7ej51edgWRjXM+TsCvi7OMQYs9drkJLOdQZtmziPgY9RUfdGSEyt+lMHDKEcKA8o1k+HBQkWYGehzt+jUSbVIG1sZjOrA=
+	t=1762275811; cv=fail; b=nQurn57WPGhLBKDTFoTbMZuhVmWE22Yyfk74Z2H1Rh4DMDl3/ngf1FjQSXuAMPIzgsd0Hm9d0aDiMZ9KFnPAMC4VJpp4mNmLmul/NTaCQHrGL27+QS1+j1qZbyqvPrcVGzuei3QBX2gdUjsgYg4L4XL3+jHmqv5KVw2jCjkhKBk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762275800; c=relaxed/simple;
-	bh=t8Cen1zWY5fjTJ0MiShh7YikAilPdSO7NFXO/JC4nHA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MFQHY+82fkL3qOWz80UTlQ0drxSKOHTBK2PGuQO5LWsGOHreLat9OpxiExAmR3TQBHy5DQR3xO+fHR68lmtQDlbmQpktt1SjDDhOpnymE05hFw4ZAOWc+wgY027Ivvb7hYMsWFajtweJa10y+7EFx9Uew0M8H2ua4iqe/xt+EMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dLQEVHpY; arc=fail smtp.client-ip=52.101.201.45
+	s=arc-20240116; t=1762275811; c=relaxed/simple;
+	bh=g3FaBmivLXEsdLHsGR3q/HycFRlWE+4Z0UwJedVcyvM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FKwJxtupcQY6UK/vbDa08+v5zMSh8kEroNrIBcXJY+t0PHCJuFNz5HC1ZhBoPXeQp1+NLAU87karzc8b+Lxoo7n44I2OtBsiTCQd0oDesPi2S1LAt73EtS3Ha99cM7I5gSiZUD/qP+n8oNmnww4PHLlXuoC1qveg7W2bivREYgs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Kbv8rPX9; arc=fail smtp.client-ip=52.101.85.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=moMKjRg9RWpx3U1q2ScbPoNVqsUSrRDsCprZ90YP1VFZY12QWT9QqIaU3n+45iTnZAfQkwx+OMEKymAY5Fc5wxT3OXsDA9WN5yRAI+7dMNj3R2SmHxg0M6dpoz3itW5O4GeVyAM1VndS+4wgXTWI3W6rJJxlJnQKdyrmeqmA5nXPqriLNE0Uf8rZAgb6TPJhOh7Aca86Zemi+v/YDhKpC+55IUU0N+jFkk5O5muyTFy0aTq2oMV8IK+mjjmMIw94zRPYEhgU3x+jTnJE2Hdtz1++RCyHmcIvnlPBO98aujgdBferLFbXVB+4rqPH77MgvuDE/BJfcHB9J+KZu5jO7g==
+ b=KcET8nX4l46ElEnphxJBU23FnM0lFFG+GCc7WqkBTc3jxY6mLwunxlaEcqgFWGRt7LQBJ9UMCKvZAE7VOtU30TSI6iOgP93GXICB4is5HS/xib9J0iEjSDYwEZx/6ayw7zZc2QYLHY/qprAzvA4NR2qU69j47+R0cWqLrKwUx9bwhX3I5DO9up4zLgahSG4AU8Yw8wW4i9p7nUtZMxAM+hZG6zQtaCbhS+rTe23qbZJfLlMSZPe/cZhyz80lBQ/X+PWnG51F2GqzFyz93P34XyJ5dOil0aAOaq9D4UPGta3Xk8ZpPUm3QkCOORk/Im1ByLJocKUSs6ZG65JQtlT1Zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MeQ0AHfnMuPGtSLPl1Ljcm96j8RFfN1D5ff4KCHEscc=;
- b=Kykk5xPu57RlWgLMatz016ZgPzCbjAwOq1ZvspEucLlfu3exnfCNN8c0c4hW9HA1wLPxPSd63T4nulp3edaJcgRNKZ9uNGHjKx9xbpGTXsmtcjwXl3qpPGiMAZ5+FevrgJYzOiRy3D2hbqCX36uTdK4eINp80m87V7Af5UtXbw0rQ4ISosTQmBPFXsR6FLcmYPK2fAr7RyUh5FhaLw3okin3abtYgTUi5scpgfUuNvSdiAnf1bbKoNWsz2fkDRCqp0e9dzsr8T9m7mg0gke5oPAWR4Lqxlir/IAfJv1MOOfjTDPRNzWPjpditUyis34oLxnv9L+QBcEG4r3TtLjKBw==
+ bh=TWS2fX0x/S66+C4ZmEBor5+04oBd/k/c00Zl/ouOkC0=;
+ b=IIdVkgIFqwe4BEYHKVsPhgt5/gwFhYVI3/Q7PbV/QfzoGm8Z5TQV0B+gl2N8hl5Lw97yr34zx58lD8hKcTsUmBjz13/7fw2TVBmPAwSInSaZasXJ+6XI1G6rsSQ7nr0zle4heR+yppRguBRMdWxJS19kt+f4hR+nFx/VkcX/3axKGs/jP2jtELQwdEUA2IvOb28vkVKehvOKaqDrRqfHhj5Rp0ri79/7pM5my+WQWgp2QjjZQ+eHQOv25ooBIp4irSZ16X5N/DAWLoGfrd9usxPNuAuOjb9DTdDMm0URQKZzqgq3b78iNB7L9a7uHp5+yT7H41thp4IUAtC8Jc9Iag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MeQ0AHfnMuPGtSLPl1Ljcm96j8RFfN1D5ff4KCHEscc=;
- b=dLQEVHpYYrRikcF7sbWfNvMuaK+IObYsRTgYpkluDX3B7jdoI2Vn+lnpKj30W+JCJFkHXgB53byKXbxEZ5TWiBOKOeTwIejb58BouIOUq7r3FEpSzwDjIwuIcFSqGoE1AHDDpCGZoHCW1XUVeRZxYmmXYpXEWi17XEsPiVwfUHs=
-Received: from BN9PR03CA0983.namprd03.prod.outlook.com (2603:10b6:408:109::28)
- by MN0PR12MB6054.namprd12.prod.outlook.com (2603:10b6:208:3ce::20) with
+ bh=TWS2fX0x/S66+C4ZmEBor5+04oBd/k/c00Zl/ouOkC0=;
+ b=Kbv8rPX9A8zmiY9zErwrYqLXsz174zVyJUBLsObgYm7MZCkB1CmbeZBpMqDvVpeRfNp++J5XviwoGBO4OBkRhSuI44vxj4gZKeEf6iFqJ8pf1/Lg+BKSyPvH5urMfbKGzzEjk8zIjP4238MI0S6DxcQDBDkUdyyDX5g3WKwesGQ=
+Received: from BN9P221CA0007.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::26)
+ by PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.7; Tue, 4 Nov
- 2025 17:03:13 +0000
-Received: from BL6PEPF0001AB74.namprd02.prod.outlook.com
- (2603:10b6:408:109:cafe::de) by BN9PR03CA0983.outlook.office365.com
- (2603:10b6:408:109::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.15 via Frontend Transport; Tue,
- 4 Nov 2025 17:03:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9275.13; Tue, 4 Nov
+ 2025 17:03:24 +0000
+Received: from BL6PEPF0001AB72.namprd02.prod.outlook.com
+ (2603:10b6:408:10a:cafe::a0) by BN9P221CA0007.outlook.office365.com
+ (2603:10b6:408:10a::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9275.16 via Frontend Transport; Tue,
+ 4 Nov 2025 17:03:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -62,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF0001AB74.mail.protection.outlook.com (10.167.242.167) with Microsoft
+ BL6PEPF0001AB72.mail.protection.outlook.com (10.167.242.165) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9298.6 via Frontend Transport; Tue, 4 Nov 2025 17:03:12 +0000
+ 15.20.9298.6 via Frontend Transport; Tue, 4 Nov 2025 17:03:23 +0000
 Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 4 Nov
- 2025 09:03:11 -0800
+ 2025 09:03:22 -0800
 From: Terry Bowman <terry.bowman@amd.com>
 To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
 	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
@@ -80,10 +81,12 @@ To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
 	<linux-cxl@vger.kernel.org>, <alucerop@amd.com>, <ira.weiny@intel.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<terry.bowman@amd.com>
-Subject: [RESEND v13 00/25] Enable CXL PCIe Port Protocol Error handling and logging
-Date: Tue, 4 Nov 2025 11:02:40 -0600
-Message-ID: <20251104170305.4163840-1-terry.bowman@amd.com>
+Subject: [RESEND v13 01/25] CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
+Date: Tue, 4 Nov 2025 11:02:41 -0600
+Message-ID: <20251104170305.4163840-2-terry.bowman@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251104170305.4163840-1-terry.bowman@amd.com>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,776 +99,495 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB74:EE_|MN0PR12MB6054:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c0b2d35-4705-4be5-c96e-08de1bc4099e
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB72:EE_|PH7PR12MB5712:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a25f57c-c500-4410-ec65-08de1bc4101f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026|921020;
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hYeml5VrqiYu6IpHO1kKvTVAnBts8pTNDHGo/NpovEJsBWJxSFqMxKwWt19K?=
- =?us-ascii?Q?rnQRXO9EG1UokhipEze3y5JMun7cesEZBd1GhyUkWQXQBkyhr9O0uU9Cnwe4?=
- =?us-ascii?Q?CWz2hmvtqcI1GaLuPeDK44dVffsvZXdQFTnkKfy8sRg9IDdsZiqIyBQo3uQ7?=
- =?us-ascii?Q?yAS+2RrFEBcMK5RJ665F4uFwthvEQTqg84s+5rMiFDOI5BiIP6he6iu80WTa?=
- =?us-ascii?Q?MsKv0I4u4zpDfblehtonLVzvLgcm8TXv7mw2jmoNFS2JWOQ707NOfkCYPNWl?=
- =?us-ascii?Q?rcKELQ98F7T3iU9NCC1/gg7Th00rjxIxudcKPsXGXdYPf19YI9H8pqB1lmCS?=
- =?us-ascii?Q?nNxwMAhP1gVflB+SoGYp52QtErHkT9RhSmlrRgoRkN7PeUa8uKpDcVzcxOul?=
- =?us-ascii?Q?t1VOnO7eRlZwztwsg0gtghZ7E2Xad9U5MB68I7sYOz9+bcpZVGa6DKHy2pVv?=
- =?us-ascii?Q?F+wBaDGkpe2fZBkmBpHaoYWLWUXvt+9hSoBWkzl7Qe7dnoYXmH3WZ6F/pqH6?=
- =?us-ascii?Q?hl8oQxLHM5rGf9JwmDT20IR4F1CXsMo8I9BvueJ3HDgnw5reQuB+CFt5OH0Z?=
- =?us-ascii?Q?jlbHJoCEWCsSXhx4Tx4L4od3trmFkbWNVeZeZRWsOwsJFzjCxXPJSCDEOU57?=
- =?us-ascii?Q?IYJ1tSbBcCzdUgBJf1kQyvoMEqf7bqJan5kqQL3mHoKOx645sxBH9ad74RM2?=
- =?us-ascii?Q?DBt8pyfYX+x/g2lIW+nPaqg5Nd/KtTs9p1x4wG6ta8DASRT+8qWvq9yfeZOL?=
- =?us-ascii?Q?GltMuqdVQCepNcSDW9syQ2lsVAT6CGZDaBzII2WOQzX1d17itDBtVbCFjy68?=
- =?us-ascii?Q?bQULn+f/BWGYb0UkmDkg1k0/UdFwd6xyVmMQhWIv+XIhsF1NP972pu2ARKxq?=
- =?us-ascii?Q?Yoz59rz/iLATjjM+yWVqi8K0UcpnRLQwp5wzXsI1sKX8SsezETp0Yys2fItp?=
- =?us-ascii?Q?5BQ97Wx1l8E/FR3KYPEMrD9A4K8n0WEL5UtynKLdikiyVOWUnZ9zomBEVW4x?=
- =?us-ascii?Q?dMDVETqtWN5s68TaxADHrjgCpjhItt+muwWJJq1zPZIrkyL7UbUcckbevhFe?=
- =?us-ascii?Q?TtK7KMkMV+rZhMoSW1gT7QGCAzWJVvXRT/n9QUV332M8NFCkFk/s1Xhdfoaw?=
- =?us-ascii?Q?xicDnmFDpD06DwOe9ALRrG1vh/pVceeMWy53MMGuKgU+elM7Z+/kU4XRYTAl?=
- =?us-ascii?Q?AnfKQe0W/wkq9q9ZJ84q4CKMyCDxfdxndxbUUELgzlbSVU0CqPFpJeX63BKU?=
- =?us-ascii?Q?0btcH4U1S6zESzySUqIyb2byMkmbD0EcERJCu0zsCZvPBo8Snc2QpV4hegAG?=
- =?us-ascii?Q?6cSik1ekZPyMTc6ncW3hP723ZTmEJVMgCc5OcLLpLdzLpCXvY0CtvBODdxlI?=
- =?us-ascii?Q?w2X9Jb74d1waAMcPOcoI7hdPTJKq1nAssODxeO6uGjVvAiu6d8vMbz6G6dUY?=
- =?us-ascii?Q?I1Pkygn8B4LDCuGdWNziv3xSPOXt4bE/p1XsnGlC7YClvdMxSQts6e/Dv/A2?=
- =?us-ascii?Q?yDqrN4TIp+dOwWG02gowPWM7odUTwdRIgF4vN/nASToC4X4ZtpduRf/wdBte?=
- =?us-ascii?Q?J/y6wI7OP/c4ZAzQ5bRwcEz5Kjd+1FfadyR9OErB?=
+	=?us-ascii?Q?fIV4+QKyXXImak4HViCY0juyzlVNJIBphxMfP3/ketS+0bRJaEMY+tMHP5tD?=
+ =?us-ascii?Q?VH0BR9PH9zVZNLisbo5XXICWGaVrA/rzPSvYJKT6fTe9/gYxcREMeGh7EJDr?=
+ =?us-ascii?Q?k0z3L8qswXHw3kA6BouhTu9KJoHZhNzYWRXr4s8iyKdTlF7WDzHKKDr/xoge?=
+ =?us-ascii?Q?07U686zKAx9bf4XOTwDLfFekI0RNrCoKF4uryVNnrhk9hSaAbBiRKmi+TuXh?=
+ =?us-ascii?Q?2hAAv6KKFBvdgj5gGScrdgvjfNQLMnNTS5OXUPGvOwmm3kHD3djqw2vkhup7?=
+ =?us-ascii?Q?TUpyBmn+S7X3qZ9+ThHFni4awceQgL3Gi17cHJ+UH0ZQqhX+eO07DPx9tAAF?=
+ =?us-ascii?Q?6EhaNZrO0WtzKoxyOtnqgd8qXMfZexWlZtfz70FD79RXBMBuayZOF5msi2RA?=
+ =?us-ascii?Q?b+norGnHfXR9WJJRUpGMDn2g92/+xTB0It3lc4leDMXoDxtTN7qiAje/qwKf?=
+ =?us-ascii?Q?lzOXPe31OBiqla/2PxSC3OX9vHVYkTeIdHTWkWZmYu8OQVDVzrB8bExrn+DZ?=
+ =?us-ascii?Q?Ft/Wd+fhAk2IFBwA/1VOGfdQA4Vb/Y6xeNLCc7i1PfgdXM4iyII7MU4AZzKo?=
+ =?us-ascii?Q?49DD9w1eNAEWBcgoLm10E0/V88SbWDqnRvX4T0gfLCGZU65GRtmW4jBhbo7U?=
+ =?us-ascii?Q?4hD9QMTduvqehBWJr9aVhmHv/BTxiwM8ImNBbWgRwKSrkA782iWHcn6Fe0HW?=
+ =?us-ascii?Q?96sm43bL/5AuvMNoxryhxTHPV2pw0RscBNI52JJ6KtNrw9NnJrw8a+A5kIC+?=
+ =?us-ascii?Q?dvfWFMdVMB5kb9DK97SDn9GBbQUhYcmcXTlMZHwnw+MbnwL/Kb8SNwSuZnwX?=
+ =?us-ascii?Q?E4GMw8q99RcFnhNZI7UXnN6txqf0a2kxJLajW9fGxOPd/V2NuHxl+QXUt3r4?=
+ =?us-ascii?Q?nN/MEauh7Dd2ytW3GIuEjbatrrSWpsQrrn/XsXBrTtmtCY8OoynFxgOBObSr?=
+ =?us-ascii?Q?hOpwGsZ6E+s2crW055UMbGwBy6jsuM0I3flfAj8IP5oZkzoAiBKjfci1DT7z?=
+ =?us-ascii?Q?peVoddzJ8WmBxzEao8BrL0GVdPHjSFd0K9VBBDOUdzxGRPB/rCvqnIEWuxk6?=
+ =?us-ascii?Q?kcUzR1pqziqqz+7tdfPRn+wV8DoRGU2T0rGFNqLeH7g5hBdNbVhukXfbHCnW?=
+ =?us-ascii?Q?Hn9IS0Oocdc7lDJPK5/4xyAkohi0fxQUPFaaZnx1pdhIVYWK8GoLRkKWSkQW?=
+ =?us-ascii?Q?/8ZyKTJvxyYlH9+HDYffXGZ2eDdBmyDKTMC/Rv3CFeENGvVJAOk5RH44CyI8?=
+ =?us-ascii?Q?77px1YPxjVKn9GWEWinBPYyOaAuJbhdPkEdZzUOPKfJI40qFsSV27SLXKRkK?=
+ =?us-ascii?Q?+7YoXNXU1Zs+it1Tc9N3W8HpVSPs/ePKHvY3R4/4gnzDhVtC4Mk7f/PxPZDw?=
+ =?us-ascii?Q?Cq46NJq1D0xgK5sFQt6/+viV0Zn6mVzMQx6fY0vwFZvW/wYe7uBzAB8pHSAw?=
+ =?us-ascii?Q?YNPVkllpiBiaO5Y2Rmbr5WYplfzmNUDHOYk/lXDTb86i+4iobN1keNZOYG9A?=
+ =?us-ascii?Q?5p4SM70sjtbBV3pFVaWAaXeFeQGmmN6ez7Khd2zs+JIEN57LI/D4cug/16D7?=
+ =?us-ascii?Q?E48LRQsf/Rl0b7NoNNKqb7pTbAHY4bjiFY5TRTdM?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2025 17:03:12.1699
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2025 17:03:23.0746
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c0b2d35-4705-4be5-c96e-08de1bc4099e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a25f57c-c500-4410-ec65-08de1bc4101f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB74.namprd02.prod.outlook.com
+	BL6PEPF0001AB72.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6054
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5712
 
-This patchset updates CXL Protocol Error handling for CXL Ports and CXL
-Endpoints (EP). Previous versions of this series can be found here:
-https://lore.kernel.org/linux-cxl/20250925223440.3539069-1-terry.bowman@amd.com/
+The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
+accessible to other subsystems. Move these to uapi/linux/pci_regs.h.
 
-The first 2 patches were moved to the front this revision. This is the pcie_is_cxl()
-patch and the DVSEC definition patch. They were moved to front in case Alejandro needs for
-his Type2 series.
+Change DVSEC name formatting to follow the existing PCI format in
+pci_regs.h. The current format uses CXL_DVSEC_XYZ and the CXL defines must
+be changed to be PCI_DVSEC_CXL_XYZ to match existing pci_regs.h. Leave
+PCI_DVSEC_CXL_PORT* defines as-is because they are already defined and may
+be in use by userspace application(s).
 
-The next 6 patches prepare and move files. This includes Dave Jiang's patch
-moving CXL RAS related code from cxl/core/pci.c to cxl/core/ras.c. Restricted
-CXL host (RCH) related RAS code is moved to cxl/core/ras_rch.c. AER driver
-related RCH code is moved within the AER driver from pci/pcie/aer.c
-pci/pcie/aer_cxl_rch.c.
+Update existing usage to match the name change.
 
-Patches 9-15 are mostly fixups in preparation for following protocol
-handling changes. This includes introducing the new PCI_ERS_RESULT_PANIC
-result type, improvements to AER logging for bus type (CXL or PCI), function
-handler interface updates supporting both Endpoints and CXL Port devices,
-logging a message if RAS is NULL. The patch "CXL/AER: Update PCI class code
-check to use FIELD_GET()" was removed from this group per Lukas's request.
+Update the inline documentation to refer to latest CXL spec version.
 
-Patches 16-17 move more code. The AER driver's virtual hierarchy (VH) RAS
-related code is moved to pci/pcie/aer_cxl_vh.c in patch 17. Patch 18 introduces
-cxl_pci_drv_bound() to identify if an EP is using the CXL EP driver. This
-is to support cases where the CXL driver is not used (eg. VFIO). Accessing
-cxl_pci_drv_bound() in cxl/pci.c from cxl_core fails with circular build
-dependencies. This requires moving cxl/pci.c (containing cxl_pci_drv_bound())
-to cxl/core/pci_drv.c.
+Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Patches 18-20 create CXL Endpoint error handlers alongside the existing CXL
-PCI error handlers. Both CXL and PCI error handlers are added for CXL Port devices.
+----
 
-Patches 21-23 implement the kernel kfifo dequeue and logic for calling the
-correctable or uncorrectable handlers. Signifcant changes were made in the
-unrecoverable patch for the following.
- - Updated locking. The endpoint and port devices lock the following:
-   EP - pdev->dev (same as cxlds->dev) and cxlmd->dev
-   RP/USP/DSP - pdev->dev and parent cxl_port
- - Move locking out of handlers and into cxl_handle_proto_error() and
-   report_error_detected(). Lock as soon as possible after kfifo dequeue.
- - Device's reporting UCEs, are locked after kfifo dequeue. Must make condition
-   check to prevent from locking the reporting device during iteration in
-   do_recovery().
-
-Patches 24-25 enable/disable protocol error interrupt masks.
-
-
-== Testing ===
-Below are the testing results while using QEMU. The QEMU testing uses a CXL Root
-Port, CXL Upstream Switch Port, CXL Downstream Switch Port and CXL Endpoint as
-given below. I've attached the QEMU startup commandline used. This testing uses
-protocol error injection at all the devices.
-
-The sub-topology for the QEMU testing is:
-                    ---------------------
-                    | CXL RP - 0C:00.0  |
-                    ---------------------
-                              |
-                    ---------------------
-                    | CXL USP - 0D:00.0 |
-                    ---------------------
-                              |
-                    ---------------------
-                    | CXL DSP - 0E:00.0 |
-                    ---------------------
-                              |
-                    ---------------------
-                    | CXL EP - 0F:00.0  |
-                    ---------------------
-		    
- root@tbowman-cxl:~# lspci -t
- -+-[0000:00]- -00.0
-  |           +-01.0
-  |           +-02.0
-  |           +-03.0
-  |           +-1f.0
-  |           +-1f.2
-  |           \-1f.3
-  \-[0000:0c]---00.0-[0d-0f]----00.0-[0e-0f]----00.0-[0f]----00.0
-
- The topology was created with:
-  ${qemu} -boot menu=on \
-             -cpu host \
-             -nographic \
-             -monitor telnet:127.0.0.1:1234,server,nowait \
-             -M virt,cxl=on \
-             -chardev stdio,id=s1,signal=off,mux=on -serial none \
-             -device isa-serial,chardev=s1 -mon chardev=s1,mode=readline \
-             -machine q35,cxl=on \
-             -m 16G,maxmem=24G,slots=8 \
-             -cpu EPYC-v3 \
-             -smp 16 \
-             -accel kvm \
-             -drive file=${img},format=raw,index=0,media=disk \
-             -device e1000,netdev=user.0 \
-             -netdev user,id=user.0,hostfwd=tcp::5555-:22 \
-             -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
-             -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=/tmp/lsa0.raw,size=256M \
-             -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-             -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
-             -device cxl-upstream,bus=root_port0,id=us0 \
-             -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
-             -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-vmem0 \
-             -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
-
-
-=== Root Port ===
-root@tbowman-cxl:~/aer-inject# ./root-ce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0c:00.0
-pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0c:00.0
-pcieport 0000:0c:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00004000/0000a000
-pcieport 0000:0c:00.0:    [14] CorrIntErr
-cxl_aer_correctable_error: memdev=0000:0c:00.0 host=pci0000:0c serial=0: status: 'CRC Threshold Hit'
-
-root@tbowman-cxl:~/aer-inject# ./root-uce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0c:00.0
-pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0c:00.0
-aer_event: 0000:0c:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
-pcieport 0000:0c:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
-pcieport 0000:0c:00.0:   device [8086:7075] error status/mask=00400000/02000000
-pcieport 0000:0c:00.0:    [22] UncorrIntErr
-cxl_aer_uncorrectable_error: memdev=0000:0c:00.0 host=pci0000:0c serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:03.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem3 host=0000:12:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:02.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem2 host=0000:11:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:01.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem0 host=0000:10:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-Kernel panic - not syncing: CXL cachemem error.
-CPU: 10 UID: 0 PID: 150 Comm: kworker/10:1 Tainted: G            E       6.18.0-rc2-00029-g7d4bdf85dccf #3518 PREEMPT(voluntary)
-Tainted: [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-Workqueue: events cxl_proto_err_work_fn [cxl_core]
-Call Trace:
- <TASK>
- vpanic+0x3a0/0x410
- panic+0x5b/0x60
- ? xa_find_after+0x134/0x250
- ? xa_find_after+0x86/0x250
- cxl_proto_err_work_fn+0x316/0x320 [cxl_core]
- ? lock_release+0x1e4/0x3f0
- process_one_work+0x22c/0x650
- worker_thread+0x188/0x330
- ? __pfx_worker_thread+0x10/0x10
- kthread+0x102/0x210
- ? __pfx_kthread+0x10/0x10
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x278/0x2e0
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-Kernel Offset: disabled
----[ end Kernel panic - not syncing: CXL cachemem error. ]---
-
-
-=== Upstream Port ===
-root@tbowman-cxl:~/aer-inject# ./us-ce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0d:00.0
-pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0d:00.0
-pcieport 0000:0d:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-pcieport 0000:0d:00.0:   device [19e5:a128] error status/mask=00004000/0000a000
-pcieport 0000:0d:00.0:    [14] CorrIntErr
-cxl_aer_correctable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'CRC Threshold Hit'
-
-root@tbowman-cxl:~/aer-inject# ./us-uce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0d:00.0
-pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0d:00.0
-aer_event: 0000:0d:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
-pcieport 0000:0d:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
-cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-Kernel panic - not syncing: CXL cachemem error.
-CPU: 10 UID: 0 PID: 159 Comm: irq/24-aerdrv Tainted: G            E       6.18.0-rc2-00029-g7d4bdf85dccf #3518 PREEMPT(voluntary)
-Tainted: [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <TASK>
- vpanic+0x3a0/0x410
- panic+0x5b/0x60
- pci_error_detected+0xb4/0xc0 [cxl_core]
- report_error_detected+0xbf/0x190
- ? __pfx_report_frozen_detected+0x10/0x10
- __pci_walk_bus+0x4c/0x70
- ? __pfx_report_frozen_detected+0x10/0x10
- __pci_walk_bus+0x34/0x70
- ? __pfx_report_frozen_detected+0x10/0x10
- __pci_walk_bus+0x34/0x70
- ? __pfx_report_frozen_detected+0x10/0x10
- pci_walk_bus+0x31/0x50
- pcie_do_recovery+0x300/0x430
- aer_isr_one_error_type+0x20f/0x3c0
- aer_isr_one_error+0x117/0x140
- aer_isr+0x4c/0x80
- irq_thread_fn+0x24/0x60
- irq_thread+0x1a0/0x2b0
- ? __pfx_irq_thread_fn+0x10/0x10
- ? __pfx_irq_thread_dtor+0x10/0x10
- ? __pfx_irq_thread+0x10/0x10
- kthread+0x102/0x210
- ? __pfx_kthread+0x10/0x10
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x278/0x2e0
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-Kernel Offset: disabled
----[ end Kernel panic - not syncing: CXL cachemem error. ]---
-
-=== Downstream Port ===
-root@tbowman-cxl:~/aer-inject# ./ds-ce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0e:00.0
-pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0e:00.0
-aer_event: 0000:0e:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
-pcieport 0000:0e:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00004000/0000a000
-pcieport 0000:0e:00.0:    [14] CorrIntErr
-cxl_aer_correctable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'CRC Threshold Hit'
-
-root@tbowman-cxl:~/aer-inject# ./ds-uce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0e:00.0
-pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0e:00.0
-aer_event: 0000:0e:00.0 CXL Bus Error: severity=Fatal, Uncorrectable Internal Error, TLP Header=Not available
-pcieport 0000:0e:00.0: CXL Bus Error: severity=Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
-pcieport 0000:0e:00.0:   device [19e5:a129] error status/mask=00400000/02000000
-pcieport 0000:0e:00.0:    [22] UncorrIntErr
-cxl_aer_uncorrectable_error: memdev=0000:0d:00.0 host=0000:0c:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:00.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem0 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:01.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem1 host=0000:10:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:03.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem2 host=0000:12:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=0000:0e:02.0 host=0000:0d:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-cxl_aer_uncorrectable_error: memdev=mem3 host=0000:11:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-Kernel panic - not syncing: CXL cachemem error.
-CPU: 10 UID: 0 PID: 683 Comm: kworker/10:2 Tainted: G            E       6.18.0-rc2-00029-g2e23f5f37fac #3552 PREEMPT(voluntary)
-Tainted: [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-Workqueue: events cxl_proto_err_work_fn [cxl_core]
-Call Trace:
- <TASK>
- vpanic+0x3a0/0x410
- panic+0x5b/0x60
- ? xa_find_after+0x134/0x250
- ? xa_find_after+0x86/0x250
- cxl_proto_err_work_fn+0x352/0x360 [cxl_core]
- ? lock_release+0x1e4/0x3f0
- process_one_work+0x22c/0x650
- worker_thread+0x188/0x330
- ? __pfx_worker_thread+0x10/0x10
- kthread+0x102/0x210
- ? __pfx_kthread+0x10/0x10
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x278/0x2e0
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-Kernel Offset: disabled
----[ end Kernel panic - not syncing: CXL cachemem error. ]---
-
-
-=== Endpoint ===
-root@tbowman-cxl:~/aer-inject# ./ep-ce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00004000/00000000 into device 0000:0f:00.0
-pcieport 0000:0c:00.0: AER: Correctable error message received from 0000:0f:00.0
-aer_event: 0000:0f:00.0 CXL Bus Error: severity=Corrected, Corrected Internal Error, TLP Header=Not available
-cxl_core 0000:0f:00.0: CXL Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-cxl_core 0000:0f:00.0:   device [8086:0d93] error status/mask=00004000/00000000
-cxl_core 0000:0f:00.0:    [14] CorrIntErr
-cxl_aer_correctable_error: memdev=mem3 host=0000:0f:00.0 serial=0: status: 'CRC Threshold Hit'
-
-root@tbowman-cxl:~/aer-inject# ./ep-uce-inject.sh
-pcieport 0000:0c:00.0: aer_inject: Injecting errors 00000000/00400000 into device 0000:0f:00.0
-pcieport 0000:0c:00.0: AER: Uncorrectable (Fatal) error message received from 0000:0f:00.0
-aer_event: 0000:0f:00.0 CXL Bus Error: severity=Fatal, , TLP Header=Not available
-cxl_core 0000:0f:00.0: AER: CXL Bus Error: severity=Uncorrectable (Fatal), type=Inaccessible, (Unregistered Agent ID)
-cxl_aer_uncorrectable_error: memdev=mem1 host=0000:0f:00.0 serial=0: status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Error'
-Kernel panic - not syncing: CXL cachemem error.
-CPU: 10 UID: 0 PID: 159 Comm: irq/24-aerdrv Tainted: G            E       6.18.0-rc2-00029-g7d4bdf85dccf #3518 PREEMPT(voluntary)
-Tainted: [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <TASK>
- vpanic+0x3a0/0x410
- panic+0x5b/0x60
- pci_error_detected+0xb4/0xc0 [cxl_core]
- report_error_detected+0xbf/0x190
- ? __pfx_report_frozen_detected+0x10/0x10
- __pci_walk_bus+0x4c/0x70
- ? __pfx_report_frozen_detected+0x10/0x10
- pci_walk_bus+0x31/0x50
- pcie_do_recovery+0x300/0x430
- aer_isr_one_error_type+0x20f/0x3c0
- aer_isr_one_error+0x117/0x140
- aer_isr+0x4c/0x80
- irq_thread_fn+0x24/0x60
- irq_thread+0x1a0/0x2b0
- ? __pfx_irq_thread_fn+0x10/0x10
- ? __pfx_irq_thread_dtor+0x10/0x10
- ? __pfx_irq_thread+0x10/0x10
- kthread+0x102/0x210
- ? __pfx_kthread+0x10/0x10
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x278/0x2e0
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1a/0x30
- </TASK>
-Kernel Offset: disabled
----[ end Kernel panic - not syncing: CXL cachemem error. ]---
-
-== Changes ==
-
- Changes in v12->v13:
- CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
- - Add Dave Jiang's reviewed-by
- - Remove changes to existing PCI_DVSEC_CXL_PORT* defines. Update commit
-   message. (Jonathan)
- PCI/CXL: Introduce pcie_is_cxl()
- - Add Ben's "reviewed-by"
- cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
- - None
- cxl/pci: Remove unnecessary CXL RCH handling helper functions
- - None
- cxl: Remove CXL VH handling in CONFIG_PCIEAER_CXL conditional blocks from core
- - None
- cxl: Move CXL driver's RCH error handling into core/ras_rch.c
- - None
- CXL/AER: Replace device_lock() in cxl_rch_handle_error_iter() with guard() lock
- - New patch
- CXL/AER: Move AER drivers RCH error handling into pcie/aer_cxl_rch.c
- - Add forward declararation of 'struct aer_err_info' in pci/pci.h (Terry)
- - Changed copyright date from 2025 to 2023 (Jonathan)
- - Add David Jiang's, Jonathan's, and Ben's review-by
- - Readd 'struct aer_err_info' (Bot)
- PCI/AER: Report CXL or PCIe bus error type in trace logging
- - Remove duplicated aer_err_info inline comments. Is already in the
-   kernel-doc header (Ben)
- cxl/pci: Update RAS handler interfaces to also support CXL Ports
- - None
- cxl/pci: Log message if RAS registers are unmapped
- - Added Bens review-by
- cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
- - Added Dave Jiang's review-by
- cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
- - Add Ben's review-by
- cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
- - Change as result of dport delay fix. No longer need switchport and
- endport approach. Refactor. (Terry)
- CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
- - Add Dave Jiang's, Jonathan's, Ben's review-by
- - Typo fix (Ben)
- CXL/AER: Introduce pcie/aer_cxl_vh.c in AER driver for forwarding CXL errors
- - Add Dave Jiang's review-by
- - Update error message (Ben)
- cxl: Introduce cxl_pci_drv_bound() to check for bound driver
- - Add Dave Jiang's review-by.
- cxl: Change CXL handlers to use guard() instead of scoped_guard()
- - New patch
-cxl/pci: Introduce CXL protocol error handlers for endpoints
- - Updated all the implemetnation and commit message. (Terry)
- - Refactored cxl_cor_error_detected()/cxl_error_detected() to remove
-   pdev (Dave Jiang)
-CXL/PCI: Introduce CXL Port protocol error handlers
- - Move get_pci_cxl_host_dev() and cxl_handle_proto_error() to Dequeue
-   patch (Terry)
- - Remove EP case in cxl_get_ras_base(), not used. (Terry)
- - Remove check for dport->dport_dev (Dave)
- - Remove whitespace (Terry)
-PCI/AER: Dequeue forwarded CXL error
- - Rewrite cxl_handle_proto_error() and cxl_proto_err_work_fn() (Terry)
- - Rename get_cxl_host dev() to be get_cxl_port() (Terry)
- - Remove exporting of unused function, pci_aer_clear_fatal_status() (Dave Jiang)
- - Change pr_err() calls to ratelimited. (Terry)
- - Update commit message. (Terry)
- - Remove namespace qualifier from pcie_clear_device_status()
-   export (Dave Jiang)
- - Move locks into cxl_proto_err_work_fn() (Dave)
- - Update log messages in cxl_forward_error() (Ben)
-CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
- - Renamed pci_ers_merge_result() to pcie_ers_merge_result().
-   pci_ers_merge_result() is already used in eeh driver. (Bot)
-CXL/PCI: Introduce CXL uncorrectable protocol error recovery
- - Rewrite report_error_detected() and cxl_walk_port (Terry)
- - Add guard() before calling cxl_pci_drv_bound() (Dave Jiang)
- - Add guard() calls for EP (cxlds->cxlmd->dev & pdev->dev) and ports
-   (pdev->dev & parent cxl_port) in cxl_report_error_detected() and
-   cxl_handle_proto_error() (Terry)
- - Remove unnecessary check for endpoint port. (Dave Jiang)
- - Remove check for RCIEP EP in cxl_report_error_detected() (Terry)
-CXL/PCI: Enable CXL protocol errors during CXL Port probe
- - Add dev and dev_is_pci() NULL checks in cxl_unmask_proto_interrupts() (Terry)
- - Add Dave Jiang's and Ben's review-by
-CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
- - Added dev and dev_is_pci() checks in cxl_mask_proto_interrupts() (Terry)
+Changes in v12->v13:
+- Add Dave Jiang's reviewed-by
+- Remove changes to existing PCI_DVSEC_CXL_PORT* defines. Update commit
+  message. (Jonathan)
 
 Changes in v11 -> v12:
-cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
- - Added Dave Jiang's review by
- - Moved to front of series
-cxl/pci: Remove unnecessary CXL RCH handling helper functions
- - Add reviewed-by for Alejandro & Dave Jiang
- - Moved to front of series
-cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
- - Update CONFIG_CXL_RAS in CXL Kconfig to have CXL_PCI dependency (Terry)
-CXL/AER: Remove CONFIG_PCIEAER_CXL and replace with CONFIG_CXL_RAS 
- - Added review-by for Sathyanarayanan
- - Changed Kconfig dependency from PCIEAER_CXL to PCIEAER. Moved
-   this backwards into this patch.
-cxl: Move CXL driver RCH error handling into CONFIG_CXL_RCH_RAS conditio
- - Moved CXL_RCH_RAS Kconfig definition here from following commit
-CXL/AER: Introduce aer_cxl_rch.c into AER driver for handling CXL RCH errors
- - Rename drivers/pci/pcie/cxl_rch.c to drivers/pci/pcie/aer_cxl_rch.c (Lukas)
- - Removed forward declararation of 'struct aer_err_info' in pci/pci.h (Terry)
-CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
- - Change formatting to be same as existing definitions
- - Change GENMASK() -> __GENMASK() and BIT() to _BITUL()
-PCI/CXL: Introduce pcie_is_cxl()
- - Add review-by for Alejandro
- - Add comment in set_pcie_cxl() explaining why updating parent status.
-PCI/AER: Report CXL or PCIe bus error type in trace logging
- - Change aer_err_info::is_cxl to be bool a bitfield. Update structure padding. (Lukas)
- - Add kernel-doc for 'struct aer_err_info' (Lukas)
-cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports 
- - Correct parameters to call trace_cxl_aer_correctable_error() (Shiju)
- - Add reviewed-by for Jonathan and Shiju
-cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
- - Add check for dport_parent->rch before calling cxl_dport_init_ras_reporting().
- - RCH dports are initialized from cxl_dport_init_ras_reporting cxl_mem_probe().  
-CXL/PCI: Introduce PCI_ERS_RESULT_PANIC 
- - Documentation requested by (Lukas)
-CXL/AER: Introduce aer_cxl_vh.c in AER driver for forwarding CXL errors
- - Rename drivers/pci/pcie/cxl_aer.c to drivers/pci/pcie/aer_cxl_vh.c (Lukas)
-cxl: Introduce cxl_pci_drv_bound() to check for bound driver
- - New patch
-PCI/AER: Dequeue forwarded CXL error
- - Add guard for CE case in cxl_handle_proto_error() (Dave)
- - Updated commit message (Terry)
-CXL/PCI: Introduce CXL Port protocol error handlers
- - Add call to cxl_pci_drv_bound() in cxl_handle_proto_error() and
-   pci_to_cxl_dev() (Lukas)
- - Change cxl_error_detected() -> cxl_cor_error_detected() (Terry)
- - Remove NULL variable assignments (Jonathan)
- - Replace bus_find_device() with find_cxl_port_by_uport() for upstream
-   port searches. (Dave)
-CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
- - Remove static inline pci_ers_merge_result() definition for !CONFIG_PCIEAER.
-   Is not needed. (Lukas)
-CXL/PCI: Introduce CXL uncorrectable protocol error recovery
- - Clean up port discovery in cxl_do_recovery() (Dave)
- - Add PCI_EXP_TYPE_RC_END to type check in cxl_report_error_detected()
+- Change formatting to be same as existing definitions
+- Change GENMASK() -> __GENMASK() and BIT() to _BITUL()
 
 Changes in v10 -> v11:
- cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
- - New patch
- CXL/AER: Remove CONFIG_PCIEAER_CXL and replace with CONFIG_CXL_RAS
- - New patch
- cxl/pci: Remove unnecessary CXL RCH handling helper functions
- - New patch
- cxl: Move CXL driver RCH error handling into CONFIG_CXL_RCH_RAS conditional block
- - New patch
- CXL/AER: Introduce rch_aer.c into AER driver for handling CXL RCH errors
- - Remove changes in code-split and move to earlier, new patch
- - Add #include <linux/bitfield.h> to cxl_ras.c
- - Move cxl_rch_handle_error() & cxl_rch_enable_rcec() declarations from pci.h
-   to aer.h, more localized.
- - Introduce CONFIG_CXL_RCH_RAS, includes Makefile changes, ras.c ifdef changes
- CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
- - New patch
- PCI/CXL: Introduce pcie_is_cxl()
- - Amended set_pcie_cxl() to check for Upstream Port's and EP's parent
-   downstream port by calling set_pcie_cxl(). (Dan)
- - Retitle patch: 'Add' -> 'Introduce'
- - Add check for CXL.mem and CXL.cache (Alejandro, Dan)
- PCI/AER: Report CXL or PCIe bus error type in trace logging
- - Remove duplicate call to trace_aer_event() (Shiju)
- - Added Dan William's and Dave Jiang's reviewed-by
- CXL/AER: Update PCI class code check to use FIELD_GET()
- - Add #include <linux/bitfield.h> to cxl_ras.c (Terry)
- - Removed line wrapping at "(CXL 3.2, 8.1.12.1)". (Jonathan)
- cxl/pci: Log message if RAS registers are unmapped
- - Added Dave Jiang's review-by (Terry)
- cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
- - Updated CE and UCE trace routines to maintian consistent TP_Struct ABI
-   and unchanged TP_printk() logging. (Shiju, Alison)
- cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
- - Added Dave Jiang and Jonathan Cameron's review-by
- - Changes moved to core/ras.c
- cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
- - Use local pointer for readability in cxl_switch_port_init_ras() (Jonathan Cameron)
- - Rename port to be ep in cxl_endpoint_port_init_ras() (Dave Jiang)
- - Rename dport to be parent_dport in cxl_endpoint_port_init_ras()
-   and cxl_switch_port_init_ras() (Dave Jiang)
- - Port helper changes were in cxl/port.c, now in core/ras.c (Dave Jiang)
- cxl/pci: Introduce CXL Endpoint protocol error handlers
- - cxl_error_detected() - Change handlers' scoped_guard() to guard() (Jonathan)
- - cxl_error_detected() - Remove extra line (Shiju)
- - Changes moved to core/ras.c (Terry)
- - cxl_error_detected(), remove 'ue' and return with function call. (Jonathan)
- - Remove extra space in documentation for PCI_ERS_RESULT_PANIC definition
- - Move #include "pci.h from cxl.h to core.h (Terry)
- - Remove unnecessary includes of cxl.h and core.h in mem.c (Terry)   
- CXL/AER: Introduce cxl_aer.c into AER driver for forwarding CXL errors
- - Move RCH implementation to cxl_rch.c and RCH declarations to pci/pci.h. (Terry)
- - Introduce 'struct cxl_proto_err_kfifo' containing semaphore, fifo,
-   and work struct. (Dan)
- - Remove embedded struct from cxl_proto_err_work (Dan)
- - Make 'struct work_struct *cxl_proto_err_work' definition static (Jonathan)
- - Add check for NULL cxl_proto_err_kfifo to determine if CXL driver is
-   not registered for workqueue. (Dan)
- PCI/AER: Dequeue forwarded CXL error
- - Reword patch commit message to remove RCiEP details (Jonathan)
- - Add #include <linux/bitfield.h> (Terry)
- - is_cxl_rcd() - Fix short comment message wrap  (Jonathan)
- - is_cxl_rcd() - Combine return calls into 1  (Jonathan)
- - cxl_handle_proto_error() - Move comment earlier  (Jonathan)
- - Usse FIELD_GET() in discovering class code (Jonathan)
- - Remove BDF from cxl_proto_err_work_data. Use 'struct pci_dev *' (Dan)
- CXL/PCI: Introduce CXL Port protocol error handlers
- - Removed check for PCI_EXP_TYPE_RC_END in cxl_report_error_detected() (Terry)
- - Update is_cxl_error() to check for acceptable PCI EP and port types
- CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
- - pci_ers_merge_result() - Change export to non-namespace and rename
-   to be pci_ers_merge_result() (Jonathan)
- - Move pci_ers_merge_result() definition to pci.h. Needs pci_ers_result (Terry)
- CXL/PCI: Introduce CXL uncorrectable protocol error recovery
- - pci_ers_merge_results() - Move to earlier patch
- CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
- - Remove guard() in cxl_mask_proto_interrupts(). Observed device lockup/block
-   during testing. (Terry)
-  
- Changes in v9 -> v10:
- - Add drivers/pci/pcie/cxl_aer.c
- - Add drivers/cxl/core/native_ras.c
- - Change cxl_register_prot_err_work()/cxl_unregister_prot_err_work to return void
- - Check for pcie_ports_native in cxl_do_recovery()
- - Remove debug logging in cxl_do_recovery()
- - Update PCI_ERS_RESULT_PANIC definition to indicate is CXL specific
- - Revert trace logging changes: name,parent -> memdev,host.
- - Use FIELD_GET() to check for EP class code (cxl_aer.c & native_ras.c).
- - Change _prot_ to _proto_ everywhere
- - cxl_rch_handle_error_iter(), check if driver is cxl_pci_driver
- - Remove cxl_create_prot_error_info(). Move logic into forward_cxl_error()
- - Remove sbdf_to_pci() and move logic into cxl_handle_proto_error()
- - Simplify/refactor get_pci_cxl_host_dev()
- - Simplify/refactor cxl_get_ras_base()
- - Move patch 'Remove unnecessary CXL Endpoint handling helper functions' to front
- - Update description for 'CXL/PCI: Introduce CXL Port protocol error
-   handlers' with why state is not used to determine handling
- - Introduce cxl_pci_drv_bound() and call from cxl_rch_handle_error_iter()
+- New commit
+---
+ drivers/cxl/core/pci.c        | 62 +++++++++++++++++-----------------
+ drivers/cxl/core/regs.c       | 12 +++----
+ drivers/cxl/cxlpci.h          | 53 -----------------------------
+ drivers/cxl/pci.c             |  2 +-
+ drivers/pci/pci.c             |  4 ++-
+ include/uapi/linux/pci_regs.h | 63 ++++++++++++++++++++++++++++++++---
+ 6 files changed, 100 insertions(+), 96 deletions(-)
 
- Changes in v8 -> v9:
- - Updated reference counting to use pci_get_device()/pci_put_device() in
-   cxl_disable_prot_errors()/cxl_enable_prot_errors
- - Refactored cxl_create_prot_err_info() to fix reference counting
- - Removed 'struct cxl_port' driver changes for error handler. Instead
-   check for CXL device type (EP or Port device) and call handler
- - Make pcie_is_cxl() static inline in include/linux/linux.h
- - Remove NULL check in create_prot_err_info()
- - Change success return in cxl_ras_init() to use hardcoded 0
- - Changed 'struct work_struct cxl_prot_err_work' declaration to static
- - Change to use rate limited log with dev anchor in forward_cxl_error()
- - Refactored forward-cxl_error() to remove severity auto variable
- - Changed pci_aer_clear_nonfatal_status() to be static inline for
-   !(CONFIG_PCIEAER)
- - Renamed merge_result() to be cxl_merge_result()
- - Removed 'ue' condition in cxl_error_detected()
- - Updated 2nd parameter in call to __cxl_handle_cor_ras()/__cxl_handle_ras()
-   in unify patch
- - Added log message for failure while assigning interrupt disable callback
- - Updated pci_aer_mask_internal_errors() to use pci_clear_and_set_config_dword()
- - Simplified patch titles for clarity
- - Moved CXL error interrupt disabling into cxl/core/port.c with CXL Port
- teardown
- - Updated 'struct cxl_port_err_info' to only contain sbdf and severity
- Removed everything else.
- - Added pdev and CXL device get_device()/put_device() before calling handlers
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 18825e1505d6..cbc8defa6848 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -158,19 +158,19 @@ static int cxl_dvsec_mem_range_valid(struct cxl_dev_state *cxlds, int id)
+ 	int rc, i;
+ 	u32 temp;
  
- Changes in v7 -> v8:
- [Dan] Use kfifo. Move handling to CXL driver. AER forwards error to CXL
- driver
- [Dan] Add device reference incrementors where needed throughout
- [Dan] Initiate CXL Port RAS init from Switch Port and Endpoint Port init 
- [Dan] Combine CXL Port and CXL Endpoint trace routine
- [Dan] Introduce aer_info::is_cxl. Use to indicate CXL or PCI errors
- [Jonathan] Add serial number for all devices in trace
- [DaveJ] Move find_cxl_port() change into patch using it
- [Terry] Move CXL Port RAS init into cxl/port.c
- [Terry] Moved kfifo functions into cxl/core/ras.c 
+-	if (id > CXL_DVSEC_RANGE_MAX)
++	if (id > PCI_DVSEC_CXL_RANGE_MAX)
+ 		return -EINVAL;
  
- Changes in v6 -> v7:
- [Terry] Move updated trace routine call to later patch. Was causing build
- error.
+ 	/* Check MEM INFO VALID bit first, give up after 1s */
+ 	i = 1;
+ 	do {
+ 		rc = pci_read_config_dword(pdev,
+-					   d + CXL_DVSEC_RANGE_SIZE_LOW(id),
++					   d + PCI_DVSEC_CXL_RANGE_SIZE_LOW(id),
+ 					   &temp);
+ 		if (rc)
+ 			return rc;
  
- Changes in v5 -> v6:
- [Ira] Move pcie_is_cxl(dev) define to a inline function
- [Ira] Update returning value from pcie_is_cxl_port() to bool w/o cast
- [Ira] Change cxl_report_error_detected() cleanup to return correct bool
- [Ira] Introduce and use PCI_ERS_RESULT_PANIC
- [Ira] Reuse comment for PCIe and CXL recovery paths
- [Jonathan] Add type check in for cxl_handle_cor_ras() and cxl_handle_ras()
- [Jonathan] cxl_uport/dport_init_ras_reporting(), added a mutex.
- [Jonathan] Add logging example to patches updating trace output
- [Jonathan] Make parameter 'const' to eliminate for cast in match_uport()
- [Jonathan] Use __free() in cxl_pci_port_ras()
- [Terry] Add patch to log the PCIe SBDF along with CXL device name
- [Terry] Add patch to handle CXL endpoint and RCH DP errors as CXL errors
- [Terry] Remove patch w USP UCE fatal support @ aer_get_device_error_info()
- [Terry] Rebase to cxl/next commit 5585e342e8d3 ("cxl/memdev: Remove unused partition values")
- [Gregory] Pre-initialize pointer to NULL in cxl_pci_port_ras()
- [Gregory] Move AER driver bus name detection to a static function
-
- Changes in v4 -> v5:
- [Alejandro] Refactor cxl_walk_bridge to simplify 'status' variable usage
- [Alejandro] Add WARN_ONCE() in __cxl_handle_ras() and cxl_handle_cor_ras()
- [Ming] Remove unnecessary NULL check in cxl_pci_port_ras()
- [Terry] Add failure check for call to to_cxl_port() in cxl_pci_port_ras()
- [Ming] Use port->dev for call to devm_add_action_or_reset() in
- cxl_dport_init_ras_reporting() and cxl_uport_init_ras_reporting()
- [Jonathan] Use get_device()/put_device() to prevent race condition in
- cxl_clear_port_error_handlers() and cxl_clear_port_error_handlers()
- [Terry] Commit message cleanup. Capitalize keywords from CXL and PCI
- specifications
-
- Changes in v3 -> v4:
- [Lukas] Capitalize PCIe and CXL device names as in specifications
- [Lukas] Move call to pcie_is_cxl() into cxl_port_devsec()
- [Lukas] Correct namespace spelling
- [Lukas] Removed export from pcie_is_cxl_port()
- [Lukas] Simplify 'if' blocks in cxl_handle_error()
- [Lukas] Change panic message to remove redundant 'panic' text
- [Ming] Update to call cxl_dport_init_ras_reporting() in RCH case
- [lkp@intel] 'host' parameter is already removed. Remove parameter description too.
- [Terry] Added field description for cxl_err_handlers in pci.h comment block
-
- Changes in v1 -> v2:
- [Jonathan] Remove extra NULL check and cleanup in cxl_pci_port_ras()
- [Jonathan] Update description to DSP map patch description
- [Jonathan] Update cxl_pci_port_ras() to check for NULL port
- [Jonathan] Dont call handler before handler port changes are present (patch order)
- [Bjorn] Fix linebreak in cover sheet URL
- [Bjorn] Remove timestamps from test logs in cover sheet
- [Bjorn] Retitle AER commits to use "PCI/AER:"
- [Bjorn] Retitle patch#3 to use renaming instead of refactoring
- [Bjorn] Fix base commit-id on cover sheet
- [Bjorn] Add VH spec reference/citation
- [Terry] Removed last 2 patches to enable internal errors. Is not needed
- because internal errors are enabled in AER driver.
- [Dan] Create cxl_do_recovery() and pci_driver::cxl_err_handlers.
- [Dan] Use kernel panic in CXL recovery
- [Dan] cxl_port_hndlrs -> cxl_port_error_handlers
-
-Dave Jiang (1):
-  cxl: Remove CXL VH handling in CONFIG_PCIEAER_CXL conditional blocks
-    from core/pci.c
-
-Terry Bowman (24):
-  CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
-  PCI/CXL: Introduce pcie_is_cxl()
-  cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
-  cxl/pci: Remove unnecessary CXL RCH handling helper functions
-  cxl: Move CXL driver's RCH error handling into core/ras_rch.c
-  CXL/AER: Replace device_lock() in cxl_rch_handle_error_iter() with
-    guard() lock
-  CXL/AER: Move AER drivers RCH error handling into pcie/aer_cxl_rch.c
-  PCI/AER: Report CXL or PCIe bus error type in trace logging
-  cxl/pci: Update RAS handler interfaces to also support CXL Ports
-  cxl/pci: Log message if RAS registers are unmapped
-  cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
-  cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
-  cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
-  CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
-  CXL/AER: Introduce pcie/aer_cxl_vh.c in AER driver for forwarding CXL
-    errors
-  cxl: Introduce cxl_pci_drv_bound() to check for bound driver
-  cxl: Change CXL handlers to use guard() instead of scoped_guard()
-  cxl/pci: Introduce CXL protocol error handlers for Endpoints
-  CXL/PCI: Introduce CXL Port protocol error handlers
-  PCI/AER: Dequeue forwarded CXL error
-  CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
-  CXL/PCI: Introduce CXL uncorrectable protocol error recovery
-  CXL/PCI: Enable CXL protocol errors during CXL Port probe
-  CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
-
- Documentation/PCI/pci-error-recovery.rst |   6 +
- drivers/cxl/Kconfig                      |  17 +-
- drivers/cxl/Makefile                     |   2 -
- drivers/cxl/core/Makefile                |   4 +-
- drivers/cxl/core/core.h                  |  66 +++
- drivers/cxl/core/pci.c                   | 380 ++-------------
- drivers/cxl/{pci.c => core/pci_drv.c}    |  32 +-
- drivers/cxl/core/port.c                  |  28 +-
- drivers/cxl/core/ras.c                   | 572 ++++++++++++++++++++++-
- drivers/cxl/core/ras_rch.c               | 120 +++++
- drivers/cxl/core/regs.c                  |  12 +-
- drivers/cxl/core/trace.h                 |  68 +--
- drivers/cxl/cxl.h                        |  10 +-
- drivers/cxl/cxlpci.h                     |  68 +--
- drivers/cxl/mem.c                        |   3 +-
- drivers/pci/pci.c                        |   5 +-
- drivers/pci/pci.h                        |  59 ++-
- drivers/pci/pcie/Makefile                |   2 +
- drivers/pci/pcie/aer.c                   | 155 ++----
- drivers/pci/pcie/aer_cxl_rch.c           |  96 ++++
- drivers/pci/pcie/aer_cxl_vh.c            |  98 ++++
- drivers/pci/pcie/err.c                   |  14 +-
- drivers/pci/probe.c                      |  29 ++
- include/linux/aer.h                      |  29 ++
- include/linux/pci.h                      |  18 +
- include/ras/ras_event.h                  |   9 +-
- include/uapi/linux/pci_regs.h            |  63 ++-
- tools/testing/cxl/Kbuild                 |   4 +-
- 28 files changed, 1320 insertions(+), 649 deletions(-)
- rename drivers/cxl/{pci.c => core/pci_drv.c} (98%)
- create mode 100644 drivers/cxl/core/ras_rch.c
- create mode 100644 drivers/pci/pcie/aer_cxl_rch.c
- create mode 100644 drivers/pci/pcie/aer_cxl_vh.c
-
-
-base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+-		valid = FIELD_GET(CXL_DVSEC_MEM_INFO_VALID, temp);
++		valid = FIELD_GET(PCI_DVSEC_CXL_MEM_INFO_VALID, temp);
+ 		if (valid)
+ 			break;
+ 		msleep(1000);
+@@ -194,17 +194,17 @@ static int cxl_dvsec_mem_range_active(struct cxl_dev_state *cxlds, int id)
+ 	int rc, i;
+ 	u32 temp;
+ 
+-	if (id > CXL_DVSEC_RANGE_MAX)
++	if (id > PCI_DVSEC_CXL_RANGE_MAX)
+ 		return -EINVAL;
+ 
+ 	/* Check MEM ACTIVE bit, up to 60s timeout by default */
+ 	for (i = media_ready_timeout; i; i--) {
+ 		rc = pci_read_config_dword(
+-			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(id), &temp);
++			pdev, d + PCI_DVSEC_CXL_RANGE_SIZE_LOW(id), &temp);
+ 		if (rc)
+ 			return rc;
+ 
+-		active = FIELD_GET(CXL_DVSEC_MEM_ACTIVE, temp);
++		active = FIELD_GET(PCI_DVSEC_CXL_MEM_ACTIVE, temp);
+ 		if (active)
+ 			break;
+ 		msleep(1000);
+@@ -233,11 +233,11 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
+ 	u16 cap;
+ 
+ 	rc = pci_read_config_word(pdev,
+-				  d + CXL_DVSEC_CAP_OFFSET, &cap);
++				  d + PCI_DVSEC_CXL_CAP_OFFSET, &cap);
+ 	if (rc)
+ 		return rc;
+ 
+-	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
++	hdm_count = FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT_MASK, cap);
+ 	for (i = 0; i < hdm_count; i++) {
+ 		rc = cxl_dvsec_mem_range_valid(cxlds, i);
+ 		if (rc)
+@@ -265,16 +265,16 @@ static int cxl_set_mem_enable(struct cxl_dev_state *cxlds, u16 val)
+ 	u16 ctrl;
+ 	int rc;
+ 
+-	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
++	rc = pci_read_config_word(pdev, d + PCI_DVSEC_CXL_CTRL_OFFSET, &ctrl);
+ 	if (rc < 0)
+ 		return rc;
+ 
+-	if ((ctrl & CXL_DVSEC_MEM_ENABLE) == val)
++	if ((ctrl & PCI_DVSEC_CXL_MEM_ENABLE) == val)
+ 		return 1;
+-	ctrl &= ~CXL_DVSEC_MEM_ENABLE;
++	ctrl &= ~PCI_DVSEC_CXL_MEM_ENABLE;
+ 	ctrl |= val;
+ 
+-	rc = pci_write_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, ctrl);
++	rc = pci_write_config_word(pdev, d + PCI_DVSEC_CXL_CTRL_OFFSET, ctrl);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -290,7 +290,7 @@ static int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
+ {
+ 	int rc;
+ 
+-	rc = cxl_set_mem_enable(cxlds, CXL_DVSEC_MEM_ENABLE);
++	rc = cxl_set_mem_enable(cxlds, PCI_DVSEC_CXL_MEM_ENABLE);
+ 	if (rc < 0)
+ 		return rc;
+ 	if (rc > 0)
+@@ -352,11 +352,11 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+ 		return -ENXIO;
+ 	}
+ 
+-	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
++	rc = pci_read_config_word(pdev, d + PCI_DVSEC_CXL_CAP_OFFSET, &cap);
+ 	if (rc)
+ 		return rc;
+ 
+-	if (!(cap & CXL_DVSEC_MEM_CAPABLE)) {
++	if (!(cap & PCI_DVSEC_CXL_MEM_CAPABLE)) {
+ 		dev_dbg(dev, "Not MEM Capable\n");
+ 		return -ENXIO;
+ 	}
+@@ -367,7 +367,7 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+ 	 * driver is for a spec defined class code which must be CXL.mem
+ 	 * capable, there is no point in continuing to enable CXL.mem.
+ 	 */
+-	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
++	hdm_count = FIELD_GET(PCI_DVSEC_CXL_HDM_COUNT_MASK, cap);
+ 	if (!hdm_count || hdm_count > 2)
+ 		return -EINVAL;
+ 
+@@ -376,11 +376,11 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+ 	 * disabled, and they will remain moot after the HDM Decoder
+ 	 * capability is enabled.
+ 	 */
+-	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
++	rc = pci_read_config_word(pdev, d + PCI_DVSEC_CXL_CTRL_OFFSET, &ctrl);
+ 	if (rc)
+ 		return rc;
+ 
+-	info->mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
++	info->mem_enabled = FIELD_GET(PCI_DVSEC_CXL_MEM_ENABLE, ctrl);
+ 	if (!info->mem_enabled)
+ 		return 0;
+ 
+@@ -393,35 +393,35 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+ 			return rc;
+ 
+ 		rc = pci_read_config_dword(
+-			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
++			pdev, d + PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i), &temp);
+ 		if (rc)
+ 			return rc;
+ 
+ 		size = (u64)temp << 32;
+ 
+ 		rc = pci_read_config_dword(
+-			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
++			pdev, d + PCI_DVSEC_CXL_RANGE_SIZE_LOW(i), &temp);
+ 		if (rc)
+ 			return rc;
+ 
+-		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
++		size |= temp & PCI_DVSEC_CXL_MEM_SIZE_LOW_MASK;
+ 		if (!size) {
+ 			continue;
+ 		}
+ 
+ 		rc = pci_read_config_dword(
+-			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
++			pdev, d + PCI_DVSEC_CXL_RANGE_BASE_HIGH(i), &temp);
+ 		if (rc)
+ 			return rc;
+ 
+ 		base = (u64)temp << 32;
+ 
+ 		rc = pci_read_config_dword(
+-			pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
++			pdev, d + PCI_DVSEC_CXL_RANGE_BASE_LOW(i), &temp);
+ 		if (rc)
+ 			return rc;
+ 
+-		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
++		base |= temp & PCI_DVSEC_CXL_MEM_BASE_LOW_MASK;
+ 
+ 		info->dvsec_range[ranges++] = (struct range) {
+ 			.start = base,
+@@ -1147,7 +1147,7 @@ u16 cxl_gpf_get_dvsec(struct device *dev)
+ 		is_port = false;
+ 
+ 	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+-			is_port ? CXL_DVSEC_PORT_GPF : CXL_DVSEC_DEVICE_GPF);
++			is_port ? PCI_DVSEC_CXL_PORT_GPF : PCI_DVSEC_CXL_DEVICE_GPF);
+ 	if (!dvsec)
+ 		dev_warn(dev, "%s GPF DVSEC not present\n",
+ 			 is_port ? "Port" : "Device");
+@@ -1163,14 +1163,14 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+ 
+ 	switch (phase) {
+ 	case 1:
+-		offset = CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET;
+-		base = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK;
+-		scale = CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
++		offset = PCI_DVSEC_CXL_PORT_GPF_PHASE_1_CONTROL_OFFSET;
++		base = PCI_DVSEC_CXL_PORT_GPF_PHASE_1_TMO_BASE_MASK;
++		scale = PCI_DVSEC_CXL_PORT_GPF_PHASE_1_TMO_SCALE_MASK;
+ 		break;
+ 	case 2:
+-		offset = CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET;
+-		base = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK;
+-		scale = CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
++		offset = PCI_DVSEC_CXL_PORT_GPF_PHASE_2_CONTROL_OFFSET;
++		base = PCI_DVSEC_CXL_PORT_GPF_PHASE_2_TMO_BASE_MASK;
++		scale = PCI_DVSEC_CXL_PORT_GPF_PHASE_2_TMO_SCALE_MASK;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 5ca7b0eed568..fb70ffbba72d 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -271,10 +271,10 @@ EXPORT_SYMBOL_NS_GPL(cxl_map_device_regs, "CXL");
+ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
+ 				struct cxl_register_map *map)
+ {
+-	u8 reg_type = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
+-	int bar = FIELD_GET(CXL_DVSEC_REG_LOCATOR_BIR_MASK, reg_lo);
++	u8 reg_type = FIELD_GET(PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_ID_MASK, reg_lo);
++	int bar = FIELD_GET(PCI_DVSEC_CXL_REG_LOCATOR_BIR_MASK, reg_lo);
+ 	u64 offset = ((u64)reg_hi << 32) |
+-		     (reg_lo & CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
++		     (reg_lo & PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW_MASK);
+ 
+ 	if (offset > pci_resource_len(pdev, bar)) {
+ 		dev_warn(&pdev->dev,
+@@ -311,15 +311,15 @@ static int __cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_ty
+ 	};
+ 
+ 	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+-					   CXL_DVSEC_REG_LOCATOR);
++					   PCI_DVSEC_CXL_REG_LOCATOR);
+ 	if (!regloc)
+ 		return -ENXIO;
+ 
+ 	pci_read_config_dword(pdev, regloc + PCI_DVSEC_HEADER1, &regloc_size);
+ 	regloc_size = FIELD_GET(PCI_DVSEC_HEADER1_LENGTH_MASK, regloc_size);
+ 
+-	regloc += CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET;
+-	regblocks = (regloc_size - CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET) / 8;
++	regloc += PCI_DVSEC_CXL_REG_LOCATOR_BLOCK1_OFFSET;
++	regblocks = (regloc_size - PCI_DVSEC_CXL_REG_LOCATOR_BLOCK1_OFFSET) / 8;
+ 
+ 	for (i = 0; i < regblocks; i++, regloc += 8) {
+ 		u32 reg_lo, reg_hi;
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 7ae621e618e7..4985dbd90069 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -7,59 +7,6 @@
+ 
+ #define CXL_MEMORY_PROGIF	0x10
+ 
+-/*
+- * See section 8.1 Configuration Space Registers in the CXL 2.0
+- * Specification. Names are taken straight from the specification with "CXL" and
+- * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+- */
+-#define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+-
+-/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+-#define CXL_DVSEC_PCIE_DEVICE					0
+-#define   CXL_DVSEC_CAP_OFFSET		0xA
+-#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+-#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+-#define   CXL_DVSEC_CTRL_OFFSET		0xC
+-#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
+-#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
+-#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
+-#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
+-#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
+-#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
+-#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
+-#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
+-#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+-
+-#define CXL_DVSEC_RANGE_MAX		2
+-
+-/* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
+-#define CXL_DVSEC_FUNCTION_MAP					2
+-
+-/* CXL 2.0 8.1.5: CXL 2.0 Extensions DVSEC for Ports */
+-#define CXL_DVSEC_PORT_EXTENSIONS				3
+-
+-/* CXL 2.0 8.1.6: GPF DVSEC for CXL Port */
+-#define CXL_DVSEC_PORT_GPF					4
+-#define   CXL_DVSEC_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
+-#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_BASE_MASK		GENMASK(3, 0)
+-#define     CXL_DVSEC_PORT_GPF_PHASE_1_TMO_SCALE_MASK		GENMASK(11, 8)
+-#define   CXL_DVSEC_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
+-#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_BASE_MASK		GENMASK(3, 0)
+-#define     CXL_DVSEC_PORT_GPF_PHASE_2_TMO_SCALE_MASK		GENMASK(11, 8)
+-
+-/* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
+-#define CXL_DVSEC_DEVICE_GPF					5
+-
+-/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
+-#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+-
+-/* CXL 2.0 8.1.9: Register Locator DVSEC */
+-#define CXL_DVSEC_REG_LOCATOR					8
+-#define   CXL_DVSEC_REG_LOCATOR_BLOCK1_OFFSET			0xC
+-#define     CXL_DVSEC_REG_LOCATOR_BIR_MASK			GENMASK(2, 0)
+-#define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
+-#define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+-
+ /*
+  * NOTE: Currently all the functions which are enabled for CXL require their
+  * vectors to be in the first 16.  Use this as the default max.
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index bd100ac31672..bd95be1f3d5c 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -933,7 +933,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	cxlds->rcd = is_cxl_restricted(pdev);
+ 	cxlds->serial = pci_get_dsn(pdev);
+ 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+-		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
++		pdev, PCI_VENDOR_ID_CXL, PCI_DVSEC_CXL_DEVICE);
+ 	if (!cxlds->cxl_dvsec)
+ 		dev_warn(&pdev->dev,
+ 			 "Device DVSEC not present, skip CXL.mem init\n");
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b14dd064006c..53a49bb32514 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5002,7 +5002,9 @@ static bool cxl_sbr_masked(struct pci_dev *dev)
+ 	if (!dvsec)
+ 		return false;
+ 
+-	rc = pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
++	rc = pci_read_config_word(dev,
++				  dvsec + PCI_DVSEC_CXL_PORT_CTL,
++				  &reg);
+ 	if (rc || PCI_POSSIBLE_ERROR(reg))
+ 		return false;
+ 
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 07e06aafec50..279b92f01d08 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1244,9 +1244,64 @@
+ /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
+ #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+ 
+-/* Compute Express Link (CXL r3.1, sec 8.1.5) */
+-#define PCI_DVSEC_CXL_PORT				3
+-#define PCI_DVSEC_CXL_PORT_CTL				0x0c
+-#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
++/* Compute Express Link (CXL r3.2, sec 8.1)
++ *
++ * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
++ * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
++ * registers on downstream link-up events.
++ */
++
++#define PCI_DVSEC_HEADER1_LENGTH_MASK  __GENMASK(31, 20)
++
++/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
++#define PCI_DVSEC_CXL_DEVICE			0
++#define  PCI_DVSEC_CXL_CAP_OFFSET		0xA
++#define   PCI_DVSEC_CXL_MEM_CAPABLE		_BITUL(2)
++#define   PCI_DVSEC_CXL_HDM_COUNT_MASK		__GENMASK(5, 4)
++#define  PCI_DVSEC_CXL_CTRL_OFFSET		0xC
++#define   PCI_DVSEC_CXL_MEM_ENABLE		_BITUL(2)
++#define  PCI_DVSEC_CXL_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
++#define  PCI_DVSEC_CXL_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
++#define   PCI_DVSEC_CXL_MEM_INFO_VALID		_BITUL(0)
++#define   PCI_DVSEC_CXL_MEM_ACTIVE		_BITUL(1)
++#define   PCI_DVSEC_CXL_MEM_SIZE_LOW_MASK	__GENMASK(31, 28)
++#define  PCI_DVSEC_CXL_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
++#define  PCI_DVSEC_CXL_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
++#define   PCI_DVSEC_CXL_MEM_BASE_LOW_MASK	__GENMASK(31, 28)
++
++#define PCI_DVSEC_CXL_RANGE_MAX			2
++
++/* CXL 3.2 8.1.4: Non-CXL Function Map DVSEC */
++#define PCI_DVSEC_CXL_FUNCTION_MAP				2
++
++/* CXL 3.2 8.1.5: Extensions DVSEC for Ports */
++#define PCI_DVSEC_CXL_PORT					3
++#define   PCI_DVSEC_CXL_PORT_CTL				0x0c
++#define    PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
++
++/* CXL 3.2 8.1.6: GPF DVSEC for CXL Port */
++#define PCI_DVSEC_CXL_PORT_GPF					4
++#define  PCI_DVSEC_CXL_PORT_GPF_PHASE_1_CONTROL_OFFSET		0x0C
++#define   PCI_DVSEC_CXL_PORT_GPF_PHASE_1_TMO_BASE_MASK		__GENMASK(3, 0)
++#define   PCI_DVSEC_CXL_PORT_GPF_PHASE_1_TMO_SCALE_MASK		__GENMASK(11, 8)
++#define  PCI_DVSEC_CXL_PORT_GPF_PHASE_2_CONTROL_OFFSET		0xE
++#define   PCI_DVSEC_CXL_PORT_GPF_PHASE_2_TMO_BASE_MASK		__GENMASK(3, 0)
++#define   PCI_DVSEC_CXL_PORT_GPF_PHASE_2_TMO_SCALE_MASK		__GENMASK(11, 8)
++
++/* CXL 3.2 8.1.7: GPF DVSEC for CXL Device */
++#define PCI_DVSEC_CXL_DEVICE_GPF				5
++
++/* CXL 3.2 8.1.8: PCIe DVSEC for Flex Bus Port */
++#define PCI_DVSEC_CXL_FLEXBUS_PORT				7
++#define  PCI_DVSEC_CXL_FLEXBUS_STATUS_OFFSET			0xE
++#define   PCI_DVSEC_CXL_FLEXBUS_STATUS_CACHE_MASK		_BITUL(0)
++#define   PCI_DVSEC_CXL_FLEXBUS_STATUS_MEM_MASK			_BITUL(2)
++
++/* CXL 3.2 8.1.9: Register Locator DVSEC */
++#define PCI_DVSEC_CXL_REG_LOCATOR				8
++#define  PCI_DVSEC_CXL_REG_LOCATOR_BLOCK1_OFFSET		0xC
++#define   PCI_DVSEC_CXL_REG_LOCATOR_BIR_MASK			__GENMASK(2, 0)
++#define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_ID_MASK		__GENMASK(15, 8)
++#define   PCI_DVSEC_CXL_REG_LOCATOR_BLOCK_OFF_LOW_MASK		__GENMASK(31, 16)
+ 
+ #endif /* LINUX_PCI_REGS_H */
 -- 
 2.34.1
 
