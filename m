@@ -1,170 +1,162 @@
-Return-Path: <linux-pci+bounces-40322-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40323-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B248C3488C
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 09:45:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F093C348A7
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 09:46:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6B96A4F03CA
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 08:45:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F03BD466F93
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 08:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B2602D9EE6;
-	Wed,  5 Nov 2025 08:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6683B2D9EE6;
+	Wed,  5 Nov 2025 08:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8yCRZJW"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nnBhHArV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E652D94AC;
-	Wed,  5 Nov 2025 08:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C1422127B;
+	Wed,  5 Nov 2025 08:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762332312; cv=none; b=bauEzMwzXlBC5RsgwGVpnw8+KEIU0QebIOkGfAmarvTc8PiS/+pXd35a9IOR2ff0UooL91FRoRwrZwT+1ToSTeCN65t7eVEmi+poyHPa5SmjVhy/8EV/IqvOAPeUbe5WXps8EmAeK589xDdWMUYqlGO7SBgSnsZ7wfLMEU9XClg=
+	t=1762332353; cv=none; b=fQPTiEWCArhui4SGelvwtOY64N9KcKXAAu8UtOfMxzyLsBtaS65AM3TQ+dprVpClbWushI1SR7ow6aUeo6vV+rgzzcf6YcYbKf1FSUw2jQO900rXe/CKVf8bLvo7UaEZT372uL76x9NnYC/Fz8ODGZXisGfElqj3oj9j9zROMkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762332312; c=relaxed/simple;
-	bh=ONo3lQJBSG60YzvL0zPvRv2Ax2mJQO6EQfj7ir29EzU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dovbGD8wFMfqZCWCFc6GrgKf1pmKuDjrVI+9EbAmOnMy4ohj564KvlHlgVQRHxlEShbO9yDWpD9bp9MGcWFgraila2BL5KhYjVesTAMoWF3LQFv+Gio3mLbDG9NihkYKAMgVEqD67OJCaVvNpfUt6PyX0MCbg74D64N1/Eo0X50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8yCRZJW; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762332310; x=1793868310;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ONo3lQJBSG60YzvL0zPvRv2Ax2mJQO6EQfj7ir29EzU=;
-  b=X8yCRZJWiax7I/HiP4/p9fNJGjI5+PIPrPPkkKjg2/zWcbWI+XPwnQiZ
-   zTYUMD3Wo3NvwRJTKQnUI1APDbqWlJ2xdd3v4hVEFTIQ7z7YdI8BdvgbQ
-   UukktHLUh9rB6zUkWbP7jHzbWzkkvm9Lq7ABHGW6F10TaMUQZFkiXDIMu
-   2eAk/cfIGv6sx/pUWDbnr409XtdiCvQKXP00M9P08SoyhIrdPqMeRHeHB
-   iSG+sphQu2MhdNqADclwtTbn9070thU/rMwEKth1zw/dgalhejHkA1ZDd
-   gxyr9urXhvBnWI9gKZI1tnfBQSzlh2yYpUYvAiO7rKa8+JuYDOkVFTtb0
-   Q==;
-X-CSE-ConnectionGUID: hwuDvibGQQa2GTp/0Yh4PA==
-X-CSE-MsgGUID: NyeJIO/fS72sYBrsCFcQkg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="74733631"
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="74733631"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:45:10 -0800
-X-CSE-ConnectionGUID: ncPN683IQSye5yDVr+RjIw==
-X-CSE-MsgGUID: xh+mfx/bSs2+IRun1f1wig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="187086212"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.252])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:45:07 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 5 Nov 2025 10:45:04 +0200 (EET)
-To: Hans Zhang <18255117159@163.com>
-cc: bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v3 1/1] PCI: of: Relax max-link-speed check to support
- PCIe Gen5/Gen6
-In-Reply-To: <6fdc4f2c-16fa-9aed-6580-759e229e5606@linux.intel.com>
-Message-ID: <eba1f55e-3396-052c-0d77-09bf8b8c8216@linux.intel.com>
-References: <20251101164132.14145-1-18255117159@163.com> <6fdc4f2c-16fa-9aed-6580-759e229e5606@linux.intel.com>
+	s=arc-20240116; t=1762332353; c=relaxed/simple;
+	bh=dcXhKr8PghVDm1g0KRmMujIo6k9hqQExl/ksAmmmqXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KzyvdUQ1FXC0JqZK3V1vljDG9cM9KABTFM32OzmSdR8TG0cNmpch2XtpcUTn4CREHlRk22yl6oh859530MruGOKMkTFOFeGJB0RfcNChaVUr70v6EPuhZR96HnrVDu8DxMwc9olOE7bi8LLGlZq9nLohFGuZmIGjn5b2a6RvSSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nnBhHArV; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762332349;
+	bh=dcXhKr8PghVDm1g0KRmMujIo6k9hqQExl/ksAmmmqXE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nnBhHArV/D205ZnfrfDXvDi2wDtW0jmATrnFaq2TVTL8sn6NhMwZ0hTuDlvOuR+CF
+	 EHvmDqcsBHrX+kERg5NBd78GuhP3zU2apbJGlZV40pfaH+Rptxna738AH9Pm9L3KEM
+	 atf7EvTl5MYI9fJYk1YuVfVP4MNRuT+NtMziPGVA3B40UPXlLhiAV7rTe1dE8vl+f5
+	 T/tODOUii/W+MXHqa4OMp3evWqYrN7uKKG0R+ef07WqSKJAWniNHUqx5Gugv7ac8OT
+	 B9dt/8eN35Ije3/YnDtczwMfbctCrVmoUJXLotBxq01RwRnaIw143Pucn8Gc8opZor
+	 ZwofItHkseP1A==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 96BD417E0CA1;
+	Wed,  5 Nov 2025 09:45:48 +0100 (CET)
+Message-ID: <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
+Date: Wed, 5 Nov 2025 09:45:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2034070910-1762332304=:33477"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
+To: Chen-Yu Tsai <wenst@chromium.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee
+ <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20251105062815.966716-1-wenst@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20251105062815.966716-1-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Il 05/11/25 07:28, Chen-Yu Tsai ha scritto:
+> As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
+> common code") come up later" in the code, it is possible for link up to
+> occur later:
+> 
+>    Let's standardize this to succeed as there are usecases where devices
+>    (and the link) appear later even without hotplug. For example, a
+>    reconfigured FPGA device.
+> 
+> Another case for this is the new PCIe power control stuff. The power
+> control mechanism only gets triggered in the PCI core after the driver
+> calls into pci_host_probe(). The power control framework then triggers
+> a bus rescan. In most driver implementations, this sequence happens
+> after link training. If the driver errors out when link training times
+> out, it will never get to the point where the device gets turned on.
+> 
+> Ignore the link up timeout, and lower the error message down to a
+> warning.
+> 
+> This makes PCIe devices that have not-always-on power rails work.
+> However there may be some reversal of PCIe power sequencing, since now
+> the PERST# and clocks are enabled in the driver, while the power is
+> applied afterwards.
+> 
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
---8323328-2034070910-1762332304=:33477
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Ok, that's sensible.
 
-On Wed, 5 Nov 2025, Ilpo J=E4rvinen wrote:
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-> On Sun, 2 Nov 2025, Hans Zhang wrote:
->=20
-> > The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4)=
-,
-> > but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 suppor=
-t.
-> >=20
-> > While DT binding validation already checks this property, the code-leve=
-l
-> > validation in `of_pci_get_max_link_speed` also needs to be updated to a=
-llow
-> > values up to 6, ensuring compatibility with newer PCIe generations.
-> >=20
-> > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> > ---
-> > Changes for v3:
-> > - Modify the commit message.
-> > - Add Reviewed-by tag.
-> >=20
-> > Changes for v2:
-> > https://patchwork.kernel.org/project/linux-pci/cover/20250529021026.475=
-861-1-18255117159@163.com/
-> > - The following files have been deleted:
-> >   Documentation/devicetree/bindings/pci/pci.txt
-> >=20
-> >   Update to this file again:
-> >   dtschema/schemas/pci/pci-bus-common.yaml
-> > ---
-> >  drivers/pci/of.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > index 3579265f1198..53928e4b3780 100644
-> > --- a/drivers/pci/of.c
-> > +++ b/drivers/pci/of.c
-> > @@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *n=
-ode)
-> >  =09u32 max_link_speed;
-> > =20
-> >  =09if (of_property_read_u32(node, "max-link-speed", &max_link_speed) |=
-|
-> > -=09    max_link_speed =3D=3D 0 || max_link_speed > 4)
-> > +=09    max_link_speed =3D=3D 0 || max_link_speed > 6)
-> >  =09=09return -EINVAL;
-> > =20
-> >  =09return max_link_speed;
-> >=20
->=20
-> Hi,
->=20
-> IMO, using a literal here is somewhat annoying as it's hard to find this=
-=20
-> spot when adding support to the next PCIe Link Speed. It would be nice if=
-=20
-> it could get updated at the same while the generic support for a new Link=
-=20
-> Speed is added.
->=20
-> Perhaps include/linux/pci.h should have something along the lines of:
->
-> static inline int pcie_max_supported_link_speed()
-> {
-> =09return PCI_EXP_LNKCAP_SLS_64_0GB - PCI_EXP_LNKCAP_SLS_2_5GB + 1;
-> }
+> ---
+> The change works to get my PCIe WiFi device working, but I wonder if
+> the driver should expose more fine grained controls for the link clock
+> and PERST# (when it is owned by the controller and not just a GPIO) to
+> the power control framework. This applies not just to this driver.
+> 
+> The PCI standard says that PERST# should hold the device in reset until
+> the power rails are valid or stable, i.e. at their designated voltages.
 
-=2E..Or maybe put it just to drivers/pci/pci.h instead.
+I completely agree with all of the above - and I can imagine multiple PCI-Express
+controller drivers doing the same as what's being done in MTK Gen3.
 
-> Then replace that 6 with pcie_max_supported_link_speed().
->=20
-> So when the next speed get's added, somebody grepping for=20
-> PCI_EXP_LNKCAP_SLS_64_0GB will find pcie_max_supported_link_speed() has=
-=20
-> to be changed and the change will propagate also to of.c.
->=20
->=20
+This means that the boot process may get slowed down by the port startup sequence
+on multiple PCI-Express controllers (again not just MediaTek) and it's something
+that must be resolved in some way... with the fastest course of action imo being
+giving controller drivers knowledge of whether there's any device that is expected
+to be powered off at that time (in order to at least avoid all those waits that
+are expected to fail).
 
---=20
- i.
+P.S.: Chen-Yu, did you check if the same applies to the MTK previous gen driver?
+       Could you please check and eventually send a commit to do the same there?
 
---8323328-2034070910-1762332304=:33477--
+Cheers,
+Angelo
+
+> ---
+>   drivers/pci/controller/pcie-mediatek-gen3.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index 75ddb8bee168..5bdb312c9f9b 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -504,10 +504,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+>   		ltssm_index = PCIE_LTSSM_STATE(val);
+>   		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
+>   			      "Unknown state" : ltssm_str[ltssm_index];
+> -		dev_err(pcie->dev,
+> -			"PCIe link down, current LTSSM state: %s (%#x)\n",
+> -			ltssm_state, val);
+> -		return err;
+> +		dev_warn(pcie->dev,
+> +			 "PCIe link down, current LTSSM state: %s (%#x)\n",
+> +			 ltssm_state, val);
+> +
+> +		/*
+> +		 * Ignore the timeout, as the link may come up later,
+> +		 * such as when the PCI power control enables power to the
+> +		 * device, at which point it triggers a rescan.
+> +		 */
+>   	}
+>   
+>   	mtk_pcie_enable_msi(pcie);
+
+
 
