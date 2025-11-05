@@ -1,185 +1,142 @@
-Return-Path: <linux-pci+bounces-40376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3313BC372F1
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:49:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16C78C3735B
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:54:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 202FB1A21237
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 17:48:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 82CF44ECE2E
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 17:51:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45FE132D0C8;
-	Wed,  5 Nov 2025 17:47:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678E7335082;
+	Wed,  5 Nov 2025 17:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trhHGyuK"
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="p+qg5rB9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170C63009DD;
-	Wed,  5 Nov 2025 17:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080B93328FF
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 17:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762364862; cv=none; b=Ewdrhd+qutHrRqC4deS0WO5+gbfpBcRrTMbiqYElDXYLV3CQ9m+o29jHkjvRcUA6eY6m7gOuy6nUm3C7CdOPEYFfL+6agekRPCOsohXu8kFK/VwjZGZ04S7mUT6oafF+0oj+pNa96UMMz/tvE0JcXn/6yAVl2AvhnIys0kticfA=
+	t=1762365071; cv=none; b=jNGq0is3c+bbSxJ2dXpIETb650TCIVPHyNdPApCJm68/q1xa8sbgcGPmEDvvAVUQ6nsWGAKJg3+vrlTNn3PylUf7gn9escct3zDRqnYOx0miDILdPKaY3K6IOI03t6V5R1jKa29OIJ5vlV+mTOO5ycBInpYpLQSVO3YbKZdjUvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762364862; c=relaxed/simple;
-	bh=ouB+TdvoLahOuTnAF2oMvy07alxSGxli529k84Vs5SU=;
+	s=arc-20240116; t=1762365071; c=relaxed/simple;
+	bh=tIgDGOVX99OdQ7xUMrv9gmtn1EgXPokG3WTHA51WYa4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnQ2HTZlTDkJexZA2CgkHIQYrxNTDcwDPhYIzKRY0WTCOZ9MH6eIR8mr3XIKgOQXt/y9nouHE/cA0wMkSrqsnN0Lppqn2MaPDO2cfALIsWmDL5QE5Fs9NZeRnrjeJ1JxXrtndHyUbBDhn8N46N276MoyGjvB1+vr6TML+EEhoOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trhHGyuK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50AC1C4CEF8;
-	Wed,  5 Nov 2025 17:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762364861;
-	bh=ouB+TdvoLahOuTnAF2oMvy07alxSGxli529k84Vs5SU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=trhHGyuKkdUtB8rp0WWVIuUqqW3uIy0jTZKZXb8FZ8ODeZlSnynBh8jbGd7+IEKuu
-	 SNmIXH6eqGUrp/87sR+1txSsuFOSOaLlsaVx4BAIUqqhi6Axd4QqeLTVo3BQyWnPW4
-	 u5du3hhGb6ocgYwe/xFFJVmowvAatjp9h9FtF1oc5c0ehmWSlpU02L38gDrEaaq8yF
-	 eJAoClLW1wrsF//aiuqaIdpAi9RcQ1hPqgGuJMGHtvm1r+oJU0nKQlbWlppRZUK7O7
-	 eHLzj6YSW/dcotkCVijQwUR50ouhvqcyt+IGdTmyff/5mV4866zmMzOYrAv4IM2QJx
-	 YBkY9f5e0GjsA==
-Date: Wed, 5 Nov 2025 23:17:28 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH 4/4] power: sequencing: Add the Power Sequencing driver
- for the PCIe M.2 connectors
-Message-ID: <m5nwjaqel4q7lsnsewe4dlw2khfjliatqg45ei5dzuemmfdiig@kdis3euzpbcv>
-References: <20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com>
- <20251105-pci-m2-v1-4-84b5f1f1e5e8@oss.qualcomm.com>
- <aQuICrh4qP0wftIl@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EEJmXl+8rc8a0nEspkiORZPTcPGBZnpKfkWDdGkuTDARtWZ1RZqgesQRoVpf7YEmb2PZ40ZkZSRxLKOA1sLDgwzq1htaBFlFy4rtrKl9Oonn5SaLKjFpDTLwUR/1r3B8bECbhQPBju+R80dRxSCNrYGUBi0stug5THOSImqLHWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=p+qg5rB9; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-795be3a3644so1112326d6.0
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 09:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762365067; x=1762969867; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LDrtj0a1qY5KhyImx5VYDzDX8bVcvGFBBUFmZLDCfSw=;
+        b=p+qg5rB9I7ZEesolYhegQvv+t3d5zVArOc803nNlc6FndePPV+FkJZcu3/Aes5Pp/Q
+         X0ah9qDlM1DIWuF4f1p5bsaIT1tLGT7UWcyDVGoAPiVHbUnMXSxfIVCEjj0oRLJk379w
+         p/rzpZ4fDcYZKEkw33V0VPCNUQ4/pi2eogoRNG1ZH6WHP2NhnV2h05wlrc1CZSLqOwkc
+         DXK41s6HRPF3u2PWmqfiE6LZnSq5yNNsAhqvv9WT160BVNEGav2pR25CWDNdNHenpEnI
+         7zkXHCUotnxhOIqCqWl2rBZ6EUjpdKjIuVCY7eyxPWpdyS6CBPdvA0fGAriHMuFQbp/K
+         JsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762365067; x=1762969867;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LDrtj0a1qY5KhyImx5VYDzDX8bVcvGFBBUFmZLDCfSw=;
+        b=XH2ZMFsqSGzgODM6qsRR7WVGZZXjjnNlho0nCNflOtzn5z2PqNXHK1Ybv8ZrVK+8Gf
+         aYuzUtAYMnHY1H3eV/TpELlEbMH+SF9d9w4wieNxiUqhPNr90lcGmkV29Di2EgLd5yyZ
+         UFDVrR0XVUkeKSYpsFmKyxw//0HSvuL7Hb+5y7gBoTT2Iu/cF3AlpImeOs6DcW1vhN5B
+         OJaf1i9XmbHeVw9llvd8pCS0U350flUWLq1O6jweSVooAx/MBbqJtNJ8x/QE2KluTNvq
+         ToXLhhobeZg5/Cf9kI1Zg1ll8uyPGGZIS3VVtS/163k7GDhSqxDuwdIkmavo0zgHK2PS
+         oglQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsEVOIwDnyYbCxmOwLAFjU5+08rr4Uz0YBjVqw1SM3Fstb0ZF9RgXKC2t1wVdWAdFCtK0q/a6K+Uw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUPhf8tGa+fQNxym6a6YSiBqtQdDP3csCTguSIFxQksIKH4nR0
+	zjPtXd1BkPH1y/ToF1jxxRKuUxRtzXYV2Vydm2/7h1aSDFd32QYwitCWAqN+e799+Iw=
+X-Gm-Gg: ASbGncuuTCxw3sLRthtA3nltkyqpdJGeS7fuMg3t2ZgS7Fbhxk09LY5ukt/usRpUFng
+	C1ksuwDX2VEPUwtjKXQOIB1wdi6ca+gr8Fg00uXdVjpi9w4dky+I6Nk95I4BpbjZ+UskoeExePf
+	kjYf740NGhEXPAbebJddLGpFhlVdZ41QaiUO4TJodYSiQj994k2Tf+AvrpgZ42N2/ACwSWYaCzL
+	RyQIyfBmDkbZkVfjQdRv5SVx8OLjLSvnV0MwlI+72jeUgK+6wtGvmGjTmZXwLcwnj3oKaJqQrqE
+	MHNtrFsPS1beEhhE7Xsy/kZyUuS05bu4ftyENi+02GPNcOHjrB0ImPE3+RXeGgzeMeC/eQHhzdu
+	wX1IP/n0DTAuVQ41bd5F3QgjSUhb9wRBn0dGY0rD/A8U0WkTyDproMBIISh3qyH8d074+NmFnFF
+	ky/f+w5ckO/KrBKQEJET88yLmVVe8UVGNsYQNVlO/mg/yKIKGmUgQfusZi9xg=
+X-Google-Smtp-Source: AGHT+IFbubKK7RHluWy72s0vGay11LKV+jA/RxKZTdEkayr9i/UfiWmuCSryIaOc1e9CcrXX+Lj9EA==
+X-Received: by 2002:a05:6214:2686:b0:87d:e456:4786 with SMTP id 6a1803df08f44-8807119644emr57736286d6.45.1762365066850;
+        Wed, 05 Nov 2025 09:51:06 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8808290d03asm1375476d6.26.2025.11.05.09.51.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 09:51:06 -0800 (PST)
+Date: Wed, 5 Nov 2025 12:51:04 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
+ for bound driver
+Message-ID: <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-18-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aQuICrh4qP0wftIl@lizhi-Precision-Tower-5810>
+In-Reply-To: <20251104170305.4163840-18-terry.bowman@amd.com>
 
-On Wed, Nov 05, 2025 at 12:23:22PM -0500, Frank Li wrote:
-> On Wed, Nov 05, 2025 at 02:45:52PM +0530, Manivannan Sadhasivam wrote:
-> > This driver is used to control the PCIe M.2 connectors of different
-> > Mechanical Keys attached to the host machines and supporting different
-> > interfaces like PCIe/SATA, USB/UART etc...
-> >
-> > Currently, this driver supports only the Mechanical Key M connectors with
-> > PCIe interface. The driver also only supports driving the mandatory 3.3v
-> > and optional 1.8v power supplies. The optional signals of the Key M
-> > connectors are not currently supported.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  MAINTAINERS                               |   7 ++
-> >  drivers/power/sequencing/Kconfig          |   8 ++
-> >  drivers/power/sequencing/Makefile         |   1 +
-> >  drivers/power/sequencing/pwrseq-pcie-m2.c | 138 ++++++++++++++++++++++++++++++
-> >  4 files changed, 154 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 46126ce2f968e4f9260263f1574ee29f5ff0de1c..9b3f689d1f50c62afa3772a0c6802f99a98ac2de 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -20474,6 +20474,13 @@ F:	Documentation/driver-api/pwrseq.rst
-> >  F:	drivers/power/sequencing/
-> >  F:	include/linux/pwrseq/
-> >
-> > +PCIE M.2 POWER SEQUENCING
-> > +M:	Manivannan Sadhasivam <mani@kernel.org>
-> > +L:	linux-pci@vger.kernel.org
-> > +S:	Maintained
-> > +F:	Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> > +F:	drivers/power/sequencing/pwrseq-pcie-m2.c
-> > +
-> >  POWER STATE COORDINATION INTERFACE (PSCI)
-> >  M:	Mark Rutland <mark.rutland@arm.com>
-> >  M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-> > index 280f92beb5d0ed524e67a28d1c5dd264bbd6c87e..f5fff84566ba463b55d3cd0c07db34c82f9f1e31 100644
-> > --- a/drivers/power/sequencing/Kconfig
-> > +++ b/drivers/power/sequencing/Kconfig
-> > @@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
-> >  	  GPU. This driver handles the complex clock and reset sequence
-> >  	  required to power on the Imagination BXM GPU on this platform.
-> >
-> > +config POWER_SEQUENCING_PCIE_M2
-> > +	tristate "PCIe M.2 connector power sequencing driver"
-> > +	depends on OF || COMPILE_TEST
-> > +	help
-> > +	  Say Y here to enable the power sequencing driver for PCIe M.2
-> > +	  connectors. This driver handles the power sequencing for the M.2
-> > +	  connectors exposing multiple interfaces like PCIe, SATA, UART, etc...
-> > +
-> >  endif
-> > diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-> > index 96c1cf0a98ac54c9c1d65a4bb4e34289a3550fa1..0911d461829897c5018e26dbe475b28f6fb6914c 100644
-> > --- a/drivers/power/sequencing/Makefile
-> > +++ b/drivers/power/sequencing/Makefile
-> > @@ -5,3 +5,4 @@ pwrseq-core-y				:= core.o
-> >
-> >  obj-$(CONFIG_POWER_SEQUENCING_QCOM_WCN)	+= pwrseq-qcom-wcn.o
-> >  obj-$(CONFIG_POWER_SEQUENCING_TH1520_GPU) += pwrseq-thead-gpu.o
-> > +obj-$(CONFIG_POWER_SEQUENCING_PCIE_M2)	+= pwrseq-pcie-m2.o
-> > diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..b9f68ee9c5a377ce900a88de86a3e269f9c99e51
-> > --- /dev/null
-> > +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> ...
-> > +
-> > +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct pwrseq_pcie_m2_ctx *ctx;
-> > +	struct pwrseq_config config;
-> > +	int ret;
-> > +
-> > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > +	if (!ctx)
-> > +		return -ENOMEM;
-> > +
-> > +	ctx->pdata = of_device_get_match_data(dev);
-> > +	if (!ctx->pdata)
-> > +		return dev_err_probe(dev, -ENODEV,
-> > +				     "Failed to obtain platform data\n");
-> > +
-> > +	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx->regs);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret,
-> > +				     "Failed to get all regulators\n");
-> > +
-> > +	ctx->num_vregs = ret;
-> > +
-> > +	memset(&config, 0, sizeof(config));
-> > +
-> > +	config.parent = dev;
-> > +	config.owner = THIS_MODULE;
-> > +	config.drvdata = ctx;
-> > +	config.match = pwrseq_pcie_m2_match;
-> > +	config.targets = ctx->pdata->targets;
-> > +
-> > +	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
-> > +	if (IS_ERR(ctx->pwrseq))
-> > +		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-> > +				     "Failed to register the power sequencer\n");
+On Tue, Nov 04, 2025 at 11:02:57AM -0600, Terry Bowman wrote:
+> CXL devices handle protocol errors via driver-specific callbacks rather
+> than the generic pci_driver::err_handlers by default. The callbacks are
+> implemented in the cxl_pci driver and are not part of struct pci_driver, so
+> cxl_core must verify that a device is actually bound to the cxl_pci
+> module's driver before invoking the callbacks (the device could be bound
+> to another driver, e.g. VFIO).
 > 
-> Does need free resources allocated by of_regulator_bulk_get_all() here?
+> However, cxl_core can not reference symbols in the cxl_pci module because
+> it creates a circular dependency. This prevents cxl_core from checking the
+> EP's bound driver and calling the callbacks.
 > 
+> To fix this, move drivers/cxl/pci.c into drivers/cxl/core/pci_drv.c and
+> build it as part of the cxl_core module. Compile into cxl_core using
+> CXL_PCI and CXL_CORE Kconfig dependencies. This removes the standalone
+> cxl_pci module, consolidates the cxl_pci driver code into cxl_core, and
+> eliminates the circular dependency so cxl_core can safely perform
+> bound-driver checks and invoke the CXL PCI callbacks.
+> 
+> Introduce cxl_pci_drv_bound() to return boolean depending on if the PCI EP
+> parameter is bound to a CXL driver instance. This will be used in future
+> patch when dequeuing work from the kfifo.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> 
+> ---
 
-Yes, missed it during cleanup. Will fix.
+This commit causes my QEMU basic expander setup and a real device setup
+to fail to probe the cxl_core driver.
 
-- Mani
+[    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
+[    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
 
--- 
-மணிவண்ணன் சதாசிவம்
+Probe order issue when CXL drivers are built-in maybe?
+
+~Gregory
 
