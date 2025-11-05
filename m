@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-40419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E603FC38045
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 22:28:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11FABC37FB8
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 22:24:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7558D3BC98D
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 21:19:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C03318876B4
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 21:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18102DF150;
-	Wed,  5 Nov 2025 21:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABB12C0276;
+	Wed,  5 Nov 2025 21:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pSe49kn1"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VOReS/tB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5976126C02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6CC248F73;
 	Wed,  5 Nov 2025 21:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762377519; cv=none; b=m6ASPQlsF3TEhwMdXCFP0tRwKjDesZ1/ugM2ilThDwicJ/1Jbj+bpT0gaiEc1T8XwRUy/8i/FKZ0pgffS6c720knddbTrIbHNEetfNYmaF2RUzZa/4cSVP77m6BVMn+hOyUunNLfOpyuQF5CEIkm6cRE1U27FabueZzt2d1zVpM=
+	t=1762377518; cv=none; b=J9borlUMqza8Ix6B0yLHsO1l67vCZv5eq2944mOeevq129rk0QoG7m/1mGufZiInALaUsvuhL2oiUlgV/9suj5wfkSRkd70dQ3WgcspWGOt2E4XGtgm1A4hJFqcd/mOHSI1oJfTVba1YK1jdJN264RVIXCGAFMbEVj8bCzMcljs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762377519; c=relaxed/simple;
-	bh=vTtFVwZhj2dtk28F9mb0pMLT2K98WweVea9+cuC24ag=;
+	s=arc-20240116; t=1762377518; c=relaxed/simple;
+	bh=bArrOhdqiPrD9jwVtY5HEE/53V3p8i0UZ8xJQqCPlD0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C+ED7EDiKfbt3fInhR6slhqsz2NB1XXeJIuDxUw20s2DRG11sozyu/x8tDCQZzEnCVMMRtClOyXy/EL3pM/N0QweYdwRH+hsGsHSs9EG/M1VkjiJuhnJ4O/tPigdJ/yAGr7Nmm5oowhFPujbnW2SfPFZnTqi+BIIoySdq4Cn+Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pSe49kn1; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=aFIFfHVuBHejyNquFCTQ5NVVpd+XAsPVAtqzJBJ0qM+zA30HpEdccADwtvRnvpy3d7MmDSFUGQFJWcejZ3iF0br5UNpzM4DTFcRHEeh0gOtv0g0juRibDaK/t4/B84CRG2XQnerXbdlkRvw+dWkDh5tJOTa05scMIG8Wz5mv+BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VOReS/tB; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1762377515;
-	bh=vTtFVwZhj2dtk28F9mb0pMLT2K98WweVea9+cuC24ag=;
+	bh=bArrOhdqiPrD9jwVtY5HEE/53V3p8i0UZ8xJQqCPlD0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pSe49kn1CNJa/3TIsAfyiPmVF6y8Y8PaNI39JUJJAAPA5wWIFh6XiC4HVZx6wEFNL
-	 L5Kdzgoirrmikw+CUAcBOG09J/CVlUGuVArOzbmO7Wslf7ZxtcAwnpndJ43sBsrCq1
-	 v/WOwnTgqG36ax9SAtLwXvRr9iFPFbDxYpPnBjW0uNx0LGTceQTwIerakX6nh/fve2
-	 gDgnn7FFMsjEfMxOyPv6ZSm9V2QYVpS7DfzQzkZ+RBkSvVkeyS66FamW1RxSMduaYI
-	 esxgWGjHuf5H2/qYR975Jxrx8kLKRiAIjaJPBj3Zh03WC2gVt5fDKiYp1fSDHIIPAT
-	 u+lL/PGRDqsvQ==
+	b=VOReS/tBa/q6ng2Yhr2+/vUP5UB2401ugVhFf+0UORldLzyq+GXymaYL+4TyWBzbq
+	 E5iJPmF4FgnRteq2+Zzs4MGmfv6KXhmt2G3qH5ETOCYYTIUARBRY6u25jdHX+O/gMo
+	 RQjh+GIR3h/L5Zus48T6qNKpMtJhHs1KZ5A/r+YahUv+BbOSHCEvWT7GIIh/9XOhL7
+	 6WqcFwJl8Xo3y+1LOMSyZZ/b8WZs6XemcZZkphmKBEawG5voNrNc2TjHbEBZ2Imc79
+	 JR7TkSCCYcSdQkGq79iDohJaa4FfGFvVEDfMbGBBWDITlglqViL0jmLc5ieNhvCiXt
+	 VgNVVQbZqGcxg==
 Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0483317E12AA;
-	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E12A417E129C;
+	Wed,  5 Nov 2025 22:18:34 +0100 (CET)
 Received: by beast.luon.net (Postfix, from userid 1000)
-	id 916BF10F352DB; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+	id 96B5110F352DD; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
 From: Sjoerd Simons <sjoerd@collabora.com>
-Date: Wed, 05 Nov 2025 22:17:56 +0100
-Subject: [PATCH v3 01/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
- SPI NOR
+Date: Wed, 05 Nov 2025 22:17:57 +0100
+Subject: [PATCH v3 02/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ software leds
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-openwrt-one-network-v3-1-008e2cab38d1@collabora.com>
+Message-Id: <20251105-openwrt-one-network-v3-2-008e2cab38d1@collabora.com>
 References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
 In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -89,136 +89,126 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  Sjoerd Simons <sjoerd@collabora.com>
 X-Mailer: b4 0.14.3
 
-The openwrt one has a SPI NOR flash which from factory is used for:
-* Recovery system
-* WiFi eeprom data
-* ethernet Mac addresses
+The openwrt has 3 status leds at the front:
+* red: Used as failsafe led by openwrt
+* white: Used as boot led by openwrt
+* green: Used as running/upgrade led by openwrt
 
-Describe this following the same partitions as the openwrt configuration
-uses.
+On the back each RJ45 jack has the typical amber/green leds. For the WAN
+jack this is hardware controlled by the phy, for LAN these are under
+software control and enabled by this patch.
 
 Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
 ---
 V2 -> V3: Move earlier in the patch sequence
 V1 -> V2:
-  - Use numeric drive-strength values rather then defines
-  - Make nvmem cell labers more meaningfull
-  - Only define nvmem cells used in later patches by devicetree
+  - Improve commit message
+  - Re-order nodes to be alphabetical
 ---
- .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 79 ++++++++++++++++++++++
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 59 ++++++++++++++++++++++
  arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
- 2 files changed, 80 insertions(+), 1 deletion(-)
+ 2 files changed, 60 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-index 968b91f55bb27..6bb98629f4536 100644
+index 6bb98629f4536..2e39e72877301 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-@@ -3,6 +3,7 @@
+@@ -3,6 +3,8 @@
  /dts-v1/;
  
  #include "mt7981b.dtsi"
-+#include "dt-bindings/pinctrl/mt65xx.h"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
+ #include "dt-bindings/pinctrl/mt65xx.h"
  
  / {
- 	compatible = "openwrt,one", "mediatek,mt7981b";
-@@ -22,6 +23,84 @@ memory@40000000 {
+@@ -21,9 +23,60 @@ memory@40000000 {
+ 		reg = <0 0x40000000 0 0x40000000>;
+ 		device_type = "memory";
+ 	};
++
++	pwm-leds {
++		compatible = "pwm-leds";
++
++		led-0 {
++			color = <LED_COLOR_ID_WHITE>;
++			default-brightness = <0>;
++			function = LED_FUNCTION_STATUS;
++			max-brightness = <255>;
++			pwms = <&pwm 0 10000>;
++		};
++
++		led-1 {
++			color = <LED_COLOR_ID_GREEN>;
++			default-brightness = <0>;
++			function = LED_FUNCTION_STATUS;
++			max-brightness = <255>;
++			pwms = <&pwm 1 10000>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		led-0 {
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_STATUS;
++			gpios = <&pio 9 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-1 {
++			color = <LED_COLOR_ID_AMBER>;
++			function = LED_FUNCTION_LAN;
++			gpios = <&pio 34 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "netdev";
++		};
++
++		led-2 {
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_LAN;
++			gpios = <&pio 35 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "netdev";
++		};
++	};
+ };
+ 
+ &pio {
++	pwm_pins: pwm-pins {
++		mux {
++			function = "pwm";
++			groups = "pwm0_0", "pwm1_1";
++		};
++	};
++
+ 	spi2_flash_pins: spi2-pins {
+ 		mux {
+ 			function = "spi";
+@@ -44,6 +97,12 @@ conf-pd {
  	};
  };
  
-+&pio {
-+	spi2_flash_pins: spi2-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2";
-+		};
-+
-+		conf-pu {
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
-+			drive-strength = <8>;
-+			pins = "SPI2_CS", "SPI2_WP";
-+		};
-+
-+		conf-pd {
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
-+			drive-strength = <8>;
-+			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
-+		};
-+	};
-+};
-+
-+&spi2 {
++&pwm {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2_flash_pins>;
++	pinctrl-0 = <&pwm_pins>;
 +	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				reg = <0x00000 0x40000>;
-+				label = "bl2-nor";
-+			};
-+
-+			partition@40000 {
-+				reg = <0x40000 0xc0000>;
-+				label = "factory";
-+				read-only;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					wifi_factory_calibration: eeprom@0 {
-+						reg = <0x0 0x1000>;
-+					};
-+
-+					wan_factory_mac: macaddr@24 {
-+						reg = <0x24 0x6>;
-+						compatible = "mac-base";
-+						#nvmem-cell-cells = <1>;
-+					};
-+				};
-+			};
-+
-+			partition@100000 {
-+				reg = <0x100000 0x80000>;
-+				label = "fip-nor";
-+			};
-+
-+			partition@180000 {
-+				reg = <0x180000 0xc80000>;
-+				label = "recovery";
-+			};
-+		};
-+	};
 +};
 +
- &uart0 {
- 	status = "okay";
- };
+ &spi2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&spi2_flash_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-index 130ce2fda3995..f00e5bf63de35 100644
+index f00e5bf63de35..416096b80770c 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-@@ -156,7 +156,7 @@ i2c@11007000 {
- 			status = "disabled";
+@@ -94,7 +94,7 @@ apmixedsys: clock-controller@1001e000 {
+ 			#clock-cells = <1>;
  		};
  
--		spi@11009000 {
-+		spi2: spi@11009000 {
- 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
- 			reg = <0 0x11009000 0 0x1000>;
- 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+-		pwm@10048000 {
++		pwm: pwm@10048000 {
+ 			compatible = "mediatek,mt7981-pwm";
+ 			reg = <0 0x10048000 0 0x1000>;
+ 			clocks = <&infracfg CLK_INFRA_PWM_STA>,
 
 -- 
 2.51.0
