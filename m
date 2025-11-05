@@ -1,152 +1,119 @@
-Return-Path: <linux-pci+bounces-40358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC0A0C36B27
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 17:30:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32313C36951
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 17:10:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B17BE623E50
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 15:51:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F7661A45B94
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 15:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 911DB33372D;
-	Wed,  5 Nov 2025 15:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44DCA23EAA1;
+	Wed,  5 Nov 2025 15:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V49Bcvv4"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L6a4pKWT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B55731DDBB;
-	Wed,  5 Nov 2025 15:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC8026CE0F;
+	Wed,  5 Nov 2025 15:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762357556; cv=none; b=fho5PErUcRgMplVWpPBwM0ZY1oo04RWe5D5r6yVyOqtL4SdGOZ1peiStdNQdYiNza5dZM98sKl66GMZGfYFLV3FxJkXWu7N9jZVs7aAgVqBOcalh7GIsFVsertxISR7eGy61nsKwEVJwJHgOOsV99K2DBsqNMqtiU6pPc1mEY68=
+	t=1762358086; cv=none; b=eK7f6p3OngwD5FX8YXZuL4nrPdfziYHoNkzEuDKMDsNiB6EH3F8wJcxaumYHTnm++6YJOH7nY4vaXRA2JRy+ov+ZihH57Me/XUhd5HAek6PrFIjl7VzeAA7XhFaKuYTMv4l1LCPHvIo306ieJYNxkqL1rSWmO4+top4xzta5+Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762357556; c=relaxed/simple;
-	bh=xmm6nLsTXBCwCytcbyH8QsnB2JeBdkkjUjdkaJjSew8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s31xmmMlh0tns6mjY13B9Q+0fUna/sS0wojQx/n/SF2mSCjVDewDjZvxIyi5IqWNO9nORNN+UL6qNBbGkW0MbidfZ1Cfl9alotDM/Sv0ctwnsJ6v9wWMjQe0ETAMMg7+l32p4gCjzsvGsv3iSk2aT5sMPUm8MuqdpKQVrxdNZVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V49Bcvv4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A62C4CEF5;
-	Wed,  5 Nov 2025 15:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762357555;
-	bh=xmm6nLsTXBCwCytcbyH8QsnB2JeBdkkjUjdkaJjSew8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V49Bcvv4Vr1XD0d8nGugzn6nEJFHU94wKaZlMJvIc+YJdz7x5ju9aDQoREW8ASZJU
-	 MW1hUDPpNZJmSffEhIdGydas6VB+w4ctZOakowcXZPe9VCVSOUxeNYJArgQ7UxDpnN
-	 G8fLk11CiNYat6qGWS6sf3enIsQ6suuzdkc/xJ+96sXJyCgwm/VCvwN3kn/uST4kQ/
-	 n2/u4JFfGzZ4lnX2yMvrfbCe1/yIkfyrIb0MDZJtSXAoqGFqJvvBcFvCehuflcypjt
-	 eNy+hH/+vmLM4JvkGDmULWA4wY5yEEwNvPSk59QeVOmmqB4U/icu2vG2nFt6e1YuOS
-	 ZRjYiAhWKqFrQ==
-Date: Wed, 5 Nov 2025 16:45:53 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Waiman Long <llong@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 13/33] cpuset: Update HK_TYPE_DOMAIN cpumask from cpuset
-Message-ID: <aQtxMYmwzfg2NW1O@localhost.localdomain>
-References: <20251013203146.10162-1-frederic@kernel.org>
- <20251013203146.10162-14-frederic@kernel.org>
- <ea2d3e0e-b1ee-4b58-a93a-b9d127258e75@redhat.com>
+	s=arc-20240116; t=1762358086; c=relaxed/simple;
+	bh=cHxAaKIXL3i/jmnRG0py7jhTnyhgh3Mm/5zptuC/FDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDRDtGoTGAPAHyPr9YoKZ26fjRDvZOKqQukg5NkVMSk2RPqRgGOIDYn30vsx44YqcVpaWghj1xEzboccXZqKNfyeFHgevkgqpLtw20opDlzVd1PK70qI36QsDMRtIkSU9SpcOuzOweTiKMqw/AcMqXWyIg0Jo4Y3TTP/BhcWrrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=L6a4pKWT; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=ghm8iWL49NV0j9nnNI8LTVhhezP2ePDGm8w0tfXDzBQ=;
+	b=L6a4pKWTpqFsyxK5AzB5nKpgBuX0cHEUoHiROvI9SRb82cSynCb0KCJgEne3tf
+	IJXRKJYq2zljqnXHvbJWaWFMKxU7QTxgBQ2zEFnn76MHLLVXGeACo1O/OGrkYUW1
+	pS/L+FeRM0TZO2liinCxCwsD4ns5ggntx2qlkzrDe6dsY=
+Received: from [IPV6:240e:b8f:927e:1000:c17c:cb22:ae30:df94] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAXHF0zcwtpSMA+Bw--.9773S2;
+	Wed, 05 Nov 2025 23:54:28 +0800 (CST)
+Message-ID: <aa9f58f6-054e-4fb4-8cb7-01ea88d7f483@163.com>
+Date: Wed, 5 Nov 2025 23:54:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea2d3e0e-b1ee-4b58-a93a-b9d127258e75@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] PCI: pciehp: Add macros for hotplug operation
+ delays
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251101160538.10055-4-18255117159@163.com>
+ <20251103153734.GA1806239@bhelgaas> <aQjlOHJoj-Fkkk4b@wunner.de>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aQjlOHJoj-Fkkk4b@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAXHF0zcwtpSMA+Bw--.9773S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KFyrAry8Xr47ur1UCr1UAwb_yoW8JFy7pa
+	4rJFW5tF40yrZ5Gw1vvanxXF1Fyr9xGF9Fgr48WryftFyDAwnxJFy0gFWYgF9xArWrCw1U
+	Zay5WF1fXFs8Jw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UsBMiUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhX8o2kLXfHYkQABs2
 
-Le Tue, Oct 21, 2025 at 09:39:10AM -0400, Waiman Long a écrit :
-> On 10/13/25 4:31 PM, Frederic Weisbecker wrote:
-> > @@ -80,12 +110,45 @@ EXPORT_SYMBOL_GPL(housekeeping_affine);
-> >   bool housekeeping_test_cpu(int cpu, enum hk_type type)
-> >   {
-> > -	if (housekeeping.flags & BIT(type))
-> > +	if (READ_ONCE(housekeeping.flags) & BIT(type))
-> >   		return cpumask_test_cpu(cpu, housekeeping_cpumask(type));
-> >   	return true;
-> >   }
-> >   EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
-> > +int housekeeping_update(struct cpumask *mask, enum hk_type type)
-> > +{
-> > +	struct cpumask *trial, *old = NULL;
-> > +
-> > +	if (type != HK_TYPE_DOMAIN)
-> > +		return -ENOTSUPP;
-> > +
-> > +	trial = kmalloc(sizeof(*trial), GFP_KERNEL);
-> Should you use cpumask_size() instead of sizeof(*trial) as the latter can be
-> much bigger?
 
-Good point!
 
-> > +	if (!trial)
-> > +		return -ENOMEM;
-> > +
-> > +	cpumask_andnot(trial, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT), mask);
-> > +	if (!cpumask_intersects(trial, cpu_online_mask)) {
-> > +		kfree(trial);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (!housekeeping.flags)
-> > +		static_branch_enable(&housekeeping_overridden);
-> > +
-> > +	if (!(housekeeping.flags & BIT(type)))
-> > +		old = housekeeping_cpumask_dereference(type);
-> > +	else
-> > +		WRITE_ONCE(housekeeping.flags, housekeeping.flags | BIT(type));
-> > +	rcu_assign_pointer(housekeeping.cpumasks[type], trial);
-> > +
-> > +	synchronize_rcu();
-> > +
-> > +	kfree(old);
+On 2025/11/4 01:24, Lukas Wunner wrote:
+> On Mon, Nov 03, 2025 at 09:37:34AM -0600, Bjorn Helgaas wrote:
+>> On Sun, Nov 02, 2025 at 12:05:37AM +0800, Hans Zhang wrote:
+>>> Add WAIT_PDS_TIMEOUT_MS and POLL_CMD_TIMEOUT_MS macros for hotplug
+>>> operation delays to improve code readability.
+> [...]
+>>> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+>>> @@ -28,6 +28,9 @@
+>>>   #include "../pci.h"
+>>>   #include "pciehp.h"
+>>>   
+>>> +#define WAIT_PDS_TIMEOUT_MS	10
+>>> +#define POLL_CMD_TIMEOUT_MS	10
+>>> +
+>>>   static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+>>>   	/*
+>>>   	 * Match all Dell systems, as some Dell systems have inband
+>>> @@ -103,7 +106,7 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+>>>   			smp_mb();
+>>>   			return 1;
+>>>   		}
+>>> -		msleep(10);
+>>> +		msleep(POLL_CMD_TIMEOUT_MS);
+>>
+>> Lukas might have different opinions and I would defer to him here.
+>>
+>> But IMO (a) these aren't timeouts, they are poll intervals, (b) the
+>> values are arbitrary with no connection to a spec, so less reason for
+>> a #define, and (c) the #defines don't improve readability because now
+>> I have to look at two places to understand the poll loops.
 > 
-> If "isolcpus" boot command line option is set, old can be a pointer to the
-> boot time memblock area which isn't a pointer that can be handled by the
-> slab allocator AFAIU. I don't know the exact consequence, but it may not be
-> good. One possible solution I can think of is to make HK_TYPE_DOMAIN and
-> HK_TYPE_DOMAIN_ROOT point to the same memblock pointer and don't pass the
-> old HK_TYPE_DOMAIN pointer to kfree() if it matches HK_TYPE_DOMAIN_BOOT one.
-> Alternatively, we can just set the HK_TYPE_DOMAIN_BOOT pointer at boot and
-> make HK_TYPE_DOMAIN falls back to HK_TYPE_DOMAIN_BOOT if not set.
+> I agree on all counts.
+> 
 
-Have a look at housekeeping_init() which reallocates the memblock
-allocated memory with kmalloc to avoid these troubles.
+Hi Bjorn,
 
-Thanks!
+Please drop this patch.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+Best regards,
+Hans
+
+
+> Thanks,
+> 
+> Lukas
+
 
