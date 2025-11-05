@@ -1,178 +1,148 @@
-Return-Path: <linux-pci+bounces-40382-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40383-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 259A7C37852
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 20:41:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A5FEC37A05
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 21:07:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBEF13BB862
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 19:40:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 551ED3A9630
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 20:02:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8904627FB3A;
-	Wed,  5 Nov 2025 19:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D15D267714;
+	Wed,  5 Nov 2025 20:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ji2EfKxp";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhU5gOa3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKoQGAoa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D275B316193
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 19:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0BB246BBA
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 20:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762371601; cv=none; b=HTjgXKtVrImvX+fmaMgKjMh+Zsjdjan0MFfNNIeMMLrDbV7rxlDCnHlMvXhE7RRh8SaGLcaq7af0I1SntZoctRtUli6ZRFWGQUPk01qB8lvW82s9EjAYzQFosmOewkYNjv36/r2k0IcosMfWF5BkYDCqf5XfO8aAbLma1OsZQuw=
+	t=1762372951; cv=none; b=cLbEGZHjqEGcpfppQo61Qp+5hvNnjpSzpVJ4Zan0I+22k7zauRDC5W+MaQEOc6evo2foRd6POShOVqzi0UuQusuZCYvNgglElWVX2SS4nMCakYgBDBsGZGlkOPkC4gKrK/YdKXf4WjnmHyclrbi29Z0ec3cXlZSqB8EtTbSyBEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762371601; c=relaxed/simple;
-	bh=+SOyxLJBOfbSw/MqBDPVxoL7LcgQEUyR14RhOCQVl6U=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rVhTdQH6ZtbpJrpdXUErfnL7BuH9KFU93ygb+W2B1RURo0L0ySZ6gR+k7Alb/vqr5IEfS1VbHyxDCOG6hOVEJrV7FsAylc+ucQ/1cRyMUv+6Xxgmxlu/G5LyGQUZSSj5qA7O0Xlm3N/DMZukSYYp0P41Z0n0qNFirdu4bkpnl68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ji2EfKxp; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=bhU5gOa3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762371598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7kizs9xJ2GRG/rLXAdsJnM3tvDx/8JZcjC0BTEZZ5WY=;
-	b=Ji2EfKxpkouMdAoEvwjcpOHzHYFZhaM7jucQYDckjDnvfUtx7PFR8xXeqaQLCYHcVYgMka
-	LHk966IECzXZey1eZFLuYckMCIxYYB6b5mZ4CC0sHvkI0QKmZfFqQnGsXz43zmQEUdU8YX
-	BL0LLF04F1SuySglXbOwLw5JjUQax84=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-FAULxOSBMMCwRXthfstObw-1; Wed, 05 Nov 2025 14:39:57 -0500
-X-MC-Unique: FAULxOSBMMCwRXthfstObw-1
-X-Mimecast-MFC-AGG-ID: FAULxOSBMMCwRXthfstObw_1762371597
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b2217a9c60so65267185a.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 11:39:57 -0800 (PST)
+	s=arc-20240116; t=1762372951; c=relaxed/simple;
+	bh=I+cyU1YsuCr2HvX/C46SKQfA6kkVDFrXjoT7BMxk52E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hF18zmvXKmDNScfciNnxYhQMlSytNKYxloTpPDgbm/dwD9SFOE+xqKbwhBOD+Rt82w9HpxnGi4xCGKXZdIBrZuPULOyDAGKPTx/zNivXc375yEVcdT9SXc4J9H+XKS1EtCpaq29IiQVOWwKBkSl4kwZowEwLbcbfeEetXhqhpvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKoQGAoa; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-3e0e4601faeso140446fac.1
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 12:02:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1762371597; x=1762976397; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+        d=gmail.com; s=20230601; t=1762372949; x=1762977749; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=7kizs9xJ2GRG/rLXAdsJnM3tvDx/8JZcjC0BTEZZ5WY=;
-        b=bhU5gOa352yz6IMZNQMetzfE9fawz8lYejcR/dsPOJRFkYjWHgw9vmAiwAPDrfVHNe
-         1SkuKfO9+wuixdu8J62kqL1yuPNN4UxT85BcWZYpR0d5mcq0muQGq7GOs9hlUDoDamn9
-         qDc8zCFQs2kW8KY1q+oIEKTtdFq2w/PfUdDP4pQKE2gJTBF9krK+GdbUpi3/mnhS0E9c
-         4bG9g8VDvW0JJvR67KQxZ4wEoWwbQfPWMP6aIb76vC2J1+no6tS5u8gwhyanuQ7TQk41
-         XtldFp/Mq83IHfqtsAD6FFGYQ6dLzZPs7AdY8DQItDo+idRaRcXQZmkTlx2fJPZR63dO
-         eX2g==
+        bh=2WgVh/W2QDlWrUEp2DhJYyH+fmgYqOSSyNzgizd879Q=;
+        b=LKoQGAoa+0ILCUoKQJsGPVqJRjm89fhu1vhyQ++IJs3+kSQdOcq3BBmwvxWjMYJAGk
+         J1IM5PYDgHrjvuTLinxxtGNTVoAfxrH81y8sbWRYpYGABiozK8ueQztmH+ndkTUrKaVT
+         zKpUOTIjSz9lKozW16NwnrXeUJ3dGCAgC4rl5kTl5VstpcYvdXdas4E54HVtjxx2Jpfl
+         u/CYj+DOwGNUonzsjwzy3Wt1ziZhoQaCsgvlq2E6k8FdZJ1SD1oassd6W58qxxXRO2fJ
+         0WKavJBAUiOI3wrIovSp+WCPxzbb9gWQWq5ww5wUKDMQr6NyjEHcJgir24JKOYtJAp6L
+         txXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762371597; x=1762976397;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
+        d=1e100.net; s=20230601; t=1762372949; x=1762977749;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7kizs9xJ2GRG/rLXAdsJnM3tvDx/8JZcjC0BTEZZ5WY=;
-        b=aVl7OLiouHTwl2wNTVt6DUIK7Caj0PmmdFDBj6aZd1CkTCFEO2CvCEvCqswyBv+mq3
-         hdJkSRfdo0RuffcFgOQ8e0mjzKXpiwtbDkC10UgIMKyNglQU54wi3cWoAZHbdNYLz59I
-         MPy2FPJLiOKF7DybsmMGaaamJCsuCRyLlx1EybNgZoG/L9fvdc+UkRo7H1QYk3dtp5oj
-         X4KMs2uJK5xZhi+KywGcxz6XlL5xCJjZB2DUU8dzj3O9QMovO1Iw3d8Ary5KmKg06H02
-         zLjyyLj8po5n++EDe4W41DXFeHtL/j0btGcg9LZceqfp1dg7nWaX/P8Sc+whx6e5LCWh
-         Isng==
-X-Forwarded-Encrypted: i=1; AJvYcCV239/YULzDE7MAvPOuQFe/Dep4AToe1AI5qy9COw7xzr+34Zux9bmaFSN3Z5VfAGxOLBRSRRjq8ew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycgzurBvJdhfr7Y2pxFhNcOT+Z5AnRXaaBAJDYvfqKVPIUOGd+
-	F/qFr4I2TKATrkZiLbdQDkjhBjxYaRfW81EEPOW96xvRl4iLT6O8GXkAjMwJ9UN+ogbdYfPoLmZ
-	j7p0++NwtiRa2mupzCC7PS/hb+k/zKKjGTX5rVHIlyXnnFkeNnybi4gZjfouKRg==
-X-Gm-Gg: ASbGncv9kr73xKC2cIftuJVIUY263/A2afoQF3UBpXezNe0qK7HlY7gvfEihYv0ZpFI
-	9195uRicKbyjOzLrOrhq5Qwz39DhPV164FWrefbgHy7t7R6ZDDDK4KvqyRFzfUhNSVi3KJS404n
-	1ajopL6vWTiSv4pV+TKhoswJrMUZEndi6rvQGjq6AICbq0rpWYSV2dmmdRLCMgEatd91uiEV8PY
-	VOT23yUr2UcA8BK/OwBwK2/zq1K+Kt7unmh5NfbOasXx+3zCCXJxeoCdWyLyS7LT+I/l0r9EXA1
-	xsL0D53AbsDKkQjY3lf0gtCGKYkdfir8zdxUAKdw9wupeGn/zDFYU8kLAXwvEsYlgQXuJF+G+4J
-	z+IcBcFtDjRM+TvO7JrAyh+P/pezIUi+U5xfoW5fVHkxDQQ==
-X-Received: by 2002:a05:620a:460f:b0:89f:7109:185f with SMTP id af79cd13be357-8b220af7c8dmr589561085a.31.1762371597237;
-        Wed, 05 Nov 2025 11:39:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFd9eT2YzuyaD6xKA1zXzyy0WWTMe4/Y4jwbmI24djGe/tYf+EHmXjHRZnQzj3cSXaGnWo3FQ==
-X-Received: by 2002:a05:620a:460f:b0:89f:7109:185f with SMTP id af79cd13be357-8b220af7c8dmr589555485a.31.1762371596761;
-        Wed, 05 Nov 2025 11:39:56 -0800 (PST)
-Received: from ?IPV6:2601:188:c102:b180:1f8b:71d0:77b1:1f6e? ([2601:188:c102:b180:1f8b:71d0:77b1:1f6e])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2355c2797sm30330485a.10.2025.11.05.11.39.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 11:39:55 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <74c2751a-4de6-49fb-b675-dc3c7f6e0bef@redhat.com>
-Date: Wed, 5 Nov 2025 14:39:53 -0500
+        bh=2WgVh/W2QDlWrUEp2DhJYyH+fmgYqOSSyNzgizd879Q=;
+        b=MgmjFHVYoxPdpQXY4vNd5JFjr9CMgzMWuUroZpmmVbIdLOncS0p56up3Fq2b68kCEB
+         ETz4HVz0SeYfNRGS3/LhCHakKFaAFVbPivzKkzqw0fwUQyYDkkKKaVJRnPEM0f5efF8b
+         U/heUYWm13K1Bu2/nYwl4F5CZclGjp6DtYlchvDXIScAoaF6kCBa+GDGOi7mpmeF2XKH
+         mhcECIKzvA8XLKo0Hv7D2QmSBp5iwUavlrZeEEt2dSQ7w3LGPlwfDDhBfjsOH6R4q/e6
+         HGhFimG28vMPRnsRWWpMcqRYWKfgtg1uk7WiX5ZOl6op9IXUJYF10GOM1p7M5z2W9Gy/
+         xlvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXS9PzwC3lp/qAOXDKuweSQG73Ks3Pma3H1JCx5LM9FhK4O7UqeEXdCT7gdw2O6luCyZcCPIQ+/tsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmGIj+dShRq76+DWzDEzpWf0E7dUXk9sBWVw+aSS3Y3XF2nkKq
+	yPhCQf6B3fAp9eDsFsvVr/VksxJN+Zo9lCp7jUBAfwtauB5MMx1jQ262
+X-Gm-Gg: ASbGncuwaYLAg6L5Lw6kY4InbhQ/8prZ9suh1Bsdh8mlNbrf9Q3FSLTLEZ1C1vnpl1L
+	zJh3mQr+v2Lup6iOo5H2lVOoMHNXO9tFMkVXWlA6SO1ERSTFRXhAdzL3TkUVYXIp4r1BUk9RSS7
+	yYPdT0JY/XUE1slyrLqX+2xJmsuGi5FsJl7mjU73CyU22C5Rl7M1V3IQoPwpQA7wwdG5M7DHz2C
+	7Nn4VN0G9LsIg6lN83FTiINmzdxI6iuXwmrHYTsNkqvCeI+csqoCXL2i8Al1VT75Ka3cfmkj7p6
+	14Cf5Tf3QEaSpHLOsUa5VSHivlSohYTrrMrnwUUh5aTdFY5j8fdimMF6a0TKy5MFvmHLXwey/fC
+	hhMMOt/HOKuvSQZSG+8KHybiZAfrMFxSnUhm9JrkB14So2x9P7kTu1owP7/ilS1s=
+X-Google-Smtp-Source: AGHT+IGSwk5bgvA4Oe45ToOFpKJoB2+FDTxvWYOBhAfgVYBhwy6jRCcKmE2cTHy1t1Zs4TzsM6oc1g==
+X-Received: by 2002:a05:6870:80d2:b0:319:be1e:9dce with SMTP id 586e51a60fabf-3e198e539f7mr2033360fac.5.1762372949003;
+        Wed, 05 Nov 2025 12:02:29 -0800 (PST)
+Received: from geday ([2804:7f2:800b:2ebb::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3e30ab3f772sm53209fac.20.2025.11.05.12.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 12:02:28 -0800 (PST)
+Date: Wed, 5 Nov 2025 17:02:21 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Jonker <jbx6244@gmail.com>,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: rockchip: align bindings to PCIe spec
+Message-ID: <aQutTbzS8rfW-Esm@geday>
+References: <4b5ffcccfef2a61838aa563521672a171acb27b2.1762321976.git.geraldogabriel@gmail.com>
+ <ba120577-42da-424d-8102-9d085c1494c8@rock-chips.com>
+ <aQsIXcQzeYop6a0B@geday>
+ <67b605b0-7046-448a-bc9b-d3ac56333809@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/33] cpuset: Update HK_TYPE_DOMAIN cpumask from cpuset
-To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
- <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
- <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
- Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
- cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20251013203146.10162-1-frederic@kernel.org>
- <20251013203146.10162-14-frederic@kernel.org>
- <ea2d3e0e-b1ee-4b58-a93a-b9d127258e75@redhat.com>
- <aQtxMYmwzfg2NW1O@localhost.localdomain>
-Content-Language: en-US
-In-Reply-To: <aQtxMYmwzfg2NW1O@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67b605b0-7046-448a-bc9b-d3ac56333809@rock-chips.com>
 
-On 11/5/25 10:45 AM, Frederic Weisbecker wrote:
->>> +	if (!trial)
->>> +		return -ENOMEM;
->>> +
->>> +	cpumask_andnot(trial, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT), mask);
->>> +	if (!cpumask_intersects(trial, cpu_online_mask)) {
->>> +		kfree(trial);
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	if (!housekeeping.flags)
->>> +		static_branch_enable(&housekeeping_overridden);
->>> +
->>> +	if (!(housekeeping.flags & BIT(type)))
->>> +		old = housekeeping_cpumask_dereference(type);
->>> +	else
->>> +		WRITE_ONCE(housekeeping.flags, housekeeping.flags | BIT(type));
->>> +	rcu_assign_pointer(housekeeping.cpumasks[type], trial);
->>> +
->>> +	synchronize_rcu();
->>> +
->>> +	kfree(old);
->> If "isolcpus" boot command line option is set, old can be a pointer to the
->> boot time memblock area which isn't a pointer that can be handled by the
->> slab allocator AFAIU. I don't know the exact consequence, but it may not be
->> good. One possible solution I can think of is to make HK_TYPE_DOMAIN and
->> HK_TYPE_DOMAIN_ROOT point to the same memblock pointer and don't pass the
->> old HK_TYPE_DOMAIN pointer to kfree() if it matches HK_TYPE_DOMAIN_BOOT one.
->> Alternatively, we can just set the HK_TYPE_DOMAIN_BOOT pointer at boot and
->> make HK_TYPE_DOMAIN falls back to HK_TYPE_DOMAIN_BOOT if not set.
-> Have a look at housekeeping_init() which reallocates the memblock
-> allocated memory with kmalloc to avoid these troubles.
+On Wed, Nov 05, 2025 at 04:56:36PM +0800, Shawn Lin wrote:
+> 在 2025/11/05 星期三 16:18, Geraldo Nascimento 写道:
+> > 
+> > Hi Shawn, glad to hear from you.
+> > 
+> > Perhaps the following change is better? It resolves the issue
+> > without the added complication of open drain. After you questioned
+> > if open drain is actually part of the spec, I remembered that
+> > GPIO_OPEN_DRAIN is actually (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
+> > so I decided to test with just GPIO_SINGLE_ENDED and it works.
+> 
+> 
+> Does that work for you too?
+> 
+> &pcie0 {
+> 	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+>   	num-lanes = <4>;
+> -	pinctrl-0 = <&pcie_clkreqnb_cpm>;
+> +	pinctrl-0 = <&pcie_clkreqnb_cpm>, <&pcie_perst>;
+>   	pinctrl-names = "default";
+>   	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
+>   	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
+> @@ -408,6 +408,10 @@ pcie {
+>   		pcie_pwr: pcie-pwr {
+>   			rockchip,pins = <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
+>   		};
+> +		pcie_perst: pcie-perst {
+> +			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+> +
+>   	};
 
-Ah your previous patch of this series did that. I was thinking about the 
-existing kernel code at the time. So you can ignore that comment.
+Hi Shawn,
+
+No, that does not work.
+
+I believe the pull-up mux became needed because I was forcing open drain
+on PERST#.
 
 Thanks,
-Longman
-
+Geraldo Nascimento
 
