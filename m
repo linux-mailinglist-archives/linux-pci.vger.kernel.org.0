@@ -1,125 +1,215 @@
-Return-Path: <linux-pci+bounces-40335-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0189C34DE8
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:34:36 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EC5BC34CBD
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:24:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A1DF18911FD
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:34:09 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E193734D242
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:24:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01BE301036;
-	Wed,  5 Nov 2025 09:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4639D2FBE17;
+	Wed,  5 Nov 2025 09:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GyNIZys1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8245828C035
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 09:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423DD2FC004
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 09:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762335208; cv=none; b=m9SbdDS8bJm2zW+dh3AWFlmsU+MpxWm5L3MDJF13lVTVpJXvbBDO7OA7DRbD6hslgHTnWliA/LjUg8+nVYMsYJO7X2ceBWbGOZMv5+im956/xnOHFZICks3WtPGVxWa4V6IMfDhbyqqfFGZ8MzSqpYBKDlNTV2AuQ36LoFBlXak=
+	t=1762334489; cv=none; b=rqrOVTQ1D1LJraYtP4aA9vW0jBY4IgfFQShU4l/UTPYVhD8iH260cqxSvmPxorQhFKJxyYaIUwHvsEp+TwUNI83NVY11QGo9P3CpMiPx4PlfcwehT6reMmHfNVWdgwkOsgmXIjXVbrWUbNPTGAlig+Fv/F83Ls/RpmxZwneGrqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762335208; c=relaxed/simple;
-	bh=/BlFRsUqHzpyPFsgXRPVEfArD94AsjLLqYTCp3TIbWc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ax9skUdokUiOe0ovdbv6W3tOq+kBc3DCAvnBXjTJtYHXwsKR8N80CRPi0UBBHE/wIFpGdaBD9r4CSZ9d4nbE9fTmef8XoLKSxlc7aCIZKQeqYcRKE1X1rsEuxJ9i7PejWVHu54ffu+rbRsBnXCWPEnRYNCe3VdxFr446TppOD4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d1fqF2qwgzHnGdC;
-	Wed,  5 Nov 2025 17:17:29 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 700071402A5;
-	Wed,  5 Nov 2025 17:17:34 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Nov
- 2025 09:17:33 +0000
-Date: Wed, 5 Nov 2025 09:17:32 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<bhelgaas@google.com>, <aneesh.kumar@kernel.org>, <yilun.xu@linux.intel.com>,
-	<aik@amd.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/6] resource: Introduce resource_assigned() for
- discerning active resources
-Message-ID: <20251105091732.0000302c@huawei.com>
-In-Reply-To: <20251105040055.2832866-2-dan.j.williams@intel.com>
-References: <20251105040055.2832866-1-dan.j.williams@intel.com>
-	<20251105040055.2832866-2-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1762334489; c=relaxed/simple;
+	bh=MsIGhFgmRY3shV51muuQARn7dSaDWqIQfo2RqSJEdV4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=InoyjB64Xpjk2dHB8re8RWXnKQt38GpOEZbLKyY6BhaIhgWsn7RapKArpoa7Vx+mGor9huLH/how5jDuoMzdIbmF/wM+TaVfVi7E1c96KSWmot/T7RhGU9BiUj/5NgDscrAlESqASyj7OaklxGGai4CZOO1+v+b6pGF0NklTNfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GyNIZys1; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3737d0920e6so54373951fa.1
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 01:21:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1762334485; x=1762939285; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M9Cz7QFeZXHx7n2GD0Sctn9Btu8KGfjVz7K3mbh7364=;
+        b=GyNIZys1OAZAm+vHerp+X58IiegAzqoxjvafHezNTISZeaEOM3FJpERaXx9DT2FqsW
+         lt9VQbL0HI9cXkRwUHezNGwVSZLB2QzxyCVXObenBmw7vKME3a/kJtInNgfKCBUVO2gi
+         9FKF9jdOXUrR/kE67/qv9vL8ml1hPSPe+7k6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762334485; x=1762939285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M9Cz7QFeZXHx7n2GD0Sctn9Btu8KGfjVz7K3mbh7364=;
+        b=MbTmvESmt8ooc3BC5gpvkieuTURgCmASwS2+OtC1povyMudl721W5BfZTVFA/k/e1e
+         bLh3QnGRxxZ2p0HEnLLpz1sGXG24H6ap4tDD6hFYynRMaEbwjMr++q+SbeebqcT7nGzg
+         L7LvoYMOPtqaW8eFyBxbu1U/WtXFOdK1OygUAttIE/RG/aq0JMJLl6DZuB3N5Jzs9Fc7
+         m60i4rt9VAfkz5m21AUMvazodz7A1zlKgkLCBH+TFWCTH2vaKynRw54YX5ICgLgELvua
+         8YL5pXXollYu0zY+RYkul1iqRjUAoWpVKkDSeby8FzjUPWQRG8kPwfESE62yKTRY6X6C
+         fq3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUrrq8IeJcc4yL5Z7CL9APRQFv48+3uw3KmzZ2eRdnNBMe6HQlgyMHkHUIz1RMpKhN487Q3kWwdAbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy7WwRruZU6DabVgW7RVtMrTzyyaGUJIbyqlYp6SvoToQtdY2n
+	H1QCGS33cMgbRh8Q/faxMMfcgtgcBYboPuCvi7Ve+zBBwAFylwsntUa1t5MPCgo4bS7ULQx6qMq
+	EHbH2hHibcLgkckTg72nHpA98iXIz+lbnpFRf52L1
+X-Gm-Gg: ASbGncsyd24DalMiF+ODUDLUFTqw0ZTMdfxcIUEq4UzbPw7suANA1C16O4VNaGhsF1h
+	vIFpPUd3nasB9pWuKs2hR/e9AH2h/lKDCqXFP/93tOyEtMqdlnKLTnMjAkpqWcK2ol1YuBCAe+c
+	KAuRORZnPQ5n7h01Hi8ZAmj87zU1UCfjJM34lmUUgdoVGEzs1SL0TFjgEb4WPnwkjTdMst0GrNf
+	CFTT0AHuSytksMDrDaZX59bl5zFdK4IjoFX1pwHUf5OpO5TocUeBhhYMwlyRsrOdzM9cSFgySKc
+	Al9+6SECf7DjDF0=
+X-Google-Smtp-Source: AGHT+IGQP2VVUJ5rUmY6C9xv2Mgt2qZpBhs2wiUlca0i0M5p6PJNG/u4WXKd81FDNk50RCsLvXv5mIlfnoCqea13DHc=
+X-Received: by 2002:a05:6512:104b:b0:594:34c4:a352 with SMTP id
+ 2adb3069b0e04-5943d75dd17mr829339e87.23.1762334485335; Wed, 05 Nov 2025
+ 01:21:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+References: <20251105062815.966716-1-wenst@chromium.org> <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
+In-Reply-To: <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 5 Nov 2025 17:21:13 +0800
+X-Gm-Features: AWmQ_bndGi-pOLYUZIEExvSxZWBBRpwVWURG5nTKgeks0Y9s12nRjMsAjohzleQ
+Message-ID: <CAGXv+5EwiL_-ozRARH2UBm5znHi1egBoCjmELN=17hvFF_oeoQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Manivannan Sadhasivam <mani@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Jianjun Wang <jianjun.wang@mediatek.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Tue,  4 Nov 2025 20:00:50 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, Nov 5, 2025 at 4:45=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Il 05/11/25 07:28, Chen-Yu Tsai ha scritto:
+> > As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
+> > common code") come up later" in the code, it is possible for link up to
+> > occur later:
+> >
+> >    Let's standardize this to succeed as there are usecases where device=
+s
+> >    (and the link) appear later even without hotplug. For example, a
+> >    reconfigured FPGA device.
+> >
+> > Another case for this is the new PCIe power control stuff. The power
+> > control mechanism only gets triggered in the PCI core after the driver
+> > calls into pci_host_probe(). The power control framework then triggers
+> > a bus rescan. In most driver implementations, this sequence happens
+> > after link training. If the driver errors out when link training times
+> > out, it will never get to the point where the device gets turned on.
+> >
+> > Ignore the link up timeout, and lower the error message down to a
+> > warning.
+> >
+> > This makes PCIe devices that have not-always-on power rails work.
+> > However there may be some reversal of PCIe power sequencing, since now
+> > the PERST# and clocks are enabled in the driver, while the power is
+> > applied afterwards.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+>
+> Ok, that's sensible.
+>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+>
+> > ---
+> > The change works to get my PCIe WiFi device working, but I wonder if
+> > the driver should expose more fine grained controls for the link clock
+> > and PERST# (when it is owned by the controller and not just a GPIO) to
+> > the power control framework. This applies not just to this driver.
+> >
+> > The PCI standard says that PERST# should hold the device in reset until
+> > the power rails are valid or stable, i.e. at their designated voltages.
+>
+> I completely agree with all of the above - and I can imagine multiple PCI=
+-Express
+> controller drivers doing the same as what's being done in MTK Gen3.
+>
+> This means that the boot process may get slowed down by the port startup =
+sequence
+> on multiple PCI-Express controllers (again not just MediaTek) and it's so=
+mething
+> that must be resolved in some way... with the fastest course of action im=
+o being
+> giving controller drivers knowledge of whether there's any device that is=
+ expected
+> to be powered off at that time (in order to at least avoid all those wait=
+s that
+> are expected to fail).
 
-> A PCI bridge resource lifecycle involves both a "request" and "assign"
-> phase. At any point in time that resource may not yet be assigned, or may
-> have failed to assign (because it does not fit).
->=20
-> There are multiple conventions to determine when assignment has not
-> completed: IORESOURCE_UNSET, IORESOURCE_DISABLED, and checking whether the
-> resource is parented.
->=20
-> In code paths that are known to not be racing assignment, e.g. post
-> subsys_initcall(), the most reliable method to judge that a bridge resour=
-ce
-> is assigned is to check the resource is parented [1].
->=20
-> Introduce a resource_assigned() helper for this purpose.
->=20
-> Link: http://lore.kernel.org/2b9f7f7b-d6a4-be59-14d4-7b4ffccfe373@linux.i=
-ntel.com [1]
-> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-One trivial thing on documentation style below.
+That also requires some refactoring, since all the drivers _wait_ for link
+up before going into the PCI core, which does the actual child node parsing=
+.
 
-> ---
->  include/linux/ioport.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index e8b2d6aa4013..9afa30f9346f 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -334,6 +334,15 @@ static inline bool resource_union(const struct resou=
-rce *r1, const struct resour
->  	return true;
->  }
-> =20
-> +/*
-> + * Check if this resource is added to a resource tree or detached. Calle=
-r is
-> + * responsible for not racing assignment.
-> + */
+I would like some input from Bartosz, who introduced the PCI power control
+framework, and Manivannan, who added slot power control.
 
-Some stuff in this file now has kernel-doc style comments. To me it
-seems like a better idea to use that style for new function descriptions
-whilst perhaps not being worth the churn that would be inherent in switching
-all docs to that style.
+> P.S.: Chen-Yu, did you check if the same applies to the MTK previous gen =
+driver?
+>        Could you please check and eventually send a commit to do the same=
+ there?
 
-> +static inline bool resource_assigned(struct resource *res)
-> +{
-> +	return res->parent;
-> +}
-> +
->  int find_resource_space(struct resource *root, struct resource *new,
->  			resource_size_t size, struct resource_constraint *constraint);
-> =20
+My quick survey last week indicated that all the drivers except for the
+dwc family error out if link up timed out.
 
+I don't have any hardware for the older generation though. And it looks
+like for the previous gen, the driver performs even worse, since it can
+support multiple slots, and each slot is brought up sequentially. A slot
+is discarded if link up times out. And the whole driver errors out if no
+slots are working.
+
+
+ChenYu
+
+> Cheers,
+> Angelo
+>
+> > ---
+> >   drivers/pci/controller/pcie-mediatek-gen3.c | 13 +++++++++----
+> >   1 file changed, 9 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
+controller/pcie-mediatek-gen3.c
+> > index 75ddb8bee168..5bdb312c9f9b 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -504,10 +504,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_=
+pcie *pcie)
+> >               ltssm_index =3D PCIE_LTSSM_STATE(val);
+> >               ltssm_state =3D ltssm_index >=3D ARRAY_SIZE(ltssm_str) ?
+> >                             "Unknown state" : ltssm_str[ltssm_index];
+> > -             dev_err(pcie->dev,
+> > -                     "PCIe link down, current LTSSM state: %s (%#x)\n"=
+,
+> > -                     ltssm_state, val);
+> > -             return err;
+> > +             dev_warn(pcie->dev,
+> > +                      "PCIe link down, current LTSSM state: %s (%#x)\n=
+",
+> > +                      ltssm_state, val);
+> > +
+> > +             /*
+> > +              * Ignore the timeout, as the link may come up later,
+> > +              * such as when the PCI power control enables power to th=
+e
+> > +              * device, at which point it triggers a rescan.
+> > +              */
+> >       }
+> >
+> >       mtk_pcie_enable_msi(pcie);
+>
+>
 
