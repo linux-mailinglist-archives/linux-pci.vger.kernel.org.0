@@ -1,126 +1,201 @@
-Return-Path: <linux-pci+bounces-40341-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40342-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C4C0C35459
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 12:00:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA3E4C355E8
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 12:32:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AD12A34D579
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 11:00:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E42911A2044D
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 11:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E1B130F545;
-	Wed,  5 Nov 2025 11:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E10A302CC1;
+	Wed,  5 Nov 2025 11:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tb1higuk"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XPy5obg5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0D630F539;
-	Wed,  5 Nov 2025 11:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567232DC334;
+	Wed,  5 Nov 2025 11:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762340419; cv=none; b=GjjFeQBzZBiDUrK1kAUjXCBi2yo+eUqHZWS3ejG+RrvzlLfQCOtdel5TVt1EnyzhgakiYGb+d0FODaz+9REWFfovJMlNQ2jn4Ig7wL+E+P6BthS3LtyUyYIIiSe7bCx2ScWL1I9uJrhEpb5MuGh1cImNu+1ls7fArUqEg0gjP50=
+	t=1762342329; cv=none; b=YjIXK9pj/TDiQ4HThdM0ZDxofL91TH8L05cH30pB+0OuuvY4/6/NyzBg6luqRDNRJ7zIwoYIZl8iJ/KuZJURQYai8rh1ZTqZa/yNbySEnX7l8XfyKrDuJmPKwJLK4kkCH/td4oYxwWDkfXkv4U1I5zkhH8eviCG5G2rtmXWbgfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762340419; c=relaxed/simple;
-	bh=B+4pOh83F8unCV02t+zRv+dq7jLqx/Ju8WvlRa4iwIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXDL/He0W0LCmxbR9/Ok+JXPiSiB8+0bqtma1khx8QOVHUpIJeVA5I4IuMSv9QhDe+hBVLlOFvWX50iGApFKrRlD1yyTKjMtN4Ad4VQKPVkHPG521bqts/a2J2TVvFxERn8hc1kaBOygUkg+E1FEH4rc41+LqSfHegvsHgKZWY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tb1higuk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D59EC4CEF8;
-	Wed,  5 Nov 2025 11:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762340419;
-	bh=B+4pOh83F8unCV02t+zRv+dq7jLqx/Ju8WvlRa4iwIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tb1higukqPOJoexZHUEDVn6rdv63fY6hwZ3LV4uK9zfaqjIuKOMWH7LZ4d0ei9f6i
-	 +Egjj7f7HKarz2VVvZFrRKdipbZCs+gjsHMTO/1Q8LUrz0zUhTV5XVBL3pohY5XmHu
-	 RysFQqMm2Isu9fWxUx2TjLmXekMKFPGNnX0QFn3oEI7OyfZt3sv6P0bdlxlGaO0i9V
-	 P/E4gdoX5HoPqW2RoSwNAE9CLBeXGYyQl+5WI6HlAHVwhNjGJDIdAQEsDQLbnfQzBZ
-	 qTAvA4Jc11XR+uK5HGEm/v7qUH+IwW7fYLF3eo0KdMaV6ttUikGFpjQCV0FDT5y/9P
-	 Sis0E2ZpiD/0A==
-Date: Wed, 5 Nov 2025 12:00:11 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Bjorn Helgaas <helgaas@kernel.org>, chester62515@gmail.com,
-	mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, s32@nxp.com,
-	bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ionut.Vicovan@nxp.com,
-	larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com,
-	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com,
-	Frank.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 3/4 v3] PCI: s32g: Add initial PCIe support (RC)
-Message-ID: <aQsuO5WaYPK0KbVw@ryzen>
-References: <20251022174309.1180931-4-vincent.guittot@linaro.org>
- <20251022190402.GA1262472@bhelgaas>
- <CAKfTPtCtHquxtK=Zx2WSNm15MmqeUXO8XXi8FkS4EpuP80PP7g@mail.gmail.com>
- <aQsmtKsTEmf7e7Sd@ryzen>
- <bf3b2d2a-ce3e-87af-4154-abd022c6a3b4@linux.intel.com>
+	s=arc-20240116; t=1762342329; c=relaxed/simple;
+	bh=qo7Q5+N4DDgqiZo8JDVIJ2IijBxpBe/S1c2lwaOZkJ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ii2mPU1xEndBvMCX1OpBdgohCaq1g36S6TrjYJPGmI8bE6isQn3pksn8fXhl8TpFWsFOK9Hf+vttanen7oF0OBtqSlnFhh0PmPhx5SQ08S0ub0cXiNtnjvfi6kWe8IUHVUrKCriyFVmpbpCtqlfzUQ44IBoq/wRCq9bLAIE7xCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XPy5obg5; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1762342325;
+	bh=qo7Q5+N4DDgqiZo8JDVIJ2IijBxpBe/S1c2lwaOZkJ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XPy5obg5QNFSpQkeUn4jpYq0MZfgWvlHwvYbUuDpQu7gGnm8a6RfJqrqhAHNSZvsy
+	 Iyw9cjdtDntX58SK4J+P+S0PYTC7tdKEw13MtE5I48vTa+B7Iqx3POlBjv8Wx7v7GP
+	 UEQX3oKAFdPkpFqdyuIyKrP6vDEfPjJdj+TwnnEHC969Msqx0lkJsXHTBvuG+ZsAlU
+	 lLcLCHvBujZB3tfuh3ztWwFknm1vgjesigUI5qxnVaXkwS3yhZ83gGssirZo6WN9dy
+	 gYWT5dlE7iuapua5SgF2IQ7lPMnBs+pRcC4+wJurjfYbPebdvpx4BSU6WZ0d5fIyc9
+	 HJEWiaTaoP0bw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0389217E12AA;
+	Wed,  5 Nov 2025 12:32:04 +0100 (CET)
+Message-ID: <3e1ffe72-b6a4-45cc-a053-190077818f19@collabora.com>
+Date: Wed, 5 Nov 2025 12:32:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
+To: Chen-Yu Tsai <wenst@chromium.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Manivannan Sadhasivam <mani@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20251105062815.966716-1-wenst@chromium.org>
+ <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
+ <CAGXv+5EwiL_-ozRARH2UBm5znHi1egBoCjmELN=17hvFF_oeoQ@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAGXv+5EwiL_-ozRARH2UBm5znHi1egBoCjmELN=17hvFF_oeoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bf3b2d2a-ce3e-87af-4154-abd022c6a3b4@linux.intel.com>
 
-On Wed, Nov 05, 2025 at 12:43:09PM +0200, Ilpo Järvinen wrote:
-> On Wed, 5 Nov 2025, Niklas Cassel wrote:
+Il 05/11/25 10:21, Chen-Yu Tsai ha scritto:
+> On Wed, Nov 5, 2025 at 4:45 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> Il 05/11/25 07:28, Chen-Yu Tsai ha scritto:
+>>> As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
+>>> common code") come up later" in the code, it is possible for link up to
+>>> occur later:
+>>>
+>>>     Let's standardize this to succeed as there are usecases where devices
+>>>     (and the link) appear later even without hotplug. For example, a
+>>>     reconfigured FPGA device.
+>>>
+>>> Another case for this is the new PCIe power control stuff. The power
+>>> control mechanism only gets triggered in the PCI core after the driver
+>>> calls into pci_host_probe(). The power control framework then triggers
+>>> a bus rescan. In most driver implementations, this sequence happens
+>>> after link training. If the driver errors out when link training times
+>>> out, it will never get to the point where the device gets turned on.
+>>>
+>>> Ignore the link up timeout, and lower the error message down to a
+>>> warning.
+>>>
+>>> This makes PCIe devices that have not-always-on power rails work.
+>>> However there may be some reversal of PCIe power sequencing, since now
+>>> the PERST# and clocks are enabled in the driver, while the power is
+>>> applied afterwards.
+>>>
+>>> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+>>
+>> Ok, that's sensible.
+>>
+>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>
+>>> ---
+>>> The change works to get my PCIe WiFi device working, but I wonder if
+>>> the driver should expose more fine grained controls for the link clock
+>>> and PERST# (when it is owned by the controller and not just a GPIO) to
+>>> the power control framework. This applies not just to this driver.
+>>>
+>>> The PCI standard says that PERST# should hold the device in reset until
+>>> the power rails are valid or stable, i.e. at their designated voltages.
+>>
+>> I completely agree with all of the above - and I can imagine multiple PCI-Express
+>> controller drivers doing the same as what's being done in MTK Gen3.
+>>
+>> This means that the boot process may get slowed down by the port startup sequence
+>> on multiple PCI-Express controllers (again not just MediaTek) and it's something
+>> that must be resolved in some way... with the fastest course of action imo being
+>> giving controller drivers knowledge of whether there's any device that is expected
+>> to be powered off at that time (in order to at least avoid all those waits that
+>> are expected to fail).
 > 
-> > On Fri, Oct 24, 2025 at 08:50:46AM +0200, Vincent Guittot wrote:
-> > > On Wed, 22 Oct 2025 at 21:04, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > +     dw_pcie_dbi_ro_wr_en(pci);
-> > > > > +
-> > > > > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_FORCE);
-> > > > > +     val |= PORT_FORCE_DO_DESKEW_FOR_SRIS;
-> > > > > +     dw_pcie_writel_dbi(pci, PCIE_PORT_FORCE, val);
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Set max payload supported, 256 bytes and
-> > > > > +      * relaxed ordering.
-> > > > > +      */
-> > > > > +     val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> > > > > +     val &= ~(PCI_EXP_DEVCTL_RELAX_EN |
-> > > > > +              PCI_EXP_DEVCTL_PAYLOAD |
-> > > > > +              PCI_EXP_DEVCTL_READRQ);
-> > > > > +     val |= PCI_EXP_DEVCTL_RELAX_EN |
-> > > > > +            PCI_EXP_DEVCTL_PAYLOAD_256B |
-> > > > > +            PCI_EXP_DEVCTL_READRQ_256B;
-> > > > > +     dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
-> > > >
-> > > > MPS and relaxed ordering should be configured by the PCI core.  Is
-> > > > there some s32g-specific restriction about these?
-> > > 
-> > > I will check with the team why they did that
-> > 
-> > Most likely, the reason is that, the PCI core does not set the MPS to the
-> > maximum supported MPS for the root port.
+> That also requires some refactoring, since all the drivers _wait_ for link
+> up before going into the PCI core, which does the actual child node parsing.
 > 
-> PCI core set/doesn't set MPS based on config. Perhaps try with 
-> CONFIG_PCIE_BUS_PERFORMANCE.
+> I would like some input from Bartosz, who introduced the PCI power control
+> framework, and Manivannan, who added slot power control.
+> 
+>> P.S.: Chen-Yu, did you check if the same applies to the MTK previous gen driver?
+>>         Could you please check and eventually send a commit to do the same there?
+> 
+> My quick survey last week indicated that all the drivers except for the
+> dwc family error out if link up timed out.
+> 
+> I don't have any hardware for the older generation though. And it looks
+> like for the previous gen, the driver performs even worse, since it can
+> support multiple slots, and each slot is brought up sequentially. A slot
+> is discarded if link up times out. And the whole driver errors out if no
+> slots are working.
+> 
 
-Sorry, I should have been more clear.
+Hey, that's bold.
 
-Since a lot of PCIe controller drivers have similar code to the above,
-it is obvious that a lot of controller drivers want to increase the MPS
-regardless of PCIE_BUS_* bus config value.
+If only one driver (DWC) is working okay, there's something wrong that must be
+fixed before that behavior change goes upstream (which it already did, ugh).
 
-With the current PCI code, MPS for root ports will not be touched if
-PCIE_BUS_TUNE_OFF or PCIE_BUS_DEFAULT.
+This needs attention from both Bartosz and Mani really-right-now.
 
-After the above series, MPS for root ports will be set to max supported
-also for PCIE_BUS_DEFAULT.
+I'm not sure about possible good solutions, and unfortunately I don't really have
+any time to explore, so I'm not spitting any words on that - leaving this to both
+Bartosz and Mani as that's also the right thing to do anyway.
 
+Angelo
 
-Kind regards,
-Niklas
+> 
+> ChenYu
+> 
+>> Cheers,
+>> Angelo
+>>
+>>> ---
+>>>    drivers/pci/controller/pcie-mediatek-gen3.c | 13 +++++++++----
+>>>    1 file changed, 9 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+>>> index 75ddb8bee168..5bdb312c9f9b 100644
+>>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+>>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>>> @@ -504,10 +504,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+>>>                ltssm_index = PCIE_LTSSM_STATE(val);
+>>>                ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
+>>>                              "Unknown state" : ltssm_str[ltssm_index];
+>>> -             dev_err(pcie->dev,
+>>> -                     "PCIe link down, current LTSSM state: %s (%#x)\n",
+>>> -                     ltssm_state, val);
+>>> -             return err;
+>>> +             dev_warn(pcie->dev,
+>>> +                      "PCIe link down, current LTSSM state: %s (%#x)\n",
+>>> +                      ltssm_state, val);
+>>> +
+>>> +             /*
+>>> +              * Ignore the timeout, as the link may come up later,
+>>> +              * such as when the PCI power control enables power to the
+>>> +              * device, at which point it triggers a rescan.
+>>> +              */
+>>>        }
+>>>
+>>>        mtk_pcie_enable_msi(pcie);
+>>
+>>
+
 
