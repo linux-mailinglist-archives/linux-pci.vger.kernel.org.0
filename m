@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-40417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40419-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90E86C380BB
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 22:35:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E603FC38045
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 22:28:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F5203BBCE5
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 21:18:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7558D3BC98D
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 21:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E755D2D0C8A;
-	Wed,  5 Nov 2025 21:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18102DF150;
+	Wed,  5 Nov 2025 21:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FYYWj5Er"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pSe49kn1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65A23F424;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5976126C02;
 	Wed,  5 Nov 2025 21:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762377518; cv=none; b=TrKMSWY3ddRrbjfsp3aItcVNASoCsA+c+GjtueEstBvS0t2qXd6FDXEf+ef5ekSDVc9HKvlIB1jd1anabnNBxj/HNmQh5wrH+TXwRYp1P8os/JmAlEowhoa3RZUHn1b21+iDo4nxpH9J+KyoZZaxjLYHYX9eDxTE8DbVhk4vWco=
+	t=1762377519; cv=none; b=m6ASPQlsF3TEhwMdXCFP0tRwKjDesZ1/ugM2ilThDwicJ/1Jbj+bpT0gaiEc1T8XwRUy/8i/FKZ0pgffS6c720knddbTrIbHNEetfNYmaF2RUzZa/4cSVP77m6BVMn+hOyUunNLfOpyuQF5CEIkm6cRE1U27FabueZzt2d1zVpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762377518; c=relaxed/simple;
-	bh=/ng5O2dKBBjx/PoMHfml7fIWlsGEdTjPoLQQq68Vk1w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JlZ3h1E+yV55PKTj+S7/umBnGMuqND9FCaUUGyEEJvLiNEykMwjqkShBHZoQQRDwqlpkCvpSx5574iw52kb2DqF0tNfWvdbbBHTEDHau+eUC9KeDsMDKA4pvGO+yvkE2HuhnHr0cd5AQFmaw801TtUV683VEC5RZONOwjiEJh/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FYYWj5Er; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1762377519; c=relaxed/simple;
+	bh=vTtFVwZhj2dtk28F9mb0pMLT2K98WweVea9+cuC24ag=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C+ED7EDiKfbt3fInhR6slhqsz2NB1XXeJIuDxUw20s2DRG11sozyu/x8tDCQZzEnCVMMRtClOyXy/EL3pM/N0QweYdwRH+hsGsHSs9EG/M1VkjiJuhnJ4O/tPigdJ/yAGr7Nmm5oowhFPujbnW2SfPFZnTqi+BIIoySdq4Cn+Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pSe49kn1; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1762377515;
-	bh=/ng5O2dKBBjx/PoMHfml7fIWlsGEdTjPoLQQq68Vk1w=;
-	h=From:Subject:Date:To:Cc:From;
-	b=FYYWj5ErKAQWBH2zuGZaHzNU61uViaX++wuDgl6qi3m3uq/JVL8lRCK2QpXOCeVXQ
-	 cK6bH0vpEageL4dR1k+JzkdBvT3UDR3JFEKn+jOJ+c+YwUlXUL8nDJEUHqzZ0r+mRA
-	 oB3wh+vHFKV76nODd5F3Ycl+IOrvH+whHccdpoEReZww8gZWhwCqanfyL6UxsEAODV
-	 rkM2Kxf+JQAbXgTHiJjAE8L2l00CXVt9ql3g8xaZmkaivTwHEk+yolMSL+dbsZ27vg
-	 OhJ+uySIkR+3pqqAgKBENCEXgrY9ThTbJGfaPWzJwryQDqYT6RrZ4FqOKyzNEaq180
-	 AnSWhk/d0T2gA==
+	bh=vTtFVwZhj2dtk28F9mb0pMLT2K98WweVea9+cuC24ag=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=pSe49kn1CNJa/3TIsAfyiPmVF6y8Y8PaNI39JUJJAAPA5wWIFh6XiC4HVZx6wEFNL
+	 L5Kdzgoirrmikw+CUAcBOG09J/CVlUGuVArOzbmO7Wslf7ZxtcAwnpndJ43sBsrCq1
+	 v/WOwnTgqG36ax9SAtLwXvRr9iFPFbDxYpPnBjW0uNx0LGTceQTwIerakX6nh/fve2
+	 gDgnn7FFMsjEfMxOyPv6ZSm9V2QYVpS7DfzQzkZ+RBkSvVkeyS66FamW1RxSMduaYI
+	 esxgWGjHuf5H2/qYR975Jxrx8kLKRiAIjaJPBj3Zh03WC2gVt5fDKiYp1fSDHIIPAT
+	 u+lL/PGRDqsvQ==
 Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id DFEF017E04D6;
-	Wed,  5 Nov 2025 22:18:34 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0483317E12AA;
+	Wed,  5 Nov 2025 22:18:35 +0100 (CET)
 Received: by beast.luon.net (Postfix, from userid 1000)
-	id 8C1DE10F352D9; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
+	id 916BF10F352DB; Wed, 05 Nov 2025 22:18:34 +0100 (CET)
 From: Sjoerd Simons <sjoerd@collabora.com>
-Subject: [PATCH v3 00/13] arm64: dts: mediatek: Add Openwrt One AP
- functionality
-Date: Wed, 05 Nov 2025 22:17:55 +0100
-Message-Id: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+Date: Wed, 05 Nov 2025 22:17:56 +0100
+Subject: [PATCH v3 01/13] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
+ SPI NOR
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,10 +62,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAO/C2kC/x3MSwqAMAwA0atI1gba+gG9irjQGjUIqaSignh3i
- 8u3mHkgkjJFaLMHlE6OHCShyDPw6yALIU/J4IyrrLE1hp3k0gODEAodV9ANSzP6ZvB2dJWHVO5
- KM9//tevf9wNgNip4ZQAAAA==
-X-Change-ID: 20251016-openwrt-one-network-40bc9ac1b25c
+Message-Id: <20251105-openwrt-one-network-v3-1-008e2cab38d1@collabora.com>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Matthias Brugger <matthias.bgg@gmail.com>, 
@@ -87,84 +86,141 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
  linux-phy@lists.infradead.org, netdev@vger.kernel.org, 
  Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>, 
- Sjoerd Simons <sjoerd@collabora.com>, 
- Conor Dooley <conor.dooley@microchip.com>
+ Sjoerd Simons <sjoerd@collabora.com>
 X-Mailer: b4 0.14.3
 
-Significant changes in V3:
-  * Drop patches that were picked up
-  * Re-order patches so changes that don't require dt binding changes
-    come first (Requested by Angelo)
-  * Specify drive power directly rather then using MTK_DRIVE_...
-  * Simply mediatek,net binding changes to avoid accidental changes to
-    other compatibles then mediatek,mt7981-eth
-Significant changes in V2:
-  * https://lore.kernel.org/lkml/20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com/
-  * Only introduce labels in mt7981b.dtsi when required
-  * Switch Airoha EN8811H phy irq to level rather then edge triggered
-  * Move uart0 pinctrl from board dts to soc dtsi
-  * Only overwrite constraints with non-default values in MT7981 bindings
-  * Make SPI NOR nvmem cell labels more meaningfull
-  * Seperate fixing and disable-by-default for the mt7981 in seperate
-    patches
+The openwrt one has a SPI NOR flash which from factory is used for:
+* Recovery system
+* WiFi eeprom data
+* ethernet Mac addresses
 
-This series add various peripherals to the Openwrt One, to make it
-actually useful an access point:
-
-* Pcie express (tested with nvme storage)
-* Wired network interfaces
-* Wireless network interfaces (2.4g, 5ghz wifi)
-* Status leds
-* SPI NOR for factory data
-
-Unsurprisingly the series is a mix of dt binding updates, extensions of
-the mt7981b and the openwrt one dtb. All driver support required is
-already available.
-
-Sadly during testing i've found various quirks requiring kernel
-arguments. Documenting those here both as note to self and making it
-easier for others to test :)
-
-* fw_devlink=permissive: the nvmem fixed-layout doesn't create a layout
-  device, so doesn't trigger fw_devlink
-* clk_ignore_unused: Needed when building CONFIG_NET_MEDIATEK_SOC as a
-  module. If the ethernet related clocks (gp1/gp2) get disabled the
-  mac ends up in a weird state causing it not to function correctly.
-* pcie_aspm: ASPM is forced to enabled in 6.18-rc1, unfortunately
-  enabling ASPM L1.1 ends up triggering unrecoverable AERs.
-
-Patches are against the mediatek trees for-next branch
+Describe this following the same partitions as the openwrt configuration
+uses.
 
 Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
 ---
-Sjoerd Simons (13):
-      arm64: dts: mediatek: mt7981b-openwrt-one: Enable SPI NOR
-      arm64: dts: mediatek: mt7981b-openwrt-one: Enable software leds
-      dt-bindings: mfd: syscon: Add mt7981-topmisc
-      dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe compatible
-      dt-bindings: phy: mediatek,tphy: Add support for MT7981
-      arm64: dts: mediatek: mt7981b: Add PCIe and USB support
-      arm64: dts: mediatek: mt7981b-openwrt-one: Enable PCIe and USB
-      dt-bindings: net: mediatek,net: Correct bindings for MT7981
-      arm64: dts: mediatek: mt7981b: Add Ethernet and WiFi offload support
-      arm64: dts: mediatek: mt7981b-openwrt-one: Enable Ethernet
-      arm64: dts: mediatek: mt7981b: Disable wifi by default
-      arm64: dts: mediatek: mt7981b: Add wifi memory region
-      arm64: dts: mediatek: mt7981b-openwrt-one: Enable wifi
-
- Documentation/devicetree/bindings/mfd/syscon.yaml  |   1 +
- .../devicetree/bindings/net/mediatek,net.yaml      |   6 +-
- .../bindings/pci/mediatek-pcie-gen3.yaml           |   1 +
- .../devicetree/bindings/phy/mediatek,tphy.yaml     |   1 +
- .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 263 +++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7981b.dtsi          | 226 +++++++++++++++++-
- 6 files changed, 492 insertions(+), 6 deletions(-)
+V2 -> V3: Move earlier in the patch sequence
+V1 -> V2:
+  - Use numeric drive-strength values rather then defines
+  - Make nvmem cell labers more meaningfull
+  - Only define nvmem cells used in later patches by devicetree
 ---
-base-commit: d7d7ac9af8cb72e3e3816ae9da3d9ee1bdfa4f9b
-change-id: 20251016-openwrt-one-network-40bc9ac1b25c
+ .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 79 ++++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
+ 2 files changed, 80 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+index 968b91f55bb27..6bb98629f4536 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
+@@ -3,6 +3,7 @@
+ /dts-v1/;
+ 
+ #include "mt7981b.dtsi"
++#include "dt-bindings/pinctrl/mt65xx.h"
+ 
+ / {
+ 	compatible = "openwrt,one", "mediatek,mt7981b";
+@@ -22,6 +23,84 @@ memory@40000000 {
+ 	};
+ };
+ 
++&pio {
++	spi2_flash_pins: spi2-pins {
++		mux {
++			function = "spi";
++			groups = "spi2";
++		};
++
++		conf-pu {
++			bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <8>;
++			pins = "SPI2_CS", "SPI2_WP";
++		};
++
++		conf-pd {
++			bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
++			drive-strength = <8>;
++			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
++		};
++	};
++};
++
++&spi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_flash_pins>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				reg = <0x00000 0x40000>;
++				label = "bl2-nor";
++			};
++
++			partition@40000 {
++				reg = <0x40000 0xc0000>;
++				label = "factory";
++				read-only;
++
++				nvmem-layout {
++					compatible = "fixed-layout";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					wifi_factory_calibration: eeprom@0 {
++						reg = <0x0 0x1000>;
++					};
++
++					wan_factory_mac: macaddr@24 {
++						reg = <0x24 0x6>;
++						compatible = "mac-base";
++						#nvmem-cell-cells = <1>;
++					};
++				};
++			};
++
++			partition@100000 {
++				reg = <0x100000 0x80000>;
++				label = "fip-nor";
++			};
++
++			partition@180000 {
++				reg = <0x180000 0xc80000>;
++				label = "recovery";
++			};
++		};
++	};
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+index 130ce2fda3995..f00e5bf63de35 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
+@@ -156,7 +156,7 @@ i2c@11007000 {
+ 			status = "disabled";
+ 		};
+ 
+-		spi@11009000 {
++		spi2: spi@11009000 {
+ 			compatible = "mediatek,mt7981-spi-ipm", "mediatek,spi-ipm";
+ 			reg = <0 0x11009000 0 0x1000>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
+
 -- 
-Sjoerd Simons <sjoerd@collabora.com>
+2.51.0
 
 
