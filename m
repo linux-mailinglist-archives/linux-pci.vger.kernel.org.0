@@ -1,148 +1,162 @@
-Return-Path: <linux-pci+bounces-40313-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 612C2C34059
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 06:55:53 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4ABFC340C7
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 07:28:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF12018C2A67
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 05:56:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6FD44E23AF
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 06:28:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 513BF27FD51;
-	Wed,  5 Nov 2025 05:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED4D22C0292;
+	Wed,  5 Nov 2025 06:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4gylcHA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iq6FnMH/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B5A27F017
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 05:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C62BF005
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 06:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762322127; cv=none; b=HRHm2MNA/YQh2aiduYHEoCcbNvP6u6N6pRRvy/2a45jD902irpmMAtWiWAZvcZYYJDq8qKoK7Q1o7IaTc9FptcacaYEW99HSGFpBUPbS2Ppc4I8LZLM9PcEb5kF8rvN6sF0bUBCn30KWF6C42Z4LJ3Q+KqWv9BP/kVyIdBviExg=
+	t=1762324115; cv=none; b=byzQs+lmfscw4ip1y2s68FyguX2w/qUtAga/Xk6qbUMK7HBMb/DLumUJuOxMYYmeO2hMIcqzfZQeJJNL6LnX3a2ScMw3MZD2cLFueAd35zXpQDYxGYrJ4kaKpBUC5HvZu/Mt/Z5I7aRdskvSF5jA3Swvp9WTVt3EUZFUEUSAGPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762322127; c=relaxed/simple;
-	bh=e6KW0tVVBZqqo+yCeocl+kVIywhldeYMYDweLh5i3ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oeL2ffTNhEUM1B9j/77soXoicZ4gmXGTiyyTQ1rodMhszCSF1EvK8Jo/NEOdEmGBWHZnlWUfN9JdUjvKqdBCEdZSsFP1TTLvwB0cIdimXHXbdbFP/pD5qz2U0pj8f1bnNQX1Ota81TTk2HJWtZMi7j4wxM1P00jdChEvVfFxhss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4gylcHA; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7c6cc366884so328870a34.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Nov 2025 21:55:25 -0800 (PST)
+	s=arc-20240116; t=1762324115; c=relaxed/simple;
+	bh=3FiroJxrQIhTUXDgWPdJEs83lUs7Rhdwifkg2x3t8g4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YoFak1c5SJ+OgqVvQx1LugrVoD53uKs3fNjv5FBIB0XWG2CXXNGaKKtnxEqLkKdx+B6gVyFn3svN9AK8wCqj9YSpXDH5MavQvtcnBaTBPAu5n6p9s0HYb9AVS4fwMS4y6z8W39KsE3YODa7DoKoQ2vyygqVOWT61c8CdQOGA7gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iq6FnMH/; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34101107cc8so3063051a91.0
+        for <linux-pci@vger.kernel.org>; Tue, 04 Nov 2025 22:28:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762322124; x=1762926924; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fwi0DrEUoNTIOaZJZRTu2PMBRWvJKCPWH2oh77N1gps=;
-        b=S4gylcHA/mBnaGO9HJN4RM31KWMQG58fQgvZtWX1t15DREJc0kWIAsuobkKk4ppsn7
-         Lkm5s3tgWeYILeakLYup/6pFrQg7g92YuvOxI4CjIeJ7sRtgA9vyjzOL+95VQfzjnbhf
-         4hrKH4ZZNh++CR9I3XLKTYbQGIgnMB4optKopJdlBfdVNC5zyB53ErcPA0eKB2ZalkKh
-         jKpwe0JPfBqdpVlf+vPkRxjGcs3G0Fh1ndppHzN6KzgNN78gE6xTjc4P/tJ7Iv6DPOFH
-         zQe/vfgfEqFQYbLLz37hZowLS0LxF0XzzvjkTty4ak7GmGRRzGs36mpBzSdJYlhoNg9H
-         w8yw==
+        d=chromium.org; s=google; t=1762324114; x=1762928914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5H6EdMxDpSqpmsIQ4cEg0ZlQTdzaOtsaMR+Q6cSWnBg=;
+        b=iq6FnMH/OuAtEb9vxBIoCjdmrv76QSlxzb6NNHVDIFOe7RVdJ8+F8sz9Nw/7m1RlHY
+         4HLzCEyzDxpQllfhklhDllyX0m25HSyayobFMYKeposp1aEqZ4gErrpQBvM7/625a6tO
+         ClBwQCXqQbFXKGjYFe1IQmyN3UXM/Np5GlFps=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762322124; x=1762926924;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fwi0DrEUoNTIOaZJZRTu2PMBRWvJKCPWH2oh77N1gps=;
-        b=ZsFSs2b7xpjJcmu0XDU8XI2RNYT1L2LBTHDrI4ApvqwgbCjHAG8NmOd4ZjpPBK/Mw8
-         bZKHkjuD207IoqFpYd+fEuKwhxfvTn3f3AI+GzQ6Vr1XEQy8Obv/4cLtp0DBMzZLi2WF
-         pImFZX4akbUzefpBB92Th5WGfoDPBUQo8ajXcJVyE0EVlJfze30lxROXeHEeBCuKZj/+
-         6yX3PTCXxyY/et5hH8tzEfVlQpoNBB4WsOR3rkoVpYE9G+x7O5GiQwgsv4eDQW3LRIvv
-         n7IXksFZT0uci4NvFUNu2Io/IxYhK8d5O0FtE1p/OTu8Xg01YRqUu87gsxh5IMJoi/Zh
-         LXIg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4tI4eViXdA6MgVdCwhmlQUTH6KW/4FS5Rf0HL3wfFt0TA5V9I+xO33sCqqrju9CVad24j9/ONxgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDjUS1ou1liT1k10N6NB74p9loSd7KcfTNBRMpyOxuUL3Se7g/
-	S4QHmUvPMPteVU/aWRoqPsNnjA87n+/3hPKOPtoJXObbCPx0H/YUX3Cm
-X-Gm-Gg: ASbGnctiuTCG3ZfcD06yr0as8Ofni6pGt+tt9MKFMRZN75RLYGnmqy+LXAtJFBRIvhK
-	Mfo3R2TtLXtHzBchPlykrQb+od5cuboB4UGeRXC0QQFsCycQsK3KcdmrrsKyS4ls4y95dmUweB9
-	aaDbAAZWVT5qFN5jCQAn/d/vDCPKH0u8FXrenW/mCHYtUBNWcWmMvC9VBegvChSGPS91BIrnowj
-	2wPGETae2qd6qg9yyoLxrYRJIaqDVjlmVRoiwHpuLcKIpPEuIK/zWUNuaJ35kFveEfCaVcGyvHe
-	P8rE+K3NuO0sRIeQjMhahv8gkfVV5NoOsTNbMuqzcdh2lyOSJXwtbcKNYe5BBKMzH3PlKAwxVA4
-	SOrpcTszGsDBE3PP1wmiZwOBbfRK29NxBA3u17n4Ejjgi4+PHXZqHI7jl503+D64=
-X-Google-Smtp-Source: AGHT+IFEVR0qbygzze5iBfiTi1hOIxTOUWBa+aFthKdgTb9tcWOqhz0feyJ/iBoBrEyZdPQs0msfOg==
-X-Received: by 2002:a05:6830:63cb:b0:79e:69fa:6bcb with SMTP id 46e09a7af769-7c6d140f2e0mr1585902a34.13.1762322124566;
-        Tue, 04 Nov 2025 21:55:24 -0800 (PST)
-Received: from geday ([2804:7f2:800b:2cb7::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c6c2448c76sm1714476a34.2.2025.11.04.21.55.18
+        d=1e100.net; s=20230601; t=1762324114; x=1762928914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5H6EdMxDpSqpmsIQ4cEg0ZlQTdzaOtsaMR+Q6cSWnBg=;
+        b=BDk+tTM8GDtpaVyrUhgRT8S9DaqqC3jJGUVE7ADW6IHTIvxV0CPY3dc7uM4jdg+IZM
+         QcTphdoeY06ttKfunsBBvlrSmJzJYO7nMG0P7tWHjeGFHFFWvU7QVbGxqUjb6Y3ySYU9
+         8UTKok2jwB8+BOxR9C7/UUenDHiGO5rA56ZD+Sc6RTob3Pt0JxM/kXOvD7hmYLOkfzNX
+         ewHUbuoBpdZwiIgOypyBab7V1J0F+NyoLp7do6faCVSFKerBwK6IS1uTG+pt60n6v9P6
+         Mp3xt9tc8kL5beighfiNhdr6aIczOHaYrsxc5lu4PBEtAPPRaAGLed2Vi5ngDvP3K+n1
+         tSsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzp6+XPCOzLS2hFK2kTyoDBwRxvh1CR+h5VAzWDRJh/B4JDAYULhTcWubQVSRRfAtHkj4ePNQsONk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9nbJnehgszz2+cY4VacGjkGP6xq+ngY/BEAdCU4K31xVCu1vp
+	CJ4USUg4a8CC5+U8N8gwgmqVXVkeEFo3PICMVNQrkIC4piRTxfEbX8WpbT6KNKUg2g==
+X-Gm-Gg: ASbGncvFn1veCjLCSKfdlOX77644op65x3I+VhCmZnnUKCW/TZCefPIwIKZocNi2jP/
+	E48qLIzcSwb33pXyq493MGlWCqJJ/hg1WeunAIqmGZt7rnYSfQV0NoTBpYcNBRaaAtt3vxIom54
+	rjuIH8Wj2pljEshaqor6BClcFpvLEp5Y1CJuggIhR+P8ezg2K2K2TqisDJ09ALP9/BE2y2niXQK
+	cJuzUpLiS+zSzconchDyHfQ5R1ioFfNrC2uUhTgU/HjYZeWcPX7lWMrsB+7R69zjA6VZzbbAGw3
+	gtgfGOTTI4WJz4Pn2JvhPi7br5edCY2kysC4lKfdkOzdmgiTMNr6ec8dbwJbXsE+8mUhIUrRP3Q
+	BZFYSDlizdni2nMNvc9ykQRB7ADSdukoEpl2tEcHr076Ea7jpZ0Xc4P2I6cXJj7QZ4Qao0Du85H
+	6I3Ee02q178bEbsfDykwysQTe+pWQSVaXsw9N7Xl6vh8OFk8VHQFH2jRcB7TtNlEfLYBU+
+X-Google-Smtp-Source: AGHT+IHcxT8eopl534bKfusC4Hown9kjuaRa6MI3B1tgGIQ3dMjZZ/a/cIEyK3gcb84dHOtYByhoug==
+X-Received: by 2002:a17:902:f542:b0:295:2d2c:1ba6 with SMTP id d9443c01a7336-2962ae10211mr34787125ad.36.1762324113674;
+        Tue, 04 Nov 2025 22:28:33 -0800 (PST)
+Received: from wenstp920.tpe.corp.google.com ([2a00:79e0:201d:8:c3d3:7b72:a22e:7adf])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-296019bb9d3sm48438615ad.50.2025.11.04.22.28.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 21:55:23 -0800 (PST)
-Date: Wed, 5 Nov 2025 02:55:10 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+        Tue, 04 Nov 2025 22:28:33 -0800 (PST)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Geraldo Nascimento <geraldogabriel@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: align bindings to PCIe spec
-Message-ID: <4b5ffcccfef2a61838aa563521672a171acb27b2.1762321976.git.geraldogabriel@gmail.com>
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
+Date: Wed,  5 Nov 2025 14:28:14 +0800
+Message-ID: <20251105062815.966716-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.51.2.1026.g39e6a42477-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-The PERST# side-band signal is defined by PCIe spec as an open-drain
-active-low signal that depends on a pull-up resistor to keep the
-signal high when deasserted. Align bindings to the spec.
+As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
+common code") come up later" in the code, it is possible for link up to
+occur later:
 
-Note that the relevant driver hacks the active-low signal as
-active-high and switches the normal polarity of PERST#
-assertion/deassertion, 1 and 0 in that order, and instead uses
-0 to signal low (assertion) and 1 to signal deassertion.
+  Let's standardize this to succeed as there are usecases where devices
+  (and the link) appear later even without hotplug. For example, a
+  reconfigured FPGA device.
 
-Incidentally, this change makes hardware that refused to work
-with the Rockchip-IP PCIe core working for me, which was the
-object of many fool's errands.
+Another case for this is the new PCIe power control stuff. The power
+control mechanism only gets triggered in the PCI core after the driver
+calls into pci_host_probe(). The power control framework then triggers
+a bus rescan. In most driver implementations, this sequence happens
+after link training. If the driver errors out when link training times
+out, it will never get to the point where the device gets turned on.
 
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+Ignore the link up timeout, and lower the error message down to a
+warning.
+
+This makes PCIe devices that have not-always-on power rails work.
+However there may be some reversal of PCIe power sequencing, since now
+the PERST# and clocks are enabled in the driver, while the power is
+applied afterwards.
+
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+The change works to get my PCIe WiFi device working, but I wonder if
+the driver should expose more fine grained controls for the link clock
+and PERST# (when it is owned by the controller and not just a GPIO) to
+the power control framework. This applies not just to this driver.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index aa70776e898a..8dcb03708145 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -383,9 +383,9 @@ &pcie_phy {
- };
- 
- &pcie0 {
--	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-+	ep-gpios = <&gpio0 RK_PB4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 	num-lanes = <4>;
--	pinctrl-0 = <&pcie_clkreqnb_cpm>;
-+	pinctrl-0 = <&pcie_clkreqnb_cpm>, <&pcie_perst>;
- 	pinctrl-names = "default";
- 	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
- 	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
-@@ -408,6 +408,10 @@ pcie {
- 		pcie_pwr: pcie-pwr {
- 			rockchip,pins = <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
-+		pcie_perst: pcie-perst {
-+			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
+The PCI standard says that PERST# should hold the device in reset until
+the power rails are valid or stable, i.e. at their designated voltages.
+---
+ drivers/pci/controller/pcie-mediatek-gen3.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 75ddb8bee168..5bdb312c9f9b 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -504,10 +504,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 		ltssm_index = PCIE_LTSSM_STATE(val);
+ 		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
+ 			      "Unknown state" : ltssm_str[ltssm_index];
+-		dev_err(pcie->dev,
+-			"PCIe link down, current LTSSM state: %s (%#x)\n",
+-			ltssm_state, val);
+-		return err;
++		dev_warn(pcie->dev,
++			 "PCIe link down, current LTSSM state: %s (%#x)\n",
++			 ltssm_state, val);
 +
- 	};
++		/*
++		 * Ignore the timeout, as the link may come up later,
++		 * such as when the PCI power control enables power to the
++		 * device, at which point it triggers a rescan.
++		 */
+ 	}
  
- 	pmic {
+ 	mtk_pcie_enable_msi(pcie);
 -- 
-2.49.0
+2.51.2.1026.g39e6a42477-goog
 
 
