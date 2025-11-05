@@ -1,203 +1,236 @@
-Return-Path: <linux-pci+bounces-40319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40320-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAEF2C346DB
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 09:19:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBA1C347A8
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 09:31:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BACB318C0FE5
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 08:19:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 942163BD42C
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 08:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9F3526ED55;
-	Wed,  5 Nov 2025 08:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63CB239E9A;
+	Wed,  5 Nov 2025 08:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7cjMwe5"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SQ/onGAs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010063.outbound.protection.outlook.com [52.101.61.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EB31F8723
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 08:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762330732; cv=none; b=p9H96vWDo+pds/WPGefSdw6Jud4KxO0N/U8XeoujE229aEIsf1+JfzlBq6vl2tRHH9owIsgZHUxF5UigWkzfkHHTsGf/W0cQCmF8bt5+Yl75UHZaJulxSnp7w+k3F/MXa5eEc7Ay/tTUIW4vQ396GUFQGRLUSKbwyXqVNz0wjrA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762330732; c=relaxed/simple;
-	bh=srzN/PhkG7PNR7iXnFZ7dJAql7Ov3F3J4AFGSBOhmYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=insK5NajCZ0JKghVudfE1A8qYIzY4KgI5MvL35rKqH1EZXx2bXJu3c4yPse/HIDv+7Ts+u3puk7yv+wdvROpdaKxehUVnw0li5M3+HULveI6b9xRfJ2HhW+bfIUz1mIRc9E1OuwmISZBDjTHoFwENjbWGPA976rpXofoJJyBxkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7cjMwe5; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7c2816c0495so4177642a34.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 00:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762330729; x=1762935529; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=f+akL+KyD042Z4LrBke1JL7l0fksnlBHxMHBzPhw6II=;
-        b=j7cjMwe53BD8uEs466oSOHAsyt0ZLu+1lKNvdtxqw439AEimLTIlSMPSsp9N2PEKe0
-         iA5PR2e6Qy9WIvsG+RsCu25xiXzS2ZuHQtTOOWk8QQOjJDVqNE4Eli/9U5+n+0sy1xWq
-         /9upJkNz5PkP/Di6QsH/pNZMGWme1JiLxlT1Aw05+s4wVUZLddIzAjWuHYuRM0tT4o3K
-         1gCSDOxr0fuqCRBxVVvgp9nMOGTfEwd7FU6zohD1W8+YikjRP9a7EDJKqYrjj60Og0iH
-         m6Xk/2vfJ+GWKKTkqFed4vqhNY0Ek1df2Cujxg5rdiY2WFQUbHYa72kmO41aMR1vCwe9
-         HjJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762330729; x=1762935529;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+akL+KyD042Z4LrBke1JL7l0fksnlBHxMHBzPhw6II=;
-        b=nSERVz+4VjZvV2/k/cvHJgteilDPE1bte/5jzVOhIU+fpERw8mm0dm9vL1aMwzAtCC
-         WuejkUMAn9hemAh7OcNfbbDWWT5F5gkOV+iYG89I4Xjcvs7JOcN5OaQ1+A3v9zFqn6f/
-         FzlDSktPEC5I9QAKXtJYLjZCrA/7QcNfnXC3oYBe4lUSfmAfAXPif9vVZYVSCtqNIjBN
-         iUtdPlca7VGgo8peZ+Fr3xEI12KUcyPLeoEyKZU2rOn0Z/I4Lju1kZkowdZqioumB6zr
-         pQswmlYBJEjyVKpQcEzX1MzPjH/oxio8At5zGuZzhrrQ920T7K+B3JqkOOuDA9tW753x
-         z1fg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0MAb8MSTn3vrhQ5KcFQj79ZDlPTqufR7VRTqkZ+AQyNKvg8npwY3mQcrtCZx0MWwXS3LIsLFU5Ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj9cknSx/QnOUOg8+SwzsUpiWeaDRAKfsnI4VSG+tU+nmct8wC
-	vihini2o959bRiUe0FoAI+pjmpIBBMILQpqTfehCwQtaBBRI8I48tC1nSml97haE
-X-Gm-Gg: ASbGnctJ25cmn3984364dHTv/xgwaW1c1P0gx60iix2cZ7wxyWlZt1X477BG0zmQg/j
-	W1wvouUcYH3ofbA+qtSWCi4kLTv0oU8zG9k8TE+SXecTFm8yhDXSoRP+fnRh+F0DlbKTF8MFHrd
-	0AF1fskwnVWuVxmbtuFRWISIJfgYPcXjKdEs9u1eqvl0HWmJcVZqC9234gLKhDVAXPoAhvPNdgG
-	yQQ6yTW/BUJ+yZbbfPcxLu4R0FN5s6cs4KeeLFvKf7qJKVY6f/Bmu5hiMvJS1uktBQYP6JtgjKT
-	mJ1BPi6CtN9T4FTpMEIhpbqwyjtESX6vVYrDtuXwKMlzKYyS6e5+yVJ+ke33yw2IX9S5Hrf9rat
-	zcAlnlai7Qf+KI0VVBOdIaHjp2h8XHeLUKaeP/oB8BUpP7jGazWbHH754du/Mz8/VZYRpGAr9l6
-	rtXpLWxOo/
-X-Google-Smtp-Source: AGHT+IFK0yDdBhfOz1NBWCKz0vAwOt4g+DxeXHtu06KoBEwHDsyVZU+NDbMVBjZzuCxM5y2NLKriXQ==
-X-Received: by 2002:a05:6830:2650:b0:7c2:7b5e:8cb3 with SMTP id 46e09a7af769-7c6d141da8dmr1565084a34.31.1762330729550;
-        Wed, 05 Nov 2025 00:18:49 -0800 (PST)
-Received: from geday ([2804:7f2:800b:2ea1::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c6c2448c76sm1804557a34.2.2025.11.05.00.18.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 00:18:47 -0800 (PST)
-Date: Wed, 5 Nov 2025 05:18:37 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: align bindings to PCIe spec
-Message-ID: <aQsIXcQzeYop6a0B@geday>
-References: <4b5ffcccfef2a61838aa563521672a171acb27b2.1762321976.git.geraldogabriel@gmail.com>
- <ba120577-42da-424d-8102-9d085c1494c8@rock-chips.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CAC23B605;
+	Wed,  5 Nov 2025 08:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762331461; cv=fail; b=iJyQHlMcgSLGN8G7DBaD9MhHI7PFvxFWlgzBig/8Fsb7NcQKUp/TycOVjzPCvsYQrvhG908Ya3cS6Ql5I5IpNx1YjRJFq4Ss/4pOIn14abARr87FyxUSlumJJfhm+LcyxAWqIfJebpmc8ZW3WGuD7S/SRA1eglwFdxf6/pgueyg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762331461; c=relaxed/simple;
+	bh=F2j2bN5tOORsk+UtnPU0D0N+QOhhV3r2CLmwBbmn5VM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WGRyeq/wtjlw3vh9zsq22dwHqlxIpVG4Esf55ppNBUs4IZCiJlrFjGQPSuAt4N0zCUpEHrgy5lrGtWJSKk3CYOsFRj6Bm58sMX+OQvthTG3TE65OwlpLJgeuYSG+nnnIPC7M/vKtUKHDXp/QgJ8EKIGhQOyItiqeObzPlLEU+S0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SQ/onGAs; arc=fail smtp.client-ip=52.101.61.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bums83ud3S0Uqw3B4W/NW0joCTUI+OAk530A+8HHR2RAG0dNemD5yY4z8OZ0t4T4aKFx1CS13XXC3YdMBKgzUbljVBujFwoNhV2p9TvUSFeyjHZwGZG8/xI68IWK1OM4vB9XsvNIc5AzzZASjoMCJM3kJ2LlQzPxY9TivYeEDttztcQfwk0+Ro0m14KBpGu6ZTxY+CM65hUTwhP/pGYLMZo9GH0QJsSteladcjLk+4RsOmIZSDgtCLEyd9Vmo86ioe1PqJ3pt+Z3PR5SfcCznxc5BSCdgIwEPIWeyDuKkwf+G69SpOF604TnZWx/1N7mgQ5gQe9EOxnHC3N8PM5Z8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H4q0txgax2kuYLnBJh+SL+9ZfuwpvhxQAzBGsODDCN4=;
+ b=sfgneD1PONw0xl/lMhy0HgigUrVdtYHNWvA3G8Pz9WhEJvJF7fsvELANNCVkfie8yKO+R2AhxD80E5c9hXCqY2hHBhhYnFoWCk/ykKTkVYdl3szRI7kt5BAHwAw3LX50Qn99s3EGg1kLE0oedg7Tv9rKmJYdIPxipftzzqCZBCeXiSFRPGprA2MIl5rAc/sdyz+L+4i1TmlZWrc+uCEQENl05lCR1pWSn5i3lmEFYHEHYIpKhqXNFRhNGD3xWJxu/V5oOB8FyUVMm0cfuhGXQ2BIjbE4h7IKPCTZtcGcWK8ECditYH9Me/q3H6TSGpzHN3o/57RBOKhj5DGfVCkctg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H4q0txgax2kuYLnBJh+SL+9ZfuwpvhxQAzBGsODDCN4=;
+ b=SQ/onGAsrl0mD2XaCW2mCn8E1wCRKk5uJGK1MWHVMsm/D+nPbzKQgxEx1UtL7r0CxhVFN35lL0qqbnfoIAzhOconJTspwIdjz1J2nUfvNqfCQc8J0N7VvJJectySzLA56ojKyjy9mviKBL4BQJzvIYWMuwkq6Ne7NbOyPlQDbEY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by PH0PR12MB7908.namprd12.prod.outlook.com (2603:10b6:510:28e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.7; Wed, 5 Nov
+ 2025 08:30:56 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9298.006; Wed, 5 Nov 2025
+ 08:30:56 +0000
+Message-ID: <142695fc-324a-4916-a569-e11d8342805b@amd.com>
+Date: Wed, 5 Nov 2025 08:30:50 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v13 13/25] cxl/pci: Update cxl_handle_cor_ras() to return
+ early if no RAS errors
+Content-Language: en-US
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-14-terry.bowman@amd.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <20251104170305.4163840-14-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0128.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c6::16) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ba120577-42da-424d-8102-9d085c1494c8@rock-chips.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH0PR12MB7908:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7dac533-b0ca-4993-5ecb-08de1c45a3f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NjkwZlY4TTdNNW82cE1mOUt3d3k0Z1dzZURFT2VwNTdrT1ZqRFBLbDBMQ29C?=
+ =?utf-8?B?RUR4cE9vSUpIMGdkdHZPdWp0MWVRUVM0S0RtZHV4NVYxUElkYjVVRmY0VnRO?=
+ =?utf-8?B?TFp4M1J2WVdsMDdPRGJPdUR6S09SK3VIUC9EZTlISm1RbmkzL2dLZkR5ckRF?=
+ =?utf-8?B?SGI2RE9kMWdsdHM4aHpBL2prb3pDbzd3bVcyNFNGTlFDdTBwUkoyU2pOTWQ0?=
+ =?utf-8?B?M2htU0owbGdRWmlRTGV2VXNDNDkraEl5blcyb1hIU0VpNFVYOHQyT1NvRnVo?=
+ =?utf-8?B?ZW5KUFRDWEtnU1hNa1NqYmlJaVowUmFLU3MyN1VMSkxubFVmQ2NEeGdQd2JO?=
+ =?utf-8?B?TVNCV0crK2VQdGtKd0FnVE9BVENkRVJYbmU2dzM3dDFYYjhkTGlENFFOMDlG?=
+ =?utf-8?B?azdEdHc4U240bTdsQU9RajJvQS9qdnU4UkdkNzFrUzIxWkw2a1BnQ093aE9L?=
+ =?utf-8?B?OE5DYnFmQnhiOFBCcEZxY2VqNnlaakpEV3ZWNjU5YUIwTWVzM0ZmcTkzSkE0?=
+ =?utf-8?B?NS9sV2VYZ3l4K05OeGlpaWVGenFVK3JwTTBXTE9VQnI5b3VmLzQ1Y3N4S1hH?=
+ =?utf-8?B?NzMyeGlrbTFtWmpibEhCU0o2UjlFVmtyWk15MVBwbTRWQVBPSUEwY1o2Y2lr?=
+ =?utf-8?B?VThnV1VGVXYzQjlJNWx2aSs2WXo3ZGp5dTM3c1FWaEJGVkxFc0RheUtKU3Bs?=
+ =?utf-8?B?QXQ3eDZBT1k0eGVnTmVkbEVCZytTRlcvYlhCZU1wZ0pXZk9hcVRGSGMyYlZY?=
+ =?utf-8?B?bkt0a3RqZXI0REt5K1Nsc0hUalBMZzY1SndtSENHdzFBQjJHQnFhNUFjY01l?=
+ =?utf-8?B?L0hUMVUwSFNzcG1rQlpBeEdHUzgrVEE3SW4vU0w5MXdOWDQzSkp4bUREcURL?=
+ =?utf-8?B?eXNkNFRxeFJ3WERKa3NGQ0RiQmkyb1lIV2pKcTBrSS83bThZcnpadkVqN3hB?=
+ =?utf-8?B?QUwrY1gxQ0l1eDF1QUpRakVQS0gwNWlITWxPVWkxeFF0ZExrRDNOT04wZ3R1?=
+ =?utf-8?B?N1VoR0VYaTIwTUJ4WTFuSk5lZVdwVWtlSFphZm0rU2p6NVZaRlM1Z3p3WW8r?=
+ =?utf-8?B?WmhkV3NDbmVnMHV3bFdaQ0MzK1lqMnk2WHp2djlabitmdzdGRVNEeTNWaG9i?=
+ =?utf-8?B?RGFrQWw4ZGR5UC9uVG1MNStlNFJGTDM2dklPZ2ZWV2prQnE5S2lOMEZicHlr?=
+ =?utf-8?B?cXFMbVFXTHZpbU1IN0NSMWozOWMxc0VhZEdKc2gwU0wzNWNyNnUzNHQ4V2pS?=
+ =?utf-8?B?dVhWUlorZWxya2RMeC9XcWl0K1VrOEFyMmI5cHFMNzFHZnFoSWJpdDI2K25z?=
+ =?utf-8?B?WmJRZFJHNDFTcExMN2VtRU5HQjg4Z2I2cFdIb3ZjYmVWNmozN0pwYWFSalFx?=
+ =?utf-8?B?N0c4ZStBek43SFFUVkxRKzUvazNRM0RQMndQZTZBRG5LakNCTFdnaFFIMDY1?=
+ =?utf-8?B?OGtzTFdscXhUamFVbXJQVlRLT3dDY0JxVUtwNFdXb2ZqSU9UeGExdjN3bnNo?=
+ =?utf-8?B?WWVWZ2ZrVDhMa2U0cTV2NThDM005b2lsaVdMNkxHMENFd1J1Z1A3UlJyQWs0?=
+ =?utf-8?B?RjhhaFhCWW43VzlqM3cyOVg4dXdHQjc3UldPYkUwLzBMcUFPOFpxaTJJVVU3?=
+ =?utf-8?B?ekVKNGM5OG5ReGJMdjUxYXVPTFg4cjd2bnE0OEszLzZRN0wvc2Z0c3A0VmVO?=
+ =?utf-8?B?UklSdVRYRG5JSjhXMXZVLy8wbW1xTlJrR0duUFpPNzBCbTU5WUZzYU8wZkI1?=
+ =?utf-8?B?b3doTTNWeUQrakJmd2lWc3JNdmV6TExUVm1kN3puUlVVQkg5ZWIzQUg2SHBJ?=
+ =?utf-8?B?MXo4VjFFMXBOMGlmUGdEWVg4T3JzM1RqTisxZ2J5Mld2WGZvaDUvYlF4ZmIz?=
+ =?utf-8?B?dXpPcXhJQ28rVkRTYzBUNFd5Y05hYVgxV0xoVGZLMHBVRHBWQmxrQ29sTUta?=
+ =?utf-8?B?TEtTUFp4L1NmM201cGxsUVpjZ2grbGFGUlBIenZOcUJrcTJkaGJ0S3NQWDZt?=
+ =?utf-8?Q?GpqgiFpzAYxHGgwxwbImZK4tHkxEgo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a2QwYWpJYndiRll6dU11RW1HeFYyRTA3dE5qTXQwbXBEMjhuNUhDemZiOXQ4?=
+ =?utf-8?B?QXZzTWNkNHlSU2NOQjZicFZ5aWRYOUM4VFdCL1ZBMG9CSzZnMFh1RHpGRzNv?=
+ =?utf-8?B?MUxZSmZ3MnhBUzZ2dWc3aW5ML0tBSEJjWFR1VjFaMFk1cFg3TlBSSmlZUWtr?=
+ =?utf-8?B?UURPYVpvdndwSGMzN0pnY3NHNWhRdDA0eHNYbjdFcVMzUGhiNk9kQlY5Z2gr?=
+ =?utf-8?B?NXdTY053a3I2OStRbll6YVFkWmxDUWxpRytzVVRZRkFnUXRxbmZpaCtBYkpD?=
+ =?utf-8?B?R0Q0Z0Z3SndibnhxbmplNHhCUmZ0WWtJOEhwYzlLL3FNWk1IVlBrYUZKbDUz?=
+ =?utf-8?B?bXl3U2Q3MDZVNkI2SDBqd215YUl5azZVeUlCZ1dRVDdldzZmcHlNMWI0bHFY?=
+ =?utf-8?B?Ty9yUnRlaC82ZHlTZFAzSUduMDBicjJJR1l3cVVMT3FtTjVxSjRJT25Sdzhp?=
+ =?utf-8?B?MFNtak9LS29Xajlra0dybXNRMFF4UWpmYlIxYzdYRHlSVHVJV0lMSWdORWsr?=
+ =?utf-8?B?WjFVWUxXTXhkclg2Y1dZaWRIb2t0Q2xxd3oxT3d4d3NicE5IK2FBUmQ0a2ZI?=
+ =?utf-8?B?WlZVdENBWnpFRDdnMzlvNnpDcWVGb3VDS3Z6U2pMM3EyU0FQM3VVMlRDS2sx?=
+ =?utf-8?B?NWRBWnhXVFh0VHVOeHNSV1pleEh6bC8xLzRWMUczdVZqK0kyS0hXaDJLTHZ1?=
+ =?utf-8?B?STR2dGRoNE1Gd2w2VW44SktOYlRMaFFTSlp4a0xYa1p1N1AvL3VmWDhQYSs4?=
+ =?utf-8?B?OG0vNnYvVnNUbW1KeEp2RXdNZ1Q4SVcwNTQ2bGp2T3dlZlY4UzVoUjRKcWFT?=
+ =?utf-8?B?bkxFanRFN2pGZTFnZXlFNld2d2xlc1owTmRqWXpQSm1xY05xbWxreW5JR3cr?=
+ =?utf-8?B?TzRTdzdHL2hsTGlNMUJBY1d4dkV3VVFMV3VXY2N6NTZhY1Zqcm82Ty81aFR2?=
+ =?utf-8?B?R2ZVYkxQR25jNElpajYxSGV4dzQxak1XK1FtbjVIWm84N2xZclZmdnM1bTNQ?=
+ =?utf-8?B?aFBzOTBMclJUVnVmMzR1cUZlQXdGVHh3em1KZFp5NUQxKzU2dzFMNkVUT2di?=
+ =?utf-8?B?ejBseEttemh6YTFHbVFtdTdVQjhobVdqNjA0VzRWcTdIbFowWXY4MjVhbDJr?=
+ =?utf-8?B?YTQ5dWRHbG9jTmtmL2Q1YS9qQXg1R3pxa1F0NmpxSjJpdUxLOTJ4MDNsUnJW?=
+ =?utf-8?B?dUMrbWZWa2hXNkVpNExSeGdNMjB1dzNqcjRERkIzK3FwYWVMZktsRmNNdTd0?=
+ =?utf-8?B?UURBYjJLT2d3ZXphY1JKTXp1T0VVSHFNVnZRWHVDY21zdmZxT2pZYXZ0QTVY?=
+ =?utf-8?B?K0dUM1RnNWJDaThWbW83NVorbFNoVkpWWjY0U0dtSU1ZSGwrV3FZZm40bS9T?=
+ =?utf-8?B?amNPU0dQSm14d0ovMkcrcUlOaEVnVVgxYnlDcWREOWdlNVdLTkJvOVR3UnNp?=
+ =?utf-8?B?SnZYQW9CdzBTNW15UzlJNUIyQkRnQXdsc3lkNEVZYXlpUy9XbmdhZ1c1a1ds?=
+ =?utf-8?B?UFIrblEvbWVsV3RLU0ZoSGg3YjBmODdYK0VjbUpDWWZoSVFXOFJIZWZPMS9v?=
+ =?utf-8?B?N29uaFF4bG1MMm5hMjNLYjFZRVBoQzArMUxERk1pWlJ4d0puYjNFTUdOYmtM?=
+ =?utf-8?B?OVhNZ2dYbzFGMjVnV2NWblVIUDl6UlE5NElhMWxsQXVEQlFLZlBaNHJxS2Js?=
+ =?utf-8?B?NDVzb0ZUUjBQaytZZ3dzK3RiM2JsWGV6MlZEdnZCTFY4dGU0dWM3N2RMbUNO?=
+ =?utf-8?B?MnI5bi9Td0tFRVBydlJ1d0Y2dzZEczlVY0JsS0FHa0NGdU90eWtHZmRHLzVo?=
+ =?utf-8?B?U3ZKVGE4ejlmWjhZNVJtNnVEWk1jV3RudmJEZnFiU1BhSzJsS0V2YjByNmcz?=
+ =?utf-8?B?ZTZ1RklrQ1VGd09ZMi9RTnJuNk9JU3hGMm03NlBVQkMwVEdlcW9nQ3BEbWRI?=
+ =?utf-8?B?OFhMRlNBelZ4T3ZYaVhVL0JtR1lGcTI5K1RYN2cybFNpQWNHRm1ISXc3UUFv?=
+ =?utf-8?B?QW5jSzQvSGZnem1CRkhRdWI0UzBFQ3Q4SGkwcWs2MHljTTBLRmxQYjdybjhH?=
+ =?utf-8?B?Ly9ZREUybTlsTEd1bkc5MUhjeWlkK250WVRWL3IySTN3aHlGNnhSZWNqMGdL?=
+ =?utf-8?Q?xSzCWWKfnGBzUy+Ck2qCMnFmm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7dac533-b0ca-4993-5ecb-08de1c45a3f3
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2025 08:30:56.3838
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gP43LF0g8oLef8HTKr6Umdc8+fU26cix2FYBwUJMOTcyTQxOm2t0t+hrw1e1totQy74lRS3K6Bk/IWyemxgwUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7908
 
-On Wed, Nov 05, 2025 at 02:35:28PM +0800, Shawn Lin wrote:
-> Hi Geraldo,
-> 
-> 在 2025/11/05 星期三 13:55, Geraldo Nascimento 写道:
-> > The PERST# side-band signal is defined by PCIe spec as an open-drain
-> 
-> I couldn't find any clue that says PERST# is an open-drain signal. Could
-> you quote it from PCI Express Card Electromechanical Specification?
-> 
-> > active-low signal that depends on a pull-up resistor to keep the
-> > signal high when deasserted. Align bindings to the spec.
-> 
-> This is not true from my POV. An open-drain PCIe side-band  signal
-> is used for both of EP and RC to achieve some special work-flow, like
-> CLKREQ# for L1ss, etc. Since both ends could control it. But PERST# is a
-> fundamental reset signal driven by RC which should be in sure state,
-> high or low, has nothing to do with open-drain.
-> 
-> > 
-> > Note that the relevant driver hacks the active-low signal as
-> > active-high and switches the normal polarity of PERST#
-> > assertion/deassertion, 1 and 0 in that order, and instead uses
-> > 0 to signal low (assertion) and 1 to signal deassertion.
-> > 
-> > Incidentally, this change makes hardware that refused to work
-> > with the Rockchip-IP PCIe core working for me, which was the
-> > object of many fool's errands.
-> > 
-> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> > ---
-> >   arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 8 ++++++--
-> >   1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > index aa70776e898a..8dcb03708145 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > @@ -383,9 +383,9 @@ &pcie_phy {
-> >   };
-> >   
-> >   &pcie0 {
-> > -	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-> > +	ep-gpios = <&gpio0 RK_PB4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> 
-> So my biggest guess is we don't need this change at all.
-> gpio0b4 is used as gpio function, the problem you faced is that it
-> didn't set gpio0b4 as pull-up, because the defaut state is pull-down.
-> 
-> Maybe the drive current of this IO is too weak, making it unable to 
-> fully drive high in the pull-down state? If that's the case, can you see 
-> a half-level signal on the oscilloscope?
-> 
-> >   	num-lanes = <4>;
-> > -	pinctrl-0 = <&pcie_clkreqnb_cpm>;
-> > +	pinctrl-0 = <&pcie_clkreqnb_cpm>, <&pcie_perst>;
-> >   	pinctrl-names = "default";
-> >   	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
-> >   	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
-> > @@ -408,6 +408,10 @@ pcie {
-> >   		pcie_pwr: pcie-pwr {
-> >   			rockchip,pins = <4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
-> >   		};
-> > +		pcie_perst: pcie-perst {
-> > +			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_up>;
-> > +		};
-> > +
-> >   	};
-> >   
-> >   	pmic {
+
+On 11/4/25 17:02, Terry Bowman wrote:
+> Update cxl_handle_cor_ras() to exit early in the case there is no RAS
+> errors detected after applying the status mask. This change will make
+> the correctable handler's implementation consistent with the uncorrectable
+> handler, cxl_handle_ras().
 >
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 
-Hi Shawn, glad to hear from you.
 
-Perhaps the following change is better? It resolves the issue
-without the added complication of open drain. After you questioned
-if open drain is actually part of the spec, I remembered that
-GPIO_OPEN_DRAIN is actually (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
-so I decided to test with just GPIO_SINGLE_ENDED and it works.
+Reviewed-by: Alejandro Lucero <alucerop@amd.com>
 
-Thanks,
-Geraldo Nascimento
 
----
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index aa70776e898a..b3d19dce539f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -383,7 +383,7 @@ &pcie_phy {
- };
- 
- &pcie0 {
--	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-+	ep-gpios = <&gpio0 RK_PB4 (GPIO_ACTIVE_HIGH | GPIO_SINGLE_ENDED)>;
- 	num-lanes = <4>;
- 	pinctrl-0 = <&pcie_clkreqnb_cpm>;
- 	pinctrl-names = "default";
+> ---
+>
+> Changes v12->v13:
+> - Added Ben's review-by
+>
+> Changes v11->v12:
+> - None
+>
+> Changes v10->v11:
+> - Added Dave Jiang and Jonathan Cameron's review-by
+> - Changes moved to core/ras.c
+> ---
+>   drivers/cxl/core/ras.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 599c88f0b376..246dfe56617a 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -174,10 +174,11 @@ void cxl_handle_cor_ras(struct device *dev, u64 serial, void __iomem *ras_base)
+>   
+>   	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+>   	status = readl(addr);
+> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> -		trace_cxl_aer_correctable_error(dev, status, serial);
+> -	}
+> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
+> +		return;
+> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+> +
+> +	trace_cxl_aer_correctable_error(dev, status, serial);
+>   }
+>   
+>   /* CXL spec rev3.0 8.2.4.16.1 */
 
