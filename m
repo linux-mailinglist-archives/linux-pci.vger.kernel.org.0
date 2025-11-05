@@ -1,388 +1,233 @@
-Return-Path: <linux-pci+bounces-40434-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40435-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2EFAC3825C
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 23:09:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C966C382FC
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 23:26:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38D201A205D0
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 22:09:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F77B3B7FFF
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 22:26:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0032EF65F;
-	Wed,  5 Nov 2025 22:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F4F22F1FD5;
+	Wed,  5 Nov 2025 22:26:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hwmyqx6m"
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="F0y7+4sY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303B92EE5FE;
-	Wed,  5 Nov 2025 22:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77422F12C5
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 22:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762380567; cv=none; b=m5zh77xDG8+VfFciiCZ2JiaIaSO8Z4bOKwq/SO1BuepB/FD0h2CwbpLtCwSMEIpUc2s8a3sBY4jkt8zB0GG6vDCN5z99qMJE7JTgS1GO+yK677UYQq6nGoC86FjEiBjPuNh5YCuS+sYFnplpyUzX2J4Q7IFGVtR1PewT4klJ9kQ=
+	t=1762381570; cv=none; b=UgzjMh0j8OiJZ2rKT3riTAPK0R1beMymZZyUxe89W14o5ysqay2aAKHo0JhuvPJG1Iwe37sZOLANSPIheFdbAfQ9R9VqZNra9qsJboyJ+eJiLoBUQTRLE/P/AHq7ouSblb3q6ms/iCwE+Ic8W8PrCWzmWStsl3q1ENRlSW2vmFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762380567; c=relaxed/simple;
-	bh=Kdf3RStyU+2pisw35rSsTNL9OxNIVbABNhD8/Es6/rE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=d8L/e6Vqk3cNN4JSZgWwVJwcqOx4iYoBlCIQAoWWFliSmP2CgxxmE4SZQoAYO0PO8qt1OErn4XDCff0a0ecuvAJ8Kqdm9yhdT+ICweUIbVbtmcTQumuNCpmQZ39vp1a7Uon1kKmY4c+onE1QQ1pcjKv8JnwR/gomJYl8JvDP6zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hwmyqx6m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A001AC4CEF5;
-	Wed,  5 Nov 2025 22:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762380566;
-	bh=Kdf3RStyU+2pisw35rSsTNL9OxNIVbABNhD8/Es6/rE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Hwmyqx6m2A0p60xFJl3/+xrDi1Fztj/nvdOhoGCSlQ2kNgmuRG+hnotQCZAIt2PHk
-	 oJGgfv2Y0IVzB0ZeuKS2s+K64kEEsg+dM4pdkNj3TclQEoqslefWMMTab1jorgQd90
-	 ibI//FLxMeWaLwBhadwJxtJNrgoiuPB3ELC9aO+mUDqEtLVWTYRi6W6fGt/bprizFV
-	 fFlGALu2rK8QHimGRVcx/J5kR8sTQMg2pnDXAXioHNS03gqzodngmpjvw/ks1Z7m5n
-	 xP7h/MjTJYGbgBnOSeK9e6+MdrgYgpILimykfD1zfxXvmqkAOpA2bzGhwa5kkhB54v
-	 WYoHWhadu7siQ==
-Date: Wed, 5 Nov 2025 16:09:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	mad skateman <madskateman@gmail.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	debian-powerpc@lists.debian.org,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
-	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>,
-	Roland <rol7and@gmx.com>
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <20251105220925.GA1926619@bhelgaas>
+	s=arc-20240116; t=1762381570; c=relaxed/simple;
+	bh=fb292zlEezfUJ98xZheff1VZ14Z92RUCuFi12mvIEfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OjES5c2pZgpMg7rqRaOQ+DNVI4FZ15uU4K3CEhC0aM0k/OtCzFOfoIS2kjX+6UW0HS39bS2XW6YHYTm8Te+LMRzI4y6wEp7HvNctDuR9DoETx/sxqJ3T08WJHN6yXqHN76feb72Bw7ZcKgYBMXVV1TCbgFnELhQJW4maNOAhkt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=F0y7+4sY; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-89e93741839so23235985a.3
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 14:26:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1762381564; x=1762986364; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPJXVCzpkSpBdBb83PCDJUzRglYtIsatm0yX8U+Anzo=;
+        b=F0y7+4sY7E0va3BoJv99e5X9wOsJxNzUOcI9EEBo0vrXOd+4KSgP1gsoXOCPgJQ1ae
+         /zxmT8tkWEX6EOfXKtHMODP0Y1r4yUxwMgnM8A1VZ6/jw4puM2gEAn+ryxXERJlYY4mm
+         4KwfIEJTI5OvUBpsI/YuxqpvSrluBpdokhpPsq4hnwMm94uoVdnXSwpXM+RDcra0Yu60
+         cUMmFJ+EUKQAl4eV1acxdiFh0K6w4pwQFd3Qhh8tJ8t/z6Ju6Ni1rCDy6HxJ2PFxjDjq
+         Tm2m4uSwLEGEZCBWIjnQRjr2o6sOHardn7C+cETrp7rzKOFMsm9vN6z1+JatlTBql+Hp
+         qk7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762381564; x=1762986364;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WPJXVCzpkSpBdBb83PCDJUzRglYtIsatm0yX8U+Anzo=;
+        b=YWTpGmHfnA3Do/K8tU3mbHO/9ZFU2Zd0Wc9PX6f1lR9NfiFP3dVfJ2wrCAWmejPJai
+         oP3cjFwpD5JplluOMqi8o2ROw/HyXU6F3eiv0Dv/QOm36Ww0scwEXFN0HHG9JMUEnIbm
+         g6VCUKPSYkJ1C8wB8MiZphbdlYFfNUO+HO0D2rEbvxH9PLEhlEPt5LJBv3g+ZkhFN1A5
+         UFcQxmediSfsy5H+tNCDY1nmMVqNF6Fxl9PiCKvCR9/xPgmz7ZQ3pdGJzXrGv3WOoUzc
+         mnnGckDaclozmAMrhJULs16B0RxxEanGZaD7aiPZeRcCY0YqQDNAMdFeAHALK2OrobWi
+         2naA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrO1ovkD74Ml4fhpZj48wpg1BRJnp1O2zUbtQcNKqapqqtyarZaPZhrhdRnohvvwg5da2E8M8vdog=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4OzVFad1hKJocepKYQJ6aeJlDkMDnP66ix17qb/kAnsQ1KMUd
+	qSg9/1SbNEWzd0mLg1ZMUdXOblCZhFp3Lc/IqE/Xi93R67qMsdASGZ2+5yxL8xtcQgw=
+X-Gm-Gg: ASbGncuk0Ul5QBCF0F1CHw8bvdT9KjnFXdFYbDfJ7zUnxK6pVUSuxjeXofw3McaxC3z
+	dASntnzt7OusdL+EsFMhzPVh38K+Q91mGL+E6xH+TY9z+L2ld0lhN5O3BVokCpnVq3bp9SZU69g
+	7rJ1Bcl+bQZgk6IAGU1DjI/MniKD0tHQwsSM93Q37caX2wggzlaYJIEYdL5d/fZWvgthdsdE6D4
+	3pJq26d0ey0tpFWZq8pt712JX7uYMpHuZkLurSspXjwX7JXbBd4T3QLpeS/VmiTvt5vxJY2PTQ4
+	L2mSf0NV0tNM5JJO0cgwg6DAOxVwy7P9gWLdoNfFVyo664dxeC8Aa3ZpeXZflg7RItN+qSQMr51
+	+BamK5YoHbM36mQWmVGdAS9alry7JfR09HRxQ6iEs/vTKAXbIUF46HD+rjmPDyAaoacosVcmY5U
+	5gaMsjUtpbzbuKwCgHeigISt5F0ClYQve0IK6ZjwldZayIgaw8zj9paiVEcvg=
+X-Google-Smtp-Source: AGHT+IGKAyeJ9TLov73WaqTicHNOCiHYLdqb1f+w5zGiAKDCTJ0LO7K9L9cNEmuqoRqNds35jwnbgA==
+X-Received: by 2002:a05:622a:d0a:b0:4ed:7f5a:c6d8 with SMTP id d75a77b69052e-4ed7f5ad803mr24070971cf.41.1762381564451;
+        Wed, 05 Nov 2025 14:26:04 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-880828f5b32sm6116936d6.16.2025.11.05.14.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 14:26:03 -0800 (PST)
+Date: Wed, 5 Nov 2025 17:26:01 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	lukas@wunner.de, Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
+ for bound driver
+Message-ID: <aQvO-eBboCOhRDOO@gourry-fedora-PF4VCD3F>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-18-terry.bowman@amd.com>
+ <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+ <aQufg2Nfq8YqkwHl@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d93eac4d-b382-97dd-d829-98aef6695204@xenosoft.de>
+In-Reply-To: <aQufg2Nfq8YqkwHl@gourry-fedora-PF4VCD3F>
 
-[+cc luigi, Al, Roland; we broke X5000 in v6.18-rc1 by enabling ASPM
-too aggressively; Christian's original report is at:
-https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de
-I grubbed around in lore for other X5000 users who might possibly be
-able to help test our attempts to fix it]
+On Wed, Nov 05, 2025 at 02:03:31PM -0500, Gregory Price wrote:
+> On Wed, Nov 05, 2025 at 12:51:04PM -0500, Gregory Price wrote:
+> > 
+> > [    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
+> > [    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
+> > 
+> > Probe order issue when CXL drivers are built-in maybe?
+> > 
+> 
 
-On Mon, Nov 03, 2025 at 07:28:19PM +0100, Christian Zigotzky wrote:
-> On 11/01/2025 06:06 PM, Manivannan Sadhasivam wrote:
-> ...
+moving it back but leaving the function seemed to work for me, i don't
+know what the implication of this is though (i.e. it's unclear to me
+why you moved it from point a to point b in the first place).
 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index d97335a40193..74d8596b3f62 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev
-> *dev)
-> >   * disable both L0s and L1 for now to be safe.
-> >   */
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080,
-> quirk_disable_aspm_l0s_l1);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451,
-> quirk_disable_aspm_l0s_l1);
-> >
-> >  /*
-> >   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+(only tested this on QEMU)
+---
 
-> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately it
-> doesn't solve the boot issue.
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index ff6add88b6ae..2caa90fa4bf2 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -12,8 +12,10 @@ obj-$(CONFIG_CXL_PORT) += cxl_port.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
++obj-$(CONFIG_CXL_PCI) += cxl_pci.o
 
-Thanks for testing that.  I see now why that approach doesn't work:
-quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
-updates the permissible ASPM link states, but pci_disable_link_state()
-only works for devices at the downstream end of a link.  It doesn't
-work at all for Root Ports, which are at the upstream end of a link.
-
-Christian, you originally reported that both X5000 and X1000 were
-broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
-df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
-platforms"), but I would love to have confirmation of that.
-
-The patches below read the PCIe Link Capabilities that tell us what
-ASPM link states the hardware supports, cache it, and use a quirk to
-remove the states we think are broken.
-
-Since these are just for testing, I didn't want to start a new thread.
-If anybody is able to test this, you should be able to just apply this
-whole email as a patch on top of v6.18-rc4.
-
-Would appreciate the complete dmesg log of the boot if possible.  This
-patch adds a quirk for the [1957:0451] Root Ports in Christian's
-X5000.  If ASPM is still broken for other Root Ports, we will need the
-Vendor and Device IDs to add quirks for them.
-
-commit 9d089f88fd66 ("PCI/ASPM: Cache Link Capabilities to enable quirks to override")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed Nov 5 12:23:38 2025 -0600
-
-    PCI/ASPM: Cache Link Capabilities to enable quirks to override
-    
-    Cache the PCIe Link Capabilities register in struct pci_dev so quirks can
-    remove features to avoid hardware defects.  The idea is:
-    
-      - set_pcie_port_type() reads PCIe Link Capabilities and caches it in
-        dev->lnkcap
-    
-      - EARLY or HEADER quirks can update the cached dev->lnkcap to remove
-        advertised features that don't work correctly
-    
-      - pcie_aspm_cap_init() relies on dev->lnkcap and ignores any features not
-        advertised there
-    
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 79b965158473..c2ecfa4e92e5 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -378,15 +378,13 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
- static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
- {
- 	int capable = 1, enabled = 1;
--	u32 reg32;
- 	u16 reg16;
- 	struct pci_dev *child;
- 	struct pci_bus *linkbus = link->pdev->subordinate;
- 
- 	/* All functions should have the same cap and state, take the worst */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
--		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
-+		if (!(child->lnkcap & PCI_EXP_LNKCAP_CLKPM)) {
- 			capable = 0;
- 			enabled = 0;
- 			break;
-@@ -567,7 +565,7 @@ static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
- 
- static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- {
--	u32 latency, encoding, lnkcap_up, lnkcap_dw;
-+	u32 latency, encoding;
- 	u32 l1_switch_latency = 0, latency_up_l0s;
- 	u32 latency_up_l1, latency_dw_l0s, latency_dw_l1;
- 	u32 acceptable_l0s, acceptable_l1;
-@@ -592,14 +590,10 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- 		struct pci_dev *dev = pci_function_0(link->pdev->subordinate);
- 
- 		/* Read direction exit latencies */
--		pcie_capability_read_dword(link->pdev, PCI_EXP_LNKCAP,
--					   &lnkcap_up);
--		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP,
--					   &lnkcap_dw);
--		latency_up_l0s = calc_l0s_latency(lnkcap_up);
--		latency_up_l1 = calc_l1_latency(lnkcap_up);
--		latency_dw_l0s = calc_l0s_latency(lnkcap_dw);
--		latency_dw_l1 = calc_l1_latency(lnkcap_dw);
-+		latency_up_l0s = calc_l0s_latency(link->pdev->lnkcap);
-+		latency_up_l1 = calc_l1_latency(link->pdev->lnkcap);
-+		latency_dw_l0s = calc_l0s_latency(dev->lnkcap);
-+		latency_dw_l1 = calc_l1_latency(dev->lnkcap);
- 
- 		/* Check upstream direction L0s latency */
- 		if ((link->aspm_capable & PCIE_LINK_STATE_L0S_UP) &&
-@@ -814,7 +808,7 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
- static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- {
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
--	u32 parent_lnkcap, child_lnkcap;
-+	u32 lnkcap;
- 	u16 parent_lnkctl, child_lnkctl;
- 	struct pci_bus *linkbus = parent->subordinate;
- 
-@@ -829,9 +823,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	 * If ASPM not supported, don't mess with the clocks and link,
- 	 * bail out now.
- 	 */
--	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &parent_lnkcap);
--	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &child_lnkcap);
--	if (!(parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPMS))
-+	if (!(parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPMS))
- 		return;
- 
- 	/* Configure common clock before checking latencies */
-@@ -841,10 +833,18 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	 * Re-read upstream/downstream components' register state after
- 	 * clock configuration.  L0s & L1 exit latencies in the otherwise
- 	 * read-only Link Capabilities may change depending on common clock
--	 * configuration (PCIe r5.0, sec 7.5.3.6).
-+	 * configuration (PCIe r5.0, sec 7.5.3.6).  Update only the exit
-+	 * latencies in the cached dev->lnkcap because quirks may have
-+	 * removed broken features advertised by the device.
- 	 */
--	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &parent_lnkcap);
--	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &child_lnkcap);
-+	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &lnkcap);
-+	parent->lnkcap &= ~(PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
-+	parent->lnkcap |= lnkcap & (PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
-+
-+	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &lnkcap);
-+	child->lnkcap &= ~(PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
-+	child->lnkcap |= lnkcap & (PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
-+
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &parent_lnkctl);
- 	pcie_capability_read_word(child, PCI_EXP_LNKCTL, &child_lnkctl);
- 
-@@ -864,7 +864,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	 * given link unless components on both sides of the link each
- 	 * support L0s.
- 	 */
--	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
-+	if (parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
- 		link->aspm_support |= PCIE_LINK_STATE_L0S;
- 
- 	if (child_lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
-@@ -873,7 +873,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 		link->aspm_enabled |= PCIE_LINK_STATE_L0S_DW;
- 
- 	/* Setup L1 state */
--	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
-+	if (parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
- 		link->aspm_support |= PCIE_LINK_STATE_L1;
- 
- 	if (parent_lnkctl & child_lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0ce98e18b5a8..7dab61347244 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1633,7 +1633,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
- {
- 	int pos;
- 	u16 reg16;
--	u32 reg32;
- 	int type;
- 	struct pci_dev *parent;
- 
-@@ -1652,8 +1651,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
- 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
- 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
- 
--	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &reg32);
--	if (reg32 & PCI_EXP_LNKCAP_DLLLARC)
-+	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &pdev->lnkcap);
-+	if (pdev->lnkcap & PCI_EXP_LNKCAP_DLLLARC)
- 		pdev->link_active_reporting = 1;
- 
- 	parent = pci_upstream_bridge(pdev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d1fdf81fbe1e..ec4133ae9cae 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -361,6 +361,7 @@ struct pci_dev {
- 	struct pci_dev  *rcec;          /* Associated RCEC device */
+ cxl_port-y := port.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o security.o
+ cxl_mem-y := mem.o
++cxl_pci-y := pci.o
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 2937d0ddcce2..fa1d4aed28b9 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -21,4 +21,3 @@ cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+ cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
+ cxl_core-$(CONFIG_CXL_RAS) += ras.o
+ cxl_core-$(CONFIG_CXL_RCH_RAS) += ras_rch.o
+-cxl_core-$(CONFIG_CXL_PCI) += pci_drv.o
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index a7a0838c8f23..7c287b4fa699 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -223,13 +223,4 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 		    u16 *return_code);
  #endif
- 	u32		devcap;		/* PCIe Device Capabilities */
-+	u32		lnkcap;		/* PCIe Link Capabilities */
- 	u16		rebar_cap;	/* Resizable BAR capability offset */
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
-commit ad3106e7d1bf ("PCI/ASPM: Add pcie_aspm_disable_cap() to remove advertised features")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed Nov 5 09:11:21 2025 -0600
 
-    PCI/ASPM: Add pcie_aspm_disable_cap() to remove advertised features
-    
-    Add pcie_aspm_disable_cap(), which can be used by quirks to remove
-    advertised features that don't work correctly.
-    
-    Removing advertised features prevents aspm.c from enabling them, even if
-    users try to enable them via sysfs or by building the kernel with
-    CONFIG_PCIEASPM_POWERSAVE or CONFIG_PCIEASPM_POWER_SUPERSAVE.
-    
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+-#ifdef CONFIG_CXL_PCI
+-bool cxl_pci_drv_bound(struct pci_dev *pdev);
+-int cxl_pci_driver_init(void);
+-void cxl_pci_driver_exit(void);
+-#else
+-static inline bool cxl_pci_drv_bound(struct pci_dev *pdev) { return false; };
+-static inline int cxl_pci_driver_init(void) { return 0; }
+-static inline void cxl_pci_driver_exit(void) { }
+-#endif
+ #endif /* __CXL_CORE_H__ */
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index d19ebf052d76..ca02ad58fc57 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -2520,8 +2520,6 @@ static __init int cxl_core_init(void)
+ 	if (rc)
+ 		goto err_ras;
 
+-	cxl_pci_driver_init();
+-
+ 	return 0;
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 4492b809094b..858d2d6c9304 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -958,6 +958,7 @@ void pci_save_aspm_l1ss_state(struct pci_dev *dev);
- void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
- 
- #ifdef CONFIG_PCIEASPM
-+void pcie_aspm_disable_cap(struct pci_dev *pdev, int state);
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
- void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked);
-@@ -965,6 +966,7 @@ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
- void pci_configure_ltr(struct pci_dev *pdev);
- void pci_bridge_reconfigure_ltr(struct pci_dev *pdev);
- #else
-+static inline void pcie_aspm_disable_cap(struct pci_dev *pdev, int state) { }
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked) { }
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index c2ecfa4e92e5..4e9e3503c569 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1530,6 +1530,18 @@ int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
- }
- EXPORT_SYMBOL(pci_enable_link_state_locked);
- 
-+void pcie_aspm_disable_cap(struct pci_dev *pdev, int state)
-+{
-+	if (state & PCIE_LINK_STATE_L0S)
-+		pdev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L0S;
-+	if (state & PCIE_LINK_STATE_L1)
-+		pdev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L1;
-+	if (state & (PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1))
-+		pci_info(pdev, "ASPM:%s%s removed from Link Capabilities to work around device defect\n",
-+			 state & PCIE_LINK_STATE_L0S ? " L0s" : "",
-+			 state & PCIE_LINK_STATE_L1 ? " L1" : "");
-+}
-+
- static int pcie_aspm_set_policy(const char *val,
- 				const struct kernel_param *kp)
+ err_ras:
+@@ -2537,7 +2535,6 @@ static __init int cxl_core_init(void)
+
+ static void cxl_core_exit(void)
  {
-commit 69184484d69e ("PCI/ASPM: Prevent use of ASPM on Freescale Root Ports")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed Nov 5 12:18:07 2025 -0600
+-	cxl_pci_driver_exit();
+ 	cxl_ras_exit();
+ 	cxl_region_exit();
+ 	bus_unregister(&cxl_bus_type);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 97e6c187e048..a2660d64c6eb 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -941,4 +941,10 @@ u16 cxl_gpf_get_dvsec(struct device *dev);
+ #define devm_cxl_switch_port_decoders_setup DECLARE_TESTABLE(devm_cxl_switch_port_decoders_setup)
+ #endif
 
-    PCI/ASPM: Prevent use of ASPM on Freescale Root Ports
-    
-    Christian reported that f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and
-    ASPM states for devicetree platforms") broke booting on the A-EON X5000 and
-    AmigaOne X1000.
-    
-    Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-    Fixes: df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms"
-    )
-    Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-    Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..8cf182c28d2b 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2525,6 +2525,16 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-  */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
- 
-+/*
-+ * Remove ASPM L0s and L1 support from cached copy of Link Capabilities so
-+ * aspm.c won't try to enable them.
-+ */
-+static void quirk_disable_aspm_l0s_l1_cap(struct pci_dev *dev)
-+{
-+	pcie_aspm_disable_cap(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1_cap);
++#ifdef CONFIG_CXL_PCI
++bool cxl_pci_drv_bound(struct pci_dev *pdev);
++#else
++static inline bool cxl_pci_drv_bound(struct pci_dev *pdev) { return false; };
++#endif
 +
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-  * Link bit cleared after starting the link retrain process to allow this
+ #endif /* __CXL_H__ */
+diff --git a/drivers/cxl/core/pci_drv.c b/drivers/cxl/pci.c
+similarity index 99%
+rename from drivers/cxl/core/pci_drv.c
+rename to drivers/cxl/pci.c
+index bc3c959f7eb6..e6d741e15ac2 100644
+--- a/drivers/cxl/core/pci_drv.c
++++ b/drivers/cxl/pci.c
+@@ -1189,7 +1189,7 @@ static void cxl_cper_work_fn(struct work_struct *work)
+ }
+ static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
+
+-int __init cxl_pci_driver_init(void)
++static int __init cxl_pci_driver_init(void)
+ {
+ 	int rc;
+
+@@ -1204,9 +1204,15 @@ int __init cxl_pci_driver_init(void)
+ 	return rc;
+ }
+
+-void cxl_pci_driver_exit(void)
++static void cxl_pci_driver_exit(void)
+ {
+ 	cxl_cper_unregister_work(&cxl_cper_work);
+ 	cancel_work_sync(&cxl_cper_work);
+ 	pci_unregister_driver(&cxl_pci_driver);
+ }
++
++module_init(cxl_pci_driver_init);
++module_exit(cxl_pci_driver_exit);
++MODULE_DESCRIPTION("CXL: PCI manageability");
++MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS("CXL");
 
