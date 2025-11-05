@@ -1,368 +1,125 @@
-Return-Path: <linux-pci+bounces-40331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40335-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34695C34CE7
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:25:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0189C34DE8
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:34:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E65F5651DA
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:21:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A1DF18911FD
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0F9E313E31;
-	Wed,  5 Nov 2025 09:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l8OO1Pr+";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NZ0dijXT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01BE301036;
+	Wed,  5 Nov 2025 09:33:28 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362FD2FF164
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 09:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8245828C035
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 09:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762334223; cv=none; b=MjCGodHmayAY2dpII7rwwZ+EuzJRLpiW3XidvD+33pCJ+eL/3FqSknPA/nWZ6Rpq/0CfBLS/5VGXSHj5wgyXXLYDcklzXNB5w1V7N3Cu/ofFNWF0Qfr4279AooQCCOfVpACD6UQuH17d1/UYdpSmtWtOkROzYvvcopD9Y3+7EgA=
+	t=1762335208; cv=none; b=m9SbdDS8bJm2zW+dh3AWFlmsU+MpxWm5L3MDJF13lVTVpJXvbBDO7OA7DRbD6hslgHTnWliA/LjUg8+nVYMsYJO7X2ceBWbGOZMv5+im956/xnOHFZICks3WtPGVxWa4V6IMfDhbyqqfFGZ8MzSqpYBKDlNTV2AuQ36LoFBlXak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762334223; c=relaxed/simple;
-	bh=lxfnNvznOLNH3wJtE9qJQ2eIkCun9KOQbBjwFBEZthw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MkM0qIDVgBL9OKtax2QOs6UkIqxjSRuDYEORuA8C5gyfrycBi1hlYpgEVd/Nj043ZWLq/e7mcnq9T8KJlViJS67rDNgunYmYsanAgI/ApPaw+sqmwKzdagTw07eqY1So5cDrfvwvEbUoxpCb2ay7fCmqDIBHvLQeWJJsp09GdAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l8OO1Pr+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NZ0dijXT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A57xT5Y3165840
-	for <linux-pci@vger.kernel.org>; Wed, 5 Nov 2025 09:16:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9BY18Ay9QO6HeFXDmCB5iQgxLMLWXgoQWG17t0/ypi4=; b=l8OO1Pr+w2QUqw2T
-	rzeJ7UEnNZxfQ1/6WJkbwL+xd5zx5LaHbslt1i4D8oFy0kqdobqL0AWHv4XN2Ozb
-	kXWmjaaenshzehOpXRkrICJPDPZpU3IYr4lP/NKn0Qw3WmQJASvaL8aM6K0tD0Aj
-	oZ5x4yy4DOJ4bHjh5r2JACC0NGc851tje/CZGZgFRLU/myKw8YZ3w/h3RrqEqP5U
-	GjEMYjwUw7DcZNfT/6ivxPhcY1bs1bL73PN4603rj6eUIIfzPKCWPpBWJlaTIL7a
-	RuYhYtn3SLvdRip1EyWtz4FF8x3pZcozTqQkeJFl6W1ZqGswZIX7nieSv+B9aq6M
-	YJ5KAA==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a7ketk23t-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 09:16:59 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-341661973daso2723820a91.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 01:16:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1762334219; x=1762939019; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9BY18Ay9QO6HeFXDmCB5iQgxLMLWXgoQWG17t0/ypi4=;
-        b=NZ0dijXTqxbPHMe6IADi/leNOuYQERS5sgvwh947kYvt3F8qMJR2kWy/C/a91eeWQ9
-         Zqm3ssmi2Agg2VNQVWkJMIsIilhhrQfAc8FTxjtlD2JXZ9NEd3nKdp5JBWE8hUd5LKT1
-         IgNA1vvHhGiPdGnVdbCr0HYFJ7jwuebffBpQyZDI81rvDf9rT0n9yRzX4pT1GG6uNmmo
-         Y/jTO7xY6pdHVH4U/0TsNFKwJoT+YeNC7ZgyXtwuB0XX+yeUg5aGhNHG1KvzN9UmjwMj
-         rynQJ/v2vVDxKeCTkw3+UE2WTI0UjLpjsK7VJ+5EmTB8PWEqwxKflw5sp+ZQvpTV0QSK
-         DhHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762334219; x=1762939019;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9BY18Ay9QO6HeFXDmCB5iQgxLMLWXgoQWG17t0/ypi4=;
-        b=Cl1ueURWfCr2GI1kNGJzpWtMNe4miu2cWjS1tIYDrxWX5j9WxomEagb1bdspf3RzuE
-         Qng3Asbx+Mxt2srGqSvPMP2BBGP81Xz/xoRyEjfi/yGUEfMhZYFjmywouGhxz7gYY7Oq
-         BLuMFwzvtRD4qCDcewBl0KvWLPoyNlZkm36YR7SkkTNWyk9C/McOESXA1uhf93+fbHst
-         QdgqTdRUzNNOllU1z13+gAmtJc/BAxUgRy0bsGkvdLUIkgBfrsbmVg9PxEMSja+qkq5q
-         4Zl36AeAgRk535kq5xHvbssd5Vqza8Fz/CBzZPBdsihN9ULyxNBwbIcujMphGnGszdJk
-         nyCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUig0V0ILXBRcwX9SikxPhsPXzQAGuJQjnuT9YORgya+CSMnn8Uaouc3S+BVz95RGCa1eF38Bco6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeHK7JL9qqHJqOThSVtOBKqHxjHqbP5eGoI3dh0kxODFKPHUgT
-	S0hVGGTzs9q894SwNfhGlH676T8qNQb3jxWy/pZPhnfUvsgtYRm6h4S+U2xgGq+3SpHXje7pnIf
-	K4ld4NvrsJCe54fuatTr/YsgEm87ONLdD44dSKDBAxlET/lZEYLX7EasU31zulo0=
-X-Gm-Gg: ASbGncv+a537QxEmlVfmVi1p2upq7krsNq0jJRnMY5rl8bFlykOPekMKTc0EmaJDr6f
-	RGlYsejj3h1QUP/f7sopXnWu2c3v9y41liAFwZgXF0gD/iMXWPVfSoZhxk4Z4Srwlu3BHB8JR/d
-	OcQGnbv3ESOQb+GR2b4gC09jx7WTV7iPB+/wEg7FOQ8YT/bODu1njfheQaAbfPonmM9VUfiUP/W
-	8r/Mt79iUmPZkbiuciPnaK5jg8TGpMCR7lwqHo9sjWh8fG8Fowh3wZ9K7j22PFxEBRLe+bhOnb9
-	MF2BhLZw97k6DB4Q8YlJ9xpZM3hdFGW78ISMH0tsGPod/qtDwWtlrt4dyA8t59wAA8Ryg/RgV2S
-	zV718vTE2J73+Y/T+b7+n7tnrd3aa
-X-Received: by 2002:a17:90b:48ca:b0:340:bfcd:6af8 with SMTP id 98e67ed59e1d1-341a6bfb6bdmr3006793a91.4.1762334218431;
-        Wed, 05 Nov 2025 01:16:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHKJhLn7P20MHnaF2lSocg1hIj2BoJNGSeY2P/QuEBxQZEn+Q+rm1gcYAX/apj7eTvwoUyNRA==
-X-Received: by 2002:a17:90b:48ca:b0:340:bfcd:6af8 with SMTP id 98e67ed59e1d1-341a6bfb6bdmr3006767a91.4.1762334217932;
-        Wed, 05 Nov 2025 01:16:57 -0800 (PST)
-Received: from [192.168.1.102] ([120.60.68.120])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3417a385563sm2274249a91.0.2025.11.05.01.16.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 01:16:57 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Date: Wed, 05 Nov 2025 14:45:52 +0530
-Subject: [PATCH 4/4] power: sequencing: Add the Power Sequencing driver for
- the PCIe M.2 connectors
+	s=arc-20240116; t=1762335208; c=relaxed/simple;
+	bh=/BlFRsUqHzpyPFsgXRPVEfArD94AsjLLqYTCp3TIbWc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ax9skUdokUiOe0ovdbv6W3tOq+kBc3DCAvnBXjTJtYHXwsKR8N80CRPi0UBBHE/wIFpGdaBD9r4CSZ9d4nbE9fTmef8XoLKSxlc7aCIZKQeqYcRKE1X1rsEuxJ9i7PejWVHu54ffu+rbRsBnXCWPEnRYNCe3VdxFr446TppOD4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d1fqF2qwgzHnGdC;
+	Wed,  5 Nov 2025 17:17:29 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 700071402A5;
+	Wed,  5 Nov 2025 17:17:34 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Nov
+ 2025 09:17:33 +0000
+Date: Wed, 5 Nov 2025 09:17:32 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<bhelgaas@google.com>, <aneesh.kumar@kernel.org>, <yilun.xu@linux.intel.com>,
+	<aik@amd.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 1/6] resource: Introduce resource_assigned() for
+ discerning active resources
+Message-ID: <20251105091732.0000302c@huawei.com>
+In-Reply-To: <20251105040055.2832866-2-dan.j.williams@intel.com>
+References: <20251105040055.2832866-1-dan.j.williams@intel.com>
+	<20251105040055.2832866-2-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-pci-m2-v1-4-84b5f1f1e5e8@oss.qualcomm.com>
-References: <20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com>
-In-Reply-To: <20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7041;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=lxfnNvznOLNH3wJtE9qJQ2eIkCun9KOQbBjwFBEZthw=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpCxXoqyQNKc1YDTRJOAiLbRWTNHfIQDpoDikcb
- 7I0QY7J4dSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaQsV6AAKCRBVnxHm/pHO
- 9T5lB/9e1Ptnw12dhC7Bbv7HkDK+rPmYh2e24YDYb266Seuczy0ibRnGhnSFhnZNq/Nq8s0GcwU
- FM4QdQTZg8wrwA/MA47yPaRjDmpsDeHakI/kryqrxD2nTmpSqDpIlQtJ6eFDinBr2lcAzc6kEZs
- 2gHUv6Zy6jengUJ0zq600KmWgX2DiAw6Y68DXL++w6iD2nzh0a5Ubbk/Q2Dtz9Oa/gEc4zSp2tp
- SugyDKGyafl39/S6auRryHRacuihMEsHcguk6GU4gp8P6cEVAQq0Qdmfmca4uoziYHuwKnzptgu
- zjIPm/fsKhkwUV7ybL3Cs8VVkMmbfG4EVC7oSOuuZpKixG9r
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA1MDA2OSBTYWx0ZWRfX3bX7wyKppE7i
- CZMZLj78r1mAj3RPVmtivux3AjOOyXf5TmWCYbpohD43WZVECCuL8A7CDFwGuBzvFi590WBf48f
- fXtHMs/FUhIkstWhR/2kcFOVLoT97YXksMmHvdweMFjNhvje5dZhh4rQEA/xOXVlO4bQDXboKwm
- RrZ9zUricBc7+FTlQBlfX4Q2cLiTn4ctdURvn8eFuE5nN0T4XwiL/h51RE53aG1/9jk3OgH28s3
- rLDp8MSBVOpNtVj3e/UaAPSeppSjX5P/sUrd+VqgBAR2CADOIW1T35ieH+p5LS5RHWR6B6psOCH
- z91R++JBRw3zz5xSvga5w4i8ZvpkKNcMkGTqn1r/iNP5fv/dbuU/r+0VdASdcUx+6otKl4Ek39m
- K4JijzT/6VgMphpN6e5DDXbOUn10UQ==
-X-Proofpoint-GUID: HNUeerJkNhhH5dlvZS9WJAShh0q9D7LD
-X-Authority-Analysis: v=2.4 cv=IdSKmGqa c=1 sm=1 tr=0 ts=690b160b cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=adoi+G5QptZiRYWGMQz2cA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8
- a=OecXa5kVODwZ4gSi3wAA:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: HNUeerJkNhhH5dlvZS9WJAShh0q9D7LD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-05_03,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511050069
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-This driver is used to control the PCIe M.2 connectors of different
-Mechanical Keys attached to the host machines and supporting different
-interfaces like PCIe/SATA, USB/UART etc...
+On Tue,  4 Nov 2025 20:00:50 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Currently, this driver supports only the Mechanical Key M connectors with
-PCIe interface. The driver also only supports driving the mandatory 3.3v
-and optional 1.8v power supplies. The optional signals of the Key M
-connectors are not currently supported.
+> A PCI bridge resource lifecycle involves both a "request" and "assign"
+> phase. At any point in time that resource may not yet be assigned, or may
+> have failed to assign (because it does not fit).
+>=20
+> There are multiple conventions to determine when assignment has not
+> completed: IORESOURCE_UNSET, IORESOURCE_DISABLED, and checking whether the
+> resource is parented.
+>=20
+> In code paths that are known to not be racing assignment, e.g. post
+> subsys_initcall(), the most reliable method to judge that a bridge resour=
+ce
+> is assigned is to check the resource is parented [1].
+>=20
+> Introduce a resource_assigned() helper for this purpose.
+>=20
+> Link: http://lore.kernel.org/2b9f7f7b-d6a4-be59-14d4-7b4ffccfe373@linux.i=
+ntel.com [1]
+> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+One trivial thing on documentation style below.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- MAINTAINERS                               |   7 ++
- drivers/power/sequencing/Kconfig          |   8 ++
- drivers/power/sequencing/Makefile         |   1 +
- drivers/power/sequencing/pwrseq-pcie-m2.c | 138 ++++++++++++++++++++++++++++++
- 4 files changed, 154 insertions(+)
+> ---
+>  include/linux/ioport.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index e8b2d6aa4013..9afa30f9346f 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -334,6 +334,15 @@ static inline bool resource_union(const struct resou=
+rce *r1, const struct resour
+>  	return true;
+>  }
+> =20
+> +/*
+> + * Check if this resource is added to a resource tree or detached. Calle=
+r is
+> + * responsible for not racing assignment.
+> + */
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968e4f9260263f1574ee29f5ff0de1c..9b3f689d1f50c62afa3772a0c6802f99a98ac2de 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20474,6 +20474,13 @@ F:	Documentation/driver-api/pwrseq.rst
- F:	drivers/power/sequencing/
- F:	include/linux/pwrseq/
- 
-+PCIE M.2 POWER SEQUENCING
-+M:	Manivannan Sadhasivam <mani@kernel.org>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-+F:	drivers/power/sequencing/pwrseq-pcie-m2.c
-+
- POWER STATE COORDINATION INTERFACE (PSCI)
- M:	Mark Rutland <mark.rutland@arm.com>
- M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
-diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-index 280f92beb5d0ed524e67a28d1c5dd264bbd6c87e..f5fff84566ba463b55d3cd0c07db34c82f9f1e31 100644
---- a/drivers/power/sequencing/Kconfig
-+++ b/drivers/power/sequencing/Kconfig
-@@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
- 	  GPU. This driver handles the complex clock and reset sequence
- 	  required to power on the Imagination BXM GPU on this platform.
- 
-+config POWER_SEQUENCING_PCIE_M2
-+	tristate "PCIe M.2 connector power sequencing driver"
-+	depends on OF || COMPILE_TEST
-+	help
-+	  Say Y here to enable the power sequencing driver for PCIe M.2
-+	  connectors. This driver handles the power sequencing for the M.2
-+	  connectors exposing multiple interfaces like PCIe, SATA, UART, etc...
-+
- endif
-diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-index 96c1cf0a98ac54c9c1d65a4bb4e34289a3550fa1..0911d461829897c5018e26dbe475b28f6fb6914c 100644
---- a/drivers/power/sequencing/Makefile
-+++ b/drivers/power/sequencing/Makefile
-@@ -5,3 +5,4 @@ pwrseq-core-y				:= core.o
- 
- obj-$(CONFIG_POWER_SEQUENCING_QCOM_WCN)	+= pwrseq-qcom-wcn.o
- obj-$(CONFIG_POWER_SEQUENCING_TH1520_GPU) += pwrseq-thead-gpu.o
-+obj-$(CONFIG_POWER_SEQUENCING_PCIE_M2)	+= pwrseq-pcie-m2.o
-diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..b9f68ee9c5a377ce900a88de86a3e269f9c99e51
---- /dev/null
-+++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwrseq/provider.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+struct pwrseq_pcie_m2_pdata {
-+	const struct pwrseq_target_data **targets;
-+};
-+
-+struct pwrseq_pcie_m2_ctx {
-+	struct pwrseq_device *pwrseq;
-+	const struct pwrseq_pcie_m2_pdata *pdata;
-+	struct regulator_bulk_data *regs;
-+	size_t num_vregs;
-+	struct notifier_block nb;
-+};
-+
-+static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
-+}
-+
-+static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return regulator_bulk_disable(ctx->num_vregs, ctx->regs);
-+}
-+
-+static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
-+	.name = "regulators-enable",
-+	.enable = pwrseq_pcie_m2_m_vregs_enable,
-+	.disable = pwrseq_pcie_m2_m_vregs_disable,
-+};
-+
-+static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
-+	&pwrseq_pcie_m2_vregs_unit_data,
-+	NULL
-+};
-+
-+static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
-+	.name = "pcie-enable",
-+	.deps = pwrseq_pcie_m2_m_unit_deps,
-+};
-+
-+static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
-+	.name = "pcie",
-+	.unit = &pwrseq_pcie_m2_m_pcie_unit_data,
-+};
-+
-+static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
-+	&pwrseq_pcie_m2_m_pcie_target_data,
-+	NULL
-+};
-+
-+static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
-+	.targets = pwrseq_pcie_m2_m_targets,
-+};
-+
-+static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
-+				 struct device *dev)
-+{
-+	return PWRSEQ_MATCH_OK;
-+}
-+
-+static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwrseq_pcie_m2_ctx *ctx;
-+	struct pwrseq_config config;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->pdata = of_device_get_match_data(dev);
-+	if (!ctx->pdata)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "Failed to obtain platform data\n");
-+
-+	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx->regs);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to get all regulators\n");
-+
-+	ctx->num_vregs = ret;
-+
-+	memset(&config, 0, sizeof(config));
-+
-+	config.parent = dev;
-+	config.owner = THIS_MODULE;
-+	config.drvdata = ctx;
-+	config.match = pwrseq_pcie_m2_match;
-+	config.targets = ctx->pdata->targets;
-+
-+	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
-+	if (IS_ERR(ctx->pwrseq))
-+		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-+				     "Failed to register the power sequencer\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
-+	{
-+		.compatible = "pcie-m2-m-connector",
-+		.data = &pwrseq_pcie_m2_m_of_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
-+
-+static struct platform_driver pwrseq_pcie_m2_driver = {
-+	.driver = {
-+		.name = "pwrseq-pcie-m2",
-+		.of_match_table = pwrseq_pcie_m2_of_match,
-+	},
-+	.probe = pwrseq_pcie_m2_probe,
-+};
-+module_platform_driver(pwrseq_pcie_m2_driver);
-+
-+MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>");
-+MODULE_DESCRIPTION("Power Sequencing driver for PCIe M.2 connector");
-+MODULE_LICENSE("GPL");
+Some stuff in this file now has kernel-doc style comments. To me it
+seems like a better idea to use that style for new function descriptions
+whilst perhaps not being worth the churn that would be inherent in switching
+all docs to that style.
 
--- 
-2.48.1
+> +static inline bool resource_assigned(struct resource *res)
+> +{
+> +	return res->parent;
+> +}
+> +
+>  int find_resource_space(struct resource *root, struct resource *new,
+>  			resource_size_t size, struct resource_constraint *constraint);
+> =20
 
 
