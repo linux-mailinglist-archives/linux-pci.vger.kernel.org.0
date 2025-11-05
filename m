@@ -1,119 +1,126 @@
-Return-Path: <linux-pci+bounces-40361-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40362-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BE69C368C7
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 17:03:55 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA2E0C3683D
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 16:58:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 596424F657F
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 15:56:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 83F6E34D072
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 15:58:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E76A30F7E8;
-	Wed,  5 Nov 2025 15:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D6D32E732;
+	Wed,  5 Nov 2025 15:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LcEauCLy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oICOgyYK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C466B30F92D;
-	Wed,  5 Nov 2025 15:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B4232939F;
+	Wed,  5 Nov 2025 15:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762358201; cv=none; b=ivgs4KL/XegvXjbpNXmqOeYFiqJZhthhHAPt1usTlrpJJxShQSwWbwYW8qHSMWf+QW+UY1mOhhSSQ93JOKEaFe03OpI1iXJWfhvIsJXXGSrh4McG4bk7WhWN84iVnHqz6yILL/f23ENOa5oJKU+dNoTq6HHYXWWtlU8IyVs/L/w=
+	t=1762358271; cv=none; b=sOec3iH7g/Y8u27Pj9QlH+Omh8hAp/6M0FyOETBprcyPDCjq34p1EyxhA+cfKbZOr5EjgaUQjJzeIF/joCQcEFj8x2vwH5iS7akO8398SFe9VT/qDZYUqTyjgaetPaWVpCOJmqeuvS+UETTL0wmsbpybL7cg4Ez75FlcGP+rhGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762358201; c=relaxed/simple;
-	bh=0S9XzOld/wJ83Z34NVYi9AzMSHoRV7uYj8ovgqz8T7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=T3D5a2lFVxWUNu+Eigg/JLX8/KzKqQeIXevZbjQted8nCkoiyi5MiCzxs2okVWLkelPFS8HH1pMCLePThxjxbOMh7Iyd8ikQ3i+/soq4WbwjCa4TXv2DlUusFOdIAcMPNzR9J79bKK3qnwWWAtg0gACiMGfeC3r9bJqy/Du5xmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LcEauCLy; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=iYNG2+m0hR4ggoPbQGjiXanwJnvQb6SZARxGOrR8rZc=;
-	b=LcEauCLySztn59Q0zQh2Iw2XHW9NRRmvnLoVJOzlMG0sHid1PLL1a5cL1ru25a
-	Z4ZX8n+jWzq+o2wOcB2qz48wLYJbZzXGlTFphnGkjkJ0Sc08mPNLGR2fZH4nFcAu
-	kJSPs6ThcuaXh7BK41GZ68pTpz0wfDanH4vzHuqSAt5as=
-Received: from [IPV6:240e:b8f:927e:1000:c17c:cb22:ae30:df94] (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wCnnLqfcwtpaFZGBw--.16628S2;
-	Wed, 05 Nov 2025 23:56:16 +0800 (CST)
-Message-ID: <9ad5a25e-04b6-48b6-b1e0-b9f51e49f8e6@163.com>
-Date: Wed, 5 Nov 2025 23:56:15 +0800
+	s=arc-20240116; t=1762358271; c=relaxed/simple;
+	bh=QE/o0Mh+dZdKXtnvDA4J2WYsUMjW6VDyfclBimdmgSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d00Q69EQPVOV0tgGcs3BpGsJmrG5h/KlGqa1/7VQR90W42m87m2fxxTh2WDfSyxajd3tonPmWDtqybQ7NNbRFPUzpd9V7uMvb1Mq0vnuvDAoMC/XhUjyXWAmi1PR95kKRMAV5AXaO+IRzWEwL1KOnxG8H4dkcbaTLv/aFhz9F0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oICOgyYK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626DAC4CEF5;
+	Wed,  5 Nov 2025 15:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762358270;
+	bh=QE/o0Mh+dZdKXtnvDA4J2WYsUMjW6VDyfclBimdmgSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oICOgyYKQxTIre82iUXxYQa+v511n78p0LH/55yOrC/qPcixKX87gwddDj+41MvaU
+	 udDR3K3EBQpgaowODsG18JDcxc/9Tm00bcjPVXc3wnknNjtgfgAbq406aWeHYZjI5z
+	 4uu77joC5oJffXn+3DZusDdh4FUBNZjP+i+b3b0F4GSCsrwLEaBgWDor4d6LqO/29r
+	 Pv3KNro8m3YZiHAE2j4eVhzRxEZTXzdKwYbom7E6szRwPYBQga2bH0zXkFLHi9b4jL
+	 AJ2ZrrbUyJI3JInBqsQp2I7DwoEBzEHAGOgWbygjatGbYoaDoSc1t79LMgiLlaLprW
+	 4ShYMDmkm4j5A==
+Date: Wed, 5 Nov 2025 16:57:48 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Phil Auld <pauld@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 13/33] cpuset: Update HK_TYPE_DOMAIN cpumask from cpuset
+Message-ID: <aQtz_ODTgiCGS_oB@localhost.localdomain>
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-14-frederic@kernel.org>
+ <20251031125951.GA430420@pauld.westford.csb>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] PCI: Add macro for secondary bus reset delay
-To: bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20251101160538.10055-1-18255117159@163.com>
- <20251101160538.10055-2-18255117159@163.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20251101160538.10055-2-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCnnLqfcwtpaFZGBw--.16628S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJF15Zw1DCr4DJw18CrW3Jrb_yoW8Ww4rpF
-	Z0kFykAr1rJay8Xan5Aa1Uury5W3ZIkFW0kF48K3sa9F1S9FyDCa1YgFWYgrnFqrWxXr1f
-	Aas8C34UJay5trDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U8kusUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgj8o2kLcM4xqwAAsr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251031125951.GA430420@pauld.westford.csb>
 
-Hi Bjorn,
-
-I wonder if this is still necessary? If not, please drop it as well. Thanks.
-
-Best regards,
-Hans
-
-On 2025/11/2 00:05, Hans Zhang wrote:
-> Add PCI_T_RST_SEC_BUS_DELAY_MS macro for the secondary bus reset
-> delay value according to PCIe r7.0 spec, section 7.5.1.3.13.
+Le Fri, Oct 31, 2025 at 08:59:51AM -0400, Phil Auld a écrit :
+> > +int housekeeping_update(struct cpumask *mask, enum hk_type type)
+> > +{
+> > +	struct cpumask *trial, *old = NULL;
+> > +
+> > +	if (type != HK_TYPE_DOMAIN)
+> > +		return -ENOTSUPP;
+> > +
+> > +	trial = kmalloc(sizeof(*trial), GFP_KERNEL);
+> > +	if (!trial)
+> > +		return -ENOMEM;
+> > +
+> > +	cpumask_andnot(trial, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT), mask);
+> > +	if (!cpumask_intersects(trial, cpu_online_mask)) {
+> > +		kfree(trial);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (!housekeeping.flags)
+> > +		static_branch_enable(&housekeeping_overridden);
+> > +
+> > +	if (!(housekeeping.flags & BIT(type)))
+> > +		old = housekeeping_cpumask_dereference(type);
+> > +	else
+> > +		WRITE_ONCE(housekeeping.flags, housekeeping.flags | BIT(type));
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->   drivers/pci/pci.c | 7 ++-----
->   drivers/pci/pci.h | 3 +++
->   2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..86449f2d627b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4912,11 +4912,8 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
->   	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
->   	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
->   
-> -	/*
-> -	 * PCI spec v3.0 7.6.4.2 requires minimum Trst of 1ms.  Double
-> -	 * this to 2ms to ensure that we meet the minimum requirement.
-> -	 */
-> -	msleep(2);
-> +	/* Double this to 2ms to ensure that we meet the minimum requirement */
-> +	msleep(2 * PCI_T_RST_SEC_BUS_DELAY_MS);
->   
->   	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
->   	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 4492b809094b..31f975619774 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -63,6 +63,9 @@ struct pcie_tlp_log;
->   #define PCIE_LINK_WAIT_MAX_RETRIES	10
->   #define PCIE_LINK_WAIT_SLEEP_MS		90
->   
-> +/* PCIe r7.0, sec 7.5.1.3.13, requires minimum Trst of 1ms */
-> +#define PCI_T_RST_SEC_BUS_DELAY_MS	1
-> +
->   /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
->   #define PCIE_MSG_TYPE_R_RC	0
->   #define PCIE_MSG_TYPE_R_ADDR	1
+> Isn't this backwards?   If the bit is not set you save old to free it
+> and if the bit is set you set it again.
 
+That's completely backward!
+
+Thanks for pointing out!
+
+-- 
+Frederic Weisbecker
+SUSE Labs
 
