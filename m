@@ -1,159 +1,222 @@
-Return-Path: <linux-pci+bounces-40369-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40370-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 584FEC37057
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:18:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75B39C36F57
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:10:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28CB0627816
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 16:52:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD1901A239B4
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 17:04:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37B6338912;
-	Wed,  5 Nov 2025 16:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E1433A038;
+	Wed,  5 Nov 2025 16:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVpbhQKs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkrNSQmV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A22338594
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 16:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C82339B47;
+	Wed,  5 Nov 2025 16:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762361527; cv=none; b=Ji5hccN1mWglFhe4yrpbDQnDy7QCN/gEBu8Y07SEuOq/8oQdpgRLVzqZs4cvyHycQz6t55XiuP0JNRVXuGQyfMbJEnlnsRnNKrPjygork1Ib3xlhfHMLgmgVgXBElvzGlWIRoI3ibYlp6Vzx+pG120CE5W/iAmhE9v/t6wHAJNs=
+	t=1762361823; cv=none; b=KI42riCZ+1kvSEJWiQlcpKxeSkjsiwgXRQ2fEFbTax+ndc+t3Tq9vkXi0Mu2lH5uLDD6ky/3djDgEB23ujS+8UZWr68dEwHLRMZKvkJG+hbRkEi+GupPynq9LxMVgPCTf0kQSPtej1yoec0884LZYdWutY2S/1ifMxgaDg37yiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762361527; c=relaxed/simple;
-	bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
+	s=arc-20240116; t=1762361823; c=relaxed/simple;
+	bh=nhM7jbKOW56d3hh/niEe2UapYbSyWoAGZQptKDlqI44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxgf9f0zPxVxTOXWrNdexrOasw5SrknBSBxc+49hp8tIGcEj1tZH34K2Fq4QaEugsqosda02aJMsB1WMMfzMheb/l+thJonIBjKUpd9PunMs+2DVkwDHkud3EqgEu0RImf4fV8tICOVANUU2zRW3XkMEM9+jc4VEn1oNJmEPosI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVpbhQKs; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4710022571cso64344095e9.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 08:52:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762361524; x=1762966324; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
-        b=AVpbhQKsWHsJPurkBtpFjS569EuYKUxy0Ewl5KvxLz11TynIudTMz6x27b6A6doKWz
-         ip2xD5KKY1oMJCK0Dweum3CzpsfSfe5Azmrly9qy+6lx5DTGxHpK2A+42y5Z3pqNqWXK
-         5oMVmrIxCr+TXfau1fOpH55Ds8Gfkw+SKMup3+25IM0tOOtYD8mCPcmX3YHevXG3I9fS
-         voKjd3O+6JkWCl7xwg0Uy4qskOwo95lmPAQUzNV1zgopuIouOGjmjNsUQ0iiplG4NNw3
-         pJwe6bLtD5Fb+hz4cFTbQ+dE2Dx8twHim57o5xVAlYBYEkIZ+8VVi9pnTa3HqwZj4o61
-         JDfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762361524; x=1762966324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
-        b=OwRNmMWFBirrlv6jwMUrZPkKAET6ynmQJw4AlWWg64N0TgWR0XpcsX4RWLns5YCR+r
-         6Jj+f8/mpuDeHzXfGsGNeCB9yljNhDZMipBpFJ5OFqcGkOxDny5k/IsV74uO36QRVbwf
-         h56gkGvO/BFQLI6l0F2EZDiMqpdXnyGqIPm/mzuYg8w4vlU+kS4wNiWdVS+qiIafYPZ8
-         8MNOWEMUzwCmfW8EZfaQexnE5SkaJi2f6JeiM4QdSv096Yy3aAiNjbC3MFtcB5ySG7HE
-         BfSC8Xo2ncwGzbjVehw1aCofg9TlxlMSTIxu+9NeCBAnwi/5BhvLuLEXHFAGPbWA2shl
-         EOsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/DaZjLL1hTHrnyPwIpkRdxOc6tcEOBtU2X122rRSp8+C0otIKHnbuvPE4divgT7f7aMuirCXx0yc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc4PRNpJ3kUCarTxuGxT33yFWNkdksH+0Q95in8Qr4vOHRNfDj
-	lb6BASM3aGfp0/exLXr6rPcYzcHWMyyOlScXJAu9ocDWWvDJIvqeX7yv
-X-Gm-Gg: ASbGncvAfHe1E0Js/guWT4bBrZ9ehnXl0k6ENmjvAMZ/F7l/luZIamfPtsAQ8/kh49R
-	eA6VgkRNwlGdKpqgvLSJGeBxNB5Bkx2uTo/j6Jgy8jDt17jStQoTbhaE4M2RIjGX61igEG1+Mt7
-	hmJQ8UZWQ3sLcV7TFeyxr9pw6Ut7tK6OGLGPpop06bKHNv6IceanSEpVd6WIaxKTU7qRg3H+GIX
-	WsRHX1RhjCczMYeTHeY8KOOScHXN93CYWqxpURXeOsbSPZ9JDMP73kPZ7Ydbr1y1zOFkWKyh2eU
-	CyaEkgxdCjAXujL+G5a0bkNrHqSurKqn69OVRT9QBHeqOAYc1O9jmXgjv8x8Hkl0Du2r2Cbckzw
-	vumJFQRPoEjwBWXq3NIbWLDW87UpRzXVo1xVOmj6QiAIoJIklkXdL2Gjj6lVBY5GelBTsx14DVT
-	WBIyta4MG3pC/GvSxkYFLvC1WzxZnRldOqQ/T7vfuQJKUsXFxIKYz76I8tz8mbwyk=
-X-Google-Smtp-Source: AGHT+IF1eT04urNHEfsD9kdCj32CNL1YcHJ6oGuMVK3cU2BLT/aQRFRmm7ox5OYZe77ML31HK9v5ow==
-X-Received: by 2002:a05:600c:1c94:b0:477:fcb:2256 with SMTP id 5b1f17b1804b1-4775ce23efemr42468465e9.17.1762361524090;
-        Wed, 05 Nov 2025 08:52:04 -0800 (PST)
-Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce210a7sm59725725e9.12.2025.11.05.08.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 08:52:02 -0800 (PST)
-Date: Wed, 5 Nov 2025 17:52:01 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
-Message-ID: <3dzha4qyqdrbutxby3n5nkvihnxrhniqr6w726eumhzgln2w5l@fbu72mzmjz4m>
-References: <20251029163336.2785270-1-thierry.reding@gmail.com>
- <20251029163336.2785270-2-thierry.reding@gmail.com>
- <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1hfKE5NVqdKsc4ZknTJnrLkEa4O5D5/3VygawME0wtKJojxW1IWucyeMJEDtICSvKb4zqtPZxVINLA/2eBPKGB2MsAikfy4ozndQvzrc9rM6jXtO+zuM0Ly9kaCb2XwYV76MUcG5j+GOj/v2DCjOoCVWcYNIzc3DUyyrJNeSU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkrNSQmV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FC2C4CEF5;
+	Wed,  5 Nov 2025 16:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762361823;
+	bh=nhM7jbKOW56d3hh/niEe2UapYbSyWoAGZQptKDlqI44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XkrNSQmVRGDQ0lt4n06gp9o429LO1OThSwSo+tIIP2EJBJlS8ww/ro7sMmGiVdhrM
+	 t1rgH6uGlaXnjmVa+q0tT6T/wHZzevQNMI/p1TJa24pvFPEM/3OqPC7DF47OIz9o9m
+	 rS7nbd/l2kvzZuGV09bu3MD4TN55uh1avGCcK3xopWmiC5ZLktsFp0az7HaETHuJoY
+	 Vh1Stje19/PGgTlt9Jb499Vr+Bcz3Vt9T3rYp8qWR+6Y0CAW4VMy94J4OlikA0BiAP
+	 dy2pVF6eF1/01q9zF36JMleysXGqAX5oXg57tsMBxZrtmIJQPGP9L3s7oIbUpsJ6fD
+	 yvwf0f0RHi11g==
+Date: Wed, 5 Nov 2025 17:57:00 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 22/33] kthread: Include unbound kthreads in the managed
+ affinity list
+Message-ID: <aQuB3Oy7i6Z0SJlA@localhost.localdomain>
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-23-frederic@kernel.org>
+ <ba437129-062a-4a2f-a753-64945e9a13ff@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ykyajizgfjgayrmb"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba437129-062a-4a2f-a753-64945e9a13ff@redhat.com>
 
+Le Tue, Oct 21, 2025 at 06:42:59PM -0400, Waiman Long a écrit :
+> 
+> On 10/13/25 4:31 PM, Frederic Weisbecker wrote:
+> > The managed affinity list currently contains only unbound kthreads that
+> > have affinity preferences. Unbound kthreads globally affine by default
+> > are outside of the list because their affinity is automatically managed
+> > by the scheduler (through the fallback housekeeping mask) and by cpuset.
+> > 
+> > However in order to preserve the preferred affinity of kthreads, cpuset
+> > will delegate the isolated partition update propagation to the
+> > housekeeping and kthread code.
+> > 
+> > Prepare for that with including all unbound kthreads in the managed
+> > affinity list.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > ---
+> >   kernel/kthread.c | 59 ++++++++++++++++++++++++------------------------
+> >   1 file changed, 30 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > index c4dd967e9e9c..cba3d297f267 100644
+> > --- a/kernel/kthread.c
+> > +++ b/kernel/kthread.c
+> > @@ -365,9 +365,10 @@ static void kthread_fetch_affinity(struct kthread *kthread, struct cpumask *cpum
+> >   	if (kthread->preferred_affinity) {
+> >   		pref = kthread->preferred_affinity;
+> >   	} else {
+> > -		if (WARN_ON_ONCE(kthread->node == NUMA_NO_NODE))
+> > -			return;
+> > -		pref = cpumask_of_node(kthread->node);
+> > +		if (kthread->node == NUMA_NO_NODE)
+> > +			pref = housekeeping_cpumask(HK_TYPE_KTHREAD);
+> > +		else
+> > +			pref = cpumask_of_node(kthread->node);
+> >   	}
+> >   	cpumask_and(cpumask, pref, housekeeping_cpumask(HK_TYPE_KTHREAD));
+> > @@ -380,32 +381,29 @@ static void kthread_affine_node(void)
+> >   	struct kthread *kthread = to_kthread(current);
+> >   	cpumask_var_t affinity;
+> > -	WARN_ON_ONCE(kthread_is_per_cpu(current));
+> > +	if (WARN_ON_ONCE(kthread_is_per_cpu(current)))
+> > +		return;
+> > -	if (kthread->node == NUMA_NO_NODE) {
+> > -		housekeeping_affine(current, HK_TYPE_KTHREAD);
+> > -	} else {
+> > -		if (!zalloc_cpumask_var(&affinity, GFP_KERNEL)) {
+> > -			WARN_ON_ONCE(1);
+> > -			return;
+> > -		}
+> > -
+> > -		mutex_lock(&kthread_affinity_lock);
+> > -		WARN_ON_ONCE(!list_empty(&kthread->affinity_node));
+> > -		list_add_tail(&kthread->affinity_node, &kthread_affinity_list);
+> > -		/*
+> > -		 * The node cpumask is racy when read from kthread() but:
+> > -		 * - a racing CPU going down will either fail on the subsequent
+> > -		 *   call to set_cpus_allowed_ptr() or be migrated to housekeepers
+> > -		 *   afterwards by the scheduler.
+> > -		 * - a racing CPU going up will be handled by kthreads_online_cpu()
+> > -		 */
+> > -		kthread_fetch_affinity(kthread, affinity);
+> > -		set_cpus_allowed_ptr(current, affinity);
+> > -		mutex_unlock(&kthread_affinity_lock);
+> > -
+> > -		free_cpumask_var(affinity);
+> > +	if (!zalloc_cpumask_var(&affinity, GFP_KERNEL)) {
+> > +		WARN_ON_ONCE(1);
+> > +		return;
+> >   	}
+> > +
+> > +	mutex_lock(&kthread_affinity_lock);
+> > +	WARN_ON_ONCE(!list_empty(&kthread->affinity_node));
+> > +	list_add_tail(&kthread->affinity_node, &kthread_affinity_list);
+> > +	/*
+> > +	 * The node cpumask is racy when read from kthread() but:
+> > +	 * - a racing CPU going down will either fail on the subsequent
+> > +	 *   call to set_cpus_allowed_ptr() or be migrated to housekeepers
+> > +	 *   afterwards by the scheduler.
+> > +	 * - a racing CPU going up will be handled by kthreads_online_cpu()
+> > +	 */
+> > +	kthread_fetch_affinity(kthread, affinity);
+> > +	set_cpus_allowed_ptr(current, affinity);
+> > +	mutex_unlock(&kthread_affinity_lock);
+> > +
+> > +	free_cpumask_var(affinity);
+> >   }
+> >   static int kthread(void *_create)
+> > @@ -924,8 +922,11 @@ static int kthreads_online_cpu(unsigned int cpu)
+> >   			ret = -EINVAL;
+> >   			continue;
+> >   		}
+> > -		kthread_fetch_affinity(k, affinity);
+> > -		set_cpus_allowed_ptr(k->task, affinity);
+> > +
+> > +		if (k->preferred_affinity || k->node != NUMA_NO_NODE) {
+> > +			kthread_fetch_affinity(k, affinity);
+> > +			set_cpus_allowed_ptr(k->task, affinity);
+> > +		}
+> >   	}
+> 
+> My understanding of kthreads_online_cpu() is that hotplug won't affect the
+> affinity returned from kthread_fetch_affinity().
 
---ykyajizgfjgayrmb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
-MIME-Version: 1.0
+It should. The onlining CPU is considered online at this point and might
+be part of the returned kthread_fetch_affinity().
 
-On Mon, Nov 03, 2025 at 05:18:08PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Oct 29, 2025 at 5:33=E2=80=AFPM Thierry Reding <thierry.reding@gm=
-ail.com> wrote:
-> >
-> > From: Thierry Reding <treding@nvidia.com>
-> >
-> > Several drivers can benefit from registering per-instance data along
-> > with the syscore operations. To achieve this, move the modifiable fields
-> > out of the syscore_ops structure and into a separate struct syscore that
-> > can be registered with the framework. Add a void * driver data field for
-> > drivers to store contextual data that will be passed to the syscore ops.
-> >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> This change is fine with me, so I can apply it unless somebody has any
-> specific heartburn related to it (Greg?), but in case you want to
-> route it differently
->=20
-> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> However, set_cpus_allowed_ptr() will mask out all the offline CPUs. So if the given
+> "cpu" to be brought online is in the returned affinity, we should call
+> set_cpus_allowed_ptr() to add this cpu into its affinity mask though the
+> current code will call it even it is not strictly necessary.
 
-I have a few follow-up patches for the Tegra PMC driver that depend on
-this. 6.19 is what I was targetting, so if we could put this into a
-stable branch that'd be the best solution. I can set that up via the
-Tegra tree if you and Greg are okay with it.
+I'm not sure I understand what you mean.
 
-If that's all too complicated, I can probably wait until the next cycle
-to merge the PMC changes.
+> This change will not do this update to NUMA_NO_NODE kthread with no preferred_affinity,
+> is this a problem?
 
-Thierry
+Ah, so unbound kthreads without preferred affinity are already affine to all
+possible CPUs (or housekeeping), whether those CPUs are online or not. So we
+don't need to add newly online CPUs to them.
 
---ykyajizgfjgayrmb
-Content-Type: application/pgp-signature; name="signature.asc"
+kthreads with a preferred affinity or node are different because if none of
+their preferred CPUs are online, they must be affine to housekeeping. But as
+soon as one of their preferred CPU becomes online, they must be affine to them.
 
------BEGIN PGP SIGNATURE-----
+Hence the different treatment. I'm adding a big comment to explain that.
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkLgLAACgkQ3SOs138+
-s6F0Lg//dTn1/PUCYHRhF8cm1xB6JKggiLC40TRct49fcf9eF5gAdCqXm44qKoaF
-67aqiXAiwzovTctJIu3rz8p71/FeXp/qGWDdPm/+wI7yD+BoCcVO0nmvXuPwCzhd
-ZMwqeaRVm57JX4M9S5BdkOGtDLgAjyZ/6Qq/2isiQSPiWWl/IT3YiLyzw8vq8mcY
-VoepQGK5hm7CHFf8FOBs+sMt6q5JJDm0VjNi+seVcCNg9U25GaXCRc2D9ztAqRib
-3768/KMhlftnoJKsizCwWq2Gyw0Se7ifz66djjf51sHd064LLDv7OZpfeGyiFK01
-MvVGXoPFuIJB0yqIoMRBbeRULm4kq+dkUkt1JWwYAMw9ZJnhXPJJI8bal2IASj8/
-E6NADiYd9HS8kAXWYvLkm0xHv4FN5WXWG2a+Gf6K2vpBm07zG2xnI+eVjYQSnb9W
-O9TcZf3jDWvgEQ31plH5JFY32sI4vjLAdcKS2oRfkbxFDJvTS+RRjj3EPqFshNXf
-B5E6pXTCltOkUepuhbGDzIifVWzYgg/GyXNfwzdnJUXcAz7QPPJySfMraf/dn+8S
-hggVgAivRFDEtaNEqKU6iqoePR3HIUJe/Ebjrb199RV9t4FcnVYOpviJRf5EWpsF
-2YEUJPiA7neiac9fPLwCoRh33bJTIzanmWVxmFF1nQ2vozIt68U=
-=3Mmd
------END PGP SIGNATURE-----
+Thanks!
 
---ykyajizgfjgayrmb--
+-- 
+Frederic Weisbecker
+SUSE Labs
 
