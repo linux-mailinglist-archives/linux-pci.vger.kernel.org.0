@@ -1,215 +1,151 @@
-Return-Path: <linux-pci+bounces-40332-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EC5BC34CBD
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:24:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1032C34E22
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 10:37:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E193734D242
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:24:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 703814201AC
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 09:31:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4639D2FBE17;
-	Wed,  5 Nov 2025 09:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C919C3019BA;
+	Wed,  5 Nov 2025 09:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GyNIZys1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJfvml5f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423DD2FC004
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 09:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C610301026;
+	Wed,  5 Nov 2025 09:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762334489; cv=none; b=rqrOVTQ1D1LJraYtP4aA9vW0jBY4IgfFQShU4l/UTPYVhD8iH260cqxSvmPxorQhFKJxyYaIUwHvsEp+TwUNI83NVY11QGo9P3CpMiPx4PlfcwehT6reMmHfNVWdgwkOsgmXIjXVbrWUbNPTGAlig+Fv/F83Ls/RpmxZwneGrqs=
+	t=1762335073; cv=none; b=BgBB/cJTh8qg/qIOGTqeYB1nePfwdHIKJ803bOINGAOr4+gZP3fzUSGkzW7VkTLup1I+a24UPT+rdYGQP/V83bd098DDBRTX3qlG7SX0PeQ1jHVp1lHnOPdQRCEI1SRl93KusZaWh9+rXYXJHTvDUkkxvyYX1Ho18oug0FAhD3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762334489; c=relaxed/simple;
-	bh=MsIGhFgmRY3shV51muuQARn7dSaDWqIQfo2RqSJEdV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=InoyjB64Xpjk2dHB8re8RWXnKQt38GpOEZbLKyY6BhaIhgWsn7RapKArpoa7Vx+mGor9huLH/how5jDuoMzdIbmF/wM+TaVfVi7E1c96KSWmot/T7RhGU9BiUj/5NgDscrAlESqASyj7OaklxGGai4CZOO1+v+b6pGF0NklTNfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GyNIZys1; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3737d0920e6so54373951fa.1
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 01:21:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1762334485; x=1762939285; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M9Cz7QFeZXHx7n2GD0Sctn9Btu8KGfjVz7K3mbh7364=;
-        b=GyNIZys1OAZAm+vHerp+X58IiegAzqoxjvafHezNTISZeaEOM3FJpERaXx9DT2FqsW
-         lt9VQbL0HI9cXkRwUHezNGwVSZLB2QzxyCVXObenBmw7vKME3a/kJtInNgfKCBUVO2gi
-         9FKF9jdOXUrR/kE67/qv9vL8ml1hPSPe+7k6M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762334485; x=1762939285;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M9Cz7QFeZXHx7n2GD0Sctn9Btu8KGfjVz7K3mbh7364=;
-        b=MbTmvESmt8ooc3BC5gpvkieuTURgCmASwS2+OtC1povyMudl721W5BfZTVFA/k/e1e
-         bLh3QnGRxxZ2p0HEnLLpz1sGXG24H6ap4tDD6hFYynRMaEbwjMr++q+SbeebqcT7nGzg
-         L7LvoYMOPtqaW8eFyBxbu1U/WtXFOdK1OygUAttIE/RG/aq0JMJLl6DZuB3N5Jzs9Fc7
-         m60i4rt9VAfkz5m21AUMvazodz7A1zlKgkLCBH+TFWCTH2vaKynRw54YX5ICgLgELvua
-         8YL5pXXollYu0zY+RYkul1iqRjUAoWpVKkDSeby8FzjUPWQRG8kPwfESE62yKTRY6X6C
-         fq3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrrq8IeJcc4yL5Z7CL9APRQFv48+3uw3KmzZ2eRdnNBMe6HQlgyMHkHUIz1RMpKhN487Q3kWwdAbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy7WwRruZU6DabVgW7RVtMrTzyyaGUJIbyqlYp6SvoToQtdY2n
-	H1QCGS33cMgbRh8Q/faxMMfcgtgcBYboPuCvi7Ve+zBBwAFylwsntUa1t5MPCgo4bS7ULQx6qMq
-	EHbH2hHibcLgkckTg72nHpA98iXIz+lbnpFRf52L1
-X-Gm-Gg: ASbGncsyd24DalMiF+ODUDLUFTqw0ZTMdfxcIUEq4UzbPw7suANA1C16O4VNaGhsF1h
-	vIFpPUd3nasB9pWuKs2hR/e9AH2h/lKDCqXFP/93tOyEtMqdlnKLTnMjAkpqWcK2ol1YuBCAe+c
-	KAuRORZnPQ5n7h01Hi8ZAmj87zU1UCfjJM34lmUUgdoVGEzs1SL0TFjgEb4WPnwkjTdMst0GrNf
-	CFTT0AHuSytksMDrDaZX59bl5zFdK4IjoFX1pwHUf5OpO5TocUeBhhYMwlyRsrOdzM9cSFgySKc
-	Al9+6SECf7DjDF0=
-X-Google-Smtp-Source: AGHT+IGQP2VVUJ5rUmY6C9xv2Mgt2qZpBhs2wiUlca0i0M5p6PJNG/u4WXKd81FDNk50RCsLvXv5mIlfnoCqea13DHc=
-X-Received: by 2002:a05:6512:104b:b0:594:34c4:a352 with SMTP id
- 2adb3069b0e04-5943d75dd17mr829339e87.23.1762334485335; Wed, 05 Nov 2025
- 01:21:25 -0800 (PST)
+	s=arc-20240116; t=1762335073; c=relaxed/simple;
+	bh=/1quHRth7L4XkYnHL1XHj+8BCMcoW5MGEeKrzUKwfhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eyK84K9vC+F9Ug5oEQ5kb9lbryAa7KAJVlQmr4LXcrQH3o9YtAIZaYj7uHxCCFCHXEaJT13wIW9dzCmY1C3b4AnJs5cUU9UZZYD4eLgj4j02R5riAhAukCIldOA2sKfpiaWi+jVZ+hiZSKPZPwfQAjyazpReWq7ZKpbUlhPjYcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJfvml5f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFAFC116B1;
+	Wed,  5 Nov 2025 09:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762335073;
+	bh=/1quHRth7L4XkYnHL1XHj+8BCMcoW5MGEeKrzUKwfhw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qJfvml5fEdgBIeHYD7vaMyrMbHdEsmpIMoe5nBjM3r0/2wSEkRf258TN+4PQUyztk
+	 U2xCS0NX+zWzqTICSVStcVmmkEGLTuHXPSKj+2+hM3UDsQvNWR8q3ObZVWFwsowyM0
+	 cyGC4PTFUHt7ognM7kXaU5QOgl997IJemKvi+aGX9cCHvVAcbUCNfOjh3mg1fQI11y
+	 noVVmiJylnGcUm3DdFMO4ArsPu5tpIXrFzqlLDJMqE5Epa0hvi5KePo7/CuFpvOTyQ
+	 8ZGS4SrWARoCPyhMY4bJ4und9bh5S1KBOJkk4gGg/huAwI9EGFAeseNY3NzPFYPE3N
+	 EYyIMiJuB1ajA==
+Date: Wed, 5 Nov 2025 15:01:03 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, PCI <linux-pci@vger.kernel.org>, 
+	"open list:THERMAL" <linux-pm@vger.kernel.org>
+Subject: Re: PCIe link training and pwrctrl sequence
+Message-ID: <rz6ajnl7l25hfl2u7lloywtw7sq7smhb63hg76wjslyuwyjb7a@fhuafuino5kv>
+References: <zk4ea5cibrkp4vttuy4evrqybf76b3nop5lnyck4ws4nyf2yc4@ghj2eyswsoow>
+ <CAMRc=MdWmO4wvX6zpzN0-LZF1pF5Y2=sS8fBwr=CKMGWHg+shA@mail.gmail.com>
+ <rfr5cou6jr7wmtxixfgjxhnda6yywlsxsei7md7ne3qge7r3gk@xv6n5pvcjzrm>
+ <CAMRc=Me9Td5G9qZV8A98XkGROKw1D2UeQHpFzt8uApF8995MZw@mail.gmail.com>
+ <rvsyll4u6v4tpaxs4z3k4pbusoktkaocq4o3g6rjt6d2zrzqst@raiuch3hu3ce>
+ <CAMRc=Me+4H6G+-Qj_Gz2cv2MgRHOmrjMyNwJr+ardDR1ndYHvQ@mail.gmail.com>
+ <fydmplp5z4hjic2wlmvcy6yr3s5t5u4qsgo7yzbqq3xu2g6hdk@v4tzjj3ww4s6>
+ <CAMRc=McGuNX42k_HdV20zW+buACBTmTZEHWgS-ddRYsvnfwDSg@mail.gmail.com>
+ <ibdmghl5dg3oda2j5ejp35ydky4xkazewhdvskm7p32vstdegr@36pj32b6dt44>
+ <CAGb2v65acHoO5025ZN7DhX0xVQf6JyHmUK3CB9UhnmTDDHq6vg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105062815.966716-1-wenst@chromium.org> <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
-In-Reply-To: <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 5 Nov 2025 17:21:13 +0800
-X-Gm-Features: AWmQ_bndGi-pOLYUZIEExvSxZWBBRpwVWURG5nTKgeks0Y9s12nRjMsAjohzleQ
-Message-ID: <CAGXv+5EwiL_-ozRARH2UBm5znHi1egBoCjmELN=17hvFF_oeoQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Manivannan Sadhasivam <mani@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Jianjun Wang <jianjun.wang@mediatek.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v65acHoO5025ZN7DhX0xVQf6JyHmUK3CB9UhnmTDDHq6vg@mail.gmail.com>
 
-On Wed, Nov 5, 2025 at 4:45=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 05/11/25 07:28, Chen-Yu Tsai ha scritto:
-> > As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
-> > common code") come up later" in the code, it is possible for link up to
-> > occur later:
+On Wed, Oct 22, 2025 at 12:39:41AM +0800, Chen-Yu Tsai wrote:
+> (recipient list trimmed down and added PCI & pwrctrl maintainers and lists)
+> 
+> On Tue, Oct 21, 2025 at 8:54 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
 > >
-> >    Let's standardize this to succeed as there are usecases where device=
-s
-> >    (and the link) appear later even without hotplug. For example, a
-> >    reconfigured FPGA device.
+> > On Tue, Oct 21, 2025 at 02:22:46PM +0200, Bartosz Golaszewski wrote:
+> > > On Tue, Oct 21, 2025 at 2:20 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > >
+> > > > >
+> > > > > And with the implementation this series proposes it would mean that
+> > > > > the perst signal will go high after the first endpoint pwrctl driver
+> > > > > sets it to high and only go down once the last driver sets it to low.
+> > > > > The only thing I'm not sure about is the synchronization between the
+> > > > > endpoints - how do we wait for all of them to be powered-up before
+> > > > > calling the last gpiod_set_value()?
+> > > > >
+> > > >
+> > > > That will be handled by the pwrctrl core. Not today, but in the coming days.
+> > > >
+> > >
+> > > But is this the right approach or are you doing it this way *because*
+> > > there's no support for enable-counted GPIOs as of yet?
+> > >
 > >
-> > Another case for this is the new PCIe power control stuff. The power
-> > control mechanism only gets triggered in the PCI core after the driver
-> > calls into pci_host_probe(). The power control framework then triggers
-> > a bus rescan. In most driver implementations, this sequence happens
-> > after link training. If the driver errors out when link training times
-> > out, it will never get to the point where the device gets turned on.
+> > This is the right approach since as of today, pwrctrl core scans the bus, tries
+> > to probe the pwrctrl driver (if one exists for the device to be scanned), powers
+> > it ON, and deasserts the PERST#. If the device is a PCI bridge/switch, then the
+> > devices underneath the downstream bus will only be powered ON after the further
+> > rescan of the downstream bus. But the pwrctrl drivers for those devices might
+> > get loaded at any time (even after the bus rescan).
 > >
-> > Ignore the link up timeout, and lower the error message down to a
-> > warning.
-> >
-> > This makes PCIe devices that have not-always-on power rails work.
-> > However there may be some reversal of PCIe power sequencing, since now
-> > the PERST# and clocks are enabled in the driver, while the power is
-> > applied afterwards.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
->
-> Ok, that's sensible.
->
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
->
-> > ---
-> > The change works to get my PCIe WiFi device working, but I wonder if
-> > the driver should expose more fine grained controls for the link clock
-> > and PERST# (when it is owned by the controller and not just a GPIO) to
-> > the power control framework. This applies not just to this driver.
-> >
-> > The PCI standard says that PERST# should hold the device in reset until
-> > the power rails are valid or stable, i.e. at their designated voltages.
->
-> I completely agree with all of the above - and I can imagine multiple PCI=
--Express
-> controller drivers doing the same as what's being done in MTK Gen3.
->
-> This means that the boot process may get slowed down by the port startup =
-sequence
-> on multiple PCI-Express controllers (again not just MediaTek) and it's so=
-mething
-> that must be resolved in some way... with the fastest course of action im=
-o being
-> giving controller drivers knowledge of whether there's any device that is=
- expected
-> to be powered off at that time (in order to at least avoid all those wait=
-s that
-> are expected to fail).
+> > This causes several issues with the PCI core as this behavior sort of emulates
+> > the PCI hot-plug (devices showing up at random times after bus scan). If the
+> > upstream PCI bridge/switch is not hot-plug capable, then the devices that were
+> > showing up later will fail to enumerate due to lack of resources. The failure
+> > is due to PCI core limiting the resources for non hot-plug PCI bridges as it
+> > doesn't expect the devices to show up later in the downstream port.
+> 
+> Side note:
+> 
+> Today I was looking into how the PCI core does slot pwrctrl, and it doesn't
+> really work for some of the PCI controller drivers.
+> 
+> The pwrctrl stuff happens after the driver adds the host bus bridge.
+> However drivers are doing link training before that. If the power is
+> not on, link training will fail, and the driver errors out. It never
+> has a chance to get to pwrctrl.
+> 
+> I wonder if some bits should be split out so they could be interleaved with
+> link management on the host side. AFAICT only dwc and qcom will rescan the
+> bus when an interrupt says the link is up. Other controllers might not have
+> such an interrupt notification. I was looking at the MediaTek gen3 driver
+> specifically.
+> 
 
-That also requires some refactoring, since all the drivers _wait_ for link
-up before going into the PCI core, which does the actual child node parsing=
-.
+This is a known issue. With the initial design of the pwrctrl framework, we
+thought that the pwrctrl devices should be created without controller
+intervention. But it is proving to be wrong as some controllers expect the
+devices to show up before the PHY initialization, as yours.
 
-I would like some input from Bartosz, who introduced the PCI power control
-framework, and Manivannan, who added slot power control.
+We are working on a series (almost complete, just needs cleanup) that moves the
+pwrctrl creation to a new exported API and allows the controller drivers to call
+the API from whereever they want based on the requirement. This series also
+fixes the above mentioned hotplug/PERST# issues by scanning all the PCIe nodes
+in one shot and creating pwrctrl devices and making use all of them gets probed
+(just the pwrctrl drivers, not PCIe client drivers) before deasserting PERST#
+and then scanning the bus. This would require all the pwrctrl drivers to be
+loaded before probing the controller driver (otherwise, probe deferral will
+happen), but that's a valid dependency.
 
-> P.S.: Chen-Yu, did you check if the same applies to the MTK previous gen =
-driver?
->        Could you please check and eventually send a commit to do the same=
- there?
+This will allow the PCI core to find all the devices during the initial bus
+scan and will fix the resource allocation issue.
 
-My quick survey last week indicated that all the drivers except for the
-dwc family error out if link up timed out.
+- Mani
 
-I don't have any hardware for the older generation though. And it looks
-like for the previous gen, the driver performs even worse, since it can
-support multiple slots, and each slot is brought up sequentially. A slot
-is discarded if link up times out. And the whole driver errors out if no
-slots are working.
-
-
-ChenYu
-
-> Cheers,
-> Angelo
->
-> > ---
-> >   drivers/pci/controller/pcie-mediatek-gen3.c | 13 +++++++++----
-> >   1 file changed, 9 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
-controller/pcie-mediatek-gen3.c
-> > index 75ddb8bee168..5bdb312c9f9b 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -504,10 +504,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_=
-pcie *pcie)
-> >               ltssm_index =3D PCIE_LTSSM_STATE(val);
-> >               ltssm_state =3D ltssm_index >=3D ARRAY_SIZE(ltssm_str) ?
-> >                             "Unknown state" : ltssm_str[ltssm_index];
-> > -             dev_err(pcie->dev,
-> > -                     "PCIe link down, current LTSSM state: %s (%#x)\n"=
-,
-> > -                     ltssm_state, val);
-> > -             return err;
-> > +             dev_warn(pcie->dev,
-> > +                      "PCIe link down, current LTSSM state: %s (%#x)\n=
-",
-> > +                      ltssm_state, val);
-> > +
-> > +             /*
-> > +              * Ignore the timeout, as the link may come up later,
-> > +              * such as when the PCI power control enables power to th=
-e
-> > +              * device, at which point it triggers a rescan.
-> > +              */
-> >       }
-> >
-> >       mtk_pcie_enable_msi(pcie);
->
->
+-- 
+மணிவண்ணன் சதாசிவம்
 
