@@ -1,361 +1,159 @@
-Return-Path: <linux-pci+bounces-40366-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40369-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 235B6C36FAB
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:12:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 584FEC37057
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 18:18:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 183C3685384
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 16:23:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28CB0627816
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 16:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD4B334692;
-	Wed,  5 Nov 2025 16:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37B6338912;
+	Wed,  5 Nov 2025 16:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B0MH5FsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVpbhQKs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57775321448
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 16:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A22338594
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 16:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762359723; cv=none; b=RbCVkalWtZBZr468yysQ9H3LfZ6c24F+2ZetNKtWUglc6sVrI61QIb5GJCORZa9L0ICvSUaA3jJtuKNLgoh49aOZxMO7tQqXzg+qw+R89z/wdbnFxlc5I77e1h4I7J3J63pAa7UhxcyTkrG9dRqF+u9M1vP91w/7385Swdo1yvw=
+	t=1762361527; cv=none; b=Ji5hccN1mWglFhe4yrpbDQnDy7QCN/gEBu8Y07SEuOq/8oQdpgRLVzqZs4cvyHycQz6t55XiuP0JNRVXuGQyfMbJEnlnsRnNKrPjygork1Ib3xlhfHMLgmgVgXBElvzGlWIRoI3ibYlp6Vzx+pG120CE5W/iAmhE9v/t6wHAJNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762359723; c=relaxed/simple;
-	bh=FmLX7J25rDa0sDpnK8PyjFiuLnrtWhbfdsiypYmH0H4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b3TkyGyFZFXIYyi7cuJg+b2vbQ/oGXpZE+GbmbwJ3OTocKhfnYEfduvkVfg1FcAq5EaQ+yhinVjZhKN3Zp3FgR4Hxf3CiRVjv/BSpTF7qvLdt8j9kXuWnMie7MD6oPaxhDYF1m3Vx9h3F9xIXZL18AgPxXxAeL9dn7gLfBGkn80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B0MH5FsU; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3717780ea70so76570111fa.1
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 08:22:00 -0800 (PST)
+	s=arc-20240116; t=1762361527; c=relaxed/simple;
+	bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxgf9f0zPxVxTOXWrNdexrOasw5SrknBSBxc+49hp8tIGcEj1tZH34K2Fq4QaEugsqosda02aJMsB1WMMfzMheb/l+thJonIBjKUpd9PunMs+2DVkwDHkud3EqgEu0RImf4fV8tICOVANUU2zRW3XkMEM9+jc4VEn1oNJmEPosI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVpbhQKs; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4710022571cso64344095e9.3
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 08:52:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762359718; x=1762964518; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=70ORLyPxlhnDgCvsyxrQcNXPF2cgzUwFaBuwCIGbTrg=;
-        b=B0MH5FsU/ayGL8d3a7IwScLQvaU1EkTn5iXcfLpNJAJ6WFiALgxsuF0JboP2SQ+/89
-         EQ8Dt7XbTnjrE8ODWcBwVAx/h21k+N2ZpVgFjeYq3CLy+8sARyurxU96x1fB2IzBArqS
-         Or812YljRtWBtXyfa3C/rrpgFF+r0y5FMYq4+MUuASrMOofiDr+ZMQxDlaKQGaZqAx9t
-         yjZDjbjL0fF4Gs4TSkUbRwfBC5QBUTXnNRG5GEZnOewba+7sAa+qzwUloMjM1PewlRiR
-         t5+32XHylDFK2+st0ScqzUbo/WnQR+9oSJ3fgwX/t38rddmvzi3AVVtEQsHRKv96wrBd
-         1gsw==
+        d=gmail.com; s=20230601; t=1762361524; x=1762966324; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
+        b=AVpbhQKsWHsJPurkBtpFjS569EuYKUxy0Ewl5KvxLz11TynIudTMz6x27b6A6doKWz
+         ip2xD5KKY1oMJCK0Dweum3CzpsfSfe5Azmrly9qy+6lx5DTGxHpK2A+42y5Z3pqNqWXK
+         5oMVmrIxCr+TXfau1fOpH55Ds8Gfkw+SKMup3+25IM0tOOtYD8mCPcmX3YHevXG3I9fS
+         voKjd3O+6JkWCl7xwg0Uy4qskOwo95lmPAQUzNV1zgopuIouOGjmjNsUQ0iiplG4NNw3
+         pJwe6bLtD5Fb+hz4cFTbQ+dE2Dx8twHim57o5xVAlYBYEkIZ+8VVi9pnTa3HqwZj4o61
+         JDfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762359718; x=1762964518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=70ORLyPxlhnDgCvsyxrQcNXPF2cgzUwFaBuwCIGbTrg=;
-        b=kucLv1AQk7TSyjZ6Qp244AlUHv0wteKLjG+8oDNuQDmRuWLWer50JZQxS+8wwaKYXy
-         yuGBmTgdUzbrieSJn12hZhbVth5ySGg9rNuP1Z7flX3bcg76lm2k3yrS9+se3phz9pO8
-         p1/MQtHi9f5W3l9DCcZINViu73IRxLIeJKe1nYDtA0S0qBsqcbnu6KrJAsbxHeVKsX9E
-         UkqNSp3/7fKjt52d6tqx5wS6VDCiW1nf8TnldLbo4RRs9915Z05k4OFFJhI4x5hTsu4E
-         iWCwsW1MojWM4tOUuurwKGEQGeBzN0ox682ZXTWQGiZmbF8VWXoUyLdsOoiMNScjtFrb
-         nU0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoEvGs6SFHCS7n/gNk38MOLPRwsp0C/dsx4LtyuEeCJpgsHOE5jzi/9bq/cm19cIrVQJMFNuWrUlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJzuLGJitYpSHeoHYtEgjECdKEFroPDrFXa7JZlyjo5d/5dikb
-	5u1NL5L6Ql8quCc0YMJ1eVVOZdWlegFi6s1yAiSv+AEUPFZrxVfckestL8Dnt6r8mZAtBQkCQVl
-	WRIFuS5UZC3Bn55lQ+5eWWqxba8evJVKnEoKgRtKk0w==
-X-Gm-Gg: ASbGncu/ebgsKRCpRSNwlrmIlwYg93mCblOvIo/dJF1nE8/n8qG+kD1MAlbdVT4NV0W
-	mAbL35sbNenghnEntf0BI4Vn0rB18lxc1pOpF2k+t0edhRx63Og2lerqK41k3UIjHCNpZq/uWL0
-	ZPcinY+JNceE9x0Bao4rXzxml4OODImiDd6SYicDXMiN8knWAxHirWSbgIB6fHRNoXsew8LQUqp
-	tNjrUAXfVgAf/6q4s+DlhzbxetjNg3aCHele4pn/9UY98LA1mACEpAVp44DgIDcKn4Jazo1uXgE
-	SGHQEiGiPzPdGsTr+R13QZSd0Xg=
-X-Google-Smtp-Source: AGHT+IGd9nOOO8Cu1iw6z8yTqdKaQ4LRnOY+7cfjhpscr/G2FIDhws1M/PZvAH1qCj7J40uiFyV1gKfF0cHDfmGqY00=
-X-Received: by 2002:a2e:a015:0:b0:37a:3132:fe34 with SMTP id
- 38308e7fff4ca-37a514a1d6bmr10033881fa.48.1762359718227; Wed, 05 Nov 2025
- 08:21:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762361524; x=1762966324;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=esO8jRq9uTUw55PJsW3htw0zar+bIhexF73TArzHxxk=;
+        b=OwRNmMWFBirrlv6jwMUrZPkKAET6ynmQJw4AlWWg64N0TgWR0XpcsX4RWLns5YCR+r
+         6Jj+f8/mpuDeHzXfGsGNeCB9yljNhDZMipBpFJ5OFqcGkOxDny5k/IsV74uO36QRVbwf
+         h56gkGvO/BFQLI6l0F2EZDiMqpdXnyGqIPm/mzuYg8w4vlU+kS4wNiWdVS+qiIafYPZ8
+         8MNOWEMUzwCmfW8EZfaQexnE5SkaJi2f6JeiM4QdSv096Yy3aAiNjbC3MFtcB5ySG7HE
+         BfSC8Xo2ncwGzbjVehw1aCofg9TlxlMSTIxu+9NeCBAnwi/5BhvLuLEXHFAGPbWA2shl
+         EOsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/DaZjLL1hTHrnyPwIpkRdxOc6tcEOBtU2X122rRSp8+C0otIKHnbuvPE4divgT7f7aMuirCXx0yc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc4PRNpJ3kUCarTxuGxT33yFWNkdksH+0Q95in8Qr4vOHRNfDj
+	lb6BASM3aGfp0/exLXr6rPcYzcHWMyyOlScXJAu9ocDWWvDJIvqeX7yv
+X-Gm-Gg: ASbGncvAfHe1E0Js/guWT4bBrZ9ehnXl0k6ENmjvAMZ/F7l/luZIamfPtsAQ8/kh49R
+	eA6VgkRNwlGdKpqgvLSJGeBxNB5Bkx2uTo/j6Jgy8jDt17jStQoTbhaE4M2RIjGX61igEG1+Mt7
+	hmJQ8UZWQ3sLcV7TFeyxr9pw6Ut7tK6OGLGPpop06bKHNv6IceanSEpVd6WIaxKTU7qRg3H+GIX
+	WsRHX1RhjCczMYeTHeY8KOOScHXN93CYWqxpURXeOsbSPZ9JDMP73kPZ7Ydbr1y1zOFkWKyh2eU
+	CyaEkgxdCjAXujL+G5a0bkNrHqSurKqn69OVRT9QBHeqOAYc1O9jmXgjv8x8Hkl0Du2r2Cbckzw
+	vumJFQRPoEjwBWXq3NIbWLDW87UpRzXVo1xVOmj6QiAIoJIklkXdL2Gjj6lVBY5GelBTsx14DVT
+	WBIyta4MG3pC/GvSxkYFLvC1WzxZnRldOqQ/T7vfuQJKUsXFxIKYz76I8tz8mbwyk=
+X-Google-Smtp-Source: AGHT+IF1eT04urNHEfsD9kdCj32CNL1YcHJ6oGuMVK3cU2BLT/aQRFRmm7ox5OYZe77ML31HK9v5ow==
+X-Received: by 2002:a05:600c:1c94:b0:477:fcb:2256 with SMTP id 5b1f17b1804b1-4775ce23efemr42468465e9.17.1762361524090;
+        Wed, 05 Nov 2025 08:52:04 -0800 (PST)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce210a7sm59725725e9.12.2025.11.05.08.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 08:52:02 -0800 (PST)
+Date: Wed, 5 Nov 2025 17:52:01 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
+Message-ID: <3dzha4qyqdrbutxby3n5nkvihnxrhniqr6w726eumhzgln2w5l@fbu72mzmjz4m>
+References: <20251029163336.2785270-1-thierry.reding@gmail.com>
+ <20251029163336.2785270-2-thierry.reding@gmail.com>
+ <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com> <20251105-pci-m2-v1-4-84b5f1f1e5e8@oss.qualcomm.com>
-In-Reply-To: <20251105-pci-m2-v1-4-84b5f1f1e5e8@oss.qualcomm.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 5 Nov 2025 17:21:46 +0100
-X-Gm-Features: AWmQ_bniXnoc6lr9i63gxHMeq3DQpk_25xCcVxF2Y4yU4HxZNRN69fcND_aCeYc
-Message-ID: <CAMRc=McB4Zk8WuSPL=7+7kX4RJbdFBNReWZyiFnH8vfVx3DxAg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] power: sequencing: Add the Power Sequencing driver
- for the PCIe M.2 connectors
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ykyajizgfjgayrmb"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0igMJ12KoYCmrWauvOfdxaNP5-XVKoSxUroaKFN7S-rTQ@mail.gmail.com>
+
+
+--ykyajizgfjgayrmb
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 1/7] syscore: Pass context data to callbacks
+MIME-Version: 1.0
 
-On Wed, Nov 5, 2025 at 10:17=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@oss.qualcomm.com> wrote:
->
-> This driver is used to control the PCIe M.2 connectors of different
-> Mechanical Keys attached to the host machines and supporting different
-> interfaces like PCIe/SATA, USB/UART etc...
->
-> Currently, this driver supports only the Mechanical Key M connectors with
-> PCIe interface. The driver also only supports driving the mandatory 3.3v
-> and optional 1.8v power supplies. The optional signals of the Key M
-> connectors are not currently supported.
->
+On Mon, Nov 03, 2025 at 05:18:08PM +0100, Rafael J. Wysocki wrote:
+> On Wed, Oct 29, 2025 at 5:33=E2=80=AFPM Thierry Reding <thierry.reding@gm=
+ail.com> wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Several drivers can benefit from registering per-instance data along
+> > with the syscore operations. To achieve this, move the modifiable fields
+> > out of the syscore_ops structure and into a separate struct syscore that
+> > can be registered with the framework. Add a void * driver data field for
+> > drivers to store contextual data that will be passed to the syscore ops.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+>=20
+> This change is fine with me, so I can apply it unless somebody has any
+> specific heartburn related to it (Greg?), but in case you want to
+> route it differently
+>=20
+> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
-I'm assuming you followed some of the examples from the existing WCN
-power sequencing driver. Not all of them are good or matching this
-one, please see below.
+I have a few follow-up patches for the Tegra PMC driver that depend on
+this. 6.19 is what I was targetting, so if we could put this into a
+stable branch that'd be the best solution. I can set that up via the
+Tegra tree if you and Greg are okay with it.
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
-> ---
->  MAINTAINERS                               |   7 ++
->  drivers/power/sequencing/Kconfig          |   8 ++
->  drivers/power/sequencing/Makefile         |   1 +
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 138 ++++++++++++++++++++++++=
-++++++
->  4 files changed, 154 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 46126ce2f968e4f9260263f1574ee29f5ff0de1c..9b3f689d1f50c62afa3772a0c=
-6802f99a98ac2de 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20474,6 +20474,13 @@ F:     Documentation/driver-api/pwrseq.rst
->  F:     drivers/power/sequencing/
->  F:     include/linux/pwrseq/
->
-> +PCIE M.2 POWER SEQUENCING
-> +M:     Manivannan Sadhasivam <mani@kernel.org>
-> +L:     linux-pci@vger.kernel.org
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/connector/pcie-m2-m-connector.y=
-aml
-> +F:     drivers/power/sequencing/pwrseq-pcie-m2.c
-> +
->  POWER STATE COORDINATION INTERFACE (PSCI)
->  M:     Mark Rutland <mark.rutland@arm.com>
->  M:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/=
-Kconfig
-> index 280f92beb5d0ed524e67a28d1c5dd264bbd6c87e..f5fff84566ba463b55d3cd0c0=
-7db34c82f9f1e31 100644
-> --- a/drivers/power/sequencing/Kconfig
-> +++ b/drivers/power/sequencing/Kconfig
-> @@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
->           GPU. This driver handles the complex clock and reset sequence
->           required to power on the Imagination BXM GPU on this platform.
->
-> +config POWER_SEQUENCING_PCIE_M2
-> +       tristate "PCIe M.2 connector power sequencing driver"
-> +       depends on OF || COMPILE_TEST
+If that's all too complicated, I can probably wait until the next cycle
+to merge the PMC changes.
 
-The OF dependency in the WCN driver is there because we're doing some
-phandle parsing and inspecting the parent-child relationships of the
-associated nodes. It doesn't look like you need it here. On the other
-hand, if you add more logic to the match() callback, this may come
-into play.
+Thierry
 
-> +       help
-> +         Say Y here to enable the power sequencing driver for PCIe M.2
-> +         connectors. This driver handles the power sequencing for the M.=
-2
-> +         connectors exposing multiple interfaces like PCIe, SATA, UART, =
-etc...
-> +
->  endif
-> diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing=
-/Makefile
-> index 96c1cf0a98ac54c9c1d65a4bb4e34289a3550fa1..0911d461829897c5018e26dbe=
-475b28f6fb6914c 100644
-> --- a/drivers/power/sequencing/Makefile
-> +++ b/drivers/power/sequencing/Makefile
-> @@ -5,3 +5,4 @@ pwrseq-core-y                           :=3D core.o
->
->  obj-$(CONFIG_POWER_SEQUENCING_QCOM_WCN)        +=3D pwrseq-qcom-wcn.o
->  obj-$(CONFIG_POWER_SEQUENCING_TH1520_GPU) +=3D pwrseq-thead-gpu.o
-> +obj-$(CONFIG_POWER_SEQUENCING_PCIE_M2) +=3D pwrseq-pcie-m2.o
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/se=
-quencing/pwrseq-pcie-m2.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..b9f68ee9c5a377ce900a88de8=
-6a3e269f9c99e51
-> --- /dev/null
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com=
->
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwrseq/provider.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +struct pwrseq_pcie_m2_pdata {
-> +       const struct pwrseq_target_data **targets;
-> +};
-> +
-> +struct pwrseq_pcie_m2_ctx {
-> +       struct pwrseq_device *pwrseq;
-> +       const struct pwrseq_pcie_m2_pdata *pdata;
-> +       struct regulator_bulk_data *regs;
-> +       size_t num_vregs;
-> +       struct notifier_block nb;
-> +};
-> +
-> +static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-> +{
-> +       struct pwrseq_pcie_m2_ctx *ctx =3D pwrseq_device_get_drvdata(pwrs=
-eq);
-> +
-> +       return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
-> +}
-> +
-> +static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-> +{
-> +       struct pwrseq_pcie_m2_ctx *ctx =3D pwrseq_device_get_drvdata(pwrs=
-eq);
-> +
-> +       return regulator_bulk_disable(ctx->num_vregs, ctx->regs);
-> +}
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data =3D =
-{
-> +       .name =3D "regulators-enable",
-> +       .enable =3D pwrseq_pcie_m2_m_vregs_enable,
-> +       .disable =3D pwrseq_pcie_m2_m_vregs_disable,
-> +};
-> +
-> +static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] =3D {
-> +       &pwrseq_pcie_m2_vregs_unit_data,
-> +       NULL
-> +};
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data =3D=
- {
-> +       .name =3D "pcie-enable",
-> +       .deps =3D pwrseq_pcie_m2_m_unit_deps,
-> +};
-> +
-> +static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data=
- =3D {
-> +       .name =3D "pcie",
-> +       .unit =3D &pwrseq_pcie_m2_m_pcie_unit_data,
-> +};
-> +
-> +static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] =3D {
-> +       &pwrseq_pcie_m2_m_pcie_target_data,
-> +       NULL
-> +};
-> +
-> +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data =3D {
-> +       .targets =3D pwrseq_pcie_m2_m_targets,
-> +};
-> +
-> +static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
-> +                                struct device *dev)
-> +{
-> +       return PWRSEQ_MATCH_OK;
+--ykyajizgfjgayrmb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Eek! That will match any device we check. I'm not sure this is what
-you want. Looking at the binding example, I assume struct device *
-here will be the endpoint? If so, you should resolve it and confirm
-it's the one referenced from the connector node.
+-----BEGIN PGP SIGNATURE-----
 
-> +}
-> +
-> +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct pwrseq_pcie_m2_ctx *ctx;
-> +       struct pwrseq_config config;
-> +       int ret;
-> +
-> +       ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx)
-> +               return -ENOMEM;
-> +
-> +       ctx->pdata =3D of_device_get_match_data(dev);
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkLgLAACgkQ3SOs138+
+s6F0Lg//dTn1/PUCYHRhF8cm1xB6JKggiLC40TRct49fcf9eF5gAdCqXm44qKoaF
+67aqiXAiwzovTctJIu3rz8p71/FeXp/qGWDdPm/+wI7yD+BoCcVO0nmvXuPwCzhd
+ZMwqeaRVm57JX4M9S5BdkOGtDLgAjyZ/6Qq/2isiQSPiWWl/IT3YiLyzw8vq8mcY
+VoepQGK5hm7CHFf8FOBs+sMt6q5JJDm0VjNi+seVcCNg9U25GaXCRc2D9ztAqRib
+3768/KMhlftnoJKsizCwWq2Gyw0Se7ifz66djjf51sHd064LLDv7OZpfeGyiFK01
+MvVGXoPFuIJB0yqIoMRBbeRULm4kq+dkUkt1JWwYAMw9ZJnhXPJJI8bal2IASj8/
+E6NADiYd9HS8kAXWYvLkm0xHv4FN5WXWG2a+Gf6K2vpBm07zG2xnI+eVjYQSnb9W
+O9TcZf3jDWvgEQ31plH5JFY32sI4vjLAdcKS2oRfkbxFDJvTS+RRjj3EPqFshNXf
+B5E6pXTCltOkUepuhbGDzIifVWzYgg/GyXNfwzdnJUXcAz7QPPJySfMraf/dn+8S
+hggVgAivRFDEtaNEqKU6iqoePR3HIUJe/Ebjrb199RV9t4FcnVYOpviJRf5EWpsF
+2YEUJPiA7neiac9fPLwCoRh33bJTIzanmWVxmFF1nQ2vozIt68U=
+=3Mmd
+-----END PGP SIGNATURE-----
 
-I should probably address it in the WCN driver - you don't need to use
-the OF variant, use device_get_match_data().
-
-> +       if (!ctx->pdata)
-> +               return dev_err_probe(dev, -ENODEV,
-> +                                    "Failed to obtain platform data\n");
-> +
-> +       ret =3D of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx->re=
-gs);
-
-Same here, you already have the device, no need to get the regulators
-through the OF node. Just use devm_regulator_bulk_get()
-
-> +       if (ret < 0)
-> +               return dev_err_probe(dev, ret,
-> +                                    "Failed to get all regulators\n");
-> +
-> +       ctx->num_vregs =3D ret;
-> +
-> +       memset(&config, 0, sizeof(config));
-
-Just do config =3D { }; above?
-
-
-> +
-> +       config.parent =3D dev;
-> +       config.owner =3D THIS_MODULE;
-> +       config.drvdata =3D ctx;
-> +       config.match =3D pwrseq_pcie_m2_match;
-> +       config.targets =3D ctx->pdata->targets;
-> +
-> +       ctx->pwrseq =3D devm_pwrseq_device_register(dev, &config);
-> +       if (IS_ERR(ctx->pwrseq))
-> +               return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-> +                                    "Failed to register the power sequen=
-cer\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id pwrseq_pcie_m2_of_match[] =3D {
-> +       {
-> +               .compatible =3D "pcie-m2-m-connector",
-> +               .data =3D &pwrseq_pcie_m2_m_of_data,
-> +       },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
-> +
-> +static struct platform_driver pwrseq_pcie_m2_driver =3D {
-> +       .driver =3D {
-> +               .name =3D "pwrseq-pcie-m2",
-> +               .of_match_table =3D pwrseq_pcie_m2_of_match,
-> +       },
-> +       .probe =3D pwrseq_pcie_m2_probe,
-> +};
-> +module_platform_driver(pwrseq_pcie_m2_driver);
-> +
-> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm=
-.com>");
-> +MODULE_DESCRIPTION("Power Sequencing driver for PCIe M.2 connector");
-> +MODULE_LICENSE("GPL");
->
-> --
-> 2.48.1
->
-
-Bartosz
+--ykyajizgfjgayrmb--
 
