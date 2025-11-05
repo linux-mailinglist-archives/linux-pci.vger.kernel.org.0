@@ -1,169 +1,242 @@
-Return-Path: <linux-pci+bounces-40380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 991F7C37695
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 20:03:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C9B3C37801
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 20:36:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 490DB4E10B9
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 19:03:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 016BE3B7537
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 19:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7AB272E42;
-	Wed,  5 Nov 2025 19:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E9133FE18;
+	Wed,  5 Nov 2025 19:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VA0aPRXP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cANaJJqg";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="nplmuMeW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997A3299AB5
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 19:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFFB328B46
+	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 19:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762369418; cv=none; b=gjxmCcznKHKl2DjnQRxvSV0Fejy8JomPODPzJMxh1hyBzw+szY9nyi1C0BGytuz9g25u7EVRH4NCa8DRdco3ZRfF+kCtfbeVr+/lJnkPmw3R+sckSAunBMDX+PD8VHSIFbAgqZZIKjauGnEPjpl0cjnUC877qothPv9ABwAJ8a8=
+	t=1762371245; cv=none; b=twf2oLnmhJWrusJUIsNBgSSv3FeXAnTt0pP5Xc+a3ccNwlSdRTvy9pvBWBlVQMPxB/gcgG5m/39kPitGwUSaA1ZqRPQfI97bFhhagYWChbjGeT8Tpkyhy7nRO8Z4xcA/o/N0IjwsbEuLJW4aTxp2mofRCf09oEkkj1fXYXboNMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762369418; c=relaxed/simple;
-	bh=PZ6fOoCOFzuuftIdxLfo9ZcdanHH16wdQ4uKtiHl2CY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AyApwMSqCcanQqLKXUM6XjWTShqpXsD71cqlGc8lEhfR3HG+gtgz+gaIN28bmKVQ0GRAEVV8WDf3o7AVXwKKkw2/FVoBlJYxyKYk0k70z+PZ89ZVQ09Yf555dculSvYg20LBFy/Kj5K2MxnC4d6PPKFtj9NNAwPSiAFmfCZRrFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VA0aPRXP; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-88f2b29b651so17600985a.0
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 11:03:36 -0800 (PST)
+	s=arc-20240116; t=1762371245; c=relaxed/simple;
+	bh=FYwCdR07aiXgiDxog7Bu9bZNTiuLgby5vJUPf5QsKOo=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ofvcqvYH/twBxDCHkWDxVZRdb5WdSSbD6mtq45FUw8nwqf0pbGEgFQi447oWCN76kwe4YFNu91J0dtRkN8znMPuI8zTHoutOHzlsZqWvFpLwpm6p6BJOW2/FiN1v40SfvtJrFDzW3ldzwOpKKSu4LO1t9zi+FuEbdEY6xLdFtQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cANaJJqg; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=nplmuMeW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762371243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W2I3VQegSFx+o1eosI30+XZ8D9IOQq1JJdeZxqs+aI0=;
+	b=cANaJJqguumTpOStW/hJlKM4/CsTrphsnRf6TQs+dFRfWtuyA/pjswPUJlve62E9AEcKmr
+	KlCfD5A4NU4t7jmrAfT9utoB1p5qxxlel+7h9WSxanwCAeLDZEU2ZtGHoE2bix9I53cx6V
+	hThNF/MX7Vr6oMAGlZXxtbVEx+ApDpY=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-468-ZyO0QL_QPwa3B0nFGQdGUw-1; Wed, 05 Nov 2025 14:34:01 -0500
+X-MC-Unique: ZyO0QL_QPwa3B0nFGQdGUw-1
+X-Mimecast-MFC-AGG-ID: ZyO0QL_QPwa3B0nFGQdGUw_1762371241
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-891504015e5so52463785a.3
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 11:34:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1762369415; x=1762974215; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pkL4FKIhP6Ehebj2t+yWaZ1SkFSBXZJ6OHio2cMXcNM=;
-        b=VA0aPRXP3DrdGlRq1n8tiTXTu7vcPVWJQYQC272tesb6SdIYqWrVyQZS77r/EX/DXm
-         hsn8HIJOYYeiXEJ1Ah1WcPzD1ArgF3EKbTloX4dGTM0rfY61dwL/1pYd38jBI4I/JY3l
-         tAvu1XMu8cNW77qqzYHGOa/n/CrYDru1g7bA6+OecEE8QIeB7grGt6SKOC3kvEHlgpot
-         nRRK6H31ufX/W3TH5Fg+95zpI3gkfjDxM5jYoJ4vQzWLLa0BtBG7Ww2hxxwMBRGAJRJh
-         tYz4q3IyabA1/s1UdM37uNsmm0tRlfX1ULsZ4qovaXexFSPkRQcrxdPCQDLpMxj8q3im
-         /WSQ==
+        d=redhat.com; s=google; t=1762371241; x=1762976041; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=W2I3VQegSFx+o1eosI30+XZ8D9IOQq1JJdeZxqs+aI0=;
+        b=nplmuMeWo+EdLo776L7W6alL3gJJrKmAyK/tL+JNBm8huOMlI6JbB18+h8Hbc+57b/
+         4R68StGzgDsm474ktvf2u5u3O6pXeW6CFyO+tAAd42vG/+R21dML1ISEg3pEprQPMGs8
+         ngsn42yj2rncWPHahVsD5XxRAtpC+su12vUyEU4VaAQH/riQjGAl5iQAPpI7tSHWnn8Z
+         UeSFPW59nUWlgt+03Z1Oq2rp297/V5Y3NSmIQc3xWZMdcDqYaylZop6kYfalmCkhssF0
+         MRj832uFpmmtc/53caKVdA2zwBHTBMGzjRFI7xuYf301o7WJbNyGByiFQsvjeepR+MId
+         CCkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762369415; x=1762974215;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pkL4FKIhP6Ehebj2t+yWaZ1SkFSBXZJ6OHio2cMXcNM=;
-        b=WM0wWswBntubncHx+MhmqgDmNcPT6vw3vRpYrjiEZ3GVQNCAd6MceXyaR8dIOKlNer
-         06nQ4ngANN1GRbZZ48GZIGm2IEjfLxT9FTiZ3NjxqD44Pepom5R+JaW1adhC8rSbJSFv
-         ToOdeIy81W1a04vF7he8HccQk5REn79rNd9eASF3VJ5wscW0hxD7u27ThVh87zkxM9Gi
-         693B8KE/zKdqlkMjUNvAujTXzOu6JGgNQvPg3N2hNU5dgdgo55hWCRx6PjybPDe0Sg4i
-         eu3NBmY6VsZYbdqZ7xKxXXsGuk+T75wpICVR/vhVoqFjtZCzdpH8cx+gTkF13MTJ61cy
-         TLJg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5rhvQQhCjMXeXbG5z7h3vc/uhYuFAZTRUARTa+49Osodi/80nZ/YoYB9sH8bdkp3r8KAoM5LOXvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNgFNcSfSYJSer1MAQlKb0opAf23H8kI4eN69sk6qs3DxwFBTc
-	RVh40ZeMvXVlhDuqFXa7Dsm1Ki36SOBT0XZ+F0kNszLPQISIa+wb6BmP0tRyhdZ8muw=
-X-Gm-Gg: ASbGncut0R/yKWw8ymgB1Ih6BCAN6S+F411LL3onzH1pHNRtB8r4PSOuqPHpRO2R3bB
-	MMXpT/Ec4W3q0+jOIBKN2xuln1vuDdhWCBVBU8tKQcumRwEFiSJnMgt+W3SCrYx1AVy2N/6Hyv3
-	yfaS/P7E77O6GPsdaakzc7wK1dBzgcBoU0G0oNi+W1jucDFqyTGY/i5yHJMrA39OUqHSrF+IVWn
-	P5BG5pSZFlAEmVrIaRXrr+Q8IwTo5ceQpW+/p4TxqcE9ukznU2ua81EZs+hRuRT+1o1ER2+zFZD
-	0kreLzHnFBOd0awL/Y3YntLQzkDDOrJpyG+nUNaSxtU8ZB6qnuMkTDo4ilE/5muF3ivXaLEMJDi
-	WaulYU3sEaaGv/xAaKMFKGdOzMWyGoItC+wOTGducznYYSdnv/CZr6oRpMY6irF3J2z6hnhu+Gf
-	AdnAp4MddUL9Nzzj7hJeNtpogX9dmH4FufWugCIt9RAS5sQgoJEIJKwq9jwhs=
-X-Google-Smtp-Source: AGHT+IE5V/WtcWnffysPIf/k2M0HgfBpWIauzXvLJZtWgsovo179L03Km10ymeu7JR1a7HWgRpdnqA==
-X-Received: by 2002:a05:620a:2a10:b0:89a:3233:db11 with SMTP id af79cd13be357-8b220afee3cmr496686485a.81.1762369415363;
-        Wed, 05 Nov 2025 11:03:35 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b235809f79sm20649785a.47.2025.11.05.11.03.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 11:03:34 -0800 (PST)
-Date: Wed, 5 Nov 2025 14:03:31 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 17/25] cxl: Introduce cxl_pci_drv_bound() to check
- for bound driver
-Message-ID: <aQufg2Nfq8YqkwHl@gourry-fedora-PF4VCD3F>
-References: <20251104170305.4163840-1-terry.bowman@amd.com>
- <20251104170305.4163840-18-terry.bowman@amd.com>
- <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+        d=1e100.net; s=20230601; t=1762371241; x=1762976041;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2I3VQegSFx+o1eosI30+XZ8D9IOQq1JJdeZxqs+aI0=;
+        b=uZbnrWBE93VhSchqjUv+cfJllAb185UEIHSyNfy072EgxszBqwgoPLZEQf+LftQ/Em
+         kHn+/USowDJnZfDs/VJ4c70c7YNUAEKQVqJ3kb8yDccr5c/r9JxOq2Gw0nFnBOUxBXyf
+         ibddySF/qpR7S+AVBY4tF3Hws8+97brS6KIdm4zZs2DqKnUwyBqZ/Dv8yH0W9kxh7iBE
+         /4YXRrl/I6n1burCRCmx8Q7TYeLJNqgGzYYJl7lc3EZfVJZlW2Ph/xHho9WdFoO4FIIc
+         5FLREcHMqM9sHXeHOGlTw8oMdDMpJFF0LLmQDoatwss+uC+xKde1q5f1eua98RMDAL4m
+         zW7g==
+X-Forwarded-Encrypted: i=1; AJvYcCW88//jMYdj8Wg2hFr4jbqABfuk/Udorxbtfwc0xqbtz7nUluZnN+Er6gkqh6OCpxu+ztr7DDRYfPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytUhORHys795zLYKWhelYjKmd/bx6JgHAvtgskBlPLwVjtW2wP
+	VxAzk7jPtwNS8zmky95krYXrfllv9ICEiCHGnOg3zxFclZ5Wnzu66066ly+vozW27Lmqb7C7JXO
+	B3wF5+eZXesFoPac4mXYLjuvHZSy9D7CldLSmXNa6RENcxmjrvIyWeS8FWsxd9g==
+X-Gm-Gg: ASbGncsT3xAsTkJiUjgV9CHHdJhWrkz+FK54SEN9uqgI/hLkvVNQzIqGTKgp9zol4qP
+	q/sQeWygqCrejJqwby2cMrgqIuoa/HF0lIudIwc6bHU7APR9GnRVof9H7PYosonx3Kzz0Y2qMD2
+	VwdQPz3O43QW6ki49mugg6PFSkE/Xs6n2h9FOHWSTjz2hd0RyViaKHaUtCEuDfQ2fwvc/7DCgtd
+	8poLB7GUUFEuJokIuahVuRWP8or4mA1dM2eFCb5QorZ4SoYQmN3MJSlRrhT7pJZWYz7v6dbIWg2
+	otiAN5SpQiNRfmUFDd+W1oNP9RPL1Jdcf5MKeWYzTTdP2nCjP4Ni5nU8Jui+YOHulFebtEapu+9
+	yj3FMJxWPaaYwlAu57hdcy2HPrxDJZ4nqpFEzadlr1W3A0Q==
+X-Received: by 2002:a05:620a:4807:b0:8a2:e35f:90 with SMTP id af79cd13be357-8b220b1d46emr570523185a.30.1762371241144;
+        Wed, 05 Nov 2025 11:34:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGiRwB16QATLm26IUQJMPlOrIcZC/Pp82bOb2D9HMznRcFkSivER3LckBzG5MspPvf0gexFmQ==
+X-Received: by 2002:a05:620a:4807:b0:8a2:e35f:90 with SMTP id af79cd13be357-8b220b1d46emr570517185a.30.1762371240407;
+        Wed, 05 Nov 2025 11:34:00 -0800 (PST)
+Received: from ?IPV6:2601:188:c102:b180:1f8b:71d0:77b1:1f6e? ([2601:188:c102:b180:1f8b:71d0:77b1:1f6e])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2357dbcc5sm28762885a.35.2025.11.05.11.33.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Nov 2025 11:33:59 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <a5e3294b-4d37-4e98-9442-e35ca1949c17@redhat.com>
+Date: Wed, 5 Nov 2025 14:33:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQuOiK8S31w44pYR@gourry-fedora-PF4VCD3F>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/33] cpuset: Update HK_TYPE_DOMAIN cpumask from cpuset
+To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
+ <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
+ <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+ Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+ cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20251013203146.10162-1-frederic@kernel.org>
+ <20251013203146.10162-14-frederic@kernel.org>
+ <0e02915f-bde7-4b04-b760-89f34fb0a436@redhat.com>
+ <aQtwbRrFBCUoQ2Yj@localhost.localdomain>
+Content-Language: en-US
+In-Reply-To: <aQtwbRrFBCUoQ2Yj@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 05, 2025 at 12:51:04PM -0500, Gregory Price wrote:
-> On Tue, Nov 04, 2025 at 11:02:57AM -0600, Terry Bowman wrote:
-> > CXL devices handle protocol errors via driver-specific callbacks rather
-> > than the generic pci_driver::err_handlers by default. The callbacks are
-> > implemented in the cxl_pci driver and are not part of struct pci_driver, so
-> > cxl_core must verify that a device is actually bound to the cxl_pci
-> > module's driver before invoking the callbacks (the device could be bound
-> > to another driver, e.g. VFIO).
-> > 
-> > However, cxl_core can not reference symbols in the cxl_pci module because
-> > it creates a circular dependency. This prevents cxl_core from checking the
-> > EP's bound driver and calling the callbacks.
-> > 
-> > To fix this, move drivers/cxl/pci.c into drivers/cxl/core/pci_drv.c and
-> > build it as part of the cxl_core module. Compile into cxl_core using
-> > CXL_PCI and CXL_CORE Kconfig dependencies. This removes the standalone
-> > cxl_pci module, consolidates the cxl_pci driver code into cxl_core, and
-> > eliminates the circular dependency so cxl_core can safely perform
-> > bound-driver checks and invoke the CXL PCI callbacks.
-> > 
-> > Introduce cxl_pci_drv_bound() to return boolean depending on if the PCI EP
-> > parameter is bound to a CXL driver instance. This will be used in future
-> > patch when dequeuing work from the kfifo.
-> > 
-> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > 
-> > ---
-> 
-> This commit causes my QEMU basic expander setup and a real device setup
-> to fail to probe the cxl_core driver.
-> 
-> [    2.697094] cxl_core 0000:0d:00.0: BAR 0 [mem 0xfe800000-0xfe80ffff 64bit]: not claimed; can't enable device
-> [    2.697098] cxl_core 0000:0d:00.0: probe with driver cxl_core failed with error -22
-> 
-> Probe order issue when CXL drivers are built-in maybe?
-> 
+On 11/5/25 10:42 AM, Frederic Weisbecker wrote:
+> Le Tue, Oct 21, 2025 at 12:10:16AM -0400, Waiman Long a écrit :
+>> On 10/13/25 4:31 PM, Frederic Weisbecker wrote:
+>>> Until now, HK_TYPE_DOMAIN used to only include boot defined isolated
+>>> CPUs passed through isolcpus= boot option. Users interested in also
+>>> knowing the runtime defined isolated CPUs through cpuset must use
+>>> different APIs: cpuset_cpu_is_isolated(), cpu_is_isolated(), etc...
+>>>
+>>> There are many drawbacks to that approach:
+>>>
+>>> 1) Most interested subsystems want to know about all isolated CPUs, not
+>>>     just those defined on boot time.
+>>>
+>>> 2) cpuset_cpu_is_isolated() / cpu_is_isolated() are not synchronized with
+>>>     concurrent cpuset changes.
+>>>
+>>> 3) Further cpuset modifications are not propagated to subsystems
+>>>
+>>> Solve 1) and 2) and centralize all isolated CPUs within the
+>>> HK_TYPE_DOMAIN housekeeping cpumask.
+>>>
+>>> Subsystems can rely on RCU to synchronize against concurrent changes.
+>>>
+>>> The propagation mentioned in 3) will be handled in further patches.
+>>>
+>>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+>>> ---
+>>>    include/linux/sched/isolation.h |  2 +
+>>>    kernel/cgroup/cpuset.c          |  2 +
+>>>    kernel/sched/isolation.c        | 75 ++++++++++++++++++++++++++++++---
+>>>    kernel/sched/sched.h            |  1 +
+>>>    4 files changed, 74 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+>>> index da22b038942a..94d5c835121b 100644
+>>> --- a/include/linux/sched/isolation.h
+>>> +++ b/include/linux/sched/isolation.h
+>>> @@ -32,6 +32,7 @@ extern const struct cpumask *housekeeping_cpumask(enum hk_type type);
+>>>    extern bool housekeeping_enabled(enum hk_type type);
+>>>    extern void housekeeping_affine(struct task_struct *t, enum hk_type type);
+>>>    extern bool housekeeping_test_cpu(int cpu, enum hk_type type);
+>>> +extern int housekeeping_update(struct cpumask *mask, enum hk_type type);
+>>>    extern void __init housekeeping_init(void);
+>>>    #else
+>>> @@ -59,6 +60,7 @@ static inline bool housekeeping_test_cpu(int cpu, enum hk_type type)
+>>>    	return true;
+>>>    }
+>>> +static inline int housekeeping_update(struct cpumask *mask, enum hk_type type) { return 0; }
+>>>    static inline void housekeeping_init(void) { }
+>>>    #endif /* CONFIG_CPU_ISOLATION */
+>>> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>>> index aa1ac7bcf2ea..b04a4242f2fa 100644
+>>> --- a/kernel/cgroup/cpuset.c
+>>> +++ b/kernel/cgroup/cpuset.c
+>>> @@ -1403,6 +1403,8 @@ static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
+>>>    	ret = workqueue_unbound_exclude_cpumask(isolated_cpus);
+>>>    	WARN_ON_ONCE(ret < 0);
+>>> +	ret = housekeeping_update(isolated_cpus, HK_TYPE_DOMAIN);
+>>> +	WARN_ON_ONCE(ret < 0);
+>>>    }
+>>>    /**
+>>> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+>>> index b46c20b5437f..95d69c2102f6 100644
+>>> --- a/kernel/sched/isolation.c
+>>> +++ b/kernel/sched/isolation.c
+>>> @@ -29,18 +29,48 @@ static struct housekeeping housekeeping;
+>>>    bool housekeeping_enabled(enum hk_type type)
+>>>    {
+>>> -	return !!(housekeeping.flags & BIT(type));
+>>> +	return !!(READ_ONCE(housekeeping.flags) & BIT(type));
+>>>    }
+>>>    EXPORT_SYMBOL_GPL(housekeeping_enabled);
+>>> +static bool housekeeping_dereference_check(enum hk_type type)
+>>> +{
+>>> +	if (IS_ENABLED(CONFIG_LOCKDEP) && type == HK_TYPE_DOMAIN) {
+>>> +		/* Cpuset isn't even writable yet? */
+>>> +		if (system_state <= SYSTEM_SCHEDULING)
+>>> +			return true;
+>>> +
+>>> +		/* CPU hotplug write locked, so cpuset partition can't be overwritten */
+>>> +		if (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_write_held())
+>>> +			return true;
+>>> +
+>>> +		/* Cpuset lock held, partitions not writable */
+>>> +		if (IS_ENABLED(CONFIG_CPUSETS) && lockdep_is_cpuset_held())
+>>> +			return true;
+>> I have some doubt about this condition as the cpuset_mutex may be held in
+>> the process of making changes to an isolated partition that will impact
+>> HK_TYPE_DOMAIN cpumask.
+> Indeed and therefore if the current process is holding the cpuset mutex,
+> it is guaranteed that no other process will update the housekeeping cpumask
+> concurrently.
+>
+> So the housekeeping mask is guaranteed to be stable, right? Of course
+> the current task may be changing it but while it is changing it, it is
+> not reading it.
 
-I've narrowed it down to:
+Right. The lockdep check is for the current task, not other tasks that 
+holding the lock.
 
-Works
------
-CONFIG_CXL_BUS=m
-CONFIG_CXL_MEM=m
+Thanks,
+Longman
 
-Fails
------
-CONFIG_CXL_BUS=y
-CONFIG_CXL_MEM=y
-or BUS ^ MEM
-
-this commit moves pci -> pci_drv.o and moves it ahead of cxl_mem into
-cxl_core into core, but note the comment in the Makefile:
-
-# Order is important here for the built-in case:
-# - 'core' first for fundamental init
-# - 'port' before platform root drivers like 'acpi' so that CXL-root ports
-#   are immediately enabled
-# - 'mem' and 'pmem' before endpoint drivers so that memdevs are
-#   immediately enabled
-# - 'pci' last, also mirrors the hardware enumeration hierarchy
-
-~Gregory
 
