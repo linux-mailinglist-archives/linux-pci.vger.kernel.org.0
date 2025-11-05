@@ -1,268 +1,388 @@
-Return-Path: <linux-pci+bounces-40433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1107C38202
-	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 22:58:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2EFAC3825C
+	for <lists+linux-pci@lfdr.de>; Wed, 05 Nov 2025 23:09:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 205AC4E4950
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 21:57:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38D201A205D0
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Nov 2025 22:09:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A722E7F17;
-	Wed,  5 Nov 2025 21:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0032EF65F;
+	Wed,  5 Nov 2025 22:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJS++KUo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hwmyqx6m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2392D7DD9
-	for <linux-pci@vger.kernel.org>; Wed,  5 Nov 2025 21:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762379863; cv=fail; b=JHMdFvazJydxrH26+OPKaGtUUBgOEOPPAFJGKDlR4xVVs16RrNBKdS+uFnPQstfUnHVl/dR14/1k9OlRyts0SEmiMveJBOeStqiNM533iAw7Hn0b+T+SuTgMB9TlkFGWSiryavvT44JQxSnP/TquZr+C9uax3GxePqsH5iOvyEk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762379863; c=relaxed/simple;
-	bh=iZWukgfXREVIUOTGEHV0TnR1ZdgXia//SEdNpEKWZ68=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=HV0U1a7sFc0oPF0UAHF/6JvuYJY86DIJxMXSr2S9urKcvp+m0i2jLwr5J0rMF1db3QWOnYvB4k2opgZxoTbe0N1goE2sxWfvH6AUTAddU+P3q3ytocBk2WMVW/3U9NhYcJq8SIAOuAr8P3iZws3VuUMe4f6qJLEKWBSkLQC7c8s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJS++KUo; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762379861; x=1793915861;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=iZWukgfXREVIUOTGEHV0TnR1ZdgXia//SEdNpEKWZ68=;
-  b=aJS++KUowfPiGrP3Nyk9m7K1XlOx19Lk9JvEbdNZ//MBZ7PEqZjR7BSl
-   m2Z92Knz0XKR8ObuPnuKF/5dO5O/v2BUWSvyxXVy6CXxN+IFTocav8VbS
-   cj60GD9xqnxtl09NTPZ8mAEZqayQOJUEkwbstexIJdxaDucPql8/U0tp+
-   y4qIwNW3CpENFp3EUU/21838d5ICQumAdqNGZU0bZsaHETfvULYcucaV+
-   0/MPLtBHsTaXYLQs8uqtTWSaCkR0lyvMZ5JJo36PRYSDAbZlmQEZ5yzU0
-   kI/ptPZFDXFOMbteKTkls9Gm3cpX5D55nkeoGij/frBtM0if1bbv/X9bY
-   g==;
-X-CSE-ConnectionGUID: pj8CqQYUQ4Sl6XWFnsiiaw==
-X-CSE-MsgGUID: kC+vEz4zS32HIGoVjvabJA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="52076304"
-X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
-   d="scan'208";a="52076304"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 13:57:41 -0800
-X-CSE-ConnectionGUID: peuU0hItS7KPVujpLyJrUQ==
-X-CSE-MsgGUID: GWbWf2vZQcSx7EEYfnewSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
-   d="scan'208";a="188295538"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 13:57:41 -0800
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 5 Nov 2025 13:57:40 -0800
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 5 Nov 2025 13:57:40 -0800
-Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.66) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 5 Nov 2025 13:57:40 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jDfgbQ6MgofWtqL4dwPeIMyMiqicAzNKv9U6x0QDXcQ3sJcsJTpEnW5QPL/nL30Uy2O2klw/8YY69tkrn/XJ5LpY6xA/KWzbbKuJ/dq852dtZMtQ2pgtUpQaV7ooHsy6IEmkiTQ8rtuKUPJqfFjxGxJ7LP/Q98rtFqyGXQAumE6AWPmz3ESaZ85D+jYjkMFmrKUHHcm46ZQh+xQ0b9a/5c19AYZlMA1mw9k/IjzPybR/1EeyzRoPG6WTM0K+FqibUYD/cNOO4YrwH6/fCtriJ0tygXDr9qFXi0ROb91E7C2h3vmGxg4tXnY03QLxjBaWtQ3jkA2AFzLF8R9Yo4aUoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RJp9vFOsrC3f98DbN0QYVREoY7bg2c3s1WY2wBPprK8=;
- b=vwvlDkVJsXKNRIsclbVsSgJZkkT8er2IIGQ63exLuwSEjdUbTu/1AtL8q61/grT4xdnEcExF09bS/vK81I+M0wvjWWg17XvqmPkmuc0kX3qqw60pzlxdexGhbL0KETdZ4cSp8pU7HT43DdbG38XWHMJByKvlrAfrlKbjTkTD2/Bkce1jDX68RLl/nkTW7eSQZYABfB9LDfDEId7L8kNuDd3DG7q4ZJOrATovD3AgHlvsGa6YhQoIHvFuqwzpA+0nYda/x3hIaUdfMIFZS5zX7Mrxyu71OjKSHkmAxsxZWvH0mpGvxjaOmtWCWfXRW/c09iUEXWOlcuNZwfFR5Es6zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA0PR11MB7742.namprd11.prod.outlook.com (2603:10b6:208:403::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.7; Wed, 5 Nov
- 2025 21:57:38 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.9298.007; Wed, 5 Nov 2025
- 21:57:38 +0000
-From: <dan.j.williams@intel.com>
-Date: Wed, 5 Nov 2025 13:57:37 -0800
-To: Jonathan Cameron <jonathan.cameron@huawei.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<bhelgaas@google.com>, <aneesh.kumar@kernel.org>, <yilun.xu@linux.intel.com>,
-	<aik@amd.com>, =?UTF-8?B?SWxwbyBKw6RydmluZW4=?=
-	<ilpo.jarvinen@linux.intel.com>
-Message-ID: <690bc851d7f98_74f76100f4@dwillia2-mobl4.notmuch>
-In-Reply-To: <20251105091732.0000302c@huawei.com>
-References: <20251105040055.2832866-1-dan.j.williams@intel.com>
- <20251105040055.2832866-2-dan.j.williams@intel.com>
- <20251105091732.0000302c@huawei.com>
-Subject: Re: [PATCH 1/6] resource: Introduce resource_assigned() for
- discerning active resources
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BY5PR16CA0004.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::17) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303B92EE5FE;
+	Wed,  5 Nov 2025 22:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762380567; cv=none; b=m5zh77xDG8+VfFciiCZ2JiaIaSO8Z4bOKwq/SO1BuepB/FD0h2CwbpLtCwSMEIpUc2s8a3sBY4jkt8zB0GG6vDCN5z99qMJE7JTgS1GO+yK677UYQq6nGoC86FjEiBjPuNh5YCuS+sYFnplpyUzX2J4Q7IFGVtR1PewT4klJ9kQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762380567; c=relaxed/simple;
+	bh=Kdf3RStyU+2pisw35rSsTNL9OxNIVbABNhD8/Es6/rE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=d8L/e6Vqk3cNN4JSZgWwVJwcqOx4iYoBlCIQAoWWFliSmP2CgxxmE4SZQoAYO0PO8qt1OErn4XDCff0a0ecuvAJ8Kqdm9yhdT+ICweUIbVbtmcTQumuNCpmQZ39vp1a7Uon1kKmY4c+onE1QQ1pcjKv8JnwR/gomJYl8JvDP6zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hwmyqx6m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A001AC4CEF5;
+	Wed,  5 Nov 2025 22:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762380566;
+	bh=Kdf3RStyU+2pisw35rSsTNL9OxNIVbABNhD8/Es6/rE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Hwmyqx6m2A0p60xFJl3/+xrDi1Fztj/nvdOhoGCSlQ2kNgmuRG+hnotQCZAIt2PHk
+	 oJGgfv2Y0IVzB0ZeuKS2s+K64kEEsg+dM4pdkNj3TclQEoqslefWMMTab1jorgQd90
+	 ibI//FLxMeWaLwBhadwJxtJNrgoiuPB3ELC9aO+mUDqEtLVWTYRi6W6fGt/bprizFV
+	 fFlGALu2rK8QHimGRVcx/J5kR8sTQMg2pnDXAXioHNS03gqzodngmpjvw/ks1Z7m5n
+	 xP7h/MjTJYGbgBnOSeK9e6+MdrgYgpILimykfD1zfxXvmqkAOpA2bzGhwa5kkhB54v
+	 WYoHWhadu7siQ==
+Date: Wed, 5 Nov 2025 16:09:25 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Christian Zigotzky <info@xenosoft.de>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+	Darren Stevens <darren@stevens-zone.net>,
+	debian-powerpc@lists.debian.org,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
+	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>,
+	Roland <rol7and@gmx.com>
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <20251105220925.GA1926619@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7742:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46f93477-e2ba-4a40-4d0b-08de1cb655c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?QzRFSXRyYWJqVkhGaVJubFUwUGRwcUUzaGpTWXJ1WnMwa1BucHhRbCszTjZQ?=
- =?utf-8?B?SkRnOTRoeElNMThHK093dUZtdWs5L29VWHdSMGVscHNVMHpoOVVHaFAxSWFT?=
- =?utf-8?B?bjExWkwvTzRCdGJYRmdyMml4TEJMd3o5SzZqMGlTTUFmbWFZYlVQQWRyZHRT?=
- =?utf-8?B?Vkt2VnA4VDhDbVMrdmd1SkhEaWhnaGpZTjFoTkh5L0hadndDblFOUmU2UXBD?=
- =?utf-8?B?VXFFbjFHTmx6QVBFaW5kWFlOdnQ2ejJuQnYvS0VqeWtvRzJqb0tJOVBSNWFl?=
- =?utf-8?B?VUZjSTFPcDBOQ1pua3VIN3RqZjRLVkxMenVYeUVSVEYxaHVLcFpBTFV3VHJP?=
- =?utf-8?B?d05jUkh3akMzTklGeW1mdk5oRG55cFFjQ3ZrbkprTDNlNzRTeEd2SzJvaG11?=
- =?utf-8?B?eEJWY0V2TzhDUzVWMnMyRDZMb0VwYnZRV1hUZkRXeE43V1pqdG5DSTFGOHVR?=
- =?utf-8?B?VGFqZWx5bmM1bW5BbWNEYndBS0lHdURwRE5xcDRhZjhOeFJTbWdRZ2JETFRn?=
- =?utf-8?B?c1NIa293bndCNGJza3NpcHljVWUzRDhibEo0MjFselFMemRJTnpwelRkaUJi?=
- =?utf-8?B?aXgrSytCdEJlVzlQVmJDalVPcDFvcFBmOHg3bm5yVjgrNXJ2RVVhRXh0SzFv?=
- =?utf-8?B?RDhhZjl4R1VnbFora0xJanNoSzRONHpUWDJ5USswQ1ZzUFN3OE4xTFBNZGJY?=
- =?utf-8?B?dU1BdGdxQS80TzJGU25KUGNKV1ZFZ2g2QVpyZ2FsUk13ME91Q1RBMHF5TGV0?=
- =?utf-8?B?R291TDhnSFkvcDJCVlg1cDg4R0JuSm40dWVEd1pZdkI2bkpiRHhSalh3RjFN?=
- =?utf-8?B?R04yNDFaVk84cU9ZRXlaOThRenhpMXJsQ3JPRGF6YVltN2NIMzRaR25ORW9T?=
- =?utf-8?B?V2VTSC9RK1Q0azBFWk9nZ3JRQnlhS21QRzlGa0VHWW9VZTNQb2JDZXI1N2Jv?=
- =?utf-8?B?QjRhRVRJRndiWWJZSTZnRmUyK2JEekVDZ3FLdW5ab3B0SGtuVElJREgyQ0Vt?=
- =?utf-8?B?M000WmEzeERzM1ZseTR6eUliL1pXR29wbHh2M3pIczlHQXRaWWtiMVFIRVpV?=
- =?utf-8?B?RnNuRHdnb0hsb2w5cFlYY0tDZk1SYmlpa0xsYVFubGF2bVdBTWwxUXhyL0ZE?=
- =?utf-8?B?djh2cTRBMDgyZWxUSkovNVUyME5qRlYzNlBrTGFwQ21YNlVvNVR5bzVNdnpr?=
- =?utf-8?B?bkZUV2lmQytLWFNBREZLa1lzZis0aDhjZHFTMDVYNWF0dmZNd2haRFp4VjZH?=
- =?utf-8?B?UGJ1RU5mZTkwNnYrVGN6dG8weXhKdmNVYnVYdW9DWTBRZWd4TzJXS2ZGdk1I?=
- =?utf-8?B?WG9QUHVxYVc5dU8xa2tRRzUxanJldUkyZXFHQjN4SFQ2TDNvM1lEd1k3Y0JM?=
- =?utf-8?B?VXJUbXZlUHpPUnhqSGFBc2lpVXJGWnIwY2Q0Tk8vNGZ3dEs3UVZBVjZ2V3lR?=
- =?utf-8?B?SU1FQ0hNbzBKN2NHL2pOd1FSR1MxWWtPcDRYYUNsZ0Yxd2draGZlWk9rQzVD?=
- =?utf-8?B?YTB2dXNhRTdRWXk2Q1ArZFQ3OTNyUHFabDR2aEp3cys0VGhoTWY1SHAzVTI4?=
- =?utf-8?B?UEhqVGZRL1VxV2VTdjFXMUJUdUZ4cXdnSURBUllUSzZMNHJLOUdsUld1bU9S?=
- =?utf-8?B?bzRKZ1BBallQZktqMjBFN2pDSVp3RzltYXBLN01ZblhUMXJYMHNobTE4dEE0?=
- =?utf-8?B?L0hGOCtHdnB6ZDEyQ0c1SjJ0dTUwS0F1QU1PenhLaWovTHBieGhINXBCY0Zu?=
- =?utf-8?B?anZkV2VITU1oWEtSS0JPeHlDbFVPNFV2ZnNST2cySzFxTi9VU2dMQTROWmNq?=
- =?utf-8?B?V3U3d3lhcm1mbm1SMG9kVkozelk2cWZaaVRmNG9kSk50UGpUNWNBM1dNbHJY?=
- =?utf-8?B?UUQzbEtWc05NRHhST09oNDhMcEN1NHIyT3BQTjRxR1FTZ2NzRXdBeDdhK1JR?=
- =?utf-8?B?cXFBMFlpRlpCRG1DazhoTmJFcnkwQTV1QlhuTnNKNXpGTi9LK2VDV2pqWTNH?=
- =?utf-8?B?dGVqcUwvMm1BPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K3lQZm5Pa2VMLzl5Q2ZjV3pscGc2eStkQmtEMVJDcVBvSWFCcldocmZRS3du?=
- =?utf-8?B?eWFXUUtlT0U5cDNRRUpPNGc0dE9rWFNhQXZ1QWRidVlsVjRZVjhBY0tuNjBv?=
- =?utf-8?B?dWJXSXVYOVd5aUlTU2JGdm1ycWV4L1hRV3AxQVdwNFJMbGR4ZDdESzBIL1ZE?=
- =?utf-8?B?NFNTeGZEQ2F5L1VFb2hIRVpzSHhqZWc1RWhzdWRydmhHaldPMGdsUTRhdzZC?=
- =?utf-8?B?R1lXbUY2aW1pOXhCcDg0YS80S0JMQ3VpYlJJUGN3NldsM3I2WFRiVWc0WVJS?=
- =?utf-8?B?N3RNV21UM0dXUVBnNTJaYmo0a0xnRmNXUHo4VWhKK24xYTltM1Z6Y2IyVWpU?=
- =?utf-8?B?ZjlGcEJnMFdVckVPMW9vNGJ5ajJKN1FzSlgzY3BVQng4Y1poTTlxT0NVNzBR?=
- =?utf-8?B?a0VZWWdpcnlscTR4NTUybnJFQ0JTK0hxU25PalRIcDk3VnlUb1VwS3Y3bkpO?=
- =?utf-8?B?ZTU2dXpkZUxZVXkzdS9UZDFMVEpsMnNWRVFwZUlXcmNScEU3aGovVldUWXlt?=
- =?utf-8?B?cTRXM0JQT2NsRmxvRnRPejZORmpaQWEvbklTdkVFNXFvcW1jMkw3cW5PSXpT?=
- =?utf-8?B?cVdHUVNoVERHMHVrS2UzdCttejFxMmdDWXk1ZTJJR2xhUHNNY09EVnpyaHo2?=
- =?utf-8?B?NUhwSjY0WE5XZE1rSkFNUk1MWEFjWGk2dXF1aENjNktYcjJxaEp5NlFEWm9k?=
- =?utf-8?B?dE1IWktQTC8xTWlWcEw4OW80RUt0RXNGVUFXemVtS1VoWHVYVFpQdTZlNFEx?=
- =?utf-8?B?VVpHeWxrNEt5VGFqR1BZRFlpNGJUWFpSaERXVlJndFQ2NE5WcitzQ1pEOXpI?=
- =?utf-8?B?a3NaVFRFSkdRRnA2NWNUTHNaV2NBanBZa0ROUlN4Q05CZjUvaDJUZnhMclcr?=
- =?utf-8?B?eWIrTENiUVZqLzQ5NWUyeE84TWIvbU5tdzBKNXljMk9HT29qcEdUM2ZMUnpZ?=
- =?utf-8?B?bnNTbUxiZ2JHa0hmWUltVCtFZDdiamlxRVh6VHRXZmd4WkFDbTBiaGlxczBD?=
- =?utf-8?B?cEV3c1B6clVxdEY2c05qMy9WRXROYWVETTBLU2tEaXQ3amt6aU9aTithM3RJ?=
- =?utf-8?B?ei9LSXF1WEovL3FUclpIcjZZcmtHL1Q0Uy9YNk03aTlCOGVDM0hROEhDQzdi?=
- =?utf-8?B?WXMyb1duYzU2WHhCVFNIdnl3TDNJSlc0MkJXOWM4YUdVUm5wZ0kwVXo5dFJp?=
- =?utf-8?B?a3FXUHJRcjl4VG40VmwwZ2VJN2t6enFKZ3FnNHUrWDAydkVTTFp1TkdjM0JN?=
- =?utf-8?B?N0RteFVhN3BJMVpDRHJIeXRjK3M5RzV5YUpXVG5XQUwxTmNWSENER21WMUF1?=
- =?utf-8?B?d3hLdHpucE9VaWFIa2Uranl4SlVxeFc3a2UvTE1ldnVsTTVKbFNUSE9Fcmtn?=
- =?utf-8?B?SU9BSURsVHpPWVRoODRxY0ltYWZrQVJsTmZuMmgxSHJoN2hIZlowRzhGZEM2?=
- =?utf-8?B?d3NicWpmRUVDNGcrRGYwM1pjbXA3RFBpNkErZjVlbXphK2poQ0ZZK0JYRVRa?=
- =?utf-8?B?TVlVcVpLR0ZFd1h5OThTVWpTMGQvVENVdDN0VTVGWmg1bGwvT2lyYWJaVk1R?=
- =?utf-8?B?ZUh2bCt2eThPOEFHaEpxbGlFMFdLdHhseFBLNlFLczdGdFA0NFpmcE4rS0o1?=
- =?utf-8?B?a0F2M3V6Z0lWRThXQ1BiK3o5Nmo2MWZBT2tyTlo1UEZHZEp6bmFuTFVpMDI5?=
- =?utf-8?B?TnhtL1JZbk13TzA0ZU1RaWRSUS9xS2xCaTFmS1loOEN1d0YyOXh4b3NzU2g0?=
- =?utf-8?B?cWpoajEvNzVOeXdEUm5QZFlMb2tpUkRBbldITXl2a3VLZDJaOWFxMThzNnVH?=
- =?utf-8?B?aCtGZEJZZGxMaFhtOVNCVGpTYnQzYnFoQXRVWDloQ0NCZHJYUTRlY1NsaEpz?=
- =?utf-8?B?NzNWcC8zR1JYK2o0ZGVhcVJjbGI1RlhIR2xSOWc3TDRyblowQXVwUm93ZWI4?=
- =?utf-8?B?akxrZVRtbmhoOXk3SUNhS2pkZDlLWnFQTWp0amtyNEpySHd6VThLS09DK3ha?=
- =?utf-8?B?cStDZmxCc3ZiSXZEYkRmYTl4ZFBUR09vdWgrR1A1SXJ6RGhzcEgxSUI3dHNL?=
- =?utf-8?B?VE1vbGxBZzB6L2NHbWVYVGdRMDV4K2pUY1ZIY2V3cERmeHI5dVlWR2swSDN3?=
- =?utf-8?B?bThDQ1dDWDl5Z1lTZHF0K0lxOXlHblpsY0ZYK1lQTllXejAwTldNRWtjRWcr?=
- =?utf-8?B?NFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46f93477-e2ba-4a40-4d0b-08de1cb655c5
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2025 21:57:38.4141
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lLS3C5rBNn8JiLEPIToDEtaMxkcYj1UsKsgh6HV5Nl04LDf4Znj0HbrXeaN69/hFsNQmdn08wudNT/t9FDwtYrZEQ9j9UJ4iiaKjbastNB0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7742
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d93eac4d-b382-97dd-d829-98aef6695204@xenosoft.de>
 
-Jonathan Cameron wrote:
-> On Tue,  4 Nov 2025 20:00:50 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->=20
-> > A PCI bridge resource lifecycle involves both a "request" and "assign"
-> > phase. At any point in time that resource may not yet be assigned, or m=
-ay
-> > have failed to assign (because it does not fit).
-> >=20
-> > There are multiple conventions to determine when assignment has not
-> > completed: IORESOURCE_UNSET, IORESOURCE_DISABLED, and checking whether =
-the
-> > resource is parented.
-> >=20
-> > In code paths that are known to not be racing assignment, e.g. post
-> > subsys_initcall(), the most reliable method to judge that a bridge reso=
-urce
-> > is assigned is to check the resource is parented [1].
-> >=20
-> > Introduce a resource_assigned() helper for this purpose.
-> >=20
-> > Link: http://lore.kernel.org/2b9f7f7b-d6a4-be59-14d4-7b4ffccfe373@linux=
-.intel.com [1]
-> > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> One trivial thing on documentation style below.
->=20
-> > ---
-> >  include/linux/ioport.h | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >=20
-> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > index e8b2d6aa4013..9afa30f9346f 100644
-> > --- a/include/linux/ioport.h
-> > +++ b/include/linux/ioport.h
-> > @@ -334,6 +334,15 @@ static inline bool resource_union(const struct res=
-ource *r1, const struct resour
-> >  	return true;
-> >  }
-> > =20
-> > +/*
-> > + * Check if this resource is added to a resource tree or detached. Cal=
-ler is
-> > + * responsible for not racing assignment.
-> > + */
->=20
-> Some stuff in this file now has kernel-doc style comments. To me it
-> seems like a better idea to use that style for new function descriptions
-> whilst perhaps not being worth the churn that would be inherent in switch=
-ing
-> all docs to that style.
+[+cc luigi, Al, Roland; we broke X5000 in v6.18-rc1 by enabling ASPM
+too aggressively; Christian's original report is at:
+https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de
+I grubbed around in lore for other X5000 users who might possibly be
+able to help test our attempts to fix it]
 
-Hmm, ioport.h is not included in any "kernel-doc::" statements. I do not
-think this tiny function that no drivers should be using needs that
-formality. It is an internal implementation detail of resource
-management, not really a kernel API.=
+On Mon, Nov 03, 2025 at 07:28:19PM +0100, Christian Zigotzky wrote:
+> On 11/01/2025 06:06 PM, Manivannan Sadhasivam wrote:
+> ...
+
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index d97335a40193..74d8596b3f62 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev
+> *dev)
+> >   * disable both L0s and L1 for now to be safe.
+> >   */
+> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080,
+> quirk_disable_aspm_l0s_l1);
+> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451,
+> quirk_disable_aspm_l0s_l1);
+> >
+> >  /*
+> >   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+
+> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately it
+> doesn't solve the boot issue.
+
+Thanks for testing that.  I see now why that approach doesn't work:
+quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
+updates the permissible ASPM link states, but pci_disable_link_state()
+only works for devices at the downstream end of a link.  It doesn't
+work at all for Root Ports, which are at the upstream end of a link.
+
+Christian, you originally reported that both X5000 and X1000 were
+broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
+df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+platforms"), but I would love to have confirmation of that.
+
+The patches below read the PCIe Link Capabilities that tell us what
+ASPM link states the hardware supports, cache it, and use a quirk to
+remove the states we think are broken.
+
+Since these are just for testing, I didn't want to start a new thread.
+If anybody is able to test this, you should be able to just apply this
+whole email as a patch on top of v6.18-rc4.
+
+Would appreciate the complete dmesg log of the boot if possible.  This
+patch adds a quirk for the [1957:0451] Root Ports in Christian's
+X5000.  If ASPM is still broken for other Root Ports, we will need the
+Vendor and Device IDs to add quirks for them.
+
+commit 9d089f88fd66 ("PCI/ASPM: Cache Link Capabilities to enable quirks to override")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed Nov 5 12:23:38 2025 -0600
+
+    PCI/ASPM: Cache Link Capabilities to enable quirks to override
+    
+    Cache the PCIe Link Capabilities register in struct pci_dev so quirks can
+    remove features to avoid hardware defects.  The idea is:
+    
+      - set_pcie_port_type() reads PCIe Link Capabilities and caches it in
+        dev->lnkcap
+    
+      - EARLY or HEADER quirks can update the cached dev->lnkcap to remove
+        advertised features that don't work correctly
+    
+      - pcie_aspm_cap_init() relies on dev->lnkcap and ignores any features not
+        advertised there
+    
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 79b965158473..c2ecfa4e92e5 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -378,15 +378,13 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+ 	int capable = 1, enabled = 1;
+-	u32 reg32;
+ 	u16 reg16;
+ 	struct pci_dev *child;
+ 	struct pci_bus *linkbus = link->pdev->subordinate;
+ 
+ 	/* All functions should have the same cap and state, take the worst */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &reg32);
+-		if (!(reg32 & PCI_EXP_LNKCAP_CLKPM)) {
++		if (!(child->lnkcap & PCI_EXP_LNKCAP_CLKPM)) {
+ 			capable = 0;
+ 			enabled = 0;
+ 			break;
+@@ -567,7 +565,7 @@ static void encode_l12_threshold(u32 threshold_us, u32 *scale, u32 *value)
+ 
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ {
+-	u32 latency, encoding, lnkcap_up, lnkcap_dw;
++	u32 latency, encoding;
+ 	u32 l1_switch_latency = 0, latency_up_l0s;
+ 	u32 latency_up_l1, latency_dw_l0s, latency_dw_l1;
+ 	u32 acceptable_l0s, acceptable_l1;
+@@ -592,14 +590,10 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		struct pci_dev *dev = pci_function_0(link->pdev->subordinate);
+ 
+ 		/* Read direction exit latencies */
+-		pcie_capability_read_dword(link->pdev, PCI_EXP_LNKCAP,
+-					   &lnkcap_up);
+-		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP,
+-					   &lnkcap_dw);
+-		latency_up_l0s = calc_l0s_latency(lnkcap_up);
+-		latency_up_l1 = calc_l1_latency(lnkcap_up);
+-		latency_dw_l0s = calc_l0s_latency(lnkcap_dw);
+-		latency_dw_l1 = calc_l1_latency(lnkcap_dw);
++		latency_up_l0s = calc_l0s_latency(link->pdev->lnkcap);
++		latency_up_l1 = calc_l1_latency(link->pdev->lnkcap);
++		latency_dw_l0s = calc_l0s_latency(dev->lnkcap);
++		latency_dw_l1 = calc_l1_latency(dev->lnkcap);
+ 
+ 		/* Check upstream direction L0s latency */
+ 		if ((link->aspm_capable & PCIE_LINK_STATE_L0S_UP) &&
+@@ -814,7 +808,7 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+-	u32 parent_lnkcap, child_lnkcap;
++	u32 lnkcap;
+ 	u16 parent_lnkctl, child_lnkctl;
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 
+@@ -829,9 +823,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	 * If ASPM not supported, don't mess with the clocks and link,
+ 	 * bail out now.
+ 	 */
+-	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &parent_lnkcap);
+-	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &child_lnkcap);
+-	if (!(parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPMS))
++	if (!(parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPMS))
+ 		return;
+ 
+ 	/* Configure common clock before checking latencies */
+@@ -841,10 +833,18 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	 * Re-read upstream/downstream components' register state after
+ 	 * clock configuration.  L0s & L1 exit latencies in the otherwise
+ 	 * read-only Link Capabilities may change depending on common clock
+-	 * configuration (PCIe r5.0, sec 7.5.3.6).
++	 * configuration (PCIe r5.0, sec 7.5.3.6).  Update only the exit
++	 * latencies in the cached dev->lnkcap because quirks may have
++	 * removed broken features advertised by the device.
+ 	 */
+-	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &parent_lnkcap);
+-	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &child_lnkcap);
++	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &lnkcap);
++	parent->lnkcap &= ~(PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
++	parent->lnkcap |= lnkcap & (PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
++
++	pcie_capability_read_dword(child, PCI_EXP_LNKCAP, &lnkcap);
++	child->lnkcap &= ~(PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
++	child->lnkcap |= lnkcap & (PCI_EXP_LNKCAP_L0SEL | PCI_EXP_LNKCAP_L1EL);
++
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &parent_lnkctl);
+ 	pcie_capability_read_word(child, PCI_EXP_LNKCTL, &child_lnkctl);
+ 
+@@ -864,7 +864,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	 * given link unless components on both sides of the link each
+ 	 * support L0s.
+ 	 */
+-	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
++	if (parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)
+ 		link->aspm_support |= PCIE_LINK_STATE_L0S;
+ 
+ 	if (child_lnkctl & PCI_EXP_LNKCTL_ASPM_L0S)
+@@ -873,7 +873,7 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 		link->aspm_enabled |= PCIE_LINK_STATE_L0S_DW;
+ 
+ 	/* Setup L1 state */
+-	if (parent_lnkcap & child_lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
++	if (parent->lnkcap & child->lnkcap & PCI_EXP_LNKCAP_ASPM_L1)
+ 		link->aspm_support |= PCIE_LINK_STATE_L1;
+ 
+ 	if (parent_lnkctl & child_lnkctl & PCI_EXP_LNKCTL_ASPM_L1)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0ce98e18b5a8..7dab61347244 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1633,7 +1633,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ {
+ 	int pos;
+ 	u16 reg16;
+-	u32 reg32;
+ 	int type;
+ 	struct pci_dev *parent;
+ 
+@@ -1652,8 +1651,8 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+ 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
+ 
+-	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &reg32);
+-	if (reg32 & PCI_EXP_LNKCAP_DLLLARC)
++	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &pdev->lnkcap);
++	if (pdev->lnkcap & PCI_EXP_LNKCAP_DLLLARC)
+ 		pdev->link_active_reporting = 1;
+ 
+ 	parent = pci_upstream_bridge(pdev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d1fdf81fbe1e..ec4133ae9cae 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -361,6 +361,7 @@ struct pci_dev {
+ 	struct pci_dev  *rcec;          /* Associated RCEC device */
+ #endif
+ 	u32		devcap;		/* PCIe Device Capabilities */
++	u32		lnkcap;		/* PCIe Link Capabilities */
+ 	u16		rebar_cap;	/* Resizable BAR capability offset */
+ 	u8		pcie_cap;	/* PCIe capability offset */
+ 	u8		msi_cap;	/* MSI capability offset */
+commit ad3106e7d1bf ("PCI/ASPM: Add pcie_aspm_disable_cap() to remove advertised features")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed Nov 5 09:11:21 2025 -0600
+
+    PCI/ASPM: Add pcie_aspm_disable_cap() to remove advertised features
+    
+    Add pcie_aspm_disable_cap(), which can be used by quirks to remove
+    advertised features that don't work correctly.
+    
+    Removing advertised features prevents aspm.c from enabling them, even if
+    users try to enable them via sysfs or by building the kernel with
+    CONFIG_PCIEASPM_POWERSAVE or CONFIG_PCIEASPM_POWER_SUPERSAVE.
+    
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 4492b809094b..858d2d6c9304 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -958,6 +958,7 @@ void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+ void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+ 
+ #ifdef CONFIG_PCIEASPM
++void pcie_aspm_disable_cap(struct pci_dev *pdev, int state);
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked);
+@@ -965,6 +966,7 @@ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+ void pci_configure_ltr(struct pci_dev *pdev);
+ void pci_bridge_reconfigure_ltr(struct pci_dev *pdev);
+ #else
++static inline void pcie_aspm_disable_cap(struct pci_dev *pdev, int state) { }
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked) { }
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index c2ecfa4e92e5..4e9e3503c569 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1530,6 +1530,18 @@ int pci_enable_link_state_locked(struct pci_dev *pdev, int state)
+ }
+ EXPORT_SYMBOL(pci_enable_link_state_locked);
+ 
++void pcie_aspm_disable_cap(struct pci_dev *pdev, int state)
++{
++	if (state & PCIE_LINK_STATE_L0S)
++		pdev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L0S;
++	if (state & PCIE_LINK_STATE_L1)
++		pdev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L1;
++	if (state & (PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1))
++		pci_info(pdev, "ASPM:%s%s removed from Link Capabilities to work around device defect\n",
++			 state & PCIE_LINK_STATE_L0S ? " L0s" : "",
++			 state & PCIE_LINK_STATE_L1 ? " L1" : "");
++}
++
+ static int pcie_aspm_set_policy(const char *val,
+ 				const struct kernel_param *kp)
+ {
+commit 69184484d69e ("PCI/ASPM: Prevent use of ASPM on Freescale Root Ports")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed Nov 5 12:18:07 2025 -0600
+
+    PCI/ASPM: Prevent use of ASPM on Freescale Root Ports
+    
+    Christian reported that f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and
+    ASPM states for devicetree platforms") broke booting on the A-EON X5000 and
+    AmigaOne X1000.
+    
+    Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+    Fixes: df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms"
+    )
+    Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+    Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 214ed060ca1b..8cf182c28d2b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2525,6 +2525,16 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+  */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+ 
++/*
++ * Remove ASPM L0s and L1 support from cached copy of Link Capabilities so
++ * aspm.c won't try to enable them.
++ */
++static void quirk_disable_aspm_l0s_l1_cap(struct pci_dev *dev)
++{
++	pcie_aspm_disable_cap(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1_cap);
++
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+  * Link bit cleared after starting the link retrain process to allow this
 
