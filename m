@@ -1,167 +1,116 @@
-Return-Path: <linux-pci+bounces-40503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF6FAC3B249
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 14:16:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 716D1C3B45D
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 14:38:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71B161AA57C9
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 13:09:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 910001A43CC6
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 13:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C030330311;
-	Thu,  6 Nov 2025 13:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0EC3321A0;
+	Thu,  6 Nov 2025 13:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3HBTJkR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RejsDbjP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F1C32C305
-	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 13:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762B0330321
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 13:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762434509; cv=none; b=lLcNM42KDpaDYMVs8oaVDwU6vlkPMz8R2SZ4grhoe2OG0dvSn/HafnFMcE319x4oKRhL1KZm5FhNvfJpw+/qwDvegfDeBXMQGAbgAlPjeFQrr8ldfGh8krB90120U4c+wPw2fCOr4zdMt+aCsf+bDFf4OqimMjgTD8uDfakxzZs=
+	t=1762436080; cv=none; b=GYKI7lDwI+ymZzcElMPoJgZW1KgmtVTlMNQck++uHzB8agnwaWmbT7KE7Bl6pFigMTGiT37MGBKj1q1tV2Vv2hhyUYnQCfCD83HlK/3NnRX2Ltzq5omo6E6H8oUSrj7XZnrQ66gWo7/ShKhPRN2d9rOr8XvCSXJlm6U5Wp8EyRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762434509; c=relaxed/simple;
-	bh=fXOzwH23+ookahwd5aVH4s9O59Gqn2mFDZ8BxYBMUrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DXiRT3M0N5pb27T5rbsAtAe1l7EYj2Rq3+l7+AJZYEV3N86c71X8K+z4M7yS/pI0P/GIPaqiTYPGWNik9FeORKuZSEXafrCqoUBUnnV3XIbdjOYnq+F6uhOk6Y19TrLvhoQJ1X3B86dIR/40a7fK5VPqtwieBdwaikMvOlSCvig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3HBTJkR; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1762436080; c=relaxed/simple;
+	bh=j9SuhjIVPNBBqJfnVLYcJU6kiIExeCsnHgyWendxW+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sdTAXa3ICDUTXc58atUvjMyZEVHy1joqMM2PBCNWoTZOA/bhxYbTfTuZN2vo4sKmHqSfHrGXu/v7O7a1jmj3xhlPDUOWwo8bzXi4+9Xeez1eb3/9AZGD5976Gk9whIRCV/nk7XXZnfG+mVr5fcd4P/vlzctWjo/hFWrEnuWR3w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RejsDbjP; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-28a5b8b12a1so10159275ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 05:08:27 -0800 (PST)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-29498a10972so1228545ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 05:34:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762434507; x=1763039307; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DiKUXXeHtxGgchjjyt6YLNM6oJ9XFDCTJqmUwZLcDQI=;
-        b=C3HBTJkRKH8pacN/lOARYm7xOt19xjuHqBos4KbvAul98g5Gg5c4cxZD2Gt/iMJBq3
-         Z+fPEqS6NcURRdgxJLNCloOpepzhFtlZ2wGxnmcTQ5PuoJQR3uf/QSQnsJWbwYShdSef
-         DUccziwnKzUotGPnkiM6uESanOak+V0zWYcjUsP1KkeUl6QRlvxr0t1EOYA/qJGecXuM
-         /dj4kL/5K++Mn/8bcjaxyB2K9UulsPo+hDroVNPTWZ5bPUMNSZa9jLk3kff1UG8HZk0A
-         RDcJlcsFN9uKzItteeBhLICJ6Ms+bWOxzwesV97NaGwo4E35Dsps8g0e9TyYMM15YWWT
-         nPDA==
+        d=gmail.com; s=20230601; t=1762436079; x=1763040879; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OAPFc6E2cuOBznS+PFsa8uaGEFuFxns4wE3SuTksKDk=;
+        b=RejsDbjP2jbgpCpqsdNG6OMV13aH6dy2qkkZoZiMhJdYvPthSskFOjy1WXWxigrFfT
+         x0zrGjVhvmGenH8bAspZjjV6n30oMIHvkpUflefZtXs50vZ6TmG6tE5EpfV83MSevzRu
+         /MRSVUH8RVDdhxZF6tkVgGOHj8dKEG+xvhgcu3sgjaCs7FxGjqXu3rW65Fc3DV/8qiLN
+         ksxt7atx1AX3oZTtyoEI2WsTP86YA4G1TjOGtdUPw2vAsopxkkDdqpkHD2CKB3vWn/0t
+         1eZrI8a/qn9JldEtgP0NGSzIU6nKrrST3EzNlwA4bJ4TIDNqMd5A8JUXHCVa1xGffE/A
+         M41A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762434507; x=1763039307;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DiKUXXeHtxGgchjjyt6YLNM6oJ9XFDCTJqmUwZLcDQI=;
-        b=e7Eo7ztIK/oOSp1dO7VSWk9o6cYKWxYJbU4/ugh8kV2uNVGY5va6GMahf5nScujyoV
-         o3Fazaf2W0LxRRZ8FPvi8vdI5VUeHXvsW+muKPLWbh5tA+DjKK/XHqpGoP/agVuTkEp9
-         x7frRSgPCz+uLQ5nsZVOZW9R/6bDAKj1edqHDnQsk0vHSa51GknD3nqSZW98zYhtMpzy
-         efo9e2WiDe0zWI4Gi1O9ddm5AvQokP+VpNAq6yv+MAh8e7tBF6uA0avscVnRD2+VXP/r
-         +7iBOSmaQS244vatHEnGtpvA78ws7miGSDJtnc/a2zpxyCXFhngAXTOpgnzgkt7dc2kc
-         bGyg==
-X-Forwarded-Encrypted: i=1; AJvYcCW43kZXyHd40N7WlkgylGEW+6COgZFpxzb62LoJDWjpOTsAeZ06EqlMWwRZmFW0qRZ8vNQbmnkvu4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqw6sMBMFfLyO6pMsFzggg0T71NZx8eXEudF6mTMskcnaUgs1B
-	4lDvNzJbf/gl5eptvNhh2ooF4uwEbwZpqeLU+ScdUg4M++4I1E0gBd4G
-X-Gm-Gg: ASbGnctOJiPKCLd2n5nRlJ7vdH+BISRHRxj7soqsaHM/EgxKoDIJhjR3N9kQrAdkMUF
-	HwQe5QVXQXu2ziOXPDMqealhlMT1fJtBfpLu46wK42XsiRAXIeyVyX2xYbF5W+azjCH9IbB4EQN
-	/q2n5qa8HN9KT0/O+zPipVRcumjhn/hkqLn8PRduxhUAXnTVhrw0sg7Y0pyTTJiWDxlg+hBW8oV
-	Tdf1flo4qkXPmGoGvRGvYUPsxuwdJBijbtks5VcHwJ0Be0Nk0OXs9yz6NpxYh/ggO4rcf4tgDTy
-	5antUO8ZBpd3o6Mdo6G/8v+40lL4ttQ09rvAFhy4dccUvUQNh3mfbM3fY8mZfWiYb++otUnADGe
-	vRQEA4zr/41e8MywQ9ykGkNRLldyht3hLxknK9OIw/fd3ns/XuaXIgUf2S5ELeriLpspN0fN/wZ
-	T4Q1lWrubeSeya8LUD+n3QyBsoYQ==
-X-Google-Smtp-Source: AGHT+IE58JuV5i1D6ly/rqum2FQefP1CgkfT3QO4ht/oHVyJQYHM1C33Yzh8g6xhgVumYzltifu0Gw==
-X-Received: by 2002:a17:903:3d0f:b0:252:50ad:4e6f with SMTP id d9443c01a7336-2962ade2bccmr97176955ad.54.1762434506664;
-        Thu, 06 Nov 2025 05:08:26 -0800 (PST)
-Received: from 2a2a0ba7cec8 ([113.102.237.74])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c8ef47sm28931545ad.74.2025.11.06.05.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 05:08:26 -0800 (PST)
-Date: Thu, 6 Nov 2025 13:08:22 +0000
-From: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Waiman Long <longman@redhat.com>, linux-rt-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] PCI/aer_inject: Convert inject_lock to
- raw_spinlock_t
-Message-ID: <aQydxtOtgPTPxL_9@2a2a0ba7cec8>
-References: <20251102105706.7259-1-jckeep.cuiguangbo@gmail.com>
- <20251102105706.7259-3-jckeep.cuiguangbo@gmail.com>
- <20251103192120.GJ3419281@noisy.programming.kicks-ass.net>
- <20251103192709.GV1386988@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1762436079; x=1763040879;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OAPFc6E2cuOBznS+PFsa8uaGEFuFxns4wE3SuTksKDk=;
+        b=v44xwhcjlD+OezZtd+04erbQLDybhnuvPldduf2WMU+ggSQL7T4TCplVLFhbMMRIPo
+         9f01tIJUMRLqgLg+BDOYBNtMqi0FxfYq513kDvdvtdftx0dywBIfP2sI3OU+9HomGaUm
+         mffdxteEh+Bo11oIA1PVUSVY6QEzToWLTCOwphtCp4aDVsZlOmQn6mYFmfEyv3fb2CwE
+         iGXZaHsV8F3UWcvJeKmDiCVh1UKouvQqHApPzCfJAmb/7Y3eKI6ty7ktVXhPDrLDmujt
+         09TQS81ZCtSSvjAQY2Y0JXKl+sGGuQ51rZRWZX3XSEZ23xlK+/AmXOm4hthpYTiiHO8A
+         fOOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvLxjXCsTzMS8/WodjVzRyu/Le8N7p6QCdVYUUcud2wuz02pBnp17joT93X2SRBCDrP4heY2iEG08=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl2FiXnz8CmQwnvvV9BJ07nGsQ3VGOsQd8/NjPiE9Em7n/4iLi
+	Q8P30HgMkLydJK9T9XpiclmJEKN6SEy7UcTS23oVAUrJXhEuHQo+7rH/GcMwaAAP97BKH8SZg5U
+	NO1P6iD2+2dkIjyf1fpGtkc8O8Oc93fY=
+X-Gm-Gg: ASbGncssGL1P0z9C0vcM2txThQ8kgln3XaQ/gRu7i4C1mFGuKSl4XvXdLIGZMiAPvYy
+	klA4OIb3WqAb+omnLjzauP4FT4HJx537FM1m2BLvJWH0EJgRdCOfFcF5l6Ojqhsh07V18R3iYqq
+	5uV04Ol1kYpI8KpHi8/6l8XOVEJshAekzfHzrQ6GjQNvMhLkPEXzQ1UR55dLW6nYjpfscRaVb6I
+	/YhnGijg+LEWVoPymyUmX9e5yJsAe9wco590FFWEaErdlpaYuRJmium5nE6kaavOcd1NWppM/Xo
+	bFwKhMRM/FbxZGE5OoggtYaSxadWwkccOu0vHclt9/69uzTORU852YmunZtBI16XyXUHsR/4Jk0
+	8iR0=
+X-Google-Smtp-Source: AGHT+IFgsu64H5AxVDYQ4VC1AtIntPLrClhNs2DhzecuOxKsWfCafPqovP7OzWqL14ZLgcHX93hNFscreoxfb/7qqJM=
+X-Received: by 2002:a17:902:d2c5:b0:290:ad79:c617 with SMTP id
+ d9443c01a7336-2962adb0131mr50508655ad.1.1762436078666; Thu, 06 Nov 2025
+ 05:34:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251103192709.GV1386988@noisy.programming.kicks-ass.net>
+References: <20251106102753.2976-1-zhiw@nvidia.com> <20251106102753.2976-3-zhiw@nvidia.com>
+In-Reply-To: <20251106102753.2976-3-zhiw@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Nov 2025 14:34:25 +0100
+X-Gm-Features: AWmQ_bkZlBPvsV_cw8dYZQNsheLfRuBL-Y7e_Ty1STSrCFE-bOnmtmTHqEfXIAE
+Message-ID: <CANiq72kE9QFdAP2cTjBaxwsQ_H=BmMyabY9vSWUdfj0Ai0QZCA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] rust: devres: style for imports
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dakr@kernel.org, aliceryhl@google.com, 
+	bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	tmgross@umich.edu, markus.probst@posteo.de, helgaas@kernel.org, 
+	cjia@nvidia.com, smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
+	kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com, 
+	joelagnelf@nvidia.com, jhubbard@nvidia.com, zhiwang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 03, 2025 at 08:27:09PM +0100, Peter Zijlstra wrote:
-> On Mon, Nov 03, 2025 at 08:21:20PM +0100, Peter Zijlstra wrote:
-> > On Sun, Nov 02, 2025 at 10:57:06AM +0000, Guangbo Cui wrote:
-> > > The AER injection path may run in interrupt-disabled context while
-> > > holding inject_lock. On PREEMPT_RT kernels, spinlock_t becomes a
-> > > sleeping lock, so it must not be taken while a raw_spinlock_t is held.
-> > > Doing so violates lock ordering rules and trigger lockdep reports
-> > > such as “Invalid wait context”.
-> > > 
-> > > Convert inject_lock to raw_spinlock_t to ensure non-sleeping locking
-> > > semantics. The protected list is bounded and used only for debugging,
-> > > so raw locking will not cause latency issues.
-> > 
-> > Bounded how?
-> > 
-> +	scoped_guard (raw_spinlock_irqsave, &inject_lock) {
-> +		if (ops == &aer_inj_pci_ops)
-> +			break;
-> +		pci_bus_ops_init(bus_ops, bus, ops);
-> +		list_add(&bus_ops->list, &pci_bus_ops_list);
-> +		bus_ops = NULL;
-> +	}
+On Thu, Nov 6, 2025 at 11:28=E2=80=AFAM Zhi Wang <zhiw@nvidia.com> wrote:
+>
+> +///     device::{Bound, Device},
 
-I found that there are two styles of calling scoped_guard in the kernel:
+Is this one converted?
 
-  1. scoped_guard (...)
+> +    /// # use kernel::{
+> +    ///     device::Core,
 
-  2. scoped_guard(...)
+This hides only the first line, which will look quite confusing when
+rendered -- please double-check with the `rustdoc` target.
 
-Is there any coding convention or guideline regarding this?
+Thanks!
 
-> +				rperr->root_status |= PCI_ERR_ROOT_COR_RCV;
-> +			rperr->source_id &= 0xffff0000;
-> +			rperr->source_id |= PCI_DEVID(einj->bus, devfn);
-> +		}
-> +		if (einj->uncor_status) {
-> +			if (rperr->root_status & PCI_ERR_ROOT_UNCOR_RCV)
-> +				rperr->root_status |= PCI_ERR_ROOT_MULTI_UNCOR_RCV;
-> +			if (sever & einj->uncor_status) {
-> +				rperr->root_status |= PCI_ERR_ROOT_FATAL_RCV;
-> +				if (!(rperr->root_status & PCI_ERR_ROOT_UNCOR_RCV))
-> +					rperr->root_status |= PCI_ERR_ROOT_FIRST_FATAL;
-> +			} else
-> +				rperr->root_status |= PCI_ERR_ROOT_NONFATAL_RCV;
-> +			rperr->root_status |= PCI_ERR_ROOT_UNCOR_RCV;
-> +			rperr->source_id &= 0x0000ffff;
-> +			rperr->source_id |= PCI_DEVID(einj->bus, devfn) << 16;
-> +		}
->  	}
-> -	raw_spin_unlock_irqrestore(&inject_lock, flags);
->  
->  	if (aer_mask_override) {
->  		pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK,
-
-LGTM, If there are no objections, I’ll include these two patches in the
-next version of the patchset and add your Signed-off-by tag.
-
-
-Best regards,
-Guangbo
+Cheers,
+Miguel
 
