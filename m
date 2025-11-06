@@ -1,63 +1,70 @@
-Return-Path: <linux-pci+bounces-40466-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40467-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED97DC397B6
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 09:00:38 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37B22C397F8
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 09:04:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BD803B82FE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 08:00:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D78934E4919
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 08:04:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38CCE2FDC53;
-	Thu,  6 Nov 2025 08:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F7E2FFF91;
+	Thu,  6 Nov 2025 08:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IES7uTpy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvHF5V12"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095562FD7B8;
-	Thu,  6 Nov 2025 08:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A0B288C25;
+	Thu,  6 Nov 2025 08:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762416037; cv=none; b=DIbRklVSyXf84gmqr4SW0+wYqwKtk8iTQ9dXn0dFFPqqYRsFHVWIVndLV7utX4T+Ate7pPeAd7RCRF5uDx15HggToyETWvVd9mlygYn+gy43AqofPBzscMFXzMcmDHO3+SV8jAoyQ0bpskZN1HSN9QOFH+caN2kkbQKXgtocjcQ=
+	t=1762416247; cv=none; b=n53Gn9PbhxAyEhgW7n+TOnc2PuAsbsb4hswg3MhcuKvt8Cc3K1cB7BLVeg1HAxpdgAh/0jSHUIAGFQuKmmMMDaogspITJqO/2UhXCqnnNQ2BCvOTRUe414ZURaXg8Krr4iDfe3NXXIlg0mLi/+mtoBAb17vK66pNJPaDaHFIyXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762416037; c=relaxed/simple;
-	bh=PLqcEO+B1iuZyJH4xuffVGT1SLh3xxFVImhSKds5ULI=;
+	s=arc-20240116; t=1762416247; c=relaxed/simple;
+	bh=ccHkm5qtYzT6iKa2MpQExMHciYd9ipIA4PEh7rQnhmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cerdlBNt+xOELXe9YeLmP7NHHZ4pT5vsuAChr+XvZGLxHtQPkm1JqeuYTMnvMwFtsSANEZbi2dptCRIYUCccFXuxeE7Lg+1rs6vrvZpG+bQclzwWd3itkE7QsQZpS2wqReh/+0a05BvcgMJ4oCH+C1+c6vF9eB/laakkgo8aqyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IES7uTpy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5C6C116B1;
-	Thu,  6 Nov 2025 08:00:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=j47mOUvD5tqvVVb6ld6LetIuZPz8nmzt5FscL3kEZIVM0lBrhaTEem69u2Eu3n45WuG9UvgNlMrjsal6KoyPsm3Z/547tvHWb51mIy2cZwX2ZHbye/QAfHUJOOS6XgCataU6vMbpRUqTnTOjHtwMsQ/QNkUHSqfWMej30HKmo5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvHF5V12; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA2CC4CEFB;
+	Thu,  6 Nov 2025 08:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762416036;
-	bh=PLqcEO+B1iuZyJH4xuffVGT1SLh3xxFVImhSKds5ULI=;
+	s=k20201202; t=1762416247;
+	bh=ccHkm5qtYzT6iKa2MpQExMHciYd9ipIA4PEh7rQnhmM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IES7uTpyPEkkRiOUjwLcBpEsMO/CcNeHwg7qBFVlLUwYjAXspO4FsbZ5803f4H2ZX
-	 ye5+3SajpM3RROc/vFVV7Wbqw3U3E5uLIk/b8vyx4GM+XB9nj42xgBZXk6ffFjMkVE
-	 cNixwAF7eXdhI8Lm1x9PNr09vEPKxsxORKLphy0g81x0SJj/zyyn03wAIkBbKjKbrt
-	 UanAVNdqm8WZqqhTOV3FiEBI1QbvWq8975fPGkOJfFiVwSiS9QDklFioT8e+E0iDQ+
-	 NcXZ79xngaNx+pbWLFLS8go/NrLG68kRDAyuYZdoekR5ZjINljH+Q0srwfZThd99et
-	 /NK0JJ4EeSqKg==
-Date: Thu, 6 Nov 2025 13:30:18 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	bhelgaas@google.com, jingoohan1@gmail.com, christian.bruel@foss.st.com, 
-	krishna.chundru@oss.qualcomm.com, qiang.yu@oss.qualcomm.com, shradha.t@samsung.com, 
-	thippeswamy.havalige@amd.com, inochiama@gmail.com, fan.ni@samsung.com, cassel@kernel.org, 
-	kishon@kernel.org, 18255117159@163.com, rongqianfeng@vivo.com, jirislaby@kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, srk@ti.com
-Subject: Re: [PATCH v5 4/4] PCI: keystone: Add support to build as a loadable
- module
-Message-ID: <grouefwty7ub7xipgxyiph7dumtvoprcdsuq4f6d73pzpqu7pm@rdivadcdcyfy>
-References: <20251029080547.1253757-1-s-vadapalli@ti.com>
- <20251029080547.1253757-5-s-vadapalli@ti.com>
- <fkzokskbjklt6atqrpwc46zsjr5ptpuynzhx4kvfurr4h37kae@rwcqljsjvzl6>
- <d65f44cac2d7fb6c4a139065b304cb4ab790acb3.camel@ti.com>
+	b=NvHF5V12wKqbRMiQh9lD2BGO6IANaZaFz4LZfCAwGDwOjoG5QFOJu38rdjOPjw8mV
+	 haXxY/iWnRM8GboXg478oHWJpF2vHWZzLbOfM/2L2YdtzCSYDa4Tf4zv/kcfmniEiY
+	 d/I6gdIPiAsnEkbIkqaIrnWxY1RTzRJCXPgrWt3P5VaSdknfiowbmC+SZQevCd/ldP
+	 blDmJLIhXIIJ4mtoBiVRN9A8X3tPOBUdfcXS/Ag+iQHm1J1rmKsbODJ6dnTxLw4NVG
+	 Hq8vSt7CDeRJKm8OSn6K2RRO36AAkqGww9DdqxAFgro75BPf3L6XHde6ydlik4vGXv
+	 Skifuqv+5A5tg==
+Date: Thu, 6 Nov 2025 09:04:04 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sjoerd Simons <sjoerd@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, kernel@collabora.com, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>, 
+	Bryan Hinton <bryan@bryanhinton.com>
+Subject: Re: [PATCH v3 08/13] dt-bindings: net: mediatek,net: Correct
+ bindings for MT7981
+Message-ID: <20251106-unbiased-warping-earthworm-f4f66c@kuoka>
+References: <20251105-openwrt-one-network-v3-0-008e2cab38d1@collabora.com>
+ <20251105-openwrt-one-network-v3-8-008e2cab38d1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,141 +73,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d65f44cac2d7fb6c4a139065b304cb4ab790acb3.camel@ti.com>
+In-Reply-To: <20251105-openwrt-one-network-v3-8-008e2cab38d1@collabora.com>
 
-On Thu, Nov 06, 2025 at 12:31:08PM +0530, Siddharth Vadapalli wrote:
-> On Wed, 2025-11-05 at 22:53 +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Oct 29, 2025 at 01:34:52PM +0530, Siddharth Vadapalli wrote:
-> > > The 'pci-keystone.c' driver is the application/glue/wrapper driver for the
-> > > Designware PCIe Controllers on TI SoCs. Now that all of the helper APIs
-> > > that the 'pci-keystone.c' driver depends upon have been exported for use,
-> > > enable support to build the driver as a loadable module.
-> > > 
-> > > Additionally, the functions marked by the '__init' keyword may be invoked:
-> > > a) After a probe deferral
-> > > OR
-> > > b) During a delayed probe - Delay attributed to driver being built as a
-> > >    loadable module
-> > > 
-> > > In both of the cases mentioned above, the '__init' memory will be freed
-> > > before the functions are invoked. This results in an exception of the form:
-> > > 
-> > > 	Unable to handle kernel paging request at virtual address ...
-> > > 	Mem abort info:
-> > > 	...
-> > > 	pc : ks_pcie_host_init+0x0/0x540
-> > > 	lr : dw_pcie_host_init+0x170/0x498
-> > > 	...
-> > > 	ks_pcie_host_init+0x0/0x540 (P)
-> > > 	ks_pcie_probe+0x728/0x84c
-> > > 	platform_probe+0x5c/0x98
-> > > 	really_probe+0xbc/0x29c
-> > > 	__driver_probe_device+0x78/0x12c
-> > > 	driver_probe_device+0xd8/0x15c
-> > > 	...
-> > > 
-> > > To address this, introduce a new function namely 'ks_pcie_init()' to
-> > > register the 'fault handler' while removing the '__init' keyword from
-> > > existing functions.
-> > > 
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > ---
-> > > 
-> > > v4:
-> > > https://lore.kernel.org/r/20251022095724.997218-5-s-vadapalli@ti.com/
-> > > Changes since v4:
-> > > - To fix the build error on ARM32 platforms as reported at:
-> > >   https://lore.kernel.org/r/202510281008.jw19XuyP-lkp@intel.com/
-> > >   patch 4 in the series has been updated by introducing a new config
-> > >   named "PCI_KEYSTONE_TRISTATE" which allows building the driver as
-> > >   a loadable module. Additionally, this newly introduced config can
-> > >   be enabled only for non-ARM32 platforms. As a result, ARM32 platforms
-> > >   continue using the existing PCI_KEYSTONE config which is a bool, while
-> > >   ARM64 platforms can use PCI_KEYSTONE_TRISTATE which is a tristate, and
-> > >   can optionally enabled loadable module support being enabled by this
-> > >   series.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > >  drivers/pci/controller/dwc/Kconfig        | 15 +++--
-> > >  drivers/pci/controller/dwc/Makefile       |  3 +
-> > >  drivers/pci/controller/dwc/pci-keystone.c | 78 +++++++++++++----------
-> > >  3 files changed, 59 insertions(+), 37 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > index 349d4657393c..c5bc2f0b1f39 100644
-> > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > @@ -482,15 +482,21 @@ config PCI_DRA7XX_EP
-> > >  	  to enable device-specific features PCI_DRA7XX_EP must be selected.
-> > >  	  This uses the DesignWare core.
-> > >  
-> > > +# ARM32 platforms use hook_fault_code() and cannot support loadable module.
-> > >  config PCI_KEYSTONE
-> > >  	bool
-> > >  
-> > > +# On non-ARM32 platforms, loadable module can be supported.
-> > > +config PCI_KEYSTONE_TRISTATE
-> > > +	tristate
-> > > +
-> > >  config PCI_KEYSTONE_HOST
-> > > -	bool "TI Keystone PCIe controller (host mode)"
-> > > +	tristate "TI Keystone PCIe controller (host mode)"
-> > >  	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-> > >  	depends on PCI_MSI
-> > >  	select PCIE_DW_HOST
-> > > -	select PCI_KEYSTONE
-> > > +	select PCI_KEYSTONE if ARM
-> > > +	select PCI_KEYSTONE_TRISTATE if !ARM
-> > 
-> > Wouldn't below change work for you?
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 349d4657393c..b1219e7136c9 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -486,8 +486,9 @@ config PCI_KEYSTONE
-> >         bool
-> >  
-> >  config PCI_KEYSTONE_HOST
-> > -       bool "TI Keystone PCIe controller (host mode)"
-> > +       tristate "TI Keystone PCIe controller (host mode)"
+On Wed, Nov 05, 2025 at 10:18:03PM +0100, Sjoerd Simons wrote:
+> Different SoCs can have different numbers of Wireless Ethernet
+> Dispatch (WED) units, specifically the MT7981 only has a single WED.
+> Furthermore the MT7981 uses infracfg for PHY switching. Adjust bindings
+> to match both aspects.
 > 
-> This doesn't alter the build of the pci-keystone.c driver. From the
-> existing Makefile, we have:
->  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
-> implying that it is only CONFIG_PCI_KEYSTONE that determines whether the
-> pci-keystone.c driver is built as a loadable module or a built-in module.
+> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> ---
+> V2 -> V3: Only update MT7981 constraints rather then defaults
+> V1 -> V2: Only overwrite constraints that are different from the default
+> ---
+>  Documentation/devicetree/bindings/net/mediatek,net.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> index b45f67f92e80d..c49871438efc7 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> @@ -338,12 +338,14 @@ allOf:
+>              - const: netsys0
+>              - const: netsys1
+>  
+> -        mediatek,infracfg: false
+> -
+>          mediatek,sgmiisys:
+>            minItems: 2
+>            maxItems: 2
+>  
+> +        mediatek,wed:
+> +          minItems: 1
 
-Ah, I missed the fact that PCI_KEYSTONE_HOST is just used inside the driver and
-not in the Makefile.
+Drop, 1 mis already minimum.
 
-> >         depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-> > +       default y if ARCH_KEYSTONE
-> 
-> The default flag only specifies what should be selected by default, but it
-> doesn't prevent the user from attempting to built it as a loadable module
-> using menuconfig. Building the pci-keystone.c driver as a loadable module
-> (CONFIG_PCI_KEYSTONE set to 'm') will cause build errors for ARM32
-> platforms due to the presence of hook_fault_code() which is __init code.
-> 
-> The Kconfig and Makefile changes made by the patch do the following:
-> 1. Allow building the pci-keystone.c driver as a loadable module for non-
-> ARM32 platforms by introducing the PCI_KEYSTONE_TRISTATE config which is a
-> tristate unlike the existing PCI_KEYSTONE config which is a bool.
-> 2. Associate PCI_KEYSTONE with ARM32 platforms and associate
-> PCI_KEYSTONE_TRISTATE with non-ARM32 platforms to prevent users from
-> building the pci-keystone.c driver as a loadable module for ARM32
-> platforms.
-> 
+Anyway, this does not match top-level schema which said minItems 2. You
+need to keep these consistent among all variants and top-level.
 
-Ok. I don't have a better solution to this problem. So fine with me.
 
-- Mani
+Best regards,
+Krzysztof
 
--- 
-மணிவண்ணன் சதாசிவம்
 
