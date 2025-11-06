@@ -1,312 +1,186 @@
-Return-Path: <linux-pci+bounces-40477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AE70C39E19
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 10:46:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 590B3C39E3D
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 10:48:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD8871A410D3
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 09:45:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AF2C188EB47
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 09:48:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FA530C611;
-	Thu,  6 Nov 2025 09:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE44A22D7B1;
+	Thu,  6 Nov 2025 09:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jp7kGB/J"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hSLKx8pI";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Euh5obur"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012002.outbound.protection.outlook.com [52.101.53.2])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C44B218845;
-	Thu,  6 Nov 2025 09:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762422276; cv=fail; b=V84tq3+4ltpaFuZnB+NJBSH1aoPd2yGn6rK9sslwzgjlz8J1FHJK1PT5dK0pjRDPROJf6h3BHu48h8+bjlNF/7cIdrV1opxyC5M7mS9tzcweHMEBQfoycumM5sllA+rOo0VgtYQLO3unv66jaBQrvbOdQYmV63WXgDcwuca44qs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762422276; c=relaxed/simple;
-	bh=HoNhxPKLzGazgVciNHddmrVSCEDz5irIxlJISJ3phb8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CLtMmr44VZGWDl5eFPHi6AI6xzUZChpLIh9pq4tEaJbuyRG81xFYiuFoycd83Vo8n3T2hFW2RAF5b5vTzywXqlfTD4u97+j3nTBzNud2IIQcDBz6l0FP1raqYLfRj7avA8nIGJVq+Hu/IHO858Oy+wYV/8Ez8AAUSeGc4TNdZ0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jp7kGB/J; arc=fail smtp.client-ip=52.101.53.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mN05KMEbKM0h6xLaM6g6b5UwNmsS+8XQBfMg/7NBkgQW0jOqh+9jA5vbCrbauYvTxsAx81Wbnrm6ANjEE2tjJEhzfwu3A6WObAsmqrNjw2Sc3USBp9A4tIzd1o5dzHH2tldLb17W4klo44UpriM1FI05KsEyvkxjdasKTsaWth7083vdIZnwD3InKqSh+whZg5FwmIe3IeLFe3GHdLFQJQ4C3gCE8KX/FU4emunmzTzaxIMUMjsmn4FOq4Kl8P0b6k8W3Whd61EUqcEP/BNxXi+HXyBK+5uvCw8HFo7beBwLRYbVHkmHnwGy+Mq9vuW1rATyOebxygmvpTQXQMOQzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8BHAC32eqxjFGLpzNnxWkDsRhgWFwcZQEWIbn4H3pjs=;
- b=g23+oAC4MXSQ1HWwTU5yIsMNsm4IllnwQ+k8lbjMe/6wpTQhm4JLO30xTIJQo/JxOTXZS8Kk6UHPRg7y2F8Y6w1pHj8vGEmycU66IBxG3NFXulXVMpz4su0qPxRsRAlfKGXDEA8/RYDz6l4pc4oi8L+JK22v2is8ovrJqoxUUfFAS7gKoA0bfC7mxy8alcA4jcZNLNswbxMl/VSI8tvCPhkOIMmV+hEgV51OiIkznVQ/UaB90Iu42fIAGBGDkYzWyLy4qtkjTOE51lx/3yD8fHaT9Z8lNTxLxWDgnzt7COmNffCixN6KsNIVjwC3t4VYBFXQu0/u4jU0FPtpzO02yQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8BHAC32eqxjFGLpzNnxWkDsRhgWFwcZQEWIbn4H3pjs=;
- b=jp7kGB/JCh0lDABGxwco5Hg4NGQGn9+O7cgF/dl3Nl6JL7LTzavsT3omdKojN4XqRMVUXUi26KL0j9LtZNKbMn8cThEWe9iTdQ/cHLb/MhkVtTdGAz79LLfUqTLvKI8G59+YubVhkjViYe+oTlvVeHOAA27up+cQDWK0N5aWrsCOv+m5Jx6iEGRiDEosK3acv/HIZrxNgTleYORW5W1FCot2ALSeAOwkeiGo2IM9rteTy3AdOW2LVQGDh2TP323/dLV8wUzT7f7+VckCqt/mgBD5dUbfFkGmiih348nRRzcyZC7YdH3Lu4EOx/S6Ts+BEm32qxWfoK/hHYNRofAZ6w==
-Received: from MW3PR06CA0027.namprd06.prod.outlook.com (2603:10b6:303:2a::32)
- by DS7PR12MB6287.namprd12.prod.outlook.com (2603:10b6:8:94::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.8; Thu, 6 Nov
- 2025 09:44:26 +0000
-Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
- (2603:10b6:303:2a:cafe::d7) by MW3PR06CA0027.outlook.office365.com
- (2603:10b6:303:2a::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.12 via Frontend Transport; Thu,
- 6 Nov 2025 09:44:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9298.6 via Frontend Transport; Thu, 6 Nov 2025 09:44:25 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 6 Nov
- 2025 01:44:16 -0800
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Thu, 6 Nov 2025 01:44:16 -0800
-Received: from inno-thin-client (10.127.8.9) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Thu, 6 Nov 2025 01:44:12 -0800
-Date: Thu, 6 Nov 2025 11:44:11 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: Danilo Krummrich <dakr@kernel.org>
-CC: <bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
-	<bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
-	<aliceryhl@google.com>, <tmgross@umich.edu>, <linux-pci@vger.kernel.org>,
-	<rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rust: pci: use "kernel vertical" style for imports
-Message-ID: <20251106114411.370711ce.zhiw@nvidia.com>
-In-Reply-To: <20251105120352.77603-1-dakr@kernel.org>
-References: <20251105120352.77603-1-dakr@kernel.org>
-Organization: NVIDIA
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651F438DE1
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 09:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762422476; cv=none; b=Q6y2H9tsMWkS5Mha7yeodFQ2nsBUDnvKFJ4/MMdngpYHVQk4D0NFC3GvZ9MomFe7APxM9iP8r1g9FBTO78qHO9T20jsFtg1rpy8JuOdpL9UFOqN1PtjQcB1NPFPyfY8pjZPnwc+UQcggH+8OTJJS8wOjoG57eUabCFj1kIQ60iY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762422476; c=relaxed/simple;
+	bh=vavezM5McYCdO0GTAExjvodbuYeC8rvFYUP3Bzrb6a0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A+hdrIOpC9A3j30bPSZvkjz/nqasrw1Cq1t2mnNYhyJW9dwWW8qiFw3UWCf+MIAGA0RvyXYxpGXb2f4qOoDIcyHk49WoJ8xs+e954TZDS3lJuf67cvPRksnkRmfkyjv8gLI72hmv6vNGtItBo0HFiuIWYvpZrofWBGEhZnI9BYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hSLKx8pI; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Euh5obur; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A66t8Kd3156156
+	for <linux-pci@vger.kernel.org>; Thu, 6 Nov 2025 09:47:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9IBxiMX/J2w532V+aM7PJT3Rhdmy1U28t6gabb7CXog=; b=hSLKx8pIVW45KUsN
+	UE5qLb8ljopgQ97CwrnC1XRVYnlbeIqDY038Sk3CR9zQENRHt/lvWe/aDxbbGneS
+	3RJk3WO1YHDNZtvBotsfSLca3QdcnMj7lNqHXqeViHhZvydRyBeHP1k5L6L9KMWm
+	hAOQhhkM24EwKjEbtTR4I/Nx/1zABG+ROYSnyrQ5pnXyqYFzVJuUigL2Y5k/S6BP
+	ZQNXJ5gaDs+M6dFf0aSDex6f8G+371Qvpwogtnnprvt7IsX2q2utiPV5LZGVhZSj
+	V9ukR/kvm6aPBv1vY7TAkfcLu1DjBS+bePfFMy3W9zbeMCpOFXsbm4aSsuLrcuxN
+	IXCxqA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a8pu0gfxy-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 09:47:54 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b1be0fdfe1so3790385a.2
+        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 01:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1762422474; x=1763027274; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9IBxiMX/J2w532V+aM7PJT3Rhdmy1U28t6gabb7CXog=;
+        b=Euh5oburOgbQyEo3+sqVXqEORRndoSlqmAN6LGWQSBl1sGYMlx4wnBx0tFxz2l6vlV
+         DHLF7gLt2BVJ5QZirossefsLdfaGdmaCyLcBdBdlBR5TtX9ryNXT9P0838qCyFaHcBZ0
+         GKv+ZTSH47S8iQ+l6XTWrUC5p7ykvAaOxyM2B/502fTwiLq8qAyUzIKpdYghmputGnPn
+         NXVasNDInm8U5ScXlpTumOWA6Tbeqory/9plMw9lzlmaMB0aVzvXcayuqS4FHfuN/jpt
+         hYBOb8a8HXreZCgj4ll8Ih2G7F4fPwzFsNtgJ6cmjBcUcVBc4szZQh6Bc5jPodraOavS
+         n1lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762422474; x=1763027274;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9IBxiMX/J2w532V+aM7PJT3Rhdmy1U28t6gabb7CXog=;
+        b=s6H0/LgaZJ85Jzf8OElZbkrn3rkyQKhJX8Xkxoj/6NnWNllexF6VzrLK7e4+qQQMRM
+         GKRozMdcWu8OacEPCuVMiy/sWhwX5iltuYa+WAJGBJ2eHr6sPBTYSktQXz6jRPn81t8z
+         5fgNf+rICHJP6GNIb3iV4z6na8+HTMV2JGHfH39CAjxjgxDcMQCgV70Xapds6GxAE5RM
+         g3jHO/GzFCgOFsvsUd7iNTjmqFHpm2vnUbGIdGCjAzy9DLEemcJ+6ZFMOtRw8S5XdSnF
+         nQUFtxUTrqTDutMTtUYC3B4R7Q6JLubvINYoAwEJXvr+xituH0WHTGSJlqyWbBUyoKSZ
+         q/Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVxbHKdmiBhUZs22PEK/N0pmYQCEZoYKEmo+Z+wZATRBIoLZq0oAoMX5QZvrfrRdnqIuM1k+Zohn9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5iKQYJnLT2tmUm16sQ93N6vbp4sBjbL+2aglswcnqp5Px0eBx
+	e1G2J7zPNyQBMxlqSHdRJiR5E2cPnOvJWz1NuYOB9WaPNp8Y9loXjgzyyr+znE37RD/aZ9HB1k6
+	sbYB5P6v9vy2XorC0Zy2A3vfjI7VB0l07NwaDo06AHd6G+4Z8Bj5OdPqc42rZMj0=
+X-Gm-Gg: ASbGncusRkv5SgjxD2kYOR6tT1YwWHNOXJZJPviK4rWJkfBmvfO78OS6G7PfAFkwru6
+	OaPCPL+xmSqUi69vlhcQztMfcYizjgjyWIAxJcM9gtEoP7ki3OgujjWbZS0AGjJEBdS6QIBCJ8I
+	1cMLACvLORKWg4WMS81eNVi70sp2SUpA0meqDUvEJqbHDZ+gAS8ZEKFAz8QmFDichf0mM7lsjrM
+	/ocvIlHheiz26Bw9yZkOUboKlGpaI4bhBsUdcJH4N+4w9wXeWgUGrS1OHughx5c4X/DxGBYinf7
+	c2J+UrEoXeEIiwYR2P6LACgJCOi0xv0zfkSlK9Rys9TGXaka7fnAfAKZG4wBX9ZT9sacqhDZsb0
+	6mj6tIX7zod4eoKhKIJPdX+Hf1umAbb+8/11g8QTqXSbEhVbQoZsx96f6
+X-Received: by 2002:a05:622a:18a6:b0:4ed:1869:6c05 with SMTP id d75a77b69052e-4ed72338594mr57540461cf.5.1762422473661;
+        Thu, 06 Nov 2025 01:47:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGpuKuCWzp0t7fCbW5KVhS4FD/Jdg9+sVXbJS47KWq/o+LFPWmer47f/TSodncTzWe2GNegOw==
+X-Received: by 2002:a05:622a:18a6:b0:4ed:1869:6c05 with SMTP id d75a77b69052e-4ed72338594mr57540311cf.5.1762422473198;
+        Thu, 06 Nov 2025 01:47:53 -0800 (PST)
+Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6412a27d68dsm516869a12.9.2025.11.06.01.47.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Nov 2025 01:47:51 -0800 (PST)
+Message-ID: <4aface5d-66eb-41bb-b6f3-ee8ce5d5da6b@oss.qualcomm.com>
+Date: Thu, 6 Nov 2025 10:47:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] PCI: host-common: Add an API to check for any device
+ under the Root Ports
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+        bhelgaas@google.com
+Cc: will@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, linux-arm-msm@vger.kernel.org,
+        zhangsenchuan@eswincomputing.com
+References: <20251106061326.8241-1-manivannan.sadhasivam@oss.qualcomm.com>
+ <20251106061326.8241-2-manivannan.sadhasivam@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251106061326.8241-2-manivannan.sadhasivam@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|DS7PR12MB6287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a6a206d-a82b-48ca-eea7-08de1d1912d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|7053199007|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WplZEbyvg4oe+k8Qm5ZsN4qB1Q3nCScsOnt853l2z5ObS/Azn/OYOBgF4wTb?=
- =?us-ascii?Q?HH5mlSmBwRisL5Bh8lv2EiXhxiq7/FzWvfT8yFdzJLvq02myNmi+8R76J2xP?=
- =?us-ascii?Q?ew8FTEv/th82CuIKuOB3ioFurtyMkrtwSuxLH5nSiYtWLdn/e166rKUeqoWk?=
- =?us-ascii?Q?u3dZk4fSFUnOfk3G7lOwEkzVTS1QqmFF8VFjEEl7EHvmkHAayepk9ZFKPqeO?=
- =?us-ascii?Q?tJTM0t87AmSxVz609mEzQ01PJ8l+HLbs2bQWy8drh7AIRUG7g7Ro3qrTHG2Q?=
- =?us-ascii?Q?N/wWnoaOCwUOsgE2q0pHO53ppB/8et6M3qgds4J637dJpb1tvb9XsCapIgwM?=
- =?us-ascii?Q?bmynMas5XFjsLVh63UDzom7ITw0rSbsNSojuBI5zqJ8E61+ER13OOT9ujQam?=
- =?us-ascii?Q?8C2x/tD88kysXulcnXNi1SfFreq9G6wKK+5RDcoDvVFyDIe4b2OvHp6Yp9XF?=
- =?us-ascii?Q?Giv6VfCEeTRpP0FkBlx3RCOFuqWCXpqngYgU6Qz2Gf7FLlxu0fN8noDSvnHO?=
- =?us-ascii?Q?ufiCbM6w2qWLG+L/JTzsr0n4PkuEKVKCu/bsUH0lKofyZ54fvRN0ln6TsujH?=
- =?us-ascii?Q?XQKottgIa9qV7/fMZ6yw113DD7Y4dNWsfmUWf8pul7KsHWwmjmPUliaW1+jb?=
- =?us-ascii?Q?BNMQcnGVFj4RkQqrk03uLdrp5Y+SAJ881FeVlMa8Ql7SlrE1aMYXTOK+9I5w?=
- =?us-ascii?Q?JslrIbe63pgEka1xWo4eVlpMEiuOSYzU6lQ9qmYNZhtc3yVIUTCoRqtixIv1?=
- =?us-ascii?Q?6zUBM+2SJswyTNFjvC0qNanpdXMmrpsirGK10+YQVvzwKyBUcRIrXKgqwpPy?=
- =?us-ascii?Q?oIZAHaAYaj9oKF96TZiQTgoYda5HXgdWUH3VBmtNx37FavqYdstsfZYqrYCH?=
- =?us-ascii?Q?YW1HfLob7F8nPrqCGUISM7xP5T1sUzyk2yksityLpVF2562CzTOq3l7ytd6A?=
- =?us-ascii?Q?dJz6Qf49moS9bX0Hg4WOPHGGRk4lCOvr2v6E2mjPZJP2+BjOESV36XGd4VJ5?=
- =?us-ascii?Q?9NQCr8gIZHYkU3AQfzecvgXU3OcBaEv2zgCUU5LEl8BurM5hSpOzqkqfgGZ0?=
- =?us-ascii?Q?+9JbB8g33gn2xbm0DQwRrbzUjAk9SrtyJfxpcqmxfZMvvegIh5WN5SBmh75P?=
- =?us-ascii?Q?hPNpRHL8GHNegynbx6Rd5jl0yS5HSzAHIFHq9NYYCd+zGksJ4+wh6neqVNKH?=
- =?us-ascii?Q?h8cmOkHRLmaYakFTc1tVvRc32mlIn7uKoxMKlMlexCuLdF8pMFo+1P28ntna?=
- =?us-ascii?Q?NBacnS8Q/4VAJypcyLqcpYBgjWJFZd75MH1wUtAo88yDSDWEVNOXAoNZVPLt?=
- =?us-ascii?Q?O1Md1sAPoDyNRYcPIxO3ZLKBCXNPK6/OjvCKHECdDan4uuEKmnpZ/bz0J2XP?=
- =?us-ascii?Q?r4/yNjzOONwwX+5rtcp6AhzmJSCkfdkEhjD5O7Y96L8E1zhlACM1q3pUQuZ3?=
- =?us-ascii?Q?pviMNiR0dWBUSho0nsD3FVAKVpocTLuOpczstyAHSMX4rRNr68qJpE3sH5Fc?=
- =?us-ascii?Q?IiVNuvYeFL3zMflGS1oktU4YRz3P/0Wil26C98sRjsQ5SlgFxpqgyLJVik+3?=
- =?us-ascii?Q?jXNBW9gZdQlrXuYnaWM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 09:44:25.9913
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a6a206d-a82b-48ca-eea7-08de1d1912d4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6287
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA2MDA3OCBTYWx0ZWRfX7SfN7YMoMlYi
+ QD42Fofq8ioBoFwstURDNPj2+1LYuRJmFrSD+ZS358bdvuaHt50A7dVK5YGCeuOIASemWy5Kx0Y
+ kusTKq82BQxtafubLu8Bd/vLJ2hhvyBIv9OMZaQNxyrlaCSaw7hz+F2AdSnDz70HMNi8ORU6u9e
+ avPbknCZRrM6f4goRRxZQG4h2V6p8xei16Vt/+3qTopW/4ULHtsbMznlogulKbobdearnCFRsip
+ QxiMCZUO8lqyUOMpu43eZ0MjeNQMN5omGnNIKDVCQq9GH0UqXeDRYPzWdxqbIUTk3cU6T11Ak0X
+ 32igP/Asc2Ev70e9w5tDwjq6TOiNeHMa6IMQYju1rFjgzYkNBTZDQyoNLoDncvp7cK69Hsx+tVJ
+ VzX2TNNea3xuw7RFlsBlDxtusRKhfA==
+X-Authority-Analysis: v=2.4 cv=bIYb4f+Z c=1 sm=1 tr=0 ts=690c6eca cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=X544SMn2G6euAj6E:21 a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=RsEGIJiJnbDJ2EEs828A:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: zrBRvzkvB1JbicRiSp6XdK_rkd5kc4eX
+X-Proofpoint-GUID: zrBRvzkvB1JbicRiSp6XdK_rkd5kc4eX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-06_02,2025-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 malwarescore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511060078
 
-On Wed,  5 Nov 2025 13:03:28 +0100
-Danilo Krummrich <dakr@kernel.org> wrote:
-
-> Convert all imports in the PCI Rust module to use "kernel vertical"
-> style.
+On 11/6/25 7:13 AM, Manivannan Sadhasivam wrote:
+> Some controller drivers need to check if there is any device available
+> under the Root Ports. So add an API that returns 'true' if a device is
+> found under any of the Root Ports, 'false' otherwise.
 > 
-> With this subsequent patches neither introduce unrelated changes nor
-> leave an inconsistent import pattern.
+> Controller drivers can use this API for usecases like turning off the
+> controller resources only if there are no devices under the Root Ports,
+> skipping PME_Turn_Off broadcast etc...
 > 
-> While at it, drop unnecessary imports covered by prelude::*.
-> 
-
-Looking good to me and test on the driver-core-testing branch.
-
-Reviewed-by: Zhi Wang <zhiw@nvidia.com>
-
-> Link: https://docs.kernel.org/rust/coding-guidelines.html#imports
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > ---
->  rust/kernel/pci.rs     | 35 +++++++++++++++++++++++++++--------
->  rust/kernel/pci/id.rs  |  5 ++++-
->  rust/kernel/pci/io.rs  | 13 ++++++++-----
->  rust/kernel/pci/irq.rs | 14 +++++++++-----
->  4 files changed, 48 insertions(+), 19 deletions(-)
+>  drivers/pci/controller/pci-host-common.c | 21 +++++++++++++++++++++
+>  drivers/pci/controller/pci-host-common.h |  2 ++
+>  2 files changed, 23 insertions(+)
 > 
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index b68ef4e575fc..410b79d46632 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -5,27 +5,46 @@
->  //! C header: [`include/linux/pci.h`](srctree/include/linux/pci.h)
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index 810d1c8de24e..6b4f90903dc6 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -17,6 +17,27 @@
 >  
->  use crate::{
-> -    bindings, container_of, device,
-> -    device_id::{RawDeviceId, RawDeviceIdIndex},
-> +    bindings,
-> +    container_of,
-> +    device,
-> +    device_id::{
-> +        RawDeviceId,
-> +        RawDeviceIdIndex, //
-> +    },
->      driver,
-> -    error::{from_result, to_result, Result},
-> +    error::{
-> +        from_result,
-> +        to_result, //
-> +    },
-> +    prelude::*,
->      str::CStr,
->      types::Opaque,
-> -    ThisModule,
-> +    ThisModule, //
->  };
->  use core::{
->      marker::PhantomData,
-> -    ptr::{addr_of_mut, NonNull},
-> +    ptr::{
-> +        addr_of_mut,
-> +        NonNull, //
-> +    },
->  };
-> -use kernel::prelude::*;
+>  #include "pci-host-common.h"
 >  
->  mod id;
->  mod io;
->  mod irq;
->  
-> -pub use self::id::{Class, ClassMask, Vendor};
-> +pub use self::id::{
-> +    Class,
-> +    ClassMask,
-> +    Vendor, //
-> +};
->  pub use self::io::Bar;
-> -pub use self::irq::{IrqType, IrqTypes, IrqVector};
-> +pub use self::irq::{
-> +    IrqType,
-> +    IrqTypes,
-> +    IrqVector, //
-> +};
->  
->  /// An adapter for the registration of PCI drivers.
->  pub struct Adapter<T: Driver>(T);
-> diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-> index 7f2a7f57507f..a1de70b2176a 100644
-> --- a/rust/kernel/pci/id.rs
-> +++ b/rust/kernel/pci/id.rs
-> @@ -4,7 +4,10 @@
->  //!
->  //! This module contains PCI class codes, Vendor IDs, and supporting
-> types. 
-> -use crate::{bindings, error::code::EINVAL, error::Error, prelude::*};
-> +use crate::{
-> +    bindings,
-> +    prelude::*, //
-> +};
->  use core::fmt;
->  
->  /// PCI device class codes.
-> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-> index 3684276b326b..0d55c3139b6f 100644
-> --- a/rust/kernel/pci/io.rs
-> +++ b/rust/kernel/pci/io.rs
-> @@ -4,14 +4,17 @@
->  
->  use super::Device;
->  use crate::{
-> -    bindings, device,
-> +    bindings,
-> +    device,
->      devres::Devres,
-> -    io::{Io, IoRaw},
-> -    str::CStr,
-> -    sync::aref::ARef,
-> +    io::{
-> +        Io,
-> +        IoRaw, //
-> +    },
-> +    prelude::*,
-> +    sync::aref::ARef, //
->  };
->  use core::ops::Deref;
-> -use kernel::prelude::*;
->  
->  /// A PCI BAR to perform I/O-Operations on.
->  ///
-> diff --git a/rust/kernel/pci/irq.rs b/rust/kernel/pci/irq.rs
-> index 782a524fe11c..063b6a5101ff 100644
-> --- a/rust/kernel/pci/irq.rs
-> +++ b/rust/kernel/pci/irq.rs
-> @@ -4,16 +4,20 @@
->  
->  use super::Device;
->  use crate::{
-> -    bindings, device,
-> +    bindings,
-> +    device,
->      device::Bound,
->      devres,
-> -    error::{to_result, Result},
-> -    irq::{self, IrqRequest},
-> +    error::to_result,
-> +    irq::{
-> +        self,
-> +        IrqRequest, //
-> +    },
-> +    prelude::*,
->      str::CStr,
-> -    sync::aref::ARef,
-> +    sync::aref::ARef, //
->  };
->  use core::ops::RangeInclusive;
-> -use kernel::prelude::*;
->  
->  /// IRQ type flags for PCI interrupt allocation.
->  #[derive(Debug, Clone, Copy)]
+> +/**
+> + * pci_root_ports_have_device - Check if the Root Ports under the Root bus have
+> + *				any device underneath
+> + * @dev: Root bus
+> + *
+> + * Return: true if a device is found, false otherwise
+> + */
+> +bool pci_root_ports_have_device(struct pci_bus *root_bus)
+> +{
+> +	struct pci_bus *child;
+> +
+> +	/* Iterate over the Root Port busses and look for any device */
+> +	list_for_each_entry(child, &root_bus->children, node) {
+> +		if (list_count_nodes(&child->devices))
 
+Is this list ever shrunk? I grepped around and couldn't find where
+that happens
+
+Konrad
 
