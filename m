@@ -1,200 +1,213 @@
-Return-Path: <linux-pci+bounces-40491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D37B1C3A74D
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 12:08:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87102C3A8F5
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 12:28:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 20FA44EF725
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 11:02:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E58B81A43643
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 11:28:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C057C30C368;
-	Thu,  6 Nov 2025 11:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41A9B30EF96;
+	Thu,  6 Nov 2025 11:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WxjmaBSa"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FK9xHrWK";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="O7ogLkbU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD4930BF67
-	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 11:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1095730EF7E
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 11:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762426915; cv=none; b=BGMbwVxJRpqMDsCE2alDfqf24AEQtlInAksS+bkmsXgkgA+9vqBtugkNbvw+X4m42borOKiSS9T7V5LRQyuQP4nRFDdkMdLO+9926bsGi5qer+2XTqZuJ4grx+MMeSzdtCAWnVhYRKnVLS8F5n7BVh36bKZ75yATyGeOBlsYTyY=
+	t=1762428471; cv=none; b=SIs+6f5nJKQK3dv853oG0JnpEH/hmYV9Hl9WixNbT5lv9WIyAGIqTmsVz+WqumQD566GFu1GUy/eTArQR8pwAnLhiXf2W1XQr6pfLjgDT0nwJqu2ysdo8M+GZ6Cn5D8Qy5hxr1nICr5sycblkHNr6YVUe3ZMxtwgQPWe/PZB/F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762426915; c=relaxed/simple;
-	bh=GbxjtuR3nbV5uSBcJDoBUPQ5UbSMcQxiLL+HqRkQbpM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lZwO2c+uB9gD6IJBEm+aGzjsVA4jjyKEHuyvrmGFDl8W0QKKrkmR7tE87tLK6UYwCStQGmH/KebzNCTKejtewq94slRCO5zVOQtifXGkSycWR/oKzBN41OmivTaqk6aqtqx7ixMApFi/EL03Z7NgWcyFJgxV/yYSPzk1bIuud/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WxjmaBSa; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b71397df721so137649366b.1
-        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 03:01:51 -0800 (PST)
+	s=arc-20240116; t=1762428471; c=relaxed/simple;
+	bh=/d0RShmJ4EWGDBU9WbnbcZYTaEbVunb7gn5q2MpqXAo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=INhlty4VqLEWpO7FBaDg4wjRql3pW+ryP06HmL2qkodND9wJ4/KPKk4PPigQGzmEJfEKmEDtJm6mn/y4P+Ti+lrmiMICIJnnZNHbC+ZljngDHOzI63PXF53fMryZ7PUVnopaLZQ7RSovOwHl2H+yiF7ZexdNkCRcQOxN+oBWLbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FK9xHrWK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=O7ogLkbU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A68jdOO3383360
+	for <linux-pci@vger.kernel.org>; Thu, 6 Nov 2025 11:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=qdqjiv+hovojXSdUMbYsbi
+	YZLigYh+pRDD7bJDGZx3k=; b=FK9xHrWKa8IK4dxgW6tFMjtZ7A72GfKf/xqJlJ
+	a7X9bLg/5EOmagFa4/lyeAMnbTGftZ2xhvnZOC7CDG45jMT/dGze1/J0RCY0ZKGK
+	2A34jbHBk/MwUUtHEeotatbCk6S67r0L2vvX/HkVlHpNel8HpCvwuEg+yFLKs1cV
+	UJ3ywO+GvOeQibwzDA1fV03Og7iuiOH+AXLiHGaKm+3FMq04FT3NFYMvMkKHZwfa
+	WlNGuAHH+K+X5U9oet918gA6rAisXg3ZFXf4OwulCVfS8r4gO+CCmpscXVrIAXgN
+	uIuDZd3A/7WeaAJ+Uw/0VqZIB49DGOSzjSDPntNcJdK/eO2Q==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a8reurdw4-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 11:27:46 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2958c80fcabso8233185ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 03:27:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1762426910; x=1763031710; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tuc3d7QnSdL0UpfWr8xV1dwP8gyHIFirvdKYeuITd3w=;
-        b=WxjmaBSaSHUpEZETgxFMYlFUu0rYhHd2KejWka0Omem1dNcWwJV+beLF2DTvxcRt28
-         S+YQeh9G7Wvo3MEEJCVatvp499goA/arepCku7h8TSSMUSIo64hCALzXEeUK9R8QHMDc
-         Ex0rwzmQnt35gDDrg2ACfjB3HgeLtlSl7Xt/HF9RKS5+P6QqXLeneWf4wWdZymOYl5G0
-         MBUBHWz29mZc47JlqMW1TqZHGBk5fuDV2IYnpS6IEvUsh6bziIM6UIKYAycUuyF8Vnh2
-         AKrfA6gHEoZ7fDLGmRp7yYD7xHM+0aP1R38xBLPojr73PBfrAdmezEe4lKKt8DUBJgbD
-         psqA==
+        d=oss.qualcomm.com; s=google; t=1762428466; x=1763033266; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdqjiv+hovojXSdUMbYsbiYZLigYh+pRDD7bJDGZx3k=;
+        b=O7ogLkbU86GrPRqp2HfX8BtN+LoKZDlqjKJYvp5XED4uYN5BPjMsXbRCPsBfEQdKNV
+         FK8Zx71tG+3vZ2vO2mV4iSZ+onP2Q/lX6Y5DooIHBlSfek+A73G79s75xwBzzz6rBWjp
+         R0dVKq2p22i4OsoG598KXPcF4V8ugkFU2ftcqoY+k+DawTbf0kJmE88dJGEnO/2Q3z17
+         Q+0DOPPOcBiQtlfRnE2BpLNyn03GPhgyTz69zYeeYyAsg1ZW1lfm6fOLp4ZnTYOrQSZM
+         o7DuRTJK1tGSktQD67oH8jFRoIhh55m9Z/KDoUq8P+6gdOA67A5mTYx5bWePHfIySxsO
+         wNlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762426910; x=1763031710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tuc3d7QnSdL0UpfWr8xV1dwP8gyHIFirvdKYeuITd3w=;
-        b=OvPkVmdcxC1nX/vMkds7nO7Ec6K0fjbesLb+uD4K6cR2huMYE7AhbUwPawPzyYbai1
-         Ldq7QpIeVLyUKVMwZwWZdmfYPqBznG+NaOPExjbHRQTEc92042fwwCMZOaLMePr6McJ7
-         lDy0kawkhrfyfbLsjWqwYdcyR8J8CLfDxcyFi9jQaMtUpJwOuwUXVSc9buXt1BTixKvG
-         4qNKl/lUwF+ldtnYIKmcW/UzEOalCR7P210L+xZzMlJO4gqqDQ+hxh/L/5oEbYyi00l1
-         p/6GtxJeMPknuM8UjzeUqfkc1fH886nbKuv0vpnO+0hR0P6c5M1+lS8+BeS+O6lD1ou4
-         ozqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8uYbqt9lqw7lkUSaCILF4CvwByP/F5gAgLqjmG/3PQGBIBSNqxZfjZWF4oXn1hWV09khJiHdqkE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB3rOQQiG+jeD0r28/lzBLjM+bOEdjB0XLRX7bIb7XzA2LRFgC
-	WN3SLgbLq/foMY+QrnWMmyeNsCVD0GwEcjUlYI8+xBp0eN34igpd7zMnYA0FhsSBiD4=
-X-Gm-Gg: ASbGncuJSfFLufYTmINbNzYo9FHoKC7OkEYA9P5U3YZc0llWmO/qFogQbeOJyIKZ8ZH
-	nhD2eIQuERP9SsW1eHa57f4n+Om7RKUoJNDuuFuwPYuBtpmqJtWVQw81wDoREwxzUIm19+HHO9S
-	zw0NtbYAkhZ49zcYaCvG7Khm6fnvbFenchAra34fOh+bZUWBLXSkk7sDBW8K7oUBVjbjAvwRLjA
-	I81+RYqvVjRqTcnPimAeAGbvnX2bwuPeEkBQYtJsC1FzhsYdvU3cJSnxJi9YKT5Mf1bYuZlvNCZ
-	XuEleh73DH3TuUQvrBCd8eAlnnWeSg72Wso6cUXfXE8kanotRTZWd+2WJz4rkqvNrHB7DTpfzAw
-	LleLVlB54gWXhba0iXivgg4GUWl+sOhEmiFQnzwoKkzR4HIQ5V12hThqIlTXuWQmrNCPf+0if+D
-	Pp7Krij88Lppc9y2MaKazAhKiVOHlCkbgNgNxVI+t1
-X-Google-Smtp-Source: AGHT+IFCQJv6UYwjxjMv3JAt25/eCd7XQsg6/s3HCkyOXBqI/r6GScWjfdTpeMGjB8fTUJElhSDVKA==
-X-Received: by 2002:a17:907:2da3:b0:b6d:95b3:5881 with SMTP id a640c23a62f3a-b72654ddb19mr745015066b.33.1762426910372;
-        Thu, 06 Nov 2025 03:01:50 -0800 (PST)
-Received: from localhost (host-79-51-28-73.retail.telecomitalia.it. [79.51.28.73])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f862697sm1560546a12.25.2025.11.06.03.01.49
+        d=1e100.net; s=20230601; t=1762428466; x=1763033266;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qdqjiv+hovojXSdUMbYsbiYZLigYh+pRDD7bJDGZx3k=;
+        b=AaLIX9zrlQ4wVDPphAoYzvUtoDO3smd4lNzqyjHdDeiIC5OIB1tHBsb+tEktw2MZUL
+         JHzOebfWlLkroo6Z7cQfjkSJ7pNSy3dyv5ntpKB7fk7rpRbm1J/EVgNhoZQZCRXwC4lS
+         Hw860KBcvviE5zFcRjHoWZxZGv6x2Dkg4q7PEYKFCCcDo0dF6QnL1/cRMMU2t7tNFhxv
+         xO25RCR4GoAOVnprKWjanV3XYAemr0QgQBU83nJYgeldSqLCa+0VDlC94CvpbdkKAUd5
+         R6oGts0Y5/2K4DqwP/sPZrdetOaaQTpbCZseICqEs2rl4gz+ubfDshDeUINmgH4YOaOW
+         wHEA==
+X-Gm-Message-State: AOJu0YxSi9XAyI1IdzlfCZvwkao9ind4W0MX79nHm/QjbVRZ/diskPLa
+	I35W4IDHfI4LlJgEnH/feOP7GB/a1YDO3qQNoMUABsxj7nIZjY4RjS2apQVvq+OnDW92XOSJQ/y
+	4MR3alrxpvjJSwFzPX29wxWYb14xid+Ej/lvRnVtrakMEbBRNGENsq6zu5Xk6SVU=
+X-Gm-Gg: ASbGnctFEklB0pEX0pfEBzGBLRKr1j38cGAzWuhKeOosg/+9AJKAJoKSYNwXUyP8IKb
+	L4mXHwvE2NrFi/MaZ+OvmsM/wjp+2pn5Qm4ze0Jmv6VTtH5KJj5y+tTl2ZuMWHu8ohsfDhRdvF2
+	bcQvwF94p61qJBq8yZSDtHCZEQw7Xs4Pip+QIMBT0KpLG90tdDr5eF4pTcwMHytHm/KAbogR5xE
+	edkX+9tF8101BfAJO9p3gap+okGoQiiHuctlRr73chuzopQYB28GvwOlrslJKA5QR9O9Also3B5
+	F7+AUQfxJM2/uYme11xH/sIzpnai8+6PQ6BeNBGy/VOkcnp8fsSnYyW9HSbbq2CltDIpmHvu+Qm
+	Y1YX3+j5gIvy4YUdy0EL1pWARD3xLMQ==
+X-Received: by 2002:a17:902:e841:b0:295:25d4:ff3f with SMTP id d9443c01a7336-2962adb1a92mr98456065ad.42.1762428465734;
+        Thu, 06 Nov 2025 03:27:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEeoXA/51ndlFT/zmxWq+rMEBEoTgVSD3HozP5DN0cQLxY4c870YiGuNmS1Wir15urf492row==
+X-Received: by 2002:a17:902:e841:b0:295:25d4:ff3f with SMTP id d9443c01a7336-2962adb1a92mr98455665ad.42.1762428465218;
+        Thu, 06 Nov 2025 03:27:45 -0800 (PST)
+Received: from [192.168.1.102] ([120.56.196.127])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c94ac5sm25577495ad.92.2025.11.06.03.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 03:01:49 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 6 Nov 2025 12:04:07 +0100
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mbrugger@suse.com,
-	guillaume.gardet@arm.com, tiwai@suse.com,
-	Lizhi Hou <lizhi.hou@amd.com>, herve.codina@bootlin.com
-Subject: Re: [PATCH v2] PCI: of: Downgrade error message on missing of_root
- node
-Message-ID: <aQyApy8lcadd-1se@apocalypse>
-References: <955bc7a9b78678fad4b705c428e8b45aeb0cbf3c.1762367117.git.andrea.porta@suse.com>
- <20251106002345.GA1934302@bhelgaas>
+        Thu, 06 Nov 2025 03:27:44 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Subject: [PATCH v2 0/2] PCI: qcom: Binding fix
+Date: Thu, 06 Nov 2025 16:57:15 +0530
+Message-Id: <20251106-pci-binding-v2-0-bebe9345fc4b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251106002345.GA1934302@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABOGDGkC/22MwQ7CIBAFf6XZszRAaAme/A/TQwvYbmKhsko0D
+ f8u9uzlJfOSmR3IJ/QE52aH5DMSxlBBnhqwyxhmz9BVBsllJ7jgbLPIJgwOw8y0U05rY2zvHVR
+ jS/6G76N2HSovSM+YPkc8i9/7v5MF48wobTlXU9cbc4lE7eM13m1c17YODKWULyeo9netAAAA
+X-Change-ID: 20251010-pci-binding-7d4d7799c6ed
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Abraham I <kishon@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2952;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=/d0RShmJ4EWGDBU9WbnbcZYTaEbVunb7gn5q2MpqXAo=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpDIYkETQWTjUMuA7NrFtSDVEROBzJJckkjDjQJ
+ kvP306at/mJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaQyGJAAKCRBVnxHm/pHO
+ 9WRgB/9CK+8W6hpe+je8rt+P5MO7F2HlFlrO/wgz5Q3vlwqMf0cCV0SVOXvqVA153jb6rf6YSSV
+ 49YV/+tw3xDISgE/5dUp4TwxFCRXHX7OI10ZucJ6Nr98e0xJJSjKWcfXTihmbj6cHNIPI25zXiB
+ D2PDILBPagpxfMtGeh/bbeaov++70JUBJCy5I7dRQwkm39OOyLA7U5AKRPjlL6tf8/4EImhCUgg
+ SjJskjDDEJHCMT9eoX73O52iu3GAl/O1SmkLC6/1gCftETfx5lQcib1IrrEOmGE9pVENgdAyOFe
+ F/ize2NIZe9y8rh5PrtBOPj2lDwfA47vUPLKiU84rRDFbo8O
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA2MDA5MCBTYWx0ZWRfXya1YzJzlBYU0
+ 84zvzPSv/FIogepOl4urZy7yIvq6T2vuo/156g5fOs8vUAz2fYR9EzmtwB3qLLhVnIEz1bI8bsH
+ Y9iexbisYzONxAa9a0OCAJAOwpDqUKc4OQrioiWZal3vYEjOHoSZmInvrCRkqE51XBOD2adsoDd
+ OAn3/ueeenev16bOg2onNEKeDF8dyuAANYFD088bA6n9eNwFgisZbaQxj6C3ulS/0eV1WHsCAyQ
+ aCAs/pAtHm+FrpKsfvKRyWrS1Wt2+F6SI094QVa1yV5j+BsXCfQmhg1ypjVSCkBQ3seJ9EytlGf
+ 4BiWFcoTH0h5keTG4bv0wv+NDzlhvDn90yT6Lyhi4SgA9WCqxXEAcMKZFwYd4f0qLjrFWPnKLoo
+ BH2zvBnZNYoTgnsdTxIH5NkGq3UcKQ==
+X-Proofpoint-ORIG-GUID: iZmc2k_prg93-UNTRtsfcf0SG8I0bISc
+X-Authority-Analysis: v=2.4 cv=RrDI7SmK c=1 sm=1 tr=0 ts=690c8632 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=NqeMpCPRvvPHbudmJ2rC7w==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=30HXYaYmheVzExRkvwwA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+ a=sptkURWiP4Gy88Gu7hUp:22 a=HhbK4dLum7pmb74im6QT:22
+X-Proofpoint-GUID: iZmc2k_prg93-UNTRtsfcf0SG8I0bISc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-06_03,2025-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 bulkscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511060090
 
-[+cc Herve]
+Hi,
 
-Hi Bjorn,
+This series fixes the binding issue around the PERST# and PHY properties.
+The binding issue was reported in [1], while discussing a DTS fix [2].
 
-On 18:23 Wed 05 Nov     , Bjorn Helgaas wrote:
-> [+cc Lizhi]
-> 
-> On Wed, Nov 05, 2025 at 07:33:40PM +0100, Andrea della Porta wrote:
-> > When CONFIG_PCI_DYNAMIC_OF_NODES is enabled, an error message
-> > is generated if no 'of_root' node is defined.
-> > 
-> > On DT-based systems, this cannot happen as a root DT node is
-> > always present. On ACPI-based systems, this is not a true error
-> > because a DT is not used.
-> > 
-> > Downgrade the pr_err() to pr_info() and reword the message text
-> > to be less context specific.
-> 
-> of_pci_make_host_bridge_node() is called in the very generic
-> pci_register_host_bridge() path.  Does that mean every boot of a
-> kernel with CONFIG_PCI_DYNAMIC_OF_NODES on a non-DT system will see
-> this message?
+The binding fix provided in this series is not sufficient enough to spot all the
+shenanigans, especially keeping one property in Controller node and another in
+Root Port node. But this series does catch the DTS issue fixed by [2]:
 
-This is the case, indeed. That's why downgrading to info seems sensible.
+arch/arm64/boot/dts/qcom/sm8750-mtp.dtb: pcie@1c00000 (qcom,pcie-sm8750): 'oneOf' conditional failed, one must be fixed:
+	'phys' is a required property
+	False schema does not allow [[148, 102, 1]]
+	False schema does not allow [[148, 104, 0]]
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/sm8750-mtp.dtb: pcie@1c00000 (qcom,pcie-sm8750): pcie@0: 'oneOf' conditional failed, one must be fixed:
+	'reset-gpios' is a required property
+	'wake-gpios' is a required property
+	False schema does not allow [[34]]
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/sm8750-mtp.dtb: pcie@1c00000 (qcom,pcie-sm8750): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interconnect-names', 'interconnects', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'msi-map', 'msi-map-mask', 'num-lanes', 'operating-points-v2', 'opp-table', 'pcie@0', 'perst-gpios', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
 
-> 
-> This message seems like something that will generate user questions.
-> Or is this really an error, and we were supposed to have created
-> of_root somewhere but it failed?  If so, I would expect a message
-> where the of_root creation failed.
+Thanks to Dmitry for suggesting the binding fix!
 
-Not really an error per se: on ACPI system we usually don't have DT, so
-this message just warns you that there will be no pci nodes created on it.
-Which, again, should be of no importance on ACPI.
+[1] https://lore.kernel.org/linux-pci/8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com
+[2] https://lore.kernel.org/all/20251008-sm8750-v1-1-daeadfcae980@oss.qualcomm.com
 
-The only scenario in which this message is actually an error would be on
-ACPI system that use DT as a complement to make runtime overlay work,
-i.e. the overlay approach for RP1 on RPi5 with ACPI fw. AFAIK this fw is
-more a PoC that something really widespread and currntly the overlay
-approach is in stand-by anyway (meaning no one will use it unless some
-major changes will be made to make it work). But there may be other
-situations in which this scenario could arise, I'm thinking about Bootlin's
-LAN966x driver which also uses runtime overlay to describe thw hw.
-On ACPI system the root DT node is not created because unflatten_device_tree()
-is not called.
-One possible (easy) solution would be calling unflatten_device_tree() also
-in case IS_ENABLED(PCI_DYNAMIC_OF_NODES), but this of course requires some
-investigation against side effects.
-In this case the roto DT node is always created (on both ACPI and non ACPI
-systems) and the info message will not be printed.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Changes in v2:
+- Dropped the binding patch that got applied.
+- Dropped mandating the WAKE# property in binding as not all platforms are
+  supplying it and also fixed the binding example reported by the bot.
+- Reworked the driver patch to just make 'phy' property as optional since all
+  platforms specify PERST#.
+- Link to v1: https://lore.kernel.org/r/20251010-pci-binding-v1-0-947c004b5699@oss.qualcomm.com
 
-> 
-> I guess I'm confused about what the point of this message is.  If it's
-> just a hint that loading an overlay in the future will fail, I assume
-> we would emit a message at that time, connected with the user action
-> of trying to load the overlay.
+---
+Manivannan Sadhasivam (2):
+      dt-bindings: PCI: qcom: Enforce check for PHY, PERST# properties
+      PCI: qcom: Treat PHY as optional for the new binding
 
-For a functional standpoint, it basically is, if we neglect the fact that
-you won't have PCI nodes described in the DT, of course, which I guess it's
-just informationali (but I may be mistaken on this point). Loading an overlay
-in the future will fail anyway so no need to take further action there. Plus,
-the systems on which this could happen (ACPI system + runtime overlay) would
-be probably rare, if ever exist.
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml        | 16 ++++++++++++++++
+ .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml       |  3 +++
+ drivers/pci/controller/dwc/pcie-qcom.c                   |  2 +-
+ 3 files changed, 20 insertions(+), 1 deletion(-)
+---
+base-commit: 5472d60c129f75282d94ae5ad072ee6dfb7c7246
+change-id: 20251010-pci-binding-7d4d7799c6ed
 
-> 
-> What badness would ensue if we downgraded this message even further
-> and removed it completely?
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-As stated above, I would expect no major issue but other opinions
-would be very welcome. 
-
-Many thanks,
-Andrea
-
-> 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > ---
-> > CHANGES in V2:
-> > 
-> > * message text reworded to be less context specific (Bjorn)
-> > ---
-> >  drivers/pci/of.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > index 3579265f1198..872c36b195e3 100644
-> > --- a/drivers/pci/of.c
-> > +++ b/drivers/pci/of.c
-> > @@ -775,7 +775,7 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
-> >  
-> >  	/* Check if there is a DT root node to attach the created node */
-> >  	if (!of_root) {
-> > -		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
-> > +		pr_info("Missing DeviceTree, cannot create PCI host bridge node\n");
-> >  		return;
-> >  	}
-> >  
-> > -- 
-> > 2.35.3
-> > 
 
