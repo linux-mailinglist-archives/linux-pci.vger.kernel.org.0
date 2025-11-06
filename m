@@ -1,65 +1,61 @@
-Return-Path: <linux-pci+bounces-40459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00FAEC39555
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 08:07:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BB46C395AF
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 08:14:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1DB164E975F
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 07:07:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A67B1A42D37
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 07:13:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489392C0323;
-	Thu,  6 Nov 2025 07:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849CD2DCF47;
+	Thu,  6 Nov 2025 07:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiDW6Dy1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7TO4A40"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9302BDC34;
-	Thu,  6 Nov 2025 07:07:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D641F4613;
+	Thu,  6 Nov 2025 07:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762412821; cv=none; b=uNTJiDPPHF3O+NCGTZDvwLlY0u/0U/wtEder60an70hFD7tEY42fOTCpAEli9IbVK1tThxfCZuk876RhPacPkI9F87GgE8/YAsXVmlkBAFiMWQvvWFYcMVdZ/ifCISlQ3orX/QOHH/cnLel1+UCnwJfijua/aqaVs7C+NMKCp0A=
+	t=1762413152; cv=none; b=RAS0PvY6j3ufiO0RUVmLGXuXiA7AxwAV9JXSGRgyB91q6Fz9v+3n/LZRwYLBd06rZKPHO+XIJXVoo/jpaC4vMXAuKzom6E5A+FNqRWUKJ4iBMQ+EosZf9gf6W2qlst7BHfsalI3bjmEWiS8zbHeEPD9ouaNi88VLO81Bp+pQuU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762412821; c=relaxed/simple;
-	bh=bqDZ7dmuCre8a9mGu2kDTQ6hkin7PcxZjdNHk50TiWs=;
+	s=arc-20240116; t=1762413152; c=relaxed/simple;
+	bh=P1T6fatvrP28TI3tj++isAxtKXoj252mgI/o9ezLyHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FG0ZDuL3arI0u8RAGKk/4oF7V35n8Miw4yVIZTYg4FT4vSq9enNo+HrnUdHeehdDsSRIRGOJCLfv25Ht+kM4Rv1G+yhcBu7MSBmaYW7mf9wrY1ALLrYyFThsY/ksmS3cO5u/mAaIF/kcV9ofMILpHIdKUmur56UxDjV1lENIHlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiDW6Dy1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA158C4CEF7;
-	Thu,  6 Nov 2025 07:06:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=oc7qvMSk2b9SNw4kVMMv1qsyWn/XLXZuTGUNCU356x7wYJ0fUhY60klRYVaQ8bJihM8jr9+0FC0ImfLCM+bkXi51VQLJ+uDpSpzI3y2ukntzLGYhuDSDmGVZx9q20RZtlnnmWOsuTKwFpWIRYjMEZXkNkW1AXzwT3BnoVVumi90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7TO4A40; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F2DC4CEF7;
+	Thu,  6 Nov 2025 07:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762412820;
-	bh=bqDZ7dmuCre8a9mGu2kDTQ6hkin7PcxZjdNHk50TiWs=;
+	s=k20201202; t=1762413151;
+	bh=P1T6fatvrP28TI3tj++isAxtKXoj252mgI/o9ezLyHM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kiDW6Dy1rIG6NN+YGv8qsOLyDj/Z50R1sni61NB7SBu0+e9PLb9hRuawULnNetA+H
-	 Gzae9u4SrXbCDwLC2qOfW/QXRTyqRZBnsXfQKeOE4w6WyykOzQ/yJF8utKHGlv5h6+
-	 Had/D2JTRqvt+2gk5yxiIfVwsWgESP8SXYHdSLJdq/7YVQ3GGncikke5lrr2e5dlgx
-	 TxvT7m9VtQcdS50cZFJQEOJdcbSFxNtY5scKNCkri30xwH+BS0VTreB7bQqvh3Hv5b
-	 M+dOKk0JJnqhxGd55mIHk7grrBVtcg751Nea8zxyYbxDoekV/7w6BpW7kzRPSFlsP1
-	 xDvK7CEmgemyg==
-Date: Thu, 6 Nov 2025 12:36:41 +0530
+	b=Q7TO4A40RhtfHwJ3tpFg6/0u/ILiqDXt9+rmMeDLxOuvBe8U1TX5tVfwDzcNg3Spr
+	 6/LaAbmwdAZsZV1JZlpBNEqYRDVu43hM6GWw88InUEzzQ3OVYD/boDTVWBiAZYXiD8
+	 Cw6a+d8ngi+LnXofjMa09isWBUijd/A0IEtJg9loRqpVOA67nsgnuZBxMiyI7Zk6WH
+	 zPH7CCZhFgsd7Og+6fbrket54o+JEakq9no/43PxpfXs8AgRkTXElht0LuLK4nFzuq
+	 ZevKtxgrbck31yKwmP8DlHZGnbq4cxgdJkIGlRC2ybNVwrCQfahYh5WQYIlJyX5lLL
+	 7XfIbN65DME9A==
+Date: Thu, 6 Nov 2025 12:42:11 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, 
-	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>, 
-	Diederik de Haas <diederik@cknow-tech.com>, stable@vger.kernel.org, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v3] PCI: dw-rockchip: Prevent advertising L1 Substates
- support
-Message-ID: <oa57mn3wrigno2kzigdo2lh46z5xmesv74nzjtg4jz4ea6urrh@icti3ewoll4r>
-References: <0e32766b-b951-4ab4-ae3d-c802cf649edf@rock-chips.com>
- <20251104221724.GA1875081@bhelgaas>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: chester62515@gmail.com, mbrugger@suse.com, 
+	ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
+	Ghennadi.Procopciuc@nxp.com, ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
+	Frank.li@nxp.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	cassel@kernel.org
+Subject: Re: [PATCH 1/4 v3] dt-bindings: PCI: s32g: Add NXP PCIe controller
+Message-ID: <6k5zdhbhtqg2dghdm2bkbymr5rwzcowziaahfdvgw4dk22y43y@npsrperinzue>
+References: <20251022174309.1180931-1-vincent.guittot@linaro.org>
+ <20251022174309.1180931-2-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,73 +65,140 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251104221724.GA1875081@bhelgaas>
+In-Reply-To: <20251022174309.1180931-2-vincent.guittot@linaro.org>
 
-On Tue, Nov 04, 2025 at 04:17:24PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 04, 2025 at 08:58:02AM +0800, Shawn Lin wrote:
-> > 在 2025/11/04 星期二 5:32, Bjorn Helgaas 写道:
-> > > On Tue, Oct 28, 2025 at 02:02:18PM -0500, Bjorn Helgaas wrote:
-> > > > On Fri, Oct 17, 2025 at 06:32:53PM +0200, Niklas Cassel wrote:
-> > > > > The L1 substates support requires additional steps to work, namely:
-> > > > > -Proper handling of the CLKREQ# sideband signal. (It is mostly handled by
-> > > > >   hardware, but software still needs to set the clkreq fields in the
-> > > > >   PCIE_CLIENT_POWER_CON register to match the hardware implementation.)
-> > > > > -Program the frequency of the aux clock into the
-> > > > >   DSP_PCIE_PL_AUX_CLK_FREQ_OFF register. (During L1 substates the core_clk
-> > > > >   is turned off and the aux_clk is used instead.)
-> > > > ...
-> > > 
-> > > > > +static void rockchip_pcie_disable_l1sub(struct dw_pcie *pci)
-> > > > > +{
-> > > > > +	u32 cap, l1subcap;
-> > > > > +
-> > > > > +	cap = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-> > > > > +	if (cap) {
-> > > > > +		l1subcap = dw_pcie_readl_dbi(pci, cap + PCI_L1SS_CAP);
-> > > > > +		l1subcap &= ~(PCI_L1SS_CAP_L1_PM_SS | PCI_L1SS_CAP_ASPM_L1_1 |
-> > > > > +			      PCI_L1SS_CAP_ASPM_L1_2 | PCI_L1SS_CAP_PCIPM_L1_1 |
-> > > > > +			      PCI_L1SS_CAP_PCIPM_L1_2);
-> > > > > +		dw_pcie_writel_dbi(pci, cap + PCI_L1SS_CAP, l1subcap);
-> > > > > +	}
-> > > > > +}
-> > > > 
-> > > > I like this.  But why should we do it just for dw-rockchip?  Is there
-> > > > something special about dw-rockchip that makes this a problem?  Maybe
-> > > > we should consider doing this in the dwc, cadence, mobiveil, and plda
-> > > > cores instead of trying to do it for every driver individually?
-> > > > 
-> > > > Advertising L1SS support via PCI_EXT_CAP_ID_L1SS means users can
-> > > > enable L1SS via CONFIG_PCIEASPM_POWER_SUPERSAVE=y or sysfs, and that
-> > > > seems likely to cause problems unless CLKREQ# is supported.
-> > > 
-> > > Any thoughts on this?  There's nothing rockchip-specific in this
-> > > patch.  What I'm proposing is something like this:
-> > 
-> > I like your idea, though. But could it be another form of regression
-> > that we may breaks the platform which have already support L1SS
-> > properly? It's even harder to detect because a functional break is easier to
-> > notice than increased power consumption. 
+On Wed, Oct 22, 2025 at 07:43:06PM +0200, Vincent Guittot wrote:
+> Describe the PCIe host controller available on the S32G platforms.
 > 
-> True, but I think it's unlikely because the PCI core never enabled
-> L1SS (except for CONFIG_PCIEASPM_POWER_SUPERSAVE=y or sysfs, which I
-> doubt anybody really uses).
+> Co-developed-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> Co-developed-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
+> Signed-off-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
+> Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
+> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> Co-developed-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> Signed-off-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  .../bindings/pci/nxp,s32g-pcie.yaml           | 102 ++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
 > 
-> Devicetree platforms that use L1SS should have explicit code to enable
-> it, like qcom does, so we should be able to find them and make sure
-> they do what's needed to prevent the regression.
-> 
-> > Or maybe we could
-> > just export dw_pcie_clear_l1ss_advert() in dwc for host drivers to
-> > call it?
-> 
-> I don't like the idea of host drivers having to opt in for this
-> because that requires changes to all of them, not just changes to
-> drivers that have done the work to actually support L1SS.
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> new file mode 100644
+> index 000000000000..2d8f7ad67651
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/nxp,s32g-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP S32G2xxx/S32G3xxx PCIe Root Complex controller
+> +
+> +maintainers:
+> +  - Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> +  - Ionut Vicovan <ionut.vicovan@nxp.com>
+> +
+> +description:
+> +  This PCIe controller is based on the Synopsys DesignWare PCIe IP.
+> +  The S32G SoC family has two PCIe controllers, which can be configured as
+> +  either Root Complex or Endpoint.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - nxp,s32g2-pcie
+> +      - items:
+> +          - const: nxp,s32g3-pcie
+> +          - const: nxp,s32g2-pcie
+> +
+> +  reg:
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: atu
+> +      - const: dma
+> +      - const: ctrl
+> +      - const: config
+> +
+> +  interrupts:
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: dma
+> +      - const: msi
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - ranges
+> +  - phys
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/phy/phy.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pcie@40400000 {
+> +            compatible = "nxp,s32g3-pcie",
+> +                         "nxp,s32g2-pcie";
+> +            reg = <0x00 0x40400000 0x0 0x00001000>,   /* dbi registers */
+> +                  <0x00 0x40420000 0x0 0x00001000>,   /* dbi2 registers */
+> +                  <0x00 0x40460000 0x0 0x00001000>,   /* atu registers */
+> +                  <0x00 0x40470000 0x0 0x00001000>,   /* dma registers */
+> +                  <0x00 0x40481000 0x0 0x000000f8>,   /* ctrl registers */
+> +                  <0x5f 0xffffe000 0x0 0x00002000>;  /* config space */
+> +            reg-names = "dbi", "dbi2", "atu", "dma", "ctrl", "config";
+> +            dma-coherent;
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            device_type = "pci";
+> +            ranges =
+> +                     <0x81000000 0x0 0x00000000 0x5f 0xfffe0000 0x0 0x00010000>,
+> +                     <0x82000000 0x0 0x00000000 0x58 0x00000000 0x0 0x80000000>,
+> +                     <0x82000000 0x1 0x00000000 0x59 0x00000000 0x6 0xfffe0000>;
+> +
+> +            bus-range = <0x0 0xff>;
+> +            interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "dma", "msi";
+> +            #interrupt-cells = <1>;
+> +            interrupt-map-mask = <0 0 0 0x7>;
+> +            interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 0 0 2 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 0 0 3 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 0 0 4 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +            phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
 
-Otherwise, we may have to introduce a flag for the controller drivers to opt-out
-of this disablement. Like, dw_pcie_rp::native_clkreq and bailing out early if
-this flag is set.
+PHY is a Root Port specific resource, not Root Complex. So it should be moved to
+the Root Port node and the controller driver should parse the Root Port node and
+control PHY. Most of the existing platforms still specify PHY and other Root
+Port properties in controller node, but they are wrong.
 
 - Mani
 
