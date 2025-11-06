@@ -1,220 +1,180 @@
-Return-Path: <linux-pci+bounces-40450-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40451-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B742FC3930D
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 06:52:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C3E3C393AF
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 07:14:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B8D54E313C
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 05:52:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26F8A1A26460
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 06:15:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC862D5410;
-	Thu,  6 Nov 2025 05:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECAFC2E8B8A;
+	Thu,  6 Nov 2025 06:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ru8uWZc5"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Fv7C8IWK";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="KX+i5+PW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7337C2D8764
-	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 05:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214872E613B
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 06:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762408347; cv=none; b=U5hGHAndcQ6L4rTR2G8HRGSXvSaBaAZ0+kJ3F5fhwAZ48UsrytQpVaFbyx6RsG3YZPG6hR1qRxwqnNjP8UnzXs9H0At+vutlSmywdcIyiXDhK6Bz64u/XhemQVh88r1jxBA6anAodvwgBkGlBguYcg7UA0pyAHcx5jTUwhbX+W0=
+	t=1762409620; cv=none; b=n+Bg++fqiqOVRYpid2uuBI/xZIh7h3rXVlmsne0aboPErFbqoHai47rAuwVwRK2aofFq4d91BawJ9pvATXbkaXH9Yt7hmpUX+Yo3q8JoQlg6QEwosZjRVr/9ASiOTSOGRJiXzM4cUiTt+W5Qrs9BU6w7ZNO5U2AlPYbcOM709oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762408347; c=relaxed/simple;
-	bh=Ar6XPa34sSziNntlv9mHo/RlQeuYRRNaiX+hkKWgV/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rdFC/CWDDIMVknbUw4WVGbiTUznETlnh3WXAQqU9cuMepFTSbXCPbgl9IgOSYYsb40SyytmnX9CHV/GlL44LIaBlWx+oZxoekzoqLozL46JAF0b3n2vofo9aYajC9Z59YOqn2llPuAJmgppRrvmXcdN/qj6Qn+TRvsRjtJFnZPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ru8uWZc5; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-37902f130e1so4783771fa.1
-        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 21:52:25 -0800 (PST)
+	s=arc-20240116; t=1762409620; c=relaxed/simple;
+	bh=DYLwHmGdJ3coXsTh0PPuy3fj9KL/zT5BoMmCnNKTDA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fwRgMBJCsbLc9fXXCXNF6S/8mRtyQSOH8OXU7lEKqVmHBy85N5JjQcPJM/DYDA0sAZHgCnhPxXhGC60szrr/4Ye3bv3hOVjAGskLnoyJ9ilO9+lgASSxsDoOMHnYC8iGJtnMozcj5t9FahVLCYiCFZclAwTArh6gVJE0I6nECDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Fv7C8IWK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=KX+i5+PW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A60Hu7Q2326472
+	for <linux-pci@vger.kernel.org>; Thu, 6 Nov 2025 06:13:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=hP3iVDjjm1Yh6lCxDh4PcKbNlm1B6eEBTsx
+	Er8EUr5Q=; b=Fv7C8IWKKNTfWD7DUqKuBJ+G1XHzrQsl8QL66j8W33JsZeKpXbv
+	mghddo2CKE6qqCG8WQJBcnbhWx1jIGXRVIyvzdo7avGzE1nd57wdSVhh5KX74nXp
+	uuJI43H3JRk57ZNKCQitR/EBvV995sX1jZxrpcBi0GFlFfX+luCmHQ5s4ulSn9Ce
+	HAFCOdHYk0KdbA/I6pKeBVAld1piRNotcrHKa4t5EFwsE/tpt0/6/G12v0iX4OTY
+	nDtaEVmp3I57fv70WGzzeB+VXW+0+iDDqvidA/9mTB6D4040y6AKfDkGtsSfMIxA
+	tt1G3d7FzGDGKuuFcSUpW1Du9Zk8ppKUVvg==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a8h0v0u1h-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 06:13:37 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2953deecdaeso2428805ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 05 Nov 2025 22:13:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1762408343; x=1763013143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2vFD9QfkLV1VBP+0tHhWY7UETMkdp6hXOZQ1SGqke4=;
-        b=Ru8uWZc5qjOZb6kMOBQOVwwhYQSsIP0LRUJTDwXXHDcblW70IcRSiBhCKOWyZ5nRxD
-         CKfiyDc31r1w3py1JYJOj06Y+GMAKaiQQwejdIlDgQXW1k9h2TaIfMgeYsNeYL6lYY6s
-         dseGvEIAdDzH0UVh0rDntRWPze4yff0s631ik=
+        d=oss.qualcomm.com; s=google; t=1762409617; x=1763014417; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hP3iVDjjm1Yh6lCxDh4PcKbNlm1B6eEBTsxEr8EUr5Q=;
+        b=KX+i5+PWDpuGUK2kPeug8ovB6GiGRWmeKstEETsvrwNBiR5FBAKBTtLauf6jeyovTG
+         DjWo9aJDxoiyBpKEe1+4LJvifYtplqa0MchZPon4iSRSbOmDZgTlffutROfcP4BcY+q4
+         L8UEYNd8fXbKNRBp1fV4kd+BJ7wUKTJhIRAiUE8NZ2TPV7DtKe5RG9/sqEwqv3pCn5m1
+         KODCOVrdbMMzXqL/XWr6UpUep1yC/UHRwyXZu9bPnXJxnzRC1FAuGYF9FnaP5oQdRuXV
+         gltp6rGS61QZBlXGg+qAinm+6PwoKaCNhSkESDxKuOWqv+ngk7CM/WSpBnMVnwbI96VW
+         fyEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762408343; x=1763013143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2vFD9QfkLV1VBP+0tHhWY7UETMkdp6hXOZQ1SGqke4=;
-        b=ZbuTzRhdzLh4UQ7sJZpJVcHQ/3nNip0AHGrRYl6GSJYD0g9hFVhHTwriktayvbZVFM
-         nuvpuOmwwqMAlfygPQ4TzkmgK01koNjMu2HZReR9La/4YM9HMXKO4Q9SLUSPjW3Cmh59
-         EF+sLMRGuruE+DwMtWmnGhBFxS1oqha+Eu9D3/ZKbkGa4ZPo/WVrDKNBqBBr8+RRdxLq
-         oQpLg7hFqvvKfr7S3x+sHTIh7lyzQsQ4X2yBq6wyeiMnG8cjGXv8Ati0XnouRrhahLzI
-         NgqQCe9WlAQ6KCyILmcBIgTRy57sS8jq9M2/OeRa4IxR+4b6fSOBwjR5uXDSi1wMcRCC
-         49VA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXsV/nl5/bQMGZXsdZP71sReLxp86FPfGXGLOZ0pD/b4wJuyHPsVEsxwS2dmLktPD4EkMbPKR5cUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1eGV9oTnlFWDkrgpA9wvo5EuYmgP9+Pt1WYeiBcKRr/Lkc2Fg
-	kKVwWov4saNfMBrxAhrrBt2dBA9Br2cPwp/aOgNCZ9OtlrOXJUQSq7VWMiarzgnkuj+E2aBw5/N
-	yZAnMyA+0UO9n06Tdvuzz0Msc6U4y1O/EHid7bRiv
-X-Gm-Gg: ASbGncsfRQcUyCj2h6tTwmDpRVyRPB5mOiYE5KyUV6OwLWQvMDygKN7N+CfchplWL6S
-	wBiGoauMUvJ0s7FyCizkk67SP3VISk4HTcX/ISoU3UGZyYMLLiGirJmxQLv5O6lSckJVSysvpUm
-	MDau/wRa4ShbM+teF9ceDjSejwTYQAfEFDCIS60YhF5mpEfBRP/ATN/KaQUJ8Nbf7j5EbjYkphq
-	577e1irpDhC3TiWchFSBCK25xEtVr0205GMHIOOdlNPn0O4V4QBWPL9LXq1y4o6HUbPTZ3/unf/
-	G515jiSLjbT2rw==
-X-Google-Smtp-Source: AGHT+IHAob6MV1N00P20nCaMZ0Unl97QFU3xVJ0gGiBJjh2pPEuMa2JaMwEv5WW7Ej34ZKo8sZo0R1CpSdofm5d6p5s=
-X-Received: by 2002:a05:6512:39d3:b0:594:29c8:9ae5 with SMTP id
- 2adb3069b0e04-5943d8043damr2230852e87.53.1762408343267; Wed, 05 Nov 2025
- 21:52:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762409617; x=1763014417;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hP3iVDjjm1Yh6lCxDh4PcKbNlm1B6eEBTsxEr8EUr5Q=;
+        b=Ci45IvodMELu5ovcW2ZkBV3j0i2yaUgzItfSHzQ6osLLrN80LGJdQHOP8GsqLCi3M4
+         f3nq1l9zcT0qpptQf2lWrm6h9ZBpe6GZu78Or0HbpQdvOOXhSce5dRqBPGXMpIUQ0VuF
+         4zYea1/74XNuOKHNAPmyhcpaWC/1S3G+Zc5veXwxWAHpFHlIt02eDxy3KUt3uOT+5Bpi
+         rudw5kbJ5b6UCdqVNplhiFzB3RulxTiwZe0RIR8knEjCWo0LdcxBHeqUL8hbVPJ+nv8l
+         c+t/3pBQ/t/Ux0sENjp7UEengR4YsQrgKN1l6wIYDUZbtZawdqPwS53lj5xu2aJHEoRq
+         XNDA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4MiSFDMjWMdYWl82d/AL2CyIZXjL9zhXCWdEknIQH1eHweuqIG+z3lkqmiwQsit/hlCPZbrH4mEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn1O3k+e8IlVNujF35wNztONrEHgmONbO8wMGyqMXoKkzVHEVk
+	Yzw/sCqoxRhK1/WHZNXgVq1CRMif0dSRfyk0hqdj17tDwhXLDDuLod5y9vpxEb/apagKCrMksBk
+	GFCkjFhUTQh13PouRG8lgfd1wNjnbHpx9weDQcZred27cKNHjNjZqophumQdx8RU=
+X-Gm-Gg: ASbGncuUED4lfdfr94FKDXnGcuN46sRqf5K9t0qTG56bsSXfCtyZMzIo+mfoY6JQdDX
+	798a8TLrvQN0bG21yrQVrhWMfUC9XHah0DF9zafAfvrkI/JaRDASe9A/hglGXXqf0cC5cALTluM
+	QBVUsrYpzfJssO6RcLhrcmNezA0frtsj7ogc/JQBW8odi2fE+A7/peTkNDPkQ/oF6sHIs6hc5JS
+	ae7WYceN6MfH5GuT6VuJiL0otgNzUeNojfy/5kEe5hAJvrzAxM1InVnTFZXh7l+0xgiGspP1mVI
+	ARJ/UthSJiq+8YvTJh8iAhrFgutkVpbn32K+vrhOdWlN8Pfl3c5qNObxqz/JB/8+psebjAHen5r
+	wdeMSxeUBjjyd8O5x
+X-Received: by 2002:a17:903:2a84:b0:295:4d50:aaab with SMTP id d9443c01a7336-2962ad21137mr94077525ad.20.1762409616899;
+        Wed, 05 Nov 2025 22:13:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEewmaTtY8AK26J3oyoLch8DjGfmDdZM/mLVA1EXvkwehtfnOLT0872UXtmqd16alDYM/BoXA==
+X-Received: by 2002:a17:903:2a84:b0:295:4d50:aaab with SMTP id d9443c01a7336-2962ad21137mr94077055ad.20.1762409616339;
+        Wed, 05 Nov 2025 22:13:36 -0800 (PST)
+Received: from work.. ([120.60.59.220])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c73382sm15036305ad.69.2025.11.05.22.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 22:13:35 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+To: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+        bhelgaas@google.com
+Cc: will@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, linux-arm-msm@vger.kernel.org,
+        zhangsenchuan@eswincomputing.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Subject: [PATCH 0/3] PCI: dwc: Replace Link up check with device presence in suspend path
+Date: Thu,  6 Nov 2025 11:43:23 +0530
+Message-ID: <20251106061326.8241-1-manivannan.sadhasivam@oss.qualcomm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105062815.966716-1-wenst@chromium.org> <7250ae04-866f-489c-b1b6-b8a3d8200529@collabora.com>
- <CAGXv+5EwiL_-ozRARH2UBm5znHi1egBoCjmELN=17hvFF_oeoQ@mail.gmail.com> <3e1ffe72-b6a4-45cc-a053-190077818f19@collabora.com>
-In-Reply-To: <3e1ffe72-b6a4-45cc-a053-190077818f19@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Thu, 6 Nov 2025 13:52:11 +0800
-X-Gm-Features: AWmQ_bmokZWwcJ_dGdsfSVTeY3Z9us2jEl3U1CaBt3RNYP_UjKHxSJPC0zLeok0
-Message-ID: <CAGXv+5GAyt6U710En_k=fq-CPrq_H6rmc=kpBNw4yXjj8qL2cw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Jianjun Wang <jianjun.wang@mediatek.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: ec8gGWaVWULjEbds5zJluK3pufWqygMm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA2MDA0OCBTYWx0ZWRfX4E0TAq+498Eu
+ wf9TPQ085PWhJLZWnRCFTXQBwodWb8Y9U7ATdNjt9PYKcaOgtkf9CAaVe+ERA6k/70mCcbYb4KV
+ R7+Y28542P4/qFSvKdg8i2+mpHxOsSO6XqsZHyd7/7n+EbUP8OBvLALfKrv9nFk2rLCceL5Zkg3
+ 6NirM12nQZx23S/PwFaLt3vOGZaC+iBMgv8lNOC9ZdtWxLpFl7f4YKOhyI1+gczTUJ38jbaoYw/
+ VLdOFwK1DwOeDOdzM1T3Eb8g0d+y0Ff2hM9yey/gTxyjFMDoUp0WmRSApJyc3WXVePBs6DBXKoD
+ 9RaQHdU5Ug++XV+9wQ37yNJyF2wu/AVm2dmBGMzTvAqxaQGMA0kUBfT3Oq64dO2xL8KUmOiWAvH
+ 5guHafpLf+4ndL6B/0DJaEF25yj8cw==
+X-Proofpoint-GUID: ec8gGWaVWULjEbds5zJluK3pufWqygMm
+X-Authority-Analysis: v=2.4 cv=PoyergM3 c=1 sm=1 tr=0 ts=690c3c91 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=tomDxdmRQcfPzRosr6lsLA==:17
+ a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=h4SL0BZ7AAAA:8 a=nOfjJzbYKU6Ixk5oWvAA:9
+ a=324X-CrmTo6CU4MGRt3R:22 a=Cfupvnr7wbb3QRzVG_cV:22 a=HhbK4dLum7pmb74im6QT:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-06_01,2025-11-03_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 phishscore=0 spamscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511060048
 
-On Wed, Nov 5, 2025 at 7:32=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 05/11/25 10:21, Chen-Yu Tsai ha scritto:
-> > On Wed, Nov 5, 2025 at 4:45=E2=80=AFPM AngeloGioacchino Del Regno
-> > <angelogioacchino.delregno@collabora.com> wrote:
-> >>
-> >> Il 05/11/25 07:28, Chen-Yu Tsai ha scritto:
-> >>> As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling in=
-to
-> >>> common code") come up later" in the code, it is possible for link up =
-to
-> >>> occur later:
-> >>>
-> >>>     Let's standardize this to succeed as there are usecases where dev=
-ices
-> >>>     (and the link) appear later even without hotplug. For example, a
-> >>>     reconfigured FPGA device.
-> >>>
-> >>> Another case for this is the new PCIe power control stuff. The power
-> >>> control mechanism only gets triggered in the PCI core after the drive=
-r
-> >>> calls into pci_host_probe(). The power control framework then trigger=
-s
-> >>> a bus rescan. In most driver implementations, this sequence happens
-> >>> after link training. If the driver errors out when link training time=
-s
-> >>> out, it will never get to the point where the device gets turned on.
-> >>>
-> >>> Ignore the link up timeout, and lower the error message down to a
-> >>> warning.
-> >>>
-> >>> This makes PCIe devices that have not-always-on power rails work.
-> >>> However there may be some reversal of PCIe power sequencing, since no=
-w
-> >>> the PERST# and clocks are enabled in the driver, while the power is
-> >>> applied afterwards.
-> >>>
-> >>> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> >>
-> >> Ok, that's sensible.
-> >>
-> >> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@col=
-labora.com>
-> >>
-> >>> ---
-> >>> The change works to get my PCIe WiFi device working, but I wonder if
-> >>> the driver should expose more fine grained controls for the link cloc=
-k
-> >>> and PERST# (when it is owned by the controller and not just a GPIO) t=
-o
-> >>> the power control framework. This applies not just to this driver.
-> >>>
-> >>> The PCI standard says that PERST# should hold the device in reset unt=
-il
-> >>> the power rails are valid or stable, i.e. at their designated voltage=
-s.
-> >>
-> >> I completely agree with all of the above - and I can imagine multiple =
-PCI-Express
-> >> controller drivers doing the same as what's being done in MTK Gen3.
-> >>
-> >> This means that the boot process may get slowed down by the port start=
-up sequence
-> >> on multiple PCI-Express controllers (again not just MediaTek) and it's=
- something
-> >> that must be resolved in some way... with the fastest course of action=
- imo being
-> >> giving controller drivers knowledge of whether there's any device that=
- is expected
-> >> to be powered off at that time (in order to at least avoid all those w=
-aits that
-> >> are expected to fail).
-> >
-> > That also requires some refactoring, since all the drivers _wait_ for l=
-ink
-> > up before going into the PCI core, which does the actual child node par=
-sing.
-> >
-> > I would like some input from Bartosz, who introduced the PCI power cont=
-rol
-> > framework, and Manivannan, who added slot power control.
-> >
-> >> P.S.: Chen-Yu, did you check if the same applies to the MTK previous g=
-en driver?
-> >>         Could you please check and eventually send a commit to do the =
-same there?
-> >
-> > My quick survey last week indicated that all the drivers except for the
-> > dwc family error out if link up timed out.
-> >
-> > I don't have any hardware for the older generation though. And it looks
-> > like for the previous gen, the driver performs even worse, since it can
-> > support multiple slots, and each slot is brought up sequentially. A slo=
-t
-> > is discarded if link up times out. And the whole driver errors out if n=
-o
-> > slots are working.
-> >
->
-> Hey, that's bold.
->
-> If only one driver (DWC) is working okay, there's something wrong that mu=
-st be
-> fixed before that behavior change goes upstream (which it already did, ug=
-h).
+Hi,
 
-To be fair one only runs into it if they convert over to the PCI slot power
-description in the device tree, and their hardware isn't DWC based. This
-is pretty new.
+This series aims to fix the usage of dw_pcie_link_up() API to check for Link up
+during system suspend. The motivation for this series comes from recent
+discussions [1] [2], where developers wanted to skip PME_Turn_Off broadcast in
+dw_pcie_suspend_noirq() API when devices are not attached to the bus. They ended
+up using dw_pcie_link_up() to check for the device presence due to the bad
+example in the pcie-qcom driver which does the same. The usage of
+dw_pcie_link_up() API here would be racy as the link can go down at any time
+after the check.
 
-> This needs attention from both Bartosz and Mani really-right-now.
->
-> I'm not sure about possible good solutions, and unfortunately I don't rea=
-lly have
-> any time to explore, so I'm not spitting any words on that - leaving this=
- to both
-> Bartosz and Mani as that's also the right thing to do anyway.
+So to properly check for the device presence, this series introduces an API, 
+pci_root_ports_have_device(), that accepts the Root bus pointer and checks for
+the presence of a device under any of the Root Ports. This API is used to
+replace the dw_pcie_link_up() check in suspend path of pcie-qcom driver and also
+used to skip the PME_Turn_Off brodcast message in dwc_pcie_suspend_noirq() API.
 
-Mani mentioned [1] that work towards moving the pwrctrl stuff into drivers
-is almost complete. So I think we're covered.
+Testing
+=======
 
-ChenYu
+This series is tested on Qualcomm Lenovo Thinkpad T14s and observed no
+functional change during the system suspend path.
 
-[1] https://lore.kernel.org/all/rz6ajnl7l25hfl2u7lloywtw7sq7smhb63hg76wjsly=
-uwyjb7a@fhuafuino5kv/
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/CAKfTPtCtHquxtK=Zx2WSNm15MmqeUXO8XXi8FkS4EpuP80PP7g@mail.gmail.com/
+[2] https://lore.kernel.org/linux-pci/27516921.17f2.1997bb2a498.Coremail.zhangsenchuan@eswincomputing.com/
+
+Manivannan Sadhasivam (3):
+  PCI: host-common: Add an API to check for any device under the Root
+    Ports
+  PCI: qcom: Check for the presence of a device instead of Link up
+    during suspend
+  PCI: dwc: Skip PME_Turn_Off and L2/L3 transition if no device is
+    available
+
+ .../pci/controller/dwc/pcie-designware-host.c |  5 +++++
+ drivers/pci/controller/dwc/pcie-qcom.c        |  6 ++++--
+ drivers/pci/controller/pci-host-common.c      | 21 +++++++++++++++++++
+ drivers/pci/controller/pci-host-common.h      |  2 ++
+ 4 files changed, 32 insertions(+), 2 deletions(-)
+
+-- 
+2.48.1
+
 
