@@ -1,214 +1,200 @@
-Return-Path: <linux-pci+bounces-40490-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40491-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC439C3A495
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 11:34:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D37B1C3A74D
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 12:08:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BA13E4FE5F4
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 10:30:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 20FA44EF725
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 11:02:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48D42C375A;
-	Thu,  6 Nov 2025 10:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C057C30C368;
+	Thu,  6 Nov 2025 11:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sH4Y02Q9"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WxjmaBSa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012065.outbound.protection.outlook.com [52.101.48.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9F29346F;
-	Thu,  6 Nov 2025 10:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762424989; cv=fail; b=sQ9PO/IRiHgiM6XJ2wiVWSkui8lfmOooE+EVPyWBsH6qRyMctnwWTlsWHBV8+9XyCOa7kSQIu7myVv5WRorUFVAXu5k//yPkT7jR4vbSzIxipNG4Beh2kGclKKGpTrbAsX3XB0+A1bzCrF3rNpTv45tJa9Yq1mECLvyTuHQa1Jw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762424989; c=relaxed/simple;
-	bh=UAlVehZO/BQ/Gxn53y1vcfvwyawrTeQ7k4WK965Triw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DHzwG+P3Ji8EE770yqeEPDS07acbzp2uBM3K+HZLKg9+6JDPbgwpxN3+0wjWRWEoEZ4BXYF8mJyu+iWOx77UWwYBYY5MCZddivHHhzX0JlZ8qVuck2Uf+wrjVaSp9bLCLVXltto27sE8vsYJDEv1BM50J0B1RFbv46Mxo1yDSh4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sH4Y02Q9; arc=fail smtp.client-ip=52.101.48.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SI5A23IGXAQzk6GDAGvUs9L1gHYOOH84PtoD1ZSWT9rh6WNn0hQC2Bg4R2PKLHuCbGD9uywoB/lFHLEnWkuvuKquAaLx77gMqYxAzRcONxtiEgy3V0gqUAfYHhr3HgU1evynrOpQXyMIyjcMCPvgcuJayAOLhcI1V5HWzOL9CcmgtIIzFN/p2KGnF5+MB1e6VcLiCUcKjCYNq5WFBLaAMAClnWKYSDSwvgDcZhvPNSJ3DJA2s9+CGPGIxZPxs1P368y8UztMqkP0/dokJ3Jhfc5R9ZmMoxM8X+Z4huGc+sD/fq5GxeNiBYpLyVo900fiege7mPIbKodluJcayyADQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ttAQUT9oaBSccgpLNPFsHih6Q/up1j5LBKjPOrlSrGU=;
- b=VfbIILAxF/fw21J1eAT45PEN2CzEVUFqcaCnltq4VOluuvZSyEdaQdph6HJVeU/QYxYsWElFEFJeBXzesgjaRIt1senNX1vJ9fYOyOeATec8tUrAUXNzaX+vW6Lz2pZRVVEM9Sq5HUhSo0O+rJnROKPAqlqlTO++8Al8zLf80ZM4eEz4QVmlliwO9MKjNoyBha1ppYurHwhzZ5DmR4Dz6hB+zK04HLve8QqkEjMO/ndEEp5bUB0YRu4HlHhACX6K5zScud056+ISPuuCm7xKo3B6nT/rN0VqY2hROQgoFgWF8ozVKSB8mrrHbOEa0MtqqF0zyvEsRR+LBcdG/fg/0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ttAQUT9oaBSccgpLNPFsHih6Q/up1j5LBKjPOrlSrGU=;
- b=sH4Y02Q9gLChj3Lrd2jkljpYqQEwC+RWxSYdviCS4Gobfwy4vdyh1MyDibULTWPm3FfzstAgEKMy28E5XddmfkzB75TceDS0VeUgzZ3xW4bIp3y3D+aCxbEov5JV8d3FM1Ri/XwfG3XwlWEswKrBA80NgQDLsLvZXKpDiXIo/utu8CZP8L02+/kg24MSlWp3ADRaIRbUhByLL8VacOUkgvNDBh6HfBUcZcsBG0T/kUAc7rKo8yOAjtdZ5ApuxLrC48GlPk+BlAZLeAPFqqL5wEFEf/nsUD8gihpT3CDMNE94OM8J8NrGrTeDG86740CBtChQUmz9/O+WrZm64eh64Q==
-Received: from BYAPR05CA0070.namprd05.prod.outlook.com (2603:10b6:a03:74::47)
- by IA1PR12MB7734.namprd12.prod.outlook.com (2603:10b6:208:422::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.12; Thu, 6 Nov
- 2025 10:29:40 +0000
-Received: from SJ1PEPF00002322.namprd03.prod.outlook.com
- (2603:10b6:a03:74:cafe::3b) by BYAPR05CA0070.outlook.office365.com
- (2603:10b6:a03:74::47) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.5 via Frontend Transport; Thu, 6
- Nov 2025 10:29:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF00002322.mail.protection.outlook.com (10.167.242.84) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9298.6 via Frontend Transport; Thu, 6 Nov 2025 10:29:40 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 6 Nov
- 2025 02:29:29 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 6 Nov
- 2025 02:29:29 -0800
-Received: from inno-vm-xubuntu (10.127.8.13) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.2562.20 via Frontend Transport; Thu, 6 Nov
- 2025 02:29:19 -0800
-From: Zhi Wang <zhiw@nvidia.com>
-To: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <dakr@kernel.org>, <aliceryhl@google.com>, <bhelgaas@google.com>,
-	<kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
-	<boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
-	<lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
-	<markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
-	<smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
-	<kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
-	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>, "Zhi
- Wang" <zhiw@nvidia.com>
-Subject: [PATCH v5 7/7] sample: rust: pci: add tests for config space routines
-Date: Thu, 6 Nov 2025 12:27:53 +0200
-Message-ID: <20251106102753.2976-8-zhiw@nvidia.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251106102753.2976-1-zhiw@nvidia.com>
-References: <20251106102753.2976-1-zhiw@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD4930BF67
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 11:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762426915; cv=none; b=BGMbwVxJRpqMDsCE2alDfqf24AEQtlInAksS+bkmsXgkgA+9vqBtugkNbvw+X4m42borOKiSS9T7V5LRQyuQP4nRFDdkMdLO+9926bsGi5qer+2XTqZuJ4grx+MMeSzdtCAWnVhYRKnVLS8F5n7BVh36bKZ75yATyGeOBlsYTyY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762426915; c=relaxed/simple;
+	bh=GbxjtuR3nbV5uSBcJDoBUPQ5UbSMcQxiLL+HqRkQbpM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZwO2c+uB9gD6IJBEm+aGzjsVA4jjyKEHuyvrmGFDl8W0QKKrkmR7tE87tLK6UYwCStQGmH/KebzNCTKejtewq94slRCO5zVOQtifXGkSycWR/oKzBN41OmivTaqk6aqtqx7ixMApFi/EL03Z7NgWcyFJgxV/yYSPzk1bIuud/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WxjmaBSa; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b71397df721so137649366b.1
+        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 03:01:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1762426910; x=1763031710; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tuc3d7QnSdL0UpfWr8xV1dwP8gyHIFirvdKYeuITd3w=;
+        b=WxjmaBSaSHUpEZETgxFMYlFUu0rYhHd2KejWka0Omem1dNcWwJV+beLF2DTvxcRt28
+         S+YQeh9G7Wvo3MEEJCVatvp499goA/arepCku7h8TSSMUSIo64hCALzXEeUK9R8QHMDc
+         Ex0rwzmQnt35gDDrg2ACfjB3HgeLtlSl7Xt/HF9RKS5+P6QqXLeneWf4wWdZymOYl5G0
+         MBUBHWz29mZc47JlqMW1TqZHGBk5fuDV2IYnpS6IEvUsh6bziIM6UIKYAycUuyF8Vnh2
+         AKrfA6gHEoZ7fDLGmRp7yYD7xHM+0aP1R38xBLPojr73PBfrAdmezEe4lKKt8DUBJgbD
+         psqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762426910; x=1763031710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tuc3d7QnSdL0UpfWr8xV1dwP8gyHIFirvdKYeuITd3w=;
+        b=OvPkVmdcxC1nX/vMkds7nO7Ec6K0fjbesLb+uD4K6cR2huMYE7AhbUwPawPzyYbai1
+         Ldq7QpIeVLyUKVMwZwWZdmfYPqBznG+NaOPExjbHRQTEc92042fwwCMZOaLMePr6McJ7
+         lDy0kawkhrfyfbLsjWqwYdcyR8J8CLfDxcyFi9jQaMtUpJwOuwUXVSc9buXt1BTixKvG
+         4qNKl/lUwF+ldtnYIKmcW/UzEOalCR7P210L+xZzMlJO4gqqDQ+hxh/L/5oEbYyi00l1
+         p/6GtxJeMPknuM8UjzeUqfkc1fH886nbKuv0vpnO+0hR0P6c5M1+lS8+BeS+O6lD1ou4
+         ozqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8uYbqt9lqw7lkUSaCILF4CvwByP/F5gAgLqjmG/3PQGBIBSNqxZfjZWF4oXn1hWV09khJiHdqkE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB3rOQQiG+jeD0r28/lzBLjM+bOEdjB0XLRX7bIb7XzA2LRFgC
+	WN3SLgbLq/foMY+QrnWMmyeNsCVD0GwEcjUlYI8+xBp0eN34igpd7zMnYA0FhsSBiD4=
+X-Gm-Gg: ASbGncuJSfFLufYTmINbNzYo9FHoKC7OkEYA9P5U3YZc0llWmO/qFogQbeOJyIKZ8ZH
+	nhD2eIQuERP9SsW1eHa57f4n+Om7RKUoJNDuuFuwPYuBtpmqJtWVQw81wDoREwxzUIm19+HHO9S
+	zw0NtbYAkhZ49zcYaCvG7Khm6fnvbFenchAra34fOh+bZUWBLXSkk7sDBW8K7oUBVjbjAvwRLjA
+	I81+RYqvVjRqTcnPimAeAGbvnX2bwuPeEkBQYtJsC1FzhsYdvU3cJSnxJi9YKT5Mf1bYuZlvNCZ
+	XuEleh73DH3TuUQvrBCd8eAlnnWeSg72Wso6cUXfXE8kanotRTZWd+2WJz4rkqvNrHB7DTpfzAw
+	LleLVlB54gWXhba0iXivgg4GUWl+sOhEmiFQnzwoKkzR4HIQ5V12hThqIlTXuWQmrNCPf+0if+D
+	Pp7Krij88Lppc9y2MaKazAhKiVOHlCkbgNgNxVI+t1
+X-Google-Smtp-Source: AGHT+IFCQJv6UYwjxjMv3JAt25/eCd7XQsg6/s3HCkyOXBqI/r6GScWjfdTpeMGjB8fTUJElhSDVKA==
+X-Received: by 2002:a17:907:2da3:b0:b6d:95b3:5881 with SMTP id a640c23a62f3a-b72654ddb19mr745015066b.33.1762426910372;
+        Thu, 06 Nov 2025 03:01:50 -0800 (PST)
+Received: from localhost (host-79-51-28-73.retail.telecomitalia.it. [79.51.28.73])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f862697sm1560546a12.25.2025.11.06.03.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 03:01:49 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 6 Nov 2025 12:04:07 +0100
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mbrugger@suse.com,
+	guillaume.gardet@arm.com, tiwai@suse.com,
+	Lizhi Hou <lizhi.hou@amd.com>, herve.codina@bootlin.com
+Subject: Re: [PATCH v2] PCI: of: Downgrade error message on missing of_root
+ node
+Message-ID: <aQyApy8lcadd-1se@apocalypse>
+References: <955bc7a9b78678fad4b705c428e8b45aeb0cbf3c.1762367117.git.andrea.porta@suse.com>
+ <20251106002345.GA1934302@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002322:EE_|IA1PR12MB7734:EE_
-X-MS-Office365-Filtering-Correlation-Id: 484bdd1e-b9ec-462c-946f-08de1d1f64b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qtNgyf1s0jxWiWFe8Y/08wUIqvd2wakb5iHLgJa8ydL53IDSQHygDQh7s1TP?=
- =?us-ascii?Q?d2oUmE2ilWjGCqrqOfS0+NCJRXYuvYCw0FuN1oNckfeIjoSL47cGJwWx3dX1?=
- =?us-ascii?Q?L9HlLQmldG1OVVyIjJ522+a4CNDWtKV6ONoukSoXyTTDXOWQn+caGpyd2aOe?=
- =?us-ascii?Q?vOjaO99zQMnat36n2JM2l9hcuQH+gxLBhYM37VyDyhFi/yBZHmXgsiWdC8pO?=
- =?us-ascii?Q?fXMbXi7jHwG6Vn/9n50KcADw6SKKaqD8EC6nGqVCRugDZVrzy67yY6h/eKHh?=
- =?us-ascii?Q?lyaYbroImKFgj1w+grAi1KJoFXGYGm3GT7Ag6lOxJ65nYWID5jVOMSrIt0Qf?=
- =?us-ascii?Q?qS64CfcatXELDbWzyrW9DKZHoTxeHwtYOfiEPFHuC0QcNu0Edlr0KrxJ0Sw0?=
- =?us-ascii?Q?SenG1+FWxR5N+vf59KVn4UnHfH7WRuaDppfITc51HtGPd/ZQvoRHejz37vvl?=
- =?us-ascii?Q?eC+QHUh+RLWbUF0sW04DZpV6uDpyBaeOIfLGcTV50y71ZC7g1SqK2oAVRFJ3?=
- =?us-ascii?Q?1AP78F0raFTeXVlji+QsH6J/0pWj5eA224WqoDzW4JwuLBBmlt8ruSDIM5hm?=
- =?us-ascii?Q?2ZwsgDnAnOOZ3kOuJz0/9RUSj3hxifua/TtJz0SdnKYzJn10ij258BCM5Ldx?=
- =?us-ascii?Q?ECWOGzmP1j6ZOSku9DZZuY66FlDKC9a16AnclDN4lyOosd60LlW/iDROgiPx?=
- =?us-ascii?Q?d86jcH40iu6zMvmJ4NoZTHyeV3oNy/e9rUQTfD67xrjlyLqUqPhdiiUly1QR?=
- =?us-ascii?Q?XRPLHw4dDvDVAa6oj7jlcgAJpLu1lgkDidBeTzJlFH2naH4/gHMVogVGH1H1?=
- =?us-ascii?Q?38kfAwL8X9YuQn/oTjX8znvOs7Pe+ejPKgnlhznKBFDU6fpCEbRYOZnULG9I?=
- =?us-ascii?Q?BHDCjtvtg9W1jb7trAb/9U9WkeuPgfFL3pGIWURkxbWtZEnzzCKZLYPqkQP6?=
- =?us-ascii?Q?zunqZFhCAXyoo5FTbTsVtkswo0uFgqR8NhZ0sY3hmZgk0YwIgAYs9WJuD9gr?=
- =?us-ascii?Q?n7DjHuj7jfEiJ8DFJiEeTOPaLWPmh/bv7I2srxlb66JIs/5av3n0oqe8mn78?=
- =?us-ascii?Q?ZW7Y63OMA2cYLCnHfObOWTOXki7MuZx1M3VfKWBEtlxyJMAQ1QEqOdvteE1E?=
- =?us-ascii?Q?clqDA5di0vfPnHR5D3bI9dN0gGItTDc0Tak53ln1ZNBODflsdrWkKQ7Ck+5L?=
- =?us-ascii?Q?FHmb6bpbEtzVTO+bAfzoxyLCuOn2XE+RzT0Atti0hUmoT18yBxpFo+lwsL58?=
- =?us-ascii?Q?c6rQ06q69JPjHKkcsjl4GRqBBv2adJv1r0aJEU4oseKlsBVh7kmM4KNkpurp?=
- =?us-ascii?Q?YV15ZXneqbnU74ePOka5e6/bl0sZFNaKFLtL3f0wUJn1dvnFeM0eaj81bqdp?=
- =?us-ascii?Q?9YjvBF8Zsj+9A0v+BY1OalOWDCW9FdCQ8cjLrsgFiXac3sdrQ7NTwbksPVNG?=
- =?us-ascii?Q?Q5YGHYJId6WIKU1Lke07D8OtBJ0ZdRl/AqyVwrT2ikJsCF/XOexp7jbCYW2E?=
- =?us-ascii?Q?oaa/ErEoueVKzt1WQofitYuecNvK979FprxWUvxuUUa8ckyc1HDbnuWnPbg0?=
- =?us-ascii?Q?guA15hggGF9IkAgIqK8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 10:29:40.3758
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 484bdd1e-b9ec-462c-946f-08de1d1f64b7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002322.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7734
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251106002345.GA1934302@bhelgaas>
 
-Add tests exercising the PCI configuration space helpers.
+[+cc Herve]
 
-Suggested-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Zhi Wang <zhiw@nvidia.com>
----
- samples/rust/rust_driver_pci.rs | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Hi Bjorn,
 
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 74b93ca7c338..8f549b2100bc 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -67,6 +67,32 @@ fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
- 
-         Ok(bar.read32(Regs::COUNT))
-     }
-+
-+    fn config_space(pdev: &pci::Device<Core>) -> Result {
-+        let config = pdev.config_space()?;
-+
-+        // TODO: use the register!() macro for defining PCI configuration space registers once it
-+        // has been move out of nova-core.
-+        dev_info!(
-+            pdev.as_ref(),
-+            "pci-testdev config space read8 rev ID: {:x}\n",
-+            config.read8(0x8)
-+        );
-+
-+        dev_info!(
-+            pdev.as_ref(),
-+            "pci-testdev config space read16 vendor ID: {:x}\n",
-+            config.read16(0)
-+        );
-+
-+        dev_info!(
-+            pdev.as_ref(),
-+            "pci-testdev config space read32 BAR 0: {:x}\n",
-+            config.read32(0x10)
-+        );
-+
-+        Ok(())
-+    }
- }
- 
- impl pci::Driver for SampleDriver {
-@@ -98,6 +124,7 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> impl PinInit<Self, Er
-                         "pci-testdev data-match count: {}\n",
-                         Self::testdev(info, bar)?
-                     );
-+                    Self::config_space(pdev)?;
-                 },
-                 pdev: pdev.into(),
-             }))
--- 
-2.51.0
+On 18:23 Wed 05 Nov     , Bjorn Helgaas wrote:
+> [+cc Lizhi]
+> 
+> On Wed, Nov 05, 2025 at 07:33:40PM +0100, Andrea della Porta wrote:
+> > When CONFIG_PCI_DYNAMIC_OF_NODES is enabled, an error message
+> > is generated if no 'of_root' node is defined.
+> > 
+> > On DT-based systems, this cannot happen as a root DT node is
+> > always present. On ACPI-based systems, this is not a true error
+> > because a DT is not used.
+> > 
+> > Downgrade the pr_err() to pr_info() and reword the message text
+> > to be less context specific.
+> 
+> of_pci_make_host_bridge_node() is called in the very generic
+> pci_register_host_bridge() path.  Does that mean every boot of a
+> kernel with CONFIG_PCI_DYNAMIC_OF_NODES on a non-DT system will see
+> this message?
 
+This is the case, indeed. That's why downgrading to info seems sensible.
+
+> 
+> This message seems like something that will generate user questions.
+> Or is this really an error, and we were supposed to have created
+> of_root somewhere but it failed?  If so, I would expect a message
+> where the of_root creation failed.
+
+Not really an error per se: on ACPI system we usually don't have DT, so
+this message just warns you that there will be no pci nodes created on it.
+Which, again, should be of no importance on ACPI.
+
+The only scenario in which this message is actually an error would be on
+ACPI system that use DT as a complement to make runtime overlay work,
+i.e. the overlay approach for RP1 on RPi5 with ACPI fw. AFAIK this fw is
+more a PoC that something really widespread and currntly the overlay
+approach is in stand-by anyway (meaning no one will use it unless some
+major changes will be made to make it work). But there may be other
+situations in which this scenario could arise, I'm thinking about Bootlin's
+LAN966x driver which also uses runtime overlay to describe thw hw.
+On ACPI system the root DT node is not created because unflatten_device_tree()
+is not called.
+One possible (easy) solution would be calling unflatten_device_tree() also
+in case IS_ENABLED(PCI_DYNAMIC_OF_NODES), but this of course requires some
+investigation against side effects.
+In this case the roto DT node is always created (on both ACPI and non ACPI
+systems) and the info message will not be printed.
+
+> 
+> I guess I'm confused about what the point of this message is.  If it's
+> just a hint that loading an overlay in the future will fail, I assume
+> we would emit a message at that time, connected with the user action
+> of trying to load the overlay.
+
+For a functional standpoint, it basically is, if we neglect the fact that
+you won't have PCI nodes described in the DT, of course, which I guess it's
+just informationali (but I may be mistaken on this point). Loading an overlay
+in the future will fail anyway so no need to take further action there. Plus,
+the systems on which this could happen (ACPI system + runtime overlay) would
+be probably rare, if ever exist.
+
+> 
+> What badness would ensue if we downgraded this message even further
+> and removed it completely?
+
+As stated above, I would expect no major issue but other opinions
+would be very welcome. 
+
+Many thanks,
+Andrea
+
+> 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> > CHANGES in V2:
+> > 
+> > * message text reworded to be less context specific (Bjorn)
+> > ---
+> >  drivers/pci/of.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 3579265f1198..872c36b195e3 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -775,7 +775,7 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> >  
+> >  	/* Check if there is a DT root node to attach the created node */
+> >  	if (!of_root) {
+> > -		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
+> > +		pr_info("Missing DeviceTree, cannot create PCI host bridge node\n");
+> >  		return;
+> >  	}
+> >  
+> > -- 
+> > 2.35.3
+> > 
 
