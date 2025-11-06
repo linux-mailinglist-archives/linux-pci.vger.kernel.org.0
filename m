@@ -1,247 +1,227 @@
-Return-Path: <linux-pci+bounces-40479-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40480-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BC2DC39F8D
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 11:00:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AF35C39FB4
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 11:01:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 617914FC70F
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 09:55:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A7651888196
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 10:01:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA3A30F94B;
-	Thu,  6 Nov 2025 09:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C54330CDB5;
+	Thu,  6 Nov 2025 10:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yX+mw0YY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YRXqBhMk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B0530F811
-	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 09:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DF930C62A
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 10:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762422803; cv=none; b=CkHMoY0QdqK+kOS5dwVMGJ3byl+X0SRnmd8mNZqRQg4NkNAk4KTbZZ3sdQRhhMANVH7ptChEgYtXqjwOAezbD4R+fpgO/4wkGTS1oY8OUSHNXNdUNQ63/PBcMOz/SW/xcQw253UxX+N0pYfrIl0LL7dYu0EASR6kRqaTVeSvle0=
+	t=1762423237; cv=none; b=nV7N4RkggEGL49bXttfEqsz7bzz5MEFh11TMkWAKRm/qD+yz95XTtP4bztwkwVtfOSaoUhcBbiuf4zzeBaCNRFLGq5l8927eQLpdB0S9fVXZMw7ejuDh/t0YBmFqAPVkaWJ4KO0IFUPRKEaU50A4pc5WhPI7guhLm3TK0vlfyS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762422803; c=relaxed/simple;
-	bh=N4gdAIjGWxxVJdRrTQ/TDeMEBNndKgzj5Pz6LBK5c3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzTo9fJAlMS5QYYqAKgJzhaaMRGnKo2QfuIKZZJZyHEAPELvMfBrJzS77/lLjog1dTDCigkXg55sArMfsrpzzbkdgT5W/Ab8+oZjyKRGgANHvdhOZFREu+pmkumo1MSKuscs4SuL1PcgHD942WYIUhuUiv+li/wQm9kqE5jZwgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yX+mw0YY; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-591c98ebe90so687928e87.3
-        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 01:53:19 -0800 (PST)
+	s=arc-20240116; t=1762423237; c=relaxed/simple;
+	bh=I4H5qHab6Aj0C5LwJMaHRiYnjpVzkseYs1jdsdGDz1Y=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qs+eJAEPQ2WQEILwrbLXGgQswvDfwYF9hLcGIDjCRQnUUvCTYqSmRr3u4FUWfP0py6ux15OzpbE0NSXQdJ/N/T3np/zCUn/VH3Q21uyzQOkeY4pM+ETR4fVQw6Ob4BjOna2wcqXt69CaVmHk1tizT2EKZq3AFST5hNMjUNRACf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YRXqBhMk; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4775ae77516so8748725e9.1
+        for <linux-pci@vger.kernel.org>; Thu, 06 Nov 2025 02:00:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762422797; x=1763027597; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I+8daSNDhd8lCt1K2wrPTUKlaXsPe2T2RLhKmIvnqVQ=;
-        b=yX+mw0YYFPOTgc8GfGwpdbFkSZYXsAYZlefjKKw0sscN6FDJryqCuFep07C4O06unQ
-         DXPMRtYbGnIGNrTveyvcY3AE3PDoe5ovfnrFZ5AvXBvo6iuwYvOBbqBhEZGvplm8RBPa
-         pGj8pOvSqCh3MkoLvvJMkgSDCrbNH4j4OUoXUiePWNjVzLO0YPQEftrRWL5g7K1L7OAP
-         uVrGSkr9mT/Rh1THyfiQQW+kpOWAVSLf8g7qTxb+g98VAD/Fd2Ij2Jp7KU+734GEzTYo
-         3IuIv+Pno1zwBvu0Fm3ozggoWhT4+Bzwz9wQG7Ch80iT/76NlKh0X1OL9ryhYQGHImqs
-         FdKA==
+        d=linaro.org; s=google; t=1762423233; x=1763028033; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hotEei7lwkfLoPtTcXzDgl2xx83T+2l/lt8Evo2copA=;
+        b=YRXqBhMkOQZ8MSYcTZP/RasE+JNe2wuuwWQGUSbFZpl2TdFcnFda8HdJ0Htrr+zxnI
+         YGYjbD/bQWd5we/rwedzxS50IZ364NDCvqjMzpeLpe3sBgBei7sNfJZIIob0XUTHYbls
+         RnKRHwAF+VM/YdIGqHFJkc5QErHxYAZbpgeUfiKxP5WcOQD4JDN246sF0Sjjcdpx3HC3
+         9oQmkfsVwzfnemIGaiI36yTB48PLo2MrMGl1DuMIZnPZ3GQ+2VGCnmGJQLAEuC9Yx8lY
+         PzZSSl9ONQMGIrKN6hLo3ErbDQ38gYiu0hd1X9i40uNxEH0DdYmZGVKRr/bRIa++JbBS
+         1qUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762422797; x=1763027597;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I+8daSNDhd8lCt1K2wrPTUKlaXsPe2T2RLhKmIvnqVQ=;
-        b=xLMvNOOVMshI9IkXVY1qQS9i1yrbWSC604owsb9k5x5GfCO2aDB2jX7fybCy5yzuKu
-         tiQtgTvAuWVOf2RsEOEQ9ZDO9rYbbuW5RD3BmNZtWvHRTCnjMdB+xmD2s8Z3k9To8CcM
-         wtgDwXcNc04MhI5xlzz0b+Xbp3njYBG61hGq0YfgHDCACPYiDy9ggv/7SBWmuRSNWJqb
-         LKtxGhAB4ruVbfeIoPDgg7ApqgI88CVMRE1GF5jDKMpfXyFtwldgsYPfyCQS2O+s/VnC
-         6zX4hj+xAjRJYsgvg/Ee9ICJFcfg/8FwrcG7cEb7ZcYEMiaiURCGQuhL+ZaYTj4vxctK
-         3mpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWf0SbfUPMIeMgZBrbJT5b/REaiDR1FBVPWus+FCJCc4ivzOjYdvvG/L1BzcB2ax7csT1YuWVtmwyQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrNOK0p/ffXn6Mq2moTHPIMEuRgQx0BoM5nMtVRHfKMYkfx5Lc
-	KBCwONtF7B2MDBWUW3ARpun/WWXNIJMjDSJe9qI828Lo4XO4vdLhonh9UrQglPBRlEby+HTrow+
-	0XNUlYlsATQMirfpECzzGeKAxScGs5gVN56WloQWJFA==
-X-Gm-Gg: ASbGncuniG0o8EEaz66Co2WAmXFmzVJEZGH4GlCmZLamfp2c/rc4RKOgy8jg/NyuPQ1
-	KG2KybsF0eCSI74PQpr8tqPDfPF8gbyVdnmSBK3/5QHPA0Ww7rFyYdDOQqbcgtEn5BOuOKnDu4h
-	p+SVxFZJEm0zRYMrXfyyMs/ScbJlcDfk2vhaiFVs+sWh6mwoCYlSMo7zUSXMKsf2Qlm12ugVuNh
-	uA5dUlOhd+LMedV+kMX5RfBQygwrkxz15APqIJSZsCi5mvGY6BAOz4ZGv7PxWK5LwYfJYRCWKBU
-	l2zpmcxT1yfW8u13hTIgZPGqCA==
-X-Google-Smtp-Source: AGHT+IHz/5foCKSm3S9RfxluGx4ispy4/FNi/RkKhEaxDVuTO2V4C8WM/HWqTc8S86iGy7YIhRyz7B1MEYUoV8eOsQA=
-X-Received: by 2002:a05:6512:61b3:b0:55f:701f:933 with SMTP id
- 2adb3069b0e04-5943d7dd53emr1995534e87.41.1762422797277; Thu, 06 Nov 2025
- 01:53:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762423233; x=1763028033;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hotEei7lwkfLoPtTcXzDgl2xx83T+2l/lt8Evo2copA=;
+        b=n1LZFCcf1mFxxJ5gTNNu8c4mHlPOQ/C7F1IVHYBScnWz+YSOuGw0C7LE3jO4aV54Dc
+         yU7oUPWRe8EAraLIPENVcX8JhUQMd8y74H1MeD8sGIGiHrI9CAYE0jk6XRWuAOiDdUhD
+         3+QxOY6N49zc8otKKwnVqVWZC6+1RXoLXh4cSbokaCW1eNNnyrJHv1dJyytE5DqzJUcL
+         8N7YPNtYpX6i8jLRu3PTwQ1cuXFSeUMi+KuiCWExZMZrN2m7skAZEPC7s9GgvX0K00Nf
+         tkLcqkf1nghOOmtnE+k6TNB7ysyFqgsOBHfb6ifB/oU4biyn/9pN9oA3LX6AZb1vsGwh
+         B0ug==
+X-Gm-Message-State: AOJu0YxMSuYvxmYH+sf7JNQZ4/1T7lXtGtGOJicUk5g5uaaYpYn4G+vu
+	F4QfON2wCgW88265HuptMeywpAdCy99b8T3X/ZHfMoWB2dLkllSOldS7OIxJHyYYIzU=
+X-Gm-Gg: ASbGnctUQYmYUoSIp6D/vSlCSrirwuD8aPgaT8ENsbnTgyVmppZ3r+YEolXdqMHlmTM
+	l1XYYNEdsmkzDxVVa/Y5EieUS4WaEkZNvztaAHoNPkNSSvR7sBCHS1I7pvKCU8sJMd7hXHRVcZD
+	tuXkhcliCfVmZg7Z33yk3naHVgyG/t21WVVqRoDNQJH19eh4n610D3YLfKo1J/N/w0UNy+sxdeF
+	0NzysssCcj5Kbwlwz6/4da3q5YBtVCTG1fuU6lk2Dohdmfj9yCF+JkOSnRi2QzwlVUY6JkkaKBx
+	8IqTj10jLAUHITvYh0zYezq/EO35U8mbtH9t8BLDwKBKWBcYG19ZxfYhyv0fl2Uu3iy0f2s4cZM
+	xLRrk9nUk2deCVyFDpHz/3pXeGKKTt6jS1xUSosS8V1V2Q9gH3HussVeKcQFVCnqNbKR4jjoCUU
+	wsyyMhVQczMTfD0EJc2jxGpiS3En0cJRZ/7A==
+X-Google-Smtp-Source: AGHT+IG+IVP2okOyZfO9efTEqK5kYK+g6r3W0Uym8vBYAKG016/w0MJyIa7e2e068PJnJ764TdjQ4Q==
+X-Received: by 2002:a05:600c:621a:b0:471:14f5:126f with SMTP id 5b1f17b1804b1-4775ce206f3mr49954515e9.33.1762423233373;
+        Thu, 06 Nov 2025 02:00:33 -0800 (PST)
+Received: from [192.168.27.65] (home.rastines.starnux.net. [82.64.67.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477625e88fasm45340025e9.15.2025.11.06.02.00.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Nov 2025 02:00:32 -0800 (PST)
+Message-ID: <1c31a5ef-39f6-460b-8046-3c7b2627e3ba@linaro.org>
+Date: Thu, 6 Nov 2025 11:00:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com>
- <20251105-pci-m2-v1-4-84b5f1f1e5e8@oss.qualcomm.com> <CAMRc=McB4Zk8WuSPL=7+7kX4RJbdFBNReWZyiFnH8vfVx3DxAg@mail.gmail.com>
- <tc2r2mme4wtre7vb7xj22vz55pks4fbdabyl62mgutyhcjxnlx@qn4jvx3jqhie>
-In-Reply-To: <tc2r2mme4wtre7vb7xj22vz55pks4fbdabyl62mgutyhcjxnlx@qn4jvx3jqhie>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 6 Nov 2025 10:53:05 +0100
-X-Gm-Features: AWmQ_blH3MiJVFlUuNcpfEa7K-SsRQSsEcKjg_SUhi3TbJQz3x1oYieu6QgbyHI
-Message-ID: <CAMRc=McDYL_B+hFtLekevtB2XpUkaMN1dsDNeefvR+ppj4whFg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] power: sequencing: Add the Power Sequencing driver
- for the PCIe M.2 connectors
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH RESEND 3/3] PCI: meson: Fix parsing the DBI register
+ region
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>,
+ Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Andrew Murray <amurray@thegoodpenguin.co.uk>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, stable@vger.kernel.org,
+ Linnaea Lavia <linnaea-von-lavia@live.com>
+References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
+ <20251101-pci-meson-fix-v1-3-c50dcc56ed6a@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20251101-pci-meson-fix-v1-3-c50dcc56ed6a@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 5, 2025 at 6:46=E2=80=AFPM Manivannan Sadhasivam <mani@kernel.o=
-rg> wrote:
->
-> On Wed, Nov 05, 2025 at 05:21:46PM +0100, Bartosz Golaszewski wrote:
-> > On Wed, Nov 5, 2025 at 10:17=E2=80=AFAM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@oss.qualcomm.com> wrote:
-> > >
-> > > This driver is used to control the PCIe M.2 connectors of different
-> > > Mechanical Keys attached to the host machines and supporting differen=
-t
-> > > interfaces like PCIe/SATA, USB/UART etc...
-> > >
-> > > Currently, this driver supports only the Mechanical Key M connectors =
-with
-> > > PCIe interface. The driver also only supports driving the mandatory 3=
-.3v
-> > > and optional 1.8v power supplies. The optional signals of the Key M
-> > > connectors are not currently supported.
-> > >
-> >
-> > I'm assuming you followed some of the examples from the existing WCN
-> > power sequencing driver. Not all of them are good or matching this
-> > one, please see below.
-> >
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualc=
-omm.com>
-> > > ---
-> > >  MAINTAINERS                               |   7 ++
-> > >  drivers/power/sequencing/Kconfig          |   8 ++
-> > >  drivers/power/sequencing/Makefile         |   1 +
-> > >  drivers/power/sequencing/pwrseq-pcie-m2.c | 138 ++++++++++++++++++++=
-++++++++++
-> > >  4 files changed, 154 insertions(+)
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 46126ce2f968e4f9260263f1574ee29f5ff0de1c..9b3f689d1f50c62afa377=
-2a0c6802f99a98ac2de 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -20474,6 +20474,13 @@ F:     Documentation/driver-api/pwrseq.rst
-> > >  F:     drivers/power/sequencing/
-> > >  F:     include/linux/pwrseq/
-> > >
-> > > +PCIE M.2 POWER SEQUENCING
-> > > +M:     Manivannan Sadhasivam <mani@kernel.org>
-> > > +L:     linux-pci@vger.kernel.org
-> > > +S:     Maintained
-> > > +F:     Documentation/devicetree/bindings/connector/pcie-m2-m-connect=
-or.yaml
-> > > +F:     drivers/power/sequencing/pwrseq-pcie-m2.c
-> > > +
-> > >  POWER STATE COORDINATION INTERFACE (PSCI)
-> > >  M:     Mark Rutland <mark.rutland@arm.com>
-> > >  M:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequenc=
-ing/Kconfig
-> > > index 280f92beb5d0ed524e67a28d1c5dd264bbd6c87e..f5fff84566ba463b55d3c=
-d0c07db34c82f9f1e31 100644
-> > > --- a/drivers/power/sequencing/Kconfig
-> > > +++ b/drivers/power/sequencing/Kconfig
-> > > @@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
-> > >           GPU. This driver handles the complex clock and reset sequen=
-ce
-> > >           required to power on the Imagination BXM GPU on this platfo=
-rm.
-> > >
-> > > +config POWER_SEQUENCING_PCIE_M2
-> > > +       tristate "PCIe M.2 connector power sequencing driver"
-> > > +       depends on OF || COMPILE_TEST
-> >
-> > The OF dependency in the WCN driver is there because we're doing some
-> > phandle parsing and inspecting the parent-child relationships of the
-> > associated nodes. It doesn't look like you need it here. On the other
-> > hand, if you add more logic to the match() callback, this may come
-> > into play.
-> >
->
-> For sure the driver will build fine for !CONFIG_OF, but it is not going t=
-o work.
-> And for the build coverage, COMPILE_TEST is already present. Maybe I was =
-wrong
-> to enforce functional dependency in Kconfig.
->
+Hi,
 
-Given what you said below for the regulator API, let's keep it as is.
+On 11/1/25 05:29, Manivannan Sadhasivam wrote:
+> First of all, the driver was parsing the 'dbi' register region as 'elbi'.
+> This was due to DT mistakenly passing 'dbi' as 'elbi'. Since the DT is
+> now fixed to supply 'dbi' region, this driver can rely on the DWC core
+> driver to parse and map it.
+> 
+> However, to support the old DTs, if the 'elbi' region is found in DT, parse
+> and map the region as both 'dw_pcie::elbi_base' as 'dw_pcie::dbi_base'.
+> This will allow the driver to work with both broken and fixed DTs.
+> 
+> Also, skip parsing the 'elbi' region in DWC core if 'pci->elbi_base' was
+> already populated.
+> 
+> Cc: <stable@vger.kernel.org> # 6.2
+> Reported-by: Linnaea Lavia <linnaea-von-lavia@live.com>
+> Closes: https://lore.kernel.org/linux-pci/DM4PR05MB102707B8CDF84D776C39F22F2C7F0A@DM4PR05MB10270.namprd05.prod.outlook.com/
+> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+> Fixes: c96992a24bec ("PCI: dwc: Add support for ELBI resource mapping")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>   drivers/pci/controller/dwc/pci-meson.c       | 18 +++++++++++++++---
+>   drivers/pci/controller/dwc/pcie-designware.c | 12 +++++++-----
+>   2 files changed, 22 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 787469d1b396d4c7b3e28edfe276b7b997fb8aee..54b6a4196f1767a3c14c6c901bfee3505588134c 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -108,10 +108,22 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>   			       struct meson_pcie *mp)
+>   {
+>   	struct dw_pcie *pci = &mp->pci;
+> +	struct resource *res;
+>   
+> -	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
+> -	if (IS_ERR(pci->dbi_base))
+> -		return PTR_ERR(pci->dbi_base);
+> +	/*
+> +	 * For the broken DTs that supply 'dbi' as 'elbi', parse the 'elbi'
+> +	 * region and assign it to both 'pci->elbi_base' and 'pci->dbi_space' so
+> +	 * that the DWC core can skip parsing both regions.
+> +	 */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> +	if (res) {
+> +		pci->elbi_base = devm_pci_remap_cfg_resource(pci->dev, res);
+> +		if (IS_ERR(pci->elbi_base))
+> +			return PTR_ERR(pci->elbi_base);
+> +
+> +		pci->dbi_base = pci->elbi_base;
+> +		pci->dbi_phys_addr = res->start;
+> +	}
+>   
+>   	mp->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+>   	if (IS_ERR(mp->cfg_base))
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index c644216995f69cbf065e61a0392bf1e5e32cf56e..06eca858eb1b3c7a8a833df6616febcdbe854850 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -168,11 +168,13 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
+>   	}
+>   
+>   	/* ELBI is an optional resource */
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> -	if (res) {
+> -		pci->elbi_base = devm_ioremap_resource(pci->dev, res);
+> -		if (IS_ERR(pci->elbi_base))
+> -			return PTR_ERR(pci->elbi_base);
+> +	if (!pci->elbi_base) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
+> +		if (res) {
+> +			pci->elbi_base = devm_ioremap_resource(pci->dev, res);
+> +			if (IS_ERR(pci->elbi_base))
+> +				return PTR_ERR(pci->elbi_base);
+> +		}
+>   	}
+>   
+>   	/* LLDD is supposed to manually switch the clocks and resets state */
+> 
 
-> > > +
-> > > +static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
-> > > +                                struct device *dev)
-> > > +{
-> > > +       return PWRSEQ_MATCH_OK;
-> >
-> > Eek! That will match any device we check. I'm not sure this is what
-> > you want. Looking at the binding example, I assume struct device *
-> > here will be the endpoint? If so, you should resolve it and confirm
-> > it's the one referenced from the connector node.
-> >
->
-> I was expecting this question, so returned PWRSEQ_MATCH_OK on purpose. I =
-feel it
-> is redundant to have match callback that just does link resolution and ma=
-tches
-> the of_node of the caller. Can't we have a default match callback that do=
-es just
-> this?
->
+Tested with "old" and "new" DT worked fine with both:
 
-To be clear: the above is certainly wrong. Any power sequencing
-consumer would match against this device.
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on Bananapi-M2S
 
-To answer your question: sure, there is nothing wrong with having a
-default match callback but first: I'd like to see more than one user
-before we generalize it, and second: it still needs some logic. What
-is the relationship between the firmware nodes of dev and pwrseq here
-exactly?
-
-> > > +       if (!ctx->pdata)
-> > > +               return dev_err_probe(dev, -ENODEV,
-> > > +                                    "Failed to obtain platform data\=
-n");
-> > > +
-> > > +       ret =3D of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx=
-->regs);
-> >
-> > Same here, you already have the device, no need to get the regulators
-> > through the OF node. Just use devm_regulator_bulk_get()
-> >
->
-> I used it on purpose. This is the only regulator API that just gets all
-> regulators defined in the devicetree node without complaining. Here, 3.3v=
- is
-> mandatory and 1.8v is optional. There could be other supplies in the futu=
-re and
-> I do not want to hardcode the supply names in the driver. IMO, the driver=
- should
-> trust devicetree to supply enough supplies and it should just consume the=
-m
-> instead of doing validation. I proposed to add a devm_ variant for this, =
-but
-> Mark was against that idea.
->
-
-What was the reason for being against it? Anyway: in that case, would
-you mind adding a comment containing what you wrote here so that
-people don't mindlessly try convert it to the regular variant in the
-future?
-
-Bart
+Thanks,
+Neil
 
