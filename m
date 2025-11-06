@@ -1,45 +1,41 @@
-Return-Path: <linux-pci+bounces-40444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D1DAC38AFD
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 02:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7BE1C38F32
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 04:16:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA3421896730
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 01:21:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD1DD18C1CA1
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 03:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66AF9204F8B;
-	Thu,  6 Nov 2025 01:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE75A2AE99;
+	Thu,  6 Nov 2025 03:16:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from psionic.psi5.com (psionic.psi5.com [185.187.169.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FACC1FFC48;
-	Thu,  6 Nov 2025 01:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FAB23EAA0
+	for <linux-pci@vger.kernel.org>; Thu,  6 Nov 2025 03:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.187.169.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762392034; cv=none; b=sDz/Zg4TnGptDs5wnmnfVCIPve5o9i5+pl+K2Bjy7xaEhWWgcjITqC4rQVsT3obPuxDRIdGhR7TwojtV50xaSL9w9hBVe0SBzNf+9mDNa56v3Eztc273KHLsMEl6KBmvzXDd0e9lGd58qZFrnMYqLo5zADmug76ak/IdxUcAjyc=
+	t=1762398993; cv=none; b=I1DuhtlbaWsN5B1kdGD8mIceqradEP17ZZU93ZUtjcyYJBEejvgwDJW1+6oz2QpvkRnulmepuZ+S45oYURNjG1UM6D1ttKpsscLju1qvIwnEEYRz/JaQi+lXD5+ZaKPuGnxQkhK1eTa/m+rf79tk8y+0BO0xTeMii76hR4Zbc9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762392034; c=relaxed/simple;
-	bh=1n2WjqKfbwvdH5KOodvEY+wR04CDw4VxYqgsx9+a/sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t7ecrYh1vzSBM4fqZttBvqt4wN3llYDVuUcrUSZ+Cn7XUQ6ju1cHw7uTBOmeWVuTGqyQahcD/sbNYuEAvKHFZmX6mIUKNU9fOyEaYlaQkvAUE+EHo5z+/zGTgUzvZTwzGF6cbvvFI69oXI2bLN14BxwY8UdJBn77ADkdxgduL7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4d24BD5gnyzKHMPT;
-	Thu,  6 Nov 2025 09:20:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id C64E91A0CC3;
-	Thu,  6 Nov 2025 09:20:28 +0800 (CST)
-Received: from [10.67.111.176] (unknown [10.67.111.176])
-	by APP2 (Coremail) with SMTP id Syh0CgAHqEDb9wtp6fpnCw--.52284S2;
-	Thu, 06 Nov 2025 09:20:28 +0800 (CST)
-Message-ID: <7742487a-81e0-430f-8c4d-f1a761c2af98@huaweicloud.com>
-Date: Thu, 6 Nov 2025 09:20:26 +0800
+	s=arc-20240116; t=1762398993; c=relaxed/simple;
+	bh=EmXFxS1n1/wO6jqPZbddjqlR06m+V1pVE8lhtcS+Luc=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=MMo173Cc3xULPIu3gcEFauQc7dG7md1iAC3HFRUwDd2ByoeFP7S2Cz9ewOL+7+oPLJsXHW0p3Cs8kUoVEz3AvGlP6/VUiV6kBzujwgl5AmGp7fLCKtDrA/q0RbI3/slNSkYQNMCxwDDMe/OOGK4/vFGmXtZl4izYmx/JZi06d34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de; spf=pass smtp.mailfrom=hogyros.de; arc=none smtp.client-ip=185.187.169.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hogyros.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hogyros.de
+Received: from [IPV6:2400:2410:b120:f200:a1f3:73da:3a04:160d] (unknown [IPv6:2400:2410:b120:f200:a1f3:73da:3a04:160d])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by psionic.psi5.com (Postfix) with ESMTPSA id 6549C3F11A;
+	Thu,  6 Nov 2025 04:16:27 +0100 (CET)
+Message-ID: <c9594cc3-031b-43cc-9268-85c32f98ba49@hogyros.de>
+Date: Thu, 6 Nov 2025 12:16:24 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,127 +43,68 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/31] cpuset: Convert boot_hk_cpus to use
- HK_TYPE_DOMAIN_BOOT
-To: Frederic Weisbecker <frederic@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Danilo Krummrich
- <dakr@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
- <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
- Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
- Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, netdev@vger.kernel.org
-References: <20251105210348.35256-1-frederic@kernel.org>
- <20251105210348.35256-7-frederic@kernel.org>
 Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20251105210348.35256-7-frederic@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+To: dri-devel@lists.freedesktop.org,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ linux-pci@vger.kernel.org
+From: Simon Richter <Simon.Richter@hogyros.de>
+Subject: Unreachable cards in vgaarb
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAHqEDb9wtp6fpnCw--.52284S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WryDGF1kuFW3trWkJFWDArb_yoW8Kw45pr
-	47X3yUKa95JF1rG345J3WqvryFgws7Jr1DC3ZxGw1rXasrCF18ArW09asayFyFv34kur47
-	Zrn8CF4SgF4rArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Wrv_ZF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4U
-	JwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	EksDUUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
+Hi,
 
+I have a card whose VGA registers are not actually reachable, for 
+multiple reasons:
 
-On 2025/11/6 5:03, Frederic Weisbecker wrote:
-> boot_hk_cpus is an ad-hoc copy of HK_TYPE_DOMAIN_BOOT. Remove it and use
-> the official version.
-> 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Reviewed-by: Phil Auld <pauld@redhat.com>
-> ---
->  kernel/cgroup/cpuset.c | 22 +++++++---------------
->  1 file changed, 7 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 52468d2c178a..8595f1eadf23 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -81,12 +81,6 @@ static cpumask_var_t	subpartitions_cpus;
->   */
->  static cpumask_var_t	isolated_cpus;
->  
-> -/*
-> - * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
-> - */
-> -static cpumask_var_t	boot_hk_cpus;
-> -static bool		have_boot_isolcpus;
-> -
->  /* List of remote partition root children */
->  static struct list_head remote_children;
->  
-> @@ -1686,15 +1680,16 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
->   * @new_cpus: cpu mask
->   * Return: true if there is conflict, false otherwise
->   *
-> - * CPUs outside of boot_hk_cpus, if defined, can only be used in an
-> + * CPUs outside of HK_TYPE_DOMAIN_BOOT, if defined, can only be used in an
->   * isolated partition.
->   */
->  static bool prstate_housekeeping_conflict(int prstate, struct cpumask *new_cpus)
->  {
-> -	if (!have_boot_isolcpus)
-> +	if (!housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
->  		return false;
->  
-> -	if ((prstate != PRS_ISOLATED) && !cpumask_subset(new_cpus, boot_hk_cpus))
-> +	if ((prstate != PRS_ISOLATED) &&
-> +	    !cpumask_subset(new_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT)))
->  		return true;
->  
->  	return false;
-> @@ -3824,12 +3819,9 @@ int __init cpuset_init(void)
->  
->  	BUG_ON(!alloc_cpumask_var(&cpus_attach, GFP_KERNEL));
->  
-> -	have_boot_isolcpus = housekeeping_enabled(HK_TYPE_DOMAIN);
-> -	if (have_boot_isolcpus) {
-> -		BUG_ON(!alloc_cpumask_var(&boot_hk_cpus, GFP_KERNEL));
-> -		cpumask_copy(boot_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
-> -		cpumask_andnot(isolated_cpus, cpu_possible_mask, boot_hk_cpus);
-> -	}
-> +	if (housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
-> +		cpumask_andnot(isolated_cpus, cpu_possible_mask,
-> +			       housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT));
->  
->  	return 0;
->  }
+1. the system in question has multiple PCI domains
+2. the system in question does not support IO access
+3. one of the bridges involved does not support VGA register forwarding
 
-Reviewed-by: Chen Ridong <chenridong@huawei.com>
+Obviously, the "works for me" solution would be to teach vgaarb to check 
+if the VGA bit actually got set in the bridge control register (because 
+apparently, that is how a bridge indicates missing support), and return 
+an error. I plan to do that, but that doesn't solve the others.
 
--- 
-Best regards,
-Ridong
+The specific actual problem I'm trying to solve here is that there is a 
+workaround in the i915 and xe drivers that pokes the VGA register space 
+on the same card after changing power states, and this falls over on my 
+system. Skipping this is safe if we can guarantee that vgacon will not 
+generate accesses later, so I think having vgaarb recognize that the 
+card is unreachable and returning an error is sufficient here.
 
+I have no idea whether this will break other systems though -- can we 
+reasonably assume that any PCI or PCIe bridge that is capable of 
+forwarding VGA accesses will proudly display the VGA bit set in the 
+bridge control register, or is a quirk needed here?
+
+For multiple PCI domains, I have no clue how to determine where accesses 
+end up. My feeling is that it's supposed to be "all of them, mediated by 
+VGA bits on root bridges", but I don't know if this is actually true. Is 
+anyone actually building machines with a CPU architecture that has a 
+separate IO range, and multiple PCI domains?
+
+For "no IO access", it is even more complex -- it appears that the 
+approach on POWER is to define inb/outb as MMIO, offset from a global 
+variable that points at a PCI range, which means this access will only 
+show up in one of the PCI(e) controllers.
+
+What is unclear to me is
+
+1. whether there is supposed to be a mechanism to generate IO accesses 
+from those,
+2. whether this range should be excluded from MMIO to not accidentally 
+create conflicts
+3. whether vgaarb needs to adjust this variable too
+4. if this variable should instead be maintained by vgaarb
+5. if we should have dedicated vga_inb/vga_outb macros or if we can 
+assume that any inb/outb on machines that don't have an IO range will be 
+VGA accesses anyway
+6. whether it is interesting to create special handling for cards that 
+have VGA registers at the beginning of their non-prefetchable MMIO range 
+(AFAIK, some Intel cards do, and you can address them either via IO or 
+via MMIO to their non-prefetchable mapping).
+7. whether this affects more than two users.
+
+    Simon
 
