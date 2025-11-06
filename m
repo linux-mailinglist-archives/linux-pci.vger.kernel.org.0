@@ -1,100 +1,105 @@
-Return-Path: <linux-pci+bounces-40457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42E1BC394D3
-	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 07:53:40 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42184C39513
+	for <lists+linux-pci@lfdr.de>; Thu, 06 Nov 2025 08:03:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0F3E1A402A8
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 06:54:04 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7DC4D4E3CB5
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Nov 2025 07:01:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC00926CE2D;
-	Thu,  6 Nov 2025 06:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC8A127A477;
+	Thu,  6 Nov 2025 07:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G+yfkb2k"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CXJiICBS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010004.outbound.protection.outlook.com [40.93.198.4])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azhn15011001.outbound.protection.outlook.com [52.102.149.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170342745C;
-	Thu,  6 Nov 2025 06:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C44D26E143;
+	Thu,  6 Nov 2025 07:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.102.149.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762412016; cv=fail; b=t88B0PDOB0wL2yJacJfr5xklB8Nar8bwTsXi2rjST0Bzgo6lCw9of/YS6d4US9k6b3l0LKbtgdRLdYxdoDRShqeiF6gS8Y22rIEaEiAh2TSVZuf2aE+0j/hZL1CAbEyUuSp7nybOMUKnXIJBw5Tal6ZCzj4kYX5dPA8YwOFco3U=
+	t=1762412473; cv=fail; b=mHXkUHQMut59+I44YKsORRGWVAIDP5Zhdi5/KyfLD50w7biOvMp/WTjpsiRIgoUIgNOGr8cD7ae8+SArk9ZYv4Mb4cfoN8w2PD+XtBeso9B1ih9FULJYuqoABZREXG1w4joP8yK6T4hc/kzneAKVEKZAMDfl1QNsK/MQd1t4fb8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762412016; c=relaxed/simple;
-	bh=q6Scbv2Nw1QRVqEvEt2Qsbh44aCeU/gu/z1bhEhim74=;
+	s=arc-20240116; t=1762412473; c=relaxed/simple;
+	bh=DOr4Te7HHzVLcooXjd5rfAs7a5GvRyc65zjB5pKOrwI=;
 	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pC0NvkR1cvQ7q7pf/iIIcDCQoD8UPU+Tac9A1bCpFg5L0pglsNpsKKiD8eCXfMv0ODtqAONLy/vy+nCt3IEaX8aMnU/l6ZeipW44KaIpPqSzfrnxh2oSd3tfjLN8Xpgi3YV/ZidFvQNU9OShQ1pzFcLnqIo4E7D5mqGsHaMlDRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=G+yfkb2k; arc=fail smtp.client-ip=40.93.198.4
+	 Content-Type:MIME-Version; b=sxpGXQSAPa9aUrqRXl/88AsFlg6Q9xh6bw8Vrq2iavHxMHJPTQ9SOmcgpbmYI4d4T33ZLomaEd0S751fvI8t8o962ItllMWDmg6JuCRjMGBpId0Jqj7dqsxPd3mpxv+fMZ+x+E4JnkbEPjYz5O0bX9xEVnj8ZPOGJski1XoXl50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CXJiICBS; arc=fail smtp.client-ip=52.102.149.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wz7R2sdLqNWpfHNGbNTVIbaUmVLMR1wr+3jskq86x11VLNGD6erd8ZJBxJNva72YFTGdY9B+0Pzlu55RqocfeTZoen2hiprB9FbWygkyTsSbELapdA4bI0Tl+/LmNzbEWa1jdAxVGHHVPBljyrmZmrE+bZOLrtTtqTIbzvCPtu6L8iIVgTslD4rNtjlF5BJv2341tbXNkUtFDlH+rJyBT60Y+gQXSMg0WO2/BvXZ2xvi5SdCAHCgtc6cWG7XFsf9cOi73tKiMVId6a2l1I86RA48BfDvYOIjgWg4eddI2pwLrqfFF3gruZDsMb2zStK8mqnynGdNUivvvrdqqFEUyg==
+ b=ZTQCxEb6H8CMasMFIO7eCp5wfYEqffZqR+ZTYrTBK48SWCi/78xbk++behU71YUKbQ4KThphuoozkICjZRXhiL2sBuJi4YbkdzvdNy9te+6pNCk+64JFT+OJ+BbMndgyD21V2d+ehk4aDR7kArMCEfI6AxXRF54pT+GG6f8uEazB9eL+RmK3Zrydx9zG5OpKD8BWHf1HFXTsP6nf4A4zdfrFNcL7aGurObhwd36tAqPqGdyhNM58Y8mdO/6Cbrz4OOMJqLpH48Hxz3vNT/t0owP02Zs4spgT95qf60TN4gh5n230RggRtvHs7TbHl/Sx3FE/5LlqVTGpGYy0MX+BJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aTiGsBKiP0VhHkiM5i+vII8KYWVV/ip0LaNVfiZBrxk=;
- b=KtY1WIlwGTRWH59I6GZRg9sOD7SkfQDeNsAJKOpRFNHtTuxofG/KEEIHsyaelVY4I8qrph1QLZsAXAWWN89jRJC7s+7Vjf6Gh5lflh0yVtWdOyeJdAPTpf7Gpdi4GOIJjAwnkDnH41JninesMy7tLW0zG2DYc10PO2NT8PSh/ylNR4+TbmO9XqCs/RBPRIVTiTespHNfskmDJeGPzNakgdMHhcItsHEPE+aYJbsbnWibwAnaYeXbqz9ey9cSJlMrbxMhBPg5pQzXVTqPVgbNLkrBxtzr7QTU+KNTCT9z13p3WooEX6JR+NltcUeOtWl1jd0DYwHYVqt/j7Dva4Zbuw==
+ bh=N7Lq+LFeAMurs2Tl7eDUkZp7Sk42LHrVgEvI6mIOlmQ=;
+ b=ecW10f+gG/3ItRUzMfJNcP0GtT1++30OYcc7QNLgKi76Zq487tQVNGM0qFqylgfW73VkvYvAtqo/OTyrcf2AowM3XHcq031PCDa4fHET9MA0Y7EsjKQ7v+kYDWB13tsQ68EqWdWFfDwisyxLrRsDmyoYAWeEy1DwK74A5WldsqUYzmYWC/cjEo9JzuMZ7CnMbA6u1Ip+1403Lz8jk5JYisN82zqOHDaOdEOjo4TWLiPeDSAAyikWMWP35NjLRjFuYavwC3dVrxjzVFK4rJ2SyoeKopHj5ZK0oxq+JDwxMmzBC6+rfJMnF0BZH3Q/qV6d7TqQ2Y0uurzLFPEd/PEH0Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
+ 198.47.21.195) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aTiGsBKiP0VhHkiM5i+vII8KYWVV/ip0LaNVfiZBrxk=;
- b=G+yfkb2k6eI2JMERt/f1iTpOsL8UB3jl9RrbnLLeWdX6rArJiABKqxtNdaAXI8Y4V/BbTXlsSalslGCknpPpEEh7ZrmkYKorEW2J49Qf47zOBMlzsVE8tKiqN/kp3j+UrEl0+HgQibaeQQ6qnWRsBrbvH2thgUu7PSh9llBaeG4=
-Received: from CH2PR11CA0003.namprd11.prod.outlook.com (2603:10b6:610:54::13)
- by LV0PR10MB997614.namprd10.prod.outlook.com (2603:10b6:408:33d::15) with
+ bh=N7Lq+LFeAMurs2Tl7eDUkZp7Sk42LHrVgEvI6mIOlmQ=;
+ b=CXJiICBS9X/QJkqSUtB6vFHcr2XHvS3RQOeDMXzr5JVhgC6ghsIZf1oCOXowH4V9HQD2+52RLQxhR7mowvvHq/iry66eizVf9xsD30lYaBBA0Stt/vMPVjzEWsBD2Tgk2ws1ahelkwz2tVu62A+0Ku04IsW8HDV4c9VZQO42rlU=
+Received: from SJ0PR03CA0350.namprd03.prod.outlook.com (2603:10b6:a03:39c::25)
+ by SJ5PPFE654FA166.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::7da) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.12; Thu, 6 Nov
- 2025 06:53:31 +0000
-Received: from CH2PEPF000000A0.namprd02.prod.outlook.com
- (2603:10b6:610:54:cafe::74) by CH2PR11CA0003.outlook.office365.com
- (2603:10b6:610:54::13) with Microsoft SMTP Server (version=TLS1_3,
+ 2025 07:01:09 +0000
+Received: from BY1PEPF0001AE19.namprd04.prod.outlook.com
+ (2603:10b6:a03:39c:cafe::d7) by SJ0PR03CA0350.outlook.office365.com
+ (2603:10b6:a03:39c::25) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.12 via Frontend Transport; Thu,
- 6 Nov 2025 06:53:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
+ 6 Nov 2025 07:00:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
 Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- CH2PEPF000000A0.mail.protection.outlook.com (10.167.244.26) with Microsoft
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ BY1PEPF0001AE19.mail.protection.outlook.com (10.167.242.101) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9298.6 via Frontend Transport; Thu, 6 Nov 2025 06:53:29 +0000
-Received: from DFLE203.ent.ti.com (10.64.6.61) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9298.6 via Frontend Transport; Thu, 6 Nov 2025 07:01:07 +0000
+Received: from DFLE204.ent.ti.com (10.64.6.62) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 6 Nov
- 2025 00:53:20 -0600
-Received: from DFLE211.ent.ti.com (10.64.6.69) by DFLE203.ent.ti.com
- (10.64.6.61) with Microsoft SMTP Server (version=TLS1_2,
+ 2025 01:01:00 -0600
+Received: from DFLE212.ent.ti.com (10.64.6.70) by DFLE204.ent.ti.com
+ (10.64.6.62) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 6 Nov
- 2025 00:53:20 -0600
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE211.ent.ti.com
- (10.64.6.69) with Microsoft SMTP Server (version=TLS1_2,
+ 2025 01:01:00 -0600
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE212.ent.ti.com
+ (10.64.6.70) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Thu, 6 Nov 2025 00:53:20 -0600
+ Transport; Thu, 6 Nov 2025 01:01:00 -0600
 Received: from [10.24.73.74] (uda0492258.dhcp.ti.com [10.24.73.74])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5A66rGVL831554;
-	Thu, 6 Nov 2025 00:53:16 -0600
-Message-ID: <9b9f4bb33620bbd30d4fc8d440f6e8fab71ed6ff.camel@ti.com>
-Subject: Re: [PATCH v2] PCI: cadence: Enable support for applying lane
- equalization presets
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5A670scI842574;
+	Thu, 6 Nov 2025 01:00:54 -0600
+Message-ID: <d65f44cac2d7fb6c4a139065b304cb4ab790acb3.camel@ti.com>
+Subject: Re: [PATCH v5 4/4] PCI: keystone: Add support to build as a
+ loadable module
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: Manivannan Sadhasivam <mani@kernel.org>
 CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <robh@kernel.org>,
-	<bhelgaas@google.com>, <kishon@kernel.org>, <18255117159@163.com>,
-	<unicorn_wang@outlook.com>, <linux-pci@vger.kernel.org>,
+	<bhelgaas@google.com>, <jingoohan1@gmail.com>, <christian.bruel@foss.st.com>,
+	<krishna.chundru@oss.qualcomm.com>, <qiang.yu@oss.qualcomm.com>,
+	<shradha.t@samsung.com>, <thippeswamy.havalige@amd.com>,
+	<inochiama@gmail.com>, <fan.ni@samsung.com>, <cassel@kernel.org>,
+	<kishon@kernel.org>, <18255117159@163.com>, <rongqianfeng@vivo.com>,
+	<jirislaby@kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<srk@ti.com>, <s-vadapalli@ti.com>
-Date: Thu, 6 Nov 2025 12:23:30 +0530
-In-Reply-To: <57nw5lae3ev7krf3dtrllxaq2wvoajijq62ac5uttvajxjvpor@cmahebflp37x>
-References: <20251028134601.3688030-1-s-vadapalli@ti.com>
-	 <57nw5lae3ev7krf3dtrllxaq2wvoajijq62ac5uttvajxjvpor@cmahebflp37x>
+Date: Thu, 6 Nov 2025 12:31:08 +0530
+In-Reply-To: <fkzokskbjklt6atqrpwc46zsjr5ptpuynzhx4kvfurr4h37kae@rwcqljsjvzl6>
+References: <20251029080547.1253757-1-s-vadapalli@ti.com>
+	 <20251029080547.1253757-5-s-vadapalli@ti.com>
+	 <fkzokskbjklt6atqrpwc46zsjr5ptpuynzhx4kvfurr4h37kae@rwcqljsjvzl6>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1-1 
@@ -107,180 +112,193 @@ MIME-Version: 1.0
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF000000A0:EE_|LV0PR10MB997614:EE_
-X-MS-Office365-Filtering-Correlation-Id: e586f13d-ee07-42cf-a099-08de1d0131b6
+X-MS-TrafficTypeDiagnostic: BY1PEPF0001AE19:EE_|SJ5PPFE654FA166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 385f01e1-6533-49bc-6863-08de1d0242b0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|32650700017|34020700016|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|34020700016|36860700013|82310400026|1800799024|7416014|376014|12100799066;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UEEzWDNHMHJjaDl0UG1RZGNFd2srUDNIS05MSWxTVi9peHEwVlRJSENydWcv?=
- =?utf-8?B?UklqN0ZCY3QvZnVXdWp0Vm8rT3ZMN0hiT2NJdjZTMzFQWk9kampQeG9OZ0pz?=
- =?utf-8?B?VzIyNU03ZmVhNFlQSU5IWnpPZjh3R3VCVDV3d1pqcG9OSk1SbkdYVVVsRUVC?=
- =?utf-8?B?UzNyWGNJVWJrMWRnUFF6b3lzUG9lbzhBQ3FDVzhaMm1HcXR6dG95cXl0cXc4?=
- =?utf-8?B?T1I5WW1vNlp0NDJON2JvT096aDNteEQ1bEx2VnJpTHhzaWRVanUwbXhvNzhG?=
- =?utf-8?B?b3psTEdnQzdEbk5SWm85OGNoRVpDUEgrZ2lsNjNLOGhjMmk4K2VjYWhLcEh4?=
- =?utf-8?B?M2s1cVpzVmROejByakNtZ25iTnQ3RVF2RzZwSEphSVFrVUJMYTRIR2J3WDVS?=
- =?utf-8?B?aTJCemsrRkV3L0Zna1lPdER3ckFCZkltVjgrbTd4ci84Mi9iUTI2dkZqNHY2?=
- =?utf-8?B?cDFHcGJUN204YVhSWnFoS29HczZNQml0akVHRmFWeisvSTliaE5mai9RN3hY?=
- =?utf-8?B?Yk1UVTdBbWw0emI4YkZ3cFhtTGIvd3hlNTljNk04ZFhFVVdCUUE0RjJCcGpZ?=
- =?utf-8?B?M2JRSm0vQXNlcjBXYnppbnRMU0hjVEUvVWhWNEhRa1JkMGtZV3Z1LzlwWUFW?=
- =?utf-8?B?SXNvSFJkVTJWc091ZDJwaXVBeW1nUjVsS0ZrZ1B1UjdQamZDaEpaOXlJelFD?=
- =?utf-8?B?UEo5bG9uUS9ZTWJ4a2xmQnhUOHhHdE1XMDN0aDgxTE5PWjRNRmJRQUVyaXZm?=
- =?utf-8?B?S1JxaFlacThId3JCNVBvRDdpU0c0aFdpQ0R3Y0ZNSDlWejY1eG9rTXMxM21F?=
- =?utf-8?B?MVAvaWE3bjhXWTliNkdpRWVEb3ZrQzRVb0tXbEQyQ24vdk54Y2t1UDQyTHVy?=
- =?utf-8?B?WXdYWUVFSTZRSThjU0xxdm1mcThPZ2ZKZTZCZmJmMlJnMzhVZmxOcTBzUkRO?=
- =?utf-8?B?c29Qd3FLeDIyRE96VHFBQkwyTlg0VG1OSlpLN0g1UTFiVUFSUUNDdSthYzl1?=
- =?utf-8?B?UVJMZWwvK3dMVHlkK1hQTnpkUm1QaGFmNkNDQTBSMVJpSFY4RnppUi95WE9V?=
- =?utf-8?B?SldVNWMyV1JBNDlOMWhxd2s0ekZaa0xnNTFaSzcrRUlaZHVtamkxQTkzaVlx?=
- =?utf-8?B?d3J5Y1BFak4zS09HOFR4L2FqMlBUNTJPNUFhb1JndXEwOWZrSCtyMkwxMG1z?=
- =?utf-8?B?c1JwZWFZbmZFdHc5VmFlalNtN2FMK3J0SFhVM3c5UWdjVWp6Ymt1Y29jVnpS?=
- =?utf-8?B?b1FDbzFRYjBOeHFRaWRvY285RWN6THprSDl1UHNnOVE4cXErSTdqcEJib1RI?=
- =?utf-8?B?OHk5MlBkcW92QktZMnBFWVc5dnkxaUp0T25rN250S3l3NWJaOE9hR09IL2dW?=
- =?utf-8?B?dFZEOVNQa2ZMZ1FxalpaMlA4QzR1eTR4OFJTVVIyNTBMRi9RckxxRGNGZWxO?=
- =?utf-8?B?UWhWTWdMbHUzbGI3N1dGK0ovOUlpaHVpTFVHSzV3aGczSXo5NGFLTHNxdlpY?=
- =?utf-8?B?eVpuR3JkOWxKN3Zwck5wUEQvUUt5WjNFVDVmM3ZtT1V1NFFjTXdCeFVPRW14?=
- =?utf-8?B?N2tIcExlQnBXM1JNZFcrdlJKUjE1SVhPa3dzc2lFNnVtYWFoNmlZeWdhWmlG?=
- =?utf-8?B?aDlranV4dWJKY1cvNWIwaWJ4RkJzM3hPemo1Vmd4VUxjVnI1ZDZrYWM2VXJS?=
- =?utf-8?B?MnJVSVd6ZVNFQkUxWmtqZ2hxQWg4STNrN0V1R2ZnK1RaSXhySFVLMytJdXh5?=
- =?utf-8?B?ZlcxVkU2UCtLaUg5YXhKQk1GOU1oOVFwRlFuUEFsc3NhdWtJWFpGdGFWQTJB?=
- =?utf-8?B?V3NoRUVSdkExb3hUeFJZaHlxeENtbDFxQnVHOS9rZTNuK3l0ZUJlNnJuMVdn?=
- =?utf-8?B?QlBMV2x3Y0dTTWZjMGovWTZ1UEhNK3FHcUR6S1o1WjVpOGd3K092WnhxbW9W?=
- =?utf-8?B?OS9HOVQrRjQyMlJ6MFludzJKRkhsTm9IYVhPb24xa1Y0ODRMaldpb3RuY3RW?=
- =?utf-8?B?amkxQitZTlBsWHpOSmY5c0xCQ3owZ1VJbWw3Z0hMenhWd2VMeDY1eFRJamhk?=
- =?utf-8?B?K2hkYXhJK0sxVTg2bEozRGN2QndPM3YxMGhNbjQ0MWFUeFhPOWhpRDhscExo?=
- =?utf-8?Q?VLbg=3D?=
+	=?utf-8?B?dGdvMDJzLzVaODZUV1VVRmphOWlsOU15MmFJVTlVUVZFdFBhcW1iaHNab0lI?=
+ =?utf-8?B?anlWUzNzcjRpbk96TDFKa2pFYTV0ZjV5dmU3cSs1am5iMEpMdXc4RitQeWVu?=
+ =?utf-8?B?K3NET2psZ1EyZENFdmh4VUFmSUp6c2dxSDZQd2xBWWtKY2xVV25sdXdPTG9F?=
+ =?utf-8?B?MVZod3ArWFA1OXV0RHQwTmtrNHZPYWRpd0NpOFJmUGhFT3lUTklBYXYvVE1O?=
+ =?utf-8?B?Nm9Nc05WQW9aUU5pUHRHa0d0SUZFQitOaTNQQVBJU3p5QXdQV25qVXF6V1BU?=
+ =?utf-8?B?UkhiWUdYNXYyNWd0SWNTb3BKdXhxLy9XLzJTWExDMUxLM0crZDV0RWx0K3ht?=
+ =?utf-8?B?TU9Rb2I3SU1pWWtLVXdHbU53VUpBOFFObUd0cUVHb3dyZzVoZ05lUGRkUGtZ?=
+ =?utf-8?B?QllxbTNtTUZ5M3lzZ2l6MlZveWEyZ0pnblI2S2U1NlAwcjFrRnJXZktESVdr?=
+ =?utf-8?B?emV0U2xrSnVUMjhjdnNVY3paaGhmZ3BteExMb0QzRWJBcXFoZ0pZUEdxMkV4?=
+ =?utf-8?B?TTR5T2R3d1VNRnRLYzJYckRaSkowaGFPcm9Ibnh2ZFR5Wm9BZjl2S2hsSXpP?=
+ =?utf-8?B?UzZrZTRQNFlFUVp5d3VFaEhmWU16TERZTXVySVhiLzUvLysvUDladVBHcmNl?=
+ =?utf-8?B?LzdrY2JwZnpaWlNndWRkbmhwSHoyMGErS0E1NXBLM0VZWUNVQzR4MCs3YUVX?=
+ =?utf-8?B?MGxpUCtQd2xiYWhZNWROamFDV2EyUm80WC9GSjRvWE9XOVN5cUl6VXdGUURz?=
+ =?utf-8?B?Y1hLU052ckF4Vm9JWXQ4QWJxdzFlUmxWNEtWRk44Tm83TU5Gdy9jVW1La3ZJ?=
+ =?utf-8?B?OGhtdmFFWW02bi9HWmtrTVp1Z0hKeGE2elVvbDRaT2ovQURqQi9TZElkU0Ru?=
+ =?utf-8?B?eStGT1ZyYTlZTHBreTJHTGFNajFKWXFTM2VLNHhjUHk1T3ZVdnNpS0hiYXFB?=
+ =?utf-8?B?OG1ZUGFaeVZrb3I5RFd2Z0MwOU85cEp6L1R0SXZaZEdhbjN0ayt0Lyt3WEFG?=
+ =?utf-8?B?YndqcGE1OXoranZxbUIyOXhMMWpGOEtJNzA2bXEvS0k3MnpYMDZWaXdwK0ty?=
+ =?utf-8?B?ZGt6Wm9sRSswamlkeXRtM1dLRTF5eFV3R0k5K2FnSXVCODVvMHF5NzdoZXhk?=
+ =?utf-8?B?RXp6TU5IWjhuNXJUYkhZN05BcUVUL3pEM1JabHJXVURNTnlubnY0OHdTdHdE?=
+ =?utf-8?B?S24rTkFJYktxTm5KeGI5NFVtdFI3S2VHRUE1bURPWG1yTXFGVGlLV3pyd0tV?=
+ =?utf-8?B?bzVmVzAzWkZrY0duWmJraERtWXY4NWpTVWJUNlkrMXFxaFV6MWxPUmMrcHVE?=
+ =?utf-8?B?cTRHRnJ6SkRuQmF0NzUvMDFmdS9EQThqT2tIaloxZmttUVlBQkFDODNsbG9M?=
+ =?utf-8?B?YTFOeW1mL0xiQUc5RnkvVWI2ZEpzR0Mxb2xMUnJQRkEzL2w3UnVJdFgzdjUr?=
+ =?utf-8?B?STNPd1VoYTQyT3dqVzdFWmozdHZPbWJkZ1Bvd3BQQTJiNzYyMzhQQUdYZXYx?=
+ =?utf-8?B?WUJpdVlRaDk4N2dQSkIxV0RCeGZ0MlNGZ3BENVJZUVhacW1EMWxIeWhEK2FR?=
+ =?utf-8?B?bXBaZXNTMHNld0RPbEZhVWdzT09KZzBKZlMydS9UZUhWYnRVN2xiMlorRVFN?=
+ =?utf-8?B?T0JYeFJoQ0JCa2dtUEFmVGtsVkw3ZW5xQlBmbnBtNnNOSFl0V3pidDZDa3Vm?=
+ =?utf-8?B?QU11dmkwL1p6cjlCQzZiellRYkdVcmRFcUdzN3V6bmVIcVRncHdBS0FQZ1ZF?=
+ =?utf-8?B?cVBNdlFoNWVBZGRrL0ovemkzS3EyWW8xMkxuYnVMeDVHNzJObHVCdmxCczhM?=
+ =?utf-8?B?UGE5cFQ5bWt2U0g0ekJqODMyOVhYYjlPdVYrUDIzcER5NElnS0pIRWFhdzU5?=
+ =?utf-8?B?R2Q3ODluZXBDRURMbDFQcDhmcnMxbWNLUmJCUldmUWZiTS9jaDcyeGc3RjV5?=
+ =?utf-8?B?TUVudUtscm9yR0FvQTlQY0tMMkJYZmU4OERJR0pvMWorMU9vVVdnd3U2bTBB?=
+ =?utf-8?B?dGtTdDNtYjNtakZjS3Z4RE5MU1JxbmJ4MTk3YzZYUnU5ejFINlkrcy9LZm9Z?=
+ =?utf-8?B?cmt1U1VZVHVBTnJLNmlLMWZsSExJcCs3U25iOG5OM3FTdEsyZ2s1NEZ1aThN?=
+ =?utf-8?Q?VHCg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(7416014)(376014)(32650700017)(34020700016)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(34020700016)(36860700013)(82310400026)(1800799024)(7416014)(376014)(12100799066);DIR:OUT;SFP:1501;
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 06:53:29.6765
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2025 07:01:07.8280
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e586f13d-ee07-42cf-a099-08de1d0131b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 385f01e1-6533-49bc-6863-08de1d0242b0
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF000000A0.namprd02.prod.outlook.com
+	BY1PEPF0001AE19.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV0PR10MB997614
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFE654FA166
 
-On Wed, 2025-11-05 at 20:40 +0530, Manivannan Sadhasivam wrote:
-> On Tue, Oct 28, 2025 at 07:15:58PM +0530, Siddharth Vadapalli wrote:
-> > The PCIe Link Equalization procedure allows peers on a PCIe Link to
-> > improve the signal quality by exchanging transmitter presets and
-> > receiver preset hints in the form of Ordered Sets.
+On Wed, 2025-11-05 at 22:53 +0530, Manivannan Sadhasivam wrote:
+> On Wed, Oct 29, 2025 at 01:34:52PM +0530, Siddharth Vadapalli wrote:
+> > The 'pci-keystone.c' driver is the application/glue/wrapper driver for =
+the
+> > Designware PCIe Controllers on TI SoCs. Now that all of the helper APIs
+> > that the 'pci-keystone.c' driver depends upon have been exported for us=
+e,
+> > enable support to build the driver as a loadable module.
 > >=20
-> > For link speeds of 8.0 GT/s and above, the transmitter presets and the
-> > receiver preset hints are configurable parameters which can be tuned to
-> > establish a stable link. This allows setting up a stable link that is
-> > specific to the peers across a Link.
+> > Additionally, the functions marked by the '__init' keyword may be invok=
+ed:
+> > a) After a probe deferral
+> > OR
+> > b) During a delayed probe - Delay attributed to driver being built as a
+> >    loadable module
 > >=20
-> > The device-tree property 'eq-presets-Ngts' (eq-presets-8gts,
-> > eq-presets-16gts, ...) specifies the transmitter presets and receiver
-> > preset hints to be applied to every lane of the link for every supporte=
-d
-> > link speed that is greater than or equal to 8.0 GT/s.
+> > In both of the cases mentioned above, the '__init' memory will be freed
+> > before the functions are invoked. This results in an exception of the f=
+orm:
 > >=20
-> > Hence, enable support for applying the 'optional' lane equalization
-> > presets when operating in the Root-Port (Root-Complex / Host) mode.
+> > 	Unable to handle kernel paging request at virtual address ...
+> > 	Mem abort info:
+> > 	...
+> > 	pc : ks_pcie_host_init+0x0/0x540
+> > 	lr : dw_pcie_host_init+0x170/0x498
+> > 	...
+> > 	ks_pcie_host_init+0x0/0x540 (P)
+> > 	ks_pcie_probe+0x728/0x84c
+> > 	platform_probe+0x5c/0x98
+> > 	really_probe+0xbc/0x29c
+> > 	__driver_probe_device+0x78/0x12c
+> > 	driver_probe_device+0xd8/0x15c
+> > 	...
+> >=20
+> > To address this, introduce a new function namely 'ks_pcie_init()' to
+> > register the 'fault handler' while removing the '__init' keyword from
+> > existing functions.
 > >=20
 > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > > ---
 > >=20
-> > Hello,
-> >=20
-> > This patch is based on linux-next tagged next-20251028.
->=20
-> Just rebase on top of pci/main or any topic branches in pci tree if there=
- are
-> any dependency.
-
-There are no dependencies. I tested on top of linux-next to see if there
-may be any issues with changes from other subsystems. Also, I ensured that
-the patch applies on v6.18-rc1 as stated below.
-
->=20
-> > It also applies cleanly on v6.18-rc1.
-> >=20
-> > Link to v1 patch:
-> > https://lore.kernel.org/r/20251027133013.2589119-1-s-vadapalli@ti.com/
-> > Changes since v1:
-> > - Implemented Bjorn's suggestion of adding 'fallthrough' keyword in
-> >   switch-case to avoid compilation warnings, since 'fallthrough' is
-> >   intentional.
+> > v4:
+> > https://lore.kernel.org/r/20251022095724.997218-5-s-vadapalli@ti.com/
+> > Changes since v4:
+> > - To fix the build error on ARM32 platforms as reported at:
+> >   https://lore.kernel.org/r/202510281008.jw19XuyP-lkp@intel.com/
+> >   patch 4 in the series has been updated by introducing a new config
+> >   named "PCI_KEYSTONE_TRISTATE" which allows building the driver as
+> >   a loadable module. Additionally, this newly introduced config can
+> >   be enabled only for non-ARM32 platforms. As a result, ARM32 platforms
+> >   continue using the existing PCI_KEYSTONE config which is a bool, whil=
+e
+> >   ARM64 platforms can use PCI_KEYSTONE_TRISTATE which is a tristate, an=
+d
+> >   can optionally enabled loadable module support being enabled by this
+> >   series.
 > >=20
 > > Regards,
 > > Siddharth.
 > >=20
-> >  .../controller/cadence/pcie-cadence-host.c    | 85 +++++++++++++++++++
-> >  drivers/pci/controller/cadence/pcie-cadence.h |  5 ++
-> >  2 files changed, 90 insertions(+)
+> >  drivers/pci/controller/dwc/Kconfig        | 15 +++--
+> >  drivers/pci/controller/dwc/Makefile       |  3 +
+> >  drivers/pci/controller/dwc/pci-keystone.c | 78 +++++++++++++----------
+> >  3 files changed, 59 insertions(+), 37 deletions(-)
 > >=20
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drive=
-rs/pci/controller/cadence/pcie-cadence-host.c
-> > index fffd63d6665e..ae85ad8cce82 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > @@ -168,6 +168,90 @@ static void cdns_pcie_host_enable_ptm_response(str=
-uct cdns_pcie *pcie)
-> >  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_=
-CTRL_PTMRSEN);
-> >  }
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controlle=
+r/dwc/Kconfig
+> > index 349d4657393c..c5bc2f0b1f39 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -482,15 +482,21 @@ config PCI_DRA7XX_EP
+> >  	  to enable device-specific features PCI_DRA7XX_EP must be selected.
+> >  	  This uses the DesignWare core.
 > > =20
-> > +static void cdns_pcie_setup_lane_equalization_presets(struct cdns_pcie=
-_rc *rc)
-> > +{
-> > +	struct cdns_pcie *pcie =3D &rc->pcie;
-> > +	struct device *dev =3D pcie->dev;
-> > +	struct device_node *np =3D dev->of_node;
-> > +	int max_link_speed, max_lanes, ret;
-> > +	u32 lane_eq_ctrl_reg;
-> > +	u16 cap;
-> > +	u16 *presets_8gts;
-> > +	u8 *presets_ngts;
-> > +	u8 i, j;
+> > +# ARM32 platforms use hook_fault_code() and cannot support loadable mo=
+dule.
+> >  config PCI_KEYSTONE
+> >  	bool
+> > =20
+> > +# On non-ARM32 platforms, loadable module can be supported.
+> > +config PCI_KEYSTONE_TRISTATE
+> > +	tristate
 > > +
-> > +	ret =3D of_property_read_u32(np, "num-lanes", &max_lanes);
-> > +	if (ret)
-> > +		return;
-> > +
-> > +	/* Lane Equalization presets are optional, so error message is not ne=
-cessary */
-> > +	ret =3D of_pci_get_equalization_presets(dev, &rc->eq_presets, max_lan=
-es);
-> > +	if (ret)
-> > +		return;
-> > +
-> > +	max_link_speed =3D of_pci_get_max_link_speed(np);
+> >  config PCI_KEYSTONE_HOST
+> > -	bool "TI Keystone PCIe controller (host mode)"
+> > +	tristate "TI Keystone PCIe controller (host mode)"
+> >  	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+> >  	depends on PCI_MSI
+> >  	select PCIE_DW_HOST
+> > -	select PCI_KEYSTONE
+> > +	select PCI_KEYSTONE if ARM
+> > +	select PCI_KEYSTONE_TRISTATE if !ARM
 >=20
-> 'max-link-speed' property is used to *limit* the max link speed of the
-> controller, in case the hardware default value is wrong or to workaround =
-the
-> hardware defect. If you goal is to find the actual max link speed of the =
-Root
-> Port, you should read the Link Capabilities register.
+> Wouldn't below change work for you?
+>=20
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 349d4657393c..b1219e7136c9 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -486,8 +486,9 @@ config PCI_KEYSTONE
+>         bool
+> =20
+>  config PCI_KEYSTONE_HOST
+> -       bool "TI Keystone PCIe controller (host mode)"
+> +       tristate "TI Keystone PCIe controller (host mode)"
 
-The intent was to get the maximum link speed that the user wants the
-Controller to support. The idea is that the user will only specify the
-presets in the device-tree ranging from 8.0 GT/s until the maximum link
-speed that they desire. The Controller could support a higher link speed in
-Hardware, but if the user doesn't intend to enable it, the presets won't be
-present in the device-tree anyway.
+This doesn't alter the build of the pci-keystone.c driver. From the
+existing Makefile, we have:
+ obj-$(CONFIG_PCI_KEYSTONE) +=3D pci-keystone.o
+implying that it is only CONFIG_PCI_KEYSTONE that determines whether the
+pci-keystone.c driver is built as a loadable module or a built-in module.
 
->=20
-> Unfortunately, the ti,j721e-pci-host.yaml binding has marked this propert=
-y as
-> 'required'. It should've been optional instead.
->=20
-> > +	if (max_link_speed < 0) {
-> > +		dev_err(dev, "%s: link-speed unknown, skipping preset setup\n", __fu=
-nc__);
->=20
-> Don't print the function names in error log.
+>         depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+> +       default y if ARCH_KEYSTONE
 
-I will fix this in v3. Thank you for reviewing the patch. Please let me
-know if you have further feedback regarding my comment above on the
-'maximum link speed'.
+The default flag only specifies what should be selected by default, but it
+doesn't prevent the user from attempting to built it as a loadable module
+using menuconfig. Building the pci-keystone.c driver as a loadable module
+(CONFIG_PCI_KEYSTONE set to 'm') will cause build errors for ARM32
+platforms due to the presence of hook_fault_code() which is __init code.
+
+The Kconfig and Makefile changes made by the patch do the following:
+1. Allow building the pci-keystone.c driver as a loadable module for non-
+ARM32 platforms by introducing the PCI_KEYSTONE_TRISTATE config which is a
+tristate unlike the existing PCI_KEYSTONE config which is a bool.
+2. Associate PCI_KEYSTONE with ARM32 platforms and associate
+PCI_KEYSTONE_TRISTATE with non-ARM32 platforms to prevent users from
+building the pci-keystone.c driver as a loadable module for ARM32
+platforms.
 
 Regards,
 Siddharth.
