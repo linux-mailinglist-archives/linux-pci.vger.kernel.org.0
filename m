@@ -1,63 +1,60 @@
-Return-Path: <linux-pci+bounces-40560-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40561-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66022C3E946
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 07:03:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49EE3C3E970
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 07:10:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FDC5188B8BD
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 06:03:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04E053A7242
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 06:10:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B3042D0601;
-	Fri,  7 Nov 2025 06:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE5F281357;
+	Fri,  7 Nov 2025 06:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPV+Cg2w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfRhim6y"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0002C280A20;
-	Fri,  7 Nov 2025 06:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6559D17A2E8;
+	Fri,  7 Nov 2025 06:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762495399; cv=none; b=fbG1yYL4Z14pOqoa7UScQ8DTW/JuQR4FNvon0+r/iQb+rWVvsNSsrPwLfJ34yOn8Cn/vm2FSm9qOOwaMGNbcY2cMLCocxOENcxAhy4ylFIBaPhlzQxuPje3/b89Ess5pCF3XiAs9VeGMQJP98oNXGozsIrLcJSistR0WXUjeHkU=
+	t=1762495807; cv=none; b=iNhiyevmiuENg4grBxF3nVWo0Ln+kspiqZ6Bx5lJRDcd623SUpZvI6I5y5cM6KrgZANY/BwXFLW+ZD8oczVqdfHjL/UZWr8OsYELtsXUzhlulOXnvvj3eBeuUr/+RtyBfIwHASKMVNHjHSXt1VVF2QMuj6pf9VoYwqCt7dwW6hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762495399; c=relaxed/simple;
-	bh=TlVvyjy8Qz5ChlDvWPbBxE+vA1IB1QZdK1yG9sKb7DI=;
+	s=arc-20240116; t=1762495807; c=relaxed/simple;
+	bh=Qw47Ypxh6hCFBJwUZNmfzHzoZf62V55gj0I8Wbneo2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHU21cHd4+Ldo9xtFs9KBGZaQqP+WPkl6AOPs/FP3oddOnvzGF5wQZ2Ev2N8c2elUZhdn5c10sMjEOHNzWbwyhYsjbiTOimkAYCesPWJcqVacQUnP9M2CL3/1tYV0O9+F94fvDEQm9CghXY0eFvpMuBSJvxkehJWlzJHq1tpE4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPV+Cg2w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D186FC4CEF5;
-	Fri,  7 Nov 2025 06:03:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCIL/5qcgP0jsGmyjW+rTiNeHNzCphPgCsJEvrba6uEmcFvyi8ULWgGIdJeMt7yuu8TmxlyUx6f1ucoZUms79jfZe5T2d8baf0e36Q5MQH2JMfR0awNaDh7ux4cVqQjcHoPnoIzUY3KRVjkYZ03+gSeAcOtmWiMAXw4XmH7VfXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfRhim6y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86FDC4CEF5;
+	Fri,  7 Nov 2025 06:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762495398;
-	bh=TlVvyjy8Qz5ChlDvWPbBxE+vA1IB1QZdK1yG9sKb7DI=;
+	s=k20201202; t=1762495805;
+	bh=Qw47Ypxh6hCFBJwUZNmfzHzoZf62V55gj0I8Wbneo2A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPV+Cg2wMPbNl1q2cCNQmh8ekcy8rJwpZ2QzvQr3CkIRAs6QlBnp5w6K4bnjX3O7e
-	 mZ7z7nM9j1sVHLYXXpeSFgtswQjKBsjoc5cYhXX1NG0/mom6XoCGKVaCGP8YB29LJ6
-	 AXqZgFQSBMTQpJemxdrpoMEzOp05DEB3yocDtCdzkv0j4EtaxbZ06gHugQwxPq0qaL
-	 nzLKSNxtaylvIc3zfm8mbqndZDqhpYstZs39ys3kMmPlsAl/39qPIGtE4MOtZXeT6d
-	 3K9c5ozOP6/ZoQP7AD8NDIdO/6hacVbF52jW752Le2R+WlgjJwi1PI5anY1W8uQFXY
-	 Tz2SFKS7br/tg==
-Date: Fri, 7 Nov 2025 11:33:04 +0530
+	b=tfRhim6ylIxts3xnNHkB7gm6zcHD1Jy69uXevGxzCCF5oaN9yLlEmGqGMbxxR3QEx
+	 iIBh9pgnRsEW0eNMazmYNzfUSgJwAo1q/4BvoIB/jqAAjBLaYS4Ye4E1nsaP36ts4f
+	 y7XFx+Rg14Bbj53V2bW+o7vqINfIoSP/T5bio6AQhzQSFiqFQh1lvWLGnR9gn34wcS
+	 hqC8UTGRWfHwJ0tvepmuc/82HNuOgjpHHOg4LD31RyqUW+2fQU2dC74qw9Pb15Gr3e
+	 3Q1GfGhHowctqQ5cTa4XVftpSx/EQbL00AC6qMJ8heP6jaiBiMzrcVuY7KQ7a+58o2
+	 P/FdDkL7E/yvg==
+Date: Fri, 7 Nov 2025 11:39:50 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-	Christian Zigotzky <chzigotzky@xenosoft.de>, mad skateman <madskateman@gmail.com>, 
-	"R . T . Dickinson" <rtd2@xtra.co.nz>, Darren Stevens <darren@stevens-zone.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lukas Wunner <lukas@wunner.de>, 
-	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>, Roland <rol7and@gmx.com>, 
-	Hongxing Zhu <hongxing.zhu@nxp.com>, hypexed@yahoo.com.au, linuxppc-dev@lists.ozlabs.org, 
-	debian-powerpc@lists.debian.org, linux-kernel@vger.kernel.org, 
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Christian Zigotzky <chzigotzky@xenosoft.de>, 
+	mad skateman <madskateman@gmail.com>, "R . T . Dickinson" <rtd2@xtra.co.nz>, 
+	Darren Stevens <darren@stevens-zone.net>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lukas Wunner <lukas@wunner.de>, luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>, 
+	Roland <rol7and@gmx.com>, Hongxing Zhu <hongxing.zhu@nxp.com>, hypexed@yahoo.com.au, 
+	linuxppc-dev@lists.ozlabs.org, debian-powerpc@lists.debian.org, linux-kernel@vger.kernel.org, 
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] PCI/ASPM: Cache Link Capabilities so quirks can
- override them
-Message-ID: <6fni6w6aolqgxazmepiw2clwjq54yt76pjswx7zmdgebj4svqz@mggk4qyhdrrt>
+Subject: Re: [PATCH 2/2] PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
+Message-ID: <ogkty663ld7fe3qmbxyil47pudidenqeikol5prk7n3qexpteq@h77qi3sg5xo4>
 References: <20251106183643.1963801-1-helgaas@kernel.org>
- <20251106183643.1963801-2-helgaas@kernel.org>
- <944388a9-1f5d-41e4-8270-ac1fb6cf73e1@rock-chips.com>
+ <20251106183643.1963801-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,67 +64,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <944388a9-1f5d-41e4-8270-ac1fb6cf73e1@rock-chips.com>
+In-Reply-To: <20251106183643.1963801-3-helgaas@kernel.org>
 
-On Fri, Nov 07, 2025 at 09:17:09AM +0800, Shawn Lin wrote:
-> 在 2025/11/07 星期五 2:36, Bjorn Helgaas 写道:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Cache the PCIe Link Capabilities register in struct pci_dev so quirks can
-> > remove features to avoid hardware defects.  The idea is:
-> > 
-> >    - set_pcie_port_type() reads PCIe Link Capabilities and caches it in
-> >      dev->lnkcap
-> > 
-> >    - HEADER quirks can update the cached dev->lnkcap to remove advertised
-> >      features that don't work correctly
-> > 
-> >    - pcie_aspm_cap_init() relies on dev->lnkcap and ignores any features not
-> >      advertised there
-> > 
+On Thu, Nov 06, 2025 at 12:36:39PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Quick test with a NVMe shows it works.
+> Christian reported that f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and
+> ASPM states for devicetree platforms") broke booting on the A-EON X5000.
 > 
-> Before this patch,  lspci -vvv dumps:
+> Fixes: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+> Fixes: df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms"
+> )
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Link: https://lore.kernel.org/r/db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/quirks.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
->  LnkCap: Port #0, Speed 16GT/s, Width x4, ASPM L1, Exit Latency L1 <64us
->          ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
->  LnkCtl: ASPM L1 Enabled; RCB 64 bytes, LnkDisable- CommClk+
-> 
-> 
-> Capabilities: [21c v1] L1 PM Substates
->          L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> L1_PM_Substates+
->                    PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
->          L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
->                     T_CommonMode=0us LTR1.2_Threshold=26016ns
-> 
-> After this patch + a local quirk patch like your patch 2, it shows:
-> 
->  LnkCap: Port #0, Speed 16GT/s, Width x4, ASPM L1, Exit Latency L1 <64us
->          ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
->  LnkCtl: ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk-
-> 
-> Capabilities: [21c v1] L1 PM Substates
->           L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> L1_PM_Substates+
->                     PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
->           L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
->                      T_CommonMode=0us LTR1.2_Threshold=0ns
-> 
-> 
-> 
-> One things I noticed is CommClk in LnkCtl is changed.
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 214ed060ca1b..44e780718953 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2525,6 +2525,18 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+>   */
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+>  
+> +/*
+> + * Remove ASPM L0s and L1 support from cached copy of Link Capabilities so
+> + * aspm.c won't try to enable them.
+> + */
+> +static void quirk_disable_aspm_l0s_l1_cap(struct pci_dev *dev)
+> +{
+> +	dev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L0S;
+> +	dev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L1;
+> +	pci_info(dev, "ASPM: L0s L1 removed from Link Capabilities to work around device defect\n");
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1_cap);
 
-That's not because of this series, but because of your quirk that disables L0s
-and L1. Common Clock Configuration happens only when ASPM is enabled, if it is
-disabled, PCI core will not configure it (the value remains untouched). That's
-why it was enabled before your quirk and disabled afterwards.
+From the commit message of the earlier version [1] you shared:
 
-This bit is also only used to report the L0s and L1 Exit latencies by the
-devices.
+    Removing advertised features prevents aspm.c from enabling them, even if
+    users try to enable them via sysfs or by building the kernel with
+    CONFIG_PCIEASPM_POWERSAVE or CONFIG_PCIEASPM_POWER_SUPERSAVE.
+
+Going by this reasoning, shouldn't we be doing this for the other quirks
+(quirk_disable_aspm_l0s_l1/quirk_disable_aspm_l0s) as well?
 
 - Mani
+
+[1] https://lore.kernel.org/linux-pci/20251105220925.GA1926619@bhelgaas
 
 -- 
 மணிவண்ணன் சதாசிவம்
