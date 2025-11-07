@@ -1,146 +1,162 @@
-Return-Path: <linux-pci+bounces-40575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46685C3FC61
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 12:45:38 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B08BC3FD40
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 12:58:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05C3E3BA287
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 11:45:37 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 94E1934AD9D
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 11:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE742836B1;
-	Fri,  7 Nov 2025 11:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC5D277CA4;
+	Fri,  7 Nov 2025 11:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tf2n5etW"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EidR1XSF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6B11DA55;
-	Fri,  7 Nov 2025 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A01027E04C
+	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 11:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762515934; cv=none; b=f9XFRjZKb5Y4PtXPhN0jXIWR9PoqJN58DTqBTUj+3tQ4FFgdVVnKI4nPc3aR79CthIPlYmySVHV3/u8ugT0B2lncrw96Sn8KdBp4cwYTQQUngJ7YgBA8tVLc2ZrEUtDHQvix0ybWk8+DtOdaKLIy8/P6ik86KJTsh5D8HhuiCCY=
+	t=1762516718; cv=none; b=OEYZOmmSD3GhiccPrI9/R85++Ovpp/kfatfslq4yX24nHLwD7Cu9s/+QnMhsbyQSnYgKxyfq4b0KphEYFKVJsGsetyh3wkq0r4O7G7npd9whNAp+6n4494GT0J8t8aiXnbzM0A71OKHf5mzh0hTNBjJmSxWADNhYmrjZfzxz2wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762515934; c=relaxed/simple;
-	bh=izDt0p7345JaRE7QPi4vAH1RGCVddKUk9lJ7ECKLP2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0g2c64Y11xqnXQUw3LiVpI+QvNcb+zqSb+q/NB52meLCfbN8ML0jjw50PwwlBmxfbU6PAfS5zGVCPukOsBJiR/NrigB0C2kCOLYO4VPmNLKwTtBZN47+QGxD2XQyRLS+AjKz+00Rydxflh7wfKo5fL1MtyDOgJgwhHwiPNRvmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tf2n5etW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0458BC116B1;
-	Fri,  7 Nov 2025 11:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762515934;
-	bh=izDt0p7345JaRE7QPi4vAH1RGCVddKUk9lJ7ECKLP2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tf2n5etWb7ZB0uyhL9KX1WJMrI8iz3X4UloiD5SaZevZEsHmX7vZvHJQq/7lFiOMs
-	 LZ4x0F1xojYcPEztReGlpQ+Ann+bdqm2sZ/i1gsKyDRMuPRgEb6Q27o4t6OidiE15C
-	 7DJpoN9uMT9pUhPOgYtrzFul37DZ2eonLqS9tjUKp0x+T4p3eQtb6o8fGUwJKGVQFE
-	 vGByKDBpHCaPlM4vgtADSGOjrkhjoim/kNMU6XzVcwgO1a7a+OUcJeifNDK9jg5MXy
-	 wAW/viwcwEIeKFa7DzJa9fnSGuVrq/wCwqZyJCllt1rs/MT+i1jqsosqlAU1Uce4+e
-	 RuYY0XlZnWWbQ==
-Date: Fri, 7 Nov 2025 17:15:14 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org, 
-	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v14 1/5] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Update pcie phy bindings for qcs8300
-Message-ID: <q3naavmyhk3ksvrtdvt7jmfwfvf666souckek356tfp3olqsxl@t65dsp5hxoeu>
-References: <20251024095609.48096-1-ziyue.zhang@oss.qualcomm.com>
- <20251024095609.48096-2-ziyue.zhang@oss.qualcomm.com>
+	s=arc-20240116; t=1762516718; c=relaxed/simple;
+	bh=UDVuq/lrhkMd3aCRzHjBXDEmTc6zljOBa7UFGRfvTZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ry0B+iar617mYjWesK02+1snwiEm1DPgZ6muXLuW0cY/Dpfo62O/ySXM/zJJZjoPrnoUPrFcaGKKX+04w6Hg+Mc+7VChOv5B1qZgIsIuBNgtrGetI6g8ozcma2KtIE2atUskmMZW5PYMc2sSjNkiATRZX0cBTLemNXEUDElfGN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EidR1XSF; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 6C0AD1A191B
+	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 11:58:33 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2F857606A6;
+	Fri,  7 Nov 2025 11:58:33 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3701111852441;
+	Fri,  7 Nov 2025 12:58:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1762516712; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=C4R54YJMw/9k/KwHXpEmkLyJAAbzYMXCXrdeUpMH9Zs=;
+	b=EidR1XSF2KvVll3yLkR6CDO2jbmKN25490panR36DO3hpBFIsHjzhK9CQBsyvzoab0Xz0g
+	IfKQ5zIUH8dzqMb+NRFLHsJPBmqopY8jfxAg15CFL26vqalAQKXFiQUVMAFE0givROlE6O
+	JpXGwiSg/wlhccCMNytyI/EKJkAFiFN0/udUC7yDTJx+PeCAoFGmLIRF/lUoliZl8O/5qq
+	kLNT5qXbLdfuY7lK1f9BjCtamZigehvjMcmuwHQNsUXK6iODqmdEiLLptET7zH30+UGFop
+	/DcgQ8EGhmH7cRbIjGfUSZwxnDYFiLng+wz6M0dVXaz0yseJCOHMy/81vhEvYQ==
+Date: Fri, 7 Nov 2025 12:58:28 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, mbrugger@suse.com,
+ guillaume.gardet@arm.com, tiwai@suse.com, Lizhi Hou <lizhi.hou@amd.com>,
+ Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] PCI: of: Downgrade error message on missing of_root
+ node
+Message-ID: <20251107125828.18a034de@bootlin.com>
+In-Reply-To: <aQ28s57R0YfrqwdG@apocalypse>
+References: <20251106182708.03cfb6c6@bootlin.com>
+	<20251106175016.GA1960490@bhelgaas>
+	<aQ28s57R0YfrqwdG@apocalypse>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251024095609.48096-2-ziyue.zhang@oss.qualcomm.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Oct 24, 2025 at 05:56:05PM +0800, Ziyue Zhang wrote:
-> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
-> specified in the device tree node. Hence, move the qcs8300 phy
-> compatibility entry into the list of PHYs that require six clocks.
+Hi Andrea, Bjorn,
+
+On Fri, 7 Nov 2025 10:32:35 +0100
+Andrea della Porta <andrea.porta@suse.com> wrote:
+
+> Hi Bjorn,
 > 
-> Removed the phy_aux clock from the PCIe PHY binding as it is no longer
-> used by any instance.
+> On 11:50 Thu 06 Nov     , Bjorn Helgaas wrote:
+> > On Thu, Nov 06, 2025 at 06:27:08PM +0100, Herve Codina wrote:  
+> > > On Thu, 6 Nov 2025 16:21:47 +0100
+> > > Andrea della Porta <andrea.porta@suse.com> wrote:  
+> > > > On 13:18 Thu 06 Nov     , Herve Codina wrote:  
+> > > > > On Thu, 6 Nov 2025 12:04:07 +0100
+> > > > > Andrea della Porta <andrea.porta@suse.com> wrote:  
+> > > > > > On 18:23 Wed 05 Nov     , Bjorn Helgaas wrote:    
+> > > > > > > On Wed, Nov 05, 2025 at 07:33:40PM +0100, Andrea della Porta wrote:      
+> > Patch at https://lore.kernel.org/r/955bc7a9b78678fad4b705c428e8b45aeb0cbf3c.1762367117.git.andrea.porta@suse.com,
+> > added back for reference:
+> > 
+> >   diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> >   index 3579265f1198..872c36b195e3 100644
+> >   --- a/drivers/pci/of.c
+> >   +++ b/drivers/pci/of.c
+> >   @@ -775,7 +775,7 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> > 
+> > 	  /* Check if there is a DT root node to attach the created node */
+> > 	  if (!of_root) {
+> >   -               pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
+> >   +               pr_info("Missing DeviceTree, cannot create PCI host bridge node\n");
+> > 		  return;
+> > 	  }
+> >   
+> > > > > > > > When CONFIG_PCI_DYNAMIC_OF_NODES is enabled, an error
+> > > > > > > > message is generated if no 'of_root' node is defined.
+> > > > > > > > 
+> > > > > > > > On DT-based systems, this cannot happen as a root DT node
+> > > > > > > > is always present. On ACPI-based systems, this is not a
+> > > > > > > > true error because a DT is not used.
+> > > > > > > > 
+> > > > > > > > Downgrade the pr_err() to pr_info() and reword the message
+> > > > > > > > text to be less context specific.      
+> > > > > > > 
+> > > > > > > of_pci_make_host_bridge_node() is called in the very generic
+> > > > > > > pci_register_host_bridge() path.  Does that mean every boot
+> > > > > > > of a kernel with CONFIG_PCI_DYNAMIC_OF_NODES on a non-DT
+> > > > > > > system will see this message?      
+> > > > > > 
+> > > > > > This is the case, indeed. That's why downgrading to info seems
+> > > > > > sensible.
+> > > > > >     
+> > > > > > > This message seems like something that will generate user
+> > > > > > > questions.  Or is this really an error, and we were supposed
+> > > > > > > to have created of_root somewhere but it failed?  If so, I
+> > > > > > > would expect a message where the of_root creation failed.      
+> > 
+> > I think we should just remove the message completely.  I don't want
+> > users to enable CONFIG_PCI_DYNAMIC_OF_NODES out of curiosity or
+> > willingness to test, and then ask about this message.  
 > 
-> Fixes: e46e59b77a9e ("dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP PCIe PHY Gen4 x2")
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-- Mani
-
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml         | 17 ++---------------
->  1 file changed, 2 insertions(+), 15 deletions(-)
+> Agreed. This would be the easy solution, the other being creating the
+> empty DT so that the message will never be printed. But this require some
+> careful thought. The latter solution will be needed if we'll ever want to
+> make drivers like RP1 or lan96xx (which uses the runtime overlay) to work.
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> index 119b4ff36dbd..d94d08752cec 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
-> @@ -55,7 +55,7 @@ properties:
->  
->    clocks:
->      minItems: 5
-> -    maxItems: 7
-> +    maxItems: 6
->  
->    clock-names:
->      minItems: 5
-> @@ -66,7 +66,6 @@ properties:
->        - enum: [rchng, refgen]
->        - const: pipe
->        - const: pipediv2
-> -      - const: phy_aux
->  
->    power-domains:
->      maxItems: 1
-> @@ -178,6 +177,7 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,qcs8300-qmp-gen4x2-pcie-phy
->                - qcom,sa8775p-qmp-gen4x2-pcie-phy
->                - qcom,sa8775p-qmp-gen4x4-pcie-phy
->                - qcom,sc8280xp-qmp-gen3x1-pcie-phy
-> @@ -195,19 +195,6 @@ allOf:
->          clock-names:
->            minItems: 6
->  
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          contains:
-> -            enum:
-> -              - qcom,qcs8300-qmp-gen4x2-pcie-phy
-> -    then:
-> -      properties:
-> -        clocks:
-> -          minItems: 7
-> -        clock-names:
-> -          minItems: 7
-> -
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.34.1
+> > 
+> > "You can avoid the message by also enabling CONFIG_OF_EARLY_FLATTREE"
+> > is not a very satisfactory answer.  
+> 
+> Unfortunately this would work on x86, but not on arm. And who knows on
+> other platforms.
+> 
+> > 
+> > A message at the point of *needing* this, i.e., when loading an
+> > overlay fails for lack of this dynamic DT, is fine.  
+> 
+> It seems fine to me.
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+Ok, even if I would prefer having an empty (or not) of_node available on all
+platforms, what is proposed makes sense especially in regards to potential
+users questions.
+
+Best regards,
+Hervé
+
 
