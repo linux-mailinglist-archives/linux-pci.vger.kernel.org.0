@@ -1,97 +1,135 @@
-Return-Path: <linux-pci+bounces-40543-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88B57C3DF3F
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 01:12:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FC07C3DFEA
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 01:40:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 367DC188DC1C
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 00:13:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D54F3A7920
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 00:40:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EAEB1FCF41;
-	Fri,  7 Nov 2025 00:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B6C27F724;
+	Fri,  7 Nov 2025 00:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arLi1sXK"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="NggE5AVl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m3279.qiye.163.com (mail-m3279.qiye.163.com [220.197.32.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7004D1F5825;
-	Fri,  7 Nov 2025 00:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4326E154
+	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 00:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762474371; cv=none; b=mSY21yWow0ftOy4g3ojKM7HMpBmoh+iB5gTBv3votTeXNgQF6wkrfEdtGBN2k03e8y3EHYTXLCrE9VBTlI5L9HisdGwcCU8iHzFHDgWKGUGueHYDTqdMUggn/PA4uNwyWAVAPet9KEERhtfaqnebknWA0uLj5ceZGj6bC5dSZ1w=
+	t=1762475994; cv=none; b=uLz+6CK3BrFtalwRZuvKaI9m0gZ3MhWpaWDyHbmKWdegG3MVVaxRB4POpSa2lRRtjIfVL5FOXihbbH7ACGUVUevGItgwNIieg70HNaz4MEBX4QTGrPWUyut9XVSLaz/9HE3lM6SpNiIjv4pNokahGXglRI89KyBCvFn7ygx/pFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762474371; c=relaxed/simple;
-	bh=zVxtIiQXF/h3lLGX+vTX4ScikwyurKS7hUPFV5evgT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kEz5npKi0X4Vj/5gsE87ZofBHcH94r9GD+f9J3KQzfPC21+JjnjwJUlb28EfB0Gaqa7Aw0S+cYpygd5rFNd9u7FcO/4NeZm44HT01yAtGqERL8pTC5jd1tXcAVZKTVdBfEdmdUtXksr+GrPvkwjoQaM+1MWJ+U3ZR+vALW+ZXBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arLi1sXK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0F1C4CEFB;
-	Fri,  7 Nov 2025 00:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762474371;
-	bh=zVxtIiQXF/h3lLGX+vTX4ScikwyurKS7hUPFV5evgT4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=arLi1sXKCOwj5bu+tukL49Vo2iKLJWUsqpLupqoRVBsB+qXse1CVN9RDSb3fOdmz0
-	 QWq+nqXxO6RDUAYD5duqY3eDg4gHTyBzD/i68NgZ2QkpJ6ydS9Bb2FQzOQpPKWj6vz
-	 bXYRTGV9r6zODcS1pIFaOYL4UGDie/fNdCt2WEedrIO50EsyjA+nOsrXtKoZub5BKl
-	 jDZCQ8MH3S60cl138FURAdotszxxo8Q2T6iL0D/iOje6ZfuODWgWtANGpLjPjKU9Fp
-	 h9YpZQQKVGWFV0rRMe/n3+geqebX703u7a4gtQFv7Zu+9PjvF4cnGRAKvTPfzEwtq+
-	 q8rhLXwIRWrPA==
-Date: Thu, 6 Nov 2025 18:12:49 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-pci@vger.kernel.org, sparclinux@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Yinghai Lu <yinghai@kernel.org>,
-	Igor Mammedov <imammedo@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	linuxppc-dev@lists.ozlabs.org, regressions@leemhuis.info
-Subject: Re: [PATCH 02/24] sparc/PCI: Remove pcibios_enable_device() as they
- do nothing extra
-Message-ID: <20251107001249.GA1977735@bhelgaas>
+	s=arc-20240116; t=1762475994; c=relaxed/simple;
+	bh=78UR5NbxjK40KyOkhV5uol3aNV7pGnP8sbC3sWiaSBg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GE6iI/8wl1JB28nQjJ1VvZ7bKLqTT6sCYASkrVpPh9h3NwZPAXQg9zQL0hyVMkgkl8OJHkdFlDavjzGY3fVOYSF3yutn3t2DXXWmGLKfJHHd5py275ylsyNJXdo0LHekEymQwDCmz0cAJky42IDcxJUxFpfnRp9HWA0Q+Xtl1bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=NggE5AVl; arc=none smtp.client-ip=220.197.32.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 28b29a2a8;
+	Fri, 7 Nov 2025 08:34:33 +0800 (GMT+08:00)
+Message-ID: <9b83595d-ba79-404d-a7ff-ed07f524966f@rock-chips.com>
+Date: Fri, 7 Nov 2025 08:34:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add ASPM quirk for Hi1105 PCIe Wi-Fi
+To: Bjorn Helgaas <helgaas@kernel.org>
+References: <20251106195057.GA1965757@bhelgaas>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20251106195057.GA1965757@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8fcc0fd4b74f99d5c4d80d3907e7607a7d4c89da.camel@physik.fu-berlin.de>
+X-HM-Tid: 0a9a5bbc864409cckunmd4e8aafdf2fcd2
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRgYHlYaH0hISkxCQkpPSkJWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=NggE5AVl8XhBnnmJyNK7Cwogs6U59gtofVbLUBzBUjMDJiBKFUTlDZjZNRTVGuZjbdb4Pvif5Eoz11ZMLU4Xw970pk90qce152zEM0A+YFe+hY+6DMxBFQPRlFjV4FkpRbsMqQwnd7sBTUbPFfcUIzaJqcVz59RNkfM76f9hsQc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=Q79vdCYmG7hbeV1qHtnnEhd5iOqPqUirn2KQg3JO6u8=;
+	h=date:mime-version:subject:message-id:from;
 
-On Thu, Nov 06, 2025 at 08:49:50AM +0100, John Paul Adrian Glaubitz wrote:
-> On Fri, 2025-08-22 at 17:55 +0300, Ilpo Järvinen wrote:
-> > Under arch/sparc/ there are multiple copies of pcibios_enable_device()
-> > but none of those seem to do anything extra beyond what
-> > pci_enable_resources() is supposed to do. These functions could lead to
-> > inconsistencies in behavior, especially now as pci_enable_resources()
-> > and the bridge window resource flags behavior are going to be altered
-> > by upcoming changes.
-
-> This change actually broke driver initialization on SPARC, see:
+在 2025/11/07 星期五 3:50, Bjorn Helgaas 写道:
+> On Thu, Nov 06, 2025 at 11:51:59AM +0800, Shawn Lin wrote:
+>> This Wi-Fi advertises the L0s and L1 capabilities but actually
+>> it doesn't support them. This's comfirmed by Hisilicon team in
+>> actual productization.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>
+>>   drivers/pci/quirks.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 214ed06..67250d4 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -2526,6 +2526,12 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+>>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+>>   
+>>   /*
+>> + * The Hi1105 PCIe Wi-Fi doesn't support L0s and L1 but advertise the capability.
+>> + * Disable both L0s and L1 for now.
+>> + */
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1);
 > 
-> https://github.com/sparclinux/issues/issues/22
+> PCI_VENDOR_ID_HUAWEI is 0x19e5.  Is there an upstream driver that
+> matches [19e5:1105]?  I didn't find anything.
 
-#regzbot report: https://github.com/sparclinux/issues/issues/22
-#regzbot introduced: 754babaaf333
-#regzbot title: v6.18-rc3 fails to initialise mpt3sas on sparc T5-2
+Yes, like plenty of other wireless drivers, Hi1105 driver is also out of
+tree.
 
-754babaaf333 ("sparc/PCI: Remove pcibios_enable_device() as they do nothing extra")
+> 
+> I think quirk_disable_aspm_l0s_l1() might be a problem because the new
+> strategy is to enable ASPM early (in pcie_aspm_init_link_state(),
+> called from pci_scan_slot(), which happens before FINAL fixups are run
+> during pci_bus_add_device().
+> 
+
+Oh, I missed this.
+
+> So I think we will enable L0s and L1 briefly before
+> quirk_disable_aspm_l0s_l1() runs, and it's possible we'd see a problem
+> then.
+> 
+> But if you apply this series:
+>    https://lore.kernel.org/r/20251106183643.1963801-1-helgaas@kernel.org
+> 
+> and then the patch below on top, I think we should avoid enabling L0s
+> and L1 at all:
+> 
+
+The patch below looks good to me. I will fix it.
+Thanks.
+
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 44e780718953..24c278857159 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2536,6 +2536,7 @@ static void quirk_disable_aspm_l0s_l1_cap(struct pci_dev *dev)
+>   	pci_info(dev, "ASPM: L0s L1 removed from Link Capabilities to work around device defect\n");
+>   }
+>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1_cap);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1_cap);
+>   
+>   /*
+>    * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+> 
+
 
