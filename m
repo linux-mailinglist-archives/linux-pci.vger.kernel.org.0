@@ -1,119 +1,97 @@
-Return-Path: <linux-pci+bounces-40544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40543-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEB59C3DF53
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 01:13:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B57C3DF3F
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 01:12:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F33C24E7142
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 00:13:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 367DC188DC1C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 00:13:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637C62236E3;
-	Fri,  7 Nov 2025 00:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EAEB1FCF41;
+	Fri,  7 Nov 2025 00:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1C2LwBM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arLi1sXK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F4D20E334;
-	Fri,  7 Nov 2025 00:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7004D1F5825;
+	Fri,  7 Nov 2025 00:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762474417; cv=none; b=o7hIdCMIHATt09A2Nt0PqCQ05BAPwG/riQtWI/eTleEUz0E/2vaTAIEfMgM/G77FZXfxF5Lc5MzU9fjv77jNDbnKooO7W82ArgCb2Mme1aMdHjadH0BRAt4AY+9qbTRgFNodGOY34dWU9ZhVVo+DQCwqjp0/U4z6eENg0DenUc8=
+	t=1762474371; cv=none; b=mSY21yWow0ftOy4g3ojKM7HMpBmoh+iB5gTBv3votTeXNgQF6wkrfEdtGBN2k03e8y3EHYTXLCrE9VBTlI5L9HisdGwcCU8iHzFHDgWKGUGueHYDTqdMUggn/PA4uNwyWAVAPet9KEERhtfaqnebknWA0uLj5ceZGj6bC5dSZ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762474417; c=relaxed/simple;
-	bh=2u4onrW1UIHYO/vrNYmY+JJnCXuAk11e42H3y3FcxMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMW9ZEdTFsw/WFM/1PbHV+tTSe1YkIdLS1vpyh0ZctABxqJRqlK4HTQzTJhfb+EqKyC+rr97Z9hpjVzyckH8kVcQZci/GSL3CGLmeZubUPw7H7ZROTLtg6GJ2umZDPUuwlkao0Q9ZkAymIAVzo9WTBH1zDMqboNiGhr21xj3J30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1C2LwBM; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762474415; x=1794010415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2u4onrW1UIHYO/vrNYmY+JJnCXuAk11e42H3y3FcxMs=;
-  b=j1C2LwBMmlhNrJ9yBt5UHP+Jhkh6vPg/U/689JBlItToqW9aukGyP4o+
-   t8FGAEOOyB71dFEhOT3X4GdYkIcQps6QZElhcfg18hwuyIVYbGIM0E1/e
-   QySAORTGX49qgrD2oWFY8v/WpW8y8F7pn6Uf08pcso0rJV8XQ1jbYooQr
-   AFAxlvuPD6mx1GACi6EZO+DRgPqw53TiMSf0NMhL1+cduz/u7Vogf35fw
-   ULxisVJ+zEiCBKH94EiJ5JKO6V8uF5JIuGg/ubU89S+4cIIndh8+PMeXi
-   P0BSVdsq9V+ToOb5TlqAazlE0A3giv76CvGwHC4f5XTLbzqV/jWIins6G
-   Q==;
-X-CSE-ConnectionGUID: JoT5F7r1ScqRPVX8lYWBeQ==
-X-CSE-MsgGUID: jknhkFozRzamKIKtn/Z1mg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11605"; a="64323423"
-X-IronPort-AV: E=Sophos;i="6.19,285,1754982000"; 
-   d="scan'208";a="64323423"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 16:13:34 -0800
-X-CSE-ConnectionGUID: DUnYCn2xS7uSIeOWmK2iaA==
-X-CSE-MsgGUID: tpitvUBxSmGAnfkDhSxq3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,285,1754982000"; 
-   d="scan'208";a="188060916"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 06 Nov 2025 16:13:32 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vHA6B-000UUS-36;
-	Fri, 07 Nov 2025 00:13:12 +0000
-Date: Fri, 7 Nov 2025 08:12:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	bhelgaas@google.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, will@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org, linux-arm-msm@vger.kernel.org,
-	zhangsenchuan@eswincomputing.com,
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Subject: Re: [PATCH 1/3] PCI: host-common: Add an API to check for any device
- under the Root Ports
-Message-ID: <202511070717.PZBzRyQO-lkp@intel.com>
-References: <20251106061326.8241-2-manivannan.sadhasivam@oss.qualcomm.com>
+	s=arc-20240116; t=1762474371; c=relaxed/simple;
+	bh=zVxtIiQXF/h3lLGX+vTX4ScikwyurKS7hUPFV5evgT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kEz5npKi0X4Vj/5gsE87ZofBHcH94r9GD+f9J3KQzfPC21+JjnjwJUlb28EfB0Gaqa7Aw0S+cYpygd5rFNd9u7FcO/4NeZm44HT01yAtGqERL8pTC5jd1tXcAVZKTVdBfEdmdUtXksr+GrPvkwjoQaM+1MWJ+U3ZR+vALW+ZXBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arLi1sXK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0F1C4CEFB;
+	Fri,  7 Nov 2025 00:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762474371;
+	bh=zVxtIiQXF/h3lLGX+vTX4ScikwyurKS7hUPFV5evgT4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=arLi1sXKCOwj5bu+tukL49Vo2iKLJWUsqpLupqoRVBsB+qXse1CVN9RDSb3fOdmz0
+	 QWq+nqXxO6RDUAYD5duqY3eDg4gHTyBzD/i68NgZ2QkpJ6ydS9Bb2FQzOQpPKWj6vz
+	 bXYRTGV9r6zODcS1pIFaOYL4UGDie/fNdCt2WEedrIO50EsyjA+nOsrXtKoZub5BKl
+	 jDZCQ8MH3S60cl138FURAdotszxxo8Q2T6iL0D/iOje6ZfuODWgWtANGpLjPjKU9Fp
+	 h9YpZQQKVGWFV0rRMe/n3+geqebX703u7a4gtQFv7Zu+9PjvF4cnGRAKvTPfzEwtq+
+	 q8rhLXwIRWrPA==
+Date: Thu, 6 Nov 2025 18:12:49 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-pci@vger.kernel.org, sparclinux@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Yinghai Lu <yinghai@kernel.org>,
+	Igor Mammedov <imammedo@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	linuxppc-dev@lists.ozlabs.org, regressions@leemhuis.info
+Subject: Re: [PATCH 02/24] sparc/PCI: Remove pcibios_enable_device() as they
+ do nothing extra
+Message-ID: <20251107001249.GA1977735@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251106061326.8241-2-manivannan.sadhasivam@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8fcc0fd4b74f99d5c4d80d3907e7607a7d4c89da.camel@physik.fu-berlin.de>
 
-Hi Manivannan,
+On Thu, Nov 06, 2025 at 08:49:50AM +0100, John Paul Adrian Glaubitz wrote:
+> On Fri, 2025-08-22 at 17:55 +0300, Ilpo Järvinen wrote:
+> > Under arch/sparc/ there are multiple copies of pcibios_enable_device()
+> > but none of those seem to do anything extra beyond what
+> > pci_enable_resources() is supposed to do. These functions could lead to
+> > inconsistencies in behavior, especially now as pci_enable_resources()
+> > and the bridge window resource flags behavior are going to be altered
+> > by upcoming changes.
 
-kernel test robot noticed the following build warnings:
+> This change actually broke driver initialization on SPARC, see:
+> 
+> https://github.com/sparclinux/issues/issues/22
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.18-rc4 next-20251106]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+#regzbot report: https://github.com/sparclinux/issues/issues/22
+#regzbot introduced: 754babaaf333
+#regzbot title: v6.18-rc3 fails to initialise mpt3sas on sparc T5-2
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/PCI-host-common-Add-an-API-to-check-for-any-device-under-the-Root-Ports/20251106-141822
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20251106061326.8241-2-manivannan.sadhasivam%40oss.qualcomm.com
-patch subject: [PATCH 1/3] PCI: host-common: Add an API to check for any device under the Root Ports
-config: arm-randconfig-001-20251107 (https://download.01.org/0day-ci/archive/20251107/202511070717.PZBzRyQO-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251107/202511070717.PZBzRyQO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511070717.PZBzRyQO-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: drivers/pci/controller/pci-host-common.c:27 function parameter 'root_bus' not described in 'pci_root_ports_have_device'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+754babaaf333 ("sparc/PCI: Remove pcibios_enable_device() as they do nothing extra")
 
