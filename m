@@ -1,152 +1,207 @@
-Return-Path: <linux-pci+bounces-40594-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76B23C414D7
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 19:42:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37F78C415D0
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 19:59:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30B193A6CC8
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 18:42:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EF05D4E9958
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 18:59:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27686338939;
-	Fri,  7 Nov 2025 18:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A0933DEE7;
+	Fri,  7 Nov 2025 18:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQNzbHKt"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H59v75Ni"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5F3385A0;
-	Fri,  7 Nov 2025 18:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5D333CEA8;
+	Fri,  7 Nov 2025 18:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762540931; cv=none; b=hleYBn21L8r3r2n9I2uazRdJy+7Oz4u2E8thjdV78IbHSuaqRat45EkBlZ2GQzcvZ8/QcRMUepv/aWY3e8au1nFzbRVqwv2djGxeegh2Wa+rmImr+1ARPmxsj0M6Lx8+z2B5jcN3zUNCYKli5Sq0A3c6JtPeB2AVTCbQuLmv60Q=
+	t=1762541923; cv=none; b=oOrWT/WtaSGTmZWpMsAyWJkW+Wa83PzmeCi0FhRoZrsAnZ7eQ8DtE+CEd9DSTwVpFbcT/ovwy35otzl/Tn+9p4yR8oQ/tDmk1ZQDLpOfHjoUqgMPkY8tUjU7ESeDSYQIrFzEvgQEZGvfe65mux3XEK7puJ9GZ8bUYkJku0ZpDzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762540931; c=relaxed/simple;
-	bh=NlugFQaxO5tLMHoPMN31XhYC2vMgdbP47ZSDQKZvL0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W2GPQY51/PLrpIhWGkt9uLL4cg8xp+KtTZyHoofpFuGnE1A46ebZ2sgKKUETOQYp7w2k4WwYM6ZNg/r5gw6OMuVnv5ImdY+8cR0Nynpr+1knwdM1YyGqu0b3+fmllwwuWogrDCKBrLMucCXBEhkybn4XXyOYjMNWjBf9FgTtjqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQNzbHKt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32B5CC4CEF5;
-	Fri,  7 Nov 2025 18:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762540930;
-	bh=NlugFQaxO5tLMHoPMN31XhYC2vMgdbP47ZSDQKZvL0I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vQNzbHKtKHNWf1dP8O1k9eugI4hPWZcWfut0pzsBj28OxIw2Jq3+zrI+v6kiO2duD
-	 XgJdGYuuafIeEFkvZXMo30MSVKnLgeOnQNdYK3azpw2apWByBnd6bCI9HMG2DVjQ4h
-	 wSwrMN+TFCbjGcEM+5O/2YEN6V78xlrEb/YHoWj8BdHhfqghDC7Vz3j6o/AhIZO3O2
-	 GAbnIQNjI6KLYqRfbdoXmb7ZP/plpEqf1S2DWQWxHxu8kjnn27AILtOla2mUK5DE2t
-	 dIjECMvt5LmLl6TN3vIzEMTVeRQBuLjvs5n24iLB4jR0c9JfKzx4q6V/mdXtwNnKgE
-	 S2LE5pRiwuujA==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Takashi Iwai <tiwai@suse.de>,
- LKML <linux-kernel@vger.kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>,
- Frank Li <Frank.Li@nxp.com>, Dhruva Gole <d-gole@ti.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
- Alex Williamson <alex.williamson@redhat.com>
-Subject:
- [PATCH v1 3/3] ACPI: TAD: Use PM_RUNTIME_ACQUIRE()/PM_RUNTIME_ACQUIRE_ERR
-Date: Fri, 07 Nov 2025 19:41:54 +0100
-Message-ID: <7873589.EvYhyI6sBW@rafael.j.wysocki>
-Organization: Linux Kernel Development
-In-Reply-To: <13883374.uLZWGnKmhe@rafael.j.wysocki>
-References: <13883374.uLZWGnKmhe@rafael.j.wysocki>
+	s=arc-20240116; t=1762541923; c=relaxed/simple;
+	bh=bOUbnZvb2TbWof6JwYRWtCUjJZ+np312O1qVpM42BAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H9TCIRg3b9h++Fo3Wzci5wvQZ3FtVyvuMpuW/ggrpBTWtIenztLxNNy4teBNCWKDaidLLOkSBzMCxWeKLpqGEODj2YIwSkXCTbjTbYSXbivQqp793Tn6Jrd+k42inzb3MVRR5iq/O+gWDCCDIrEMOasmE+MJv/30HTJZias6qjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H59v75Ni; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=PjiF0FDj1ggdA8+srznADWIujFetT2w1WcC08yNm+xE=; b=H59v75NiiIx555adWgSui938BX
+	Yc3i1CYEaGF7O6kQ1NqaqRVT/Zz7Cswv0/fmOzsuOsqzoIRagasqeUrHrhrdChqEbZeXwaG25NO+S
+	5wwiT1Bk++lMCO2rTIpSkO6LuvNwiSk1/lj7Setie4/hO5vXucwRTkyP4yelMuEJS4S3/t3xpANoZ
+	fMWvRG+69LUGWzme6PVDco0ZFCeM7vfUpGeksDZI3z5FpBYHlU5+MqvBB/XCUz0tSEk1fDzrRkUZ2
+	YHwjo2XWY68XJ4S/UyDHNpcYYoIRz6GCK8IoBHNkuYm6Mq2NkrCY2ePjJ4l6ltSL9O9XJUZxKJPhW
+	/Noao/Cg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vHRfI-00000000bYE-3FZm;
+	Fri, 07 Nov 2025 18:58:28 +0000
+Message-ID: <0c265a9b-fdc5-40d7-845f-30910f1ac6ea@infradead.org>
+Date: Fri, 7 Nov 2025 10:58:27 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 05/11] PCI/P2PDMA: Document DMABUF model
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe
+ <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian
+ <kevin.tian@intel.com>, Alex Williamson <alex@shazbot.org>,
+ Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, iommu@lists.linux.dev, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ kvm@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
+ <20251106-dmabuf-vfio-v7-5-2503bf390699@nvidia.com>
+ <135df7eb-9291-428b-9c86-d58c2e19e052@infradead.org>
+ <20251107160120.GD15456@unreal>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251107160120.GD15456@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+	
 
-Use new PM_RUNTIME_ACQUIRE() and PM_RUNTIME_ACQUIRE_ERR wrapper macros
-to make the code look more straightforward.
+On 11/7/25 8:01 AM, Leon Romanovsky wrote:
+> On Thu, Nov 06, 2025 at 10:15:07PM -0800, Randy Dunlap wrote:
+>>
+>>
+>> On 11/6/25 6:16 AM, Leon Romanovsky wrote:
+>>> From: Jason Gunthorpe <jgg@nvidia.com>
+>>>
+>>> Reflect latest changes in p2p implementation to support DMABUF lifecycle.
+>>>
+>>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+>>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+>>> ---
+>>>  Documentation/driver-api/pci/p2pdma.rst | 95 +++++++++++++++++++++++++--------
+>>>  1 file changed, 72 insertions(+), 23 deletions(-)
+>>>
+>>> diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+>>> index d0b241628cf1..69adea45f73e 100644
+>>> --- a/Documentation/driver-api/pci/p2pdma.rst
+>>> +++ b/Documentation/driver-api/pci/p2pdma.rst
+>>> @@ -9,22 +9,47 @@ between two devices on the bus. This type of transaction is henceforth
+>>>  called Peer-to-Peer (or P2P). However, there are a number of issues that
+>>>  make P2P transactions tricky to do in a perfectly safe way.
+>>>  
+>>> -One of the biggest issues is that PCI doesn't require forwarding
+>>> -transactions between hierarchy domains, and in PCIe, each Root Port
+>>> -defines a separate hierarchy domain. To make things worse, there is no
+>>> -simple way to determine if a given Root Complex supports this or not.
+>>> -(See PCIe r4.0, sec 1.3.1). Therefore, as of this writing, the kernel
+>>> -only supports doing P2P when the endpoints involved are all behind the
+>>> -same PCI bridge, as such devices are all in the same PCI hierarchy
+>>> -domain, and the spec guarantees that all transactions within the
+>>> -hierarchy will be routable, but it does not require routing
+>>> -between hierarchies.
+>>> -
+>>> -The second issue is that to make use of existing interfaces in Linux,
+>>> -memory that is used for P2P transactions needs to be backed by struct
+>>> -pages. However, PCI BARs are not typically cache coherent so there are
+>>> -a few corner case gotchas with these pages so developers need to
+>>> -be careful about what they do with them.
+>>> +For PCIe the routing of TLPs is well defined up until they reach a host bridge
+>>
+>> Define what TLP means?
+> 
+> In PCIe "world", TLP is very well-known and well-defined acronym, which
+> means Transaction Layer Packet.
 
-No intentional functional impact.
+It's your choice (or Bjorn's). I'm just reviewing...
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpi_tad.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+>>                                    well-defined
+> 
+> Thanks
+> 
+> diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+> index 69adea45f73e..7530296a5dea 100644
+> --- a/Documentation/driver-api/pci/p2pdma.rst
+> +++ b/Documentation/driver-api/pci/p2pdma.rst
+> @@ -9,17 +9,17 @@ between two devices on the bus. This type of transaction is henceforth
+>  called Peer-to-Peer (or P2P). However, there are a number of issues that
+>  make P2P transactions tricky to do in a perfectly safe way.
+> 
+> -For PCIe the routing of TLPs is well defined up until they reach a host bridge
+> -or root port. If the path includes PCIe switches then based on the ACS settings
+> -the transaction can route entirely within the PCIe hierarchy and never reach the
+> -root port. The kernel will evaluate the PCIe topology and always permit P2P
+> -in these well defined cases.
+> +For PCIe the routing of Transaction Layer Packets (TLPs) is well-defined up
+> +until they reach a host bridge or root port. If the path includes PCIe switches
+> +then based on the ACS settings the transaction can route entirely within
+> +the PCIe hierarchy and never reach the root port. The kernel will evaluate
+> +the PCIe topology and always permit P2P in these well-defined cases.
+> 
+>  However, if the P2P transaction reaches the host bridge then it might have to
+>  hairpin back out the same root port, be routed inside the CPU SOC to another
+>  PCIe root port, or routed internally to the SOC.
+> 
+> -As this is not well defined or well supported in real HW the kernel defaults to
+> +As this is not well-defined or well supported in real HW the kernel defaults to
+Nit:                              well-supported
 
---- a/drivers/acpi/acpi_tad.c
-+++ b/drivers/acpi/acpi_tad.c
-@@ -90,8 +90,8 @@ static int acpi_tad_set_real_time(struct
- 	args[0].buffer.pointer = (u8 *)rt;
- 	args[0].buffer.length = sizeof(*rt);
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	status = acpi_evaluate_integer(handle, "_SRT", &arg_list, &retval);
-@@ -137,8 +137,8 @@ static int acpi_tad_get_real_time(struct
- {
- 	int ret;
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	ret = acpi_tad_evaluate_grt(dev, rt);
-@@ -275,8 +275,8 @@ static int acpi_tad_wake_set(struct devi
- 	args[0].integer.value = timer_id;
- 	args[1].integer.value = value;
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	status = acpi_evaluate_integer(handle, method, &arg_list, &retval);
-@@ -322,8 +322,8 @@ static ssize_t acpi_tad_wake_read(struct
- 
- 	args[0].integer.value = timer_id;
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	status = acpi_evaluate_integer(handle, method, &arg_list, &retval);
-@@ -377,8 +377,8 @@ static int acpi_tad_clear_status(struct
- 
- 	args[0].integer.value = timer_id;
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	status = acpi_evaluate_integer(handle, "_CWS", &arg_list, &retval);
-@@ -417,8 +417,8 @@ static ssize_t acpi_tad_status_read(stru
- 
- 	args[0].integer.value = timer_id;
- 
--	ACQUIRE(pm_runtime_active_try, pm)(dev);
--	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
-+	PM_RUNTIME_ACQUIRE(dev);
-+	if (PM_RUNTIME_ACQUIRE_ERR)
- 		return -ENXIO;
- 
- 	status = acpi_evaluate_integer(handle, "_GWS", &arg_list, &retval);
+The rest of it looks good. Thanks.
 
+>  blocking such routing. There is an allow list to allow detecting known-good HW,
+>  in which case P2P between any two PCIe devices will be permitted.
+> 
+> @@ -39,7 +39,7 @@ delegates lifecycle management to the providing driver. It is expected that
+>  drivers using this option will wrap their MMIO memory in DMABUF and use DMABUF
+>  to provide an invalidation shutdown. These MMIO pages have no struct page, and
+>  if used with mmap() must create special PTEs. As such there are very few
+> -kernel uAPIs that can accept pointers to them, in particular they cannot be used
+> +kernel uAPIs that can accept pointers to them; in particular they cannot be used
+>  with read()/write(), including O_DIRECT.
+> 
+>  Building on this, the subsystem offers a layer to wrap the MMIO in a ZONE_DEVICE
+> @@ -154,7 +154,7 @@ access happens.
+>  Usage With DMABUF
+>  =================
+> 
+> -DMABUF provides an alternative to the above struct page based
+> +DMABUF provides an alternative to the above struct page-based
+>  client/provider/orchestrator system. In this mode the exporting driver will wrap
+>  some of its MMIO in a DMABUF and give the DMABUF FD to userspace.
+> 
+> @@ -162,10 +162,10 @@ Userspace can then pass the FD to an importing driver which will ask the
+>  exporting driver to map it.
+> 
+>  In this case the initiator and target pci_devices are known and the P2P subsystem
+> -is used to determine the mapping type. The phys_addr_t based DMA API is used to
+> +is used to determine the mapping type. The phys_addr_t-based DMA API is used to
+>  establish the dma_addr_t.
+> 
+> -Lifecycle is controlled by DMABUF move_notify(), when the exporting driver wants
+> +Lifecycle is controlled by DMABUF move_notify(). When the exporting driver wants
+>  to remove() it must deliver an invalidation shutdown to all DMABUF importing
+>  drivers through move_notify() and synchronously DMA unmap all the MMIO.
+> 
 
+-- 
+~Randy
 
 
