@@ -1,93 +1,95 @@
-Return-Path: <linux-pci+bounces-40581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2DEBC40617
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 15:33:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C52BC40620
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 15:34:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 69C024F46B9
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 14:31:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E7FE18879F6
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 14:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FBA02F60A7;
-	Fri,  7 Nov 2025 14:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D3231AF2C;
+	Fri,  7 Nov 2025 14:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CE+rONLp"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dLa/oT4L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151F2550AD
-	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 14:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693192765C5
+	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 14:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762525880; cv=none; b=nnxSf2lWq2+IEQJcAgN9wq3l+5/MpKtL9QSw5mcFcd/Gq0XyoH7Fm10syfxNR1JBJAQEn4gC9QuP1zJM9DgulfA/WPe6bP+mZ8lRZpnlKtoSoLUW60MuX23OFiYDDX534166r8bPZFTteO7Pj5v+yIexY6CEyxWL8cf/A9edEYA=
+	t=1762526027; cv=none; b=mDe3D+fYT/gxa4l0e8w25ejzhEMVpEPwW+J1PhwGQtiZ4TGDKmel1b61sucJrzEXpmCboTI1q9R9A3tfS2CzmjjpqdfuP6JUs6SBJms6zHl4qAZei6dIh77Slm9uYTvxdupgNo2xRmlA7toKFVbbmIE3bGOhLpkXHZdF97m2hS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762525880; c=relaxed/simple;
-	bh=cSdDnIXxswzbdqa2gav6B3GuVmFeRkspqdWD/8dhg5M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mFAJ/RIJldXsNHTkCOKb2Q8YHPFiD6T9jA8nGZVzst6E+QzWiPsHceIbgQGc1QbKeGi5X7hA3dFLUHRI80dnhn2mcH8SN2d22J2V4dZ51QtxWHbOux4Qsv2MI3rCUK7+jM5i29ii7nQyddj/NXyMWTWjeJdDucj+lOlKZOrO/bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CE+rONLp; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1762526027; c=relaxed/simple;
+	bh=hjyBa29LvF5ke1bIbdIdjRleYwiz0qsv2bHQaxIvBTg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M+vGzWtuaDZGhZJJsN4q80vO6LtPSeJSssFQwx5BeeBTpRXgGtvLG3/yJyXoN1NP0p02qKV3KUL2H6QtYDFNQ9tNRnRT+oJL97CeneqJ433AB74bFG7XJWvdGbDFMB1NNXek7Dk3ABbTK7hspQ1xJ3qqs0h6lqahD7+3Iw8MvWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dLa/oT4L; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47112edf9f7so4528885e9.0
-        for <linux-pci@vger.kernel.org>; Fri, 07 Nov 2025 06:31:18 -0800 (PST)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-429c82bf86bso427781f8f.1
+        for <linux-pci@vger.kernel.org>; Fri, 07 Nov 2025 06:33:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1762525877; x=1763130677; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1762526024; x=1763130824; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUBmSzOMW1hVmBvLVfhS6unxv5YlCb/+J2qrVLMEhjI=;
-        b=CE+rONLpD5X7mbnF4JMh5VVhIeZ85Z/nRhUVIxDy3k17s1C2rsXJsA7noCRQRvVNVT
-         gk9uS9IDoOkEI34dJjSTcRdkKscfGMl/erD9cqTg3l3G2eS32w4WwE1kstF95LOjNPu2
-         NMjGb4oyc9irAyC+rNhoBLkSVD0xyrPB9ub7ivovW3Lpa6dYBKWJzzfIbOGVjqRosasO
-         nrimhCt/M4jHLyQIHf55ThQZZWWbC2nfSZJIJ8SjKJSfSQiXQjukxJdz0f+W/ED+BtSJ
-         KskOjSZ3lIg+Me2thlTvC/GKd6l1yIhvP0NUHSvypEe9QsQajg3xo5IvvFZQHDjpgBkV
-         gnlQ==
+        bh=zZwooRdHB1TiRGXyDl2NtjlO6yhOj/8qnno438SS5o4=;
+        b=dLa/oT4LfOxUCj6VM2szBUjNXF8ISsp9ao6TL4LXAmBLa5VzAXB5ziuq8wJl+mz10E
+         ohEfVM1Dq0hQ3vu/Bqj1aicUj5YjtcI4+ri6k5F8yZDH8nFOh3LSdYk/QsR5hc5aYUF5
+         0LkokKuGIZp1LvtcwOzE+bsPt40LJRIVzOxCrWzZOiDcshZOBeFuql/ycBEbHo2uOhIe
+         7tnixhdRfp02aJsCJ2DG8vGZBUgt3DMjU3t1uOgXuiPzOJxDP9efDneoFD0PmOf4wwxd
+         WFNCuvKpNv7Y+Fsl/Dd3S9GWuRhgtHCR9UkyPA3mfTeGSwJrYAHYrZBrgBHFell42I6S
+         Xm5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762525877; x=1763130677;
+        d=1e100.net; s=20230601; t=1762526024; x=1763130824;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CUBmSzOMW1hVmBvLVfhS6unxv5YlCb/+J2qrVLMEhjI=;
-        b=iWukn+5Kvc8DvLpDaBpALTx8anCJ3K3FyfGY2XnFnZ2XcD6gxlAXkRCxk8+Szkdne2
-         Eq4fbRJ5CcICMoLzMEZS5g7B8LVzbmtO3yJI+seJqhLCfSkbJpJQy2HvRDp1oSkfIirO
-         m2W1iXpibqdoDSiiKq3vasA7WdWI6CUSd6Nvh7u6cnLCkSsOp+YpBwhP18FaXAW4J2QY
-         vYEALVc1WFLNpU5B8gIsaAjwE1ydlNVQEbPZ+InlMcni13cYj9j12ilZj0Lo+KVoPf+s
-         FsPnApb5T0b6J9KBr6ockeUiqP+7nDMDYl7rDSZKmImA9Q9TXlThjuubEVlH21x/c62c
-         RDKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOwEGQkSFlgM/hhozcthavuk6z2qOCUtbZtop5tnOLJcvaTdbynUcbPj8yAL+Jwf89mTe3OiaQCmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6XwPAcilpa4qYq6DInKC9M2hGmLxl2/jJHf5Mlg3O3CU+X2CZ
-	HZ+ul37bIkGB2XzcBsQeFftQHlZ2yu3RVilgGVvg1hlRS0g4BfBs5TM/TV/XIJ9m0Wc=
-X-Gm-Gg: ASbGncvihQxhgE9+0oVZ8PN1JNV+8l1ZzFA3OAt21QRljPvmCKW174xHnYljE/yl4ue
-	j9y3OUMEXg1E94VeTboD8dOunWcyznG9XtIRu3Iq6CiYBgt13+UWxWuBH2oJoY4oWupK4cZvB2a
-	3VscIBpbq2gc9904GT+WbIYkIam/7Ozue9krRJnY95ui8vROVVihwhTv5/MENoHJ8TweV31Qb2/
-	RCwE5Ei3jPj1ztB8Xn7rDhCiZGKeiMDVVXx3dNsDpAdIHTg0Zk/iQKNEBjLm4DCSAy+dh1f+I8W
-	OgFc9tyu7ACLzazO+2kr2Kynz6bwY9mOjmh1CRNiui/zVzW3vNyQ8mGsa0gIsAYVze7Y+yLrnvT
-	7EKoHm+QNbp2q10M4b1RUS5CK4qQoTqgtQXM0Wnp/jNCyEGOVVyNyw51QcFR9eYKuI1jP1cHLOP
-	mUmOVcFemqpRvwN1fL5SQowQNivyalBaG5Dgc=
-X-Google-Smtp-Source: AGHT+IGSY6yDLTu3hRcVf/k/pttfkC0OQRPyNDQ0Wl+wJKGkdFmqGU/QfjbxpsGop8pwcaivmOt2vw==
-X-Received: by 2002:a05:600c:a4b:b0:471:1774:3003 with SMTP id 5b1f17b1804b1-4776bcde4d5mr31145925e9.29.1762525876714;
-        Fri, 07 Nov 2025 06:31:16 -0800 (PST)
+        bh=zZwooRdHB1TiRGXyDl2NtjlO6yhOj/8qnno438SS5o4=;
+        b=gT0ilnCeCuTF9wJHAIWQJAADPMR5DkMHtIAVmoaVgZWTzP7bLzC5Jw3EXBpXxDUg2v
+         qUXUxp+qEan+qNhBJ0mjdD/ktUGaeaqo1+Vzqjsi5m43lRYZWE/rtdsoEV9yZfA94Pwg
+         +2zpK6yuCMJ353qQeQEpX+DmZ4DOBHSkEkN+DkduVVSus4CLZDD6M3jelFKnmkqqDGyi
+         Hvfl8PMc5Q7LlE8n3eiyEBrAk4ysKQzWYhfS7yzpKDfzoBydGtB5j+DyK7RhBtE4m1oQ
+         /IQZ4RR/bTdEj4oOY5fTtXPWGJA7Jab+uuqGIaKVh4oVz56xfMWt5u1PVZwoYj8M399p
+         KNXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJqUU7DdAS4AsmbitGqEH/G5BGwtSq/ZsGxIPp6IlAwVI/6M7B8KO1VtkEYImgUan/PEAbfiLRK9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxupdmM7l89qdEBUv5lfl+Xtbsa9mErCMLG+Y5O8aXW62pKipjm
+	gAsNGpzn0NTX+kYSsJ2SDNDyn9LFNZ3wi4qxhku5ol6o9kTgRAuBSiLYqU07bBCPs/w=
+X-Gm-Gg: ASbGncvyq0QIN76I3ik534owgDY/IQXRsWuYFP0kCpW84Y9s/ef+hFoMskbGtIdeZn8
+	ZMC9ShNgIRUtKAUt5Gts5/LvSMq070TnqPXxGkqQEle02e6695dccinXQziDjAqZfQIyv4LLvK0
+	YbEAQFPzo3mcm4dlvQk8j8wuKNgv9FYQGKAXLel0KelJykdB3OUyXLfIIyrdB7gTiPvUaVxFvQE
+	3piQFf7g6H2yMTZrsD/qqK90dxrcodt/emgiFjq52t0038bioy9F4dLYe4tuJRiSe2omHTw/Uok
+	DCToaVKTC7YP7EiLHDrRhPcZtbybZdLymW7QlstjnfHy4szQtfQ57qez6cZ9fOxYaLffOtD0PcY
+	9kFr+INwGqgeBLrPBBZe8JevUIOxARh6owxq1i0SmaKxQ/H7aCZIwh6euC/YiD6ZJzKCYP1xS2L
+	qoJ598S/fHUWBCgzoMGW1QOrnj
+X-Google-Smtp-Source: AGHT+IHKuyvTGNSoJsQ3fSAGflXQvX+4fyFLXoLOYbtCrxRpdLm0CfiflATW1SeGn2vQFdIECJYLiw==
+X-Received: by 2002:a05:6000:1a8d:b0:429:cc01:c6a1 with SMTP id ffacd0b85a97d-42ae5888a25mr2897316f8f.28.1762526023562;
+        Fri, 07 Nov 2025 06:33:43 -0800 (PST)
 Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bcfd2e5sm52355795e9.13.2025.11.07.06.31.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42abe63e126sm5647624f8f.16.2025.11.07.06.33.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 06:31:16 -0800 (PST)
+        Fri, 07 Nov 2025 06:33:43 -0800 (PST)
 From: Marco Crivellari <marco.crivellari@suse.com>
 To: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
 Cc: Tejun Heo <tj@kernel.org>,
 	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: endpoint: pci-epf-test: add WQ_PERCPU to alloc_workqueue users
-Date: Fri,  7 Nov 2025 15:31:08 +0100
-Message-ID: <20251107143108.240025-1-marco.crivellari@suse.com>
+Subject: [PATCH] PCI: pnv_php: add WQ_PERCPU to alloc_workqueue users
+Date: Fri,  7 Nov 2025 15:33:35 +0100
+Message-ID: <20251107143335.242342-1-marco.crivellari@suse.com>
 X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -131,23 +133,22 @@ become the implicit default.
 Suggested-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/hotplug/pnv_php.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 31617772ad51..46e684c0e496 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -1188,7 +1188,8 @@ static int __init pci_epf_test_init(void)
- 	int ret;
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index c5345bff9a55..35f1758126c6 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -802,7 +802,7 @@ static struct pnv_php_slot *pnv_php_alloc_slot(struct device_node *dn)
+ 	}
  
- 	kpcitest_workqueue = alloc_workqueue("kpcitest",
--					     WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
-+					     WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_PERCPU,
-+					     0);
- 	if (!kpcitest_workqueue) {
- 		pr_err("Failed to allocate the kpcitest work queue\n");
- 		return -ENOMEM;
+ 	/* Allocate workqueue for this slot's interrupt handling */
+-	php_slot->wq = alloc_workqueue("pciehp-%s", 0, 0, php_slot->name);
++	php_slot->wq = alloc_workqueue("pciehp-%s", WQ_PERCPU, 0, php_slot->name);
+ 	if (!php_slot->wq) {
+ 		SLOT_WARN(php_slot, "Cannot alloc workqueue\n");
+ 		kfree(php_slot->name);
 -- 
 2.51.1
 
